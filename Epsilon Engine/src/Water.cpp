@@ -1,0 +1,232 @@
+///========= Copyright Survtech, All rights reserved. ============//
+///
+/// Purpose:
+///
+///=============================================================================
+
+#include <Water.h>
+
+Water::Water(glm::vec3 position, float scale)
+{
+    this->scale = scale;
+    this->position = position;
+
+    this->ReflectionResoulution = 512;
+    this->RefractionResoulution = 512;
+
+    this->CreateReflectionFBO();
+    this->CreateRefractionFBO();
+    this->LoadShaders();
+    this->LoadTextures();
+    this->GeneratevertexArray();
+}
+
+void Water::RenderWater(Camera* cam, glm::vec3 lightDir)
+{
+    shader->Use();
+    glDisable(GL_CULL_FACE);
+
+    glActiveTexture(GL_TEXTURE0);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "reflectionSampler"), 0);
+    glBindTexture(GL_TEXTURE_2D, this->reflectionTexture);
+
+    glActiveTexture(GL_TEXTURE1);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "refractionSampler"), 1);
+    glBindTexture(GL_TEXTURE_2D, this->refractionTexture);
+
+    glActiveTexture(GL_TEXTURE2);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "depthSampler"), 2);
+    glBindTexture(GL_TEXTURE_2D, this->refractionDepthTexture);
+
+    glActiveTexture(GL_TEXTURE3);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "normalSampler"), 3);
+    glBindTexture(GL_TEXTURE_2D, this->normalTexture);
+
+    glActiveTexture(GL_TEXTURE4);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "DuDvSampler"), 4);
+    glBindTexture(GL_TEXTURE_2D, this->DuDvTexture);
+
+    glActiveTexture(GL_TEXTURE5);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "foamSampler"), 5);
+    glBindTexture(GL_TEXTURE_2D, this->foamTexture);
+
+    glActiveTexture(GL_TEXTURE6);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "diffuseSampler"), 6);
+    glBindTexture(GL_TEXTURE_2D, this->diffuseTexture);
+
+
+    glm::mat4 model = glm::mat4();
+    /// glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(scale,1,scale));
+    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), this->position);
+    model = TranslationMatrix;
+    this->MVP = cam->getProjectionMatrix() * cam->getViewMatrix() * model;
+    glm::mat4 view = glm::mat4(cam->getViewMatrix());
+
+    glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "model"), 1, GL_FALSE, &model[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "view"), 1, GL_FALSE, &cam->getViewMatrix()[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "projection"), 1, GL_FALSE, &cam->getProjectionMatrix()[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "MVP"), 1, GL_FALSE, &this->MVP[0][0]);
+    glUniform1f(glGetUniformLocation(shader->getProgramID(), "time"),  glfwGetTime());
+    glUniform3f(glGetUniformLocation(shader->getProgramID(), "cameraPosition"), cam->getPosition().x, cam->getPosition().y, cam->getPosition().z);
+    glUniform3f(glGetUniformLocation(shader->getProgramID(), "LightDirection"), lightDir.x, lightDir.y, lightDir.z);
+
+    glBindVertexArray(this->VAO);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+    glEnable(GL_CULL_FACE);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glActiveTexture(GL_TEXTURE5);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+
+}
+
+void Water::LoadTextures(void)
+{
+    eTexture* tex = new eTexture("Wavy_Water - Height (Normal Map 2).png");
+    normalTexture = tex->texture;
+
+    delete tex;
+
+    eTexture* tex2 = new eTexture("Wavy_Water - DuDvt.png");
+    DuDvTexture = tex2->texture;
+
+    delete tex2;
+
+    eTexture* tex3 = new eTexture("Foam.png");
+    foamTexture = tex3->texture;
+
+    delete tex3;
+
+    eTexture* tex4 = new eTexture("Wavy_Water - Color Map.png");
+    diffuseTexture = tex4->texture;
+
+    delete tex4;
+}
+
+void Water::LoadShaders(void)
+{
+    shader = new Shader("shaders/water.vglsl", "shaders/water.fglsl");
+}
+
+void Water::CreateReflectionFBO(void)
+{
+    glGenFramebuffers(1, &reflectionFBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, reflectionFBO);
+    glGenTextures(1, &reflectionTexture);
+    glBindTexture(GL_TEXTURE_2D, reflectionTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB16F, ReflectionResoulution, ReflectionResoulution, 0,GL_RGB, GL_UNSIGNED_BYTE, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glGenRenderbuffers(1, &reflectionRBO);
+    glBindRenderbuffer(GL_RENDERBUFFER, reflectionRBO);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, ReflectionResoulution, ReflectionResoulution);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, reflectionRBO);
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, reflectionTexture, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Water::CreateRefractionFBO(void)
+{
+    glGenFramebuffers(1, &refractionFBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, refractionFBO);
+
+    glGenTextures(1, &refractionTexture);
+    glBindTexture(GL_TEXTURE_2D, refractionTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB16F, RefractionResoulution, RefractionResoulution, 0,GL_RGB, GL_FLOAT, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, refractionTexture, 0);
+
+    glGenRenderbuffers(1, &refractionRBO);
+    glBindRenderbuffer(GL_RENDERBUFFER, refractionRBO);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, RefractionResoulution, RefractionResoulution);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, refractionRBO);
+
+    glGenTextures(1, &refractionDepthTexture);
+    glBindTexture(GL_TEXTURE_2D, refractionDepthTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0,GL_DEPTH24_STENCIL8, RefractionResoulution, RefractionResoulution, 0,GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, refractionDepthTexture, 0);
+
+    GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+    glDrawBuffers(1, DrawBuffers);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+
+void Water::GenerateReflection(Camera* cam)
+{
+    GenerateModelViewProjection(cam);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, reflectionFBO);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glViewport(0,0,ReflectionResoulution, ReflectionResoulution);
+}
+
+void Water::GenerateRefraction(Camera* cam)
+{
+    GenerateModelViewProjection(cam);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, refractionFBO);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glViewport(0,0,RefractionResoulution, RefractionResoulution);
+}
+
+void Water::GeneratevertexArray()
+{
+    GLfloat plane[] =
+    {
+        1.0f * scale,  this->position.y,  1.0f* scale, 1.0f, 1.0f,
+        1.0f*  scale,  this->position.y, -1.0f* scale, 1.0f, 0.0f,
+       -1.0f*  scale,  this->position.y, -1.0f* scale, 0.0f, 0.0f,
+       -1.0f*  scale,  this->position.y,  1.0f* scale, 0.0f, 1.0f,
+
+    };
+    GLuint indices[] = {
+        0, 1, 3,
+        1, 2, 3
+    };
+
+    glGenVertexArrays(1, &this->VAO);
+    glGenBuffers(1, &this->VBO);
+    glGenBuffers(1, &this->EBO);
+
+    glBindVertexArray(this->VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(plane), &plane[0], GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+
+    glBindVertexArray(0);
+
+}
+
+void Water::FinishWatercomputation(void)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Water::GenerateModelViewProjection(Camera* cam)
+{
+    glm::mat4 model = glm::mat4();
+    MVP = cam->getProjectionMatrix() * cam->getViewMatrix() * model;
+}

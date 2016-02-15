@@ -1,0 +1,103 @@
+#version 330 core
+in vec2 TexCoord;
+
+uniform sampler2D texture_diffuse;
+uniform sampler2D texture_normal;
+
+out vec4 color;
+
+in float visibility;
+in float underWatervisibility;
+in vec3 FragPos;
+in vec3 Normal;
+uniform float time;
+uniform vec3 viewPos;
+uniform float plane;
+uniform int clip_Direction;
+uniform bool BelowWater;
+uniform vec3 LightDirection;
+
+in vec3 TangentViewPos;
+in vec3 TangentViewDir;
+in vec3 TangentFragPos;
+in vec3 TangentLightdir;
+in vec3 otangent;
+
+vec3 SkyColor = vec3(0.5,0.5,0.5);
+vec3 NightFog = vec3(0.1,0.1,0.1);
+vec3 WaterColor = vec3(0.001, 0.001, 0.001);
+
+vec3 CalculateDirectional(vec2 texCoords);
+
+void main()
+{
+
+/** Harcoded Cliping plane*/
+
+/** Refraction*/
+
+if(clip_Direction == 1)
+{
+	if(BelowWater == false)
+	{
+				if((FragPos.y-0.05) > plane){
+					discard;}
+	}
+	if(BelowWater == true)
+	{
+				if(FragPos.y < plane){
+					discard;}
+	}
+}
+/** Reflection*/
+if(clip_Direction == -1)
+{
+		if(!BelowWater)
+		{
+				if(FragPos.y < plane){
+						discard;}
+		}
+		if(BelowWater)
+		{
+			discard;
+		}
+}
+
+
+	float gamma = 1.2;
+
+    vec3 res = CalculateDirectional(TexCoord);
+
+		SkyColor = mix(normalize(vec3(250, 190, 108)), SkyColor, abs(LightDirection.y)+0.2);
+
+		vec3 fogColor = mix(NightFog, SkyColor, clamp(LightDirection.y + 1, 0.0, 1.0));
+
+    color = vec4(mix(fogColor, res, visibility), 1.0);
+
+}
+
+vec3 CalculateDirectional(vec2 texCoords)
+{
+    vec3 ambient = vec3(0.1,0.1,0.1) * vec3(texture(texture_diffuse, texCoords ));
+    vec3 lightcolor = normalize(vec3(210, 190, 108));
+		vec3 normal = texture(texture_normal, texCoords).rgb * 2.0 - 1.0;
+    vec3 lightdirection;
+    vec3 viewDir;
+    float diff;
+    vec3 lightDir;
+    vec3 norm;
+
+        lightdirection = vec3(0.0, -0.8, -0.5);
+        viewDir = normalize(TangentViewPos - TangentFragPos);
+        norm = normalize(normal);
+        diff = max(dot(TangentLightdir, norm), 0.0);
+
+    vec3 diffuse =  diff * vec3(texture(texture_diffuse, texCoords));
+
+    vec3 halfwayDir = normalize(-TangentLightdir + viewDir);
+    float spec = pow(max(dot(norm, halfwayDir), 0.0), 32);
+    vec3 specular = spec * vec3(0.1) * diff;
+
+    return mix(ambient, (vec3(diffuse + specular + ambient)) * lightcolor * 2, clamp(LightDirection.y, 0.0, 1.0));
+
+}

@@ -1,0 +1,89 @@
+///========= Copyright Survtech, All rights reserved. ============//
+///
+/// Purpose:
+///
+///=============================================================================
+
+#ifndef WATER_H_INCLUDED
+#define WATER_H_INCLUDED
+
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <Shader.h>
+#include <Texture.h>
+#include <Camera.h>
+
+#include <vector>
+
+class Water{
+
+public:
+
+    Water(glm::vec3 position, float scale);
+    virtual ~Water(){
+        delete shader;
+    }
+
+public:
+
+    void GenerateReflection(Camera* cam);
+    void GenerateRefraction(Camera* cam);
+    void FinishWatercomputation(void);
+    void RenderWater(Camera* cam, glm::vec3 lightDir);
+
+public:
+    float scale;
+    glm::vec3 position;
+
+private:
+
+    void LoadTextures(void);
+    void LoadShaders(void);
+    void CreateReflectionFBO(void);
+    void CreateRefractionFBO(void);
+    void GeneratePlane(void);
+    void GenerateModelViewProjection(Camera* cam);
+    void GeneratevertexArray();
+
+
+private:
+
+    GLuint colorTexture;
+    GLuint normalTexture;
+    GLuint dispTexture;
+    GLuint DuDvTexture;
+    GLuint foamTexture;
+    GLuint diffuseTexture;
+
+    GLuint reflectionTexture;
+    GLuint refractionTexture;
+    GLuint refractionDepthTexture;
+
+    GLuint refractionRBO;
+    GLuint reflectionRBO;
+
+    GLuint refractionFBO;
+    GLuint reflectionFBO;
+
+    GLint refractionWidth;
+    GLint refractionHeight;
+
+    GLint reflectionWidth;
+    GLint reflectionHeight;
+
+    GLuint ReflectionResoulution;
+    GLuint RefractionResoulution;
+
+    GLuint VAO;
+    GLuint VBO;
+    GLuint EBO;
+
+    Shader* shader;
+
+    glm::mat4 MVP;
+
+};
+
+#endif /// WATER_H_INCLUDED

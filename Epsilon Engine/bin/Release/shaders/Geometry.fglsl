@@ -1,0 +1,79 @@
+#version 330 core
+
+layout(location = 0) out vec4 gAlbedoSpec;
+layout(location = 1) out vec4 gNormal;
+layout(location = 2) out vec4 gPosition;
+layout(location = 3) out vec3 gExpensiveNormal;
+layout(location = 4) out vec3 gWorldSpacePosition;
+
+in vec3 Normal;
+in vec3 FragPos;
+in vec2 TexCoords;
+in mat3 TBN;
+in vec3 wFragPos;
+
+uniform sampler2D texture_diffuse;
+uniform sampler2D texture_specular;
+uniform sampler2D texture_normal;
+uniform sampler2D texture_height;
+uniform samplerCube skybox;
+
+uniform int clip_Direction;
+uniform bool BelowWater;
+uniform float plane;
+
+float NEAR = 0.1;
+float FAR = 3000.0;
+
+float LinearizeDepth(float depth)
+{
+    float z = depth * 2.0 - 1.0; // Back to NDC
+    return ((2.0 * NEAR * FAR) / (FAR + NEAR - z * (FAR - NEAR)));
+}
+
+void main()
+{
+      /** Harcoded Cliping plane*/
+
+      /** Refraction*/
+/*
+      if(clip_Direction == 1)
+      {
+      	if(BelowWater == false)
+      	{
+      				if(FragPos.y > plane){
+      					discard;}
+      	}
+      	if(BelowWater == true)
+      	{
+      				if(FragPos.y < plane){
+      					discard;}
+      	}
+      }*/
+      /** Reflection*/
+      /*if(clip_Direction == -1)
+      {
+      		if(!BelowWater)
+      		{
+      				if(FragPos.y < plane){
+      						discard;}
+      		}
+      		if(BelowWater)
+      		{
+      			discard;
+      		}
+      }
+*/
+      if(texture(texture_diffuse, TexCoords).a < 0.05)
+            discard;
+
+  gAlbedoSpec.rgb = texture(texture_diffuse, TexCoords).rgb;
+  gAlbedoSpec.a = texture(texture_specular, TexCoords).r;
+  gNormal.rgb = normalize(Normal);
+  gNormal.a = gl_FragCoord.z;
+  gExpensiveNormal = normalize((texture(texture_normal, TexCoords).rgb * 2.0 - 1.0) * TBN);
+  gPosition.rgb = FragPos;
+  float Depth = LinearizeDepth(gl_FragCoord.z);
+  gPosition.a = Depth;
+  gWorldSpacePosition.rgb = wFragPos;
+}

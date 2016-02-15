@@ -1,0 +1,24 @@
+#version 330 core
+
+layout(location = 0) out vec4 FragColor;
+in vec2 UV;
+
+uniform sampler2D sSampler;
+
+float gamma = 2.2;
+
+vec3 HDR(vec3 image)
+{
+    vec3 result = vec3(1.0) - exp(-image.xyz * 1.5);
+    result.xyz = pow(result.xyz, vec3(1.0 / gamma));
+    return (result.xyz - 0.5f) * 1.1f + 0.5f;
+}
+void main()
+{
+  vec4 SunTexture = texture(sSampler, UV);
+
+  FragColor.rgb = HDR(SunTexture.xyz * 3.0);
+  FragColor.a = SunTexture.a;
+
+
+}

@@ -1,0 +1,31 @@
+#version 330 core
+
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec2 texCoord;
+
+uniform vec3 sunPos;
+uniform vec3 CameraRight;
+uniform vec3 CameraUp;
+
+uniform mat4 MVP;
+uniform mat4 model;
+uniform mat4 choppedView;
+uniform mat4 view;
+uniform mat4 projection;
+
+out vec2 UV;
+
+void main()
+{
+
+vec3 vertexPosition =
+sunPos
++ CameraRight * position.x * 3.0
++ CameraUp  * position.y * 3.0;
+
+vec4 pos = projection * choppedView * vec4(vertexPosition, 1.0f);
+gl_Position = pos.xyww;
+
+UV = (texCoord/2) - 0.5;
+
+}

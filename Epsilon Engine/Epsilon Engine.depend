@@ -1,0 +1,1562 @@
+# depslib dependency file v1.0
+1455224836 source:d:\epsilon\epsilon engine\src\main.cpp
+	<iostream>
+	<Shader.h>
+	<SOIL.h>
+	<main.h>
+	<exception>
+	<assert.h>
+
+1429998427 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window.hpp
+	<SFML/System.hpp>
+	<SFML/Window/Context.hpp>
+	<SFML/Window/ContextSettings.hpp>
+	<SFML/Window/Event.hpp>
+	<SFML/Window/Joystick.hpp>
+	<SFML/Window/Keyboard.hpp>
+	<SFML/Window/Mouse.hpp>
+	<SFML/Window/Touch.hpp>
+	<SFML/Window/Sensor.hpp>
+	<SFML/Window/VideoMode.hpp>
+	<SFML/Window/Window.hpp>
+	<SFML/Window/WindowStyle.hpp>
+
+1429998427 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system.hpp
+	<SFML/Config.hpp>
+	<SFML/System/Clock.hpp>
+	<SFML/System/Err.hpp>
+	<SFML/System/InputStream.hpp>
+	<SFML/System/Lock.hpp>
+	<SFML/System/Mutex.hpp>
+	<SFML/System/Sleep.hpp>
+	<SFML/System/String.hpp>
+	<SFML/System/Thread.hpp>
+	<SFML/System/ThreadLocal.hpp>
+	<SFML/System/ThreadLocalPtr.hpp>
+	<SFML/System/Utf.hpp>
+	<SFML/System/Vector2.hpp>
+	<SFML/System/Vector3.hpp>
+
+1429998427 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\config.hpp
+	"TargetConditionals.h"
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\clock.hpp
+	<SFML/System/Export.hpp>
+	<SFML/System/Time.hpp>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\export.hpp
+	<SFML/Config.hpp>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\time.hpp
+	<SFML/System/Export.hpp>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\err.hpp
+	<SFML/System/Export.hpp>
+	<ostream>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\inputstream.hpp
+	<SFML/Config.hpp>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\lock.hpp
+	<SFML/System/Export.hpp>
+	<SFML/System/NonCopyable.hpp>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\noncopyable.hpp
+	<SFML/System/Export.hpp>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\mutex.hpp
+	<SFML/System/Export.hpp>
+	<SFML/System/NonCopyable.hpp>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\sleep.hpp
+	<SFML/System/Export.hpp>
+	<SFML/System/Time.hpp>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\string.hpp
+	<SFML/System/Export.hpp>
+	<SFML/System/Utf.hpp>
+	<locale>
+	<string>
+	<SFML/System/String.inl>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\utf.hpp
+	<SFML/Config.hpp>
+	<algorithm>
+	<locale>
+	<string>
+	<cstdlib>
+	<SFML/System/Utf.inl>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\utf.inl
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\string.inl
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\thread.hpp
+	<SFML/System/Export.hpp>
+	<SFML/System/NonCopyable.hpp>
+	<cstdlib>
+	<SFML/System/Thread.inl>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\thread.inl
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\threadlocal.hpp
+	<SFML/System/Export.hpp>
+	<SFML/System/NonCopyable.hpp>
+	<cstdlib>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\threadlocalptr.hpp
+	<SFML/System/ThreadLocal.hpp>
+	<SFML/System/ThreadLocalPtr.inl>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\threadlocalptr.inl
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\vector2.hpp
+	<SFML/System/Vector2.inl>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\vector2.inl
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\vector3.hpp
+	<SFML/System/Vector3.inl>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\vector3.inl
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\context.hpp
+	<SFML/Window/Export.hpp>
+	<SFML/Window/GlResource.hpp>
+	<SFML/Window/ContextSettings.hpp>
+	<SFML/System/NonCopyable.hpp>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\export.hpp
+	<SFML/Config.hpp>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\glresource.hpp
+	<SFML/Window/Export.hpp>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\contextsettings.hpp
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\event.hpp
+	<SFML/Config.hpp>
+	<SFML/Window/Joystick.hpp>
+	<SFML/Window/Keyboard.hpp>
+	<SFML/Window/Mouse.hpp>
+	<SFML/Window/Sensor.hpp>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\joystick.hpp
+	<SFML/Window/Export.hpp>
+	<SFML/System/String.hpp>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\keyboard.hpp
+	<SFML/Window/Export.hpp>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\mouse.hpp
+	<SFML/Window/Export.hpp>
+	<SFML/System/Vector2.hpp>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\sensor.hpp
+	<SFML/Window/Export.hpp>
+	<SFML/System/Vector3.hpp>
+	<SFML/System/Time.hpp>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\touch.hpp
+	<SFML/Window/Export.hpp>
+	<SFML/System/Vector2.hpp>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\videomode.hpp
+	<SFML/Window/Export.hpp>
+	<vector>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\window.hpp
+	<SFML/Window/Export.hpp>
+	<SFML/Window/ContextSettings.hpp>
+	<SFML/Window/VideoMode.hpp>
+	<SFML/Window/WindowHandle.hpp>
+	<SFML/Window/WindowStyle.hpp>
+	<SFML/Window/GlResource.hpp>
+	<SFML/System/Clock.hpp>
+	<SFML/System/Vector2.hpp>
+	<SFML/System/NonCopyable.hpp>
+	<SFML/System/String.hpp>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\windowhandle.hpp
+	<SFML/Config.hpp>
+
+1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\windowstyle.hpp
+
+1429998427 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\opengl.hpp
+	<SFML/Config.hpp>
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+	<GLES/gl.h>
+	<GLES/glext.h>
+	<GL/gl.h>
+	<GL/glu.h>
+	<OpenGL/gl.h>
+	<OpenGL/glu.h>
+	<OpenGLES/ES1/gl.h>
+	<OpenGLES/ES1/glext.h>
+	<GLES/gl.h>
+	<GLES/glext.h>
+
+1430001189 d:\epsilon\epsilon engine\deppend\glew\include\gl\glew.h
+	<stddef.h>
+	<inttypes.h>
+	<stdint.h>
+	<inttypes.h>
+	<OpenGL/glu.h>
+	<GL/glu.h>
+
+1429999334 d:\epsilon\epsilon engine\deppend\glfw\include\glfw\glfw3.h
+	<stddef.h>
+	<OpenGL/gl3.h>
+	<OpenGL/gl3ext.h>
+	<OpenGL/gl.h>
+	<OpenGL/glu.h>
+	<GL/glcorearb.h>
+	<GLES/gl.h>
+	<GLES/glext.h>
+	<GLES2/gl2.h>
+	<GLES2/gl2ext.h>
+	<GLES3/gl3.h>
+	<GLES3/gl2ext.h>
+	<GLES3/gl31.h>
+	<GLES3/gl2ext.h>
+	<GL/gl.h>
+	<GL/glext.h>
+	<GL/glu.h>
+
+1429999334 d:\epsilon\epsilon engine\deppend\glfw\include\\glfw\glfw3.h
+	<stddef.h>
+	<OpenGL/gl3.h>
+	<OpenGL/gl3ext.h>
+	<OpenGL/gl.h>
+	<OpenGL/glu.h>
+	<GL/glcorearb.h>
+	<GLES/gl.h>
+	<GLES/glext.h>
+	<GLES2/gl2.h>
+	<GLES2/gl2ext.h>
+	<GLES3/gl3.h>
+	<GLES3/gl2ext.h>
+	<GLES3/gl31.h>
+	<GLES3/gl2ext.h>
+	<GL/gl.h>
+	<GL/glext.h>
+	<GL/glu.h>
+
+1455220719 source:d:\epsilon\epsilon engine\src\epsilon.cpp
+	<iostream>
+	<Epsilon.h>
+	<ProgramData.h>
+	<cstdlib>
+	<time.h>
+	<Includes.h>
+	<Types.h>
+
+1455224784 d:\epsilon\epsilon engine\include\epsilon.h
+	<map>
+	<GL/glew.h>
+	<GLFW/glfw3.h>
+	<Texture.h>
+	<Shader.h>
+	<Skybox.h>
+	<camera.h>
+	<Model.h>
+	<Text.h>
+	<Terrain.h>
+	<Grass.h>
+	<PostProcess.h>
+	<Water.h>
+	<Sun.h>
+	<BSP.h>
+	<MD5_Model.h>
+	<MD5_Anim.h>
+
+1430094264 d:\epsilon\epsilon engine\include\app.h
+	<GL/glew.h>
+	<GLFW/glfw3.h>
+	<iostream>
+	<string>
+
+1455219871 source:d:\epsilon\epsilon engine\src\shader.cpp
+	<Shader.h>
+	<stdio.h>
+	<string>
+	<vector>
+	<iostream>
+	<fstream>
+	<algorithm>
+
+1452305552 d:\epsilon\epsilon engine\include\shader.h
+	<GL/glew.h>
+	<string>
+
+1430089633 d:\epsilon\epsilon engine\include\scene.h
+	<Shader.h>
+	<Skybox.h>
+	<string>
+	<vector>
+	<map>
+
+1430088181 source:d:\epsilon\epsilon engine\src\scene.cpp
+	<iostream>
+	<fstream>
+	<string>
+	<vector>
+	<cstdlib>
+	<Scene.h>
+
+1455221493 d:\epsilon\epsilon engine\include\skybox.h
+	<string>
+	<GL/glew.h>
+	<camera.h>
+	<Model.h>
+	<Shader.h>
+
+1455211377 source:d:\epsilon\epsilon engine\src\skybox.cpp
+	<vector>
+	<iostream>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<glm/gtc/type_ptr.hpp>
+	<SOIL.h>
+	<Skybox.h>
+	<SkyboxData.h>
+
+1396053918 d:\epsilon\epsilon engine\deppend\soil\src\soil.h
+
+1395988090 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\cimport.h
+	"types.h"
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\types.h
+	<sys/types.h>
+	<memory.h>
+	<math.h>
+	<stddef.h>
+	"defs.h"
+	"vector3.h"
+	"vector2.h"
+	"color4.h"
+	"matrix3x3.h"
+	"matrix4x4.h"
+	"quaternion.h"
+	<new>
+	<string>
+	"./Compiler/pushpack1.h"
+	"./Compiler/poppack1.h"
+	"vector2.inl"
+	"vector3.inl"
+	"color4.inl"
+	"quaternion.inl"
+	"matrix3x3.inl"
+	"matrix4x4.inl"
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\defs.h
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\vector3.h
+	<math.h>
+	"./Compiler/pushpack1.h"
+	"./Compiler/poppack1.h"
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\compiler\pushpack1.h
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\compiler\poppack1.h
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\vector2.h
+	<math.h>
+	"./Compiler/pushpack1.h"
+	"./Compiler/poppack1.h"
+
+1395988090 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\color4.h
+	"./Compiler/pushpack1.h"
+	"./Compiler/poppack1.h"
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\matrix3x3.h
+	"./Compiler/pushpack1.h"
+	"./Compiler/poppack1.h"
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\matrix4x4.h
+	"./Compiler/pushpack1.h"
+	"./Compiler/poppack1.h"
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\quaternion.h
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\vector2.inl
+	"vector2.h"
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\vector3.inl
+	"vector3.h"
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\color4.inl
+	"color4.h"
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\quaternion.inl
+	"quaternion.h"
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\matrix3x3.inl
+	"matrix3x3.h"
+	"matrix4x4.h"
+	<algorithm>
+	<limits>
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\matrix4x4.inl
+	"matrix4x4.h"
+	"matrix3x3.h"
+	"quaternion.h"
+	<algorithm>
+	<limits>
+	<math.h>
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\scene.h
+	"types.h"
+	"texture.h"
+	"mesh.h"
+	"light.h"
+	"camera.h"
+	"material.h"
+	"anim.h"
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\texture.h
+	"types.h"
+	"./Compiler/pushpack1.h"
+	"./Compiler/poppack1.h"
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\mesh.h
+	"types.h"
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\light.h
+	"types.h"
+
+1395988090 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\camera.h
+	"types.h"
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\material.h
+	"types.h"
+	"./Compiler/pushpack1.h"
+	"./Compiler/poppack1.h"
+	"material.inl"
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\material.inl
+
+1395988090 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\anim.h
+	"types.h"
+	"quaternion.h"
+
+1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\postprocess.h
+	"types.h"
+
+1452798524 source:d:\epsilon\epsilon engine\src\camera.cpp
+	<iostream>
+	<camera.h>
+	<math.h>
+
+1452742885 d:\epsilon\epsilon engine\include\camera.h
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<glm/gtc/quaternion.hpp>
+	<GLFW/glfw3.h>
+
+1455222171 d:\epsilon\epsilon engine\include\texture.h
+	<iostream>
+	<GL/glew.h>
+	<SOIL.h>
+	<ProgramData.h>
+
+1455223625 d:\epsilon\epsilon engine\include\main.h
+	<ProgramData.h>
+	<Epsilon.h>
+
+1451178317 d:\epsilon\epsilon engine\include\skyboxdata.h
+
+1455220173 d:\epsilon\epsilon engine\include\model.h
+	<string>
+	<fstream>
+	<sstream>
+	<iostream>
+	<map>
+	<vector>
+	<GL/glew.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<assimp/cimport.h>
+	<assimp/scene.h>
+	<assimp/postprocess.h>
+	<Texture.h>
+	<Mesh.h>
+
+1433317369 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\importer.hpp
+	"types.h"
+	"config.h"
+
+1433317369 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\config.h
+
+1433317369 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\metadata.h
+	<assert.h>
+	"Compiler/pstdint.h"
+	<stdint.h>
+	<string>
+
+1433317369 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\compiler\pstdint.h
+	<stddef.h>
+	<limits.h>
+	<signal.h>
+	<stdint.h>
+	<wchar.h>
+
+1452305881 d:\epsilon\epsilon engine\include\mesh.h
+	<string>
+	<fstream>
+	<sstream>
+	<iostream>
+	<vector>
+	<GL/glew.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Shader.h>
+
+1455222171 d:\epsilon\epsilon engine\include\text.h
+	<ft2build.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Shader.h>
+
+1237038326 d:\epsilon\epsilon engine\deppend\freetype2\include\ft2build.h
+	<freetype/config/ftheader.h>
+
+1237038326 d:\epsilon\epsilon engine\deppend\freetype2\include\freetype\config\ftheader.h
+
+1430970208 source:d:\epsilon\epsilon engine\src\resources.rc
+	<Windows.h>
+
+1451178317 d:\epsilon\epsilon engine\include\programdata.h
+
+1451178317 source:d:\epsilon\epsilon engine\src\programdata.cpp
+	<iostream>
+	<INIReader.h>
+	<ProgramData.h>
+
+1400904193 d:\epsilon\epsilon engine\deppend\ini\include\inireader.h
+	<map>
+	<string>
+
+1455222171 d:\epsilon\epsilon engine\include\terrain.h
+	<vector>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Shader.h>
+	<Texture.h>
+
+1455220094 source:d:\epsilon\epsilon engine\src\terrain.cpp
+	<iostream>
+	<fstream>
+	<Terrain.h>
+	<SOIL.h>
+	<Includes.h>
+
+1452305588 d:\epsilon\epsilon engine\include\grass.h
+	<GL/glew.h>
+	<string>
+	<iostream>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Shader.h>
+
+1455222171 d:\epsilon\epsilon engine\include\postprocess.h
+	<GL/glew.h>
+	<Shader.h>
+	<camera.h>
+	<vector>
+
+1455155858 source:d:\epsilon\epsilon engine\src\postprocess.cpp
+	<PostProcess.h>
+	<iostream>
+	<ProgramData.h>
+	<glm/gtx/compatibility.hpp>
+	<glm/gtc/type_ptr.hpp>
+	<random>
+	<string>
+	<Includes.h>
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\cimport.h
+	"types.h"
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\types.h
+	<sys/types.h>
+	<memory.h>
+	<math.h>
+	<stddef.h>
+	<string.h>
+	<limits.h>
+	"defs.h"
+	"vector3.h"
+	"vector2.h"
+	"color4.h"
+	"matrix3x3.h"
+	"matrix4x4.h"
+	"quaternion.h"
+	<cstring>
+	<new>
+	<string>
+	"./Compiler/pushpack1.h"
+	"./Compiler/poppack1.h"
+	"vector2.inl"
+	"vector3.inl"
+	"color4.inl"
+	"quaternion.inl"
+	"matrix3x3.inl"
+	"matrix4x4.inl"
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\defs.h
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\vector3.h
+	<cmath>
+	<math.h>
+	"./Compiler/pushpack1.h"
+	"./Compiler/poppack1.h"
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\compiler\pushpack1.h
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\compiler\poppack1.h
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\vector2.h
+	<cmath>
+	<math.h>
+	"./Compiler/pushpack1.h"
+	"./Compiler/poppack1.h"
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\color4.h
+	"./Compiler/pushpack1.h"
+	"./Compiler/poppack1.h"
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\matrix3x3.h
+	"./Compiler/pushpack1.h"
+	"./Compiler/poppack1.h"
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\matrix4x4.h
+	"./Compiler/pushpack1.h"
+	"./Compiler/poppack1.h"
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\quaternion.h
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\vector2.inl
+	"vector2.h"
+	<cmath>
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\vector3.inl
+	"vector3.h"
+	<cmath>
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\color4.inl
+	"color4.h"
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\quaternion.inl
+	"quaternion.h"
+	<cmath>
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\matrix3x3.inl
+	"matrix3x3.h"
+	"matrix4x4.h"
+	<algorithm>
+	<cmath>
+	<limits>
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\matrix4x4.inl
+	"matrix4x4.h"
+	"matrix3x3.h"
+	"quaternion.h"
+	<algorithm>
+	<limits>
+	<cmath>
+	<math.h>
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\scene.h
+	"types.h"
+	"texture.h"
+	"mesh.h"
+	"light.h"
+	"camera.h"
+	"material.h"
+	"anim.h"
+	"metadata.h"
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\texture.h
+	"types.h"
+	"./Compiler/pushpack1.h"
+	"./Compiler/poppack1.h"
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\mesh.h
+	"types.h"
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\light.h
+	"types.h"
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\camera.h
+	"types.h"
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\material.h
+	"types.h"
+	"./Compiler/pushpack1.h"
+	"./Compiler/poppack1.h"
+	"material.inl"
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\material.inl
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\anim.h
+	"types.h"
+	"quaternion.h"
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\metadata.h
+	<assert.h>
+	"Compiler/pstdint.h"
+	<stdint.h>
+	<string>
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\compiler\pstdint.h
+	<stddef.h>
+	<limits.h>
+	<signal.h>
+	<stdint.h>
+	<wchar.h>
+
+1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\postprocess.h
+	"types.h"
+
+1452790639 d:\epsilon\epsilon engine\include\includes.h
+	<iostream>
+	<string>
+	<sstream>
+	<ctime>
+	<glm/gtc/quaternion.hpp>
+
+1452305699 source:d:\epsilon\epsilon engine\src\water.cpp
+	<Water.h>
+
+1455222171 d:\epsilon\epsilon engine\include\water.h
+	<GL/glew.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Shader.h>
+	<Texture.h>
+	<Camera.h>
+	<vector>
+
+1437074035 d:\epsilon\epsilon engine\include\inputmanagement.h
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<GLFW/glfw3.h>
+	<Includes.h>
+
+1388306390 d:\epsilon\epsilon engine\deppend\glm\glm.hpp
+	"core/_fixes.hpp"
+	<cmath>
+	<climits>
+	<cfloat>
+	<limits>
+	<cstdio>
+	"core/setup.hpp"
+	"./core/_detail.hpp"
+	"./core/_vectorize.hpp"
+	"./core/type.hpp"
+	"./core/func_trigonometric.hpp"
+	"./core/func_exponential.hpp"
+	"./core/func_common.hpp"
+	"./core/func_packing.hpp"
+	"./core/func_geometric.hpp"
+	"./core/func_matrix.hpp"
+	"./core/func_vector_relational.hpp"
+	"./core/func_integer.hpp"
+	"./core/func_noise.hpp"
+	"./core/_swizzle.hpp"
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\_fixes.hpp
+	<cmath>
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\setup.hpp
+	<immintrin.h>
+	<immintrin.h>
+	<smmintrin.h>
+	<pmmintrin.h>
+	<emmintrin.h>
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\_detail.hpp
+	"setup.hpp"
+	<cassert>
+	<cstdint>
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\_vectorize.hpp
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type.hpp
+	"type_half.hpp"
+	"type_float.hpp"
+	"type_int.hpp"
+	"type_gentype.hpp"
+	"type_vec1.hpp"
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+	"type_mat2x2.hpp"
+	"type_mat2x3.hpp"
+	"type_mat2x4.hpp"
+	"type_mat3x2.hpp"
+	"type_mat3x3.hpp"
+	"type_mat3x4.hpp"
+	"type_mat4x2.hpp"
+	"type_mat4x3.hpp"
+	"type_mat4x4.hpp"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_half.hpp
+	<cstdlib>
+	"type_half.inl"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_half.inl
+	"_detail.hpp"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_float.hpp
+	"type_half.hpp"
+	"setup.hpp"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_int.hpp
+	"setup.hpp"
+	"_detail.hpp"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_gentype.hpp
+	"type_size.hpp"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_size.hpp
+	<cstdlib>
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_vec1.hpp
+	"type_vec.hpp"
+	"type_float.hpp"
+	"type_int.hpp"
+	"type_size.hpp"
+	"_swizzle.hpp"
+	"type_vec1.inl"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_vec.hpp
+	"type_gentype.hpp"
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\_swizzle.hpp
+	"_swizzle_func.hpp"
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\_swizzle_func.hpp
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_vec1.inl
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_vec2.hpp
+	"type_vec.hpp"
+	"type_float.hpp"
+	"type_int.hpp"
+	"type_size.hpp"
+	"_swizzle.hpp"
+	"type_vec2.inl"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_vec2.inl
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_vec3.hpp
+	"type_vec.hpp"
+	"type_float.hpp"
+	"type_int.hpp"
+	"type_size.hpp"
+	"_swizzle.hpp"
+	"type_vec3.inl"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_vec3.inl
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_vec4.hpp
+	"type_vec.hpp"
+	"type_float.hpp"
+	"type_int.hpp"
+	"type_size.hpp"
+	"_swizzle.hpp"
+	"type_vec4.inl"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_vec4.inl
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat2x2.hpp
+	"type_mat.hpp"
+	"type_mat2x2.inl"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat.hpp
+	"type_gentype.hpp"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat2x2.inl
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat2x3.hpp
+	"type_mat.hpp"
+	"type_mat2x3.inl"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat2x3.inl
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat2x4.hpp
+	"type_mat.hpp"
+	"type_mat2x4.inl"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat2x4.inl
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat3x2.hpp
+	"type_mat.hpp"
+	"type_mat3x2.inl"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat3x2.inl
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat3x3.hpp
+	"type_mat.hpp"
+	"type_mat3x3.inl"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat3x3.inl
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat3x4.hpp
+	"type_mat.hpp"
+	"type_mat3x4.inl"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat3x4.inl
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat4x2.hpp
+	"type_mat.hpp"
+	"type_mat4x2.inl"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat4x2.inl
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat4x3.hpp
+	"type_mat.hpp"
+	"type_mat4x3.inl"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat4x3.inl
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat4x4.hpp
+	"type_mat.hpp"
+	"type_mat4x4.inl"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat4x4.inl
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_trigonometric.hpp
+	"func_trigonometric.inl"
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_trigonometric.inl
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_exponential.hpp
+	"func_exponential.inl"
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_exponential.inl
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_common.hpp
+	"_fixes.hpp"
+	"func_common.inl"
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_common.inl
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_packing.hpp
+	"func_packing.inl"
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_packing.inl
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_geometric.hpp
+	"func_geometric.inl"
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_geometric.inl
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_matrix.hpp
+	"func_matrix.inl"
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_matrix.inl
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_vector_relational.hpp
+	"_detail.hpp"
+	"func_vector_relational.inl"
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_vector_relational.inl
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_integer.hpp
+	"func_integer.inl"
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_integer.inl
+	<intrin.h>
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_noise.hpp
+	"func_noise.inl"
+
+1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_noise.inl
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\gtc\matrix_transform.hpp
+	"../glm.hpp"
+	"matrix_transform.inl"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\gtc\matrix_transform.inl
+
+1388306393 d:\epsilon\epsilon engine\deppend\glm\gtx\compatibility.hpp
+	"../glm.hpp"
+	"../gtc/half_float.hpp"
+	"../gtc/quaternion.hpp"
+	<cfloat>
+	<cmath>
+	"compatibility.inl"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\gtc\half_float.hpp
+	"../glm.hpp"
+	"half_float.inl"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\gtc\half_float.inl
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\gtc\quaternion.hpp
+	"../glm.hpp"
+	"../gtc/half_float.hpp"
+	"quaternion.inl"
+
+1388306392 d:\epsilon\epsilon engine\deppend\glm\gtc\quaternion.inl
+	<limits>
+
+1388306393 d:\epsilon\epsilon engine\deppend\glm\gtx\compatibility.inl
+
+1388306393 d:\epsilon\epsilon engine\deppend\glm\gtc\type_ptr.hpp
+	"../glm.hpp"
+	"../gtc/half_float.hpp"
+	"../gtc/quaternion.hpp"
+	<cstring>
+	"type_ptr.inl"
+
+1388306393 d:\epsilon\epsilon engine\deppend\glm\gtc\type_ptr.inl
+
+1451178317 d:\epsilon\epsilon engine\include\sun.h
+	<GL/glew.h>
+	<GLFW/glfw3.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Texture.h>
+	<Shader.h>
+
+1455211470 source:d:\epsilon\epsilon engine\src\sun.cpp
+	<Sun.h>
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\glm.hpp
+	"detail/_fixes.hpp"
+	<cmath>
+	<climits>
+	<cfloat>
+	<limits>
+	<cassert>
+	"fwd.hpp"
+	"vec2.hpp"
+	"vec3.hpp"
+	"vec4.hpp"
+	"mat2x2.hpp"
+	"mat2x3.hpp"
+	"mat2x4.hpp"
+	"mat3x2.hpp"
+	"mat3x3.hpp"
+	"mat3x4.hpp"
+	"mat4x2.hpp"
+	"mat4x3.hpp"
+	"mat4x4.hpp"
+	"trigonometric.hpp"
+	"exponential.hpp"
+	"common.hpp"
+	"packing.hpp"
+	"geometric.hpp"
+	"matrix.hpp"
+	"vector_relational.hpp"
+	"integer.hpp"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\_fixes.hpp
+	<cmath>
+
+1438464936 d:\epsilon\epsilon engine\deppend\glm\glm\fwd.hpp
+	"detail/type_int.hpp"
+	"detail/type_float.hpp"
+	"detail/type_vec.hpp"
+	"detail/type_mat.hpp"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_int.hpp
+	"setup.hpp"
+	<type_traits>
+	<cstdint>
+
+1441569934 d:\epsilon\epsilon engine\deppend\glm\glm\detail\setup.hpp
+	<cassert>
+	<cstddef>
+	<cuda.h>
+	<intrin.h>
+	<immintrin.h>
+	<immintrin.h>
+	<smmintrin.h>
+	<pmmintrin.h>
+	<emmintrin.h>
+	<__config>
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_float.hpp
+	"setup.hpp"
+
+1438465103 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_vec.hpp
+	"precision.hpp"
+	"type_int.hpp"
+
+1441038560 d:\epsilon\epsilon engine\deppend\glm\glm\detail\precision.hpp
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_mat.hpp
+	"precision.hpp"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\vec2.hpp
+	"detail/type_vec2.hpp"
+
+1441568189 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_vec2.hpp
+	"type_vec.hpp"
+	"_swizzle.hpp"
+	"_swizzle_func.hpp"
+	<cstddef>
+	"type_vec2.inl"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\_swizzle.hpp
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\_swizzle_func.hpp
+
+1441568189 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_vec2.inl
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\vec3.hpp
+	"detail/type_vec3.hpp"
+
+1441568189 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_vec3.hpp
+	"type_vec.hpp"
+	"_swizzle.hpp"
+	"_swizzle_func.hpp"
+	<cstddef>
+	"type_vec3.inl"
+
+1441568189 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_vec3.inl
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\vec4.hpp
+	"detail/type_vec4.hpp"
+
+1441568189 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_vec4.hpp
+	"setup.hpp"
+	"type_vec.hpp"
+	"_swizzle.hpp"
+	"_swizzle_func.hpp"
+	<cstddef>
+	"type_vec4.inl"
+
+1451348181 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_vec4.inl
+	"type_vec4_sse2.inl"
+	"type_vec4_avx.inl"
+	"type_vec4_avx2.inl"
+
+1441038892 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_vec4_sse2.inl
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_vec4_avx.inl
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_vec4_avx2.inl
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\mat2x2.hpp
+	"detail/type_mat2x2.hpp"
+
+1440864226 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_mat2x2.hpp
+	"../fwd.hpp"
+	"type_vec2.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat2x2.inl"
+
+1438470808 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_mat2x2.inl
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\mat2x3.hpp
+	"detail/type_mat2x3.hpp"
+
+1438468469 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_mat2x3.hpp
+	"../fwd.hpp"
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat2x3.inl"
+
+1438470737 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_mat2x3.inl
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\mat2x4.hpp
+	"detail/type_mat2x4.hpp"
+
+1438468425 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_mat2x4.hpp
+	"../fwd.hpp"
+	"type_vec2.hpp"
+	"type_vec4.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat2x4.inl"
+
+1438470573 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_mat2x4.inl
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\mat3x2.hpp
+	"detail/type_mat3x2.hpp"
+
+1438468285 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_mat3x2.hpp
+	"../fwd.hpp"
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat3x2.inl"
+
+1438470418 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_mat3x2.inl
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\mat3x3.hpp
+	"detail/type_mat3x3.hpp"
+
+1438468227 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_mat3x3.hpp
+	"../fwd.hpp"
+	"type_vec3.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat3x3.inl"
+
+1438470302 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_mat3x3.inl
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\mat3x4.hpp
+	"detail/type_mat3x4.hpp"
+
+1438468095 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_mat3x4.hpp
+	"../fwd.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat3x4.inl"
+
+1438470191 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_mat3x4.inl
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\mat4x2.hpp
+	"detail/type_mat4x2.hpp"
+
+1438468017 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_mat4x2.hpp
+	"../fwd.hpp"
+	"type_vec2.hpp"
+	"type_vec4.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat4x2.inl"
+
+1438470017 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_mat4x2.inl
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\mat4x3.hpp
+	"detail/type_mat4x3.hpp"
+
+1438467958 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_mat4x3.hpp
+	"../fwd.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat4x3.inl"
+
+1438470532 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_mat4x3.inl
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\mat4x4.hpp
+	"detail/type_mat4x4.hpp"
+
+1438467899 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_mat4x4.hpp
+	"../fwd.hpp"
+	"type_vec4.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat4x4.inl"
+
+1438469995 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_mat4x4.inl
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\trigonometric.hpp
+	"detail/func_trigonometric.hpp"
+
+1441051837 d:\epsilon\epsilon engine\deppend\glm\glm\detail\func_trigonometric.hpp
+	"setup.hpp"
+	"precision.hpp"
+	"func_trigonometric.inl"
+
+1441052446 d:\epsilon\epsilon engine\deppend\glm\glm\detail\func_trigonometric.inl
+	"_vectorize.hpp"
+	<cmath>
+	<limits>
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\_vectorize.hpp
+	"type_vec1.hpp"
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+
+1441568189 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_vec1.hpp
+	"../fwd.hpp"
+	"type_vec.hpp"
+	"_swizzle.hpp"
+	"_swizzle_func.hpp"
+	<cstddef>
+	"type_vec1.inl"
+
+1441568189 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_vec1.inl
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\exponential.hpp
+	"detail/func_exponential.hpp"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\func_exponential.hpp
+	"type_vec1.hpp"
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+	<cmath>
+	"func_exponential.inl"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\func_exponential.inl
+	"func_vector_relational.hpp"
+	"_vectorize.hpp"
+	<limits>
+	<cmath>
+	<cassert>
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\func_vector_relational.hpp
+	"precision.hpp"
+	"setup.hpp"
+	"func_vector_relational.inl"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\func_vector_relational.inl
+	<limits>
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\common.hpp
+	"detail/func_common.hpp"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\func_common.hpp
+	"setup.hpp"
+	"precision.hpp"
+	"type_int.hpp"
+	"_fixes.hpp"
+	"func_common.inl"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\func_common.inl
+	"func_vector_relational.hpp"
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+	"_vectorize.hpp"
+	<limits>
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\packing.hpp
+	"detail/func_packing.hpp"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\func_packing.hpp
+	"type_vec2.hpp"
+	"type_vec4.hpp"
+	"func_packing.inl"
+
+1437262117 d:\epsilon\epsilon engine\deppend\glm\glm\detail\func_packing.inl
+	"func_common.hpp"
+	"type_half.hpp"
+	"../fwd.hpp"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_half.hpp
+	"setup.hpp"
+	"type_half.inl"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\type_half.inl
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\geometric.hpp
+	"detail/func_geometric.hpp"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\func_geometric.hpp
+	"type_vec3.hpp"
+	"func_geometric.inl"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\func_geometric.inl
+	"func_exponential.hpp"
+	"func_common.hpp"
+	"type_vec2.hpp"
+	"type_vec4.hpp"
+	"type_float.hpp"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\matrix.hpp
+	"detail/func_matrix.hpp"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\func_matrix.hpp
+	"../detail/precision.hpp"
+	"../detail/setup.hpp"
+	"../detail/type_mat.hpp"
+	"../vec2.hpp"
+	"../vec3.hpp"
+	"../vec4.hpp"
+	"../mat2x2.hpp"
+	"../mat2x3.hpp"
+	"../mat2x4.hpp"
+	"../mat3x2.hpp"
+	"../mat3x3.hpp"
+	"../mat3x4.hpp"
+	"../mat4x2.hpp"
+	"../mat4x3.hpp"
+	"../mat4x4.hpp"
+	"func_matrix.inl"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\func_matrix.inl
+	"../geometric.hpp"
+	<limits>
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\vector_relational.hpp
+	"detail/func_vector_relational.hpp"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\integer.hpp
+	"detail/func_integer.hpp"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\detail\func_integer.hpp
+	"setup.hpp"
+	"precision.hpp"
+	"func_common.hpp"
+	"func_vector_relational.hpp"
+	"func_integer.inl"
+
+1426535103 d:\epsilon\epsilon engine\deppend\glm\glm\detail\func_integer.inl
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+	"type_int.hpp"
+	"_vectorize.hpp"
+	<intrin.h>
+	<limits>
+
+1441038256 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\matrix_transform.hpp
+	"../mat4x4.hpp"
+	"../vec2.hpp"
+	"../vec3.hpp"
+	"../vec4.hpp"
+	"../gtc/constants.hpp"
+	"matrix_transform.inl"
+
+1441051454 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\constants.hpp
+	"../detail/setup.hpp"
+	"constants.inl"
+
+1441052694 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\constants.inl
+	<limits>
+
+1426534869 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\matrix_transform.inl
+	"../geometric.hpp"
+	"../trigonometric.hpp"
+	"../matrix.hpp"
+
+1437315607 d:\epsilon\epsilon engine\deppend\glm\glm\gtx\compatibility.hpp
+	"../glm.hpp"
+	"../gtc/quaternion.hpp"
+	<cfloat>
+	<cmath>
+	"compatibility.inl"
+
+1438471086 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\quaternion.hpp
+	"../mat3x3.hpp"
+	"../mat4x4.hpp"
+	"../vec3.hpp"
+	"../vec4.hpp"
+	"../gtc/constants.hpp"
+	"quaternion.inl"
+
+1438472000 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\quaternion.inl
+	"../trigonometric.hpp"
+	"../geometric.hpp"
+	"../exponential.hpp"
+	<limits>
+
+1437315632 d:\epsilon\epsilon engine\deppend\glm\glm\gtx\compatibility.inl
+	<limits>
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\type_ptr.hpp
+	"../gtc/quaternion.hpp"
+	"../vec2.hpp"
+	"../vec3.hpp"
+	"../vec4.hpp"
+	"../mat2x2.hpp"
+	"../mat2x3.hpp"
+	"../mat2x4.hpp"
+	"../mat3x2.hpp"
+	"../mat3x3.hpp"
+	"../mat3x4.hpp"
+	"../mat4x2.hpp"
+	"../mat4x3.hpp"
+	"../mat4x4.hpp"
+	<cstring>
+	"type_ptr.inl"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\type_ptr.inl
+	<cstring>
+
+1455220094 source:d:\epsilon\epsilon engine\src\bsp.cpp
+	<GL/glew.h>
+	<BSP.h>
+	<glm/glm.hpp>
+	<vector>
+	<iostream>
+	<Frustum.h>
+	<Texture.h>
+
+1455221671 d:\epsilon\epsilon engine\include\bsp.h
+	<cstdlib>
+	<cstdio>
+	<cstring>
+	<vector>
+	<map>
+	<GLFW/glfw3.h>
+	"BSPFace.h"
+	"Frustum.h"
+
+1451722225 d:\epsilon\epsilon engine\include\bspface.h
+	<glm/glm.hpp>
+	<GL/glew.h>
+	<iostream>
+	<string>
+	<vector>
+	<SOIL.h>
+
+1451907924 d:\epsilon\epsilon engine\include\frustum.h
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+
+1451907924 source:d:\epsilon\epsilon engine\src\frustum.cpp
+	"Frustum.h"
+	<iostream>
+
+1452307752 source:d:\epsilon\epsilon engine\src\resourcemanager.cpp
+	"ResourceManager.h"
+
+1452307597 d:\epsilon\epsilon engine\include\resourcemanager.h
+	<Texture.h>
+	<Model.h>
+	<Water.h>
+	<Terrain.h>
+	<Grass.h>
+
+1452790291 source:d:\epsilon\epsilon engine\src\md5_anim.cpp
+	<MD5_Anim.h>
+	<Includes.h>
+
+1452790491 d:\epsilon\epsilon engine\include\md5_anim.h
+	<vector>
+	<string>
+	<iostream>
+	<fstream>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<glm/gtc/quaternion.hpp>
+
+1455220241 source:d:\epsilon\epsilon engine\src\md5_model.cpp
+	<Includes.h>
+	<iostream>
+	<MD5_Model.h>
+	<Texture.h>
+
+1451347788 d:\epsilon\epsilon engine\include\md5_model.h
+	<GL/glew.h>
+	<string>
+	<vector>
+	<glm/glm.hpp>
+	<glm/gtc/quaternion.hpp>
+	"MD5_Anim.h"
+	<SOIL.h>
+
+1452304617 d:\epsilon\epsilon engine\include\types.h
+

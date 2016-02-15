@@ -1,0 +1,96 @@
+#version 330 core
+
+in vec2 TexCoords;
+in vec4 clipSpace;;
+in vec3 viewDir;
+in float visibility;
+
+uniform sampler2D reflectionSampler;
+uniform sampler2D refractionSampler;
+uniform sampler2D normalSampler;
+uniform sampler2D DuDvSampler;
+uniform sampler2D depthSampler;
+uniform sampler2D foamSampler;
+uniform sampler2D diffuseSampler;
+
+uniform vec3 LightDirection;
+
+uniform vec3 cameraDirection;
+uniform float time;
+
+out vec4 FragColor;
+
+vec4 SkyColor = vec4(0.5,0.5,0.5, 1.0);
+vec3 NightFog = vec3(0.1,0.1,0.1);
+    vec3 lightcolor = normalize(vec3(250, 190, 108));
+
+    const float density = 0.005;
+    const float gradient = 3.5;
+
+void main()
+{
+    float moveFactor = 0.002 * time;
+    float distStrenght =  0.009;
+
+    vec2 normalizedDeviceCoordinates = (clipSpace.xy / clipSpace.w) / 2.0 + 0.5;
+
+    vec2 refracCoords = vec2(normalizedDeviceCoordinates.x, normalizedDeviceCoordinates.y );
+    vec2 reflecCoords = vec2(normalizedDeviceCoordinates.x, -normalizedDeviceCoordinates.y);
+
+    vec2 distortion1 = (texture(DuDvSampler,vec2(TexCoords.x + moveFactor - moveFactor + 5, TexCoords.y - moveFactor)).rg * 2.0 - 1.0) * distStrenght;
+    vec2 distortion2 = (texture(DuDvSampler,vec2(TexCoords.x + moveFactor + moveFactor, TexCoords.y + moveFactor - 5)).rg * 2.0 - 1.0) * distStrenght;
+    vec2 finalDist = distortion1 + distortion2;
+
+    float near = 0.1;
+    float far = 3000.0f;
+    float depth = texture(depthSampler, refracCoords).r;
+    float floorDistance = 2.0 * near * far / (far + near - (2.0 * depth - 1.0) * (far - near));
+
+    depth = gl_FragCoord.z;
+    float waterDistance = 2.0 * near * far / (far + near - (2.0 * depth - 1.0) * (far - near));
+    float waterDepth = floorDistance - waterDistance;
+
+    refracCoords += finalDist;
+    refracCoords = clamp(refracCoords, 0.001, 0.999);
+
+    reflecCoords += finalDist;
+    reflecCoords.x = clamp(reflecCoords.x, 0.001, 0.999);
+    reflecCoords.y = clamp(reflecCoords.y, -0.999, -0.001);
+
+    vec4 refractiontex = texture(refractionSampler, refracCoords);
+    vec4 reflectiontex =  texture(reflectionSampler, reflecCoords);
+
+    vec3 viewVector = normalize(viewDir);
+    if(viewVector.y < 0.0)
+    viewVector.y = -1 * viewVector.y;
+
+    vec4 DiffuseTex = texture(diffuseSampler, finalDist);
+
+    vec4 normaltex = texture(normalSampler, finalDist);
+    vec3 normal = vec3(normaltex.r * 2.0 - 1.0, normaltex.b, normaltex.g * 2.0 - 1.0);
+    normal = normalize(normal);
+
+    float refractiveFactor = dot(viewVector, normal);
+    refractiveFactor = clamp(refractiveFactor, 0.0, 1.0);
+
+    vec3 lightdirection = vec3(0.0, -0.8, -0.5);
+    vec3 lightDir = normalize(LightDirection);
+    vec3 halfway = normalize(LightDirection.xzy + viewVector);
+
+    float spec = pow(max(dot(normal, halfway), 0.0), 32.0);
+    vec3 specular =  spec * vec3(1.3);//) normalize(vec3(244, 234, 108));
+
+    vec4 foamTexture = texture(foamSampler,TexCoords*5 + moveFactor);
+    FragColor = mix(reflectiontex, refractiontex , 0.0/* refractiveFactor*//*clamp(waterDepth/12.0, 0.0, 1.0)*/);
+    FragColor = FragColor/* * DiffuseTex*/;
+    FragColor = mix(FragColor, vec4(specular * lightcolor, 1.0), 0.5);
+    //FragColor = mix(foamTexture, FragColor, clamp(waterDepth/0.2, 0.0, 1.0));
+      float  visibility = exp(-pow((waterDistance*density), gradient));
+      	SkyColor = mix(normalize(vec4(250, 190, 108, 1.0)), SkyColor, abs(LightDirection.y)+0.2);
+        	vec3 fogColor = mix(NightFog, SkyColor.rgb, clamp(LightDirection.y + 1, 0.0, 1.0));
+      FragColor = mix(vec4(fogColor, 1.0), FragColor, visibility );
+    FragColor.a = max(clamp(waterDepth/4.0, 0.0, 1.0), 0.1);
+
+
+
+}

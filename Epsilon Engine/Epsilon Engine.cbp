@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Epsilon Engine" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option platforms="Windows;" />
+				<Option output="bin/Debug/Epsilon Engine" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/Debug" />
+				<Option object_output="obj/Debug/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option parameters="-static" />
+				<Compiler>
+					<Add option="-g" />
+					<Add directory="deppend/glew/include" />
+					<Add directory="deppend/glfw/include" />
+					<Add directory="deppend/glm" />
+					<Add directory="deppend/assimp/include" />
+					<Add directory="include" />
+					<Add directory="deppend/SOIL/src" />
+					<Add directory="deppend/FreeType2/include" />
+					<Add directory="deppend/ini/include" />
+				</Compiler>
+				<Linker>
+					<Add option="-static -static-libgcc -static-libstdc++" />
+					<Add library="SOIL" />
+					<Add library="opengl32" />
+					<Add library="deppend\glfw\lib\glfw3dll.a" />
+					<Add library="deppend\assimp\lib\assimp_release-dll_win32\assimp.lib" />
+					<Add library="freetype240" />
+					<Add library="inih" />
+					<Add library="glew32.dll" />
+					<Add library="mingw32" />
+					<Add directory="deppend/glew/lib" />
+					<Add directory="deppend/glfw/lib" />
+					<Add directory="deppend/SOIL/lib" />
+					<Add directory="deppend/FreeType2/lib" />
+					<Add directory="deppend/ini/lib" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/Epsilon Engine" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/Release" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-std=c++11" />
+					<Add directory="deppend/glew/include" />
+					<Add directory="deppend/glfw/include" />
+					<Add directory="deppend/glm" />
+					<Add directory="deppend/assimp2/include" />
+					<Add directory="deppend" />
+					<Add directory="deppend/SOIL/src" />
+					<Add directory="deppend/FreeType2/include" />
+					<Add directory="deppend/ini/include" />
+					<Add directory="include" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-lSOIL" />
+					<Add option="-lopengl32" />
+					<Add option="deppend\glfw\lib\glfw3dll.a" />
+					<Add option="deppend\assimp\lib\assimp_release-dll_win32\assimp.lib" />
+					<Add option="-lfreetype240" />
+					<Add option="-linih" />
+					<Add option="-lglew32.dll" />
+					<Add directory="deppend/glew/lib" />
+					<Add directory="deppend/glfw/lib" />
+					<Add directory="deppend/SOIL/lib" />
+					<Add directory="deppend/FreeType2/lib" />
+					<Add directory="deppend/ini/lib" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="bin/Debug/shaders/ShadowMapping.fglsl" />
+		<Unit filename="bin/Debug/shaders/ShadowMapping.vglsl" />
+		<Unit filename="bin/Debug/shaders/StandardShading.fglsl" />
+		<Unit filename="bin/Debug/shaders/StandardShading.vglsl" />
+		<Unit filename="bin/Debug/shaders/StandardShadingRTT.fglsl" />
+		<Unit filename="bin/Debug/shaders/StandardShadingRTT.vglsl" />
+		<Unit filename="bin/Debug/shaders/TextVertexShader.fglsl" />
+		<Unit filename="bin/Debug/shaders/TextVertexShader.vglsl" />
+		<Unit filename="bin/Debug/shaders/TextureFragmentShader.fglsl" />
+		<Unit filename="bin/Debug/shaders/TransformVertexShader.vglsl" />
+		<Unit filename="bin/Debug/shaders/grass.fglsl" />
+		<Unit filename="bin/Debug/shaders/grass.vglsl" />
+		<Unit filename="bin/Debug/shaders/reflectionv.vglsl" />
+		<Unit filename="bin/Debug/shaders/skybox.fglsl" />
+		<Unit filename="bin/Debug/shaders/skybox.vglsl" />
+		<Unit filename="bin/Debug/shaders/testshader.fglsl" />
+		<Unit filename="bin/Debug/shaders/testshader.vglsl" />
+		<Unit filename="bin/Debug/shaders/text.fglsl" />
+		<Unit filename="bin/Debug/shaders/text.vglsl" />
+		<Unit filename="bin/Release/shaders/Geometry.fglsl" />
+		<Unit filename="bin/Release/shaders/Geometry.vglsl" />
+		<Unit filename="bin/Release/shaders/Lighting.fglsl" />
+		<Unit filename="bin/Release/shaders/Lighting.vglsl" />
+		<Unit filename="bin/Release/shaders/SSAO.fglsl" />
+		<Unit filename="bin/Release/shaders/SSAO.vglsl" />
+		<Unit filename="bin/Release/shaders/Sun.fglsl" />
+		<Unit filename="bin/Release/shaders/Sun.vglsl" />
+		<Unit filename="bin/Release/shaders/TextureFragmentShader.fglsl" />
+		<Unit filename="bin/Release/shaders/TransformVertexShader.vglsl" />
+		<Unit filename="bin/Release/shaders/blur.fglsl" />
+		<Unit filename="bin/Release/shaders/blurBloom.fglsl" />
+		<Unit filename="bin/Release/shaders/blurBloom.vglsl" />
+		<Unit filename="bin/Release/shaders/blurSSAO.fglsl" />
+		<Unit filename="bin/Release/shaders/blurSSAO.vglsl" />
+		<Unit filename="bin/Release/shaders/grass.fglsl" />
+		<Unit filename="bin/Release/shaders/grass.vglsl" />
+		<Unit filename="bin/Release/shaders/hdr.fglsl" />
+		<Unit filename="bin/Release/shaders/hdr.vglsl" />
+		<Unit filename="bin/Release/shaders/reflection.fglsl" />
+		<Unit filename="bin/Release/shaders/reflection.vglsl" />
+		<Unit filename="bin/Release/shaders/skybox.fglsl" />
+		<Unit filename="bin/Release/shaders/skybox.vglsl" />
+		<Unit filename="bin/Release/shaders/testshader.fglsl" />
+		<Unit filename="bin/Release/shaders/testshader.vglsl" />
+		<Unit filename="bin/Release/shaders/text.fglsl" />
+		<Unit filename="bin/Release/shaders/text.vglsl" />
+		<Unit filename="bin/Release/shaders/water.fglsl" />
+		<Unit filename="bin/Release/shaders/water.vglsl" />
+		<Unit filename="include/BSP.h" />
+		<Unit filename="include/BSPFace.h" />
+		<Unit filename="include/BSPfile.h" />
+		<Unit filename="include/BSPformat.h" />
+		<Unit filename="include/CBitset.h" />
+		<Unit filename="include/Epsilon.h" />
+		<Unit filename="include/Frustum.h" />
+		<Unit filename="include/Grass.h" />
+		<Unit filename="include/Includes.h" />
+		<Unit filename="include/Light.h" />
+		<Unit filename="include/MD5_Anim.h" />
+		<Unit filename="include/MD5_Model.h" />
+		<Unit filename="include/Mesh.h" />
+		<Unit filename="include/Model.h" />
+		<Unit filename="include/PostProcess.h" />
+		<Unit filename="include/ProgramData.h" />
+		<Unit filename="include/ResourceManager.h" />
+		<Unit filename="include/Shader.h" />
+		<Unit filename="include/Skybox.h" />
+		<Unit filename="include/SkyboxData.h" />
+		<Unit filename="include/Sun.h" />
+		<Unit filename="include/Terrain.h" />
+		<Unit filename="include/Text.h" />
+		<Unit filename="include/Texture.h" />
+		<Unit filename="include/Types.h" />
+		<Unit filename="include/Water.h" />
+		<Unit filename="include/camera.h" />
+		<Unit filename="include/main.h" />
+		<Unit filename="src/BSP.cpp" />
+		<Unit filename="src/Camera.cpp" />
+		<Unit filename="src/Epsilon.cpp" />
+		<Unit filename="src/Frustum.cpp" />
+		<Unit filename="src/MD5_Anim.cpp" />
+		<Unit filename="src/MD5_Model.cpp" />
+		<Unit filename="src/PostProcess.cpp" />
+		<Unit filename="src/ProgramData.cpp" />
+		<Unit filename="src/ResourceManager.cpp" />
+		<Unit filename="src/Shader.cpp" />
+		<Unit filename="src/Skybox.cpp" />
+		<Unit filename="src/Sun.cpp" />
+		<Unit filename="src/Terrain.cpp" />
+		<Unit filename="src/Water.cpp" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="src/resources.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="version.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+			<AutoVersioning>
+				<Scheme minor_max="10" build_max="0" rev_max="0" rev_rand_max="10" build_times_to_increment_minor="100" />
+				<Settings autoincrement="1" date_declarations="1" use_define="0" update_manifest="1" do_auto_increment="0" ask_to_increment="0" language="C++" svn="0" svn_directory="" header_path="version.h" />
+				<Changes_Log show_changes_editor="0" app_title="released version %M.%m.%b of %p" changeslog_path="ChangesLog.txt" />
+				<Code header_guard="VERSION_H" namespace="AutoVersion" prefix="" />
+			</AutoVersioning>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
