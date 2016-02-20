@@ -1,0 +1,12 @@
+<map id="CQuake3BSP" name="CQuake3BSP">
+<area shape="rect" id="node2" href="$structt_b_s_p_vertex.html" title="This is our BSP vertex structure. " alt="" coords="5,124,96,151"/>
+<area shape="rect" id="node3" href="$structt_b_s_p_node.html" title="This stores a node in the BSP tree. " alt="" coords="120,124,203,151"/>
+<area shape="rect" id="node4" href="$structt_vector3i.html" title="This is our small number to compensate for float errors. " alt="" coords="171,5,245,32"/>
+<area shape="rect" id="node5" href="$structt_b_s_p_leaf.html" title="This stores a leaf (end node) in the BSP tree. " alt="" coords="227,124,304,151"/>
+<area shape="rect" id="node6" href="$class_c_frustum.html" title="CFrustum" alt="" coords="329,124,407,151"/>
+<area shape="rect" id="node7" href="$structt_b_s_p_plane.html" title="This stores a splitter plane in the BSP tree. " alt="" coords="431,124,518,151"/>
+<area shape="rect" id="node8" href="$struct_c_vector3.html" title="CVector3" alt="" coords="490,5,566,32"/>
+<area shape="rect" id="node11" href="$structt_b_s_p_face.html" title="This is our BSP face structure. " alt="" coords="543,124,625,151"/>
+<area shape="rect" id="node9" href="$class_c_bitset.html" title="CBitset" alt="" coords="650,124,715,151"/>
+<area shape="rect" id="node10" href="$structt_b_s_p_vis_data.html" title="This stores the cluster data for the PVS&#39;s. " alt="" coords="749,124,848,151"/>
+</map>

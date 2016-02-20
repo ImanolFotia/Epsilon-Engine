@@ -1,0 +1,7 @@
+// CFG(section, name, default)
+
+
+CFG(config, Width, "1024")
+CFG(config, Height, "768")
+
+#undef CFG

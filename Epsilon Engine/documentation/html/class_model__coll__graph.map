@@ -1,0 +1,4 @@
+<map id="Model" name="Model">
+<area shape="rect" id="node2" href="$struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x.html" title="Structure to store the models bounding box for visibility and collision computation. " alt="" coords="5,5,172,32"/>
+<area shape="rect" id="node3" href="$struct_model_1_1_m_i_n___m_a_x___p_o_i_n_t_s.html" title="Model::MIN_MAX_POINTS" alt="" coords="197,5,373,32"/>
+</map>
