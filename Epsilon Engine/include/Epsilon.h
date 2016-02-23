@@ -27,6 +27,7 @@
 #include <BSP.h>
 #include <MD5_Model.h>
 #include <MD5_Anim.h>
+#include <ShadowMapping.h>
 
 class Epsilon
 {
@@ -46,9 +47,8 @@ public:
         delete sun;
         delete m_AnimModel;
         delete PP;
+        BSPMap->Destroy();
         delete BSPMap;
-        glfwDestroyWindow(window);
-        delete window;
         cout << "Epsilon Engine has closed Succesfully." << endl;
     }
 
@@ -67,6 +67,8 @@ private:
     void PollEvents(void);
 
     void Render3D(int clip);
+
+    void Render3D(void);
 
     void Render2D(void);
 
@@ -88,6 +90,8 @@ private:
 
     void Clock(void);
 
+    void ComputeShadow(void);
+
 
 public:
 
@@ -108,7 +112,7 @@ public:
     Sun* sun;
     CQuake3BSP* BSPMap;
     MD5Model* m_AnimModel;
-
+    ShadowMap* shadowMap;
     /** Window Properties **/
 
     short WIDTH;

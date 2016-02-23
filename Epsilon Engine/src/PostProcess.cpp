@@ -1,9 +1,3 @@
-///========= Copyright Survtech, All rights reserved. ============//
-///
-/// Purpose:
-///
-///=============================================================================
-
 #include <PostProcess.h>
 #include <iostream>
 #include <ProgramData.h>
@@ -25,11 +19,11 @@ void PostProcess::SetupFramebuffer()
     ProgramData PG;
     width = PG.WINDOW_WIDTH;
     height = PG.WINDOW_HEIGHT;
-    this->SSAOwidth = 1920;
-    this->SSAOheight = 1080;
+    this->SSAOwidth = 600;
+    this->SSAOheight = 600;
     m_exposure = 1.5;
 
-    /** MSAA buffer
+    /* MSAA buffer
         glGenFramebuffers(1, &hdrFBO);
         glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
 
@@ -248,7 +242,7 @@ void PostProcess::setupSSAO()
         std::cout << "SSAO Blur Framebuffer not complete!" << std::endl;
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    /// Sample kernel
+    // Sample kernel
     std::uniform_real_distribution<GLfloat> randomFloatsClamped(0.2, 1.0); // generates random floats between 0.0 and 1.0
     std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0); // generates random floats between 0.0 and 1.0
     std::default_random_engine generator;
@@ -265,7 +259,7 @@ void PostProcess::setupSSAO()
         ssaoKernel.push_back(sample);
     }
 
-    /// Noise texture
+    // Noise texture
     for (GLuint i = 0; i < 16; i++)
     {
         glm::vec3 noise(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, 0.0f); // rotate around z-axis (in tangent space)
@@ -298,9 +292,9 @@ void PostProcess::applySSAO(Camera* cam)
     glUniform1i(glGetUniformLocation(SSAO->getProgramID(), "texNoise"), 2);
     glBindTexture(GL_TEXTURE_2D, this->noiseTexture);
 
-    /// Send kernel + rotation
+    // Send kernel + rotation
     for (GLuint i = 0; i < 32; i++)
-        glUniform3fv(glGetUniformLocation(SSAO->getProgramID(), ("samples[" + intTostring(i) + "]").c_str()), 1, &ssaoKernel[i][0]);
+        glUniform3fv(glGetUniformLocation(SSAO->getProgramID(), ("samples[" + Helpers::intTostring(i) + "]").c_str()), 1, &ssaoKernel[i][0]);
     glUniformMatrix4fv(glGetUniformLocation(SSAO->getProgramID(), "projection"), 1, GL_FALSE, &cam->getProjectionMatrix()[0][0]);
     glUniform1i(glGetUniformLocation(this->shader->getProgramID(), "width"), (float)width);
     glUniform1i(glGetUniformLocation(this->shader->getProgramID(), "height"), (float)height);
@@ -310,7 +304,7 @@ void PostProcess::applySSAO(Camera* cam)
     glViewport(0,0,width, height);
 
 
-    /// 3. Blur SSAO texture to remove noise
+    // 3. Blur SSAO texture to remove noise
     glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
     glClear(GL_COLOR_BUFFER_BIT);
     blurSSAO->Use();
@@ -400,7 +394,7 @@ void PostProcess::SetupPingPongFBO()
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // We clamp to the edge as the blur filter would otherwise sample repeated texture values!
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pingpongColorbuffers[i], 0);
-        /// Also check if framebuffers are complete (no need for depth buffer)
+        // Also check if framebuffers are complete (no need for depth buffer)
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
             std::cout << "Framebuffer not complete!" << std::endl;
     }
@@ -420,13 +414,13 @@ void PostProcess::SetupPingPongDOF()
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // We clamp to the edge as the blur filter would otherwise sample repeated texture values!
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pingpongColorbuffersDOF[i], 0);
-        /// Also check if framebuffers are complete (no need for depth buffer)
+        // Also check if framebuffers are complete (no need for depth buffer)
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
             std::cout << "Framebuffer not complete!" << std::endl;
     }
 }
 
-void PostProcess::ShowPostProcessImage(float exposure)
+void PostProcess::ShowPostProcessImage(float exposure, GLuint ShadowMapID)
 {
     /*
     float rgba[4];
@@ -451,12 +445,16 @@ void PostProcess::ShowPostProcessImage(float exposure)
     glUniform1i(glGetUniformLocation(finalImage->getProgramID(), "blurredSampler"), 1);
     glBindTexture(GL_TEXTURE_2D, blurred);
 
+    glActiveTexture(GL_TEXTURE2);
+    glUniform1i(glGetUniformLocation(finalImage->getProgramID(), "ShadowMap"), 2);
+    glBindTexture(GL_TEXTURE_2D, ShadowMapID);
+
     glUniform1f(glGetUniformLocation(finalImage->getProgramID(), "exposure"), exposure);
 
     this->RenderQuad();
 }
 
-void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, Camera* cam, float exposure)
+void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, Camera* cam, float exposure, ShadowMap* shadowMap)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -479,8 +477,13 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, Camera* cam, float exposu
     glUniform1i(glGetUniformLocation(shader->getProgramID(), "ssaoColorBufferBlur"), 3);
     glBindTexture(GL_TEXTURE_2D, this->ssaoColorBufferBlur);
 
+    glActiveTexture(GL_TEXTURE4);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "shadowMap"), 4);
+    glBindTexture(GL_TEXTURE_2D, shadowMap->getShadowTextureID());
+
     glUniform1i(glGetUniformLocation(this->shader->getProgramID(), "hdr"), hdr);
     glUniform1f(glGetUniformLocation(this->shader->getProgramID(), "exposure"), m_exposure);
+    glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "lightSpaceMatrix"), 1, GL_FALSE, &shadowMap->getLightSpaceMatrix()[0][0]);
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "viewPos"),  cam->getPosition().x, cam->getPosition().y, cam->getPosition().z);
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "viewDir"),  cam->getDirection().x, cam->getDirection().y, cam->getDirection().z);
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "lightDir"),  Sun.x, Sun.y, Sun.z);
@@ -521,13 +524,13 @@ void PostProcess::RenderQuad()
     {
         GLfloat quadVertices[] =
         {
-        /// Positions         //Texture Coords
+        // Positions         //Texture Coords
             -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
             -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
              1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
              1.0f, -1.0f, 0.0f, 1.0f, 0.0f
         };
-        /// Setup plane VAO
+        // Setup plane VAO
         glGenVertexArrays(1, &quadVAO);
         glGenBuffers(1, &quadVBO);
         glBindVertexArray(quadVAO);

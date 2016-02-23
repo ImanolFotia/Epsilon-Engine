@@ -2,17 +2,20 @@
 in vec3 TexCoords;
 in vec2 TexCoord;
 layout(location = 0) out vec4 FragColor;
+layout(location = 1) out vec4 blurImage;
 //layout(location = 1) out vec4 BrightFragColor;
 
 uniform samplerCube skybox;
 uniform sampler2D tex;
 const float lowerlimit = 0.0;
-const float upperlimit = 0.2;
+const float upperlimit = 0.15;
 
 uniform vec3 LightDirection;
 uniform float time;
+
 vec3 SkyColor = vec3(0.5,0.5,0.5);
 vec3 NightFog = vec3(0.1,0.1,0.1);
+vec4 nightcolor = vec4(0.0,0.0,0.0,1.0);
 
 const float CloudSpeed = 0.3;
 
@@ -44,8 +47,6 @@ void main()
 
     float average = 0.2126 * skyboxTex.r + 0.7152 * skyboxTex.g + 0.0722 * skyboxTex.b;
 
-    vec4 nightcolor = /*vec4(average, average, average, 1.0)*/vec4(0.0,0.0,0.0,1.0);
-    nightcolor = mix(nightcolor, vec4(0.0,0.0,0.0,1.0), 0.8);
 
     vec4 color;
 
@@ -53,16 +54,19 @@ void main()
 
     color = mix(nightcolor, color, max(LightDirection.y, 0.0));
 
+    Tex = Tex * clamp(LightDirection.y + 0.5, 0.2, 1.0);
+
     color = mix(color, Tex, Tex.r);
+
 
     vec3 fogColor = mix(NightFog, SkyColor, clamp(LightDirection.y + 1, 0.0, 1.0));
 
 
-    FragColor.rgb = mix(fogColor, color.rgb, factor) * 0.25;
+    FragColor.rgb = mix(fogColor, color.rgb, factor);
     FragColor.a = 1.0;
-    //float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
-    //if(brightness > 0.7)
-    //BrightFragColor = FragColor;
+    float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+    if(brightness > 1.0)
+    blurImage = FragColor;
 
 
 }

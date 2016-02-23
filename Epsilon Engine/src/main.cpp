@@ -20,7 +20,9 @@ int main(int argc, char* argv[])
 
     MainProgram->Run();
 
-    //delete MainProgram;
+    delete MainProgram;
+    //glfwDestroyWindow(window);
+    delete window;
 
     return 0;
 }

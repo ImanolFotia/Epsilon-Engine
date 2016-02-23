@@ -30,7 +30,7 @@ bool MD5Animation::LoadAnimation( const std::string& filename )
     {
         std::cout << "No se puedo abrir el archivo de animacion: " << filename << std::endl <<"Error: " << e << std::endl;
     }
-    int fileLength = GetFileLength( file );
+    int fileLength = Helpers::GetFileLength( file );
     assert( fileLength > 0 );
 
     m_JointInfos.clear();
@@ -80,7 +80,7 @@ bool MD5Animation::LoadAnimation( const std::string& filename )
             {
                 JointInfo joint;
                 file >> joint.m_Name >> joint.m_ParentID >> joint.m_Flags >> joint.m_StartIndex;
-                RemoveQuotes( joint.m_Name );
+                Helpers::RemoveQuotes( joint.m_Name );
 
                 m_JointInfos.push_back(joint);
 
@@ -208,7 +208,7 @@ void MD5Animation::BuildFrameSkeleton( FrameSkeletonList& skeletons, const Joint
             animatedJoint.m_Orient.z = frameData.m_FrameData[ jointInfo.m_StartIndex + j++ ];
         }
 
-        ComputeQuatW( animatedJoint.m_Orient );
+        Helpers::ComputeQuatW( animatedJoint.m_Orient );
 
         if ( animatedJoint.m_Parent >= 0 ) // Has a parent joint
         {

@@ -93,22 +93,22 @@ void Water::RenderWater(Camera* cam, glm::vec3 lightDir)
 void Water::LoadTextures(void)
 {
     eTexture* tex = new eTexture("Wavy_Water - Height (Normal Map 2).png");
-    normalTexture = tex->texture;
+    normalTexture = tex->getTextureID();
 
     delete tex;
 
     eTexture* tex2 = new eTexture("Wavy_Water - DuDvt.png");
-    DuDvTexture = tex2->texture;
+    DuDvTexture = tex2->getTextureID();
 
     delete tex2;
 
     eTexture* tex3 = new eTexture("Foam.png");
-    foamTexture = tex3->texture;
+    foamTexture = tex3->getTextureID();
 
     delete tex3;
 
     eTexture* tex4 = new eTexture("Wavy_Water - Color Map.png");
-    diffuseTexture = tex4->texture;
+    diffuseTexture = tex4->getTextureID();
 
     delete tex4;
 }

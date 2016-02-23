@@ -20,7 +20,7 @@ Skybox::Skybox(string SkyboxTex)
 
     eTexture tex("Cliff_height.png");
 
-    CubeMapID = tex.texture;
+    CubeMapID = tex.getTextureID();
 
 
     skydome = new Model("models/sphere.obj");

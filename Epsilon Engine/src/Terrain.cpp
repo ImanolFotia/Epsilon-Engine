@@ -221,11 +221,11 @@ bool Terrain::LoadTexture(const char* diff)
 
     eTexture dTex(diff);
 
-    GL_d_texture = dTex.texture;
+    GL_d_texture = dTex.getTextureID();
 
-    texwidth = dTex.width;
+    texwidth = dTex.getWidth();
 
-    texheight = dTex.height;
+    texheight = dTex.getWidth();
 
 }
 
@@ -239,15 +239,15 @@ bool Terrain::LoadTexture(const char* diff, const char* normal, const char* spec
 
     eTexture sTex(specular);
 
-    GL_d_texture = dTex.texture;
+    GL_d_texture = dTex.getTextureID();
 
-    GL_n_texture = nTex.texture;
+    GL_n_texture = nTex.getTextureID();
 
-    GL_s_texture = sTex.texture;
+    GL_s_texture = sTex.getTextureID();
 
-    texwidth = dTex.width;
+    texwidth = dTex.getWidth();
 
-    texheight = dTex.height;
+    texheight = dTex.getWidth();
 
 }
 

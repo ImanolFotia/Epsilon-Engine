@@ -25,7 +25,6 @@ public:
     {
         ProgramData DATA;
         int channels;
-        const char* path;
         path = ("materials/" + std::string(TexName)).c_str();
         //cout << path << endl;
         unsigned char* image = SOIL_load_image(path, &width, &height, &channels, SOIL_LOAD_RGBA);
@@ -47,18 +46,47 @@ public:
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, DATA.ANISOTROPY);
-        if(!texture){
-                cout << "no se pudo crear" << TexName << endl;
-            return;}
+        if(!texture)
+        {
+            cout << "no se pudo crear" << TexName << endl;
+            return;
+        }
         SOIL_free_image_data(image);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    virtual ~eTexture() {}
+    virtual ~eTexture() {
+            delete path;
+        }
 
-    GLuint Use(void){return texture;}
+public:
+
+    GLuint getTextureID(void)
+    {
+        return texture;
+    }
+
+    int getWidth()
+    {
+        return width;
+    }
+
+    int getHeight()
+    {
+        return height;
+    }
+
+    const char* getPath()
+    {
+        return path;
+    }
+
+private:
 
     GLuint texture = 0;
+
+    const char* path;
+
     int width = 0, height = 0;
 
 };

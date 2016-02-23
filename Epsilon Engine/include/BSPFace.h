@@ -51,7 +51,7 @@ public:
 
         this->LoadLightMapTexture();
 
-
+        return true;
     }
 public:
 
@@ -89,6 +89,8 @@ private:
         glGenerateMipmap(GL_TEXTURE_2D);
         glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
         glBindTexture(GL_TEXTURE_2D, 0);
+
+        return true;
     }
 
     bool CalcTangentSpace()
@@ -96,7 +98,7 @@ private:
 
         /// calculate tangent/bitangent vectors of both triangles
         glm::vec3 tangent1, bitangent1;
-        for(int i = 0 ; i < Indices.size() ; i+=3)
+        for(int i = 0 ; i < (int)Indices.size() ; i+=3)
         {
 
             glm::vec3 edge1 = Vertices.at(Indices.at((i+1))) - Vertices.at(Indices.at((i)));

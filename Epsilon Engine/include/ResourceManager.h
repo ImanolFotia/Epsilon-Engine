@@ -6,23 +6,50 @@
 #include <Water.h>
 #include <Terrain.h>
 #include <Grass.h>
-//#include <Audio.h>
+#include <map>
 
-namespace ResourceManager{
+using namespace std;
+
+namespace Epsilon{
 class ResourceManager
 {
     public:
-        ResourceManager();
-        virtual ~ResourceManager();
 
-    protected:
+        std::string loadTexture(std::string texPath)
+        {
+            std::map<std::string, eTexture*>::iterator it;
+            it = TextureList.find(texPath);
+            if(it != TextureList.end())
+            {
+                return TextureList.at(it->first)->getPath();
+            }
+            else
+            {
+                eTexture* tmpTex = new eTexture(texPath.c_str());
+                TextureList[texPath] = tmpTex;
+                return texPath;
+            }
+        }
+
+        GLuint getTextureID(std::string texPath)
+        {
+            return TextureList[texPath]->getTextureID();
+        }
+
+        std::string loadModel(std::string);
+
+        std::string loadWater();
+        std::string loadTerrain();
 
     private:
 
-        typedef map<std::string, Texture*>  TextureList;
-        typedef map<std::string, Model*>    ModelList;
-        typedef map<std::string, Water*>    WaterPlanesList;
-        typedef map<std::string, Terrain*>  TerrainList;
+        ResourceManager(){}
+        virtual ~ResourceManager(){}
+
+        std::map<std::string, eTexture*>  TextureList;
+        std::map<std::string, Model*>    ModelList;
+        std::map<std::string, Water*>    WaterPlanesList;
+        std::map<std::string, Terrain*>  TerrainList;
 
 
 };

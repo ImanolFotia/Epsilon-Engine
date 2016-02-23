@@ -153,9 +153,9 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
 
     char ents[lumps[kEntities].length];
 
-	fread(ents, lumps[kEntities].length, sizeof(char), fp);
+    fread(ents, lumps[kEntities].length, sizeof(char), fp);
 
-	//cout << ents << endl;
+    //cout << ents << endl;
 
     fclose(fp);
 
@@ -205,6 +205,7 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
                 }
             }
         }
+
         for(int k = 0 ; k < normalIndex.size() ; k++)
             N = glm::normalize(N +  Normals.at(normalIndex.at(k)));
 
@@ -252,10 +253,11 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
 
         string str( pTextures[pFace->textureID].strName);
         std::size_t found=str.find("skies");
-            if (found!=std::string::npos){
-                pFace->type = FACE_UNUSED;
-                continue;
-            }
+        if (found!=std::string::npos)
+        {
+            pFace->type = FACE_UNUSED;
+            continue;
+        }
 
         for(int k = 0 ; k < Textures.size() ; k++)
         {
@@ -288,17 +290,17 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
         else
         {
             tex.path = pTextures[pFace->textureID].strName;
-            tex.GLTextureID = eTexture((tex.path + ".png").c_str()).texture;
+            tex.GLTextureID = eTexture((tex.path + ".png").c_str()).getTextureID();
             tex.type = 1;
             Textures.push_back(tex);
 
             normal.path = string(pTextures[pFace->textureID].strName) + "_n";
-            normal.GLTextureID = eTexture((normal.path + ".png").c_str()).texture;
+            normal.GLTextureID = eTexture((normal.path + ".png").c_str()).getTextureID();
             normal.type = 1;
             normalTextures.push_back(normal);
 
             specular.path = string(pTextures[pFace->textureID].strName) + "_s";
-            specular.GLTextureID = eTexture((specular.path + ".png").c_str()).texture;
+            specular.GLTextureID = eTexture((specular.path + ".png").c_str()).getTextureID();
             specular.type = 1;
             specularTextures.push_back(specular);
         }
@@ -378,7 +380,7 @@ void CQuake3BSP::RenderFace(int faceIndex, GLuint shader)
 
 int g_VisibleFaces;
 
-void CQuake3BSP::RenderLevel(glm::vec3 vPos, GLuint shader, GLFWwindow* window)
+void CQuake3BSP::RenderLevel(glm::vec3 vPos, GLuint shader, GLFWwindow* window, bool Shadow)
 {
 
     m_FacesDrawn.ClearAll();
@@ -393,14 +395,17 @@ void CQuake3BSP::RenderLevel(glm::vec3 vPos, GLuint shader, GLFWwindow* window)
     while(i--)
     {
         tBSPLeaf *pLeaf = &(m_pLeafs[i]);
-
+        if(Shadow)
+        {
         if(!IsClusterVisible(cluster, pLeaf->cluster))
             continue;
-
-        if(!Frustum.BoxInFrustum((float)pLeaf->min.x, (float)pLeaf->min.y, (float)pLeaf->min.z,
-                                 (float)pLeaf->max.x, (float)pLeaf->max.y, (float)pLeaf->max.z))
-            continue;
-
+        }
+        if(Shadow)
+        {
+            if(!Frustum.BoxInFrustum((float)pLeaf->min.x, (float)pLeaf->min.y, (float)pLeaf->min.z,
+                                     (float)pLeaf->max.x, (float)pLeaf->max.y, (float)pLeaf->max.z))
+                continue;
+        }
         faceCount = pLeaf->numOfLeafFaces;
 
         while(faceCount--)

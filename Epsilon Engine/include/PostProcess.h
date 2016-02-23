@@ -11,18 +11,13 @@
 #include <Shader.h>
 #include <camera.h>
 #include <vector>
-
+#include <ShadowMapping.h>
 class PostProcess
 {
 public:
-    /**
-        Purpose: Constructor
-    */
+
     PostProcess();
 
-    /**
-        Purpose: Destructor
-    */
     virtual ~PostProcess(){
         delete shader;
         delete shader2;
@@ -35,31 +30,31 @@ public:
 public:
 
     /**
-        Purpose: Attaches the off-screen rendering buffer
+        Attaches the off-screen rendering buffer
     */
     void beginOffScreenrendering(void);
 
     /**
-        Purpose: Disattaches the off-screen rendering buffer
+        Disattaches the off-screen rendering buffer
     */
     void endOffScreenRendering(void);
 
     /**
-        Purpose: Render the output from the G-Buffer
+        Render the output from the G-Buffer
     */
-    void ShowFrame(glm::vec3, bool & hdr, Camera* cam, float exposure);
+    void ShowFrame(glm::vec3, bool & hdr, Camera* cam, float exposure, ShadowMap*);
 
     /**
-        Purpose: Calculates the screen space ambient occlusion
+        Calculates the screen space ambient occlusion
         from the geometry
     */
     void applySSAO(Camera * cam);
 
     /**
-        Purpose: Render the post process image to the screen
+        Render the post process image to the screen
         after the post-process effects has been applied
     */
-    void ShowPostProcessImage(float exposure);
+    void ShowPostProcessImage(float exposure, GLuint);
 
 public:
 
@@ -71,53 +66,53 @@ public:
 private:
 
     /**
-        Purpose: loads the shaders used for render off-screen
+        loads the shaders used for render off-screen
         and post process affects
     */
     void LoadOffscreensShaders(void);
 
     /**
-        Purpose: Creates the framebuffer objects and attaches the proper textures
+        Creates the framebuffer objects and attaches the proper textures
     */
     void SetupFramebuffer(void);
 
     /**
-        Purpose: Renders a quad that fills the screen
+        Renders a quad that fills the screen
     */
     void RenderQuad(void);
 
     /**
-        Purpose: Lerp function to interpolate values
+        Lerp function to interpolate values
     */
     float lerp(float y1,float y2,float mu);
 
     /**
-        Purpose: Creates the GBuffer and attaches the proper textures
+        Creates the GBuffer and attaches the proper textures
     */
     void SetupGBuffer(void);
 
     /**
-        Purpose: Creates the SSAO framebuffer and attaches the proper textures
+        Creates the SSAO framebuffer and attaches the proper textures
     */
     void setupSSAO(void);
 
     /**
-        Purpose: Blurs and image using a Gaussian Blur shader
+        Blurs and image using a Gaussian Blur shader
     */
     GLuint blurImage(GLuint Buffer);
 
     /**
-        Purpose: Set up buffers for blurring
+        Set up buffers for blurring
     */
     void SetupPingPongFBO(void);
 
     /**
-        Purpose: Set up buffers for blurring
+        Set up buffers for blurring
     */
     void SetupPingPongDOF(void);
 
     /**
-        Purpose: gets the luminicense from a texture
+        gets the luminicense from a texture
     */
     GLfloat applyAutoAxposure(GLuint Buffer);
 
@@ -150,6 +145,7 @@ private:
     Shader* blurSSAO;
     Shader* finalImage;
     Shader* blurBloom;
+
     /// G-Buffer texture samplers
     std::vector<glm::vec3> ssaoKernel;
     GLuint noiseTexture;

@@ -2,6 +2,8 @@
 
 uniform sampler2D sampler;
 uniform sampler2D blurredSampler;
+
+uniform sampler2D ShadowMap;
 out vec4 color;
 in vec2 TexCoords;
 uniform float exposure;

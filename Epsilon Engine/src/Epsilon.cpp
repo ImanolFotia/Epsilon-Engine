@@ -11,7 +11,9 @@
 #include <time.h>
 #include <Includes.h>
 #include <Types.h>
-
+#include "../version.h"
+#include <glm/gtc/quaternion.hpp>
+#include <cmath>
 Epsilon::Epsilon(GLFWwindow* win)
 {
     window = win;
@@ -69,7 +71,7 @@ void Epsilon::InitResources(void)
     this->HEIGHT = DATA.WINDOW_HEIGHT;
     this->SSAO = DATA.SSAO;
 
-    eCamera = new Camera(glm::vec3(-30.0, 5.0, -120.0), glm::vec3(0.0f,0.0f,0.0f));
+    eCamera = new Camera(glm::vec3(20.0, 11.0, 2.0), glm::vec3(0.0f,0.0f,0.0f));
 
     text = new Text("resources/arial.ttf", DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT);
 
@@ -79,6 +81,8 @@ void Epsilon::InitResources(void)
     lightPositions.push_back(glm::vec3(-29, 4.5, 11));
     lightPositions.push_back(glm::vec3(29, 4.5, 11));
     lightPositions.push_back(glm::vec3(29, 4.5, -11));
+
+    shadowMap = new ShadowMap(DATA.SHADOWMAP_SIZE, DATA.SHADOWMAP_SIZE, -20.0f, 80.0f);
 
     this->LoadShaders();
 
@@ -104,26 +108,29 @@ void Epsilon::LoadShaders(void)
     Shaders["SkyBox"] = new Shader("shaders/skybox.vglsl", "shaders/skybox.fglsl");
 
     Shaders["MD5Geometry"] = new Shader("shaders/MD5Geometryv.glsl", "shaders/MD5Geometryf.glsl");
+
+    Shaders["ShadowMapping"] = new Shader("shaders/ShadowMappingv.glsl", "shaders/ShadowMappingf.glsl");
+
+    Shaders["MD5ShadowMapping"] = new Shader("shaders/MD5GeometryShadowv.glsl", "shaders/ShadowMappingf.glsl");
 }
 
 void Epsilon::LoadGeometry(void)
 {
     cout << "Loading World Geometry..." <<endl;
-
-    /*
+/*
        for(int i = 0 ; i < 50 ; i++)
        {
-           grassPos.push_back(glm::vec3(  0 + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(30-10)))  ,-11.3, 0 + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(30-0))) ));
+           grassPos.push_back(glm::vec3(  0 + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(30-10)))  ,2.0, 0 + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(30-0))) ));
            cout << grassPos.at(i).x << grassPos.at(i).y << grassPos.at(i).z << endl;
        }
-    */
+*/
     skybox = new Skybox("plain");
 
     //terrain = new Terrain("materials/mountains.jpg", "mud-diffuse.jpg", "mud-normal.jpg", "awp_india_texture_4s.jpg", 1, 1);
 
     //model.push_back(Model("models/sponza.obj"));
 
-    model.push_back(Model("models/bigboss.obj"));
+    model.push_back(Model("models/plant.obj"));
 
     grass.push_back(Grass("billboardgrass0002.png"));
 
@@ -139,8 +146,8 @@ void Epsilon::LoadGeometry(void)
 
 
     m_AnimModel->LoadModel("models/hellknight/hellknight.md5mesh");
-    m_AnimModel->LoadAnim("models/hellknight/idle2.md5anim");
-    m_AnimModel->LoadAnim("models/hellknight/idle2.md5anim");
+    m_AnimModel->LoadAnim("models/hellknight/walk7.md5anim");
+    m_AnimModel->LoadAnim("models/hellknight/turret_attack.md5anim");
 }
 
 void Epsilon::LoadSound(void)
@@ -148,38 +155,30 @@ void Epsilon::LoadSound(void)
     cout << "Loading Sound..." << endl;
 }
 bool visible = true;
+
 void Epsilon::Render3D(int clip)
 {
 
-    bool underWater = ((this->eCamera->getPosition().y < this->waterPlane->position.y) ? true : false);
 /*
         Shaders["Main"]->Use();
         this->SetUniforms(Shaders["Main"], glm::vec3(190,-40,10), glm::vec3(1,1,1), glm::vec3(1,1,1) );
         terrain->RenderTerrain(Shaders["Main"]);
-*/
-/*
-    Shaders["Main"]->Use();
-    this->SetUniforms(Shaders["Main"], glm::vec3(16,-5,3.5), glm::vec3(0.025,0.025,0.025));
-    glUniform1f(glGetUniformLocation(this->Shaders["Main"]->getProgramID(), "plane"), this->waterPlane->position.y);
-    glUniform1i(glGetUniformLocation(this->Shaders["Main"]->getProgramID(), "clip_Direction"),  clip);
-    if(clip == 0)
-        glUniform1i(glGetUniformLocation(this->Shaders["Main"]->getProgramID(), "BelowWater"), underWater);
-    model.at(0).Draw(Shaders["Main"]);
+
 */
 
+    glm::vec3 camPos = eCamera->getPosition();
+    glm::vec3 camDir = eCamera->getDirection();
+
+        glDisable(GL_CULL_FACE);
     Shaders["Main"]->Use();
-    this->SetUniforms(Shaders["Main"], glm::vec3(55.7,0.75,5.5), glm::vec3(3.0,3.0,3.0), glm::vec3(1.0, 1.0, 1.0));
-    glUniform1f(glGetUniformLocation(this->Shaders["Main"]->getProgramID(), "plane"), this->waterPlane->position.y);
-    glUniform1i(glGetUniformLocation(this->Shaders["Main"]->getProgramID(), "clip_Direction"),  clip);
-    if(clip == 0)
-        glUniform1i(glGetUniformLocation(this->Shaders["Main"]->getProgramID(), "BelowWater"), underWater);
+    this->SetUniforms(Shaders["Main"], glm::vec3(55.7,-0.5,5.5), glm::vec3(3.0,3.0,3.0), glm::vec3(0.0f, 1.0f, 0.0f), camDir.y);
     glm::mat4 Model = glm::mat4();
     glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(3.0,3.0,3.0));
-    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), glm::vec3(55.7,0.75,5.5));
+    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), glm::vec3(55.7,-0.5,5.5));
 
     Model = TranslationMatrix * ScaleMatrix;
     BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), Model);
-/*
+
     visible = BSPMap->Frustum.BoxInFrustum(
                   model.at(0).MinMaxPoints.MAX_X,
                   model.at(0).MinMaxPoints.MAX_Y,
@@ -187,7 +186,7 @@ void Epsilon::Render3D(int clip)
                   model.at(0).MinMaxPoints.MIN_X,
                   model.at(0).MinMaxPoints.MIN_Y,
                   model.at(0).MinMaxPoints.MIN_Z
-              );*/
+              );
     if(visible)
     {
         //cout << "visible" << endl;
@@ -198,6 +197,7 @@ void Epsilon::Render3D(int clip)
         //cout << "no visible" << endl;
     }
 
+        glEnable(GL_CULL_FACE);
 
         glCullFace(GL_FRONT);
         glm::mat4 BSPmodel = glm::mat4();
@@ -207,29 +207,79 @@ void Epsilon::Render3D(int clip)
         BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), BSPmodel);
         Shaders["Main"]->Use();
         this->SetUniforms(Shaders["Main"],  glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.1, 0.1, 0.1), glm::vec3(1.0, 1.0, 1.0));
-        BSPMap->RenderLevel(eCamera->getPosition(), Shaders["Main"]->getProgramID(), window);
+        BSPMap->RenderLevel(eCamera->getPosition(), Shaders["Main"]->getProgramID(), window, true);
 
-
-
-        m_AnimModel->Update(frametime, 0.0);
         Shaders["MD5Geometry"]->Use();
         glUniformMatrix4fv(glGetUniformLocation(Shaders["MD5Geometry"]->getProgramID(), "mSkinned"), 200, GL_FALSE, &m_AnimModel->m_AnimatedBones[0][0][0]);
-        this->SetUniforms(Shaders["MD5Geometry"], glm::vec3(55.7 - 55.0 ,0.40 + 5,5.5 - 120), glm::vec3(0.05, 0.05, 0.05), glm::vec3(1.0, 0.0, 0.0), 270.0f);
+        this->SetUniforms(Shaders["MD5Geometry"], glm::vec3(15.7 ,6.25,5.5), glm::vec3(0.1, 0.1, 0.1), glm::vec3(1.0, 0.0, 0.0), 270.0f);
         m_AnimModel->Render(Shaders["MD5Geometry"]->getProgramID());
         glCullFace(GL_BACK);
-    /*
+
+/*
             for(int i = 0 ; i < grassPos.size() ; i++){
-            Shaders["grass"]->Use();
-            this->SetUniforms(Shaders["grass"], grassPos.at(i), glm::vec3(1,1,1));
-            glUniform1f(glGetUniformLocation(this->Shaders["grass"]->ProgramID, "plane"), this->waterPlane->position.y);
-            glUniform1i(glGetUniformLocation(this->Shaders["grass"]->ProgramID, "clip_Direction"),  clip);
-            if(clip == 0)
-            glUniform1i(glGetUniformLocation(this->Shaders["grass"]->ProgramID, "BelowWater"), underWater);
-            grass.at(0).Render(Shaders["grass"]);
+            Shaders["Main"]->Use();
+            this->SetUniforms(Shaders["Main"], grassPos.at(i), glm::vec3(1,1,1), glm::vec3(1.0, 1.0, 1.0));
+            grass.at(0).Render(Shaders["Main"]);
             }
-    */
+*/
 
 }
+
+void Epsilon::Render3D()
+{
+        glDisable(GL_CULL_FACE);
+/*
+        Shaders["Main"]->Use();
+        this->SetUniforms(Shaders["Main"], glm::vec3(190,-40,10), glm::vec3(1,1,1), glm::vec3(1,1,1) );
+        terrain->RenderTerrain(Shaders["Main"]);
+
+
+    Shaders["Main"]->Use();
+    this->SetUniforms(Shaders["Main"], glm::vec3(16,-5,3.5), glm::vec3(0.025,0.025,0.025));
+    glUniform1f(glGetUniformLocation(this->Shaders["Main"]->getProgramID(), "plane"), this->waterPlane->position.y);
+    glUniform1i(glGetUniformLocation(this->Shaders["Main"]->getProgramID(), "clip_Direction"),  clip);
+    if(clip == 0)
+        glUniform1i(glGetUniformLocation(this->Shaders["Main"]->getProgramID(), "BelowWater"), underWater);
+    model.at(0).Draw(Shaders["Main"]);
+*/
+
+    Shaders["ShadowMapping"]->Use();
+    this->SetUniforms(Shaders["ShadowMapping"], glm::vec3(55.7,-0.5,5.5), glm::vec3(3.0,3.0,3.0), glm::vec3(1.0, 1.0, 1.0));
+    glm::mat4 Model = glm::mat4();
+    glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(3.0,3.0,3.0));
+    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), glm::vec3(55.7,-0.5,5.5));
+
+    Model = TranslationMatrix * ScaleMatrix;
+    //BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), Model);
+    model.at(0).DrawNoTexture(Shaders["ShadowMapping"]);
+
+
+
+        glm::mat4 BSPmodel = glm::mat4();
+        //glm::mat4 tmodel = glm::translate(glm::mat4(), glm::vec3(-30.0, 5.0, -120.0));
+        glm::mat4 sModel = glm::scale(glm::mat4(), glm::vec3(0.1, 0.1, 0.1));
+        BSPmodel = sModel;
+        BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), BSPmodel);
+        Shaders["ShadowMapping"]->Use();
+        this->SetUniforms(Shaders["ShadowMapping"],  glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.1, 0.1, 0.1), glm::vec3(1.0, 1.0, 1.0));
+        BSPMap->RenderLevel(eCamera->getPosition(), Shaders["ShadowMapping"]->getProgramID(), window, false);
+        //m_AnimModel->Update(frametime, 0.0);
+
+        Shaders["MD5ShadowMapping"]->Use();
+        glUniformMatrix4fv(glGetUniformLocation(Shaders["MD5ShadowMapping"]->getProgramID(), "mSkinned"), 200, GL_FALSE, &m_AnimModel->m_AnimatedBones[0][0][0]);
+        this->SetUniforms(Shaders["MD5ShadowMapping"], glm::vec3(15.7 ,6.25,5.5), glm::vec3(0.1, 0.1, 0.1), glm::vec3(1.0, 0.0, 0.0), 270.0f);
+        m_AnimModel->Render(Shaders["MD5ShadowMapping"]->getProgramID());
+        //glCullFace(GL_BACK);
+/*
+            for(int i = 0 ; i < grassPos.size() ; i++){
+            Shaders["MD5ShadowMapping"]->Use();
+            this->SetUniforms(Shaders["MD5ShadowMapping"], grassPos.at(i), glm::vec3(1,1,1), glm::vec3(1.0, 1.0, 1.0));
+            grass.at(0).Render(Shaders["MD5ShadowMapping"]);
+            }
+*/
+        glEnable(GL_CULL_FACE);
+}
+
 
 void Epsilon::SetUniforms(Shader* shader, glm::vec3 position, glm::vec3 scale, glm::vec3 rotation, float degree)
 {
@@ -248,6 +298,7 @@ void Epsilon::SetUniforms(Shader* shader, glm::vec3 position, glm::vec3 scale, g
     glm::mat4 choppedView = glm::mat4(glm::mat3(eCamera->getViewMatrix()));
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "choppedView"), 1, GL_FALSE, &choppedView[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "projection"), 1, GL_FALSE, &eCamera->getProjectionMatrix()[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "lightSpaceMatrix"), 1, GL_FALSE, &shadowMap->getLightSpaceMatrix()[0][0]);
 
     glm::mat3 ModelView3x3Matrix = glm::mat3(Model * eCamera->getViewMatrix());
     glm::mat4 NormalMatrix = glm::transpose(glm::inverse((Model/* * eCamera->ViewMatrix*/)));
@@ -257,14 +308,10 @@ void Epsilon::SetUniforms(Shader* shader, glm::vec3 position, glm::vec3 scale, g
 
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "LightDirection"), sun->Direction.x, sun->Direction.y, sun->Direction.z);
 
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "normal"), normal);
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "viewPos"),  eCamera->getPosition().x, eCamera->getPosition().y, eCamera->getPosition().z);
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "viewDir"),  eCamera->getDirection().x, eCamera->getDirection().y, eCamera->getDirection().z);
-    glUniform1f(glGetUniformLocation(shader->getProgramID(), "cut"),  glm::cos(glm::radians(20.5f)));
-    glUniform1f(glGetUniformLocation(shader->getProgramID(), "cutoff"),  glm::cos(glm::radians(25.5f)));
     glUniform1f(glGetUniformLocation(shader->getProgramID(), "time"),  glfwGetTime());
     glUniform1f(glGetUniformLocation(shader->getProgramID(), "flashLight"),  flashLight);
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "parallax"),  parallax);
 
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "CameraRight"),  eCamera->getViewMatrix()[0][0], eCamera->getViewMatrix()[1][0], eCamera->getViewMatrix()[2][0]);
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "CameraUp"),  eCamera->getViewMatrix()[0][1], eCamera->getViewMatrix()[1][1], eCamera->getViewMatrix()[2][1]);
@@ -277,13 +324,12 @@ void Epsilon::SetUniforms(Shader* shader, glm::vec3 position, glm::vec3 scale, g
 void Epsilon::Render2D(void)
 {
 
-    this->text->RenderText("Epsilon Engine Alpha Developer Build.", 0.01, 0.97, 0.3, glm::vec3(1,1,1));
-    this->text->RenderText("Speed: " + floatTostring(eCamera->MovementSpeed), 0.01, 0.95, 0.3, glm::vec3(1,1,1));
-    this->text->RenderText    /**
-        Purpose: Set up buffers for blurring
-    */("Position: x = " + floatTostring(this->eCamera->getPosition().x) + " y = " + floatTostring(this->eCamera->getPosition().y) + " z = " + floatTostring(this->eCamera->getPosition().z), 0.01, 0.93, 0.3, glm::vec3(1,1,1));
+    //this->text->RenderText("Epsilon Engine Alpha Developer Build. Build: " + Helpers::intTostring(AutoVersion::BUILD), 0.01, 0.97, 0.3, glm::vec3(1,1,1));
+    //this->text->RenderText("Speed: " + floatTostring(eCamera->MovementSpeed), 0.01, 0.95, 0.3, glm::vec3(1,1,1));
+    //this->text->RenderText
+    //("Position: x = " + Helpers::floatTostring(this->eCamera->getPosition().x) + " y = " + Helpers::floatTostring(this->eCamera->getPosition().y) + " z = " + Helpers::floatTostring(this->eCamera->getPosition().z), 0.01, 0.93, 0.3, glm::vec3(1,1,1));
     //this->text->RenderText(std::string(normal ? "Normal Mapping: ON" : "Normal Mapping: OFF"),0.01, 0.91, 0.3, glm::vec3(1,1,1));
-    this->text->RenderText("Frame Time: " + floatTostring(frametime*1000) + "ms", 0.01, 0.89, 0.3, glm::vec3(1,1,1));
+    //this->text->RenderText("Frame Time: " + floatTostring(frametime*1000) + "ms", 0.01, 0.89, 0.3, glm::vec3(1,1,1));
     //this->text->RenderText("FPS: " + intTostring(fps), 0.01, 0.87, 0.3, glm::vec3(1,1,1));
     //this->text->RenderText("SSAO: " + std::string(SSAO ? "ON" : "OFF"),0.01, 0.85, 0.3, glm::vec3(1,1,1));
     //this->text->RenderText("Parallax Mapping: " + std::string(parallax ? "ON" : "OFF"),0.01, 0.83, 0.3, glm::vec3(1,1,1));
@@ -364,11 +410,14 @@ void Epsilon::MainLoop(void)
         /*
                 this->ComputeWater();
         */
+
+        this->ComputeShadow();
+
         this->ProcessFrame();
 
         this->RenderFrame();
 
-        //this->Render2D();
+        this->Render2D();
 
         this->SwapBuffers();
     }
@@ -413,13 +462,36 @@ void Epsilon::ComputeWater(void)
 
 }
 
+void Epsilon::ComputeShadow()
+{
+
+    glm::vec3 camPos = eCamera->getPosition();
+    glm::vec3 camDir = eCamera->getDirection();
+
+
+    shadowMap->setShadowPosition(glm::vec3(camPos.x + camDir.x * 30.0f, camPos.y + 45.0f, camPos.z + camDir.z * 30.0f));
+
+    shadowMap->setShadowDirection(sun->Direction);
+
+    shadowMap->SetupShadowMatrices();
+
+    shadowMap->BindShadowFrameBuffer();
+
+    this->Render3D();
+
+    shadowMap->UnbindShadowFrameBuffer();
+}
+
 void Epsilon::ProcessFrame(void)
 {
+
+    m_AnimModel->Update(frametime, 1.0);
+
     PP->beginOffScreenrendering();
 
     this->Render3D(0);
 
-    this->RenderSkybox();
+    //this->RenderSkybox();
     /*
         this->waterPlane->RenderWater(this->eCamera, sun->Direction);
     */
@@ -433,9 +505,9 @@ void Epsilon::RenderFrame(void)
 {
     glViewport(0,0, this->WIDTH, this->HEIGHT);
 
-    PP->ShowFrame(sun->Direction, SSAO, this->eCamera, exposure);
+    PP->ShowFrame(sun->Direction, SSAO, this->eCamera, exposure, this->shadowMap);
 
     this->RenderSkybox();
 
-    PP->ShowPostProcessImage(exposure);
+    PP->ShowPostProcessImage(exposure, shadowMap->getShadowTextureID());
 }

@@ -35,7 +35,7 @@ public:
         m_FAR_SHADOW_PLANE(far)
 
     {
-        this->SetupShadowMatrices();
+        this->SetupShadowMap();
     }
 
     /**
@@ -51,6 +51,8 @@ public:
     void BindShadowFrameBuffer(void)
     {
         glBindFramebuffer(GL_FRAMEBUFFER, this->m_ShadowFBO);
+        glViewport(0, 0,  this->m_SHADOW_WIDTH, this->m_SHADOW_HEIGHT);
+        glClear(GL_DEPTH_BUFFER_BIT);
     }
 
     /**
@@ -58,7 +60,7 @@ public:
     */
     void UnbindShadowFrameBuffer(void)
     {
-        glBindFramebuffer(GL_FRAMEBUFFER, DEFAULT_FRAMEBUFFER);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
     /**
@@ -97,17 +99,18 @@ public:
         return m_lightSpaceMatrix;
     }
 
+    /**
+        Setups the matrices from where the light will be calculated
+    */
+
+    void SetupShadowMatrices(void);
+
 private:
 
     /**
         Setups the OpenGL related stuff of the Shadowmap
     */
     void SetupShadowMap(void);
-
-    /**
-        Setups the matrices from where the light will be calculated
-    */
-    void SetupShadowMatrices(void);
 
 private:
 

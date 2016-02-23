@@ -12,6 +12,8 @@
 #include <ctime>
 #include <glm/gtc/quaternion.hpp>
 
+namespace Helpers{
+
 inline
 static std::string intTostring(int number)
 {
@@ -110,7 +112,7 @@ private:
     float m_fMaxTimeStep;
     mutable float m_fPrevious;
 };
-
+}
 
 
 

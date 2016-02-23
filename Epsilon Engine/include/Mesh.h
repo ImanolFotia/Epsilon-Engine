@@ -66,31 +66,39 @@ public:
     void Draw(Shader* shader)
     {
 
-        if(this->textures.size() > 0){
-        glActiveTexture(GL_TEXTURE0);
-        glUniform1i(glGetUniformLocation(shader->getProgramID(), "texture_diffuse"), 0);
-        glBindTexture(GL_TEXTURE_2D, this->textures[0].id);}
+        if(this->textures.size() > 0)
+        {
+            glActiveTexture(GL_TEXTURE0);
+            glUniform1i(glGetUniformLocation(shader->getProgramID(), "texture_diffuse"), 0);
+            glBindTexture(GL_TEXTURE_2D, this->textures[0].id);
+        }
 
 
-        if(this->textures.size() > 1){
-        glActiveTexture(GL_TEXTURE1);
-        glUniform1i(glGetUniformLocation(shader->getProgramID(), "texture_specular"), 1);
-        glBindTexture(GL_TEXTURE_2D, this->textures[1].id);}
+        if(this->textures.size() > 1)
+        {
+            glActiveTexture(GL_TEXTURE1);
+            glUniform1i(glGetUniformLocation(shader->getProgramID(), "texture_specular"), 1);
+            glBindTexture(GL_TEXTURE_2D, this->textures[1].id);
+        }
 
-        if(this->textures.size() > 2){
-        glActiveTexture(GL_TEXTURE2);
-        glUniform1i(glGetUniformLocation(shader->getProgramID(), "texture_normal"), 2);
-        glBindTexture(GL_TEXTURE_2D, this->textures[2].id);}
+        if(this->textures.size() > 2)
+        {
+            glActiveTexture(GL_TEXTURE2);
+            glUniform1i(glGetUniformLocation(shader->getProgramID(), "texture_normal"), 2);
+            glBindTexture(GL_TEXTURE_2D, this->textures[2].id);
+        }
 
-        if(this->textures.size() > 3){
-        glActiveTexture(GL_TEXTURE3);
-        glUniform1i(glGetUniformLocation(shader->getProgramID(), "texture_height"), 3);
-        glBindTexture(GL_TEXTURE_2D, this->textures[3].id);}
-/**
-        glActiveTexture(GL_TEXTURE4);
-        glUniform1i(glGetUniformLocation(shader->ProgramID, "skybox"), 4);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, this->textures[4].id);
-*/
+        if(this->textures.size() > 3)
+        {
+            glActiveTexture(GL_TEXTURE3);
+            glUniform1i(glGetUniformLocation(shader->getProgramID(), "texture_height"), 3);
+            glBindTexture(GL_TEXTURE_2D, this->textures[3].id);
+        }
+        /**
+                glActiveTexture(GL_TEXTURE4);
+                glUniform1i(glGetUniformLocation(shader->ProgramID, "skybox"), 4);
+                glBindTexture(GL_TEXTURE_CUBE_MAP, this->textures[4].id);
+        */
         /// Draw mesh
         glBindVertexArray(this->VAO);
         glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
@@ -107,15 +115,23 @@ public:
         glActiveTexture(GL_TEXTURE4);
         glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
-}
+    }
+
+/// Render the mesh
+    void DrawNoTexture(Shader* shader)
+    {
+        glBindVertexArray(this->VAO);
+        glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
+    }
 
 private:
-/**  Render data  */
-GLuint VAO, VBO, EBO;
+    /**  Render data  */
+    GLuint VAO, VBO, EBO;
 
-/**  Functions    */
+    /**  Functions    */
 /// Initializes all the buffer objects/arrays
-void setupMesh()
+    void setupMesh()
     {
         /// Create buffers/arrays
         glGenVertexArrays(1, &this->VAO);

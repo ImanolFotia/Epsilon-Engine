@@ -10,7 +10,7 @@ Sun::Sun()
 {
     eTexture tex("Sun.png");
 
-    this->TextureID = tex.texture;
+    this->TextureID = tex.getTextureID();
 
     this->radius = 8.0;
 

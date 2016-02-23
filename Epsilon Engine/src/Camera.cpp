@@ -149,7 +149,7 @@ void Camera::HandleInputs(void)
         MovementVector = glm::normalize(DeltaVector / glm::vec3( glm::sqrt(glm::pow(DeltaVector.x, 2.0)  + glm::pow(DeltaVector.y, 2.0) + glm::pow(DeltaVector.z , 2.0) ) ));
     }
 
-    Orientation = glm::normalize(Orientation);
+    Orientation = Orientation;
 
 
     LastPosition = Position;
@@ -204,6 +204,11 @@ glm::vec3 Camera::getPosition(void)
 glm::vec3 Camera::getDirection(void)
 {
     return this->Orientation;
+}
+
+glm::vec3 Camera::getUp(void)
+{
+    return this->Up;
 }
 
 glm::vec3 Camera::setPosition(glm::vec3 newPosition)

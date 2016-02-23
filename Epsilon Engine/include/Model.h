@@ -43,6 +43,14 @@ public:
         shader->Free();
     }
 
+    /// Draws the model, and thus all its meshes
+    void DrawNoTexture(Shader* shader)
+    {
+        for(GLuint i = 0; i < this->meshes.size(); i++)
+            this->meshes[i].DrawNoTexture(shader);
+        shader->Free();
+    }
+
     vector<Mesh> meshes;
 
     vector<Texture> textures_loaded;
@@ -88,7 +96,7 @@ private:
     void loadModel(string path)
     {
         /// Read file via ASSIMP
-        const aiScene* scene = aiImportFile(path.c_str(), aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_FlipUVs | aiProcess_GenUVCoords);
+        const aiScene* scene = aiImportFile(path.c_str(), aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_FlipUVs | aiProcess_GenUVCoords | aiProcess_JoinIdenticalVertices);
         /// Check for errors
         if(!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
         {
@@ -194,7 +202,7 @@ private:
                 vertex.TexCoords = glm::vec2(0.0f, 0.0f);
             vertices.push_back(vertex);
         }
-        /// Now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
+        /// Now walk through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
         for(GLuint i = 0; i < mesh->mNumFaces; i++)
         {
             aiFace face = mesh->mFaces[i];
@@ -267,14 +275,14 @@ private:
                 /// If texture hasn't been loaded already, load it
                 Texture texture;
                 eTexture texID(str.C_Str());
-                texture.id = texID.texture;
+                texture.id = texID.getTextureID();
                 texture.type = typeName;
                 texture.path = path;
                 TMPtextures.push_back(texture);
                 this->textures_loaded.push_back(texture);  /// Store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
             }
         }
-/**
+/*
         if(typeName == "CubeMap")
         {
             Texture texture;

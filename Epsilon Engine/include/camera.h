@@ -18,7 +18,9 @@ public:
 
     Camera(glm::vec3, glm::vec3);
 
-    ~Camera(){}
+    ~Camera(){
+        delete window;
+    }
 
 public:
 
@@ -33,6 +35,8 @@ public:
     glm::vec3 getPosition(void);
 
     glm::vec3 getDirection(void);
+
+    glm::vec3 getUp(void);
 
     glm::vec3 setPosition(glm::vec3 newPosition);
 

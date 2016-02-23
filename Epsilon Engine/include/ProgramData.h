@@ -22,6 +22,7 @@ public:
     int MSAA_SAMPLES;
     int MONITOR;
     int VSYNC;
+    int SHADOWMAP_SIZE;
     bool SSAO;
 };
 #endif

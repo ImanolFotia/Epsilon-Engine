@@ -244,7 +244,7 @@ public:
 
     bool LoadBSP(const char *strFileName);
 
-    void RenderLevel(glm::vec3 vPos, GLuint shader, GLFWwindow * window);
+    void RenderLevel(glm::vec3 vPos, GLuint shader, GLFWwindow * window, bool Shadow);
 
     void Destroy();
 

@@ -23,7 +23,7 @@ bool MD5Model::LoadModel( const std::string &filename )
     std::string junk;   // Read junk from the file
 
     std::ifstream file(filename);
-    int fileLength = GetFileLength( file );
+    int fileLength = Helpers::GetFileLength( file );
     assert( fileLength > 0 );
 
     m_Joints.clear();
@@ -40,7 +40,7 @@ bool MD5Model::LoadModel( const std::string &filename )
         }
         else if ( param == "commandline" )
         {
-            IgnoreLine(file, fileLength ); // Ignore the contents of the line
+            Helpers::IgnoreLine(file, fileLength ); // Ignore the contents of the line
         }
         else if ( param == "numJoints" )
         {
@@ -63,12 +63,12 @@ bool MD5Model::LoadModel( const std::string &filename )
                      >> joint.m_Pos.x >> joint.m_Pos.y >> joint.m_Pos.z >> junk >> junk
                      >> joint.m_Orient.x >> joint.m_Orient.y >> joint.m_Orient.z >> junk;
 
-                RemoveQuotes( joint.m_Name );
-                ComputeQuatW( joint.m_Orient );
+                Helpers::RemoveQuotes( joint.m_Name );
+                Helpers::ComputeQuatW( joint.m_Orient );
 
                 m_Joints.push_back(joint);
                 // Ignore everything else on the line up to the end-of-line character.
-                IgnoreLine( file, fileLength );
+                Helpers::IgnoreLine( file, fileLength );
             }
             file >> junk; // Read the '}' character
 
@@ -86,25 +86,25 @@ bool MD5Model::LoadModel( const std::string &filename )
                 if ( param == "shader" )
                 {
                     file >> mesh.m_Shader;
-                    RemoveQuotes( mesh.m_Shader );
+                    Helpers::RemoveQuotes( mesh.m_Shader );
                     std::string texturePath = mesh.m_Shader;
                     eTexture texd(texturePath.c_str());
-                    mesh.m_TexID = texd.texture;
-                    std::string ext = getExtension(texturePath);
-                    std::string n_path = removeExtension(texturePath) + "_n" + ext;
-                    std::string s_path = removeExtension(texturePath) + "_s" + ext;
+                    mesh.m_TexID = texd.getTextureID();
+                    std::string ext = Helpers::getExtension(texturePath);
+                    std::string n_path = Helpers::removeExtension(texturePath) + "_n" + ext;
+                    std::string s_path = Helpers::removeExtension(texturePath) + "_s" + ext;
                     //std::cout << n_path << std::endl;
                     eTexture texn((n_path).c_str());
-                    mesh.m_nTexID = texn.texture;
+                    mesh.m_nTexID = texn.getTextureID();
                     //std::cout << "Texture: " << texturePath << std::endl;
                     eTexture texs((s_path).c_str());
-                    mesh.m_sTexID = texs.texture;
+                    mesh.m_sTexID = texs.getTextureID();
                     file.ignore(fileLength, '\n' ); // Ignore everything else on the line
                 }
                 else if ( param == "numverts")
                 {
                     file >> numVerts;               // Read in the vertices
-                    IgnoreLine(file, fileLength);
+                    Helpers::IgnoreLine(file, fileLength);
                     for ( int i = 0; i < numVerts; ++i )
                     {
                         Vertex vert;
@@ -113,7 +113,7 @@ bool MD5Model::LoadModel( const std::string &filename )
                              >> vert.m_Tex0.x >> vert.m_Tex0.y >> junk  //  s t )
                              >> vert.m_StartWeight >> vert.m_WeightCount;
 
-                        IgnoreLine(file, fileLength);
+                        Helpers::IgnoreLine(file, fileLength);
 
                         mesh.m_Verts.push_back(vert);
                         mesh.m_Tex2DBuffer.push_back(vert.m_Tex0);
@@ -122,13 +122,13 @@ bool MD5Model::LoadModel( const std::string &filename )
                 else if ( param == "numtris" )
                 {
                     file >> numTris;
-                    IgnoreLine(file, fileLength);
+                    Helpers::IgnoreLine(file, fileLength);
                     for ( int i = 0; i < numTris; ++i )
                     {
                         Triangle tri;
                         file >> junk >> junk >> tri.m_Indices[0] >> tri.m_Indices[1] >> tri.m_Indices[2];
 
-                        IgnoreLine( file, fileLength );
+                        Helpers::IgnoreLine( file, fileLength );
 
                         mesh.m_Tris.push_back(tri);
                         mesh.m_IndexBuffer.push_back( (GLuint)tri.m_Indices[0] );
@@ -139,20 +139,20 @@ bool MD5Model::LoadModel( const std::string &filename )
                 else if ( param == "numweights" )
                 {
                     file >> numWeights;
-                    IgnoreLine( file, fileLength );
+                    Helpers::IgnoreLine( file, fileLength );
                     for ( int i = 0; i < numWeights; ++i )
                     {
                         Weight weight;
                         file >> junk >> junk >> weight.m_JointID >> weight.m_Bias >> junk
                              >> weight.m_Pos.x >> weight.m_Pos.y >> weight.m_Pos.z >> junk;
 
-                        IgnoreLine( file, fileLength );
+                        Helpers::IgnoreLine( file, fileLength );
                         mesh.m_Weights.push_back(weight);
                     }
                 }
                 else
                 {
-                    IgnoreLine(file, fileLength);
+                    Helpers::IgnoreLine(file, fileLength);
                 }
 
                 file >> param;
@@ -601,7 +601,7 @@ void MD5Model::Update( float fDeltaTime, float blend )
 
         for ( int i = 0; i < m_iNumJoints; ++i )
         {
-            m_AnimatedBones[i] = animatedSkeleton[i] * m_InverseBindPose[i] * glm::mat4x4(1);
+            m_AnimatedBones[i] = glm::mix(animatedSkeleton[i], animatedSkeleton2[i], blend) * m_InverseBindPose[i] * glm::mat4x4(1);
         }
 
     }

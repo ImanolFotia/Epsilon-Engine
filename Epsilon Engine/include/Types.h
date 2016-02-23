@@ -7,6 +7,8 @@
 #ifndef TYPES_H_INCLUDED
 #define TYPES_H_INCLUDED
 
+#define     DEFAULT_FRAMEBUFFER                     0x00000000
+
 /** Light types */
 
 #define     LIGHT_DIRECTIONAL                       0x00000001
