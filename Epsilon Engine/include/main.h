@@ -13,7 +13,7 @@ class App
 {
 public:
 
-    App(GLFWwindow* win)
+    App(GLFWwindow*& win)
     {
         EpsilonEngine = new Epsilon(win);
 
@@ -100,9 +100,9 @@ GLFWwindow* InitEngine(const char* ProgramName)
 
     glfwSwapInterval(DATA.VSYNC);
 
-    delete Monitor;
-    delete CurrentMonitor;
-    delete modes;
+    //delete[] Monitor;
+    //delete CurrentMonitor;
+    //delete modes;
 
     return window;
 }

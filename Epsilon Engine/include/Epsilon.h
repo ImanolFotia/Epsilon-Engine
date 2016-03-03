@@ -8,7 +8,7 @@
 #define EPSILON_H_INCLUDED
 
 #include <map>
-
+#define GLEW_STATIC
 #include <GL/glew.h>
 
 #include <GLFW/glfw3.h>
@@ -28,27 +28,34 @@
 #include <MD5_Model.h>
 #include <MD5_Anim.h>
 #include <ShadowMapping.h>
+#include <EntityTemplate.h>
 
 class Epsilon
 {
 public:
 
-    Epsilon(GLFWwindow*);
+    Epsilon(GLFWwindow*&);
 
     virtual ~Epsilon(void)
     {
         delete eCamera;
         delete skybox;
-        delete texture;
         delete waterPlane;
         delete text;
-        delete hud;
-        delete terrain;
+        //delete terrain;
         delete sun;
         delete m_AnimModel;
         delete PP;
         BSPMap->Destroy();
         delete BSPMap;
+        delete shadowMap;
+
+        for(std::map<std::string, Shader*>::iterator itr = Shaders.begin(); itr != Shaders.end(); itr++)
+        {
+            delete itr->second;
+            itr->second = nullptr;
+        }
+
         cout << "Epsilon Engine has closed Succesfully." << endl;
     }
 
@@ -86,7 +93,7 @@ private:
 
     void ProcessFrame(void);
 
-    void SetUniforms(Shader*, glm::vec3 position, glm::vec3 scale, glm::vec3 rotation, float degree = 0.0);
+    void SetUniforms(Shader*&, glm::vec3 position, glm::vec3 scale, glm::vec3 rotation, float degree = 0.0);
 
     void Clock(void);
 
@@ -100,14 +107,12 @@ public:
     /**Shaders**/
     std::map <string, Shader*> Shaders;
     Skybox* skybox;
-    eTexture* texture;
     Water* waterPlane;
     std::vector<Grass> grass;
     std::vector<Model> model;
     GLuint VertexArrayID;
     GLFWwindow* window;
     Text* text;
-    Text* hud;
     Terrain* terrain;
     Sun* sun;
     CQuake3BSP* BSPMap;

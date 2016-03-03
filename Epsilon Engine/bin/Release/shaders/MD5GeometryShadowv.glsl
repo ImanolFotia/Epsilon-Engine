@@ -8,7 +8,7 @@ layout (location = 4) in vec3 in_bitangent;
 layout (location = 5) in vec4 in_weights;
 layout (location = 6) in vec4 in_indices;
 
-uniform mat4 mSkinned[200];
+uniform mat4 mSkinned[150];
 
 out vec3 FragPos;
 out vec3 Normal;
@@ -47,7 +47,7 @@ void main()
 
 	matTransform += mSkinned[int(in_indices.w)] * finalWeight;
 
-	vec4 position = matTransform * vec4(in_position, 1.0);
+	vec4 position = model * matTransform * vec4(in_position, 1.0);
 
-	gl_Position = lightSpaceMatrix * model * position;
+	gl_Position = lightSpaceMatrix * position;
 }

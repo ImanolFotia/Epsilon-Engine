@@ -1,9 +1,7 @@
 var annotated_dup =
 [
+    [ "Component", "namespace_component.html", "namespace_component" ],
     [ "Helpers", "namespace_helpers.html", "namespace_helpers" ],
-    [ "ResourceManager", null, [
-      [ "ResourceManager", "class_resource_manager_1_1_resource_manager.html", "class_resource_manager_1_1_resource_manager" ]
-    ] ],
     [ "App", "class_app.html", "class_app" ],
     [ "BSPFace", "class_b_s_p_face.html", "class_b_s_p_face" ],
     [ "BSPfile", "class_b_s_pfile.html", "class_b_s_pfile" ],
@@ -14,6 +12,7 @@ var annotated_dup =
     [ "CQuake3BSP", "class_c_quake3_b_s_p.html", "class_c_quake3_b_s_p" ],
     [ "CVector2", "struct_c_vector2.html", "struct_c_vector2" ],
     [ "CVector3", "struct_c_vector3.html", "struct_c_vector3" ],
+    [ "EntityTemplate", "class_entity_template.html", "class_entity_template" ],
     [ "Epsilon", "class_epsilon.html", "class_epsilon" ],
     [ "eTexture", "classe_texture.html", "classe_texture" ],
     [ "Face", "struct_face.html", "struct_face" ],

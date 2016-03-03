@@ -135,6 +135,8 @@
 		<Unit filename="include/BSPfile.h" />
 		<Unit filename="include/BSPformat.h" />
 		<Unit filename="include/CBitset.h" />
+		<Unit filename="include/Component.h" />
+		<Unit filename="include/EntityTemplate.h" />
 		<Unit filename="include/Epsilon.h" />
 		<Unit filename="include/Frustum.h" />
 		<Unit filename="include/Grass.h" />
@@ -161,6 +163,7 @@
 		<Unit filename="include/main.h" />
 		<Unit filename="src/BSP.cpp" />
 		<Unit filename="src/Camera.cpp" />
+		<Unit filename="src/EntityTemplate.cpp" />
 		<Unit filename="src/Epsilon.cpp" />
 		<Unit filename="src/Frustum.cpp" />
 		<Unit filename="src/MD5_Anim.cpp" />

@@ -38,9 +38,9 @@ public:
 
     virtual ~Terrain(){
         delete pixels;
-        delete diffuseTexture;
-        delete specularTexture;
-        delete heightMap;
+        //delete diffuseTexture;
+        //delete specularTexture;
+        //delete heightMap;
     }
 
 public:

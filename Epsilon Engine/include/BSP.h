@@ -232,13 +232,6 @@ public:
     CQuake3BSP();
 
     virtual ~CQuake3BSP(){
-        delete m_pIndices;
-        delete m_pVerts;
-        delete m_pFaces;
-        delete m_pNodes;
-        delete m_pLeafs;
-        delete m_pPlanes;
-        delete m_pLeafFaces;
         delete VertexBufferArrays;
     }
 

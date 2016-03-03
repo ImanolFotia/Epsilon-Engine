@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['helpers',['Helpers',['../namespace_helpers.html',1,'']]]
+  ['component',['Component',['../namespace_component.html',1,'']]]
 ];

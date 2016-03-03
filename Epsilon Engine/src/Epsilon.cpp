@@ -14,7 +14,11 @@
 #include "../version.h"
 #include <glm/gtc/quaternion.hpp>
 #include <cmath>
-Epsilon::Epsilon(GLFWwindow* win)
+
+float mpos = -20.0;
+float blend = 1.0f;
+
+Epsilon::Epsilon(GLFWwindow*& win)
 {
     window = win;
     glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
@@ -58,6 +62,9 @@ Epsilon::Epsilon(GLFWwindow* win)
     srand(time(NULL));
 
     int li = LIGHT_DIRECTIONAL;
+
+
+
 
 }
 
@@ -117,20 +124,24 @@ void Epsilon::LoadShaders(void)
 void Epsilon::LoadGeometry(void)
 {
     cout << "Loading World Geometry..." <<endl;
-/*
-       for(int i = 0 ; i < 50 ; i++)
-       {
-           grassPos.push_back(glm::vec3(  0 + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(30-10)))  ,2.0, 0 + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(30-0))) ));
-           cout << grassPos.at(i).x << grassPos.at(i).y << grassPos.at(i).z << endl;
-       }
-*/
+    /*
+           for(int i = 0 ; i < 50 ; i++)
+           {
+               grassPos.push_back(glm::vec3(  0 + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(30-10)))  ,2.0, 0 + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(30-0))) ));
+               cout << grassPos.at(i).x << grassPos.at(i).y << grassPos.at(i).z << endl;
+           }
+    */
     skybox = new Skybox("plain");
 
     //terrain = new Terrain("materials/mountains.jpg", "mud-diffuse.jpg", "mud-normal.jpg", "awp_india_texture_4s.jpg", 1, 1);
 
     //model.push_back(Model("models/sponza.obj"));
 
-    model.push_back(Model("models/plant.obj"));
+
+
+    model.push_back(Model("models/cube.obj"));
+
+    model.push_back(Model("models/esfera.obj"));
 
     grass.push_back(Grass("billboardgrass0002.png"));
 
@@ -144,10 +155,9 @@ void Epsilon::LoadGeometry(void)
 
     m_AnimModel = new MD5Model();
 
-
     m_AnimModel->LoadModel("models/hellknight/hellknight.md5mesh");
     m_AnimModel->LoadAnim("models/hellknight/walk7.md5anim");
-    m_AnimModel->LoadAnim("models/hellknight/turret_attack.md5anim");
+    m_AnimModel->LoadAnim("models/hellknight/stand.md5anim");
 }
 
 void Epsilon::LoadSound(void)
@@ -159,129 +169,130 @@ bool visible = true;
 void Epsilon::Render3D(int clip)
 {
 
-/*
-        Shaders["Main"]->Use();
-        this->SetUniforms(Shaders["Main"], glm::vec3(190,-40,10), glm::vec3(1,1,1), glm::vec3(1,1,1) );
-        terrain->RenderTerrain(Shaders["Main"]);
+    /*
+            Shaders["Main"]->Use();
+            this->SetUniforms(Shaders["Main"], glm::vec3(190,-40,10), glm::vec3(1,1,1), glm::vec3(1,1,1) );
+            terrain->RenderTerrain(Shaders["Main"]);
 
-*/
+    */
+
 
     glm::vec3 camPos = eCamera->getPosition();
     glm::vec3 camDir = eCamera->getDirection();
 
-        glDisable(GL_CULL_FACE);
     Shaders["Main"]->Use();
-    this->SetUniforms(Shaders["Main"], glm::vec3(55.7,-0.5,5.5), glm::vec3(3.0,3.0,3.0), glm::vec3(0.0f, 1.0f, 0.0f), camDir.y);
+    this->SetUniforms(Shaders["Main"], glm::vec3(85.7,6.0,0.0), glm::vec3(3.0,3.0,3.0), glm::vec3(0.0f, 1.0f, 0.0f), glfwGetTime() * 20);
     glm::mat4 Model = glm::mat4();
     glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(3.0,3.0,3.0));
-    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), glm::vec3(55.7,-0.5,5.5));
+    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), glm::vec3(85.7,6.0,0.0));
 
     Model = TranslationMatrix * ScaleMatrix;
     BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), Model);
 
     visible = BSPMap->Frustum.BoxInFrustum(
-                  model.at(0).MinMaxPoints.MAX_X,
-                  model.at(0).MinMaxPoints.MAX_Y,
-                  model.at(0).MinMaxPoints.MAX_Z,
-                  model.at(0).MinMaxPoints.MIN_X,
-                  model.at(0).MinMaxPoints.MIN_Y,
-                  model.at(0).MinMaxPoints.MIN_Z
+                  model.at(1).MinMaxPoints.MAX_X,
+                  model.at(1).MinMaxPoints.MAX_Y,
+                  model.at(1).MinMaxPoints.MAX_Z,
+                  model.at(1).MinMaxPoints.MIN_X,
+                  model.at(1).MinMaxPoints.MIN_Y,
+                  model.at(1).MinMaxPoints.MIN_Z
               );
     if(visible)
     {
         //cout << "visible" << endl;
-        model.at(0).Draw(Shaders["Main"]);
+        model.at(1).Draw(Shaders["Main"]);
     }
     else
     {
         //cout << "no visible" << endl;
     }
 
-        glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
+    glm::mat4 BSPmodel = glm::mat4();
+    //glm::mat4 tmodel = glm::translate(glm::mat4(), glm::vec3(-30.0, 5.0, -120.0));
+    glm::mat4 sModel = glm::scale(glm::mat4(), glm::vec3(0.1, 0.1, 0.1));
+    BSPmodel = sModel;
+    BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), BSPmodel);
+    Shaders["Main"]->Use();
+    this->SetUniforms(Shaders["Main"],  glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.1, 0.1, 0.1), glm::vec3(1.0, 1.0, 1.0));
+    BSPMap->RenderLevel(eCamera->getPosition(), Shaders["Main"]->getProgramID(), window, true);
 
-        glCullFace(GL_FRONT);
-        glm::mat4 BSPmodel = glm::mat4();
-        //glm::mat4 tmodel = glm::translate(glm::mat4(), glm::vec3(-30.0, 5.0, -120.0));
-        glm::mat4 sModel = glm::scale(glm::mat4(), glm::vec3(0.1, 0.1, 0.1));
-        BSPmodel = sModel;
-        BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), BSPmodel);
-        Shaders["Main"]->Use();
-        this->SetUniforms(Shaders["Main"],  glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.1, 0.1, 0.1), glm::vec3(1.0, 1.0, 1.0));
-        BSPMap->RenderLevel(eCamera->getPosition(), Shaders["Main"]->getProgramID(), window, true);
+    Shaders["MD5Geometry"]->Use();
 
-        Shaders["MD5Geometry"]->Use();
-        glUniformMatrix4fv(glGetUniformLocation(Shaders["MD5Geometry"]->getProgramID(), "mSkinned"), 200, GL_FALSE, &m_AnimModel->m_AnimatedBones[0][0][0]);
-        this->SetUniforms(Shaders["MD5Geometry"], glm::vec3(15.7 ,6.25,5.5), glm::vec3(0.1, 0.1, 0.1), glm::vec3(1.0, 0.0, 0.0), 270.0f);
-        m_AnimModel->Render(Shaders["MD5Geometry"]->getProgramID());
-        glCullFace(GL_BACK);
 
-/*
-            for(int i = 0 ; i < grassPos.size() ; i++){
-            Shaders["Main"]->Use();
-            this->SetUniforms(Shaders["Main"], grassPos.at(i), glm::vec3(1,1,1), glm::vec3(1.0, 1.0, 1.0));
-            grass.at(0).Render(Shaders["Main"]);
-            }
-*/
+
+    glUniformMatrix4fv(glGetUniformLocation(Shaders["MD5Geometry"]->getProgramID(), "mSkinned"), 150, GL_FALSE, &m_AnimModel->m_AnimatedBones[0][0][0]);
+    this->SetUniforms(Shaders["MD5Geometry"], glm::vec3(mpos,0.75,5.5), glm::vec3(0.1, 0.1, 0.1), glm::vec3(1.0, 0.0, 0.0), 270.0f);
+    m_AnimModel->Render(Shaders["MD5Geometry"]->getProgramID());
+    glCullFace(GL_BACK);
+
+    /*
+                for(int i = 0 ; i < grassPos.size() ; i++){
+                Shaders["Main"]->Use();
+                this->SetUniforms(Shaders["Main"], grassPos.at(i), glm::vec3(1,1,1), glm::vec3(1.0, 1.0, 1.0));
+                grass.at(0).Render(Shaders["Main"]);
+                }
+    */
 
 }
 
 void Epsilon::Render3D()
 {
-        glDisable(GL_CULL_FACE);
-/*
+
+    /*
+            Shaders["Main"]->Use();
+            this->SetUniforms(Shaders["Main"], glm::vec3(190,-40,10), glm::vec3(1,1,1), glm::vec3(1,1,1) );
+            terrain->RenderTerrain(Shaders["Main"]);
+
+
         Shaders["Main"]->Use();
-        this->SetUniforms(Shaders["Main"], glm::vec3(190,-40,10), glm::vec3(1,1,1), glm::vec3(1,1,1) );
-        terrain->RenderTerrain(Shaders["Main"]);
-
-
-    Shaders["Main"]->Use();
-    this->SetUniforms(Shaders["Main"], glm::vec3(16,-5,3.5), glm::vec3(0.025,0.025,0.025));
-    glUniform1f(glGetUniformLocation(this->Shaders["Main"]->getProgramID(), "plane"), this->waterPlane->position.y);
-    glUniform1i(glGetUniformLocation(this->Shaders["Main"]->getProgramID(), "clip_Direction"),  clip);
-    if(clip == 0)
-        glUniform1i(glGetUniformLocation(this->Shaders["Main"]->getProgramID(), "BelowWater"), underWater);
-    model.at(0).Draw(Shaders["Main"]);
-*/
+        this->SetUniforms(Shaders["Main"], glm::vec3(16,-5,3.5), glm::vec3(0.025,0.025,0.025));
+        glUniform1f(glGetUniformLocation(this->Shaders["Main"]->getProgramID(), "plane"), this->waterPlane->position.y);
+        glUniform1i(glGetUniformLocation(this->Shaders["Main"]->getProgramID(), "clip_Direction"),  clip);
+        if(clip == 0)
+            glUniform1i(glGetUniformLocation(this->Shaders["Main"]->getProgramID(), "BelowWater"), underWater);
+        model.at(0).Draw(Shaders["Main"]);
+    */
 
     Shaders["ShadowMapping"]->Use();
-    this->SetUniforms(Shaders["ShadowMapping"], glm::vec3(55.7,-0.5,5.5), glm::vec3(3.0,3.0,3.0), glm::vec3(1.0, 1.0, 1.0));
+    this->SetUniforms(Shaders["ShadowMapping"], glm::vec3(85.7,6.0,0.0), glm::vec3(3.0,3.0,3.0), glm::vec3(1.0, 1.0, 1.0));
     glm::mat4 Model = glm::mat4();
     glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(3.0,3.0,3.0));
-    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), glm::vec3(55.7,-0.5,5.5));
+    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), glm::vec3(85.7,6.0,0.0));
 
     Model = TranslationMatrix * ScaleMatrix;
     //BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), Model);
-    model.at(0).DrawNoTexture(Shaders["ShadowMapping"]);
+    model.at(1).DrawNoTexture();
+    glDisable(GL_CULL_FACE);
+    glm::mat4 BSPmodel = glm::mat4();
+    //glm::mat4 tmodel = glm::translate(glm::mat4(), glm::vec3(-30.0, 5.0, -120.0));
+    glm::mat4 sModel = glm::scale(glm::mat4(), glm::vec3(0.1, 0.1, 0.1));
+    BSPmodel = sModel;
+    BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), BSPmodel);
+    Shaders["ShadowMapping"]->Use();
+    this->SetUniforms(Shaders["ShadowMapping"],  glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.1, 0.1, 0.1), glm::vec3(1.0, 1.0, 1.0));
+    BSPMap->RenderLevel(eCamera->getPosition(), Shaders["ShadowMapping"]->getProgramID(), window, false);
+    //m_AnimModel->Update(frametime, 0.0);
 
 
+    Shaders["MD5ShadowMapping"]->Use();
+    glUniformMatrix4fv(glGetUniformLocation(Shaders["MD5ShadowMapping"]->getProgramID(), "mSkinned"), 150, GL_FALSE, &m_AnimModel->m_AnimatedBones[0][0][0]);
+    this->SetUniforms(Shaders["MD5ShadowMapping"], glm::vec3(mpos,0.75,5.5), glm::vec3(0.1, 0.1, 0.1), glm::vec3(1.0, 0.0, 0.0), 270.0f);
+    m_AnimModel->Render(Shaders["MD5ShadowMapping"]->getProgramID());
 
-        glm::mat4 BSPmodel = glm::mat4();
-        //glm::mat4 tmodel = glm::translate(glm::mat4(), glm::vec3(-30.0, 5.0, -120.0));
-        glm::mat4 sModel = glm::scale(glm::mat4(), glm::vec3(0.1, 0.1, 0.1));
-        BSPmodel = sModel;
-        BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), BSPmodel);
-        Shaders["ShadowMapping"]->Use();
-        this->SetUniforms(Shaders["ShadowMapping"],  glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.1, 0.1, 0.1), glm::vec3(1.0, 1.0, 1.0));
-        BSPMap->RenderLevel(eCamera->getPosition(), Shaders["ShadowMapping"]->getProgramID(), window, false);
-        //m_AnimModel->Update(frametime, 0.0);
-
-        Shaders["MD5ShadowMapping"]->Use();
-        glUniformMatrix4fv(glGetUniformLocation(Shaders["MD5ShadowMapping"]->getProgramID(), "mSkinned"), 200, GL_FALSE, &m_AnimModel->m_AnimatedBones[0][0][0]);
-        this->SetUniforms(Shaders["MD5ShadowMapping"], glm::vec3(15.7 ,6.25,5.5), glm::vec3(0.1, 0.1, 0.1), glm::vec3(1.0, 0.0, 0.0), 270.0f);
-        m_AnimModel->Render(Shaders["MD5ShadowMapping"]->getProgramID());
-        //glCullFace(GL_BACK);
-/*
-            for(int i = 0 ; i < grassPos.size() ; i++){
-            Shaders["MD5ShadowMapping"]->Use();
-            this->SetUniforms(Shaders["MD5ShadowMapping"], grassPos.at(i), glm::vec3(1,1,1), glm::vec3(1.0, 1.0, 1.0));
-            grass.at(0).Render(Shaders["MD5ShadowMapping"]);
-            }
-*/
-        glEnable(GL_CULL_FACE);
+    //glCullFace(GL_BACK);
+    /*
+                for(int i = 0 ; i < grassPos.size() ; i++){
+                Shaders["MD5ShadowMapping"]->Use();
+                this->SetUniforms(Shaders["MD5ShadowMapping"], grassPos.at(i), glm::vec3(1,1,1), glm::vec3(1.0, 1.0, 1.0));
+                grass.at(0).Render(Shaders["MD5ShadowMapping"]);
+                }
+    */
+    glEnable(GL_CULL_FACE);
 }
 
 
-void Epsilon::SetUniforms(Shader* shader, glm::vec3 position, glm::vec3 scale, glm::vec3 rotation, float degree)
+void Epsilon::SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, glm::vec3 rotation, float degree)
 {
     glm::mat4 Model = glm::mat4();
     glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), scale);
@@ -326,8 +337,8 @@ void Epsilon::Render2D(void)
 
     //this->text->RenderText("Epsilon Engine Alpha Developer Build. Build: " + Helpers::intTostring(AutoVersion::BUILD), 0.01, 0.97, 0.3, glm::vec3(1,1,1));
     //this->text->RenderText("Speed: " + floatTostring(eCamera->MovementSpeed), 0.01, 0.95, 0.3, glm::vec3(1,1,1));
-    //this->text->RenderText
-    //("Position: x = " + Helpers::floatTostring(this->eCamera->getPosition().x) + " y = " + Helpers::floatTostring(this->eCamera->getPosition().y) + " z = " + Helpers::floatTostring(this->eCamera->getPosition().z), 0.01, 0.93, 0.3, glm::vec3(1,1,1));
+    this->text->RenderText
+    ("Position: x = " + Helpers::floatTostring(this->eCamera->getPosition().x) + " y = " + Helpers::floatTostring(this->eCamera->getPosition().y) + " z = " + Helpers::floatTostring(this->eCamera->getPosition().z), 0.01, 0.93, 0.3, glm::vec3(1,1,1));
     //this->text->RenderText(std::string(normal ? "Normal Mapping: ON" : "Normal Mapping: OFF"),0.01, 0.91, 0.3, glm::vec3(1,1,1));
     //this->text->RenderText("Frame Time: " + floatTostring(frametime*1000) + "ms", 0.01, 0.89, 0.3, glm::vec3(1,1,1));
     //this->text->RenderText("FPS: " + intTostring(fps), 0.01, 0.87, 0.3, glm::vec3(1,1,1));
@@ -392,6 +403,21 @@ void Epsilon::PollEvents(void)
 
     if(glfwGetKey(window, GLFW_KEY_KP_SUBTRACT ) == GLFW_PRESS)
         exposure -= 0.5 * frametime;
+
+    blend = glm::clamp(blend, 0.0f, 1.0f);
+
+    if(glfwGetKey(window, GLFW_KEY_RIGHT ) == GLFW_PRESS)
+    {
+        mpos += 8.5 * frametime;
+        m_AnimModel->Update(frametime, glm::clamp(blend, 0.0f, 1.0f));
+        blend -= 3.5 * frametime;
+    }
+    else
+    {
+        m_AnimModel->Update(frametime, glm::clamp(blend, 0.0f, 1.0f));
+        blend += 0.6 * frametime;
+        mpos += 8.5 * frametime * (1 - glm::clamp(blend, 0.0f, 1.0f));
+    }
 }
 
 void Epsilon::MainLoop(void)
@@ -407,6 +433,7 @@ void Epsilon::MainLoop(void)
         this->eCamera->Update(this->window);
 
         this->eCamera->UpdateMatrices();
+
         /*
                 this->ComputeWater();
         */
@@ -484,8 +511,6 @@ void Epsilon::ComputeShadow()
 
 void Epsilon::ProcessFrame(void)
 {
-
-    m_AnimModel->Update(frametime, 1.0);
 
     PP->beginOffScreenrendering();
 

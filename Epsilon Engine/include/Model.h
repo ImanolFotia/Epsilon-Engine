@@ -29,10 +29,15 @@ class Model
 public:
     /**  Functions   */
     /// Constructor, expects a filepath to a 3D model.
+    aiMesh* mesh;
+
     Model(GLchar* path)
     {
         this->loadModel(path);
         //cout << "Cantidad de texturas: " << textures_loaded.size() << endl;
+    }
+    ~Model()
+    {
     }
     string directory;
     /// Draws the model, and thus all its meshes
@@ -44,11 +49,10 @@ public:
     }
 
     /// Draws the model, and thus all its meshes
-    void DrawNoTexture(Shader* shader)
+    void DrawNoTexture()
     {
         for(GLuint i = 0; i < this->meshes.size(); i++)
-            this->meshes[i].DrawNoTexture(shader);
-        shader->Free();
+            this->meshes[i].DrawNoTexture();
     }
 
     vector<Mesh> meshes;
@@ -87,7 +91,6 @@ public:
 
 private:
     /**  Model Data  */
-
     /// Stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
     bool CubeMapLoaded = false;
 
@@ -95,12 +98,20 @@ private:
     /// Loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
     void loadModel(string path)
     {
+        MinMaxPoints.MAX_X = 0;
+        MinMaxPoints.MAX_Y = 0;
+        MinMaxPoints.MAX_Z = 0;
+
+        MinMaxPoints.MIN_X = 0;
+        MinMaxPoints.MIN_Y = 0;
+        MinMaxPoints.MIN_Z = 0;
+
         /// Read file via ASSIMP
         const aiScene* scene = aiImportFile(path.c_str(), aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_FlipUVs | aiProcess_GenUVCoords | aiProcess_JoinIdenticalVertices);
         /// Check for errors
         if(!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
         {
-            /// cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << endl;
+            cout << "ERROR::ASSIMP:: " << aiGetErrorString() << endl;
             return;
         }
         this->directory = path.substr(0, path.find_last_of('/'));
@@ -114,12 +125,13 @@ private:
     /// Processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
     void processNode(aiNode* node, const aiScene* scene)
     {
+
         /// Process each mesh located at the current node
         for(GLuint i = 0; i < node->mNumMeshes; i++)
         {
             /// The node object only contains indices to index the actual objects in the scene.
             /// The scene contains all the data, node is just to keep stuff organized (like relations between nodes).
-            aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+            mesh = scene->mMeshes[node->mMeshes[i]];
             this->meshes.push_back(this->processMesh(mesh, scene));
         }
         /// After we've processed all of the meshes (if any) we then recursively process each of the children nodes
@@ -127,23 +139,14 @@ private:
         {
             this->processNode(node->mChildren[i], scene);
         }
-
     }
 
-    Mesh processMesh(aiMesh* mesh, const aiScene* scene)
+    Mesh processMesh(aiMesh*& mesh, const aiScene*& scene)
     {
         /// Data to fill
         vector<Vertex> vertices;
         vector<GLuint> indices;
         vector<Texture> textures;
-
-        MinMaxPoints.MAX_X = 0;
-        MinMaxPoints.MAX_Y = 0;
-        MinMaxPoints.MAX_Z = 0;
-
-        MinMaxPoints.MIN_X = 0;
-        MinMaxPoints.MIN_Y = 0;
-        MinMaxPoints.MIN_Z = 0;
 
         /// Walk through each of the mesh's vertices
         for(GLuint i = 0; i < mesh->mNumVertices; i++)
@@ -156,19 +159,19 @@ private:
             vector.z = mesh->mVertices[i].z;
 
             if(vector.x > MinMaxPoints.MAX_X)
-            MinMaxPoints.MAX_X = vector.x;
+                MinMaxPoints.MAX_X = vector.x;
             if(vector.y > MinMaxPoints.MAX_Y)
-            MinMaxPoints.MAX_Y = vector.y;
+                MinMaxPoints.MAX_Y = vector.y;
             if(vector.z > MinMaxPoints.MAX_Z)
-            MinMaxPoints.MAX_Z = vector.z;
+                MinMaxPoints.MAX_Z = vector.z;
 
 
             if(vector.x < MinMaxPoints.MIN_X)
-            MinMaxPoints.MIN_X = vector.x;
+                MinMaxPoints.MIN_X = vector.x;
             if(vector.y < MinMaxPoints.MIN_Y)
-            MinMaxPoints.MIN_Y = vector.y;
+                MinMaxPoints.MIN_Y = vector.y;
             if(vector.z < MinMaxPoints.MIN_Z)
-            MinMaxPoints.MIN_Z = vector.z;
+                MinMaxPoints.MIN_Z = vector.z;
 
             vertex.Position = vector;
             /// Normals
@@ -233,13 +236,13 @@ private:
             /// 2. Heigth maps
             vector<Texture> heigthMaps = this->loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
             textures.insert(textures.end(), heigthMaps.begin(), heigthMaps.end());
-            /**
+
             Texture Tex;
             Tex.id = loadCubemap();
             Tex.type = "CubeMap";
             Tex.path = "materials/skyboxes/Miramar/right.tga";
             textures.push_back(Tex);
-            */
+
         }
 
         //cout << "MaxPoints: " << MinMaxPoints.MAX_X << " " << MinMaxPoints.MAX_Y << " " << MinMaxPoints.MAX_Z << endl;
@@ -282,53 +285,55 @@ private:
                 this->textures_loaded.push_back(texture);  /// Store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
             }
         }
+
+
 /*
-        if(typeName == "CubeMap")
-        {
-            Texture texture;
-            texture.id = loadCubemap();
-            texture.type = "CubeMap";
-            texture.path = "materials/skyboxes/Miramar/right.tga";
-            TMPtextures.push_back(texture);
-            this->textures_loaded.push_back(texture);  /// Store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
-            CubeMapLoaded = true;
-            return TMPtextures;
-        }
+                    Texture texture;
+                    texture.id = loadCubemap();
+                    texture.type = "CubeMap";
+                    texture.path = "materials/skyboxes/Miramar/right.tga";
+                    TMPtextures.push_back(texture);
+                    this->textures_loaded.push_back(texture);  /// Store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+                    CubeMapLoaded = true;
 */
+
+
         return TMPtextures;
     }
 
     GLuint loadCubemap()
     {
         vector<std::string> faces;
-        faces.push_back("materials/skyboxes/Miramar_Blurred/right.tga");
-        faces.push_back("materials/skyboxes/Miramar_Blurred/left.tga");
-        faces.push_back("materials/skyboxes/Miramar_Blurred/top.tga");
-        faces.push_back("materials/skyboxes/Miramar_Blurred/bottom.tga");
-        faces.push_back("materials/skyboxes/Miramar_Blurred/back.tga");
-        faces.push_back("materials/skyboxes/Miramar_Blurred/front.tga");
+        faces.push_back("materials/skyboxes/Miramar/right.tga");
+        faces.push_back("materials/skyboxes/Miramar/left.tga");
+        faces.push_back("materials/skyboxes/Miramar/top.tga");
+        faces.push_back("materials/skyboxes/Miramar/bottom.tga");
+        faces.push_back("materials/skyboxes/Miramar/back.tga");
+        faces.push_back("materials/skyboxes/Miramar/front.tga");
 
-    GLuint CubeMapID;
-    glGenTextures(1, &CubeMapID);
-    int width,height, channels;
-    unsigned char* image;
-    glBindTexture(GL_TEXTURE_CUBE_MAP, CubeMapID);
+        GLuint CubeMapID;
+        glGenTextures(1, &CubeMapID);
+        int width,height, channels;
+        unsigned char* image;
+        glBindTexture(GL_TEXTURE_CUBE_MAP, CubeMapID);
 
-    for(GLuint i = 0; i < faces.size(); i++)
-    {
-        image = SOIL_load_image(faces[i].c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+        for(GLuint i = 0; i < faces.size(); i++)
+        {
+            image = SOIL_load_image(faces[i].c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_SRGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+            glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+        }
+
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+
+        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
         SOIL_free_image_data(image);
-    }
-
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-
         return CubeMapID;
     }
 

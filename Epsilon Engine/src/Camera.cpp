@@ -112,31 +112,31 @@ void Camera::HandleInputs(void)
 
     if ( glfwGetKey( window, GLFW_KEY_W ) == GLFW_PRESS )
     {
-        MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 1.5f * DeltaTime);
+        MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
         Position += Orientation   *     MovementSpeed      *   DeltaTime;
     }
 
     if ( glfwGetKey( window, GLFW_KEY_S ) == GLFW_PRESS )
     {
-        MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 1.5f * DeltaTime);
+        MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
         Position -= Orientation   *     MovementSpeed      *   DeltaTime;
     }
 
     if ( glfwGetKey( window, GLFW_KEY_D ) == GLFW_PRESS )
     {
-        MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 1.5f * DeltaTime);
+        MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
         Position += Rigth       *     MovementSpeed      *   DeltaTime;
     }
 
     if ( glfwGetKey( window, GLFW_KEY_A ) == GLFW_PRESS )
     {
-        MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 1.5f * DeltaTime);
+        MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
         Position -= Rigth       *     MovementSpeed      *   DeltaTime;
     }
 
     if ( glfwGetKey( window, GLFW_KEY_A ) != GLFW_PRESS && glfwGetKey( window, GLFW_KEY_W ) != GLFW_PRESS && glfwGetKey( window, GLFW_KEY_S ) != GLFW_PRESS && glfwGetKey( window, GLFW_KEY_D ) != GLFW_PRESS )
     {
-        MovementSpeed = glm::mix(MovementSpeed, 0.0f, 1.5f * DeltaTime);
+        MovementSpeed = glm::mix(MovementSpeed, 0.0f, 2.0f * DeltaTime);
 
     }
 
@@ -182,7 +182,6 @@ void Camera::UpdateMatrices(void)
                            Position+Orientation,
                            glm::vec3(0,1,0)
                        );
-    glm::mat4 Model = glm::mat4();
 
 }
 

@@ -8,7 +8,7 @@ var class_c_quake3_b_s_p =
     [ "IsClusterVisible", "class_c_quake3_b_s_p.html#a8e69e5687f268bc56bff5faf341d597c", null ],
     [ "LoadBSP", "class_c_quake3_b_s_p.html#a63f458d8e84eb5a4f0432460c849ba75", null ],
     [ "RenderFace", "class_c_quake3_b_s_p.html#ae83aa7bd087d2a8163639286912c16f5", null ],
-    [ "RenderLevel", "class_c_quake3_b_s_p.html#a72ed5dc7bd4af52f0c89bbe18cbb0909", null ],
+    [ "RenderLevel", "class_c_quake3_b_s_p.html#ab82384e5072ab582e17aaf811d1e804d", null ],
     [ "color", "class_c_quake3_b_s_p.html#aab755fee798e3a61e5ea781565fd1d89", null ],
     [ "faceCount", "class_c_quake3_b_s_p.html#a7153ffaf217255a815b837862a9d2f9a", null ],
     [ "Faces", "class_c_quake3_b_s_p.html#a3abb90858963d1d795b5e5e33a152f92", null ],

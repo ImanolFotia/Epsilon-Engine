@@ -131,12 +131,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a38bb7420926e3eabf5f4f73ecff37aa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19cbfd261c0899f70035134e56ec0faa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_post_process.html#a19cbfd261c0899f70035134e56ec0faa">endOffScreenRendering</a> (void)</td></tr>
 <tr class="separator:a19cbfd261c0899f70035134e56ec0faa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af443d74113cda879385ea4ba0bbd33a1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_post_process.html#af443d74113cda879385ea4ba0bbd33a1">ShowFrame</a> (glm::vec3, bool &amp;hdr, <a class="el" href="class_camera.html">Camera</a> *cam, float exposure)</td></tr>
-<tr class="separator:af443d74113cda879385ea4ba0bbd33a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8969c885ab3ad2328e337d86453ac94"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_post_process.html#aa8969c885ab3ad2328e337d86453ac94">ShowFrame</a> (glm::vec3, bool &amp;hdr, <a class="el" href="class_camera.html">Camera</a> *cam, float exposure, <a class="el" href="class_shadow_map.html">ShadowMap</a> *)</td></tr>
+<tr class="separator:aa8969c885ab3ad2328e337d86453ac94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5238b6bff81d36254a0bc1db7f973a33"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_post_process.html#a5238b6bff81d36254a0bc1db7f973a33">applySSAO</a> (<a class="el" href="class_camera.html">Camera</a> *cam)</td></tr>
 <tr class="separator:a5238b6bff81d36254a0bc1db7f973a33"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a900f3cca73c982e775dbf9870509a2a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_post_process.html#a900f3cca73c982e775dbf9870509a2a0">ShowPostProcessImage</a> (float exposure)</td></tr>
-<tr class="separator:a900f3cca73c982e775dbf9870509a2a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2803f42027824b9726ecf4bf9f042aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_post_process.html#ad2803f42027824b9726ecf4bf9f042aa">ShowPostProcessImage</a> (float exposure, GLuint)</td></tr>
+<tr class="separator:ad2803f42027824b9726ecf4bf9f042aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -445,7 +445,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="class_post_process_a3e25d72da486f623ba34bc5d8b8ddfb7_icgraph.png" border="0" usemap="#class_post_process_a3e25d72da486f623ba34bc5d8b8ddfb7_icgraph" alt=""/></div>
 <map name="class_post_process_a3e25d72da486f623ba34bc5d8b8ddfb7_icgraph" id="class_post_process_a3e25d72da486f623ba34bc5d8b8ddfb7_icgraph">
-<area shape="rect" id="node2" href="class_post_process.html#a900f3cca73c982e775dbf9870509a2a0" title="PostProcess::ShowPostProcess\lImage" alt="" coords="215,5,427,47"/>
+<area shape="rect" id="node2" href="class_post_process.html#ad2803f42027824b9726ecf4bf9f042aa" title="PostProcess::ShowPostProcess\lImage" alt="" coords="215,5,427,47"/>
 <area shape="rect" id="node3" href="class_epsilon.html#abbabb1ab313440119a0ff1741d52d4ca" title="Epsilon::ComputeWater" alt="" coords="475,13,635,39"/>
 </map>
 </div>
@@ -588,9 +588,9 @@ Here is the caller graph for this function:</div>
 <map name="class_post_process_ad0e21d0808e0a70d2c996a7ab9e3b0ce_icgraph" id="class_post_process_ad0e21d0808e0a70d2c996a7ab9e3b0ce_icgraph">
 <area shape="rect" id="node2" href="class_post_process.html#a5238b6bff81d36254a0bc1db7f973a33" title="PostProcess::applySSAO" alt="" coords="517,5,690,32"/>
 <area shape="rect" id="node4" href="class_post_process.html#a3e25d72da486f623ba34bc5d8b8ddfb7" title="PostProcess::blurImage" alt="" coords="259,45,421,72"/>
-<area shape="rect" id="node5" href="class_post_process.html#a900f3cca73c982e775dbf9870509a2a0" title="PostProcess::ShowPostProcess\lImage" alt="" coords="497,78,709,119"/>
+<area shape="rect" id="node5" href="class_post_process.html#ad2803f42027824b9726ecf4bf9f042aa" title="PostProcess::ShowPostProcess\lImage" alt="" coords="497,78,709,119"/>
 <area shape="rect" id="node6" href="class_post_process.html#ab337b3a4d3cce0fea1bc6ae3d25185bf" title="PostProcess::applyAutoAxposure" alt="" coords="231,147,449,173"/>
-<area shape="rect" id="node7" href="class_post_process.html#af443d74113cda879385ea4ba0bbd33a1" title="PostProcess::ShowFrame" alt="" coords="516,165,691,192"/>
+<area shape="rect" id="node7" href="class_post_process.html#aa8969c885ab3ad2328e337d86453ac94" title="PostProcess::ShowFrame" alt="" coords="516,165,691,192"/>
 <area shape="rect" id="node3" href="class_epsilon.html#abbabb1ab313440119a0ff1741d52d4ca" title="Epsilon::ComputeWater" alt="" coords="757,85,917,112"/>
 </map>
 </div>
@@ -799,7 +799,7 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="af443d74113cda879385ea4ba0bbd33a1"></a>
+<a class="anchor" id="aa8969c885ab3ad2328e337d86453ac94"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -825,7 +825,13 @@ Here is the caller graph for this function:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>exposure</em>&#160;</td>
+          <td class="paramname"><em>exposure</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_shadow_map.html">ShadowMap</a> *&#160;</td>
+          <td class="paramname"><em>shadowMap</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -839,9 +845,13 @@ Here is the caller graph for this function:</div>
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="class_post_process_af443d74113cda879385ea4ba0bbd33a1_cgraph.png" border="0" usemap="#class_post_process_af443d74113cda879385ea4ba0bbd33a1_cgraph" alt=""/></div>
-<map name="class_post_process_af443d74113cda879385ea4ba0bbd33a1_cgraph" id="class_post_process_af443d74113cda879385ea4ba0bbd33a1_cgraph">
-<area shape="rect" id="node2" href="class_post_process.html#ad0e21d0808e0a70d2c996a7ab9e3b0ce" title="PostProcess::RenderQuad" alt="" coords="228,5,405,32"/>
+<div class="center"><img src="class_post_process_aa8969c885ab3ad2328e337d86453ac94_cgraph.png" border="0" usemap="#class_post_process_aa8969c885ab3ad2328e337d86453ac94_cgraph" alt=""/></div>
+<map name="class_post_process_aa8969c885ab3ad2328e337d86453ac94_cgraph" id="class_post_process_aa8969c885ab3ad2328e337d86453ac94_cgraph">
+<area shape="rect" id="node2" href="class_shadow_map.html#a4ecae9c8ba5f3e1eb1fa0899615d9f96" title="ShadowMap::getShadowTextureID" alt="" coords="228,5,448,32"/>
+<area shape="rect" id="node3" href="class_shadow_map.html#a860d36ab2c85037db4005258ed17f8a0" title="ShadowMap::getLightSpace\lMatrix" alt="" coords="246,57,430,98"/>
+<area shape="rect" id="node6" href="class_post_process.html#ad0e21d0808e0a70d2c996a7ab9e3b0ce" title="PostProcess::RenderQuad" alt="" coords="249,123,427,149"/>
+<area shape="rect" id="node4" href="class_shadow_map.html#acce822bf94608533989b77998eea48b6" title="ShadowMap::SetupShadowMatrices" alt="" coords="496,39,727,65"/>
+<area shape="rect" id="node5" href="class_shadow_map.html#a4d4aa3ef5716aeeaee64d8431e432947" title="ShadowMap::SetupShadowMap" alt="" coords="508,89,715,116"/>
 </map>
 </div>
 </p>
@@ -849,8 +859,8 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="class_post_process_af443d74113cda879385ea4ba0bbd33a1_icgraph.png" border="0" usemap="#class_post_process_af443d74113cda879385ea4ba0bbd33a1_icgraph" alt=""/></div>
-<map name="class_post_process_af443d74113cda879385ea4ba0bbd33a1_icgraph" id="class_post_process_af443d74113cda879385ea4ba0bbd33a1_icgraph">
+<div class="center"><img src="class_post_process_aa8969c885ab3ad2328e337d86453ac94_icgraph.png" border="0" usemap="#class_post_process_aa8969c885ab3ad2328e337d86453ac94_icgraph" alt=""/></div>
+<map name="class_post_process_aa8969c885ab3ad2328e337d86453ac94_icgraph" id="class_post_process_aa8969c885ab3ad2328e337d86453ac94_icgraph">
 <area shape="rect" id="node2" href="class_epsilon.html#abbabb1ab313440119a0ff1741d52d4ca" title="Epsilon::ComputeWater" alt="" coords="228,5,388,32"/>
 </map>
 </div>
@@ -858,7 +868,7 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a900f3cca73c982e775dbf9870509a2a0"></a>
+<a class="anchor" id="ad2803f42027824b9726ecf4bf9f042aa"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -866,8 +876,18 @@ Here is the caller graph for this function:</div>
           <td class="memname">void PostProcess::ShowPostProcessImage </td>
           <td>(</td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>exposure</em></td><td>)</td>
+          <td class="paramname"><em>exposure</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">GLuint&#160;</td>
+          <td class="paramname"><em>ShadowMapID</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -876,8 +896,8 @@ Here is the caller graph for this function:</div>
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="class_post_process_a900f3cca73c982e775dbf9870509a2a0_cgraph.png" border="0" usemap="#class_post_process_a900f3cca73c982e775dbf9870509a2a0_cgraph" alt=""/></div>
-<map name="class_post_process_a900f3cca73c982e775dbf9870509a2a0_cgraph" id="class_post_process_a900f3cca73c982e775dbf9870509a2a0_cgraph">
+<div class="center"><img src="class_post_process_ad2803f42027824b9726ecf4bf9f042aa_cgraph.png" border="0" usemap="#class_post_process_ad2803f42027824b9726ecf4bf9f042aa_cgraph" alt=""/></div>
+<map name="class_post_process_ad2803f42027824b9726ecf4bf9f042aa_cgraph" id="class_post_process_ad2803f42027824b9726ecf4bf9f042aa_cgraph">
 <area shape="rect" id="node2" href="class_post_process.html#a3e25d72da486f623ba34bc5d8b8ddfb7" title="PostProcess::blurImage" alt="" coords="265,5,427,32"/>
 <area shape="rect" id="node3" href="class_post_process.html#ad0e21d0808e0a70d2c996a7ab9e3b0ce" title="PostProcess::RenderQuad" alt="" coords="475,31,652,57"/>
 </map>
@@ -887,8 +907,8 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="class_post_process_a900f3cca73c982e775dbf9870509a2a0_icgraph.png" border="0" usemap="#class_post_process_a900f3cca73c982e775dbf9870509a2a0_icgraph" alt=""/></div>
-<map name="class_post_process_a900f3cca73c982e775dbf9870509a2a0_icgraph" id="class_post_process_a900f3cca73c982e775dbf9870509a2a0_icgraph">
+<div class="center"><img src="class_post_process_ad2803f42027824b9726ecf4bf9f042aa_icgraph.png" border="0" usemap="#class_post_process_ad2803f42027824b9726ecf4bf9f042aa_icgraph" alt=""/></div>
+<map name="class_post_process_ad2803f42027824b9726ecf4bf9f042aa_icgraph" id="class_post_process_ad2803f42027824b9726ecf4bf9f042aa_icgraph">
 <area shape="rect" id="node2" href="class_epsilon.html#abbabb1ab313440119a0ff1741d52d4ca" title="Epsilon::ComputeWater" alt="" coords="265,13,425,39"/>
 </map>
 </div>

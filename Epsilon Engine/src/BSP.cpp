@@ -395,11 +395,10 @@ void CQuake3BSP::RenderLevel(glm::vec3 vPos, GLuint shader, GLFWwindow* window, 
     while(i--)
     {
         tBSPLeaf *pLeaf = &(m_pLeafs[i]);
-        if(Shadow)
-        {
-        if(!IsClusterVisible(cluster, pLeaf->cluster))
-            continue;
-        }
+
+            if(!IsClusterVisible(cluster, pLeaf->cluster))
+                continue;
+
         if(Shadow)
         {
             if(!Frustum.BoxInFrustum((float)pLeaf->min.x, (float)pLeaf->min.y, (float)pLeaf->min.z,
@@ -441,10 +440,34 @@ void CQuake3BSP::Destroy()
         m_pFaces = NULL;
     }
 
+    if(m_pLeafs)
+    {
+        delete [] m_pLeafs;
+        m_pLeafs = NULL;
+    }
+
     if(m_pIndices)
     {
         delete [] m_pIndices;
         m_pIndices = NULL;
+    }
+
+    if(m_pNodes)
+    {
+        delete [] m_pNodes;
+        m_pNodes = NULL;
+    }
+
+    if(m_pPlanes)
+    {
+        delete [] m_pPlanes;
+        m_pPlanes = NULL;
+    }
+
+    if(m_pLeafFaces)
+    {
+        delete [] m_pLeafFaces;
+        m_pLeafFaces = NULL;
     }
 
     glDeleteTextures(m_numOfTextures, m_textures);

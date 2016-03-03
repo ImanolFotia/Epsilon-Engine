@@ -6,6 +6,7 @@ var class_camera =
     [ "GetExternalInputs", "class_camera.html#ae26cc8359a03e57b9f26c149574e920d", null ],
     [ "getPosition", "class_camera.html#a0a32173c1f61b10ced8f674758872403", null ],
     [ "getProjectionMatrix", "class_camera.html#a2ebb2fdd189345caa39113fcafcc6d5a", null ],
+    [ "getUp", "class_camera.html#ae3b6ae9df4f8003f7985e683a375899c", null ],
     [ "getViewMatrix", "class_camera.html#a5b68da2e7a27893a7a3a8ac85c5b788f", null ],
     [ "HandleInputs", "class_camera.html#a5056e6a063a38c6bb411a1b3a2d17e6d", null ],
     [ "LockCamera", "class_camera.html#abff5b93c71289be007f966060ff9a70d", null ],

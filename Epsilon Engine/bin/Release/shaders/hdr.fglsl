@@ -38,7 +38,7 @@ float LinearizeDepth(float depth)
 
 void main()
 {
-    vec3 hdrColor = texture(sampler, TexCoords).rgb;
+    vec3 hdrColor = textureLod(sampler, TexCoords, 0.0).rgb;
     vec3 bloom = texture(blurredSampler, TexCoords).rgb;
     vec3 finalcolor = HDR(hdrColor + bloom);
     color.rgb = finalcolor; //finalcolor /(1+finalcolor);

@@ -100,6 +100,15 @@ public:
     }
 
     /**
+        Get the Light/Proj Matrix multiplied by the Bias Matrix
+    **/
+
+    glm::mat4 getBiasMatrix(void)
+    {
+        return m_biasMatrix;
+    }
+
+    /**
         Setups the matrices from where the light will be calculated
     */
 
@@ -129,5 +138,6 @@ private:
     glm::mat4 m_lightProjection;
     glm::mat4 m_lightView;
     glm::mat4 m_lightSpaceMatrix;
+    glm::mat4 m_biasMatrix;
 };
 #endif // SHADOWMAPPING_H_INCLUDED

@@ -8,7 +8,7 @@ layout(location = 1) out vec4 blurImage;
 uniform samplerCube skybox;
 uniform sampler2D tex;
 const float lowerlimit = 0.0;
-const float upperlimit = 0.15;
+const float upperlimit = 0.1;
 
 uniform vec3 LightDirection;
 uniform float time;
@@ -33,7 +33,7 @@ vec3 HDR(vec3 image)
 void main()
 {
     float factor = (TexCoords.y - lowerlimit) / (upperlimit - lowerlimit);
-    factor = clamp(factor, 0.0, 0.7);
+    factor = clamp(factor, 0.0, 0.9);
     vec4 skyboxTex = texture(skybox, TexCoords);
     vec2 cloudUV  = (TexCoords.xz/TexCoords.y)/10 + time * CloudSpeedOffset1 * CloudSpeed;
     vec2 cloudUV2 = (TexCoords.xz/TexCoords.y)/10 + time * CloudSpeedOffset2 * CloudSpeed;
@@ -43,7 +43,7 @@ void main()
 
     Tex = mix(Tex, Tex2, 0.5);
 
-		SkyColor = mix(normalize(vec3(250, 190, 108)), SkyColor, abs(LightDirection.y)+0.2);
+		SkyColor = mix(normalize(vec3(250, 190, 108)), SkyColor, abs(LightDirection.y));
 
     float average = 0.2126 * skyboxTex.r + 0.7152 * skyboxTex.g + 0.0722 * skyboxTex.b;
 

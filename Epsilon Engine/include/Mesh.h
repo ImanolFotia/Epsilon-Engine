@@ -62,8 +62,13 @@ public:
         this->setupMesh();
     }
 
+    ~Mesh()
+    {
+
+    }
+
     /// Render the mesh
-    void Draw(Shader* shader)
+    void Draw(Shader*& shader)
     {
 
         if(this->textures.size() > 0)
@@ -94,11 +99,11 @@ public:
             glUniform1i(glGetUniformLocation(shader->getProgramID(), "texture_height"), 3);
             glBindTexture(GL_TEXTURE_2D, this->textures[3].id);
         }
-        /**
-                glActiveTexture(GL_TEXTURE4);
-                glUniform1i(glGetUniformLocation(shader->ProgramID, "skybox"), 4);
-                glBindTexture(GL_TEXTURE_CUBE_MAP, this->textures[4].id);
-        */
+
+        glActiveTexture(GL_TEXTURE4);
+        glUniform1i(glGetUniformLocation(shader->getProgramID(), "skybox"), 4);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, this->textures[4].id);
+
         /// Draw mesh
         glBindVertexArray(this->VAO);
         glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
@@ -118,7 +123,7 @@ public:
     }
 
 /// Render the mesh
-    void DrawNoTexture(Shader* shader)
+    void DrawNoTexture()
     {
         glBindVertexArray(this->VAO);
         glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);

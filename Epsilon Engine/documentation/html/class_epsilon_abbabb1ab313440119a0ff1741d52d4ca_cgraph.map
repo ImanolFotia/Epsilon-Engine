@@ -1,9 +1,17 @@
 <map id="Epsilon::ComputeWater" name="Epsilon::ComputeWater">
-<area shape="rect" id="node2" href="$class_post_process.html#a38bb7420926e3eabf5f4f73ecff37aa9" title="PostProcess::beginOffScreenrendering" alt="" coords="213,5,460,32"/>
-<area shape="rect" id="node3" href="$class_post_process.html#a19cbfd261c0899f70035134e56ec0faa" title="PostProcess::endOffScreen\lRendering" alt="" coords="245,57,428,98"/>
-<area shape="rect" id="node4" href="$class_post_process.html#a5238b6bff81d36254a0bc1db7f973a33" title="PostProcess::applySSAO" alt="" coords="509,123,682,149"/>
-<area shape="rect" id="node6" href="$class_post_process.html#af443d74113cda879385ea4ba0bbd33a1" title="PostProcess::ShowFrame" alt="" coords="508,173,683,200"/>
-<area shape="rect" id="node7" href="$class_post_process.html#a900f3cca73c982e775dbf9870509a2a0" title="PostProcess::ShowPostProcess\lImage" alt="" coords="231,225,443,266"/>
-<area shape="rect" id="node5" href="$class_post_process.html#ad0e21d0808e0a70d2c996a7ab9e3b0ce" title="PostProcess::RenderQuad" alt="" coords="731,199,908,225"/>
-<area shape="rect" id="node8" href="$class_post_process.html#a3e25d72da486f623ba34bc5d8b8ddfb7" title="PostProcess::blurImage" alt="" coords="515,275,676,301"/>
+<area shape="rect" id="node2" href="$class_shadow_map.html#adce20a1694daa11845bb8a4cabfe3f18" title="ShadowMap::setShadowPosition" alt="" coords="231,5,443,32"/>
+<area shape="rect" id="node3" href="$class_shadow_map.html#a4c28748161d18d8e260ef21bc402af9d" title="ShadowMap::setShadowDirection" alt="" coords="229,56,445,83"/>
+<area shape="rect" id="node4" href="$class_shadow_map.html#acce822bf94608533989b77998eea48b6" title="ShadowMap::SetupShadowMatrices" alt="" coords="776,155,1007,181"/>
+<area shape="rect" id="node5" href="$class_shadow_map.html#aea0e3d6a4b32b256b3318ea94d7cda9e" title="ShadowMap::BindShadowFrame\lBuffer" alt="" coords="231,158,442,199"/>
+<area shape="rect" id="node6" href="$class_shadow_map.html#a0b8328ce476f157f00c78f905706be73" title="ShadowMap::UnbindShadowFrame\lBuffer" alt="" coords="225,223,449,265"/>
+<area shape="rect" id="node7" href="$class_post_process.html#a38bb7420926e3eabf5f4f73ecff37aa9" title="PostProcess::beginOffScreenrendering" alt="" coords="213,289,460,316"/>
+<area shape="rect" id="node8" href="$class_post_process.html#a19cbfd261c0899f70035134e56ec0faa" title="PostProcess::endOffScreen\lRendering" alt="" coords="245,341,428,382"/>
+<area shape="rect" id="node9" href="$class_post_process.html#a5238b6bff81d36254a0bc1db7f973a33" title="PostProcess::applySSAO" alt="" coords="531,600,705,627"/>
+<area shape="rect" id="node11" href="$class_post_process.html#aa8969c885ab3ad2328e337d86453ac94" title="PostProcess::ShowFrame" alt="" coords="249,407,424,433"/>
+<area shape="rect" id="node12" href="$class_shadow_map.html#a4ecae9c8ba5f3e1eb1fa0899615d9f96" title="ShadowMap::getShadowTextureID" alt="" coords="508,448,728,475"/>
+<area shape="rect" id="node15" href="$class_post_process.html#ad2803f42027824b9726ecf4bf9f042aa" title="PostProcess::ShowPostProcess\lImage" alt="" coords="231,509,443,550"/>
+<area shape="rect" id="node10" href="$class_post_process.html#ad0e21d0808e0a70d2c996a7ab9e3b0ce" title="PostProcess::RenderQuad" alt="" coords="803,524,980,551"/>
+<area shape="rect" id="node13" href="$class_shadow_map.html#a860d36ab2c85037db4005258ed17f8a0" title="ShadowMap::getLightSpace\lMatrix" alt="" coords="526,245,710,286"/>
+<area shape="rect" id="node14" href="$class_shadow_map.html#a4d4aa3ef5716aeeaee64d8431e432947" title="ShadowMap::SetupShadowMap" alt="" coords="788,252,995,279"/>
+<area shape="rect" id="node16" href="$class_post_process.html#a3e25d72da486f623ba34bc5d8b8ddfb7" title="PostProcess::blurImage" alt="" coords="537,499,699,525"/>
 </map>

@@ -19,7 +19,6 @@ public:
     Camera(glm::vec3, glm::vec3);
 
     ~Camera(){
-        delete window;
     }
 
 public:
