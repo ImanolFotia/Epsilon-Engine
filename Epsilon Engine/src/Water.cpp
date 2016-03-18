@@ -21,7 +21,7 @@ Water::Water(glm::vec3 position, float scale)
     this->GeneratevertexArray();
 }
 
-void Water::RenderWater(Camera* cam, glm::vec3 lightDir)
+void Water::RenderWater(std::unique_ptr<Camera>& cam, glm::vec3 lightDir)
 {
     shader->Use();
     glDisable(GL_CULL_FACE);
@@ -165,7 +165,7 @@ void Water::CreateRefractionFBO(void)
 }
 
 
-void Water::GenerateReflection(Camera* cam)
+void Water::GenerateReflection(std::unique_ptr<Camera>& cam)
 {
     GenerateModelViewProjection(cam);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -174,7 +174,7 @@ void Water::GenerateReflection(Camera* cam)
     glViewport(0,0,ReflectionResoulution, ReflectionResoulution);
 }
 
-void Water::GenerateRefraction(Camera* cam)
+void Water::GenerateRefraction(std::unique_ptr<Camera>& cam)
 {
     GenerateModelViewProjection(cam);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -225,7 +225,7 @@ void Water::FinishWatercomputation(void)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Water::GenerateModelViewProjection(Camera* cam)
+void Water::GenerateModelViewProjection(std::unique_ptr<Camera>& cam)
 {
     glm::mat4 model = glm::mat4();
     MVP = cam->getProjectionMatrix() * cam->getViewMatrix() * model;

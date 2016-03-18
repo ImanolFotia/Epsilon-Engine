@@ -27,7 +27,7 @@ Skybox::Skybox(string SkyboxTex)
 
 }
 
-void Skybox::Render(Camera* & camera, Shader* SkyShader)
+void Skybox::Render(std::unique_ptr<Camera> & camera, Shader* SkyShader)
 {
 
     glDepthFunc(GL_LEQUAL);

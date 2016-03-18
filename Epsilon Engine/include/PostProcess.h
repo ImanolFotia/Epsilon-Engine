@@ -12,6 +12,7 @@
 #include <camera.h>
 #include <vector>
 #include <ShadowMapping.h>
+#include <memory>
 class PostProcess
 {
 public:
@@ -42,13 +43,13 @@ public:
     /**
         Render the output from the G-Buffer
     */
-    void ShowFrame(glm::vec3, bool & hdr, Camera* cam, float exposure, ShadowMap*);
+    void ShowFrame(glm::vec3, bool & hdr, std::unique_ptr<Camera>& cam, float exposure, std::unique_ptr<ShadowMap>&);
 
     /**
         Calculates the screen space ambient occlusion
         from the geometry
     */
-    void applySSAO(Camera * cam);
+    void applySSAO(std::unique_ptr<Camera>& cam);
 
     /**
         Render the post process image to the screen

@@ -125,6 +125,8 @@ public:
 /// Render the mesh
     void DrawNoTexture()
     {
+        glBindTexture(GL_TEXTURE_2D, this->textures[0].id);
+
         glBindVertexArray(this->VAO);
         glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);

@@ -62,6 +62,7 @@ class SpatialComponent
 {
 public:
     SpatialComponent() {}
+    ~SpatialComponent(){ std::cout << "Spatial Destructor" << std:: endl;}
     void Fill(bool mass, glm::vec3 position)
     {
         Mass = mass;

@@ -244,6 +244,9 @@ void MD5Animation::Update( float fDeltaTime )
 
     float fInterpolate = fmodf( m_fAnimTime, m_fFrameDuration ) / m_fFrameDuration;
 
+    if(m_fAnimTime == m_fAnimDuration)
+        std::cout << fFramNum << std::endl;
+
     InterpolateSkeletons( m_AnimatedSkeleton, m_Skeletons[iFrame0], m_Skeletons[iFrame1], fInterpolate );
 }
 

@@ -30,7 +30,9 @@ void ShadowMap::SetupShadowMap()
 void ShadowMap::SetupShadowMatrices()
 {
 
-    m_lightProjection = glm::ortho(-65.0f, 65.0f, -65.0f, 65.0f, -20.0f, 80.0f);// glm::perspective(glm::radians(90.0f), 16.0f / 9.0f, 0.5f, 100.0f);
+    m_lightProjection = glm::ortho(-65.0f, 65.0f, -65.0f, 65.0f, -20.0f, 80.0f);
+    //glm::perspective(glm::radians(90.0f), 16.0f / 9.0f, 0.5f, 100.0f);
+    //m_lightProjection = glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.5f, 100.0f);
 
     m_lightView = glm::lookAt(this->m_POSITION, this->m_POSITION - this->m_DIRECTION, glm::vec3(1.0));
     //m_lightView = glm::lookAt(this->m_POSITION, this->m_POSITION + this->m_DIRECTION, glm::vec3(1.0));

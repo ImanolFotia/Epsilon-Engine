@@ -14,6 +14,9 @@
 #include "../version.h"
 #include <glm/gtc/quaternion.hpp>
 #include <cmath>
+#include <thread>
+#include <EpsilonMemory.h>
+#include <CPUID.h>
 
 float mpos = -20.0;
 float blend = 1.0f;
@@ -28,6 +31,11 @@ Epsilon::Epsilon(GLFWwindow*& win)
     std:: cout << "OpenGL VENDOR: " << glGetString(GL_VENDOR) << std::endl;
     std:: cout << "Video RENDERER: " << glGetString(GL_RENDERER) << std::endl;
     std:: cout << "OpenGL VERSION: " << glGetString(GL_VERSION) << std::endl;
+
+
+
+    CPUID cpu(0);
+    cpu.printHardwareInformation();
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
@@ -61,11 +69,6 @@ Epsilon::Epsilon(GLFWwindow*& win)
 
     srand(time(NULL));
 
-    int li = LIGHT_DIRECTIONAL;
-
-
-
-
 }
 
 void Epsilon::InitResources(void)
@@ -78,18 +81,18 @@ void Epsilon::InitResources(void)
     this->HEIGHT = DATA.WINDOW_HEIGHT;
     this->SSAO = DATA.SSAO;
 
-    eCamera = new Camera(glm::vec3(20.0, 11.0, 2.0), glm::vec3(0.0f,0.0f,0.0f));
+    eCamera = std::move((unique_ptr<Camera>)(new Camera(glm::vec3(20.0, 11.0, 2.0), glm::vec3(0.0f,0.0f,0.0f))));
 
-    text = new Text("resources/arial.ttf", DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT);
+    text = std::move((unique_ptr<Text>)(new Text("resources/arial.ttf", DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT)));
 
-    PP = new PostProcess();
+    PP = std::move((unique_ptr<PostProcess>)(new PostProcess()));
 
     lightPositions.push_back(glm::vec3(-29, 4.5, -11));
     lightPositions.push_back(glm::vec3(-29, 4.5, 11));
     lightPositions.push_back(glm::vec3(29, 4.5, 11));
     lightPositions.push_back(glm::vec3(29, 4.5, -11));
 
-    shadowMap = new ShadowMap(DATA.SHADOWMAP_SIZE, DATA.SHADOWMAP_SIZE, -20.0f, 80.0f);
+    shadowMap = std::move((unique_ptr<ShadowMap>)(new ShadowMap(DATA.SHADOWMAP_SIZE, DATA.SHADOWMAP_SIZE, -20.0f, 80.0f)));
 
     this->LoadShaders();
 
@@ -131,33 +134,37 @@ void Epsilon::LoadGeometry(void)
                cout << grassPos.at(i).x << grassPos.at(i).y << grassPos.at(i).z << endl;
            }
     */
-    skybox = new Skybox("plain");
+    //unique_ptr<Skybox> s(new Skybox("plain"));
+
+    skybox = std::move((unique_ptr<Skybox>)(new Skybox("plain")));
 
     //terrain = new Terrain("materials/mountains.jpg", "mud-diffuse.jpg", "mud-normal.jpg", "awp_india_texture_4s.jpg", 1, 1);
 
     //model.push_back(Model("models/sponza.obj"));
 
 
-
+/*
     model.push_back(Model("models/cube.obj"));
+*/
+    //model.push_back(Model("models/Laughing_Octopus.obj"));
 
-    model.push_back(Model("models/esfera.obj"));
+    rM.requestModel("models/Laughing_Octopus.obj");
 
     grass.push_back(Grass("billboardgrass0002.png"));
 
-    waterPlane = new Water(glm::vec3(0,4.1,0), 100.0f); ///-11.8
+    waterPlane = std::move((unique_ptr<Water>)(new Water(glm::vec3(0,4.1,0), 100.0f))); ///-11.8
 
-    sun = new Sun();
+    sun = std::move((unique_ptr<Sun>)(new Sun()));
 
-    BSPMap = new CQuake3BSP();
+    BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP()));
 
     BSPMap->LoadBSP((string("maps/") + "room.bsp").c_str());
 
-    m_AnimModel = new MD5Model();
+    m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 
     m_AnimModel->LoadModel("models/hellknight/hellknight.md5mesh");
     m_AnimModel->LoadAnim("models/hellknight/walk7.md5anim");
-    m_AnimModel->LoadAnim("models/hellknight/stand.md5anim");
+    m_AnimModel->LoadAnim("models/hellknight/idle2.md5anim");
 }
 
 void Epsilon::LoadSound(void)
@@ -179,34 +186,26 @@ void Epsilon::Render3D(int clip)
 
     glm::vec3 camPos = eCamera->getPosition();
     glm::vec3 camDir = eCamera->getDirection();
-
+glDisable(GL_CULL_FACE);
     Shaders["Main"]->Use();
-    this->SetUniforms(Shaders["Main"], glm::vec3(85.7,6.0,0.0), glm::vec3(3.0,3.0,3.0), glm::vec3(0.0f, 1.0f, 0.0f), glfwGetTime() * 20);
+    this->SetUniforms(Shaders["Main"], glm::vec3(-2,0,-14.0), glm::vec3(3.0,3.0,3.0), glm::vec3(0.0f, 1.0f, 0.0f));
     glm::mat4 Model = glm::mat4();
     glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(3.0,3.0,3.0));
-    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), glm::vec3(85.7,6.0,0.0));
+    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), glm::vec3(-2,0,-14.0));
 
     Model = TranslationMatrix * ScaleMatrix;
     BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), Model);
 
-    visible = BSPMap->Frustum.BoxInFrustum(
-                  model.at(1).MinMaxPoints.MAX_X,
-                  model.at(1).MinMaxPoints.MAX_Y,
-                  model.at(1).MinMaxPoints.MAX_Z,
-                  model.at(1).MinMaxPoints.MIN_X,
-                  model.at(1).MinMaxPoints.MIN_Y,
-                  model.at(1).MinMaxPoints.MIN_Z
-              );
+    visible = BSPMap->Frustum.BoxInFrustum(rM.getModelBoundingBox("models/Laughing_Octopus.obj"));
     if(visible)
     {
-        //cout << "visible" << endl;
-        model.at(1).Draw(Shaders["Main"]);
+        rM.useModel("models/Laughing_Octopus.obj", Shaders["Main"]);
     }
     else
     {
         //cout << "no visible" << endl;
     }
-
+glEnable(GL_CULL_FACE);
     glCullFace(GL_FRONT);
     glm::mat4 BSPmodel = glm::mat4();
     //glm::mat4 tmodel = glm::translate(glm::mat4(), glm::vec3(-30.0, 5.0, -120.0));
@@ -233,7 +232,6 @@ void Epsilon::Render3D(int clip)
                 grass.at(0).Render(Shaders["Main"]);
                 }
     */
-
 }
 
 void Epsilon::Render3D()
@@ -255,14 +253,14 @@ void Epsilon::Render3D()
     */
 
     Shaders["ShadowMapping"]->Use();
-    this->SetUniforms(Shaders["ShadowMapping"], glm::vec3(85.7,6.0,0.0), glm::vec3(3.0,3.0,3.0), glm::vec3(1.0, 1.0, 1.0));
+    this->SetUniforms(Shaders["ShadowMapping"], glm::vec3(-2,0,-14), glm::vec3(3.0,3.0,3.0), glm::vec3(0.0f, 1.0f, 0.0f));
     glm::mat4 Model = glm::mat4();
     glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(3.0,3.0,3.0));
-    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), glm::vec3(85.7,6.0,0.0));
+    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), glm::vec3(-2,0,-14));
 
     Model = TranslationMatrix * ScaleMatrix;
     //BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), Model);
-    model.at(1).DrawNoTexture();
+    rM.useModel("models/Laughing_Octopus.obj", Shaders["Main"]);
     glDisable(GL_CULL_FACE);
     glm::mat4 BSPmodel = glm::mat4();
     //glm::mat4 tmodel = glm::translate(glm::mat4(), glm::vec3(-30.0, 5.0, -120.0));
@@ -328,8 +326,6 @@ void Epsilon::SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, 
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "CameraUp"),  eCamera->getViewMatrix()[0][1], eCamera->getViewMatrix()[1][1], eCamera->getViewMatrix()[2][1]);
 
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "GrassPos"),  position.x, position.y, position.z);
-
-
 }
 
 void Epsilon::Render2D(void)
@@ -361,7 +357,7 @@ void Epsilon::Clock()
     }
 
     eventtime += 1 * frametime;
-
+    //cout << eventtime << endl;
     sun->Update();
 }
 

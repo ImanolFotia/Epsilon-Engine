@@ -66,7 +66,7 @@ void main()
       		}
       }
 */
-      if(texture(texture_diffuse, TexCoords).a < 0.05)
+      if(texture(texture_diffuse, TexCoords).a * 3 < 0.22)
             discard;    
 
 
@@ -78,7 +78,7 @@ void main()
     vec3 I = normalize(wFragPos - viewPos);
     R = reflect(I, normalize(gExpensiveNormal));
   }
-  CubeMapcolor = textureLod(skybox, R, 5.5);
+  CubeMapcolor = textureLod(skybox, R, 0.0);
   gAlbedoSpec.a = texture(texture_specular, TexCoords).r;
   gAlbedoSpec.rgb = mix(texture(texture_diffuse, TexCoords).rgb, CubeMapcolor.rgb, clamp(gAlbedoSpec.a, 0.01, 0.15));
   gNormal.rgb = normalize(Normal);

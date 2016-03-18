@@ -22,6 +22,6 @@ var searchData=
   ['mesh',['Mesh',['../class_mesh.html',1,'Mesh'],['../class_mesh.html#a106df0a29578f3aa05a7ee3e4912b5d9',1,'Mesh::Mesh()'],['../class_model.html#ab910ead43eaeb4cedd2b1aca69d28987',1,'Model::mesh()']]],
   ['mesh',['Mesh',['../struct_m_d5_model_1_1_mesh.html',1,'MD5Model']]],
   ['min',['min',['../structt_b_s_p_node.html#a409af63ecc6a4b7524e7c3f578bcae58',1,'tBSPNode::min()'],['../structt_b_s_p_leaf.html#af291c3a70d15cf834d0b3e592d652660',1,'tBSPLeaf::min()']]],
-  ['min_5fmax_5fpoints',['MIN_MAX_POINTS',['../struct_model_1_1_m_i_n___m_a_x___p_o_i_n_t_s.html',1,'Model']]],
+  ['min_5fmax_5fpoints',['MIN_MAX_POINTS',['../struct_m_i_n___m_a_x___p_o_i_n_t_s.html',1,'']]],
   ['model',['Model',['../class_model.html',1,'']]]
 ];

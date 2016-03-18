@@ -1,8 +1,4 @@
 <map id="ShadowMap::SetupShadowMap" name="ShadowMap::SetupShadowMap">
-<area shape="rect" id="node2" href="$class_shadow_map.html#aad205032db3d7d854ba714acf111eec2" title="ShadowMap::ShadowMap" alt="" coords="266,5,438,32"/>
-<area shape="rect" id="node3" href="$class_shadow_map.html#a860d36ab2c85037db4005258ed17f8a0" title="ShadowMap::getLightSpace\lMatrix" alt="" coords="260,57,444,98"/>
-<area shape="rect" id="node4" href="$class_epsilon.html#a78c0240886a4a651bbd68f32a8a83bcb" title="Epsilon::LoadGeometry" alt="" coords="500,39,659,65"/>
-<area shape="rect" id="node6" href="$class_post_process.html#aa8969c885ab3ad2328e337d86453ac94" title="PostProcess::ShowFrame" alt="" coords="492,89,667,116"/>
-<area shape="rect" id="node5" href="$class_epsilon.html#a97302c6ca7b7d55d14f9ca742659ddca" title="Epsilon::Epsilon" alt="" coords="737,39,853,65"/>
-<area shape="rect" id="node7" href="$class_epsilon.html#abbabb1ab313440119a0ff1741d52d4ca" title="Epsilon::ComputeWater" alt="" coords="715,89,875,116"/>
+<area shape="rect" id="node2" href="$class_shadow_map.html#aad205032db3d7d854ba714acf111eec2" title="ShadowMap::ShadowMap" alt="" coords="265,5,437,32"/>
+<area shape="rect" id="node3" href="$class_shadow_map.html#a06668973dbcad477693f1a80879e24b1" title="ShadowMap::getBiasMatrix" alt="" coords="260,56,441,83"/>
 </map>

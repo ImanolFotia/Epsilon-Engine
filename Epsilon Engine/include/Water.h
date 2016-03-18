@@ -16,6 +16,7 @@
 #include <Camera.h>
 
 #include <vector>
+#include <memory>
 
 class Water{
 
@@ -28,10 +29,10 @@ public:
 
 public:
 
-    void GenerateReflection(Camera* cam);
-    void GenerateRefraction(Camera* cam);
+    void GenerateReflection(std::unique_ptr<Camera>& cam);
+    void GenerateRefraction(std::unique_ptr<Camera>& cam);
     void FinishWatercomputation(void);
-    void RenderWater(Camera* cam, glm::vec3 lightDir);
+    void RenderWater(std::unique_ptr<Camera>& cam, glm::vec3 lightDir);
 
 public:
     float scale;
@@ -44,7 +45,7 @@ private:
     void CreateReflectionFBO(void);
     void CreateRefractionFBO(void);
     void GeneratePlane(void);
-    void GenerateModelViewProjection(Camera* cam);
+    void GenerateModelViewProjection(std::unique_ptr<Camera>& cam);
     void GeneratevertexArray();
 
 

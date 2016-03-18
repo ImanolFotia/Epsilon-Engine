@@ -127,6 +127,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a02d4b3e95c33f9f83fc4104a3f5363e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a06155e722ef85cce62f65d8667cf41fb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_frustum.html#a06155e722ef85cce62f65d8667cf41fb">BoxInFrustum</a> (float x, float y, float z, float sizeX, float sizeY, float sizeZ)</td></tr>
 <tr class="separator:a06155e722ef85cce62f65d8667cf41fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34e0f4eee50fa86ab4dfbdb2b1a78264"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_frustum.html#a34e0f4eee50fa86ab4dfbdb2b1a78264">BoxInFrustum</a> (<a class="el" href="struct_m_i_n___m_a_x___p_o_i_n_t_s.html">MIN_MAX_POINTS</a> points)</td></tr>
+<tr class="separator:a34e0f4eee50fa86ab4dfbdb2b1a78264"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -185,16 +187,23 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>m_Frustum</b> [6][4]
 <p>Go through all of the corners of the box and check then again each plane in the frustum. If all of them are behind one of the planes, then it most like is not in the frustum.</p>
 <p>If we get here, it isn't in the frustum </p>
 
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="class_c_frustum_a06155e722ef85cce62f65d8667cf41fb_icgraph.png" border="0" usemap="#class_c_frustum_a06155e722ef85cce62f65d8667cf41fb_icgraph" alt=""/></div>
-<map name="class_c_frustum_a06155e722ef85cce62f65d8667cf41fb_icgraph" id="class_c_frustum_a06155e722ef85cce62f65d8667cf41fb_icgraph">
-<area shape="rect" id="node2" href="class_epsilon.html#a78c0240886a4a651bbd68f32a8a83bcb" title="Epsilon::LoadGeometry" alt="" coords="221,5,380,32"/>
-<area shape="rect" id="node3" href="class_epsilon.html#a97302c6ca7b7d55d14f9ca742659ddca" title="Epsilon::Epsilon" alt="" coords="428,5,544,32"/>
-</map>
 </div>
-</p>
+</div>
+<a class="anchor" id="a34e0f4eee50fa86ab4dfbdb2b1a78264"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool CFrustum::BoxInFrustum </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_m_i_n___m_a_x___p_o_i_n_t_s.html">MIN_MAX_POINTS</a>&#160;</td>
+          <td class="paramname"><em>points</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Go through all of the corners of the box and check then again each plane in the frustum. If all of them are behind one of the planes, then it most like is not in the frustum.</p>
+<p>If we get here, it isn't in the frustum </p>
 
 </div>
 </div>
@@ -227,17 +236,6 @@ Here is the caller graph for this function:</div>
 <p>This will extract the BACK side of the frustum</p>
 <p>Normalize the BACK side</p>
 <p>Normalize the FRONT side </p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="class_c_frustum_a9c1738062b94376ab2b754bfd6b4c363_icgraph.png" border="0" usemap="#class_c_frustum_a9c1738062b94376ab2b754bfd6b4c363_icgraph" alt=""/></div>
-<map name="class_c_frustum_a9c1738062b94376ab2b754bfd6b4c363_icgraph" id="class_c_frustum_a9c1738062b94376ab2b754bfd6b4c363_icgraph">
-<area shape="rect" id="node2" href="class_epsilon.html#a78c0240886a4a651bbd68f32a8a83bcb" title="Epsilon::LoadGeometry" alt="" coords="243,5,401,32"/>
-<area shape="rect" id="node3" href="class_epsilon.html#a97302c6ca7b7d55d14f9ca742659ddca" title="Epsilon::Epsilon" alt="" coords="449,5,565,32"/>
-</map>
-</div>
-</p>
 
 </div>
 </div>

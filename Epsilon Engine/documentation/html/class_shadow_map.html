@@ -134,6 +134,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4ecae9c8ba5f3e1eb1fa0899615d9f96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a860d36ab2c85037db4005258ed17f8a0"><td class="memItemLeft" align="right" valign="top">glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_shadow_map.html#a860d36ab2c85037db4005258ed17f8a0">getLightSpaceMatrix</a> (void)</td></tr>
 <tr class="separator:a860d36ab2c85037db4005258ed17f8a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06668973dbcad477693f1a80879e24b1"><td class="memItemLeft" align="right" valign="top">glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_shadow_map.html#a06668973dbcad477693f1a80879e24b1">getBiasMatrix</a> (void)</td></tr>
+<tr class="separator:a06668973dbcad477693f1a80879e24b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acce822bf94608533989b77998eea48b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_shadow_map.html#acce822bf94608533989b77998eea48b6">SetupShadowMatrices</a> (void)</td></tr>
 <tr class="separator:acce822bf94608533989b77998eea48b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -169,6 +171,9 @@ glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>m_lightView</b><
 <tr class="memitem:a0eea8d2dd25ac26d8696cebe6b097c9d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0eea8d2dd25ac26d8696cebe6b097c9d"></a>
 glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>m_lightSpaceMatrix</b></td></tr>
 <tr class="separator:a0eea8d2dd25ac26d8696cebe6b097c9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10adb1b4da43d0fd2820869486ca8092"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a10adb1b4da43d0fd2820869486ca8092"></a>
+glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>m_biasMatrix</b></td></tr>
+<tr class="separator:a10adb1b4da43d0fd2820869486ca8092"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>========= Copyright Survtech, All rights reserved. ============//</p>
@@ -288,12 +293,38 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 <p>Binds the Shadow Map framebuffer as the current framebuffer, where the depth of the scene will be rendered to. </p>
 
+</div>
+</div>
+<a class="anchor" id="a06668973dbcad477693f1a80879e24b1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">glm::mat4 ShadowMap::getBiasMatrix </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Get the Light/Proj Matrix multiplied by the Bias Matrix </p>
+
 <p><div class="dynheader">
-Here is the caller graph for this function:</div>
+Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="class_shadow_map_aea0e3d6a4b32b256b3318ea94d7cda9e_icgraph.png" border="0" usemap="#class_shadow_map_aea0e3d6a4b32b256b3318ea94d7cda9e_icgraph" alt=""/></div>
-<map name="class_shadow_map_aea0e3d6a4b32b256b3318ea94d7cda9e_icgraph" id="class_shadow_map_aea0e3d6a4b32b256b3318ea94d7cda9e_icgraph">
-<area shape="rect" id="node2" href="class_epsilon.html#abbabb1ab313440119a0ff1741d52d4ca" title="Epsilon::ComputeWater" alt="" coords="264,13,424,39"/>
+<div class="center"><img src="class_shadow_map_a06668973dbcad477693f1a80879e24b1_cgraph.png" border="0" usemap="#class_shadow_map_a06668973dbcad477693f1a80879e24b1_cgraph" alt=""/></div>
+<map name="class_shadow_map_a06668973dbcad477693f1a80879e24b1_cgraph" id="class_shadow_map_a06668973dbcad477693f1a80879e24b1_cgraph">
+<area shape="rect" id="node2" href="class_shadow_map.html#acce822bf94608533989b77998eea48b6" title="ShadowMap::SetupShadowMatrices" alt="" coords="235,5,465,32"/>
+<area shape="rect" id="node3" href="class_shadow_map.html#a4d4aa3ef5716aeeaee64d8431e432947" title="ShadowMap::SetupShadowMap" alt="" coords="247,56,453,83"/>
 </map>
 </div>
 </p>
@@ -323,30 +354,6 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <p>Get the Shadow Map LightSpace ProjectionView Matrix </p>
 
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="class_shadow_map_a860d36ab2c85037db4005258ed17f8a0_cgraph.png" border="0" usemap="#class_shadow_map_a860d36ab2c85037db4005258ed17f8a0_cgraph" alt=""/></div>
-<map name="class_shadow_map_a860d36ab2c85037db4005258ed17f8a0_cgraph" id="class_shadow_map_a860d36ab2c85037db4005258ed17f8a0_cgraph">
-<area shape="rect" id="node2" href="class_shadow_map.html#acce822bf94608533989b77998eea48b6" title="ShadowMap::SetupShadowMatrices" alt="" coords="237,5,468,32"/>
-<area shape="rect" id="node3" href="class_shadow_map.html#a4d4aa3ef5716aeeaee64d8431e432947" title="ShadowMap::SetupShadowMap" alt="" coords="249,56,456,83"/>
-</map>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="class_shadow_map_a860d36ab2c85037db4005258ed17f8a0_icgraph.png" border="0" usemap="#class_shadow_map_a860d36ab2c85037db4005258ed17f8a0_icgraph" alt=""/></div>
-<map name="class_shadow_map_a860d36ab2c85037db4005258ed17f8a0_icgraph" id="class_shadow_map_a860d36ab2c85037db4005258ed17f8a0_icgraph">
-<area shape="rect" id="node2" href="class_epsilon.html#a78c0240886a4a651bbd68f32a8a83bcb" title="Epsilon::LoadGeometry" alt="" coords="245,5,404,32"/>
-<area shape="rect" id="node4" href="class_post_process.html#aa8969c885ab3ad2328e337d86453ac94" title="PostProcess::ShowFrame" alt="" coords="237,56,412,83"/>
-<area shape="rect" id="node3" href="class_epsilon.html#a97302c6ca7b7d55d14f9ca742659ddca" title="Epsilon::Epsilon" alt="" coords="482,5,598,32"/>
-<area shape="rect" id="node5" href="class_epsilon.html#abbabb1ab313440119a0ff1741d52d4ca" title="Epsilon::ComputeWater" alt="" coords="460,56,620,83"/>
-</map>
-</div>
-</p>
-
 </div>
 </div>
 <a class="anchor" id="a4ecae9c8ba5f3e1eb1fa0899615d9f96"></a>
@@ -371,17 +378,6 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 <p>Get the Shadow Map texture Id where the depth from the scene was rendered to. </p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="class_shadow_map_a4ecae9c8ba5f3e1eb1fa0899615d9f96_icgraph.png" border="0" usemap="#class_shadow_map_a4ecae9c8ba5f3e1eb1fa0899615d9f96_icgraph" alt=""/></div>
-<map name="class_shadow_map_a4ecae9c8ba5f3e1eb1fa0899615d9f96_icgraph" id="class_shadow_map_a4ecae9c8ba5f3e1eb1fa0899615d9f96_icgraph">
-<area shape="rect" id="node2" href="class_epsilon.html#abbabb1ab313440119a0ff1741d52d4ca" title="Epsilon::ComputeWater" alt="" coords="496,5,656,32"/>
-<area shape="rect" id="node3" href="class_post_process.html#aa8969c885ab3ad2328e337d86453ac94" title="PostProcess::ShowFrame" alt="" coords="273,31,448,57"/>
-</map>
-</div>
-</p>
 
 </div>
 </div>
@@ -408,16 +404,6 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <p>Set the Shadow Map Direction </p>
 
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="class_shadow_map_a4c28748161d18d8e260ef21bc402af9d_icgraph.png" border="0" usemap="#class_shadow_map_a4c28748161d18d8e260ef21bc402af9d_icgraph" alt=""/></div>
-<map name="class_shadow_map_a4c28748161d18d8e260ef21bc402af9d_icgraph" id="class_shadow_map_a4c28748161d18d8e260ef21bc402af9d_icgraph">
-<area shape="rect" id="node2" href="class_epsilon.html#abbabb1ab313440119a0ff1741d52d4ca" title="Epsilon::ComputeWater" alt="" coords="269,5,429,32"/>
-</map>
-</div>
-</p>
-
 </div>
 </div>
 <a class="anchor" id="adce20a1694daa11845bb8a4cabfe3f18"></a>
@@ -442,16 +428,6 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 <p>Set the Shadow Map Position </p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="class_shadow_map_adce20a1694daa11845bb8a4cabfe3f18_icgraph.png" border="0" usemap="#class_shadow_map_adce20a1694daa11845bb8a4cabfe3f18_icgraph" alt=""/></div>
-<map name="class_shadow_map_adce20a1694daa11845bb8a4cabfe3f18_icgraph" id="class_shadow_map_adce20a1694daa11845bb8a4cabfe3f18_icgraph">
-<area shape="rect" id="node2" href="class_epsilon.html#abbabb1ab313440119a0ff1741d52d4ca" title="Epsilon::ComputeWater" alt="" coords="265,5,425,32"/>
-</map>
-</div>
-</p>
 
 </div>
 </div>
@@ -483,12 +459,8 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="class_shadow_map_a4d4aa3ef5716aeeaee64d8431e432947_icgraph.png" border="0" usemap="#class_shadow_map_a4d4aa3ef5716aeeaee64d8431e432947_icgraph" alt=""/></div>
 <map name="class_shadow_map_a4d4aa3ef5716aeeaee64d8431e432947_icgraph" id="class_shadow_map_a4d4aa3ef5716aeeaee64d8431e432947_icgraph">
-<area shape="rect" id="node2" href="class_shadow_map.html#aad205032db3d7d854ba714acf111eec2" title="ShadowMap::ShadowMap" alt="" coords="266,5,438,32"/>
-<area shape="rect" id="node3" href="class_shadow_map.html#a860d36ab2c85037db4005258ed17f8a0" title="ShadowMap::getLightSpace\lMatrix" alt="" coords="260,57,444,98"/>
-<area shape="rect" id="node4" href="class_epsilon.html#a78c0240886a4a651bbd68f32a8a83bcb" title="Epsilon::LoadGeometry" alt="" coords="500,39,659,65"/>
-<area shape="rect" id="node6" href="class_post_process.html#aa8969c885ab3ad2328e337d86453ac94" title="PostProcess::ShowFrame" alt="" coords="492,89,667,116"/>
-<area shape="rect" id="node5" href="class_epsilon.html#a97302c6ca7b7d55d14f9ca742659ddca" title="Epsilon::Epsilon" alt="" coords="737,39,853,65"/>
-<area shape="rect" id="node7" href="class_epsilon.html#abbabb1ab313440119a0ff1741d52d4ca" title="Epsilon::ComputeWater" alt="" coords="715,89,875,116"/>
+<area shape="rect" id="node2" href="class_shadow_map.html#aad205032db3d7d854ba714acf111eec2" title="ShadowMap::ShadowMap" alt="" coords="265,5,437,32"/>
+<area shape="rect" id="node3" href="class_shadow_map.html#a06668973dbcad477693f1a80879e24b1" title="ShadowMap::getBiasMatrix" alt="" coords="260,56,441,83"/>
 </map>
 </div>
 </p>
@@ -515,11 +487,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="class_shadow_map_acce822bf94608533989b77998eea48b6_icgraph.png" border="0" usemap="#class_shadow_map_acce822bf94608533989b77998eea48b6_icgraph" alt=""/></div>
 <map name="class_shadow_map_acce822bf94608533989b77998eea48b6_icgraph" id="class_shadow_map_acce822bf94608533989b77998eea48b6_icgraph">
-<area shape="rect" id="node2" href="class_shadow_map.html#a860d36ab2c85037db4005258ed17f8a0" title="ShadowMap::getLightSpace\lMatrix" alt="" coords="284,41,468,82"/>
-<area shape="rect" id="node6" href="class_epsilon.html#abbabb1ab313440119a0ff1741d52d4ca" title="Epsilon::ComputeWater" alt="" coords="739,81,899,108"/>
-<area shape="rect" id="node3" href="class_epsilon.html#a78c0240886a4a651bbd68f32a8a83bcb" title="Epsilon::LoadGeometry" alt="" coords="524,5,683,32"/>
-<area shape="rect" id="node5" href="class_post_process.html#aa8969c885ab3ad2328e337d86453ac94" title="PostProcess::ShowFrame" alt="" coords="516,56,691,83"/>
-<area shape="rect" id="node4" href="class_epsilon.html#a97302c6ca7b7d55d14f9ca742659ddca" title="Epsilon::Epsilon" alt="" coords="761,5,877,32"/>
+<area shape="rect" id="node2" href="class_shadow_map.html#a06668973dbcad477693f1a80879e24b1" title="ShadowMap::getBiasMatrix" alt="" coords="284,5,465,32"/>
 </map>
 </div>
 </p>
@@ -548,16 +516,6 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 <p>Binds the current framebuffer to the default framebuffer </p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="class_shadow_map_a0b8328ce476f157f00c78f905706be73_icgraph.png" border="0" usemap="#class_shadow_map_a0b8328ce476f157f00c78f905706be73_icgraph" alt=""/></div>
-<map name="class_shadow_map_a0b8328ce476f157f00c78f905706be73_icgraph" id="class_shadow_map_a0b8328ce476f157f00c78f905706be73_icgraph">
-<area shape="rect" id="node2" href="class_epsilon.html#abbabb1ab313440119a0ff1741d52d4ca" title="Epsilon::ComputeWater" alt="" coords="277,13,437,39"/>
-</map>
-</div>
-</p>
 
 </div>
 </div>

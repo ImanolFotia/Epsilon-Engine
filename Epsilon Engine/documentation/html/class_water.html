@@ -129,17 +129,17 @@ Collaboration diagram for Water:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a456fec66ab6833de7615dc9fb212ae2a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_water.html#a456fec66ab6833de7615dc9fb212ae2a">Water</a> (glm::vec3 position, float scale)</td></tr>
 <tr class="separator:a456fec66ab6833de7615dc9fb212ae2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab6bcc7902558d57742cdec99ff26630b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab6bcc7902558d57742cdec99ff26630b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>GenerateReflection</b> (<a class="el" href="class_camera.html">Camera</a> *cam)</td></tr>
-<tr class="separator:ab6bcc7902558d57742cdec99ff26630b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f58d073441d1c6540dd6fb210dea063"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6f58d073441d1c6540dd6fb210dea063"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>GenerateRefraction</b> (<a class="el" href="class_camera.html">Camera</a> *cam)</td></tr>
-<tr class="separator:a6f58d073441d1c6540dd6fb210dea063"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a622cc785abc56f0662d2991e07bdba63"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a622cc785abc56f0662d2991e07bdba63"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>GenerateReflection</b> (std::unique_ptr&lt; <a class="el" href="class_camera.html">Camera</a> &gt; &amp;cam)</td></tr>
+<tr class="separator:a622cc785abc56f0662d2991e07bdba63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aadde2b7a3d4e4f4a5250f89d8308b12c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aadde2b7a3d4e4f4a5250f89d8308b12c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>GenerateRefraction</b> (std::unique_ptr&lt; <a class="el" href="class_camera.html">Camera</a> &gt; &amp;cam)</td></tr>
+<tr class="separator:aadde2b7a3d4e4f4a5250f89d8308b12c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa69302dc7573d79027ef421dbed2f886"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa69302dc7573d79027ef421dbed2f886"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>FinishWatercomputation</b> (void)</td></tr>
 <tr class="separator:aa69302dc7573d79027ef421dbed2f886"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08a41b27d6a0f1534646a10ad5af154a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_water.html#a08a41b27d6a0f1534646a10ad5af154a">RenderWater</a> (<a class="el" href="class_camera.html">Camera</a> *cam, glm::vec3 lightDir)</td></tr>
-<tr class="separator:a08a41b27d6a0f1534646a10ad5af154a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa61c82b036ffee41246bfff00df51211"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_water.html#aa61c82b036ffee41246bfff00df51211">RenderWater</a> (std::unique_ptr&lt; <a class="el" href="class_camera.html">Camera</a> &gt; &amp;cam, glm::vec3 lightDir)</td></tr>
+<tr class="separator:aa61c82b036ffee41246bfff00df51211"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -167,9 +167,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>CreateRefractionFBO</
 <tr class="memitem:ac7a0243b5a7a83e5ca4a61ebb58b7457"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac7a0243b5a7a83e5ca4a61ebb58b7457"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>GeneratePlane</b> (void)</td></tr>
 <tr class="separator:ac7a0243b5a7a83e5ca4a61ebb58b7457"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee1270eed6188c50a960a70af4f3c7bd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aee1270eed6188c50a960a70af4f3c7bd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>GenerateModelViewProjection</b> (<a class="el" href="class_camera.html">Camera</a> *cam)</td></tr>
-<tr class="separator:aee1270eed6188c50a960a70af4f3c7bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32e07a0cb0fbaf7f10ae6ce8fbdc2fdb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a32e07a0cb0fbaf7f10ae6ce8fbdc2fdb"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>GenerateModelViewProjection</b> (std::unique_ptr&lt; <a class="el" href="class_camera.html">Camera</a> &gt; &amp;cam)</td></tr>
+<tr class="separator:a32e07a0cb0fbaf7f10ae6ce8fbdc2fdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb05d0aff9758b52436f8e7e363fbb32"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abb05d0aff9758b52436f8e7e363fbb32"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>GeneratevertexArray</b> ()</td></tr>
 <tr class="separator:abb05d0aff9758b52436f8e7e363fbb32"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -282,14 +282,14 @@ glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>MVP</b></td></tr
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a08a41b27d6a0f1534646a10ad5af154a"></a>
+<a class="anchor" id="aa61c82b036ffee41246bfff00df51211"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void Water::RenderWater </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_camera.html">Camera</a> *&#160;</td>
+          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="class_camera.html">Camera</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>cam</em>, </td>
         </tr>
         <tr>

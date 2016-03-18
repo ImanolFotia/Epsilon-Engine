@@ -9,7 +9,7 @@ var searchData=
   ['blurimage',['blurImage',['../class_post_process.html#a3e25d72da486f623ba34bc5d8b8ddfb7',1,'PostProcess']]],
   ['bound',['Bound',['../struct_m_d5_animation_1_1_bound.html',1,'MD5Animation']]],
   ['bounding_5fbox',['BOUNDING_BOX',['../struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x.html',1,'Model']]],
-  ['boxinfrustum',['BoxInFrustum',['../class_c_frustum.html#a06155e722ef85cce62f65d8667cf41fb',1,'CFrustum']]],
+  ['boxinfrustum',['BoxInFrustum',['../class_c_frustum.html#a06155e722ef85cce62f65d8667cf41fb',1,'CFrustum::BoxInFrustum(float x, float y, float z, float sizeX, float sizeY, float sizeZ)'],['../class_c_frustum.html#a34e0f4eee50fa86ab4dfbdb2b1a78264',1,'CFrustum::BoxInFrustum(MIN_MAX_POINTS points)']]],
   ['bspface',['BSPFace',['../class_b_s_p_face.html',1,'']]],
   ['bspfile',['BSPfile',['../class_b_s_pfile.html',1,'']]],
   ['bsptexture',['BSPTexture',['../struct_b_s_p_texture.html',1,'']]],

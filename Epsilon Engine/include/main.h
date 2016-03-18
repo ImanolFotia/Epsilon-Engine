@@ -29,7 +29,7 @@ public:
         EpsilonEngine->MainLoop();
     }
 
-    virtual ~App(void) {
+    ~App(void) {
         delete EpsilonEngine;
     }
 

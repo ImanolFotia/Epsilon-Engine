@@ -20,8 +20,8 @@ void PostProcess::SetupFramebuffer()
     ProgramData PG;
     width = PG.WINDOW_WIDTH;
     height = PG.WINDOW_HEIGHT;
-    this->SSAOwidth = 600;
-    this->SSAOheight = 600;
+    this->SSAOwidth = width;
+    this->SSAOheight = height;
     m_exposure = 1.5;
 
     /* MSAA buffer
@@ -244,15 +244,15 @@ void PostProcess::setupSSAO()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // Sample kernel
-    std::uniform_real_distribution<GLfloat> randomFloatsClamped(0.2, 1.0); // generates random floats between 0.0 and 1.0
+    std::uniform_real_distribution<GLfloat> randomFloatsClamped(0.4, 1.0); // generates random floats between 0.0 and 1.0
     std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0); // generates random floats between 0.0 and 1.0
     std::default_random_engine generator;
-    for (GLuint i = 0; i < 16; ++i)
+    for (GLuint i = 0; i < 24; ++i)
     {
         glm::vec3 sample(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, randomFloatsClamped(generator));
         sample = glm::normalize(sample);
         sample *= randomFloats(generator);
-        GLfloat scale = GLfloat(i) / 16.0;
+        GLfloat scale = GLfloat(i) / 24.0;
 
         // Scale samples s.t. they're more aligned to center of kernel
         scale = lerp(0.1f, 1.0f, scale * scale);
@@ -276,7 +276,7 @@ void PostProcess::setupSSAO()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
-void PostProcess::applySSAO(Camera* cam)
+void PostProcess::applySSAO(std::unique_ptr<Camera>& cam)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -295,7 +295,7 @@ void PostProcess::applySSAO(Camera* cam)
     glBindTexture(GL_TEXTURE_2D, this->noiseTexture);
 
     // Send kernel + rotation
-    for (GLuint i = 0; i < 16; i++)
+    for (GLuint i = 0; i < 24; i++)
         glUniform3fv(glGetUniformLocation(SSAO->getProgramID(), ("samples[" + Helpers::intTostring(i) + "]").c_str()), 1, &ssaoKernel[i][0]);
 
     glUniformMatrix4fv(glGetUniformLocation(SSAO->getProgramID(), "projection"), 1, GL_FALSE, &cam->getProjectionMatrix()[0][0]);
@@ -453,7 +453,7 @@ void PostProcess::ShowPostProcessImage(float exposure, GLuint ShadowMapID)
     this->RenderQuad();
 }
 
-void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, Camera* cam, float exposure, ShadowMap* shadowMap)
+void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::unique_ptr<Camera>& cam, float exposure, std::unique_ptr<ShadowMap>& shadowMap)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

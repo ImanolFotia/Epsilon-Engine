@@ -3,7 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-
+#include <Model.h>
 class CFrustum {
 
 public:
@@ -25,6 +25,9 @@ public:
 
 	// This checks if a box is in the frustum
 	bool BoxInFrustum(float x, float y, float z, float sizeX, float sizeY, float sizeZ);
+
+	// This checks if a box is in the frustum
+	bool BoxInFrustum(MIN_MAX_POINTS points);
 
 /////// * /////////// * /////////// * NEW * /////// * /////////// * /////////// *
 

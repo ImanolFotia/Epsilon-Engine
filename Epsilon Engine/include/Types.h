@@ -33,8 +33,8 @@
 
 /** Datatypes */
 
-typedef unsigned char   BOOL;
-typedef char            BYTE;
+typedef unsigned char   UCHAR;
+typedef unsigned char   BYTE;
 typedef int             INT;
 typedef int             INTEGER;
 typedef unsigned int    UINT;

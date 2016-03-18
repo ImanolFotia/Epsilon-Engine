@@ -117,16 +117,13 @@ $(document).ready(function(){initNavTree('class_model.html','');});
 <div class="title">Model Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p>Contains all the necessery OpenGL includes.  
- <a href="class_model.html#details">More...</a></p>
 <div class="dynheader">
 Collaboration diagram for Model:</div>
 <div class="dyncontent">
 <div class="center"><img src="class_model__coll__graph.png" border="0" usemap="#_model_coll__map" alt="Collaboration graph"/></div>
 <map name="_model_coll__map" id="_model_coll__map">
-<area shape="rect" id="node2" href="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x.html" title="Structure to store the models bounding box for visibility and collision computation. " alt="" coords="5,5,172,32"/>
-<area shape="rect" id="node3" href="struct_model_1_1_m_i_n___m_a_x___p_o_i_n_t_s.html" title="Model::MIN_MAX_POINTS" alt="" coords="197,5,373,32"/>
+<area shape="rect" id="node2" href="struct_m_i_n___m_a_x___p_o_i_n_t_s.html" title="Contains all the necessery OpenGL includes. " alt="" coords="5,5,139,32"/>
+<area shape="rect" id="node3" href="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x.html" title="Structure to store the models bounding box for visibility and collision computation. " alt="" coords="163,5,330,32"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -135,14 +132,15 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x.html">BOUNDING_BOX</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure to store the models bounding box for visibility and collision computation.  <a href="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_model_1_1_m_i_n___m_a_x___p_o_i_n_t_s.html">MIN_MAX_POINTS</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac1aaf3ae95e438c200eb3dfcb4a22073"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac1aaf3ae95e438c200eb3dfcb4a22073"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Model</b> (GLchar *path)</td></tr>
-<tr class="separator:ac1aaf3ae95e438c200eb3dfcb4a22073"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c34749c25d878e0e00179911d2b6628"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0c34749c25d878e0e00179911d2b6628"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Model</b> (const char *path)</td></tr>
+<tr class="separator:a0c34749c25d878e0e00179911d2b6628"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01308a0e5396f32afacefe1b1e39312d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a01308a0e5396f32afacefe1b1e39312d"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getPath</b> ()</td></tr>
+<tr class="separator:a01308a0e5396f32afacefe1b1e39312d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8444e404fcc9cc66827c2f628b92ece3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8444e404fcc9cc66827c2f628b92ece3"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_model.html#a8444e404fcc9cc66827c2f628b92ece3">Draw</a> (<a class="el" href="class_shader.html">Shader</a> *shader)</td></tr>
 <tr class="memdesc:a8444e404fcc9cc66827c2f628b92ece3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draws the model, and thus all its meshes. <br /></td></tr>
@@ -157,6 +155,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ab910ead43eaeb4cedd2b1aca69d28987"><td class="memItemLeft" align="right" valign="top">aiMesh *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_model.html#ab910ead43eaeb4cedd2b1aca69d28987">mesh</a></td></tr>
 <tr class="memdesc:ab910ead43eaeb4cedd2b1aca69d28987"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor, expects a filepath to a 3D model.  <a href="#ab910ead43eaeb4cedd2b1aca69d28987">More...</a><br /></td></tr>
 <tr class="separator:ab910ead43eaeb4cedd2b1aca69d28987"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af94ddde9af2f1fcee96a5aca53e48ed1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af94ddde9af2f1fcee96a5aca53e48ed1"></a>
+const char *&#160;</td><td class="memItemRight" valign="bottom"><b>path</b></td></tr>
+<tr class="separator:af94ddde9af2f1fcee96a5aca53e48ed1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d77b67392e10756ca9c5075b2abedea"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5d77b67392e10756ca9c5075b2abedea"></a>
 string&#160;</td><td class="memItemRight" valign="bottom"><b>directory</b></td></tr>
 <tr class="separator:a5d77b67392e10756ca9c5075b2abedea"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -167,7 +168,7 @@ vector&lt; <a class="el" href="class_mesh.html">Mesh</a> &gt;&#160;</td><td clas
 vector&lt; <a class="el" href="struct_texture.html">Texture</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>textures_loaded</b></td></tr>
 <tr class="separator:aa0d87cb976812a96da160a85d7a610e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fb7f2a4cd72a2d800219107187e07f2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4fb7f2a4cd72a2d800219107187e07f2"></a>
-<a class="el" href="struct_model_1_1_m_i_n___m_a_x___p_o_i_n_t_s.html">MIN_MAX_POINTS</a>&#160;</td><td class="memItemRight" valign="bottom"><b>MinMaxPoints</b></td></tr>
+<a class="el" href="struct_m_i_n___m_a_x___p_o_i_n_t_s.html">MIN_MAX_POINTS</a>&#160;</td><td class="memItemRight" valign="bottom"><b>MinMaxPoints</b></td></tr>
 <tr class="separator:a4fb7f2a4cd72a2d800219107187e07f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abda72709e3aa14066e39f4ccd02f9911"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abda72709e3aa14066e39f4ccd02f9911"></a>
 <a class="el" href="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x.html">BOUNDING_BOX</a>&#160;</td><td class="memItemRight" valign="bottom"><b>BoundingBox</b></td></tr>
@@ -198,10 +199,7 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:aa8e86b524eb1e7f3f76d14422af27204"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.  <a href="#aa8e86b524eb1e7f3f76d14422af27204">More...</a><br /></td></tr>
 <tr class="separator:aa8e86b524eb1e7f3f76d14422af27204"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Contains all the necessery OpenGL includes. </p>
-<p>GL Includes </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a class="anchor" id="aae58d549a5695ae7c1d7bef7b82df73a"></a>
 <div class="memitem">
 <div class="memproto">
@@ -332,7 +330,6 @@ Private Attributes</h2></td></tr>
 <ol type="1">
 <li>Heigth maps</li>
 </ol>
-<p><a class="el" href="struct_texture.html">Texture</a> Tex; Tex.id = loadCubemap(); Tex.type = "CubeMap"; Tex.path = "materials/skyboxes/Miramar/right.tga"; textures.push_back(Tex);</p>
 <p>Return a mesh object created from the extracted mesh data </p>
 
 </div>
@@ -396,7 +393,7 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once. </p>
-<p><a class="el" href="class_model.html" title="Contains all the necessery OpenGL includes. ">Model</a> Data </p>
+<p><a class="el" href="class_model.html">Model</a> Data </p>
 
 </div>
 </div>

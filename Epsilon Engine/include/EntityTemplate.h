@@ -4,7 +4,7 @@
 #include <Component.h>
 #include <iostream>
 #include <typeinfo>
-
+#include <memory>
 class EntityTemplate
 {
 public:
@@ -30,34 +30,32 @@ public:
         std::cout << "isBool" << std::endl;
     }
 
-    void addComponent(Component::RenderComponent& t)
+    void addComponent(std::shared_ptr<Component::RenderComponent> t)
     {
         std::cout <<typeid(Component::RenderComponent).name() << " Added." << std::endl;
         hasRenderComponent = true;
         rC = t;
     }
 
-    void addComponent(Component::PlayerComponent& t)
+    void addComponent(std::shared_ptr<Component::PlayerComponent> t)
     {
         std::cout << "is" <<typeid(Component::PlayerComponent).name() << std::endl;
         hasPlayerComponent = true;
-
     }
 
-    void addComponent(Component::SpatialComponent& t)
+    void addComponent(std::shared_ptr<Component::SpatialComponent> t)
     {
         std::cout << "is" <<typeid(Component::SpatialComponent).name() << std::endl;
         hasSpatialComponent = true;
         sC = t;
-
     }
 
 
     void Update();
 
-    Component::RenderComponent rC;
-    Component::PlayerComponent pC;
-    Component::SpatialComponent sC;
+    std::shared_ptr<Component::RenderComponent> rC;
+    std::shared_ptr<Component::PlayerComponent> pC;
+    std::shared_ptr<Component::SpatialComponent> sC;
 
 private:
 

@@ -23,6 +23,16 @@ using namespace std;
 #include <Texture.h>
 #include <Mesh.h>
 
+typedef struct MIN_MAX_POINTS
+{
+    float MAX_X;
+    float MAX_Y;
+    float MAX_Z;
+
+    float MIN_X;
+    float MIN_Y;
+    float MIN_Z;
+};
 
 class Model
 {
@@ -30,11 +40,17 @@ public:
     /**  Functions   */
     /// Constructor, expects a filepath to a 3D model.
     aiMesh* mesh;
-
-    Model(GLchar* path)
+    const char* path;
+    Model(const char* path)
     {
         this->loadModel(path);
+        this->path = path;
         //cout << "Cantidad de texturas: " << textures_loaded.size() << endl;
+    }
+
+    std::string getPath()
+    {
+        return this->path;
     }
     ~Model()
     {
@@ -71,17 +87,6 @@ public:
         float BACK_TOP_RIGHT;
         float BACK_BOTTOM_LEFT;
         float BACK_BOTTOM_RIGHT;
-    };
-
-    typedef struct MIN_MAX_POINTS
-    {
-        float MAX_X;
-        float MAX_Y;
-        float MAX_Z;
-
-        float MIN_X;
-        float MIN_Y;
-        float MIN_Z;
     };
 
     MIN_MAX_POINTS MinMaxPoints;
@@ -286,16 +291,15 @@ private:
             }
         }
 
-
-/*
-                    Texture texture;
-                    texture.id = loadCubemap();
-                    texture.type = "CubeMap";
-                    texture.path = "materials/skyboxes/Miramar/right.tga";
-                    TMPtextures.push_back(texture);
-                    this->textures_loaded.push_back(texture);  /// Store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
-                    CubeMapLoaded = true;
-*/
+        /*
+                            Texture texture;
+                            texture.id = loadCubemap();
+                            texture.type = "CubeMap";
+                            texture.path = "materials/skyboxes/Miramar/right.tga";
+                            TMPtextures.push_back(texture);
+                            this->textures_loaded.push_back(texture);  /// Store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+                            CubeMapLoaded = true;
+        */
 
 
         return TMPtextures;

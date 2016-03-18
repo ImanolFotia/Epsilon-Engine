@@ -2,7 +2,7 @@ var class_skybox =
 [
     [ "Skybox", "class_skybox.html#ae89023375201d5c07883412184866696", null ],
     [ "~Skybox", "class_skybox.html#a75809f0396413e4e74a348291fcd99f9", null ],
-    [ "Render", "class_skybox.html#a7724a6fc016c33c14a5c31821a0cd462", null ],
+    [ "Render", "class_skybox.html#a18a9f68b489fbc0169fba7a35ecec4a5", null ],
     [ "CubeMapID", "class_skybox.html#a92ceb9614e85c1ece06e382d19cd5da9", null ],
     [ "EBO", "class_skybox.html#ad2450b9e277d6c0f106213cdc770af47", null ],
     [ "skyboxVAO", "class_skybox.html#a36dd4d9cd2053604fa123fada498d26d", null ],

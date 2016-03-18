@@ -301,3 +301,27 @@ bool CFrustum::BoxInFrustum( float x, float y, float z, float x2, float y2, floa
 
     return true;
 }
+
+
+bool CFrustum::BoxInFrustum( MIN_MAX_POINTS points)
+{
+    /// Go through all of the corners of the box and check then again each plane
+    /// in the frustum.  If all of them are behind one of the planes, then it most
+    /// like is not in the frustum.
+    for(int i = 0; i < 6; i++ )
+    {
+        if(m_Frustum[i][A] * points.MAX_X  + m_Frustum[i][B] * points.MAX_Y  + m_Frustum[i][C] * points.MAX_Z  + m_Frustum[i][D] > 0)  continue;
+        if(m_Frustum[i][A] * points.MIN_X + m_Frustum[i][B] * points.MAX_Y  + m_Frustum[i][C] * points.MAX_Z  + m_Frustum[i][D] > 0)  continue;
+        if(m_Frustum[i][A] * points.MAX_X  + m_Frustum[i][B] * points.MIN_Y + m_Frustum[i][C] * points.MAX_Z  + m_Frustum[i][D] > 0)  continue;
+        if(m_Frustum[i][A] * points.MIN_X + m_Frustum[i][B] * points.MIN_Y  + m_Frustum[i][C] * points.MAX_Z  + m_Frustum[i][D] > 0)  continue;
+        if(m_Frustum[i][A] * points.MAX_X  + m_Frustum[i][B] * points.MAX_Y  + m_Frustum[i][C] * points.MIN_Z + m_Frustum[i][D] > 0)  continue;
+        if(m_Frustum[i][A] * points.MIN_X + m_Frustum[i][B] * points.MAX_Y  + m_Frustum[i][C] * points.MIN_Z + m_Frustum[i][D] > 0)  continue;
+        if(m_Frustum[i][A] * points.MAX_X  + m_Frustum[i][B] * points.MIN_Y  + m_Frustum[i][C] * points.MIN_Z + m_Frustum[i][D] > 0)  continue;
+        if(m_Frustum[i][A] * points.MIN_X + m_Frustum[i][B] * points.MIN_Y  + m_Frustum[i][C] * points.MIN_Z + m_Frustum[i][D] > 0)  continue;
+
+        /// If we get here, it isn't in the frustum
+        return false;
+    }
+
+    return true;
+}

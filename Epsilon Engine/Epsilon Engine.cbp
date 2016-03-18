@@ -135,9 +135,11 @@
 		<Unit filename="include/BSPfile.h" />
 		<Unit filename="include/BSPformat.h" />
 		<Unit filename="include/CBitset.h" />
+		<Unit filename="include/CPUID.h" />
 		<Unit filename="include/Component.h" />
 		<Unit filename="include/EntityTemplate.h" />
 		<Unit filename="include/Epsilon.h" />
+		<Unit filename="include/EpsilonMemory.h" />
 		<Unit filename="include/Frustum.h" />
 		<Unit filename="include/Grass.h" />
 		<Unit filename="include/Includes.h" />

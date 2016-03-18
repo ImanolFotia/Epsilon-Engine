@@ -29,6 +29,8 @@
 #include <MD5_Anim.h>
 #include <ShadowMapping.h>
 #include <EntityTemplate.h>
+#include <memory>
+#include <ResourceManager.h>
 
 class Epsilon
 {
@@ -38,17 +40,6 @@ public:
 
     virtual ~Epsilon(void)
     {
-        delete eCamera;
-        delete skybox;
-        delete waterPlane;
-        delete text;
-        //delete terrain;
-        delete sun;
-        delete m_AnimModel;
-        delete PP;
-        BSPMap->Destroy();
-        delete BSPMap;
-        delete shadowMap;
 
         for(std::map<std::string, Shader*>::iterator itr = Shaders.begin(); itr != Shaders.end(); itr++)
         {
@@ -102,22 +93,24 @@ private:
 
 public:
 
-    Camera* eCamera;
+    std::unique_ptr<Camera> eCamera;
 
     /**Shaders**/
     std::map <string, Shader*> Shaders;
-    Skybox* skybox;
-    Water* waterPlane;
+    std::unique_ptr<Skybox> skybox;
+    std::unique_ptr<Water> waterPlane;
     std::vector<Grass> grass;
     std::vector<Model> model;
     GLuint VertexArrayID;
     GLFWwindow* window;
-    Text* text;
-    Terrain* terrain;
-    Sun* sun;
-    CQuake3BSP* BSPMap;
-    MD5Model* m_AnimModel;
-    ShadowMap* shadowMap;
+    std::unique_ptr<Text> text;
+    std::unique_ptr<Terrain> terrain;
+    std::unique_ptr<Sun> sun;
+    std::unique_ptr<CQuake3BSP> BSPMap;
+    std::unique_ptr<MD5Model> m_AnimModel;
+    std::unique_ptr<ShadowMap> shadowMap;
+    std::unique_ptr<EntityTemplate> ent;
+    std::unique_ptr<PostProcess> PP;
     /** Window Properties **/
 
     short WIDTH;
@@ -133,13 +126,12 @@ private:
     double etime;
     float exposure;
     bool parallax;
-    float eventtime;
+    float eventtime = 0;
     short fps;
     vector<glm::vec3> lightPositions;
     std::vector<glm::vec3> grassPos;
     std::ostringstream fpss;
-    PostProcess* PP;
-
+    ResourceManager rM;
 };
 
 #endif /// EPSILON_H_INCLUDED

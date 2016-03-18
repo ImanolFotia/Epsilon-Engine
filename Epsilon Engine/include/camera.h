@@ -11,7 +11,7 @@
 
 #include <glm/gtc/quaternion.hpp>
 #include <GLFW/glfw3.h>
-
+#include <iostream>
 class Camera{
 
 public:
@@ -19,6 +19,7 @@ public:
     Camera(glm::vec3, glm::vec3);
 
     ~Camera(){
+        std::cout << "Deleted Camera" << std::endl;
     }
 
 public:
