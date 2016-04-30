@@ -324,9 +324,6 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
                 throw;
             }
 
-
-
-
         return true;
     }
 
@@ -380,9 +377,9 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
         this->Faces[faceIndex].RenderFace(shader, faceTexture[faceIndex].GLTextureID, faceTexture_normal[faceIndex].GLTextureID, faceTexture_specular[faceIndex].GLTextureID);
     }
 
-    int g_VisibleFaces;
+    //int g_VisibleFaces;
 
-    void CQuake3BSP::RenderLevel(glm::vec3 vPos, GLuint shader, GLFWwindow* window, bool Shadow)
+    void CQuake3BSP::RenderLevel(glm::vec3 vPos, GLuint shader, bool Shadow)
     {
 
         m_FacesDrawn.ClearAll();
@@ -392,7 +389,7 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
         int cluster = m_pLeafs[leafIndex].cluster;
 
         int i = m_numOfLeafs;
-        g_VisibleFaces = 0;
+        //g_VisibleFaces = 0;
 
         while(i--)
         {
@@ -412,11 +409,11 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
             while(faceCount--)
             {
                 int faceIndex = m_pLeafFaces[pLeaf->leafface + faceCount];
-                if(m_pFaces[faceIndex].type != FACE_POLYGON && m_pFaces[faceIndex].type != FACE_MESHVERT) continue;
+                //if(m_pFaces[faceIndex].type != FACE_POLYGON && m_pFaces[faceIndex].type != FACE_MESHVERT) continue;
 
                 if(!m_FacesDrawn.On(faceIndex))
                 {
-                    g_VisibleFaces++;
+                    //g_VisibleFaces++;
                     m_FacesDrawn.Set(faceIndex);
                     RenderFace(faceIndex, shader);
                 }

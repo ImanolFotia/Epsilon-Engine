@@ -31,6 +31,9 @@
 #include <EntityTemplate.h>
 #include <memory>
 #include <ResourceManager.h>
+#include <Scene.h>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 class Epsilon
 {
@@ -84,7 +87,7 @@ private:
 
     void ProcessFrame(void);
 
-    void SetUniforms(Shader*&, glm::vec3 position, glm::vec3 scale, glm::vec3 rotation, float degree = 0.0);
+    void SetUniforms(Shader*&, glm::vec3 position, glm::vec3 scale, glm::quat rotation);
 
     void Clock(void);
 
@@ -96,42 +99,42 @@ public:
     std::unique_ptr<Camera> eCamera;
 
     /**Shaders**/
-    std::map <string, Shader*> Shaders;
+    std::map<string, Shader*> Shaders;
     std::unique_ptr<Skybox> skybox;
     std::unique_ptr<Water> waterPlane;
     std::vector<Grass> grass;
     std::vector<Model> model;
     GLuint VertexArrayID;
-    GLFWwindow* window;
+    GLFWwindow* window = nullptr;
     std::unique_ptr<Text> text;
     std::unique_ptr<Terrain> terrain;
-    std::unique_ptr<Sun> sun;
+    std::shared_ptr<Sun> sun;
     std::unique_ptr<CQuake3BSP> BSPMap;
     std::unique_ptr<MD5Model> m_AnimModel;
     std::unique_ptr<ShadowMap> shadowMap;
-    std::unique_ptr<EntityTemplate> ent;
     std::unique_ptr<PostProcess> PP;
     /** Window Properties **/
 
-    short WIDTH;
-    short HEIGHT;
-    bool SSAO;
+    short WIDTH = 16;
+    short HEIGHT = 16;
+    bool SSAO = false;
 private:
-    bool Running;
-    bool normal;
-    bool flashLight;
-    bool hdr;
-    double lastTime;
-    double frametime;
-    double etime;
-    float exposure;
-    bool parallax;
+    bool Running = true;
+    bool normal = 0;
+    bool flashLight = 0;
+    bool hdr = true;
+    double lastTime = 0;
+    double frametime = 0;
+    double etime = 0;
+    float exposure = 0;
+    bool parallax = false;
     float eventtime = 0;
-    short fps;
+    short fps = 0;
+    bool showtext = false;
     vector<glm::vec3> lightPositions;
     std::vector<glm::vec3> grassPos;
     std::ostringstream fpss;
-    ResourceManager rM;
+    std::shared_ptr<ResourceManager> rM;
 };
 
 #endif /// EPSILON_H_INCLUDED

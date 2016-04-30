@@ -56,7 +56,8 @@ public:
 
         glBindVertexArray(0);
     }
-    virtual ~Grass() {}
+    virtual ~Grass() {
+    }
 
 public:
     void Render(Shader* shader)

@@ -28,11 +28,9 @@ Camera::Camera(glm::vec3 cPosition, glm::vec3 cOrientation)
     this->LastPosition;
 }
 
-void Camera::Update(GLFWwindow* win)
+void Camera::Update(GLFWwindow*& win)
 {
-    window = win;
-
-    HandleInputs();
+    HandleInputs(win);
 
     GetExternalInputs();
 }
@@ -67,7 +65,7 @@ void Camera::LockCamera(void)
 
 }
 
-void Camera::HandleInputs(void)
+void Camera::HandleInputs(GLFWwindow*& window)
 {
 
     if(glm::isnan(this->Position.x))

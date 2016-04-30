@@ -1,13 +1,13 @@
 #version 330 core
 
-uniform sampler2D tex;
+
+uniform sampler2D texture_diffuse;
 
 in vec2 TexCoords;
 
 void main()
 {
-	if(texture(tex, TexCoords).a < 0.9)
-		discard;
+      if(texture(texture_diffuse, TexCoords).a < 0.3)
+            discard;    
 
-	
 }

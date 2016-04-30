@@ -8,6 +8,8 @@
 #define TEXTURE_H_INCLUDED
 
 #include <iostream>
+#include <string>
+#include <vector>
 
 #include <GL/glew.h>
 
@@ -21,7 +23,7 @@ class eTexture
 {
 
 public:
-    eTexture(const char* TexName)
+    eTexture(const char* TexName, GLenum wrap = GL_REPEAT)
     {
         ProgramData DATA;
         int channels;
@@ -38,13 +40,14 @@ public:
         std::size_t found3 = name.find("specular");
         std::size_t found4 = name.find("normal");
         std::size_t found5 = name.find("ddn");
-        if(found1 != std::string::npos || found2 != std::string::npos || found3 != std::string::npos || found4 != std::string::npos || found5 != std::string::npos)
+        std::size_t found6 = name.find("nrm");
+        if(found1 != std::string::npos || found2 != std::string::npos || found3 != std::string::npos || found4 != std::string::npos || found5 != std::string::npos || found6 != std::string::npos)
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
         else
             glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
         glGenerateMipmap(GL_TEXTURE_2D);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
         if(DATA.ANISOTROPY <= 0)
         {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -63,9 +66,33 @@ public:
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
+    eTexture(std::vector<std::string> CubeMapPath)
+    {
+        glGenTextures(1, &texture);
+        glActiveTexture(GL_TEXTURE0);
+        int channels;
+        unsigned char* image;
+
+        glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+        for(GLuint i = 0; i < CubeMapPath.size(); i++)
+        {
+            image = SOIL_load_image(CubeMapPath[i].c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
+                std::cout << CubeMapPath[i] << std::endl;
+            glTexImage2D(
+                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,GL_SRGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+            //glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+        }
+                std::cout << "CubeMapID" << texture << std::endl;
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+    }
+
     virtual ~eTexture()
     {
-        delete path;
     }
 
 public:

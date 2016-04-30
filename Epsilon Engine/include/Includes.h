@@ -10,9 +10,11 @@
 #include <string>
 #include <sstream>
 #include <ctime>
+#include <vector>
 #include <glm/gtc/quaternion.hpp>
 
-namespace Helpers{
+namespace Helpers
+{
 
 inline
 static std::string intTostring(int number)
@@ -87,26 +89,41 @@ static std::string removeExtension(std::string path)
     return path;
 }
 
+static int findNearestPointFromSet(glm::vec3 TestingPoint, std::vector<glm::vec3> PointSet)
+{
+    int pointIndex;
+    float shortestLength = glm::length(PointSet[0] - TestingPoint);
+    for(int i = 0; 0 < PointSet.size(); ++i)
+    {
+        if(glm::length(PointSet[i] - TestingPoint) < shortestLength)
+        {
+            shortestLength = glm::length(PointSet[i] - TestingPoint);
+            pointIndex = i;
+        }
+    }
+    return pointIndex;
+}
+
 // Helper class to count frame time
 class ElapsedTime
 {
 public:
     ElapsedTime( float maxTimeStep = 0.03333f  )
-    : m_fMaxTimeStep( maxTimeStep )
-    , m_fPrevious ( std::clock() / (float)CLOCKS_PER_SEC )
-{}
+        : m_fMaxTimeStep( maxTimeStep )
+        , m_fPrevious ( std::clock() / (float)CLOCKS_PER_SEC )
+    {}
 
     float GetElapsedTime() const
-{
-    float fCurrentTime = std::clock() / (float)CLOCKS_PER_SEC;
-    float fDeltaTime = fCurrentTime - m_fPrevious;
-    m_fPrevious = fCurrentTime;
+    {
+        float fCurrentTime = std::clock() / (float)CLOCKS_PER_SEC;
+        float fDeltaTime = fCurrentTime - m_fPrevious;
+        m_fPrevious = fCurrentTime;
 
-    // Clamp to the max time step
-    fDeltaTime = std::min( fDeltaTime, m_fMaxTimeStep );
+        // Clamp to the max time step
+        fDeltaTime = std::min( fDeltaTime, m_fMaxTimeStep );
 
-    return fDeltaTime;
-}
+        return fDeltaTime;
+    }
 
 private:
     float m_fMaxTimeStep;

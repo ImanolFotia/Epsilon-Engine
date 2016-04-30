@@ -41,7 +41,9 @@ public:
     /**
         Destructor
     **/
-    virtual ~ShadowMap() {}
+    virtual ~ShadowMap()
+    {
+    }
 
 public:
 
@@ -62,6 +64,11 @@ public:
     {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
+
+    /**
+        Setups a framebuffer for blurring the shadow map image to be used in variance shadow mapping
+    */
+    void SetupPingPongFBO();
 
     /**
         Set the Shadow Map Position
@@ -126,6 +133,9 @@ private:
     GLuint m_ShadowTexture; /*!< Texture where the depth will be rendered to. */
     GLuint m_ShadowFBO; /*!< Framebuffer object used to created the shadow texture */
 
+    GLuint pingpongFBO[2];
+    GLuint pingpongDepthbuffers[2];
+
     GLfloat m_SHADOW_WIDTH; /*!< Shadow map texture width */
     GLfloat m_SHADOW_HEIGHT; /*!< Shadow map texture height */
 
@@ -139,5 +149,7 @@ private:
     glm::mat4 m_lightView;
     glm::mat4 m_lightSpaceMatrix;
     glm::mat4 m_biasMatrix;
+
+    //std::unique_ptr<Shader> blurShader;
 };
 #endif // SHADOWMAPPING_H_INCLUDED

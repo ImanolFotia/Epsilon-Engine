@@ -1,23 +1,14 @@
 #include <EntityTemplate.h>
 
-EntityTemplate::EntityTemplate()
+EntityTemplate::EntityTemplate(std::shared_ptr<ResourceManager> rm)
 {
-
+    resourceManager = rm;
 }
 
 
 void EntityTemplate::Update()
 {
-    if(this->hasPlayerComponent){
-            pC->Update();
-    }
-
-    if(this->hasRenderComponent){
-            rC->Update();
-            std::cout << "hasRenderComponent" << std::endl;
-    }
-
-    if(this->hasSpatialComponent){
-            sC->Update();
-    }
+    for(int i = 0; i < ComponentList.size(); ++i)
+        ComponentList.at(i)->Update();
 }
+

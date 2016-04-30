@@ -12,8 +12,8 @@ void main()
 {
     vec4 pos = projection * view * model * vec4(position, 1.0);
     gl_Position = pos.xyww;
-    gl_Position.z = clamp(pos.w, 0.0, 0.99999999999999999999);
-    gl_Position.w = clamp(pos.w, 0.0, 0.99999999999999999999);
+    gl_Position.z = clamp(pos.w, 0.0, 0.9);
+    gl_Position.w = clamp(pos.w, 0.0, 0.9);
     TexCoords = position;
     TexCoord = UV;
 }

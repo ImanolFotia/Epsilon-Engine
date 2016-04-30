@@ -8,14 +8,14 @@
 
 #include <ProgramData.h>
 #include <Epsilon.h>
-
+#include <memory>
 class App
 {
 public:
 
     App(GLFWwindow*& win)
     {
-        EpsilonEngine = new Epsilon(win);
+        EpsilonEngine = (std::unique_ptr<Epsilon>) (new Epsilon(win));
 
         EpsilonEngine->InitResources();
     }
@@ -30,11 +30,11 @@ public:
     }
 
     ~App(void) {
-        delete EpsilonEngine;
+        std::cout << "Engine shuted down" << std::endl;
     }
 
 public:
-    Epsilon* EpsilonEngine;
+    std::unique_ptr<Epsilon> EpsilonEngine;
 
 };
 
@@ -69,9 +69,9 @@ GLFWwindow* InitEngine(const char* ProgramName)
 
     GLFWwindow* window;
 
-    //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     cout << "Creating window || Window Resolution: ";
     if(DATA.FULLSCREEN)
     {

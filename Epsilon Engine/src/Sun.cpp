@@ -19,9 +19,10 @@ Sun::Sun()
     PrepareVAO();
 }
 
-void Sun::Render(Shader* shader)
+void Sun::Render(Shader*& shader)
 {
     glDepthFunc(GL_LEQUAL);
+    shader->Use();
     glBindVertexArray(this->VAO);
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(glGetUniformLocation(shader->getProgramID(), "sSampler"), 0);
@@ -32,7 +33,6 @@ void Sun::Render(Shader* shader)
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);
-
     glBindVertexArray(0);
     glUseProgram(0);
     glDepthFunc(GL_LESS);
@@ -46,17 +46,15 @@ void Sun::Update()
 
 void Sun::PrepareVAO()
 {
-    static float vertices[] =
+    float vertices[20] =
     {
         /// Positions        /// Texture Coords
         -1.0f,  1.0f, 0.0f,  0.0f, 1.0f,    /// Top Left
         -1.0f, -1.0f, 0.0f,  1.0f, 0.0f,    /// Top Right
          1.0f,  1.0f, 0.0f,  0.0f, 0.0f,    /// Bottom Right
          1.0f, -1.0f, 0.0f,  1.0f, 1.0f     /// Bottom Left
-
     };
 
-    GLuint VBO, EBO;
     glGenVertexArrays(1, &this->VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -72,5 +70,7 @@ void Sun::PrepareVAO()
 
     glBindBuffer(GL_VERTEX_ARRAY, 0);
     glBindVertexArray(0);
+
+    delete vertices;
 
 }

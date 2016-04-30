@@ -1,11 +1,12 @@
 # depslib dependency file v1.0
-1458090697 source:d:\epsilon\epsilon engine\src\main.cpp
+1459782538 source:d:\epsilon\epsilon engine\src\main.cpp
 	<iostream>
 	<Shader.h>
 	<SOIL.h>
 	<main.h>
 	<exception>
 	<assert.h>
+	<memory>
 
 1429998427 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window.hpp
 	<SFML/System.hpp>
@@ -244,7 +245,7 @@
 	<GL/glext.h>
 	<GL/glu.h>
 
-1458311177 source:d:\epsilon\epsilon engine\src\epsilon.cpp
+1461974691 source:d:\epsilon\epsilon engine\src\epsilon.cpp
 	<iostream>
 	<Epsilon.h>
 	<ProgramData.h>
@@ -259,7 +260,7 @@
 	<EpsilonMemory.h>
 	<CPUID.h>
 
-1458311089 d:\epsilon\epsilon engine\include\epsilon.h
+1460838557 d:\epsilon\epsilon engine\include\epsilon.h
 	<map>
 	<GL/glew.h>
 	<GLFW/glfw3.h>
@@ -281,6 +282,9 @@
 	<EntityTemplate.h>
 	<memory>
 	<ResourceManager.h>
+	<Scene.h>
+	<glm/gtc/quaternion.hpp>
+	<glm/gtx/quaternion.hpp>
 
 1430094264 d:\epsilon\epsilon engine\include\app.h
 	<GL/glew.h>
@@ -288,7 +292,7 @@
 	<iostream>
 	<string>
 
-1455219871 source:d:\epsilon\epsilon engine\src\shader.cpp
+1459991405 source:d:\epsilon\epsilon engine\src\shader.cpp
 	<Shader.h>
 	<stdio.h>
 	<string>
@@ -297,26 +301,36 @@
 	<fstream>
 	<algorithm>
 
-1452305552 d:\epsilon\epsilon engine\include\shader.h
+1461483175 d:\epsilon\epsilon engine\include\shader.h
 	<GL/glew.h>
 	<string>
-
-1430089633 d:\epsilon\epsilon engine\include\scene.h
-	<Shader.h>
-	<Skybox.h>
-	<string>
-	<vector>
-	<map>
-
-1430088181 source:d:\epsilon\epsilon engine\src\scene.cpp
 	<iostream>
-	<fstream>
+
+1461001212 d:\epsilon\epsilon engine\include\scene.h
+	<ResourceManager.h>
+	<Shader.h>
+	<EntityTemplate.h>
+	<BSP.h>
+	<ShadowMapping.h>
+	<Sun.h>
+	<Skybox.h>
+	<PostProcess.h>
+	<Light.h>
+	<EpsilonMemory.h>
+	<Camera.h>
+	<Frustum.h>
+	<memory>
+	<map>
+	<iostream>
 	<string>
-	<vector>
-	<cstdlib>
+	<glm/gtc/quaternion.hpp>
+	<glm/gtx/quaternion.hpp>
+	<GLFW/glfw3.h>
+
+1461001287 source:d:\epsilon\epsilon engine\src\scene.cpp
 	<Scene.h>
 
-1458311177 d:\epsilon\epsilon engine\include\skybox.h
+1461483175 d:\epsilon\epsilon engine\include\skybox.h
 	<string>
 	<GL/glew.h>
 	<camera.h>
@@ -324,7 +338,7 @@
 	<Shader.h>
 	<memory>
 
-1458311778 source:d:\epsilon\epsilon engine\src\skybox.cpp
+1461481184 source:d:\epsilon\epsilon engine\src\skybox.cpp
 	<vector>
 	<iostream>
 	<glm/glm.hpp>
@@ -333,6 +347,7 @@
 	<SOIL.h>
 	<Skybox.h>
 	<SkyboxData.h>
+	<ResourceManager.h>
 
 1396053918 d:\epsilon\epsilon engine\deppend\soil\src\soil.h
 
@@ -456,31 +471,34 @@
 1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\postprocess.h
 	"types.h"
 
-1456639871 source:d:\epsilon\epsilon engine\src\camera.cpp
+1458345269 source:d:\epsilon\epsilon engine\src\camera.cpp
 	<iostream>
 	<camera.h>
 	<math.h>
 
-1458191830 d:\epsilon\epsilon engine\include\camera.h
+1461483175 d:\epsilon\epsilon engine\include\camera.h
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
 	<glm/gtc/quaternion.hpp>
 	<GLFW/glfw3.h>
 	<iostream>
 
-1456633503 d:\epsilon\epsilon engine\include\texture.h
+1461975758 d:\epsilon\epsilon engine\include\texture.h
 	<iostream>
+	<string>
+	<vector>
 	<GL/glew.h>
 	<SOIL.h>
 	<ProgramData.h>
 
-1458090697 d:\epsilon\epsilon engine\include\main.h
+1459782538 d:\epsilon\epsilon engine\include\main.h
 	<ProgramData.h>
 	<Epsilon.h>
+	<memory>
 
 1451178317 d:\epsilon\epsilon engine\include\skyboxdata.h
 
-1458178843 d:\epsilon\epsilon engine\include\model.h
+1461483175 d:\epsilon\epsilon engine\include\model.h
 	<string>
 	<fstream>
 	<sstream>
@@ -489,12 +507,13 @@
 	<vector>
 	<GL/glew.h>
 	<glm/glm.hpp>
+	<glm/gtc/quaternion.hpp>
 	<glm/gtc/matrix_transform.hpp>
-	<assimp/cimport.h>
-	<assimp/scene.h>
-	<assimp/postprocess.h>
 	<Texture.h>
 	<Mesh.h>
+	<Types.h>
+	<memory>
+	<emlFormat.h>
 
 1433317369 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\importer.hpp
 	"types.h"
@@ -515,7 +534,7 @@
 	<stdint.h>
 	<wchar.h>
 
-1457245258 d:\epsilon\epsilon engine\include\mesh.h
+1461561254 d:\epsilon\epsilon engine\include\mesh.h
 	<string>
 	<fstream>
 	<sstream>
@@ -525,8 +544,10 @@
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
 	<Shader.h>
+	<emlFormat.h>
+	<memory>
 
-1455222171 d:\epsilon\epsilon engine\include\text.h
+1461483175 d:\epsilon\epsilon engine\include\text.h
 	<ft2build.h>
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
@@ -540,7 +561,7 @@
 1430970208 source:d:\epsilon\epsilon engine\src\resources.rc
 	<Windows.h>
 
-1456096982 d:\epsilon\epsilon engine\include\programdata.h
+1458349182 d:\epsilon\epsilon engine\include\programdata.h
 
 1456096982 source:d:\epsilon\epsilon engine\src\programdata.cpp
 	<iostream>
@@ -551,7 +572,7 @@
 	<map>
 	<string>
 
-1456883972 d:\epsilon\epsilon engine\include\terrain.h
+1461483175 d:\epsilon\epsilon engine\include\terrain.h
 	<vector>
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
@@ -565,7 +586,7 @@
 	<SOIL.h>
 	<Includes.h>
 
-1452305588 d:\epsilon\epsilon engine\include\grass.h
+1461483175 d:\epsilon\epsilon engine\include\grass.h
 	<GL/glew.h>
 	<string>
 	<iostream>
@@ -573,7 +594,7 @@
 	<glm/gtc/matrix_transform.hpp>
 	<Shader.h>
 
-1458311732 d:\epsilon\epsilon engine\include\postprocess.h
+1461621314 d:\epsilon\epsilon engine\include\postprocess.h
 	<GL/glew.h>
 	<Shader.h>
 	<camera.h>
@@ -581,7 +602,7 @@
 	<ShadowMapping.h>
 	<memory>
 
-1458311753 source:d:\epsilon\epsilon engine\src\postprocess.cpp
+1461625253 source:d:\epsilon\epsilon engine\src\postprocess.cpp
 	<PostProcess.h>
 	<iostream>
 	<ProgramData.h>
@@ -735,17 +756,18 @@
 1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\postprocess.h
 	"types.h"
 
-1455926641 d:\epsilon\epsilon engine\include\includes.h
+1461972036 d:\epsilon\epsilon engine\include\includes.h
 	<iostream>
 	<string>
 	<sstream>
 	<ctime>
+	<vector>
 	<glm/gtc/quaternion.hpp>
 
 1458311824 source:d:\epsilon\epsilon engine\src\water.cpp
 	<Water.h>
 
-1458311687 d:\epsilon\epsilon engine\include\water.h
+1461483175 d:\epsilon\epsilon engine\include\water.h
 	<GL/glew.h>
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
@@ -1032,7 +1054,7 @@
 
 1388306393 d:\epsilon\epsilon engine\deppend\glm\gtc\type_ptr.inl
 
-1451178317 d:\epsilon\epsilon engine\include\sun.h
+1461483175 d:\epsilon\epsilon engine\include\sun.h
 	<GL/glew.h>
 	<GLFW/glfw3.h>
 	<glm/glm.hpp>
@@ -1040,7 +1062,7 @@
 	<Texture.h>
 	<Shader.h>
 
-1456814208 source:d:\epsilon\epsilon engine\src\sun.cpp
+1461625317 source:d:\epsilon\epsilon engine\src\sun.cpp
 	<Sun.h>
 
 1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\glm.hpp
@@ -1500,7 +1522,7 @@
 1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\type_ptr.inl
 	<cstring>
 
-1457706120 source:d:\epsilon\epsilon engine\src\bsp.cpp
+1461514155 source:d:\epsilon\epsilon engine\src\bsp.cpp
 	<GL/glew.h>
 	<BSP.h>
 	<glm/glm.hpp>
@@ -1509,7 +1531,7 @@
 	<Frustum.h>
 	<Texture.h>
 
-1456884162 d:\epsilon\epsilon engine\include\bsp.h
+1459996162 d:\epsilon\epsilon engine\include\bsp.h
 	<cstdlib>
 	<cstdio>
 	<cstring>
@@ -1519,7 +1541,7 @@
 	"BSPFace.h"
 	"Frustum.h"
 
-1456183286 d:\epsilon\epsilon engine\include\bspface.h
+1458420288 d:\epsilon\epsilon engine\include\bspface.h
 	<glm/glm.hpp>
 	<GL/glew.h>
 	<iostream>
@@ -1539,7 +1561,7 @@
 1455946270 source:d:\epsilon\epsilon engine\src\resourcemanager.cpp
 	"ResourceManager.h"
 
-1458229830 d:\epsilon\epsilon engine\include\resourcemanager.h
+1461976417 d:\epsilon\epsilon engine\include\resourcemanager.h
 	<Texture.h>
 	<Model.h>
 	<Water.h>
@@ -1547,12 +1569,14 @@
 	<Grass.h>
 	<map>
 	<Shader.h>
+	<CubeMap.h>
+	<Includes.h>
 
-1457974286 source:d:\epsilon\epsilon engine\src\md5_anim.cpp
+1459912765 source:d:\epsilon\epsilon engine\src\md5_anim.cpp
 	<MD5_Anim.h>
 	<Includes.h>
 
-1456183286 d:\epsilon\epsilon engine\include\md5_anim.h
+1459912765 d:\epsilon\epsilon engine\include\md5_anim.h
 	<vector>
 	<string>
 	<iostream>
@@ -1561,7 +1585,7 @@
 	<glm/gtc/matrix_transform.hpp>
 	<glm/gtc/quaternion.hpp>
 
-1456100185 source:d:\epsilon\epsilon engine\src\md5_model.cpp
+1459792986 source:d:\epsilon\epsilon engine\src\md5_model.cpp
 	<Includes.h>
 	<iostream>
 	<MD5_Model.h>
@@ -1576,34 +1600,37 @@
 	"MD5_Anim.h"
 	<SOIL.h>
 
-1457703351 d:\epsilon\epsilon engine\include\types.h
+1459992446 d:\epsilon\epsilon engine\include\types.h
 
-1457242848 d:\epsilon\epsilon engine\include\shadowmapping.h
+1461483175 d:\epsilon\epsilon engine\include\shadowmapping.h
 	<Shader.h>
 	<Types.h>
 	<GL/glew.h>
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
 
-1458229830 source:d:\epsilon\epsilon engine\src\shadowmapping.cpp
+1460337208 source:d:\epsilon\epsilon engine\src\shadowmapping.cpp
 	<ShadowMapping.h>
 	<iostream>
 	<cmath>
 
-1458311824 d:\epsilon\epsilon engine\version.h
+1461976417 d:\epsilon\epsilon engine\version.h
 
-1457806429 d:\epsilon\epsilon engine\include\entitytemplate.h
+1460999877 d:\epsilon\epsilon engine\include\entitytemplate.h
 	<Component.h>
 	<iostream>
 	<typeinfo>
 	<memory>
+	<ResourceManager.h>
 
-1457806821 d:\epsilon\epsilon engine\include\component.h
+1461000886 d:\epsilon\epsilon engine\include\component.h
 	<iostream>
 	<glm/glm.hpp>
 	<Model.h>
+	<ResourceManager.h>
+	<memory>
 
-1457806441 source:d:\epsilon\epsilon engine\src\entitytemplate.cpp
+1460845932 source:d:\epsilon\epsilon engine\src\entitytemplate.cpp
 	<EntityTemplate.h>
 
 1457715723 d:\epsilon\epsilon engine\include\cpuid.h
@@ -1616,4 +1643,45 @@
 
 1457808606 d:\epsilon\epsilon engine\include\epsilonmemory.h
 	<memory>
+
+1451178317 d:\epsilon\epsilon engine\include\light.h
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Types.h>
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\gtx\quaternion.hpp
+	"../glm.hpp"
+	"../gtc/constants.hpp"
+	"../gtc/quaternion.hpp"
+	"../gtx/norm.hpp"
+	"quaternion.inl"
+
+1437695657 d:\epsilon\epsilon engine\deppend\glm\glm\gtx\norm.hpp
+	"../glm.hpp"
+	"../gtx/quaternion.hpp"
+	"norm.inl"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\gtx\norm.inl
+
+1441050881 d:\epsilon\epsilon engine\deppend\glm\glm\gtx\quaternion.inl
+	<limits>
+	"../gtc/constants.hpp"
+
+1461470738 source:d:\epsilon\epsilon engine\src\model.cpp
+	<Model.h>
+	<ResourceManager.h>
+
+1461365554 d:\epsilon\epsilon engine\include\emlformat.h
+	<string>
+
+1461976417 source:d:\epsilon\epsilon engine\src\mesh.cpp
+	<Mesh.h>
+	<ResourceManager.h>
+
+1461975758 d:\epsilon\epsilon engine\include\cubemap.h
+	<glm/glm.hpp>
+	<vector>
+	<string>
+	<memory>
+	<Texture.h>
 

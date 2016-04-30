@@ -9,12 +9,14 @@
 
 #include <GL/glew.h>
 #include <string>
+#include <iostream>
 
 class Shader{
 public:
 
    Shader(const char*, const char*);
-   virtual ~Shader(void){}
+   virtual ~Shader(void){
+   }
 
     void Use(void){glUseProgram(this->ProgramID);}
 
@@ -22,8 +24,11 @@ public:
 
     GLuint getProgramID(){return this->ProgramID;}
 
+    std::string getPath(){return this->Path;}
+
 private:
     GLuint ProgramID;
+    std::string Path;
 };
 
 

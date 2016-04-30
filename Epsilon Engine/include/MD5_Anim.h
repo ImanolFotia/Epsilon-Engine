@@ -129,4 +129,5 @@ private:
     float m_fAnimDuration;
     float m_fFrameDuration;
     float m_fAnimTime;
+    std::string m_AnimationName;
 };

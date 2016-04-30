@@ -111,6 +111,7 @@ public:
     void RenderText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
     {
         /// Activate corresponding render state
+        glEnable(GL_BLEND);
         shader->Use();
         glUniform3f(glGetUniformLocation(shader->getProgramID(), "textColor"), color.x, color.y, color.z);
         glActiveTexture(GL_TEXTURE0);

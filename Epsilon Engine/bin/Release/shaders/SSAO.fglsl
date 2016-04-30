@@ -6,11 +6,11 @@ uniform sampler2D gPositionDepth;
 uniform sampler2D gNormal;
 uniform sampler2D texNoise;
 
-uniform vec3 samples[32];
+const int kernelSize = 24;
+uniform vec3 samples[kernelSize];
 
 // parameters (you'd probably want to use them as uniforms to more easily tweak the effect)
-int kernelSize = 32;
-float radius = 1.5;
+float radius = 2.0;
 
 uniform float width;
 uniform float height;
@@ -49,11 +49,11 @@ void main()
         offset.y = clamp(offset.y, 0.001, 0.999);
 
         float sampleDepth = -texture(gPositionDepth, offset.xy).w; // Get depth value of kernel sample
-        float bias = max(1.5 * (1.0 - dot(normal, -fragPos)), 0.05);
+        float bias = max(1.5 * (1.0 - dot(normal, -fragPos)), 0.1);
         // range check & accumulate
         float rangeCheck = smoothstep(0.0, 1.0, radius / abs(fragPos.z - sampleDepth));
         occlusion += (sampleDepth - bias >= sample.z ? 1.0 : 0.0) * rangeCheck;
     }
     occlusion = 1.0 - (occlusion / kernelSize);
-    FragColor = pow(occlusion, 8);
+    FragColor = pow(occlusion, 5);
 }

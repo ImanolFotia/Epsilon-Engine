@@ -13,6 +13,7 @@ MD5Model::MD5Model()
 
 MD5Model::~MD5Model()
 {
+        std::cout << "Deleted MD5 Model" << endl;
 }
 
 bool MD5Model::LoadModel( const std::string &filename )

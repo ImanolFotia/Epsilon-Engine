@@ -17,19 +17,17 @@ class Skybox
 public:
     Skybox(std::string);
     virtual ~Skybox(){
-        delete skydome;
-        std::cout << "Skybox Destructed" << std::endl;
     }
 
 public:
 
-    void Render(std::unique_ptr<Camera>&, Shader*);
+    void Render(std::unique_ptr<Camera>&, Shader*, float);
     GLuint CubeMapID;
 
 private:
 
     GLuint skyboxVAO, skyboxVBO, EBO;
-    Model* skydome;
+    std::unique_ptr<Model> skydome;
     vector<string> Textures;
 
 };

@@ -8,7 +8,7 @@ layout (location = 4) in vec3 in_bitangent;
 layout (location = 5) in vec4 in_weights;
 layout (location = 6) in vec4 in_indices;
 
-uniform mat4 mSkinned[200];
+uniform mat4 mSkinned[110];
 
 out vec3 FragPos;
 out vec3 Normal;

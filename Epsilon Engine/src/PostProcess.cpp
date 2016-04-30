@@ -24,6 +24,20 @@ void PostProcess::SetupFramebuffer()
     this->SSAOheight = height;
     m_exposure = 1.5;
 
+    std::uniform_real_distribution<GLfloat> randomFloatsz(-20.0f, 45.0f); // generates random floats between 0.0 and 1.0
+    std::uniform_real_distribution<GLfloat> randomFloatsx(50.0f, 130.0f); // generates random floats between 0.0 and 1.0
+    //std::random_device ;
+    std::default_random_engine generator(glfwGetTime());
+
+
+    LightPositions.push_back(glm::vec3(125, 20.5, -80));
+    LightPositions.push_back(glm::vec3(70, 13.3, -63));
+    LightPositions.push_back(glm::vec3(96.2, 13.3, -63));
+    LightPositions.push_back(glm::vec3(123, 13.3, -63));
+    LightPositions.push_back(glm::vec3(106.7, 30.63, -59.3));
+    LightPositions.push_back(glm::vec3(82, 30.63, -59.3));
+    LightPositions.push_back(glm::vec3(95.5, 15.21, -40.57));
+
     /* MSAA buffer
         glGenFramebuffers(1, &hdrFBO);
         glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
@@ -63,26 +77,14 @@ void PostProcess::SetupFramebuffer()
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     */
 
-    glGenTextures(1, &DOFBuffer);
-    glBindTexture(GL_TEXTURE_2D, DOFBuffer);
-    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGBA16F, width, height, 0,GL_RGBA, GL_FLOAT, 0);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
     glGenFramebuffers(1, &hdrFBO);
     glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
 
     glGenTextures(1, &colorBuffer);
     glBindTexture(GL_TEXTURE_2D, colorBuffer);
     glTexImage2D(GL_TEXTURE_2D, 0,GL_RGBA16F, width, height, 0,GL_RGBA, GL_FLOAT, 0);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer, 0);
@@ -91,8 +93,8 @@ void PostProcess::SetupFramebuffer()
     glGenTextures(1, &brightColorBuffer);
     glBindTexture(GL_TEXTURE_2D, brightColorBuffer);
     glTexImage2D(GL_TEXTURE_2D, 0,GL_RGBA16F, width, height, 0,GL_RGBA, GL_FLOAT, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, brightColorBuffer, 0);
@@ -117,27 +119,22 @@ void PostProcess::SetupFramebuffer()
     SetupGBuffer();
     setupSSAO();
     SetupPingPongFBO();
-    SetupPingPongDOF();
 
 }
 
 void PostProcess::LoadOffscreensShaders()
 {
-    shader = new Shader("shaders/Lighting.vglsl", "shaders/Lighting.fglsl");
-    SSAO = new Shader("shaders/SSAO.vglsl", "shaders/SSAO.fglsl");
-    blurSSAO = new Shader("shaders/blurSSAO.vglsl", "shaders/blurSSAO.fglsl");
-    finalImage = new Shader("shaders/hdr.vglsl", "shaders/hdr.fglsl");
-    blurBloom = new Shader("shaders/blurBloom.vglsl", "shaders/blurBloom.fglsl");
+    shader = (std::unique_ptr<Shader>)(new Shader("shaders/Lighting.vglsl", "shaders/Lighting.fglsl"));
+    SSAO = (std::unique_ptr<Shader>)(new Shader("shaders/SSAO.vglsl", "shaders/SSAO.fglsl"));
+    blurSSAO = (std::unique_ptr<Shader>)(new Shader("shaders/blurSSAO.vglsl", "shaders/blurSSAO.fglsl"));
+    finalImage = (std::unique_ptr<Shader>)(new Shader("shaders/hdr.vglsl", "shaders/hdr.fglsl"));
+    blurBloom = (std::unique_ptr<Shader>)(new Shader("shaders/blurBloom.vglsl", "shaders/blurBloom.fglsl"));
 }
 
 void PostProcess::beginOffScreenrendering()
 {
     glDisable(GL_BLEND);
     glViewport(0,0,width, height);
-    //glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-    //glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->gBuffer); // Write to default framebuffer
-    //glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-    //glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->gBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, this->gBuffer);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -167,7 +164,7 @@ void PostProcess::SetupGBuffer()
 
     glGenTextures(1, &gNormal);
     glBindTexture(GL_TEXTURE_2D, gNormal);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gNormal, 0);
@@ -183,7 +180,7 @@ void PostProcess::SetupGBuffer()
     /// - Tell OpenGL which color attachments we'll use (of this framebuffer) for rendering
     glGenTextures(1, &gExpensiveNormal);
     glBindTexture(GL_TEXTURE_2D, gExpensiveNormal);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, gExpensiveNormal, 0);
@@ -244,7 +241,7 @@ void PostProcess::setupSSAO()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // Sample kernel
-    std::uniform_real_distribution<GLfloat> randomFloatsClamped(0.4, 1.0); // generates random floats between 0.0 and 1.0
+    std::uniform_real_distribution<GLfloat> randomFloatsClamped(0.2, 1.0); // generates random floats between 0.0 and 1.0
     std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0); // generates random floats between 0.0 and 1.0
     std::default_random_engine generator;
     for (GLuint i = 0; i < 24; ++i)
@@ -270,8 +267,8 @@ void PostProcess::setupSSAO()
     glGenTextures(1, &noiseTexture);
     glBindTexture(GL_TEXTURE_2D, noiseTexture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, 4, 4, 0, GL_RGB, GL_FLOAT, &ssaoNoise[0]);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
@@ -357,7 +354,8 @@ GLfloat PostProcess::applyAutoAxposure(GLuint Buffer)
     while(Ewidth > 1)
     {
         glBindFramebuffer(GL_FRAMEBUFFER, pingpongDOF[horizontal]);
-        Ewidth /= 2; Eheight /= 2;
+        Ewidth /= 2;
+        Eheight /= 2;
         glViewport(0,0,Ewidth, Eheight);
         glUniform1i(glGetUniformLocation(blurBloom->getProgramID(), "horizontal"), horizontal);
         glBindTexture(GL_TEXTURE_2D, first_iteration ? Buffer : pingpongColorbuffersDOF[!horizontal]);  // bind texture of other framebuffer (or scene if first iteration)
@@ -425,24 +423,16 @@ void PostProcess::SetupPingPongDOF()
 
 void PostProcess::ShowPostProcessImage(float exposure, GLuint ShadowMapID)
 {
-    /*
-    float rgba[4];
-    glReadPixels(width/2,height/2,1,1,GL_DEPTH_COMPONENT,GL_FLOAT,&rgba);
-    glEnable(GL_BLEND);
-*/
     GLuint blurred = this->blurImage(this->brightColorBuffer);
-    //m_exposure = this->applyAutoAxposure(this->colorBuffer);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glBindTexture(GL_TEXTURE_2D, this->colorBuffer);
-    glGenerateMipmap(GL_TEXTURE_2D);
 
     finalImage->Use();
 
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(glGetUniformLocation(finalImage->getProgramID(), "sampler"), 0);
     glBindTexture(GL_TEXTURE_2D, this->colorBuffer);
-    glGenerateMipmap(GL_TEXTURE_2D);
 
     glActiveTexture(GL_TEXTURE1);
     glUniform1i(glGetUniformLocation(finalImage->getProgramID(), "blurredSampler"), 1);
@@ -451,13 +441,14 @@ void PostProcess::ShowPostProcessImage(float exposure, GLuint ShadowMapID)
     glUniform1f(glGetUniformLocation(finalImage->getProgramID(), "exposure"), exposure);
 
     this->RenderQuad();
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::unique_ptr<Camera>& cam, float exposure, std::unique_ptr<ShadowMap>& shadowMap)
 {
+
     glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     this->shader->Use();
     glActiveTexture(GL_TEXTURE0);
@@ -484,25 +475,18 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::unique_ptr<Camera>& 
     glUniform1f(glGetUniformLocation(this->shader->getProgramID(), "exposure"), m_exposure);
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "lightSpaceMatrix"), 1, GL_FALSE, &shadowMap->getLightSpaceMatrix()[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "depthBias"), 1, GL_FALSE, &shadowMap->getBiasMatrix()[0][0]);
+
+    glUniform3fv(glGetUniformLocation(shader->getProgramID(), "LightPositions"), LightPositions.size(), &LightPositions[0][0]);
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "viewPos"),  cam->getPosition().x, cam->getPosition().y, cam->getPosition().z);
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "viewDir"),  cam->getDirection().x, cam->getDirection().y, cam->getDirection().z);
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "lightDir"),  Sun.x, Sun.y, Sun.z);
 
     this->RenderQuad();
 
-    //glUseProgram(0);
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);
-
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindVertexArray(0);
+    glUseProgram(0);
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, hdrFBO);
@@ -524,11 +508,11 @@ void PostProcess::RenderQuad()
     {
         GLfloat quadVertices[] =
         {
-        // Positions         //Texture Coords
+            // Positions         //Texture Coords
             -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
             -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-             1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-             1.0f, -1.0f, 0.0f, 1.0f, 0.0f
+            1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+            1.0f, -1.0f, 0.0f, 1.0f, 0.0f
         };
         // Setup plane VAO
         glGenVertexArrays(1, &quadVAO);

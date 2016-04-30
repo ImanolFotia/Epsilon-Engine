@@ -233,11 +233,12 @@ public:
 
     virtual ~CQuake3BSP(){
         delete VertexBufferArrays;
+        //cout << "Destroyed BSP map" << endl;
     }
 
     bool LoadBSP(const char *strFileName);
 
-    void RenderLevel(glm::vec3 vPos, GLuint shader, GLFWwindow * window, bool Shadow);
+    void RenderLevel(glm::vec3 vPos, GLuint shader, bool Shadow);
 
     void Destroy();
 

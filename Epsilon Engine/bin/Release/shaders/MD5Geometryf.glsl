@@ -38,11 +38,11 @@ void main()
 	gNormal.rgb = norm;
       gNormal.a = gl_FragCoord.z;
 
-	gAlbedoSpec.rgb = texture2D(sampler, TexCoords).rgb;
+	gAlbedoSpec.rgb = clamp(texture2D(sampler, TexCoords).rgb, 0, 10000);
 
-	gAlbedoSpec.a = texture2D(s_sampler, TexCoords).g;
+	gAlbedoSpec.a = clamp(texture2D(s_sampler, TexCoords).g, 0, 10000);
 
-	gExpensiveNormal = normalize((texture2D(n_sampler, TexCoords).rgb * 2.0 - 1.0) * TBN);
+	gExpensiveNormal = clamp(normalize((texture2D(n_sampler, TexCoords).rgb * 2.0 - 1.0) * TBN), 0, 10000);
 
 	gPosition.rgb = FragPos;
 

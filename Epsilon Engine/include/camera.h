@@ -19,12 +19,11 @@ public:
     Camera(glm::vec3, glm::vec3);
 
     ~Camera(){
-        std::cout << "Deleted Camera" << std::endl;
     }
 
 public:
 
-    void Update(GLFWwindow*);
+    void Update(GLFWwindow*&);
 
     void UpdateMatrices(void);
 
@@ -46,7 +45,7 @@ private:
 
     void LockCamera(void);
 
-    void HandleInputs(void);
+    void HandleInputs(GLFWwindow*&);
 
     void GetExternalInputs(void);
 
@@ -79,8 +78,6 @@ private:
     glm::vec3 Orientation;
     glm::vec3 LastPosition;
     glm::vec3 DeltaVector, MovementVector;
-
-    GLFWwindow* window;
 
 };
 

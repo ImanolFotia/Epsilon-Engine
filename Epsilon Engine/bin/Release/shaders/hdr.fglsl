@@ -3,42 +3,23 @@
 uniform sampler2D sampler;
 uniform sampler2D blurredSampler;
 
-uniform sampler2D ShadowMap;
 out vec4 color;
 in vec2 TexCoords;
 uniform float exposure;
 
 const float gamma = 2.2;
-
-float near = 0.1;
-float far = 3000.0;
-const float density = 0.1;
-const float gradient = 1.1;
+const float contrast = 0.3;
 
 vec3 HDR(vec3 image)
 {
     vec3 result = vec3(1.0) - exp(-image.xyz * exposure);
     result.xyz = pow(result.xyz, vec3(1.0 / gamma));
-    return (result.xyz - 0.5f) * 1.1f + 0.5f;
-}
-
-float floordistance(float depth)
-{
-    return 2.0 * near * far / (far + near - (2.0 * depth - 1.0) * (far - near));
-}
-
-float NEAR = 0.1;
-float FAR = 3000.0;
-
-float LinearizeDepth(float depth)
-{
-    float z = depth * 2.0 - 1.0; // Back to NDC
-    return ((2.0 * NEAR * FAR) / (FAR + NEAR - z * (FAR - NEAR)));
+    return (result.xyz - 0.5f) * (1.0 + contrast) + 0.5f;
 }
 
 void main()
 {
-    vec3 hdrColor = textureLod(sampler, TexCoords, 0.0).rgb;
+    vec3 hdrColor = texture(sampler, TexCoords).rgb;
     vec3 bloom = texture(blurredSampler, TexCoords).rgb;
     vec3 finalcolor = HDR(hdrColor + bloom);
     color.rgb = finalcolor; //finalcolor /(1+finalcolor);
@@ -47,22 +28,3 @@ void main()
 }
 
 
-//Used for DoF (not quite yet)
-/*
-    uniform sampler2D DOF;
-    uniform sampler2D gNormal;
-
-    vec3 DoFColor = texture(DOF, TexCoords).rgb;
-    float Depth = texture(gNormal, TexCoords).a;
-
-    float targetDepth = clamp((LinearizeDepth(depth)/2), 0.0, 1.0);
-    float currentDepth = clamp((LinearizeDepth(Depth)/2), 0.0, 1.0);
-
-    float DoF;
-    if(currentDepth > targetDepth)
-      DoF = clamp(currentDepth - targetDepth, 0.0, 1.0);
-    else
-      DoF = clamp(targetDepth - currentDepth, 0.0, 1.0);
-
-    //hdrColor = mix(hdrColor + bloom, DoFColor, 0.0);
-*/

@@ -1,72 +1,49 @@
-#ifndef ENTITYTEMPLATE_H_INCLUDED
-#define ENTITYTEMPLATE_H_INCLUDED
+#pragma once
 
 #include <Component.h>
 #include <iostream>
 #include <typeinfo>
 #include <memory>
+#include <ResourceManager.h>
+
 class EntityTemplate
 {
 public:
-    EntityTemplate();
+    EntityTemplate(std::shared_ptr<ResourceManager> rm);
 
     ~EntityTemplate()
     {
-        /*
-        delete rC;
-        rC = nullptr;
-
-        delete pC;
-        pC = nullptr;
-
-        delete sC;
-        sC = nullptr;
-*/
         std::cout << "Entity Destructor" << std::endl;
     }
 
-    void addComponent(bool t)
+    void addComponent(std::shared_ptr<Component::Component> t)
     {
-        std::cout << "isBool" << std::endl;
-    }
+        if(t->Type == Component::MODELCOMPONENT)
+            hasModel = true;
+        else if(t->Type == Component::SPATIALCOMPONENT)
+            hasSpatialComponent = true;
+        else if(t->Type == Component::PLAYERCOMPONENT)
+            hasPlayerComponent = true;
 
-    void addComponent(std::shared_ptr<Component::RenderComponent> t)
-    {
-        std::cout <<typeid(Component::RenderComponent).name() << " Added." << std::endl;
-        hasRenderComponent = true;
-        rC = t;
+        ComponentList.push_back(std::move(t));
     }
-
-    void addComponent(std::shared_ptr<Component::PlayerComponent> t)
-    {
-        std::cout << "is" <<typeid(Component::PlayerComponent).name() << std::endl;
-        hasPlayerComponent = true;
-    }
-
-    void addComponent(std::shared_ptr<Component::SpatialComponent> t)
-    {
-        std::cout << "is" <<typeid(Component::SpatialComponent).name() << std::endl;
-        hasSpatialComponent = true;
-        sC = t;
-    }
-
 
     void Update();
 
-    std::shared_ptr<Component::RenderComponent> rC;
-    std::shared_ptr<Component::PlayerComponent> pC;
-    std::shared_ptr<Component::SpatialComponent> sC;
+public:
+    bool hasPlayerComponent = false;
+    bool hasModel = false;
+    bool hasSpatialComponent = false;
+
+    std::string modelPath;
+    std::vector<std::shared_ptr<Component::Component>> ComponentList;
 
 private:
 
-    bool hasPlayerComponent = false;
-    bool hasRenderComponent = false;
-    bool hasSpatialComponent = false;
-
-
+    std::shared_ptr<ResourceManager> resourceManager;
 
 protected:
 
 };
 
-#endif // ENTITYTEMPLATE_H_INCLUDED
+

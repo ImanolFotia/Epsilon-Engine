@@ -17,7 +17,7 @@ void main()
 {
   vec4 SunTexture = texture(sSampler, UV);
 
-  FragColor.rgb = HDR(SunTexture.xyz * 3.0);
+  FragColor.rgb = HDR(SunTexture.xyz * 5.0);
   FragColor.a = SunTexture.a;
 
 

@@ -30,7 +30,9 @@ public:
 
     }
 
-    virtual ~BSPFace() {}
+    virtual ~BSPFace() {
+        //std::cout << "Destroyed BSP Face" << std::endl;
+    }
 
     bool BuildFace(std::vector<glm::vec3> Vertices, std::vector<glm::vec3> Normals, std::vector<glm::vec2> TexCoords, std::vector<glm::vec2> LMTexCoords, std::vector<unsigned int> Indices, int ID, string imagePath, tBSPLightmap LightMap)
     {

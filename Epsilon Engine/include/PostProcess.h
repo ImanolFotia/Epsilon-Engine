@@ -20,12 +20,6 @@ public:
     PostProcess();
 
     virtual ~PostProcess(){
-        delete shader;
-        delete shader2;
-        delete SSAO;
-        delete blurSSAO;
-        delete finalImage;
-        delete blurBloom;
     }
 
 public:
@@ -62,7 +56,7 @@ public:
     GLuint colorBuffer;
     GLuint depthBuffer;
     GLuint hdrFBO;
-    Shader* shader;
+    std::unique_ptr<Shader> shader;
 
 private:
 
@@ -141,12 +135,12 @@ private:
     std::vector<glm::vec3> ssaoNoise;
     GLenum attachment_type;
     int width, height;
-    Shader* shader2;
-    Shader* SSAO;
-    Shader* blurSSAO;
-    Shader* finalImage;
-    Shader* blurBloom;
+    std::unique_ptr<Shader> SSAO;
+    std::unique_ptr<Shader> blurSSAO;
+    std::unique_ptr<Shader> finalImage;
+    std::unique_ptr<Shader> blurBloom;
 
+    std::vector<glm::vec3> LightPositions;
     /// G-Buffer texture samplers
     std::vector<glm::vec3> ssaoKernel;
     GLuint noiseTexture;

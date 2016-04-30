@@ -14,7 +14,9 @@ MD5Animation::MD5Animation()
 }
 
 MD5Animation::~MD5Animation()
-{}
+{
+    std::cout << "Destroyed animation: " << m_AnimationName << std::endl;
+}
 
 bool MD5Animation::LoadAnimation( const std::string& filename )
 {
@@ -152,6 +154,8 @@ bool MD5Animation::LoadAnimation( const std::string& filename )
         file >> param;
     } // while ( !file.eof )
 
+    file.close();
+    m_AnimationName = filename;
     // Make sure there are enough joints for the animated skeleton.
     m_AnimatedSkeleton.m_Joints.assign(m_iNumJoints, SkeletonJoint() );     // DEPRICATED
     m_AnimatedSkeleton.m_BoneMatrices.assign( m_iNumJoints, glm::mat4x4(1.0) );

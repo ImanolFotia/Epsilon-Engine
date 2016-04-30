@@ -10,18 +10,18 @@
 #include <main.h>
 #include <exception>
 #include <assert.h>
+#include <memory>
 using namespace std;
 
 int main(int argc, char* argv[])
 {
     GLFWwindow* window = InitEngine("Epsilon Engine");
 
-    App* MainProgram = new App(window);
+    std::unique_ptr<App> MainProgram = (std::unique_ptr<App>) (new App(window));
 
     MainProgram->Run();
 
-    delete MainProgram;
-    //delete window;
+    glfwTerminate();
 
     return 0;
 }

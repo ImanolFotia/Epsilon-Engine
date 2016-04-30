@@ -20,9 +20,11 @@ class Sun{
 public:
 
     Sun();
-    virtual ~Sun(){}
+    ~Sun()
+    {
+    }
 
-    void Render(Shader*);
+    void Render(Shader*&);
     void Update();
 
     glm::vec3 Position;
@@ -38,8 +40,7 @@ private:
     GLuint TextureID;
 
     GLuint VAO;
-
-
+    GLuint VBO, EBO;
 };
 
 #endif // SUN_H_INCLUDED
