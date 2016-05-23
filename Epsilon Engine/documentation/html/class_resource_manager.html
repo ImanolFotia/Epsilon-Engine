@@ -50,7 +50,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
-      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -71,9 +71,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
-      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
-      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
+      <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -108,8 +109,8 @@ $(document).ready(function(){initNavTree('class_resource_manager.html','');});
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pri-attribs">Private Attributes</a> &#124;
-<a href="class_resource_manager-members.html">List of all members</a>  </div>
+<a href="#pub-attribs">Data Fields</a> &#124;
+<a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">ResourceManager Class Reference</div>  </div>
 </div><!--header-->
@@ -120,39 +121,86 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3d5f5a1f1ba52642b5e39b0c51c970f7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3d5f5a1f1ba52642b5e39b0c51c970f7"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>requestTexture</b> (std::string texPath)</td></tr>
 <tr class="separator:a3d5f5a1f1ba52642b5e39b0c51c970f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43b2611cbda412ecbc8255528b17266a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a43b2611cbda412ecbc8255528b17266a"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>requestModel</b> (std::string modelPath)</td></tr>
-<tr class="separator:a43b2611cbda412ecbc8255528b17266a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a957b2daa207d299545d210fb2afc1049"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a957b2daa207d299545d210fb2afc1049"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>requestModel</b> (std::string modelPath, std::shared_ptr&lt; <a class="el" href="class_resource_manager.html">ResourceManager</a> &gt; rm, glm::vec3 Pos, glm::vec3 scs, glm::quat rot)</td></tr>
+<tr class="separator:a957b2daa207d299545d210fb2afc1049"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89a3442d8e47f442c77c31b03a1d8edf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a89a3442d8e47f442c77c31b03a1d8edf"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>useModel</b> (std::string modelPath, <a class="el" href="class_shader.html">Shader</a> *shader)</td></tr>
 <tr class="separator:a89a3442d8e47f442c77c31b03a1d8edf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a97368ca128405495ccf1325b7df5f846"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a97368ca128405495ccf1325b7df5f846"></a>
 <a class="el" href="struct_m_i_n___m_a_x___p_o_i_n_t_s.html">MIN_MAX_POINTS</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getModelBoundingBox</b> (std::string modelPath)</td></tr>
 <tr class="separator:a97368ca128405495ccf1325b7df5f846"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e25cafdac62920c553b570604812650"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6e25cafdac62920c553b570604812650"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setModelVisibility</b> (std::string path, bool visibility)</td></tr>
+<tr class="separator:a6e25cafdac62920c553b570604812650"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45899dc887c74ecabcc3fce5e079b4e4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a45899dc887c74ecabcc3fce5e079b4e4"></a>
+glm::quat&#160;</td><td class="memItemRight" valign="bottom"><b>getModelRotation</b> (std::string path)</td></tr>
+<tr class="separator:a45899dc887c74ecabcc3fce5e079b4e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61f0223aaee7a6b11e197a4b68c0d17d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a61f0223aaee7a6b11e197a4b68c0d17d"></a>
+glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>getModelPosition</b> (std::string path)</td></tr>
+<tr class="separator:a61f0223aaee7a6b11e197a4b68c0d17d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f6456c08e57b52fa66ce2c293b6a947"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7f6456c08e57b52fa66ce2c293b6a947"></a>
+glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>getModelScale</b> (std::string path)</td></tr>
+<tr class="separator:a7f6456c08e57b52fa66ce2c293b6a947"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a387876b621fafcf12ca31f3c23a35c5a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a387876b621fafcf12ca31f3c23a35c5a"></a>
 GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>useTexture</b> (std::string texPath)</td></tr>
 <tr class="separator:a387876b621fafcf12ca31f3c23a35c5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6453933d2a9b43f03290eff85af3e774"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6453933d2a9b43f03290eff85af3e774"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>loadWater</b> ()</td></tr>
-<tr class="separator:a6453933d2a9b43f03290eff85af3e774"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab89de8eac889e44b388da91c98035524"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab89de8eac889e44b388da91c98035524"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>loadTerrain</b> ()</td></tr>
-<tr class="separator:ab89de8eac889e44b388da91c98035524"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc152b5b5383745636924a18fcbbac47"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afc152b5b5383745636924a18fcbbac47"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addTextureToQueue</b> (std::string texture)</td></tr>
+<tr class="separator:afc152b5b5383745636924a18fcbbac47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad45541223c9f21701bf75107c5369203"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad45541223c9f21701bf75107c5369203"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>loadQueuedTextures</b> ()</td></tr>
+<tr class="separator:ad45541223c9f21701bf75107c5369203"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09c74cde552fc234412209cc9b9dd85a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a09c74cde552fc234412209cc9b9dd85a"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>requestShader</b> (std::string shaderPathv, std::string shaderPathf)</td></tr>
+<tr class="separator:a09c74cde552fc234412209cc9b9dd85a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c5654dad152328ad50a20f130464acf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8c5654dad152328ad50a20f130464acf"></a>
+<a class="el" href="class_shader.html">Shader</a>&#160;</td><td class="memItemRight" valign="bottom"><b>useShader</b> (std::string shaderPath)</td></tr>
+<tr class="separator:a8c5654dad152328ad50a20f130464acf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63f9e674e29969a32cb4ea906e9a5aa4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a63f9e674e29969a32cb4ea906e9a5aa4"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>getShaderID</b> (std::string shaderPath)</td></tr>
+<tr class="separator:a63f9e674e29969a32cb4ea906e9a5aa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa351ca8ae3ef95f4089398dc288552f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaa351ca8ae3ef95f4089398dc288552f"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>requestCubeMap</b> (int CubeMapID, glm::vec3 Position)</td></tr>
+<tr class="separator:aaa351ca8ae3ef95f4089398dc288552f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1552bad163f9c3727faadaa9b055406"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac1552bad163f9c3727faadaa9b055406"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>NearestCubeMap</b> (glm::vec3 TestingPoint)</td></tr>
+<tr class="separator:ac1552bad163f9c3727faadaa9b055406"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07e56b885469a090c43606a13e451d62"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a07e56b885469a090c43606a13e451d62"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>useCubeMap</b> (int ID)</td></tr>
+<tr class="separator:a07e56b885469a090c43606a13e451d62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Data Fields</h2></td></tr>
+<tr class="memitem:a80b2ea2f322e1431bbc59b2a2a994d11"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a80b2ea2f322e1431bbc59b2a2a994d11"></a>
+std::shared_ptr&lt; <a class="el" href="class_camera.html">Camera</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_Camera</b></td></tr>
+<tr class="separator:a80b2ea2f322e1431bbc59b2a2a994d11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a736cf30f3149ae6226d5a009b07c9151"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a736cf30f3149ae6226d5a009b07c9151"></a>
 std::map&lt; std::string, <a class="el" href="classe_texture.html">eTexture</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>TextureList</b></td></tr>
 <tr class="separator:a736cf30f3149ae6226d5a009b07c9151"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f9a6979889cf6d913bbb6aa5af7f993"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2f9a6979889cf6d913bbb6aa5af7f993"></a>
-std::map&lt; std::string, <a class="el" href="class_model.html">Model</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ModelList</b></td></tr>
-<tr class="separator:a2f9a6979889cf6d913bbb6aa5af7f993"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b28e4995ea477def6e7d1d101466317"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3b28e4995ea477def6e7d1d101466317"></a>
 std::map&lt; std::string, <a class="el" href="class_water.html">Water</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>WaterPlanesList</b></td></tr>
 <tr class="separator:a3b28e4995ea477def6e7d1d101466317"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e13d8ba49d868e8a0c57e7d1f04f6ea"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3e13d8ba49d868e8a0c57e7d1f04f6ea"></a>
 std::map&lt; std::string, <a class="el" href="class_terrain.html">Terrain</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>TerrainList</b></td></tr>
 <tr class="separator:a3e13d8ba49d868e8a0c57e7d1f04f6ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f9a6979889cf6d913bbb6aa5af7f993"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2f9a6979889cf6d913bbb6aa5af7f993"></a>
+std::map&lt; std::string, <a class="el" href="class_model.html">Model</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ModelList</b></td></tr>
+<tr class="separator:a2f9a6979889cf6d913bbb6aa5af7f993"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a828322cfec867ce19af8eb249e0c23b2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a828322cfec867ce19af8eb249e0c23b2"></a>
+std::map&lt; std::string, <a class="el" href="class_shader.html">Shader</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ShadersList</b></td></tr>
+<tr class="separator:a828322cfec867ce19af8eb249e0c23b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a263134bae4cf63699abe7db16557d73d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a263134bae4cf63699abe7db16557d73d"></a>
+std::map&lt; int, <a class="el" href="class_cube_map.html">CubeMap</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CubeMapList</b></td></tr>
+<tr class="separator:a263134bae4cf63699abe7db16557d73d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae88330d471df1f1da98de27dbfd3b084"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae88330d471df1f1da98de27dbfd3b084"></a>
+std::vector&lt; glm::vec3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>CubeMapPositions</b></td></tr>
+<tr class="separator:ae88330d471df1f1da98de27dbfd3b084"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e21ce059a8812bb3afe957f75a3120b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_resource_manager.html#a9e21ce059a8812bb3afe957f75a3120b">TextureQueue</a></td></tr>
+<tr class="separator:a9e21ce059a8812bb3afe957f75a3120b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4f1e2253295104d9a93ec8ca26816e4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab4f1e2253295104d9a93ec8ca26816e4"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>modelCounter</b></td></tr>
 <tr class="separator:ab4f1e2253295104d9a93ec8ca26816e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -160,6 +208,28 @@ unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>modelCounter<
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>textureCounter</b></td></tr>
 <tr class="separator:a88d9b4bc80f4e31ea4eb9956a85f1b79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Field Documentation</h2>
+<a class="anchor" id="a9e21ce059a8812bb3afe957f75a3120b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt;std::string&gt; ResourceManager::TextureQueue</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Temp Variables </p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

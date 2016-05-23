@@ -68,6 +68,9 @@ Epsilon::Epsilon(GLFWwindow*& win)
     exposure = 3.0;
 
     srand(time(NULL));
+
+
+
 /*
     EntityTemplate ent(rM);
     std::shared_ptr<Component::SpatialComponent> spa = ((std::shared_ptr<Component::SpatialComponent>) (new Component::SpatialComponent()));
@@ -105,6 +108,21 @@ void Epsilon::InitResources(void)
 
     this->LoadGeometry();
 
+    rM->m_PhysicsWorld = (std::shared_ptr<Physics::Physics>) new Physics::Physics();
+
+    EntityTest = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(78.0,100.25,-57), glm::vec3(0.0621), glm::quat(1.0, 0.0, 0.0, 1.0)));
+    std::shared_ptr<Component::RenderComponent> Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/M33.eml", rM, "Main");
+
+    std::shared_ptr<Component::PhysicComponent> CompPhys = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
+
+    std::shared_ptr<Physics::CubePhysicObject> ph = (std::shared_ptr<Physics::CubePhysicObject>) new Physics::CubePhysicObject();
+    rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(glm::vec3(78.0,100.25,-57), 1.0f ,0.5).get());
+    CompPhys->Fill(5.0f, ph);
+
+    EntityTest->addComponent(Compmodel);
+    EntityTest->addComponent(CompPhys);
+
     this->LoadSound();
 
     rM->loadQueuedTextures();
@@ -131,6 +149,8 @@ void Epsilon::LoadShaders(void)
     Shaders["ShadowMapping"] = new Shader("shaders/ShadowMappingv.glsl", "shaders/ShadowMappingf.glsl");
 
     Shaders["MD5ShadowMapping"] = new Shader("shaders/MD5GeometryShadowv.glsl", "shaders/ShadowMappingf.glsl");
+
+    rM->requestShader("shaders/Geometry.vglsl", "shaders/Geometry.fglsl", "Main");
 }
 
 void Epsilon::LoadGeometry(void)
@@ -146,9 +166,9 @@ void Epsilon::LoadGeometry(void)
     //unique_ptr<Skybox> s(new Skybox("plain"));
 
 
-
-    //terrain = new Terrain("materials/mountains.jpg", "mud-diffuse.jpg", "mud-normal.jpg", "awp_india_texture_4s.jpg", 1, 1);
-
+/*
+    terrain = (std::unique_ptr<Terrain>)new Terrain("materials/mountains.jpg", "mud-diffuse.jpg", "mud-normal.jpg", "awp_india_texture_4s.jpg", 1, 1);
+*/
     //model.push_back(Model("models/sponza.obj"));
 
 
@@ -159,12 +179,11 @@ void Epsilon::LoadGeometry(void)
 
     std::cout << "Resource manager in epsilon address: " << rM.get() << std::endl;
 
-    rM->requestModel("models/esfera.eml", rM, glm::vec3(-3.0,0.75,0.0), glm::vec3(3), glm::quat(-1.0, 0.0, -1.0, 0.0));
-    rM->requestModel("models/esfera.eml", rM, glm::vec3(-3.0,0.75,0.0), glm::vec3(3), glm::quat(-1.0, 0.0, -1.0, 0.0));
-    rM->requestModel("models/plant.eml", rM, glm::vec3(10.0,0.75,0.0), glm::vec3(3), glm::quat(-1.0, 0.0, -1.0, 0.0));
+    rM->requestCubeMap(2, glm::vec3(0,0,0));
+    rM->requestCubeMap(2, glm::vec3(78.9,4.75,-64.0));
+    rM->requestModel("models/M33.eml", rM, glm::vec3(78.0,5.25,-57), glm::vec3(0.0621), glm::quat(1.0, 0.0, 0.0, 1.0));
+    rM->requestModel("models/lee-perry-smith-head-scan2.eml", rM, glm::vec3(78.9,4.75,-64.0), glm::vec3(8), glm::quat(-1.0, 0.0, -1.0, 0.0));
     rM->requestModel("models/Tree.eml", rM, glm::vec3(23.0,0.75,0.0), glm::vec3(8), glm::quat(-1.0, 0.0, -1.0, 0.0));
-    rM->requestModel("models/sphere.eml", rM, glm::vec3(23.0,0.75,0.0), glm::vec3(8), glm::quat(-1.0, 0.0, -1.0, 0.0));
-    rM->requestCubeMap(0, glm::vec3(0,0,0));
     skybox = std::move((unique_ptr<Skybox>)(new Skybox("plain")));
     grass.push_back(Grass("billboardgrass0002.png"));
 
@@ -198,25 +217,26 @@ bool visible = true;
 void Epsilon::Render3D(int clip)
 {
 
-    /*
+/*
             Shaders["Main"]->Use();
-            this->SetUniforms(Shaders["Main"], glm::vec3(190,-40,10), glm::vec3(1,1,1), glm::vec3(1,1,1) );
+            this->SetUniforms(Shaders["Main"], glm::vec3(190,-40,10), glm::vec3(1,1,1), glm::quat(-1, 0, -1, 0) );
             terrain->RenderTerrain(Shaders["Main"]);
+*/
 
-    */
     Shaders["Main"]->Use();
-    this->SetUniforms(Shaders["Main"], rM->getModelPosition("models/esfera.eml"), rM->getModelScale("models/esfera.eml"), rM->getModelRotation("models/esfera.eml"));
+    this->SetUniforms(Shaders["Main"], /*rM->getModelPosition("models/M33.eml")*/ EntityTest->getPosition(), EntityTest->getScale(), EntityTest->getRotation());
     glm::mat4 Model = glm::mat4();
-    glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), rM->getModelScale("models/esfera.eml"));
-    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), rM->getModelPosition("models/esfera.eml"));
-    glm::mat4 RotationMatrix = glm::toMat4(glm::normalize(rM->getModelRotation("models/esfera.eml")));
+    glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), EntityTest->getScale());
+    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), EntityTest->getPosition());
+    glm::mat4 RotationMatrix = glm::toMat4(glm::normalize(EntityTest->getRotation()));
     Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
     BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), Model);
 
-    visible = BSPMap->Frustum.BoxInFrustum(rM->getModelBoundingBox("models/esfera.eml"));
-    if(visible)
+    visible = BSPMap->Frustum.BoxInFrustum(rM->getModelBoundingBox("models/M33.eml"));
+    if(1)
     {
-        rM->useModel("models/esfera.eml", Shaders["Main"]);
+        //rM->useModel("models/M33.eml", Shaders["Main"]->getProgramID());
+        EntityTest->Update();
     }
     else
     {
@@ -224,18 +244,18 @@ void Epsilon::Render3D(int clip)
     }
 
     Shaders["Main"]->Use();
-    this->SetUniforms(Shaders["Main"], rM->getModelPosition("models/plant.eml"), rM->getModelScale("models/plant.eml"), rM->getModelRotation("models/plant.eml"));
+    this->SetUniforms(Shaders["Main"], rM->getModelPosition("models/lee-perry-smith-head-scan2.eml"), rM->getModelScale("models/lee-perry-smith-head-scan2.eml"), rM->getModelRotation("models/lee-perry-smith-head-scan2.eml"));
     Model = glm::mat4();
-    ScaleMatrix = glm::scale(glm::mat4(), rM->getModelScale("models/plant.eml"));
-    TranslationMatrix = glm::translate(glm::mat4(), rM->getModelPosition("models/plant.eml"));
-    RotationMatrix = glm::toMat4(glm::normalize(rM->getModelRotation("models/plant.eml")));
+    ScaleMatrix = glm::scale(glm::mat4(), rM->getModelScale("models/lee-perry-smith-head-scan2.eml"));
+    TranslationMatrix = glm::translate(glm::mat4(), rM->getModelPosition("models/lee-perry-smith-head-scan2.eml"));
+    RotationMatrix = glm::toMat4(glm::normalize(rM->getModelRotation("models/lee-perry-smith-head-scan2.eml")));
     Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
     BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), Model);
 
-    visible = BSPMap->Frustum.BoxInFrustum(rM->getModelBoundingBox("models/plant.eml"));
+    visible = BSPMap->Frustum.BoxInFrustum(rM->getModelBoundingBox("models/lee-perry-smith-head-scan2.eml"));
     if(visible)
     {
-        rM->useModel("models/plant.eml", Shaders["Main"]);
+        rM->useModel("models/lee-perry-smith-head-scan2.eml", Shaders["Main"]);
     }
     else
     {
@@ -280,15 +300,18 @@ void Epsilon::Render3D(int clip)
 
 void Epsilon::Render3D()
 {
-
-
+/*
+            Shaders["ShadowMapping"]->Use();
+            this->SetUniforms(Shaders["ShadowMapping"], glm::vec3(190,-40,10), glm::vec3(1,1,1), glm::quat(-1, 0, -1, 0) );
+            terrain->RenderTerrain(Shaders["ShadowMapping"]);
+*/
     Shaders["ShadowMapping"]->Use();
-    this->SetUniforms(Shaders["ShadowMapping"], rM->getModelPosition("models/esfera.eml"), rM->getModelScale("models/esfera.eml"), rM->getModelRotation("models/esfera.eml"));
-    rM->useModel("models/esfera.eml", Shaders["ShadowMapping"]);
+    this->SetUniforms(Shaders["ShadowMapping"], rM->getModelPosition("models/M33.eml"), rM->getModelScale("models/M33.eml"), rM->getModelRotation("models/M33.eml"));
+    rM->useModel("models/M33.eml", Shaders["ShadowMapping"]);
 
         Shaders["ShadowMapping"]->Use();
-    this->SetUniforms(Shaders["ShadowMapping"], rM->getModelPosition("models/plant.eml"), rM->getModelScale("models/plant.eml"), rM->getModelRotation("models/plant.eml"));
-    rM->useModel("models/plant.eml", Shaders["ShadowMapping"]);
+    this->SetUniforms(Shaders["ShadowMapping"], rM->getModelPosition("models/lee-perry-smith-head-scan2.eml"), rM->getModelScale("models/lee-perry-smith-head-scan2.eml"), rM->getModelRotation("models/lee-perry-smith-head-scan2.eml"));
+    rM->useModel("models/lee-perry-smith-head-scan2.eml", Shaders["ShadowMapping"]);
 
         Shaders["ShadowMapping"]->Use();
     this->SetUniforms(Shaders["ShadowMapping"], rM->getModelPosition("models/Tree.eml"), rM->getModelScale("models/Tree.eml"), rM->getModelRotation("models/Tree.eml"));
@@ -329,7 +352,7 @@ void Epsilon::SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, 
     glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), scale);
     glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), position);
     glm::mat4 RotationMatrix;
-    RotationMatrix = glm::toMat4(glm::normalize(rotation));//glm::rotate(RotationMatrix, glm::radians(degree), rotation);
+    RotationMatrix = glm::mat4(1) * glm::toMat4(glm::normalize(rotation));//glm::rotate(RotationMatrix, glm::radians(degree), rotation);
 
     Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
 
@@ -489,6 +512,8 @@ void Epsilon::MainLoop(void)
         /*
                 this->ComputeWater();
         */
+
+        rM->m_PhysicsWorld->Update(frametime);
 
         this->ComputeShadow();
 

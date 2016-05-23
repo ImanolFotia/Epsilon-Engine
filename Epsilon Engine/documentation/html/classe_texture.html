@@ -50,7 +50,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
-      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -71,9 +71,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
-      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
-      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
+      <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -108,8 +109,7 @@ $(document).ready(function(){initNavTree('classe_texture.html','');});
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pri-attribs">Private Attributes</a> &#124;
-<a href="classe_texture-members.html">List of all members</a>  </div>
+<a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">eTexture Class Reference</div>  </div>
 </div><!--header-->
@@ -117,9 +117,12 @@ $(document).ready(function(){initNavTree('classe_texture.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a8fd98d068ab6a7fa6b1958839e8ee145"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8fd98d068ab6a7fa6b1958839e8ee145"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>eTexture</b> (const char *TexName)</td></tr>
-<tr class="separator:a8fd98d068ab6a7fa6b1958839e8ee145"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ef969f00202b9c6dd6e086eabda97e5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6ef969f00202b9c6dd6e086eabda97e5"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>eTexture</b> (const char *TexName, GLenum wrap=GL_REPEAT)</td></tr>
+<tr class="separator:a6ef969f00202b9c6dd6e086eabda97e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeafb4e7b82a31dc25568b682afbbdbfd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeafb4e7b82a31dc25568b682afbbdbfd"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>eTexture</b> (std::vector&lt; std::string &gt; CubeMapPath)</td></tr>
+<tr class="separator:aeafb4e7b82a31dc25568b682afbbdbfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a533898fcfffcc4bc44900a5332d0263b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a533898fcfffcc4bc44900a5332d0263b"></a>
 GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>getTextureID</b> (void)</td></tr>
 <tr class="separator:a533898fcfffcc4bc44900a5332d0263b"><td class="memSeparator" colspan="2">&#160;</td></tr>

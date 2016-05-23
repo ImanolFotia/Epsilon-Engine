@@ -5,11 +5,11 @@ Model::Model(const char* path, std::shared_ptr<ResourceManager> rm, glm::vec3 po
 {
     this->path = path;
     resm = rm;
-
-    this->loadModel(path, 0);
     Position = pos;
     Scale = sc;
     Rotation = rot;
+
+    this->loadModel(path, 0);
     std::cout << "Resource manager in epsilon address: " << resm.get() << std::endl;
     //cout << "Cantidad de texturas: " << textures_loaded.size() << endl;
 }
@@ -38,6 +38,7 @@ bool Model::loadModel(string emlPath, int a)
     if((int)header->format != EMLHEADER)
     {
         std::cout << "This file is not a valid SEML file. " << std::endl;
+        return false;
     }
 
     if((float)header->version != emlVersion)
@@ -128,8 +129,11 @@ bool Model::loadModel(string emlPath, int a)
             tmpTexturesVector.push_back(tex);
         }
         }
-
-        meshes.push_back(Mesh(tmpVertVector, tmpIndicesVector, tmpTexturesVector));
+        if(!a){
+            meshes.push_back(Mesh(tmpVertVector, tmpIndicesVector, tmpTexturesVector, resm->NearestCubeMap(Position)));
+        }
+        else
+            meshes.push_back(Mesh(tmpVertVector, tmpIndicesVector, tmpTexturesVector));
     }
 
 
@@ -140,6 +144,7 @@ bool Model::loadModel(string emlPath, int a)
     delete[] l_meshes;
 
     inFILE.close();
+    return true;
 
 }
 
@@ -148,4 +153,10 @@ void Model::Draw(Shader* shader)
     for(GLuint i = 0; i < this->meshes.size(); i++)
         this->meshes[i].Draw(shader, this->resm);
     shader->Free();
+}
+
+void Model::Draw(GLuint shader)
+{
+    for(GLuint i = 0; i < this->meshes.size(); i++)
+        this->meshes[i].Draw(shader, this->resm);
 }

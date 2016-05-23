@@ -50,7 +50,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
-      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -71,9 +71,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
-      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
-      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
+      <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -108,35 +109,24 @@ $(document).ready(function(){initNavTree('class_skybox.html','');});
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="#pri-attribs">Private Attributes</a> &#124;
-<a href="class_skybox-members.html">List of all members</a>  </div>
+<a href="#pub-attribs">Data Fields</a> &#124;
+<a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">Skybox Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="dynheader">
-Collaboration diagram for Skybox:</div>
-<div class="dyncontent">
-<div class="center"><img src="class_skybox__coll__graph.png" border="0" usemap="#_skybox_coll__map" alt="Collaboration graph"/></div>
-<map name="_skybox_coll__map" id="_skybox_coll__map">
-<area shape="rect" id="node2" href="class_model.html" title="Model" alt="" coords="130,95,187,121"/>
-<area shape="rect" id="node3" href="struct_m_i_n___m_a_x___p_o_i_n_t_s.html" title="Contains all the necessery OpenGL includes. " alt="" coords="5,5,139,32"/>
-<area shape="rect" id="node4" href="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x.html" title="Structure to store the models bounding box for visibility and collision computation. " alt="" coords="163,5,330,32"/>
-</map>
-<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ae89023375201d5c07883412184866696"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae89023375201d5c07883412184866696"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Skybox</b> (std::string)</td></tr>
 <tr class="separator:ae89023375201d5c07883412184866696"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18a9f68b489fbc0169fba7a35ecec4a5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a18a9f68b489fbc0169fba7a35ecec4a5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Render</b> (std::unique_ptr&lt; <a class="el" href="class_camera.html">Camera</a> &gt; &amp;, <a class="el" href="class_shader.html">Shader</a> *)</td></tr>
-<tr class="separator:a18a9f68b489fbc0169fba7a35ecec4a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5d2d582a8564306f47ef7d2c7278f21"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac5d2d582a8564306f47ef7d2c7278f21"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Render</b> (std::unique_ptr&lt; <a class="el" href="class_camera.html">Camera</a> &gt; &amp;, <a class="el" href="class_shader.html">Shader</a> *, float)</td></tr>
+<tr class="separator:ac5d2d582a8564306f47ef7d2c7278f21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
+Data Fields</h2></td></tr>
 <tr class="memitem:a92ceb9614e85c1ece06e382d19cd5da9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a92ceb9614e85c1ece06e382d19cd5da9"></a>
 GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>CubeMapID</b></td></tr>
 <tr class="separator:a92ceb9614e85c1ece06e382d19cd5da9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -152,9 +142,9 @@ GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>skyboxVBO</b></td><
 <tr class="memitem:ad2450b9e277d6c0f106213cdc770af47"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad2450b9e277d6c0f106213cdc770af47"></a>
 GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>EBO</b></td></tr>
 <tr class="separator:ad2450b9e277d6c0f106213cdc770af47"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0297ea3cdc5d2e7546272aff37465209"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0297ea3cdc5d2e7546272aff37465209"></a>
-<a class="el" href="class_model.html">Model</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>skydome</b></td></tr>
-<tr class="separator:a0297ea3cdc5d2e7546272aff37465209"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b0e6f5f59bc653ce42ca6e2b417d995"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0b0e6f5f59bc653ce42ca6e2b417d995"></a>
+std::unique_ptr&lt; <a class="el" href="class_model.html">Model</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>skydome</b></td></tr>
+<tr class="separator:a0b0e6f5f59bc653ce42ca6e2b417d995"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54ea802cc992878e61107384e58a7ef4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a54ea802cc992878e61107384e58a7ef4"></a>
 vector&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Textures</b></td></tr>
 <tr class="separator:a54ea802cc992878e61107384e58a7ef4"><td class="memSeparator" colspan="2">&#160;</td></tr>

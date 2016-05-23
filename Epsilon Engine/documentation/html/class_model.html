@@ -50,7 +50,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
-      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -71,9 +71,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
-      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
-      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
+      <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -107,12 +108,10 @@ $(document).ready(function(){initNavTree('class_model.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
+<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="#pri-methods">Private Member Functions</a> &#124;
-<a href="#pri-attribs">Private Attributes</a> &#124;
-<a href="class_model-members.html">List of all members</a>  </div>
+<a href="#pub-attribs">Data Fields</a> &#124;
+<a href="#pri-methods">Private Member Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Model Class Reference</div>  </div>
 </div><!--header-->
@@ -122,13 +121,13 @@ Collaboration diagram for Model:</div>
 <div class="dyncontent">
 <div class="center"><img src="class_model__coll__graph.png" border="0" usemap="#_model_coll__map" alt="Collaboration graph"/></div>
 <map name="_model_coll__map" id="_model_coll__map">
-<area shape="rect" id="node2" href="struct_m_i_n___m_a_x___p_o_i_n_t_s.html" title="Contains all the necessery OpenGL includes. " alt="" coords="5,5,139,32"/>
+<area shape="rect" id="node2" href="struct_m_i_n___m_a_x___p_o_i_n_t_s.html" title="MIN_MAX_POINTS" alt="" coords="5,5,139,32"/>
 <area shape="rect" id="node3" href="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x.html" title="Structure to store the models bounding box for visibility and collision computation. " alt="" coords="163,5,330,32"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
+Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x.html">BOUNDING_BOX</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure to store the models bounding box for visibility and collision computation.  <a href="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -136,8 +135,11 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a0c34749c25d878e0e00179911d2b6628"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0c34749c25d878e0e00179911d2b6628"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Model</b> (const char *path)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Model</b> (const char *<a class="el" href="class_model.html#af94ddde9af2f1fcee96a5aca53e48ed1">path</a>)</td></tr>
 <tr class="separator:a0c34749c25d878e0e00179911d2b6628"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e5fadef9ed39a2d3a2282b3e6d34524"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9e5fadef9ed39a2d3a2282b3e6d34524"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Model</b> (const char *<a class="el" href="class_model.html#af94ddde9af2f1fcee96a5aca53e48ed1">path</a>, std::shared_ptr&lt; <a class="el" href="class_resource_manager.html">ResourceManager</a> &gt; rm, glm::vec3 pos=glm::vec3(0, 0, 0), glm::vec3 sc=glm::vec3(0, 0, 0), glm::quat rot=glm::quat(0, 0, 0, 1))</td></tr>
+<tr class="separator:a9e5fadef9ed39a2d3a2282b3e6d34524"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01308a0e5396f32afacefe1b1e39312d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a01308a0e5396f32afacefe1b1e39312d"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getPath</b> ()</td></tr>
 <tr class="separator:a01308a0e5396f32afacefe1b1e39312d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -151,12 +153,30 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="separator:a03262c92e9aa1028a2df43eb53eaca67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:ab910ead43eaeb4cedd2b1aca69d28987"><td class="memItemLeft" align="right" valign="top">aiMesh *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_model.html#ab910ead43eaeb4cedd2b1aca69d28987">mesh</a></td></tr>
-<tr class="memdesc:ab910ead43eaeb4cedd2b1aca69d28987"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor, expects a filepath to a 3D model.  <a href="#ab910ead43eaeb4cedd2b1aca69d28987">More...</a><br /></td></tr>
-<tr class="separator:ab910ead43eaeb4cedd2b1aca69d28987"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af94ddde9af2f1fcee96a5aca53e48ed1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af94ddde9af2f1fcee96a5aca53e48ed1"></a>
-const char *&#160;</td><td class="memItemRight" valign="bottom"><b>path</b></td></tr>
+Data Fields</h2></td></tr>
+<tr class="memitem:a973bfbdb62d7cc49da681f5f96416bac"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a973bfbdb62d7cc49da681f5f96416bac"></a>
+glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>Position</b> = glm::vec3(0,0,0)</td></tr>
+<tr class="separator:a973bfbdb62d7cc49da681f5f96416bac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a272a95591f623982748ca26cfc2787b3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a272a95591f623982748ca26cfc2787b3"></a>
+glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>Scale</b></td></tr>
+<tr class="separator:a272a95591f623982748ca26cfc2787b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae319973305e370f31f131b6bc53c71ca"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae319973305e370f31f131b6bc53c71ca"></a>
+glm::quat&#160;</td><td class="memItemRight" valign="bottom"><b>Rotation</b></td></tr>
+<tr class="separator:ae319973305e370f31f131b6bc53c71ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8fae239ce9a064b20070c5a50f3c15a9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8fae239ce9a064b20070c5a50f3c15a9"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_CastShadows</b></td></tr>
+<tr class="separator:a8fae239ce9a064b20070c5a50f3c15a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2be5d1b1db5c70b22ff1f43e45146e09"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2be5d1b1db5c70b22ff1f43e45146e09"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_IsVisible</b></td></tr>
+<tr class="separator:a2be5d1b1db5c70b22ff1f43e45146e09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d8ac75c6ab0c5c63f97571f33095924"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7d8ac75c6ab0c5c63f97571f33095924"></a>
+MODEL_TYPE&#160;</td><td class="memItemRight" valign="bottom"><b>m_Type</b></td></tr>
+<tr class="separator:a7d8ac75c6ab0c5c63f97571f33095924"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af175189cc681cfc69faf76e2d2ed78a1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af175189cc681cfc69faf76e2d2ed78a1"></a>
+std::shared_ptr&lt; <a class="el" href="class_resource_manager.html">ResourceManager</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>resm</b></td></tr>
+<tr class="separator:af175189cc681cfc69faf76e2d2ed78a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af94ddde9af2f1fcee96a5aca53e48ed1"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_model.html#af94ddde9af2f1fcee96a5aca53e48ed1">path</a></td></tr>
+<tr class="memdesc:af94ddde9af2f1fcee96a5aca53e48ed1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor, expects a filepath to a 3D model.  <a href="#af94ddde9af2f1fcee96a5aca53e48ed1">More...</a><br /></td></tr>
 <tr class="separator:af94ddde9af2f1fcee96a5aca53e48ed1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d77b67392e10756ca9c5075b2abedea"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5d77b67392e10756ca9c5075b2abedea"></a>
 string&#160;</td><td class="memItemRight" valign="bottom"><b>directory</b></td></tr>
@@ -176,31 +196,12 @@ vector&lt; <a class="el" href="struct_texture.html">Texture</a> &gt;&#160;</td><
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a293cf3e4b03935164fbee0fab62c78cd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_model.html#a293cf3e4b03935164fbee0fab62c78cd">loadModel</a> (string path)</td></tr>
-<tr class="memdesc:a293cf3e4b03935164fbee0fab62c78cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.  <a href="#a293cf3e4b03935164fbee0fab62c78cd">More...</a><br /></td></tr>
-<tr class="separator:a293cf3e4b03935164fbee0fab62c78cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23b167ce0d33f7e6ab5693cd5e81a9a5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_model.html#a23b167ce0d33f7e6ab5693cd5e81a9a5">processNode</a> (aiNode *node, const aiScene *scene)</td></tr>
-<tr class="memdesc:a23b167ce0d33f7e6ab5693cd5e81a9a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).  <a href="#a23b167ce0d33f7e6ab5693cd5e81a9a5">More...</a><br /></td></tr>
-<tr class="separator:a23b167ce0d33f7e6ab5693cd5e81a9a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34780ba89eaf96397bb6b12af29de871"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_mesh.html">Mesh</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_model.html#a34780ba89eaf96397bb6b12af29de871">processMesh</a> (aiMesh *&amp;<a class="el" href="class_model.html#ab910ead43eaeb4cedd2b1aca69d28987">mesh</a>, const aiScene *&amp;scene)</td></tr>
-<tr class="separator:a34780ba89eaf96397bb6b12af29de871"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae58d549a5695ae7c1d7bef7b82df73a"><td class="memItemLeft" align="right" valign="top">vector&lt; <a class="el" href="struct_texture.html">Texture</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_model.html#aae58d549a5695ae7c1d7bef7b82df73a">loadMaterialTextures</a> (aiMaterial *mat, aiTextureType type, string typeName)</td></tr>
-<tr class="separator:aae58d549a5695ae7c1d7bef7b82df73a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c371204c0407ab15ea0eaa1a5af28d3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0c371204c0407ab15ea0eaa1a5af28d3"></a>
-GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>loadCubemap</b> ()</td></tr>
-<tr class="separator:a0c371204c0407ab15ea0eaa1a5af28d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23e0c677d8492376f36252216d4605e7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a23e0c677d8492376f36252216d4605e7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>createBoundingBox</b> ()</td></tr>
-<tr class="separator:a23e0c677d8492376f36252216d4605e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
-Private Attributes</h2></td></tr>
-<tr class="memitem:aa8e86b524eb1e7f3f76d14422af27204"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_model.html#aa8e86b524eb1e7f3f76d14422af27204">CubeMapLoaded</a> = false</td></tr>
-<tr class="memdesc:aa8e86b524eb1e7f3f76d14422af27204"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.  <a href="#aa8e86b524eb1e7f3f76d14422af27204">More...</a><br /></td></tr>
-<tr class="separator:aa8e86b524eb1e7f3f76d14422af27204"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7eff5466b93a48b22e71f9b57c88c6ad"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_model.html#a7eff5466b93a48b22e71f9b57c88c6ad">loadModel</a> (string emlPath, int a)</td></tr>
+<tr class="memdesc:a7eff5466b93a48b22e71f9b57c88c6ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.  <a href="#a7eff5466b93a48b22e71f9b57c88c6ad">More...</a><br /></td></tr>
+<tr class="separator:a7eff5466b93a48b22e71f9b57c88c6ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="aae58d549a5695ae7c1d7bef7b82df73a"></a>
+<a class="anchor" id="a7eff5466b93a48b22e71f9b57c88c6ad"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -208,181 +209,21 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">vector&lt;<a class="el" href="struct_texture.html">Texture</a>&gt; Model::loadMaterialTextures </td>
-          <td>(</td>
-          <td class="paramtype">aiMaterial *&#160;</td>
-          <td class="paramname"><em>mat</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">aiTextureType&#160;</td>
-          <td class="paramname"><em>type</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">string&#160;</td>
-          <td class="paramname"><em>typeName</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Checks all material textures of a given type and loads the textures if they're not loaded yet. The required info is returned as a <a class="el" href="struct_texture.html">Texture</a> struct. </p>
-<p>Check if texture was loaded before and if so, continue to next iteration: skip loading a new texture</p>
-<p>A texature with the same filepath has already been loaded, continue to next one. (optimization)</p>
-<p>If texture hasn't been loaded already, load it</p>
-<p>Store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures. </p>
-
-</div>
-</div>
-<a class="anchor" id="a293cf3e4b03935164fbee0fab62c78cd"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Model::loadModel </td>
+          <td class="memname">bool Model::loadModel </td>
           <td>(</td>
           <td class="paramtype">string&#160;</td>
-          <td class="paramname"><em>path</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector. </p>
-<p>Functions </p>
-<p>Read file via ASSIMP</p>
-<p>Check for errors</p>
-<p>Process ASSIMP's root node recursively </p>
-
-</div>
-</div>
-<a class="anchor" id="a34780ba89eaf96397bb6b12af29de871"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_mesh.html">Mesh</a> Model::processMesh </td>
-          <td>(</td>
-          <td class="paramtype">aiMesh *&amp;&#160;</td>
-          <td class="paramname"><em>mesh</em>, </td>
+          <td class="paramname"><em>emlPath</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const aiScene *&amp;&#160;</td>
-          <td class="paramname"><em>scene</em>&#160;</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>a</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Data to fill</p>
-<p>Walk through each of the mesh's vertices</p>
-<p>We declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.</p>
-<p>Positions</p>
-<p>Normals</p>
-<p>Tangent</p>
-<p>Bitangent</p>
-<p><a class="el" href="struct_texture.html">Texture</a> Coordinates</p>
-<p>Does the mesh contain texture coordinates?</p>
-<p>A vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't use models where a vertex can have multiple texture coordinates so we always take the first set (0).</p>
-<p>Now walk through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.</p>
-<p>Retrieve all indices of the face and store them in the indices vector</p>
-<p>Process materials</p>
-<p>We assume a convention for sampler names in the shaders. Each diffuse texture should be named as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER. Same applies to other texture as the following list summarizes: Diffuse: texture_diffuseN Specular: texture_specularN Normal: texture_normalN</p>
-<ol type="1">
-<li>Diffuse maps</li>
-<li>Specular maps</li>
-</ol>
-<ol type="1">
-<li>Normal maps</li>
-</ol>
-<ol type="1">
-<li>Heigth maps</li>
-</ol>
-<p>Return a mesh object created from the extracted mesh data </p>
-
-</div>
-</div>
-<a class="anchor" id="a23b167ce0d33f7e6ab5693cd5e81a9a5"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Model::processNode </td>
-          <td>(</td>
-          <td class="paramtype">aiNode *&#160;</td>
-          <td class="paramname"><em>node</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const aiScene *&#160;</td>
-          <td class="paramname"><em>scene</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any). </p>
-<p>Process each mesh located at the current node</p>
-<p>The node object only contains indices to index the actual objects in the scene. The scene contains all the data, node is just to keep stuff organized (like relations between nodes).</p>
-<p>After we've processed all of the meshes (if any) we then recursively process each of the children nodes </p>
-
-</div>
-</div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a class="anchor" id="aa8e86b524eb1e7f3f76d14422af27204"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Model::CubeMapLoaded = false</td>
         </tr>
       </table>
   </td>
@@ -397,12 +238,13 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ab910ead43eaeb4cedd2b1aca69d28987"></a>
+<h2 class="groupheader">Field Documentation</h2>
+<a class="anchor" id="af94ddde9af2f1fcee96a5aca53e48ed1"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">aiMesh* Model::mesh</td>
+          <td class="memname">const char* Model::path</td>
         </tr>
       </table>
 </div><div class="memdoc">

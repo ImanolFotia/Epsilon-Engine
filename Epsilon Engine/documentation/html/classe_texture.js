@@ -1,6 +1,7 @@
 var classe_texture =
 [
-    [ "eTexture", "classe_texture.html#a8fd98d068ab6a7fa6b1958839e8ee145", null ],
+    [ "eTexture", "classe_texture.html#a6ef969f00202b9c6dd6e086eabda97e5", null ],
+    [ "eTexture", "classe_texture.html#aeafb4e7b82a31dc25568b682afbbdbfd", null ],
     [ "~eTexture", "classe_texture.html#a3c355145139288955c67d6029b8f0c3a", null ],
     [ "getHeight", "classe_texture.html#abb1dbcb9479bdd601b7fda6f19eafc9a", null ],
     [ "getPath", "classe_texture.html#a07f3dc41b4314f889e099f84c51372fe", null ],

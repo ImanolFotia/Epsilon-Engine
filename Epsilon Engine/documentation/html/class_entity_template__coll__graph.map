@@ -1,5 +1,0 @@
-<map id="EntityTemplate" name="EntityTemplate">
-<area shape="rect" id="node2" href="$class_component_1_1_player_component.html" title="NPC/Player Components. " alt="" coords="5,5,204,32"/>
-<area shape="rect" id="node3" href="$class_component_1_1_render_component.html" title="Rendering Components. " alt="" coords="229,5,431,32"/>
-<area shape="rect" id="node4" href="$class_component_1_1_spatial_component.html" title="Spatial Components. " alt="" coords="455,5,658,32"/>
-</map>

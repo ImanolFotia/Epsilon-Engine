@@ -11,34 +11,34 @@
 #include <Model.h>
 #include <ResourceManager.h>
 #include <memory>
+#include <Types.h>
+#include <Physics.h>
 
 namespace Component
 {
-
-enum COMPONENT_TYPE
-{
-    MODELCOMPONENT = 0,
-    SPATIALCOMPONENT,
-    PLAYERCOMPONENT,
-    SOUNDCOMPONENT,
-    PHYSICCOMPONENT
-};
-
 class Component
 {
 public:
     Component() {}
-    virtual ~Component() {}
-    virtual void Update(){}
+    virtual ~Component(){}
+
+    virtual void Fill(bool HasHealth, bool HasGun) = 0;
+    virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader) = 0;
+    virtual void Fill(float mass, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer) = 0;
+    virtual void Update(std::shared_ptr<ResourceManager> rm) = 0;
 
     COMPONENT_TYPE Type;
+    btVector3 m_PhysicsWorldPosition;
+    btVector3 m_PhysicsWorldScale;
+    btQuaternion m_PhysicsWorldRotation;
 };
 
 /// NPC/Player Components
 class PlayerComponent : public Component
 {
 public:
-    PlayerComponent() {
+    PlayerComponent()
+    {
         Type = PLAYERCOMPONENT;
     }
     ~PlayerComponent() {}
@@ -49,7 +49,7 @@ public:
     }
     bool hasHealth;
     bool hasGun;
-    void Update() {}
+    void Update(std::shared_ptr<ResourceManager> rm) {}
 };
 
 /// Rendering Components
@@ -62,60 +62,65 @@ public:
         hasModel = true;
     }
 
-    virtual ~RenderComponent()
+    ~RenderComponent()
     {
-
         std::cout << "RenderComponent Destructor" << std::endl;
     }
 public:
 
-    void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot)
+    void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader)
     {
         modelPath = path;
-        Position = pos;
-        Scale = sc;
-        Rotation = rot;
-        rm->requestModel(modelPath, rm, Position, Scale, Rotation);
+        rm->requestModel(modelPath, rm, glm::vec3(0), glm::vec3(1), glm::quat(0,0,0,0));
         shaderType = shader;
     }
 
     void Update(std::shared_ptr<ResourceManager> rm)
     {
-        //rm->useModel(modelPath, rm->useShader(shaderType));
+        rm->useModel(modelPath, rm->getShaderID(shaderType));
     }
 
     bool hasModel = false;
     std::string modelPath;
     std::string shaderType;
+    MODEL_TYPE ModelType;
 
-    glm::vec3 Position;
-    glm::vec3 Scale;
-    glm::quat Rotation;
+    /** Functions declared for the sake of pure virtual function polymorphism, must not be used for production*/
+    virtual void Fill(bool, bool){}
+    virtual void Fill(float, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer){}
 
 };
 
-/// Spatial Components
-class SpatialComponent : public Component
+/// Physic Components
+class PhysicComponent : public Component
 {
 public:
-    SpatialComponent() {
-        Type = SPATIALCOMPONENT;
-    }
-    ~SpatialComponent()
+    PhysicComponent()
     {
-        std::cout << "Spatial Destructor" << std:: endl;
+        Type = PHYSICCOMPONENT;
     }
-    void Fill(float mass, glm::vec3 position)
+    ~PhysicComponent()
+    {
+        std::cout << "Physic Destructor" << std:: endl;
+    }
+    void Fill(float mass, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer)
     {
         Mass = mass;
-        Position = position;
+        RigidBodyPointer = PhysicBodyPointer;
     }
     float Mass;
-    glm::vec3 Position;
-    void Update()
+
+    std::shared_ptr<Physics::PhysicObject> RigidBodyPointer;
+
+    void Update(std::shared_ptr<ResourceManager> rm)
     {
-        std::cout << "this is the spatial component" << std::endl;
+        m_PhysicsWorldPosition = RigidBodyPointer->Body->getCenterOfMassPosition();
+        m_PhysicsWorldRotation = RigidBodyPointer->Body->getOrientation();
     }
+
+    /** Functions declared for the sake of pure virtual function polymorphism, must not be used for production*/
+    virtual void Fill(bool, bool){}
+    virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader){}
 };
 }
 

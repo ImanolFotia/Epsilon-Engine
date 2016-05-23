@@ -8,11 +8,11 @@ var class_camera =
     [ "getProjectionMatrix", "class_camera.html#a2ebb2fdd189345caa39113fcafcc6d5a", null ],
     [ "getUp", "class_camera.html#ae3b6ae9df4f8003f7985e683a375899c", null ],
     [ "getViewMatrix", "class_camera.html#a5b68da2e7a27893a7a3a8ac85c5b788f", null ],
-    [ "HandleInputs", "class_camera.html#a5056e6a063a38c6bb411a1b3a2d17e6d", null ],
+    [ "HandleInputs", "class_camera.html#a63bf578388a6ea87d2d0a250f91198ab", null ],
     [ "LockCamera", "class_camera.html#abff5b93c71289be007f966060ff9a70d", null ],
     [ "setDirection", "class_camera.html#abfad6243c0d9365acd3bc686cae9ab70", null ],
     [ "setPosition", "class_camera.html#a899a89f25ebb347eb2c99d0fc01fd226", null ],
-    [ "Update", "class_camera.html#a0ced2e4aca3b6742c8965f34eef40c90", null ],
+    [ "Update", "class_camera.html#a0d9114c1c4de87842d227d511e045df5", null ],
     [ "UpdateMatrices", "class_camera.html#acdf18835a138363721f33a6d3bf085b2", null ],
     [ "DeltaVector", "class_camera.html#a92ea5380dd9962b451e067fe1c3c81dc", null ],
     [ "FieldOfView", "class_camera.html#aa58ac7abca90e0a182493b86f7b1c4d2", null ],
@@ -35,7 +35,6 @@ var class_camera =
     [ "Up", "class_camera.html#ad74c4a490bc8865e67e27a2036d0a72d", null ],
     [ "verticalAngle", "class_camera.html#a6582a5068d81b8de7a7fc67e5143e628", null ],
     [ "ViewMatrix", "class_camera.html#a34f22e4635ee38206e4b9c59095d43bf", null ],
-    [ "window", "class_camera.html#a9045e1a5a610020d85b4bb9d63a82ab1", null ],
     [ "winx", "class_camera.html#acb5a9b01adbd32a00e5d70c4f175c467", null ],
     [ "winy", "class_camera.html#a94f986f9ed4b4a07f2d9ee857d958b32", null ]
 ];

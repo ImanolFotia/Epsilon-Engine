@@ -11,6 +11,7 @@ out vec3 FragPos;
 out vec3 Normal;
 out vec2 TexCoords;
 out mat3 TBN;
+out mat3 TBN2;
 out vec3 wFragPos;
 uniform mat4 model;
 uniform mat4 view;
@@ -47,5 +48,6 @@ void main()
   mat3 normalMatrix = transpose(inverse(mat3(model)));
   TBN = CreateTBNMatrix(normalMatrix);
   normalMatrix = transpose(inverse(mat3(view * model)));
+  TBN2 = CreateTBNMatrix(normalMatrix);
   Normal = normalMatrix * normal;
 }

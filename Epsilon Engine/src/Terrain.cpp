@@ -84,13 +84,14 @@ bool Terrain::GenerateGrid()
     {
         for(int j = 0 ; j < this->height ; j++)
         {
-            vert.Position.x = (float)i - (this->height)/2;
+            vert.Position.x = (float)i;
             vert.Position.y = (float)pixels[counter]/2;
-            vert.Position.z = (float)j - (this->height)/2;
+            vert.Position.z = (float)j;
             row.push_back(vert.Position.y);
-            float fScaleC = float(j)/float(this->height-1)/50;
-            float fScaleR = float(i)/float(this->width-1)/50;
-            vert.TexCoords = glm::vec2(texU*fScaleC, texV*fScaleR);
+            float fScaleC = float(j)/float(this->height-1);
+            float fScaleR = float(i)/float(this->width-1);
+            vert.TexCoords.s = this->width*fScaleC/this->width*50;
+            vert.TexCoords.t = this->height*fScaleR/this->height*50;
             vertices.push_back(vert);
             counter++;
 
@@ -102,9 +103,11 @@ bool Terrain::GenerateGrid()
     //cout << Grid.size() << endl;
     //cout << Grid.at(0).size() << endl;
 
-    for(int i = 0 ; i < Grid.size() ; i++)
+    int mod = 0;
+    counter = 0;
+    for(int i = 0 ; i < this->width ; i++)
     {
-        for(int j = 0 ; j < Grid.at(i).size() ; j++)
+        for(int j = 0 ; j < this->width ; j++)
         {
             if(i > 0 && j > 0 && i < Grid.size()-1 && j < Grid.size()-1)
             {
@@ -128,26 +131,27 @@ bool Terrain::GenerateGrid()
 
     counter= 0;
 
-    for(int i = 0 ; i < this->cantPixels-this->width+1 ; i++)
+    for(int i = 0 ; i < this->cantPixels-this->width ; i++)
     {
         if(counter == this->width-1)
         {
             counter = 0;
+            mod++;
             continue;
         }
         Face face;
 
-        face.vertex0 = vertices[i].Position;
-        indices.push_back(i);
-        face.vertex1 = vertices[i+1].Position;
+        face.vertex0 = vertices[i+1].Position;
         indices.push_back(i+1);
-        face.vertex2 = vertices[i+this->width+1].Position;
-        indices.push_back(i+this->width+1);
+        face.vertex1 = vertices[i+this->width].Position;
+        indices.push_back(i+this->width);
+        face.vertex2 = vertices[i+this->width - this->width].Position;
+        indices.push_back(i+this->width - this->width);
 
         vface.push_back(face);
 
-        face.vertex0 = vertices[i].Position;
-        indices.push_back(i);
+        face.vertex0 = vertices[i + 1].Position;
+        indices.push_back(i + 1);
         face.vertex1 = vertices[i+this->width+1].Position;
         indices.push_back(i+this->width+1);
         face.vertex2 = vertices[i+this->width].Position;
@@ -158,14 +162,14 @@ bool Terrain::GenerateGrid()
         counter++;
 
     }
-
+/*
     indices.pop_back();
     indices.pop_back();
     indices.pop_back();
 
     indices.pop_back();
     indices.pop_back();
-    indices.pop_back();
+    indices.pop_back();*/
     calculateTangentSpace();
 }
 

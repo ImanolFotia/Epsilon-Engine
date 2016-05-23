@@ -8,7 +8,7 @@ var searchData=
   ['setupgbuffer',['SetupGBuffer',['../class_post_process.html#aa34071cd45a83f46b63622d2710d7990',1,'PostProcess']]],
   ['setupmesh',['setupMesh',['../class_mesh.html#aafa4e21067a9b0c4407daf5e3c9ea991',1,'Mesh']]],
   ['setuppingpongdof',['SetupPingPongDOF',['../class_post_process.html#a0cec00da385424a8f0c67a44c61d1a0e',1,'PostProcess']]],
-  ['setuppingpongfbo',['SetupPingPongFBO',['../class_post_process.html#a0487c53687150b2c46f210f2aebf3eac',1,'PostProcess']]],
+  ['setuppingpongfbo',['SetupPingPongFBO',['../class_post_process.html#a0487c53687150b2c46f210f2aebf3eac',1,'PostProcess::SetupPingPongFBO()'],['../class_shadow_map.html#a7ee7e51d8d5fb048b19acaaccae3c1d4',1,'ShadowMap::SetupPingPongFBO()']]],
   ['setupshadowmap',['SetupShadowMap',['../class_shadow_map.html#a4d4aa3ef5716aeeaee64d8431e432947',1,'ShadowMap']]],
   ['setupshadowmatrices',['SetupShadowMatrices',['../class_shadow_map.html#acce822bf94608533989b77998eea48b6',1,'ShadowMap']]],
   ['setupssao',['setupSSAO',['../class_post_process.html#aa78e9436eb2ee584aa68f4a780dfb0d7',1,'PostProcess']]],

@@ -8,6 +8,7 @@ var class_shadow_map =
     [ "getShadowTextureID", "class_shadow_map.html#a4ecae9c8ba5f3e1eb1fa0899615d9f96", null ],
     [ "setShadowDirection", "class_shadow_map.html#a4c28748161d18d8e260ef21bc402af9d", null ],
     [ "setShadowPosition", "class_shadow_map.html#adce20a1694daa11845bb8a4cabfe3f18", null ],
+    [ "SetupPingPongFBO", "class_shadow_map.html#a7ee7e51d8d5fb048b19acaaccae3c1d4", null ],
     [ "SetupShadowMap", "class_shadow_map.html#a4d4aa3ef5716aeeaee64d8431e432947", null ],
     [ "SetupShadowMatrices", "class_shadow_map.html#acce822bf94608533989b77998eea48b6", null ],
     [ "UnbindShadowFrameBuffer", "class_shadow_map.html#a0b8328ce476f157f00c78f905706be73", null ],
@@ -22,5 +23,7 @@ var class_shadow_map =
     [ "m_SHADOW_HEIGHT", "class_shadow_map.html#aef84eb2ab2d1f970cfdcb155254d7645", null ],
     [ "m_SHADOW_WIDTH", "class_shadow_map.html#a01106ae34d919ac828e9786da7a91215", null ],
     [ "m_ShadowFBO", "class_shadow_map.html#aa8a296eaaa25b1ed280f0d5443b6cb82", null ],
-    [ "m_ShadowTexture", "class_shadow_map.html#aebb26b7e83be13b2e812d3d60e646e69", null ]
+    [ "m_ShadowTexture", "class_shadow_map.html#aebb26b7e83be13b2e812d3d60e646e69", null ],
+    [ "pingpongDepthbuffers", "class_shadow_map.html#aac20dd5e218bc9a4cb94c6a8e591eb61", null ],
+    [ "pingpongFBO", "class_shadow_map.html#a35ed57b768f4a11a7563d8edc75e2983", null ]
 ];

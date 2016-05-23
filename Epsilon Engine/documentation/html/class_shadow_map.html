@@ -50,7 +50,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
-      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -71,9 +71,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
-      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
-      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
+      <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -109,8 +110,7 @@ $(document).ready(function(){initNavTree('class_shadow_map.html','');});
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
-<a href="#pri-attribs">Private Attributes</a> &#124;
-<a href="class_shadow_map-members.html">List of all members</a>  </div>
+<a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">ShadowMap Class Reference</div>  </div>
 </div><!--header-->
@@ -126,6 +126,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aea0e3d6a4b32b256b3318ea94d7cda9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b8328ce476f157f00c78f905706be73"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_shadow_map.html#a0b8328ce476f157f00c78f905706be73">UnbindShadowFrameBuffer</a> (void)</td></tr>
 <tr class="separator:a0b8328ce476f157f00c78f905706be73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ee7e51d8d5fb048b19acaaccae3c1d4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_shadow_map.html#a7ee7e51d8d5fb048b19acaaccae3c1d4">SetupPingPongFBO</a> ()</td></tr>
+<tr class="separator:a7ee7e51d8d5fb048b19acaaccae3c1d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adce20a1694daa11845bb8a4cabfe3f18"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_shadow_map.html#adce20a1694daa11845bb8a4cabfe3f18">setShadowPosition</a> (glm::vec3 newPos)</td></tr>
 <tr class="separator:adce20a1694daa11845bb8a4cabfe3f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c28748161d18d8e260ef21bc402af9d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_shadow_map.html#a4c28748161d18d8e260ef21bc402af9d">setShadowDirection</a> (glm::vec3 newDir)</td></tr>
@@ -150,6 +152,12 @@ Private Attributes</h2></td></tr>
 <tr class="separator:aebb26b7e83be13b2e812d3d60e646e69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8a296eaaa25b1ed280f0d5443b6cb82"><td class="memItemLeft" align="right" valign="top">GLuint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_shadow_map.html#aa8a296eaaa25b1ed280f0d5443b6cb82">m_ShadowFBO</a></td></tr>
 <tr class="separator:aa8a296eaaa25b1ed280f0d5443b6cb82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35ed57b768f4a11a7563d8edc75e2983"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a35ed57b768f4a11a7563d8edc75e2983"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>pingpongFBO</b> [2]</td></tr>
+<tr class="separator:a35ed57b768f4a11a7563d8edc75e2983"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac20dd5e218bc9a4cb94c6a8e591eb61"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aac20dd5e218bc9a4cb94c6a8e591eb61"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>pingpongDepthbuffers</b> [2]</td></tr>
+<tr class="separator:aac20dd5e218bc9a4cb94c6a8e591eb61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01106ae34d919ac828e9786da7a91215"><td class="memItemLeft" align="right" valign="top">GLfloat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_shadow_map.html#a01106ae34d919ac828e9786da7a91215">m_SHADOW_WIDTH</a></td></tr>
 <tr class="separator:a01106ae34d919ac828e9786da7a91215"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef84eb2ab2d1f970cfdcb155254d7645"><td class="memItemLeft" align="right" valign="top">GLfloat&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_shadow_map.html#aef84eb2ab2d1f970cfdcb155254d7645">m_SHADOW_HEIGHT</a></td></tr>
@@ -431,6 +439,32 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
+<a class="anchor" id="a7ee7e51d8d5fb048b19acaaccae3c1d4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ShadowMap::SetupPingPongFBO </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Setups a framebuffer for blurring the shadow map image to be used in variance shadow mapping </p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_shadow_map_a7ee7e51d8d5fb048b19acaaccae3c1d4_icgraph.png" border="0" usemap="#class_shadow_map_a7ee7e51d8d5fb048b19acaaccae3c1d4_icgraph" alt=""/></div>
+<map name="class_shadow_map_a7ee7e51d8d5fb048b19acaaccae3c1d4_icgraph" id="class_shadow_map_a7ee7e51d8d5fb048b19acaaccae3c1d4_icgraph">
+<area shape="rect" id="node2" href="class_shadow_map.html#a0b8328ce476f157f00c78f905706be73" title="ShadowMap::UnbindShadowFrame\lBuffer" alt="" coords="272,5,496,47"/>
+</map>
+</div>
+</p>
+
+</div>
+</div>
 <a class="anchor" id="a4d4aa3ef5716aeeaee64d8431e432947"></a>
 <div class="memitem">
 <div class="memproto">
@@ -517,9 +551,19 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 <p>Binds the current framebuffer to the default framebuffer </p>
 
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_shadow_map_a0b8328ce476f157f00c78f905706be73_cgraph.png" border="0" usemap="#class_shadow_map_a0b8328ce476f157f00c78f905706be73_cgraph" alt=""/></div>
+<map name="class_shadow_map_a0b8328ce476f157f00c78f905706be73_cgraph" id="class_shadow_map_a0b8328ce476f157f00c78f905706be73_cgraph">
+<area shape="rect" id="node2" href="class_shadow_map.html#a7ee7e51d8d5fb048b19acaaccae3c1d4" title="ShadowMap::SetupPingPongFBO" alt="" coords="277,13,496,39"/>
+</map>
+</div>
+</p>
+
 </div>
 </div>
-<h2 class="groupheader">Member Data Documentation</h2>
+<h2 class="groupheader">Field Documentation</h2>
 <a class="anchor" id="ad78382c5ab5ebc0de058081389ace23f"></a>
 <div class="memitem">
 <div class="memproto">

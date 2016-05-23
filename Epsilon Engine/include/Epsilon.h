@@ -113,6 +113,7 @@ public:
     std::unique_ptr<MD5Model> m_AnimModel;
     std::unique_ptr<ShadowMap> shadowMap;
     std::unique_ptr<PostProcess> PP;
+    std::shared_ptr<EntityTemplate> EntityTest;
     /** Window Properties **/
 
     short WIDTH = 16;

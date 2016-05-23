@@ -41,7 +41,7 @@ class Model
 {
 public:
 
-    glm::vec3 Position, Scale;
+    glm::vec3 Position = glm::vec3(0,0,0), Scale;
     glm::quat Rotation;
     bool m_CastShadows;
     bool m_IsVisible;
@@ -61,7 +61,7 @@ public:
         //cout << "Cantidad de texturas: " << textures_loaded.size() << endl;
     }
 
-    Model(const char* path, std::shared_ptr<ResourceManager> rm, glm::vec3 pos, glm::vec3 sc, glm::quat rot);
+    Model(const char* path, std::shared_ptr<ResourceManager> rm, glm::vec3 pos = glm::vec3(0,0,0), glm::vec3 sc = glm::vec3(0,0,0), glm::quat rot = glm::quat(0,0,0,1));
 
     std::string getPath()
     {
@@ -74,6 +74,9 @@ public:
     string directory;
     /// Draws the model, and thus all its meshes
     void Draw(Shader* shader);
+
+    /// Draws the model, and thus all its meshes
+    void Draw(GLuint shader);
 
     /// Draws the model, and thus all its meshes
     void DrawNoTexture()

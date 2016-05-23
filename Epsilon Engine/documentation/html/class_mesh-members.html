@@ -73,6 +73,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
       <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
       <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
     </ul>
   </div>
@@ -113,17 +114,20 @@ $(document).ready(function(){initNavTree('class_mesh.html','');});
 
 <p>This is the complete list of members for <a class="el" href="class_mesh.html">Mesh</a>, including all inherited members.</p>
 <table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="class_mesh.html#aaa3da31b0d47c47d4516eeb321c19b08">Draw</a>(Shader *&amp;shader)</td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="class_mesh.html#acdb1558a5dd6337ac2fa6df4db67cd84">DrawNoTexture</a>()</td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>CubeMapIndex</b> (defined in <a class="el" href="class_mesh.html">Mesh</a>)</td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="class_mesh.html#ac26f908078f6b9a7f3ac67b0bffff6a2">Draw</a>(Shader *&amp;shader, std::shared_ptr&lt; ResourceManager &gt; resm)</td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>DrawNoTexture</b>() (defined in <a class="el" href="class_mesh.html">Mesh</a>)</td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="class_mesh.html#a0709742dcefaa68370096791963bf055">DrawWithAlpha</a>()</td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
   <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>EBO</b> (defined in <a class="el" href="class_mesh.html">Mesh</a>)</td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
   <tr bgcolor="#f0f0f0"><td class="entry"><b>indices</b> (defined in <a class="el" href="class_mesh.html">Mesh</a>)</td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="class_mesh.html#a106df0a29578f3aa05a7ee3e4912b5d9">Mesh</a>(vector&lt; Vertex &gt; vertices, vector&lt; GLuint &gt; indices, vector&lt; Texture &gt; textures)</td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr><td class="entry"><a class="el" href="class_mesh.html#aafa4e21067a9b0c4407daf5e3c9ea991">setupMesh</a>()</td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">private</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>textures</b> (defined in <a class="el" href="class_mesh.html">Mesh</a>)</td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"></td></tr>
-  <tr><td class="entry"><a class="el" href="class_mesh.html#a09b989b9d4df8ae595d7e80e091a4a5b">VAO</a></td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>VBO</b> (defined in <a class="el" href="class_mesh.html">Mesh</a>)</td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
-  <tr><td class="entry"><a class="el" href="class_mesh.html#abe5c05c224e47ba1e8b6393759798a9b">vertices</a></td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>~Mesh</b>() (defined in <a class="el" href="class_mesh.html">Mesh</a>)</td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>ivertices</b> (defined in <a class="el" href="class_mesh.html">Mesh</a>)</td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"></td></tr>
+  <tr><td class="entry"><a class="el" href="class_mesh.html#ab1367e4facd2cd7165d7800c0f5e8f1a">Mesh</a>(vector&lt; t_Vertex &gt; vertices, vector&lt; GLuint &gt; indices, vector&lt; Texture &gt; textures, int CubeMapindex=1)</td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_mesh.html#aafa4e21067a9b0c4407daf5e3c9ea991">setupMesh</a>()</td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">private</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>textures</b> (defined in <a class="el" href="class_mesh.html">Mesh</a>)</td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_mesh.html#a09b989b9d4df8ae595d7e80e091a4a5b">VAO</a></td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>VBO</b> (defined in <a class="el" href="class_mesh.html">Mesh</a>)</td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"><span class="mlabel">private</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_mesh.html#ae065969fc6d4864eca63f57d14030a5d">vertices</a></td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>~Mesh</b>() (defined in <a class="el" href="class_mesh.html">Mesh</a>)</td><td class="entry"><a class="el" href="class_mesh.html">Mesh</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
 </table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

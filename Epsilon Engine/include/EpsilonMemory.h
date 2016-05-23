@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-
+#include <typeinfo>
 namespace Memory
 {
     template <class T>
@@ -8,5 +8,6 @@ namespace Memory
     {
         return std::move(pointer);
     }
+
 }
 

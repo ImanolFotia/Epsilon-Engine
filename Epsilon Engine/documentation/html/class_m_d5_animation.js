@@ -26,6 +26,7 @@ var class_m_d5_animation =
     [ "Update", "class_m_d5_animation.html#ae150a53834deb176c35ac63f7913c4e5", null ],
     [ "finalSkeletonMatrix", "class_m_d5_animation.html#a87b07f5e10f3bac5bab316e23b734704", null ],
     [ "m_AnimatedSkeleton", "class_m_d5_animation.html#aa2089bc95c2ad6b30113989c49d305fd", null ],
+    [ "m_AnimationName", "class_m_d5_animation.html#a653d440c11d99febfae6c595920c14f4", null ],
     [ "m_BaseFrames", "class_m_d5_animation.html#a63c8b797cfb34b237ef07c70cf57c042", null ],
     [ "m_Bounds", "class_m_d5_animation.html#a563bead578187d904bcb05865a589a04", null ],
     [ "m_fAnimDuration", "class_m_d5_animation.html#a6dc7fae87e62b8e7ed8d3d52e254806f", null ],

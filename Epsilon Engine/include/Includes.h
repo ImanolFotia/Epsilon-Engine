@@ -91,16 +91,21 @@ static std::string removeExtension(std::string path)
 
 static int findNearestPointFromSet(glm::vec3 TestingPoint, std::vector<glm::vec3> PointSet)
 {
-    int pointIndex;
+    std::cout << "Finding Nearest cubemap for mesh" << std::endl;
+    std::cout << "Point set: " << PointSet.size() << std::endl;
+    int pointIndex = 1;
     float shortestLength = glm::length(PointSet[0] - TestingPoint);
-    for(int i = 0; 0 < PointSet.size(); ++i)
+    std::cout << "llega" << std::endl;
+    for(int i = 0; i < PointSet.size(); ++i)
     {
         if(glm::length(PointSet[i] - TestingPoint) < shortestLength)
         {
             shortestLength = glm::length(PointSet[i] - TestingPoint);
-            pointIndex = i;
+            pointIndex = i+1;
         }
     }
+    std::cout << "Returning Nearest cubemap index" << std::endl;
+    std::cout << "Shortest lenght: " << shortestLength << std::endl;
     return pointIndex;
 }
 

@@ -50,7 +50,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
-      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -71,9 +71,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
-      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
-      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
+      <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -108,10 +109,9 @@ $(document).ready(function(){initNavTree('class_c_quake3_b_s_p.html','');});
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pub-attribs">Data Fields</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
-<a href="#pri-attribs">Private Attributes</a> &#124;
-<a href="class_c_quake3_b_s_p-members.html">List of all members</a>  </div>
+<a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">CQuake3BSP Class Reference</div>  </div>
 </div><!--header-->
@@ -138,14 +138,14 @@ Collaboration diagram for CQuake3BSP:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a63f458d8e84eb5a4f0432460c849ba75"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_quake3_b_s_p.html#a63f458d8e84eb5a4f0432460c849ba75">LoadBSP</a> (const char *strFileName)</td></tr>
 <tr class="separator:a63f458d8e84eb5a4f0432460c849ba75"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab82384e5072ab582e17aaf811d1e804d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_quake3_b_s_p.html#ab82384e5072ab582e17aaf811d1e804d">RenderLevel</a> (glm::vec3 vPos, GLuint shader, GLFWwindow *window, bool Shadow)</td></tr>
-<tr class="separator:ab82384e5072ab582e17aaf811d1e804d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb06c36ee906c9c4db1d16c1642c3aa2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_quake3_b_s_p.html#adb06c36ee906c9c4db1d16c1642c3aa2">RenderLevel</a> (glm::vec3 vPos, GLuint shader, bool Shadow)</td></tr>
+<tr class="separator:adb06c36ee906c9c4db1d16c1642c3aa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa61b5bb7e4dfe39ce88a023f438cbe77"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa61b5bb7e4dfe39ce88a023f438cbe77"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Destroy</b> ()</td></tr>
 <tr class="separator:aa61b5bb7e4dfe39ce88a023f438cbe77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
+Data Fields</h2></td></tr>
 <tr class="memitem:ab3535b50e4d79b894aad24c1960ad718"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab3535b50e4d79b894aad24c1960ad718"></a>
 <a class="el" href="class_c_frustum.html">CFrustum</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Frustum</b></td></tr>
 <tr class="separator:ab3535b50e4d79b894aad24c1960ad718"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -314,7 +314,7 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="ab82384e5072ab582e17aaf811d1e804d"></a>
+<a class="anchor" id="adb06c36ee906c9c4db1d16c1642c3aa2"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -329,12 +329,6 @@ Here is the call graph for this function:</div>
           <td></td>
           <td class="paramtype">GLuint&#160;</td>
           <td class="paramname"><em>shader</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">GLFWwindow *&#160;</td>
-          <td class="paramname"><em>window</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

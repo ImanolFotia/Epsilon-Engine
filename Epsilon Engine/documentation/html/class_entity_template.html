@@ -50,7 +50,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
-      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -71,9 +71,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
-      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
-      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
+      <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -108,9 +109,8 @@ $(document).ready(function(){initNavTree('class_entity_template.html','');});
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="#pri-attribs">Private Attributes</a> &#124;
-<a href="class_entity_template-members.html">List of all members</a>  </div>
+<a href="#pub-attribs">Data Fields</a> &#124;
+<a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">EntityTemplate Class Reference</div>  </div>
 </div><!--header-->
@@ -118,45 +118,48 @@ $(document).ready(function(){initNavTree('class_entity_template.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5e32283d7a2668d802fe2082adccf039"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5e32283d7a2668d802fe2082adccf039"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addComponent</b> (bool t)</td></tr>
-<tr class="separator:a5e32283d7a2668d802fe2082adccf039"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a167cc7909323c3e7a961b6959ecd40b6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a167cc7909323c3e7a961b6959ecd40b6"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addComponent</b> (std::shared_ptr&lt; <a class="el" href="class_component_1_1_render_component.html">Component::RenderComponent</a> &gt; t)</td></tr>
-<tr class="separator:a167cc7909323c3e7a961b6959ecd40b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab01e061b5d192da016f958c39ec119f1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab01e061b5d192da016f958c39ec119f1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addComponent</b> (std::shared_ptr&lt; <a class="el" href="class_component_1_1_player_component.html">Component::PlayerComponent</a> &gt; t)</td></tr>
-<tr class="separator:ab01e061b5d192da016f958c39ec119f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4aac3b559394be9b5664c7b5b497a03"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab4aac3b559394be9b5664c7b5b497a03"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addComponent</b> (std::shared_ptr&lt; <a class="el" href="class_component_1_1_spatial_component.html">Component::SpatialComponent</a> &gt; t)</td></tr>
-<tr class="separator:ab4aac3b559394be9b5664c7b5b497a03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa07266c57ef5df9df9b06032167bd1fa"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa07266c57ef5df9df9b06032167bd1fa"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>EntityTemplate</b> (std::shared_ptr&lt; <a class="el" href="class_resource_manager.html">ResourceManager</a> &gt; rm)</td></tr>
+<tr class="separator:aa07266c57ef5df9df9b06032167bd1fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8321b22a8c2a781634850d9fab6df4e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac8321b22a8c2a781634850d9fab6df4e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addComponent</b> (std::shared_ptr&lt; <a class="el" href="class_component_1_1_component.html">Component::Component</a> &gt; t)</td></tr>
+<tr class="separator:ac8321b22a8c2a781634850d9fab6df4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d3a948716b31911b55f124f41994bb8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3d3a948716b31911b55f124f41994bb8"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Update</b> ()</td></tr>
 <tr class="separator:a3d3a948716b31911b55f124f41994bb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:aa345f6cf40b0b3e37605cd2409663b28"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa345f6cf40b0b3e37605cd2409663b28"></a>
-std::shared_ptr&lt; <a class="el" href="class_component_1_1_render_component.html">Component::RenderComponent</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>rC</b></td></tr>
-<tr class="separator:aa345f6cf40b0b3e37605cd2409663b28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a967d9cb61d0dcae5e9608ba922e063f7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a967d9cb61d0dcae5e9608ba922e063f7"></a>
-std::shared_ptr&lt; <a class="el" href="class_component_1_1_player_component.html">Component::PlayerComponent</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pC</b></td></tr>
-<tr class="separator:a967d9cb61d0dcae5e9608ba922e063f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a0787e3b9f33c68232f4d49ea738d41"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1a0787e3b9f33c68232f4d49ea738d41"></a>
-std::shared_ptr&lt; <a class="el" href="class_component_1_1_spatial_component.html">Component::SpatialComponent</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>sC</b></td></tr>
-<tr class="separator:a1a0787e3b9f33c68232f4d49ea738d41"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
-Private Attributes</h2></td></tr>
+Data Fields</h2></td></tr>
 <tr class="memitem:a5fa22e1a9509c613f4e1346bf1748722"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5fa22e1a9509c613f4e1346bf1748722"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasPlayerComponent</b> = false</td></tr>
 <tr class="separator:a5fa22e1a9509c613f4e1346bf1748722"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9521d000c01f6a56bcf14eca7b027708"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9521d000c01f6a56bcf14eca7b027708"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasRenderComponent</b> = false</td></tr>
-<tr class="separator:a9521d000c01f6a56bcf14eca7b027708"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2766cf841ba16dd64b7f2a1c1029a34"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af2766cf841ba16dd64b7f2a1c1029a34"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasModel</b> = false</td></tr>
+<tr class="separator:af2766cf841ba16dd64b7f2a1c1029a34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8934c458ba2e8e518d77edd08362c672"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8934c458ba2e8e518d77edd08362c672"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasSpatialComponent</b> = false</td></tr>
 <tr class="separator:a8934c458ba2e8e518d77edd08362c672"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afdb73a0ce60c40aafa25a4b39f7c52db"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afdb73a0ce60c40aafa25a4b39f7c52db"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>modelPath</b></td></tr>
+<tr class="separator:afdb73a0ce60c40aafa25a4b39f7c52db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43acb5764c2b2ade736859cd6174b367"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a43acb5764c2b2ade736859cd6174b367"></a>
+std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_component_1_1_component.html">Component::Component</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ComponentList</b></td></tr>
+<tr class="separator:a43acb5764c2b2ade736859cd6174b367"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a7d870912d0a3b6b12ea10f961a8dd6ff"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7d870912d0a3b6b12ea10f961a8dd6ff"></a>
+glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>m_Position</b></td></tr>
+<tr class="separator:a7d870912d0a3b6b12ea10f961a8dd6ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74618b9555c8ba4026a822fa9ba907e6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a74618b9555c8ba4026a822fa9ba907e6"></a>
+glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>m_Scale</b></td></tr>
+<tr class="separator:a74618b9555c8ba4026a822fa9ba907e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9095228ca57933e8e44fd09293ee553"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad9095228ca57933e8e44fd09293ee553"></a>
+glm::quat&#160;</td><td class="memItemRight" valign="bottom"><b>m_Rotation</b></td></tr>
+<tr class="separator:ad9095228ca57933e8e44fd09293ee553"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab50f8e53879cb19aed028252cca762ac"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab50f8e53879cb19aed028252cca762ac"></a>
+std::shared_ptr&lt; <a class="el" href="class_resource_manager.html">ResourceManager</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>resourceManager</b></td></tr>
+<tr class="separator:ab50f8e53879cb19aed028252cca762ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

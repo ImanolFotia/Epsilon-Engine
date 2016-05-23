@@ -50,7 +50,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
-      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -71,9 +71,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
-      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
-      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
+      <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -108,10 +109,9 @@ $(document).ready(function(){initNavTree('class_camera.html','');});
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pub-attribs">Data Fields</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
-<a href="#pri-attribs">Private Attributes</a> &#124;
-<a href="class_camera-members.html">List of all members</a>  </div>
+<a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">Camera Class Reference</div>  </div>
 </div><!--header-->
@@ -122,9 +122,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7ac99ca06250df56ae81414fe54589e2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7ac99ca06250df56ae81414fe54589e2"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Camera</b> (glm::vec3, glm::vec3)</td></tr>
 <tr class="separator:a7ac99ca06250df56ae81414fe54589e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ced2e4aca3b6742c8965f34eef40c90"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0ced2e4aca3b6742c8965f34eef40c90"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Update</b> (GLFWwindow *)</td></tr>
-<tr class="separator:a0ced2e4aca3b6742c8965f34eef40c90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d9114c1c4de87842d227d511e045df5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0d9114c1c4de87842d227d511e045df5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Update</b> (GLFWwindow *&amp;)</td></tr>
+<tr class="separator:a0d9114c1c4de87842d227d511e045df5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acdf18835a138363721f33a6d3bf085b2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acdf18835a138363721f33a6d3bf085b2"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>UpdateMatrices</b> (void)</td></tr>
 <tr class="separator:acdf18835a138363721f33a6d3bf085b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -151,7 +151,7 @@ glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>setDirection</b>
 <tr class="separator:abfad6243c0d9365acd3bc686cae9ab70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
+Data Fields</h2></td></tr>
 <tr class="memitem:acbffeb464f0d15fa92f6780ef1e005d7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acbffeb464f0d15fa92f6780ef1e005d7"></a>
 glm::mat4&#160;</td><td class="memItemRight" valign="bottom"><b>MVP</b></td></tr>
 <tr class="separator:acbffeb464f0d15fa92f6780ef1e005d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -179,9 +179,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:abff5b93c71289be007f966060ff9a70d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abff5b93c71289be007f966060ff9a70d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>LockCamera</b> (void)</td></tr>
 <tr class="separator:abff5b93c71289be007f966060ff9a70d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5056e6a063a38c6bb411a1b3a2d17e6d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5056e6a063a38c6bb411a1b3a2d17e6d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>HandleInputs</b> (void)</td></tr>
-<tr class="separator:a5056e6a063a38c6bb411a1b3a2d17e6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63bf578388a6ea87d2d0a250f91198ab"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a63bf578388a6ea87d2d0a250f91198ab"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>HandleInputs</b> (GLFWwindow *&amp;)</td></tr>
+<tr class="separator:a63bf578388a6ea87d2d0a250f91198ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae26cc8359a03e57b9f26c149574e920d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae26cc8359a03e57b9f26c149574e920d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>GetExternalInputs</b> (void)</td></tr>
 <tr class="separator:ae26cc8359a03e57b9f26c149574e920d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -236,9 +236,6 @@ glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>DeltaVector</b><
 <tr class="memitem:a0d450752f3639989bc813bb077dd9f13"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0d450752f3639989bc813bb077dd9f13"></a>
 glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>MovementVector</b></td></tr>
 <tr class="separator:a0d450752f3639989bc813bb077dd9f13"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9045e1a5a610020d85b4bb9d63a82ab1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9045e1a5a610020d85b4bb9d63a82ab1"></a>
-GLFWwindow *&#160;</td><td class="memItemRight" valign="bottom"><b>window</b></td></tr>
-<tr class="separator:a9045e1a5a610020d85b4bb9d63a82ab1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>========= Copyright Survtech, All rights reserved. ============//</p>

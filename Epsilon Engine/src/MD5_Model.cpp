@@ -299,6 +299,20 @@ bool MD5Model::PrepareMesh( Mesh& mesh, const std::vector<glm::mat4x4>& skel )
 }
 */
 
+glm::vec3 MD5Model::getJointPositionByName(std::string jointName)
+{
+    int index = 0;
+    for(int i = 0; i < m_Joints.size(); ++i)
+    {
+        if(m_Joints[i].m_Name == jointName)
+        {
+            index = i;
+            break;
+        }
+    }
+    return m_Joints[index].m_Pos;
+}
+
 void MD5Model::BuildBindPose( const JointList& joints )
 {
     m_BindPose.clear();

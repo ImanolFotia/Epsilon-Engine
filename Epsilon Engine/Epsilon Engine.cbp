@@ -24,6 +24,7 @@
 					<Add directory="deppend/SOIL/src" />
 					<Add directory="deppend/FreeType2/include" />
 					<Add directory="deppend/ini/include" />
+					<Add directory="deppend/bullet3-2.83.7/src" />
 				</Compiler>
 				<Linker>
 					<Add option="-static -static-libgcc -static-libstdc++" />
@@ -35,6 +36,9 @@
 					<Add library="inih" />
 					<Add library="glew32.dll" />
 					<Add library="mingw32" />
+					<Add library="deppend\bullet3-2.83.7\lib\libBulletCollision.a" />
+					<Add library="deppend\bullet3-2.83.7\lib\libBulletDynamics.a" />
+					<Add library="deppend\bullet3-2.83.7\lib\libLinearMath.a" />
 					<Add directory="deppend/glew/lib" />
 					<Add directory="deppend/glfw/lib" />
 					<Add directory="deppend/SOIL/lib" />
@@ -59,6 +63,7 @@
 					<Add directory="deppend/FreeType2/include" />
 					<Add directory="deppend/ini/include" />
 					<Add directory="include" />
+					<Add directory="deppend/bullet3-2.83.7/src" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -68,6 +73,9 @@
 					<Add option="-lfreetype240" />
 					<Add option="-linih" />
 					<Add option="-lglew32.dll" />
+					<Add library="deppend\bullet3-2.83.7\lib\libBulletDynamics.a" />
+					<Add library="deppend\bullet3-2.83.7\lib\libBulletCollision.a" />
+					<Add library="deppend\bullet3-2.83.7\lib\libLinearMath.a" />
 					<Add directory="deppend/glew/lib" />
 					<Add directory="deppend/glfw/lib" />
 					<Add directory="deppend/SOIL/lib" />
@@ -86,6 +94,7 @@
 		<Unit filename="include/CBitset.h" />
 		<Unit filename="include/CPUID.h" />
 		<Unit filename="include/Component.h" />
+		<Unit filename="include/CubeMap.h" />
 		<Unit filename="include/EntityTemplate.h" />
 		<Unit filename="include/Epsilon.h" />
 		<Unit filename="include/EpsilonMemory.h" />
@@ -97,6 +106,7 @@
 		<Unit filename="include/MD5_Model.h" />
 		<Unit filename="include/Mesh.h" />
 		<Unit filename="include/Model.h" />
+		<Unit filename="include/Physics.h" />
 		<Unit filename="include/PostProcess.h" />
 		<Unit filename="include/ProgramData.h" />
 		<Unit filename="include/ResourceManager.h" />
@@ -123,6 +133,7 @@
 		<Unit filename="src/MD5_Model.cpp" />
 		<Unit filename="src/Mesh.cpp" />
 		<Unit filename="src/Model.cpp" />
+		<Unit filename="src/Physics.cpp" />
 		<Unit filename="src/PostProcess.cpp" />
 		<Unit filename="src/ProgramData.cpp" />
 		<Unit filename="src/ResourceManager.cpp" />

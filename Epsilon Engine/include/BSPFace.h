@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <SOIL.h>
+#include <Physics.h>
 
 struct tBSPLightmap
 {
@@ -30,7 +31,8 @@ public:
 
     }
 
-    virtual ~BSPFace() {
+    virtual ~BSPFace()
+    {
         //std::cout << "Destroyed BSP Face" << std::endl;
     }
 
@@ -51,7 +53,7 @@ public:
         this->CalcTangentSpace();
         bool res = this->prepareVAO();
 
-        this->LoadLightMapTexture();
+        //this->LoadLightMapTexture();
 
         return true;
     }
@@ -165,7 +167,6 @@ private:
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (GLvoid*)0);
         glEnableVertexAttribArray(1);
 
-
         glBindBuffer(GL_ARRAY_BUFFER, NBO);
         glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * Normals.size(), &Normals[0], GL_STATIC_DRAW);
         glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (GLvoid*)0);
@@ -200,6 +201,9 @@ private:
     string imagePath;
     tBSPLightmap LightMap;
     GLuint LightMaptexture;
+
+    std::shared_ptr<Physics::PhysicObject> CollisionObject;
+
     std::vector<glm::vec3> Vertices;
     std::vector<glm::vec3> Normals;
     std::vector<glm::vec2> TexCoords;

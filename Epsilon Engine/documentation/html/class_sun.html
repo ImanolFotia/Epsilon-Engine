@@ -50,7 +50,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
-      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -71,9 +71,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
-      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
-      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
+      <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -108,10 +109,9 @@ $(document).ready(function(){initNavTree('class_sun.html','');});
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pub-attribs">Data Fields</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
-<a href="#pri-attribs">Private Attributes</a> &#124;
-<a href="class_sun-members.html">List of all members</a>  </div>
+<a href="#pri-attribs">Private Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">Sun Class Reference</div>  </div>
 </div><!--header-->
@@ -121,14 +121,14 @@ $(document).ready(function(){initNavTree('class_sun.html','');});
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aa3e508ffefb0cb76e55c2bdefdc907d1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_sun.html#aa3e508ffefb0cb76e55c2bdefdc907d1">Sun</a> ()</td></tr>
 <tr class="separator:aa3e508ffefb0cb76e55c2bdefdc907d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada8ab99b996936edc80064900ba5f015"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ada8ab99b996936edc80064900ba5f015"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Render</b> (<a class="el" href="class_shader.html">Shader</a> *)</td></tr>
-<tr class="separator:ada8ab99b996936edc80064900ba5f015"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9860c6a85787ce7c0ed969ab5019464e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9860c6a85787ce7c0ed969ab5019464e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Render</b> (<a class="el" href="class_shader.html">Shader</a> *&amp;)</td></tr>
+<tr class="separator:a9860c6a85787ce7c0ed969ab5019464e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4b93a42883411f4287f91ba3d3dc73a5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_sun.html#a4b93a42883411f4287f91ba3d3dc73a5">Update</a> ()</td></tr>
 <tr class="separator:a4b93a42883411f4287f91ba3d3dc73a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
+Data Fields</h2></td></tr>
 <tr class="memitem:a044e3f3e76daaf6a4dfdfaa2ced95694"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a044e3f3e76daaf6a4dfdfaa2ced95694"></a>
 glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>Position</b></td></tr>
 <tr class="separator:a044e3f3e76daaf6a4dfdfaa2ced95694"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -155,6 +155,12 @@ GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>TextureID</b></td><
 <tr class="memitem:a82ec072ad094119b8efff93954106a21"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a82ec072ad094119b8efff93954106a21"></a>
 GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>VAO</b></td></tr>
 <tr class="separator:a82ec072ad094119b8efff93954106a21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56b11001a0b61e52cb51312907c25a9d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a56b11001a0b61e52cb51312907c25a9d"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>VBO</b></td></tr>
+<tr class="separator:a56b11001a0b61e52cb51312907c25a9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42ac7b8f44fdc3c95d96c1a83e5f1bb9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a42ac7b8f44fdc3c95d96c1a83e5f1bb9"></a>
+GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>EBO</b></td></tr>
+<tr class="separator:a42ac7b8f44fdc3c95d96c1a83e5f1bb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>========= Copyright Survtech, All rights reserved. ============//</p>

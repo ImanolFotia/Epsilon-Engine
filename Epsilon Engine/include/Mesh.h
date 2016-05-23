@@ -48,19 +48,19 @@ class Mesh
 public:
     /**  Mesh Data  */
     vector<t_Vertex> vertices;
-
+    int CubeMapIndex = 1;
     vector<Vertex> ivertices;
     vector<GLuint> indices;
     vector<Texture> textures;
 
     /**  Functions  */
     /// Constructor
-    Mesh(vector<t_Vertex> vertices, vector<GLuint> indices, vector<Texture> textures)
+    Mesh(vector<t_Vertex> vertices, vector<GLuint> indices, vector<Texture> textures, int CubeMapindex = 1)
     {
         this->vertices = vertices;
         this->indices = indices;
         this->textures = textures;
-
+        CubeMapIndex = CubeMapindex;
         ///cout << "number of textures for this mesh: " << textures.size() << endl;
 
         /// Now that we have all the required data, set the vertex buffers and its attribute pointers.
@@ -73,6 +73,9 @@ public:
 
     /// Render the mesh
     void Draw(Shader*& shader, std::shared_ptr<ResourceManager> resm);
+
+    /// Render the mesh
+    void Draw(GLuint shader, std::shared_ptr<ResourceManager> resm);
 
 /// Render the mesh
     void DrawWithAlpha()

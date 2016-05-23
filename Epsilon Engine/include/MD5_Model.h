@@ -21,6 +21,7 @@ public:
     void Render(GLuint shader);
     void RenderSkeleton();
     void RenderJoints();
+    glm::vec3 getJointPositionByName(std::string jointName);
 
 protected:
     typedef std::vector<glm::vec3> PositionBuffer;

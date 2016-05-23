@@ -10,6 +10,7 @@
 #include <Shader.h>
 #include <CubeMap.h>
 #include <Includes.h>
+#include <Physics.h>
 
 using namespace std;
 
@@ -100,6 +101,19 @@ public:
         }
     }
 
+    void useModel(std::string modelPath, GLuint shader)
+    {
+        try
+        {
+            ModelList.at(modelPath).Draw(shader);
+        }
+
+        catch(...)
+        {
+            throw;
+        }
+    }
+
     MIN_MAX_POINTS getModelBoundingBox(std::string modelPath)
     {
         try
@@ -166,12 +180,12 @@ public:
         }
     }
 
-    std::string requestShader(std::string shaderPathv, std::string shaderPathf)
+    std::string requestShader(std::string shaderPathv, std::string shaderPathf, std::string name)
     {
         try
         {
             std::map<std::string, Shader>::iterator it;
-            it = ShadersList.find(shaderPathv);
+            it = ShadersList.find(name);
             if(it != ShadersList.end())
             {
                 return ShadersList.at(it->first).getPath();
@@ -179,8 +193,8 @@ public:
             else
             {
                 Shader tmpShader(shaderPathv.c_str(), shaderPathf.c_str());
-                ShadersList.insert(std::make_pair(shaderPathv, tmpShader));
-                return shaderPathv;
+                ShadersList.insert(std::make_pair(name, tmpShader));
+                return name;
             }
         }
         catch(...)
@@ -202,6 +216,7 @@ public:
         }
     }
 
+
     GLuint getShaderID(std::string shaderPath)
     {
         try
@@ -219,16 +234,19 @@ public:
     {
         try
         {
-            std::map<int, CubeMap>::iterator it;
-            it = CubeMapList.find(CubeMapID);
-            if(it != CubeMapList.end())
-            {
-                return true;
-            }
-            else
-            {
                 std::vector<std::string> paths;
-                std::string path = "materials/skyboxes/Miramar/";
+                std::string path;
+            switch(CubeMapID){
+                case 1:
+                    path = "materials/skyboxes/Miramar/";
+                    break;
+                case 2:
+                    path = "materials/skyboxes/cubemap/";
+                    break;
+                default:
+                    path = "materials/skyboxes/Miramar/";
+
+            }
                 paths.push_back(path + "right.tga");
                 paths.push_back(path + "left.tga");
                 paths.push_back(path + "top.tga");
@@ -240,10 +258,6 @@ public:
 
                 CubeMapList.insert(std::make_pair(CubeMapList.size() + 1, tmpCubeMap));
                 CubeMapPositions.push_back(Position);
-                return true;
-            }
-
-            return false;
         }
         catch(...)
         {
@@ -262,6 +276,7 @@ public:
     }
 
     std::shared_ptr<Camera> m_Camera;
+    std::shared_ptr<Physics::Physics> m_PhysicsWorld;
 
 private:
 
@@ -273,6 +288,7 @@ private:
     std::map<std::string, Shader> ShadersList;
     std::map<int, CubeMap> CubeMapList;
     std::vector<glm::vec3> CubeMapPositions;
+
 
     /*!
     Temp Variables

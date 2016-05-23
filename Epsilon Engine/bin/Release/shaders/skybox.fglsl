@@ -59,13 +59,13 @@ void main()
     color = mix(color, Tex, cloudmixFactor);
 
 
-    vec3 fogColor = mix(NightFog, SkyColor, clamp(LightDirection.y + 1, 0.0, 1.0));
+    vec3 fogColor = mix(NightFog, SkyColor, clamp(LightDirection.y + 0.5, 0.1, 1.0));
 
 
     FragColor.rgb = mix(fogColor, color.rgb, factor);
     FragColor.a = 1.0;
-    float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
-    if(brightness > 0.9)
+    float brightness = dot(FragColor.rgb * ((exposure - 3.0) <= 0 ? 1.0 : (exposure - 3.0)), vec3(0.2126, 0.7152, 0.0722));
+    if(brightness > 1.0)
     blurImage = FragColor;
 
 

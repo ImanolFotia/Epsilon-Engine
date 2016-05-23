@@ -245,7 +245,7 @@
 	<GL/glext.h>
 	<GL/glu.h>
 
-1461974691 source:d:\epsilon\epsilon engine\src\epsilon.cpp
+1463979734 source:d:\epsilon\epsilon engine\src\epsilon.cpp
 	<iostream>
 	<Epsilon.h>
 	<ProgramData.h>
@@ -260,7 +260,7 @@
 	<EpsilonMemory.h>
 	<CPUID.h>
 
-1460838557 d:\epsilon\epsilon engine\include\epsilon.h
+1463856850 d:\epsilon\epsilon engine\include\epsilon.h
 	<map>
 	<GL/glew.h>
 	<GLFW/glfw3.h>
@@ -483,7 +483,7 @@
 	<GLFW/glfw3.h>
 	<iostream>
 
-1461975758 d:\epsilon\epsilon engine\include\texture.h
+1462147651 d:\epsilon\epsilon engine\include\texture.h
 	<iostream>
 	<string>
 	<vector>
@@ -498,7 +498,7 @@
 
 1451178317 d:\epsilon\epsilon engine\include\skyboxdata.h
 
-1461483175 d:\epsilon\epsilon engine\include\model.h
+1463856228 d:\epsilon\epsilon engine\include\model.h
 	<string>
 	<fstream>
 	<sstream>
@@ -534,7 +534,7 @@
 	<stdint.h>
 	<wchar.h>
 
-1461561254 d:\epsilon\epsilon engine\include\mesh.h
+1463856228 d:\epsilon\epsilon engine\include\mesh.h
 	<string>
 	<fstream>
 	<sstream>
@@ -579,7 +579,7 @@
 	<Shader.h>
 	<Texture.h>
 
-1455946379 source:d:\epsilon\epsilon engine\src\terrain.cpp
+1463262644 source:d:\epsilon\epsilon engine\src\terrain.cpp
 	<iostream>
 	<fstream>
 	<Terrain.h>
@@ -602,7 +602,7 @@
 	<ShadowMapping.h>
 	<memory>
 
-1461625253 source:d:\epsilon\epsilon engine\src\postprocess.cpp
+1463706602 source:d:\epsilon\epsilon engine\src\postprocess.cpp
 	<PostProcess.h>
 	<iostream>
 	<ProgramData.h>
@@ -756,7 +756,7 @@
 1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\postprocess.h
 	"types.h"
 
-1461972036 d:\epsilon\epsilon engine\include\includes.h
+1462160179 d:\epsilon\epsilon engine\include\includes.h
 	<iostream>
 	<string>
 	<sstream>
@@ -1062,7 +1062,7 @@
 	<Texture.h>
 	<Shader.h>
 
-1461625317 source:d:\epsilon\epsilon engine\src\sun.cpp
+1462214153 source:d:\epsilon\epsilon engine\src\sun.cpp
 	<Sun.h>
 
 1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\glm.hpp
@@ -1541,13 +1541,14 @@
 	"BSPFace.h"
 	"Frustum.h"
 
-1458420288 d:\epsilon\epsilon engine\include\bspface.h
+1463810222 d:\epsilon\epsilon engine\include\bspface.h
 	<glm/glm.hpp>
 	<GL/glew.h>
 	<iostream>
 	<string>
 	<vector>
 	<SOIL.h>
+	<Physics.h>
 
 1458178843 d:\epsilon\epsilon engine\include\frustum.h
 	<glm/glm.hpp>
@@ -1561,7 +1562,7 @@
 1455946270 source:d:\epsilon\epsilon engine\src\resourcemanager.cpp
 	"ResourceManager.h"
 
-1461976417 d:\epsilon\epsilon engine\include\resourcemanager.h
+1463976167 d:\epsilon\epsilon engine\include\resourcemanager.h
 	<Texture.h>
 	<Model.h>
 	<Water.h>
@@ -1571,6 +1572,7 @@
 	<Shader.h>
 	<CubeMap.h>
 	<Includes.h>
+	<Physics.h>
 
 1459912765 source:d:\epsilon\epsilon engine\src\md5_anim.cpp
 	<MD5_Anim.h>
@@ -1585,13 +1587,13 @@
 	<glm/gtc/matrix_transform.hpp>
 	<glm/gtc/quaternion.hpp>
 
-1459792986 source:d:\epsilon\epsilon engine\src\md5_model.cpp
+1463244640 source:d:\epsilon\epsilon engine\src\md5_model.cpp
 	<Includes.h>
 	<iostream>
 	<MD5_Model.h>
 	<Texture.h>
 
-1451347788 d:\epsilon\epsilon engine\include\md5_model.h
+1463206221 d:\epsilon\epsilon engine\include\md5_model.h
 	<GL/glew.h>
 	<string>
 	<vector>
@@ -1600,7 +1602,9 @@
 	"MD5_Anim.h"
 	<SOIL.h>
 
-1459992446 d:\epsilon\epsilon engine\include\types.h
+1463978615 d:\epsilon\epsilon engine\include\types.h
+	<btBulletDynamicsCommon.h>
+	<btBulletCollisionCommon.h>
 
 1461483175 d:\epsilon\epsilon engine\include\shadowmapping.h
 	<Shader.h>
@@ -1609,28 +1613,31 @@
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
 
-1460337208 source:d:\epsilon\epsilon engine\src\shadowmapping.cpp
+1462150796 source:d:\epsilon\epsilon engine\src\shadowmapping.cpp
 	<ShadowMapping.h>
 	<iostream>
 	<cmath>
 
-1461976417 d:\epsilon\epsilon engine\version.h
+1463980016 d:\epsilon\epsilon engine\version.h
 
-1460999877 d:\epsilon\epsilon engine\include\entitytemplate.h
+1463888085 d:\epsilon\epsilon engine\include\entitytemplate.h
 	<Component.h>
 	<iostream>
+	<glm/glm.hpp>
 	<typeinfo>
 	<memory>
 	<ResourceManager.h>
 
-1461000886 d:\epsilon\epsilon engine\include\component.h
+1463977043 d:\epsilon\epsilon engine\include\component.h
 	<iostream>
 	<glm/glm.hpp>
 	<Model.h>
 	<ResourceManager.h>
 	<memory>
+	<Types.h>
+	<Physics.h>
 
-1460845932 source:d:\epsilon\epsilon engine\src\entitytemplate.cpp
+1463867328 source:d:\epsilon\epsilon engine\src\entitytemplate.cpp
 	<EntityTemplate.h>
 
 1457715723 d:\epsilon\epsilon engine\include\cpuid.h
@@ -1641,8 +1648,9 @@
 	<thread>
 	<exception>
 
-1457808606 d:\epsilon\epsilon engine\include\epsilonmemory.h
+1463868487 d:\epsilon\epsilon engine\include\epsilonmemory.h
 	<memory>
+	<typeinfo>
 
 1451178317 d:\epsilon\epsilon engine\include\light.h
 	<glm/glm.hpp>
@@ -1667,14 +1675,14 @@
 	<limits>
 	"../gtc/constants.hpp"
 
-1461470738 source:d:\epsilon\epsilon engine\src\model.cpp
+1463856228 source:d:\epsilon\epsilon engine\src\model.cpp
 	<Model.h>
 	<ResourceManager.h>
 
 1461365554 d:\epsilon\epsilon engine\include\emlformat.h
 	<string>
 
-1461976417 source:d:\epsilon\epsilon engine\src\mesh.cpp
+1463856228 source:d:\epsilon\epsilon engine\src\mesh.cpp
 	<Mesh.h>
 	<ResourceManager.h>
 
@@ -1684,4 +1692,557 @@
 	<string>
 	<memory>
 	<Texture.h>
+
+1463978354 d:\epsilon\epsilon engine\include\physics.h
+	<glm/glm.hpp>
+	<EpsilonMemory.h>
+	<Types.h>
+	<vector>
+	<btBulletDynamicsCommon.h>
+	<btBulletCollisionCommon.h>
+	<BulletCollision/CollisionDispatch/btGhostObject.h>
+	<BulletDynamics/Character/btKinematicCharacterController.h>
+
+1456870205 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\btbulletdynamicscommon.h
+	"btBulletCollisionCommon.h"
+	"BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h"
+	"BulletDynamics/Dynamics/btSimpleDynamicsWorld.h"
+	"BulletDynamics/Dynamics/btRigidBody.h"
+	"BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h"
+	"BulletDynamics/ConstraintSolver/btHingeConstraint.h"
+	"BulletDynamics/ConstraintSolver/btConeTwistConstraint.h"
+	"BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h"
+	"BulletDynamics/ConstraintSolver/btSliderConstraint.h"
+	"BulletDynamics/ConstraintSolver/btGeneric6DofSpringConstraint.h"
+	"BulletDynamics/ConstraintSolver/btUniversalConstraint.h"
+	"BulletDynamics/ConstraintSolver/btHinge2Constraint.h"
+	"BulletDynamics/ConstraintSolver/btGearConstraint.h"
+	"BulletDynamics/ConstraintSolver/btFixedConstraint.h"
+	"BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h"
+	"BulletDynamics/Vehicle/btRaycastVehicle.h"
+
+1456870205 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\btbulletcollisioncommon.h
+	"BulletCollision/CollisionDispatch/btCollisionWorld.h"
+	"BulletCollision/CollisionDispatch/btCollisionObject.h"
+	"BulletCollision/CollisionShapes/btBoxShape.h"
+	"BulletCollision/CollisionShapes/btSphereShape.h"
+	"BulletCollision/CollisionShapes/btCapsuleShape.h"
+	"BulletCollision/CollisionShapes/btCylinderShape.h"
+	"BulletCollision/CollisionShapes/btConeShape.h"
+	"BulletCollision/CollisionShapes/btStaticPlaneShape.h"
+	"BulletCollision/CollisionShapes/btConvexHullShape.h"
+	"BulletCollision/CollisionShapes/btTriangleMesh.h"
+	"BulletCollision/CollisionShapes/btConvexTriangleMeshShape.h"
+	"BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h"
+	"BulletCollision/CollisionShapes/btScaledBvhTriangleMeshShape.h"
+	"BulletCollision/CollisionShapes/btTriangleMeshShape.h"
+	"BulletCollision/CollisionShapes/btTriangleIndexVertexArray.h"
+	"BulletCollision/CollisionShapes/btCompoundShape.h"
+	"BulletCollision/CollisionShapes/btTetrahedronShape.h"
+	"BulletCollision/CollisionShapes/btEmptyShape.h"
+	"BulletCollision/CollisionShapes/btMultiSphereShape.h"
+	"BulletCollision/CollisionShapes/btUniformScalingShape.h"
+	"BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.h"
+	"BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.h"
+	"BulletCollision/CollisionDispatch/btCollisionDispatcher.h"
+	"BulletCollision/BroadphaseCollision/btSimpleBroadphase.h"
+	"BulletCollision/BroadphaseCollision/btAxisSweep3.h"
+	"BulletCollision/BroadphaseCollision/btMultiSapBroadphase.h"
+	"BulletCollision/BroadphaseCollision/btDbvtBroadphase.h"
+	"LinearMath/btQuaternion.h"
+	"LinearMath/btTransform.h"
+	"LinearMath/btDefaultMotionState.h"
+	"LinearMath/btQuickprof.h"
+	"LinearMath/btIDebugDraw.h"
+	"LinearMath/btSerializer.h"
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btcollisionworld.h
+	"LinearMath/btVector3.h"
+	"LinearMath/btTransform.h"
+	"btCollisionObject.h"
+	"btCollisionDispatcher.h"
+	"BulletCollision/BroadphaseCollision/btOverlappingPairCache.h"
+	"LinearMath/btAlignedObjectArray.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btvector3.h
+	"btScalar.h"
+	"btMinMax.h"
+	"btAlignedAllocator.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btscalar.h
+	<math.h>
+	<stdlib.h>
+	<float.h>
+	<ppcintrinsics.h>
+	<emmintrin.h>
+	<stdio.h>
+	<assert.h>
+	<assert.h>
+	<spu_printf.h>
+	<assert.h>
+	<smmintrin.h>
+	<tmmintrin.h>
+	<pmmintrin.h>
+	<emmintrin.h>
+	<arm_neon.h>
+	<assert.h>
+	<stdio.h>
+	<assert.h>
+	<arm_neon.h>
+	<arm_neon.h>
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btminmax.h
+	"btScalar.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btalignedallocator.h
+	"btScalar.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\bttransform.h
+	"btMatrix3x3.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btmatrix3x3.h
+	"btVector3.h"
+	"btQuaternion.h"
+	<stdio.h>
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btquaternion.h
+	"btVector3.h"
+	"btQuadWord.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btquadword.h
+	"btScalar.h"
+	"btMinMax.h"
+	<altivec.h>
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btcollisionobject.h
+	"LinearMath/btTransform.h"
+	"LinearMath/btMotionState.h"
+	"LinearMath/btAlignedAllocator.h"
+	"LinearMath/btAlignedObjectArray.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btmotionstate.h
+	"btTransform.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btalignedobjectarray.h
+	"btScalar.h"
+	"btAlignedAllocator.h"
+	<memory.h>
+	<string.h>
+	<new>
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btcollisiondispatcher.h
+	"BulletCollision/BroadphaseCollision/btDispatcher.h"
+	"BulletCollision/NarrowPhaseCollision/btPersistentManifold.h"
+	"BulletCollision/CollisionDispatch/btManifoldResult.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+	"LinearMath/btAlignedObjectArray.h"
+	"btCollisionCreateFunc.h"
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btdispatcher.h
+	"LinearMath/btScalar.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\narrowphasecollision\btpersistentmanifold.h
+	"LinearMath/btVector3.h"
+	"LinearMath/btTransform.h"
+	"btManifoldPoint.h"
+	"LinearMath/btAlignedAllocator.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\narrowphasecollision\btmanifoldpoint.h
+	"LinearMath/btVector3.h"
+	"LinearMath/btTransformUtil.h"
+	"physics_effects/base_level/solver/pfx_constraint_row.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\bttransformutil.h
+	"btTransform.h"
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btmanifoldresult.h
+	"BulletCollision/NarrowPhaseCollision/btPersistentManifold.h"
+	"BulletCollision/NarrowPhaseCollision/btDiscreteCollisionDetectorInterface.h"
+	"LinearMath/btTransform.h"
+	"BulletCollision/CollisionDispatch/btCollisionObjectWrapper.h"
+	"BulletCollision/CollisionDispatch/btCollisionObject.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\narrowphasecollision\btdiscretecollisiondetectorinterface.h
+	"LinearMath/btTransform.h"
+	"LinearMath/btVector3.h"
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btcollisionobjectwrapper.h
+	"LinearMath/btScalar.h"
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btbroadphaseproxy.h
+	"LinearMath/btScalar.h"
+	"LinearMath/btVector3.h"
+	"LinearMath/btAlignedAllocator.h"
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btcollisioncreatefunc.h
+	"LinearMath/btAlignedObjectArray.h"
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btoverlappingpaircache.h
+	"btBroadphaseInterface.h"
+	"btBroadphaseProxy.h"
+	"btOverlappingPairCallback.h"
+	"LinearMath/btAlignedObjectArray.h"
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btbroadphaseinterface.h
+	"btBroadphaseProxy.h"
+	"LinearMath/btVector3.h"
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btoverlappingpaircallback.h
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btboxshape.h
+	"btPolyhedralConvexShape.h"
+	"btCollisionMargin.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+	"LinearMath/btVector3.h"
+	"LinearMath/btMinMax.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btpolyhedralconvexshape.h
+	"LinearMath/btMatrix3x3.h"
+	"btConvexInternalShape.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btconvexinternalshape.h
+	"btConvexShape.h"
+	"LinearMath/btAabbUtil2.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btconvexshape.h
+	"btCollisionShape.h"
+	"LinearMath/btVector3.h"
+	"LinearMath/btTransform.h"
+	"LinearMath/btMatrix3x3.h"
+	"btCollisionMargin.h"
+	"LinearMath/btAlignedAllocator.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btcollisionshape.h
+	"LinearMath/btTransform.h"
+	"LinearMath/btVector3.h"
+	"LinearMath/btMatrix3x3.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btcollisionmargin.h
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btaabbutil2.h
+	"btTransform.h"
+	"btVector3.h"
+	"btMinMax.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btsphereshape.h
+	"btConvexInternalShape.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btcapsuleshape.h
+	"btConvexInternalShape.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btcylindershape.h
+	"btBoxShape.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+	"LinearMath/btVector3.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btconeshape.h
+	"btConvexInternalShape.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btstaticplaneshape.h
+	"btConcaveShape.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btconcaveshape.h
+	"btCollisionShape.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+	"btTriangleCallback.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\bttrianglecallback.h
+	"LinearMath/btVector3.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btconvexhullshape.h
+	"btPolyhedralConvexShape.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+	"LinearMath/btAlignedObjectArray.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\bttrianglemesh.h
+	"btTriangleIndexVertexArray.h"
+	"LinearMath/btVector3.h"
+	"LinearMath/btAlignedObjectArray.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\bttriangleindexvertexarray.h
+	"btStridingMeshInterface.h"
+	"LinearMath/btAlignedObjectArray.h"
+	"LinearMath/btScalar.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btstridingmeshinterface.h
+	"LinearMath/btVector3.h"
+	"btTriangleCallback.h"
+	"btConcaveShape.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btconvextrianglemeshshape.h
+	"btPolyhedralConvexShape.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btbvhtrianglemeshshape.h
+	"btTriangleMeshShape.h"
+	"btOptimizedBvh.h"
+	"LinearMath/btAlignedAllocator.h"
+	"btTriangleInfoMap.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\bttrianglemeshshape.h
+	"btConcaveShape.h"
+	"btStridingMeshInterface.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btoptimizedbvh.h
+	"BulletCollision/BroadphaseCollision/btQuantizedBvh.h"
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btquantizedbvh.h
+	<stdio.h>
+	<stdlib.h>
+	"LinearMath/btVector3.h"
+	"LinearMath/btAlignedAllocator.h"
+	"LinearMath/btAlignedAllocator.h"
+	"LinearMath/btAlignedObjectArray.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\bttriangleinfomap.h
+	"LinearMath/btHashMap.h"
+	"LinearMath/btSerializer.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\bthashmap.h
+	"btAlignedObjectArray.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btserializer.h
+	"btScalar.h"
+	"btHashMap.h"
+	<memory.h>
+	<string.h>
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btscaledbvhtrianglemeshshape.h
+	"BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btcompoundshape.h
+	"btCollisionShape.h"
+	"LinearMath/btVector3.h"
+	"LinearMath/btTransform.h"
+	"LinearMath/btMatrix3x3.h"
+	"btCollisionMargin.h"
+	"LinearMath/btAlignedObjectArray.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\bttetrahedronshape.h
+	"btPolyhedralConvexShape.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btemptyshape.h
+	"btConcaveShape.h"
+	"LinearMath/btVector3.h"
+	"LinearMath/btTransform.h"
+	"LinearMath/btMatrix3x3.h"
+	"btCollisionMargin.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btmultisphereshape.h
+	"btConvexInternalShape.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+	"LinearMath/btAlignedObjectArray.h"
+	"LinearMath/btAabbUtil2.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btuniformscalingshape.h
+	"btConvexShape.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btspherespherecollisionalgorithm.h
+	"btActivatingCollisionAlgorithm.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+	"BulletCollision/CollisionDispatch/btCollisionCreateFunc.h"
+	"btCollisionDispatcher.h"
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btactivatingcollisionalgorithm.h
+	"BulletCollision/BroadphaseCollision/btCollisionAlgorithm.h"
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btcollisionalgorithm.h
+	"LinearMath/btScalar.h"
+	"LinearMath/btAlignedObjectArray.h"
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btdefaultcollisionconfiguration.h
+	"btCollisionConfiguration.h"
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btcollisionconfiguration.h
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btsimplebroadphase.h
+	"btOverlappingPairCache.h"
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btaxissweep3.h
+	"LinearMath/btVector3.h"
+	"btOverlappingPairCache.h"
+	"btBroadphaseInterface.h"
+	"btBroadphaseProxy.h"
+	"btOverlappingPairCallback.h"
+	"btDbvtBroadphase.h"
+	<stdio.h>
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btdbvtbroadphase.h
+	"BulletCollision/BroadphaseCollision/btDbvt.h"
+	"BulletCollision/BroadphaseCollision/btOverlappingPairCache.h"
+	"LinearMath/btQuickprof.h"
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btdbvt.h
+	"LinearMath/btAlignedObjectArray.h"
+	"LinearMath/btVector3.h"
+	"LinearMath/btTransform.h"
+	"LinearMath/btAabbUtil2.h"
+	<emmintrin.h>
+	<memory.h>
+	<string.h>
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btquickprof.h
+	<stdio.h>
+	"btScalar.h"
+	"btAlignedAllocator.h"
+	<new>
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btmultisapbroadphase.h
+	"btBroadphaseInterface.h"
+	"LinearMath/btAlignedObjectArray.h"
+	"btOverlappingPairCache.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btdefaultmotionstate.h
+	"btMotionState.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btidebugdraw.h
+	"btVector3.h"
+	"btTransform.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\dynamics\btdiscretedynamicsworld.h
+	"btDynamicsWorld.h"
+	"LinearMath/btAlignedObjectArray.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\dynamics\btdynamicsworld.h
+	"BulletCollision/CollisionDispatch/btCollisionWorld.h"
+	"BulletDynamics/ConstraintSolver/btContactSolverInfo.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btcontactsolverinfo.h
+	"LinearMath/btScalar.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\dynamics\btsimpledynamicsworld.h
+	"btDynamicsWorld.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\dynamics\btrigidbody.h
+	"LinearMath/btAlignedObjectArray.h"
+	"LinearMath/btTransform.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+	"BulletCollision/CollisionDispatch/btCollisionObject.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btpoint2pointconstraint.h
+	"LinearMath/btVector3.h"
+	"btJacobianEntry.h"
+	"btTypedConstraint.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btjacobianentry.h
+	"LinearMath/btMatrix3x3.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\bttypedconstraint.h
+	"LinearMath/btScalar.h"
+	"btSolverConstraint.h"
+	"BulletDynamics/Dynamics/btRigidBody.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btsolverconstraint.h
+	"LinearMath/btVector3.h"
+	"LinearMath/btMatrix3x3.h"
+	"btJacobianEntry.h"
+	"LinearMath/btAlignedObjectArray.h"
+	"btSolverBody.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btsolverbody.h
+	"LinearMath/btVector3.h"
+	"LinearMath/btMatrix3x3.h"
+	"LinearMath/btAlignedAllocator.h"
+	"LinearMath/btTransformUtil.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\bthingeconstraint.h
+	"LinearMath/btVector3.h"
+	"btJacobianEntry.h"
+	"btTypedConstraint.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btconetwistconstraint.h
+	"LinearMath/btVector3.h"
+	"btJacobianEntry.h"
+	"btTypedConstraint.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btgeneric6dofconstraint.h
+	"LinearMath/btVector3.h"
+	"btJacobianEntry.h"
+	"btTypedConstraint.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btsliderconstraint.h
+	"LinearMath/btVector3.h"
+	"btJacobianEntry.h"
+	"btTypedConstraint.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btgeneric6dofspringconstraint.h
+	"LinearMath/btVector3.h"
+	"btTypedConstraint.h"
+	"btGeneric6DofConstraint.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btuniversalconstraint.h
+	"LinearMath/btVector3.h"
+	"btTypedConstraint.h"
+	"btGeneric6DofConstraint.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\bthinge2constraint.h
+	"LinearMath/btVector3.h"
+	"btTypedConstraint.h"
+	"btGeneric6DofSpring2Constraint.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btgeneric6dofspring2constraint.h
+	"LinearMath/btVector3.h"
+	"btJacobianEntry.h"
+	"btTypedConstraint.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btgearconstraint.h
+	"BulletDynamics/ConstraintSolver/btTypedConstraint.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btfixedconstraint.h
+	"btGeneric6DofSpring2Constraint.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btsequentialimpulseconstraintsolver.h
+	"BulletDynamics/ConstraintSolver/btTypedConstraint.h"
+	"BulletDynamics/ConstraintSolver/btContactSolverInfo.h"
+	"BulletDynamics/ConstraintSolver/btSolverBody.h"
+	"BulletDynamics/ConstraintSolver/btSolverConstraint.h"
+	"BulletCollision/NarrowPhaseCollision/btManifoldPoint.h"
+	"BulletDynamics/ConstraintSolver/btConstraintSolver.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btconstraintsolver.h
+	"LinearMath/btScalar.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\vehicle\btraycastvehicle.h
+	"BulletDynamics/Dynamics/btRigidBody.h"
+	"BulletDynamics/ConstraintSolver/btTypedConstraint.h"
+	"btVehicleRaycaster.h"
+	"LinearMath/btAlignedObjectArray.h"
+	"btWheelInfo.h"
+	"BulletDynamics/Dynamics/btActionInterface.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\vehicle\btvehicleraycaster.h
+	"LinearMath/btVector3.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\vehicle\btwheelinfo.h
+	"LinearMath/btVector3.h"
+	"LinearMath/btTransform.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\dynamics\btactioninterface.h
+	"LinearMath/btScalar.h"
+	"btRigidBody.h"
+
+1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btghostobject.h
+	"btCollisionObject.h"
+	"BulletCollision/BroadphaseCollision/btOverlappingPairCallback.h"
+	"LinearMath/btAlignedAllocator.h"
+	"BulletCollision/BroadphaseCollision/btOverlappingPairCache.h"
+	"btCollisionWorld.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\character\btkinematiccharactercontroller.h
+	"LinearMath/btVector3.h"
+	"btCharacterControllerInterface.h"
+	"BulletCollision/BroadphaseCollision/btCollisionAlgorithm.h"
+
+1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\character\btcharactercontrollerinterface.h
+	"LinearMath/btVector3.h"
+	"BulletDynamics/Dynamics/btActionInterface.h"
+
+1463978215 source:d:\epsilon\epsilon engine\src\physics.cpp
+	<Physics.h>
 

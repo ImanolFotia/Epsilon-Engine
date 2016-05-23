@@ -50,7 +50,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
-      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -71,9 +71,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
-      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
-      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
+      <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -108,8 +109,7 @@ $(document).ready(function(){initNavTree('class_component_1_1_render_component.h
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="class_component_1_1_render_component-members.html">List of all members</a>  </div>
+<a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
 <div class="title">Component::RenderComponent Class Reference</div>  </div>
 </div><!--header-->
@@ -117,21 +117,60 @@ $(document).ready(function(){initNavTree('class_component_1_1_render_component.h
 
 <p>Rendering Components.  
  <a href="class_component_1_1_render_component.html#details">More...</a></p>
+<div class="dynheader">
+Inheritance diagram for Component::RenderComponent:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_component_1_1_render_component__inherit__graph.png" border="0" usemap="#_component_1_1_render_component_inherit__map" alt="Inheritance graph"/></div>
+<map name="_component_1_1_render_component_inherit__map" id="_component_1_1_render_component_inherit__map">
+<area shape="rect" id="node2" href="class_component_1_1_component.html" title="Component::Component" alt="" coords="25,5,188,32"/>
+</map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for Component::RenderComponent:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_component_1_1_render_component__coll__graph.png" border="0" usemap="#_component_1_1_render_component_coll__map" alt="Collaboration graph"/></div>
+<map name="_component_1_1_render_component_coll__map" id="_component_1_1_render_component_coll__map">
+<area shape="rect" id="node2" href="class_component_1_1_component.html" title="Component::Component" alt="" coords="25,5,188,32"/>
+</map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ab7d850dc25656c745a289f9e9595e5cb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab7d850dc25656c745a289f9e9595e5cb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Fill</b> (bool HasModel)</td></tr>
-<tr class="separator:ab7d850dc25656c745a289f9e9595e5cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaab14a25acbb2fb6e7934778bae8d6c4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaab14a25acbb2fb6e7934778bae8d6c4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Update</b> ()</td></tr>
-<tr class="separator:aaab14a25acbb2fb6e7934778bae8d6c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c038993fe9f6e5c75c092702930e1e6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9c038993fe9f6e5c75c092702930e1e6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Fill</b> (std::string path, std::shared_ptr&lt; <a class="el" href="class_resource_manager.html">ResourceManager</a> &gt; &amp;rm, std::string shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot)</td></tr>
+<tr class="separator:a9c038993fe9f6e5c75c092702930e1e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a718f61cfd8e4c69918efa56194bfac75"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a718f61cfd8e4c69918efa56194bfac75"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Update</b> (std::shared_ptr&lt; <a class="el" href="class_resource_manager.html">ResourceManager</a> &gt; rm)</td></tr>
+<tr class="separator:a718f61cfd8e4c69918efa56194bfac75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_class_component_1_1_component"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_component_1_1_component')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_component_1_1_component.html">Component::Component</a></td></tr>
+<tr class="memitem:ad86ae60c774756f29aa754ed205836c7 inherit pub_methods_class_component_1_1_component"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad86ae60c774756f29aa754ed205836c7"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>Update</b> ()</td></tr>
+<tr class="separator:ad86ae60c774756f29aa754ed205836c7 inherit pub_methods_class_component_1_1_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
+Data Fields</h2></td></tr>
 <tr class="memitem:a51e43d8377e19480220004570443fd5b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a51e43d8377e19480220004570443fd5b"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasModel</b></td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasModel</b> = false</td></tr>
 <tr class="separator:a51e43d8377e19480220004570443fd5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2baadbbad5f4a59dc2ab2fbdf0c95761"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2baadbbad5f4a59dc2ab2fbdf0c95761"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>modelPath</b></td></tr>
+<tr class="separator:a2baadbbad5f4a59dc2ab2fbdf0c95761"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a298178bc83427dabccc8269cfad4cd7e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a298178bc83427dabccc8269cfad4cd7e"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>shaderType</b></td></tr>
+<tr class="separator:a298178bc83427dabccc8269cfad4cd7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e6900189fe3dba2a90b487fa8f1f312"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0e6900189fe3dba2a90b487fa8f1f312"></a>
+glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>Position</b></td></tr>
+<tr class="separator:a0e6900189fe3dba2a90b487fa8f1f312"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e31183b9e8161060286136dde8fe93f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7e31183b9e8161060286136dde8fe93f"></a>
+glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>Scale</b></td></tr>
+<tr class="separator:a7e31183b9e8161060286136dde8fe93f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b9a23484acb07bd7d04b774bde8be40"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4b9a23484acb07bd7d04b774bde8be40"></a>
+glm::quat&#160;</td><td class="memItemRight" valign="bottom"><b>Rotation</b></td></tr>
+<tr class="separator:a4b9a23484acb07bd7d04b774bde8be40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_attribs_class_component_1_1_component"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_class_component_1_1_component')"><img src="closed.png" alt="-"/>&#160;Data Fields inherited from <a class="el" href="class_component_1_1_component.html">Component::Component</a></td></tr>
+<tr class="memitem:af4dec3a51b9df784040cb5cd809d79fe inherit pub_attribs_class_component_1_1_component"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af4dec3a51b9df784040cb5cd809d79fe"></a>
+COMPONENT_TYPE&#160;</td><td class="memItemRight" valign="bottom"><b>Type</b></td></tr>
+<tr class="separator:af4dec3a51b9df784040cb5cd809d79fe inherit pub_attribs_class_component_1_1_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Rendering Components. </p>
