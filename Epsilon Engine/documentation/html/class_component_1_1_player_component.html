@@ -51,6 +51,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -139,9 +140,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aea1500efda4a05a928bd23d76d47fdda"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aea1500efda4a05a928bd23d76d47fdda"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Fill</b> (bool HasHealth, bool HasGun)</td></tr>
 <tr class="separator:aea1500efda4a05a928bd23d76d47fdda"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78e43cbf5b483d70ad4d9ab81ac91ec6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a78e43cbf5b483d70ad4d9ab81ac91ec6"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Update</b> ()</td></tr>
-<tr class="separator:a78e43cbf5b483d70ad4d9ab81ac91ec6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48b3a0653cebd15a14e248bbd71011bd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a48b3a0653cebd15a14e248bbd71011bd"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Update</b> (std::shared_ptr&lt; <a class="el" href="class_resource_manager.html">ResourceManager</a> &gt; rm)</td></tr>
+<tr class="separator:a48b3a0653cebd15a14e248bbd71011bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_class_component_1_1_component"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_component_1_1_component')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_component_1_1_component.html">Component::Component</a></td></tr>
+<tr class="memitem:a489a17c3dd7e1ee77959181533fa9d9a inherit pub_methods_class_component_1_1_component"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a489a17c3dd7e1ee77959181533fa9d9a"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>Fill</b> (std::string path, std::shared_ptr&lt; <a class="el" href="class_resource_manager.html">ResourceManager</a> &gt; &amp;rm, std::string shader)=0</td></tr>
+<tr class="separator:a489a17c3dd7e1ee77959181533fa9d9a inherit pub_methods_class_component_1_1_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae90e144d4395c5ab87bd0c6ba6b9bee7 inherit pub_methods_class_component_1_1_component"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae90e144d4395c5ab87bd0c6ba6b9bee7"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>Fill</b> (float mass, std::shared_ptr&lt; <a class="el" href="class_physics_1_1_physic_object.html">Physics::PhysicObject</a> &gt; PhysicBodyPointer)=0</td></tr>
+<tr class="separator:ae90e144d4395c5ab87bd0c6ba6b9bee7 inherit pub_methods_class_component_1_1_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
@@ -155,10 +163,22 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasGun</b></td></tr>
 <tr class="memitem:af4dec3a51b9df784040cb5cd809d79fe inherit pub_attribs_class_component_1_1_component"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af4dec3a51b9df784040cb5cd809d79fe"></a>
 COMPONENT_TYPE&#160;</td><td class="memItemRight" valign="bottom"><b>Type</b></td></tr>
 <tr class="separator:af4dec3a51b9df784040cb5cd809d79fe inherit pub_attribs_class_component_1_1_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a052f87b10a8099a7c5d1c177a13056df inherit pub_attribs_class_component_1_1_component"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a052f87b10a8099a7c5d1c177a13056df"></a>
+btVector3&#160;</td><td class="memItemRight" valign="bottom"><b>m_PhysicsWorldPosition</b></td></tr>
+<tr class="separator:a052f87b10a8099a7c5d1c177a13056df inherit pub_attribs_class_component_1_1_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad533f66011b8562f55af6ae4b56e374b inherit pub_attribs_class_component_1_1_component"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad533f66011b8562f55af6ae4b56e374b"></a>
+btVector3&#160;</td><td class="memItemRight" valign="bottom"><b>m_PhysicsWorldScale</b></td></tr>
+<tr class="separator:ad533f66011b8562f55af6ae4b56e374b inherit pub_attribs_class_component_1_1_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7fefa7380768c1b96b67d65410cb0d90 inherit pub_attribs_class_component_1_1_component"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7fefa7380768c1b96b67d65410cb0d90"></a>
+btQuaternion&#160;</td><td class="memItemRight" valign="bottom"><b>m_PhysicsWorldRotation</b></td></tr>
+<tr class="separator:a7fefa7380768c1b96b67d65410cb0d90 inherit pub_attribs_class_component_1_1_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>NPC/Player Components. </p>
-</div></div><!-- contents -->
+</div><hr/>The documentation for this class was generated from the following file:<ul>
+<li>D:/Epsilon/Epsilon Engine/include/<a class="el" href="_component_8h_source.html">Component.h</a></li>
+</ul>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

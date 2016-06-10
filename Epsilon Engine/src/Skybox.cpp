@@ -19,14 +19,16 @@ Skybox::Skybox(string SkyboxTex)
 {
 
     eTexture tex("sky_texture1984.jpg");
+    eTexture texn("sky_texture1984_n.jpg");
 
     CubeMapID = tex.getTextureID();
+    CubeMapNormalID = texn.getTextureID();
 
     skydome = (std::unique_ptr<Model>)new Model("models/sphere.eml");
 
 }
 
-void Skybox::Render(std::unique_ptr<Camera> & camera, Shader* SkyShader, float exposure)
+void Skybox::Render(std::unique_ptr<Camera> & camera, Shader* SkyShader, float exposure, bool state)
 {
 
     glDepthFunc(GL_LEQUAL);
@@ -47,9 +49,13 @@ void Skybox::Render(std::unique_ptr<Camera> & camera, Shader* SkyShader, float e
     glUniformMatrix4fv(glGetUniformLocation(SkyShader->getProgramID(), "projection"), 1, GL_FALSE, &projection[0][0]);
     glUniform1f(glGetUniformLocation(SkyShader->getProgramID(), "exposure"), exposure);
     glUniform1f(glGetUniformLocation(SkyShader->getProgramID(), "time"), glfwGetTime());
+    glUniform1i(glGetUniformLocation(SkyShader->getProgramID(), "renderDepth"), state);
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(glGetUniformLocation(SkyShader->getProgramID(), "tex"), 0);
     glBindTexture(GL_TEXTURE_2D, CubeMapID);
+    glActiveTexture(GL_TEXTURE1);
+    glUniform1i(glGetUniformLocation(SkyShader->getProgramID(), "texn"), 1);
+    glBindTexture(GL_TEXTURE_2D, CubeMapNormalID);
     skydome->DrawNoTexture();
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);

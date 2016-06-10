@@ -1,11 +1,14 @@
 #version 330 core
 
 layout(location = 0) out vec4 FragColor;
+layout(location = 1) out vec4 blurImage;
+layout(location = 2) out vec4 gPosition;
 in vec2 UV;
 
 uniform sampler2D sSampler;
 
 float gamma = 2.2;
+uniform float exposure;
 
 vec3 HDR(vec3 image)
 {
@@ -19,6 +22,8 @@ void main()
 
   FragColor.rgb = HDR(SunTexture.xyz * 1.0);
   FragColor.a = SunTexture.a;
+  blurImage = vec4(FragColor);
+  gPosition.a = 1.0f;
 
 
 }

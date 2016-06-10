@@ -19,10 +19,15 @@ public:
 
     void addComponent(std::shared_ptr<Component::Component> t)
     {
-        if(t->Type == Component::MODELCOMPONENT)
+        if(t->Type == Component::MODELCOMPONENT){
             hasModel = true;
+            this->modelPath = (static_pointer_cast<Component::RenderComponent>(t))->modelPath;
+        }
         else if(t->Type == Component::PHYSICCOMPONENT)
+        {
             hasPhysicComponent = true;
+            m_Position = glm::vec3(t->m_PhysicsWorldPosition.getX(), t->m_PhysicsWorldPosition.getY(),t->m_PhysicsWorldPosition.getZ());
+        }
         else if(t->Type == Component::PLAYERCOMPONENT)
             hasPlayerComponent = true;
         else
@@ -65,7 +70,24 @@ public:
 
     glm::quat getRotation()
     {
+        if(hasPhysicComponent)
+        {
+            for(int i = 0; i < ComponentList.size(); ++i)
+            {
+                if(ComponentList.at(i)->Type == Component::PHYSICCOMPONENT)
+                    return glm::quat(ComponentList.at(i)->m_PhysicsWorldRotation.getW(),
+                                     ComponentList.at(i)->m_PhysicsWorldRotation.getX(),
+                                     ComponentList.at(i)->m_PhysicsWorldRotation.getY(),
+                                     ComponentList.at(i)->m_PhysicsWorldRotation.getZ());
+            }
+        }
+        else
         return m_Rotation;
+    }
+
+    MIN_MAX_POINTS getBoundingBox()
+    {
+        return resourceManager->getModelBoundingBox(modelPath);
     }
 
 private:

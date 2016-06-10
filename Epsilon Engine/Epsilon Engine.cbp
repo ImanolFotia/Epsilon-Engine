@@ -68,11 +68,12 @@
 				<Linker>
 					<Add option="-s" />
 					<Add option="-lSOIL" />
+					<Add option="deppend\glfw\lib\libglfw3.a" />
 					<Add option="-lopengl32" />
-					<Add option="deppend\glfw\lib\glfw3dll.a" />
 					<Add option="-lfreetype240" />
 					<Add option="-linih" />
 					<Add option="-lglew32.dll" />
+					<Add option="-lgdi32" />
 					<Add library="deppend\bullet3-2.83.7\lib\libBulletDynamics.a" />
 					<Add library="deppend\bullet3-2.83.7\lib\libBulletCollision.a" />
 					<Add library="deppend\bullet3-2.83.7\lib\libLinearMath.a" />
@@ -101,12 +102,16 @@
 		<Unit filename="include/Frustum.h" />
 		<Unit filename="include/Grass.h" />
 		<Unit filename="include/Includes.h" />
+		<Unit filename="include/KeyBoard.h" />
+		<Unit filename="include/KeyboardWrapper.h" />
 		<Unit filename="include/Light.h" />
 		<Unit filename="include/MD5_Anim.h" />
 		<Unit filename="include/MD5_Model.h" />
 		<Unit filename="include/Mesh.h" />
 		<Unit filename="include/Model.h" />
+		<Unit filename="include/Mouse.h" />
 		<Unit filename="include/Physics.h" />
+		<Unit filename="include/Player.h" />
 		<Unit filename="include/PostProcess.h" />
 		<Unit filename="include/ProgramData.h" />
 		<Unit filename="include/ResourceManager.h" />
@@ -125,15 +130,18 @@
 		<Unit filename="include/emlFormat.h" />
 		<Unit filename="include/main.h" />
 		<Unit filename="src/BSP.cpp" />
+		<Unit filename="src/BSPFace.cpp" />
 		<Unit filename="src/Camera.cpp" />
 		<Unit filename="src/EntityTemplate.cpp" />
 		<Unit filename="src/Epsilon.cpp" />
 		<Unit filename="src/Frustum.cpp" />
+		<Unit filename="src/KeyBoard.cpp" />
 		<Unit filename="src/MD5_Anim.cpp" />
 		<Unit filename="src/MD5_Model.cpp" />
 		<Unit filename="src/Mesh.cpp" />
 		<Unit filename="src/Model.cpp" />
 		<Unit filename="src/Physics.cpp" />
+		<Unit filename="src/Player.cpp" />
 		<Unit filename="src/PostProcess.cpp" />
 		<Unit filename="src/ProgramData.cpp" />
 		<Unit filename="src/ResourceManager.cpp" />
@@ -160,6 +168,15 @@
 				<Changes_Log show_changes_editor="0" app_title="released version %M.%m.%b of %p" changeslog_path="ChangesLog.txt" />
 				<Code header_guard="VERSION_H" namespace="AutoVersion" prefix="" />
 			</AutoVersioning>
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

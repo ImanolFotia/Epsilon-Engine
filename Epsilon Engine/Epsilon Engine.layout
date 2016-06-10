@@ -1,119 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
-	<File name="include\Types.h" open="1" top="0" tabpos="28" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="include\Player.h" open="1" top="0" tabpos="61" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1726" topLine="21" />
+			<Cursor1 position="688" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="include\CBitset.h" open="1" top="0" tabpos="30" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="include\PostProcess.h" open="1" top="0" tabpos="22" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="543" topLine="5" />
-		</Cursor>
-	</File>
-	<File name="include\Water.h" open="1" top="0" tabpos="25" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="544" topLine="13" />
-		</Cursor>
-	</File>
-	<File name="include\ResourceManager.h" open="1" top="0" tabpos="38" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3878" topLine="106" />
-		</Cursor>
-	</File>
-	<File name="include\camera.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1298" topLine="42" />
-		</Cursor>
-	</File>
-	<File name="include\CPUID.h" open="0" top="0" tabpos="49" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1415" topLine="33" />
-		</Cursor>
-	</File>
-	<File name="include\emlFormat.h" open="1" top="0" tabpos="48" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="872" topLine="43" />
-		</Cursor>
-	</File>
-	<File name="include\BSPformat.h" open="1" top="0" tabpos="29" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4862" topLine="69" />
-		</Cursor>
-	</File>
-	<File name="include\main.h" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="780" topLine="9" />
-		</Cursor>
-	</File>
-	<File name="include\MD5_Anim.h" open="1" top="0" tabpos="41" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1313" topLine="51" />
-		</Cursor>
-	</File>
-	<File name="src\BSP.cpp" open="1" top="0" tabpos="33" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="13004" topLine="357" />
-		</Cursor>
-	</File>
-	<File name="include\MD5_Model.h" open="1" top="0" tabpos="43" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4600" topLine="136" />
-		</Cursor>
-	</File>
-	<File name="src\Camera.cpp" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="653" topLine="141" />
-		</Cursor>
-	</File>
-	<File name="include\EntityTemplate.h" open="1" top="1" tabpos="56" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1725" topLine="33" />
-		</Cursor>
-	</File>
-	<File name="src\EntityTemplate.cpp" open="1" top="0" tabpos="52" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="141" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="include\Component.h" open="1" top="0" tabpos="53" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="859" topLine="10" />
-		</Cursor>
-	</File>
-	<File name="src\Epsilon.cpp" open="1" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="7691" topLine="202" />
-		</Cursor>
-	</File>
-	<File name="include\Epsilon.h" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1854" topLine="81" />
-		</Cursor>
-	</File>
-	<File name="src\Frustum.cpp" open="1" top="0" tabpos="36" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="13563" topLine="285" />
-		</Cursor>
-	</File>
-	<File name="include\Light.h" open="1" top="0" tabpos="27" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1260" topLine="30" />
-		</Cursor>
-	</File>
-	<File name="src\MD5_Anim.cpp" open="1" top="0" tabpos="40" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="6355" topLine="171" />
-		</Cursor>
-	</File>
-	<File name="include\Scene.h" open="1" top="0" tabpos="45" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1116" topLine="25" />
-		</Cursor>
-	</File>
-	<File name="src\MD5_Model.cpp" open="1" top="0" tabpos="42" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2213" topLine="45" />
+			<Cursor1 position="889" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="include\ProgramData.h" open="1" top="0" tabpos="18" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -121,19 +16,14 @@
 			<Cursor1 position="324" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src\Mesh.cpp" open="1" top="0" tabpos="49" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="include\ResourceManager.h" open="1" top="0" tabpos="38" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2609" topLine="48" />
+			<Cursor1 position="6689" topLine="228" />
 		</Cursor>
 	</File>
-	<File name="include\CubeMap.h" open="1" top="0" tabpos="50" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="include\Scene.h" open="1" top="0" tabpos="45" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="544" topLine="7" />
-		</Cursor>
-	</File>
-	<File name="src\Model.cpp" open="1" top="0" tabpos="47" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="5435" topLine="120" />
+			<Cursor1 position="1116" topLine="25" />
 		</Cursor>
 	</File>
 	<File name="include\Shader.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -141,59 +31,24 @@
 			<Cursor1 position="515" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src\Physics.cpp" open="1" top="0" tabpos="54" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2259" topLine="36" />
-		</Cursor>
-	</File>
 	<File name="include\ShadowMapping.h" open="1" top="0" tabpos="44" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1251" topLine="15" />
 		</Cursor>
 	</File>
-	<File name="src\PostProcess.cpp" open="1" top="0" tabpos="24" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\Frustum.cpp" open="1" top="0" tabpos="36" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="829" topLine="78" />
-		</Cursor>
-	</File>
-	<File name="include\Includes.h" open="1" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2202" topLine="78" />
-		</Cursor>
-	</File>
-	<File name="src\ProgramData.cpp" open="1" top="0" tabpos="19" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="483" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="include\EpsilonMemory.h" open="1" top="0" tabpos="55" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="199" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src\ResourceManager.cpp" open="1" top="0" tabpos="39" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="34" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="include\Physics.h" open="1" top="0" tabpos="51" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1162" topLine="33" />
-		</Cursor>
-	</File>
-	<File name="src\Scene.cpp" open="1" top="0" tabpos="46" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="527" topLine="0" />
+			<Cursor1 position="5795" topLine="107" />
 		</Cursor>
 	</File>
 	<File name="include\Skybox.h" open="1" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="428" topLine="0" />
+			<Cursor1 position="554" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src\Shader.cpp" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\KeyBoard.cpp" open="1" top="0" tabpos="60" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="438" topLine="65" />
+			<Cursor1 position="510" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="include\SkyboxData.h" open="1" top="0" tabpos="14" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -201,69 +56,34 @@
 			<Cursor1 position="123" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src\ShadowMapping.cpp" open="0" top="0" tabpos="45" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\MD5_Anim.cpp" open="1" top="0" tabpos="40" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1373" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="include\BSP.h" open="1" top="0" tabpos="34" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1351" topLine="82" />
-		</Cursor>
-	</File>
-	<File name="src\Skybox.cpp" open="1" top="0" tabpos="15" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1718" topLine="17" />
-		</Cursor>
-	</File>
-	<File name="include\BSPFace.h" open="1" top="0" tabpos="35" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="7508" topLine="144" />
-		</Cursor>
-	</File>
-	<File name="src\Sun.cpp" open="1" top="0" tabpos="32" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="477" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="include\Frustum.h" open="1" top="0" tabpos="37" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1091" topLine="1" />
-		</Cursor>
-	</File>
-	<File name="src\Terrain.cpp" open="1" top="0" tabpos="21" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2387" topLine="68" />
-		</Cursor>
-	</File>
-	<File name="include\Model.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1710" topLine="51" />
-		</Cursor>
-	</File>
-	<File name="src\Water.cpp" open="1" top="0" tabpos="26" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="8336" topLine="0" />
+			<Cursor1 position="6355" topLine="171" />
 		</Cursor>
 	</File>
 	<File name="include\Sun.h" open="1" top="0" tabpos="31" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="441" topLine="4" />
+			<Cursor1 position="553" topLine="4" />
+		</Cursor>
+	</File>
+	<File name="src\MD5_Model.cpp" open="1" top="0" tabpos="42" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2213" topLine="45" />
 		</Cursor>
 	</File>
 	<File name="include\Terrain.h" open="1" top="0" tabpos="20" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1019" topLine="26" />
+			<Cursor1 position="1753" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src\main.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\Mesh.cpp" open="1" top="0" tabpos="49" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="521" topLine="0" />
+			<Cursor1 position="545" topLine="55" />
 		</Cursor>
 	</File>
-	<File name="include\Grass.h" open="1" top="0" tabpos="23" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="include\Component.h" open="1" top="0" tabpos="53" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2059" topLine="26" />
+			<Cursor1 position="3128" topLine="45" />
 		</Cursor>
 	</File>
 	<File name="include\Text.h" open="1" top="0" tabpos="16" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -271,14 +91,14 @@
 			<Cursor1 position="3791" topLine="79" />
 		</Cursor>
 	</File>
-	<File name="include\PostProcess.h" open="1" top="0" tabpos="22" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\Model.cpp" open="1" top="0" tabpos="47" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1126" topLine="21" />
+			<Cursor1 position="2850" topLine="116" />
 		</Cursor>
 	</File>
-	<File name="src\resources.rc" open="1" top="0" tabpos="17" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="include\CubeMap.h" open="1" top="0" tabpos="50" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="717" topLine="0" />
+			<Cursor1 position="544" topLine="7" />
 		</Cursor>
 	</File>
 	<File name="include\Texture.h" open="1" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -286,14 +106,229 @@
 			<Cursor1 position="450" topLine="6" />
 		</Cursor>
 	</File>
+	<File name="src\Physics.cpp" open="1" top="0" tabpos="54" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4150" topLine="54" />
+		</Cursor>
+	</File>
+	<File name="include\EntityTemplate.h" open="1" top="0" tabpos="56" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2686" topLine="7" />
+		</Cursor>
+	</File>
+	<File name="include\Types.h" open="1" top="0" tabpos="28" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2209" topLine="39" />
+		</Cursor>
+	</File>
+	<File name="src\Player.cpp" open="1" top="0" tabpos="62" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="829" topLine="6" />
+		</Cursor>
+	</File>
+	<File name="include\Epsilon.h" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="292" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include\Water.h" open="1" top="0" tabpos="25" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="544" topLine="13" />
+		</Cursor>
+	</File>
+	<File name="src\PostProcess.cpp" open="1" top="0" tabpos="24" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="11695" topLine="207" />
+		</Cursor>
+	</File>
+	<File name="include\EpsilonMemory.h" open="1" top="0" tabpos="55" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="199" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include\camera.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="547" topLine="42" />
+		</Cursor>
+	</File>
+	<File name="src\ProgramData.cpp" open="1" top="0" tabpos="19" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="483" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include\Frustum.h" open="1" top="0" tabpos="37" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="664" topLine="1" />
+		</Cursor>
+	</File>
+	<File name="include\emlFormat.h" open="1" top="0" tabpos="48" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="720" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src\ResourceManager.cpp" open="1" top="0" tabpos="39" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="34" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include\Grass.h" open="1" top="0" tabpos="23" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1415" topLine="8" />
+		</Cursor>
+	</File>
+	<File name="include\main.h" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1812" topLine="54" />
+		</Cursor>
+	</File>
+	<File name="src\Scene.cpp" open="1" top="0" tabpos="46" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="527" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include\Includes.h" open="1" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1361" topLine="45" />
+		</Cursor>
+	</File>
+	<File name="src\BSP.cpp" open="1" top="0" tabpos="33" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="8587" topLine="375" />
+		</Cursor>
+	</File>
+	<File name="src\Shader.cpp" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="438" topLine="65" />
+		</Cursor>
+	</File>
+	<File name="include\KeyBoard.h" open="1" top="0" tabpos="59" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="249" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src\BSPFace.cpp" open="1" top="0" tabpos="57" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1028" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src\ShadowMapping.cpp" open="1" top="0" tabpos="65" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1373" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include\BSP.h" open="1" top="0" tabpos="34" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3265" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include\KeyboardWrapper.h" open="1" top="0" tabpos="63" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2448" topLine="20" />
+		</Cursor>
+	</File>
+	<File name="src\Camera.cpp" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="547" topLine="8" />
+		</Cursor>
+	</File>
+	<File name="src\Skybox.cpp" open="1" top="0" tabpos="15" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="722" topLine="23" />
+		</Cursor>
+	</File>
+	<File name="include\CPUID.h" open="1" top="0" tabpos="58" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="496" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include\Light.h" open="1" top="0" tabpos="27" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1076" topLine="3" />
+		</Cursor>
+	</File>
+	<File name="src\EntityTemplate.cpp" open="1" top="0" tabpos="52" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="384" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src\Sun.cpp" open="1" top="0" tabpos="32" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1726" topLine="34" />
+		</Cursor>
+	</File>
+	<File name="include\BSPformat.h" open="1" top="0" tabpos="29" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4862" topLine="69" />
+		</Cursor>
+	</File>
+	<File name="include\MD5_Anim.h" open="1" top="0" tabpos="41" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1313" topLine="51" />
+		</Cursor>
+	</File>
+	<File name="src\Epsilon.cpp" open="1" top="1" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="5600" topLine="141" />
+		</Cursor>
+	</File>
+	<File name="src\Terrain.cpp" open="1" top="0" tabpos="21" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2159" topLine="68" />
+		</Cursor>
+	</File>
+	<File name="include\BSPFace.h" open="1" top="0" tabpos="35" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="722" topLine="21" />
+		</Cursor>
+	</File>
+	<File name="include\MD5_Model.h" open="1" top="0" tabpos="43" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4600" topLine="136" />
+		</Cursor>
+	</File>
+	<File name="src\Water.cpp" open="1" top="0" tabpos="26" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4585" topLine="144" />
+		</Cursor>
+	</File>
+	<File name="include\CBitset.h" open="1" top="0" tabpos="30" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="543" topLine="5" />
+		</Cursor>
+	</File>
 	<File name="include\Mesh.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1796" topLine="45" />
+			<Cursor1 position="4366" topLine="102" />
+		</Cursor>
+	</File>
+	<File name="src\main.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="521" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include\Model.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="841" topLine="38" />
+		</Cursor>
+	</File>
+	<File name="src\resources.rc" open="1" top="0" tabpos="17" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="717" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include\Mouse.h" open="1" top="0" tabpos="64" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="61" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="version.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="372" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include\Physics.h" open="1" top="0" tabpos="51" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1888" topLine="31" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

@@ -1,6 +1,6 @@
 var class_c_quake3_b_s_p =
 [
-    [ "CQuake3BSP", "class_c_quake3_b_s_p.html#a8b79d3dda33e27399defef7e0b91ad99", null ],
+    [ "CQuake3BSP", "class_c_quake3_b_s_p.html#ade103aa4e41c95c7d8d96e4dc8fa5b6e", null ],
     [ "~CQuake3BSP", "class_c_quake3_b_s_p.html#afb74d3f0f6656169b612011015650256", null ],
     [ "Destroy", "class_c_quake3_b_s_p.html#aa61b5bb7e4dfe39ce88a023f438cbe77", null ],
     [ "FindLeaf", "class_c_quake3_b_s_p.html#a82ab93b599790d05ebf7039aa811cee5", null ],
@@ -38,6 +38,7 @@ var class_c_quake3_b_s_p =
     [ "m_textures", "class_c_quake3_b_s_p.html#ad39344a841f60c33fbad46c354cc1c04", null ],
     [ "NormalTextureID", "class_c_quake3_b_s_p.html#a0daebdd8ca8923f8a0aa6d35e962a7b3", null ],
     [ "normalTextures", "class_c_quake3_b_s_p.html#a83c453f608fa2799750da3705309aba4", null ],
+    [ "resm", "class_c_quake3_b_s_p.html#a31582b175495cba4efe12a246e2c0556", null ],
     [ "specularTextures", "class_c_quake3_b_s_p.html#a38864b6aeb49897e7e836ca3ca306913", null ],
     [ "Textures", "class_c_quake3_b_s_p.html#ae0e924f8e1ec9d4e911e4d9bdce5a1dd", null ],
     [ "VertexBufferArrays", "class_c_quake3_b_s_p.html#af1f7e1ed6e4012355c6424f4793426c3", null ]

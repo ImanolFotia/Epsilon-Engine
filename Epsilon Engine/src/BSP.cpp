@@ -15,7 +15,7 @@
 
 using namespace std;
 
-CQuake3BSP::CQuake3BSP()
+CQuake3BSP::CQuake3BSP(std::shared_ptr<ResourceManager> Resm)
 {
     m_numOfVerts    = 0;
     m_numOfFaces    = 0;
@@ -25,6 +25,8 @@ CQuake3BSP::CQuake3BSP()
     m_pVerts = NULL;
     m_pFaces = NULL;
     m_pIndices = NULL;
+
+    resm = Resm;
 }
 
 
@@ -313,7 +315,7 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
 
             BSPFace Face;
 
-            Face.BuildFace(faceVertices, faceNormals, faceTexCoords, faceLMTexCoords, faceIndices, i, pTextures[pFace->textureID].strName, pLightmaps[pFace->lightmapID]);
+            Face.BuildFace(faceVertices, faceNormals, faceTexCoords, faceLMTexCoords, faceIndices, i, pTextures[pFace->textureID].strName, pLightmaps[pFace->lightmapID], resm);
 
             this->Faces[i] = Face;
 

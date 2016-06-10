@@ -13,6 +13,6 @@ var searchData=
   ['bspface',['BSPFace',['../class_b_s_p_face.html',1,'']]],
   ['bspfile',['BSPfile',['../class_b_s_pfile.html',1,'']]],
   ['bsptexture',['BSPTexture',['../struct_b_s_p_texture.html',1,'']]],
-  ['buildface',['BuildFace',['../class_b_s_p_face.html#a19f538f17b7746ad1e13e36583a13955',1,'BSPFace']]],
+  ['buildface',['BuildFace',['../class_b_s_p_face.html#a4ae99df1fc45845b5a3049c73eb6ae25',1,'BSPFace']]],
   ['bytespercluster',['bytesPerCluster',['../structt_b_s_p_vis_data.html#a3b536ed777e4d1265917193322336648',1,'tBSPVisData']]]
 ];

@@ -4,5 +4,5 @@ var searchData=
   ['bindshadowframebuffer',['BindShadowFrameBuffer',['../class_shadow_map.html#aea0e3d6a4b32b256b3318ea94d7cda9e',1,'ShadowMap']]],
   ['blurimage',['blurImage',['../class_post_process.html#a3e25d72da486f623ba34bc5d8b8ddfb7',1,'PostProcess']]],
   ['boxinfrustum',['BoxInFrustum',['../class_c_frustum.html#a06155e722ef85cce62f65d8667cf41fb',1,'CFrustum::BoxInFrustum(float x, float y, float z, float sizeX, float sizeY, float sizeZ)'],['../class_c_frustum.html#a34e0f4eee50fa86ab4dfbdb2b1a78264',1,'CFrustum::BoxInFrustum(MIN_MAX_POINTS points)']]],
-  ['buildface',['BuildFace',['../class_b_s_p_face.html#a19f538f17b7746ad1e13e36583a13955',1,'BSPFace']]]
+  ['buildface',['BuildFace',['../class_b_s_p_face.html#a4ae99df1fc45845b5a3049c73eb6ae25',1,'BSPFace']]]
 ];

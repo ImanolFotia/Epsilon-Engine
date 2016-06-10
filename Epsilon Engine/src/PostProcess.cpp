@@ -20,8 +20,8 @@ void PostProcess::SetupFramebuffer()
     ProgramData PG;
     width = PG.WINDOW_WIDTH;
     height = PG.WINDOW_HEIGHT;
-    this->SSAOwidth = width/1.5;
-    this->SSAOheight = height/1.5;
+    this->SSAOwidth = width*0.65;
+    this->SSAOheight = height*0.65;
     m_exposure = 1.5;
 
     std::uniform_real_distribution<GLfloat> randomFloatsz(-20.0f, 45.0f); // generates random floats between 0.0 and 1.0
@@ -441,6 +441,10 @@ void PostProcess::ShowPostProcessImage(float exposure, GLuint ShadowMapID)
     glUniform1i(glGetUniformLocation(finalImage->getProgramID(), "blurredSampler"), 1);
     glBindTexture(GL_TEXTURE_2D, blurred);
 
+    glActiveTexture(GL_TEXTURE2);
+    glUniform1i(glGetUniformLocation(finalImage->getProgramID(), "ssaoColorBufferBlur"), 2);
+    glBindTexture(GL_TEXTURE_2D, this->ssaoColorBufferBlur);
+
     glUniform1f(glGetUniformLocation(finalImage->getProgramID(), "exposure"), exposure);
 
     this->RenderQuad();
@@ -467,11 +471,7 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::unique_ptr<Camera>& 
     glBindTexture(GL_TEXTURE_2D, this->gWorldSpacePosition);
 
     glActiveTexture(GL_TEXTURE3);
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "ssaoColorBufferBlur"), 3);
-    glBindTexture(GL_TEXTURE_2D, this->ssaoColorBufferBlur);
-
-    glActiveTexture(GL_TEXTURE4);
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "shadowMap"), 4);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "shadowMap"), 3);
     glBindTexture(GL_TEXTURE_2D, shadowMap->getShadowTextureID());
 
     glUniform1i(glGetUniformLocation(this->shader->getProgramID(), "hdr"), hdr);

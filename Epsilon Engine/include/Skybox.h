@@ -21,8 +21,8 @@ public:
 
 public:
 
-    void Render(std::unique_ptr<Camera>&, Shader*, float);
-    GLuint CubeMapID;
+    void Render(std::unique_ptr<Camera>&, Shader*, float, bool);
+    GLuint CubeMapID, CubeMapNormalID;
 
 private:
 

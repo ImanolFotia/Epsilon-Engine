@@ -15,6 +15,8 @@
 #include <SOIL.h>
 #include <Physics.h>
 
+class ResourceManager;
+
 struct tBSPLightmap
 {
     char imageBits[128][128][3];   /// The RGB data in a 128x128 image
@@ -35,28 +37,17 @@ public:
     {
         //std::cout << "Destroyed BSP Face" << std::endl;
     }
+public:
+    bool BuildFace(std::vector<glm::vec3> Vertices,
+                   std::vector<glm::vec3> Normals,
+                   std::vector<glm::vec2> TexCoords,
+                   std::vector<glm::vec2> LMTexCoords,
+                   std::vector<unsigned int> Indices,
+                   int ID,
+                   string imagePath,
+                   tBSPLightmap LightMap,
+                   std::shared_ptr<ResourceManager> Resm);
 
-    bool BuildFace(std::vector<glm::vec3> Vertices, std::vector<glm::vec3> Normals, std::vector<glm::vec2> TexCoords, std::vector<glm::vec2> LMTexCoords, std::vector<unsigned int> Indices, int ID, string imagePath, tBSPLightmap LightMap)
-    {
-        /// cout << "Face #" << ID << endl;
-        this->Vertices = Vertices;
-
-        this->TexCoords = TexCoords;
-
-        this->Indices = Indices;
-        this->Normals = Normals;
-        this->faceID = ID;
-        this->imagePath = imagePath;
-        this->imagePath = this->imagePath;
-        this->LightMap = LightMap;
-        this->LMTexCoords = LMTexCoords;
-        this->CalcTangentSpace();
-        bool res = this->prepareVAO();
-
-        //this->LoadLightMapTexture();
-
-        return true;
-    }
 public:
 
     void RenderFace(GLuint shader, GLuint TextureID,GLuint normalID, GLuint specularID)
@@ -203,7 +194,7 @@ private:
     GLuint LightMaptexture;
 
     std::shared_ptr<Physics::PhysicObject> CollisionObject;
-
+    std::shared_ptr<ResourceManager> resm;
     std::vector<glm::vec3> Vertices;
     std::vector<glm::vec3> Normals;
     std::vector<glm::vec2> TexCoords;

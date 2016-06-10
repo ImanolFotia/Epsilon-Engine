@@ -72,6 +72,8 @@ GLFWwindow* InitEngine(const char* ProgramName)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+
     cout << "Creating window || Window Resolution: ";
     if(DATA.FULLSCREEN)
     {
@@ -97,6 +99,9 @@ GLFWwindow* InitEngine(const char* ProgramName)
     glewInit();
 
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetKeyCallback(window, Input::KeyBoard::KeyBoardCallBack);
+    glfwSetCursorPosCallback(window, Input::Mouse::MouseCallBack);
 
     glfwSwapInterval(DATA.VSYNC);
 

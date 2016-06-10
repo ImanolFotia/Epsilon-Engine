@@ -51,6 +51,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -115,6 +116,30 @@ $(document).ready(function(){initNavTree('class_resource_manager.html','');});
 <div class="title">ResourceManager Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+<div class="dynheader">
+Collaboration diagram for ResourceManager:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_resource_manager__coll__graph.png" border="0" usemap="#_resource_manager_coll__map" alt="Collaboration graph"/></div>
+<map name="_resource_manager_coll__map" id="_resource_manager_coll__map">
+<area shape="rect" id="node4" href="class_terrain.html" title="Terrain" alt="" coords="611,160,672,187"/>
+<area shape="rect" id="node15" href="class_cube_map.html" title="CubeMap" alt="" coords="603,372,680,399"/>
+<area shape="rect" id="node22" href="struct_m_d5_model_1_1_mesh.html" title="MD5Model::Mesh" alt="" coords="579,903,703,929"/>
+<area shape="rect" id="node7" href="struct_t_vertex.html" title="TVertex" alt="" coords="41,85,107,112"/>
+<area shape="rect" id="node9" href="struct_face.html" title="Face" alt="" coords="49,7,99,33"/>
+<area shape="rect" id="node10" title="STL class. " alt="" coords="289,593,369,620"/>
+<area shape="rect" id="node13" href="class_shader.html" title="Shader" alt="" coords="610,543,673,569"/>
+<area shape="rect" id="node18" href="class_model.html" title="Model" alt="" coords="1361,777,1418,804"/>
+<area shape="rect" id="node32" href="struct_texture.html" title="Texture" alt="" coords="609,697,674,724"/>
+<area shape="rect" id="node11" title="STL class. " alt="" coords="11,586,137,627"/>
+<area shape="rect" id="node34" href="class_water.html" title="Water" alt="" coords="981,541,1039,568"/>
+<area shape="rect" id="node19" href="struct_m_i_n___m_a_x___p_o_i_n_t_s.html" title="MIN_MAX_POINTS" alt="" coords="943,857,1077,884"/>
+<area shape="rect" id="node20" href="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x.html" title="Structure to store the models bounding box for visibility and collision computation. " alt="" coords="927,908,1093,935"/>
+<area shape="rect" id="node26" href="struct_m_d5_model_1_1_triangle.html" title="MD5Model::Triangle" alt="" coords="5,951,143,977"/>
+<area shape="rect" id="node28" href="struct_m_d5_model_1_1_weight.html" title="MD5Model::Weight" alt="" coords="7,1001,141,1028"/>
+<area shape="rect" id="node30" href="struct_vertex.html" title="Contains all the necessery OpenGL includes. " alt="" coords="44,1052,104,1079"/>
+<area shape="rect" id="node36" href="classe_texture.html" title="eTexture" alt="" coords="293,1153,365,1180"/>
+</map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -127,6 +152,9 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>requestModel</
 <tr class="memitem:a89a3442d8e47f442c77c31b03a1d8edf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a89a3442d8e47f442c77c31b03a1d8edf"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>useModel</b> (std::string modelPath, <a class="el" href="class_shader.html">Shader</a> *shader)</td></tr>
 <tr class="separator:a89a3442d8e47f442c77c31b03a1d8edf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b65ddab8bb0f159db9621b4777c8231"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0b65ddab8bb0f159db9621b4777c8231"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>useModel</b> (std::string modelPath, GLuint shader)</td></tr>
+<tr class="separator:a0b65ddab8bb0f159db9621b4777c8231"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a97368ca128405495ccf1325b7df5f846"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a97368ca128405495ccf1325b7df5f846"></a>
 <a class="el" href="struct_m_i_n___m_a_x___p_o_i_n_t_s.html">MIN_MAX_POINTS</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getModelBoundingBox</b> (std::string modelPath)</td></tr>
 <tr class="separator:a97368ca128405495ccf1325b7df5f846"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -151,9 +179,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>addTextureToQueue</b>
 <tr class="memitem:ad45541223c9f21701bf75107c5369203"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad45541223c9f21701bf75107c5369203"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>loadQueuedTextures</b> ()</td></tr>
 <tr class="separator:ad45541223c9f21701bf75107c5369203"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a09c74cde552fc234412209cc9b9dd85a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a09c74cde552fc234412209cc9b9dd85a"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>requestShader</b> (std::string shaderPathv, std::string shaderPathf)</td></tr>
-<tr class="separator:a09c74cde552fc234412209cc9b9dd85a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a981cfea7bc21774000932f9bcc0b34"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8a981cfea7bc21774000932f9bcc0b34"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>requestShader</b> (std::string shaderPathv, std::string shaderPathf, std::string name)</td></tr>
+<tr class="separator:a8a981cfea7bc21774000932f9bcc0b34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c5654dad152328ad50a20f130464acf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8c5654dad152328ad50a20f130464acf"></a>
 <a class="el" href="class_shader.html">Shader</a>&#160;</td><td class="memItemRight" valign="bottom"><b>useShader</b> (std::string shaderPath)</td></tr>
 <tr class="separator:a8c5654dad152328ad50a20f130464acf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -175,6 +203,9 @@ Data Fields</h2></td></tr>
 <tr class="memitem:a80b2ea2f322e1431bbc59b2a2a994d11"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a80b2ea2f322e1431bbc59b2a2a994d11"></a>
 std::shared_ptr&lt; <a class="el" href="class_camera.html">Camera</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_Camera</b></td></tr>
 <tr class="separator:a80b2ea2f322e1431bbc59b2a2a994d11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add34ae6384c490c5689a860bd44af852"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="add34ae6384c490c5689a860bd44af852"></a>
+std::shared_ptr&lt; <a class="el" href="class_physics_1_1_physics.html">Physics::Physics</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_PhysicsWorld</b></td></tr>
+<tr class="separator:add34ae6384c490c5689a860bd44af852"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -230,6 +261,9 @@ unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>textureCounte
 
 </div>
 </div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>D:/Epsilon/Epsilon Engine/include/<a class="el" href="_resource_manager_8h_source.html">ResourceManager.h</a></li>
+</ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

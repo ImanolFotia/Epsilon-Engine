@@ -2,6 +2,7 @@
 
 uniform sampler2D sampler;
 uniform sampler2D blurredSampler;
+uniform sampler2D ssaoColorBufferBlur;
 
 out vec4 color;
 in vec2 TexCoords;
@@ -19,7 +20,8 @@ vec3 HDR(vec3 image)
 
 void main()
 {
-    vec3 hdrColor = texture(sampler, TexCoords).rgb;
+    vec3 SSAO = vec3(texture(ssaoColorBufferBlur, TexCoords).r);
+    vec3 hdrColor = texture(sampler, TexCoords).rgb * SSAO;
     vec3 bloom = texture(blurredSampler, TexCoords).rgb;
     vec3 finalcolor = HDR(hdrColor + bloom);
     color.rgb = finalcolor; //finalcolor /(1+finalcolor);

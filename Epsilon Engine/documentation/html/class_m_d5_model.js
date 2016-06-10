@@ -28,6 +28,7 @@ var class_m_d5_model =
     [ "CalcTangentSpace", "class_m_d5_model.html#ad5476239e7378cc4171e5cd5f6763e3e", null ],
     [ "CheckAnimation", "class_m_d5_model.html#ac12c62307502306fa8a8777bd8f2aa09", null ],
     [ "GetAnimatedSkeletonMatrix", "class_m_d5_model.html#a8e64f2869b7cb8757bc37dcae197d91d", null ],
+    [ "getJointPositionByName", "class_m_d5_model.html#aba436fd966ee9a32cbf5325b6e73b1d1", null ],
     [ "LoadAnim", "class_m_d5_model.html#a6447eb17a7c651c93a6d5e8b05894539", null ],
     [ "LoadModel", "class_m_d5_model.html#acf87019fc5b1b071c9f870a67f6bfb1f", null ],
     [ "PrepareMesh", "class_m_d5_model.html#af26d86069e82be5f921edb05e883b679", null ],

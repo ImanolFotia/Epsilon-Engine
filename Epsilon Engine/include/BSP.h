@@ -22,6 +22,7 @@
 
 #include "BSPFace.h"
 #include "Frustum.h"
+#include <ResourceManager.h>
 
 typedef char byte;
 
@@ -229,7 +230,7 @@ class CQuake3BSP
 
 public:
 
-    CQuake3BSP();
+    CQuake3BSP(std::shared_ptr<ResourceManager>);
 
     virtual ~CQuake3BSP(){
         delete VertexBufferArrays;
@@ -290,6 +291,7 @@ private:
     std::map<int, BSPTexture> faceTexture;
     std::map<int, BSPTexture> faceTexture_normal;
     std::map<int, BSPTexture> faceTexture_specular;
+    std::shared_ptr<ResourceManager> resm;
 
     bool lightmap;
     bool color;

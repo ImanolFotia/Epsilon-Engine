@@ -5,6 +5,7 @@ var class_model =
     [ "Model", "class_model.html#a9e5fadef9ed39a2d3a2282b3e6d34524", null ],
     [ "~Model", "class_model.html#ad6ebd2062a0b823db841a0b88baac4c0", null ],
     [ "Draw", "class_model.html#a8444e404fcc9cc66827c2f628b92ece3", null ],
+    [ "Draw", "class_model.html#a5da22b69452616fc135deff71c6e4e08", null ],
     [ "DrawNoTexture", "class_model.html#a03262c92e9aa1028a2df43eb53eaca67", null ],
     [ "getPath", "class_model.html#a01308a0e5396f32afacefe1b1e39312d", null ],
     [ "loadModel", "class_model.html#a7eff5466b93a48b22e71f9b57c88c6ad", null ],

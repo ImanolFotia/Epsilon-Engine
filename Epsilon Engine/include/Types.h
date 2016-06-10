@@ -49,6 +49,7 @@ typedef short           SHORT;
 typedef unsigned short  USHORT;
 
 constexpr double PI = 3.14159265359;
+constexpr double TAU = PI * 0.5;
 
 enum class PHYSIC_SHAPE
 {
@@ -65,6 +66,12 @@ enum MODEL_TYPE
 {
     DYNAMIC_MODEL = 0,
     STATIC_MODEL
+};
+
+enum CAMERA_MODE
+{
+    PLAYER_CONTROLLED = 0,
+    DEBUG_MODE
 };
 
 enum SHADER_TYPE
@@ -90,6 +97,20 @@ enum COMPONENT_TYPE
     PLAYERCOMPONENT,
     SOUNDCOMPONENT,
     PHYSICCOMPONENT
+};
+
+enum MATERIAL
+{
+    DIRT = 0,
+    GRAVE,
+    STONE,
+    METAL,
+    MUD,
+    WATER,
+    WOOD,
+    CONCRETE,
+    GRASS,
+    OREO
 };
 }
 

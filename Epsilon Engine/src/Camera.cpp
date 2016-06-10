@@ -8,6 +8,9 @@
 
 #include <camera.h>
 #include <math.h>
+#include <KeyBoard.h>
+#include <Mouse.h>
+
 float lerp(float v0, float v1, float t)
 {
     return (1-t)*v0 + t*v1;
@@ -17,7 +20,7 @@ Camera::Camera(glm::vec3 cPosition, glm::vec3 cOrientation)
 {
     this->Orientation = glm::vec3(cOrientation);
     this->Position = glm::vec3(cPosition);
-    this->FieldOfView = 75.5f;
+    this->FieldOfView = 75.0f;
     this->MovementSpeed = 0.0f;
     this->MouseSpeed = 0.005f;
     this->PositionhasChanged = false;
@@ -87,7 +90,6 @@ void Camera::HandleInputs(GLFWwindow*& window)
     glfwGetCursorPos(window, &xpos , &ypos );
     glfwSetCursorPos(window, winx/2.0, winy/2.0);
 
-
     horizontalAngle += MouseSpeed * float( winx/2.0 - xpos ) ;
     verticalAngle   += MouseSpeed * float( winy/2.0 - ypos ) ;
 
@@ -108,32 +110,34 @@ void Camera::HandleInputs(GLFWwindow*& window)
     Up = glm::cross( Rigth , Orientation );
 
 
-    if ( glfwGetKey( window, GLFW_KEY_W ) == GLFW_PRESS )
+    if ( Input::KeyBoard::KEYS[Input::GLFW::Key::W] )
     {
         MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
         Position += Orientation   *     MovementSpeed      *   DeltaTime;
     }
 
-    if ( glfwGetKey( window, GLFW_KEY_S ) == GLFW_PRESS )
+    if ( Input::KeyBoard::KEYS[Input::GLFW::Key::S] )
     {
         MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
         Position -= Orientation   *     MovementSpeed      *   DeltaTime;
     }
 
-    if ( glfwGetKey( window, GLFW_KEY_D ) == GLFW_PRESS )
+    if ( Input::KeyBoard::KEYS[Input::GLFW::Key::D] )
     {
         MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
         Position += Rigth       *     MovementSpeed      *   DeltaTime;
     }
 
-    if ( glfwGetKey( window, GLFW_KEY_A ) == GLFW_PRESS )
+    if ( Input::KeyBoard::KEYS[Input::GLFW::Key::A] )
     {
         MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
         Position -= Rigth       *     MovementSpeed      *   DeltaTime;
     }
 
-    if ( glfwGetKey( window, GLFW_KEY_A ) != GLFW_PRESS && glfwGetKey( window, GLFW_KEY_W ) != GLFW_PRESS && glfwGetKey( window, GLFW_KEY_S ) != GLFW_PRESS && glfwGetKey( window, GLFW_KEY_D ) != GLFW_PRESS )
-    {
+    if (!Input::KeyBoard::KEYS[Input::GLFW::Key::A] &&
+        !Input::KeyBoard::KEYS[Input::GLFW::Key::W] &&
+        !Input::KeyBoard::KEYS[Input::GLFW::Key::S] &&
+        !Input::KeyBoard::KEYS[Input::GLFW::Key::D] ){
         MovementSpeed = glm::mix(MovementSpeed, 0.0f, 2.0f * DeltaTime);
 
     }
@@ -146,9 +150,6 @@ void Camera::HandleInputs(GLFWwindow*& window)
         DeltaVector = (Position - LastPosition);
         MovementVector = glm::normalize(DeltaVector / glm::vec3( glm::sqrt(glm::pow(DeltaVector.x, 2.0)  + glm::pow(DeltaVector.y, 2.0) + glm::pow(DeltaVector.z , 2.0) ) ));
     }
-
-    Orientation = Orientation;
-
 
     LastPosition = Position;
 

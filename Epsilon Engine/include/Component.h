@@ -107,6 +107,9 @@ public:
     {
         Mass = mass;
         RigidBodyPointer = PhysicBodyPointer;
+
+        m_PhysicsWorldPosition = RigidBodyPointer->Body->getCenterOfMassPosition();
+        m_PhysicsWorldRotation = RigidBodyPointer->Body->getOrientation();
     }
     float Mass;
 

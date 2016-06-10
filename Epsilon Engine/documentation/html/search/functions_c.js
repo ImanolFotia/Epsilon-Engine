@@ -1,21 +1,9 @@
 var searchData=
 [
-  ['set',['Set',['../class_c_bitset.html#a217900efa644dd8d739a756d6811e475',1,'CBitset']]],
-  ['setshadowdirection',['setShadowDirection',['../class_shadow_map.html#a4c28748161d18d8e260ef21bc402af9d',1,'ShadowMap']]],
-  ['setshadowposition',['setShadowPosition',['../class_shadow_map.html#adce20a1694daa11845bb8a4cabfe3f18',1,'ShadowMap']]],
-  ['settype',['setType',['../class_light.html#abba7a3cf02bc097fcb8950e00c113aa8',1,'Light']]],
-  ['setupframebuffer',['SetupFramebuffer',['../class_post_process.html#a08977c2caa835dd252648edaedbd320f',1,'PostProcess']]],
-  ['setupgbuffer',['SetupGBuffer',['../class_post_process.html#aa34071cd45a83f46b63622d2710d7990',1,'PostProcess']]],
-  ['setupmesh',['setupMesh',['../class_mesh.html#aafa4e21067a9b0c4407daf5e3c9ea991',1,'Mesh']]],
-  ['setuppingpongdof',['SetupPingPongDOF',['../class_post_process.html#a0cec00da385424a8f0c67a44c61d1a0e',1,'PostProcess']]],
-  ['setuppingpongfbo',['SetupPingPongFBO',['../class_post_process.html#a0487c53687150b2c46f210f2aebf3eac',1,'PostProcess::SetupPingPongFBO()'],['../class_shadow_map.html#a7ee7e51d8d5fb048b19acaaccae3c1d4',1,'ShadowMap::SetupPingPongFBO()']]],
-  ['setupshadowmap',['SetupShadowMap',['../class_shadow_map.html#a4d4aa3ef5716aeeaee64d8431e432947',1,'ShadowMap']]],
-  ['setupshadowmatrices',['SetupShadowMatrices',['../class_shadow_map.html#acce822bf94608533989b77998eea48b6',1,'ShadowMap']]],
-  ['setupssao',['setupSSAO',['../class_post_process.html#aa78e9436eb2ee584aa68f4a780dfb0d7',1,'PostProcess']]],
-  ['shader',['Shader',['../class_shader.html#a06826fa137fa32fde05c3aca7605c6aa',1,'Shader']]],
-  ['shadowmap',['ShadowMap',['../class_shadow_map.html#aad205032db3d7d854ba714acf111eec2',1,'ShadowMap']]],
-  ['showframe',['ShowFrame',['../class_post_process.html#aba15ab321c44df5a1b87637738458454',1,'PostProcess']]],
-  ['showpostprocessimage',['ShowPostProcessImage',['../class_post_process.html#ad2803f42027824b9726ecf4bf9f042aa',1,'PostProcess']]],
-  ['sphereinfrustum',['SphereInFrustum',['../class_c_frustum.html#af05ef901019c29f46d145c6ebe6ea62c',1,'CFrustum']]],
-  ['sun',['Sun',['../class_sun.html#aa3e508ffefb0cb76e55c2bdefdc907d1',1,'Sun']]]
+  ['renderface',['RenderFace',['../class_b_s_pfile.html#a25c51a5f92f9fe447dbbb1c33785c117',1,'BSPfile']]],
+  ['renderlevel',['RenderLevel',['../class_c_quake3_b_s_p.html#adb06c36ee906c9c4db1d16c1642c3aa2',1,'CQuake3BSP::RenderLevel()'],['../class_b_s_pfile.html#a7b15a3485081c1e8b31209271a68e0a6',1,'BSPfile::RenderLevel()']]],
+  ['renderquad',['RenderQuad',['../class_post_process.html#ad0e21d0808e0a70d2c996a7ab9e3b0ce',1,'PostProcess']]],
+  ['rendertext',['RenderText',['../class_text.html#abefa2ead7ccd585c07995bb5d7d52c97',1,'Text']]],
+  ['renderwater',['RenderWater',['../class_water.html#aa61c82b036ffee41246bfff00df51211',1,'Water']]],
+  ['resize',['Resize',['../class_c_bitset.html#a452780d0a5bf716012e7706929885a27',1,'CBitset']]]
 ];

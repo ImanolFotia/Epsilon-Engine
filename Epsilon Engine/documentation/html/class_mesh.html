@@ -51,6 +51,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -116,6 +117,23 @@ $(document).ready(function(){initNavTree('class_mesh.html','');});
 <div class="title">Mesh Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+<div class="dynheader">
+Collaboration diagram for Mesh:</div>
+<div class="dyncontent">
+<div class="center"><img src="class_mesh__coll__graph.png" border="0" usemap="#_mesh_coll__map" alt="Collaboration graph"/></div>
+<map name="_mesh_coll__map" id="_mesh_coll__map">
+<area shape="rect" id="node4" href="struct_texture.html" title="Texture" alt="" coords="377,35,443,61"/>
+<area shape="rect" id="node5" title="STL class. " alt="" coords="185,13,265,40"/>
+<area shape="rect" id="node6" title="STL class. " alt="" coords="5,6,132,47"/>
+<area shape="rect" id="node8" href="structt___vertex.html" title="t_Vertex" alt="" coords="375,140,445,167"/>
+<area shape="rect" id="node9" href="structt___tangent.html" title="t_Tangent" alt="" coords="186,64,265,91"/>
+<area shape="rect" id="node10" href="structt___tex_coord.html" title="t_TexCoord" alt="" coords="181,115,269,141"/>
+<area shape="rect" id="node11" href="structt___position.html" title="t_Position" alt="" coords="185,165,265,192"/>
+<area shape="rect" id="node12" href="structt___bitangent.html" title="t_Bitangent" alt="" coords="181,216,269,243"/>
+<area shape="rect" id="node13" href="structt___normal.html" title="t_Normal" alt="" coords="188,267,263,293"/>
+<area shape="rect" id="node15" href="struct_vertex.html" title="Contains all the necessery OpenGL includes. " alt="" coords="380,191,440,217"/>
+</map>
+<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -125,6 +143,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac26f908078f6b9a7f3ac67b0bffff6a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_mesh.html#ac26f908078f6b9a7f3ac67b0bffff6a2">Draw</a> (<a class="el" href="class_shader.html">Shader</a> *&amp;shader, std::shared_ptr&lt; <a class="el" href="class_resource_manager.html">ResourceManager</a> &gt; resm)</td></tr>
 <tr class="memdesc:ac26f908078f6b9a7f3ac67b0bffff6a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Render the mesh.  <a href="#ac26f908078f6b9a7f3ac67b0bffff6a2">More...</a><br /></td></tr>
 <tr class="separator:ac26f908078f6b9a7f3ac67b0bffff6a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d40d8a7049af095e8026e8ce154107a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_mesh.html#a5d40d8a7049af095e8026e8ce154107a">Draw</a> (GLuint shader, std::shared_ptr&lt; <a class="el" href="class_resource_manager.html">ResourceManager</a> &gt; resm)</td></tr>
+<tr class="memdesc:a5d40d8a7049af095e8026e8ce154107a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Render the mesh.  <a href="#a5d40d8a7049af095e8026e8ce154107a">More...</a><br /></td></tr>
+<tr class="separator:a5d40d8a7049af095e8026e8ce154107a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0709742dcefaa68370096791963bf055"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0709742dcefaa68370096791963bf055"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_mesh.html#a0709742dcefaa68370096791963bf055">DrawWithAlpha</a> ()</td></tr>
 <tr class="memdesc:a0709742dcefaa68370096791963bf055"><td class="mdescLeft">&#160;</td><td class="mdescRight">Render the mesh. <br /></td></tr>
@@ -249,6 +270,35 @@ GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>EBO</b></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a5d40d8a7049af095e8026e8ce154107a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Mesh::Draw </td>
+          <td>(</td>
+          <td class="paramtype">GLuint&#160;</td>
+          <td class="paramname"><em>shader</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="class_resource_manager.html">ResourceManager</a> &gt;&#160;</td>
+          <td class="paramname"><em>resm</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Render the mesh. </p>
+<p>Draw mesh </p>
+
+</div>
+</div>
 <a class="anchor" id="aafa4e21067a9b0c4407daf5e3c9ea991"></a>
 <div class="memitem">
 <div class="memproto">
@@ -318,6 +368,10 @@ GLuint&#160;</td><td class="memItemRight" valign="bottom"><b>EBO</b></td></tr>
 
 </div>
 </div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>D:/Epsilon/Epsilon Engine/include/<a class="el" href="_mesh_8h_source.html">Mesh.h</a></li>
+<li>D:/Epsilon/Epsilon Engine/src/Mesh.cpp</li>
+</ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

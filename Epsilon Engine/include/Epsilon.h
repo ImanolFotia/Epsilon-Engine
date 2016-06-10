@@ -9,6 +9,7 @@
 
 #include <map>
 #define GLEW_STATIC
+#define GLFW_STATIC
 #include <GL/glew.h>
 
 #include <GLFW/glfw3.h>
@@ -34,6 +35,8 @@
 #include <Scene.h>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include <KeyBoard.h>
+#include <Mouse.h>
 
 class Epsilon
 {
@@ -67,7 +70,7 @@ private:
 
     void PollEvents(void);
 
-    void Render3D(int clip);
+    void Render3D(int);
 
     void Render3D(void);
 
@@ -75,7 +78,7 @@ private:
 
     void RenderLegacy(void);
 
-    void RenderSkybox(void);
+    void RenderSkybox(bool);
 
     void ComputeWater(void);
 
@@ -113,7 +116,7 @@ public:
     std::unique_ptr<MD5Model> m_AnimModel;
     std::unique_ptr<ShadowMap> shadowMap;
     std::unique_ptr<PostProcess> PP;
-    std::shared_ptr<EntityTemplate> EntityTest;
+    std::shared_ptr<EntityTemplate> EntityTest[2];
     /** Window Properties **/
 
     short WIDTH = 16;

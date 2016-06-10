@@ -55,6 +55,36 @@ static void RemoveQuotes( std::string& str )
     while ( ( n = str.find('\"') ) != std::string::npos ) str.erase(n,1);
 }
 
+inline
+static float Invsqrt(float x)
+{
+    float xhalf = 0.5f*x;
+    union
+    {
+        float x;
+        int i;
+    } u;
+    u.x = x;
+    u.i = 0x5f3759df - (u.i >> 1);
+    u.x = u.x * (1.5f - xhalf * u.x * u.x);
+    return u.x;
+}
+
+inline
+static float sqrt(float x)
+{
+    float xhalf = 0.5f*x;
+    union
+    {
+        float x;
+        int i;
+    } u;
+    u.x = x;
+    u.i = 0x5f3759df - (u.i >> 1);
+    u.x = u.x * (1.5f - xhalf * u.x * u.x);
+    return  1/u.x;
+}
+
 // Computes the W component of the quaternion based on the X, Y, and Z components.
 // This method assumes the quaternion is of unit length.
 static void ComputeQuatW( glm::quat& quat )

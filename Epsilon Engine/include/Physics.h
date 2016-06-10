@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <EpsilonMemory.h>
 #include <Types.h>
+#include <Model.h>
 
 #include <vector>
 
@@ -25,16 +26,6 @@ public:
 
     void Update(float);
 
-    bool addCube(float, float, float);
-
-    bool addSphere(float);
-
-    bool addCone(float, float, float);
-
-    bool addCylinder(float, float, float);
-
-    bool addTriangleMesh(std::vector<glm::vec3>, std::vector<unsigned int>);
-
     std::shared_ptr<btDynamicsWorld> world;
 
 private:
@@ -51,84 +42,116 @@ protected:
 class PhysicObject
 {
 public:
-    PhysicObject(){}
-    virtual ~PhysicObject(){};
+    PhysicObject() = default;
+    virtual ~PhysicObject() {};
 
 public:
-    virtual btRigidBody* addObject() = 0;
     virtual std::shared_ptr<btRigidBody> addObject(glm::vec3 /* Position */, float /* Mass */, float /* Size */) = 0;
     virtual std::shared_ptr<btRigidBody> addObject(float /* Position X */, float /* Position Y */, float /* Position Z */, float /* Mass */, float /* Size*/) = 0;
     virtual std::shared_ptr<btRigidBody> addObject(float /* Radius */, float /* Mass */) = 0;
-    virtual std::shared_ptr<btRigidBody> addObject(std::vector<glm::vec3> /* Vertices */, std::vector<unsigned int> /* Indices */) = 0;
+    virtual std::shared_ptr<btRigidBody> addObject(glm::vec3 /* Position */, float /* Mass */, MIN_MAX_POINTS /* Bounding Box */, float /* Scale*/) = 0;
+    virtual std::shared_ptr<btRigidBody> addObject(std::vector<glm::vec3> /* Vertices */, std::vector<unsigned int> /* Indices */, float) = 0;
     std::shared_ptr<btRigidBody> Body;
 };
 
 class CubePhysicObject : public PhysicObject
 {
-    public:
-    CubePhysicObject(){}
+public:
+    CubePhysicObject() = default;
     ~CubePhysicObject() {}
 
-    public:
-        virtual std::shared_ptr<btRigidBody> addObject(float /* Position X */, float /* Position Y */, float /* Position Z */, float /* Mass */, float /* Size*/){}
+public:
+    virtual std::shared_ptr<btRigidBody> addObject(float /* Position X */, float /* Position Y */, float /* Position Z */, float /* Mass */, float /* Size*/) {}
 
-        virtual std::shared_ptr<btRigidBody> addObject(glm::vec3 /* Position */, float /* Mass */, float /* Size */);
+    virtual std::shared_ptr<btRigidBody> addObject(glm::vec3 /* Position */, float /* Mass */, MIN_MAX_POINTS /* Bounding Box */, float /* Scale*/);
 
-    private:
+private:
 
-        float m_Size = 1.0f;
-        float m_Mass = 0.0f;
-        glm::vec3 m_Position = glm::vec3(0.0f, 0.0f, 0.0f);
+    float m_Size = 1.0f;
+    float m_Mass = 0.0f;
+    glm::vec3 m_Position = glm::vec3(0.0f, 0.0f, 0.0f);
 
-        std::shared_ptr<btBoxShape> CubeShape;
-        std::shared_ptr<btMotionState> motionState;
+    std::shared_ptr<btBoxShape> CubeShape;
+    std::shared_ptr<btMotionState> motionState;
 
-
-    virtual btRigidBody* addObject(){}
-    virtual std::shared_ptr<btRigidBody> addObject(float /* Radius */, float /* Mass */){}
-    virtual std::shared_ptr<btRigidBody> addObject(std::vector<glm::vec3> /* Vertices */, std::vector<unsigned int> /* Indices */){}
+    virtual std::shared_ptr<btRigidBody> addObject(float /* Radius */, float /* Mass */) {}
+    virtual std::shared_ptr<btRigidBody> addObject(std::vector<glm::vec3> /* Vertices */, std::vector<unsigned int> /* Indices */, float) {}
+    virtual std::shared_ptr<btRigidBody> addObject(glm::vec3 /* Position */, float /* Mass */, float /* Size */) {}
 };
 
 class SpherePhysicObject : public PhysicObject
 {
-    public:
-    SpherePhysicObject();
+public:
+    SpherePhysicObject() = default;
     virtual ~SpherePhysicObject() {}
 
-    public:
-        virtual std::shared_ptr<btRigidBody> addObject(float /* Radius */, float /* Mass */);
+public:
+    virtual std::shared_ptr<btRigidBody> addObject(float /* Radius */, float /* Mass */){}
 
-        virtual std::shared_ptr<btRigidBody> addObject(float /* Radius */,  glm::vec3 /* Position */, float /* Mass */);
+    virtual std::shared_ptr<btRigidBody> addObject(float /* Radius */,  glm::vec3 /* Position */, float /* Mass */);
 
-    private:
+private:
 
-        float m_Radius = 1.0f;
-        float m_Mass = 0.0f;
-        glm::vec3 m_Position = glm::vec3(0.0f, 0.0f, 0.0f);
+    float m_Radius = 1.0f;
+    float m_Mass = 0.0f;
+    glm::vec3 m_Position = glm::vec3(0.0f, 0.0f, 0.0f);
 
-        std::shared_ptr<btSphereShape> CubeShape;
-        std::shared_ptr<btMotionState> motionState;
+    std::shared_ptr<btSphereShape> SphereShape;
+    std::shared_ptr<btMotionState> motionState;
+
+    virtual std::shared_ptr<btRigidBody> addObject(float /* Position X */, float /* Position Y */, float /* Position Z */, float /* Mass */, float /* Size*/) {}
+    virtual std::shared_ptr<btRigidBody> addObject(glm::vec3 /* Position */, float /* Mass */, MIN_MAX_POINTS /* Bounding Box */, float /* Scale*/){}
+    virtual std::shared_ptr<btRigidBody> addObject(std::vector<glm::vec3> /* Vertices */, std::vector<unsigned int> /* Indices */, float) {}
+    virtual std::shared_ptr<btRigidBody> addObject(glm::vec3 /* Position */, float /* Mass */, float /* Size */) {}
 };
 
 class TriangleMeshPhysicObject : public PhysicObject
 {
-    public:
-    TriangleMeshPhysicObject();
+public:
+    TriangleMeshPhysicObject() = default;
     virtual ~TriangleMeshPhysicObject() {}
 
-    public:
-        virtual std::shared_ptr<btRigidBody> addObject(std::vector<glm::vec3> /* Vertices */, std::vector<unsigned int> /* Indices */, glm::vec3 /* Position */,float /* Mass */);
+public:
+    virtual std::shared_ptr<btRigidBody> addObject(std::vector<glm::vec3> /* Vertices */, std::vector<unsigned int> /* Indices */, glm::vec3 /* Position */,float /* Mass */) {}
 
-        virtual std::shared_ptr<btRigidBody> addObject(std::vector<glm::vec3> /* Vertices */, std::vector<unsigned int> /* Indices */);
+    virtual std::shared_ptr<btRigidBody> addObject(std::vector<glm::vec3> /* Vertices */, std::vector<unsigned int> /* Indices */, float Scaling);
 
-    private:
+private:
 
-        float m_Mass = 0.0f;
-        glm::vec3 m_Position = glm::vec3(0.0f, 0.0f, 0.0f);
+    float m_Mass = 0.0f;
+    glm::vec3 m_Position = glm::vec3(0.0f, 0.0f, 0.0f);
 
-        std::shared_ptr<btMotionState> motionState;
-        std::shared_ptr<btCollisionShape> shape;
-        std::shared_ptr<btTriangleMesh> trimesh;
+    std::shared_ptr<btMotionState> motionState;
+    std::shared_ptr<btCollisionShape> TriangleMeshShape;
+    std::shared_ptr<btTriangleMesh> trimesh;
+
+private:
+    virtual std::shared_ptr<btRigidBody> addObject(float /* Radius */, float /* Mass */) {}
+    virtual std::shared_ptr<btRigidBody> addObject(glm::vec3 /* Position */, float /* Mass */, float /* Size */) {}
+    virtual std::shared_ptr<btRigidBody> addObject(glm::vec3 /* Position */, float /* Mass */, MIN_MAX_POINTS /* Bounding Box */, float /* Scale*/){}
+    virtual std::shared_ptr<btRigidBody> addObject(float /* Position X */, float /* Position Y */, float /* Position Z */, float /* Mass */, float /* Size*/){}
+};
+
+class PlayerControlledPhysicsObject
+{
+public:
+    PlayerControlledPhysicsObject(btScalar x, btScalar y, btScalar z);
+    ~PlayerControlledPhysicsObject(){}
+
+    glm::vec3 getPosition();
+    glm::vec3 getOrientation();
+
+    bool isOnGround();
+    float getSpeed();
+
+private:
+    btScalar sizeX, sizeY, sizeZ;
+    std::shared_ptr<btMotionState> m_motionState;
+    std::shared_ptr<btCollisionShape> capsuleShape;
+
+    std::shared_ptr<btRigidBody> m_playerbody;
+    std::shared_ptr<btPairCachingGhostObject> m_ghostObject;
+    std::shared_ptr<btCharacterControllerInterface> m_character;
 };
 
 }
