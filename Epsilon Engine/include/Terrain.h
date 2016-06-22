@@ -37,7 +37,8 @@ public:
     Terrain(const char*, const char*, const char*, const char*, float, int/**Must be Power of two*/);
 
     virtual ~Terrain(){
-        delete pixels;
+
+        std::cout <<"Deleted terrain" << std::endl;
         //delete diffuseTexture;
         //delete specularTexture;
         //delete heightMap;
@@ -52,7 +53,7 @@ private:
     bool GenerateSmoothNormals();
     bool GenerateVertexBuffers();
     bool GetHeightData();
-    bool GenerateGrid();
+    bool GenerateGrid(unsigned char* pixels);
     bool LoadTexture();
     bool LoadTexture(const char*);
     bool LoadTexture(const char*, const char*, const char*);
@@ -62,7 +63,6 @@ private:
     GLuint GL_d_texture;
     GLuint GL_n_texture;
     GLuint GL_s_texture;
-    unsigned char* pixels;
     const char* diffuseTexture;
     const char* specularTexture;
     const char* heightMap;

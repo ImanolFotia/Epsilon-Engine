@@ -109,9 +109,6 @@ public:
 
 
 private:
-    /**  Model Data  */
-    /// Stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
-
 
 bool loadModel(string emlPath, int a);
 

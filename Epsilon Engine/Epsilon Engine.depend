@@ -245,7 +245,7 @@
 	<GL/glext.h>
 	<GL/glu.h>
 
-1465540866 source:d:\epsilon\epsilon engine\src\epsilon.cpp
+1466486360 source:d:\epsilon\epsilon engine\src\epsilon.cpp
 	<iostream>
 	<Epsilon.h>
 	<ProgramData.h>
@@ -260,9 +260,10 @@
 	<EpsilonMemory.h>
 	<CPUID.h>
 
-1465526398 d:\epsilon\epsilon engine\include\epsilon.h
+1466482357 d:\epsilon\epsilon engine\include\epsilon.h
 	<map>
 	<GL/glew.h>
+	<GL/gl.h>
 	<GLFW/glfw3.h>
 	<Texture.h>
 	<Shader.h>
@@ -473,7 +474,7 @@
 1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\postprocess.h
 	"types.h"
 
-1465525874 source:d:\epsilon\epsilon engine\src\camera.cpp
+1466221873 source:d:\epsilon\epsilon engine\src\camera.cpp
 	<iostream>
 	<camera.h>
 	<math.h>
@@ -502,7 +503,7 @@
 
 1451178317 d:\epsilon\epsilon engine\include\skyboxdata.h
 
-1463856228 d:\epsilon\epsilon engine\include\model.h
+1466191837 d:\epsilon\epsilon engine\include\model.h
 	<string>
 	<fstream>
 	<sstream>
@@ -576,21 +577,21 @@
 	<map>
 	<string>
 
-1461483175 d:\epsilon\epsilon engine\include\terrain.h
+1466188260 d:\epsilon\epsilon engine\include\terrain.h
 	<vector>
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
 	<Shader.h>
 	<Texture.h>
 
-1463262644 source:d:\epsilon\epsilon engine\src\terrain.cpp
+1466188653 source:d:\epsilon\epsilon engine\src\terrain.cpp
 	<iostream>
 	<fstream>
 	<Terrain.h>
 	<SOIL.h>
 	<Includes.h>
 
-1461483175 d:\epsilon\epsilon engine\include\grass.h
+1466483082 d:\epsilon\epsilon engine\include\grass.h
 	<GL/glew.h>
 	<string>
 	<iostream>
@@ -606,7 +607,7 @@
 	<ShadowMapping.h>
 	<memory>
 
-1465349488 source:d:\epsilon\epsilon engine\src\postprocess.cpp
+1466278676 source:d:\epsilon\epsilon engine\src\postprocess.cpp
 	<PostProcess.h>
 	<iostream>
 	<ProgramData.h>
@@ -768,10 +769,10 @@
 	<vector>
 	<glm/gtc/quaternion.hpp>
 
-1458311824 source:d:\epsilon\epsilon engine\src\water.cpp
+1466483042 source:d:\epsilon\epsilon engine\src\water.cpp
 	<Water.h>
 
-1461483175 d:\epsilon\epsilon engine\include\water.h
+1466483067 d:\epsilon\epsilon engine\include\water.h
 	<GL/glew.h>
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
@@ -1066,7 +1067,7 @@
 	<Texture.h>
 	<Shader.h>
 
-1464275718 source:d:\epsilon\epsilon engine\src\sun.cpp
+1466230798 source:d:\epsilon\epsilon engine\src\sun.cpp
 	<Sun.h>
 
 1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\glm.hpp
@@ -1526,7 +1527,7 @@
 1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\type_ptr.inl
 	<cstring>
 
-1464317154 source:d:\epsilon\epsilon engine\src\bsp.cpp
+1466481152 source:d:\epsilon\epsilon engine\src\bsp.cpp
 	<GL/glew.h>
 	<BSP.h>
 	<glm/glm.hpp>
@@ -1535,7 +1536,7 @@
 	<Frustum.h>
 	<Texture.h>
 
-1464317154 d:\epsilon\epsilon engine\include\bsp.h
+1466481015 d:\epsilon\epsilon engine\include\bsp.h
 	<cstdlib>
 	<cstdio>
 	<cstring>
@@ -1546,7 +1547,7 @@
 	"Frustum.h"
 	<ResourceManager.h>
 
-1464560393 d:\epsilon\epsilon engine\include\bspface.h
+1466482905 d:\epsilon\epsilon engine\include\bspface.h
 	<glm/glm.hpp>
 	<GL/glew.h>
 	<iostream>
@@ -1554,20 +1555,21 @@
 	<vector>
 	<SOIL.h>
 	<Physics.h>
+	<Includes.h>
 
 1464926531 d:\epsilon\epsilon engine\include\frustum.h
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
 	<Model.h>
 
-1464885904 source:d:\epsilon\epsilon engine\src\frustum.cpp
+1466190186 source:d:\epsilon\epsilon engine\src\frustum.cpp
 	"Frustum.h"
 	<iostream>
 
-1455946270 source:d:\epsilon\epsilon engine\src\resourcemanager.cpp
+1465797549 source:d:\epsilon\epsilon engine\src\resourcemanager.cpp
 	"ResourceManager.h"
 
-1465449013 d:\epsilon\epsilon engine\include\resourcemanager.h
+1466469510 d:\epsilon\epsilon engine\include\resourcemanager.h
 	<Texture.h>
 	<Model.h>
 	<Water.h>
@@ -1618,14 +1620,14 @@
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
 
-1462150796 source:d:\epsilon\epsilon engine\src\shadowmapping.cpp
+1466241669 source:d:\epsilon\epsilon engine\src\shadowmapping.cpp
 	<ShadowMapping.h>
 	<iostream>
 	<cmath>
 
-1465540866 d:\epsilon\epsilon engine\version.h
+1466486360 d:\epsilon\epsilon engine\version.h
 
-1465440427 d:\epsilon\epsilon engine\include\entitytemplate.h
+1466481941 d:\epsilon\epsilon engine\include\entitytemplate.h
 	<Component.h>
 	<iostream>
 	<glm/glm.hpp>
@@ -1633,7 +1635,7 @@
 	<memory>
 	<ResourceManager.h>
 
-1465439737 d:\epsilon\epsilon engine\include\component.h
+1466477385 d:\epsilon\epsilon engine\include\component.h
 	<iostream>
 	<glm/glm.hpp>
 	<Model.h>
@@ -1680,7 +1682,7 @@
 	<limits>
 	"../gtc/constants.hpp"
 
-1463856228 source:d:\epsilon\epsilon engine\src\model.cpp
+1466192739 source:d:\epsilon\epsilon engine\src\model.cpp
 	<Model.h>
 	<ResourceManager.h>
 
@@ -1698,7 +1700,7 @@
 	<memory>
 	<Texture.h>
 
-1465490694 d:\epsilon\epsilon engine\include\physics.h
+1466486275 d:\epsilon\epsilon engine\include\physics.h
 	<glm/glm.hpp>
 	<EpsilonMemory.h>
 	<Types.h>
@@ -1708,6 +1710,8 @@
 	<btBulletCollisionCommon.h>
 	<BulletCollision/CollisionDispatch/btGhostObject.h>
 	<BulletDynamics/Character/btKinematicCharacterController.h>
+	<BulletDynamics/Featherstone/btMultiBodyDynamicsWorld.h>
+	<BulletDynamics/Featherstone/btMultiBodyConstraintSolver.h>
 
 1456870205 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\btbulletdynamicscommon.h
 	"btBulletCollisionCommon.h"
@@ -2249,10 +2253,10 @@
 	"LinearMath/btVector3.h"
 	"BulletDynamics/Dynamics/btActionInterface.h"
 
-1465490411 source:d:\epsilon\epsilon engine\src\physics.cpp
+1466486275 source:d:\epsilon\epsilon engine\src\physics.cpp
 	<Physics.h>
 
-1464564823 source:d:\epsilon\epsilon engine\src\bspface.cpp
+1466482905 source:d:\epsilon\epsilon engine\src\bspface.cpp
 	<Physics.h>
 	<ResourceManager.h>
 	<BSPFace.h>
@@ -2274,4 +2278,41 @@
 1465435296 d:\epsilon\epsilon engine\include\keyboardwrapper.h
 
 1465436739 d:\epsilon\epsilon engine\include\mouse.h
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\featherstone\btmultibodydynamicsworld.h
+	"BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\featherstone\btmultibodyconstraintsolver.h
+	"BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h"
+	"btMultiBodySolverConstraint.h"
+	"btMultiBodyConstraint.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\featherstone\btmultibodysolverconstraint.h
+	"LinearMath/btVector3.h"
+	"LinearMath/btAlignedObjectArray.h"
+	"BulletDynamics/ConstraintSolver/btSolverBody.h"
+	"BulletDynamics/ConstraintSolver/btContactSolverInfo.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\featherstone\btmultibodyconstraint.h
+	"LinearMath/btScalar.h"
+	"LinearMath/btAlignedObjectArray.h"
+	"btMultiBody.h"
+	"btMultiBodySolverConstraint.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\featherstone\btmultibody.h
+	"LinearMath/btScalar.h"
+	"LinearMath/btVector3.h"
+	"LinearMath/btQuaternion.h"
+	"LinearMath/btMatrix3x3.h"
+	"LinearMath/btAlignedObjectArray.h"
+	"btMultiBodyLink.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\featherstone\btmultibodylink.h
+	"LinearMath/btQuaternion.h"
+	"LinearMath/btVector3.h"
+	"BulletCollision/CollisionDispatch/btCollisionObject.h"
+	"LinearMath/btSpatialAlgebra.h"
+
+1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btspatialalgebra.h
+	"btMatrix3x3.h"
 

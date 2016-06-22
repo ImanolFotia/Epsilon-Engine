@@ -13,6 +13,9 @@ out vec4 clipSpace;
 out vec2 TexCoords;
 out vec3 viewDir;
 out float visibility;
+out vec3 FragPos;
+out vec3 wFragPos;
+out mat3 viewMatrix;
 
 const float density = 0.0004;
 const float gradient = 3.5;
@@ -29,6 +32,8 @@ void main()
     TexCoords = texCoords;
     vec4 PosToCam = view * worldPosition;
     float distance = length(PosToCam);
-
+    wFragPos = worldPosition.xyz;
+    viewMatrix = mat3(view);
+    FragPos = vec3(PosToCam);
     visibility = exp(-pow((distance*density), gradient));
 }

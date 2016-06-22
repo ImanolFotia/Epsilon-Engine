@@ -12,8 +12,13 @@
 
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <BulletDynamics/Character/btKinematicCharacterController.h>
+#include <BulletDynamics/Featherstone/btMultiBodyDynamicsWorld.h>
+#include <BulletDynamics/Featherstone/btMultiBodyConstraintSolver.h>
+
 namespace Physics
 {
+class CollisionInfo;
+
 class Physics
 {
 public:
@@ -26,14 +31,16 @@ public:
 
     void Update(float);
 
-    std::shared_ptr<btDynamicsWorld> world;
+    std::string RayCollision(btVector3, btVector3);
+
+    std::shared_ptr<btDiscreteDynamicsWorld> world;
 
 private:
 
     std::shared_ptr<btDispatcher> dispatcher;
     std::shared_ptr<btCollisionConfiguration> collisionConfig;
     std::shared_ptr<btBroadphaseInterface> broadphase;
-    std::shared_ptr<btConstraintSolver> solver;
+    std::shared_ptr<btSequentialImpulseConstraintSolver> solver;
 
 protected:
 
@@ -152,6 +159,29 @@ private:
     std::shared_ptr<btRigidBody> m_playerbody;
     std::shared_ptr<btPairCachingGhostObject> m_ghostObject;
     std::shared_ptr<btCharacterControllerInterface> m_character;
+};
+
+class CollisionInfo
+{
+public:
+    CollisionInfo()
+    {
+        m_Name = "";
+    }
+    ~CollisionInfo() {}
+
+    std::string getName()
+    {
+        return m_Name;
+    }
+
+    void setName(std::string name)
+    {
+        m_Name = name;
+    }
+
+private:
+    std::string m_Name;
 };
 
 }

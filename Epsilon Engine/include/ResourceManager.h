@@ -19,264 +19,63 @@ class ResourceManager
 {
 public:
 
-    ResourceManager() {
-        std::cout << "Created Resource Manager" << std::endl;}
+    ResourceManager()
+    {
+        std::cout << "Created Resource Manager" << std::endl;
+    }
 
-    virtual ~ResourceManager() {
+    virtual ~ResourceManager()
+    {
         std::cout << "Deleted Resource Manager" << std::endl;
         for(std::map<std::string, eTexture>::iterator itr = TextureList.begin(); itr != TextureList.end(); itr++)
         {
             GLuint tex = itr->second.getTextureID();
             glDeleteTextures(1, &tex);
         }
-/*
-        for(std::map<std::string, Model>::iterator itr = ModelList.begin(); itr != ModelList.end(); itr++)
-        {
-            itr->second = nullptr;
-        }*/
     }
 
-    std::string requestTexture(std::string texPath)
-    {
-        try
-        {
-            std::map<std::string, eTexture>::iterator it;
-            std::cout << "Loading texture: " << texPath << " ... " << std::endl;
-            it = TextureList.find(texPath);
-            if(it != TextureList.end())
-            {
-                std::cout << "Texture already loaded, assigning existing one to object" << std::endl << std::endl;
-                return TextureList.at(it->first).getPath();
-            }
-            else
-            {
-                std::cout << "Texture not loaded, reading it from hard drive" << std::endl << std::endl;
-                eTexture tmpTex(texPath.c_str());
-                TextureList.insert(std::make_pair(texPath, tmpTex));
-                return texPath;
-            }
-        }
-        catch(...)
-        {
-            throw;
-        }
-    }
+    std::string requestTexture(std::string texPath);
 
-    std::string requestModel(std::string modelPath, std::shared_ptr<ResourceManager> rm, glm::vec3 Pos, glm::vec3 scs, glm::quat rot)
-    {
-        try
-        {
-            std::map<std::string, Model>::iterator it;
-            it = ModelList.find(modelPath);
-            std::cout << "Loading model: " << modelPath << " ... " << std::endl;
-            if(it != ModelList.end())
-            {
-                std::cout << "Model already loaded, assigning existing one to object" << std::endl << std::endl;
-                return ModelList.at(it->first).getPath();
-            }
-            else
-            {
-                std::cout << "Model not loaded, reading it from hard drive" << std::endl << std::endl;
-                Model tmpModel(modelPath.c_str(), rm, Pos, scs, rot);
-                ModelList.insert(std::make_pair(modelPath, tmpModel));
-                return modelPath;
-            }
-        }
-        catch(...)
-        {
-            throw;
-        }
-    }
+    std::string requestModel(std::string modelPath, std::shared_ptr<ResourceManager> rm, glm::vec3 Pos, glm::vec3 scs, glm::quat rot);
 
-    void useModel(std::string modelPath, Shader* shader)
-    {
-        try
-        {
-            ModelList.at(modelPath).Draw(shader);
-        }
+    void useModel(std::string modelPath, Shader* shader);
 
-        catch(...)
-        {
-            throw;
-        }
-    }
+    void useModel(std::string modelPath, GLuint shader);
 
-    void useModel(std::string modelPath, GLuint shader)
-    {
-        try
-        {
-            ModelList.at(modelPath).Draw(shader);
-        }
+    MIN_MAX_POINTS getModelBoundingBox(std::string modelPath);
 
-        catch(...)
-        {
-            throw;
-        }
-    }
+    void setModelVisibility(std::string path ,bool visibility);
 
-    MIN_MAX_POINTS getModelBoundingBox(std::string modelPath)
-    {
-        try
-        {
-            return ModelList.at(modelPath).MinMaxPoints;
-        }
+    glm::quat getModelRotation(std::string path);
 
-        catch(...)
-        {
-            throw;
-        }
-    }
+    glm::vec3 getModelPosition(std::string path);
 
-    void setModelVisibility(std::string path ,bool visibility)
-    {
-        ModelList.at(path).m_IsVisible = visibility;
-    }
+    glm::vec3 getModelScale(std::string path);
 
-    glm::quat getModelRotation(std::string path)
-    {
-        return ModelList.at(path).Rotation;
-    }
+    GLuint useTexture(std::string texPath);
 
-    glm::vec3 getModelPosition(std::string path)
-    {
-        return ModelList.at(path).Position;
-    }
+    void addTextureToQueue(std::string texture);
 
-    glm::vec3 getModelScale(std::string path)
-    {
-        return ModelList.at(path).Scale;
-    }
+    void loadQueuedTextures();
 
-    GLuint useTexture(std::string texPath)
-    {
-        try
-        {   if(texPath.empty() != true)
-                return TextureList.at(texPath).getTextureID();
-            else
-                return 0;
-        }
+    std::string requestShader(std::string shaderPathv, std::string shaderPathf, std::string name);
 
-        catch(...)
-        {
-            throw;
-        }
-    }
-
-    void addTextureToQueue(std::string texture)
-    {
-        try{
-        TextureQueue.push_back(texture);
-        std::cout << texture << " Added to the Queue." << std::endl;
-        }
-        catch(...){throw;}
-    }
-
-    void loadQueuedTextures()
-    {
-        for(int i = 0 ; i < TextureQueue.size() ; ++i)
-        {
-            requestTexture(TextureQueue.at(i));
-            TextureQueue.at(i).pop_back();
-        }
-    }
-
-    std::string requestShader(std::string shaderPathv, std::string shaderPathf, std::string name)
-    {
-        try
-        {
-            std::map<std::string, Shader>::iterator it;
-            it = ShadersList.find(name);
-            if(it != ShadersList.end())
-            {
-                return ShadersList.at(it->first).getPath();
-            }
-            else
-            {
-                Shader tmpShader(shaderPathv.c_str(), shaderPathf.c_str());
-                ShadersList.insert(std::make_pair(name, tmpShader));
-                return name;
-            }
-        }
-        catch(...)
-        {
-            throw;
-        }
-    }
-
-    Shader useShader(std::string shaderPath)
-    {
-        try
-        {
-            return ShadersList.at(shaderPath);
-        }
-
-        catch(...)
-        {
-            throw;
-        }
-    }
+    Shader useShader(std::string shaderPath);
 
 
-    GLuint getShaderID(std::string shaderPath)
-    {
-        try
-        {
-            return ShadersList.at(shaderPath).getProgramID();
-        }
+    GLuint getShaderID(std::string shaderPath);
 
-        catch(...)
-        {
-            throw;
-        }
-    }
+    bool requestCubeMap(int CubeMapID, glm::vec3 Position);
 
-    bool requestCubeMap(int CubeMapID, glm::vec3 Position)
-    {
-        try
-        {
-                std::vector<std::string> paths;
-                std::string path;
-            switch(CubeMapID){
-                case 1:
-                    path = "materials/skyboxes/Miramar/";
-                    break;
-                case 2:
-                    path = "materials/skyboxes/cubemap/";
-                    break;
-                default:
-                    path = "materials/skyboxes/Miramar/";
+    int NearestCubeMap(glm::vec3 TestingPoint);
 
-            }
-                paths.push_back(path + "right.tga");
-                paths.push_back(path + "left.tga");
-                paths.push_back(path + "top.tga");
-                paths.push_back(path + "bottom.tga");
-                paths.push_back(path + "back.tga");
-                paths.push_back(path + "front.tga");
-
-                CubeMap tmpCubeMap(paths, CubeMapList.size() + 1, Position);
-
-                CubeMapList.insert(std::make_pair(CubeMapList.size() + 1, tmpCubeMap));
-                CubeMapPositions.push_back(Position);
-        }
-        catch(...)
-        {
-            throw;
-        }
-    }
-
-    int NearestCubeMap(glm::vec3 TestingPoint)
-    {
-        return Helpers::findNearestPointFromSet(TestingPoint, CubeMapPositions);
-    }
-
-    GLuint useCubeMap(int ID)
-    {
-        return CubeMapList.at(ID).getTextureID();
-    }
+    GLuint useCubeMap(int ID);
 
     std::shared_ptr<Camera> m_Camera;
+
     std::shared_ptr<Physics::Physics> m_PhysicsWorld;
+
+    float timestep;
 
 private:
 

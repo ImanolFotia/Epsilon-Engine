@@ -22,7 +22,7 @@ Camera::Camera(glm::vec3 cPosition, glm::vec3 cOrientation)
     this->Position = glm::vec3(cPosition);
     this->FieldOfView = 75.0f;
     this->MovementSpeed = 0.0f;
-    this->MouseSpeed = 0.005f;
+    this->MouseSpeed = 0.002f;
     this->PositionhasChanged = false;
     this->OrientationhasChanged = false;
     this->MaxMovementSpeed = 15.3;
@@ -85,13 +85,17 @@ void Camera::HandleInputs(GLFWwindow*& window)
     float DeltaTime = float( currentTime - LastTime );
 
     double xpos, ypos;
+    static double lastX, lastY;
 
     glfwGetWindowSize(window , &winx , &winy );
     glfwGetCursorPos(window, &xpos , &ypos );
-    glfwSetCursorPos(window, winx/2.0, winy/2.0);
+    //glfwSetCursorPos(window, winx/2.0, winy/2.0);
 
-    horizontalAngle += MouseSpeed * float( winx/2.0 - xpos ) ;
-    verticalAngle   += MouseSpeed * float( winy/2.0 - ypos ) ;
+    horizontalAngle += MouseSpeed * float( lastX - xpos ) ;
+    verticalAngle   += MouseSpeed * float( lastY - ypos ) ;
+
+    lastX = xpos;
+    lastY = ypos;
 
     Orientation = glm::vec3(
                       cos( verticalAngle )      *       sin( horizontalAngle ),

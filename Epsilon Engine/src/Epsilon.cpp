@@ -21,8 +21,8 @@ float mpos = -20.0;
 float blend = 1.0f;
 
 
-    double Input::Mouse::XPOS = 500;
-    double Input::Mouse::YPOS = 500;
+double Input::Mouse::XPOS = 500;
+double Input::Mouse::YPOS = 500;
 
 Epsilon::Epsilon(GLFWwindow*& win)
 {
@@ -35,7 +35,14 @@ Epsilon::Epsilon(GLFWwindow*& win)
     std:: cout << "Video RENDERER: " << glGetString(GL_RENDERER) << std::endl;
     std:: cout << "OpenGL VERSION: " << glGetString(GL_VERSION) << std::endl;
 
+    glEnable(GL_CLIP_PLANE0);
+    glEnable(GL_CLIP_DISTANCE0);
 
+    double plane[4] = {0.0, 5.0, 0.0, 15.0};
+    glClipPlane(GL_CLIP_PLANE0, plane);
+
+
+    std::cout << "Clip Plane: " << (glIsEnabled(GL_CLIP_PLANE0) ? "Enabled" : "Disabled") << endl;
 
     CPUID cpu(0);
     cpu.printHardwareInformation();
@@ -81,7 +88,7 @@ void Epsilon::InitResources(void)
     this->HEIGHT = DATA.WINDOW_HEIGHT;
     this->SSAO = DATA.SSAO;
 
-    eCamera = std::move((unique_ptr<Camera>)(new Camera(glm::vec3(95.0f,29.25f,-76.0f), glm::vec3(1.0f,1.0f,1.0f))));
+    eCamera = std::move((unique_ptr<Camera>)(new Camera(glm::vec3(-10.0f,29.25f,-15.0f), glm::vec3(1.0f,1.0f,1.0f))));
 
     text = std::move((unique_ptr<Text>)(new Text("resources/arial.ttf", DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT)));
 
@@ -102,19 +109,32 @@ void Epsilon::InitResources(void)
     this->LoadGeometry();
 
 
-    EntityTest[0] = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(80.0,100.25,-33), glm::vec3(2), glm::quat(-1.0, 0.0, -1.0, 0.0)));
+    EntityTest[0] = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(80.0,100.25,-31), glm::vec3(2), glm::quat(-1.0, 0.0, -1.0, 0.0)));
     std::shared_ptr<Component::RenderComponent> Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
     Compmodel->Fill("models/esfera.eml", rM, "Main");
 
     std::shared_ptr<Component::PhysicComponent> CompPhys = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
 
     std::shared_ptr<Physics::SpherePhysicObject> ph = (std::shared_ptr<Physics::SpherePhysicObject>) new Physics::SpherePhysicObject();
-    rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(2.0f, glm::vec3(95.0,29.25,-76), 100.0f).get());
+    rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(2.0f, glm::vec3(6.0,100.25,12), 50.0f).get());
     CompPhys->Fill(100.0f, ph);
 
     EntityTest[0]->addComponent(Compmodel);
     EntityTest[0]->addComponent(CompPhys);
+    ////////////////////////////////////////
 
+    EntityTest[1] = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(60.0,100.25,-31), glm::vec3(2), glm::quat(-1.0, 0.0, -1.0, 0.0)));
+    std::shared_ptr<Component::RenderComponent> Compmodel2 = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel2->Fill("models/esfera.eml", rM, "Main");
+
+    std::shared_ptr<Component::PhysicComponent> CompPhys2 = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
+
+    std::shared_ptr<Physics::SpherePhysicObject> ph2 = (std::shared_ptr<Physics::SpherePhysicObject>) new Physics::SpherePhysicObject();
+    rM->m_PhysicsWorld->world->addRigidBody(ph2->addObject(2.0f, glm::vec3(30.0,100.25,12), 50.0f).get());
+    CompPhys2->Fill(100.0f, ph2);
+
+    EntityTest[1]->addComponent(Compmodel2);
+    EntityTest[1]->addComponent(CompPhys2);
     this->LoadSound();
 
     rM->loadQueuedTextures();
@@ -142,24 +162,33 @@ void Epsilon::LoadShaders(void)
 
     Shaders["MD5ShadowMapping"] = new Shader("shaders/MD5GeometryShadowv.glsl", "shaders/ShadowMappingf.glsl");
 
+    Shaders["ForwardShader"] = new Shader("shaders/TransformVertexShader.vglsl", "shaders/TextureFragmentShader.fglsl");
+
     rM->requestShader("shaders/Geometry.vglsl", "shaders/Geometry.fglsl", "Main");
 }
 
 void Epsilon::LoadGeometry(void)
 {
     cout << "Loading World Geometry..." <<endl;
-    /*
-           for(int i = 0 ; i < 50 ; i++)
-           {
-               grassPos.push_back(glm::vec3(  0 + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(30-10)))  ,2.0, 0 + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(30-0))) ));
-               cout << grassPos.at(i).x << grassPos.at(i).y << grassPos.at(i).z << endl;
-           }
-    */
+
+    for(int i = 0 ; i < 250 ; i++)
+    {
+        grassPos.push_back(glm::vec3(  50 + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(80))) , 4.5, -23 + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(70))) ));
+        //cout << grassPos.at(i).x << grassPos.at(i).y << grassPos.at(i).z << endl;
+    }
+
+    vector<glm::vec3> grasspos2;
+    for(int i = 0 ; i < 250 ; i++)
+    {
+        grasspos2.push_back(glm::vec3(  50 + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(80))), 4.5, -23 + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(70))) ));
+        //cout << grassPos.at(i).x << grassPos.at(i).y << grassPos.at(i).z << endl;
+    }
+
     //unique_ptr<Skybox> s(new Skybox("plain"));
 
 
     /*
-        terrain = (std::unique_ptr<Terrain>)new Terrain("materials/mountains.jpg", "mud-diffuse.jpg", "mud-normal.jpg", "awp_india_texture_4s.jpg", 1, 1);
+            terrain = (std::shared_ptr<Terrain>)new Terrain("materials/testmontana.jpg", "mud-diffuse.jpg", "mud-normal.jpg", "awp_india_texture_4s.jpg", 1, 1);
     */
     //model.push_back(Model("models/sponza.obj"));
 
@@ -171,16 +200,16 @@ void Epsilon::LoadGeometry(void)
 
     std::cout << "Resource manager in epsilon address: " << rM.get() << std::endl;
 
-    rM->requestCubeMap(1, glm::vec3(0,0,0));
-    rM->requestCubeMap(2, glm::vec3(78.9,4.75,-64.0));
+    rM->requestCubeMap(2, glm::vec3(0,0,0));
     rM->requestModel("models/esfera.eml", rM, glm::vec3(78.0,5.25,-57), glm::vec3(5), glm::quat(0.0, 0.0, 0.0, 0.0));
-    rM->requestModel("models/lee-perry-smith-head-scan2.eml", rM, glm::vec3(78.9,4.75,-64.0), glm::vec3(8), glm::quat(-1.0, 0.0, -1.0, 0.0));
-    rM->requestModel("models/buddha.eml", rM, glm::vec3(23.0,0.75,0.0), glm::vec3(1), glm::quat(-1.0, 0.0, -1.0, 0.0));
-    rM->requestModel("models/DRAGON.eml", rM, glm::vec3(80.0,0.75,0.0), glm::vec3(1), glm::quat(-1.0, 0.0, -1.0, 0.0));
+    rM->requestModel("models/barrel.eml", rM, glm::vec3(98.9,5.25,-6.0), glm::vec3(4), glm::quat(-1.0, 0.0, -1.0, 0.0));
+    rM->requestModel("models/Rock_6.eml", rM, glm::vec3(102, 2.0, 19), glm::vec3(5), glm::quat(-1.0, 0.0, -1.0, 0.0));
+    rM->requestModel("models/Tree.eml", rM, glm::vec3(61.0,0.75,-12.0), glm::vec3(10), glm::quat(-1.0, 0.0, -1.0, 0.0));
     skybox = std::move((unique_ptr<Skybox>)(new Skybox("plain")));
-    grass.push_back(Grass("billboardgrass0002.png"));
+    grass.push_back(Grass("grass04.png", grassPos));
+    grass.push_back(Grass("billboardgrass0002.png", grasspos2));
 
-    waterPlane = std::move((unique_ptr<Water>)(new Water(glm::vec3(0,4.1,0), 100.0f))); ///-11.8
+    waterPlane = std::move((unique_ptr<Water>)(new Water(glm::vec3(0,-.3,0), 30.0f))); ///-11.8
 
     sun = std::move((shared_ptr<Sun>)(new Sun()));
 
@@ -196,104 +225,110 @@ void Epsilon::LoadGeometry(void)
     m_AnimModel->LoadAnim("models/hellknight/idle2.md5anim");
 
     /*
-        m_AnimModel->LoadModel("models/dummy.md5mesh");
-        m_AnimModel->LoadAnim("models/anim.md5anim");
-        m_AnimModel->LoadAnim("models/anim.md5anim");*/
-
+            m_AnimModel->LoadModel("models/dummy.md5mesh");
+            m_AnimModel->LoadAnim("models/anim.md5anim");
+            m_AnimModel->LoadAnim("models/anim.md5anim");
+    */
 }
 
 void Epsilon::LoadSound(void)
 {
     cout << "Loading Sound..." << endl;
 }
-void Epsilon::Render3D(int clip)
+
+bool visible = true;
+void Epsilon::Render3D(Shader* shader)
 {
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     /*
-                Shaders["Main"]->Use();
-                this->SetUniforms(Shaders["Main"], glm::vec3(190,-40,10), glm::vec3(1,1,1), glm::quat(-1, 0, -1, 0) );
-                terrain->RenderTerrain(Shaders["Main"]);
+                    Shaders["Main"]->Use();
+                    this->SetUniforms(Shaders["Main"], glm::vec3(-512, -10, 512), glm::vec3(1,1,1), glm::quat(-1, 0, -1, 0) );
+                    terrain->RenderTerrain(Shaders["Main"]);
     */
-
-    bool visible = true;
-    Shaders["Main"]->Use();
-    this->SetUniforms(Shaders["Main"], EntityTest[0]->getPosition(), EntityTest[0]->getScale(), EntityTest[0]->getRotation());
-    glm::mat4 Model = glm::mat4(1);
-    glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1), EntityTest[0]->getScale());
-    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), EntityTest[0]->getPosition());
-    glm::mat4 RotationMatrix = glm::toMat4(EntityTest[0]->getRotation());
+    glm::mat4 Model = glm::mat4(1);glm::mat4 ScaleMatrix;glm::mat4 TranslationMatrix;glm::mat4 RotationMatrix;
+    for(int i =0; i <2; ++i){
+    shader->Use();
+    this->SetUniforms(shader, EntityTest[i]->getPosition(), EntityTest[i]->getScale(), EntityTest[i]->getRotation());
+    ScaleMatrix = glm::scale(glm::mat4(1), EntityTest[i]->getScale());
+    TranslationMatrix = glm::translate(glm::mat4(1), EntityTest[i]->getPosition());
+    RotationMatrix = glm::toMat4(EntityTest[i]->getRotation());
     Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
 
     BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), Model);
-    visible = BSPMap->Frustum.BoxInFrustum(EntityTest[0]->getBoundingBox());
+    //visible = BSPMap->Frustum.BoxInFrustum(EntityTest[0]->getBoundingBox());
 
-    // cout << "Visible: " << visible << endl;
-
-    if(visible)
-    {
-        EntityTest[0]->Update();
+    //if(visible)
+    //{
+    EntityTest[i]->Update();
+    //}
+    //else
+    //{
+    //cout << "no visible" << endl;
+    //}
     }
-    else
-    {
-        //cout << "no visible" << endl;
-    }
-
-    Shaders["Main"]->Use();
-    this->SetUniforms(Shaders["Main"], rM->getModelPosition("models/lee-perry-smith-head-scan2.eml"), rM->getModelScale("models/lee-perry-smith-head-scan2.eml"), rM->getModelRotation("models/lee-perry-smith-head-scan2.eml"));
+    shader->Use();
+    this->SetUniforms(shader, rM->getModelPosition("models/barrel.eml"), rM->getModelScale("models/barrel.eml"), rM->getModelRotation("models/barrel.eml"));
     Model = glm::mat4(1);
-    ScaleMatrix = glm::scale(glm::mat4(), rM->getModelScale("models/lee-perry-smith-head-scan2.eml"));
-    TranslationMatrix = glm::translate(glm::mat4(), rM->getModelPosition("models/lee-perry-smith-head-scan2.eml"));
-    RotationMatrix = glm::toMat4(glm::normalize(rM->getModelRotation("models/lee-perry-smith-head-scan2.eml")));
+    ScaleMatrix = glm::scale(glm::mat4(), rM->getModelScale("models/barrel.eml"));
+    TranslationMatrix = glm::translate(glm::mat4(), rM->getModelPosition("models/barrel.eml"));
+    RotationMatrix = glm::toMat4(glm::normalize(rM->getModelRotation("models/barrel.eml")));
     Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
     BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), Model);
 
-    visible = BSPMap->Frustum.BoxInFrustum(rM->getModelBoundingBox("models/lee-perry-smith-head-scan2.eml"));
+    visible = BSPMap->Frustum.BoxInFrustum(rM->getModelBoundingBox("models/barrel.eml"));
     //cout << "Visible: " << visible << endl;
     if(visible)
     {
-        rM->useModel("models/lee-perry-smith-head-scan2.eml", Shaders["Main"]);
+        rM->useModel("models/barrel.eml", shader);
     }
     else
     {
-        //cout << "no visible" << endl;
+        // cout << "no visible" << endl;
     }
 
-    Shaders["Main"]->Use();
-    this->SetUniforms(Shaders["Main"],rM->getModelPosition("models/buddha.eml"), rM->getModelScale("models/buddha.eml"),  rM->getModelRotation("models/buddha.eml"));
+    shader->Use();
+    this->SetUniforms(shader,rM->getModelPosition("models/Rock_6.eml"), rM->getModelScale("models/Rock_6.eml"),  rM->getModelRotation("models/Rock_6.eml"));
     Model = glm::mat4();
-    ScaleMatrix = glm::scale(glm::mat4(), rM->getModelScale("models/buddha.eml"));
-    TranslationMatrix = glm::translate(glm::mat4(),rM->getModelPosition("models/buddha.eml"));
-    RotationMatrix = glm::toMat4(glm::normalize(rM->getModelRotation("models/buddha.eml")));
+    ScaleMatrix = glm::scale(glm::mat4(), rM->getModelScale("models/Rock_6.eml"));
+    TranslationMatrix = glm::translate(glm::mat4(),rM->getModelPosition("models/Rock_6.eml"));
+    RotationMatrix = glm::toMat4(glm::normalize(rM->getModelRotation("models/Rock_6.eml")));
     Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
     BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), Model);
 
-    visible = BSPMap->Frustum.BoxInFrustum(rM->getModelBoundingBox("models/buddha.eml"));
+    visible = BSPMap->Frustum.BoxInFrustum(rM->getModelBoundingBox("models/Rock_6.eml"));
     if(visible)
     {
-        rM->useModel("models/buddha.eml", Shaders["Main"]);
+        rM->useModel("models/Rock_6.eml", shader);
     }
     else
     {
         //cout << "no visible" << endl;
     }
 
-    Shaders["Main"]->Use();
-    this->SetUniforms(Shaders["Main"],rM->getModelPosition("models/DRAGON.eml"), rM->getModelScale("models/DRAGON.eml"),  rM->getModelRotation("models/DRAGON.eml"));
-    Model = glm::mat4();
-    ScaleMatrix = glm::scale(glm::mat4(), rM->getModelScale("models/DRAGON.eml"));
-    TranslationMatrix = glm::translate(glm::mat4(),rM->getModelPosition("models/DRAGON.eml"));
-    RotationMatrix = glm::toMat4(glm::normalize(rM->getModelRotation("models/DRAGON.eml")));
-    Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
-    BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), Model);
+    for(int i = 0; i < 3 ; i++)
+    {
+        for(int j = 0; j < 3 ; j++)
+        {
+            shader->Use();
+            this->SetUniforms(shader,rM->getModelPosition("models/Tree.eml") + glm::vec3(i*30, 0.0, j * 25), rM->getModelScale("models/Tree.eml"),  rM->getModelRotation("models/Tree.eml"));
+            Model = glm::mat4();
+            ScaleMatrix = glm::scale(glm::mat4(), rM->getModelScale("models/Tree.eml"));
+            TranslationMatrix = glm::translate(glm::mat4(),rM->getModelPosition("models/Tree.eml") + glm::vec3(i*30, 0.0, j*25));
+            RotationMatrix = glm::toMat4(glm::normalize(rM->getModelRotation("models/Tree.eml")));
+            Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
+            BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), Model);
 
-    visible = BSPMap->Frustum.BoxInFrustum(rM->getModelBoundingBox("models/DRAGON.eml"));
-    if(visible)
-    {
-        rM->useModel("models/DRAGON.eml", Shaders["Main"]);
-    }
-    else
-    {
-        //cout << "no visible" << endl;
+            visible = BSPMap->Frustum.BoxInFrustum(rM->getModelBoundingBox("models/Tree.eml"));
+            if(visible)
+            {
+                rM->useModel("models/Tree.eml", shader);
+            }
+            else
+            {
+                //cout << "no visible" << endl;
+            }
+        }
     }
 
     glCullFace(GL_FRONT);
@@ -302,15 +337,17 @@ void Epsilon::Render3D(int clip)
     glm::mat4 sModel = glm::scale(glm::mat4(), glm::vec3(0.1, 0.1, 0.1));
     BSPmodel = sModel;
     BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), BSPmodel);
-    Shaders["Main"]->Use();
-    this->SetUniforms(Shaders["Main"],  glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.1, 0.1, 0.1), glm::quat(0,0,0,0));
-    BSPMap->RenderLevel(eCamera->getPosition(), Shaders["Main"]->getProgramID(), true);
+    shader->Use();
+    this->SetUniforms(shader,  glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.1, 0.1, 0.1), glm::quat(0,0,0,0));
+    BSPMap->RenderLevel(eCamera->getPosition(), shader->getProgramID(), true);
 
     Shaders["MD5Geometry"]->Use();
     glUniformMatrix4fv(glGetUniformLocation(Shaders["MD5Geometry"]->getProgramID(), "mSkinned"), 150, GL_FALSE, &m_AnimModel->m_AnimatedBones[0][0][0]);
     this->SetUniforms(Shaders["MD5Geometry"], glm::vec3(mpos,0.75,5.5), glm::vec3(0.2, 0.2, 0.2), glm::quat(-1.0, 1.0, 0.0, 0.0));
     m_AnimModel->Render(Shaders["MD5Geometry"]->getProgramID());
     glCullFace(GL_BACK);
+
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 }
 
@@ -320,22 +357,28 @@ void Epsilon::Render3D()
                 Shaders["ShadowMapping"]->Use();
                 this->SetUniforms(Shaders["ShadowMapping"], glm::vec3(190,-40,10), glm::vec3(1,1,1), glm::quat(-1, 0, -1, 0) );
                 terrain->RenderTerrain(Shaders["ShadowMapping"]);
-    */
+    */for(int i =0; i <2; ++i){
     Shaders["ShadowMapping"]->Use();
-    this->SetUniforms(Shaders["ShadowMapping"], EntityTest[0]->getPosition(), EntityTest[0]->getScale(), EntityTest[0]->getRotation());
+    this->SetUniforms(Shaders["ShadowMapping"], EntityTest[i]->getPosition(), EntityTest[i]->getScale(), EntityTest[i]->getRotation());
     rM->useModel("models/esfera.eml", Shaders["ShadowMapping"]);
+    }
+    Shaders["ShadowMapping"]->Use();
+    this->SetUniforms(Shaders["ShadowMapping"], rM->getModelPosition("models/barrel.eml"), rM->getModelScale("models/barrel.eml"), rM->getModelRotation("models/barrel.eml"));
+    rM->useModel("models/barrel.eml", Shaders["ShadowMapping"]);
 
     Shaders["ShadowMapping"]->Use();
-    this->SetUniforms(Shaders["ShadowMapping"], rM->getModelPosition("models/lee-perry-smith-head-scan2.eml"), rM->getModelScale("models/lee-perry-smith-head-scan2.eml"), rM->getModelRotation("models/lee-perry-smith-head-scan2.eml"));
-    rM->useModel("models/lee-perry-smith-head-scan2.eml", Shaders["ShadowMapping"]);
+    this->SetUniforms(Shaders["ShadowMapping"], rM->getModelPosition("models/Rock_6.eml"), rM->getModelScale("models/Rock_6.eml"), rM->getModelRotation("models/Rock_6.eml"));
+    rM->useModel("models/Rock_6.eml", Shaders["ShadowMapping"]);
 
-    Shaders["ShadowMapping"]->Use();
-    this->SetUniforms(Shaders["ShadowMapping"], rM->getModelPosition("models/buddha.eml"), rM->getModelScale("models/buddha.eml"), rM->getModelRotation("models/buddha.eml"));
-    rM->useModel("models/buddha.eml", Shaders["ShadowMapping"]);
-
-    Shaders["ShadowMapping"]->Use();
-    this->SetUniforms(Shaders["ShadowMapping"], rM->getModelPosition("models/DRAGON.eml"), rM->getModelScale("models/DRAGON.eml"), rM->getModelRotation("models/DRAGON.eml"));
-    rM->useModel("models/DRAGON.eml", Shaders["ShadowMapping"]);
+    for(int i = 0; i < 3 ; i++)
+    {
+        for(int j = 0; j < 3 ; j++)
+        {
+            Shaders["ShadowMapping"]->Use();
+            this->SetUniforms(Shaders["ShadowMapping"], rM->getModelPosition("models/Tree.eml")+ glm::vec3(i*30, 0.0, j * 25), rM->getModelScale("models/Tree.eml"), rM->getModelRotation("models/Tree.eml"));
+            rM->useModel("models/Tree.eml", Shaders["ShadowMapping"]);
+        }
+    }
 
     glDisable(GL_CULL_FACE);
     glm::mat4 BSPmodel = glm::mat4();
@@ -361,6 +404,7 @@ void Epsilon::Render3D()
                     grass.at(0).Render(Shaders["MD5ShadowMapping"]);
                     }
         */
+    Shaders["MD5ShadowMapping"]->Free();
     glEnable(GL_CULL_FACE);
 }
 
@@ -391,7 +435,7 @@ void Epsilon::SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, 
     glUniformMatrix3fv(glGetUniformLocation(shader->getProgramID(), "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
 
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "LightDirection"), sun->Direction.x, sun->Direction.y, sun->Direction.z);
-
+    glUniform4f(glGetUniformLocation(shader->getProgramID(), "clipplane"), 0.0, this->waterPlane->getActiveClip(), 0.0, this->waterPlane->position.y+2);
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "viewPos"),  eCamera->getPosition().x, eCamera->getPosition().y, eCamera->getPosition().z);
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "viewDir"),  eCamera->getDirection().x, eCamera->getDirection().y, eCamera->getDirection().z);
     glUniform1f(glGetUniformLocation(shader->getProgramID(), "time"),  glfwGetTime());
@@ -405,17 +449,39 @@ void Epsilon::SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, 
 
 void Epsilon::Render2D(void)
 {
-/*
-    this->text->RenderText("Epsilon Engine Alpha Developer Build. Build: " + Helpers::intTostring(AutoVersion::BUILD), 0.01, 0.97, 0.3, glm::vec3(1,1,1));
+    //btCollisionWorld::ClosestRayResultCallback RayCallback(btVector3(eCamera->getPosition().x, eCamera->getPosition().y, eCamera->getPosition().z), btVector3(eCamera->getDirection().x * 1000, eCamera->getDirection().y * 1000, eCamera->getDirection().z * 1000));
+    //rM->m_PhysicsWorld->world->rayTest(btVector3(eCamera->getPosition().x, eCamera->getPosition().y, eCamera->getPosition().z), btVector3(eCamera->getDirection().x * 1000, eCamera->getDirection().y * 1000, eCamera->getDirection().z * 1000), RayCallback);
+    /*if(RayCallback.hasHit())
+    {
+        try{
+            rM->m_PhysicsWorld->RayCast(btVector3(eCamera->getPosition().x, eCamera->getPosition().y, eCamera->getPosition().z), btVector3(eCamera->getDirection().x * 1000, eCamera->getDirection().y * 1000, eCamera->getDirection().z * 1000));
+        }
+        catch(...)
+        {
+            throw;
+        }
+
+    }
+    else
+    {
+        this->text->RenderText(std::string("Pointing at: Skybox"), 0.01, 0.83, 0.3, glm::vec3(1,0,0));
+    }*/
+
+    std::string obj = rM->m_PhysicsWorld->RayCollision(btVector3(eCamera->getPosition().x, eCamera->getPosition().y, eCamera->getPosition().z),
+                                btVector3(eCamera->getDirection().x * 1000, eCamera->getDirection().y * 1000, eCamera->getDirection().z * 1000));
+
+    this->text->RenderText(std::string("Pointing at: ") + obj , 0.01, 0.83, 0.3, glm::vec3(1,0,0));
+
+    //this->text->RenderText("Epsilon Engine Alpha Developer Build. Build: " + Helpers::intTostring(AutoVersion::BUILD), 0.01, 0.97, 0.3, glm::vec3(1,1,1));
     //this->text->RenderText("Speed: " + floatTostring(eCamera->MovementSpeed), 0.01, 0.95, 0.3, glm::vec3(1,1,1));
-    this->text->RenderText
-    ("Position: x = " + Helpers::floatTostring(this->eCamera->getPosition().x) + " y = " + Helpers::floatTostring(this->eCamera->getPosition().y) + " z = " + Helpers::floatTostring(this->eCamera->getPosition().z), 0.01, 0.93, 0.3, glm::vec3(1,1,1));
+    //this->text->RenderText
+    //("Position: x = " + Helpers::floatTostring(this->eCamera->getPosition().x) + " y = " + Helpers::floatTostring(this->eCamera->getPosition().y) + " z = " + Helpers::floatTostring(this->eCamera->getPosition().z), 0.01, 0.93, 0.3, glm::vec3(1,1,1));
     //this->text->RenderText(std::string(normal ? "Normal Mapping: ON" : "Normal Mapping: OFF"),0.01, 0.91, 0.3, glm::vec3(1,1,1));
-    this->text->RenderText("Frame Time: " + Helpers::floatTostring(frametime*1000) + "ms", 0.01, 0.89, 0.3, glm::vec3(1,1,1));
-    this->text->RenderText("FPS: " + Helpers::intTostring(fps), 0.01, 0.87, 0.3, glm::vec3(1,1,1));
+    //this->text->RenderText("Frame Time: " + Helpers::floatTostring(frametime*1000) + "ms", 0.01, 0.89, 0.3, glm::vec3(1,1,1));
+    //this->text->RenderText("FPS: " + Helpers::intTostring(fps), 0.01, 0.87, 0.3, glm::vec3(1,1,1));
     //this->text->RenderText("SSAO: " + std::string(SSAO ? "ON" : "OFF"),0.01, 0.85, 0.3, glm::vec3(1,1,1));
     //this->text->RenderText("Parallax Mapping: " + std::string(parallax ? "ON" : "OFF"),0.01, 0.83, 0.3, glm::vec3(1,1,1));
-*/
+
 }
 
 void Epsilon::Clock()
@@ -434,6 +500,8 @@ void Epsilon::Clock()
     eventtime += 1 * frametime;
     //cout << eventtime << endl;
     sun->Update();
+
+    rM->timestep = frametime;
 }
 
 void Epsilon::RenderSkybox(bool state)
@@ -507,6 +575,8 @@ void Epsilon::MainLoop(void)
 
         rM->m_PhysicsWorld->Update(frametime);
 
+        ComputeWater();
+
         this->ComputeShadow();
 
         this->ProcessFrame();
@@ -536,12 +606,16 @@ void Epsilon::ComputeWater(void)
     /**
         Render Reflection to Texture
     */
+    glEnable(GL_CLIP_PLANE0);
+    glEnable(GL_CLIP_DISTANCE0);
+
     this->waterPlane->GenerateReflection(this->eCamera);
     float distance = 2 * (this->eCamera->getPosition().y - this->waterPlane->position.y);
     this->eCamera->setPosition(glm::vec3(this->eCamera->getPosition().x, this->eCamera->getPosition().y - distance, this->eCamera->getPosition().z));
     this->eCamera->setDirection(glm::vec3(this->eCamera->getDirection().x, this->eCamera->getDirection().y * -1, this->eCamera->getDirection().z));
     this->eCamera->UpdateMatrices();
-    this->Render3D(-1);
+    this->waterPlane->setActiveClip(1);
+    this->Render3D(Shaders["ForwardShader"]);
     this->RenderSkybox(false);
     this->eCamera->setPosition(glm::vec3(this->eCamera->getPosition().x, this->eCamera->getPosition().y + distance, this->eCamera->getPosition().z));
     this->eCamera->setDirection(glm::vec3(this->eCamera->getDirection().x, this->eCamera->getDirection().y * -1, this->eCamera->getDirection().z));
@@ -550,11 +624,15 @@ void Epsilon::ComputeWater(void)
     /**
         Render Refraction to Texture
     */
+
     this->waterPlane->GenerateRefraction(this->eCamera);
     this->eCamera->UpdateMatrices();
-    this->Render3D(1);
+    this->waterPlane->setActiveClip(-1);
+    this->Render3D(Shaders["ForwardShader"]);
     this->RenderSkybox(false);
     this->waterPlane->FinishWatercomputation();
+    glDisable(GL_CLIP_PLANE0);
+    glDisable(GL_CLIP_DISTANCE0);
 
 }
 
@@ -584,7 +662,18 @@ void Epsilon::ProcessFrame(void)
     PP->beginOffScreenrendering();
 
     this->RenderSkybox(true);
-    this->Render3D(0);
+
+    Shaders["grass"]->Use();
+    this->SetUniforms(Shaders["grass"], glm::vec3(-512, -10, 512), glm::vec3(1,1,1), glm::quat(-1, 0, -1, 0) );
+    grass.at(0).Render(Shaders["grass"]);
+
+    Shaders["grass"]->Use();
+    this->SetUniforms(Shaders["grass"], glm::vec3(-512, -10, 512), glm::vec3(1,1,1), glm::quat(-1, 0, -1, 0) );
+    grass.at(1).Render(Shaders["grass"]);
+
+    this->Render3D(Shaders["Main"]);
+    this->waterPlane->RenderWater(eCamera, sun->Direction);
+
 
     if(this->SSAO)
         PP->applySSAO(this->eCamera);

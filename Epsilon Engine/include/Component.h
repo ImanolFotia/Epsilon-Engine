@@ -25,10 +25,14 @@ public:
     virtual void Fill(bool HasHealth, bool HasGun) = 0;
     virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader) = 0;
     virtual void Fill(float mass, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer) = 0;
+
+    virtual void setUserPointer(void *userPointer){}
+
     virtual void Update(std::shared_ptr<ResourceManager> rm) = 0;
 
     COMPONENT_TYPE Type;
     btVector3 m_PhysicsWorldPosition;
+    btVector3 m_LastPhysicsWorldPosition;
     btVector3 m_PhysicsWorldScale;
     btQuaternion m_PhysicsWorldRotation;
 };
@@ -109,6 +113,7 @@ public:
         RigidBodyPointer = PhysicBodyPointer;
 
         m_PhysicsWorldPosition = RigidBodyPointer->Body->getCenterOfMassPosition();
+        m_LastPhysicsWorldPosition = m_PhysicsWorldPosition;
         m_PhysicsWorldRotation = RigidBodyPointer->Body->getOrientation();
     }
     float Mass;
@@ -117,8 +122,21 @@ public:
 
     void Update(std::shared_ptr<ResourceManager> rm)
     {
+
         m_PhysicsWorldPosition = RigidBodyPointer->Body->getCenterOfMassPosition();
+
+        glm::vec3 pos  = mix(glm::vec3(m_LastPhysicsWorldPosition.getX(), m_LastPhysicsWorldPosition.getY(), m_LastPhysicsWorldPosition.getZ()),
+                                     glm::vec3(m_PhysicsWorldPosition.getX(), m_PhysicsWorldPosition.getY(), m_PhysicsWorldPosition.getZ()),
+                                     rm->timestep*10);
+
+        m_PhysicsWorldPosition = btVector3(pos.x, pos.y, pos.z);
+        m_LastPhysicsWorldPosition = m_PhysicsWorldPosition;
         m_PhysicsWorldRotation = RigidBodyPointer->Body->getOrientation();
+    }
+
+    virtual void setUserPointer(void* userPointer)
+    {
+        RigidBodyPointer->Body->setUserPointer(userPointer);
     }
 
     /** Functions declared for the sake of pure virtual function polymorphism, must not be used for production*/

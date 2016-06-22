@@ -14,6 +14,7 @@
 #include <vector>
 #include <SOIL.h>
 #include <Physics.h>
+#include <Includes.h>
 
 class ResourceManager;
 
@@ -30,7 +31,7 @@ class BSPFace
 public:
     BSPFace()
     {
-
+        collinfo = (std::shared_ptr<Physics::CollisionInfo>) new Physics::CollisionInfo();
     }
 
     virtual ~BSPFace()
@@ -70,6 +71,18 @@ public:
         glBindVertexArray(0);
 
     }
+
+public:
+
+    std::string ObjectID;
+
+    int faceID;
+    std::string getObjectID()
+    {
+        return ObjectID;
+    }
+
+    std::shared_ptr<btRigidBody> rigidBody;
 
 private:
 
@@ -183,16 +196,15 @@ private:
         return true;
     }
 
+
 private:
 
     GLuint VAO;
 
-    int faceID;
     GLuint texture;
     string imagePath;
     tBSPLightmap LightMap;
     GLuint LightMaptexture;
-
     std::shared_ptr<Physics::PhysicObject> CollisionObject;
     std::shared_ptr<ResourceManager> resm;
     std::vector<glm::vec3> Vertices;
@@ -202,6 +214,7 @@ private:
     std::vector<glm::vec3> Tangents;
     std::vector<glm::vec3> Bitangents;
     std::vector<unsigned int> Indices;
+    std::shared_ptr<Physics::CollisionInfo> collinfo;
 
 };
 

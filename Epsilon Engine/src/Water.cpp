@@ -115,7 +115,7 @@ void Water::LoadTextures(void)
 
 void Water::LoadShaders(void)
 {
-    shader = new Shader("shaders/water.vglsl", "shaders/water.fglsl");
+    shader = (std::shared_ptr<Shader>) new Shader("shaders/water.vglsl", "shaders/water.fglsl");
 }
 
 void Water::CreateReflectionFBO(void)
@@ -124,7 +124,7 @@ void Water::CreateReflectionFBO(void)
     glBindFramebuffer(GL_FRAMEBUFFER, reflectionFBO);
     glGenTextures(1, &reflectionTexture);
     glBindTexture(GL_TEXTURE_2D, reflectionTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB16F, ReflectionResoulution, ReflectionResoulution, 0,GL_RGB, GL_UNSIGNED_BYTE, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB16F, ReflectionResoulution, ReflectionResoulution, 0,GL_RGB, GL_FLOAT, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glGenRenderbuffers(1, &reflectionRBO);
@@ -132,6 +132,8 @@ void Water::CreateReflectionFBO(void)
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, ReflectionResoulution, ReflectionResoulution);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, reflectionRBO);
     glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, reflectionTexture, 0);
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        std::cout << "Framebuffer not complete!" << std::endl;
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -161,6 +163,8 @@ void Water::CreateRefractionFBO(void)
 
     GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
     glDrawBuffers(1, DrawBuffers);
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        std::cout << "Framebuffer not complete!" << std::endl;
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -168,19 +172,17 @@ void Water::CreateRefractionFBO(void)
 void Water::GenerateReflection(std::unique_ptr<Camera>& cam)
 {
     GenerateModelViewProjection(cam);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glBindFramebuffer(GL_FRAMEBUFFER, reflectionFBO);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0,0,ReflectionResoulution, ReflectionResoulution);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Water::GenerateRefraction(std::unique_ptr<Camera>& cam)
 {
     GenerateModelViewProjection(cam);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glBindFramebuffer(GL_FRAMEBUFFER, refractionFBO);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0,0,RefractionResoulution, RefractionResoulution);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Water::GeneratevertexArray()

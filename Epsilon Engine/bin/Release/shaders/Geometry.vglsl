@@ -23,6 +23,7 @@ uniform sampler2D texture_normal;
 uniform sampler2D texture_height;
 uniform samplerCube skybox;
 
+uniform vec4 clipplane;
 
 vec3 T;
 vec3 B;
@@ -39,6 +40,7 @@ mat3 CreateTBNMatrix(mat3 normalMatrix)
 void main()
 {
   vec4 worldPos = model * vec4(position, 1.0);
+  gl_ClipDistance[0] = dot(worldPos, clipplane);
   vec4 viewPos = view * worldPos;
   FragPos = viewPos.xyz;
   wFragPos = worldPos.xyz;

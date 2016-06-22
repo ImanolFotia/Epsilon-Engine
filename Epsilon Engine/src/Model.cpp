@@ -86,11 +86,22 @@ bool Model::loadModel(string emlPath, int a)
     }
     std::cout << "Num of meshes: " << numMeshes << std::endl;
 
+
+
+    MinMaxPoints.MAX_X = l_vertices[l_meshes[0].mFirstVertex].position.x;
+    MinMaxPoints.MAX_Y = l_vertices[l_meshes[0].mFirstVertex].position.y;
+    MinMaxPoints.MAX_Z = l_vertices[l_meshes[0].mFirstVertex].position.z;
+
+    MinMaxPoints.MIN_X = l_vertices[l_meshes[0].mFirstVertex].position.x;
+    MinMaxPoints.MIN_Y = l_vertices[l_meshes[0].mFirstVertex].position.y;
+    MinMaxPoints.MIN_Z = l_vertices[l_meshes[0].mFirstVertex].position.z;
+
     for(int i = 0; i < numMeshes; ++i)
     {
         std::vector<t_Vertex> tmpVertVector;
         std::vector<unsigned int> tmpIndicesVector;
         std::vector<Texture> tmpTexturesVector;
+
 
         for(int j = 0; j < l_meshes[i].mNumVertices; ++j)
         {
@@ -98,7 +109,7 @@ bool Model::loadModel(string emlPath, int a)
 
 
             if(l_vertices[l_meshes[i].mFirstVertex + j].position.x > MinMaxPoints.MAX_X)
-                MinMaxPoints.MAX_X = l_vertices[l_meshes[i].mFirstVertex + j].position.x;
+            MinMaxPoints.MAX_X = l_vertices[l_meshes[i].mFirstVertex + j].position.x;
             if(l_vertices[l_meshes[i].mFirstVertex + j].position.y > MinMaxPoints.MAX_Y)
                 MinMaxPoints.MAX_Y = l_vertices[l_meshes[i].mFirstVertex + j].position.y;
             if(l_vertices[l_meshes[i].mFirstVertex + j].position.z > MinMaxPoints.MAX_Z)

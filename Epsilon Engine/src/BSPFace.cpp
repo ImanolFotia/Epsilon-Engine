@@ -12,6 +12,8 @@ bool BSPFace::BuildFace(std::vector<glm::vec3> Vertices, std::vector<glm::vec3> 
     this->Indices = Indices;
     this->Normals = Normals;
     this->faceID = ID;
+    this->ObjectID = "BSPFace_" + Helpers::intTostring(ID);
+    std::cout << this->ObjectID << std::endl;
     this->imagePath = imagePath;
     this->imagePath = this->imagePath;
     this->LightMap = LightMap;
@@ -22,9 +24,15 @@ bool BSPFace::BuildFace(std::vector<glm::vec3> Vertices, std::vector<glm::vec3> 
 
     std::shared_ptr<Physics::TriangleMeshPhysicObject> ph = (std::shared_ptr<Physics::TriangleMeshPhysicObject>) new Physics::TriangleMeshPhysicObject();
 
-    btRigidBody* rigidBody = ph->addObject(this->Vertices, this->Indices, 0.1).get();
+    rigidBody = nullptr;
 
-    resm->m_PhysicsWorld->world->addRigidBody(rigidBody);
+    rigidBody = ph->addObject(this->Vertices, this->Indices, 0.1);
+
+    collinfo->setName(this->ObjectID);
+
+    ph->Body->setUserPointer(collinfo.get());
+
+    resm->m_PhysicsWorld->world->addRigidBody(rigidBody.get());
 
     this->CollisionObject = ph;
 

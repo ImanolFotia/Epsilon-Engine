@@ -23,7 +23,7 @@ void main()
   FragColor.rgb = HDR(SunTexture.xyz * 1.0);
   FragColor.a = SunTexture.a;
   blurImage = vec4(FragColor);
-  gPosition.a = 1.0f;
+  gPosition.a = 1000000000.0f;
 
 
 }

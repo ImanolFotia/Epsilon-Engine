@@ -8,15 +8,42 @@ Physics::Physics()
     collisionConfig = (std::shared_ptr<btCollisionConfiguration>) (new btDefaultCollisionConfiguration());
     dispatcher = (std::shared_ptr<btDispatcher>) (new btCollisionDispatcher(collisionConfig.get()));
     broadphase = (std::shared_ptr<btBroadphaseInterface>) (new btDbvtBroadphase());
-    solver = (std::shared_ptr<btConstraintSolver>) (new btSequentialImpulseConstraintSolver());
-    world = (std::shared_ptr<btDynamicsWorld>) (new btDiscreteDynamicsWorld(dispatcher.get(),broadphase.get(),solver.get(),collisionConfig.get()));
+    solver = (std::shared_ptr<btSequentialImpulseConstraintSolver>) (new btMultiBodyConstraintSolver());
+    world = (std::shared_ptr<btDiscreteDynamicsWorld>) (new btDiscreteDynamicsWorld(dispatcher.get(),broadphase.get(),solver.get(),collisionConfig.get()));
 
     world->setGravity(btVector3(0,GRAVITY,0));    //gravity on Earth
 }
 
 void Physics::Update(float deltaTime)
 {
-    world->stepSimulation(deltaTime, 15);
+      world->stepSimulation(deltaTime, 1);
+}
+
+std::string Physics::RayCollision(btVector3 rayPosition, btVector3 rayTarget)
+{
+    btVector3 target =  btVector3(rayTarget.getX() * 1000, rayTarget.getY() * 1000, rayTarget.getZ() * 1000);
+    btCollisionWorld::ClosestRayResultCallback RayCallback(rayPosition, target);
+    world->rayTest(rayPosition, target, RayCallback);
+    if(RayCallback.hasHit())
+    {
+        try{
+        void *var;
+        var =  RayCallback.m_collisionObject->getUserPointer();
+        if(var == nullptr)
+            return "";
+
+        CollisionInfo* CollInfo;
+        CollInfo = reinterpret_cast<CollisionInfo*>(var);
+        return CollInfo->getName();
+        }
+        catch(...)
+        {
+            throw;
+        }
+    }
+    else
+        return "Skybox";
+
 }
 
 std::shared_ptr<btRigidBody> CubePhysicObject::addObject(glm::vec3  Position , float  Mass , MIN_MAX_POINTS minmaxpoints, float scale)

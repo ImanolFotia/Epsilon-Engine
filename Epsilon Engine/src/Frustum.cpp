@@ -286,14 +286,14 @@ bool CFrustum::BoxInFrustum( float x, float y, float z, float x2, float y2, floa
     /// like is not in the frustum.
     for(int i = 0; i < 6; i++ )
     {
-        if(m_Frustum[i][A] * x  + m_Frustum[i][B] * y  + m_Frustum[i][C] * z  + m_Frustum[i][D] >= 0)  continue;
-        if(m_Frustum[i][A] * x2 + m_Frustum[i][B] * y  + m_Frustum[i][C] * z  + m_Frustum[i][D] >= 0)  continue;
-        if(m_Frustum[i][A] * x  + m_Frustum[i][B] * y2 + m_Frustum[i][C] * z  + m_Frustum[i][D] >= 0)  continue;
-        if(m_Frustum[i][A] * x2 + m_Frustum[i][B] * y2 + m_Frustum[i][C] * z  + m_Frustum[i][D] >= 0)  continue;
-        if(m_Frustum[i][A] * x  + m_Frustum[i][B] * y  + m_Frustum[i][C] * z2 + m_Frustum[i][D] >= 0)  continue;
-        if(m_Frustum[i][A] * x2 + m_Frustum[i][B] * y  + m_Frustum[i][C] * z2 + m_Frustum[i][D] >= 0)  continue;
-        if(m_Frustum[i][A] * x  + m_Frustum[i][B] * y2 + m_Frustum[i][C] * z2 + m_Frustum[i][D] >= 0)  continue;
-        if(m_Frustum[i][A] * x2 + m_Frustum[i][B] * y2 + m_Frustum[i][C] * z2 + m_Frustum[i][D] >= 0)  continue;
+        if(m_Frustum[i][A] * x  + m_Frustum[i][B] * y  + m_Frustum[i][C] * z  + m_Frustum[i][D] > 0)  continue;
+        if(m_Frustum[i][A] * x2 + m_Frustum[i][B] * y  + m_Frustum[i][C] * z  + m_Frustum[i][D] > 0)  continue;
+        if(m_Frustum[i][A] * x  + m_Frustum[i][B] * y2 + m_Frustum[i][C] * z  + m_Frustum[i][D] > 0)  continue;
+        if(m_Frustum[i][A] * x2 + m_Frustum[i][B] * y2 + m_Frustum[i][C] * z  + m_Frustum[i][D] > 0)  continue;
+        if(m_Frustum[i][A] * x  + m_Frustum[i][B] * y  + m_Frustum[i][C] * z2 + m_Frustum[i][D] > 0)  continue;
+        if(m_Frustum[i][A] * x2 + m_Frustum[i][B] * y  + m_Frustum[i][C] * z2 + m_Frustum[i][D] > 0)  continue;
+        if(m_Frustum[i][A] * x  + m_Frustum[i][B] * y2 + m_Frustum[i][C] * z2 + m_Frustum[i][D] > 0)  continue;
+        if(m_Frustum[i][A] * x2 + m_Frustum[i][B] * y2 + m_Frustum[i][C] * z2 + m_Frustum[i][D] > 0)  continue;
 
         /// If we get here, it isn't in the frustum
         return false;
@@ -310,14 +310,14 @@ bool CFrustum::BoxInFrustum( MIN_MAX_POINTS points)
     /// like is not in the frustum.
     for(int i = 0; i < 6; i++ )
     {
-        if(m_Frustum[i][A] * points.MIN_X + m_Frustum[i][B] * points.MIN_Y + m_Frustum[i][C] * points.MIN_Z + m_Frustum[i][D] >= 0)  continue;
-        if(m_Frustum[i][A] * points.MAX_X + m_Frustum[i][B] * points.MIN_Y + m_Frustum[i][C] * points.MIN_Z + m_Frustum[i][D] >= 0)  continue;
-        if(m_Frustum[i][A] * points.MIN_X + m_Frustum[i][B] * points.MAX_Y + m_Frustum[i][C] * points.MIN_Z + m_Frustum[i][D] >= 0)  continue;
-        if(m_Frustum[i][A] * points.MAX_X + m_Frustum[i][B] * points.MAX_Y + m_Frustum[i][C] * points.MIN_Z + m_Frustum[i][D] >= 0)  continue;
-        if(m_Frustum[i][A] * points.MIN_X + m_Frustum[i][B] * points.MIN_Y + m_Frustum[i][C] * points.MAX_Z + m_Frustum[i][D] >= 0)  continue;
-        if(m_Frustum[i][A] * points.MAX_X + m_Frustum[i][B] * points.MIN_Y + m_Frustum[i][C] * points.MAX_Z + m_Frustum[i][D] >= 0)  continue;
-        if(m_Frustum[i][A] * points.MIN_X + m_Frustum[i][B] * points.MAX_Y + m_Frustum[i][C] * points.MAX_Z + m_Frustum[i][D] >= 0)  continue;
-        if(m_Frustum[i][A] * points.MAX_X + m_Frustum[i][B] * points.MAX_Y + m_Frustum[i][C] * points.MAX_Z + m_Frustum[i][D] >= 0)  continue;
+        if(m_Frustum[i][A] * points.MAX_X + m_Frustum[i][B] * points.MAX_Y + m_Frustum[i][C] * points.MAX_Z + m_Frustum[i][D] > 0)  continue;
+        if(m_Frustum[i][A] * points.MIN_X + m_Frustum[i][B] * points.MAX_Y + m_Frustum[i][C] * points.MAX_Z + m_Frustum[i][D] > 0)  continue;
+        if(m_Frustum[i][A] * points.MAX_X + m_Frustum[i][B] * points.MIN_Y + m_Frustum[i][C] * points.MAX_Z + m_Frustum[i][D] > 0)  continue;
+        if(m_Frustum[i][A] * points.MIN_X + m_Frustum[i][B] * points.MIN_Y + m_Frustum[i][C] * points.MAX_Z + m_Frustum[i][D] > 0)  continue;
+        if(m_Frustum[i][A] * points.MAX_X + m_Frustum[i][B] * points.MAX_Y + m_Frustum[i][C] * points.MIN_Z + m_Frustum[i][D] > 0)  continue;
+        if(m_Frustum[i][A] * points.MIN_X + m_Frustum[i][B] * points.MAX_Y + m_Frustum[i][C] * points.MIN_Z + m_Frustum[i][D] > 0)  continue;
+        if(m_Frustum[i][A] * points.MAX_X + m_Frustum[i][B] * points.MIN_Y + m_Frustum[i][C] * points.MIN_Z + m_Frustum[i][D] > 0)  continue;
+        if(m_Frustum[i][A] * points.MIN_X + m_Frustum[i][B] * points.MIN_Y + m_Frustum[i][C] * points.MIN_Z + m_Frustum[i][D] > 0)  continue;
 
         /// If we get here, it isn't in the frustum
         return false;

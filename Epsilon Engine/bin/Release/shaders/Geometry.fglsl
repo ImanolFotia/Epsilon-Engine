@@ -1,7 +1,7 @@
 #version 430 core
 
 layout(location = 0) out vec4 gAlbedoSpec;
-layout(location = 1) out vec4 gNormal;
+layout(location = 1) out vec3 gNormal;
 layout(location = 2) out vec4 gPosition;
 layout(location = 3) out vec3 gExpensiveNormal;
 layout(location = 4) out vec3 gWorldSpacePosition;
@@ -36,7 +36,6 @@ float LinearizeDepth(float depth)
 
 void main()
 {
-      
       if(texture(texture_diffuse, TexCoords).a < 0.3)
             discard;    
 
@@ -52,13 +51,12 @@ void main()
     vec3 I = normalize(wFragPos - viewPos);
     R = reflect(I, normalize(gExpensiveNormal));
     CubeMapcolor = textureLod(skybox, R, 0.0);
-    gAlbedoSpec.rgb = mix(CubeMapcolor.rgb, texture(texture_diffuse, TexCoords).rgb, clamp(metallic, 0.1, 1.0) );
+    gAlbedoSpec.rgb = mix(mix(CubeMapcolor.rgb, texture(texture_diffuse, TexCoords).rgb*0.3, 0.5), texture(texture_diffuse, TexCoords).rgb, clamp(metallic, 0.1, 1.0) );
   }
   else{
   gAlbedoSpec.rgb = texture(texture_diffuse, TexCoords).rgb;
 }
   gNormal.rgb = normalize(normalTexture * TBN2);
-  gNormal.a = gl_FragCoord.z;
   gPosition.rgb = FragPos;
   float Depth = LinearizeDepth(gl_FragCoord.z);
   gPosition.a = Depth;

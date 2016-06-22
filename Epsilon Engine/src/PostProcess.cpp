@@ -20,8 +20,8 @@ void PostProcess::SetupFramebuffer()
     ProgramData PG;
     width = PG.WINDOW_WIDTH;
     height = PG.WINDOW_HEIGHT;
-    this->SSAOwidth = width*0.65;
-    this->SSAOheight = height*0.65;
+    this->SSAOwidth = width*0.5;
+    this->SSAOheight = height*0.5;
     m_exposure = 1.5;
 
     std::uniform_real_distribution<GLfloat> randomFloatsz(-20.0f, 45.0f); // generates random floats between 0.0 and 1.0
@@ -38,6 +38,15 @@ void PostProcess::SetupFramebuffer()
     LightPositions.push_back(glm::vec3(82, 30.63, -59.3));
     LightPositions.push_back(glm::vec3(95.5, 15.21, -40.57));
 
+
+/*
+    LightPositions.push_back(glm::vec3(-41, 12.0, -23));
+    LightPositions.push_back(glm::vec3(-39, 10.3, 2));
+    LightPositions.push_back(glm::vec3(17.2, 17.3, -17));
+    LightPositions.push_back(glm::vec3(17, 17.3, 27));
+    LightPositions.push_back(glm::vec3(122.7, 13.63, 5.3));
+    LightPositions.push_back(glm::vec3(-14, 16.63, 32.3));
+    LightPositions.push_back(glm::vec3(80.5, 17.21, 1.57));*/
     /* MSAA buffer
         glGenFramebuffers(1, &hdrFBO);
         glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
@@ -150,6 +159,25 @@ void PostProcess::SetupGBuffer()
 {
     glGenFramebuffers(1, &gBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+
+    /// - Color + Specular color buffer
+    glGenTextures(1, &gAlbedoSpec);
+    glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_FLOAT, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gAlbedoSpec, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    /// - Normal color buffer
+
+    glGenTextures(1, &gNormal);
+    glBindTexture(GL_TEXTURE_2D, gNormal);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gNormal, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
     /// - Position color buffer
     glGenTextures(1, &gPositionDepth);
     glBindTexture(GL_TEXTURE_2D, gPositionDepth);
@@ -160,23 +188,7 @@ void PostProcess::SetupGBuffer()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gPositionDepth, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
-    /// - Normal color buffer
 
-    glGenTextures(1, &gNormal);
-    glBindTexture(GL_TEXTURE_2D, gNormal);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gNormal, 0);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    /// - Color + Specular color buffer
-    glGenTextures(1, &gAlbedoSpec);
-    glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_FLOAT, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gAlbedoSpec, 0);
-    glBindTexture(GL_TEXTURE_2D, 0);
     /// - Tell OpenGL which color attachments we'll use (of this framebuffer) for rendering
     glGenTextures(1, &gExpensiveNormal);
     glBindTexture(GL_TEXTURE_2D, gExpensiveNormal);
@@ -244,12 +256,12 @@ void PostProcess::setupSSAO()
     std::uniform_real_distribution<GLfloat> randomFloatsClamped(0.2, 1.0); // generates random floats between 0.0 and 1.0
     std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0); // generates random floats between 0.0 and 1.0
     std::default_random_engine generator;
-    for (GLuint i = 0; i < 32; ++i)
+    for (GLuint i = 0; i < 16; ++i)
     {
         glm::vec3 sample(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, randomFloatsClamped(generator));
         sample = glm::normalize(sample);
         sample *= randomFloats(generator);
-        GLfloat scale = GLfloat(i) / 32.0;
+        GLfloat scale = GLfloat(i) / 16.0;
 
         // Scale samples s.t. they're more aligned to center of kernel
         scale = lerp(0.1f, 1.0f, scale * scale);
@@ -291,7 +303,7 @@ void PostProcess::applySSAO(std::unique_ptr<Camera>& cam)
     glUniform1i(glGetUniformLocation(SSAO->getProgramID(), "texNoise"), 2);
     glBindTexture(GL_TEXTURE_2D, this->noiseTexture);
 
-    glUniform3fv(glGetUniformLocation(SSAO->getProgramID(), "samples"), 32, &ssaoKernel[0][0]);
+    glUniform3fv(glGetUniformLocation(SSAO->getProgramID(), "samples"), 16, &ssaoKernel[0][0]);
 
     glUniformMatrix4fv(glGetUniformLocation(SSAO->getProgramID(), "projection"), 1, GL_FALSE, &cam->getProjectionMatrix()[0][0]);
     glUniform1i(glGetUniformLocation(this->shader->getProgramID(), "width"), (float)width);
@@ -441,10 +453,6 @@ void PostProcess::ShowPostProcessImage(float exposure, GLuint ShadowMapID)
     glUniform1i(glGetUniformLocation(finalImage->getProgramID(), "blurredSampler"), 1);
     glBindTexture(GL_TEXTURE_2D, blurred);
 
-    glActiveTexture(GL_TEXTURE2);
-    glUniform1i(glGetUniformLocation(finalImage->getProgramID(), "ssaoColorBufferBlur"), 2);
-    glBindTexture(GL_TEXTURE_2D, this->ssaoColorBufferBlur);
-
     glUniform1f(glGetUniformLocation(finalImage->getProgramID(), "exposure"), exposure);
 
     this->RenderQuad();
@@ -458,20 +466,26 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::unique_ptr<Camera>& 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     this->shader->Use();
+
+
     glActiveTexture(GL_TEXTURE0);
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "gAlbedoSpec"), 0);
-    glBindTexture(GL_TEXTURE_2D, this->gAlbedoSpec);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "gPositionDepth"), 0);
+    glBindTexture(GL_TEXTURE_2D, this->gWorldSpacePosition);
 
     glActiveTexture(GL_TEXTURE1);
     glUniform1i(glGetUniformLocation(shader->getProgramID(), "gNormal"), 1);
     glBindTexture(GL_TEXTURE_2D, this->gExpensiveNormal);
 
     glActiveTexture(GL_TEXTURE2);
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "gPositionDepth"), 2);
-    glBindTexture(GL_TEXTURE_2D, this->gWorldSpacePosition);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "gAlbedoSpec"), 2);
+    glBindTexture(GL_TEXTURE_2D, this->gAlbedoSpec);
 
     glActiveTexture(GL_TEXTURE3);
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "shadowMap"), 3);
+    glUniform1i(glGetUniformLocation(finalImage->getProgramID(), "ssaoColorBufferBlur"), 3);
+    glBindTexture(GL_TEXTURE_2D, this->ssaoColorBufferBlur);
+
+    glActiveTexture(GL_TEXTURE4);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "shadowMap"), 4);
     glBindTexture(GL_TEXTURE_2D, shadowMap->getShadowTextureID());
 
     glUniform1i(glGetUniformLocation(this->shader->getProgramID(), "hdr"), hdr);

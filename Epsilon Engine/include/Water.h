@@ -24,7 +24,7 @@ public:
 
     Water(glm::vec3 position, float scale);
     virtual ~Water(){
-        delete shader;
+        std::cout << "Deleted Water" << std::endl;
     }
 
 public:
@@ -37,6 +37,16 @@ public:
 public:
     float scale;
     glm::vec3 position;
+
+    double getActiveClip()
+    {
+        return ActiveClip;
+    }
+
+    void setActiveClip(double t)
+    {
+        ActiveClip = t;
+    }
 
 private:
 
@@ -81,9 +91,10 @@ private:
     GLuint VBO;
     GLuint EBO;
 
-    Shader* shader;
+    std::shared_ptr<Shader> shader;
 
     glm::mat4 MVP;
+    double ActiveClip;
 
 };
 

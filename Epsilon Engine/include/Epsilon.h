@@ -11,7 +11,7 @@
 #define GLEW_STATIC
 #define GLFW_STATIC
 #include <GL/glew.h>
-
+#include <GL/gl.h>
 #include <GLFW/glfw3.h>
 
 #include <Texture.h>
@@ -70,7 +70,7 @@ private:
 
     void PollEvents(void);
 
-    void Render3D(int);
+    void Render3D(Shader*);
 
     void Render3D(void);
 
@@ -110,7 +110,8 @@ public:
     GLuint VertexArrayID;
     GLFWwindow* window = nullptr;
     std::unique_ptr<Text> text;
-    std::unique_ptr<Terrain> terrain;
+    std::unique_ptr<Text> text2;
+    std::shared_ptr<Terrain> terrain;
     std::shared_ptr<Sun> sun;
     std::unique_ptr<CQuake3BSP> BSPMap;
     std::unique_ptr<MD5Model> m_AnimModel;

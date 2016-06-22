@@ -23,8 +23,6 @@ Terrain::Terrain(const char* heightMap,const char* diffuseTexture, float scale, 
 
     this->GetHeightData();
 
-    this->GenerateGrid();
-
     this->LoadTexture(diffuseTexture);
 
     this->GenerateVertexBuffers();
@@ -43,8 +41,6 @@ Terrain::Terrain(const char* heightMap,const char* diffuseTexture, const char* n
 
     this->GetHeightData();
 
-    this->GenerateGrid();
-
     this->LoadTexture(diffuseTexture, normalTexture, specularTexture);
 
     this->GenerateVertexBuffers();
@@ -53,10 +49,9 @@ Terrain::Terrain(const char* heightMap,const char* diffuseTexture, const char* n
 
 bool Terrain::GetHeightData()
 {
-    pixels = 0;
     int w, h;
 
-    pixels = SOIL_load_image(this->heightMap, &this->width, &this->height, 0, SOIL_LOAD_L);
+    unsigned char* pixels = SOIL_load_image(this->heightMap, &this->width, &this->height, 0, SOIL_LOAD_L);
 
     if(this->width != this->height)
     {
@@ -66,9 +61,13 @@ bool Terrain::GetHeightData()
 
     this->cantPixels = this->width * this->height;
 
+    this->GenerateGrid(pixels);
+
+    SOIL_free_image_data(pixels);
+
 }
 
-bool Terrain::GenerateGrid()
+bool Terrain::GenerateGrid(unsigned char* pixels)
 {
     TVertex vert;
 
@@ -85,7 +84,7 @@ bool Terrain::GenerateGrid()
         for(int j = 0 ; j < this->height ; j++)
         {
             vert.Position.x = (float)i;
-            vert.Position.y = (float)pixels[counter]/2;
+            vert.Position.y = (float)pixels[counter];
             vert.Position.z = (float)j;
             row.push_back(vert.Position.y);
             float fScaleC = float(j)/float(this->height-1);

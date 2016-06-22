@@ -27,6 +27,8 @@ public:
         {
             hasPhysicComponent = true;
             m_Position = glm::vec3(t->m_PhysicsWorldPosition.getX(), t->m_PhysicsWorldPosition.getY(),t->m_PhysicsWorldPosition.getZ());
+
+            t->setUserPointer(&CollInfo);
         }
         else if(t->Type == Component::PLAYERCOMPONENT)
             hasPlayerComponent = true;
@@ -34,6 +36,9 @@ public:
             std::cout << " not added component" << std::endl;
 
         ComponentList.push_back(std::move(t));
+        this->ID = ComponentList.size();
+
+        CollInfo.setName("Entity_" + Helpers::floatTostring(m_Position.x));
     }
 
     void Update();
@@ -42,7 +47,7 @@ public:
     bool hasPlayerComponent = false;
     bool hasModel = false;
     bool hasPhysicComponent = false;
-
+    int ID;
     std::string modelPath;
     std::vector<std::shared_ptr<Component::Component>> ComponentList;
 
@@ -94,6 +99,7 @@ private:
     glm::vec3 m_Position;
     glm::vec3 m_Scale;
     glm::quat m_Rotation;
+    Physics::CollisionInfo CollInfo;
 
     std::shared_ptr<ResourceManager> resourceManager;
 
