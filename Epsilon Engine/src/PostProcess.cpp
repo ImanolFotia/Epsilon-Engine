@@ -38,6 +38,9 @@ void PostProcess::SetupFramebuffer()
     LightPositions.push_back(glm::vec3(82, 30.63, -59.3));
     LightPositions.push_back(glm::vec3(95.5, 15.21, -40.57));
 
+lensColor = (std::shared_ptr<eTexture>) new eTexture("effects/lenscolor.png", GL_REPEAT, GL_TEXTURE_1D);
+lensDirt = (std::shared_ptr<eTexture>) new eTexture("effects/lensdirt.png");
+lensStar = (std::shared_ptr<eTexture>) new eTexture("effects/lensstar.png");
 
 /*
     LightPositions.push_back(glm::vec3(-41, 12.0, -23));
@@ -256,12 +259,12 @@ void PostProcess::setupSSAO()
     std::uniform_real_distribution<GLfloat> randomFloatsClamped(0.2, 1.0); // generates random floats between 0.0 and 1.0
     std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0); // generates random floats between 0.0 and 1.0
     std::default_random_engine generator;
-    for (GLuint i = 0; i < 16; ++i)
+    for (GLuint i = 0; i < 32; ++i)
     {
         glm::vec3 sample(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, randomFloatsClamped(generator));
         sample = glm::normalize(sample);
         sample *= randomFloats(generator);
-        GLfloat scale = GLfloat(i) / 16.0;
+        GLfloat scale = GLfloat(i) / 32.0;
 
         // Scale samples s.t. they're more aligned to center of kernel
         scale = lerp(0.1f, 1.0f, scale * scale);
@@ -303,7 +306,7 @@ void PostProcess::applySSAO(std::unique_ptr<Camera>& cam)
     glUniform1i(glGetUniformLocation(SSAO->getProgramID(), "texNoise"), 2);
     glBindTexture(GL_TEXTURE_2D, this->noiseTexture);
 
-    glUniform3fv(glGetUniformLocation(SSAO->getProgramID(), "samples"), 16, &ssaoKernel[0][0]);
+    glUniform3fv(glGetUniformLocation(SSAO->getProgramID(), "samples"), 32, &ssaoKernel[0][0]);
 
     glUniformMatrix4fv(glGetUniformLocation(SSAO->getProgramID(), "projection"), 1, GL_FALSE, &cam->getProjectionMatrix()[0][0]);
     glUniform1i(glGetUniformLocation(this->shader->getProgramID(), "width"), (float)width);
@@ -441,7 +444,7 @@ void PostProcess::ShowPostProcessImage(float exposure, GLuint ShadowMapID)
     GLuint blurred = this->blurImage(this->brightColorBuffer);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glBindTexture(GL_TEXTURE_2D, this->colorBuffer);
+    //glBindTexture(GL_TEXTURE_2D, this->colorBuffer);
 
     finalImage->Use();
 
@@ -452,6 +455,18 @@ void PostProcess::ShowPostProcessImage(float exposure, GLuint ShadowMapID)
     glActiveTexture(GL_TEXTURE1);
     glUniform1i(glGetUniformLocation(finalImage->getProgramID(), "blurredSampler"), 1);
     glBindTexture(GL_TEXTURE_2D, blurred);
+
+    glActiveTexture(GL_TEXTURE2);
+    glUniform1i(glGetUniformLocation(finalImage->getProgramID(), "uLensColor"), 2);
+    glBindTexture(GL_TEXTURE_1D, lensColor->getTextureID());
+
+    glActiveTexture(GL_TEXTURE3);
+    glUniform1i(glGetUniformLocation(finalImage->getProgramID(), "uLensDirtTex"), 3);
+    glBindTexture(GL_TEXTURE_2D, lensDirt->getTextureID());
+
+    glActiveTexture(GL_TEXTURE4);
+    glUniform1i(glGetUniformLocation(finalImage->getProgramID(), "uLensStarTex"), 4);
+    glBindTexture(GL_TEXTURE_2D, lensStar->getTextureID());
 
     glUniform1f(glGetUniformLocation(finalImage->getProgramID(), "exposure"), exposure);
 

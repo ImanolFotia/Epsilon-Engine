@@ -13,7 +13,7 @@ bool BSPFace::BuildFace(std::vector<glm::vec3> Vertices, std::vector<glm::vec3> 
     this->Normals = Normals;
     this->faceID = ID;
     this->ObjectID = "BSPFace_" + Helpers::intTostring(ID);
-    std::cout << this->ObjectID << std::endl;
+    //std::cout << this->ObjectID << std::endl;
     this->imagePath = imagePath;
     this->imagePath = this->imagePath;
     this->LightMap = LightMap;

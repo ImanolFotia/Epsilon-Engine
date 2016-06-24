@@ -13,6 +13,7 @@
 #include <vector>
 #include <ShadowMapping.h>
 #include <memory>
+#include <Texture.h>
 class PostProcess
 {
 public:
@@ -154,6 +155,9 @@ private:
     GLuint ssaoColorBufferBlur;
     GLuint gWorldSpacePosition;
     GLuint m_exposure;
+    std::shared_ptr<eTexture> lensColor;
+    std::shared_ptr<eTexture> lensDirt;
+    std::shared_ptr<eTexture> lensStar;
 
 };
 

@@ -92,7 +92,6 @@ void Epsilon::InitResources(void)
 
     text = std::move((unique_ptr<Text>)(new Text("resources/arial.ttf", DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT)));
 
-    PP = std::move((unique_ptr<PostProcess>)(new PostProcess()));
 
     lightPositions.push_back(glm::vec3(-29, 4.5, -11));
     lightPositions.push_back(glm::vec3(-29, 4.5, 11));
@@ -138,6 +137,8 @@ void Epsilon::InitResources(void)
     this->LoadSound();
 
     rM->loadQueuedTextures();
+
+    PP = std::move((unique_ptr<PostProcess>)(new PostProcess()));
 
     std::cout << "All Resources Initialized." << std::endl;
 }
@@ -215,7 +216,7 @@ void Epsilon::LoadGeometry(void)
 
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "alley.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "deathmatch.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 

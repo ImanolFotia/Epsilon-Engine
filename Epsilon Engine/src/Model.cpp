@@ -10,14 +10,14 @@ Model::Model(const char* path, std::shared_ptr<ResourceManager> rm, glm::vec3 po
     Rotation = rot;
 
     this->loadModel(path, 0);
-    std::cout << "Resource manager in epsilon address: " << resm.get() << std::endl;
+    //std::cout << "Resource manager in epsilon address: " << resm.get() << std::endl;
     //cout << "Cantidad de texturas: " << textures_loaded.size() << endl;
 }
 
 
 bool Model::loadModel(string emlPath, int a)
 {
-    std::cout << "Open File: " << emlPath << std::endl;
+    //std::cout << "Open File: " << emlPath << std::endl;
     ifstream inFILE(emlPath, std::ios::binary);
     if(!inFILE.is_open())
     {
@@ -64,7 +64,7 @@ bool Model::loadModel(string emlPath, int a)
         inFILE.read((char*)&l_vertices[i], sizeof(t_Vertex));
     }
 
-    std::cout << "Num of vertices: " << numvertices << std::endl;
+    //std::cout << "Num of vertices: " << numvertices << std::endl;
 
     //Get the array of indices in the file
     numIndices = lumps[lIndices].size / sizeof(t_Index);
@@ -75,7 +75,7 @@ bool Model::loadModel(string emlPath, int a)
         inFILE.read((char*)&l_indices[i], sizeof(t_Index));
     }
 
-    std::cout << "Num of indices: " << numIndices << std::endl;
+    //std::cout << "Num of indices: " << numIndices << std::endl;
     //Get the array of meshes in the file
     numMeshes = (int)header->numOfMeshes;
     t_Mesh* l_meshes = new t_Mesh[numMeshes];
@@ -84,7 +84,7 @@ bool Model::loadModel(string emlPath, int a)
     {
         inFILE.read((char*)&l_meshes[i], sizeof(t_Mesh));
     }
-    std::cout << "Num of meshes: " << numMeshes << std::endl;
+    //std::cout << "Num of meshes: " << numMeshes << std::endl;
 
 
 

@@ -6,11 +6,11 @@ uniform sampler2D gPositionDepth;
 uniform sampler2D gNormal;
 uniform sampler2D texNoise;
 
-const int kernelSize = 16;
+const int kernelSize = 32;
 uniform vec3 samples[kernelSize];
 
 // parameters (you'd probably want to use them as uniforms to more easily tweak the effect)
-float radius = 5;
+float radius = 3;
 
 uniform float width;
 uniform float height;

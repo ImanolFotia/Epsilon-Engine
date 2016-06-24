@@ -23,17 +23,19 @@ class eTexture
 {
 
 public:
-    eTexture(const char* TexName, GLenum wrap = GL_REPEAT)
+    eTexture(const char* TexName, GLenum wrap = GL_REPEAT, GLenum type = GL_TEXTURE_2D)
     {
         ProgramData DATA;
         int channels;
         path = ("materials/" + std::string(TexName)).c_str();
         //cout << path << endl;
+
         unsigned char* image = SOIL_load_image(path, &width, &height, &channels, SOIL_LOAD_RGBA);
+        //cout << channels << endl;
         if(!image)
             return;
         glGenTextures(1, &texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
+        glBindTexture(type, texture);
         string name = string(TexName);
         std::size_t found2 = name.find("_s");
         std::size_t found1 = name.find("_n");
@@ -41,21 +43,29 @@ public:
         std::size_t found4 = name.find("normal");
         std::size_t found5 = name.find("ddn");
         std::size_t found6 = name.find("nrm");
-        if(found1 != std::string::npos || found2 != std::string::npos || found3 != std::string::npos || found4 != std::string::npos || found5 != std::string::npos || found6 != std::string::npos)
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-        else
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-        glGenerateMipmap(GL_TEXTURE_2D);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
+        if(found1 != std::string::npos || found2 != std::string::npos || found3 != std::string::npos || found4 != std::string::npos || found5 != std::string::npos || found6 != std::string::npos){
+            if(type == GL_TEXTURE_2D)
+                glTexImage2D(type, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+            else if(type == GL_TEXTURE_1D)
+                glTexImage1D(type, 0, GL_RGBA, width, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+        }
+        else{
+            if(type == GL_TEXTURE_2D)
+                glTexImage2D(type, 0, GL_SRGB_ALPHA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+            else if(type == GL_TEXTURE_1D)
+                glTexImage1D(type, 0, GL_RGBA, width, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+        }
+        glGenerateMipmap(type);
+        glTexParameteri(type, GL_TEXTURE_WRAP_S, wrap);
+        glTexParameteri(type, GL_TEXTURE_WRAP_T, wrap);
         if(DATA.ANISOTROPY <= 0)
         {
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         }
         else
         {
-            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, DATA.ANISOTROPY);
+            glTexParameterf(type, GL_TEXTURE_MAX_ANISOTROPY_EXT, DATA.ANISOTROPY);
         }
         if(!texture)
         {
@@ -63,7 +73,7 @@ public:
             return;
         }
         SOIL_free_image_data(image);
-        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindTexture(type, 0);
     }
 
     eTexture(std::vector<std::string> CubeMapPath)

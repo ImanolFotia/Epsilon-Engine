@@ -30,7 +30,7 @@ std::string Physics::RayCollision(btVector3 rayPosition, btVector3 rayTarget)
         void *var;
         var =  RayCallback.m_collisionObject->getUserPointer();
         if(var == nullptr)
-            return "";
+            return "UNDEFINED_COLLISION_INFO";
 
         CollisionInfo* CollInfo;
         CollInfo = reinterpret_cast<CollisionInfo*>(var);
