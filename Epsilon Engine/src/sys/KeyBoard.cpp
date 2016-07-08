@@ -1,4 +1,4 @@
-#include <KeyBoard.h>
+#include <sys/KeyBoard.h>
 #include <iostream>
 
 bool Input::KeyBoard::KEYS[1024] = {false};

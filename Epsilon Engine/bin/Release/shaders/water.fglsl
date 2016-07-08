@@ -40,7 +40,7 @@ vec3 NightFog = vec3(0.1,0.1,0.1);
 void main()
 {
     float moveFactor = 0.002 * time;
-    float distStrenght =  0.01;
+    float distStrenght =  0.05;
 
     vec2 normalizedDeviceCoordinates = (clipSpace.xy / clipSpace.w) / 2.0 + 0.5;
 
@@ -74,8 +74,8 @@ void main()
     if(viewVector.y < 0.0)
     viewVector.y = -1 * viewVector.y;
 
-    vec4 normaltex = texture(normalSampler, finalDist);
-    vec3 normal = vec3(normaltex.r, normaltex.b*2.5, normaltex.g);
+    vec4 normaltex = texture(normalSampler, finalDist) * 2 - 1;
+    vec3 normal = vec3(normaltex.r, normaltex.b*4.5, normaltex.g);
     normal = normalize(normal);
 
     float refractiveFactor = dot(viewVector, vec3(0,1,0));
@@ -83,10 +83,11 @@ void main()
 
     vec4 foamTexture = texture(foamSampler,TexCoords + moveFactor);
 
-    gAlbedoSpec.rgb = mix(reflectiontex, refractiontex , refractiveFactor/*clamp(waterDepth/12.0, 0.0, 1.0)*/).rgb;
-    gAlbedoSpec.rgb = mix(foamTexture.rgb, gAlbedoSpec.rgb, clamp(waterDepth/0.2, 0.0, 1.0));
+    gAlbedoSpec.rgb = mix(reflectiontex, refractiontex , min(refractiveFactor, clamp(waterDepth/5, 0.0, 1.0))).rgb;
+    gAlbedoSpec.rgb = mix(foamTexture.rgb, gAlbedoSpec.rgb, clamp(waterDepth/5, 0.0, 1.0));
+    gAlbedoSpec.rgb = mix(texture(diffuseSampler, finalDist).rgb, gAlbedoSpec.rgb, 0.8);
     gAlbedoSpec.a = 1.0;
-    gNormal = vec3(0,1,0);
+    gNormal = normal;
     gPosition.rgb = FragPos;
     gPosition.a = 1000000000;
     gExpensiveNormal = normal;

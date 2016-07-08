@@ -102,6 +102,8 @@ GLFWwindow* InitEngine(const char* ProgramName)
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetKeyCallback(window, Input::KeyBoard::KeyBoardCallBack);
     glfwSetCursorPosCallback(window, Input::Mouse::MouseCallBack);
+    //glfwSetJoystickCallback(window, Input::Joystick::JoystickCallback);
+     //std::cout << "New joystick connected: " << glfwGetJoystickName(GLFW_JOYSTICK_1) << std::endl;
 
     glfwSwapInterval(DATA.VSYNC);
 

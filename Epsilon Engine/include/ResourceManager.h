@@ -12,9 +12,6 @@
 #include <Includes.h>
 #include <Physics.h>
 
-using namespace std;
-
-
 class ResourceManager
 {
 public:

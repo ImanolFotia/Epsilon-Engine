@@ -7,7 +7,7 @@
 #pragma once
 
 #include <GLFW/glfw3.h>
-#include <KeyboardWrapper.h>
+#include <sys/KeyboardWrapper.h>
 
 namespace Input
 {

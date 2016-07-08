@@ -62,7 +62,7 @@ void main()
         result += texture(blurredSampler, offset);
       }
       result *= texture(uLensColor, length(vec2(0.5) - texcoord) / length(vec2(0.5)));
-
+/*
      float weight = length(vec2(0.5) - fract(texcoord + haloVec)) / length(vec2(0.5));
 	weight = pow(1.0 - weight, 10.0);
 	result += textureDistorted(
@@ -71,14 +71,29 @@ void main()
 		normalize(ghostVec),
 		distortion
 	) * weight;
-
+*/
 	vec4 lensMod = texture(uLensDirtTex, TexCoords);
 	lensMod += texture(uLensStarTex, TexCoords);
 
     vec3 hdrColor = texture(sampler, TexCoords).rgb;
+    float rOffset = 0.004;
+    float gOffset = 0.001;
+    float bOffset = 0.004;
+/*
+    float rValue = texture2D(sampler, TexCoords - rOffset).r;  
+    float gValue = texture2D(sampler, TexCoords - gOffset).g;
+    float bValue = texture2D(sampler, TexCoords - bOffset).b;
+*/
     vec3 bloom = texture(blurredSampler, TexCoords).rgb;
-    vec3 finalcolor = HDR(hdrColor + bloom + (result.rgb * lensMod.rgb*5));
-    color.rgb = finalcolor; //(1+finalcolor);
+/*
+    vec2 c = gl_FragCoord.xy / vec2(1920, 1080);
+
+    float a = smoothstep( 0.2, 1.0, length(c - vec2(0.5, 0.5)));
+
+    hdrColor *= 1.0 - a;
+*/
+    color.rgb  = HDR(hdrColor+ bloom + (result.rgb * lensMod.rgb*5));
+
     color.a = 1.0;
 
 }

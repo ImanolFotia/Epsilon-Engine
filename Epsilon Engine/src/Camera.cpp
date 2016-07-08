@@ -91,11 +91,11 @@ void Camera::HandleInputs(GLFWwindow*& window)
     glfwGetCursorPos(window, &xpos , &ypos );
     //glfwSetCursorPos(window, winx/2.0, winy/2.0);
 
-    horizontalAngle += MouseSpeed * float( lastX - xpos ) ;
-    verticalAngle   += MouseSpeed * float( lastY - ypos ) ;
+    horizontalAngle += MouseSpeed * float( lastX - Input::Mouse::XPOS ) ;
+    verticalAngle   += MouseSpeed * float( lastY - Input::Mouse::YPOS ) ;
 
-    lastX = xpos;
-    lastY = ypos;
+    lastX = Input::Mouse::XPOS;
+    lastY = Input::Mouse::YPOS;
 
     Orientation = glm::vec3(
                       cos( verticalAngle )      *       sin( horizontalAngle ),

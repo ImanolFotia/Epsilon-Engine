@@ -109,7 +109,7 @@ bool Model::loadModel(string emlPath, int a)
 
 
             if(l_vertices[l_meshes[i].mFirstVertex + j].position.x > MinMaxPoints.MAX_X)
-            MinMaxPoints.MAX_X = l_vertices[l_meshes[i].mFirstVertex + j].position.x;
+                MinMaxPoints.MAX_X = l_vertices[l_meshes[i].mFirstVertex + j].position.x;
             if(l_vertices[l_meshes[i].mFirstVertex + j].position.y > MinMaxPoints.MAX_Y)
                 MinMaxPoints.MAX_Y = l_vertices[l_meshes[i].mFirstVertex + j].position.y;
             if(l_vertices[l_meshes[i].mFirstVertex + j].position.z > MinMaxPoints.MAX_Z)
@@ -130,17 +130,18 @@ bool Model::loadModel(string emlPath, int a)
         }
         if(a == 0)
         {
-        for(int j = 0; j < 4; ++j)
+            for(int j = 0; j < 4; ++j)
+            {
+                Texture tex;
+                tex.id = 0;
+                tex.path = std::string(l_meshes[i].mMaterial[j]);
+                tex.type = i;
+                resm->addTextureToQueue(tex.path);
+                tmpTexturesVector.push_back(tex);
+            }
+        }
+        if(!a)
         {
-            Texture tex;
-            tex.id = 0;
-            tex.path = std::string(l_meshes[i].mMaterial[j]);
-            tex.type = i;
-            resm->addTextureToQueue(tex.path);
-            tmpTexturesVector.push_back(tex);
-        }
-        }
-        if(!a){
             meshes.push_back(Mesh(tmpVertVector, tmpIndicesVector, tmpTexturesVector, resm->NearestCubeMap(Position)));
         }
         else

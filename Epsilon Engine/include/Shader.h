@@ -29,6 +29,28 @@ public:
 private:
     GLuint ProgramID;
     std::string Path;
+
+    void getUniformsLocations();
+
+public:
+    GLuint MVP_Location;
+    GLuint WorldTransform_Location;
+    GLuint Projection_Location;
+    GLuint View_Location;
+    GLuint ViewDirection_Location;
+    GLuint ViewPosition_Location;
+    GLuint LightSpaceMatrix_Location;
+    GLuint ModelView3x3Matrix_Location;
+    GLuint NormalMatrix_Location;
+    GLuint LightDirection_Location;
+    GLuint ClipPlane_Location;
+    GLuint Time_Location;
+    GLuint texture_diffuse_Location;
+    GLuint texture_specular_Location;
+    GLuint texture_normal_Location;
+    GLuint texture_height_Location;
+    GLuint skybox_Location;
+
 };
 
 

@@ -22,14 +22,14 @@ const float gradient = 3.5;
 
 void main()
 {
-    vec4 worldPosition = vec4(position, 1.0f);
+    vec4 worldPosition = model * vec4(position, 1.0f);
     clipSpace = projection * view * worldPosition;
 
     gl_Position = clipSpace;
 
     viewDir = cameraPosition - worldPosition.xyz;
 
-    TexCoords = texCoords;
+    TexCoords = texCoords*50;
     vec4 PosToCam = view * worldPosition;
     float distance = length(PosToCam);
     wFragPos = worldPosition.xyz;

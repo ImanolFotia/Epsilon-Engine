@@ -33,15 +33,14 @@ public:
 
     std::string RayCollision(btVector3, btVector3);
 
-    std::shared_ptr<btDiscreteDynamicsWorld> world;
+    std::shared_ptr<btDynamicsWorld> world;
+    std::shared_ptr<btBroadphaseInterface> broadphase;
 
 private:
 
     std::shared_ptr<btDispatcher> dispatcher;
     std::shared_ptr<btCollisionConfiguration> collisionConfig;
-    std::shared_ptr<btBroadphaseInterface> broadphase;
-    std::shared_ptr<btSequentialImpulseConstraintSolver> solver;
-
+    std::shared_ptr<btConstraintSolver> solver;
 protected:
 
 };
@@ -50,7 +49,7 @@ class PhysicObject
 {
 public:
     PhysicObject() = default;
-    virtual ~PhysicObject() {};
+    virtual ~PhysicObject() {}
 
 public:
     virtual std::shared_ptr<btRigidBody> addObject(glm::vec3 /* Position */, float /* Mass */, float /* Size */) = 0;
@@ -65,7 +64,7 @@ class CubePhysicObject : public PhysicObject
 {
 public:
     CubePhysicObject() = default;
-    ~CubePhysicObject() {}
+    virtual ~CubePhysicObject() {}
 
 public:
     virtual std::shared_ptr<btRigidBody> addObject(float /* Position X */, float /* Position Y */, float /* Position Z */, float /* Mass */, float /* Size*/) {}

@@ -8,8 +8,8 @@ Physics::Physics()
     collisionConfig = (std::shared_ptr<btCollisionConfiguration>) (new btDefaultCollisionConfiguration());
     dispatcher = (std::shared_ptr<btDispatcher>) (new btCollisionDispatcher(collisionConfig.get()));
     broadphase = (std::shared_ptr<btBroadphaseInterface>) (new btDbvtBroadphase());
-    solver = (std::shared_ptr<btSequentialImpulseConstraintSolver>) (new btMultiBodyConstraintSolver());
-    world = (std::shared_ptr<btDiscreteDynamicsWorld>) (new btDiscreteDynamicsWorld(dispatcher.get(),broadphase.get(),solver.get(),collisionConfig.get()));
+    solver = (std::shared_ptr<btConstraintSolver>) (new btSequentialImpulseConstraintSolver());
+    world = (std::shared_ptr<btDynamicsWorld>) (new btDiscreteDynamicsWorld(dispatcher.get(),broadphase.get(),solver.get(),collisionConfig.get()));
 
     world->setGravity(btVector3(0,GRAVITY,0));    //gravity on Earth
 }
@@ -48,21 +48,21 @@ std::string Physics::RayCollision(btVector3 rayPosition, btVector3 rayTarget)
 
 std::shared_ptr<btRigidBody> CubePhysicObject::addObject(glm::vec3  Position , float  Mass , MIN_MAX_POINTS minmaxpoints, float scale)
 {
-    btTransform t;  //position and rotation
+    btTransform t;
     t.setIdentity();
     btVector3 pos = btVector3(Position.x, Position.y, Position.z);
-    t.setOrigin(pos);  //put it to x,y,z coordinates
+    t.setOrigin(pos);
     CubeShape = (std::shared_ptr<btBoxShape>) new btBoxShape(btVector3(scale * (glm::length(minmaxpoints.MAX_X - minmaxpoints.MIN_X)/2), scale * (glm::length(minmaxpoints.MAX_Y - minmaxpoints.MIN_Y)/2), scale * (glm::length(minmaxpoints.MAX_Z - minmaxpoints.MIN_Z)/2)));
-    btVector3 inertia(0,0,0);   //inertia is 0,0,0 for static object, else
+    btVector3 inertia(0,0,0);
     if(Mass!=0.0)
-        CubeShape->calculateLocalInertia(Mass,inertia);    //it can be determined by this function (for all kind of shapes)
+        CubeShape->calculateLocalInertia(Mass,inertia);
 
     btScalar mass = Mass;
-    motionState = (std::shared_ptr<btDefaultMotionState>) new btDefaultMotionState(t);  //set the position (and motion)
-    btRigidBody::btRigidBodyConstructionInfo info(mass,motionState.get(),CubeShape.get(),inertia);  //create the constructioninfo, you can create multiple bodies with the same info
+    motionState = (std::shared_ptr<btDefaultMotionState>) new btDefaultMotionState(t);
+    btRigidBody::btRigidBodyConstructionInfo info(mass,motionState.get(),CubeShape.get(),inertia);
     info.m_restitution = 1.0f;
     info.m_friction = 0.8f;
-    Body = (std::shared_ptr<btRigidBody>) new btRigidBody(info);    //let's create the body itself
+    Body = (std::shared_ptr<btRigidBody>) new btRigidBody(info);
 
     return Body;
 }

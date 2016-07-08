@@ -406,6 +406,7 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
                                          (float)pLeaf->max.x, (float)pLeaf->max.y, (float)pLeaf->max.z))
                     continue;
             }
+
             faceCount = pLeaf->numOfLeafFaces;
 
             while(faceCount--)

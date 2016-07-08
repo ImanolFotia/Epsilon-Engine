@@ -103,5 +103,19 @@ Shader::Shader(const char* vertex, const char* fragment)
 	glDeleteShader(VertexShaderID);
 	glDeleteShader(FragmentShaderID);
 
+	this->getUniformsLocations();
 
+
+}
+
+void Shader::getUniformsLocations()
+{
+    this->MVP_Location = glGetUniformLocation(this->ProgramID, "MVP");
+    this->WorldTransform_Location = glGetUniformLocation(this->ProgramID, "model");
+    this->Projection_Location = glGetUniformLocation(this->ProgramID, "projection");
+    this->View_Location = glGetUniformLocation(this->ProgramID, "view");
+    this->LightSpaceMatrix_Location = glGetUniformLocation(this->ProgramID, "lightSpaceMatrix");
+    //this->MVP_Location = glGetUniformLocation(this->ProgramID, "MVP");
+    //this->MVP_Location = glGetUniformLocation(this->ProgramID, "MVP");
+    //this->MVP_Location = glGetUniformLocation(this->ProgramID, "MVP");
 }

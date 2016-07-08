@@ -84,7 +84,7 @@ bool Terrain::GenerateGrid(unsigned char* pixels)
         for(int j = 0 ; j < this->height ; j++)
         {
             vert.Position.x = (float)i;
-            vert.Position.y = (float)pixels[counter];
+            vert.Position.y = (float)pixels[counter]/4;
             vert.Position.z = (float)j;
             row.push_back(vert.Position.y);
             float fScaleC = float(j)/float(this->height-1);

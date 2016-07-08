@@ -11,6 +11,9 @@
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
 
+//64 BSP units equals 1 meter
+//3.2 OpenGL units equals 1 meter
+
 #define     GRAVITY                                     -9.81f
 
 #define     DEFAULT_FRAMEBUFFER                     0x00000000
@@ -50,6 +53,7 @@ typedef unsigned short  USHORT;
 
 constexpr double PI = 3.14159265359;
 constexpr double TAU = PI * 0.5;
+
 
 enum class PHYSIC_SHAPE
 {

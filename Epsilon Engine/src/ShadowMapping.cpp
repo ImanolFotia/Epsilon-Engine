@@ -9,7 +9,7 @@ void ShadowMap::SetupShadowMap()
     glGenTextures(1, &m_ShadowTexture);
     glBindTexture(GL_TEXTURE_2D, m_ShadowTexture);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, this->m_SHADOW_WIDTH, this->m_SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, this->m_SHADOW_WIDTH, this->m_SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
@@ -36,8 +36,10 @@ void ShadowMap::SetupShadowMatrices()
     m_lightProjection = glm::ortho(-65.0f, 65.0f, -65.0f, 65.0f, -20.0f, 80.0f);
     //glm::perspective(glm::radians(90.0f), 16.0f / 9.0f, 0.5f, 100.0f);
     //m_lightProjection = glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.5f, 100.0f);
+    this->m_POSITION = glm::vec3(floor(this->m_POSITION.x), floor(this->m_POSITION.y), floor(this->m_POSITION.z));
+    glm::vec3 POSDIR = this->m_POSITION - this->m_DIRECTION;
 
-    m_lightView = glm::lookAt(this->m_POSITION, this->m_POSITION - this->m_DIRECTION, glm::vec3(1.0));
+    m_lightView = glm::lookAt(this->m_POSITION, POSDIR, glm::vec3(1.0));
     //m_lightView = glm::lookAt(this->m_POSITION, this->m_POSITION + this->m_DIRECTION, glm::vec3(1.0));
     m_lightSpaceMatrix = m_lightProjection * m_lightView;
 }

@@ -92,7 +92,7 @@ void Water::RenderWater(std::unique_ptr<Camera>& cam, glm::vec3 lightDir)
 
 void Water::LoadTextures(void)
 {
-    eTexture* tex = new eTexture("Wavy_Water - Height (Normal Map 2).png");
+    eTexture* tex = new eTexture("Wavy_Water - Height (Normal Map 4).png");
     normalTexture = tex->getTextureID();
 
     delete tex;
@@ -102,7 +102,7 @@ void Water::LoadTextures(void)
 
     delete tex2;
 
-    eTexture* tex3 = new eTexture("Foam.png");
+    eTexture* tex3 = new eTexture("fog_texture_by_finding_the_time-d637xrm.png");
     foamTexture = tex3->getTextureID();
 
     delete tex3;
@@ -189,10 +189,10 @@ void Water::GeneratevertexArray()
 {
     GLfloat plane[] =
     {
-        1.0f * scale,  this->position.y,  1.0f* scale, 1.0f, 1.0f,
-        1.0f*  scale,  this->position.y, -1.0f* scale, 1.0f, 0.0f,
-       -1.0f*  scale,  this->position.y, -1.0f* scale, 0.0f, 0.0f,
-       -1.0f*  scale,  this->position.y,  1.0f* scale, 0.0f, 1.0f,
+        1.0f * scale,  0,  1.0f* scale, 1.0f, 1.0f,
+        1.0f*  scale,  0, -1.0f* scale, 1.0f, 0.0f,
+       -1.0f*  scale,  0, -1.0f* scale, 0.0f, 0.0f,
+       -1.0f*  scale,  0,  1.0f* scale, 0.0f, 1.0f,
 
     };
     GLuint indices[] = {

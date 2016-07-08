@@ -35,8 +35,10 @@
 #include <Scene.h>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
-#include <KeyBoard.h>
-#include <Mouse.h>
+#include <sys/KeyBoard.h>
+#include <sys/Mouse.h>
+#include <sys/Joystick.h>
+#include <Player.h>
 
 class Epsilon
 {
@@ -118,6 +120,7 @@ public:
     std::unique_ptr<ShadowMap> shadowMap;
     std::unique_ptr<PostProcess> PP;
     std::shared_ptr<EntityTemplate> EntityTest[2];
+    //std::shared_ptr<Game::Player> m_PlayerCapsule;
     /** Window Properties **/
 
     short WIDTH = 16;
@@ -140,6 +143,7 @@ private:
     std::vector<glm::vec3> grassPos;
     std::ostringstream fpss;
     std::shared_ptr<ResourceManager> rM;
+    std::shared_ptr<Physics::SpherePhysicObject> ph3;
 };
 
 #endif /// EPSILON_H_INCLUDED

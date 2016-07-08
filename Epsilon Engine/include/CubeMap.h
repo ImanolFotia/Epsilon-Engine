@@ -20,30 +20,40 @@ public:
         this->ID = ID;
     }
 
-    ~CubeMap(){}
+    virtual ~CubeMap(){}
 
-    glm::vec3 getPosition()
+    virtual glm::vec3 getPosition()
     {
         return this->Position;
     }
 
-    std::vector<glm::vec3> getBoxMinMaxPoints()
-    {
-        return BoxMinMaxPoints;
-    }
-    GLuint getTextureID()
+    virtual GLuint getTextureID()
     {
         return texture->getTextureID();
     }
 
 private:
         int ID = 0;
-        std::string CM_path;
         glm::vec3 Position;
-        std::vector<glm::vec3> BoxMinMaxPoints;
         std::shared_ptr<eTexture> texture;
 
 protected:
+};
+
+class PCCB : public CubeMap
+{
+
+public:
+
+    PCCB();
+
+    ~PCCB(){}
+
+    std::vector<glm::vec3> getBoxMinMaxPoints()
+    {
+        return BoxMinMaxPoints;
+    }
 
 
+    std::vector<glm::vec3> BoxMinMaxPoints;
 };

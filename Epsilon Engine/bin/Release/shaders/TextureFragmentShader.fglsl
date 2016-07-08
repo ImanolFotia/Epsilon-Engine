@@ -153,7 +153,7 @@ vec3 CalculateDirectional(vec2 texCoords)
 
     vec3 ambient = Diffuse * vec3(mix(0.005, 0.05, clamp(LightDirection.y + 0.1, 0.0, 1.0)));
 
-    return mix(ambient, vec3(diffuse + specular), clamp(LightDirection.y + 0.1, 0.0, 1.0));
+    return mix(ambient, vec3(ambient + diffuse + specular), /*clamp(LightDirection.y + 0.1, 0.0, 1.0)*/ 1.0);
 
 
 

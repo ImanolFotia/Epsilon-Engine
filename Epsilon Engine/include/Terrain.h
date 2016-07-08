@@ -47,6 +47,7 @@ public:
 public:
 
     void RenderTerrain(Shader*);
+    std::vector<TVertex> vertices;
 
 private:
 
@@ -82,7 +83,6 @@ private:
 
 private:
     std::vector<Face> vface;
-    std::vector<TVertex> vertices;
     std::vector<GLuint> indices;
     std::vector<glm::vec3> Normals;
     std::vector<glm::vec3> Tangents;
