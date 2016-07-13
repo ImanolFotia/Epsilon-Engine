@@ -40,6 +40,7 @@ void ShadowMap::SetupShadowMatrices()
     glm::vec3 POSDIR = this->m_POSITION - this->m_DIRECTION;
 
     m_lightView = glm::lookAt(this->m_POSITION, POSDIR, glm::vec3(1.0));
+
     //m_lightView = glm::lookAt(this->m_POSITION, this->m_POSITION + this->m_DIRECTION, glm::vec3(1.0));
     m_lightSpaceMatrix = m_lightProjection * m_lightView;
 }

@@ -1,7 +1,0 @@
-<map id="PostProcess::RenderQuad" name="PostProcess::RenderQuad">
-<area shape="rect" id="node2" href="$class_post_process.html#a06ebb6b09a502fa4b90bf39f21e0660c" title="PostProcess::applySSAO" alt="" coords="253,5,427,32"/>
-<area shape="rect" id="node3" href="$class_post_process.html#a3e25d72da486f623ba34bc5d8b8ddfb7" title="PostProcess::blurImage" alt="" coords="259,56,421,83"/>
-<area shape="rect" id="node4" href="$class_post_process.html#ad2803f42027824b9726ecf4bf9f042aa" title="PostProcess::ShowPostProcess\lImage" alt="" coords="497,74,709,115"/>
-<area shape="rect" id="node5" href="$class_post_process.html#ab337b3a4d3cce0fea1bc6ae3d25185bf" title="PostProcess::applyAutoAxposure" alt="" coords="231,157,449,184"/>
-<area shape="rect" id="node6" href="$class_post_process.html#aba15ab321c44df5a1b87637738458454" title="PostProcess::ShowFrame" alt="" coords="253,208,427,235"/>
-</map>

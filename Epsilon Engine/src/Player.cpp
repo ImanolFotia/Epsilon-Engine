@@ -6,7 +6,7 @@
 
 #include <Player.h>
 #include <ResourceManager.h>
-#include <KeyBoard.h>
+#include <sys/KeyBoard.h>
 namespace Game
 {
 /** @brief (one liner)

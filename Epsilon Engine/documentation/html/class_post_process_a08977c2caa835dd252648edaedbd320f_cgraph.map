@@ -1,6 +1,0 @@
-<map id="PostProcess::SetupFramebuffer" name="PostProcess::SetupFramebuffer">
-<area shape="rect" id="node2" href="$class_post_process.html#aa34071cd45a83f46b63622d2710d7990" title="PostProcess::SetupGBuffer" alt="" coords="280,5,463,32"/>
-<area shape="rect" id="node3" href="$class_post_process.html#aa78e9436eb2ee584aa68f4a780dfb0d7" title="PostProcess::setupSSAO" alt="" coords="284,56,459,83"/>
-<area shape="rect" id="node5" href="$class_post_process.html#a0487c53687150b2c46f210f2aebf3eac" title="PostProcess::SetupPingPongFBO" alt="" coords="260,107,483,133"/>
-<area shape="rect" id="node4" href="$class_post_process.html#aef30f3a7c5c63af503e5bc8a943469c0" title="PostProcess::lerp" alt="" coords="531,56,657,83"/>
-</map>
