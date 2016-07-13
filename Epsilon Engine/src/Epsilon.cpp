@@ -201,8 +201,8 @@ void Epsilon::LoadGeometry(void)
          int chance = rand() % 2 + 1;
          if(chance == 1)
             grassPos.push_back(terrain->vertices[i].Position + glm::vec3(-230, -2, -256));
-         else if(chance == 2)
-            grasspos2.push_back(terrain->vertices[i].Position + glm::vec3(-230, -2, -256));
+         //else if(chance == 2)
+         //   grasspos2.push_back(terrain->vertices[i].Position + glm::vec3(-230, -2, -256));
     }
 /*
     for(int i = 5 ; i < terrain->vertices.size() ; i+= 10)
@@ -213,13 +213,14 @@ void Epsilon::LoadGeometry(void)
     std::cout << "Resource manager in epsilon address: " << rM.get() << std::endl;
 
     rM->requestCubeMap(2, glm::vec3(0,0,0));
-    rM->requestModel("models/esfera.eml", rM, glm::vec3(78.0,5.25,-57), glm::vec3(5), glm::quat(0.0, 0.0, 0.0, 0.0));
+    rM->requestModel("models/esfera.eml", rM, glm::vec3(78.0,5.25,-57), glm::vec3(1), glm::quat(0.0, 0.0, 0.0, 0.0));
     rM->requestModel("models/barrel.eml", rM, glm::vec3(98.9,5.25,-6.0), glm::vec3(4), glm::quat(-1.0, 0.0, -1.0, 0.0));
     rM->requestModel("models/Rock_6.eml", rM, glm::vec3(102, 2.0, 19), glm::vec3(5), glm::quat(-1.0, 0.0, -1.0, 0.0));
     rM->requestModel("models/Tree.eml", rM, glm::vec3(61.0,0.75,-12.0), glm::vec3(10), glm::quat(-1.0, 0.0, -1.0, 0.0));
+    rM->requestModel("models/sphere.eml", rM, glm::vec3(0.0,0.0,0.0), glm::vec3(0.2), glm::quat(-1.0, 0.0, -1.0, 0.0));
     skybox = std::move((unique_ptr<Skybox>)(new Skybox("plain")));
     grass.push_back(Grass("grass04.png", grassPos));
-    grass.push_back(Grass("billboardredflowers.png", grasspos2));
+    //grass.push_back(Grass("billboardredflowers.png", grasspos2));
 
     waterPlane = std::move((unique_ptr<Water>)(new Water(glm::vec3(-29,-0.2,-83), 1000.0f))); ///-11.8
 
@@ -339,6 +340,26 @@ void Epsilon::Render3D(Shader* shader)
 
     }
 
+    shader->Use();
+    this->SetUniforms(shader, rM->m_PhysicsWorld->getCollisionPosition(btVector3(eCamera->getPosition().x, eCamera->getPosition().y, eCamera->getPosition().z),
+                      btVector3(eCamera->getDirection().x * 1000, eCamera->getDirection().y * 1000, eCamera->getDirection().z * 1000)), rM->getModelScale("models/esfera.eml"),  rM->getModelRotation("models/esfera.eml"));
+    Model = glm::mat4();
+    ScaleMatrix = glm::scale(glm::mat4(), rM->getModelScale("models/esfera.eml"));
+    TranslationMatrix = glm::translate(glm::mat4(),rM->getModelPosition("models/esfera.eml"));
+    RotationMatrix = glm::toMat4(glm::normalize(rM->getModelRotation("models/esfera.eml")));
+    Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
+    BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), Model);
+
+    visible = true;// = BSPMap->Frustum.BoxInFrustum(rM->getModelBoundingBox("models/esfera.eml"));
+    if(visible)
+    {
+        rM->useModel("models/esfera.eml", shader);
+    }
+    else
+    {
+
+    }
+
     glCullFace(GL_FRONT);
     glm::mat4 BSPmodel = glm::mat4();
     //glm::mat4 tmodel = glm::translate(glm::mat4(), glm::vec3(-30.0, 5.0, -120.0));
@@ -441,7 +462,7 @@ void Epsilon::SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, 
 
 void Epsilon::Render2D(void)
 {
-    std::string obj = rM->m_PhysicsWorld->RayCollision(btVector3(eCamera->getPosition().x, eCamera->getPosition().y, eCamera->getPosition().z),
+    std::string obj = rM->m_PhysicsWorld->getCollisionObjectName(btVector3(eCamera->getPosition().x, eCamera->getPosition().y, eCamera->getPosition().z),
                       btVector3(eCamera->getDirection().x * 1000, eCamera->getDirection().y * 1000, eCamera->getDirection().z * 1000));
 
     this->text->RenderText(std::string("Pointing at: ") + obj , 0.01, 0.83, 0.3, glm::vec3(1,0,0));
@@ -647,11 +668,11 @@ void Epsilon::ProcessFrame(void)
     Shaders["grass"]->Use();
     this->SetUniforms(Shaders["grass"], glm::vec3(-512, -10, 512), glm::vec3(1,1,1), glm::quat(-1, 0, -1, 0) );
     grass.at(0).Render(Shaders["grass"]);
-
+/*
     Shaders["grass"]->Use();
     this->SetUniforms(Shaders["grass"], glm::vec3(-512, -10, 512), glm::vec3(1,1,1), glm::quat(-1, 0, -1, 0) );
     grass.at(1).Render(Shaders["grass"]);
-
+*/
     this->Render3D(Shaders["Main"]);
     this->waterPlane->RenderWater(eCamera, sun->Direction);
 

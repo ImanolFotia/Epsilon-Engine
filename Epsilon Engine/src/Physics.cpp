@@ -19,10 +19,12 @@ void Physics::Update(float deltaTime)
       world->stepSimulation(deltaTime, 1);
 }
 
-std::string Physics::RayCollision(btVector3 rayPosition, btVector3 rayTarget)
+
+std::string Physics::getCollisionObjectName(btVector3 rayPosition, btVector3 rayTarget)
 {
     btVector3 target =  btVector3(rayTarget.getX() * 1000, rayTarget.getY() * 1000, rayTarget.getZ() * 1000);
     btCollisionWorld::ClosestRayResultCallback RayCallback(rayPosition, target);
+
     world->rayTest(rayPosition, target, RayCallback);
     if(RayCallback.hasHit())
     {
@@ -43,7 +45,21 @@ std::string Physics::RayCollision(btVector3 rayPosition, btVector3 rayTarget)
     }
     else
         return "Skybox";
+}
 
+glm::vec3 Physics::getCollisionPosition(btVector3 rayPosition, btVector3 rayTarget)
+{
+        btVector3 target =  btVector3(rayTarget.getX() * 1000, rayTarget.getY() * 1000, rayTarget.getZ() * 1000);
+    btCollisionWorld::ClosestRayResultCallback RayCallback(rayPosition, target);
+
+    world->rayTest(rayPosition, target, RayCallback);
+    if(RayCallback.hasHit())
+    {
+        btVector3 coll = RayCallback.m_hitPointWorld;
+        return glm::vec3(coll.getX(), coll.getY(),coll.getZ());
+    }
+    else
+        return glm::vec3(0,0,0);
 }
 
 std::shared_ptr<btRigidBody> CubePhysicObject::addObject(glm::vec3  Position , float  Mass , MIN_MAX_POINTS minmaxpoints, float scale)

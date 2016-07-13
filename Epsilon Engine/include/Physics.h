@@ -31,7 +31,8 @@ public:
 
     void Update(float);
 
-    std::string RayCollision(btVector3, btVector3);
+    std::string getCollisionObjectName(btVector3 rayPosition, btVector3 rayTarget);
+    glm::vec3 getCollisionPosition(btVector3 rayPosition, btVector3 rayTarget);
 
     std::shared_ptr<btDynamicsWorld> world;
     std::shared_ptr<btBroadphaseInterface> broadphase;
