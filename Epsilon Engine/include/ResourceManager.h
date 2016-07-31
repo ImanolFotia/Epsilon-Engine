@@ -11,6 +11,7 @@
 #include <CubeMap.h>
 #include <Includes.h>
 #include <Physics.h>
+#include <Audio.h>
 
 class ResourceManager
 {
@@ -164,6 +165,8 @@ public:
     std::shared_ptr<Camera> m_Camera;
 
     std::shared_ptr<Physics::Physics> m_PhysicsWorld;
+
+    std::shared_ptr<Audio::Audio> m_AudioSystem;
 
     float timestep;
 

@@ -39,7 +39,7 @@
 #include <sys/Mouse.h>
 #include <sys/Joystick.h>
 #include <Player.h>
-
+#include <WAVFile.h>
 class Epsilon
 {
 public:

@@ -24,6 +24,8 @@ public:
     int VSYNC;
     int SHADOWMAP_SIZE;
     bool SSAO;
+    bool SSR;
+    bool LIGHTSHAFTS;
 };
 #endif
 

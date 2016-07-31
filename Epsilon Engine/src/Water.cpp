@@ -92,7 +92,7 @@ void Water::RenderWater(std::unique_ptr<Camera>& cam, glm::vec3 lightDir)
 
 void Water::LoadTextures(void)
 {
-    eTexture* tex = new eTexture("Wavy_Water - Height (Normal Map 4).png");
+    eTexture* tex = new eTexture("Wavy_Water - Height (Normal Map 2).png");
     normalTexture = tex->getTextureID();
 
     delete tex;
@@ -191,8 +191,8 @@ void Water::GeneratevertexArray()
     {
         1.0f * scale,  0,  1.0f* scale, 1.0f, 1.0f,
         1.0f*  scale,  0, -1.0f* scale, 1.0f, 0.0f,
-       -1.0f*  scale,  0, -1.0f* scale, 0.0f, 0.0f,
-       -1.0f*  scale,  0,  1.0f* scale, 0.0f, 1.0f,
+        -1.0f*  scale,  0, -1.0f* scale, 0.0f, 0.0f,
+        -1.0f*  scale,  0,  1.0f* scale, 0.0f, 1.0f,
 
     };
     GLuint indices[] = {

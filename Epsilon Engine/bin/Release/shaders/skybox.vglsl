@@ -10,7 +10,7 @@ out mat3 TBN;
 uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
-
+out vec3 FragPos;
 vec3 T;
 vec3 B;
 vec3 N;
@@ -26,6 +26,7 @@ mat3 CreateTBNMatrix(mat3 normalMatrix)
 void main()
 {
     vec4 pos = projection * view * model * vec4(position, 1.0);
+    FragPos = vec3(view * model * vec4(position, 1.0));
     gl_Position = pos.xyww;
     gl_Position.z = clamp(pos.w, 0.0, 0.9);
     gl_Position.w = clamp(pos.w, 0.0, 0.9);

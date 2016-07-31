@@ -139,6 +139,24 @@ static int findNearestPointFromSet(glm::vec3 TestingPoint, std::vector<glm::vec3
     return pointIndex;
 }
 
+static bool isBigEndian()
+{
+    int a=1;
+    return !((char*)&a)[0];
+}
+
+static int ByteToInt(char* buffer,int len)
+{
+    int a=0;
+    if(!isBigEndian())
+        for(int i=0; i<len; i++)
+            ((char*)&a)[i]=buffer[i];
+    else
+        for(int i=0; i<len; i++)
+            ((char*)&a)[3-i]=buffer[i];
+    return a;
+}
+
 // Helper class to count frame time
 class ElapsedTime
 {

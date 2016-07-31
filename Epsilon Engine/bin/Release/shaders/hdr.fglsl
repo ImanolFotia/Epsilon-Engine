@@ -5,10 +5,15 @@ uniform sampler2D blurredSampler;
 uniform sampler1D uLensColor;
 uniform sampler2D uLensDirtTex;
 uniform sampler2D uLensStarTex;
+uniform sampler2D gReflectionSampler;
+uniform float time;
 out vec4 color;
 noperspective in vec2 TexCoords;
 uniform float exposure;
-
+uniform mat4 choppedView;
+uniform mat4 projection;
+uniform vec3 sunPos;
+uniform bool lightShafts;
 const float gamma = 2.2;
 const float contrast = 0.3;
 
@@ -42,6 +47,30 @@ vec4 textureDistorted(
 
 /*----------------------------------------------------------------------------*/
 
+float hash( vec2 p ){ return fract(sin(dot(p, vec2(41, 289)))*45758.5453); }
+
+vec3 lOff(){    
+    
+    vec2 u = vec2(1.0, 0.0);
+    mat2 a = mat2(u, -u.y, u.x);
+    
+    vec3 l = normalize(vec3(1.5, 1., -0.5));
+    l.xz = a * l.xz;
+    l.xy = a * l.xy;
+    
+    return l;
+    
+}
+    // Radial blur factors.
+    //
+    // Falloff, as we radiate outwards.
+    float decay = 0.97; 
+    // Controls the sample density, which in turn, controls the sample spread.
+    float density = 0.5; 
+    // Sample weight. Decays as we radiate outwards.
+    float weight = 0.1; 
+const float SAMPLES = 20.; 
+
 void main()
 {
 
@@ -62,37 +91,43 @@ void main()
         result += texture(blurredSampler, offset);
       }
       result *= texture(uLensColor, length(vec2(0.5) - texcoord) / length(vec2(0.5)));
-/*
-     float weight = length(vec2(0.5) - fract(texcoord + haloVec)) / length(vec2(0.5));
-	weight = pow(1.0 - weight, 10.0);
-	result += textureDistorted(
-		blurredSampler,
-		fract(texcoord + haloVec),
-		normalize(ghostVec),
-		distortion
-	) * weight;
-*/
+
 	vec4 lensMod = texture(uLensDirtTex, TexCoords);
 	lensMod += texture(uLensStarTex, TexCoords);
 
     vec3 hdrColor = texture(sampler, TexCoords).rgb;
-    float rOffset = 0.004;
-    float gOffset = 0.001;
-    float bOffset = 0.004;
-/*
-    float rValue = texture2D(sampler, TexCoords - rOffset).r;  
-    float gValue = texture2D(sampler, TexCoords - gOffset).g;
-    float bValue = texture2D(sampler, TexCoords - bOffset).b;
-*/
+    vec3 SSR = texture(gReflectionSampler, TexCoords).rgb;
     vec3 bloom = texture(blurredSampler, TexCoords).rgb;
-/*
-    vec2 c = gl_FragCoord.xy / vec2(1920, 1080);
 
-    float a = smoothstep( 0.2, 1.0, length(c - vec2(0.5, 0.5)));
 
-    hdrColor *= 1.0 - a;
-*/
-    color.rgb  = HDR(hdrColor+ bloom + (result.rgb * lensMod.rgb*5));
+    vec2 fragcoord = gl_FragCoord.xy/vec2(1920, 1080);
+
+    // Light offset. Kind of fake. See above.
+    vec4 col = vec4(0.0);
+    vec4 LightColor = vec4(218, 205, 118, 1.0);
+	vec4 pos = projection * choppedView * vec4(sunPos, 1.0f);
+	if(pos.x > 1.0 || pos.x < -1.0 || pos.y > 1.0 || pos.y < -1.0 || pos.z < 0.0 || sunPos.y < 0.0 || !lightShafts){ col = vec4(0.0);} else{
+    vec3 l = vec3(pos.xy, 1.0);//lOff();
+    vec2 tuv =  fragcoord - .5 - l.xy*.45;
+    vec2 dTuv = tuv*density/SAMPLES;
+    col = texture(sampler, fragcoord.xy)*0.25;
+    fragcoord += dTuv*(hash(fragcoord.xy));
+
+       for(float i=0.; i < SAMPLES; i++){
+    
+        fragcoord -= dTuv;
+        col += texture2D(sampler, fragcoord) * weight;
+        weight *= decay;
+        
+    }
+    col *= (1. - dot(tuv, tuv)*.75);
+    col = smoothstep(0., 1., col);
+}
+
+    col = mix(col, vec4(0.0), length(vec2(0.0) - pos.xy));
+    col = vec4(clamp(col.x, 0.0, 1.0), clamp(col.y, 0.0, 1.0), clamp(col.z, 0.0, 1.0), col.w) * 0.25;
+
+    color.rgb  = HDR((hdrColor + col.rgb + bloom + (result.rgb * lensMod.rgb*5) ) + SSR );
 
     color.a = 1.0;
 

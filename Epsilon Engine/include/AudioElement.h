@@ -1,6 +1,7 @@
 #pragma once
 #include <Types.h>
 
+namespace Audio{
 class AudioElement
 {
     AudioElement(){}
@@ -17,3 +18,4 @@ class AudioElement
     glm::vec3 m_Velocity;
     float m_Radius;
 };
+}

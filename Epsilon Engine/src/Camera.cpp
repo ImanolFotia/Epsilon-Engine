@@ -8,8 +8,8 @@
 
 #include <camera.h>
 #include <math.h>
-#include <KeyBoard.h>
-#include <Mouse.h>
+#include <sys/KeyBoard.h>
+#include <sys/Mouse.h>
 
 float lerp(float v0, float v1, float t)
 {

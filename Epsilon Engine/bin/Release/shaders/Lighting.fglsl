@@ -23,7 +23,7 @@ const float shadowDistance = 100.0f;
 const float fadeDistance = 10.0f;
 const vec3 SkyColor = vec3(0.5,0.5,0.5);
 const float density = 0.003;
-const float gradient = 3.0;
+const float gradient = 5.0;
 
 struct Light {
     vec3 Position;
@@ -252,7 +252,7 @@ void main()
 vec3 CalculateDirectional()
 {
     vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 lightcolor = vec3(1);//normalize(vec3(205, 109, 39));
+    vec3 lightcolor = normalize(vec3(205, 109, 39));
     vec3 lightdirection = lightDir;
     if(clamp(lightDir.y + 0.1, 0.0, 1.0) < 0.0){
       vec3 lightdirection = -lightDir;
@@ -292,5 +292,5 @@ vec3 calculatePoint(vec3 LightPos)
     diffuse  *= attenuation;
     specular *= attenuation * 25;
 
-    return  (specular * clamp( 1 - refractiveFactor, 0.1, 0.9) + diffuse) * 2.0f;
+    return  (specular * clamp( 1 - refractiveFactor, 0.1, 0.9) + diffuse);
 }

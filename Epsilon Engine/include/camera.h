@@ -12,6 +12,7 @@
 #include <glm/gtc/quaternion.hpp>
 #include <GLFW/glfw3.h>
 #include <iostream>
+
 class Camera{
 
 public:

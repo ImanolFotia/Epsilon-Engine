@@ -7,7 +7,7 @@ in float visibility;
 in vec3 FragPos;
 in vec3 wFragPos;
 in mat3 viewMatrix;
-
+in mat3 TBN;
 uniform sampler2D reflectionSampler;
 uniform sampler2D refractionSampler;
 uniform sampler2D normalSampler;
@@ -35,12 +35,30 @@ vec3 NightFog = vec3(0.1,0.1,0.1);
     const float density = 0.005;
     const float gradient = 3.5;
 
+uniform mat4 view;
+uniform mat4 model;
 
+vec3 T;
+vec3 B;
+vec3 N;
+
+
+    vec3 tangent;
+    vec3 binormal;
+    vec3 normal;
+mat3 CreateTBNMatrix(mat3 normalMatrix)
+{
+     T = normalize(normalMatrix * tangent);
+     B = normalize(normalMatrix * binormal);
+     N = normalize(normalMatrix * vec3(0,1,0));
+
+    return transpose(mat3(T, B, N));
+}
 
 void main()
 {
     float moveFactor = 0.002 * time;
-    float distStrenght =  0.05;
+    float distStrenght =  0.009;
 
     vec2 normalizedDeviceCoordinates = (clipSpace.xy / clipSpace.w) / 2.0 + 0.5;
 
@@ -74,8 +92,8 @@ void main()
     if(viewVector.y < 0.0)
     viewVector.y = -1 * viewVector.y;
 
-    vec4 normaltex = texture(normalSampler, finalDist) * 2 - 1;
-    vec3 normal = vec3(normaltex.r, normaltex.b*4.5, normaltex.g);
+    vec4 normaltex = texture(normalSampler, finalDist);
+    normal = vec3(normaltex.r, normaltex.b*3.0, normaltex.g) * 2 - 1;
     normal = normalize(normal);
 
     float refractiveFactor = dot(viewVector, vec3(0,1,0));
@@ -83,14 +101,18 @@ void main()
 
     vec4 foamTexture = texture(foamSampler,TexCoords + moveFactor);
 
-    gAlbedoSpec.rgb = mix(reflectiontex, refractiontex , min(refractiveFactor, clamp(waterDepth/5, 0.0, 1.0))).rgb;
-    gAlbedoSpec.rgb = mix(foamTexture.rgb, gAlbedoSpec.rgb, clamp(waterDepth/5, 0.0, 1.0));
-    gAlbedoSpec.rgb = mix(texture(diffuseSampler, finalDist).rgb, gAlbedoSpec.rgb, 0.8);
+    //gAlbedoSpec.rgb = mix(reflectiontex, refractiontex , min(refractiveFactor, clamp(waterDepth/5, 0.0, 1.0))).rgb;
+    //gAlbedoSpec.rgb = mix(refractiontex.rgb, gAlbedoSpec.rgb, clamp(waterDepth/5, 0.0, 1.0));
+    //gAlbedoSpec.rgb = mix(texture(diffuseSampler, finalDist).rgb, gAlbedoSpec.rgb, 0.8);
+    gAlbedoSpec.rgb = vec3(0.0);//texture(diffuseSampler, finalDist).rgb;
     gAlbedoSpec.a = 1.0;
-    gNormal = normal;
+    gExpensiveNormal = normal;
+
+    normal = vec3(normaltex.r, normaltex.b*4.0, normaltex.g);
+
+    gNormal = normalize(vec3(0,1,0) * TBN);//normalize(normal * mat3(view) /* TBN*/);
     gPosition.rgb = FragPos;
     gPosition.a = 1000000000;
-    gExpensiveNormal = normal;
     gWorldSpacePosition = wFragPos;
 /*
     FragColor = mix(FragColor, vec4(specular * lightcolor, 1.0), 0.5);

@@ -11,7 +11,7 @@
 				<Option output="bin/Debug/Epsilon Engine" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="bin/Debug" />
 				<Option object_output="obj/Debug/" />
-				<Option type="0" />
+				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option parameters="-static" />
 				<Compiler>
@@ -90,6 +90,8 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include/Audio.h" />
+		<Unit filename="include/AudioElement.h" />
 		<Unit filename="include/BSP.h" />
 		<Unit filename="include/BSPFace.h" />
 		<Unit filename="include/BSPfile.h" />
@@ -123,6 +125,7 @@
 		<Unit filename="include/Text.h" />
 		<Unit filename="include/Texture.h" />
 		<Unit filename="include/Types.h" />
+		<Unit filename="include/WAVFile.h" />
 		<Unit filename="include/Water.h" />
 		<Unit filename="include/camera.h" />
 		<Unit filename="include/emlFormat.h" />

@@ -27,4 +27,6 @@ ProgramData::ProgramData()
     VSYNC           = (int)reader.GetReal   (     "VISUAL"    ,     "VSYNC"             ,       0       );
     SSAO            = (bool)reader.GetReal  (     "VISUAL"    ,     "SSAO"              ,       0       );
     SHADOWMAP_SIZE  = (int)reader.GetReal   (     "VISUAL"    ,     "SHADOWMAP_SIZE"    ,       1024    );
+    SSR             = (bool)reader.GetReal  (     "VISUAL"    ,     "SSR"               ,       false   );
+    LIGHTSHAFTS     = (bool)reader.GetReal  (     "VISUAL"    ,     "LIGHTSHAFTS"       ,       false   );
 }

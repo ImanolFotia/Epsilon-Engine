@@ -12,15 +12,15 @@
 namespace Input
 {
 
-class KeyBoard
-{
+    class KeyBoard
+    {
 
-public:
-    static bool KEYS[1024];
+    public:
+        static bool KEYS[1024];
 
-    static void KeyBoardCallBack(GLFWwindow* window, int key, int scancode, int action, int mode);
+        static void KeyBoardCallBack(GLFWwindow* window, int key, int scancode, int action, int mode);
 
-};
+    };
 
 }
 

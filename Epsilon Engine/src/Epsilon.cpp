@@ -17,7 +17,7 @@
 #include <thread>
 #include <EpsilonMemory.h>
 #include <sys/CPUID.h>
-float mpos = -40.0;
+float mpos = 80.0;
 float blend = 1.0f;
 
 
@@ -195,15 +195,15 @@ void Epsilon::LoadGeometry(void)
 
     terrain = (std::shared_ptr<Terrain>)new Terrain("materials/testmontana2.png", "awp_india_texture_4.jpg", "mud-normal.jpg", "awp_india_texture_4s.jpg", 1, 1);
 
-
+/*
     for(int i = 0 ; i < terrain->vertices.size() ; i+= 5)
     {
          int chance = rand() % 2 + 1;
          if(chance == 1)
-            grassPos.push_back(terrain->vertices[i].Position + glm::vec3(-230, -2, -256));
+            grassPos.push_back(terrain->vertices[i].Position + glm::vec3(-230, -1.5, -256));
          //else if(chance == 2)
          //   grasspos2.push_back(terrain->vertices[i].Position + glm::vec3(-230, -2, -256));
-    }
+    }*/
 /*
     for(int i = 5 ; i < terrain->vertices.size() ; i+= 10)
     {
@@ -215,7 +215,7 @@ void Epsilon::LoadGeometry(void)
     rM->requestCubeMap(2, glm::vec3(0,0,0));
     rM->requestModel("models/esfera.eml", rM, glm::vec3(78.0,5.25,-57), glm::vec3(1), glm::quat(0.0, 0.0, 0.0, 0.0));
     rM->requestModel("models/barrel.eml", rM, glm::vec3(98.9,5.25,-6.0), glm::vec3(4), glm::quat(-1.0, 0.0, -1.0, 0.0));
-    rM->requestModel("models/Rock_6.eml", rM, glm::vec3(102, 2.0, 19), glm::vec3(5), glm::quat(-1.0, 0.0, -1.0, 0.0));
+    rM->requestModel("models/mitsuba.eml", rM, glm::vec3(-11, 2, 0), glm::vec3(1), glm::quat(-1.0, 0.0, -1.0, 0.0));
     rM->requestModel("models/Tree.eml", rM, glm::vec3(61.0,0.75,-12.0), glm::vec3(10), glm::quat(-1.0, 0.0, -1.0, 0.0));
     rM->requestModel("models/sphere.eml", rM, glm::vec3(0.0,0.0,0.0), glm::vec3(0.2), glm::quat(-1.0, 0.0, -1.0, 0.0));
     skybox = std::move((unique_ptr<Skybox>)(new Skybox("plain")));
@@ -256,11 +256,11 @@ void Epsilon::Render3D(Shader* shader)
     glm::mat4 ScaleMatrix;
     glm::mat4 TranslationMatrix;
     glm::mat4 RotationMatrix;
-
+/*
     shader->Use();
     this->SetUniforms(shader,glm::vec3(-230, -5, -256), glm::vec3(1),  glm::quat(0, 0 ,0, 0));
     terrain->RenderTerrain(shader);
-
+*/
     for(int i =0; i < 2; ++i)
     {
         shader->Use();
@@ -303,18 +303,18 @@ void Epsilon::Render3D(Shader* shader)
     }
 
     shader->Use();
-    this->SetUniforms(shader,rM->getModelPosition("models/Rock_6.eml"), rM->getModelScale("models/Rock_6.eml"),  rM->getModelRotation("models/Rock_6.eml"));
+    this->SetUniforms(shader,rM->getModelPosition("models/mitsuba.eml"), rM->getModelScale("models/mitsuba.eml"),  rM->getModelRotation("models/mitsuba.eml"));
     Model = glm::mat4();
-    ScaleMatrix = glm::scale(glm::mat4(), rM->getModelScale("models/Rock_6.eml"));
-    TranslationMatrix = glm::translate(glm::mat4(),rM->getModelPosition("models/Rock_6.eml"));
-    RotationMatrix = glm::toMat4(glm::normalize(rM->getModelRotation("models/Rock_6.eml")));
+    ScaleMatrix = glm::scale(glm::mat4(), rM->getModelScale("models/mitsuba.eml"));
+    TranslationMatrix = glm::translate(glm::mat4(),rM->getModelPosition("models/mitsuba.eml"));
+    RotationMatrix = glm::toMat4(glm::normalize(rM->getModelRotation("models/mitsuba.eml")));
     Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
     BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), Model);
 
-    visible = BSPMap->Frustum.BoxInFrustum(rM->getModelBoundingBox("models/Rock_6.eml"));
+    visible = BSPMap->Frustum.BoxInFrustum(rM->getModelBoundingBox("models/mitsuba.eml"));
     if(visible)
     {
-        rM->useModel("models/Rock_6.eml", shader);
+        rM->useModel("models/mitsuba.eml", shader);
     }
     else
     {
@@ -339,7 +339,7 @@ void Epsilon::Render3D(Shader* shader)
     {
 
     }
-
+/*
     shader->Use();
     this->SetUniforms(shader, rM->m_PhysicsWorld->getCollisionPosition(btVector3(eCamera->getPosition().x, eCamera->getPosition().y, eCamera->getPosition().z),
                       btVector3(eCamera->getDirection().x * 1000, eCamera->getDirection().y * 1000, eCamera->getDirection().z * 1000)), rM->getModelScale("models/esfera.eml"),  rM->getModelRotation("models/esfera.eml"));
@@ -358,7 +358,7 @@ void Epsilon::Render3D(Shader* shader)
     else
     {
 
-    }
+    }*/
 
     glCullFace(GL_FRONT);
     glm::mat4 BSPmodel = glm::mat4();
@@ -372,7 +372,7 @@ void Epsilon::Render3D(Shader* shader)
 
     Shaders["MD5Geometry"]->Use();
     glUniformMatrix4fv(glGetUniformLocation(Shaders["MD5Geometry"]->getProgramID(), "mSkinned"), 150, GL_FALSE, &m_AnimModel->m_AnimatedBones[0][0][0]);
-    this->SetUniforms(Shaders["MD5Geometry"], glm::vec3(mpos,0.0,-21), glm::vec3(0.1, 0.1, 0.1), glm::quat(-1.0, 1.0, 0.0, 0.0));
+    this->SetUniforms(Shaders["MD5Geometry"], glm::vec3(mpos,1.5,-60), glm::vec3(0.1, 0.1, 0.1), glm::quat(-1.0, 1.0, 0.0, 0.0));
     m_AnimModel->Render(Shaders["MD5Geometry"]->getProgramID());
     glCullFace(GL_BACK);
 
@@ -393,8 +393,8 @@ void Epsilon::Render3D()
     rM->useModel("models/barrel.eml", Shaders["ShadowMapping"]);
 
     Shaders["ShadowMapping"]->Use();
-    this->SetUniforms(Shaders["ShadowMapping"], rM->getModelPosition("models/Rock_6.eml"), rM->getModelScale("models/Rock_6.eml"), rM->getModelRotation("models/Rock_6.eml"));
-    rM->useModel("models/Rock_6.eml", Shaders["ShadowMapping"]);
+    this->SetUniforms(Shaders["ShadowMapping"], rM->getModelPosition("models/mitsuba.eml"), rM->getModelScale("models/mitsuba.eml"), rM->getModelRotation("models/mitsuba.eml"));
+    rM->useModel("models/mitsuba.eml", Shaders["ShadowMapping"]);
 
 
     Shaders["ShadowMapping"]->Use();
@@ -415,7 +415,7 @@ void Epsilon::Render3D()
 
     Shaders["MD5ShadowMapping"]->Use();
     glUniformMatrix4fv(glGetUniformLocation(Shaders["MD5ShadowMapping"]->getProgramID(), "mSkinned"), 150, GL_FALSE, &m_AnimModel->m_AnimatedBones[0][0][0]);
-    this->SetUniforms(Shaders["MD5ShadowMapping"], glm::vec3(mpos,0.0,-21.5), glm::vec3(0.1, 0.1, 0.1), glm::quat(-1.0, 1.0, 0.0, 0.0f));
+    this->SetUniforms(Shaders["MD5ShadowMapping"], glm::vec3(mpos,1.5,-60), glm::vec3(0.1, 0.1, 0.1), glm::quat(-1.0, 1.0, 0.0, 0.0f));
     m_AnimModel->Render(Shaders["MD5ShadowMapping"]->getProgramID());
     Shaders["MD5ShadowMapping"]->Free();
     glEnable(GL_CULL_FACE);
@@ -448,7 +448,7 @@ void Epsilon::SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, 
     glUniformMatrix3fv(glGetUniformLocation(shader->getProgramID(), "normalMatrix"), 1, GL_FALSE, &NormalMatrix[0][0]);
 
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "LightDirection"), sun->Direction.x, sun->Direction.y, sun->Direction.z);
-    glUniform4f(glGetUniformLocation(shader->getProgramID(), "clipplane"), 0.0, this->waterPlane->getActiveClip(), 0.0, this->waterPlane->position.y+30);
+    glUniform4f(glGetUniformLocation(shader->getProgramID(), "clipplane"), 0.0, this->waterPlane->getActiveClip(), 0.0, this->waterPlane->position.y+2);
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "viewPos"),  eCamera->getPosition().x, eCamera->getPosition().y, eCamera->getPosition().z);
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "viewDir"),  eCamera->getDirection().x, eCamera->getDirection().y, eCamera->getDirection().z);
     glUniform1f(glGetUniformLocation(shader->getProgramID(), "time"),  glfwGetTime());
@@ -576,9 +576,9 @@ void Epsilon::MainLoop(void)
         this->eCamera->UpdateMatrices();
 
         rM->m_PhysicsWorld->Update(frametime);
-
+/*
         ComputeWater();
-
+*/
         this->ComputeShadow();
 
         this->ProcessFrame();
@@ -664,10 +664,10 @@ void Epsilon::ProcessFrame(void)
     PP->beginOffScreenrendering();
 
     this->RenderSkybox(true);
-
+/*
     Shaders["grass"]->Use();
     this->SetUniforms(Shaders["grass"], glm::vec3(-512, -10, 512), glm::vec3(1,1,1), glm::quat(-1, 0, -1, 0) );
-    grass.at(0).Render(Shaders["grass"]);
+    grass.at(0).Render(Shaders["grass"]);*/
 /*
     Shaders["grass"]->Use();
     this->SetUniforms(Shaders["grass"], glm::vec3(-512, -10, 512), glm::vec3(1,1,1), glm::quat(-1, 0, -1, 0) );
@@ -676,6 +676,7 @@ void Epsilon::ProcessFrame(void)
     this->Render3D(Shaders["Main"]);
     this->waterPlane->RenderWater(eCamera, sun->Direction);
 
+    PP->endOffScreenRendering();
 
     if(this->SSAO)
         PP->applySSAO(this->eCamera);
@@ -689,6 +690,6 @@ void Epsilon::RenderFrame(void)
 
     this->RenderSkybox(false);
 
-    PP->ShowPostProcessImage(exposure, shadowMap->getShadowTextureID());
+    PP->ShowPostProcessImage(exposure, shadowMap->getShadowTextureID(), this->sun->Direction, this->eCamera);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

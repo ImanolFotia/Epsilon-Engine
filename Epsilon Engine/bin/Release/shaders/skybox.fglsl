@@ -2,6 +2,7 @@
 in vec3 TexCoords;
 in vec2 TexCoord;
 in mat3 TBN;
+in vec3 FragPos;
 layout(location = 0) out vec4 FragColor;
 layout(location = 1) out vec4 blurImage;
 layout(location = 2) out vec4 gPosition;
@@ -69,14 +70,14 @@ void main()
 
     //if(renderDepth)
     //{
-        gPosition = vec4(1000000000.0);
+        gPosition = vec4(FragPos, 1000000000.0);
     //}
 
     FragColor.rgb = mix(fogColor, color.rgb, factor);
     FragColor.a = 1.0;
     float brightness = dot(FragColor.rgb * ((exposure - 3.0) <= 0 ? 1.0 : (exposure - 3.0)), vec3(0.2126, 0.7152, 0.0722));
     if(brightness > 1.0)
-    blurImage = FragColor;
+    blurImage = /*FragColor*/vec4(0.0);
 
 
 }

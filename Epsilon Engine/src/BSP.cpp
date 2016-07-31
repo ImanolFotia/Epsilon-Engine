@@ -412,7 +412,7 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
             while(faceCount--)
             {
                 int faceIndex = m_pLeafFaces[pLeaf->leafface + faceCount];
-                //if(m_pFaces[faceIndex].type != FACE_POLYGON && m_pFaces[faceIndex].type != FACE_MESHVERT) continue;
+                if(m_pFaces[faceIndex].type != FACE_POLYGON && m_pFaces[faceIndex].type != FACE_MESHVERT) continue;
 
                 if(!m_FacesDrawn.On(faceIndex))
                 {

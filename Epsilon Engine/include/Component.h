@@ -125,9 +125,9 @@ public:
 
         m_PhysicsWorldPosition = RigidBodyPointer->Body->getCenterOfMassPosition();
 
-        glm::vec3 pos  = mix(glm::vec3(m_LastPhysicsWorldPosition.getX(), m_LastPhysicsWorldPosition.getY(), m_LastPhysicsWorldPosition.getZ()),
+        glm::vec3 pos  = glm::mix(glm::vec3(m_LastPhysicsWorldPosition.getX(), m_LastPhysicsWorldPosition.getY(), m_LastPhysicsWorldPosition.getZ()),
                                      glm::vec3(m_PhysicsWorldPosition.getX(), m_PhysicsWorldPosition.getY(), m_PhysicsWorldPosition.getZ()),
-                                     rm->timestep*10);
+                                     rm->timestep*60);
 
         m_PhysicsWorldPosition = btVector3(pos.x, pos.y, pos.z);
         m_LastPhysicsWorldPosition = m_PhysicsWorldPosition;

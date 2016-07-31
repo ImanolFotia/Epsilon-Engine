@@ -50,7 +50,7 @@ public:
         Render the post process image to the screen
         after the post-process effects has been applied
     */
-    void ShowPostProcessImage(float exposure, GLuint);
+    void ShowPostProcessImage(float exposure, GLuint, glm::vec3 Sun, std::unique_ptr<Camera>& cam);
 
 public:
 
@@ -93,6 +93,18 @@ private:
     void setupSSAO(void);
 
     /**
+        Creates the SSR framebuffer and attaches the proper textures
+    */
+    void setupSSR(void);
+
+    /**
+        SSR
+    */
+    void SSRPass();
+    void setupDownSampledSSR();
+    void DownSampleSSR();
+
+    /**
         Blurs and image using a Gaussian Blur shader
     */
     GLuint blurImage(GLuint Buffer);
@@ -112,9 +124,22 @@ private:
     */
     GLfloat applyAutoAxposure(GLuint Buffer);
 
+    GLuint blurSSR(GLuint);
+    void setupPingPongSSR();
+
 private:
     GLuint SSAOwidth;
     GLuint SSAOheight;
+
+    GLuint SSRFBO;
+    GLuint SSRTexture;
+    GLuint pingpongSSRFBO[2];
+    GLuint pingpongSSRT[2];
+    GLuint DownSamplerFBO;
+    GLuint DownSampledTextures[4];
+    bool SSROn;
+    bool lightShafts;
+
     GLuint ssaoFBO;
     GLuint ssaoBlurFBO;
     GLuint rboDepth;
@@ -140,6 +165,9 @@ private:
     std::unique_ptr<Shader> blurSSAO;
     std::unique_ptr<Shader> finalImage;
     std::unique_ptr<Shader> blurBloom;
+    std::unique_ptr<Shader> ScreenSpaceReflectionShader;
+    std::unique_ptr<Shader> blurSSRShader;
+    std::unique_ptr<Shader> PassThroughShader;
 
     std::vector<glm::vec3> LightPositions;
     /// G-Buffer texture samplers
@@ -150,6 +178,7 @@ private:
     GLuint gAlbedoSpec;
     GLuint gPositionDepth;
     GLuint gNormal;
+    GLuint gLowResDepth;
     GLuint gExpensiveNormal;
     GLuint ssaoColorBuffer;
     GLuint ssaoColorBufferBlur;

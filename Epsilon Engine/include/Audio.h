@@ -4,24 +4,28 @@
 
 #include <AudioElement.h>
 
-class Audio
-{
-public:
-    Audio(){}
-    ~Audio(){}
 
-public:
+namespace Audio {
 
-    void addAudioElement(std::shared_ptr<AudioElement>);
+    class Audio
+    {
+    public:
+        Audio() {}
+        ~Audio() {}
 
-    bool setMasterVolume(float);
-    bool setMusicVolume(float);
-    bool setGameVolume(float);
+    public:
 
-private:
-    float m_MasterVolume;
-    float m_MusicVolume;
-    float m_GameVolume;
+        void addAudioElement(std::shared_ptr<AudioElement>);
 
-    std::vector<std::shared_ptr<AudioElement>> m_AudioElementsCollection;
-};
+        bool setMasterVolume(float);
+        bool setMusicVolume(float);
+        bool setGameVolume(float);
+
+    private:
+        float m_MasterVolume;
+        float m_MusicVolume;
+        float m_GameVolume;
+
+        std::vector<std::shared_ptr<AudioElement>> m_AudioElementsCollection;
+    };
+}
