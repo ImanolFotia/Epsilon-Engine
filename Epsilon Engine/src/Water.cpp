@@ -14,11 +14,11 @@ Water::Water(glm::vec3 position, float scale)
     this->ReflectionResoulution = 512;
     this->RefractionResoulution = 512;
 
-    this->CreateReflectionFBO();
-    this->CreateRefractionFBO();
+
+    m_Model = (std::shared_ptr<Model>) new Model("models/plane.eml");
+
     this->LoadShaders();
     this->LoadTextures();
-    this->GeneratevertexArray();
 }
 
 void Water::RenderWater(std::unique_ptr<Camera>& cam, glm::vec3 lightDir)
@@ -27,31 +27,19 @@ void Water::RenderWater(std::unique_ptr<Camera>& cam, glm::vec3 lightDir)
     glDisable(GL_CULL_FACE);
 
     glActiveTexture(GL_TEXTURE0);
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "reflectionSampler"), 0);
-    glBindTexture(GL_TEXTURE_2D, this->reflectionTexture);
-
-    glActiveTexture(GL_TEXTURE1);
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "refractionSampler"), 1);
-    glBindTexture(GL_TEXTURE_2D, this->refractionTexture);
-
-    glActiveTexture(GL_TEXTURE2);
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "depthSampler"), 2);
-    glBindTexture(GL_TEXTURE_2D, this->refractionDepthTexture);
-
-    glActiveTexture(GL_TEXTURE3);
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "normalSampler"), 3);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "normalSampler"), 0);
     glBindTexture(GL_TEXTURE_2D, this->normalTexture);
 
-    glActiveTexture(GL_TEXTURE4);
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "DuDvSampler"), 4);
+    glActiveTexture(GL_TEXTURE1);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "DuDvSampler"), 1);
     glBindTexture(GL_TEXTURE_2D, this->DuDvTexture);
 
-    glActiveTexture(GL_TEXTURE5);
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "foamSampler"), 5);
+    glActiveTexture(GL_TEXTURE2);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "foamSampler"), 2);
     glBindTexture(GL_TEXTURE_2D, this->foamTexture);
 
-    glActiveTexture(GL_TEXTURE6);
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "diffuseSampler"), 6);
+    glActiveTexture(GL_TEXTURE3);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "diffuseSampler"), 3);
     glBindTexture(GL_TEXTURE_2D, this->diffuseTexture);
 
 
@@ -59,20 +47,20 @@ void Water::RenderWater(std::unique_ptr<Camera>& cam, glm::vec3 lightDir)
     /// glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(scale,1,scale));
     glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), this->position);
     model = TranslationMatrix;
+    model = glm::scale(model, glm::vec3(scale, 1.0f, scale));
     this->MVP = cam->getProjectionMatrix() * cam->getViewMatrix() * model;
     glm::mat4 view = glm::mat4(cam->getViewMatrix());
 
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "model"), 1, GL_FALSE, &model[0][0]);
-    glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "view"), 1, GL_FALSE, &cam->getViewMatrix()[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "view"), 1, GL_FALSE, &view[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "projection"), 1, GL_FALSE, &cam->getProjectionMatrix()[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "MVP"), 1, GL_FALSE, &this->MVP[0][0]);
     glUniform1f(glGetUniformLocation(shader->getProgramID(), "time"),  glfwGetTime());
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "cameraPosition"), cam->getPosition().x, cam->getPosition().y, cam->getPosition().z);
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "LightDirection"), lightDir.x, lightDir.y, lightDir.z);
 
-    glBindVertexArray(this->VAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
+    m_Model->DrawNoTexture();
+
     glEnable(GL_CULL_FACE);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -81,23 +69,18 @@ void Water::RenderWater(std::unique_ptr<Camera>& cam, glm::vec3 lightDir)
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, 0);
     glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glActiveTexture(GL_TEXTURE4);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glActiveTexture(GL_TEXTURE5);
-    glBindTexture(GL_TEXTURE_2D, 0);
 
 
 }
 
 void Water::LoadTextures(void)
 {
-    eTexture* tex = new eTexture("Wavy_Water - Height (Normal Map 2).png");
+    eTexture* tex = new eTexture("Wavy_Water - Height (Normal Map 4).png");
     normalTexture = tex->getTextureID();
 
     delete tex;
 
-    eTexture* tex2 = new eTexture("Wavy_Water - DuDvt.png");
+    eTexture* tex2 = new eTexture("Well Preserved Chesterfield - (Normal Map_2).png");
     DuDvTexture = tex2->getTextureID();
 
     delete tex2;

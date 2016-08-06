@@ -39,7 +39,10 @@
 #include <sys/Mouse.h>
 #include <sys/Joystick.h>
 #include <Player.h>
-#include <WAVFile.h>
+#include <Audio.h>
+#include <AudioElement.h>
+#include <AudioListener.h>
+
 class Epsilon
 {
 public:
@@ -77,6 +80,8 @@ private:
     void Render3D(void);
 
     void Render2D(void);
+
+    void ProcessAudio(void);
 
     void RenderLegacy(void);
 
@@ -120,6 +125,10 @@ public:
     std::unique_ptr<ShadowMap> shadowMap;
     std::unique_ptr<PostProcess> PP;
     std::shared_ptr<EntityTemplate> EntityTest[2];
+    std::unique_ptr<Audio::AudioElement> m_AudioElement;
+    std::unique_ptr<Audio::Audio> m_AudioSystem;
+    std::unique_ptr<Audio::AudioListener> m_AudioListener;
+
     //std::shared_ptr<Game::Player> m_PlayerCapsule;
     /** Window Properties **/
 

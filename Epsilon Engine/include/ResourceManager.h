@@ -162,6 +162,15 @@ public:
      */
     GLuint useCubeMap(int ID);
 
+     /** \brief Returns the number of times a texture is used per frame
+     *
+     * \param Texture name.
+     * \return Number of times that texture was used in the frame
+     */
+    int requestTextureUsage(std::string);
+
+    void resetTextureUsage(std::string);
+
     std::shared_ptr<Camera> m_Camera;
 
     std::shared_ptr<Physics::Physics> m_PhysicsWorld;

@@ -8,9 +8,13 @@ namespace Audio
 {
     namespace File
     {
-        namespace WAV
+        class WAVfile
         {
-            static std::shared_ptr<char> Load(const char* fn,int& chan,int& samplerate,int& bps,int& size)
+        public:
+            WAVfile() = default;
+            ~WAVfile(){}
+
+            std::shared_ptr<char> Load(const char* fn)
             {
                 char buffer[4];
                 std::ifstream inFILE(fn,std::ios::binary);
@@ -46,6 +50,32 @@ namespace Audio
 
                 return data;
             }
-        }
+
+            int getNumberOfChannels()
+            {
+                return chan;
+            }
+
+            int getSampleRate()
+            {
+                return samplerate;
+            }
+
+            int getBPS()
+            {
+                return bps;
+            }
+
+            int getFileSize()
+            {
+                return size;
+            }
+
+        private:
+            int chan;
+            int samplerate;
+            int bps;
+            int size;
+        };
     }
 }

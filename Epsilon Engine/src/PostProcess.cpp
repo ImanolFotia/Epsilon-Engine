@@ -266,12 +266,12 @@ void PostProcess::setupSSAO()
     std::uniform_real_distribution<GLfloat> randomFloatsClamped(0.2, 1.0); // generates random floats between 0.0 and 1.0
     std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0); // generates random floats between 0.0 and 1.0
     std::default_random_engine generator;
-    for (GLuint i = 0; i < 20; ++i)
+    for (GLuint i = 0; i < 32; ++i)
     {
         glm::vec3 sample(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, randomFloatsClamped(generator));
         sample = glm::normalize(sample);
         sample *= randomFloats(generator);
-        GLfloat scale = GLfloat(i) / 20.0;
+        GLfloat scale = GLfloat(i) / 32.0;
 
         // Scale samples s.t. they're more aligned to center of kernel
         scale = lerp(0.1f, 1.0f, scale * scale);
@@ -297,13 +297,14 @@ void PostProcess::setupSSAO()
 
 void PostProcess::applySSAO(std::unique_ptr<Camera>& cam)
 {
+    DownSampleSSR();
     glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
     glClear(GL_COLOR_BUFFER_BIT);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     SSAO->Use();
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(glGetUniformLocation(SSAO->getProgramID(), "gPositionDepth"), 0);
-    glBindTexture(GL_TEXTURE_2D, this->gPositionDepth);
+    glBindTexture(GL_TEXTURE_2D, this->DownSampledTextures[0]);
 
     glActiveTexture(GL_TEXTURE1);
     glUniform1i(glGetUniformLocation(SSAO->getProgramID(), "gNormal"), 1);
@@ -313,7 +314,7 @@ void PostProcess::applySSAO(std::unique_ptr<Camera>& cam)
     glUniform1i(glGetUniformLocation(SSAO->getProgramID(), "texNoise"), 2);
     glBindTexture(GL_TEXTURE_2D, this->noiseTexture);
 
-    glUniform3fv(glGetUniformLocation(SSAO->getProgramID(), "samples"), 20, &ssaoKernel[0][0]);
+    glUniform3fv(glGetUniformLocation(SSAO->getProgramID(), "samples"), 32, &ssaoKernel[0][0]);
 
     glUniformMatrix4fv(glGetUniformLocation(SSAO->getProgramID(), "projection"), 1, GL_FALSE, &cam->getProjectionMatrix()[0][0]);
     glUniform1i(glGetUniformLocation(this->shader->getProgramID(), "width"), (float)width);
@@ -626,7 +627,7 @@ void PostProcess::ShowPostProcessImage(float exposure, GLuint ShadowMapID, glm::
     glViewport(0,0,this->width, this->height);
     finalImage->Use();
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(glGetUniformLocation(finalImage->getProgramID(), "sampler"), 0);
@@ -658,6 +659,7 @@ void PostProcess::ShowPostProcessImage(float exposure, GLuint ShadowMapID, glm::
     glUniformMatrix4fv(glGetUniformLocation(finalImage->getProgramID(), "projection"), 1, GL_FALSE, &cam->getProjectionMatrix()[0][0]);
     glUniform3f(glGetUniformLocation(finalImage->getProgramID(), "sunPos"), Sun.x, Sun.y, Sun.z);
     glUniform1i(glGetUniformLocation(finalImage->getProgramID(), "lightShafts"), this->lightShafts);
+    glUniform2f(glGetUniformLocation(finalImage->getProgramID(), "Resolution"), this->width, this->height);
 
     glUniform1f(glGetUniformLocation(finalImage->getProgramID(), "exposure"), exposure);
     glUniform1f(glGetUniformLocation(finalImage->getProgramID(), "time"), glfwGetTime());

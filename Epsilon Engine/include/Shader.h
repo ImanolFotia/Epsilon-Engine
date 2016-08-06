@@ -11,20 +11,39 @@
 #include <string>
 #include <iostream>
 
-class Shader{
+class Shader {
 public:
 
-   Shader(const char*, const char*);
-   virtual ~Shader(void){
-   }
+    //Default Vertex/Fragment Shader constructor
+    Shader(const char*, const char*);
 
-    void Use(void){glUseProgram(this->ProgramID);}
+    //Vertex/Fragment/Geometry shader constructor
+    Shader(const char*, const char*, const char*){}
 
-    void Free(void){glUseProgram(0);}
+    //Vertex/Fragment/Geometry/Tessellation evaluation/Tessellation Control Shader Constructor
+    Shader(const char*, const char*, const char*, const char*, const char*){}
 
-    GLuint getProgramID(){return this->ProgramID;}
+    //Compute Shader Constructor
+    Shader(const char*){}
 
-    std::string getPath(){return this->Path;}
+    virtual ~Shader(void){
+    }
+
+    void Use(void) {
+        glUseProgram(this->ProgramID);
+    }
+
+    void Free(void) {
+        glUseProgram(0);
+    }
+
+    GLuint getProgramID() {
+        return this->ProgramID;
+    }
+
+    std::string getPath() {
+        return this->Path;
+    }
 
 private:
     GLuint ProgramID;

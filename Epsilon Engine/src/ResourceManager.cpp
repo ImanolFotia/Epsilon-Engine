@@ -149,6 +149,51 @@ void ResourceManager::loadQueuedTextures()
     }
 }
 
+
+int ResourceManager::requestTextureUsage(std::string texPath)
+{
+    try
+    {
+        std::map<std::string, eTexture>::iterator it;
+        it = TextureList.find(texPath);
+        if(it != TextureList.end())
+        {
+            return TextureList.at(it->first).getTimesUsed();
+        }
+        else
+        {
+            std::cout << ":: ERROR :: The texture requested is not loaded in the system" << std::endl << std::endl;
+            return 0;
+        }
+    }
+    catch(...)
+    {
+        throw;
+    }
+}
+
+void ResourceManager::resetTextureUsage(std::string texPath)
+{
+    try
+    {
+        std::map<std::string, eTexture>::iterator it;
+        it = TextureList.find(texPath);
+        if(it != TextureList.end())
+        {
+            TextureList.at(it->first).resetRequestCount();
+        }
+        else
+        {
+            std::cout << ":: ERROR :: The texture requested is not loaded in the system" << std::endl << std::endl;
+            return;
+        }
+    }
+    catch(...)
+    {
+        throw;
+    }
+}
+
 std::string ResourceManager::requestShader(std::string shaderPathv, std::string shaderPathf, std::string name)
 {
     try

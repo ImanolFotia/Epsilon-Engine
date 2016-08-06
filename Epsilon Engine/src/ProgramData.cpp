@@ -18,15 +18,16 @@ ProgramData::ProgramData()
         return;
     }
 
-    WINDOW_WIDTH    = (int)reader.GetReal   (     "WINDOW"    ,     "Width"             ,       640     );
-    WINDOW_HEIGHT   = (int)reader.GetReal   (     "WINDOW"    ,     "Height"            ,       480     );
-    FULLSCREEN      = (bool)reader.GetReal  (     "WINDOW"    ,     "FullScreen"        ,       0       );
-    ANISOTROPY      = (float)reader.GetReal (     "VISUAL"    ,     "ANISOTROPY"        ,       0       );
-    MSAA_SAMPLES    = (int)reader.GetReal   (     "VISUAL"    ,     "MSAA_SAMPLES"      ,       0       );
-    MONITOR         = (int)reader.GetReal   (     "VISUAL"    ,     "MONITOR"           ,       0       );
-    VSYNC           = (int)reader.GetReal   (     "VISUAL"    ,     "VSYNC"             ,       0       );
-    SSAO            = (bool)reader.GetReal  (     "VISUAL"    ,     "SSAO"              ,       0       );
-    SHADOWMAP_SIZE  = (int)reader.GetReal   (     "VISUAL"    ,     "SHADOWMAP_SIZE"    ,       1024    );
-    SSR             = (bool)reader.GetReal  (     "VISUAL"    ,     "SSR"               ,       false   );
-    LIGHTSHAFTS     = (bool)reader.GetReal  (     "VISUAL"    ,     "LIGHTSHAFTS"       ,       false   );
+    WINDOW_WIDTH        = (int)reader.GetReal   (     "WINDOW"    ,     "Width"                 ,       640     );
+    WINDOW_HEIGHT       = (int)reader.GetReal   (     "WINDOW"    ,     "Height"                ,       480     );
+    FULLSCREEN          = (bool)reader.GetReal  (     "WINDOW"    ,     "FullScreen"            ,       0       );
+    ANISOTROPY          = (float)reader.GetReal (     "VISUAL"    ,     "ANISOTROPY"            ,       0       );
+    MSAA_SAMPLES        = (int)reader.GetReal   (     "VISUAL"    ,     "MSAA_SAMPLES"          ,       0       );
+    MONITOR             = (int)reader.GetReal   (     "VISUAL"    ,     "MONITOR"               ,       0       );
+    VSYNC               = (int)reader.GetReal   (     "VISUAL"    ,     "VSYNC"                 ,       0       );
+    SSAO                = (bool)reader.GetReal  (     "VISUAL"    ,     "SSAO"                  ,       0       );
+    SHADOWMAP_SIZE      = (int)reader.GetReal   (     "VISUAL"    ,     "SHADOWMAP_SIZE"        ,       1024    );
+    SSR                 = (bool)reader.GetReal  (     "VISUAL"    ,     "SSR"                   ,       false   );
+    LIGHTSHAFTS         = (bool)reader.GetReal  (     "VISUAL"    ,     "LIGHTSHAFTS"           ,       false   );
+    COMPRESSED_TEXTURES = (bool)reader.GetReal  (     "VISUAL"    ,     "COMPRESSED_TEXTURES"   ,       false   );
 }

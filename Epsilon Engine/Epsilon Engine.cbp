@@ -64,6 +64,7 @@
 					<Add directory="deppend/ini/include" />
 					<Add directory="include" />
 					<Add directory="deppend/bullet-2.82-r2704/src" />
+					<Add directory="deppend/openal-soft-1.17.2-bin/include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -74,6 +75,7 @@
 					<Add option="-linih" />
 					<Add option="-lglew32.dll" />
 					<Add option="-lgdi32" />
+					<Add option="-lOpenAL32.dll" />
 					<Add library="deppend\bullet-2.82-r2704\build\vs2010\libBulletDynamics.a" />
 					<Add library="deppend\bullet-2.82-r2704\build\vs2010\libBulletCollision.a" />
 					<Add library="deppend\bullet-2.82-r2704\build\vs2010\libLinearMath.a" />
@@ -83,6 +85,7 @@
 					<Add directory="deppend/SOIL/lib" />
 					<Add directory="deppend/FreeType2/lib" />
 					<Add directory="deppend/ini/lib" />
+					<Add directory="deppend/openal-soft-1.17.2-bin/libs/Win32" />
 				</Linker>
 			</Target>
 		</Build>

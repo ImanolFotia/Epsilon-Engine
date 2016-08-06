@@ -26,6 +26,7 @@ public:
     bool SSAO;
     bool SSR;
     bool LIGHTSHAFTS;
+    bool COMPRESSED_TEXTURES;
 };
 #endif
 

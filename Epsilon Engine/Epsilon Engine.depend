@@ -245,7 +245,7 @@
 	<GL/glext.h>
 	<GL/glu.h>
 
-1469941131 source:d:\epsilon\epsilon engine\src\epsilon.cpp
+1470464032 source:d:\epsilon\epsilon engine\src\epsilon.cpp
 	<iostream>
 	<Epsilon.h>
 	<ProgramData.h>
@@ -260,7 +260,7 @@
 	<EpsilonMemory.h>
 	<sys/CPUID.h>
 
-1468716758 d:\epsilon\epsilon engine\include\epsilon.h
+1470444150 d:\epsilon\epsilon engine\include\epsilon.h
 	<map>
 	<GL/glew.h>
 	<GL/gl.h>
@@ -290,7 +290,9 @@
 	<sys/Mouse.h>
 	<sys/Joystick.h>
 	<Player.h>
-	<WAVFile.h>
+	<Audio.h>
+	<AudioElement.h>
+	<AudioListener.h>
 
 1430094264 d:\epsilon\epsilon engine\include\app.h
 	<GL/glew.h>
@@ -307,7 +309,7 @@
 	<fstream>
 	<algorithm>
 
-1467076899 d:\epsilon\epsilon engine\include\shader.h
+1470454857 d:\epsilon\epsilon engine\include\shader.h
 	<GL/glew.h>
 	<string>
 	<iostream>
@@ -477,7 +479,7 @@
 1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\postprocess.h
 	"types.h"
 
-1468896579 source:d:\epsilon\epsilon engine\src\camera.cpp
+1470090412 source:d:\epsilon\epsilon engine\src\camera.cpp
 	<iostream>
 	<camera.h>
 	<math.h>
@@ -491,7 +493,7 @@
 	<GLFW/glfw3.h>
 	<iostream>
 
-1469068921 d:\epsilon\epsilon engine\include\texture.h
+1470455502 d:\epsilon\epsilon engine\include\texture.h
 	<iostream>
 	<string>
 	<vector>
@@ -499,7 +501,7 @@
 	<SOIL.h>
 	<ProgramData.h>
 
-1468998439 d:\epsilon\epsilon engine\include\main.h
+1470454549 d:\epsilon\epsilon engine\include\main.h
 	<ProgramData.h>
 	<Epsilon.h>
 	<memory>
@@ -569,9 +571,9 @@
 1430970208 source:d:\epsilon\epsilon engine\src\resources.rc
 	<Windows.h>
 
-1469321736 d:\epsilon\epsilon engine\include\programdata.h
+1470007321 d:\epsilon\epsilon engine\include\programdata.h
 
-1469321618 source:d:\epsilon\epsilon engine\src\programdata.cpp
+1470007291 source:d:\epsilon\epsilon engine\src\programdata.cpp
 	<iostream>
 	<INIReader.h>
 	<ProgramData.h>
@@ -611,7 +613,7 @@
 	<memory>
 	<Texture.h>
 
-1469939184 source:d:\epsilon\epsilon engine\src\postprocess.cpp
+1470459585 source:d:\epsilon\epsilon engine\src\postprocess.cpp
 	<PostProcess.h>
 	<iostream>
 	<ProgramData.h>
@@ -773,16 +775,17 @@
 	<vector>
 	<glm/gtc/quaternion.hpp>
 
-1469934578 source:d:\epsilon\epsilon engine\src\water.cpp
+1470462825 source:d:\epsilon\epsilon engine\src\water.cpp
 	<Water.h>
 
-1466483067 d:\epsilon\epsilon engine\include\water.h
+1470458473 d:\epsilon\epsilon engine\include\water.h
 	<GL/glew.h>
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
 	<Shader.h>
 	<Texture.h>
 	<Camera.h>
+	<Model.h>
 	<vector>
 	<memory>
 
@@ -1071,7 +1074,7 @@
 	<Texture.h>
 	<Shader.h>
 
-1469312225 source:d:\epsilon\epsilon engine\src\sun.cpp
+1470025596 source:d:\epsilon\epsilon engine\src\sun.cpp
 	<Sun.h>
 
 1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\glm.hpp
@@ -1570,10 +1573,10 @@
 	"Frustum.h"
 	<iostream>
 
-1465797549 source:d:\epsilon\epsilon engine\src\resourcemanager.cpp
+1470455743 source:d:\epsilon\epsilon engine\src\resourcemanager.cpp
 	"ResourceManager.h"
 
-1468723939 d:\epsilon\epsilon engine\include\resourcemanager.h
+1470455502 d:\epsilon\epsilon engine\include\resourcemanager.h
 	<Texture.h>
 	<Model.h>
 	<Water.h>
@@ -1630,7 +1633,7 @@
 	<iostream>
 	<cmath>
 
-1469941131 d:\epsilon\epsilon engine\version.h
+1470464032 d:\epsilon\epsilon engine\version.h
 
 1466481941 d:\epsilon\epsilon engine\include\entitytemplate.h
 	<Component.h>
@@ -2919,17 +2922,51 @@
 	<sys/KeyBoard.h>
 	<iostream>
 
-1468724027 d:\epsilon\epsilon engine\include\wavfile.h
+1470099293 d:\epsilon\epsilon engine\include\wavfile.h
 	<iostream>
 	<fstream>
 	<memory>
 	<Includes.h>
 
-1468723939 d:\epsilon\epsilon engine\include\audio.h
+1470427999 d:\epsilon\epsilon engine\include\audio.h
 	<vector>
 	<memory>
 	<AudioElement.h>
 
-1468716274 d:\epsilon\epsilon engine\include\audioelement.h
+1470463865 d:\epsilon\epsilon engine\include\audioelement.h
+	<AL/al.h>
+	<AL/alc.h>
 	<Types.h>
+	<WAVFile.h>
+	<iostream>
+
+1456869867 d:\epsilon\epsilon engine\deppend\openal-soft-1.17.2-bin\include\al\al.h
+
+1456869867 d:\epsilon\epsilon engine\deppend\openal-soft-1.17.2-bin\include\al\alc.h
+
+1470446497 d:\epsilon\epsilon engine\include\audiolistener.h
+	<AL/al.h>
+	<AL/alc.h>
+	<glm/glm.hpp>
+
+1470451971 d:\epsilon\epsilon engine\deppend\glfw-3.2.bin.win32\include\glfw\glfw3.h
+	<stddef.h>
+	<stdint.h>
+	<OpenGL/gl3.h>
+	<OpenGL/gl3ext.h>
+	<OpenGL/gl.h>
+	<OpenGL/glu.h>
+	<GL/glcorearb.h>
+	<GLES/gl.h>
+	<GLES/glext.h>
+	<GLES2/gl2.h>
+	<GLES2/gl2ext.h>
+	<GLES3/gl3.h>
+	<GLES2/gl2ext.h>
+	<GLES3/gl31.h>
+	<GLES2/gl2ext.h>
+	<vulkan/vulkan.h>
+	<GL/gl.h>
+	<GL/glext.h>
+	<GL/glu.h>
 

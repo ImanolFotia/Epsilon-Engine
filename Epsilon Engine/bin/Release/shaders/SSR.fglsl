@@ -16,10 +16,10 @@ uniform vec2 Resolution;
 
 const float rayStep = 0.2;
 const float minRayStep = 0.1;
-const float maxSteps = 30;
+const float maxSteps = 20;
 const float searchDist = 5;
 const float searchDistInv = 0.2;
-const int numBinarySearchSteps = 10;
+const int numBinarySearchSteps = 5;
 const float maxDDepth = 1.0;
 const float maxDDepthInv = 1.0;
  
@@ -41,20 +41,14 @@ vec3 BinarySearch(vec3 dir, inout vec3 hitCoord, out float dDepth)
  
  
         depth = texture2D(gPositionDepth, projectedCoord.xy).z;
- 
+
  
         dDepth = hitCoord.z - depth;
-
-        if(hitCoord.x < 0 || hitCoord.x > 1 ||
-			   hitCoord.y < 0 || hitCoord.y > 1 ||
-			   hitCoord.z < 0 || hitCoord.z > 1)
-				break;
-
 
         if(dDepth >= 0.0)
             hitCoord += dir;
  
-        dir *= 0.25;
+        dir *= 0.5;
         hitCoord -= dir;    
     }
  
@@ -73,14 +67,14 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
  
  
     float depth;
- 
+    int steps;
+ vec4 projectedCoord;
  
     for(int i = 0; i < maxSteps; i++)
     {
         hitCoord += dir;
  
- 
-        vec4 projectedCoord = projection * vec4(hitCoord, 1.0);
+        projectedCoord = projection * vec4(hitCoord, 1.0);
         projectedCoord.xy /= projectedCoord.w;
         projectedCoord.xy = projectedCoord.xy * 0.5 + 0.5;
  
@@ -90,7 +84,11 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
         dDepth = hitCoord.z - depth;
  
         if(dDepth < 0.0)
-            return vec4(BinarySearch(dir, hitCoord, dDepth), 1.0);
+        {
+
+            return vec4(BinarySearch(dir, hitCoord, dDepth), steps);
+        }
+        steps++;
     }
  
  
@@ -135,7 +133,7 @@ vec4 screenSpaceReflection()
 {
 
 	//Tweakable variables
-	float initialStepAmount = .01;
+	float initialStepAmount = .04;
 	float stepRefinementAmount = .3;
 	int maxRefinements = 3;
 	int maxDepth = 1;
@@ -223,13 +221,15 @@ void main()
 {
 
 	vec2 gTexCoord = gl_FragCoord.xy/vec2(Resolution);
+	gTexCoord *= 2 - 1;
+	//gTexCoord.x *= Resolution.x / Resolution.y;
  
  
     // Samples
     specular = texture(gColor, TexCoords).a;
  
-    vec3 viewNormal = texture2D(gNormal, gTexCoord).xyz;
-    vec3 viewPos = texture2D(gPositionDepth, gTexCoord).xyz;
+    vec3 viewNormal = texture2D(gNormal, TexCoords).xyz;
+    vec3 viewPos = texture2D(gPositionDepth, TexCoords).xyz;
  
  
     // Reflection vector
@@ -245,10 +245,10 @@ void main()
 	float randomOffset2 = clamp(rand(viewPos.yy),0,1)/1500;
 	vec3 b = vec3(randomOffset1, randomOffset2, 0.0);
  
-    vec4 coords = RayCast((reflected * max(minRayStep, -viewPos.z)) + b, hitPos, dDepth);
+    vec4 coords = RayCast((reflected * max(minRayStep, -viewPos.z)), hitPos, dDepth);
  
  
-    vec2 dCoords = abs(vec2(0.5, 0.5) - coords.xy);
+    vec2 dCoords = smoothstep(0.2, 0.6, abs(vec2(0.5, 0.5) - coords.xy));
  
  
     float screenEdgefactor = clamp(1.0 - (dCoords.x + dCoords.y), 0.0, 1.0);
@@ -258,7 +258,7 @@ void main()
     			clamp(-reflected.z, 0.0, 1.0) * 
     			//clamp((searchDist - length(viewPos - hitPos)) * 
     			//searchDistInv, 0.5, 1.0) * 
-    			coords.w;
+    			1;
  
     // Get color
     vec3 SSR = texture2D(gFinalImage, coords.xy).rgb * asd;  //specular * 0.5 * screenEdgefactor

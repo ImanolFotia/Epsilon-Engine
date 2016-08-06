@@ -7,6 +7,7 @@ in vec2 UV;
 in vec3 FragPos;
 uniform sampler2D sSampler;
 
+in float altitude;
 float gamma = 2.2;
 uniform float exposure;
 
@@ -19,11 +20,13 @@ vec3 HDR(vec3 image)
 void main()
 {
   vec4 SunTexture = texture(sSampler, UV);
+  if(-SunTexture.a > altitude)
+  	discard;
 
   FragColor.rgb = HDR(SunTexture.xyz * 1.0);
   FragColor.a = SunTexture.a;
   blurImage = vec4(FragColor);
-  gPosition = vec4(1000000000.0f);
+  gPosition = vec4(FragPos, 1000000000.0f);
 
 
 }

@@ -84,11 +84,11 @@ void Camera::HandleInputs(GLFWwindow*& window)
 
     float DeltaTime = float( currentTime - LastTime );
 
-    double xpos, ypos;
+    //double xpos, ypos;
     static double lastX, lastY;
 
     glfwGetWindowSize(window , &winx , &winy );
-    glfwGetCursorPos(window, &xpos , &ypos );
+    //glfwGetCursorPos(window, &xpos , &ypos );
     //glfwSetCursorPos(window, winx/2.0, winy/2.0);
 
     horizontalAngle += MouseSpeed * float( lastX - Input::Mouse::XPOS ) ;

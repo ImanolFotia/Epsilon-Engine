@@ -14,7 +14,7 @@
 #include <Shader.h>
 #include <Texture.h>
 #include <Camera.h>
-
+#include <Model.h>
 #include <vector>
 #include <memory>
 
@@ -92,6 +92,7 @@ private:
     GLuint EBO;
 
     std::shared_ptr<Shader> shader;
+    std::shared_ptr<Model> m_Model;
 
     glm::mat4 MVP;
     double ActiveClip;
