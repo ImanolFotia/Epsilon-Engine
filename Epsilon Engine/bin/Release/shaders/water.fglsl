@@ -86,7 +86,7 @@ void main()
     //gAlbedoSpec.rgb = mix(texture(diffuseSampler, finalDist).rgb, gAlbedoSpec.rgb, 0.8);
     gAlbedoSpec.rgb = texture(diffuseSampler, finalDist).rgb;
     gAlbedoSpec.a = 1.0;
-    gExpensiveNormal = normalize(normaltex.tgb * TBN);
+    gExpensiveNormal = normalize(normaltex.rgb * TBN);
 
 
     gNormal = normalize(normaltex.rgb * TBN2);//normalize(normal * mat3(view) /* TBN*/);

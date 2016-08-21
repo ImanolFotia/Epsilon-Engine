@@ -13,6 +13,16 @@ out vec4 outColor;
 uniform mat4 projection;
 uniform vec2 Resolution;
 // Consts should help improve performance
+/*
+const float rayStep = 0.05;
+const float minRayStep = 0.1;
+const float maxSteps = 50;
+const float searchDist = 5;
+const float searchDistInv = 0.2;
+const int numBinarySearchSteps = 5;
+const float maxDDepth = 1.0;
+const float maxDDepthInv = 1.0;
+ */
 
 const float rayStep = 0.2;
 const float minRayStep = 0.1;
@@ -23,7 +33,6 @@ const int numBinarySearchSteps = 5;
 const float maxDDepth = 1.0;
 const float maxDDepthInv = 1.0;
  
- 
 const float reflectionSpecularFalloffExponent = 3.0;
  float specular;
  
@@ -31,13 +40,14 @@ vec3 BinarySearch(vec3 dir, inout vec3 hitCoord, out float dDepth)
 {
     float depth;
 
-        vec4 projectedCoord = projection * vec4(hitCoord, 1.0);
-        projectedCoord.xy /= projectedCoord.w;
-        projectedCoord.xy = projectedCoord.xy * 0.5 + 0.5;
- 
+        vec4 projectedCoord;
  
     for(int i = 0; i < numBinarySearchSteps; i++)
     {
+
+    	projectedCoord = projection * vec4(hitCoord, 1.0);
+        projectedCoord.xy /= projectedCoord.w;
+        projectedCoord.xy = projectedCoord.xy * 0.5 + 0.5;
  
  
         depth = texture2D(gPositionDepth, projectedCoord.xy).z;
@@ -45,12 +55,17 @@ vec3 BinarySearch(vec3 dir, inout vec3 hitCoord, out float dDepth)
  
         dDepth = hitCoord.z - depth;
 
-        if(dDepth >= 0.0)
+        if(dDepth > 0.0)
             hitCoord += dir;
  
         dir *= 0.5;
         hitCoord -= dir;    
     }
+
+
+    	projectedCoord = projection * vec4(hitCoord, 1.0);
+        projectedCoord.xy /= projectedCoord.w;
+        projectedCoord.xy = projectedCoord.xy * 0.5 + 0.5;
  
     return vec3(projectedCoord.xy, depth);
 }
@@ -82,12 +97,13 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
         depth = texture2D(gPositionDepth, projectedCoord.xy).z;
  
         dDepth = hitCoord.z - depth;
- 
+
         if(dDepth < 0.0)
         {
 
-            return vec4(BinarySearch(dir, hitCoord, dDepth), steps);
+            return vec4(BinarySearch(dir, hitCoord, dDepth), 1.0);
         }
+    	
         steps++;
     }
  
@@ -227,6 +243,9 @@ void main()
  
     // Samples
     specular = texture(gColor, TexCoords).a;
+
+    if(specular < 0.15)
+    	discard;
  
     vec3 viewNormal = texture2D(gNormal, TexCoords).xyz;
     vec3 viewPos = texture2D(gPositionDepth, TexCoords).xyz;

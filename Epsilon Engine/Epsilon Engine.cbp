@@ -56,7 +56,7 @@
 					<Add option="-O2" />
 					<Add option="-std=c++11" />
 					<Add directory="deppend/glew/include" />
-					<Add directory="deppend/glfw/include" />
+					<Add directory="deppend/glfw-3.2.bin.WIN32/include" />
 					<Add directory="deppend/glm" />
 					<Add directory="deppend" />
 					<Add directory="deppend/SOIL/src" />
@@ -69,7 +69,7 @@
 				<Linker>
 					<Add option="-s" />
 					<Add option="-lSOIL" />
-					<Add option="deppend\glfw\lib\libglfw3.a" />
+					<Add option="deppend\glfw-3.2.bin.WIN32\lib-mingw\libglfw3.a" />
 					<Add option="-lopengl32" />
 					<Add option="-lfreetype240" />
 					<Add option="-linih" />
@@ -95,6 +95,7 @@
 		</Compiler>
 		<Unit filename="include/Audio.h" />
 		<Unit filename="include/AudioElement.h" />
+		<Unit filename="include/AudioListener.h" />
 		<Unit filename="include/BSP.h" />
 		<Unit filename="include/BSPFace.h" />
 		<Unit filename="include/BSPfile.h" />
@@ -133,6 +134,9 @@
 		<Unit filename="include/camera.h" />
 		<Unit filename="include/emlFormat.h" />
 		<Unit filename="include/main.h" />
+		<Unit filename="include/multithread/Job.h" />
+		<Unit filename="include/multithread/Mutex.h" />
+		<Unit filename="include/multithread/Thread.h" />
 		<Unit filename="include/sys/CPUID.h" />
 		<Unit filename="include/sys/Joystick.h" />
 		<Unit filename="include/sys/KeyBoard.h" />

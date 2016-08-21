@@ -245,7 +245,7 @@
 	<GL/glext.h>
 	<GL/glu.h>
 
-1470464032 source:d:\epsilon\epsilon engine\src\epsilon.cpp
+1471772831 source:d:\epsilon\epsilon engine\src\epsilon.cpp
 	<iostream>
 	<Epsilon.h>
 	<ProgramData.h>
@@ -260,7 +260,7 @@
 	<EpsilonMemory.h>
 	<sys/CPUID.h>
 
-1470444150 d:\epsilon\epsilon engine\include\epsilon.h
+1470610304 d:\epsilon\epsilon engine\include\epsilon.h
 	<map>
 	<GL/glew.h>
 	<GL/gl.h>
@@ -300,7 +300,7 @@
 	<iostream>
 	<string>
 
-1467077051 source:d:\epsilon\epsilon engine\src\shader.cpp
+1470635254 source:d:\epsilon\epsilon engine\src\shader.cpp
 	<Shader.h>
 	<stdio.h>
 	<string>
@@ -493,7 +493,7 @@
 	<GLFW/glfw3.h>
 	<iostream>
 
-1470455502 d:\epsilon\epsilon engine\include\texture.h
+1471483729 d:\epsilon\epsilon engine\include\texture.h
 	<iostream>
 	<string>
 	<vector>
@@ -501,7 +501,7 @@
 	<SOIL.h>
 	<ProgramData.h>
 
-1470454549 d:\epsilon\epsilon engine\include\main.h
+1470639214 d:\epsilon\epsilon engine\include\main.h
 	<ProgramData.h>
 	<Epsilon.h>
 	<memory>
@@ -604,7 +604,7 @@
 	<glm/gtc/matrix_transform.hpp>
 	<Shader.h>
 
-1469842985 d:\epsilon\epsilon engine\include\postprocess.h
+1470807960 d:\epsilon\epsilon engine\include\postprocess.h
 	<GL/glew.h>
 	<Shader.h>
 	<camera.h>
@@ -613,7 +613,7 @@
 	<memory>
 	<Texture.h>
 
-1470459585 source:d:\epsilon\epsilon engine\src\postprocess.cpp
+1470811390 source:d:\epsilon\epsilon engine\src\postprocess.cpp
 	<PostProcess.h>
 	<iostream>
 	<ProgramData.h>
@@ -1628,12 +1628,12 @@
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
 
-1469063513 source:d:\epsilon\epsilon engine\src\shadowmapping.cpp
+1471771032 source:d:\epsilon\epsilon engine\src\shadowmapping.cpp
 	<ShadowMapping.h>
 	<iostream>
 	<cmath>
 
-1470464032 d:\epsilon\epsilon engine\version.h
+1471772831 d:\epsilon\epsilon engine\version.h
 
 1466481941 d:\epsilon\epsilon engine\include\entitytemplate.h
 	<Component.h>
@@ -1643,7 +1643,7 @@
 	<memory>
 	<ResourceManager.h>
 
-1469061736 d:\epsilon\epsilon engine\include\component.h
+1471628006 d:\epsilon\epsilon engine\include\component.h
 	<iostream>
 	<glm/glm.hpp>
 	<Model.h>
@@ -2910,7 +2910,7 @@
 	<GLFW/glfw3.h>
 	<iostream>
 
-1457715723 d:\epsilon\epsilon engine\include\sys\cpuid.h
+1471720139 d:\epsilon\epsilon engine\include\sys\cpuid.h
 	<string>
 	<iostream>
 	<limits.h>
@@ -2928,7 +2928,7 @@
 	<memory>
 	<Includes.h>
 
-1470427999 d:\epsilon\epsilon engine\include\audio.h
+1471627978 d:\epsilon\epsilon engine\include\audio.h
 	<vector>
 	<memory>
 	<AudioElement.h>

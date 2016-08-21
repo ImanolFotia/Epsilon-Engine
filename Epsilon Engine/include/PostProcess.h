@@ -136,7 +136,7 @@ private:
     GLuint pingpongSSRFBO[2];
     GLuint pingpongSSRT[2];
     GLuint DownSamplerFBO;
-    GLuint DownSampledTextures[4];
+    GLuint DownSampledTexture;
     bool SSROn;
     bool lightShafts;
 

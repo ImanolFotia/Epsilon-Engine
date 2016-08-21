@@ -24,6 +24,8 @@ namespace Audio {
                 return ;
             }
             alcMakeContextCurrent(context);
+            alDopplerFactor(1.0f);
+            alDopplerVelocity(340.29f);
         }
         ~Audio() {
 

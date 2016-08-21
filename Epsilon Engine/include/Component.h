@@ -143,6 +143,40 @@ public:
     virtual void Fill(bool, bool){}
     virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader){}
 };
+
+
+
+/// Rendering Components
+class SoundComponent : public Component
+{
+public:
+    SoundComponent()
+    {
+    }
+
+    ~SoundComponent()
+    {
+        std::cout << "SoundComponent Destructor" << std::endl;
+    }
+public:
+
+    void Fill(float volume, float radius, glm::vec3 position, glm::vec3 direction)
+    {
+
+    }
+
+    void Update(std::shared_ptr<ResourceManager> rm)
+    {
+    }
+
+
+    /** Functions declared for the sake of pure virtual function polymorphism, must not be used for production*/
+    virtual void Fill(bool, bool){}
+    virtual void Fill(float, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer){}
+    virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader){}
+
+};
+
 }
 
 #endif // COMPONENT_H_INCLUDED

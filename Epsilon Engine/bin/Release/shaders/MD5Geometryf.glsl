@@ -36,7 +36,7 @@ void main()
 	vec3 norm = normalize(Normal.rgb);
 
 	gNormal.rgb = norm;
-      gNormal.a = gl_FragCoord.z;
+    gNormal.a = gl_FragCoord.z;
 
 	gAlbedoSpec.rgb = clamp(texture2D(sampler, TexCoords).rgb, 0, 10000);
 

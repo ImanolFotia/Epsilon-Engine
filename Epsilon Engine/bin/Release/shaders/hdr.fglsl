@@ -62,6 +62,12 @@ vec3 lOff(){
     return l;
     
 }
+
+vec3 changeSaturation(vec3 color, float saturation)
+{
+    float luma = dot(vec3(0.213, 0.715, 0.072) * color, vec3(1.));
+    return mix(vec3(luma), color, saturation);
+}
     // Radial blur factors.
     //
     // Falloff, as we radiate outwards.
@@ -96,7 +102,7 @@ void main()
 	vec4 lensMod = texture(uLensDirtTex, TexCoords);
 	lensMod += texture(uLensStarTex, TexCoords);
 
-    vec3 hdrColor = texture(sampler, TexCoords).rgb;
+    vec3 hdrColor = texture(sampler, TexCoords, 0.0).rgb;
     vec3 SSR = texture(gReflectionSampler, TexCoords).rgb;
     vec3 bloom = texture(blurredSampler, TexCoords).rgb;
 
@@ -126,12 +132,16 @@ void main()
 }
 
     col = mix(col, vec4(0.0), length(vec2(0.0) - pos.xy));
-    col = vec4(clamp(col.x, 0.0, 1.0), clamp(col.y, 0.0, 1.0), clamp(col.z, 0.0, 1.0), col.w) * 0.25 * normalize(vec4(205, 109, 39, 1.0));
+    col = vec4(clamp(col.x, 0.0, 1.0), clamp(col.y, 0.0, 1.0), clamp(col.z, 0.0, 1.0), col.w) * 0.25 /** normalize(vec4(205, 109, 39, 1.0))*/;
 
 	fragcoord = gl_FragCoord.xy/Resolution;
     float vignete = 1.0 - smoothstep(0.9, 1.75, length(vec2(0.0) - (fragcoord * 2.0 - 1.0)));
 
-    color.rgb  = HDR((hdrColor + col.rgb + bloom + (result.rgb * lensMod.rgb*5) ) + SSR ) * vignete;
+    //hdrColor = changeSaturation(hdrColor, 0.7);
+
+    color.rgb  = HDR((hdrColor + col.rgb + bloom + (result.rgb * lensMod.rgb*5) ) + SSR*0.3 ) * vignete;
+
+    
 
     color.a = 1.0;
 

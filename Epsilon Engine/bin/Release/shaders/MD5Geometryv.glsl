@@ -58,7 +58,7 @@ void main()
 	TexCoords = in_texCoord;
 
   	mat3 normalMatrix = transpose(inverse(mat3(model * matTransform)));
-    	TBN = CreateTBNMatrix(normalMatrix);
+    TBN = CreateTBNMatrix(normalMatrix);
 	normalMatrix = transpose(inverse(mat3(view * model * matTransform)));
 	Normal = normalMatrix  * in_normal;
 }

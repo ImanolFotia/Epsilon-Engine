@@ -58,15 +58,9 @@ public:
         }
         else {
             if(type == GL_TEXTURE_2D)//GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT
-                if(DATA.COMPRESSED_TEXTURES)
-                    glTexImage2D(type, 0, GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-                else
                     glTexImage2D(type, 0, GL_SRGB_ALPHA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 
             else if(type == GL_TEXTURE_1D)
-                if(DATA.COMPRESSED_TEXTURES)
-                    glTexImage1D(type, 0, GL_RGBA, width, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-                else
                     glTexImage1D(type, 0, GL_RGBA, width, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
         }
         glGenerateMipmap(type);

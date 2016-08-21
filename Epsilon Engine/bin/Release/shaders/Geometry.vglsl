@@ -1,4 +1,4 @@
-#version 330 core
+#version 440 core
 
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec2 vertexUV;
@@ -6,28 +6,24 @@ layout(location = 2) in vec3 normal;
 layout(location = 3) in vec3 tangent;
 layout(location = 4) in vec3 bitangent;
 
-
+out VS_OUT{
 out vec3 FragPos;
 out vec3 Normal;
 out vec2 TexCoords;
 out mat3 TBN;
 out mat3 TBN2;
 out vec3 wFragPos;
+} vs_out;
+
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
-
-uniform sampler2D texture_diffuse;
-uniform sampler2D texture_specular;
-uniform sampler2D texture_normal;
-uniform sampler2D texture_height;
-uniform samplerCube skybox;
-
 uniform vec4 clipplane;
 
 vec3 T;
 vec3 B;
 vec3 N;
+
 mat3 CreateTBNMatrix(mat3 normalMatrix)
 {
      T = normalize(normalMatrix * tangent);
@@ -42,14 +38,14 @@ void main()
   vec4 worldPos = model * vec4(position, 1.0);
   gl_ClipDistance[0] = dot(worldPos, clipplane);
   vec4 viewPos = view * worldPos;
-  FragPos = viewPos.xyz;
-  wFragPos = worldPos.xyz;
+  vs_out.FragPos = viewPos.xyz;
+  vs_out.wFragPos = worldPos.xyz;
   gl_Position = projection * viewPos;
-  TexCoords = vertexUV;
+  vs_out.TexCoords = vertexUV;
 
   mat3 normalMatrix = transpose(inverse(mat3(model)));
-  TBN = CreateTBNMatrix(normalMatrix);
+  vs_out.TBN = CreateTBNMatrix(normalMatrix);
   normalMatrix = transpose(inverse(mat3(view * model)));
-  TBN2 = CreateTBNMatrix(normalMatrix);
-  Normal = normalMatrix * normal;
+  vs_out.TBN2 = CreateTBNMatrix(normalMatrix);
+  vs_out.Normal = normalMatrix * normal;
 }

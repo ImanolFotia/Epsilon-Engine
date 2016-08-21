@@ -14,7 +14,7 @@
 Shader::Shader(const char* vertex, const char* fragment)
 {
     Path = std::string(vertex);
-
+    std::cout << fragment << std::endl;
     /// Create the shaders
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);

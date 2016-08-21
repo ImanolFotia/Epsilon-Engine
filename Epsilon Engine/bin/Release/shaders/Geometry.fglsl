@@ -7,18 +7,21 @@ layout(location = 3) out vec3 gExpensiveNormal;
 layout(location = 4) out vec3 gWorldSpacePosition;
 layout(location = 5) out float gDepth;
 
-in vec3 Normal;
-in vec3 FragPos;
-in vec2 TexCoords;
-in mat3 TBN;
-in vec3 wFragPos;
-in mat3 TBN2;
-
 layout (binding = 0) uniform sampler2D texture_diffuse;
 layout (binding = 1) uniform sampler2D texture_specular;
 layout (binding = 2) uniform sampler2D texture_normal;
 layout (binding = 3) uniform sampler2D texture_height;
 layout (binding = 4) uniform samplerCube skybox;
+
+in VS_OUT{
+  vec3 FragPos;
+  vec3 Normal;
+  vec2 TexCoords;
+  mat3 TBN;
+  mat3 TBN2;
+  vec3 wFragPos;
+} fs_in;
+
 
 uniform int clip_Direction;
 uniform bool BelowWater;
@@ -27,7 +30,6 @@ uniform vec3 viewPos;
 
 float NEAR = 0.1;
 float FAR = 3000.0;
-
 float LinearizeDepth(float depth)
 {
     float z = depth * 2.0 - 1.0; // Back to NDC
@@ -37,30 +39,43 @@ float LinearizeDepth(float depth)
 
 void main()
 {
-      if(texture(texture_diffuse, TexCoords).a < 0.3)
-            discard;    
+  if(texture(texture_diffuse, fs_in.TexCoords).a < 0.3)
+    discard;    
 
-  vec3 normalTexture = (texture(texture_normal, TexCoords).rgb * 2.0 - 1.0);
-  gExpensiveNormal = normalize(normalTexture * TBN);
+  vec3 normalTexture = (texture(texture_normal, fs_in.TexCoords).rgb * 2.0 - 1.0);
+  gExpensiveNormal = normalize(normalTexture * fs_in.TBN);
 
-  gAlbedoSpec.a = texture(texture_specular, TexCoords).r;
-  vec3 metallic = texture(texture_height, TexCoords).rgb;
+  gAlbedoSpec.a = texture(texture_specular, fs_in.TexCoords).r;
+  vec3 metallic = texture(texture_height, fs_in.TexCoords).rgb;
 
-    vec4 CubeMapcolor = vec4(0.0);
-    vec3 R = vec3(0.0);
-    if( texture( skybox, vec3(0)).x > 0){
-    vec3 I = normalize(wFragPos - viewPos);
+  vec4 CubeMapcolor = vec4(0.0);
+  vec3 R = vec3(0.0);
+
+  if( texture( skybox, vec3(0)).x > 0)
+  {
+    vec3 I = normalize(fs_in.wFragPos - viewPos);
     R = reflect(I, normalize(gExpensiveNormal));
     CubeMapcolor = textureLod(skybox, R, 0.0);
-    gAlbedoSpec.rgb = mix(mix(CubeMapcolor.rgb, texture(texture_diffuse, TexCoords).rgb*0.3, 0.5), texture(texture_diffuse, TexCoords).rgb, clamp(metallic, 0.1, 1.0) );
+
+    gAlbedoSpec.rgb = mix(    mix(    CubeMapcolor.rgb, 
+                                      texture(texture_diffuse, fs_in.TexCoords).rgb*0.3,
+                                      0.5
+                                ), 
+
+                                texture(texture_diffuse, 
+                                fs_in.TexCoords).rgb, 
+                                clamp(metallic, 0.1, 1.0)
+                          );
   }
-  else{
-  gAlbedoSpec.rgb = texture(texture_diffuse, TexCoords).rgb;
-}
-  gNormal.rgb = normalize(normalTexture * TBN2);
-  gPosition.rgb = FragPos;
+  else
+  {
+    gAlbedoSpec.rgb = texture(texture_diffuse, fs_in.TexCoords).rgb;
+  }
+
+  gNormal.rgb = normalize(normalTexture * fs_in.TBN2);
+  gPosition.rgb = fs_in.FragPos;
   float Depth = LinearizeDepth(gl_FragCoord.z);
   gPosition.a = Depth;
   gDepth = Depth;
-  gWorldSpacePosition.rgb = wFragPos;
+  gWorldSpacePosition.rgb = fs_in.wFragPos;
 }

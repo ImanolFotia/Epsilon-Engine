@@ -118,7 +118,7 @@ public:
     GLFWwindow* window = nullptr;
     std::unique_ptr<Text> text;
     std::unique_ptr<Text> text2;
-    std::shared_ptr<Terrain> terrain;
+    //std::shared_ptr<Terrain> terrain;
     std::shared_ptr<Sun> sun;
     std::unique_ptr<CQuake3BSP> BSPMap;
     std::unique_ptr<MD5Model> m_AnimModel;

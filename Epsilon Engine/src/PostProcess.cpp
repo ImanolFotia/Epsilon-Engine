@@ -44,7 +44,7 @@ void PostProcess::SetupFramebuffer()
     lensDirt = (std::shared_ptr<eTexture>) new eTexture("effects/lensdirt.png");
     lensStar = (std::shared_ptr<eTexture>) new eTexture("effects/lensstar.png");
 
-    /*
+/*
             LightPositions.push_back(glm::vec3(-41, 12.0, -23));
             LightPositions.push_back(glm::vec3(-39, 10.3, 2));
             LightPositions.push_back(glm::vec3(17.2, 17.3, -17));
@@ -52,7 +52,7 @@ void PostProcess::SetupFramebuffer()
             LightPositions.push_back(glm::vec3(122.7, 13.63, 5.3));
             LightPositions.push_back(glm::vec3(-14, 16.63, 32.3));
             LightPositions.push_back(glm::vec3(80.5, 17.21, 1.57));
-    */
+*/
     /* MSAA buffer
         glGenFramebuffers(1, &hdrFBO);
         glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
@@ -98,12 +98,13 @@ void PostProcess::SetupFramebuffer()
     glGenTextures(1, &colorBuffer);
     glBindTexture(GL_TEXTURE_2D, colorBuffer);
     glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB16F, width, height, 0,GL_RGB, GL_FLOAT, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
+    glGenerateMipmap(GL_TEXTURE_2D);
 
     glGenTextures(1, &brightColorBuffer);
     glBindTexture(GL_TEXTURE_2D, brightColorBuffer);
@@ -191,7 +192,7 @@ void PostProcess::SetupGBuffer()
     /// - Position color buffer
     glGenTextures(1, &gPositionDepth);
     glBindTexture(GL_TEXTURE_2D, gPositionDepth);
-    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGBA16F, width, height, 0,GL_RGBA, GL_FLOAT, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGBA32F, width, height, 0,GL_RGBA, GL_FLOAT, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -304,7 +305,7 @@ void PostProcess::applySSAO(std::unique_ptr<Camera>& cam)
     SSAO->Use();
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(glGetUniformLocation(SSAO->getProgramID(), "gPositionDepth"), 0);
-    glBindTexture(GL_TEXTURE_2D, this->DownSampledTextures[0]);
+    glBindTexture(GL_TEXTURE_2D, this->DownSampledTexture);
 
     glActiveTexture(GL_TEXTURE1);
     glUniform1i(glGetUniformLocation(SSAO->getProgramID(), "gNormal"), 1);
@@ -500,15 +501,16 @@ void PostProcess::setupDownSampledSSR()
 {
     glGenFramebuffers(1, &DownSamplerFBO);
     glBindFramebuffer(GL_FRAMEBUFFER, DownSamplerFBO);
-    glGenTextures(1, &this->DownSampledTextures[0]);
+    glGenTextures(1, &this->DownSampledTexture);
 
-    glBindTexture(GL_TEXTURE_2D, DownSampledTextures[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->width/2.0f, this->height/2.0f, 0, GL_RGBA, GL_FLOAT, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, DownSampledTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, this->width/2, this->height/2, 0, GL_RGBA, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // We clamp to the edge as the blur filter would otherwise sample repeated texture values!
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, DownSampledTextures[0], 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, DownSampledTexture, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0};
     glDrawBuffers(1, DrawBuffers);
@@ -534,7 +536,7 @@ void PostProcess::SSRPass()
 
     glActiveTexture(GL_TEXTURE1);
     glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "gPositionDepth"), 1);
-    glBindTexture(GL_TEXTURE_2D, DownSampledTextures[0]);
+    glBindTexture(GL_TEXTURE_2D, DownSampledTexture);
 
     glActiveTexture(GL_TEXTURE2);
     glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "gNormal"), 2);
@@ -561,7 +563,7 @@ void PostProcess::DownSampleSSR()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     PassThroughShader->Use();
-    glViewport(0,0, this->width/2.0, this->height/2.0);
+    glViewport(0,0, this->width/2, this->height/2);
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(glGetUniformLocation(PassThroughShader->getProgramID(), "texture0"), 0);
     glBindTexture(GL_TEXTURE_2D, this->gPositionDepth);
@@ -572,7 +574,6 @@ void PostProcess::DownSampleSSR()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     PassThroughShader->Free();
 }
-
 
 GLuint PostProcess::blurSSR(GLuint Buffer)
 {
@@ -590,7 +591,7 @@ GLuint PostProcess::blurSSR(GLuint Buffer)
         glUniform1i(glGetUniformLocation(blurSSRShader->getProgramID(), "horizontal"), horizontal);
         glActiveTexture(GL_TEXTURE0);
         glUniform1i(glGetUniformLocation(blurSSRShader->getProgramID(), "image"), 0);
-        glBindTexture(GL_TEXTURE_2D, first_iteration ? this->DownSampledTextures[0] : pingpongSSRT[!horizontal]);  // bind texture of other framebuffer (or scene if first iteration)
+        glBindTexture(GL_TEXTURE_2D, first_iteration ? this->DownSampledTexture : pingpongSSRT[!horizontal]);  // bind texture of other framebuffer (or scene if first iteration)
         RenderQuad();
 
         if(i >= 4)
@@ -632,6 +633,7 @@ void PostProcess::ShowPostProcessImage(float exposure, GLuint ShadowMapID, glm::
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(glGetUniformLocation(finalImage->getProgramID(), "sampler"), 0);
     glBindTexture(GL_TEXTURE_2D, this->colorBuffer);
+    glGenerateMipmap(GL_TEXTURE_2D);
 
     glActiveTexture(GL_TEXTURE1);
     glUniform1i(glGetUniformLocation(finalImage->getProgramID(), "blurredSampler"), 1);

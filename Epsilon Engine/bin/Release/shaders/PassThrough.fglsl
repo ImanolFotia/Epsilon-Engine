@@ -1,10 +1,10 @@
-#version 330 core
+#version 430 core
 
-layout(location = 0) out vec4 output0;
+layout(location = 0) highp out vec4 output0;
 
-uniform sampler2D texture0;
+layout (binding = 0) uniform sampler2D texture0;
 
-in vec2 TexCoords;
+in noperspective vec2 TexCoords;
 
 void main()
 {

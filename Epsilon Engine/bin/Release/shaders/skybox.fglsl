@@ -35,6 +35,25 @@ vec3 HDR(vec3 image)
     result.xyz = pow(result.xyz, vec3(1.0 / gamma));
     return (result.xyz - 0.5f) * 1.1f + 0.5f;
 }
+
+float hash( float n ) { return fract(sin(n)*753.5453123); }
+
+float noise( in vec3 x )
+{
+    vec3 p = floor(x);
+    vec3 f = fract(x);
+    f = f*f*(3.0-2.0*f);
+    
+    float n = p.x + p.y*157.0 + 113.0*p.z;
+    return mix(mix(mix( hash(n+  0.0), hash(n+  1.0),f.x),
+                   mix( hash(n+157.0), hash(n+158.0),f.x),f.y),
+               mix(mix( hash(n+113.0), hash(n+114.0),f.x),
+                   mix( hash(n+270.0), hash(n+271.0),f.x),f.y),f.z);
+}
+
+const mat3 m = mat3( 0.00,  0.80,  0.60,
+                    -0.80,  0.36, -0.48,
+                    -0.60, -0.48,  0.64 );
 void main()
 {
     float factor = (TexCoords.y - lowerlimit) / (upperlimit - lowerlimit);
@@ -44,6 +63,32 @@ void main()
     vec4 Tex = texture(tex, cloudUV) * 1.5;
 
     vec4 Tex2 = texture(tex, vec2(cloudUV2.x - 0.3, cloudUV2.y + 0.5)) * 1;
+
+    Tex = mix(Tex, Tex2, 0.5);
+
+            vec3 q = 12.0*TexCoords + time*CloudSpeed;
+            float f  = 0.5000*noise( q ); q = m*q*2.01;
+            f += 0.2500*noise( q ); q = m*q*2.02;
+            f += 0.1250*noise( q ); q = m*q*2.03;
+            f += 0.0625*noise( q ); q = m*q*2.01;
+
+            f *= 0.5 + 0.5 * f;  
+
+    Tex2 =    vec4(vec3(f), 1.0);
+
+                q = 24.0*TexCoords + time*CloudSpeed;
+            f  = 0.5000*noise( q ); q = m*q*2.01;
+            f += 0.2500*noise( q ); q = m*q*2.02;
+            f += 0.1250*noise( q ); q = m*q*2.03;
+            f += 0.0625*noise( q ); q = m*q*2.01; 
+            f += 0.03125*noise( q ); q = m*q*2.01; 
+            f += 0.015625*noise( q ); q = m*q*2.01; 
+            f += 0.0078125*noise( q ); q = m*q*2.01; 
+            f += 0.00390625*noise( q ); q = m*q*2.01;     
+
+            f *= 0.5 + 0.5 * f;  
+
+    Tex = vec4(vec3(f), 1.0);
 
     Tex = mix(Tex, Tex2, 0.5);
 
