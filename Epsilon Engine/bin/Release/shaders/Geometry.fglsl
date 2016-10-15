@@ -4,8 +4,7 @@ layout(location = 0) out vec4 gAlbedoSpec;
 layout(location = 1) out vec3 gNormal;
 layout(location = 2) out vec4 gPosition;
 layout(location = 3) out vec3 gExpensiveNormal;
-layout(location = 4) out vec3 gWorldSpacePosition;
-layout(location = 5) out float gDepth;
+layout(location = 4) out float gDepth;
 
 layout (binding = 0) uniform sampler2D texture_diffuse;
 layout (binding = 1) uniform sampler2D texture_specular;
@@ -76,6 +75,7 @@ void main()
   gPosition.rgb = fs_in.FragPos;
   float Depth = LinearizeDepth(gl_FragCoord.z);
   gPosition.a = Depth;
-  gDepth = Depth;
-  gWorldSpacePosition.rgb = fs_in.wFragPos;
+  gDepth = gl_FragCoord.z;
+  //gWorldSpacePosition.rgb = fs_in.wFragPos;
+  //gWorldSpacePosition.a = gl_FragCoord.z;
 }

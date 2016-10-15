@@ -68,8 +68,15 @@ public:
         return this->path;
     }
 
+    void Destroy()
+    {
+        for(int i = 0; i < meshes.size(); ++i)
+            meshes[i].Destroy();
+    }
+
     ~Model()
     {
+        std::cout << "Deleted Model" << std::endl;
     }
     string directory;
     /// Draws the model, and thus all its meshes

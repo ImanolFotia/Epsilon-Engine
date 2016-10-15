@@ -24,7 +24,7 @@ const float maxDDepth = 1.0;
 const float maxDDepthInv = 1.0;
  */
 
-const float rayStep = 0.2;
+const float rayStep = 0.15;
 const float minRayStep = 0.1;
 const float maxSteps = 20;
 const float searchDist = 5;
@@ -36,7 +36,7 @@ const float maxDDepthInv = 1.0;
 const float reflectionSpecularFalloffExponent = 3.0;
  float specular;
  
-vec3 BinarySearch(vec3 dir, inout vec3 hitCoord, out float dDepth)
+vec3 BinarySearch(inout vec3 dir, inout vec3 hitCoord, inout float dDepth)
 {
     float depth;
 
@@ -73,10 +73,10 @@ vec3 BinarySearch(vec3 dir, inout vec3 hitCoord, out float dDepth)
  
 vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
 {
-/*
+
 	if(specular*0.5 < 0.1)
 		return vec4(0.0);
-*/
+
 
     dir *= rayStep;
  
@@ -95,20 +95,26 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
  
  
         depth = texture2D(gPositionDepth, projectedCoord.xy).z;
+        if(depth > 1000.0)
+        continue;
  
         dDepth = hitCoord.z - depth;
 
-        if(dDepth < 0.0)
-        {
+        if((dir.z - dDepth) < 1.5)
+        if(dDepth <= 0.0)
+        {	
+        	vec4 asd;
+            	asd = vec4(BinarySearch(dir, hitCoord, dDepth), 1.0);
 
-            return vec4(BinarySearch(dir, hitCoord, dDepth), 1.0);
+        	//if(dir.z <= dDepth)
+            	return asd;
         }
     	
         steps++;
     }
  
- 
-    return vec4(BinarySearch(dir, hitCoord, dDepth), 1.0);
+ 	
+    return vec4(0.0);//vec4(BinarySearch(dir, hitCoord, dDepth), 1.0);
 }
 
 /*
@@ -237,7 +243,7 @@ void main()
 {
 
 	vec2 gTexCoord = gl_FragCoord.xy/vec2(Resolution);
-	gTexCoord *= 2 - 1;
+	//gTexCoord *= 2 - 1;
 	//gTexCoord.x *= Resolution.x / Resolution.y;
  
  
@@ -249,12 +255,11 @@ void main()
  
     vec3 viewNormal = texture2D(gNormal, TexCoords).xyz;
     vec3 viewPos = texture2D(gPositionDepth, TexCoords).xyz;
- 
- 
+
     // Reflection vector
     vec3 reflected = normalize(reflect(normalize(viewPos), normalize(viewNormal)));
- 
- 
+
+
     // Ray cast
     vec3 hitPos = viewPos;
     float dDepth;

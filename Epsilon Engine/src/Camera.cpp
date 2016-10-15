@@ -212,6 +212,10 @@ glm::vec3 Camera::getUp(void)
 {
     return this->Up;
 }
+glm::vec3 Camera::getRight(void)
+{
+    return this->Rigth;
+}
 
 glm::vec3 Camera::setPosition(glm::vec3 newPosition)
 {

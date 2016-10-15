@@ -20,7 +20,8 @@ public:
         this->ID = ID;
     }
 
-    virtual ~CubeMap(){}
+    virtual ~CubeMap(){
+        std::cout << "Deleted CubeMap" << std::endl;}
 
     virtual glm::vec3 getPosition()
     {

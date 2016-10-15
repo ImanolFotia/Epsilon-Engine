@@ -10,7 +10,8 @@ namespace Audio{
     public:
 
         AudioListener() {}
-        ~AudioListener() {}
+        ~AudioListener() {
+        std::cout << "Deleted AudioListener" << std::endl;}
 
         void UpdateListener()
         {

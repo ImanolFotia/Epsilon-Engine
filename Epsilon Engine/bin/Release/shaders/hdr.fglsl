@@ -132,7 +132,7 @@ void main()
 }
 
     col = mix(col, vec4(0.0), length(vec2(0.0) - pos.xy));
-    col = vec4(clamp(col.x, 0.0, 1.0), clamp(col.y, 0.0, 1.0), clamp(col.z, 0.0, 1.0), col.w) * 0.25 /** normalize(vec4(205, 109, 39, 1.0))*/;
+    col = vec4(clamp(col.x, 0.0, 1.0), clamp(col.y, 0.0, 1.0), clamp(col.z, 0.0, 1.0), col.w) * 0.25 * normalize(vec4(205, 109, 39, 1.0));
 
 	fragcoord = gl_FragCoord.xy/Resolution;
     float vignete = 1.0 - smoothstep(0.9, 1.75, length(vec2(0.0) - (fragcoord * 2.0 - 1.0)));

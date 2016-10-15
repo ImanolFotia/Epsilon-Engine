@@ -58,6 +58,7 @@ namespace Input
 
             static constexpr int ESCAPE = GLFW_KEY_ESCAPE;
             static constexpr int SPACE = GLFW_KEY_SPACE;
+            static constexpr int LEFT_SHIFT = GLFW_KEY_LEFT_SHIFT;
         }
     }
 }

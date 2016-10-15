@@ -17,11 +17,12 @@ class Skybox
 public:
     Skybox(std::string);
     virtual ~Skybox(){
+        std::cout << "SkyBox Destroyed" << std::endl;
     }
 
 public:
 
-    void Render(std::unique_ptr<Camera>&, Shader*, float, bool);
+    void Render(std::shared_ptr<Camera>&, Shader*, float, bool);
     GLuint CubeMapID, CubeMapNormalID;
 
 private:

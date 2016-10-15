@@ -31,7 +31,7 @@ void PostProcess::SetupFramebuffer()
     //std::random_device ;
     std::default_random_engine generator(glfwGetTime());
 
-
+/*
     LightPositions.push_back(glm::vec3(125, 20.5, -80));
     LightPositions.push_back(glm::vec3(70, 13.3, -63));
     LightPositions.push_back(glm::vec3(96.2, 13.3, -63));
@@ -39,6 +39,15 @@ void PostProcess::SetupFramebuffer()
     LightPositions.push_back(glm::vec3(106.7, 30.63, -59.3));
     LightPositions.push_back(glm::vec3(82, 30.63, -59.3));
     LightPositions.push_back(glm::vec3(95.5, 15.21, -40.57));
+*/
+
+    LightPositions.push_back(glm::vec3(4, 15, -8));
+    LightPositions.push_back(glm::vec3(20, 15, 7));
+    LightPositions.push_back(glm::vec3(20, 15, -20));
+    LightPositions.push_back(glm::vec3(45, 15, -22));
+    LightPositions.push_back(glm::vec3(65, 15, -22));
+    LightPositions.push_back(glm::vec3(65, 15, 8));
+    LightPositions.push_back(glm::vec3(45, 15, 8));
 
     lensColor = (std::shared_ptr<eTexture>) new eTexture("effects/lenscolor.png", GL_REPEAT, GL_TEXTURE_1D);
     lensDirt = (std::shared_ptr<eTexture>) new eTexture("effects/lensdirt.png");
@@ -209,12 +218,12 @@ void PostProcess::SetupGBuffer()
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, gExpensiveNormal, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    glGenTextures(1, &gWorldSpacePosition);
-    glBindTexture(GL_TEXTURE_2D, gWorldSpacePosition);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RGB, GL_FLOAT, 0);
+    glGenTextures(1, &gDepth);
+    glBindTexture(GL_TEXTURE_2D, gDepth);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RED, GL_FLOAT, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_TEXTURE_2D, gWorldSpacePosition, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_TEXTURE_2D, gDepth, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
     /// - Create and attach depth buffer (renderbuffer)
 
@@ -296,7 +305,7 @@ void PostProcess::setupSSAO()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
-void PostProcess::applySSAO(std::unique_ptr<Camera>& cam)
+void PostProcess::applySSAO(std::shared_ptr<Camera>& cam)
 {
     DownSampleSSR();
     glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
@@ -318,8 +327,12 @@ void PostProcess::applySSAO(std::unique_ptr<Camera>& cam)
     glUniform3fv(glGetUniformLocation(SSAO->getProgramID(), "samples"), 32, &ssaoKernel[0][0]);
 
     glUniformMatrix4fv(glGetUniformLocation(SSAO->getProgramID(), "projection"), 1, GL_FALSE, &cam->getProjectionMatrix()[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(SSAO->getProgramID(), "invprojection"), 1, GL_FALSE, &glm::inverse(cam->getProjectionMatrix())[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(SSAO->getProgramID(), "invview"), 1, GL_FALSE, &glm::inverse(cam->getViewMatrix())[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(SSAO->getProgramID(), "view"), 1, GL_FALSE, &cam->getViewMatrix()[0][0]);
     glUniform1i(glGetUniformLocation(this->shader->getProgramID(), "width"), (float)width);
     glUniform1i(glGetUniformLocation(this->shader->getProgramID(), "height"), (float)height);
+    glUniform3f(glGetUniformLocation(this->shader->getProgramID(), "viewRay"), cam->getDirection().x, cam->getDirection().y,cam->getDirection().z);
     glViewport(0,0,SSAOwidth, SSAOheight);
     this->RenderQuad();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -536,7 +549,7 @@ void PostProcess::SSRPass()
 
     glActiveTexture(GL_TEXTURE1);
     glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "gPositionDepth"), 1);
-    glBindTexture(GL_TEXTURE_2D, DownSampledTexture);
+    glBindTexture(GL_TEXTURE_2D, this->gPositionDepth);
 
     glActiveTexture(GL_TEXTURE2);
     glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "gNormal"), 2);
@@ -613,7 +626,7 @@ GLuint PostProcess::blurSSR(GLuint Buffer)
 
 }
 
-void PostProcess::ShowPostProcessImage(float exposure, GLuint ShadowMapID, glm::vec3 Sun, std::unique_ptr<Camera>& cam)
+void PostProcess::ShowPostProcessImage(float exposure, GLuint ShadowMapID, glm::vec3 Sun, std::shared_ptr<Camera>& cam)
 {
 
     GLuint blurred = this->blurImage(this->brightColorBuffer);
@@ -670,7 +683,7 @@ void PostProcess::ShowPostProcessImage(float exposure, GLuint ShadowMapID, glm::
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::unique_ptr<Camera>& cam, float exposure, std::unique_ptr<ShadowMap>& shadowMap)
+void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::shared_ptr<Camera>& cam, float exposure, std::unique_ptr<ShadowMap>& shadowMap)
 {
 
     glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
@@ -681,8 +694,8 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::unique_ptr<Camera>& 
 
     glViewport(0,0,this->width, this->height);
     glActiveTexture(GL_TEXTURE0);
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "gPositionDepth"), 0);
-    glBindTexture(GL_TEXTURE_2D, this->gWorldSpacePosition);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "gDepth"), 0);
+    glBindTexture(GL_TEXTURE_2D, this->gDepth);
 
     glActiveTexture(GL_TEXTURE1);
     glUniform1i(glGetUniformLocation(shader->getProgramID(), "gNormal"), 1);
@@ -705,9 +718,13 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::unique_ptr<Camera>& 
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "lightSpaceMatrix"), 1, GL_FALSE, &shadowMap->getLightSpaceMatrix()[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "depthBias"), 1, GL_FALSE, &shadowMap->getBiasMatrix()[0][0]);
 
+    glm::mat4 invProj = glm::inverse(cam->getProjectionMatrix());
+    glm::mat4 invView = glm::inverse(cam->getViewMatrix());
+    glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "projection"), 1, GL_FALSE, &invProj[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "view"), 1, GL_FALSE, &invView[0][0]);
     glUniform3fv(glGetUniformLocation(shader->getProgramID(), "LightPositions"), LightPositions.size(), &LightPositions[0][0]);
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "viewPos"),  cam->getPosition().x, cam->getPosition().y, cam->getPosition().z);
-    glUniform3f(glGetUniformLocation(shader->getProgramID(), "viewDir"),  cam->getDirection().x, cam->getDirection().y, cam->getDirection().z);
+    glUniform3f(glGetUniformLocation(shader->getProgramID(), "uViewDir"),  cam->getDirection().x, cam->getDirection().y, cam->getDirection().z);
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "lightDir"),  Sun.x, Sun.y, Sun.z);
 
     this->RenderQuad();

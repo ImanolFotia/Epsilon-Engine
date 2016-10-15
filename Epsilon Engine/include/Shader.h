@@ -27,6 +27,7 @@ public:
     Shader(const char*){}
 
     virtual ~Shader(void){
+        std::cout << "Shader Destroyed" << std::endl;
     }
 
     void Use(void) {

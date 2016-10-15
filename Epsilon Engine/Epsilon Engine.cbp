@@ -47,6 +47,7 @@
 				</Linker>
 			</Target>
 			<Target title="Release">
+				<Option platforms="Windows;" />
 				<Option output="bin/Release/Epsilon Engine" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="bin/Release" />
 				<Option object_output="obj/Release/" />
@@ -76,10 +77,10 @@
 					<Add option="-lglew32.dll" />
 					<Add option="-lgdi32" />
 					<Add option="-lOpenAL32.dll" />
-					<Add library="deppend\bullet-2.82-r2704\build\vs2010\libBulletDynamics.a" />
-					<Add library="deppend\bullet-2.82-r2704\build\vs2010\libBulletCollision.a" />
-					<Add library="deppend\bullet-2.82-r2704\build\vs2010\libLinearMath.a" />
-					<Add library="deppend\bullet-2.82-r2704\build\vs2010\libBulletSoftBody.a" />
+					<Add library="deppend\bullet-2.82-r2704\lib\libBulletDynamics.a" />
+					<Add library="deppend\bullet-2.82-r2704\lib\libBulletCollision.a" />
+					<Add library="deppend\bullet-2.82-r2704\lib\libBulletSoftBody.a" />
+					<Add library="deppend\bullet-2.82-r2704\lib\libLinearMath.a" />
 					<Add directory="deppend/glew/lib" />
 					<Add directory="deppend/glfw/lib" />
 					<Add directory="deppend/SOIL/lib" />
@@ -114,6 +115,8 @@
 		<Unit filename="include/MD5_Model.h" />
 		<Unit filename="include/Mesh.h" />
 		<Unit filename="include/Model.h" />
+		<Unit filename="include/Particle.h" />
+		<Unit filename="include/ParticleSystem.h" />
 		<Unit filename="include/Physics.h" />
 		<Unit filename="include/Player.h" />
 		<Unit filename="include/PostProcess.h" />
@@ -124,6 +127,7 @@
 		<Unit filename="include/ShadowMapping.h" />
 		<Unit filename="include/Skybox.h" />
 		<Unit filename="include/SkyboxData.h" />
+		<Unit filename="include/SplashScreen.h" />
 		<Unit filename="include/Sun.h" />
 		<Unit filename="include/Terrain.h" />
 		<Unit filename="include/Text.h" />

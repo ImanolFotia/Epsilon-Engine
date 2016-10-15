@@ -20,7 +20,8 @@ class BSPfile
 {
 public:
     BSPfile();
-    virtual ~BSPfile() {}
+    virtual ~BSPfile() {
+        std::cout << "Deleted BSPfile" << std::endl;}
 
     /// This loads a .bsp file by it's file name (Returns true if successful)
     bool LoadBSP(const char *strFileName);

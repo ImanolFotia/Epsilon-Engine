@@ -35,6 +35,7 @@ namespace Audio {
 
             context = nullptr;
             device = nullptr;
+            std::cout << "Deleted Audio" << std::endl;
         }
 
     public:

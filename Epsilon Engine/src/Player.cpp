@@ -7,97 +7,330 @@
 #include <Player.h>
 #include <ResourceManager.h>
 #include <sys/KeyBoard.h>
+#include <iostream>
 namespace Game
 {
-/** @brief (one liner)
-  *
-  * (documentation goes here)
-  */
-Player::Player(float x, float y, float z, std::shared_ptr<ResourceManager> resourceManager)
-{
-    btTransform t;
-    t.setIdentity();
-    t.setOrigin(btVector3(x, y, z));
-
-    m_ghostObject = (std::shared_ptr<btPairCachingGhostObject>) new btPairCachingGhostObject();
-    m_ghostObject->setWorldTransform(t);
-    resourceManager->m_PhysicsWorld->broadphase->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
-
-    m_playerCapsule = (std::shared_ptr<btCapsuleShape>) new btCapsuleShape(3, 5);
-    m_ghostObject->setCollisionShape(m_playerCapsule.get());
-    m_ghostObject->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);
-    btScalar stepHeight = btScalar(3.0f);
-    m_character = (std::shared_ptr<btKinematicCharacterController>)new btKinematicCharacterController(m_ghostObject.get(),m_playerCapsule.get(),stepHeight);
-    resourceManager->m_PhysicsWorld->world->addCollisionObject(m_ghostObject.get(),btBroadphaseProxy::StaticFilter|btBroadphaseProxy::DefaultFilter|btBroadphaseProxy::KinematicFilter);
-
-    resourceManager->m_PhysicsWorld->world->addAction(m_character.get());
-
-}
-
-/** @brief Player is on the ground
-  *
-  * (documentation goes here)
-  */
-bool Player::inOnGround(){}
-
-/** @brief Set the player's speed
-  *
-  * (documentation goes here)
-  */
-void Player::setSpeed(float speed){}
-
-/** @brief (one liner)
-  *
-  * (documentation goes here)
-  */
-void Player::setHealth(unsigned short health){}
-/** @brief (one liner)
-  *
-  * (documentation goes here)
-  */
-void Player::setDirection(glm::vec3 dir){}
-/** @brief (one liner)
-  *
-  * (documentation goes here)
-  */
-void Player::setPosition(glm::vec3 pos){}
-
-
-void Player::Movement()
-{
-    m_character->setWalkDirection(btVector3(0,0,0));
-
-    //m_character->setVelocityForTimeInterval(btVector3(10,10,10), 0.016f);
-    m_character->setMaxJumpHeight(300);
-    m_character->setFallSpeed(1000);
-    m_character->setJumpSpeed(30);
-    m_character->setGravity(100);
-    btVector3 dir;
-
-	if ( Input::KeyBoard::KEYS[Input::GLFW::Key::W])
+    /** @brief (one liner)
+      *
+      * (documentation goes here)
+      */
+    Player::Player(float x, float y, float z, std::shared_ptr<ResourceManager> resourceManager)
     {
-         dir = btVector3(0.9, 0, 0.0);
+
+        m_rayLambda[0] = 1.0;
+        m_rayLambda[1] = 1.0;
+        m_turnAngle = 0.0;
+        m_maxLinearVelocity = 40.0;
+        m_walkVelocity = 10.0; // meters/sec
+        m_turnVelocity = 1.0; // radians/sec
+        m_PrevDirection = btVector3(0.0, 0.0, 0.0);
+        walkSpeed = 0.0f;
+        distanceToGround = 0.0;
+        btTransform t;  //position and rotation
+        t.setIdentity();
+        t.setOrigin(btVector3(x, y, z));  //put it to x,y,z coordinates
+        m_Position = btVector3(x, y, z);
+        m_playerCapsule = (std::shared_ptr<btCapsuleShape>) new btCapsuleShape(1.5, 6);
+        btVector3 inertia(0,0,0);   //inertia is 0,0,0 for static object, else
+        m_playerCapsule->calculateLocalInertia(150.0,inertia);    //it can be determined by this function (for all kind of shapes)
+        m_MotionState = (std::shared_ptr<btDefaultMotionState>) new btDefaultMotionState(t);  //set the position (and motion)
+        btRigidBody::btRigidBodyConstructionInfo info(150.0,m_MotionState.get(),m_playerCapsule.get(),inertia);  //create the constructioninfo, you can create multiple bodies with the same info
+        info.m_restitution = 0.0f;
+        info.m_friction = 10.0f;
+        m_LocalResourceManagerPointer = resourceManager;
+        m_playerBody = (std::shared_ptr<btRigidBody>) new btRigidBody(info);    //let's create the body itself
+        m_LocalResourceManagerPointer->m_PhysicsWorld->world->addRigidBody(m_playerBody.get());
+        m_playerBody->setActivationState(DISABLE_DEACTIVATION);
+        m_playerBody->setSleepingThresholds (0.0, 0.0);
+        m_playerBody->setAngularFactor (0.0);
+
     }
 
-    if ( Input::KeyBoard::KEYS[Input::GLFW::Key::S] )
-    {
-         dir = btVector3(-0.9, 0, 0.0);
+    /** @brief Player is on the ground
+      *
+      * (documentation goes here)
+      */
+    bool Player::isOnGround() {
+        //return m_rayLambda[0] < btScalar(1.0);
+        return distanceToGround < 0.8;
     }
 
-    if ( Input::KeyBoard::KEYS[Input::GLFW::Key::D] )
-    {
-         dir = btVector3(0.0, 0, 0.9);
+    /** @brief Set the player's speed
+      *
+      * (documentation goes here)
+      */
+    void Player::setSpeed(float speed) {}
+
+    /** @brief (one liner)
+      *
+      * (documentation goes here)
+      */
+    void Player::setHealth(unsigned short health) {}
+    /** @brief (one liner)
+      *
+      * (documentation goes here)
+      */
+    void Player::setDirection(glm::vec3 dir) {}
+    /** @brief (one liner)
+      *
+      * (documentation goes here)
+      */
+    void Player::setPosition(glm::vec3 pos) {}
+
+    /** @brief (one liner)
+      *
+      * (documentation goes here)
+      */
+    glm::vec3 Player::getPosition() {
+        btVector3 pos = m_playerBody->getCenterOfMassPosition();
+        return glm::vec3(pos.getX(), pos.getY() + 2.0, pos.getZ());
     }
 
-    if ( Input::KeyBoard::KEYS[Input::GLFW::Key::A] )
+    void Player::preStep()
     {
-         dir = btVector3(0.0, 0, -0.9);
-    }
-    if(Input::KeyBoard::KEYS[Input::GLFW::Key::SPACE] == GLFW_PRESS && m_character->onGround() && m_character->canJump())
-    {
-        m_character->jump();
+        btTransform xform;
+        m_playerBody->getMotionState()->getWorldTransform (xform);
+        btVector3 down = -xform.getBasis()[1];
+        btVector3 forward = m_Front;//xform.getBasis()[2];
+        down.normalize ();
+        forward.normalize();
+
+        m_raySource[0] = xform.getOrigin();
+        m_raySource[1] = xform.getOrigin();
+        float pos = m_playerBody->getCenterOfMassPosition().y();
+
+        m_rayTarget[0] = m_raySource[0] + down *100.0;
+        m_rayTarget[1] = m_raySource[1] + forward * 2.5;
+
+        class ClosestNotMe : public btCollisionWorld::ClosestRayResultCallback
+        {
+        public:
+            ClosestNotMe (btRigidBody* me, btVector3 rayfrom, btVector3 rayTo) : btCollisionWorld::ClosestRayResultCallback(btVector3(0.0, 0.0, 0.0), btVector3(0.0, 0.0, 0.0))
+            {
+                m_me = me;
+                m_rayFromWorld = rayfrom;
+                m_rayToWorld = rayTo;
+            }
+
+            virtual btScalar addSingleResult(btCollisionWorld::LocalRayResult& rayResult,bool normalInWorldSpace)
+            {
+                if (rayResult.m_collisionObject == m_me)
+                    return 1.0;
+
+                return ClosestRayResultCallback::addSingleResult (rayResult, normalInWorldSpace);
+            }
+        protected:
+            btRigidBody* m_me;
+        };
+
+        for(int i = 0; i <2; i++) {
+            ClosestNotMe rayCallback(m_playerBody.get(), m_raySource[i], m_rayTarget[i]);
+            rayCallback.m_closestHitFraction = 1.0;
+            m_LocalResourceManagerPointer->m_PhysicsWorld->world->rayTest(m_raySource[i], m_rayTarget[i], rayCallback);
+            if (rayCallback.hasHit())
+            {
+                m_rayLambda[i] = rayCallback.m_closestHitFraction;
+                m_rayPos[i] = rayCallback.m_hitPointWorld;
+            } else {
+                m_rayLambda[i] = 1.0;
+            }
+        }
+
+        //std::cout << m_rayPos[1] << std::endl;
+
+        if(isOnGround())
+            m_playerBody->setFriction(10.0);
+        else
+            m_playerBody->setFriction(0.0);
+
+        distanceToGround = glm::length((pos-4.5) - m_rayPos[0].y());
+
     }
 
-    m_character->setWalkDirection((dir));
-}
+
+
+    bool Player::canJump()
+    {
+        return isOnGround();
+    }
+
+    bool Player::HasObstacle()
+    {
+        return m_rayLambda[1] < btScalar(1.0);
+    }
+
+    void Player::Jump() {
+        if (!canJump())
+            return;
+
+        btVector3 linearVelocity = m_playerBody->getLinearVelocity();
+        m_playerBody->setLinearVelocity(btVector3(linearVelocity.getX(), 0.0, linearVelocity.getZ()));
+        btTransform xform;
+        m_playerBody->getMotionState()->getWorldTransform (xform);
+        btVector3 up = xform.getBasis()[1];
+        up.normalize ();
+        btScalar magnitude = (btScalar(1.0)/m_playerBody->getInvMass()) * btScalar(5.0);
+        m_playerBody->applyCentralImpulse (up * magnitude);
+    }
+
+    void Player::warp(btVector3 pos)
+    {
+        btTransform xform;
+        this->m_playerBody->getMotionState()->getWorldTransform (xform);
+        xform.setOrigin(pos);
+        this->m_playerBody->setCenterOfMassTransform(xform);
+
+    }
+
+
+    void Player::reset()
+    {
+        btTransform xform;
+        this->m_playerBody->getMotionState()->getWorldTransform (xform);
+        xform.setOrigin(m_Position);
+        this->m_playerBody->setCenterOfMassTransform(xform);
+
+    }
+
+    void Player::Movement(std::shared_ptr<Camera> cam, float dt)
+    {
+        m_Front = btVector3(cam->getDirection().x, 0.0, cam->getDirection().z);
+        btTransform xform;
+        this->m_playerBody->getMotionState()->getWorldTransform (xform);
+
+        btVector3 linearVelocity = m_playerBody->getLinearVelocity();
+        btScalar speed = m_playerBody->getLinearVelocity().length();
+        btVector3 velocity = linearVelocity;
+
+        btVector3 forwardDir = xform.getBasis()[2];
+        forwardDir.normalize ();
+        btVector3 walkDirection = btVector3(0.0, 0.0, 0.0);
+
+        btVector3 camDir = btVector3(cam->getDirection().x, 0.0, cam->getDirection().z);
+        btVector3 camRight = btVector3(cam->getRight().x, 0.0, cam->getRight().z);
+        camDir.normalize();
+        camRight.normalize();
+        btVector3 pos = m_playerBody->getCenterOfMassPosition();
+        bool moved = false;
+
+        if ( Input::KeyBoard::KEYS[Input::GLFW::Key::LEFT_SHIFT])
+        {
+            m_walkVelocity = m_walkVelocity * 1.8 * dt;
+        }
+        else
+        {
+            m_walkVelocity = m_walkVelocity * dt;
+        }
+
+        if(!HasObstacle()) {
+            if ( Input::KeyBoard::KEYS[Input::GLFW::Key::W] && isOnGround())
+            {
+                moved = true;
+                walkSpeed = glm::mix((float)walkSpeed, 12.0f, 10.0f*dt);
+                walkDirection += btVector3(camDir.getX(), 0.0, camDir.getZ());
+                velocity += btVector3(camDir.getX()*walkSpeed, -7.0, camDir.getZ()*walkSpeed);
+            }
+        }
+
+        if ( Input::KeyBoard::KEYS[Input::GLFW::Key::S] && isOnGround())
+        {
+            moved = true;
+            walkSpeed = glm::mix((float)walkSpeed, 12.0f, 10.0f*dt);
+            walkDirection += btVector3(-camDir.getX(), 0.0, -camDir.getZ());
+            velocity += btVector3(-camDir.getX()*walkSpeed, -7.0, -camDir.getZ()*walkSpeed);
+        }
+
+        if ( Input::KeyBoard::KEYS[Input::GLFW::Key::D] && isOnGround())
+        {
+            moved = true;
+            walkSpeed = glm::mix((float)walkSpeed, 12.0f, 10.0f*dt);
+            walkDirection += btVector3(camRight.getX(), 0.0, camRight.getZ());
+            velocity += btVector3(camRight.getX()*walkSpeed, -7.0, camRight.getZ()*walkSpeed);
+        }
+
+        if ( Input::KeyBoard::KEYS[Input::GLFW::Key::A] && isOnGround())
+        {
+            moved = true;
+            walkSpeed = glm::mix((float)walkSpeed, 12.0f, 10.0f*dt);
+            walkDirection += btVector3(-camRight.getX(), 0.0, -camRight.getZ());
+            velocity += btVector3(-camRight.getX()*walkSpeed, -7.0, -camRight.getZ()*walkSpeed);
+        }
+
+        if ( Input::KeyBoard::KEYS[Input::GLFW::Key::SPACE] && isOnGround())
+        {
+            Jump();
+        }
+
+        btScalar downVelocity = 0.0;
+        btVector3 directionVelocity;
+
+        if(!isOnGround()) {
+            if(!Input::KeyBoard::KEYS[Input::GLFW::Key::A] &&
+                    !Input::KeyBoard::KEYS[Input::GLFW::Key::W] &&
+                    !Input::KeyBoard::KEYS[Input::GLFW::Key::S] &&
+                    !Input::KeyBoard::KEYS[Input::GLFW::Key::D]
+              )
+            {
+                walkSpeed = glm::mix((float)walkSpeed, 0.0f,dt);
+                directionVelocity = btVector3(m_PrevDirection.x()*walkSpeed * dt, 0.0, m_PrevDirection.z()*walkSpeed * dt);
+                //btScalar downVelocity = 0.0;
+                //m_playerBody->translate(btVector3(m_PrevDirection.x()*walkSpeed * dt, 0.0, m_PrevDirection.z()*walkSpeed * dt));
+            }
+            else
+            {
+                directionVelocity = btVector3(m_PrevDirection.x()*walkSpeed * dt, 0.0, m_PrevDirection.z()*walkSpeed * dt);
+                if(distanceToGround < 2.0)
+                    downVelocity = distanceToGround;
+            }
+
+        }
+        else if(isOnGround()) {
+            if(!Input::KeyBoard::KEYS[Input::GLFW::Key::A] &&
+                    !Input::KeyBoard::KEYS[Input::GLFW::Key::W] &&
+                    !Input::KeyBoard::KEYS[Input::GLFW::Key::S] &&
+                    !Input::KeyBoard::KEYS[Input::GLFW::Key::D]
+              )
+            {
+                btScalar downVelocity = 0.0;
+                walkSpeed = glm::mix((float)walkSpeed, 0.0f,dt);
+                directionVelocity = btVector3(m_PrevDirection.x()*walkSpeed * dt,0.0, m_PrevDirection.z()*walkSpeed * dt);
+            }
+            else {
+                directionVelocity = btVector3(walkDirection.x()*walkSpeed * dt,0.0, walkDirection.z()*walkSpeed * dt);
+                /*
+                if(distanceToGround < 0.5)
+                {
+                    downVelocity = distanceToGround;
+                }*/
+            }
+        }
+
+        m_playerBody->translate(btVector3(directionVelocity.x(),-downVelocity, directionVelocity.z()));
+
+        if(isOnGround())
+            m_PrevDirection = btVector3(0.0, 0.0, 0.0);
+
+
+        btScalar deltaPos = glm::length((float)pos.y() - (float)m_rayPos[0].y());
+        /*
+
+                    if(distanceToGround < 1.5)
+                        m_playerBody->translate(btVector3(walkDirection.x(),-distanceToGround, walkDirection.z())*walkSpeed * dt);
+                    else
+                        m_playerBody->translate(btVector3(walkDirection.x(),0.0, walkDirection.z())*walkSpeed * dt);
+        */
+
+        if (!Input::KeyBoard::KEYS[Input::GLFW::Key::A] &&
+                !Input::KeyBoard::KEYS[Input::GLFW::Key::W] &&
+                !Input::KeyBoard::KEYS[Input::GLFW::Key::S] &&
+                !Input::KeyBoard::KEYS[Input::GLFW::Key::D]) {
+
+
+        }
+        //std::cout << " x: " << m_rayPos[0].x()<< " y: " << m_rayPos[0].y()<< " z: " << m_rayPos[0].z() << std::endl;
+        //std::cout << " rayHit: " << m_rayPos[0].y() << std::endl;
+        //std::cout << "Distance to ground: " << glm::length((pos.y()-4.5) - m_rayPos[0].y()) << std::endl;
+        if(moved)
+            m_PrevDirection = walkDirection;
+    }
 }

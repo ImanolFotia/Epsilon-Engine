@@ -86,6 +86,7 @@ namespace Audio {
 
         ~AudioElement() {
             //May crash the program in the future
+            std::cout << "Deleted AudioElement" << std::endl;
             alDeleteSources(1, &m_AudioID);
             alDeleteBuffers(1, &m_BufferID);
         }

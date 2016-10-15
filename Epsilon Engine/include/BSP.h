@@ -233,8 +233,7 @@ public:
     CQuake3BSP(std::shared_ptr<ResourceManager>);
 
     virtual ~CQuake3BSP(){
-        delete VertexBufferArrays;
-        //cout << "Destroyed BSP map" << endl;
+        cout << "Destroyed BSP map" << endl;
     }
 
     bool LoadBSP(const char *strFileName);
@@ -279,8 +278,6 @@ private:
 	tBSPVisData  m_clusters;
 
     unsigned int m_textures[MAX_TEXTURES];
-
-    unsigned int* VertexBufferArrays;
 
     CBitset m_FacesDrawn;
 

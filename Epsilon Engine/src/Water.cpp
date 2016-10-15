@@ -21,7 +21,7 @@ Water::Water(glm::vec3 position, float scale)
     this->LoadTextures();
 }
 
-void Water::RenderWater(std::unique_ptr<Camera>& cam, glm::vec3 lightDir)
+void Water::RenderWater(std::shared_ptr<Camera>& cam, glm::vec3 lightDir)
 {
     shader->Use();
     glDisable(GL_CULL_FACE);
@@ -152,7 +152,7 @@ void Water::CreateRefractionFBO(void)
 }
 
 
-void Water::GenerateReflection(std::unique_ptr<Camera>& cam)
+void Water::GenerateReflection(std::shared_ptr<Camera>& cam)
 {
     GenerateModelViewProjection(cam);
     glBindFramebuffer(GL_FRAMEBUFFER, reflectionFBO);
@@ -160,7 +160,7 @@ void Water::GenerateReflection(std::unique_ptr<Camera>& cam)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Water::GenerateRefraction(std::unique_ptr<Camera>& cam)
+void Water::GenerateRefraction(std::shared_ptr<Camera>& cam)
 {
     GenerateModelViewProjection(cam);
     glBindFramebuffer(GL_FRAMEBUFFER, refractionFBO);
@@ -210,7 +210,7 @@ void Water::FinishWatercomputation(void)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Water::GenerateModelViewProjection(std::unique_ptr<Camera>& cam)
+void Water::GenerateModelViewProjection(std::shared_ptr<Camera>& cam)
 {
     glm::mat4 model = glm::mat4();
     MVP = cam->getProjectionMatrix() * cam->getViewMatrix() * model;

@@ -5,7 +5,7 @@ layout(location = 0) out vec4 gAlbedoSpec;
 layout(location = 1) out vec4 gNormal;
 layout(location = 2) out vec4 gPosition;
 layout(location = 3) out vec3 gExpensiveNormal;
-layout(location = 4) out vec3 gWorldSpacePosition;
+layout(location = 4) out float gDepth;
 
 uniform sampler2D sampler;
 uniform sampler2D n_sampler;
@@ -31,8 +31,6 @@ float LinearizeDepth(float depth)
 
 void main()
 {
-
-
 	vec3 norm = normalize(Normal.rgb);
 
 	gNormal.rgb = norm;
@@ -49,5 +47,5 @@ void main()
   	float Depth = LinearizeDepth(gl_FragCoord.z);
   	gPosition.a = Depth;
 
-  	gWorldSpacePosition.rgb = wFragPos;
+  	gDepth = gl_FragCoord.z;
 }

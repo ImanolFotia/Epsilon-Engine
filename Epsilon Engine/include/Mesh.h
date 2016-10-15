@@ -69,6 +69,7 @@ public:
 
     ~Mesh()
     {
+        std::cout << "Deleted Mesh" << std::endl;
     }
 
     /// Render the mesh
@@ -92,6 +93,13 @@ public:
         glBindVertexArray(this->VAO);
         glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
+    }
+
+    void Destroy()
+    {
+        glDeleteBuffers(1, &VBO);
+        glDeleteBuffers(1, &EBO);
+        glDeleteVertexArrays(1, &VAO);
     }
 
 private:

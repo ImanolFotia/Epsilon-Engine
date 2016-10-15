@@ -42,6 +42,8 @@
 #include <Audio.h>
 #include <AudioElement.h>
 #include <AudioListener.h>
+#include <SplashScreen.h>
+
 
 class Epsilon
 {
@@ -58,6 +60,8 @@ public:
             itr->second = nullptr;
         }
 
+        BSPMap->Destroy();
+
         cout << "Epsilon Engine has closed Succesfully." << endl;
     }
 
@@ -72,6 +76,8 @@ private:
     void LoadSound(void);
 
     void LoadShaders(void);
+
+    void RenderSplashScreen(std::string);
 
     void PollEvents(void);
 
@@ -93,6 +99,8 @@ private:
 
     void ClearBuffers(void);
 
+    void ComputeCamera(void);
+
     void RenderFrame(void);
 
     void ProcessFrame(void);
@@ -106,18 +114,18 @@ private:
 
 public:
 
-    std::unique_ptr<Camera> eCamera;
+    std::shared_ptr<Camera> eCamera;
 
     /**Shaders**/
     std::map<string, Shader*> Shaders;
     std::unique_ptr<Skybox> skybox;
-    std::unique_ptr<Water> waterPlane;
-    std::vector<Grass> grass;
+    //std::unique_ptr<Water> waterPlane;
+    //std::vector<Grass> grass;
     std::vector<Model> model;
     GLuint VertexArrayID;
     GLFWwindow* window = nullptr;
     std::unique_ptr<Text> text;
-    std::unique_ptr<Text> text2;
+    //std::unique_ptr<Text> text2;
     //std::shared_ptr<Terrain> terrain;
     std::shared_ptr<Sun> sun;
     std::unique_ptr<CQuake3BSP> BSPMap;
@@ -129,13 +137,15 @@ public:
     std::unique_ptr<Audio::Audio> m_AudioSystem;
     std::unique_ptr<Audio::AudioListener> m_AudioListener;
 
-    //std::shared_ptr<Game::Player> m_PlayerCapsule;
+
+    std::shared_ptr<Game::Player> m_PlayerCapsule;
     /** Window Properties **/
 
     short WIDTH = 16;
     short HEIGHT = 16;
     bool SSAO = false;
 private:
+    void endgame(){Running = false;}
     bool Running = true;
     bool normal = 0;
     bool flashLight = 0;
@@ -148,8 +158,8 @@ private:
     float eventtime = 0;
     short fps = 0;
     bool showtext = false;
-    vector<glm::vec3> lightPositions;
-    std::vector<glm::vec3> grassPos;
+    //vector<glm::vec3> lightPositions;
+    //std::vector<glm::vec3> grassPos;
     std::ostringstream fpss;
     std::shared_ptr<ResourceManager> rM;
     std::shared_ptr<Physics::SpherePhysicObject> ph3;

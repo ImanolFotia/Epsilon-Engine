@@ -22,6 +22,7 @@ public:
     Sun();
     ~Sun()
     {
+        std::cout << "Sun Destroyed" << std::endl;
     }
 
     void Render(Shader*&);

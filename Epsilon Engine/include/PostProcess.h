@@ -21,6 +21,7 @@ public:
     PostProcess();
 
     virtual ~PostProcess(){
+        std::cout << "Deleted PostProcess" << std::endl;
     }
 
 public:
@@ -38,19 +39,19 @@ public:
     /**
         Render the output from the G-Buffer
     */
-    void ShowFrame(glm::vec3, bool & hdr, std::unique_ptr<Camera>& cam, float exposure, std::unique_ptr<ShadowMap>&);
+    void ShowFrame(glm::vec3, bool & hdr, std::shared_ptr<Camera>& cam, float exposure, std::unique_ptr<ShadowMap>&);
 
     /**
         Calculates the screen space ambient occlusion
         from the geometry
     */
-    void applySSAO(std::unique_ptr<Camera>& cam);
+    void applySSAO(std::shared_ptr<Camera>& cam);
 
     /**
         Render the post process image to the screen
         after the post-process effects has been applied
     */
-    void ShowPostProcessImage(float exposure, GLuint, glm::vec3 Sun, std::unique_ptr<Camera>& cam);
+    void ShowPostProcessImage(float exposure, GLuint, glm::vec3 Sun, std::shared_ptr<Camera>& cam);
 
 public:
 
@@ -144,6 +145,7 @@ private:
     GLuint ssaoBlurFBO;
     GLuint rboDepth;
     GLuint rDepth;
+    GLuint gDepth;
     GLuint quadVAO = 0;
     GLuint quadVBO;
     GLuint sampler;

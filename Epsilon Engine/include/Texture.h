@@ -109,8 +109,14 @@ public:
         glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
     }
 
+    void Destroy()
+    {
+        glDeleteTextures(1, &texture);
+    }
+
     virtual ~eTexture()
     {
+        std::cout << "eTexture Destroyed" << std::endl;
 
     }
 

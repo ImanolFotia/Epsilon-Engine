@@ -20,6 +20,7 @@ public:
     Camera(glm::vec3, glm::vec3);
 
     ~Camera(){
+        std::cout << "Deleted Camera" << std::endl;
     }
 
 public:
@@ -37,6 +38,8 @@ public:
     glm::vec3 getDirection(void);
 
     glm::vec3 getUp(void);
+
+    glm::vec3 getRight(void);
 
     glm::vec3 setPosition(glm::vec3 newPosition);
 

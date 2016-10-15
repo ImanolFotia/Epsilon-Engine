@@ -24,12 +24,17 @@ public:
 
     virtual ~ResourceManager()
     {
-        std::cout << "Deleted Resource Manager" << std::endl;
         for(std::map<std::string, eTexture>::iterator itr = TextureList.begin(); itr != TextureList.end(); itr++)
         {
             GLuint tex = itr->second.getTextureID();
             glDeleteTextures(1, &tex);
         }
+
+        for(std::map<std::string, Model>::iterator itr = ModelList.begin(); itr != ModelList.end(); itr++)
+        {
+            itr->second.Destroy();
+        }
+        std::cout << "Deleted Resource Manager" << std::endl;
     }
 
     /** \brief Loads a texture from disk or assign the ID if it's already loaded

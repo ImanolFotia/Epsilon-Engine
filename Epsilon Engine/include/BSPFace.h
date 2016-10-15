@@ -36,7 +36,7 @@ public:
 
     virtual ~BSPFace()
     {
-        //std::cout << "Destroyed BSP Face" << std::endl;
+        std::cout << "Destroyed BSP Face" << std::endl;
     }
 public:
     bool BuildFace(std::vector<glm::vec3> Vertices,

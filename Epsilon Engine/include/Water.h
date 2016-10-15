@@ -29,10 +29,10 @@ public:
 
 public:
 
-    void GenerateReflection(std::unique_ptr<Camera>& cam);
-    void GenerateRefraction(std::unique_ptr<Camera>& cam);
+    void GenerateReflection(std::shared_ptr<Camera>& cam);
+    void GenerateRefraction(std::shared_ptr<Camera>& cam);
     void FinishWatercomputation(void);
-    void RenderWater(std::unique_ptr<Camera>& cam, glm::vec3 lightDir);
+    void RenderWater(std::shared_ptr<Camera>& cam, glm::vec3 lightDir);
 
 public:
     float scale;
@@ -55,7 +55,7 @@ private:
     void CreateReflectionFBO(void);
     void CreateRefractionFBO(void);
     void GeneratePlane(void);
-    void GenerateModelViewProjection(std::unique_ptr<Camera>& cam);
+    void GenerateModelViewProjection(std::shared_ptr<Camera>& cam);
     void GeneratevertexArray();
 
 

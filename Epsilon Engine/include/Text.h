@@ -104,6 +104,7 @@ public:
 
     virtual ~Text() {
         delete shader;
+        std::cout << "Text Destroyed" << std::endl;
     }
 
 public:
