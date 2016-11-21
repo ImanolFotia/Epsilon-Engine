@@ -16,166 +16,238 @@
 
 namespace Component
 {
-class Component
-{
-public:
-    Component() {}
-    virtual ~Component(){}
+    class Component
+    {
+    public:
+        Component() {}
+        virtual ~Component() {}
 
-    virtual void Fill(bool HasHealth, bool HasGun) = 0;
-    virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader) = 0;
-    virtual void Fill(float mass, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer) = 0;
+        virtual void Fill(bool HasHealth, bool HasGun) = 0;
+        virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader) = 0;
+        virtual void Fill(float mass, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer) = 0;
 
-    virtual void setUserPointer(void *userPointer){}
+        virtual void setUserPointer(void *userPointer) {}
 
-    virtual void Update(std::shared_ptr<ResourceManager> rm) = 0;
+        virtual void Update(std::shared_ptr<ResourceManager> rm) = 0;
 
-    COMPONENT_TYPE Type;
-    btVector3 m_PhysicsWorldPosition;
-    btVector3 m_LastPhysicsWorldPosition;
-    btVector3 m_PhysicsWorldScale;
-    btQuaternion m_PhysicsWorldRotation;
-};
+        COMPONENT_TYPE Type;
+        btVector3 m_PhysicsWorldPosition;
+        btVector3 m_LastPhysicsWorldPosition;
+        btVector3 m_PhysicsWorldScale;
+        btQuaternion m_PhysicsWorldRotation;
+    };
 
 /// NPC/Player Components
-class PlayerComponent : public Component
-{
-public:
-    PlayerComponent()
+    class PlayerComponent : public Component
     {
-        Type = PLAYERCOMPONENT;
-    }
-    ~PlayerComponent() {}
-    void Fill(bool HasHealth, bool HasGun)
-    {
-        hasHealth = HasHealth;
-        hasGun = HasGun;
-    }
-    bool hasHealth;
-    bool hasGun;
-    void Update(std::shared_ptr<ResourceManager> rm) {}
-};
+    public:
+        PlayerComponent()
+        {
+            Type = PLAYERCOMPONENT;
+        }
+        ~PlayerComponent() {}
+        void Fill(bool HasHealth, bool HasGun)
+        {
+            hasHealth = HasHealth;
+            hasGun = HasGun;
+        }
+        bool hasHealth;
+        bool hasGun;
+        void Update(std::shared_ptr<ResourceManager> rm) {}
+    };
 
 /// Rendering Components
-class RenderComponent : public Component
-{
-public:
-    RenderComponent()
+    class RenderComponent : public Component
     {
-        Type = MODELCOMPONENT;
-        hasModel = true;
-    }
+    public:
+        RenderComponent()
+        {
+            Type = MODELCOMPONENT;
+            hasModel = true;
+        }
 
-    ~RenderComponent()
-    {
-        std::cout << "RenderComponent Destructor" << std::endl;
-    }
-public:
+        ~RenderComponent()
+        {
+            std::cout << "RenderComponent Destructor" << std::endl;
+        }
+    public:
 
-    void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader)
-    {
-        modelPath = path;
-        rm->requestModel(modelPath, rm, glm::vec3(0), glm::vec3(1), glm::quat(0,0,0,0));
-        shaderType = shader;
-    }
+        void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader)
+        {
+            modelPath = path;
+            rm->requestModel(modelPath, rm, glm::vec3(0), glm::vec3(1), glm::quat(0,0,0,0));
+            shaderType = shader;
+        }
 
-    void Update(std::shared_ptr<ResourceManager> rm)
-    {
-        rm->useModel(modelPath, rm->getShaderID(shaderType));
-    }
+        void Update(std::shared_ptr<ResourceManager> rm)
+        {
+            rm->useModel(modelPath, rm->getShaderID(shaderType));
+        }
 
-    bool hasModel = false;
-    std::string modelPath;
-    std::string shaderType;
-    MODEL_TYPE ModelType;
+        bool hasModel = false;
+        std::string modelPath;
+        std::string shaderType;
+        MODEL_TYPE ModelType;
 
-    /** Functions declared for the sake of pure virtual function polymorphism, must not be used for production*/
-    virtual void Fill(bool, bool){}
-    virtual void Fill(float, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer){}
+        /** Functions declared for the sake of pure virtual function polymorphism, must not be used for production*/
+        virtual void Fill(bool, bool) {}
+        virtual void Fill(float, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer) {}
 
-};
+    };
 
 /// Physic Components
-class PhysicComponent : public Component
-{
-public:
-    PhysicComponent()
+    class PhysicComponent : public Component
     {
-        Type = PHYSICCOMPONENT;
-    }
-    ~PhysicComponent()
+    public:
+        PhysicComponent()
+        {
+            Type = PHYSICCOMPONENT;
+        }
+        ~PhysicComponent()
+        {
+            //std::cout << "Physic Destructor" << std:: endl;
+        }
+        void Fill(float mass, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer)
+        {
+            Mass = mass;
+            RigidBodyPointer = PhysicBodyPointer;
+
+            m_PhysicsWorldPosition = RigidBodyPointer->Body->getCenterOfMassPosition();
+            m_LastPhysicsWorldPosition = m_PhysicsWorldPosition;
+            m_PhysicsWorldRotation = RigidBodyPointer->Body->getOrientation();
+        }
+        float Mass;
+
+        std::shared_ptr<Physics::PhysicObject> RigidBodyPointer;
+
+        void Update(std::shared_ptr<ResourceManager> rm)
+        {
+
+            m_PhysicsWorldPosition = RigidBodyPointer->Body->getCenterOfMassPosition();
+
+            //std::cout << m_PhysicsWorldPosition.y() << std::endl;
+            /*
+                    glm::vec3 pos  = glm::mix(glm::vec3(m_LastPhysicsWorldPosition.getX(), m_LastPhysicsWorldPosition.getY(), m_LastPhysicsWorldPosition.getZ()),
+                                                 glm::vec3(m_PhysicsWorldPosition.getX(), m_PhysicsWorldPosition.getY(), m_PhysicsWorldPosition.getZ()),
+                                                 rm->timestep*60);
+
+                    m_PhysicsWorldPosition = btVector3(pos.x, pos.y, pos.z);*/
+            m_LastPhysicsWorldPosition = m_PhysicsWorldPosition;
+            m_PhysicsWorldRotation = RigidBodyPointer->Body->getOrientation();
+        }
+
+        virtual void setUserPointer(void* userPointer)
+        {
+            RigidBodyPointer->Body->setUserPointer(userPointer);
+        }
+
+        /** Functions declared for the sake of pure virtual function polymorphism, must not be used for production*/
+        virtual void Fill(bool, bool) {}
+        virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader) {}
+    };
+
+    class MovementComponent : public Component
     {
-        std::cout << "Physic Destructor" << std:: endl;
-    }
-    void Fill(float mass, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer)
-    {
-        Mass = mass;
-        RigidBodyPointer = PhysicBodyPointer;
+    public:
+        MovementComponent() {}
+        ~MovementComponent() {}
 
-        m_PhysicsWorldPosition = RigidBodyPointer->Body->getCenterOfMassPosition();
-        m_LastPhysicsWorldPosition = m_PhysicsWorldPosition;
-        m_PhysicsWorldRotation = RigidBodyPointer->Body->getOrientation();
-    }
-    float Mass;
+        void Fill(std::shared_ptr<Physics::PhysicObject> rigidBody, glm::vec3 from, glm::vec3 to, float speed, bool loop)
+        {
+            RigidBodyPointer = rigidBody;
+            m_FromPos = from;
+            m_ToPos = to;
+            m_Speed = glm::abs(speed);
+            m_Loop = loop;
+        }
 
-    std::shared_ptr<Physics::PhysicObject> RigidBodyPointer;
+        void Update(std::shared_ptr<ResourceManager> rm)
+        {
 
-    void Update(std::shared_ptr<ResourceManager> rm)
-    {
+            m_Interpolation = glm::clamp(m_Rate,0.0f ,1.0f);
 
-        m_PhysicsWorldPosition = RigidBodyPointer->Body->getCenterOfMassPosition();
-/*
-        glm::vec3 pos  = glm::mix(glm::vec3(m_LastPhysicsWorldPosition.getX(), m_LastPhysicsWorldPosition.getY(), m_LastPhysicsWorldPosition.getZ()),
-                                     glm::vec3(m_PhysicsWorldPosition.getX(), m_PhysicsWorldPosition.getY(), m_PhysicsWorldPosition.getZ()),
-                                     rm->timestep*60);
+            if(m_Loop) {
+                if(m_Interpolation >= 1.0)
+                    m_Up = false;
+                else if(m_Interpolation <= 0.0)
+                    m_Up = true;
+                else if(m_Interpolation >= 0.0 && m_Interpolation <= 1.0 && !m_Up)
+                {
+                    m_Up = false;
+                }
+                else if(m_Interpolation >= 0.0 && m_Interpolation <= 1.0 && m_Up){
+                    m_Up = true;
+                }
+            }
 
-        m_PhysicsWorldPosition = btVector3(pos.x, pos.y, pos.z);*/
-        m_LastPhysicsWorldPosition = m_PhysicsWorldPosition;
-        m_PhysicsWorldRotation = RigidBodyPointer->Body->getOrientation();
-    }
+            if(m_Loop)
+            {
+                if(m_Up)
+                    m_Rate += m_Speed * rm->timestep;
+                else
+                    m_Rate -= m_Speed * rm->timestep;
+            }
+            else
+            {
+                m_Rate += m_Speed * rm->timestep;
+            }
 
-    virtual void setUserPointer(void* userPointer)
-    {
-        RigidBodyPointer->Body->setUserPointer(userPointer);
-    }
-
-    /** Functions declared for the sake of pure virtual function polymorphism, must not be used for production*/
-    virtual void Fill(bool, bool){}
-    virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader){}
-};
+            m_CurrentPosition = glm::mix(m_FromPos, m_ToPos, m_Interpolation);
+            btVector3 deltaPos = btVector3(m_CurrentPosition.x, m_CurrentPosition.y, m_CurrentPosition.z) - RigidBodyPointer->Body->getCenterOfMassPosition();
+            RigidBodyPointer->Body->translate(btVector3(deltaPos));
+        }
 
 
+        virtual void Fill(bool, bool) {}
+        virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader) {}
+        virtual void Fill(float mass, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer) {}
+
+    private:
+
+        glm::vec3 m_FromPos;
+        glm::vec3 m_ToPos;
+        glm::vec3 m_CurrentPosition;
+        float m_Speed;
+        float m_Interpolation = 0.0;
+        float m_Rate = 0;
+        bool m_Loop;
+        bool m_Up = true;
+        std::shared_ptr<Physics::PhysicObject> RigidBodyPointer;
+
+    protected:
+
+    };
 
 /// Rendering Components
-class SoundComponent : public Component
-{
-public:
-    SoundComponent()
+    class SoundComponent : public Component
     {
-    }
+    public:
+        SoundComponent()
+        {
+        }
 
-    ~SoundComponent()
-    {
-        std::cout << "SoundComponent Destructor" << std::endl;
-    }
-public:
+        ~SoundComponent()
+        {
+            std::cout << "SoundComponent Destructor" << std::endl;
+        }
+    public:
 
-    void Fill(float volume, float radius, glm::vec3 position, glm::vec3 direction)
-    {
+        void Fill(float volume, float radius, glm::vec3 position, glm::vec3 direction)
+        {
 
-    }
+        }
 
-    void Update(std::shared_ptr<ResourceManager> rm)
-    {
-    }
+        void Update(std::shared_ptr<ResourceManager> rm)
+        {
+        }
 
 
-    /** Functions declared for the sake of pure virtual function polymorphism, must not be used for production*/
-    virtual void Fill(bool, bool){}
-    virtual void Fill(float, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer){}
-    virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader){}
+        /** Functions declared for the sake of pure virtual function polymorphism, must not be used for production*/
+        virtual void Fill(bool, bool) {}
+        virtual void Fill(float, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer) {}
+        virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader) {}
 
-};
+    };
 
 }
 

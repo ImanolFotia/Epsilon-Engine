@@ -120,19 +120,19 @@ public:
     std::map<string, Shader*> Shaders;
     std::unique_ptr<Skybox> skybox;
     //std::unique_ptr<Water> waterPlane;
-    //std::vector<Grass> grass;
+    std::vector<Grass> grass;
     std::vector<Model> model;
     GLuint VertexArrayID;
     GLFWwindow* window = nullptr;
     std::unique_ptr<Text> text;
     //std::unique_ptr<Text> text2;
-    //std::shared_ptr<Terrain> terrain;
+    std::shared_ptr<Terrain> terrain;
     std::shared_ptr<Sun> sun;
     std::unique_ptr<CQuake3BSP> BSPMap;
     std::unique_ptr<MD5Model> m_AnimModel;
     std::unique_ptr<ShadowMap> shadowMap;
     std::unique_ptr<PostProcess> PP;
-    std::shared_ptr<EntityTemplate> EntityTest[2];
+    std::shared_ptr<EntityTemplate> EntityTest[3];
     std::unique_ptr<Audio::AudioElement> m_AudioElement;
     std::unique_ptr<Audio::Audio> m_AudioSystem;
     std::unique_ptr<Audio::AudioListener> m_AudioListener;
@@ -140,7 +140,7 @@ public:
 
     std::shared_ptr<Game::Player> m_PlayerCapsule;
     /** Window Properties **/
-
+    float xz[5][5];
     short WIDTH = 16;
     short HEIGHT = 16;
     bool SSAO = false;
@@ -159,7 +159,7 @@ private:
     short fps = 0;
     bool showtext = false;
     //vector<glm::vec3> lightPositions;
-    //std::vector<glm::vec3> grassPos;
+    std::vector<glm::vec3> grassPos;
     std::ostringstream fpss;
     std::shared_ptr<ResourceManager> rM;
     std::shared_ptr<Physics::SpherePhysicObject> ph3;

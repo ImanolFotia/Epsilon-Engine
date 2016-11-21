@@ -15,7 +15,7 @@ Water::Water(glm::vec3 position, float scale)
     this->RefractionResoulution = 512;
 
 
-    m_Model = (std::shared_ptr<Model>) new Model("models/plane.eml");
+    m_Model = (std::shared_ptr<Model>) new Model("models/platform.eml");
 
     this->LoadShaders();
     this->LoadTextures();
@@ -80,7 +80,7 @@ void Water::LoadTextures(void)
 
     delete tex;
 
-    eTexture* tex2 = new eTexture("Well Preserved Chesterfield - (Normal Map_2).png");
+    eTexture* tex2 = new eTexture("Wavy_Water - Color Map.png");
     DuDvTexture = tex2->getTextureID();
 
     delete tex2;

@@ -75,8 +75,8 @@ vec3 changeSaturation(vec3 color, float saturation)
     // Controls the sample density, which in turn, controls the sample spread.
     float density = 0.5; 
     // Sample weight. Decays as we radiate outwards.
-    float weight = 0.2; 
-const float SAMPLES = 20.; 
+    float weight = 0.3; 
+const float SAMPLES = 10.; 
 
 void main()
 {
@@ -102,7 +102,7 @@ void main()
 	vec4 lensMod = texture(uLensDirtTex, TexCoords);
 	lensMod += texture(uLensStarTex, TexCoords);
 
-    vec3 hdrColor = texture(sampler, TexCoords, 0.0).rgb;
+    vec3 hdrColor = texture(sampler, TexCoords).rgb;
     vec3 SSR = texture(gReflectionSampler, TexCoords).rgb;
     vec3 bloom = texture(blurredSampler, TexCoords).rgb;
 
@@ -137,11 +137,11 @@ void main()
 	fragcoord = gl_FragCoord.xy/Resolution;
     float vignete = 1.0 - smoothstep(0.9, 1.75, length(vec2(0.0) - (fragcoord * 2.0 - 1.0)));
 
-    //hdrColor = changeSaturation(hdrColor, 0.7);
+    //hdrColor = changeSaturation(hdrColor, 1.0);
 
     color.rgb  = HDR((hdrColor + col.rgb + bloom + (result.rgb * lensMod.rgb*5) ) + SSR*0.3 ) * vignete;
 
-    
+    color.rgb = changeSaturation(color.rgb, 1.0);
 
     color.a = 1.0;
 

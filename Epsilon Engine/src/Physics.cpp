@@ -16,7 +16,13 @@ Physics::Physics()
 
 void Physics::Update(float deltaTime)
 {
-      world->stepSimulation(deltaTime, 1);
+    //static float acum = 0.0;
+    //acum += deltaTime;
+    //if(acum >= 1/60){
+
+        world->stepSimulation(deltaTime, 5, 1.0/300.0);
+        //acum = 0.0;
+    //}
 }
 
 

@@ -16,6 +16,7 @@ bool BSPFace::BuildFace(std::vector<glm::vec3> Vertices, std::vector<glm::vec3> 
     //std::cout << this->ObjectID << std::endl;
     this->imagePath = imagePath;
     this->imagePath = this->imagePath;
+    std::cout << imagePath << std::endl;
     this->LightMap = LightMap;
     this->LMTexCoords = LMTexCoords;
     this->CalcTangentSpace();

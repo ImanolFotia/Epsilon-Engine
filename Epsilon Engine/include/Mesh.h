@@ -69,7 +69,7 @@ public:
 
     ~Mesh()
     {
-        std::cout << "Deleted Mesh" << std::endl;
+        //std::cout << "Deleted Mesh" << std::endl;
     }
 
     /// Render the mesh

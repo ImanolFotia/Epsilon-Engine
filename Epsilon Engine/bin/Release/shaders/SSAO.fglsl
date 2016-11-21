@@ -50,7 +50,7 @@ void main()
     //fragPos = vec3(view * vec4(fragPos, 1.0));
 
     vec3 normal = texture(gNormal, TexCoords).rgb;
-    vec3 randomVec = texture(texNoise, TexCoords * noiseScale).xyz;
+    vec3 randomVec = texture(texNoise, TexCoords * noiseScale, 4).xyz;
     // Create TBN change-of-basis matrix: from tangent-space to view-space
     vec3 tangent = normalize(randomVec - normal * dot(randomVec, normal));
     vec3 bitangent = cross(normal, tangent);
@@ -73,12 +73,12 @@ void main()
         offset.x = clamp(offset.x, 0.001, 0.999);
         offset.y = clamp(offset.y, 0.001, 0.999);
 
-        float sampleDepth = -texture(gPositionDepth, offset.xy).w; // Get depth value of kernel sample
+        float sampleDepth = -texture(gPositionDepth, offset.xy, 4).w; // Get depth value of kernel sample
         float bias = max(1.5 * (1.0 - dot(normal, -fragPos)), 0.1);
         // range check & accumulate
         float rangeCheck = smoothstep(0.0, 1.0, radius / abs(fragPos.z - sampleDepth));
         occlusion += (sampleDepth - bias >= sample.z ? 1.0 : 0.0) * rangeCheck;
     }
     occlusion = 1.0 - (occlusion / kernelSize);
-    FragColor = pow(occlusion, 2);
+    FragColor = pow(occlusion, 4);
 }

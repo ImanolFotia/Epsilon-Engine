@@ -156,6 +156,7 @@ bool Model::loadModel(string emlPath, int a)
     delete[] l_meshes;
 
     inFILE.close();
+
     return true;
 
 }

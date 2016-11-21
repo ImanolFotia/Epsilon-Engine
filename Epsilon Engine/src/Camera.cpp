@@ -25,7 +25,7 @@ Camera::Camera(glm::vec3 cPosition, glm::vec3 cOrientation)
     this->MouseSpeed = 0.002f;
     this->PositionhasChanged = false;
     this->OrientationhasChanged = false;
-    this->MaxMovementSpeed = 15.3;
+    this->MaxMovementSpeed = 5.3;
     this->horizontalAngle = 0.0;
     this->verticalAngle = 0.0;
     this->LastPosition;

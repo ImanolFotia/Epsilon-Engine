@@ -36,7 +36,7 @@ public:
 
     virtual ~BSPFace()
     {
-        std::cout << "Destroyed BSP Face" << std::endl;
+        //std::cout << "Destroyed BSP Face" << std::endl;
     }
 public:
     bool BuildFace(std::vector<glm::vec3> Vertices,
@@ -51,7 +51,7 @@ public:
 
 public:
 
-    void RenderFace(GLuint shader, GLuint TextureID,GLuint normalID, GLuint specularID)
+    void RenderFace(GLuint shader, GLuint TextureID,GLuint normalID, GLuint specularID, GLuint metallicID)
     {
         glBindVertexArray(this->VAO);
 
@@ -66,6 +66,10 @@ public:
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, normalID);
         glUniform1i(glGetUniformLocation(shader, "texture_normal"), 2);
+
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, metallicID);
+        glUniform1i(glGetUniformLocation(shader, "texture_height"), 3);
 
         glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);

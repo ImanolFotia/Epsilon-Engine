@@ -15,7 +15,7 @@ class Player
 {
 public:
     Player(float x, float y, float z, std::shared_ptr<ResourceManager> resourceManager);
-    ~Player() {std::cout << "Deleted Player"<< std::endl;}
+    ~Player() {/*std::cout << "Deleted Player"<< std::endl;*/}
 
 public:
     void setPosition(glm::vec3 pos);
@@ -40,6 +40,7 @@ private:
     btVector3 m_Position;
     btVector3 m_Direction;
 
+    btVector3 m_PrevPosition;
     btVector3 m_PrevDirection;
     btVector3 m_Front;
 	btVector3 m_raySource[2];
@@ -50,6 +51,7 @@ private:
     float distanceToGround;
     btScalar walkSpeed;
 	btScalar m_turnAngle;
+	bool higherthannormal;
 
 	btScalar m_maxLinearVelocity;
 	btScalar m_walkVelocity;
@@ -63,6 +65,7 @@ private:
     std::shared_ptr<btCapsuleShape> m_playerCapsule;
     std::shared_ptr<btMotionState> m_MotionState;
     std::shared_ptr<ResourceManager> m_LocalResourceManagerPointer;
+    std::shared_ptr<Physics::CollisionInfo> m_collinfo;
 
 };
 }

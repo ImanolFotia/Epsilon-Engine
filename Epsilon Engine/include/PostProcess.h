@@ -21,7 +21,7 @@ public:
     PostProcess();
 
     virtual ~PostProcess(){
-        std::cout << "Deleted PostProcess" << std::endl;
+        //std::cout << "Deleted PostProcess" << std::endl;
     }
 
 public:

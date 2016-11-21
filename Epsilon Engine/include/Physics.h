@@ -26,7 +26,7 @@ namespace Physics
 
         ~Physics()
         {
-        std::cout << "Deleted Physics" << std::endl;
+        //std::cout << "Deleted Physics" << std::endl;
 
         }
 

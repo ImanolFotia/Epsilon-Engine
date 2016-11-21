@@ -103,6 +103,12 @@ static void ComputeQuatW( glm::quat& quat )
 static std::string getExtension(std::string path)
 {
     std::string ext;
+
+    std::size_t found = path.find(".");
+
+    if(found == std::string::npos)
+        return "0";
+
     for(int i = path.length()-4 ; i < path.length() ; i++)
     {
         ext += path.at(i);
@@ -114,6 +120,7 @@ static std::string removeExtension(std::string path)
 {
     for(int i = path.length()-4 ; i < path.length() ; i++)
     {
+        std::cout << path[i] << std::endl;
         path.erase(i);
     }
     return path;

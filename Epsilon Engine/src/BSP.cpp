@@ -274,6 +274,7 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
             BSPTexture tex;
             BSPTexture normal;
             BSPTexture specular;
+            BSPTexture metallic;
             if(texture != -1)
             {
                 tex.path = string(Textures.at(texture).path);
@@ -290,6 +291,11 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
                 specular.GLTextureID = specularTextures.at(texture).GLTextureID;
                 specular.type = specularTextures.at(texture).type;
                 specularTextures.push_back(specular);
+
+                metallic.path = string(metallicTextures.at(texture).path+"_m");
+                metallic.GLTextureID = metallicTextures.at(texture).GLTextureID;
+                metallic.type = metallicTextures.at(texture).type;
+                metallicTextures.push_back(metallic);
             }
             else
             {
@@ -307,11 +313,17 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
                 specular.GLTextureID = eTexture((specular.path + ".png").c_str()).getTextureID();
                 specular.type = 1;
                 specularTextures.push_back(specular);
+
+                metallic.path = string(pTextures[pFace->textureID].strName) + "_m";
+                metallic.GLTextureID = eTexture((metallic.path + ".png").c_str()).getTextureID();
+                metallic.type = 1;
+                metallicTextures.push_back(metallic);
             }
 
             faceTexture[i] = tex;
             faceTexture_normal[i] = normal;
             faceTexture_specular[i] = specular;
+            faceTexture_metallic[i] = metallic;
 
             BSPFace Face;
 
@@ -376,7 +388,7 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
         else
             glUniform1i(glGetUniformLocation(shader, "lightmap"), 1);
 
-        this->Faces[faceIndex].RenderFace(shader, faceTexture[faceIndex].GLTextureID, faceTexture_normal[faceIndex].GLTextureID, faceTexture_specular[faceIndex].GLTextureID);
+        this->Faces[faceIndex].RenderFace(shader, faceTexture[faceIndex].GLTextureID, faceTexture_normal[faceIndex].GLTextureID, faceTexture_specular[faceIndex].GLTextureID, faceTexture_metallic[faceIndex].GLTextureID);
     }
 
     //int g_VisibleFaces;

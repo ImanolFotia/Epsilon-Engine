@@ -76,7 +76,7 @@ public:
 
     ~Model()
     {
-        std::cout << "Deleted Model" << std::endl;
+        //std::cout << "Deleted Model" << std::endl;
     }
     string directory;
     /// Draws the model, and thus all its meshes

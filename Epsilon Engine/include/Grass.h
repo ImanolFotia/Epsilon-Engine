@@ -95,7 +95,7 @@ public:
     }
     virtual ~Grass()
     {
-        std::cout << "Deleted Grass" << std::endl;
+        //std::cout << "Deleted Grass" << std::endl;
     }
 
 public:

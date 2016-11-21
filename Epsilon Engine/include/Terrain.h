@@ -12,6 +12,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <Shader.h>
 #include <Texture.h>
+#include <memory>
+#include <Physics.h>
+
+class ResourceManager;
 
 struct TVertex
 {
@@ -32,13 +36,13 @@ class Terrain
 {
 public:
 
-    Terrain(const char*, const char*, float, int /**Must be Power of two*/);
+    Terrain(const char*, const char*, float, int, std::shared_ptr<ResourceManager> rm /**Must be Power of two*/);
     Terrain(const char*, const char*, const char*, float, int/**Must be Power of two*/);
-    Terrain(const char*, const char*, const char*, const char*, float, int/**Must be Power of two*/);
+    Terrain(const char*, const char*, const char*, const char*, float, int, glm::vec3,std::shared_ptr<ResourceManager> rm/**Must be Power of two*/);
 
     virtual ~Terrain(){
 
-        std::cout <<"Deleted terrain" << std::endl;
+        //std::cout <<"Deleted terrain" << std::endl;
         //delete diffuseTexture;
         //delete specularTexture;
         //delete heightMap;
@@ -64,6 +68,7 @@ private:
     GLuint GL_d_texture;
     GLuint GL_n_texture;
     GLuint GL_s_texture;
+    GLuint GL_decal_texture;
     const char* diffuseTexture;
     const char* specularTexture;
     const char* heightMap;
@@ -72,6 +77,8 @@ private:
     int channels;
     int gridSize;
     int cantPixels;
+    float scale;
+    glm::vec3 m_Position;
 
 private:
     GLuint VAO;
@@ -87,6 +94,12 @@ private:
     std::vector<glm::vec3> Normals;
     std::vector<glm::vec3> Tangents;
     std::vector<glm::vec3> Bitangents;
+
+private:
+    std::shared_ptr<ResourceManager> rM;
+    std::shared_ptr<btRigidBody> rigidBody;
+    std::shared_ptr<Physics::CollisionInfo> collinfo;
+    std::shared_ptr<Physics::PhysicObject> CollisionObject;
 };
 
 #endif // TERRAIN_H_INCLUDED

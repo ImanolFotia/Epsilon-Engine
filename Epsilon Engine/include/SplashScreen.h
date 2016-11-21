@@ -5,7 +5,7 @@ class SplashScreen
 public:
     SplashScreen() {}
     ~SplashScreen() {
-        std::cout << "Splash Destroyed" << std::endl;}
+        /*std::cout << "Splash Destroyed" << std::endl;*/}
 
     void Draw(GLuint shader, GLuint texture) {
 

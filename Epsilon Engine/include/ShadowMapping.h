@@ -43,7 +43,7 @@ public:
     **/
     virtual ~ShadowMap()
     {
-        std::cout << "ShadowMap Destroyed" << std::endl;
+        //std::cout << "ShadowMap Destroyed" << std::endl;
     }
 
 public:

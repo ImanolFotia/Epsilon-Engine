@@ -6,7 +6,7 @@ class Particle
 public:
     Particle(){}
     virtual ~Particle() {
-        std::cout << "Deleted Particle" << std::endl;}
+        //std::cout << "Deleted Particle" << std::endl;}
 
     const glm::vec3 getPosition() const {
         return m_Position;

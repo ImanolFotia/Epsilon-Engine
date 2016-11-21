@@ -25,6 +25,7 @@
 					<Add directory="deppend/FreeType2/include" />
 					<Add directory="deppend/ini/include" />
 					<Add directory="deppend/bullet3-2.83.7/src" />
+					<Add directory="deppend/openal-soft-1.17.2-bin/include" />
 				</Compiler>
 				<Linker>
 					<Add option="-static -static-libgcc -static-libstdc++" />
@@ -137,6 +138,7 @@
 		<Unit filename="include/Water.h" />
 		<Unit filename="include/camera.h" />
 		<Unit filename="include/emlFormat.h" />
+		<Unit filename="include/empFormat.h" />
 		<Unit filename="include/main.h" />
 		<Unit filename="include/multithread/Job.h" />
 		<Unit filename="include/multithread/Mutex.h" />

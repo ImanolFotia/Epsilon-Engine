@@ -17,7 +17,7 @@ class Skybox
 public:
     Skybox(std::string);
     virtual ~Skybox(){
-        std::cout << "SkyBox Destroyed" << std::endl;
+        //std::cout << "SkyBox Destroyed" << std::endl;
     }
 
 public:

@@ -21,7 +21,7 @@ public:
     }
 
     virtual ~CubeMap(){
-        std::cout << "Deleted CubeMap" << std::endl;}
+        /*std::cout << "Deleted CubeMap" << std::endl;*/}
 
     virtual glm::vec3 getPosition()
     {

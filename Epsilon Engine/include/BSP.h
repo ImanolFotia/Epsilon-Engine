@@ -233,7 +233,7 @@ public:
     CQuake3BSP(std::shared_ptr<ResourceManager>);
 
     virtual ~CQuake3BSP(){
-        cout << "Destroyed BSP map" << endl;
+        //cout << "Destroyed BSP map" << endl;
     }
 
     bool LoadBSP(const char *strFileName);
@@ -285,9 +285,11 @@ private:
     std::vector<BSPTexture> Textures;
     std::vector<BSPTexture> normalTextures;
     std::vector<BSPTexture> specularTextures;
+    std::vector<BSPTexture> metallicTextures;
     std::map<int, BSPTexture> faceTexture;
     std::map<int, BSPTexture> faceTexture_normal;
     std::map<int, BSPTexture> faceTexture_specular;
+    std::map<int, BSPTexture> faceTexture_metallic;
     std::shared_ptr<ResourceManager> resm;
 
     bool lightmap;

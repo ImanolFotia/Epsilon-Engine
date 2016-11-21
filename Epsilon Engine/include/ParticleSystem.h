@@ -10,7 +10,7 @@ public:
     ParticleSystem();
 
     virtual ~ParticleSystem(){
-        std::cout << "Deleted ParticleSystem" << std::endl;}
+        //std::cout << "Deleted ParticleSystem" << std::endl;}
 
     void UpdateParticleSystem();
 

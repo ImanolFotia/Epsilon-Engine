@@ -3,6 +3,7 @@
 layout(location = 0) out vec4 FragColor;
 layout(location = 1) out vec4 blurImage;
 layout(location = 2) out vec4 gPosition;
+layout(location = 3) out vec4 gExpensiveNormal;
 in vec2 UV;
 in vec3 FragPos;
 uniform sampler2D sSampler;
@@ -20,12 +21,13 @@ vec3 HDR(vec3 image)
 void main()
 {
   vec4 SunTexture = texture(sSampler, UV);
-  if(-SunTexture.a > altitude)
-  	discard;
+  //if(-SunTexture.a > altitude)
+  	//discard;
 
   FragColor.rgb = HDR(SunTexture.xyz * 1.0);
   FragColor.a = SunTexture.a;
   blurImage = vec4(FragColor);
+  gExpensiveNormal.rgba = vec4(0.0);
   gPosition = vec4(FragPos, 1000000000.0f);
 
 

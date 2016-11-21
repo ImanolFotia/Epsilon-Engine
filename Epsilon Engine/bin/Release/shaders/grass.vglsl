@@ -16,6 +16,8 @@ out vec3 FragPos;
 out vec3 wFragPos;
 out vec3 Normal;
 
+float hash( float n ) { return fract(sin(n)*753.5453123); }
+
 void main()
 {
 	/*
@@ -28,7 +30,7 @@ void main()
 
 */
     float t = positions[3][0] / 256;
-	vec3 newPosition = vec3(position.x + sin(time * t) * max(position.y, 0.0), position.y, position.z);
+	vec3 newPosition = vec3(position.x + sin(time * hash(t)) * max(position.y, 0.0), position.y, position.z);
 
     gl_Position = projection * view * positions * vec4(newPosition, 1.0);
 

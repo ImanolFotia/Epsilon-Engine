@@ -8,12 +8,17 @@
 #include <fstream>
 #include <Terrain.h>
 #include <SOIL.h>
+#include <Physics.h>
+#include <ResourceManager.h>
+#include <exception>
 
 #include <Includes.h>
 
-Terrain::Terrain(const char* heightMap,const char* diffuseTexture, float scale, int gridSize /**Must be Power of two*/)
+Terrain::Terrain(const char* heightMap,const char* diffuseTexture, float scale, int gridSize/**Must be Power of two*/, std::shared_ptr<ResourceManager> rm)
 {
     this->GL_n_texture = 0;
+
+    this->rM = rm;
 
     this->gridSize = gridSize;
 
@@ -29,11 +34,17 @@ Terrain::Terrain(const char* heightMap,const char* diffuseTexture, float scale, 
 
 }
 
-Terrain::Terrain(const char* heightMap,const char* diffuseTexture, const char* normalTexture, const char* specularTexture, float scale, int gridSize /**Must be Power of two*/)
+Terrain::Terrain(const char* heightMap,const char* diffuseTexture, const char* normalTexture, const char* specularTexture, float sc, int gridSize, glm::vec3 Position ,std::shared_ptr<ResourceManager> rm /**Must be Power of two*/)
 {
     this->gridSize = gridSize;
 
     this->heightMap = heightMap;
+
+    this->scale = sc;
+
+    this->rM = rm;
+
+    this->m_Position = Position;
 
     this->diffuseTexture = diffuseTexture;
 
@@ -83,9 +94,9 @@ bool Terrain::GenerateGrid(unsigned char* pixels)
     {
         for(int j = 0 ; j < this->height ; j++)
         {
-            vert.Position.x = (float)i;
+            vert.Position.x = ((float)i + m_Position.x) * scale;
             vert.Position.y = (float)pixels[counter]/4;
-            vert.Position.z = (float)j;
+            vert.Position.z = ((float)j + m_Position.z) * scale;
             row.push_back(vert.Position.y);
             float fScaleC = float(j)/float(this->height-1);
             float fScaleR = float(i)/float(this->width-1);
@@ -161,14 +172,48 @@ bool Terrain::GenerateGrid(unsigned char* pixels)
         counter++;
 
     }
-/*
-    indices.pop_back();
-    indices.pop_back();
-    indices.pop_back();
 
-    indices.pop_back();
-    indices.pop_back();
-    indices.pop_back();*/
+    std::vector<glm::vec3> tmp_vertices;
+
+    std::cout << indices.size() << std::endl;
+
+    for(int i = 0; i < vertices.size(); ++i)
+        tmp_vertices.push_back(vertices[i].Position);
+
+    std::cout << "llega" << std::endl;
+
+    try {
+        std::shared_ptr<Physics::TriangleMeshPhysicObject> TerrainPhysicsMesh = (std::shared_ptr<Physics::TriangleMeshPhysicObject>) new Physics::TriangleMeshPhysicObject();
+
+        this->rigidBody = nullptr;
+
+        this->rigidBody = TerrainPhysicsMesh->addObject(tmp_vertices, this->indices, 1.0f);
+
+        this->collinfo = (std::shared_ptr<Physics::CollisionInfo>) new Physics::CollisionInfo();
+
+        this->collinfo->setName("Terrain");
+
+        TerrainPhysicsMesh->Body->setUserPointer(collinfo.get());
+
+        this->rM->m_PhysicsWorld->world->addRigidBody(rigidBody.get());
+
+        this->CollisionObject = TerrainPhysicsMesh;
+    }
+    catch(exception e)
+    {
+        std::cout << e.what() << std::endl;
+    }
+
+    std::cout << "llega 2 " << std::endl;
+
+    /*
+        indices.pop_back();
+        indices.pop_back();
+        indices.pop_back();
+
+        indices.pop_back();
+        indices.pop_back();
+        indices.pop_back();*/
     calculateTangentSpace();
 }
 
@@ -242,11 +287,15 @@ bool Terrain::LoadTexture(const char* diff, const char* normal, const char* spec
 
     eTexture sTex(specular);
 
+    eTexture Decal("decal.png", GL_CLAMP_TO_BORDER);
+
     GL_d_texture = dTex.getTextureID();
 
     GL_n_texture = nTex.getTextureID();
 
     GL_s_texture = sTex.getTextureID();
+
+    GL_decal_texture = Decal.getTextureID();
 
     texwidth = dTex.getWidth();
 
@@ -322,7 +371,11 @@ void Terrain::RenderTerrain(Shader* shader)
     glActiveTexture(GL_TEXTURE2);
     glUniform1i(glGetUniformLocation(shader->getProgramID(), "texture_normal"), 2);
     glBindTexture(GL_TEXTURE_2D, GL_n_texture);
-
+/*
+    glActiveTexture(GL_TEXTURE5);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "texture_decal"), 5);
+    glBindTexture(GL_TEXTURE_2D, GL_decal_texture);
+*/
     // Draw mesh
     glBindVertexArray(this->VAO);
     glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
@@ -330,6 +383,8 @@ void Terrain::RenderTerrain(Shader* shader)
     glUseProgram(0);
 
     glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glActiveTexture(GL_TEXTURE5);
     glBindTexture(GL_TEXTURE_2D, 0);
 
 }

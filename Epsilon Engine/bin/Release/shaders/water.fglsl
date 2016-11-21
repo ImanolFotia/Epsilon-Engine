@@ -33,8 +33,8 @@ vec4 SkyColor = vec4(0.5,0.5,0.5, 1.0);
 vec3 NightFog = vec3(0.1,0.1,0.1);
     vec3 lightcolor = normalize(vec3(250, 190, 108));
 
-    const float density = 0.005;
-    const float gradient = 3.5;
+    const float density = 0.003;
+    const float gradient = 1.5;
 
 uniform mat4 view;
 uniform mat4 model;
@@ -84,7 +84,7 @@ void main()
     //gAlbedoSpec.rgb = mix(reflectiontex, refractiontex , min(refractiveFactor, clamp(waterDepth/5, 0.0, 1.0))).rgb;
     //gAlbedoSpec.rgb = mix(refractiontex.rgb, gAlbedoSpec.rgb, clamp(waterDepth/5, 0.0, 1.0));
     //gAlbedoSpec.rgb = mix(texture(diffuseSampler, finalDist).rgb, gAlbedoSpec.rgb, 0.8);
-    gAlbedoSpec.rgb = texture(diffuseSampler, finalDist).rgb;
+    gAlbedoSpec.rgb = texture(diffuseSampler, finalDist).rgb * visibility;
     gAlbedoSpec.a = 1.0;
     gExpensiveNormal = normalize(normaltex.rgb * TBN);
 
