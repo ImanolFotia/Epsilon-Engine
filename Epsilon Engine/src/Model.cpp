@@ -173,3 +173,23 @@ void Model::Draw(GLuint shader)
     for(GLuint i = 0; i < this->meshes.size(); i++)
         this->meshes[i].Draw(shader, this->resm);
 }
+
+void Model::SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation, std::shared_ptr<Camera> cam)
+{
+    glm::mat4 Model = glm::mat4();
+    glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), scale);
+    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), position);
+    glm::mat4 RotationMatrix;
+    RotationMatrix = glm::mat4(1) * glm::toMat4(glm::normalize(rotation));
+
+    Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
+
+    glm::mat4 MVP = cam->getProjectionMatrix() * cam->getViewMatrix() * Model;
+    glUniformMatrix4fv(shader->MVP_Location, 1, GL_FALSE, &MVP[0][0]);
+    glUniformMatrix4fv(shader->WorldTransform_Location, 1, GL_FALSE, &Model[0][0]);
+    glUniformMatrix4fv(shader->View_Location, 1, GL_FALSE, &cam->getViewMatrix()[0][0]);
+    glUniformMatrix4fv(shader->Projection_Location, 1, GL_FALSE, &cam->getProjectionMatrix()[0][0]);
+    glUniform3f(shader->viewPos_Location,  cam->getPosition().x, cam->getPosition().y, cam->getPosition().z);
+
+    glUniform1f(glGetUniformLocation(shader->getProgramID(), "time"),  glfwGetTime());
+}

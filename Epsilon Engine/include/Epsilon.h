@@ -43,7 +43,7 @@
 #include <AudioElement.h>
 #include <AudioListener.h>
 #include <SplashScreen.h>
-
+#include <SphericalHarmonics.h>
 
 class Epsilon
 {
@@ -132,10 +132,11 @@ public:
     std::unique_ptr<MD5Model> m_AnimModel;
     std::unique_ptr<ShadowMap> shadowMap;
     std::unique_ptr<PostProcess> PP;
-    std::shared_ptr<EntityTemplate> EntityTest[3];
+    std::vector<std::shared_ptr<EntityTemplate> > EntityList;
     std::unique_ptr<Audio::AudioElement> m_AudioElement;
     std::unique_ptr<Audio::Audio> m_AudioSystem;
     std::unique_ptr<Audio::AudioListener> m_AudioListener;
+    std::shared_ptr<SphericalHarmonics> sphericalharmonics;
 
 
     std::shared_ptr<Game::Player> m_PlayerCapsule;
@@ -163,6 +164,8 @@ private:
     std::ostringstream fpss;
     std::shared_ptr<ResourceManager> rM;
     std::shared_ptr<Physics::SpherePhysicObject> ph3;
+    std::string GL_VER, GL_REN, GL_VEN;
+    double m_TextAcum = 0.0;
 };
 
 #endif /// EPSILON_H_INCLUDED

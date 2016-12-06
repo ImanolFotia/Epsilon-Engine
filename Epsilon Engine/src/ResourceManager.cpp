@@ -111,6 +111,11 @@ glm::vec3 ResourceManager::getModelScale(std::string path)
     return ModelList.at(path).Scale;
 }
 
+void ResourceManager::setModelUniforms(std::string path, Shader*& shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, std::shared_ptr<Camera> cam)
+{
+    this->ModelList.at(path).SetUniforms(shader, pos, sc, rot, cam);
+}
+
 GLuint ResourceManager::useTexture(std::string texPath)
 {
     try
@@ -255,7 +260,7 @@ bool ResourceManager::requestCubeMap(int CubeMapID, glm::vec3 Position)
             path = "materials/skyboxes/Miramar/";
             break;
         case 2:
-            path = "materials/skyboxes/cubemap/";
+            path = "materials/skyboxes/cubemap2/";
             break;
         default:
             path = "materials/skyboxes/Miramar/";

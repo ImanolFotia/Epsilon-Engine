@@ -60,6 +60,7 @@ public:
 
     float MovementSpeed;
     float MouseSpeed;
+    float JoystickSensibility;
     float FieldOfView;
     int winx;
     int winy;

@@ -18,10 +18,20 @@ public:
         std::cout << "CubeMapID" << texture->getTextureID() << std::endl;
         Position = Pos;
         this->ID = ID;
+
+        m_CubemapSides.push_back(GL_TEXTURE_CUBE_MAP_POSITIVE_X);
+        m_CubemapSides.push_back(GL_TEXTURE_CUBE_MAP_NEGATIVE_X);
+        m_CubemapSides.push_back(GL_TEXTURE_CUBE_MAP_POSITIVE_Y);
+        m_CubemapSides.push_back(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y);
+        m_CubemapSides.push_back(GL_TEXTURE_CUBE_MAP_POSITIVE_Z);
+        m_CubemapSides.push_back(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
+
     }
 
     virtual ~CubeMap(){
         /*std::cout << "Deleted CubeMap" << std::endl;*/}
+
+
 
     virtual glm::vec3 getPosition()
     {
@@ -33,10 +43,18 @@ public:
         return texture->getTextureID();
     }
 
+    virtual GLuint getCubemapFace(int index)
+    {
+        return m_CubemapSides.at(index);
+    }
+
+
 private:
         int ID = 0;
         glm::vec3 Position;
         std::shared_ptr<eTexture> texture;
+        std::vector<glm::vec3> m_CubeMapsDirections;
+        std::vector<GLuint> m_CubemapSides;
 
 protected:
 };

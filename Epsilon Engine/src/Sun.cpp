@@ -44,6 +44,15 @@ void Sun::Update()
     this->Direction = glm::normalize(this->Position - glm::vec3(0,0,0));
 }
 
+void Sun::SetUniforms(std::shared_ptr<Camera> cam, Shader*& shader)
+{
+    glUniform3f(glGetUniformLocation(shader->getProgramID(), "CameraRight"),  cam->getViewMatrix()[0][0], cam->getViewMatrix()[1][0], cam->getViewMatrix()[2][0]);
+    glUniform3f(glGetUniformLocation(shader->getProgramID(), "CameraUp"),  cam->getViewMatrix()[0][1], cam->getViewMatrix()[1][1], cam->getViewMatrix()[2][1]);
+    glm::mat4 choppedView = glm::mat4(glm::mat3(cam->getViewMatrix()));
+    glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "choppedView"), 1, GL_FALSE, &choppedView[0][0]);
+    glUniformMatrix4fv(shader->Projection_Location, 1, GL_FALSE, &cam->getProjectionMatrix()[0][0]);
+}
+
 void Sun::PrepareVAO()
 {
     float vertices[20] =

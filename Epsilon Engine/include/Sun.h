@@ -14,7 +14,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <Texture.h>
 #include <Shader.h>
-
+#include <camera.h>
+#include <memory>
 class Sun{
 
 public:
@@ -27,6 +28,7 @@ public:
 
     void Render(Shader*&);
     void Update();
+    void SetUniforms(std::shared_ptr<Camera>, Shader*&);
 
     glm::vec3 Position;
     glm::vec3 Direction;

@@ -2,9 +2,8 @@
 
 layout(location = 0) out vec4 gAlbedoSpec;
 layout(location = 1) out vec3 gNormal;
-layout(location = 2) out vec4 gPosition;
-layout(location = 3) out vec4 gExpensiveNormal;
-layout(location = 4) out float gDepth;
+layout(location = 2) out vec4 gExpensiveNormal;
+layout(location = 3) out float gDepth;
 
 layout (binding = 0) uniform sampler2D texture_diffuse;
 layout (binding = 1) uniform sampler2D texture_specular;
@@ -23,9 +22,6 @@ in VS_OUT{
 } fs_in;
 
 
-uniform int clip_Direction;
-uniform bool BelowWater;
-uniform float plane;
 uniform vec3 viewPos;
 uniform float time;
 
@@ -58,7 +54,7 @@ void main()
   {
     vec3 I = normalize(fs_in.wFragPos - viewPos);
     R = reflect(I, normalize(gExpensiveNormal.rgb));
-    CubeMapcolor = textureLod(skybox, R, gAlbedoSpec.a*5.0);
+    CubeMapcolor = textureLod(skybox, R, gAlbedoSpec.a);
 
     gAlbedoSpec.rgb = mix(texture(texture_diffuse,fs_in.TexCoords).rgb, 
                           CubeMapcolor.rgb,
@@ -74,9 +70,7 @@ void main()
   }
 
   gNormal.rgb = normalize(normalTexture * fs_in.TBN2);
-  gPosition.rgb = fs_in.FragPos;
   float Depth = LinearizeDepth(gl_FragCoord.z);
-  gPosition.a = Depth;
   gDepth = gl_FragCoord.z;
   //gWorldSpacePosition.rgb = fs_in.wFragPos;
   //gWorldSpacePosition.a = gl_FragCoord.z;

@@ -16,6 +16,7 @@ using namespace std;
 #include <GL/glew.h> /// Contains all the necessery OpenGL includes
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <Texture.h>
@@ -23,7 +24,7 @@ using namespace std;
 #include <Types.h>
 #include <memory>
 #include <emlFormat.h>
-
+#include <camera.h>
 class ResourceManager;
 
 typedef struct MIN_MAX_POINTS
@@ -91,6 +92,8 @@ public:
         for(GLuint i = 0; i < this->meshes.size(); i++)
             this->meshes[i].DrawNoTexture();
     }
+
+    void SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation, std::shared_ptr<Camera> cam);
 
     vector<Mesh> meshes;
 

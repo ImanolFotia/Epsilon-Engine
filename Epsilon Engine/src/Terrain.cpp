@@ -95,13 +95,13 @@ bool Terrain::GenerateGrid(unsigned char* pixels)
         for(int j = 0 ; j < this->height ; j++)
         {
             vert.Position.x = ((float)i + m_Position.x) * scale;
-            vert.Position.y = (float)pixels[counter]/4;
+            vert.Position.y = (float)pixels[counter] + m_Position.y; ///4
             vert.Position.z = ((float)j + m_Position.z) * scale;
             row.push_back(vert.Position.y);
             float fScaleC = float(j)/float(this->height-1);
             float fScaleR = float(i)/float(this->width-1);
-            vert.TexCoords.s = this->width*fScaleC/this->width*50;
-            vert.TexCoords.t = this->height*fScaleR/this->height*50;
+            vert.TexCoords.s = this->width*fScaleC/this->width;
+            vert.TexCoords.t = this->height*fScaleR/this->height;
             vertices.push_back(vert);
             counter++;
 

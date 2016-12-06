@@ -112,6 +112,7 @@
 		<Unit filename="include/Grass.h" />
 		<Unit filename="include/Includes.h" />
 		<Unit filename="include/Light.h" />
+		<Unit filename="include/LightProbe.h" />
 		<Unit filename="include/MD5_Anim.h" />
 		<Unit filename="include/MD5_Model.h" />
 		<Unit filename="include/Mesh.h" />
@@ -128,6 +129,7 @@
 		<Unit filename="include/ShadowMapping.h" />
 		<Unit filename="include/Skybox.h" />
 		<Unit filename="include/SkyboxData.h" />
+		<Unit filename="include/SphericalHarmonics.h" />
 		<Unit filename="include/SplashScreen.h" />
 		<Unit filename="include/Sun.h" />
 		<Unit filename="include/Terrain.h" />
@@ -167,6 +169,7 @@
 		<Unit filename="src/Shader.cpp" />
 		<Unit filename="src/ShadowMapping.cpp" />
 		<Unit filename="src/Skybox.cpp" />
+		<Unit filename="src/SphericalHarmonics.cpp" />
 		<Unit filename="src/Sun.cpp" />
 		<Unit filename="src/Terrain.cpp" />
 		<Unit filename="src/Water.cpp" />

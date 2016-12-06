@@ -1,7 +1,7 @@
 #version 330 core
 
 uniform sampler2D gFinalImage;
-uniform sampler2D gPositionDepth;
+uniform sampler2D gDepth;
 uniform sampler2D gNormal;
 uniform sampler2D gColor;
 
@@ -11,8 +11,8 @@ out vec4 outColor;
 
 
 uniform mat4 projection;
+uniform mat4 invprojection;
 uniform vec2 Resolution;
-uniform vec2 Resolution2;
 // Consts should help improve performance
 /*
 const float rayStep = 0.05;
@@ -36,7 +36,28 @@ const float maxDDepthInv = 1.0;
  
 const float reflectionSpecularFalloffExponent = 3.0;
 float specular;
- 
+
+vec3 PositionFromDepth(float depth) {
+    float z = depth * 2.0 - 1.0;
+
+    vec4 clipSpacePosition = vec4(TexCoords * 2.0 - 1.0, z, 1.0);
+    vec4 viewSpacePosition = invprojection * clipSpacePosition;
+
+    // Perspective division
+    viewSpacePosition /= viewSpacePosition.w;
+
+    return viewSpacePosition.xyz;
+}
+
+float NEAR = 0.1;
+float FAR = 3000.0;
+
+float LinearizeDepth(float depth)
+{
+    float z = depth * 2.0 - 1.0; // Back to NDC
+    return ((2.0 * NEAR * FAR) / (FAR + NEAR - z * (FAR - NEAR)));
+}
+
 vec3 BinarySearch(inout vec3 dir, inout vec3 hitCoord, inout float dDepth)
 {
     float depth;
@@ -51,7 +72,8 @@ vec3 BinarySearch(inout vec3 dir, inout vec3 hitCoord, inout float dDepth)
         projectedCoord.xy = projectedCoord.xy * 0.5 + 0.5;
  
  
-        depth = textureLod(gPositionDepth, projectedCoord.xy, 3).z;
+        depth = PositionFromDepth( texture(gDepth, projectedCoord.xy, 3).r).z;
+        //depth = textureLod(gPosition, projectedCoord.xy, 2).z;
 
  
         dDepth = hitCoord.z - depth;
@@ -94,8 +116,8 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
         projectedCoord.xy /= projectedCoord.w;
         projectedCoord.xy = projectedCoord.xy * 0.5 + 0.5;
  
- 
-        depth = textureLod(gPositionDepth, projectedCoord.xy, 4).z;
+        depth = PositionFromDepth( texture(gDepth, projectedCoord.xy, 3).r).z;
+        //depth = textureLod(gPosition, projectedCoord.xy, 2).z;
         if(depth > 1000.0)
         continue;
  
@@ -118,6 +140,8 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
     return vec4(BinarySearch(dir, hitCoord, dDepth), 1.0);
 }
 
+
+
 void main()
 {
 
@@ -134,7 +158,8 @@ void main()
     	discard;
  
     vec3 viewNormal = texture2D(gNormal, TexCoords).xyz;
-    vec3 viewPos = textureLod(gPositionDepth, TexCoords, 3).xyz;
+    vec3 viewPos = PositionFromDepth(texture(gDepth, TexCoords).r).xyz;
+    //vec3 viewPos = textureLod(gPositionDepth, TexCoords, 2).xyz;
 
     // Reflection vector
     vec3 reflected = normalize(reflect(normalize(viewPos), normalize(viewNormal)));

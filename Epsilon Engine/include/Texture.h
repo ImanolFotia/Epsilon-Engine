@@ -10,8 +10,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
 #include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 #include <SOIL.h>
 
@@ -29,11 +29,18 @@ public:
         int channels;
         path = ("materials/" + std::string(TexName)).c_str();
         //cout << path << endl;
-
+/*
+        std::cout << "Time to load from file to RAM: ";*/
+        double time = glfwGetTime();
+        double time2;
         unsigned char* image = SOIL_load_image(path, &width, &height, &channels, SOIL_LOAD_RGBA);
+        time2 = glfwGetTime();/*
+        std::cout << time2 - time << std::endl;*/
         //cout << channels << endl;
         if(!image)
-            return;
+            return;/*
+        std::cout << "Time to load from RAM to GPU: ";*/
+        time = glfwGetTime();
         glGenTextures(1, &texture);
         glBindTexture(type, texture);
         string name = string(TexName);
@@ -81,6 +88,8 @@ public:
             cout << "no se pudo crear" << TexName << endl;
             return;
         }
+        time2 = glfwGetTime();/*
+        std::cout << time2 - time << std::endl;*/
         SOIL_free_image_data(image);
         glBindTexture(type, 0);
     }
@@ -98,12 +107,12 @@ public:
             image = SOIL_load_image(CubeMapPath[i].c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
             std::cout << CubeMapPath[i] << std::endl;
             glTexImage2D(
-                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,GL_SRGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
             glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
         }
         std::cout << "CubeMapID" << texture << std::endl;
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);

@@ -28,7 +28,7 @@ void main()
   FragColor.a = SunTexture.a;
   blurImage = vec4(FragColor);
   gExpensiveNormal.rgba = vec4(0.0);
-  gPosition = vec4(FragPos, 1000000000.0f);
+  gPosition = vec4(FragPos, 0.0f);
 
 
 }

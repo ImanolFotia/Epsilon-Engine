@@ -24,8 +24,8 @@ const int NR_LIGHTS = 32;
 const float shadowDistance = 100.0f;
 const float fadeDistance = 10.0f;
 const vec3 SkyColor = vec3(0.5,0.5,0.5);
-const float density = 0.003;
-const float gradient = 5.0;
+const float density = 0.01;
+const float gradient = 8.0;
 
 
 vec3 FragPos;

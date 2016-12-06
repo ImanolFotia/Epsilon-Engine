@@ -104,6 +104,16 @@ public:
      */
     glm::vec3 getModelScale(std::string path);
 
+    /** \brief Set model's uniforms
+     *
+     * \param Path to the model
+     * \param Position
+     * \param Scale
+     * \param Rotation
+     * \return void
+     */
+    void setModelUniforms(std::string, Shader*& , glm::vec3, glm::vec3, glm::quat, std::shared_ptr<Camera>);
+
     /** \brief Returns a Texture ID given a path
      *
      * \param Path to the texture
@@ -184,6 +194,8 @@ public:
 
     float timestep;
 
+    std::map<int, CubeMap> CubeMapList;
+
 private:
 
 
@@ -192,7 +204,6 @@ private:
     std::map<std::string, Terrain>  TerrainList;
     std::map<std::string, Model>    ModelList;
     std::map<std::string, Shader> ShadersList;
-    std::map<int, CubeMap> CubeMapList;
     std::vector<glm::vec3> CubeMapPositions;
 
     /*!
