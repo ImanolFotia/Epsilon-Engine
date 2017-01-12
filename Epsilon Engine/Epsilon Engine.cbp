@@ -113,13 +113,16 @@
 		<Unit filename="include/Includes.h" />
 		<Unit filename="include/Light.h" />
 		<Unit filename="include/LightProbe.h" />
+		<Unit filename="include/Log.h" />
 		<Unit filename="include/MD5_Anim.h" />
 		<Unit filename="include/MD5_Model.h" />
 		<Unit filename="include/Mesh.h" />
 		<Unit filename="include/Model.h" />
 		<Unit filename="include/Particle.h" />
+		<Unit filename="include/ParticleProxy.h" />
 		<Unit filename="include/ParticleSystem.h" />
 		<Unit filename="include/Physics.h" />
+		<Unit filename="include/Picking.h" />
 		<Unit filename="include/Player.h" />
 		<Unit filename="include/PostProcess.h" />
 		<Unit filename="include/ProgramData.h" />
@@ -161,6 +164,7 @@
 		<Unit filename="src/Mesh.cpp" />
 		<Unit filename="src/Model.cpp" />
 		<Unit filename="src/Physics.cpp" />
+		<Unit filename="src/Picking.cpp" />
 		<Unit filename="src/Player.cpp" />
 		<Unit filename="src/PostProcess.cpp" />
 		<Unit filename="src/ProgramData.cpp" />

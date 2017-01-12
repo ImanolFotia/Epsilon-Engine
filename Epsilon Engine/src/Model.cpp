@@ -147,6 +147,19 @@ bool Model::loadModel(string emlPath, int a)
         else
             meshes.push_back(Mesh(tmpVertVector, tmpIndicesVector, tmpTexturesVector));
     }
+/*
+        MinMaxPoints.MAX_X = ((MinMaxPoints.MAX_X * Position.x)* Scale.x);
+        MinMaxPoints.MAX_Y = ((MinMaxPoints.MAX_Y * Position.y)* Scale.y);
+        MinMaxPoints.MAX_Z = ((MinMaxPoints.MAX_Z * Position.z)* Scale.z);
+        MinMaxPoints.MIN_X = ((MinMaxPoints.MIN_X * Position.x)* Scale.x);
+        MinMaxPoints.MIN_Y = ((MinMaxPoints.MIN_Y * Position.y)* Scale.y);
+        MinMaxPoints.MIN_Z = ((MinMaxPoints.MIN_Z * Position.z)* Scale.z);
+*/
+        //glm::vec3 M = glm::vec3(MinMaxPoints.MAX_X, MinMaxPoints.MAX_Y, MinMaxPoints.MAX_Z) * Rotation;
+        //glm::vec3 m = glm::vec3(MinMaxPoints.MIN_X, MinMaxPoints.MIN_Y, MinMaxPoints.MIN_Z) * Rotation;
+
+        //MinMaxPoints.MAX_X = M.x; MinMaxPoints.MAX_Y = M.y; MinMaxPoints.MAX_Z = M.z;
+        //MinMaxPoints.MIN_X = m.x; MinMaxPoints.MIN_Y = m.y; MinMaxPoints.MIN_Z = m.z;
 
 
     delete header;

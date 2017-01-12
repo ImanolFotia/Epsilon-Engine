@@ -94,12 +94,17 @@ bool MD5Model::LoadModel( const std::string &filename )
                     std::string ext = Helpers::getExtension(texturePath);
                     std::string n_path = Helpers::removeExtension(texturePath) + "_n" + ext;
                     std::string s_path = Helpers::removeExtension(texturePath) + "_s" + ext;
+                    std::string m_path = Helpers::removeExtension(texturePath) + "_m" + ext;
                     //std::cout << n_path << std::endl;
                     eTexture texn((n_path).c_str());
                     mesh.m_nTexID = texn.getTextureID();
                     //std::cout << "Texture: " << texturePath << std::endl;
                     eTexture texs((s_path).c_str());
                     mesh.m_sTexID = texs.getTextureID();
+
+                    eTexture texm((m_path).c_str());
+                    mesh.m_mTexID = texm.getTextureID();
+
                     file.ignore(fileLength, '\n' ); // Ignore everything else on the line
                 }
                 else if ( param == "numverts")
@@ -652,6 +657,10 @@ void MD5Model::RenderMesh( const Mesh& mesh, GLuint shader )
     glActiveTexture(GL_TEXTURE2);
     glBindTexture( GL_TEXTURE_2D, mesh.m_sTexID );
     glUniform1i(glGetUniformLocation(shader, "s_sampler"), 2);
+
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, mesh.m_mTexID);
+    glUniform1i(glGetUniformLocation(shader, "m_sampler"), 3);
 
     glBindVertexArray(mesh.m_VAO);
 

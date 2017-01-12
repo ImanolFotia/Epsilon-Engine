@@ -13,7 +13,7 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
-
+#include <thread>
 #include <Texture.h>
 #include <Shader.h>
 #include <Skybox.h>
@@ -44,6 +44,7 @@
 #include <AudioListener.h>
 #include <SplashScreen.h>
 #include <SphericalHarmonics.h>
+#include <Picking.h>
 
 class Epsilon
 {
@@ -53,7 +54,6 @@ public:
 
     virtual ~Epsilon(void)
     {
-
         for(std::map<std::string, Shader*>::iterator itr = Shaders.begin(); itr != Shaders.end(); itr++)
         {
             delete itr->second;
@@ -119,7 +119,7 @@ public:
     /**Shaders**/
     std::map<string, Shader*> Shaders;
     std::unique_ptr<Skybox> skybox;
-    //std::unique_ptr<Water> waterPlane;
+    std::shared_ptr<Water> waterPlane;
     std::vector<Grass> grass;
     std::vector<Model> model;
     GLuint VertexArrayID;
@@ -137,7 +137,8 @@ public:
     std::unique_ptr<Audio::Audio> m_AudioSystem;
     std::unique_ptr<Audio::AudioListener> m_AudioListener;
     std::shared_ptr<SphericalHarmonics> sphericalharmonics;
-
+    std::thread t1;
+   // std::shared_ptr<Pick> m_Pick;
 
     std::shared_ptr<Game::Player> m_PlayerCapsule;
     /** Window Properties **/

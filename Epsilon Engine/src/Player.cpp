@@ -43,10 +43,15 @@ namespace Game
         m_collinfo->setName(std::string("Player"));
         m_playerBody->setUserPointer(m_collinfo.get());
         m_LocalResourceManagerPointer->m_PhysicsWorld->world->addRigidBody(m_playerBody.get());
+        m_playerBody->setCollisionFlags(m_playerBody->getFlags());
         m_playerBody->setActivationState(DISABLE_DEACTIVATION);
         m_playerBody->setSleepingThresholds (0.0, 0.0);
         m_playerBody->setAngularFactor (0.0);
+        m_pickedConstraint = 0;
 
+        m_oldPickingPos = btVector3(0,0,0);
+        m_hitPos = btVector3(0,0,0);
+        m_oldPickingDist = 0.0;
 
 
     }
@@ -134,8 +139,12 @@ namespace Game
             m_LocalResourceManagerPointer->m_PhysicsWorld->world->rayTest(m_raySource[i], m_rayTarget[i], rayCallback);
             if (rayCallback.hasHit())
             {
-                m_rayLambda[i] = rayCallback.m_closestHitFraction;
-                m_rayPos[i] = rayCallback.m_hitPointWorld;
+                btRigidBody* body = (btRigidBody*)btRigidBody::upcast(rayCallback.m_collisionObject);
+                if ((body->isStaticObject()))
+                {
+                    m_rayLambda[i] = rayCallback.m_closestHitFraction;
+                    m_rayPos[i] = rayCallback.m_hitPointWorld;
+                }
             } else {
                 m_rayLambda[i] = 1.0;
             }
@@ -351,4 +360,136 @@ namespace Game
 
         m_PrevPosition = pos;
     }
+
+
+
+    void Player::CheckforPicking(btVector3 from, btVector3 to)
+    {
+        this->rayTo = to;
+        this->rayFrom = btVector3(getPosition().x, getPosition().y, getPosition().z);
+        if(Input::KeyBoard::KEYS[Input::GLFW::Key::E])
+        {
+            if(!active)
+            {
+                pickObject(from, to);
+                active = true;
+            }
+            moveObject();
+        }
+        else
+        {
+            deleteConstraint();
+            active = false;
+        }
+    }
+
+
+    bool Player::pickObject(btVector3 from, btVector3 to)
+    {
+        if (m_LocalResourceManagerPointer->m_PhysicsWorld->world==0)
+            return false;
+
+        class ClosestNotMe : public btCollisionWorld::ClosestRayResultCallback
+        {
+        public:
+            ClosestNotMe (btRigidBody* me, btVector3 rayfrom, btVector3 rayTo) : btCollisionWorld::ClosestRayResultCallback(btVector3(0.0, 0.0, 0.0), btVector3(0.0, 0.0, 0.0))
+            {
+                m_me = me;
+                m_rayFromWorld = rayfrom;
+                m_rayToWorld = rayTo;
+            }
+
+            virtual btScalar addSingleResult(btCollisionWorld::LocalRayResult& rayResult,bool normalInWorldSpace)
+            {
+                if (rayResult.m_collisionObject == m_me)
+                    return 1.0;
+
+                return ClosestRayResultCallback::addSingleResult (rayResult, normalInWorldSpace);
+            }
+        protected:
+            btRigidBody* m_me;
+        };
+        btVector3 target = rayFrom + rayTo;
+        ClosestNotMe rayCallback(m_playerBody.get(), rayFrom, target);
+
+        m_LocalResourceManagerPointer->m_PhysicsWorld->world->rayTest(rayFrom, target, rayCallback);
+        if (rayCallback.hasHit())
+        {
+            //std::cout << "Llega" << std::endl;
+            btVector3 pickPos = rayCallback.m_hitPointWorld;
+            btRigidBody* body = (btRigidBody*)btRigidBody::upcast(rayCallback.m_collisionObject);
+
+            if (body)
+            {
+                if (!(body->isStaticObject()))
+                {
+                    m_pickedBody = body;
+                    m_savedState = m_pickedBody->getActivationState();
+                    m_pickedBody->setActivationState(DISABLE_DEACTIVATION);
+                    btVector3 localPivot = body->getCenterOfMassTransform().inverse() * body->getCenterOfMassPosition();
+                    btPoint2PointConstraint* p2p = new btPoint2PointConstraint(*body, localPivot);
+                    m_LocalResourceManagerPointer->m_PhysicsWorld->world->addConstraint(p2p, true);
+                    m_pickedConstraint = p2p;
+                    btScalar mousePickClamping = 30.f;
+                    p2p->m_setting.m_impulseClamp = mousePickClamping;
+                    p2p->m_setting.m_tau = 0.1f;
+                    //p2p->m_setting.m_damping = 100.0f;
+                }
+            }
+
+            m_oldPickingPos = target;
+            m_hitPos = pickPos;
+            m_oldPickingDist = (rayFrom - pickPos).length();
+            //std::cout << "m_hitPos: x: " << pickPos.getX() << " y: " << pickPos.getY() << " z: " << pickPos.getZ()  << std::endl;
+            //std::cout << "from: x: " << getPosition().getX() << " y: " << from.getY() << " z: " << from.getZ()  << std::endl;
+        }
+        return false;
+
+    }
+
+    bool Player::moveObject()
+    {
+        if (m_pickedBody  && m_pickedConstraint)
+        {
+            btPoint2PointConstraint* pickCon = static_cast<btPoint2PointConstraint*>(m_pickedConstraint);
+            if (pickCon)
+            {
+                //keep it at the same picking distance
+
+                btVector3 newPivotB;
+
+
+
+                btVector3 dir = rayTo;// - rayFrom;
+                dir.normalize();
+                dir *= m_oldPickingDist;
+                this->pickedbodyangularfactor = m_pickedBody->getAngularVelocity();
+                m_pickedBody->setAngularVelocity(btVector3(glm::clamp((float)this->pickedbodyangularfactor.x(), 0.0f, 2.0f),
+                                                           glm::clamp((float)this->pickedbodyangularfactor.y(), 0.0f, 2.0f),
+                                                           glm::clamp((float)this->pickedbodyangularfactor.z(), 0.0f, 2.0f)));
+                newPivotB = rayFrom + dir;
+                //std::cout << m_oldPickingDist << std::endl;
+                //std::cout << "Pick Pos: x: " << newPivotB.getX() << " y: " << newPivotB.getY() << " z: " << newPivotB.getZ()  << std::endl;
+                pickCon->setPivotB(newPivotB);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void Player::deleteConstraint()
+    {
+        if (m_pickedConstraint)
+        {
+            m_pickedBody->forceActivationState(m_savedState);
+            m_pickedBody->activate();
+            m_pickedBody->setAngularVelocity(pickedbodyangularfactor);
+            m_LocalResourceManagerPointer->m_PhysicsWorld->world->removeConstraint(m_pickedConstraint);
+            delete m_pickedConstraint;
+            m_pickedConstraint = 0;
+            m_pickedBody = 0;
+            std::cout << "deleted constraint" << std::endl;
+        }
+    }
+
 }

@@ -55,7 +55,7 @@ std::string Physics::getCollisionObjectName(btVector3 rayPosition, btVector3 ray
 
 glm::vec3 Physics::getCollisionPosition(btVector3 rayPosition, btVector3 rayTarget)
 {
-        btVector3 target =  btVector3(rayTarget.getX() * 1000, rayTarget.getY() * 1000, rayTarget.getZ() * 1000);
+    btVector3 target =  btVector3(rayTarget.getX() * 1000, rayTarget.getY() * 1000, rayTarget.getZ() * 1000);
     btCollisionWorld::ClosestRayResultCallback RayCallback(rayPosition, target);
 
     world->rayTest(rayPosition, target, RayCallback);

@@ -3,13 +3,14 @@
 
 layout(location = 0) out vec4 gAlbedoSpec;
 layout(location = 1) out vec4 gNormal;
-layout(location = 2) out vec4 gPosition;
-layout(location = 3) out vec3 gExpensiveNormal;
+layout(location = 2) out vec3 gPosition;
+layout(location = 3) out vec4 gExpensiveNormal;
 layout(location = 4) out float gDepth;
 
 uniform sampler2D sampler;
 uniform sampler2D n_sampler;
 uniform sampler2D s_sampler;
+uniform sampler2D m_sampler;
 uniform vec3 viewPos;
 uniform vec3 lightDir;
 uniform float texmix;
@@ -23,29 +24,21 @@ in vec3 wFragPos;
 float NEAR = 0.1;
 float FAR = 3000.0;
 
-float LinearizeDepth(float depth)
-{
-    float z = depth * 2.0 - 1.0; // Back to NDC
-    return ((2.0 * NEAR * FAR) / (FAR + NEAR - z * (FAR - NEAR)));
-}
-
 void main()
 {
 	vec3 norm = normalize(Normal.rgb);
-
+	vec3 metallic_emissive = texture(m_sampler, TexCoords).xyz;
 	gNormal.rgb = norm;
-    gNormal.a = gl_FragCoord.z;
+    gNormal.a = metallic_emissive.r;
 
-	gAlbedoSpec.rgb = clamp(texture2D(sampler, TexCoords).rgb, 0, 10000);
+	gAlbedoSpec.rgb = texture(sampler, TexCoords).rgb;
 
-	gAlbedoSpec.a = clamp(texture2D(s_sampler, TexCoords).g, 0, 10000);
+	gAlbedoSpec.a = texture(s_sampler, TexCoords).g;
 
-	gExpensiveNormal = clamp(normalize((texture2D(n_sampler, TexCoords).rgb * 2.0 - 1.0) * TBN), 0, 10000);
+	gExpensiveNormal.rgb = normalize((texture(n_sampler, TexCoords).rgb * 2.0 - 1.0) * TBN);
+	gExpensiveNormal.a = metallic_emissive.g;
 
 	gPosition.rgb = FragPos;
-
-  	float Depth = LinearizeDepth(gl_FragCoord.z);
-  	gPosition.a = Depth;
 
   	gDepth = gl_FragCoord.z;
 }

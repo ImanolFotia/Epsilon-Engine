@@ -40,7 +40,7 @@ void Sun::Render(Shader*& shader)
 
 void Sun::Update()
 {
-    this->Position = glm::vec3(0,0,0) + glm::vec3(this->radius /** glm::cos(glfwGetTime()/10)*/ * glm::cos(2.9), height /** glm::sin(glfwGetTime()/10)*/ * glm::sin(2.9), this->radius /** glm::sin(glfwGetTime()/10)*/ * glm::sin(2.9));
+    this->Position = glm::vec3(0,0,0) + glm::vec3(this->radius /** glm::cos(glfwGetTime()/10) **/ * glm::cos(2.9), height* /** glm::sin(glfwGetTime()/10) * */glm::sin(2.9), this->radius /** glm::sin(glfwGetTime()/10) * */* glm::sin(2.9));
     this->Direction = glm::normalize(this->Position - glm::vec3(0,0,0));
 }
 

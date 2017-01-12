@@ -36,6 +36,17 @@ public:
     void preStep();
     void Movement(std::shared_ptr<Camera> cam, float dt);
 
+
+    void CheckforPicking(btVector3, btVector3);
+
+private:
+
+    bool pickObject(btVector3, btVector3);
+
+    bool moveObject();
+
+    void deleteConstraint();
+
 private:
     btVector3 m_Position;
     btVector3 m_Direction;
@@ -66,6 +77,21 @@ private:
     std::shared_ptr<btMotionState> m_MotionState;
     std::shared_ptr<ResourceManager> m_LocalResourceManagerPointer;
     std::shared_ptr<Physics::CollisionInfo> m_collinfo;
+
+private:
+
+	btRigidBody* m_pickedBody;
+	btTypedConstraint* m_pickedConstraint;
+
+    btVector3 m_oldPickingPos;
+    btVector3 m_hitPos;
+    btVector3 rayTo, rayFrom;
+    btScalar m_oldPickingDist;
+
+    bool active = false;
+    btVector3 pickedbodyangularfactor;
+
+    int m_savedState;
 
 };
 }

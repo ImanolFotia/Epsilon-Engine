@@ -49,7 +49,7 @@ void PostProcess::SetupFramebuffer()
     LightPositions.push_back(glm::vec3(65, 15, 8));
     LightPositions.push_back(glm::vec3(45, 15, 8));
     */
-/*
+
     LightPositions.push_back(glm::vec3(50, 14, 5));
     LightPositions.push_back(glm::vec3(52, 14, -17));
     LightPositions.push_back(glm::vec3(12, 14, 3));
@@ -58,7 +58,11 @@ void PostProcess::SetupFramebuffer()
     LightPositions.push_back(glm::vec3(12, 26, 18));
     LightPositions.push_back(glm::vec3(96, 26, 18));
     LightPositions.push_back(glm::vec3(50, 32, -15));
-    */
+    LightPositions.push_back(glm::vec3(105, 19, -27));
+
+
+    //Corridor
+/*
     LightPositions.push_back(glm::vec3(70, 15, -20));
     LightPositions.push_back(glm::vec3(70, 15, 0));
     LightPositions.push_back(glm::vec3(70, 15, 20));
@@ -67,9 +71,29 @@ void PostProcess::SetupFramebuffer()
     LightPositions.push_back(glm::vec3(-13, 18, -8));
     LightPositions.push_back(glm::vec3(-13, 18, 8));
     LightPositions.push_back(glm::vec3(46, 20, 0));
+*/
+/*
 
+    LightPositions.push_back(glm::vec3(0, 24, 0));
+    LightPositions.push_back(glm::vec3(70, -55, 0));
+    LightPositions.push_back(glm::vec3(70, -55, 20));
+    LightPositions.push_back(glm::vec3(13, -55, 8));
+    LightPositions.push_back(glm::vec3(13, -55, -8));
+    LightPositions.push_back(glm::vec3(-13, -55, -8));
+    LightPositions.push_back(glm::vec3(-13, -55, 8));
+    LightPositions.push_back(glm::vec3(46, -55, 0));
 
-
+*/
+/*
+    LightPositions.push_back(glm::vec3(70, 13, -20));
+    LightPositions.push_back(glm::vec3(70, 13, 0));
+    LightPositions.push_back(glm::vec3(70, 13, 20));
+    LightPositions.push_back(glm::vec3(13, 16, 8));
+    LightPositions.push_back(glm::vec3(13, 16, -8));
+    LightPositions.push_back(glm::vec3(-13, 16, -8));
+    LightPositions.push_back(glm::vec3(-13, 16, 8));
+    LightPositions.push_back(glm::vec3(46, 20, 0));
+*/
 
 
 
@@ -220,10 +244,21 @@ void PostProcess::SetupGBuffer()
 
     glGenTextures(1, &gNormal);
     glBindTexture(GL_TEXTURE_2D, gNormal);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gNormal, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    glGenTextures(1, &gPosition);
+    glBindTexture(GL_TEXTURE_2D, gPosition);
+    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB16F, width, height, 0,GL_RGB, GL_FLOAT, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gPosition, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
     glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -233,16 +268,16 @@ void PostProcess::SetupGBuffer()
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gExpensiveNormal, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, gExpensiveNormal, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
     glGenerateMipmap(GL_TEXTURE_2D);
 
     glGenTextures(1, &gDepth);
     glBindTexture(GL_TEXTURE_2D, gDepth);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, width, height, 0, GL_RED, GL_FLOAT, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, gDepth, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_TEXTURE_2D, gDepth, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
     glGenerateMipmap(GL_TEXTURE_2D);
     /// - Create and attach depth buffer (renderbuffer)
@@ -252,8 +287,8 @@ void PostProcess::SetupGBuffer()
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
 
-    GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
-    glDrawBuffers(4, DrawBuffers);
+    GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4};
+    glDrawBuffers(5, DrawBuffers);
 
     GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
@@ -337,8 +372,6 @@ void PostProcess::applySSAO(std::shared_ptr<Camera>& cam)
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(glGetUniformLocation(SSAO->getProgramID(), "gDepth"), 0);
     glBindTexture(GL_TEXTURE_2D, this->gDepth);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     //glGenerateMipmap(GL_TEXTURE_2D);
 
     glActiveTexture(GL_TEXTURE1);
@@ -496,7 +529,7 @@ void PostProcess::setupSSR()
     glGenTextures(1, &SSRTexture);
     glBindFramebuffer(GL_FRAMEBUFFER, SSRFBO);
     glBindTexture(GL_TEXTURE_2D, SSRTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->width, this->height, 0, GL_RGB, GL_FLOAT, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, this->width, this->height, 0, GL_RGB, GL_FLOAT, NULL);
     glGenerateMipmap(GL_TEXTURE_2D);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -573,10 +606,8 @@ void PostProcess::SSRPass()
     glGenerateMipmap(GL_TEXTURE_2D);
 
     glActiveTexture(GL_TEXTURE1);
-    glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "gDepth"), 1);
-    glBindTexture(GL_TEXTURE_2D, this->gDepth);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "gPosition"), 1);
+    glBindTexture(GL_TEXTURE_2D, this->gPosition);
     glGenerateMipmap(GL_TEXTURE_2D);
 
     glActiveTexture(GL_TEXTURE2);
@@ -609,7 +640,7 @@ void PostProcess::DownSampleSSR()
     glViewport(0,0, this->width/2, this->height/2);
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(glGetUniformLocation(PassThroughShader->getProgramID(), "texture0"), 0);
-    glBindTexture(GL_TEXTURE_2D, this->gPositionDepth);
+    glBindTexture(GL_TEXTURE_2D, this->gPosition);
     glGenerateMipmap(GL_TEXTURE_2D);
 
     this->RenderQuad();
@@ -718,7 +749,7 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::shared_ptr<Camera>& 
 {
 
     glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     this->shader->Use();
 

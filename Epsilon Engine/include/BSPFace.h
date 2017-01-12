@@ -51,30 +51,7 @@ public:
 
 public:
 
-    void RenderFace(GLuint shader, GLuint TextureID,GLuint normalID, GLuint specularID, GLuint metallicID)
-    {
-        glBindVertexArray(this->VAO);
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, TextureID);
-        glUniform1i(glGetUniformLocation(shader, "texture_diffuse"), 0);
-
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, specularID);
-        glUniform1i(glGetUniformLocation(shader, "texture_specular"), 1);
-
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, normalID);
-        glUniform1i(glGetUniformLocation(shader, "texture_normal"), 2);
-
-        glActiveTexture(GL_TEXTURE3);
-        glBindTexture(GL_TEXTURE_2D, metallicID);
-        glUniform1i(glGetUniformLocation(shader, "texture_height"), 3);
-
-        glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
-
-    }
+    void RenderFace(GLuint shader, GLuint TextureID,GLuint normalID, GLuint specularID, GLuint metallicID);
 
 public:
 

@@ -85,6 +85,7 @@ protected:
         GLuint              m_TexID;
         GLuint              m_nTexID;
         GLuint              m_sTexID;
+        GLuint              m_mTexID;
 
         // These buffers are used for rendering the animated mesh
         PositionBuffer      m_PositionBuffer;   // Vertex position stream

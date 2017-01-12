@@ -14,17 +14,16 @@ Water::Water(glm::vec3 position, float scale)
     this->ReflectionResoulution = 512;
     this->RefractionResoulution = 512;
 
-
-    m_Model = (std::shared_ptr<Model>) new Model("models/platform.eml");
-
     this->LoadShaders();
     this->LoadTextures();
+
+    GeneratevertexArray();
 }
 
-void Water::RenderWater(std::shared_ptr<Camera>& cam, glm::vec3 lightDir)
+void Water::RenderWater(std::shared_ptr<Camera> cam)
 {
     shader->Use();
-    glDisable(GL_CULL_FACE);
+    //glDisable(GL_CULL_FACE);
 
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(glGetUniformLocation(shader->getProgramID(), "normalSampler"), 0);
@@ -45,23 +44,20 @@ void Water::RenderWater(std::shared_ptr<Camera>& cam, glm::vec3 lightDir)
 
     glm::mat4 model = glm::mat4();
     /// glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(scale,1,scale));
-    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), this->position);
-    model = TranslationMatrix;
-    model = glm::scale(model, glm::vec3(scale, 1.0f, scale));
+    model = glm::translate(model, this->position);
     this->MVP = cam->getProjectionMatrix() * cam->getViewMatrix() * model;
-    glm::mat4 view = glm::mat4(cam->getViewMatrix());
 
-    glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "model"), 1, GL_FALSE, &model[0][0]);
-    glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "view"), 1, GL_FALSE, &view[0][0]);
-    glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "projection"), 1, GL_FALSE, &cam->getProjectionMatrix()[0][0]);
-    glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "MVP"), 1, GL_FALSE, &this->MVP[0][0]);
+    glUniformMatrix4fv(shader->MVP_Location, 1, GL_FALSE, &MVP[0][0]);
+    glUniformMatrix4fv(shader->WorldTransform_Location, 1, GL_FALSE, &model[0][0]);
+    glUniformMatrix4fv(shader->View_Location, 1, GL_FALSE, &cam->getViewMatrix()[0][0]);
+    glUniformMatrix4fv(shader->Projection_Location, 1, GL_FALSE, &cam->getProjectionMatrix()[0][0]);
     glUniform1f(glGetUniformLocation(shader->getProgramID(), "time"),  glfwGetTime());
-    glUniform3f(glGetUniformLocation(shader->getProgramID(), "cameraPosition"), cam->getPosition().x, cam->getPosition().y, cam->getPosition().z);
-    glUniform3f(glGetUniformLocation(shader->getProgramID(), "LightDirection"), lightDir.x, lightDir.y, lightDir.z);
 
-    m_Model->DrawNoTexture();
+    glBindVertexArray(this->VAO);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
 
-    glEnable(GL_CULL_FACE);
+    //glEnable(GL_CULL_FACE);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);
     glActiveTexture(GL_TEXTURE1);
@@ -75,7 +71,7 @@ void Water::RenderWater(std::shared_ptr<Camera>& cam, glm::vec3 lightDir)
 
 void Water::LoadTextures(void)
 {
-    eTexture* tex = new eTexture("Wavy_Water - Height (Normal Map 4).png");
+    eTexture* tex = new eTexture("Wavy_Water_n.png");
     normalTexture = tex->getTextureID();
 
     delete tex;
@@ -90,7 +86,7 @@ void Water::LoadTextures(void)
 
     delete tex3;
 
-    eTexture* tex4 = new eTexture("Wavy_Water - Color Map.png");
+    eTexture* tex4 = new eTexture("4141-diffuse.jpg");
     diffuseTexture = tex4->getTextureID();
 
     delete tex4;
@@ -152,7 +148,7 @@ void Water::CreateRefractionFBO(void)
 }
 
 
-void Water::GenerateReflection(std::shared_ptr<Camera>& cam)
+void Water::GenerateReflection(std::shared_ptr<Camera> cam)
 {
     GenerateModelViewProjection(cam);
     glBindFramebuffer(GL_FRAMEBUFFER, reflectionFBO);
@@ -160,7 +156,7 @@ void Water::GenerateReflection(std::shared_ptr<Camera>& cam)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Water::GenerateRefraction(std::shared_ptr<Camera>& cam)
+void Water::GenerateRefraction(std::shared_ptr<Camera> cam)
 {
     GenerateModelViewProjection(cam);
     glBindFramebuffer(GL_FRAMEBUFFER, refractionFBO);
@@ -170,36 +166,123 @@ void Water::GenerateRefraction(std::shared_ptr<Camera>& cam)
 
 void Water::GeneratevertexArray()
 {
-    GLfloat plane[] =
+    glm::vec3 verts[] =
     {
-        1.0f * scale,  0,  1.0f* scale, 1.0f, 1.0f,
-        1.0f*  scale,  0, -1.0f* scale, 1.0f, 0.0f,
-        -1.0f*  scale,  0, -1.0f* scale, 0.0f, 0.0f,
-        -1.0f*  scale,  0,  1.0f* scale, 0.0f, 1.0f,
+        glm::vec3(115.0f,  0.0,  115.0f),
+        glm::vec3(115.0f,  0.0, -115.0f),
+        glm::vec3(-115.0f,  0.0, -115.0f),
+        glm::vec3(-115.0f,  0.0,  115.0f)
 
     };
+
+    glm::vec2 texcoords[] =
+    {
+        glm::vec2(1.0f, 1.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(0.0f, 1.0f)
+    };
+
     GLuint indices[] = {
         0, 1, 3,
         1, 2, 3
     };
 
+    glm::vec3 tangent, binormal;
+
+
+    {
+        glm::vec3 v0 = verts[ indices[0] ];
+        glm::vec3 v1 = verts[ indices[1] ];
+        glm::vec3 v2 = verts[ indices[2] ];
+
+        glm::vec3 edge1 = v2 - v0;
+        glm::vec3 edge2 = v1 - v0;
+
+        glm::vec2 t0 = texcoords[ indices[0] ];
+        glm::vec2 t1 = texcoords[ indices[1] ];
+        glm::vec2 t2 = texcoords[ indices[2] ];
+
+        glm::vec2 deltaUV1 = t1 - t0;
+        glm::vec2 deltaUV2 = t2 - t0;
+
+        float f = (deltaUV2.x * deltaUV1.x - deltaUV2.y * deltaUV1.y) == 0.0f ? -1.0f : 1.0f;
+        if ( 0 == deltaUV2.x && 0 ==deltaUV2.y && 0 == deltaUV1.x && 0 == deltaUV1.y )
+        {
+            deltaUV1.x = 0.0;
+            deltaUV1.y = 1.0;
+            deltaUV2.y = 1.0;
+            deltaUV2.y = 0.0;
+        }
+
+        tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+        tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+        tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+
+        binormal.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+        binormal.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+        binormal.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+    }
+/*
+    tangent = glm::normalize(tangent - glm::dot(tangent, glm::vec3(0,1,0)) * glm::vec3(0,1,0));
+    // then retrieve perpendicular vector B with the cross product of T and N
+    binormal = glm::cross(tangent, glm::vec3(0,1,0));
+
+    if (glm::dot(glm::cross(glm::vec3(0,1,0), tangent), binormal) < 0.0f)
+    {
+        tangent = tangent * -1.0f;
+    }
+*/
+    glm::vec3 tangents[] =
+    {
+        tangent,
+        tangent,
+        tangent,
+        tangent
+
+    };
+    std::cout << tangent.x << " " << tangent.y << " " << tangent.z << std::endl;
+
+    glm::vec3 binormals[] =
+    {
+        binormal,
+        binormal,
+        binormal,
+        binormal
+    };
+
     glGenVertexArrays(1, &this->VAO);
+    GLuint UVBO, TBO, BBO;
     glGenBuffers(1, &this->VBO);
+    glGenBuffers(1, &BBO);
+    glGenBuffers(1, &TBO);
+    glGenBuffers(1, &UVBO);
     glGenBuffers(1, &this->EBO);
 
     glBindVertexArray(this->VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(plane), &plane[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * 4, &verts[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (GLvoid*)0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, UVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * 4, &texcoords[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (GLvoid*)0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, TBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * 4, &tangents[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (GLvoid*)0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, BBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * 4, &binormals[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (GLvoid*)0);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
-
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6, &indices[0], GL_STATIC_DRAW);
 
     glBindVertexArray(0);
 
@@ -210,7 +293,7 @@ void Water::FinishWatercomputation(void)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Water::GenerateModelViewProjection(std::shared_ptr<Camera>& cam)
+void Water::GenerateModelViewProjection(std::shared_ptr<Camera> cam)
 {
     glm::mat4 model = glm::mat4();
     MVP = cam->getProjectionMatrix() * cam->getViewMatrix() * model;

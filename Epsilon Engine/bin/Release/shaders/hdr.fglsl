@@ -33,17 +33,17 @@ vec3 HDR(vec3 image)
 
 /*----------------------------------------------------------------------------*/
 vec4 textureDistorted(
-	in sampler2D tex, 
-	in vec2 texcoord, 
-	in vec2 direction,
-	in vec3 distortion 
+    in sampler2D tex, 
+    in vec2 texcoord, 
+    in vec2 direction,
+    in vec3 distortion 
 ) {
-	return vec4(
-		texture(tex, texcoord + direction * distortion.r).r,
-		texture(tex, texcoord + direction * distortion.g).g,
-		texture(tex, texcoord + direction * distortion.b).b,
-		1.0
-	);
+    return vec4(
+        texture(tex, texcoord + direction * distortion.r).r,
+        texture(tex, texcoord + direction * distortion.g).g,
+        texture(tex, texcoord + direction * distortion.b).b,
+        1.0
+    );
 }
 
 /*----------------------------------------------------------------------------*/
@@ -75,34 +75,34 @@ vec3 changeSaturation(vec3 color, float saturation)
     // Controls the sample density, which in turn, controls the sample spread.
     float density = 0.5; 
     // Sample weight. Decays as we radiate outwards.
-    float weight = 0.3; 
-const float SAMPLES = 10.; 
+    float weight = 0.2; 
+const float SAMPLES = 20.; 
 
 void main()
 {
 
-	vec2 texcoord = -TexCoords + vec2(1.0);
+    vec2 texcoord = -TexCoords + vec2(1.0);
     vec2 texelSize = 1.0 / vec2(textureSize(blurredSampler, 0));
    // ghost vector to image centre:
     vec2 ghostVec = (vec2(0.5) - texcoord) * uGhostDispersal;
-	vec2 haloVec = normalize(ghostVec) * uHaloWidth;
-	vec3 distortion = vec3(-texelSize.x * uDistortion, 0.0, texelSize.x * uDistortion);
+    vec2 haloVec = normalize(ghostVec) * uHaloWidth;
+    vec3 distortion = vec3(-texelSize.x * uDistortion, 0.0, texelSize.x * uDistortion);
    
    // sample ghosts:  
       vec4 result = vec4(0.0);
       for (int i = 0; i < uGhosts; ++i) { 
         vec2 offset = fract(texcoord + ghostVec * float(i));
         float weight = length(vec2(0.5) - offset) / length(vec2(0.5));
-      	weight = pow(1.0 - weight, 10.0);
+        weight = pow(1.0 - weight, 10.0);
   
         result += texture(blurredSampler, offset);
       }
       result *= texture(uLensColor, length(vec2(0.5) - texcoord) / length(vec2(0.5)));
 
-	vec4 lensMod = texture(uLensDirtTex, TexCoords);
-	lensMod += texture(uLensStarTex, TexCoords);
+    vec4 lensMod = texture(uLensDirtTex, TexCoords);
+    lensMod += texture(uLensStarTex, TexCoords);
 
-    vec3 hdrColor = texture(sampler, TexCoords).rgb;
+    vec3 hdrColor = texture(sampler, TexCoords, 0.0).rgb;
     vec3 SSR = texture(gReflectionSampler, TexCoords).rgb;
     vec3 bloom = texture(blurredSampler, TexCoords).rgb;
 
@@ -112,8 +112,8 @@ void main()
     // Light offset. Kind of fake. See above.
     vec4 col = vec4(0.0);
     vec4 LightColor = vec4(218, 205, 118, 1.0);
-	vec4 pos = projection * choppedView * vec4(sunPos, 1.0f);
-	if(pos.x > 1.0 || pos.x < -1.0 || pos.y > 1.0 || pos.y < -1.0 || pos.z < 0.0 || sunPos.y < 0.0 || !lightShafts){ col = vec4(0.0);} else{
+    vec4 pos = projection * choppedView * vec4(sunPos, 1.0f);
+    if(pos.x > 1.0 || pos.x < -1.0 || pos.y > 1.0 || pos.y < -1.0 || pos.z < 0.0 || sunPos.y < 0.0 || !lightShafts){ col = vec4(0.0);} else{
     vec3 l = vec3(pos.xy, 1.0);//lOff();
     vec2 tuv =  fragcoord - .5 - l.xy*.45;
     vec2 dTuv = tuv*density/SAMPLES;
@@ -134,17 +134,15 @@ void main()
     col = mix(col, vec4(0.0), length(vec2(0.0) - pos.xy));
     col = vec4(clamp(col.x, 0.0, 1.0), clamp(col.y, 0.0, 1.0), clamp(col.z, 0.0, 1.0), col.w) * 0.25 * normalize(vec4(205, 109, 39, 1.0));
 
-	fragcoord = gl_FragCoord.xy/Resolution;
+    fragcoord = gl_FragCoord.xy/Resolution;
     float vignete = 1.0 - smoothstep(0.9, 1.75, length(vec2(0.0) - (fragcoord * 2.0 - 1.0)));
 
-    //hdrColor = changeSaturation(hdrColor, 1.0);
+    //hdrColor = changeSaturation(hdrColor, 0.7);
 
     color.rgb  = HDR((hdrColor + col.rgb + bloom + (result.rgb * lensMod.rgb*5) ) + SSR*0.3 ) * vignete;
 
-    color.rgb = changeSaturation(color.rgb, 1.0);
+    
 
     color.a = 1.0;
 
 }
-
-

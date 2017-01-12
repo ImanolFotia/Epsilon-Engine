@@ -1,9 +1,10 @@
 #version 430 core
 
 layout(location = 0) out vec4 gAlbedoSpec;
-layout(location = 1) out vec3 gNormal;
-layout(location = 2) out vec4 gExpensiveNormal;
-layout(location = 3) out float gDepth;
+layout(location = 1) out vec4 gNormal;
+layout(location = 2) out vec3 gPosition;
+layout(location = 3) out vec4 gExpensiveNormal;
+layout(location = 4) out float gDepth;
 
 layout (binding = 0) uniform sampler2D texture_diffuse;
 layout (binding = 1) uniform sampler2D texture_specular;
@@ -58,7 +59,7 @@ void main()
 
     gAlbedoSpec.rgb = mix(texture(texture_diffuse,fs_in.TexCoords).rgb, 
                           CubeMapcolor.rgb,
-                          clamp(Metallic_Emmisive.r, 0.0, 1.0)
+                          0.0//clamp(Metallic_Emmisive.r, 0.0, 1.0)
                           );
   }
   else
@@ -70,8 +71,10 @@ void main()
   }
 
   gNormal.rgb = normalize(normalTexture * fs_in.TBN2);
+  gNormal.a = Metallic_Emmisive.r;
   float Depth = LinearizeDepth(gl_FragCoord.z);
   gDepth = gl_FragCoord.z;
+  gPosition = fs_in.FragPos;
   //gWorldSpacePosition.rgb = fs_in.wFragPos;
   //gWorldSpacePosition.a = gl_FragCoord.z;
 }

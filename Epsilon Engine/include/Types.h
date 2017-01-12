@@ -13,8 +13,8 @@
 
 //64 BSP units equals 1 meter
 //3.2 OpenGL units equals 1 meter
-
-#define     GRAVITY                                     -9.81f
+#define     GOLDEN_RATIO                                  3.2f
+#define     GRAVITY                        -9.81f*GOLDEN_RATIO
 
 #define     DEFAULT_FRAMEBUFFER                     0x00000000
 
@@ -37,6 +37,16 @@ typedef unsigned short  USHORT;
 constexpr double PI = 3.14159265359;
 constexpr double TAU = PI * 0.5;
 
+typedef struct MINMAX_POINTS
+{
+    float MAX_X;
+    float MAX_Y;
+    float MAX_Z;
+
+    float MIN_X;
+    float MIN_Y;
+    float MIN_Z;
+};
 
 enum class PHYSIC_SHAPE
 {

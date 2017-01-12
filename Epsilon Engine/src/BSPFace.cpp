@@ -16,7 +16,7 @@ bool BSPFace::BuildFace(std::vector<glm::vec3> Vertices, std::vector<glm::vec3> 
     //std::cout << this->ObjectID << std::endl;
     this->imagePath = imagePath;
     this->imagePath = this->imagePath;
-    std::cout << imagePath << std::endl;
+    //std::cout << imagePath << std::endl;
     this->LightMap = LightMap;
     this->LMTexCoords = LMTexCoords;
     this->CalcTangentSpace();
@@ -40,4 +40,33 @@ bool BSPFace::BuildFace(std::vector<glm::vec3> Vertices, std::vector<glm::vec3> 
     //this->LoadLightMapTexture();
 
     return true;
+}
+
+void BSPFace::RenderFace(GLuint shader, GLuint TextureID,GLuint normalID, GLuint specularID, GLuint metallicID)
+{
+    glBindVertexArray(this->VAO);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, TextureID);
+    glUniform1i(glGetUniformLocation(shader, "texture_diffuse"), 0);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, specularID);
+    glUniform1i(glGetUniformLocation(shader, "texture_specular"), 1);
+
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, normalID);
+    glUniform1i(glGetUniformLocation(shader, "texture_normal"), 2);
+
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, metallicID);
+    glUniform1i(glGetUniformLocation(shader, "texture_height"), 3);
+
+    glActiveTexture(GL_TEXTURE4);
+    glUniform1i(glGetUniformLocation(shader, "skybox"), 4);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, resm->useCubeMap(1));
+
+    glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+
 }

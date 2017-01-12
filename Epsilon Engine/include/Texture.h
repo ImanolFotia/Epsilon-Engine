@@ -28,12 +28,13 @@ public:
         ProgramData DATA;
         int channels;
         path = ("materials/" + std::string(TexName)).c_str();
-        //cout << path << endl;
+       // cout << path << endl;
 /*
         std::cout << "Time to load from file to RAM: ";*/
         double time = glfwGetTime();
         double time2;
-        unsigned char* image = SOIL_load_image(path, &width, &height, &channels, SOIL_LOAD_RGBA);
+        unsigned char* image;
+        loadFile(path, image, &width, &height, &channels);
         time2 = glfwGetTime();/*
         std::cout << time2 - time << std::endl;*/
         //cout << channels << endl;
@@ -110,13 +111,18 @@ public:
                 GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
             glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
         }
-        std::cout << "CubeMapID" << texture << std::endl;
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        //std::cout << "CubeMapID" << texture << std::endl;
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
         glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+    }
+
+    void loadFile(const char* path, unsigned char* &data, int *outwidth, int *outheight, int *outchannels)
+    {
+        data = SOIL_load_image(path, outwidth, outheight, outchannels, SOIL_LOAD_RGBA);
     }
 
     void Destroy()

@@ -27,7 +27,7 @@ Camera::Camera(glm::vec3 cPosition, glm::vec3 cOrientation)
     this->JoystickSensibility = 0.05f;
     this->PositionhasChanged = false;
     this->OrientationhasChanged = false;
-    this->MaxMovementSpeed = 5.3;
+    this->MaxMovementSpeed = 15.3;
     this->horizontalAngle = 0.0;
     this->verticalAngle = 0.0;
     this->LastPosition;
@@ -123,6 +123,8 @@ void Camera::HandleInputs(GLFWwindow*& window)
 
     LockCamera();
 
+    Orientation = glm::normalize(Orientation);
+
     Up = glm::cross( Rigth , Orientation );
 
 /** Keyboard Camera input**/
@@ -166,25 +168,25 @@ if(Input::Joystick::JoystickIsPresent){
     if ( Input::KeyBoard::KEYS[Input::GLFW::Key::W] || Input::Joystick::JoystickAxes[1] > 0.0)
     {
         MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-        Position += Orientation   *     MovementSpeed      *   glm::abs(DeltaTime * Input::Joystick::JoystickAxes[1]);
+        Position += Orientation   *     MovementSpeed      *  DeltaTime *    (glm::abs(Input::Joystick::JoystickAxes[1] * 2));
     }
 
     if ( Input::KeyBoard::KEYS[Input::GLFW::Key::S] || Input::Joystick::JoystickAxes[1] < 0.0 )
     {
         MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-        Position -= Orientation   *     MovementSpeed      *   glm::abs(DeltaTime * Input::Joystick::JoystickAxes[1]);
+        Position -= Orientation   *     MovementSpeed      *   DeltaTime * (glm::abs(Input::Joystick::JoystickAxes[1] * 2));
     }
 
     if ( Input::KeyBoard::KEYS[Input::GLFW::Key::D]  || Input::Joystick::JoystickAxes[0] > 0.0)
     {
         MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-        Position += Rigth       *     MovementSpeed      *   DeltaTime * glm::abs(Input::Joystick::JoystickAxes[0]);
+        Position += Rigth       *     MovementSpeed      *   DeltaTime * (glm::abs(Input::Joystick::JoystickAxes[0] * 2));
     }
 
     if ( Input::KeyBoard::KEYS[Input::GLFW::Key::A]  || Input::Joystick::JoystickAxes[0] < 0.0)
     {
         MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-        Position -= Rigth       *     MovementSpeed      *   DeltaTime * glm::abs(Input::Joystick::JoystickAxes[0]);
+        Position -= Rigth       *     MovementSpeed      *   DeltaTime * (glm::abs(Input::Joystick::JoystickAxes[0] * 2));
     }
 
     if (!Input::KeyBoard::KEYS[Input::GLFW::Key::A] &&

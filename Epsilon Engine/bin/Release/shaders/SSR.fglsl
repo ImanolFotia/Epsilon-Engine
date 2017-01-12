@@ -1,7 +1,7 @@
 #version 330 core
 
 uniform sampler2D gFinalImage;
-uniform sampler2D gDepth;
+uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gColor;
 
@@ -72,8 +72,8 @@ vec3 BinarySearch(inout vec3 dir, inout vec3 hitCoord, inout float dDepth)
         projectedCoord.xy = projectedCoord.xy * 0.5 + 0.5;
  
  
-        depth = PositionFromDepth( texture(gDepth, projectedCoord.xy, 3).r).z;
-        //depth = textureLod(gPosition, projectedCoord.xy, 2).z;
+        //depth = PositionFromDepth( texture(gDepth, projectedCoord.xy, 3).r).z;
+        depth = textureLod(gPosition, projectedCoord.xy, 2).z;
 
  
         dDepth = hitCoord.z - depth;
@@ -110,20 +110,20 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
  
     for(int i = 0; i < maxSteps; i++)
     {
-        hitCoord += dir;
+        hitCoord += dir*1.05;
  
         projectedCoord = projection * vec4(hitCoord, 1.0);
         projectedCoord.xy /= projectedCoord.w;
         projectedCoord.xy = projectedCoord.xy * 0.5 + 0.5;
  
-        depth = PositionFromDepth( texture(gDepth, projectedCoord.xy, 3).r).z;
-        //depth = textureLod(gPosition, projectedCoord.xy, 2).z;
+        //depth = PositionFromDepth( texture(gDepth, projectedCoord.xy, 3).r).z;
+        depth = textureLod(gPosition, projectedCoord.xy, 2).z;
         if(depth > 1000.0)
         continue;
  
         dDepth = hitCoord.z - depth;
 
-        if((dir.z - dDepth) < 1.5)
+        if((dir.z - dDepth) < 1.2)
         if(dDepth <= 0.0)
         {	
         	vec4 asd;
@@ -152,14 +152,14 @@ void main()
  
  
     // Samples
-    specular = texture(gColor, TexCoords).a;
+    specular = texture2D(gNormal, TexCoords).a;
 
-    if(specular < 0.0)
+    if(specular < 0.1)
     	discard;
  
     vec3 viewNormal = texture2D(gNormal, TexCoords).xyz;
-    vec3 viewPos = PositionFromDepth(texture(gDepth, TexCoords).r).xyz;
-    //vec3 viewPos = textureLod(gPositionDepth, TexCoords, 2).xyz;
+    //vec3 viewPos = PositionFromDepth(texture(gDepth, TexCoords).r).xyz;
+    vec3 viewPos = textureLod(gPosition, TexCoords, 2).xyz;
 
     // Reflection vector
     vec3 reflected = normalize(reflect(normalize(viewPos), normalize(viewNormal)));

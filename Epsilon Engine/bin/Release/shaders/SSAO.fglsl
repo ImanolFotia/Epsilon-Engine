@@ -10,7 +10,7 @@ const int kernelSize = 32;
 uniform vec3 samples[kernelSize];
 
 // parameters (you'd probably want to use them as uniforms to more easily tweak the effect)
-float radius = 4.5;
+float radius = 4.0;
 
 uniform float width;
 uniform float height;

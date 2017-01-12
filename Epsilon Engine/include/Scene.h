@@ -30,6 +30,8 @@ public:
 
     bool setupScene();
 
+    bool ReloadScene();
+
     void Update(float deltatime, GLFWwindow* window);
 
     void Render();
@@ -44,7 +46,7 @@ private:
 
     void CalculateVisibility();
 
-    void LightPrePass();
+    void GeometryPrePass();
 
     void DeferredRenderingPass();
 

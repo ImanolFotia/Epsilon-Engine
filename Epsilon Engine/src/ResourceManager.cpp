@@ -14,7 +14,8 @@ std::string ResourceManager::requestTexture(std::string texPath)
         }
         else
         {
-            std::cout << "Texture not loaded, reading it from hard drive" << std::endl << std::endl;
+            std::cout << "Texture not loaded, reading it from hard drive"<< std::endl;
+
             eTexture tmpTex(texPath.c_str());
             TextureList.insert(std::make_pair(texPath, tmpTex));
             return texPath;
@@ -147,10 +148,17 @@ void ResourceManager::addTextureToQueue(std::string texture)
 
 void ResourceManager::loadQueuedTextures()
 {
-    for(int i = 0 ; i < TextureQueue.size() ; ++i)
+    try {
+        for(int i = 0 ; i < TextureQueue.size() ; ++i)
+        {
+            requestTexture(TextureQueue.at(i));
+            //std::cout << "Loaded: " << i+1 << " out of " << TextureQueue.size() << std::endl << std::endl ;
+            TextureQueue.at(i).pop_back();
+        }
+    }
+    catch(...)
     {
-        requestTexture(TextureQueue.at(i));
-        TextureQueue.at(i).pop_back();
+        throw;
     }
 }
 
@@ -260,7 +268,7 @@ bool ResourceManager::requestCubeMap(int CubeMapID, glm::vec3 Position)
             path = "materials/skyboxes/Miramar/";
             break;
         case 2:
-            path = "materials/skyboxes/cubemap2/";
+            path = "materials/skyboxes/cornell/";
             break;
         default:
             path = "materials/skyboxes/Miramar/";

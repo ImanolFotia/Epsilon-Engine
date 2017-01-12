@@ -178,7 +178,7 @@ private:
     GLuint brightColorBuffer;
     GLuint gBuffer;
     GLuint gAlbedoSpec;
-    GLuint gPositionDepth;
+    GLuint gPosition;
     GLuint gNormal;
     GLuint gLowResDepth;
     GLuint gExpensiveNormal;

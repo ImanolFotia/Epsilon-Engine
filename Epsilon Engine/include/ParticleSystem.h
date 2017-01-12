@@ -20,6 +20,6 @@ private:
 
     void m_Simulate();
 
-    std::vector<Particle> m_ParticleContainer;
+    std::vector<ParticleProxy> m_ParticleProxyContainer;
 };
 
