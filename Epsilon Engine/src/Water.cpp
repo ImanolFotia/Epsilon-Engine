@@ -20,22 +20,23 @@ Water::Water(glm::vec3 position, float scale)
     GeneratevertexArray();
 }
 
-void Water::RenderWater(std::shared_ptr<Camera> cam)
+void Water::RenderWater(std::shared_ptr<Camera> cam, GLuint colorBuffer)
 {
     shader->Use();
     //glDisable(GL_CULL_FACE);
 
     glActiveTexture(GL_TEXTURE0);
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "normalSampler"), 0);
-    glBindTexture(GL_TEXTURE_2D, this->normalTexture);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "ColorBuffer"), 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glGenerateMipmap(GL_TEXTURE_2D);
 
     glActiveTexture(GL_TEXTURE1);
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "DuDvSampler"), 1);
-    glBindTexture(GL_TEXTURE_2D, this->DuDvTexture);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "normalSampler"), 1);
+    glBindTexture(GL_TEXTURE_2D, this->normalTexture);
 
     glActiveTexture(GL_TEXTURE2);
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "foamSampler"), 2);
-    glBindTexture(GL_TEXTURE_2D, this->foamTexture);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "DuDvSampler"), 2);
+    glBindTexture(GL_TEXTURE_2D, this->DuDvTexture);
 
     glActiveTexture(GL_TEXTURE3);
     glUniform1i(glGetUniformLocation(shader->getProgramID(), "diffuseSampler"), 3);

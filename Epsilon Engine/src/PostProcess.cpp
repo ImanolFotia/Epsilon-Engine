@@ -372,7 +372,7 @@ void PostProcess::applySSAO(std::shared_ptr<Camera>& cam)
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(glGetUniformLocation(SSAO->getProgramID(), "gDepth"), 0);
     glBindTexture(GL_TEXTURE_2D, this->gDepth);
-    //glGenerateMipmap(GL_TEXTURE_2D);
+    glGenerateMipmap(GL_TEXTURE_2D);
 
     glActiveTexture(GL_TEXTURE1);
     glUniform1i(glGetUniformLocation(SSAO->getProgramID(), "gNormal"), 1);

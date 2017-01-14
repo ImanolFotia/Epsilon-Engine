@@ -16,9 +16,9 @@ in vec3 wFragPos;
 in mat3 TBN;
 in mat3 TBN2;
 
-layout (binding = 0) uniform sampler2D normalSampler;
-layout (binding = 1) uniform sampler2D DuDvSampler;
-layout (binding = 2) uniform sampler2D foamSampler;
+layout (binding = 0) uniform sampler2D ColorBuffer;
+layout (binding = 1) uniform sampler2D normalSampler;
+layout (binding = 2) uniform sampler2D DuDvSampler;
 layout (binding = 3) uniform sampler2D diffuseSampler;
 
 uniform float time;
@@ -76,11 +76,14 @@ void main()
 {
     float moveFactor = 0.004 * time;
     float distStrenght =  0.009;
-    
+    vec2 normalizedDeviceCoordinates = (clipSpace.xy / clipSpace.w) * 0.5 + 0.5;
+    vec2 refracCoords = vec2(normalizedDeviceCoordinates.x, normalizedDeviceCoordinates.y );
     vec4 normaltex = texture(normalSampler, TexCoords - moveFactor);
     normaltex = (normaltex * 2.0 - 1.0);
 
-    vec4 foamTexture = texture(foamSampler,TexCoords + moveFactor);
+    //refracCoords += vec2(normaltex.x, normaltex.z);
+    //refracCoords = clamp(refracCoords, 0.001, 0.999);
+
 
     gAlbedoSpec.rgb = texture(diffuseSampler, TexCoords - moveFactor).rgb;
     gAlbedoSpec.a = 1.0;

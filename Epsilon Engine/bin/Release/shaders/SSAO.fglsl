@@ -10,7 +10,7 @@ const int kernelSize = 32;
 uniform vec3 samples[kernelSize];
 
 // parameters (you'd probably want to use them as uniforms to more easily tweak the effect)
-float radius = 4.0;
+float radius = 5.0;
 
 uniform float width;
 uniform float height;
@@ -52,7 +52,7 @@ void main()
 {
     // Get input for SSAO algorithm
  
-    vec3 fragPos = WorldPosFromDepth((texture(gDepth, TexCoords).r));
+    vec3 fragPos = WorldPosFromDepth((texture(gDepth, TexCoords, 2.0).r));
 
     vec3 normal = texture(gNormal, TexCoords).rgb;
     vec3 randomVec = texture(texNoise, TexCoords * noiseScale, 4).xyz;
@@ -78,7 +78,7 @@ void main()
         offset.x = clamp(offset.x, 0.001, 0.999);
         offset.y = clamp(offset.y, 0.001, 0.999);
 
-        float sampleDepth = -LinearizeDepth(texture(gDepth, offset.xy).r); // Get depth value of kernel sample
+        float sampleDepth = -LinearizeDepth(texture(gDepth, offset.xy, 2.0).r); // Get depth value of kernel sample
         float bias = max(1.5 * (1.0 - dot(normal, -fragPos)), 0.1);
         // range check & accumulate
         float rangeCheck = smoothstep(0.0, 1.0, radius / abs(fragPos.z - sampleDepth));

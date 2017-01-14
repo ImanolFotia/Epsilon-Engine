@@ -324,6 +324,8 @@ void Epsilon::Render3D(Shader* shader)
     glm::mat4 RotationMatrix;
 
 
+    this->waterPlane->RenderWater(eCamera, PP->colorBuffer);
+
         shader->Use();
         this->SetUniforms(shader,glm::vec3(0, 0, 0), glm::vec3(1),  glm::quat(0, 0 ,0, 0));
         terrain->RenderTerrain(shader);
@@ -447,7 +449,6 @@ void Epsilon::Render3D(Shader* shader)
     glCullFace(GL_BACK);
 
 
-    this->waterPlane->RenderWater(eCamera);
 
 }
 

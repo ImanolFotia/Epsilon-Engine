@@ -137,7 +137,7 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
     }
  
  	
-    return vec4(BinarySearch(dir, hitCoord, dDepth), 1.0);
+    return vec4(projectedCoord.xy, depth, 1.0);//vec4(BinarySearch(dir, hitCoord, dDepth), 1.0);
 }
 
 
