@@ -2,10 +2,10 @@
 
 
 layout(location = 0) out vec4 gAlbedoSpec;
-layout(location = 1) out vec4 gNormal;
-layout(location = 2) out vec3 gPosition;
-layout(location = 3) out vec4 gExpensiveNormal;
-layout(location = 4) out float gDepth;
+layout(location = 1) out vec3 gPosition;
+layout(location = 2) out vec3 gExpensiveNormal;
+layout(location = 3) out float gDepth;
+layout(location = 4) out vec4 gExtraComponents; 
 
 in vec2 TexCoords;
 in vec4 clipSpace;;
@@ -88,14 +88,11 @@ void main()
     gAlbedoSpec.rgb = texture(diffuseSampler, TexCoords - moveFactor).rgb;
     gAlbedoSpec.a = 1.0;
     gExpensiveNormal.rgb = normalize(normaltex.rgb * TBN);
-    gExpensiveNormal.a = 0.0;
 
-    gNormal.rgb = normalize(normaltex.rgb * TBN2);//normalize(normal * mat3(view) /* TBN*/);
-    gNormal.a = 1.0;
     gPosition.rgb = FragPos;
     gDepth = gl_FragCoord.z;
 
-
+    gExtraComponents = vec4(1.0, 0.0, 0.0, 0.0);
 
 
 }

@@ -105,10 +105,15 @@
 		<Unit filename="include/CBitset.h" />
 		<Unit filename="include/Component.h" />
 		<Unit filename="include/CubeMap.h" />
+		<Unit filename="include/DDS.h" />
+		<Unit filename="include/DDSFile.h" />
 		<Unit filename="include/EntityTemplate.h" />
 		<Unit filename="include/Epsilon.h" />
 		<Unit filename="include/EpsilonMemory.h" />
 		<Unit filename="include/Frustum.h" />
+		<Unit filename="include/GUI/GUI.h" />
+		<Unit filename="include/GUI/Panel.h" />
+		<Unit filename="include/GUI/Widget.h" />
 		<Unit filename="include/Grass.h" />
 		<Unit filename="include/Includes.h" />
 		<Unit filename="include/Light.h" />
@@ -118,6 +123,8 @@
 		<Unit filename="include/MD5_Model.h" />
 		<Unit filename="include/Mesh.h" />
 		<Unit filename="include/Model.h" />
+		<Unit filename="include/OpenGL/FrameBuffer.h" />
+		<Unit filename="include/OpenGL/RenderTarget.h" />
 		<Unit filename="include/Particle.h" />
 		<Unit filename="include/ParticleProxy.h" />
 		<Unit filename="include/ParticleSystem.h" />
@@ -156,6 +163,7 @@
 		<Unit filename="src/BSP.cpp" />
 		<Unit filename="src/BSPFace.cpp" />
 		<Unit filename="src/Camera.cpp" />
+		<Unit filename="src/DDS.cpp" />
 		<Unit filename="src/EntityTemplate.cpp" />
 		<Unit filename="src/Epsilon.cpp" />
 		<Unit filename="src/Frustum.cpp" />
@@ -163,6 +171,7 @@
 		<Unit filename="src/MD5_Model.cpp" />
 		<Unit filename="src/Mesh.cpp" />
 		<Unit filename="src/Model.cpp" />
+		<Unit filename="src/Particle.cpp" />
 		<Unit filename="src/Physics.cpp" />
 		<Unit filename="src/Picking.cpp" />
 		<Unit filename="src/Player.cpp" />

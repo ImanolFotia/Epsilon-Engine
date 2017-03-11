@@ -116,6 +116,7 @@ void Shader::getUniformsLocations()
     this->View_Location = glGetUniformLocation(this->ProgramID, "view");
     this->LightSpaceMatrix_Location = glGetUniformLocation(this->ProgramID, "lightSpaceMatrix");
     this->viewPos_Location = glGetUniformLocation(this->ProgramID, "viewPos");
+    this->PrevViewPos_Location = glGetUniformLocation(this->ProgramID, "PrevView");
     //this->MVP_Location = glGetUniformLocation(this->ProgramID, "MVP");
     //this->MVP_Location = glGetUniformLocation(this->ProgramID, "MVP");
 }

@@ -60,6 +60,10 @@ public:
             itr->second = nullptr;
         }
 
+        rM->destroyAllTextures();
+
+        rM->destroyAllModels();
+
         BSPMap->Destroy();
 
         cout << "Epsilon Engine has closed Succesfully." << endl;
@@ -133,7 +137,7 @@ public:
     std::unique_ptr<ShadowMap> shadowMap;
     std::unique_ptr<PostProcess> PP;
     std::vector<std::shared_ptr<EntityTemplate> > EntityList;
-    std::unique_ptr<Audio::AudioElement> m_AudioElement;
+    std::unique_ptr<Audio::AudioElement> m_AudioElement, m_AudioElement2;
     std::unique_ptr<Audio::Audio> m_AudioSystem;
     std::unique_ptr<Audio::AudioListener> m_AudioListener;
     std::shared_ptr<SphericalHarmonics> sphericalharmonics;
@@ -146,6 +150,7 @@ public:
     short WIDTH = 16;
     short HEIGHT = 16;
     bool SSAO = false;
+    float timeBehind;
 private:
     void endgame(){Running = false;}
     bool Running = true;

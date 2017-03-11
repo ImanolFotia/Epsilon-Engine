@@ -27,6 +27,7 @@ public:
     bool SSR;
     bool LIGHTSHAFTS;
     bool COMPRESSED_TEXTURES;
+    bool MOTIONBLUR;
 };
 #endif
 

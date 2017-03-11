@@ -71,6 +71,7 @@ public:
     GLuint texture_height_Location;
     GLuint skybox_Location;
     GLuint viewPos_Location;
+    GLuint PrevViewPos_Location;
 
 };
 

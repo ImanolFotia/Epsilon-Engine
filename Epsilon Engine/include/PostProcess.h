@@ -14,6 +14,8 @@
 #include <ShadowMapping.h>
 #include <memory>
 #include <Texture.h>
+#include <OpenGL/FrameBuffer.h>
+
 class PostProcess
 {
 public:
@@ -57,9 +59,10 @@ public:
 
     GLuint colorBuffer;
     GLuint depthBuffer;
-    GLuint hdrFBO;
+    std::shared_ptr<FrameBuffer> hdrFBO;
     std::unique_ptr<Shader> shader;
 
+    float m_exposure;
 private:
 
     /**
@@ -101,9 +104,9 @@ private:
     /**
         SSR
     */
-    void SSRPass();
+    void SSRPass(std::shared_ptr<Camera>& cam);
     void setupDownSampledSSR();
-    void DownSampleSSR();
+    void DownSampleSSR(double);
 
     /**
         Blurs and image using a Gaussian Blur shader
@@ -125,20 +128,29 @@ private:
     */
     GLfloat applyAutoAxposure(GLuint Buffer);
 
+    void SetupMotionBlur();
+
+    void MotionBlur(float);
+
     GLuint blurSSR(GLuint);
     void setupPingPongSSR();
 
+    GLuint GetPixel(GLuint);
 private:
     GLuint SSAOwidth;
     GLuint SSAOheight;
-
+    GLuint MotionBlurBuffer;
+    GLuint MotionBlurFBO;
     GLuint SSRFBO;
     GLuint SSRTexture;
     GLuint pingpongSSRFBO[2];
     GLuint pingpongSSRT[2];
     GLuint DownSamplerFBO;
     GLuint DownSampledTexture;
+    GLuint SinglePixelColorBuffer;
+    GLuint gExtraComponents;
     bool SSROn;
+    bool m_MotionBlur;
     bool lightShafts;
 
     GLuint ssaoFBO;
@@ -163,6 +175,7 @@ private:
     std::vector<glm::vec3> ssaoNoise;
     GLenum attachment_type;
     int width, height;
+    float exposureTime;
     std::unique_ptr<Shader> SSAO;
     std::unique_ptr<Shader> blurSSAO;
     std::unique_ptr<Shader> finalImage;
@@ -170,7 +183,7 @@ private:
     std::unique_ptr<Shader> ScreenSpaceReflectionShader;
     std::unique_ptr<Shader> blurSSRShader;
     std::unique_ptr<Shader> PassThroughShader;
-
+    std::unique_ptr<Shader> MotionBlurShader;
     std::vector<glm::vec3> LightPositions;
     /// G-Buffer texture samplers
     std::vector<glm::vec3> ssaoKernel;
@@ -185,7 +198,7 @@ private:
     GLuint ssaoColorBuffer;
     GLuint ssaoColorBufferBlur;
     GLuint gWorldSpacePosition;
-    GLuint m_exposure;
+    GLuint gLightAccumulation;
     std::shared_ptr<eTexture> lensColor;
     std::shared_ptr<eTexture> lensDirt;
     std::shared_ptr<eTexture> lensStar;

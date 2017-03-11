@@ -5,9 +5,9 @@ in mat3 TBN;
 in vec3 FragPos;
 layout(location = 0) out vec4 FragColor;
 layout(location = 1) out vec4 blurImage;
-layout(location = 2) out vec4 gPosition;
-layout(location = 3) out vec4 gExpensiveNormal;
-layout(location = 4) out float gDepth;
+layout(location = 2) out vec3 gExpensiveNormal;
+layout(location = 3) out float gDepth;
+layout(location = 4) out vec4 gExtraComponents; 
 //layout(location = 1) out vec4 BrightFragColor;
 
 uniform sampler2D tex;
@@ -106,9 +106,9 @@ void main()
     vec4 Tex = texture(tex, cloudUV) * 1.5;
 
     vec4 Tex2 = texture(tex, vec2(cloudUV2.x - 0.3, cloudUV2.y + 0.5)) * 1;
-/*
-    Tex = mix(Tex, Tex2, 0.5);
-*/
+
+    Tex = mix(Tex, Tex2, 0.5);/*
+
             vec3 q = 12.0*TexCoords + time*CloudSpeed;
             float f  = 0.5000*noise( q ); q = m*q*2.01;
             f += 0.2500*noise( q ); q = m*q*2.02;
@@ -132,7 +132,7 @@ void main()
             f *= 0.5 + 0.5 * f;  
 
     Tex = vec4(vec3(f), 1.0);
-
+*/
     Tex = mix(Tex, Tex2, 0.5);
 
     float cloudmixFactor = Tex.r;
@@ -145,7 +145,7 @@ void main()
 
 
 
-    color = normalize(mix(vec4(vec3(205, 109, 39), 1.0), vec4(65,82,217,1),(TexCoords.y)/(0.1)));
+    color = normalize(mix(vec4(vec3(205, 109, 39), 1.0), vec4(132,175,223,1),(TexCoords.y)/(0.1)));
 
     color = mix(nightcolor, color, max(LightDirection.y, 0.0));
 
@@ -158,16 +158,18 @@ void main()
 
     //if(renderDepth)
     //{
-        gPosition = vec4(FragPos, 10000000.0);
+        //blurImage = vec4(FragPos, 10000000.0);
     //}
 
     FragColor.rgb = mix(fogColor, color.rgb, factor);
     FragColor.a = 1.0;
     float brightness = dot(FragColor.rgb * ((exposure - 3.0) <= 0 ? 1.0 : (exposure - 3.0)), vec3(0.2126, 0.7152, 0.0722));
     if(brightness > 1.0)
-    blurImage = FragColor;
-    gExpensiveNormal.rgba = vec4(0.0);
+        blurImage = vec4(0.0);//FragColor;
+    gExpensiveNormal.rgb = vec3(0.0);
     gDepth = 1.0;
+
+    gExtraComponents = vec4(0.0);
 
 
 }

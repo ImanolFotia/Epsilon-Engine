@@ -28,13 +28,20 @@ namespace Component
 
         virtual void setUserPointer(void *userPointer) {}
 
+        virtual btTransform getTransform(){}
+
+        virtual void setTransform(btTransform){}
+
         virtual void Update(std::shared_ptr<ResourceManager> rm) = 0;
+
+        virtual void Render(std::shared_ptr<ResourceManager> rm) = 0;
 
         COMPONENT_TYPE Type;
         btVector3 m_PhysicsWorldPosition;
         btVector3 m_LastPhysicsWorldPosition;
         btVector3 m_PhysicsWorldScale;
         btQuaternion m_PhysicsWorldRotation;
+        btQuaternion m_LastPhysicsWorldRotation;
     };
 
 /// NPC/Player Components
@@ -79,7 +86,9 @@ namespace Component
             shaderType = shader;
         }
 
-        void Update(std::shared_ptr<ResourceManager> rm)
+        void Update(std::shared_ptr<ResourceManager> rm){}
+
+        void Render(std::shared_ptr<ResourceManager> rm)
         {
             rm->useModel(modelPath, rm->getShaderID(shaderType));
         }
@@ -123,16 +132,16 @@ namespace Component
         void Update(std::shared_ptr<ResourceManager> rm)
         {
 
+            m_LastPhysicsWorldPosition = m_PhysicsWorldPosition;
             m_PhysicsWorldPosition = RigidBodyPointer->Body->getCenterOfMassPosition();
 
-            //std::cout << m_PhysicsWorldPosition.y() << std::endl;
             /*
                     glm::vec3 pos  = glm::mix(glm::vec3(m_LastPhysicsWorldPosition.getX(), m_LastPhysicsWorldPosition.getY(), m_LastPhysicsWorldPosition.getZ()),
                                                  glm::vec3(m_PhysicsWorldPosition.getX(), m_PhysicsWorldPosition.getY(), m_PhysicsWorldPosition.getZ()),
                                                  rm->timestep*60);
 
                     m_PhysicsWorldPosition = btVector3(pos.x, pos.y, pos.z);*/
-            m_LastPhysicsWorldPosition = m_PhysicsWorldPosition;
+            m_LastPhysicsWorldRotation = m_PhysicsWorldRotation;
             m_PhysicsWorldRotation = RigidBodyPointer->Body->getOrientation();
         }
 
@@ -141,9 +150,20 @@ namespace Component
             RigidBodyPointer->Body->setUserPointer(userPointer);
         }
 
+        virtual btTransform getTransform()
+        {
+            return RigidBodyPointer->Body->getCenterOfMassTransform();
+        }
+
+        virtual void setTransform(btTransform t)
+        {
+            RigidBodyPointer->Body->setCenterOfMassTransform(t);
+        }
+
         /** Functions declared for the sake of pure virtual function polymorphism, must not be used for production*/
         virtual void Fill(bool, bool) {}
         virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader) {}
+        void Render(std::shared_ptr<ResourceManager> rm){}
     };
 
     class MovementComponent : public Component
@@ -201,6 +221,7 @@ namespace Component
         virtual void Fill(bool, bool) {}
         virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader) {}
         virtual void Fill(float mass, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer) {}
+        void Render(std::shared_ptr<ResourceManager> rm){}
 
     private:
 
@@ -246,6 +267,7 @@ namespace Component
         virtual void Fill(bool, bool) {}
         virtual void Fill(float, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer) {}
         virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader) {}
+        void Render(){}
 
     };
 

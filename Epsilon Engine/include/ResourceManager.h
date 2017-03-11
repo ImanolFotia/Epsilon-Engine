@@ -114,6 +114,10 @@ public:
      */
     void setModelUniforms(std::string, Shader*& , glm::vec3, glm::vec3, glm::quat, std::shared_ptr<Camera>);
 
+    void setModelUniforms(std::string path, Shader*& shader, glm::vec3, glm::vec3, glm::quat, glm::vec3, glm::vec3, glm::quat, std::shared_ptr<Camera> cam);
+
+    void destroyAllModels();
+
     /** \brief Returns a Texture ID given a path
      *
      * \param Path to the texture
@@ -140,6 +144,8 @@ public:
      * \return Shader identification
      */
     std::string requestShader(std::string shaderPathv, std::string shaderPathf, std::string name);
+
+    void destroyAllTextures();
 
     /** \brief Returns an instance of the requested shader
      *

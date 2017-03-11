@@ -7,6 +7,7 @@
 #include <Player.h>
 #include <ResourceManager.h>
 #include <sys/KeyBoard.h>
+#include <sys/Joystick.h>
 #include <iostream>
 namespace Game
 {
@@ -93,7 +94,7 @@ namespace Game
       */
     glm::vec3 Player::getPosition() {
         btVector3 pos = m_playerBody->getCenterOfMassPosition();
-        return glm::vec3(pos.getX(), pos.getY() + 2.0, pos.getZ());
+        return glm::vec3(pos.getX(), pos.getY() + 3.0, pos.getZ());
     }
 
     void Player::preStep()
@@ -234,7 +235,7 @@ namespace Game
 
         bool moved = false;
 
-        float speedWalk = 12.0, speedSprint = 20.0, currentSpeed = 0.0;
+        float speedWalk = 30.0, speedSprint = 20.0, currentSpeed = 0.0;
 
         if ( Input::KeyBoard::KEYS[Input::GLFW::Key::LEFT_SHIFT])
         {
@@ -246,7 +247,7 @@ namespace Game
         }
 
         if(!HasObstacle()) {
-            if ( Input::KeyBoard::KEYS[Input::GLFW::Key::W] && isOnGround())
+            if ( (Input::KeyBoard::KEYS[Input::GLFW::Key::W] && isOnGround()) /*|| Input::Joystick::JoystickAxes[1] > 0.0*/)
             {
                 moved = true;
                 walkSpeed = glm::mix((float)walkSpeed, currentSpeed, 10.0f*dt);
@@ -255,7 +256,7 @@ namespace Game
             }
         }
 
-        if ( Input::KeyBoard::KEYS[Input::GLFW::Key::S] && isOnGround())
+        if ( (Input::KeyBoard::KEYS[Input::GLFW::Key::S] && isOnGround()) /*|| Input::Joystick::JoystickAxes[1] < 0.0*/)
         {
             moved = true;
             walkSpeed = glm::mix((float)walkSpeed, currentSpeed, 10.0f*dt);
@@ -263,7 +264,7 @@ namespace Game
             velocity += btVector3(-camDir.getX()*walkSpeed, -7.0, -camDir.getZ()*walkSpeed);
         }
 
-        if ( Input::KeyBoard::KEYS[Input::GLFW::Key::D] && isOnGround())
+        if ( (Input::KeyBoard::KEYS[Input::GLFW::Key::D] && isOnGround()) /*|| Input::Joystick::JoystickAxes[0] > 0.0*/)
         {
             moved = true;
             walkSpeed = glm::mix((float)walkSpeed, currentSpeed, 10.0f*dt);
@@ -271,7 +272,7 @@ namespace Game
             velocity += btVector3(camRight.getX()*walkSpeed, -7.0, camRight.getZ()*walkSpeed);
         }
 
-        if ( Input::KeyBoard::KEYS[Input::GLFW::Key::A] && isOnGround())
+        if ( (Input::KeyBoard::KEYS[Input::GLFW::Key::A] && isOnGround()) /*|| Input::Joystick::JoystickAxes[0] < 0.0*/)
         {
             moved = true;
             walkSpeed = glm::mix((float)walkSpeed, currentSpeed, 10.0f*dt);
@@ -430,7 +431,7 @@ namespace Game
                     btPoint2PointConstraint* p2p = new btPoint2PointConstraint(*body, localPivot);
                     m_LocalResourceManagerPointer->m_PhysicsWorld->world->addConstraint(p2p, true);
                     m_pickedConstraint = p2p;
-                    btScalar mousePickClamping = 30.f;
+                    btScalar mousePickClamping = 1000.f;
                     p2p->m_setting.m_impulseClamp = mousePickClamping;
                     p2p->m_setting.m_tau = 0.1f;
                     //p2p->m_setting.m_damping = 100.0f;
@@ -486,6 +487,7 @@ namespace Game
             m_pickedBody->setAngularVelocity(pickedbodyangularfactor);
             m_LocalResourceManagerPointer->m_PhysicsWorld->world->removeConstraint(m_pickedConstraint);
             delete m_pickedConstraint;
+            delete m_pickedBody;
             m_pickedConstraint = 0;
             m_pickedBody = 0;
             std::cout << "deleted constraint" << std::endl;

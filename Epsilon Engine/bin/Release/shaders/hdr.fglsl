@@ -6,6 +6,8 @@ uniform sampler1D uLensColor;
 uniform sampler2D uLensDirtTex;
 uniform sampler2D uLensStarTex;
 uniform sampler2D gReflectionSampler;
+uniform sampler2D brightColorBuffer;
+uniform sampler2D MotionBlurSampler;
 uniform float time;
 out vec4 color;
 noperspective in vec2 TexCoords;
@@ -15,7 +17,7 @@ uniform mat4 projection;
 uniform vec3 sunPos;
 uniform bool lightShafts;
 const float gamma = 2.2;
-const float contrast = 0.3;
+const float contrast = 0.1;
 
 uniform vec2 Resolution;
 
@@ -29,6 +31,32 @@ vec3 HDR(vec3 image)
     vec3 result = vec3(1.0) - exp(-image.xyz * exposure);
     result.xyz = pow(result.xyz, vec3(1.0 / gamma));
     return (result.xyz - 0.5f) * (1.0 + contrast) + 0.5f;
+}
+
+float A = 0.15;
+float B = 0.50;
+float C = 0.10;
+float D = 0.20;
+float E = 0.02;
+float F = 0.30;
+float W = 11.2;
+
+vec3 Uncharted2Tonemap(vec3 x)
+{
+   return ((x*(A*x+C*B)+D*E)/(x*(A*x+B)+D*F))-E/F;
+}
+
+vec3 HDR2(vec3 image)
+{
+    float ExposureBias = 2.0f;
+    image*= exposure;
+   vec3 curr = Uncharted2Tonemap(ExposureBias*image);
+
+   vec3 whiteScale = 1.0f/Uncharted2Tonemap(vec3(W));
+   vec3 color = curr*whiteScale;
+      
+   vec3 result = pow(color,vec3(1.0/gamma));
+   return (result.xyz - 0.5f) * (1.0 + contrast) + 0.5f;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -73,9 +101,9 @@ vec3 changeSaturation(vec3 color, float saturation)
     // Falloff, as we radiate outwards.
     float decay = 0.97; 
     // Controls the sample density, which in turn, controls the sample spread.
-    float density = 0.5; 
+    float density = 1.0; 
     // Sample weight. Decays as we radiate outwards.
-    float weight = 0.2; 
+    float weight = 0.3; 
 const float SAMPLES = 20.; 
 
 void main()
@@ -102,10 +130,10 @@ void main()
     vec4 lensMod = texture(uLensDirtTex, TexCoords);
     lensMod += texture(uLensStarTex, TexCoords);
 
-    vec3 hdrColor = texture(sampler, TexCoords, 0.0).rgb;
-    vec3 SSR = texture(gReflectionSampler, TexCoords).rgb;
+    vec3 hdrColor = texture(sampler, TexCoords).rgb;
+    vec4 SSR = texture(gReflectionSampler, TexCoords);
     vec3 bloom = texture(blurredSampler, TexCoords).rgb;
-
+    vec3 mb = texture(MotionBlurSampler, TexCoords).rgb;
 
     vec2 fragcoord = gl_FragCoord.xy/Resolution;
 
@@ -117,13 +145,13 @@ void main()
     vec3 l = vec3(pos.xy, 1.0);//lOff();
     vec2 tuv =  fragcoord - .5 - l.xy*.45;
     vec2 dTuv = tuv*density/SAMPLES;
-    col = texture(sampler, fragcoord.xy)*0.25;
+    col = texture(brightColorBuffer, fragcoord.xy)*0.25;
     fragcoord += dTuv*(hash(fragcoord.xy));
 
        for(float i=0.; i < SAMPLES; i++){
     
         fragcoord -= dTuv;
-        col += texture2D(sampler, fragcoord) * weight;
+        col += texture2D(brightColorBuffer, fragcoord) * weight;
         weight *= decay;
         
     }
@@ -137,9 +165,9 @@ void main()
     fragcoord = gl_FragCoord.xy/Resolution;
     float vignete = 1.0 - smoothstep(0.9, 1.75, length(vec2(0.0) - (fragcoord * 2.0 - 1.0)));
 
-    //hdrColor = changeSaturation(hdrColor, 0.7);
+    //hdrColor = changeSaturation(hdrColor, .3);
 
-    color.rgb  = HDR((hdrColor + col.rgb + bloom + (result.rgb * lensMod.rgb*5) ) + SSR*0.3 ) * vignete;
+    color.rgb  = (HDR2((hdrColor + col.rgb + bloom + (result.rgb * lensMod.rgb*5)+ clamp(SSR.rgb, 0.0, 1.0) )  )) * vignete;
 
     
 

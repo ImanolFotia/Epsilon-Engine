@@ -82,7 +82,7 @@ std::shared_ptr<btRigidBody> CubePhysicObject::addObject(glm::vec3  Position , f
     btScalar mass = Mass;
     motionState = (std::shared_ptr<btDefaultMotionState>) new btDefaultMotionState(t);
     btRigidBody::btRigidBodyConstructionInfo info(mass,motionState.get(),CubeShape.get(),inertia);
-    info.m_restitution = 1.0f;
+    info.m_restitution = 0.1f;
     info.m_friction = 0.8f;
     Body = (std::shared_ptr<btRigidBody>) new btRigidBody(info);
 
@@ -103,7 +103,7 @@ std::shared_ptr<btRigidBody> SpherePhysicObject::addObject(float  Radius ,  glm:
     btScalar mass = Mass;
     motionState = (std::shared_ptr<btDefaultMotionState>) new btDefaultMotionState(t);  //set the position (and motion)
     btRigidBody::btRigidBodyConstructionInfo info(mass,motionState.get(),SphereShape.get(),inertia);  //create the constructioninfo, you can create multiple bodies with the same info
-    info.m_restitution = 2.0f;
+    info.m_restitution = 0.597f;
     info.m_friction = 0.8f;
     Body = (std::shared_ptr<btRigidBody>) new btRigidBody(info);    //let's create the body itself
 
@@ -134,7 +134,7 @@ std::shared_ptr<btRigidBody> TriangleMeshPhysicObject::addObject(std::vector<glm
 
     motionState = (std::shared_ptr<btDefaultMotionState>) new btDefaultMotionState(a);
     btRigidBody::btRigidBodyConstructionInfo info(0.0,motionState.get(),TriangleMeshShape.get(), btVector3(0,0,0));
-    info.m_restitution = 0.2f;
+    info.m_restitution = 1.0f;
     info.m_friction = 0.8f;
     Body = (std::shared_ptr<btRigidBody>) new btRigidBody(info);
 

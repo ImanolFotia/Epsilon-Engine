@@ -1,18 +1,24 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
 #include <algorithm>
 #include <Particle.h>
+#include <ParticleProxy.h>
 
-class ParticleSystem()
+class ParticleSystem
 {
 public:
     ParticleSystem();
 
     virtual ~ParticleSystem(){
-        //std::cout << "Deleted ParticleSystem" << std::endl;}
+        std::cout << "Deleted ParticleSystem" << std::endl;}
 
     void UpdateParticleSystem();
+
+    void Render();
+
+    void UpdateParticles();
 
 private:
 

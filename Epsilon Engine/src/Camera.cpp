@@ -24,10 +24,10 @@ Camera::Camera(glm::vec3 cPosition, glm::vec3 cOrientation)
     this->FieldOfView = 75.0f;
     this->MovementSpeed = 0.0f;
     this->MouseSpeed = 0.002f;
-    this->JoystickSensibility = 0.05f;
+    this->JoystickSensibility = 0.5f;
     this->PositionhasChanged = false;
     this->OrientationhasChanged = false;
-    this->MaxMovementSpeed = 15.3;
+    this->MaxMovementSpeed = 5.3;
     this->horizontalAngle = 0.0;
     this->verticalAngle = 0.0;
     this->LastPosition;
@@ -233,6 +233,8 @@ void Camera::UpdateMatrices(void)
         ProjectionMatrix = glm::perspective( glm::radians(FieldOfView) , 16.0f/ 10.0f , 0.1f , 3000.0f );
     }
 
+    PrevView = ViewMatrix;
+
     ViewMatrix       = glm::lookAt(
                            Position,
                            Position+Orientation,
@@ -278,4 +280,9 @@ glm::vec3 Camera::setPosition(glm::vec3 newPosition)
 glm::vec3 Camera::setDirection(glm::vec3 newDirection)
 {
     this->Orientation = newDirection;
+}
+
+glm::mat4 Camera::getPrevViewMatrix()
+{
+    return PrevView;
 }

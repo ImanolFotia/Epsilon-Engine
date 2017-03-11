@@ -38,7 +38,7 @@ public:
 
     Terrain(const char*, const char*, float, int, std::shared_ptr<ResourceManager> rm /**Must be Power of two*/);
     Terrain(const char*, const char*, const char*, float, int/**Must be Power of two*/);
-    Terrain(const char*, const char*, const char*, const char*, float, int, glm::vec3,std::shared_ptr<ResourceManager> rm/**Must be Power of two*/);
+    Terrain(const char*, const char*, const char*, const char*, const char*,float, int, glm::vec3,std::shared_ptr<ResourceManager> rm/**Must be Power of two*/);
 
     virtual ~Terrain(){
 
@@ -61,13 +61,14 @@ private:
     bool GenerateGrid(unsigned char* pixels);
     bool LoadTexture();
     bool LoadTexture(const char*);
-    bool LoadTexture(const char*, const char*, const char*);
+    bool LoadTexture(const char*, const char*, const char*, const char*);
     bool calculateTangentSpace();
 
 private:
     GLuint GL_d_texture;
     GLuint GL_n_texture;
     GLuint GL_s_texture;
+    GLuint GL_m_texture;
     GLuint GL_decal_texture;
     const char* diffuseTexture;
     const char* specularTexture;

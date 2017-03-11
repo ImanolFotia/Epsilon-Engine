@@ -1,17 +1,19 @@
 #pragma once
 #include <Types.h>
-
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 class ParticleProxy {
 public:
     ParticleProxy() {}
     virtual ~ParticleProxy() {}
     virtual void Update() {}
     virtual void Render() {}
+    double m_NumParticles;
+    std::vector<glm::vec3> m_ParticlePositions;
+    GLuint quadVAO, quadVBO;
 private:
     std::vector<Particle> Particles;
-    std::vector<glm::vec3> m_ParticlePositions;
     MINMAX_POINTS ParticlesLimits;
-    double m_NumParticles;
 protected:
 };
 
@@ -19,7 +21,6 @@ class MistParticleProxy : public ParticleProxy {
 public:
     MistParticleProxy() {}
     virtual ~MistParticleProxy() {}
-
     virtual void Render()
     {   if (quadVAO == 0)
         {
@@ -42,7 +43,7 @@ public:
             glEnableVertexAttribArray(1);
             glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 
-            glm::mat4* modelMatrices = new glm::mat4[m_NumParticles];
+            glm::mat4* modelMatrices = new glm::mat4[(int)m_NumParticles];
             glm::mat4 model;
             for(int i = 0; i < m_NumParticles; ++i)
             {
@@ -104,7 +105,7 @@ public:
             glEnableVertexAttribArray(1);
             glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 
-            glm::mat4* modelMatrices = new glm::mat4[m_NumParticles];
+            glm::mat4* modelMatrices = new glm::mat4[(int)m_NumParticles];
             glm::mat4 model;
             for(int i = 0; i < m_NumParticles; ++i)
             {
@@ -166,7 +167,7 @@ public:
             glEnableVertexAttribArray(1);
             glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 
-            glm::mat4* modelMatrices = new glm::mat4[m_NumParticles];
+            glm::mat4* modelMatrices = new glm::mat4[(int)m_NumParticles];
             glm::mat4 model;
             for(int i = 0; i < m_NumParticles; ++i)
             {

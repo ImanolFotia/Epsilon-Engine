@@ -31,6 +31,8 @@ public:
 
     glm::mat4 getViewMatrix(void);
 
+    glm::mat4 getPrevViewMatrix(void);
+
     glm::mat4 getProjectionMatrix(void);
 
     glm::vec3 getPosition(void);
@@ -73,6 +75,7 @@ private:
     glm::vec3 Frustrum;
     glm::vec3 newOrientation;
     glm::vec3 newPosition;
+    glm::mat4 PrevView;
     bool OrientationhasChanged;
     bool PositionhasChanged;
     float verticalAngle;

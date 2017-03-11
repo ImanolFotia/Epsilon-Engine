@@ -1,15 +1,15 @@
-#version 330 core
+#version 400 core
 
 uniform sampler2D gFinalImage;
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
-uniform sampler2D gColor;
-
+uniform sampler2D gExtraComponents;
+uniform sampler2D gLightAccumulation; 
 noperspective in vec2 TexCoords;
 
 out vec4 outColor;
 
-
+uniform mat4 invView;
 uniform mat4 projection;
 uniform mat4 invprojection;
 uniform vec2 Resolution;
@@ -97,8 +97,8 @@ vec3 BinarySearch(inout vec3 dir, inout vec3 hitCoord, inout float dDepth)
 vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
 {
 
-	if(specular*0.5 < 0.1)
-		return vec4(0.0);
+	//if(specular*0.5 < 0.1)
+	//	return vec4(0.0, 1.0, 0.0, 1.0);
 
 
     dir *= rayStep;
@@ -107,10 +107,11 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
     float depth;
     int steps;
  vec4 projectedCoord;
+
  
     for(int i = 0; i < maxSteps; i++)
     {
-        hitCoord += dir*1.05;
+        hitCoord += dir;
  
         projectedCoord = projection * vec4(hitCoord, 1.0);
         projectedCoord.xy /= projectedCoord.w;
@@ -119,11 +120,11 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
         //depth = PositionFromDepth( texture(gDepth, projectedCoord.xy, 3).r).z;
         depth = textureLod(gPosition, projectedCoord.xy, 2).z;
         if(depth > 1000.0)
-        continue;
+            continue;
  
         dDepth = hitCoord.z - depth;
 
-        if((dir.z - dDepth) < 1.2)
+        if((dir.z - dDepth) < 1.1)
         if(dDepth <= 0.0)
         {	
         	vec4 asd;
@@ -137,10 +138,19 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
     }
  
  	
-    return vec4(projectedCoord.xy, depth, 1.0);//vec4(BinarySearch(dir, hitCoord, dDepth), 1.0);
+    return vec4(projectedCoord.xy, depth, 0.0);
 }
 
 
+vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0)
+{
+    return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+}
+
+float rand(vec2 co)
+{
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
 
 void main()
 {
@@ -150,17 +160,21 @@ void main()
 	//gTexCoord *= 2 - 1;
 	//gTexCoord.x *= Resolution.x / Resolution.y;
  
- 
     // Samples
-    specular = texture2D(gNormal, TexCoords).a;
+    vec2 extra = texture2D(gExtraComponents, TexCoords).rg;
+    specular = extra.r;
 
-    if(specular < 0.1)
+    if(specular < 0.01)
     	discard;
  
-    vec3 viewNormal = texture2D(gNormal, TexCoords).xyz;
+    vec3 viewNormal = vec3(texture2D(gNormal, TexCoords) * invView);
     //vec3 viewPos = PositionFromDepth(texture(gDepth, TexCoords).r).xyz;
     vec3 viewPos = textureLod(gPosition, TexCoords, 2).xyz;
+    vec3 albedo = texture(gFinalImage, TexCoords).rgb;
 
+    vec3 F0 = vec3(0.04); 
+    F0      = mix(F0, albedo, specular);
+    vec3 F = fresnelSchlickRoughness(max(dot(normalize(viewNormal), normalize(viewPos)), 0.0), F0);
     // Reflection vector
     vec3 reflected = normalize(reflect(normalize(viewPos), normalize(viewNormal)));
 
@@ -169,8 +183,7 @@ void main()
     vec3 hitPos = viewPos;
     float dDepth;
  
-
- 
+    //vec3 irradiance = texture(gLightAccumulation, TexCoords).rgb;
     vec4 coords = RayCast((reflected * max(minRayStep, -viewPos.z)), hitPos, dDepth);
  
  
@@ -181,13 +194,13 @@ void main()
 
     float asd = pow(specular, reflectionSpecularFalloffExponent) * 
     			screenEdgefactor * 
-    			clamp(-reflected.z, 0.0, 1.0) * 
-    			//clamp((searchDist - length(viewPos - hitPos)) * 
-    			//searchDistInv, 0.5, 1.0) * 
-    			1;
+    			-reflected.z;
  
     // Get color
-    vec3 SSR = texture(gFinalImage, coords.xy, 0).rgb * asd;  //specular * 0.5 * screenEdgefactor
+    vec3 SSR = textureLod(gFinalImage, coords.xy, 0).rgb * clamp(asd, 0.0, 0.9);  //specular * 0.5 * screenEdgefactor
     //vec3 SSR = vec3(screenSpaceReflection());
-		outColor = vec4(SSR, 1.0f);
+    //if(asd < .01)
+    //    SSR = irradiance;
+	outColor = vec4(SSR, specular);//vec4(clamp(-reflected.z, 0.0, 1.0), coords.y, coords.z, clamp(-reflected.z, 0.0, 1.0));
+    //outColor = outColor / (outColor + vec4(1.0)); 
 }

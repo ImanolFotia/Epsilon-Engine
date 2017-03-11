@@ -72,7 +72,7 @@ void Water::RenderWater(std::shared_ptr<Camera> cam, GLuint colorBuffer)
 
 void Water::LoadTextures(void)
 {
-    eTexture* tex = new eTexture("Wavy_Water_n.png");
+    eTexture* tex = new eTexture("water_n.jpg");
     normalTexture = tex->getTextureID();
 
     delete tex;

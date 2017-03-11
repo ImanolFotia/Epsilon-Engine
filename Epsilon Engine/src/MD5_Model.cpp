@@ -92,9 +92,9 @@ bool MD5Model::LoadModel( const std::string &filename )
                     eTexture texd(texturePath.c_str());
                     mesh.m_TexID = texd.getTextureID();
                     std::string ext = Helpers::getExtension(texturePath);
-                    std::string n_path = Helpers::removeExtension(texturePath) + "_n" + ext;
-                    std::string s_path = Helpers::removeExtension(texturePath) + "_s" + ext;
-                    std::string m_path = Helpers::removeExtension(texturePath) + "_m" + ext;
+                    std::string n_path = Helpers::removeExtension(texturePath) + "_n" + ".tga";
+                    std::string s_path = Helpers::removeExtension(texturePath) + "_s" + ".tga";
+                    std::string m_path = Helpers::removeExtension(texturePath) + "_m" + ".tga";
                     //std::cout << n_path << std::endl;
                     eTexture texn((n_path).c_str());
                     mesh.m_nTexID = texn.getTextureID();

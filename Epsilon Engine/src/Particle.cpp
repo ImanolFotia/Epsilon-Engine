@@ -1,4 +1,4 @@
-#include <Particle.h>
+#include <ParticleSystem.h>
 
 ParticleSystem::ParticleSystem()
 {

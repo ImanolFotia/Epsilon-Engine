@@ -8,6 +8,8 @@ Model::Model(const char* path, std::shared_ptr<ResourceManager> rm, glm::vec3 po
     Position = pos;
     Scale = sc;
     Rotation = rot;
+    PrevModel = glm::mat4();
+    ModelMatrix = glm::mat4();
 
     this->loadModel(path, 0);
     //std::cout << "Resource manager in epsilon address: " << resm.get() << std::endl;
@@ -189,20 +191,61 @@ void Model::Draw(GLuint shader)
 
 void Model::SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation, std::shared_ptr<Camera> cam)
 {
-    glm::mat4 Model = glm::mat4();
+
+    this->PrevModel = this->ModelMatrix;
     glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), scale);
     glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), position);
     glm::mat4 RotationMatrix;
     RotationMatrix = glm::mat4(1) * glm::toMat4(glm::normalize(rotation));
+    this->ModelMatrix = TranslationMatrix * ScaleMatrix * RotationMatrix;
 
-    Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
 
-    glm::mat4 MVP = cam->getProjectionMatrix() * cam->getViewMatrix() * Model;
+    ScaleMatrix = glm::scale(glm::mat4(), PrevScale);
+    TranslationMatrix = glm::translate(glm::mat4(), PrevPos);
+    RotationMatrix = glm::mat4(1) * glm::toMat4(glm::normalize(PrevRot));
+    this->PrevModel = TranslationMatrix * ScaleMatrix * RotationMatrix;
+
+    glm::mat4 MVP = cam->getProjectionMatrix() * cam->getViewMatrix() * this->ModelMatrix;
     glUniformMatrix4fv(shader->MVP_Location, 1, GL_FALSE, &MVP[0][0]);
-    glUniformMatrix4fv(shader->WorldTransform_Location, 1, GL_FALSE, &Model[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "PrevModel"), 1, GL_FALSE, &this->PrevModel[0][0]);
+    glUniformMatrix4fv(shader->WorldTransform_Location, 1, GL_FALSE, &this->ModelMatrix[0][0]);
     glUniformMatrix4fv(shader->View_Location, 1, GL_FALSE, &cam->getViewMatrix()[0][0]);
+    glUniformMatrix4fv(shader->PrevViewPos_Location, 1, GL_FALSE, &cam->getPrevViewMatrix()[0][0]);
     glUniformMatrix4fv(shader->Projection_Location, 1, GL_FALSE, &cam->getProjectionMatrix()[0][0]);
     glUniform3f(shader->viewPos_Location,  cam->getPosition().x, cam->getPosition().y, cam->getPosition().z);
 
     glUniform1f(glGetUniformLocation(shader->getProgramID(), "time"),  glfwGetTime());
+    PrevPos = position;
+    PrevScale = scale;
+    PrevRot = rotation;
+
+}
+
+
+void Model::SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation,
+                                         glm::vec3 pposition, glm::vec3 pscale, glm::quat protation,
+                                         std::shared_ptr<Camera> cam)
+{
+
+    glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), scale);
+    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), position);
+    glm::mat4 RotationMatrix;
+    RotationMatrix = glm::mat4(1) * glm::toMat4(glm::normalize(rotation));
+    this->ModelMatrix = TranslationMatrix * ScaleMatrix * RotationMatrix;
+
+    ScaleMatrix = glm::scale(glm::mat4(), pscale);
+    TranslationMatrix = glm::translate(glm::mat4(), pposition);
+    RotationMatrix = glm::mat4(1) * glm::toMat4(glm::normalize(protation));
+    this->PrevModel = TranslationMatrix * ScaleMatrix * RotationMatrix;
+    glm::mat4 MVP = cam->getProjectionMatrix() * cam->getViewMatrix() * this->ModelMatrix;
+    glUniformMatrix4fv(shader->MVP_Location, 1, GL_FALSE, &MVP[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "PrevModel"), 1, GL_FALSE, &this->PrevModel[0][0]);
+    glUniformMatrix4fv(shader->WorldTransform_Location, 1, GL_FALSE, &this->ModelMatrix[0][0]);
+    glUniformMatrix4fv(shader->View_Location, 1, GL_FALSE, &cam->getViewMatrix()[0][0]);
+    glUniformMatrix4fv(shader->PrevViewPos_Location, 1, GL_FALSE, &cam->getPrevViewMatrix()[0][0]);
+    glUniformMatrix4fv(shader->Projection_Location, 1, GL_FALSE, &cam->getProjectionMatrix()[0][0]);
+    glUniform3f(shader->viewPos_Location,  cam->getPosition().x, cam->getPosition().y, cam->getPosition().z);
+
+    glUniform1f(glGetUniformLocation(shader->getProgramID(), "time"),  glfwGetTime());
+
 }

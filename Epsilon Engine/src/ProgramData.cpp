@@ -29,5 +29,6 @@ ProgramData::ProgramData()
     SHADOWMAP_SIZE      = (int)reader.GetReal   (     "VISUAL"    ,     "SHADOWMAP_SIZE"        ,       1024    );
     SSR                 = (bool)reader.GetReal  (     "VISUAL"    ,     "SSR"                   ,       false   );
     LIGHTSHAFTS         = (bool)reader.GetReal  (     "VISUAL"    ,     "LIGHTSHAFTS"           ,       false   );
+    MOTIONBLUR          = (bool)reader.GetReal  (     "VISUAL"    ,     "MOTIONBLUR"            ,       false   );
     COMPRESSED_TEXTURES = (bool)reader.GetReal  (     "VISUAL"    ,     "COMPRESSED_TEXTURES"   ,       false   );
 }

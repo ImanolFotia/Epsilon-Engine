@@ -10,13 +10,15 @@ layout (binding = 1) uniform sampler2D gNormal;
 layout (binding = 2) uniform sampler2D gAlbedoSpec;
 layout (binding = 3) uniform sampler2D ssaoColorBufferBlur;
 layout (binding = 4) uniform sampler2DShadow shadowMap;
+layout (binding = 5) uniform sampler2D gExtraComponents;
+layout (binding = 6) uniform sampler2D gLightAccumulation; 
 
 uniform float exposure;
 uniform mat4 lightSpaceMatrix;
 uniform vec3 viewPos;
 uniform vec3 lightDir;
 uniform bool hdr;
-uniform vec3 LightPositions[9];
+uniform vec3 LightPositions[13];
 uniform mat4 projection;
 uniform vec3 uViewDir;
 uniform mat4 view;
@@ -30,7 +32,7 @@ const vec3 SkyColor = vec3(0.5,0.5,0.5);
 
 const vec3 SkyColor0 = normalize(vec3(205, 109, 39));
 const vec3 SkyColor1 = normalize(vec3(256, 75, 20));
-const float density = 0.0005;
+const float density = 0.00001;
 const float gradient = 1.3;
 
 
@@ -43,6 +45,7 @@ vec3 ambient;
 vec3 SpecDiff;
 float AmbientOcclusion;
 float shadow = 0.0;
+vec4 ExtraComponents;
 
 vec2 poissonDisk[16] = vec2[]( 
    vec2( -0.94201624, -0.39906216 ), 
@@ -93,6 +96,9 @@ float poissonShadowMapping(vec4 fragPosLightSpace){
     return visibility;
 }
 
+float calculateAttenuation(float radius, float distance);
+
+
 float NEAR = 0.1;
 float FAR = 3000.0;
 float LinearizeDepth(in float depth, in mat4 projMatrix) {
@@ -100,7 +106,7 @@ float LinearizeDepth(in float depth, in mat4 projMatrix) {
 }
 
 float attenuation = 0.0f;
-float minLight = 0.045;
+float minLight = 0.03;
 float b = 1.0 / 40.0;
 float radius = sqrt(1.0 / (b * minLight));
 
@@ -128,7 +134,7 @@ const float CosineA0 = Pi;
 const float CosineA1 = (2.0f * Pi) / 3.0f;
 const float CosineA2 = Pi * 0.25f;
 // scale for restored amount of lighting
-uniform float u_scaleFactor = 1.0;
+uniform float u_scaleFactor = 0.01;
 
 // coefficients of spherical harmonics and possible values
 vec3 u_L00 = vec3(1.64867, 1.82459, 1.15313);
@@ -140,7 +146,6 @@ vec3 u_L2m1 = vec3(0.0497046, 0.0555005, 0.0438776);
 vec3 u_L20 = vec3(0.190118, 0.166343, 0.324225);
 vec3 u_L21 = vec3(-0.0855067, 0.136518, 0.00239028);
 vec3 u_L22 = vec3(-0.329658, -0.28537, -0.601917);
-
 
 
 const float C1 = 0.429043;
@@ -184,6 +189,73 @@ vec3 ComputeSHIrradiance(in vec3 normal)
 
 uniform float time;
 
+const float PI = 3.14159265359;
+
+vec3 calculatePointPBR(vec3 pos);
+vec3 CalculateDirectionalPBR();
+float DistributionGGX(vec3 N, vec3 H, float roughness)
+{
+    float a      = roughness*roughness;
+    float a2     = a*a;
+    float NdotH  = max(dot(N, H), 0.0);
+    float NdotH2 = NdotH*NdotH;
+  
+    float nom   = a2;
+    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+    denom = PI * denom * denom;
+  
+    return nom / denom;
+}
+
+float GeometrySchlickGGX(float NdotV, float roughness)
+{
+    float r = (roughness + 1.0);
+    float k = (r*r) / 8.0;
+
+    float nom   = NdotV;
+    float denom = NdotV * (1.0 - k) + k;
+  
+    return nom / denom;
+}
+float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
+{
+    float NdotV = max(dot(N, V), 0.0);
+    float NdotL = max(dot(N, L), 0.0);
+    float ggx2  = GeometrySchlickGGX(NdotV, roughness);
+    float ggx1  = GeometrySchlickGGX(NdotL, roughness);
+  
+    return ggx1 * ggx2;
+}
+vec3 F;
+vec3 kS;
+vec3 kD;
+
+vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
+{
+    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
+}  
+
+float orenNayarDiffuse(
+  vec3 lightDirection,
+  vec3 viewDirection,
+  vec3 surfaceNormal,
+  float roughness,
+  float albedo) {
+  
+  float LdotV = dot(lightDirection, viewDirection);
+  float NdotL = dot(lightDirection, surfaceNormal);
+  float NdotV = dot(surfaceNormal, viewDirection);
+
+  float s = LdotV - NdotL * NdotV;
+  float t = mix(1.0, max(NdotL, NdotV), step(0.0, s));
+
+  float sigma2 = roughness * roughness;
+  float A = 1.0 + sigma2 * (albedo / (sigma2 + 0.13) + 0.5 / (sigma2 + 0.33) + 0.000001);
+  float B = 0.45 * sigma2 / (sigma2 + 0.09) + 0.00001;
+
+  return albedo * max(0.0, NdotL) * (A + B * s / t) / PI;
+}
+
 void main()
 {
 
@@ -195,17 +267,22 @@ void main()
     //originDepth = LinearizeDepth(originDepth, projection);
     FragPos = WorldPosFromDepth(texture(gDepth, TexCoords).r);
 
-
     float distance = length(viewPos - FragPos);
+    vec3  V = normalize(viewPos - FragPos);
 
     float visibility = exp(-pow((distance*density), gradient));
 
-    vec4 Normal_Emmisive = texture(gNormal, TexCoords);
+    Normal = texture(gNormal, TexCoords).rgb;
 
-    Normal = normalize(Normal_Emmisive.rgb);
+    Normal = normalize(Normal);
+
+    ExtraComponents = texture(gExtraComponents, TexCoords).rgba;
+
     Diffuse = texture(gAlbedoSpec, TexCoords).rgb;
 
-    if(Normal_Emmisive.a > 0.5){
+
+
+    if(ExtraComponents.y > 0.5){
     	FragColor.rgb = mix(SkyColor, Diffuse, visibility);
     	blurImage.rgb = mix(SkyColor, Diffuse, visibility);
     	return;
@@ -216,23 +293,41 @@ void main()
     AmbientOcclusion = texture(ssaoColorBufferBlur, TexCoords).r;
     vec4 FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0f);
     
+    vec3 F0 = vec3(0.04);
+    F0      = mix(F0, Diffuse, ExtraComponents.x);
+
+    F = fresnelSchlickRoughness(max(dot(Normal, V), 0.0), F0, Specular);
+    //F.x = clamp(F.x, 0.03, 1.0);
+    //F.y = clamp(F.y, 0.03, 1.0);
+    //F.z = clamp(F.z, 0.03, 1.0);
+    kS = F;
+    kD = vec3(1.0) - kS;
+    kD *= 1.0 - ExtraComponents.x;
+
+
     vec3 shc = sphericalHarmonics(Normal) * u_scaleFactor;
-    ambient = /*vec3(shc);//*/ clamp(Diffuse *  0.05, 0.0, 1.0);
+    //vec3 irradiance = texture(gLightAccumulation, TexCoords).rgb;
+    //vec3 diff = irradiance * Diffuse;
+    //ambient = kD * (shc*Diffuse);
+    ambient = /*vec3(shc);//*/ clamp(Diffuse *  0.0008, 0.0, 1.0);
 
     shadow  = poissonShadowMapping(FragPosLightSpace);
 
-    vec3 light = CalculateDirectional();
+    vec3 light = CalculateDirectionalPBR();
 
     b = 1.0 / (radius*radius * minLight);
     float change = sin(time)*10.0;
     float change2 = cos(time)*10.0;
-    for(int i = 0 ; i < 9 ; i++)
+    for(int i = 0 ; i < 13 ; i++)
     {
       
-      light += calculatePoint(LightPositions[i]);
+      light += calculatePointPBR(LightPositions[i]);
     }
 
-    light += ambient /** (Diffuse*0.025)*/;
+    //light += irradiance * vec3(ExtraComponents.r) * kS;
+    //light += ambient /** (Diffuse*0.025)*/;
+
+    //light = light / (light + vec3(1.0)); 
 
     vec3 composedScene;
 
@@ -249,12 +344,13 @@ void main()
 
     FragColor.rgb = mix(SkyColor, composedScene, visibility);
     vec3 testHDR = FragColor.rgb;
-    float brightness = dot(testHDR.rgb * ((exposure - 3.0) <= 0 ? 1.0 : (exposure - 3.0)), vec3(0.2126, 0.7152, 0.0722));
+    float brightness = dot(testHDR.rgb /** ((exposure - 3.0) <= 0 ? 1.0 : (exposure - 3.0))*/, vec3(0.2126, 0.7152, 0.0722));
 
     if(brightness > 1.0)
-        blurImage.rgb = FragColor.rgb;
-    else
-        blurImage = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+        blurImage.rgb = vec3(0.0);//FragColor.rgb;
+
+            FragColor.a = 1.0;
+    blurImage.a = 1.0;
 
 }
 
@@ -288,7 +384,7 @@ vec3 CalculateDirectional()
 
 vec3 calculatePoint(vec3 LightPos)
 {
-	vec3 lightcolor = normalize(vec3(49, 114, 221));///*normalize(LightPos) *0.5+ 0.5*/vec3(1);
+	vec3 lightcolor = normalize(LightPos) *0.5+ 0.5;
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 lightDirection = normalize(LightPos - FragPos);
     float diff =  max(dot(lightDirection, Normal), 0.0);
@@ -305,4 +401,60 @@ vec3 calculatePoint(vec3 LightPos)
     specular *= attenuation * 25;
 
     return  (specular * clamp( 1 - refractiveFactor, 0.1, 0.9) + diffuse) * lightcolor;
+}
+
+vec3 CalculateDirectionalPBR()
+{
+    // calculate per-light radiance
+        vec3 lightcolor = normalize(vec3(205, 109, 39));
+        vec3 V = normalize(viewPos - FragPos);
+        vec3 L = normalize(lightDir);
+        vec3 H = normalize(V + L);  
+        
+        // cook-torrance brdf
+        float NDF = DistributionGGX(Normal, H, clamp(Specular, 0.03, 1.0));        
+        float G   = GeometrySmith(Normal, V, L, Specular);      
+        
+        vec3 nominator    = NDF * G * F;
+        float denominator = (4 * max(dot(V, Normal), 0.0) * max(dot(L, Normal), 0.0)) + 0.001; 
+        vec3 brdf = nominator / denominator;
+            
+        // add to outgoing radiance Lo
+        float NdotL = max(dot(Normal, L), 0.0); // max(orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.03, 1.0), 1.0), 0.0);//              
+        vec3 Lo = (kD * Diffuse / PI + brdf) * NdotL; 
+        return mix(vec3(0.0), Lo * clamp(1.0 - shadow, 0.0, 1.0) * lightcolor, clamp(lightDir.y + 0.1, 0.0, 1.0))*2.0;
+}
+vec3 calculatePointPBR(vec3 pos)
+{
+  // calculate per-light radiance
+        vec3 V = normalize(viewPos - FragPos);
+        vec3 L = normalize(pos - FragPos);
+        vec3 H = normalize(V + L);
+        //float distance    = length(pos - FragPos);
+        float distance = length(pos - FragPos);
+        attenuation = calculateAttenuation(100, distance);//1.0 / (1.0 + 0.1/*factor*/ * pow(distance, 2));
+        attenuation *= smoothstep(40.0, 35.0, distance);
+        vec3 radiance     = vec3(1.0) * attenuation;        
+        
+        // cook-torrance brdf
+        float NDF = DistributionGGX(Normal, H, clamp(Specular, 0.03, 1.0));        
+        float G   = GeometrySmith(Normal, V, L, Specular);      
+        
+        vec3 nominator    = NDF * G * F;
+        float denominator = (4 * max(dot(V, Normal), 0.0) * max(dot(L, Normal), 0.0)) + 0.001; 
+        vec3 brdf = nominator / denominator;
+            
+        // add to outgoing radiance Lo
+        float NdotL = max(dot(Normal, L), 0.0); //max(orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.03, 1.0), 1.0), 0.0);//               
+        vec3 Lo = (kD * Diffuse / PI + brdf) * radiance * NdotL; 
+        return Lo;
+}
+
+float calculateAttenuation(float power, float distance)
+{/*
+    float a = pow(clamp( 1.0 - pow(distance/radius, 4.0), 0.0, 200.0), 2.0);
+    float b = (pow(distance, 2.0) + 1.0);
+    return a/b;*/
+    //return radius * (1.0 / (distance*distance));
+    return power / (4.0f * PI * (distance*distance));
 }

@@ -6,7 +6,7 @@ uniform sampler2D gDepth;
 uniform sampler2D gNormal;
 uniform sampler2D texNoise;
 
-const int kernelSize = 32;
+const int kernelSize = 20;
 uniform vec3 samples[kernelSize];
 
 // parameters (you'd probably want to use them as uniforms to more easily tweak the effect)
@@ -54,8 +54,8 @@ void main()
  
     vec3 fragPos = WorldPosFromDepth((texture(gDepth, TexCoords, 2.0).r));
 
-    vec3 normal = texture(gNormal, TexCoords).rgb;
-    vec3 randomVec = texture(texNoise, TexCoords * noiseScale, 4).xyz;
+    vec3 normal = vec3(texture(gNormal, TexCoords) * inverse(view));
+    vec3 randomVec = texture(texNoise, TexCoords * noiseScale).xyz;
     // Create TBN change-of-basis matrix: from tangent-space to view-space
     vec3 tangent = normalize(randomVec - normal * dot(randomVec, normal));
     vec3 bitangent = cross(normal, tangent);
@@ -67,7 +67,6 @@ void main()
         // get sample position
         vec3 sample = TBN * samples[i]; // From tangent to view-space
         sample = fragPos + sample * radius;
-
 
         // project sample position (to sample texture) (to get position on screen/texture)
         vec4 offset = vec4(sample, 1.0);
@@ -85,5 +84,5 @@ void main()
         occlusion += (sampleDepth - bias >= sample.z ? 1.0 : 0.0) * rangeCheck;
     }
     occlusion = 1.0 - (occlusion / kernelSize);
-    FragColor = pow(occlusion, 4);
+    FragColor = pow(occlusion, 5);
 }

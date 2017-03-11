@@ -18,12 +18,16 @@ out vec3 wFragPos;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
+uniform mat4 PrevModel;
+uniform mat4 PrevView;
 //uniform vec4 clipplane;
 
 vec3 T;
 vec3 B;
 vec3 N;
 
+out vec4 PrevPosition;
+out vec4 Position;
 mat3 CreateTBNMatrix(mat3 normalMatrix)
 {
      T = normalize(normalMatrix * tangent);
@@ -40,7 +44,9 @@ void main()
   vec4 viewPos = view * worldPos;
   vs_out.FragPos = viewPos.xyz;
   vs_out.wFragPos = worldPos.xyz;
+  Position = projection * viewPos;
   gl_Position = projection * viewPos;
+  PrevPosition = projection * PrevView * PrevModel * vec4(position, 1.0);
   vs_out.TexCoords = vertexUV;
 
   mat3 normalMatrix = transpose(inverse(mat3(model)));

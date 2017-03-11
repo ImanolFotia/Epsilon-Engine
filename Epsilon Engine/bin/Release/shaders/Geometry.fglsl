@@ -1,17 +1,17 @@
 #version 430 core
 
 layout(location = 0) out vec4 gAlbedoSpec;
-layout(location = 1) out vec4 gNormal;
-layout(location = 2) out vec3 gPosition;
-layout(location = 3) out vec4 gExpensiveNormal;
-layout(location = 4) out float gDepth;
+layout(location = 1) out vec3 gPosition;
+layout(location = 2) out vec3 gExpensiveNormal;
+layout(location = 3) out float gDepth;
+layout(location = 4) out vec4 gExtraComponents; 
+layout(location = 5) out vec3 gLightAccumulation;
 
 layout (binding = 0) uniform sampler2D texture_diffuse;
 layout (binding = 1) uniform sampler2D texture_specular;
 layout (binding = 2) uniform sampler2D texture_normal;
 layout (binding = 3) uniform sampler2D texture_height;
 layout (binding = 4) uniform samplerCube skybox;
-layout (binding = 5) uniform sampler2D texture_decal;
 
 in VS_OUT{
   vec3 FragPos;
@@ -33,7 +33,8 @@ float LinearizeDepth(float depth)
     float z = depth * 2.0 - 1.0; // Back to NDC
     return ((2.0 * NEAR * FAR) / (FAR + NEAR - z * (FAR - NEAR)));
 }
-
+in vec4 PrevPosition;
+in vec4 Position;
 
 void main()
 {
@@ -45,36 +46,32 @@ void main()
   //vec4 decalTex = texture(texture_decal, fs_in.TexCoords + (vec2(viewPos.x - 225.0, viewPos.z-300.0)));
 
   gAlbedoSpec.a = texture(texture_specular, fs_in.TexCoords).r;
-  vec3 Metallic_Emmisive = texture(texture_height, fs_in.TexCoords).rgb;
-  gExpensiveNormal.a = Metallic_Emmisive.g;
+  vec2 Metallic_Emmisive = texture(texture_height, fs_in.TexCoords).rg;
 
   vec4 CubeMapcolor = vec4(0.0);
   vec3 R = vec3(0.0);
+
+  gAlbedoSpec.rgb = texture(texture_diffuse,fs_in.TexCoords).rgb;
+  
+  float Depth = LinearizeDepth(gl_FragCoord.z);
+  gDepth = gl_FragCoord.z;
+  gPosition = fs_in.FragPos;
+  gExtraComponents.xy = Metallic_Emmisive.xy; //vec4(Metallic_Emmisive, 1.0, 1.0);
+
+  vec2 a = (Position.xy / Position.w) * 0.5 + 0.5;
+  vec2 b = (PrevPosition.xy / PrevPosition.w) * 0.5 + 0.5;
+  gExtraComponents.zw = (a - b);
 
   if( texture( skybox, vec3(0)).x > 0)
   {
     vec3 I = normalize(fs_in.wFragPos - viewPos);
     R = reflect(I, normalize(gExpensiveNormal.rgb));
-    CubeMapcolor = textureLod(skybox, R, gAlbedoSpec.a);
-
-    gAlbedoSpec.rgb = mix(texture(texture_diffuse,fs_in.TexCoords).rgb, 
-                          CubeMapcolor.rgb,
-                          0.0//clamp(Metallic_Emmisive.r, 0.0, 1.0)
-                          );
+    CubeMapcolor = texture(skybox, R);
   }
   else
-  {
-    //if(texture(texture_decal, vec2(0.0)).a > 0.5)
-      gAlbedoSpec.rgb = texture(texture_diffuse,fs_in.TexCoords).rgb;
-    //else
-      //gAlbedoSpec.rgb = mix(texture(texture_diffuse,fs_in.TexCoords).rgb, decalTex.rgb, decalTex.a);
-  }
+    CubeMapcolor = gAlbedoSpec.rgba * 0.0008;
 
-  gNormal.rgb = normalize(normalTexture * fs_in.TBN2);
-  gNormal.a = Metallic_Emmisive.r;
-  float Depth = LinearizeDepth(gl_FragCoord.z);
-  gDepth = gl_FragCoord.z;
-  gPosition = fs_in.FragPos;
+  gLightAccumulation = CubeMapcolor.rgb;
   //gWorldSpacePosition.rgb = fs_in.wFragPos;
   //gWorldSpacePosition.a = gl_FragCoord.z;
 }

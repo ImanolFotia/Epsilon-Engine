@@ -34,7 +34,7 @@ Terrain::Terrain(const char* heightMap,const char* diffuseTexture, float scale, 
 
 }
 
-Terrain::Terrain(const char* heightMap,const char* diffuseTexture, const char* normalTexture, const char* specularTexture, float sc, int gridSize, glm::vec3 Position ,std::shared_ptr<ResourceManager> rm /**Must be Power of two*/)
+Terrain::Terrain(const char* heightMap,const char* diffuseTexture, const char* normalTexture, const char* specularTexture, const char* metalTexture,float sc, int gridSize, glm::vec3 Position ,std::shared_ptr<ResourceManager> rm /**Must be Power of two*/)
 {
     this->gridSize = gridSize;
 
@@ -52,7 +52,7 @@ Terrain::Terrain(const char* heightMap,const char* diffuseTexture, const char* n
 
     this->GetHeightData();
 
-    this->LoadTexture(diffuseTexture, normalTexture, specularTexture);
+    this->LoadTexture(diffuseTexture, normalTexture, specularTexture, metalTexture);
 
     this->GenerateVertexBuffers();
 
@@ -277,7 +277,7 @@ bool Terrain::LoadTexture(const char* diff)
 
 }
 
-bool Terrain::LoadTexture(const char* diff, const char* normal, const char* specular)
+bool Terrain::LoadTexture(const char* diff, const char* normal, const char* specular, const char* metallic)
 {
     int texwidth, texheight, texchannels;
 
@@ -287,6 +287,8 @@ bool Terrain::LoadTexture(const char* diff, const char* normal, const char* spec
 
     eTexture sTex(specular);
 
+    eTexture mTex(metallic);
+
     eTexture Decal("decal.png", GL_CLAMP_TO_BORDER);
 
     GL_d_texture = dTex.getTextureID();
@@ -294,6 +296,8 @@ bool Terrain::LoadTexture(const char* diff, const char* normal, const char* spec
     GL_n_texture = nTex.getTextureID();
 
     GL_s_texture = sTex.getTextureID();
+
+    GL_m_texture = mTex.getTextureID();
 
     GL_decal_texture = Decal.getTextureID();
 
@@ -371,11 +375,11 @@ void Terrain::RenderTerrain(Shader* shader)
     glActiveTexture(GL_TEXTURE2);
     glUniform1i(glGetUniformLocation(shader->getProgramID(), "texture_normal"), 2);
     glBindTexture(GL_TEXTURE_2D, GL_n_texture);
-/*
-    glActiveTexture(GL_TEXTURE5);
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "texture_decal"), 5);
-    glBindTexture(GL_TEXTURE_2D, GL_decal_texture);
-*/
+
+    glActiveTexture(GL_TEXTURE3);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "texture_height"), 3);
+    glBindTexture(GL_TEXTURE_2D, GL_m_texture);
+
     // Draw mesh
     glBindVertexArray(this->VAO);
     glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);

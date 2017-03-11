@@ -44,6 +44,10 @@ public:
 
     glm::vec3 Position = glm::vec3(0,0,0), Scale;
     glm::quat Rotation;
+    glm::mat4 PrevModel;
+    glm::mat4 ModelMatrix;
+    glm::vec3 PrevPos, PrevScale;
+    glm::quat PrevRot;
     bool m_CastShadows;
     bool m_IsVisible;
     MODEL_TYPE m_Type;
@@ -93,8 +97,12 @@ public:
             this->meshes[i].DrawNoTexture();
     }
 
-    void SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation, std::shared_ptr<Camera> cam);
+    void SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation,
+                                      glm::vec3 pposition, glm::vec3 pscale, glm::quat protation,
+                                      std::shared_ptr<Camera> cam);
 
+    void SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation,
+                                      std::shared_ptr<Camera> cam);
     vector<Mesh> meshes;
 
     vector<Texture> textures_loaded;

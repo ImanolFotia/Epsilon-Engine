@@ -117,6 +117,20 @@ void ResourceManager::setModelUniforms(std::string path, Shader*& shader, glm::v
     this->ModelList.at(path).SetUniforms(shader, pos, sc, rot, cam);
 }
 
+void ResourceManager::setModelUniforms(std::string path, Shader*& shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, glm::vec3 ppos, glm::vec3 psc, glm::quat prot, std::shared_ptr<Camera> cam)
+{
+    this->ModelList.at(path).SetUniforms(shader, pos, sc, rot, ppos, psc, prot, cam);
+}
+
+
+void ResourceManager::destroyAllModels()
+{
+    for(std::map<std::string, Model>::iterator itr = ModelList.begin(); itr != ModelList.end(); itr++)
+        {
+            itr->second.Destroy();
+        }
+}
+
 GLuint ResourceManager::useTexture(std::string texPath)
 {
     try
@@ -207,6 +221,14 @@ void ResourceManager::resetTextureUsage(std::string texPath)
     }
 }
 
+void ResourceManager::destroyAllTextures()
+{
+    for(std::map<std::string, eTexture>::iterator itr = TextureList.begin(); itr != TextureList.end(); itr++)
+        {
+            itr->second.Destroy();
+        }
+}
+
 std::string ResourceManager::requestShader(std::string shaderPathv, std::string shaderPathf, std::string name)
 {
     try
@@ -268,7 +290,7 @@ bool ResourceManager::requestCubeMap(int CubeMapID, glm::vec3 Position)
             path = "materials/skyboxes/Miramar/";
             break;
         case 2:
-            path = "materials/skyboxes/cornell/";
+            path = "materials/skyboxes/cubemap/";
             break;
         default:
             path = "materials/skyboxes/Miramar/";
