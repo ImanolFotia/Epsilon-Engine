@@ -433,7 +433,7 @@ vec3 calculatePointPBR(vec3 pos)
         //float distance    = length(pos - FragPos);
         float distance = length(pos - FragPos);
         attenuation = calculateAttenuation(100, distance);//1.0 / (1.0 + 0.1/*factor*/ * pow(distance, 2));
-        attenuation *= smoothstep(40.0, 35.0, distance);
+        //attenuation *= smoothstep(40.0, 35.0, distance);
         vec3 radiance     = vec3(1.0) * attenuation;        
         
         // cook-torrance brdf

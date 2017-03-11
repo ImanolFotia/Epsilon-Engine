@@ -12,7 +12,7 @@ class FrameBuffer
 public:
     FrameBuffer(int width, int height, bool DepthAttachment)
     {
-        //glGetIntegerv(GL_MAX_DRAW_BUFFERS, &MAX_RENDER_TARGETS);
+        glGetIntegerv(GL_MAX_DRAW_BUFFERS, &MAX_RENDER_TARGETS);
         glGenFramebuffers(1, &m_FramebufferHandler);
         m_RenderTargetCount = 0;
 
@@ -50,7 +50,7 @@ public:
 
         GLenum DrawBuffers[m_RenderTargetCount];
 
-        for(int i = 0; i < m_RenderTargetCount; ++i)
+        for(auto i = 0; i < m_RenderTargetCount; ++i)
             DrawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
 
         glDrawBuffers(m_RenderTargetCount, DrawBuffers);
@@ -129,7 +129,7 @@ public:
     std::unordered_map<std::string, std::shared_ptr<RenderTarget> > m_RenderTargets;
 
     int m_RenderTargetCount;
-    int MAX_RENDER_TARGETS = 8;
+    int MAX_RENDER_TARGETS;
     int WIDTH;
     int HEIGHT;
 

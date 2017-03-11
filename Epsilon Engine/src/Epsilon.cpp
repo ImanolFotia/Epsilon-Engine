@@ -247,12 +247,12 @@ void Epsilon::LoadGeometry(void)
     rM->requestCubeMap(2, glm::vec3(0,0,0));
     rM->requestModel("models/esfera.eml", rM, glm::vec3(78.0,5.25,-57), glm::vec3(1), glm::quat(0.0, 0.0, 0.0, 0.0));
     std::cout << "Llega" << endl;
-    rM->requestModel("models/dragon.eml", rM, glm::vec3(22, 20, -36), glm::vec3(1), glm::quat(-1.0, 0.0, -1.0, 0.0));
+    rM->requestModel("models/dragon.eml", rM, glm::vec3(33, 0.0, 24), glm::vec3(1), glm::quat(-1.0, 0.0, -1.0, 0.0));
     std::cout << "Llega" << endl;
     rM->requestModel("models/platform.eml", rM, glm::vec3(50,0.0,0), glm::vec3(4), glm::quat(-1.0, 0.0, -1.0, 0.0));
     rM->requestModel("models/Rock_6.eml", rM, glm::vec3(-63, 1.5, 91), glm::vec3(4.0), glm::quat(0.0, 0.0, 0.5, 0.0));
     rM->requestModel("models/Desk.eml", rM, glm::vec3(-2.0,8.0,10.0), glm::vec3(0.9), glm::quat(1, 0.0, -1.0, 0.0));
-    rM->requestModel("models/curve.eml", rM, glm::vec3(-51,1.0,-1), glm::vec3(4), glm::quat(0, 0.0, 0, 0.0));
+    rM->requestModel("models/buddha.eml", rM, glm::vec3(-51,0.0,33), glm::vec3(1), glm::quat(0, 0.0, 0, 0.0));
 
 
     float first, second, delta;
@@ -291,7 +291,7 @@ void Epsilon::LoadGeometry(void)
 
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "h_int_1.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "pbrtest.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 
@@ -422,18 +422,18 @@ void Epsilon::Render3D(Shader* shader)
 
 
     shader->Use();
-    this->SetUniforms(shader,rM->getModelPosition("models/curve.eml") /*+ glm::vec3(0, 0.0, -i * 5)*/, rM->getModelScale("models/curve.eml"),  rM->getModelRotation("models/curve.eml"));
+    this->SetUniforms(shader,rM->getModelPosition("models/buddha.eml") /*+ glm::vec3(0, 0.0, -i * 5)*/, rM->getModelScale("models/buddha.eml"),  rM->getModelRotation("models/buddha.eml"));
     Model = glm::mat4();
-    ScaleMatrix = glm::scale(glm::mat4(), rM->getModelScale("models/curve.eml"));
-    TranslationMatrix = glm::translate(glm::mat4(),rM->getModelPosition("models/curve.eml") /*+ glm::vec3(0, 0.0, -i * 5)*/);
-    RotationMatrix = glm::toMat4(glm::normalize(rM->getModelRotation("models/curve.eml") * glm::quat(0.0, 0.0, 1.0, 0.0)));
+    ScaleMatrix = glm::scale(glm::mat4(), rM->getModelScale("models/buddha.eml"));
+    TranslationMatrix = glm::translate(glm::mat4(),rM->getModelPosition("models/buddha.eml") /*+ glm::vec3(0, 0.0, -i * 5)*/);
+    RotationMatrix = glm::toMat4(glm::normalize(rM->getModelRotation("models/buddha.eml") * glm::quat(0.0, 0.0, 1.0, 0.0)));
     Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
     BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), Model);
 
-    visible = BSPMap->Frustum.BoxInFrustum(rM->getModelBoundingBox("models/curve.eml"));
+    visible = BSPMap->Frustum.BoxInFrustum(rM->getModelBoundingBox("models/buddha.eml"));
     if(visible)
     {
-        rM->useModel("models/curve.eml", shader);
+        rM->useModel("models/buddha.eml", shader);
     }
     else
     {

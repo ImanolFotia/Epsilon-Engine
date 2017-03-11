@@ -110,6 +110,7 @@ void PostProcess::SetupFramebuffer()
 */
 
     //PBR test
+    /*
     LightPositions.push_back(glm::vec3(-20, 12, -5));
     LightPositions.push_back(glm::vec3(-14, 12, -5));
     LightPositions.push_back(glm::vec3(-8, 12, -5));
@@ -121,11 +122,31 @@ void PostProcess::SetupFramebuffer()
     LightPositions.push_back(glm::vec3(-0.5, 15, 52));
 
 
+
+
     LightPositions.push_back(glm::vec3(-41, 12, 40));
     LightPositions.push_back(glm::vec3(-64, 12, 40));
     LightPositions.push_back(glm::vec3(-64, 12, 65));
     LightPositions.push_back(glm::vec3(-64, 12, 91));
+*/
 
+    LightPositions.push_back(glm::vec3(-20, 12, -5));
+    LightPositions.push_back(glm::vec3(-14, 12, -5));
+    LightPositions.push_back(glm::vec3(-8, 12, -5));
+    LightPositions.push_back(glm::vec3(-2, 12, -5));
+    LightPositions.push_back(glm::vec3(4, 12, -5));
+    LightPositions.push_back(glm::vec3(10, 12, -5));
+    LightPositions.push_back(glm::vec3(16, 12, -5));
+    LightPositions.push_back(glm::vec3(22, 12, -5));
+    LightPositions.push_back(glm::vec3(-0.5, 15, 52));
+
+
+
+
+    LightPositions.push_back(glm::vec3(27, 5, 24));
+    LightPositions.push_back(glm::vec3(-51, 12, 33));
+    LightPositions.push_back(glm::vec3(-64, 12, 65));
+    LightPositions.push_back(glm::vec3(-64, 12, 91));
 
 
 
@@ -645,8 +666,8 @@ void PostProcess::SSRPass(std::shared_ptr<Camera>& cam)
     glBindTexture(GL_TEXTURE_2D, this->gExtraComponents);
 
     glActiveTexture(GL_TEXTURE4);
-    glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "gLightAccumulation"), 4);
-    glBindTexture(GL_TEXTURE_2D, this->gLightAccumulation);
+    glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "ColorBuffer"), 4);
+    glBindTexture(GL_TEXTURE_2D, this->gAlbedoSpec);
 
     glm::mat4 proj = glm::perspective( glm::radians(75.0f) , (float)this->width/(float)this->height , 0.1f , 3000.0f );
     glUniformMatrix4fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "projection"), 1, GL_FALSE, &proj[0][0]);
@@ -654,6 +675,8 @@ void PostProcess::SSRPass(std::shared_ptr<Camera>& cam)
     glUniformMatrix4fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "invprojection"), 1, GL_FALSE, &invproj[0][0]);
     glm::mat4 invView = glm::inverse(cam->getViewMatrix());
     glUniformMatrix4fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "invView"), 1, GL_FALSE, &invView[0][0]);
+    glm::mat4 view = cam->getViewMatrix();
+    glUniformMatrix4fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "view"), 1, GL_FALSE, &view[0][0]);
     glUniform2f(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "Resolution"), this->width, this->height);
 
     this->RenderQuad();
