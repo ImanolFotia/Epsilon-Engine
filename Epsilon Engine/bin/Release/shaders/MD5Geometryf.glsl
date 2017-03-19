@@ -3,7 +3,7 @@
 
 layout(location = 0) out vec4 gAlbedoSpec;
 layout(location = 1) out vec3 gPosition;
-layout(location = 2) out vec3 gExpensiveNormal;
+layout(location = 2) out vec4 gExpensiveNormal;
 layout(location = 3) out float gDepth;
 layout(location = 4) out vec2 gExtraComponents;
 
@@ -35,6 +35,8 @@ void main()
 	gAlbedoSpec.a = texture(s_sampler, TexCoords).g;
 
 	gExpensiveNormal.rgb = normalize((texture(n_sampler, TexCoords).rgb * 2.0 - 1.0) * TBN);
+
+	gExpensiveNormal.a = texture(s_sampler, TexCoords).g;
 
 	gPosition.rgb = FragPos;
 

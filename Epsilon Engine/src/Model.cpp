@@ -1,5 +1,6 @@
 #include <Model.h>
 #include <ResourceManager.h>
+#include <Log.h>
 
 Model::Model(const char* path, std::shared_ptr<ResourceManager> rm, glm::vec3 pos, glm::vec3 sc, glm::quat rot)
 {
@@ -24,6 +25,7 @@ bool Model::loadModel(string emlPath, int a)
     if(!inFILE.is_open())
     {
         std::cout << "Fail to open EML file" << std::endl;
+        Global::Log::WriteToLog("Fail to open EML file " + emlPath);
         return false;
     }
 
@@ -40,6 +42,7 @@ bool Model::loadModel(string emlPath, int a)
     if((int)header->format != EMLHEADER)
     {
         std::cout << "This file is not a valid SEML file. " << std::endl;
+        Global::Log::WriteToLog("Not a valid EML file: " + emlPath);
         return false;
     }
 
@@ -47,6 +50,8 @@ bool Model::loadModel(string emlPath, int a)
     {
         std::cout << "This file version doesn't match the one required."<< std::endl <<
                   "This file: " << (float)header->version << " Required: " << emlVersion << std::endl;
+        Global::Log::WriteToLog("This file version doesn't match the one required.");
+        Global::Log::WriteToLog("This file: " + Helpers::floatTostring((float)header->version) + " Required: " + Helpers::floatTostring(emlVersion));
         return false;
     }
 

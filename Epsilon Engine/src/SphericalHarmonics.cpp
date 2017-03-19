@@ -175,6 +175,8 @@ void SphericalHarmonics::CalculateCohefficients(CubeMap cubemap, const unsigned 
       m_Cohefficients[i].g = resultG[i];
       m_Cohefficients[i].b = resultB[i];
    }
+
+   this->SaveCohefficients();
 }
 
 void SphericalHarmonics::sphericalHarmonicsEvaluateDirection(float * result, int order,

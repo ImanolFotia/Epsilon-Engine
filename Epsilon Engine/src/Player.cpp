@@ -31,7 +31,7 @@ namespace Game
         t.setIdentity();
         t.setOrigin(btVector3(x, y, z));  //put it to x,y,z coordinates
         m_Position = btVector3(x, y, z);
-        m_playerCapsule = (std::shared_ptr<btCapsuleShape>) new btCapsuleShape(1.5, 6);
+        m_playerCapsule = (std::shared_ptr<btCapsuleShape>) new btCapsuleShape(1.5, 5.5);
         btVector3 inertia(0,0,0);   //inertia is 0,0,0 for static object, else
         m_playerCapsule->calculateLocalInertia(150.0,inertia);    //it can be determined by this function (for all kind of shapes)
         m_MotionState = (std::shared_ptr<btDefaultMotionState>) new btDefaultMotionState(t);  //set the position (and motion)
@@ -235,7 +235,7 @@ namespace Game
 
         bool moved = false;
 
-        float speedWalk = 30.0, speedSprint = 20.0, currentSpeed = 0.0;
+        float speedWalk = 12.0, speedSprint = 20.0, currentSpeed = 0.0;
 
         if ( Input::KeyBoard::KEYS[Input::GLFW::Key::LEFT_SHIFT])
         {
@@ -487,7 +487,6 @@ namespace Game
             m_pickedBody->setAngularVelocity(pickedbodyangularfactor);
             m_LocalResourceManagerPointer->m_PhysicsWorld->world->removeConstraint(m_pickedConstraint);
             delete m_pickedConstraint;
-            delete m_pickedBody;
             m_pickedConstraint = 0;
             m_pickedBody = 0;
             std::cout << "deleted constraint" << std::endl;

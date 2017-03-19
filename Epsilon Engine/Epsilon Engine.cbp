@@ -57,7 +57,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-std=c++11" />
-					<Add directory="deppend/glew/include" />
+					<Add directory="deppend/glew-2.0.0/include" />
 					<Add directory="deppend/glfw-3.2.bin.WIN32/include" />
 					<Add directory="deppend/glm" />
 					<Add directory="deppend" />
@@ -82,7 +82,7 @@
 					<Add library="deppend\bullet-2.82-r2704\lib\libBulletCollision.a" />
 					<Add library="deppend\bullet-2.82-r2704\lib\libBulletSoftBody.a" />
 					<Add library="deppend\bullet-2.82-r2704\lib\libLinearMath.a" />
-					<Add directory="deppend/glew/lib" />
+					<Add directory="deppend/glew-2.0.0/lib" />
 					<Add directory="deppend/glfw/lib" />
 					<Add directory="deppend/SOIL/lib" />
 					<Add directory="deppend/FreeType2/lib" />
@@ -124,6 +124,7 @@
 		<Unit filename="include/Mesh.h" />
 		<Unit filename="include/Model.h" />
 		<Unit filename="include/OpenGL/FrameBuffer.h" />
+		<Unit filename="include/OpenGL/HelperFunctions/FullScreenQuad.h" />
 		<Unit filename="include/OpenGL/RenderTarget.h" />
 		<Unit filename="include/Particle.h" />
 		<Unit filename="include/ParticleProxy.h" />
@@ -132,6 +133,8 @@
 		<Unit filename="include/Picking.h" />
 		<Unit filename="include/Player.h" />
 		<Unit filename="include/PostProcess.h" />
+		<Unit filename="include/PostProcess/Effect.h" />
+		<Unit filename="include/PostProcess/MotionBlur.h" />
 		<Unit filename="include/ProgramData.h" />
 		<Unit filename="include/ResourceManager.h" />
 		<Unit filename="include/Scene.h" />
@@ -176,6 +179,7 @@
 		<Unit filename="src/Picking.cpp" />
 		<Unit filename="src/Player.cpp" />
 		<Unit filename="src/PostProcess.cpp" />
+		<Unit filename="src/PostProcess/MotionBlur.cpp" />
 		<Unit filename="src/ProgramData.cpp" />
 		<Unit filename="src/ResourceManager.cpp" />
 		<Unit filename="src/Scene.cpp" />

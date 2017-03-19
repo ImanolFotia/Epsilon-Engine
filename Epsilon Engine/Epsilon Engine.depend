@@ -245,7 +245,7 @@
 	<GL/glext.h>
 	<GL/glu.h>
 
-1489202575 source:d:\epsilon\epsilon engine\src\epsilon.cpp
+1489864880 source:d:\epsilon\epsilon engine\src\epsilon.cpp
 	<iostream>
 	<Epsilon.h>
 	<ProgramData.h>
@@ -260,8 +260,9 @@
 	<EpsilonMemory.h>
 	<sys/CPUID.h>
 	<chrono>
+	<Log.h>
 
-1487827673 d:\epsilon\epsilon engine\include\epsilon.h
+1489719225 d:\epsilon\epsilon engine\include\epsilon.h
 	<map>
 	<GL/glew.h>
 	<GL/gl.h>
@@ -298,6 +299,7 @@
 	<SplashScreen.h>
 	<SphericalHarmonics.h>
 	<Picking.h>
+	<Log.h>
 
 1430094264 d:\epsilon\epsilon engine\include\app.h
 	<GL/glew.h>
@@ -305,7 +307,7 @@
 	<iostream>
 	<string>
 
-1487733356 source:d:\epsilon\epsilon engine\src\shader.cpp
+1489719284 source:d:\epsilon\epsilon engine\src\shader.cpp
 	<Shader.h>
 	<stdio.h>
 	<string>
@@ -313,6 +315,8 @@
 	<iostream>
 	<fstream>
 	<algorithm>
+	<Log.h>
+	<Includes.h>
 
 1487733393 d:\epsilon\epsilon engine\include\shader.h
 	<GL/glew.h>
@@ -484,7 +488,7 @@
 1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\postprocess.h
 	"types.h"
 
-1488575981 source:d:\epsilon\epsilon engine\src\camera.cpp
+1489432720 source:d:\epsilon\epsilon engine\src\camera.cpp
 	<iostream>
 	<camera.h>
 	<math.h>
@@ -508,10 +512,11 @@
 	<SOIL.h>
 	<ProgramData.h>
 
-1481167677 d:\epsilon\epsilon engine\include\main.h
+1489718664 d:\epsilon\epsilon engine\include\main.h
 	<ProgramData.h>
 	<Epsilon.h>
 	<memory>
+	<Log.h>
 
 1451178317 d:\epsilon\epsilon engine\include\skyboxdata.h
 
@@ -618,7 +623,7 @@
 	<glm/gtc/matrix_transform.hpp>
 	<Shader.h>
 
-1489189935 d:\epsilon\epsilon engine\include\postprocess.h
+1489215620 d:\epsilon\epsilon engine\include\postprocess.h
 	<GL/glew.h>
 	<Shader.h>
 	<camera.h>
@@ -628,7 +633,7 @@
 	<Texture.h>
 	<OpenGL/FrameBuffer.h>
 
-1489202082 source:d:\epsilon\epsilon engine\src\postprocess.cpp
+1489634288 source:d:\epsilon\epsilon engine\src\postprocess.cpp
 	<PostProcess.h>
 	<iostream>
 	<ProgramData.h>
@@ -1590,7 +1595,7 @@
 	"Frustum.h"
 	<iostream>
 
-1489029287 source:d:\epsilon\epsilon engine\src\resourcemanager.cpp
+1489213194 source:d:\epsilon\epsilon engine\src\resourcemanager.cpp
 	"ResourceManager.h"
 
 1487827673 d:\epsilon\epsilon engine\include\resourcemanager.h
@@ -1634,9 +1639,10 @@
 	"MD5_Anim.h"
 	<SOIL.h>
 
-1483588004 d:\epsilon\epsilon engine\include\types.h
+1489884814 d:\epsilon\epsilon engine\include\types.h
 	<btBulletDynamicsCommon.h>
 	<btBulletCollisionCommon.h>
+	<memory>
 
 1477961386 d:\epsilon\epsilon engine\include\shadowmapping.h
 	<Shader.h>
@@ -1650,9 +1656,9 @@
 	<iostream>
 	<cmath>
 
-1489202575 d:\epsilon\epsilon engine\version.h
+1489884814 d:\epsilon\epsilon engine\version.h
 
-1488491726 d:\epsilon\epsilon engine\include\entitytemplate.h
+1489258556 d:\epsilon\epsilon engine\include\entitytemplate.h
 	<Component.h>
 	<iostream>
 	<glm/glm.hpp>
@@ -1660,7 +1666,7 @@
 	<memory>
 	<ResourceManager.h>
 
-1488491661 d:\epsilon\epsilon engine\include\component.h
+1489258311 d:\epsilon\epsilon engine\include\component.h
 	<iostream>
 	<glm/glm.hpp>
 	<Model.h>
@@ -1707,9 +1713,10 @@
 	<limits>
 	"../gtc/constants.hpp"
 
-1487752341 source:d:\epsilon\epsilon engine\src\model.cpp
+1489719268 source:d:\epsilon\epsilon engine\src\model.cpp
 	<Model.h>
 	<ResourceManager.h>
+	<Log.h>
 
 1461365554 d:\epsilon\epsilon engine\include\emlformat.h
 	<string>
@@ -2295,7 +2302,7 @@
 	<KeyBoard.h>
 	<iostream>
 
-1488575981 source:d:\epsilon\epsilon engine\src\player.cpp
+1489524417 source:d:\epsilon\epsilon engine\src\player.cpp
 	<Player.h>
 	<ResourceManager.h>
 	<sys/KeyBoard.h>
@@ -2931,13 +2938,14 @@
 	<GLFW/glfw3.h>
 	<iostream>
 
-1471720139 d:\epsilon\epsilon engine\include\sys\cpuid.h
+1489719397 d:\epsilon\epsilon engine\include\sys\cpuid.h
 	<string>
 	<iostream>
 	<limits.h>
 	<stdint.h>
 	<thread>
 	<exception>
+	<Log.h>
 
 1467939169 source:d:\epsilon\epsilon engine\src\sys\keyboard.cpp
 	<sys/KeyBoard.h>
@@ -3065,13 +3073,15 @@
 1477961434 d:\epsilon\epsilon engine\include\splashscreen.h
 	<GL/glew.h>
 
-1481051337 source:d:\epsilon\epsilon engine\src\sphericalharmonics.cpp
+1489864880 source:d:\epsilon\epsilon engine\src\sphericalharmonics.cpp
 	<SphericalHarmonics.h>
 	<Types.h>
 
-1481048282 d:\epsilon\epsilon engine\include\sphericalharmonics.h
+1489865794 d:\epsilon\epsilon engine\include\sphericalharmonics.h
 	<CubeMap.h>
 	<memory>
+	<fstream>
+	<Includes.h>
 
 1482803747 d:\epsilon\epsilon engine\include\picking.h
 	<glm/glm.hpp>
@@ -3108,10 +3118,11 @@
 	<glm/glm.hpp>
 	<GL/glew.h>
 
-1489026893 d:\epsilon\epsilon engine\include\particleproxy.h
+1489884788 d:\epsilon\epsilon engine\include\particleproxy.h
 	<Types.h>
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
+	<OpenGL/HelperFunctions/FullScreenQuad.h>
 
 1489192805 d:\epsilon\epsilon engine\include\opengl\framebuffer.h
 	<unordered_map>
@@ -3123,4 +3134,33 @@
 
 1489189601 d:\epsilon\epsilon engine\include\opengl\rendertarget.h
 	<GL/glew.h>
+
+1489530221 source:d:\epsilon\epsilon engine\src\postprocess\motionblur.cpp
+	<PostProcess/MotionBlur.h>
+
+1489530300 d:\epsilon\epsilon engine\include\postprocess\motionblur.h
+	<PostProcess/Effect.h>
+
+1489530330 d:\epsilon\epsilon engine\include\postprocess\effect.h
+	<OpenGL/FrameBuffer.h>
+	<OpenGL/HelperFunctions/FullScreenQuad.h>
+	<Shader.h>
+	<memory>
+
+1489530128 d:\epsilon\epsilon engine\include\opengl\helperfunctions\fullscreenquad.h
+	<GL/glew.h>
+
+1469321017 d:\epsilon\epsilon engine\deppend\glew-2.0.0\include\gl\glew.h
+	<stddef.h>
+	<inttypes.h>
+	<stdint.h>
+	<inttypes.h>
+	<Availability.h>
+	<OpenGL/glu.h>
+	<GL/glu.h>
+
+1489718664 d:\epsilon\epsilon engine\include\log.h
+	<iostream>
+	<fstream>
+	<string>
 

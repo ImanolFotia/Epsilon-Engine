@@ -290,18 +290,18 @@ bool ResourceManager::requestCubeMap(int CubeMapID, glm::vec3 Position)
             path = "materials/skyboxes/Miramar/";
             break;
         case 2:
-            path = "materials/skyboxes/cubemap/";
+            path = "materials/skyboxes/pbrtest/";
             break;
         default:
             path = "materials/skyboxes/Miramar/";
 
         }
-        paths.push_back(path + "right.tga");
-        paths.push_back(path + "left.tga");
-        paths.push_back(path + "top.tga");
-        paths.push_back(path + "bottom.tga");
-        paths.push_back(path + "back.tga");
-        paths.push_back(path + "front.tga");
+        paths.push_back(path + "right.png");
+        paths.push_back(path + "left.png");
+        paths.push_back(path + "top.png");
+        paths.push_back(path + "bottom.png");
+        paths.push_back(path + "back.png");
+        paths.push_back(path + "front.png");
 
         CubeMap tmpCubeMap(paths, CubeMapList.size() + 1, Position);
 

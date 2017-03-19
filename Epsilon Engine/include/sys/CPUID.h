@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <thread>
 #include <exception>
+#include <Log.h>
 class CPUID
 {
     uint32_t regs[4];
@@ -71,5 +72,9 @@ public:
         std::cout << "CPU Manufacturer: " << getCPUVendor() << std:: endl;
         std::cout << "Number of Threads: " << getNumberOfThreads() << std::endl;
         std::cout << "Endianness: " << std::string(getEndianes() ? "Big-Endian" : "Little-Endian") << std::endl;
+
+        Global::Log::WriteToLog("CPU Manufacturer: " + getCPUVendor());
+        Global::Log::WriteToLog("Number of Threads: " + Helpers::intTostring(getNumberOfThreads()));
+        Global::Log::WriteToLog("Endianness: " + std::string(getEndianes() ? "Big-Endian" : "Little-Endian"));
     }
 };

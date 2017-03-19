@@ -14,7 +14,7 @@ public:
 
     ~EntityTemplate()
     {
-       //std::cout << "Entity Destructor" << std::endl;
+       std::cout << "Entity " + CollInfo.getName() + " Destroyed." << std::endl;
     }
 
     void addComponent(std::shared_ptr<Component::Component> t)

@@ -10,7 +10,7 @@
 
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
-
+#include <memory>
 //64 BSP units equals 1 meter
 //3.2 OpenGL units equals 1 meter
 #define     GOLDEN_RATIO                                  3.2f

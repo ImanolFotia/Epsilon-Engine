@@ -9,6 +9,7 @@
 #include <ProgramData.h>
 #include <Epsilon.h>
 #include <memory>
+#include <Log.h>
 class App
 {
 public:
@@ -29,6 +30,7 @@ public:
         EpsilonEngine->MainLoop();
     }
 
+
     ~App(void) {
         std::cout << "Engine shuted down" << std::endl;
     }
@@ -38,15 +40,21 @@ public:
 
 };
 
+std::ofstream Global::Log::FILE;
 GLFWwindow* InitEngine(const char* ProgramName)
 {
+
+    Global::Log::OpenFile("log.txt");
+
     std::cout << "Initializing Epsilon Engine" << std::endl;
+        Global::Log::WriteToLog("Initializing Epsilon Engine");
 
     ProgramData DATA;
 
     if(!glfwInit())
     {
         std::cout << "GLFW could not be initialized" << std::endl;
+        Global::Log::WriteToLog("GLFW could not be initialized");
     }
 
     /// glfwWindowHint(GLFW_SAMPLES, DATA.MSAA_SAMPLES);
@@ -92,6 +100,7 @@ GLFWwindow* InitEngine(const char* ProgramName)
     if(!window)
     {
         std::cout << "Window could not be created" << std::endl;
+        Global::Log::WriteToLog("Window could not be created");
     }
 
     glfwSetWindowPos(window, modes->width/2, modes->height/2);

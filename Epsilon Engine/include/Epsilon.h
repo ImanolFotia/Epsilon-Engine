@@ -45,7 +45,7 @@
 #include <SplashScreen.h>
 #include <SphericalHarmonics.h>
 #include <Picking.h>
-
+#include <Log.h>
 class Epsilon
 {
 public:
@@ -67,6 +67,8 @@ public:
         BSPMap->Destroy();
 
         cout << "Epsilon Engine has closed Succesfully." << endl;
+
+        Global::Log::WriteToLog("Epsilon Engine has closed Succesfully.");
     }
 
     void MainLoop(void);

@@ -114,7 +114,7 @@ namespace Component
         }
         ~PhysicComponent()
         {
-            //std::cout << "Physic Destructor" << std:: endl;
+            std::cout << "Physic Destructor" << std:: endl;
         }
         void Fill(float mass, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer)
         {

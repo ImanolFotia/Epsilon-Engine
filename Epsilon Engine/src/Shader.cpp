@@ -10,6 +10,8 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <Log.h>
+#include <Includes.h>
 
 Shader::Shader(const char* vertex, const char* fragment)
 {
@@ -95,9 +97,12 @@ Shader::Shader(const char* vertex, const char* fragment)
 	glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
 	glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
 	if ( InfoLogLength > 0 ){
-		std::vector<char> ProgramErrorMessage(InfoLogLength+1);
-		glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
-		printf("%s\n", &ProgramErrorMessage[0]);
+		char ProgramErrorMessage[InfoLogLength+1];
+		glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, ProgramErrorMessage);
+		//printf("%s\n", &ProgramErrorMessage[0]);
+		std::cout << ProgramErrorMessage << std::endl;
+		Global::Log::WriteToLog("Error while compiling: " + Helpers::removeExtension(Path));
+		Global::Log::WriteToLog(std::string(ProgramErrorMessage));
 	}
 
 	glDeleteShader(VertexShaderID);
