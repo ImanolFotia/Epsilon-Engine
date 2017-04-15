@@ -211,11 +211,13 @@ void Epsilon::LoadShaders(void)
 
     Shaders["Main"] = new Shader("shaders/Geometry.vglsl", "shaders/Geometry.fglsl");
 
-    Shaders["Terrain"] = new Shader( "shaders/testshader.vglsl", "shaders/testshader.fglsl" );
+    Shaders["Terrain"] = new Shader("shaders/Geometry.vglsl", "shaders/GeometryTerrain.fglsl");
+
+    //Shaders["Terrain"] = new Shader( "shaders/testshader.vglsl", "shaders/testshader.fglsl" );
 
     Shaders["Sun"] = new Shader("shaders/Sun.vglsl", "shaders/Sun.fglsl");
 
-    Shaders["SkyBox"] = new Shader("shaders/skybox.vglsl", "shaders/skybox.fglsl");
+    Shaders["SkyBox"] = new Shader("shaders/skybox.vglsl", "shaders/_skybox.fglsl");
 
     Shaders["MD5Geometry"] = new Shader("shaders/MD5Geometryv.glsl", "shaders/MD5Geometryf.glsl");
 
@@ -232,22 +234,22 @@ void Epsilon::LoadGeometry(void)
 {
     cout << "Loading World Geometry..." <<endl;
     vector<glm::vec3> grasspos2;
-    /*
-         terrain = (std::shared_ptr<Terrain>)new Terrain("materials/testmontana2.png", "dry-dirt2-albedo.png", "dry-dirt2-normal2.png", "dry-dirt2-roughness.png", "dry-dirt2-metalness.png", 3, 1, glm::vec3(-100.0, -1.0, -100),rM);
+
+         terrain = (std::shared_ptr<Terrain>)new Terrain("materials/terrain.bmp", "sandydrysoil-albedo.png", "sandydrysoil-normal-ue.png", "sandydrysoil-roughness.png", "sandydrysoil-metalness.png", 20, 1, glm::vec3(-100.0, -50.0, -100),rM);
 
 
 
             for(int i = 0 ; i < terrain->vertices.size() ; i+= 3)
             {
-                if(terrain->vertices[i].Position.y < 0)
-                    continue;
+                //if(terrain->vertices[i].Position.y < 0)
+                //    continue;
                 int chance = rand() % 2 + 1;
                 if(chance == 1)
                     grassPos.push_back(terrain->vertices[i].Position + glm::vec3((rand()%6)-3, 3.5, (rand()%6)-3));
                 else if(chance == 2)
                     grasspos2.push_back(terrain->vertices[i].Position + glm::vec3((rand()%6)-3, 3.5, (rand()%6)-3));
             }
-    */
+
     std::cout << "Resource manager in epsilon address: " << rM.get() << std::endl;
 
     rM->requestCubeMap(2, glm::vec3(0,0,0));
@@ -258,7 +260,7 @@ void Epsilon::LoadGeometry(void)
     rM->requestModel("models/platform.eml", rM, glm::vec3(50,0.0,0), glm::vec3(4), glm::quat(-1.0, 0.0, -1.0, 0.0));
     rM->requestModel("models/utah-teapot.eml", rM, glm::vec3(-63, 4.0, 91), glm::vec3(0.3), glm::quat(0.0, 0.0, 0.5, 0.0));
     rM->requestModel("models/Desk.eml", rM, glm::vec3(-2.0,8.0,10.0), glm::vec3(0.9), glm::quat(1, 0.0, -1.0, 0.0));
-    rM->requestModel("models/pisa.eml", rM, glm::vec3(-16,5.0,-15), glm::vec3(1.5), glm::quat(0, 0.0, 0, 0.0));
+    //rM->requestModel("models/sponza.eml", rM, glm::vec3(-16,5.0,-15), glm::vec3(0.025), glm::quat(0, 0.0, 0, 0.0));
 
 
     float first, second, delta;
@@ -267,12 +269,12 @@ void Epsilon::LoadGeometry(void)
     std::string path;
 
 
-    paths.push_back(path + "materials/skyboxes/pbr/right.png");
-    paths.push_back(path + "materials/skyboxes/pbr/left.png");
-    paths.push_back(path + "materials/skyboxes/pbr/top.png");
-    paths.push_back(path + "materials/skyboxes/pbr/bottom.png");
-    paths.push_back(path + "materials/skyboxes/pbr/back.png");
-    paths.push_back(path + "materials/skyboxes/pbr/front.png");
+    paths.push_back(path + "materials/skyboxes/Miramar/right.tga");
+    paths.push_back(path + "materials/skyboxes/Miramar/left.tga");
+    paths.push_back(path + "materials/skyboxes/Miramar/top.tga");
+    paths.push_back(path + "materials/skyboxes/Miramar/bottom.tga");
+    paths.push_back(path + "materials/skyboxes/Miramar/back.tga");
+    paths.push_back(path + "materials/skyboxes/Miramar/front.tga");
 
     CubeMap cube(paths, 1, glm::vec3(0,0,0));
     sphericalharmonics = (std::shared_ptr<SphericalHarmonics>) new SphericalHarmonics();
@@ -282,6 +284,9 @@ void Epsilon::LoadGeometry(void)
     delta = second - first;
 
     cout << "Spherical Harmonics generated in: " << delta << " Seconds." << endl;
+    std::vector<glm::vec3> sph = sphericalharmonics->getCohefficients();
+        for(int i = 0; i < sph.size(); ++i)
+            cout << sph[i].x << ", " << sph[i].y << ", " << sph[i].z  << endl;
 
     skybox = std::move((unique_ptr<Skybox>)(new Skybox("plain")));
     grass.push_back(Grass("grass04.png", grassPos));
@@ -294,7 +299,7 @@ void Epsilon::LoadGeometry(void)
 
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "h_int_1.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "SSR.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 
@@ -311,9 +316,11 @@ void Epsilon::LoadSound(void)
 
     m_AudioSystem = (std::unique_ptr<Audio::Audio>) new Audio::Audio();
 
-    m_AudioElement = (std::unique_ptr<Audio::AudioElement>) new Audio::AudioElement("sound/File0279.wav", STATIC_SOUND, glm::vec3(-28, 10, 15), glm::vec3(0,0,0));
+    std::shared_ptr<Audio::AudioElement> m_AudioElement = (std::shared_ptr<Audio::AudioElement>) new Audio::AudioElement("sound/File0279.wav", STATIC_SOUND, glm::vec3(-28, 10, 15), glm::vec3(0,0,0));
+    m_AudioSystem->addAudioElement(m_AudioElement);
 
-    m_AudioElement2 = (std::unique_ptr<Audio::AudioElement>) new Audio::AudioElement("sound/File0279.wav", STATIC_SOUND, glm::vec3(-28, 10, 15), glm::vec3(0,0,0));
+    std::shared_ptr<Audio::AudioElement> m_AudioElement2 = (std::shared_ptr<Audio::AudioElement>) new Audio::AudioElement("sound/ambient.wav", MUSIC, glm::vec3(-28, 10, 15), glm::vec3(0,0,0));
+    m_AudioSystem->addAudioElement(m_AudioElement2);
 
     m_AudioListener = (std::unique_ptr<Audio::AudioListener>) new Audio::AudioListener();
 
@@ -328,14 +335,15 @@ void Epsilon::Render3D(Shader* shader)
     glm::mat4 TranslationMatrix;
     glm::mat4 RotationMatrix;
 
-    /*
+/*
         this->waterPlane->RenderWater(eCamera, PP->colorBuffer);
-
+*/
             shader->Use();
-            this->SetUniforms(shader,glm::vec3(0, 0, 0), glm::vec3(1),  glm::quat(0, 0 ,0, 0));
+            //Shaders["Terrain"]->Use();
+            this->SetUniforms(shader,glm::vec3(0, 0, 0), glm::vec3(1, 2, 1),  glm::quat(0, 0 ,0, 0));
             terrain->RenderTerrain(shader);
             glCullFace(GL_BACK);
-    */
+
 
 //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 //glLineWidth(2.0);
@@ -424,26 +432,27 @@ void Epsilon::Render3D(Shader* shader)
     }
 
 
-
+/*
     shader->Use();
-    this->SetUniforms(shader,rM->getModelPosition("models/pisa.eml") /*+ glm::vec3(0, 0.0, -i * 5)*/, rM->getModelScale("models/pisa.eml"),  rM->getModelRotation("models/pisa.eml"));
+    this->SetUniforms(shader,rM->getModelPosition("models/sponza.eml"), rM->getModelScale("models/sponza.eml"),  rM->getModelRotation("models/sponza.eml"));
     Model = glm::mat4();
-    ScaleMatrix = glm::scale(glm::mat4(), rM->getModelScale("models/pisa.eml"));
-    TranslationMatrix = glm::translate(glm::mat4(),rM->getModelPosition("models/pisa.eml") /*+ glm::vec3(0, 0.0, -i * 5)*/);
-    RotationMatrix = glm::toMat4(glm::normalize(rM->getModelRotation("models/pisa.eml") * glm::quat(0.0, 0.0, 1.0, 0.0)));
+    ScaleMatrix = glm::scale(glm::mat4(), rM->getModelScale("models/sponza.eml"));
+    TranslationMatrix = glm::translate(glm::mat4(),rM->getModelPosition("models/sponza.eml"));
+    RotationMatrix = glm::toMat4(glm::normalize(rM->getModelRotation("models/sponza.eml") * glm::quat(0.0, 0.0, 1.0, 0.0)));
     Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
     BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), Model);
 
-    visible = BSPMap->Frustum.BoxInFrustum(rM->getModelBoundingBox("models/pisa.eml"));
+    visible = BSPMap->Frustum.BoxInFrustum(rM->getModelBoundingBox("models/sponza.eml"));
     if(visible)
     {
-        rM->useModel("models/pisa.eml", shader);
+        rM->useModel("models/sponza.eml", shader);
     }
     else
     {
     }
-
+*/
     glCullFace(GL_FRONT);
+
     glm::mat4 BSPmodel = glm::mat4();
     //glm::mat4 tmodel = glm::translate(glm::mat4(), glm::vec3(-30.0, 5.0, -120.0));
     glm::mat4 sModel = glm::scale(glm::mat4(), glm::vec3(0.1, 0.1, 0.1));
@@ -475,6 +484,10 @@ void Epsilon::Render3D()
     Shaders["ShadowMapping"]->Use();
     this->SetUniforms(Shaders["ShadowMapping"], rM->getModelPosition("models/dragon.eml"), rM->getModelScale("models/dragon.eml"), rM->getModelRotation("models/dragon.eml"));
     rM->useModel("models/dragon.eml", Shaders["ShadowMapping"]);
+/*
+    Shaders["ShadowMapping"]->Use();
+    this->SetUniforms(Shaders["ShadowMapping"], rM->getModelPosition("models/sponza.eml"), rM->getModelScale("models/sponza.eml"), rM->getModelRotation("models/sponza.eml"));
+    rM->useModel("models/sponza.eml", Shaders["ShadowMapping"]);*/
 
     //for(int i =0; i < 4; ++i)
     //{
@@ -485,6 +498,7 @@ void Epsilon::Render3D()
 
 
     glDisable(GL_CULL_FACE);
+
     glm::mat4 BSPmodel = glm::mat4();
     //glm::mat4 tmodel = glm::translate(glm::mat4(), glm::vec3(-30.0, 5.0, -120.0));
     glm::mat4 sModel = glm::scale(glm::mat4(), glm::vec3(0.1, 0.1, 0.1));
@@ -496,7 +510,7 @@ void Epsilon::Render3D()
 
     Shaders["MD5ShadowMapping"]->Use();
     glUniformMatrix4fv(glGetUniformLocation(Shaders["MD5ShadowMapping"]->getProgramID(), "mSkinned"), 150, GL_FALSE, &m_AnimModel->m_AnimatedBones[0][0][0]);
-    this->SetUniforms(Shaders["MD5ShadowMapping"], glm::vec3(mpos,3.0,60), glm::vec3(0.1, 0.1, 0.1), glm::quat(-1.0, 1.0, 0.0, 0.0f));
+    this->SetUniforms(Shaders["MD5ShadowMapping"], glm::vec3(mpos,1.2,45), glm::vec3(0.1, 0.1, 0.1), glm::quat(-1.0, 1.0, 0.0, 0.0f));
     m_AnimModel->Render(Shaders["MD5ShadowMapping"]->getProgramID());
     Shaders["MD5ShadowMapping"]->Free();
     glEnable(GL_CULL_FACE);
@@ -564,7 +578,7 @@ void Epsilon::Render2D(void)
     this->text->RenderText(GL_VEN,0.01, 0.85, 0.3, glm::vec3(1,1,1));
     this->text->RenderText(std::string("Total GPU Memory: " + Helpers::intTostring(total_mem_kb/1024) + "MB"),0.01, 0.83, 0.3, glm::vec3(1,1,1));
     this->text->RenderText(std::string("Current GPU Memory Available: " + Helpers::intTostring(cur_avail_mem_kb/1024) + "MB"),0.01, 0.81, 0.3, glm::vec3(1,1,1));
-    this->text->RenderText(std::string("Time up: " + Helpers::floatTostring(glm::floor(glfwGetTime())) + " Seconds"),0.01, 0.79, 0.3, glm::vec3(1,1,1));
+    this->text->RenderText(std::string("Resolution: " + Helpers::intTostring(this->WIDTH) + "x" + Helpers::intTostring(this->HEIGHT)),0.01, 0.79, 0.3, glm::vec3(1,1,1));
     //this->text->RenderText(std::string("Current GPU Memory Available: " + Helpers::intTostring(cur_avail_mem_kb/1024) + "MB"),0.01, 0.77, 0.3, glm::vec3(1,1,1));
     //this->text->RenderText("On ground: " + std::string(m_PlayerCapsule->isOnGround() ? "YES" : "NO"),0.01, 0.79, 0.3, glm::vec3(1,1,1));/*
     //this->text->RenderText("Parallax Mapping: " + std::string(parallax ? "ON" : "OFF"),0.01, 0.83, 0.3, glm::vec3(1,1,1));*/
@@ -583,7 +597,7 @@ void Epsilon::ProcessAudio()
 
     m_AudioListener->UpdateListener();
 
-    //m_AudioElement->Play();
+    m_AudioSystem->PlayAudio();
 
 }
 
@@ -771,7 +785,7 @@ void Epsilon::ProcessFrame(void)
 
     glEnable(GL_DEPTH_CLAMP);
     this->RenderSkybox(true);
-    /*
+
             Shaders["grass"]->Use();
             this->SetUniforms(Shaders["grass"], glm::vec3(-512, 0, 512), glm::vec3(3,3,3), glm::quat(-1, 0, -1, 0) );
             grass.at(0).Render(Shaders["grass"]);
@@ -779,7 +793,7 @@ void Epsilon::ProcessFrame(void)
             Shaders["grass"]->Use();
             this->SetUniforms(Shaders["grass"], glm::vec3(-512, 0, 512), glm::vec3(1,1,1), glm::quat(-1, 0, -1, 0) );
             grass.at(1).Render(Shaders["grass"]);
-    */
+
     this->Render3D(Shaders["Main"]);
 
     glDisable(GL_DEPTH_CLAMP);

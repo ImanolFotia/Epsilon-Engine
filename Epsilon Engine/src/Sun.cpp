@@ -14,7 +14,7 @@ Sun::Sun()
 
     this->radius = 8.0;
 
-    this->height = -10.0;
+    this->height = 10.0;
 
     PrepareVAO();
 }
@@ -40,7 +40,7 @@ void Sun::Render(Shader*& shader)
 
 void Sun::Update()
 {
-    this->Position = glm::vec3(0,0,0) + glm::vec3(this->radius /** glm::cos(glfwGetTime()/10)*/, height /** glm::sin(glfwGetTime()/10)*/, this->radius /** glm::sin(glfwGetTime()/10)*/);
+    this->Position = glm::vec3(0,0,0) + glm::vec3(this->radius * glm::cos(0.8) /** glm::cos(glfwGetTime()/10)*/, height * glm::sin(1.0) /** glm::sin(glfwGetTime()/10)*/, this->radius * glm::sin(0.3) /** glm::sin(glfwGetTime()/10)*/);
     this->Direction = glm::normalize(this->Position - glm::vec3(0,0,0));
 }
 

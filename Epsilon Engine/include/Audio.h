@@ -40,7 +40,18 @@ namespace Audio {
 
     public:
 
-        void addAudioElement(std::shared_ptr<AudioElement>);
+        void addAudioElement(std::shared_ptr<AudioElement> element)
+        {
+            m_AudioElementsCollection.push_back(element);
+        }
+
+        void PlayAudio()
+        {
+            for(auto i : m_AudioElementsCollection)
+            {
+                i->Play();
+            }
+        }
 
         bool setMasterVolume(float);
         bool setMusicVolume(float);

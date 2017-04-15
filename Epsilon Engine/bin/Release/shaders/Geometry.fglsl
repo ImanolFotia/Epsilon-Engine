@@ -42,18 +42,18 @@ const float CosineA0 = Pi;
 const float CosineA1 = (2.0f * Pi) / 3.0f;
 const float CosineA2 = Pi * 0.25f;
 // scale for restored amount of lighting
-uniform float u_scaleFactor = 0.001;
+uniform float u_scaleFactor = 0.05;
 
 // coefficients of spherical harmonics and possible values
-vec3 u_L00 = vec3(2.18019, 1.70291, 1.2511);
-vec3 u_L1m1 = vec3(-0.270175, -0.183452, 0.220139);
-vec3 u_L10 = vec3(-5.07485e-008, 2.95473e-008, -1.27885e-008);
-vec3 u_L11 = vec3(-5.19708e-008, 2.85869e-008, 2.09197e-009);
-vec3 u_L2m2 = vec3(-6.61901e-009, -3.40227e-009, 3.20674e-009);
-vec3 u_L2m1 = vec3(2.11412e-008, 3.18673e-009, 1.86529e-009);
-vec3 u_L20 = vec3(0.207079, 0.00427602, -0.385601);
-vec3 u_L21 = vec3(-4.65641e-010, 3.45593e-011, -3.174e-010);
-vec3 u_L22 = vec3(0.358673, 0.00742685, -0.667871);
+vec3 u_L00 = vec3(1.39612, 1.64919, 1.86605);
+vec3 u_L1m1 = vec3(0.132936, 0.213117, 0.229061);
+vec3 u_L10 = vec3(0.0166772, 0.0122024, 0.0143346);
+vec3 u_L11 = vec3(0.0431105, 0.0464594, 0.0347415);
+vec3 u_L2m2 = vec3(0.0295467, 0.0366565, 0.0262763);
+vec3 u_L2m1 = vec3(-0.000187474, 0.00993374, 0.015035);
+vec3 u_L20 = vec3(0.138465, 0.132195, 0.111292);
+vec3 u_L21 = vec3(0.0224431, 0.0304701, 0.031113);
+vec3 u_L22 = vec3(0.205337, 0.202315, 0.17805);
 
 
 const float C1 = 0.429043;

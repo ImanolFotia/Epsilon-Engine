@@ -110,7 +110,7 @@ void PostProcess::SetupFramebuffer()
 */
 
     //PBR test
-    /*
+/*
     LightPositions.push_back(glm::vec3(-20, 12, -5));
     LightPositions.push_back(glm::vec3(-14, 12, -5));
     LightPositions.push_back(glm::vec3(-8, 12, -5));
@@ -148,6 +148,8 @@ void PostProcess::SetupFramebuffer()
     LightPositions.push_back(glm::vec3(-64, 12, 65));
     LightPositions.push_back(glm::vec3(-64, 12, 91));
     */
+
+    //int house
     LightPositions.push_back(glm::vec3(7.3, 11, -12));
     LightPositions.push_back(glm::vec3(3, 11, -35));
     LightPositions.push_back(glm::vec3(-30, 11, -23));
@@ -164,6 +166,25 @@ void PostProcess::SetupFramebuffer()
     LightPositions.push_back(glm::vec3(10, -3, -52));
     LightPositions.push_back(glm::vec3(-8, 24, -28));
 
+    //Sponza
+    /*
+    LightPositions.push_back(glm::vec3(12, 12, -4));
+    LightPositions.push_back(glm::vec3(12, 12, -26));
+    LightPositions.push_back(glm::vec3(-46, 12, -26));
+    LightPositions.push_back(glm::vec3(-46, 12, -4));
+
+    LightPositions.push_back(glm::vec3(-34, 22, -15));
+    LightPositions.push_back(glm::vec3(-23, 22, -15));
+    LightPositions.push_back(glm::vec3(-12, 22, -15));
+    LightPositions.push_back(glm::vec3(-3, 22, -15));
+    LightPositions.push_back(glm::vec3(-26, 10, -16));
+
+
+    LightPositions.push_back(glm::vec3(-36, 10, -16));
+    LightPositions.push_back(glm::vec3(-39, 36, -15));
+    LightPositions.push_back(glm::vec3(-4, 36, -15));
+    LightPositions.push_back(glm::vec3(-48, 13, -16));
+*/
 
 
 

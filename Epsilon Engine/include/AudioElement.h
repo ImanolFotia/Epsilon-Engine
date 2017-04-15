@@ -16,7 +16,7 @@ namespace Audio {
                 this->m_Direction = AudioDirection;
 
                 Audio::File::WAVfile SoundFile;
-                std::shared_ptr<char> data = (std::shared_ptr<char>) SoundFile.Load(fileName);
+                data = (std::shared_ptr<char>) SoundFile.Load(fileName);
 
                 alGenBuffers(1,&this->m_BufferID);
 
@@ -84,11 +84,18 @@ namespace Audio {
 
         }
 
-        ~AudioElement() {
-            //May crash the program in the future
+        void Destroy()
+        {
             std::cout << "Deleted AudioElement" << std::endl;
+            //char* tmpData = data.reset();
+            //delete tmpData;
+            //tmpData = nullptr;
             alDeleteSources(1, &m_AudioID);
             alDeleteBuffers(1, &m_BufferID);
+
+        }
+
+        ~AudioElement() {
         }
 
     public:
@@ -127,6 +134,7 @@ namespace Audio {
         int m_Channels;
         unsigned int m_Format;
         int m_BytesPerSecond;
+        std::shared_ptr<char> data;
 
         AUDIO_TYPE m_Type;
 

@@ -94,7 +94,7 @@ namespace Game
       */
     glm::vec3 Player::getPosition() {
         btVector3 pos = m_playerBody->getCenterOfMassPosition();
-        return glm::vec3(pos.getX(), pos.getY() + 3.0, pos.getZ());
+        return glm::vec3(pos.getX(), pos.getY() + 2.0, pos.getZ());
     }
 
     void Player::preStep()

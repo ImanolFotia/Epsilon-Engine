@@ -1,11 +1,11 @@
-#version 330
+#version 430 core
 
-
-layout(location = 0) out vec4 gAlbedoSpec;
+layout(location = 0) out vec3 gAlbedoSpec;
 layout(location = 1) out vec3 gPosition;
 layout(location = 2) out vec4 gExpensiveNormal;
 layout(location = 3) out float gDepth;
-layout(location = 4) out vec2 gExtraComponents;
+layout(location = 4) out vec4 gExtraComponents; 
+layout(location = 5) out vec3 gLightAccumulation;
 
 uniform sampler2D sampler;
 uniform sampler2D n_sampler;
@@ -28,17 +28,19 @@ void main()
 {
 	vec3 norm = normalize(Normal.rgb);
 	vec2 metallic_emissive = texture(m_sampler, TexCoords).xy;
-	gExtraComponents = metallic_emissive;
+	gExtraComponents.rg = metallic_emissive;
 
-	gAlbedoSpec.rgb = texture(sampler, TexCoords).rgb;
+  	gExtraComponents.zw = vec2(0.0);
 
-	gAlbedoSpec.a = texture(s_sampler, TexCoords).g;
+	gAlbedoSpec = texture(sampler, TexCoords).rgb;
 
 	gExpensiveNormal.rgb = normalize((texture(n_sampler, TexCoords).rgb * 2.0 - 1.0) * TBN);
 
-	gExpensiveNormal.a = texture(s_sampler, TexCoords).g;
+	gExpensiveNormal.a = texture(s_sampler, TexCoords).r;
 
-	gPosition.rgb = FragPos;
+	gPosition = FragPos;
 
   	gDepth = gl_FragCoord.z;
+
+  	gLightAccumulation = vec3(0.0);
 }

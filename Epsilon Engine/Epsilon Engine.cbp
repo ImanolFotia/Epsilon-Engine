@@ -126,6 +126,8 @@
 		<Unit filename="include/OpenGL/FrameBuffer.h" />
 		<Unit filename="include/OpenGL/HelperFunctions/FullScreenQuad.h" />
 		<Unit filename="include/OpenGL/RenderTarget.h" />
+		<Unit filename="include/OpenGL/VertexArrayObject.h" />
+		<Unit filename="include/OpenGL/VertexBufferObject.h" />
 		<Unit filename="include/Particle.h" />
 		<Unit filename="include/ParticleProxy.h" />
 		<Unit filename="include/ParticleSystem.h" />
@@ -158,6 +160,10 @@
 		<Unit filename="include/multithread/Job.h" />
 		<Unit filename="include/multithread/Mutex.h" />
 		<Unit filename="include/multithread/Thread.h" />
+		<Unit filename="include/renderer/DeferredRenderer.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="include/renderer/Renderer.h" />
 		<Unit filename="include/sys/CPUID.h" />
 		<Unit filename="include/sys/Joystick.h" />
 		<Unit filename="include/sys/KeyBoard.h" />

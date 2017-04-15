@@ -31,7 +31,10 @@ public:
     virtual ~CubeMap(){
         /*std::cout << "Deleted CubeMap" << std::endl;*/}
 
+    virtual void CaptureEnvironment(glm::vec3 pos)
+    {
 
+    }
 
     virtual glm::vec3 getPosition()
     {

@@ -56,17 +56,18 @@ void Camera::GetExternalInputs(void)
 
 void Camera::LockCamera(void)
 {
-    if(verticalAngle > 1.4208)
-        verticalAngle = 1.4208;
 
-    if(verticalAngle < -1.4508)
-        verticalAngle = -1.4508;
+    if(verticalAngle >= 1.5707)
+        verticalAngle = 1.5707;
 
-    if(horizontalAngle < -3.1416)
-        horizontalAngle = 3.1414;
+    if(verticalAngle <= -1.5707)
+        verticalAngle = -1.5707;
 
-    if(horizontalAngle>3.1416)
-        horizontalAngle = -3.1414;
+    if(horizontalAngle <= -3.1416)
+        horizontalAngle = 3.1416;
+
+    if(horizontalAngle >= 3.1416)
+        horizontalAngle = -3.1416;
 
 }
 
@@ -93,21 +94,22 @@ void Camera::HandleInputs(GLFWwindow*& window)
     //glfwGetCursorPos(window, &xpos , &ypos );
     //glfwSetCursorPos(window, winx/2.0, winy/2.0);
 
-    if(!Input::Joystick::JoystickIsPresent){
-    horizontalAngle += MouseSpeed * float( lastX - Input::Mouse::XPOS ) ;
-    verticalAngle   += MouseSpeed * float( lastY - Input::Mouse::YPOS ) ;
+    if(!Input::Joystick::JoystickIsPresent) {
+        horizontalAngle += MouseSpeed * float( lastX - Input::Mouse::XPOS ) ;
+        verticalAngle   += MouseSpeed * float( lastY - Input::Mouse::YPOS ) ;
 
-    lastX = Input::Mouse::XPOS;
-    lastY = Input::Mouse::YPOS;
+        lastX = Input::Mouse::XPOS;
+        lastY = Input::Mouse::YPOS;
 
     }
     else
     {
 
-    horizontalAngle -= JoystickSensibility * float( Input::Joystick::JoystickAxes[2] ) ;
-    verticalAngle   += JoystickSensibility * float( Input::Joystick::JoystickAxes[3] ) ;
+        horizontalAngle -= JoystickSensibility * float( Input::Joystick::JoystickAxes[2] ) ;
+        verticalAngle   += JoystickSensibility * float( Input::Joystick::JoystickAxes[3] ) ;
     }
 
+    LockCamera();
 
     Orientation = glm::vec3(
                       cos( verticalAngle )      *       sin( horizontalAngle ),
@@ -121,83 +123,82 @@ void Camera::HandleInputs(GLFWwindow*& window)
                 cos(horizontalAngle     -       3.14f/2.0f)
             );
 
-    LockCamera();
 
     Orientation = glm::normalize(Orientation);
 
     Up = glm::cross( Rigth , Orientation );
 
-/** Keyboard Camera input**/
-if(!Input::Joystick::JoystickIsPresent){
-    if ( Input::KeyBoard::KEYS[Input::GLFW::Key::W])
-    {
-        MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-        Position += Orientation   *     MovementSpeed      *   DeltaTime;
+    /** Keyboard Camera input**/
+    if(!Input::Joystick::JoystickIsPresent) {
+        if ( Input::KeyBoard::KEYS[Input::GLFW::Key::W])
+        {
+            MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
+            Position += Orientation   *     MovementSpeed      *   DeltaTime;
+        }
+
+        if ( Input::KeyBoard::KEYS[Input::GLFW::Key::S])
+        {
+            MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
+            Position -= Orientation   *     MovementSpeed      *   DeltaTime;
+        }
+
+        if ( Input::KeyBoard::KEYS[Input::GLFW::Key::D])
+        {
+            MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
+            Position += Rigth       *     MovementSpeed      *   DeltaTime;
+        }
+
+        if ( Input::KeyBoard::KEYS[Input::GLFW::Key::A])
+        {
+            MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
+            Position -= Rigth       *     MovementSpeed      *   DeltaTime;
+        }
+
+        if (!Input::KeyBoard::KEYS[Input::GLFW::Key::A] &&
+                !Input::KeyBoard::KEYS[Input::GLFW::Key::W] &&
+                !Input::KeyBoard::KEYS[Input::GLFW::Key::S] &&
+                !Input::KeyBoard::KEYS[Input::GLFW::Key::D] ) {
+            MovementSpeed = glm::mix(MovementSpeed, 0.0f, 2.0f * DeltaTime);
+
+        }
     }
+    /**---------------------------------------------------------------**/
 
-    if ( Input::KeyBoard::KEYS[Input::GLFW::Key::S])
-    {
-        MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-        Position -= Orientation   *     MovementSpeed      *   DeltaTime;
+    /** Joystick Camera input**/
+    if(Input::Joystick::JoystickIsPresent) {
+        if ( Input::KeyBoard::KEYS[Input::GLFW::Key::W] || Input::Joystick::JoystickAxes[1] > 0.0)
+        {
+            MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
+            Position += Orientation   *     MovementSpeed      *  DeltaTime *    (glm::abs(Input::Joystick::JoystickAxes[1] * 2));
+        }
+
+        if ( Input::KeyBoard::KEYS[Input::GLFW::Key::S] || Input::Joystick::JoystickAxes[1] < 0.0 )
+        {
+            MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
+            Position -= Orientation   *     MovementSpeed      *   DeltaTime * (glm::abs(Input::Joystick::JoystickAxes[1] * 2));
+        }
+
+        if ( Input::KeyBoard::KEYS[Input::GLFW::Key::D]  || Input::Joystick::JoystickAxes[0] > 0.0)
+        {
+            MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
+            Position += Rigth       *     MovementSpeed      *   DeltaTime * (glm::abs(Input::Joystick::JoystickAxes[0] * 2));
+        }
+
+        if ( Input::KeyBoard::KEYS[Input::GLFW::Key::A]  || Input::Joystick::JoystickAxes[0] < 0.0)
+        {
+            MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
+            Position -= Rigth       *     MovementSpeed      *   DeltaTime * (glm::abs(Input::Joystick::JoystickAxes[0] * 2));
+        }
+
+        if (!Input::KeyBoard::KEYS[Input::GLFW::Key::A] &&
+                !Input::KeyBoard::KEYS[Input::GLFW::Key::W] &&
+                !Input::KeyBoard::KEYS[Input::GLFW::Key::S] &&
+                !Input::KeyBoard::KEYS[Input::GLFW::Key::D] ) {
+            MovementSpeed = glm::mix(MovementSpeed, 0.0f, 2.0f * DeltaTime);
+
+        }
     }
-
-    if ( Input::KeyBoard::KEYS[Input::GLFW::Key::D])
-    {
-        MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-        Position += Rigth       *     MovementSpeed      *   DeltaTime;
-    }
-
-    if ( Input::KeyBoard::KEYS[Input::GLFW::Key::A])
-    {
-        MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-        Position -= Rigth       *     MovementSpeed      *   DeltaTime;
-    }
-
-    if (!Input::KeyBoard::KEYS[Input::GLFW::Key::A] &&
-        !Input::KeyBoard::KEYS[Input::GLFW::Key::W] &&
-        !Input::KeyBoard::KEYS[Input::GLFW::Key::S] &&
-        !Input::KeyBoard::KEYS[Input::GLFW::Key::D] ){
-        MovementSpeed = glm::mix(MovementSpeed, 0.0f, 2.0f * DeltaTime);
-
-    }
-}
-/**---------------------------------------------------------------**/
-
-/** Joystick Camera input**/
-if(Input::Joystick::JoystickIsPresent){
-    if ( Input::KeyBoard::KEYS[Input::GLFW::Key::W] || Input::Joystick::JoystickAxes[1] > 0.0)
-    {
-        MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-        Position += Orientation   *     MovementSpeed      *  DeltaTime *    (glm::abs(Input::Joystick::JoystickAxes[1] * 2));
-    }
-
-    if ( Input::KeyBoard::KEYS[Input::GLFW::Key::S] || Input::Joystick::JoystickAxes[1] < 0.0 )
-    {
-        MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-        Position -= Orientation   *     MovementSpeed      *   DeltaTime * (glm::abs(Input::Joystick::JoystickAxes[1] * 2));
-    }
-
-    if ( Input::KeyBoard::KEYS[Input::GLFW::Key::D]  || Input::Joystick::JoystickAxes[0] > 0.0)
-    {
-        MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-        Position += Rigth       *     MovementSpeed      *   DeltaTime * (glm::abs(Input::Joystick::JoystickAxes[0] * 2));
-    }
-
-    if ( Input::KeyBoard::KEYS[Input::GLFW::Key::A]  || Input::Joystick::JoystickAxes[0] < 0.0)
-    {
-        MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-        Position -= Rigth       *     MovementSpeed      *   DeltaTime * (glm::abs(Input::Joystick::JoystickAxes[0] * 2));
-    }
-
-    if (!Input::KeyBoard::KEYS[Input::GLFW::Key::A] &&
-        !Input::KeyBoard::KEYS[Input::GLFW::Key::W] &&
-        !Input::KeyBoard::KEYS[Input::GLFW::Key::S] &&
-        !Input::KeyBoard::KEYS[Input::GLFW::Key::D] ){
-        MovementSpeed = glm::mix(MovementSpeed, 0.0f, 2.0f * DeltaTime);
-
-    }
-}
-/** ------------------------------------------------------------------*/
+    /** ------------------------------------------------------------------*/
 
     LastTime = currentTime;
 
@@ -285,4 +286,14 @@ glm::vec3 Camera::setDirection(glm::vec3 newDirection)
 glm::mat4 Camera::getPrevViewMatrix()
 {
     return PrevView;
+}
+
+void Camera::setFoV(float FoV)
+{
+    this->FieldOfView = FoV;
+}
+
+void Camera::setProjection(float AR, float NEAR, float FAR)
+{
+    this->ProjectionMatrix = glm::perspective( glm::radians(FieldOfView) , AR , NEAR , FAR );
 }

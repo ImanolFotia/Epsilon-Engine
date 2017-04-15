@@ -139,7 +139,6 @@ public:
     std::unique_ptr<ShadowMap> shadowMap;
     std::unique_ptr<PostProcess> PP;
     std::vector<std::shared_ptr<EntityTemplate> > EntityList;
-    std::unique_ptr<Audio::AudioElement> m_AudioElement, m_AudioElement2;
     std::unique_ptr<Audio::Audio> m_AudioSystem;
     std::unique_ptr<Audio::AudioListener> m_AudioListener;
     std::shared_ptr<SphericalHarmonics> sphericalharmonics;

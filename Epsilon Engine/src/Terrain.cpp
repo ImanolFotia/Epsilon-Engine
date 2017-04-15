@@ -95,13 +95,13 @@ bool Terrain::GenerateGrid(unsigned char* pixels)
         for(int j = 0 ; j < this->height ; j++)
         {
             vert.Position.x = ((float)i + m_Position.x) * scale;
-            vert.Position.y = ((float)pixels[counter]/4) + m_Position.y;
+            vert.Position.y = ((float)pixels[counter]) + m_Position.y;
             vert.Position.z = ((float)j + m_Position.z) * scale;
             row.push_back(vert.Position.y);
             float fScaleC = float(j)/float(this->height-1);
             float fScaleR = float(i)/float(this->width-1);
-            vert.TexCoords.s = this->width*fScaleC/this->width*30;
-            vert.TexCoords.t = this->height*fScaleR/this->height*30;
+            vert.TexCoords.s = this->width*fScaleC/this->width*60;
+            vert.TexCoords.t = this->height*fScaleR/this->height*60;
             vertices.push_back(vert);
             counter++;
 
@@ -126,7 +126,7 @@ bool Terrain::GenerateGrid(unsigned char* pixels)
                 float HD = Grid.at(i).at(j-1);
                 float HU = Grid.at(i).at(j+1);
 
-                glm::vec3 norm = glm::vec3(HL - HR, 2.0f, HD - HU);
+                glm::vec3 norm = glm::normalize(glm::vec3(HL - HR, 2.0f, HD - HU));
 
                 Normals.push_back(norm);
             }

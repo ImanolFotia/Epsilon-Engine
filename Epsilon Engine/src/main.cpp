@@ -4,6 +4,8 @@
 ///
 ///=============================================================================
 
+#define WIN32_LEAN_AND_MEAN
+
 #include <iostream>
 #include <Shader.h>
 #include <SOIL.h>

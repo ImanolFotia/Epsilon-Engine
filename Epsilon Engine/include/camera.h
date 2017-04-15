@@ -47,6 +47,10 @@ public:
 
     glm::vec3 setDirection(glm::vec3 newDirection);
 
+    void setFoV(float FoV);
+
+    void setProjection(float AR, float NEAR, float FAR);
+
 private:
 
     void LockCamera(void);
