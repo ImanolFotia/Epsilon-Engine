@@ -24,9 +24,6 @@
 #include "Frustum.h"
 #include <ResourceManager.h>
 
-typedef char byte;
-
-
 struct tVector3i
 {
     int x, y, z;
@@ -63,7 +60,7 @@ struct tBSPVertex
     glm::vec2 vTextureCoord;
     glm::vec2 vLightmapCoord;
     glm::vec3 vNormal;
-    byte color[4];
+    char color[4];
 };
 
 
@@ -156,7 +153,7 @@ struct tBSPVisData
 {
 	int numOfClusters;
 	int bytesPerCluster;
-	byte *pBitsets;
+	char *pBitsets;
 };
 
 struct tBSPEntitie

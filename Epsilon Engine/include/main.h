@@ -81,7 +81,12 @@ GLFWwindow* InitEngine(const char* ProgramName)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    //glfwWindowHint(GLFW_DECORATED, GL_FALSE);
+
+    //glfwWindowHint(GLFW_RED_BITS, 16);
+    //glfwWindowHint(GLFW_GREEN_BITS, 16);
+    //glfwWindowHint(GLFW_BLUE_BITS, 16);
+    //glfwWindowHint(GLFW_DEPTH_BITS, 32);
+    glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 
     cout << "Creating window || Window Resolution: ";
     if(DATA.FULLSCREEN)

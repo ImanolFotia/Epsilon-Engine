@@ -115,6 +115,34 @@ Shader::Shader(const char* vertex, const char* fragment)
 
 void Shader::getUniformsLocations()
 {
+
+    // NOTE(Joey): query the number of active uniforms and attributes
+        int nrAttributes, nrUniforms;
+        glGetProgramiv(ProgramID, GL_ACTIVE_ATTRIBUTES, &nrAttributes);
+        glGetProgramiv(ProgramID, GL_ACTIVE_UNIFORMS, &nrUniforms);
+        //m_Attributes.resize(nrAttributes);
+        //m_Uniforms.resize(nrUniforms);
+
+        // NOTE(Joey): iterate over all active attributes
+        char buffer[128];
+        int Size;
+        for (unsigned int i = 0; i < nrAttributes; ++i)
+        {
+            GLenum glType;
+            glGetActiveAttrib(ProgramID, i, sizeof(buffer), 0, &Size, &glType, buffer);
+
+            this->m_Uniforms[std::string(buffer)] = glGetAttribLocation(ProgramID, buffer);
+        }
+
+        // NOTE(Joey): iterate over all active uniforms
+        for (unsigned int i = 0; i < nrUniforms; ++i)
+        {
+            GLenum glType;
+            glGetActiveUniform(ProgramID, i, sizeof(buffer), 0, &Size, &glType, buffer);
+
+            this->m_Uniforms[std::string(buffer)] = glGetUniformLocation(ProgramID, buffer);
+        }
+
     this->MVP_Location = glGetUniformLocation(this->ProgramID, "MVP");
     this->WorldTransform_Location = glGetUniformLocation(this->ProgramID, "model");
     this->Projection_Location = glGetUniformLocation(this->ProgramID, "projection");

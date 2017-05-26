@@ -2,15 +2,17 @@
 #include <PostProcess/Effect.h>
 
 namespace PostProcess {
-    class MotionBlur : public Effect
-    {
+
+    class MotionBlur : public Effect{
+
     public:
-        MotionBlur(int, int);
+        MotionBlur(int w, int h);
+
         ~MotionBlur() {}
 
-        virtual void ApplyEffect(GLuint, GLuint, double);
+        virtual GLuint Apply(GLuint, GLuint, double);
 
-        void Update(){}
+        virtual void Update(){}
 
     private:
         bool m_Activated;

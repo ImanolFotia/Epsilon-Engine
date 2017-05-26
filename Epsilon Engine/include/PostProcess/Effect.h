@@ -2,27 +2,29 @@
 #include <OpenGL/FrameBuffer.h>
 #include <OpenGL/HelperFunctions/FullScreenQuad.h>
 #include <Shader.h>
-
+#include <vector>
 #include <memory>
+#include <glm/glm.hpp>
+
 namespace PostProcess {
-    class Effect
-    {
+    class Effect{
+
     public:
-        Effect()
-        {
-            m_pFullScreenQuad = (std::shared_ptr<OpenGLHelpers::FullScreenQuad>) new OpenGLHelpers::FullScreenQuad();
-        }
 
-        virtual ~Effect() {}
+        Effect(int, int){}
 
-        virtual void ApplyEffect(){}
+        virtual ~Effect(){}
 
-        virtual void Update(){}
+        virtual GLuint Apply() = 0;
+
+        virtual void Update() = 0;
 
     protected:
 
         std::shared_ptr<FrameBuffer> m_pFrameBuffer;
         std::shared_ptr<OpenGLHelpers::FullScreenQuad> m_pFullScreenQuad;
         std::shared_ptr<Shader> m_pShader;
+        int m_Width;
+        int m_Height;
     };
 }

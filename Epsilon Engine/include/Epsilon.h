@@ -46,6 +46,13 @@
 #include <SphericalHarmonics.h>
 #include <Picking.h>
 #include <Log.h>
+#include <GUI/GUI.h>
+#include <sys/filesystem.h>
+#include <ParticleSystem.h>
+
+    static bool Running = true;
+    static void endgame(){Running = false;}
+
 class Epsilon
 {
 public:
@@ -143,9 +150,12 @@ public:
     std::unique_ptr<Audio::AudioListener> m_AudioListener;
     std::shared_ptr<SphericalHarmonics> sphericalharmonics;
     std::thread t1;
+    std::shared_ptr<ParticleSystem> m_ParticleSystem;
    // std::shared_ptr<Pick> m_Pick;
 
     std::shared_ptr<Game::Player> m_PlayerCapsule;
+    std::shared_ptr<GUI> m_GUI;
+    std::shared_ptr<Panel> m_Panel;
     /** Window Properties **/
     float xz[5][5];
     short WIDTH = 16;
@@ -153,8 +163,6 @@ public:
     bool SSAO = false;
     float timeBehind;
 private:
-    void endgame(){Running = false;}
-    bool Running = true;
     bool normal = 0;
     bool flashLight = 0;
     bool hdr = true;

@@ -150,6 +150,7 @@ void PostProcess::SetupFramebuffer()
     */
 
     //int house
+
     LightPositions.push_back(glm::vec3(7.3, 11, -12));
     LightPositions.push_back(glm::vec3(3, 11, -35));
     LightPositions.push_back(glm::vec3(-30, 11, -23));
@@ -186,10 +187,23 @@ void PostProcess::SetupFramebuffer()
     LightPositions.push_back(glm::vec3(-48, 13, -16));
 */
 
+    //g_test_0
+/*
+    LightPositions.push_back(glm::vec3(-7, 7, -3));
+    LightPositions.push_back(glm::vec3(7, 7, -3));
+    LightPositions.push_back(glm::vec3(14, 7, -3));
+    LightPositions.push_back(glm::vec3(47, 19, -20));
+    LightPositions.push_back(glm::vec3(47, 19, -3));
+    LightPositions.push_back(glm::vec3(47, 19, 14));
+    LightPositions.push_back(glm::vec3(76, 19, -20));
+    LightPositions.push_back(glm::vec3(76, 19, -3));
+    LightPositions.push_back(glm::vec3(76, 19, 14));
 
-
-
-
+    LightPositions.push_back(glm::vec3(97, 19, -3));
+    LightPositions.push_back(glm::vec3(58, 19, 6));
+    LightPositions.push_back(glm::vec3(58, 19, -10));
+    LightPositions.push_back(glm::vec3(-16, 9, -3));
+*/
     lensColor = (std::shared_ptr<eTexture>) new eTexture("effects/lenscolor.png", GL_REPEAT, GL_TEXTURE_1D);
     lensDirt = (std::shared_ptr<eTexture>) new eTexture("effects/lensdirt.png");
     lensStar = (std::shared_ptr<eTexture>) new eTexture("effects/lensstar.png");
@@ -203,45 +217,6 @@ void PostProcess::SetupFramebuffer()
             LightPositions.push_back(glm::vec3(-14, 16.63, 32.3));
             LightPositions.push_back(glm::vec3(80.5, 17.21, 1.57));
 */
-    /* MSAA buffer
-        glGenFramebuffers(1, &hdrFBO);
-        glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
-
-        GLuint textureColorBufferMultiSampled;
-        glGenTextures(1, &textureColorBufferMultiSampled);
-
-        glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, textureColorBufferMultiSampled);
-        glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, PG.MSAA_SAMPLES, GL_RGB16F, width, height, GL_TRUE);
-        glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, textureColorBufferMultiSampled, 0);
-
-        glGenRenderbuffers(1, &rboDepth);
-        glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
-        glGenerateMipmap(GL_TEXTURE_2D);
-        glRenderbufferStorageMultisample(GL_RENDERBUFFER, PG.MSAA_SAMPLES, GL_DEPTH24_STENCIL8, width, height);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
-        glBindRenderbuffer(GL_RENDERBUFFER, 0);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-        attachment_type = GL_RGB16F;
-        glGenTextures(1, &colorBuffer);
-        glBindTexture(GL_TEXTURE_2D, colorBuffer);
-        glTexImage2D(GL_TEXTURE_2D, 0, attachment_type, width, height, 0, GL_RGB, GL_FLOAT, NULL);
-        glGenerateMipmap(GL_TEXTURE_2D);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glBindTexture(GL_TEXTURE_2D, 0);
-
-        glGenFramebuffers(1, &intermediateFBO);
-        glBindFramebuffer(GL_FRAMEBUFFER, intermediateFBO);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer, 0);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    */
-
     hdrFBO = (std::shared_ptr<FrameBuffer>) new FrameBuffer(width, height, true);
 
     hdrFBO->addRenderTarget("colorBuffer", GL_RGB16F, GL_RGB, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, true);
@@ -412,7 +387,7 @@ void PostProcess::setupSSAO()
     }
 
     // Noise texture
-    for (GLuint i = 0; i < 16; i++)
+    for (GLuint i = 0; i < 64; i++)
     {
         glm::vec3 noise(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, 0.0f); // rotate around z-axis (in tangent space)
         ssaoNoise.push_back(noise);
@@ -456,7 +431,7 @@ void PostProcess::applySSAO(std::shared_ptr<Camera>& cam)
     glViewport(0,0,SSAOwidth, SSAOheight);
     this->RenderQuad();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0,0,width, height);
+    //glViewport(0,0,width, height);
 
 
     // 3. Blur SSAO texture to remove noise

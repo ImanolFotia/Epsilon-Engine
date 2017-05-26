@@ -96,7 +96,6 @@ Epsilon::Epsilon(GLFWwindow*& win)
 
     srand(time(NULL));
 
-
 }
 
 void Epsilon::RenderSplashScreen(string text)
@@ -111,10 +110,14 @@ void Epsilon::RenderSplashScreen(string text)
     this->text->RenderText(text,0.01, 0.83, 0.3, glm::vec3(1,1,1));
     this->SwapBuffers();
     texture.Destroy();
+
 }
 
 void Epsilon::InitResources(void)
 {
+
+
+
     cout << "Initializing Resources..." << endl;
 
     ProgramData DATA;
@@ -122,6 +125,17 @@ void Epsilon::InitResources(void)
     this->WIDTH = DATA.WINDOW_WIDTH;
     this->HEIGHT = DATA.WINDOW_HEIGHT;
     this->SSAO = DATA.SSAO;
+
+    m_GUI = (std::shared_ptr<GUI>) new GUI(this->WIDTH, this->HEIGHT);
+    std::shared_ptr<Container> t_Container = (std::shared_ptr<Container>) new Container();
+    std::shared_ptr<Panel> t_Panel = (std::shared_ptr<Panel>) new Panel(this->WIDTH, this->HEIGHT);
+    std::shared_ptr<Button> t_Button = (std::shared_ptr<Button>) new Button(0.5, 0.5, this->WIDTH, this->HEIGHT, "dfsdf");
+    t_Button->OnClickCallback(endgame);
+    t_Container->addWidget(t_Panel);
+    t_Container->addWidget(t_Button);
+    m_GUI->AddContainer(t_Container);
+
+    m_Panel = (std::shared_ptr<Panel>) new Panel(WIDTH, HEIGHT);
 
     text = std::move((unique_ptr<Text>)(new Text("resources/Prototype.ttf", DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT)));
 
@@ -199,6 +213,16 @@ void Epsilon::InitResources(void)
         for(int z=0; z<5; ++z)
             xz[x][z] = (rand()%30) - 15;
 
+    MINMAX_POINTS limits;
+    limits.MAX_X = 124.0;
+    limits.MIN_X = -200.0;
+    limits.MAX_Y = 300.0;
+    limits.MIN_Y = 0.0;
+    limits.MAX_Z = 100.0;
+    limits.MIN_Z = -300.0;
+
+    m_ParticleSystem = (std::shared_ptr<ParticleSystem>) new ParticleSystem();
+    m_ParticleSystem->addNewSystem(limits, RAIN, 5000);
 
     std::cout << "All Resources Initialized." << std::endl;
 }
@@ -227,6 +251,8 @@ void Epsilon::LoadShaders(void)
 
     Shaders["ForwardShader"] = new Shader("shaders/TransformVertexShader.vglsl", "shaders/TextureFragmentShader.fglsl");
 
+    Shaders["DefaultParticle"] = new Shader("shaders/defaultParticle.vglsl", "shaders/defaultParticle.fglsl");
+
     rM->requestShader("shaders/Geometry.vglsl", "shaders/Geometry.fglsl", "Main");
 }
 
@@ -234,8 +260,8 @@ void Epsilon::LoadGeometry(void)
 {
     cout << "Loading World Geometry..." <<endl;
     vector<glm::vec3> grasspos2;
-
-         terrain = (std::shared_ptr<Terrain>)new Terrain("materials/terrain.bmp", "sandydrysoil-albedo.png", "sandydrysoil-normal-ue.png", "sandydrysoil-roughness.png", "sandydrysoil-metalness.png", 20, 1, glm::vec3(-100.0, -50.0, -100),rM);
+/*
+         terrain = (std::shared_ptr<Terrain>)new Terrain("materials/Untitled.png", "sandydrysoil-albedo.png", "sandydrysoil-normal-ue.png", "sandydrysoil-roughness.png", "sandydrysoil-metalness.png", 3, 1, glm::vec3(0.0, -50.0, 0),rM);
 
 
 
@@ -249,7 +275,7 @@ void Epsilon::LoadGeometry(void)
                 else if(chance == 2)
                     grasspos2.push_back(terrain->vertices[i].Position + glm::vec3((rand()%6)-3, 3.5, (rand()%6)-3));
             }
-
+*/
     std::cout << "Resource manager in epsilon address: " << rM.get() << std::endl;
 
     rM->requestCubeMap(2, glm::vec3(0,0,0));
@@ -299,7 +325,7 @@ void Epsilon::LoadGeometry(void)
 
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "SSR.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "h_int_1.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 
@@ -338,13 +364,14 @@ void Epsilon::Render3D(Shader* shader)
 /*
         this->waterPlane->RenderWater(eCamera, PP->colorBuffer);
 */
-            shader->Use();
-            //Shaders["Terrain"]->Use();
-            this->SetUniforms(shader,glm::vec3(0, 0, 0), glm::vec3(1, 2, 1),  glm::quat(0, 0 ,0, 0));
-            terrain->RenderTerrain(shader);
+            //shader->Use();
+/*
+            Shaders["Terrain"]->Use();
+            this->SetUniforms(Shaders["Terrain"],glm::vec3(0, 0, 0), glm::vec3(1.0),  glm::quat(0, 0 ,0, 0));
+            terrain->RenderTerrain(Shaders["Terrain"]);
             glCullFace(GL_BACK);
 
-
+*/
 //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 //glLineWidth(2.0);
     for(int i =0; i < EntityList.size(); ++i)
@@ -453,13 +480,14 @@ void Epsilon::Render3D(Shader* shader)
 */
     glCullFace(GL_FRONT);
 
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glm::mat4 BSPmodel = glm::mat4();
     //glm::mat4 tmodel = glm::translate(glm::mat4(), glm::vec3(-30.0, 5.0, -120.0));
     glm::mat4 sModel = glm::scale(glm::mat4(), glm::vec3(0.1, 0.1, 0.1));
     BSPmodel = sModel;
     BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), BSPmodel);
     shader->Use();
-    this->SetUniforms(shader,  glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.1, 0.1, 0.1), glm::quat(0,0,0,0));
+    this->SetUniforms(shader,  glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.1), glm::quat(0,0,0,0));
     BSPMap->RenderLevel(eCamera->getPosition(), shader->getProgramID(), true);
 
     Shaders["MD5Geometry"]->Use();
@@ -542,6 +570,8 @@ void Epsilon::SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, 
 
 void Epsilon::Render2D(void)
 {
+    glDisable(GL_DEPTH_TEST);
+    m_GUI->Render();
     m_TextAcum += frametime;
     static float acumfps = 0.0;
     if(m_TextAcum > 0.5) {
@@ -583,9 +613,9 @@ void Epsilon::Render2D(void)
     //this->text->RenderText("On ground: " + std::string(m_PlayerCapsule->isOnGround() ? "YES" : "NO"),0.01, 0.79, 0.3, glm::vec3(1,1,1));/*
     //this->text->RenderText("Parallax Mapping: " + std::string(parallax ? "ON" : "OFF"),0.01, 0.83, 0.3, glm::vec3(1,1,1));*/
 
-
-
     this->text->RenderText("+", 0.5, 0.5, 1.0, glm::vec3(1,1,1));
+
+    glEnable(GL_DEPTH_TEST);
 
 }
 
@@ -644,9 +674,7 @@ void Epsilon::PollEvents(void)
 
     if(Input::KeyBoard::KEYS[Input::GLFW::Key::ESCAPE])
     {
-
-        endgame();
-
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 
     if(Input::KeyBoard::KEYS[Input::GLFW::Key::N])
@@ -689,7 +717,7 @@ void Epsilon::PollEvents(void)
         */
     m_PlayerCapsule->CheckforPicking(btVector3(eCamera->getPosition().x, eCamera->getPosition().y, eCamera->getPosition().z),
                                      btVector3(eCamera->getDirection().x*1000, eCamera->getDirection().y*1000, eCamera->getDirection().z*1000));
-    //m_GUI->PollEvents(window);
+    m_GUI->PollEvents(window);
 }
 
 void Epsilon::MainLoop(void)
@@ -704,14 +732,13 @@ void Epsilon::MainLoop(void)
 
         this->ComputeCamera();
 
-        this->ProcessAudio();
+        //this->ProcessAudio();
 
         timeBehind += etime - lastTime;
 
         while( timeBehind >= 0.016 )
         {
             // Update the game.
-
             rM->m_PhysicsWorld->Update(0.016);
             // Every time we update, we subtract a timestep from the amount we are behind.
             timeBehind -= 0.016;
@@ -722,9 +749,9 @@ void Epsilon::MainLoop(void)
         this->ProcessFrame();
 
         this->RenderFrame();
-
+/*
         this->Render2D();
-
+*/
         this->SwapBuffers();
     }
 }
@@ -745,7 +772,7 @@ void Epsilon::ComputeCamera()
 {
     this->eCamera->Update(this->window);
 
-    if(0)
+    if(1)
     {
         m_PlayerCapsule->preStep();
         m_PlayerCapsule->Movement(this->eCamera, frametime);
@@ -785,7 +812,7 @@ void Epsilon::ProcessFrame(void)
 
     glEnable(GL_DEPTH_CLAMP);
     this->RenderSkybox(true);
-
+/*
             Shaders["grass"]->Use();
             this->SetUniforms(Shaders["grass"], glm::vec3(-512, 0, 512), glm::vec3(3,3,3), glm::quat(-1, 0, -1, 0) );
             grass.at(0).Render(Shaders["grass"]);
@@ -793,7 +820,7 @@ void Epsilon::ProcessFrame(void)
             Shaders["grass"]->Use();
             this->SetUniforms(Shaders["grass"], glm::vec3(-512, 0, 512), glm::vec3(1,1,1), glm::quat(-1, 0, -1, 0) );
             grass.at(1).Render(Shaders["grass"]);
-
+*/
     this->Render3D(Shaders["Main"]);
 
     glDisable(GL_DEPTH_CLAMP);
@@ -813,4 +840,13 @@ void Epsilon::RenderFrame(void)
     glDisable(GL_DEPTH_CLAMP);
     PP->ShowPostProcessImage(this->frametime, shadowMap->getShadowTextureID(), this->sun->Direction, this->eCamera);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+/*
+    glDisable(GL_DEPTH_TEST);
+    m_ParticleSystem->Simulate(this->frametime, this->eCamera->getPosition());
+    Shaders["DefaultParticle"]->Use();
+    glUniform3f(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "cameraRight"),  eCamera->getRight().x, eCamera->getRight().y, eCamera->getRight().z);
+    glUniform3f(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "cameraUp"),  eCamera->getUp().x, eCamera->getUp().y, eCamera->getUp().z);
+    this->SetUniforms(Shaders["DefaultParticle"], glm::vec3(-512, 0, 512), glm::vec3(3,3,3), glm::quat(-1, 0, -1, 0) );
+    m_ParticleSystem->Render();
+    glEnable(GL_DEPTH_TEST);*/
 }

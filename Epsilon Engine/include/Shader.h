@@ -10,6 +10,7 @@
 #include <GL/glew.h>
 #include <string>
 #include <iostream>
+#include <unordered_map>
 
 class Shader {
 public:
@@ -49,6 +50,9 @@ public:
 private:
     GLuint ProgramID;
     std::string Path;
+
+    std::unordered_map<std::string, GLuint> m_Attributes;
+    std::unordered_map<std::string, GLuint> m_Uniforms;
 
     void getUniformsLocations();
 

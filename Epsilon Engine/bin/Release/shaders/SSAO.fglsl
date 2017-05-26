@@ -16,7 +16,7 @@ uniform float width;
 uniform float height;
 
 // tile noise texture over screen based on screen dimensions divided by noise size
-vec2 noiseScale = vec2(width*4.0f, height*4.0f);
+vec2 noiseScale = vec2(width*8.0f, height*8.0f);
 
 uniform mat4 projection;
 uniform mat4 invprojection;

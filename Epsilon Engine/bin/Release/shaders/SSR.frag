@@ -1,4 +1,5 @@
-#version 400 core
+
+#version 440 core
 
 uniform sampler2D gFinalImage;
 uniform sampler2D gPosition;
@@ -43,13 +44,13 @@ vec3 hash(vec3 a);
 void main()
 {
 
-    vec2 MetallicEmmissive = texture2D(gExtraComponents, TexCoords).rg;
+    vec2 MetallicEmmissive = texture(gExtraComponents, TexCoords).rg;
     Metallic = MetallicEmmissive.r;
 
     if(Metallic < 0.01)
         discard;
  
-    vec3 viewNormal = vec3(texture2D(gNormal, TexCoords) * invView);
+    vec3 viewNormal = vec3(texture(gNormal, TexCoords) * invView);
     vec3 viewPos = textureLod(gPosition, TexCoords, 2).xyz;
     vec3 albedo = texture(gFinalImage, TexCoords).rgb;
 

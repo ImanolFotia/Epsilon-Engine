@@ -14,18 +14,17 @@ public:
     virtual ~ParticleSystem(){
         std::cout << "Deleted ParticleSystem" << std::endl;}
 
+    void addNewSystem(MINMAX_POINTS, PARTICLE_PROXY, unsigned int);
+
     void UpdateParticleSystem();
 
     void Render();
 
-    void UpdateParticles();
+    void Simulate(float, glm::vec3);
 
 private:
 
-    void m_Sort();
 
-    void m_Simulate();
-
-    std::vector<ParticleProxy> m_ParticleProxyContainer;
+    std::vector<std::shared_ptr<ParticleProxy> > m_ParticleProxyContainer;
 };
 

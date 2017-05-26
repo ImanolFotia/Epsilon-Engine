@@ -27,10 +27,10 @@ void main()
 {
 
     vec4 diff = texture(grassTex, UV);
-
+/*
     if(diff.a < 0.3)
         discard;
-
+*/
     gAlbedoSpec.rgb = diff.rgb;
     gPosition = FragPos;
     gExpensiveNormal.rgb = vec3(0,1,0);

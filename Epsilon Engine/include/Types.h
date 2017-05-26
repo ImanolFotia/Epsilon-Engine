@@ -30,7 +30,6 @@ typedef unsigned char   BYTE;
 typedef int             INT;
 typedef int             INTEGER;
 typedef unsigned int    UINT;
-typedef float           DECIMAL;
 typedef short           SHORT;
 typedef unsigned short  USHORT;
 
@@ -55,6 +54,13 @@ enum class PHYSIC_SHAPE
     PHYSICS_CONE_SHAPE = CONE_SHAPE_PROXYTYPE,
     PHYSICS_CYLINDER_SHAPE = CYLINDER_SHAPE_PROXYTYPE,
     PHYSICS_TRIANGLEMESH_SHAPE = TRIANGLE_MESH_SHAPE_PROXYTYPE
+};
+
+enum PARTICLE_PROXY
+{
+    RAIN = 0,
+    MIST,
+    SNOW,
 };
 
 /**Enums*/
@@ -118,6 +124,14 @@ enum MATERIAL
     OREO
 };
 }
+
+struct GUIEVENTS
+{
+    double MousePosition[2];
+    bool KeyPressed[256];
+    bool RightClickWasPressed;
+    bool LeftClickWasPressed;
+};
 
 
 #endif /// TYPES_H_INCLUDED

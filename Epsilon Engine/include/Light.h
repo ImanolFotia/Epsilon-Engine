@@ -15,7 +15,7 @@
 class Light{
 
 public:
-    Light(BYTE type, glm::vec3 direction, glm::vec3 position, DECIMAL radius, DECIMAL quadratic, DECIMAL linear, DECIMAL constant)
+    Light(BYTE type, glm::vec3 direction, glm::vec3 position, float radius, float quadratic, float linear, float constant)
     {
         this->type = type;
         this->direction = direction;
@@ -45,22 +45,22 @@ public:
         return this->position;
     }
 
-    DECIMAL getRadius()
+    float getRadius()
     {
         return this->radius;
     }
 
-    DECIMAL getQuadratic()
+    float getQuadratic()
     {
         return this->quadratic;
     }
 
-    DECIMAL getLinear()
+    float getLinear()
     {
         return this->linear;
     }
 
-    DECIMAL getConstant()
+    float getConstant()
     {
         return this->constant;
     }
@@ -82,22 +82,22 @@ public:
         this->position = newPosition;
     }
 
-    void setRadius(DECIMAL newRadius)
+    void setRadius(float newRadius)
     {
         this->radius = newRadius;
     }
 
-    void setQuadratic(DECIMAL newQuadratic)
+    void setQuadratic(float newQuadratic)
     {
         this->quadratic = newQuadratic;
     }
 
-    void setLinear(DECIMAL newLinear)
+    void setLinear(float newLinear)
     {
         this->linear = newLinear;
     }
 
-    void setConstant(DECIMAL newConstant)
+    void setConstant(float newConstant)
     {
         this->constant = newConstant;
     }
@@ -110,13 +110,13 @@ private:
 
     glm::vec3 position;
 
-    DECIMAL radius;
+    float radius;
 
-    DECIMAL quadratic;
+    float quadratic;
 
-    DECIMAL linear;
+    float linear;
 
-    DECIMAL constant;
+    float constant;
 
 
 };

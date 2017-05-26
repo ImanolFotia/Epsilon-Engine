@@ -290,14 +290,15 @@ void main()
     //light += calculatePointPBR(viewPos);
 
     //light += irradiance * vec3(ExtraComponents.r) * kS;
-    light += ((irradiance * Diffuse) * kD);
+    //light += ((irradiance * Diffuse) * kD);
+    //light += ambient;
     
     if(hdr)
     light *= AmbientOcclusion;
 
     vec3 fogColor = mix(SkyColor0, SkyColor1, lightDir.y);
 
-    FragColor.rgb = Normal;//mix(SkyColor, light, visibility);
+    FragColor.rgb = mix(SkyColor, light, visibility);
     vec3 testHDR = FragColor.rgb;
     float brightness = dot(testHDR.rgb /** ((exposure - 3.0) <= 0 ? 1.0 : (exposure - 3.0))*/, vec3(0.2126, 0.7152, 0.0722));
 
@@ -388,7 +389,7 @@ vec3 calculatePointPBR(vec3 pos)
         //float distance    = length(pos - FragPos);
         float distance = length(pos - FragPos);
         attenuation = calculateAttenuation(100, distance);//1.0 / (1.0 + 0.1/*factor*/ * pow(distance, 2));
-        attenuation *= smoothstep(20.0, 15.0, distance);
+        attenuation *= smoothstep(40.0, 35.0, distance);
         vec3 radiance     = vec3(1.0) * attenuation;        
         
         // cook-torrance brdf
@@ -402,7 +403,7 @@ vec3 calculatePointPBR(vec3 pos)
         // add to outgoing radiance Lo
         float NdotL = max(dot(Normal, L), 0.0); //max(orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.03, 1.0), 1.0), 0.0);//               
         vec3 Lo = (kD * Diffuse / PI + brdf) * radiance * NdotL; 
-        return Lo * normalize(vec3(205, 109, 39));
+        return Lo /* normalize(vec3(205, 109, 39))*/;
 }
 
 float calculateAttenuation(float power, float distance)

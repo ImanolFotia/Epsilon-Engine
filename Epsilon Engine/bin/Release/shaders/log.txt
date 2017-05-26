@@ -1,0 +1,7 @@
+Initializing Epsilon Engine
+OpenGL VENDOR: NVIDIA Corporation
+Video RENDERER: GeForce GTX 970/PCIe/SSE2
+OpenGL VERSION: 4.5.0 NVIDIA 378.92
+CPU Manufacturer: GenuineIntel
+Number of Threads: 8
+Endianness: Little-Endian

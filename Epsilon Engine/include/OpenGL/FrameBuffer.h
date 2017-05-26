@@ -114,6 +114,8 @@ public:
             return false;
         }
         this->unbindFramebuffer();
+
+        return true;
     }
 
     bool Destroy()

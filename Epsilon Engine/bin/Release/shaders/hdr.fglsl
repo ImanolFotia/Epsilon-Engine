@@ -106,6 +106,34 @@ vec3 changeSaturation(vec3 color, float saturation)
     float weight = 0.3; 
 const float SAMPLES = 20.; 
 
+#define PI 3.14159265359
+
+vec3 Bokeh(vec2 uv, float rad, float thres, float mult)
+{
+    vec3 col = vec3(0.0), res = vec3(0.0);
+    float r = 1.0;
+    
+    vec2 pixelSize = 1.0 / Resolution.xy;
+    float i = 0.0;
+    for(i = 0.0001; i < PI*2.0; i+=PI*0.0314)
+    {       
+        r += (1.0/r);
+        
+        vec2 disk = vec2(sin(i*10.0)*(1.0-r), cos(i*10.0)*(1.0-r)) * rad;
+        
+        col = texture(sampler, uv + pixelSize * disk, 2.0).rgb;
+        
+        res += col;
+        //res2 += pow(col, vec3(5.0))*30.0;
+        
+    }
+    
+    //res = res + res2/(i+0.000001)*.1;
+    
+    return min(max(res/(i+0.000001)*0.1, 0.000001), 50.0);
+    
+}
+
 void main()
 {
 
@@ -117,15 +145,16 @@ void main()
     vec3 distortion = vec3(-texelSize.x * uDistortion, 0.0, texelSize.x * uDistortion);
    
    // sample ghosts:  
-      vec4 result = vec4(0.0);
-      for (int i = 0; i < uGhosts; ++i) { 
+    vec4 result = vec4(0.0);
+    for (int i = 0; i < uGhosts; ++i) { 
         vec2 offset = fract(texcoord + ghostVec * float(i));
         float weight = length(vec2(0.5) - offset) / length(vec2(0.5));
         weight = pow(1.0 - weight, 10.0);
   
         result += texture(blurredSampler, offset);
-      }
-      result *= texture(uLensColor, length(vec2(0.5) - texcoord) / length(vec2(0.5)));
+    }
+    
+    result *= texture(uLensColor, length(vec2(0.5) - texcoord) / length(vec2(0.5)));
 
     vec4 lensMod = texture(uLensDirtTex, TexCoords);
     lensMod += texture(uLensStarTex, TexCoords);
@@ -141,23 +170,31 @@ void main()
     vec4 col = vec4(0.0);
     vec4 LightColor = vec4(218, 205, 118, 1.0);
     vec4 pos = projection * choppedView * vec4(sunPos, 1.0f);
-    if(pos.x > 1.0 || pos.x < -1.0 || pos.y > 1.0 || pos.y < -1.0 || pos.z < 0.0 || sunPos.y < 0.0 || !lightShafts){ col = vec4(0.0);} else{
-    vec3 l = vec3(pos.xy, 1.0);//lOff();
-    vec2 tuv =  fragcoord - .5 - l.xy*.45;
-    vec2 dTuv = tuv*density/SAMPLES;
-    col = texture(brightColorBuffer, fragcoord.xy)*0.25;
-    fragcoord += dTuv*(hash(fragcoord.xy));
 
-       for(float i=0.; i < SAMPLES; i++){
+    if(pos.x > 1.0 || pos.x < -1.0 || pos.y > 1.0 || pos.y < -1.0 || pos.z < 0.0 || sunPos.y < 0.0 || !lightShafts){ 
+        col = vec4(0.0);
+    } else {
+
+        vec3 uvp = pos.rgb / pos.w;
+        vec2 deltaTextCoord = vec2( (fragcoord-.5) - uvp.xy*0.5 );
+        vec2 textCoo = fragcoord;
+        deltaTextCoord *= 1.0 /  float(SAMPLES) * density;
+        float illuminationDecay = 1.0;
     
-        fragcoord -= dTuv;
-        col += texture2D(brightColorBuffer, fragcoord) * weight;
-        weight *= decay;
-        
+        textCoo += deltaTextCoord*hash(textCoo);
+
+        for(int i=0; i < SAMPLES ; i++)
+        {
+                 textCoo -= deltaTextCoord;
+                 vec4 sample = texture2D(brightColorBuffer, textCoo );
+            
+                 sample *= illuminationDecay * weight;
+
+                 col += sample;
+
+                 illuminationDecay *= decay;
+         }
     }
-    col *= (1. - dot(tuv, tuv)*.75);
-    col = smoothstep(0., 1., col);
-}
 
     col = mix(col, vec4(0.0), length(vec2(0.0) - pos.xy));
     col = vec4(clamp(col.x, 0.0, 1.0), clamp(col.y, 0.0, 1.0), clamp(col.z, 0.0, 1.0), col.w) * 0.25 * normalize(vec4(205, 109, 39, 1.0));
@@ -165,9 +202,11 @@ void main()
     fragcoord = gl_FragCoord.xy/Resolution;
     float vignete = 1.0 - smoothstep(0.9, 1.75, length(vec2(0.0) - (fragcoord * 2.0 - 1.0)));
 
+    //hdrColor = Bokeh(TexCoords, 0.5, .10, 1.0);
+
     //hdrColor = changeSaturation(hdrColor, .3);
 
-    color.rgb  = (HDR2((hdrColor + col.rgb + bloom + (result.rgb * lensMod.rgb*5)+ clamp(SSR.rgb, 0.0, 1.0) )  )) * vignete;
+    color.rgb  = (HDR2((hdrColor + col.rgb /*+ bloom*/ + (result.rgb * lensMod.rgb*5)+ clamp(SSR.rgb, 0.0, 1.0) )  )) * vignete;
 
     
 

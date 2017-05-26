@@ -146,9 +146,9 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
             fread(&(m_clusters.bytesPerCluster), 1, sizeof(int), fp);
 
             int size = m_clusters.numOfClusters * m_clusters.bytesPerCluster;
-            m_clusters.pBitsets = new byte [size];
+            m_clusters.pBitsets = new char [size];
 
-            fread(m_clusters.pBitsets, 1, sizeof(byte) * size, fp);
+            fread(m_clusters.pBitsets, 1, sizeof(char) * size, fp);
         }
         else
             m_clusters.pBitsets = NULL;
@@ -354,7 +354,7 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
 
             distance =	plane.vNormal.x * vPos.x +
                         plane.vNormal.y * vPos.y +
-                        plane.vNormal.z * vPos.z - plane.d/10;
+                        plane.vNormal.z * vPos.z - plane.d*0.1f;
 
             if(distance >= 0)
             {
@@ -373,7 +373,7 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
     {
         if(!m_clusters.pBitsets || current < 0) return 1;
 
-        byte visSet = m_clusters.pBitsets[(current*m_clusters.bytesPerCluster) + (test / 8)];
+        char visSet = m_clusters.pBitsets[(current*m_clusters.bytesPerCluster) + (test / 8)];
 
         int result = visSet & (1 << ((test) & 7));
 

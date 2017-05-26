@@ -1,53 +1,41 @@
 #pragma once
 
-#include <Widget.h>
+#include <GUI/Widget.h>
+#include <OpenGL/HelperFunctions/Quad.h>
+#include <iostream>
+#include <glm/glm.hpp>
 
 class Panel : public Widget
 {
 public:
-    Panel() {
-        m_Shader = (std::shared_ptr<Shader>) new Shader("", "");
+    Panel(const int winWidth, const int winHeight) : m_winWidth(winWidth), m_winHeight(winHeight) {
+        m_Quad = (std::shared_ptr<OpenGLHelpers::Quad>) new OpenGLHelpers::Quad(400, 720);
+
+        projection = glm::ortho(0.0f, static_cast<GLfloat>(m_winWidth), 0.0f, static_cast<GLfloat>(m_winHeight));
     }
+
     ~Panel() {}
 
-    virtual Render(void) {
-        if (quadVAO == 0)
-        {
-            GLfloat quadVertices[] =
-            {
-                // Positions         //Texture Coords
-                -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-                -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-                1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-                1.0f, -1.0f, 0.0f, 1.0f, 0.0f
-            };
-            // Setup plane VAO
-            glGenVertexArrays(1, &quadVAO);
-            glGenBuffers(1, &quadVBO);
-            glBindVertexArray(quadVAO);
-            glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-            glEnableVertexAttribArray(0);
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
-            glEnableVertexAttribArray(1);
-            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-        }
-        m_Shader->Use();
-        glBindVertexArray(quadVAO);
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-        glBindVertexArray(0);
-        m_Shader->Free();
+    void Render(std::shared_ptr<Shader> shader) {
+        shader->Use();
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glUniform2f(glGetUniformLocation(shader->getProgramID(), "Position"), 200.0, 360);
+        glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "projection"), 1, GL_FALSE, &projection[0][0]);
+        m_Quad->Render();
+        shader->Free();
     }
 
-    virtual Update(void) {}
+    void Update(void) {}
 
 private:
     float m_Opacity;
     float m_Width;
     float m_Height;
+    float m_winWidth;
+    float m_winHeight;
 
-    GLuint quadVAO;
-    GLuint quadVBO;
+    std::shared_ptr<OpenGLHelpers::Quad> m_Quad;
 
-    std::shared_ptr<> m_Shader;
+    glm::mat4 projection;
 };
