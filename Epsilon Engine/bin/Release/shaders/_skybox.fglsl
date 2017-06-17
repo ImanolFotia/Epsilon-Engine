@@ -81,9 +81,9 @@ void main()
 
     vec3 SkyColor = mix(Orange, Background, scatteringFactor);
 
-	vec3 TimeColor = mix(Gray, SkyColor, clamp(LightDirection.y, 0.0, 1.0));
+	vec3 TimeColor = mix(Gray, SkyColor, /*clamp(LightDirection.y, 0.0, 1.0)*/ 0.0);
 
-	vec3 color = mix(TimeColor, vec3(2.0), clamp(pow(Clouds.x, 2.0), 0.0, 1.0)) * clamp(LightDirection.y, 0.1, 0.5);
+	vec3 color = mix(TimeColor, vec3(2.0), clamp(pow(Clouds.x, 2.0), 0.0, 1.0)) * 0.2 /** clamp(LightDirection.y, 0.1, 0.5)*/;
 
 	FragColor.rgb = /*vec3(clamp((1-Clouds.x), 0.0, 1.0)*0.1);*/color;
     FragColor.a = 1.0;

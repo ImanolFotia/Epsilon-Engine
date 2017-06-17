@@ -55,11 +55,16 @@ public:
     */
     void ShowPostProcessImage(float exposure, GLuint, glm::vec3 Sun, std::shared_ptr<Camera>& cam);
 
+    GLuint getSceneTexture()
+    {
+        return hdrFBO->getRenderTargetHandler("colorBuffer");
+    }
+
 public:
 
     GLuint colorBuffer;
     GLuint depthBuffer;
-    std::shared_ptr<FrameBuffer> hdrFBO;
+    std::shared_ptr<FrameBuffer<std::string> > hdrFBO;
     std::unique_ptr<Shader> shader;
 
     float m_exposure;
@@ -136,6 +141,7 @@ private:
     void setupPingPongSSR();
 
     GLuint GetPixel(GLuint);
+
 private:
     GLuint SSAOwidth;
     GLuint SSAOheight;

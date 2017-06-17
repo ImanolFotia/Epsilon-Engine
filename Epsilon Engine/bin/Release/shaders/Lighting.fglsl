@@ -290,7 +290,7 @@ void main()
     //light += calculatePointPBR(viewPos);
 
     //light += irradiance * vec3(ExtraComponents.r) * kS;
-    //light += ((irradiance * Diffuse) * kD);
+    light += ((irradiance * Diffuse) * kD);
     //light += ambient;
     
     if(hdr)
@@ -362,7 +362,7 @@ vec3 calculatePoint(vec3 LightPos)
 vec3 CalculateDirectionalPBR()
 {
     // calculate per-light radiance
-        vec3 lightcolor = normalize(vec3(205, 109, 39));
+        vec3 lightcolor = vec3(0.3);//normalize(vec3(205, 109, 39));
         vec3 V = normalize(viewPos - FragPos);
         vec3 L = normalize(lightDir);
         vec3 H = normalize(V + L);  

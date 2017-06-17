@@ -21,7 +21,7 @@ Camera::Camera(glm::vec3 cPosition, glm::vec3 cOrientation)
 {
     this->Orientation = glm::vec3(cOrientation);
     this->Position = glm::vec3(cPosition);
-    this->FieldOfView = 75.0f;
+    this->FieldOfView = 90.0f;
     this->MovementSpeed = 0.0f;
     this->MouseSpeed = 0.002f;
     this->JoystickSensibility = 0.05f;
@@ -293,7 +293,17 @@ void Camera::setFoV(float FoV)
     this->FieldOfView = FoV;
 }
 
-void Camera::setProjection(float AR, float NEAR, float FAR)
+void Camera::setProjection(float FOV, float AR, float NEAR, float FAR)
 {
-    this->ProjectionMatrix = glm::perspective( glm::radians(FieldOfView) , AR , NEAR , FAR );
+    this->ProjectionMatrix = glm::perspective( glm::radians(FOV) , AR , NEAR , FAR );
+}
+
+void Camera::setProjection(glm::mat4 newProj)
+{
+    this->ProjectionMatrix = newProj;
+}
+
+void Camera::setViewMatrix(glm::mat4 newView)
+{
+    this->ViewMatrix = newView;
 }

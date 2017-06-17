@@ -29,7 +29,7 @@ namespace PostProcess {
         GLuint noiseTexture;
         std::vector<glm::vec3> ssaoKernel;
         std::shared_ptr<Shader> blurShader;
-        std::shared_ptr<FrameBuffer> m_pFrameBufferBlur;
+        std::shared_ptr<FrameBuffer<std::string> > m_pFrameBufferBlur;
         std::vector<glm::vec3> ssaoNoise;
 
 

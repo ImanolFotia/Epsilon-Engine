@@ -27,7 +27,7 @@ using namespace std;
 #include <camera.h>
 class ResourceManager;
 
-typedef struct MIN_MAX_POINTS
+struct MIN_MAX_POINTS
 {
     float MAX_X;
     float MAX_Y;
@@ -75,7 +75,7 @@ public:
 
     void Destroy()
     {
-        for(int i = 0; i < meshes.size(); ++i)
+        for(unsigned i = 0; i < meshes.size(); ++i)
             meshes[i].Destroy();
     }
 
@@ -108,7 +108,7 @@ public:
     vector<Texture> textures_loaded;
 
     /// Structure to store the models bounding box for visibility and collision computation
-    typedef struct BOUNDING_BOX
+    struct BOUNDING_BOX
     {
         float FRONT_TOP_LEFT;
         float FRONT_TOP_RIGHT;

@@ -6,6 +6,10 @@
 #include <random>
 #include <Types.h>
 #include <chrono>
+#include <Texture.h>
+#include <atomic>
+#include <thread>
+
 class ParticleProxy {
 public:
     ParticleProxy(unsigned int id, MINMAX_POINTS limits, double numparts) : ID(id), ParticlesLimits(limits), m_NumParticles(numparts) {}
@@ -23,27 +27,15 @@ public:
     std::shared_ptr<ParticleRenderer> m_ParticleRenderer;
 
 private:
-        std::random_device rd;
-        std::default_random_engine generator;
 protected:
 
+    std::random_device rd;
+    std::default_random_engine generator;
     MINMAX_POINTS ParticlesLimits;
     unsigned int ID;
-    std::vector<std::shared_ptr<Particle> > Particles;
+    //std::vector<Particle> Particles;
 
 protected:
-
-    void calculateDistancetoCamera(glm::vec3 camPosition)
-    {
-        for(auto p: Particles)
-        {
-            p->setDistancetoCamera(glm::length(p->getPosition() - camPosition));
-        }
-    }
-
-    void sortParticles() {
-        std::sort(Particles.begin(), Particles.end());
-    }
 
     glm::vec3 GenerateRandomParticle() {
 
@@ -59,30 +51,7 @@ protected:
                );
     }
 
-    void InitializeProxy() {
-
-        std::uniform_real_distribution<GLfloat> HorizonalLimit(ParticlesLimits.MIN_X, ParticlesLimits.MAX_X);
-        std::uniform_real_distribution<GLfloat> VerticalLimit(ParticlesLimits.MIN_Y, ParticlesLimits.MAX_Y);
-        std::uniform_real_distribution<GLfloat> ZLimit(ParticlesLimits.MIN_Z, ParticlesLimits.MAX_Z);
-        generator.seed(std::chrono::system_clock::now().time_since_epoch().count());
-
-        for(int i = 0; i < m_NumParticles; i++) {
-
-            glm::vec3 CurrentParticlePosition(
-                HorizonalLimit  (generator),
-                VerticalLimit   (generator),
-                ZLimit          (generator)
-            );
-
-            Particles.push_back((std::shared_ptr<Particle>) new Particle(CurrentParticlePosition, 1.0, 50.0));
-            std::cout << "Particle #" << i << ": X: " << Particles[i]->getPosition().x << " Y: " << Particles[i]->getPosition().y << " Z: " << Particles[i]->getPosition().z << std::endl;
-        }
-
-        for(auto p: Particles) {
-            glm::mat4 modelPos = glm::mat4();
-            modelPos = translate(modelPos, p->getPosition());
-            m_ParticlePositions.push_back(modelPos);
-        }
+    virtual void InitializeProxy() {
     }
 };
 
@@ -123,11 +92,54 @@ public:
         InitializeProxy();
 
         m_ParticleRenderer = (std::shared_ptr<ParticleRenderer>) new ParticleRenderer(ID, m_NumParticles, m_ParticlePositions);
+
+    }
+
+    void calculateDistancetoCamera(glm::vec3 camPosition)
+    {
+        for(auto &p: Particles)
+        {
+            p.setDistancetoCamera(glm::length(p.getPosition() - camPosition));
+        }
+    }
+
+    void sortParticles() {
+        std::sort(Particles.begin(), Particles.end());
+    }
+
+    std::vector<Particle> Particles;
+
+    void InitializeProxy() {
+
+        std::uniform_real_distribution<GLfloat> HorizonalLimit(ParticlesLimits.MIN_X, ParticlesLimits.MAX_X);
+        std::uniform_real_distribution<GLfloat> VerticalLimit(ParticlesLimits.MIN_Y, ParticlesLimits.MAX_Y);
+        std::uniform_real_distribution<GLfloat> ZLimit(ParticlesLimits.MIN_Z, ParticlesLimits.MAX_Z);
+        generator.seed(std::chrono::system_clock::now().time_since_epoch().count());
+
+        for(int i = 0; i < m_NumParticles; i++) {
+
+            glm::vec3 CurrentParticlePosition(
+                HorizonalLimit  (generator),
+                VerticalLimit   (generator),
+                ZLimit          (generator)
+            );
+
+            Particles.push_back(Particle(CurrentParticlePosition, 1.0, 50.0, ParticlesLimits));
+            std::cout << "Particle #" << i << ": X: " << Particles[i].getPosition().x << " Y: " << Particles[i].getPosition().y << " Z: " << Particles[i].getPosition().z << std::endl;
+        }
+
+        for(auto &p: Particles) {
+            glm::mat4 modelPos = glm::mat4();
+            modelPos = translate(modelPos, p.getPosition());
+            m_ParticlePositions.push_back(modelPos);
+        }
     }
 
     virtual ~RainParticleProxy() {}
 
     void Simulate(float deltaTime, glm::vec3 camPos) {
+
+        deltaTime = glm::clamp(deltaTime, 0.0f, 0.064f);
 
         this->calculateDistancetoCamera(camPos);
 
@@ -135,31 +147,26 @@ public:
 
         for(int i = 0; i < Particles.size(); i++) {
 
-            if(Particles[i]->m_Position.y < ParticlesLimits.MIN_Y){
-                Particles[i]->setLife(-1.0);
-                //std::cout << "Reset Particle: Limit" << std::endl;
+            if(Particles[i].getPosition().y < ParticlesLimits.MIN_Y) {
+                //cout  << deltaTime << endl;
+                Particles[i].setLife(-1.0);
+            }
+            if(Particles[i].getLife() < 0.0) {
+                Particles[i].resetPosition();
+                Particles[i].resetLife();
             }
 
-            if(Particles[i]->getLife() < 0.0) {
-                //Particles[i]->setPosition(GenerateRandomParticle());
-                Particles[i]->resetPosition();
-                Particles[i]->resetLife();
-                //std::cout << "Reset Particle" << std::endl;
-            }
+            Particles[i].setSpeed(glm::vec3(0.0, -9.81, 0.0));
+            Particles[i].m_Position.y = Particles[i].m_Position.y + -9.81 * deltaTime;
 
-
-
-            Particles[i]->setSpeed(glm::vec3(0.0, -9.81, 0.0));
-            Particles[i]->m_Position.y = Particles[i]->m_Position.y + -9.81 * deltaTime * 3.0;
-            //p.setPosition( p.getPosition() + p.getSpeed() *deltaTime);
-
-            Particles[i]->setLife(Particles[i]->getLife() - deltaTime);
+            Particles[i].setLife(Particles[i].getLife() - deltaTime);
 
         }
 
+
         for(int i = 0; i < m_NumParticles; i++) {
             glm::mat4 modelPos = glm::mat4();
-            modelPos = translate(modelPos, Particles[i]->getPosition());
+            modelPos = translate(modelPos, Particles[i].getPosition());
             m_ParticlePositions[i] = modelPos;
         }
     }
@@ -170,6 +177,7 @@ public:
 
         m_ParticleRenderer->Render();
     }
+
 };
 
 class SnowParticleProxy : public ParticleProxy {

@@ -83,7 +83,6 @@
 					<Add library="deppend\bullet-2.82-r2704\lib\libBulletSoftBody.a" />
 					<Add library="deppend\bullet-2.82-r2704\lib\libLinearMath.a" />
 					<Add directory="deppend/glew-2.0.0/lib" />
-					<Add directory="deppend/glfw/lib" />
 					<Add directory="deppend/SOIL/lib" />
 					<Add directory="deppend/FreeType2/lib" />
 					<Add directory="deppend/ini/lib" />

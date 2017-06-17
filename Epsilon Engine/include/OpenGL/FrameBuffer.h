@@ -7,6 +7,7 @@
 #include <GL/glew.h>
 #include <OpenGL/RenderTarget.h>
 
+template <typename T>
 class FrameBuffer
 {
 public:
@@ -24,7 +25,7 @@ public:
 
     ~FrameBuffer() {}
 
-    bool addRenderTarget(std::string name, int internalformat, int format, int magfilter, int minfilter, bool mipmaps)
+    bool addRenderTarget(T name, int internalformat, int format, int magfilter, int minfilter, bool mipmaps, GLuint target = GL_TEXTURE_2D)
     {
         if(m_RenderTargetCount >= MAX_RENDER_TARGETS)
         {
@@ -34,7 +35,7 @@ public:
 
         this->bindFramebuffer();
 
-        m_RenderTargets[name] = (std::shared_ptr<RenderTarget>) new RenderTarget(WIDTH, HEIGHT, internalformat, format, magfilter, minfilter, GL_COLOR_ATTACHMENT0 + m_RenderTargetCount, mipmaps);
+        m_RenderTargets[name] = (std::shared_ptr<RenderTarget>) new RenderTarget(WIDTH, HEIGHT, internalformat, format, magfilter, minfilter, GL_COLOR_ATTACHMENT0 + m_RenderTargetCount, mipmaps, target);
 
         m_RenderTargetCount++;
 
@@ -123,12 +124,12 @@ public:
         glDeleteFramebuffers(1, &m_FramebufferHandler);
     }
 
-    GLuint getRenderTargetHandler(std::string name)
+    GLuint getRenderTargetHandler(T name)
     {
         return m_RenderTargets[name]->getRenderTextureTarget();
     }
 
-    std::unordered_map<std::string, std::shared_ptr<RenderTarget> > m_RenderTargets;
+    std::unordered_map<T, std::shared_ptr<RenderTarget> > m_RenderTargets;
 
     int m_RenderTargetCount;
     int MAX_RENDER_TARGETS;

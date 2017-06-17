@@ -36,7 +36,7 @@ typedef unsigned short  USHORT;
 constexpr double PI = 3.14159265359;
 constexpr double TAU = PI * 0.5;
 
-typedef struct MINMAX_POINTS
+struct MINMAX_POINTS
 {
     float MAX_X;
     float MAX_Y;
@@ -74,7 +74,9 @@ enum MODEL_TYPE
 enum CAMERA_MODE
 {
     PLAYER_CONTROLLED = 0,
-    DEBUG_MODE
+    NO_CLIP,
+    CAMERA_FIXED,
+    CAMERA_OVERRIDE
 };
 
 enum SHADER_TYPE
@@ -97,6 +99,12 @@ enum AUDIO_TYPE
     STATIC_SOUND,
     DYNAMIC_SOUND,
     MUSIC
+};
+
+enum CUBEMAP_TYPE
+{
+    STATIC = 0,
+    DYNAMIC
 };
 
 namespace Component

@@ -1,12 +1,13 @@
 #version 440 core
 
-layout(location = 0) out vec3 gAlbedoSpec;
-layout(location = 1) out vec3 gPosition;
-layout(location = 2) out vec4 gExpensiveNormal;
+
+layout(location = 0) out vec4 FragColor;
+layout(location = 1) out vec4 blurImage;
+layout(location = 2) out vec3 gExpensiveNormal;
 layout(location = 3) out float gDepth;
 layout(location = 4) out vec4 gExtraComponents; 
-layout(location = 5) out vec3 gLightAccumulation;
 
+layout (binding = 0) uniform sampler2D texture0;
 in vec2 UV;
 in vec3 FragPos;
 in vec3 wFragPos;
@@ -14,9 +15,11 @@ in vec3 Normal;
 
 void main()
 {
-	gAlbedoSpec = vec3(1.0, 0.0, 0.0);
-	gPosition = FragPos;
-	gExpensiveNormal = vec4(0.0);
+	vec4 tex = texture(texture0, UV);
+	FragColor = tex;
+	blurImage = vec4(0.0);
+	
+	gExpensiveNormal = vec3(0.0);
 	gDepth = gl_FragCoord.z; 
 
     gExtraComponents = vec4(0.0, 1.0, 0.0, 0.0); 

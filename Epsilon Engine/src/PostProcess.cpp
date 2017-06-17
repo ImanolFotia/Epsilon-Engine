@@ -32,7 +32,7 @@ void PostProcess::SetupFramebuffer()
     //std::random_device ;
     std::default_random_engine generator(glfwGetTime());
 
-/*
+
     LightPositions.push_back(glm::vec3(125, 20.5, -80));
     LightPositions.push_back(glm::vec3(70, 13.3, -63));
     LightPositions.push_back(glm::vec3(96.2, 13.3, -63));
@@ -40,7 +40,7 @@ void PostProcess::SetupFramebuffer()
     LightPositions.push_back(glm::vec3(106.7, 30.63, -59.3));
     LightPositions.push_back(glm::vec3(82, 30.63, -59.3));
     LightPositions.push_back(glm::vec3(95.5, 15.21, -40.57));
-*/
+
 /*
     LightPositions.push_back(glm::vec3(4, 15, -8));
     LightPositions.push_back(glm::vec3(20, 15, 7));
@@ -150,7 +150,7 @@ void PostProcess::SetupFramebuffer()
     */
 
     //int house
-
+/*
     LightPositions.push_back(glm::vec3(7.3, 11, -12));
     LightPositions.push_back(glm::vec3(3, 11, -35));
     LightPositions.push_back(glm::vec3(-30, 11, -23));
@@ -166,7 +166,7 @@ void PostProcess::SetupFramebuffer()
     LightPositions.push_back(glm::vec3(-18, -3, -10));
     LightPositions.push_back(glm::vec3(10, -3, -52));
     LightPositions.push_back(glm::vec3(-8, 24, -28));
-
+*/
     //Sponza
     /*
     LightPositions.push_back(glm::vec3(12, 12, -4));
@@ -217,7 +217,7 @@ void PostProcess::SetupFramebuffer()
             LightPositions.push_back(glm::vec3(-14, 16.63, 32.3));
             LightPositions.push_back(glm::vec3(80.5, 17.21, 1.57));
 */
-    hdrFBO = (std::shared_ptr<FrameBuffer>) new FrameBuffer(width, height, true);
+    hdrFBO = (std::shared_ptr<FrameBuffer<std::string> >) new FrameBuffer<std::string>(width, height, true);
 
     hdrFBO->addRenderTarget("colorBuffer", GL_RGB16F, GL_RGB, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, true);
     hdrFBO->addRenderTarget("brightColorBuffer", GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, true);
@@ -678,7 +678,7 @@ void PostProcess::SSRPass(std::shared_ptr<Camera>& cam)
     glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "gExtraComponents"), 3);
     glBindTexture(GL_TEXTURE_2D, this->gExtraComponents);
 
-    glm::mat4 proj = glm::perspective( glm::radians(75.0f) , (float)this->width/(float)this->height , 0.1f , 3000.0f );
+    glm::mat4 proj = glm::perspective( glm::radians(90.0f) , (float)this->width/(float)this->height , 0.1f , 3000.0f );
     glUniformMatrix4fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "projection"), 1, GL_FALSE, &proj[0][0]);
     glm::mat4 invproj = glm::inverse(proj);
     glUniformMatrix4fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "invprojection"), 1, GL_FALSE, &invproj[0][0]);
@@ -954,7 +954,6 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::shared_ptr<Camera>& 
     glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 
     hdrFBO->bindFramebuffer();
-    glEnable(GL_BLEND);
 
 }
 

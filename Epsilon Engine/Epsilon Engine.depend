@@ -245,7 +245,7 @@
 	<GL/glext.h>
 	<GL/glu.h>
 
-1495748523 source:d:\epsilon\epsilon engine\src\epsilon.cpp
+1497679913 source:d:\epsilon\epsilon engine\src\epsilon.cpp
 	<iostream>
 	<Epsilon.h>
 	<ProgramData.h>
@@ -262,7 +262,7 @@
 	<chrono>
 	<Log.h>
 
-1495679070 d:\epsilon\epsilon engine\include\epsilon.h
+1497151529 d:\epsilon\epsilon engine\include\epsilon.h
 	<map>
 	<GL/glew.h>
 	<GL/gl.h>
@@ -492,7 +492,7 @@
 1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\postprocess.h
 	"types.h"
 
-1495493311 source:d:\epsilon\epsilon engine\src\camera.cpp
+1497150814 source:d:\epsilon\epsilon engine\src\camera.cpp
 	<iostream>
 	<camera.h>
 	<math.h>
@@ -500,14 +500,14 @@
 	<sys/Mouse.h>
 	<sys/Joystick.h>
 
-1491684634 d:\epsilon\epsilon engine\include\camera.h
+1497150814 d:\epsilon\epsilon engine\include\camera.h
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
 	<glm/gtc/quaternion.hpp>
 	<GLFW/glfw3.h>
 	<iostream>
 
-1483691782 d:\epsilon\epsilon engine\include\texture.h
+1497675470 d:\epsilon\epsilon engine\include\texture.h
 	<iostream>
 	<string>
 	<vector>
@@ -516,7 +516,7 @@
 	<SOIL.h>
 	<ProgramData.h>
 
-1492743135 d:\epsilon\epsilon engine\include\main.h
+1495863227 d:\epsilon\epsilon engine\include\main.h
 	<ProgramData.h>
 	<Epsilon.h>
 	<memory>
@@ -524,7 +524,7 @@
 
 1451178317 d:\epsilon\epsilon engine\include\skyboxdata.h
 
-1487736554 d:\epsilon\epsilon engine\include\model.h
+1497675470 d:\epsilon\epsilon engine\include\model.h
 	<string>
 	<fstream>
 	<sstream>
@@ -627,7 +627,7 @@
 	<glm/gtc/matrix_transform.hpp>
 	<Shader.h>
 
-1489215620 d:\epsilon\epsilon engine\include\postprocess.h
+1497148505 d:\epsilon\epsilon engine\include\postprocess.h
 	<GL/glew.h>
 	<Shader.h>
 	<camera.h>
@@ -637,7 +637,7 @@
 	<Texture.h>
 	<OpenGL/FrameBuffer.h>
 
-1495748695 source:d:\epsilon\epsilon engine\src\postprocess.cpp
+1497148544 source:d:\epsilon\epsilon engine\src\postprocess.cpp
 	<PostProcess.h>
 	<iostream>
 	<ProgramData.h>
@@ -1100,7 +1100,7 @@
 	<camera.h>
 	<memory>
 
-1495748581 source:d:\epsilon\epsilon engine\src\sun.cpp
+1495864691 source:d:\epsilon\epsilon engine\src\sun.cpp
 	<Sun.h>
 
 1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\glm.hpp
@@ -1560,7 +1560,7 @@
 1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\type_ptr.inl
 	<cstring>
 
-1493414728 source:d:\epsilon\epsilon engine\src\bsp.cpp
+1497595494 source:d:\epsilon\epsilon engine\src\bsp.cpp
 	<GL/glew.h>
 	<BSP.h>
 	<glm/glm.hpp>
@@ -1599,7 +1599,7 @@
 	"Frustum.h"
 	<iostream>
 
-1489213194 source:d:\epsilon\epsilon engine\src\resourcemanager.cpp
+1497152356 source:d:\epsilon\epsilon engine\src\resourcemanager.cpp
 	"ResourceManager.h"
 
 1487827673 d:\epsilon\epsilon engine\include\resourcemanager.h
@@ -1643,7 +1643,7 @@
 	"MD5_Anim.h"
 	<SOIL.h>
 
-1495072167 d:\epsilon\epsilon engine\include\types.h
+1497675470 d:\epsilon\epsilon engine\include\types.h
 	<btBulletDynamicsCommon.h>
 	<btBulletCollisionCommon.h>
 	<memory>
@@ -1660,7 +1660,7 @@
 	<iostream>
 	<cmath>
 
-1495748695 d:\epsilon\epsilon engine\version.h
+1497682501 d:\epsilon\epsilon engine\version.h
 
 1489258556 d:\epsilon\epsilon engine\include\entitytemplate.h
 	<Component.h>
@@ -1729,12 +1729,18 @@
 	<Mesh.h>
 	<ResourceManager.h>
 
-1491683667 d:\epsilon\epsilon engine\include\cubemap.h
+1497682249 d:\epsilon\epsilon engine\include\cubemap.h
 	<glm/glm.hpp>
 	<vector>
 	<string>
 	<memory>
 	<Texture.h>
+	<OpenGL/HelperFunctions/FullScreenQuad.h>
+	<OpenGL/FrameBuffer.h>
+	<Shader.h>
+	<Types.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
 
 1495057048 d:\epsilon\epsilon engine\include\physics.h
 	<glm/glm.hpp>
@@ -3115,11 +3121,12 @@
 	<Particle.h>
 	<ParticleProxy.h>
 
-1495686947 d:\epsilon\epsilon engine\include\particle.h
+1497674773 d:\epsilon\epsilon engine\include\particle.h
 	<glm/glm.hpp>
 	<GL/glew.h>
+	<Types.h>
 
-1495687111 d:\epsilon\epsilon engine\include\particleproxy.h
+1497678105 d:\epsilon\epsilon engine\include\particleproxy.h
 	<Types.h>
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
@@ -3127,8 +3134,11 @@
 	<random>
 	<Types.h>
 	<chrono>
+	<Texture.h>
+	<atomic>
+	<thread>
 
-1493603345 d:\epsilon\epsilon engine\include\opengl\framebuffer.h
+1497149576 d:\epsilon\epsilon engine\include\opengl\framebuffer.h
 	<unordered_map>
 	<iostream>
 	<string>
@@ -3136,16 +3146,16 @@
 	<GL/glew.h>
 	<OpenGL/RenderTarget.h>
 
-1489189601 d:\epsilon\epsilon engine\include\opengl\rendertarget.h
+1497149814 d:\epsilon\epsilon engine\include\opengl\rendertarget.h
 	<GL/glew.h>
 
-1493603957 source:d:\epsilon\epsilon engine\src\postprocess\motionblur.cpp
+1497148575 source:d:\epsilon\epsilon engine\src\postprocess\motionblur.cpp
 	<PostProcess/MotionBlur.h>
 
 1493604681 d:\epsilon\epsilon engine\include\postprocess\motionblur.h
 	<PostProcess/Effect.h>
 
-1493604635 d:\epsilon\epsilon engine\include\postprocess\effect.h
+1497148558 d:\epsilon\epsilon engine\include\postprocess\effect.h
 	<OpenGL/FrameBuffer.h>
 	<OpenGL/HelperFunctions/FullScreenQuad.h>
 	<Shader.h>
@@ -3203,11 +3213,11 @@
 	<fstream>
 	<Log.h>
 
-1493604456 source:d:\epsilon\epsilon engine\src\postprocess\ssao.cpp
+1497148605 source:d:\epsilon\epsilon engine\src\postprocess\ssao.cpp
 	<PostProcess/SSAO.h>
 	<random>
 
-1493604681 d:\epsilon\epsilon engine\include\postprocess\ssao.h
+1497148584 d:\epsilon\epsilon engine\include\postprocess\ssao.h
 	<PostProcess/Effect.h>
 	<Includes.h>
 
@@ -3215,7 +3225,15 @@
 	<GUI/Widget.h>
 	<string>
 
-1495684425 d:\epsilon\epsilon engine\include\particlerenderer.h
+1497677890 d:\epsilon\epsilon engine\include\particlerenderer.h
 	<Particle.h>
 	<Shader.h>
+
+1497680178 d:\epsilon\epsilon engine\deppend\stb-master\stb_image_write.h
+	<stdio.h>
+	<stdarg.h>
+	<stdlib.h>
+	<string.h>
+	<math.h>
+	<assert.h>
 

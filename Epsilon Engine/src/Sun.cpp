@@ -14,7 +14,7 @@ Sun::Sun()
 
     this->radius = 8.0;
 
-    this->height = -10.0;
+    this->height = 10.0;
 
     PrepareVAO();
 }

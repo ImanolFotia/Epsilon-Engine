@@ -4,7 +4,7 @@ namespace PostProcess {
 
     MotionBlur::MotionBlur(int w, int h)  : Effect(w, h)
     {
-        m_pFrameBuffer = (std::shared_ptr<FrameBuffer>) new FrameBuffer(w, h, false);
+        m_pFrameBuffer = (std::shared_ptr<FrameBuffer<std::string> >) new FrameBuffer<std::string>(w, h, false);
         m_pFrameBuffer->addRenderTarget("MotionBlurBuffer", GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
         m_pFrameBuffer->FinishFrameBuffer();
     }

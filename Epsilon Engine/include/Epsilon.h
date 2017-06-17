@@ -112,7 +112,7 @@ private:
 
     void ClearBuffers(void);
 
-    void ComputeCamera(void);
+    void ComputeCamera(CAMERA_MODE, glm::vec3 position = glm::vec3(0.0), glm::vec3 direction = glm::vec3(0.0), glm::mat4 proj = glm::mat4(0), glm::mat4 view = glm::mat4(0));
 
     void RenderFrame(void);
 
@@ -123,6 +123,10 @@ private:
     void Clock(void);
 
     void ComputeShadow(void);
+
+    void RenderToCubemaps();
+
+    void RenderParticles();
 
 
 public:
@@ -151,7 +155,10 @@ public:
     std::shared_ptr<SphericalHarmonics> sphericalharmonics;
     std::thread t1;
     std::shared_ptr<ParticleSystem> m_ParticleSystem;
+    std::shared_ptr<eTexture> tex;
    // std::shared_ptr<Pick> m_Pick;
+    CAMERA_MODE m_CameraMode;
+    std::vector<std::shared_ptr<CubeMap> > m_Cubemaps;
 
     std::shared_ptr<Game::Player> m_PlayerCapsule;
     std::shared_ptr<GUI> m_GUI;

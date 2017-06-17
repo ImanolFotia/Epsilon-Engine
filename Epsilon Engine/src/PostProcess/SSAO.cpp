@@ -3,9 +3,12 @@
 #include <random>
 
 namespace PostProcess {
-    SSAO::SSAO(int width, int height)  : Effect(width, height)
+    SSAO::SSAO(int width, int height) : Effect(width, height)
     {
-
+        m_Width = width;
+        m_Height = height;
+        m_pShader = (std::shared_ptr<Shader>) new Shader("shaders/SSAO.vglsl", "shaders/SSAO.fglsl");
+        blurShader = (std::shared_ptr<Shader>) new Shader("shaders/blurSSAO.vglsl", "shaders/blurSSAO.fglsl");
     }
 
     GLuint SSAO::Apply(GLuint gDepth, GLuint gNormal, glm::mat4 projection, glm::mat4 view)
@@ -29,7 +32,6 @@ namespace PostProcess {
         glActiveTexture(GL_TEXTURE2);
         glUniform1i(glGetUniformLocation(m_pShader->getProgramID(), "texNoise"), 2);
         glBindTexture(GL_TEXTURE_2D, this->noiseTexture);
-
 
         glUniform3fv(glGetUniformLocation(m_pShader->getProgramID(), "samples"), 32, &ssaoKernel[0][0]);
 
@@ -59,15 +61,15 @@ namespace PostProcess {
 
     void SSAO::PrepareSSAOTexture()
     {
-        m_pFrameBuffer = (std::shared_ptr<FrameBuffer>) new FrameBuffer(m_Width, m_Height, false);
-        m_pFrameBuffer->addRenderTarget("SSAOBuffer", GL_RED, GL_RGB, GL_LINEAR, GL_LINEAR, false);
+        m_pFrameBuffer = (std::shared_ptr<FrameBuffer <std::string> >) new FrameBuffer<std::string>(m_Width, m_Height, false);
+        m_pFrameBuffer->addRenderTarget("SSAOBuffer", GL_RED, GL_RGB, GL_LINEAR, GL_LINEAR, true);
         m_pFrameBuffer->FinishFrameBuffer();
     }
 
     void SSAO::PrepareSSAOBlurTexture()
     {
-        m_pFrameBufferBlur = (std::shared_ptr<FrameBuffer>) new FrameBuffer(m_Width, m_Height, false);
-        m_pFrameBufferBlur->addRenderTarget("ssaoBlur", GL_RED, GL_RGB, GL_LINEAR, GL_LINEAR, false);
+        m_pFrameBufferBlur = (std::shared_ptr<FrameBuffer<std::string> >) new FrameBuffer<std::string>(m_Width, m_Height, false);
+        m_pFrameBufferBlur->addRenderTarget("ssaoBlur", GL_RED, GL_RGB, GL_LINEAR, GL_LINEAR, true);
         m_pFrameBufferBlur->FinishFrameBuffer();
     }
 

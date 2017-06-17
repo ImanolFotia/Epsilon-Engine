@@ -85,7 +85,7 @@ GLFWwindow* InitEngine(const char* ProgramName)
     //glfwWindowHint(GLFW_RED_BITS, 16);
     //glfwWindowHint(GLFW_GREEN_BITS, 16);
     //glfwWindowHint(GLFW_BLUE_BITS, 16);
-    //glfwWindowHint(GLFW_DEPTH_BITS, 32);
+    glfwWindowHint(GLFW_DEPTH_BITS, 32);
     glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 
     cout << "Creating window || Window Resolution: ";

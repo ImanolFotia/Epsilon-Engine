@@ -31,17 +31,13 @@ public:
        // cout << path << endl;
 /*
         std::cout << "Time to load from file to RAM: ";*/
-        double time = glfwGetTime();
-        double time2;
         unsigned char* image;
         loadFile(path, image, &width, &height, &channels);
-        time2 = glfwGetTime();/*
-        std::cout << time2 - time << std::endl;*/
+
         //cout << channels << endl;
         if(!image)
             return;/*
         std::cout << "Time to load from RAM to GPU: ";*/
-        time = glfwGetTime();
         glGenTextures(1, &texture);
         glBindTexture(type, texture);
         string name = string(TexName);
@@ -89,8 +85,6 @@ public:
             cout << "no se pudo crear" << TexName << endl;
             return;
         }
-        time2 = glfwGetTime();/*
-        std::cout << time2 - time << std::endl;*/
         SOIL_free_image_data(image);
         glBindTexture(type, 0);
     }

@@ -402,10 +402,8 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
 
         int cluster = m_pLeafs[leafIndex].cluster;
 
-        int i = m_numOfLeafs;
         //g_VisibleFaces = 0;
-
-        while(i--)
+        for(int i = m_numOfLeafs ; i-- ; )
         {
             tBSPLeaf *pLeaf = &(m_pLeafs[i]);
 

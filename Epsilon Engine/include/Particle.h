@@ -1,13 +1,14 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <GL/glew.h>
-
+#include <Types.h>
 class Particle
 {
 public:
-    Particle(glm::vec3 pos, float speed, float life) : m_Position(pos), m_Speed(speed), m_InitialLife(life) {
+    Particle(glm::vec3 pos, float speed, float life, MINMAX_POINTS limits) : m_Position(pos), m_Speed(speed), m_InitialLife(life), ParticlesLimits(limits) {
         m_Life = m_InitialLife;
         m_InitialPosition = pos;
+        m_Position = pos;
         }
     virtual ~Particle() {
     }
@@ -17,7 +18,9 @@ public:
     }
 
     void resetPosition(){
-        m_Position = m_InitialPosition;
+        m_Position.x = m_InitialPosition.x;
+        m_Position.y = ParticlesLimits.MAX_Y;
+        m_Position.z = m_InitialPosition.z;
     }
 
     const glm::vec3 getSpeed() const {
@@ -66,6 +69,7 @@ private:
     glm::vec3 m_Speed;
     float m_Life;
     glm::vec3 m_InitialPosition;
+    MINMAX_POINTS ParticlesLimits;
     float m_InitialLife;
     float m_Weight;
     float m_DistancetoCamera;
