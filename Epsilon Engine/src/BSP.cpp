@@ -5,7 +5,7 @@
 ///=============================================================================
 
 #include <GL/glew.h>
-
+#include <omp.h>
 #include <BSP.h>
 #include <glm/glm.hpp>
 #include <vector>
@@ -216,7 +216,6 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
             m_pVerts[i].vNormal = N;
         }
 
-
         for(i = m_numOfFaces ; i >= 0 ; i--)
         {
             tBSPFace *pFace = &m_pFaces[i];
@@ -403,6 +402,7 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
         int cluster = m_pLeafs[leafIndex].cluster;
 
         //g_VisibleFaces = 0;
+        #pragma omp
         for(int i = m_numOfLeafs ; i-- ; )
         {
             tBSPLeaf *pLeaf = &(m_pLeafs[i]);

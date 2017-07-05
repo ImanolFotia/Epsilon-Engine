@@ -823,7 +823,6 @@ void PostProcess::ShowPostProcessImage(float frametime, GLuint ShadowMapID, glm:
 
     GLuint blurred = this->blurImage(hdrFBO->getRenderTargetHandler("brightColorBuffer"));
     if(SSROn) {
-        //blurSSR(1);
         SSRPass(cam);
     }
 

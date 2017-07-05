@@ -163,6 +163,7 @@ void ResourceManager::addTextureToQueue(std::string texture)
 void ResourceManager::loadQueuedTextures()
 {
     try {
+        #pragma omp
         for(int i = 0 ; i < TextureQueue.size() ; ++i)
         {
             requestTexture(TextureQueue.at(i));

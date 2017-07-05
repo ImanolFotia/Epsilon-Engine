@@ -19,7 +19,7 @@ public:
     void Render(std::shared_ptr<Shader> shader)
     {
         for(auto w: m_WidgetContainer){
-            w->Render(shader);
+            if(w->m_isHidden != true)w->Render(shader);
         }
     }
 

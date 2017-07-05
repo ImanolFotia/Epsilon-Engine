@@ -245,7 +245,7 @@
 	<GL/glext.h>
 	<GL/glu.h>
 
-1497679913 source:d:\epsilon\epsilon engine\src\epsilon.cpp
+1497933049 source:d:\epsilon\epsilon engine\src\epsilon.cpp
 	<iostream>
 	<Epsilon.h>
 	<ProgramData.h>
@@ -637,7 +637,7 @@
 	<Texture.h>
 	<OpenGL/FrameBuffer.h>
 
-1497148544 source:d:\epsilon\epsilon engine\src\postprocess.cpp
+1497683159 source:d:\epsilon\epsilon engine\src\postprocess.cpp
 	<PostProcess.h>
 	<iostream>
 	<ProgramData.h>
@@ -1560,8 +1560,9 @@
 1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\type_ptr.inl
 	<cstring>
 
-1497595494 source:d:\epsilon\epsilon engine\src\bsp.cpp
+1497936888 source:d:\epsilon\epsilon engine\src\bsp.cpp
 	<GL/glew.h>
+	<omp.h>
 	<BSP.h>
 	<glm/glm.hpp>
 	<vector>
@@ -1599,7 +1600,7 @@
 	"Frustum.h"
 	<iostream>
 
-1497152356 source:d:\epsilon\epsilon engine\src\resourcemanager.cpp
+1497936763 source:d:\epsilon\epsilon engine\src\resourcemanager.cpp
 	"ResourceManager.h"
 
 1487827673 d:\epsilon\epsilon engine\include\resourcemanager.h
@@ -1660,7 +1661,7 @@
 	<iostream>
 	<cmath>
 
-1497682501 d:\epsilon\epsilon engine\version.h
+1497937236 d:\epsilon\epsilon engine\version.h
 
 1489258556 d:\epsilon\epsilon engine\include\entitytemplate.h
 	<Component.h>
@@ -3126,7 +3127,7 @@
 	<GL/glew.h>
 	<Types.h>
 
-1497678105 d:\epsilon\epsilon engine\include\particleproxy.h
+1497935623 d:\epsilon\epsilon engine\include\particleproxy.h
 	<Types.h>
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
@@ -3180,10 +3181,10 @@
 	<fstream>
 	<string>
 
-1493611589 d:\epsilon\epsilon engine\include\gui\container.h
+1497684054 d:\epsilon\epsilon engine\include\gui\container.h
 	<GUI/Widget.h>
 
-1493618306 d:\epsilon\epsilon engine\include\gui\widget.h
+1497684054 d:\epsilon\epsilon engine\include\gui\widget.h
 	<vector>
 	<memory>
 	<glm/glm.hpp>
@@ -3213,7 +3214,7 @@
 	<fstream>
 	<Log.h>
 
-1497148605 source:d:\epsilon\epsilon engine\src\postprocess\ssao.cpp
+1497682362 source:d:\epsilon\epsilon engine\src\postprocess\ssao.cpp
 	<PostProcess/SSAO.h>
 	<random>
 
@@ -3221,7 +3222,7 @@
 	<PostProcess/Effect.h>
 	<Includes.h>
 
-1493682065 d:\epsilon\epsilon engine\include\gui\button.h
+1497683901 d:\epsilon\epsilon engine\include\gui\button.h
 	<GUI/Widget.h>
 	<string>
 
@@ -3236,4 +3237,10 @@
 	<string.h>
 	<math.h>
 	<assert.h>
+
+1497682501 source:d:\epsilon\epsilon engine\src\postprocess\screenspacereflections.cpp
+	<PostProcess/ScreenSpaceReflections.h>
+
+1497682481 d:\epsilon\epsilon engine\include\postprocess\screenspacereflections.h
+	<PostProcess/Effect.h>
 

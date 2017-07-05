@@ -31,15 +31,15 @@
 					<Add option="-static -static-libgcc -static-libstdc++" />
 					<Add library="SOIL" />
 					<Add library="opengl32" />
-					<Add library="deppend\glfw\lib\glfw3dll.a" />
-					<Add library="deppend\assimp\lib\assimp_release-dll_win32\assimp.lib" />
+					<Add library="deppend/glfw/lib/glfw3dll.a" />
+					<Add library="deppend/assimp/lib/assimp_release-dll_win32/assimp.lib" />
 					<Add library="freetype240" />
 					<Add library="inih" />
 					<Add library="glew32.dll" />
 					<Add library="mingw32" />
-					<Add library="deppend\bullet3-2.83.7\lib\libBulletCollision.a" />
-					<Add library="deppend\bullet3-2.83.7\lib\libBulletDynamics.a" />
-					<Add library="deppend\bullet3-2.83.7\lib\libLinearMath.a" />
+					<Add library="deppend/bullet3-2.83.7/lib/libBulletCollision.a" />
+					<Add library="deppend/bullet3-2.83.7/lib/libBulletDynamics.a" />
+					<Add library="deppend/bullet3-2.83.7/lib/libLinearMath.a" />
 					<Add directory="deppend/glew/lib" />
 					<Add directory="deppend/glfw/lib" />
 					<Add directory="deppend/SOIL/lib" />
@@ -55,8 +55,10 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-march=core2" />
+					<Add option="-O3" />
 					<Add option="-std=c++11" />
+					<Add option="-fopenmp" />
 					<Add directory="deppend/glew-2.0.0/include" />
 					<Add directory="deppend/glfw-3.2.bin.WIN32/include" />
 					<Add directory="deppend/glm" />
@@ -67,26 +69,29 @@
 					<Add directory="include" />
 					<Add directory="deppend/bullet-2.82-r2704/src" />
 					<Add directory="deppend/openal-soft-1.17.2-bin/include" />
+					<Add directory="deppend/stb-master" />
 				</Compiler>
 				<Linker>
-					<Add option="-s" />
-					<Add option="-lSOIL" />
+					<Add option="-fopenmp" />
+					<Add option="-lgomp" />
+					<Add option="deppend\SOIL\lib\libSOIL.a" />
 					<Add option="deppend\glfw-3.2.bin.WIN32\lib-mingw\libglfw3.a" />
 					<Add option="-lopengl32" />
-					<Add option="-lfreetype240" />
-					<Add option="-linih" />
-					<Add option="-lglew32.dll" />
+					<Add option="deppend\FreeType2\lib\libfreetype240.a" />
+					<Add option="deppend\ini\lib\libinih.a" />
+					<Add option="deppend\glew-2.0.0\lib\libglew32.dll.a" />
 					<Add option="-lgdi32" />
-					<Add option="-lOpenAL32.dll" />
-					<Add library="deppend\bullet-2.82-r2704\lib\libBulletDynamics.a" />
-					<Add library="deppend\bullet-2.82-r2704\lib\libBulletCollision.a" />
-					<Add library="deppend\bullet-2.82-r2704\lib\libBulletSoftBody.a" />
-					<Add library="deppend\bullet-2.82-r2704\lib\libLinearMath.a" />
+					<Add option="deppend\openal-soft-1.17.2-bin\libs\Win32\libOpenAL32.dll.a" />
+					<Add library="deppend/bullet-2.82-r2704/lib/libBulletDynamics.a" />
+					<Add library="deppend/bullet-2.82-r2704/lib/libBulletCollision.a" />
+					<Add library="deppend/bullet-2.82-r2704/lib/libBulletSoftBody.a" />
+					<Add library="deppend/bullet-2.82-r2704/lib/libLinearMath.a" />
 					<Add directory="deppend/glew-2.0.0/lib" />
 					<Add directory="deppend/SOIL/lib" />
 					<Add directory="deppend/FreeType2/lib" />
 					<Add directory="deppend/ini/lib" />
 					<Add directory="deppend/openal-soft-1.17.2-bin/libs/Win32" />
+					<Add directory="C:/Program Files (x86)/CodeBlocks/MinGW/lib/gcc/mingw32/4.9.2" />
 				</Linker>
 			</Target>
 		</Build>
@@ -141,6 +146,7 @@
 		<Unit filename="include/PostProcess/Effect.h" />
 		<Unit filename="include/PostProcess/MotionBlur.h" />
 		<Unit filename="include/PostProcess/SSAO.h" />
+		<Unit filename="include/PostProcess/ScreenSpaceReflections.h" />
 		<Unit filename="include/ProgramData.h" />
 		<Unit filename="include/ResourceManager.h" />
 		<Unit filename="include/Scene.h" />
@@ -192,6 +198,7 @@
 		<Unit filename="src/PostProcess.cpp" />
 		<Unit filename="src/PostProcess/MotionBlur.cpp" />
 		<Unit filename="src/PostProcess/SSAO.cpp" />
+		<Unit filename="src/PostProcess/ScreenSpaceReflections.cpp" />
 		<Unit filename="src/ProgramData.cpp" />
 		<Unit filename="src/ResourceManager.cpp" />
 		<Unit filename="src/Scene.cpp" />

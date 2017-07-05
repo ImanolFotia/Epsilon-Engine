@@ -116,6 +116,7 @@ public:
         std::uniform_real_distribution<GLfloat> ZLimit(ParticlesLimits.MIN_Z, ParticlesLimits.MAX_Z);
         generator.seed(std::chrono::system_clock::now().time_since_epoch().count());
 
+        #pragma omp
         for(int i = 0; i < m_NumParticles; i++) {
 
             glm::vec3 CurrentParticlePosition(
@@ -128,6 +129,7 @@ public:
             std::cout << "Particle #" << i << ": X: " << Particles[i].getPosition().x << " Y: " << Particles[i].getPosition().y << " Z: " << Particles[i].getPosition().z << std::endl;
         }
 
+        #pragma omp
         for(auto &p: Particles) {
             glm::mat4 modelPos = glm::mat4();
             modelPos = translate(modelPos, p.getPosition());
@@ -145,6 +147,7 @@ public:
 
         this->sortParticles();
 
+        #pragma omp
         for(int i = 0; i < Particles.size(); i++) {
 
             if(Particles[i].getPosition().y < ParticlesLimits.MIN_Y) {
@@ -164,6 +167,7 @@ public:
         }
 
 
+        #pragma omp
         for(int i = 0; i < m_NumParticles; i++) {
             glm::mat4 modelPos = glm::mat4();
             modelPos = translate(modelPos, Particles[i].getPosition());

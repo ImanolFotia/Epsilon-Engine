@@ -100,7 +100,7 @@ Epsilon::Epsilon(GLFWwindow*& win)
 
     srand(time(NULL));
 
-    m_CameraMode = NO_CLIP;
+    m_CameraMode = PLAYER_CONTROLLED;
 
 }
 
@@ -137,6 +137,7 @@ void Epsilon::InitResources(void)
     std::shared_ptr<Panel> t_Panel = (std::shared_ptr<Panel>) new Panel(this->WIDTH, this->HEIGHT);
     std::shared_ptr<Button> t_Button = (std::shared_ptr<Button>) new Button(0.5, 0.5, this->WIDTH, this->HEIGHT, "dfsdf");
     t_Button->OnClickCallback(endgame);
+    t_Button->m_isHidden = true;
     t_Container->addWidget(t_Panel);
     t_Container->addWidget(t_Button);
     m_GUI->AddContainer(t_Container);
@@ -228,58 +229,9 @@ void Epsilon::InitResources(void)
     limits.MIN_Z = -79.0;
 
     m_ParticleSystem = (std::shared_ptr<ParticleSystem>) new ParticleSystem();
-    m_ParticleSystem->addNewSystem(limits, RAIN, 1);
+    m_ParticleSystem->addNewSystem(limits, RAIN, 10000);
 
     std::cout << "All Resources Initialized." << std::endl;
-
-    CubeMap cube(1, glm::vec3(-10.0f,8.25f,-15.0f));//cube(paths, 1, glm::vec3(0,0,0));
-
-    for(int i = 0 ; i < 6 ; i++)
-    {
-        this->ClearBuffers();
-
-        this->Clock();
-
-        this->PollEvents();
-
-        //this->ProcessAudio();
-
-        timeBehind += etime - lastTime;
-
-        while( timeBehind >= 0.016 )
-        {
-            // Update the game.
-            rM->m_PhysicsWorld->Update(0.016);
-            // Every time we update, we subtract a timestep from the amount we are behind.
-            timeBehind -= 0.016;
-        }
-
-
-        this->ComputeCamera(CAMERA_FIXED, cube.getPosition(), glm::vec3(0.0), cube.getProjectionMatrix(),  cube.getViewMatrixbyIndex(i));
-
-        this->ComputeShadow();
-
-        this->ProcessFrame();
-
-        this->RenderFrame();
-
-        glEnable(GL_DEPTH_CLAMP);
-        this->RenderSkybox(false);
-        glDisable(GL_DEPTH_CLAMP);
-
-        cube.CaptureEnvironment(i, PP->getSceneTexture());
-        this->SwapBuffers();
-
-    }
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    sphericalharmonics = (std::shared_ptr<SphericalHarmonics>) new SphericalHarmonics();
-    sphericalharmonics->CalculateCohefficients(cube, 3);
-    std::cout << "Llega Cubemap" <<std::endl;
-
-    std::vector<glm::vec3> sph = sphericalharmonics->getCohefficients();
-    for(int i = 0; i < sph.size(); ++i)
-        cout << sph[i].x << ", " << sph[i].y << ", " << sph[i].z  << endl;
 }
 
 void Epsilon::LoadShaders(void)
@@ -774,15 +726,13 @@ void Epsilon::MainLoop(void)
 
         this->ComputeCamera(m_CameraMode);
 
-        //this->ProcessAudio();
+        this->ProcessAudio();
 
         timeBehind += etime - lastTime;
 
         while( timeBehind >= 0.016 )
         {
-            // Update the game.
             rM->m_PhysicsWorld->Update(0.016);
-            // Every time we update, we subtract a timestep from the amount we are behind.
             timeBehind -= 0.016;
         }
 
@@ -791,9 +741,9 @@ void Epsilon::MainLoop(void)
         this->ProcessFrame();
 
         this->RenderFrame();
-        /*
-                this->Render2D();
-        */
+
+        this->Render2D();
+
         this->SwapBuffers();
     }
 }
@@ -832,7 +782,8 @@ void Epsilon::ComputeCamera(CAMERA_MODE mode, glm::vec3 position, glm::vec3 dire
         eCamera->setViewMatrix(view);
         eCamera->setProjection(proj);
     }
-    else {}
+    else if(mode == NO_CLIP) {/*default mode: everything is calculated automatically*/}
+    else{}
 
     this->eCamera->UpdateMatrices();
 }

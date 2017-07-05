@@ -63,6 +63,9 @@ public:
         }
     }
 
+bool Hidden = false;
+bool m_isHidden = false;
+
 private:
     glm::vec4 getBoundingBox()
     {
@@ -96,7 +99,6 @@ private:
     void (*m_OnLostFocusFunc)(void) = nullptr;
 
     GUIEVENTS m_Events;
-    bool Hidden = false;
     float L, R, T, B;
     float BBL, BBR, BBT, BBB;
 
