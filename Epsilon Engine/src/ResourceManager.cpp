@@ -5,16 +5,16 @@ std::string ResourceManager::requestTexture(std::string texPath)
     try
     {
         std::map<std::string, eTexture>::iterator it;
-        std::cout << "Loading texture: " << texPath << " ... " << std::endl;
+        //std::cout << "Loading texture: " << texPath << " ... " << std::endl;
         it = TextureList.find(texPath);
         if(it != TextureList.end())
         {
-            std::cout << "Texture already loaded, assigning existing one to object" << std::endl << std::endl;
+            //std::cout << "Texture already loaded, assigning existing one to object" << std::endl << std::endl;
             return TextureList.at(it->first).getPath();
         }
         else
         {
-            std::cout << "Texture not loaded, reading it from hard drive"<< std::endl;
+            //std::cout << "Texture not loaded, reading it from hard drive"<< std::endl;
 
             eTexture tmpTex(texPath.c_str());
             TextureList.insert(std::make_pair(texPath, tmpTex));
@@ -33,15 +33,15 @@ std::string ResourceManager::requestModel(std::string modelPath, std::shared_ptr
     {
         std::map<std::string, Model>::iterator it;
         it = ModelList.find(modelPath);
-        std::cout << "Loading model: " << modelPath << " ... " << std::endl;
+        //std::cout << "Loading model: " << modelPath << " ... " << std::endl;
         if(it != ModelList.end())
         {
-            std::cout << "Model already loaded, assigning existing one to object" << std::endl << std::endl;
+            //std::cout << "Model already loaded, assigning existing one to object" << std::endl << std::endl;
             return ModelList.at(it->first).getPath();
         }
         else
         {
-            std::cout << "Model not loaded, reading it from hard drive" << std::endl << std::endl;
+            //std::cout << "Model not loaded, reading it from hard drive" << std::endl << std::endl;
             Model tmpModel(modelPath.c_str(), rm, Pos, scs, rot);
             ModelList.insert(std::make_pair(modelPath, tmpModel));
             return modelPath;
@@ -66,11 +66,11 @@ void ResourceManager::useModel(std::string modelPath, Shader* shader)
     }
 }
 
-void ResourceManager::useModel(std::string modelPath, GLuint shader)
+void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 pos = glm::vec3(0,0,0))
 {
     try
     {
-        ModelList.at(modelPath).Draw(shader);
+        ModelList.at(modelPath).Draw(shader, pos);
     }
 
     catch(...)
@@ -152,7 +152,7 @@ void ResourceManager::addTextureToQueue(std::string texture)
     try
     {
         TextureQueue.push_back(texture);
-        std::cout << texture << " Added to the Queue." << std::endl;
+        //std::cout << texture << " Added to the Queue." << std::endl;
     }
     catch(...)
     {
@@ -304,15 +304,31 @@ bool ResourceManager::requestCubeMap(int CubeMapID, glm::vec3 Position)
         paths.push_back(path + "back.png");
         paths.push_back(path + "front.png");
 
-        CubeMap tmpCubeMap(paths, CubeMapList.size() + 1, Position);
-
-        CubeMapList.insert(std::make_pair(CubeMapList.size() + 1, tmpCubeMap));
+        std::shared_ptr<CubeMap> tmpCubeMap = (std::shared_ptr<CubeMap>) new CubeMap(paths, CubeMapID, Position);
+        std::cout << "Added Cubemap: " << CubeMapID << std::endl;
+        CubeMapList.insert(std::make_pair(CubeMapID, tmpCubeMap));
         CubeMapPositions.push_back(Position);
+        mCubemapIndex.push_back(CubeMapID);
     }
     catch(...)
     {
         throw;
     }
+}
+
+bool ResourceManager::addCubemap(std::shared_ptr<CubeMap> cubemap, glm::vec3 position)
+{
+    if(cubemap != nullptr){
+        CubeMapList.insert(std::make_pair(cubemap->getID(), cubemap));
+        CubeMapPositions.push_back(position);
+        mCubemapIndex.push_back(cubemap->getID());
+        std::cout << "Added Cubemap: " << cubemap->getID() << std::endl;
+        return true;
+    }
+    else{
+        return false;
+    }
+
 }
 
 int ResourceManager::NearestCubeMap(glm::vec3 TestingPoint)
@@ -322,5 +338,5 @@ int ResourceManager::NearestCubeMap(glm::vec3 TestingPoint)
 
 GLuint ResourceManager::useCubeMap(int ID)
 {
-    return CubeMapList.at(ID).getTextureID();
+    return CubeMapList.at(ID)->getTextureID();
 }

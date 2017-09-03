@@ -103,8 +103,8 @@ vec3 changeSaturation(vec3 color, float saturation)
     // Controls the sample density, which in turn, controls the sample spread.
     float density = 1.0; 
     // Sample weight. Decays as we radiate outwards.
-    float weight = 0.3; 
-const float SAMPLES = 20.; 
+    float weight = 0.1; 
+const float SAMPLES = 10.; 
 
 #define PI 3.14159265359
 
@@ -121,7 +121,7 @@ vec3 Bokeh(vec2 uv, float rad, float thres, float mult)
         
         vec2 disk = vec2(sin(i*10.0)*(1.0-r), cos(i*10.0)*(1.0-r)) * rad;
         
-        col = texture(sampler, uv + pixelSize * disk, 2.0).rgb;
+        col = texture(sampler, uv + pixelSize * disk, 0.0).rgb;
         
         res += col;
         //res2 += pow(col, vec3(5.0))*30.0;
@@ -202,9 +202,12 @@ void main()
     fragcoord = gl_FragCoord.xy/Resolution;
     float vignete = 1.0 - smoothstep(0.9, 1.75, length(vec2(0.0) - (fragcoord * 2.0 - 1.0)));
 
-    //hdrColor = Bokeh(TexCoords, 0.5, .10, 1.0);
 
-    //hdrColor = changeSaturation(hdrColor, .3);
+    //float DOFRadius = smoothstep(-0.5, 1.75, length(vec2(0.0) - (fragcoord * 2.0 - 1.0)));
+
+    //hdrColor = Bokeh(TexCoords, DOFRadius, .10, 1.0);
+
+    //hdrColor = changeSaturation(hdrColor, .7);
 
     color.rgb  = (HDR2((hdrColor + col.rgb + bloom + (result.rgb * lensMod.rgb*5)+ clamp(SSR.rgb, 0.0, 1.0) )  )) * vignete;
 

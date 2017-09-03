@@ -1,6 +1,8 @@
 #include <SphericalHarmonics.h>
 #include <Types.h>
-void SphericalHarmonics::CalculateCohefficients(CubeMap cubemap, const unsigned int order)
+#include <OpenGL/HelperFunctions/CheckError.h>
+
+void SphericalHarmonics::CalculateCohefficients(GLuint cubemap, const unsigned int order)
 {
    const unsigned int sqOrder = order*order;
 
@@ -31,13 +33,14 @@ void SphericalHarmonics::CalculateCohefficients(CubeMap cubemap, const unsigned 
    std::vector<float> shBuffB(sqOrder);
 
    // bind current texture
-   glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap.getTextureID());
+   glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
    // for each face of cube texture
    for(int face=0; face < 6; face++)
    {
       // get width and height
-      glGetTexLevelParameteriv(cubemap.getCubemapFace(face), 0, GL_TEXTURE_WIDTH, &width);
-      glGetTexLevelParameteriv(cubemap.getCubemapFace(face), 0, GL_TEXTURE_HEIGHT, &height);
+      glGetTexLevelParameteriv(GL_TEXTURE_CUBE_MAP_POSITIVE_X+face, 0, GL_TEXTURE_WIDTH, &width);
+      glGetTexLevelParameteriv(GL_TEXTURE_CUBE_MAP_POSITIVE_X+face, 0, GL_TEXTURE_HEIGHT, &height);
+      glCheckError();
 
       if(width != height)
       {
@@ -45,8 +48,9 @@ void SphericalHarmonics::CalculateCohefficients(CubeMap cubemap, const unsigned 
       }
 
       // get format of data in texture
-      glGetTexLevelParameteriv(cubemap.getCubemapFace(face), 0,
+      glGetTexLevelParameteriv(GL_TEXTURE_CUBE_MAP_POSITIVE_X+face, 0,
             GL_TEXTURE_INTERNAL_FORMAT, &internalFormat);
+            glCheckError();
 
       // get data from texture
       if(internalFormat == GL_RGBA)
@@ -54,16 +58,18 @@ void SphericalHarmonics::CalculateCohefficients(CubeMap cubemap, const unsigned 
          numComponents = 4;
          data = (std::unique_ptr<GLubyte[]>)(new GLubyte[numComponents * width * width]);
       }
-      else if(internalFormat == GL_RGB || internalFormat == GL_SRGB)
+      else if(internalFormat == GL_RGB16F || internalFormat == GL_SRGB)
       {
          numComponents = 3;
          data = (std::unique_ptr<GLubyte[]>)(new GLubyte[numComponents * width * width]);
       }
       else
       {
+        std::cout << "Format not compatible" << std::endl;
          return;
       }
-      glGetTexImage(cubemap.getCubemapFace(face), 0, internalFormat, GL_UNSIGNED_BYTE, data.get());
+      glGetTexImage(GL_TEXTURE_CUBE_MAP_POSITIVE_X+face, 0, GL_RGB, GL_UNSIGNED_BYTE, data.get());
+      glCheckError();
 
       // step between two texels for range [0, 1]
       float invWidth = 1.0f / float(width);
@@ -84,7 +90,7 @@ void SphericalHarmonics::CalculateCohefficients(CubeMap cubemap, const unsigned 
 
             // determine direction from center of cube texture to current texel
             glm::vec3 dir;
-            switch(cubemap.getCubemapFace(face))
+            switch(GL_TEXTURE_CUBE_MAP_POSITIVE_X+face)
             {
                case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
                   dir.x = 1.0f;

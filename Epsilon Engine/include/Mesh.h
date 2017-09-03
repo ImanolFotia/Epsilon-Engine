@@ -76,7 +76,7 @@ public:
     void Draw(Shader*& shader, std::shared_ptr<ResourceManager> resm);
 
     /// Render the mesh
-    void Draw(GLuint shader, std::shared_ptr<ResourceManager> resm);
+    void Draw(GLuint shader, std::shared_ptr<ResourceManager> resm, glm::vec3);
 
 /// Render the mesh
     void DrawWithAlpha()

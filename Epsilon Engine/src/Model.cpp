@@ -185,13 +185,13 @@ void Model::Draw(Shader* shader)
 {
     for(GLuint i = 0; i < this->meshes.size(); i++)
         this->meshes[i].Draw(shader, this->resm);
-    shader->Free();
+    //shader->Free();
 }
 
-void Model::Draw(GLuint shader)
+void Model::Draw(GLuint shader, glm::vec3 pos = glm::vec3(0,0,0))
 {
     for(GLuint i = 0; i < this->meshes.size(); i++)
-        this->meshes[i].Draw(shader, this->resm);
+        this->meshes[i].Draw(shader, this->resm, pos);
 }
 
 void Model::SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation, std::shared_ptr<Camera> cam)

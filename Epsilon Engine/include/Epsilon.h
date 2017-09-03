@@ -9,9 +9,7 @@
 
 #include <map>
 #define GLEW_STATIC
-#define GLFW_STATIC
 #include <GL/glew.h>
-#include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #include <thread>
 #include <Texture.h>
@@ -49,6 +47,8 @@
 #include <GUI/GUI.h>
 #include <sys/filesystem.h>
 #include <ParticleSystem.h>
+#include <cubemapRenderer.h>
+#include <CubeMap.h>
 
     static bool Running = true;
     static void endgame(){Running = false;}
@@ -134,6 +134,8 @@ public:
     std::shared_ptr<Camera> eCamera;
 
     /**Shaders**/
+    GLuint cubemapTex = 0;
+    GLuint cubemapDepthTex = 0;
     std::map<string, Shader*> Shaders;
     std::unique_ptr<Skybox> skybox;
     std::shared_ptr<Water> waterPlane;
@@ -159,6 +161,7 @@ public:
    // std::shared_ptr<Pick> m_Pick;
     CAMERA_MODE m_CameraMode;
     std::vector<std::shared_ptr<CubeMap> > m_Cubemaps;
+    std::shared_ptr<CubeMap> mCubemap;
 
     std::shared_ptr<Game::Player> m_PlayerCapsule;
     std::shared_ptr<GUI> m_GUI;

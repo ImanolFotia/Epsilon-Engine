@@ -17,11 +17,16 @@ uniform vec3 LightDirection;
 const vec3 Blue = normalize(vec3(29,91,186));
 const vec3 Cian = normalize(vec3(31, 184, 138));
 const vec3 Orange = normalize(vec3(224,115,36));
-const vec3 Gray = normalize(vec3(0.01,0.01,0.01));
+const vec3 Gray = normalize(vec3(0.001,0.001,0.001));
 const vec3 Black = normalize(vec3(0.0,0.0,0.0));
+const vec3 Brown = normalize(vec3(123.0,91.0,68.0));
 
 const float lowerlimit = 0.0;
-const float upperlimit = 0.07;
+const float upperlimit = 0.01;
+
+uniform mat4 projection;
+uniform mat4 view;
+in vec3 Normal;
 
 vec3 hash(vec3 p3)
 {
@@ -52,14 +57,12 @@ const mat3 m = mat3( 0.00,  0.80,  0.60,
                     -0.60, -0.48,  0.64 );
 vec3 fbm(in vec3 q)
 {
-            vec3 f  = 0.5000*noise( q ); q = m*q*2.01;
-            f += 0.2500*noise( q ); q = m*q*2.02;
-            f += 0.1250*noise( q ); q = m*q*2.03;
-            f += 0.0625*noise( q ); q = m*q*2.01; 
-            f += 0.03125*noise( q ); q = m*q*2.01; 
-            f += 0.015625*noise( q ); q = m*q*2.01; 
-            f += 0.0078125*noise( q ); q = m*q*2.01; 
-            f += 0.00390625*noise( q ); q = m*q*2.01;  
+            vec3    f  = 0.5000*noise( q ); q = m*q*2.01;
+                    f += 0.2500*noise( q ); q = m*q*2.02;
+                    f += 0.1250*noise( q ); q = m*q*2.03;
+                    f += 0.0625*noise( q ); q = m*q*2.04;  
+                    f += 0.03125*noise( q ); q = m*q*2.05; 
+                    f += 0.015625*noise( q ); q = m*q*2.06; 
     return vec3(f);
 }
 
@@ -72,23 +75,32 @@ float getAverage(in vec3 color)
 void main()
 {
 	
-	vec3 Clouds = fbm(vec3(FragPos.x*3.0+time*0.08, FragPos.y*8.0+time*0.08, FragPos.z*3.0+time*0.08));
+	vec3 Clouds = fbm(vec3(FragPos.x*4.0+time*0.08, FragPos.y*9.0+time*0.08, FragPos.z*4.0+time*0.08));
 
 	float scatteringFactor = clamp((FragPos.y - lowerlimit) / (upperlimit - lowerlimit), 0.0, 1.0);
 
+    vec3 SunDir = LightDirection; 
+
+    float Sun = smoothstep(0.95, 1.0, max(dot(-Normal, SunDir), 0.0) * 0.80);
 
 	vec3 Background = mix(Cian, Blue, clamp(FragPos.y*5.0+0.15, 0.0, 1.0));
 
     vec3 SkyColor = mix(Orange, Background, scatteringFactor);
 
-	vec3 TimeColor = mix(Gray, SkyColor, /*clamp(LightDirection.y, 0.0, 1.0)*/ 0.0);
+	vec3 TimeColor = mix(Gray, SkyColor, clamp(LightDirection.y, 0.0, 1.0));
 
-	vec3 color = mix(TimeColor, vec3(2.0), clamp(pow(Clouds.x, 2.0), 0.0, 1.0)) * 0.2 /** clamp(LightDirection.y, 0.1, 0.5)*/;
+    vec3 MixedClouds = vec3(vec3(Clouds.x * 0.2126 + Clouds.y * 0.7152 + Clouds.z * 0.0722)*1.5);
 
-	FragColor.rgb = /*vec3(clamp((1-Clouds.x), 0.0, 1.0)*0.1);*/color;
+	vec3 color = mix(TimeColor, MixedClouds, clamp(pow(mix(0.0, Clouds.x*4.0, Clouds.z), 3.0), 0.0, 1.0)) * 0.2 /** clamp(LightDirection.y, 0.1, 0.5)*/;
+
+    vec3 sun = mix(vec3(Sun), vec3(0.0), clamp(pow(mix(0.0, Clouds.x*4.0, Clouds.z), 3.0), 0.0, 1.0));
+
+    vec3 LightColor = normalize(vec3(218, 205, 118));
+	FragColor.rgb = color/* + sun*LightColor*/;
     FragColor.a = 1.0;
 
-    blurImage = vec4(FragColor)*0.2;
+
+    blurImage = (vec4(FragColor)*0.15) /*+ vec4(sun*2.0*LightColor, 1.0)*/;
     
     gExpensiveNormal.rgb = vec3(0.0);
     

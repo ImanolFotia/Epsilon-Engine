@@ -44,9 +44,9 @@ void Skybox::Render(std::shared_ptr<Camera> & camera, Shader* SkyShader, float e
     glm::mat4 ScaleMatrix = glm::scale(model, glm::vec3(1,1,1));
     glm::mat4 TranslationMatrix = glm::translate(model, glm::vec3(0,0,0));
     model = model * ScaleMatrix * TranslationMatrix;
-    glUniformMatrix4fv(glGetUniformLocation(SkyShader->getProgramID(), "model"), 1, GL_FALSE, &model[0][0]);
-    glUniformMatrix4fv(glGetUniformLocation(SkyShader->getProgramID(), "view"), 1, GL_FALSE, &view[0][0]);
-    glUniformMatrix4fv(glGetUniformLocation(SkyShader->getProgramID(), "projection"), 1, GL_FALSE, &projection[0][0]);
+    //glUniformMatrix4fv(glGetUniformLocation(SkyShader->getProgramID(), "model"), 1, GL_FALSE, &model[0][0]);
+    //glUniformMatrix4fv(glGetUniformLocation(SkyShader->getProgramID(), "view"), 1, GL_FALSE, &view[0][0]);
+    //glUniformMatrix4fv(glGetUniformLocation(SkyShader->getProgramID(), "projection"), 1, GL_FALSE, &projection[0][0]);
     glUniform1f(glGetUniformLocation(SkyShader->getProgramID(), "exposure"), exposure);
     glUniform1f(glGetUniformLocation(SkyShader->getProgramID(), "time"), glfwGetTime());
     glUniform1i(glGetUniformLocation(SkyShader->getProgramID(), "renderDepth"), state);

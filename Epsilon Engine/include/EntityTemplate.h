@@ -86,7 +86,7 @@ public:
             }
         }
         else
-        return m_PrevPosition;
+        return m_Position;
     }
 
     glm::vec3 getScale()

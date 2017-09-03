@@ -223,14 +223,17 @@ void Camera::UpdateMatrices(void)
 
     if ( Aspectratio < 1.5 )
     {
+        //std::cout << "Aspectratio = 4:3" << std::endl;
         ProjectionMatrix = glm::perspective( glm::radians(FieldOfView) , 4.0f/ 3.0f , 0.1f , 3000.0f );
     }
     else if( Aspectratio > 1.7 )
     {
+        //std::cout << "Aspectratio = 16:9" << std::endl;
         ProjectionMatrix = glm::perspective( glm::radians(FieldOfView) , 16.0f/ 9.0f , 0.1f , 3000.0f );
     }
     else
     {
+        //std::cout << "Aspectratio = 16:10" << std::endl;
         ProjectionMatrix = glm::perspective( glm::radians(FieldOfView) , 16.0f/ 10.0f , 0.1f , 3000.0f );
     }
 

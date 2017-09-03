@@ -133,6 +133,11 @@
 		<Unit filename="include/OpenGL/HelperFunctions/FullScreenQuad.h" />
 		<Unit filename="include/OpenGL/HelperFunctions/Quad.h" />
 		<Unit filename="include/OpenGL/RenderTarget.h" />
+		<Unit filename="include/OpenGL/Renderers/DeferredRenderer.h" />
+		<Unit filename="include/OpenGL/Renderers/renderer.h" />
+		<Unit filename="include/OpenGL/ShaderPreProcessor.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="include/OpenGL/VertexArrayObject.h" />
 		<Unit filename="include/OpenGL/VertexBufferObject.h" />
 		<Unit filename="include/Particle.h" />
@@ -164,6 +169,7 @@
 		<Unit filename="include/WAVFile.h" />
 		<Unit filename="include/Water.h" />
 		<Unit filename="include/camera.h" />
+		<Unit filename="include/cubemapRenderer.h" />
 		<Unit filename="include/emlFormat.h" />
 		<Unit filename="include/empFormat.h" />
 		<Unit filename="include/main.h" />
@@ -209,6 +215,7 @@
 		<Unit filename="src/Sun.cpp" />
 		<Unit filename="src/Terrain.cpp" />
 		<Unit filename="src/Water.cpp" />
+		<Unit filename="src/cubemapRenderer.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/resources.rc">
 			<Option compilerVar="WINDRES" />

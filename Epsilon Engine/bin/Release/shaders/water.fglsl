@@ -1,15 +1,13 @@
 #version 430 core
 
 
-layout(location = 0) out vec4 gAlbedoSpec;
-layout(location = 1) out vec3 gPosition;
-layout(location = 2) out vec3 gExpensiveNormal;
-layout(location = 3) out float gDepth;
-layout(location = 4) out vec4 gExtraComponents; 
+
+layout(location = 0) out vec4 FragColor;
+layout(location = 1) out vec4 blurImage;
 
 in vec2 TexCoords;
 in vec4 clipSpace;;
-in vec3 viewDir;
+uniform vec3 viewPos;
 in float visibility;
 in vec3 FragPos;
 in vec3 wFragPos;
@@ -22,6 +20,7 @@ layout (binding = 2) uniform sampler2D DuDvSampler;
 layout (binding = 3) uniform sampler2D diffuseSampler;
 
 uniform float time;
+uniform vec3 lightDir;
 
 vec4 SkyColor = vec4(0.5,0.5,0.5, 1.0);
 vec3 NightFog = vec3(0.1,0.1,0.1);
@@ -72,27 +71,51 @@ vec4 textureNoTile( sampler2D samp, in vec2 uv )
                      textureGrad( samp, uvd, ddxd, ddyd ), b.x), b.y );
 }
 
+uniform int ResX;
+uniform int ResY;
+
+
 void main()
 {
-    float moveFactor = 0.004 * time;
-    float distStrenght =  0.009;
-    vec2 normalizedDeviceCoordinates = (clipSpace.xy / clipSpace.w) * 0.5 + 0.5;
-    vec2 refracCoords = vec2(normalizedDeviceCoordinates.x, normalizedDeviceCoordinates.y );
-    vec4 normaltex = texture(normalSampler, TexCoords - moveFactor);
-    normaltex = (normaltex * 2.0 - 1.0);
 
-    //refracCoords += vec2(normaltex.x, normaltex.z);
-    //refracCoords = clamp(refracCoords, 0.001, 0.999);
+    vec2 iResolution = vec2(ResX, ResY);
+    float moveFactor = 0.04 * time;
+    float distStrenght =  0.05;
+    vec2 ndc = gl_FragCoord.xy/iResolution;//(clipSpace.xy / clipSpace.w);
+    //ndc = ndc*2.0-1.0;
+    //ndc.x *= iResolution.x/iResolution.y;
 
+    vec2 refracCoords = ndc;
 
-    gAlbedoSpec.rgb = texture(diffuseSampler, TexCoords - moveFactor).rgb;
-    gAlbedoSpec.a = 1.0;
-    gExpensiveNormal.rgb = normalize(normaltex.rgb * TBN);
+    vec2 distortion1 = (textureNoTile(DuDvSampler,vec2(TexCoords.x + moveFactor, TexCoords.y - moveFactor)).rg) * distStrenght;
+    vec2 distortion2 = (textureNoTile(DuDvSampler,vec2(TexCoords.x + moveFactor, TexCoords.y + moveFactor)).rg) * distStrenght;
+    vec2 finalDist = distortion1 - distortion2;
+    vec3 normaltex = textureNoTile(normalSampler, TexCoords + finalDist).xyz;
+    normaltex = normalize(vec3(normaltex.r * 2.0 - 1.0, normaltex.b, normaltex.g *2.0 - 1.0));
 
-    gPosition.rgb = FragPos;
-    gDepth = gl_FragCoord.z;
+    refracCoords += finalDist;
+    refracCoords = clamp(refracCoords, 0.000, 1.0);
 
-    gExtraComponents = vec4(1.0, 0.0, 0.0, 0.0);
+    vec3 viewDir = normalize(viewPos - wFragPos);
+
+    vec3 tangent = vec3(1.0,0.0, 0.0);
+    vec3 bitangent = vec3(-1.0, 0.0, 0.0);
+    vec3 normal = vec3(0.0, 1.0, 0.0);
+
+    vec3 n = normaltex;
+    vec3 light = vec3(0.5, -0.8, 0.5);
+
+    vec3 halfway = normalize(-lightDir + viewDir);
+
+    
+    vec3 reflectDir = normalize(reflect(-light, n));  
+    vec3 spec = vec3(pow(max(dot(reflectDir, viewDir), 0.0), 32));
+
+    FragColor.rgb = texture(ColorBuffer, refracCoords).rgb * vec3(0.5) + spec;
+    FragColor.a = 1.0;
+
+    blurImage = vec4(spec*0.1, 1.0);
+
 
 
 }

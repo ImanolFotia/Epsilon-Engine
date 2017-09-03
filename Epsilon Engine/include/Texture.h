@@ -61,7 +61,7 @@ public:
         else {
             if(type == GL_TEXTURE_2D)//GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT
                 if(DATA.COMPRESSED_TEXTURES)
-                    glTexImage2D(type, 0, GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+                    glTexImage2D(type, 0, 0x8C4F, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
                 else
                     glTexImage2D(type, 0, GL_SRGB_ALPHA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 

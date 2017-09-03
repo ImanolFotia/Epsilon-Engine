@@ -18,24 +18,20 @@
 
 class ResourceManager;
 
-struct tBSPLightmap
-{
+struct tBSPLightmap {
     char imageBits[128][128][3];   /// The RGB data in a 128x128 image
 };
 
 using namespace std;
 
 
-class BSPFace
-{
+class BSPFace {
 public:
-    BSPFace()
-    {
+    BSPFace() {
         collinfo = (std::shared_ptr<Physics::CollisionInfo>) new Physics::CollisionInfo();
     }
 
-    virtual ~BSPFace()
-    {
+    virtual ~BSPFace() {
         //std::cout << "Destroyed BSP Face" << std::endl;
     }
 public:
@@ -51,15 +47,14 @@ public:
 
 public:
 
-    void RenderFace(GLuint shader, GLuint TextureID,GLuint normalID, GLuint specularID, GLuint metallicID);
+    void RenderFace(GLuint shader, GLuint TextureID,GLuint normalID, GLuint specularID, GLuint metallicID, bool);
 
 public:
 
     std::string ObjectID;
 
     int faceID;
-    std::string getObjectID()
-    {
+    std::string getObjectID() {
         return ObjectID;
     }
 
@@ -67,8 +62,19 @@ public:
 
 private:
 
-    bool LoadLightMapTexture()
-    {
+    struct t_Vertex {
+        glm::vec3 position;
+        glm::vec2 texcoord;
+        glm::vec3 normal;
+        glm::vec3 tangent;
+        glm::vec3 bitangent;
+    };
+
+    std::vector<t_Vertex> mVertices;
+
+    glm::vec3 mPosition;
+
+    bool LoadLightMapTexture() {
         glGenTextures(1, &LightMaptexture);
         glPixelStorei (GL_UNPACK_ALIGNMENT, 1);
         glBindTexture(GL_TEXTURE_2D, LightMaptexture);
@@ -82,13 +88,11 @@ private:
         return true;
     }
 
-    bool CalcTangentSpace()
-    {
+    bool CalcTangentSpace() {
 
         /// calculate tangent/bitangent vectors of both triangles
         glm::vec3 tangent1, bitangent1;
-        for(int i = 0 ; i < (int)Indices.size() ; i+=3)
-        {
+        for(int i = 0 ; i < (int)Indices.size() ; i+=3) {
 
             glm::vec3 edge1 = Vertices.at(Indices.at((i+1))) - Vertices.at(Indices.at((i)));
             glm::vec3 edge2 = Vertices.at(Indices.at((i+2))) - Vertices.at(Indices.at((i)));
@@ -126,53 +130,46 @@ private:
         return true;
     }
 
-    bool prepareVAO()
-    {
-        GLuint VBO, EBO, UVB, LMUVB, NBO, TBO, BTBO;
+    bool prepareVAO() {
 
         glGenVertexArrays(1, &this->VAO);
 
         glGenBuffers(1, &VBO);
         glGenBuffers(1, &EBO);
-        glGenBuffers(1, &UVB);
-        glGenBuffers(1, &LMUVB);
-        glGenBuffers(1, &NBO);
-        glGenBuffers(1, &TBO);
-        glGenBuffers(1, &BTBO);
 
         glBindVertexArray(this->VAO);
 
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (GLvoid*)0);
+         /// Load data into vertex buffers
+        glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+        /// A great thing about structs is that their memory layout is sequential for all its items.
+        /// The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
+        /// again translates to 3/2 floats which translates to a byte array.
+        glBufferData(GL_ARRAY_BUFFER, this->mVertices.size() * sizeof(t_Vertex), &this->mVertices[0], GL_STATIC_DRAW);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->Indices.size() * sizeof(GLuint), &this->Indices[0], GL_STATIC_DRAW);
+
+        /// Set the vertex attribute pointers
+        /// Vertex Positions
         glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(t_Vertex), (GLvoid*)0);
 
-        glBindBuffer(GL_ARRAY_BUFFER, UVB);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * TexCoords.size(), &TexCoords[0], GL_STATIC_DRAW);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (GLvoid*)0);
+        /// Vertex Texture Coords
         glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(t_Vertex), (GLvoid*)offsetof(t_Vertex, texcoord));
 
-        glBindBuffer(GL_ARRAY_BUFFER, NBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * Normals.size(), &Normals[0], GL_STATIC_DRAW);
-        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (GLvoid*)0);
+        /// Vertex Normals
         glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(t_Vertex), (GLvoid*)offsetof(t_Vertex, normal));
 
-        glBindBuffer(GL_ARRAY_BUFFER, TBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * Tangents.size(), &Tangents[0], GL_STATIC_DRAW);
-        glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (GLvoid*)0);
+        /// Vertex Tangent
         glEnableVertexAttribArray(3);
+        glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(t_Vertex), (GLvoid*)offsetof(t_Vertex, tangent));
 
-        glBindBuffer(GL_ARRAY_BUFFER, BTBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * Bitangents.size(), &Bitangents[0], GL_STATIC_DRAW);
-        glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (GLvoid*)0);
+        /// Vertex Bitangent
         glEnableVertexAttribArray(4);
-        /**
-        cout << "SizeOf indices: " << sizeof(unsigned int) * Indices.size() << endl;
-        */
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+        glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(t_Vertex), (GLvoid*)offsetof(t_Vertex, bitangent));
 
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
         return true;
     }
@@ -184,6 +181,7 @@ private:
 
     GLuint texture;
     string imagePath;
+    GLuint VBO, EBO;
     tBSPLightmap LightMap;
     GLuint LightMaptexture;
     std::shared_ptr<Physics::PhysicObject> CollisionObject;

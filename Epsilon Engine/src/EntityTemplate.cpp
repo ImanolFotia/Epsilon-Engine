@@ -14,12 +14,14 @@ EntityTemplate::EntityTemplate(std::shared_ptr<ResourceManager> rm, glm::vec3 po
 void EntityTemplate::Update()
 {
     for(int i = 0; i < ComponentList.size(); ++i)
+    {
         ComponentList.at(i)->Update(resourceManager);
+    }
 }
 
 void EntityTemplate::Render()
 {
     for(int i = 0; i < ComponentList.size(); ++i)
-        ComponentList.at(i)->Render(resourceManager);
+        ComponentList.at(i)->Render(resourceManager, this->getPosition());
 }
 

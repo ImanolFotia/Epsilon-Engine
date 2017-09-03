@@ -33,14 +33,16 @@ public:
     glm::vec3 Position;
     glm::vec3 Direction;
 
+    float height;
 private:
 
     void PrepareVAO();
 
     float radius;
-    float height;
 
     GLuint TextureID;
+
+    float mMovement;
 
     GLuint VAO;
     GLuint VBO, EBO;

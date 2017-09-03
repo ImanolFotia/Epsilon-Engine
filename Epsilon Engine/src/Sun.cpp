@@ -5,6 +5,7 @@
 ///=============================================================================
 
 #include <Sun.h>
+#include <sys/KeyBoard.h>
 
 Sun::Sun()
 {
@@ -12,11 +13,12 @@ Sun::Sun()
 
     this->TextureID = tex.getTextureID();
 
-    this->radius = 8.0;
+    this->radius = 30.0;
 
-    this->height = 10.0;
+    this->height = 30.0;
 
     PrepareVAO();
+    mMovement = 1.0;
 }
 
 void Sun::Render(Shader*& shader)
@@ -36,11 +38,17 @@ void Sun::Render(Shader*& shader)
     glBindVertexArray(0);
     glUseProgram(0);
     glDepthFunc(GL_LESS);
+
 }
 
 void Sun::Update()
 {
-    this->Position = glm::vec3(0,0,0) + glm::vec3(this->radius * glm::cos(0.8) /** glm::cos(glfwGetTime()/10)*/, height * glm::sin(1.0) /** glm::sin(glfwGetTime()/10)*/, this->radius * glm::sin(0.3) /** glm::sin(glfwGetTime()/10)*/);
+
+    if(Input::KeyBoard::KEYS[Input::GLFW::Key::SIX])
+        mMovement += 0.01;
+    if(Input::KeyBoard::KEYS[Input::GLFW::Key::NINE])
+        mMovement -= 0.01;
+    this->Position = glm::vec3(0,0,0) + glm::vec3(this->radius * glm::cos(mMovement) /** glm::cos(glfwGetTime()/10)*/, height * glm::sin(mMovement) /** glm::sin(glfwGetTime()/10)*/, 0.0/*this->radius * glm::sin(mMovement)*/ /** glm::sin(glfwGetTime()/10)*/);
     this->Direction = glm::normalize(this->Position - glm::vec3(0,0,0));
 }
 
@@ -77,7 +85,6 @@ void Sun::PrepareVAO()
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
 
-    glBindBuffer(GL_VERTEX_ARRAY, 0);
     glBindVertexArray(0);
 
     delete vertices;

@@ -26,8 +26,6 @@ uniform vec3 uViewDir;
 uniform mat4 view;
 uniform mat4 uView;
 
-
-
 const float gamma = 2.2;
 const float shadowDistance = 100.0f;
 const float fadeDistance = 10.0f;
@@ -35,8 +33,10 @@ const vec3 SkyColor = normalize(vec3(186,162,135));
 
 const vec3 SkyColor0 = normalize(vec3(205, 109, 39));
 const vec3 SkyColor1 = normalize(vec3(256, 75, 20));
-const float density = 0.00015;
-const float gradient = 1.5;
+const float density = 0.0003;
+const float gradient = 1.9;
+
+#include <PBRFunctions.glsl>
 
 
 vec3 FragPos;
@@ -93,7 +93,7 @@ float poissonShadowMapping(vec4 fragPosLightSpace){
 
     for (int i=0;i<4;i++){
         int index = int(16.0*random(floor(FragPos.xyz*1000.0), i))%16;
-        visibility -= 0.2*(texture(shadowMap, vec3(fragPosLightSpace.xy+ poissonDisk[index]/2000.0, fragPosLightSpace.z - bias)/fragPosLightSpace.w).r);
+        visibility -= 0.2*(texture(shadowMap, vec3(fragPosLightSpace.xy+ poissonDisk[index]/1000.0, fragPosLightSpace.z - bias)/fragPosLightSpace.w).r);
     }
 
     return visibility;
@@ -132,6 +132,12 @@ vec3 WorldPosFromDepth(float depth) {
 }
 
 
+const vec3 Blue = normalize(vec3(29,91,186));
+const vec3 Cian = normalize(vec3(31, 184, 138));
+const vec3 Orange = normalize(vec3(224,115,36));
+const vec3 Gray = normalize(vec3(0.001,0.001,0.001));
+const vec3 Black = normalize(vec3(0.0,0.0,0.0));
+const vec3 Brown = normalize(vec3(123.0,91.0,68.0));
 
 /*
 vec3 ComputeSHIrradiance(in vec3 normal)
@@ -150,51 +156,14 @@ vec3 ComputeSHIrradiance(in vec3 normal)
 
 uniform float time;
 
-const float PI = 3.14159265359;
 
 vec3 calculatePointPBR(vec3 pos);
 vec3 CalculateDirectionalPBR();
-float DistributionGGX(vec3 N, vec3 H, float roughness)
-{
-    float a      = roughness*roughness;
-    float a2     = a*a;
-    float NdotH  = max(dot(N, H), 0.0);
-    float NdotH2 = NdotH*NdotH;
-  
-    float nom   = a2;
-    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
-    denom = PI * denom * denom;
-  
-    return nom / denom;
-}
 
-float GeometrySchlickGGX(float NdotV, float roughness)
-{
-    float r = (roughness + 1.0);
-    float k = (r*r) / 8.0;
-
-    float nom   = NdotV;
-    float denom = NdotV * (1.0 - k) + k;
-  
-    return nom / denom;
-}
-float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
-{
-    float NdotV = max(dot(N, V), 0.0);
-    float NdotL = max(dot(N, L), 0.0);
-    float ggx2  = GeometrySchlickGGX(NdotV, roughness);
-    float ggx1  = GeometrySchlickGGX(NdotL, roughness);
-  
-    return ggx1 * ggx2;
-}
 vec3 F;
 vec3 kS;
 vec3 kD;
 
-vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
-{
-    return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
-}  
 
 float orenNayarDiffuse(
   vec3 lightDirection,
@@ -246,8 +215,8 @@ void main()
 
 
     if(ExtraComponents.y > 0.1){
-    	FragColor.rgb = mix(SkyColor, Diffuse, visibility);
-    	blurImage.rgb = mix(SkyColor, Diffuse, visibility);
+    	FragColor.rgb = mix(SkyColor, Diffuse, visibility) * ExtraComponents.y;
+    	blurImage.rgb = mix(SkyColor, Diffuse, visibility) * ExtraComponents.y;
     	return;
     }
 
@@ -265,7 +234,6 @@ void main()
     //F.z = clamp(F.z, 0.03, 1.0);
     kS = F;
     kD = vec3(1.0) - kS;
-    kD *= 1.0 - ExtraComponents.x;
 
 
     //vec3 shc = sphericalHarmonics(Normal) * u_scaleFactor;
@@ -289,14 +257,25 @@ void main()
 
     //light += calculatePointPBR(viewPos);
 
-    //light += irradiance * vec3(ExtraComponents.r) * kS;
-    light += ((irradiance * Diffuse) * kD);
+    //light += calculatePointPBR(viewPos);
+
+    //light += irradiance * vec3(ExtraComponents.r) * kS; // IBL
+    light += ((irradiance * Diffuse) * kD); // Spherical harmonics
     //light += ambient;
     
     if(hdr)
-    light *= AmbientOcclusion;
+    light *= pow(AmbientOcclusion, 2.2);
 
-    vec3 fogColor = mix(SkyColor0, SkyColor1, lightDir.y);
+
+const float lowerlimit = 0.0;
+const float upperlimit = 0.07;
+    float scatteringFactor = clamp((FragPos.y - lowerlimit) / (upperlimit - lowerlimit), 0.0, 1.0);
+    vec3 Background = mix(Cian, Brown, clamp(FragPos.y*5.0+0.15, 0.0, 1.0));
+
+    //vec3 SkyColor = mix(Orange, Background, scatteringFactor);
+
+    vec3 fogColor = clamp(mix(Gray, Background, clamp(lightDir.y, 0.0, 1.0)), vec3(0.0), normalize(vec3(221,221,221)));
+
 
     FragColor.rgb = mix(SkyColor, light, visibility);
     vec3 testHDR = FragColor.rgb;
@@ -304,6 +283,8 @@ void main()
 
     if(brightness > 1.0)
         blurImage.rgb = vec3(0.0);//FragColor.rgb;
+
+    blurImage.rgb = vec3(0.0);
 
             FragColor.a = 1.0;
     blurImage.a = 1.0;
@@ -341,6 +322,9 @@ vec3 CalculateDirectional()
 vec3 calculatePoint(vec3 LightPos)
 {
 	vec3 lightcolor = normalize(LightPos) *0.5+ 0.5;
+
+    if(LightPos.z > 53 && LightPos.z < 55)
+        lightcolor = vec3(0.0, 0.0, 0.7);
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 lightDirection = normalize(LightPos - FragPos);
     float diff =  max(dot(lightDirection, Normal), 0.0);
@@ -362,7 +346,7 @@ vec3 calculatePoint(vec3 LightPos)
 vec3 CalculateDirectionalPBR()
 {
     // calculate per-light radiance
-        vec3 lightcolor = vec3(0.3);//normalize(vec3(205, 109, 39));
+        vec3 lightcolor = normalize(vec3(205, 109, 39));
         vec3 V = normalize(viewPos - FragPos);
         vec3 L = normalize(lightDir);
         vec3 H = normalize(V + L);  
@@ -376,20 +360,23 @@ vec3 CalculateDirectionalPBR()
         vec3 brdf = nominator / denominator;
             
         // add to outgoing radiance Lo
-        float NdotL = max(dot(Normal, L), 0.0); // max(orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.03, 1.0), 1.0), 0.0);//              
+        float NdotL =/* max(dot(Normal, L), 0.0); */ max(orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.03, 1.0), 1.0), 0.0);//              
         vec3 Lo = (kD * Diffuse / PI + brdf) * NdotL; 
         return mix(vec3(0.0), Lo * clamp(1.0 - shadow, 0.0, 1.0) * lightcolor, clamp(lightDir.y + 0.1, 0.0, 1.0))*4.0;
 }
 vec3 calculatePointPBR(vec3 pos)
 {
   // calculate per-light radiance
+        vec3 lightcolor = normalize(vec3(205, 109, 39));
+        if(pos.z == 56.0)
+            lightcolor = vec3(0.0, 0.0, 0.7);
         vec3 V = normalize(viewPos - FragPos);
         vec3 L = normalize(pos - FragPos);
         vec3 H = normalize(V + L);
         //float distance    = length(pos - FragPos);
         float distance = length(pos - FragPos);
-        attenuation = calculateAttenuation(100, distance);//1.0 / (1.0 + 0.1/*factor*/ * pow(distance, 2));
-        attenuation *= smoothstep(40.0, 35.0, distance);
+        attenuation = calculateAttenuation(80, distance);//1.0 / (1.0 + 0.1/*factor*/ * pow(distance, 2));
+        attenuation *= smoothstep(80.0, 75.0, distance);
         vec3 radiance     = vec3(1.0) * attenuation;        
         
         // cook-torrance brdf
@@ -401,9 +388,9 @@ vec3 calculatePointPBR(vec3 pos)
         vec3 brdf = nominator / denominator;
             
         // add to outgoing radiance Lo
-        float NdotL = max(dot(Normal, L), 0.0); //max(orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.03, 1.0), 1.0), 0.0);//               
+        float NdotL = /*max(dot(Normal, L), 0.0);*/  max(orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.03, 1.0), 1.0), 0.0);//               
         vec3 Lo = (kD * Diffuse / PI + brdf) * radiance * NdotL; 
-        return Lo /* normalize(vec3(205, 109, 39))*/;
+        return Lo * lightcolor;
 }
 
 float calculateAttenuation(float power, float distance)

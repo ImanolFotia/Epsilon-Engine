@@ -69,7 +69,7 @@ void main()
  
     vec3 wp = vec3(vec4(viewPos, 1.0));
     vec3 jitt = mix(vec3(0.0), normalize(vec3(hash(wp))), spec);
-    vec4 coords = RayCast((vec3(jitt) + reflected * max(minRayStep, -viewPos.z)), hitPos, dDepth);
+    vec4 coords = RayCast((/*vec3(jitt) + */reflected * max(minRayStep, -viewPos.z)), hitPos, dDepth);
  
  
     vec2 dCoords = smoothstep(0.2, 0.6, abs(vec2(0.5, 0.5) - coords.xy));

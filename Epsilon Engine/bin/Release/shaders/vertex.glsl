@@ -1,21 +1,49 @@
-#version 330 core
+#version 420 core
 
-layout(location = 0) in vec3 positions;
-layout(location = 1) in vec2 uv;
+layout(location = 0) in vec3 in_position;
+layout(location = 1) in vec2 in_vertexUV;
+layout(location = 2) in vec3 in_normal;
+layout(location = 3) in vec3 in_tangent;
+layout(location = 4) in vec3 in_bitangent;
 
-uniform vec2 position;
-uniform vec2 scale;
-uniform vec2 glyph;
-uniform int viewportx;
-uniform int viewporty;
+uniform mat4 view;
+uniform mat4 model;
+uniform mat4 projection;
+uniform mat4 MVP;
 
-out vec2 texCoords;
+out vec2 TexCoords;
+out vec3 Normal;
+out vec4 FragPos;
+out mat3 TBN;
+
+vec3 T;
+vec3 B;
+vec3 N;
+
+mat3 CreateTBNMatrix(mat3 normalMatrix)
+{
+     T = normalize(normalMatrix * in_tangent);
+     B = normalize(normalMatrix * in_bitangent);
+     N = normalize(normalMatrix * in_normal);
+
+    return transpose(mat3(T, B, N));
+}
 void main()
 {
-	//vec2 calcpos = vec2((position.x / viewportx), (position.y  / viewporty));
-	//vec2 pos = ((positions.xy*0.5+0.5) * glyph + calcpos) * 2 - 1;
+	vec4 pos = vec4(in_position, 1.0);
 
-	gl_Position = vec4(((positions.xy * glyph) + position) , 0.0, 1.0);
+	vec4 viewPos = model * pos;
 
-	texCoords = vec2(-uv.x, uv.y);
+	FragPos = viewPos;
+
+	Normal = in_normal;
+
+	TexCoords = in_vertexUV;
+
+	mat3 NormalMatrix = transpose(inverse(mat3(model)));
+	TBN = CreateTBNMatrix(NormalMatrix);
+
+	gl_Position = projection * view * viewPos;
+
+
 }

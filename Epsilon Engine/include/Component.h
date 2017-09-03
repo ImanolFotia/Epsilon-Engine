@@ -34,7 +34,7 @@ namespace Component
 
         virtual void Update(std::shared_ptr<ResourceManager> rm) = 0;
 
-        virtual void Render(std::shared_ptr<ResourceManager> rm) = 0;
+        virtual void Render(std::shared_ptr<ResourceManager> rm, glm::vec3) = 0;
 
         COMPONENT_TYPE Type;
         btVector3 m_PhysicsWorldPosition;
@@ -86,11 +86,13 @@ namespace Component
             shaderType = shader;
         }
 
-        void Update(std::shared_ptr<ResourceManager> rm){}
+        void Update(std::shared_ptr<ResourceManager> rm){
 
-        void Render(std::shared_ptr<ResourceManager> rm)
+        }
+
+        void Render(std::shared_ptr<ResourceManager> rm, glm::vec3 pos)
         {
-            rm->useModel(modelPath, rm->getShaderID(shaderType));
+            rm->useModel(modelPath, rm->getShaderID(shaderType), pos);
         }
 
         bool hasModel = false;
@@ -163,7 +165,7 @@ namespace Component
         /** Functions declared for the sake of pure virtual function polymorphism, must not be used for production*/
         virtual void Fill(bool, bool) {}
         virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader) {}
-        void Render(std::shared_ptr<ResourceManager> rm){}
+        void Render(std::shared_ptr<ResourceManager> rm, glm::vec3){}
     };
 
     class MovementComponent : public Component

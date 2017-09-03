@@ -67,7 +67,7 @@ public:
      * \param Path to the model
      * \param Shader ID
      */
-    void useModel(std::string modelPath, GLuint shader);
+    void useModel(std::string modelPath, GLuint shader, glm::vec3);
 
     /** \brief Retrieves the asked model's Mins and Max points contained in a structure
      *
@@ -192,6 +192,8 @@ public:
 
     void resetTextureUsage(std::string);
 
+    bool addCubemap(std::shared_ptr<CubeMap>, glm::vec3);
+
     std::shared_ptr<Camera> m_Camera;
 
     std::shared_ptr<Physics::Physics> m_PhysicsWorld;
@@ -200,8 +202,9 @@ public:
 
     float timestep;
 
-    std::map<int, CubeMap> CubeMapList;
+    std::map<int, std::shared_ptr<CubeMap> > CubeMapList;
 
+    std::vector<int> mCubemapIndex;
 private:
 
 

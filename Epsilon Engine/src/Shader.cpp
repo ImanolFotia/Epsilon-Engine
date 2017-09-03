@@ -12,66 +12,99 @@
 #include <algorithm>
 #include <Log.h>
 #include <Includes.h>
+#include <OpenGL/ShaderPreProcessor.h>
 
 Shader::Shader(const char* vertex, const char* fragment)
 {
     Path = std::string(vertex);
-    std::cout << fragment << std::endl;
-    /// Create the shaders
-	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
-	/// Read the Vertex Shader code from the file
-	std::string VertexShaderCode;
-	std::ifstream VertexShaderStream(vertex, std::ios::in);
-	if(VertexShaderStream.is_open()){
-		std::string Line = "";
-		while(getline(VertexShaderStream, Line))
-			VertexShaderCode += "\n" + Line;
-		VertexShaderStream.close();
-	}else{
-		printf("Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", vertex);
-		getchar();
-		return ;
-	}
+	std::string VertexShaderCode = GLSLPreProcessor::PreProcessGLSL(std::string(vertex));
 
-	/// Read the Fragment Shader code from the file
-	std::string FragmentShaderCode;
-	std::ifstream FragmentShaderStream(fragment, std::ios::in);
-	if(FragmentShaderStream.is_open()){
-		std::string Line = "";
-		while(getline(FragmentShaderStream, Line))
-			FragmentShaderCode += "\n" + Line;
-		FragmentShaderStream.close();
-	}
+	std::string FragmentShaderCode = GLSLPreProcessor::PreProcessGLSL(std::string(fragment));
+
+	GLuint VertexShaderID = generateVertexProgram(VertexShaderCode);
+
+	GLuint FragmentShaderID = generateFragmentProgram(FragmentShaderCode);
 
 
+		std::cout << Path << std::endl;
+
+	/// Link the program
+	//printf("Linking program\n");
+    ProgramID = glCreateProgram();
+	glAttachShader(ProgramID, VertexShaderID);
+	glAttachShader(ProgramID, FragmentShaderID);
+	glLinkProgram(ProgramID);
 
 	GLint Result = GL_FALSE;
 	int InfoLogLength;
-
-
-
-	/// Compile Vertex Shader
-	//printf("Compiling shader : %s\n", vertex);
-	char const * VertexSourcePointer = VertexShaderCode.c_str();
-	glShaderSource(VertexShaderID, 1, &VertexSourcePointer , NULL);
-	glCompileShader(VertexShaderID);
-
-	/// Check Vertex Shader
-	glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
-	glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+	/// Check the program
+	glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
+	glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
 	if ( InfoLogLength > 0 ){
-		std::vector<char> VertexShaderErrorMessage(InfoLogLength+1);
-		glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
-		printf("%s\n", &VertexShaderErrorMessage[0]);
+		char ProgramErrorMessage[InfoLogLength+1];
+		glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, ProgramErrorMessage);
+		//printf("%s\n", &ProgramErrorMessage[0]);
+		std::cout << ProgramErrorMessage << std::endl;
+		Global::Log::WriteToLog("Error while compiling: " + Helpers::removeExtension(Path));
+		Global::Log::WriteToLog(std::string(ProgramErrorMessage));
 	}
+	glDeleteShader(VertexShaderID);
+	glDeleteShader(FragmentShaderID);
+	this->getUniformsLocations();
+}
 
+Shader::Shader(const char* vertex, const char* fragment, const char* geometry)
+{
+    Path = std::string(vertex);
 
+	std::string VertexShaderCode = GLSLPreProcessor::PreProcessGLSL(std::string(vertex));
 
-	/// Compile Fragment Shader
+	std::string FragmentShaderCode = GLSLPreProcessor::PreProcessGLSL(std::string(fragment));
+
+	std::string GeometryShaderCode = GLSLPreProcessor::PreProcessGLSL(std::string(geometry));
+
+	GLuint VertexShaderID = generateVertexProgram(VertexShaderCode);
+
+	GLuint FragmentShaderID = generateFragmentProgram(FragmentShaderCode);
+
+	GLuint GeometryShaderID = generateGeometryProgram(GeometryShaderCode);
+
+	/// Link the program
+	//printf("Linking program\n");
+    ProgramID = glCreateProgram();
+	glAttachShader(ProgramID, VertexShaderID);
+	glAttachShader(ProgramID, FragmentShaderID);
+	glAttachShader(ProgramID, GeometryShaderID);
+	glLinkProgram(ProgramID);
+
+	GLint Result = GL_FALSE;
+	int InfoLogLength;
+	/// Check the program
+	glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
+	glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+	if ( InfoLogLength > 0 ){
+		char ProgramErrorMessage[InfoLogLength+1];
+		glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, ProgramErrorMessage);
+		//printf("%s\n", &ProgramErrorMessage[0]);
+		std::cout << ProgramErrorMessage << std::endl;
+		Global::Log::WriteToLog("Error while compiling: " + Helpers::removeExtension(Path));
+		Global::Log::WriteToLog(std::string(ProgramErrorMessage));
+	}
+	glDeleteShader(VertexShaderID);
+	glDeleteShader(FragmentShaderID);
+	glDeleteShader(GeometryShaderID);
+	this->getUniformsLocations();
+}
+
+GLuint Shader::generateFragmentProgram(std::string pShaderString)
+{
+	GLint Result = GL_FALSE;
+	int InfoLogLength;
+    /// Compile Fragment Shader
 	//printf("Compiling shader : %s\n", fragment);
-	char const * FragmentSourcePointer = FragmentShaderCode.c_str();
+	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+	char const * FragmentSourcePointer = pShaderString.c_str();
 	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer , NULL);
 	glCompileShader(FragmentShaderID);
 
@@ -84,35 +117,51 @@ Shader::Shader(const char* vertex, const char* fragment)
 		printf("%s\n", &FragmentShaderErrorMessage[0]);
 	}
 
-
-
-	/// Link the program
-	//printf("Linking program\n");
-    ProgramID = glCreateProgram();
-	glAttachShader(ProgramID, VertexShaderID);
-	glAttachShader(ProgramID, FragmentShaderID);
-	glLinkProgram(ProgramID);
-
-	/// Check the program
-	glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
-	glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-	if ( InfoLogLength > 0 ){
-		char ProgramErrorMessage[InfoLogLength+1];
-		glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, ProgramErrorMessage);
-		//printf("%s\n", &ProgramErrorMessage[0]);
-		std::cout << ProgramErrorMessage << std::endl;
-		Global::Log::WriteToLog("Error while compiling: " + Helpers::removeExtension(Path));
-		Global::Log::WriteToLog(std::string(ProgramErrorMessage));
-	}
-
-	glDeleteShader(VertexShaderID);
-	glDeleteShader(FragmentShaderID);
-
-	this->getUniformsLocations();
-
-
+	return FragmentShaderID;
 }
 
+GLuint Shader::generateVertexProgram(std::string pShaderString)
+{
+	GLint Result = GL_FALSE;
+	int InfoLogLength;
+	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+	char const * VertexSourcePointer = pShaderString.c_str();
+	glShaderSource(VertexShaderID, 1, &VertexSourcePointer , NULL);
+	glCompileShader(VertexShaderID);
+
+	/// Check Vertex Shader
+	glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
+	glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+	if ( InfoLogLength > 0 ){
+		std::vector<char> VertexShaderErrorMessage(InfoLogLength+1);
+		glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
+		printf("%s\n", &VertexShaderErrorMessage[0]);
+	}
+
+	return VertexShaderID;
+}
+
+
+GLuint Shader::generateGeometryProgram(std::string pShaderString)
+{
+	GLint Result = GL_FALSE;
+	int InfoLogLength;
+	GLuint GeometryShaderID = glCreateShader(GL_GEOMETRY_SHADER);
+	char const * GeometrySourcePointer = pShaderString.c_str();
+	glShaderSource(GeometryShaderID, 1, &GeometrySourcePointer , NULL);
+	glCompileShader(GeometryShaderID);
+
+	/// Check Vertex Shader
+	glGetShaderiv(GeometryShaderID, GL_COMPILE_STATUS, &Result);
+	glGetShaderiv(GeometryShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+	if ( InfoLogLength > 0 ){
+		std::vector<char> GeometryShaderErrorMessage(InfoLogLength+1);
+		glGetShaderInfoLog(GeometryShaderID, InfoLogLength, NULL, &GeometryShaderErrorMessage[0]);
+		printf("%s\n", &GeometryShaderErrorMessage[0]);
+	}
+
+	return GeometryShaderID;
+}
 void Shader::getUniformsLocations()
 {
 
@@ -131,7 +180,8 @@ void Shader::getUniformsLocations()
             GLenum glType;
             glGetActiveAttrib(ProgramID, i, sizeof(buffer), 0, &Size, &glType, buffer);
 
-            this->m_Uniforms[std::string(buffer)] = glGetAttribLocation(ProgramID, buffer);
+            this->m_Attributes[std::string(buffer)] = glGetAttribLocation(ProgramID, buffer);
+            //std::cout << "Attribute: " << i << " :: " << buffer << std::endl;
         }
 
         // NOTE(Joey): iterate over all active uniforms
@@ -141,6 +191,7 @@ void Shader::getUniformsLocations()
             glGetActiveUniform(ProgramID, i, sizeof(buffer), 0, &Size, &glType, buffer);
 
             this->m_Uniforms[std::string(buffer)] = glGetUniformLocation(ProgramID, buffer);
+            //std::cout << "Uniform: " << i << " :: " << buffer << std::endl;
         }
 
     this->MVP_Location = glGetUniformLocation(this->ProgramID, "MVP");

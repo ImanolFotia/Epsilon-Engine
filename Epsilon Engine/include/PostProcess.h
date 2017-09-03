@@ -66,6 +66,7 @@ public:
     GLuint depthBuffer;
     std::shared_ptr<FrameBuffer<std::string> > hdrFBO;
     std::unique_ptr<Shader> shader;
+    std::shared_ptr<FrameBuffer<int> > CopyTextureFBO;
 
     float m_exposure;
 private:
@@ -205,9 +206,11 @@ private:
     GLuint ssaoColorBufferBlur;
     GLuint gWorldSpacePosition;
     GLuint gLightAccumulation;
+    GLuint mLastFrametexture;
     std::shared_ptr<eTexture> lensColor;
     std::shared_ptr<eTexture> lensDirt;
     std::shared_ptr<eTexture> lensStar;
+
 
 };
 
