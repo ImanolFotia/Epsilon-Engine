@@ -69,6 +69,7 @@ private:
     bool LoadTexture(const char*);
     bool LoadTexture(const char*, const char*, const char*, const char*);
     bool calculateTangentSpace();
+    float FBM(glm::vec2 p);
 
 private:
     GLuint GL_d_texture;

@@ -33,7 +33,7 @@ void main()
 
     gAlbedoSpec.rgb = diff.rgb;
     gPosition = vec3(0.0);
-    gExpensiveNormal.rgb = Normal;
+    gExpensiveNormal.rgb = vec3(0,1,0);
     gExpensiveNormal.a = 1.0;
     gDepth = gl_FragCoord.z;
     gExtraComponents = vec4(0.0, 0.0, 0.0, 0.0); 

@@ -10,19 +10,16 @@
 #include <Epsilon.h>
 #include <memory>
 #include <Log.h>
-class App
-{
+class App {
 public:
 
-    App(GLFWwindow*& win)
-    {
+    App(GLFWwindow*& win) {
         EpsilonEngine = (std::unique_ptr<Epsilon>) (new Epsilon(win));
 
         EpsilonEngine->InitResources();
     }
 
-    void Run(void)
-    {
+    void Run(void) {
         std::cout << "==================================================" << std::endl;
         std::cout << "Engine Initialization Complete." << std::endl;
         std::cout << "Now Rendering." << std::endl;
@@ -41,18 +38,16 @@ public:
 };
 
 std::ofstream Global::Log::FILE;
-GLFWwindow* InitEngine(const char* ProgramName)
-{
+GLFWwindow* InitEngine(const char* ProgramName) {
 
     Global::Log::OpenFile("log.txt");
 
     std::cout << "Initializing Epsilon Engine" << std::endl;
-        Global::Log::WriteToLog("Initializing Epsilon Engine");
+    Global::Log::WriteToLog("Initializing Epsilon Engine");
 
     ProgramData DATA;
 
-    if(!glfwInit())
-    {
+    if(!glfwInit()) {
         std::cout << "GLFW could not be initialized" << std::endl;
         Global::Log::WriteToLog("GLFW could not be initialized");
     }
@@ -69,7 +64,7 @@ GLFWwindow* InitEngine(const char* ProgramName)
     if(numberofmonitors < DATA.MONITOR)
         CurrentMonitor = Monitor[0];
     else
-    CurrentMonitor = Monitor[DATA.MONITOR];
+        CurrentMonitor = Monitor[DATA.MONITOR];
 
     int numberofmodes;
 
@@ -89,26 +84,30 @@ GLFWwindow* InitEngine(const char* ProgramName)
     glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 
     cout << "Creating window || Window Resolution: ";
-    if(DATA.FULLSCREEN)
-    {
+    if(DATA.FULLSCREEN == 1) {
         window = glfwCreateWindow(DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT, ProgramName, glfwGetPrimaryMonitor(), 0);
         cout << DATA.WINDOW_WIDTH << " x " << DATA.WINDOW_HEIGHT << endl;
-    }
-    else
-    {
+    } else if(DATA.FULLSCREEN == 2) {
+        const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+        window = glfwCreateWindow(mode->width, mode->height, ProgramName, 0, 0);
+        cout << mode->width << " x " << mode->height << endl;
+    } else {
         window = glfwCreateWindow(DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT, ProgramName, 0, 0);
+        glfwSetWindowPos(window, modes->width/2, modes->height/2);
         cout << DATA.WINDOW_WIDTH << " x " << DATA.WINDOW_HEIGHT << endl;
     }
 
     glfwMakeContextCurrent(window);
 
-    if(!window)
-    {
+    if(!window) {
         std::cout << "Window could not be created" << std::endl;
         Global::Log::WriteToLog("Window could not be created");
     }
 
-    glfwSetWindowPos(window, modes->width/2, modes->height/2);
 
     glewExperimental = GL_TRUE;
     glewInit();
@@ -119,7 +118,7 @@ GLFWwindow* InitEngine(const char* ProgramName)
     glfwSetKeyCallback(window, Input::KeyBoard::KeyBoardCallBack);
     glfwSetCursorPosCallback(window, Input::Mouse::MouseCallBack);
     glfwSetJoystickCallback(Input::Joystick::JoystickCallback);
-     //std::cout << "New joystick connected: " << glfwGetJoystickName(GLFW_JOYSTICK_1) << std::endl;
+    //std::cout << "New joystick connected: " << glfwGetJoystickName(GLFW_JOYSTICK_1) << std::endl;
 
     glfwSwapInterval(DATA.VSYNC);
 

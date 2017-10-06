@@ -36,9 +36,10 @@ void main()
 	vec3 NormalTexture = texture(texture_normal, TexCoords).rgb * 2.0 - 1.0;
 	vec3 mNormal = normalize(NormalTexture * TBN);
 
-	vec3 lambert = max(dot(mNormal, lightDirection), 0.0) * vec3(0.2);
+        vec3 lightcolor = normalize(vec3(205, 109, 39));
+	vec3 lambert = max(dot(mNormal, lightDirection), 0.0) * vec3(0.2) * lightcolor;
 
-	Color = vec4(lambert, 1.0) * Albedo;
+	Color = (vec4(lambert, 1.0) * Albedo);
 }
 
 

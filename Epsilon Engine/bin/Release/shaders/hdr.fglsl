@@ -209,7 +209,7 @@ void main()
 
     //hdrColor = changeSaturation(hdrColor, .7);
 
-    color.rgb  = (HDR2((hdrColor + col.rgb + bloom + (result.rgb * lensMod.rgb*5)+ clamp(SSR.rgb, 0.0, 1.0) )  )) * vignete;
+    color.rgb  = HDR2((hdrColor + SSR.rgb) + col.rgb + bloom + (result.rgb * lensMod.rgb*5) ) * vignete;
 
     
 

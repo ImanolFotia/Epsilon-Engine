@@ -73,6 +73,10 @@ public:
 
         BSPMap->Destroy();
 
+        sun->Destroy();
+
+        PP->Destroy();
+
         cout << "Epsilon Engine has closed Succesfully." << endl;
 
         Global::Log::WriteToLog("Epsilon Engine has closed Succesfully.");

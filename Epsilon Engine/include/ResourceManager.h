@@ -60,7 +60,7 @@ public:
      * \param Path to the model
      * \param Shader instance
      */
-    void useModel(std::string modelPath, Shader* shader);
+    void useModel(std::string modelPath, Shader* shader, glm::vec3);
 
     /** \brief Renders the asked model
      *
@@ -193,6 +193,8 @@ public:
     void resetTextureUsage(std::string);
 
     bool addCubemap(std::shared_ptr<CubeMap>, glm::vec3);
+
+    Model getModel(std::string modelPath);
 
     std::shared_ptr<Camera> m_Camera;
 

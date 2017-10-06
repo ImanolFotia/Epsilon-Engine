@@ -53,11 +53,11 @@ std::string ResourceManager::requestModel(std::string modelPath, std::shared_ptr
     }
 }
 
-void ResourceManager::useModel(std::string modelPath, Shader* shader)
+void ResourceManager::useModel(std::string modelPath, Shader* shader, glm::vec3 pos = glm::vec3(0,0,0))
 {
     try
     {
-        ModelList.at(modelPath).Draw(shader);
+        ModelList.at(modelPath).Draw(shader, pos);
     }
 
     catch(...)
@@ -71,6 +71,19 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
     try
     {
         ModelList.at(modelPath).Draw(shader, pos);
+    }
+
+    catch(...)
+    {
+        throw;
+    }
+}
+
+Model ResourceManager::getModel(std::string modelPath)
+{
+    try
+    {
+        return ModelList.at(modelPath);
     }
 
     catch(...)
@@ -291,18 +304,18 @@ bool ResourceManager::requestCubeMap(int CubeMapID, glm::vec3 Position)
             path = "materials/skyboxes/Miramar/";
             break;
         case 2:
-            path = "materials/skyboxes/pbrtest/";
+            path = "materials/skyboxes/Miramar_Blurred/";
             break;
         default:
             path = "materials/skyboxes/Miramar/";
 
         }
-        paths.push_back(path + "right.png");
-        paths.push_back(path + "left.png");
-        paths.push_back(path + "top.png");
-        paths.push_back(path + "bottom.png");
-        paths.push_back(path + "back.png");
-        paths.push_back(path + "front.png");
+        paths.push_back(path + "right.tga");
+        paths.push_back(path + "left.tga");
+        paths.push_back(path + "top.tga");
+        paths.push_back(path + "bottom.tga");
+        paths.push_back(path + "back.tga");
+        paths.push_back(path + "front.tga");
 
         std::shared_ptr<CubeMap> tmpCubeMap = (std::shared_ptr<CubeMap>) new CubeMap(paths, CubeMapID, Position);
         std::cout << "Added Cubemap: " << CubeMapID << std::endl;

@@ -1,7 +1,7 @@
 #version 430 core
 
 layout(location = 0) out vec3 gAlbedoSpec;
-layout(location = 1) out vec3 gPosition;
+layout(location = 1) out float gPosition;
 layout(location = 2) out vec4 gExpensiveNormal;
 layout(location = 3) out float gDepth;
 layout(location = 4) out vec4 gExtraComponents; 
@@ -106,22 +106,22 @@ void main()
   if(texture(texture_diffuse, fs_in.TexCoords).a < 0.3)
     discard;    
 
-  vec3 normalTexture = (texture(texture_normal, fs_in.TexCoords).rgb * 2.0 - 1.0);
+  vec3 normalTexture = (textureNoTile(texture_normal, fs_in.TexCoords).rgb * 2.0 - 1.0);
   gExpensiveNormal.rgb = normalize(normalTexture * fs_in.TBN);
   //vec4 decalTex = texture(texture_decal, fs_in.TexCoords + (vec2(viewPos.x - 225.0, viewPos.z-300.0)));
 
   //gAlbedoSpec.a = texture(texture_specular, fs_in.TexCoords).r;
-  vec2 Metallic_Emmisive = texture(texture_height, fs_in.TexCoords).rg;
-  gExpensiveNormal.a = texture(texture_specular, fs_in.TexCoords).r;
+  vec2 Metallic_Emmisive = textureNoTile(texture_height, fs_in.TexCoords).rg;
+  gExpensiveNormal.a = textureNoTile(texture_specular, fs_in.TexCoords).r;
 
   vec4 CubeMapcolor = vec4(0.0);
   vec3 R = vec3(0.0);
 
-  gAlbedoSpec.rgb = texture(texture_diffuse,fs_in.TexCoords).rgb;
+  gAlbedoSpec.rgb = textureNoTile(texture_diffuse,fs_in.TexCoords).rgb;
   
   float Depth = LinearizeDepth(gl_FragCoord.z);
   gDepth = gl_FragCoord.z;
-  gPosition = fs_in.FragPos;
+  gPosition = fs_in.FragPos.z;
   gExtraComponents.xy = Metallic_Emmisive.xy; //vec4(Metallic_Emmisive, 1.0, 1.0);
 
   vec2 a = (Position.xy / Position.w) * 0.5 + 0.5;

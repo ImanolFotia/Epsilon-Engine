@@ -95,13 +95,13 @@ bool Model::loadModel(string emlPath, int a)
 
 
 
-    MinMaxPoints.MAX_X = l_vertices[l_meshes[0].mFirstVertex].position.x;
-    MinMaxPoints.MAX_Y = l_vertices[l_meshes[0].mFirstVertex].position.y;
-    MinMaxPoints.MAX_Z = l_vertices[l_meshes[0].mFirstVertex].position.z;
+    MinMaxPoints.MAX_X = 0;
+    MinMaxPoints.MAX_Y = 0;
+    MinMaxPoints.MAX_Z = 0;
 
-    MinMaxPoints.MIN_X = l_vertices[l_meshes[0].mFirstVertex].position.x;
-    MinMaxPoints.MIN_Y = l_vertices[l_meshes[0].mFirstVertex].position.y;
-    MinMaxPoints.MIN_Z = l_vertices[l_meshes[0].mFirstVertex].position.z;
+    MinMaxPoints.MIN_X = 0;
+    MinMaxPoints.MIN_Y = 0;
+    MinMaxPoints.MIN_Z = 0;
 
     for(int i = 0; i < numMeshes; ++i)
     {
@@ -113,7 +113,6 @@ bool Model::loadModel(string emlPath, int a)
         for(int j = 0; j < l_meshes[i].mNumVertices; ++j)
         {
             tmpVertVector.push_back(l_vertices[l_meshes[i].mFirstVertex + j]);
-
 
             if(l_vertices[l_meshes[i].mFirstVertex + j].position.x > MinMaxPoints.MAX_X)
                 MinMaxPoints.MAX_X = l_vertices[l_meshes[i].mFirstVertex + j].position.x;
@@ -181,10 +180,10 @@ bool Model::loadModel(string emlPath, int a)
 
 }
 
-void Model::Draw(Shader* shader)
+void Model::Draw(Shader* shader, glm::vec3 pos = glm::vec3(0,0,0))
 {
     for(GLuint i = 0; i < this->meshes.size(); i++)
-        this->meshes[i].Draw(shader, this->resm);
+        this->meshes[i].Draw(shader, this->resm, pos);
     //shader->Free();
 }
 

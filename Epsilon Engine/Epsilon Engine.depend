@@ -1,1112 +1,64 @@
 # depslib dependency file v1.0
-1492282245 source:d:\epsilon\epsilon engine\src\main.cpp
-	<iostream>
-	<Shader.h>
-	<SOIL.h>
-	<main.h>
-	<exception>
-	<assert.h>
-	<memory>
-
-1429998427 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window.hpp
-	<SFML/System.hpp>
-	<SFML/Window/Context.hpp>
-	<SFML/Window/ContextSettings.hpp>
-	<SFML/Window/Event.hpp>
-	<SFML/Window/Joystick.hpp>
-	<SFML/Window/Keyboard.hpp>
-	<SFML/Window/Mouse.hpp>
-	<SFML/Window/Touch.hpp>
-	<SFML/Window/Sensor.hpp>
-	<SFML/Window/VideoMode.hpp>
-	<SFML/Window/Window.hpp>
-	<SFML/Window/WindowStyle.hpp>
-
-1429998427 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system.hpp
-	<SFML/Config.hpp>
-	<SFML/System/Clock.hpp>
-	<SFML/System/Err.hpp>
-	<SFML/System/InputStream.hpp>
-	<SFML/System/Lock.hpp>
-	<SFML/System/Mutex.hpp>
-	<SFML/System/Sleep.hpp>
-	<SFML/System/String.hpp>
-	<SFML/System/Thread.hpp>
-	<SFML/System/ThreadLocal.hpp>
-	<SFML/System/ThreadLocalPtr.hpp>
-	<SFML/System/Utf.hpp>
-	<SFML/System/Vector2.hpp>
-	<SFML/System/Vector3.hpp>
-
-1429998427 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\config.hpp
-	"TargetConditionals.h"
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\clock.hpp
-	<SFML/System/Export.hpp>
-	<SFML/System/Time.hpp>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\export.hpp
-	<SFML/Config.hpp>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\time.hpp
-	<SFML/System/Export.hpp>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\err.hpp
-	<SFML/System/Export.hpp>
-	<ostream>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\inputstream.hpp
-	<SFML/Config.hpp>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\lock.hpp
-	<SFML/System/Export.hpp>
-	<SFML/System/NonCopyable.hpp>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\noncopyable.hpp
-	<SFML/System/Export.hpp>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\mutex.hpp
-	<SFML/System/Export.hpp>
-	<SFML/System/NonCopyable.hpp>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\sleep.hpp
-	<SFML/System/Export.hpp>
-	<SFML/System/Time.hpp>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\string.hpp
-	<SFML/System/Export.hpp>
-	<SFML/System/Utf.hpp>
-	<locale>
-	<string>
-	<SFML/System/String.inl>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\utf.hpp
-	<SFML/Config.hpp>
-	<algorithm>
-	<locale>
-	<string>
-	<cstdlib>
-	<SFML/System/Utf.inl>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\utf.inl
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\string.inl
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\thread.hpp
-	<SFML/System/Export.hpp>
-	<SFML/System/NonCopyable.hpp>
-	<cstdlib>
-	<SFML/System/Thread.inl>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\thread.inl
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\threadlocal.hpp
-	<SFML/System/Export.hpp>
-	<SFML/System/NonCopyable.hpp>
-	<cstdlib>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\threadlocalptr.hpp
-	<SFML/System/ThreadLocal.hpp>
-	<SFML/System/ThreadLocalPtr.inl>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\threadlocalptr.inl
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\vector2.hpp
-	<SFML/System/Vector2.inl>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\vector2.inl
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\vector3.hpp
-	<SFML/System/Vector3.inl>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\system\vector3.inl
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\context.hpp
-	<SFML/Window/Export.hpp>
-	<SFML/Window/GlResource.hpp>
-	<SFML/Window/ContextSettings.hpp>
-	<SFML/System/NonCopyable.hpp>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\export.hpp
-	<SFML/Config.hpp>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\glresource.hpp
-	<SFML/Window/Export.hpp>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\contextsettings.hpp
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\event.hpp
-	<SFML/Config.hpp>
-	<SFML/Window/Joystick.hpp>
-	<SFML/Window/Keyboard.hpp>
-	<SFML/Window/Mouse.hpp>
-	<SFML/Window/Sensor.hpp>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\joystick.hpp
-	<SFML/Window/Export.hpp>
-	<SFML/System/String.hpp>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\keyboard.hpp
-	<SFML/Window/Export.hpp>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\mouse.hpp
-	<SFML/Window/Export.hpp>
-	<SFML/System/Vector2.hpp>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\sensor.hpp
-	<SFML/Window/Export.hpp>
-	<SFML/System/Vector3.hpp>
-	<SFML/System/Time.hpp>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\touch.hpp
-	<SFML/Window/Export.hpp>
-	<SFML/System/Vector2.hpp>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\videomode.hpp
-	<SFML/Window/Export.hpp>
-	<vector>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\window.hpp
-	<SFML/Window/Export.hpp>
-	<SFML/Window/ContextSettings.hpp>
-	<SFML/Window/VideoMode.hpp>
-	<SFML/Window/WindowHandle.hpp>
-	<SFML/Window/WindowStyle.hpp>
-	<SFML/Window/GlResource.hpp>
-	<SFML/System/Clock.hpp>
-	<SFML/System/Vector2.hpp>
-	<SFML/System/NonCopyable.hpp>
-	<SFML/System/String.hpp>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\windowhandle.hpp
-	<SFML/Config.hpp>
-
-1429998429 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\window\windowstyle.hpp
-
-1429998427 d:\epsilon\epsilon engine\deppend\sfml-2.2\include\sfml\opengl.hpp
-	<SFML/Config.hpp>
-	<windows.h>
-	<GL/gl.h>
-	<GL/glu.h>
-	<GLES/gl.h>
-	<GLES/glext.h>
-	<GL/gl.h>
-	<GL/glu.h>
-	<OpenGL/gl.h>
-	<OpenGL/glu.h>
-	<OpenGLES/ES1/gl.h>
-	<OpenGLES/ES1/glext.h>
-	<GLES/gl.h>
-	<GLES/glext.h>
-
-1430001189 d:\epsilon\epsilon engine\deppend\glew\include\gl\glew.h
-	<stddef.h>
-	<inttypes.h>
-	<stdint.h>
-	<inttypes.h>
-	<OpenGL/glu.h>
-	<GL/glu.h>
-
-1429999334 d:\epsilon\epsilon engine\deppend\glfw\include\glfw\glfw3.h
-	<stddef.h>
-	<OpenGL/gl3.h>
-	<OpenGL/gl3ext.h>
-	<OpenGL/gl.h>
-	<OpenGL/glu.h>
-	<GL/glcorearb.h>
-	<GLES/gl.h>
-	<GLES/glext.h>
-	<GLES2/gl2.h>
-	<GLES2/gl2ext.h>
-	<GLES3/gl3.h>
-	<GLES3/gl2ext.h>
-	<GLES3/gl31.h>
-	<GLES3/gl2ext.h>
-	<GL/gl.h>
-	<GL/glext.h>
-	<GL/glu.h>
-
-1429999334 d:\epsilon\epsilon engine\deppend\glfw\include\\glfw\glfw3.h
-	<stddef.h>
-	<OpenGL/gl3.h>
-	<OpenGL/gl3ext.h>
-	<OpenGL/gl.h>
-	<OpenGL/glu.h>
-	<GL/glcorearb.h>
-	<GLES/gl.h>
-	<GLES/glext.h>
-	<GLES2/gl2.h>
-	<GLES2/gl2ext.h>
-	<GLES3/gl3.h>
-	<GLES3/gl2ext.h>
-	<GLES3/gl31.h>
-	<GLES3/gl2ext.h>
-	<GL/gl.h>
-	<GL/glext.h>
-	<GL/glu.h>
-
-1504334360 source:d:\epsilon\epsilon engine\src\epsilon.cpp
-	<iostream>
-	<Epsilon.h>
-	<ProgramData.h>
-	<cstdlib>
-	<time.h>
-	<Includes.h>
-	<Types.h>
-	"../version.h"
-	<glm/gtc/quaternion.hpp>
-	<cmath>
-	<thread>
-	<EpsilonMemory.h>
-	<sys/CPUID.h>
-	<chrono>
-	<Log.h>
-
-1503893832 d:\epsilon\epsilon engine\include\epsilon.h
-	<map>
+1504217989 source:d:\epsilon\epsilon engine\src\bsp.cpp
 	<GL/glew.h>
-	<GLFW/glfw3.h>
-	<thread>
-	<Texture.h>
-	<Shader.h>
-	<Skybox.h>
-	<camera.h>
-	<Model.h>
-	<Text.h>
-	<Terrain.h>
-	<Grass.h>
-	<PostProcess.h>
-	<Water.h>
-	<Sun.h>
+	<omp.h>
 	<BSP.h>
-	<MD5_Model.h>
-	<MD5_Anim.h>
-	<ShadowMapping.h>
-	<EntityTemplate.h>
-	<memory>
-	<ResourceManager.h>
-	<Scene.h>
-	<glm/gtc/quaternion.hpp>
-	<glm/gtx/quaternion.hpp>
-	<sys/KeyBoard.h>
-	<sys/Mouse.h>
-	<sys/Joystick.h>
-	<Player.h>
-	<Audio.h>
-	<AudioElement.h>
-	<AudioListener.h>
-	<SplashScreen.h>
-	<SphericalHarmonics.h>
-	<Picking.h>
-	<Log.h>
-	<GUI/GUI.h>
-	<sys/filesystem.h>
-	<ParticleSystem.h>
-	<cubemapRenderer.h>
-	<CubeMap.h>
-
-1430094264 d:\epsilon\epsilon engine\include\app.h
-	<GL/glew.h>
-	<GLFW/glfw3.h>
-	<iostream>
-	<string>
-
-1504213709 source:d:\epsilon\epsilon engine\src\shader.cpp
-	<Shader.h>
-	<stdio.h>
-	<string>
-	<vector>
-	<iostream>
-	<fstream>
-	<algorithm>
-	<Log.h>
-	<Includes.h>
-	<OpenGL/ShaderPreProcessor.h>
-
-1503779023 d:\epsilon\epsilon engine\include\shader.h
-	<GL/glew.h>
-	<string>
-	<iostream>
-	<unordered_map>
 	<glm/glm.hpp>
-	<Types.h>
-
-1483584967 d:\epsilon\epsilon engine\include\scene.h
-	<ResourceManager.h>
-	<Shader.h>
-	<EntityTemplate.h>
-	<BSP.h>
-	<ShadowMapping.h>
-	<Sun.h>
-	<Skybox.h>
-	<PostProcess.h>
-	<Light.h>
-	<EpsilonMemory.h>
-	<Camera.h>
+	<vector>
+	<iostream>
 	<Frustum.h>
-	<memory>
-	<map>
-	<iostream>
-	<string>
-	<glm/gtc/quaternion.hpp>
-	<glm/gtx/quaternion.hpp>
-	<GLFW/glfw3.h>
-
-1461001287 source:d:\epsilon\epsilon engine\src\scene.cpp
-	<Scene.h>
-
-1504331139 d:\epsilon\epsilon engine\include\skybox.h
-	<string>
-	<GL/glew.h>
-	<camera.h>
-	<Model.h>
-	<Shader.h>
-	<memory>
-
-1504331052 source:d:\epsilon\epsilon engine\src\skybox.cpp
-	<vector>
-	<iostream>
-	<glm/glm.hpp>
-	<glm/gtc/matrix_transform.hpp>
-	<glm/gtc/type_ptr.hpp>
-	<SOIL.h>
-	<Skybox.h>
-	<SkyboxData.h>
-	<ResourceManager.h>
-
-1396053918 d:\epsilon\epsilon engine\deppend\soil\src\soil.h
-
-1395988090 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\cimport.h
-	"types.h"
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\types.h
-	<sys/types.h>
-	<memory.h>
-	<math.h>
-	<stddef.h>
-	"defs.h"
-	"vector3.h"
-	"vector2.h"
-	"color4.h"
-	"matrix3x3.h"
-	"matrix4x4.h"
-	"quaternion.h"
-	<new>
-	<string>
-	"./Compiler/pushpack1.h"
-	"./Compiler/poppack1.h"
-	"vector2.inl"
-	"vector3.inl"
-	"color4.inl"
-	"quaternion.inl"
-	"matrix3x3.inl"
-	"matrix4x4.inl"
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\defs.h
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\vector3.h
-	<math.h>
-	"./Compiler/pushpack1.h"
-	"./Compiler/poppack1.h"
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\compiler\pushpack1.h
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\compiler\poppack1.h
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\vector2.h
-	<math.h>
-	"./Compiler/pushpack1.h"
-	"./Compiler/poppack1.h"
-
-1395988090 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\color4.h
-	"./Compiler/pushpack1.h"
-	"./Compiler/poppack1.h"
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\matrix3x3.h
-	"./Compiler/pushpack1.h"
-	"./Compiler/poppack1.h"
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\matrix4x4.h
-	"./Compiler/pushpack1.h"
-	"./Compiler/poppack1.h"
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\quaternion.h
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\vector2.inl
-	"vector2.h"
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\vector3.inl
-	"vector3.h"
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\color4.inl
-	"color4.h"
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\quaternion.inl
-	"quaternion.h"
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\matrix3x3.inl
-	"matrix3x3.h"
-	"matrix4x4.h"
-	<algorithm>
-	<limits>
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\matrix4x4.inl
-	"matrix4x4.h"
-	"matrix3x3.h"
-	"quaternion.h"
-	<algorithm>
-	<limits>
-	<math.h>
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\scene.h
-	"types.h"
-	"texture.h"
-	"mesh.h"
-	"light.h"
-	"camera.h"
-	"material.h"
-	"anim.h"
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\texture.h
-	"types.h"
-	"./Compiler/pushpack1.h"
-	"./Compiler/poppack1.h"
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\mesh.h
-	"types.h"
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\light.h
-	"types.h"
-
-1395988090 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\camera.h
-	"types.h"
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\material.h
-	"types.h"
-	"./Compiler/pushpack1.h"
-	"./Compiler/poppack1.h"
-	"material.inl"
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\material.inl
-
-1395988090 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\anim.h
-	"types.h"
-	"quaternion.h"
-
-1395988091 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\postprocess.h
-	"types.h"
-
-1503717190 source:d:\epsilon\epsilon engine\src\camera.cpp
-	<iostream>
-	<camera.h>
-	<math.h>
-	<sys/KeyBoard.h>
-	<sys/Mouse.h>
-	<sys/Joystick.h>
-
-1497150814 d:\epsilon\epsilon engine\include\camera.h
-	<glm/glm.hpp>
-	<glm/gtc/matrix_transform.hpp>
-	<glm/gtc/quaternion.hpp>
-	<GLFW/glfw3.h>
-	<iostream>
-
-1503725936 d:\epsilon\epsilon engine\include\texture.h
-	<iostream>
-	<string>
-	<vector>
-	<GL/glew.h>
-	<GLFW/glfw3.h>
-	<SOIL.h>
-	<ProgramData.h>
-
-1503725766 d:\epsilon\epsilon engine\include\main.h
-	<ProgramData.h>
-	<Epsilon.h>
-	<memory>
-	<Log.h>
-
-1451178317 d:\epsilon\epsilon engine\include\skyboxdata.h
-
-1504214934 d:\epsilon\epsilon engine\include\model.h
-	<string>
-	<fstream>
-	<sstream>
-	<iostream>
-	<map>
-	<vector>
-	<GL/glew.h>
-	<glm/glm.hpp>
-	<glm/gtc/quaternion.hpp>
-	<glm/gtx/quaternion.hpp>
-	<glm/gtc/matrix_transform.hpp>
 	<Texture.h>
-	<Mesh.h>
-	<Types.h>
-	<memory>
-	<emlFormat.h>
-	<camera.h>
 
-1433317369 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\importer.hpp
-	"types.h"
-	"config.h"
-
-1433317369 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\config.h
-
-1433317369 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\metadata.h
-	<assert.h>
-	"Compiler/pstdint.h"
-	<stdint.h>
-	<string>
-
-1433317369 d:\epsilon\epsilon engine\deppend\assimp\include\assimp\compiler\pstdint.h
+1469321017 d:\epsilon\epsilon engine\deppend\glew-2.0.0\include\gl\glew.h
 	<stddef.h>
-	<limits.h>
-	<signal.h>
+	<inttypes.h>
 	<stdint.h>
-	<wchar.h>
+	<inttypes.h>
+	<Availability.h>
+	<OpenGL/glu.h>
+	<GL/glu.h>
 
-1504214915 d:\epsilon\epsilon engine\include\mesh.h
-	<string>
-	<fstream>
-	<sstream>
-	<iostream>
-	<vector>
-	<GL/glew.h>
-	<glm/glm.hpp>
-	<glm/gtc/matrix_transform.hpp>
-	<Shader.h>
-	<emlFormat.h>
-	<memory>
-
-1477961386 d:\epsilon\epsilon engine\include\text.h
-	<ft2build.h>
-	<glm/glm.hpp>
-	<glm/gtc/matrix_transform.hpp>
-	<Shader.h>
-
-1237038326 d:\epsilon\epsilon engine\deppend\freetype2\include\ft2build.h
-	<freetype/config/ftheader.h>
-
-1237038326 d:\epsilon\epsilon engine\deppend\freetype2\include\freetype\config\ftheader.h
-
-1430970208 source:d:\epsilon\epsilon engine\src\resources.rc
-	<Windows.h>
-
-1488567539 d:\epsilon\epsilon engine\include\programdata.h
-
-1488567576 source:d:\epsilon\epsilon engine\src\programdata.cpp
-	<iostream>
-	<INIReader.h>
-	<ProgramData.h>
-
-1400904193 d:\epsilon\epsilon engine\deppend\ini\include\inireader.h
-	<map>
-	<string>
-
-1502936733 d:\epsilon\epsilon engine\include\terrain.h
-	<vector>
-	<glm/glm.hpp>
-	<glm/gtc/matrix_transform.hpp>
-	<Shader.h>
-	<Texture.h>
-	<memory>
-	<Physics.h>
-
-1502942602 source:d:\epsilon\epsilon engine\src\terrain.cpp
-	<iostream>
-	<fstream>
-	<Terrain.h>
-	<SOIL.h>
-	<Physics.h>
-	<ResourceManager.h>
-	<exception>
-	<Includes.h>
-
-1503725767 d:\epsilon\epsilon engine\include\grass.h
-	<GL/glew.h>
-	<string>
-	<iostream>
-	<glm/glm.hpp>
-	<glm/gtc/matrix_transform.hpp>
-	<Shader.h>
-
-1503725763 d:\epsilon\epsilon engine\include\postprocess.h
-	<GL/glew.h>
-	<Shader.h>
-	<camera.h>
-	<vector>
-	<ShadowMapping.h>
-	<memory>
-	<Texture.h>
-	<OpenGL/FrameBuffer.h>
-
-1504219384 source:d:\epsilon\epsilon engine\src\postprocess.cpp
-	<PostProcess.h>
-	<iostream>
-	<ProgramData.h>
-	<glm/gtx/compatibility.hpp>
-	<glm/gtc/type_ptr.hpp>
-	<random>
-	<string>
-	<Includes.h>
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\cimport.h
-	"types.h"
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\types.h
-	<sys/types.h>
-	<memory.h>
-	<math.h>
-	<stddef.h>
-	<string.h>
-	<limits.h>
-	"defs.h"
-	"vector3.h"
-	"vector2.h"
-	"color4.h"
-	"matrix3x3.h"
-	"matrix4x4.h"
-	"quaternion.h"
-	<cstring>
-	<new>
-	<string>
-	"./Compiler/pushpack1.h"
-	"./Compiler/poppack1.h"
-	"vector2.inl"
-	"vector3.inl"
-	"color4.inl"
-	"quaternion.inl"
-	"matrix3x3.inl"
-	"matrix4x4.inl"
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\defs.h
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\vector3.h
-	<cmath>
-	<math.h>
-	"./Compiler/pushpack1.h"
-	"./Compiler/poppack1.h"
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\compiler\pushpack1.h
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\compiler\poppack1.h
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\vector2.h
-	<cmath>
-	<math.h>
-	"./Compiler/pushpack1.h"
-	"./Compiler/poppack1.h"
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\color4.h
-	"./Compiler/pushpack1.h"
-	"./Compiler/poppack1.h"
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\matrix3x3.h
-	"./Compiler/pushpack1.h"
-	"./Compiler/poppack1.h"
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\matrix4x4.h
-	"./Compiler/pushpack1.h"
-	"./Compiler/poppack1.h"
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\quaternion.h
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\vector2.inl
-	"vector2.h"
-	<cmath>
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\vector3.inl
-	"vector3.h"
-	<cmath>
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\color4.inl
-	"color4.h"
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\quaternion.inl
-	"quaternion.h"
-	<cmath>
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\matrix3x3.inl
-	"matrix3x3.h"
-	"matrix4x4.h"
-	<algorithm>
-	<cmath>
-	<limits>
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\matrix4x4.inl
-	"matrix4x4.h"
-	"matrix3x3.h"
-	"quaternion.h"
-	<algorithm>
-	<limits>
-	<cmath>
-	<math.h>
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\scene.h
-	"types.h"
-	"texture.h"
-	"mesh.h"
-	"light.h"
-	"camera.h"
-	"material.h"
-	"anim.h"
-	"metadata.h"
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\texture.h
-	"types.h"
-	"./Compiler/pushpack1.h"
-	"./Compiler/poppack1.h"
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\mesh.h
-	"types.h"
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\light.h
-	"types.h"
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\camera.h
-	"types.h"
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\material.h
-	"types.h"
-	"./Compiler/pushpack1.h"
-	"./Compiler/poppack1.h"
-	"material.inl"
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\material.inl
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\anim.h
-	"types.h"
-	"quaternion.h"
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\metadata.h
-	<assert.h>
-	"Compiler/pstdint.h"
-	<stdint.h>
-	<string>
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\compiler\pstdint.h
-	<stddef.h>
-	<limits.h>
-	<signal.h>
-	<stdint.h>
-	<wchar.h>
-
-1435500930 d:\epsilon\epsilon engine\deppend\assimp2\include\assimp\postprocess.h
-	"types.h"
-
-1504216633 d:\epsilon\epsilon engine\include\includes.h
-	<iostream>
-	<string>
-	<sstream>
-	<ctime>
-	<vector>
-	<glm/gtc/quaternion.hpp>
-
-1504322355 source:d:\epsilon\epsilon engine\src\water.cpp
-	<Water.h>
-
-1503725759 d:\epsilon\epsilon engine\include\water.h
-	<GL/glew.h>
-	<glm/glm.hpp>
-	<glm/gtc/matrix_transform.hpp>
-	<Shader.h>
-	<Texture.h>
-	<Camera.h>
-	<Model.h>
-	<vector>
-	<memory>
-
-1437074035 d:\epsilon\epsilon engine\include\inputmanagement.h
-	<glm/glm.hpp>
-	<glm/gtc/matrix_transform.hpp>
-	<GLFW/glfw3.h>
-	<Includes.h>
-
-1388306390 d:\epsilon\epsilon engine\deppend\glm\glm.hpp
-	"core/_fixes.hpp"
-	<cmath>
-	<climits>
-	<cfloat>
-	<limits>
+1504217997 d:\epsilon\epsilon engine\include\bsp.h
+	<cstdlib>
 	<cstdio>
-	"core/setup.hpp"
-	"./core/_detail.hpp"
-	"./core/_vectorize.hpp"
-	"./core/type.hpp"
-	"./core/func_trigonometric.hpp"
-	"./core/func_exponential.hpp"
-	"./core/func_common.hpp"
-	"./core/func_packing.hpp"
-	"./core/func_geometric.hpp"
-	"./core/func_matrix.hpp"
-	"./core/func_vector_relational.hpp"
-	"./core/func_integer.hpp"
-	"./core/func_noise.hpp"
-	"./core/_swizzle.hpp"
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\_fixes.hpp
-	<cmath>
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\setup.hpp
-	<immintrin.h>
-	<immintrin.h>
-	<smmintrin.h>
-	<pmmintrin.h>
-	<emmintrin.h>
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\_detail.hpp
-	"setup.hpp"
-	<cassert>
-	<cstdint>
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\_vectorize.hpp
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type.hpp
-	"type_half.hpp"
-	"type_float.hpp"
-	"type_int.hpp"
-	"type_gentype.hpp"
-	"type_vec1.hpp"
-	"type_vec2.hpp"
-	"type_vec3.hpp"
-	"type_vec4.hpp"
-	"type_mat2x2.hpp"
-	"type_mat2x3.hpp"
-	"type_mat2x4.hpp"
-	"type_mat3x2.hpp"
-	"type_mat3x3.hpp"
-	"type_mat3x4.hpp"
-	"type_mat4x2.hpp"
-	"type_mat4x3.hpp"
-	"type_mat4x4.hpp"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_half.hpp
-	<cstdlib>
-	"type_half.inl"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_half.inl
-	"_detail.hpp"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_float.hpp
-	"type_half.hpp"
-	"setup.hpp"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_int.hpp
-	"setup.hpp"
-	"_detail.hpp"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_gentype.hpp
-	"type_size.hpp"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_size.hpp
-	<cstdlib>
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_vec1.hpp
-	"type_vec.hpp"
-	"type_float.hpp"
-	"type_int.hpp"
-	"type_size.hpp"
-	"_swizzle.hpp"
-	"type_vec1.inl"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_vec.hpp
-	"type_gentype.hpp"
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\_swizzle.hpp
-	"_swizzle_func.hpp"
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\_swizzle_func.hpp
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_vec1.inl
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_vec2.hpp
-	"type_vec.hpp"
-	"type_float.hpp"
-	"type_int.hpp"
-	"type_size.hpp"
-	"_swizzle.hpp"
-	"type_vec2.inl"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_vec2.inl
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_vec3.hpp
-	"type_vec.hpp"
-	"type_float.hpp"
-	"type_int.hpp"
-	"type_size.hpp"
-	"_swizzle.hpp"
-	"type_vec3.inl"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_vec3.inl
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_vec4.hpp
-	"type_vec.hpp"
-	"type_float.hpp"
-	"type_int.hpp"
-	"type_size.hpp"
-	"_swizzle.hpp"
-	"type_vec4.inl"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_vec4.inl
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat2x2.hpp
-	"type_mat.hpp"
-	"type_mat2x2.inl"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat.hpp
-	"type_gentype.hpp"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat2x2.inl
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat2x3.hpp
-	"type_mat.hpp"
-	"type_mat2x3.inl"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat2x3.inl
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat2x4.hpp
-	"type_mat.hpp"
-	"type_mat2x4.inl"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat2x4.inl
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat3x2.hpp
-	"type_mat.hpp"
-	"type_mat3x2.inl"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat3x2.inl
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat3x3.hpp
-	"type_mat.hpp"
-	"type_mat3x3.inl"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat3x3.inl
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat3x4.hpp
-	"type_mat.hpp"
-	"type_mat3x4.inl"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat3x4.inl
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat4x2.hpp
-	"type_mat.hpp"
-	"type_mat4x2.inl"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat4x2.inl
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat4x3.hpp
-	"type_mat.hpp"
-	"type_mat4x3.inl"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat4x3.inl
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat4x4.hpp
-	"type_mat.hpp"
-	"type_mat4x4.inl"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\core\type_mat4x4.inl
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_trigonometric.hpp
-	"func_trigonometric.inl"
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_trigonometric.inl
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_exponential.hpp
-	"func_exponential.inl"
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_exponential.inl
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_common.hpp
-	"_fixes.hpp"
-	"func_common.inl"
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_common.inl
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_packing.hpp
-	"func_packing.inl"
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_packing.inl
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_geometric.hpp
-	"func_geometric.inl"
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_geometric.inl
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_matrix.hpp
-	"func_matrix.inl"
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_matrix.inl
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_vector_relational.hpp
-	"_detail.hpp"
-	"func_vector_relational.inl"
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_vector_relational.inl
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_integer.hpp
-	"func_integer.inl"
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_integer.inl
-	<intrin.h>
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_noise.hpp
-	"func_noise.inl"
-
-1388306391 d:\epsilon\epsilon engine\deppend\glm\core\func_noise.inl
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\gtc\matrix_transform.hpp
-	"../glm.hpp"
-	"matrix_transform.inl"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\gtc\matrix_transform.inl
-
-1388306393 d:\epsilon\epsilon engine\deppend\glm\gtx\compatibility.hpp
-	"../glm.hpp"
-	"../gtc/half_float.hpp"
-	"../gtc/quaternion.hpp"
-	<cfloat>
-	<cmath>
-	"compatibility.inl"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\gtc\half_float.hpp
-	"../glm.hpp"
-	"half_float.inl"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\gtc\half_float.inl
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\gtc\quaternion.hpp
-	"../glm.hpp"
-	"../gtc/half_float.hpp"
-	"quaternion.inl"
-
-1388306392 d:\epsilon\epsilon engine\deppend\glm\gtc\quaternion.inl
-	<limits>
-
-1388306393 d:\epsilon\epsilon engine\deppend\glm\gtx\compatibility.inl
-
-1388306393 d:\epsilon\epsilon engine\deppend\glm\gtc\type_ptr.hpp
-	"../glm.hpp"
-	"../gtc/half_float.hpp"
-	"../gtc/quaternion.hpp"
 	<cstring>
-	"type_ptr.inl"
-
-1388306393 d:\epsilon\epsilon engine\deppend\glm\gtc\type_ptr.inl
-
-1504331139 d:\epsilon\epsilon engine\include\sun.h
-	<GL/glew.h>
+	<vector>
+	<map>
 	<GLFW/glfw3.h>
-	<glm/glm.hpp>
-	<glm/gtc/matrix_transform.hpp>
-	<Texture.h>
-	<Shader.h>
-	<camera.h>
-	<memory>
+	"BSPFace.h"
+	"Frustum.h"
+	<ResourceManager.h>
 
-1504218659 source:d:\epsilon\epsilon engine\src\sun.cpp
-	<Sun.h>
-	<sys/KeyBoard.h>
+1470451971 d:\epsilon\epsilon engine\deppend\glfw-3.2.bin.win32\include\glfw\glfw3.h
+	<stddef.h>
+	<stdint.h>
+	<OpenGL/gl3.h>
+	<OpenGL/gl3ext.h>
+	<OpenGL/gl.h>
+	<OpenGL/glu.h>
+	<GL/glcorearb.h>
+	<GLES/gl.h>
+	<GLES/glext.h>
+	<GLES2/gl2.h>
+	<GLES2/gl2ext.h>
+	<GLES3/gl3.h>
+	<GLES2/gl2ext.h>
+	<GLES3/gl31.h>
+	<GLES2/gl2ext.h>
+	<vulkan/vulkan.h>
+	<GL/gl.h>
+	<GL/glext.h>
+	<GL/glu.h>
+
+1504218114 d:\epsilon\epsilon engine\include\bspface.h
+	<glm/glm.hpp>
+	<GL/glew.h>
+	<iostream>
+	<string>
+	<vector>
+	<SOIL.h>
+	<Physics.h>
+	<Includes.h>
 
 1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\glm.hpp
 	"detail/_fixes.hpp"
@@ -1501,256 +453,9 @@
 	<intrin.h>
 	<limits>
 
-1441038256 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\matrix_transform.hpp
-	"../mat4x4.hpp"
-	"../vec2.hpp"
-	"../vec3.hpp"
-	"../vec4.hpp"
-	"../gtc/constants.hpp"
-	"matrix_transform.inl"
+1396053918 d:\epsilon\epsilon engine\deppend\soil\src\soil.h
 
-1441051454 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\constants.hpp
-	"../detail/setup.hpp"
-	"constants.inl"
-
-1441052694 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\constants.inl
-	<limits>
-
-1426534869 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\matrix_transform.inl
-	"../geometric.hpp"
-	"../trigonometric.hpp"
-	"../matrix.hpp"
-
-1437315607 d:\epsilon\epsilon engine\deppend\glm\glm\gtx\compatibility.hpp
-	"../glm.hpp"
-	"../gtc/quaternion.hpp"
-	<cfloat>
-	<cmath>
-	"compatibility.inl"
-
-1438471086 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\quaternion.hpp
-	"../mat3x3.hpp"
-	"../mat4x4.hpp"
-	"../vec3.hpp"
-	"../vec4.hpp"
-	"../gtc/constants.hpp"
-	"quaternion.inl"
-
-1438472000 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\quaternion.inl
-	"../trigonometric.hpp"
-	"../geometric.hpp"
-	"../exponential.hpp"
-	<limits>
-
-1437315632 d:\epsilon\epsilon engine\deppend\glm\glm\gtx\compatibility.inl
-	<limits>
-
-1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\type_ptr.hpp
-	"../gtc/quaternion.hpp"
-	"../vec2.hpp"
-	"../vec3.hpp"
-	"../vec4.hpp"
-	"../mat2x2.hpp"
-	"../mat2x3.hpp"
-	"../mat2x4.hpp"
-	"../mat3x2.hpp"
-	"../mat3x3.hpp"
-	"../mat3x4.hpp"
-	"../mat4x2.hpp"
-	"../mat4x3.hpp"
-	"../mat4x4.hpp"
-	<cstring>
-	"type_ptr.inl"
-
-1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\type_ptr.inl
-	<cstring>
-
-1504217989 source:d:\epsilon\epsilon engine\src\bsp.cpp
-	<GL/glew.h>
-	<omp.h>
-	<BSP.h>
-	<glm/glm.hpp>
-	<vector>
-	<iostream>
-	<Frustum.h>
-	<Texture.h>
-
-1504217997 d:\epsilon\epsilon engine\include\bsp.h
-	<cstdlib>
-	<cstdio>
-	<cstring>
-	<vector>
-	<map>
-	<GLFW/glfw3.h>
-	"BSPFace.h"
-	"Frustum.h"
-	<ResourceManager.h>
-
-1504218114 d:\epsilon\epsilon engine\include\bspface.h
-	<glm/glm.hpp>
-	<GL/glew.h>
-	<iostream>
-	<string>
-	<vector>
-	<SOIL.h>
-	<Physics.h>
-	<Includes.h>
-
-1464926531 d:\epsilon\epsilon engine\include\frustum.h
-	<glm/glm.hpp>
-	<glm/gtc/matrix_transform.hpp>
-	<Model.h>
-
-1478052518 source:d:\epsilon\epsilon engine\src\frustum.cpp
-	"Frustum.h"
-	<iostream>
-
-1504217307 source:d:\epsilon\epsilon engine\src\resourcemanager.cpp
-	"ResourceManager.h"
-
-1504216014 d:\epsilon\epsilon engine\include\resourcemanager.h
-	<Texture.h>
-	<Model.h>
-	<Water.h>
-	<Terrain.h>
-	<Grass.h>
-	<map>
-	<Shader.h>
-	<CubeMap.h>
-	<Includes.h>
-	<Physics.h>
-	<Audio.h>
-
-1459912765 source:d:\epsilon\epsilon engine\src\md5_anim.cpp
-	<MD5_Anim.h>
-	<Includes.h>
-
-1459912765 d:\epsilon\epsilon engine\include\md5_anim.h
-	<vector>
-	<string>
-	<iostream>
-	<fstream>
-	<glm/glm.hpp>
-	<glm/gtc/matrix_transform.hpp>
-	<glm/gtc/quaternion.hpp>
-
-1487784737 source:d:\epsilon\epsilon engine\src\md5_model.cpp
-	<Includes.h>
-	<iostream>
-	<MD5_Model.h>
-	<Texture.h>
-
-1503725765 d:\epsilon\epsilon engine\include\md5_model.h
-	<GL/glew.h>
-	<string>
-	<vector>
-	<glm/glm.hpp>
-	<glm/gtc/quaternion.hpp>
-	"MD5_Anim.h"
-	<SOIL.h>
-
-1501950847 d:\epsilon\epsilon engine\include\types.h
-	<btBulletDynamicsCommon.h>
-	<btBulletCollisionCommon.h>
-	<memory>
-
-1503725761 d:\epsilon\epsilon engine\include\shadowmapping.h
-	<Shader.h>
-	<Types.h>
-	<GL/glew.h>
-	<glm/glm.hpp>
-	<glm/gtc/matrix_transform.hpp>
-
-1503725774 source:d:\epsilon\epsilon engine\src\shadowmapping.cpp
-	<ShadowMapping.h>
-	<iostream>
-	<cmath>
-
-1504476777 d:\epsilon\epsilon engine\version.h
-
-1503634982 d:\epsilon\epsilon engine\include\entitytemplate.h
-	<Component.h>
-	<iostream>
-	<glm/glm.hpp>
-	<typeinfo>
-	<memory>
-	<ResourceManager.h>
-
-1504215125 d:\epsilon\epsilon engine\include\component.h
-	<iostream>
-	<glm/glm.hpp>
-	<Model.h>
-	<ResourceManager.h>
-	<memory>
-	<Types.h>
-	<Physics.h>
-
-1504215099 source:d:\epsilon\epsilon engine\src\entitytemplate.cpp
-	<EntityTemplate.h>
-
-1457715723 d:\epsilon\epsilon engine\include\cpuid.h
-	<string>
-	<iostream>
-	<limits.h>
-	<stdint.h>
-	<thread>
-	<exception>
-
-1463868487 d:\epsilon\epsilon engine\include\epsilonmemory.h
-	<memory>
-	<typeinfo>
-
-1493414773 d:\epsilon\epsilon engine\include\light.h
-	<glm/glm.hpp>
-	<glm/gtc/matrix_transform.hpp>
-	<Types.h>
-
-1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\gtx\quaternion.hpp
-	"../glm.hpp"
-	"../gtc/constants.hpp"
-	"../gtc/quaternion.hpp"
-	"../gtx/norm.hpp"
-	"quaternion.inl"
-
-1437695657 d:\epsilon\epsilon engine\deppend\glm\glm\gtx\norm.hpp
-	"../glm.hpp"
-	"../gtx/quaternion.hpp"
-	"norm.inl"
-
-1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\gtx\norm.inl
-
-1441050881 d:\epsilon\epsilon engine\deppend\glm\glm\gtx\quaternion.inl
-	<limits>
-	"../gtc/constants.hpp"
-
-1504214915 source:d:\epsilon\epsilon engine\src\model.cpp
-	<Model.h>
-	<ResourceManager.h>
-	<Log.h>
-
-1461365554 d:\epsilon\epsilon engine\include\emlformat.h
-	<string>
-
-1504218269 source:d:\epsilon\epsilon engine\src\mesh.cpp
-	<Mesh.h>
-	<ResourceManager.h>
-
-1504333573 d:\epsilon\epsilon engine\include\cubemap.h
-	<glm/glm.hpp>
-	<vector>
-	<string>
-	<memory>
-	<Texture.h>
-	<OpenGL/HelperFunctions/FullScreenQuad.h>
-	<OpenGL/FrameBuffer.h>
-	<Shader.h>
-	<Types.h>
-	<cubemapRenderer.h>
-	<glm/glm.hpp>
-	<glm/gtc/matrix_transform.hpp>
-	<exception>
-
-1495057048 d:\epsilon\epsilon engine\include\physics.h
+1504823842 d:\epsilon\epsilon engine\include\physics.h
 	<glm/glm.hpp>
 	<EpsilonMemory.h>
 	<Types.h>
@@ -1764,613 +469,14 @@
 	<BulletDynamics/Featherstone/btMultiBodyConstraintSolver.h>
 	<LinearMath/btTransform.h>
 
-1456870205 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\btbulletdynamicscommon.h
-	"btBulletCollisionCommon.h"
-	"BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h"
-	"BulletDynamics/Dynamics/btSimpleDynamicsWorld.h"
-	"BulletDynamics/Dynamics/btRigidBody.h"
-	"BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h"
-	"BulletDynamics/ConstraintSolver/btHingeConstraint.h"
-	"BulletDynamics/ConstraintSolver/btConeTwistConstraint.h"
-	"BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h"
-	"BulletDynamics/ConstraintSolver/btSliderConstraint.h"
-	"BulletDynamics/ConstraintSolver/btGeneric6DofSpringConstraint.h"
-	"BulletDynamics/ConstraintSolver/btUniversalConstraint.h"
-	"BulletDynamics/ConstraintSolver/btHinge2Constraint.h"
-	"BulletDynamics/ConstraintSolver/btGearConstraint.h"
-	"BulletDynamics/ConstraintSolver/btFixedConstraint.h"
-	"BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h"
-	"BulletDynamics/Vehicle/btRaycastVehicle.h"
-
-1456870205 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\btbulletcollisioncommon.h
-	"BulletCollision/CollisionDispatch/btCollisionWorld.h"
-	"BulletCollision/CollisionDispatch/btCollisionObject.h"
-	"BulletCollision/CollisionShapes/btBoxShape.h"
-	"BulletCollision/CollisionShapes/btSphereShape.h"
-	"BulletCollision/CollisionShapes/btCapsuleShape.h"
-	"BulletCollision/CollisionShapes/btCylinderShape.h"
-	"BulletCollision/CollisionShapes/btConeShape.h"
-	"BulletCollision/CollisionShapes/btStaticPlaneShape.h"
-	"BulletCollision/CollisionShapes/btConvexHullShape.h"
-	"BulletCollision/CollisionShapes/btTriangleMesh.h"
-	"BulletCollision/CollisionShapes/btConvexTriangleMeshShape.h"
-	"BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h"
-	"BulletCollision/CollisionShapes/btScaledBvhTriangleMeshShape.h"
-	"BulletCollision/CollisionShapes/btTriangleMeshShape.h"
-	"BulletCollision/CollisionShapes/btTriangleIndexVertexArray.h"
-	"BulletCollision/CollisionShapes/btCompoundShape.h"
-	"BulletCollision/CollisionShapes/btTetrahedronShape.h"
-	"BulletCollision/CollisionShapes/btEmptyShape.h"
-	"BulletCollision/CollisionShapes/btMultiSphereShape.h"
-	"BulletCollision/CollisionShapes/btUniformScalingShape.h"
-	"BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.h"
-	"BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.h"
-	"BulletCollision/CollisionDispatch/btCollisionDispatcher.h"
-	"BulletCollision/BroadphaseCollision/btSimpleBroadphase.h"
-	"BulletCollision/BroadphaseCollision/btAxisSweep3.h"
-	"BulletCollision/BroadphaseCollision/btMultiSapBroadphase.h"
-	"BulletCollision/BroadphaseCollision/btDbvtBroadphase.h"
-	"LinearMath/btQuaternion.h"
-	"LinearMath/btTransform.h"
-	"LinearMath/btDefaultMotionState.h"
-	"LinearMath/btQuickprof.h"
-	"LinearMath/btIDebugDraw.h"
-	"LinearMath/btSerializer.h"
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btcollisionworld.h
-	"LinearMath/btVector3.h"
-	"LinearMath/btTransform.h"
-	"btCollisionObject.h"
-	"btCollisionDispatcher.h"
-	"BulletCollision/BroadphaseCollision/btOverlappingPairCache.h"
-	"LinearMath/btAlignedObjectArray.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btvector3.h
-	"btScalar.h"
-	"btMinMax.h"
-	"btAlignedAllocator.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btscalar.h
-	<math.h>
-	<stdlib.h>
-	<float.h>
-	<ppcintrinsics.h>
-	<emmintrin.h>
-	<stdio.h>
-	<assert.h>
-	<assert.h>
-	<spu_printf.h>
-	<assert.h>
-	<smmintrin.h>
-	<tmmintrin.h>
-	<pmmintrin.h>
-	<emmintrin.h>
-	<arm_neon.h>
-	<assert.h>
-	<stdio.h>
-	<assert.h>
-	<arm_neon.h>
-	<arm_neon.h>
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btminmax.h
-	"btScalar.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btalignedallocator.h
-	"btScalar.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\bttransform.h
-	"btMatrix3x3.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btmatrix3x3.h
-	"btVector3.h"
-	"btQuaternion.h"
-	<stdio.h>
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btquaternion.h
-	"btVector3.h"
-	"btQuadWord.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btquadword.h
-	"btScalar.h"
-	"btMinMax.h"
-	<altivec.h>
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btcollisionobject.h
-	"LinearMath/btTransform.h"
-	"LinearMath/btMotionState.h"
-	"LinearMath/btAlignedAllocator.h"
-	"LinearMath/btAlignedObjectArray.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btmotionstate.h
-	"btTransform.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btalignedobjectarray.h
-	"btScalar.h"
-	"btAlignedAllocator.h"
-	<memory.h>
-	<string.h>
-	<new>
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btcollisiondispatcher.h
-	"BulletCollision/BroadphaseCollision/btDispatcher.h"
-	"BulletCollision/NarrowPhaseCollision/btPersistentManifold.h"
-	"BulletCollision/CollisionDispatch/btManifoldResult.h"
-	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
-	"LinearMath/btAlignedObjectArray.h"
-	"btCollisionCreateFunc.h"
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btdispatcher.h
-	"LinearMath/btScalar.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\narrowphasecollision\btpersistentmanifold.h
-	"LinearMath/btVector3.h"
-	"LinearMath/btTransform.h"
-	"btManifoldPoint.h"
-	"LinearMath/btAlignedAllocator.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\narrowphasecollision\btmanifoldpoint.h
-	"LinearMath/btVector3.h"
-	"LinearMath/btTransformUtil.h"
-	"physics_effects/base_level/solver/pfx_constraint_row.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\bttransformutil.h
-	"btTransform.h"
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btmanifoldresult.h
-	"BulletCollision/NarrowPhaseCollision/btPersistentManifold.h"
-	"BulletCollision/NarrowPhaseCollision/btDiscreteCollisionDetectorInterface.h"
-	"LinearMath/btTransform.h"
-	"BulletCollision/CollisionDispatch/btCollisionObjectWrapper.h"
-	"BulletCollision/CollisionDispatch/btCollisionObject.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\narrowphasecollision\btdiscretecollisiondetectorinterface.h
-	"LinearMath/btTransform.h"
-	"LinearMath/btVector3.h"
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btcollisionobjectwrapper.h
-	"LinearMath/btScalar.h"
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btbroadphaseproxy.h
-	"LinearMath/btScalar.h"
-	"LinearMath/btVector3.h"
-	"LinearMath/btAlignedAllocator.h"
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btcollisioncreatefunc.h
-	"LinearMath/btAlignedObjectArray.h"
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btoverlappingpaircache.h
-	"btBroadphaseInterface.h"
-	"btBroadphaseProxy.h"
-	"btOverlappingPairCallback.h"
-	"LinearMath/btAlignedObjectArray.h"
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btbroadphaseinterface.h
-	"btBroadphaseProxy.h"
-	"LinearMath/btVector3.h"
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btoverlappingpaircallback.h
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btboxshape.h
-	"btPolyhedralConvexShape.h"
-	"btCollisionMargin.h"
-	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
-	"LinearMath/btVector3.h"
-	"LinearMath/btMinMax.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btpolyhedralconvexshape.h
-	"LinearMath/btMatrix3x3.h"
-	"btConvexInternalShape.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btconvexinternalshape.h
-	"btConvexShape.h"
-	"LinearMath/btAabbUtil2.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btconvexshape.h
-	"btCollisionShape.h"
-	"LinearMath/btVector3.h"
-	"LinearMath/btTransform.h"
-	"LinearMath/btMatrix3x3.h"
-	"btCollisionMargin.h"
-	"LinearMath/btAlignedAllocator.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btcollisionshape.h
-	"LinearMath/btTransform.h"
-	"LinearMath/btVector3.h"
-	"LinearMath/btMatrix3x3.h"
-	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btcollisionmargin.h
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btaabbutil2.h
-	"btTransform.h"
-	"btVector3.h"
-	"btMinMax.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btsphereshape.h
-	"btConvexInternalShape.h"
-	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btcapsuleshape.h
-	"btConvexInternalShape.h"
-	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btcylindershape.h
-	"btBoxShape.h"
-	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
-	"LinearMath/btVector3.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btconeshape.h
-	"btConvexInternalShape.h"
-	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btstaticplaneshape.h
-	"btConcaveShape.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btconcaveshape.h
-	"btCollisionShape.h"
-	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
-	"btTriangleCallback.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\bttrianglecallback.h
-	"LinearMath/btVector3.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btconvexhullshape.h
-	"btPolyhedralConvexShape.h"
-	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
-	"LinearMath/btAlignedObjectArray.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\bttrianglemesh.h
-	"btTriangleIndexVertexArray.h"
-	"LinearMath/btVector3.h"
-	"LinearMath/btAlignedObjectArray.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\bttriangleindexvertexarray.h
-	"btStridingMeshInterface.h"
-	"LinearMath/btAlignedObjectArray.h"
-	"LinearMath/btScalar.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btstridingmeshinterface.h
-	"LinearMath/btVector3.h"
-	"btTriangleCallback.h"
-	"btConcaveShape.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btconvextrianglemeshshape.h
-	"btPolyhedralConvexShape.h"
-	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btbvhtrianglemeshshape.h
-	"btTriangleMeshShape.h"
-	"btOptimizedBvh.h"
-	"LinearMath/btAlignedAllocator.h"
-	"btTriangleInfoMap.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\bttrianglemeshshape.h
-	"btConcaveShape.h"
-	"btStridingMeshInterface.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btoptimizedbvh.h
-	"BulletCollision/BroadphaseCollision/btQuantizedBvh.h"
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btquantizedbvh.h
-	<stdio.h>
-	<stdlib.h>
-	"LinearMath/btVector3.h"
-	"LinearMath/btAlignedAllocator.h"
-	"LinearMath/btAlignedAllocator.h"
-	"LinearMath/btAlignedObjectArray.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\bttriangleinfomap.h
-	"LinearMath/btHashMap.h"
-	"LinearMath/btSerializer.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\bthashmap.h
-	"btAlignedObjectArray.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btserializer.h
-	"btScalar.h"
-	"btHashMap.h"
-	<memory.h>
-	<string.h>
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btscaledbvhtrianglemeshshape.h
-	"BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btcompoundshape.h
-	"btCollisionShape.h"
-	"LinearMath/btVector3.h"
-	"LinearMath/btTransform.h"
-	"LinearMath/btMatrix3x3.h"
-	"btCollisionMargin.h"
-	"LinearMath/btAlignedObjectArray.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\bttetrahedronshape.h
-	"btPolyhedralConvexShape.h"
-	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btemptyshape.h
-	"btConcaveShape.h"
-	"LinearMath/btVector3.h"
-	"LinearMath/btTransform.h"
-	"LinearMath/btMatrix3x3.h"
-	"btCollisionMargin.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btmultisphereshape.h
-	"btConvexInternalShape.h"
-	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
-	"LinearMath/btAlignedObjectArray.h"
-	"LinearMath/btAabbUtil2.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisionshapes\btuniformscalingshape.h
-	"btConvexShape.h"
-	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btspherespherecollisionalgorithm.h
-	"btActivatingCollisionAlgorithm.h"
-	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
-	"BulletCollision/CollisionDispatch/btCollisionCreateFunc.h"
-	"btCollisionDispatcher.h"
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btactivatingcollisionalgorithm.h
-	"BulletCollision/BroadphaseCollision/btCollisionAlgorithm.h"
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btcollisionalgorithm.h
-	"LinearMath/btScalar.h"
-	"LinearMath/btAlignedObjectArray.h"
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btdefaultcollisionconfiguration.h
-	"btCollisionConfiguration.h"
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btcollisionconfiguration.h
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btsimplebroadphase.h
-	"btOverlappingPairCache.h"
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btaxissweep3.h
-	"LinearMath/btVector3.h"
-	"btOverlappingPairCache.h"
-	"btBroadphaseInterface.h"
-	"btBroadphaseProxy.h"
-	"btOverlappingPairCallback.h"
-	"btDbvtBroadphase.h"
-	<stdio.h>
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btdbvtbroadphase.h
-	"BulletCollision/BroadphaseCollision/btDbvt.h"
-	"BulletCollision/BroadphaseCollision/btOverlappingPairCache.h"
-	"LinearMath/btQuickprof.h"
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btdbvt.h
-	"LinearMath/btAlignedObjectArray.h"
-	"LinearMath/btVector3.h"
-	"LinearMath/btTransform.h"
-	"LinearMath/btAabbUtil2.h"
-	<emmintrin.h>
-	<memory.h>
-	<string.h>
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btquickprof.h
-	<stdio.h>
-	"btScalar.h"
-	"btAlignedAllocator.h"
-	<new>
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\broadphasecollision\btmultisapbroadphase.h
-	"btBroadphaseInterface.h"
-	"LinearMath/btAlignedObjectArray.h"
-	"btOverlappingPairCache.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btdefaultmotionstate.h
-	"btMotionState.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btidebugdraw.h
-	"btVector3.h"
-	"btTransform.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\dynamics\btdiscretedynamicsworld.h
-	"btDynamicsWorld.h"
-	"LinearMath/btAlignedObjectArray.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\dynamics\btdynamicsworld.h
-	"BulletCollision/CollisionDispatch/btCollisionWorld.h"
-	"BulletDynamics/ConstraintSolver/btContactSolverInfo.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btcontactsolverinfo.h
-	"LinearMath/btScalar.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\dynamics\btsimpledynamicsworld.h
-	"btDynamicsWorld.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\dynamics\btrigidbody.h
-	"LinearMath/btAlignedObjectArray.h"
-	"LinearMath/btTransform.h"
-	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
-	"BulletCollision/CollisionDispatch/btCollisionObject.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btpoint2pointconstraint.h
-	"LinearMath/btVector3.h"
-	"btJacobianEntry.h"
-	"btTypedConstraint.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btjacobianentry.h
-	"LinearMath/btMatrix3x3.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\bttypedconstraint.h
-	"LinearMath/btScalar.h"
-	"btSolverConstraint.h"
-	"BulletDynamics/Dynamics/btRigidBody.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btsolverconstraint.h
-	"LinearMath/btVector3.h"
-	"LinearMath/btMatrix3x3.h"
-	"btJacobianEntry.h"
-	"LinearMath/btAlignedObjectArray.h"
-	"btSolverBody.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btsolverbody.h
-	"LinearMath/btVector3.h"
-	"LinearMath/btMatrix3x3.h"
-	"LinearMath/btAlignedAllocator.h"
-	"LinearMath/btTransformUtil.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\bthingeconstraint.h
-	"LinearMath/btVector3.h"
-	"btJacobianEntry.h"
-	"btTypedConstraint.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btconetwistconstraint.h
-	"LinearMath/btVector3.h"
-	"btJacobianEntry.h"
-	"btTypedConstraint.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btgeneric6dofconstraint.h
-	"LinearMath/btVector3.h"
-	"btJacobianEntry.h"
-	"btTypedConstraint.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btsliderconstraint.h
-	"LinearMath/btVector3.h"
-	"btJacobianEntry.h"
-	"btTypedConstraint.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btgeneric6dofspringconstraint.h
-	"LinearMath/btVector3.h"
-	"btTypedConstraint.h"
-	"btGeneric6DofConstraint.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btuniversalconstraint.h
-	"LinearMath/btVector3.h"
-	"btTypedConstraint.h"
-	"btGeneric6DofConstraint.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\bthinge2constraint.h
-	"LinearMath/btVector3.h"
-	"btTypedConstraint.h"
-	"btGeneric6DofSpring2Constraint.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btgeneric6dofspring2constraint.h
-	"LinearMath/btVector3.h"
-	"btJacobianEntry.h"
-	"btTypedConstraint.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btgearconstraint.h
-	"BulletDynamics/ConstraintSolver/btTypedConstraint.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btfixedconstraint.h
-	"btGeneric6DofSpring2Constraint.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btsequentialimpulseconstraintsolver.h
-	"BulletDynamics/ConstraintSolver/btTypedConstraint.h"
-	"BulletDynamics/ConstraintSolver/btContactSolverInfo.h"
-	"BulletDynamics/ConstraintSolver/btSolverBody.h"
-	"BulletDynamics/ConstraintSolver/btSolverConstraint.h"
-	"BulletCollision/NarrowPhaseCollision/btManifoldPoint.h"
-	"BulletDynamics/ConstraintSolver/btConstraintSolver.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\constraintsolver\btconstraintsolver.h
-	"LinearMath/btScalar.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\vehicle\btraycastvehicle.h
-	"BulletDynamics/Dynamics/btRigidBody.h"
-	"BulletDynamics/ConstraintSolver/btTypedConstraint.h"
-	"btVehicleRaycaster.h"
-	"LinearMath/btAlignedObjectArray.h"
-	"btWheelInfo.h"
-	"BulletDynamics/Dynamics/btActionInterface.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\vehicle\btvehicleraycaster.h
-	"LinearMath/btVector3.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\vehicle\btwheelinfo.h
-	"LinearMath/btVector3.h"
-	"LinearMath/btTransform.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\dynamics\btactioninterface.h
-	"LinearMath/btScalar.h"
-	"btRigidBody.h"
-
-1456870206 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletcollision\collisiondispatch\btghostobject.h
-	"btCollisionObject.h"
-	"BulletCollision/BroadphaseCollision/btOverlappingPairCallback.h"
-	"LinearMath/btAlignedAllocator.h"
-	"BulletCollision/BroadphaseCollision/btOverlappingPairCache.h"
-	"btCollisionWorld.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\character\btkinematiccharactercontroller.h
-	"LinearMath/btVector3.h"
-	"btCharacterControllerInterface.h"
-	"BulletCollision/BroadphaseCollision/btCollisionAlgorithm.h"
-
-1456870207 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\character\btcharactercontrollerinterface.h
-	"LinearMath/btVector3.h"
-	"BulletDynamics/Dynamics/btActionInterface.h"
-
-1488491801 source:d:\epsilon\epsilon engine\src\physics.cpp
-	<Physics.h>
-
-1504218454 source:d:\epsilon\epsilon engine\src\bspface.cpp
-	<Physics.h>
-	<ResourceManager.h>
-	<BSPFace.h>
-
-1465434547 d:\epsilon\epsilon engine\include\keyboard.h
-	<GLFW/glfw3.h>
-	<KeyboardWrapper.h>
-
-1465520024 source:d:\epsilon\epsilon engine\src\keyboard.cpp
-	<KeyBoard.h>
-	<iostream>
-
-1491092255 source:d:\epsilon\epsilon engine\src\player.cpp
-	<Player.h>
-	<ResourceManager.h>
-	<sys/KeyBoard.h>
-	<sys/Joystick.h>
-	<iostream>
-
-1483143985 d:\epsilon\epsilon engine\include\player.h
-	<Physics.h>
-	<camera.h>
-
-1465435296 d:\epsilon\epsilon engine\include\keyboardwrapper.h
-
-1465436739 d:\epsilon\epsilon engine\include\mouse.h
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\featherstone\btmultibodydynamicsworld.h
-	"BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\featherstone\btmultibodyconstraintsolver.h
-	"BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h"
-	"btMultiBodySolverConstraint.h"
-	"btMultiBodyConstraint.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\featherstone\btmultibodysolverconstraint.h
-	"LinearMath/btVector3.h"
-	"LinearMath/btAlignedObjectArray.h"
-	"BulletDynamics/ConstraintSolver/btSolverBody.h"
-	"BulletDynamics/ConstraintSolver/btContactSolverInfo.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\featherstone\btmultibodyconstraint.h
-	"LinearMath/btScalar.h"
-	"LinearMath/btAlignedObjectArray.h"
-	"btMultiBody.h"
-	"btMultiBodySolverConstraint.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\featherstone\btmultibody.h
-	"LinearMath/btScalar.h"
-	"LinearMath/btVector3.h"
-	"LinearMath/btQuaternion.h"
-	"LinearMath/btMatrix3x3.h"
-	"LinearMath/btAlignedObjectArray.h"
-	"btMultiBodyLink.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\bulletdynamics\featherstone\btmultibodylink.h
-	"LinearMath/btQuaternion.h"
-	"LinearMath/btVector3.h"
-	"BulletCollision/CollisionDispatch/btCollisionObject.h"
-	"LinearMath/btSpatialAlgebra.h"
-
-1456870208 d:\epsilon\epsilon engine\deppend\bullet3-2.83.7\src\linearmath\btspatialalgebra.h
-	"btMatrix3x3.h"
+1463868487 d:\epsilon\epsilon engine\include\epsilonmemory.h
+	<memory>
+	<typeinfo>
+
+1501950847 d:\epsilon\epsilon engine\include\types.h
+	<btBulletDynamicsCommon.h>
+	<btBulletCollisionCommon.h>
+	<memory>
 
 1391359685 d:\epsilon\epsilon engine\deppend\bullet-2.82-r2704\src\btbulletdynamicscommon.h
 	"btBulletCollisionCommon.h"
@@ -2891,6 +997,119 @@
 	"LinearMath/btScalar.h"
 	"btRigidBody.h"
 
+1505010369 d:\epsilon\epsilon engine\include\model.h
+	<string>
+	<fstream>
+	<sstream>
+	<iostream>
+	<map>
+	<vector>
+	<GL/glew.h>
+	<glm/glm.hpp>
+	<glm/gtc/quaternion.hpp>
+	<glm/gtx/quaternion.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Texture.h>
+	<Mesh.h>
+	<Types.h>
+	<memory>
+	<emlFormat.h>
+	<camera.h>
+
+1438471086 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\quaternion.hpp
+	"../mat3x3.hpp"
+	"../mat4x4.hpp"
+	"../vec3.hpp"
+	"../vec4.hpp"
+	"../gtc/constants.hpp"
+	"quaternion.inl"
+
+1441051454 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\constants.hpp
+	"../detail/setup.hpp"
+	"constants.inl"
+
+1441052694 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\constants.inl
+	<limits>
+
+1438472000 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\quaternion.inl
+	"../trigonometric.hpp"
+	"../geometric.hpp"
+	"../exponential.hpp"
+	<limits>
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\gtx\quaternion.hpp
+	"../glm.hpp"
+	"../gtc/constants.hpp"
+	"../gtc/quaternion.hpp"
+	"../gtx/norm.hpp"
+	"quaternion.inl"
+
+1437695657 d:\epsilon\epsilon engine\deppend\glm\glm\gtx\norm.hpp
+	"../glm.hpp"
+	"../gtx/quaternion.hpp"
+	"norm.inl"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\gtx\norm.inl
+
+1441050881 d:\epsilon\epsilon engine\deppend\glm\glm\gtx\quaternion.inl
+	<limits>
+	"../gtc/constants.hpp"
+
+1441038256 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\matrix_transform.hpp
+	"../mat4x4.hpp"
+	"../vec2.hpp"
+	"../vec3.hpp"
+	"../vec4.hpp"
+	"../gtc/constants.hpp"
+	"matrix_transform.inl"
+
+1426534869 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\matrix_transform.inl
+	"../geometric.hpp"
+	"../trigonometric.hpp"
+	"../matrix.hpp"
+
+1505011284 d:\epsilon\epsilon engine\include\texture.h
+	<iostream>
+	<string>
+	<vector>
+	<GL/glew.h>
+	<GLFW/glfw3.h>
+	<SOIL.h>
+	<ProgramData.h>
+
+1505150656 d:\epsilon\epsilon engine\include\programdata.h
+
+1505010205 d:\epsilon\epsilon engine\include\mesh.h
+	<string>
+	<fstream>
+	<sstream>
+	<iostream>
+	<vector>
+	<GL/glew.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Shader.h>
+	<emlFormat.h>
+	<memory>
+
+1503779023 d:\epsilon\epsilon engine\include\shader.h
+	<GL/glew.h>
+	<string>
+	<iostream>
+	<unordered_map>
+	<glm/glm.hpp>
+	<Types.h>
+
+1461365554 d:\epsilon\epsilon engine\include\emlformat.h
+	<string>
+
+1497150814 d:\epsilon\epsilon engine\include\camera.h
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<glm/gtc/quaternion.hpp>
+	<GLFW/glfw3.h>
+	<iostream>
+
 1391359685 d:\epsilon\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisiondispatch\btghostobject.h
 	"btCollisionObject.h"
 	"BulletCollision/BroadphaseCollision/btOverlappingPairCallback.h"
@@ -2940,40 +1159,99 @@
 	"LinearMath/btVector3.h"
 	"BulletCollision/CollisionDispatch/btCollisionObject.h"
 
-1467436615 d:\epsilon\epsilon engine\include\joystick.h
-	<GLFW/glfw3.h>
+1504216633 d:\epsilon\epsilon engine\include\includes.h
 	<iostream>
+	<string>
+	<sstream>
+	<ctime>
+	<vector>
+	<glm/gtc/quaternion.hpp>
 
-1468724288 d:\epsilon\epsilon engine\include\sys\keyboard.h
-	<GLFW/glfw3.h>
-	<sys/KeyboardWrapper.h>
+1464926531 d:\epsilon\epsilon engine\include\frustum.h
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Model.h>
 
-1474615042 d:\epsilon\epsilon engine\include\sys\keyboardwrapper.h
+1505010544 d:\epsilon\epsilon engine\include\resourcemanager.h
+	<Texture.h>
+	<Model.h>
+	<Water.h>
+	<Terrain.h>
+	<Grass.h>
+	<map>
+	<Shader.h>
+	<CubeMap.h>
+	<Includes.h>
+	<Physics.h>
+	<Audio.h>
 
-1468724288 d:\epsilon\epsilon engine\include\sys\mouse.h
+1503725759 d:\epsilon\epsilon engine\include\water.h
+	<GL/glew.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Shader.h>
+	<Texture.h>
+	<Camera.h>
+	<Model.h>
+	<vector>
+	<memory>
 
-1481041193 d:\epsilon\epsilon engine\include\sys\joystick.h
-	<GLFW/glfw3.h>
-	<iostream>
+1504934261 d:\epsilon\epsilon engine\include\terrain.h
+	<vector>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Shader.h>
+	<Texture.h>
+	<memory>
+	<Physics.h>
 
-1489719397 d:\epsilon\epsilon engine\include\sys\cpuid.h
+1503725767 d:\epsilon\epsilon engine\include\grass.h
+	<GL/glew.h>
 	<string>
 	<iostream>
-	<limits.h>
-	<stdint.h>
-	<thread>
-	<exception>
-	<Log.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Shader.h>
 
-1467939169 source:d:\epsilon\epsilon engine\src\sys\keyboard.cpp
-	<sys/KeyBoard.h>
-	<iostream>
-
-1470099293 d:\epsilon\epsilon engine\include\wavfile.h
-	<iostream>
-	<fstream>
+1506984728 d:\epsilon\epsilon engine\include\cubemap.h
+	<glm/glm.hpp>
+	<vector>
+	<string>
 	<memory>
-	<Includes.h>
+	<Texture.h>
+	<OpenGL/HelperFunctions/FullScreenQuad.h>
+	<OpenGL/FrameBuffer.h>
+	<Shader.h>
+	<Types.h>
+	<cubemapRenderer.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<exception>
+
+1503725922 d:\epsilon\epsilon engine\include\opengl\helperfunctions\fullscreenquad.h
+	<GL/glew.h>
+
+1503725922 d:\epsilon\epsilon engine\include\opengl\framebuffer.h
+	<unordered_map>
+	<iostream>
+	<string>
+	<memory>
+	<GL/glew.h>
+	<OpenGL/RenderTarget.h>
+
+1503725922 d:\epsilon\epsilon engine\include\opengl\rendertarget.h
+	<GL/glew.h>
+
+1503725770 d:\epsilon\epsilon engine\include\cubemaprenderer.h
+	<GL/glew.h>
+	<vector>
+	<memory>
+	<OpenGL/FrameBuffer.h>
+	<OpenGL/HelperFunctions/FullScreenQuad.h>
+	<OpenGL/FrameBuffer.h>
+	<Shader.h>
+	<glm/glm.hpp>
+	<camera.h>
 
 1489890372 d:\epsilon\epsilon engine\include\audio.h
 	<vector>
@@ -2991,120 +1269,40 @@
 
 1456869867 d:\epsilon\epsilon engine\deppend\openal-soft-1.17.2-bin\include\al\alc.h
 
-1475287716 d:\epsilon\epsilon engine\include\audiolistener.h
-	<AL/al.h>
-	<AL/alc.h>
-	<glm/glm.hpp>
-
-1470451971 d:\epsilon\epsilon engine\deppend\glfw-3.2.bin.win32\include\glfw\glfw3.h
-	<stddef.h>
-	<stdint.h>
-	<OpenGL/gl3.h>
-	<OpenGL/gl3ext.h>
-	<OpenGL/gl.h>
-	<OpenGL/glu.h>
-	<GL/glcorearb.h>
-	<GLES/gl.h>
-	<GLES/glext.h>
-	<GLES2/gl2.h>
-	<GLES2/gl2ext.h>
-	<GLES3/gl3.h>
-	<GLES2/gl2ext.h>
-	<GLES3/gl31.h>
-	<GLES2/gl2ext.h>
-	<vulkan/vulkan.h>
-	<GL/gl.h>
-	<GL/glext.h>
-	<GL/glu.h>
-
-1474775515 source:d:\epsilon\epsilon engine\src\gui\gui.cpp
-	<GUI/GUI.h>
-
-1493618591 d:\epsilon\epsilon engine\include\gui\gui.h
-	<GUI/Container.h>
-	<GUI/Panel.h>
-	<GUI/Button.h>
-
-1474775695 d:\epsilon\epsilon engine\include\gui\control.h
-	<string>
-	<GUI/Renderers/OpenGL 3.x+/Renderer.h>
-	<GUI/TextGUI.h>
-	<GUI/Types.h>
-	<functional>
-
-1474773940 d:\epsilon\epsilon engine\include\gui\renderers\opengl 3.x+\renderer.h
-	<GL/glew.h>
-	<Shader.h>
-	<GUI/Renderers/OpenGL 3.x+/shaders.h>
-	<glm/glm.hpp>
-	<Shader.h>
-
-1461483175 d:\epsilon\epsilon engine\include\gui\shader.h
-	<GL/glew.h>
-	<string>
+1470099293 d:\epsilon\epsilon engine\include\wavfile.h
 	<iostream>
-
-1467945224 d:\epsilon\epsilon engine\include\gui\renderers\opengl 3.x+\shaders.h
-
-1474754764 d:\epsilon\epsilon engine\include\gui\text.h
-	<ft2build.h>
-	<map>
-	<glm/glm.hpp>
-	<glm/gtc/matrix_transform.hpp>
-	<Shader.h>
-
-1474775162 d:\epsilon\epsilon engine\include\gui\types.h
-
-1474770121 d:\epsilon\epsilon engine\include\gui\controls\button.h
-	<iostream>
-	<GUI/Control.h>
-	<GUI/Texture.h>
-
-1465271355 d:\epsilon\epsilon engine\include\gui\texture.h
-	<iostream>
-	<string>
-	<vector>
-	<GL/glew.h>
-	<SOIL.h>
-
-1474768395 d:\epsilon\epsilon engine\include\gui\controls\label.h
-	<iostream>
-	<GUI/Control.h>
-	<GUI/Texture.h>
-
-1474768400 d:\epsilon\epsilon engine\include\gui\controls\alertbox.h
-	<iostream>
-	<GUI/Control.h>
-	<GUI/Texture.h>
-
-1474770048 d:\epsilon\epsilon engine\include\gui\textgui.h
-	<ft2build.h>
-	<map>
-	<glm/glm.hpp>
-	<glm/gtc/matrix_transform.hpp>
-	<Shader.h>
-
-1503725760 d:\epsilon\epsilon engine\include\splashscreen.h
-	<GL/glew.h>
-
-1503883844 source:d:\epsilon\epsilon engine\src\sphericalharmonics.cpp
-	<SphericalHarmonics.h>
-	<Types.h>
-	<OpenGL/HelperFunctions/CheckError.h>
-
-1504289709 d:\epsilon\epsilon engine\include\sphericalharmonics.h
-	<CubeMap.h>
-	<memory>
 	<fstream>
+	<memory>
 	<Includes.h>
 
-1482803747 d:\epsilon\epsilon engine\include\picking.h
-	<glm/glm.hpp>
+1505017170 source:d:\epsilon\epsilon engine\src\bspface.cpp
 	<Physics.h>
+	<ResourceManager.h>
+	<BSPFace.h>
 
-1482815678 source:d:\epsilon\epsilon engine\src\picking.cpp
-	<Picking.h>
+1506623869 source:d:\epsilon\epsilon engine\src\camera.cpp
+	<iostream>
+	<camera.h>
+	<math.h>
 	<sys/KeyBoard.h>
+	<sys/Mouse.h>
+	<sys/Joystick.h>
+
+1468724288 d:\epsilon\epsilon engine\include\sys\keyboard.h
+	<GLFW/glfw3.h>
+	<sys/KeyboardWrapper.h>
+
+1474615042 d:\epsilon\epsilon engine\include\sys\keyboardwrapper.h
+
+1468724288 d:\epsilon\epsilon engine\include\sys\mouse.h
+
+1481041193 d:\epsilon\epsilon engine\include\sys\joystick.h
+	<GLFW/glfw3.h>
+	<iostream>
+
+1503710894 source:d:\epsilon\epsilon engine\src\cubemaprenderer.cpp
+	<cubemapRenderer.h>
+	<Texture.h>
 
 1503725922 source:d:\epsilon\epsilon engine\src\dds.cpp
 	<iostream>
@@ -3119,75 +1317,207 @@
 
 1471669636 d:\epsilon\epsilon engine\include\ddsfile.h
 
-1495073362 source:d:\epsilon\epsilon engine\src\particle.cpp
-	<ParticleSystem.h>
-	<Types.h>
+1504215099 source:d:\epsilon\epsilon engine\src\entitytemplate.cpp
+	<EntityTemplate.h>
 
-1495686566 d:\epsilon\epsilon engine\include\particlesystem.h
-	<vector>
+1503634982 d:\epsilon\epsilon engine\include\entitytemplate.h
+	<Component.h>
 	<iostream>
-	<algorithm>
-	<Particle.h>
-	<ParticleProxy.h>
-
-1503725764 d:\epsilon\epsilon engine\include\particle.h
 	<glm/glm.hpp>
-	<GL/glew.h>
-	<Types.h>
+	<typeinfo>
+	<memory>
+	<ResourceManager.h>
 
-1504476777 d:\epsilon\epsilon engine\include\particleproxy.h
+1504821816 d:\epsilon\epsilon engine\include\component.h
+	<iostream>
+	<glm/glm.hpp>
+	<Model.h>
+	<ResourceManager.h>
+	<memory>
 	<Types.h>
+	<Physics.h>
+
+1506984592 source:d:\epsilon\epsilon engine\src\epsilon.cpp
+	<iostream>
+	<Epsilon.h>
+	<ProgramData.h>
+	<cstdlib>
+	<time.h>
+	<Includes.h>
+	<Types.h>
+	"../version.h"
+	<glm/gtc/quaternion.hpp>
+	<cmath>
+	<thread>
+	<EpsilonMemory.h>
+	<sys/CPUID.h>
+	<chrono>
+	<Log.h>
+
+1504487668 d:\epsilon\epsilon engine\include\epsilon.h
+	<map>
+	<GL/glew.h>
+	<GLFW/glfw3.h>
+	<thread>
+	<Texture.h>
+	<Shader.h>
+	<Skybox.h>
+	<camera.h>
+	<Model.h>
+	<Text.h>
+	<Terrain.h>
+	<Grass.h>
+	<PostProcess.h>
+	<Water.h>
+	<Sun.h>
+	<BSP.h>
+	<MD5_Model.h>
+	<MD5_Anim.h>
+	<ShadowMapping.h>
+	<EntityTemplate.h>
+	<memory>
+	<ResourceManager.h>
+	<Scene.h>
+	<glm/gtc/quaternion.hpp>
+	<glm/gtx/quaternion.hpp>
+	<sys/KeyBoard.h>
+	<sys/Mouse.h>
+	<sys/Joystick.h>
+	<Player.h>
+	<Audio.h>
+	<AudioElement.h>
+	<AudioListener.h>
+	<SplashScreen.h>
+	<SphericalHarmonics.h>
+	<Picking.h>
+	<Log.h>
+	<GUI/GUI.h>
+	<sys/filesystem.h>
+	<ParticleSystem.h>
+	<cubemapRenderer.h>
+	<CubeMap.h>
+
+1504487668 d:\epsilon\epsilon engine\include\skybox.h
+	<string>
+	<GL/glew.h>
+	<camera.h>
+	<Model.h>
+	<Shader.h>
+	<memory>
+
+1477961386 d:\epsilon\epsilon engine\include\text.h
+	<ft2build.h>
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
-	<ParticleRenderer.h>
-	<random>
-	<Types.h>
-	<chrono>
-	<Texture.h>
-	<atomic>
-	<thread>
+	<Shader.h>
 
-1503725922 d:\epsilon\epsilon engine\include\opengl\framebuffer.h
-	<unordered_map>
+1237038326 d:\epsilon\epsilon engine\deppend\freetype2\include\ft2build.h
+	<freetype/config/ftheader.h>
+
+1237038326 d:\epsilon\epsilon engine\deppend\freetype2\include\freetype\config\ftheader.h
+
+1506571152 d:\epsilon\epsilon engine\include\postprocess.h
+	<GL/glew.h>
+	<Shader.h>
+	<camera.h>
+	<vector>
+	<ShadowMapping.h>
+	<memory>
+	<Texture.h>
+	<OpenGL/FrameBuffer.h>
+
+1503725761 d:\epsilon\epsilon engine\include\shadowmapping.h
+	<Shader.h>
+	<Types.h>
+	<GL/glew.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+
+1504487668 d:\epsilon\epsilon engine\include\sun.h
+	<GL/glew.h>
+	<GLFW/glfw3.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Texture.h>
+	<Shader.h>
+	<camera.h>
+	<memory>
+
+1503725765 d:\epsilon\epsilon engine\include\md5_model.h
+	<GL/glew.h>
+	<string>
+	<vector>
+	<glm/glm.hpp>
+	<glm/gtc/quaternion.hpp>
+	"MD5_Anim.h"
+	<SOIL.h>
+
+1459912765 d:\epsilon\epsilon engine\include\md5_anim.h
+	<vector>
+	<string>
+	<iostream>
+	<fstream>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<glm/gtc/quaternion.hpp>
+
+1483584967 d:\epsilon\epsilon engine\include\scene.h
+	<ResourceManager.h>
+	<Shader.h>
+	<EntityTemplate.h>
+	<BSP.h>
+	<ShadowMapping.h>
+	<Sun.h>
+	<Skybox.h>
+	<PostProcess.h>
+	<Light.h>
+	<EpsilonMemory.h>
+	<Camera.h>
+	<Frustum.h>
+	<memory>
+	<map>
 	<iostream>
 	<string>
-	<memory>
-	<GL/glew.h>
-	<OpenGL/RenderTarget.h>
+	<glm/gtc/quaternion.hpp>
+	<glm/gtx/quaternion.hpp>
+	<GLFW/glfw3.h>
 
-1503725922 d:\epsilon\epsilon engine\include\opengl\rendertarget.h
-	<GL/glew.h>
+1493414773 d:\epsilon\epsilon engine\include\light.h
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Types.h>
 
-1497148575 source:d:\epsilon\epsilon engine\src\postprocess\motionblur.cpp
-	<PostProcess/MotionBlur.h>
+1483143985 d:\epsilon\epsilon engine\include\player.h
+	<Physics.h>
+	<camera.h>
 
-1493604681 d:\epsilon\epsilon engine\include\postprocess\motionblur.h
-	<PostProcess/Effect.h>
-
-1497148558 d:\epsilon\epsilon engine\include\postprocess\effect.h
-	<OpenGL/FrameBuffer.h>
-	<OpenGL/HelperFunctions/FullScreenQuad.h>
-	<Shader.h>
-	<vector>
-	<memory>
+1475287716 d:\epsilon\epsilon engine\include\audiolistener.h
+	<AL/al.h>
+	<AL/alc.h>
 	<glm/glm.hpp>
 
-1503725922 d:\epsilon\epsilon engine\include\opengl\helperfunctions\fullscreenquad.h
+1503725760 d:\epsilon\epsilon engine\include\splashscreen.h
 	<GL/glew.h>
 
-1469321017 d:\epsilon\epsilon engine\deppend\glew-2.0.0\include\gl\glew.h
-	<stddef.h>
-	<inttypes.h>
-	<stdint.h>
-	<inttypes.h>
-	<Availability.h>
-	<OpenGL/glu.h>
-	<GL/glu.h>
+1504289709 d:\epsilon\epsilon engine\include\sphericalharmonics.h
+	<CubeMap.h>
+	<memory>
+	<fstream>
+	<Includes.h>
+
+1482803747 d:\epsilon\epsilon engine\include\picking.h
+	<glm/glm.hpp>
+	<Physics.h>
 
 1489718664 d:\epsilon\epsilon engine\include\log.h
 	<iostream>
 	<fstream>
 	<string>
+
+1493618591 d:\epsilon\epsilon engine\include\gui\gui.h
+	<GUI/Container.h>
+	<GUI/Panel.h>
+	<GUI/Button.h>
 
 1497684054 d:\epsilon\epsilon engine\include\gui\container.h
 	<GUI/Widget.h>
@@ -3208,6 +1538,10 @@
 
 1492305027 d:\epsilon\epsilon engine\include\opengl\helperfunctions\quad.h
 
+1497683901 d:\epsilon\epsilon engine\include\gui\button.h
+	<GUI/Widget.h>
+	<string>
+
 1493446499 d:\epsilon\epsilon engine\include\sys\filesystem.h
 	<sys/types.h>
 	<dirent.h>
@@ -3217,10 +1551,161 @@
 	<vector>
 	<unordered_map>
 
-1493446479 source:d:\epsilon\epsilon engine\src\sys\filesystem.cpp
-	<sys/filesystem.h>
-	<fstream>
+1495686566 d:\epsilon\epsilon engine\include\particlesystem.h
+	<vector>
+	<iostream>
+	<algorithm>
+	<Particle.h>
+	<ParticleProxy.h>
+
+1503725764 d:\epsilon\epsilon engine\include\particle.h
+	<glm/glm.hpp>
+	<GL/glew.h>
+	<Types.h>
+
+1504826185 d:\epsilon\epsilon engine\include\particleproxy.h
+	<Types.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<ParticleRenderer.h>
+	<random>
+	<Types.h>
+	<chrono>
+	<Texture.h>
+	<atomic>
+	<thread>
+
+1497677890 d:\epsilon\epsilon engine\include\particlerenderer.h
+	<Particle.h>
+	<Shader.h>
+
+1506984728 d:\epsilon\epsilon engine\version.h
+
+1489719397 d:\epsilon\epsilon engine\include\sys\cpuid.h
+	<string>
+	<iostream>
+	<limits.h>
+	<stdint.h>
+	<thread>
+	<exception>
 	<Log.h>
+
+1478052518 source:d:\epsilon\epsilon engine\src\frustum.cpp
+	"Frustum.h"
+	<iostream>
+
+1492282245 source:d:\epsilon\epsilon engine\src\main.cpp
+	<iostream>
+	<Shader.h>
+	<SOIL.h>
+	<main.h>
+	<exception>
+	<assert.h>
+	<memory>
+
+1505151467 d:\epsilon\epsilon engine\include\main.h
+	<ProgramData.h>
+	<Epsilon.h>
+	<memory>
+	<Log.h>
+
+1459912765 source:d:\epsilon\epsilon engine\src\md5_anim.cpp
+	<MD5_Anim.h>
+	<Includes.h>
+
+1487784737 source:d:\epsilon\epsilon engine\src\md5_model.cpp
+	<Includes.h>
+	<iostream>
+	<MD5_Model.h>
+	<Texture.h>
+
+1505011110 source:d:\epsilon\epsilon engine\src\mesh.cpp
+	<Mesh.h>
+	<ResourceManager.h>
+
+1505023003 source:d:\epsilon\epsilon engine\src\model.cpp
+	<Model.h>
+	<ResourceManager.h>
+	<Log.h>
+
+1495073362 source:d:\epsilon\epsilon engine\src\particle.cpp
+	<ParticleSystem.h>
+	<Types.h>
+
+1505023766 source:d:\epsilon\epsilon engine\src\physics.cpp
+	<Physics.h>
+
+1482815678 source:d:\epsilon\epsilon engine\src\picking.cpp
+	<Picking.h>
+	<sys/KeyBoard.h>
+
+1504824262 source:d:\epsilon\epsilon engine\src\player.cpp
+	<Player.h>
+	<ResourceManager.h>
+	<sys/KeyBoard.h>
+	<sys/Joystick.h>
+	<iostream>
+
+1506981368 source:d:\epsilon\epsilon engine\src\postprocess.cpp
+	<PostProcess.h>
+	<iostream>
+	<ProgramData.h>
+	<glm/gtx/compatibility.hpp>
+	<glm/gtc/type_ptr.hpp>
+	<random>
+	<string>
+	<Includes.h>
+	<chrono>
+
+1437315607 d:\epsilon\epsilon engine\deppend\glm\glm\gtx\compatibility.hpp
+	"../glm.hpp"
+	"../gtc/quaternion.hpp"
+	<cfloat>
+	<cmath>
+	"compatibility.inl"
+
+1437315632 d:\epsilon\epsilon engine\deppend\glm\glm\gtx\compatibility.inl
+	<limits>
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\type_ptr.hpp
+	"../gtc/quaternion.hpp"
+	"../vec2.hpp"
+	"../vec3.hpp"
+	"../vec4.hpp"
+	"../mat2x2.hpp"
+	"../mat2x3.hpp"
+	"../mat2x4.hpp"
+	"../mat3x2.hpp"
+	"../mat3x3.hpp"
+	"../mat3x4.hpp"
+	"../mat4x2.hpp"
+	"../mat4x3.hpp"
+	"../mat4x4.hpp"
+	<cstring>
+	"type_ptr.inl"
+
+1424014283 d:\epsilon\epsilon engine\deppend\glm\glm\gtc\type_ptr.inl
+	<cstring>
+
+1497148575 source:d:\epsilon\epsilon engine\src\postprocess\motionblur.cpp
+	<PostProcess/MotionBlur.h>
+
+1493604681 d:\epsilon\epsilon engine\include\postprocess\motionblur.h
+	<PostProcess/Effect.h>
+
+1497148558 d:\epsilon\epsilon engine\include\postprocess\effect.h
+	<OpenGL/FrameBuffer.h>
+	<OpenGL/HelperFunctions/FullScreenQuad.h>
+	<Shader.h>
+	<vector>
+	<memory>
+	<glm/glm.hpp>
+
+1497682501 source:d:\epsilon\epsilon engine\src\postprocess\screenspacereflections.cpp
+	<PostProcess/ScreenSpaceReflections.h>
+
+1497682481 d:\epsilon\epsilon engine\include\postprocess\screenspacereflections.h
+	<PostProcess/Effect.h>
 
 1497682362 source:d:\epsilon\epsilon engine\src\postprocess\ssao.cpp
 	<PostProcess/SSAO.h>
@@ -3230,42 +1715,35 @@
 	<PostProcess/Effect.h>
 	<Includes.h>
 
-1497683901 d:\epsilon\epsilon engine\include\gui\button.h
-	<GUI/Widget.h>
+1505150691 source:d:\epsilon\epsilon engine\src\programdata.cpp
+	<iostream>
+	<INIReader.h>
+	<ProgramData.h>
+
+1400904193 d:\epsilon\epsilon engine\deppend\ini\include\inireader.h
+	<map>
 	<string>
 
-1497677890 d:\epsilon\epsilon engine\include\particlerenderer.h
-	<Particle.h>
-	<Shader.h>
+1505011126 source:d:\epsilon\epsilon engine\src\resourcemanager.cpp
+	"ResourceManager.h"
 
-1497680178 d:\epsilon\epsilon engine\deppend\stb-master\stb_image_write.h
+1430970208 source:d:\epsilon\epsilon engine\src\resources.rc
+	<Windows.h>
+
+1461001287 source:d:\epsilon\epsilon engine\src\scene.cpp
+	<Scene.h>
+
+1504213709 source:d:\epsilon\epsilon engine\src\shader.cpp
+	<Shader.h>
 	<stdio.h>
-	<stdarg.h>
-	<stdlib.h>
-	<string.h>
-	<math.h>
-	<assert.h>
-
-1497682501 source:d:\epsilon\epsilon engine\src\postprocess\screenspacereflections.cpp
-	<PostProcess/ScreenSpaceReflections.h>
-
-1497682481 d:\epsilon\epsilon engine\include\postprocess\screenspacereflections.h
-	<PostProcess/Effect.h>
-
-1503710894 source:d:\epsilon\epsilon engine\src\cubemaprenderer.cpp
-	<cubemapRenderer.h>
-	<Texture.h>
-
-1503725770 d:\epsilon\epsilon engine\include\cubemaprenderer.h
-	<GL/glew.h>
+	<string>
 	<vector>
-	<memory>
-	<OpenGL/FrameBuffer.h>
-	<OpenGL/HelperFunctions/FullScreenQuad.h>
-	<OpenGL/FrameBuffer.h>
-	<Shader.h>
-	<glm/glm.hpp>
-	<camera.h>
+	<iostream>
+	<fstream>
+	<algorithm>
+	<Log.h>
+	<Includes.h>
+	<OpenGL/ShaderPreProcessor.h>
 
 1503525669 d:\epsilon\epsilon engine\include\opengl\shaderpreprocessor.h
 	<fstream>
@@ -3275,93 +1753,58 @@
 	<map>
 	<algorithm>
 
-1503724658 d:\epsilon\epsilon engine\include\glad\glad.h
-	<windows.h>
-	<stddef.h>
-	<KHR/khrplatform.h>
-	<inttypes.h>
-	<inttypes.h>
-	<inttypes.h>
-	<stdint.h>
-	<stdint.h>
-	<inttypes.h>
+1503725774 source:d:\epsilon\epsilon engine\src\shadowmapping.cpp
+	<ShadowMapping.h>
+	<iostream>
+	<cmath>
 
-1503724658 d:\epsilon\epsilon engine\include\khr\khrplatform.h
-	<stdint.h>
-	<inttypes.h>
-	<stdint.h>
+1504487668 source:d:\epsilon\epsilon engine\src\skybox.cpp
+	<vector>
+	<iostream>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<glm/gtc/type_ptr.hpp>
+	<SOIL.h>
+	<Skybox.h>
+	<SkyboxData.h>
+	<ResourceManager.h>
 
-1503724658 source:d:\epsilon\epsilon engine\src\glad.c
-	<stdio.h>
-	<stdlib.h>
-	<string.h>
-	<glad/glad.h>
-	<windows.h>
-	<dlfcn.h>
+1451178317 d:\epsilon\epsilon engine\include\skyboxdata.h
 
-1503805276 d:\epsilon\epsilon engine\deppend\glew-2.1.0\include\gl\glew.h
-	<stddef.h>
-	<inttypes.h>
-	<stdint.h>
-	<inttypes.h>
-	<Availability.h>
-	<OpenGL/glu.h>
-	<GL/glu.h>
+1506984190 source:d:\epsilon\epsilon engine\src\sphericalharmonics.cpp
+	<SphericalHarmonics.h>
+	<Types.h>
+	<OpenGL/HelperFunctions/CheckError.h>
 
 1503872725 d:\epsilon\epsilon engine\include\opengl\helperfunctions\checkerror.h
 
-1503805276 source:d:\epsilon\epsilon engine\src\glew.c
-	<GL/glew.h>
-	<GL/osmesa.h>
-	<GL/eglew.h>
-	<GL/wglew.h>
-	<GL/glxew.h>
-	<stddef.h>
-	<dlfcn.h>
-	<stdio.h>
-	<stdlib.h>
-	<stdlib.h>
-	<string.h>
-	<AvailabilityMacros.h>
-	<dlfcn.h>
-	<mach-o/dyld.h>
+1506980719 source:d:\epsilon\epsilon engine\src\sun.cpp
+	<Sun.h>
+	<sys/KeyBoard.h>
 
-1503805276 d:\epsilon\epsilon engine\deppend\glew-2.1.0\include\gl\eglew.h
-	<sys/types.h>
-	<KHR/khrplatform.h>
-	<EGL/eglplatform.h>
-	<GL/glew.h>
+1493446479 source:d:\epsilon\epsilon engine\src\sys\filesystem.cpp
+	<sys/filesystem.h>
+	<fstream>
+	<Log.h>
 
-1503805276 d:\epsilon\epsilon engine\deppend\glew-2.1.0\include\gl\wglew.h
-	<windows.h>
+1467939169 source:d:\epsilon\epsilon engine\src\sys\keyboard.cpp
+	<sys/KeyBoard.h>
+	<iostream>
 
-1503805276 d:\epsilon\epsilon engine\deppend\glew-2.1.0\include\gl\glxew.h
-	<X11/Xlib.h>
-	<X11/Xutil.h>
-	<X11/Xmd.h>
-	<GL/glew.h>
+1504979394 source:d:\epsilon\epsilon engine\src\terrain.cpp
+	<iostream>
+	<fstream>
+	<Terrain.h>
+	<SOIL.h>
+	<Physics.h>
+	<ResourceManager.h>
+	<exception>
+	<Includes.h>
 
-1503805276 d:\epsilon\epsilon engine\include\gl\glew.h
-	<stddef.h>
-	<inttypes.h>
-	<stdint.h>
-	<inttypes.h>
-	<Availability.h>
-	<OpenGL/glu.h>
-	<GL/glu.h>
+1504322355 source:d:\epsilon\epsilon engine\src\water.cpp
+	<Water.h>
 
-1469321017 d:\epsilon\epsilon engine\deppend\glew-2.0.0\include\gl\eglew.h
-	<sys/types.h>
-	<KHR/khrplatform.h>
-	<EGL/eglplatform.h>
-	<GL/glew.h>
-
-1469321017 d:\epsilon\epsilon engine\deppend\glew-2.0.0\include\gl\wglew.h
-	<windows.h>
-
-1469321017 d:\epsilon\epsilon engine\deppend\glew-2.0.0\include\gl\glxew.h
-	<X11/Xlib.h>
-	<X11/Xutil.h>
-	<X11/Xmd.h>
-	<GL/glew.h>
+1391359686 d:\epsilon\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btshapehull.h
+	"LinearMath/btAlignedObjectArray.h"
+	"BulletCollision/CollisionShapes/btConvexShape.h"
 

@@ -4,14 +4,41 @@ in vec2 TexCoords;
 
 uniform sampler2D image;
 uniform bool horizontal;
+uniform bool cheap;
 
 uniform float weight[11] = float[] (0.082607,    0.080977,   0.076276,   0.069041,   0.060049,   0.050187, 0.040306,     0.031105, 0.023066,     0.016436, 0.011254);
 
+const float weight2[5] = float[] (0.227027, 0.1945946, 0.1216216, 0.054054, 0.016216);
 void main()
 {
+    vec3 result;
+    if(cheap){
      vec2 tex_offset = 1.0 / textureSize(image, 0); // gets size of single texel
      vec3 sample1 = texture(image, TexCoords).rgb;
-     vec3 result = sample1 * weight[0];
+     result = sample1 * weight2[0];
+     float multiplier = dot(sample1.rgb, vec3(0.2126, 0.7152, 0.0722)) * 1.001;
+     if(horizontal)
+     {
+         for(int i = 1; i < 5; ++i)
+         {
+            result += (texture(image, TexCoords + vec2(tex_offset.x * i, 0.0)).rgb * (weight2[i]));
+            result += (texture(image, TexCoords - vec2(tex_offset.x * i, 0.0)).rgb * (weight2[i]));
+         }
+     }
+     else
+     {
+         for(int i = 1; i < 5; ++i)
+         {
+             result += (texture(image, TexCoords + vec2(0.0, tex_offset.y * i)).rgb * weight2[i]);
+             result += (texture(image, TexCoords - vec2(0.0, tex_offset.y * i)).rgb * weight2[i]);
+         }
+     }
+ }
+ else {     
+
+    vec2 tex_offset = 1.0 / textureSize(image, 0); // gets size of single texel
+     vec3 sample1 = texture(image, TexCoords).rgb;
+     result = sample1 * weight[0];
      float multiplier = dot(sample1.rgb, vec3(0.2126, 0.7152, 0.0722)) * 1.001;
      if(horizontal)
      {
@@ -29,5 +56,7 @@ void main()
              result += (texture(image, TexCoords - vec2(0.0, tex_offset.y * i)).rgb * weight[i]);
          }
      }
+ }
      FragColor = vec4(result, 1.0);
+ 
 }

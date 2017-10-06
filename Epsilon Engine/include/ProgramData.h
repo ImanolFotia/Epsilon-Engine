@@ -17,7 +17,7 @@ public:
 public:
     int WINDOW_WIDTH;
     int WINDOW_HEIGHT;
-    bool FULLSCREEN;
+    int FULLSCREEN;
     float ANISOTROPY;
     int MSAA_SAMPLES;
     int MONITOR;

@@ -235,11 +235,11 @@ public:
             }
 
             Particles[i].setSpeed(glm::vec3(0.0, -9.81, 0.0));
-            //Particles[i].m_Position.y = Particles[i].m_Position.y + -2.81 * deltaTime;
-            //Particles[i].m_Position.x += glm::sin(Particles[i].m_Position.y) * deltaTime;
-            //Particles[i].m_Position.z += glm::cos(Particles[i].m_Position.y) * deltaTime * 2.0;
-            glm::vec3 pos = glm::vec3(Particles[i].m_Position.x, Particles[i].m_Position.y, Particles[i].m_Position.z);
-            Particles[i].m_Position += FractionalBrownianMotion(pos) * glm::vec3(1.0f,deltaTime, 1.0f);
+            Particles[i].m_Position.y = Particles[i].m_Position.y + -2.81 * deltaTime;
+            Particles[i].m_Position.x += glm::sin(Particles[i].m_Position.y) * deltaTime;
+            Particles[i].m_Position.z += glm::cos(Particles[i].m_Position.y) * deltaTime * 2.0;
+            //glm::vec3 pos = glm::vec3(Particles[i].m_Position.x, Particles[i].m_Position.y, Particles[i].m_Position.z);
+            //Particles[i].m_Position += FractionalBrownianMotion(pos) * glm::vec3(1.0f,deltaTime, 1.0f);
 
             Particles[i].setLife(Particles[i].getLife() - deltaTime);
 

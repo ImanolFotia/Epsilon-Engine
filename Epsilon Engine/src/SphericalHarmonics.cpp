@@ -13,7 +13,7 @@ void SphericalHarmonics::CalculateCohefficients(GLuint cubemap, const unsigned i
    std::vector<float> resultB(sqOrder);
 
    // variables that describe current face of cube texture
-   std::unique_ptr<GLubyte[]> data;
+   std::unique_ptr<GLfloat[]> data;
    GLint width, height;
    GLint internalFormat;
    GLint numComponents;
@@ -56,19 +56,19 @@ void SphericalHarmonics::CalculateCohefficients(GLuint cubemap, const unsigned i
       if(internalFormat == GL_RGBA)
       {
          numComponents = 4;
-         data = (std::unique_ptr<GLubyte[]>)(new GLubyte[numComponents * width * width]);
+         data = (std::unique_ptr<GLfloat[]>)(new GLfloat[numComponents * width * width]);
       }
       else if(internalFormat == GL_RGB16F || internalFormat == GL_SRGB)
       {
          numComponents = 3;
-         data = (std::unique_ptr<GLubyte[]>)(new GLubyte[numComponents * width * width]);
+         data = (std::unique_ptr<GLfloat[]>)(new GLfloat[numComponents * width * width]);
       }
       else
       {
         std::cout << "Format not compatible" << std::endl;
          return;
       }
-      glGetTexImage(GL_TEXTURE_CUBE_MAP_POSITIVE_X+face, 0, GL_RGB, GL_UNSIGNED_BYTE, data.get());
+      glGetTexImage(GL_TEXTURE_CUBE_MAP_POSITIVE_X+face, 0, GL_RGB, GL_FLOAT, data.get());
       glCheckError();
 
       // step between two texels for range [0, 1]

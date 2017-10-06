@@ -24,5 +24,5 @@
          vec2 offset = velocity * (float(i) / float(nSamples - 1) - 0.5);
          oResult += texture(gFinalImage, screenTexCoords + offset);
       }
-      oResult /= float(nSamples);
+      oResult /= max(1.0, float(nSamples));
    }

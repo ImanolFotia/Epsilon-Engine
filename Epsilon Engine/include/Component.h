@@ -129,7 +129,7 @@ namespace Component
         }
         float Mass;
 
-        std::shared_ptr<Physics::PhysicObject> RigidBodyPointer;
+        std::shared_ptr<Physics::PhysicObject> RigidBodyPointer = nullptr;
 
         void Update(std::shared_ptr<ResourceManager> rm)
         {

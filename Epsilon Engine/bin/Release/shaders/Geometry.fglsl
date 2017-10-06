@@ -1,7 +1,7 @@
 #version 430 core
 
 layout(location = 0) out vec3 gAlbedoSpec;
-layout(location = 1) out vec3 gPosition;
+layout(location = 1) out float gPosition;
 layout(location = 2) out vec4 gExpensiveNormal;
 layout(location = 3) out vec4 gDepth;
 layout(location = 4) out vec4 gExtraComponents; 
@@ -42,18 +42,18 @@ const float CosineA0 = Pi;
 const float CosineA1 = (2.0f * Pi) / 3.0f;
 const float CosineA2 = Pi * 0.25f;
 // scale for restored amount of lighting
-uniform float u_scaleFactor = 0.5;
+uniform float u_scaleFactor = 5.0;
 
 // coefficients of spherical harmonics and possible values
-vec3 u_L00 = vec3(0.135271, 0.140548, 0.240986);
-vec3 u_L1m1 = vec3(0.00108605, 0.052453, 0.128252);
-vec3 u_L10 = vec3(0.000858167, -0.00153477, -0.00494818);
-vec3 u_L11 = vec3(-0.00291183, -0.004253, -0.00762381);
-vec3 u_L2m2 = vec3(-0.00395948, -0.00270581, -0.00249359);
-vec3 u_L2m1 = vec3(-0.0122531, -0.00686075, -0.00947045);
-vec3 u_L20 = vec3(-0.0323092, -0.0205575, -0.0149928);
-vec3 u_L21 = vec3(-0.00147488, -0.00325437, -0.00882504);
-vec3 u_L22 = vec3(-0.0182774, -0.0199064, -0.0239607);
+vec3 u_L00 = vec3(0.000324516, 0.000124163, 4.67499e-005);
+vec3 u_L1m1 = vec3(2.02443e-005, 1.07191e-005, 2.09899e-006);
+vec3 u_L10 = vec3(-1.7756e-005, 9.64536e-006, 2.02017e-005);
+vec3 u_L11 = vec3(-2.55291e-005, -4.84169e-007, 8.4612e-006);
+vec3 u_L2m2 = vec3(-1.76976e-005, -6.2409e-006, -8.05847e-007);
+vec3 u_L2m1 = vec3(2.42043e-005, 9.53509e-006, 1.13099e-006);
+vec3 u_L20 = vec3(0.000132081, 7.43471e-005, 5.5592e-005);
+vec3 u_L21 = vec3(-1.5689e-005, -4.61771e-007, 5.65383e-006);
+vec3 u_L22 = vec3(0.000184862, 5.432e-005, 1.24763e-005);
 
 const float C1 = 0.429043;
 const float C2 = 0.511664;
@@ -132,7 +132,7 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 
 void main()
 {
-  if(texture(texture_diffuse, fs_in.TexCoords).a < 0.3)
+  if(texture(texture_diffuse, fs_in.TexCoords).a < 0.15)
     discard;    
     vec3 Dir = normalize((fs_in.TBN * viewPos) - (fs_in.TBN * fs_in.wFragPos));
 
@@ -142,7 +142,7 @@ void main()
   else
   texCoords = fs_in.TexCoords;
 
-  vec3 normalTexture = (texture(texture_normal, texCoords).rgb * 2.0 - 1.0);
+  vec3 normalTexture = normalize(texture(texture_normal, texCoords).rgb * 2.0 - 1.0);
   gExpensiveNormal.rgb = normalize(normalTexture * fs_in.TBN);
   //vec4 decalTex = texture(texture_decal, fs_in.TexCoords + (vec2(viewPos.x - 225.0, viewPos.z-300.0)));
 
@@ -157,7 +157,7 @@ void main()
   
   float Depth = LinearizeDepth(gl_FragCoord.z);
   gDepth.r = gl_FragCoord.z;
-  gPosition = fs_in.FragPos;
+  gPosition = fs_in.FragPos.z;
   gExtraComponents.xy = Metallic_Emmisive.xy; //vec4(Metallic_Emmisive, 1.0, 1.0);
 
   vec2 a = (Position.xy / Position.w) * 0.5 + 0.5;

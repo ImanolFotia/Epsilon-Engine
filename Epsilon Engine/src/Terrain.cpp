@@ -25,7 +25,7 @@ Terrain::Terrain(const char* heightMap,const char* diffuseTexture, float scale, 
 
     this->diffuseTexture = diffuseTexture;
 
-    this->GetHeightData();
+    //this->GetHeightData();
 
     this->LoadTexture(diffuseTexture);
 
@@ -48,7 +48,9 @@ Terrain::Terrain(const char* heightMap,const char* diffuseTexture, const char* n
 
     this->specularTexture = specularTexture;
 
-    this->GetHeightData();
+    //this->GetHeightData();
+
+    this->GenerateGrid(nullptr);
 
     this->LoadTexture(diffuseTexture, normalTexture, specularTexture, metalTexture);
 
@@ -78,23 +80,23 @@ bool Terrain::GenerateGrid(unsigned char* pixels) {
     TVertex vert;
 
 
-    float texU = float(this->height);
-    float texV = float(this->height);
+    float texU = float(this->gridSize);
+    float texV = float(this->gridSize);
     int counter = 0;
 
     vector< vector<float> > Grid;
     vector<float> row;
 
-    for(int i = 0 ; i < this->width ; i++) {
-        for(int j = 0 ; j < this->height ; j++) {
+    for(int i = 0 ; i < this->gridSize ; i++) {
+        for(int j = 0 ; j < this->gridSize ; j++) {
             vert.Position.x = ((float)i + m_Position.x) * scale;
-            vert.Position.y = ((float)pixels[counter]) + m_Position.y;
+            vert.Position.y = (float)FBM(glm::vec2(i, j)*0.015f) * 50.0f + m_Position.y;
             vert.Position.z = ((float)j + m_Position.z) * scale;
             row.push_back(vert.Position.y);
-            float fScaleC = float(j)/float(this->height-1);
-            float fScaleR = float(i)/float(this->width-1);
-            vert.TexCoords.s = this->width*fScaleC/this->width*60;
-            vert.TexCoords.t = this->height*fScaleR/this->height*60;
+            float fScaleC = float(j)/float(this->gridSize-1);
+            float fScaleR = float(i)/float(this->gridSize-1);
+            vert.TexCoords.s = this->gridSize*fScaleC/this->gridSize*60;
+            vert.TexCoords.t = this->gridSize*fScaleR/this->gridSize*60;
             vertices.push_back(vert);
             counter++;
 
@@ -108,8 +110,8 @@ bool Terrain::GenerateGrid(unsigned char* pixels) {
 
     int mod = 0;
     counter = 0;
-    for(int i = 0 ; i < this->width ; i++) {
-        for(int j = 0 ; j < this->width ; j++) {
+    for(int i = 0 ; i < this->gridSize ; i++) {
+        for(int j = 0 ; j < this->gridSize ; j++) {
             if(i > 0 && j > 0 && i < Grid.size()-1 && j < Grid.size()-1) {
                 float HL = Grid.at(i-1).at(j);
                 float HR = Grid.at(i+1).at(j);
@@ -132,8 +134,8 @@ bool Terrain::GenerateGrid(unsigned char* pixels) {
 
     counter= 0;
 
-    for(int i = 0 ; i < this->cantPixels-this->width ; i++) {
-        if(counter == this->width-1) {
+    for(int i = 0 ; i < glm::pow(this->gridSize, 2.0f)-this->gridSize ; i++) {
+        if(counter == this->gridSize-1) {
             counter = 0;
             mod++;
             continue;
@@ -142,19 +144,19 @@ bool Terrain::GenerateGrid(unsigned char* pixels) {
 
         face.vertex0 = vertices[i+1].Position;
         indices.push_back(i+1);
-        face.vertex1 = vertices[i+this->width].Position;
-        indices.push_back(i+this->width);
-        face.vertex2 = vertices[i+this->width - this->width].Position;
-        indices.push_back(i+this->width - this->width);
+        face.vertex1 = vertices[i+this->gridSize].Position;
+        indices.push_back(i+this->gridSize);
+        face.vertex2 = vertices[i+this->gridSize - this->gridSize].Position;
+        indices.push_back(i+this->gridSize - this->gridSize);
 
         vface.push_back(face);
 
         face.vertex0 = vertices[i + 1].Position;
         indices.push_back(i + 1);
-        face.vertex1 = vertices[i+this->width+1].Position;
-        indices.push_back(i+this->width+1);
-        face.vertex2 = vertices[i+this->width].Position;
-        indices.push_back(i+this->width);
+        face.vertex1 = vertices[i+this->gridSize+1].Position;
+        indices.push_back(i+this->gridSize+1);
+        face.vertex2 = vertices[i+this->gridSize].Position;
+        indices.push_back(i+this->gridSize);
 
         vface.push_back(face);
 
@@ -319,6 +321,38 @@ bool Terrain::GenerateVertexBuffers() {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(GLuint), &this->indices[0], GL_STATIC_DRAW);
 
     glBindVertexArray(0);
+}
+
+float Terrain::FBM(glm::vec2 p) {
+
+    auto hash11 = [&]( float n )->float {
+        return glm::fract(glm::sin(n)*43758.5453123);
+    };
+
+    auto noise12 = [&]( glm::vec2 x ) ->float {
+        glm::vec2 q = glm::floor(x);
+        glm::vec2 f = glm::fract(x);
+
+        f = f*f*(3.0f-2.0f*f);
+
+        float n = q.x + q.y*57.0f;
+
+        return glm::mix(glm::mix( hash11(n + 0.0f), hash11(n + 1.0f),f.x),glm::mix( hash11(n + 57.0f), hash11(n+ 58.0f),f.x),f.y);
+    };
+
+
+        float f = 0.0;
+        f+=0.5 * noise12(p);
+        p*=2.02;
+        f+=0.25 * noise12(p);
+        p*=2.03;
+        f+=0.125 * noise12(p);
+        p*=2.04;
+        f+=0.0625 * noise12(p);
+        p*=2.05;
+        return f/0.9375;
+
+
 }
 
 void Terrain::RenderTerrain(Shader* shader) {

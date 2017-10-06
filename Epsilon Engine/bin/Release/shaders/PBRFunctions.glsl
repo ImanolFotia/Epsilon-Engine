@@ -1,6 +1,10 @@
 
 const float PI = 3.14159265359;
 
+float minLight = 0.03;
+float b = 1.0 / 40.0;
+float radius = sqrt(1.0 / (b * minLight));
+
 float DistributionGGX(vec3 N, vec3 H, float roughness)
 {
     float a      = roughness*roughness;
@@ -40,3 +44,98 @@ vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
 {
     return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
 } 
+
+vec3 fresnelSchlick(float cosTheta, vec3 F0)
+{
+    return F0 + (1.0 - F0) * pow(1.0 - clamp(cosTheta, 0.0, 1.0), 5.0);
+}
+
+float calculateAttenuation(float power, float distance)
+{
+    return power / (4.0f * PI * (distance*distance));
+}
+
+float orenNayarDiffuse(vec3 ld,vec3 vd,vec3 sn,float r,float a) {
+  
+  float LdotV = dot(ld, vd);
+  float NdotL = dot(ld, sn);
+  float NdotV = dot(sn, vd);
+
+  float s = LdotV - NdotL * NdotV;
+  float t = mix(1., max(NdotL, NdotV), step(.0, s));
+
+  float sigma2 = r * r;
+  float A = 1. - .5 * (sigma2/((sigma2 + .33) + .000001));
+  float B = .45 * sigma2 / (sigma2 + .09) + .00001;
+    
+  float ga = dot(vd-sn*NdotV,sn-sn*NdotL);
+
+  return max(0., NdotL) * (A + B * max(0., ga) * sqrt((1.0-NdotV*NdotV)*(1.0-NdotL*NdotL)) / max(NdotL, NdotV));
+}
+
+float LambertDiffuse(in vec3 N, in vec3 L)
+{
+    return max(dot(N, L), 0.0);
+}
+
+vec3 calculatePointPBR(vec3 pos)
+{
+  // calculate per-light radiance
+        vec3 lightcolor = vec3(1.0);//normalize(vec3(205, 109, 39));
+        if(pos.z == 56.0)
+            lightcolor = vec3(0.0, 0.0, 0.7);
+        vec3 V = normalize(viewPos - FragPos);
+        vec3 L = normalize(pos - FragPos);
+        vec3 H = normalize(V + L);
+        vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+        vec3 kS = F;
+        vec3 kD = vec3(1.0) - kS;
+        kD *= clamp(1.0 - ExtraComponents.x, 0.0, 1.0);
+        //float distance    = length(pos - FragPos);
+        float distance = length(pos - FragPos);
+        float watts = 180;
+        float attenuation = calculateAttenuation(watts, distance);//1.0 / (1.0 + 0.1/*factor*/ * pow(distance, 2));
+        attenuation *= smoothstep(watts, watts - 5.0, distance);
+        vec3 radiance     = vec3(1.0) * attenuation;        
+        
+        // cook-torrance brdf
+        float NDF = DistributionGGX(Normal, H, clamp(Specular, 0.05, 1.0));        
+        float G   = GeometrySmith(Normal, V, L, Specular);      
+        
+        vec3 nominator    = NDF * G * F;
+        float denominator = (4 * max(dot(V, Normal), 0.0) * max(dot(L, Normal), 0.0)) + 0.001; 
+        vec3 brdf = nominator / denominator;
+            
+        // add to outgoing radiance Lo
+        float NdotL = orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.05, 1.0), 1.0);             
+        vec3 Lo = (kD * Diffuse / PI + brdf) * radiance * NdotL; 
+        return Lo * lightcolor;
+}
+
+vec3 CalculateDirectionalPBR()
+{
+    // calculate per-light radiance
+        vec3 lightcolor = normalize(vec3(205, 109, 39));
+        vec3 V = normalize(viewPos - FragPos);
+        vec3 L = normalize(lightDir);
+        vec3 H = normalize(V + L);  
+
+        vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+        vec3 kS = F;
+        vec3 kD = vec3(1.0) - kS;
+        kD *= 1.0 - ExtraComponents.x;
+        kD = clamp(kD, vec3(0.2), vec3(1.0));
+        
+        // cook-torrance brdf
+        float NDF = DistributionGGX(Normal, H, clamp(Specular, 0.03, 1.0));        
+        float G   = GeometrySmith(Normal, V, L, Specular);      
+        
+        vec3 nominator    = NDF * G * F;
+        float denominator = (4 * max(dot(V, Normal), 0.0) * max(dot(L, Normal), 0.0)) + 0.001; 
+        vec3 brdf = nominator / denominator;
+            
+        // add to outgoing radiance Lo
+        float NdotL = orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.03, 1.0), 1.0);//              
+        vec3 Lo = (kD * Diffuse / PI + brdf) * NdotL; 
+        return mix(vec3(0.0), Lo * clamp(1.0 - shadow, 0.0, 1.0) * lightcolor, clamp(lightDir.y + 0.1, 0.0, 1.0))*4.0;
+}

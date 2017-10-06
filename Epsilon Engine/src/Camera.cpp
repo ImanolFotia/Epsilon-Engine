@@ -21,7 +21,7 @@ Camera::Camera(glm::vec3 cPosition, glm::vec3 cOrientation)
 {
     this->Orientation = glm::vec3(cOrientation);
     this->Position = glm::vec3(cPosition);
-    this->FieldOfView = 90.0f;
+    this->FieldOfView = 65.0f;
     this->MovementSpeed = 0.0f;
     this->MouseSpeed = 0.002f;
     this->JoystickSensibility = 0.05f;

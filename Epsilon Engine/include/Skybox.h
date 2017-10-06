@@ -23,13 +23,10 @@ public:
 public:
 
     void Render(std::shared_ptr<Camera>&, Shader*, float, bool);
-    GLuint CubeMapID, CubeMapNormalID;
 
 private:
 
-    GLuint skyboxVAO, skyboxVBO, EBO;
     std::unique_ptr<Model> skydome;
-    vector<string> Textures;
 
 };
 

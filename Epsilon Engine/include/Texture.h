@@ -102,7 +102,7 @@ public:
             image = SOIL_load_image(CubeMapPath[i].c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
             std::cout << CubeMapPath[i] << std::endl;
             glTexImage2D(
-                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,GL_RGB16F, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
             glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
         }
         //std::cout << "CubeMapID" << texture << std::endl;

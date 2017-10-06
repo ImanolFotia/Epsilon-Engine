@@ -7,6 +7,7 @@
 #include <string>
 #include <Includes.h>
 
+#include <chrono>
 PostProcess::PostProcess()
 {
     this->LoadOffscreensShaders();
@@ -119,7 +120,7 @@ void PostProcess::SetupFramebuffer()
 */
 
     //PBR test
-
+/*
     LightPositions.push_back(glm::vec3(-20, 12, -5));
     LightPositions.push_back(glm::vec3(-14, 12, -5));
     LightPositions.push_back(glm::vec3(-8, 12, -5));
@@ -136,7 +137,24 @@ void PostProcess::SetupFramebuffer()
     LightPositions.push_back(glm::vec3(-41, 12, 40));
     LightPositions.push_back(glm::vec3(-64, 12, 40));
     LightPositions.push_back(glm::vec3(-64, 12, 65));
-    LightPositions.push_back(glm::vec3(-64, 12, 91));
+    LightPositions.push_back(glm::vec3(-64, 12, 91));*/
+
+    LightPositions.push_back(glm::vec3(5, 17, -20));
+    LightPositions.push_back(glm::vec3(4, 17, 19));
+    LightPositions.push_back(glm::vec3(60, 17, 18));
+    LightPositions.push_back(glm::vec3(43, 17, -43));
+    LightPositions.push_back(glm::vec3(90, 17, -43));
+    LightPositions.push_back(glm::vec3(58, 17, 49));
+    LightPositions.push_back(glm::vec3(-78, 17, 46));
+    LightPositions.push_back(glm::vec3(-90, 17, 16));
+
+
+
+
+    LightPositions.push_back(glm::vec3(-82, 17, -20));
+    LightPositions.push_back(glm::vec3(-30, 17, -54));
+    LightPositions.push_back(glm::vec3(-30, 17, -17));
+    LightPositions.push_back(glm::vec3(51, 17, -13));
 
 /*
     LightPositions.push_back(glm::vec3(-20, 12, -5));
@@ -156,8 +174,8 @@ void PostProcess::SetupFramebuffer()
     LightPositions.push_back(glm::vec3(-51, 12, 33));
     LightPositions.push_back(glm::vec3(-64, 12, 65));
     LightPositions.push_back(glm::vec3(-64, 12, 91));
-    */
 
+*/
     //int house
 /*
     LightPositions.push_back(glm::vec3(7.3, 11, -12));
@@ -285,12 +303,11 @@ void PostProcess::SetupGBuffer()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gAlbedoSpec, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
-    glGenerateMipmap(GL_TEXTURE_2D);
     /// - Normal color buffer
 
     glGenTextures(1, &gPosition);
     glBindTexture(GL_TEXTURE_2D, gPosition);
-    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB16F, width, height, 0,GL_RGB, GL_FLOAT, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0,GL_R32F, width, height, 0,GL_RED, GL_FLOAT, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -301,12 +318,11 @@ void PostProcess::SetupGBuffer()
 
     glGenTextures(1, &gExpensiveNormal);
     glBindTexture(GL_TEXTURE_2D, gExpensiveNormal);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gExpensiveNormal, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
-    glGenerateMipmap(GL_TEXTURE_2D);
 
     glGenTextures(1, &gDepth);
     glBindTexture(GL_TEXTURE_2D, gDepth);
@@ -386,6 +402,7 @@ void PostProcess::setupSSAO()
     std::uniform_real_distribution<GLfloat> randomFloatsClamped(0.2, 1.0); // generates random floats between 0.0 and 1.0
     std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0); // generates random floats between 0.0 and 1.0
     std::default_random_engine generator;
+    generator.seed(std::chrono::system_clock::now().time_since_epoch().count());
     for (GLuint i = 0; i < 9; ++i)
     {
         glm::vec3 sample(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, randomFloatsClamped(generator));
@@ -441,6 +458,7 @@ void PostProcess::applySSAO(std::shared_ptr<Camera>& cam)
     SSAO->PushUniform("projection", cam->getProjectionMatrix());
     SSAO->PushUniform("invprojection", glm::inverse(cam->getProjectionMatrix()));
     SSAO->PushUniform("view", cam->getViewMatrix());
+    SSAO->PushUniform("invView", glm::inverse(cam->getViewMatrix()));
     glViewport(0,0,SSAOwidth, SSAOheight);
     this->RenderQuad();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -448,6 +466,7 @@ void PostProcess::applySSAO(std::shared_ptr<Camera>& cam)
 
 
     // 3. Blur SSAO texture to remove noise
+    /*
     glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
     glClear(GL_COLOR_BUFFER_BIT);
     blurSSAO->Use();
@@ -455,13 +474,16 @@ void PostProcess::applySSAO(std::shared_ptr<Camera>& cam)
     glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
     //glGenerateMipmap(GL_TEXTURE_2D);
     glViewport(0,0,SSAOwidth, SSAOheight);
-    this->RenderQuad();
+    this->RenderQuad();*/
+
+    ssaoColorBufferBlur = this->blurImage(ssaoColorBuffer, true);
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
     glViewport(0,0,width, height);
 }
 
-GLuint PostProcess::blurImage(GLuint Buffer)
+GLuint PostProcess::blurImage(GLuint Buffer, bool cheap = false)
 {
 
     GLboolean horizontal = true, first_iteration = true, direction = true;
@@ -475,6 +497,7 @@ GLuint PostProcess::blurImage(GLuint Buffer)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glUniform1i(glGetUniformLocation(blurBloom->getProgramID(), "horizontal"), horizontal);
+        glUniform1i(glGetUniformLocation(blurBloom->getProgramID(), "cheap"), cheap);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, first_iteration ? Buffer : pingpongColorbuffers[!horizontal]);  // bind texture of other framebuffer (or scene if first iteration)
         RenderQuad();
@@ -696,7 +719,7 @@ void PostProcess::SSRPass(std::shared_ptr<Camera>& cam)
     glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "gDepth"), 4);
     glBindTexture(GL_TEXTURE_2D, this->gDepth);
 
-    glm::mat4 proj = glm::perspective( glm::radians(90.0f) , (float)this->width/(float)this->height , 0.1f , 3000.0f );
+    glm::mat4 proj = cam->getProjectionMatrix();
     glUniformMatrix4fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "projection"), 1, GL_FALSE, &proj[0][0]);
     glm::mat4 invproj = glm::inverse(proj);
     glUniformMatrix4fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "invprojection"), 1, GL_FALSE, &invproj[0][0]);
@@ -705,6 +728,8 @@ void PostProcess::SSRPass(std::shared_ptr<Camera>& cam)
     glm::mat4 view = cam->getViewMatrix();
     glUniformMatrix4fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "view"), 1, GL_FALSE, &view[0][0]);
     glUniform2f(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "Resolution"), this->width, this->height);
+    glUniform3fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "camDir"), 1, &cam->getDirection()[0]);
+    glUniform3fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "camPos"), 1, &cam->getPosition()[0]);
 
     this->RenderQuad();
 
@@ -967,7 +992,7 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::shared_ptr<Camera>& 
     glUseProgram(0);
 
         /** copy texture */
-
+/*
     CopyTextureFBO->bindFramebuffer();
     CopyTextureFBO->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     CopyTextureFBO->setViewport();
@@ -985,7 +1010,7 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::shared_ptr<Camera>& 
     glBindTexture(GL_TEXTURE_2D, 0);
 
     CopyTextureFBO->unbindFramebuffer();
-
+*/
     /** end copy texture*/
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer);

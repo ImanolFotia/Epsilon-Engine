@@ -85,7 +85,7 @@ public:
     }
     string directory;
     /// Draws the model, and thus all its meshes
-    void Draw(Shader* shader);
+    void Draw(Shader* shader, glm::vec3);
 
     /// Draws the model, and thus all its meshes
     void Draw(GLuint shader, glm::vec3);

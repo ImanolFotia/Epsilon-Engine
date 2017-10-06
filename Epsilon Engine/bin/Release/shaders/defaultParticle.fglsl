@@ -13,6 +13,11 @@ in vec3 FragPos;
 in vec3 wFragPos;
 in vec3 Normal;
 
+in vec4 PrevPosition;
+in vec4 Position;
+
+uniform vec3 viewPos;
+
 void main()
 {
 	vec4 tex = texture(texture0, UV);
@@ -23,4 +28,8 @@ void main()
 	gDepth = gl_FragCoord.z; 
 
     gExtraComponents = vec4(0.0, 1.0, 0.0, 0.0); 
+
+    vec2 a = (Position.xy / Position.w) * 0.5 + 0.5;
+  	vec2 b = (PrevPosition.xy / PrevPosition.w) * 0.5 + 0.5;
+  	gExtraComponents.zw = (a - b);
 }
