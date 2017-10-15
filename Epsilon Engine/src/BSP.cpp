@@ -380,17 +380,17 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
     }
 
 
-    void CQuake3BSP::RenderFace(int faceIndex, GLuint shader)
-    {
+    void CQuake3BSP::RenderFace(int faceIndex, GLuint shader, bool simpleRender)
+    {/*
         if(m_pFaces[faceIndex].type == 3)
             glUniform1i(glGetUniformLocation(shader, "lightmap"), 0);
         else
             glUniform1i(glGetUniformLocation(shader, "lightmap"), 1);
-
-        this->Faces[faceIndex].RenderFace(shader, faceTexture[faceIndex].GLTextureID, faceTexture_normal[faceIndex].GLTextureID, faceTexture_specular[faceIndex].GLTextureID, faceTexture_metallic[faceIndex].GLTextureID);
+*/
+        this->Faces[faceIndex].RenderFace(shader, faceTexture[faceIndex].GLTextureID, faceTexture_normal[faceIndex].GLTextureID, faceTexture_specular[faceIndex].GLTextureID, faceTexture_metallic[faceIndex].GLTextureID, simpleRender);
     }
 
-    //int g_VisibleFaces;
+    int g_VisibleFaces;
 
     void CQuake3BSP::RenderLevel(glm::vec3 vPos, GLuint shader, bool Shadow)
     {
@@ -401,8 +401,8 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
 
         int cluster = m_pLeafs[leafIndex].cluster;
 
-        //g_VisibleFaces = 0;
-        #pragma omp
+        g_VisibleFaces = 0;
+        //#pragma omp
         for(int i = m_numOfLeafs ; i-- ; )
         {
             tBSPLeaf *pLeaf = &(m_pLeafs[i]);
@@ -426,13 +426,15 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
 
                 if(!m_FacesDrawn.On(faceIndex))
                 {
-                    //g_VisibleFaces++;
+                    g_VisibleFaces++;
                     m_FacesDrawn.Set(faceIndex);
-                    RenderFace(faceIndex, shader);
+                    RenderFace(faceIndex, shader, !Shadow);
                 }
             }
 
         }
+
+        //std::cout << g_VisibleFaces << std::endl;
 
         ///glfwSetWindowTitle(window, ("Faces Drawn: " + to_string(g_VisibleFaces)).c_str());
     }

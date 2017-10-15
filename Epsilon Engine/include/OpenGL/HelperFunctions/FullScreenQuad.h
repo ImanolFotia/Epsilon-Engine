@@ -37,7 +37,7 @@ namespace OpenGLHelpers {
         }
     private:
 
-        GLuint quadVAO, quadVBO;
+        GLuint quadVAO = 0, quadVBO = 0;
     };
 
 }

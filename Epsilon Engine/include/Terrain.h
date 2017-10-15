@@ -23,6 +23,12 @@ struct TVertex
     glm::vec3 Position;
     /// TexCoords
     glm::vec2 TexCoords;
+    /// Normal
+    glm::vec3 Normal;
+    /// Tangent
+    glm::vec3 Tangent;
+    /// Binormal
+    glm::vec3 Binormal;
 };
 
 struct Face
@@ -63,6 +69,7 @@ private:
     bool LoadTexture(const char*);
     bool LoadTexture(const char*, const char*, const char*, const char*);
     bool calculateTangentSpace();
+    float FBM(glm::vec2 p);
 
 private:
     GLuint GL_d_texture;

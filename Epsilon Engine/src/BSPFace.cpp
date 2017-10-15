@@ -19,7 +19,23 @@ bool BSPFace::BuildFace(std::vector<glm::vec3> Vertices, std::vector<glm::vec3> 
     //std::cout << imagePath << std::endl;
     this->LightMap = LightMap;
     this->LMTexCoords = LMTexCoords;
+
     this->CalcTangentSpace();
+    for(int i = 0; i < Vertices.size(); i++)
+    {
+        t_Vertex vert;
+        vert.position = Vertices[i];
+        vert.texcoord = TexCoords[i];
+        vert.normal = Normals[i];
+        vert.tangent = Tangents[i];
+        vert.bitangent = Bitangents[i];
+        mVertices.push_back(vert);
+
+        mPosition += Vertices[i];
+    }
+
+    mPosition /= Vertices.size();
+
     bool res = this->prepareVAO();
     this->resm = Resm;
 
@@ -28,6 +44,7 @@ bool BSPFace::BuildFace(std::vector<glm::vec3> Vertices, std::vector<glm::vec3> 
     rigidBody = nullptr;
 
     rigidBody = ph->addObject(this->Vertices, this->Indices, 0.1);
+    //mPosition = glm::vec3(rigidBody->getCenterOfMassPosition().x(), rigidBody->getCenterOfMassPosition().y(), rigidBody->getCenterOfMassPosition().z());
 
     collinfo->setName(this->ObjectID);
 
@@ -42,9 +59,8 @@ bool BSPFace::BuildFace(std::vector<glm::vec3> Vertices, std::vector<glm::vec3> 
     return true;
 }
 
-void BSPFace::RenderFace(GLuint shader, GLuint TextureID,GLuint normalID, GLuint specularID, GLuint metallicID)
+void BSPFace::RenderFace(GLuint shader, GLuint TextureID,GLuint normalID, GLuint specularID, GLuint metallicID, bool simpleRender)
 {
-    glBindVertexArray(this->VAO);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, TextureID);
@@ -64,9 +80,13 @@ void BSPFace::RenderFace(GLuint shader, GLuint TextureID,GLuint normalID, GLuint
 
     glActiveTexture(GL_TEXTURE4);
     glUniform1i(glGetUniformLocation(shader, "skybox"), 4);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, resm->useCubeMap(1));
+    if(simpleRender)
+        glBindTexture(GL_TEXTURE_CUBE_MAP, resm->useCubeMap(2));
+    else
+        glBindTexture(GL_TEXTURE_CUBE_MAP, resm->useCubeMap(resm->mCubemapIndex.at(resm->NearestCubeMap(mPosition))));
 
-    glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(this->VAO);
+    glDrawElements(GL_TRIANGLES, this->Indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 
 }

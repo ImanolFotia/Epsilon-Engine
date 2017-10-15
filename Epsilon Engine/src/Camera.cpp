@@ -21,7 +21,7 @@ Camera::Camera(glm::vec3 cPosition, glm::vec3 cOrientation)
 {
     this->Orientation = glm::vec3(cOrientation);
     this->Position = glm::vec3(cPosition);
-    this->FieldOfView = 90.0f;
+    this->FieldOfView = 65.0f;
     this->MovementSpeed = 0.0f;
     this->MouseSpeed = 0.002f;
     this->JoystickSensibility = 0.05f;
@@ -223,14 +223,17 @@ void Camera::UpdateMatrices(void)
 
     if ( Aspectratio < 1.5 )
     {
+        //std::cout << "Aspectratio = 4:3" << std::endl;
         ProjectionMatrix = glm::perspective( glm::radians(FieldOfView) , 4.0f/ 3.0f , 0.1f , 3000.0f );
     }
     else if( Aspectratio > 1.7 )
     {
+        //std::cout << "Aspectratio = 16:9" << std::endl;
         ProjectionMatrix = glm::perspective( glm::radians(FieldOfView) , 16.0f/ 9.0f , 0.1f , 3000.0f );
     }
     else
     {
+        //std::cout << "Aspectratio = 16:10" << std::endl;
         ProjectionMatrix = glm::perspective( glm::radians(FieldOfView) , 16.0f/ 10.0f , 0.1f , 3000.0f );
     }
 

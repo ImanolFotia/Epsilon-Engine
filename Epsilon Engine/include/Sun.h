@@ -30,17 +30,27 @@ public:
     void Update();
     void SetUniforms(std::shared_ptr<Camera>, Shader*&);
 
+    void Destroy()
+    {
+        glDeleteTextures(1, &this->TextureID);
+        glDeleteVertexArrays(1, &VAO);
+        glDeleteBuffers(1, &VBO);
+        glDeleteBuffers(1, &EBO);
+    }
+
     glm::vec3 Position;
     glm::vec3 Direction;
 
+    float height;
 private:
 
     void PrepareVAO();
 
     float radius;
-    float height;
 
     GLuint TextureID;
+
+    float mMovement;
 
     GLuint VAO;
     GLuint VBO, EBO;

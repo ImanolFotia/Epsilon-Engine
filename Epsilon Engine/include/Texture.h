@@ -61,7 +61,7 @@ public:
         else {
             if(type == GL_TEXTURE_2D)//GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT
                 if(DATA.COMPRESSED_TEXTURES)
-                    glTexImage2D(type, 0, GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+                    glTexImage2D(type, 0, 0x8C4F, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
                 else
                     glTexImage2D(type, 0, GL_SRGB_ALPHA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 
@@ -102,7 +102,7 @@ public:
             image = SOIL_load_image(CubeMapPath[i].c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
             std::cout << CubeMapPath[i] << std::endl;
             glTexImage2D(
-                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+                GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0,GL_RGB16F, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
             glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
         }
         //std::cout << "CubeMapID" << texture << std::endl;

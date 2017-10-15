@@ -93,6 +93,17 @@ enum SHADER_TYPE
     GEOMETRY_PASS_SHADER
 };
 
+enum UNIFORM_TYPE
+{
+    U_INT = 0,
+    U_FLOAT,
+    U_VEC2,
+    U_VEC3,
+    U_VEC4,
+    U_MAT3,
+    U_MAT4
+};
+
 enum AUDIO_TYPE
 {
     AMBIENT_SOUND = 0,

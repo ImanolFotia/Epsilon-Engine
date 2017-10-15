@@ -20,7 +20,7 @@ ProgramData::ProgramData()
 
     WINDOW_WIDTH        = (int)reader.GetReal   (     "WINDOW"    ,     "Width"                 ,       640     );
     WINDOW_HEIGHT       = (int)reader.GetReal   (     "WINDOW"    ,     "Height"                ,       480     );
-    FULLSCREEN          = (bool)reader.GetReal  (     "WINDOW"    ,     "FullScreen"            ,       0       );
+    FULLSCREEN          = (int)reader.GetReal  (     "WINDOW"    ,     "FullScreen"            ,       0       );
     ANISOTROPY          = (float)reader.GetReal (     "VISUAL"    ,     "ANISOTROPY"            ,       0       );
     MSAA_SAMPLES        = (int)reader.GetReal   (     "VISUAL"    ,     "MSAA_SAMPLES"          ,       0       );
     MONITOR             = (int)reader.GetReal   (     "VISUAL"    ,     "MONITOR"               ,       0       );

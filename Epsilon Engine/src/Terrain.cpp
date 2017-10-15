@@ -14,8 +14,7 @@
 
 #include <Includes.h>
 
-Terrain::Terrain(const char* heightMap,const char* diffuseTexture, float scale, int gridSize/**Must be Power of two*/, std::shared_ptr<ResourceManager> rm)
-{
+Terrain::Terrain(const char* heightMap,const char* diffuseTexture, float scale, int gridSize/**Must be Power of two*/, std::shared_ptr<ResourceManager> rm) {
     this->GL_n_texture = 0;
 
     this->rM = rm;
@@ -26,7 +25,7 @@ Terrain::Terrain(const char* heightMap,const char* diffuseTexture, float scale, 
 
     this->diffuseTexture = diffuseTexture;
 
-    this->GetHeightData();
+    //this->GetHeightData();
 
     this->LoadTexture(diffuseTexture);
 
@@ -34,8 +33,7 @@ Terrain::Terrain(const char* heightMap,const char* diffuseTexture, float scale, 
 
 }
 
-Terrain::Terrain(const char* heightMap,const char* diffuseTexture, const char* normalTexture, const char* specularTexture, const char* metalTexture,float sc, int gridSize, glm::vec3 Position ,std::shared_ptr<ResourceManager> rm /**Must be Power of two*/)
-{
+Terrain::Terrain(const char* heightMap,const char* diffuseTexture, const char* normalTexture, const char* specularTexture, const char* metalTexture,float sc, int gridSize, glm::vec3 Position,std::shared_ptr<ResourceManager> rm /**Must be Power of two*/) {
     this->gridSize = gridSize;
 
     this->heightMap = heightMap;
@@ -50,7 +48,9 @@ Terrain::Terrain(const char* heightMap,const char* diffuseTexture, const char* n
 
     this->specularTexture = specularTexture;
 
-    this->GetHeightData();
+    //this->GetHeightData();
+
+    this->GenerateGrid(nullptr);
 
     this->LoadTexture(diffuseTexture, normalTexture, specularTexture, metalTexture);
 
@@ -58,14 +58,12 @@ Terrain::Terrain(const char* heightMap,const char* diffuseTexture, const char* n
 
 }
 
-bool Terrain::GetHeightData()
-{
+bool Terrain::GetHeightData() {
     int w, h;
 
     unsigned char* pixels = SOIL_load_image(this->heightMap, &this->width, &this->height, 0, SOIL_LOAD_L);
 
-    if(this->width != this->height)
-    {
+    if(this->width != this->height) {
         cout << "TERRAIN ERROR: THE TEXTURE'S SIZE PROVIDED IS NOT POWER OF TWO::ABORTING" << endl;
         return 1;
     }
@@ -78,30 +76,27 @@ bool Terrain::GetHeightData()
 
 }
 
-bool Terrain::GenerateGrid(unsigned char* pixels)
-{
+bool Terrain::GenerateGrid(unsigned char* pixels) {
     TVertex vert;
 
 
-    float texU = float(this->height);
-    float texV = float(this->height);
+    float texU = float(this->gridSize);
+    float texV = float(this->gridSize);
     int counter = 0;
 
     vector< vector<float> > Grid;
     vector<float> row;
 
-    for(int i = 0 ; i < this->width ; i++)
-    {
-        for(int j = 0 ; j < this->height ; j++)
-        {
+    for(int i = 0 ; i < this->gridSize ; i++) {
+        for(int j = 0 ; j < this->gridSize ; j++) {
             vert.Position.x = ((float)i + m_Position.x) * scale;
-            vert.Position.y = ((float)pixels[counter]) + m_Position.y;
+            vert.Position.y = (float)FBM(glm::vec2(i, j)*0.015f) * 50.0f + m_Position.y;
             vert.Position.z = ((float)j + m_Position.z) * scale;
             row.push_back(vert.Position.y);
-            float fScaleC = float(j)/float(this->height-1);
-            float fScaleR = float(i)/float(this->width-1);
-            vert.TexCoords.s = this->width*fScaleC/this->width*60;
-            vert.TexCoords.t = this->height*fScaleR/this->height*60;
+            float fScaleC = float(j)/float(this->gridSize-1);
+            float fScaleR = float(i)/float(this->gridSize-1);
+            vert.TexCoords.s = this->gridSize*fScaleC/this->gridSize*60;
+            vert.TexCoords.t = this->gridSize*fScaleR/this->gridSize*60;
             vertices.push_back(vert);
             counter++;
 
@@ -115,36 +110,32 @@ bool Terrain::GenerateGrid(unsigned char* pixels)
 
     int mod = 0;
     counter = 0;
-    for(int i = 0 ; i < this->width ; i++)
-    {
-        for(int j = 0 ; j < this->width ; j++)
-        {
-            if(i > 0 && j > 0 && i < Grid.size()-1 && j < Grid.size()-1)
-            {
+    for(int i = 0 ; i < this->gridSize ; i++) {
+        for(int j = 0 ; j < this->gridSize ; j++) {
+            if(i > 0 && j > 0 && i < Grid.size()-1 && j < Grid.size()-1) {
                 float HL = Grid.at(i-1).at(j);
                 float HR = Grid.at(i+1).at(j);
                 float HD = Grid.at(i).at(j-1);
                 float HU = Grid.at(i).at(j+1);
 
-                glm::vec3 norm = glm::normalize(glm::vec3(HL - HR, 2.0f, HD - HU));
+                glm::vec3 norm = glm::normalize(glm::vec3(HL - HR, 1.0f, HD - HU));
 
                 Normals.push_back(norm);
-            }
-            else
-            {
+            } else {
                 Normals.push_back(glm::vec3(0,1,0));
             }
 
 
         }
     }
+    for(int i = 0; i < vertices.size(); i++) {
+        vertices.at(i).Normal = Normals.at(i);
+    }
 
     counter= 0;
 
-    for(int i = 0 ; i < this->cantPixels-this->width ; i++)
-    {
-        if(counter == this->width-1)
-        {
+    for(int i = 0 ; i < glm::pow(this->gridSize, 2.0f)-this->gridSize ; i++) {
+        if(counter == this->gridSize-1) {
             counter = 0;
             mod++;
             continue;
@@ -153,19 +144,19 @@ bool Terrain::GenerateGrid(unsigned char* pixels)
 
         face.vertex0 = vertices[i+1].Position;
         indices.push_back(i+1);
-        face.vertex1 = vertices[i+this->width].Position;
-        indices.push_back(i+this->width);
-        face.vertex2 = vertices[i+this->width - this->width].Position;
-        indices.push_back(i+this->width - this->width);
+        face.vertex1 = vertices[i+this->gridSize].Position;
+        indices.push_back(i+this->gridSize);
+        face.vertex2 = vertices[i+this->gridSize - this->gridSize].Position;
+        indices.push_back(i+this->gridSize - this->gridSize);
 
         vface.push_back(face);
 
         face.vertex0 = vertices[i + 1].Position;
         indices.push_back(i + 1);
-        face.vertex1 = vertices[i+this->width+1].Position;
-        indices.push_back(i+this->width+1);
-        face.vertex2 = vertices[i+this->width].Position;
-        indices.push_back(i+this->width);
+        face.vertex1 = vertices[i+this->gridSize+1].Position;
+        indices.push_back(i+this->gridSize+1);
+        face.vertex2 = vertices[i+this->gridSize].Position;
+        indices.push_back(i+this->gridSize);
 
         vface.push_back(face);
 
@@ -180,7 +171,7 @@ bool Terrain::GenerateGrid(unsigned char* pixels)
     for(int i = 0; i < vertices.size(); ++i)
         tmp_vertices.push_back(vertices[i].Position);
 
-    std::cout << "llega" << std::endl;
+    //std::cout << "llega" << std::endl;
 
     try {
         std::shared_ptr<Physics::TriangleMeshPhysicObject> TerrainPhysicsMesh = (std::shared_ptr<Physics::TriangleMeshPhysicObject>) new Physics::TriangleMeshPhysicObject();
@@ -198,13 +189,10 @@ bool Terrain::GenerateGrid(unsigned char* pixels)
         this->rM->m_PhysicsWorld->world->addRigidBody(rigidBody.get());
 
         this->CollisionObject = TerrainPhysicsMesh;
-    }
-    catch(exception e)
-    {
+    } catch(exception e) {
         std::cout << e.what() << std::endl;
     }
 
-    std::cout << "llega 2 " << std::endl;
 
     /*
         indices.pop_back();
@@ -217,54 +205,48 @@ bool Terrain::GenerateGrid(unsigned char* pixels)
     calculateTangentSpace();
 }
 
-bool Terrain::calculateTangentSpace()
-{
+bool Terrain::calculateTangentSpace() {
+    /// calculate tangent/bitangent vectors of both triangles
     glm::vec3 tangent1, bitangent1;
-    for(int i = 0 ; i < vface.size() ; i++)
-    {
-        glm::vec3 edge1 = vertices.at(indices.at((i+1))).Position + vertices.at(indices.at((i))).Position;
-        glm::vec3 edge2 = vertices.at(indices.at((i+2))).Position + vertices.at(indices.at((i))).Position;
+    for(int i = 0 ; i < (int)indices.size() ; i+=3) {
 
-        glm::vec2 deltaUV1 = vertices.at(indices.at((i+2))).TexCoords + vertices.at(indices.at((i))).TexCoords;
-        glm::vec2 deltaUV2 = vertices.at(indices.at((i+1))).TexCoords + vertices.at(indices.at((i))).TexCoords;
+        glm::vec3 edge1 = vertices.at(indices.at((i+1))).Position - vertices.at(indices.at((i))).Position;
+        glm::vec3 edge2 = vertices.at(indices.at((i+2))).Position - vertices.at(indices.at((i))).Position;
 
-        float f = (deltaUV2.x * deltaUV1.x + deltaUV2.y * deltaUV1.y) == 0.0f ? 1.0f : -1.0f;
-        // when t1, t2, t3 in same position in UV space, just use default UV direction.
-        if ( 0 == deltaUV2.x && 0 ==deltaUV2.y && 0 == deltaUV1.x && 0 == deltaUV1.y )
-        {
-            deltaUV1.x = 0.0;
-            deltaUV1.y = 1.0;
-            deltaUV2.y = 1.0;
-            deltaUV2.x = 0.0;
-        }
+        glm::vec2 deltaUV1 = vertices.at(indices.at((i+1))).TexCoords - vertices.at(indices.at((i))).TexCoords;
+        glm::vec2 deltaUV2 = vertices.at(indices.at((i+2))).TexCoords - vertices.at(indices.at((i))).TexCoords;
 
-        tangent1.x = f * (deltaUV2.y * edge1.x + deltaUV1.y * edge2.x);
-        tangent1.y = f * (deltaUV2.y * edge1.y + deltaUV1.y * edge2.y);
-        tangent1.z = f * (deltaUV2.y * edge1.z + deltaUV1.y * edge2.z);
-        if(tangent1.x == 0 && tangent1.y == 0 && tangent1.z == 0)
-            tangent1 = glm::vec3(0,0,1);
+        GLfloat f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+        tangent1.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+        tangent1.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+        tangent1.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+        /// tangent1 = glm::normalize(tangent1);
+
+        //for(int j = 0 ; j < Tangents.size() ; j++)
+        //   tangent1 = tangent1 + Tangents[j];
+
         tangent1 = glm::normalize(tangent1);
-
-        Tangents.push_back(tangent1);
-        Tangents.push_back(tangent1);
-        Tangents.push_back(tangent1);
-
+        vertices.at(indices.at((i+0))).Tangent = tangent1;
+        vertices.at(indices.at((i+1))).Tangent = tangent1;
+        vertices.at(indices.at((i+2))).Tangent = tangent1;
         bitangent1.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
         bitangent1.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
         bitangent1.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
-        if(tangent1.x == 0 && tangent1.y == 0 && tangent1.z == 0)
-            bitangent1 = glm::vec3(0,0,1);
-        bitangent1 = glm::normalize(bitangent1);
+        /// bitangent1 = glm::normalize(bitangent1);
 
-        Bitangents.push_back(bitangent1);
-        Bitangents.push_back(bitangent1);
-        Bitangents.push_back(bitangent1);
+        //for(int j = 0 ; j < Bitangents.size() ; j++)
+        //    bitangent1 = bitangent1 + Bitangents[j];
+
+        bitangent1 = glm::normalize(bitangent1);
+        vertices.at(indices.at((i+0))).Binormal = bitangent1;
+        vertices.at(indices.at((i+1))).Binormal = bitangent1;
+        vertices.at(indices.at((i+2))).Binormal = bitangent1;
     }
     return true;
 }
 
-bool Terrain::LoadTexture(const char* diff)
-{
+bool Terrain::LoadTexture(const char* diff) {
     int texwidth, texheight, texchannels;
 
     eTexture dTex(diff);
@@ -277,8 +259,7 @@ bool Terrain::LoadTexture(const char* diff)
 
 }
 
-bool Terrain::LoadTexture(const char* diff, const char* normal, const char* specular, const char* metallic)
-{
+bool Terrain::LoadTexture(const char* diff, const char* normal, const char* specular, const char* metallic) {
     int texwidth, texheight, texchannels;
 
     eTexture dTex(diff);
@@ -307,13 +288,9 @@ bool Terrain::LoadTexture(const char* diff, const char* normal, const char* spec
 
 }
 
-bool Terrain::GenerateVertexBuffers()
-{
+bool Terrain::GenerateVertexBuffers() {
     glGenVertexArrays(1, &this->VAO);
     glGenBuffers(1, &this->VBO);
-    glGenBuffers(1, &this->NVB);
-    glGenBuffers(1, &this->TVB);
-    glGenBuffers(1, &this->BVB);
     glGenBuffers(1, &this->EBO);
 
     glBindVertexArray(this->VAO);
@@ -329,29 +306,14 @@ bool Terrain::GenerateVertexBuffers()
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(TVertex), (GLvoid*)offsetof(TVertex, TexCoords));
 
-    /** Normal buffer Attachments*/
-
-    glBindBuffer(GL_ARRAY_BUFFER, this->NVB);
-    glBufferData(GL_ARRAY_BUFFER, this->Normals.size() * sizeof(glm::vec3), &this->Normals[0], GL_STATIC_DRAW);
-
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Normals), (GLvoid*)0);
-
-    /** Normal buffer Attachments*/
-
-    glBindBuffer(GL_ARRAY_BUFFER, this->TVB);
-    glBufferData(GL_ARRAY_BUFFER, this->Tangents.size() * sizeof(glm::vec3), &this->Tangents[0], GL_STATIC_DRAW);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(TVertex), (GLvoid*)offsetof(TVertex, Normal));
 
     glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Tangents), (GLvoid*)0);
-
-    /** Normal buffer Attachments*/
-
-    glBindBuffer(GL_ARRAY_BUFFER, this->BVB);
-    glBufferData(GL_ARRAY_BUFFER, this->Bitangents.size() * sizeof(glm::vec3), &this->Bitangents[0], GL_STATIC_DRAW);
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(TVertex), (GLvoid*)offsetof(TVertex, Tangent));
 
     glEnableVertexAttribArray(4);
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Bitangents), (GLvoid*)0);
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(TVertex), (GLvoid*)offsetof(TVertex, Binormal));
 
     /** Element buffer Attachments*/
 
@@ -361,8 +323,39 @@ bool Terrain::GenerateVertexBuffers()
     glBindVertexArray(0);
 }
 
-void Terrain::RenderTerrain(Shader* shader)
-{
+float Terrain::FBM(glm::vec2 p) {
+
+    auto hash11 = [&]( float n )->float {
+        return glm::fract(glm::sin(n)*43758.5453123);
+    };
+
+    auto noise12 = [&]( glm::vec2 x ) ->float {
+        glm::vec2 q = glm::floor(x);
+        glm::vec2 f = glm::fract(x);
+
+        f = f*f*(3.0f-2.0f*f);
+
+        float n = q.x + q.y*57.0f;
+
+        return glm::mix(glm::mix( hash11(n + 0.0f), hash11(n + 1.0f),f.x),glm::mix( hash11(n + 57.0f), hash11(n+ 58.0f),f.x),f.y);
+    };
+
+
+        float f = 0.0;
+        f+=0.5 * noise12(p);
+        p*=2.02;
+        f+=0.25 * noise12(p);
+        p*=2.03;
+        f+=0.125 * noise12(p);
+        p*=2.04;
+        f+=0.0625 * noise12(p);
+        p*=2.05;
+        return f/0.9375;
+
+
+}
+
+void Terrain::RenderTerrain(Shader* shader) {
 
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(glGetUniformLocation(shader->getProgramID(), "texture_diffuse"), 0);

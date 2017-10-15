@@ -20,14 +20,14 @@ Water::Water(glm::vec3 position, float scale)
     GeneratevertexArray();
 }
 
-void Water::RenderWater(std::shared_ptr<Camera> cam, GLuint colorBuffer)
+void Water::RenderWater(std::shared_ptr<Camera> cam, GLuint colorBuffer, glm::vec3 lightDir)
 {
     shader->Use();
-    //glDisable(GL_CULL_FACE);
+    glDisable(GL_CULL_FACE);
 
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(glGetUniformLocation(shader->getProgramID(), "ColorBuffer"), 0);
-    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindTexture(GL_TEXTURE_2D, colorBuffer);
     glGenerateMipmap(GL_TEXTURE_2D);
 
     glActiveTexture(GL_TEXTURE1);
@@ -44,21 +44,27 @@ void Water::RenderWater(std::shared_ptr<Camera> cam, GLuint colorBuffer)
 
 
     glm::mat4 model = glm::mat4();
-    /// glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(scale,1,scale));
+    glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(scale,1,scale));
     model = glm::translate(model, this->position);
     this->MVP = cam->getProjectionMatrix() * cam->getViewMatrix() * model;
 
+    shader->PushUniform("lightDir", lightDir);
+    shader->PushUniform("viewDir", cam->getDirection());
+    shader->PushUniform("viewPos", cam->getPosition());
+    shader->PushUniform("ResX", cam->winx);
+    shader->PushUniform("ResY", cam->winy);
     glUniformMatrix4fv(shader->MVP_Location, 1, GL_FALSE, &MVP[0][0]);
     glUniformMatrix4fv(shader->WorldTransform_Location, 1, GL_FALSE, &model[0][0]);
     glUniformMatrix4fv(shader->View_Location, 1, GL_FALSE, &cam->getViewMatrix()[0][0]);
     glUniformMatrix4fv(shader->Projection_Location, 1, GL_FALSE, &cam->getProjectionMatrix()[0][0]);
-    glUniform1f(glGetUniformLocation(shader->getProgramID(), "time"),  glfwGetTime());
+    shader->PushUniform("time", (float)glfwGetTime());
 
     glBindVertexArray(this->VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+    shader->Free();
 
-    //glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);
     glActiveTexture(GL_TEXTURE1);
@@ -72,12 +78,12 @@ void Water::RenderWater(std::shared_ptr<Camera> cam, GLuint colorBuffer)
 
 void Water::LoadTextures(void)
 {
-    eTexture* tex = new eTexture("water_n.jpg");
+    eTexture* tex = new eTexture("normalMap.png");
     normalTexture = tex->getTextureID();
 
     delete tex;
 
-    eTexture* tex2 = new eTexture("Wavy_Water - Color Map.png");
+    eTexture* tex2 = new eTexture("waterDUDV.png");
     DuDvTexture = tex2->getTextureID();
 
     delete tex2;
@@ -99,7 +105,7 @@ void Water::LoadShaders(void)
 }
 
 void Water::CreateReflectionFBO(void)
-{
+{/*
     glGenFramebuffers(1, &reflectionFBO);
     glBindFramebuffer(GL_FRAMEBUFFER, reflectionFBO);
     glGenTextures(1, &reflectionTexture);
@@ -114,7 +120,7 @@ void Water::CreateReflectionFBO(void)
     glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, reflectionTexture, 0);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         std::cout << "Framebuffer not complete!" << std::endl;
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);*/
 }
 
 void Water::CreateRefractionFBO(void)
@@ -169,10 +175,10 @@ void Water::GeneratevertexArray()
 {
     glm::vec3 verts[] =
     {
-        glm::vec3(115.0f,  0.0,  115.0f),
-        glm::vec3(115.0f,  0.0, -115.0f),
-        glm::vec3(-115.0f,  0.0, -115.0f),
-        glm::vec3(-115.0f,  0.0,  115.0f)
+        glm::vec3(115.0f*this->scale,  0.0,  115.0f*this->scale),
+        glm::vec3(115.0f*this->scale,  0.0, -115.0f*this->scale),
+        glm::vec3(-115.0f*this->scale,  0.0, -115.0f*this->scale),
+        glm::vec3(-115.0f*this->scale,  0.0,  115.0f*this->scale)
 
     };
 

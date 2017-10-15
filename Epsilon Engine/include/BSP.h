@@ -245,7 +245,7 @@ private:
 
     void FindTextureExtension(char *strFileName);
 
-    void RenderFace(int faceIndex, GLuint shader);
+    void RenderFace(int faceIndex, GLuint shader, bool);
 
     int IsClusterVisible(int current, int test);
 

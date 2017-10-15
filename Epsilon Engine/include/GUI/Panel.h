@@ -9,7 +9,7 @@ class Panel : public Widget
 {
 public:
     Panel(const int winWidth, const int winHeight) : m_winWidth(winWidth), m_winHeight(winHeight) {
-        m_Quad = (std::shared_ptr<OpenGLHelpers::Quad>) new OpenGLHelpers::Quad(400, 720);
+        m_Quad = (std::shared_ptr<OpenGLHelpers::Quad>) new OpenGLHelpers::Quad(400, 1080);
 
         projection = glm::ortho(0.0f, static_cast<GLfloat>(m_winWidth), 0.0f, static_cast<GLfloat>(m_winHeight));
     }

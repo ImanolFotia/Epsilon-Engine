@@ -60,12 +60,46 @@ public:
         return hdrFBO->getRenderTargetHandler("colorBuffer");
     }
 
+    void Destroy()
+    {
+        glDeleteTextures(1, &colorBuffer);
+        glDeleteTextures(1, &depthBuffer);
+        glDeleteTextures(1, &MotionBlurBuffer);
+        glDeleteTextures(1, &SSRTexture);
+        glDeleteTextures(2, pingpongSSRT);
+        glDeleteTextures(1, &DownSampledTexture);
+        glDeleteTextures(1, &SinglePixelColorBuffer);
+        glDeleteTextures(1, &gExtraComponents);
+        glDeleteTextures(1, &rboDepth);
+        glDeleteTextures(1, &rDepth);
+        glDeleteTextures(1, &gDepth);
+        glDeleteTextures(1, &DepthTexture);
+        glDeleteTextures(1, &lowresTex);
+        glDeleteTextures(1, &DOFBuffer);
+        glDeleteTextures(1, &sampler);
+        glDeleteTextures(2, pingpongDOF);
+        glDeleteTextures(2, pingpongColorbuffers);
+        glDeleteTextures(2, pingpongColorbuffersDOF);
+
+        glDeleteFramebuffers(1, &MotionBlurFBO);
+        glDeleteFramebuffers(1, &SSRFBO);
+        glDeleteFramebuffers(2, pingpongSSRFBO);
+        glDeleteFramebuffers(1, &lowresFBO);
+
+        glDeleteFramebuffers(1, &ssaoFBO);
+        glDeleteFramebuffers(1, &SSRFBO);
+        glDeleteFramebuffers(2, pingpongFBO);
+        glDeleteFramebuffers(1, &DownSamplerFBO);
+    }
+
 public:
 
     GLuint colorBuffer;
     GLuint depthBuffer;
+
     std::shared_ptr<FrameBuffer<std::string> > hdrFBO;
     std::unique_ptr<Shader> shader;
+    std::shared_ptr<FrameBuffer<int> > CopyTextureFBO;
 
     float m_exposure;
 private:
@@ -116,7 +150,7 @@ private:
     /**
         Blurs and image using a Gaussian Blur shader
     */
-    GLuint blurImage(GLuint Buffer);
+    GLuint blurImage(GLuint Buffer, bool);
 
     /**
         Set up buffers for blurring
@@ -205,9 +239,11 @@ private:
     GLuint ssaoColorBufferBlur;
     GLuint gWorldSpacePosition;
     GLuint gLightAccumulation;
+    GLuint mLastFrametexture;
     std::shared_ptr<eTexture> lensColor;
     std::shared_ptr<eTexture> lensDirt;
     std::shared_ptr<eTexture> lensStar;
+
 
 };
 

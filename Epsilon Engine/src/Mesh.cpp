@@ -3,7 +3,7 @@
 
 
 /// Render the mesh
-void Mesh::Draw(Shader*& shader, std::shared_ptr<ResourceManager> resm)
+void Mesh::Draw(Shader*& shader, std::shared_ptr<ResourceManager> resm, glm::vec3 pos)
 {
 
 
@@ -26,10 +26,9 @@ void Mesh::Draw(Shader*& shader, std::shared_ptr<ResourceManager> resm)
     glUniform1i(glGetUniformLocation(shader->getProgramID(), "texture_height"), 3);
     glBindTexture(GL_TEXTURE_2D, resm->useTexture(textures[3].path));
 
-
     glActiveTexture(GL_TEXTURE4);
     glUniform1i(glGetUniformLocation(shader->getProgramID(), "skybox"), 4);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, resm->useCubeMap(CubeMapIndex));
+    glBindTexture(GL_TEXTURE_CUBE_MAP, resm->useCubeMap(resm->mCubemapIndex.at(resm->NearestCubeMap(pos))));
 
     /// Draw mesh
     glBindVertexArray(this->VAO);
@@ -50,9 +49,8 @@ void Mesh::Draw(Shader*& shader, std::shared_ptr<ResourceManager> resm)
 }
 
 /// Render the mesh
-void Mesh::Draw(GLuint shader, std::shared_ptr<ResourceManager> resm)
+void Mesh::Draw(GLuint shader, std::shared_ptr<ResourceManager> resm, glm::vec3 pos)
 {
-
 
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(glGetUniformLocation(shader, "texture_diffuse"), 0);
@@ -76,7 +74,7 @@ void Mesh::Draw(GLuint shader, std::shared_ptr<ResourceManager> resm)
 
     glActiveTexture(GL_TEXTURE4);
     glUniform1i(glGetUniformLocation(shader, "skybox"), 4);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, resm->useCubeMap(CubeMapIndex));
+    glBindTexture(GL_TEXTURE_CUBE_MAP, resm->useCubeMap(resm->mCubemapIndex.at(resm->NearestCubeMap(pos))));
 
     /// Draw mesh
     glBindVertexArray(this->VAO);
