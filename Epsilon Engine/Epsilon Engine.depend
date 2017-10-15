@@ -3244,3 +3244,1775 @@
 1497682481 d:\epsilon\epsilon engine\include\postprocess\screenspacereflections.h
 	<PostProcess/Effect.h>
 
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\bsp.cpp
+	<GL/glew.h>
+	<omp.h>
+	<BSP.h>
+	<glm/glm.hpp>
+	<vector>
+	<iostream>
+	<Frustum.h>
+	<Texture.h>
+
+1469321017 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glew-2.0.0\include\gl\glew.h
+	<stddef.h>
+	<inttypes.h>
+	<stdint.h>
+	<inttypes.h>
+	<Availability.h>
+	<OpenGL/glu.h>
+	<GL/glu.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\bsp.h
+	<cstdlib>
+	<cstdio>
+	<cstring>
+	<vector>
+	<map>
+	<GLFW/glfw3.h>
+	"BSPFace.h"
+	"Frustum.h"
+	<ResourceManager.h>
+
+1470451971 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glfw-3.2.bin.win32\include\glfw\glfw3.h
+	<stddef.h>
+	<stdint.h>
+	<OpenGL/gl3.h>
+	<OpenGL/gl3ext.h>
+	<OpenGL/gl.h>
+	<OpenGL/glu.h>
+	<GL/glcorearb.h>
+	<GLES/gl.h>
+	<GLES/glext.h>
+	<GLES2/gl2.h>
+	<GLES2/gl2ext.h>
+	<GLES3/gl3.h>
+	<GLES2/gl2ext.h>
+	<GLES3/gl31.h>
+	<GLES2/gl2ext.h>
+	<vulkan/vulkan.h>
+	<GL/gl.h>
+	<GL/glext.h>
+	<GL/glu.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\bspface.h
+	<glm/glm.hpp>
+	<GL/glew.h>
+	<iostream>
+	<string>
+	<vector>
+	<SOIL.h>
+	<Physics.h>
+	<Includes.h>
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\glm.hpp
+	"detail/_fixes.hpp"
+	<cmath>
+	<climits>
+	<cfloat>
+	<limits>
+	<cassert>
+	"fwd.hpp"
+	"vec2.hpp"
+	"vec3.hpp"
+	"vec4.hpp"
+	"mat2x2.hpp"
+	"mat2x3.hpp"
+	"mat2x4.hpp"
+	"mat3x2.hpp"
+	"mat3x3.hpp"
+	"mat3x4.hpp"
+	"mat4x2.hpp"
+	"mat4x3.hpp"
+	"mat4x4.hpp"
+	"trigonometric.hpp"
+	"exponential.hpp"
+	"common.hpp"
+	"packing.hpp"
+	"geometric.hpp"
+	"matrix.hpp"
+	"vector_relational.hpp"
+	"integer.hpp"
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\_fixes.hpp
+	<cmath>
+
+1438464936 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\fwd.hpp
+	"detail/type_int.hpp"
+	"detail/type_float.hpp"
+	"detail/type_vec.hpp"
+	"detail/type_mat.hpp"
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_int.hpp
+	"setup.hpp"
+	<type_traits>
+	<cstdint>
+
+1441569934 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\setup.hpp
+	<cassert>
+	<cstddef>
+	<cuda.h>
+	<intrin.h>
+	<immintrin.h>
+	<immintrin.h>
+	<smmintrin.h>
+	<pmmintrin.h>
+	<emmintrin.h>
+	<__config>
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_float.hpp
+	"setup.hpp"
+
+1438465103 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_vec.hpp
+	"precision.hpp"
+	"type_int.hpp"
+
+1441038560 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\precision.hpp
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_mat.hpp
+	"precision.hpp"
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\vec2.hpp
+	"detail/type_vec2.hpp"
+
+1441568189 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_vec2.hpp
+	"type_vec.hpp"
+	"_swizzle.hpp"
+	"_swizzle_func.hpp"
+	<cstddef>
+	"type_vec2.inl"
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\_swizzle.hpp
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\_swizzle_func.hpp
+
+1441568189 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_vec2.inl
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\vec3.hpp
+	"detail/type_vec3.hpp"
+
+1441568189 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_vec3.hpp
+	"type_vec.hpp"
+	"_swizzle.hpp"
+	"_swizzle_func.hpp"
+	<cstddef>
+	"type_vec3.inl"
+
+1441568189 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_vec3.inl
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\vec4.hpp
+	"detail/type_vec4.hpp"
+
+1441568189 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_vec4.hpp
+	"setup.hpp"
+	"type_vec.hpp"
+	"_swizzle.hpp"
+	"_swizzle_func.hpp"
+	<cstddef>
+	"type_vec4.inl"
+
+1451348181 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_vec4.inl
+	"type_vec4_sse2.inl"
+	"type_vec4_avx.inl"
+	"type_vec4_avx2.inl"
+
+1441038892 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_vec4_sse2.inl
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_vec4_avx.inl
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_vec4_avx2.inl
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\mat2x2.hpp
+	"detail/type_mat2x2.hpp"
+
+1440864226 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_mat2x2.hpp
+	"../fwd.hpp"
+	"type_vec2.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat2x2.inl"
+
+1438470808 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_mat2x2.inl
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\mat2x3.hpp
+	"detail/type_mat2x3.hpp"
+
+1438468469 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_mat2x3.hpp
+	"../fwd.hpp"
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat2x3.inl"
+
+1438470737 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_mat2x3.inl
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\mat2x4.hpp
+	"detail/type_mat2x4.hpp"
+
+1438468425 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_mat2x4.hpp
+	"../fwd.hpp"
+	"type_vec2.hpp"
+	"type_vec4.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat2x4.inl"
+
+1438470573 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_mat2x4.inl
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\mat3x2.hpp
+	"detail/type_mat3x2.hpp"
+
+1438468285 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_mat3x2.hpp
+	"../fwd.hpp"
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat3x2.inl"
+
+1438470418 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_mat3x2.inl
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\mat3x3.hpp
+	"detail/type_mat3x3.hpp"
+
+1438468227 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_mat3x3.hpp
+	"../fwd.hpp"
+	"type_vec3.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat3x3.inl"
+
+1438470302 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_mat3x3.inl
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\mat3x4.hpp
+	"detail/type_mat3x4.hpp"
+
+1438468095 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_mat3x4.hpp
+	"../fwd.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat3x4.inl"
+
+1438470191 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_mat3x4.inl
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\mat4x2.hpp
+	"detail/type_mat4x2.hpp"
+
+1438468017 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_mat4x2.hpp
+	"../fwd.hpp"
+	"type_vec2.hpp"
+	"type_vec4.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat4x2.inl"
+
+1438470017 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_mat4x2.inl
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\mat4x3.hpp
+	"detail/type_mat4x3.hpp"
+
+1438467958 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_mat4x3.hpp
+	"../fwd.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat4x3.inl"
+
+1438470532 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_mat4x3.inl
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\mat4x4.hpp
+	"detail/type_mat4x4.hpp"
+
+1438467899 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_mat4x4.hpp
+	"../fwd.hpp"
+	"type_vec4.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat4x4.inl"
+
+1438469995 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_mat4x4.inl
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\trigonometric.hpp
+	"detail/func_trigonometric.hpp"
+
+1441051837 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\func_trigonometric.hpp
+	"setup.hpp"
+	"precision.hpp"
+	"func_trigonometric.inl"
+
+1441052446 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\func_trigonometric.inl
+	"_vectorize.hpp"
+	<cmath>
+	<limits>
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\_vectorize.hpp
+	"type_vec1.hpp"
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+
+1441568189 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_vec1.hpp
+	"../fwd.hpp"
+	"type_vec.hpp"
+	"_swizzle.hpp"
+	"_swizzle_func.hpp"
+	<cstddef>
+	"type_vec1.inl"
+
+1441568189 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_vec1.inl
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\exponential.hpp
+	"detail/func_exponential.hpp"
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\func_exponential.hpp
+	"type_vec1.hpp"
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+	<cmath>
+	"func_exponential.inl"
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\func_exponential.inl
+	"func_vector_relational.hpp"
+	"_vectorize.hpp"
+	<limits>
+	<cmath>
+	<cassert>
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\func_vector_relational.hpp
+	"precision.hpp"
+	"setup.hpp"
+	"func_vector_relational.inl"
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\func_vector_relational.inl
+	<limits>
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\common.hpp
+	"detail/func_common.hpp"
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\func_common.hpp
+	"setup.hpp"
+	"precision.hpp"
+	"type_int.hpp"
+	"_fixes.hpp"
+	"func_common.inl"
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\func_common.inl
+	"func_vector_relational.hpp"
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+	"_vectorize.hpp"
+	<limits>
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\packing.hpp
+	"detail/func_packing.hpp"
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\func_packing.hpp
+	"type_vec2.hpp"
+	"type_vec4.hpp"
+	"func_packing.inl"
+
+1437262117 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\func_packing.inl
+	"func_common.hpp"
+	"type_half.hpp"
+	"../fwd.hpp"
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_half.hpp
+	"setup.hpp"
+	"type_half.inl"
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\type_half.inl
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\geometric.hpp
+	"detail/func_geometric.hpp"
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\func_geometric.hpp
+	"type_vec3.hpp"
+	"func_geometric.inl"
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\func_geometric.inl
+	"func_exponential.hpp"
+	"func_common.hpp"
+	"type_vec2.hpp"
+	"type_vec4.hpp"
+	"type_float.hpp"
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\matrix.hpp
+	"detail/func_matrix.hpp"
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\func_matrix.hpp
+	"../detail/precision.hpp"
+	"../detail/setup.hpp"
+	"../detail/type_mat.hpp"
+	"../vec2.hpp"
+	"../vec3.hpp"
+	"../vec4.hpp"
+	"../mat2x2.hpp"
+	"../mat2x3.hpp"
+	"../mat2x4.hpp"
+	"../mat3x2.hpp"
+	"../mat3x3.hpp"
+	"../mat3x4.hpp"
+	"../mat4x2.hpp"
+	"../mat4x3.hpp"
+	"../mat4x4.hpp"
+	"func_matrix.inl"
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\func_matrix.inl
+	"../geometric.hpp"
+	<limits>
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\vector_relational.hpp
+	"detail/func_vector_relational.hpp"
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\integer.hpp
+	"detail/func_integer.hpp"
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\func_integer.hpp
+	"setup.hpp"
+	"precision.hpp"
+	"func_common.hpp"
+	"func_vector_relational.hpp"
+	"func_integer.inl"
+
+1426535103 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\detail\func_integer.inl
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+	"type_int.hpp"
+	"_vectorize.hpp"
+	<intrin.h>
+	<limits>
+
+1396053918 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\soil\src\soil.h
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\physics.h
+	<glm/glm.hpp>
+	<EpsilonMemory.h>
+	<Types.h>
+	<Model.h>
+	<vector>
+	<btBulletDynamicsCommon.h>
+	<btBulletCollisionCommon.h>
+	<BulletCollision/CollisionDispatch/btGhostObject.h>
+	<BulletDynamics/Character/btKinematicCharacterController.h>
+	<BulletDynamics/Featherstone/btMultiBodyDynamicsWorld.h>
+	<BulletDynamics/Featherstone/btMultiBodyConstraintSolver.h>
+	<LinearMath/btTransform.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\epsilonmemory.h
+	<memory>
+	<typeinfo>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\types.h
+	<btBulletDynamicsCommon.h>
+	<btBulletCollisionCommon.h>
+	<memory>
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\btbulletdynamicscommon.h
+	"btBulletCollisionCommon.h"
+	"BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h"
+	"BulletDynamics/Dynamics/btSimpleDynamicsWorld.h"
+	"BulletDynamics/Dynamics/btRigidBody.h"
+	"BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h"
+	"BulletDynamics/ConstraintSolver/btHingeConstraint.h"
+	"BulletDynamics/ConstraintSolver/btConeTwistConstraint.h"
+	"BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h"
+	"BulletDynamics/ConstraintSolver/btSliderConstraint.h"
+	"BulletDynamics/ConstraintSolver/btGeneric6DofSpringConstraint.h"
+	"BulletDynamics/ConstraintSolver/btUniversalConstraint.h"
+	"BulletDynamics/ConstraintSolver/btHinge2Constraint.h"
+	"BulletDynamics/ConstraintSolver/btGearConstraint.h"
+	"BulletDynamics/ConstraintSolver/btFixedConstraint.h"
+	"BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h"
+	"BulletDynamics/Vehicle/btRaycastVehicle.h"
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\btbulletcollisioncommon.h
+	"BulletCollision/CollisionDispatch/btCollisionWorld.h"
+	"BulletCollision/CollisionDispatch/btCollisionObject.h"
+	"BulletCollision/CollisionShapes/btBoxShape.h"
+	"BulletCollision/CollisionShapes/btSphereShape.h"
+	"BulletCollision/CollisionShapes/btCapsuleShape.h"
+	"BulletCollision/CollisionShapes/btCylinderShape.h"
+	"BulletCollision/CollisionShapes/btConeShape.h"
+	"BulletCollision/CollisionShapes/btStaticPlaneShape.h"
+	"BulletCollision/CollisionShapes/btConvexHullShape.h"
+	"BulletCollision/CollisionShapes/btTriangleMesh.h"
+	"BulletCollision/CollisionShapes/btConvexTriangleMeshShape.h"
+	"BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h"
+	"BulletCollision/CollisionShapes/btScaledBvhTriangleMeshShape.h"
+	"BulletCollision/CollisionShapes/btTriangleMeshShape.h"
+	"BulletCollision/CollisionShapes/btTriangleIndexVertexArray.h"
+	"BulletCollision/CollisionShapes/btCompoundShape.h"
+	"BulletCollision/CollisionShapes/btTetrahedronShape.h"
+	"BulletCollision/CollisionShapes/btEmptyShape.h"
+	"BulletCollision/CollisionShapes/btMultiSphereShape.h"
+	"BulletCollision/CollisionShapes/btUniformScalingShape.h"
+	"BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.h"
+	"BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.h"
+	"BulletCollision/CollisionDispatch/btCollisionDispatcher.h"
+	"BulletCollision/BroadphaseCollision/btSimpleBroadphase.h"
+	"BulletCollision/BroadphaseCollision/btAxisSweep3.h"
+	"BulletCollision/BroadphaseCollision/btMultiSapBroadphase.h"
+	"BulletCollision/BroadphaseCollision/btDbvtBroadphase.h"
+	"LinearMath/btQuaternion.h"
+	"LinearMath/btTransform.h"
+	"LinearMath/btDefaultMotionState.h"
+	"LinearMath/btQuickprof.h"
+	"LinearMath/btIDebugDraw.h"
+	"LinearMath/btSerializer.h"
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisiondispatch\btcollisionworld.h
+	"LinearMath/btVector3.h"
+	"LinearMath/btTransform.h"
+	"btCollisionObject.h"
+	"btCollisionDispatcher.h"
+	"BulletCollision/BroadphaseCollision/btOverlappingPairCache.h"
+	"LinearMath/btAlignedObjectArray.h"
+
+1391359690 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\linearmath\btvector3.h
+	"btScalar.h"
+	"btMinMax.h"
+	"btAlignedAllocator.h"
+
+1391359690 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\linearmath\btscalar.h
+	<math.h>
+	<stdlib.h>
+	<float.h>
+	<ppcintrinsics.h>
+	<emmintrin.h>
+	<stdio.h>
+	<assert.h>
+	<assert.h>
+	<spu_printf.h>
+	<assert.h>
+	<smmintrin.h>
+	<tmmintrin.h>
+	<pmmintrin.h>
+	<emmintrin.h>
+	<arm_neon.h>
+	<assert.h>
+	<stdio.h>
+	<assert.h>
+	<arm_neon.h>
+	<arm_neon.h>
+
+1391359690 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\linearmath\btminmax.h
+	"btScalar.h"
+
+1391359690 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\linearmath\btalignedallocator.h
+	"btScalar.h"
+
+1391359690 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\linearmath\bttransform.h
+	"btMatrix3x3.h"
+
+1391359690 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\linearmath\btmatrix3x3.h
+	"btVector3.h"
+	"btQuaternion.h"
+	<stdio.h>
+
+1391359690 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\linearmath\btquaternion.h
+	"btVector3.h"
+	"btQuadWord.h"
+
+1391359690 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\linearmath\btquadword.h
+	"btScalar.h"
+	"btMinMax.h"
+	<altivec.h>
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisiondispatch\btcollisionobject.h
+	"LinearMath/btTransform.h"
+	"LinearMath/btMotionState.h"
+	"LinearMath/btAlignedAllocator.h"
+	"LinearMath/btAlignedObjectArray.h"
+
+1391359690 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\linearmath\btmotionstate.h
+	"btTransform.h"
+
+1391359690 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\linearmath\btalignedobjectarray.h
+	"btScalar.h"
+	"btAlignedAllocator.h"
+	<memory.h>
+	<string.h>
+	<new>
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisiondispatch\btcollisiondispatcher.h
+	"BulletCollision/BroadphaseCollision/btDispatcher.h"
+	"BulletCollision/NarrowPhaseCollision/btPersistentManifold.h"
+	"BulletCollision/CollisionDispatch/btManifoldResult.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+	"LinearMath/btAlignedObjectArray.h"
+	"btCollisionCreateFunc.h"
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\broadphasecollision\btdispatcher.h
+	"LinearMath/btScalar.h"
+
+1391359687 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\narrowphasecollision\btpersistentmanifold.h
+	"LinearMath/btVector3.h"
+	"LinearMath/btTransform.h"
+	"btManifoldPoint.h"
+	"LinearMath/btAlignedAllocator.h"
+
+1391359687 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\narrowphasecollision\btmanifoldpoint.h
+	"LinearMath/btVector3.h"
+	"LinearMath/btTransformUtil.h"
+	"physics_effects/base_level/solver/pfx_constraint_row.h"
+
+1391359690 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\linearmath\bttransformutil.h
+	"btTransform.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisiondispatch\btmanifoldresult.h
+	"BulletCollision/NarrowPhaseCollision/btPersistentManifold.h"
+	"BulletCollision/NarrowPhaseCollision/btDiscreteCollisionDetectorInterface.h"
+	"LinearMath/btTransform.h"
+	"BulletCollision/CollisionDispatch/btCollisionObjectWrapper.h"
+	"BulletCollision/CollisionDispatch/btCollisionObject.h"
+
+1391359687 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\narrowphasecollision\btdiscretecollisiondetectorinterface.h
+	"LinearMath/btTransform.h"
+	"LinearMath/btVector3.h"
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisiondispatch\btcollisionobjectwrapper.h
+	"LinearMath/btScalar.h"
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\broadphasecollision\btbroadphaseproxy.h
+	"LinearMath/btScalar.h"
+	"LinearMath/btVector3.h"
+	"LinearMath/btAlignedAllocator.h"
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisiondispatch\btcollisioncreatefunc.h
+	"LinearMath/btAlignedObjectArray.h"
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\broadphasecollision\btoverlappingpaircache.h
+	"btBroadphaseInterface.h"
+	"btBroadphaseProxy.h"
+	"btOverlappingPairCallback.h"
+	"LinearMath/btAlignedObjectArray.h"
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\broadphasecollision\btbroadphaseinterface.h
+	"btBroadphaseProxy.h"
+	"LinearMath/btVector3.h"
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\broadphasecollision\btoverlappingpaircallback.h
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btboxshape.h
+	"btPolyhedralConvexShape.h"
+	"btCollisionMargin.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+	"LinearMath/btVector3.h"
+	"LinearMath/btMinMax.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btpolyhedralconvexshape.h
+	"LinearMath/btMatrix3x3.h"
+	"btConvexInternalShape.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btconvexinternalshape.h
+	"btConvexShape.h"
+	"LinearMath/btAabbUtil2.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btconvexshape.h
+	"btCollisionShape.h"
+	"LinearMath/btVector3.h"
+	"LinearMath/btTransform.h"
+	"LinearMath/btMatrix3x3.h"
+	"btCollisionMargin.h"
+	"LinearMath/btAlignedAllocator.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btcollisionshape.h
+	"LinearMath/btTransform.h"
+	"LinearMath/btVector3.h"
+	"LinearMath/btMatrix3x3.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btcollisionmargin.h
+
+1391359690 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\linearmath\btaabbutil2.h
+	"btTransform.h"
+	"btVector3.h"
+	"btMinMax.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btsphereshape.h
+	"btConvexInternalShape.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btcapsuleshape.h
+	"btConvexInternalShape.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btcylindershape.h
+	"btBoxShape.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+	"LinearMath/btVector3.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btconeshape.h
+	"btConvexInternalShape.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btstaticplaneshape.h
+	"btConcaveShape.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btconcaveshape.h
+	"btCollisionShape.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+	"btTriangleCallback.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\bttrianglecallback.h
+	"LinearMath/btVector3.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btconvexhullshape.h
+	"btPolyhedralConvexShape.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+	"LinearMath/btAlignedObjectArray.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\bttrianglemesh.h
+	"btTriangleIndexVertexArray.h"
+	"LinearMath/btVector3.h"
+	"LinearMath/btAlignedObjectArray.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\bttriangleindexvertexarray.h
+	"btStridingMeshInterface.h"
+	"LinearMath/btAlignedObjectArray.h"
+	"LinearMath/btScalar.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btstridingmeshinterface.h
+	"LinearMath/btVector3.h"
+	"btTriangleCallback.h"
+	"btConcaveShape.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btconvextrianglemeshshape.h
+	"btPolyhedralConvexShape.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btbvhtrianglemeshshape.h
+	"btTriangleMeshShape.h"
+	"btOptimizedBvh.h"
+	"LinearMath/btAlignedAllocator.h"
+	"btTriangleInfoMap.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\bttrianglemeshshape.h
+	"btConcaveShape.h"
+	"btStridingMeshInterface.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btoptimizedbvh.h
+	"BulletCollision/BroadphaseCollision/btQuantizedBvh.h"
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\broadphasecollision\btquantizedbvh.h
+	<stdio.h>
+	<stdlib.h>
+	"LinearMath/btVector3.h"
+	"LinearMath/btAlignedAllocator.h"
+	"LinearMath/btAlignedAllocator.h"
+	"LinearMath/btAlignedObjectArray.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\bttriangleinfomap.h
+	"LinearMath/btHashMap.h"
+	"LinearMath/btSerializer.h"
+
+1391359690 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\linearmath\bthashmap.h
+	"btAlignedObjectArray.h"
+
+1391359690 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\linearmath\btserializer.h
+	"btScalar.h"
+	"btHashMap.h"
+	<memory.h>
+	<string.h>
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btscaledbvhtrianglemeshshape.h
+	"BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btcompoundshape.h
+	"btCollisionShape.h"
+	"LinearMath/btVector3.h"
+	"LinearMath/btTransform.h"
+	"LinearMath/btMatrix3x3.h"
+	"btCollisionMargin.h"
+	"LinearMath/btAlignedObjectArray.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\bttetrahedronshape.h
+	"btPolyhedralConvexShape.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btemptyshape.h
+	"btConcaveShape.h"
+	"LinearMath/btVector3.h"
+	"LinearMath/btTransform.h"
+	"LinearMath/btMatrix3x3.h"
+	"btCollisionMargin.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btmultisphereshape.h
+	"btConvexInternalShape.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+	"LinearMath/btAlignedObjectArray.h"
+	"LinearMath/btAabbUtil2.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btuniformscalingshape.h
+	"btConvexShape.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+
+1391359686 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisiondispatch\btspherespherecollisionalgorithm.h
+	"btActivatingCollisionAlgorithm.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+	"BulletCollision/CollisionDispatch/btCollisionCreateFunc.h"
+	"btCollisionDispatcher.h"
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisiondispatch\btactivatingcollisionalgorithm.h
+	"BulletCollision/BroadphaseCollision/btCollisionAlgorithm.h"
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\broadphasecollision\btcollisionalgorithm.h
+	"LinearMath/btScalar.h"
+	"LinearMath/btAlignedObjectArray.h"
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisiondispatch\btdefaultcollisionconfiguration.h
+	"btCollisionConfiguration.h"
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisiondispatch\btcollisionconfiguration.h
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\broadphasecollision\btsimplebroadphase.h
+	"btOverlappingPairCache.h"
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\broadphasecollision\btaxissweep3.h
+	"LinearMath/btVector3.h"
+	"btOverlappingPairCache.h"
+	"btBroadphaseInterface.h"
+	"btBroadphaseProxy.h"
+	"btOverlappingPairCallback.h"
+	"btDbvtBroadphase.h"
+	<stdio.h>
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\broadphasecollision\btdbvtbroadphase.h
+	"BulletCollision/BroadphaseCollision/btDbvt.h"
+	"BulletCollision/BroadphaseCollision/btOverlappingPairCache.h"
+	"LinearMath/btQuickprof.h"
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\broadphasecollision\btdbvt.h
+	"LinearMath/btAlignedObjectArray.h"
+	"LinearMath/btVector3.h"
+	"LinearMath/btTransform.h"
+	"LinearMath/btAabbUtil2.h"
+	<emmintrin.h>
+	<memory.h>
+	<string.h>
+
+1391359690 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\linearmath\btquickprof.h
+	<stdio.h>
+	"btScalar.h"
+	"btAlignedAllocator.h"
+	<new>
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\broadphasecollision\btmultisapbroadphase.h
+	"btBroadphaseInterface.h"
+	"LinearMath/btAlignedObjectArray.h"
+	"btOverlappingPairCache.h"
+
+1391359690 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\linearmath\btdefaultmotionstate.h
+	"btMotionState.h"
+
+1391359690 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\linearmath\btidebugdraw.h
+	"btVector3.h"
+	"btTransform.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\dynamics\btdiscretedynamicsworld.h
+	"btDynamicsWorld.h"
+	"LinearMath/btAlignedObjectArray.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\dynamics\btdynamicsworld.h
+	"BulletCollision/CollisionDispatch/btCollisionWorld.h"
+	"BulletDynamics/ConstraintSolver/btContactSolverInfo.h"
+
+1391359687 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\constraintsolver\btcontactsolverinfo.h
+	"LinearMath/btScalar.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\dynamics\btsimpledynamicsworld.h
+	"btDynamicsWorld.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\dynamics\btrigidbody.h
+	"LinearMath/btAlignedObjectArray.h"
+	"LinearMath/btTransform.h"
+	"BulletCollision/BroadphaseCollision/btBroadphaseProxy.h"
+	"BulletCollision/CollisionDispatch/btCollisionObject.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\constraintsolver\btpoint2pointconstraint.h
+	"LinearMath/btVector3.h"
+	"btJacobianEntry.h"
+	"btTypedConstraint.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\constraintsolver\btjacobianentry.h
+	"LinearMath/btMatrix3x3.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\constraintsolver\bttypedconstraint.h
+	"LinearMath/btScalar.h"
+	"btSolverConstraint.h"
+	"BulletDynamics/Dynamics/btRigidBody.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\constraintsolver\btsolverconstraint.h
+	"LinearMath/btVector3.h"
+	"LinearMath/btMatrix3x3.h"
+	"btJacobianEntry.h"
+	"LinearMath/btAlignedObjectArray.h"
+	"btSolverBody.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\constraintsolver\btsolverbody.h
+	"LinearMath/btVector3.h"
+	"LinearMath/btMatrix3x3.h"
+	"LinearMath/btAlignedAllocator.h"
+	"LinearMath/btTransformUtil.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\constraintsolver\bthingeconstraint.h
+	"LinearMath/btVector3.h"
+	"btJacobianEntry.h"
+	"btTypedConstraint.h"
+
+1391359687 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\constraintsolver\btconetwistconstraint.h
+	"LinearMath/btVector3.h"
+	"btJacobianEntry.h"
+	"btTypedConstraint.h"
+
+1391359687 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\constraintsolver\btgeneric6dofconstraint.h
+	"LinearMath/btVector3.h"
+	"btJacobianEntry.h"
+	"btTypedConstraint.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\constraintsolver\btsliderconstraint.h
+	"LinearMath/btVector3.h"
+	"btJacobianEntry.h"
+	"btTypedConstraint.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\constraintsolver\btgeneric6dofspringconstraint.h
+	"LinearMath/btVector3.h"
+	"btTypedConstraint.h"
+	"btGeneric6DofConstraint.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\constraintsolver\btuniversalconstraint.h
+	"LinearMath/btVector3.h"
+	"btTypedConstraint.h"
+	"btGeneric6DofConstraint.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\constraintsolver\bthinge2constraint.h
+	"LinearMath/btVector3.h"
+	"btTypedConstraint.h"
+	"btGeneric6DofSpringConstraint.h"
+
+1391359687 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\constraintsolver\btgearconstraint.h
+	"BulletDynamics/ConstraintSolver/btTypedConstraint.h"
+
+1391359687 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\constraintsolver\btfixedconstraint.h
+	"btTypedConstraint.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\constraintsolver\btsequentialimpulseconstraintsolver.h
+	"BulletDynamics/ConstraintSolver/btTypedConstraint.h"
+	"BulletDynamics/ConstraintSolver/btContactSolverInfo.h"
+	"BulletDynamics/ConstraintSolver/btSolverBody.h"
+	"BulletDynamics/ConstraintSolver/btSolverConstraint.h"
+	"BulletCollision/NarrowPhaseCollision/btManifoldPoint.h"
+	"BulletDynamics/ConstraintSolver/btConstraintSolver.h"
+
+1391359687 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\constraintsolver\btconstraintsolver.h
+	"LinearMath/btScalar.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\vehicle\btraycastvehicle.h
+	"BulletDynamics/Dynamics/btRigidBody.h"
+	"BulletDynamics/ConstraintSolver/btTypedConstraint.h"
+	"btVehicleRaycaster.h"
+	"LinearMath/btAlignedObjectArray.h"
+	"btWheelInfo.h"
+	"BulletDynamics/Dynamics/btActionInterface.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\vehicle\btvehicleraycaster.h
+	"LinearMath/btVector3.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\vehicle\btwheelinfo.h
+	"LinearMath/btVector3.h"
+	"LinearMath/btTransform.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\dynamics\btactioninterface.h
+	"LinearMath/btScalar.h"
+	"btRigidBody.h"
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\model.h
+	<string>
+	<fstream>
+	<sstream>
+	<iostream>
+	<map>
+	<vector>
+	<GL/glew.h>
+	<glm/glm.hpp>
+	<glm/gtc/quaternion.hpp>
+	<glm/gtx/quaternion.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Texture.h>
+	<Mesh.h>
+	<Types.h>
+	<memory>
+	<emlFormat.h>
+	<camera.h>
+
+1438471086 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\gtc\quaternion.hpp
+	"../mat3x3.hpp"
+	"../mat4x4.hpp"
+	"../vec3.hpp"
+	"../vec4.hpp"
+	"../gtc/constants.hpp"
+	"quaternion.inl"
+
+1441051454 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\gtc\constants.hpp
+	"../detail/setup.hpp"
+	"constants.inl"
+
+1441052694 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\gtc\constants.inl
+	<limits>
+
+1438472000 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\gtc\quaternion.inl
+	"../trigonometric.hpp"
+	"../geometric.hpp"
+	"../exponential.hpp"
+	<limits>
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\gtx\quaternion.hpp
+	"../glm.hpp"
+	"../gtc/constants.hpp"
+	"../gtc/quaternion.hpp"
+	"../gtx/norm.hpp"
+	"quaternion.inl"
+
+1437695657 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\gtx\norm.hpp
+	"../glm.hpp"
+	"../gtx/quaternion.hpp"
+	"norm.inl"
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\gtx\norm.inl
+
+1441050881 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\gtx\quaternion.inl
+	<limits>
+	"../gtc/constants.hpp"
+
+1441038256 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\gtc\matrix_transform.hpp
+	"../mat4x4.hpp"
+	"../vec2.hpp"
+	"../vec3.hpp"
+	"../vec4.hpp"
+	"../gtc/constants.hpp"
+	"matrix_transform.inl"
+
+1426534869 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\gtc\matrix_transform.inl
+	"../geometric.hpp"
+	"../trigonometric.hpp"
+	"../matrix.hpp"
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\texture.h
+	<iostream>
+	<string>
+	<vector>
+	<GL/glew.h>
+	<GLFW/glfw3.h>
+	<SOIL.h>
+	<ProgramData.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\programdata.h
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\mesh.h
+	<string>
+	<fstream>
+	<sstream>
+	<iostream>
+	<vector>
+	<GL/glew.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Shader.h>
+	<emlFormat.h>
+	<memory>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\shader.h
+	<GL/glew.h>
+	<string>
+	<iostream>
+	<unordered_map>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\emlformat.h
+	<string>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\camera.h
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<glm/gtc/quaternion.hpp>
+	<GLFW/glfw3.h>
+	<iostream>
+
+1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisiondispatch\btghostobject.h
+	"btCollisionObject.h"
+	"BulletCollision/BroadphaseCollision/btOverlappingPairCallback.h"
+	"LinearMath/btAlignedAllocator.h"
+	"BulletCollision/BroadphaseCollision/btOverlappingPairCache.h"
+	"btCollisionWorld.h"
+
+1391359687 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\character\btkinematiccharactercontroller.h
+	"LinearMath/btVector3.h"
+	"btCharacterControllerInterface.h"
+	"BulletCollision/BroadphaseCollision/btCollisionAlgorithm.h"
+
+1391359687 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\character\btcharactercontrollerinterface.h
+	"LinearMath/btVector3.h"
+	"BulletDynamics/Dynamics/btActionInterface.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\featherstone\btmultibodydynamicsworld.h
+	"BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\featherstone\btmultibodyconstraintsolver.h
+	"BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h"
+	"btMultiBodySolverConstraint.h"
+	"btMultiBodyConstraint.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\featherstone\btmultibodysolverconstraint.h
+	"LinearMath/btVector3.h"
+	"LinearMath/btAlignedObjectArray.h"
+	"BulletDynamics/ConstraintSolver/btSolverBody.h"
+	"BulletDynamics/ConstraintSolver/btContactSolverInfo.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\featherstone\btmultibodyconstraint.h
+	"LinearMath/btScalar.h"
+	"LinearMath/btAlignedObjectArray.h"
+	"btMultiBody.h"
+	"btMultiBodySolverConstraint.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\featherstone\btmultibody.h
+	"LinearMath/btScalar.h"
+	"LinearMath/btVector3.h"
+	"LinearMath/btQuaternion.h"
+	"LinearMath/btMatrix3x3.h"
+	"LinearMath/btAlignedObjectArray.h"
+	"btMultiBodyLink.h"
+
+1391359688 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\bulletdynamics\featherstone\btmultibodylink.h
+	"LinearMath/btQuaternion.h"
+	"LinearMath/btVector3.h"
+	"BulletCollision/CollisionDispatch/btCollisionObject.h"
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\includes.h
+	<iostream>
+	<string>
+	<sstream>
+	<ctime>
+	<vector>
+	<glm/gtc/quaternion.hpp>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\frustum.h
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Model.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\resourcemanager.h
+	<Texture.h>
+	<Model.h>
+	<Water.h>
+	<Terrain.h>
+	<Grass.h>
+	<map>
+	<Shader.h>
+	<CubeMap.h>
+	<Includes.h>
+	<Physics.h>
+	<Audio.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\water.h
+	<GL/glew.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Shader.h>
+	<Texture.h>
+	<Camera.h>
+	<Model.h>
+	<vector>
+	<memory>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\terrain.h
+	<vector>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Shader.h>
+	<Texture.h>
+	<memory>
+	<Physics.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\grass.h
+	<GL/glew.h>
+	<string>
+	<iostream>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Shader.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\cubemap.h
+	<glm/glm.hpp>
+	<vector>
+	<string>
+	<memory>
+	<Texture.h>
+	<OpenGL/HelperFunctions/FullScreenQuad.h>
+	<OpenGL/FrameBuffer.h>
+	<Shader.h>
+	<Types.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\opengl\helperfunctions\fullscreenquad.h
+	<GL/glew.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\opengl\framebuffer.h
+	<unordered_map>
+	<iostream>
+	<string>
+	<memory>
+	<GL/glew.h>
+	<OpenGL/RenderTarget.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\opengl\rendertarget.h
+	<GL/glew.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\audio.h
+	<vector>
+	<memory>
+	<AudioElement.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\audioelement.h
+	<AL/al.h>
+	<AL/alc.h>
+	<Types.h>
+	<WAVFile.h>
+	<iostream>
+
+1456869867 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\openal-soft-1.17.2-bin\include\al\al.h
+
+1456869867 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\openal-soft-1.17.2-bin\include\al\alc.h
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\wavfile.h
+	<iostream>
+	<fstream>
+	<memory>
+	<Includes.h>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\bspface.cpp
+	<Physics.h>
+	<ResourceManager.h>
+	<BSPFace.h>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\camera.cpp
+	<iostream>
+	<camera.h>
+	<math.h>
+	<sys/KeyBoard.h>
+	<sys/Mouse.h>
+	<sys/Joystick.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\sys\keyboard.h
+	<GLFW/glfw3.h>
+	<sys/KeyboardWrapper.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\sys\keyboardwrapper.h
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\sys\mouse.h
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\sys\joystick.h
+	<GLFW/glfw3.h>
+	<iostream>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\dds.cpp
+	<iostream>
+	<fstream>
+	<cstring>
+	"DDS.h"
+	<GL/glew.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\dds.h
+	"DDSFile.h"
+	<memory>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\ddsfile.h
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\entitytemplate.cpp
+	<EntityTemplate.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\entitytemplate.h
+	<Component.h>
+	<iostream>
+	<glm/glm.hpp>
+	<typeinfo>
+	<memory>
+	<ResourceManager.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\component.h
+	<iostream>
+	<glm/glm.hpp>
+	<Model.h>
+	<ResourceManager.h>
+	<memory>
+	<Types.h>
+	<Physics.h>
+
+1501129110 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\epsilon.cpp
+	<iostream>
+	<Epsilon.h>
+	<ProgramData.h>
+	<cstdlib>
+	<time.h>
+	<Includes.h>
+	<Types.h>
+	"../version.h"
+	<glm/gtc/quaternion.hpp>
+	<cmath>
+	<thread>
+	<EpsilonMemory.h>
+	<sys/CPUID.h>
+	<chrono>
+	<Log.h>
+
+1501124351 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\epsilon.h
+	<map>
+	<GL/glew.h>
+	<GL/gl.h>
+	<GLFW/glfw3.h>
+	<thread>
+	<Texture.h>
+	<Shader.h>
+	<Skybox.h>
+	<camera.h>
+	<Model.h>
+	<Text.h>
+	<Terrain.h>
+	<Grass.h>
+	<PostProcess.h>
+	<Water.h>
+	<Sun.h>
+	<BSP.h>
+	<MD5_Model.h>
+	<MD5_Anim.h>
+	<ShadowMapping.h>
+	<EntityTemplate.h>
+	<memory>
+	<ResourceManager.h>
+	<Scene.h>
+	<glm/gtc/quaternion.hpp>
+	<glm/gtx/quaternion.hpp>
+	<sys/KeyBoard.h>
+	<sys/Mouse.h>
+	<sys/Joystick.h>
+	<Player.h>
+	<Audio.h>
+	<AudioElement.h>
+	<AudioListener.h>
+	<SplashScreen.h>
+	<SphericalHarmonics.h>
+	<Picking.h>
+	<Log.h>
+	<GUI/GUI.h>
+	<sys/filesystem.h>
+	<ParticleSystem.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\skybox.h
+	<string>
+	<GL/glew.h>
+	<camera.h>
+	<Model.h>
+	<Shader.h>
+	<memory>
+
+1501128945 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\text.h
+	<ft2build.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Shader.h>
+
+1237038326 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\freetype2\include\ft2build.h
+	<freetype/config/ftheader.h>
+
+1237038326 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\freetype2\include\freetype\config\ftheader.h
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\postprocess.h
+	<GL/glew.h>
+	<Shader.h>
+	<camera.h>
+	<vector>
+	<ShadowMapping.h>
+	<memory>
+	<Texture.h>
+	<OpenGL/FrameBuffer.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\shadowmapping.h
+	<Shader.h>
+	<Types.h>
+	<GL/glew.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\sun.h
+	<GL/glew.h>
+	<GLFW/glfw3.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Texture.h>
+	<Shader.h>
+	<camera.h>
+	<memory>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\md5_model.h
+	<GL/glew.h>
+	<string>
+	<vector>
+	<glm/glm.hpp>
+	<glm/gtc/quaternion.hpp>
+	"MD5_Anim.h"
+	<SOIL.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\md5_anim.h
+	<vector>
+	<string>
+	<iostream>
+	<fstream>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<glm/gtc/quaternion.hpp>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\scene.h
+	<ResourceManager.h>
+	<Shader.h>
+	<EntityTemplate.h>
+	<BSP.h>
+	<ShadowMapping.h>
+	<Sun.h>
+	<Skybox.h>
+	<PostProcess.h>
+	<Light.h>
+	<EpsilonMemory.h>
+	<Camera.h>
+	<Frustum.h>
+	<memory>
+	<map>
+	<iostream>
+	<string>
+	<glm/gtc/quaternion.hpp>
+	<glm/gtx/quaternion.hpp>
+	<GLFW/glfw3.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\light.h
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Types.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\player.h
+	<Physics.h>
+	<camera.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\audiolistener.h
+	<AL/al.h>
+	<AL/alc.h>
+	<glm/glm.hpp>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\splashscreen.h
+	<GL/glew.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\sphericalharmonics.h
+	<CubeMap.h>
+	<memory>
+	<fstream>
+	<Includes.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\picking.h
+	<glm/glm.hpp>
+	<Physics.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\log.h
+	<iostream>
+	<fstream>
+	<string>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\gui\gui.h
+	<GUI/Container.h>
+	<GUI/Panel.h>
+	<GUI/Button.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\gui\container.h
+	<GUI/Widget.h>
+
+1501125191 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\gui\widget.h
+	<vector>
+	<memory>
+	<glm/glm.hpp>
+	<Shader.h>
+	<functional>
+	<Types.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\gui\panel.h
+	<GUI/Widget.h>
+	<OpenGL/HelperFunctions/Quad.h>
+	<iostream>
+	<glm/glm.hpp>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\opengl\helperfunctions\quad.h
+
+1501128860 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\gui\button.h
+	<GUI/Widget.h>
+	<Text.h>
+	<string>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\sys\filesystem.h
+	<sys/types.h>
+	<dirent.h>
+	<windows.h>
+	<string>
+	<fstream>
+	<vector>
+	<unordered_map>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\particlesystem.h
+	<vector>
+	<iostream>
+	<algorithm>
+	<Particle.h>
+	<ParticleProxy.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\particle.h
+	<glm/glm.hpp>
+	<GL/glew.h>
+	<Types.h>
+
+1501125191 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\particleproxy.h
+	<Types.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<ParticleRenderer.h>
+	<random>
+	<Types.h>
+	<chrono>
+	<Texture.h>
+	<atomic>
+	<thread>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\particlerenderer.h
+	<Particle.h>
+	<Shader.h>
+
+1503379774 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\version.h
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\sys\cpuid.h
+	<string>
+	<iostream>
+	<limits.h>
+	<stdint.h>
+	<thread>
+	<exception>
+	<Log.h>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\frustum.cpp
+	"Frustum.h"
+	<iostream>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\main.cpp
+	<iostream>
+	<Shader.h>
+	<SOIL.h>
+	<main.h>
+	<exception>
+	<assert.h>
+	<memory>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\main.h
+	<ProgramData.h>
+	<Epsilon.h>
+	<memory>
+	<Log.h>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\md5_anim.cpp
+	<MD5_Anim.h>
+	<Includes.h>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\md5_model.cpp
+	<Includes.h>
+	<iostream>
+	<MD5_Model.h>
+	<Texture.h>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\mesh.cpp
+	<Mesh.h>
+	<ResourceManager.h>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\model.cpp
+	<Model.h>
+	<ResourceManager.h>
+	<Log.h>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\particle.cpp
+	<ParticleSystem.h>
+	<Types.h>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\physics.cpp
+	<Physics.h>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\picking.cpp
+	<Picking.h>
+	<sys/KeyBoard.h>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\player.cpp
+	<Player.h>
+	<ResourceManager.h>
+	<sys/KeyBoard.h>
+	<sys/Joystick.h>
+	<iostream>
+
+1503379774 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\postprocess.cpp
+	<PostProcess.h>
+	<iostream>
+	<ProgramData.h>
+	<glm/gtx/compatibility.hpp>
+	<glm/gtc/type_ptr.hpp>
+	<random>
+	<string>
+	<Includes.h>
+
+1437315607 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\gtx\compatibility.hpp
+	"../glm.hpp"
+	"../gtc/quaternion.hpp"
+	<cfloat>
+	<cmath>
+	"compatibility.inl"
+
+1437315632 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\gtx\compatibility.inl
+	<limits>
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\gtc\type_ptr.hpp
+	"../gtc/quaternion.hpp"
+	"../vec2.hpp"
+	"../vec3.hpp"
+	"../vec4.hpp"
+	"../mat2x2.hpp"
+	"../mat2x3.hpp"
+	"../mat2x4.hpp"
+	"../mat3x2.hpp"
+	"../mat3x3.hpp"
+	"../mat3x4.hpp"
+	"../mat4x2.hpp"
+	"../mat4x3.hpp"
+	"../mat4x4.hpp"
+	<cstring>
+	"type_ptr.inl"
+
+1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\gtc\type_ptr.inl
+	<cstring>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\postprocess\motionblur.cpp
+	<PostProcess/MotionBlur.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\postprocess\motionblur.h
+	<PostProcess/Effect.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\postprocess\effect.h
+	<OpenGL/FrameBuffer.h>
+	<OpenGL/HelperFunctions/FullScreenQuad.h>
+	<Shader.h>
+	<vector>
+	<memory>
+	<glm/glm.hpp>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\postprocess\screenspacereflections.cpp
+	<PostProcess/ScreenSpaceReflections.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\postprocess\screenspacereflections.h
+	<PostProcess/Effect.h>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\postprocess\ssao.cpp
+	<PostProcess/SSAO.h>
+	<random>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\postprocess\ssao.h
+	<PostProcess/Effect.h>
+	<Includes.h>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\programdata.cpp
+	<iostream>
+	<INIReader.h>
+	<ProgramData.h>
+
+1400904193 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\ini\include\inireader.h
+	<map>
+	<string>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\resourcemanager.cpp
+	"ResourceManager.h"
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\resources.rc
+	<Windows.h>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\scene.cpp
+	<Scene.h>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\shader.cpp
+	<Shader.h>
+	<stdio.h>
+	<string>
+	<vector>
+	<iostream>
+	<fstream>
+	<algorithm>
+	<Log.h>
+	<Includes.h>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\shadowmapping.cpp
+	<ShadowMapping.h>
+	<iostream>
+	<cmath>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\skybox.cpp
+	<vector>
+	<iostream>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<glm/gtc/type_ptr.hpp>
+	<SOIL.h>
+	<Skybox.h>
+	<SkyboxData.h>
+	<ResourceManager.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\skyboxdata.h
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\sphericalharmonics.cpp
+	<SphericalHarmonics.h>
+	<Types.h>
+
+1500501182 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\sun.cpp
+	<Sun.h>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\sys\filesystem.cpp
+	<sys/filesystem.h>
+	<fstream>
+	<Log.h>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\sys\keyboard.cpp
+	<sys/KeyBoard.h>
+	<iostream>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\terrain.cpp
+	<iostream>
+	<fstream>
+	<Terrain.h>
+	<SOIL.h>
+	<Physics.h>
+	<ResourceManager.h>
+	<exception>
+	<Includes.h>
+
+1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\water.cpp
+	<Water.h>
+

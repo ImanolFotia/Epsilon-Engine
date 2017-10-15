@@ -6,21 +6,21 @@ uniform sampler2D gDepth;
 uniform sampler2D gNormal;
 uniform sampler2D texNoise;
 
-const int kernelSize = 16;
+const int kernelSize = 9;
 uniform vec3 samples[kernelSize];
 
 // parameters (you'd probably want to use them as uniforms to more easily tweak the effect)
-float radius = 5.0;
+float radius = 2.0;
 
 uniform float width;
 uniform float height;
 
 // tile noise texture over screen based on screen dimensions divided by noise size
-vec2 noiseScale = vec2(width*8.0f, height*8.0f);
+vec2 noiseScale = vec2(width*3.0f, height*3.0f);
 
 uniform mat4 projection;
 uniform mat4 invprojection;
-uniform mat4 invview;
+uniform mat4 invView;
 uniform vec3 viewRay;
 uniform mat4 view;
 
@@ -53,18 +53,10 @@ void main()
     // Get input for SSAO algorithm
 
     float depth = texture(gDepth, TexCoords, 2.0).r;
-
  
     vec3 fragPos = WorldPosFromDepth(depth);
 
-
-    if(depth > 0.999)
-        {
-            FragColor = 1.0;
-            return;
-        }
-
-    vec3 normal = vec3(texture(gNormal, TexCoords) * inverse(view));
+    vec3 normal = vec3(texture(gNormal, TexCoords) * invView);
     vec3 randomVec = texture(texNoise, TexCoords * noiseScale).xyz;
     // Create TBN change-of-basis matrix: from tangent-space to view-space
     vec3 tangent = normalize(randomVec - normal * dot(randomVec, normal));
@@ -89,9 +81,10 @@ void main()
 
         float sampleDepth = -LinearizeDepth(texture(gDepth, offset.xy, 2.0).r); // Get depth value of kernel sample
         float bias = max(1.5 * (1.0 - dot(normal, -fragPos)), 0.1);
+        bias = 0.025;
         // range check & accumulate
         float rangeCheck = smoothstep(0.0, 1.0, radius / abs(fragPos.z - sampleDepth));
-        occlusion += (sampleDepth - bias >= sample.z ? 1.0 : 0.0) * rangeCheck;
+        occlusion += (sampleDepth >= sample.z + bias ? 1.0 : 0.0) * rangeCheck;
     }
     occlusion = 1.0 - (occlusion / kernelSize);
     FragColor = pow(occlusion, 5);

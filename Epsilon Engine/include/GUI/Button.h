@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GUI/Widget.h>
+#include <Text.h>
 #include <string>
 
 class Button : public Widget
@@ -15,6 +16,7 @@ public:
 
         this->WIDTH = m_winWidth;
         this->HEIGHT = m_winHeight;
+
     }
 
     ~Button() {
@@ -24,14 +26,16 @@ public:
         shader->Use();
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glUniform2f(glGetUniformLocation(shader->getProgramID(), "Position"), 0.5*m_winWidth, 0.5*m_winHeight);
+        glUniform2f(glGetUniformLocation(shader->getProgramID(), "Position"), (this->PositionX*0.5+0.5)*m_winWidth, (this->PositionY*0.5+0.5)*m_winHeight);
         glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "projection"), 1, GL_FALSE, &projection[0][0]);
         m_Quad->Render();
         shader->Free();
+        this->m_TextRendererInstance->RenderText(m_TextString,/**/(this->PositionX*0.5+0.5)-(m_TextRendererInstance->getHorizontalLength(m_TextString, 0.8)*0.5), this->PositionY*0.5+0.5, 0.8, glm::vec3(1,1,1));
     }
 
     void Update() {
     }
+    std::shared_ptr<Text> m_TextRendererInstance;
 private:
 
     float m_Opacity;

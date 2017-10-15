@@ -8,10 +8,14 @@ layout(location = 3) in mat4 positions;
 uniform mat4 MVP;
 
 uniform mat4 view;
+uniform mat4 PrevView;
 uniform mat4 projection;
 uniform float time;
 uniform vec3 cameraRight; 
 uniform vec3 cameraUp;
+
+out vec4 PrevPosition;
+out vec4 Position;
 
 out vec2 UV;
 out vec3 FragPos;
@@ -32,6 +36,8 @@ void main()
     wFragPos = vec3(positions * vec4(newPosition, 1.0f));
 
     FragPos = vec3(view * vec4(wFragPos, 1.0f));
+    Position = gl_Position;
+    PrevPosition = projection * PrevView * positions * vec4(position, 1.0);
 
     UV = texCoords;//-position.xy + vec2(0.5, 0.5);
     Normal = normalize(normal * mat3(inverse(view)));

@@ -32,7 +32,7 @@ void PostProcess::SetupFramebuffer()
     //std::random_device ;
     std::default_random_engine generator(glfwGetTime());
 
-
+/*
     LightPositions.push_back(glm::vec3(125, 20.5, -80));
     LightPositions.push_back(glm::vec3(70, 13.3, -63));
     LightPositions.push_back(glm::vec3(96.2, 13.3, -63));
@@ -40,7 +40,7 @@ void PostProcess::SetupFramebuffer()
     LightPositions.push_back(glm::vec3(106.7, 30.63, -59.3));
     LightPositions.push_back(glm::vec3(82, 30.63, -59.3));
     LightPositions.push_back(glm::vec3(95.5, 15.21, -40.57));
-
+*/
 /*
     LightPositions.push_back(glm::vec3(4, 15, -8));
     LightPositions.push_back(glm::vec3(20, 15, 7));
@@ -110,7 +110,7 @@ void PostProcess::SetupFramebuffer()
 */
 
     //PBR test
-/*
+
     LightPositions.push_back(glm::vec3(-20, 12, -5));
     LightPositions.push_back(glm::vec3(-14, 12, -5));
     LightPositions.push_back(glm::vec3(-8, 12, -5));
@@ -120,15 +120,11 @@ void PostProcess::SetupFramebuffer()
     LightPositions.push_back(glm::vec3(16, 12, -5));
     LightPositions.push_back(glm::vec3(22, 12, -5));
     LightPositions.push_back(glm::vec3(-0.5, 15, 52));
-
-
-
-
     LightPositions.push_back(glm::vec3(-41, 12, 40));
     LightPositions.push_back(glm::vec3(-64, 12, 40));
     LightPositions.push_back(glm::vec3(-64, 12, 65));
     LightPositions.push_back(glm::vec3(-64, 12, 91));
-*/
+
 /*
     LightPositions.push_back(glm::vec3(-20, 12, -5));
     LightPositions.push_back(glm::vec3(-14, 12, -5));
@@ -870,6 +866,10 @@ void PostProcess::ShowPostProcessImage(float frametime, GLuint ShadowMapID, glm:
     glActiveTexture(GL_TEXTURE6);
     glUniform1i(glGetUniformLocation(finalImage->getProgramID(), "brightColorBuffer"), 6);
     glBindTexture(GL_TEXTURE_2D, hdrFBO->getRenderTargetHandler("brightColorBuffer"));
+
+    glActiveTexture(GL_TEXTURE7);
+    glUniform1i(glGetUniformLocation(finalImage->getProgramID(), "gDepth"), 7);
+    glBindTexture(GL_TEXTURE_2D, gDepth);
 
 
     glm::mat4 choppedView = glm::mat4(glm::mat3(cam->getViewMatrix()));

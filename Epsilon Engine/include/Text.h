@@ -15,12 +15,10 @@
 
 #include <Shader.h>
 
-class Text
-{
+class Text {
 
 public:
-    Text(const char* FontName, int WIDTH, int HEIGHT)
-    {
+    Text(const char* FontName, int WIDTH, int HEIGHT) {
         shader = new Shader("shaders/text.vglsl", "shaders/text.fglsl");
         glm::mat4 projection = glm::ortho(0.0f, static_cast<GLfloat>(WIDTH), 0.0f, static_cast<GLfloat>(HEIGHT));
         shader->Use();
@@ -46,11 +44,9 @@ public:
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
         /// Load first 128 characters of ASCII set
-        for (GLubyte c = 0; c < 128; c++)
-        {
+        for (GLubyte c = 0; c < 128; c++) {
             /// Load character glyph
-            if (FT_Load_Char(face, c, FT_LOAD_RENDER))
-            {
+            if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
                 std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
                 continue;
             }
@@ -75,8 +71,7 @@ public:
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             /// Now store character for later use
-            Character character =
-            {
+            Character character = {
                 texture,
                 glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
                 glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
@@ -109,8 +104,20 @@ public:
 
 public:
 
-    void RenderText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
-    {
+    float getHorizontalLength(std::string text, GLfloat scale) {
+        std::string::const_iterator c;
+        float horizontalScale = 0.0;
+        for (c = text.begin(); c != text.end(); c++) {
+            Character ch = Characters[*c];
+
+            GLfloat w = ch.Size.x * scale;
+            horizontalScale += w;
+            GLfloat h = ch.Size.y * scale;
+        }
+        return horizontalScale/WIDTH;
+    }
+
+    void RenderText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color) {
         /// Activate corresponding render state
         glEnable(GL_BLEND);
         shader->Use();
@@ -121,8 +128,8 @@ public:
         x = x * this->WIDTH;
         /// Iterate through all characters
         std::string::const_iterator c;
-        for (c = text.begin(); c != text.end(); c++)
-        {
+
+        for (c = text.begin(); c != text.end(); c++) {
             Character ch = Characters[*c];
 
             GLfloat xpos = x + ch.Bearing.x * scale;
@@ -131,8 +138,7 @@ public:
             GLfloat w = ch.Size.x * scale;
             GLfloat h = ch.Size.y * scale;
             // Update VBO for each character
-            GLfloat vertices[6][4] =
-            {
+            GLfloat vertices[6][4] = {
                 { xpos,     ypos + h,   0.0, 0.0 },
                 { xpos,     ypos,       0.0, 1.0 },
                 { xpos + w, ypos,       1.0, 1.0 },
@@ -156,14 +162,14 @@ public:
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
+
 private:
     Shader* shader;
     int WIDTH, HEIGTH;
 
+    bool calcLength = false;
 
-
-    struct Character
-    {
+    struct Character {
         GLuint TextureID;   /// ID handle of the glyph texture
         glm::ivec2 Size;    /// Size of glyph
         glm::ivec2 Bearing;  /// Offset from baseline to left/top of glyph

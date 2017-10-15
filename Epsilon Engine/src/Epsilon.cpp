@@ -100,7 +100,7 @@ Epsilon::Epsilon(GLFWwindow*& win)
 
     srand(time(NULL));
 
-    m_CameraMode = PLAYER_CONTROLLED;
+    m_CameraMode = NO_CLIP;
 
 }
 
@@ -132,19 +132,24 @@ void Epsilon::InitResources(void)
     this->HEIGHT = DATA.WINDOW_HEIGHT;
     this->SSAO = DATA.SSAO;
 
+    text = (std::shared_ptr<Text>)new Text("resources/Prototype.ttf", DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT);
+
     m_GUI = (std::shared_ptr<GUI>) new GUI(this->WIDTH, this->HEIGHT);
     std::shared_ptr<Container> t_Container = (std::shared_ptr<Container>) new Container();
     std::shared_ptr<Panel> t_Panel = (std::shared_ptr<Panel>) new Panel(this->WIDTH, this->HEIGHT);
-    std::shared_ptr<Button> t_Button = (std::shared_ptr<Button>) new Button(0.5, 0.5, this->WIDTH, this->HEIGHT, "dfsdf");
+    std::shared_ptr<Button> t_Button = (std::shared_ptr<Button>) new Button(0.2, 0.15, this->WIDTH, this->HEIGHT, "Quit");
+    t_Button->SizeX = 0.2;
+    t_Button->SizeY = 0.15;
+    t_Button->PositionX = -0.65;
+    t_Button->PositionY = -0.45;
     t_Button->OnClickCallback(endgame);
-    t_Button->m_isHidden = true;
+    t_Button->m_isHidden = false;
+    t_Button->m_TextRendererInstance = text;
     t_Container->addWidget(t_Panel);
     t_Container->addWidget(t_Button);
     m_GUI->AddContainer(t_Container);
 
     m_Panel = (std::shared_ptr<Panel>) new Panel(WIDTH, HEIGHT);
-
-    text = std::move((unique_ptr<Text>)(new Text("resources/Prototype.ttf", DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT)));
 
     RenderSplashScreen("Initializing Engine...");
 
@@ -318,7 +323,7 @@ void Epsilon::LoadGeometry(void)
 
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "deathmatch.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "pbrtest.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 
@@ -711,7 +716,7 @@ void Epsilon::PollEvents(void)
                                      btVector3(eCamera->getDirection().x*1000, eCamera->getDirection().y*1000, eCamera->getDirection().z*1000));
     m_GUI->PollEvents(window);
 
-    m_ParticleSystem->Simulate(this->frametime, this->eCamera->getPosition());
+    //m_ParticleSystem->Simulate(this->frametime, this->eCamera->getPosition());
 }
 
 void Epsilon::MainLoop(void)

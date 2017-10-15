@@ -111,9 +111,9 @@ public:
     std::string textureName;
 
 public:
-    float SizeX = 0.5;
+    float SizeX = 0.2;
 public:
-    float SizeY = 0.5;
+    float SizeY = 0.2;
 
 public:
     float TextSize;

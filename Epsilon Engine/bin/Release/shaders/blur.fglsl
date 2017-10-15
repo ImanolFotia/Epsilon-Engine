@@ -1,4 +1,6 @@
 
+#include <file.glsl>
+
 vec3 GausianBlur(sampler2D RenderedTexture, vec2 UV)
 {
 vec2 offsets[9] = vec2[](

@@ -1,6 +1,6 @@
 #version 330 core
 
-out vec4 output0;
+layout(location = 0) out vec4 output0;
 
 uniform sampler2D texture0;
 
@@ -8,5 +8,5 @@ in vec2 TexCoords;
 
 void main()
 {
-	output0 = texture(texture0, TexCoords, 8.0);
+	output0 = texture(texture0, TexCoords);
 }

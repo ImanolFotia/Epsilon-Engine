@@ -141,7 +141,7 @@ public:
     std::vector<Model> model;
     GLuint VertexArrayID;
     GLFWwindow* window = nullptr;
-    std::unique_ptr<Text> text;
+    std::shared_ptr<Text> text;
     //std::unique_ptr<Text> text2;
     std::shared_ptr<Terrain> terrain;
     std::shared_ptr<Sun> sun;

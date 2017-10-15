@@ -10,7 +10,7 @@ out VS_OUT{
 out vec3 FragPos;
 out vec3 Normal;
 out vec2 TexCoords;
-out mat3 TBN;
+out noperspective mat3 TBN;
 out mat3 TBN2;
 out vec3 wFragPos;
 } vs_out;

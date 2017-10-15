@@ -133,6 +133,7 @@
 		<Unit filename="include/OpenGL/HelperFunctions/FullScreenQuad.h" />
 		<Unit filename="include/OpenGL/HelperFunctions/Quad.h" />
 		<Unit filename="include/OpenGL/RenderTarget.h" />
+		<Unit filename="include/OpenGL/ShaderStorageBuffer.h" />
 		<Unit filename="include/OpenGL/VertexArrayObject.h" />
 		<Unit filename="include/OpenGL/VertexBufferObject.h" />
 		<Unit filename="include/Particle.h" />
