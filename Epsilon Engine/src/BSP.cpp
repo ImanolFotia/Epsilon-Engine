@@ -190,7 +190,7 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
                     else
                     {
                         bool valid = true;
-                        for(int k = 0 ; k < normalIndex.size() ; ++k)
+                        for(unsigned int k = 0 ; k < normalIndex.size() ; ++k)
                         {
                             if( glm::dot(Normals.at(j), Normals.at(normalIndex.at(k)) ) <= 0.0)
                             {
@@ -210,7 +210,7 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
                 }
             }
 
-            for(int k = 0 ; k < normalIndex.size() ; k++)
+            for(unsigned int k = 0 ; k < normalIndex.size() ; k++)
                 N = glm::normalize(N +  Normals.at(normalIndex.at(k)));
 
             m_pVerts[i].vNormal = N;
@@ -262,7 +262,7 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
                 continue;
             }
 
-            for(int k = 0 ; k < Textures.size() ; k++)
+            for(unsigned int k = 0 ; k < Textures.size() ; k++)
             {
                 if(Textures.at(k).path == pTextures[pFace->textureID].strName)
                 {

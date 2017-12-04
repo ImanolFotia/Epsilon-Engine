@@ -65,6 +65,7 @@ public:
     }
 
     glm::vec3 m_Position;
+    glm::vec3 m_Direction;
 private:
     glm::vec3 m_Speed;
     float m_Life;

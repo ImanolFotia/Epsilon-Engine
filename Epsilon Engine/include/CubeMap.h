@@ -55,7 +55,7 @@ public:
     virtual void CaptureEnvironment(int index) {
 
         //glClearColor(0.05,0.08,0.2, 1.0);
-        glClearColor(0.1,0.1,0.1, 1.0);
+        glClearColor(0.1,0.1,0.2, 1.0);
         glViewport(0,0,512,512);
         glEnable(GL_DEPTH_TEST);
 
@@ -65,6 +65,8 @@ public:
         glUniformMatrix4fv(glGetUniformLocation(mMainShader->getProgramID(), "view"), 1, GL_FALSE, (const float*)&captureViews[index]);
 
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X+index, cubemapTex, 0);
+
+        glGenerateMipmap(GL_TEXTURE_2D);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     }
@@ -91,6 +93,8 @@ public:
         for (unsigned int i = 0; i < 6; ++i) {
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, 0, GL_RGB16F, 512, 512, 0, GL_RGB, GL_FLOAT, 0);
         }
+
+        glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
         glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 
@@ -101,11 +105,7 @@ public:
 
     }
 
-    genLUTTexture() {
-
-    }
-
-    genAmbientConvolution() {
+    void genAmbientConvolution() {
        /* unsigned int prefilterMap;
         glGenTextures(1, &prefilterMap);
         glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap);
@@ -171,10 +171,8 @@ public:
     }
 
     virtual GLuint getTextureID() {
-        if(type == STATIC)
-            return texture->getTextureID();
-        else if(type == DYNAMIC)return cubemapTex;
-        else {}
+        if(type == STATIC) return texture->getTextureID();
+        if(type == DYNAMIC) return cubemapTex;
     }
 
     virtual GLuint getCubemapFace(int index) {

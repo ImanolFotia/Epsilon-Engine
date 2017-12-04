@@ -7,7 +7,7 @@ class ParticleRenderer
 {
 public:
     ParticleRenderer(unsigned int ID, unsigned int numParticles, std::vector<glm::mat4> initPos) :
-        System_ID(ID), m_NumParticles(numParticles), m_Positions(initPos) {
+        m_Positions(initPos), System_ID(ID), m_NumParticles(numParticles) {
         GenerateParticleGeometry();
 
     }

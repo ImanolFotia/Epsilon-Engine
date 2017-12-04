@@ -164,12 +164,6 @@ bool MD5Animation::LoadAnimation( const std::string& filename )
     m_fAnimDuration = ( m_fFrameDuration * (float)m_iNumFrames );
     m_fAnimTime = 0.0f;
 
-    assert( m_JointInfos.size() == m_iNumJoints );
-    assert( m_Bounds.size() == m_iNumFrames );
-    assert( m_BaseFrames.size() == m_iNumJoints );
-    assert( m_Frames.size() == m_iNumFrames );
-    assert( m_Skeletons.size() == m_iNumFrames );
-
     return true;
 }
 

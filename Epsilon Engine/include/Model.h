@@ -97,11 +97,11 @@ public:
             this->meshes[i].DrawNoTexture();
     }
 
-    void SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation,
+    void SetUniforms(Shader* shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation,
                                       glm::vec3 pposition, glm::vec3 pscale, glm::quat protation,
                                       std::shared_ptr<Camera> cam);
 
-    void SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation,
+    void SetUniforms(Shader* shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation,
                                       std::shared_ptr<Camera> cam);
     vector<Mesh> meshes;
 
@@ -124,6 +124,11 @@ public:
     MIN_MAX_POINTS MinMaxPoints;
 
     BOUNDING_BOX BoundingBox;
+
+    long toHash()
+    {
+        return std::hash<std::string>{}(path);
+    }
 
 
 private:

@@ -161,64 +161,182 @@ void Epsilon::InitResources(void) {
     std::vector<string> modelsNames;
     std::vector<glm::vec3> modelsPositions;
     std::vector<float> modelsScales;
-/*
-    modelsNames.push_back("models/tree_2.eml");
-    modelsPositions.push_back(glm::vec3(77, -20, -7));
-    modelsScales.push_back(3.0);
+    /*
+        modelsNames.push_back("models/tree_2.eml");
+        modelsPositions.push_back(glm::vec3(77, -20, -7));
+        modelsScales.push_back(3.0);
 
-    modelsNames.push_back("models/Tree.eml");
-    modelsPositions.push_back(glm::vec3(80, -20, 35));
-    modelsScales.push_back(3.0);
-*/
-/*
-    modelsNames.push_back("models/Parkbench.eml");
-    modelsPositions.push_back(glm::vec3(15,15.5, 4));
-    modelsScales.push_back(0.5);
-
-    modelsNames.push_back("models/P_box 3.eml");
-    modelsPositions.push_back(glm::vec3(15,8.5, 4));
-    modelsScales.push_back(0.05);
-*/
-    modelsNames.push_back("models/tetrahedra.eml");
-    modelsPositions.push_back(glm::vec3(0,7.5, 4));
-    modelsScales.push_back(1.0);
-
-    for(int i = 0; i < modelsNames.size(); ++i) {
-        std::shared_ptr<EntityTemplate> tmpEnt;
-        tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, modelsPositions.at(i), glm::vec3(modelsScales.at(i)), glm::quat(-1.0, 0.0, -1.0, 0.0)));
-        std::shared_ptr<Component::RenderComponent> Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-        Compmodel->Fill(modelsNames.at(i), rM, "Main");
+        modelsNames.push_back("models/Tree.eml");
+        modelsPositions.push_back(glm::vec3(80, -20, 35));
+        modelsScales.push_back(3.0);
+    */
+    /*
+        for(int i = 0; i < modelsNames.size(); ++i) {
+            std::shared_ptr<EntityTemplate> tmpEnt;
+            tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, modelsPositions.at(i), glm::vec3(modelsScales.at(i)), glm::quat(0.5, 0.0, 0.0, 0.0)));
+            std::shared_ptr<Component::RenderComponent> Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+            Compmodel->Fill(modelsNames.at(i), rM, "Main");
 
 
-        std::shared_ptr<Component::PhysicComponent> CompPhys = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
+            std::shared_ptr<Component::PhysicComponent> CompPhys = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
 
-        std::shared_ptr<Physics::CubePhysicObject> ph = (std::shared_ptr<Physics::CubePhysicObject>) new Physics::CubePhysicObject();
-        rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(modelsPositions.at(i), 10.0, rM->getModelBoundingBox(modelsNames.at(i)), modelsScales.at(i)).get());
-        CompPhys->Fill(100.0f, ph);
+            std::shared_ptr<Physics::CubePhysicObject> ph = (std::shared_ptr<Physics::CubePhysicObject>) new Physics::CubePhysicObject();
+            rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(modelsPositions.at(i), 10.0, rM->getModelBoundingBox(modelsNames.at(i)), modelsScales.at(i)).get());
+            CompPhys->Fill(100.0f, ph);
 
-        tmpEnt->addComponent(Compmodel);
-        tmpEnt->addComponent(CompPhys);
+            tmpEnt->addComponent(Compmodel);
+            tmpEnt->addComponent(CompPhys);
 
-        EntityList.push_back(tmpEnt);
+            EntityList.push_back(tmpEnt);
+        }*/
+
+        for(int i = 0; i < 5; i++) {
+            std::shared_ptr<EntityTemplate> tmpEnt;
+            tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-5.5+(i*6.4),9.0,-2), glm::vec3(2.0), glm::quat(-1.0, 0.0, 0.0, 0.0)));
+            std::shared_ptr<Component::RenderComponent> Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+            Compmodel->Fill("models/esfera.eml", rM, "Main");
+
+            std::shared_ptr<Component::PhysicComponent> CompPhys = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
+
+            std::shared_ptr<Physics::SpherePhysicObject> ph = (std::shared_ptr<Physics::SpherePhysicObject>) new Physics::SpherePhysicObject();
+            rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(2.0, glm::vec3(-20.5+(i*6.4),9.0,-8), 50.0f).get());
+            CompPhys->Fill(100.0f, ph);
+
+            tmpEnt->addComponent(Compmodel);
+            tmpEnt->addComponent(CompPhys);
+
+            EntityList.push_back(tmpEnt);
+        }
+
+
+    std::shared_ptr<EntityTemplate> tmpEnt;
+    std::shared_ptr<Component::RenderComponent> Compmodel;
+    /*
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(4.0, -1.2, 9.0), glm::vec3(0.6, 0.85, 0.6), glm::quat(1.0, 0.0, 0.6, 0.0)));
+    std::shared_ptr<Component::RenderComponent> Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/rock_wall.eml", rM, "Main");
+    tmpEnt->addComponent(Compmodel);
+    EntityList.push_back(tmpEnt);
+
+
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-1.3, -1.2, -5.0), glm::vec3(0.6, 0.85, 0.6), glm::quat(-0.6, 0.0, 1.0, 0.0)));
+    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/rock_wall.eml", rM, "Main");
+    tmpEnt->addComponent(Compmodel);
+    EntityList.push_back(tmpEnt);
+
+    for(int i = 0; i < 2; i++) {
+        for(int j = 0; j < 2; j++) {
+            tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(25+i*20, 1.0, -10+j*20), glm::vec3(0.1), glm::quat(-1.0, 0.0, 0.0, 0.0)));
+            Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+            Compmodel->Fill("models/grass.eml", rM, "Main");
+            tmpEnt->addComponent(Compmodel);
+            EntityList.push_back(tmpEnt);
+        }
     }
 
-    for(int i = 0; i < 10; i++) {
-        std::shared_ptr<EntityTemplate> tmpEnt;
-        tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-20.5+(i*6.4),9.0,-8), glm::vec3(1.0), glm::quat(-1.0, 0.0, 0.0, 0.0)));
-        std::shared_ptr<Component::RenderComponent> Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-        Compmodel->Fill("models/esfera.eml", rM, "Main");
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(14, 0.0, 0.0), glm::vec3(0.1), glm::quat(-1.0, 0.0, 0.0, 0.0)));
+    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/grass.eml", rM, "Main");
+    tmpEnt->addComponent(Compmodel);
+    EntityList.push_back(tmpEnt);
 
-        std::shared_ptr<Component::PhysicComponent> CompPhys = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(45,1.5, 3), glm::vec3(0.5), glm::quat(-1.0, 0.0, 1.0, 0.0)));
+    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/artorias.eml", rM, "Main");
+    tmpEnt->addComponent(Compmodel);
+    EntityList.push_back(tmpEnt);
 
-        std::shared_ptr<Physics::CubePhysicObject> ph = (std::shared_ptr<Physics::CubePhysicObject>) new Physics::CubePhysicObject();
-        rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(glm::vec3(-20.5+(i*6.4),9.0,-8), 10.0, rM->getModelBoundingBox("models/esfera.eml"), 1.0f).get());
-        CompPhys->Fill(100.0f, ph);
 
-        tmpEnt->addComponent(Compmodel);
-        tmpEnt->addComponent(CompPhys);
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(52, 0.0, 23), glm::vec3(2.0), glm::quat(-1.0, 0.0, -1.0, 0.0)));
+    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/tree_2.eml", rM, "Main");
+    tmpEnt->addComponent(Compmodel);
+    EntityList.push_back(tmpEnt);
 
-        EntityList.push_back(tmpEnt);
-    }
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(52, 0.0, -18.0), glm::vec3(2.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
+    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/tree_2.eml", rM, "Main");
+    tmpEnt->addComponent(Compmodel);
+    EntityList.push_back(tmpEnt);
+
+
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(52, 0.0, 0.0), glm::vec3(2.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
+    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/Rock_6.eml", rM, "Main");
+    tmpEnt->addComponent(Compmodel);
+    EntityList.push_back(tmpEnt);
+
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(34, 0.5, 3.5), glm::vec3(0.1), glm::quat(-1.0, 0.0, 1.0, 0.0)));
+    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/full_rock.eml", rM, "Main");
+    tmpEnt->addComponent(Compmodel);
+    EntityList.push_back(tmpEnt);
+
+
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(34, 3.8, 3.5), glm::vec3(3.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
+    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/swords.eml", rM, "Main");
+    tmpEnt->addComponent(Compmodel);
+    EntityList.push_back(tmpEnt);
+
+
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(40, 3.5, 3.5), glm::vec3(4.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
+    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/pillar.eml", rM, "Main");
+    tmpEnt->addComponent(Compmodel);
+    EntityList.push_back(tmpEnt);
+
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(40, 8.25, 3.2), glm::vec3(1.0), glm::quat(-1.0, 1.0, 1.0, 0.5)));
+    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/ember.eml", rM, "Main");
+    tmpEnt->addComponent(Compmodel);
+    EntityList.push_back(tmpEnt);
+
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(21, 1.5, -7), glm::vec3(2.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
+    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/Tree.eml", rM, "Main");
+    tmpEnt->addComponent(Compmodel);
+    EntityList.push_back(tmpEnt);
+
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(21, 1.5, 14), glm::vec3(2.0), glm::quat(-1.0, 0.0, -1.0, 0.0)));
+    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/Tree.eml", rM, "Main");
+    tmpEnt->addComponent(Compmodel);
+    EntityList.push_back(tmpEnt);
+    */
+
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-20, 0.8, 0.0), glm::vec3(0.06, 0.1, 0.06), glm::quat(-1.0, 0.0, 0.0, 0.0)));
+    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/grass.eml", rM, "Main");
+    tmpEnt->addComponent(Compmodel);
+    EntityList.push_back(tmpEnt);
+
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-20, 0.8, 0.0), glm::vec3(5.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
+    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/tree_o.eml", rM, "Main");
+    tmpEnt->addComponent(Compmodel);
+    EntityList.push_back(tmpEnt);
+
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-18, 0.5, 0.0), glm::vec3(0.1), glm::quat(-1.0, 0.0, 1.0, 0.0)));
+    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/full_rock.eml", rM, "Main");
+    tmpEnt->addComponent(Compmodel);
+    EntityList.push_back(tmpEnt);
+
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-20, 0.8, -15.0), glm::vec3(0.5), glm::quat(-1.0, 0.0, 1.0, 0.0)));
+    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/Parkbench.eml", rM, "Main");
+    tmpEnt->addComponent(Compmodel);
+    EntityList.push_back(tmpEnt);
+
+
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-20, 3.3, 15.0), glm::vec3(5.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
+    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/woodentable.eml", rM, "Main");
+    tmpEnt->addComponent(Compmodel);
+    EntityList.push_back(tmpEnt);
+
     /*
     ph->addObject(2.0, glm::vec3(-20.5+(i*6.4),8.2,-8), 2.0).get()
 
@@ -251,7 +369,7 @@ void Epsilon::InitResources(void) {
 
     PP = std::move((unique_ptr<PostProcess>)(new PostProcess()));
 
-    m_PlayerCapsule = (std::shared_ptr<Game::Player>) new Game::Player(0,15.5, 4, this->rM);
+    m_PlayerCapsule = (std::shared_ptr<Game::Player>) new Game::Player(5,15.5, 4, this->rM);
     //m_PlayerCapsule = (std::shared_ptr<Game::Player>) new Game::Player(170.0,5.25,-202.0, this->rM);
 
 
@@ -272,12 +390,15 @@ void Epsilon::InitResources(void) {
     m_ParticleSystem = (std::shared_ptr<ParticleSystem>) new ParticleSystem();
     m_ParticleSystem->addNewSystem(limits, SNOW, 150);
 
-    this->mCubemap = (std::shared_ptr<CubeMap>) new CubeMap(54, glm::vec3(5, 9, 16));
+    this->mCubemap = (std::shared_ptr<CubeMap>) new CubeMap(54, glm::vec3(0, 8, 0));
 
     glClearColor(0.1, 0.1, 0.1, 1.0);
     glViewport(0,0,512,512);
     glEnable(GL_DEPTH_TEST);
     sun->Update();
+    eCamera->Update(window);
+    eCamera->UpdateMatrices();
+
     for(int i = 0; i < 6; ++i) {
 
         this->mCubemap->CaptureEnvironment(i);
@@ -289,6 +410,7 @@ void Epsilon::InitResources(void) {
         glCullFace(GL_FRONT);
         BSPMap->Frustum.CalculateFrustum(glm::mat4(this->mCubemap->captureProjection * this->mCubemap->captureViews[i]), cModel);
         BSPMap->RenderLevel(mCubemap->getPosition(), Shaders["CubeMap"]->getProgramID(), true);
+
     }
     glCullFace(GL_BACK);
     mCubemap->endCapturingEnvironment();
@@ -298,13 +420,13 @@ void Epsilon::InitResources(void) {
     SphericalHarmonics sph;
     sph.CalculateCohefficients(this->mCubemap->getTextureID(), 3);
 
-    for(int i = 0; i < sph.getCohefficients().size(); i++)
-    {
+    for(unsigned int i = 0; i < sph.getCohefficients().size(); i++) {
         std::cout << "vec3 " << sph.mCohefficientsNames[i] << " = vec3(" <<
-        sph.getCohefficients()[i].x << ", " <<
-        sph.getCohefficients()[i].y << ", " <<
-        sph.getCohefficients()[i].z << ");" <<
-        std::endl;
+                  sph.getCohefficients()[i].x << ", " <<
+                  sph.getCohefficients()[i].y << ", " <<
+                  sph.getCohefficients()[i].z << ");" <<
+                  std::endl;
+
     }
 
     cout << "Calculating spherical harmonics" << endl;
@@ -348,21 +470,21 @@ void Epsilon::LoadShaders(void) {
 void Epsilon::LoadGeometry(void) {
     cout << "Loading World Geometry..." <<endl;
     vector<glm::vec3> grasspos2;
-/*
-    terrain = (std::shared_ptr<Terrain>)new Terrain("materials/iceland2.png", "Pavement_basecolor.png", "Pavement_normal.png", "Pavement_roughness.png", "Pavement_m.png", 1, 256, glm::vec3(128, 0.0, 0),rM);
-*/
+    /*
+        terrain = (std::shared_ptr<Terrain>)new Terrain("materials/iceland2.png", "Tundra - Color Map.png", "Tundra_n.png", "glass_spec.png", "Untitled.png", 4.5, 350, glm::vec3(-150, -70.0, -150),rM);
 
-/*
-        for(int i = 0 ; i < terrain->vertices.size() ; i+= 2) {
-            //if(terrain->vertices[i].Position.y < 0)
-            //    continue;
-            int chance = rand() % 2 + 1;
-            if(chance == 1)
-                grassPos.push_back(terrain->vertices[i].Position + glm::vec3((rand()%6)-3, 3.5, (rand()%6)-3));
-            else if(chance == 2)
-                grasspos2.push_back(terrain->vertices[i].Position + glm::vec3((rand()%6)-3, 3.5, (rand()%6)-3));
-        }
-*/
+
+
+                for(int i = 0 ; i < terrain->vertices.size() ; i+= 2) {
+                    //if(terrain->vertices[i].Position.y < 0)
+                    //    continue;
+                    int chance = rand() % 2 + 1;
+                    if(chance == 1)
+                        grassPos.push_back(terrain->vertices[i].Position + glm::vec3((rand()%6)-3, 3.5, (rand()%6)-3));
+                    else if(chance == 2)
+                        grasspos2.push_back(terrain->vertices[i].Position + glm::vec3((rand()%6)-3, 3.5, (rand()%6)-3));
+                }
+    */
     std::cout << "Resource manager in epsilon address: " << rM.get() << std::endl;
 
     rM->requestCubeMap(2, glm::vec3(4.8,80000.2,-8));
@@ -390,13 +512,13 @@ void Epsilon::LoadGeometry(void) {
     grass.push_back(Grass("billboardgrass0002.png", grasspos2));
 
 
-    waterPlane = (shared_ptr<Water>)(new Water(glm::vec3(150,-128.1,150), 9.0f)); ///-11.8
+    waterPlane = (shared_ptr<Water>)(new Water(glm::vec3(150,2.0,150), 9.0f)); ///-11.8
 
     sun = std::move((shared_ptr<Sun>)(new Sun()));
 
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "house_blueprint.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "church.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 
@@ -432,18 +554,18 @@ void Epsilon::Render3D(Shader* shader) {
 
 
     //this->waterPlane->RenderWater(eCamera, PP->CopyTextureFBO->getRenderTargetHandler(0), sun->Direction);
-    //shader->Use();
-/*
-        Shaders["Terrain"]->Use();
-        this->SetUniforms(Shaders["Terrain"],glm::vec3(0, 0, 0), glm::vec3(1.0),  glm::quat(0, 0,0, 0));
-        terrain->RenderTerrain(Shaders["Terrain"]);
-        glCullFace(GL_BACK);
-*/
+    /*shader->Use();
+
+            Shaders["Terrain"]->Use();
+            this->SetUniforms(Shaders["Terrain"],glm::vec3(0, 0, 0), glm::vec3(1.0),  glm::quat(0, 0,0, 0));
+            terrain->RenderTerrain(Shaders["Terrain"]);
+            glCullFace(GL_BACK);*/
+
 
 //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 //glLineWidth(2.0);
-    //glDisable(GL_CULL_FACE);
-    for(int i =0; i < EntityList.size(); ++i) {
+    glDisable(GL_CULL_FACE);
+    for(unsigned int i =0; i < EntityList.size(); ++i) {
         shader->Use();
         //this->SetUniforms(shader, EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation());
         ScaleMatrix = glm::scale(glm::mat4(1), EntityList[i]->getScale());
@@ -463,22 +585,24 @@ void Epsilon::Render3D(Shader* shader) {
         }
         EntityList[i]->Update();
     }
+    glEnable(GL_CULL_FACE);
 
     glCullFace(GL_FRONT);
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glm::mat4 BSPmodel = glm::mat4();
     //glm::mat4 tmodel = glm::translate(glm::mat4(), glm::vec3(-30.0, 5.0, -120.0));
+
     glm::mat4 sModel = glm::scale(glm::mat4(), glm::vec3(0.1, 0.1, 0.1));
     BSPmodel = sModel;
     BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), BSPmodel);
     shader->Use();
-    this->SetUniforms(shader,  glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.1), glm::quat(0,0,0,0));
+    this->SetUniforms(shader,  glm::vec3(0.0), glm::vec3(0.1), glm::quat(0,0,0,0));
     BSPMap->RenderLevel(eCamera->getPosition(), shader->getProgramID(), true);
 
     Shaders["MD5Geometry"]->Use();
     glUniformMatrix4fv(glGetUniformLocation(Shaders["MD5Geometry"]->getProgramID(), "mSkinned"), 150, GL_FALSE, &m_AnimModel->m_AnimatedBones[0][0][0]);
-    this->SetUniforms(Shaders["MD5Geometry"], glm::vec3(mpos,0.0,45), glm::vec3(0.1, 0.1, 0.1), glm::quat(-1.0, 1.0, 0.0, 0.0));
+    this->SetUniforms(Shaders["MD5Geometry"], glm::vec3(mpos,0.8,15), glm::vec3(0.1, 0.1, 0.1), glm::quat(-1.0, 1.0, 0.0, 0.0));
     m_AnimModel->Render(Shaders["MD5Geometry"]->getProgramID());
     glCullFace(GL_BACK);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -487,7 +611,7 @@ void Epsilon::Render3D(Shader* shader) {
 }
 
 void Epsilon::Render3D() {
-    for(int i = 0; i < EntityList.size(); ++i) {
+    for(unsigned int i = 0; i < EntityList.size(); ++i) {
         Shaders["ShadowMapping"]->Use();
         this->SetUniforms(Shaders["ShadowMapping"], EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation());
         rM->useModel(EntityList[i]->modelPath, Shaders["ShadowMapping"], EntityList[i]->getPosition());
@@ -506,7 +630,7 @@ void Epsilon::Render3D() {
 
     Shaders["MD5ShadowMapping"]->Use();
     glUniformMatrix4fv(glGetUniformLocation(Shaders["MD5ShadowMapping"]->getProgramID(), "mSkinned"), 150, GL_FALSE, &m_AnimModel->m_AnimatedBones[0][0][0]);
-    this->SetUniforms(Shaders["MD5ShadowMapping"], glm::vec3(mpos,0.0,45), glm::vec3(0.1, 0.1, 0.1), glm::quat(-1.0, 1.0, 0.0, 0.0f));
+    this->SetUniforms(Shaders["MD5ShadowMapping"], glm::vec3(mpos,0.8,15), glm::vec3(0.1, 0.1, 0.1), glm::quat(-1.0, 1.0, 0.0, 0.0f));
     m_AnimModel->Render(Shaders["MD5ShadowMapping"]->getProgramID());
     Shaders["MD5ShadowMapping"]->Free();
     glEnable(GL_CULL_FACE);
@@ -525,6 +649,7 @@ void Epsilon::SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, 
     glm::mat4 MVP = eCamera->getProjectionMatrix() * eCamera->getViewMatrix() * Model;
     shader->PushUniform("MVP", MVP);
     shader->PushUniform("viewDir", eCamera->getDirection());
+    shader->PushUniform("viewPos", eCamera->getPosition());
     //glUniformMatrix4fv(shader->MVP_Location, 1, GL_FALSE, &MVP[0][0]);
     glUniformMatrix4fv(shader->WorldTransform_Location, 1, GL_FALSE, &Model[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "PrevModel"), 1, GL_FALSE, &Model[0][0]);
@@ -534,11 +659,6 @@ void Epsilon::SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, 
     glUniformMatrix4fv(shader->LightSpaceMatrix_Location, 1, GL_FALSE, &shadowMap->getLightSpaceMatrix()[0][0]);
 
     glUniform1f(glGetUniformLocation(shader->getProgramID(), "time"),  glfwGetTime());
-
-    glActiveTexture(GL_TEXTURE4);
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "skybox"), 4);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, this->mCubemap->cubemapTex);
-
 }
 
 void Epsilon::Render2D(void) {
@@ -554,7 +674,7 @@ void Epsilon::Render2D(void) {
     std::string obj = rM->m_PhysicsWorld->getCollisionObjectName(btVector3(eCamera->getPosition().x, eCamera->getPosition().y, eCamera->getPosition().z),
                       btVector3(eCamera->getDirection().x * 1000, eCamera->getDirection().y * 1000, eCamera->getDirection().z * 1000));
 
-    //this->text->RenderText(std::string("Pointing at: ") + obj , 0.01, 0.75, 0.3, glm::vec3(1,0,0));
+    this->text->RenderText(std::string("Pointing at: ") + obj , 0.01, 0.71, 0.3, glm::vec3(1,0,0));
 
     this->text->RenderText("Epsilon Engine Alpha Build. Version: " + std::string(AutoVersion::FULLVERSION_STRING), 0.01, 0.73, 0.3, glm::vec3(1,1,1));
     //this->text->RenderText("Speed: " + floatTostring(eCamera->MovementSpeed), 0.01, 0.95, 0.3, glm::vec3(1,1,1));
@@ -572,6 +692,25 @@ void Epsilon::Render2D(void) {
     GLint cur_avail_mem_kb = 0;
     glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX,
                   &cur_avail_mem_kb);
+
+    if(total_mem_kb <= 0) {
+        GLuint uNoOfGPUs = wglGetGPUIDsAMD( 0, 0 );
+        GLuint* uGPUIDs = new GLuint[uNoOfGPUs];
+        wglGetGPUIDsAMD( uNoOfGPUs, uGPUIDs );
+
+        GLuint total_mem_kb = 0;
+        wglGetGPUInfoAMD( uGPUIDs[0],
+                          WGL_GPU_RAM_AMD,
+                          GL_UNSIGNED_INT,
+                          sizeof( GLuint ),
+                          &total_mem_kb );
+
+        total_mem_kb *= 1024;
+
+        GLint cur_avail_mem_kb = 0;
+        glGetIntegerv( GL_TEXTURE_FREE_MEMORY_ATI,
+                       &cur_avail_mem_kb );
+    }
 
     this->text->RenderText("FPS: " + Helpers::intTostring(acumfps), 0.01, 0.95, 0.5, glm::vec3(1,1,1));
     this->text->RenderText("Frame Time: " + Helpers::floatTostring(frametime*1000) + "ms", 0.01, 0.91, 0.3, glm::vec3(1,1,1));
@@ -709,9 +848,9 @@ void Epsilon::MainLoop(void) {
 
         this->PollEvents();
 
-        this->ComputeCamera(m_CameraMode);
+        this->ComputeCamera(m_CameraMode, glm::vec3(48.4247, 8.1507, -12.9128), glm::vec3(-0.785454, 0.0299956, 0.618193));
 
-        //this->ProcessAudio();
+        this->ProcessAudio();
 
         timeBehind += etime - lastTime;
 
@@ -788,21 +927,21 @@ void Epsilon::ComputeShadow() {
 void Epsilon::ProcessFrame(void) {
     PP->beginOffScreenrendering();
 
-    //glEnable(GL_DEPTH_CLAMP);
+    glEnable(GL_DEPTH_CLAMP);
     this->RenderSkybox(true);
-    //glClearDepth( 1.0f );
-/*
-    Shaders["grass"]->Use();
-    this->SetUniforms(Shaders["grass"], glm::vec3(-512, 0, 512), glm::vec3(3,3,3), glm::quat(-1, 0, -1, 0) );
-    grass.at(0).Render(Shaders["grass"]);
+    glClearDepth( 1.0f );
+    /*
+            Shaders["grass"]->Use();
+            this->SetUniforms(Shaders["grass"], glm::vec3(-512, 0, 512), glm::vec3(3,3,3), glm::quat(-1, 0, -1, 0) );
+            grass.at(0).Render(Shaders["grass"]);
 
-    Shaders["grass"]->Use();
-    this->SetUniforms(Shaders["grass"], glm::vec3(-512, 0, 512), glm::vec3(1,1,1), glm::quat(-1, 0, -1, 0) );
-    grass.at(1).Render(Shaders["grass"]);
-*/
+            Shaders["grass"]->Use();
+            this->SetUniforms(Shaders["grass"], glm::vec3(-512, 0, 512), glm::vec3(1,1,1), glm::quat(-1, 0, -1, 0) );
+            grass.at(1).Render(Shaders["grass"]);
+    */
     this->Render3D(Shaders["Main"]);
 
-    //glDisable(GL_DEPTH_CLAMP);
+    glDisable(GL_DEPTH_CLAMP);
     PP->endOffScreenRendering();
 
     if(this->SSAO)
@@ -815,10 +954,13 @@ void Epsilon::RenderParticles(void) {
     glUniform3f(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "cameraUp"),  eCamera->getUp().x, eCamera->getUp().y, eCamera->getUp().z);
     glUniformMatrix4fv(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "view"), 1, GL_FALSE,   &eCamera->getViewMatrix()[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "PrevView"), 1, GL_FALSE,   &eCamera->getPrevViewMatrix()[0][0]);
-    this->SetUniforms(Shaders["DefaultParticle"], glm::vec3(0.0f), glm::vec3(1.0f), glm::quat(0.0f, 0.0f, 0.0f, 0.0f) );
+    this->SetUniforms(Shaders["DefaultParticle"], glm::vec3(0.0f), glm::vec3(1.0f), glm::quat(1.0, sin(glfwGetTime()*frametime), 0.0f, cos(glfwGetTime()*frametime) ));
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "texture0"), 0);
     glBindTexture(GL_TEXTURE_2D, tex->getTextureID());
+    glActiveTexture(GL_TEXTURE1);
+    glUniform1i(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "bufferDepth"), 1);
+    glBindTexture(GL_TEXTURE_2D, PP->gDepth);
     m_ParticleSystem->Render();
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -837,11 +979,11 @@ void Epsilon::RenderFrame(void) {
 
     glEnable(GL_BLEND);
     PP->ShowFrame(sun->Direction, SSAO, this->eCamera, exposure, this->shadowMap);
-    //glEnable(GL_DEPTH_CLAMP);
+    glEnable(GL_DEPTH_CLAMP);
     this->RenderSkybox(false);
-    //glDisable(GL_DEPTH_CLAMP);
+    glDisable(GL_DEPTH_CLAMP);
 
-    //this->RenderParticles();
+    this->RenderParticles();
 
     //this->waterPlane->RenderWater(eCamera, PP->CopyTextureFBO->getRenderTargetHandler(0), sun->Direction);
 

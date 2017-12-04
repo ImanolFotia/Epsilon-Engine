@@ -22,6 +22,7 @@ bool Scene::setupScene()
 
     LoadEntities();
 
+    return true;
 }
 
 void Scene::CalculateVisibility()
@@ -50,11 +51,13 @@ void Scene::CalculateVisibility()
 bool Scene::LoadEntities()
 {
     m_ResourceManager->m_Camera = ((shared_ptr<Camera>)(new Camera(glm::vec3(20.0, 11.0, 2.0), glm::vec3(0.0f,0.0f,0.0f))));
+
+    return true;
 }
 
 bool Scene::LoadGeometry()
 {
-
+    return true;
 }
 
 void Scene::Update(float deltatime, GLFWwindow* window)

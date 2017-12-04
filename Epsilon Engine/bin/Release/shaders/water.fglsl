@@ -94,7 +94,7 @@ void main()
     normaltex = normalize(vec3(normaltex.r * 2.0 - 1.0, normaltex.b, normaltex.g *2.0 - 1.0));
 
     refracCoords += finalDist;
-    refracCoords = clamp(refracCoords, 0.000, 1.0);
+    refracCoords = clamp(refracCoords, 0.0001, 1.0);
 
     vec3 viewDir = normalize(viewPos - wFragPos);
 
@@ -111,7 +111,15 @@ void main()
     vec3 reflectDir = normalize(reflect(-light, n));  
     vec3 spec = vec3(pow(max(dot(reflectDir, viewDir), 0.0), 32));
 
-    FragColor.rgb = texture(ColorBuffer, refracCoords).rgb * vec3(0.5) + spec;
+    vec2 textureResolution = iResolution;
+    vec2 uv = refracCoords*textureResolution + 0.5;
+    vec2 iuv = floor( uv );
+    vec2 fuv = fract( uv );
+    uv = iuv + fuv*fuv*(3.0-2.0*fuv); // fuv*fuv*fuv*(fuv*(fuv*6.0-15.0)+10.0);;
+    uv = (uv - 0.5)/textureResolution;
+    //vec3 colB = texture( iChannel0, uv ).xyz;
+
+    FragColor.rgb = texture(ColorBuffer, uv, 0).rgb * vec3(0.5) + spec;
     FragColor.a = 1.0;
 
     blurImage = vec4(spec*0.1, 1.0);

@@ -10,6 +10,7 @@
 #include <map>
 #define GLEW_STATIC
 #include <GL/glew.h>
+#include <GL/wglew.h>
 #include <GLFW/glfw3.h>
 #include <thread>
 #include <Texture.h>

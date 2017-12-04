@@ -34,7 +34,7 @@ const vec3 SkyColor = normalize(vec3(186,162,135));
 const vec3 SkyColor0 = normalize(vec3(205, 109, 39));
 const vec3 SkyColor1 = normalize(vec3(256, 75, 20));
 const float density = 0.0003;
-const float gradient = 1.9;
+const float gradient = 1.5;
 
 vec3 FragPos;
 vec3 Normal;
@@ -93,7 +93,7 @@ float poissonShadowMapping(vec4 fragPosLightSpace){
 
     for (int i=0;i<4;i++){
         int index = int(16.0*random(floor(FragPos.xyz*1000.0), i))%16;
-        visibility -= 0.2*(texture(shadowMap, vec3(fragPosLightSpace.xy+ poissonDisk[index]/400.0, fragPosLightSpace.z - bias)/fragPosLightSpace.w).r);
+        visibility -= 0.2*(texture(shadowMap, vec3(fragPosLightSpace.xy+ poissonDisk[index]/700.0, fragPosLightSpace.z - bias)/fragPosLightSpace.w).r);
     }
 
     return visibility;
@@ -141,9 +141,7 @@ void main()
 {
 
     FragColor.a = 1.0;
-    blurImage.a = 0.0;
-
-
+    blurImage.a = 1.0;
 
     //originDepth = LinearizeDepth(originDepth, projection);
     FragPos = WorldPosFromDepth(texture(gDepth, TexCoords).r);
@@ -186,8 +184,7 @@ void main()
     vec3 light = CalculateDirectionalPBR();
 
     b = 1.0 / (radius*radius * minLight);
-    float change = sin(time)*10.0;
-    float change2 = cos(time)*10.0;
+    
     for(int i = 0 ; i < NUMLIGHTS ; i++)
     {
       light += calculatePointPBR(LightPositions[i]);

@@ -42,7 +42,7 @@ public:
         ComponentList.push_back(std::move(t));
         this->ID = ComponentList.size();
 
-        CollInfo.setName("Entity_" + Helpers::floatTostring(m_Position.x));
+        CollInfo.setName("Entity_" + std::string(Helpers::to_hex(toHash())));
     }
 
     void Update();
@@ -61,7 +61,7 @@ public:
     {
         if(hasPhysicComponent)
         {
-            for(int i = 0; i < ComponentList.size(); ++i)
+            for(unsigned int i = 0; i < ComponentList.size(); ++i)
             {
                 if(ComponentList.at(i)->Type == Component::PHYSICCOMPONENT)
                     return glm::vec3(ComponentList.at(i)->m_PhysicsWorldPosition.getX(),
@@ -69,15 +69,15 @@ public:
                                      ComponentList.at(i)->m_PhysicsWorldPosition.getZ());
             }
         }
-        else
         return m_Position;
+
     }
 
     glm::vec3 getPrevPosition()
     {
         if(hasPhysicComponent)
         {
-            for(int i = 0; i < ComponentList.size(); ++i)
+            for(unsigned int i = 0; i < ComponentList.size(); ++i)
             {
                 if(ComponentList.at(i)->Type == Component::PHYSICCOMPONENT)
                     return glm::vec3(ComponentList.at(i)->m_LastPhysicsWorldPosition.getX(),
@@ -103,7 +103,7 @@ public:
     {
         if(hasPhysicComponent)
         {
-            for(int i = 0; i < ComponentList.size(); ++i)
+            for(unsigned int i = 0; i < ComponentList.size(); ++i)
             {
                 if(ComponentList.at(i)->Type == Component::PHYSICCOMPONENT)
                     return glm::quat(ComponentList.at(i)->m_PhysicsWorldRotation.getW(),
@@ -120,7 +120,7 @@ public:
     {
         if(hasPhysicComponent)
         {
-            for(int i = 0; i < ComponentList.size(); ++i)
+            for(unsigned int i = 0; i < ComponentList.size(); ++i)
             {
                 if(ComponentList.at(i)->Type == Component::PHYSICCOMPONENT)
                     return glm::quat(ComponentList.at(i)->m_LastPhysicsWorldRotation.getW(),
@@ -130,7 +130,7 @@ public:
             }
         }
         else
-        return m_PrevRotation;
+            return m_PrevRotation;
         }
 
     MIN_MAX_POINTS getBoundingBox()
@@ -138,6 +138,10 @@ public:
         return resourceManager->getModelBoundingBox(modelPath);
     }
 
+    long toHash()
+    {
+        return std::hash<float>{}(m_Position.x+m_Position.y+m_Position.z + ID);
+    }
 private:
     glm::vec3 m_Position;
     glm::vec3 m_Scale;

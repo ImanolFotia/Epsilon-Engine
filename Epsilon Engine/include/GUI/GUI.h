@@ -39,7 +39,7 @@ public:
         else
             Events.LeftClickWasPressed = false;
 
-        for(int i = 0; i < m_ContainerCollection.size(); ++i)
+        for(unsigned int i = 0; i < m_ContainerCollection.size(); ++i)
         {
             m_ContainerCollection[i]->AnalizeEvents(Events);
         }

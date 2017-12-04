@@ -28,7 +28,7 @@ namespace Component
 
         virtual void setUserPointer(void *userPointer) {}
 
-        virtual btTransform getTransform(){}
+        virtual btTransform getTransform(){return btTransform();}
 
         virtual void setTransform(btTransform){}
 

@@ -58,7 +58,6 @@
 					<Add option="-march=core2" />
 					<Add option="-O3" />
 					<Add option="-std=c++11" />
-					<Add option="-fopenmp" />
 					<Add directory="deppend/glew-2.0.0/include" />
 					<Add directory="deppend/glfw-3.2.bin.WIN32/include" />
 					<Add directory="deppend/glm" />
@@ -72,8 +71,6 @@
 					<Add directory="deppend/stb-master" />
 				</Compiler>
 				<Linker>
-					<Add option="-fopenmp" />
-					<Add option="-lgomp" />
 					<Add option="deppend\SOIL\lib\libSOIL.a" />
 					<Add option="deppend\glfw-3.2.bin.WIN32\lib-mingw\libglfw3.a" />
 					<Add option="-lopengl32" />
@@ -82,10 +79,12 @@
 					<Add option="deppend\glew-2.0.0\lib\libglew32.dll.a" />
 					<Add option="-lgdi32" />
 					<Add option="deppend\openal-soft-1.17.2-bin\libs\Win32\libOpenAL32.dll.a" />
+					<Add option="-fopenmp" />
 					<Add library="deppend/bullet-2.82-r2704/lib/libBulletDynamics.a" />
 					<Add library="deppend/bullet-2.82-r2704/lib/libBulletCollision.a" />
 					<Add library="deppend/bullet-2.82-r2704/lib/libBulletSoftBody.a" />
 					<Add library="deppend/bullet-2.82-r2704/lib/libLinearMath.a" />
+					<Add library="C:/Program Files (x86)/CodeBlocks/MinGW/bin/libgomp.a" />
 					<Add directory="deppend/glew-2.0.0/lib" />
 					<Add directory="deppend/SOIL/lib" />
 					<Add directory="deppend/FreeType2/lib" />
@@ -130,6 +129,7 @@
 		<Unit filename="include/Mesh.h" />
 		<Unit filename="include/Model.h" />
 		<Unit filename="include/OpenGL/FrameBuffer.h" />
+		<Unit filename="include/OpenGL/HelperFunctions/CheckError.h" />
 		<Unit filename="include/OpenGL/HelperFunctions/FullScreenQuad.h" />
 		<Unit filename="include/OpenGL/HelperFunctions/Quad.h" />
 		<Unit filename="include/OpenGL/RenderTarget.h" />

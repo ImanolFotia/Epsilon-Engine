@@ -193,7 +193,7 @@ void Model::Draw(GLuint shader, glm::vec3 pos = glm::vec3(0,0,0))
         this->meshes[i].Draw(shader, this->resm, pos);
 }
 
-void Model::SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation, std::shared_ptr<Camera> cam)
+void Model::SetUniforms(Shader* shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation, std::shared_ptr<Camera> cam)
 {
 
     this->PrevModel = this->ModelMatrix;
@@ -226,7 +226,7 @@ void Model::SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, gl
 }
 
 
-void Model::SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation,
+void Model::SetUniforms(Shader* shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation,
                                          glm::vec3 pposition, glm::vec3 pscale, glm::quat protation,
                                          std::shared_ptr<Camera> cam)
 {
