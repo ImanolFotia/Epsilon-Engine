@@ -74,6 +74,7 @@ bool Terrain::GetHeightData() {
 
     SOIL_free_image_data(pixels);
 
+    return true;
 }
 
 bool Terrain::GenerateGrid(unsigned char* pixels) {
@@ -110,8 +111,8 @@ bool Terrain::GenerateGrid(unsigned char* pixels) {
 
     int mod = 0;
     counter = 0;
-    for(int i = 0 ; i < this->gridSize ; i++) {
-        for(int j = 0 ; j < this->gridSize ; j++) {
+    for(unsigned int i = 0 ; i < this->gridSize ; i++) {
+        for(unsigned int j = 0 ; j < this->gridSize ; j++) {
             if(i > 0 && j > 0 && i < Grid.size()-1 && j < Grid.size()-1) {
                 float HL = Grid.at(i-1).at(j);
                 float HR = Grid.at(i+1).at(j);
@@ -128,7 +129,7 @@ bool Terrain::GenerateGrid(unsigned char* pixels) {
 
         }
     }
-    for(int i = 0; i < vertices.size(); i++) {
+    for(unsigned int i = 0; i < vertices.size(); i++) {
         vertices.at(i).Normal = Normals.at(i);
     }
 
@@ -168,7 +169,7 @@ bool Terrain::GenerateGrid(unsigned char* pixels) {
 
     std::cout << indices.size() << std::endl;
 
-    for(int i = 0; i < vertices.size(); ++i)
+    for(unsigned int i = 0; i < vertices.size(); ++i)
         tmp_vertices.push_back(vertices[i].Position);
 
     //std::cout << "llega" << std::endl;
@@ -257,6 +258,7 @@ bool Terrain::LoadTexture(const char* diff) {
 
     texheight = dTex.getWidth();
 
+    return true;
 }
 
 bool Terrain::LoadTexture(const char* diff, const char* normal, const char* specular, const char* metallic) {
@@ -286,6 +288,7 @@ bool Terrain::LoadTexture(const char* diff, const char* normal, const char* spec
 
     texheight = dTex.getWidth();
 
+    return true;
 }
 
 bool Terrain::GenerateVertexBuffers() {
@@ -321,6 +324,8 @@ bool Terrain::GenerateVertexBuffers() {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(GLuint), &this->indices[0], GL_STATIC_DRAW);
 
     glBindVertexArray(0);
+
+    return true;
 }
 
 float Terrain::FBM(glm::vec2 p) {

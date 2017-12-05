@@ -69,7 +69,6 @@ void SphericalHarmonics::CalculateCohefficients(GLuint cubemap, const unsigned i
          return;
       }
       glGetTexImage(GL_TEXTURE_CUBE_MAP_POSITIVE_X+face, 0, GL_RGB, GL_FLOAT, data.get());
-      glCheckError();
 
       // step between two texels for range [0, 1]
       float invWidth = 1.0f / float(width);

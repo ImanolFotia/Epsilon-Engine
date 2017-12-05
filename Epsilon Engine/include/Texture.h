@@ -48,14 +48,19 @@ public:
         std::size_t found5 = name.find("ddn");
         std::size_t found6 = name.find("nrm");
         if(found1 != std::string::npos || found2 != std::string::npos || found3 != std::string::npos || found4 != std::string::npos || found5 != std::string::npos || found6 != std::string::npos) {
-            if(type == GL_TEXTURE_2D)//GL_COMPRESSED_RGBA_S3TC_DXT5_EXT
+            if(type == GL_TEXTURE_2D){//GL_COMPRESSED_RGBA_S3TC_DXT5_EXT
 
                     glTexImage2D(type, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+            }
             else if(type == GL_TEXTURE_1D)
-                if(DATA.COMPRESSED_TEXTURES)
+            {
+                if(DATA.COMPRESSED_TEXTURES){
                     glTexImage1D(type, 0, GL_RGBA, width, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-                else
+                }
+                else{
                     glTexImage1D(type, 0, GL_RGBA, width, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+                }
+            }
 
         }
         else {
@@ -166,6 +171,11 @@ public:
     int getTimesUsed()
     {
         return m_TimesUsed;
+    }
+
+    long toHash()
+    {
+        return std::hash<std::string>{}(path);
     }
 
 private:

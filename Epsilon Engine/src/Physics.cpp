@@ -117,7 +117,7 @@ std::shared_ptr<btRigidBody> TriangleMeshPhysicObject::addObject(std::vector<glm
     a.setIdentity();
     a.setOrigin(btVector3(0,0,0));
     btVector3 localScaling(Scaling,Scaling,Scaling);
-    for ( int i = 0; i < inIndices.size() / 3 ; i++)
+    for (unsigned int i = 0; i < inIndices.size() / 3 ; i++)
     {
         int index0 = inIndices[i*3];
         int index1 = inIndices[i*3+1];

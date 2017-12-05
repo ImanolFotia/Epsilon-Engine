@@ -58,7 +58,7 @@ namespace GLSLPreProcessor {
         }
 		InputShaderStringStream.close();
 
-        for(int i = 0; i < Directives.size(); i++) {
+        for(unsigned int i = 0; i < Directives.size(); i++) {
              if(Directives.at(i).macro == "message") {
 
             } else {
@@ -71,7 +71,7 @@ namespace GLSLPreProcessor {
     }
 
     static std::string openAndAttachFile(std::string path) {
-
+        return nullptr;
     }
 
 }

@@ -112,9 +112,9 @@ public:
      * \param Rotation
      * \return void
      */
-    void setModelUniforms(std::string, Shader*& , glm::vec3, glm::vec3, glm::quat, std::shared_ptr<Camera>);
+    void setModelUniforms(std::string, Shader* , glm::vec3, glm::vec3, glm::quat, std::shared_ptr<Camera>);
 
-    void setModelUniforms(std::string path, Shader*& shader, glm::vec3, glm::vec3, glm::quat, glm::vec3, glm::vec3, glm::quat, std::shared_ptr<Camera> cam);
+    void setModelUniforms(std::string path, Shader* shader, glm::vec3, glm::vec3, glm::quat, glm::vec3, glm::vec3, glm::quat, std::shared_ptr<Camera> cam);
 
     void destroyAllModels();
 

@@ -98,10 +98,12 @@ public:
     GLuint depthBuffer;
 
     std::shared_ptr<FrameBuffer<std::string> > hdrFBO;
+    std::shared_ptr<FrameBuffer<int> > mCompositeImage;
     std::unique_ptr<Shader> shader;
     std::shared_ptr<FrameBuffer<int> > CopyTextureFBO;
 
     float m_exposure;
+    GLuint gDepth;
 private:
 
     /**
@@ -174,6 +176,8 @@ private:
     GLuint blurSSR(GLuint);
     void setupPingPongSSR();
 
+    void CompositeImage();
+
     GLuint GetPixel(GLuint);
 
 private:
@@ -197,7 +201,6 @@ private:
     GLuint ssaoBlurFBO;
     GLuint rboDepth;
     GLuint rDepth;
-    GLuint gDepth;
     GLuint quadVAO = 0;
     GLuint quadVBO;
     GLuint sampler;
@@ -224,6 +227,7 @@ private:
     std::unique_ptr<Shader> blurSSRShader;
     std::unique_ptr<Shader> PassThroughShader;
     std::unique_ptr<Shader> MotionBlurShader;
+    std::unique_ptr<Shader> CompositeShader;
     std::vector<glm::vec3> LightPositions;
     /// G-Buffer texture samplers
     std::vector<glm::vec3> ssaoKernel;

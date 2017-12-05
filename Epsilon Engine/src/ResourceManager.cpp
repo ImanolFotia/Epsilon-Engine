@@ -125,12 +125,12 @@ glm::vec3 ResourceManager::getModelScale(std::string path)
     return ModelList.at(path).Scale;
 }
 
-void ResourceManager::setModelUniforms(std::string path, Shader*& shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, std::shared_ptr<Camera> cam)
+void ResourceManager::setModelUniforms(std::string path, Shader* shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, std::shared_ptr<Camera> cam)
 {
     this->ModelList.at(path).SetUniforms(shader, pos, sc, rot, cam);
 }
 
-void ResourceManager::setModelUniforms(std::string path, Shader*& shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, glm::vec3 ppos, glm::vec3 psc, glm::quat prot, std::shared_ptr<Camera> cam)
+void ResourceManager::setModelUniforms(std::string path, Shader* shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, glm::vec3 ppos, glm::vec3 psc, glm::quat prot, std::shared_ptr<Camera> cam)
 {
     this->ModelList.at(path).SetUniforms(shader, pos, sc, rot, ppos, psc, prot, cam);
 }
@@ -177,7 +177,7 @@ void ResourceManager::loadQueuedTextures()
 {
     try {
         #pragma omp
-        for(int i = 0 ; i < TextureQueue.size() ; ++i)
+        for(unsigned int i = 0 ; i < TextureQueue.size() ; ++i)
         {
             requestTexture(TextureQueue.at(i));
             //std::cout << "Loaded: " << i+1 << " out of " << TextureQueue.size() << std::endl << std::endl ;

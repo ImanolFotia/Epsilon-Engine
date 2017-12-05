@@ -177,9 +177,6 @@ bool MD5Model::LoadModel( const std::string &filename )
     }
     //BuildBindPose();
 
-    assert( m_Joints.size() == m_iNumJoints );
-    assert( m_Meshes.size() == m_iNumMeshes );
-
     return true;
 }
 
@@ -712,7 +709,7 @@ void MD5Model::RenderJoints()
     glBindVertexArray(m_JointDrawInfo.VAO);
     glBindBuffer(GL_ARRAY_BUFFER, m_JointDrawInfo.VBO);
 
-    for(int i = 0 ; i < m_JointDrawInfo.Info.size() ; i++)
+    for(unsigned int i = 0 ; i < m_JointDrawInfo.Info.size() ; i++)
     {
         m_JointDrawInfo.Info.at(i).x = this->finalskeleton.m_Joints[i].m_Pos.x;
         m_JointDrawInfo.Info.at(i).y = this->finalskeleton.m_Joints[i].m_Pos.y;

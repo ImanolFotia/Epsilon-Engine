@@ -37,6 +37,11 @@ public:
 
 };
 
+
+extern "C" {
+    _declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+}
+
 std::ofstream Global::Log::FILE;
 GLFWwindow* InitEngine(const char* ProgramName) {
 
@@ -71,6 +76,7 @@ GLFWwindow* InitEngine(const char* ProgramName) {
     const GLFWvidmode* modes = glfwGetVideoModes(CurrentMonitor, &numberofmodes);
 
     GLFWwindow* window;
+
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);

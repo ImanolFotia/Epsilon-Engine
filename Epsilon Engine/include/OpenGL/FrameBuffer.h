@@ -40,6 +40,8 @@ public:
         m_RenderTargetCount++;
 
         this->unbindFramebuffer();
+
+        return true;
     }
 
     bool FinishFrameBuffer()
@@ -57,6 +59,8 @@ public:
         glDrawBuffers(m_RenderTargetCount, DrawBuffers);
 
         this->checkFramebuffer();
+
+        return true;
     }
 
     bool addDepthAttachment()
@@ -67,6 +71,8 @@ public:
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_DepthTextureTarget);
         this->unbindFramebuffer();
+
+        return true;
     }
 
     void bindFramebuffer()
@@ -122,6 +128,8 @@ public:
     bool Destroy()
     {
         glDeleteFramebuffers(1, &m_FramebufferHandler);
+
+        return true;
     }
 
     GLuint getRenderTargetHandler(T name)

@@ -27,10 +27,9 @@ Camera::Camera(glm::vec3 cPosition, glm::vec3 cOrientation)
     this->JoystickSensibility = 0.05f;
     this->PositionhasChanged = false;
     this->OrientationhasChanged = false;
-    this->MaxMovementSpeed = 15.3;
+    this->MaxMovementSpeed = 3.3;
     this->horizontalAngle = 0.0;
     this->verticalAngle = 0.0;
-    this->LastPosition;
 }
 
 void Camera::Update(GLFWwindow*& win)
@@ -221,21 +220,9 @@ void Camera::UpdateMatrices(void)
     float Aspectratio;
     Aspectratio = (float)winx/(float)winy;
 
-    if ( Aspectratio < 1.5 )
-    {
-        //std::cout << "Aspectratio = 4:3" << std::endl;
-        ProjectionMatrix = glm::perspective( glm::radians(FieldOfView) , 4.0f/ 3.0f , 0.1f , 3000.0f );
-    }
-    else if( Aspectratio > 1.7 )
-    {
-        //std::cout << "Aspectratio = 16:9" << std::endl;
-        ProjectionMatrix = glm::perspective( glm::radians(FieldOfView) , 16.0f/ 9.0f , 0.1f , 3000.0f );
-    }
-    else
-    {
-        //std::cout << "Aspectratio = 16:10" << std::endl;
-        ProjectionMatrix = glm::perspective( glm::radians(FieldOfView) , 16.0f/ 10.0f , 0.1f , 3000.0f );
-    }
+
+    //std::cout << "Aspectratio = 16:10" << std::endl;
+    ProjectionMatrix = glm::perspective( glm::radians(FieldOfView) , Aspectratio , 0.1f , 3000.0f );
 
     PrevView = ViewMatrix;
 
@@ -276,12 +263,12 @@ glm::vec3 Camera::getRight(void)
     return this->Rigth;
 }
 
-glm::vec3 Camera::setPosition(glm::vec3 newPosition)
+void Camera::setPosition(glm::vec3 newPosition)
 {
     this->Position = newPosition;
 }
 
-glm::vec3 Camera::setDirection(glm::vec3 newDirection)
+void Camera::setDirection(glm::vec3 newDirection)
 {
     this->Orientation = newDirection;
 }

@@ -43,9 +43,9 @@ public:
 
     glm::vec3 getRight(void);
 
-    glm::vec3 setPosition(glm::vec3 newPosition);
+    void setPosition(glm::vec3 newPosition);
 
-    glm::vec3 setDirection(glm::vec3 newDirection);
+    void setDirection(glm::vec3 newDirection);
 
     void setFoV(float FoV);
 

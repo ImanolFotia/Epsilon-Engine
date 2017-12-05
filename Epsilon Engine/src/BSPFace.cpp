@@ -21,7 +21,7 @@ bool BSPFace::BuildFace(std::vector<glm::vec3> Vertices, std::vector<glm::vec3> 
     this->LMTexCoords = LMTexCoords;
 
     this->CalcTangentSpace();
-    for(int i = 0; i < Vertices.size(); i++)
+    for(unsigned int i = 0; i < Vertices.size(); i++)
     {
         t_Vertex vert;
         vert.position = Vertices[i];

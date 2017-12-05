@@ -60,7 +60,7 @@ public:
 
         glm::mat4* modelMatrices = new glm::mat4[grassPos.size()];
         glm::mat4 model;
-        for(int i = 0; i < grassPos.size(); ++i)
+        for(unsigned int i = 0; i < grassPos.size(); ++i)
         {
             model = glm::mat4(1);
             model = glm::translate(glm::mat4(1), grassPos[i]);
