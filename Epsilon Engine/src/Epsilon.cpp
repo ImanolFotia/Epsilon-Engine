@@ -401,11 +401,7 @@ void Epsilon::LoadGeometry(void) {
 
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-<<<<<<< HEAD
-    BSPMap->LoadBSP((string("maps/") + "pbrtest.bsp").c_str());
-=======
     BSPMap->LoadBSP((string("maps/") + "house_blueprint.bsp").c_str());
->>>>>>> f18d2bdc0c2a47e757ef5976bfbec4e2955d416f
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 

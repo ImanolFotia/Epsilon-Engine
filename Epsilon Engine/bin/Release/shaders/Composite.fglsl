@@ -1,0 +1,18 @@
+#version 440 core
+
+in vec2 TexCoords;
+
+out vec4 FragColor;
+
+layout (binding = 0) uniform sampler2D gColorSampler;
+layout (binding = 1) uniform sampler2D gReflectionSampler;
+
+
+void main()
+{
+	vec3 color = texture(gColorSampler, TexCoords).rgb;
+	vec3 reflection = texture(gReflectionSampler, TexCoords).rgb;
+
+	FragColor.rgb = clamp(reflection.rgb, 0.0, 1.0) + color;
+	FragColor.a = 1.0;
+}

@@ -18,7 +18,7 @@ in mat3 TBN;
 void main()
 {
 
-	vec3 LightPosition = vec3(-2, 14, 0);
+	vec3 LightPosition = vec3(37, 6.5, 3.5);
 	vec3 lightDirection = normalize(LightPosition - FragPos.xyz);
 
 	float emissive = texture(texture_height, TexCoords).y;
@@ -37,7 +37,7 @@ void main()
 	vec3 mNormal = normalize(NormalTexture * TBN);
 
         vec3 lightcolor = normalize(vec3(205, 109, 39));
-	vec3 lambert = max(dot(mNormal, lightDirection), 0.0) * vec3(0.2) * lightcolor;
+	vec3 lambert = max(dot(mNormal, lightDirection), 0.0)*vec3(0.3)/* * lightcolor*/;
 
 	Color = (vec4(lambert, 1.0) * Albedo);
 }

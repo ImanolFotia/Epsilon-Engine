@@ -42,18 +42,18 @@ const float CosineA0 = Pi;
 const float CosineA1 = (2.0f * Pi) / 3.0f;
 const float CosineA2 = Pi * 0.25f;
 // scale for restored amount of lighting
-uniform float u_scaleFactor = 5.0;
+uniform float u_scaleFactor = 13.0;
 
 // coefficients of spherical harmonics and possible values
-vec3 u_L00 = vec3(0.000324516, 0.000124163, 4.67499e-005);
-vec3 u_L1m1 = vec3(2.02443e-005, 1.07191e-005, 2.09899e-006);
-vec3 u_L10 = vec3(-1.7756e-005, 9.64536e-006, 2.02017e-005);
-vec3 u_L11 = vec3(-2.55291e-005, -4.84169e-007, 8.4612e-006);
-vec3 u_L2m2 = vec3(-1.76976e-005, -6.2409e-006, -8.05847e-007);
-vec3 u_L2m1 = vec3(2.42043e-005, 9.53509e-006, 1.13099e-006);
-vec3 u_L20 = vec3(0.000132081, 7.43471e-005, 5.5592e-005);
-vec3 u_L21 = vec3(-1.5689e-005, -4.61771e-007, 5.65383e-006);
-vec3 u_L22 = vec3(0.000184862, 5.432e-005, 1.24763e-005);
+vec3 u_L00 = vec3(0.000583486, 0.000571206, 0.00103499);
+vec3 u_L1m1 = vec3(0.000285382, 0.000283877, 0.000577816);
+vec3 u_L10 = vec3(-6.56216e-006, -6.49363e-006, -1.13807e-005);
+vec3 u_L11 = vec3(-4.21726e-005, -4.90659e-005, -9.87656e-005);
+vec3 u_L2m2 = vec3(-0.000108929, -0.000115347, -0.000255311);
+vec3 u_L2m1 = vec3(-6.82438e-007, -5.38153e-007, 1.84106e-007);
+vec3 u_L20 = vec3(-5.45785e-005, -5.16044e-005, -0.00011851);
+vec3 u_L21 = vec3(-4.20471e-006, -3.81651e-006, -7.40711e-006);
+vec3 u_L22 = vec3(-7.63505e-005, -7.64585e-005, -0.000186511);
 
 const float C1 = 0.429043;
 const float C2 = 0.511664;
@@ -129,10 +129,27 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
     return finalTexCoords;
 }
 
+vec3 bpcem (in vec3 v, vec3 Emax, vec3 Emin, vec3 Epos)
+{ 
+  vec3 nrdir = normalize(v);
+  vec3 rbmax = (Emax - fs_in.wFragPos)/nrdir;
+  vec3 rbmin = (Emin - fs_in.wFragPos)/nrdir;
+  
+  vec3 rbminmax;
+  rbminmax.x = (nrdir.x>0.0)?rbmax.x:rbmin.x;
+  rbminmax.y = (nrdir.y>0.0)?rbmax.y:rbmin.y;
+  rbminmax.z = (nrdir.z>0.0)?rbmax.z:rbmin.z;   
+  float fa = min(min(rbminmax.x, rbminmax.y), rbminmax.z);
+  vec3 posonbox = fs_in.wFragPos + nrdir * fa;
+  return posonbox - Epos;
+}
+
+vec3 BoxMax = vec3(35, 30, 27);
+vec3 BoxMin = vec3(-39,0.8,-23);
 
 void main()
 {
-  if(texture(texture_diffuse, fs_in.TexCoords).a < 0.15)
+  if(texture(texture_diffuse, fs_in.TexCoords).a < 0.9)
     discard;    
     vec3 Dir = normalize((fs_in.TBN * viewPos) - (fs_in.TBN * fs_in.wFragPos));
 
@@ -152,8 +169,8 @@ void main()
 
   vec4 CubeMapcolor = vec4(0.0);
   vec3 R = vec3(0.0);
-
-  gAlbedoSpec.rgb = texture(texture_diffuse,texCoords).rgb;
+  gAlbedoSpec.rgb = vec3(0.0001);
+  gAlbedoSpec.rgb += texture(texture_diffuse,texCoords).rgb;
   
   float Depth = LinearizeDepth(gl_FragCoord.z);
   gDepth.r = gl_FragCoord.z;
@@ -164,17 +181,20 @@ void main()
   vec2 b = (PrevPosition.xy / PrevPosition.w) * 0.5 + 0.5;
   gExtraComponents.zw = (a - b);
 
-  if( texture( skybox, vec3(0)).x > 0)
-  {
+  //if( texture( skybox, vec3(0)).x > 0)
+  //{
     vec3 I = normalize(fs_in.wFragPos - viewPos);
     R = reflect(I, normalize(gExpensiveNormal.rgb));
-    CubeMapcolor = texture(skybox, R);
-  }
+    CubeMapcolor = texture(skybox, bpcem(R, BoxMax, BoxMin, vec3(0, 8, 0)));
+  //}
 
   //else
   //  CubeMapcolor = gAlbedoSpec.rgba * 0.0008;
 
-  vec3 shc = sphericalHarmonics(gExpensiveNormal.rgb) * u_scaleFactor;
+  vec3 schDir = vec3(gExpensiveNormal.rgb.x, gExpensiveNormal.rgb.y, -gExpensiveNormal.rgb.z);
+  schDir = bpcem(schDir, BoxMax, BoxMin, vec3(-6, 25, -1.5));
+  //schDir = schDir.xzy;
+  vec3 shc = sphericalHarmonics(normalize(gExpensiveNormal.rgb)) * u_scaleFactor;
   gLightAccumulation = shc;///max(CubeMapcolor.rgb * Metallic_Emmisive.r, vec3(0.0));
   gDepth.gba = CubeMapcolor.rgb;
   //gLightAccumulation = shc;

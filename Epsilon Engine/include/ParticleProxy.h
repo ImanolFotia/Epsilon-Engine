@@ -123,10 +123,7 @@ public:
             );
 
             Particles.push_back(Particle(CurrentParticlePosition, 1.0, 50.0, ParticlesLimits));
-<<<<<<< HEAD
-=======
-            //std::cout << "Particle #" << i << ": X: " << Particles[i].getPosition().x << " Y: " << Particles[i].getPosition().y << " Z: " << Particles[i].getPosition().z << std::endl;
->>>>>>> f18d2bdc0c2a47e757ef5976bfbec4e2955d416f
+
         }
 
         #pragma omp

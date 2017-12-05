@@ -8,6 +8,7 @@ layout(location = 3) out float gDepth;
 layout(location = 4) out vec4 gExtraComponents; 
 
 layout (binding = 0) uniform sampler2D texture0;
+layout (binding = 0) uniform sampler2D bufferDepth;
 in vec2 UV;
 in vec3 FragPos;
 in vec3 wFragPos;
@@ -18,10 +19,26 @@ in vec4 Position;
 
 uniform vec3 viewPos;
 
+float NEAR = 0.1;
+float FAR = 3000.0;
+
+float LinearizeDepth(float depth) {
+  float z = depth * 2.0 - 1.0;  // Back to NDC
+  return ((2.0 * NEAR * FAR) / (FAR + NEAR - z * (FAR - NEAR)));
+}
+
 void main()
 {
+
+    vec2 ndc = gl_FragCoord.xy/vec2(1280,720);
+	float l_gDepth = LinearizeDepth(texture(bufferDepth, ndc).r);
+	float depth = LinearizeDepth(gl_FragCoord.z);
+	float dDepth = l_gDepth - depth;
+	dDepth = clamp(dDepth/20.0, 0.0, 1.0);
+
 	vec4 tex = texture(texture0, UV);
-	FragColor = tex;
+	FragColor = vec4(vec3(tex.rgb), dDepth*tex.a);//tex;
+	//FragColor.a = clamp(dDepth, 0.0, 1.0);
 	blurImage = vec4(0.0);
 	
 	gExpensiveNormal = vec3(0.0);

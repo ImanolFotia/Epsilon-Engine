@@ -1,7 +1,7 @@
 #version 430 core
 
 layout(location = 0) out vec3 gAlbedoSpec;
-layout(location = 1) out vec3 gPosition;
+layout(location = 1) out float gPosition;
 layout(location = 2) out vec4 gExpensiveNormal;
 layout(location = 3) out vec4 gDepth;
 layout(location = 4) out vec4 gExtraComponents; 
@@ -29,18 +29,18 @@ const float CosineA0 = Pi;
 const float CosineA1 = (2.0f * Pi) / 3.0f;
 const float CosineA2 = Pi * 0.25f;
 // scale for restored amount of lighting
-uniform float u_scaleFactor = 5.0;
+uniform float u_scaleFactor = 13.0;
 
 // coefficients of spherical harmonics and possible values
-vec3 u_L00 = vec3(0.000324516, 0.000124163, 4.67499e-005);
-vec3 u_L1m1 = vec3(2.02443e-005, 1.07191e-005, 2.09899e-006);
-vec3 u_L10 = vec3(-1.7756e-005, 9.64536e-006, 2.02017e-005);
-vec3 u_L11 = vec3(-2.55291e-005, -4.84169e-007, 8.4612e-006);
-vec3 u_L2m2 = vec3(-1.76976e-005, -6.2409e-006, -8.05847e-007);
-vec3 u_L2m1 = vec3(2.42043e-005, 9.53509e-006, 1.13099e-006);
-vec3 u_L20 = vec3(0.000132081, 7.43471e-005, 5.5592e-005);
-vec3 u_L21 = vec3(-1.5689e-005, -4.61771e-007, 5.65383e-006);
-vec3 u_L22 = vec3(0.000184862, 5.432e-005, 1.24763e-005);
+vec3 u_L00 = vec3(0.000583486, 0.000571206, 0.00103499);
+vec3 u_L1m1 = vec3(0.000285382, 0.000283877, 0.000577816);
+vec3 u_L10 = vec3(-6.56216e-006, -6.49363e-006, -1.13807e-005);
+vec3 u_L11 = vec3(-4.21726e-005, -4.90659e-005, -9.87656e-005);
+vec3 u_L2m2 = vec3(-0.000108929, -0.000115347, -0.000255311);
+vec3 u_L2m1 = vec3(-6.82438e-007, -5.38153e-007, 1.84106e-007);
+vec3 u_L20 = vec3(-5.45785e-005, -5.16044e-005, -0.00011851);
+vec3 u_L21 = vec3(-4.20471e-006, -3.81651e-006, -7.40711e-006);
+vec3 u_L22 = vec3(-7.63505e-005, -7.64585e-005, -0.000186511);
 
 
 const float C1 = 0.429043;
@@ -82,7 +82,7 @@ void main()
 
 	gExpensiveNormal.a = texture(s_sampler, TexCoords).r;
 
-	gPosition = FragPos;
+	gPosition = FragPos.z;
 
   	gDepth.x = gl_FragCoord.z;
 

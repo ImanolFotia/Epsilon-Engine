@@ -123,7 +123,7 @@ void PostProcess::SetupFramebuffer()
 */
 
     //PBR test
-
+/*
     LightPositions.push_back(glm::vec3(-20, 12, -5));
     LightPositions.push_back(glm::vec3(-14, 12, -5));
     LightPositions.push_back(glm::vec3(-8, 12, -5));
@@ -132,13 +132,6 @@ void PostProcess::SetupFramebuffer()
     LightPositions.push_back(glm::vec3(10, 12, -5));
     LightPositions.push_back(glm::vec3(16, 12, -5));
     LightPositions.push_back(glm::vec3(22, 12, -5));
-<<<<<<< HEAD
-    LightPositions.push_back(glm::vec3(-0.5, 15, 52));
-    LightPositions.push_back(glm::vec3(-41, 12, 40));
-    LightPositions.push_back(glm::vec3(-64, 12, 40));
-    LightPositions.push_back(glm::vec3(-64, 12, 65));
-    LightPositions.push_back(glm::vec3(-64, 12, 91));
-=======
     LightPositions.push_back(glm::vec3(-0.0, 11, 56));
 
 
@@ -165,8 +158,6 @@ void PostProcess::SetupFramebuffer()
     LightPositions.push_back(glm::vec3(-30, 17, -54));
     LightPositions.push_back(glm::vec3(-30, 17, -17));
     LightPositions.push_back(glm::vec3(51, 17, -13));
->>>>>>> f18d2bdc0c2a47e757ef5976bfbec4e2955d416f
-
 /*
     LightPositions.push_back(glm::vec3(-20, 12, -5));
     LightPositions.push_back(glm::vec3(-14, 12, -5));

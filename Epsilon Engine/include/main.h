@@ -77,23 +77,28 @@ GLFWwindow* InitEngine(const char* ProgramName) {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
+
+    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+    glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+    glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+    glfwWindowHint(GLFW_REFRESH_RATE, 60);
     //glfwWindowHint(GLFW_RED_BITS, 16);
     //glfwWindowHint(GLFW_GREEN_BITS, 16);
     //glfwWindowHint(GLFW_BLUE_BITS, 16);
-    glfwWindowHint(GLFW_DEPTH_BITS, 32);
-    glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 
     cout << "Creating window || Window Resolution: ";
     if(DATA.FULLSCREEN == 1) {
         window = glfwCreateWindow(DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT, ProgramName, glfwGetPrimaryMonitor(), 0);
         cout << DATA.WINDOW_WIDTH << " x " << DATA.WINDOW_HEIGHT << endl;
     } else if(DATA.FULLSCREEN == 2) {
-        const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         glfwWindowHint(GLFW_RED_BITS, mode->redBits);
         glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
         glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
         glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
-        window = glfwCreateWindow(mode->width, mode->height, ProgramName, 0, 0);
+        //glfwWindowHint(GLFW_DECORATED, GL_FALSE);
+        window = glfwCreateWindow(mode->width, mode->height, ProgramName, glfwGetPrimaryMonitor(), 0);
         cout << mode->width << " x " << mode->height << endl;
     } else {
         window = glfwCreateWindow(DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT, ProgramName, 0, 0);

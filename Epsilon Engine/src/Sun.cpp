@@ -15,11 +15,7 @@ Sun::Sun()
 
     this->radius = 30.0;
 
-<<<<<<< HEAD
-    this->height = -10.0;
-=======
     this->height = -30.0;
->>>>>>> f18d2bdc0c2a47e757ef5976bfbec4e2955d416f
 
     PrepareVAO();
     mMovement = 1.0;

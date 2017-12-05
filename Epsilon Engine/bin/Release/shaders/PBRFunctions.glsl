@@ -93,7 +93,7 @@ vec3 calculatePointPBR(vec3 pos)
         kD *= clamp(1.0 - ExtraComponents.x, 0.0, 1.0);
         //float distance    = length(pos - FragPos);
         float distance = length(pos - FragPos);
-        float watts = 180;
+        float watts = 300;
         float attenuation = calculateAttenuation(watts, distance);//1.0 / (1.0 + 0.1/*factor*/ * pow(distance, 2));
         attenuation *= smoothstep(watts, watts - 5.0, distance);
         vec3 radiance     = vec3(1.0) * attenuation;        
@@ -115,7 +115,7 @@ vec3 calculatePointPBR(vec3 pos)
 vec3 CalculateDirectionalPBR()
 {
     // calculate per-light radiance
-        vec3 lightcolor = normalize(vec3(205, 109, 39));
+        vec3 lightcolor = normalize(vec3(68, 88, 135));
         vec3 V = normalize(viewPos - FragPos);
         vec3 L = normalize(lightDir);
         vec3 H = normalize(V + L);  
@@ -137,5 +137,5 @@ vec3 CalculateDirectionalPBR()
         // add to outgoing radiance Lo
         float NdotL = orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.03, 1.0), 1.0);//              
         vec3 Lo = (kD * Diffuse / PI + brdf) * NdotL; 
-        return mix(vec3(0.0), Lo * clamp(1.0 - shadow, 0.0, 1.0) * lightcolor, clamp(lightDir.y + 0.1, 0.0, 1.0))*4.0;
+        return mix(vec3(0.0), Lo * clamp(1.0 - shadow, 0.0, 1.0) /** lightcolor*/, clamp(lightDir.y + 0.1, 0.0, 1.0))*4.0;
 }
