@@ -57,7 +57,9 @@
 				<Compiler>
 					<Add option="-march=core2" />
 					<Add option="-O3" />
+					<Add option="-std=c++14" />
 					<Add option="-std=c++11" />
+					<Add option="-fopenmp" />
 					<Add directory="deppend/glew-2.0.0/include" />
 					<Add directory="deppend/glfw-3.2.bin.WIN32/include" />
 					<Add directory="deppend/glm" />
@@ -79,12 +81,11 @@
 					<Add option="deppend\glew-2.0.0\lib\libglew32.dll.a" />
 					<Add option="-lgdi32" />
 					<Add option="deppend\openal-soft-1.17.2-bin\libs\Win32\libOpenAL32.dll.a" />
-					<Add option="-fopenmp" />
+					<Add option="-lgomp" />
 					<Add library="deppend/bullet-2.82-r2704/lib/libBulletDynamics.a" />
 					<Add library="deppend/bullet-2.82-r2704/lib/libBulletCollision.a" />
 					<Add library="deppend/bullet-2.82-r2704/lib/libBulletSoftBody.a" />
 					<Add library="deppend/bullet-2.82-r2704/lib/libLinearMath.a" />
-					<Add library="C:/Program Files (x86)/CodeBlocks/MinGW/bin/libgomp.a" />
 					<Add directory="deppend/glew-2.0.0/lib" />
 					<Add directory="deppend/SOIL/lib" />
 					<Add directory="deppend/FreeType2/lib" />
@@ -133,15 +134,11 @@
 		<Unit filename="include/OpenGL/HelperFunctions/FullScreenQuad.h" />
 		<Unit filename="include/OpenGL/HelperFunctions/Quad.h" />
 		<Unit filename="include/OpenGL/RenderTarget.h" />
-<<<<<<< HEAD
-		<Unit filename="include/OpenGL/ShaderStorageBuffer.h" />
-=======
 		<Unit filename="include/OpenGL/Renderers/DeferredRenderer.h" />
 		<Unit filename="include/OpenGL/Renderers/renderer.h" />
 		<Unit filename="include/OpenGL/ShaderPreProcessor.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
->>>>>>> f18d2bdc0c2a47e757ef5976bfbec4e2955d416f
 		<Unit filename="include/OpenGL/VertexArrayObject.h" />
 		<Unit filename="include/OpenGL/VertexBufferObject.h" />
 		<Unit filename="include/Particle.h" />

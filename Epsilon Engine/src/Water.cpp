@@ -20,7 +20,7 @@ Water::Water(glm::vec3 position, float scale)
     GeneratevertexArray();
 }
 
-void Water::RenderWater(std::shared_ptr<Camera> cam, GLuint colorBuffer, glm::vec3 lightDir)
+void Water::RenderWater(std::shared_ptr<Camera> cam, GLuint colorBuffer, glm::vec3 lightDir, GLuint depthTexture)
 {
     shader->Use();
     glDisable(GL_CULL_FACE);
@@ -39,8 +39,8 @@ void Water::RenderWater(std::shared_ptr<Camera> cam, GLuint colorBuffer, glm::ve
     glBindTexture(GL_TEXTURE_2D, this->DuDvTexture);
 
     glActiveTexture(GL_TEXTURE3);
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "diffuseSampler"), 3);
-    glBindTexture(GL_TEXTURE_2D, this->diffuseTexture);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "gDepth"), 3);
+    glBindTexture(GL_TEXTURE_2D, depthTexture);
 
 
     glm::mat4 model = glm::mat4();

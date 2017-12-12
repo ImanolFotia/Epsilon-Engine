@@ -181,6 +181,17 @@ private:
     GLuint GetPixel(GLuint);
 
 private:
+    //#pragma pack(push, 1)
+        struct t_light {
+        glm::vec4 position; // 4/*
+        glm::vec4 direction; // 8
+        glm::vec4 color; // 12
+        float radius; float _padding[3]; // 13
+        float watts;  float __padding[3]; // 14
+        int type;     float ___padding[3];//15*/
+    };
+
+    std::vector<t_light> m_Lights;
     GLuint SSAOwidth;
     GLuint SSAOheight;
     GLuint MotionBlurBuffer;
@@ -244,6 +255,8 @@ private:
     GLuint gWorldSpacePosition;
     GLuint gLightAccumulation;
     GLuint mLastFrametexture;
+
+    GLuint ssbo = 0;
     std::shared_ptr<eTexture> lensColor;
     std::shared_ptr<eTexture> lensDirt;
     std::shared_ptr<eTexture> lensStar;

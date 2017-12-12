@@ -32,19 +32,6 @@ void PostProcess::SetupFramebuffer() {
     //std::random_device ;
     std::default_random_engine generator(glfwGetTime());
 
-<<<<<<< HEAD
-/*
-    LightPositions.push_back(glm::vec3(125, 20.5, -80));
-    LightPositions.push_back(glm::vec3(70, 13.3, -63));
-    LightPositions.push_back(glm::vec3(96.2, 13.3, -63));
-    LightPositions.push_back(glm::vec3(123, 13.3, -63));
-    LightPositions.push_back(glm::vec3(106.7, 30.63, -59.3));
-    LightPositions.push_back(glm::vec3(82, 30.63, -59.3));
-    LightPositions.push_back(glm::vec3(95.5, 15.21, -40.57));
-<<<<<<< HEAD
-=======
-    */
-=======
     /*
         LightPositions.push_back(glm::vec3(125, 20.5, -80));
         LightPositions.push_back(glm::vec3(70, 13.3, -63));
@@ -53,8 +40,9 @@ void PostProcess::SetupFramebuffer() {
         LightPositions.push_back(glm::vec3(106.7, 30.63, -59.3));
         LightPositions.push_back(glm::vec3(82, 30.63, -59.3));
         LightPositions.push_back(glm::vec3(95.5, 15.21, -40.57));
+    <<<<<<< HEAD
+    =======
         */
->>>>>>> 8928179c2403e3f904d84e0da64b9c95b44f0d03
     /*
         LightPositions.push_back(glm::vec3(19, 6.5, -1));
     LightPositions.push_back(glm::vec3(20, 5, 88));
@@ -63,20 +51,20 @@ void PostProcess::SetupFramebuffer() {
     LightPositions.push_back(glm::vec3(106.7, 30.63, -59.3));
     LightPositions.push_back(glm::vec3(82, 30.63, -59.3));
     LightPositions.push_back(glm::vec3(95.5, 15.21, -40.57));
-<<<<<<< HEAD
->>>>>>> f18d2bdc0c2a47e757ef5976bfbec4e2955d416f
-*/
-/*
-    LightPositions.push_back(glm::vec3(4, 15, -8));
-    LightPositions.push_back(glm::vec3(20, 15, 7));
-    LightPositions.push_back(glm::vec3(20, 15, -20));
-    LightPositions.push_back(glm::vec3(45, 15, -22));
-    LightPositions.push_back(glm::vec3(65, 15, -22));
-    LightPositions.push_back(glm::vec3(65, 15, 8));
-    LightPositions.push_back(glm::vec3(45, 15, 8));
-=======
->>>>>>> 8928179c2403e3f904d84e0da64b9c95b44f0d03
+    <<<<<<< HEAD
+    >>>>>>> f18d2bdc0c2a47e757ef5976bfbec4e2955d416f
     */
+    /*
+        LightPositions.push_back(glm::vec3(4, 15, -8));
+        LightPositions.push_back(glm::vec3(20, 15, 7));
+        LightPositions.push_back(glm::vec3(20, 15, -20));
+        LightPositions.push_back(glm::vec3(45, 15, -22));
+        LightPositions.push_back(glm::vec3(65, 15, -22));
+        LightPositions.push_back(glm::vec3(65, 15, 8));
+        LightPositions.push_back(glm::vec3(45, 15, 8));
+    =======
+    >>>>>>> 8928179c2403e3f904d84e0da64b9c95b44f0d03
+        */
     /*
         LightPositions.push_back(glm::vec3(4, 15, -8));
         LightPositions.push_back(glm::vec3(20, 15, 7));
@@ -166,34 +154,120 @@ void PostProcess::SetupFramebuffer() {
         LightPositions.push_back(glm::vec3(-64, 12, 91));*/
 
 //BLUEPRINT HOUSE
-    LightPositions.push_back(glm::vec3(5, 17, -20));
-    LightPositions.push_back(glm::vec3(4, 17, 19));
-    LightPositions.push_back(glm::vec3(60, 17, 18));
-    LightPositions.push_back(glm::vec3(43, 17, -43));
-    LightPositions.push_back(glm::vec3(90, 17, -43));
-    LightPositions.push_back(glm::vec3(58, 17, 49));
-    LightPositions.push_back(glm::vec3(-78, 17, 46));
-    LightPositions.push_back(glm::vec3(-90, 17, 16));
 
 
+    t_light tmpLight;
 
+    tmpLight.position = glm::vec4(5, 17, -20, 1.0);
+    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+    tmpLight.color = glm::vec4(1, 1, 1, 1.0);
+    tmpLight.radius = 45.0f;
+    tmpLight.watts = 100.0f;
+    tmpLight.type = 0;
+    m_Lights.push_back(tmpLight);
 
-    LightPositions.push_back(glm::vec3(-82, 17, -20));
-    LightPositions.push_back(glm::vec3(-30, 17, -54));
-    LightPositions.push_back(glm::vec3(-30, 17, -17));
-    LightPositions.push_back(glm::vec3(51, 17, -13));
-<<<<<<< HEAD
-/*
-    LightPositions.push_back(glm::vec3(-20, 12, -5));
-    LightPositions.push_back(glm::vec3(-14, 12, -5));
-    LightPositions.push_back(glm::vec3(-8, 12, -5));
-    LightPositions.push_back(glm::vec3(-2, 12, -5));
-    LightPositions.push_back(glm::vec3(4, 12, -5));
-    LightPositions.push_back(glm::vec3(10, 12, -5));
-    LightPositions.push_back(glm::vec3(16, 12, -5));
-    LightPositions.push_back(glm::vec3(22, 12, -5));
-    LightPositions.push_back(glm::vec3(-0.5, 15, 52));
-=======
+    tmpLight.position = glm::vec4(4, 17, 19, 1.0);
+    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+    tmpLight.color = glm::vec4(1, 1, 1, 1.0);
+    tmpLight.radius = 45.0f;
+    tmpLight.watts = 100.0f;
+    tmpLight.type = 0;
+    m_Lights.push_back(tmpLight);
+
+    tmpLight.position = glm::vec4(60, 17, 18, 1.0);
+    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+    tmpLight.color = glm::vec4(1, 1, 1, 1.0);
+    tmpLight.radius = 45.0f;
+    tmpLight.watts = 100.0f;
+    tmpLight.type = 0;
+    m_Lights.push_back(tmpLight);
+
+    tmpLight.position = glm::vec4(43, 17, -43, 1.0);
+    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+    tmpLight.color = glm::vec4(1, 1, 1, 1.0);
+    tmpLight.radius = 45.0f;
+    tmpLight.watts = 100.0f;
+    tmpLight.type = 0;
+    m_Lights.push_back(tmpLight);
+
+    tmpLight.position = glm::vec4(90, 17, -43, 1.0);
+    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+    tmpLight.color = glm::vec4(1, 1, 1, 1.0);
+    tmpLight.radius = 45.0f;
+    tmpLight.watts = 100.0f;
+    tmpLight.type = 0;
+    m_Lights.push_back(tmpLight);
+
+    tmpLight.position = glm::vec4(58, 17, 49, 1.0);
+    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+    tmpLight.color = glm::vec4(1, 1, 1, 1.0);
+    tmpLight.radius = 45.0f;
+    tmpLight.watts = 100.0f;
+    tmpLight.type = 0;
+    m_Lights.push_back(tmpLight);
+
+    tmpLight.position = glm::vec4(-78, 17, 46, 1.0);
+    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+    tmpLight.color = glm::vec4(1, 1, 1, 1.0);
+    tmpLight.radius = 45.0f;
+    tmpLight.watts = 100.0f;
+    tmpLight.type = 0;
+    m_Lights.push_back(tmpLight);
+
+    tmpLight.position = glm::vec4(-90, 17, 16, 1.0);
+    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+    tmpLight.color = glm::vec4(1, 1, 1, 1.0);
+    tmpLight.radius = 45.0f;
+    tmpLight.watts = 100.0f;
+    tmpLight.type = 0;
+    m_Lights.push_back(tmpLight);
+
+    tmpLight.position = glm::vec4(-82, 17, -20, 1.0);
+    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+    tmpLight.color = glm::vec4(1, 1, 1, 1.0);
+    tmpLight.radius = 45.0f;
+    tmpLight.watts = 100.0f;
+    tmpLight.type = 0;
+    m_Lights.push_back(tmpLight);
+
+    tmpLight.position = glm::vec4(-30, 17, -54, 1.0);
+    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+    tmpLight.color = glm::vec4(1, 1, 1, 1.0);
+    tmpLight.radius = 45.0f;
+    tmpLight.watts = 100.0f;
+    tmpLight.type = 0;
+    m_Lights.push_back(tmpLight);
+
+    tmpLight.position = glm::vec4(-30, 17, -17, 1.0);
+    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+    tmpLight.color = glm::vec4(1, 1, 1, 1.0);
+    tmpLight.radius = 45.0f;
+    tmpLight.watts = 100.0f;
+    tmpLight.type = 0;
+    m_Lights.push_back(tmpLight);
+
+    tmpLight.position = glm::vec4(3, 0.5, -52, 1.0);
+    tmpLight.direction = glm::vec4(0, 0, 1, 1.0);
+    tmpLight.color = glm::vec4(0.4, 0.8, 0.5, 1.0);
+    tmpLight.radius = 0.5f;
+    tmpLight.watts = 100.0f;
+    tmpLight.type = 1;
+    m_Lights.push_back(tmpLight);
+
+    tmpLight.position = glm::vec4(-8, 0.0, -29, 1.0);
+    tmpLight.direction = glm::vec4(0, 1, 0, 1.0);
+    tmpLight.color = glm::vec4(0.4, 0.8, 0.5, 1.0);
+    tmpLight.radius = 0.2f;
+    tmpLight.watts = 100.0f;
+    tmpLight.type = 1;
+    m_Lights.push_back(tmpLight);
+
+    glGenBuffers(1, &ssbo);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(t_light) * m_Lights.size(), (const void*)&m_Lights[0], GL_DYNAMIC_COPY);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
 
     // Solar panel chamber
     /*
@@ -221,7 +295,6 @@ void PostProcess::SetupFramebuffer() {
         LightPositions.push_back(glm::vec3(16, 12, -5));
         LightPositions.push_back(glm::vec3(22, 12, -5));
         LightPositions.push_back(glm::vec3(-0.5, 15, 52));
->>>>>>> 8928179c2403e3f904d84e0da64b9c95b44f0d03
 
 
 
@@ -986,6 +1059,7 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::shared_ptr<Camera>& 
 
     this->shader->Use();
 
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
     glViewport(0,0,this->width, this->height);
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(glGetUniformLocation(shader->getProgramID(), "gDepth"), 0);
@@ -1027,8 +1101,8 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::shared_ptr<Camera>& 
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "projection"), 1, GL_FALSE, &invProj[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "view"), 1, GL_FALSE, &invView[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "uView"), 1, GL_FALSE, &cam->getViewMatrix()[0][0]);
-    glUniform3fv(glGetUniformLocation(shader->getProgramID(), "LightPositions"), LightPositions.size(), &LightPositions[0][0]);
-    glUniform1i(glGetUniformLocation(shader->getProgramID(), "NUMLIGHTS"), LightPositions.size());
+    //glUniform3fv(glGetUniformLocation(shader->getProgramID(), "LightPositions"), LightPositions.size(), &LightPositions[0][0]);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "NUMLIGHTS"), m_Lights.size());
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "viewPos"),  cam->getPosition().x, cam->getPosition().y, cam->getPosition().z);
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "uViewDir"),  cam->getDirection().x, cam->getDirection().y, cam->getDirection().z);
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "lightDir"),  Sun.x, Sun.y, Sun.z);
@@ -1037,6 +1111,7 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::shared_ptr<Camera>& 
 
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindVertexArray(0);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
     glUseProgram(0);
 
     /** copy texture */

@@ -154,8 +154,8 @@ public:
 
         generator.seed(std::chrono::system_clock::now().time_since_epoch().count());
 
-        //#pragma omp simd
-        for(unsigned int i = 0; i < m_NumParticles; ++i) {
+        #pragma omp parallel for
+        for(unsigned int i = 0; i < Particles.size(); ++i) {
 
             glm::vec3 CurrentParticlePosition(
                 HorizonalLimit  (generator),
@@ -223,8 +223,8 @@ public:
         std::uniform_real_distribution<GLfloat> ZLimit(ParticlesLimits.MIN_Z, ParticlesLimits.MAX_Z);
         generator.seed(std::chrono::system_clock::now().time_since_epoch().count());
 
-        //#pragma omp simd
-        for(unsigned int i = 0; i < m_NumParticles; ++i) {
+        #pragma omp parallel for
+        for(unsigned int i = 0; i < Particles.size(); ++i) {
 
             glm::vec3 CurrentParticlePosition(
                 HorizonalLimit  (generator),
@@ -232,13 +232,9 @@ public:
                 ZLimit          (generator)
             );
 
-<<<<<<< HEAD
-            Particles.push_back(Particle(CurrentParticlePosition, 1.0, 50.0, ParticlesLimits));
-
-=======
             Particles.push_back(Particle(CurrentParticlePosition, 1.0, 0.5, ParticlesLimits));
             //std::cout << "Particle #" << i << ": X: " << Particles[i].getPosition().x << " Y: " << Particles[i].getPosition().y << " Z: " << Particles[i].getPosition().z << std::endl;
->>>>>>> 8928179c2403e3f904d84e0da64b9c95b44f0d03
+
         }
 
         for(auto &p: Particles) {
@@ -333,7 +329,8 @@ public:
         this->calculateDistancetoCamera(camPos);
 
         this->sortParticles();
-        #pragma omp simd
+
+        #pragma omp parallel for simd
         for(unsigned int i = 0; i < Particles.size(); i++) {
 
             if(Particles[i].getPosition().y < ParticlesLimits.MIN_Y) {
@@ -355,7 +352,7 @@ public:
 
         }
 
-        #pragma omp simd
+        //#pragma omp parallel for simd
         for(int i = 0; i < Particles.size(); i++) {
             glm::mat4 modelPos = glm::mat4();
             modelPos = translate(modelPos, Particles[i].getPosition());

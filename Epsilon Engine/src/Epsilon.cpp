@@ -370,7 +370,6 @@ void Epsilon::InitResources(void) {
     RenderSplashScreen("Loading Textures...");
     rM->loadQueuedTextures();
 
-    std::cout << "Llega" << std::endl;
 
     PP = std::move((unique_ptr<PostProcess>)(new PostProcess()));
 
@@ -475,8 +474,12 @@ void Epsilon::LoadShaders(void) {
 void Epsilon::LoadGeometry(void) {
     cout << "Loading World Geometry..." <<endl;
     vector<glm::vec3> grasspos2;
-    /*
-        terrain = (std::shared_ptr<Terrain>)new Terrain("materials/iceland2.png", "Tundra - Color Map.png", "Tundra_n.png", "glass_spec.png", "Untitled.png", 4.5, 350, glm::vec3(-150, -70.0, -150),rM);
+
+        terrain = (std::shared_ptr<Terrain>)new Terrain("materials/iceland2.png",
+                                                        "textures/terrain/cratered-rock.png",
+                                                        "textures/terrain/cratered-rock_n.png",
+                                                        "textures/terrain/cratered-rock_s.png",
+                                                        "Untitled.png", 5.5, 350, glm::vec3(-150, -70.0, -150),rM);
 
 
 
@@ -489,7 +492,7 @@ void Epsilon::LoadGeometry(void) {
                     else if(chance == 2)
                         grasspos2.push_back(terrain->vertices[i].Position + glm::vec3((rand()%6)-3, 3.5, (rand()%6)-3));
                 }
-    */
+
     std::cout << "Resource manager in epsilon address: " << rM.get() << std::endl;
 
     rM->requestCubeMap(2, glm::vec3(4.8,80000.2,-8));
@@ -517,13 +520,13 @@ void Epsilon::LoadGeometry(void) {
     grass.push_back(Grass("billboardgrass0002.png", grasspos2));
 
 
-    waterPlane = (shared_ptr<Water>)(new Water(glm::vec3(150,2.0,150), 9.0f)); ///-11.8
+    waterPlane = (shared_ptr<Water>)(new Water(glm::vec3(150,-66.0,150), 9.0f)); ///-11.8
 
     sun = std::move((shared_ptr<Sun>)(new Sun()));
 
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "church.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "depto.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 
@@ -559,12 +562,12 @@ void Epsilon::Render3D(Shader* shader) {
 
 
     //this->waterPlane->RenderWater(eCamera, PP->CopyTextureFBO->getRenderTargetHandler(0), sun->Direction);
-    /*shader->Use();
+    shader->Use();
 
             Shaders["Terrain"]->Use();
             this->SetUniforms(Shaders["Terrain"],glm::vec3(0, 0, 0), glm::vec3(1.0),  glm::quat(0, 0,0, 0));
             terrain->RenderTerrain(Shaders["Terrain"]);
-            glCullFace(GL_BACK);*/
+            glCullFace(GL_BACK);
 
 
 //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -729,7 +732,7 @@ void Epsilon::Render2D(void) {
     //this->text->RenderText("On ground: " + std::string(m_PlayerCapsule->isOnGround() ? "YES" : "NO"),0.01, 0.79, 0.3, glm::vec3(1,1,1));/*
     //this->text->RenderText("Parallax Mapping: " + std::string(parallax ? "ON" : "OFF"),0.01, 0.83, 0.3, glm::vec3(1,1,1));*/
 
-    this->text->RenderText("+", 0.5, 0.5, 1.0, glm::vec3(1,1,1));
+    this->text->RenderText("+", 0.5, 0.5, 0.5, glm::vec3(1,1,1));
 
     glEnable(GL_DEPTH_TEST);
 
@@ -841,7 +844,7 @@ void Epsilon::PollEvents(void) {
                                      btVector3(eCamera->getDirection().x*1000, eCamera->getDirection().y*1000, eCamera->getDirection().z*1000));
     m_GUI->PollEvents(window);
 
-    //m_ParticleSystem->Simulate(this->frametime, this->eCamera->getPosition());
+    m_ParticleSystem->Simulate(this->frametime, this->eCamera->getPosition());
 }
 
 void Epsilon::MainLoop(void) {
@@ -855,7 +858,7 @@ void Epsilon::MainLoop(void) {
 
         this->ComputeCamera(m_CameraMode, glm::vec3(48.4247, 8.1507, -12.9128), glm::vec3(-0.785454, 0.0299956, 0.618193));
 
-        this->ProcessAudio();
+        //this->ProcessAudio();
 
         timeBehind += etime - lastTime;
 
@@ -863,6 +866,7 @@ void Epsilon::MainLoop(void) {
             rM->m_PhysicsWorld->Update(0.016);
             timeBehind -= 0.016;
         }
+
 
         this->ComputeShadow();
 
@@ -990,7 +994,7 @@ void Epsilon::RenderFrame(void) {
 
     this->RenderParticles();
 
-    //this->waterPlane->RenderWater(eCamera, PP->CopyTextureFBO->getRenderTargetHandler(0), sun->Direction);
+    this->waterPlane->RenderWater(eCamera, PP->CopyTextureFBO->getRenderTargetHandler(0), sun->Direction, PP->gDepth);
 
     PP->ShowPostProcessImage(this->frametime, shadowMap->getShadowTextureID(), this->sun->Direction, this->eCamera);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

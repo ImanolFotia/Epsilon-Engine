@@ -3,7 +3,7 @@ const float PI = 3.14159265359;
 
 float minLight = 0.03;
 float b = 1.0 / 40.0;
-float radius = sqrt(1.0 / (b * minLight));
+//float radius = sqrt(1.0 / (b * minLight));
 
 float DistributionGGX(vec3 N, vec3 H, float roughness)
 {
@@ -78,10 +78,10 @@ float LambertDiffuse(in vec3 N, in vec3 L)
     return max(dot(N, L), 0.0);
 }
 
-vec3 calculatePointPBR(vec3 pos)
+vec3 calculatePointPBR(vec3 pos, vec3 color)
 {
   // calculate per-light radiance
-        vec3 lightcolor = vec3(1.0);//normalize(vec3(205, 109, 39));
+        vec3 lightcolor = normalize(color);
         if(pos.z == 56.0)
             lightcolor = vec3(0.0, 0.0, 0.7);
         vec3 V = normalize(viewPos - FragPos);
@@ -138,4 +138,62 @@ vec3 CalculateDirectionalPBR()
         float NdotL = orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.03, 1.0), 1.0);//              
         vec3 Lo = (kD * Diffuse / PI + brdf) * NdotL; 
         return mix(vec3(0.0), Lo * clamp(1.0 - shadow, 0.0, 1.0) /** lightcolor*/, clamp(lightDir.y + 0.1, 0.0, 1.0))*4.0;
+}
+
+float saturate(in float x)
+{
+    return clamp(x, 0.0, 1.0);
+}
+
+float SpotLightIntensity(in float y, in float p, in float t)
+{
+    return saturate((t - y) / (p - y));
+}
+
+vec3 SpotLightPBR(in vec3 pos, in vec3 dir, in float radius, in vec3 color)
+{
+
+
+        vec3 lightcolor = normalize(color);
+        //if(pos.z == 56.0)
+        //    lightcolor = vec3(0.0, 0.0, 0.7);
+        vec3 V = normalize(viewPos - FragPos);
+        vec3 L = normalize(pos - FragPos);
+        float distance = length(pos - FragPos);
+        float maxDistance = 5.0;
+
+        float theta = dot(L, -dir);
+        float innerRadius = cos(radius);
+        float outerRadius = clamp(distance/maxDistance, 0.0, 0.15);
+        outerRadius = innerRadius - outerRadius;
+        if(theta < outerRadius)
+            return vec3(0.0);
+
+        vec3 H = normalize(V + L);
+        vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+        vec3 kS = F;
+        vec3 kD = vec3(1.0) - kS;
+        kD *= clamp(1.0 - ExtraComponents.x, 0.0, 1.0);
+        //float distance    = length(pos - FragPos);
+        float watts = 60;
+        float attenuation = calculateAttenuation(watts, distance);//1.0 / (1.0 + 0.1/*factor*/ * pow(distance, 2));
+        attenuation *= smoothstep(watts, watts - 5.0, distance);
+        vec3 radiance     = vec3(1.0) * attenuation;        
+        
+        // cook-torrance brdf
+        float NDF = DistributionGGX(Normal, H, clamp(Specular, 0.05, 1.0));        
+        float G   = GeometrySmith(Normal, V, L, Specular);      
+        
+        vec3 nominator    = NDF * G * F;
+        float denominator = (4 * max(dot(V, Normal), 0.0) * max(dot(L, Normal), 0.0)) + 0.001; 
+        vec3 brdf = nominator / denominator;
+            
+        // add to outgoing radiance Lo
+        float NdotL = orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.05, 1.0), 1.0);             
+        vec3 Lo = (kD * Diffuse / PI + brdf) * radiance * NdotL; 
+        vec3 outColor = Lo;
+
+
+        return outColor * lightcolor * SpotLightIntensity(outerRadius, innerRadius, theta)*3.0;
+    
 }

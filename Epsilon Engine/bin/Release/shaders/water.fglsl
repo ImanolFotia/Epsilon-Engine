@@ -17,7 +17,7 @@ in mat3 TBN2;
 layout (binding = 0) uniform sampler2D ColorBuffer;
 layout (binding = 1) uniform sampler2D normalSampler;
 layout (binding = 2) uniform sampler2D DuDvSampler;
-layout (binding = 3) uniform sampler2D diffuseSampler;
+layout (binding = 3) uniform sampler2D gDepth;
 
 uniform float time;
 uniform vec3 lightDir;
@@ -74,6 +74,13 @@ vec4 textureNoTile( sampler2D samp, in vec2 uv )
 uniform int ResX;
 uniform int ResY;
 
+float NEAR = 0.1;
+float FAR = 3000.0;
+float LinearizeDepth(float depth)
+{
+    float z = depth * 2.0 - 1.0; // Back to NDC
+    return ((2.0 * NEAR * FAR) / (FAR + NEAR - z * (FAR - NEAR)));
+}
 
 void main()
 {
@@ -92,6 +99,9 @@ void main()
     vec2 finalDist = distortion1 - distortion2;
     vec3 normaltex = textureNoTile(normalSampler, TexCoords + finalDist).xyz;
     normaltex = normalize(vec3(normaltex.r * 2.0 - 1.0, normaltex.b, normaltex.g *2.0 - 1.0));
+
+    float floorDistance = texture(gDepth, refracCoords).r;
+    floorDistance = LinearizeDepth(floorDistance);
 
     refracCoords += finalDist;
     refracCoords = clamp(refracCoords, 0.0001, 1.0);
@@ -119,7 +129,16 @@ void main()
     uv = (uv - 0.5)/textureResolution;
     //vec3 colB = texture( iChannel0, uv ).xyz;
 
-    FragColor.rgb = texture(ColorBuffer, uv, 0).rgb * vec3(0.5) + spec;
+
+    float depth = gl_FragCoord.z;
+    float waterDistance = LinearizeDepth(depth);
+    float waterDepth = floorDistance - waterDistance;
+
+    vec3 reflectionColor = texture(ColorBuffer, uv, 0).rgb;
+
+    vec3 color = mix(reflectionColor, normalize(vec3(41, 88, 85))*0.01, 0.5);
+    FragColor.rgb = mix(color, normalize(vec3(41, 88, 85))*0.01, clamp(waterDepth/5.0, 0.0, 0.8)) + spec;
+    FragColor.rgb = clamp(FragColor.rgb, vec3(0.005), vec3(1.0));
     FragColor.a = 1.0;
 
     blurImage = vec4(spec*0.1, 1.0);

@@ -44,7 +44,7 @@ void main()
 
     gl_Position = MVP * vec4(position, 1.0f);
 
-    TexCoords = texCoords*25;
+    TexCoords = texCoords*500;
     vec4 PosToCam = view * worldPosition;
     float distance = length(PosToCam);
     wFragPos = worldPosition.xyz;

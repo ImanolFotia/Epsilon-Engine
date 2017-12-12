@@ -26,6 +26,8 @@ in VS_OUT{
 uniform vec3 viewPos;
 uniform float time;
 
+uniform mat4 projection;
+
 float NEAR = 0.1;
 float FAR = 3000.0;
 float LinearizeDepth(float depth)
@@ -33,6 +35,13 @@ float LinearizeDepth(float depth)
     float z = depth * 2.0 - 1.0; // Back to NDC
     return ((2.0 * NEAR * FAR) / (FAR + NEAR - z * (FAR - NEAR)));
 }
+
+float deLinearizeDepth(float depth){
+    float nonLinearDepth = (FAR + NEAR - 2.0 * NEAR * FAR / depth) / (FAR - NEAR);
+    nonLinearDepth = (nonLinearDepth + 1.0) / 2.0;
+    return nonLinearDepth;
+}
+
 in vec4 PrevPosition;
 in vec4 Position;
 
@@ -80,6 +89,10 @@ vec3 sphericalHarmonics(vec3 N)
       2.0 * C1 * u_L2m1 * N.y * N.z;
 }
 
+int numSteps = 0;
+float currentLayerDepth = 0.0;
+float weight = 0.0;
+float layerDepth = 0.0;
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 { 
     // number of depth layers
@@ -87,9 +100,8 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
     const float maxLayers = 32;
     float numLayers = mix(maxLayers, minLayers, abs(dot(vec3(0.0, 0.0, 1.0), viewDir)));  
     // calculate the size of each layer
-    float layerDepth = 1.0 / numLayers;
+    layerDepth = 1.0 / numLayers;
     // depth of current layer
-    float currentLayerDepth = 0.0;
     // the amount to shift the texture coordinates per layer (from vector P)
     vec2 P = viewDir.xy / viewDir.z * 0.08; 
     vec2 deltaTexCoords = P / numLayers;
@@ -99,7 +111,6 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
     float currentDepthMapValue = texture(texture_height, currentTexCoords).b;
 
     int maxSteps = 16;
-    int numSteps = 0;
       
     while(currentLayerDepth < currentDepthMapValue)
     {
@@ -123,7 +134,7 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
     float beforeDepth = texture(texture_height, prevTexCoords).b - currentLayerDepth + layerDepth;
  
     // interpolation of texture coordinates
-    float weight = afterDepth / (afterDepth - beforeDepth);
+    weight = afterDepth / (afterDepth - beforeDepth);
     vec2 finalTexCoords = prevTexCoords * weight + currentTexCoords * (1.0 - weight);
 
     return finalTexCoords;
@@ -173,7 +184,10 @@ void main()
   gAlbedoSpec.rgb += texture(texture_diffuse,texCoords).rgb;
   
   float Depth = LinearizeDepth(gl_FragCoord.z);
-  gDepth.r = gl_FragCoord.z;
+  float bias = max(0.01 * (1.0 - dot(gExpensiveNormal.rgb, Dir)), 0.5) * texture(texture_height, texCoords).b;
+  Depth += smoothstep(0.4, 0.0, texture(texture_height, texCoords).b);
+  gDepth.r = gl_FragCoord.z;//deLinearizeDepth(Depth);
+  //gl_FragDepth = gDepth.r;
   gPosition = fs_in.FragPos.z;
   gExtraComponents.xy = Metallic_Emmisive.xy; //vec4(Metallic_Emmisive, 1.0, 1.0);
 

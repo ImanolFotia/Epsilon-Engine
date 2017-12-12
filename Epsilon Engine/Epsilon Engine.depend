@@ -1812,8 +1812,9 @@
 	"LinearMath/btAlignedObjectArray.h"
 	"BulletCollision/CollisionShapes/btConvexShape.h"
 
-<<<<<<< HEAD
-1508038942 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\bsp.cpp
+1391359686 D
+
+1512502097 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\bsp.cpp
 	<GL/glew.h>
 	<omp.h>
 	<BSP.h>
@@ -2269,7 +2270,7 @@
 
 1396053918 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\soil\src\soil.h
 
-1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\physics.h
+1512502097 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\physics.h
 	<glm/glm.hpp>
 	<EpsilonMemory.h>
 	<Types.h>
@@ -2811,7 +2812,7 @@
 	"LinearMath/btScalar.h"
 	"btRigidBody.h"
 
-1508038942 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\model.h
+1512502096 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\model.h
 	<string>
 	<fstream>
 	<sstream>
@@ -2882,7 +2883,7 @@
 	"../trigonometric.hpp"
 	"../matrix.hpp"
 
-1508038942 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\texture.h
+1512502097 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\texture.h
 	<iostream>
 	<string>
 	<vector>
@@ -2917,7 +2918,7 @@
 1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\emlformat.h
 	<string>
 
-1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\camera.h
+1512502097 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\camera.h
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
 	<glm/gtc/quaternion.hpp>
@@ -2973,12 +2974,13 @@
 	"LinearMath/btVector3.h"
 	"BulletCollision/CollisionDispatch/btCollisionObject.h"
 
-1508038942 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\includes.h
+1512502096 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\includes.h
 	<iostream>
 	<string>
 	<sstream>
 	<ctime>
 	<vector>
+	<iomanip>
 	<glm/gtc/quaternion.hpp>
 
 1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\frustum.h
@@ -2986,7 +2988,7 @@
 	<glm/gtc/matrix_transform.hpp>
 	<Model.h>
 
-1508038942 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\resourcemanager.h
+1512502097 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\resourcemanager.h
 	<Texture.h>
 	<Model.h>
 	<Water.h>
@@ -2999,7 +3001,7 @@
 	<Physics.h>
 	<Audio.h>
 
-1508038942 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\water.h
+1512943729 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\water.h
 	<GL/glew.h>
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
@@ -3019,7 +3021,7 @@
 	<memory>
 	<Physics.h>
 
-1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\grass.h
+1512502096 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\grass.h
 	<GL/glew.h>
 	<string>
 	<iostream>
@@ -3027,7 +3029,7 @@
 	<glm/gtc/matrix_transform.hpp>
 	<Shader.h>
 
-1508038942 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\cubemap.h
+1512502096 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\cubemap.h
 	<glm/glm.hpp>
 	<vector>
 	<string>
@@ -3045,7 +3047,7 @@
 1508038942 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\opengl\helperfunctions\fullscreenquad.h
 	<GL/glew.h>
 
-1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\opengl\framebuffer.h
+1512502096 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\opengl\framebuffer.h
 	<unordered_map>
 	<iostream>
 	<string>
@@ -3053,7 +3055,7 @@
 	<GL/glew.h>
 	<OpenGL/RenderTarget.h>
 
-1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\opengl\rendertarget.h
+1512502096 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\opengl\rendertarget.h
 	<GL/glew.h>
 
 1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\audio.h
@@ -3078,12 +3080,12 @@
 	<memory>
 	<Includes.h>
 
-1508038942 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\bspface.cpp
+1512502097 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\bspface.cpp
 	<Physics.h>
 	<ResourceManager.h>
 	<BSPFace.h>
 
-1508038942 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\camera.cpp
+1512502097 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\camera.cpp
 	<iostream>
 	<camera.h>
 	<math.h>
@@ -3116,10 +3118,10 @@
 
 1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\ddsfile.h
 
-1508038942 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\entitytemplate.cpp
+1512502097 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\entitytemplate.cpp
 	<EntityTemplate.h>
 
-1508038942 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\entitytemplate.h
+1512502096 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\entitytemplate.h
 	<Component.h>
 	<iostream>
 	<glm/glm.hpp>
@@ -3127,7 +3129,7 @@
 	<memory>
 	<ResourceManager.h>
 
-1508038942 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\component.h
+1512502096 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\component.h
 	<iostream>
 	<glm/glm.hpp>
 	<Model.h>
@@ -3136,7 +3138,7 @@
 	<Types.h>
 	<Physics.h>
 
-1508040629 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\epsilon.cpp
+1512960069 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\epsilon.cpp
 	<iostream>
 	<Epsilon.h>
 	<ProgramData.h>
@@ -3153,9 +3155,10 @@
 	<chrono>
 	<Log.h>
 
-1508038943 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\epsilon.h
+1512502097 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\epsilon.h
 	<map>
 	<GL/glew.h>
+	<GL/wglew.h>
 	<GLFW/glfw3.h>
 	<thread>
 	<Texture.h>
@@ -3204,7 +3207,7 @@
 	<Shader.h>
 	<memory>
 
-1501128945 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\text.h
+1512502097 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\text.h
 	<ft2build.h>
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
@@ -3215,7 +3218,7 @@
 
 1237038326 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\freetype2\include\freetype\config\ftheader.h
 
-1508038942 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\postprocess.h
+1512881874 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\postprocess.h
 	<GL/glew.h>
 	<Shader.h>
 	<camera.h>
@@ -3313,7 +3316,7 @@
 	<fstream>
 	<string>
 
-1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\gui\gui.h
+1512502096 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\gui\gui.h
 	<GUI/Container.h>
 	<GUI/Panel.h>
 	<GUI/Button.h>
@@ -3358,12 +3361,12 @@
 	<Particle.h>
 	<ParticleProxy.h>
 
-1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\particle.h
+1512502096 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\particle.h
 	<glm/glm.hpp>
 	<GL/glew.h>
 	<Types.h>
 
-1508039084 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\particleproxy.h
+1512509107 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\particleproxy.h
 	<Types.h>
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
@@ -3374,12 +3377,13 @@
 	<Texture.h>
 	<atomic>
 	<thread>
+	<omp.h>
 
-1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\particlerenderer.h
+1512502096 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\particlerenderer.h
 	<Particle.h>
 	<Shader.h>
 
-1508558718 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\version.h
+1512960603 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\version.h
 
 1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\sys\cpuid.h
 	<string>
@@ -3403,17 +3407,17 @@
 	<assert.h>
 	<memory>
 
-1508558718 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\main.h
+1512503777 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\main.h
 	<ProgramData.h>
 	<Epsilon.h>
 	<memory>
 	<Log.h>
 
-1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\md5_anim.cpp
+1512502097 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\md5_anim.cpp
 	<MD5_Anim.h>
 	<Includes.h>
 
-1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\md5_model.cpp
+1512502097 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\md5_model.cpp
 	<Includes.h>
 	<iostream>
 	<MD5_Model.h>
@@ -3423,7 +3427,7 @@
 	<Mesh.h>
 	<ResourceManager.h>
 
-1508038942 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\model.cpp
+1512502097 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\model.cpp
 	<Model.h>
 	<ResourceManager.h>
 	<Log.h>
@@ -3432,7 +3436,7 @@
 	<ParticleSystem.h>
 	<Types.h>
 
-1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\physics.cpp
+1512502097 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\physics.cpp
 	<Physics.h>
 
 1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\picking.cpp
@@ -3446,7 +3450,7 @@
 	<sys/Joystick.h>
 	<iostream>
 
-1508039367 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\postprocess.cpp
+1512890761 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\postprocess.cpp
 	<PostProcess.h>
 	<iostream>
 	<ProgramData.h>
@@ -3455,6 +3459,7 @@
 	<random>
 	<string>
 	<Includes.h>
+	<OpenGL/HelperFunctions/CheckError.h>
 	<chrono>
 
 1437315607 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\gtx\compatibility.hpp
@@ -3524,13 +3529,13 @@
 	<map>
 	<string>
 
-1508038942 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\resourcemanager.cpp
+1512502097 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\resourcemanager.cpp
 	"ResourceManager.h"
 
 1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\resources.rc
 	<Windows.h>
 
-1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\scene.cpp
+1512502097 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\scene.cpp
 	<Scene.h>
 
 1508038942 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\shader.cpp
@@ -3545,7 +3550,7 @@
 	<Includes.h>
 	<OpenGL/ShaderPreProcessor.h>
 
-1499296007 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\shadowmapping.cpp
+1512949201 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\shadowmapping.cpp
 	<ShadowMapping.h>
 	<iostream>
 	<cmath>
@@ -3563,12 +3568,12 @@
 
 1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\skyboxdata.h
 
-1508038942 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\sphericalharmonics.cpp
+1512502097 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\sphericalharmonics.cpp
 	<SphericalHarmonics.h>
 	<Types.h>
 	<OpenGL/HelperFunctions/CheckError.h>
 
-1508039409 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\sun.cpp
+1512502097 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\sun.cpp
 	<Sun.h>
 	<sys/KeyBoard.h>
 
@@ -3581,7 +3586,7 @@
 	<sys/KeyBoard.h>
 	<iostream>
 
-1508038942 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\terrain.cpp
+1512959418 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\terrain.cpp
 	<iostream>
 	<fstream>
 	<Terrain.h>
@@ -3591,7 +3596,7 @@
 	<exception>
 	<Includes.h>
 
-1508038942 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\water.cpp
+1512943695 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\water.cpp
 	<Water.h>
 
 1508038942 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\cubemaprenderer.h
@@ -3609,7 +3614,7 @@
 	<cubemapRenderer.h>
 	<Texture.h>
 
-1508038942 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\opengl\shaderpreprocessor.h
+1512502096 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\opengl\shaderpreprocessor.h
 	<fstream>
 	<iostream>
 	<string>
@@ -3618,8 +3623,12 @@
 	<algorithm>
 
 1508038942 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\opengl\helperfunctions\checkerror.h
-=======
+
 1469321017 d:\epsilon\epsilon engine\deppend\glew-2.0.0\include\gl\wglew.h
 	<windows.h>
->>>>>>> 8928179c2403e3f904d84e0da64b9c95b44f0d03
+
+1469321017 8179c2403e3f904d84e0da64b9c95b44f0d03
+
+1469321017 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glew-2.0.0\include\gl\wglew.h
+	<windows.h>
 

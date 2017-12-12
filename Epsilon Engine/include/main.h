@@ -37,12 +37,19 @@ public:
 
 };
 
+/*
+extern "C" {
+    _declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+}*/
 
+std::ofstream Global::Log::FILE;
+void error_callback(int error, const char* description)
+{
+    fprintf(stderr, "Error: %s\n", description);
+}
 extern "C" {
     _declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
 }
-
-std::ofstream Global::Log::FILE;
 GLFWwindow* InitEngine(const char* ProgramName) {
 
     Global::Log::OpenFile("log.txt");
@@ -51,12 +58,13 @@ GLFWwindow* InitEngine(const char* ProgramName) {
     Global::Log::WriteToLog("Initializing Epsilon Engine");
 
     ProgramData DATA;
+    std::cout << ProgramName << std::endl;
 
     if(!glfwInit()) {
         std::cout << "GLFW could not be initialized" << std::endl;
         Global::Log::WriteToLog("GLFW could not be initialized");
     }
-
+    glfwSetErrorCallback(error_callback);
     /// glfwWindowHint(GLFW_SAMPLES, DATA.MSAA_SAMPLES);
 
     int numberofmonitors;
@@ -73,7 +81,7 @@ GLFWwindow* InitEngine(const char* ProgramName) {
 
     int numberofmodes;
 
-    const GLFWvidmode* modes = glfwGetVideoModes(CurrentMonitor, &numberofmodes);
+    const GLFWvidmode* modes = glfwGetVideoModes(glfwGetPrimaryMonitor(), &numberofmodes);
 
     GLFWwindow* window;
 
@@ -103,13 +111,13 @@ GLFWwindow* InitEngine(const char* ProgramName) {
         glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
         glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
         glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
-        //glfwWindowHint(GLFW_DECORATED, GL_FALSE);
+        glfwWindowHint(GLFW_DECORATED, GL_FALSE);
         window = glfwCreateWindow(mode->width, mode->height, ProgramName, glfwGetPrimaryMonitor(), 0);
         cout << mode->width << " x " << mode->height << endl;
     } else {
-        window = glfwCreateWindow(DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT, ProgramName, 0, 0);
-        glfwSetWindowPos(window, modes->width/2, modes->height/2);
         cout << DATA.WINDOW_WIDTH << " x " << DATA.WINDOW_HEIGHT << endl;
+        window = glfwCreateWindow(DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT, ProgramName, nullptr, nullptr);
+        glfwSetWindowPos(window, modes->width/2, modes->height/2);
     }
 
     glfwMakeContextCurrent(window);
