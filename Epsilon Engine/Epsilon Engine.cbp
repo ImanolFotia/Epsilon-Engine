@@ -119,6 +119,7 @@
 		<Unit filename="include/GUI/Button.h" />
 		<Unit filename="include/GUI/Container.h" />
 		<Unit filename="include/GUI/GUI.h" />
+		<Unit filename="include/GUI/Label.h" />
 		<Unit filename="include/GUI/Panel.h" />
 		<Unit filename="include/GUI/Widget.h" />
 		<Unit filename="include/Grass.h" />
