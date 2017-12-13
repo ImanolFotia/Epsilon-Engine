@@ -13,6 +13,7 @@
 #include <vector>
 #include <ShadowMapping.h>
 #include <memory>
+#include <Light.h>
 #include <Texture.h>
 #include <OpenGL/FrameBuffer.h>
 
@@ -182,14 +183,6 @@ private:
 
 private:
     //#pragma pack(push, 1)
-        struct t_light {
-        glm::vec4 position; // 4/*
-        glm::vec4 direction; // 8
-        glm::vec4 color; // 12
-        float radius; float _padding[3]; // 13
-        float watts;  float __padding[3]; // 14
-        int type;     float ___padding[3];//15*/
-    };
 
     std::vector<t_light> m_Lights;
     GLuint SSAOwidth;

@@ -2,49 +2,60 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
-namespace Input
-{
-    class Joystick
-    {
-    public:
-        static bool JoystickIsPresent;
+#include <sys/JoystickWrapper.h>
 
-        static int JoystickAxesCount;
-        static int JoystickButtonsCount;
-        static const float* JoystickAxes;
-        static const unsigned char* JoystickButtons;
+namespace Input {
+class Joystick {
+public:
+    static bool JoystickIsPresent;
 
-        static void JoystickCallback(int joystick, int event)
-        {
-            if (event == GLFW_CONNECTED)
-            {
-                std::cout << "New joystick connected: " << glfwGetJoystickName(joystick) << std::endl;
-                JoystickIsPresent = true;
+    static int JoystickAxesCount;
+    static int JoystickButtonsCount;
+    static const float* JoystickAxes;
+    static const unsigned char* JoystickButtons;
 
-               JoystickAxes = glfwGetJoystickAxes(joystick, &JoystickAxesCount);
-               std::cout << "Axis Count: " << JoystickAxesCount << std::endl;
+    static bool BUTTONS[15];
+
+    static void JoystickCallback(int joystick, int event) {
+        if (event == GLFW_CONNECTED) {
+            std::cout << "New joystick connected: " << glfwGetJoystickName(joystick) << std::endl;
+            JoystickIsPresent = true;
+
+            JoystickAxes = glfwGetJoystickAxes(joystick, &JoystickAxesCount);
+            std::cout << "Axis Count: " << JoystickAxesCount << std::endl;
 
 
-               JoystickButtons = glfwGetJoystickButtons(joystick, &JoystickButtonsCount);
-               std::cout << "Axis Count: " << JoystickButtonsCount << std::endl;
-            }
-            else if (event == GLFW_DISCONNECTED)
-            {
-                JoystickIsPresent = false;
-            }
+            JoystickButtons = glfwGetJoystickButtons(joystick, &JoystickButtonsCount);
+            std::cout << "Axis Count: " << JoystickButtonsCount << std::endl;
 
+        } else if (event == GLFW_DISCONNECTED) {
+            JoystickIsPresent = false;
         }
 
-        static void PollJoystick()
-        {
+    }
 
-            if(JoystickIsPresent)
-            {
+    static void PollJoystick() {
 
-               JoystickAxes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &JoystickAxesCount);
+        if(JoystickIsPresent) {
 
-               JoystickButtons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &JoystickButtonsCount);
+            JoystickAxes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &JoystickAxesCount);
+
+            JoystickButtons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &JoystickButtonsCount);
+
+            for(int i = 0; i < 15; i++){
+                if (JoystickButtons[i] == GLFW_PRESS) {
+                    BUTTONS[i] = true;
+                    //std::cout << "Pressed: " << KEYS[key] << std::endl;
+                } else if (JoystickButtons[i] == GLFW_RELEASE) {
+                    BUTTONS[i] = false;
+                    //std::cout << "Released: " << KEYS[key] << std::endl;
+                }
+
             }
+
+        } else {
+            JoystickButtons = nullptr;
         }
-    };
+    }
+};
 }

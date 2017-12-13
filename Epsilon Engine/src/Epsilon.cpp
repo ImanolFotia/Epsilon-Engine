@@ -30,8 +30,9 @@ double Input::Mouse::YPOS = 500;
 bool Input::Joystick::JoystickIsPresent = false;
 int Input::Joystick::JoystickAxesCount = 0;
 int Input::Joystick::JoystickButtonsCount = 0;
-const float* Input::Joystick::JoystickAxes = {0};
-const unsigned char* Input::Joystick::JoystickButtons = {0};
+const float* Input::Joystick::JoystickAxes = nullptr;
+const unsigned char* Input::Joystick::JoystickButtons = nullptr;
+bool Input::Joystick::BUTTONS[15] = {false};
 
 Epsilon::Epsilon(GLFWwindow*& win) {
     window = win;
@@ -84,7 +85,7 @@ Epsilon::Epsilon(GLFWwindow*& win) {
 
     normal = true;
 
-    Running = true;
+    g_Running = true;
 
     flashLight = false;
 
@@ -111,7 +112,10 @@ void Epsilon::RenderSplashScreen(string text) {
     SplashScreen splsh;
     ClearBuffers();
     splsh.Draw(tmpShader.getProgramID(), texture.getTextureID());
-    this->text->RenderText(text,0.01, 0.83, 0.3, glm::vec3(1,1,1));
+    this->text->RenderText(text,0.01, 0.83, 0.4, glm::vec3(1,1,1));
+
+    //this->text->RenderText(std::string("#include <iostream>\nusing namespace std;\nint main(int argc, char** argv) {\n\tstd::cout << \"Hello, World!\" << std::endl;\n\treturn 0;\n}") ,0.01, 0.79, 0.5, glm::vec3(1,1,1));
+
     this->SwapBuffers();
     texture.Destroy();
 
@@ -129,24 +133,52 @@ void Epsilon::InitResources(void) {
     this->HEIGHT = DATA.WINDOW_HEIGHT;
     this->SSAO = DATA.SSAO;
 
-    text = (std::shared_ptr<Text>)new Text("resources/Prototype.ttf", DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT);
+    text = (std::shared_ptr<Text>)new Text("resources/Roboto-Regular.ttf", DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT);
 
     m_GUI = (std::shared_ptr<GUI>) new GUI(this->WIDTH, this->HEIGHT);
     std::shared_ptr<Container> t_Container = (std::shared_ptr<Container>) new Container();
-    std::shared_ptr<Panel> t_Panel = (std::shared_ptr<Panel>) new Panel(this->WIDTH, this->HEIGHT);
-    std::shared_ptr<Button> t_Button = (std::shared_ptr<Button>) new Button(0.2, 0.15, this->WIDTH, this->HEIGHT, "Quit");
-    t_Button->SizeX = 0.2;
-    t_Button->SizeY = 0.15;
-    t_Button->PositionX = -0.65;
-    t_Button->PositionY = -0.45;
-    t_Button->OnClickCallback(endgame);
-    t_Button->m_isHidden = false;
-    t_Button->m_TextRendererInstance = text;
-    t_Container->addWidget(t_Panel);
-    t_Container->addWidget(t_Button);
-    m_GUI->AddContainer(t_Container);
+    std::shared_ptr<Panel> t_Panel = (std::shared_ptr<Panel>) new Panel(this->WIDTH, this->HEIGHT, 0.3*WIDTH, 1.0*HEIGHT, glm::vec2(-0.7, 0.0));
+    t_PanelSettings = (std::shared_ptr<Panel>) new Panel(this->WIDTH, this->HEIGHT, 0.5*WIDTH, 0.5*HEIGHT, glm::vec2(0.3, 0.0));
+    std::shared_ptr<Button> t_ButtonQuit = (std::shared_ptr<Button>) new Button(0.15, 0.1, this->WIDTH, this->HEIGHT, "Quit");
+    t_ButtonQuit->SizeX = 0.15;
+    t_ButtonQuit->SizeY = 0.1;
+    t_ButtonQuit->PositionX = -0.75;
+    t_ButtonQuit->PositionY = -0.45;
+    t_ButtonQuit->OnClickCallback(endgame);
+    t_ButtonQuit->m_isHidden = false;
+    t_ButtonQuit->m_TextRendererInstance = text;
+    t_Container->addWidget(t_ButtonQuit);
 
-    m_Panel = (std::shared_ptr<Panel>) new Panel(WIDTH, HEIGHT);
+    t_ButtonSettings = (std::shared_ptr<Button>) new Button(0.15, 0.1, this->WIDTH, this->HEIGHT, "Settings");
+    t_ButtonSettings->SizeX = 0.15;
+    t_ButtonSettings->SizeY = 0.1;
+    t_ButtonSettings->PositionX = -0.75;
+    t_ButtonSettings->PositionY = -0.2;
+    std::function<void()> lSettings = [&]()->void {
+        t_PanelSettings->ChangeVisibility();
+    };
+    t_ButtonSettings->OnClickCallback(lSettings);
+    t_ButtonSettings->m_isHidden = true;
+    t_ButtonSettings->m_TextRendererInstance = text;
+    t_Container->addWidget(t_ButtonSettings);
+
+    t_ButtonResume = (std::shared_ptr<Button>) new Button(0.15, 0.1, this->WIDTH, this->HEIGHT, "Resume");
+    t_ButtonResume->SizeX = 0.15;
+    t_ButtonResume->SizeY = 0.1;
+    t_ButtonResume->PositionX = -0.75;
+    t_ButtonResume->PositionY = 0.05;
+    std::function<void()> lResume = [&]()->void {
+        this->onMenu = false;
+        menuTime = this->etime;
+    };
+    t_ButtonResume->OnClickCallback(lResume);
+    t_ButtonResume->m_isHidden = false;
+    t_ButtonResume->m_TextRendererInstance = text;
+    t_Container->addWidget(t_ButtonResume);
+
+    t_Container->addWidget(t_Panel);
+    t_Container->addWidget(t_PanelSettings);
+    m_GUI->AddContainer(t_Container);
 
     RenderSplashScreen("Initializing Engine...");
 
@@ -195,23 +227,23 @@ void Epsilon::InitResources(void) {
             EntityList.push_back(tmpEnt);
         }*/
 
-        for(int i = 0; i < 5; i++) {
-            std::shared_ptr<EntityTemplate> tmpEnt;
-            tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-5.5+(i*6.4),9.0,-2), glm::vec3(2.0), glm::quat(-1.0, 0.0, 0.0, 0.0)));
-            std::shared_ptr<Component::RenderComponent> Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-            Compmodel->Fill("models/esfera.eml", rM, "Main");
+    for(int i = 0; i < 5; i++) {
+        std::shared_ptr<EntityTemplate> tmpEnt;
+        tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-5.5+(i*6.4),9.0,-2), glm::vec3(2.0), glm::quat(-1.0, 0.0, 0.0, 0.0)));
+        std::shared_ptr<Component::RenderComponent> Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+        Compmodel->Fill("models/esfera.eml", rM, "Main");
 
-            std::shared_ptr<Component::PhysicComponent> CompPhys = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
+        std::shared_ptr<Component::PhysicComponent> CompPhys = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
 
-            std::shared_ptr<Physics::SpherePhysicObject> ph = (std::shared_ptr<Physics::SpherePhysicObject>) new Physics::SpherePhysicObject();
-            rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(2.0, glm::vec3(-20.5+(i*6.4),9.0,-8), 50.0f).get());
-            CompPhys->Fill(100.0f, ph);
+        std::shared_ptr<Physics::SpherePhysicObject> ph = (std::shared_ptr<Physics::SpherePhysicObject>) new Physics::SpherePhysicObject();
+        rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(2.0, glm::vec3(-20.5+(i*6.4),9.0,-8), 50.0f).get());
+        CompPhys->Fill(100.0f, ph);
 
-            tmpEnt->addComponent(Compmodel);
-            tmpEnt->addComponent(CompPhys);
+        tmpEnt->addComponent(Compmodel);
+        tmpEnt->addComponent(CompPhys);
 
-            EntityList.push_back(tmpEnt);
-        }
+        EntityList.push_back(tmpEnt);
+    }
 
 
     std::shared_ptr<EntityTemplate> tmpEnt;
@@ -406,14 +438,41 @@ void Epsilon::InitResources(void) {
     for(int i = 0; i < 6; ++i) {
 
         this->mCubemap->CaptureEnvironment(i);
-        glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(0.1));
-        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), glm::vec3(0.0));
-        glm::mat4 cModel =  TranslationMatrix * ScaleMatrix;
+        //
+        /*
+                {
+                    for(unsigned int i =0; i < EntityList.size(); ++i) {
+                        //shader->Use();
+                        //this->SetUniforms(shader, EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation());
+                        glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1), EntityList[i]->getScale());
+                        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), EntityList[i]->getPosition());
+                        glm::mat4 RotationMatrix = glm::toMat4(EntityList[i]->getRotation());
+                        glm::mat4 Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
+                        this->rM->setModelUniforms(EntityList[i]->modelPath, Shaders["CubeMap"], EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation(),
+                                                   EntityList[i]->getPrevPosition(), EntityList[i]->getPrevScale(), EntityList[i]->getPrevRotation(),
+                                                   eCamera);
 
-        this->mCubemap->mMainShader->PushUniform("model", cModel);
-        glCullFace(GL_FRONT);
-        BSPMap->Frustum.CalculateFrustum(glm::mat4(this->mCubemap->captureProjection * this->mCubemap->captureViews[i]), cModel);
-        BSPMap->RenderLevel(mCubemap->getPosition(), Shaders["CubeMap"]->getProgramID(), true);
+                        EntityList[i]->Update();
+                        EntityList[i]->Render();
+                    }
+                }
+        */
+
+        glDisable(GL_DEPTH_TEST);
+        this->RenderSkybox(true);
+        glEnable(GL_DEPTH_TEST);
+        {
+            Shaders["CubeMap"]->Use();
+            glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(0.1));
+            glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), glm::vec3(0.0));
+            glm::mat4 cModel =  TranslationMatrix * ScaleMatrix;
+
+            this->mCubemap->mMainShader->PushUniform("model", cModel);
+            glCullFace(GL_FRONT);
+            BSPMap->Frustum.CalculateFrustum(glm::mat4(this->mCubemap->captureProjection * this->mCubemap->captureViews[i]), cModel);
+            BSPMap->RenderLevel(mCubemap->getPosition(), Shaders["CubeMap"]->getProgramID(), true);
+        }
+
 
     }
     glCullFace(GL_BACK);
@@ -474,25 +533,25 @@ void Epsilon::LoadShaders(void) {
 void Epsilon::LoadGeometry(void) {
     cout << "Loading World Geometry..." <<endl;
     vector<glm::vec3> grasspos2;
-
+    /*
         terrain = (std::shared_ptr<Terrain>)new Terrain("materials/iceland2.png",
-                                                        "textures/terrain/cratered-rock.png",
-                                                        "textures/terrain/cratered-rock_n.png",
-                                                        "textures/terrain/cratered-rock_s.png",
-                                                        "Untitled.png", 5.5, 350, glm::vec3(-150, -70.0, -150),rM);
+                  "textures/terrain/cratered-rock.png",
+                  "textures/terrain/cratered-rock_n.png",
+                  "textures/terrain/cratered-rock_s.png",
+                  "Untitled.png", 5.5, 350, glm::vec3(-150, -70.0, -150),rM);
 
 
 
-                for(int i = 0 ; i < terrain->vertices.size() ; i+= 2) {
-                    //if(terrain->vertices[i].Position.y < 0)
-                    //    continue;
-                    int chance = rand() % 2 + 1;
-                    if(chance == 1)
-                        grassPos.push_back(terrain->vertices[i].Position + glm::vec3((rand()%6)-3, 3.5, (rand()%6)-3));
-                    else if(chance == 2)
-                        grasspos2.push_back(terrain->vertices[i].Position + glm::vec3((rand()%6)-3, 3.5, (rand()%6)-3));
-                }
-
+        for(int i = 0 ; i < terrain->vertices.size() ; i+= 2) {
+            //if(terrain->vertices[i].Position.y < 0)
+            //    continue;
+            int chance = rand() % 2 + 1;
+            if(chance == 1)
+                grassPos.push_back(terrain->vertices[i].Position + glm::vec3((rand()%6)-3, 3.5, (rand()%6)-3));
+            else if(chance == 2)
+                grasspos2.push_back(terrain->vertices[i].Position + glm::vec3((rand()%6)-3, 3.5, (rand()%6)-3));
+        }
+    */
     std::cout << "Resource manager in epsilon address: " << rM.get() << std::endl;
 
     rM->requestCubeMap(2, glm::vec3(4.8,80000.2,-8));
@@ -526,7 +585,7 @@ void Epsilon::LoadGeometry(void) {
 
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "depto.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "fun.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 
@@ -563,12 +622,12 @@ void Epsilon::Render3D(Shader* shader) {
 
     //this->waterPlane->RenderWater(eCamera, PP->CopyTextureFBO->getRenderTargetHandler(0), sun->Direction);
     shader->Use();
-
-            Shaders["Terrain"]->Use();
-            this->SetUniforms(Shaders["Terrain"],glm::vec3(0, 0, 0), glm::vec3(1.0),  glm::quat(0, 0,0, 0));
-            terrain->RenderTerrain(Shaders["Terrain"]);
-            glCullFace(GL_BACK);
-
+    /*
+        Shaders["Terrain"]->Use();
+        this->SetUniforms(Shaders["Terrain"],glm::vec3(0, 0, 0), glm::vec3(1.0),  glm::quat(0, 0,0, 0));
+        terrain->RenderTerrain(Shaders["Terrain"]);
+        glCullFace(GL_BACK);
+    */
 
 //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 //glLineWidth(2.0);
@@ -671,7 +730,8 @@ void Epsilon::SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, 
 
 void Epsilon::Render2D(void) {
     glDisable(GL_DEPTH_TEST);
-    m_GUI->Render();
+    if(onMenu)
+        m_GUI->Render();
     m_TextAcum += frametime;
     static float acumfps = 0.0;
     if(m_TextAcum > 0.5) {
@@ -679,18 +739,9 @@ void Epsilon::Render2D(void) {
         acumfps = fps;
 
     }
+
     std::string obj = rM->m_PhysicsWorld->getCollisionObjectName(btVector3(eCamera->getPosition().x, eCamera->getPosition().y, eCamera->getPosition().z),
                       btVector3(eCamera->getDirection().x * 1000, eCamera->getDirection().y * 1000, eCamera->getDirection().z * 1000));
-
-    this->text->RenderText(std::string("Pointing at: ") + obj , 0.01, 0.71, 0.3, glm::vec3(1,0,0));
-
-    this->text->RenderText("Epsilon Engine Alpha Build. Version: " + std::string(AutoVersion::FULLVERSION_STRING), 0.01, 0.73, 0.3, glm::vec3(1,1,1));
-    //this->text->RenderText("Speed: " + floatTostring(eCamera->MovementSpeed), 0.01, 0.95, 0.3, glm::vec3(1,1,1));
-    this->text->RenderText
-    ("Position: x = " + Helpers::floatTostring(this->eCamera->getPosition().x) + " y = " + Helpers::floatTostring(this->eCamera->getPosition().y) + " z = " + Helpers::floatTostring(this->eCamera->getPosition().z), 0.01, 0.77, 0.3, glm::vec3(1,1,1));
-
-    this->text->RenderText
-    ("Direction: x = " + Helpers::floatTostring(this->eCamera->getDirection().x) + " y = " + Helpers::floatTostring(this->eCamera->getDirection().y) + " z = " + Helpers::floatTostring(this->eCamera->getDirection().z), 0.01, 0.75, 0.3, glm::vec3(1,1,1));
 
 
     GLint total_mem_kb = 0;
@@ -720,19 +771,38 @@ void Epsilon::Render2D(void) {
                        &cur_avail_mem_kb );
     }
 
-    this->text->RenderText("FPS: " + Helpers::intTostring(acumfps), 0.01, 0.95, 0.5, glm::vec3(1,1,1));
-    this->text->RenderText("Frame Time: " + Helpers::floatTostring(frametime*1000) + "ms", 0.01, 0.91, 0.3, glm::vec3(1,1,1));
-    this->text->RenderText("OpenGL: " + GL_VER,0.01, 0.89, 0.3, glm::vec3(1,1,1));
-    this->text->RenderText(GL_REN,0.01, 0.87, 0.3, glm::vec3(1,1,1));
-    this->text->RenderText(GL_VEN,0.01, 0.85, 0.3, glm::vec3(1,1,1));
-    this->text->RenderText(std::string("Total GPU Memory: " + Helpers::intTostring(total_mem_kb/1024) + "MB"),0.01, 0.83, 0.3, glm::vec3(1,1,1));
-    this->text->RenderText(std::string("Current GPU Memory Available: " + Helpers::intTostring(cur_avail_mem_kb/1024) + "MB"),0.01, 0.81, 0.3, glm::vec3(1,1,1));
-    this->text->RenderText(std::string("Resolution: " + Helpers::intTostring(this->WIDTH) + "x" + Helpers::intTostring(this->HEIGHT)),0.01, 0.79, 0.3, glm::vec3(1,1,1));
-    //this->text->RenderText(std::string("Current GPU Memory Available: " + Helpers::intTostring(cur_avail_mem_kb/1024) + "MB"),0.01, 0.77, 0.3, glm::vec3(1,1,1));
+    int DEBUG_MODE = 2;
+
+    if(DEBUG_MODE >= 1) {
+        this->text->RenderText("FPS: " + Helpers::intTostring(acumfps), 0.01, 0.95, 0.5, glm::vec3(1,1,1));
+    }
+
+    if(DEBUG_MODE >= 2) {
+        this->text->RenderText("Frame Time: " + Helpers::floatTostring(frametime*1000) + "ms", 0.01, 0.91, 0.3, glm::vec3(1,1,1));
+        this->text->RenderText("OpenGL: " + GL_VER,0.01, 0.89, 0.3, glm::vec3(1,1,1));
+        this->text->RenderText(GL_REN,0.01, 0.87, 0.3, glm::vec3(1,1,1));
+        this->text->RenderText(GL_VEN,0.01, 0.85, 0.3, glm::vec3(1,1,1));
+        this->text->RenderText(std::string("Total GPU Memory: " + Helpers::intTostring(total_mem_kb/1024) + "MB"),0.01, 0.83, 0.3, glm::vec3(1,1,1));
+        this->text->RenderText(std::string("Current GPU Memory Available: " + Helpers::intTostring(cur_avail_mem_kb/1024) + "MB"),0.01, 0.81, 0.3, glm::vec3(1,1,1));
+        //this->text->RenderText(std::string("Current GPU Memory Available: " + Helpers::intTostring(cur_avail_mem_kb/1024) + "MB"),0.01, 0.77, 0.3, glm::vec3(1,1,1));
+        this->text->RenderText(std::string("Resolution: " + Helpers::intTostring(this->WIDTH) + "x" + Helpers::intTostring(this->HEIGHT)),0.01, 0.79, 0.3, glm::vec3(1,1,1));
+    }
+
+    if(DEBUG_MODE >= 3) {
+        this->text->RenderText(std::string("Pointing at: ") + obj, 0.01, 0.71, 0.3, glm::vec3(1,0,0));
+        this->text->RenderText("Epsilon Engine Alpha Build. Version: " + std::string(AutoVersion::FULLVERSION_STRING), 0.01, 0.73, 0.3, glm::vec3(1,1,1));
+        this->text->RenderText
+        ("Position: x = " + Helpers::floatTostring(this->eCamera->getPosition().x) + " y = " + Helpers::floatTostring(this->eCamera->getPosition().y) + " z = " + Helpers::floatTostring(this->eCamera->getPosition().z), 0.01, 0.77, 0.3, glm::vec3(1,1,1));
+        this->text->RenderText
+        ("Direction: x = " + Helpers::floatTostring(this->eCamera->getDirection().x) + " y = " + Helpers::floatTostring(this->eCamera->getDirection().y) + " z = " + Helpers::floatTostring(this->eCamera->getDirection().z), 0.01, 0.75, 0.3, glm::vec3(1,1,1));
+    }
+
+
+
     //this->text->RenderText("On ground: " + std::string(m_PlayerCapsule->isOnGround() ? "YES" : "NO"),0.01, 0.79, 0.3, glm::vec3(1,1,1));/*
     //this->text->RenderText("Parallax Mapping: " + std::string(parallax ? "ON" : "OFF"),0.01, 0.83, 0.3, glm::vec3(1,1,1));*/
 
-    this->text->RenderText("+", 0.5, 0.5, 0.5, glm::vec3(1,1,1));
+    this->text->RenderText(".", 0.5, 0.5, 1.0, glm::vec3(1,1,1));
 
     glEnable(GL_DEPTH_TEST);
 
@@ -802,8 +872,24 @@ void Epsilon::PollEvents(void) {
 
     Input::Joystick::PollJoystick();
 
-    if(Input::KeyBoard::KEYS[Input::GLFW::Key::ESCAPE]) {
+    if(glm::abs((timeGUI*60)-(etime*60)) > 10.0f){
+        timeGUI = this->etime;
+        m_GUI->PollEvents(window);
+    }
+
+    if(Input::KeyBoard::KEYS[Input::GLFW::Key::ESCAPE] || Input::Joystick::BUTTONS[Input::GLFW::Joystick::START] ) {
+        if(glm::abs((menuTime*60)-(etime*60)) > 60.0f ) {
+            onMenu = !onMenu;
+            menuTime = this->etime;
+        }
+    }
+    if(onMenu) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        ComputeCamera(CAMERA_FIXED, eCamera->getPosition(), eCamera->getDirection(), eCamera->getProjectionMatrix(), eCamera->getViewMatrix());
+        this->m_CameraMode = CAMERA_FIXED;
+    } else {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        this->m_CameraMode = NO_CLIP;
     }
 
     if(Input::KeyBoard::KEYS[Input::GLFW::Key::N])
@@ -842,21 +928,21 @@ void Epsilon::PollEvents(void) {
         */
     m_PlayerCapsule->CheckforPicking(btVector3(eCamera->getPosition().x, eCamera->getPosition().y, eCamera->getPosition().z),
                                      btVector3(eCamera->getDirection().x*1000, eCamera->getDirection().y*1000, eCamera->getDirection().z*1000));
-    m_GUI->PollEvents(window);
 
     m_ParticleSystem->Simulate(this->frametime, this->eCamera->getPosition());
 }
 
 void Epsilon::MainLoop(void) {
     // 0 8 6
-    while(Running) {
+    while(g_Running) {
         this->ClearBuffers();
 
         this->Clock();
 
         this->PollEvents();
 
-        this->ComputeCamera(m_CameraMode, glm::vec3(48.4247, 8.1507, -12.9128), glm::vec3(-0.785454, 0.0299956, 0.618193));
+        if(!onMenu)
+            this->ComputeCamera(m_CameraMode, glm::vec3(48.4247, 8.1507, -12.9128), glm::vec3(-0.785454, 0.0299956, 0.618193));
 
         //this->ProcessAudio();
 
@@ -994,7 +1080,7 @@ void Epsilon::RenderFrame(void) {
 
     this->RenderParticles();
 
-    this->waterPlane->RenderWater(eCamera, PP->CopyTextureFBO->getRenderTargetHandler(0), sun->Direction, PP->gDepth);
+    //this->waterPlane->RenderWater(eCamera, PP->CopyTextureFBO->getRenderTargetHandler(0), sun->Direction, PP->gDepth);
 
     PP->ShowPostProcessImage(this->frametime, shadowMap->getShadowTextureID(), this->sun->Direction, this->eCamera);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

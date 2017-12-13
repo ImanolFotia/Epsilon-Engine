@@ -8,9 +8,10 @@
 class Panel : public Widget
 {
 public:
-    Panel(const int winWidth, const int winHeight) : m_winWidth(winWidth), m_winHeight(winHeight) {
-        m_Quad = (std::shared_ptr<OpenGLHelpers::Quad>) new OpenGLHelpers::Quad(400, 1080);
-
+    Panel(const int winWidth, const int winHeight, const int width, const int height, const glm::vec2 pos)
+    : m_winWidth(winWidth), m_winHeight(winHeight), m_Width(width), m_Height(height) {
+        m_Quad = (std::shared_ptr<OpenGLHelpers::Quad>) new OpenGLHelpers::Quad(width, height);
+        m_Position = pos;
         projection = glm::ortho(0.0f, static_cast<GLfloat>(m_winWidth), 0.0f, static_cast<GLfloat>(m_winHeight));
     }
 
@@ -20,7 +21,7 @@ public:
         shader->Use();
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glUniform2f(glGetUniformLocation(shader->getProgramID(), "Position"), 200.0, 360);
+        glUniform2f(glGetUniformLocation(shader->getProgramID(), "Position"), (m_Position.x*0.5+0.5)*m_winWidth, (m_Position.y*0.5+0.5)*m_winHeight);
         glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "projection"), 1, GL_FALSE, &projection[0][0]);
         m_Quad->Render();
         shader->Free();

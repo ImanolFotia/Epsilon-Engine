@@ -375,12 +375,12 @@ void PostProcess::SetupFramebuffer() {
     */
     hdrFBO = (std::shared_ptr<FrameBuffer<std::string> >) new FrameBuffer<std::string>(width, height, true);
 
-    hdrFBO->addRenderTarget("colorBuffer", GL_RGB16F, GL_RGB, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, true);
+    hdrFBO->addRenderTarget("colorBuffer", GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, true);
     hdrFBO->addRenderTarget("brightColorBuffer", GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, true);
     hdrFBO->FinishFrameBuffer();
 
     CopyTextureFBO = (std::shared_ptr<FrameBuffer<int> >) new FrameBuffer<int>(width, height, true);
-    CopyTextureFBO->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR, true);
+    CopyTextureFBO->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, true);
     CopyTextureFBO->FinishFrameBuffer();
 
     SetupGBuffer();
@@ -1115,7 +1115,7 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::shared_ptr<Camera>& 
     glUseProgram(0);
 
     /** copy texture */
-
+/*
     CopyTextureFBO->bindFramebuffer();
     CopyTextureFBO->setViewport();
     CopyTextureFBO->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -1137,7 +1137,7 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::shared_ptr<Camera>& 
 
     CopyTextureFBO->unbindFramebuffer();
     glViewport(0,0,this->width, this->height);
-
+*/
     /** end copy texture*/
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer);

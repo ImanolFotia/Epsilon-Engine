@@ -36,8 +36,7 @@ typedef unsigned short  USHORT;
 constexpr double PI = 3.14159265359;
 constexpr double TAU = PI * 0.5;
 
-struct MINMAX_POINTS
-{
+struct MINMAX_POINTS {
     float MAX_X;
     float MAX_Y;
     float MAX_Z;
@@ -47,8 +46,7 @@ struct MINMAX_POINTS
     float MIN_Z;
 };
 
-enum class PHYSIC_SHAPE
-{
+enum class PHYSIC_SHAPE {
     PHYSICS_BOX_SHAPE = BOX_SHAPE_PROXYTYPE,
     PHYSICS_SPHERE_SHAPE = SPHERE_SHAPE_PROXYTYPE,
     PHYSICS_CONE_SHAPE = CONE_SHAPE_PROXYTYPE,
@@ -56,8 +54,7 @@ enum class PHYSIC_SHAPE
     PHYSICS_TRIANGLEMESH_SHAPE = TRIANGLE_MESH_SHAPE_PROXYTYPE
 };
 
-enum PARTICLE_PROXY
-{
+enum PARTICLE_PROXY {
     RAIN = 0,
     MIST,
     SNOW,
@@ -65,22 +62,19 @@ enum PARTICLE_PROXY
 
 /**Enums*/
 
-enum MODEL_TYPE
-{
+enum MODEL_TYPE {
     DYNAMIC_MODEL = 0,
     STATIC_MODEL
 };
 
-enum CAMERA_MODE
-{
+enum CAMERA_MODE {
     PLAYER_CONTROLLED = 0,
     NO_CLIP,
     CAMERA_FIXED,
     CAMERA_OVERRIDE
 };
 
-enum SHADER_TYPE
-{
+enum SHADER_TYPE {
     FORWARD_RENDERING_SHADER = 0,
     LIGHTNING_PASS_SHADER,
     SSAO_SHADER,
@@ -93,8 +87,7 @@ enum SHADER_TYPE
     GEOMETRY_PASS_SHADER
 };
 
-enum UNIFORM_TYPE
-{
+enum UNIFORM_TYPE {
     U_INT = 0,
     U_FLOAT,
     U_VEC2,
@@ -104,24 +97,32 @@ enum UNIFORM_TYPE
     U_MAT4
 };
 
-enum AUDIO_TYPE
-{
+enum AUDIO_TYPE {
     AMBIENT_SOUND = 0,
     STATIC_SOUND,
     DYNAMIC_SOUND,
     MUSIC
 };
 
-enum CUBEMAP_TYPE
-{
+struct t_light {
+    glm::vec4 position; // 4/*
+    glm::vec4 direction; // 8
+    glm::vec4 color; // 12
+    float radius;
+    float _padding[3]; // 13
+    float watts;
+    float __padding[3]; // 14
+    int type;
+    float ___padding[3];//15*/
+};
+
+enum CUBEMAP_TYPE {
     STATIC = 0,
     DYNAMIC
 };
 
-namespace Component
-{
-enum COMPONENT_TYPE
-{
+namespace Component {
+enum COMPONENT_TYPE {
     MODELCOMPONENT = 0,
     SPATIALCOMPONENT,
     PLAYERCOMPONENT,
@@ -129,8 +130,7 @@ enum COMPONENT_TYPE
     PHYSICCOMPONENT
 };
 
-enum MATERIAL
-{
+enum MATERIAL {
     DIRT = 0,
     GRAVE,
     STONE,
@@ -144,8 +144,7 @@ enum MATERIAL
 };
 }
 
-struct GUIEVENTS
-{
+struct GUIEVENTS {
     double MousePosition[2];
     bool KeyPressed[256];
     bool RightClickWasPressed;

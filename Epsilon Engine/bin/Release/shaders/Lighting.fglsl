@@ -117,7 +117,7 @@ float poissonShadowMapping(vec4 fragPosLightSpace){
     float bias = max(0.01 * (1.0 - dot(normal, lightDir)), 0.005);
 
     for (int i=0;i<4;i++){
-        int index = int(16.0*hash(floor(FragPos.xyz*1000.0), i))%16;
+        int index = int(16.0*random(floor(FragPos.xyz*1000.0), i))%16;
         visibility -= 0.2*(texture(shadowMap, vec3(fragPosLightSpace.xy+ poissonDisk[index]/700.0, fragPosLightSpace.z - bias)/fragPosLightSpace.w).r);
     }
     //visibility -= step(fragPosLightSpace.z, texture(shadowMap, vec3(fragPosLightSpace.xy, fragPosLightSpace.z-bias)).r);

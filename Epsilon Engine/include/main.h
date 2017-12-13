@@ -87,7 +87,7 @@ GLFWwindow* InitEngine(const char* ProgramName) {
 
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
@@ -130,7 +130,16 @@ GLFWwindow* InitEngine(const char* ProgramName) {
 
     glewExperimental = GL_TRUE;
     glewInit();
+    int width, height, channel;
+    unsigned char* pixels = SOIL_load_image("resources/ui/cursor32.png", &width, &height, &channel, SOIL_LOAD_RGBA);
+    std::cout << channel << std::endl;
+    GLFWimage cursorImage;
+    cursorImage.width = width;
+    cursorImage.height = height;
+    cursorImage.pixels = pixels;
 
+    GLFWcursor* cursor = glfwCreateCursor(&cursorImage, 0, 0);
+    glfwSetCursor(window, cursor);
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     //glfwSetWindowPos(window, 0, 0);

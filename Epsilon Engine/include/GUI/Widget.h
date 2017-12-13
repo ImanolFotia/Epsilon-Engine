@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <Shader.h>
 #include <functional>
+#include <exception>
 #include <Types.h>
 
 class Widget {
@@ -28,14 +29,19 @@ public:
         m_OnHoverFunc = func;
     }
 
-    void OnClickCallback( void(*func)()) {
+    void OnClickCallback( std::function<void()> func) {
         m_OnClickFunc = func;
+    }
+
+    void ChangeVisibility()
+    {
+        this->m_isHidden = !this->m_isHidden;
     }
 
     void AnalizeEvents(GUIEVENTS Events)
     {
         m_Events = Events;
-        if(this->Hidden)
+        if(this->m_isHidden)
             return;
 
         CalculateBoundingBox();
@@ -47,8 +53,14 @@ public:
             {
                 if(m_OnHoverFunc != nullptr)
                     OnHover();
+                    try{
                 if(Events.LeftClickWasPressed && m_OnClickFunc != nullptr)
                     m_OnClickFunc();
+                    }
+                    catch(exception e)
+                    {
+                        std::cout << e.what() << std::endl;
+                    }
             }
             else
             {
@@ -63,7 +75,6 @@ public:
         }
     }
 
-bool Hidden = false;
 bool m_isHidden = false;
 
 private:
@@ -90,11 +101,12 @@ private:
         BBB = ( - 1 * SizeY + PositionY);
     }
 
-private:
+public:
     glm::vec2 m_Position;
 
 private:
-    void (*m_OnClickFunc)(void) = nullptr;
+    //void (*m_OnClickFunc)(void) = nullptr;
+    std::function<void()> m_OnClickFunc = nullptr;
     void (*m_OnHoverFunc)(void) = nullptr;
     void (*m_OnLostFocusFunc)(void) = nullptr;
 

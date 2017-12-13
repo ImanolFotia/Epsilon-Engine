@@ -124,16 +124,37 @@ public:
         glUniform3f(glGetUniformLocation(shader->getProgramID(), "textColor"), color.x, color.y, color.z);
         glActiveTexture(GL_TEXTURE0);
         glBindVertexArray(VAO);
+        GLfloat initialX = x;
         y = y * this->HEIGTH;
         x = x * this->WIDTH;
+        GLfloat interlined = 15.0f;
         /// Iterate through all characters
         std::string::const_iterator c;
 
         for (c = text.begin(); c != text.end(); c++) {
+            if(*c == '\n')
+                std::cout << "Jump detected" << std::endl;
             Character ch = Characters[*c];
 
-            GLfloat xpos = x + ch.Bearing.x * scale;
-            GLfloat ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+            GLfloat xpos;
+            GLfloat ypos;
+
+            if(*c == '\n'){
+                x = initialX * this->WIDTH;
+                y = (y - ch.Size.y * scale) - interlined;
+                xpos = x + ch.Bearing.x * scale;
+                ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+                continue;
+            }
+            else if(*c == '\t'){
+                x = (initialX * this->WIDTH) * (ch.Bearing.x * scale * 8.0f);
+                xpos = x + (ch.Bearing.x * scale);
+                continue;
+            }
+            else {
+                xpos = x + ch.Bearing.x * scale;
+                ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+            }
 
             GLfloat w = ch.Size.x * scale;
             GLfloat h = ch.Size.y * scale;

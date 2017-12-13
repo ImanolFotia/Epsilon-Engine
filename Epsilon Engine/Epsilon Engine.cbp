@@ -107,6 +107,7 @@
 		<Unit filename="include/BSPfile.h" />
 		<Unit filename="include/BSPformat.h" />
 		<Unit filename="include/CBitset.h" />
+		<Unit filename="include/CommandFunctions.h" />
 		<Unit filename="include/Component.h" />
 		<Unit filename="include/CubeMap.h" />
 		<Unit filename="include/DDS.h" />
@@ -183,6 +184,7 @@
 		<Unit filename="include/renderer/Renderer.h" />
 		<Unit filename="include/sys/CPUID.h" />
 		<Unit filename="include/sys/Joystick.h" />
+		<Unit filename="include/sys/JoystickWrapper.h" />
 		<Unit filename="include/sys/KeyBoard.h" />
 		<Unit filename="include/sys/KeyboardWrapper.h" />
 		<Unit filename="include/sys/Mouse.h" />

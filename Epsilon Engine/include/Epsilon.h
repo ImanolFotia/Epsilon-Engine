@@ -50,9 +50,7 @@
 #include <ParticleSystem.h>
 #include <cubemapRenderer.h>
 #include <CubeMap.h>
-
-    static bool Running = true;
-    static void endgame(){Running = false;}
+#include <CommandFunctions.h>
 
 class Epsilon
 {
@@ -171,12 +169,16 @@ public:
     std::shared_ptr<Game::Player> m_PlayerCapsule;
     std::shared_ptr<GUI> m_GUI;
     std::shared_ptr<Panel> m_Panel;
+    std::shared_ptr<Button> t_ButtonSettings;
+    std::shared_ptr<Panel> t_PanelSettings;
+    std::shared_ptr<Button> t_ButtonResume;
     /** Window Properties **/
     float xz[5][5];
     short WIDTH = 16;
     short HEIGHT = 16;
     bool SSAO = false;
     float timeBehind;
+    float timeGUI = 0.0;
 private:
     bool normal = 0;
     bool flashLight = 0;
@@ -189,6 +191,8 @@ private:
     float eventtime = 0;
     short fps = 0;
     bool showtext = false;
+    bool onMenu = false;
+    float menuTime = 0.0;
     //vector<glm::vec3> lightPositions;
     std::vector<glm::vec3> grassPos;
     std::ostringstream fpss;

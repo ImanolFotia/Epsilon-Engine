@@ -57,10 +57,22 @@ vec3 HDR2(vec3 image) {
 
 /*----------------------------------------------------------------------------*/
 vec4 textureDistorted(in sampler2D tex, in vec2 texcoord, in vec2 direction,
-                      in vec3 distortion) {
+                      in float distortion) {
+  /*
   return vec4(texture(tex, texcoord + direction * distortion.r).r,
               texture(tex, texcoord + direction * distortion.g).g,
               texture(tex, texcoord + direction * distortion.b).b, 1.0);
+*/
+        float dist = sqrt(pow(direction.x,2) + pow(direction.y,2));
+        //float _ChromaticAberration = 0.5;
+        float mov = distortion * dist;
+        vec2 uvR = vec2(texcoord.x - mov, texcoord.y);
+        vec2 uvG = vec2(texcoord.x + mov, texcoord.y);
+        vec2 uvB = vec2(texcoord.x, texcoord.y - mov);
+        vec4 colR = texture(tex, uvR);
+        vec4 colG = texture(tex, uvG);
+        vec4 colB = texture(tex, uvB);
+        return vec4(colR.r, colG.g, colB.b, 0.8f);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -164,7 +176,9 @@ void main() {
 
   DOFRadius = clamp(dDepth * 15.0, 0.0, 0.7);
 
-  composite = Bokeh(TexCoords, DOFRadius, .10, 1.0);
+  //composite = Bokeh(TexCoords, DOFRadius, .10, 1.0);
+
+  composite = textureDistorted(compositeImage, TexCoords, normalize(fragcoord - vec2(0.0)), 0.001).rgb;
 
   composite = changeSaturation(composite, 1.2);
 

@@ -15,7 +15,7 @@
 class Light{
 
 public:
-    Light(BYTE type, glm::vec3 direction, glm::vec3 position, float radius, float quadratic, float linear, float constant)
+    Light(short type, glm::vec3 direction, glm::vec3 position, float radius, float quadratic, float linear, float constant)
     {
         this->type = type;
         this->direction = direction;
@@ -30,7 +30,7 @@ public:
 
     /** Getters */
 public:
-    BYTE getType()
+    short getType()
     {
         return this->type;
     }
@@ -63,6 +63,11 @@ public:
     float getConstant()
     {
         return this->constant;
+    }
+
+    t_light toStruct()
+    {
+
     }
 
         /** Setters */
@@ -104,7 +109,7 @@ public:
 
 private:
 
-    BYTE type;
+    short type;
 
     glm::vec3 direction;
 
