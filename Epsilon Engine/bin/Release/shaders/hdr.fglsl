@@ -178,9 +178,9 @@ void main() {
 
   //composite = Bokeh(TexCoords, DOFRadius, .10, 1.0);
 
-  composite = textureDistorted(compositeImage, TexCoords, normalize(fragcoord - vec2(0.0)), 0.001).rgb;
+  composite = textureDistorted(compositeImage, TexCoords, normalize(fragcoord - vec2(0.0)), 0.005).rgb;
 
-  composite = changeSaturation(composite, 1.2);
+  composite = changeSaturation(composite, 0.5);
 
   color.rgb = HDR2(composite + (GodRays.rgb) + (bloom) + (result.rgb * lensMod.rgb * 5)) * vignete;
 

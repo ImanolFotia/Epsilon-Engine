@@ -105,7 +105,7 @@ public:
 
         this->sortParticles();
 
-        #pragma omp simd
+        //#pragma omp simd
         for(unsigned int i = 0; i < Particles.size(); i++) {
 
             if(Particles[i].getPosition().y > ParticlesLimits.MAX_X) {
@@ -154,7 +154,7 @@ public:
 
         generator.seed(std::chrono::system_clock::now().time_since_epoch().count());
 
-        #pragma omp parallel for
+        //#pragma omp parallel for
         for(unsigned int i = 0; i < Particles.size(); ++i) {
 
             glm::vec3 CurrentParticlePosition(
@@ -223,7 +223,7 @@ public:
         std::uniform_real_distribution<GLfloat> ZLimit(ParticlesLimits.MIN_Z, ParticlesLimits.MAX_Z);
         generator.seed(std::chrono::system_clock::now().time_since_epoch().count());
 
-        #pragma omp parallel for
+        //#pragma omp parallel for
         for(unsigned int i = 0; i < Particles.size(); ++i) {
 
             glm::vec3 CurrentParticlePosition(
@@ -260,7 +260,7 @@ public:
         // for(int t = 0; t < 8; t++)
         // {   th.emplace_back([&]()
         // {
-        #pragma omp simd
+        //#pragma omp simd
         for(unsigned int i = 0; i < Particles.size(); i++) {
 
             if(Particles[i].getPosition().y < ParticlesLimits.MIN_Y) {
@@ -330,7 +330,7 @@ public:
 
         this->sortParticles();
 
-        #pragma omp parallel for simd
+        //#pragma omp parallel for simd
         for(unsigned int i = 0; i < Particles.size(); i++) {
 
             if(Particles[i].getPosition().y < ParticlesLimits.MIN_Y) {

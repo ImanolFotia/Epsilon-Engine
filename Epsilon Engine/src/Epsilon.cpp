@@ -122,9 +122,6 @@ void Epsilon::RenderSplashScreen(string text) {
 }
 
 void Epsilon::InitResources(void) {
-
-
-
     cout << "Initializing Resources..." << endl;
 
     ProgramData DATA;
@@ -154,11 +151,12 @@ void Epsilon::InitResources(void) {
     t_ButtonSettings->SizeY = 0.1;
     t_ButtonSettings->PositionX = -0.75;
     t_ButtonSettings->PositionY = -0.2;
+    t_PanelSettings->m_isHidden = true;
     std::function<void()> lSettings = [&]()->void {
         t_PanelSettings->ChangeVisibility();
     };
     t_ButtonSettings->OnClickCallback(lSettings);
-    t_ButtonSettings->m_isHidden = true;
+    t_ButtonSettings->m_isHidden = false;
     t_ButtonSettings->m_TextRendererInstance = text;
     t_Container->addWidget(t_ButtonSettings);
 
@@ -585,7 +583,7 @@ void Epsilon::LoadGeometry(void) {
 
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "fun.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "godrays_tutorial.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 
