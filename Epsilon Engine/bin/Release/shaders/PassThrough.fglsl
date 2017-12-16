@@ -9,5 +9,5 @@ noperspective in vec2 TexCoords;
 void main()
 {	
 
-	output0 = texture(texture0, TexCoords);
+	output0 = texture(texture0, TexCoords, 8.0);
 }

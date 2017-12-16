@@ -51,7 +51,7 @@ const float CosineA0 = Pi;
 const float CosineA1 = (2.0f * Pi) / 3.0f;
 const float CosineA2 = Pi * 0.25f;
 // scale for restored amount of lighting
-uniform float u_scaleFactor = 13.0;
+uniform float u_scaleFactor = 15.0;
 
 // coefficients of spherical harmonics and possible values
 vec3 u_L00 = vec3(0.00069917, 0.000636377, 0.00103519);

@@ -162,7 +162,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 1, 1, 1.0);
     tmpLight.radius = 45.0f;
-    tmpLight.watts = 100.0f;
+    tmpLight.watts = 500.0f;
     tmpLight.type = 0;
     m_Lights.push_back(tmpLight);
 
@@ -170,7 +170,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 1, 1, 1.0);
     tmpLight.radius = 45.0f;
-    tmpLight.watts = 100.0f;
+    tmpLight.watts = 500.0f;
     tmpLight.type = 0;
     m_Lights.push_back(tmpLight);
 
@@ -178,7 +178,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 1, 1, 1.0);
     tmpLight.radius = 45.0f;
-    tmpLight.watts = 100.0f;
+    tmpLight.watts = 500.0f;
     tmpLight.type = 0;
     m_Lights.push_back(tmpLight);
 
@@ -186,7 +186,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 1, 1, 1.0);
     tmpLight.radius = 45.0f;
-    tmpLight.watts = 100.0f;
+    tmpLight.watts = 500.0f;
     tmpLight.type = 0;
     m_Lights.push_back(tmpLight);
 
@@ -194,7 +194,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 1, 1, 1.0);
     tmpLight.radius = 45.0f;
-    tmpLight.watts = 100.0f;
+    tmpLight.watts = 500.0f;
     tmpLight.type = 0;
     m_Lights.push_back(tmpLight);
 
@@ -202,7 +202,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 1, 1, 1.0);
     tmpLight.radius = 45.0f;
-    tmpLight.watts = 100.0f;
+    tmpLight.watts = 500.0f;
     tmpLight.type = 0;
     m_Lights.push_back(tmpLight);
 
@@ -210,7 +210,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 1, 1, 1.0);
     tmpLight.radius = 45.0f;
-    tmpLight.watts = 100.0f;
+    tmpLight.watts = 500.0f;
     tmpLight.type = 0;
     m_Lights.push_back(tmpLight);
 
@@ -218,7 +218,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 1, 1, 1.0);
     tmpLight.radius = 45.0f;
-    tmpLight.watts = 100.0f;
+    tmpLight.watts = 500.0f;
     tmpLight.type = 0;
     m_Lights.push_back(tmpLight);
 
@@ -226,7 +226,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 1, 1, 1.0);
     tmpLight.radius = 45.0f;
-    tmpLight.watts = 100.0f;
+    tmpLight.watts = 500.0f;
     tmpLight.type = 0;
     m_Lights.push_back(tmpLight);
 
@@ -234,7 +234,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 1, 1, 1.0);
     tmpLight.radius = 45.0f;
-    tmpLight.watts = 100.0f;
+    tmpLight.watts = 500.0f;
     tmpLight.type = 0;
     m_Lights.push_back(tmpLight);
 
@@ -242,7 +242,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 1, 1, 1.0);
     tmpLight.radius = 45.0f;
-    tmpLight.watts = 100.0f;
+    tmpLight.watts = 500.0f;
     tmpLight.type = 0;
     m_Lights.push_back(tmpLight);
 
@@ -250,7 +250,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 1, 1.0);
     tmpLight.color = glm::vec4(0.4, 0.8, 0.5, 1.0);
     tmpLight.radius = 0.5f;
-    tmpLight.watts = 100.0f;
+    tmpLight.watts = 500.0f;
     tmpLight.type = 1;
     m_Lights.push_back(tmpLight);
 
@@ -258,7 +258,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 1, 0, 1.0);
     tmpLight.color = glm::vec4(0.4, 0.8, 0.5, 1.0);
     tmpLight.radius = 0.2f;
-    tmpLight.watts = 100.0f;
+    tmpLight.watts = 500.0f;
     tmpLight.type = 1;
     m_Lights.push_back(tmpLight);
 
@@ -390,7 +390,7 @@ void PostProcess::SetupFramebuffer() {
     SetupMotionBlur();
 
     mCompositeImage = (std::shared_ptr<FrameBuffer<int> >) new FrameBuffer<int>(width, height, true);
-    mCompositeImage->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_NEAREST, GL_NEAREST, false);
+    mCompositeImage->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, false);
     mCompositeImage->FinishFrameBuffer();
 
 }
@@ -892,9 +892,18 @@ void PostProcess::DownSampleSSR(double frametime) {
 
     PassThroughShader->Use();
     glViewport(0,0, 1, 1);
-    glBindTexture(GL_TEXTURE_2D, hdrFBO->getRenderTargetHandler("colorBuffer"));
+    glBindTexture(GL_TEXTURE_2D, mCompositeImage->getRenderTargetHandler(0));
     glGenerateMipmap(GL_TEXTURE_2D);
     this->RenderQuad();
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    PassThroughShader->Free();
+
+
+
+    glBindFramebuffer(GL_FRAMEBUFFER, DownSamplerFBO);
 
     GLfloat luminescence[3];
     glReadPixels(0, 0, 1, 1, GL_RGB, GL_FLOAT, &luminescence);
@@ -906,11 +915,10 @@ void PostProcess::DownSampleSSR(double frametime) {
     else {}
 
     m_exposure = glm::clamp(m_exposure, 7.0f, 12.0f);
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    PassThroughShader->Free();
+
+    std::cout << m_exposure << std::endl;
+
 }
 
 GLuint PostProcess::blurSSR(GLuint Buffer) {
@@ -981,7 +989,6 @@ void PostProcess::CompositeImage() {
 
 void PostProcess::ShowPostProcessImage(float frametime, GLuint ShadowMapID, glm::vec3 Sun, std::shared_ptr<Camera>& cam) {
 
-    DownSampleSSR(frametime);
 
     GLuint blurred = this->blurImage(hdrFBO->getRenderTargetHandler("brightColorBuffer"), false);
     if(SSROn) {
@@ -992,6 +999,8 @@ void PostProcess::ShowPostProcessImage(float frametime, GLuint ShadowMapID, glm:
         MotionBlur(frametime);
 
     this->CompositeImage();
+
+    DownSampleSSR(frametime);
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
