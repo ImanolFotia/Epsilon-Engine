@@ -28,16 +28,15 @@ public:
     }
 
     struct SphericalHarmonicsFormat {
-        glm::vec3 position;
-        glm::vec3 u_L00;
-        glm::vec3 u_L1m1;
-        glm::vec3 u_L10;
-        glm::vec3 u_L11;
-        glm::vec3 u_L2m2;
-        glm::vec3 u_L2m1;
-        glm::vec3 u_L20;
-        glm::vec3 u_L21;
-        glm::vec3 u_L22;
+        glm::vec3 u_L00; float padding0;
+        glm::vec3 u_L1m1; float padding1;
+        glm::vec3 u_L10; float padding2;
+        glm::vec3 u_L11; float padding3;
+        glm::vec3 u_L2m2; float padding4;
+        glm::vec3 u_L2m1; float padding5;
+        glm::vec3 u_L20; float padding6;
+        glm::vec3 u_L21; float padding7;
+        glm::vec3 u_L22; float padding8;
     };
 
     void SaveCohefficients() {
@@ -49,7 +48,6 @@ public:
 
         SphericalHarmonicsFormat SHF;
 
-        SHF.position = glm::vec3(0.0, 0.0, 0.0);
         SHF.u_L00 = m_Cohefficients[0];
         SHF.u_L1m1 = m_Cohefficients[1];
         SHF.u_L10 = m_Cohefficients[2];
@@ -64,12 +62,32 @@ public:
 
     }
 
+    SphericalHarmonicsFormat toStruct()
+    {
+        SphericalHarmonicsFormat SHF;
+
+        SHF.u_L00 = m_Cohefficients[0];
+        SHF.u_L1m1 = m_Cohefficients[1];
+        SHF.u_L10 = m_Cohefficients[2];
+        SHF.u_L11 = m_Cohefficients[3];
+        SHF.u_L2m2 = m_Cohefficients[4];
+        SHF.u_L2m1 = m_Cohefficients[5];
+        SHF.u_L20 = m_Cohefficients[6];
+        SHF.u_L21 = m_Cohefficients[7];
+        SHF.u_L22 = m_Cohefficients[8];
+
+        return SHF;
+    }
+
     std::vector<std::string> mCohefficientsNames;
+
+    void setId(unsigned inId) { this->m_ID = inId;}
 
 private:
     std::vector<glm::vec3> m_Cohefficients;
     float m_scaleFactor;
     glm::vec3 m_Position;
+    unsigned m_ID;
 
 
     void sphericalHarmonicsEvaluateDirection(float * result, int order,
