@@ -13,7 +13,7 @@ uniform mat4 MVP;
 
 out vec2 TexCoords;
 out vec3 Normal;
-out vec4 FragPos;
+out vec3 FragPos;
 out mat3 TBN;
 
 vec3 T;
@@ -34,7 +34,7 @@ void main()
 
 	vec4 viewPos = model * pos;
 
-	FragPos = viewPos;
+	FragPos = viewPos.xyz;
 
 	Normal = in_normal;
 

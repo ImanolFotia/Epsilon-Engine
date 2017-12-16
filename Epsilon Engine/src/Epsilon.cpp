@@ -436,41 +436,14 @@ void Epsilon::InitResources(void) {
     for(int i = 0; i < 6; ++i) {
 
         this->mCubemap->CaptureEnvironment(i);
-        //
-        /*
-                {
-                    for(unsigned int i =0; i < EntityList.size(); ++i) {
-                        //shader->Use();
-                        //this->SetUniforms(shader, EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation());
-                        glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1), EntityList[i]->getScale());
-                        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), EntityList[i]->getPosition());
-                        glm::mat4 RotationMatrix = glm::toMat4(EntityList[i]->getRotation());
-                        glm::mat4 Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
-                        this->rM->setModelUniforms(EntityList[i]->modelPath, Shaders["CubeMap"], EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation(),
-                                                   EntityList[i]->getPrevPosition(), EntityList[i]->getPrevScale(), EntityList[i]->getPrevRotation(),
-                                                   eCamera);
+        glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(0.1));
+        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), glm::vec3(0.0));
+        glm::mat4 cModel =  TranslationMatrix * ScaleMatrix;
 
-                        EntityList[i]->Update();
-                        EntityList[i]->Render();
-                    }
-                }
-        */
-
-        glDisable(GL_DEPTH_TEST);
-        this->RenderSkybox(true);
-        glEnable(GL_DEPTH_TEST);
-        {
-            Shaders["CubeMap"]->Use();
-            glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(0.1));
-            glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), glm::vec3(0.0));
-            glm::mat4 cModel =  TranslationMatrix * ScaleMatrix;
-
-            this->mCubemap->mMainShader->PushUniform("model", cModel);
-            glCullFace(GL_FRONT);
-            BSPMap->Frustum.CalculateFrustum(glm::mat4(this->mCubemap->captureProjection * this->mCubemap->captureViews[i]), cModel);
-            BSPMap->RenderLevel(mCubemap->getPosition(), Shaders["CubeMap"]->getProgramID(), true);
-        }
-
+        this->mCubemap->mMainShader->PushUniform("model", cModel);
+        glCullFace(GL_FRONT);
+        BSPMap->Frustum.CalculateFrustum(glm::mat4(this->mCubemap->captureProjection * this->mCubemap->captureViews[i]), cModel);
+        BSPMap->RenderLevel(mCubemap->getPosition(), Shaders["CubeMap"]->getProgramID(), true);
 
     }
     glCullFace(GL_BACK);
@@ -478,8 +451,15 @@ void Epsilon::InitResources(void) {
 
     rM->addCubemap(this->mCubemap, mCubemap->getPosition());
 
-    SphericalHarmonics sph;
     sph.CalculateCohefficients(this->mCubemap->getTextureID(), 3);
+    sph.setId(this->mCubemap->getID());
+
+    glGenBuffers(1, &AmbientLightSSBO);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, AmbientLightSSBO);
+    SphericalHarmonics::SphericalHarmonicsFormat sphStruct = sph.toStruct();
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(SphericalHarmonics::SphericalHarmonicsFormat), (const void*)&sphStruct, GL_DYNAMIC_COPY);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, AmbientLightSSBO);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
     for(unsigned int i = 0; i < sph.getCohefficients().size(); i++) {
         std::cout << "vec3 " << sph.mCohefficientsNames[i] << " = vec3(" <<
@@ -583,7 +563,7 @@ void Epsilon::LoadGeometry(void) {
 
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "godrays_tutorial.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "house_blueprint.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 
@@ -769,7 +749,7 @@ void Epsilon::Render2D(void) {
                        &cur_avail_mem_kb );
     }
 
-    int DEBUG_MODE = 2;
+    int DEBUG_MODE = 3;
 
     if(DEBUG_MODE >= 1) {
         this->text->RenderText("FPS: " + Helpers::intTostring(acumfps), 0.01, 0.95, 0.5, glm::vec3(1,1,1));
@@ -870,7 +850,7 @@ void Epsilon::PollEvents(void) {
 
     Input::Joystick::PollJoystick();
 
-    if(glm::abs((timeGUI*60)-(etime*60)) > 10.0f){
+    if(glm::abs((timeGUI*60)-(etime*60)) > 10.0f) {
         timeGUI = this->etime;
         m_GUI->PollEvents(window);
     }
@@ -1020,6 +1000,7 @@ void Epsilon::ComputeShadow() {
 void Epsilon::ProcessFrame(void) {
     PP->beginOffScreenrendering();
 
+    //glBindBuffer(GL_SHADER_STORAGE_BUFFER, this->AmbientLightSSBO);
     glEnable(GL_DEPTH_CLAMP);
     this->RenderSkybox(true);
     glClearDepth( 1.0f );
@@ -1036,6 +1017,8 @@ void Epsilon::ProcessFrame(void) {
 
     glDisable(GL_DEPTH_CLAMP);
     PP->endOffScreenRendering();
+
+    //glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
     if(this->SSAO)
         PP->applySSAO(this->eCamera);

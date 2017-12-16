@@ -179,6 +179,9 @@ public:
     bool SSAO = false;
     float timeBehind;
     float timeGUI = 0.0;
+    SphericalHarmonics sph;
+
+    GLuint AmbientLightSSBO;
 private:
     bool normal = 0;
     bool flashLight = 0;

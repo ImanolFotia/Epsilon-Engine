@@ -210,7 +210,7 @@ void main()
 
    // b = 1.0 / (radius*radius * minLight);
     
-    for(int i = 0 ; i < 13 ; i++)
+    for(int i = 0 ; i < outBuffer.Lights.length() ; i++)
     {
         if(outBuffer.Lights[i].type == 0)
             light += calculatePointPBR(outBuffer.Lights[i].position.rgb, outBuffer.Lights[i].color.rgb);
