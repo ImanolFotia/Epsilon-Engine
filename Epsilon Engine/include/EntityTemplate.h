@@ -7,24 +7,19 @@
 #include <memory>
 #include <ResourceManager.h>
 
-class EntityTemplate
-{
+class EntityTemplate {
 public:
     EntityTemplate(std::shared_ptr<ResourceManager> rm, glm::vec3 pos, glm::vec3 sc, glm::quat rot);
 
-    ~EntityTemplate()
-    {
-       std::cout << "Entity " + CollInfo.getName() + " Destroyed." << std::endl;
+    ~EntityTemplate() {
+        std::cout << "Entity " + CollInfo.getName() + " Destroyed." << std::endl;
     }
 
-    void addComponent(std::shared_ptr<Component::Component> t)
-    {
-        if(t->Type == Component::MODELCOMPONENT){
+    void addComponent(std::shared_ptr<Component::Component> t) {
+        if(t->Type == Component::MODELCOMPONENT) {
             hasModel = true;
             this->modelPath = (static_pointer_cast<Component::RenderComponent>(t))->modelPath;
-        }
-        else if(t->Type == Component::PHYSICCOMPONENT)
-        {
+        } else if(t->Type == Component::PHYSICCOMPONENT) {
             hasPhysicComponent = true;
             m_Position = glm::vec3(t->m_PhysicsWorldPosition.getX(), t->m_PhysicsWorldPosition.getY(),t->m_PhysicsWorldPosition.getZ());
             m_PrevPosition = m_Position;
@@ -33,8 +28,7 @@ public:
             transf.setRotation(rot);
             t->setTransform(transf);
             t->setUserPointer(&CollInfo);
-        }
-        else if(t->Type == Component::PLAYERCOMPONENT)
+        } else if(t->Type == Component::PLAYERCOMPONENT)
             hasPlayerComponent = true;
         else
             std::cout << " not added component" << std::endl;
@@ -57,12 +51,9 @@ public:
     std::vector<std::shared_ptr<Component::Component>> ComponentList;
 
 public:
-    glm::vec3 getPosition()
-    {
-        if(hasPhysicComponent)
-        {
-            for(unsigned int i = 0; i < ComponentList.size(); ++i)
-            {
+    glm::vec3 getPosition() {
+        if(hasPhysicComponent) {
+            for(unsigned int i = 0; i < ComponentList.size(); ++i) {
                 if(ComponentList.at(i)->Type == Component::PHYSICCOMPONENT)
                     return glm::vec3(ComponentList.at(i)->m_PhysicsWorldPosition.getX(),
                                      ComponentList.at(i)->m_PhysicsWorldPosition.getY(),
@@ -73,74 +64,68 @@ public:
 
     }
 
-    glm::vec3 getPrevPosition()
-    {
-        if(hasPhysicComponent)
-        {
-            for(unsigned int i = 0; i < ComponentList.size(); ++i)
-            {
+    glm::vec3 getPrevPosition() {
+        if(hasPhysicComponent) {
+            for(unsigned int i = 0; i < ComponentList.size(); ++i) {
                 if(ComponentList.at(i)->Type == Component::PHYSICCOMPONENT)
                     return glm::vec3(ComponentList.at(i)->m_LastPhysicsWorldPosition.getX(),
                                      ComponentList.at(i)->m_LastPhysicsWorldPosition.getY(),
                                      ComponentList.at(i)->m_LastPhysicsWorldPosition.getZ());
             }
-        }
-        else
-        return m_Position;
+        } else
+            return m_Position;
     }
 
-    glm::vec3 getScale()
-    {
+    glm::vec3 getScale() {
         return m_Scale;
     }
 
-    glm::vec3 getPrevScale()
-    {
+    glm::vec3 getPrevScale() {
         return m_PrevScale;
     }
 
-    glm::quat getRotation()
-    {
-        if(hasPhysicComponent)
-        {
-            for(unsigned int i = 0; i < ComponentList.size(); ++i)
-            {
+    glm::quat getRotation() {
+        if(hasPhysicComponent) {
+            for(unsigned int i = 0; i < ComponentList.size(); ++i) {
                 if(ComponentList.at(i)->Type == Component::PHYSICCOMPONENT)
                     return glm::quat(ComponentList.at(i)->m_PhysicsWorldRotation.getW(),
                                      ComponentList.at(i)->m_PhysicsWorldRotation.getX(),
                                      ComponentList.at(i)->m_PhysicsWorldRotation.getY(),
                                      ComponentList.at(i)->m_PhysicsWorldRotation.getZ());
             }
-        }
-        else
-        return m_Rotation;
+        } else
+            return m_Rotation;
     }
 
-    glm::quat getPrevRotation()
-    {
-        if(hasPhysicComponent)
-        {
-            for(unsigned int i = 0; i < ComponentList.size(); ++i)
-            {
+    glm::quat getPrevRotation() {
+        if(hasPhysicComponent) {
+            for(unsigned int i = 0; i < ComponentList.size(); ++i) {
                 if(ComponentList.at(i)->Type == Component::PHYSICCOMPONENT)
                     return glm::quat(ComponentList.at(i)->m_LastPhysicsWorldRotation.getW(),
                                      ComponentList.at(i)->m_LastPhysicsWorldRotation.getX(),
                                      ComponentList.at(i)->m_LastPhysicsWorldRotation.getY(),
                                      ComponentList.at(i)->m_LastPhysicsWorldRotation.getZ());
             }
-        }
-        else
+        } else
             return m_PrevRotation;
-        }
+    }
 
-    MIN_MAX_POINTS getBoundingBox()
-    {
+    MIN_MAX_POINTS getBoundingBox() {
         return resourceManager->getModelBoundingBox(modelPath);
     }
 
-    long toHash()
-    {
-        return std::hash<float>{}(m_Position.x+m_Position.y+m_Position.z + ID);
+    long toHash() {
+        return std::hash<float> {}(m_Position.x+m_Position.y+m_Position.z + ID);
+    }
+
+    void setShader(std::string sh) {
+        if(hasModel) {
+            for(auto &c :ComponentList) {
+                if(c->Type == MODELCOMPONENT) {
+                    c->setShader(sh);
+                }
+            }
+        }
     }
 private:
     glm::vec3 m_Position;

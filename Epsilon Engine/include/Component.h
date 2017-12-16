@@ -95,6 +95,11 @@ namespace Component
             rm->useModel(modelPath, rm->getShaderID(shaderType), pos);
         }
 
+        void setShader(std::string sh)
+        {
+            shaderType = sh;
+        }
+
         bool hasModel = false;
         std::string modelPath;
         std::string shaderType;
