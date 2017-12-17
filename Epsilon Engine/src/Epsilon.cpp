@@ -340,7 +340,8 @@ void Epsilon::InitResources(void) {
     tmpEnt->addComponent(Compmodel);
     EntityList.push_back(tmpEnt);
     */
-
+///godrays tutorial begin
+/*
     tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-20, 0.8, 0.0), glm::vec3(0.06, 0.1, 0.06), glm::quat(-1.0, 0.0, 0.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
     Compmodel->Fill("models/grass.eml", rM, "Main");
@@ -371,6 +372,9 @@ void Epsilon::InitResources(void) {
     Compmodel->Fill("models/woodentable.eml", rM, "Main");
     tmpEnt->addComponent(Compmodel);
     EntityList.push_back(tmpEnt);
+    */
+
+///godrays tutorial end
 
     /*
     ph->addObject(2.0, glm::vec3(-20.5+(i*6.4),8.2,-8), 2.0).get()
@@ -424,7 +428,7 @@ void Epsilon::InitResources(void) {
     m_ParticleSystem = (std::shared_ptr<ParticleSystem>) new ParticleSystem();
     m_ParticleSystem->addNewSystem(limits, SNOW, 150);
 
-    this->mCubemap = (std::shared_ptr<CubeMap>) new CubeMap(54, glm::vec3(0, 8, 0));
+    this->mCubemap = (std::shared_ptr<CubeMap>) new CubeMap(54, glm::vec3(0, 10, 0));
 
     glClearColor(0.1, 0.1, 0.1, 1.0);
     glViewport(0,0,512,512);
@@ -563,7 +567,7 @@ void Epsilon::LoadGeometry(void) {
 
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "house_blueprint.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "cornellbox.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 

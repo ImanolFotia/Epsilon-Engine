@@ -58,7 +58,7 @@ void SphericalHarmonics::CalculateCohefficients(GLuint cubemap, const unsigned i
          numComponents = 4;
          data = (std::unique_ptr<GLfloat[]>)(new GLfloat[numComponents * width * width]);
       }
-      else if(internalFormat == GL_RGB16F || internalFormat == GL_SRGB)
+      else if(internalFormat == GL_RGB16F || internalFormat == GL_SRGB || internalFormat == GL_RGB32F)
       {
          numComponents = 3;
          data = (std::unique_ptr<GLfloat[]>)(new GLfloat[numComponents * width * width]);

@@ -59,14 +59,14 @@ void main()
     vec2 MetallicEmmissive = texture2D(gExtraComponents, TexCoords).rg;
     Metallic = MetallicEmmissive.r;
 
-    if(Metallic <= 0.3)
+    if(Metallic <= 0.1)
         discard;
  
     vec3 worldNormal = vec3(texture(gNormal, TexCoords));
     vec3 viewNormal = vec3(vec4(worldNormal, 1.0) * invView);
     vec3 viewPos = PositionFromDepth( texture(gDepth, TexCoords).x);
     vec3 worldPos = vec3(invView * vec4(viewPos, 1.0));
-    vec3 albedo = texture(gFinalImage, TexCoords).rgb;
+    vec3 albedo = pow(texture(gFinalImage, TexCoords).rgb, vec3(2.2));
 
     //vec3 WorldPos = vec3(vec4(viewPos, 1.0) * invView);
 
@@ -76,10 +76,14 @@ void main()
 
     vec3 F0 = vec3(0.04); 
     F0      = mix(F0, albedo, Metallic);
-    vec3 Fresnel = clamp(fresnelSchlickRoughness(max(dot(normalize(worldNormal), normalize(viewDir)), 0.0), F0, spec), vec3(0.0), vec3(1.0));
+    vec3 Fresnel = fresnelSchlick(max(dot(normalize(worldNormal), normalize(viewDir)), 0.0), F0);
 
     vec3 hitPos = viewPos;
     float dDepth;
+
+    vec3 kS = Fresnel;
+    vec3 kD = 1.0 - kS;
+    kD *= 1.0 - Metallic;   
  
     vec3 q = hitPos * 2.0 - 1.0;
     //q.x = 16.0/9.0;
@@ -95,16 +99,16 @@ void main()
  
     float screenEdgefactor = clamp(1.0 - (dCoords.x + dCoords.y), 0.0, 1.0);
 
-    float ReflectionMultiplier = Metallic * 
+    float ReflectionMultiplier =  
                 screenEdgefactor * 
                 -reflected.z;
  
     // Get color
     vec3 SSR = mix(     texture(gFinalImage, coords.xy).rgb*clamp(ReflectionMultiplier, 0.0, 1.0), 
-                        texture(gDepth, TexCoords).gba * Metallic, 
+                        texture(gDepth, TexCoords).gba, 
                         clamp(1.0-(screenEdgefactor*(2.0*-reflected.z)), 0.0, 1.0)) * Fresnel;  
     //SSR = mix(vec3(1.0, 0.0, 0.0), vec3(0.0, 0.0, 1.0), clamp(1.0-(screenEdgefactor*(2.0*-reflected.z)), 0.0, 1.0)) * Fresnel;
-    outColor = vec4(texture(gDepth, TexCoords).gba, 1.0);
+    outColor = vec4(texture(gDepth, TexCoords).gba*0.0, 1.0);
 }
 
 vec3 PositionFromDepth(float depth) {

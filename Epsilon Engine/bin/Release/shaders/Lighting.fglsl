@@ -243,7 +243,7 @@ void main()
     vec3 fogColor = clamp(mix(Gray, Background, clamp(lightDir.y, 0.0, 1.0)), vec3(0.00011), normalize(vec3(221,221,221)));
 
 
-    FragColor.rgb = mix(SkyColor, light, visibility);
+    FragColor.rgb = (irradiance * Diffuse);//mix(SkyColor, light, visibility);
     vec3 testHDR = FragColor.rgb;
     float brightness = dot(testHDR.rgb /** ((exposure - 3.0) <= 0 ? 1.0 : (exposure - 3.0))*/, vec3(0.2126, 0.7152, 0.0722));
 

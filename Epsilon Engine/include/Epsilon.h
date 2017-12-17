@@ -177,7 +177,7 @@ public:
     short WIDTH = 16;
     short HEIGHT = 16;
     bool SSAO = false;
-    float timeBehind;
+    double timeBehind = 0.0;
     float timeGUI = 0.0;
     SphericalHarmonics sph;
 

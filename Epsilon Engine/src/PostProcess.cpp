@@ -162,7 +162,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 1, 1, 1.0);
     tmpLight.radius = 45.0f;
-    tmpLight.watts = 500.0f;
+    tmpLight.watts = 1000.0f;
     tmpLight.type = 0;
     m_Lights.push_back(tmpLight);
 
@@ -170,7 +170,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 1, 1, 1.0);
     tmpLight.radius = 45.0f;
-    tmpLight.watts = 500.0f;
+    tmpLight.watts = 1000.0f;
     tmpLight.type = 0;
     m_Lights.push_back(tmpLight);
 
@@ -178,7 +178,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 1, 1, 1.0);
     tmpLight.radius = 45.0f;
-    tmpLight.watts = 500.0f;
+    tmpLight.watts = 1000.0f;
     tmpLight.type = 0;
     m_Lights.push_back(tmpLight);
 
@@ -186,7 +186,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 1, 1, 1.0);
     tmpLight.radius = 45.0f;
-    tmpLight.watts = 500.0f;
+    tmpLight.watts = 1000.0f;
     tmpLight.type = 0;
     m_Lights.push_back(tmpLight);
 
@@ -194,7 +194,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 1, 1, 1.0);
     tmpLight.radius = 45.0f;
-    tmpLight.watts = 500.0f;
+    tmpLight.watts = 1000.0f;
     tmpLight.type = 0;
     m_Lights.push_back(tmpLight);
 
@@ -210,7 +210,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 1, 1, 1.0);
     tmpLight.radius = 45.0f;
-    tmpLight.watts = 500.0f;
+    tmpLight.watts = 1000.0f;
     tmpLight.type = 0;
     m_Lights.push_back(tmpLight);
 
@@ -218,7 +218,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 1, 1, 1.0);
     tmpLight.radius = 45.0f;
-    tmpLight.watts = 500.0f;
+    tmpLight.watts = 1000.0f;
     tmpLight.type = 0;
     m_Lights.push_back(tmpLight);
 
@@ -226,7 +226,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 1, 1, 1.0);
     tmpLight.radius = 45.0f;
-    tmpLight.watts = 500.0f;
+    tmpLight.watts = 1000.0f;
     tmpLight.type = 0;
     m_Lights.push_back(tmpLight);
 
@@ -234,7 +234,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 1, 1, 1.0);
     tmpLight.radius = 45.0f;
-    tmpLight.watts = 500.0f;
+    tmpLight.watts = 1000.0f;
     tmpLight.type = 0;
     m_Lights.push_back(tmpLight);
 
@@ -242,7 +242,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 1, 1, 1.0);
     tmpLight.radius = 45.0f;
-    tmpLight.watts = 500.0f;
+    tmpLight.watts = 1000.0f;
     tmpLight.type = 0;
     m_Lights.push_back(tmpLight);
 
@@ -250,7 +250,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 0, 1, 1.0);
     tmpLight.color = glm::vec4(0.4, 0.8, 0.5, 1.0);
     tmpLight.radius = 0.5f;
-    tmpLight.watts = 500.0f;
+    tmpLight.watts = 1000.0f;
     tmpLight.type = 1;
     m_Lights.push_back(tmpLight);
 
@@ -258,7 +258,7 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.direction = glm::vec4(0, 1, 0, 1.0);
     tmpLight.color = glm::vec4(0.4, 0.8, 0.5, 1.0);
     tmpLight.radius = 0.2f;
-    tmpLight.watts = 500.0f;
+    tmpLight.watts = 1000.0f;
     tmpLight.type = 1;
     m_Lights.push_back(tmpLight);
 
@@ -473,7 +473,7 @@ void PostProcess::SetupGBuffer() {
 
     glGenTextures(1, &gLightAccumulation);
     glBindTexture(GL_TEXTURE_2D, gLightAccumulation);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_R11F_G11F_B10F, width, height, 0, GL_RGB, GL_FLOAT, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, /*GL_R11F_G11F_B10F*/GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT5, GL_TEXTURE_2D, gLightAccumulation, 0);
