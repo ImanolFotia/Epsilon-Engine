@@ -117,7 +117,7 @@ public:
     long toHash() {
         return std::hash<float> {}(m_Position.x+m_Position.y+m_Position.z + ID);
     }
-
+/*
     void setShader(std::string sh) {
         if(hasModel) {
             for(auto &c :ComponentList) {
@@ -126,7 +126,7 @@ public:
                 }
             }
         }
-    }
+    }*/
 private:
     glm::vec3 m_Position;
     glm::vec3 m_Scale;
