@@ -138,6 +138,11 @@ public:
         return resourceManager->getModelBoundingBox(modelPath);
     }
 
+
+    long toHash() {
+        return std::hash<float> {}(m_Position.x+m_Position.y+m_Position.z + ID);
+    }
+
 private:
     glm::vec3 m_Position;
     glm::vec3 m_Scale;
