@@ -100,7 +100,7 @@ Epsilon::Epsilon(GLFWwindow*& win) {
 
     srand(time(NULL)); //
 
-    m_CameraMode = NO_CLIP;
+    m_CameraMode = PLAYER_CONTROLLED;
 
 }
 

@@ -28,7 +28,7 @@ namespace Component
 
         virtual void setUserPointer(void *userPointer) {}
 
-        virtual btTransform getTransform(){return btTransform();}
+        virtual btTransform getTransform(){}
 
         virtual void setTransform(btTransform){}
 
@@ -95,11 +95,6 @@ namespace Component
             rm->useModel(modelPath, rm->getShaderID(shaderType), pos);
         }
 
-        void setShader(std::string sh)
-        {
-            shaderType = sh;
-        }
-
         bool hasModel = false;
         std::string modelPath;
         std::string shaderType;
@@ -134,7 +129,7 @@ namespace Component
         }
         float Mass;
 
-        std::shared_ptr<Physics::PhysicObject> RigidBodyPointer = nullptr;
+        std::shared_ptr<Physics::PhysicObject> RigidBodyPointer;
 
         void Update(std::shared_ptr<ResourceManager> rm)
         {

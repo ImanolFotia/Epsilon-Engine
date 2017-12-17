@@ -917,7 +917,7 @@ void PostProcess::DownSampleSSR(double frametime) {
     m_exposure = glm::clamp(m_exposure, 7.0f, 12.0f);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    std::cout << m_exposure << std::endl;
+   // std::cout << m_exposure << std::endl;
 
 }
 
