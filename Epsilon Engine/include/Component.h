@@ -28,7 +28,7 @@ namespace Component
 
         virtual void setUserPointer(void *userPointer) {}
 
-        virtual btTransform getTransform(){}
+        virtual btTransform getTransform(){return btTransform();}
 
         virtual void setTransform(btTransform){}
 
@@ -95,6 +95,11 @@ namespace Component
             rm->useModel(modelPath, rm->getShaderID(shaderType), pos);
         }
 
+        void setShader(std::string sh)
+        {
+            shaderType = sh;
+        }
+
         bool hasModel = false;
         std::string modelPath;
         std::string shaderType;
@@ -129,13 +134,14 @@ namespace Component
         }
         float Mass;
 
-        std::shared_ptr<Physics::PhysicObject> RigidBodyPointer;
+        std::shared_ptr<Physics::PhysicObject> RigidBodyPointer = nullptr;
 
         void Update(std::shared_ptr<ResourceManager> rm)
         {
 
             m_LastPhysicsWorldPosition = m_PhysicsWorldPosition;
             m_PhysicsWorldPosition = RigidBodyPointer->Body->getCenterOfMassPosition();
+
             /*
                     glm::vec3 pos  = glm::mix(glm::vec3(m_LastPhysicsWorldPosition.getX(), m_LastPhysicsWorldPosition.getY(), m_LastPhysicsWorldPosition.getZ()),
                                                  glm::vec3(m_PhysicsWorldPosition.getX(), m_PhysicsWorldPosition.getY(), m_PhysicsWorldPosition.getZ()),

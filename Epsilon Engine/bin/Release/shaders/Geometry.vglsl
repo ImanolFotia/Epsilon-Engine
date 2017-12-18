@@ -51,7 +51,7 @@ void main()
 
   mat3 normalMatrix = transpose(inverse(mat3(model)));
   vs_out.TBN = CreateTBNMatrix(normalMatrix);
-  vs_out.Normal = normal;
+  vs_out.Normal = normalMatrix * normal;
   normalMatrix = transpose(inverse(mat3(view * model)));
   vs_out.TBN2 = CreateTBNMatrix(normalMatrix);
 }

@@ -181,6 +181,8 @@ private:
 
     GLuint GetPixel(GLuint);
 
+    void generateBRDF();
+
 private:
     //#pragma pack(push, 1)
 
@@ -200,7 +202,7 @@ private:
     bool SSROn;
     bool m_MotionBlur;
     bool lightShafts;
-
+std::shared_ptr<FrameBuffer<int> > BRDFFramebuffer;
     GLuint ssaoFBO;
     GLuint ssaoBlurFBO;
     GLuint rboDepth;
@@ -232,6 +234,7 @@ private:
     std::unique_ptr<Shader> PassThroughShader;
     std::unique_ptr<Shader> MotionBlurShader;
     std::unique_ptr<Shader> CompositeShader;
+    std::unique_ptr<Shader> BRDFShader;
     std::vector<glm::vec3> LightPositions;
     /// G-Buffer texture samplers
     std::vector<glm::vec3> ssaoKernel;
@@ -248,7 +251,7 @@ private:
     GLuint gWorldSpacePosition;
     GLuint gLightAccumulation;
     GLuint mLastFrametexture;
-
+    GLuint BRDF = 0;
     GLuint ssbo = 0;
     std::shared_ptr<eTexture> lensColor;
     std::shared_ptr<eTexture> lensDirt;

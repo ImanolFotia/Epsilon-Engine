@@ -5,7 +5,8 @@ uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gExtraComponents;
 uniform sampler2D gDepth; 
-
+uniform sampler2D BRDF;
+uniform sampler2D gAlbedo;
 uniform mat4 invView;
 uniform mat4 projection;
 uniform mat4 invprojection;
@@ -62,11 +63,11 @@ void main()
     if(Metallic <= 0.1)
         discard;
  
-    vec3 worldNormal = vec3(texture(gNormal, TexCoords));
+    vec3 worldNormal = normalize(vec3(texture(gNormal, TexCoords)));
     vec3 viewNormal = vec3(vec4(worldNormal, 1.0) * invView);
     vec3 viewPos = PositionFromDepth( texture(gDepth, TexCoords).x);
     vec3 worldPos = vec3(invView * vec4(viewPos, 1.0));
-    vec3 albedo = pow(texture(gFinalImage, TexCoords).rgb, vec3(2.2));
+    vec3 albedo = texture(gAlbedo, TexCoords).rgb;
 
     //vec3 WorldPos = vec3(vec4(viewPos, 1.0) * invView);
 
@@ -76,7 +77,7 @@ void main()
 
     vec3 F0 = vec3(0.04); 
     F0      = mix(F0, albedo, Metallic);
-    vec3 Fresnel = fresnelSchlick(max(dot(normalize(worldNormal), normalize(viewDir)), 0.0), F0);
+    vec3 Fresnel = fresnelSchlickRoughness(max(dot(worldNormal, viewDir), 0.0), F0, spec);
 
     vec3 hitPos = viewPos;
     float dDepth;
@@ -87,12 +88,14 @@ void main()
  
     vec3 q = hitPos * 2.0 - 1.0;
     //q.x = 16.0/9.0;
-    vec3 jitt = normalize(hash(q)) * spec;
+    //vec3 jitt = normalize(hash(q)) * spec;
     // Reflection vector
     vec3 reflected = normalize(reflect(normalize(viewPos), normalize(viewNormal)));
 
     //jitt.x *= 16.0/9.0;
-    vec4 coords = RayCast(reflected * max(minRayStep, -viewPos.z), hitPos, dDepth);
+    vec3 wp = vec3(vec4(viewPos, 1.0) * invView);
+    vec3 jitt = mix(vec3(0.0), vec3(hash(wp)), spec);
+    vec4 coords = RayCast((/*jitt +*/ reflected) * max(minRayStep, -viewPos.z), hitPos, dDepth);
  
     vec2 dCoords = smoothstep(0.2, 0.6, abs(vec2(0.5, 0.5) - coords.xy));
  
@@ -102,13 +105,15 @@ void main()
     float ReflectionMultiplier =  
                 screenEdgefactor * 
                 -reflected.z;
+
+    vec2 brdf  = texture(BRDF, vec2(max(dot(worldNormal, viewDir), 0.0), spec)).rg;
  
     // Get color
     vec3 SSR = mix(     texture(gFinalImage, coords.xy).rgb*clamp(ReflectionMultiplier, 0.0, 1.0), 
                         texture(gDepth, TexCoords).gba, 
-                        clamp(1.0-(screenEdgefactor*(2.0*-reflected.z)), 0.0, 1.0)) * Fresnel;  
+                        clamp(1.0-(screenEdgefactor*(2.0*-reflected.z)), 0.0, 1.0));  
     //SSR = mix(vec3(1.0, 0.0, 0.0), vec3(0.0, 0.0, 1.0), clamp(1.0-(screenEdgefactor*(2.0*-reflected.z)), 0.0, 1.0)) * Fresnel;
-    outColor = vec4(texture(gDepth, TexCoords).gba*0.0, 1.0);
+    outColor = vec4(SSR * (Fresnel * brdf.x + brdf.y), 1.0);
 }
 
 vec3 PositionFromDepth(float depth) {

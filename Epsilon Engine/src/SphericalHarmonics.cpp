@@ -144,9 +144,9 @@ void SphericalHarmonics::CalculateCohefficients(GLuint cubemap, const unsigned i
             unsigned int pixOffsetIndex = (x + y * width) * numComponents;
             // get color from texture and map to range [0, 1]
             glm::vec3 clr(
-                  float(data[pixOffsetIndex]) / 255,
-                  float(data[pixOffsetIndex+1]) / 255,
-                  float(data[pixOffsetIndex+2]) / 255
+                  float(data[pixOffsetIndex]) /*/ 255.0f*/,
+                  float(data[pixOffsetIndex+1]) /*/ 255.0f*/,
+                  float(data[pixOffsetIndex+2]) /*/ 255.0f*/
                );
 
             // scale color and add to previously accumulated coefficients

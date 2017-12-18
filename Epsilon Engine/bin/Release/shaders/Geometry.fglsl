@@ -51,7 +51,7 @@ const float CosineA0 = Pi;
 const float CosineA1 = (2.0f * Pi) / 3.0f;
 const float CosineA2 = Pi * 0.25f;
 // scale for restored amount of lighting
-uniform float u_scaleFactor = 50.0;
+uniform float u_scaleFactor = 0.5;
 
 // coefficients of spherical harmonics and possible values
 vec3 u_L00 = vec3(0.00069917, 0.000636377, 0.00103519);
@@ -183,8 +183,8 @@ vec3 bpcem (in vec3 v, vec3 Emax, vec3 Emin, vec3 Epos)
   return posonbox - Epos;
 }
 
-vec3 BoxMax = vec3(19, 25.8, 19);
-vec3 BoxMin = vec3(-19,0.8,-19);
+vec3 BoxMax = vec3(40, 25.8, 4);
+vec3 BoxMin = vec3(-40,0.8,-40);
 
 void main()
 {
@@ -227,16 +227,16 @@ void main()
   //{
     vec3 I = normalize(fs_in.wFragPos - viewPos);
     R = reflect(I, normalize(gExpensiveNormal.rgb));
-    CubeMapcolor = texture(skybox, bpcem(R, BoxMax, BoxMin, vec3(0, 10, 0)));
+    CubeMapcolor = texture(skybox, bpcem(R, BoxMax, BoxMin, vec3(0, 12, 0)));
   //}
 
   //else
   //  CubeMapcolor = gAlbedoSpec.rgba * 0.0008;
 
   vec3 schDir =  normalize(gExpensiveNormal.rgb);
-  schDir = bpcem(schDir, BoxMax, BoxMin, vec3(0, 10, 0));
+  schDir = bpcem(schDir, BoxMax, BoxMin, vec3(0, 12, 0));
   //schDir = schDir.xzy;
-  vec3 shc = sphericalHarmonics(normalize(gExpensiveNormal.rgb)) * u_scaleFactor;
+  vec3 shc = sphericalHarmonics(normalize(fs_in.Normal)) * u_scaleFactor;
   gLightAccumulation = shc;///max(CubeMapcolor.rgb * Metallic_Emmisive.r, vec3(0.0));
   gDepth.gba = CubeMapcolor.rgb;
   //gLightAccumulation = shc;

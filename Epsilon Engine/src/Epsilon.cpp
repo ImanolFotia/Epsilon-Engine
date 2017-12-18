@@ -428,7 +428,7 @@ void Epsilon::InitResources(void) {
     m_ParticleSystem = (std::shared_ptr<ParticleSystem>) new ParticleSystem();
     m_ParticleSystem->addNewSystem(limits, SNOW, 150);
 
-    this->mCubemap = (std::shared_ptr<CubeMap>) new CubeMap(54, glm::vec3(0, 10, 0));
+    this->mCubemap = (std::shared_ptr<CubeMap>) new CubeMap(54, glm::vec3(0, 12, 0));
 
     glClearColor(0.1, 0.1, 0.1, 1.0);
     glViewport(0,0,512,512);
@@ -567,7 +567,7 @@ void Epsilon::LoadGeometry(void) {
 
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "cornellbox.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "house_blueprint.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 

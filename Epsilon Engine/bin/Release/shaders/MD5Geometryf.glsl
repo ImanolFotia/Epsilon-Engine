@@ -29,7 +29,7 @@ const float CosineA0 = Pi;
 const float CosineA1 = (2.0f * Pi) / 3.0f;
 const float CosineA2 = Pi * 0.25f;
 // scale for restored amount of lighting
-uniform float u_scaleFactor = 13.0;
+uniform float u_scaleFactor = 1.0;
 
 // coefficients of spherical harmonics and possible values
 vec3 u_L00 = vec3(0.000583486, 0.000571206, 0.00103499);
@@ -42,6 +42,33 @@ vec3 u_L20 = vec3(-5.45785e-005, -5.16044e-005, -0.00011851);
 vec3 u_L21 = vec3(-4.20471e-006, -3.81651e-006, -7.40711e-006);
 vec3 u_L22 = vec3(-7.63505e-005, -7.64585e-005, -0.000186511);
 
+struct SphericalHarmonicsFormat {
+  vec3 u_L00; 
+  vec3 u_L1m1;
+  vec3 u_L10;
+  vec3 u_L11;
+  vec3 u_L2m2;
+  vec3 u_L2m1;
+  vec3 u_L20;
+  vec3 u_L21;
+  vec3 u_L22;
+};
+
+layout(std430, binding = 1) buffer AmbientLightSSBO
+{
+    //SphericalHarmonicsFormat ambientProbes[];
+
+        vec3 u_L00; float padding0;
+        vec3 u_L1m1; float padding1;
+        vec3 u_L10; float padding2;
+        vec3 u_L11; float padding3;
+        vec3 u_L2m2; float padding4;
+        vec3 u_L2m1; float padding5;
+        vec3 u_L20; float padding6;
+        vec3 u_L21; float padding7;
+        vec3 u_L22; float padding8;
+
+} lp;
 
 const float C1 = 0.429043;
 const float C2 = 0.511664;
@@ -53,19 +80,19 @@ vec3 sphericalHarmonics(vec3 N)
 {
    return
       // band 0, constant value, details of lowest frequency
-      C4 * u_L00 +
+      C4 * lp.u_L00 +
 
       // band 1, oriented along main axes
-      2.0 * C2 * u_L11 * N.x +
-      2.0 * C2 * u_L1m1 * N.y +
-      2.0 * C2 * u_L10 * N.z +
+      2.0 * C2 * lp.u_L11 * N.x +
+      2.0 * C2 * lp.u_L1m1 * N.y +
+      2.0 * C2 * lp.u_L10 * N.z +
 
       // band 2, values depend on multiple axes, higher frequency details
-      C1 * u_L22 * (N.x * N.x - N.y * N.y) +
-      C3 * u_L20 * N.z * N.z - C5 * u_L20 +
-      2.0 * C1 * u_L2m2 * N.x * N.y +
-      2.0 * C1 * u_L21 * N.x * N.z +
-      2.0 * C1 * u_L2m1 * N.y * N.z;
+      C1 * lp.u_L22 * (N.x * N.x - N.y * N.y) +
+      C3 * lp.u_L20 * N.z * N.z - C5 * lp.u_L20 +
+      2.0 * C1 * lp.u_L2m2 * N.x * N.y +
+      2.0 * C1 * lp.u_L21 * N.x * N.z +
+      2.0 * C1 * lp.u_L2m1 * N.y * N.z;
 }
 
 void main()

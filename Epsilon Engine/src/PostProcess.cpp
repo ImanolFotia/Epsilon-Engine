@@ -262,6 +262,15 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.type = 1;
     m_Lights.push_back(tmpLight);
 
+
+    tmpLight.position = glm::vec4(0.0, 24.0, 0.0, 1.0);
+    tmpLight.direction = glm::vec4(0, 1, 0, 1.0);
+    tmpLight.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
+    tmpLight.radius = 0.2f;
+    tmpLight.watts = 1000.0f;
+    tmpLight.type = 0;
+    m_Lights.push_back(tmpLight);
+
     glGenBuffers(1, &ssbo);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
     glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(t_light) * m_Lights.size(), (const void*)&m_Lights[0], GL_DYNAMIC_COPY);
@@ -393,6 +402,31 @@ void PostProcess::SetupFramebuffer() {
     mCompositeImage->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, false);
     mCompositeImage->FinishFrameBuffer();
 
+
+    BRDFFramebuffer = (std::shared_ptr<FrameBuffer<int> >) new FrameBuffer<int>(512, 512, true);
+    BRDFFramebuffer->addRenderTarget(0, GL_RG16F, GL_RG, GL_LINEAR, GL_LINEAR, false);
+    BRDFFramebuffer->FinishFrameBuffer();
+
+
+    generateBRDF();
+
+}
+
+void PostProcess::generateBRDF()
+{
+    BRDFFramebuffer->bindFramebuffer();
+    BRDFFramebuffer->setViewport();
+    BRDFFramebuffer->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    BRDFShader->Use();
+    glDisable(GL_BLEND);
+    this->RenderQuad();
+    glEnable(GL_BLEND);
+
+    BRDFFramebuffer->unbindFramebuffer();
+    BRDFShader->Free();
+    glViewport(0,0,width, height);
+
 }
 
 void PostProcess::LoadOffscreensShaders() {
@@ -406,6 +440,7 @@ void PostProcess::LoadOffscreensShaders() {
     PassThroughShader = (std::unique_ptr<Shader>)(new Shader("shaders/PassThrough.vglsl", "shaders/PassThrough.fglsl"));
     MotionBlurShader = (std::unique_ptr<Shader>)(new Shader("shaders/MotionBlur.vglsl", "shaders/MotionBlur.fglsl"));
     CompositeShader = (std::unique_ptr<Shader>)(new Shader("shaders/Composite.vglsl", "shaders/Composite.fglsl"));
+    BRDFShader = (std::unique_ptr<Shader>)(new Shader("shaders/Composite.vglsl", "shaders/BRDF.glsl"));
 }
 
 void PostProcess::beginOffScreenrendering() {
@@ -817,6 +852,14 @@ void PostProcess::SSRPass(std::shared_ptr<Camera>& cam) {
     glActiveTexture(GL_TEXTURE4);
     glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "gDepth"), 4);
     glBindTexture(GL_TEXTURE_2D, this->gDepth);
+
+    glActiveTexture(GL_TEXTURE5);
+    glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "BRDF"), 5);
+    glBindTexture(GL_TEXTURE_2D, BRDFFramebuffer->getRenderTargetHandler(0));
+
+    glActiveTexture(GL_TEXTURE6);
+    glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "gAlbedo"), 6);
+    glBindTexture(GL_TEXTURE_2D, this->gAlbedoSpec);
 
     glm::mat4 proj = cam->getProjectionMatrix();
     glUniformMatrix4fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "projection"), 1, GL_FALSE, &proj[0][0]);
