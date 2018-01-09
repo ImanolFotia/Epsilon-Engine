@@ -108,7 +108,7 @@ vec3 Bokeh(vec2 uv, float rad, float thres, float mult) {
     vec2 disk =
         vec2(sin(i * 10.0) * (1.0 - r), cos(i * 10.0) * (1.0 - r)) * rad;
 
-    col = texture(compositeImage, uv + pixelSize * disk, 2.0).rgb;
+    col = texture(compositeImage, uv + pixelSize * disk).rgb;
 
     res += col;
     // res2 += pow(col, vec3(5.0))*30.0;
@@ -176,7 +176,7 @@ void main() {
 
   DOFRadius = clamp(dDepth * 15.0, 0.0, 0.7);
 
-  //composite = Bokeh(TexCoords, DOFRadius, .10, 1.0);
+  composite = Bokeh(TexCoords, DOFRadius, .10, 1.0);
 
   //composite = textureDistorted(compositeImage, TexCoords, normalize(fragcoord - vec2(0.0)), 0.005).rgb;
 
