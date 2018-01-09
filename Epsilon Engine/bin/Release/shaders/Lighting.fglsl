@@ -216,6 +216,8 @@ void main()
             light += calculatePointPBR(outBuffer.Lights[i].position.rgb, outBuffer.Lights[i].color.rgb);
         else if(outBuffer.Lights[i].type == 1)
             light += SpotLightPBR(outBuffer.Lights[i].position.rgb, outBuffer.Lights[i].direction.rgb, outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb);
+        else if(outBuffer.Lights[i].type == 2)
+            light += SphereAreaLight(outBuffer.Lights[i].position.rgb,  outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts);
     }
 
             //pos  30, 7, -6

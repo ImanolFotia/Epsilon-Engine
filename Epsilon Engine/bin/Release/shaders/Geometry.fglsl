@@ -183,8 +183,8 @@ vec3 bpcem (in vec3 v, vec3 Emax, vec3 Emin, vec3 Epos)
   return posonbox - Epos;
 }
 
-vec3 BoxMax = vec3(40, 25.8, 4);
-vec3 BoxMin = vec3(-40,0.8,-40);
+vec3 BoxMax = vec3(36, 29.8, 27);
+vec3 BoxMin = vec3(-40,0.8,-28);
 
 void main()
 {
@@ -199,7 +199,10 @@ void main()
   texCoords = fs_in.TexCoords;
 
   vec3 normalTexture = normalize(texture(texture_normal, texCoords).rgb * 2.0 - 1.0);
-  gExpensiveNormal.rgb = normalize(normalTexture * fs_in.TBN);
+  if(gl_FrontFacing)
+    gExpensiveNormal.rgb = normalize(normalTexture * fs_in.TBN);
+  else
+    gExpensiveNormal.rgb = -normalize(normalTexture * fs_in.TBN);
   //vec4 decalTex = texture(texture_decal, fs_in.TexCoords + (vec2(viewPos.x - 225.0, viewPos.z-300.0)));
 
   //gAlbedoSpec.a = texture(texture_specular, fs_in.TexCoords).r;
@@ -227,7 +230,7 @@ void main()
   //{
     vec3 I = normalize(fs_in.wFragPos - viewPos);
     R = reflect(I, normalize(gExpensiveNormal.rgb));
-    CubeMapcolor = texture(skybox, bpcem(R, BoxMax, BoxMin, vec3(0, 12, 0)));
+    CubeMapcolor = texture(skybox, bpcem(R, BoxMax, BoxMin, vec3(0, 5, -1)));
   //}
 
   //else

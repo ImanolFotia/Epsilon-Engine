@@ -18,6 +18,7 @@ in vec4 PrevPosition;
 in vec4 Position;
 
 uniform vec3 viewPos;
+uniform vec2 resolution;
 
 float NEAR = 0.1;
 float FAR = 3000.0;
@@ -30,7 +31,7 @@ float LinearizeDepth(float depth) {
 void main()
 {
 
-    vec2 ndc = gl_FragCoord.xy/vec2(1280,720);
+    vec2 ndc = gl_FragCoord.xy/resolution;
 	float l_gDepth = LinearizeDepth(texture(bufferDepth, ndc).r);
 	float depth = LinearizeDepth(gl_FragCoord.z);
 	float dDepth = l_gDepth - depth;

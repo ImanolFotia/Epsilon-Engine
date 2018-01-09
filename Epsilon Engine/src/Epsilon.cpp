@@ -341,16 +341,16 @@ void Epsilon::InitResources(void) {
     EntityList.push_back(tmpEnt);
     */
 ///godrays tutorial begin
-/*
+
     tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-20, 0.8, 0.0), glm::vec3(0.06, 0.1, 0.06), glm::quat(-1.0, 0.0, 0.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
     Compmodel->Fill("models/grass.eml", rM, "Main");
     tmpEnt->addComponent(Compmodel);
     EntityList.push_back(tmpEnt);
 
-    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-20, 0.8, 0.0), glm::vec3(5.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-20, 0.8, 0.0), glm::vec3(2.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    Compmodel->Fill("models/tree_o.eml", rM, "Main");
+    Compmodel->Fill("models/birch2.eml", rM, "Main");
     tmpEnt->addComponent(Compmodel);
     EntityList.push_back(tmpEnt);
 
@@ -372,7 +372,7 @@ void Epsilon::InitResources(void) {
     Compmodel->Fill("models/woodentable.eml", rM, "Main");
     tmpEnt->addComponent(Compmodel);
     EntityList.push_back(tmpEnt);
-    */
+
 
 ///godrays tutorial end
 
@@ -428,7 +428,7 @@ void Epsilon::InitResources(void) {
     m_ParticleSystem = (std::shared_ptr<ParticleSystem>) new ParticleSystem();
     m_ParticleSystem->addNewSystem(limits, SNOW, 150);
 
-    this->mCubemap = (std::shared_ptr<CubeMap>) new CubeMap(54, glm::vec3(0, 12, 0));
+    this->mCubemap = (std::shared_ptr<CubeMap>) new CubeMap(54, glm::vec3(0, 5, -1));
 
     glClearColor(0.1, 0.1, 0.1, 1.0);
     glViewport(0,0,512,512);
@@ -438,7 +438,6 @@ void Epsilon::InitResources(void) {
     eCamera->UpdateMatrices();
 
     for(int i = 0; i < 6; ++i) {
-
         this->mCubemap->CaptureEnvironment(i);
         glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(0.1));
         glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), glm::vec3(0.0));
@@ -448,7 +447,6 @@ void Epsilon::InitResources(void) {
         glCullFace(GL_FRONT);
         BSPMap->Frustum.CalculateFrustum(glm::mat4(this->mCubemap->captureProjection * this->mCubemap->captureViews[i]), cModel);
         BSPMap->RenderLevel(mCubemap->getPosition(), Shaders["CubeMap"]->getProgramID(), true);
-
     }
     glCullFace(GL_BACK);
     mCubemap->endCapturingEnvironment();
@@ -1032,6 +1030,7 @@ void Epsilon::RenderParticles(void) {
     Shaders["DefaultParticle"]->Use();
     glUniform3f(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "cameraRight"),  eCamera->getRight().x, eCamera->getRight().y, eCamera->getRight().z);
     glUniform3f(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "cameraUp"),  eCamera->getUp().x, eCamera->getUp().y, eCamera->getUp().z);
+    glUniform2f(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "resolution"),  this->WIDTH, this->HEIGHT);
     glUniformMatrix4fv(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "view"), 1, GL_FALSE,   &eCamera->getViewMatrix()[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "PrevView"), 1, GL_FALSE,   &eCamera->getPrevViewMatrix()[0][0]);
     this->SetUniforms(Shaders["DefaultParticle"], glm::vec3(0.0f), glm::vec3(1.0f), glm::quat(1.0, sin(glfwGetTime()*frametime), 0.0f, cos(glfwGetTime()*frametime) ));
