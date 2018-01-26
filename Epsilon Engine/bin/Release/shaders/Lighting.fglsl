@@ -20,6 +20,7 @@ uniform vec3 lightDir;
 uniform bool hdr;
 uniform int NUMLIGHTS;
 const int NR_LIGHTS = 32;
+uniform float time;
 //uniform vec3 LightPositions[NR_LIGHTS];
 struct t_light {
 
@@ -66,6 +67,47 @@ vec3 F0;
 
 #include <PBRFunctions.glsl>
 
+#define Scale vec3(0.3, 0.1, 0.1)
+#define K 19.19
+
+vec3 hash(vec3 p3)
+{
+  p3 = fract(p3 * Scale);
+    p3 += dot(p3, p3.yxz+19.19);
+    return fract((p3.xxy + p3.yxx)*p3.zyx);
+
+}
+
+vec3 noise( in vec3 x )
+{
+    vec3 p = floor(x);
+    vec3 f = fract(x);
+    f = f*f*(3.0-2.0*f);
+  
+    return mix(mix(mix( hash(p+vec3(0,0,0)), 
+                        hash(p+vec3(1,0,0)),f.x),
+                   mix( hash(p+vec3(0,1,0)), 
+                        hash(p+vec3(1,1,0)),f.x),f.y),
+               mix(mix( hash(p+vec3(0,0,1)), 
+                        hash(p+vec3(1,0,1)),f.x),
+                   mix( hash(p+vec3(0,1,1)), 
+                        hash(p+vec3(1,1,1)),f.x),f.y),f.z);
+}
+
+const mat3 m = mat3( 0.00,  0.80,  0.60,
+                    -0.80,  0.36, -0.48,
+                    -0.60, -0.48,  0.64 );
+vec3 fbm(in vec3 q)
+{
+            vec3    f  = 0.5000*noise( q ); q = m*q*2.01;
+                    f += 0.2500*noise( q ); q = m*q*2.02;
+                    f += 0.1250*noise( q ); q = m*q*2.03;
+                    f += 0.0625*noise( q ); q = m*q*2.04;  
+                    f += 0.03125*noise( q ); q = m*q*2.05; 
+                    //f += 0.015625*noise( q ); q = m*q*2.06; 
+    return vec3(f);
+}
+
 vec2 poissonDisk[16] = vec2[]( 
    vec2( -0.94201624, -0.39906216 ), 
    vec2( 0.94558609, -0.76890725 ), 
@@ -91,15 +133,6 @@ float random(vec3 seed, int i){
     return fract(sin(dot_product) * 43758.5453);
 }
 
-#define SEED 1.123456789
-#define HASHM mat3(40.15384,31.973157,31.179219,10.72341,13.123009,41.441023,-311.61923,10.41234,178.127121)
-
-float hash(vec3 p, int index) {
-    p = fract((vec3(p.x, p.y, p.z) + SEED+index * 1e-3) * HASHM);
-    p += dot(p, p.yzx + 41.19);
-    return fract((p.x + p.y) * p.z);
-}
-
 vec3 HDR(vec3 image)
 {
     vec3 result = vec3(1.0) - exp(-image.xyz * exposure);
@@ -116,7 +149,7 @@ float poissonShadowMapping(vec4 fragPosLightSpace){
     vec3 normal = normalize(Normal);
     float bias = max(0.01 * (1.0 - dot(normal, lightDir)), 0.005);
 
-    for (int i=0;i<4;i++){
+    for (int i=0;i<8;i++){
         int index = int(16.0*random(floor(FragPos.xyz*1000.0), i))%16;
         visibility -= 0.2*(texture(shadowMap, vec3(fragPosLightSpace.xy+ poissonDisk[index]/700.0, fragPosLightSpace.z - bias)/fragPosLightSpace.w).r);
     }
@@ -160,7 +193,6 @@ const vec3 Gray = normalize(vec3(0.001,0.001,0.001));
 const vec3 Black = normalize(vec3(0.0,0.0,0.0));
 const vec3 Brown = normalize(vec3(123.0,91.0,68.0));
 
-uniform float time;
 
 void main()
 {
@@ -175,6 +207,7 @@ void main()
     vec3  V = normalize(viewPos - FragPos);
 
     float visibility = exp(-pow((distance*density), gradient));
+    //visibility = pow((fbm(vec3(vec2(FragPos.x, FragPos.y*2.0), 1.0)*2.0+time*0.1).r), 3.0) * visibility*5.0;
 
     Normal = texture(gNormal, TexCoords).rgb;
 
@@ -207,27 +240,22 @@ void main()
     shadow  = poissonShadowMapping(FragPosLightSpace);
 
     vec3 light = CalculateDirectionalPBR();
-
-   // b = 1.0 / (radius*radius * minLight);
     
     for(int i = 0 ; i < outBuffer.Lights.length() ; i++)
     {
-        if(outBuffer.Lights[i].type == 0)
+
+      switch(outBuffer.Lights[i].type){
+        case 0:
             light += calculatePointPBR(outBuffer.Lights[i].position.rgb, outBuffer.Lights[i].color.rgb);
-        else if(outBuffer.Lights[i].type == 1)
+            break;
+        case 1:
             light += SpotLightPBR(outBuffer.Lights[i].position.rgb, outBuffer.Lights[i].direction.rgb, outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb);
-        else if(outBuffer.Lights[i].type == 2)
+            break;
+        case 2:
             light += SphereAreaLight(outBuffer.Lights[i].position.rgb,  outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts);
+            break;
+      }
     }
-
-            //pos  30, 7, -6
-            //dir 0.804746, 0.505533, -0.2948859
-    //light += SpotLightPBR(outBuffer.Lights[11].position.rgb, outBuffer.Lights[11].direction.rgb, );
-    //vec3 kS = fresnelSchlick(max(dot(Normal, V), 0.0), F0);
-    //vec3 kD = 1.0 - kS;
-   // kD *= 1.0 - ExtraComponents.x;
-
-   // light += calculatePointPBR(viewPos);
 
     light += ((irradiance * Diffuse)); // Spherical harmonics
     

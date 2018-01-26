@@ -9,6 +9,7 @@
 #include <Texture.h>
 #include <atomic>
 #include <thread>
+#include <atomic>
 #include <omp.h>
 
 class ParticleProxy {
@@ -322,8 +323,7 @@ public:
 
     std::vector<Particle> Particles;
 
-    void Simulate(float deltaTime, glm::vec3 camPos) {
-
+    void _Simulate(float deltaTime, glm::vec3 camPos, int index, int end) {
         deltaTime = glm::clamp(deltaTime, 0.0f, 0.064f);
 
         this->calculateDistancetoCamera(camPos);
@@ -331,7 +331,7 @@ public:
         this->sortParticles();
 
         //#pragma omp parallel for simd
-        for(unsigned int i = 0; i < Particles.size(); i++) {
+        for(unsigned int i = index; i < end; i++) {
 
             if(Particles[i].getPosition().y < ParticlesLimits.MIN_Y) {
                 Particles[i].setLife(-1.0);
@@ -351,6 +351,18 @@ public:
             Particles[i].setLife(Particles[i].getLife() - deltaTime);
 
         }
+
+    }
+
+    void Simulate(float deltaTime, glm::vec3 camPos) {
+
+        try {
+            _Simulate(deltaTime, camPos, 0, Particles.size());
+
+        } catch(std::exception e) {
+            std::cout << "Exception ocurred in ParticleProxy::Simulate " << e.what() << std::endl;
+        }
+
 
         //#pragma omp parallel for simd
         for(int i = 0; i < Particles.size(); i++) {

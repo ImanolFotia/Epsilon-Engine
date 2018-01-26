@@ -49,6 +49,8 @@ public:
 
     void setFoV(float FoV);
 
+    float getFoV();
+
     void setProjection(float FOV, float AR, float NEAR, float FAR);
 
     void setProjection(glm::mat4);

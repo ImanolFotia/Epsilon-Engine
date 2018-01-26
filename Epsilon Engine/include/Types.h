@@ -46,6 +46,17 @@ struct MINMAX_POINTS {
     float MIN_Z;
 };
 
+struct MIN_MAX_POINTS
+{
+    float MAX_X;
+    float MAX_Y;
+    float MAX_Z;
+
+    float MIN_X;
+    float MIN_Y;
+    float MIN_Z;
+};
+
 enum class PHYSIC_SHAPE {
     PHYSICS_BOX_SHAPE = BOX_SHAPE_PROXYTYPE,
     PHYSICS_SPHERE_SHAPE = SPHERE_SHAPE_PROXYTYPE,

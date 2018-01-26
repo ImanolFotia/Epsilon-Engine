@@ -91,6 +91,7 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
         fseek(fp, lumps[kFaces].offset, SEEK_SET);
 
         fread(m_pFaces, m_numOfFaces, sizeof(tBSPFace), fp);
+        //std::cout << "m_pFaces[m_numOfFaces-1]->numOfIndices: " << m_pFaces[m_numOfFaces-1].numOfIndices << std::endl;
 
         fseek(fp, lumps[kTextures].offset, SEEK_SET);
 
@@ -216,9 +217,9 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
             m_pVerts[i].vNormal = N;
         }
 
-        for(i = m_numOfFaces ; i >= 0 ; i--)
+        for(i = m_numOfFaces-1 ; i >= 0 ; i--)
         {
-            tBSPFace *pFace = &m_pFaces[i];
+            tBSPFace *pFace =  &m_pFaces[i];
             if(pFace->type != FACE_POLYGON && pFace->type != FACE_MESHVERT) continue;
             std::vector<glm::vec3> faceVertices;
             std::vector<glm::vec3> faceNormals;
@@ -246,9 +247,10 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
             {
                 faceNormals.push_back(m_pVerts[pFace->startVertIndex + j].vNormal);
             }
-
+            //std::cout << "Num of indices: " << pFace->numOfIndices << std::endl;
             for(int k = 0 ; k < pFace->numOfIndices ; k++)
             {
+                //std::cout  << "index: " << m_pIndices[pFace->startIndex + k] << std::endl;
                 faceIndices.push_back (m_pIndices[pFace->startIndex + k]);
             }
 

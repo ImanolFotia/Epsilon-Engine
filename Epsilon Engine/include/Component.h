@@ -36,12 +36,15 @@ namespace Component
 
         virtual void Render(std::shared_ptr<ResourceManager> rm, glm::vec3) = 0;
 
+        virtual void setTransparency(bool x) = 0;
+
         COMPONENT_TYPE Type;
         btVector3 m_PhysicsWorldPosition;
         btVector3 m_LastPhysicsWorldPosition;
         btVector3 m_PhysicsWorldScale;
         btQuaternion m_PhysicsWorldRotation;
         btQuaternion m_LastPhysicsWorldRotation;
+        bool isTransparent = false;
     };
 
 /// NPC/Player Components
@@ -92,6 +95,7 @@ namespace Component
 
         void Render(std::shared_ptr<ResourceManager> rm, glm::vec3 pos)
         {
+            glUniform1i(glGetUniformLocation(rm->getShaderID(shaderType), "isTransparent"), this->isTransparent);
             rm->useModel(modelPath, rm->getShaderID(shaderType), pos);
         }
 
@@ -99,6 +103,8 @@ namespace Component
         {
             shaderType = sh;
         }
+
+        void setTransparency(bool x) {isTransparent = x;}
 
         bool hasModel = false;
         std::string modelPath;
@@ -171,6 +177,7 @@ namespace Component
         virtual void Fill(bool, bool) {}
         virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader) {}
         void Render(std::shared_ptr<ResourceManager> rm, glm::vec3){}
+        virtual void setTransparency(bool x){}
     };
 
     class MovementComponent : public Component
@@ -229,6 +236,7 @@ namespace Component
         virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader) {}
         virtual void Fill(float mass, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer) {}
         void Render(std::shared_ptr<ResourceManager> rm){}
+        virtual void setTransparency(bool x){}
 
     private:
 
@@ -275,6 +283,7 @@ namespace Component
         virtual void Fill(float, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer) {}
         virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader) {}
         void Render(){}
+        virtual void setTransparency(bool x) {}
 
     };
 

@@ -19,15 +19,20 @@ float DistributionGGX(vec3 N, vec3 H, float roughness)
     return nom / denom;
 }
 
-float DistributionGGX2(in vec3 N, in vec3 H, in float roughness, in vec3 L,  in float rad)
+float DistributionGGX2(in vec3 N, in vec3 H, in float roughness, in vec3 L, in float rad)
 {
     float a      = roughness*roughness;
     float a2     = a*a;
-    float aP2    = a2 * a2;
+    float aP     = clamp( rad / ( length(L) * 2.0 ) + a, 0.0, 1.0 );
+    float aP2    = aP * aP;
     float NdotH  = max(dot(N, H), 0.0);
     float NdotH2 = NdotH*NdotH;
 
-    return (a2 * aP2) / pow(NdotH2 * (a2 - 1.0) + 1.0, 2.0);
+    float nom = a2 * aP2;
+    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+    denom = PI * denom * denom;
+
+    return nom / denom;
 }
 
 float GeometrySchlickGGX(float NdotV, float roughness)
@@ -230,11 +235,11 @@ vec3 SphereAreaLight(in vec3 position, in float radius, in vec3 color, in float 
         float distance = length(position - FragPos);
         float watts = power;
         float attenuation = calculateAttenuation(watts, distance);//1.0 / (1.0 + 0.1/*factor*/ * pow(distance, 2));
-        //attenuation *= smoothstep(watts, watts - 5.0, distance);
+        attenuation *= smoothstep(watts, watts - 5.0, distance);
         vec3 radiance     = vec3(1.0) * attenuation;        
         
         // cook-torrance brdf
-        float NDF = DistributionGGX(Normal, H, clamp(Specular, 0.05, 1.0));       
+        float NDF = DistributionGGX2(Normal, H, clamp(Specular, 0.05, 1.0), L, radius);       
         float G   = GeometrySmith(Normal, V, L, Specular);      
         
         vec3 nominator    = NDF * G * F;
@@ -244,5 +249,9 @@ vec3 SphereAreaLight(in vec3 position, in float radius, in vec3 color, in float 
         // add to outgoing radiance Lo
         float NdotL = orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.05, 1.0), 1.0);             
         vec3 Lo = (kD * Diffuse / PI + brdf) * radiance * NdotL; 
-        return Lo * color;
+        return Lo * normalize(color);
 }
+/*
+vec3 TubeAreaLight(in vec3 position, in vec3 direction,in float radius, in vec3 color, in float power){
+
+}*/

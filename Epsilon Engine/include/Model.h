@@ -27,16 +27,7 @@ using namespace std;
 #include <camera.h>
 class ResourceManager;
 
-struct MIN_MAX_POINTS
-{
-    float MAX_X;
-    float MAX_Y;
-    float MAX_Z;
 
-    float MIN_X;
-    float MIN_Y;
-    float MIN_Z;
-};
 
 class Model
 {

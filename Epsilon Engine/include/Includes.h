@@ -13,8 +13,25 @@
 #include <vector>
 #include <iomanip>
 #include <glm/gtc/quaternion.hpp>
+#include <Types.h>
 
 namespace Helpers {
+
+    inline static bool PointInBox(MIN_MAX_POINTS box, glm::vec3 point){
+        return (point.x > box.MIN_X && point.x < box.MAX_X &&
+                point.y > box.MIN_Y && point.y < box.MAX_Y &&
+                point.z > box.MIN_Z && point.z < box.MAX_Z);
+    }
+
+    inline static bool PointInBox(MIN_MAX_POINTS box, glm::vec3 point, glm::mat4 model){
+
+        glm::vec4 min = model*glm::vec4(box.MIN_X, box.MIN_Y, box.MIN_Z, 1.0);
+        glm::vec4 max = model*glm::vec4(box.MAX_X, box.MAX_Y, box.MAX_Z, 1.0);
+
+        return (point.x > min.x && point.x < max.x &&
+                point.y > min.y && point.y < max.y &&
+                point.z > min.z && point.z < max.z);
+    }
 
     inline
     static std::string intTostring(int number) {

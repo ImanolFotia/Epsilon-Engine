@@ -26,7 +26,7 @@ bool BSPFace::BuildFace(std::vector<glm::vec3> Vertices, std::vector<glm::vec3> 
         t_Vertex vert;
         vert.position = Vertices[i];
         vert.texcoord = TexCoords[i];
-        vert.normal = -Normals[i];
+        vert.normal = glm::normalize(-Normals[i]);
         vert.tangent = -Tangents[i];
         vert.bitangent = -Bitangents[i];
         mVertices.push_back(vert);
