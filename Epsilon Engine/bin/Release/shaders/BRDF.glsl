@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #version 330 core
+=======
+#version 440 core
+>>>>>>> bf3e86905916742fe0a25173e3674c5562729fa2
 out vec2 FragColor;
 in vec2 TexCoords;
 

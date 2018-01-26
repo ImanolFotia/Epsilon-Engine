@@ -283,6 +283,11 @@ void Camera::setFoV(float FoV)
     this->FieldOfView = FoV;
 }
 
+float Camera::getFoV()
+{
+    return this->FieldOfView;
+}
+
 void Camera::setProjection(float FOV, float AR, float NEAR, float FAR)
 {
     this->ProjectionMatrix = glm::perspective( glm::radians(FOV) , AR , NEAR , FAR );

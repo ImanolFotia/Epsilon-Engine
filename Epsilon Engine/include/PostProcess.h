@@ -258,6 +258,10 @@ std::shared_ptr<FrameBuffer<int> > BRDFFramebuffer;
     std::shared_ptr<eTexture> lensStar;
 
 
+    glm::vec2 FocalLen, InvFocalLen, UVToViewA, UVToViewB, LinMAD;
+
+
+
 };
 
 #endif // POSTPROCESS_H_INCLUDED

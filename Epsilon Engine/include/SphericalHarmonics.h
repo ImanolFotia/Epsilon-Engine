@@ -91,13 +91,13 @@ private:
 
 
     void sphericalHarmonicsEvaluateDirection(float * result, int order,
-            const glm::vec3 & dir);
+            const glm::vec3 & dir, std::string why);
 
     void sphericalHarmonicsAdd(float * result, int order,
-                               const float * inputA, const float * inputB);
+                               const float * inputA, const float * inputB, std::string why);
 
     void sphericalHarmonicsScale(float * result, int order,
-                                 const float * input, float scale);
+                                 const float * input, float scale, std::string why);
 
 
 };

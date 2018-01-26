@@ -1,10 +1,12 @@
-#version 330 core
-out float FragColor;
-in vec2 TexCoords;
+#version 440 core
 
-uniform sampler2D gDepth;
-uniform sampler2D gNormal;
-uniform sampler2D texNoise;
+layout (binding = 0) uniform sampler2D gDepth;
+layout (binding = 1) uniform sampler2D gNormal;
+layout (binding = 2) uniform sampler2D texNoise;
+
+
+layout(location = 0) out float FragColor;
+in vec2 TexCoords;
 
 const int kernelSize = 9;
 uniform vec3 samples[kernelSize];
@@ -48,15 +50,45 @@ float LinearizeDepth(float depth)
     return ((2.0 * NEAR * FAR) / (FAR + NEAR - z * (FAR - NEAR)));
 }
 
+
+bool ScreenDoor[4][4];
+
 void main()
 {
     // Get input for SSAO algorithm
+
+      ScreenDoor[0][0] = true;
+      ScreenDoor[1][0] = true;
+      ScreenDoor[2][0] = true;
+      ScreenDoor[3][0] = false;
+
+      ScreenDoor[0][1] = false;
+      ScreenDoor[1][1] = true;
+      ScreenDoor[2][1] = false;
+      ScreenDoor[3][1] = true;
+
+      ScreenDoor[0][2] = true;
+      ScreenDoor[1][2] = false;
+      ScreenDoor[2][2] = true;
+      ScreenDoor[3][2] = true;
+
+      ScreenDoor[0][3] = false;
+      ScreenDoor[1][3] = true;
+      ScreenDoor[2][3] = false;
+      ScreenDoor[3][3] = true;
+
+    ivec2 invFragCoord = ivec2(gl_FragCoord)*2;///ivec2(fragCoord);  
+    int indexX = int(mod(int(invFragCoord.x), 4)); 
+    int indexY = int(mod(int(invFragCoord.y), 4));
+    
+    if(!ScreenDoor[indexX][indexY])
+        discard;
 
     float depth = texture(gDepth, TexCoords, 2.0).r;
  
     vec3 fragPos = WorldPosFromDepth(depth);
 
-    vec3 normal = vec3(texture(gNormal, TexCoords) * invView);
+    vec3 normal = vec3(texture(gNormal, TexCoords, 1.0) * invView);
     vec3 randomVec = texture(texNoise, TexCoords * noiseScale).xyz;
     // Create TBN change-of-basis matrix: from tangent-space to view-space
     vec3 tangent = normalize(randomVec - normal * dot(randomVec, normal));
@@ -67,11 +99,11 @@ void main()
     for(int i = 0; i < kernelSize; ++i)
     {
         // get sample position
-        vec3 sample = TBN * samples[i]; // From tangent to view-space
-        sample = fragPos + sample * radius;
+        vec3 samp = TBN * samples[i]; // From tangent to view-space
+        samp = fragPos + samp * radius;
 
         // project sample position (to sample texture) (to get position on screen/texture)
-        vec4 offset = vec4(sample, 1.0);
+        vec4 offset = vec4(samp, 1.0);
         offset = projection * offset; // from view to clip-space
         offset.xyz /= offset.w; // perspective divide
         offset.xyz = offset.xyz * 0.5 + 0.5; // transform to range 0.0 - 1.0
@@ -84,7 +116,7 @@ void main()
         bias = 0.025;
         // range check & accumulate
         float rangeCheck = smoothstep(0.0, 1.0, radius / abs(fragPos.z - sampleDepth));
-        occlusion += (sampleDepth >= sample.z + bias ? 1.0 : 0.0) * rangeCheck;
+        occlusion += (sampleDepth >= samp.z + bias ? 1.0 : 0.0) * rangeCheck;
     }
     occlusion = 1.0 - (occlusion / kernelSize);
     FragColor = pow(occlusion, 5);

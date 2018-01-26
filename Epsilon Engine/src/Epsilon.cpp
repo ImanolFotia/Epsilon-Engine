@@ -237,6 +237,7 @@ void Epsilon::InitResources(void) {
         rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(2.0, glm::vec3(-20.5+(i*6.4),9.0,-8), 50.0f).get());
         CompPhys->Fill(100.0f, ph);
 
+        Compmodel->isTransparent = true;
         tmpEnt->addComponent(Compmodel);
         tmpEnt->addComponent(CompPhys);
 
@@ -348,9 +349,9 @@ void Epsilon::InitResources(void) {
     tmpEnt->addComponent(Compmodel);
     EntityList.push_back(tmpEnt);
 
-    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-20, 0.8, 0.0), glm::vec3(2.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-20, 0.8, 0.0), glm::vec3(5.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    Compmodel->Fill("models/birch2.eml", rM, "Main");
+    Compmodel->Fill("models/Tree_o.eml", rM, "Main");
     tmpEnt->addComponent(Compmodel);
     EntityList.push_back(tmpEnt);
 
@@ -367,7 +368,7 @@ void Epsilon::InitResources(void) {
     EntityList.push_back(tmpEnt);
 
 
-    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-20, 3.3, 15.0), glm::vec3(5.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-27.8, 3.2, 14.0), glm::vec3(6.5), glm::quat(-1.0, 0.0, -1.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
     Compmodel->Fill("models/woodentable.eml", rM, "Main");
     tmpEnt->addComponent(Compmodel);
@@ -375,6 +376,26 @@ void Epsilon::InitResources(void) {
 
 
 ///godrays tutorial end
+
+
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-29, 7.65, 18.0), glm::vec3(2), glm::quat(-0.5, 0.0, -1.0, 0.0)));
+    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/oldtv.eml", rM, "Main");
+    Compmodel->isTransparent = true;
+
+    tmpEnt->addComponent(Compmodel);
+    EntityList.push_back(tmpEnt);
+
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(13, 4, -2), glm::vec3(3.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
+    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/vase.eml", rM, "Main");
+    std::shared_ptr<Component::PhysicComponent> CompPhys = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
+    std::shared_ptr<Physics::CubePhysicObject> ph = (std::shared_ptr<Physics::CubePhysicObject>) new Physics::CubePhysicObject();
+    rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(glm::vec3(13, 4, -2), 10.0, rM->getModelBoundingBox("models/vase.eml"), 3.0).get());
+    CompPhys->Fill(100.0f, ph);
+    tmpEnt->addComponent(Compmodel);
+    tmpEnt->addComponent(CompPhys);
+    EntityList.push_back(tmpEnt);
 
     /*
     ph->addObject(2.0, glm::vec3(-20.5+(i*6.4),8.2,-8), 2.0).get()
@@ -428,15 +449,32 @@ void Epsilon::InitResources(void) {
     m_ParticleSystem = (std::shared_ptr<ParticleSystem>) new ParticleSystem();
     m_ParticleSystem->addNewSystem(limits, SNOW, 150);
 
-    this->mCubemap = (std::shared_ptr<CubeMap>) new CubeMap(54, glm::vec3(0, 5, -1));
+
+    sun->Update();
+    shadowMap->setShadowPosition(glm::vec3(6 + 1.0 * 30, 8 + 45.0f, -8 + 0.0 * 30));
+
+    shadowMap->setShadowDirection(sun->Direction);
+
+    shadowMap->SetupShadowMatrices();
+
+    shadowMap->BindShadowFrameBuffer();
+    this->Render3D();
+    shadowMap->UnbindShadowFrameBuffer();
+
+
+    this->mCubemap = (std::shared_ptr<CubeMap>) new CubeMap(54, glm::vec3(6, 8, -8));
+
 
     glClearColor(0.1, 0.1, 0.1, 1.0);
     glViewport(0,0,512,512);
     glEnable(GL_DEPTH_TEST);
-    sun->Update();
     eCamera->Update(window);
     eCamera->UpdateMatrices();
 
+    glDisable(GL_CULL_FACE);
+
+
+    Shaders["CubeMap"]->Use();
     for(int i = 0; i < 6; ++i) {
         this->mCubemap->CaptureEnvironment(i);
         glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(0.1));
@@ -446,6 +484,13 @@ void Epsilon::InitResources(void) {
         this->mCubemap->mMainShader->PushUniform("model", cModel);
         glCullFace(GL_FRONT);
         BSPMap->Frustum.CalculateFrustum(glm::mat4(this->mCubemap->captureProjection * this->mCubemap->captureViews[i]), cModel);
+
+        glUniformMatrix4fv(glGetUniformLocation(Shaders["CubeMap"]->getProgramID(), "lightSpaceMatrix"), 1, GL_FALSE, &shadowMap->getLightSpaceMatrix()[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(Shaders["CubeMap"]->getProgramID(), "depthBias"), 1, GL_FALSE, &shadowMap->getBiasMatrix()[0][0]);
+        this->mCubemap->mMainShader->PushUniform("lightDir", sun->Direction);
+        glActiveTexture(GL_TEXTURE5);
+        this->mCubemap->mMainShader->PushUniform("shadowMap", 5);
+        glBindTexture(GL_TEXTURE_2D, shadowMap->getShadowTextureID());
         BSPMap->RenderLevel(mCubemap->getPosition(), Shaders["CubeMap"]->getProgramID(), true);
     }
     glCullFace(GL_BACK);
@@ -560,12 +605,11 @@ void Epsilon::LoadGeometry(void) {
 
 
     waterPlane = (shared_ptr<Water>)(new Water(glm::vec3(150,-66.0,150), 9.0f)); ///-11.8
-
     sun = std::move((shared_ptr<Sun>)(new Sun()));
 
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "house_blueprint.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "godrays_tutorial.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 
@@ -624,11 +668,24 @@ void Epsilon::Render3D(Shader* shader) {
                                    eCamera);
         BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), Model);
         visible = BSPMap->Frustum.BoxInFrustum(EntityList[i]->getBoundingBox());
-
+/*
+        if(EntityList[i]->hasModel) {
+            for(const auto &C: EntityList[i]->ComponentList) {
+                if(C->Type == Component::MODELCOMPONENT) {
+                    bool transparent = Helpers::PointInBox(EntityList[i]->getBoundingBox(), eCamera->getPosition(),  Model);
+                    if(transparent) {
+                        C->setTransparency(true);
+                    } else {
+                        C->setTransparency(false);
+                    }
+                }
+            }
+        }
+*/
         if(visible) {
             EntityList[i]->Render();
+
         } else {
-            //cout << "no visible" << endl;
         }
         EntityList[i]->Update();
     }
@@ -706,6 +763,7 @@ void Epsilon::SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, 
     glUniformMatrix4fv(shader->LightSpaceMatrix_Location, 1, GL_FALSE, &shadowMap->getLightSpaceMatrix()[0][0]);
 
     glUniform1f(glGetUniformLocation(shader->getProgramID(), "time"),  glfwGetTime());
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "isTransparent"), 0);
 }
 
 void Epsilon::Render2D(void) {
@@ -751,14 +809,14 @@ void Epsilon::Render2D(void) {
                        &cur_avail_mem_kb );
     }
 
-    int DEBUG_MODE = 3;
+    int DEBUG_MODE = 1;
 
     if(DEBUG_MODE >= 1) {
         this->text->RenderText("FPS: " + Helpers::intTostring(acumfps), 0.01, 0.95, 0.5, glm::vec3(1,1,1));
+        this->text->RenderText("Frame Time: " + Helpers::floatTostring(frametime*1000) + "ms", 0.01, 0.91, 0.3, glm::vec3(1,1,1));
     }
 
     if(DEBUG_MODE >= 2) {
-        this->text->RenderText("Frame Time: " + Helpers::floatTostring(frametime*1000) + "ms", 0.01, 0.91, 0.3, glm::vec3(1,1,1));
         this->text->RenderText("OpenGL: " + GL_VER,0.01, 0.89, 0.3, glm::vec3(1,1,1));
         this->text->RenderText(GL_REN,0.01, 0.87, 0.3, glm::vec3(1,1,1));
         this->text->RenderText(GL_VEN,0.01, 0.85, 0.3, glm::vec3(1,1,1));
@@ -776,8 +834,6 @@ void Epsilon::Render2D(void) {
         this->text->RenderText
         ("Direction: x = " + Helpers::floatTostring(this->eCamera->getDirection().x) + " y = " + Helpers::floatTostring(this->eCamera->getDirection().y) + " z = " + Helpers::floatTostring(this->eCamera->getDirection().z), 0.01, 0.75, 0.3, glm::vec3(1,1,1));
     }
-
-
 
     //this->text->RenderText("On ground: " + std::string(m_PlayerCapsule->isOnGround() ? "YES" : "NO"),0.01, 0.79, 0.3, glm::vec3(1,1,1));/*
     //this->text->RenderText("Parallax Mapping: " + std::string(parallax ? "ON" : "OFF"),0.01, 0.83, 0.3, glm::vec3(1,1,1));*/
@@ -877,10 +933,10 @@ void Epsilon::PollEvents(void) {
 
     if(Input::KeyBoard::KEYS[Input::GLFW::Key::F])
         flashLight = !flashLight;
-    /*
-        if(Input::KeyBoard::KEYS[Input::GLFW::Key::SPACE])
-            SSAO = !SSAO;
-    */
+
+    if(Input::KeyBoard::KEYS[Input::GLFW::Key::SPACE])
+        SSAO = !SSAO;
+
     if(Input::KeyBoard::KEYS[Input::GLFW::Key::P])
         parallax = !parallax;
 
@@ -909,7 +965,7 @@ void Epsilon::PollEvents(void) {
     m_PlayerCapsule->CheckforPicking(btVector3(eCamera->getPosition().x, eCamera->getPosition().y, eCamera->getPosition().z),
                                      btVector3(eCamera->getDirection().x*1000, eCamera->getDirection().y*1000, eCamera->getDirection().z*1000));
 
-    m_ParticleSystem->Simulate(this->frametime, this->eCamera->getPosition());
+    //m_ParticleSystem->Simulate(this->frametime, this->eCamera->getPosition());
 }
 
 void Epsilon::MainLoop(void) {
@@ -1003,7 +1059,7 @@ void Epsilon::ProcessFrame(void) {
     PP->beginOffScreenrendering();
 
     //glBindBuffer(GL_SHADER_STORAGE_BUFFER, this->AmbientLightSSBO);
-    glEnable(GL_DEPTH_CLAMP);
+    //glEnable(GL_DEPTH_CLAMP);
     this->RenderSkybox(true);
     glClearDepth( 1.0f );
     /*
@@ -1017,7 +1073,7 @@ void Epsilon::ProcessFrame(void) {
     */
     this->Render3D(Shaders["Main"]);
 
-    glDisable(GL_DEPTH_CLAMP);
+    //glDisable(GL_DEPTH_CLAMP);
     PP->endOffScreenRendering();
 
     //glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
@@ -1062,7 +1118,7 @@ void Epsilon::RenderFrame(void) {
     this->RenderSkybox(false);
     glDisable(GL_DEPTH_CLAMP);
 
-    this->RenderParticles();
+    //this->RenderParticles();
 
     //this->waterPlane->RenderWater(eCamera, PP->CopyTextureFBO->getRenderTargetHandler(0), sun->Direction, PP->gDepth);
 

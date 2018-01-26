@@ -219,6 +219,7 @@ void Model::SetUniforms(Shader* shader, glm::vec3 position, glm::vec3 scale, glm
     glUniform3f(shader->viewPos_Location,  cam->getPosition().x, cam->getPosition().y, cam->getPosition().z);
 
     glUniform1f(glGetUniformLocation(shader->getProgramID(), "time"),  glfwGetTime());
+    glUniform2i(glGetUniformLocation(shader->getProgramID(), "Resolution"), 1920, 1080);
     PrevPos = position;
     PrevScale = scale;
     PrevRot = rotation;
@@ -251,5 +252,6 @@ void Model::SetUniforms(Shader* shader, glm::vec3 position, glm::vec3 scale, glm
     glUniform3f(shader->viewPos_Location,  cam->getPosition().x, cam->getPosition().y, cam->getPosition().z);
 
     glUniform1f(glGetUniformLocation(shader->getProgramID(), "time"),  glfwGetTime());
+    glUniform2i(glGetUniformLocation(shader->getProgramID(), "Resolution"), 1920, 1080);
 
 }

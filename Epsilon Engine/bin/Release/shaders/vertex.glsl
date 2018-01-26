@@ -12,7 +12,7 @@ uniform mat4 projection;
 uniform mat4 MVP;
 
 out vec2 TexCoords;
-out vec3 Normal;
+//out vec3 Normal;
 out vec3 FragPos;
 out mat3 TBN;
 
@@ -36,7 +36,7 @@ void main()
 
 	FragPos = viewPos.xyz;
 
-	Normal = in_normal;
+	//Normal = in_normal;
 
 	TexCoords = in_vertexUV;
 

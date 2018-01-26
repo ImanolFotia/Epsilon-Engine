@@ -13,6 +13,6 @@ void main()
 	vec3 color = vec3(texture(gColorSampler, TexCoords).rgb);
 	vec3 reflection = texture(gReflectionSampler, TexCoords).rgb;
 
-	FragColor.rgb = max(reflection.rgb, vec3(0.0)) + (color);
+	FragColor.rgb = max(reflection.rgb, vec3(0.0)) +  max(color, vec3(0.0));
 	FragColor.a = 1.0;
 }

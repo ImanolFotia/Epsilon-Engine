@@ -160,123 +160,140 @@ void PostProcess::SetupFramebuffer() {
 
     tmpLight.position = glm::vec4(5, 17, -20, 1.0);
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-    tmpLight.color = glm::vec4(1, 1, 1, 1.0);
+    tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
     tmpLight.radius = 1.f;
-    tmpLight.watts = 1000.0f;
+    tmpLight.watts = 50.0f;
     tmpLight.type = 2;
     m_Lights.push_back(tmpLight);
 
     tmpLight.position = glm::vec4(4, 17, 19, 1.0);
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-    tmpLight.color = glm::vec4(1, 0, 1, 1.0);
+    tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
     tmpLight.radius = 1.f;
-    tmpLight.watts = 1000.0f;
+    tmpLight.watts = 50.0f;
     tmpLight.type = 2;
     m_Lights.push_back(tmpLight);
 
     tmpLight.position = glm::vec4(60, 17, 18, 1.0);
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-    tmpLight.color = glm::vec4(0.3, 1, 0.5, 1.0);
+    tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
     tmpLight.radius = 1.f;
-    tmpLight.watts = 1000.0f;
+    tmpLight.watts = 50.0f;
     tmpLight.type = 2;
     m_Lights.push_back(tmpLight);
+    /*
+        tmpLight.position = glm::vec4(43, 17, -43, 1.0);
+        tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+        tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
+        tmpLight.radius = 1.f;
+        tmpLight.watts = 50.0f;
+        tmpLight.type = 2;
+        m_Lights.push_back(tmpLight);
 
-    tmpLight.position = glm::vec4(43, 17, -43, 1.0);
-    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-    tmpLight.color = glm::vec4(1, 0.5, 1, 1.0);
-    tmpLight.radius = 1.f;
-    tmpLight.watts = 1000.0f;
-    tmpLight.type = 2;
-    m_Lights.push_back(tmpLight);
+        tmpLight.position = glm::vec4(90, 17, -43, 1.0);
+        tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+        tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
+        tmpLight.radius = 1.f;
+        tmpLight.watts = 50.0f;
+        tmpLight.type = 2;
+        m_Lights.push_back(tmpLight);
 
-    tmpLight.position = glm::vec4(90, 17, -43, 1.0);
-    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-    tmpLight.color = glm::vec4(0.5, 1, 1, 1.0);
-    tmpLight.radius = 1.f;
-    tmpLight.watts = 1000.0f;
-    tmpLight.type = 2;
-    m_Lights.push_back(tmpLight);
+        tmpLight.position = glm::vec4(58, 17, 49, 1.0);
+        tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+        tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
+        tmpLight.radius = 1.f;
+        tmpLight.watts = 50.0f;
+        tmpLight.type = 2;
+        m_Lights.push_back(tmpLight);
 
-    tmpLight.position = glm::vec4(58, 17, 49, 1.0);
-    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-    tmpLight.color = glm::vec4(0.7, 0.8, 0.2, 1.0);
-    tmpLight.radius = 1.f;
-    tmpLight.watts = 1000.0f;
-    tmpLight.type = 2;
-    m_Lights.push_back(tmpLight);
+        tmpLight.position = glm::vec4(-78, 17, 46, 1.0);
+        tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+        tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
+        tmpLight.radius = 1.f;
+        tmpLight.watts = 50.0f;
+        tmpLight.type = 2;
+        m_Lights.push_back(tmpLight);
 
-    tmpLight.position = glm::vec4(-78, 17, 46, 1.0);
-    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-    tmpLight.color = glm::vec4(0.2, 0.8, 0.6, 1.0);
-    tmpLight.radius = 1.f;
-    tmpLight.watts = 1000.0f;
-    tmpLight.type = 2;
-    m_Lights.push_back(tmpLight);
+        tmpLight.position = glm::vec4(-90, 17, 16, 1.0);
+        tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+        tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
+        tmpLight.radius = 1.f;
+        tmpLight.watts = 50.0f;
+        tmpLight.type = 2;
+        m_Lights.push_back(tmpLight);
 
-    tmpLight.position = glm::vec4(-90, 17, 16, 1.0);
-    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-    tmpLight.color = glm::vec4(0.8, 0.5, 0.1, 1.0);
-    tmpLight.radius = 1.f;
-    tmpLight.watts = 1000.0f;
-    tmpLight.type = 2;
-    m_Lights.push_back(tmpLight);
+        tmpLight.position = glm::vec4(-82, 17, -20, 1.0);
+        tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+        tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
+        tmpLight.radius = 1.f;
+        tmpLight.watts = 50.0f;
+        tmpLight.type = 2;
+        m_Lights.push_back(tmpLight);
 
-    tmpLight.position = glm::vec4(-82, 17, -20, 1.0);
-    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-    tmpLight.color = glm::vec4(0.7, 0.3, 0.5, 1.0);
-    tmpLight.radius = 1.f;
-    tmpLight.watts = 1000.0f;
-    tmpLight.type = 2;
-    m_Lights.push_back(tmpLight);
+        tmpLight.position = glm::vec4(-30, 17, -54, 1.0);
+        tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+        tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
+        tmpLight.radius = 1.f;
+        tmpLight.watts = 50.0f;
+        tmpLight.type = 2;
+        m_Lights.push_back(tmpLight);
 
-    tmpLight.position = glm::vec4(-30, 17, -54, 1.0);
-    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-    tmpLight.color = glm::vec4(0.2, 0.6, 0.2, 1.0);
-    tmpLight.radius = 1.f;
-    tmpLight.watts = 1000.0f;
-    tmpLight.type = 2;
-    m_Lights.push_back(tmpLight);
+        tmpLight.position = glm::vec4(-30, 17, -17, 1.0);
+        tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+        tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
+        tmpLight.radius = 1.f;
+        tmpLight.watts = 50.0f;
+        tmpLight.type = 2;
+        m_Lights.push_back(tmpLight);
 
-    tmpLight.position = glm::vec4(-30, 17, -17, 1.0);
-    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-    tmpLight.color = glm::vec4(0.3, 0.2, 0.8, 1.0);
-    tmpLight.radius = 1.f;
-    tmpLight.watts = 1000.0f;
-    tmpLight.type = 2;
-    m_Lights.push_back(tmpLight);
+        tmpLight.position = glm::vec4(3, 0.5, -52, 1.0);
+        tmpLight.direction = glm::vec4(0, 0, 1, 1.0);
+        tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
+        tmpLight.radius = 0.5f;
+        tmpLight.watts = 50.0f;
+        tmpLight.type = 1;
+        m_Lights.push_back(tmpLight);
 
-    tmpLight.position = glm::vec4(3, 0.5, -52, 1.0);
-    tmpLight.direction = glm::vec4(0, 0, 1, 1.0);
-    tmpLight.color = glm::vec4(0.4, 0.8, 0.5, 1.0);
+        tmpLight.position = glm::vec4(-8, 0.0, -29, 1.0);
+        tmpLight.direction = glm::vec4(0, 1, 0, 1.0);
+        tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
+        tmpLight.radius = 0.2f;
+        tmpLight.watts = 50.0f;
+        tmpLight.type = 1;
+        m_Lights.push_back(tmpLight);
+
+
+        tmpLight.position = glm::vec4(0.0, 24.0, 0.0, 1.0);
+        tmpLight.direction = glm::vec4(0, 1, 0, 1.0);
+        tmpLight.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
+        tmpLight.radius = 0.2f;
+        tmpLight.watts = 50.0f;
+        tmpLight.type = 0;
+        m_Lights.push_back(tmpLight);
+
+
+        tmpLight.position = glm::vec4(49.0, 16, -13.0, 1.0);
+        tmpLight.direction = glm::vec4(1, 1, 0, 1.0);
+        tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
+        tmpLight.radius = 1.5f;
+        tmpLight.watts = 50.0f;
+        tmpLight.type = 2;
+        m_Lights.push_back(tmpLight);
+
+
+        tmpLight.position = glm::vec4(-29.3, 8.5, 18.5, 1.0);
+        tmpLight.direction = glm::vec4(0.74, -0.5761, -0.60, 1.0);
+        tmpLight.color = glm::vec4(70, 158, 116, 1.0);
+        tmpLight.radius = 0.5f;
+        tmpLight.watts = 50.0f;
+        tmpLight.type = 1;
+        m_Lights.push_back(tmpLight);
+    */
+    tmpLight.position = glm::vec4(13, 4, -4, 1.0);
+    tmpLight.direction = glm::vec4(0.74, -0.5761, -0.60, 1.0);
+    tmpLight.color = glm::vec4(70, 158, 116, 1.0);
     tmpLight.radius = 0.5f;
-    tmpLight.watts = 1000.0f;
-    tmpLight.type = 1;
-    m_Lights.push_back(tmpLight);
-
-    tmpLight.position = glm::vec4(-8, 0.0, -29, 1.0);
-    tmpLight.direction = glm::vec4(0, 1, 0, 1.0);
-    tmpLight.color = glm::vec4(0.4, 0.8, 0.5, 1.0);
-    tmpLight.radius = 0.2f;
-    tmpLight.watts = 1000.0f;
-    tmpLight.type = 1;
-    m_Lights.push_back(tmpLight);
-
-
-    tmpLight.position = glm::vec4(0.0, 24.0, 0.0, 1.0);
-    tmpLight.direction = glm::vec4(0, 1, 0, 1.0);
-    tmpLight.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
-    tmpLight.radius = 0.2f;
-    tmpLight.watts = 1000.0f;
-    tmpLight.type = 0;
-    m_Lights.push_back(tmpLight);
-
-
-    tmpLight.position = glm::vec4(17.0, 5, 3.0, 1.0);
-    tmpLight.direction = glm::vec4(1, 1, 0, 1.0);
-    tmpLight.color = glm::vec4(0.2, 0.1, 0.1, 1.0);
-    tmpLight.radius = 1.5f;
-    tmpLight.watts = 500.0f;
+    tmpLight.watts = 50.0f;
     tmpLight.type = 2;
     m_Lights.push_back(tmpLight);
 
@@ -421,8 +438,7 @@ void PostProcess::SetupFramebuffer() {
 
 }
 
-void PostProcess::generateBRDF()
-{
+void PostProcess::generateBRDF() {
     BRDFFramebuffer->bindFramebuffer();
     BRDFFramebuffer->setViewport();
     BRDFFramebuffer->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -543,6 +559,7 @@ void PostProcess::SetupGBuffer() {
 }
 
 void PostProcess::setupSSAO() {
+
     /// Also create framebuffer to hold SSAO processing stage
     glGenFramebuffers(1, &ssaoFBO);
     glGenFramebuffers(1, &ssaoBlurFBO);
@@ -588,14 +605,14 @@ void PostProcess::setupSSAO() {
     }
 
     // Noise texture
-    for (GLuint i = 0; i < 9; i++) {
+    for (GLuint i = 0; i < 16; i++) {
         glm::vec3 noise(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, 0.0f); // rotate around z-axis (in tangent space)
         ssaoNoise.push_back(noise);
     }
 
     glGenTextures(1, &noiseTexture);
     glBindTexture(GL_TEXTURE_2D, noiseTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 3, 3, 0, GL_RGB, GL_FLOAT, &ssaoNoise[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 4, 4, 0, GL_RGB, GL_FLOAT, &ssaoNoise[0]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -618,10 +635,29 @@ void PostProcess::applySSAO(std::shared_ptr<Camera>& cam) {
     glBindTexture(GL_TEXTURE_2D, this->gExpensiveNormal);
 
     glActiveTexture(GL_TEXTURE2);
-    SSAO->PushUniform("texNoise", 0);
+    SSAO->PushUniform("texNoise", 2);
     glBindTexture(GL_TEXTURE_2D, this->noiseTexture);
+    /*
+        FocalLen.x      = 1.0f / tanf(glm::radians(cam->getFoV()) * 0.5f) * ((float)SSAOheight / (float)SSAOwidth);
+        FocalLen.y      = 1.0f / tanf(glm::radians(cam->getFoV()) * 0.5f);
+        InvFocalLen.x   = 1.0f / FocalLen.x;
+        InvFocalLen.y   = 1.0f / FocalLen.y;
+
+        UVToViewA.x = -2.0f * InvFocalLen.x;
+        UVToViewA.y = -2.0f * InvFocalLen.y;
+        UVToViewB.x =  1.0f * InvFocalLen.x;
+        UVToViewB.y =  1.0f * InvFocalLen.y;
+
+        float near = 0.1f , far = 3000.0f;
+        LinMAD.x = (near-far)/(2.0f*near*far);
+        LinMAD.y = (near+far)/(2.0f*near*far);
 
 
+        SSAO->PushUniform("FocalLen", FocalLen);
+        SSAO->PushUniform("UVToViewA", UVToViewA);
+        SSAO->PushUniform("UVToViewB", UVToViewB);
+        SSAO->PushUniform("LinMAD", LinMAD);
+    */
     glUniform3fv(glGetUniformLocation(SSAO->getProgramID(), "samples"), 9, &ssaoKernel[0][0]);
 
     SSAO->PushUniform("projection", cam->getProjectionMatrix());
@@ -969,7 +1005,7 @@ void PostProcess::DownSampleSSR(double frametime) {
     m_exposure = glm::clamp(m_exposure, 7.0f, 12.0f);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-   // std::cout << m_exposure << std::endl;
+    // std::cout << m_exposure << std::endl;
 
 }
 
@@ -1172,29 +1208,29 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::shared_ptr<Camera>& 
     glUseProgram(0);
 
     /** copy texture */
-/*
-    CopyTextureFBO->bindFramebuffer();
-    CopyTextureFBO->setViewport();
-    CopyTextureFBO->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    PassThroughShader->Use();
+    /*
+        CopyTextureFBO->bindFramebuffer();
+        CopyTextureFBO->setViewport();
+        CopyTextureFBO->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        PassThroughShader->Use();
 
-    glActiveTexture(GL_TEXTURE0);
-    glUniform1i(glGetUniformLocation(PassThroughShader->getProgramID(), "texture0"), 0);
-    glBindTexture(GL_TEXTURE_2D, hdrFBO->getRenderTargetHandler("colorBuffer"));
-    //glGenerateMipmap(GL_TEXTURE_2D);
+        glActiveTexture(GL_TEXTURE0);
+        glUniform1i(glGetUniformLocation(PassThroughShader->getProgramID(), "texture0"), 0);
+        glBindTexture(GL_TEXTURE_2D, hdrFBO->getRenderTargetHandler("colorBuffer"));
+        //glGenerateMipmap(GL_TEXTURE_2D);
 
-    CopyTextureFBO->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        CopyTextureFBO->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    this->RenderQuad();
+        this->RenderQuad();
 
-    PassThroughShader->Free();
+        PassThroughShader->Free();
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, 0);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, 0);
 
-    CopyTextureFBO->unbindFramebuffer();
-    glViewport(0,0,this->width, this->height);
-*/
+        CopyTextureFBO->unbindFramebuffer();
+        glViewport(0,0,this->width, this->height);
+    */
     /** end copy texture*/
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer);
