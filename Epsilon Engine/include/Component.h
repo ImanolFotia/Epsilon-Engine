@@ -12,7 +12,7 @@
 #include <ResourceManager.h>
 #include <memory>
 #include <Types.h>
-#include <Physics.h>
+#include <Physics/Physics.h>
 
 namespace Component
 {

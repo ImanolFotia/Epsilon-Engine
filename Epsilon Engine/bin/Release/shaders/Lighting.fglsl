@@ -243,7 +243,6 @@ void main()
     
     for(int i = 0 ; i < outBuffer.Lights.length() ; i++)
     {
-
       switch(outBuffer.Lights[i].type){
         case 0:
             light += calculatePointPBR(outBuffer.Lights[i].position.rgb, outBuffer.Lights[i].color.rgb);

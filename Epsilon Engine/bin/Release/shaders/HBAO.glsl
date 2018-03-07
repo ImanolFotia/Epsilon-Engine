@@ -13,17 +13,19 @@ layout(location = 0) out float FragColor;
 uniform vec2 FocalLen;
 uniform vec2 UVToViewA;
 uniform vec2 UVToViewB;
+uniform vec2 Resolution;
+in vec2 ViewRay;
 
 uniform vec2 LinMAD;// = vec2(0.1-10.0, 0.1+10.0) / (2.0*0.1*10.0);
 
-vec2 AORes = vec2(1280.0, 720.0);
-vec2 InvAORes = vec2(1.0/1280.0, 1.0/720.0);
-vec2 NoiseScale = vec2(1280.0, 720.0) / 4.0;
+vec2 AORes = vec2(Resolution);
+vec2 InvAORes = vec2(1.0/Resolution.x, 1.0/Resolution.y);
+vec2 NoiseScale = Resolution / 4.0;
 
-float AOStrength = 1.9;
-float R = 0.3;
-float R2 = 0.3*0.3;
-float NegInvR2 = - 1.0 / (0.3*0.3);
+float AOStrength = 30.0;
+float R = 1.0;
+float R2 = R*R;
+float NegInvR2 = - 1.0 / R2;
 float TanBias = tan(30.0 * PI / 180.0);
 float MaxRadiusPixels = 50.0;
 
@@ -31,6 +33,15 @@ int NumDirections = 6;
 int NumSamples = 4;
 
 in vec2 TexCoords;
+
+const float NEAR = 0.1;
+const float FAR = 3000.0;
+
+float LinearizeDepth(float depth)
+{
+    float z = depth * 2.0 - 1.0; // Back to NDC
+    return ((2.0 * NEAR * FAR) / (FAR + NEAR - z * (FAR - NEAR)));
+}
 
 float ViewSpaceZFromDepth(float d)
 {
@@ -41,6 +52,7 @@ float ViewSpaceZFromDepth(float d)
 	return -1.0 / (LinMAD.x * d + LinMAD.y);
 }
 
+
 vec3 UVToViewSpace(vec2 uv, float z)
 {
 	uv = UVToViewA * uv + UVToViewB;
@@ -49,8 +61,8 @@ vec3 UVToViewSpace(vec2 uv, float z)
 
 vec3 GetViewPos(vec2 uv)
 {
-	//float z = ViewSpaceZFromDepth(texture(texture0, uv).r);
-	float z = texture(gDepth, uv).r;
+	float z = ViewSpaceZFromDepth(textureLod(gDepth, uv, 1.0).r);
+	//float z = texture(gDepth, uv).r;
 	return UVToViewSpace(uv, z);
 }
 
@@ -220,12 +232,12 @@ void main(void)
     	ComputeSteps(stepSizeUV, numSteps, rayRadiusPix, random.z);
 
 		float alpha = 2.0 * PI / numDirections;
-
+		float test = 0.0;
 		// Calculate the horizon occlusion of each direction
 		for(float d = 0; d < numDirections; ++d)
 		{
 			float theta = alpha * d;
-
+			test = theta;
 			// Apply noise to the direction
 			vec2 dir = RotateDirections(vec2(cos(theta), sin(theta)), random.xy);
 			vec2 deltaUV = dir * stepSizeUV;
@@ -240,8 +252,9 @@ void main(void)
 		}
 
 		// Average the results and produce the final AO
+		//ao = ao;//clamp(ao, 0.0, 1.0);
 		ao = 1.0 - ao / numDirections * AOStrength;
+		
 	}
-
-	FragColor = ao;
+	FragColor = clamp(pow(ao, 15.0), 0.0, 1.0);
 }

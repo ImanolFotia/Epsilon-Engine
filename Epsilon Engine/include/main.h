@@ -87,16 +87,16 @@ GLFWwindow* InitEngine(const char* ProgramName) {
 
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
 
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-    glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-    glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-    glfwWindowHint(GLFW_REFRESH_RATE, 60);
+    //glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+    //glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+    //glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+    //glfwWindowHint(GLFW_REFRESH_RATE, 60);
     //glfwWindowHint(GLFW_RED_BITS, 16);
     //glfwWindowHint(GLFW_GREEN_BITS, 16);
     //glfwWindowHint(GLFW_BLUE_BITS, 16);

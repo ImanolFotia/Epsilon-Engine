@@ -1,11 +1,11 @@
 #version 440 core
 
 layout(location = 0) out vec3 gAlbedoSpec;
-layout(location = 1) out float gPosition;
-layout(location = 2) out vec4 gExpensiveNormal;
-layout(location = 3) out vec4 gDepth;
-layout(location = 4) out vec4 gExtraComponents; 
-layout(location = 5) out vec3 gLightAccumulation;
+//layout(location = 1) out float gPosition;
+layout(location = 1) out vec4 gExpensiveNormal;
+layout(location = 2) out vec4 gDepth;
+layout(location = 3) out vec4 gExtraComponents; 
+layout(location = 4) out vec3 gLightAccumulation;
 
 layout (binding = 0) uniform sampler2D texture_diffuse;
 layout (binding = 1) uniform sampler2D texture_specular;
@@ -52,17 +52,6 @@ const float CosineA1 = (2.0f * Pi) / 3.0f;
 const float CosineA2 = Pi * 0.25f;
 // scale for restored amount of lighting
 uniform float u_scaleFactor = 0.5;
-
-// coefficients of spherical harmonics and possible values
-vec3 u_L00 = vec3(0.00069917, 0.000636377, 0.00103519);
-vec3 u_L1m1 = vec3(0.000158042, 0.000210175, 0.000571624);
-vec3 u_L10 = vec3(-9.60469e-007, -1.90034e-006, -8.98426e-007);
-vec3 u_L11 = vec3(-7.90908e-006, -2.77222e-005, -9.7246e-005);
-vec3 u_L2m2 = vec3(-0.000151222, -0.000140365, -0.000256554);
-vec3 u_L2m1 = vec3(-2.27325e-006, -2.22188e-006, -4.66022e-006);
-vec3 u_L20 = vec3(-0.000128482, -9.65931e-005, -0.000135669);
-vec3 u_L21 = vec3(-4.05267e-006, -1.33986e-006, -8.86971e-007);
-vec3 u_L22 = vec3(-0.000141542, -0.000116212, -0.000192996);
 
 struct SphericalHarmonicsFormat {
   vec3 u_L00; 
@@ -244,12 +233,13 @@ void main()
   
   float bias = max(0.01 * (1.0 - dot(gExpensiveNormal.rgb, Dir)), 0.5) * texture(texture_height, texCoords).b;
   //gDepth.r = gl_FragCoord.z;
-  gPosition = fs_in.FragPos.z;
+  //gPosition = fs_in.FragPos.z;
 
   gExtraComponents.xy = texture(texture_height, texCoords).rg; 
   vec2 a = (Position.xy / Position.w) * 0.5 + 0.5;
   vec2 b = (PrevPosition.xy / PrevPosition.w) * 0.5 + 0.5;
-  gExtraComponents.zw = (a - b);
+
+  gExtraComponents.zw = vec2(0.0);
 
   CubeMapcolor = texture(skybox, bpcem(
                                       reflect(normalize(fs_in.wFragPos - viewPos), normalize(gExpensiveNormal.rgb)), 

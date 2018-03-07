@@ -13,7 +13,8 @@
 #include <Shader.h>
 #include <Texture.h>
 #include <memory>
-#include <Physics.h>
+#include <Physics/Physics.h>
+#include <Physics/PhysicObject.h>
 
 class ResourceManager;
 

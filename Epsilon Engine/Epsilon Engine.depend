@@ -1822,7 +1822,7 @@
 
 1391359686 D
 
-1512502097 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\bsp.cpp
+1516977750 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\bsp.cpp
 	<GL/glew.h>
 	<omp.h>
 	<BSP.h>
@@ -1873,14 +1873,16 @@
 	<GL/glext.h>
 	<GL/glu.h>
 
-1508038942 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\bspface.h
+1520152066 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\bspface.h
 	<glm/glm.hpp>
 	<GL/glew.h>
 	<iostream>
 	<string>
 	<vector>
 	<SOIL.h>
-	<Physics.h>
+	<Physics/Physics.h>
+	<Physics/PhysicObject.h>
+	<Physics/CollisionInfo.h>
 	<Includes.h>
 
 1424014283 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\glm\glm\glm.hpp
@@ -2278,7 +2280,7 @@
 
 1396053918 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\soil\src\soil.h
 
-1512502097 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\physics.h
+1518927015 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\physics.h
 	<glm/glm.hpp>
 	<EpsilonMemory.h>
 	<Types.h>
@@ -2296,10 +2298,11 @@
 	<memory>
 	<typeinfo>
 
-1513103301 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\types.h
+1520131076 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\types.h
 	<btBulletDynamicsCommon.h>
 	<btBulletCollisionCommon.h>
 	<memory>
+	<glm/glm.hpp>
 
 1391359685 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\bullet-2.82-r2704\src\btbulletdynamicscommon.h
 	"btBulletCollisionCommon.h"
@@ -2820,7 +2823,7 @@
 	"LinearMath/btScalar.h"
 	"btRigidBody.h"
 
-1512502096 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\model.h
+1516977750 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\model.h
 	<string>
 	<fstream>
 	<sstream>
@@ -2926,7 +2929,7 @@
 1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\emlformat.h
 	<string>
 
-1512502097 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\camera.h
+1516977750 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\camera.h
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
 	<glm/gtc/quaternion.hpp>
@@ -2982,7 +2985,7 @@
 	"LinearMath/btVector3.h"
 	"BulletCollision/CollisionDispatch/btCollisionObject.h"
 
-1512502096 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\includes.h
+1517431694 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\includes.h
 	<iostream>
 	<string>
 	<sstream>
@@ -2990,13 +2993,15 @@
 	<vector>
 	<iomanip>
 	<glm/gtc/quaternion.hpp>
+	<Types.h>
+	<algorithm>
 
 1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\frustum.h
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
 	<Model.h>
 
-1512502097 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\resourcemanager.h
+1520130440 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\resourcemanager.h
 	<Texture.h>
 	<Model.h>
 	<Water.h>
@@ -3006,8 +3011,8 @@
 	<Shader.h>
 	<CubeMap.h>
 	<Includes.h>
-	<Physics.h>
-	<Audio.h>
+	<Physics/Physics.h>
+	<Audio/Audio.h>
 
 1512943729 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\water.h
 	<GL/glew.h>
@@ -3020,14 +3025,15 @@
 	<vector>
 	<memory>
 
-1508038942 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\terrain.h
+1520132525 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\terrain.h
 	<vector>
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
 	<Shader.h>
 	<Texture.h>
 	<memory>
-	<Physics.h>
+	<Physics/Physics.h>
+	<Physics/PhysicObject.h>
 
 1512502096 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\grass.h
 	<GL/glew.h>
@@ -3037,7 +3043,7 @@
 	<glm/gtc/matrix_transform.hpp>
 	<Shader.h>
 
-1513739444 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\cubemap.h
+1516977750 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\cubemap.h
 	<glm/glm.hpp>
 	<vector>
 	<string>
@@ -3088,12 +3094,12 @@
 	<memory>
 	<Includes.h>
 
-1514966684 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\bspface.cpp
-	<Physics.h>
+1520201231 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\bspface.cpp
+	<Physics/Physics.h>
 	<ResourceManager.h>
 	<BSPFace.h>
 
-1512502097 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\camera.cpp
+1516977750 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\camera.cpp
 	<iostream>
 	<camera.h>
 	<math.h>
@@ -3130,24 +3136,25 @@
 1512502097 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\entitytemplate.cpp
 	<EntityTemplate.h>
 
-1513739444 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\entitytemplate.h
+1520132551 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\entitytemplate.h
 	<Component.h>
 	<iostream>
 	<glm/glm.hpp>
 	<typeinfo>
 	<memory>
 	<ResourceManager.h>
+	<Physics/CollisionInfo.h>
 
-1513464383 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\component.h
+1520130348 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\component.h
 	<iostream>
 	<glm/glm.hpp>
 	<Model.h>
 	<ResourceManager.h>
 	<memory>
 	<Types.h>
-	<Physics.h>
+	<Physics/Physics.h>
 
-1515284543 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\epsilon.cpp
+1520202283 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\epsilon.cpp
 	<iostream>
 	<Epsilon.h>
 	<ProgramData.h>
@@ -3163,8 +3170,9 @@
 	<sys/CPUID.h>
 	<chrono>
 	<Log.h>
+	<sys/Console.hpp>
 
-1513739444 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\epsilon.h
+1520130473 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\epsilon.h
 	<map>
 	<GL/glew.h>
 	<GL/wglew.h>
@@ -3195,9 +3203,9 @@
 	<sys/Mouse.h>
 	<sys/Joystick.h>
 	<Player.h>
-	<Audio.h>
-	<AudioElement.h>
-	<AudioListener.h>
+	<Audio/Audio.h>
+	<Audio/AudioElement.h>
+	<Audio/AudioListener.h>
 	<SplashScreen.h>
 	<SphericalHarmonics.h>
 	<Picking.h>
@@ -3228,7 +3236,7 @@
 
 1237038326 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\deppend\freetype2\include\freetype\config\ftheader.h
 
-1513739444 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\postprocess.h
+1516977750 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\postprocess.h
 	<GL/glew.h>
 	<Shader.h>
 	<camera.h>
@@ -3300,8 +3308,8 @@
 	<glm/gtc/matrix_transform.hpp>
 	<Types.h>
 
-1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\player.h
-	<Physics.h>
+1520130355 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\player.h
+	<Physics/Physics.h>
 	<camera.h>
 
 1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\audiolistener.h
@@ -3312,15 +3320,15 @@
 1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\splashscreen.h
 	<GL/glew.h>
 
-1513385805 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\sphericalharmonics.h
+1516977750 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\sphericalharmonics.h
 	<CubeMap.h>
 	<memory>
 	<fstream>
 	<Includes.h>
 
-1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\picking.h
+1520130363 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\picking.h
 	<glm/glm.hpp>
-	<Physics.h>
+	<Physics/Physics.h>
 
 1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\log.h
 	<iostream>
@@ -3378,7 +3386,7 @@
 	<GL/glew.h>
 	<Types.h>
 
-1513378894 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\particleproxy.h
+1516977750 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\particleproxy.h
 	<Types.h>
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
@@ -3389,13 +3397,14 @@
 	<Texture.h>
 	<atomic>
 	<thread>
+	<atomic>
 	<omp.h>
 
 1512502096 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\particlerenderer.h
 	<Particle.h>
 	<Shader.h>
 
-1515284543 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\version.h
+1520221203 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\version.h
 
 1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\sys\cpuid.h
 	<string>
@@ -3419,7 +3428,7 @@
 	<assert.h>
 	<memory>
 
-1513142151 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\main.h
+1520151219 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\main.h
 	<ProgramData.h>
 	<Epsilon.h>
 	<memory>
@@ -3439,7 +3448,7 @@
 	<Mesh.h>
 	<ResourceManager.h>
 
-1512502097 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\model.cpp
+1516977750 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\model.cpp
 	<Model.h>
 	<ResourceManager.h>
 	<Log.h>
@@ -3455,14 +3464,15 @@
 	<Picking.h>
 	<sys/KeyBoard.h>
 
-1508038942 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\player.cpp
+1520132777 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\player.cpp
 	<Player.h>
 	<ResourceManager.h>
 	<sys/KeyBoard.h>
 	<sys/Joystick.h>
 	<iostream>
+	<Physics/CollisionInfo.h>
 
-1515283488 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\postprocess.cpp
+1520204742 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\postprocess.cpp
 	<PostProcess.h>
 	<iostream>
 	<ProgramData.h>
@@ -3580,12 +3590,13 @@
 
 1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\skyboxdata.h
 
-1515108287 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\sphericalharmonics.cpp
+1516977750 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\sphericalharmonics.cpp
 	<SphericalHarmonics.h>
 	<Types.h>
 	<OpenGL/HelperFunctions/CheckError.h>
+	<cstdlib>
 
-1515283939 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\sun.cpp
+1520148857 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\sun.cpp
 	<Sun.h>
 	<sys/KeyBoard.h>
 
@@ -3598,14 +3609,15 @@
 	<sys/KeyBoard.h>
 	<iostream>
 
-1513109183 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\terrain.cpp
+1520146374 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\terrain.cpp
 	<iostream>
 	<fstream>
 	<Terrain.h>
 	<SOIL.h>
-	<Physics.h>
+	<Physics/Physics.h>
 	<ResourceManager.h>
 	<exception>
+	<Physics/CollisionInfo.h>
 	<Includes.h>
 
 1512943695 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\water.cpp
@@ -3651,4 +3663,88 @@
 1513209455 d:\epsilon\epsilon engine\include\sys\joystickwrapper.h
 
 1513209455 d:\epsilon\epsilon engine\include\commandfunctions.h
+
+1517433720 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\sys\console.hpp
+	<iostream>
+	<string>
+	<cstdio>
+	<Includes.h>
+
+1520132277 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\physics\physics.h
+	<glm/glm.hpp>
+	<EpsilonMemory.h>
+	<Types.h>
+	<Model.h>
+	<vector>
+	<btBulletDynamicsCommon.h>
+	<btBulletCollisionCommon.h>
+	<BulletCollision/CollisionDispatch/btGhostObject.h>
+	<BulletDynamics/Character/btKinematicCharacterController.h>
+	<BulletDynamics/Featherstone/btMultiBodyDynamicsWorld.h>
+	<BulletDynamics/Featherstone/btMultiBodyConstraintSolver.h>
+	<LinearMath/btTransform.h>
+
+1520130905 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\audio\audio.h
+	<vector>
+	<memory>
+	<Audio/AudioElement.h>
+
+1520132325 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\audio\audioelement.h
+	<AL/al.h>
+	<AL/alc.h>
+	<Types.h>
+	<Audio/Loaders/WAVFile.h>
+	<iostream>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\audio\audiolistener.h
+	<AL/al.h>
+	<AL/alc.h>
+	<glm/glm.hpp>
+
+1520132652 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\physics\physics.cpp
+	<Physics/Physics.h>
+	<Physics/CollisionInfo.h>
+
+1499296007 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\audio\loaders\wavfile.h
+	<iostream>
+	<fstream>
+	<memory>
+	<Includes.h>
+
+1520130905 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\audio\audio.cpp
+	<Audio/Audio.h>
+
+1520132485 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\physics\physicobject.h
+	<Physics/Physics.h>
+	<Physics/ClothPhysicObject.h>
+	<Physics/CubePhysicObject.h>
+	<Physics/SpherePhysicObject.h>
+	<Physics/TriangleMeshPhysicObject.h>
+
+1520132485 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\physics\clothphysicobject.h
+	<Physics/Physics.h>
+	<Physics/PhysicObject.h>
+
+1520132606 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\physics\cubephysicobject.h
+	<Physics/Physics.h>
+	<Physics/PhysicObject.h>
+
+1520132679 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\physics\spherephysicobject.h
+	<Physics/Physics.h>
+	<Physics/PhysicObject.h>
+
+1520132724 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\physics\trianglemeshphysicobject.h
+	<Physics/Physics.h>
+	<Physics/PhysicObject.h>
+
+1520132325 c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\include\physics\collisioninfo.h
+
+1520132325 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\physics\cubephysicobject.cpp
+	<Physics/CubePhysicObject.h>
+
+1520132113 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\physics\spherephysicobject.cpp
+	<Physics/SpherePhysicObject.h>
+
+1520132325 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\physics\trianglemeshphysicobject.cpp
+	<Physics/TriangleMeshPhysicObject.h>
 

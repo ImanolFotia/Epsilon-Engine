@@ -153,7 +153,7 @@ vec3 CalculateDirectionalPBR()
         // add to outgoing radiance Lo
         float NdotL = orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.03, 1.0), 1.0);//              
         vec3 Lo = (kD * Diffuse / PI + brdf) * NdotL; 
-        return mix(vec3(0.0), Lo * clamp(1.0 - shadow, 0.0, 1.0) /** lightcolor*/, clamp(lightDir.y + 0.1, 0.0, 1.0))*4.0;
+        return mix(vec3(0.0), Lo * clamp(1.0 - shadow, 0.0, 1.0) /** lightcolor*/, clamp(lightDir.y + 0.1, 0.0, 1.0));
 }
 
 float saturate(in float x)
