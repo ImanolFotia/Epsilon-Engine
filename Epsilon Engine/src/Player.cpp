@@ -9,6 +9,8 @@
 #include <sys/KeyBoard.h>
 #include <sys/Joystick.h>
 #include <iostream>
+#include <Physics/CollisionInfo.h>
+
 namespace Game
 {
     /** @brief (one liner)

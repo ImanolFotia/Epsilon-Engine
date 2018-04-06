@@ -2,9 +2,9 @@
 
 layout(location = 0) out vec4 FragColor;
 layout(location = 1) out vec4 blurImage;
-layout(location = 2) out vec3 gExpensiveNormal;
-layout(location = 3) out float gDepth;
-layout(location = 4) out vec4 gExtraComponents; 
+layout(location = 2) out vec4 gDepth;
+layout(location = 3) out vec4 gExtraComponents;
+layout(location = 4) out vec3 gLightAccumulation; 
 
 in vec2 UV;
 in vec3 FragPos;
@@ -29,9 +29,10 @@ void main()
   FragColor.rgb = HDR(SunTexture.xyz);
   FragColor.a = SunTexture.a;
   blurImage = vec4(FragColor);
-  gExpensiveNormal.rgb = vec3(0.0);
-  gDepth = 1.0;
+  //gExpensiveNormal.rgb = vec3(0.0);
+  gDepth = vec4(1.0);
     gExtraComponents = vec4(0.0);
+    gLightAccumulation = vec3(0.0);
 
 
 }

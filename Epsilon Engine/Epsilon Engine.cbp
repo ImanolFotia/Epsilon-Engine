@@ -100,9 +100,10 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="include/Audio.h" />
-		<Unit filename="include/AudioElement.h" />
-		<Unit filename="include/AudioListener.h" />
+		<Unit filename="include/Audio/Audio.h" />
+		<Unit filename="include/Audio/AudioElement.h" />
+		<Unit filename="include/Audio/AudioListener.h" />
+		<Unit filename="include/Audio/Loaders/WAVFile.h" />
 		<Unit filename="include/BSP.h" />
 		<Unit filename="include/BSPFace.h" />
 		<Unit filename="include/BSPfile.h" />
@@ -148,7 +149,14 @@
 		<Unit filename="include/ParticleProxy.h" />
 		<Unit filename="include/ParticleRenderer.h" />
 		<Unit filename="include/ParticleSystem.h" />
-		<Unit filename="include/Physics.h" />
+		<Unit filename="include/Physics/ClothPhysicObject.h" />
+		<Unit filename="include/Physics/CollisionInfo.h" />
+		<Unit filename="include/Physics/CubePhysicObject.h" />
+		<Unit filename="include/Physics/PhysicObject.h" />
+		<Unit filename="include/Physics/Physics.h" />
+		<Unit filename="include/Physics/PlayerControlledPhysicsObject.h" />
+		<Unit filename="include/Physics/SpherePhysicObject.h" />
+		<Unit filename="include/Physics/TriangleMeshPhysicObject.h" />
 		<Unit filename="include/Picking.h" />
 		<Unit filename="include/Player.h" />
 		<Unit filename="include/PostProcess.h" />
@@ -170,7 +178,6 @@
 		<Unit filename="include/Text.h" />
 		<Unit filename="include/Texture.h" />
 		<Unit filename="include/Types.h" />
-		<Unit filename="include/WAVFile.h" />
 		<Unit filename="include/Water.h" />
 		<Unit filename="include/camera.h" />
 		<Unit filename="include/cubemapRenderer.h" />
@@ -185,12 +192,14 @@
 		</Unit>
 		<Unit filename="include/renderer/Renderer.h" />
 		<Unit filename="include/sys/CPUID.h" />
+		<Unit filename="include/sys/Console.hpp" />
 		<Unit filename="include/sys/Joystick.h" />
 		<Unit filename="include/sys/JoystickWrapper.h" />
 		<Unit filename="include/sys/KeyBoard.h" />
 		<Unit filename="include/sys/KeyboardWrapper.h" />
 		<Unit filename="include/sys/Mouse.h" />
 		<Unit filename="include/sys/filesystem.h" />
+		<Unit filename="src/Audio/Audio.cpp" />
 		<Unit filename="src/BSP.cpp" />
 		<Unit filename="src/BSPFace.cpp" />
 		<Unit filename="src/Camera.cpp" />
@@ -203,7 +212,10 @@
 		<Unit filename="src/Mesh.cpp" />
 		<Unit filename="src/Model.cpp" />
 		<Unit filename="src/Particle.cpp" />
-		<Unit filename="src/Physics.cpp" />
+		<Unit filename="src/Physics/CubePhysicObject.cpp" />
+		<Unit filename="src/Physics/Physics.cpp" />
+		<Unit filename="src/Physics/SpherePhysicObject.cpp" />
+		<Unit filename="src/Physics/TriangleMeshPhysicObject.cpp" />
 		<Unit filename="src/Picking.cpp" />
 		<Unit filename="src/Player.cpp" />
 		<Unit filename="src/PostProcess.cpp" />

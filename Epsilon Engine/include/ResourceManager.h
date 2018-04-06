@@ -10,8 +10,8 @@
 #include <Shader.h>
 #include <CubeMap.h>
 #include <Includes.h>
-#include <Physics.h>
-#include <Audio.h>
+#include <Physics/Physics.h>
+#include <Audio/Audio.h>
 
 class ResourceManager
 {

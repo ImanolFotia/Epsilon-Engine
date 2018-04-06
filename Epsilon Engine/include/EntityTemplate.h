@@ -6,6 +6,7 @@
 #include <typeinfo>
 #include <memory>
 #include <ResourceManager.h>
+#include <Physics/CollisionInfo.h>
 
 class EntityTemplate {
 public:

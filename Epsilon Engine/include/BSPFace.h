@@ -13,7 +13,9 @@
 #include <string>
 #include <vector>
 #include <SOIL.h>
-#include <Physics.h>
+#include <Physics/Physics.h>
+#include <Physics/PhysicObject.h>
+#include <Physics/CollisionInfo.h>
 #include <Includes.h>
 
 class ResourceManager;
@@ -182,6 +184,8 @@ private:
     GLuint texture;
     string imagePath;
     GLuint VBO, EBO;
+    GLuint GITexture;
+    bool GISet = false;
     tBSPLightmap LightMap;
     GLuint LightMaptexture;
     std::shared_ptr<Physics::PhysicObject> CollisionObject;

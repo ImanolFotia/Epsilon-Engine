@@ -147,8 +147,7 @@ void main() {
     result += texture(blurredSampler, offset);
   }
 
-  result *=
-      texture(uLensColor, length(vec2(0.5) - texcoord) / length(vec2(0.5)));
+  result *= texture(uLensColor, length(vec2(0.5) - texcoord) / length(vec2(0.5)));
 
   vec4 lensMod = texture(uLensDirtTex, TexCoords);
   lensMod += texture(uLensStarTex, TexCoords);

@@ -38,9 +38,9 @@
 #include <sys/Mouse.h>
 #include <sys/Joystick.h>
 #include <Player.h>
-#include <Audio.h>
-#include <AudioElement.h>
-#include <AudioListener.h>
+#include <Audio/Audio.h>
+#include <Audio/AudioElement.h>
+#include <Audio/AudioListener.h>
 #include <SplashScreen.h>
 #include <SphericalHarmonics.h>
 #include <Picking.h>

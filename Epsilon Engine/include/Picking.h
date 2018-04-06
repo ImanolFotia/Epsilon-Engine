@@ -1,6 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
-#include <Physics.h>
+#include <Physics/Physics.h>
 
 class Pick
 {

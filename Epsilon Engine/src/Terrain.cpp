@@ -8,10 +8,10 @@
 #include <fstream>
 #include <Terrain.h>
 #include <SOIL.h>
-#include <Physics.h>
+#include <Physics/Physics.h>
 #include <ResourceManager.h>
 #include <exception>
-
+#include <Physics/CollisionInfo.h>
 #include <Includes.h>
 
 Terrain::Terrain(const char* heightMap,const char* diffuseTexture, float scale, int gridSize/**Must be Power of two*/, std::shared_ptr<ResourceManager> rm) {
@@ -24,8 +24,6 @@ Terrain::Terrain(const char* heightMap,const char* diffuseTexture, float scale, 
     this->heightMap = heightMap;
 
     this->diffuseTexture = diffuseTexture;
-
-    //this->GetHeightData();
 
     this->LoadTexture(diffuseTexture);
 
@@ -47,8 +45,6 @@ Terrain::Terrain(const char* heightMap,const char* diffuseTexture, const char* n
     this->diffuseTexture = diffuseTexture;
 
     this->specularTexture = specularTexture;
-
-    //this->GetHeightData();
 
     this->GenerateGrid(nullptr);
 
@@ -105,9 +101,6 @@ bool Terrain::GenerateGrid(unsigned char* pixels) {
         Grid.push_back(row);
         row.clear();
     }
-
-    //cout << Grid.size() << endl;
-    //cout << Grid.at(0).size() << endl;
 
     int mod = 0;
     counter = 0;
@@ -170,8 +163,6 @@ bool Terrain::GenerateGrid(unsigned char* pixels) {
     for(unsigned int i = 0; i < vertices.size(); ++i)
         tmp_vertices.push_back(vertices[i].Position);
 
-    //std::cout << "llega" << std::endl;
-
     try {
         std::shared_ptr<Physics::TriangleMeshPhysicObject> TerrainPhysicsMesh = (std::shared_ptr<Physics::TriangleMeshPhysicObject>) new Physics::TriangleMeshPhysicObject();
 
@@ -192,15 +183,6 @@ bool Terrain::GenerateGrid(unsigned char* pixels) {
         std::cout << e.what() << std::endl;
     }
 
-
-    /*
-        indices.pop_back();
-        indices.pop_back();
-        indices.pop_back();
-
-        indices.pop_back();
-        indices.pop_back();
-        indices.pop_back();*/
     calculateTangentSpace();
 }
 
@@ -222,9 +204,6 @@ bool Terrain::calculateTangentSpace() {
         tangent1.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
         /// tangent1 = glm::normalize(tangent1);
 
-        //for(int j = 0 ; j < Tangents.size() ; j++)
-        //   tangent1 = tangent1 + Tangents[j];
-
         tangent1 = glm::normalize(tangent1);
         vertices.at(indices.at((i+0))).Tangent = tangent1;
         vertices.at(indices.at((i+1))).Tangent = tangent1;
@@ -233,9 +212,6 @@ bool Terrain::calculateTangentSpace() {
         bitangent1.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
         bitangent1.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
         /// bitangent1 = glm::normalize(bitangent1);
-
-        //for(int j = 0 ; j < Bitangents.size() ; j++)
-        //    bitangent1 = bitangent1 + Bitangents[j];
 
         bitangent1 = glm::normalize(bitangent1);
         vertices.at(indices.at((i+0))).Binormal = bitangent1;

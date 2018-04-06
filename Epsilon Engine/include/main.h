@@ -87,16 +87,16 @@ GLFWwindow* InitEngine(const char* ProgramName) {
 
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
 
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-    glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-    glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-    glfwWindowHint(GLFW_REFRESH_RATE, 60);
+    //glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+    //glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+    //glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+    //glfwWindowHint(GLFW_REFRESH_RATE, 60);
     //glfwWindowHint(GLFW_RED_BITS, 16);
     //glfwWindowHint(GLFW_GREEN_BITS, 16);
     //glfwWindowHint(GLFW_BLUE_BITS, 16);
@@ -117,7 +117,7 @@ GLFWwindow* InitEngine(const char* ProgramName) {
     } else {
         cout << DATA.WINDOW_WIDTH << " x " << DATA.WINDOW_HEIGHT << endl;
         window = glfwCreateWindow(DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT, ProgramName, nullptr, nullptr);
-        glfwSetWindowPos(window, modes->width/2, modes->height/2);
+        glfwSetWindowPos(window, (mode->width/2) - (DATA.WINDOW_WIDTH*0.5), (mode->height/2) - (DATA.WINDOW_HEIGHT*0.5));
     }
 
     glfwMakeContextCurrent(window);
@@ -141,7 +141,6 @@ GLFWwindow* InitEngine(const char* ProgramName) {
     GLFWcursor* cursor = glfwCreateCursor(&cursorImage, 0, 0);
     glfwSetCursor(window, cursor);
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     //glfwSetWindowPos(window, 0, 0);
     glfwSetKeyCallback(window, Input::KeyBoard::KeyBoardCallBack);
     glfwSetCursorPosCallback(window, Input::Mouse::MouseCallBack);

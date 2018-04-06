@@ -15,7 +15,7 @@ out vec2 TexCoords;
 //out vec3 Normal;
 out vec3 FragPos;
 out mat3 TBN;
-
+out vec3 WorldPos;
 vec3 T;
 vec3 B;
 vec3 N;
@@ -43,6 +43,7 @@ void main()
 	mat3 NormalMatrix = transpose(inverse(mat3(model)));
 	TBN = CreateTBNMatrix(NormalMatrix);
 
+    WorldPos = in_position;  
 	gl_Position = projection * view * viewPos;
 
 

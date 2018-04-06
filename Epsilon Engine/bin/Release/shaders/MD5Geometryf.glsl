@@ -1,11 +1,10 @@
 #version 430 core
 
 layout(location = 0) out vec3 gAlbedoSpec;
-layout(location = 1) out float gPosition;
-layout(location = 2) out vec4 gExpensiveNormal;
-layout(location = 3) out vec4 gDepth;
-layout(location = 4) out vec4 gExtraComponents; 
-layout(location = 5) out vec3 gLightAccumulation;
+layout(location = 1) out vec4 gExpensiveNormal;
+layout(location = 2) out vec4 gDepth;
+layout(location = 3) out vec4 gExtraComponents; 
+layout(location = 4) out vec3 gLightAccumulation;
 
 uniform sampler2D sampler;
 uniform sampler2D n_sampler;
@@ -108,8 +107,6 @@ void main()
 	gExpensiveNormal.rgb = normalize((texture(n_sampler, TexCoords).rgb * 2.0 - 1.0) * TBN);
 
 	gExpensiveNormal.a = texture(s_sampler, TexCoords).r;
-
-	gPosition = FragPos.z;
 
   	gDepth.x = gl_FragCoord.z;
 
