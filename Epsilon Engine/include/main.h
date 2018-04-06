@@ -117,7 +117,7 @@ GLFWwindow* InitEngine(const char* ProgramName) {
     } else {
         cout << DATA.WINDOW_WIDTH << " x " << DATA.WINDOW_HEIGHT << endl;
         window = glfwCreateWindow(DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT, ProgramName, nullptr, nullptr);
-        glfwSetWindowPos(window, modes->width/2, modes->height/2);
+        glfwSetWindowPos(window, (mode->width/2) - (DATA.WINDOW_WIDTH*0.5), (mode->height/2) - (DATA.WINDOW_HEIGHT*0.5));
     }
 
     glfwMakeContextCurrent(window);
@@ -141,7 +141,6 @@ GLFWwindow* InitEngine(const char* ProgramName) {
     GLFWcursor* cursor = glfwCreateCursor(&cursorImage, 0, 0);
     glfwSetCursor(window, cursor);
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     //glfwSetWindowPos(window, 0, 0);
     glfwSetKeyCallback(window, Input::KeyBoard::KeyBoardCallBack);
     glfwSetCursorPosCallback(window, Input::Mouse::MouseCallBack);

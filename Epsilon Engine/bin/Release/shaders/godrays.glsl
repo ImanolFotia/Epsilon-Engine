@@ -39,7 +39,7 @@ vec4 godRays(in sampler2D brightBuffer, in vec3 blurOrigin) {
   vec2 deltaTextCoord = vec2((FragCoord - .5) - ScreenPosition.xy * 0.5);
   deltaTextCoord *= 1.0 / float(SAMPLES) * DENSITY;
   float illuminationDecay = 1.0;
-  FragCoord += deltaTextCoord * hash(FragCoord);
+  FragCoord += deltaTextCoord * hash(FragCoord*0.1);
 
   for(int i = 0; i < SAMPLES; i++) {
     FragCoord -= deltaTextCoord;

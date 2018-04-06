@@ -1,11 +1,11 @@
 #version 440 core
 
 uniform sampler2D gFinalImage;
-uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gExtraComponents;
 uniform sampler2D gDepth; 
 uniform sampler2D BRDF;
+uniform sampler2D noiseTexture;
 
 uniform mat4 invView;
 uniform mat4 projection;
@@ -13,6 +13,7 @@ uniform mat4 invprojection;
 uniform mat4 view;
 uniform vec3 camDir;
 uniform vec3 camPos;
+uniform vec2 Resolution;
 noperspective in vec2 TexCoords;
 
 out vec4 outColor;
@@ -109,25 +110,34 @@ void main()
     //vec3 jitt = normalize(hash(q)) * spec;
     // Reflection vector
     vec3 reflected = normalize(reflect(normalize(viewPos), normalize(viewNormal)));
+    vec3 samples = vec3(0.0);
+    float screenEdgefactor;
+    float ReflectionMultiplier;
+    //for(int i = 0; i < 2; i++){
+        //jitt.x *= 16.0/9.0;
+        vec2 NoiseScale = Resolution / 4.0;
+        vec3 wp = vec3(vec4(viewPos, 1.0) * invView);
+        vec3 random = texture(noiseTexture, TexCoords.xy * NoiseScale).rgb;
+        vec3 jitt = mix(vec3(0.0), /*normalize(vec3(hash(wp)) * 2.0 - 1.0)*/random, 0.05 * spec);
+        //jitt = normalize(jitt);
+        vec4 coords = RayCast((jitt + reflected) * max(minRayStep, -viewPos.z), hitPos, dDepth);
+     
+        vec2 dCoords = smoothstep(0.2, 0.6, abs(vec2(0.5, 0.5) - coords.xy));
+     
+     
+        screenEdgefactor = clamp(1.0 - (dCoords.x + dCoords.y), 0.0, 1.0);
 
-    //jitt.x *= 16.0/9.0;
-    vec3 wp = vec3(vec4(viewPos, 1.0) * invView);
-    vec3 jitt = mix(vec3(0.0), vec3(hash(wp)), spec);
-    vec4 coords = RayCast((/*jitt +*/ reflected) * max(minRayStep, -viewPos.z), hitPos, dDepth);
- 
-    vec2 dCoords = smoothstep(0.2, 0.6, abs(vec2(0.5, 0.5) - coords.xy));
- 
- 
-    float screenEdgefactor = clamp(1.0 - (dCoords.x + dCoords.y), 0.0, 1.0);
-
-    float ReflectionMultiplier =  
-                screenEdgefactor * 
-                -reflected.z;
-
+        samples = texture(gFinalImage, coords.xy).rgb;
+    //}
+            ReflectionMultiplier =  
+                    screenEdgefactor * 
+                    -reflected.z;
     vec2 brdf  = texture(BRDF, vec2(max(dot(worldNormal, viewDir), 0.0), spec)).rg;
- 
+    //samples = samples * 0.5;
     // Get color
-    vec3 SSR = mix(     texture(gFinalImage, coords.xy).rgb*clamp(ReflectionMultiplier, 0.0, 1.0), 
+
+    //vec3 specular = prefilteredColor * (F /** brdf.x + brdf.y*/);
+    vec3 SSR = mix(     samples*clamp(ReflectionMultiplier, 0.0, 1.0), 
                         texture(gDepth, TexCoords).gba, 
                         clamp(1.0-(screenEdgefactor*(2.0*-reflected.z)), 0.0, 1.0));  
     //SSR = mix(vec3(1.0, 0.0, 0.0), vec3(0.0, 0.0, 1.0), clamp(1.0-(screenEdgefactor*(2.0*-reflected.z)), 0.0, 1.0)) * Fresnel;
@@ -160,8 +170,8 @@ vec3 BinarySearch(inout vec3 dir, inout vec3 hitCoord, inout float dDepth)
         projectedCoord.xy = projectedCoord.xy * 0.5 + 0.5;
  
         //depth = texture(gPosition, projectedCoord.xy, 2.0).x;
-        //depth = PositionFromDepth(textureLod(gDepth, projectedCoord.xy, 3.0).x).z;
-        depth = ViewSpaceZFromDepth(textureLod(gDepth, projectedCoord.xy, 2.0).x);
+        depth = PositionFromDepth(textureLod(gDepth, projectedCoord.xy, 3.0).x).z;
+        //depth = ViewSpaceZFromDepth(textureLod(gDepth, projectedCoord.xy, 2.0).x);
         dDepth = hitCoord.z - depth;
 
         dir *= 0.5;
@@ -196,8 +206,8 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
         projectedCoord.xy = projectedCoord.xy * 0.5 + 0.5;
  
         //depth = texture(gPosition, projectedCoord.xy, 2.0).x;
-        //depth = PositionFromDepth(textureLod(gDepth, projectedCoord.xy, 3.0).x).z;
-        depth = ViewSpaceZFromDepth(textureLod(gDepth, projectedCoord.xy, 2.0).x);
+        depth = PositionFromDepth(textureLod(gDepth, projectedCoord.xy, 3.0).x).z;
+        //depth = ViewSpaceZFromDepth(textureLod(gDepth, projectedCoord.xy, 2.0).x);
         if(depth > 1000.0){
             continue;
         }

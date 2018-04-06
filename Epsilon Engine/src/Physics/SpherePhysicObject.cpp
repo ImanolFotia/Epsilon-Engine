@@ -14,7 +14,7 @@ namespace Physics {
 		btScalar mass = Mass;
 		motionState = (std::shared_ptr<btDefaultMotionState>) new btDefaultMotionState(t);  //set the position (and motion)
 		btRigidBody::btRigidBodyConstructionInfo info(mass,motionState.get(),SphereShape.get(),inertia);  //create the constructioninfo, you can create multiple bodies with the same info
-		info.m_restitution = 0.597f;
+		info.m_restitution = 0.1f;
 		info.m_friction = 0.8f;
 		Body = (std::shared_ptr<btRigidBody>) new btRigidBody(info);    //let's create the body itself
 

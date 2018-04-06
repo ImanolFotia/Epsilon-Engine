@@ -147,8 +147,7 @@ void main() {
     result += texture(blurredSampler, offset);
   }
 
-  result *=
-      texture(uLensColor, length(vec2(0.5) - texcoord) / length(vec2(0.5)));
+  result *= texture(uLensColor, length(vec2(0.5) - texcoord) / length(vec2(0.5)));
 
   vec4 lensMod = texture(uLensDirtTex, TexCoords);
   lensMod += texture(uLensStarTex, TexCoords);
@@ -175,7 +174,7 @@ void main() {
   DOFRadius = clamp(dDepth * 15.0, 0.0, 0.7);
 
 
-  composite = Bokeh(TexCoords, DOFRadius, .10, 1.0);
+  //composite = Bokeh(TexCoords, DOFRadius, .10, 1.0);
 
   //composite = textureDistorted(compositeImage, TexCoords, normalize(fragcoord - vec2(0.0)), 0.001*pow(length((fragcoord * 2.0 - 1.0) - vec2(0.0)), 3.0)).rgb;
 

@@ -1,8 +1,8 @@
 #version 440 core
 
 layout (binding = 0) uniform sampler2D gDepth;
-layout (binding = 1) uniform sampler2D gNormal;
-layout (binding = 2) uniform sampler2D texNoise;
+layout (binding = 1) uniform sampler2D texNoise;
+layout (binding = 2) uniform sampler2D gNormal;
 
 
 layout(location = 0) out float FragColor;
@@ -56,7 +56,7 @@ bool ScreenDoor[4][4];
 void main()
 {
     // Get input for SSAO algorithm
-
+/*
       ScreenDoor[0][0] = true;
       ScreenDoor[1][0] = true;
       ScreenDoor[2][0] = true;
@@ -76,20 +76,20 @@ void main()
       ScreenDoor[1][3] = true;
       ScreenDoor[2][3] = false;
       ScreenDoor[3][3] = true;
-
+*/
     ivec2 invFragCoord = ivec2(gl_FragCoord)*2;///ivec2(fragCoord);  
     int indexX = int(mod(int(invFragCoord.x), 4)); 
     int indexY = int(mod(int(invFragCoord.y), 4));
-    
+    /*
     if(!ScreenDoor[indexX][indexY])
         discard;
-
-    float depth = texture(gDepth, TexCoords, 2.0).r;
+*/
+    float depth = textureLod(gDepth, TexCoords, 2.0).r;
  
     vec3 fragPos = WorldPosFromDepth(depth);
 
-    vec3 normal = vec3(texture(gNormal, TexCoords, 1.0) * invView);
-    vec3 randomVec = texture(texNoise, TexCoords * noiseScale).xyz;
+    vec3 normal = vec3(textureLod(gNormal, TexCoords, 1.0) * invView);
+    vec3 randomVec = textureLod(texNoise, TexCoords * noiseScale, 0.0).xyz;
     // Create TBN change-of-basis matrix: from tangent-space to view-space
     vec3 tangent = normalize(randomVec - normal * dot(randomVec, normal));
     vec3 bitangent = cross(normal, tangent);
@@ -111,9 +111,9 @@ void main()
         offset.x = clamp(offset.x, 0.001, 0.999);
         offset.y = clamp(offset.y, 0.001, 0.999);
 
-        float sampleDepth = -LinearizeDepth(texture(gDepth, offset.xy, 2.0).r); // Get depth value of kernel sample
+        float sampleDepth = -LinearizeDepth(textureLod(gDepth, offset.xy, 2.0).r); // Get depth value of kernel sample
         float bias = max(1.5 * (1.0 - dot(normal, -fragPos)), 0.1);
-        bias = 0.025;
+        //bias = 0.025;
         // range check & accumulate
         float rangeCheck = smoothstep(0.0, 1.0, radius / abs(fragPos.z - sampleDepth));
         occlusion += (sampleDepth >= samp.z + bias ? 1.0 : 0.0) * rangeCheck;
