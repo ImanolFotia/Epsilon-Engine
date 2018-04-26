@@ -47,9 +47,11 @@ namespace Game
         m_playerBody->setUserPointer(m_collinfo.get());
         m_LocalResourceManagerPointer->m_PhysicsWorld->world->addRigidBody(m_playerBody.get());
         m_playerBody->setCollisionFlags(m_playerBody->getFlags());
+        //m_playerBody->setFlags(btRigidBody::CO_SOFT_BODY);
         m_playerBody->setActivationState(DISABLE_DEACTIVATION);
         m_playerBody->setSleepingThresholds (0.0, 0.0);
         m_playerBody->setAngularFactor (0.0);
+
         m_pickedConstraint = 0;
 
         m_oldPickingPos = btVector3(0,0,0);

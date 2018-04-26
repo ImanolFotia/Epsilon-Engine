@@ -15,7 +15,8 @@ void EntityTemplate::Update()
 {
     for(unsigned int i = 0; i < ComponentList.size(); ++i)
     {
-        ComponentList.at(i)->Update(resourceManager);
+        //if(ComponentList.at(i)->updateIfOutOfView)
+            ComponentList.at(i)->Update(resourceManager);
     }
 }
 

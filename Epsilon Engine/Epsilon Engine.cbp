@@ -83,9 +83,9 @@
 					<Add option="deppend\openal-soft-1.17.2-bin\libs\Win32\libOpenAL32.dll.a" />
 					<Add option="-fopenmp" />
 					<Add option="-lgomp" />
+					<Add library="deppend/bullet-2.82-r2704/lib/libBulletSoftBody.a" />
 					<Add library="deppend/bullet-2.82-r2704/lib/libBulletDynamics.a" />
 					<Add library="deppend/bullet-2.82-r2704/lib/libBulletCollision.a" />
-					<Add library="deppend/bullet-2.82-r2704/lib/libBulletSoftBody.a" />
 					<Add library="deppend/bullet-2.82-r2704/lib/libLinearMath.a" />
 					<Add directory="deppend/glew-2.0.0/lib" />
 					<Add directory="deppend/SOIL/lib" />
@@ -149,6 +149,7 @@
 		<Unit filename="include/ParticleProxy.h" />
 		<Unit filename="include/ParticleRenderer.h" />
 		<Unit filename="include/ParticleSystem.h" />
+		<Unit filename="include/Patch.h" />
 		<Unit filename="include/Physics/ClothPhysicObject.h" />
 		<Unit filename="include/Physics/CollisionInfo.h" />
 		<Unit filename="include/Physics/CubePhysicObject.h" />
@@ -212,6 +213,8 @@
 		<Unit filename="src/Mesh.cpp" />
 		<Unit filename="src/Model.cpp" />
 		<Unit filename="src/Particle.cpp" />
+		<Unit filename="src/Patch.cpp" />
+		<Unit filename="src/Physics/ClothPhysicObject.cpp" />
 		<Unit filename="src/Physics/CubePhysicObject.cpp" />
 		<Unit filename="src/Physics/Physics.cpp" />
 		<Unit filename="src/Physics/SpherePhysicObject.cpp" />

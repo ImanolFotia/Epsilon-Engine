@@ -270,8 +270,8 @@ vec3 TubeAreaLight(in vec3 position, in vec3 tubeStart,in vec3 tubeEnd, in float
     vec3 V = normalize(viewPos - FragPos);
     r = (reflect(V, Normal));
 
-    vec3 L0         = tubeStart - FragPos;
-    vec3 L1         = tubeEnd - FragPos;
+    vec3 L0         = (tubeStart) - FragPos;
+    vec3 L1         = (tubeEnd) - FragPos;
     float distL0    = length( L0 );
     float distL1    = length( L1 );
     

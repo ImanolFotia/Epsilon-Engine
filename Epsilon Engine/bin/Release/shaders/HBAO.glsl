@@ -23,7 +23,7 @@ vec2 AORes = vec2(Resolution);
 vec2 InvAORes = vec2(1.0/Resolution.x, 1.0/Resolution.y);
 vec2 NoiseScale = Resolution / 4.0;
 
-float AOStrength = 30.0;
+float AOStrength = 50.0;
 float R = 1.0;
 float R2 = R*R;
 float NegInvR2 = - 1.0 / R2;
@@ -62,7 +62,7 @@ vec3 UVToViewSpace(vec2 uv, float z)
 
 vec3 GetViewPos(vec2 uv)
 {
-	float z = ViewSpaceZFromDepth(textureLod(gDepth, uv, 2.0).r);
+	float z = ViewSpaceZFromDepth(textureLod(gDepth, uv, 1.0).r);
 	//float z = texture(gDepth, uv).r;
 	return UVToViewSpace(uv, z);
 }
@@ -70,7 +70,7 @@ vec3 GetViewPos(vec2 uv)
 vec3 GetViewPosPoint(ivec2 uv)
 {
 	ivec2 coord = ivec2(gl_FragCoord.xy) + uv;
-	float z = texelFetch(gDepth, coord, 2).r;
+	float z = texelFetch(gDepth, coord, 1).r;
 	return UVToViewSpace(uv, z);
 }
 
@@ -257,5 +257,5 @@ void main(void)
 		ao = 1.0 - ao / numDirections * AOStrength;
 		
 	}
-	FragColor = clamp(pow(ao, 15.0), 0.0, 1.0);
+	FragColor = clamp(pow(ao, 30.0), 0.0, 1.0);
 }

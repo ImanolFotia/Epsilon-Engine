@@ -13,6 +13,7 @@
 #include <memory>
 #include <Types.h>
 #include <Physics/Physics.h>
+#include <Patch.h>
 
 namespace Component
 {
@@ -36,6 +37,8 @@ namespace Component
 
         virtual void Render(std::shared_ptr<ResourceManager> rm, glm::vec3) = 0;
 
+        virtual void RenderShadows(){}
+
         virtual void setTransparency(bool x) = 0;
 
         COMPONENT_TYPE Type;
@@ -44,6 +47,7 @@ namespace Component
         btVector3 m_PhysicsWorldScale;
         btQuaternion m_PhysicsWorldRotation;
         btQuaternion m_LastPhysicsWorldRotation;
+        bool updateIfOutOfView = true;
         bool isTransparent = false;
     };
 
@@ -284,6 +288,63 @@ namespace Component
         virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader) {}
         void Render(){}
         virtual void setTransparency(bool x) {}
+
+    };
+
+    class ClothComponent : public Component
+    {
+    public:
+        ClothComponent(std::shared_ptr<Camera>& inPointerToCamera)
+        {
+            PointerToCamera = inPointerToCamera;
+            updateIfOutOfView = false;
+            Type = CLOTHCOMPONENT;
+        }
+
+        ~ClothComponent()
+        {
+            std::cout << "ClothComponent Destructor" << std::endl;
+        }
+    public:
+
+        void Fill(std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer)
+        {
+            std::shared_ptr<Physics::ClothPhysicObject> cloth = std::static_pointer_cast<Physics::ClothPhysicObject>(PhysicBodyPointer);
+            mPatch = (std::shared_ptr<Patch>) new Patch(glm::vec3(0.0), cloth->getScale(), cloth->getWidth(), cloth->getHeight(), "sponza/sponza_curtain_diff.tga");
+            RigidBodyPointer = PhysicBodyPointer;
+        }
+
+        void Render(std::shared_ptr<ResourceManager> rm, glm::vec3 pos)
+        {
+            mPatch->Render(rm->useShader(shaderType), PointerToCamera->getViewMatrix(), PointerToCamera->getProjectionMatrix());
+        }
+
+        virtual void RenderShadows(){
+            mPatch->RenderShadows();
+        }
+
+        void Update(std::shared_ptr<ResourceManager> rm)
+        {
+            //std::cout << "Llega Update cloth" <<std::endl;
+            std::shared_ptr<Physics::ClothPhysicObject> cloth = std::static_pointer_cast<Physics::ClothPhysicObject>(RigidBodyPointer);
+            mPatch->updateVertexBuffers(cloth->getVertices());
+        }
+
+        void setShader(std::string sh)
+        {
+            shaderType = sh;
+        }
+
+        std::shared_ptr<Patch> mPatch;
+        std::shared_ptr<Physics::PhysicObject> RigidBodyPointer = nullptr;
+        std::shared_ptr<Camera> PointerToCamera;
+        /** Functions declared for the sake of pure virtual function polymorphism, must not be used for production*/
+        virtual void Fill(bool, bool) {}
+        virtual void Fill(float, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer) {}
+        virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader) {}
+        void Render(){}
+        virtual void setTransparency(bool x) {}
+        std::string shaderType;
 
     };
 

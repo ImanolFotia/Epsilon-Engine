@@ -31,6 +31,8 @@ public:
             t->setUserPointer(&CollInfo);
         } else if(t->Type == Component::PLAYERCOMPONENT)
             hasPlayerComponent = true;
+        else if(t->Type == Component::PLAYERCOMPONENT)
+            hasClothComponent = true;
         else
             std::cout << " not added component" << std::endl;
 
@@ -43,10 +45,16 @@ public:
     void Update();
     void Render();
 
+    void RenderShadows() {
+        for(unsigned int i = 0; i < ComponentList.size(); ++i)
+            ComponentList.at(i)->RenderShadows();
+    }
+
 public:
     bool hasPlayerComponent = false;
     bool hasModel = false;
     bool hasPhysicComponent = false;
+    bool hasClothComponent = false;
     int ID;
     std::string modelPath;
     std::vector<std::shared_ptr<Component::Component>> ComponentList;
@@ -113,28 +121,50 @@ public:
 
     MIN_MAX_POINTS getBoundingBox() {
 
-        MIN_MAX_POINTS BB = resourceManager->getModelBoundingBox(modelPath);
+        if(this->hasModel) {
+            return resourceManager->getModelBoundingBox(modelPath);
+        } else if(this->hasClothComponent) {
+            for(unsigned int i = 0; i < ComponentList.size(); ++i) {
+                if(ComponentList.at(i)->Type == Component::CLOTHCOMPONENT) {
+                    btSoftBody* cloth = std::static_pointer_cast<Physics::ClothPhysicObject>
+                                        (std::static_pointer_cast<Component::ClothComponent>
+                                         (ComponentList[i])->RigidBodyPointer)->m_BodyCloth.get();
+
+                    btVector3 aabbMin, aabbMax;
+                    cloth->getAabb(aabbMin, aabbMax);
+
+                    MIN_MAX_POINTS BB;
+                    BB.MAX_X = aabbMax.x();
+                    BB.MAX_Y = aabbMax.y();
+                    BB.MAX_Z = aabbMax.z();
+                    BB.MIN_X = aabbMin.x();
+                    BB.MIN_Y = aabbMin.y();
+                    BB.MIN_Z = aabbMin.z();
+
+                    return BB;
+                }
+            }
+        }
         /*
         BB.MIN_X *= this->getScale().x; BB.MAX_X *= this->getScale().x;
         BB.MIN_Y *= this->getScale().y; BB.MAX_Y *= this->getScale().y;
         BB.MIN_Z *= this->getScale().z; BB.MAX_Z *= this->getScale().z;*/
 
-        return BB;
     }
 
     long toHash() {
         return std::hash<float> {}(m_Position.x+m_Position.y+m_Position.z + ID);
     }
-/*
-    void setShader(std::string sh) {
-        if(hasModel) {
-            for(auto &c :ComponentList) {
-                if(c->Type == MODELCOMPONENT) {
-                    c->setShader(sh);
+    /*
+        void setShader(std::string sh) {
+            if(hasModel) {
+                for(auto &c :ComponentList) {
+                    if(c->Type == MODELCOMPONENT) {
+                        c->setShader(sh);
+                    }
                 }
             }
-        }
-    }*/
+        }*/
 private:
     glm::vec3 m_Position;
     glm::vec3 m_Scale;

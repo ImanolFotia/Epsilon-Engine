@@ -48,6 +48,8 @@ bool BSPFace::BuildFace(std::vector<glm::vec3> Vertices, std::vector<glm::vec3> 
 
 	ph->Body->setUserPointer(collinfo.get());
 
+	//rigidBody->setFriction(0.0);
+
 	resm->m_PhysicsWorld->world->addRigidBody(rigidBody.get());
 
 	this->CollisionObject = ph;
@@ -89,7 +91,7 @@ void BSPFace::RenderFace(GLuint shader, GLuint TextureID,GLuint normalID, GLuint
 
 	glActiveTexture(GL_TEXTURE4);
 	glUniform1i(glGetUniformLocation(shader, "skybox"), 4);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, this->GITexture);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, resm->useCubeMap(resm->mCubemapIndex.at(resm->NearestCubeMap(mPosition))));
 
 	glBindVertexArray(this->VAO);
 	glDrawElements(GL_TRIANGLES, this->Indices.size(), GL_UNSIGNED_INT, 0);

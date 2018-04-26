@@ -51,6 +51,8 @@
 #include <cubemapRenderer.h>
 #include <CubeMap.h>
 #include <CommandFunctions.h>
+#include <Physics/ClothPhysicObject.h>
+#include <Patch.h>
 
 class Epsilon
 {
@@ -135,7 +137,8 @@ private:
 public:
 
     std::shared_ptr<Camera> eCamera;
-
+    std::shared_ptr<Physics::ClothPhysicObject> mCloth;
+    std::shared_ptr<Patch> mPatch;
     /**Shaders**/
     GLuint cubemapTex = 0;
     GLuint cubemapDepthTex = 0;
@@ -189,10 +192,13 @@ private:
     double lastTime = 0;
     double frametime = 0;
     double etime = 0;
+    float windSpeed = 0.0;
     float exposure = 0;
     bool parallax = false;
     float eventtime = 0;
     short fps = 0;
+    int FrameCount = 0;
+    int FramesSinceLastUIUpdate = 0;
     bool showtext = false;
     bool onMenu = false;
     float menuTime = 0.0;

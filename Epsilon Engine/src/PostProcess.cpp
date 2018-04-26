@@ -34,7 +34,7 @@ void PostProcess::SetupFramebuffer() {
 
 	t_light tmpLight;
 
-	tmpLight.position = glm::vec4(5, 17, -20, 1.0);
+	tmpLight.position = glm::vec4(5, 17, -14, 1.0);
 	tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
 	tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
 	tmpLight.radius = 1.f;
@@ -42,7 +42,7 @@ void PostProcess::SetupFramebuffer() {
 	tmpLight.type = 2;
 	m_Lights.push_back(tmpLight);
 
-	tmpLight.position = glm::vec4(4, 17, 19, 1.0);
+	tmpLight.position = glm::vec4(4, 17, 14, 1.0);
 	tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
 	tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
 	tmpLight.radius = 1.f;
@@ -164,6 +164,14 @@ void PostProcess::SetupFramebuffer() {
 	tmpLight.radius = 0.5f;
 	tmpLight.watts = 50.0f;
 	tmpLight.type = 1;
+	m_Lights.push_back(tmpLight);
+
+	tmpLight.position = glm::vec4(-28.5, 13.5, 16.0, 1.0);
+	tmpLight.direction = glm::vec4(0.0, -1.0, 0.0, 1.0);
+	tmpLight.color = glm::vec4(70, 158, 116, 1.0);
+	tmpLight.radius = 0.25f;
+	tmpLight.watts = 50.0f;
+	tmpLight.type = 2;
 	m_Lights.push_back(tmpLight);
 
 	tmpLight.position = glm::vec4(13, 4, -4, 1.0);
@@ -293,7 +301,7 @@ void PostProcess::SetupGBuffer() {
 	glBindTexture(GL_TEXTURE_2D, gDepth);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gDepth, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glGenerateMipmap(GL_TEXTURE_2D);
@@ -696,7 +704,7 @@ void PostProcess::SSRPass(std::shared_ptr<Camera>& cam) {
 	glUniform2f(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "Resolution"), this->width, this->height);
 	glUniform3fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "camDir"), 1, &cam->getDirection()[0]);
 	glUniform3fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "camPos"), 1, &cam->getPosition()[0]);
-
+    ScreenSpaceReflectionShader->PushUniform("SSROn", SSROn);
 	this->RenderQuad();
 
 	glActiveTexture(GL_TEXTURE0);
@@ -852,13 +860,13 @@ void PostProcess::CompositeImage() {
 	mCompositeImage->unbindFramebuffer();
 }
 
-void PostProcess::ShowPostProcessImage(float frametime, GLuint ShadowMapID, glm::vec3 Sun, std::shared_ptr<Camera>& cam) {
+void PostProcess::ShowPostProcessImage(float frametime, GLuint onmenu, glm::vec3 Sun, std::shared_ptr<Camera>& cam) {
 
 
 	GLuint blurred = this->blurImage(hdrFBO->getRenderTargetHandler("brightColorBuffer"), false);
-	if(SSROn) {
+	//if(SSROn) {
 		SSRPass(cam);
-	}
+	//}
 
 	if(m_MotionBlur)
 		MotionBlur(frametime);
@@ -912,6 +920,7 @@ void PostProcess::ShowPostProcessImage(float frametime, GLuint ShadowMapID, glm:
 	finalImage->PushUniform("projection", cam->getProjectionMatrix());
 	finalImage->PushUniform("sunPos", Sun);
 	finalImage->PushUniform("lightShafts", this->lightShafts);
+	finalImage->PushUniform("onmenu", (int)onmenu);
 	finalImage->PushUniform("Resolution", glm::vec2(this->width, this->height));
 
 	finalImage->PushUniform("exposure", m_exposure);
