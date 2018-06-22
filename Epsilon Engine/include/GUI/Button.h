@@ -16,6 +16,7 @@ public:
 
         this->WIDTH = m_winWidth;
         this->HEIGHT = m_winHeight;
+        //type = GUIType::Button;
 
     }
 

@@ -27,9 +27,9 @@ struct t_light {
         vec4 position; // 4/*
         vec4 direction; // 8
         vec4 color; // 12
-        float radius; float padding0[3]; // 13
-        float watts;  float padding1[3]; // 14
-        int type;     float padding2[3];//15*/
+        float radius; float padding0[3]; // 16
+        float watts;  float padding1[3]; // 20
+        int type;     float padding2[3];//24
     };
 
 layout(std430, binding = 0) buffer ssbo
@@ -110,14 +110,14 @@ void main()
 	float alpha = texture(texture_diffuse, TexCoords).a;
 
 	Specular = texture(texture_specular, TexCoords).r;
-    vec3 SpecDiff = Diffuse * Specular;
+    	vec3 SpecDiff = Diffuse * Specular;
     
-    F0 = vec3(0.04);
-    F0      = mix(F0, Diffuse, ExtraComponents.x);
+    	F0 = vec3(0.04);
+    	F0      = mix(F0, Diffuse, ExtraComponents.x);
 
 
-	if(alpha < 0.2)
-    	discard; 
+	if(alpha < 0.5)
+    		discard; 
 
 	if(ExtraComponents.y > 0.1)
 	{
@@ -156,6 +156,9 @@ void main()
         else if(outBuffer.Lights[i].type == 2)
             light += SphereAreaLight(outBuffer.Lights[i].position.rgb,  outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts);
     }
+
+    light += TubeAreaLight(vec3(0, 0, 0), vec3(-38,11,6), vec3(63,11,6),  0.25, normalize(vec3(0.2,0.5,0.3)), 500);
+    light += TubeAreaLight(vec3(0, 0, 0), vec3(-38,11,-12), vec3(63,11,-12),  0.25, normalize(vec3(0.2,0.5,0.3)), 500);
 
 	Color = (vec4(vec3(light), 1.0));
 }

@@ -34,6 +34,7 @@ int Input::Joystick::JoystickButtonsCount = 0;
 const float* Input::Joystick::JoystickAxes = nullptr;
 const unsigned char* Input::Joystick::JoystickButtons = nullptr;
 bool Input::Joystick::BUTTONS[15] = {false};
+bool CheckBox::_checked = true;
 
 Epsilon::Epsilon(GLFWwindow*& win) {
     window = win;
@@ -102,7 +103,7 @@ Epsilon::Epsilon(GLFWwindow*& win) {
 
     srand(time(NULL)); //
 
-    m_CameraMode = NO_CLIP;
+    m_CameraMode = PLAYER_CONTROLLED;
 
 
 }
@@ -111,7 +112,7 @@ void Epsilon::RenderSplashScreen(string text) {
     glClear(GL_COLOR_BUFFER_BIT);
     glViewport(0,0,WIDTH, HEIGHT);
     Shader tmpShader("shaders/splashv.glsl", "shaders/splashf.glsl");
-    eTexture texture("Survtech.png");
+    eTexture texture("Survtech.png", GL_REPEAT, GL_TEXTURE_2D, 1);
     SplashScreen splsh;
     ClearBuffers();
     splsh.Draw(tmpShader.getProgramID(), texture.getTextureID());
@@ -150,12 +151,23 @@ void Epsilon::InitResources(void) {
     t_ButtonQuit->m_TextRendererInstance = text;
     t_Container->addWidget(t_ButtonQuit);
 
+    t_CheckBox = (std::shared_ptr<CheckBox>) new CheckBox(0.1, 0.1, this->WIDTH, this->HEIGHT, "Quit");
+    t_CheckBox->SizeX = 0.1;
+    t_CheckBox->SizeY = 0.1;
+    t_CheckBox->PositionX = 0.0;
+    t_CheckBox->PositionY = 0.0;
+    t_CheckBox->m_isHidden = false;
+    t_CheckBox->m_TextRendererInstance = text;
+    t_CheckBox->setText("CheckBox");
+    t_Container->addWidget(t_CheckBox);
+
     t_ButtonSettings = (std::shared_ptr<Button>) new Button(0.15, 0.1, this->WIDTH, this->HEIGHT, "Settings");
     t_ButtonSettings->SizeX = 0.15;
     t_ButtonSettings->SizeY = 0.1;
     t_ButtonSettings->PositionX = -0.75;
     t_ButtonSettings->PositionY = -0.2;
     t_PanelSettings->m_isHidden = true;
+
     std::function<void()> lSettings = [&]()->void {
         t_PanelSettings->ChangeVisibility();
     };
@@ -190,24 +202,25 @@ void Epsilon::InitResources(void) {
 
     rM = ((std::shared_ptr<ResourceManager>)(new ResourceManager()));
     rM->m_PhysicsWorld = (std::shared_ptr<Physics::Physics>) new Physics::Physics();
-
+    std::shared_ptr<EntityTemplate> tmpEnt;
+    std::shared_ptr<Component::RenderComponent> Compmodel;
     //mPatch = (std::shared_ptr<Patch>) new Patch(glm::vec3(-7,14,41), 10, 10, 15, "sponza/sponza_curtain_diff.tga");
     //mCloth = (std::shared_ptr<Physics::ClothPhysicObject>) new Physics::ClothPhysicObject();
     //rM->m_PhysicsWorld->getSoftDynamicsWorld()->addSoftBody(mCloth->addObject(rM->m_PhysicsWorld->softBodyWorldInfo, glm::vec3(-7,14,41), 10, 10, 15, 1+2).get());
+/*
+        {
+            std::shared_ptr<EntityTemplate> tmpEnt;
+            tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(10,14,10), glm::vec3(4.0), glm::quat(-1.0, 0.0, 0.0, 0.0)));
+            std::shared_ptr<Component::ClothComponent> ClothComponent = (std::shared_ptr<Component::ClothComponent>) new Component::ClothComponent(eCamera);
+            mCloth = (std::shared_ptr<Physics::ClothPhysicObject>) new Physics::ClothPhysicObject();
+            rM->m_PhysicsWorld->getSoftDynamicsWorld()->addSoftBody(mCloth->addObject(rM->m_PhysicsWorld->softBodyWorldInfo, glm::vec3(10,14,10), 10, 10, 15, 1+2).get());
+            //mCloth->setWind(btVector3(0,0,1), 0.5);
+            ClothComponent->Fill(mCloth);
+            ClothComponent->setShader("Cloth");
+            tmpEnt->addComponent(ClothComponent);
+            EntityList.push_back(tmpEnt);
 
-    {
-        std::shared_ptr<EntityTemplate> tmpEnt;
-        tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(96,14,10), glm::vec3(4.0), glm::quat(-1.0, 0.0, 0.0, 0.0)));
-        std::shared_ptr<Component::ClothComponent> ClothComponent = (std::shared_ptr<Component::ClothComponent>) new Component::ClothComponent(eCamera);
-        mCloth = (std::shared_ptr<Physics::ClothPhysicObject>) new Physics::ClothPhysicObject();
-        rM->m_PhysicsWorld->getSoftDynamicsWorld()->addSoftBody(mCloth->addObject(rM->m_PhysicsWorld->softBodyWorldInfo, glm::vec3(96,14,10), 10, 10, 15, 1+2).get());
-        //mCloth->setWind(btVector3(0,0,1), 0.5);
-        ClothComponent->Fill(mCloth);
-        ClothComponent->setShader("Cloth");
-        tmpEnt->addComponent(ClothComponent);
-        EntityList.push_back(tmpEnt);
-
-    }
+        }*/
 
     RenderSplashScreen("Loading Shaders...");
     this->LoadShaders();
@@ -218,14 +231,14 @@ void Epsilon::InitResources(void) {
     std::vector<string> modelsNames;
     std::vector<glm::vec3> modelsPositions;
     std::vector<float> modelsScales;
-/*
-        modelsNames.push_back("models/tree_2.eml");
-        modelsPositions.push_back(glm::vec3(77, -20, -7));
-        modelsScales.push_back(3.0);
+    /*
+            modelsNames.push_back("models/tree_2.eml");
+            modelsPositions.push_back(glm::vec3(77, -20, -7));
+            modelsScales.push_back(3.0);
 
-        modelsNames.push_back("models/Tree.eml");
-        modelsPositions.push_back(glm::vec3(80, -20, 35));
-        modelsScales.push_back(3.0);*/
+            modelsNames.push_back("models/Tree.eml");
+            modelsPositions.push_back(glm::vec3(80, -20, 35));
+            modelsScales.push_back(3.0);*/
 
     /*
         for(int i = 0; i < modelsNames.size(); ++i) {
@@ -265,9 +278,9 @@ void Epsilon::InitResources(void) {
         EntityList.push_back(tmpEnt);
     }
 
-
-    std::shared_ptr<EntityTemplate> tmpEnt;
-    std::shared_ptr<Component::RenderComponent> Compmodel;
+    /*
+        std::shared_ptr<EntityTemplate> tmpEnt;
+        std::shared_ptr<Component::RenderComponent> Compmodel;*/
     /*
     tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(4.0, -1.2, 9.0), glm::vec3(0.6, 0.85, 0.6), glm::quat(1.0, 0.0, 0.6, 0.0)));
     std::shared_ptr<Component::RenderComponent> Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
@@ -281,42 +294,43 @@ void Epsilon::InitResources(void) {
     Compmodel->Fill("models/rock_wall.eml", rM, "Main");
     tmpEnt->addComponent(Compmodel);
     EntityList.push_back(tmpEnt);
-
+    */
     for(int i = 0; i < 2; i++) {
         for(int j = 0; j < 2; j++) {
-            tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(25+i*20, 1.0, -10+j*20), glm::vec3(0.1), glm::quat(-1.0, 0.0, 0.0, 0.0)));
+            tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-60+i*20, 1.0, -10+j*20), glm::vec3(0.1), glm::quat(-1.0, 0.0, 0.0, 0.0)));
             Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
             Compmodel->Fill("models/grass.eml", rM, "Main");
+            Compmodel->isDoubleFaced = true;
             tmpEnt->addComponent(Compmodel);
             EntityList.push_back(tmpEnt);
         }
     }
-
-    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(14, 10.0, 0.0), glm::vec3(4.0), glm::quat(-1.0, 0.0, 0.0, 0.0)));
-    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    Compmodel->Fill("models/vrdemo.eml", rM, "Main");
-    tmpEnt->addComponent(Compmodel);
-    EntityList.push_back(tmpEnt);
-/*
-    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(0,4.3, 3), glm::vec3(4.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
-    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    Compmodel->Fill("models/cerberus.eml", rM, "Main");
-    tmpEnt->addComponent(Compmodel);
-    EntityList.push_back(tmpEnt);
     /*
+        tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(14, 10.0, 0.0), glm::vec3(4.0), glm::quat(-1.0, 0.0, 0.0, 0.0)));
+        Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+        Compmodel->Fill("models/vrdemo.eml", rM, "Main");
+        tmpEnt->addComponent(Compmodel);
+        EntityList.push_back(tmpEnt);
+    /*
+        tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(0,4.3, 3), glm::vec3(4.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
+        Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+        Compmodel->Fill("models/cerberus.eml", rM, "Main");
+        tmpEnt->addComponent(Compmodel);
+        EntityList.push_back(tmpEnt);
+        /*
 
-    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(52, 0.0, 23), glm::vec3(2.0), glm::quat(-1.0, 0.0, -1.0, 0.0)));
-    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    Compmodel->Fill("models/tree_2.eml", rM, "Main");
-    tmpEnt->addComponent(Compmodel);
-    EntityList.push_back(tmpEnt);
+        tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(52, 0.0, 23), glm::vec3(2.0), glm::quat(-1.0, 0.0, -1.0, 0.0)));
+        Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+        Compmodel->Fill("models/tree_2.eml", rM, "Main");
+        tmpEnt->addComponent(Compmodel);
+        EntityList.push_back(tmpEnt);
 
-    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(52, 0.0, -10.0), glm::vec3(2.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
-    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    Compmodel->Fill("models/tree_o.eml", rM, "Main");
-    tmpEnt->addComponent(Compmodel);
-    EntityList.push_back(tmpEnt);
-*/
+        tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(52, 0.0, -10.0), glm::vec3(2.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
+        Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+        Compmodel->Fill("models/tree_o.eml", rM, "Main");
+        tmpEnt->addComponent(Compmodel);
+        EntityList.push_back(tmpEnt);
+    *//*
     tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(52, 0.0, 0.0), glm::vec3(2.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
     Compmodel->Fill("models/Rock_6.eml", rM, "Main");
@@ -330,25 +344,25 @@ void Epsilon::InitResources(void) {
     EntityList.push_back(tmpEnt);*/
 
 
+    /*
+        	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(34, 3.8, 3.5), glm::vec3(3.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
+        	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+        	Compmodel->Fill("models/swords.eml", rM, "Main");
+        	tmpEnt->addComponent(Compmodel);
+        	EntityList.push_back(tmpEnt);
 
-    	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(34, 3.8, 3.5), glm::vec3(3.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
-    	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    	Compmodel->Fill("models/swords.eml", rM, "Main");
-    	tmpEnt->addComponent(Compmodel);
-    	EntityList.push_back(tmpEnt);
 
+        	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(23, 3.5+6, 15), glm::vec3(4.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
+        	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+        	Compmodel->Fill("models/pillar.eml", rM, "Main");
+        	tmpEnt->addComponent(Compmodel);
+        	EntityList.push_back(tmpEnt);
 
-    	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(23, 3.5+6, 15), glm::vec3(4.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
-    	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    	Compmodel->Fill("models/pillar.eml", rM, "Main");
-    	tmpEnt->addComponent(Compmodel);
-    	EntityList.push_back(tmpEnt);
-
-    	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(23, 8.25+6.2, 14.5), glm::vec3(1.0), glm::quat(-1.0, 1.0, 1.0, 0.5)));
-    	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    	Compmodel->Fill("models/ember.eml", rM, "Main");
-    	tmpEnt->addComponent(Compmodel);
-    	EntityList.push_back(tmpEnt);
+        	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(23, 8.25+6.2, 14.5), glm::vec3(1.0), glm::quat(-1.0, 1.0, 1.0, 0.5)));
+        	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+        	Compmodel->Fill("models/ember.eml", rM, "Main");
+        	tmpEnt->addComponent(Compmodel);
+        	EntityList.push_back(tmpEnt);*/
     /*
     	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(21, 1.5, -7), glm::vec3(2.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
     	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
@@ -370,48 +384,63 @@ void Epsilon::InitResources(void) {
     	tmpEnt->addComponent(Compmodel);
     	EntityList.push_back(tmpEnt);*/
     /**/
+    /*
     tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(6, 27, 15.0), glm::vec3(2.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
     Compmodel->Fill("models/BigBell.eml", rM, "Main");
     tmpEnt->addComponent(Compmodel);
     EntityList.push_back(tmpEnt);
-    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-40, -0.5, -25.0), glm::vec3(2.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
+    */
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-13, 1.0, -3), glm::vec3(0.5), glm::quat(1.0, 0.0, 0.0, 0.0)));
+    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+    Compmodel->Fill("models/zweihander.eml", rM, "Main");
+    tmpEnt->addComponent(Compmodel);
+    EntityList.push_back(tmpEnt);
+
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-58, 0.5, -3), glm::vec3(1.5), glm::quat(1.0, 0.0, 0.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
     Compmodel->Fill("models/column.eml", rM, "Main");
     tmpEnt->addComponent(Compmodel);
     EntityList.push_back(tmpEnt);
     /*
-    	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-18, 0.5, 0.0), glm::vec3(0.1), glm::quat(-1.0, 0.0, 1.0, 0.0)));
-    	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    	Compmodel->Fill("models/full_rock.eml", rM, "Main");
-    	tmpEnt->addComponent(Compmodel);
-    	EntityList.push_back(tmpEnt);
+        	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-18, 30.0, 0.0), glm::vec3(0.025), glm::quat(-1.0, 0.0, 1.0, 0.0)));
+        	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+        	Compmodel->Fill("models/sponza.eml", rM, "Main");
+        	tmpEnt->addComponent(Compmodel);
+        	EntityList.push_back(tmpEnt);
+
     */
+    /*
+        	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-20, 0.8, -15.0), glm::vec3(4.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
+        	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+        	Compmodel->Fill("models/case.eml", rM, "Main");
+        	tmpEnt->addComponent(Compmodel);
+        	EntityList.push_back(tmpEnt);
 
-    	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-20, 0.8, -15.0), glm::vec3(4.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
-    	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    	Compmodel->Fill("models/case.eml", rM, "Main");
-    	tmpEnt->addComponent(Compmodel);
-    	EntityList.push_back(tmpEnt);
 
-
-    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-27.8, 3.2, 14.0), glm::vec3(6.5), glm::quat(-1.0, 0.0, -1.0, 0.0)));
+        tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-27.8, 3.2, 14.0), glm::vec3(6.5), glm::quat(-1.0, 0.0, -1.0, 0.0)));
+        Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+        Compmodel->Fill("models/woodentable.eml", rM, "Main");
+        tmpEnt->addComponent(Compmodel);
+        EntityList.push_back(tmpEnt);
+    */
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-58, 0.5, -3), glm::vec3(1.0), glm::quat(0.0, 0.0, 1.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    Compmodel->Fill("models/woodentable.eml", rM, "Main");
+    Compmodel->Fill("models/arch.eml", rM, "Main");
     tmpEnt->addComponent(Compmodel);
     EntityList.push_back(tmpEnt);
 
 
 ///godrays tutorial end
 
+    /*
+        tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-29, 7.65, 18.0), glm::vec3(2), glm::quat(-0.5, 0.0, -1.0, 0.0)));
+        Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+        Compmodel->Fill("models/oldtv.eml", rM, "Main");
+    //Compmodel->isTransparent = true;
 
-    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-29, 7.65, 18.0), glm::vec3(2), glm::quat(-0.5, 0.0, -1.0, 0.0)));
-    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    Compmodel->Fill("models/oldtv.eml", rM, "Main");
-//Compmodel->isTransparent = true;
-
-    tmpEnt->addComponent(Compmodel);
-    EntityList.push_back(tmpEnt);
+        tmpEnt->addComponent(Compmodel);
+        EntityList.push_back(tmpEnt);*/
     /*
     	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(13, 4, -2), glm::vec3(1.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
     	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
@@ -489,7 +518,7 @@ void Epsilon::InitResources(void) {
     shadowMap->UnbindShadowFrameBuffer();
 
 
-    this->mCubemap = (std::shared_ptr<CubeMap>) new CubeMap(54, glm::vec3(6, 8, -8));
+    this->mCubemap = (std::shared_ptr<CubeMap>) new CubeMap(54, glm::vec3(0, 5, -3));
 
 
     glClearColor(0.1, 0.1, 0.1, 1.0);
@@ -530,11 +559,40 @@ void Epsilon::InitResources(void) {
         		}
         */
 
+        /****************************************************************************/
+        glEnable(GL_CULL_FACE);
+        for(unsigned int i = 0; i < EntityList.size(); ++i) {
+            EntityList[i]->Update();
+            EntityList[i]->setShader("CubeMap");
+            glm::mat4 Model = glm::mat4();
+            if(EntityList[i]->hasClothComponent)
+                continue;
+            if(EntityList[i]->hasModel) {
+                glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1), EntityList[i]->getScale());
+                glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), EntityList[i]->getPosition());
+                glm::mat4 RotationMatrix = glm::toMat4(EntityList[i]->getRotation());
+                Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
+                Shaders["CubeMap"]->PushUniform("model", Model);
+                glUniformMatrix4fv(glGetUniformLocation(Shaders["CubeMap"]->getProgramID(), "lightSpaceMatrix"), 1, GL_FALSE, &shadowMap->getLightSpaceMatrix()[0][0]);
+                glUniformMatrix4fv(glGetUniformLocation(Shaders["CubeMap"]->getProgramID(), "depthBias"), 1, GL_FALSE, &shadowMap->getBiasMatrix()[0][0]);
+                this->mCubemap->mMainShader->PushUniform("lightDir", sun->Direction);
+                glActiveTexture(GL_TEXTURE5);
+                this->mCubemap->mMainShader->PushUniform("shadowMap", 5);
+                glBindTexture(GL_TEXTURE_2D, shadowMap->getShadowTextureID());
+            }
+            EntityList[i]->Render();
+
+        }
+        glEnable(GL_CULL_FACE);
+
+        glCullFace(GL_FRONT);
+        /****************************************************************************/
+
         glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(0.1));
         glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), glm::vec3(0.0));
         glm::mat4 cModel =  TranslationMatrix * ScaleMatrix;
 
-        this->mCubemap->mMainShader->PushUniform("model", cModel);
+        Shaders["CubeMap"]->PushUniform("model", cModel);
         glCullFace(GL_FRONT);
         BSPMap->Frustum.CalculateFrustum(glm::mat4(this->mCubemap->captureProjection * this->mCubemap->captureViews[i]), cModel);
 
@@ -557,6 +615,12 @@ void Epsilon::InitResources(void) {
     sph.setId(this->mCubemap->getID());
 
     glCullFace(GL_BACK);
+
+        for(unsigned int i =0; i < EntityList.size(); ++i) {
+            EntityList[i]->setShader("Main");
+            if(EntityList[i]->hasClothComponent)
+                EntityList[i]->setShader("Cloth");
+        }
 
     glGenBuffers(1, &AmbientLightSSBO);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, AmbientLightSSBO);
@@ -612,30 +676,31 @@ void Epsilon::LoadShaders(void) {
 
     rM->requestShader("shaders/Geometry.vglsl", "shaders/Geometry.fglsl", "Main");
     rM->requestShader("shaders/Cloth.vglsl", "shaders/Cloth.fglsl", "Cloth");
+    rM->requestShader("shaders/vertex.glsl", "shaders/fragment.glsl", "CubeMap");
 }
 
 void Epsilon::LoadGeometry(void) {
     cout << "Loading World Geometry..." <<endl;
     vector<glm::vec3> grasspos2;
     /*
-        terrain = (std::shared_ptr<Terrain>)new Terrain("materials/iceland2.png",
-                  "textures/terrain/cratered-rock.png",
-                  "textures/terrain/cratered-rock_n.png",
-                  "textures/terrain/cratered-rock_s.png",
-                  "Untitled.png", 5.5, 350, glm::vec3(-150, -70.0, -150),rM);
-
-
-
-        for(int i = 0 ; i < terrain->vertices.size() ; i+= 2) {
-            //if(terrain->vertices[i].Position.y < 0)
-            //    continue;
-            int chance = rand() % 2 + 1;
-            if(chance == 1)
-                grassPos.push_back(terrain->vertices[i].Position + glm::vec3((rand()%6)-3, 3.5, (rand()%6)-3));
-            else if(chance == 2)
-                grasspos2.push_back(terrain->vertices[i].Position + glm::vec3((rand()%6)-3, 3.5, (rand()%6)-3));
-        }
+            terrain = (std::shared_ptr<Terrain>)new Terrain("materials/testmontana.jpg",
+                      "textures/epsilon/Wet_floor.png",
+                      "textures/epsilon/Wet_floor_n.png",
+                      "textures/epsilon/Wet_floor_s.png",
+                      "textures/epsilon/Wet_floor_m.png", 2.0, 150, glm::vec3(0, -70.0, 0),rM);
     */
+    /*
+
+            for(int i = 0 ; i < terrain->vertices.size() ; i+= 2) {
+                //if(terrain->vertices[i].Position.y < 0)
+                //    continue;
+                int chance = rand() % 2 + 1;
+                if(chance == 1)
+                    grassPos.push_back(terrain->vertices[i].Position + glm::vec3((rand()%6)-3, 3.5, (rand()%6)-3));
+                else if(chance == 2)
+                    grasspos2.push_back(terrain->vertices[i].Position + glm::vec3((rand()%6)-3, 3.5, (rand()%6)-3));
+            }
+        */
     std::cout << "Resource manager in epsilon address: " << rM.get() << std::endl;
 
     rM->requestCubeMap(2, glm::vec3(4.8,80000.2,-8));
@@ -663,12 +728,12 @@ void Epsilon::LoadGeometry(void) {
     grass.push_back(Grass("billboardgrass0002.png", grasspos2));
 
 
-    waterPlane = (shared_ptr<Water>)(new Water(glm::vec3(150,5.0,150), 9.0f)); ///-11.8
+    waterPlane = (shared_ptr<Water>)(new Water(glm::vec3(0.0,0.5,0.0), 1.0f)); ///-11.8
     sun = std::move((shared_ptr<Sun>)(new Sun()));
 
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "Gothic.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "tunnel.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 
@@ -683,10 +748,10 @@ void Epsilon::LoadSound(void) {
     cout << "Loading Sound..." << endl;
 
     m_AudioSystem = (std::unique_ptr<Audio::Audio>) new Audio::Audio();
-/*
-    std::shared_ptr<Audio::AudioElement> m_AudioElement = (std::shared_ptr<Audio::AudioElement>) new Audio::AudioElement("sound/File0279.wav", STATIC_SOUND, glm::vec3(-28, 10, 15), glm::vec3(0,0,0));
-    m_AudioSystem->addAudioElement(m_AudioElement);
-*/
+    /*
+        std::shared_ptr<Audio::AudioElement> m_AudioElement = (std::shared_ptr<Audio::AudioElement>) new Audio::AudioElement("sound/File0279.wav", STATIC_SOUND, glm::vec3(-28, 10, 15), glm::vec3(0,0,0));
+        m_AudioSystem->addAudioElement(m_AudioElement);
+    */
     std::shared_ptr<Audio::AudioElement> m_AudioElement2 = (std::shared_ptr<Audio::AudioElement>) new Audio::AudioElement("sound/ambient.wav", MUSIC, glm::vec3(-28, 10, 15), glm::vec3(0,0,0));
     m_AudioSystem->addAudioElement(m_AudioElement2);
 
@@ -710,15 +775,15 @@ void Epsilon::Render3D(Shader* shader) {
     //this->waterPlane->RenderWater(eCamera, PP->CopyTextureFBO->getRenderTargetHandler(0), sun->Direction);
     shader->Use();
     /*
-        Shaders["Terrain"]->Use();
-        this->SetUniforms(Shaders["Terrain"],glm::vec3(0, 0, 0), glm::vec3(1.0),  glm::quat(0, 0,0, 0));
-        terrain->RenderTerrain(Shaders["Terrain"]);
-        glCullFace(GL_BACK);
+            Shaders["Terrain"]->Use();
+            this->SetUniforms(Shaders["Terrain"],glm::vec3(0, 0, 0), glm::vec3(1.0),  glm::quat(0, 0,0, 0));
+            terrain->RenderTerrain(Shaders["Terrain"]);
+            glCullFace(GL_BACK);
     */
 
 //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 //glLineWidth(2.0);
-    glDisable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
     //glEnable(GL_CULL_FACE);
     for(unsigned int i =0; i < EntityList.size(); ++i) {
         EntityList[i]->Update();
@@ -774,9 +839,9 @@ void Epsilon::Render3D() {
     for(unsigned int i = 0; i < EntityList.size(); ++i) {
         if(!EntityList[i]->hasModel) continue;
 
-            Shaders["ShadowMapping"]->Use();
-            this->SetUniforms(Shaders["ShadowMapping"], EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation());
-            rM->useModel(EntityList[i]->modelPath, Shaders["ShadowMapping"], EntityList[i]->getPosition());
+        Shaders["ShadowMapping"]->Use();
+        this->SetUniforms(Shaders["ShadowMapping"], EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation());
+        rM->useModel(EntityList[i]->modelPath, Shaders["ShadowMapping"], EntityList[i]->getPosition());
     }
 
 
@@ -843,8 +908,7 @@ void Epsilon::Render2D(void) {
         acumfps2 = 0.0;
         FramesSinceLastUIUpdate = -1;
 
-    }
-    else{
+    } else {
         FramesSinceLastUIUpdate++;
         acumfps2 += fps;
     }
@@ -999,7 +1063,7 @@ void Epsilon::PollEvents(void) {
         this->m_CameraMode = CAMERA_FIXED;
     } else {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        this->m_CameraMode = PLAYER_CONTROLLED;
+        this->m_CameraMode = NO_CLIP;
     }
 
     if(Input::KeyBoard::KEYS[Input::GLFW::Key::N])
@@ -1192,9 +1256,10 @@ void Epsilon::RenderFrame(void) {
     this->RenderSkybox(false);
     glDisable(GL_DEPTH_CLAMP);
 
-    glDisable(GL_BLEND);
-    //this->waterPlane->RenderWater(eCamera, PP->CopyTextureFBO->getRenderTargetHandler(0), sun->Direction, PP->gDepth);
-    glEnable(GL_BLEND);
+        glDisable(GL_BLEND);
+        this->waterPlane->RenderWater(eCamera, PP->CopyTextureFBO->getRenderTargetHandler(0), glm::normalize(glm::vec3(83, 6, -3) - glm::vec3(0, 6, -3)), PP->gDepth);
+        //glEnable(GL_BLEND);
+
     //this->RenderParticles();
     PP->ShowPostProcessImage(this->frametime, (int)this->onMenu, this->sun->Direction, this->eCamera);
     glEnable(GL_BLEND);

@@ -47,8 +47,8 @@ struct MINMAX_POINTS {
     float MIN_Z;
 };
 
-struct MIN_MAX_POINTS
-{
+
+struct MIN_MAX_POINTS {
     float MAX_X;
     float MAX_Y;
     float MAX_Z;
@@ -70,6 +70,13 @@ enum PARTICLE_PROXY {
     RAIN = 0,
     MIST,
     SNOW,
+};
+
+enum GUIType {
+   /* Button = 0,
+    Panel,
+    Label,
+    CheckBox*/
 };
 
 /**Enums*/
@@ -134,27 +141,27 @@ enum CUBEMAP_TYPE {
 };
 
 namespace Component {
-enum COMPONENT_TYPE {
-    MODELCOMPONENT = 0,
-    SPATIALCOMPONENT,
-    PLAYERCOMPONENT,
-    SOUNDCOMPONENT,
-    PHYSICCOMPONENT,
-    CLOTHCOMPONENT
-};
+    enum COMPONENT_TYPE {
+        MODELCOMPONENT = 0,
+        SPATIALCOMPONENT,
+        PLAYERCOMPONENT,
+        SOUNDCOMPONENT,
+        PHYSICCOMPONENT,
+        CLOTHCOMPONENT
+    };
 
-enum MATERIAL {
-    DIRT = 0,
-    GRAVE,
-    STONE,
-    METAL,
-    MUD,
-    WATER,
-    WOOD,
-    CONCRETE,
-    GRASS,
-    OREO
-};
+    enum MATERIAL {
+        DIRT = 0,
+        GRAVE,
+        STONE,
+        METAL,
+        MUD,
+        WATER,
+        WOOD,
+        CONCRETE,
+        GRASS,
+        OREO
+    };
 }
 
 struct GUIEVENTS {

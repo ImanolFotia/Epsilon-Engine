@@ -116,8 +116,6 @@ void Patch::generateGeometry() {
             float s = x / (this->mWidth-1);
             float t = y / (this->mHeight-1);
 
-            std::cout << s << ":::::::" << t << std::endl;
-
             this->mVertices.push_back(glm::vec3(x, y, 0));
             this->mTexCoords.push_back(glm::vec2(s, t));
             this->mNormals.push_back(glm::vec3(0,0,1));
@@ -139,7 +137,6 @@ void Patch::generateGeometry() {
 
         counter++;
     }
-
 
     std::cout << "Created new patch" << std::endl;
     std::cout << "\tVertices: " << this->mVertices.size() << std::endl;
@@ -174,7 +171,5 @@ void Patch::setupVertexBuffers() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->mIndices.size() * sizeof(unsigned int), &this->mIndices[0], GL_STREAM_DRAW);
 
-    //glBindBuffer(GL_ARRAY_BUFFER, 0);
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }

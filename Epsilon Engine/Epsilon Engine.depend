@@ -475,7 +475,7 @@
 	<memory>
 	<typeinfo>
 
-1524011982 d:\epsilon\epsilon engine\include\types.h
+1526280590 d:\epsilon\epsilon engine\include\types.h
 	<btBulletDynamicsCommon.h>
 	<btBulletCollisionCommon.h>
 	<memory>
@@ -1071,7 +1071,7 @@
 	"../trigonometric.hpp"
 	"../matrix.hpp"
 
-1511918408 d:\epsilon\epsilon engine\include\texture.h
+1527833993 d:\epsilon\epsilon engine\include\texture.h
 	<iostream>
 	<string>
 	<vector>
@@ -1282,7 +1282,7 @@
 	<memory>
 	<Includes.h>
 
-1523929265 source:d:\epsilon\epsilon engine\src\bspface.cpp
+1525738070 source:d:\epsilon\epsilon engine\src\bspface.cpp
 	<Physics/Physics.h>
 	<ResourceManager.h>
 	<BSPFace.h>
@@ -1325,10 +1325,10 @@
 
 1471669636 d:\epsilon\epsilon engine\include\ddsfile.h
 
-1524014503 source:d:\epsilon\epsilon engine\src\entitytemplate.cpp
+1527642463 source:d:\epsilon\epsilon engine\src\entitytemplate.cpp
 	<EntityTemplate.h>
 
-1524019497 d:\epsilon\epsilon engine\include\entitytemplate.h
+1529463698 d:\epsilon\epsilon engine\include\entitytemplate.h
 	<Component.h>
 	<iostream>
 	<glm/glm.hpp>
@@ -1337,7 +1337,7 @@
 	<ResourceManager.h>
 	<Physics/CollisionInfo.h>
 
-1524019374 d:\epsilon\epsilon engine\include\component.h
+1529432020 d:\epsilon\epsilon engine\include\component.h
 	<iostream>
 	<glm/glm.hpp>
 	<Model.h>
@@ -1347,7 +1347,7 @@
 	<Physics/Physics.h>
 	<Patch.h>
 
-1524520524 source:d:\epsilon\epsilon engine\src\epsilon.cpp
+1529622993 source:d:\epsilon\epsilon engine\src\epsilon.cpp
 	<iostream>
 	<Epsilon.h>
 	<ProgramData.h>
@@ -1365,7 +1365,7 @@
 	<Log.h>
 	<sys/Console.hpp>
 
-1524264961 d:\epsilon\epsilon engine\include\epsilon.h
+1526280217 d:\epsilon\epsilon engine\include\epsilon.h
 	<map>
 	<GL/glew.h>
 	<GL/wglew.h>
@@ -1530,15 +1530,16 @@
 	<fstream>
 	<string>
 
-1511575881 d:\epsilon\epsilon engine\include\gui\gui.h
+1526280645 d:\epsilon\epsilon engine\include\gui\gui.h
 	<GUI/Container.h>
 	<GUI/Panel.h>
 	<GUI/Button.h>
+	<GUI/CheckBox.h>
 
 1497684054 d:\epsilon\epsilon engine\include\gui\container.h
 	<GUI/Widget.h>
 
-1513209455 d:\epsilon\epsilon engine\include\gui\widget.h
+1526284255 d:\epsilon\epsilon engine\include\gui\widget.h
 	<vector>
 	<memory>
 	<glm/glm.hpp>
@@ -1547,7 +1548,7 @@
 	<exception>
 	<Types.h>
 
-1513209455 d:\epsilon\epsilon engine\include\gui\panel.h
+1526280605 d:\epsilon\epsilon engine\include\gui\panel.h
 	<GUI/Widget.h>
 	<OpenGL/HelperFunctions/Quad.h>
 	<iostream>
@@ -1555,7 +1556,7 @@
 
 1492305027 d:\epsilon\epsilon engine\include\opengl\helperfunctions\quad.h
 
-1513209455 d:\epsilon\epsilon engine\include\gui\button.h
+1526280610 d:\epsilon\epsilon engine\include\gui\button.h
 	<GUI/Widget.h>
 	<Text.h>
 	<string>
@@ -1599,7 +1600,7 @@
 	<Particle.h>
 	<Shader.h>
 
-1524520524 d:\epsilon\epsilon engine\version.h
+1529631622 d:\epsilon\epsilon engine\version.h
 
 1489719397 d:\epsilon\epsilon engine\include\sys\cpuid.h
 	<string>
@@ -1623,7 +1624,7 @@
 	<assert.h>
 	<memory>
 
-1523055549 d:\epsilon\epsilon engine\include\main.h
+1529631622 d:\epsilon\epsilon engine\include\main.h
 	<ProgramData.h>
 	<Epsilon.h>
 	<memory>
@@ -1667,7 +1668,7 @@
 	<iostream>
 	<Physics/CollisionInfo.h>
 
-1524264344 source:d:\epsilon\epsilon engine\src\postprocess.cpp
+1527136770 source:d:\epsilon\epsilon engine\src\postprocess.cpp
 	<PostProcess.h>
 	<iostream>
 	<ProgramData.h>
@@ -1801,7 +1802,7 @@
 
 1503872725 d:\epsilon\epsilon engine\include\opengl\helperfunctions\checkerror.h
 
-1523660502 source:d:\epsilon\epsilon engine\src\sun.cpp
+1528913750 source:d:\epsilon\epsilon engine\src\sun.cpp
 	<Sun.h>
 	<sys/KeyBoard.h>
 
@@ -1814,7 +1815,7 @@
 	<sys/KeyBoard.h>
 	<iostream>
 
-1523055549 source:d:\epsilon\epsilon engine\src\terrain.cpp
+1528916845 source:d:\epsilon\epsilon engine\src\terrain.cpp
 	<iostream>
 	<fstream>
 	<Terrain.h>
@@ -1825,7 +1826,7 @@
 	<Physics/CollisionInfo.h>
 	<Includes.h>
 
-1513209455 source:d:\epsilon\epsilon engine\src\water.cpp
+1525738165 source:d:\epsilon\epsilon engine\src\water.cpp
 	<Water.h>
 
 1391359686 d:\epsilon\epsilon engine\deppend\bullet-2.82-r2704\src\bulletcollision\collisionshapes\btshapehull.h
@@ -3875,10 +3876,10 @@
 1391359690 d:\epsilon\epsilon engine\deppend\bullet-2.82-r2704\src\bulletsoftbody\btsoftbodyhelpers.h
 	"btSoftBody.h"
 
-1524015042 source:d:\epsilon\epsilon engine\src\physics\clothphysicobject.cpp
+1529615267 source:d:\epsilon\epsilon engine\src\physics\clothphysicobject.cpp
 	<Physics/ClothPhysicObject.h>
 
-1524263571 source:d:\epsilon\epsilon engine\src\patch.cpp
+1529476129 source:d:\epsilon\epsilon engine\src\patch.cpp
 	<Patch.h>
 
 1524019425 d:\epsilon\epsilon engine\include\patch.h
@@ -4498,4 +4499,9 @@
 
 1523927132 d:\epsilon\epsilon engine\deppend\bullet3-master\src\bulletsoftbody\btsoftbodyhelpers.h
 	"btSoftBody.h"
+
+1526286917 d:\epsilon\epsilon engine\include\gui\checkbox.h
+	<GUI/Widget.h>
+	<Text.h>
+	<string>
 

@@ -175,8 +175,8 @@ void Water::GeneratevertexArray()
 {
     glm::vec3 verts[] =
     {
-        glm::vec3(115.0f*this->scale,  0.0,  115.0f*this->scale),
-        glm::vec3(115.0f*this->scale,  0.0, -115.0f*this->scale),
+        glm::vec3(84.0f*this->scale,  0.0,  115.0f*this->scale),
+        glm::vec3(84.0f*this->scale,  0.0, -115.0f*this->scale),
         glm::vec3(-115.0f*this->scale,  0.0, -115.0f*this->scale),
         glm::vec3(-115.0f*this->scale,  0.0,  115.0f*this->scale)
 

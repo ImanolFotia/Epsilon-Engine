@@ -2,10 +2,12 @@
 #include <GUI/Container.h>
 #include <GUI/Panel.h>
 #include <GUI/Button.h>
+#include <GUI/CheckBox.h>
 
 class GUI {
+
 public:
-    GUI(int winWidth, int winHeight) : m_WindowWidth(winWidth), m_WindowHeight(winHeight){
+    GUI(int winWidth, int winHeight) : m_WindowWidth(winWidth), m_WindowHeight(winHeight) {
         m_Shader = (std::shared_ptr<Shader>) new Shader("shaders/GUI/vertexCommon.glsl", "shaders/GUI/panel.glsl");
     }
     ~GUI() {}
@@ -15,6 +17,7 @@ public:
             C->Render(m_Shader);
         }
     }
+
 
     bool AddContainer(std::shared_ptr<Container> container) {
         if(container == nullptr) {
@@ -26,8 +29,7 @@ public:
 
     bool GUIRemoveWidget(int WidgetID);
 
-    void PollEvents(GLFWwindow* window)
-    {
+    void PollEvents(GLFWwindow* window) {
         double x, y;
         glfwGetCursorPos(window, &x, &y);
         Events.MousePosition[0] = (x / this->m_WindowWidth) * 2 - 1;
@@ -39,8 +41,7 @@ public:
         else
             Events.LeftClickWasPressed = false;
 
-        for(unsigned int i = 0; i < m_ContainerCollection.size(); ++i)
-        {
+        for(unsigned int i = 0; i < m_ContainerCollection.size(); ++i) {
             m_ContainerCollection[i]->AnalizeEvents(Events);
         }
     }

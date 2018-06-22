@@ -74,14 +74,34 @@ GLFWwindow* InitEngine(const char* ProgramName) {
 
     Monitor = glfwGetMonitors(&numberofmonitors);
 
+    std::cout << "Available monitor data" << std::endl;
+    for(int i = 0; i < numberofmonitors; ++i)
+    {
+        std::cout << "-----------------------------------" << std::endl;
+        std::cout << glfwGetMonitorName(Monitor[i]) << std::endl;
+        int numberofmodes;
+        const GLFWvidmode* modes = glfwGetVideoModes(Monitor[i], &numberofmodes);
+        for(int j = 0; j < numberofmodes;++j)
+        {
+            std::cout << modes[j].width << "x" << modes[j].height << std::endl;
+        }
+        int widthMM, heightMM;
+        glfwGetMonitorPhysicalSize(Monitor[i], &widthMM, &heightMM);
+        const GLFWvidmode* mode = glfwGetVideoMode(Monitor[i]);
+        const double dpi = mode->width / (widthMM / 25.4);
+        std::cout << "Monitor physical size: " << widthMM << "x" << heightMM << std::endl;
+        std::cout << "DPI: " << dpi << std::endl;
+        std::cout << "-----------------------------------" << std::endl;
+    }
+
     if(numberofmonitors < DATA.MONITOR)
-        CurrentMonitor = Monitor[0];
+        CurrentMonitor = glfwGetPrimaryMonitor();
     else
         CurrentMonitor = Monitor[DATA.MONITOR];
 
     int numberofmodes;
 
-    const GLFWvidmode* modes = glfwGetVideoModes(glfwGetPrimaryMonitor(), &numberofmodes);
+    const GLFWvidmode* modes = glfwGetVideoModes(CurrentMonitor, &numberofmodes);
 
     GLFWwindow* window;
 
@@ -92,7 +112,7 @@ GLFWwindow* InitEngine(const char* ProgramName) {
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
 
-    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    const GLFWvidmode* mode = glfwGetVideoMode(CurrentMonitor);
     //glfwWindowHint(GLFW_RED_BITS, mode->redBits);
     //glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
     //glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
@@ -103,7 +123,7 @@ GLFWwindow* InitEngine(const char* ProgramName) {
 
     cout << "Creating window || Window Resolution: ";
     if(DATA.FULLSCREEN == 1) {
-        window = glfwCreateWindow(DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT, ProgramName, glfwGetPrimaryMonitor(), 0);
+        window = glfwCreateWindow(DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT, ProgramName, CurrentMonitor, 0);
         cout << DATA.WINDOW_WIDTH << " x " << DATA.WINDOW_HEIGHT << endl;
     } else if(DATA.FULLSCREEN == 2) {
         mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -112,7 +132,7 @@ GLFWwindow* InitEngine(const char* ProgramName) {
         glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
         glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
         glfwWindowHint(GLFW_DECORATED, GL_FALSE);
-        window = glfwCreateWindow(mode->width, mode->height, ProgramName, glfwGetPrimaryMonitor(), 0);
+        window = glfwCreateWindow(mode->width, mode->height, ProgramName, CurrentMonitor, 0);
         cout << mode->width << " x " << mode->height << endl;
     } else {
         cout << DATA.WINDOW_WIDTH << " x " << DATA.WINDOW_HEIGHT << endl;

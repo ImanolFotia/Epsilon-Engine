@@ -82,6 +82,11 @@ float LinearizeDepth(float depth)
     return ((2.0 * NEAR * FAR) / (FAR + NEAR - z * (FAR - NEAR)));
 }
 
+vec3 fresnelSchlick(float cosTheta, vec3 F0)
+{
+    return F0 + (1.0 - F0) * pow(1.0 - clamp(cosTheta, 0.0, 1.0), 5.0);
+}
+
 void main()
 {
 
@@ -119,7 +124,7 @@ void main()
 
     
     vec3 reflectDir = normalize(reflect(-light, n));  
-    vec3 spec = vec3(pow(max(dot(reflectDir, viewDir), 0.0), 32));
+    vec3 spec = vec3(pow(max(dot(reflectDir, viewDir), 0.0), 128));
 
     vec2 textureResolution = iResolution;
     vec2 uv = refracCoords*textureResolution + 0.5;
@@ -136,9 +141,10 @@ void main()
 
     vec3 reflectionColor = texture(ColorBuffer, uv, 0).rgb;
 
-    vec3 color = mix(reflectionColor, normalize(vec3(41, 88, 85))*0.01, 0.5);
-    FragColor.rgb = mix(color, normalize(vec3(41, 88, 85))*0.01, clamp(waterDepth/5.0, 0.0, 0.8)) + spec;
-    FragColor.rgb = clamp(FragColor.rgb, vec3(0.005), vec3(1.0));
+    vec3 color = reflectionColor;//mix(reflectionColor, normalize(vec3(41, 88, 85))*0.01, 0.5);
+    vec3 F = fresnelSchlick(max(dot(Normal, viewDir), 0.0), vec3(0.04));
+    FragColor.rgb = mix(reflectionColor, normalize(vec3(41, 88, 85))*0.005, /*clamp(waterDepth/15.0, 0.0, 0.8) **/ F.x) + spec;
+    //FragColor.rgb = clamp(FragColor.rgb, vec3(0.005), vec3(1.0));
     FragColor.a = 1.0;
 
     blurImage = vec4(spec*0.1, 1.0);

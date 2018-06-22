@@ -1,11 +1,11 @@
 #version 440 core
 
 layout(location = 0) out vec3 gAlbedoSpec;
-//layout(location = 1) out float gPosition;
 layout(location = 1) out vec4 gExpensiveNormal;
 layout(location = 2) out vec4 gDepth;
 layout(location = 3) out vec4 gExtraComponents; 
 layout(location = 4) out vec3 gLightAccumulation;
+//layout(location = 5) out float gPosition;
 
 layout (binding = 0) uniform sampler2D texture_diffuse;
 layout (binding = 1) uniform sampler2D texture_specular;
@@ -51,7 +51,7 @@ const float CosineA0 = Pi;
 const float CosineA1 = (2.0f * Pi) / 3.0f;
 const float CosineA2 = Pi * 0.25f;
 // scale for restored amount of lighting
-uniform float u_scaleFactor = 0.5;
+uniform float u_scaleFactor = 0.9;
 
 struct SphericalHarmonicsFormat {
   vec3 u_L00; 
@@ -148,7 +148,7 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 
     // get depth after and before collision for linear interpolation
     float afterDepth  = currentDepthMapValue - currentLayerDepth;
-    float beforeDepth = texture(texture_height, prevTexCoords).b - currentLayerDepth + layerDepth;
+    float beforeDepth = (texture(texture_height, prevTexCoords).b) - currentLayerDepth + layerDepth;
  
     // interpolation of texture coordinates
     weight = afterDepth / (afterDepth - beforeDepth);
@@ -172,8 +172,8 @@ vec3 bpcem (in vec3 v, vec3 Emax, vec3 Emin, vec3 Epos)
   return posonbox - Epos;
 }
 
-vec3 BoxMax = vec3(40, 32.8, 50);
-vec3 BoxMin = vec3(-31,0.0,-27);
+vec3 BoxMax = vec3(64, 12, 6.5);
+vec3 BoxMin = vec3(-318,0.5,-12);
 
 uniform ivec2 Resolution;
 uniform bool isTransparent = false;
@@ -208,6 +208,34 @@ vec3 textureNoTile(in sampler2D tex, in vec2 x)
     return mix( cola, colb, smoothstep(0.2,0.8,f-0.1*sum(cola-colb)) );
 }
 
+mat3 cotangent_frame(vec3 N, vec3 p, vec2 uv)
+{
+    // get edge vectors of the pixel triangle
+    vec3 dp1 = dFdx( p );
+    vec3 dp2 = dFdy( p );
+    vec2 duv1 = dFdx( uv );
+    vec2 duv2 = dFdy( uv );
+ 
+    // solve the linear system
+    vec3 dp2perp = cross( dp2, N );
+    vec3 dp1perp = cross( N, dp1 );
+    vec3 T = dp2perp * duv1.x + dp1perp * duv2.x;
+    vec3 B = dp2perp * duv1.y + dp1perp * duv2.y;
+ 
+    // construct a scale-invariant frame 
+    float invmax = inversesqrt( max( dot(T,T), dot(B,B) ) );
+    return mat3( T * invmax, B * invmax, N );
+}
+
+vec3 perturb_normal( vec3 N, vec3 V, vec2 texcoord )
+{
+    // assume N, the interpolated vertex normal and 
+    // V, the view vector (vertex to eye)
+   vec3 map = texture(texture_normal, texcoord ).xyz;
+   map = map * 255./127. - 128./127.;
+    mat3 TBN = cotangent_frame(N, -V, texcoord);
+    return normalize(TBN * map);
+}
 
 void main()
 {
@@ -233,10 +261,11 @@ void main()
   ScreenDoor[3][3] = true;
 
   if(texture(texture_diffuse, fs_in.TexCoords).a < 0.5)
-    discard;    
+    discard;  
+
     vec3 Dir = normalize((fs_in.TBN * viewPos) - (fs_in.TBN * fs_in.wFragPos));
 
-  
+
   ivec2 invFragCoord = ivec2(gl_FragCoord);///ivec2(fragCoord);  
     int indexX = int(mod(int(invFragCoord.x), 4)); 
     int indexY = int(mod(int(invFragCoord.y), 4));
@@ -250,11 +279,17 @@ void main()
   else
   texCoords = fs_in.TexCoords;
 
+
+  //vec3 exNormal = normalize(perturb_normal(fs_in.Normal, normalize(fs_in.wFragPos - viewPos), texCoords));
+
   int negator = ( int(gl_FrontFacing) * 2 - 1 );
-  gExpensiveNormal.rgb = negator * normalize( texture(texture_normal, texCoords).rgb * 2.0 - 1.0) * fs_in.TBN;
+  gExpensiveNormal.rgb = negator * normalize( normalize( texture(texture_normal, texCoords).rgb * 2.0 - 1.0) * fs_in.TBN);
+
+  gExpensiveNormal.rgb = clamp(gExpensiveNormal.rgb, -1.0, 1.0);
+  //gExpensiveNormal.rgb = vec3(gExpensiveNormal.x, -gExpensiveNormal.y, gExpensiveNormal.z);
   float Spec = texture(texture_specular, texCoords).x;
   float Wet = textureNoTile(texture_specular, texCoords).y;
-  gExpensiveNormal.a = max(Spec - Wet, 0.0);
+  gExpensiveNormal.a = max(Spec/* - Wet*/, 0.0);
 
   vec4 CubeMapcolor = vec4(0.0);
   vec3 R = vec3(0.0);
@@ -264,7 +299,7 @@ void main()
   //gDepth.r = gl_FragCoord.z;
   //gPosition = fs_in.FragPos.z;
   vec2 MetallicHeight = texture(texture_height, texCoords).rg;
-  gExtraComponents.x = min(MetallicHeight.x + Wet, 1.0); 
+  gExtraComponents.x = min(MetallicHeight.x/* + Wet*/, 1.0); 
   gExtraComponents.y = MetallicHeight.y; 
   vec2 a = (Position.xy / Position.w) * 0.5 + 0.5;
   vec2 b = (PrevPosition.xy / PrevPosition.w) * 0.5 + 0.5;
@@ -277,7 +312,7 @@ void main()
 
   CubeMapcolor = textureLod(skybox, bpcem(
                                       reflect(normalize(fs_in.wFragPos - viewPos), normalize(gExpensiveNormal.rgb)), 
-                                      BoxMax, BoxMin, vec3(6, 8, -8)), gExpensiveNormal.a * MAX_REFLECTION_LOD);
+                                      BoxMax, BoxMin, vec3(0, 5, -3)), gExpensiveNormal.a * MAX_REFLECTION_LOD);
 
   vec3 shc = sphericalHarmonics(normalize(gExpensiveNormal.rgb)) * u_scaleFactor;
   gLightAccumulation = shc;

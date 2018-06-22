@@ -41,6 +41,8 @@ namespace Component
 
         virtual void setTransparency(bool x) = 0;
 
+        void setShader(string sh){}
+
         COMPONENT_TYPE Type;
         btVector3 m_PhysicsWorldPosition;
         btVector3 m_LastPhysicsWorldPosition;
@@ -49,6 +51,7 @@ namespace Component
         btQuaternion m_LastPhysicsWorldRotation;
         bool updateIfOutOfView = true;
         bool isTransparent = false;
+        bool isDoubleFaced = false;
     };
 
 /// NPC/Player Components

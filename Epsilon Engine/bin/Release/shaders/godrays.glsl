@@ -31,8 +31,8 @@ vec4 godRays(in sampler2D brightBuffer, in vec3 blurOrigin) {
   if(!isSourceVisible(ScreenPosition))
     return outColor;
 
-  if(blurOrigin.y < 0.0)
-    return outColor;
+  //if(blurOrigin.y < 0.0)
+  //  return outColor;
 
   ScreenPosition = ScreenPosition / ScreenPosition.w;
   vec2 FragCoord = gl_FragCoord.xy / Resolution;

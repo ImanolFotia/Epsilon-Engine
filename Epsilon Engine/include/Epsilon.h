@@ -175,6 +175,7 @@ public:
     std::shared_ptr<Button> t_ButtonSettings;
     std::shared_ptr<Panel> t_PanelSettings;
     std::shared_ptr<Button> t_ButtonResume;
+    std::shared_ptr<CheckBox> t_CheckBox;
     /** Window Properties **/
     float xz[5][5];
     short WIDTH = 16;

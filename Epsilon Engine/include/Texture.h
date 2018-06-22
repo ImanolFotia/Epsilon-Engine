@@ -23,7 +23,7 @@ class eTexture
 {
 
 public:
-    eTexture(const char* TexName, GLenum wrap = GL_REPEAT, GLenum type = GL_TEXTURE_2D)
+    eTexture(const char* TexName, GLenum wrap = GL_REPEAT, GLenum type = GL_TEXTURE_2D, GLuint filtering = -1)
     {
         ProgramData DATA;
         int channels;
@@ -47,7 +47,8 @@ public:
         std::size_t found4 = name.find("normal");
         std::size_t found5 = name.find("ddn");
         std::size_t found6 = name.find("nrm");
-        if(found1 != std::string::npos || found2 != std::string::npos || found3 != std::string::npos || found4 != std::string::npos || found5 != std::string::npos || found6 != std::string::npos) {
+        std::size_t found7 = name.find("Normal");
+        if(found1 != std::string::npos || found2 != std::string::npos || found3 != std::string::npos || found4 != std::string::npos || found5 != std::string::npos || found6 != std::string::npos|| found7 != std::string::npos) {
             if(type == GL_TEXTURE_2D){//GL_COMPRESSED_RGBA_S3TC_DXT5_EXT
 
                     glTexImage2D(type, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
@@ -76,14 +77,21 @@ public:
         glGenerateMipmap(type);
         glTexParameteri(type, GL_TEXTURE_WRAP_S, wrap);
         glTexParameteri(type, GL_TEXTURE_WRAP_T, wrap);
-        if(DATA.ANISOTROPY <= 0)
+        if(filtering  == -1)
         {
-            glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            if(DATA.ANISOTROPY <= 0)
+            {
+                glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+                glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            }
+            else
+            {
+                glTexParameterf(type, GL_TEXTURE_MAX_ANISOTROPY_EXT, DATA.ANISOTROPY);
+            }
         }
-        else
-        {
-            glTexParameterf(type, GL_TEXTURE_MAX_ANISOTROPY_EXT, DATA.ANISOTROPY);
+        else{
+            glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         }
         if(!texture)
         {

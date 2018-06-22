@@ -17,19 +17,21 @@ public:
 
     virtual void Update(void) {}
 
-    void OnClick(void) {
+    virtual void OnClick(void) {
         m_OnClickFunc();
     }
 
-    void OnHover(void) {
+    virtual void OnHover(void) {
         m_OnHoverFunc();
     }
 
-    void OnHoverCallback(void(*func)()) {
+    template<typename T>
+    void OnHoverCallback( T func ) {
         m_OnHoverFunc = func;
     }
 
-    void OnClickCallback( std::function<void()> func) {
+    template<typename T>
+    void OnClickCallback( T func ) {
         m_OnClickFunc = func;
     }
 
@@ -104,11 +106,11 @@ private:
 public:
     glm::vec2 m_Position;
 
-private:
+protected:
     //void (*m_OnClickFunc)(void) = nullptr;
     std::function<void()> m_OnClickFunc = nullptr;
-    void (*m_OnHoverFunc)(void) = nullptr;
-    void (*m_OnLostFocusFunc)(void) = nullptr;
+    std::function<void()> m_OnHoverFunc = nullptr;
+    std::function<void()> m_OnLostFocusFunc = nullptr;
 
     GUIEVENTS m_Events;
     float L, R, T, B;
@@ -126,7 +128,7 @@ public:
     float SizeX = 0.2;
 public:
     float SizeY = 0.2;
-
+    GUIType type;
 public:
     float TextSize;
 public:

@@ -22,7 +22,14 @@ void EntityTemplate::Update()
 
 void EntityTemplate::Render()
 {
-    for(unsigned int i = 0; i < ComponentList.size(); ++i)
+    for(unsigned int i = 0; i < ComponentList.size(); ++i){
+            if(ComponentList.at(i)->Type == Component::COMPONENT_TYPE::MODELCOMPONENT)
+                if(ComponentList.at(i)->isDoubleFaced)
+                    glDisable(GL_CULL_FACE);
+                else
+                    glEnable(GL_CULL_FACE);
+
         ComponentList.at(i)->Render(resourceManager, this->getPosition());
+    }
 }
 

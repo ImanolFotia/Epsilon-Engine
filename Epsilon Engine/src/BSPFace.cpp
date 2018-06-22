@@ -61,7 +61,7 @@ bool BSPFace::BuildFace(std::vector<glm::vec3> Vertices, std::vector<glm::vec3> 
 }
 
 void BSPFace::RenderFace(GLuint shader, GLuint TextureID,GLuint normalID, GLuint specularID, GLuint metallicID, bool simpleRender) {
-
+/*
 	if(GISet == false) {
 		if(simpleRender) {
 			GITexture = resm->useCubeMap(2);
@@ -71,7 +71,7 @@ void BSPFace::RenderFace(GLuint shader, GLuint TextureID,GLuint normalID, GLuint
 		//std::cout << "GITexture: " << GITexture << std::endl;
 		if(GITexture != 131)
             GISet = true;
-	}
+	}*/
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, TextureID);

@@ -13,6 +13,7 @@ public:
         m_Quad = (std::shared_ptr<OpenGLHelpers::Quad>) new OpenGLHelpers::Quad(width, height);
         m_Position = pos;
         projection = glm::ortho(0.0f, static_cast<GLfloat>(m_winWidth), 0.0f, static_cast<GLfloat>(m_winHeight));
+       // type = GUIType::Panel;
     }
 
     ~Panel() {}

@@ -34,25 +34,25 @@ void PostProcess::SetupFramebuffer() {
 
 	t_light tmpLight;
 
-	tmpLight.position = glm::vec4(5, 17, -14, 1.0);
+	tmpLight.position = glm::vec4(84, 6, -3, 1.0);
 	tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-	tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
+	tmpLight.color = glm::vec4(1.0,1.0,1.0, 1.0);
+	tmpLight.radius = 2.5f;
+	tmpLight.watts = 1000.0f;
+	tmpLight.type = 2;
+	m_Lights.push_back(tmpLight);
+
+	tmpLight.position = glm::vec4(60, 6, -3, 1.0);
+	tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+	tmpLight.color = glm::vec4(1.0,1.0,1.0, 1.0);
 	tmpLight.radius = 1.f;
 	tmpLight.watts = 50.0f;
 	tmpLight.type = 2;
 	m_Lights.push_back(tmpLight);
 
-	tmpLight.position = glm::vec4(4, 17, 14, 1.0);
+	tmpLight.position = glm::vec4(11, 21, -3, 1.0);
 	tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-	tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
-	tmpLight.radius = 1.f;
-	tmpLight.watts = 50.0f;
-	tmpLight.type = 2;
-	m_Lights.push_back(tmpLight);
-
-	tmpLight.position = glm::vec4(60, 17, 18, 1.0);
-	tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-	tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
+	tmpLight.color = glm::vec4(0.2,0.5,0.3, 1.0);
 	tmpLight.radius = 1.f;
 	tmpLight.watts = 50.0f;
 	tmpLight.type = 2;
@@ -157,7 +157,6 @@ void PostProcess::SetupFramebuffer() {
 	    m_Lights.push_back(tmpLight);
 
 
-	*/
 	tmpLight.position = glm::vec4(-29.3, 8.5, 18.5, 1.0);
 	tmpLight.direction = glm::vec4(0.74, -0.5761, -0.60, 1.0);
 	tmpLight.color = glm::vec4(70, 158, 116, 1.0);
@@ -165,6 +164,7 @@ void PostProcess::SetupFramebuffer() {
 	tmpLight.watts = 50.0f;
 	tmpLight.type = 1;
 	m_Lights.push_back(tmpLight);
+	*/
 
 	tmpLight.position = glm::vec4(-28.5, 13.5, 16.0, 1.0);
 	tmpLight.direction = glm::vec4(0.0, -1.0, 0.0, 1.0);
@@ -174,12 +174,13 @@ void PostProcess::SetupFramebuffer() {
 	tmpLight.type = 2;
 	m_Lights.push_back(tmpLight);
 
-	tmpLight.position = glm::vec4(13, 4, -4, 1.0);
+	tmpLight.position = glm::vec4(-47, 10.5, -3, 1.0);
 	tmpLight.direction = glm::vec4(0.74, -0.5761, -0.60, 1.0);
 	tmpLight.color = glm::vec4(70, 158, 116, 1.0);
 	tmpLight.radius = 0.5f;
-	tmpLight.watts = 50.0f;
+	tmpLight.watts = 450.0f;
 	tmpLight.type = 2;
+
 	m_Lights.push_back(tmpLight);
 
 	glGenBuffers(1, &ssbo);
@@ -323,7 +324,6 @@ void PostProcess::SetupGBuffer() {
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	/// - Create and attach depth buffer (renderbuffer)
-
 	glGenRenderbuffers(1, &rboDepth);
 	glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
@@ -453,8 +453,8 @@ void PostProcess::applySSAO(std::shared_ptr<Camera>& cam) {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	//glViewport(0,0,width, height);
 
-	ssaoColorBufferBlur = this->blurImage(ssaoColorBuffer, true);
-/*
+	//ssaoColorBufferBlur = this->blurImage(ssaoColorBuffer, true);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
 	glClear(GL_COLOR_BUFFER_BIT);
 	blurSSAO->Use();
@@ -462,7 +462,7 @@ void PostProcess::applySSAO(std::shared_ptr<Camera>& cam) {
 	glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
 	this->RenderQuad();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-*/
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glViewport(0,0,width, height);
@@ -705,6 +705,7 @@ void PostProcess::SSRPass(std::shared_ptr<Camera>& cam) {
 	glUniform3fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "camDir"), 1, &cam->getDirection()[0]);
 	glUniform3fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "camPos"), 1, &cam->getPosition()[0]);
     ScreenSpaceReflectionShader->PushUniform("SSROn", SSROn);
+    ScreenSpaceReflectionShader->PushUniform("LinMAD", LinMAD);
 	this->RenderQuad();
 
 	glActiveTexture(GL_TEXTURE0);
@@ -918,6 +919,7 @@ void PostProcess::ShowPostProcessImage(float frametime, GLuint onmenu, glm::vec3
 	glm::mat4 choppedView = glm::mat4(glm::mat3(cam->getViewMatrix()));
 	finalImage->PushUniform("choppedView", choppedView);
 	finalImage->PushUniform("projection", cam->getProjectionMatrix());
+	finalImage->PushUniform("position", cam->getPosition());
 	finalImage->PushUniform("sunPos", Sun);
 	finalImage->PushUniform("lightShafts", this->lightShafts);
 	finalImage->PushUniform("onmenu", (int)onmenu);
@@ -994,7 +996,7 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::shared_ptr<Camera>& 
 	glUseProgram(0);
 
 	/** copy texture */
-/*
+
 	    CopyTextureFBO->bindFramebuffer();
 	    CopyTextureFBO->setViewport();
 	    CopyTextureFBO->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -1016,7 +1018,7 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::shared_ptr<Camera>& 
 
 	    CopyTextureFBO->unbindFramebuffer();
 	    glViewport(0,0,this->width, this->height);
-*/
+
 	/** end copy texture*/
 
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer);

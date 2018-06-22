@@ -23,14 +23,14 @@ vec2 AORes = vec2(Resolution);
 vec2 InvAORes = vec2(1.0/Resolution.x, 1.0/Resolution.y);
 vec2 NoiseScale = Resolution / 4.0;
 
-float AOStrength = 50.0;
-float R = 1.0;
+float AOStrength = 80.0;
+float R = 1.5;
 float R2 = R*R;
 float NegInvR2 = - 1.0 / R2;
-float TanBias = tan(30.0 * PI / 180.0);
+float TanBias = tan(45.0 * PI / 180.0);
 float MaxRadiusPixels = 50.0;
 
-int NumDirections = 6;
+int NumDirections = 4;
 int NumSamples = 4;
 
 in vec2 TexCoords;
@@ -254,8 +254,8 @@ void main(void)
 
 		// Average the results and produce the final AO
 		//ao = ao;//clamp(ao, 0.0, 1.0);
-		ao = 1.0 - ao / numDirections * AOStrength;
+		ao = 1.0 - ((ao / numDirections) * AOStrength);
 		
 	}
-	FragColor = clamp(pow(ao, 30.0), 0.0, 1.0);
+	FragColor = pow(ao, 30.0) * AOStrength;
 }

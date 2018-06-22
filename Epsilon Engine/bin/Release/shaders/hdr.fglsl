@@ -17,7 +17,7 @@ uniform vec3 sunPos;
 uniform bool lightShafts;
 const float gamma = 2.2;
 const float contrast = 0.2;
-
+uniform vec3 position;
 uniform vec2 Resolution;
 
 int uGhosts = 5;               // number of ghost samples
@@ -96,6 +96,7 @@ vec3 changeSaturation(vec3 color, float saturation) {
 
 #define PI 3.14159265359
 #define G  1.61803398875
+
 uniform int onmenu;
 
 vec3 Bokeh(vec2 uv, float rad, float thres, float mult) {
@@ -105,7 +106,7 @@ vec3 Bokeh(vec2 uv, float rad, float thres, float mult) {
   vec2 pixelSize = 1.0 / Resolution.xy;
   float i = 0.0;
   int numLoops = 0;
-  for (i = 0.0001; i < PI * 2.0; i += PI * 0.0314) {
+  for (i = 0.0001; i < PI * 2.0; i += PI * 0.031415) {
     r += (1.0 / r);
 
     vec2 disk = vec2(sin(i * 10.0) * (1.0 - r), cos(i * 10.0) * (1.0 - r)) * rad;
@@ -158,7 +159,7 @@ void main() {
 
   vec2 fragcoord = gl_FragCoord.xy / Resolution;
 
-  vec4 GodRays = godRays(brightColorBuffer, sunPos);
+  vec4 GodRays = godRays(brightColorBuffer, /*sunPos*/normalize(vec3(83, 6, -3) - vec3(0, 6, -3)) );
 
   fragcoord = gl_FragCoord.xy / Resolution;
   float vignete =
@@ -180,7 +181,7 @@ void main() {
 
   //composite = Bokeh(TexCoords, DOFRadius, .10, 1.0);
 
-  //composite = textureDistorted(compositeImage, TexCoords, normalize(fragcoord - vec2(0.0)), 0.001*pow(length((fragcoord * 2.0 - 1.0) - vec2(0.0)), 3.0)).rgb;
+  composite = textureDistorted(compositeImage, TexCoords, normalize(fragcoord - vec2(0.0)), 0.001*pow(length((fragcoord * 2.0 - 1.0) - vec2(0.0)), 3.0)).rgb;
 
   composite = changeSaturation(composite, 1.0);
 

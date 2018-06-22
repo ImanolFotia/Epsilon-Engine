@@ -1,11 +1,10 @@
 #version 430 core
 
 layout(location = 0) out vec3 gAlbedoSpec;
-layout(location = 1) out float gPosition;
-layout(location = 2) out vec4 gExpensiveNormal;
-layout(location = 3) out float gDepth;
-layout(location = 4) out vec4 gExtraComponents; 
-layout(location = 5) out vec3 gLightAccumulation;
+layout(location = 1) out vec4 gExpensiveNormal;
+layout(location = 2) out vec4 gDepth;
+layout(location = 3) out vec4 gExtraComponents; 
+layout(location = 4) out vec3 gLightAccumulation;
 
 layout (binding = 0) uniform sampler2D texture_diffuse;
 layout (binding = 1) uniform sampler2D texture_specular;
@@ -120,8 +119,8 @@ void main()
   gAlbedoSpec.rgb = textureNoTile(texture_diffuse,fs_in.TexCoords).rgb* (max(dot(vec3(0,1,0), fs_in.Normal), 0.0));
   
   float Depth = LinearizeDepth(gl_FragCoord.z);
-  gDepth = gl_FragCoord.z;
-  gPosition = fs_in.FragPos.z;
+  gDepth.x = gl_FragCoord.z;
+  //gPosition = fs_in.FragPos.z;
   gExtraComponents.xy = Metallic_Emmisive.xy; //vec4(Metallic_Emmisive, 1.0, 1.0);
 
   vec2 a = (Position.xy / Position.w) * 0.5 + 0.5;
@@ -132,8 +131,9 @@ void main()
   {
     vec3 I = normalize(fs_in.wFragPos - viewPos);
     R = reflect(I, normalize(gExpensiveNormal.rgb));
-    CubeMapcolor = texture(skybox, R);
+    gDepth.gba = texture(skybox, R).rgb;
   }
+
   //else
   //  CubeMapcolor = gAlbedoSpec.rgba * 0.0008;
   vec3 shc = sphericalHarmonics(gExpensiveNormal.rgb) * u_scaleFactor;

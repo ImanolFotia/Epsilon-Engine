@@ -31,7 +31,7 @@ public:
             t->setUserPointer(&CollInfo);
         } else if(t->Type == Component::PLAYERCOMPONENT)
             hasPlayerComponent = true;
-        else if(t->Type == Component::PLAYERCOMPONENT)
+        else if(t->Type == Component::CLOTHCOMPONENT)
             hasClothComponent = true;
         else
             std::cout << " not added component" << std::endl;
@@ -155,16 +155,16 @@ public:
     long toHash() {
         return std::hash<float> {}(m_Position.x+m_Position.y+m_Position.z + ID);
     }
-    /*
-        void setShader(std::string sh) {
-            if(hasModel) {
-                for(auto &c :ComponentList) {
-                    if(c->Type == MODELCOMPONENT) {
-                        c->setShader(sh);
-                    }
+
+    void setShader(std::string sh) {
+        if(hasModel) {
+            for(auto &c :ComponentList) {
+                if(c->Type == Component::MODELCOMPONENT) {
+                    (std::static_pointer_cast<Component::RenderComponent>(c))->setShader(sh);
                 }
             }
-        }*/
+        }
+    }
 private:
     glm::vec3 m_Position;
     glm::vec3 m_Scale;
