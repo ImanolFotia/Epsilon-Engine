@@ -33,7 +33,7 @@ namespace Game
         t.setIdentity();
         t.setOrigin(btVector3(x, y, z));  //put it to x,y,z coordinates
         m_Position = btVector3(x, y, z);
-        m_playerCapsule = (std::shared_ptr<btCapsuleShape>) new btCapsuleShape(1.8, 5.5);
+        m_playerCapsule = (std::shared_ptr<btCapsuleShape>) new btCapsuleShape(1.6, 5.5);
         btVector3 inertia(0,0,0);   //inertia is 0,0,0 for static object, else
         m_playerCapsule->calculateLocalInertia(150.0,inertia);    //it can be determined by this function (for all kind of shapes)
         m_MotionState = (std::shared_ptr<btDefaultMotionState>) new btDefaultMotionState(t);  //set the position (and motion)

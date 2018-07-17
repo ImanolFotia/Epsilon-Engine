@@ -484,7 +484,7 @@ void Epsilon::InitResources(void) {
 
     PP = std::move((unique_ptr<PostProcess>)(new PostProcess()));
 
-    m_PlayerCapsule = (std::shared_ptr<Game::Player>) new Game::Player(35,15.5, 4, this->rM);
+    m_PlayerCapsule = (std::shared_ptr<Game::Player>) new Game::Player(-13,2.5, -3, this->rM);
 //m_PlayerCapsule = (std::shared_ptr<Game::Player>) new Game::Player(170.0,5.25,-202.0, this->rM);
 
 
@@ -733,7 +733,7 @@ void Epsilon::LoadGeometry(void) {
 
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "tunnel.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "intro.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 
@@ -1063,7 +1063,7 @@ void Epsilon::PollEvents(void) {
         this->m_CameraMode = CAMERA_FIXED;
     } else {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        this->m_CameraMode = NO_CLIP;
+        this->m_CameraMode = PLAYER_CONTROLLED;
     }
 
     if(Input::KeyBoard::KEYS[Input::GLFW::Key::N])
