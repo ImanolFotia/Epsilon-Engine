@@ -112,8 +112,6 @@
 		<Unit filename="include/CommandFunctions.h" />
 		<Unit filename="include/Component.h" />
 		<Unit filename="include/CubeMap.h" />
-		<Unit filename="include/DDS.h" />
-		<Unit filename="include/DDSFile.h" />
 		<Unit filename="include/EntityTemplate.h" />
 		<Unit filename="include/Epsilon.h" />
 		<Unit filename="include/EpsilonMemory.h" />
@@ -126,6 +124,11 @@
 		<Unit filename="include/GUI/Panel.h" />
 		<Unit filename="include/GUI/Widget.h" />
 		<Unit filename="include/Grass.h" />
+		<Unit filename="include/Image/BMP.hpp" />
+		<Unit filename="include/Image/DDS.h" />
+		<Unit filename="include/Image/DDSFile.h" />
+		<Unit filename="include/Image/Image.hpp" />
+		<Unit filename="include/Image/TGA.hpp" />
 		<Unit filename="include/Includes.h" />
 		<Unit filename="include/Light.h" />
 		<Unit filename="include/LightProbe.h" />
@@ -187,8 +190,11 @@
 		<Unit filename="include/empFormat.h" />
 		<Unit filename="include/main.h" />
 		<Unit filename="include/multithread/Job.h" />
+		<Unit filename="include/multithread/Lambda.hpp" />
 		<Unit filename="include/multithread/Mutex.h" />
+		<Unit filename="include/multithread/Promise.hpp" />
 		<Unit filename="include/multithread/Thread.h" />
+		<Unit filename="include/multithread/ThreadPool.hpp" />
 		<Unit filename="include/renderer/DeferredRenderer.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
@@ -205,10 +211,10 @@
 		<Unit filename="src/BSP.cpp" />
 		<Unit filename="src/BSPFace.cpp" />
 		<Unit filename="src/Camera.cpp" />
-		<Unit filename="src/DDS.cpp" />
 		<Unit filename="src/EntityTemplate.cpp" />
 		<Unit filename="src/Epsilon.cpp" />
 		<Unit filename="src/Frustum.cpp" />
+		<Unit filename="src/Image/DDS.cpp" />
 		<Unit filename="src/MD5_Anim.cpp" />
 		<Unit filename="src/MD5_Model.cpp" />
 		<Unit filename="src/Mesh.cpp" />

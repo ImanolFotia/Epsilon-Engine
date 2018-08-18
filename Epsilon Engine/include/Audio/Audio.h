@@ -3,33 +3,34 @@
 #include <memory>
 #include <Audio/AudioElement.h>
 
+namespace IO {
+    namespace Audio {
 
-namespace Audio {
+        class Audio {
+        public:
+            Audio();
+            ~Audio();
 
-	class Audio {
-		public:
-			Audio();
-			~Audio();
+        public:
 
-		public:
+            void addAudioElement(std::shared_ptr<AudioElement> element);
 
-			void addAudioElement(std::shared_ptr<AudioElement> element);
+            void PlayAudio();
 
-			void PlayAudio();
+            bool setMasterVolume(float);
+            bool setMusicVolume(float);
+            bool setGameVolume(float);
 
-			bool setMasterVolume(float);
-			bool setMusicVolume(float);
-			bool setGameVolume(float);
-
-		private:
-			float m_MasterVolume;
-			float m_MusicVolume;
-			float m_GameVolume;
+        private:
+            float m_MasterVolume;
+            float m_MusicVolume;
+            float m_GameVolume;
 
 
-			ALCdevice* device;
-			ALCcontext* context;
+            ALCdevice* device;
+            ALCcontext* context;
 
-			std::vector<std::shared_ptr<AudioElement>> m_AudioElementsCollection;
-	};
+            std::vector<std::shared_ptr<AudioElement>> m_AudioElementsCollection;
+        };
+    }
 }

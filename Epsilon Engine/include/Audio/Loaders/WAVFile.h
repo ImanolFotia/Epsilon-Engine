@@ -4,78 +4,71 @@
 #include <memory>
 #include <Includes.h>
 
-namespace Audio
-{
-    namespace File
-    {
-        class WAVfile
-        {
-        public:
-            WAVfile() = default;
-            ~WAVfile(){}
+namespace IO {
+    namespace Audio {
+        namespace File {
+            class WAVfile {
+            public:
+                WAVfile() = default;
+                ~WAVfile() {}
 
-            std::shared_ptr<char> Load(const char* fn)
-            {
-                char buffer[4];
-                std::ifstream inFILE(fn,std::ios::binary);
-                inFILE.read(buffer,4);
+                std::shared_ptr<char> Load(const char* fn) {
+                    char buffer[4];
+                    std::ifstream inFILE(fn,std::ios::binary);
+                    inFILE.read(buffer,4);
 
-                if(strncmp(buffer,"RIFF",4)!=0)
-                {
-                    std::cout << " ::AUDIO ERROR:: ---> " << fn << " is not a valid WAVE file."  << std::endl;
-                    return NULL;
+                    if(strncmp(buffer,"RIFF",4)!=0) {
+                        std::cout << " ::AUDIO ERROR:: ---> " << fn << " is not a valid WAVE file."  << std::endl;
+                        return NULL;
+                    }
+                    inFILE.read(buffer,4);
+                    inFILE.read(buffer,4);      //WAVE
+                    inFILE.read(buffer,4);      //fmt
+                    inFILE.read(buffer,4);      //16
+                    inFILE.read(buffer,2);      //1
+                    inFILE.read(buffer,2);
+                    chan=Helpers::ByteToInt(buffer,2);
+
+                    inFILE.read(buffer,4);
+                    samplerate=Helpers::ByteToInt(buffer,4);
+
+                    inFILE.read(buffer,4);
+                    inFILE.read(buffer,2);
+                    inFILE.read(buffer,2);
+                    bps=Helpers::ByteToInt(buffer,2);
+
+                    inFILE.read(buffer,4);      //data
+                    inFILE.read(buffer,4);
+                    size=Helpers::ByteToInt(buffer,4);
+
+                    std::shared_ptr<char> data = (std::shared_ptr<char>) new char[size];
+                    inFILE.read(data.get(),size);
+
+                    return data;
                 }
-                inFILE.read(buffer,4);
-                inFILE.read(buffer,4);      //WAVE
-                inFILE.read(buffer,4);      //fmt
-                inFILE.read(buffer,4);      //16
-                inFILE.read(buffer,2);      //1
-                inFILE.read(buffer,2);
-                chan=Helpers::ByteToInt(buffer,2);
 
-                inFILE.read(buffer,4);
-                samplerate=Helpers::ByteToInt(buffer,4);
+                int getNumberOfChannels() {
+                    return chan;
+                }
 
-                inFILE.read(buffer,4);
-                inFILE.read(buffer,2);
-                inFILE.read(buffer,2);
-                bps=Helpers::ByteToInt(buffer,2);
+                int getSampleRate() {
+                    return samplerate;
+                }
 
-                inFILE.read(buffer,4);      //data
-                inFILE.read(buffer,4);
-                size=Helpers::ByteToInt(buffer,4);
+                int getBPS() {
+                    return bps;
+                }
 
-                std::shared_ptr<char> data = (std::shared_ptr<char>) new char[size];
-                inFILE.read(data.get(),size);
+                int getFileSize() {
+                    return size;
+                }
 
-                return data;
-            }
-
-            int getNumberOfChannels()
-            {
-                return chan;
-            }
-
-            int getSampleRate()
-            {
-                return samplerate;
-            }
-
-            int getBPS()
-            {
-                return bps;
-            }
-
-            int getFileSize()
-            {
-                return size;
-            }
-
-        private:
-            int chan;
-            int samplerate;
-            int bps;
-            int size;
-        };
+            private:
+                int chan;
+                int samplerate;
+                int bps;
+                int size;
+            };
+        }
     }
 }

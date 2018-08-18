@@ -102,7 +102,7 @@ void main()
         FragColor.a = 1.0;
 
 
-        blurImage = (vec4(FragColor)*0.15) /*+ vec4(sun*2.0*LightColor, 1.0)*/;
+        blurImage = (vec4(FragColor)*0.5) /*+ vec4(sun*2.0*LightColor, 1.0)*/;
         blurImage.a = 1.0;
         //gExpensiveNormal.rgb = vec3(0.0);
         

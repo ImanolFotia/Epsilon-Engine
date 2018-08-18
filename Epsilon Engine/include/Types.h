@@ -23,7 +23,7 @@
 #define     EPSILON_PAUSE                           0x10000000
 #define     EPSILON_RUNNING                         0x10000001
 #define     EPSILON_MENU                            0x10000010
-
+#define     GL_TEXTURE_COMPRESSION_S3TC_DXT5_SRGB       0x8C4F
 /** Datatypes */
 
 typedef unsigned char   UCHAR;

@@ -143,7 +143,7 @@ void main()
 
     vec3 color = reflectionColor;//mix(reflectionColor, normalize(vec3(41, 88, 85))*0.01, 0.5);
     vec3 F = fresnelSchlick(max(dot(Normal, viewDir), 0.0), vec3(0.04));
-    FragColor.rgb = mix(reflectionColor, normalize(vec3(41, 88, 85))*0.005, /*clamp(waterDepth/15.0, 0.0, 0.8) **/ F.x) + spec;
+    FragColor.rgb = mix(reflectionColor, normalize(vec3(41, 88, 85))*0.0025, max(clamp(waterDepth/15.0, 0.0, 0.8), F.x)) + spec;
     //FragColor.rgb = clamp(FragColor.rgb, vec3(0.005), vec3(1.0));
     FragColor.a = 1.0;
 

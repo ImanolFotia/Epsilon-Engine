@@ -44,6 +44,7 @@ public:
     float height;
 private:
 
+    std::shared_ptr<eTexture> tex;
     void PrepareVAO();
 
     float radius;

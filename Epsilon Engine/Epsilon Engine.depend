@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1516919944 source:d:\epsilon\epsilon engine\src\bsp.cpp
+1533357260 source:d:\epsilon\epsilon engine\src\bsp.cpp
 	<GL/glew.h>
 	<omp.h>
 	<BSP.h>
@@ -18,7 +18,7 @@
 	<OpenGL/glu.h>
 	<GL/glu.h>
 
-1511577335 d:\epsilon\epsilon engine\include\bsp.h
+1533355881 d:\epsilon\epsilon engine\include\bsp.h
 	<cstdlib>
 	<cstdio>
 	<cstring>
@@ -50,7 +50,7 @@
 	<GL/glext.h>
 	<GL/glu.h>
 
-1523055549 d:\epsilon\epsilon engine\include\bspface.h
+1533059709 d:\epsilon\epsilon engine\include\bspface.h
 	<glm/glm.hpp>
 	<GL/glew.h>
 	<iostream>
@@ -475,7 +475,7 @@
 	<memory>
 	<typeinfo>
 
-1526280590 d:\epsilon\epsilon engine\include\types.h
+1533083000 d:\epsilon\epsilon engine\include\types.h
 	<btBulletDynamicsCommon.h>
 	<btBulletCollisionCommon.h>
 	<memory>
@@ -1071,14 +1071,19 @@
 	"../trigonometric.hpp"
 	"../matrix.hpp"
 
-1527833993 d:\epsilon\epsilon engine\include\texture.h
+1534363195 d:\epsilon\epsilon engine\include\texture.h
 	<iostream>
 	<string>
 	<vector>
 	<GL/glew.h>
 	<GLFW/glfw3.h>
+	<mutex>
+	<memory>
 	<SOIL.h>
+	<Image/Image.hpp>
 	<ProgramData.h>
+	<Includes.h>
+	<Image/Image.hpp>
 
 1505150656 d:\epsilon\epsilon engine\include\programdata.h
 
@@ -1162,7 +1167,7 @@
 	"LinearMath/btVector3.h"
 	"BulletCollision/CollisionDispatch/btCollisionObject.h"
 
-1523055549 d:\epsilon\epsilon engine\include\includes.h
+1533085603 d:\epsilon\epsilon engine\include\includes.h
 	<iostream>
 	<string>
 	<sstream>
@@ -1178,7 +1183,7 @@
 	<glm/gtc/matrix_transform.hpp>
 	<Model.h>
 
-1523055549 d:\epsilon\epsilon engine\include\resourcemanager.h
+1533358189 d:\epsilon\epsilon engine\include\resourcemanager.h
 	<Texture.h>
 	<Model.h>
 	<Water.h>
@@ -1282,7 +1287,7 @@
 	<memory>
 	<Includes.h>
 
-1525738070 source:d:\epsilon\epsilon engine\src\bspface.cpp
+1533062079 source:d:\epsilon\epsilon engine\src\bspface.cpp
 	<Physics/Physics.h>
 	<ResourceManager.h>
 	<BSPFace.h>
@@ -1347,7 +1352,7 @@
 	<Physics/Physics.h>
 	<Patch.h>
 
-1531446033 source:d:\epsilon\epsilon engine\src\epsilon.cpp
+1534487256 source:d:\epsilon\epsilon engine\src\epsilon.cpp
 	<iostream>
 	<Epsilon.h>
 	<ProgramData.h>
@@ -1364,8 +1369,9 @@
 	<chrono>
 	<Log.h>
 	<sys/Console.hpp>
+	<multithread/ThreadPool.hpp>
 
-1526280217 d:\epsilon\epsilon engine\include\epsilon.h
+1533080709 d:\epsilon\epsilon engine\include\epsilon.h
 	<map>
 	<GL/glew.h>
 	<GL/wglew.h>
@@ -1449,7 +1455,7 @@
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
 
-1504487668 d:\epsilon\epsilon engine\include\sun.h
+1533257469 d:\epsilon\epsilon engine\include\sun.h
 	<GL/glew.h>
 	<GLFW/glfw3.h>
 	<glm/glm.hpp>
@@ -1561,7 +1567,7 @@
 	<Text.h>
 	<string>
 
-1493446499 d:\epsilon\epsilon engine\include\sys\filesystem.h
+1533081641 d:\epsilon\epsilon engine\include\sys\filesystem.h
 	<sys/types.h>
 	<dirent.h>
 	<windows.h>
@@ -1600,7 +1606,7 @@
 	<Particle.h>
 	<Shader.h>
 
-1531446764 d:\epsilon\epsilon engine\version.h
+1534487256 d:\epsilon\epsilon engine\version.h
 
 1489719397 d:\epsilon\epsilon engine\include\sys\cpuid.h
 	<string>
@@ -1624,7 +1630,7 @@
 	<assert.h>
 	<memory>
 
-1529631622 d:\epsilon\epsilon engine\include\main.h
+1533170029 d:\epsilon\epsilon engine\include\main.h
 	<ProgramData.h>
 	<Epsilon.h>
 	<memory>
@@ -1640,7 +1646,7 @@
 	<MD5_Model.h>
 	<Texture.h>
 
-1505011110 source:d:\epsilon\epsilon engine\src\mesh.cpp
+1533061645 source:d:\epsilon\epsilon engine\src\mesh.cpp
 	<Mesh.h>
 	<ResourceManager.h>
 
@@ -1668,7 +1674,7 @@
 	<iostream>
 	<Physics/CollisionInfo.h>
 
-1527136770 source:d:\epsilon\epsilon engine\src\postprocess.cpp
+1533255641 source:d:\epsilon\epsilon engine\src\postprocess.cpp
 	<PostProcess.h>
 	<iostream>
 	<ProgramData.h>
@@ -1747,7 +1753,7 @@
 	<map>
 	<string>
 
-1524011683 source:d:\epsilon\epsilon engine\src\resourcemanager.cpp
+1533358674 source:d:\epsilon\epsilon engine\src\resourcemanager.cpp
 	"ResourceManager.h"
 
 1430970208 source:d:\epsilon\epsilon engine\src\resources.rc
@@ -1802,11 +1808,11 @@
 
 1503872725 d:\epsilon\epsilon engine\include\opengl\helperfunctions\checkerror.h
 
-1531444718 source:d:\epsilon\epsilon engine\src\sun.cpp
+1534150362 source:d:\epsilon\epsilon engine\src\sun.cpp
 	<Sun.h>
 	<sys/KeyBoard.h>
 
-1493446479 source:d:\epsilon\epsilon engine\src\sys\filesystem.cpp
+1533081702 source:d:\epsilon\epsilon engine\src\sys\filesystem.cpp
 	<sys/filesystem.h>
 	<fstream>
 	<Log.h>
@@ -3804,30 +3810,30 @@
 
 1523055549 d:\epsilon\epsilon engine\include\physics\collisioninfo.h
 
-1523055549 d:\epsilon\epsilon engine\include\audio\audio.h
+1533070831 d:\epsilon\epsilon engine\include\audio\audio.h
 	<vector>
 	<memory>
 	<Audio/AudioElement.h>
 
-1523055549 d:\epsilon\epsilon engine\include\audio\audioelement.h
+1533080596 d:\epsilon\epsilon engine\include\audio\audioelement.h
 	<AL/al.h>
 	<AL/alc.h>
 	<Types.h>
 	<Audio/Loaders/WAVFile.h>
 	<iostream>
 
-1523055549 d:\epsilon\epsilon engine\include\audio\loaders\wavfile.h
+1533080662 d:\epsilon\epsilon engine\include\audio\loaders\wavfile.h
 	<iostream>
 	<fstream>
 	<memory>
 	<Includes.h>
 
-1523055549 d:\epsilon\epsilon engine\include\audio\audiolistener.h
+1533070854 d:\epsilon\epsilon engine\include\audio\audiolistener.h
 	<AL/al.h>
 	<AL/alc.h>
 	<glm/glm.hpp>
 
-1523055549 source:d:\epsilon\epsilon engine\src\audio\audio.cpp
+1533080681 source:d:\epsilon\epsilon engine\src\audio\audio.cpp
 	<Audio/Audio.h>
 
 1523055549 source:d:\epsilon\epsilon engine\src\physics\cubephysicobject.cpp
@@ -4504,4 +4510,42 @@
 	<GUI/Widget.h>
 	<Text.h>
 	<string>
+
+1533080817 source:d:\epsilon\epsilon engine\src\image\dds.cpp
+	<iostream>
+	<fstream>
+	<cstring>
+	"Image/DDS.h"
+	<GL/glew.h>
+
+1533071170 d:\epsilon\epsilon engine\include\image\dds.h
+	"DDSFile.h"
+	<memory>
+
+1471669636 d:\epsilon\epsilon engine\include\image\ddsfile.h
+
+1534362841 d:\epsilon\epsilon engine\include\image\image.hpp
+	<SOIL.h>
+	<fstream>
+	<Includes.h>
+	<thread>
+	<exception>
+	<functional>
+
+1533419283 d:\epsilon\epsilon engine\include\multithread\threadpool.hpp
+	<Thread>
+	<future>
+	<atomic>
+	<memory>
+	<iostream>
+	<exception>
+	<queue>
+	<thread>
+	<mutex>
+	<random>
+	<vector>
+	<functional>
+	<stdexcept>
+	<condition_variable>
+	<type_traits>
 

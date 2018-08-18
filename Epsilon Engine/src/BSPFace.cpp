@@ -29,7 +29,7 @@ bool BSPFace::BuildFace(std::vector<glm::vec3> Vertices, std::vector<glm::vec3> 
 		vert.bitangent = -Bitangents[i];
 		mVertices.push_back(vert);
 
-		mPosition += Vertices[i];
+		mPosition += Vertices[i]*0.1f;
 	}
 
 	mPosition /= Vertices.size();
@@ -43,6 +43,8 @@ bool BSPFace::BuildFace(std::vector<glm::vec3> Vertices, std::vector<glm::vec3> 
 
 	rigidBody = ph->addObject(this->Vertices, this->Indices, 0.1);
 	//mPosition = glm::vec3(rigidBody->getCenterOfMassPosition().x(), rigidBody->getCenterOfMassPosition().y(), rigidBody->getCenterOfMassPosition().z());
+	//std::cout << "Face: " << ID << " Position: x: " << mPosition.x << " y: " << mPosition.y << " z: " << mPosition.z << std::endl;
+	//std::cout << "Using cubemap: " << resm->NearestCubeMap(mPosition) << std::endl;
 
 	collinfo->setName(this->ObjectID);
 
@@ -91,7 +93,10 @@ void BSPFace::RenderFace(GLuint shader, GLuint TextureID,GLuint normalID, GLuint
 
 	glActiveTexture(GL_TEXTURE4);
 	glUniform1i(glGetUniformLocation(shader, "skybox"), 4);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, resm->useCubeMap(resm->mCubemapIndex.at(resm->NearestCubeMap(mPosition))));
+    glBindTexture(GL_TEXTURE_CUBE_MAP, resm->useCubeMap(resm->mCubemapIndex.at(resm->NearestCubeMap(mPosition))));
+	//std::cout << "Using cubemap: " << resm->NearestCubeMap(mPosition) << std::endl;
+
+	glUniform1i(glGetUniformLocation(shader, "CubemapID"), resm->NearestCubeMap(mPosition));
 
 	glBindVertexArray(this->VAO);
 	glDrawElements(GL_TRIANGLES, this->Indices.size(), GL_UNSIGNED_INT, 0);

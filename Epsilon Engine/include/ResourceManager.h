@@ -24,9 +24,9 @@ public:
 
     virtual ~ResourceManager()
     {
-        for(std::map<std::string, eTexture>::iterator itr = TextureList.begin(); itr != TextureList.end(); itr++)
+        for(std::map<std::string, std::shared_ptr<eTexture> >::iterator itr = TextureList.begin(); itr != TextureList.end(); itr++)
         {
-            GLuint tex = itr->second.getTextureID();
+            GLuint tex = itr->second->getTextureID();
             glDeleteTextures(1, &tex);
         }
 
@@ -200,7 +200,7 @@ public:
 
     std::shared_ptr<Physics::Physics> m_PhysicsWorld;
 
-    std::shared_ptr<Audio::Audio> m_AudioSystem;
+    std::shared_ptr<IO::Audio::Audio> m_AudioSystem;
 
     float timestep;
 
@@ -210,7 +210,7 @@ public:
 private:
 
 
-    std::map<std::string, eTexture>  TextureList;
+    std::map<std::string, std::shared_ptr<eTexture> >  TextureList;
     std::map<std::string, Water>    WaterPlanesList;
     std::map<std::string, Terrain>  TerrainList;
     std::map<std::string, Model>    ModelList;

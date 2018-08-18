@@ -159,7 +159,7 @@ void main() {
 
   vec2 fragcoord = gl_FragCoord.xy / Resolution;
 
-  vec4 GodRays = godRays(brightColorBuffer, /*sunPos*/normalize(vec3(83, 6, -3) - vec3(0, 6, -3)) );
+  vec4 GodRays = godRays(brightColorBuffer, sunPos/*normalize(vec3(83, 6, -3) - vec3(0, 6, -3))*/ );
 
   fragcoord = gl_FragCoord.xy / Resolution;
   float vignete =
@@ -179,9 +179,9 @@ void main() {
     DOFRadius = clamp(dDepth * 15.0, 0.0, 0.85);
 
 
-  //composite = Bokeh(TexCoords, DOFRadius, .10, 1.0);
+  composite = Bokeh(TexCoords, DOFRadius, .10, 1.0);
 
-  composite = textureDistorted(compositeImage, TexCoords, normalize(fragcoord - vec2(0.0)), 0.001*pow(length((fragcoord * 2.0 - 1.0) - vec2(0.0)), 3.0)).rgb;
+  //composite = textureDistorted(compositeImage, TexCoords, normalize(fragcoord - vec2(0.0)), 0.001*pow(length((fragcoord * 2.0 - 1.0) - vec2(0.0)), 3.0)).rgb;
 
   composite = changeSaturation(composite, 1.0);
 

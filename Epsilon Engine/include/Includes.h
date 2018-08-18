@@ -131,9 +131,11 @@ static std::string getExtension(std::string path) {
     std::size_t found = path.find(".");
 
     if(found == std::string::npos)
-        return "0";
+        return "NO EXTENSION";
 
-    for(unsigned int i = path.length()-4 ; i < path.length() ; i++) {
+    std::size_t EXTL = path.length() - found;
+
+    for(unsigned int i = path.length()-EXTL ; i < path.length() ; i++) {
         ext += path.at(i);
     }
     return ext;
@@ -167,6 +169,25 @@ static int findNearestPointFromSet(glm::vec3 TestingPoint, std::vector<glm::vec3
 static bool isBigEndian() {
     int a=1;
     return !((char*)&a)[0];
+}
+
+template <typename T>
+T SwapEndian(T u)
+{
+    static_assert (CHAR_BIT == 8, "CHAR_BIT != 8");
+
+    union
+    {
+        T u;
+        unsigned char u8[sizeof(T)];
+    } source, dest;
+
+    source.u = u;
+
+    for (size_t k = 0; k < sizeof(T); k++)
+        dest.u8[k] = source.u8[sizeof(T) - k - 1];
+
+    return dest.u;
 }
 
 static int ByteToInt(char* buffer,int len) {

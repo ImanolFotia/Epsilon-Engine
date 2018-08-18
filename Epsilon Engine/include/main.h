@@ -74,24 +74,24 @@ GLFWwindow* InitEngine(const char* ProgramName) {
 
     Monitor = glfwGetMonitors(&numberofmonitors);
 
-    std::cout << "Available monitor data" << std::endl;
+   // std::cout << "Available monitor data" << std::endl;
     for(int i = 0; i < numberofmonitors; ++i)
     {
-        std::cout << "-----------------------------------" << std::endl;
-        std::cout << glfwGetMonitorName(Monitor[i]) << std::endl;
+       // std::cout << "-----------------------------------" << std::endl;
+       // std::cout << glfwGetMonitorName(Monitor[i]) << std::endl;
         int numberofmodes;
         const GLFWvidmode* modes = glfwGetVideoModes(Monitor[i], &numberofmodes);
-        for(int j = 0; j < numberofmodes;++j)
-        {
-            std::cout << modes[j].width << "x" << modes[j].height << std::endl;
-        }
+       // for(int j = 0; j < numberofmodes;++j)
+       // {
+       //     std::cout << modes[j].width << "x" << modes[j].height << std::endl;
+       // }
         int widthMM, heightMM;
         glfwGetMonitorPhysicalSize(Monitor[i], &widthMM, &heightMM);
         const GLFWvidmode* mode = glfwGetVideoMode(Monitor[i]);
         const double dpi = mode->width / (widthMM / 25.4);
-        std::cout << "Monitor physical size: " << widthMM << "x" << heightMM << std::endl;
-        std::cout << "DPI: " << dpi << std::endl;
-        std::cout << "-----------------------------------" << std::endl;
+       // std::cout << "Monitor physical size: " << widthMM << "x" << heightMM << std::endl;
+        //std::cout << "DPI: " << dpi << std::endl;
+      // std::cout << "-----------------------------------" << std::endl;
     }
 
     if(numberofmonitors < DATA.MONITOR)

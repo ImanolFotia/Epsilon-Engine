@@ -14,62 +14,66 @@
 #include <vector>
 #include <unordered_map>
 
-namespace EFS
-{
-    class File{
-    public:
-        std::string name;
-        uint32_t hash;
-        uint32_t type;
+namespace IO {
+    namespace Filesystem {
 
-        uint32_t generateHash(std::string filename);
-    };
 
-    class VirtualFileSystem {
-    public:
-        VirtualFileSystem() = default;
-        virtual ~VirtualFileSystem(){}
 
-        virtual File FindFile(const std::string) = 0;
+        class File {
+        public:
+            std::string name;
+            uint32_t hash;
+            uint32_t type;
 
-    private:
-        bool m_IsZip;
-        std::string m_Path;
-    };
+            uint32_t generateHash(std::string filename);
+        };
 
-    class ZipFileSystem : public VirtualFileSystem{
-    public:
-        ZipFileSystem(std::string);
-        ~ZipFileSystem();
+        class VirtualFileSystem {
+        public:
+            VirtualFileSystem() = default;
+            virtual ~VirtualFileSystem() {}
 
-        File FindFile(const std::string);
+            virtual File FindFile(const std::string) = 0;
+
+        private:
+            bool m_IsZip;
+            std::string m_Path;
+        };
+
+        class ZipFileSystem : public VirtualFileSystem {
+        public:
+            ZipFileSystem(std::string);
+            ~ZipFileSystem();
+
+            File FindFile(const std::string);
 
         private:
 
-    };
+        };
 
-    class PhysicalFileSystem : public VirtualFileSystem{
-        PhysicalFileSystem(std::string);
-        ~PhysicalFileSystem();
+        class PhysicalFileSystem : public VirtualFileSystem {
+            PhysicalFileSystem(std::string);
+            ~PhysicalFileSystem();
 
-        File FindFile(const std::string);
+            File FindFile(const std::string);
 
         private:
-    };
+        };
 
-    class Filesystem {
-    public:
-        const std::vector<std::string> getFileNamesInDirectory(std::string, std::string);
+        class Filesystem {
+        public:
+            const std::vector<std::string> getFileNamesInDirectory(std::string, std::string);
 
-        bool FileExists(std::string);
+            bool FileExists(std::string);
 
-        bool Mount(std::string, std::string);
+            bool Mount(std::string, std::string);
 
-        bool FileSystemIsZip(File file);
+            bool FileSystemIsZip(File file);
 
-    private:
-        std::unordered_map<std::string, std::string> m_MountedSystems;
-        std::vector<File> m_Files;
-    };
+        private:
+            std::unordered_map<std::string, std::string> m_MountedSystems;
+            std::vector<File> m_Files;
+        };
+    }
 }
 

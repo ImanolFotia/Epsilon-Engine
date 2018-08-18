@@ -174,7 +174,7 @@ void PostProcess::SetupFramebuffer() {
 	tmpLight.type = 2;
 	m_Lights.push_back(tmpLight);
 
-	tmpLight.position = glm::vec4(-47, 10.5, -3, 1.0);
+	tmpLight.position = glm::vec4(-68, -26, -44, 1.0);
 	tmpLight.direction = glm::vec4(0.74, -0.5761, -0.60, 1.0);
 	tmpLight.color = glm::vec4(70, 158, 116, 1.0);
 	tmpLight.radius = 0.5f;

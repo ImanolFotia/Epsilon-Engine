@@ -4,19 +4,19 @@ std::string ResourceManager::requestTexture(std::string texPath)
 {
     try
     {
-        std::map<std::string, eTexture>::iterator it;
+        std::map<std::string, std::shared_ptr<eTexture> >::iterator it;
         //std::cout << "Loading texture: " << texPath << " ... " << std::endl;
         it = TextureList.find(texPath);
         if(it != TextureList.end())
         {
             //std::cout << "Texture already loaded, assigning existing one to object" << std::endl << std::endl;
-            return TextureList.at(it->first).getPath();
+            return TextureList.at(it->first)->getPath();
         }
         else
         {
             //std::cout << "Texture not loaded, reading it from hard drive"<< std::endl;
 
-            eTexture tmpTex(texPath.c_str());
+            std::shared_ptr<eTexture> tmpTex = (std::shared_ptr<eTexture>) new eTexture(texPath.c_str());
             TextureList.insert(std::make_pair(texPath, tmpTex));
             return texPath;
         }
@@ -148,8 +148,9 @@ GLuint ResourceManager::useTexture(std::string texPath)
 {
     try
     {
-        if(texPath.empty() != true)
-            return TextureList.at(texPath).getTextureID();
+        if(texPath.empty() != true){
+            return TextureList.at(texPath)->getTextureID();
+        }
         else
             return 0;
     }
@@ -195,11 +196,11 @@ int ResourceManager::requestTextureUsage(std::string texPath)
 {
     try
     {
-        std::map<std::string, eTexture>::iterator it;
+        std::map<std::string, std::shared_ptr<eTexture> >::iterator it;
         it = TextureList.find(texPath);
         if(it != TextureList.end())
         {
-            return TextureList.at(it->first).getTimesUsed();
+            return TextureList.at(it->first)->getTimesUsed();
         }
         else
         {
@@ -217,11 +218,11 @@ void ResourceManager::resetTextureUsage(std::string texPath)
 {
     try
     {
-        std::map<std::string, eTexture>::iterator it;
+        std::map<std::string, std::shared_ptr<eTexture> >::iterator it;
         it = TextureList.find(texPath);
         if(it != TextureList.end())
         {
-            TextureList.at(it->first).resetRequestCount();
+            TextureList.at(it->first)->resetRequestCount();
         }
         else
         {
@@ -237,9 +238,9 @@ void ResourceManager::resetTextureUsage(std::string texPath)
 
 void ResourceManager::destroyAllTextures()
 {
-    for(std::map<std::string, eTexture>::iterator itr = TextureList.begin(); itr != TextureList.end(); itr++)
+    for(std::map<std::string, std::shared_ptr<eTexture> >::iterator itr = TextureList.begin(); itr != TextureList.end(); itr++)
         {
-            itr->second.Destroy();
+            itr->second->Destroy();
         }
 }
 

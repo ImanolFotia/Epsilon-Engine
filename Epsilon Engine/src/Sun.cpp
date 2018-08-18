@@ -9,17 +9,23 @@
 
 Sun::Sun()
 {
-    eTexture tex("Sun.png");
-
-    this->TextureID = tex.getTextureID();
+    try{
+    tex = (std::shared_ptr<eTexture>) new eTexture("Sun.png");
+    this->TextureID = tex->getTextureID();
 
     this->radius = 30.0;
 
-    this->height = -30.0;
+    this->height = 30.0;
 
     PrepareVAO();
+    std::cout << "Sun texture ID " << TextureID << std::endl;
     //mMovement = 2.6;
     mMovement = 1.0;
+    }
+    catch(std::exception e)
+    {
+        std::cout << e.what() << std::endl;
+    }
 }
 
 void Sun::Render(Shader*& shader)

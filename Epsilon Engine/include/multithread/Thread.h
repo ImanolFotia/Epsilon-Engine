@@ -2,8 +2,9 @@
 
 #include <thread>
 #include <memory>
+#include <functional>
 
-namespace Thread {
+namespace Threading {
 
     class Thread {
     public:
@@ -12,10 +13,13 @@ namespace Thread {
 
     public:
         bool JoinThread() {
-            this->m_Thread->join()
+            if(this->isJoinable())
+                this->m_Thread->join()
         }
 
-        bool DetachThread() {}
+        bool DetachThread() {
+            mThread->detach();
+        }
 
         bool isJoinable() {
             this->m_Thread->joinable()
@@ -24,6 +28,8 @@ namespace Thread {
         std::thread::id getThreadID() {
             return this->m_ThreadID;
         }
+
+        static uint32_t getConcurrency(){ return std::thread::hardware_concurrency();}
 
     private:
 

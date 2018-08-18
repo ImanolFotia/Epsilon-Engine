@@ -158,8 +158,8 @@ public:
     std::unique_ptr<ShadowMap> shadowMap;
     std::unique_ptr<PostProcess> PP;
     std::vector<std::shared_ptr<EntityTemplate> > EntityList;
-    std::unique_ptr<Audio::Audio> m_AudioSystem;
-    std::unique_ptr<Audio::AudioListener> m_AudioListener;
+    std::unique_ptr<IO::Audio::Audio> m_AudioSystem;
+    std::unique_ptr<IO::Audio::AudioListener> m_AudioListener;
     std::shared_ptr<SphericalHarmonics> sphericalharmonics;
     std::thread t1;
     std::shared_ptr<ParticleSystem> m_ParticleSystem;
@@ -167,7 +167,7 @@ public:
    // std::shared_ptr<Pick> m_Pick;
     CAMERA_MODE m_CameraMode;
     std::vector<std::shared_ptr<CubeMap> > m_Cubemaps;
-    std::shared_ptr<CubeMap> mCubemap;
+    std::shared_ptr<CubeMap> mCubemap[2];
 
     std::shared_ptr<Game::Player> m_PlayerCapsule;
     std::shared_ptr<GUI> m_GUI;

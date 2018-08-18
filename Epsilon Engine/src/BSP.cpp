@@ -272,10 +272,11 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
                     break;
                 }
             }
+
             BSPTexture tex;
             BSPTexture normal;
             BSPTexture specular;
-            BSPTexture metallic;
+            BSPTexture metallic;/*
             if(texture != -1)
             {
                 tex.path = string(Textures.at(texture).path);
@@ -299,27 +300,31 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
                 metallicTextures.push_back(metallic);
             }
             else
-            {
-                tex.path = pTextures[pFace->textureID].strName;
-                tex.GLTextureID = eTexture((tex.path + ".png").c_str()).getTextureID();
+            {*/
+                tex.path = std::string(pTextures[pFace->textureID].strName) + ".png";
+                resm->addTextureToQueue(tex.path);
+                //tex.GLTextureID = eTexture((tex.path + ".png").c_str()).getTextureID();
                 tex.type = 1;
                 Textures.push_back(tex);
 
-                normal.path = string(pTextures[pFace->textureID].strName) + "_n";
-                normal.GLTextureID = eTexture((normal.path + ".png").c_str()).getTextureID();
+                normal.path = string(pTextures[pFace->textureID].strName) + "_n" + ".png";
+                resm->addTextureToQueue(normal.path);
+                //normal.GLTextureID = eTexture((normal.path + ".png").c_str()).getTextureID();
                 normal.type = 1;
                 normalTextures.push_back(normal);
 
-                specular.path = string(pTextures[pFace->textureID].strName) + "_s";
-                specular.GLTextureID = eTexture((specular.path + ".png").c_str()).getTextureID();
+                specular.path = string(pTextures[pFace->textureID].strName) + "_s" + ".png";
+                resm->addTextureToQueue(specular.path);
+                //specular.GLTextureID = eTexture((specular.path + ".png").c_str()).getTextureID();
                 specular.type = 1;
                 specularTextures.push_back(specular);
 
-                metallic.path = string(pTextures[pFace->textureID].strName) + "_m";
-                metallic.GLTextureID = eTexture((metallic.path + ".png").c_str()).getTextureID();
+                metallic.path = string(pTextures[pFace->textureID].strName) + "_m" + ".png";
+                resm->addTextureToQueue(metallic.path);
+                //metallic.GLTextureID = eTexture((metallic.path + ".png").c_str()).getTextureID();
                 metallic.type = 1;
                 metallicTextures.push_back(metallic);
-            }
+          //  }
 
             faceTexture[i] = tex;
             faceTexture_normal[i] = normal;
@@ -389,7 +394,12 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
         else
             glUniform1i(glGetUniformLocation(shader, "lightmap"), 1);
 */
-        this->Faces[faceIndex].RenderFace(shader, faceTexture[faceIndex].GLTextureID, faceTexture_normal[faceIndex].GLTextureID, faceTexture_specular[faceIndex].GLTextureID, faceTexture_metallic[faceIndex].GLTextureID, simpleRender);
+        this->Faces[faceIndex].RenderFace(shader,
+                                          /*faceTexture[faceIndex].GLTextureID*/ resm->useTexture(faceTexture[faceIndex].path),
+                                          /*faceTexture_normal[faceIndex].GLTextureID*/resm->useTexture(faceTexture_normal[faceIndex].path),
+                                          /*faceTexture_specular[faceIndex].GLTextureID*/resm->useTexture(faceTexture_specular[faceIndex].path),
+                                          /*faceTexture_metallic[faceIndex].GLTextureID*/resm->useTexture(faceTexture_metallic[faceIndex].path),
+                                          simpleRender);
     }
 
     int g_VisibleFaces;
