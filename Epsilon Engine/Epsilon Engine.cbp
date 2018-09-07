@@ -69,7 +69,7 @@
 					<Add directory="deppend/ini/include" />
 					<Add directory="include" />
 					<Add directory="deppend/bullet-2.82-r2704/src" />
-					<Add directory="deppend/openal-soft-1.17.2-bin/include" />
+					<Add directory="deppend/openal-soft-master/openal-soft-master/include" />
 					<Add directory="deppend/stb-master" />
 				</Compiler>
 				<Linker>
@@ -80,7 +80,7 @@
 					<Add option="deppend\ini\lib\libinih.a" />
 					<Add option="deppend\glew-2.0.0\lib\libglew32.dll.a" />
 					<Add option="-lgdi32" />
-					<Add option="deppend\openal-soft-1.17.2-bin\libs\Win32\libOpenAL32.dll.a" />
+					<Add option="deppend\openal-soft-master\openal-soft-master\build\libOpenAL32.dll.a" />
 					<Add option="-fopenmp" />
 					<Add option="-lgomp" />
 					<Add library="deppend/bullet-2.82-r2704/lib/libBulletSoftBody.a" />
@@ -118,6 +118,7 @@
 		<Unit filename="include/Frustum.h" />
 		<Unit filename="include/GUI/Button.h" />
 		<Unit filename="include/GUI/CheckBox.h" />
+		<Unit filename="include/GUI/Console.h" />
 		<Unit filename="include/GUI/Container.h" />
 		<Unit filename="include/GUI/GUI.h" />
 		<Unit filename="include/GUI/Label.h" />

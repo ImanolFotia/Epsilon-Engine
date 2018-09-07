@@ -121,7 +121,7 @@ void main()
 
 	if(ExtraComponents.y > 0.1)
 	{
-		Color = vec4(Diffuse*0.5, 1.0);
+		Color = vec4(Diffuse, 1.0);
 		return;
 	}
 
@@ -157,8 +157,8 @@ void main()
             light += SphereAreaLight(outBuffer.Lights[i].position.rgb,  outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts);
     }
 
-    light += TubeAreaLight(vec3(0, 0, 0), vec3(-38,11,6), vec3(63,11,6),  0.25, normalize(vec3(0.2,0.5,0.3)), 500);
-    light += TubeAreaLight(vec3(0, 0, 0), vec3(-38,11,-12), vec3(63,11,-12),  0.25, normalize(vec3(0.2,0.5,0.3)), 500);
+    //light += TubeAreaLight(vec3(0, 0, 0), vec3(-38,11,6), vec3(63,11,6),  0.25, normalize(vec3(200,147,3)), 500);
+    //light += TubeAreaLight(vec3(0, 0, 0), vec3(-38,11,-12), vec3(63,11,-12),  0.25, normalize(vec3(200,147,3)), 500);
 
 	Color = (vec4(vec3(light), 1.0));
 }

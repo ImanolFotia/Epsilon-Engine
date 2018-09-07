@@ -30,14 +30,20 @@ namespace IO {
         }
 
 
-        void Audio::addAudioElement(std::shared_ptr<AudioElement> element) {
-            m_AudioElementsCollection.push_back(element);
+        void Audio::addAudioElement(int ID, std::shared_ptr<AudioElement> element) {
+            m_AudioElementsCollection[ID] = element;
         }
 
         void Audio::PlayAudio() {
             for(auto i : m_AudioElementsCollection) {
-                i->Play();
+                if(i.second->getType() != MENU_SOUND)
+                    i.second->Play();
             }
+        }
+
+        void Audio::PlayByID(int ID)
+        {
+            m_AudioElementsCollection[ID]->Play();
         }
 
         bool Audio::setMasterVolume(float) {}

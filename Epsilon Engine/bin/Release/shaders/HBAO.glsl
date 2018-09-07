@@ -62,7 +62,7 @@ vec3 UVToViewSpace(vec2 uv, float z)
 
 vec3 GetViewPos(vec2 uv)
 {
-	float z = ViewSpaceZFromDepth(textureLod(gDepth, uv, 1.0).r);
+	float z = ViewSpaceZFromDepth(textureLod(gDepth, uv, 0.0).r);
 	//float z = texture(gDepth, uv).r;
 	return UVToViewSpace(uv, z);
 }
@@ -70,7 +70,7 @@ vec3 GetViewPos(vec2 uv)
 vec3 GetViewPosPoint(ivec2 uv)
 {
 	ivec2 coord = ivec2(gl_FragCoord.xy) + uv;
-	float z = texelFetch(gDepth, coord, 1).r;
+	float z = texelFetch(gDepth, coord, 0).r;
 	return UVToViewSpace(uv, z);
 }
 

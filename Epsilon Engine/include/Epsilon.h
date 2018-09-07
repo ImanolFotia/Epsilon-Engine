@@ -167,7 +167,7 @@ public:
    // std::shared_ptr<Pick> m_Pick;
     CAMERA_MODE m_CameraMode;
     std::vector<std::shared_ptr<CubeMap> > m_Cubemaps;
-    std::shared_ptr<CubeMap> mCubemap[2];
+    std::shared_ptr<CubeMap> mCubemap;
 
     std::shared_ptr<Game::Player> m_PlayerCapsule;
     std::shared_ptr<GUI> m_GUI;

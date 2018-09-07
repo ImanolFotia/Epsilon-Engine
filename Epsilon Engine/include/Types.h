@@ -120,7 +120,8 @@ enum AUDIO_TYPE {
     AMBIENT_SOUND = 0,
     STATIC_SOUND,
     DYNAMIC_SOUND,
-    MUSIC
+    MUSIC,
+    MENU_SOUND
 };
 
 struct t_light {

@@ -255,7 +255,7 @@ vec3 SphereAreaLight(in vec3 position, in float radius, in vec3 color, in float 
         vec3 brdf = nominator / denominator;
             
         // add to outgoing radiance Lo
-        float NdotL = LambertDiffuse(Normal, L);//orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.05, 1.0), 1.0);             
+        float NdotL = orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.05, 1.0), 1.0);             
         vec3 Lo = (kD * Diffuse / PI + brdf) * radiance * NdotL; 
         return Lo * normalize(color);
 }
@@ -301,13 +301,13 @@ vec3 TubeAreaLight(in vec3 position, in vec3 tubeStart,in vec3 tubeEnd, in float
         vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
         vec3 kS = F;
         vec3 kD = vec3(1.0) - kS;
-        kD *= clamp(1.0 - ExtraComponents.x, 0.0, 1.0);
+        kD *= clamp(1.0 - ExtraComponents.x, 0.05, 1.0);
 
-        float distance    = length(closestPoint - FragPos);
-        //float distance = length(closestPoint);
+        //float distance    = length(closestPoint - FragPos);
+        float distance = length(closestPoint);
         float watts = power;
         float attenuation = calculateAttenuation(watts, distance);//1.0 / (1.0 + 0.1/*factor*/ * pow(distance, 2));
-        attenuation *= smoothstep(watts, watts - 5.0, distance);
+        //attenuation *= smoothstep(watts, watts - 5.0, distance);
         vec3 radiance     = vec3(1.0) * attenuation;        
         
         // cook-torrance brdf
@@ -319,7 +319,7 @@ vec3 TubeAreaLight(in vec3 position, in vec3 tubeStart,in vec3 tubeEnd, in float
         vec3 brdf = nominator / denominator;
             
         // add to outgoing radiance Lo
-        float NdotL = LambertDiffuse(Normal, L);//orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.05, 1.0), 1.0);             
+        float NdotL = orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.05, 1.0), 1.0);             
         vec3 Lo = (kD * Diffuse / PI + brdf) * radiance * NdotL; 
         return Lo * normalize(color);
 }

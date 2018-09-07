@@ -29,6 +29,11 @@ public:
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glUniform2f(glGetUniformLocation(shader->getProgramID(), "Position"), (this->PositionX*0.5+0.5)*m_winWidth, (this->PositionY*0.5+0.5)*m_winHeight);
         glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "projection"), 1, GL_FALSE, &projection[0][0]);
+        if(this->hasLostFocus)
+            shader->PushUniform("color", glm::vec4(glm::vec3(0.0f, 0.0f, 0.0f), 0.5f) * 0.5f);
+        else if(this->isHover)
+            shader->PushUniform("color", glm::vec4(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f));
+        else{}
         m_Quad->Render();
         shader->Free();
         this->m_TextRendererInstance->RenderText(m_TextString,/**/(this->PositionX*0.5+0.5)-(m_TextRendererInstance->getHorizontalLength(m_TextString, 0.8)*0.5), this->PositionY*0.5+0.5, 0.8, glm::vec3(1,1,1));

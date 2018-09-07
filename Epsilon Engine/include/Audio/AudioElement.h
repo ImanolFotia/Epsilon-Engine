@@ -65,6 +65,8 @@ namespace IO {
                         alSourcef(m_AudioID,AL_CONE_OUTER_ANGLE,360);
                         alSource3f(m_AudioID, AL_VELOCITY, 0.0,0.0,0.0);
                     }
+
+                    alSourcei(m_AudioID,AL_BUFFER,m_BufferID);
                 } catch(...) {
                     throw;
                 }
@@ -88,14 +90,13 @@ namespace IO {
 
             void Play() {
                 ALint source_state;
-                alSourcei(m_AudioID, AL_LOOPING,AL_TRUE);
                 alGetSourcei(m_AudioID, AL_SOURCE_STATE, &source_state);
 
                 if(source_state != AL_PLAYING) {
 
-                    alSourcei(m_AudioID,AL_BUFFER,m_BufferID);
 
                     if(this->m_Type == DYNAMIC_SOUND) {
+                        alSourcei(m_AudioID, AL_LOOPING,AL_TRUE);
                         alSourcei(m_AudioID, AL_SOURCE_RELATIVE, AL_FALSE);
                         alSourcef(m_AudioID,AL_GAIN,1);
                         alSourcef(m_AudioID,AL_PITCH,1);
@@ -104,10 +105,33 @@ namespace IO {
                         alSourcef(m_AudioID,AL_CONE_INNER_ANGLE,360);
                         alSourcef(m_AudioID,AL_CONE_OUTER_ANGLE,360);
                         alSource3f(m_AudioID, AL_VELOCITY, 0.0,0.0,0.0);
+                        alSourcePlay(m_AudioID);
+                    } else if(this->m_Type == STATIC_SOUND) {
+                        alSourcei(m_AudioID, AL_LOOPING,AL_TRUE);
+                        alSourcePlay(m_AudioID);
+                    } else if(this->m_Type == MUSIC) {
+                        alSourcei(m_AudioID, AL_LOOPING,AL_TRUE);
+                        alSourcePlay(m_AudioID);
                     }
 
-                    alSourcePlay(m_AudioID);
                 }
+
+                if(this->m_Type == MENU_SOUND) {
+                    //if(source_state != AL_PLAYING){
+                    alSourcef(m_AudioID,AL_GAIN,0);
+                    alSourceStop(m_AudioID);
+                    //}
+                    //else{
+                    alSourcei(m_AudioID, AL_LOOPING,AL_FALSE);
+                    alSourcePlay(m_AudioID);
+                    alSourcef(m_AudioID,AL_GAIN,1);
+                    //}
+
+                }
+            }
+
+            AUDIO_TYPE getType() {
+                return m_Type;
             }
 
         private:

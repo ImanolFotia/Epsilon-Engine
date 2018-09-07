@@ -34,151 +34,67 @@ void PostProcess::SetupFramebuffer() {
 
 	t_light tmpLight;
 
-	tmpLight.position = glm::vec4(84, 6, -3, 1.0);
+	tmpLight.position = glm::vec4(12, 11, 0, 1.0);
 	tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-	tmpLight.color = glm::vec4(1.0,1.0,1.0, 1.0);
-	tmpLight.radius = 2.5f;
-	tmpLight.watts = 1000.0f;
-	tmpLight.type = 2;
-	m_Lights.push_back(tmpLight);
-
-	tmpLight.position = glm::vec4(60, 6, -3, 1.0);
-	tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-	tmpLight.color = glm::vec4(1.0,1.0,1.0, 1.0);
-	tmpLight.radius = 1.f;
-	tmpLight.watts = 50.0f;
-	tmpLight.type = 2;
-	m_Lights.push_back(tmpLight);
-
-	tmpLight.position = glm::vec4(11, 21, -3, 1.0);
-	tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-	tmpLight.color = glm::vec4(0.2,0.5,0.3, 1.0);
-	tmpLight.radius = 1.f;
-	tmpLight.watts = 50.0f;
-	tmpLight.type = 2;
-	m_Lights.push_back(tmpLight);
-	/*
-	    tmpLight.position = glm::vec4(43, 17, -43, 1.0);
-	    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-	    tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
-	    tmpLight.radius = 1.f;
-	    tmpLight.watts = 50.0f;
-	    tmpLight.type = 2;
-	    m_Lights.push_back(tmpLight);
-
-	    tmpLight.position = glm::vec4(90, 17, -43, 1.0);
-	    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-	    tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
-	    tmpLight.radius = 1.f;
-	    tmpLight.watts = 50.0f;
-	    tmpLight.type = 2;
-	    m_Lights.push_back(tmpLight);
-
-	    tmpLight.position = glm::vec4(58, 17, 49, 1.0);
-	    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-	    tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
-	    tmpLight.radius = 1.f;
-	    tmpLight.watts = 50.0f;
-	    tmpLight.type = 2;
-	    m_Lights.push_back(tmpLight);
-
-	    tmpLight.position = glm::vec4(-78, 17, 46, 1.0);
-	    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-	    tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
-	    tmpLight.radius = 1.f;
-	    tmpLight.watts = 50.0f;
-	    tmpLight.type = 2;
-	    m_Lights.push_back(tmpLight);
-
-	    tmpLight.position = glm::vec4(-90, 17, 16, 1.0);
-	    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-	    tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
-	    tmpLight.radius = 1.f;
-	    tmpLight.watts = 50.0f;
-	    tmpLight.type = 2;
-	    m_Lights.push_back(tmpLight);
-
-	    tmpLight.position = glm::vec4(-82, 17, -20, 1.0);
-	    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-	    tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
-	    tmpLight.radius = 1.f;
-	    tmpLight.watts = 50.0f;
-	    tmpLight.type = 2;
-	    m_Lights.push_back(tmpLight);
-
-	    tmpLight.position = glm::vec4(-30, 17, -54, 1.0);
-	    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-	    tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
-	    tmpLight.radius = 1.f;
-	    tmpLight.watts = 50.0f;
-	    tmpLight.type = 2;
-	    m_Lights.push_back(tmpLight);
-
-	    tmpLight.position = glm::vec4(-30, 17, -17, 1.0);
-	    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-	    tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
-	    tmpLight.radius = 1.f;
-	    tmpLight.watts = 50.0f;
-	    tmpLight.type = 2;
-	    m_Lights.push_back(tmpLight);
-
-	    tmpLight.position = glm::vec4(3, 0.5, -52, 1.0);
-	    tmpLight.direction = glm::vec4(0, 0, 1, 1.0);
-	    tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
-	    tmpLight.radius = 0.5f;
-	    tmpLight.watts = 50.0f;
-	    tmpLight.type = 1;
-	    m_Lights.push_back(tmpLight);
-
-	    tmpLight.position = glm::vec4(-8, 0.0, -29, 1.0);
-	    tmpLight.direction = glm::vec4(0, 1, 0, 1.0);
-	    tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
-	    tmpLight.radius = 0.2f;
-	    tmpLight.watts = 50.0f;
-	    tmpLight.type = 1;
-	    m_Lights.push_back(tmpLight);
-
-
-	    tmpLight.position = glm::vec4(0.0, 24.0, 0.0, 1.0);
-	    tmpLight.direction = glm::vec4(0, 1, 0, 1.0);
-	    tmpLight.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
-	    tmpLight.radius = 0.2f;
-	    tmpLight.watts = 50.0f;
-	    tmpLight.type = 0;
-	    m_Lights.push_back(tmpLight);
-
-
-	    tmpLight.position = glm::vec4(49.0, 16, -13.0, 1.0);
-	    tmpLight.direction = glm::vec4(1, 1, 0, 1.0);
-	    tmpLight.color = glm::vec4(1.0, 0.5, 0.3, 1.0);
-	    tmpLight.radius = 1.5f;
-	    tmpLight.watts = 50.0f;
-	    tmpLight.type = 2;
-	    m_Lights.push_back(tmpLight);
-
-
-	tmpLight.position = glm::vec4(-29.3, 8.5, 18.5, 1.0);
-	tmpLight.direction = glm::vec4(0.74, -0.5761, -0.60, 1.0);
-	tmpLight.color = glm::vec4(70, 158, 116, 1.0);
+	tmpLight.color = glm::vec4(1, 0.8, 0.8, 1.0);
 	tmpLight.radius = 0.5f;
-	tmpLight.watts = 50.0f;
-	tmpLight.type = 1;
+	tmpLight.watts = 150.0f;
+	tmpLight.type = 2;
 	m_Lights.push_back(tmpLight);
-	*/
 
-	tmpLight.position = glm::vec4(-28.5, 13.5, 16.0, 1.0);
+	tmpLight.position = glm::vec4(-10, 12, 0, 1.0);
+	tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+	tmpLight.color = glm::vec4(1, 0.8, 0.8, 1.0);
+	tmpLight.radius = 0.5f;
+	tmpLight.watts = 150.0f;
+	tmpLight.type = 2;
+	m_Lights.push_back(tmpLight);
+
+	tmpLight.position = glm::vec4(-40, 15, 0, 1.0);
+	tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+	tmpLight.color = glm::vec4(1, 0.8, 0.8, 1.0);
+	tmpLight.radius = 0.5f;
+	tmpLight.watts = 150.0f;
+	tmpLight.type = 2;
+	m_Lights.push_back(tmpLight);
+
+	tmpLight.position = glm::vec4(-64.5, 7.5, 0.0, 1.0);
 	tmpLight.direction = glm::vec4(0.0, -1.0, 0.0, 1.0);
-	tmpLight.color = glm::vec4(70, 158, 116, 1.0);
-	tmpLight.radius = 0.25f;
-	tmpLight.watts = 50.0f;
+	tmpLight.color = glm::vec4(1, 0.8, 0.8, 1.0);
+	tmpLight.radius = 0.5f;
+	tmpLight.watts = 150.0f;
 	tmpLight.type = 2;
 	m_Lights.push_back(tmpLight);
 
-	tmpLight.position = glm::vec4(-68, -26, -44, 1.0);
+	tmpLight.position = glm::vec4(-90, 7, 12, 1.0);
 	tmpLight.direction = glm::vec4(0.74, -0.5761, -0.60, 1.0);
-	tmpLight.color = glm::vec4(70, 158, 116, 1.0);
-	tmpLight.radius = 0.5f;
-	tmpLight.watts = 450.0f;
+	tmpLight.color = glm::vec4(1, 0.8, 0.8, 1.0);
+	tmpLight.radius = 0.25f;
+	tmpLight.watts = 300.0f;
+	tmpLight.type = 2;
+	m_Lights.push_back(tmpLight);
+
+	tmpLight.position = glm::vec4(-90, 7, -12, 1.0);
+	tmpLight.direction = glm::vec4(0.74, -0.5761, -0.60, 1.0);
+	tmpLight.color = glm::vec4(1, 0.8, 0.8, 1.0);
+	tmpLight.radius = 0.25f;
+	tmpLight.watts = 300.0f;
+	tmpLight.type = 2;
+	m_Lights.push_back(tmpLight);
+
+	tmpLight.position = glm::vec4(-112, 7, -12, 1.0);
+	tmpLight.direction = glm::vec4(0.74, -0.5761, -0.60, 1.0);
+	tmpLight.color = glm::vec4(1, 0.8, 0.8, 1.0);
+	tmpLight.radius = 0.25f;
+	tmpLight.watts = 300.0f;
+	tmpLight.type = 2;
+	m_Lights.push_back(tmpLight);
+
+	tmpLight.position = glm::vec4(-112, 7, 12, 1.0);
+	tmpLight.direction = glm::vec4(0.74, -0.5761, -0.60, 1.0);
+	tmpLight.color = glm::vec4(1, 0.8, 0.8, 1.0);
+	tmpLight.radius = 0.25f;
+	tmpLight.watts = 300.0f;
 	tmpLight.type = 2;
 
 	m_Lights.push_back(tmpLight);
@@ -453,8 +369,8 @@ void PostProcess::applySSAO(std::shared_ptr<Camera>& cam) {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	//glViewport(0,0,width, height);
 
-	//ssaoColorBufferBlur = this->blurImage(ssaoColorBuffer, true);
-
+	ssaoColorBufferBlur = this->blurImage(ssaoColorBuffer, true);
+/*
 	glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
 	glClear(GL_COLOR_BUFFER_BIT);
 	blurSSAO->Use();
@@ -462,7 +378,7 @@ void PostProcess::applySSAO(std::shared_ptr<Camera>& cam) {
 	glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
 	this->RenderQuad();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+*/
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glViewport(0,0,width, height);
@@ -710,16 +626,10 @@ void PostProcess::SSRPass(std::shared_ptr<Camera>& cam) {
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, 0);
-
-
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, 1);
-
-
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, 2);
-
-
 	glActiveTexture(GL_TEXTURE3);
 	glBindTexture(GL_TEXTURE_2D, 3);
 

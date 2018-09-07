@@ -475,7 +475,7 @@
 	<memory>
 	<typeinfo>
 
-1533083000 d:\epsilon\epsilon engine\include\types.h
+1535858172 d:\epsilon\epsilon engine\include\types.h
 	<btBulletDynamicsCommon.h>
 	<btBulletCollisionCommon.h>
 	<memory>
@@ -1071,7 +1071,7 @@
 	"../trigonometric.hpp"
 	"../matrix.hpp"
 
-1534363195 d:\epsilon\epsilon engine\include\texture.h
+1535095019 d:\epsilon\epsilon engine\include\texture.h
 	<iostream>
 	<string>
 	<vector>
@@ -1352,7 +1352,7 @@
 	<Physics/Physics.h>
 	<Patch.h>
 
-1534487256 source:d:\epsilon\epsilon engine\src\epsilon.cpp
+1535952166 source:d:\epsilon\epsilon engine\src\epsilon.cpp
 	<iostream>
 	<Epsilon.h>
 	<ProgramData.h>
@@ -1371,7 +1371,7 @@
 	<sys/Console.hpp>
 	<multithread/ThreadPool.hpp>
 
-1533080709 d:\epsilon\epsilon engine\include\epsilon.h
+1534959889 d:\epsilon\epsilon engine\include\epsilon.h
 	<map>
 	<GL/glew.h>
 	<GL/wglew.h>
@@ -1437,7 +1437,7 @@
 
 1237038326 d:\epsilon\epsilon engine\deppend\freetype2\include\freetype\config\ftheader.h
 
-1516919230 d:\epsilon\epsilon engine\include\postprocess.h
+1535854064 d:\epsilon\epsilon engine\include\postprocess.h
 	<GL/glew.h>
 	<Shader.h>
 	<camera.h>
@@ -1545,7 +1545,7 @@
 1497684054 d:\epsilon\epsilon engine\include\gui\container.h
 	<GUI/Widget.h>
 
-1526284255 d:\epsilon\epsilon engine\include\gui\widget.h
+1535862744 d:\epsilon\epsilon engine\include\gui\widget.h
 	<vector>
 	<memory>
 	<glm/glm.hpp>
@@ -1554,7 +1554,7 @@
 	<exception>
 	<Types.h>
 
-1526280605 d:\epsilon\epsilon engine\include\gui\panel.h
+1535857209 d:\epsilon\epsilon engine\include\gui\panel.h
 	<GUI/Widget.h>
 	<OpenGL/HelperFunctions/Quad.h>
 	<iostream>
@@ -1562,7 +1562,7 @@
 
 1492305027 d:\epsilon\epsilon engine\include\opengl\helperfunctions\quad.h
 
-1526280610 d:\epsilon\epsilon engine\include\gui\button.h
+1535856781 d:\epsilon\epsilon engine\include\gui\button.h
 	<GUI/Widget.h>
 	<Text.h>
 	<string>
@@ -1606,7 +1606,7 @@
 	<Particle.h>
 	<Shader.h>
 
-1534487256 d:\epsilon\epsilon engine\version.h
+1535952166 d:\epsilon\epsilon engine\version.h
 
 1489719397 d:\epsilon\epsilon engine\include\sys\cpuid.h
 	<string>
@@ -1674,7 +1674,7 @@
 	<iostream>
 	<Physics/CollisionInfo.h>
 
-1533255641 source:d:\epsilon\epsilon engine\src\postprocess.cpp
+1535854249 source:d:\epsilon\epsilon engine\src\postprocess.cpp
 	<PostProcess.h>
 	<iostream>
 	<ProgramData.h>
@@ -1808,7 +1808,7 @@
 
 1503872725 d:\epsilon\epsilon engine\include\opengl\helperfunctions\checkerror.h
 
-1534150362 source:d:\epsilon\epsilon engine\src\sun.cpp
+1535853033 source:d:\epsilon\epsilon engine\src\sun.cpp
 	<Sun.h>
 	<sys/KeyBoard.h>
 
@@ -3810,19 +3810,19 @@
 
 1523055549 d:\epsilon\epsilon engine\include\physics\collisioninfo.h
 
-1533070831 d:\epsilon\epsilon engine\include\audio\audio.h
-	<vector>
+1535858221 d:\epsilon\epsilon engine\include\audio\audio.h
+	<unordered_map>
 	<memory>
 	<Audio/AudioElement.h>
 
-1533080596 d:\epsilon\epsilon engine\include\audio\audioelement.h
+1535868965 d:\epsilon\epsilon engine\include\audio\audioelement.h
 	<AL/al.h>
 	<AL/alc.h>
 	<Types.h>
 	<Audio/Loaders/WAVFile.h>
 	<iostream>
 
-1533080662 d:\epsilon\epsilon engine\include\audio\loaders\wavfile.h
+1535860288 d:\epsilon\epsilon engine\include\audio\loaders\wavfile.h
 	<iostream>
 	<fstream>
 	<memory>
@@ -3833,7 +3833,7 @@
 	<AL/alc.h>
 	<glm/glm.hpp>
 
-1533080681 source:d:\epsilon\epsilon engine\src\audio\audio.cpp
+1535860838 source:d:\epsilon\epsilon engine\src\audio\audio.cpp
 	<Audio/Audio.h>
 
 1523055549 source:d:\epsilon\epsilon engine\src\physics\cubephysicobject.cpp
@@ -4548,4 +4548,8 @@
 	<stdexcept>
 	<condition_variable>
 	<type_traits>
+
+1535865893 d:\epsilon\epsilon engine\deppend\openal-soft-master\openal-soft-master\include\al\al.h
+
+1535865893 d:\epsilon\epsilon engine\deppend\openal-soft-master\openal-soft-master\include\al\alc.h
 

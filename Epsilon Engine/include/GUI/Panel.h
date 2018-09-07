@@ -24,6 +24,7 @@ public:
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glUniform2f(glGetUniformLocation(shader->getProgramID(), "Position"), (m_Position.x*0.5+0.5)*m_winWidth, (m_Position.y*0.5+0.5)*m_winHeight);
         glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "projection"), 1, GL_FALSE, &projection[0][0]);
+        shader->PushUniform("color", glm::vec4(glm::vec3(0.0f, 0.0f, 0.0f), 0.5f) * 0.5f);
         m_Quad->Render();
         shader->Free();
     }

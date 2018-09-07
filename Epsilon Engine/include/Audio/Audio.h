@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+#include <unordered_map>
 #include <memory>
 #include <Audio/AudioElement.h>
 
@@ -13,9 +13,10 @@ namespace IO {
 
         public:
 
-            void addAudioElement(std::shared_ptr<AudioElement> element);
+            void addAudioElement(int, std::shared_ptr<AudioElement> element);
 
             void PlayAudio();
+            void PlayByID(int);
 
             bool setMasterVolume(float);
             bool setMusicVolume(float);
@@ -30,7 +31,7 @@ namespace IO {
             ALCdevice* device;
             ALCcontext* context;
 
-            std::vector<std::shared_ptr<AudioElement>> m_AudioElementsCollection;
+            std::unordered_map<int, std::shared_ptr<AudioElement> > m_AudioElementsCollection;
         };
     }
 }

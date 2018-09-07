@@ -164,7 +164,6 @@ void Epsilon::InitResources(void) {
     t_CheckBox->m_TextRendererInstance = text;
     t_CheckBox->setText("CheckBox");
     t_Container->addWidget(t_CheckBox);
-
     t_ButtonSettings = (std::shared_ptr<Button>) new Button(0.15, 0.1, this->WIDTH, this->HEIGHT, "Settings");
     t_ButtonSettings->SizeX = 0.15;
     t_ButtonSettings->SizeY = 0.1;
@@ -208,10 +207,7 @@ void Epsilon::InitResources(void) {
     rM->m_PhysicsWorld = (std::shared_ptr<Physics::Physics>) new Physics::Physics();
     std::shared_ptr<EntityTemplate> tmpEnt;
     std::shared_ptr<Component::RenderComponent> Compmodel;
-    //mPatch = (std::shared_ptr<Patch>) new Patch(glm::vec3(-7,14,41), 10, 10, 15, "sponza/sponza_curtain_diff.tga");
-    //mCloth = (std::shared_ptr<Physics::ClothPhysicObject>) new Physics::ClothPhysicObject();
-    //rM->m_PhysicsWorld->getSoftDynamicsWorld()->addSoftBody(mCloth->addObject(rM->m_PhysicsWorld->softBodyWorldInfo, glm::vec3(-7,14,41), 10, 10, 15, 1+2).get());
-
+/*
             {
                 std::shared_ptr<EntityTemplate> tmpEnt;
                 tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(10,14,10), glm::vec3(4.0), glm::quat(-1.0, 0.0, 0.0, 0.0)));
@@ -224,7 +220,7 @@ void Epsilon::InitResources(void) {
                 tmpEnt->addComponent(ClothComponent);
                 EntityList.push_back(tmpEnt);
 
-            }
+            }*/
 
     RenderSplashScreen("Loading Shaders...");
     this->LoadShaders();
@@ -299,6 +295,7 @@ void Epsilon::InitResources(void) {
     tmpEnt->addComponent(Compmodel);
     EntityList.push_back(tmpEnt);
     */
+    /*
     for(int i = 0; i < 2; i++) {
         for(int j = 0; j < 2; j++) {
             tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-60+i*20, 1.0, -10+j*20), glm::vec3(0.1), glm::quat(-1.0, 0.0, 0.0, 0.0)));
@@ -308,7 +305,7 @@ void Epsilon::InitResources(void) {
             tmpEnt->addComponent(Compmodel);
             EntityList.push_back(tmpEnt);
         }
-    }
+    }*/
     /*
         tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(14, 10.0, 0.0), glm::vec3(4.0), glm::quat(-1.0, 0.0, 0.0, 0.0)));
         Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
@@ -334,7 +331,7 @@ void Epsilon::InitResources(void) {
         Compmodel->Fill("models/tree_o.eml", rM, "Main");
         tmpEnt->addComponent(Compmodel);
         EntityList.push_back(tmpEnt);
-
+*/
 tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(52, 0.0, 0.0), glm::vec3(2.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
 Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
 Compmodel->Fill("models/Rock_6.eml", rM, "Main");
@@ -345,8 +342,8 @@ tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(34,
 Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
 Compmodel->Fill("models/full_rock.eml", rM, "Main");
 tmpEnt->addComponent(Compmodel);
-EntityList.push_back(tmpEnt);*/
-
+EntityList.push_back(tmpEnt);
+/*
 
     /*
         	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(34, 3.8, 3.5), glm::vec3(3.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
@@ -394,13 +391,13 @@ EntityList.push_back(tmpEnt);*/
     Compmodel->Fill("models/BigBell.eml", rM, "Main");
     tmpEnt->addComponent(Compmodel);
     EntityList.push_back(tmpEnt);
-
+*/
     tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-13, 1.0, -3), glm::vec3(0.5), glm::quat(1.0, 0.0, 0.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
     Compmodel->Fill("models/zweihander.eml", rM, "Main");
     tmpEnt->addComponent(Compmodel);
     EntityList.push_back(tmpEnt);
-*/
+
     tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-58, 0.5, -3), glm::vec3(1.5), glm::quat(1.0, 0.0, 0.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
     Compmodel->Fill("models/column.eml", rM, "Main");
@@ -421,30 +418,30 @@ EntityList.push_back(tmpEnt);*/
         	tmpEnt->addComponent(Compmodel);
         	EntityList.push_back(tmpEnt);
 */
-/*
-        tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-27.8, 3.2, 14.0), glm::vec3(6.5), glm::quat(-1.0, 0.0, -1.0, 0.0)));
+
+        tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-120, -4.5, 13.5), glm::vec3(5.5), glm::quat(0.0, 0.0, 1.0, 0.0)));
         Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
         Compmodel->Fill("models/woodentable.eml", rM, "Main");
         tmpEnt->addComponent(Compmodel);
         EntityList.push_back(tmpEnt);
-*/
+/*
     tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-58, 0.5, -3), glm::vec3(1.0), glm::quat(0.0, 0.0, 1.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
     Compmodel->Fill("models/arch.eml", rM, "Main");
     tmpEnt->addComponent(Compmodel);
     EntityList.push_back(tmpEnt);
-
+*/
 
 ///godrays tutorial end
 
-    /*
-        tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-29, 7.65, 18.0), glm::vec3(2), glm::quat(-0.5, 0.0, -1.0, 0.0)));
+/*
+        tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-114, 1, 11.0), glm::vec3(2), glm::quat(-0.5, 0.0, -1.0, 0.0)));
         Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
         Compmodel->Fill("models/oldtv.eml", rM, "Main");
     //Compmodel->isTransparent = true;
 
         tmpEnt->addComponent(Compmodel);
-        EntityList.push_back(tmpEnt);*/
+        EntityList.push_back(tmpEnt);
 /*
     	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(13, 4, -2), glm::vec3(1.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
     	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
@@ -481,6 +478,12 @@ EntityList.push_back(tmpEnt);*/
         EntityList[8]->addComponent(MovComp);
     */
     this->LoadSound();
+
+    auto MenuAudio = [&]() -> void{m_AudioSystem->PlayByID(2);};
+
+    t_ButtonQuit->OnEntering(MenuAudio);
+    t_ButtonSettings->OnEntering(MenuAudio);
+    t_ButtonResume->OnEntering(MenuAudio);
 
     RenderSplashScreen("Loading Textures...");
     rM->loadQueuedTextures();
@@ -522,8 +525,8 @@ EntityList.push_back(tmpEnt);*/
     shadowMap->UnbindShadowFrameBuffer();
 
 
-    this->mCubemap[0] = (std::shared_ptr<CubeMap>) new CubeMap(54, glm::vec3(0, 5, 0));
-    this->mCubemap[1] = (std::shared_ptr<CubeMap>) new CubeMap(55, glm::vec3(3, 7, 30));
+    this->mCubemap = (std::shared_ptr<CubeMap>) new CubeMap(54, glm::vec3(-100, 2, 0));
+    //this->mCubemap[1] = (std::shared_ptr<CubeMap>) new CubeMap(55, glm::vec3(3, 7, 30));
 
 
     glClearColor(0.1, 0.1, 0.1, 1.0);
@@ -536,11 +539,11 @@ EntityList.push_back(tmpEnt);*/
     glDisable(GL_CULL_FACE);
 
 
-    SphericalHarmonics::SphericalHarmonicsFormat sphStruct[2];
+    SphericalHarmonics::SphericalHarmonicsFormat sphStruct;
     Shaders["CubeMap"]->Use();
-    for(int a = 0; a < 2; a++) {
+    //for(int a = 0; a < 2; a++) {
         for(int i = 0; i < 6; ++i) {
-            this->mCubemap[a]->CaptureEnvironment(i);
+            this->mCubemap->CaptureEnvironment(i);
 
             /****************************************************************************/
             glEnable(GL_CULL_FACE);
@@ -558,9 +561,9 @@ EntityList.push_back(tmpEnt);*/
                     Shaders["CubeMap"]->PushUniform("model", Model);
                     glUniformMatrix4fv(glGetUniformLocation(Shaders["CubeMap"]->getProgramID(), "lightSpaceMatrix"), 1, GL_FALSE, &shadowMap->getLightSpaceMatrix()[0][0]);
                     glUniformMatrix4fv(glGetUniformLocation(Shaders["CubeMap"]->getProgramID(), "depthBias"), 1, GL_FALSE, &shadowMap->getBiasMatrix()[0][0]);
-                    this->mCubemap[a]->mMainShader->PushUniform("lightDir", sun->Direction);
+                    this->mCubemap->mMainShader->PushUniform("lightDir", sun->Direction);
                     glActiveTexture(GL_TEXTURE5);
-                    this->mCubemap[a]->mMainShader->PushUniform("shadowMap", 5);
+                    this->mCubemap->mMainShader->PushUniform("shadowMap", 5);
                     glBindTexture(GL_TEXTURE_2D, shadowMap->getShadowTextureID());
                 }
                 EntityList[i]->Render();
@@ -577,26 +580,26 @@ EntityList.push_back(tmpEnt);*/
 
             Shaders["CubeMap"]->PushUniform("model", cModel);
             glCullFace(GL_FRONT);
-            BSPMap->Frustum.CalculateFrustum(glm::mat4(this->mCubemap[a]->captureProjection * this->mCubemap[a]->captureViews[i]), cModel);
+            BSPMap->Frustum.CalculateFrustum(glm::mat4(this->mCubemap->captureProjection * this->mCubemap->captureViews[i]), cModel);
 
             glUniformMatrix4fv(glGetUniformLocation(Shaders["CubeMap"]->getProgramID(), "lightSpaceMatrix"), 1, GL_FALSE, &shadowMap->getLightSpaceMatrix()[0][0]);
             glUniformMatrix4fv(glGetUniformLocation(Shaders["CubeMap"]->getProgramID(), "depthBias"), 1, GL_FALSE, &shadowMap->getBiasMatrix()[0][0]);
-            this->mCubemap[a]->mMainShader->PushUniform("lightDir", sun->Direction);
+            this->mCubemap->mMainShader->PushUniform("lightDir", sun->Direction);
             glActiveTexture(GL_TEXTURE5);
-            this->mCubemap[a]->mMainShader->PushUniform("shadowMap", 5);
+            this->mCubemap->mMainShader->PushUniform("shadowMap", 5);
             glBindTexture(GL_TEXTURE_2D, shadowMap->getShadowTextureID());
-            BSPMap->RenderLevel(mCubemap[a]->getPosition(), Shaders["CubeMap"]->getProgramID(), true);
+            BSPMap->RenderLevel(mCubemap->getPosition(), Shaders["CubeMap"]->getProgramID(), true);
 
         }
-        mCubemap[a]->endCapturingEnvironment();
+        mCubemap->endCapturingEnvironment();
 
-        mCubemap[a]->genAmbientConvolution();
-        rM->addCubemap(this->mCubemap[a], mCubemap[a]->getPosition());
+        mCubemap->genAmbientConvolution();
+        rM->addCubemap(this->mCubemap, mCubemap->getPosition());
 
-        sph.CalculateCohefficients(this->mCubemap[a]->getTextureID(), 3);
+        sph.CalculateCohefficients(this->mCubemap->getTextureID(), 3);
 
-        sph.setId(this->mCubemap[a]->getID());
-        sphStruct[a] = sph.toStruct();
+        sph.setId(this->mCubemap->getID());
+        sphStruct = sph.toStruct();
 
         for(unsigned int i = 0; i < sph.getCohefficients().size(); i++) {
             std::cout << "vec3 " << sph.mCohefficientsNames[i] << " = vec3(" <<
@@ -605,7 +608,7 @@ EntityList.push_back(tmpEnt);*/
                       sph.getCohefficients()[i].z << ");" <<
                       std::endl;
         }
-    }
+    //}
 
     glCullFace(GL_BACK);
 
@@ -617,7 +620,7 @@ EntityList.push_back(tmpEnt);*/
 
     glGenBuffers(1, &AmbientLightSSBO);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, AmbientLightSSBO);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(SphericalHarmonics::SphericalHarmonicsFormat)*2, (const void*)&sphStruct, GL_DYNAMIC_COPY);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(SphericalHarmonics::SphericalHarmonicsFormat), (const void*)&sphStruct, GL_DYNAMIC_COPY);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, AmbientLightSSBO);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
@@ -716,7 +719,7 @@ void Epsilon::LoadGeometry(void) {
 
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "lighting.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "clinic.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 
@@ -736,10 +739,14 @@ void Epsilon::LoadSound(void) {
         m_AudioSystem->addAudioElement(m_AudioElement);
     */
     std::shared_ptr<IO::Audio::AudioElement> m_AudioElement2 = (std::shared_ptr<IO::Audio::AudioElement>) new IO::Audio::AudioElement("sound/ambient.wav", MUSIC, glm::vec3(-28, 10, 15), glm::vec3(0,0,0));
-    m_AudioSystem->addAudioElement(m_AudioElement2);
+    m_AudioSystem->addAudioElement(0, m_AudioElement2);
 
     std::shared_ptr<IO::Audio::AudioElement> m_AudioElement3 = (std::shared_ptr<IO::Audio::AudioElement>) new IO::Audio::AudioElement("sound/flag.wav", STATIC_SOUND, glm::vec3(96, 16, 6), glm::vec3(0,0,0));
-    m_AudioSystem->addAudioElement(m_AudioElement3);
+    m_AudioSystem->addAudioElement(1, m_AudioElement3);
+
+
+    std::shared_ptr<IO::Audio::AudioElement> m_AudioElement4 = (std::shared_ptr<IO::Audio::AudioElement>) new IO::Audio::AudioElement("sound/hover.wav", MENU_SOUND, glm::vec3(96, 16, 6), glm::vec3(0,0,0));
+    m_AudioSystem->addAudioElement(2, m_AudioElement4);
 
     m_AudioListener = (std::unique_ptr<IO::Audio::AudioListener>) new IO::Audio::AudioListener();
 
@@ -753,9 +760,6 @@ void Epsilon::Render3D(Shader* shader) {
     glm::mat4 TranslationMatrix;
     glm::mat4 RotationMatrix;
 
-    //mPatch->updateVertexBuffers(mCloth->getVertices());
-    //mPatch->Render(Shaders["Cloth"], eCamera->getViewMatrix(), eCamera->getProjectionMatrix());
-    //this->waterPlane->RenderWater(eCamera, PP->CopyTextureFBO->getRenderTargetHandler(0), sun->Direction);
     shader->Use();
     /*
             Shaders["Terrain"]->Use();
@@ -1029,7 +1033,7 @@ void Epsilon::PollEvents(void) {
 
     Input::Joystick::PollJoystick();
 
-    if(glm::abs((timeGUI*60)-(etime*60)) > 10.0f) {
+    if(glm::abs((timeGUI*60)-(etime*60)) > 2.0f && onMenu) {
         timeGUI = this->etime;
         m_GUI->PollEvents(window);
     }
@@ -1046,7 +1050,7 @@ void Epsilon::PollEvents(void) {
         this->m_CameraMode = CAMERA_FIXED;
     } else {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        this->m_CameraMode = PLAYER_CONTROLLED;
+        this->m_CameraMode = NO_CLIP;
     }
 
     if(Input::KeyBoard::KEYS[Input::GLFW::Key::N])
@@ -1104,7 +1108,7 @@ void Epsilon::MainLoop(void) {
         if(!onMenu)
             this->ComputeCamera(m_CameraMode, glm::vec3(48.4247, 8.1507, -12.9128), glm::vec3(-0.785454, 0.0299956, 0.618193));
 
-        this->ProcessAudio();
+        //this->ProcessAudio();
 
 
         while( timeBehind >= 0.016 ) {
@@ -1238,12 +1242,12 @@ void Epsilon::RenderFrame(void) {
     glEnable(GL_DEPTH_CLAMP);
     this->RenderSkybox(false);
     glDisable(GL_DEPTH_CLAMP);
-
+/*
     glDisable(GL_BLEND);
     this->waterPlane->RenderWater(eCamera, PP->CopyTextureFBO->getRenderTargetHandler(0), glm::normalize(glm::vec3(83, 6, -3) - glm::vec3(0, 6, -3)), PP->gDepth);
     glEnable(GL_BLEND);
-
-    this->RenderParticles();
+*/
+    //this->RenderParticles();
     PP->ShowPostProcessImage(this->frametime, (int)this->onMenu, this->sun->Direction, this->eCamera);
     glEnable(GL_BLEND);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

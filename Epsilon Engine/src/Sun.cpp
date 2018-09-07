@@ -15,7 +15,7 @@ Sun::Sun()
 
     this->radius = 30.0;
 
-    this->height = 30.0;
+    this->height = -30.0;
 
     PrepareVAO();
     std::cout << "Sun texture ID " << TextureID << std::endl;

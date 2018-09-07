@@ -179,7 +179,7 @@ void main() {
     DOFRadius = clamp(dDepth * 15.0, 0.0, 0.85);
 
 
-  composite = Bokeh(TexCoords, DOFRadius, .10, 1.0);
+  //composite = Bokeh(TexCoords, DOFRadius, .10, 1.0);
 
   //composite = textureDistorted(compositeImage, TexCoords, normalize(fragcoord - vec2(0.0)), 0.001*pow(length((fragcoord * 2.0 - 1.0) - vec2(0.0)), 3.0)).rgb;
 

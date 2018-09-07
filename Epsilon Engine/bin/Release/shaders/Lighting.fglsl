@@ -268,8 +268,9 @@ void main()
       }
     }
 
-    light += TubeAreaLight(vec3(0, 0, 0), vec3(-40,11,6), vec3(63,11,6),  0.25, normalize(vec3(0.2,0.5,0.3)), 500);
-    light += TubeAreaLight(vec3(0, 0, 0), vec3(-40,11,-12), vec3(63,11,-12),  0.25, normalize(vec3(0.2,0.5,0.3)), 500);
+    //light += TubeAreaLight(vec3(0, 0, 0), vec3(-40,11,6), vec3(63,11,6),  0.1, normalize(vec3(200,147,36)), 250);
+    //light += TubeAreaLight(vec3(0, 0, 0), vec3(-40,11,-12), vec3(63,11,-12),  0.1, normalize(vec3(200,147,36)), 250);
+    //light += TubeAreaLight(vec3(0, 0, 0), vec3(-48,35,-113), vec3(-48,35,-170),  0.3, normalize(vec3(200,147,36)), 500);
     //light += calculatePointPBR(viewPos, vec3(1.0));
     light += max(ambient, 0.0);
     const float lowerlimit = 0.0;

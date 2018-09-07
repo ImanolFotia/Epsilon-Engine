@@ -251,6 +251,7 @@ std::shared_ptr<FrameBuffer<int> > BRDFFramebuffer;
     GLuint gWorldSpacePosition;
     GLuint gLightAccumulation;
     GLuint mLastFrametexture;
+    GLuint mBlurredSSR;
     GLuint BRDF = 0;
     GLuint ssbo = 0;
     std::shared_ptr<eTexture> lensColor;
