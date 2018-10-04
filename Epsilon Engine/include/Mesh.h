@@ -64,7 +64,7 @@ public:
         ///cout << "number of textures for this mesh: " << textures.size() << endl;
 
         /// Now that we have all the required data, set the vertex buffers and its attribute pointers.
-        this->setupMesh();
+        //this->setupMesh();
     }
 
     ~Mesh()
@@ -84,14 +84,14 @@ public:
         glBindTexture(GL_TEXTURE_2D, this->textures[0].id);
 
         glBindVertexArray(this->VAO);
-        glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
+        glCache::glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     }
 
     void DrawNoTexture()
     {
         glBindVertexArray(this->VAO);
-        glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
+        glCache::glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     }
 
@@ -102,7 +102,7 @@ public:
         glDeleteVertexArrays(1, &VAO);
     }
 
-private:
+public:
     /**  Render data  */
     GLuint VAO, VBO, EBO;
 

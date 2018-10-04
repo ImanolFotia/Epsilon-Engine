@@ -9,7 +9,7 @@ public:
 
     void Draw(GLuint shader, GLuint texture) {
 
-        glUseProgram(shader);
+        glCache::glUseProgram(shader);
         glActiveTexture(GL_TEXTURE0);
         glUniform1i(glGetUniformLocation(shader, "tex"), 0);
         glBindTexture(GL_TEXTURE_2D, texture);
@@ -43,7 +43,7 @@ void RenderQuad()
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
     }
     glBindVertexArray(quadVAO);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glCache::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glBindVertexArray(0);
 
 }

@@ -38,12 +38,12 @@ void Sun::Render(Shader*& shader)
     glBindTexture(GL_TEXTURE_2D, this->TextureID);
 
     glUniform3f(glGetUniformLocation(shader->getProgramID(), "sunPos"), this->Position.x, this->Position.y, this->Position.z);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glCache::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindVertexArray(0);
-    glUseProgram(0);
+    glCache::glUseProgram(0);
     glDepthFunc(GL_LESS);
 
 }

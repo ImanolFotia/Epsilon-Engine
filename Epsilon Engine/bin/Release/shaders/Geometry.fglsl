@@ -27,6 +27,7 @@ uniform vec3 viewPos;
 uniform float time;
 uniform int CubemapID;
 uniform mat4 projection;
+uniform bool parallaxOn;
 
 float NEAR = 0.1;
 float FAR = 3000.0;
@@ -274,10 +275,10 @@ void main()
     discard;
 
   vec2 texCoords;  
-  if(texture(texture_height, fs_in.TexCoords).b > 0.0)
-  texCoords = ParallaxMapping(fs_in.TexCoords, Dir);
+  if(texture(texture_height, fs_in.TexCoords).b > 0.0 && parallaxOn)
+    texCoords = ParallaxMapping(fs_in.TexCoords, Dir);
   else
-  texCoords = fs_in.TexCoords;
+    texCoords = fs_in.TexCoords;
 
 
   //vec3 exNormal = normalize(perturb_normal(fs_in.Normal, normalize(fs_in.wFragPos - viewPos), texCoords));

@@ -167,6 +167,12 @@ GLFWwindow* InitEngine(const char* ProgramName) {
     glfwSetJoystickCallback(Input::Joystick::JoystickCallback);
     //std::cout << "New joystick connected: " << glfwGetJoystickName(GLFW_JOYSTICK_1) << std::endl;
 
+    glfwJoystickPresent(GLFW_JOYSTICK_1);
+    glfwJoystickPresent(GLFW_JOYSTICK_2);
+    glfwJoystickPresent(GLFW_JOYSTICK_3);
+    glfwJoystickPresent(GLFW_JOYSTICK_4);
+    glfwJoystickPresent(GLFW_JOYSTICK_5);
+
     glfwSwapInterval(DATA.VSYNC);
 
     //delete[] Monitor;

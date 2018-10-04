@@ -14,6 +14,7 @@
 #include <glm/glm.hpp>
 
 #include <Types.h>
+#include <OpenGL/GlCache.h>
 
 class Shader
 {
@@ -36,10 +37,10 @@ public:
     }
 
     void Use(void)
-    {   glUseProgram(this->ProgramID); }
+    {   glCache::glUseProgram(this->ProgramID); }
 
     void Free(void)
-    {   glUseProgram(0); }
+    {   glCache::glUseProgram(0); }
 
     GLuint generateFragmentProgram(std::string);
 

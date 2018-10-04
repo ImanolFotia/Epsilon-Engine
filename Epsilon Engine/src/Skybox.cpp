@@ -29,6 +29,6 @@ void Skybox::Render(std::shared_ptr<Camera> & camera, Shader* SkyShader, float e
     glUniform1f(glGetUniformLocation(SkyShader->getProgramID(), "time"), glfwGetTime());
     glUniform1i(glGetUniformLocation(SkyShader->getProgramID(), "renderDepth"), state);
     skydome->DrawNoTexture();
-    glUseProgram(0);
+    glCache::glUseProgram(0);
     glDepthFunc(GL_LESS);
 }

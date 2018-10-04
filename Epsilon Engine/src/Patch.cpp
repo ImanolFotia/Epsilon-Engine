@@ -42,7 +42,7 @@ void Patch::Render(Shader* inShader, glm::mat4 viewMatrix, glm::mat4 projectionM
     glBindTexture(GL_TEXTURE_2D, this->mNormalTexture->getTextureID());
     inShader->PushUniform("texture1", 1);
 
-    glDrawElements(GL_TRIANGLES, this->mIndices.size(), GL_UNSIGNED_INT, 0);
+    glCache::glDrawElements(GL_TRIANGLES, this->mIndices.size(), GL_UNSIGNED_INT, 0);
 
     inShader->Free();
     glBindVertexArray(0);
@@ -53,7 +53,7 @@ void Patch::RenderShadows()
 {
     glDisable(GL_CULL_FACE);
     glBindVertexArray(this->VAO);
-    glDrawElements(GL_TRIANGLES, this->mIndices.size(), GL_UNSIGNED_INT, 0);
+    glCache::glDrawElements(GL_TRIANGLES, this->mIndices.size(), GL_UNSIGNED_INT, 0);
     glEnable(GL_CULL_FACE);
     glBindVertexArray(0);
 }
@@ -75,7 +75,7 @@ void Patch::Render(Shader inShader, glm::mat4 viewMatrix, glm::mat4 projectionMa
     glBindTexture(GL_TEXTURE_2D, this->mNormalTexture->getTextureID());
     inShader.PushUniform("texture1", 1);
 
-    glDrawElements(GL_TRIANGLES, this->mIndices.size(), GL_UNSIGNED_INT, 0);
+    glCache::glDrawElements(GL_TRIANGLES, this->mIndices.size(), GL_UNSIGNED_INT, 0);
 
     inShader.Free();
     glBindVertexArray(0);

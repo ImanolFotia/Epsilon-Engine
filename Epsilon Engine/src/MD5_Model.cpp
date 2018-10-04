@@ -2,6 +2,7 @@
 #include <iostream>
 #include <MD5_Model.h>
 #include <Texture.h>
+#include <OpenGL/GlCache.h>
 MD5Model::MD5Model()
     : m_iMD5Version(-1)
     , m_iNumJoints(0)
@@ -661,7 +662,7 @@ void MD5Model::RenderMesh( const Mesh& mesh, GLuint shader )
 
     glBindVertexArray(mesh.m_VAO);
 
-    glDrawElements( GL_TRIANGLES, mesh.m_IndexBuffer.size(), GL_UNSIGNED_INT, (GLvoid*)0);
+    glCache::glDrawElements( GL_TRIANGLES, mesh.m_IndexBuffer.size(), GL_UNSIGNED_INT, (GLvoid*)0);
     glBindTexture( GL_TEXTURE_2D, 0 );
 
 }
@@ -696,7 +697,7 @@ void MD5Model::RenderSkeleton()
     {
 
         glBindVertexArray(m_Skeletons[i].VAO);
-        glDrawArrays( GL_LINES, 0, 2);
+        glCache::glDrawArrays( GL_LINES, 0, 2);
         glBindVertexArray(0);
     }
 
@@ -723,5 +724,5 @@ void MD5Model::RenderJoints()
     glBindVertexArray(0);
 
     glBindVertexArray(m_JointDrawInfo.VAO);
-    glDrawArrays( GL_POINTS, 0, m_JointDrawInfo.Info.size()/4);
+    glCache::glDrawArrays( GL_POINTS, 0, m_JointDrawInfo.Info.size()/4);
 }

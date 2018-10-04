@@ -14,7 +14,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <Shader.h>
-
+#define nop 1+1
 class Text {
 
 public:
@@ -80,6 +80,7 @@ public:
             Characters.insert(std::pair<GLchar, Character>(c, character));
         }
         glBindTexture(GL_TEXTURE_2D, 0);
+        calculateHeight();
         /// Destroy FreeType once we're finished
         FT_Done_Face(face);
         FT_Done_FreeType(ft);
@@ -112,9 +113,25 @@ public:
 
             GLfloat w = ch.Size.x * scale;
             horizontalScale += w;
-            GLfloat h = ch.Size.y * scale;
         }
-        return horizontalScale/WIDTH;
+        return glm::abs(horizontalScale/WIDTH);
+    }
+
+    void calculateHeight()
+    {
+        std::map<GLchar, Character>::const_iterator c;
+        float v = 0.0;
+        for (c = Characters.begin(); c != Characters.end(); c++) {
+            Character ch = c->second;
+
+            GLfloat h = (ch.Size.y - ch.Bearing.y);
+            v = h>v?h:v;
+        }
+        textHeight = glm::abs(v/HEIGTH);
+    }
+
+    float getVerticalLength() {
+        return textHeight;
     }
 
     void RenderText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color) {
@@ -175,7 +192,7 @@ public:
             glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); // Be sure to use glBufferSubData and not glBufferData
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             /// Render quad
-            glDrawArrays(GL_TRIANGLES, 0, 6);
+            glCache::glDrawArrays(GL_TRIANGLES, 0, 6);
             /// Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
             x += (ch.Advance >> 6) * scale; /// Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
         }
@@ -189,6 +206,7 @@ private:
     int WIDTH, HEIGTH;
 
     bool calcLength = false;
+    float textHeight = 0.0f;
 
     struct Character {
         GLuint TextureID;   /// ID handle of the glyph texture

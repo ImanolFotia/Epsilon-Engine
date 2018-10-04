@@ -95,10 +95,10 @@ void main()
         vec3 MixedClouds = sqrt(vec3(vec3(Clouds.x * 0.2126 + Clouds.y * 0.7152 + Clouds.z * 0.0722)*1.5));
 
     	vec3 color = mix(TimeColor, MixedClouds, clamp(pow(mix(0.0, Clouds.x*3.0, Clouds.z), 3.0), 0.0, 1.0)) * 0.1 /** clamp(LightDirection.y, 0.1, 0.5)*/;
-
+        color = TimeColor;
         vec3 LightColor = normalize(vec3(218, 205, 118));
         float scattering  = max(dot(FragPos, LightDirection), 0.0);
-    	FragColor.rgb = color*1.1/*+(scattering*0.5)*/ /** max(0.1, LightDirection.y+0.2) */;
+    	FragColor.rgb = color*0.1/*+(scattering*0.5)*/ /** max(0.1, LightDirection.y+0.2) */;
         FragColor.a = 1.0;
 
 

@@ -23,6 +23,7 @@ namespace Physics {
 
 			std::shared_ptr<btBoxShape> CubeShape;
 			std::shared_ptr<btMotionState> motionState;
+			std::shared_ptr<btCompoundShape> m_ColShape;
 
 			virtual std::shared_ptr<btRigidBody> addObject(float /* Radius */, float /* Mass */) {
 				return nullptr;

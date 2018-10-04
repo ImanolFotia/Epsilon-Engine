@@ -285,7 +285,7 @@ class CubeMap {
 			}
 			// render Cube
 			glBindVertexArray(cubeVAO);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
+			glCache::glDrawArrays(GL_TRIANGLES, 0, 36);
 			glBindVertexArray(0);
 		}
 };

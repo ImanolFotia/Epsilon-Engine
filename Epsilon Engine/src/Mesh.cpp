@@ -33,7 +33,7 @@ void Mesh::Draw(Shader*& shader, std::shared_ptr<ResourceManager> resm, glm::vec
 
     /// Draw mesh
     glBindVertexArray(this->VAO);
-    glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
+    glCache::glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 
     glActiveTexture(GL_TEXTURE0);
@@ -80,7 +80,7 @@ void Mesh::Draw(GLuint shader, std::shared_ptr<ResourceManager> resm, glm::vec3 
 
     /// Draw mesh
     glBindVertexArray(this->VAO);
-    glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
+    glCache::glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 
     glActiveTexture(GL_TEXTURE0);

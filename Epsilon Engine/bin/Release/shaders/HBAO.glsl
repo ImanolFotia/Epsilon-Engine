@@ -30,8 +30,8 @@ float NegInvR2 = - 1.0 / R2;
 float TanBias = tan(45.0 * PI / 180.0);
 float MaxRadiusPixels = 50.0;
 
-int NumDirections = 4;
-int NumSamples = 4;
+uniform int NumDirections;
+uniform int NumSamples;
 
 in vec2 TexCoords;
 

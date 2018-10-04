@@ -22,6 +22,11 @@
 #include <Log.h>
 #include <sys/Console.hpp>
 #include <multithread/ThreadPool.hpp>
+#include <OpenGL/GlCache.h>
+
+GLenum glCache::CullFaceMode = 0;
+GLuint glCache::ShaderId = 0;
+unsigned glCache::DrawCalls = 0;
 
 using namespace std::placeholders;
 float mpos = -20.0;
@@ -73,17 +78,17 @@ Epsilon::Epsilon(GLFWwindow*& win) {
     cpu.printHardwareInformation();
 
     {
-        glEnable(GL_DEPTH_TEST);
+        glCache::glEnable(GL_DEPTH_TEST);
 
         glDepthFunc(GL_LESS);
 
-        glEnable(GL_MULTISAMPLE);
+        glCache::glEnable(GL_MULTISAMPLE);
 
-        glEnable(GL_CULL_FACE);
+        glCache::glEnable(GL_CULL_FACE);
 
         glShadeModel(GL_SMOOTH);
 
-        glEnable(GL_BLEND);
+        glCache::glEnable(GL_BLEND);
 
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
@@ -136,16 +141,17 @@ void Epsilon::InitResources(void) {
 
     this->WIDTH = DATA.WINDOW_WIDTH;
     this->HEIGHT = DATA.WINDOW_HEIGHT;
-    this->SSAO = DATA.SSAO;
+    this->SSAO = DATA.HBAO;
+    this->ParallaxOn = DATA.PARALLAX_OCLUSSION_MAPPING;
 
-    text = (std::shared_ptr<Text>)new Text("resources/Roboto-Regular.ttf", DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT);
+    text = (std::shared_ptr<Text>)new Text("resources/OptimusPrincepsSemiBold.ttf", DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT);
 
     m_GUI = (std::shared_ptr<GUI>) new GUI(this->WIDTH, this->HEIGHT);
     std::shared_ptr<Container> t_Container = (std::shared_ptr<Container>) new Container();
     std::shared_ptr<Panel> t_Panel = (std::shared_ptr<Panel>) new Panel(this->WIDTH, this->HEIGHT, 0.3*WIDTH, 1.0*HEIGHT, glm::vec2(-0.7, 0.0));
     t_PanelSettings = (std::shared_ptr<Panel>) new Panel(this->WIDTH, this->HEIGHT, 0.5*WIDTH, 0.5*HEIGHT, glm::vec2(0.3, 0.0));
-    std::shared_ptr<Button> t_ButtonQuit = (std::shared_ptr<Button>) new Button(0.15, 0.1, this->WIDTH, this->HEIGHT, "Quit");
 
+    std::shared_ptr<Button> t_ButtonQuit = (std::shared_ptr<Button>) new Button(0.15, 0.1, this->WIDTH, this->HEIGHT, "Quit");
     t_ButtonQuit->SizeX = 0.15;
     t_ButtonQuit->SizeY = 0.1;
     t_ButtonQuit->PositionX = -0.75;
@@ -164,16 +170,14 @@ void Epsilon::InitResources(void) {
     t_CheckBox->m_TextRendererInstance = text;
     t_CheckBox->setText("CheckBox");
     t_Container->addWidget(t_CheckBox);
+
     t_ButtonSettings = (std::shared_ptr<Button>) new Button(0.15, 0.1, this->WIDTH, this->HEIGHT, "Settings");
     t_ButtonSettings->SizeX = 0.15;
     t_ButtonSettings->SizeY = 0.1;
     t_ButtonSettings->PositionX = -0.75;
     t_ButtonSettings->PositionY = -0.2;
     t_PanelSettings->m_isHidden = true;
-
-    std::function<void()> lSettings = [&]()->void {
-        t_PanelSettings->ChangeVisibility();
-    };
+    std::function<void()> lSettings = [&]()->void {t_PanelSettings->ChangeVisibility();};
     t_ButtonSettings->OnClickCallback(lSettings);
     t_ButtonSettings->m_isHidden = false;
     t_ButtonSettings->m_TextRendererInstance = text;
@@ -191,8 +195,8 @@ void Epsilon::InitResources(void) {
     t_ButtonResume->OnClickCallback(lResume);
     t_ButtonResume->m_isHidden = false;
     t_ButtonResume->m_TextRendererInstance = text;
-    t_Container->addWidget(t_ButtonResume);
 
+    t_Container->addWidget(t_ButtonResume);
     t_Container->addWidget(t_Panel);
     t_Container->addWidget(t_PanelSettings);
     m_GUI->AddContainer(t_Container);
@@ -261,14 +265,15 @@ void Epsilon::InitResources(void) {
 
     for(int i = 0; i < 5; i++) {
         std::shared_ptr<EntityTemplate> tmpEnt;
-        tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-5.5+(i*6.4),9.0,-2), glm::vec3(2.0), glm::quat(-1.0, 0.0, 0.0, 0.0)));
+        tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-5.5+(i*6.4),9.0,-2), glm::vec3(0.25), glm::quat(-1.0, 0.0, 0.0, 0.0)));
         std::shared_ptr<Component::RenderComponent> Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-        Compmodel->Fill("models/esfera.eml", rM, "Main");
+        Compmodel->Fill("models/rock.eml", rM, "Main");
 
         std::shared_ptr<Component::PhysicComponent> CompPhys = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
 
-        std::shared_ptr<Physics::SpherePhysicObject> ph = (std::shared_ptr<Physics::SpherePhysicObject>) new Physics::SpherePhysicObject();
-        rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(2.0, glm::vec3(-20.5+(i*6.4),9.0,-8), 50.0f).get());
+        std::shared_ptr<Physics::CubePhysicObject> ph = (std::shared_ptr<Physics::CubePhysicObject>) new Physics::CubePhysicObject();
+        //rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(2.0, glm::vec3(-20.5+(i*6.4),9.0,-8), 50.0f).get());
+        rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(glm::vec3(-5.5+(i*6.4),9.0,-2), 100.0f, rM->getModelBoundingBox("models/rock.eml"), 0.25f).get());
         CompPhys->Fill(100.0f, ph);
 
         //Compmodel->isTransparent = true;
@@ -778,6 +783,7 @@ void Epsilon::Render3D(Shader* shader) {
         visible = true;
         if(EntityList[i]->hasModel) {
             shader->Use();
+            shader->PushUniform("parallaxOn", ParallaxOn);
             //this->SetUniforms(shader, EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation());
             ScaleMatrix = glm::scale(glm::mat4(1), EntityList[i]->getScale());
             TranslationMatrix = glm::translate(glm::mat4(1), EntityList[i]->getPosition());
@@ -797,9 +803,9 @@ void Epsilon::Render3D(Shader* shader) {
         } else {
         }
     }
-    glEnable(GL_CULL_FACE);
+    /*glCache::*/glEnable(GL_CULL_FACE);
 
-    glCullFace(GL_FRONT);
+    /*glCache::*/glCullFace(GL_FRONT);
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glm::mat4 BSPmodel = glm::mat4();
@@ -929,11 +935,12 @@ void Epsilon::Render2D(void) {
                        &cur_avail_mem_kb );
     }
 
-    int DEBUG_MODE = 3;
+    int DEBUG_MODE = 1;
 
     if(DEBUG_MODE >= 1) {
         this->text->RenderText("FPS: " + Helpers::intTostring(acumfps), 0.01, 0.95, 0.5, glm::vec3(1,1,1));
         this->text->RenderText("Frame Time: " + Helpers::floatTostring(frametime*1000) + "ms", 0.01, 0.91, 0.3, glm::vec3(1,1,1));
+        this->text->RenderText("Draw calls: " + Helpers::intTostring(glCache::DrawCalls), 0.01, 0.69, 0.3, glm::vec3(1,1,1));
     }
 
     if(DEBUG_MODE >= 2) {
@@ -956,6 +963,7 @@ void Epsilon::Render2D(void) {
         ("Position: x = " + Helpers::floatTostring(this->eCamera->getPosition().x) + " y = " + Helpers::floatTostring(this->eCamera->getPosition().y) + " z = " + Helpers::floatTostring(this->eCamera->getPosition().z), 0.01, 0.77, 0.3, glm::vec3(1,1,1));
         this->text->RenderText
         ("Direction: x = " + Helpers::floatTostring(this->eCamera->getDirection().x) + " y = " + Helpers::floatTostring(this->eCamera->getDirection().y) + " z = " + Helpers::floatTostring(this->eCamera->getDirection().z), 0.01, 0.75, 0.3, glm::vec3(1,1,1));
+        //this->text->RenderText("Draw calls: " + Helpers::intTostring(glCache::DrawCalls), 0.01, 0.69, 0.3, glm::vec3(1,1,1));
     }
 
     //this->text->RenderText("On ground: " + std::string(m_PlayerCapsule->isOnGround() ? "YES" : "NO"),0.01, 0.79, 0.3, glm::vec3(1,1,1));/*
@@ -1026,10 +1034,11 @@ void Epsilon::RenderSkybox(bool state) {
 
 void Epsilon::PollEvents(void) {
 
-    if(glfwGetWindowAttrib(window, GLFW_FOCUSED))
+    if(glfwGetWindowAttrib(window, GLFW_FOCUSED)){
         glfwPollEvents();
-    else
+    }else{
         glfwWaitEvents();
+    }
 
     Input::Joystick::PollJoystick();
 
@@ -1050,7 +1059,7 @@ void Epsilon::PollEvents(void) {
         this->m_CameraMode = CAMERA_FIXED;
     } else {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        this->m_CameraMode = NO_CLIP;
+        this->m_CameraMode = PLAYER_CONTROLLED;
     }
 
     if(Input::KeyBoard::KEYS[Input::GLFW::Key::N])
@@ -1125,6 +1134,8 @@ void Epsilon::MainLoop(void) {
         this->Render2D();
 
         this->SwapBuffers();
+
+        glCache::DrawCalls = 0;
     }
 }
 

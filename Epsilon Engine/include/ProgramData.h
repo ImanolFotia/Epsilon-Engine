@@ -23,11 +23,20 @@ public:
     int MONITOR;
     int VSYNC;
     int SHADOWMAP_SIZE;
-    bool SSAO;
-    bool SSR;
+    bool BLOOM;
+    bool SCREEN_SPACE_REFLECTIONS;
+    int SSR_QUALITY;
     bool LIGHTSHAFTS;
     bool COMPRESSED_TEXTURES;
-    bool MOTIONBLUR;
+    bool MOTION_BLUR;
+    float MOTION_BLUR_STRENGTH;
+    bool PARALLAX_OCLUSSION_MAPPING;
+    bool BOKEH_DOF;
+    bool CHROMATIC_ABERRATION;
+    bool FXAA;
+    bool HBAO;
+    int HBAO_QUALITY;
+
 };
 #endif
 

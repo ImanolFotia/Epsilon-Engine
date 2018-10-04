@@ -153,6 +153,38 @@ bool Model::loadModel(string emlPath, int a)
         else
             meshes.push_back(Mesh(tmpVertVector, tmpIndicesVector, tmpTexturesVector));
     }
+
+    float dx, dy, dz;
+    dx = (MinMaxPoints.MAX_X - MinMaxPoints.MIN_X);
+    dy = (MinMaxPoints.MAX_Y - MinMaxPoints.MIN_Y);
+    dz = (MinMaxPoints.MAX_Z - MinMaxPoints.MIN_Z);
+
+    glm::vec3 centerOfMass = glm::vec3(MinMaxPoints.MIN_X + (dx*0.5),
+                                       MinMaxPoints.MIN_Y + (dy*0.5),
+                                       MinMaxPoints.MIN_Z + (dz*0.5));
+
+    glm::vec3 origin = glm::vec3(0.0f, 0.0f, 0.0f);
+
+    glm::vec3 delta = origin - centerOfMass;
+
+    for(int i = 0; i < numMeshes; ++i)
+    {
+        for(int j = 0; j < meshes.at(i).vertices.size(); j++){
+            meshes.at(i).vertices[j].position.x += delta.x;
+            meshes.at(i).vertices[j].position.y += delta.y;
+            meshes.at(i).vertices[j].position.z += delta.z;
+        }
+
+        meshes.at(i).setupMesh();
+    }
+
+    MinMaxPoints.MIN_X += delta.x;
+    MinMaxPoints.MIN_Y += delta.y;
+    MinMaxPoints.MIN_Z += delta.z;
+
+    MinMaxPoints.MAX_X += delta.x;
+    MinMaxPoints.MAX_Y += delta.y;
+    MinMaxPoints.MAX_Z += delta.z;
 /*
         MinMaxPoints.MAX_X = ((MinMaxPoints.MAX_X * Position.x)* Scale.x);
         MinMaxPoints.MAX_Y = ((MinMaxPoints.MAX_Y * Position.y)* Scale.y);

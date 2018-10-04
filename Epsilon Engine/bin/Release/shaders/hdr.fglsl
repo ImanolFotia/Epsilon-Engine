@@ -20,6 +20,10 @@ const float contrast = 0.2;
 uniform vec3 position;
 uniform vec2 Resolution;
 
+
+uniform bool BokehOn;
+uniform bool ChromaticAberrationOn;
+
 int uGhosts = 5;               // number of ghost samples
 float uGhostDispersal = 0.3;  // dispersion factor
 float uHaloWidth = 10;
@@ -111,7 +115,7 @@ vec3 Bokeh(vec2 uv, float rad, float thres, float mult) {
 
     vec2 disk = vec2(sin(i * 10.0) * (1.0 - r), cos(i * 10.0) * (1.0 - r)) * rad;
 
-    col = texture(compositeImage, uv + pixelSize * disk).rgb;
+    col = texelFetch(compositeImage, ivec2((uv * Resolution) + pixelSize * disk), 0).rgb;
 
     res += col;
     numLoops++;
@@ -179,9 +183,11 @@ void main() {
     DOFRadius = clamp(dDepth * 15.0, 0.0, 0.85);
 
 
-  //composite = Bokeh(TexCoords, DOFRadius, .10, 1.0);
+  if(BokehOn)
+    composite = Bokeh(TexCoords, DOFRadius, .10, 1.0);
 
-  //composite = textureDistorted(compositeImage, TexCoords, normalize(fragcoord - vec2(0.0)), 0.001*pow(length((fragcoord * 2.0 - 1.0) - vec2(0.0)), 3.0)).rgb;
+  if(ChromaticAberrationOn)
+    composite = textureDistorted(compositeImage, TexCoords, normalize(fragcoord - vec2(0.0)), 0.001*pow(length((fragcoord * 2.0 - 1.0) - vec2(0.0)), 3.0)).rgb;
 
   composite = changeSaturation(composite, 1.0);
 

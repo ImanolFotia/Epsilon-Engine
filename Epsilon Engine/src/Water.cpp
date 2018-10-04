@@ -60,7 +60,7 @@ void Water::RenderWater(std::shared_ptr<Camera> cam, GLuint colorBuffer, glm::ve
     shader->PushUniform("time", (float)glfwGetTime());
 
     glBindVertexArray(this->VAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glCache::glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
     shader->Free();
 

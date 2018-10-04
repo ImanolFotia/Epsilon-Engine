@@ -183,6 +183,8 @@ private:
 
     void generateBRDF();
 
+    void setupDenoise();
+
 private:
     //#pragma pack(push, 1)
 
@@ -202,6 +204,12 @@ private:
     bool SSROn;
     bool m_MotionBlur;
     bool lightShafts;
+    bool mParallaxMapping;
+    bool mMotionBlurStrength;
+    int mHBAOQuality;
+    bool mChromaticAberration;
+    bool mBokehDOF;
+
 std::shared_ptr<FrameBuffer<int> > BRDFFramebuffer;
     GLuint ssaoFBO;
     GLuint ssaoBlurFBO;
@@ -235,10 +243,14 @@ std::shared_ptr<FrameBuffer<int> > BRDFFramebuffer;
     std::unique_ptr<Shader> MotionBlurShader;
     std::unique_ptr<Shader> CompositeShader;
     std::unique_ptr<Shader> BRDFShader;
+    std::unique_ptr<Shader> DenoiseShader;
+
     std::vector<glm::vec3> LightPositions;
     /// G-Buffer texture samplers
     std::vector<glm::vec3> ssaoKernel;
     GLuint noiseTexture;
+    GLuint DenoiseTexture;
+    GLuint DenoiseFBO;
     GLuint brightColorBuffer;
     GLuint gBuffer;
     GLuint gAlbedoSpec;
