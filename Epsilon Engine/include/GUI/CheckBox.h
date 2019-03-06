@@ -11,10 +11,11 @@ public:
     CheckBox(float width, float height, int winWidth, int winHeight, std::string text)
         : m_Width(width), m_Height(height), m_winWidth(winWidth), m_winHeight(winHeight), _text(text) {
 
-        m_Quad = (std::shared_ptr<OpenGLHelpers::Quad>) new OpenGLHelpers::Quad((m_Width*m_winWidth), (m_Height*m_winHeight));
+        glm::vec2 WS = this->CalculateResolution(m_Width, m_Height, m_winWidth, m_winHeight);
+        m_Quad = (std::shared_ptr<OpenGLHelpers::Quad>) new OpenGLHelpers::Quad(WS.x, WS.y);
 
-        _checkedIco = (std::shared_ptr<eTexture>) new eTexture("gui/Checked.png");
-        _uncheckedIco = (std::shared_ptr<eTexture>) new eTexture("gui/Unchecked.png");
+        _checkedIco = (std::shared_ptr<eTexture>) new eTexture("gui/Checked.png",GL_REPEAT, GL_TEXTURE_2D, 0);
+        _uncheckedIco = (std::shared_ptr<eTexture>) new eTexture("gui/Unchecked.png",GL_REPEAT, GL_TEXTURE_2D, 0);
 
         projection = glm::ortho(0.0f, static_cast<GLfloat>(m_winWidth), 0.0f, static_cast<GLfloat>(m_winHeight));
         m_CheckBoxShader = (std::shared_ptr<Shader>) new Shader("shaders/GUI/vertexCommon.glsl", "shaders/GUI/checkbox.glsl");
@@ -44,6 +45,16 @@ public:
     const void Toggle() {
         if(_checked) _checked = false;
         else _checked = true;
+    }
+
+
+    glm::vec2 CalculateResolution(int w, int h, int ww, int wh)
+    {
+        glm::vec2 Resolution = glm::vec2(m_winWidth, m_winHeight);
+        glm::vec2 WidgetSize = glm::vec2(m_Width, m_Height)*Resolution;
+        WidgetSize.x /= Resolution.x/Resolution.y;
+
+        return WidgetSize;
     }
 
     void Render(std::shared_ptr<Shader> shader) {

@@ -475,7 +475,7 @@
 	<memory>
 	<typeinfo>
 
-1535858172 d:\epsilon\epsilon engine\include\types.h
+1551826007 d:\epsilon\epsilon engine\include\types.h
 	<btBulletDynamicsCommon.h>
 	<btBulletCollisionCommon.h>
 	<memory>
@@ -1071,7 +1071,7 @@
 	"../trigonometric.hpp"
 	"../matrix.hpp"
 
-1535095019 d:\epsilon\epsilon engine\include\texture.h
+1545518457 d:\epsilon\epsilon engine\include\texture.h
 	<iostream>
 	<string>
 	<vector>
@@ -1084,6 +1084,7 @@
 	<ProgramData.h>
 	<Includes.h>
 	<Image/Image.hpp>
+	<Log.h>
 
 1538295841 d:\epsilon\epsilon engine\include\programdata.h
 
@@ -1100,7 +1101,7 @@
 	<emlFormat.h>
 	<memory>
 
-1536786065 d:\epsilon\epsilon engine\include\shader.h
+1545203100 d:\epsilon\epsilon engine\include\shader.h
 	<GL/glew.h>
 	<string>
 	<iostream>
@@ -1112,7 +1113,7 @@
 1461365554 d:\epsilon\epsilon engine\include\emlformat.h
 	<string>
 
-1523729134 d:\epsilon\epsilon engine\include\camera.h
+1551820268 d:\epsilon\epsilon engine\include\camera.h
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
 	<glm/gtc/quaternion.hpp>
@@ -1294,7 +1295,7 @@
 	<ResourceManager.h>
 	<BSPFace.h>
 
-1516919230 source:d:\epsilon\epsilon engine\src\camera.cpp
+1551820301 source:d:\epsilon\epsilon engine\src\camera.cpp
 	<iostream>
 	<camera.h>
 	<math.h>
@@ -1354,7 +1355,7 @@
 	<Physics/Physics.h>
 	<Patch.h>
 
-1538621541 source:d:\epsilon\epsilon engine\src\epsilon.cpp
+1551844349 source:d:\epsilon\epsilon engine\src\epsilon.cpp
 	<iostream>
 	<Epsilon.h>
 	<ProgramData.h>
@@ -1373,6 +1374,7 @@
 	<sys/Console.hpp>
 	<multithread/ThreadPool.hpp>
 	<OpenGL/GlCache.h>
+	<sys/GPU.hpp>
 
 1538297351 d:\epsilon\epsilon engine\include\epsilon.h
 	<map>
@@ -1440,7 +1442,7 @@
 
 1237038326 d:\epsilon\epsilon engine\deppend\freetype2\include\freetype\config\ftheader.h
 
-1538296706 d:\epsilon\epsilon engine\include\postprocess.h
+1551820621 d:\epsilon\epsilon engine\include\postprocess.h
 	<GL/glew.h>
 	<Shader.h>
 	<camera.h>
@@ -1534,10 +1536,11 @@
 	<glm/glm.hpp>
 	<Physics/Physics.h>
 
-1489718664 d:\epsilon\epsilon engine\include\log.h
+1545203431 d:\epsilon\epsilon engine\include\log.h
 	<iostream>
 	<fstream>
 	<string>
+	<time.h>
 
 1526280645 d:\epsilon\epsilon engine\include\gui\gui.h
 	<GUI/Container.h>
@@ -1548,7 +1551,7 @@
 1497684054 d:\epsilon\epsilon engine\include\gui\container.h
 	<GUI/Widget.h>
 
-1535862744 d:\epsilon\epsilon engine\include\gui\widget.h
+1545522909 d:\epsilon\epsilon engine\include\gui\widget.h
 	<vector>
 	<memory>
 	<glm/glm.hpp>
@@ -1591,7 +1594,7 @@
 	<GL/glew.h>
 	<Types.h>
 
-1516225229 d:\epsilon\epsilon engine\include\particleproxy.h
+1551839262 d:\epsilon\epsilon engine\include\particleproxy.h
 	<Types.h>
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
@@ -1605,11 +1608,11 @@
 	<atomic>
 	<omp.h>
 
-1511572295 d:\epsilon\epsilon engine\include\particlerenderer.h
+1551832242 d:\epsilon\epsilon engine\include\particlerenderer.h
 	<Particle.h>
 	<Shader.h>
 
-1538634979 d:\epsilon\epsilon engine\version.h
+1551844284 d:\epsilon\epsilon engine\version.h
 
 1489719397 d:\epsilon\epsilon engine\include\sys\cpuid.h
 	<string>
@@ -1654,12 +1657,12 @@
 	<Mesh.h>
 	<ResourceManager.h>
 
-1538633434 source:d:\epsilon\epsilon engine\src\model.cpp
+1545202870 source:d:\epsilon\epsilon engine\src\model.cpp
 	<Model.h>
 	<ResourceManager.h>
 	<Log.h>
 
-1495073362 source:d:\epsilon\epsilon engine\src\particle.cpp
+1551826175 source:d:\epsilon\epsilon engine\src\particle.cpp
 	<ParticleSystem.h>
 	<Types.h>
 
@@ -1678,7 +1681,7 @@
 	<iostream>
 	<Physics/CollisionInfo.h>
 
-1538555587 source:d:\epsilon\epsilon engine\src\postprocess.cpp
+1551820959 source:d:\epsilon\epsilon engine\src\postprocess.cpp
 	<PostProcess.h>
 	<iostream>
 	<ProgramData.h>
@@ -1766,7 +1769,7 @@
 1512158888 source:d:\epsilon\epsilon engine\src\scene.cpp
 	<Scene.h>
 
-1504213709 source:d:\epsilon\epsilon engine\src\shader.cpp
+1545203531 source:d:\epsilon\epsilon engine\src\shader.cpp
 	<Shader.h>
 	<stdio.h>
 	<string>
@@ -1812,7 +1815,7 @@
 
 1503872725 d:\epsilon\epsilon engine\include\opengl\helperfunctions\checkerror.h
 
-1538620834 source:d:\epsilon\epsilon engine\src\sun.cpp
+1547506253 source:d:\epsilon\epsilon engine\src\sun.cpp
 	<Sun.h>
 	<sys/KeyBoard.h>
 
@@ -4528,7 +4531,7 @@
 1523927132 d:\epsilon\epsilon engine\deppend\bullet3-master\src\bulletsoftbody\btsoftbodyhelpers.h
 	"btSoftBody.h"
 
-1526286917 d:\epsilon\epsilon engine\include\gui\checkbox.h
+1545528665 d:\epsilon\epsilon engine\include\gui\checkbox.h
 	<GUI/Widget.h>
 	<Text.h>
 	<string>
@@ -4667,5 +4670,8 @@
 
 1536813730 d:\epsilon\epsilon engine\include\opengl\glcache.h
 	<unordered_map>
+	<GL/glew.h>
+
+1545202299 d:\epsilon\epsilon engine\include\sys\gpu.hpp
 	<GL/glew.h>
 

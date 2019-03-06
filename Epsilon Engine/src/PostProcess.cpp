@@ -41,54 +41,54 @@ void PostProcess::SetupFramebuffer() {
 
     t_light tmpLight;
 
-    tmpLight.position = glm::vec4(12, 11, 0, 1.0);
+    tmpLight.position = glm::vec4(-0.77, 11, -4.19, 1.0);
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-    tmpLight.color = glm::vec4(1, 0.8, 0.8, 1.0);
+    tmpLight.color = glm::vec4(1.0, 0.8, 0.8, 1.0);
     tmpLight.radius = 0.5f;
-    tmpLight.watts = 150.0f;
+    tmpLight.watts = 100.0f;
     tmpLight.type = 2;
     m_Lights.push_back(tmpLight);
 
-    tmpLight.position = glm::vec4(-10, 12, 0, 1.0);
+    tmpLight.position = glm::vec4(22.6, 11, -6.8, 1.0);
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 0.8, 0.8, 1.0);
     tmpLight.radius = 0.5f;
-    tmpLight.watts = 150.0f;
+    tmpLight.watts = 100.0f;
     tmpLight.type = 2;
     m_Lights.push_back(tmpLight);
 
-    tmpLight.position = glm::vec4(-40, 15, 0, 1.0);
+    tmpLight.position = glm::vec4(8.6, 11, 16, 1.0);
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1, 0.8, 0.8, 1.0);
     tmpLight.radius = 0.5f;
-    tmpLight.watts = 150.0f;
+    tmpLight.watts = 100.0f;
     tmpLight.type = 2;
     m_Lights.push_back(tmpLight);
 
-    tmpLight.position = glm::vec4(-64.5, 7.5, 0.0, 1.0);
+    tmpLight.position = glm::vec4(24.8, 11, 5.0, 1.0);
     tmpLight.direction = glm::vec4(0.0, -1.0, 0.0, 1.0);
     tmpLight.color = glm::vec4(1, 0.8, 0.8, 1.0);
     tmpLight.radius = 0.5f;
-    tmpLight.watts = 150.0f;
+    tmpLight.watts = 100.0f;
     tmpLight.type = 2;
     m_Lights.push_back(tmpLight);
 
-    tmpLight.position = glm::vec4(-90, 7, 12, 1.0);
+    tmpLight.position = glm::vec4(44.1, 11, 22, 1.0);
     tmpLight.direction = glm::vec4(0.74, -0.5761, -0.60, 1.0);
     tmpLight.color = glm::vec4(1, 0.8, 0.8, 1.0);
     tmpLight.radius = 0.25f;
-    tmpLight.watts = 300.0f;
+    tmpLight.watts = 100.0f;
     tmpLight.type = 2;
     m_Lights.push_back(tmpLight);
 
-    tmpLight.position = glm::vec4(-90, 7, -12, 1.0);
+    tmpLight.position = glm::vec4(23, 11, 27.3, 1.0);
     tmpLight.direction = glm::vec4(0.74, -0.5761, -0.60, 1.0);
     tmpLight.color = glm::vec4(1, 0.8, 0.8, 1.0);
     tmpLight.radius = 0.25f;
-    tmpLight.watts = 300.0f;
+    tmpLight.watts = 100.0f;
     tmpLight.type = 2;
     m_Lights.push_back(tmpLight);
-
+/*
     tmpLight.position = glm::vec4(-112, 7, -12, 1.0);
     tmpLight.direction = glm::vec4(0.74, -0.5761, -0.60, 1.0);
     tmpLight.color = glm::vec4(1, 0.8, 0.8, 1.0);
@@ -111,9 +111,9 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.radius = 0.4f;
     tmpLight.watts = 500.0f;
     tmpLight.type = 2;
-
+*//*
     m_Lights.push_back(tmpLight);
-
+*/
     glGenBuffers(1, &ssbo);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
     glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(t_light) * m_Lights.size(), (const void*)&m_Lights[0], GL_DYNAMIC_COPY);
@@ -556,7 +556,7 @@ void PostProcess::setupSSR() {
     glGenTextures(1, &SSRTexture);
     glBindFramebuffer(GL_FRAMEBUFFER, SSRFBO);
     glBindTexture(GL_TEXTURE_2D, SSRTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->width/2, this->height/2, 0, GL_RGBA, GL_FLOAT, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->width, this->height, 0, GL_RGBA, GL_FLOAT, NULL);
     //glGenerateMipmap(GL_TEXTURE_2D);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -643,7 +643,7 @@ void PostProcess::SSRPass(std::shared_ptr<Camera>& cam) {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glDisable(GL_BLEND);
     ScreenSpaceReflectionShader->Use();
-    glViewport(0,0, this->width/2, this->height/2);
+    glViewport(0,0, this->width, this->height);
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "gFinalImage"), 0);
     glBindTexture(GL_TEXTURE_2D, hdrFBO->getRenderTargetHandler("colorBuffer"));
@@ -677,7 +677,7 @@ void PostProcess::SSRPass(std::shared_ptr<Camera>& cam) {
     glUniformMatrix4fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "invView"), 1, GL_FALSE, &invView[0][0]);
     glm::mat4 view = cam->getViewMatrix();
     glUniformMatrix4fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "view"), 1, GL_FALSE, &view[0][0]);
-    glUniform2f(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "Resolution"), this->width/2, this->height/2);
+    glUniform2f(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "Resolution"), this->width, this->height);
     glUniform3fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "camDir"), 1, &cam->getDirection()[0]);
     glUniform3fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "camPos"), 1, &cam->getPosition()[0]);
     ScreenSpaceReflectionShader->PushUniform("SSROn", SSROn);
@@ -700,26 +700,28 @@ void PostProcess::SSRPass(std::shared_ptr<Camera>& cam) {
     //glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     /** Denoise SSR*/
+    if(cam->isMoving()){
+        glBindFramebuffer(GL_FRAMEBUFFER, DenoiseFBO);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, DenoiseFBO);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        DenoiseShader->Use();
+        glViewport(0,0, this->width, this->height);
+        glActiveTexture(GL_TEXTURE0);
+        glUniform1i(glGetUniformLocation(DenoiseShader->getProgramID(), "texture0"), 0);
+        glBindTexture(GL_TEXTURE_2D, SSRTexture);
 
-    DenoiseShader->Use();
-    glViewport(0,0, this->width, this->height);
-    glActiveTexture(GL_TEXTURE0);
-    glUniform1i(glGetUniformLocation(DenoiseShader->getProgramID(), "texture0"), 0);
-    glBindTexture(GL_TEXTURE_2D, SSRTexture);
+        glUniform2f(glGetUniformLocation(DenoiseShader->getProgramID(), "resolution"), this->width, this->height);
+        glUniform1f(glGetUniformLocation(DenoiseShader->getProgramID(), "exponent"), 0.05);
+        this->RenderQuad();
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    glUniform2f(glGetUniformLocation(DenoiseShader->getProgramID(), "resolution"), this->width, this->height);
-    glUniform1f(glGetUniformLocation(DenoiseShader->getProgramID(), "exponent"), 1.0);
-    this->RenderQuad();
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glEnable(GL_BLEND);
+        glViewport(0,0, this->width, this->height);
+    }
 
-    glEnable(GL_BLEND);
-    glViewport(0,0, this->width, this->height);
 
     /*****************/
 }
@@ -835,7 +837,7 @@ GLuint PostProcess::GetPixel(GLuint tex) {
     return 0;
 }
 
-void PostProcess::CompositeImage() {
+void PostProcess::CompositeImage(bool isMoving) {
     mCompositeImage->bindFramebuffer();
     mCompositeImage->setViewport();
     mCompositeImage->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -853,7 +855,10 @@ void PostProcess::CompositeImage() {
 
     glActiveTexture(GL_TEXTURE1);
     CompositeShader->PushUniform("gReflectionSampler", 1);
-    glBindTexture(GL_TEXTURE_2D, DenoiseTexture);
+    if(isMoving)
+        glBindTexture(GL_TEXTURE_2D, DenoiseTexture);
+    else
+        glBindTexture(GL_TEXTURE_2D, SSRTexture);
 
     this->RenderQuad();
 
@@ -872,7 +877,7 @@ void PostProcess::ShowPostProcessImage(float frametime, GLuint onmenu, glm::vec3
     if(m_MotionBlur)
         MotionBlur(frametime);
 
-    this->CompositeImage();
+    this->CompositeImage(cam->isMoving());
 
     DownSampleSSR(frametime);
 

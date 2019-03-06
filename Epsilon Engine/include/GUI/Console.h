@@ -3,8 +3,24 @@
 #include <Text.h>
 #include <string>
 #include <vector>
+
 class Console : public Widget{
 public:
+
+    class Line
+    {
+    public:
+        using Color = glm::vec3;
+        Line(std::string content, Color col) : mContent(content), mColor(col){}
+
+        std::string const getText() { return mContent; }
+
+        Color const getColor() { return mColor; }
+    private:
+        std::string mContent;
+        Color mColor;
+    };
+
     Console(int w, int h, int fs, glm::vec4 c): mWidth(w), mHeight(h), mFontSize(fs), mBackgroundColor(c)
     {
         this->m_Quad = (std::shared_ptr<OpenGLHelpers::Quad>) new OpenGLHelpers::Quad((this->mWidth), (this->mHeight));
@@ -16,19 +32,28 @@ public:
 
     virtual ~Console(){}
 
-    Render(){}
+    Render(){
+        this->RenderFrame();
+        this->RenderScrollBar();
+    }
 
-    Toggle(){}
+    Toggle(){mShowing = !mShowing;}
 
     AddCommand(){}
 
     ExecuteCommand(){}
 
     bool isShowing(){ return this->mShowing; }
+private:
+
+    void RenderFrame(){}
+    void RenderScrollBar(){}
+    void RenderText(){}
+    void RenderInputText(){}
 
 private:
-    bool mShowing;
-    std::vector<std::string> mOutput;
+    bool mShowing = false;
+    std::vector<Line> mLines; //Console lines to be able to scroll and paint them individually
     std::string mInput;
     int mWidth;
     int mHeight;

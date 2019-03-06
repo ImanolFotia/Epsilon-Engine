@@ -17,6 +17,8 @@
 Shader::Shader(const char* vertex, const char* fragment)
 {
     Path = std::string(vertex);
+    vPath = vertex;
+    fPath = fragment;
 
 	std::string VertexShaderCode = GLSLPreProcessor::PreProcessGLSL(std::string(vertex));
 
@@ -52,11 +54,14 @@ Shader::Shader(const char* vertex, const char* fragment)
 	glDeleteShader(VertexShaderID);
 	glDeleteShader(FragmentShaderID);
 	this->getUniformsLocations();
+
 }
 
 Shader::Shader(const char* vertex, const char* fragment, const char* geometry)
 {
     Path = std::string(vertex);
+    vPath = vertex;
+    fPath = fragment;
 
 	std::string VertexShaderCode = GLSLPreProcessor::PreProcessGLSL(std::string(vertex));
 
@@ -117,6 +122,7 @@ GLuint Shader::generateFragmentProgram(std::string pShaderString)
 		printf("%s\n", &FragmentShaderErrorMessage[0]);
 	}
 
+    Global::Log::WriteToLog("Fragment shader: " + std::string(fPath) + " was successfully compiled.");
 	return FragmentShaderID;
 }
 
@@ -138,6 +144,7 @@ GLuint Shader::generateVertexProgram(std::string pShaderString)
 		printf("%s\n", &VertexShaderErrorMessage[0]);
 	}
 
+    Global::Log::WriteToLog("Vertex shader: " + std::string(vPath) + " was successfully compiled.");
 	return VertexShaderID;
 }
 

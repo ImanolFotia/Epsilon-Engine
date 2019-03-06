@@ -43,6 +43,15 @@ void ParticleSystem::addNewSystem(MINMAX_POINTS limits, PARTICLE_PROXY ProxyType
                                                 );
         break;
 
+    case SMOKE:
+        this->m_ParticleProxyContainer.push_back(
+                            (std::shared_ptr<SmokeParticleProxy>) new SmokeParticleProxy(
+                                                            this->m_ParticleProxyContainer.size() + 1,
+                                                            limits,
+                                                            numParts)
+                                                );
+        break;
+
     }
 }
 

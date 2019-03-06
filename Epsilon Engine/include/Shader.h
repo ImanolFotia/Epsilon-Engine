@@ -100,6 +100,8 @@ private:
     GLuint ProgramID;
     std::string Path;
 
+    std::string vPath, fPath;
+
     std::unordered_map<std::string, GLuint> m_Attributes;
     std::unordered_map<std::string, GLuint> m_Uniforms;
 

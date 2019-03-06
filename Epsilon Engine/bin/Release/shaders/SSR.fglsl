@@ -126,7 +126,7 @@ void main()
             vec2 NoiseScale = Resolution / 4.0;
             vec3 wp = vec3(vec4(viewPos, 1.0) * invView);
             //vec3 random = texture(noiseTexture, TexCoords.xy * NoiseScale).rgb;
-            float factor = spec*0.25;
+            float factor = spec*0.05;
             vec3 jitt = mix(vec3(0.0), normalize(vec3(hash(wp)) * 2.0 - 1.0), factor);
             //jitt = normalize(jitt);
             vec4 coords = RayCast((jitt + reflected) * max(minRayStep, -viewPos.z), hitPos, dDepth);
@@ -143,10 +143,13 @@ void main()
                         -reflected.z;
         //samples = samples * 0.5;
         // Get color
+        vec3 hN = texture(gNormal, coords.xy).xyz;
+        float VNvector = dot(hN, viewDir);
 
         SSR = mix(     samples*clamp(ReflectionMultiplier, 0.0, 1.0), 
                             texture(gDepth, TexCoords).gba, 
-                            clamp(1.0-(screenEdgefactor*(2.0*-reflected.z)), 0.0, 1.0));
+                            clamp(1.0-(screenEdgefactor*(2.0*-reflected.z) * VNvector), 0.0, 1.0));
+        
         mask = int(clamp((screenEdgefactor*(2.0-reflected.z)), 0.0, 1.0));
 
         if(spec < 0.05) mask = 0;

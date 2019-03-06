@@ -23,6 +23,7 @@
 #include <sys/Console.hpp>
 #include <multithread/ThreadPool.hpp>
 #include <OpenGL/GlCache.h>
+#include <sys/GPU.hpp>
 
 GLenum glCache::CullFaceMode = 0;
 GLuint glCache::ShaderId = 0;
@@ -49,11 +50,12 @@ Epsilon::Epsilon(GLFWwindow*& win) {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     glClear(GL_COLOR_BUFFER_BIT);
+    GPU _gpu;
 
     cout << endl << endl << "Gathering Video Device information..." << endl;
-    GL_VEN = (char*)glGetString(GL_VENDOR);
-    GL_REN = (char*)glGetString(GL_RENDERER);
-    GL_VER = (char*)glGetString(GL_VERSION);
+    GL_VEN = _gpu.getVendor();
+    GL_REN = _gpu.getDevice();
+    GL_VER = _gpu.getDriverVersion();
     Console::Log("vendor", GL_VEN);
     std:: cout << "OpenGL VENDOR: " << GL_VEN << std::endl;
     std:: cout << "Video RENDERER: " << GL_REN << std::endl;
@@ -70,7 +72,7 @@ Epsilon::Epsilon(GLFWwindow*& win) {
     double plane[4] = {0.0, 5.0, 0.0, 15.0};
     glClipPlane(GL_CLIP_PLANE0, plane);
 
-    tex = (std::shared_ptr<eTexture>) new eTexture("Sun.png");
+    tex = (std::shared_ptr<eTexture>) new eTexture("smoke.png");
 
     std::cout << "Clip Plane: " << (glIsEnabled(GL_CLIP_PLANE0) ? "Enabled" : "Disabled") << endl;
 
@@ -144,7 +146,7 @@ void Epsilon::InitResources(void) {
     this->SSAO = DATA.HBAO;
     this->ParallaxOn = DATA.PARALLAX_OCLUSSION_MAPPING;
 
-    text = (std::shared_ptr<Text>)new Text("resources/OptimusPrincepsSemiBold.ttf", DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT);
+    text = (std::shared_ptr<Text>)new Text("resources/Roboto-Regular.ttf", DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT);
 
     m_GUI = (std::shared_ptr<GUI>) new GUI(this->WIDTH, this->HEIGHT);
     std::shared_ptr<Container> t_Container = (std::shared_ptr<Container>) new Container();
@@ -161,9 +163,9 @@ void Epsilon::InitResources(void) {
     t_ButtonQuit->m_TextRendererInstance = text;
     t_Container->addWidget(t_ButtonQuit);
 
-    t_CheckBox = (std::shared_ptr<CheckBox>) new CheckBox(0.1, 0.1, this->WIDTH, this->HEIGHT, "Quit");
-    t_CheckBox->SizeX = 0.1;
-    t_CheckBox->SizeY = 0.1;
+    t_CheckBox = (std::shared_ptr<CheckBox>) new CheckBox(0.05, 0.05, this->WIDTH, this->HEIGHT, "Quit");
+    t_CheckBox->SizeX = 0.5;
+    t_CheckBox->SizeY = 0.5;
     t_CheckBox->PositionX = 0.0;
     t_CheckBox->PositionY = 0.0;
     t_CheckBox->m_isHidden = false;
@@ -507,15 +509,15 @@ EntityList.push_back(tmpEnt);
             xz[x][z] = (rand()%30) - 15;
 
     MINMAX_POINTS limits;
-    limits.MAX_X = 47.0;
-    limits.MIN_X = -91.0;
-    limits.MAX_Y = 45.0;
+    limits.MAX_X = 57.0;
+    limits.MIN_X = -38.0;
+    limits.MAX_Y = 30.0;
     limits.MIN_Y = 0.0;
-    limits.MAX_Z = 27.0;
-    limits.MIN_Z = -82.0;
+    limits.MAX_Z = 19.0;
+    limits.MIN_Z = -19.0;
 
     m_ParticleSystem = (std::shared_ptr<ParticleSystem>) new ParticleSystem();
-    m_ParticleSystem->addNewSystem(limits, SNOW, 150);
+    m_ParticleSystem->addNewSystem(limits, MIST, 150);
 
     //3 , 7, 30
     sun->Update();
@@ -530,7 +532,7 @@ EntityList.push_back(tmpEnt);
     shadowMap->UnbindShadowFrameBuffer();
 
 
-    this->mCubemap = (std::shared_ptr<CubeMap>) new CubeMap(54, glm::vec3(-100, 2, 0));
+    this->mCubemap = (std::shared_ptr<CubeMap>) new CubeMap(54, glm::vec3(0, 7, -5));
     //this->mCubemap[1] = (std::shared_ptr<CubeMap>) new CubeMap(55, glm::vec3(3, 7, 30));
 
 
@@ -724,7 +726,7 @@ void Epsilon::LoadGeometry(void) {
 
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "clinic.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "church.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 
@@ -773,10 +775,7 @@ void Epsilon::Render3D(Shader* shader) {
             glCullFace(GL_BACK);
     */
 
-//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-//glLineWidth(2.0);
     glDisable(GL_CULL_FACE);
-    //glEnable(GL_CULL_FACE);
     for(unsigned int i =0; i < EntityList.size(); ++i) {
         EntityList[i]->Update();
         Model = glm::mat4();
@@ -907,35 +906,8 @@ void Epsilon::Render2D(void) {
     }
 
 
-
-    GLint total_mem_kb = 0;
-    glGetIntegerv(GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX,
-                  &total_mem_kb);
-
-    GLint cur_avail_mem_kb = 0;
-    glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX,
-                  &cur_avail_mem_kb);
-
-    if(total_mem_kb <= 0) {
-        GLuint uNoOfGPUs = wglGetGPUIDsAMD( 0, 0 );
-        GLuint* uGPUIDs = new GLuint[uNoOfGPUs];
-        wglGetGPUIDsAMD( uNoOfGPUs, uGPUIDs );
-
-        GLuint total_mem_kb = 0;
-        wglGetGPUInfoAMD( uGPUIDs[0],
-                          WGL_GPU_RAM_AMD,
-                          GL_UNSIGNED_INT,
-                          sizeof( GLuint ),
-                          &total_mem_kb );
-
-        total_mem_kb *= 1024;
-
-        GLint cur_avail_mem_kb = 0;
-        glGetIntegerv( GL_TEXTURE_FREE_MEMORY_ATI,
-                       &cur_avail_mem_kb );
-    }
-
-    int DEBUG_MODE = 1;
+    GPU _gpu;
+    int DEBUG_MODE = 3;
 
     if(DEBUG_MODE >= 1) {
         this->text->RenderText("FPS: " + Helpers::intTostring(acumfps), 0.01, 0.95, 0.5, glm::vec3(1,1,1));
@@ -947,8 +919,8 @@ void Epsilon::Render2D(void) {
         this->text->RenderText("OpenGL: " + GL_VER,0.01, 0.89, 0.3, glm::vec3(1,1,1));
         this->text->RenderText(GL_REN,0.01, 0.87, 0.3, glm::vec3(1,1,1));
         this->text->RenderText(GL_VEN,0.01, 0.85, 0.3, glm::vec3(1,1,1));
-        this->text->RenderText(std::string("Total GPU Memory: " + Helpers::intTostring(total_mem_kb/1024) + "MB"),0.01, 0.83, 0.3, glm::vec3(1,1,1));
-        this->text->RenderText(std::string("Current GPU Memory Available: " + Helpers::intTostring(cur_avail_mem_kb/1024) + "MB"),0.01, 0.81, 0.3, glm::vec3(1,1,1));
+        this->text->RenderText(std::string("Total GPU Memory: " + Helpers::intTostring(_gpu.getTotalMemory()/1024) + "MB"),0.01, 0.83, 0.3, glm::vec3(1,1,1));
+        this->text->RenderText(std::string("Current GPU Memory Available: " + Helpers::intTostring(_gpu.getAvailableMemory()/1024) + "MB"),0.01, 0.81, 0.3, glm::vec3(1,1,1));
         //this->text->RenderText(std::string("Current GPU Memory Available: " + Helpers::intTostring(cur_avail_mem_kb/1024) + "MB"),0.01, 0.77, 0.3, glm::vec3(1,1,1));
         this->text->RenderText(std::string("Resolution: " + Helpers::intTostring(this->WIDTH) + "x" + Helpers::intTostring(this->HEIGHT)),0.01, 0.79, 0.3, glm::vec3(1,1,1));
     }
@@ -1059,7 +1031,7 @@ void Epsilon::PollEvents(void) {
         this->m_CameraMode = CAMERA_FIXED;
     } else {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        this->m_CameraMode = PLAYER_CONTROLLED;
+        this->m_CameraMode = NO_CLIP;
     }
 
     if(Input::KeyBoard::KEYS[Input::GLFW::Key::N])
@@ -1226,7 +1198,7 @@ void Epsilon::RenderParticles(void) {
     glUniform2f(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "resolution"),  this->WIDTH, this->HEIGHT);
     glUniformMatrix4fv(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "view"), 1, GL_FALSE,   &eCamera->getViewMatrix()[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "PrevView"), 1, GL_FALSE,   &eCamera->getPrevViewMatrix()[0][0]);
-    this->SetUniforms(Shaders["DefaultParticle"], glm::vec3(0.0f), glm::vec3(1.0f), glm::quat(1.0, sin(glfwGetTime()*frametime), 0.0f, cos(glfwGetTime()*frametime) ));
+    this->SetUniforms(Shaders["DefaultParticle"], glm::vec3(0.0f), glm::vec3(4.0f), glm::quat(1.0, sin(glfwGetTime()*frametime), 0.0f, cos(glfwGetTime()*frametime) ));
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "texture0"), 0);
     glBindTexture(GL_TEXTURE_2D, tex->getTextureID());
@@ -1258,7 +1230,7 @@ void Epsilon::RenderFrame(void) {
     this->waterPlane->RenderWater(eCamera, PP->CopyTextureFBO->getRenderTargetHandler(0), glm::normalize(glm::vec3(83, 6, -3) - glm::vec3(0, 6, -3)), PP->gDepth);
     glEnable(GL_BLEND);
 */
-    //this->RenderParticles();
+    this->RenderParticles();
     PP->ShowPostProcessImage(this->frametime, (int)this->onMenu, this->sun->Direction, this->eCamera);
     glEnable(GL_BLEND);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

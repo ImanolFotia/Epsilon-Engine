@@ -177,7 +177,7 @@ private:
     GLuint blurSSR(GLuint);
     void setupPingPongSSR();
 
-    void CompositeImage();
+    void CompositeImage(bool);
 
     GLuint GetPixel(GLuint);
 

@@ -70,6 +70,7 @@ enum PARTICLE_PROXY {
     RAIN = 0,
     MIST,
     SNOW,
+    SMOKE
 };
 
 enum GUIType {

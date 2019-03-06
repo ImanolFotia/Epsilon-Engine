@@ -202,10 +202,12 @@ void Camera::HandleInputs(GLFWwindow*& window)
     LastTime = currentTime;
 
     Position += (MovementVector * MovementSpeed * DeltaTime);
+    mIsMoving = false;
     if(LastPosition != Position)
     {
         DeltaVector = (Position - LastPosition);
         MovementVector = glm::normalize(DeltaVector / glm::vec3( glm::sqrt(glm::pow(DeltaVector.x, 2.0)  + glm::pow(DeltaVector.y, 2.0) + glm::pow(DeltaVector.z , 2.0) ) ));
+        mIsMoving = true;
     }
 
     LastPosition = Position;
@@ -222,7 +224,7 @@ void Camera::UpdateMatrices(void)
 
 
     //std::cout << "Aspectratio = 16:10" << std::endl;
-    ProjectionMatrix = glm::perspective( glm::radians(FieldOfView) , Aspectratio , 0.1f , 3000.0f );
+    ProjectionMatrix = glm::perspective( glm::radians(FieldOfView) , glm::max(Aspectratio, 1.0f) , 0.1f , 3000.0f );
 
     PrevView = ViewMatrix;
 
@@ -242,6 +244,11 @@ glm::mat4 Camera::getViewMatrix(void)
 glm::mat4 Camera::getProjectionMatrix(void)
 {
     return this->ProjectionMatrix;
+}
+
+bool Camera::isMoving()
+{
+    return mIsMoving;
 }
 
 glm::vec3 Camera::getPosition(void)

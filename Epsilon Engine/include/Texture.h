@@ -19,7 +19,7 @@
 #include <ProgramData.h>
 #include <Includes.h>
 #include <Image/Image.hpp>
-
+#include <Log.h>
 using namespace std;
 
 class eTexture {
@@ -138,6 +138,7 @@ public:
         }
         if(!texture) {
             cout << "no se pudo crear" << TexName << endl;
+            Global::Log::WriteToLog("Texture: " + std::string(TexName) + " failed to load.");
             return;
         }
         glBindTexture(type, 0);
@@ -190,15 +191,18 @@ public:
                 glTexParameterf(type, GL_TEXTURE_MAX_ANISOTROPY_EXT, DATA.ANISOTROPY);
             }
         } else {
-            glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         }
         if(!texture) {
             cout << "no se pudo crear" << TexName << endl;
+            Global::Log::WriteToLog("Texture: " + std::string(TexName) + " failed to load.");
             return;
         }
         SOIL_free_image_data(image);
         glBindTexture(type, 0);
+
+        Global::Log::WriteToLog("Texture: " + std::string(TexName) + " Loaded.");
         //mtx.unlock();
     }
 

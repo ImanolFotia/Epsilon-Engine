@@ -57,6 +57,8 @@ public:
 
     void setViewMatrix(glm::mat4);
 
+    bool isMoving();
+
 private:
 
     void LockCamera(void);
@@ -77,6 +79,7 @@ public:
     int winx;
     int winy;
     float MaxMovementSpeed;
+    bool mIsMoving = false;
 
 private:
 

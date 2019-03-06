@@ -25,7 +25,7 @@ bool Model::loadModel(string emlPath, int a)
     if(!inFILE.is_open())
     {
         std::cout << "Fail to open EML file" << std::endl;
-        Global::Log::WriteToLog("Fail to open EML file " + emlPath);
+        Global::Log::WriteToLog("Model: " + emlPath + " could not be loaded.");
         return false;
     }
 
@@ -207,6 +207,7 @@ bool Model::loadModel(string emlPath, int a)
     delete[] l_meshes;
 
     inFILE.close();
+    Global::Log::WriteToLog("Model: " + std::string(emlPath) + " Loaded.");
 
     return true;
 

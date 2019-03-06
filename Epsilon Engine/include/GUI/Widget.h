@@ -25,6 +25,10 @@ public:
         m_OnHoverFunc();
     }
 
+    virtual void OnEnter(void) {
+        m_OnEnterFunc();
+    }
+
     template<typename T>
     void OnHoverCallback( T func ) {
         m_OnHoverFunc = func;
@@ -45,6 +49,16 @@ public:
         m_OnClickFunc = func;
     }
 
+    template<typename T>
+    void OnEnterCallback( T func ) {
+        m_OnEnterFunc = func;
+    }
+
+    template<typename T>
+    void OnKeyCallback( T func ) {
+        m_OnKeyFunc = func;
+    }
+
     void ChangeVisibility() {
         this->m_isHidden = !this->m_isHidden;
     }
@@ -57,48 +71,46 @@ public:
         CalculateBoundingBox();
         glm::vec4 Control = getBoundingBox();
         /** TOP LEFT*/    /** BOTTOM LEFT*/   /**TOP RIGHT*/    /**BOTTOM RIGHT*/
-        if(Events.MousePosition[0] > Control.x  && Events.MousePosition[0] > Control.x    && Events.MousePosition[0] < Control.y  &&  Events.MousePosition[0] < Control.y) {
-            if(Events.MousePosition[1] < Control.z  && Events.MousePosition[1] > Control.w   && Events.MousePosition[1] < Control.z  &&  Events.MousePosition[1] > Control.w) {
-                if(m_OnHoverFunc != nullptr && !m_isHidden)
-                    OnHover();
-                isHover = true;
-                hasLostFocus = false;
-                if(!wasHover) {
-                    Entering = true;
-                    wasHover = true;
-                    if(m_OnEnteringFunc!= nullptr && !m_isHidden)
-                        m_OnEnteringFunc();
-                } else {
-                    Entering = false;
-                    wasHover = true;
-                }
-                try {
-                    if(Events.LeftClickWasPressed && m_OnClickFunc != nullptr && !m_isHidden)
-                        m_OnClickFunc();
-                } catch(exception e) {
-                    std::cout << e.what() << std::endl;
-                }
+        if(Events.MousePosition[0] > Control.x  && Events.MousePosition[0] < Control.y && Events.MousePosition[1] < Control.z  && Events.MousePosition[1] > Control.w) {
+
+            if(m_OnHoverFunc != nullptr && !m_isHidden)
+                OnHover();
+            isHover = true;
+            hasLostFocus = false;
+            if(!wasHover) {
+                Entering = true;
+                wasHover = true;
+                if(m_OnEnteringFunc!= nullptr && !m_isHidden)
+                    m_OnEnteringFunc();
             } else {
-                isHover = false;
-                wasHover = false;
-                hasLostFocus = true;
-                if(!WasFocus) {
-                    Leaving = false;
-                    WasFocus = true;
-                } else {
-                    Leaving = true;
-                    WasFocus = false;
-                    if(m_OnLeavingFunc != nullptr && !m_isHidden)
-                        m_OnLeavingFunc();
-                }
-                if(m_OnLostFocusFunc != nullptr && !m_isHidden)
-                    m_OnLostFocusFunc();
+                Entering = false;
+                wasHover = true;
             }
+            try {
+                if(Events.LeftClickWasPressed && m_OnClickFunc != nullptr && !m_isHidden)
+                    m_OnClickFunc();
+            } catch(exception e) {
+                std::cout << e.what() << std::endl;
+            }
+
         } else {
+            isHover = false;
+            wasHover = false;
+            hasLostFocus = true;
+            if(!WasFocus) {
+                Leaving = false;
+                WasFocus = true;
+            } else {
+                Leaving = true;
+                WasFocus = false;
+                if(m_OnLeavingFunc != nullptr && !m_isHidden)
+                    m_OnLeavingFunc();
+            }
             if(m_OnLostFocusFunc != nullptr && !m_isHidden)
                 m_OnLostFocusFunc();
         }
     }
+
 
     bool m_isHidden = false;
 
@@ -107,7 +119,6 @@ private:
         return glm::vec4(BBL, BBR, BBT, BBB);
     }
 
-private:
     void CalculateBorders() {
         L = (-SizeX/2);
         R = (SizeX/2);
@@ -115,13 +126,13 @@ private:
         B = (-SizeY/2);
     }
 
-private:
     void CalculateBoundingBox() {
         BBL = ( - 1 * SizeX + PositionX);
         BBR = (SizeX + PositionX);
         BBT = (SizeY + PositionY);
         BBB = ( - 1 * SizeY + PositionY);
     }
+
 
 public:
     glm::vec2 m_Position;
@@ -133,6 +144,8 @@ protected:
     std::function<void()> m_OnLostFocusFunc = nullptr;
     std::function<void()> m_OnEnteringFunc = nullptr;
     std::function<void()> m_OnLeavingFunc = nullptr;
+    std::function<void()> m_OnEnterFunc = nullptr;
+    std::function<void()> m_OnKeyFunc = nullptr;
 
     GUIEVENTS m_Events;
     float L, R, T, B;
@@ -148,23 +161,17 @@ protected:
 
 public:
     float PositionX = 0.0;
-public:
     float PositionY = 0.0;
 
-public:
     std::string textureName;
 
-public:
     float SizeX = 0.2;
-public:
     float SizeY = 0.2;
     GUIType type;
-public:
     float TextSize;
-public:
     float textPosition;
 protected:
     float WIDTH;
-protected:
     float HEIGHT;
+
 };

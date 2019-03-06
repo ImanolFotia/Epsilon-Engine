@@ -16,6 +16,7 @@ in vec3 Normal;
 
 in vec4 PrevPosition;
 in vec4 Position;
+in flat int Id;
 
 uniform vec3 viewPos;
 uniform vec2 resolution;
@@ -28,8 +29,26 @@ float LinearizeDepth(float depth) {
   return ((2.0 * NEAR * FAR) / (FAR + NEAR - z * (FAR - NEAR)));
 }
 
+#define HASHSCALE1 443.8975
+float hash11(float p)
+{
+	vec3 p3  = fract(vec3(p) * HASHSCALE1);
+    p3 += dot(p3, p3.yzx + 19.19);
+    return fract((p3.x + p3.y) * p3.z);
+}
+
+vec2 rotateUV(vec2 uv, float rotation)
+{
+    float mid = 0.5;
+    return vec2(
+        cos(rotation) * (uv.x - mid) + sin(rotation) * (uv.y - mid) + mid,
+        cos(rotation) * (uv.y - mid) - sin(rotation) * (uv.x - mid) + mid
+    );
+}
+
 void main()
 {
+	float x = float(gl_PrimitiveID);
 
     vec2 ndc = gl_FragCoord.xy/resolution;
 	float l_gDepth = LinearizeDepth(texture(bufferDepth, ndc).r);
@@ -38,7 +57,9 @@ void main()
 	dDepth = clamp(dDepth/20.0, 0.0, 1.0);
 
 	vec4 tex = texture(texture0, UV);
-	FragColor = vec4(vec3(tex.rgb), dDepth*tex.a);//tex;
+	vec3 Normal = vec3(0,1,0);
+	float diff = max(dot(Normal, normalize(vec3(0.0, 5.0, 0.0) - wFragPos)), 0.0);
+	FragColor = vec4(vec3(tex.rgb)*0.05, min(dDepth,tex.a)*0.05);//tex;
 	//FragColor.a = clamp(dDepth, 0.0, 1.0);
 	blurImage = vec4(0.0);
 	

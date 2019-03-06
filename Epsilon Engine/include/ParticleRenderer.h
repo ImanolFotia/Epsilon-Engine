@@ -15,9 +15,13 @@ public:
 
     void Render() {
         glDisable(GL_CULL_FACE);
+        glDepthMask(GL_FALSE);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glBindVertexArray(this->VAO);
         glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, m_NumParticles);
         glBindVertexArray(0);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDepthMask(GL_TRUE);
         glEnable(GL_CULL_FACE);
     }
 

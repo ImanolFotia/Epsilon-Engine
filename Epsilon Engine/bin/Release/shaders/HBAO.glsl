@@ -28,7 +28,7 @@ float R = 1.5;
 float R2 = R*R;
 float NegInvR2 = - 1.0 / R2;
 float TanBias = tan(45.0 * PI / 180.0);
-float MaxRadiusPixels = 50.0;
+float MaxRadiusPixels = 15.0;
 
 uniform int NumDirections;
 uniform int NumSamples;
