@@ -1,0 +1,66 @@
+.TH "DeferredRenderer" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+DeferredRenderer \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBRenderer\fP, and \fBRenderer\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "virtual void \fBStart\fP ()"
+.br
+.ti -1c
+.RI "virtual void \fBEnd\fP ()"
+.br
+.ti -1c
+.RI "\fBDeferredRenderer\fP (int width, int height)"
+.br
+.ti -1c
+.RI "void \fBbeginRender\fP ()"
+.br
+.ti -1c
+.RI "void \fBendRender\fP ()"
+.br
+.ti -1c
+.RI "void \fBgetTexture\fP ()"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "std::vector< \fBLight\fP > \fBm_Ligths\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBFrameBuffer\fP > \fBm_gBuffer\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBFrameBuffer\fP > \fBm_CompositeBuffer\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBShader\fP > \fBm_shader\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< eCamera > \fBm_camera\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 8 of file DeferredRenderer\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "DeferredRenderer::DeferredRenderer (int width, int height)\fC [inline]\fP"
+Setting up the Geometry buffer
+.PP
+Setting up the composite buffer 
+.PP
+Definition at line 10 of file DeferredRenderer\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

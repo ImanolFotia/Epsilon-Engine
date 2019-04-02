@@ -1,0 +1,139 @@
+.TH "CubeMap" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+CubeMap \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherited by \fBPCCB\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCubeMap\fP (int ID, glm::vec3 Pos)"
+.br
+.ti -1c
+.RI "\fBCubeMap\fP (std::vector< std::string > paths, int ID, glm::vec3 Pos)"
+.br
+.ti -1c
+.RI "virtual void \fBCaptureEnvironment\fP (int index)"
+.br
+.ti -1c
+.RI "void \fBendCapturingEnvironment\fP ()"
+.br
+.ti -1c
+.RI "void \fBgenFrameBuffer\fP ()"
+.br
+.ti -1c
+.RI "void \fBgenAmbientConvolution\fP ()"
+.br
+.ti -1c
+.RI "glm::mat4 \fBgetViewMatrixbyIndex\fP (int index)"
+.br
+.ti -1c
+.RI "glm::mat4 \fBgetProjectionMatrix\fP ()"
+.br
+.ti -1c
+.RI "virtual glm::vec3 \fBgetPosition\fP ()"
+.br
+.ti -1c
+.RI "virtual GLuint \fBgetTextureID\fP ()"
+.br
+.ti -1c
+.RI "virtual GLuint \fBgetCubemapFace\fP (int index)"
+.br
+.ti -1c
+.RI "int \fBgetID\fP ()"
+.br
+.ti -1c
+.RI "CUBEMAP_TYPE \fBgetType\fP ()"
+.br
+.in -1c
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "glm::mat4 \fBcaptureViews\fP [6]"
+.br
+.ti -1c
+.RI "GLuint \fBcubemapTex\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBShader\fP > \fBmMainShader\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBShader\fP > \fBprefilterShader\fP"
+.br
+.ti -1c
+.RI "glm::mat4 \fBcaptureProjection\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBprefilterMap\fP"
+.br
+.ti -1c
+.RI "GLuint \fBcaptureFBO\fP = 0"
+.br
+.ti -1c
+.RI "GLuint \fBcaptureRBO\fP = 0"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBrenderCube\fP ()"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "unsigned int \fBcubeVAO\fP = 0"
+.br
+.ti -1c
+.RI "unsigned int \fBcubeVBO\fP = 0"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "int \fBID\fP = 0"
+.br
+.ti -1c
+.RI "glm::vec3 \fBPosition\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBeTexture\fP > \fBtexture\fP"
+.br
+.ti -1c
+.RI "std::vector< glm::vec3 > \fBm_CubeMapsDirections\fP"
+.br
+.ti -1c
+.RI "std::vector< GLuint > \fBm_CubemapSides\fP"
+.br
+.ti -1c
+.RI "std::vector< GLuint > \fBm_renderTargets\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBOpenGLHelpers::FullScreenQuad\fP > \fBm_Quad\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBShader\fP > \fBmPassThroughShader\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBFrameBuffer\fP< std::string > > \fBhdrFBO\fP"
+.br
+.ti -1c
+.RI "CUBEMAP_TYPE \fBtype\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 19 of file CubeMap\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

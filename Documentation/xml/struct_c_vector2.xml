@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="struct_c_vector2" kind="struct" language="C++" prot="public">
+    <compoundname>CVector2</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_c_vector2_1a33cc20e661507c82c45d27e75563d672" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float CVector2::x</definition>
+        <argsstring></argsstring>
+        <name>x</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="41" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_c_vector2_1a3856009668b0d289c514161ca5828e2a" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float CVector2::y</definition>
+        <argsstring></argsstring>
+        <name>y</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="41" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="40" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="39" bodyend="42"/>
+    <listofallmembers>
+      <member refid="struct_c_vector2_1a33cc20e661507c82c45d27e75563d672" prot="public" virt="non-virtual"><scope>CVector2</scope><name>x</name></member>
+      <member refid="struct_c_vector2_1a3856009668b0d289c514161ca5828e2a" prot="public" virt="non-virtual"><scope>CVector2</scope><name>y</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

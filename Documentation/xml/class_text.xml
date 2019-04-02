@@ -1,0 +1,194 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="class_text" kind="class" language="C++" prot="public">
+    <compoundname>Text</compoundname>
+    <includes refid="_text_8h" local="no">Text.h</includes>
+    <innerclass refid="struct_text_1_1_character" prot="private">Text::Character</innerclass>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_text_1a50e97faa1729cd7eac3a177904e1e5a6" prot="private" static="no" mutable="no">
+        <type><ref refid="class_shader" kindref="compound">Shader</ref> *</type>
+        <definition>Shader* Text::shader</definition>
+        <argsstring></argsstring>
+        <name>shader</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Text.h" line="159" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Text.h" bodystart="159" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_text_1ae58c29280eefc2bb9741791709f1fb39" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Text::WIDTH</definition>
+        <argsstring></argsstring>
+        <name>WIDTH</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Text.h" line="160" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Text.h" bodystart="160" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_text_1ac9ccfb4ff928907085b69bf1f9cec87f" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Text::HEIGTH</definition>
+        <argsstring></argsstring>
+        <name>HEIGTH</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Text.h" line="160" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Text.h" bodystart="160" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_text_1aa3d063fcb04f34d0b2ed7a40d5fddbf2" prot="private" static="no" mutable="no">
+        <type>std::map&lt; GLchar, <ref refid="struct_text_1_1_character" kindref="compound">Character</ref> &gt;</type>
+        <definition>std::map&lt;GLchar, Character&gt; Text::Characters</definition>
+        <argsstring></argsstring>
+        <name>Characters</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Text.h" line="172" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Text.h" bodystart="172" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_text_1a485e2c31f7a6d7a5a7d360f00818d751" prot="private" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint Text::VAO</definition>
+        <argsstring></argsstring>
+        <name>VAO</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Text.h" line="173" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Text.h" bodystart="173" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_text_1aaac524c6d42c895e6cbf962538f72b3a" prot="private" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint Text::VBO</definition>
+        <argsstring></argsstring>
+        <name>VBO</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Text.h" line="173" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Text.h" bodystart="173" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_text_1a76a5d4d810534b5f8bc34ff45064f1f3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Text::Text</definition>
+        <argsstring>(const char *FontName, int WIDTH, int HEIGHT)</argsstring>
+        <name>Text</name>
+        <param>
+          <type>const char *</type>
+          <declname>FontName</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>WIDTH</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>HEIGHT</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+<para>FreeType</para><para>All functions return a value different than 0 whenever an error occurred</para><para>Load font as face</para><para>Set size to load glyphs as</para><para>Load first 128 characters of ASCII set</para><para>Load character glyph</para><para>Generate texture</para><para>Set texture options</para><para>Now store character for later use</para><para>Destroy FreeType once we&apos;re finished</para><para>Configure VAO/VBO for texture quads </para>        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Text.h" line="22" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Text.h" bodystart="22" bodyend="103"/>
+      </memberdef>
+      <memberdef kind="function" id="class_text_1a068e9e04751fc94f4c45c6cb15af55f4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type></type>
+        <definition>virtual Text::~Text</definition>
+        <argsstring>()</argsstring>
+        <name>~Text</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Text.h" line="105" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Text.h" bodystart="105" bodyend="107"/>
+      </memberdef>
+      <memberdef kind="function" id="class_text_1abefa2ead7ccd585c07995bb5d7d52c97" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Text::RenderText</definition>
+        <argsstring>(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)</argsstring>
+        <name>RenderText</name>
+        <param>
+          <type>std::string</type>
+          <declname>text</declname>
+        </param>
+        <param>
+          <type>GLfloat</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>GLfloat</type>
+          <declname>y</declname>
+        </param>
+        <param>
+          <type>GLfloat</type>
+          <declname>scale</declname>
+        </param>
+        <param>
+          <type>glm::vec3</type>
+          <declname>color</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+<para>Activate corresponding render state</para><para>Iterate through all characters</para><para>Render glyph texture over quad</para><para>Update content of VBO memory</para><para>Render quad</para><para>Now advance cursors for next glyph (note that advance is number of 1/64 pixels)</para><para>Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels)) </para>        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Text.h" line="111" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Text.h" bodystart="111" bodyend="156"/>
+        <references refid="struct_text_1_1_character_1a2bfdd54e6722da034311bb89e8059336" compoundref="_text_8h" startline="168">Text::Character::Bearing</references>
+        <references refid="struct_text_1_1_character_1ad4c2b88bfc1232dec53699b361231ca3" compoundref="_text_8h" startline="167">Text::Character::Size</references>
+        <references refid="struct_text_1_1_character_1a654a8be453c9922a74763e5579f6ce61" compoundref="_text_8h" startline="169">Text::Character::Advance</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>========= Copyright Survtech, All rights reserved. ============//</para><para>Purpose: <hruler/>
+ </para>    </detaileddescription>
+    <collaborationgraph>
+      <node id="394">
+        <label>Shader</label>
+        <link refid="class_shader"/>
+      </node>
+      <node id="393">
+        <label>Text</label>
+        <link refid="class_text"/>
+        <childnode refid="394" relation="usage">
+          <edgelabel>shader</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="D:/Epsilon/Epsilon Engine/include/Text.h" line="19" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Text.h" bodystart="18" bodyend="174"/>
+    <listofallmembers>
+      <member refid="class_text_1aa3d063fcb04f34d0b2ed7a40d5fddbf2" prot="private" virt="non-virtual"><scope>Text</scope><name>Characters</name></member>
+      <member refid="class_text_1ac9ccfb4ff928907085b69bf1f9cec87f" prot="private" virt="non-virtual"><scope>Text</scope><name>HEIGTH</name></member>
+      <member refid="class_text_1abefa2ead7ccd585c07995bb5d7d52c97" prot="public" virt="non-virtual"><scope>Text</scope><name>RenderText</name></member>
+      <member refid="class_text_1a50e97faa1729cd7eac3a177904e1e5a6" prot="private" virt="non-virtual"><scope>Text</scope><name>shader</name></member>
+      <member refid="class_text_1a76a5d4d810534b5f8bc34ff45064f1f3" prot="public" virt="non-virtual"><scope>Text</scope><name>Text</name></member>
+      <member refid="class_text_1a485e2c31f7a6d7a5a7d360f00818d751" prot="private" virt="non-virtual"><scope>Text</scope><name>VAO</name></member>
+      <member refid="class_text_1aaac524c6d42c895e6cbf962538f72b3a" prot="private" virt="non-virtual"><scope>Text</scope><name>VBO</name></member>
+      <member refid="class_text_1ae58c29280eefc2bb9741791709f1fb39" prot="private" virt="non-virtual"><scope>Text</scope><name>WIDTH</name></member>
+      <member refid="class_text_1a068e9e04751fc94f4c45c6cb15af55f4" prot="public" virt="virtual"><scope>Text</scope><name>~Text</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

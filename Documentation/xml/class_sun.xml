@@ -1,0 +1,212 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="class_sun" kind="class" language="C++" prot="public">
+    <compoundname>Sun</compoundname>
+    <includes refid="_sun_8h" local="no">Sun.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_sun_1a044e3f3e76daaf6a4dfdfaa2ced95694" prot="public" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Sun::Position</definition>
+        <argsstring></argsstring>
+        <name>Position</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Sun.h" line="30" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Sun.h" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_sun_1ae3467f6ebc8f83f2cbbd49289693d967" prot="public" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Sun::Direction</definition>
+        <argsstring></argsstring>
+        <name>Direction</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Sun.h" line="31" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Sun.h" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_sun_1a3bc12a74bbbb49f0f77dcf32de332d7e" prot="private" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Sun::radius</definition>
+        <argsstring></argsstring>
+        <name>radius</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Sun.h" line="37" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Sun.h" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_sun_1a8fcdae88a34ab1b5279d394b5ce7c859" prot="private" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Sun::height</definition>
+        <argsstring></argsstring>
+        <name>height</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Sun.h" line="38" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Sun.h" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_sun_1a8eab40b64942412ea07c443f4398d5b8" prot="private" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint Sun::TextureID</definition>
+        <argsstring></argsstring>
+        <name>TextureID</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Sun.h" line="40" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Sun.h" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_sun_1a82ec072ad094119b8efff93954106a21" prot="private" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint Sun::VAO</definition>
+        <argsstring></argsstring>
+        <name>VAO</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Sun.h" line="42" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Sun.h" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_sun_1a56b11001a0b61e52cb51312907c25a9d" prot="private" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint Sun::VBO</definition>
+        <argsstring></argsstring>
+        <name>VBO</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Sun.h" line="43" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Sun.h" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_sun_1a42ac7b8f44fdc3c95d96c1a83e5f1bb9" prot="private" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint Sun::EBO</definition>
+        <argsstring></argsstring>
+        <name>EBO</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Sun.h" line="43" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Sun.h" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_sun_1aa3e508ffefb0cb76e55c2bdefdc907d1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Sun::Sun</definition>
+        <argsstring>()</argsstring>
+        <name>Sun</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>========= Copyright Survtech, All rights reserved. ============//</para><para>Purpose: <hruler/>
+ </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Sun.h" line="22" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Sun.cpp" bodystart="9" bodyend="20"/>
+        <references refid="class_sun_1a14d4e698e1d477d14b5ac84dc311446f" compoundref="_sun_8cpp" startline="47" endline="76">PrepareVAO</references>
+      </memberdef>
+      <memberdef kind="function" id="class_sun_1a4e43fa67eca98adfb1fa900207af6120" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Sun::~Sun</definition>
+        <argsstring>()</argsstring>
+        <name>~Sun</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Sun.h" line="23" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Sun.h" bodystart="23" bodyend="25"/>
+      </memberdef>
+      <memberdef kind="function" id="class_sun_1a9860c6a85787ce7c0ed969ab5019464e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Sun::Render</definition>
+        <argsstring>(Shader *&amp;)</argsstring>
+        <name>Render</name>
+        <param>
+          <type><ref refid="class_shader" kindref="compound">Shader</ref> *&amp;</type>
+          <defname>shader</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Sun.h" line="27" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Sun.cpp" bodystart="22" bodyend="39"/>
+      </memberdef>
+      <memberdef kind="function" id="class_sun_1a4b93a42883411f4287f91ba3d3dc73a5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Sun::Update</definition>
+        <argsstring>()</argsstring>
+        <name>Update</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+<para>glm::cos(glfwGetTime()/10)</para><para>glm::sin(glfwGetTime()/10)</para><para>glm::sin(glfwGetTime()/10) </para>        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Sun.h" line="28" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Sun.cpp" bodystart="41" bodyend="45"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_sun_1a14d4e698e1d477d14b5ac84dc311446f" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Sun::PrepareVAO</definition>
+        <argsstring>()</argsstring>
+        <name>PrepareVAO</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+<para>Positions /// <ref refid="struct_texture" kindref="compound">Texture</ref> Coords</para><para>Top Left</para><para>Top Right</para><para>Bottom Right</para><para>Bottom Left </para>        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Sun.h" line="35" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Sun.cpp" bodystart="47" bodyend="76"/>
+        <referencedby refid="class_sun_1aa3e508ffefb0cb76e55c2bdefdc907d1" compoundref="_sun_8cpp" startline="9" endline="20">Sun</referencedby>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>========= Copyright Survtech, All rights reserved. ============//</para><para>Purpose: <hruler/>
+ </para>    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/Sun.h" line="18" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Sun.h" bodystart="18" bodyend="44"/>
+    <listofallmembers>
+      <member refid="class_sun_1ae3467f6ebc8f83f2cbbd49289693d967" prot="public" virt="non-virtual"><scope>Sun</scope><name>Direction</name></member>
+      <member refid="class_sun_1a42ac7b8f44fdc3c95d96c1a83e5f1bb9" prot="private" virt="non-virtual"><scope>Sun</scope><name>EBO</name></member>
+      <member refid="class_sun_1a8fcdae88a34ab1b5279d394b5ce7c859" prot="private" virt="non-virtual"><scope>Sun</scope><name>height</name></member>
+      <member refid="class_sun_1a044e3f3e76daaf6a4dfdfaa2ced95694" prot="public" virt="non-virtual"><scope>Sun</scope><name>Position</name></member>
+      <member refid="class_sun_1a14d4e698e1d477d14b5ac84dc311446f" prot="private" virt="non-virtual"><scope>Sun</scope><name>PrepareVAO</name></member>
+      <member refid="class_sun_1a3bc12a74bbbb49f0f77dcf32de332d7e" prot="private" virt="non-virtual"><scope>Sun</scope><name>radius</name></member>
+      <member refid="class_sun_1a9860c6a85787ce7c0ed969ab5019464e" prot="public" virt="non-virtual"><scope>Sun</scope><name>Render</name></member>
+      <member refid="class_sun_1aa3e508ffefb0cb76e55c2bdefdc907d1" prot="public" virt="non-virtual"><scope>Sun</scope><name>Sun</name></member>
+      <member refid="class_sun_1a8eab40b64942412ea07c443f4398d5b8" prot="private" virt="non-virtual"><scope>Sun</scope><name>TextureID</name></member>
+      <member refid="class_sun_1a4b93a42883411f4287f91ba3d3dc73a5" prot="public" virt="non-virtual"><scope>Sun</scope><name>Update</name></member>
+      <member refid="class_sun_1a82ec072ad094119b8efff93954106a21" prot="private" virt="non-virtual"><scope>Sun</scope><name>VAO</name></member>
+      <member refid="class_sun_1a56b11001a0b61e52cb51312907c25a9d" prot="private" virt="non-virtual"><scope>Sun</scope><name>VBO</name></member>
+      <member refid="class_sun_1a4e43fa67eca98adfb1fa900207af6120" prot="public" virt="non-virtual"><scope>Sun</scope><name>~Sun</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

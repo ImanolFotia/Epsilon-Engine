@@ -1,0 +1,360 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="class_model" kind="class" language="C++" prot="public">
+    <compoundname>Model</compoundname>
+    <innerclass refid="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x" prot="public">Model::BOUNDING_BOX</innerclass>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_model_1a973bfbdb62d7cc49da681f5f96416bac" prot="public" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Model::Position</definition>
+        <argsstring></argsstring>
+        <name>Position</name>
+        <initializer>= glm::vec3(0,0,0)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="44" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_model_1a272a95591f623982748ca26cfc2787b3" prot="public" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Model::Scale</definition>
+        <argsstring></argsstring>
+        <name>Scale</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="44" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_model_1ae319973305e370f31f131b6bc53c71ca" prot="public" static="no" mutable="no">
+        <type>glm::quat</type>
+        <definition>glm::quat Model::Rotation</definition>
+        <argsstring></argsstring>
+        <name>Rotation</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="45" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_model_1a8fae239ce9a064b20070c5a50f3c15a9" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Model::m_CastShadows</definition>
+        <argsstring></argsstring>
+        <name>m_CastShadows</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="46" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_model_1a2be5d1b1db5c70b22ff1f43e45146e09" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Model::m_IsVisible</definition>
+        <argsstring></argsstring>
+        <name>m_IsVisible</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="47" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_model_1a7d8ac75c6ab0c5c63f97571f33095924" prot="public" static="no" mutable="no">
+        <type>MODEL_TYPE</type>
+        <definition>MODEL_TYPE Model::m_Type</definition>
+        <argsstring></argsstring>
+        <name>m_Type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="48" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_model_1af175189cc681cfc69faf76e2d2ed78a1" prot="public" static="no" mutable="no">
+        <type>std::shared_ptr&lt; <ref refid="class_resource_manager" kindref="compound">ResourceManager</ref> &gt;</type>
+        <definition>std::shared_ptr&lt;ResourceManager&gt; Model::resm</definition>
+        <argsstring></argsstring>
+        <name>resm</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="50" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_model_1af94ddde9af2f1fcee96a5aca53e48ed1" prot="public" static="no" mutable="no">
+        <type>const char *</type>
+        <definition>const char* Model::path</definition>
+        <argsstring></argsstring>
+        <name>path</name>
+        <briefdescription>
+<para>Constructor, expects a filepath to a 3D model. </para>        </briefdescription>
+        <detaileddescription>
+<para>Functions </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="54" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_model_1a5d77b67392e10756ca9c5075b2abedea" prot="public" static="no" mutable="no">
+        <type>string</type>
+        <definition>string Model::directory</definition>
+        <argsstring></argsstring>
+        <name>directory</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="74" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_model_1a8ff9e88cc08d20ac95168a6a61458d98" prot="public" static="no" mutable="no">
+        <type>vector&lt; <ref refid="class_mesh" kindref="compound">Mesh</ref> &gt;</type>
+        <definition>vector&lt;Mesh&gt; Model::meshes</definition>
+        <argsstring></argsstring>
+        <name>meshes</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="85" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="85" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_model_1aa0d87cb976812a96da160a85d7a610e8" prot="public" static="no" mutable="no">
+        <type>vector&lt; <ref refid="struct_texture" kindref="compound">Texture</ref> &gt;</type>
+        <definition>vector&lt;Texture&gt; Model::textures_loaded</definition>
+        <argsstring></argsstring>
+        <name>textures_loaded</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="87" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="87" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_model_1a4fb7f2a4cd72a2d800219107187e07f2" prot="public" static="no" mutable="no">
+        <type><ref refid="struct_m_i_n___m_a_x___p_o_i_n_t_s" kindref="compound">MIN_MAX_POINTS</ref></type>
+        <definition>MIN_MAX_POINTS Model::MinMaxPoints</definition>
+        <argsstring></argsstring>
+        <name>MinMaxPoints</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="103" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="103" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_model_1abda72709e3aa14066e39f4ccd02f9911" prot="public" static="no" mutable="no">
+        <type><ref refid="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x" kindref="compound">BOUNDING_BOX</ref></type>
+        <definition>BOUNDING_BOX Model::BoundingBox</definition>
+        <argsstring></argsstring>
+        <name>BoundingBox</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="105" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="105" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_model_1a0c34749c25d878e0e00179911d2b6628" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Model::Model</definition>
+        <argsstring>(const char *path)</argsstring>
+        <name>Model</name>
+        <param>
+          <type>const char *</type>
+          <declname>path</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="56" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="56" bodyend="62"/>
+      </memberdef>
+      <memberdef kind="function" id="class_model_1a9e5fadef9ed39a2d3a2282b3e6d34524" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Model::Model</definition>
+        <argsstring>(const char *path, std::shared_ptr&lt; ResourceManager &gt; rm, glm::vec3 pos=glm::vec3(0, 0, 0), glm::vec3 sc=glm::vec3(0, 0, 0), glm::quat rot=glm::quat(0, 0, 0, 1))</argsstring>
+        <name>Model</name>
+        <param>
+          <type>const char *</type>
+          <declname>path</declname>
+        </param>
+        <param>
+          <type>std::shared_ptr&lt; <ref refid="class_resource_manager" kindref="compound">ResourceManager</ref> &gt;</type>
+          <declname>rm</declname>
+        </param>
+        <param>
+          <type>glm::vec3</type>
+          <declname>pos</declname>
+          <defval>glm::vec3(0, 0, 0)</defval>
+        </param>
+        <param>
+          <type>glm::vec3</type>
+          <declname>sc</declname>
+          <defval>glm::vec3(0, 0, 0)</defval>
+        </param>
+        <param>
+          <type>glm::quat</type>
+          <declname>rot</declname>
+          <defval>glm::quat(0, 0, 0, 1)</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="64" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Model.cpp" bodystart="4" bodyend="15"/>
+      </memberdef>
+      <memberdef kind="function" id="class_model_1a01308a0e5396f32afacefe1b1e39312d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::string</type>
+        <definition>std::string Model::getPath</definition>
+        <argsstring>()</argsstring>
+        <name>getPath</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="66" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="66" bodyend="69"/>
+      </memberdef>
+      <memberdef kind="function" id="class_model_1ad6ebd2062a0b823db841a0b88baac4c0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Model::~Model</definition>
+        <argsstring>()</argsstring>
+        <name>~Model</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="71" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="71" bodyend="73"/>
+      </memberdef>
+      <memberdef kind="function" id="class_model_1a8444e404fcc9cc66827c2f628b92ece3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Model::Draw</definition>
+        <argsstring>(Shader *shader)</argsstring>
+        <name>Draw</name>
+        <param>
+          <type><ref refid="class_shader" kindref="compound">Shader</ref> *</type>
+          <declname>shader</declname>
+        </param>
+        <briefdescription>
+<para>Draws the model, and thus all its meshes. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="76" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Model.cpp" bodystart="149" bodyend="154"/>
+      </memberdef>
+      <memberdef kind="function" id="class_model_1a03262c92e9aa1028a2df43eb53eaca67" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Model::DrawNoTexture</definition>
+        <argsstring>()</argsstring>
+        <name>DrawNoTexture</name>
+        <briefdescription>
+<para>Draws the model, and thus all its meshes. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="79" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="79" bodyend="83"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_model_1a7eff5466b93a48b22e71f9b57c88c6ad" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool Model::loadModel</definition>
+        <argsstring>(string emlPath, int a)</argsstring>
+        <name>loadModel</name>
+        <param>
+          <type>string</type>
+          <declname>emlPath</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>a</declname>
+        </param>
+        <briefdescription>
+<para>Stores all the textures loaded so far, optimization to make sure textures aren&apos;t loaded more than once. </para>        </briefdescription>
+        <detaileddescription>
+<para><ref refid="class_model" kindref="compound">Model</ref> Data </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="113" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Model.cpp" bodystart="18" bodyend="147"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="299">
+        <label>MIN_MAX_POINTS</label>
+        <link refid="struct_m_i_n___m_a_x___p_o_i_n_t_s"/>
+      </node>
+      <node id="300">
+        <label>Model::BOUNDING_BOX</label>
+        <link refid="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x"/>
+      </node>
+      <node id="298">
+        <label>Model</label>
+        <link refid="class_model"/>
+        <childnode refid="299" relation="usage">
+          <edgelabel>MinMaxPoints</edgelabel>
+        </childnode>
+        <childnode refid="300" relation="usage">
+          <edgelabel>BoundingBox</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="41" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="40" bodyend="115"/>
+    <listofallmembers>
+      <member refid="class_model_1abda72709e3aa14066e39f4ccd02f9911" prot="public" virt="non-virtual"><scope>Model</scope><name>BoundingBox</name></member>
+      <member refid="class_model_1a5d77b67392e10756ca9c5075b2abedea" prot="public" virt="non-virtual"><scope>Model</scope><name>directory</name></member>
+      <member refid="class_model_1a8444e404fcc9cc66827c2f628b92ece3" prot="public" virt="non-virtual"><scope>Model</scope><name>Draw</name></member>
+      <member refid="class_model_1a03262c92e9aa1028a2df43eb53eaca67" prot="public" virt="non-virtual"><scope>Model</scope><name>DrawNoTexture</name></member>
+      <member refid="class_model_1a01308a0e5396f32afacefe1b1e39312d" prot="public" virt="non-virtual"><scope>Model</scope><name>getPath</name></member>
+      <member refid="class_model_1a7eff5466b93a48b22e71f9b57c88c6ad" prot="private" virt="non-virtual"><scope>Model</scope><name>loadModel</name></member>
+      <member refid="class_model_1a8fae239ce9a064b20070c5a50f3c15a9" prot="public" virt="non-virtual"><scope>Model</scope><name>m_CastShadows</name></member>
+      <member refid="class_model_1a2be5d1b1db5c70b22ff1f43e45146e09" prot="public" virt="non-virtual"><scope>Model</scope><name>m_IsVisible</name></member>
+      <member refid="class_model_1a7d8ac75c6ab0c5c63f97571f33095924" prot="public" virt="non-virtual"><scope>Model</scope><name>m_Type</name></member>
+      <member refid="class_model_1a8ff9e88cc08d20ac95168a6a61458d98" prot="public" virt="non-virtual"><scope>Model</scope><name>meshes</name></member>
+      <member refid="class_model_1a4fb7f2a4cd72a2d800219107187e07f2" prot="public" virt="non-virtual"><scope>Model</scope><name>MinMaxPoints</name></member>
+      <member refid="class_model_1a0c34749c25d878e0e00179911d2b6628" prot="public" virt="non-virtual"><scope>Model</scope><name>Model</name></member>
+      <member refid="class_model_1a9e5fadef9ed39a2d3a2282b3e6d34524" prot="public" virt="non-virtual"><scope>Model</scope><name>Model</name></member>
+      <member refid="class_model_1af94ddde9af2f1fcee96a5aca53e48ed1" prot="public" virt="non-virtual"><scope>Model</scope><name>path</name></member>
+      <member refid="class_model_1a973bfbdb62d7cc49da681f5f96416bac" prot="public" virt="non-virtual"><scope>Model</scope><name>Position</name></member>
+      <member refid="class_model_1af175189cc681cfc69faf76e2d2ed78a1" prot="public" virt="non-virtual"><scope>Model</scope><name>resm</name></member>
+      <member refid="class_model_1ae319973305e370f31f131b6bc53c71ca" prot="public" virt="non-virtual"><scope>Model</scope><name>Rotation</name></member>
+      <member refid="class_model_1a272a95591f623982748ca26cfc2787b3" prot="public" virt="non-virtual"><scope>Model</scope><name>Scale</name></member>
+      <member refid="class_model_1aa0d87cb976812a96da160a85d7a610e8" prot="public" virt="non-virtual"><scope>Model</scope><name>textures_loaded</name></member>
+      <member refid="class_model_1ad6ebd2062a0b823db841a0b88baac4c0" prot="public" virt="non-virtual"><scope>Model</scope><name>~Model</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

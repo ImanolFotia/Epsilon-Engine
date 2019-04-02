@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="struct_m_d5_model_1_1_joint" kind="struct" language="C++" prot="protected">
+    <compoundname>MD5Model::Joint</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_joint_1a87fc950b11a52a0f5c3ac5ef8ec554ac" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string MD5Model::Joint::m_Name</definition>
+        <argsstring></argsstring>
+        <name>m_Name</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="67" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_joint_1a386ca25e937f6341eb8a2afd1d2165e8" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MD5Model::Joint::m_ParentID</definition>
+        <argsstring></argsstring>
+        <name>m_ParentID</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="68" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_joint_1ad0858a102b54299e5fe8ad942acffea0" prot="public" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 MD5Model::Joint::m_Pos</definition>
+        <argsstring></argsstring>
+        <name>m_Pos</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="69" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_joint_1a9fbf36372259c5d1c877b06c991c279b" prot="public" static="no" mutable="no">
+        <type>glm::quat</type>
+        <definition>glm::quat MD5Model::Joint::m_Orient</definition>
+        <argsstring></argsstring>
+        <name>m_Orient</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="70" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="66" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="65" bodyend="71"/>
+    <listofallmembers>
+      <member refid="struct_m_d5_model_1_1_joint_1a87fc950b11a52a0f5c3ac5ef8ec554ac" prot="public" virt="non-virtual"><scope>MD5Model::Joint</scope><name>m_Name</name></member>
+      <member refid="struct_m_d5_model_1_1_joint_1a9fbf36372259c5d1c877b06c991c279b" prot="public" virt="non-virtual"><scope>MD5Model::Joint</scope><name>m_Orient</name></member>
+      <member refid="struct_m_d5_model_1_1_joint_1a386ca25e937f6341eb8a2afd1d2165e8" prot="public" virt="non-virtual"><scope>MD5Model::Joint</scope><name>m_ParentID</name></member>
+      <member refid="struct_m_d5_model_1_1_joint_1ad0858a102b54299e5fe8ad942acffea0" prot="public" virt="non-virtual"><scope>MD5Model::Joint</scope><name>m_Pos</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

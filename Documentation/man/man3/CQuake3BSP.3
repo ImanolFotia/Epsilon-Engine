@@ -1,0 +1,173 @@
+.TH "CQuake3BSP" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+CQuake3BSP \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCQuake3BSP\fP (std::shared_ptr< \fBResourceManager\fP >)"
+.br
+.ti -1c
+.RI "bool \fBLoadBSP\fP (const char *strFileName)"
+.br
+.ti -1c
+.RI "void \fBRenderLevel\fP (glm::vec3 vPos, GLuint shader, bool Shadow)"
+.br
+.ti -1c
+.RI "void \fBDestroy\fP ()"
+.br
+.in -1c
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "\fBCFrustum\fP \fBFrustum\fP"
+.br
+.in -1c
+.SS "Private Member Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBFindTextureExtension\fP (char *strFileName)"
+.br
+.ti -1c
+.RI "void \fBRenderFace\fP (int faceIndex, GLuint shader, bool)"
+.br
+.ti -1c
+.RI "int \fBIsClusterVisible\fP (int current, int test)"
+.br
+.ti -1c
+.RI "int \fBFindLeaf\fP (glm::vec3 vPos)"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "int \fBm_numOfVerts\fP"
+.br
+.ti -1c
+.RI "int \fBm_numOfFaces\fP"
+.br
+.ti -1c
+.RI "int \fBm_numOfIndices\fP"
+.br
+.ti -1c
+.RI "int \fBm_numOfTextures\fP"
+.br
+.ti -1c
+.RI "int \fBm_numOfLightmaps\fP"
+.br
+.ti -1c
+.RI "int \fBm_numOfNodes\fP"
+.br
+.ti -1c
+.RI "int \fBm_numOfLeafs\fP"
+.br
+.ti -1c
+.RI "int \fBm_numOfLeafFaces\fP"
+.br
+.ti -1c
+.RI "int \fBm_numOfPlanes\fP"
+.br
+.ti -1c
+.RI "int * \fBm_pIndices\fP"
+.br
+.ti -1c
+.RI "\fBtBSPVertex\fP * \fBm_pVerts\fP"
+.br
+.ti -1c
+.RI "\fBtBSPFace\fP * \fBm_pFaces\fP"
+.br
+.ti -1c
+.RI "\fBtBSPNode\fP * \fBm_pNodes\fP"
+.br
+.ti -1c
+.RI "\fBtBSPLeaf\fP * \fBm_pLeafs\fP"
+.br
+.ti -1c
+.RI "\fBtBSPPlane\fP * \fBm_pPlanes\fP"
+.br
+.ti -1c
+.RI "int * \fBm_pLeafFaces\fP"
+.br
+.ti -1c
+.RI "\fBtBSPVisData\fP \fBm_clusters\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBm_textures\fP [MAX_TEXTURES]"
+.br
+.ti -1c
+.RI "\fBCBitset\fP \fBm_FacesDrawn\fP"
+.br
+.ti -1c
+.RI "std::map< int, \fBBSPFace\fP > \fBFaces\fP"
+.br
+.ti -1c
+.RI "std::vector< \fBBSPTexture\fP > \fBTextures\fP"
+.br
+.ti -1c
+.RI "std::vector< \fBBSPTexture\fP > \fBnormalTextures\fP"
+.br
+.ti -1c
+.RI "std::vector< \fBBSPTexture\fP > \fBspecularTextures\fP"
+.br
+.ti -1c
+.RI "std::vector< \fBBSPTexture\fP > \fBmetallicTextures\fP"
+.br
+.ti -1c
+.RI "std::map< int, \fBBSPTexture\fP > \fBfaceTexture\fP"
+.br
+.ti -1c
+.RI "std::map< int, \fBBSPTexture\fP > \fBfaceTexture_normal\fP"
+.br
+.ti -1c
+.RI "std::map< int, \fBBSPTexture\fP > \fBfaceTexture_specular\fP"
+.br
+.ti -1c
+.RI "std::map< int, \fBBSPTexture\fP > \fBfaceTexture_metallic\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBResourceManager\fP > \fBresm\fP"
+.br
+.ti -1c
+.RI "bool \fBlightmap\fP"
+.br
+.ti -1c
+.RI "bool \fBcolor\fP"
+.br
+.ti -1c
+.RI "int \fBfaceCount\fP"
+.br
+.ti -1c
+.RI "GLuint \fBNormalTextureID\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 225 of file BSP\&.h\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "int CQuake3BSP::FindLeaf (glm::vec3 vPos)\fC [private]\fP"
+Binary operation 
+.PP
+Definition at line 351 of file BSP\&.cpp\&.
+.SS "bool CQuake3BSP::LoadBSP (const char * strFileName)"
+cout << 'Number of lightmaps : ' << lumps[kLightmaps]\&.length / sizeof(tBSPLightmap) << endl;
+.PP
+Used to Smooth the normals of the whole BSP map 
+.PP
+Definition at line 33 of file BSP\&.cpp\&.
+.SS "void CQuake3BSP::RenderLevel (glm::vec3 vPos, GLuint shader, bool Shadow)"
+glfwSetWindowTitle(window, ('Faces Drawn: ' + to_string(g_VisibleFaces))\&.c_str()); 
+.PP
+Definition at line 407 of file BSP\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

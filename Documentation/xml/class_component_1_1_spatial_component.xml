@@ -1,0 +1,153 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="class_component_1_1_spatial_component" kind="class" language="C++" prot="public">
+    <compoundname>Component::SpatialComponent</compoundname>
+    <basecompoundref refid="class_component_1_1_component" prot="public" virt="non-virtual">Component::Component</basecompoundref>
+    <includes refid="_component_8h" local="no">Component.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_component_1_1_spatial_component_1a5ac01dc97a0c0566d91aea21351d1c02" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Component::SpatialComponent::Mass</definition>
+        <argsstring></argsstring>
+        <name>Mass</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="105" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="105" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_component_1_1_spatial_component_1a88e7dc4befccfbe44b1db41d7fed6d13" prot="public" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Component::SpatialComponent::Position</definition>
+        <argsstring></argsstring>
+        <name>Position</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="106" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="106" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_component_1_1_spatial_component_1a8612fbfec17cfe9b22f28194af3fd92c" prot="public" static="no" mutable="no">
+        <type>std::shared_ptr&lt; btRigidBody &gt;</type>
+        <definition>std::shared_ptr&lt;btRigidBody&gt; Component::SpatialComponent::RigidBodyPointer</definition>
+        <argsstring></argsstring>
+        <name>RigidBodyPointer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="107" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="107" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_component_1_1_spatial_component_1a722b60127378351f5f435357641d1e74" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Component::SpatialComponent::SpatialComponent</definition>
+        <argsstring>()</argsstring>
+        <name>SpatialComponent</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="93" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="93" bodyend="95"/>
+      </memberdef>
+      <memberdef kind="function" id="class_component_1_1_spatial_component_1a26e28a43528950e85020a16fc780d311" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Component::SpatialComponent::~SpatialComponent</definition>
+        <argsstring>()</argsstring>
+        <name>~SpatialComponent</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="96" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="96" bodyend="99"/>
+      </memberdef>
+      <memberdef kind="function" id="class_component_1_1_spatial_component_1acc350817a8201a2bec665f8705b4d5a2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Component::SpatialComponent::Fill</definition>
+        <argsstring>(float mass, glm::vec3 position)</argsstring>
+        <name>Fill</name>
+        <param>
+          <type>float</type>
+          <declname>mass</declname>
+        </param>
+        <param>
+          <type>glm::vec3</type>
+          <declname>position</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="100" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="100" bodyend="104"/>
+      </memberdef>
+      <memberdef kind="function" id="class_component_1_1_spatial_component_1ad9749f474d482ca2393ae36f1fd7ddeb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>void Component::SpatialComponent::Update</definition>
+        <argsstring>()</argsstring>
+        <name>Update</name>
+        <reimplements refid="class_component_1_1_component_1ad86ae60c774756f29aa754ed205836c7">Update</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="108" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="108" bodyend="111"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Spatial Components. </para>    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="329">
+        <label>Component::SpatialComponent</label>
+        <link refid="class_component_1_1_spatial_component"/>
+        <childnode refid="330" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="330">
+        <label>Component::Component</label>
+        <link refid="class_component_1_1_component"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="331">
+        <label>Component::SpatialComponent</label>
+        <link refid="class_component_1_1_spatial_component"/>
+        <childnode refid="332" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="332">
+        <label>Component::Component</label>
+        <link refid="class_component_1_1_component"/>
+      </node>
+    </collaborationgraph>
+    <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="91" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="90" bodyend="112"/>
+    <listofallmembers>
+      <member refid="class_component_1_1_component_1a9e1818d63b0c1e2bfb008e8a12b153c4" prot="public" virt="non-virtual"><scope>Component::SpatialComponent</scope><name>Component</name></member>
+      <member refid="class_component_1_1_spatial_component_1acc350817a8201a2bec665f8705b4d5a2" prot="public" virt="non-virtual"><scope>Component::SpatialComponent</scope><name>Fill</name></member>
+      <member refid="class_component_1_1_spatial_component_1a5ac01dc97a0c0566d91aea21351d1c02" prot="public" virt="non-virtual"><scope>Component::SpatialComponent</scope><name>Mass</name></member>
+      <member refid="class_component_1_1_spatial_component_1a88e7dc4befccfbe44b1db41d7fed6d13" prot="public" virt="non-virtual"><scope>Component::SpatialComponent</scope><name>Position</name></member>
+      <member refid="class_component_1_1_spatial_component_1a8612fbfec17cfe9b22f28194af3fd92c" prot="public" virt="non-virtual"><scope>Component::SpatialComponent</scope><name>RigidBodyPointer</name></member>
+      <member refid="class_component_1_1_spatial_component_1a722b60127378351f5f435357641d1e74" prot="public" virt="non-virtual"><scope>Component::SpatialComponent</scope><name>SpatialComponent</name></member>
+      <member refid="class_component_1_1_component_1af4dec3a51b9df784040cb5cd809d79fe" prot="public" virt="non-virtual"><scope>Component::SpatialComponent</scope><name>Type</name></member>
+      <member refid="class_component_1_1_spatial_component_1ad9749f474d482ca2393ae36f1fd7ddeb" prot="public" virt="virtual"><scope>Component::SpatialComponent</scope><name>Update</name></member>
+      <member refid="class_component_1_1_component_1af9c8b45dbafc33f77e8f959334f97e5f" prot="public" virt="virtual"><scope>Component::SpatialComponent</scope><name>~Component</name></member>
+      <member refid="class_component_1_1_spatial_component_1a26e28a43528950e85020a16fc780d311" prot="public" virt="non-virtual"><scope>Component::SpatialComponent</scope><name>~SpatialComponent</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

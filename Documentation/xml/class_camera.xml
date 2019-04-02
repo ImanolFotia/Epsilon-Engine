@@ -1,0 +1,589 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="class_camera" kind="class" language="C++" prot="public">
+    <compoundname>Camera</compoundname>
+    <includes refid="camera_8h" local="no">camera.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_camera_1acbffeb464f0d15fa92f6780ef1e005d7" prot="public" static="no" mutable="no">
+        <type>glm::mat4</type>
+        <definition>glm::mat4 Camera::MVP</definition>
+        <argsstring></argsstring>
+        <name>MVP</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="54" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_camera_1a63221392d762df6a74f45bc9d43a2f61" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Camera::MovementSpeed</definition>
+        <argsstring></argsstring>
+        <name>MovementSpeed</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="57" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_camera_1a54fc599f1742077bbc84f623a23112ae" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Camera::MouseSpeed</definition>
+        <argsstring></argsstring>
+        <name>MouseSpeed</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="58" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_camera_1aa58ac7abca90e0a182493b86f7b1c4d2" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Camera::FieldOfView</definition>
+        <argsstring></argsstring>
+        <name>FieldOfView</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="59" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_camera_1acb5a9b01adbd32a00e5d70c4f175c467" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Camera::winx</definition>
+        <argsstring></argsstring>
+        <name>winx</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="60" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_camera_1a94f986f9ed4b4a07f2d9ee857d958b32" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Camera::winy</definition>
+        <argsstring></argsstring>
+        <name>winy</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="61" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_camera_1a161269518cec25e3597455472610a311" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Camera::MaxMovementSpeed</definition>
+        <argsstring></argsstring>
+        <name>MaxMovementSpeed</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="62" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_camera_1a3b7666cf3dbaf02534a2644abaa5be76" prot="private" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Camera::Rigth</definition>
+        <argsstring></argsstring>
+        <name>Rigth</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="66" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="66" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_camera_1ad74c4a490bc8865e67e27a2036d0a72d" prot="private" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Camera::Up</definition>
+        <argsstring></argsstring>
+        <name>Up</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="67" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_camera_1ae18be48fbe18e69438525168435bc745" prot="private" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Camera::Frustrum</definition>
+        <argsstring></argsstring>
+        <name>Frustrum</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="68" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_camera_1a0781b6d41623d8798e92a25151ff3cd8" prot="private" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Camera::newOrientation</definition>
+        <argsstring></argsstring>
+        <name>newOrientation</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="69" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_camera_1ab80cd05699e81ec019e256b2f1c07d3e" prot="private" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Camera::newPosition</definition>
+        <argsstring></argsstring>
+        <name>newPosition</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="70" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_camera_1a73bb980786eb9ee9e23ad99ee06c3907" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Camera::OrientationhasChanged</definition>
+        <argsstring></argsstring>
+        <name>OrientationhasChanged</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="71" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="71" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_camera_1acc8ddad12bc8d2d6289df0884cfa9a9e" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Camera::PositionhasChanged</definition>
+        <argsstring></argsstring>
+        <name>PositionhasChanged</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="72" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_camera_1a6582a5068d81b8de7a7fc67e5143e628" prot="private" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Camera::verticalAngle</definition>
+        <argsstring></argsstring>
+        <name>verticalAngle</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="73" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="73" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_camera_1aad9d573147be409e929251eca0bea339" prot="private" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Camera::horizontalAngle</definition>
+        <argsstring></argsstring>
+        <name>horizontalAngle</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="74" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_camera_1a34f22e4635ee38206e4b9c59095d43bf" prot="private" static="no" mutable="no">
+        <type>glm::mat4</type>
+        <definition>glm::mat4 Camera::ViewMatrix</definition>
+        <argsstring></argsstring>
+        <name>ViewMatrix</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="75" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_camera_1a8f5424b6795715c8a44805d1c3a5b11c" prot="private" static="no" mutable="no">
+        <type>glm::mat4</type>
+        <definition>glm::mat4 Camera::ProjectionMatrix</definition>
+        <argsstring></argsstring>
+        <name>ProjectionMatrix</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="76" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_camera_1a9733b59f5340f6f1bca24d52a6679039" prot="private" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Camera::Position</definition>
+        <argsstring></argsstring>
+        <name>Position</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="77" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="77" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_camera_1ab998c79a8bcbd71dcaad201f536e36e1" prot="private" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Camera::Orientation</definition>
+        <argsstring></argsstring>
+        <name>Orientation</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="78" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_camera_1a274def711ceb63556a3074da11fb43df" prot="private" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Camera::LastPosition</definition>
+        <argsstring></argsstring>
+        <name>LastPosition</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="79" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="79" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_camera_1a92ea5380dd9962b451e067fe1c3c81dc" prot="private" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Camera::DeltaVector</definition>
+        <argsstring></argsstring>
+        <name>DeltaVector</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="80" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_camera_1a0d450752f3639989bc813bb077dd9f13" prot="private" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Camera::MovementVector</definition>
+        <argsstring></argsstring>
+        <name>MovementVector</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="80" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_camera_1a7ac99ca06250df56ae81414fe54589e2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Camera::Camera</definition>
+        <argsstring>(glm::vec3, glm::vec3)</argsstring>
+        <name>Camera</name>
+        <param>
+          <type>glm::vec3</type>
+          <defname>cPosition</defname>
+        </param>
+        <param>
+          <type>glm::vec3</type>
+          <defname>cOrientation</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="19" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Camera.cpp" bodystart="16" bodyend="29"/>
+      </memberdef>
+      <memberdef kind="function" id="class_camera_1ad1897942d0ccf91052386388a497349f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Camera::~Camera</definition>
+        <argsstring>()</argsstring>
+        <name>~Camera</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="21" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="21" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="function" id="class_camera_1a0d9114c1c4de87842d227d511e045df5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Camera::Update</definition>
+        <argsstring>(GLFWwindow *&amp;)</argsstring>
+        <name>Update</name>
+        <param>
+          <type>GLFWwindow *&amp;</type>
+          <defname>win</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="26" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Camera.cpp" bodystart="31" bodyend="36"/>
+      </memberdef>
+      <memberdef kind="function" id="class_camera_1acdf18835a138363721f33a6d3bf085b2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Camera::UpdateMatrices</definition>
+        <argsstring>(void)</argsstring>
+        <name>UpdateMatrices</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="28" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Camera.cpp" bodystart="158" bodyend="184"/>
+      </memberdef>
+      <memberdef kind="function" id="class_camera_1a5b68da2e7a27893a7a3a8ac85c5b788f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>glm::mat4</type>
+        <definition>glm::mat4 Camera::getViewMatrix</definition>
+        <argsstring>(void)</argsstring>
+        <name>getViewMatrix</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="30" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Camera.cpp" bodystart="186" bodyend="189"/>
+      </memberdef>
+      <memberdef kind="function" id="class_camera_1a2ebb2fdd189345caa39113fcafcc6d5a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>glm::mat4</type>
+        <definition>glm::mat4 Camera::getProjectionMatrix</definition>
+        <argsstring>(void)</argsstring>
+        <name>getProjectionMatrix</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="32" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Camera.cpp" bodystart="191" bodyend="194"/>
+      </memberdef>
+      <memberdef kind="function" id="class_camera_1a0a32173c1f61b10ced8f674758872403" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Camera::getPosition</definition>
+        <argsstring>(void)</argsstring>
+        <name>getPosition</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="34" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Camera.cpp" bodystart="196" bodyend="199"/>
+      </memberdef>
+      <memberdef kind="function" id="class_camera_1a50f87cd85fd230c6b5196e552c4fe45f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Camera::getDirection</definition>
+        <argsstring>(void)</argsstring>
+        <name>getDirection</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="36" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Camera.cpp" bodystart="201" bodyend="204"/>
+      </memberdef>
+      <memberdef kind="function" id="class_camera_1ae3b6ae9df4f8003f7985e683a375899c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Camera::getUp</definition>
+        <argsstring>(void)</argsstring>
+        <name>getUp</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="38" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Camera.cpp" bodystart="206" bodyend="209"/>
+      </memberdef>
+      <memberdef kind="function" id="class_camera_1a899a89f25ebb347eb2c99d0fc01fd226" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Camera::setPosition</definition>
+        <argsstring>(glm::vec3 newPosition)</argsstring>
+        <name>setPosition</name>
+        <param>
+          <type>glm::vec3</type>
+          <declname>newPosition</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="40" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Camera.cpp" bodystart="211" bodyend="214"/>
+      </memberdef>
+      <memberdef kind="function" id="class_camera_1abfad6243c0d9365acd3bc686cae9ab70" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Camera::setDirection</definition>
+        <argsstring>(glm::vec3 newDirection)</argsstring>
+        <name>setDirection</name>
+        <param>
+          <type>glm::vec3</type>
+          <declname>newDirection</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="42" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Camera.cpp" bodystart="216" bodyend="219"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_camera_1abff5b93c71289be007f966060ff9a70d" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Camera::LockCamera</definition>
+        <argsstring>(void)</argsstring>
+        <name>LockCamera</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="46" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Camera.cpp" bodystart="52" bodyend="66"/>
+      </memberdef>
+      <memberdef kind="function" id="class_camera_1a63bf578388a6ea87d2d0a250f91198ab" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Camera::HandleInputs</definition>
+        <argsstring>(GLFWwindow *&amp;)</argsstring>
+        <name>HandleInputs</name>
+        <param>
+          <type>GLFWwindow *&amp;</type>
+          <defname>window</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="48" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Camera.cpp" bodystart="68" bodyend="156"/>
+      </memberdef>
+      <memberdef kind="function" id="class_camera_1ae26cc8359a03e57b9f26c149574e920d" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Camera::GetExternalInputs</definition>
+        <argsstring>(void)</argsstring>
+        <name>GetExternalInputs</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="50" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Camera.cpp" bodystart="38" bodyend="50"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>========= Copyright Survtech, All rights reserved. ============//</para><para>Purpose: <hruler/>
+ </para>    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/camera.h" line="15" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/camera.h" bodystart="15" bodyend="82"/>
+    <listofallmembers>
+      <member refid="class_camera_1a7ac99ca06250df56ae81414fe54589e2" prot="public" virt="non-virtual"><scope>Camera</scope><name>Camera</name></member>
+      <member refid="class_camera_1a92ea5380dd9962b451e067fe1c3c81dc" prot="private" virt="non-virtual"><scope>Camera</scope><name>DeltaVector</name></member>
+      <member refid="class_camera_1aa58ac7abca90e0a182493b86f7b1c4d2" prot="public" virt="non-virtual"><scope>Camera</scope><name>FieldOfView</name></member>
+      <member refid="class_camera_1ae18be48fbe18e69438525168435bc745" prot="private" virt="non-virtual"><scope>Camera</scope><name>Frustrum</name></member>
+      <member refid="class_camera_1a50f87cd85fd230c6b5196e552c4fe45f" prot="public" virt="non-virtual"><scope>Camera</scope><name>getDirection</name></member>
+      <member refid="class_camera_1ae26cc8359a03e57b9f26c149574e920d" prot="private" virt="non-virtual"><scope>Camera</scope><name>GetExternalInputs</name></member>
+      <member refid="class_camera_1a0a32173c1f61b10ced8f674758872403" prot="public" virt="non-virtual"><scope>Camera</scope><name>getPosition</name></member>
+      <member refid="class_camera_1a2ebb2fdd189345caa39113fcafcc6d5a" prot="public" virt="non-virtual"><scope>Camera</scope><name>getProjectionMatrix</name></member>
+      <member refid="class_camera_1ae3b6ae9df4f8003f7985e683a375899c" prot="public" virt="non-virtual"><scope>Camera</scope><name>getUp</name></member>
+      <member refid="class_camera_1a5b68da2e7a27893a7a3a8ac85c5b788f" prot="public" virt="non-virtual"><scope>Camera</scope><name>getViewMatrix</name></member>
+      <member refid="class_camera_1a63bf578388a6ea87d2d0a250f91198ab" prot="private" virt="non-virtual"><scope>Camera</scope><name>HandleInputs</name></member>
+      <member refid="class_camera_1aad9d573147be409e929251eca0bea339" prot="private" virt="non-virtual"><scope>Camera</scope><name>horizontalAngle</name></member>
+      <member refid="class_camera_1a274def711ceb63556a3074da11fb43df" prot="private" virt="non-virtual"><scope>Camera</scope><name>LastPosition</name></member>
+      <member refid="class_camera_1abff5b93c71289be007f966060ff9a70d" prot="private" virt="non-virtual"><scope>Camera</scope><name>LockCamera</name></member>
+      <member refid="class_camera_1a161269518cec25e3597455472610a311" prot="public" virt="non-virtual"><scope>Camera</scope><name>MaxMovementSpeed</name></member>
+      <member refid="class_camera_1a54fc599f1742077bbc84f623a23112ae" prot="public" virt="non-virtual"><scope>Camera</scope><name>MouseSpeed</name></member>
+      <member refid="class_camera_1a63221392d762df6a74f45bc9d43a2f61" prot="public" virt="non-virtual"><scope>Camera</scope><name>MovementSpeed</name></member>
+      <member refid="class_camera_1a0d450752f3639989bc813bb077dd9f13" prot="private" virt="non-virtual"><scope>Camera</scope><name>MovementVector</name></member>
+      <member refid="class_camera_1acbffeb464f0d15fa92f6780ef1e005d7" prot="public" virt="non-virtual"><scope>Camera</scope><name>MVP</name></member>
+      <member refid="class_camera_1a0781b6d41623d8798e92a25151ff3cd8" prot="private" virt="non-virtual"><scope>Camera</scope><name>newOrientation</name></member>
+      <member refid="class_camera_1ab80cd05699e81ec019e256b2f1c07d3e" prot="private" virt="non-virtual"><scope>Camera</scope><name>newPosition</name></member>
+      <member refid="class_camera_1ab998c79a8bcbd71dcaad201f536e36e1" prot="private" virt="non-virtual"><scope>Camera</scope><name>Orientation</name></member>
+      <member refid="class_camera_1a73bb980786eb9ee9e23ad99ee06c3907" prot="private" virt="non-virtual"><scope>Camera</scope><name>OrientationhasChanged</name></member>
+      <member refid="class_camera_1a9733b59f5340f6f1bca24d52a6679039" prot="private" virt="non-virtual"><scope>Camera</scope><name>Position</name></member>
+      <member refid="class_camera_1acc8ddad12bc8d2d6289df0884cfa9a9e" prot="private" virt="non-virtual"><scope>Camera</scope><name>PositionhasChanged</name></member>
+      <member refid="class_camera_1a8f5424b6795715c8a44805d1c3a5b11c" prot="private" virt="non-virtual"><scope>Camera</scope><name>ProjectionMatrix</name></member>
+      <member refid="class_camera_1a3b7666cf3dbaf02534a2644abaa5be76" prot="private" virt="non-virtual"><scope>Camera</scope><name>Rigth</name></member>
+      <member refid="class_camera_1abfad6243c0d9365acd3bc686cae9ab70" prot="public" virt="non-virtual"><scope>Camera</scope><name>setDirection</name></member>
+      <member refid="class_camera_1a899a89f25ebb347eb2c99d0fc01fd226" prot="public" virt="non-virtual"><scope>Camera</scope><name>setPosition</name></member>
+      <member refid="class_camera_1ad74c4a490bc8865e67e27a2036d0a72d" prot="private" virt="non-virtual"><scope>Camera</scope><name>Up</name></member>
+      <member refid="class_camera_1a0d9114c1c4de87842d227d511e045df5" prot="public" virt="non-virtual"><scope>Camera</scope><name>Update</name></member>
+      <member refid="class_camera_1acdf18835a138363721f33a6d3bf085b2" prot="public" virt="non-virtual"><scope>Camera</scope><name>UpdateMatrices</name></member>
+      <member refid="class_camera_1a6582a5068d81b8de7a7fc67e5143e628" prot="private" virt="non-virtual"><scope>Camera</scope><name>verticalAngle</name></member>
+      <member refid="class_camera_1a34f22e4635ee38206e4b9c59095d43bf" prot="private" virt="non-virtual"><scope>Camera</scope><name>ViewMatrix</name></member>
+      <member refid="class_camera_1acb5a9b01adbd32a00e5d70c4f175c467" prot="public" virt="non-virtual"><scope>Camera</scope><name>winx</name></member>
+      <member refid="class_camera_1a94f986f9ed4b4a07f2d9ee857d958b32" prot="public" virt="non-virtual"><scope>Camera</scope><name>winy</name></member>
+      <member refid="class_camera_1ad1897942d0ccf91052386388a497349f" prot="public" virt="non-virtual"><scope>Camera</scope><name>~Camera</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,47 @@
+.TH "IO::Filesystem::Filesystem" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+IO::Filesystem::Filesystem \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "const std::vector< std::string > \fBgetFileNamesInDirectory\fP (std::string, std::string)"
+.br
+.ti -1c
+.RI "bool \fBFileExists\fP (std::string)"
+.br
+.ti -1c
+.RI "bool \fBMount\fP (std::string, std::string)"
+.br
+.ti -1c
+.RI "bool \fBFileSystemIsZip\fP (\fBFile\fP file)"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "std::unordered_map< std::string, std::string > \fBm_MountedSystems\fP"
+.br
+.ti -1c
+.RI "std::vector< \fBFile\fP > \fBm_Files\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 63 of file filesystem\&.h\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "const std::vector< std::string > IO::Filesystem::Filesystem::getFileNamesInDirectory (std::string path, std::string ext = \fC'*'\fP)"
+Now is the main class that controls the interaction between the virtual filesystem and the user 
+.PP
+Definition at line 50 of file filesystem\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

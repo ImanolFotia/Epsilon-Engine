@@ -1,0 +1,190 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="classe_texture" kind="class" language="C++" prot="public">
+    <compoundname>eTexture</compoundname>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classe_texture_1ad971f45612dacb43ca0d7c15ae756f1d" prot="private" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint eTexture::texture</definition>
+        <argsstring></argsstring>
+        <name>texture</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Texture.h" line="122" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Texture.h" bodystart="122" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classe_texture_1a3e974d7415ec85e149b8504b85484b7c" prot="private" static="no" mutable="no">
+        <type>const char *</type>
+        <definition>const char* eTexture::path</definition>
+        <argsstring></argsstring>
+        <name>path</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Texture.h" line="124" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Texture.h" bodystart="124" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classe_texture_1ac01c2228b2de88acd9441de9d094f8af" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int eTexture::width</definition>
+        <argsstring></argsstring>
+        <name>width</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Texture.h" line="126" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Texture.h" bodystart="126" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classe_texture_1a607169804cdbbc9e4adb3211efd91cd0" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int eTexture::height</definition>
+        <argsstring></argsstring>
+        <name>height</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Texture.h" line="126" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Texture.h" bodystart="126" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classe_texture_1a6ef969f00202b9c6dd6e086eabda97e5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>eTexture::eTexture</definition>
+        <argsstring>(const char *TexName, GLenum wrap=GL_REPEAT)</argsstring>
+        <name>eTexture</name>
+        <param>
+          <type>const char *</type>
+          <declname>TexName</declname>
+        </param>
+        <param>
+          <type>GLenum</type>
+          <declname>wrap</declname>
+          <defval>GL_REPEAT</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Texture.h" line="26" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Texture.h" bodystart="26" bodyend="67"/>
+      </memberdef>
+      <memberdef kind="function" id="classe_texture_1aeafb4e7b82a31dc25568b682afbbdbfd" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>eTexture::eTexture</definition>
+        <argsstring>(std::vector&lt; std::string &gt; CubeMapPath)</argsstring>
+        <name>eTexture</name>
+        <param>
+          <type>std::vector&lt; std::string &gt;</type>
+          <declname>CubeMapPath</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Texture.h" line="69" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Texture.h" bodystart="69" bodyend="92"/>
+      </memberdef>
+      <memberdef kind="function" id="classe_texture_1a3c355145139288955c67d6029b8f0c3a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type></type>
+        <definition>virtual eTexture::~eTexture</definition>
+        <argsstring>()</argsstring>
+        <name>~eTexture</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Texture.h" line="94" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Texture.h" bodystart="94" bodyend="96"/>
+      </memberdef>
+      <memberdef kind="function" id="classe_texture_1a533898fcfffcc4bc44900a5332d0263b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>GLuint</type>
+        <definition>GLuint eTexture::getTextureID</definition>
+        <argsstring>(void)</argsstring>
+        <name>getTextureID</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Texture.h" line="100" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Texture.h" bodystart="100" bodyend="103"/>
+      </memberdef>
+      <memberdef kind="function" id="classe_texture_1aee25d33f8fdd1169dd38a7205be9a199" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int eTexture::getWidth</definition>
+        <argsstring>()</argsstring>
+        <name>getWidth</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Texture.h" line="105" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Texture.h" bodystart="105" bodyend="108"/>
+      </memberdef>
+      <memberdef kind="function" id="classe_texture_1abb1dbcb9479bdd601b7fda6f19eafc9a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int eTexture::getHeight</definition>
+        <argsstring>()</argsstring>
+        <name>getHeight</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Texture.h" line="110" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Texture.h" bodystart="110" bodyend="113"/>
+      </memberdef>
+      <memberdef kind="function" id="classe_texture_1a07f3dc41b4314f889e099f84c51372fe" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>const char *</type>
+        <definition>const char* eTexture::getPath</definition>
+        <argsstring>()</argsstring>
+        <name>getPath</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Texture.h" line="115" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Texture.h" bodystart="115" bodyend="118"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/Texture.h" line="23" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Texture.h" bodystart="22" bodyend="128"/>
+    <listofallmembers>
+      <member refid="classe_texture_1a6ef969f00202b9c6dd6e086eabda97e5" prot="public" virt="non-virtual"><scope>eTexture</scope><name>eTexture</name></member>
+      <member refid="classe_texture_1aeafb4e7b82a31dc25568b682afbbdbfd" prot="public" virt="non-virtual"><scope>eTexture</scope><name>eTexture</name></member>
+      <member refid="classe_texture_1abb1dbcb9479bdd601b7fda6f19eafc9a" prot="public" virt="non-virtual"><scope>eTexture</scope><name>getHeight</name></member>
+      <member refid="classe_texture_1a07f3dc41b4314f889e099f84c51372fe" prot="public" virt="non-virtual"><scope>eTexture</scope><name>getPath</name></member>
+      <member refid="classe_texture_1a533898fcfffcc4bc44900a5332d0263b" prot="public" virt="non-virtual"><scope>eTexture</scope><name>getTextureID</name></member>
+      <member refid="classe_texture_1aee25d33f8fdd1169dd38a7205be9a199" prot="public" virt="non-virtual"><scope>eTexture</scope><name>getWidth</name></member>
+      <member refid="classe_texture_1a607169804cdbbc9e4adb3211efd91cd0" prot="private" virt="non-virtual"><scope>eTexture</scope><name>height</name></member>
+      <member refid="classe_texture_1a3e974d7415ec85e149b8504b85484b7c" prot="private" virt="non-virtual"><scope>eTexture</scope><name>path</name></member>
+      <member refid="classe_texture_1ad971f45612dacb43ca0d7c15ae756f1d" prot="private" virt="non-virtual"><scope>eTexture</scope><name>texture</name></member>
+      <member refid="classe_texture_1ac01c2228b2de88acd9441de9d094f8af" prot="private" virt="non-virtual"><scope>eTexture</scope><name>width</name></member>
+      <member refid="classe_texture_1a3c355145139288955c67d6029b8f0c3a" prot="public" virt="virtual"><scope>eTexture</scope><name>~eTexture</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

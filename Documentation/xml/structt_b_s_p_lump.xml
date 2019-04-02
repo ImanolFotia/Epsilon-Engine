@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="structt_b_s_p_lump" kind="struct" language="C++" prot="public">
+    <compoundname>tBSPLump</compoundname>
+    <includes refid="_b_s_pformat_8h" local="no">BSPformat.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structt_b_s_p_lump_1a5867754b7d8b7e35b82185d099579226" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int tBSPLump::offset</definition>
+        <argsstring></argsstring>
+        <name>offset</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="54" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structt_b_s_p_lump_1afbc7425ba859229dba1872f143087407" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int tBSPLump::length</definition>
+        <argsstring></argsstring>
+        <name>length</name>
+        <briefdescription>
+<para>The offset into the file for the start of this lump. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="55" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="55" bodyend="-1"/>
+        <referencedby refid="class_c_quake3_b_s_p_1a63f458d8e84eb5a4f0432460c849ba75" compoundref="_b_s_p_8cpp" startline="31" endline="328">CQuake3BSP::LoadBSP</referencedby>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>This is our BSP lump structure. </para>    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="53" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="52" bodyend="56"/>
+    <listofallmembers>
+      <member refid="structt_b_s_p_lump_1afbc7425ba859229dba1872f143087407" prot="public" virt="non-virtual"><scope>tBSPLump</scope><name>length</name></member>
+      <member refid="structt_b_s_p_lump_1a5867754b7d8b7e35b82185d099579226" prot="public" virt="non-virtual"><scope>tBSPLump</scope><name>offset</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

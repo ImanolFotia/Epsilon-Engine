@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="structt___position" kind="struct" language="C++" prot="public">
+    <compoundname>t_Position</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structt___position_1af7e02d6c0ee63f68afa04f70a9d0eeee" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float t_Position::x</definition>
+        <argsstring></argsstring>
+        <name>x</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/emlFormat.h" line="32" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/emlFormat.h" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structt___position_1a5b784932f0e6910fafe4c98fa69186ea" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float t_Position::y</definition>
+        <argsstring></argsstring>
+        <name>y</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/emlFormat.h" line="33" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/emlFormat.h" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structt___position_1aabd279db63be3d74143634fb8714aea0" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float t_Position::z</definition>
+        <argsstring></argsstring>
+        <name>z</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/emlFormat.h" line="34" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/emlFormat.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/emlFormat.h" line="31" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/emlFormat.h" bodystart="30" bodyend="35"/>
+    <listofallmembers>
+      <member refid="structt___position_1af7e02d6c0ee63f68afa04f70a9d0eeee" prot="public" virt="non-virtual"><scope>t_Position</scope><name>x</name></member>
+      <member refid="structt___position_1a5b784932f0e6910fafe4c98fa69186ea" prot="public" virt="non-virtual"><scope>t_Position</scope><name>y</name></member>
+      <member refid="structt___position_1aabd279db63be3d74143634fb8714aea0" prot="public" virt="non-virtual"><scope>t_Position</scope><name>z</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,172 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="class_grass" kind="class" language="C++" prot="public">
+    <compoundname>Grass</compoundname>
+    <includes refid="_grass_8h" local="no">Grass.h</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_grass_1a94546b98c58f2a74a91ad59f73036f8b" prot="private" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint Grass::VBO</definition>
+        <argsstring></argsstring>
+        <name>VBO</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Grass.h" line="77" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Grass.h" bodystart="77" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_grass_1a054fd25dde0d19e2b272f8aa611e7b3e" prot="private" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint Grass::EBO</definition>
+        <argsstring></argsstring>
+        <name>EBO</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Grass.h" line="77" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Grass.h" bodystart="77" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_grass_1a35f97e4d959542776ba90ad2e0908260" prot="private" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint Grass::VAO</definition>
+        <argsstring></argsstring>
+        <name>VAO</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Grass.h" line="77" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Grass.h" bodystart="77" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_grass_1a026bbcbfbb49b9557801943723cb01be" prot="private" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint Grass::grassTexture</definition>
+        <argsstring></argsstring>
+        <name>grassTexture</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Grass.h" line="78" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Grass.h" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_grass_1a1d72247c855e7877494f3155d76af24a" prot="private" static="no" mutable="no">
+        <type>GLfloat</type>
+        <definition>GLfloat Grass::GrassVertices[40]</definition>
+        <argsstring>[40]</argsstring>
+        <name>GrassVertices</name>
+        <initializer>=
+    {
+         0.5f,  0.5f,  0.0f, 0.0f, 0.0f,
+         0.5f, -0.5f,  0.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,
+        -0.5f,  0.5f,  0.0f, 1.0f, 0.0f,
+
+         0.0f,  0.5f,  0.5f, 1.0f, 0.0f,
+         0.0f,  0.5f, -0.5f, 0.0f, 0.0f,
+         0.0f, -0.5f, -0.5f, 0.0f, 1.0f,
+         0.0f, -0.5f,  0.5f, 1.0f, 1.0f
+    }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Grass.h" line="79" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Grass.h" bodystart="79" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_grass_1a2a7aecffc8204c7b6d268d91f37eea3d" prot="private" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint Grass::GrassIndices[12]</definition>
+        <argsstring>[12]</argsstring>
+        <name>GrassIndices</name>
+        <initializer>=
+    {
+      0, 1, 3,
+      1, 2, 3,
+      4, 5, 7,
+      5, 6, 7
+    }</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Grass.h" line="92" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Grass.h" bodystart="92" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_grass_1ac714e7b32c3f54c433b321009e4bb367" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Grass::Grass</definition>
+        <argsstring>(const char *path)</argsstring>
+        <name>Grass</name>
+        <param>
+          <type>const char *</type>
+          <declname>path</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Grass.h" line="22" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Grass.h" bodystart="22" bodyend="58"/>
+      </memberdef>
+      <memberdef kind="function" id="class_grass_1a6a730e325557cc8595c993f97dceae87" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type></type>
+        <definition>virtual Grass::~Grass</definition>
+        <argsstring>()</argsstring>
+        <name>~Grass</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Grass.h" line="59" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Grass.h" bodystart="59" bodyend="60"/>
+      </memberdef>
+      <memberdef kind="function" id="class_grass_1a5d3aa3ab5ad807f3cdd9b655da53f3b7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Grass::Render</definition>
+        <argsstring>(Shader *shader)</argsstring>
+        <name>Render</name>
+        <param>
+          <type><ref refid="class_shader" kindref="compound">Shader</ref> *</type>
+          <declname>shader</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Grass.h" line="63" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Grass.h" bodystart="63" bodyend="74"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>========= Copyright Survtech, All rights reserved. ============//</para><para>Purpose: <hruler/>
+ </para>    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/Grass.h" line="19" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Grass.h" bodystart="18" bodyend="100"/>
+    <listofallmembers>
+      <member refid="class_grass_1a054fd25dde0d19e2b272f8aa611e7b3e" prot="private" virt="non-virtual"><scope>Grass</scope><name>EBO</name></member>
+      <member refid="class_grass_1ac714e7b32c3f54c433b321009e4bb367" prot="public" virt="non-virtual"><scope>Grass</scope><name>Grass</name></member>
+      <member refid="class_grass_1a2a7aecffc8204c7b6d268d91f37eea3d" prot="private" virt="non-virtual"><scope>Grass</scope><name>GrassIndices</name></member>
+      <member refid="class_grass_1a026bbcbfbb49b9557801943723cb01be" prot="private" virt="non-virtual"><scope>Grass</scope><name>grassTexture</name></member>
+      <member refid="class_grass_1a1d72247c855e7877494f3155d76af24a" prot="private" virt="non-virtual"><scope>Grass</scope><name>GrassVertices</name></member>
+      <member refid="class_grass_1a5d3aa3ab5ad807f3cdd9b655da53f3b7" prot="public" virt="non-virtual"><scope>Grass</scope><name>Render</name></member>
+      <member refid="class_grass_1a35f97e4d959542776ba90ad2e0908260" prot="private" virt="non-virtual"><scope>Grass</scope><name>VAO</name></member>
+      <member refid="class_grass_1a94546b98c58f2a74a91ad59f73036f8b" prot="private" virt="non-virtual"><scope>Grass</scope><name>VBO</name></member>
+      <member refid="class_grass_1a6a730e325557cc8595c993f97dceae87" prot="public" virt="virtual"><scope>Grass</scope><name>~Grass</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

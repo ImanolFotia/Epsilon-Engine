@@ -1,0 +1,84 @@
+.TH "ThreadPool" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ThreadPool \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "using \fBThreadPool_ptr\fP = std::shared_ptr< \fBThreadPool\fP >"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "template<class T , class\&.\&.\&. Args> auto \fBEmplaceTask\fP (T &&t, Args &&\&.\&.\&.args) \-> std::future< typename std::result_of< T(Args\&.\&.\&.)>::type >        "
+.br
+.ti -1c
+.RI "void \fBUpdate\fP ()"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static ThreadPool_ptr \fBgetInstance_shared_ptr\fP ()"
+.br
+.ti -1c
+.RI "static \fBThreadPool\fP * \fBgetInstance\fP ()"
+.br
+.in -1c
+.SS "Private Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBThreadPool\fP (const \fBThreadPool\fP &)=delete"
+.br
+.ti -1c
+.RI "\fBThreadPool\fP & \fBoperator=\fP (const \fBThreadPool\fP &)=delete"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "std::atomic< bool > \fBstopped\fP"
+.br
+.ti -1c
+.RI "std::mutex \fBpool_mutex\fP"
+.br
+.ti -1c
+.RI "uint16_t \fB_capacity\fP"
+.br
+.ti -1c
+.RI "std::atomic< int > \fB_current_active_threads\fP"
+.br
+.ti -1c
+.RI "std::condition_variable \fBcondition\fP"
+.br
+.ti -1c
+.RI "std::vector< std::thread > \fB_threads\fP"
+.br
+.ti -1c
+.RI "std::queue< std::function< void()> > \fB_tasks_queue\fP"
+.br
+.in -1c
+.SS "Static Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "static ThreadPool_ptr \fB_instance\fP = nullptr"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 18 of file ThreadPool\&.hpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

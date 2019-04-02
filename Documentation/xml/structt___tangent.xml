@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="structt___tangent" kind="struct" language="C++" prot="public">
+    <compoundname>t_Tangent</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structt___tangent_1a4dc223b5a67817ce9aac4730a16d6cab" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float t_Tangent::x</definition>
+        <argsstring></argsstring>
+        <name>x</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/emlFormat.h" line="46" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/emlFormat.h" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structt___tangent_1a082edefd5bb11ff1a93c2d879b5cf751" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float t_Tangent::y</definition>
+        <argsstring></argsstring>
+        <name>y</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/emlFormat.h" line="47" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/emlFormat.h" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structt___tangent_1acd9cb65fb8e4273c0e2df8a125193d78" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float t_Tangent::z</definition>
+        <argsstring></argsstring>
+        <name>z</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/emlFormat.h" line="48" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/emlFormat.h" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/emlFormat.h" line="45" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/emlFormat.h" bodystart="44" bodyend="49"/>
+    <listofallmembers>
+      <member refid="structt___tangent_1a4dc223b5a67817ce9aac4730a16d6cab" prot="public" virt="non-virtual"><scope>t_Tangent</scope><name>x</name></member>
+      <member refid="structt___tangent_1a082edefd5bb11ff1a93c2d879b5cf751" prot="public" virt="non-virtual"><scope>t_Tangent</scope><name>y</name></member>
+      <member refid="structt___tangent_1acd9cb65fb8e4273c0e2df8a125193d78" prot="public" virt="non-virtual"><scope>t_Tangent</scope><name>z</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

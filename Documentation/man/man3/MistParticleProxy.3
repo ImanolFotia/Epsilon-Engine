@@ -1,0 +1,55 @@
+.TH "MistParticleProxy" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+MistParticleProxy \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBParticleProxy\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBMistParticleProxy\fP (unsigned int id, \fBMINMAX_POINTS\fP limits, double numparts)"
+.br
+.ti -1c
+.RI "void \fBInitializeProxy\fP ()"
+.br
+.ti -1c
+.RI "void \fBcalculateDistancetoCamera\fP (glm::vec3 camPosition)"
+.br
+.ti -1c
+.RI "void \fBsortParticles\fP ()"
+.br
+.ti -1c
+.RI "void \fBSimulate\fP (float deltaTime, glm::vec3 camPos)"
+.br
+.ti -1c
+.RI "virtual void \fBRender\fP ()"
+.br
+.in -1c
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "std::vector< \fBParticle\fP > \fBParticles\fP"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+Definition at line 60 of file ParticleProxy\&.h\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void MistParticleProxy::Simulate (float deltaTime, glm::vec3 camPos)\fC [inline]\fP, \fC [virtual]\fP"
+RotationMatrix 
+.PP
+Reimplemented from \fBParticleProxy\fP\&.
+.PP
+Definition at line 112 of file ParticleProxy\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

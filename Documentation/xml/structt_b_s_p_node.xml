@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="structt_b_s_p_node" kind="struct" language="C++" prot="public">
+    <compoundname>tBSPNode</compoundname>
+    <includes refid="_b_s_pformat_8h" local="no">BSPformat.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structt_b_s_p_node_1acae9ab0c244841538b7042374cc7badc" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int tBSPNode::plane</definition>
+        <argsstring></argsstring>
+        <name>plane</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="128" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="128" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structt_b_s_p_node_1a8e8f05774c8c65b46a9a89418d0347d4" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int tBSPNode::front</definition>
+        <argsstring></argsstring>
+        <name>front</name>
+        <briefdescription>
+<para>The index into the planes array. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="129" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="129" bodyend="-1"/>
+        <referencedby refid="class_c_quake3_b_s_p_1a82ab93b599790d05ebf7039aa811cee5" compoundref="_b_s_p_8cpp" startline="331" endline="355">CQuake3BSP::FindLeaf</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structt_b_s_p_node_1a814838f175570662e13bdb184039f8a1" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int tBSPNode::back</definition>
+        <argsstring></argsstring>
+        <name>back</name>
+        <briefdescription>
+<para>The child index for the front node. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="130" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="130" bodyend="-1"/>
+        <referencedby refid="class_c_quake3_b_s_p_1a82ab93b599790d05ebf7039aa811cee5" compoundref="_b_s_p_8cpp" startline="331" endline="355">CQuake3BSP::FindLeaf</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structt_b_s_p_node_1a803a817ecea71b6713d42169e5ee8a1f" prot="public" static="no" mutable="no">
+        <type><ref refid="structt_vector3i" kindref="compound">tVector3i</ref></type>
+        <definition>tVector3i tBSPNode::min</definition>
+        <argsstring></argsstring>
+        <name>min</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="131" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="131" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structt_b_s_p_node_1a079da40ca10a9c458312eb3941de8112" prot="public" static="no" mutable="no">
+        <type><ref refid="structt_vector3i" kindref="compound">tVector3i</ref></type>
+        <definition>tVector3i tBSPNode::max</definition>
+        <argsstring></argsstring>
+        <name>max</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="132" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="132" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structt_b_s_p_node_1a409af63ecc6a4b7524e7c3f578bcae58" prot="public" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 tBSPNode::min</definition>
+        <argsstring></argsstring>
+        <name>min</name>
+        <briefdescription>
+<para>The child index for the back node. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSPformat.h" line="100" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSPformat.h" bodystart="100" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structt_b_s_p_node_1a883eb4f441271d833d2f8ab8a65559c1" prot="public" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 tBSPNode::max</definition>
+        <argsstring></argsstring>
+        <name>max</name>
+        <briefdescription>
+<para>The bounding box min position. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSPformat.h" line="101" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSPformat.h" bodystart="101" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>This stores a node in the BSP tree. </para>    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="380">
+        <label>tVector3i</label>
+        <link refid="structt_vector3i"/>
+      </node>
+      <node id="379">
+        <label>tBSPNode</label>
+        <link refid="structt_b_s_p_node"/>
+        <childnode refid="380" relation="usage">
+          <edgelabel>min</edgelabel>
+          <edgelabel>max</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="127" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="126" bodyend="133"/>
+    <listofallmembers>
+      <member refid="structt_b_s_p_node_1a814838f175570662e13bdb184039f8a1" prot="public" virt="non-virtual"><scope>tBSPNode</scope><name>back</name></member>
+      <member refid="structt_b_s_p_node_1a8e8f05774c8c65b46a9a89418d0347d4" prot="public" virt="non-virtual"><scope>tBSPNode</scope><name>front</name></member>
+      <member refid="structt_b_s_p_node_1a079da40ca10a9c458312eb3941de8112" prot="public" virt="non-virtual"><scope>tBSPNode</scope><name>max</name></member>
+      <member refid="structt_b_s_p_node_1a883eb4f441271d833d2f8ab8a65559c1" prot="public" virt="non-virtual"><scope>tBSPNode</scope><name>max</name></member>
+      <member refid="structt_b_s_p_node_1a803a817ecea71b6713d42169e5ee8a1f" prot="public" virt="non-virtual"><scope>tBSPNode</scope><name>min</name></member>
+      <member refid="structt_b_s_p_node_1a409af63ecc6a4b7524e7c3f578bcae58" prot="public" virt="non-virtual"><scope>tBSPNode</scope><name>min</name></member>
+      <member refid="structt_b_s_p_node_1acae9ab0c244841538b7042374cc7badc" prot="public" virt="non-virtual"><scope>tBSPNode</scope><name>plane</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

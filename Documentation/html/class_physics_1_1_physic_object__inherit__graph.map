@@ -1,0 +1,6 @@
+<map id="Physics::PhysicObject" name="Physics::PhysicObject">
+<area shape="rect" id="node2" href="$class_physics_1_1_cloth_physic_object.html" title="Physics::ClothPhysicObject" alt="" coords="213,5,399,32"/>
+<area shape="rect" id="node3" href="$class_physics_1_1_cube_physic_object.html" title="Physics::CubePhysicObject" alt="" coords="213,56,399,83"/>
+<area shape="rect" id="node4" href="$class_physics_1_1_sphere_physic_object.html" title="Physics::SpherePhysicObject" alt="" coords="208,107,404,133"/>
+<area shape="rect" id="node5" href="$class_physics_1_1_triangle_mesh_physic_object.html" title="Physics::TriangleMeshPhysic\lObject" alt="" coords="209,158,403,199"/>
+</map>

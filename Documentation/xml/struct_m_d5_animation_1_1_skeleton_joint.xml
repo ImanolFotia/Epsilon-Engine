@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="struct_m_d5_animation_1_1_skeleton_joint" kind="struct" language="C++" prot="public">
+    <compoundname>MD5Animation::SkeletonJoint</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_m_d5_animation_1_1_skeleton_joint_1a25a69f45c86dac7840ebd888210e2fb2" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MD5Animation::SkeletonJoint::m_Parent</definition>
+        <argsstring></argsstring>
+        <name>m_Parent</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" line="68" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_animation_1_1_skeleton_joint_1ad5a72dff34e73b342f72954d6d1abc51" prot="public" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 MD5Animation::SkeletonJoint::m_Pos</definition>
+        <argsstring></argsstring>
+        <name>m_Pos</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" line="69" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_animation_1_1_skeleton_joint_1a747910dd0518c0b3ebd8ec198f6e193a" prot="public" static="no" mutable="no">
+        <type>glm::quat</type>
+        <definition>glm::quat MD5Animation::SkeletonJoint::m_Orient</definition>
+        <argsstring></argsstring>
+        <name>m_Orient</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" line="70" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="struct_m_d5_animation_1_1_skeleton_joint_1a35e4c4bb65ba9c4b99a569dc18d5562f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>MD5Animation::SkeletonJoint::SkeletonJoint</definition>
+        <argsstring>()</argsstring>
+        <name>SkeletonJoint</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" line="58" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" bodystart="58" bodyend="61"/>
+      </memberdef>
+      <memberdef kind="function" id="struct_m_d5_animation_1_1_skeleton_joint_1a74fa8f6e61097a24c186be9c660c9f5a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>MD5Animation::SkeletonJoint::SkeletonJoint</definition>
+        <argsstring>(const BaseFrame &amp;copy)</argsstring>
+        <name>SkeletonJoint</name>
+        <param>
+          <type>const <ref refid="struct_m_d5_animation_1_1_base_frame" kindref="compound">BaseFrame</ref> &amp;</type>
+          <declname>copy</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" line="63" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" bodystart="63" bodyend="66"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" line="57" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" bodystart="56" bodyend="71"/>
+    <listofallmembers>
+      <member refid="struct_m_d5_animation_1_1_skeleton_joint_1a747910dd0518c0b3ebd8ec198f6e193a" prot="public" virt="non-virtual"><scope>MD5Animation::SkeletonJoint</scope><name>m_Orient</name></member>
+      <member refid="struct_m_d5_animation_1_1_skeleton_joint_1a25a69f45c86dac7840ebd888210e2fb2" prot="public" virt="non-virtual"><scope>MD5Animation::SkeletonJoint</scope><name>m_Parent</name></member>
+      <member refid="struct_m_d5_animation_1_1_skeleton_joint_1ad5a72dff34e73b342f72954d6d1abc51" prot="public" virt="non-virtual"><scope>MD5Animation::SkeletonJoint</scope><name>m_Pos</name></member>
+      <member refid="struct_m_d5_animation_1_1_skeleton_joint_1a35e4c4bb65ba9c4b99a569dc18d5562f" prot="public" virt="non-virtual"><scope>MD5Animation::SkeletonJoint</scope><name>SkeletonJoint</name></member>
+      <member refid="struct_m_d5_animation_1_1_skeleton_joint_1a74fa8f6e61097a24c186be9c660c9f5a" prot="public" virt="non-virtual"><scope>MD5Animation::SkeletonJoint</scope><name>SkeletonJoint</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

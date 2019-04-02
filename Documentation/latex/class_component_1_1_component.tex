@@ -1,0 +1,85 @@
+\hypertarget{class_component_1_1_component}{}\section{Component\+:\+:Component Class Reference}
+\label{class_component_1_1_component}\index{Component\+::\+Component@{Component\+::\+Component}}
+
+
+Inheritance diagram for Component\+:\+:Component\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_component_1_1_component__inherit__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual void {\bfseries Fill} (bool Has\+Health, bool Has\+Gun)=0\hypertarget{class_component_1_1_component_a26353b4e284b63d84b929b86f6e9148b}{}\label{class_component_1_1_component_a26353b4e284b63d84b929b86f6e9148b}
+
+\item 
+virtual void {\bfseries Fill} (std\+::string path, std\+::shared\+\_\+ptr$<$ \hyperlink{class_resource_manager}{Resource\+Manager} $>$ \&rm, std\+::string shader)=0\hypertarget{class_component_1_1_component_a489a17c3dd7e1ee77959181533fa9d9a}{}\label{class_component_1_1_component_a489a17c3dd7e1ee77959181533fa9d9a}
+
+\item 
+virtual void {\bfseries Fill} (float mass, std\+::shared\+\_\+ptr$<$ \hyperlink{class_physics_1_1_physic_object}{Physics\+::\+Physic\+Object} $>$ Physic\+Body\+Pointer)=0\hypertarget{class_component_1_1_component_ae90e144d4395c5ab87bd0c6ba6b9bee7}{}\label{class_component_1_1_component_ae90e144d4395c5ab87bd0c6ba6b9bee7}
+
+\item 
+virtual void {\bfseries set\+User\+Pointer} (void $\ast$user\+Pointer)\hypertarget{class_component_1_1_component_a2dce4318453252ae4f290b06b810e31b}{}\label{class_component_1_1_component_a2dce4318453252ae4f290b06b810e31b}
+
+\item 
+virtual bt\+Transform {\bfseries get\+Transform} ()\hypertarget{class_component_1_1_component_a79cfa9368519bd1956cf52ee24636d47}{}\label{class_component_1_1_component_a79cfa9368519bd1956cf52ee24636d47}
+
+\item 
+virtual void {\bfseries set\+Transform} (bt\+Transform)\hypertarget{class_component_1_1_component_a077e191323027579fd41e1cc893a79e7}{}\label{class_component_1_1_component_a077e191323027579fd41e1cc893a79e7}
+
+\item 
+virtual void {\bfseries Update} (std\+::shared\+\_\+ptr$<$ \hyperlink{class_resource_manager}{Resource\+Manager} $>$ rm)=0\hypertarget{class_component_1_1_component_aa931d000ca1e0ba431213273755f622c}{}\label{class_component_1_1_component_aa931d000ca1e0ba431213273755f622c}
+
+\item 
+virtual void {\bfseries Render} (std\+::shared\+\_\+ptr$<$ \hyperlink{class_resource_manager}{Resource\+Manager} $>$ rm, glm\+::vec3)=0\hypertarget{class_component_1_1_component_ac485b3a9afb2f9dd593fa6b7714ad3cc}{}\label{class_component_1_1_component_ac485b3a9afb2f9dd593fa6b7714ad3cc}
+
+\item 
+virtual void {\bfseries Render\+Shadows} ()\hypertarget{class_component_1_1_component_a99c7072041c25a077cf4633669c1c984}{}\label{class_component_1_1_component_a99c7072041c25a077cf4633669c1c984}
+
+\item 
+virtual void {\bfseries set\+Transparency} (bool x)=0\hypertarget{class_component_1_1_component_af43987e6d8dadab7ef7aaee6629fa1e1}{}\label{class_component_1_1_component_af43987e6d8dadab7ef7aaee6629fa1e1}
+
+\item 
+void {\bfseries set\+Shader} (string sh)\hypertarget{class_component_1_1_component_a6a113766820370bb4cdc4129d2408a55}{}\label{class_component_1_1_component_a6a113766820370bb4cdc4129d2408a55}
+
+\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+C\+O\+M\+P\+O\+N\+E\+N\+T\+\_\+\+T\+Y\+PE {\bfseries Type}\hypertarget{class_component_1_1_component_af4dec3a51b9df784040cb5cd809d79fe}{}\label{class_component_1_1_component_af4dec3a51b9df784040cb5cd809d79fe}
+
+\item 
+bt\+Vector3 {\bfseries m\+\_\+\+Physics\+World\+Position}\hypertarget{class_component_1_1_component_a052f87b10a8099a7c5d1c177a13056df}{}\label{class_component_1_1_component_a052f87b10a8099a7c5d1c177a13056df}
+
+\item 
+bt\+Vector3 {\bfseries m\+\_\+\+Last\+Physics\+World\+Position}\hypertarget{class_component_1_1_component_a63bb972ef698fe609770899f252ccc53}{}\label{class_component_1_1_component_a63bb972ef698fe609770899f252ccc53}
+
+\item 
+bt\+Vector3 {\bfseries m\+\_\+\+Physics\+World\+Scale}\hypertarget{class_component_1_1_component_ad533f66011b8562f55af6ae4b56e374b}{}\label{class_component_1_1_component_ad533f66011b8562f55af6ae4b56e374b}
+
+\item 
+bt\+Quaternion {\bfseries m\+\_\+\+Physics\+World\+Rotation}\hypertarget{class_component_1_1_component_a7fefa7380768c1b96b67d65410cb0d90}{}\label{class_component_1_1_component_a7fefa7380768c1b96b67d65410cb0d90}
+
+\item 
+bt\+Quaternion {\bfseries m\+\_\+\+Last\+Physics\+World\+Rotation}\hypertarget{class_component_1_1_component_a4d549befaca3703195f7328791206770}{}\label{class_component_1_1_component_a4d549befaca3703195f7328791206770}
+
+\item 
+bool {\bfseries update\+If\+Out\+Of\+View} = true\hypertarget{class_component_1_1_component_a0a49f61f8df325e37d18972ef9efab7c}{}\label{class_component_1_1_component_a0a49f61f8df325e37d18972ef9efab7c}
+
+\item 
+bool {\bfseries is\+Transparent} = false\hypertarget{class_component_1_1_component_ac8579c1969e9b0f53366b5521dd9d89b}{}\label{class_component_1_1_component_ac8579c1969e9b0f53366b5521dd9d89b}
+
+\item 
+bool {\bfseries is\+Double\+Faced} = false\hypertarget{class_component_1_1_component_a9b9c018cd89f4f31d49232f4e47caf3e}{}\label{class_component_1_1_component_a9b9c018cd89f4f31d49232f4e47caf3e}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 20 of file Component.\+h.
+

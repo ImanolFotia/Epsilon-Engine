@@ -1,0 +1,75 @@
+\hypertarget{class_spherical_harmonics}{}\section{Spherical\+Harmonics Class Reference}
+\label{class_spherical_harmonics}\index{Spherical\+Harmonics@{Spherical\+Harmonics}}
+
+
+Collaboration diagram for Spherical\+Harmonics\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=347pt]{class_spherical_harmonics__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_spherical_harmonics_1_1_spherical_harmonics_format}{Spherical\+Harmonics\+Format}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Calculate\+Cohefficients} (G\+Luint cubemap, const unsigned int order)\hypertarget{class_spherical_harmonics_af176027a0be4a86c43525233fbd718e2}{}\label{class_spherical_harmonics_af176027a0be4a86c43525233fbd718e2}
+
+\item 
+std\+::vector$<$ glm\+::vec3 $>$ {\bfseries get\+Cohefficients} ()\hypertarget{class_spherical_harmonics_a5af84553c1069647786569dff9adc89b}{}\label{class_spherical_harmonics_a5af84553c1069647786569dff9adc89b}
+
+\item 
+void {\bfseries Save\+Cohefficients} ()\hypertarget{class_spherical_harmonics_a191f166157005955120126331a5aa95b}{}\label{class_spherical_harmonics_a191f166157005955120126331a5aa95b}
+
+\item 
+\hyperlink{struct_spherical_harmonics_1_1_spherical_harmonics_format}{Spherical\+Harmonics\+Format} {\bfseries to\+Struct} ()\hypertarget{class_spherical_harmonics_a394583d89e2ca18f17b55396d5abe14b}{}\label{class_spherical_harmonics_a394583d89e2ca18f17b55396d5abe14b}
+
+\item 
+void {\bfseries set\+Id} (unsigned in\+Id)\hypertarget{class_spherical_harmonics_ac2707c28fdba92e8f4fecc0e54fc48b2}{}\label{class_spherical_harmonics_ac2707c28fdba92e8f4fecc0e54fc48b2}
+
+\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ std\+::string $>$ {\bfseries m\+Cohefficients\+Names}\hypertarget{class_spherical_harmonics_ae720cd6bd4d4f7372d794a466f64b061}{}\label{class_spherical_harmonics_ae720cd6bd4d4f7372d794a466f64b061}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries spherical\+Harmonics\+Evaluate\+Direction} (float $\ast$result, int order, const glm\+::vec3 \&dir, std\+::string why)\hypertarget{class_spherical_harmonics_aaa5c91e3c0f2bed1ccf2f49fa2147747}{}\label{class_spherical_harmonics_aaa5c91e3c0f2bed1ccf2f49fa2147747}
+
+\item 
+void {\bfseries spherical\+Harmonics\+Add} (float $\ast$result, int order, const float $\ast$inputA, const float $\ast$inputB, std\+::string why)\hypertarget{class_spherical_harmonics_a9cfbfb534388866352dd2dde1106809c}{}\label{class_spherical_harmonics_a9cfbfb534388866352dd2dde1106809c}
+
+\item 
+void {\bfseries spherical\+Harmonics\+Scale} (float $\ast$result, int order, const float $\ast$input, float scale, std\+::string why)\hypertarget{class_spherical_harmonics_ad4f71bf5d418baa21d50e64a6f3501ec}{}\label{class_spherical_harmonics_ad4f71bf5d418baa21d50e64a6f3501ec}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ glm\+::vec3 $>$ {\bfseries m\+\_\+\+Cohefficients}\hypertarget{class_spherical_harmonics_a3fa5ca4e67713542368a2165e0c4acac}{}\label{class_spherical_harmonics_a3fa5ca4e67713542368a2165e0c4acac}
+
+\item 
+float {\bfseries m\+\_\+scale\+Factor}\hypertarget{class_spherical_harmonics_a05f898913f159f83235b7cb8b29877ce}{}\label{class_spherical_harmonics_a05f898913f159f83235b7cb8b29877ce}
+
+\item 
+glm\+::vec3 {\bfseries m\+\_\+\+Position}\hypertarget{class_spherical_harmonics_a50459e1ab113fa53145ce4844eb2c4a2}{}\label{class_spherical_harmonics_a50459e1ab113fa53145ce4844eb2c4a2}
+
+\item 
+unsigned {\bfseries m\+\_\+\+ID}\hypertarget{class_spherical_harmonics_a9f518092886239dbd82226f48b2890e1}{}\label{class_spherical_harmonics_a9f518092886239dbd82226f48b2890e1}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 6 of file Spherical\+Harmonics.\+h.
+

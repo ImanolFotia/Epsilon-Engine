@@ -1,0 +1,29 @@
+<map id="Scene" name="Scene">
+<area shape="rect" id="node3" href="$class_c_quake3_b_s_p.html" title="CQuake3BSP" alt="" coords="1455,301,1557,328"/>
+<area shape="rect" id="node4" href="$structt_b_s_p_vertex.html" title="This is our BSP vertex structure. " alt="" coords="1131,284,1221,311"/>
+<area shape="rect" id="node5" href="$structt_b_s_p_node.html" title="This stores a node in the BSP tree. " alt="" coords="1135,388,1217,415"/>
+<area shape="rect" id="node6" href="$structt_vector3i.html" title="This is our small number to compensate for float errors. " alt="" coords="830,363,905,389"/>
+<area shape="rect" id="node7" href="$structt_b_s_p_leaf.html" title="This stores a leaf (end node) in the BSP tree. " alt="" coords="1137,335,1215,361"/>
+<area shape="rect" id="node8" href="$class_c_frustum.html" title="CFrustum" alt="" coords="1137,19,1215,45"/>
+<area shape="rect" id="node9" href="$structt_b_s_p_plane.html" title="This stores a splitter plane in the BSP tree. " alt="" coords="1133,183,1219,209"/>
+<area shape="rect" id="node10" href="$struct_c_vector3.html" title="CVector3" alt="" coords="829,201,905,228"/>
+<area shape="rect" id="node25" href="$structt_b_s_p_face.html" title="This is our BSP face structure. " alt="" coords="1135,132,1217,159"/>
+<area shape="rect" id="node12" href="$class_b_s_p_face.html" title="BSPFace" alt="" coords="828,151,907,177"/>
+<area shape="rect" id="node13" href="$structt_b_s_p_lightmap.html" title="This is our BSP lightmap structure which stores the 128x128 RGB values. " alt="" coords="521,181,627,208"/>
+<area shape="rect" id="node40" href="$class_post_process.html" title="PostProcess" alt="" coords="1457,852,1555,879"/>
+<area shape="rect" id="node17" href="$struct_b_s_p_face_1_1t___vertex.html" title="BSPFace::t_Vertex" alt="" coords="197,45,332,72"/>
+<area shape="rect" id="node18" title="STL class. " alt="" coords="225,769,305,796"/>
+<area shape="rect" id="node24" href="$struct_b_s_p_texture.html" title="BSPTexture" alt="" coords="821,515,913,541"/>
+<area shape="rect" id="node34" href="$class_model.html" title="Model" alt="" coords="545,1048,603,1075"/>
+<area shape="rect" id="node45" href="$class_shader.html" title="Shader" alt="" coords="836,812,899,839"/>
+<area shape="rect" id="node19" title="STL class. " alt="" coords="5,762,132,803"/>
+<area shape="rect" id="node21" href="$class_c_bitset.html" title="CBitset" alt="" coords="1143,233,1209,260"/>
+<area shape="rect" id="node22" href="$structt_b_s_p_vis_data.html" title="This stores the cluster data for the PVS&#39;s. " alt="" coords="1127,507,1225,533"/>
+<area shape="rect" id="node30" href="$class_program_data.html" title="ProgramData" alt="" coords="1457,1175,1555,1201"/>
+<area shape="rect" id="node32" href="$class_skybox.html" title="Skybox" alt="" coords="1143,1031,1209,1057"/>
+<area shape="rect" id="node35" href="$struct_m_i_n___m_a_x___p_o_i_n_t_s.html" title="MIN_MAX_POINTS" alt="" coords="198,1099,331,1125"/>
+<area shape="rect" id="node36" href="$struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x.html" title="Structure to store the models bounding box for visibility and collision computation. " alt="" coords="181,1149,348,1176"/>
+<area shape="rect" id="node42" href="$structt__light.html" title="t_light" alt="" coords="839,871,896,897"/>
+<area shape="rect" id="node43" href="$structt__vector.html" title="t_vector" alt="" coords="541,872,607,899"/>
+<area shape="rect" id="node50" href="$class_sun.html" title="Sun" alt="" coords="1483,1299,1529,1325"/>
+</map>

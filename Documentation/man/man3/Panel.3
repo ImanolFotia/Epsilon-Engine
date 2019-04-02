@@ -1,0 +1,56 @@
+.TH "Panel" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Panel \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBWidget\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPanel\fP (const int winWidth, const int winHeight, const int width, const int height, const glm::vec2 pos)"
+.br
+.ti -1c
+.RI "void \fBRender\fP (std::shared_ptr< \fBShader\fP > shader)"
+.br
+.ti -1c
+.RI "void \fBUpdate\fP (void)"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "float \fBm_Opacity\fP"
+.br
+.ti -1c
+.RI "float \fBm_Width\fP"
+.br
+.ti -1c
+.RI "float \fBm_Height\fP"
+.br
+.ti -1c
+.RI "float \fBm_winWidth\fP"
+.br
+.ti -1c
+.RI "float \fBm_winHeight\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBOpenGLHelpers::Quad\fP > \fBm_Quad\fP"
+.br
+.ti -1c
+.RI "glm::mat4 \fBprojection\fP"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+Definition at line 8 of file Panel\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

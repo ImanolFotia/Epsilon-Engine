@@ -1,0 +1,94 @@
+\hypertarget{class_frame_buffer}{}\section{Frame\+Buffer$<$ T $>$ Class Template Reference}
+\label{class_frame_buffer}\index{Frame\+Buffer$<$ T $>$@{Frame\+Buffer$<$ T $>$}}
+
+
+Collaboration diagram for Frame\+Buffer$<$ T $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=212pt]{class_frame_buffer__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries Frame\+Buffer} (int width, int height, bool Depth\+Attachment)\hypertarget{class_frame_buffer_ab7b122bbfc713a58e3d54e5b7474af56}{}\label{class_frame_buffer_ab7b122bbfc713a58e3d54e5b7474af56}
+
+\item 
+bool {\bfseries add\+Render\+Target} (T name, int internalformat, int format, int magfilter, int minfilter, bool mipmaps, G\+Luint target=G\+L\+\_\+\+T\+E\+X\+T\+U\+R\+E\+\_\+2D)\hypertarget{class_frame_buffer_ab09573b43ca1906bb3c106f4a9ea7078}{}\label{class_frame_buffer_ab09573b43ca1906bb3c106f4a9ea7078}
+
+\item 
+bool {\bfseries Finish\+Frame\+Buffer} ()\hypertarget{class_frame_buffer_ade95eb0f5e2c9112727fd5fcd39e7f98}{}\label{class_frame_buffer_ade95eb0f5e2c9112727fd5fcd39e7f98}
+
+\item 
+bool {\bfseries add\+Depth\+Attachment} ()\hypertarget{class_frame_buffer_a10bb6b1df517a12113e37bf913d4f78a}{}\label{class_frame_buffer_a10bb6b1df517a12113e37bf913d4f78a}
+
+\item 
+void {\bfseries bind\+Framebuffer} ()\hypertarget{class_frame_buffer_ab8d75432d798f90e01e48f1c8b12cbd2}{}\label{class_frame_buffer_ab8d75432d798f90e01e48f1c8b12cbd2}
+
+\item 
+void {\bfseries unbind\+Framebuffer} ()\hypertarget{class_frame_buffer_a28daa4e95495388f1d58ba72cc6b3116}{}\label{class_frame_buffer_a28daa4e95495388f1d58ba72cc6b3116}
+
+\item 
+void {\bfseries set\+Viewport} ()\hypertarget{class_frame_buffer_a38d76aa81993cb1bcf28b811ccb7e97e}{}\label{class_frame_buffer_a38d76aa81993cb1bcf28b811ccb7e97e}
+
+\item 
+void {\bfseries clear\+Buffer} (int masks)\hypertarget{class_frame_buffer_a9678f75bff552a860451aec9aa268b80}{}\label{class_frame_buffer_a9678f75bff552a860451aec9aa268b80}
+
+\item 
+void {\bfseries Update\+Mip\+Maps} ()\hypertarget{class_frame_buffer_ae547f88e0e9081bfd4e8c2cc98ca3198}{}\label{class_frame_buffer_ae547f88e0e9081bfd4e8c2cc98ca3198}
+
+\item 
+void {\bfseries set\+To\+Read} ()\hypertarget{class_frame_buffer_aab0e90a873662766c8aeb7d034bf981c}{}\label{class_frame_buffer_aab0e90a873662766c8aeb7d034bf981c}
+
+\item 
+void {\bfseries set\+To\+Draw} ()\hypertarget{class_frame_buffer_a7fc09c39eb24e6cadc57b006dd6af0cc}{}\label{class_frame_buffer_a7fc09c39eb24e6cadc57b006dd6af0cc}
+
+\item 
+bool {\bfseries check\+Framebuffer} ()\hypertarget{class_frame_buffer_a76d5ef51d24805dd4c2de33dcc598b75}{}\label{class_frame_buffer_a76d5ef51d24805dd4c2de33dcc598b75}
+
+\item 
+bool {\bfseries Destroy} ()\hypertarget{class_frame_buffer_afedd4359e85b3588fa11656b9dbade69}{}\label{class_frame_buffer_afedd4359e85b3588fa11656b9dbade69}
+
+\item 
+G\+Luint {\bfseries get\+Render\+Target\+Handler} (T name)\hypertarget{class_frame_buffer_aa66d88e11d16a6e505878acca41f872c}{}\label{class_frame_buffer_aa66d88e11d16a6e505878acca41f872c}
+
+\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+std\+::unordered\+\_\+map$<$ T, std\+::shared\+\_\+ptr$<$ \hyperlink{class_render_target}{Render\+Target} $>$ $>$ {\bfseries m\+\_\+\+Render\+Targets}\hypertarget{class_frame_buffer_a7c5cdda0f659fba287d1a5b3d09de387}{}\label{class_frame_buffer_a7c5cdda0f659fba287d1a5b3d09de387}
+
+\item 
+int {\bfseries m\+\_\+\+Render\+Target\+Count}\hypertarget{class_frame_buffer_a01b5ec507b23c7b821675308391fc9df}{}\label{class_frame_buffer_a01b5ec507b23c7b821675308391fc9df}
+
+\item 
+int {\bfseries M\+A\+X\+\_\+\+R\+E\+N\+D\+E\+R\+\_\+\+T\+A\+R\+G\+E\+TS}\hypertarget{class_frame_buffer_a5b334773e9a54ade675e1b538706eae8}{}\label{class_frame_buffer_a5b334773e9a54ade675e1b538706eae8}
+
+\item 
+int {\bfseries W\+I\+D\+TH}\hypertarget{class_frame_buffer_a11fe0a9c9c4f35abd66a2c77e1c740f9}{}\label{class_frame_buffer_a11fe0a9c9c4f35abd66a2c77e1c740f9}
+
+\item 
+int {\bfseries H\+E\+I\+G\+HT}\hypertarget{class_frame_buffer_ab85b82233910477a28c1ca8f69dbe555}{}\label{class_frame_buffer_ab85b82233910477a28c1ca8f69dbe555}
+
+\item 
+G\+Luint {\bfseries m\+\_\+\+Framebuffer\+Handler}\hypertarget{class_frame_buffer_a16bcb5f0c8a1064dd075b89965b79863}{}\label{class_frame_buffer_a16bcb5f0c8a1064dd075b89965b79863}
+
+\item 
+G\+Luint {\bfseries m\+\_\+\+Depth\+Texture\+Target}\hypertarget{class_frame_buffer_a49198d665734401aa6b28860fc9442e8}{}\label{class_frame_buffer_a49198d665734401aa6b28860fc9442e8}
+
+\item 
+bool {\bfseries is\+Depth\+Attachment}\hypertarget{class_frame_buffer_a065cf8faab04276cb7e6a4cd004512d1}{}\label{class_frame_buffer_a065cf8faab04276cb7e6a4cd004512d1}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename T$>$\\*
+class Frame\+Buffer$<$ T $>$}
+
+
+
+Definition at line 11 of file Frame\+Buffer.\+h.
+

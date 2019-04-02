@@ -1,0 +1,17 @@
+<map id="ResourceManager" name="ResourceManager">
+<area shape="rect" id="node4" href="$class_terrain.html" title="Terrain" alt="" coords="605,124,666,151"/>
+<area shape="rect" id="node24" href="$struct_m_d5_model_1_1_mesh.html" title="MD5Model::Mesh" alt="" coords="573,592,697,619"/>
+<area shape="rect" id="node7" href="$struct_face.html" title="Face" alt="" coords="49,7,99,33"/>
+<area shape="rect" id="node9" href="$struct_t_vertex.html" title="TVertex" alt="" coords="41,57,107,84"/>
+<area shape="rect" id="node10" title="STL class. " alt="" coords="289,900,369,927"/>
+<area shape="rect" id="node14" href="$class_shader.html" title="Shader" alt="" coords="1009,1057,1072,1084"/>
+<area shape="rect" id="node20" href="$class_model.html" title="Model" alt="" coords="1381,868,1438,895"/>
+<area shape="rect" id="node34" href="$struct_texture.html" title="Texture" alt="" coords="603,799,668,825"/>
+<area shape="rect" id="node11" title="STL class. " alt="" coords="11,893,137,934"/>
+<area shape="rect" id="node21" href="$struct_m_i_n___m_a_x___p_o_i_n_t_s.html" title="MIN_MAX_POINTS" alt="" coords="974,893,1107,920"/>
+<area shape="rect" id="node22" href="$struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x.html" title="Structure to store the models bounding box for visibility and collision computation. " alt="" coords="957,944,1124,971"/>
+<area shape="rect" id="node28" href="$struct_m_d5_model_1_1_triangle.html" title="MD5Model::Triangle" alt="" coords="5,633,143,660"/>
+<area shape="rect" id="node30" href="$struct_m_d5_model_1_1_weight.html" title="MD5Model::Weight" alt="" coords="7,684,141,711"/>
+<area shape="rect" id="node32" href="$struct_vertex.html" title="Contains all the necessery OpenGL includes. " alt="" coords="44,435,104,461"/>
+<area shape="rect" id="node36" href="$class_water.html" title="Water" alt="" coords="300,209,357,236"/>
+</map>

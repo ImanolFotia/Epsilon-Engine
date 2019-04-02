@@ -1,0 +1,3 @@
+<map id="ResourceManager::requestTexture" name="ResourceManager::requestTexture">
+<area shape="rect" id="node2" href="$class_resource_manager.html#ad45541223c9f21701bf75107c5369203" title="When there is no more queued commands, all the texture are loaded in order of assignment. " alt="" coords="232,5,436,47"/>
+</map>

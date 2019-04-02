@@ -1,0 +1,145 @@
+\hypertarget{class_sun}{}\section{Sun Class Reference}
+\label{class_sun}\index{Sun@{Sun}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_sun_aa3e508ffefb0cb76e55c2bdefdc907d1}{Sun} ()
+\item 
+void {\bfseries Render} (\hyperlink{class_shader}{Shader} $\ast$\&)\hypertarget{class_sun_a9860c6a85787ce7c0ed969ab5019464e}{}\label{class_sun_a9860c6a85787ce7c0ed969ab5019464e}
+
+\item 
+void \hyperlink{class_sun_a4b93a42883411f4287f91ba3d3dc73a5}{Update} ()
+\item 
+void {\bfseries Set\+Uniforms} (std\+::shared\+\_\+ptr$<$ \hyperlink{class_camera}{Camera} $>$, \hyperlink{class_shader}{Shader} $\ast$\&)\hypertarget{class_sun_afd8240c02aa75e6c8100261373b17eb6}{}\label{class_sun_afd8240c02aa75e6c8100261373b17eb6}
+
+\item 
+void {\bfseries Destroy} ()\hypertarget{class_sun_ab1a0a8319c3ba1ffcee2cda8c9e29ac1}{}\label{class_sun_ab1a0a8319c3ba1ffcee2cda8c9e29ac1}
+
+\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+glm\+::vec3 {\bfseries Position}\hypertarget{class_sun_a044e3f3e76daaf6a4dfdfaa2ced95694}{}\label{class_sun_a044e3f3e76daaf6a4dfdfaa2ced95694}
+
+\item 
+glm\+::vec3 {\bfseries Direction}\hypertarget{class_sun_ae3467f6ebc8f83f2cbbd49289693d967}{}\label{class_sun_ae3467f6ebc8f83f2cbbd49289693d967}
+
+\item 
+float {\bfseries height}\hypertarget{class_sun_a8fcdae88a34ab1b5279d394b5ce7c859}{}\label{class_sun_a8fcdae88a34ab1b5279d394b5ce7c859}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{class_sun_a14d4e698e1d477d14b5ac84dc311446f}{Prepare\+V\+AO} ()
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{classe_texture}{e\+Texture} $>$ {\bfseries tex}\hypertarget{class_sun_a8ae090bb2912e50ac55ec4e9f7f4e4e8}{}\label{class_sun_a8ae090bb2912e50ac55ec4e9f7f4e4e8}
+
+\item 
+float {\bfseries radius}\hypertarget{class_sun_a3bc12a74bbbb49f0f77dcf32de332d7e}{}\label{class_sun_a3bc12a74bbbb49f0f77dcf32de332d7e}
+
+\item 
+G\+Luint {\bfseries Texture\+ID}\hypertarget{class_sun_a8eab40b64942412ea07c443f4398d5b8}{}\label{class_sun_a8eab40b64942412ea07c443f4398d5b8}
+
+\item 
+float {\bfseries m\+Movement}\hypertarget{class_sun_a486ac23281a66c90ba24e181903a527e}{}\label{class_sun_a486ac23281a66c90ba24e181903a527e}
+
+\item 
+G\+Luint {\bfseries V\+AO}\hypertarget{class_sun_a82ec072ad094119b8efff93954106a21}{}\label{class_sun_a82ec072ad094119b8efff93954106a21}
+
+\item 
+G\+Luint {\bfseries V\+BO}\hypertarget{class_sun_a56b11001a0b61e52cb51312907c25a9d}{}\label{class_sun_a56b11001a0b61e52cb51312907c25a9d}
+
+\item 
+G\+Luint {\bfseries E\+BO}\hypertarget{class_sun_a42ac7b8f44fdc3c95d96c1a83e5f1bb9}{}\label{class_sun_a42ac7b8f44fdc3c95d96c1a83e5f1bb9}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+========= Copyright Survtech, All rights reserved. ============//
+
+Purpose\+: 
+
+ 
+
+Definition at line 19 of file Sun.\+h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Sun@{Sun}!Sun@{Sun}}
+\index{Sun@{Sun}!Sun@{Sun}}
+\subsubsection[{\texorpdfstring{Sun()}{Sun()}}]{\setlength{\rightskip}{0pt plus 5cm}Sun\+::\+Sun (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_sun_aa3e508ffefb0cb76e55c2bdefdc907d1}{}\label{class_sun_aa3e508ffefb0cb76e55c2bdefdc907d1}
+========= Copyright Survtech, All rights reserved. ============//
+
+Purpose\+: 
+
+ 
+
+Definition at line 10 of file Sun.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=268pt]{class_sun_aa3e508ffefb0cb76e55c2bdefdc907d1_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+\subsection{Member Function Documentation}
+\index{Sun@{Sun}!Prepare\+V\+AO@{Prepare\+V\+AO}}
+\index{Prepare\+V\+AO@{Prepare\+V\+AO}!Sun@{Sun}}
+\subsubsection[{\texorpdfstring{Prepare\+V\+A\+O()}{PrepareVAO()}}]{\setlength{\rightskip}{0pt plus 5cm}void Sun\+::\+Prepare\+V\+AO (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_sun_a14d4e698e1d477d14b5ac84dc311446f}{}\label{class_sun_a14d4e698e1d477d14b5ac84dc311446f}
+Positions /// \hyperlink{struct_texture}{Texture} Coords
+
+Top Left
+
+Top Right
+
+Bottom Right
+
+Bottom Left 
+
+Definition at line 71 of file Sun.\+cpp.
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=268pt]{class_sun_a14d4e698e1d477d14b5ac84dc311446f_icgraph}
+\end{center}
+\end{figure}
+
+
+\index{Sun@{Sun}!Update@{Update}}
+\index{Update@{Update}!Sun@{Sun}}
+\subsubsection[{\texorpdfstring{Update()}{Update()}}]{\setlength{\rightskip}{0pt plus 5cm}void Sun\+::\+Update (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_sun_a4b93a42883411f4287f91ba3d3dc73a5}{}\label{class_sun_a4b93a42883411f4287f91ba3d3dc73a5}
+glm\+::cos(glfw\+Get\+Time()/10) 
+
+Definition at line 51 of file Sun.\+cpp.
+
