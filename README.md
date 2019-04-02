@@ -1,4 +1,4 @@
-# Epsilon-Engine
+# Epsilon Engine
 
 Epsilon Engine is a next-gen, multi-platform, general purpose game engine.
 
