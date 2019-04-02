@@ -4,6 +4,17 @@ Epsilon Engine is a next-gen, multi-platform, general purpose game engine.
 
 Written in modern C++ and GLSL 4.3+
 
+## Dependencies
+
+* Bullet Physics 
+* Zlib
+* GLM
+* GLEW
+* GLFW 3
+* libinih
+* Freetype
+* Soft OpenAL
+
 ## Features
 
 * Bullet Physics integration
