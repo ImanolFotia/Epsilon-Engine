@@ -6,14 +6,14 @@ Written in modern C++ and GLSL 4.3+
 
 ## Dependencies
 
-* Bullet Physics 
+* Bullet Physics 2.82-r2704
 * Zlib
-* GLM
-* GLEW
-* GLFW 3
+* GLM 0.9.7.1 
+* GLEW 2.0.0
+* GLFW 3.2
 * libinih
-* Freetype
-* Soft OpenAL
+* Freetype 2
+* Soft OpenAL 1.18.2
 
 ## Features
 
@@ -22,6 +22,7 @@ Written in modern C++ and GLSL 4.3+
 * Bokeh DoF
 * Volumetric Lighting
 * Deferred rendering
+* Skeletal Animation
 * Spherical Harmonics Global Illumination
 * BSP Support
 * GPU accelerated particle systems
