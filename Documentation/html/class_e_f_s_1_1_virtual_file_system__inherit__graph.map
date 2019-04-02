@@ -1,0 +1,4 @@
+<map id="EFS::VirtualFileSystem" name="EFS::VirtualFileSystem">
+<area shape="rect" id="node2" href="$class_e_f_s_1_1_physical_file_system.html" title="EFS::PhysicalFileSystem" alt="" coords="5,80,177,107"/>
+<area shape="rect" id="node3" href="$class_e_f_s_1_1_zip_file_system.html" title="EFS::ZipFileSystem" alt="" coords="202,80,341,107"/>
+</map>

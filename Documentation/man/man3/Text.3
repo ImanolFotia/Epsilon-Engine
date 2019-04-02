@@ -1,0 +1,113 @@
+.TH "Text" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Text \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBCharacter\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBText\fP (const char *FontName, int WIDTH, int HEIGHT)"
+.br
+.ti -1c
+.RI "float \fBgetHorizontalLength\fP (std::string text, GLfloat scale)"
+.br
+.ti -1c
+.RI "void \fBcalculateHeight\fP ()"
+.br
+.ti -1c
+.RI "float \fBgetVerticalLength\fP ()"
+.br
+.ti -1c
+.RI "void \fBRenderText\fP (std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBShader\fP * \fBshader\fP"
+.br
+.ti -1c
+.RI "int \fBWIDTH\fP"
+.br
+.ti -1c
+.RI "int \fBHEIGTH\fP"
+.br
+.ti -1c
+.RI "bool \fBcalcLength\fP = false"
+.br
+.ti -1c
+.RI "float \fBtextHeight\fP = 0\&.0f"
+.br
+.ti -1c
+.RI "std::map< GLchar, \fBCharacter\fP > \fBCharacters\fP"
+.br
+.ti -1c
+.RI "GLuint \fBVAO\fP"
+.br
+.ti -1c
+.RI "GLuint \fBVBO\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 18 of file Text\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Text::Text (const char * FontName, int WIDTH, int HEIGHT)\fC [inline]\fP"
+FreeType
+.PP
+All functions return a value different than 0 whenever an error occurred
+.PP
+Load font as face
+.PP
+Set size to load glyphs as
+.PP
+Load first 128 characters of ASCII set
+.PP
+Load character glyph
+.PP
+Generate texture
+.PP
+Set texture options
+.PP
+Now store character for later use
+.PP
+Destroy FreeType once we're finished
+.PP
+Configure VAO/VBO for texture quads 
+.PP
+Definition at line 21 of file Text\&.h\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void Text::RenderText (std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)\fC [inline]\fP"
+Activate corresponding render state
+.PP
+Iterate through all characters
+.PP
+Render glyph texture over quad
+.PP
+Update content of VBO memory
+.PP
+Render quad
+.PP
+Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
+.PP
+Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels)) 
+.PP
+Definition at line 137 of file Text\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

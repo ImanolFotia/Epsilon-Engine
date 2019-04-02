@@ -1,0 +1,7 @@
+<map id="t_Vertex" name="t_Vertex">
+<area shape="rect" id="node2" href="$structt___tangent.html" title="t_Tangent" alt="" coords="5,5,84,32"/>
+<area shape="rect" id="node3" href="$structt___tex_coord.html" title="t_TexCoord" alt="" coords="109,5,197,32"/>
+<area shape="rect" id="node4" href="$structt___position.html" title="t_Position" alt="" coords="221,5,301,32"/>
+<area shape="rect" id="node5" href="$structt___bitangent.html" title="t_Bitangent" alt="" coords="325,5,413,32"/>
+<area shape="rect" id="node6" href="$structt___normal.html" title="t_Normal" alt="" coords="437,5,511,32"/>
+</map>

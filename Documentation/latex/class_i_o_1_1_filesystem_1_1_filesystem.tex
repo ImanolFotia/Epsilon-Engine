@@ -1,0 +1,57 @@
+\hypertarget{class_i_o_1_1_filesystem_1_1_filesystem}{}\section{IO\+:\+:Filesystem\+:\+:Filesystem Class Reference}
+\label{class_i_o_1_1_filesystem_1_1_filesystem}\index{I\+O\+::\+Filesystem\+::\+Filesystem@{I\+O\+::\+Filesystem\+::\+Filesystem}}
+
+
+Collaboration diagram for IO\+:\+:Filesystem\+:\+:Filesystem\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_i_o_1_1_filesystem_1_1_filesystem__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+const std\+::vector$<$ std\+::string $>$ \hyperlink{class_i_o_1_1_filesystem_1_1_filesystem_a08a55eab2acbf4868339d2dee3e861e6}{get\+File\+Names\+In\+Directory} (std\+::string, std\+::string)
+\item 
+bool {\bfseries File\+Exists} (std\+::string)\hypertarget{class_i_o_1_1_filesystem_1_1_filesystem_a8652e75765bc28f5d5f8da64ae8770f9}{}\label{class_i_o_1_1_filesystem_1_1_filesystem_a8652e75765bc28f5d5f8da64ae8770f9}
+
+\item 
+bool {\bfseries Mount} (std\+::string, std\+::string)\hypertarget{class_i_o_1_1_filesystem_1_1_filesystem_a82571e9965f36d7593a383fef2489e64}{}\label{class_i_o_1_1_filesystem_1_1_filesystem_a82571e9965f36d7593a383fef2489e64}
+
+\item 
+bool {\bfseries File\+System\+Is\+Zip} (\hyperlink{class_i_o_1_1_filesystem_1_1_file}{File} file)\hypertarget{class_i_o_1_1_filesystem_1_1_filesystem_afe8e55d51bd27cefd17c52ae62be79e6}{}\label{class_i_o_1_1_filesystem_1_1_filesystem_afe8e55d51bd27cefd17c52ae62be79e6}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::unordered\+\_\+map$<$ std\+::string, std\+::string $>$ {\bfseries m\+\_\+\+Mounted\+Systems}\hypertarget{class_i_o_1_1_filesystem_1_1_filesystem_ac71a116e35d3243ea9b8747b32439e01}{}\label{class_i_o_1_1_filesystem_1_1_filesystem_ac71a116e35d3243ea9b8747b32439e01}
+
+\item 
+std\+::vector$<$ \hyperlink{class_i_o_1_1_filesystem_1_1_file}{File} $>$ {\bfseries m\+\_\+\+Files}\hypertarget{class_i_o_1_1_filesystem_1_1_filesystem_adf20c9d57de39dcea58bcace45cbb5a9}{}\label{class_i_o_1_1_filesystem_1_1_filesystem_adf20c9d57de39dcea58bcace45cbb5a9}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 63 of file filesystem.\+h.
+
+
+
+\subsection{Member Function Documentation}
+\index{I\+O\+::\+Filesystem\+::\+Filesystem@{I\+O\+::\+Filesystem\+::\+Filesystem}!get\+File\+Names\+In\+Directory@{get\+File\+Names\+In\+Directory}}
+\index{get\+File\+Names\+In\+Directory@{get\+File\+Names\+In\+Directory}!I\+O\+::\+Filesystem\+::\+Filesystem@{I\+O\+::\+Filesystem\+::\+Filesystem}}
+\subsubsection[{\texorpdfstring{get\+File\+Names\+In\+Directory(std\+::string, std\+::string)}{getFileNamesInDirectory(std::string, std::string)}}]{\setlength{\rightskip}{0pt plus 5cm}const std\+::vector$<$ std\+::string $>$ I\+O\+::\+Filesystem\+::\+Filesystem\+::get\+File\+Names\+In\+Directory (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{path, }
+\item[{std\+::string}]{ext = {\ttfamily \char`\"{}$\ast$\char`\"{}}}
+\end{DoxyParamCaption}
+)}\hypertarget{class_i_o_1_1_filesystem_1_1_filesystem_a08a55eab2acbf4868339d2dee3e861e6}{}\label{class_i_o_1_1_filesystem_1_1_filesystem_a08a55eab2acbf4868339d2dee3e861e6}
+Now is the main class that controls the interaction between the virtual filesystem and the user 
+
+Definition at line 50 of file filesystem.\+cpp.
+

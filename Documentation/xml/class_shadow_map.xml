@@ -1,0 +1,466 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="class_shadow_map" kind="class" language="C++" prot="public">
+    <compoundname>ShadowMap</compoundname>
+    <includes refid="_shadow_mapping_8h" local="no">ShadowMapping.h</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_shadow_map_1aebb26b7e83be13b2e812d3d60e646e69" prot="private" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint ShadowMap::m_ShadowTexture</definition>
+        <argsstring></argsstring>
+        <name>m_ShadowTexture</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><ref refid="struct_texture" kindref="compound">Texture</ref> where the depth will be rendered to. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="133" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="133" bodyend="-1"/>
+        <referencedby refid="class_shadow_map_1a4ecae9c8ba5f3e1eb1fa0899615d9f96" compoundref="_shadow_mapping_8h" startline="95" endline="98">getShadowTextureID</referencedby>
+        <referencedby refid="class_shadow_map_1a4d4aa3ef5716aeeaee64d8431e432947" compoundref="_shadow_mapping_8cpp" startline="5" endline="28">SetupShadowMap</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_shadow_map_1aa8a296eaaa25b1ed280f0d5443b6cb82" prot="private" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint ShadowMap::m_ShadowFBO</definition>
+        <argsstring></argsstring>
+        <name>m_ShadowFBO</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Framebuffer object used to created the shadow texture </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="134" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="134" bodyend="-1"/>
+        <referencedby refid="class_shadow_map_1aea0e3d6a4b32b256b3318ea94d7cda9e" compoundref="_shadow_mapping_8h" startline="53" endline="58">BindShadowFrameBuffer</referencedby>
+        <referencedby refid="class_shadow_map_1a4d4aa3ef5716aeeaee64d8431e432947" compoundref="_shadow_mapping_8cpp" startline="5" endline="28">SetupShadowMap</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_shadow_map_1a35ed57b768f4a11a7563d8edc75e2983" prot="private" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint ShadowMap::pingpongFBO[2]</definition>
+        <argsstring>[2]</argsstring>
+        <name>pingpongFBO</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="136" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="136" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_shadow_map_1aac20dd5e218bc9a4cb94c6a8e591eb61" prot="private" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint ShadowMap::pingpongDepthbuffers[2]</definition>
+        <argsstring>[2]</argsstring>
+        <name>pingpongDepthbuffers</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="137" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="137" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_shadow_map_1a01106ae34d919ac828e9786da7a91215" prot="private" static="no" mutable="no">
+        <type>GLfloat</type>
+        <definition>GLfloat ShadowMap::m_SHADOW_WIDTH</definition>
+        <argsstring></argsstring>
+        <name>m_SHADOW_WIDTH</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Shadow map texture width </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="139" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="139" bodyend="-1"/>
+        <referencedby refid="class_shadow_map_1aea0e3d6a4b32b256b3318ea94d7cda9e" compoundref="_shadow_mapping_8h" startline="53" endline="58">BindShadowFrameBuffer</referencedby>
+        <referencedby refid="class_shadow_map_1a4d4aa3ef5716aeeaee64d8431e432947" compoundref="_shadow_mapping_8cpp" startline="5" endline="28">SetupShadowMap</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_shadow_map_1aef84eb2ab2d1f970cfdcb155254d7645" prot="private" static="no" mutable="no">
+        <type>GLfloat</type>
+        <definition>GLfloat ShadowMap::m_SHADOW_HEIGHT</definition>
+        <argsstring></argsstring>
+        <name>m_SHADOW_HEIGHT</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Shadow map texture height </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="140" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="140" bodyend="-1"/>
+        <referencedby refid="class_shadow_map_1aea0e3d6a4b32b256b3318ea94d7cda9e" compoundref="_shadow_mapping_8h" startline="53" endline="58">BindShadowFrameBuffer</referencedby>
+        <referencedby refid="class_shadow_map_1a4d4aa3ef5716aeeaee64d8431e432947" compoundref="_shadow_mapping_8cpp" startline="5" endline="28">SetupShadowMap</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_shadow_map_1a12457178e044128f6beaeafc6cff362c" prot="private" static="no" mutable="no">
+        <type>GLfloat</type>
+        <definition>GLfloat ShadowMap::m_NEAR_SHADOW_PLANE</definition>
+        <argsstring></argsstring>
+        <name>m_NEAR_SHADOW_PLANE</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Near plane of the shadow map bounding box </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="142" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="142" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_shadow_map_1ad4391126d86ecbd472125b86e38665b3" prot="private" static="no" mutable="no">
+        <type>GLfloat</type>
+        <definition>GLfloat ShadowMap::m_FAR_SHADOW_PLANE</definition>
+        <argsstring></argsstring>
+        <name>m_FAR_SHADOW_PLANE</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Far plane of the shadow map bounding box </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="143" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="143" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_shadow_map_1ac4dd84a1069dfb1d9d5e63fcf917947b" prot="private" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 ShadowMap::m_POSITION</definition>
+        <argsstring></argsstring>
+        <name>m_POSITION</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Position of the light in World Space </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="145" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="145" bodyend="-1"/>
+        <referencedby refid="class_shadow_map_1adce20a1694daa11845bb8a4cabfe3f18" compoundref="_shadow_mapping_8h" startline="77" endline="80">setShadowPosition</referencedby>
+        <referencedby refid="class_shadow_map_1acce822bf94608533989b77998eea48b6" compoundref="_shadow_mapping_8cpp" startline="30" endline="40">SetupShadowMatrices</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_shadow_map_1ad78382c5ab5ebc0de058081389ace23f" prot="private" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 ShadowMap::m_DIRECTION</definition>
+        <argsstring></argsstring>
+        <name>m_DIRECTION</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Direction of the light </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="146" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="146" bodyend="-1"/>
+        <referencedby refid="class_shadow_map_1a4c28748161d18d8e260ef21bc402af9d" compoundref="_shadow_mapping_8h" startline="86" endline="89">setShadowDirection</referencedby>
+        <referencedby refid="class_shadow_map_1acce822bf94608533989b77998eea48b6" compoundref="_shadow_mapping_8cpp" startline="30" endline="40">SetupShadowMatrices</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_shadow_map_1a5b6ba931f697f84f4da3e265587d9720" prot="private" static="no" mutable="no">
+        <type>glm::mat4</type>
+        <definition>glm::mat4 ShadowMap::m_lightProjection</definition>
+        <argsstring></argsstring>
+        <name>m_lightProjection</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="148" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="148" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_shadow_map_1aecef96918788429b8d6299c84a4b45b5" prot="private" static="no" mutable="no">
+        <type>glm::mat4</type>
+        <definition>glm::mat4 ShadowMap::m_lightView</definition>
+        <argsstring></argsstring>
+        <name>m_lightView</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="149" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="149" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_shadow_map_1a0eea8d2dd25ac26d8696cebe6b097c9d" prot="private" static="no" mutable="no">
+        <type>glm::mat4</type>
+        <definition>glm::mat4 ShadowMap::m_lightSpaceMatrix</definition>
+        <argsstring></argsstring>
+        <name>m_lightSpaceMatrix</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="150" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="150" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_shadow_map_1a10adb1b4da43d0fd2820869486ca8092" prot="private" static="no" mutable="no">
+        <type>glm::mat4</type>
+        <definition>glm::mat4 ShadowMap::m_biasMatrix</definition>
+        <argsstring></argsstring>
+        <name>m_biasMatrix</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="151" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="151" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_shadow_map_1aad205032db3d7d854ba714acf111eec2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>ShadowMap::ShadowMap</definition>
+        <argsstring>(GLfloat width, GLfloat height, GLfloat near, GLfloat far)</argsstring>
+        <name>ShadowMap</name>
+        <param>
+          <type>GLfloat</type>
+          <declname>width</declname>
+          <briefdescription><para>Width of the shadow map texture </para></briefdescription>
+        </param>
+        <param>
+          <type>GLfloat</type>
+          <declname>height</declname>
+          <briefdescription><para>Height of the shadow map texture </para></briefdescription>
+        </param>
+        <param>
+          <type>GLfloat</type>
+          <declname>near</declname>
+          <briefdescription><para>Shadow map bounding box near plane </para></briefdescription>
+        </param>
+        <param>
+          <type>GLfloat</type>
+          <declname>far</declname>
+          <briefdescription><para>Shadow map bounding box far plane </para></briefdescription>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Constructor: In the first two arguments takes in the width and height of the shadow map texture The third and fourth argument are used for the shadow map bounding box near and far planes </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="26" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="26" bodyend="39"/>
+        <references refid="class_shadow_map_1a4d4aa3ef5716aeeaee64d8431e432947" compoundref="_shadow_mapping_8cpp" startline="5" endline="28">SetupShadowMap</references>
+      </memberdef>
+      <memberdef kind="function" id="class_shadow_map_1a90af55a8b823d1863ba2e76a50de8f38" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type></type>
+        <definition>virtual ShadowMap::~ShadowMap</definition>
+        <argsstring>()</argsstring>
+        <name>~ShadowMap</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Destructor </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="44" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="44" bodyend="46"/>
+      </memberdef>
+      <memberdef kind="function" id="class_shadow_map_1aea0e3d6a4b32b256b3318ea94d7cda9e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ShadowMap::BindShadowFrameBuffer</definition>
+        <argsstring>(void)</argsstring>
+        <name>BindShadowFrameBuffer</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Binds the Shadow Map framebuffer as the current framebuffer, where the depth of the scene will be rendered to. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="53" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="53" bodyend="58"/>
+        <references refid="class_shadow_map_1aa8a296eaaa25b1ed280f0d5443b6cb82" compoundref="_shadow_mapping_8h" startline="134">m_ShadowFBO</references>
+        <references refid="class_shadow_map_1a01106ae34d919ac828e9786da7a91215" compoundref="_shadow_mapping_8h" startline="139">m_SHADOW_WIDTH</references>
+        <references refid="class_shadow_map_1aef84eb2ab2d1f970cfdcb155254d7645" compoundref="_shadow_mapping_8h" startline="140">m_SHADOW_HEIGHT</references>
+      </memberdef>
+      <memberdef kind="function" id="class_shadow_map_1a0b8328ce476f157f00c78f905706be73" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ShadowMap::UnbindShadowFrameBuffer</definition>
+        <argsstring>(void)</argsstring>
+        <name>UnbindShadowFrameBuffer</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Binds the current framebuffer to the default framebuffer </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="63" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="63" bodyend="66"/>
+        <references refid="class_shadow_map_1a7ee7e51d8d5fb048b19acaaccae3c1d4">SetupPingPongFBO</references>
+      </memberdef>
+      <memberdef kind="function" id="class_shadow_map_1a7ee7e51d8d5fb048b19acaaccae3c1d4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void ShadowMap::SetupPingPongFBO</definition>
+        <argsstring>()</argsstring>
+        <name>SetupPingPongFBO</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Setups a framebuffer for blurring the shadow map image to be used in variance shadow mapping </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="71" column="1"/>
+        <referencedby refid="class_shadow_map_1a0b8328ce476f157f00c78f905706be73" compoundref="_shadow_mapping_8h" startline="63" endline="66">UnbindShadowFrameBuffer</referencedby>
+      </memberdef>
+      <memberdef kind="function" id="class_shadow_map_1adce20a1694daa11845bb8a4cabfe3f18" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ShadowMap::setShadowPosition</definition>
+        <argsstring>(glm::vec3 newPos)</argsstring>
+        <name>setShadowPosition</name>
+        <param>
+          <type>glm::vec3</type>
+          <declname>newPos</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set the Shadow Map Position </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="77" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="77" bodyend="80"/>
+        <references refid="class_shadow_map_1ac4dd84a1069dfb1d9d5e63fcf917947b" compoundref="_shadow_mapping_8h" startline="145">m_POSITION</references>
+      </memberdef>
+      <memberdef kind="function" id="class_shadow_map_1a4c28748161d18d8e260ef21bc402af9d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ShadowMap::setShadowDirection</definition>
+        <argsstring>(glm::vec3 newDir)</argsstring>
+        <name>setShadowDirection</name>
+        <param>
+          <type>glm::vec3</type>
+          <declname>newDir</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Set the Shadow Map Direction </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="86" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="86" bodyend="89"/>
+        <references refid="class_shadow_map_1ad78382c5ab5ebc0de058081389ace23f" compoundref="_shadow_mapping_8h" startline="146">m_DIRECTION</references>
+      </memberdef>
+      <memberdef kind="function" id="class_shadow_map_1a4ecae9c8ba5f3e1eb1fa0899615d9f96" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>GLuint</type>
+        <definition>GLuint ShadowMap::getShadowTextureID</definition>
+        <argsstring>(void)</argsstring>
+        <name>getShadowTextureID</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Get the Shadow Map texture Id where the depth from the scene was rendered to. </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="95" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="95" bodyend="98"/>
+        <references refid="class_shadow_map_1aebb26b7e83be13b2e812d3d60e646e69" compoundref="_shadow_mapping_8h" startline="133">m_ShadowTexture</references>
+      </memberdef>
+      <memberdef kind="function" id="class_shadow_map_1a860d36ab2c85037db4005258ed17f8a0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>glm::mat4</type>
+        <definition>glm::mat4 ShadowMap::getLightSpaceMatrix</definition>
+        <argsstring>(void)</argsstring>
+        <name>getLightSpaceMatrix</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Get the Shadow Map LightSpace ProjectionView Matrix </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="104" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="104" bodyend="107"/>
+      </memberdef>
+      <memberdef kind="function" id="class_shadow_map_1a06668973dbcad477693f1a80879e24b1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>glm::mat4</type>
+        <definition>glm::mat4 ShadowMap::getBiasMatrix</definition>
+        <argsstring>(void)</argsstring>
+        <name>getBiasMatrix</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Get the Light/Proj Matrix multiplied by the Bias Matrix </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="113" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="113" bodyend="116"/>
+        <references refid="class_shadow_map_1acce822bf94608533989b77998eea48b6" compoundref="_shadow_mapping_8cpp" startline="30" endline="40">SetupShadowMatrices</references>
+        <references refid="class_shadow_map_1a4d4aa3ef5716aeeaee64d8431e432947" compoundref="_shadow_mapping_8cpp" startline="5" endline="28">SetupShadowMap</references>
+      </memberdef>
+      <memberdef kind="function" id="class_shadow_map_1acce822bf94608533989b77998eea48b6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void ShadowMap::SetupShadowMatrices</definition>
+        <argsstring>(void)</argsstring>
+        <name>SetupShadowMatrices</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Setups the matrices from where the light will be calculated </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="122" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/ShadowMapping.cpp" bodystart="30" bodyend="40"/>
+        <references refid="class_shadow_map_1ac4dd84a1069dfb1d9d5e63fcf917947b" compoundref="_shadow_mapping_8h" startline="145">m_POSITION</references>
+        <references refid="class_shadow_map_1ad78382c5ab5ebc0de058081389ace23f" compoundref="_shadow_mapping_8h" startline="146">m_DIRECTION</references>
+        <referencedby refid="class_shadow_map_1a06668973dbcad477693f1a80879e24b1" compoundref="_shadow_mapping_8h" startline="113" endline="116">getBiasMatrix</referencedby>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_shadow_map_1a4d4aa3ef5716aeeaee64d8431e432947" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void ShadowMap::SetupShadowMap</definition>
+        <argsstring>(void)</argsstring>
+        <name>SetupShadowMap</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Setups the OpenGL related stuff of the Shadowmap </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="129" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/ShadowMapping.cpp" bodystart="5" bodyend="28"/>
+        <references refid="class_shadow_map_1aa8a296eaaa25b1ed280f0d5443b6cb82" compoundref="_shadow_mapping_8h" startline="134">m_ShadowFBO</references>
+        <references refid="class_shadow_map_1aebb26b7e83be13b2e812d3d60e646e69" compoundref="_shadow_mapping_8h" startline="133">m_ShadowTexture</references>
+        <references refid="class_shadow_map_1a01106ae34d919ac828e9786da7a91215" compoundref="_shadow_mapping_8h" startline="139">m_SHADOW_WIDTH</references>
+        <references refid="class_shadow_map_1aef84eb2ab2d1f970cfdcb155254d7645" compoundref="_shadow_mapping_8h" startline="140">m_SHADOW_HEIGHT</references>
+        <referencedby refid="class_shadow_map_1aad205032db3d7d854ba714acf111eec2" compoundref="_shadow_mapping_8h" startline="26" endline="39">ShadowMap</referencedby>
+        <referencedby refid="class_shadow_map_1a06668973dbcad477693f1a80879e24b1" compoundref="_shadow_mapping_8h" startline="113" endline="116">getBiasMatrix</referencedby>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>========= Copyright Survtech, All rights reserved. ============//</para><para>Purpose: Produce Shadows by a Framebuffer depth texture sampler <hruler/>
+ </para>    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" line="18" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ShadowMapping.h" bodystart="17" bodyend="154"/>
+    <listofallmembers>
+      <member refid="class_shadow_map_1aea0e3d6a4b32b256b3318ea94d7cda9e" prot="public" virt="non-virtual"><scope>ShadowMap</scope><name>BindShadowFrameBuffer</name></member>
+      <member refid="class_shadow_map_1a06668973dbcad477693f1a80879e24b1" prot="public" virt="non-virtual"><scope>ShadowMap</scope><name>getBiasMatrix</name></member>
+      <member refid="class_shadow_map_1a860d36ab2c85037db4005258ed17f8a0" prot="public" virt="non-virtual"><scope>ShadowMap</scope><name>getLightSpaceMatrix</name></member>
+      <member refid="class_shadow_map_1a4ecae9c8ba5f3e1eb1fa0899615d9f96" prot="public" virt="non-virtual"><scope>ShadowMap</scope><name>getShadowTextureID</name></member>
+      <member refid="class_shadow_map_1a10adb1b4da43d0fd2820869486ca8092" prot="private" virt="non-virtual"><scope>ShadowMap</scope><name>m_biasMatrix</name></member>
+      <member refid="class_shadow_map_1ad78382c5ab5ebc0de058081389ace23f" prot="private" virt="non-virtual"><scope>ShadowMap</scope><name>m_DIRECTION</name></member>
+      <member refid="class_shadow_map_1ad4391126d86ecbd472125b86e38665b3" prot="private" virt="non-virtual"><scope>ShadowMap</scope><name>m_FAR_SHADOW_PLANE</name></member>
+      <member refid="class_shadow_map_1a5b6ba931f697f84f4da3e265587d9720" prot="private" virt="non-virtual"><scope>ShadowMap</scope><name>m_lightProjection</name></member>
+      <member refid="class_shadow_map_1a0eea8d2dd25ac26d8696cebe6b097c9d" prot="private" virt="non-virtual"><scope>ShadowMap</scope><name>m_lightSpaceMatrix</name></member>
+      <member refid="class_shadow_map_1aecef96918788429b8d6299c84a4b45b5" prot="private" virt="non-virtual"><scope>ShadowMap</scope><name>m_lightView</name></member>
+      <member refid="class_shadow_map_1a12457178e044128f6beaeafc6cff362c" prot="private" virt="non-virtual"><scope>ShadowMap</scope><name>m_NEAR_SHADOW_PLANE</name></member>
+      <member refid="class_shadow_map_1ac4dd84a1069dfb1d9d5e63fcf917947b" prot="private" virt="non-virtual"><scope>ShadowMap</scope><name>m_POSITION</name></member>
+      <member refid="class_shadow_map_1aef84eb2ab2d1f970cfdcb155254d7645" prot="private" virt="non-virtual"><scope>ShadowMap</scope><name>m_SHADOW_HEIGHT</name></member>
+      <member refid="class_shadow_map_1a01106ae34d919ac828e9786da7a91215" prot="private" virt="non-virtual"><scope>ShadowMap</scope><name>m_SHADOW_WIDTH</name></member>
+      <member refid="class_shadow_map_1aa8a296eaaa25b1ed280f0d5443b6cb82" prot="private" virt="non-virtual"><scope>ShadowMap</scope><name>m_ShadowFBO</name></member>
+      <member refid="class_shadow_map_1aebb26b7e83be13b2e812d3d60e646e69" prot="private" virt="non-virtual"><scope>ShadowMap</scope><name>m_ShadowTexture</name></member>
+      <member refid="class_shadow_map_1aac20dd5e218bc9a4cb94c6a8e591eb61" prot="private" virt="non-virtual"><scope>ShadowMap</scope><name>pingpongDepthbuffers</name></member>
+      <member refid="class_shadow_map_1a35ed57b768f4a11a7563d8edc75e2983" prot="private" virt="non-virtual"><scope>ShadowMap</scope><name>pingpongFBO</name></member>
+      <member refid="class_shadow_map_1a4c28748161d18d8e260ef21bc402af9d" prot="public" virt="non-virtual"><scope>ShadowMap</scope><name>setShadowDirection</name></member>
+      <member refid="class_shadow_map_1adce20a1694daa11845bb8a4cabfe3f18" prot="public" virt="non-virtual"><scope>ShadowMap</scope><name>setShadowPosition</name></member>
+      <member refid="class_shadow_map_1a7ee7e51d8d5fb048b19acaaccae3c1d4" prot="public" virt="non-virtual"><scope>ShadowMap</scope><name>SetupPingPongFBO</name></member>
+      <member refid="class_shadow_map_1a4d4aa3ef5716aeeaee64d8431e432947" prot="private" virt="non-virtual"><scope>ShadowMap</scope><name>SetupShadowMap</name></member>
+      <member refid="class_shadow_map_1acce822bf94608533989b77998eea48b6" prot="public" virt="non-virtual"><scope>ShadowMap</scope><name>SetupShadowMatrices</name></member>
+      <member refid="class_shadow_map_1aad205032db3d7d854ba714acf111eec2" prot="public" virt="non-virtual"><scope>ShadowMap</scope><name>ShadowMap</name></member>
+      <member refid="class_shadow_map_1a0b8328ce476f157f00c78f905706be73" prot="public" virt="non-virtual"><scope>ShadowMap</scope><name>UnbindShadowFrameBuffer</name></member>
+      <member refid="class_shadow_map_1a90af55a8b823d1863ba2e76a50de8f38" prot="public" virt="virtual"><scope>ShadowMap</scope><name>~ShadowMap</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

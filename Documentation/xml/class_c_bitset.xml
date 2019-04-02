@@ -1,0 +1,287 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="class_c_bitset" kind="class" language="C++" prot="public">
+    <compoundname>CBitset</compoundname>
+    <includes refid="_c_bitset_8h" local="no">CBitset.h</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_c_bitset_1ad652e9601865e54acd0d956b1493a535" prot="private" static="no" mutable="no">
+        <type>unsigned int *</type>
+        <definition>unsigned int * CBitset::m_bits</definition>
+        <argsstring></argsstring>
+        <name>m_bits</name>
+        <briefdescription>
+<para>Our private bit data that holds the bits and size. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="222" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="222" bodyend="-1"/>
+        <referencedby refid="class_c_bitset_1a9332c709c4d655959bcdac749db593b4" compoundref="_c_bitset_8h" startline="25" endline="33">~CBitset</referencedby>
+        <referencedby refid="class_c_bitset_1a452780d0a5bf716012e7706929885a27" compoundref="_c_bitset_8h" startline="36" endline="51">Resize</referencedby>
+        <referencedby refid="class_c_bitset_1a217900efa644dd8d739a756d6811e475" compoundref="_c_bitset_8h" startline="54" endline="57">Set</referencedby>
+        <referencedby refid="class_c_bitset_1a57dfc60d4a180f8166e94bd41612d3f8" compoundref="_c_bitset_8h" startline="60" endline="63">On</referencedby>
+        <referencedby refid="class_c_bitset_1a0278f6027f4bbc3177731ccadb638e2a" compoundref="_c_bitset_8h" startline="66" endline="69">Clear</referencedby>
+        <referencedby refid="class_c_bitset_1ad1cf97399375c29574079338ce02d7ac" compoundref="_c_bitset_8h" startline="72" endline="75">ClearAll</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_bitset_1ab55d8030981a04787e0198a124fa8488" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int CBitset::m_size</definition>
+        <argsstring></argsstring>
+        <name>m_size</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="223" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="223" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_c_bitset_1a20e9448086472dcf6cba08abf8a55f0a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>CBitset::CBitset</definition>
+        <argsstring>()</argsstring>
+        <name>CBitset</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="172" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="172" bodyend="172"/>
+      </memberdef>
+      <memberdef kind="function" id="class_c_bitset_1a9332c709c4d655959bcdac749db593b4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>CBitset::~CBitset</definition>
+        <argsstring>()</argsstring>
+        <name>~CBitset</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="175" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="175" bodyend="183"/>
+      </memberdef>
+      <memberdef kind="function" id="class_c_bitset_1a452780d0a5bf716012e7706929885a27" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void CBitset::Resize</definition>
+        <argsstring>(int count)</argsstring>
+        <name>Resize</name>
+        <param>
+          <type>int</type>
+          <declname>count</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="185" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="185" bodyend="198"/>
+      </memberdef>
+      <memberdef kind="function" id="class_c_bitset_1a217900efa644dd8d739a756d6811e475" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void CBitset::Set</definition>
+        <argsstring>(int i)</argsstring>
+        <name>Set</name>
+        <param>
+          <type>int</type>
+          <declname>i</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="200" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="200" bodyend="203"/>
+      </memberdef>
+      <memberdef kind="function" id="class_c_bitset_1a57dfc60d4a180f8166e94bd41612d3f8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int CBitset::On</definition>
+        <argsstring>(int i)</argsstring>
+        <name>On</name>
+        <param>
+          <type>int</type>
+          <declname>i</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="205" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="205" bodyend="208"/>
+      </memberdef>
+      <memberdef kind="function" id="class_c_bitset_1a0278f6027f4bbc3177731ccadb638e2a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void CBitset::Clear</definition>
+        <argsstring>(int i)</argsstring>
+        <name>Clear</name>
+        <param>
+          <type>int</type>
+          <declname>i</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="210" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="210" bodyend="213"/>
+      </memberdef>
+      <memberdef kind="function" id="class_c_bitset_1ad1cf97399375c29574079338ce02d7ac" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void CBitset::ClearAll</definition>
+        <argsstring>()</argsstring>
+        <name>ClearAll</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="215" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="215" bodyend="218"/>
+      </memberdef>
+      <memberdef kind="function" id="class_c_bitset_1a20e9448086472dcf6cba08abf8a55f0a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>CBitset::CBitset</definition>
+        <argsstring>()</argsstring>
+        <name>CBitset</name>
+        <briefdescription>
+<para>Initialize all the data members. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CBitset.h" line="22" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CBitset.h" bodystart="22" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="function" id="class_c_bitset_1a9332c709c4d655959bcdac749db593b4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>CBitset::~CBitset</definition>
+        <argsstring>()</argsstring>
+        <name>~CBitset</name>
+        <briefdescription>
+<para>This is our deconstructor. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+<para>If we have valid memory, get rid of it </para>        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CBitset.h" line="25" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CBitset.h" bodystart="25" bodyend="33"/>
+        <references refid="class_c_bitset_1ad652e9601865e54acd0d956b1493a535" compoundref="_b_s_p_8h" startline="222">m_bits</references>
+      </memberdef>
+      <memberdef kind="function" id="class_c_bitset_1a452780d0a5bf716012e7706929885a27" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void CBitset::Resize</definition>
+        <argsstring>(int count)</argsstring>
+        <name>Resize</name>
+        <param>
+          <type>int</type>
+          <declname>count</declname>
+        </param>
+        <briefdescription>
+<para>This resizes our bitset to a size so each face has a bit associated with it. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+<para>Get the size of integers we need</para><para>Make sure we haven&apos;t already allocated memory for the bits</para><para>Allocate the bits and initialize them </para>        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CBitset.h" line="36" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CBitset.h" bodystart="36" bodyend="51"/>
+        <references refid="class_c_bitset_1ad652e9601865e54acd0d956b1493a535" compoundref="_b_s_p_8h" startline="222">m_bits</references>
+      </memberdef>
+      <memberdef kind="function" id="class_c_bitset_1a217900efa644dd8d739a756d6811e475" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void CBitset::Set</definition>
+        <argsstring>(int i)</argsstring>
+        <name>Set</name>
+        <param>
+          <type>int</type>
+          <declname>i</declname>
+        </param>
+        <briefdescription>
+<para>This does the binary math to set the desired bit. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CBitset.h" line="54" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CBitset.h" bodystart="54" bodyend="57"/>
+        <references refid="class_c_bitset_1ad652e9601865e54acd0d956b1493a535" compoundref="_b_s_p_8h" startline="222">m_bits</references>
+      </memberdef>
+      <memberdef kind="function" id="class_c_bitset_1a57dfc60d4a180f8166e94bd41612d3f8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int CBitset::On</definition>
+        <argsstring>(int i)</argsstring>
+        <name>On</name>
+        <param>
+          <type>int</type>
+          <declname>i</declname>
+        </param>
+        <briefdescription>
+<para>This returns if the desired bit slot is a 1 or a 0. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CBitset.h" line="60" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CBitset.h" bodystart="60" bodyend="63"/>
+        <references refid="class_c_bitset_1ad652e9601865e54acd0d956b1493a535" compoundref="_b_s_p_8h" startline="222">m_bits</references>
+      </memberdef>
+      <memberdef kind="function" id="class_c_bitset_1a0278f6027f4bbc3177731ccadb638e2a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void CBitset::Clear</definition>
+        <argsstring>(int i)</argsstring>
+        <name>Clear</name>
+        <param>
+          <type>int</type>
+          <declname>i</declname>
+        </param>
+        <briefdescription>
+<para>This clears a bit to 0. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CBitset.h" line="66" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CBitset.h" bodystart="66" bodyend="69"/>
+        <references refid="class_c_bitset_1ad652e9601865e54acd0d956b1493a535" compoundref="_b_s_p_8h" startline="222">m_bits</references>
+      </memberdef>
+      <memberdef kind="function" id="class_c_bitset_1ad1cf97399375c29574079338ce02d7ac" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void CBitset::ClearAll</definition>
+        <argsstring>()</argsstring>
+        <name>ClearAll</name>
+        <briefdescription>
+<para>This initializes the bits to 0. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CBitset.h" line="72" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CBitset.h" bodystart="72" bodyend="75"/>
+        <references refid="class_c_bitset_1ad652e9601865e54acd0d956b1493a535" compoundref="_b_s_p_8h" startline="222">m_bits</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>========= Copyright Survtech, All rights reserved. ============//</para><para>Purpose: <hruler/>
+ </para>    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="167" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="166" bodyend="224"/>
+    <listofallmembers>
+      <member refid="class_c_bitset_1a20e9448086472dcf6cba08abf8a55f0a" prot="public" virt="non-virtual"><scope>CBitset</scope><name>CBitset</name></member>
+      <member refid="class_c_bitset_1a20e9448086472dcf6cba08abf8a55f0a" prot="public" virt="non-virtual"><scope>CBitset</scope><name>CBitset</name></member>
+      <member refid="class_c_bitset_1a0278f6027f4bbc3177731ccadb638e2a" prot="public" virt="non-virtual"><scope>CBitset</scope><name>Clear</name></member>
+      <member refid="class_c_bitset_1a0278f6027f4bbc3177731ccadb638e2a" prot="public" virt="non-virtual"><scope>CBitset</scope><name>Clear</name></member>
+      <member refid="class_c_bitset_1ad1cf97399375c29574079338ce02d7ac" prot="public" virt="non-virtual"><scope>CBitset</scope><name>ClearAll</name></member>
+      <member refid="class_c_bitset_1ad1cf97399375c29574079338ce02d7ac" prot="public" virt="non-virtual"><scope>CBitset</scope><name>ClearAll</name></member>
+      <member refid="class_c_bitset_1ad652e9601865e54acd0d956b1493a535" prot="private" virt="non-virtual"><scope>CBitset</scope><name>m_bits</name></member>
+      <member refid="class_c_bitset_1ab55d8030981a04787e0198a124fa8488" prot="private" virt="non-virtual"><scope>CBitset</scope><name>m_size</name></member>
+      <member refid="class_c_bitset_1a57dfc60d4a180f8166e94bd41612d3f8" prot="public" virt="non-virtual"><scope>CBitset</scope><name>On</name></member>
+      <member refid="class_c_bitset_1a57dfc60d4a180f8166e94bd41612d3f8" prot="public" virt="non-virtual"><scope>CBitset</scope><name>On</name></member>
+      <member refid="class_c_bitset_1a452780d0a5bf716012e7706929885a27" prot="public" virt="non-virtual"><scope>CBitset</scope><name>Resize</name></member>
+      <member refid="class_c_bitset_1a452780d0a5bf716012e7706929885a27" prot="public" virt="non-virtual"><scope>CBitset</scope><name>Resize</name></member>
+      <member refid="class_c_bitset_1a217900efa644dd8d739a756d6811e475" prot="public" virt="non-virtual"><scope>CBitset</scope><name>Set</name></member>
+      <member refid="class_c_bitset_1a217900efa644dd8d739a756d6811e475" prot="public" virt="non-virtual"><scope>CBitset</scope><name>Set</name></member>
+      <member refid="class_c_bitset_1a9332c709c4d655959bcdac749db593b4" prot="public" virt="non-virtual"><scope>CBitset</scope><name>~CBitset</name></member>
+      <member refid="class_c_bitset_1a9332c709c4d655959bcdac749db593b4" prot="public" virt="non-virtual"><scope>CBitset</scope><name>~CBitset</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,172 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="structt_b_s_p_leaf" kind="struct" language="C++" prot="public">
+    <compoundname>tBSPLeaf</compoundname>
+    <includes refid="_b_s_pformat_8h" local="no">BSPformat.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structt_b_s_p_leaf_1a614d113d96578e86c84eac1e5da30964" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int tBSPLeaf::cluster</definition>
+        <argsstring></argsstring>
+        <name>cluster</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="137" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="137" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structt_b_s_p_leaf_1a42134f4980e2596e91aad36318392178" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int tBSPLeaf::area</definition>
+        <argsstring></argsstring>
+        <name>area</name>
+        <briefdescription>
+<para>The visibility cluster. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="138" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="138" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structt_b_s_p_leaf_1a54bc50d07dee43f58e07113c22ef9bc5" prot="public" static="no" mutable="no">
+        <type><ref refid="structt_vector3i" kindref="compound">tVector3i</ref></type>
+        <definition>tVector3i tBSPLeaf::min</definition>
+        <argsstring></argsstring>
+        <name>min</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="139" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="139" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structt_b_s_p_leaf_1ad948f5ec602fe6374e579ebecdca32b9" prot="public" static="no" mutable="no">
+        <type><ref refid="structt_vector3i" kindref="compound">tVector3i</ref></type>
+        <definition>tVector3i tBSPLeaf::max</definition>
+        <argsstring></argsstring>
+        <name>max</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="140" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="140" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structt_b_s_p_leaf_1ae511900fc2a0644237f91bf87c54fec4" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int tBSPLeaf::leafface</definition>
+        <argsstring></argsstring>
+        <name>leafface</name>
+        <briefdescription>
+<para>The bounding box max position. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="141" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="141" bodyend="-1"/>
+        <referencedby refid="class_c_quake3_b_s_p_1adb06c36ee906c9c4db1d16c1642c3aa2" compoundref="_b_s_p_8cpp" startline="382" endline="425">CQuake3BSP::RenderLevel</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structt_b_s_p_leaf_1af9c931abae0ae1c714c263d6f360cf80" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int tBSPLeaf::numOfLeafFaces</definition>
+        <argsstring></argsstring>
+        <name>numOfLeafFaces</name>
+        <briefdescription>
+<para>The first index into the face array. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="142" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="142" bodyend="-1"/>
+        <referencedby refid="class_c_quake3_b_s_p_1adb06c36ee906c9c4db1d16c1642c3aa2" compoundref="_b_s_p_8cpp" startline="382" endline="425">CQuake3BSP::RenderLevel</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="structt_b_s_p_leaf_1ae33ecb631834c42ef3fc222e6964d0b9" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int tBSPLeaf::leafBrush</definition>
+        <argsstring></argsstring>
+        <name>leafBrush</name>
+        <briefdescription>
+<para>The number of faces for this leaf. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="143" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="143" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structt_b_s_p_leaf_1a678fe06069aef16fb2990a9bb757117c" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int tBSPLeaf::numOfLeafBrushes</definition>
+        <argsstring></argsstring>
+        <name>numOfLeafBrushes</name>
+        <briefdescription>
+<para>The first index for into the brushes. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="144" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="144" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structt_b_s_p_leaf_1af291c3a70d15cf834d0b3e592d652660" prot="public" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 tBSPLeaf::min</definition>
+        <argsstring></argsstring>
+        <name>min</name>
+        <briefdescription>
+<para>The area portal. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSPformat.h" line="109" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSPformat.h" bodystart="109" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structt_b_s_p_leaf_1a659a8a62f3d9e8df122df037348cb4a8" prot="public" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 tBSPLeaf::max</definition>
+        <argsstring></argsstring>
+        <name>max</name>
+        <briefdescription>
+<para>The bounding box min position. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSPformat.h" line="110" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSPformat.h" bodystart="110" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>This stores a leaf (end node) in the BSP tree. </para>    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="373">
+        <label>tVector3i</label>
+        <link refid="structt_vector3i"/>
+      </node>
+      <node id="372">
+        <label>tBSPLeaf</label>
+        <link refid="structt_b_s_p_leaf"/>
+        <childnode refid="373" relation="usage">
+          <edgelabel>min</edgelabel>
+          <edgelabel>max</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="136" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="135" bodyend="145"/>
+    <listofallmembers>
+      <member refid="structt_b_s_p_leaf_1a42134f4980e2596e91aad36318392178" prot="public" virt="non-virtual"><scope>tBSPLeaf</scope><name>area</name></member>
+      <member refid="structt_b_s_p_leaf_1a614d113d96578e86c84eac1e5da30964" prot="public" virt="non-virtual"><scope>tBSPLeaf</scope><name>cluster</name></member>
+      <member refid="structt_b_s_p_leaf_1ae33ecb631834c42ef3fc222e6964d0b9" prot="public" virt="non-virtual"><scope>tBSPLeaf</scope><name>leafBrush</name></member>
+      <member refid="structt_b_s_p_leaf_1ae511900fc2a0644237f91bf87c54fec4" prot="public" virt="non-virtual"><scope>tBSPLeaf</scope><name>leafface</name></member>
+      <member refid="structt_b_s_p_leaf_1ad948f5ec602fe6374e579ebecdca32b9" prot="public" virt="non-virtual"><scope>tBSPLeaf</scope><name>max</name></member>
+      <member refid="structt_b_s_p_leaf_1a659a8a62f3d9e8df122df037348cb4a8" prot="public" virt="non-virtual"><scope>tBSPLeaf</scope><name>max</name></member>
+      <member refid="structt_b_s_p_leaf_1a54bc50d07dee43f58e07113c22ef9bc5" prot="public" virt="non-virtual"><scope>tBSPLeaf</scope><name>min</name></member>
+      <member refid="structt_b_s_p_leaf_1af291c3a70d15cf834d0b3e592d652660" prot="public" virt="non-virtual"><scope>tBSPLeaf</scope><name>min</name></member>
+      <member refid="structt_b_s_p_leaf_1a678fe06069aef16fb2990a9bb757117c" prot="public" virt="non-virtual"><scope>tBSPLeaf</scope><name>numOfLeafBrushes</name></member>
+      <member refid="structt_b_s_p_leaf_1af9c931abae0ae1c714c263d6f360cf80" prot="public" virt="non-virtual"><scope>tBSPLeaf</scope><name>numOfLeafFaces</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

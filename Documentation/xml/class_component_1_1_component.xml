@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="class_component_1_1_component" kind="class" language="C++" prot="public">
+    <compoundname>Component::Component</compoundname>
+    <derivedcompoundref refid="class_component_1_1_player_component" prot="public" virt="non-virtual">Component::PlayerComponent</derivedcompoundref>
+    <derivedcompoundref refid="class_component_1_1_render_component" prot="public" virt="non-virtual">Component::RenderComponent</derivedcompoundref>
+    <derivedcompoundref refid="class_component_1_1_spatial_component" prot="public" virt="non-virtual">Component::SpatialComponent</derivedcompoundref>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_component_1_1_component_1af4dec3a51b9df784040cb5cd809d79fe" prot="public" static="no" mutable="no">
+        <type>COMPONENT_TYPE</type>
+        <definition>COMPONENT_TYPE Component::Component::Type</definition>
+        <argsstring></argsstring>
+        <name>Type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="26" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_component_1_1_component_1a9e1818d63b0c1e2bfb008e8a12b153c4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Component::Component::Component</definition>
+        <argsstring>()</argsstring>
+        <name>Component</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="22" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="22" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="function" id="class_component_1_1_component_1af9c8b45dbafc33f77e8f959334f97e5f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type></type>
+        <definition>virtual Component::Component::~Component</definition>
+        <argsstring>()</argsstring>
+        <name>~Component</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="23" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="23" bodyend="23"/>
+      </memberdef>
+      <memberdef kind="function" id="class_component_1_1_component_1ad86ae60c774756f29aa754ed205836c7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>void</type>
+        <definition>virtual void Component::Component::Update</definition>
+        <argsstring>()</argsstring>
+        <name>Update</name>
+        <reimplementedby refid="class_component_1_1_player_component_1a78e43cbf5b483d70ad4d9ab81ac91ec6">Update</reimplementedby>
+        <reimplementedby refid="class_component_1_1_spatial_component_1ad9749f474d482ca2393ae36f1fd7ddeb">Update</reimplementedby>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="24" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="24" bodyend="24"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="235">
+        <label>Component::RenderComponent</label>
+        <link refid="class_component_1_1_render_component"/>
+        <childnode refid="233" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="236">
+        <label>Component::SpatialComponent</label>
+        <link refid="class_component_1_1_spatial_component"/>
+        <childnode refid="233" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="234">
+        <label>Component::PlayerComponent</label>
+        <link refid="class_component_1_1_player_component"/>
+        <childnode refid="233" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="233">
+        <label>Component::Component</label>
+        <link refid="class_component_1_1_component"/>
+      </node>
+    </inheritancegraph>
+    <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="20" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="19" bodyend="27"/>
+    <listofallmembers>
+      <member refid="class_component_1_1_component_1a9e1818d63b0c1e2bfb008e8a12b153c4" prot="public" virt="non-virtual"><scope>Component::Component</scope><name>Component</name></member>
+      <member refid="class_component_1_1_component_1af4dec3a51b9df784040cb5cd809d79fe" prot="public" virt="non-virtual"><scope>Component::Component</scope><name>Type</name></member>
+      <member refid="class_component_1_1_component_1ad86ae60c774756f29aa754ed205836c7" prot="public" virt="virtual"><scope>Component::Component</scope><name>Update</name></member>
+      <member refid="class_component_1_1_component_1af9c8b45dbafc33f77e8f959334f97e5f" prot="public" virt="virtual"><scope>Component::Component</scope><name>~Component</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

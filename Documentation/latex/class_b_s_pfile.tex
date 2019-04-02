@@ -1,0 +1,87 @@
+\hypertarget{class_b_s_pfile}{}\section{B\+S\+Pfile Class Reference}
+\label{class_b_s_pfile}\index{B\+S\+Pfile@{B\+S\+Pfile}}
+
+
+Collaboration diagram for B\+S\+Pfile\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=329pt]{class_b_s_pfile__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{class_b_s_pfile_abfb2664873246b1714ffa17593cb6cf2}{Load\+B\+SP} (const char $\ast$str\+File\+Name)\hypertarget{class_b_s_pfile_abfb2664873246b1714ffa17593cb6cf2}{}\label{class_b_s_pfile_abfb2664873246b1714ffa17593cb6cf2}
+
+\begin{DoxyCompactList}\small\item\em This loads a .bsp file by it\textquotesingle{}s file name (Returns true if successful) \end{DoxyCompactList}\item 
+void \hyperlink{class_b_s_pfile_a7b15a3485081c1e8b31209271a68e0a6}{Render\+Level} (const glm\+::vec3 \&v\+Pos)\hypertarget{class_b_s_pfile_a7b15a3485081c1e8b31209271a68e0a6}{}\label{class_b_s_pfile_a7b15a3485081c1e8b31209271a68e0a6}
+
+\begin{DoxyCompactList}\small\item\em This renders the level to the screen, currently the camera pos isn\textquotesingle{}t being used. \end{DoxyCompactList}\item 
+void \hyperlink{class_b_s_pfile_a703bd45549f861ea4a84852538b0fcb1}{Destroy} ()\hypertarget{class_b_s_pfile_a703bd45549f861ea4a84852538b0fcb1}{}\label{class_b_s_pfile_a703bd45549f861ea4a84852538b0fcb1}
+
+\begin{DoxyCompactList}\small\item\em This destroys the level data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{class_b_s_pfile_ae1f8be78e62a72e8d38f5858bddb9c1b}{Find\+Texture\+Extension} (char $\ast$str\+File\+Name)\hypertarget{class_b_s_pfile_ae1f8be78e62a72e8d38f5858bddb9c1b}{}\label{class_b_s_pfile_ae1f8be78e62a72e8d38f5858bddb9c1b}
+
+\begin{DoxyCompactList}\small\item\em This attaches the correct extension to the file name, if found. \end{DoxyCompactList}\item 
+void \hyperlink{class_b_s_pfile_a25c51a5f92f9fe447dbbb1c33785c117}{Render\+Face} (int face\+Index)\hypertarget{class_b_s_pfile_a25c51a5f92f9fe447dbbb1c33785c117}{}\label{class_b_s_pfile_a25c51a5f92f9fe447dbbb1c33785c117}
+
+\begin{DoxyCompactList}\small\item\em This renders a single face to the screen. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries m\+\_\+num\+Of\+Verts}\hypertarget{class_b_s_pfile_a4ace6677bd15bc1e1476f24e0c2864f1}{}\label{class_b_s_pfile_a4ace6677bd15bc1e1476f24e0c2864f1}
+
+\item 
+int \hyperlink{class_b_s_pfile_a12bfa8c7e0d985dd89193bce795f2613}{m\+\_\+num\+Of\+Faces}\hypertarget{class_b_s_pfile_a12bfa8c7e0d985dd89193bce795f2613}{}\label{class_b_s_pfile_a12bfa8c7e0d985dd89193bce795f2613}
+
+\begin{DoxyCompactList}\small\item\em The number of verts in the model. \end{DoxyCompactList}\item 
+int \hyperlink{class_b_s_pfile_a764cccbff1b8f80ef366f35c4edc721e}{m\+\_\+num\+Of\+Indices}\hypertarget{class_b_s_pfile_a764cccbff1b8f80ef366f35c4edc721e}{}\label{class_b_s_pfile_a764cccbff1b8f80ef366f35c4edc721e}
+
+\begin{DoxyCompactList}\small\item\em The number of faces in the model. \end{DoxyCompactList}\item 
+int \hyperlink{class_b_s_pfile_a862b3f1249427bcacf1ade8362b753c8}{m\+\_\+num\+Of\+Textures}\hypertarget{class_b_s_pfile_a862b3f1249427bcacf1ade8362b753c8}{}\label{class_b_s_pfile_a862b3f1249427bcacf1ade8362b753c8}
+
+\begin{DoxyCompactList}\small\item\em The number of indices for the model. \end{DoxyCompactList}\item 
+int $\ast$ \hyperlink{class_b_s_pfile_aa86af87121864c5cfef95e5278241f7b}{m\+\_\+p\+Indices}\hypertarget{class_b_s_pfile_aa86af87121864c5cfef95e5278241f7b}{}\label{class_b_s_pfile_aa86af87121864c5cfef95e5278241f7b}
+
+\begin{DoxyCompactList}\small\item\em The number of texture maps. \end{DoxyCompactList}\item 
+\hyperlink{structt_b_s_p_vertex}{t\+B\+S\+P\+Vertex} $\ast$ \hyperlink{class_b_s_pfile_a6ddf2eae40c66dad1e2306aab2b79c4b}{m\+\_\+p\+Verts}\hypertarget{class_b_s_pfile_a6ddf2eae40c66dad1e2306aab2b79c4b}{}\label{class_b_s_pfile_a6ddf2eae40c66dad1e2306aab2b79c4b}
+
+\begin{DoxyCompactList}\small\item\em The object\textquotesingle{}s indices for rendering. \end{DoxyCompactList}\item 
+\hyperlink{structt_b_s_p_face}{t\+B\+S\+P\+Face} $\ast$ \hyperlink{class_b_s_pfile_a229bf352e07fe5fc205925ef4bcd204c}{m\+\_\+p\+Faces}\hypertarget{class_b_s_pfile_a229bf352e07fe5fc205925ef4bcd204c}{}\label{class_b_s_pfile_a229bf352e07fe5fc205925ef4bcd204c}
+
+\begin{DoxyCompactList}\small\item\em The object\textquotesingle{}s vertices. \end{DoxyCompactList}\item 
+unsigned int \hyperlink{class_b_s_pfile_ade4ec8b0582ac55d498ce1d53b94a565}{m\+\_\+textures} \mbox{[}500\mbox{]}
+\begin{DoxyCompactList}\small\item\em The texture and lightmap array for the level. \end{DoxyCompactList}\item 
+\hyperlink{class_c_bitset}{C\+Bitset} {\bfseries m\+\_\+\+Faces\+Drawn}\hypertarget{class_b_s_pfile_a500f3a4700116398f61dcca78ceca484}{}\label{class_b_s_pfile_a500f3a4700116398f61dcca78ceca484}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+========= Copyright Survtech, All rights reserved. ============//
+
+Purpose\+: 
+
+ 
+
+Definition at line 19 of file B\+S\+Pfile.\+h.
+
+
+
+\subsection{Field Documentation}
+\index{B\+S\+Pfile@{B\+S\+Pfile}!m\+\_\+textures@{m\+\_\+textures}}
+\index{m\+\_\+textures@{m\+\_\+textures}!B\+S\+Pfile@{B\+S\+Pfile}}
+\subsubsection[{\texorpdfstring{m\+\_\+textures}{m_textures}}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int B\+S\+Pfile\+::m\+\_\+textures\mbox{[}500\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_b_s_pfile_ade4ec8b0582ac55d498ce1d53b94a565}{}\label{class_b_s_pfile_ade4ec8b0582ac55d498ce1d53b94a565}
+
+
+The texture and lightmap array for the level. 
+
+The faces information of the object 
+
+Definition at line 52 of file B\+S\+Pfile.\+h.
+

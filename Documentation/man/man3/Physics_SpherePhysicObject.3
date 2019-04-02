@@ -1,0 +1,47 @@
+.TH "Physics::SpherePhysicObject" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Physics::SpherePhysicObject \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBPhysics::PhysicObject\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "virtual std::shared_ptr< btRigidBody > \fBaddObject\fP (float, float)"
+.br
+.ti -1c
+.RI "virtual std::shared_ptr< btRigidBody > \fBaddObject\fP (float, glm::vec3, float)"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "float \fBm_Radius\fP = 1\&.0f"
+.br
+.ti -1c
+.RI "float \fBm_Mass\fP = 0\&.0f"
+.br
+.ti -1c
+.RI "glm::vec3 \fBm_Position\fP = glm::vec3(0\&.0f, 0\&.0f, 0\&.0f)"
+.br
+.ti -1c
+.RI "std::shared_ptr< btSphereShape > \fBSphereShape\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< btMotionState > \fBmotionState\fP"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+Definition at line 6 of file SpherePhysicObject\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

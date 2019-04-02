@@ -1,0 +1,216 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="class_component_1_1_render_component" kind="class" language="C++" prot="public">
+    <compoundname>Component::RenderComponent</compoundname>
+    <basecompoundref refid="class_component_1_1_component" prot="public" virt="non-virtual">Component::Component</basecompoundref>
+    <includes refid="_component_8h" local="no">Component.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_component_1_1_render_component_1a51e43d8377e19480220004570443fd5b" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Component::RenderComponent::hasModel</definition>
+        <argsstring></argsstring>
+        <name>hasModel</name>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="79" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="79" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_component_1_1_render_component_1a2baadbbad5f4a59dc2ab2fbdf0c95761" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string Component::RenderComponent::modelPath</definition>
+        <argsstring></argsstring>
+        <name>modelPath</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="80" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_component_1_1_render_component_1a298178bc83427dabccc8269cfad4cd7e" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string Component::RenderComponent::shaderType</definition>
+        <argsstring></argsstring>
+        <name>shaderType</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="81" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_component_1_1_render_component_1a0e6900189fe3dba2a90b487fa8f1f312" prot="public" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Component::RenderComponent::Position</definition>
+        <argsstring></argsstring>
+        <name>Position</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="83" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="83" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_component_1_1_render_component_1a7e31183b9e8161060286136dde8fe93f" prot="public" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Component::RenderComponent::Scale</definition>
+        <argsstring></argsstring>
+        <name>Scale</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="84" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="84" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_component_1_1_render_component_1a4b9a23484acb07bd7d04b774bde8be40" prot="public" static="no" mutable="no">
+        <type>glm::quat</type>
+        <definition>glm::quat Component::RenderComponent::Rotation</definition>
+        <argsstring></argsstring>
+        <name>Rotation</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="85" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="85" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_component_1_1_render_component_1ab0e43e48dcf4722730617f835dc8bf02" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Component::RenderComponent::RenderComponent</definition>
+        <argsstring>()</argsstring>
+        <name>RenderComponent</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="51" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="51" bodyend="55"/>
+      </memberdef>
+      <memberdef kind="function" id="class_component_1_1_render_component_1aa5dd9494ca6265e1fba4bb7cb1c2c6b0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type></type>
+        <definition>virtual Component::RenderComponent::~RenderComponent</definition>
+        <argsstring>()</argsstring>
+        <name>~RenderComponent</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="57" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="57" bodyend="61"/>
+      </memberdef>
+      <memberdef kind="function" id="class_component_1_1_render_component_1a9c038993fe9f6e5c75c092702930e1e6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Component::RenderComponent::Fill</definition>
+        <argsstring>(std::string path, std::shared_ptr&lt; ResourceManager &gt; &amp;rm, std::string shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot)</argsstring>
+        <name>Fill</name>
+        <param>
+          <type>std::string</type>
+          <declname>path</declname>
+        </param>
+        <param>
+          <type>std::shared_ptr&lt; <ref refid="class_resource_manager" kindref="compound">ResourceManager</ref> &gt; &amp;</type>
+          <declname>rm</declname>
+        </param>
+        <param>
+          <type>std::string</type>
+          <declname>shader</declname>
+        </param>
+        <param>
+          <type>glm::vec3</type>
+          <declname>pos</declname>
+        </param>
+        <param>
+          <type>glm::vec3</type>
+          <declname>sc</declname>
+        </param>
+        <param>
+          <type>glm::quat</type>
+          <declname>rot</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="64" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="64" bodyend="72"/>
+      </memberdef>
+      <memberdef kind="function" id="class_component_1_1_render_component_1a718f61cfd8e4c69918efa56194bfac75" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Component::RenderComponent::Update</definition>
+        <argsstring>(std::shared_ptr&lt; ResourceManager &gt; rm)</argsstring>
+        <name>Update</name>
+        <param>
+          <type>std::shared_ptr&lt; <ref refid="class_resource_manager" kindref="compound">ResourceManager</ref> &gt;</type>
+          <declname>rm</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="74" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="74" bodyend="77"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Rendering Components. </para>    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="311">
+        <label>Component::RenderComponent</label>
+        <link refid="class_component_1_1_render_component"/>
+        <childnode refid="312" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="312">
+        <label>Component::Component</label>
+        <link refid="class_component_1_1_component"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="313">
+        <label>Component::RenderComponent</label>
+        <link refid="class_component_1_1_render_component"/>
+        <childnode refid="314" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="314">
+        <label>Component::Component</label>
+        <link refid="class_component_1_1_component"/>
+      </node>
+    </collaborationgraph>
+    <location file="D:/Epsilon/Epsilon Engine/include/Component.h" line="49" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Component.h" bodystart="48" bodyend="87"/>
+    <listofallmembers>
+      <member refid="class_component_1_1_component_1a9e1818d63b0c1e2bfb008e8a12b153c4" prot="public" virt="non-virtual"><scope>Component::RenderComponent</scope><name>Component</name></member>
+      <member refid="class_component_1_1_render_component_1a9c038993fe9f6e5c75c092702930e1e6" prot="public" virt="non-virtual"><scope>Component::RenderComponent</scope><name>Fill</name></member>
+      <member refid="class_component_1_1_render_component_1a51e43d8377e19480220004570443fd5b" prot="public" virt="non-virtual"><scope>Component::RenderComponent</scope><name>hasModel</name></member>
+      <member refid="class_component_1_1_render_component_1a2baadbbad5f4a59dc2ab2fbdf0c95761" prot="public" virt="non-virtual"><scope>Component::RenderComponent</scope><name>modelPath</name></member>
+      <member refid="class_component_1_1_render_component_1a0e6900189fe3dba2a90b487fa8f1f312" prot="public" virt="non-virtual"><scope>Component::RenderComponent</scope><name>Position</name></member>
+      <member refid="class_component_1_1_render_component_1ab0e43e48dcf4722730617f835dc8bf02" prot="public" virt="non-virtual"><scope>Component::RenderComponent</scope><name>RenderComponent</name></member>
+      <member refid="class_component_1_1_render_component_1a4b9a23484acb07bd7d04b774bde8be40" prot="public" virt="non-virtual"><scope>Component::RenderComponent</scope><name>Rotation</name></member>
+      <member refid="class_component_1_1_render_component_1a7e31183b9e8161060286136dde8fe93f" prot="public" virt="non-virtual"><scope>Component::RenderComponent</scope><name>Scale</name></member>
+      <member refid="class_component_1_1_render_component_1a298178bc83427dabccc8269cfad4cd7e" prot="public" virt="non-virtual"><scope>Component::RenderComponent</scope><name>shaderType</name></member>
+      <member refid="class_component_1_1_component_1af4dec3a51b9df784040cb5cd809d79fe" prot="public" virt="non-virtual"><scope>Component::RenderComponent</scope><name>Type</name></member>
+      <member refid="class_component_1_1_render_component_1a718f61cfd8e4c69918efa56194bfac75" prot="public" virt="non-virtual"><scope>Component::RenderComponent</scope><name>Update</name></member>
+      <member refid="class_component_1_1_component_1ad86ae60c774756f29aa754ed205836c7" prot="public" virt="virtual" ambiguityscope="Component::Component::"><scope>Component::RenderComponent</scope><name>Update</name></member>
+      <member refid="class_component_1_1_component_1af9c8b45dbafc33f77e8f959334f97e5f" prot="public" virt="virtual"><scope>Component::RenderComponent</scope><name>~Component</name></member>
+      <member refid="class_component_1_1_render_component_1aa5dd9494ca6265e1fba4bb7cb1c2c6b0" prot="public" virt="virtual"><scope>Component::RenderComponent</scope><name>~RenderComponent</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,189 @@
+.TH "Camera" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Camera \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCamera\fP (glm::vec3, glm::vec3)"
+.br
+.ti -1c
+.RI "void \fBUpdate\fP (GLFWwindow *&)"
+.br
+.ti -1c
+.RI "void \fBUpdateMatrices\fP (void)"
+.br
+.ti -1c
+.RI "glm::mat4 \fBgetViewMatrix\fP (void)"
+.br
+.ti -1c
+.RI "glm::mat4 \fBgetPrevViewMatrix\fP (void)"
+.br
+.ti -1c
+.RI "glm::mat4 \fBgetProjectionMatrix\fP (void)"
+.br
+.ti -1c
+.RI "glm::vec3 \fBgetPosition\fP (void)"
+.br
+.ti -1c
+.RI "glm::vec3 \fBgetDirection\fP (void)"
+.br
+.ti -1c
+.RI "glm::vec3 \fBgetUp\fP (void)"
+.br
+.ti -1c
+.RI "glm::vec3 \fBgetRight\fP (void)"
+.br
+.ti -1c
+.RI "void \fBsetPosition\fP (glm::vec3 newPosition)"
+.br
+.ti -1c
+.RI "void \fBsetDirection\fP (glm::vec3 newDirection)"
+.br
+.ti -1c
+.RI "void \fBsetFoV\fP (float FoV)"
+.br
+.ti -1c
+.RI "float \fBgetFoV\fP ()"
+.br
+.ti -1c
+.RI "void \fBsetProjection\fP (float FOV, float AR, float NEAR, float FAR)"
+.br
+.ti -1c
+.RI "void \fBsetProjection\fP (glm::mat4)"
+.br
+.ti -1c
+.RI "void \fBsetViewMatrix\fP (glm::mat4)"
+.br
+.ti -1c
+.RI "bool \fBisMoving\fP ()"
+.br
+.in -1c
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "glm::mat4 \fBMVP\fP"
+.br
+.ti -1c
+.RI "float \fBMovementSpeed\fP"
+.br
+.ti -1c
+.RI "float \fBMouseSpeed\fP"
+.br
+.ti -1c
+.RI "float \fBJoystickSensibility\fP"
+.br
+.ti -1c
+.RI "float \fBFieldOfView\fP"
+.br
+.ti -1c
+.RI "int \fBwinx\fP"
+.br
+.ti -1c
+.RI "int \fBwiny\fP"
+.br
+.ti -1c
+.RI "float \fBMaxMovementSpeed\fP"
+.br
+.ti -1c
+.RI "bool \fBmIsMoving\fP = false"
+.br
+.in -1c
+.SS "Private Member Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBLockCamera\fP (void)"
+.br
+.ti -1c
+.RI "void \fBHandleInputs\fP (GLFWwindow *&)"
+.br
+.ti -1c
+.RI "void \fBGetExternalInputs\fP (void)"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "glm::vec3 \fBRigth\fP"
+.br
+.ti -1c
+.RI "glm::vec3 \fBUp\fP"
+.br
+.ti -1c
+.RI "glm::vec3 \fBFrustrum\fP"
+.br
+.ti -1c
+.RI "glm::vec3 \fBnewOrientation\fP"
+.br
+.ti -1c
+.RI "glm::vec3 \fBnewPosition\fP"
+.br
+.ti -1c
+.RI "glm::mat4 \fBPrevView\fP"
+.br
+.ti -1c
+.RI "bool \fBOrientationhasChanged\fP"
+.br
+.ti -1c
+.RI "bool \fBPositionhasChanged\fP"
+.br
+.ti -1c
+.RI "float \fBverticalAngle\fP"
+.br
+.ti -1c
+.RI "float \fBhorizontalAngle\fP"
+.br
+.ti -1c
+.RI "glm::mat4 \fBViewMatrix\fP"
+.br
+.ti -1c
+.RI "glm::mat4 \fBProjectionMatrix\fP"
+.br
+.ti -1c
+.RI "glm::vec3 \fBPosition\fP"
+.br
+.ti -1c
+.RI "glm::vec3 \fBOrientation\fP"
+.br
+.ti -1c
+.RI "glm::vec3 \fBLastPosition\fP"
+.br
+.ti -1c
+.RI "glm::vec3 \fBDeltaVector\fP"
+.br
+.ti -1c
+.RI "glm::vec3 \fBMovementVector\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+========= Copyright Survtech, All rights reserved\&. ============//
+.PP
+Purpose: 
+.PP
+ 
+.PP
+Definition at line 16 of file camera\&.h\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void Camera::HandleInputs (GLFWwindow *& window)\fC [private]\fP"
+Keyboard \fBCamera\fP input 
+.PP
+.PP
+Joystick \fBCamera\fP input 
+.PP
+
+.PP
+Definition at line 73 of file Camera\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

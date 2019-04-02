@@ -1,0 +1,6 @@
+<map id="BSPFace" name="BSPFace">
+<area shape="rect" id="node2" href="$structt_b_s_p_lightmap.html" title="This is our BSP lightmap structure which stores the 128x128 RGB values. " alt="" coords="273,5,379,32"/>
+<area shape="rect" id="node6" href="$struct_b_s_p_face_1_1t___vertex.html" title="BSPFace::t_Vertex" alt="" coords="5,204,140,231"/>
+<area shape="rect" id="node7" title="STL class. " alt="" coords="286,263,366,289"/>
+<area shape="rect" id="node8" title="STL class. " alt="" coords="9,255,136,297"/>
+</map>

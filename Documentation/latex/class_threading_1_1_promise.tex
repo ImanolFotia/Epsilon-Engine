@@ -1,0 +1,43 @@
+\hypertarget{class_threading_1_1_promise}{}\section{Threading\+:\+:Promise Class Reference}
+\label{class_threading_1_1_promise}\index{Threading\+::\+Promise@{Threading\+::\+Promise}}
+
+
+Collaboration diagram for Threading\+:\+:Promise\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_threading_1_1_promise__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries Promise} (\hyperlink{class_threading_1_1_lambda}{Lambda} l)\hypertarget{class_threading_1_1_promise_a2f98b22f7246aff0d7d9f000f7628267}{}\label{class_threading_1_1_promise_a2f98b22f7246aff0d7d9f000f7628267}
+
+\item 
+void {\bfseries then} (\hyperlink{class_threading_1_1_lambda}{Lambda}$<$ void(\hyperlink{class_threading_1_1_lambda}{Lambda} success, \hyperlink{class_threading_1_1_lambda}{Lambda} faillure)$>$ l)\hypertarget{class_threading_1_1_promise_a37a2bd76dd97c9fa71e6bd18dc7f69de}{}\label{class_threading_1_1_promise_a37a2bd76dd97c9fa71e6bd18dc7f69de}
+
+\item 
+void {\bfseries catch} (\hyperlink{class_threading_1_1_lambda}{Lambda}$<$ void(std\+::string)$>$ l)\hypertarget{class_threading_1_1_promise_ad37ac3724f9d94c63441446adc9fff2e}{}\label{class_threading_1_1_promise_ad37ac3724f9d94c63441446adc9fff2e}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_threading_1_1_lambda}{Lambda} {\bfseries \+\_\+primary\+\_\+function}\hypertarget{class_threading_1_1_promise_a8af5df617c8285a8481a1c96a9233591}{}\label{class_threading_1_1_promise_a8af5df617c8285a8481a1c96a9233591}
+
+\item 
+\hyperlink{class_threading_1_1_lambda}{Lambda}$<$ void(\hyperlink{class_threading_1_1_lambda}{Lambda}, \hyperlink{class_threading_1_1_lambda}{Lambda})$>$ {\bfseries \+\_\+then\+\_\+function}\hypertarget{class_threading_1_1_promise_a9746cd2fc6d98afbe8ac3567673b3b9a}{}\label{class_threading_1_1_promise_a9746cd2fc6d98afbe8ac3567673b3b9a}
+
+\item 
+\hyperlink{class_threading_1_1_lambda}{Lambda}$<$ void(std\+::string)$>$ {\bfseries \+\_\+catch\+\_\+function}\hypertarget{class_threading_1_1_promise_aacf54b6543861a8676bb1075d443f538}{}\label{class_threading_1_1_promise_aacf54b6543861a8676bb1075d443f538}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 7 of file Promise.\+hpp.
+

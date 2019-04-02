@@ -1,0 +1,188 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="class_cube_map" kind="class" language="C++" prot="public">
+    <compoundname>CubeMap</compoundname>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_cube_map_1a6c8cb6843f7fac0f413750ab56a9672f" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int CubeMap::ID</definition>
+        <argsstring></argsstring>
+        <name>ID</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CubeMap.h" line="40" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CubeMap.h" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_cube_map_1a7cfac75ebc988782df0516ec2818d5fd" prot="private" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string CubeMap::CM_path</definition>
+        <argsstring></argsstring>
+        <name>CM_path</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CubeMap.h" line="41" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CubeMap.h" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_cube_map_1a86c355799975449ea9021ff727c4b442" prot="private" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 CubeMap::Position</definition>
+        <argsstring></argsstring>
+        <name>Position</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CubeMap.h" line="42" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CubeMap.h" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_cube_map_1a8d35f3ac784086d119bf045c9ef44161" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; glm::vec3 &gt;</type>
+        <definition>std::vector&lt;glm::vec3&gt; CubeMap::BoxMinMaxPoints</definition>
+        <argsstring></argsstring>
+        <name>BoxMinMaxPoints</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CubeMap.h" line="43" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CubeMap.h" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_cube_map_1a5abac1b20596767c00c1d265ca2cb2cc" prot="private" static="no" mutable="no">
+        <type>std::shared_ptr&lt; <ref refid="classe_texture" kindref="compound">eTexture</ref> &gt;</type>
+        <definition>std::shared_ptr&lt;eTexture&gt; CubeMap::texture</definition>
+        <argsstring></argsstring>
+        <name>texture</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CubeMap.h" line="44" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CubeMap.h" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_cube_map_1ae7aa4dbd62b029a39a7e34aa8a483aae" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>CubeMap::CubeMap</definition>
+        <argsstring>(int ID)</argsstring>
+        <name>CubeMap</name>
+        <param>
+          <type>int</type>
+          <declname>ID</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CubeMap.h" line="13" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CubeMap.h" bodystart="13" bodyend="13"/>
+      </memberdef>
+      <memberdef kind="function" id="class_cube_map_1a378d9efce6a735333fa729b41139311c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>CubeMap::CubeMap</definition>
+        <argsstring>(std::vector&lt; std::string &gt; paths, int ID, glm::vec3 Pos)</argsstring>
+        <name>CubeMap</name>
+        <param>
+          <type>std::vector&lt; std::string &gt;</type>
+          <declname>paths</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>ID</declname>
+        </param>
+        <param>
+          <type>glm::vec3</type>
+          <declname>Pos</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CubeMap.h" line="15" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CubeMap.h" bodystart="15" bodyend="21"/>
+      </memberdef>
+      <memberdef kind="function" id="class_cube_map_1ac4c453248cd7022d3b268755b2dd218e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>CubeMap::~CubeMap</definition>
+        <argsstring>()</argsstring>
+        <name>~CubeMap</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CubeMap.h" line="23" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CubeMap.h" bodystart="23" bodyend="23"/>
+      </memberdef>
+      <memberdef kind="function" id="class_cube_map_1a12f735d123344dbe0348d7ff1cc634b2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 CubeMap::getPosition</definition>
+        <argsstring>()</argsstring>
+        <name>getPosition</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CubeMap.h" line="25" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CubeMap.h" bodystart="25" bodyend="28"/>
+      </memberdef>
+      <memberdef kind="function" id="class_cube_map_1ae7d78f57946334ee9f8b73e9116d6ec7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::vector&lt; glm::vec3 &gt;</type>
+        <definition>std::vector&lt;glm::vec3&gt; CubeMap::getBoxMinMaxPoints</definition>
+        <argsstring>()</argsstring>
+        <name>getBoxMinMaxPoints</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CubeMap.h" line="30" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CubeMap.h" bodystart="30" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="function" id="class_cube_map_1a9d763a705d48f0375326abf5a6c08482" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>GLuint</type>
+        <definition>GLuint CubeMap::getTextureID</definition>
+        <argsstring>()</argsstring>
+        <name>getTextureID</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CubeMap.h" line="34" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CubeMap.h" bodystart="34" bodyend="37"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/CubeMap.h" line="11" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CubeMap.h" bodystart="10" bodyend="49"/>
+    <listofallmembers>
+      <member refid="class_cube_map_1a8d35f3ac784086d119bf045c9ef44161" prot="private" virt="non-virtual"><scope>CubeMap</scope><name>BoxMinMaxPoints</name></member>
+      <member refid="class_cube_map_1a7cfac75ebc988782df0516ec2818d5fd" prot="private" virt="non-virtual"><scope>CubeMap</scope><name>CM_path</name></member>
+      <member refid="class_cube_map_1ae7aa4dbd62b029a39a7e34aa8a483aae" prot="public" virt="non-virtual"><scope>CubeMap</scope><name>CubeMap</name></member>
+      <member refid="class_cube_map_1a378d9efce6a735333fa729b41139311c" prot="public" virt="non-virtual"><scope>CubeMap</scope><name>CubeMap</name></member>
+      <member refid="class_cube_map_1ae7d78f57946334ee9f8b73e9116d6ec7" prot="public" virt="non-virtual"><scope>CubeMap</scope><name>getBoxMinMaxPoints</name></member>
+      <member refid="class_cube_map_1a12f735d123344dbe0348d7ff1cc634b2" prot="public" virt="non-virtual"><scope>CubeMap</scope><name>getPosition</name></member>
+      <member refid="class_cube_map_1a9d763a705d48f0375326abf5a6c08482" prot="public" virt="non-virtual"><scope>CubeMap</scope><name>getTextureID</name></member>
+      <member refid="class_cube_map_1a6c8cb6843f7fac0f413750ab56a9672f" prot="private" virt="non-virtual"><scope>CubeMap</scope><name>ID</name></member>
+      <member refid="class_cube_map_1a86c355799975449ea9021ff727c4b442" prot="private" virt="non-virtual"><scope>CubeMap</scope><name>Position</name></member>
+      <member refid="class_cube_map_1a5abac1b20596767c00c1d265ca2cb2cc" prot="private" virt="non-virtual"><scope>CubeMap</scope><name>texture</name></member>
+      <member refid="class_cube_map_1ac4c453248cd7022d3b268755b2dd218e" prot="public" virt="non-virtual"><scope>CubeMap</scope><name>~CubeMap</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

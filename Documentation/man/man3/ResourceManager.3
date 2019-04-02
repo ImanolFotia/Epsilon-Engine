@@ -1,0 +1,529 @@
+.TH "ResourceManager" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ResourceManager \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "std::string \fBrequestTexture\fP (std::string texPath)"
+.br
+.RI "\fILoads a texture from disk or assign the ID if it's already loaded\&. \fP"
+.ti -1c
+.RI "std::string \fBrequestModel\fP (std::string modelPath, std::shared_ptr< \fBResourceManager\fP > rm, glm::vec3 Pos, glm::vec3 scs, glm::quat rot)"
+.br
+.RI "\fILoads a model from disk or assign the ID if it's already loaded\&. \fP"
+.ti -1c
+.RI "void \fBuseModel\fP (std::string modelPath, \fBShader\fP *shader, glm::vec3)"
+.br
+.RI "\fIRenders the asked model\&. \fP"
+.ti -1c
+.RI "void \fBuseModel\fP (std::string modelPath, GLuint shader, glm::vec3)"
+.br
+.RI "\fIRenders the asked model\&. \fP"
+.ti -1c
+.RI "\fBMIN_MAX_POINTS\fP \fBgetModelBoundingBox\fP (std::string modelPath)"
+.br
+.RI "\fIRetrieves the asked model's Mins and Max points contained in a structure\&. \fP"
+.ti -1c
+.RI "void \fBsetModelVisibility\fP (std::string path, bool visibility)"
+.br
+.RI "\fIBased on the visibility calculation sets the current visibility state of the model\&. \fP"
+.ti -1c
+.RI "glm::quat \fBgetModelRotation\fP (std::string path)"
+.br
+.RI "\fI\fBModel\fP assigned Rotation\&. \fP"
+.ti -1c
+.RI "glm::vec3 \fBgetModelPosition\fP (std::string path)"
+.br
+.RI "\fI\fBModel\fP assigned Position\&. \fP"
+.ti -1c
+.RI "glm::vec3 \fBgetModelScale\fP (std::string path)"
+.br
+.RI "\fI\fBModel\fP assigned Scale\&. \fP"
+.ti -1c
+.RI "void \fBsetModelUniforms\fP (std::string, \fBShader\fP *, glm::vec3, glm::vec3, glm::quat, std::shared_ptr< \fBCamera\fP >)"
+.br
+.RI "\fISet model's uniforms\&. \fP"
+.ti -1c
+.RI "void \fBsetModelUniforms\fP (std::string path, \fBShader\fP *shader, glm::vec3, glm::vec3, glm::quat, glm::vec3, glm::vec3, glm::quat, std::shared_ptr< \fBCamera\fP > cam)"
+.br
+.ti -1c
+.RI "void \fBdestroyAllModels\fP ()"
+.br
+.ti -1c
+.RI "GLuint \fBuseTexture\fP (std::string texPath)"
+.br
+.RI "\fIReturns a \fBTexture\fP ID given a path\&. \fP"
+.ti -1c
+.RI "void \fBaddTextureToQueue\fP (std::string texture)"
+.br
+.RI "\fIAdds the path of a texture to be loaded when all the other resources are ready\&. \fP"
+.ti -1c
+.RI "void \fBloadQueuedTextures\fP ()"
+.br
+.RI "\fIWhen there is no more queued commands, all the texture are loaded in order of assignment\&. \fP"
+.ti -1c
+.RI "std::string \fBrequestShader\fP (std::string shaderPathv, std::string shaderPathf, std::string name)"
+.br
+.RI "\fILoads a new shader into the engine or returns the existing one if already loaded\&. \fP"
+.ti -1c
+.RI "void \fBdestroyAllTextures\fP ()"
+.br
+.ti -1c
+.RI "\fBShader\fP \fBuseShader\fP (std::string shaderPath)"
+.br
+.RI "\fIReturns an instance of the requested shader\&. \fP"
+.ti -1c
+.RI "GLuint \fBgetShaderID\fP (std::string shaderPath)"
+.br
+.RI "\fILoads a new shader into the engine or returns the existing one if already loaded\&. \fP"
+.ti -1c
+.RI "bool \fBrequestCubeMap\fP (int CubeMapID, glm::vec3 Position)"
+.br
+.RI "\fILoads a new Cube Map into the engine or returns the existing one if already loaded\&. \fP"
+.ti -1c
+.RI "int \fBNearestCubeMap\fP (glm::vec3 TestingPoint)"
+.br
+.RI "\fIReturns the ID of the closest cube map based on a given position\&. \fP"
+.ti -1c
+.RI "GLuint \fBuseCubeMap\fP (int ID)"
+.br
+.RI "\fIReturns the ID of the requested cube map\&. \fP"
+.ti -1c
+.RI "int \fBrequestTextureUsage\fP (std::string)"
+.br
+.RI "\fIReturns the number of times a texture is used per frame\&. \fP"
+.ti -1c
+.RI "void \fBresetTextureUsage\fP (std::string)"
+.br
+.ti -1c
+.RI "bool \fBaddCubemap\fP (std::shared_ptr< \fBCubeMap\fP >, glm::vec3)"
+.br
+.ti -1c
+.RI "\fBModel\fP \fBgetModel\fP (std::string modelPath)"
+.br
+.in -1c
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "std::shared_ptr< \fBCamera\fP > \fBm_Camera\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBPhysics::Physics\fP > \fBm_PhysicsWorld\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBIO::Audio::Audio\fP > \fBm_AudioSystem\fP"
+.br
+.ti -1c
+.RI "float \fBtimestep\fP"
+.br
+.ti -1c
+.RI "std::map< int, std::shared_ptr< \fBCubeMap\fP > > \fBCubeMapList\fP"
+.br
+.ti -1c
+.RI "std::vector< int > \fBmCubemapIndex\fP"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "std::map< std::string, std::shared_ptr< \fBeTexture\fP > > \fBTextureList\fP"
+.br
+.ti -1c
+.RI "std::map< std::string, \fBWater\fP > \fBWaterPlanesList\fP"
+.br
+.ti -1c
+.RI "std::map< std::string, \fBTerrain\fP > \fBTerrainList\fP"
+.br
+.ti -1c
+.RI "std::map< std::string, \fBModel\fP > \fBModelList\fP"
+.br
+.ti -1c
+.RI "std::map< std::string, \fBShader\fP > \fBShadersList\fP"
+.br
+.ti -1c
+.RI "std::vector< glm::vec3 > \fBCubeMapPositions\fP"
+.br
+.ti -1c
+.RI "std::vector< std::string > \fBTextureQueue\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBmodelCounter\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBtextureCounter\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 16 of file ResourceManager\&.h\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void ResourceManager::addTextureToQueue (std::string texture)"
+
+.PP
+Adds the path of a texture to be loaded when all the other resources are ready\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIPath\fP to the texture 
+.RE
+.PP
+
+.PP
+Definition at line 164 of file ResourceManager\&.cpp\&.
+.SS "\fBMIN_MAX_POINTS\fP ResourceManager::getModelBoundingBox (std::string modelPath)"
+
+.PP
+Retrieves the asked model's Mins and Max points contained in a structure\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIPath\fP to the model 
+.br
+\fIMins\fP and Max points 
+.RE
+.PP
+
+.PP
+Definition at line 95 of file ResourceManager\&.cpp\&.
+.SS "glm::vec3 ResourceManager::getModelPosition (std::string path)"
+
+.PP
+\fBModel\fP assigned Position\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIPath\fP to the model 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+A 3 component vector with the position 
+.RE
+.PP
+
+.PP
+Definition at line 118 of file ResourceManager\&.cpp\&.
+.SS "glm::quat ResourceManager::getModelRotation (std::string path)"
+
+.PP
+\fBModel\fP assigned Rotation\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIPath\fP to the model 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+A quaternion with the orientation 
+.RE
+.PP
+
+.PP
+Definition at line 113 of file ResourceManager\&.cpp\&.
+.SS "glm::vec3 ResourceManager::getModelScale (std::string path)"
+
+.PP
+\fBModel\fP assigned Scale\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIPath\fP to the model 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+A 3 component vector with the scale 
+.RE
+.PP
+
+.PP
+Definition at line 123 of file ResourceManager\&.cpp\&.
+.SS "GLuint ResourceManager::getShaderID (std::string shaderPath)"
+
+.PP
+Loads a new shader into the engine or returns the existing one if already loaded\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fI\fBShader\fP\fP Name 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBShader\fP ID 
+.RE
+.PP
+
+.PP
+Definition at line 283 of file ResourceManager\&.cpp\&.
+.SS "void ResourceManager::loadQueuedTextures ()"
+
+.PP
+When there is no more queued commands, all the texture are loaded in order of assignment\&. 
+.PP
+Definition at line 177 of file ResourceManager\&.cpp\&.
+.SS "int ResourceManager::NearestCubeMap (glm::vec3 TestingPoint)"
+
+.PP
+Returns the ID of the closest cube map based on a given position\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIPosition\fP to get the nearest cube map to\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Cube map ID 
+.RE
+.PP
+
+.PP
+Definition at line 348 of file ResourceManager\&.cpp\&.
+.SS "bool ResourceManager::requestCubeMap (int CubeMapID, glm::vec3 Position)"
+
+.PP
+Loads a new Cube Map into the engine or returns the existing one if already loaded\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fICube\fP Map Assign ID 
+.br
+\fIPosition\fP of the cube map in world coordinates 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Confirmation of correct loading 
+.RE
+.PP
+
+.PP
+Definition at line 296 of file ResourceManager\&.cpp\&.
+.SS "std::string ResourceManager::requestModel (std::string modelPath, std::shared_ptr< \fBResourceManager\fP > rm, glm::vec3 Pos, glm::vec3 scs, glm::quat rot)"
+
+.PP
+Loads a model from disk or assign the ID if it's already loaded\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIPath\fP to the model 
+.br
+\fIInstance\fP of the Resource Manager 
+.br
+\fI\fBModel\fP\fP Position 
+.br
+\fI\fBModel\fP\fP Scale 
+.br
+\fI\fBModel\fP\fP Rotation 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Path of the loaded model 
+.RE
+.PP
+
+.PP
+Definition at line 30 of file ResourceManager\&.cpp\&.
+.SS "std::string ResourceManager::requestShader (std::string shaderPathv, std::string shaderPathf, std::string name)"
+
+.PP
+Loads a new shader into the engine or returns the existing one if already loaded\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIPath\fP to vertex shader 
+.br
+\fIPath\fP to fragment shader 
+.br
+\fI\fBShader\fP\fP identification 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBShader\fP identification 
+.RE
+.PP
+
+.PP
+Definition at line 247 of file ResourceManager\&.cpp\&.
+.SS "std::string ResourceManager::requestTexture (std::string texPath)"
+
+.PP
+Loads a texture from disk or assign the ID if it's already loaded\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIPath\fP to the texture 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Path of the loaded texture 
+.RE
+.PP
+
+.PP
+Definition at line 3 of file ResourceManager\&.cpp\&.
+.SS "int ResourceManager::requestTextureUsage (std::string texPath)"
+
+.PP
+Returns the number of times a texture is used per frame\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fI\fBTexture\fP\fP name\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Number of times that texture was used in the frame 
+.RE
+.PP
+
+.PP
+Definition at line 195 of file ResourceManager\&.cpp\&.
+.SS "void ResourceManager::setModelUniforms (std::string path, \fBShader\fP * shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, std::shared_ptr< \fBCamera\fP > cam)"
+
+.PP
+Set model's uniforms\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIPath\fP to the model 
+.br
+\fIPosition\fP 
+.br
+\fIScale\fP 
+.br
+\fIRotation\fP 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+void 
+.RE
+.PP
+
+.PP
+Definition at line 128 of file ResourceManager\&.cpp\&.
+.SS "void ResourceManager::setModelVisibility (std::string path, bool visibility)"
+
+.PP
+Based on the visibility calculation sets the current visibility state of the model\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIPath\fP to the model 
+.br
+\fIState\fP 
+.RE
+.PP
+
+.PP
+Definition at line 108 of file ResourceManager\&.cpp\&.
+.SS "GLuint ResourceManager::useCubeMap (int ID)"
+
+.PP
+Returns the ID of the requested cube map\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fICube\fP map ID\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Cube-map \fBTexture\fP ID 
+.RE
+.PP
+
+.PP
+Definition at line 353 of file ResourceManager\&.cpp\&.
+.SS "void ResourceManager::useModel (std::string modelPath, \fBShader\fP * shader, glm::vec3 pos = \fCglm::vec3(0,0,0)\fP)"
+
+.PP
+Renders the asked model\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIPath\fP to the model 
+.br
+\fI\fBShader\fP\fP instance 
+.RE
+.PP
+
+.PP
+Definition at line 56 of file ResourceManager\&.cpp\&.
+.SS "void ResourceManager::useModel (std::string modelPath, GLuint shader, glm::vec3 pos = \fCglm::vec3(0,0,0)\fP)"
+
+.PP
+Renders the asked model\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIPath\fP to the model 
+.br
+\fI\fBShader\fP\fP ID 
+.RE
+.PP
+
+.PP
+Definition at line 69 of file ResourceManager\&.cpp\&.
+.SS "\fBShader\fP ResourceManager::useShader (std::string shaderPath)"
+
+.PP
+Returns an instance of the requested shader\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fI\fBShader\fP\fP Name 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBShader\fP Instance 
+.RE
+.PP
+
+.PP
+Definition at line 270 of file ResourceManager\&.cpp\&.
+.SS "GLuint ResourceManager::useTexture (std::string texPath)"
+
+.PP
+Returns a \fBTexture\fP ID given a path\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIPath\fP to the texture 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+\fBTexture\fP ID 
+.RE
+.PP
+
+.PP
+Definition at line 147 of file ResourceManager\&.cpp\&.
+.SH "Field Documentation"
+.PP 
+.SS "std::vector<std::string> ResourceManager::TextureQueue\fC [private]\fP"
+Temp Variables 
+.PP
+Definition at line 223 of file ResourceManager\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

@@ -1,0 +1,48 @@
+.TH "Threading::Thread" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Threading::Thread \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "bool \fBJoinThread\fP ()"
+.br
+.ti -1c
+.RI "bool \fBDetachThread\fP ()"
+.br
+.ti -1c
+.RI "bool \fBisJoinable\fP ()"
+.br
+.ti -1c
+.RI "std::thread::id \fBgetThreadID\fP ()"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static uint32_t \fBgetConcurrency\fP ()"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "std::shared_ptr< std::thread > \fBm_Thread\fP"
+.br
+.ti -1c
+.RI "std::thread::id \fBm_ThreadID\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 9 of file Thread\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

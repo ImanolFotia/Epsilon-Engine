@@ -1,0 +1,62 @@
+.TH "Physics::PlayerControlledPhysicsObject" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Physics::PlayerControlledPhysicsObject \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPlayerControlledPhysicsObject\fP (btScalar x, btScalar y, btScalar z)"
+.br
+.ti -1c
+.RI "glm::vec3 \fBgetPosition\fP ()"
+.br
+.ti -1c
+.RI "glm::vec3 \fBgetOrientation\fP ()"
+.br
+.ti -1c
+.RI "bool \fBisOnGround\fP ()"
+.br
+.ti -1c
+.RI "float \fBgetSpeed\fP ()"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "btScalar \fBsizeX\fP"
+.br
+.ti -1c
+.RI "btScalar \fBsizeY\fP"
+.br
+.ti -1c
+.RI "btScalar \fBsizeZ\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< btMotionState > \fBm_motionState\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< btCollisionShape > \fBcapsuleShape\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< btRigidBody > \fBm_playerbody\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< btPairCachingGhostObject > \fBm_ghostObject\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< btCharacterControllerInterface > \fBm_character\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 5 of file PlayerControlledPhysicsObject\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

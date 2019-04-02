@@ -1,0 +1,133 @@
+\hypertarget{class_text}{}\section{Text Class Reference}
+\label{class_text}\index{Text@{Text}}
+
+
+Collaboration diagram for Text\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_text__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_text_1_1_character}{Character}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_text_a76a5d4d810534b5f8bc34ff45064f1f3}{Text} (const char $\ast$Font\+Name, int W\+I\+D\+TH, int H\+E\+I\+G\+HT)
+\item 
+float {\bfseries get\+Horizontal\+Length} (std\+::string text, G\+Lfloat scale)\hypertarget{class_text_a9aa7ce502af580459bd69158ece5fbe1}{}\label{class_text_a9aa7ce502af580459bd69158ece5fbe1}
+
+\item 
+void {\bfseries calculate\+Height} ()\hypertarget{class_text_a04f6769781cfbabba1451ce520ef89e6}{}\label{class_text_a04f6769781cfbabba1451ce520ef89e6}
+
+\item 
+float {\bfseries get\+Vertical\+Length} ()\hypertarget{class_text_aec8f18191f9b2090301e477a729c2f1e}{}\label{class_text_aec8f18191f9b2090301e477a729c2f1e}
+
+\item 
+void \hyperlink{class_text_abefa2ead7ccd585c07995bb5d7d52c97}{Render\+Text} (std\+::string text, G\+Lfloat x, G\+Lfloat y, G\+Lfloat scale, glm\+::vec3 color)
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_shader}{Shader} $\ast$ {\bfseries shader}\hypertarget{class_text_a50e97faa1729cd7eac3a177904e1e5a6}{}\label{class_text_a50e97faa1729cd7eac3a177904e1e5a6}
+
+\item 
+int {\bfseries W\+I\+D\+TH}\hypertarget{class_text_ae58c29280eefc2bb9741791709f1fb39}{}\label{class_text_ae58c29280eefc2bb9741791709f1fb39}
+
+\item 
+int {\bfseries H\+E\+I\+G\+TH}\hypertarget{class_text_ac9ccfb4ff928907085b69bf1f9cec87f}{}\label{class_text_ac9ccfb4ff928907085b69bf1f9cec87f}
+
+\item 
+bool {\bfseries calc\+Length} = false\hypertarget{class_text_a938381281ab752b62a032945bf443071}{}\label{class_text_a938381281ab752b62a032945bf443071}
+
+\item 
+float {\bfseries text\+Height} = 0.\+0f\hypertarget{class_text_a838c8d252c14ea3e2cde0e3df2fd3728}{}\label{class_text_a838c8d252c14ea3e2cde0e3df2fd3728}
+
+\item 
+std\+::map$<$ G\+Lchar, \hyperlink{struct_text_1_1_character}{Character} $>$ {\bfseries Characters}\hypertarget{class_text_aa3d063fcb04f34d0b2ed7a40d5fddbf2}{}\label{class_text_aa3d063fcb04f34d0b2ed7a40d5fddbf2}
+
+\item 
+G\+Luint {\bfseries V\+AO}\hypertarget{class_text_a485e2c31f7a6d7a5a7d360f00818d751}{}\label{class_text_a485e2c31f7a6d7a5a7d360f00818d751}
+
+\item 
+G\+Luint {\bfseries V\+BO}\hypertarget{class_text_aaac524c6d42c895e6cbf962538f72b3a}{}\label{class_text_aaac524c6d42c895e6cbf962538f72b3a}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 18 of file Text.\+h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Text@{Text}!Text@{Text}}
+\index{Text@{Text}!Text@{Text}}
+\subsubsection[{\texorpdfstring{Text(const char $\ast$\+Font\+Name, int W\+I\+D\+T\+H, int H\+E\+I\+G\+H\+T)}{Text(const char *FontName, int WIDTH, int HEIGHT)}}]{\setlength{\rightskip}{0pt plus 5cm}Text\+::\+Text (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{Font\+Name, }
+\item[{int}]{W\+I\+D\+TH, }
+\item[{int}]{H\+E\+I\+G\+HT}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_text_a76a5d4d810534b5f8bc34ff45064f1f3}{}\label{class_text_a76a5d4d810534b5f8bc34ff45064f1f3}
+Free\+Type
+
+All functions return a value different than 0 whenever an error occurred
+
+Load font as face
+
+Set size to load glyphs as
+
+Load first 128 characters of A\+S\+C\+II set
+
+Load character glyph
+
+Generate texture
+
+Set texture options
+
+Now store character for later use
+
+Destroy Free\+Type once we\textquotesingle{}re finished
+
+Configure V\+A\+O/\+V\+BO for texture quads 
+
+Definition at line 21 of file Text.\+h.
+
+
+
+\subsection{Member Function Documentation}
+\index{Text@{Text}!Render\+Text@{Render\+Text}}
+\index{Render\+Text@{Render\+Text}!Text@{Text}}
+\subsubsection[{\texorpdfstring{Render\+Text(std\+::string text, G\+Lfloat x, G\+Lfloat y, G\+Lfloat scale, glm\+::vec3 color)}{RenderText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)}}]{\setlength{\rightskip}{0pt plus 5cm}void Text\+::\+Render\+Text (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{text, }
+\item[{G\+Lfloat}]{x, }
+\item[{G\+Lfloat}]{y, }
+\item[{G\+Lfloat}]{scale, }
+\item[{glm\+::vec3}]{color}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_text_abefa2ead7ccd585c07995bb5d7d52c97}{}\label{class_text_abefa2ead7ccd585c07995bb5d7d52c97}
+Activate corresponding render state
+
+Iterate through all characters
+
+Render glyph texture over quad
+
+Update content of V\+BO memory
+
+Render quad
+
+Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
+
+Bitshift by 6 to get value in pixels (2$^\wedge$6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels)) 
+
+Definition at line 137 of file Text.\+h.
+

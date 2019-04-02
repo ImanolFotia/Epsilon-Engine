@@ -1,0 +1,12 @@
+<map id="Mesh" name="Mesh">
+<area shape="rect" id="node4" href="$struct_texture.html" title="Texture" alt="" coords="377,35,443,61"/>
+<area shape="rect" id="node5" title="STL class. " alt="" coords="185,13,265,40"/>
+<area shape="rect" id="node6" title="STL class. " alt="" coords="5,6,132,47"/>
+<area shape="rect" id="node8" href="$structt___vertex.html" title="t_Vertex" alt="" coords="375,140,445,167"/>
+<area shape="rect" id="node9" href="$structt___tangent.html" title="t_Tangent" alt="" coords="186,64,265,91"/>
+<area shape="rect" id="node10" href="$structt___tex_coord.html" title="t_TexCoord" alt="" coords="181,115,269,141"/>
+<area shape="rect" id="node11" href="$structt___position.html" title="t_Position" alt="" coords="185,165,265,192"/>
+<area shape="rect" id="node12" href="$structt___bitangent.html" title="t_Bitangent" alt="" coords="181,216,269,243"/>
+<area shape="rect" id="node13" href="$structt___normal.html" title="t_Normal" alt="" coords="188,267,263,293"/>
+<area shape="rect" id="node15" href="$struct_vertex.html" title="Contains all the necessery OpenGL includes. " alt="" coords="380,191,440,217"/>
+</map>

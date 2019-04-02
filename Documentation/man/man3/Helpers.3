@@ -1,0 +1,89 @@
+.TH "Helpers" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Helpers \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "class \fBElapsedTime\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "static bool \fBPointInBox\fP (\fBMIN_MAX_POINTS\fP box, glm::vec3 point)"
+.br
+.ti -1c
+.RI "static bool \fBPointInBox\fP (\fBMIN_MAX_POINTS\fP box, glm::vec3 point, glm::mat4 model)"
+.br
+.ti -1c
+.RI "static std::string \fBintTostring\fP (int number)"
+.br
+.ti -1c
+.RI "static std::string \fBfloatTostring\fP (float number)"
+.br
+.ti -1c
+.RI "template<typename T > static std::string \fBto_upper\fP (T &n)"
+.br
+.ti -1c
+.RI "template<typename T > static std::string \fBto_string\fP (const T &n)"
+.br
+.ti -1c
+.RI "template<typename T > std::string \fBto_hex\fP (T i)"
+.br
+.ti -1c
+.RI "static int \fBGetFileLength\fP (std::istream &file)"
+.br
+.ti -1c
+.RI "static void \fBIgnoreLine\fP (std::istream &file, int length)"
+.br
+.ti -1c
+.RI "static void \fBRemoveQuotes\fP (std::string &str)"
+.br
+.ti -1c
+.RI "static float \fBInvsqrt\fP (float x)"
+.br
+.ti -1c
+.RI "static float \fBsqrt\fP (float x)"
+.br
+.ti -1c
+.RI "static void \fBComputeQuatW\fP (glm::quat &quat)"
+.br
+.ti -1c
+.RI "static std::string \fBgetExtension\fP (std::string path)"
+.br
+.ti -1c
+.RI "static std::string \fBremoveExtension\fP (std::string path)"
+.br
+.ti -1c
+.RI "static int \fBfindNearestPointFromSet\fP (glm::vec3 TestingPoint, std::vector< glm::vec3 > PointSet)"
+.br
+.ti -1c
+.RI "static bool \fBisBigEndian\fP ()"
+.br
+.ti -1c
+.RI "template<typename T > T \fBSwapEndian\fP (T u)"
+.br
+.ti -1c
+.RI "static int \fBByteToInt\fP (char *buffer, int len)"
+.br
+.ti -1c
+.RI "static float \fBlerp\fP (float v0, float v1, float t)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+========= Copyright Survtech, All rights reserved\&. ============//
+.PP
+Purpose: 
+.PP
+ 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

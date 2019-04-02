@@ -1,0 +1,127 @@
+.TH "Mesh" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Mesh \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBMesh\fP (vector< \fBt_Vertex\fP > \fBvertices\fP, vector< GLuint > indices, vector< \fBTexture\fP > textures, int CubeMapindex=1)"
+.br
+.RI "\fIConstructor\&. \fP"
+.ti -1c
+.RI "void \fBDraw\fP (\fBShader\fP *&shader, std::shared_ptr< \fBResourceManager\fP > resm, glm::vec3 pos)"
+.br
+.RI "\fIRender the mesh\&. \fP"
+.ti -1c
+.RI "void \fBDraw\fP (GLuint shader, std::shared_ptr< \fBResourceManager\fP > resm, glm::vec3)"
+.br
+.RI "\fIRender the mesh\&. \fP"
+.ti -1c
+.RI "void \fBDrawWithAlpha\fP ()"
+.br
+.RI "\fIRender the mesh\&. \fP"
+.ti -1c
+.RI "void \fBDrawNoTexture\fP ()"
+.br
+.ti -1c
+.RI "void \fBDestroy\fP ()"
+.br
+.ti -1c
+.RI "void \fBsetupMesh\fP ()"
+.br
+.RI "\fIInitializes all the buffer objects/arrays\&. \fP"
+.in -1c
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "vector< \fBt_Vertex\fP > \fBvertices\fP"
+.br
+.ti -1c
+.RI "int \fBCubeMapIndex\fP = 1"
+.br
+.ti -1c
+.RI "vector< \fBVertex\fP > \fBivertices\fP"
+.br
+.ti -1c
+.RI "vector< GLuint > \fBindices\fP"
+.br
+.ti -1c
+.RI "vector< \fBTexture\fP > \fBtextures\fP"
+.br
+.ti -1c
+.RI "GLuint \fBVAO\fP"
+.br
+.ti -1c
+.RI "GLuint \fBVBO\fP"
+.br
+.ti -1c
+.RI "GLuint \fBEBO\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 46 of file Mesh\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Mesh::Mesh (vector< \fBt_Vertex\fP > vertices, vector< GLuint > indices, vector< \fBTexture\fP > textures, int CubeMapindex = \fC1\fP)\fC [inline]\fP"
+
+.PP
+Constructor\&. Functions cout << 'number of textures for this mesh: ' << textures\&.size() << endl;
+.PP
+Now that we have all the required data, set the vertex buffers and its attribute pointers\&. 
+.PP
+Definition at line 58 of file Mesh\&.h\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void Mesh::Draw (\fBShader\fP *& shader, std::shared_ptr< \fBResourceManager\fP > resm, glm::vec3 pos)"
+
+.PP
+Render the mesh\&. Draw mesh 
+.PP
+Definition at line 6 of file Mesh\&.cpp\&.
+.SS "void Mesh::Draw (GLuint shader, std::shared_ptr< \fBResourceManager\fP > resm, glm::vec3 pos)"
+
+.PP
+Render the mesh\&. Draw mesh 
+.PP
+Definition at line 53 of file Mesh\&.cpp\&.
+.SS "void Mesh::setupMesh ()\fC [inline]\fP"
+
+.PP
+Initializes all the buffer objects/arrays\&. Functions Create buffers/arrays
+.PP
+Load data into vertex buffers
+.PP
+A great thing about structs is that their memory layout is sequential for all its items\&. The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which again translates to 3/2 floats which translates to a byte array\&.
+.PP
+Set the vertex attribute pointers \fBVertex\fP Positions
+.PP
+\fBVertex\fP \fBTexture\fP Coords
+.PP
+\fBVertex\fP Normals
+.PP
+\fBVertex\fP Tangent
+.PP
+\fBVertex\fP Bitangent 
+.PP
+Definition at line 111 of file Mesh\&.h\&.
+.SH "Field Documentation"
+.PP 
+.SS "GLuint Mesh::VAO"
+Render data 
+.PP
+Definition at line 107 of file Mesh\&.h\&.
+.SS "vector<\fBt_Vertex\fP> Mesh::vertices"
+\fBMesh\fP Data 
+.PP
+Definition at line 50 of file Mesh\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

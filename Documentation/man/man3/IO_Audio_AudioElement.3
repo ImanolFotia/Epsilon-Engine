@@ -1,0 +1,71 @@
+.TH "IO::Audio::AudioElement" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+IO::Audio::AudioElement \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBAudioElement\fP (const char *fileName, AUDIO_TYPE type, glm::vec3 AudioPosition, glm::vec3 AudioDirection)"
+.br
+.ti -1c
+.RI "void \fBDestroy\fP ()"
+.br
+.ti -1c
+.RI "void \fBPlay\fP ()"
+.br
+.ti -1c
+.RI "AUDIO_TYPE \fBgetType\fP ()"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "unsigned int \fBm_AudioID\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBm_BufferID\fP"
+.br
+.ti -1c
+.RI "float \fBm_Volume\fP"
+.br
+.ti -1c
+.RI "int \fBm_Channels\fP"
+.br
+.ti -1c
+.RI "unsigned int \fBm_Format\fP"
+.br
+.ti -1c
+.RI "int \fBm_BytesPerSecond\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< char > \fBdata\fP"
+.br
+.ti -1c
+.RI "AUDIO_TYPE \fBm_Type\fP"
+.br
+.ti -1c
+.RI "glm::vec3 \fBm_Position\fP"
+.br
+.ti -1c
+.RI "glm::vec3 \fBm_Direction\fP"
+.br
+.ti -1c
+.RI "glm::vec3 \fBm_Velocity\fP"
+.br
+.ti -1c
+.RI "float \fBm_Radius\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 10 of file AudioElement\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.
