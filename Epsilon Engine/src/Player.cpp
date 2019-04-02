@@ -155,8 +155,6 @@ namespace Game
             }
         }
 
-        //std::cout << m_rayPos[1] << std::endl;
-
         if(isOnGround())
             m_playerBody->setFriction(10.0);
         else
@@ -165,8 +163,6 @@ namespace Game
         distanceToGround = glm::length((pos-4.5) - m_rayPos[0].y());
 
     }
-
-
 
     bool Player::canJump()
     {
@@ -327,28 +323,16 @@ namespace Game
             }
             else {
                 directionVelocity = btVector3(walkDirection.x()*walkSpeed * dt,0.0, walkDirection.z()*walkSpeed * dt);
-                /*
-                if(distanceToGround < 0.5)
-                {
-                    downVelocity = distanceToGround;
-                }*/
             }
         }
 
         m_playerBody->translate(btVector3(directionVelocity.x(),-downVelocity, directionVelocity.z()));
         m_playerBody->setLinearVelocity(btVector3(LinearVelocity.x(), -downVelocity + LinearVelocity.y(), LinearVelocity.z()));
+
         if(isOnGround())
             m_PrevDirection = btVector3(0.0, 0.0, 0.0);
 
-
         btScalar deltaPos = glm::length((float)pos.y() - (float)m_rayPos[0].y());
-        /*
-
-                    if(distanceToGround < 1.5)
-                        m_playerBody->translate(btVector3(walkDirection.x(),-distanceToGround, walkDirection.z())*walkSpeed * dt);
-                    else
-                        m_playerBody->translate(btVector3(walkDirection.x(),0.0, walkDirection.z())*walkSpeed * dt);
-        */
 
         if (!Input::KeyBoard::KEYS[Input::GLFW::Key::A] &&
                 !Input::KeyBoard::KEYS[Input::GLFW::Key::W] &&
@@ -357,16 +341,11 @@ namespace Game
 
 
         }
-        //std::cout << " x: " << m_rayPos[0].x()<< " y: " << m_rayPos[0].y()<< " z: " << m_rayPos[0].z() << std::endl;
-        //std::cout << " rayHit: " << m_rayPos[0].y() << std::endl;
-        //std::cout << "Distance to ground: " << glm::length((pos.y()-4.5) - m_rayPos[0].y()) << std::endl;
         if(moved)
             m_PrevDirection = walkDirection;
 
         m_PrevPosition = pos;
     }
-
-
 
     void Player::CheckforPicking(btVector3 from, btVector3 to)
     {
@@ -387,7 +366,6 @@ namespace Game
             active = false;
         }
     }
-
 
     bool Player::pickObject(btVector3 from, btVector3 to)
     {
@@ -420,7 +398,6 @@ namespace Game
         m_LocalResourceManagerPointer->m_PhysicsWorld->world->rayTest(rayFrom, target, rayCallback);
         if (rayCallback.hasHit())
         {
-            //std::cout << "Llega" << std::endl;
             btVector3 pickPos = rayCallback.m_hitPointWorld;
             btRigidBody* body = (btRigidBody*)btRigidBody::upcast(rayCallback.m_collisionObject);
 
@@ -438,15 +415,12 @@ namespace Game
                     btScalar mousePickClamping = 1000.f;
                     p2p->m_setting.m_impulseClamp = mousePickClamping;
                     p2p->m_setting.m_tau = 0.1f;
-                    //p2p->m_setting.m_damping = 100.0f;
                 }
             }
 
             m_oldPickingPos = target;
             m_hitPos = pickPos;
             m_oldPickingDist = (rayFrom - pickPos).length();
-            //std::cout << "m_hitPos: x: " << pickPos.getX() << " y: " << pickPos.getY() << " z: " << pickPos.getZ()  << std::endl;
-            //std::cout << "from: x: " << getPosition().getX() << " y: " << from.getY() << " z: " << from.getZ()  << std::endl;
         }
         return false;
 
@@ -460,12 +434,8 @@ namespace Game
             if (pickCon)
             {
                 //keep it at the same picking distance
-
                 btVector3 newPivotB;
-
-
-
-                btVector3 dir = rayTo;// - rayFrom;
+                btVector3 dir = rayTo;
                 dir.normalize();
                 dir *= m_oldPickingDist;
                 this->pickedbodyangularfactor = m_pickedBody->getAngularVelocity();
@@ -473,8 +443,6 @@ namespace Game
                                                            glm::clamp((float)this->pickedbodyangularfactor.y(), 0.0f, 2.0f),
                                                            glm::clamp((float)this->pickedbodyangularfactor.z(), 0.0f, 2.0f)));
                 newPivotB = rayFrom + dir;
-                //std::cout << m_oldPickingDist << std::endl;
-                //std::cout << "Pick Pos: x: " << newPivotB.getX() << " y: " << newPivotB.getY() << " z: " << newPivotB.getZ()  << std::endl;
                 pickCon->setPivotB(newPivotB);
                 return true;
             }
@@ -493,7 +461,6 @@ namespace Game
             delete m_pickedConstraint;
             m_pickedConstraint = 0;
             m_pickedBody = 0;
-            std::cout << "deleted constraint" << std::endl;
         }
     }
 

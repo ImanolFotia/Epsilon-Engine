@@ -183,7 +183,7 @@ void main() {
     DOFRadius = clamp(dDepth * 15.0, 0.0, 0.85);
 
 
-  //if(BokehOn)
+  if(BokehOn)
     composite = Bokeh(TexCoords, DOFRadius, .10, 1.0);
 
   //if(ChromaticAberrationOn)

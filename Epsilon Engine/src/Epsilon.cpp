@@ -339,17 +339,17 @@ void Epsilon::InitResources(void) {
         tmpEnt->addComponent(Compmodel);
         EntityList.push_back(tmpEnt);
 */
-tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(52, 0.0, 0.0), glm::vec3(2.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
-Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-Compmodel->Fill("models/Rock_6.eml", rM, "Main");
-tmpEnt->addComponent(Compmodel);
-EntityList.push_back(tmpEnt);
+        tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(22, 2.0, -20.0), glm::vec3(2.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
+        Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+        Compmodel->Fill("models/Rock_6.eml", rM, "Main");
+        tmpEnt->addComponent(Compmodel);
+        EntityList.push_back(tmpEnt);
 
-tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(34, 0.5, 3.5), glm::vec3(0.1), glm::quat(-1.0, 0.0, 1.0, 0.0)));
-Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-Compmodel->Fill("models/full_rock.eml", rM, "Main");
-tmpEnt->addComponent(Compmodel);
-EntityList.push_back(tmpEnt);
+        tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(3, 2.4, -20.0), glm::vec3(0.1), glm::quat(-1.0, 0.0, 1.0, 0.0)));
+        Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+        Compmodel->Fill("models/full_rock.eml", rM, "Main");
+        tmpEnt->addComponent(Compmodel);
+        EntityList.push_back(tmpEnt);
 /*
 
     /*
@@ -386,7 +386,7 @@ EntityList.push_back(tmpEnt);
 
 ///godrays tutorial begin
 
-    	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-20, 0.8, 0.0), glm::vec3(0.06, 0.1, 0.06), glm::quat(-1.0, 0.0, 0.0, 0.0)));
+    	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-20, 2.0, 0.0), glm::vec3(0.06, 0.1, 0.06), glm::quat(-1.0, 0.0, 0.0, 0.0)));
     	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
     	Compmodel->Fill("models/grass.eml", rM, "Main");
     	tmpEnt->addComponent(Compmodel);
@@ -399,7 +399,7 @@ EntityList.push_back(tmpEnt);
     tmpEnt->addComponent(Compmodel);
     EntityList.push_back(tmpEnt);
 */
-    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-13, 1.0, -3), glm::vec3(0.5), glm::quat(1.0, 0.0, 0.0, 0.0)));
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-13, 8.0, -3), glm::vec3(0.5), glm::quat(1.0, 0.0, 0.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
     Compmodel->Fill("models/zweihander.eml", rM, "Main");
     tmpEnt->addComponent(Compmodel);
@@ -509,12 +509,12 @@ EntityList.push_back(tmpEnt);
             xz[x][z] = (rand()%30) - 15;
 
     MINMAX_POINTS limits;
-    limits.MAX_X = 57.0;
-    limits.MIN_X = -38.0;
-    limits.MAX_Y = 30.0;
+    limits.MAX_X = 32.0;
+    limits.MIN_X = -32.0;
+    limits.MAX_Y = 4.0;
     limits.MIN_Y = 0.0;
-    limits.MAX_Z = 19.0;
-    limits.MIN_Z = -19.0;
+    limits.MAX_Z = 32.0;
+    limits.MIN_Z = -32.0;
 
     m_ParticleSystem = (std::shared_ptr<ParticleSystem>) new ParticleSystem();
     m_ParticleSystem->addNewSystem(limits, MIST, 150);
@@ -726,7 +726,7 @@ void Epsilon::LoadGeometry(void) {
 
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "church.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "grass_test.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 

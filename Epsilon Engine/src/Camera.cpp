@@ -86,12 +86,9 @@ void Camera::HandleInputs(GLFWwindow*& window)
 
     float DeltaTime = float( currentTime - LastTime );
 
-    //double xpos, ypos;
     static double lastX, lastY;
 
     glfwGetWindowSize(window , &winx , &winy );
-    //glfwGetCursorPos(window, &xpos , &ypos );
-    //glfwSetCursorPos(window, winx/2.0, winy/2.0);
 
     if(!Input::Joystick::JoystickIsPresent) {
         horizontalAngle += MouseSpeed * float( lastX - Input::Mouse::XPOS ) ;
@@ -222,8 +219,6 @@ void Camera::UpdateMatrices(void)
     float Aspectratio;
     Aspectratio = (float)winx/(float)winy;
 
-
-    //std::cout << "Aspectratio = 16:10" << std::endl;
     ProjectionMatrix = glm::perspective( glm::radians(FieldOfView) , glm::max(Aspectratio, 1.0f) , 0.1f , 3000.0f );
 
     PrevView = ViewMatrix;

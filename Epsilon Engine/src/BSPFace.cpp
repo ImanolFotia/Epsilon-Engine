@@ -42,15 +42,10 @@ bool BSPFace::BuildFace(std::vector<glm::vec3> Vertices, std::vector<glm::vec3> 
 	rigidBody = nullptr;
 
 	rigidBody = ph->addObject(this->Vertices, this->Indices, 0.1);
-	//mPosition = glm::vec3(rigidBody->getCenterOfMassPosition().x(), rigidBody->getCenterOfMassPosition().y(), rigidBody->getCenterOfMassPosition().z());
-	//std::cout << "Face: " << ID << " Position: x: " << mPosition.x << " y: " << mPosition.y << " z: " << mPosition.z << std::endl;
-	//std::cout << "Using cubemap: " << resm->NearestCubeMap(mPosition) << std::endl;
 
 	collinfo->setName(this->ObjectID);
 
 	ph->Body->setUserPointer(collinfo.get());
-
-	//rigidBody->setFriction(0.0);
 
 	resm->m_PhysicsWorld->world->addRigidBody(rigidBody.get());
 
@@ -62,19 +57,8 @@ bool BSPFace::BuildFace(std::vector<glm::vec3> Vertices, std::vector<glm::vec3> 
 	return true;
 }
 
-void BSPFace::RenderFace(GLuint shader, GLuint TextureID,GLuint normalID, GLuint specularID, GLuint metallicID, bool simpleRender) {
-/*
-	if(GISet == false) {
-		if(simpleRender) {
-			GITexture = resm->useCubeMap(2);
-		} else {
-			GITexture = resm->useCubeMap(resm->mCubemapIndex.at(resm->NearestCubeMap(mPosition)));
-		}
-		//std::cout << "GITexture: " << GITexture << std::endl;
-		if(GITexture != 131)
-            GISet = true;
-	}*/
-
+void BSPFace::RenderFace(GLuint shader, GLuint TextureID,GLuint normalID, GLuint specularID, GLuint metallicID, bool simpleRender)
+{
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, TextureID);
 	glUniform1i(glGetUniformLocation(shader, "texture_diffuse"), 0);
@@ -94,12 +78,10 @@ void BSPFace::RenderFace(GLuint shader, GLuint TextureID,GLuint normalID, GLuint
 	glActiveTexture(GL_TEXTURE4);
 	glUniform1i(glGetUniformLocation(shader, "skybox"), 4);
     glBindTexture(GL_TEXTURE_CUBE_MAP, resm->useCubeMap(resm->mCubemapIndex.at(resm->NearestCubeMap(mPosition))));
-	//std::cout << "Using cubemap: " << resm->NearestCubeMap(mPosition) << std::endl;
 
 	glUniform1i(glGetUniformLocation(shader, "CubemapID"), resm->NearestCubeMap(mPosition));
 
 	glBindVertexArray(this->VAO);
 	glCache::glDrawElements(GL_TRIANGLES, this->Indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
-
 }

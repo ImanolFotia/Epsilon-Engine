@@ -60,8 +60,6 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
         m_numOfLightmaps = lumps[kLightmaps].length / sizeof(tBSPLightmap);
         tBSPLightmap *pLightmaps = new tBSPLightmap [m_numOfLightmaps ];
 
-        ///cout << "Number of lightmaps : " << lumps[kLightmaps].length / sizeof(tBSPLightmap) << endl;
-
         fseek(fp, lumps[kVertices].offset, SEEK_SET);
 
         for(i = 0; i < m_numOfVerts; i++)
@@ -91,7 +89,6 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
         fseek(fp, lumps[kFaces].offset, SEEK_SET);
 
         fread(m_pFaces, m_numOfFaces, sizeof(tBSPFace), fp);
-        //std::cout << "m_pFaces[m_numOfFaces-1]->numOfIndices: " << m_pFaces[m_numOfFaces-1].numOfIndices << std::endl;
 
         fseek(fp, lumps[kTextures].offset, SEEK_SET);
 
@@ -160,8 +157,6 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
 
         fread(ents, lumps[kEntities].length, sizeof(char), fp);
 
-        //cout << ents << endl;
-
         fclose(fp);
 
         m_FacesDrawn.Resize(m_numOfFaces);
@@ -184,7 +179,6 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
                 {
                     if(first)
                     {
-                        //N = N + m_pVerts[j].vNormal;
                         normalIndex.push_back(i);
                         first = false;
                     }
@@ -196,7 +190,6 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
                             if( glm::dot(Normals.at(j), Normals.at(normalIndex.at(k)) ) <= 0.0)
                             {
                                 valid = false;
-                                //cout << glm::dot(Normals.at(j), Normals.at(normalIndex.at(k))) << endl;
                                 break;
 
                             }
@@ -247,10 +240,9 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
             {
                 faceNormals.push_back(m_pVerts[pFace->startVertIndex + j].vNormal);
             }
-            //std::cout << "Num of indices: " << pFace->numOfIndices << std::endl;
+
             for(int k = 0 ; k < pFace->numOfIndices ; k++)
             {
-                //std::cout  << "index: " << m_pIndices[pFace->startIndex + k] << std::endl;
                 faceIndices.push_back (m_pIndices[pFace->startIndex + k]);
             }
 
@@ -276,55 +268,26 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
             BSPTexture tex;
             BSPTexture normal;
             BSPTexture specular;
-            BSPTexture metallic;/*
-            if(texture != -1)
-            {
-                tex.path = string(Textures.at(texture).path);
-                tex.GLTextureID = Textures.at(texture).GLTextureID;
-                tex.type = Textures.at(texture).type;
-                Textures.push_back(tex);
-
-                normal.path = string(normalTextures.at(texture).path+"_n");
-                normal.GLTextureID = normalTextures.at(texture).GLTextureID;
-                normal.type = normalTextures.at(texture).type;
-                normalTextures.push_back(normal);
-
-                specular.path = string(specularTextures.at(texture).path+"_s");
-                specular.GLTextureID = specularTextures.at(texture).GLTextureID;
-                specular.type = specularTextures.at(texture).type;
-                specularTextures.push_back(specular);
-
-                metallic.path = string(metallicTextures.at(texture).path+"_m");
-                metallic.GLTextureID = metallicTextures.at(texture).GLTextureID;
-                metallic.type = metallicTextures.at(texture).type;
-                metallicTextures.push_back(metallic);
-            }
-            else
-            {*/
+            BSPTexture metallic;
                 tex.path = std::string(pTextures[pFace->textureID].strName) + ".png";
                 resm->addTextureToQueue(tex.path);
-                //tex.GLTextureID = eTexture((tex.path + ".png").c_str()).getTextureID();
                 tex.type = 1;
                 Textures.push_back(tex);
 
                 normal.path = string(pTextures[pFace->textureID].strName) + "_n" + ".png";
                 resm->addTextureToQueue(normal.path);
-                //normal.GLTextureID = eTexture((normal.path + ".png").c_str()).getTextureID();
                 normal.type = 1;
                 normalTextures.push_back(normal);
 
                 specular.path = string(pTextures[pFace->textureID].strName) + "_s" + ".png";
                 resm->addTextureToQueue(specular.path);
-                //specular.GLTextureID = eTexture((specular.path + ".png").c_str()).getTextureID();
                 specular.type = 1;
                 specularTextures.push_back(specular);
 
                 metallic.path = string(pTextures[pFace->textureID].strName) + "_m" + ".png";
                 resm->addTextureToQueue(metallic.path);
-                //metallic.GLTextureID = eTexture((metallic.path + ".png").c_str()).getTextureID();
                 metallic.type = 1;
                 metallicTextures.push_back(metallic);
-          //  }
 
             faceTexture[i] = tex;
             faceTexture_normal[i] = normal;
@@ -388,17 +351,12 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
 
 
     void CQuake3BSP::RenderFace(int faceIndex, GLuint shader, bool simpleRender)
-    {/*
-        if(m_pFaces[faceIndex].type == 3)
-            glUniform1i(glGetUniformLocation(shader, "lightmap"), 0);
-        else
-            glUniform1i(glGetUniformLocation(shader, "lightmap"), 1);
-*/
+    {
         this->Faces[faceIndex].RenderFace(shader,
-                                          /*faceTexture[faceIndex].GLTextureID*/ resm->useTexture(faceTexture[faceIndex].path),
-                                          /*faceTexture_normal[faceIndex].GLTextureID*/resm->useTexture(faceTexture_normal[faceIndex].path),
-                                          /*faceTexture_specular[faceIndex].GLTextureID*/resm->useTexture(faceTexture_specular[faceIndex].path),
-                                          /*faceTexture_metallic[faceIndex].GLTextureID*/resm->useTexture(faceTexture_metallic[faceIndex].path),
+                                          resm->useTexture(faceTexture[faceIndex].path),
+                                          resm->useTexture(faceTexture_normal[faceIndex].path),
+                                          resm->useTexture(faceTexture_specular[faceIndex].path),
+                                          resm->useTexture(faceTexture_metallic[faceIndex].path),
                                           simpleRender);
     }
 
@@ -414,7 +372,6 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
         int cluster = m_pLeafs[leafIndex].cluster;
 
         g_VisibleFaces = 0;
-        //#pragma omp
         for(int i = m_numOfLeafs ; i-- ; )
         {
             tBSPLeaf *pLeaf = &(m_pLeafs[i]);
@@ -445,10 +402,6 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
             }
 
         }
-
-        //std::cout << g_VisibleFaces << std::endl;
-
-        ///glfwSetWindowTitle(window, ("Faces Drawn: " + to_string(g_VisibleFaces)).c_str());
     }
 
 

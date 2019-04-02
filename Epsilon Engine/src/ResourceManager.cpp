@@ -5,17 +5,13 @@ std::string ResourceManager::requestTexture(std::string texPath)
     try
     {
         std::map<std::string, std::shared_ptr<eTexture> >::iterator it;
-        //std::cout << "Loading texture: " << texPath << " ... " << std::endl;
         it = TextureList.find(texPath);
         if(it != TextureList.end())
         {
-            //std::cout << "Texture already loaded, assigning existing one to object" << std::endl << std::endl;
             return TextureList.at(it->first)->getPath();
         }
         else
         {
-            //std::cout << "Texture not loaded, reading it from hard drive"<< std::endl;
-
             std::shared_ptr<eTexture> tmpTex = (std::shared_ptr<eTexture>) new eTexture(texPath.c_str());
             TextureList.insert(std::make_pair(texPath, tmpTex));
             return texPath;
@@ -33,15 +29,12 @@ std::string ResourceManager::requestModel(std::string modelPath, std::shared_ptr
     {
         std::map<std::string, Model>::iterator it;
         it = ModelList.find(modelPath);
-        //std::cout << "Loading model: " << modelPath << " ... " << std::endl;
         if(it != ModelList.end())
         {
-            //std::cout << "Model already loaded, assigning existing one to object" << std::endl << std::endl;
             return ModelList.at(it->first).getPath();
         }
         else
         {
-            //std::cout << "Model not loaded, reading it from hard drive" << std::endl << std::endl;
             Model tmpModel(modelPath.c_str(), rm, Pos, scs, rot);
             ModelList.insert(std::make_pair(modelPath, tmpModel));
             return modelPath;
