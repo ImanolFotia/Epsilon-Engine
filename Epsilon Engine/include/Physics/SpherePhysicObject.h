@@ -9,11 +9,11 @@ namespace Physics {
 			virtual ~SpherePhysicObject() {}
 
 		public:
-			virtual std::shared_ptr<btRigidBody> addObject(float /* Radius */, float /* Mass */) {
+			virtual btRigidBody_ptr addObject(float /* Radius */, float /* Mass */) {
 				return nullptr;
 			}
 
-			virtual std::shared_ptr<btRigidBody> addObject(float /* Radius */,  glm::vec3 /* Position */, float /* Mass */);
+			virtual btRigidBody_ptr addObject(float /* Radius */,  glm::vec3 /* Position */, float /* Mass */);
 
 		private:
 

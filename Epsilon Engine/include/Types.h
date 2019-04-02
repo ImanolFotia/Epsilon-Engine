@@ -35,6 +35,7 @@ typedef short           SHORT;
 typedef unsigned short  USHORT;
 
 constexpr double PI = 3.14159265359;
+constexpr double HPI = 3.14159265359*0.5;
 constexpr double TAU = PI * 0.5;
 
 struct MINMAX_POINTS {

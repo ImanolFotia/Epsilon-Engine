@@ -18,7 +18,7 @@ class PlayerControlledPhysicsObject {
 		std::shared_ptr<btMotionState> m_motionState;
 		std::shared_ptr<btCollisionShape> capsuleShape;
 
-		std::shared_ptr<btRigidBody> m_playerbody;
+		btRigidBody_ptr m_playerbody;
 		std::shared_ptr<btPairCachingGhostObject> m_ghostObject;
 		std::shared_ptr<btCharacterControllerInterface> m_character;
 };

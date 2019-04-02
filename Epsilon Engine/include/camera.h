@@ -91,8 +91,8 @@ private:
     glm::mat4 PrevView;
     bool OrientationhasChanged;
     bool PositionhasChanged;
-    float verticalAngle;
-    float horizontalAngle;
+    double verticalAngle;
+    double horizontalAngle;
     glm::mat4 ViewMatrix;
     glm::mat4 ProjectionMatrix;
     glm::vec3 Position;

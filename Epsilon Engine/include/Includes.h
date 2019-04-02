@@ -15,6 +15,8 @@
 #include <glm/gtc/quaternion.hpp>
 #include <Types.h>
 #include <algorithm>
+#include <limits>
+
 namespace Helpers {
 
 inline static bool PointInBox(MIN_MAX_POINTS box, glm::vec3 point) {
@@ -87,6 +89,22 @@ static void RemoveQuotes( std::string& str ) {
     size_t n;
     while ( ( n = str.find('\"') ) != std::string::npos ) str.erase(n,1);
 }
+
+template <typename T>
+inline static T getMinimum() {
+    return std::numeric_limits<T>::min();
+}
+
+template <typename T>
+inline static T getMaximum() {
+    return std::numeric_limits<T>::max();
+}
+
+template <typename T>
+auto static clamp(T a, T b, T c, double d = 0.0, double e = 1.0) -> T {
+    a = (a < b) ? (b+d)*e : a;
+    return (a > c) ? (c+d)*e : a;
+};
 
 inline
 static float Invsqrt(float x) {

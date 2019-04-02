@@ -193,9 +193,7 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
                                 break;
 
                             }
-                            else
-                            {
-                            }
+                            else{}
                         }
                         if(valid)
                             normalIndex.push_back(j);
@@ -302,12 +300,12 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
 
         }
     }
-            catch(...)
-            {
-                throw;
-            }
+    catch(...)
+    {
+        throw;
+    }
 
-        return true;
+    return true;
     }
 
 
@@ -343,7 +341,6 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
         if(!m_clusters.pBitsets || current < 0) return 1;
 
         char visSet = m_clusters.pBitsets[(current*m_clusters.bytesPerCluster) + (test / 8)];
-
         int result = visSet & (1 << ((test) & 7));
 
         return ( result );
@@ -368,10 +365,9 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
         m_FacesDrawn.ClearAll();
 
         int leafIndex = FindLeaf(vPos);
-
         int cluster = m_pLeafs[leafIndex].cluster;
-
         g_VisibleFaces = 0;
+
         for(int i = m_numOfLeafs ; i-- ; )
         {
             tBSPLeaf *pLeaf = &(m_pLeafs[i]);
@@ -400,7 +396,6 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
                     RenderFace(faceIndex, shader, !Shadow);
                 }
             }
-
         }
     }
 
@@ -412,42 +407,35 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
             delete [] m_pVerts;
             m_pVerts = NULL;
         }
-
         if(m_pFaces)
         {
             delete [] m_pFaces;
             m_pFaces = NULL;
         }
-
         if(m_pLeafs)
         {
             delete [] m_pLeafs;
             m_pLeafs = NULL;
         }
-
         if(m_pIndices)
         {
             delete [] m_pIndices;
             m_pIndices = NULL;
         }
-
         if(m_pNodes)
         {
             delete [] m_pNodes;
             m_pNodes = NULL;
         }
-
         if(m_pPlanes)
         {
             delete [] m_pPlanes;
             m_pPlanes = NULL;
         }
-
         if(m_pLeafFaces)
         {
             delete [] m_pLeafFaces;
             m_pLeafFaces = NULL;
         }
-
         glDeleteTextures(m_numOfTextures, m_textures);
     }

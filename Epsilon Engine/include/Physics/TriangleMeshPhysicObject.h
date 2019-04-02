@@ -10,11 +10,11 @@ namespace Physics {
 			virtual ~TriangleMeshPhysicObject() {}
 
 		public:
-			virtual std::shared_ptr<btRigidBody> addObject(std::vector<glm::vec3> /* Vertices */, std::vector<unsigned int> /* Indices */, glm::vec3 /* Position */,float /* Mass */) {
+			virtual btRigidBody_ptr addObject(std::vector<glm::vec3> /* Vertices */, std::vector<unsigned int> /* Indices */, glm::vec3 /* Position */,float /* Mass */) {
 				return nullptr;
 			}
 
-			virtual std::shared_ptr<btRigidBody> addObject(std::vector<glm::vec3> /* Vertices */, std::vector<unsigned int> /* Indices */, float Scaling);
+			virtual btRigidBody_ptr addObject(std::vector<glm::vec3> /* Vertices */, std::vector<unsigned int> /* Indices */, float Scaling);
 
 		private:
 
@@ -26,16 +26,16 @@ namespace Physics {
 			std::shared_ptr<btTriangleMesh> trimesh;
 
 		private:
-			virtual std::shared_ptr<btRigidBody> addObject(float /* Radius */, float /* Mass */) {
+			virtual btRigidBody_ptr addObject(float /* Radius */, float /* Mass */) {
 				return nullptr;
 			}
-			virtual std::shared_ptr<btRigidBody> addObject(glm::vec3 /* Position */, float /* Mass */, float /* Size */) {
+			virtual btRigidBody_ptr addObject(glm::vec3 /* Position */, float /* Mass */, float /* Size */) {
 				return nullptr;
 			}
-			virtual std::shared_ptr<btRigidBody> addObject(glm::vec3 /* Position */, float /* Mass */, MIN_MAX_POINTS /* Bounding Box */, float /* Scale*/) {
+			virtual btRigidBody_ptr addObject(glm::vec3 /* Position */, float /* Mass */, MIN_MAX_POINTS /* Bounding Box */, float /* Scale*/) {
 				return nullptr;
 			}
-			virtual std::shared_ptr<btRigidBody> addObject(float /* Position X */, float /* Position Y */, float /* Position Z */, float /* Mass */, float /* Size*/) {
+			virtual btRigidBody_ptr addObject(float /* Position X */, float /* Position Y */, float /* Position Z */, float /* Mass */, float /* Size*/) {
 				return nullptr;
 			}
 	};

@@ -1,7 +1,7 @@
 #include <Physics/SpherePhysicObject.h>
 
 namespace Physics {
-	std::shared_ptr<btRigidBody> SpherePhysicObject::addObject(float  Radius,  glm::vec3 Position, float  Mass ) {
+	btRigidBody_ptr SpherePhysicObject::addObject(float  Radius,  glm::vec3 Position, float  Mass ) {
 		btTransform t;  //position and rotation
 		t.setIdentity();
 		btVector3 pos = btVector3(Position.x, Position.y, Position.z);
@@ -16,7 +16,7 @@ namespace Physics {
 		btRigidBody::btRigidBodyConstructionInfo info(mass,motionState.get(),SphereShape.get(),inertia);  //create the constructioninfo, you can create multiple bodies with the same info
 		info.m_restitution = 0.1f;
 		info.m_friction = 0.8f;
-		Body = (std::shared_ptr<btRigidBody>) new btRigidBody(info);    //let's create the body itself
+		Body = (btRigidBody_ptr) new btRigidBody(info);    //let's create the body itself
 
 		return Body;
 	}
