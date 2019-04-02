@@ -12,6 +12,9 @@
 #include <sys/Mouse.h>
 #include <sys/Joystick.h>
 
+#include <Types.h>
+#include <Includes.h>
+
 float lerp(float v0, float v1, float t)
 {
     return (1-t)*v0 + t*v1;
@@ -55,18 +58,11 @@ void Camera::GetExternalInputs(void)
 
 void Camera::LockCamera(void)
 {
+    auto k = Helpers::getMinimum<double>();
+    auto bias = 0.05;
 
-    if(verticalAngle >= 1.5707)
-        verticalAngle = 1.5707;
-
-    if(verticalAngle <= -1.5707)
-        verticalAngle = -1.5707;
-
-    if(horizontalAngle <= -3.1416)
-        horizontalAngle = 3.1416;
-
-    if(horizontalAngle >= 3.1416)
-        horizontalAngle = -3.1416;
+    verticalAngle = Helpers::clamp(verticalAngle, -HPI+bias, HPI-bias);
+    horizontalAngle = Helpers::clamp(horizontalAngle, -PI, PI, -k, -1.0);
 
 }
 
@@ -114,9 +110,9 @@ void Camera::HandleInputs(GLFWwindow*& window)
                   );
 
     Rigth = glm::vec3(
-                sin(horizontalAngle     -       3.14f/2.0f),
+                sin(horizontalAngle     -       HPI),
                 0,
-                cos(horizontalAngle     -       3.14f/2.0f)
+                cos(horizontalAngle     -       HPI)
             );
 
 

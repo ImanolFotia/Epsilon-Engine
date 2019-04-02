@@ -22,14 +22,13 @@
 namespace Physics {
 	class CollisionInfo;
 
+	using btRigidBody_ptr = std::shared_ptr<btRigidBody>;
+
 	class Physics {
 		public:
 			Physics();
 
-			~Physics() {
-				//std::cout << "Deleted Physics" << std::endl;
-
-			}
+			~Physics() {}
 
 			void Update(float);
 

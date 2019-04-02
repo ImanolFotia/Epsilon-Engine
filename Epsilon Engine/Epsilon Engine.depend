@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1533357260 source:d:\epsilon\epsilon engine\src\bsp.cpp
+1554243087 source:d:\epsilon\epsilon engine\src\bsp.cpp
 	<GL/glew.h>
 	<omp.h>
 	<BSP.h>
@@ -475,7 +475,7 @@
 	<memory>
 	<typeinfo>
 
-1551826007 d:\epsilon\epsilon engine\include\types.h
+1554243031 d:\epsilon\epsilon engine\include\types.h
 	<btBulletDynamicsCommon.h>
 	<btBulletCollisionCommon.h>
 	<memory>
@@ -1113,7 +1113,7 @@
 1461365554 d:\epsilon\epsilon engine\include\emlformat.h
 	<string>
 
-1551820268 d:\epsilon\epsilon engine\include\camera.h
+1554243343 d:\epsilon\epsilon engine\include\camera.h
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
 	<glm/gtc/quaternion.hpp>
@@ -1169,7 +1169,7 @@
 	"LinearMath/btVector3.h"
 	"BulletCollision/CollisionDispatch/btCollisionObject.h"
 
-1533085603 d:\epsilon\epsilon engine\include\includes.h
+1554247248 d:\epsilon\epsilon engine\include\includes.h
 	<iostream>
 	<string>
 	<sstream>
@@ -1179,6 +1179,7 @@
 	<glm/gtc/quaternion.hpp>
 	<Types.h>
 	<algorithm>
+	<limits>
 
 1464926531 d:\epsilon\epsilon engine\include\frustum.h
 	<glm/glm.hpp>
@@ -1290,18 +1291,20 @@
 	<memory>
 	<Includes.h>
 
-1536786933 source:d:\epsilon\epsilon engine\src\bspface.cpp
+1554242903 source:d:\epsilon\epsilon engine\src\bspface.cpp
 	<Physics/Physics.h>
 	<ResourceManager.h>
 	<BSPFace.h>
 
-1551820301 source:d:\epsilon\epsilon engine\src\camera.cpp
+1554247014 source:d:\epsilon\epsilon engine\src\camera.cpp
 	<iostream>
 	<camera.h>
 	<math.h>
 	<sys/KeyBoard.h>
 	<sys/Mouse.h>
 	<sys/Joystick.h>
+	<Types.h>
+	<Includes.h>
 
 1468724288 d:\epsilon\epsilon engine\include\sys\keyboard.h
 	<GLFW/glfw3.h>
@@ -1612,7 +1615,7 @@
 	<Particle.h>
 	<Shader.h>
 
-1554236721 d:\epsilon\epsilon engine\version.h
+1554247265 d:\epsilon\epsilon engine\version.h
 
 1489719397 d:\epsilon\epsilon engine\include\sys\cpuid.h
 	<string>
@@ -1657,7 +1660,7 @@
 	<Mesh.h>
 	<ResourceManager.h>
 
-1545202870 source:d:\epsilon\epsilon engine\src\model.cpp
+1554241949 source:d:\epsilon\epsilon engine\src\model.cpp
 	<Model.h>
 	<ResourceManager.h>
 	<Log.h>
@@ -1669,11 +1672,11 @@
 1512158888 source:d:\epsilon\epsilon engine\src\physics.cpp
 	<Physics.h>
 
-1482815678 source:d:\epsilon\epsilon engine\src\picking.cpp
+1554236721 source:d:\epsilon\epsilon engine\src\picking.cpp
 	<Picking.h>
 	<sys/KeyBoard.h>
 
-1531446764 source:d:\epsilon\epsilon engine\src\player.cpp
+1554236721 source:d:\epsilon\epsilon engine\src\player.cpp
 	<Player.h>
 	<ResourceManager.h>
 	<sys/KeyBoard.h>
@@ -1760,7 +1763,7 @@
 	<map>
 	<string>
 
-1533358674 source:d:\epsilon\epsilon engine\src\resourcemanager.cpp
+1554236721 source:d:\epsilon\epsilon engine\src\resourcemanager.cpp
 	"ResourceManager.h"
 
 1430970208 source:d:\epsilon\epsilon engine\src\resources.rc
@@ -1769,7 +1772,7 @@
 1512158888 source:d:\epsilon\epsilon engine\src\scene.cpp
 	<Scene.h>
 
-1545203531 source:d:\epsilon\epsilon engine\src\shader.cpp
+1554241949 source:d:\epsilon\epsilon engine\src\shader.cpp
 	<Shader.h>
 	<stdio.h>
 	<string>
@@ -3792,7 +3795,7 @@
 1523055549 source:c:\users\imanol\documents\code\c++\epsilon-engine\epsilon engine\src\physics\trianglemeshphysicobject.cpp
 	<Physics/TriangleMeshPhysicObject.h>
 
-1523676778 d:\epsilon\epsilon engine\include\physics\physics.h
+1554241806 d:\epsilon\epsilon engine\include\physics\physics.h
 	<glm/glm.hpp>
 	<EpsilonMemory.h>
 	<Types.h>
@@ -3809,7 +3812,7 @@
 	<LinearMath/btTransform.h>
 	<BulletSoftBody/btSoftBodyHelpers.h>
 
-1523571478 d:\epsilon\epsilon engine\include\physics\physicobject.h
+1554241846 d:\epsilon\epsilon engine\include\physics\physicobject.h
 	<Physics/Physics.h>
 	<Physics/ClothPhysicObject.h>
 	<Physics/CubePhysicObject.h>
@@ -3821,15 +3824,15 @@
 	<Physics/PhysicObject.h>
 	<Physics/CollisionInfo.h>
 
-1538632649 d:\epsilon\epsilon engine\include\physics\cubephysicobject.h
+1554241830 d:\epsilon\epsilon engine\include\physics\cubephysicobject.h
 	<Physics/Physics.h>
 	<Physics/PhysicObject.h>
 
-1523055549 d:\epsilon\epsilon engine\include\physics\spherephysicobject.h
+1554241863 d:\epsilon\epsilon engine\include\physics\spherephysicobject.h
 	<Physics/Physics.h>
 	<Physics/PhysicObject.h>
 
-1523055549 d:\epsilon\epsilon engine\include\physics\trianglemeshphysicobject.h
+1554241876 d:\epsilon\epsilon engine\include\physics\trianglemeshphysicobject.h
 	<Physics/Physics.h>
 	<Physics/PhysicObject.h>
 
@@ -3861,17 +3864,17 @@
 1535860838 source:d:\epsilon\epsilon engine\src\audio\audio.cpp
 	<Audio/Audio.h>
 
-1538632859 source:d:\epsilon\epsilon engine\src\physics\cubephysicobject.cpp
+1554241911 source:d:\epsilon\epsilon engine\src\physics\cubephysicobject.cpp
 	<Physics/CubePhysicObject.h>
 
 1524004788 source:d:\epsilon\epsilon engine\src\physics\physics.cpp
 	<Physics/Physics.h>
 	<Physics/CollisionInfo.h>
 
-1523055549 source:d:\epsilon\epsilon engine\src\physics\spherephysicobject.cpp
+1554242057 source:d:\epsilon\epsilon engine\src\physics\spherephysicobject.cpp
 	<Physics/SpherePhysicObject.h>
 
-1523055549 source:d:\epsilon\epsilon engine\src\physics\trianglemeshphysicobject.cpp
+1554241946 source:d:\epsilon\epsilon engine\src\physics\trianglemeshphysicobject.cpp
 	<Physics/TriangleMeshPhysicObject.h>
 
 1523055549 d:\epsilon\epsilon engine\include\sys\console.hpp

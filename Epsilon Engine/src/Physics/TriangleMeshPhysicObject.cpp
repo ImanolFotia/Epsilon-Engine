@@ -1,7 +1,7 @@
 #include <Physics/TriangleMeshPhysicObject.h>
 
 namespace Physics {
-	std::shared_ptr<btRigidBody> TriangleMeshPhysicObject::addObject(std::vector<glm::vec3> inVertices, std::vector<unsigned int> inIndices, float Scaling) {
+	btRigidBody_ptr TriangleMeshPhysicObject::addObject(std::vector<glm::vec3> inVertices, std::vector<unsigned int> inIndices, float Scaling) {
 		trimesh = (std::shared_ptr<btTriangleMesh>)new btTriangleMesh();
 		btTransform a;
 		a.setIdentity();
@@ -25,7 +25,7 @@ namespace Physics {
 		btRigidBody::btRigidBodyConstructionInfo info(0.0,motionState.get(),TriangleMeshShape.get(), btVector3(0,0,0));
 		info.m_restitution = 1.0f;
 		info.m_friction = 0.8f;
-		Body = (std::shared_ptr<btRigidBody>) new btRigidBody(info);
+		Body = (btRigidBody_ptr) new btRigidBody(info);
 
 		return Body;
 	}

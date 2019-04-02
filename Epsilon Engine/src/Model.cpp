@@ -13,14 +13,10 @@ Model::Model(const char* path, std::shared_ptr<ResourceManager> rm, glm::vec3 po
     ModelMatrix = glm::mat4();
 
     this->loadModel(path, 0);
-    //std::cout << "Resource manager in epsilon address: " << resm.get() << std::endl;
-    //cout << "Cantidad de texturas: " << textures_loaded.size() << endl;
 }
-
 
 bool Model::loadModel(string emlPath, int a)
 {
-    //std::cout << "Open File: " << emlPath << std::endl;
     ifstream inFILE(emlPath, std::ios::binary);
     if(!inFILE.is_open())
     {
@@ -71,8 +67,6 @@ bool Model::loadModel(string emlPath, int a)
         inFILE.read((char*)&l_vertices[i], sizeof(t_Vertex));
     }
 
-    //std::cout << "Num of vertices: " << numvertices << std::endl;
-
     //Get the array of indices in the file
     numIndices = lumps[lIndices].size / sizeof(t_Index);
     t_Index* l_indices = new t_Index[numIndices];
@@ -82,7 +76,6 @@ bool Model::loadModel(string emlPath, int a)
         inFILE.read((char*)&l_indices[i], sizeof(t_Index));
     }
 
-    //std::cout << "Num of indices: " << numIndices << std::endl;
     //Get the array of meshes in the file
     numMeshes = (int)header->numOfMeshes;
     t_Mesh* l_meshes = new t_Mesh[numMeshes];
@@ -185,21 +178,6 @@ bool Model::loadModel(string emlPath, int a)
     MinMaxPoints.MAX_X += delta.x;
     MinMaxPoints.MAX_Y += delta.y;
     MinMaxPoints.MAX_Z += delta.z;
-/*
-        MinMaxPoints.MAX_X = ((MinMaxPoints.MAX_X * Position.x)* Scale.x);
-        MinMaxPoints.MAX_Y = ((MinMaxPoints.MAX_Y * Position.y)* Scale.y);
-        MinMaxPoints.MAX_Z = ((MinMaxPoints.MAX_Z * Position.z)* Scale.z);
-        MinMaxPoints.MIN_X = ((MinMaxPoints.MIN_X * Position.x)* Scale.x);
-        MinMaxPoints.MIN_Y = ((MinMaxPoints.MIN_Y * Position.y)* Scale.y);
-        MinMaxPoints.MIN_Z = ((MinMaxPoints.MIN_Z * Position.z)* Scale.z);
-*/
-        //glm::vec3 M = glm::vec3(MinMaxPoints.MAX_X, MinMaxPoints.MAX_Y, MinMaxPoints.MAX_Z) * Rotation;
-        //glm::vec3 m = glm::vec3(MinMaxPoints.MIN_X, MinMaxPoints.MIN_Y, MinMaxPoints.MIN_Z) * Rotation;
-
-        //MinMaxPoints.MAX_X = M.x; MinMaxPoints.MAX_Y = M.y; MinMaxPoints.MAX_Z = M.z;
-        //MinMaxPoints.MIN_X = m.x; MinMaxPoints.MIN_Y = m.y; MinMaxPoints.MIN_Z = m.z;
-
-
     delete header;
     delete[] lumps;
     delete[] l_vertices;
@@ -217,7 +195,6 @@ void Model::Draw(Shader* shader, glm::vec3 pos = glm::vec3(0,0,0))
 {
     for(GLuint i = 0; i < this->meshes.size(); i++)
         this->meshes[i].Draw(shader, this->resm, pos);
-    //shader->Free();
 }
 
 void Model::Draw(GLuint shader, glm::vec3 pos = glm::vec3(0,0,0))
