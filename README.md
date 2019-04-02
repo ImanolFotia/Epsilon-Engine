@@ -22,6 +22,7 @@ Written in modern C++ and GLSL 4.3+
 * Bokeh DoF
 * Volumetric Lighting
 * Deferred rendering
+* Skeletal Animation
 * Spherical Harmonics Global Illumination
 * BSP Support
 * GPU accelerated particle systems
