@@ -29,3 +29,7 @@ Written in modern C++ and GLSL 4.3+
 * Dynamic Skybox and day time cycle
 * Dynamic terrain generation
 * Custom GUI
+
+### G buffer structure
+
+![Epsilon%20Engine/media/G-Buffer.png](Epsilon%20Engine/media/G-Buffer.png)
