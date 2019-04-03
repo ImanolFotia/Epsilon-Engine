@@ -25,17 +25,27 @@ Installers and binaries will be available soon
 ## Features
 
 * Bullet Physics integration
-* Physically Based Shading
-* Bokeh DoF
-* Volumetric Lighting
-* Deferred rendering
+* Screen Space Ambient Oclussion
+* Cook-Torrance specular lighting
+* Oren-Nayar diffuse lighting
+* Ambient and indirect lighting is encoded in 3rd order Spherical Harmonics
+* Screen Space Realtime Reflections
+* Octree space division for open areas
+* Binary Space Partition Trees(BSP Trees) are used for indoor areas
+* Bokeh Depth of Field(DoF) post-processing
+* Nvidia's FXAA post-processing
+* Point, Area and Ambient lights are supported
+* Physical Based Rendering(PBR) workflow
 * Skeletal Animation
-* Spherical Harmonics Global Illumination
-* BSP Support
-* GPU accelerated particle systems
-* Dynamic Skybox and day time cycle
-* Dynamic terrain generation
+* Volumetric Lighting
+* Day & Night system
+* GPU simulated particle systems
+* Parallax Oclussion mapping
+* Dynamic sky and weather using procedural generation and Fractal Brownian Motion
+* Meta-surfaces rendering using signed distance fields
+* Developer's tools
 * Custom GUI
+* Dynamic terrain generation
 
 ## Software & Hardware Succesfully Tested
 * OS: Windows 7 & 10
