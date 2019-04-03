@@ -5,7 +5,7 @@
 Official repository for Epsilon Engine.
 Epsilon Engine is a next-gen, multi-platform, general purpose game engine.
 
-Written in modern C++ and GLSL 4.3+
+Epsilon Engine© is a multi-platform, next-gen, on-development engine especifically designed to build high quality games and simulations. It uses OpenGL© 4.5 capabilities to deliver stunning graphics with great real time performance. It has been under development since 2015, and has constantly been catching up with the latest realtime, 3D techniques.
 
 Screenshots and more detailed information is available on [my Webpage](http://imanolfotia.com/epsilon_engine)
 
