@@ -11,6 +11,8 @@ Screenshots and more detailed information is available on [my Webpage](http://im
 
 Installers and binaries will be available soon
 
+## table of Contents
+
 | Table of Contents | 
 | :--- |
 | [Dependencies](#dependencies) | 
