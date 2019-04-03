@@ -20,8 +20,9 @@ Installers and binaries will be available soon
 | [Dependencies](#dependencies) | 
 | [Features](#features)| 
 | [Software & Hardware Succesfully Tested](#software_and_hardware_succesfully_tested)| 
-| [Contributors](#contributors)| 
+| [Contributors](#contributors)|  
 | [Notes](#notes)| 
+| [Documentation](#documentation)| 
 | [License](#license)| 
 
 <a name="dependencies"></a>
@@ -79,6 +80,10 @@ Installers and binaries will be available soon
 
 * At the moment the only IDE supported is Code::Blocks, the idea is to migrate to CMake and make it IDE agnostic
 * It should compile almost unmodified under Linux
+
+<a name="documentation"></a>
+## Documentation
+A Doxygen auto generated documentation is available [here](http://imanolfotia.com/epsilon_documentation)
 
 <a name="license"></a>
 ## License
