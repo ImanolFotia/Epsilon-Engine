@@ -7,6 +7,8 @@ Written in modern C++ and GLSL 4.3+
 
 Screenshots and more detailed information is available on [my Webpage](http://imanolfotia.com/epsilon_engine)
 
+Installers and binaries will be available soon
+
 ## Dependencies
 
 * Bullet Physics 2.82-r2704
