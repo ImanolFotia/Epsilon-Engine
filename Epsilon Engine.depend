@@ -1615,7 +1615,7 @@
 	<Particle.h>
 	<Shader.h>
 
-1554249719 d:\epsilon\epsilon engine\version.h
+1554261194 d:\epsilon\epsilon engine\version.h
 
 1489719397 d:\epsilon\epsilon engine\include\sys\cpuid.h
 	<string>
@@ -4677,4 +4677,874 @@
 
 1545202299 d:\epsilon\epsilon engine\include\sys\gpu.hpp
 	<GL/glew.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\audio\audio.cpp
+	<Audio/Audio.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\audio\audio.h
+	<unordered_map>
+	<memory>
+	<Audio/AudioElement.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\audio\audioelement.h
+	<AL/al.h>
+	<AL/alc.h>
+	<Types.h>
+	<Audio/Loaders/WAVFile.h>
+	<iostream>
+
+1554315729 d:\epsilon\epsilon engine\core\include\types.h
+	<btBulletDynamicsCommon.h>
+	<btBulletCollisionCommon.h>
+	<memory>
+	<glm/glm.hpp>
+
+1554315729 d:\epsilon\epsilon engine\core\include\audio\loaders\wavfile.h
+	<iostream>
+	<fstream>
+	<memory>
+	<Includes.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\includes.h
+	<iostream>
+	<string>
+	<sstream>
+	<ctime>
+	<vector>
+	<iomanip>
+	<glm/gtc/quaternion.hpp>
+	<Types.h>
+	<algorithm>
+	<limits>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\bsp.cpp
+	<GL/glew.h>
+	<omp.h>
+	<BSP.h>
+	<glm/glm.hpp>
+	<vector>
+	<iostream>
+	<Frustum.h>
+	<Texture.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\bsp.h
+	<cstdlib>
+	<cstdio>
+	<cstring>
+	<vector>
+	<map>
+	<GLFW/glfw3.h>
+	"BSPFace.h"
+	"Frustum.h"
+	<ResourceManager.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\bspface.h
+	<glm/glm.hpp>
+	<GL/glew.h>
+	<iostream>
+	<string>
+	<vector>
+	<SOIL.h>
+	<Physics/Physics.h>
+	<Physics/PhysicObject.h>
+	<Physics/CollisionInfo.h>
+	<Includes.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\physics\physics.h
+	<glm/glm.hpp>
+	<EpsilonMemory.h>
+	<Types.h>
+	<Model.h>
+	<vector>
+	<btBulletDynamicsCommon.h>
+	<BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.h>
+	<btBulletCollisionCommon.h>
+	<BulletCollision/CollisionDispatch/btGhostObject.h>
+	<BulletDynamics/Character/btKinematicCharacterController.h>
+	<BulletDynamics/Featherstone/btMultiBodyDynamicsWorld.h>
+	<BulletSoftBody/btSoftRigidDynamicsWorld.h>
+	<BulletDynamics/Featherstone/btMultiBodyConstraintSolver.h>
+	<LinearMath/btTransform.h>
+	<BulletSoftBody/btSoftBodyHelpers.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\epsilonmemory.h
+	<memory>
+	<typeinfo>
+
+1554315729 d:\epsilon\epsilon engine\core\include\model.h
+	<string>
+	<fstream>
+	<sstream>
+	<iostream>
+	<map>
+	<vector>
+	<GL/glew.h>
+	<glm/glm.hpp>
+	<glm/gtc/quaternion.hpp>
+	<glm/gtx/quaternion.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Texture.h>
+	<Mesh.h>
+	<Types.h>
+	<memory>
+	<emlFormat.h>
+	<camera.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\texture.h
+	<iostream>
+	<string>
+	<vector>
+	<GL/glew.h>
+	<GLFW/glfw3.h>
+	<mutex>
+	<memory>
+	<SOIL.h>
+	<Image/Image.hpp>
+	<ProgramData.h>
+	<Includes.h>
+	<Image/Image.hpp>
+	<Log.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\image\image.hpp
+	<SOIL.h>
+	<fstream>
+	<Includes.h>
+	<thread>
+	<exception>
+	<functional>
+
+1554315729 d:\epsilon\epsilon engine\core\include\programdata.h
+
+1554315729 d:\epsilon\epsilon engine\core\include\log.h
+	<iostream>
+	<fstream>
+	<string>
+	<time.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\mesh.h
+	<string>
+	<fstream>
+	<sstream>
+	<iostream>
+	<vector>
+	<GL/glew.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Shader.h>
+	<emlFormat.h>
+	<memory>
+
+1554315729 d:\epsilon\epsilon engine\core\include\shader.h
+	<GL/glew.h>
+	<string>
+	<iostream>
+	<unordered_map>
+	<glm/glm.hpp>
+	<Types.h>
+	<OpenGL/GlCache.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\opengl\glcache.h
+	<unordered_map>
+	<GL/glew.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\emlformat.h
+	<string>
+
+1554315729 d:\epsilon\epsilon engine\core\include\camera.h
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<glm/gtc/quaternion.hpp>
+	<GLFW/glfw3.h>
+	<iostream>
+
+1554315729 d:\epsilon\epsilon engine\core\include\physics\physicobject.h
+	<Physics/Physics.h>
+	<Physics/ClothPhysicObject.h>
+	<Physics/CubePhysicObject.h>
+	<Physics/SpherePhysicObject.h>
+	<Physics/TriangleMeshPhysicObject.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\physics\clothphysicobject.h
+	<Physics/Physics.h>
+	<Physics/PhysicObject.h>
+	<Physics/CollisionInfo.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\physics\collisioninfo.h
+
+1554315729 d:\epsilon\epsilon engine\core\include\physics\cubephysicobject.h
+	<Physics/Physics.h>
+	<Physics/PhysicObject.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\physics\spherephysicobject.h
+	<Physics/Physics.h>
+	<Physics/PhysicObject.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\physics\trianglemeshphysicobject.h
+	<Physics/Physics.h>
+	<Physics/PhysicObject.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\frustum.h
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Model.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\resourcemanager.h
+	<Texture.h>
+	<Model.h>
+	<Water.h>
+	<Terrain.h>
+	<Grass.h>
+	<map>
+	<Shader.h>
+	<CubeMap.h>
+	<Includes.h>
+	<Physics/Physics.h>
+	<Audio/Audio.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\water.h
+	<GL/glew.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Shader.h>
+	<Texture.h>
+	<Camera.h>
+	<Model.h>
+	<vector>
+	<memory>
+
+1554315729 d:\epsilon\epsilon engine\core\include\terrain.h
+	<vector>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Shader.h>
+	<Texture.h>
+	<memory>
+	<Physics/Physics.h>
+	<Physics/PhysicObject.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\grass.h
+	<GL/glew.h>
+	<string>
+	<iostream>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Shader.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\cubemap.h
+	<glm/glm.hpp>
+	<vector>
+	<string>
+	<memory>
+	<Texture.h>
+	<OpenGL/HelperFunctions/FullScreenQuad.h>
+	<OpenGL/FrameBuffer.h>
+	<Shader.h>
+	<Types.h>
+	<cubemapRenderer.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<exception>
+
+1554315729 d:\epsilon\epsilon engine\core\include\opengl\helperfunctions\fullscreenquad.h
+	<GL/glew.h>
+	<OpenGL/GlCache.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\opengl\framebuffer.h
+	<unordered_map>
+	<iostream>
+	<string>
+	<memory>
+	<GL/glew.h>
+	<OpenGL/RenderTarget.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\opengl\rendertarget.h
+	<GL/glew.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\cubemaprenderer.h
+	<GL/glew.h>
+	<vector>
+	<memory>
+	<OpenGL/FrameBuffer.h>
+	<OpenGL/HelperFunctions/FullScreenQuad.h>
+	<OpenGL/FrameBuffer.h>
+	<Shader.h>
+	<glm/glm.hpp>
+	<camera.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\bspface.cpp
+	<Physics/Physics.h>
+	<ResourceManager.h>
+	<BSPFace.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\camera.cpp
+	<iostream>
+	<camera.h>
+	<math.h>
+	<sys/KeyBoard.h>
+	<sys/Mouse.h>
+	<sys/Joystick.h>
+	<Types.h>
+	<Includes.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\sys\keyboard.h
+	<GLFW/glfw3.h>
+	<sys/KeyboardWrapper.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\sys\keyboardwrapper.h
+
+1554315729 d:\epsilon\epsilon engine\core\include\sys\mouse.h
+
+1554315729 d:\epsilon\epsilon engine\core\include\sys\joystick.h
+	<GLFW/glfw3.h>
+	<iostream>
+	<sys/JoystickWrapper.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\sys\joystickwrapper.h
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\cubemaprenderer.cpp
+	<cubemapRenderer.h>
+	<Texture.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\dds.cpp
+	<iostream>
+	<fstream>
+	<cstring>
+	"DDS.h"
+	<GL/glew.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\dds.h
+	"DDSFile.h"
+	<memory>
+
+1554315729 d:\epsilon\epsilon engine\core\include\ddsfile.h
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\entitytemplate.cpp
+	<EntityTemplate.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\entitytemplate.h
+	<Component.h>
+	<iostream>
+	<glm/glm.hpp>
+	<typeinfo>
+	<memory>
+	<ResourceManager.h>
+	<Physics/CollisionInfo.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\component.h
+	<iostream>
+	<glm/glm.hpp>
+	<Model.h>
+	<ResourceManager.h>
+	<memory>
+	<Types.h>
+	<Physics/Physics.h>
+	<Patch.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\patch.h
+	<memory>
+	<Physics/PhysicObject.h>
+	<Shader.h>
+	<Texture.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\epsilon.cpp
+	<iostream>
+	<Epsilon.h>
+	<ProgramData.h>
+	<cstdlib>
+	<time.h>
+	<Includes.h>
+	<Types.h>
+	"../version.h"
+	<glm/gtc/quaternion.hpp>
+	<cmath>
+	<thread>
+	<EpsilonMemory.h>
+	<sys/CPUID.h>
+	<chrono>
+	<Log.h>
+	<sys/Console.hpp>
+	<multithread/ThreadPool.hpp>
+	<OpenGL/GlCache.h>
+	<sys/GPU.hpp>
+
+1554315729 d:\epsilon\epsilon engine\core\include\epsilon.h
+	<map>
+	<GL/glew.h>
+	<GL/wglew.h>
+	<GLFW/glfw3.h>
+	<thread>
+	<Texture.h>
+	<Shader.h>
+	<Skybox.h>
+	<camera.h>
+	<Model.h>
+	<Text.h>
+	<Terrain.h>
+	<Grass.h>
+	<PostProcess.h>
+	<Water.h>
+	<Sun.h>
+	<BSP.h>
+	<MD5_Model.h>
+	<MD5_Anim.h>
+	<ShadowMapping.h>
+	<EntityTemplate.h>
+	<memory>
+	<ResourceManager.h>
+	<Scene.h>
+	<glm/gtc/quaternion.hpp>
+	<glm/gtx/quaternion.hpp>
+	<sys/KeyBoard.h>
+	<sys/Mouse.h>
+	<sys/Joystick.h>
+	<Player.h>
+	<Audio/Audio.h>
+	<Audio/AudioElement.h>
+	<Audio/AudioListener.h>
+	<SplashScreen.h>
+	<SphericalHarmonics.h>
+	<Picking.h>
+	<Log.h>
+	<GUI/GUI.h>
+	<sys/filesystem.h>
+	<ParticleSystem.h>
+	<cubemapRenderer.h>
+	<CubeMap.h>
+	<CommandFunctions.h>
+	<Physics/ClothPhysicObject.h>
+	<Patch.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\skybox.h
+	<string>
+	<GL/glew.h>
+	<camera.h>
+	<Model.h>
+	<Shader.h>
+	<memory>
+
+1554315729 d:\epsilon\epsilon engine\core\include\text.h
+	<ft2build.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Shader.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\postprocess.h
+	<GL/glew.h>
+	<Shader.h>
+	<camera.h>
+	<vector>
+	<ShadowMapping.h>
+	<memory>
+	<Light.h>
+	<Texture.h>
+	<OpenGL/FrameBuffer.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\shadowmapping.h
+	<Shader.h>
+	<Types.h>
+	<GL/glew.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+
+1554315729 d:\epsilon\epsilon engine\core\include\light.h
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Types.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\sun.h
+	<GL/glew.h>
+	<GLFW/glfw3.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<Texture.h>
+	<Shader.h>
+	<camera.h>
+	<memory>
+
+1554315729 d:\epsilon\epsilon engine\core\include\md5_model.h
+	<GL/glew.h>
+	<string>
+	<vector>
+	<glm/glm.hpp>
+	<glm/gtc/quaternion.hpp>
+	"MD5_Anim.h"
+	<SOIL.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\md5_anim.h
+	<vector>
+	<string>
+	<iostream>
+	<fstream>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<glm/gtc/quaternion.hpp>
+
+1554315729 d:\epsilon\epsilon engine\core\include\scene.h
+	<ResourceManager.h>
+	<Shader.h>
+	<EntityTemplate.h>
+	<BSP.h>
+	<ShadowMapping.h>
+	<Sun.h>
+	<Skybox.h>
+	<PostProcess.h>
+	<Light.h>
+	<EpsilonMemory.h>
+	<Camera.h>
+	<Frustum.h>
+	<memory>
+	<map>
+	<iostream>
+	<string>
+	<glm/gtc/quaternion.hpp>
+	<glm/gtx/quaternion.hpp>
+	<GLFW/glfw3.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\player.h
+	<Physics/Physics.h>
+	<camera.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\audio\audiolistener.h
+	<AL/al.h>
+	<AL/alc.h>
+	<glm/glm.hpp>
+
+1554315729 d:\epsilon\epsilon engine\core\include\splashscreen.h
+	<GL/glew.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\sphericalharmonics.h
+	<CubeMap.h>
+	<memory>
+	<fstream>
+	<Includes.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\picking.h
+	<glm/glm.hpp>
+	<Physics/Physics.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\gui\gui.h
+	<GUI/Container.h>
+	<GUI/Panel.h>
+	<GUI/Button.h>
+	<GUI/CheckBox.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\gui\container.h
+	<GUI/Widget.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\gui\widget.h
+	<vector>
+	<memory>
+	<glm/glm.hpp>
+	<Shader.h>
+	<functional>
+	<exception>
+	<Types.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\gui\panel.h
+	<GUI/Widget.h>
+	<OpenGL/HelperFunctions/Quad.h>
+	<iostream>
+	<glm/glm.hpp>
+
+1554315729 d:\epsilon\epsilon engine\core\include\opengl\helperfunctions\quad.h
+
+1554315729 d:\epsilon\epsilon engine\core\include\gui\button.h
+	<GUI/Widget.h>
+	<Text.h>
+	<string>
+
+1554315729 d:\epsilon\epsilon engine\core\include\gui\checkbox.h
+	<GUI/Widget.h>
+	<Text.h>
+	<string>
+
+1554315729 d:\epsilon\epsilon engine\core\include\sys\filesystem.h
+	<sys/types.h>
+	<dirent.h>
+	<windows.h>
+	<string>
+	<fstream>
+	<vector>
+	<unordered_map>
+
+1554315729 d:\epsilon\epsilon engine\core\include\particlesystem.h
+	<vector>
+	<iostream>
+	<algorithm>
+	<Particle.h>
+	<ParticleProxy.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\particle.h
+	<glm/glm.hpp>
+	<GL/glew.h>
+	<Types.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\particleproxy.h
+	<Types.h>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<ParticleRenderer.h>
+	<random>
+	<Types.h>
+	<chrono>
+	<Texture.h>
+	<atomic>
+	<thread>
+	<atomic>
+	<omp.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\particlerenderer.h
+	<Particle.h>
+	<Shader.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\commandfunctions.h
+
+1554315729 d:\epsilon\epsilon engine\core\include\sys\cpuid.h
+	<string>
+	<iostream>
+	<limits.h>
+	<stdint.h>
+	<thread>
+	<exception>
+	<Log.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\sys\console.hpp
+	<iostream>
+	<string>
+	<cstdio>
+	<Includes.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\multithread\threadpool.hpp
+	<Thread>
+	<future>
+	<atomic>
+	<memory>
+	<iostream>
+	<exception>
+	<queue>
+	<thread>
+	<mutex>
+	<random>
+	<vector>
+	<functional>
+	<stdexcept>
+	<condition_variable>
+	<type_traits>
+
+1554315729 d:\epsilon\epsilon engine\core\include\sys\gpu.hpp
+	<GL/glew.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\frustum.cpp
+	"Frustum.h"
+	<iostream>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\image\dds.cpp
+	<iostream>
+	<fstream>
+	<cstring>
+	"Image/DDS.h"
+	<GL/glew.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\image\dds.h
+	"DDSFile.h"
+	<memory>
+
+1554315729 d:\epsilon\epsilon engine\core\include\image\ddsfile.h
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\main.cpp
+	<iostream>
+	<Shader.h>
+	<SOIL.h>
+	<main.h>
+	<exception>
+	<assert.h>
+	<memory>
+
+1554315729 d:\epsilon\epsilon engine\core\include\main.h
+	<ProgramData.h>
+	<Epsilon.h>
+	<memory>
+	<Log.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\md5_anim.cpp
+	<MD5_Anim.h>
+	<Includes.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\md5_model.cpp
+	<Includes.h>
+	<iostream>
+	<MD5_Model.h>
+	<Texture.h>
+	<OpenGL/GlCache.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\mesh.cpp
+	<Mesh.h>
+	<ResourceManager.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\model.cpp
+	<Model.h>
+	<ResourceManager.h>
+	<Log.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\particle.cpp
+	<ParticleSystem.h>
+	<Types.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\patch.cpp
+	<Patch.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\physics\clothphysicobject.cpp
+	<Physics/ClothPhysicObject.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\physics\cubephysicobject.cpp
+	<Physics/CubePhysicObject.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\physics\physics.cpp
+	<Physics/Physics.h>
+	<Physics/CollisionInfo.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\physics\spherephysicobject.cpp
+	<Physics/SpherePhysicObject.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\physics\trianglemeshphysicobject.cpp
+	<Physics/TriangleMeshPhysicObject.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\picking.cpp
+	<Picking.h>
+	<sys/KeyBoard.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\player.cpp
+	<Player.h>
+	<ResourceManager.h>
+	<sys/KeyBoard.h>
+	<sys/Joystick.h>
+	<iostream>
+	<Physics/CollisionInfo.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\postprocess.cpp
+	<PostProcess.h>
+	<iostream>
+	<ProgramData.h>
+	<glm/gtx/compatibility.hpp>
+	<glm/gtc/type_ptr.hpp>
+	<random>
+	<string>
+	<Includes.h>
+	<OpenGL/HelperFunctions/CheckError.h>
+	<chrono>
+
+1554315729 d:\epsilon\epsilon engine\core\include\opengl\helperfunctions\checkerror.h
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\postprocess\motionblur.cpp
+	<PostProcess/MotionBlur.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\postprocess\motionblur.h
+	<PostProcess/Effect.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\postprocess\effect.h
+	<OpenGL/FrameBuffer.h>
+	<OpenGL/HelperFunctions/FullScreenQuad.h>
+	<Shader.h>
+	<vector>
+	<memory>
+	<glm/glm.hpp>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\postprocess\screenspacereflections.cpp
+	<PostProcess/ScreenSpaceReflections.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\postprocess\screenspacereflections.h
+	<PostProcess/Effect.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\postprocess\ssao.cpp
+	<PostProcess/SSAO.h>
+	<random>
+
+1554315729 d:\epsilon\epsilon engine\core\include\postprocess\ssao.h
+	<PostProcess/Effect.h>
+	<Includes.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\programdata.cpp
+	<iostream>
+	<INIReader.h>
+	<ProgramData.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\resourcemanager.cpp
+	"ResourceManager.h"
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\resources.rc
+	<Windows.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\scene.cpp
+	<Scene.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\shader.cpp
+	<Shader.h>
+	<stdio.h>
+	<string>
+	<vector>
+	<iostream>
+	<fstream>
+	<algorithm>
+	<Log.h>
+	<Includes.h>
+	<OpenGL/ShaderPreProcessor.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\opengl\shaderpreprocessor.h
+	<fstream>
+	<iostream>
+	<string>
+	<vector>
+	<map>
+	<algorithm>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\shadowmapping.cpp
+	<ShadowMapping.h>
+	<iostream>
+	<cmath>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\skybox.cpp
+	<vector>
+	<iostream>
+	<glm/glm.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<glm/gtc/type_ptr.hpp>
+	<SOIL.h>
+	<Skybox.h>
+	<SkyboxData.h>
+	<ResourceManager.h>
+
+1554315729 d:\epsilon\epsilon engine\core\include\skyboxdata.h
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\sphericalharmonics.cpp
+	<SphericalHarmonics.h>
+	<Types.h>
+	<OpenGL/HelperFunctions/CheckError.h>
+	<cstdlib>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\sun.cpp
+	<Sun.h>
+	<sys/KeyBoard.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\sys\filesystem.cpp
+	<sys/filesystem.h>
+	<fstream>
+	<Log.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\sys\keyboard.cpp
+	<sys/KeyBoard.h>
+	<iostream>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\terrain.cpp
+	<iostream>
+	<fstream>
+	<Terrain.h>
+	<SOIL.h>
+	<Physics/Physics.h>
+	<ResourceManager.h>
+	<exception>
+	<Physics/CollisionInfo.h>
+	<Includes.h>
+
+1554315729 source:d:\epsilon\epsilon engine\core\src\water.cpp
+	<Water.h>
 
