@@ -83,7 +83,7 @@ Installers and binaries will be available soon
 
 <a name="documentation"></a>
 ## Documentation
-A Doxygen auto generated documentation is available [here](http://imanolfotia.com/epsilon_documentation)
+A Doxygen auto generated documentation is available [here](http://imanolfotia.com/epsilon-documentation)
 
 <a name="license"></a>
 ## License
