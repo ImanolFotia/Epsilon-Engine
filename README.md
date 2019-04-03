@@ -83,6 +83,4 @@ Installers and binaries will be available soon
 <a name="license"></a>
 ## License
 
-                                 Apache License
-                           Version 2.0, January 2004
-                        http://www.apache.org/licenses/
+Check out [LICENSE](LICENSE.md)
