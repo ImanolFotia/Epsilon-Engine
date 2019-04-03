@@ -5,7 +5,7 @@ before_install:
   - sudo apt-get install cmake xorg-dev libglu1-mesa-dev
   - sudo apt-get install libglfw3-dev libglfw3
   - sudo apt-get install libglew-dev
-  - sudo apt-get install libSOIL-dev
+  - sudo apt-get install libsoil-dev
   - sudo apt-get install libopenal-dev
 
 language: cpp
