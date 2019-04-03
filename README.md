@@ -20,6 +20,7 @@ Installers and binaries will be available soon
 | [Dependencies](#dependencies) | 
 | [Features](#features)| 
 | [Software & Hardware Succesfully Tested](#software_and_hardware_succesfully_tested)| 
+| [Contributors](#contributors)| 
 | [Notes](#notes)| 
 | [License](#license)| 
 
@@ -67,6 +68,11 @@ Installers and binaries will be available soon
 * CPU: Intel i7 4790K & Intel I7 6700HQ
 * RAM: 12 & 24 GB
 * GPU: Nvidia GTX 970 & 970M
+
+<a name="contributors"></a>
+## Contributors 
+
+[Imanol Fotia](https://github.com/ImanolFotia) - http://imanolfotia.com
 
 <a name="notes"></a>
 ## Notes 
