@@ -1,4 +1,5 @@
 # Epsilon Engine
+[![Build Status](https://travis-ci.com/ImanolFotia/Epsilon-Engine.svg?token=eqNdpsuxZdxtFxRycvU4&branch=master)](https://travis-ci.com/ImanolFotia/Epsilon-Engine)
 
 Official repository for Epsilon Engine.
 Epsilon Engine is a next-gen, multi-platform, general purpose game engine.
