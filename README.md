@@ -13,12 +13,12 @@ Installers and binaries will be available soon
 
 | Table of Contents | 
 | :--- |
-| [Dependencies](#Dependencies) | 
-| [Features](#Features)| 
+| [Dependencies](#dependencies) | 
+| [Features](#features)| 
 | [Software & Hardware Succesfully Tested](#Software_and_Hardware_Succesfully_Tested)| 
 | [Notes](#Notes)| 
 
-## Dependencies <a name="Dependencies"></a>
+## Dependencies <a name="dependencies"></a>
 
 * Bullet Physics 2.82-r2704
 * Zlib
@@ -29,7 +29,7 @@ Installers and binaries will be available soon
 * Freetype 2
 * Soft OpenAL 1.18.2
 
-## Features <a name="Features"></a>
+## Features <a name="features"></a>
 
 * Bullet Physics integration
 * Screen Space Ambient Oclussion
