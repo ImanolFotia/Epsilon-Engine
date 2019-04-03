@@ -25,7 +25,7 @@ Installers and binaries will be available soon
 | [Documentation](#documentation)| 
 | [License](#license)| 
 
-<a name="dependencies"></a>
+<a name="dependencies"> </a>
 ## Dependencies 
 
 * Bullet Physics 2.82-r2704
