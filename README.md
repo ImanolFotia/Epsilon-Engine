@@ -72,7 +72,7 @@ Installers and binaries will be available soon
 <a name="contributors"></a>
 ## Contributors 
 
-[Imanol Fotia](https://github.com/ImanolFotia) - http://imanolfotia.com
+**[Imanol Fotia](https://github.com/ImanolFotia)** - http://imanolfotia.com
 
 <a name="notes"></a>
 ## Notes 
