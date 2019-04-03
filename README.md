@@ -1,5 +1,6 @@
 # Epsilon Engine
 
+Official repository for Epsilon Engine.
 Epsilon Engine is a next-gen, multi-platform, general purpose game engine.
 
 Written in modern C++ and GLSL 4.3+
