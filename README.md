@@ -11,7 +11,14 @@ Screenshots and more detailed information is available on [my Webpage](http://im
 
 Installers and binaries will be available soon
 
-## Dependencies
+| Table of Contents | 
+| :--- |
+| [Dependencies](#Dependencies) | 
+| [Features](#Features)| 
+| [Software & Hardware Succesfully Tested](#Software_and_Hardware_Succesfully_Tested)| 
+| [Notes](#Notes)| 
+
+## Dependencies <a name="Dependencies"></a>
 
 * Bullet Physics 2.82-r2704
 * Zlib
@@ -22,7 +29,7 @@ Installers and binaries will be available soon
 * Freetype 2
 * Soft OpenAL 1.18.2
 
-## Features
+## Features <a name="Features"></a>
 
 * Bullet Physics integration
 * Screen Space Ambient Oclussion
@@ -47,13 +54,13 @@ Installers and binaries will be available soon
 * Custom GUI
 * Dynamic terrain generation
 
-## Software & Hardware Succesfully Tested
+## Software & Hardware Succesfully Tested <a name="Software_and_Hardware_Succesfully_Tested"></a>
 * OS: Windows 7 & 10
 * CPU: Intel i7 4790K & Intel I7 6700HQ
 * RAM: 12 & 24 GB
 * GPU: Nvidia GTX 970 & 970M
 
-## Notes
+## Notes <a name="Notes"></a>
 
 * At the moment the only IDE supported is Code::Blocks, the idea is to migrate to CMake and make it IDE agnostic
 * It should compile almost unmodified under Linux
