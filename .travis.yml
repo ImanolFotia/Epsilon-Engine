@@ -1,6 +1,9 @@
 before_install:
-  - sudo apt-get install libglfw3-dev
+  - deb http://ppa.launchpad.net/keithw/glfw3/ubuntu trusty main
+  - sudo apt-get install cmake xorg-dev libglu1-mesa-dev
+  - sudo apt-get install libglfw3-dev libglfw3
   - sudo apt-get install libglew-dev
   - sudo apt-get install libSOIL-dev
+  - sudo apt-get install libopenal-dev
 
 language: cpp
