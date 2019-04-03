@@ -341,7 +341,7 @@ void Epsilon::InitResources(void) {
 */
         tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(22, 2.0, -20.0), glm::vec3(2.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
         Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-        Compmodel->Fill("models/Rock_6.eml", rM, "Main");
+        Compmodel->Fill("models/export3dcoat.eml", rM, "Main");
         tmpEnt->addComponent(Compmodel);
         EntityList.push_back(tmpEnt);
 
