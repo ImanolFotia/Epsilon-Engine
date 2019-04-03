@@ -32,4 +32,4 @@ Written in modern C++ and GLSL 4.3+
 
 ### G buffer structure
 
-![Epsilon%20Engine/media/G-Buffer.png](Epsilon%20Engine/media/G-Buffer.png)
+![media/G-Buffer.png](Epsilon%20Engine/media/G-Buffer.png)
