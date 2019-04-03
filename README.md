@@ -13,8 +13,8 @@ Installers and binaries will be available soon
 
 | Table of Contents | 
 | :--- |
-| [Dependencies](#dependencies) | 
-| [Features](#features)| 
+| [Dependencies](#Dependencies) | 
+| [Features](#Features)| 
 | [Software & Hardware Succesfully Tested](#Software_and_Hardware_Succesfully_Tested)| 
 | [Notes](#Notes)| 
 
