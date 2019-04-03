@@ -1,0 +1,12 @@
+# Compiled files
+*.o
+*.so
+*.exe
+
+# Directories
+/bin
+/depend
+/obj
+
+# Specific Files
+
