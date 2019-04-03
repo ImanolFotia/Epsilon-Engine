@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="struct_m_d5_model_1_1_vertex" kind="struct" language="C++" prot="protected">
+    <compoundname>MD5Model::Vertex</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_vertex_1aa80f1491b2282065d93b461584727dce" prot="public" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 MD5Model::Vertex::m_Pos</definition>
+        <argsstring></argsstring>
+        <name>m_Pos</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="37" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_vertex_1a6a3958b87be55b3213188fb07a45fa98" prot="public" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 MD5Model::Vertex::m_Normal</definition>
+        <argsstring></argsstring>
+        <name>m_Normal</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="38" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_vertex_1a8742e37c0a379d53122d774e2ac613f7" prot="public" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 MD5Model::Vertex::m_Tangent</definition>
+        <argsstring></argsstring>
+        <name>m_Tangent</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="39" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_vertex_1ab22ba173bf3a04ff24afb55384fa8375" prot="public" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 MD5Model::Vertex::m_Binormal</definition>
+        <argsstring></argsstring>
+        <name>m_Binormal</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="40" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_vertex_1acd2f4166e0d987f3a96546b816ab600b" prot="public" static="no" mutable="no">
+        <type>glm::vec2</type>
+        <definition>glm::vec2 MD5Model::Vertex::m_Tex0</definition>
+        <argsstring></argsstring>
+        <name>m_Tex0</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="41" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_vertex_1a161ecefc3a66dbe6e3bdbd6c5be595d5" prot="public" static="no" mutable="no">
+        <type>glm::vec4</type>
+        <definition>glm::vec4 MD5Model::Vertex::m_BoneWeights</definition>
+        <argsstring></argsstring>
+        <name>m_BoneWeights</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="42" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_vertex_1ae9093a7c890b8a5a9c0ff424c413195f" prot="public" static="no" mutable="no">
+        <type>glm::vec4</type>
+        <definition>glm::vec4 MD5Model::Vertex::m_BoneIndices</definition>
+        <argsstring></argsstring>
+        <name>m_BoneIndices</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="43" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_vertex_1ac8f02d6c15cd60ae82de5e7e90d6e424" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MD5Model::Vertex::m_StartWeight</definition>
+        <argsstring></argsstring>
+        <name>m_StartWeight</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="46" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_vertex_1ae6f7fec085ac28aab56656e398959c6d" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MD5Model::Vertex::m_WeightCount</definition>
+        <argsstring></argsstring>
+        <name>m_WeightCount</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="47" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="36" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="35" bodyend="48"/>
+    <listofallmembers>
+      <member refid="struct_m_d5_model_1_1_vertex_1ab22ba173bf3a04ff24afb55384fa8375" prot="public" virt="non-virtual"><scope>MD5Model::Vertex</scope><name>m_Binormal</name></member>
+      <member refid="struct_m_d5_model_1_1_vertex_1ae9093a7c890b8a5a9c0ff424c413195f" prot="public" virt="non-virtual"><scope>MD5Model::Vertex</scope><name>m_BoneIndices</name></member>
+      <member refid="struct_m_d5_model_1_1_vertex_1a161ecefc3a66dbe6e3bdbd6c5be595d5" prot="public" virt="non-virtual"><scope>MD5Model::Vertex</scope><name>m_BoneWeights</name></member>
+      <member refid="struct_m_d5_model_1_1_vertex_1a6a3958b87be55b3213188fb07a45fa98" prot="public" virt="non-virtual"><scope>MD5Model::Vertex</scope><name>m_Normal</name></member>
+      <member refid="struct_m_d5_model_1_1_vertex_1aa80f1491b2282065d93b461584727dce" prot="public" virt="non-virtual"><scope>MD5Model::Vertex</scope><name>m_Pos</name></member>
+      <member refid="struct_m_d5_model_1_1_vertex_1ac8f02d6c15cd60ae82de5e7e90d6e424" prot="public" virt="non-virtual"><scope>MD5Model::Vertex</scope><name>m_StartWeight</name></member>
+      <member refid="struct_m_d5_model_1_1_vertex_1a8742e37c0a379d53122d774e2ac613f7" prot="public" virt="non-virtual"><scope>MD5Model::Vertex</scope><name>m_Tangent</name></member>
+      <member refid="struct_m_d5_model_1_1_vertex_1acd2f4166e0d987f3a96546b816ab600b" prot="public" virt="non-virtual"><scope>MD5Model::Vertex</scope><name>m_Tex0</name></member>
+      <member refid="struct_m_d5_model_1_1_vertex_1ae6f7fec085ac28aab56656e398959c6d" prot="public" virt="non-virtual"><scope>MD5Model::Vertex</scope><name>m_WeightCount</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,173 @@
+.TH "Water" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Water \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBWater\fP (glm::vec3 position, float scale)"
+.br
+.ti -1c
+.RI "void \fBGenerateReflection\fP (std::shared_ptr< \fBCamera\fP > cam)"
+.br
+.ti -1c
+.RI "void \fBGenerateRefraction\fP (std::shared_ptr< \fBCamera\fP > cam)"
+.br
+.ti -1c
+.RI "void \fBFinishWatercomputation\fP (void)"
+.br
+.ti -1c
+.RI "void \fBRenderWater\fP (std::shared_ptr< \fBCamera\fP > cam, GLuint colorBuffer, glm::vec3 lightDir, GLuint depthTexture)"
+.br
+.ti -1c
+.RI "double \fBgetActiveClip\fP ()"
+.br
+.ti -1c
+.RI "void \fBsetActiveClip\fP (double t)"
+.br
+.in -1c
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "float \fBscale\fP"
+.br
+.ti -1c
+.RI "glm::vec3 \fBposition\fP"
+.br
+.in -1c
+.SS "Private Member Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBLoadTextures\fP (void)"
+.br
+.ti -1c
+.RI "void \fBLoadShaders\fP (void)"
+.br
+.ti -1c
+.RI "void \fBCreateReflectionFBO\fP (void)"
+.br
+.ti -1c
+.RI "void \fBCreateRefractionFBO\fP (void)"
+.br
+.ti -1c
+.RI "void \fBGeneratePlane\fP (void)"
+.br
+.ti -1c
+.RI "void \fBGenerateModelViewProjection\fP (std::shared_ptr< \fBCamera\fP > cam)"
+.br
+.ti -1c
+.RI "void \fBGeneratevertexArray\fP ()"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "GLuint \fBcolorTexture\fP"
+.br
+.ti -1c
+.RI "GLuint \fBnormalTexture\fP"
+.br
+.ti -1c
+.RI "GLuint \fBdispTexture\fP"
+.br
+.ti -1c
+.RI "GLuint \fBDuDvTexture\fP"
+.br
+.ti -1c
+.RI "GLuint \fBfoamTexture\fP"
+.br
+.ti -1c
+.RI "GLuint \fBdiffuseTexture\fP"
+.br
+.ti -1c
+.RI "GLuint \fBreflectionTexture\fP"
+.br
+.ti -1c
+.RI "GLuint \fBrefractionTexture\fP"
+.br
+.ti -1c
+.RI "GLuint \fBrefractionDepthTexture\fP"
+.br
+.ti -1c
+.RI "GLuint \fBrefractionRBO\fP"
+.br
+.ti -1c
+.RI "GLuint \fBreflectionRBO\fP"
+.br
+.ti -1c
+.RI "GLuint \fBrefractionFBO\fP"
+.br
+.ti -1c
+.RI "GLuint \fBreflectionFBO\fP"
+.br
+.ti -1c
+.RI "GLint \fBrefractionWidth\fP"
+.br
+.ti -1c
+.RI "GLint \fBrefractionHeight\fP"
+.br
+.ti -1c
+.RI "GLint \fBreflectionWidth\fP"
+.br
+.ti -1c
+.RI "GLint \fBreflectionHeight\fP"
+.br
+.ti -1c
+.RI "GLuint \fBReflectionResoulution\fP"
+.br
+.ti -1c
+.RI "GLuint \fBRefractionResoulution\fP"
+.br
+.ti -1c
+.RI "GLuint \fBVAO\fP"
+.br
+.ti -1c
+.RI "GLuint \fBVBO\fP"
+.br
+.ti -1c
+.RI "GLuint \fBEBO\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBShader\fP > \fBshader\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBModel\fP > \fBm_Model\fP"
+.br
+.ti -1c
+.RI "glm::mat4 \fBMVP\fP"
+.br
+.ti -1c
+.RI "double \fBActiveClip\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+========= Copyright Survtech, All rights reserved\&. ============//
+.PP
+Purpose: 
+.PP
+ 
+.PP
+Definition at line 21 of file Water\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Water::Water (glm::vec3 position, float scale)"
+========= Copyright Survtech, All rights reserved\&. ============//
+.PP
+Purpose: 
+.PP
+ 
+.PP
+Definition at line 9 of file Water\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

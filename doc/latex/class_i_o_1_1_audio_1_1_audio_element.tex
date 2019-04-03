@@ -1,0 +1,63 @@
+\hypertarget{class_i_o_1_1_audio_1_1_audio_element}{}\section{IO\+:\+:Audio\+:\+:Audio\+Element Class Reference}
+\label{class_i_o_1_1_audio_1_1_audio_element}\index{I\+O\+::\+Audio\+::\+Audio\+Element@{I\+O\+::\+Audio\+::\+Audio\+Element}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries Audio\+Element} (const char $\ast$file\+Name, A\+U\+D\+I\+O\+\_\+\+T\+Y\+PE type, glm\+::vec3 Audio\+Position, glm\+::vec3 Audio\+Direction)\hypertarget{class_i_o_1_1_audio_1_1_audio_element_a5dc9b2edcd68bbb0c17231628dead103}{}\label{class_i_o_1_1_audio_1_1_audio_element_a5dc9b2edcd68bbb0c17231628dead103}
+
+\item 
+void {\bfseries Destroy} ()\hypertarget{class_i_o_1_1_audio_1_1_audio_element_a0e9ba45fc7d2f2f3228695120ca0e539}{}\label{class_i_o_1_1_audio_1_1_audio_element_a0e9ba45fc7d2f2f3228695120ca0e539}
+
+\item 
+void {\bfseries Play} ()\hypertarget{class_i_o_1_1_audio_1_1_audio_element_ae6dd75379691f87959a93110bd456be7}{}\label{class_i_o_1_1_audio_1_1_audio_element_ae6dd75379691f87959a93110bd456be7}
+
+\item 
+A\+U\+D\+I\+O\+\_\+\+T\+Y\+PE {\bfseries get\+Type} ()\hypertarget{class_i_o_1_1_audio_1_1_audio_element_aaa1929ed8868b03997adebca0a9f2fa7}{}\label{class_i_o_1_1_audio_1_1_audio_element_aaa1929ed8868b03997adebca0a9f2fa7}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+unsigned int {\bfseries m\+\_\+\+Audio\+ID}\hypertarget{class_i_o_1_1_audio_1_1_audio_element_a527eaf6c623d65e34f858c8e9445fa5e}{}\label{class_i_o_1_1_audio_1_1_audio_element_a527eaf6c623d65e34f858c8e9445fa5e}
+
+\item 
+unsigned int {\bfseries m\+\_\+\+Buffer\+ID}\hypertarget{class_i_o_1_1_audio_1_1_audio_element_a3ec6a87075a8df60de7c632ce554474a}{}\label{class_i_o_1_1_audio_1_1_audio_element_a3ec6a87075a8df60de7c632ce554474a}
+
+\item 
+float {\bfseries m\+\_\+\+Volume}\hypertarget{class_i_o_1_1_audio_1_1_audio_element_a9a370abcfaea4f25da82691fdc02289d}{}\label{class_i_o_1_1_audio_1_1_audio_element_a9a370abcfaea4f25da82691fdc02289d}
+
+\item 
+int {\bfseries m\+\_\+\+Channels}\hypertarget{class_i_o_1_1_audio_1_1_audio_element_a0a4ba6e76a29da2a3d7587c574ed7cba}{}\label{class_i_o_1_1_audio_1_1_audio_element_a0a4ba6e76a29da2a3d7587c574ed7cba}
+
+\item 
+unsigned int {\bfseries m\+\_\+\+Format}\hypertarget{class_i_o_1_1_audio_1_1_audio_element_ab31b6315ede0f2c568dffe14eb02ae32}{}\label{class_i_o_1_1_audio_1_1_audio_element_ab31b6315ede0f2c568dffe14eb02ae32}
+
+\item 
+int {\bfseries m\+\_\+\+Bytes\+Per\+Second}\hypertarget{class_i_o_1_1_audio_1_1_audio_element_af2b400f9761b0b33a81bb65f25532866}{}\label{class_i_o_1_1_audio_1_1_audio_element_af2b400f9761b0b33a81bb65f25532866}
+
+\item 
+std\+::shared\+\_\+ptr$<$ char $>$ {\bfseries data}\hypertarget{class_i_o_1_1_audio_1_1_audio_element_a5a89ff073db45b715cc9f0162e71354f}{}\label{class_i_o_1_1_audio_1_1_audio_element_a5a89ff073db45b715cc9f0162e71354f}
+
+\item 
+A\+U\+D\+I\+O\+\_\+\+T\+Y\+PE {\bfseries m\+\_\+\+Type}\hypertarget{class_i_o_1_1_audio_1_1_audio_element_a867da6202123d156f61dc57bcc5fc645}{}\label{class_i_o_1_1_audio_1_1_audio_element_a867da6202123d156f61dc57bcc5fc645}
+
+\item 
+glm\+::vec3 {\bfseries m\+\_\+\+Position}\hypertarget{class_i_o_1_1_audio_1_1_audio_element_aeac2de4d6e56351d66072ff105c92069}{}\label{class_i_o_1_1_audio_1_1_audio_element_aeac2de4d6e56351d66072ff105c92069}
+
+\item 
+glm\+::vec3 {\bfseries m\+\_\+\+Direction}\hypertarget{class_i_o_1_1_audio_1_1_audio_element_a8186dfc5446ca0409f7c259eb2a9f222}{}\label{class_i_o_1_1_audio_1_1_audio_element_a8186dfc5446ca0409f7c259eb2a9f222}
+
+\item 
+glm\+::vec3 {\bfseries m\+\_\+\+Velocity}\hypertarget{class_i_o_1_1_audio_1_1_audio_element_a0b68136368101c51108886435dd94b00}{}\label{class_i_o_1_1_audio_1_1_audio_element_a0b68136368101c51108886435dd94b00}
+
+\item 
+float {\bfseries m\+\_\+\+Radius}\hypertarget{class_i_o_1_1_audio_1_1_audio_element_a08db2f7eadcda0d391722723afb68bca}{}\label{class_i_o_1_1_audio_1_1_audio_element_a08db2f7eadcda0d391722723afb68bca}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 10 of file Audio\+Element.\+h.
+

@@ -1,0 +1,649 @@
+\hypertarget{class_resource_manager}{}\section{Resource\+Manager Class Reference}
+\label{class_resource_manager}\index{Resource\+Manager@{Resource\+Manager}}
+
+
+Collaboration diagram for Resource\+Manager\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_resource_manager__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \hyperlink{class_resource_manager_a3d5f5a1f1ba52642b5e39b0c51c970f7}{request\+Texture} (std\+::string tex\+Path)
+\begin{DoxyCompactList}\small\item\em Loads a texture from disk or assign the ID if it\textquotesingle{}s already loaded. \end{DoxyCompactList}\item 
+std\+::string \hyperlink{class_resource_manager_a957b2daa207d299545d210fb2afc1049}{request\+Model} (std\+::string model\+Path, std\+::shared\+\_\+ptr$<$ \hyperlink{class_resource_manager}{Resource\+Manager} $>$ rm, glm\+::vec3 Pos, glm\+::vec3 scs, glm\+::quat rot)
+\begin{DoxyCompactList}\small\item\em Loads a model from disk or assign the ID if it\textquotesingle{}s already loaded. \end{DoxyCompactList}\item 
+void \hyperlink{class_resource_manager_a4a1e37445897a89d4b07a3490d0ba2ce}{use\+Model} (std\+::string model\+Path, \hyperlink{class_shader}{Shader} $\ast$shader, glm\+::vec3)
+\begin{DoxyCompactList}\small\item\em Renders the asked model. \end{DoxyCompactList}\item 
+void \hyperlink{class_resource_manager_a0572626be5a022c000afd417c72d851b}{use\+Model} (std\+::string model\+Path, G\+Luint shader, glm\+::vec3)
+\begin{DoxyCompactList}\small\item\em Renders the asked model. \end{DoxyCompactList}\item 
+\hyperlink{struct_m_i_n___m_a_x___p_o_i_n_t_s}{M\+I\+N\+\_\+\+M\+A\+X\+\_\+\+P\+O\+I\+N\+TS} \hyperlink{class_resource_manager_a97368ca128405495ccf1325b7df5f846}{get\+Model\+Bounding\+Box} (std\+::string model\+Path)
+\begin{DoxyCompactList}\small\item\em Retrieves the asked model\textquotesingle{}s Mins and Max points contained in a structure. \end{DoxyCompactList}\item 
+void \hyperlink{class_resource_manager_a6e25cafdac62920c553b570604812650}{set\+Model\+Visibility} (std\+::string path, bool visibility)
+\begin{DoxyCompactList}\small\item\em Based on the visibility calculation sets the current visibility state of the model. \end{DoxyCompactList}\item 
+glm\+::quat \hyperlink{class_resource_manager_a45899dc887c74ecabcc3fce5e079b4e4}{get\+Model\+Rotation} (std\+::string path)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_model}{Model} assigned Rotation. \end{DoxyCompactList}\item 
+glm\+::vec3 \hyperlink{class_resource_manager_a61f0223aaee7a6b11e197a4b68c0d17d}{get\+Model\+Position} (std\+::string path)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_model}{Model} assigned Position. \end{DoxyCompactList}\item 
+glm\+::vec3 \hyperlink{class_resource_manager_a7f6456c08e57b52fa66ce2c293b6a947}{get\+Model\+Scale} (std\+::string path)
+\begin{DoxyCompactList}\small\item\em \hyperlink{class_model}{Model} assigned Scale. \end{DoxyCompactList}\item 
+void \hyperlink{class_resource_manager_a538b1d86fac74708cd854ca185e8a716}{set\+Model\+Uniforms} (std\+::string, \hyperlink{class_shader}{Shader} $\ast$, glm\+::vec3, glm\+::vec3, glm\+::quat, std\+::shared\+\_\+ptr$<$ \hyperlink{class_camera}{Camera} $>$)
+\begin{DoxyCompactList}\small\item\em Set model\textquotesingle{}s uniforms. \end{DoxyCompactList}\item 
+void {\bfseries set\+Model\+Uniforms} (std\+::string path, \hyperlink{class_shader}{Shader} $\ast$shader, glm\+::vec3, glm\+::vec3, glm\+::quat, glm\+::vec3, glm\+::vec3, glm\+::quat, std\+::shared\+\_\+ptr$<$ \hyperlink{class_camera}{Camera} $>$ cam)\hypertarget{class_resource_manager_a6da9fd1a7b8c939b850a5ed23158a781}{}\label{class_resource_manager_a6da9fd1a7b8c939b850a5ed23158a781}
+
+\item 
+void {\bfseries destroy\+All\+Models} ()\hypertarget{class_resource_manager_af05090de2a0ab1186c7b6f9669345b4b}{}\label{class_resource_manager_af05090de2a0ab1186c7b6f9669345b4b}
+
+\item 
+G\+Luint \hyperlink{class_resource_manager_a387876b621fafcf12ca31f3c23a35c5a}{use\+Texture} (std\+::string tex\+Path)
+\begin{DoxyCompactList}\small\item\em Returns a \hyperlink{struct_texture}{Texture} ID given a path. \end{DoxyCompactList}\item 
+void \hyperlink{class_resource_manager_afc152b5b5383745636924a18fcbbac47}{add\+Texture\+To\+Queue} (std\+::string texture)
+\begin{DoxyCompactList}\small\item\em Adds the path of a texture to be loaded when all the other resources are ready. \end{DoxyCompactList}\item 
+void \hyperlink{class_resource_manager_ad45541223c9f21701bf75107c5369203}{load\+Queued\+Textures} ()
+\begin{DoxyCompactList}\small\item\em When there is no more queued commands, all the texture are loaded in order of assignment. \end{DoxyCompactList}\item 
+std\+::string \hyperlink{class_resource_manager_a8a981cfea7bc21774000932f9bcc0b34}{request\+Shader} (std\+::string shader\+Pathv, std\+::string shader\+Pathf, std\+::string name)
+\begin{DoxyCompactList}\small\item\em Loads a new shader into the engine or returns the existing one if already loaded. \end{DoxyCompactList}\item 
+void {\bfseries destroy\+All\+Textures} ()\hypertarget{class_resource_manager_a28da80dabb6ff7873cc6bb4eb709648a}{}\label{class_resource_manager_a28da80dabb6ff7873cc6bb4eb709648a}
+
+\item 
+\hyperlink{class_shader}{Shader} \hyperlink{class_resource_manager_a8c5654dad152328ad50a20f130464acf}{use\+Shader} (std\+::string shader\+Path)
+\begin{DoxyCompactList}\small\item\em Returns an instance of the requested shader. \end{DoxyCompactList}\item 
+G\+Luint \hyperlink{class_resource_manager_a63f9e674e29969a32cb4ea906e9a5aa4}{get\+Shader\+ID} (std\+::string shader\+Path)
+\begin{DoxyCompactList}\small\item\em Loads a new shader into the engine or returns the existing one if already loaded. \end{DoxyCompactList}\item 
+bool \hyperlink{class_resource_manager_aaa351ca8ae3ef95f4089398dc288552f}{request\+Cube\+Map} (int Cube\+Map\+ID, glm\+::vec3 Position)
+\begin{DoxyCompactList}\small\item\em Loads a new Cube Map into the engine or returns the existing one if already loaded. \end{DoxyCompactList}\item 
+int \hyperlink{class_resource_manager_ac1552bad163f9c3727faadaa9b055406}{Nearest\+Cube\+Map} (glm\+::vec3 Testing\+Point)
+\begin{DoxyCompactList}\small\item\em Returns the ID of the closest cube map based on a given position. \end{DoxyCompactList}\item 
+G\+Luint \hyperlink{class_resource_manager_a07e56b885469a090c43606a13e451d62}{use\+Cube\+Map} (int ID)
+\begin{DoxyCompactList}\small\item\em Returns the ID of the requested cube map. \end{DoxyCompactList}\item 
+int \hyperlink{class_resource_manager_a1438d6e497c7456e4f875c5936f898d5}{request\+Texture\+Usage} (std\+::string)
+\begin{DoxyCompactList}\small\item\em Returns the number of times a texture is used per frame. \end{DoxyCompactList}\item 
+void {\bfseries reset\+Texture\+Usage} (std\+::string)\hypertarget{class_resource_manager_aa78d80ebfe3deec7e98362f7eff29b3b}{}\label{class_resource_manager_aa78d80ebfe3deec7e98362f7eff29b3b}
+
+\item 
+bool {\bfseries add\+Cubemap} (std\+::shared\+\_\+ptr$<$ \hyperlink{class_cube_map}{Cube\+Map} $>$, glm\+::vec3)\hypertarget{class_resource_manager_a8826abe638311f03b8ee850110f1d18e}{}\label{class_resource_manager_a8826abe638311f03b8ee850110f1d18e}
+
+\item 
+\hyperlink{class_model}{Model} {\bfseries get\+Model} (std\+::string model\+Path)\hypertarget{class_resource_manager_a27054eafe78f53df38abf67e6f052569}{}\label{class_resource_manager_a27054eafe78f53df38abf67e6f052569}
+
+\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{class_camera}{Camera} $>$ {\bfseries m\+\_\+\+Camera}\hypertarget{class_resource_manager_a80b2ea2f322e1431bbc59b2a2a994d11}{}\label{class_resource_manager_a80b2ea2f322e1431bbc59b2a2a994d11}
+
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{class_physics_1_1_physics}{Physics\+::\+Physics} $>$ {\bfseries m\+\_\+\+Physics\+World}\hypertarget{class_resource_manager_add34ae6384c490c5689a860bd44af852}{}\label{class_resource_manager_add34ae6384c490c5689a860bd44af852}
+
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{class_i_o_1_1_audio_1_1_audio}{I\+O\+::\+Audio\+::\+Audio} $>$ {\bfseries m\+\_\+\+Audio\+System}\hypertarget{class_resource_manager_ab5042cc5d60c068ca1bce6939c87b944}{}\label{class_resource_manager_ab5042cc5d60c068ca1bce6939c87b944}
+
+\item 
+float {\bfseries timestep}\hypertarget{class_resource_manager_a07c54e80f53e5d2cf81cb12619bcd16f}{}\label{class_resource_manager_a07c54e80f53e5d2cf81cb12619bcd16f}
+
+\item 
+std\+::map$<$ int, std\+::shared\+\_\+ptr$<$ \hyperlink{class_cube_map}{Cube\+Map} $>$ $>$ {\bfseries Cube\+Map\+List}\hypertarget{class_resource_manager_afa304255b6198c2e9dd56c4394a63911}{}\label{class_resource_manager_afa304255b6198c2e9dd56c4394a63911}
+
+\item 
+std\+::vector$<$ int $>$ {\bfseries m\+Cubemap\+Index}\hypertarget{class_resource_manager_a64589baa7311486ef730953fc7a04ffb}{}\label{class_resource_manager_a64589baa7311486ef730953fc7a04ffb}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::map$<$ std\+::string, std\+::shared\+\_\+ptr$<$ \hyperlink{classe_texture}{e\+Texture} $>$ $>$ {\bfseries Texture\+List}\hypertarget{class_resource_manager_a2b386cfa7cb2d3bf15eb6354888b8e67}{}\label{class_resource_manager_a2b386cfa7cb2d3bf15eb6354888b8e67}
+
+\item 
+std\+::map$<$ std\+::string, \hyperlink{class_water}{Water} $>$ {\bfseries Water\+Planes\+List}\hypertarget{class_resource_manager_a3b28e4995ea477def6e7d1d101466317}{}\label{class_resource_manager_a3b28e4995ea477def6e7d1d101466317}
+
+\item 
+std\+::map$<$ std\+::string, \hyperlink{class_terrain}{Terrain} $>$ {\bfseries Terrain\+List}\hypertarget{class_resource_manager_a3e13d8ba49d868e8a0c57e7d1f04f6ea}{}\label{class_resource_manager_a3e13d8ba49d868e8a0c57e7d1f04f6ea}
+
+\item 
+std\+::map$<$ std\+::string, \hyperlink{class_model}{Model} $>$ {\bfseries Model\+List}\hypertarget{class_resource_manager_a2f9a6979889cf6d913bbb6aa5af7f993}{}\label{class_resource_manager_a2f9a6979889cf6d913bbb6aa5af7f993}
+
+\item 
+std\+::map$<$ std\+::string, \hyperlink{class_shader}{Shader} $>$ {\bfseries Shaders\+List}\hypertarget{class_resource_manager_a828322cfec867ce19af8eb249e0c23b2}{}\label{class_resource_manager_a828322cfec867ce19af8eb249e0c23b2}
+
+\item 
+std\+::vector$<$ glm\+::vec3 $>$ {\bfseries Cube\+Map\+Positions}\hypertarget{class_resource_manager_ae88330d471df1f1da98de27dbfd3b084}{}\label{class_resource_manager_ae88330d471df1f1da98de27dbfd3b084}
+
+\item 
+std\+::vector$<$ std\+::string $>$ \hyperlink{class_resource_manager_a9e21ce059a8812bb3afe957f75a3120b}{Texture\+Queue}
+\item 
+unsigned int {\bfseries model\+Counter}\hypertarget{class_resource_manager_ab4f1e2253295104d9a93ec8ca26816e4}{}\label{class_resource_manager_ab4f1e2253295104d9a93ec8ca26816e4}
+
+\item 
+unsigned int {\bfseries texture\+Counter}\hypertarget{class_resource_manager_a88d9b4bc80f4e31ea4eb9956a85f1b79}{}\label{class_resource_manager_a88d9b4bc80f4e31ea4eb9956a85f1b79}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 16 of file Resource\+Manager.\+h.
+
+
+
+\subsection{Member Function Documentation}
+\index{Resource\+Manager@{Resource\+Manager}!add\+Texture\+To\+Queue@{add\+Texture\+To\+Queue}}
+\index{add\+Texture\+To\+Queue@{add\+Texture\+To\+Queue}!Resource\+Manager@{Resource\+Manager}}
+\subsubsection[{\texorpdfstring{add\+Texture\+To\+Queue(std\+::string texture)}{addTextureToQueue(std::string texture)}}]{\setlength{\rightskip}{0pt plus 5cm}void Resource\+Manager\+::add\+Texture\+To\+Queue (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{texture}
+\end{DoxyParamCaption}
+)}\hypertarget{class_resource_manager_afc152b5b5383745636924a18fcbbac47}{}\label{class_resource_manager_afc152b5b5383745636924a18fcbbac47}
+
+
+Adds the path of a texture to be loaded when all the other resources are ready. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Path} & to the texture \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 164 of file Resource\+Manager.\+cpp.
+
+\index{Resource\+Manager@{Resource\+Manager}!get\+Model\+Bounding\+Box@{get\+Model\+Bounding\+Box}}
+\index{get\+Model\+Bounding\+Box@{get\+Model\+Bounding\+Box}!Resource\+Manager@{Resource\+Manager}}
+\subsubsection[{\texorpdfstring{get\+Model\+Bounding\+Box(std\+::string model\+Path)}{getModelBoundingBox(std::string modelPath)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf M\+I\+N\+\_\+\+M\+A\+X\+\_\+\+P\+O\+I\+N\+TS} Resource\+Manager\+::get\+Model\+Bounding\+Box (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{model\+Path}
+\end{DoxyParamCaption}
+)}\hypertarget{class_resource_manager_a97368ca128405495ccf1325b7df5f846}{}\label{class_resource_manager_a97368ca128405495ccf1325b7df5f846}
+
+
+Retrieves the asked model\textquotesingle{}s Mins and Max points contained in a structure. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Path} & to the model \\
+\hline
+{\em Mins} & and Max points \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 95 of file Resource\+Manager.\+cpp.
+
+\index{Resource\+Manager@{Resource\+Manager}!get\+Model\+Position@{get\+Model\+Position}}
+\index{get\+Model\+Position@{get\+Model\+Position}!Resource\+Manager@{Resource\+Manager}}
+\subsubsection[{\texorpdfstring{get\+Model\+Position(std\+::string path)}{getModelPosition(std::string path)}}]{\setlength{\rightskip}{0pt plus 5cm}glm\+::vec3 Resource\+Manager\+::get\+Model\+Position (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{path}
+\end{DoxyParamCaption}
+)}\hypertarget{class_resource_manager_a61f0223aaee7a6b11e197a4b68c0d17d}{}\label{class_resource_manager_a61f0223aaee7a6b11e197a4b68c0d17d}
+
+
+\hyperlink{class_model}{Model} assigned Position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Path} & to the model \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A 3 component vector with the position 
+\end{DoxyReturn}
+
+
+Definition at line 118 of file Resource\+Manager.\+cpp.
+
+\index{Resource\+Manager@{Resource\+Manager}!get\+Model\+Rotation@{get\+Model\+Rotation}}
+\index{get\+Model\+Rotation@{get\+Model\+Rotation}!Resource\+Manager@{Resource\+Manager}}
+\subsubsection[{\texorpdfstring{get\+Model\+Rotation(std\+::string path)}{getModelRotation(std::string path)}}]{\setlength{\rightskip}{0pt plus 5cm}glm\+::quat Resource\+Manager\+::get\+Model\+Rotation (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{path}
+\end{DoxyParamCaption}
+)}\hypertarget{class_resource_manager_a45899dc887c74ecabcc3fce5e079b4e4}{}\label{class_resource_manager_a45899dc887c74ecabcc3fce5e079b4e4}
+
+
+\hyperlink{class_model}{Model} assigned Rotation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Path} & to the model \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A quaternion with the orientation 
+\end{DoxyReturn}
+
+
+Definition at line 113 of file Resource\+Manager.\+cpp.
+
+\index{Resource\+Manager@{Resource\+Manager}!get\+Model\+Scale@{get\+Model\+Scale}}
+\index{get\+Model\+Scale@{get\+Model\+Scale}!Resource\+Manager@{Resource\+Manager}}
+\subsubsection[{\texorpdfstring{get\+Model\+Scale(std\+::string path)}{getModelScale(std::string path)}}]{\setlength{\rightskip}{0pt plus 5cm}glm\+::vec3 Resource\+Manager\+::get\+Model\+Scale (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{path}
+\end{DoxyParamCaption}
+)}\hypertarget{class_resource_manager_a7f6456c08e57b52fa66ce2c293b6a947}{}\label{class_resource_manager_a7f6456c08e57b52fa66ce2c293b6a947}
+
+
+\hyperlink{class_model}{Model} assigned Scale. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Path} & to the model \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A 3 component vector with the scale 
+\end{DoxyReturn}
+
+
+Definition at line 123 of file Resource\+Manager.\+cpp.
+
+\index{Resource\+Manager@{Resource\+Manager}!get\+Shader\+ID@{get\+Shader\+ID}}
+\index{get\+Shader\+ID@{get\+Shader\+ID}!Resource\+Manager@{Resource\+Manager}}
+\subsubsection[{\texorpdfstring{get\+Shader\+I\+D(std\+::string shader\+Path)}{getShaderID(std::string shaderPath)}}]{\setlength{\rightskip}{0pt plus 5cm}G\+Luint Resource\+Manager\+::get\+Shader\+ID (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{shader\+Path}
+\end{DoxyParamCaption}
+)}\hypertarget{class_resource_manager_a63f9e674e29969a32cb4ea906e9a5aa4}{}\label{class_resource_manager_a63f9e674e29969a32cb4ea906e9a5aa4}
+
+
+Loads a new shader into the engine or returns the existing one if already loaded. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \hyperlink{class_shader}{Shader}} & Name \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{class_shader}{Shader} ID 
+\end{DoxyReturn}
+
+
+Definition at line 283 of file Resource\+Manager.\+cpp.
+
+\index{Resource\+Manager@{Resource\+Manager}!load\+Queued\+Textures@{load\+Queued\+Textures}}
+\index{load\+Queued\+Textures@{load\+Queued\+Textures}!Resource\+Manager@{Resource\+Manager}}
+\subsubsection[{\texorpdfstring{load\+Queued\+Textures()}{loadQueuedTextures()}}]{\setlength{\rightskip}{0pt plus 5cm}void Resource\+Manager\+::load\+Queued\+Textures (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_resource_manager_ad45541223c9f21701bf75107c5369203}{}\label{class_resource_manager_ad45541223c9f21701bf75107c5369203}
+
+
+When there is no more queued commands, all the texture are loaded in order of assignment. 
+
+
+
+Definition at line 177 of file Resource\+Manager.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_resource_manager_ad45541223c9f21701bf75107c5369203_cgraph}
+\end{center}
+\end{figure}
+
+
+\index{Resource\+Manager@{Resource\+Manager}!Nearest\+Cube\+Map@{Nearest\+Cube\+Map}}
+\index{Nearest\+Cube\+Map@{Nearest\+Cube\+Map}!Resource\+Manager@{Resource\+Manager}}
+\subsubsection[{\texorpdfstring{Nearest\+Cube\+Map(glm\+::vec3 Testing\+Point)}{NearestCubeMap(glm::vec3 TestingPoint)}}]{\setlength{\rightskip}{0pt plus 5cm}int Resource\+Manager\+::\+Nearest\+Cube\+Map (
+\begin{DoxyParamCaption}
+\item[{glm\+::vec3}]{Testing\+Point}
+\end{DoxyParamCaption}
+)}\hypertarget{class_resource_manager_ac1552bad163f9c3727faadaa9b055406}{}\label{class_resource_manager_ac1552bad163f9c3727faadaa9b055406}
+
+
+Returns the ID of the closest cube map based on a given position. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Position} & to get the nearest cube map to. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Cube map ID 
+\end{DoxyReturn}
+
+
+Definition at line 348 of file Resource\+Manager.\+cpp.
+
+\index{Resource\+Manager@{Resource\+Manager}!request\+Cube\+Map@{request\+Cube\+Map}}
+\index{request\+Cube\+Map@{request\+Cube\+Map}!Resource\+Manager@{Resource\+Manager}}
+\subsubsection[{\texorpdfstring{request\+Cube\+Map(int Cube\+Map\+I\+D, glm\+::vec3 Position)}{requestCubeMap(int CubeMapID, glm::vec3 Position)}}]{\setlength{\rightskip}{0pt plus 5cm}bool Resource\+Manager\+::request\+Cube\+Map (
+\begin{DoxyParamCaption}
+\item[{int}]{Cube\+Map\+ID, }
+\item[{glm\+::vec3}]{Position}
+\end{DoxyParamCaption}
+)}\hypertarget{class_resource_manager_aaa351ca8ae3ef95f4089398dc288552f}{}\label{class_resource_manager_aaa351ca8ae3ef95f4089398dc288552f}
+
+
+Loads a new Cube Map into the engine or returns the existing one if already loaded. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Cube} & Map Assign ID \\
+\hline
+{\em Position} & of the cube map in world coordinates \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Confirmation of correct loading 
+\end{DoxyReturn}
+
+
+Definition at line 296 of file Resource\+Manager.\+cpp.
+
+\index{Resource\+Manager@{Resource\+Manager}!request\+Model@{request\+Model}}
+\index{request\+Model@{request\+Model}!Resource\+Manager@{Resource\+Manager}}
+\subsubsection[{\texorpdfstring{request\+Model(std\+::string model\+Path, std\+::shared\+\_\+ptr$<$ Resource\+Manager $>$ rm, glm\+::vec3 Pos, glm\+::vec3 scs, glm\+::quat rot)}{requestModel(std::string modelPath, std::shared_ptr< ResourceManager > rm, glm::vec3 Pos, glm::vec3 scs, glm::quat rot)}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::string Resource\+Manager\+::request\+Model (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{model\+Path, }
+\item[{std\+::shared\+\_\+ptr$<$ {\bf Resource\+Manager} $>$}]{rm, }
+\item[{glm\+::vec3}]{Pos, }
+\item[{glm\+::vec3}]{scs, }
+\item[{glm\+::quat}]{rot}
+\end{DoxyParamCaption}
+)}\hypertarget{class_resource_manager_a957b2daa207d299545d210fb2afc1049}{}\label{class_resource_manager_a957b2daa207d299545d210fb2afc1049}
+
+
+Loads a model from disk or assign the ID if it\textquotesingle{}s already loaded. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Path} & to the model \\
+\hline
+{\em Instance} & of the Resource Manager \\
+\hline
+{\em \hyperlink{class_model}{Model}} & Position \\
+\hline
+{\em \hyperlink{class_model}{Model}} & Scale \\
+\hline
+{\em \hyperlink{class_model}{Model}} & Rotation \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Path of the loaded model 
+\end{DoxyReturn}
+
+
+Definition at line 30 of file Resource\+Manager.\+cpp.
+
+\index{Resource\+Manager@{Resource\+Manager}!request\+Shader@{request\+Shader}}
+\index{request\+Shader@{request\+Shader}!Resource\+Manager@{Resource\+Manager}}
+\subsubsection[{\texorpdfstring{request\+Shader(std\+::string shader\+Pathv, std\+::string shader\+Pathf, std\+::string name)}{requestShader(std::string shaderPathv, std::string shaderPathf, std::string name)}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::string Resource\+Manager\+::request\+Shader (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{shader\+Pathv, }
+\item[{std\+::string}]{shader\+Pathf, }
+\item[{std\+::string}]{name}
+\end{DoxyParamCaption}
+)}\hypertarget{class_resource_manager_a8a981cfea7bc21774000932f9bcc0b34}{}\label{class_resource_manager_a8a981cfea7bc21774000932f9bcc0b34}
+
+
+Loads a new shader into the engine or returns the existing one if already loaded. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Path} & to vertex shader \\
+\hline
+{\em Path} & to fragment shader \\
+\hline
+{\em \hyperlink{class_shader}{Shader}} & identification \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{class_shader}{Shader} identification 
+\end{DoxyReturn}
+
+
+Definition at line 247 of file Resource\+Manager.\+cpp.
+
+\index{Resource\+Manager@{Resource\+Manager}!request\+Texture@{request\+Texture}}
+\index{request\+Texture@{request\+Texture}!Resource\+Manager@{Resource\+Manager}}
+\subsubsection[{\texorpdfstring{request\+Texture(std\+::string tex\+Path)}{requestTexture(std::string texPath)}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::string Resource\+Manager\+::request\+Texture (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{tex\+Path}
+\end{DoxyParamCaption}
+)}\hypertarget{class_resource_manager_a3d5f5a1f1ba52642b5e39b0c51c970f7}{}\label{class_resource_manager_a3d5f5a1f1ba52642b5e39b0c51c970f7}
+
+
+Loads a texture from disk or assign the ID if it\textquotesingle{}s already loaded. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Path} & to the texture \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Path of the loaded texture 
+\end{DoxyReturn}
+
+
+Definition at line 3 of file Resource\+Manager.\+cpp.
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_resource_manager_a3d5f5a1f1ba52642b5e39b0c51c970f7_icgraph}
+\end{center}
+\end{figure}
+
+
+\index{Resource\+Manager@{Resource\+Manager}!request\+Texture\+Usage@{request\+Texture\+Usage}}
+\index{request\+Texture\+Usage@{request\+Texture\+Usage}!Resource\+Manager@{Resource\+Manager}}
+\subsubsection[{\texorpdfstring{request\+Texture\+Usage(std\+::string)}{requestTextureUsage(std::string)}}]{\setlength{\rightskip}{0pt plus 5cm}int Resource\+Manager\+::request\+Texture\+Usage (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{tex\+Path}
+\end{DoxyParamCaption}
+)}\hypertarget{class_resource_manager_a1438d6e497c7456e4f875c5936f898d5}{}\label{class_resource_manager_a1438d6e497c7456e4f875c5936f898d5}
+
+
+Returns the number of times a texture is used per frame. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \hyperlink{struct_texture}{Texture}} & name. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Number of times that texture was used in the frame 
+\end{DoxyReturn}
+
+
+Definition at line 195 of file Resource\+Manager.\+cpp.
+
+\index{Resource\+Manager@{Resource\+Manager}!set\+Model\+Uniforms@{set\+Model\+Uniforms}}
+\index{set\+Model\+Uniforms@{set\+Model\+Uniforms}!Resource\+Manager@{Resource\+Manager}}
+\subsubsection[{\texorpdfstring{set\+Model\+Uniforms(std\+::string, Shader $\ast$, glm\+::vec3, glm\+::vec3, glm\+::quat, std\+::shared\+\_\+ptr$<$ Camera $>$)}{setModelUniforms(std::string, Shader *, glm::vec3, glm::vec3, glm::quat, std::shared_ptr< Camera >)}}]{\setlength{\rightskip}{0pt plus 5cm}void Resource\+Manager\+::set\+Model\+Uniforms (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{path, }
+\item[{{\bf Shader} $\ast$}]{shader, }
+\item[{glm\+::vec3}]{pos, }
+\item[{glm\+::vec3}]{sc, }
+\item[{glm\+::quat}]{rot, }
+\item[{std\+::shared\+\_\+ptr$<$ {\bf Camera} $>$}]{cam}
+\end{DoxyParamCaption}
+)}\hypertarget{class_resource_manager_a538b1d86fac74708cd854ca185e8a716}{}\label{class_resource_manager_a538b1d86fac74708cd854ca185e8a716}
+
+
+Set model\textquotesingle{}s uniforms. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Path} & to the model \\
+\hline
+{\em Position} & \\
+\hline
+{\em Scale} & \\
+\hline
+{\em Rotation} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+Definition at line 128 of file Resource\+Manager.\+cpp.
+
+\index{Resource\+Manager@{Resource\+Manager}!set\+Model\+Visibility@{set\+Model\+Visibility}}
+\index{set\+Model\+Visibility@{set\+Model\+Visibility}!Resource\+Manager@{Resource\+Manager}}
+\subsubsection[{\texorpdfstring{set\+Model\+Visibility(std\+::string path, bool visibility)}{setModelVisibility(std::string path, bool visibility)}}]{\setlength{\rightskip}{0pt plus 5cm}void Resource\+Manager\+::set\+Model\+Visibility (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{path, }
+\item[{bool}]{visibility}
+\end{DoxyParamCaption}
+)}\hypertarget{class_resource_manager_a6e25cafdac62920c553b570604812650}{}\label{class_resource_manager_a6e25cafdac62920c553b570604812650}
+
+
+Based on the visibility calculation sets the current visibility state of the model. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Path} & to the model \\
+\hline
+{\em State} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 108 of file Resource\+Manager.\+cpp.
+
+\index{Resource\+Manager@{Resource\+Manager}!use\+Cube\+Map@{use\+Cube\+Map}}
+\index{use\+Cube\+Map@{use\+Cube\+Map}!Resource\+Manager@{Resource\+Manager}}
+\subsubsection[{\texorpdfstring{use\+Cube\+Map(int I\+D)}{useCubeMap(int ID)}}]{\setlength{\rightskip}{0pt plus 5cm}G\+Luint Resource\+Manager\+::use\+Cube\+Map (
+\begin{DoxyParamCaption}
+\item[{int}]{ID}
+\end{DoxyParamCaption}
+)}\hypertarget{class_resource_manager_a07e56b885469a090c43606a13e451d62}{}\label{class_resource_manager_a07e56b885469a090c43606a13e451d62}
+
+
+Returns the ID of the requested cube map. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Cube} & map ID. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Cube-\/map \hyperlink{struct_texture}{Texture} ID 
+\end{DoxyReturn}
+
+
+Definition at line 353 of file Resource\+Manager.\+cpp.
+
+\index{Resource\+Manager@{Resource\+Manager}!use\+Model@{use\+Model}}
+\index{use\+Model@{use\+Model}!Resource\+Manager@{Resource\+Manager}}
+\subsubsection[{\texorpdfstring{use\+Model(std\+::string model\+Path, Shader $\ast$shader, glm\+::vec3)}{useModel(std::string modelPath, Shader *shader, glm::vec3)}}]{\setlength{\rightskip}{0pt plus 5cm}void Resource\+Manager\+::use\+Model (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{model\+Path, }
+\item[{{\bf Shader} $\ast$}]{shader, }
+\item[{glm\+::vec3}]{pos = {\ttfamily glm\+:\+:vec3(0,0,0)}}
+\end{DoxyParamCaption}
+)}\hypertarget{class_resource_manager_a4a1e37445897a89d4b07a3490d0ba2ce}{}\label{class_resource_manager_a4a1e37445897a89d4b07a3490d0ba2ce}
+
+
+Renders the asked model. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Path} & to the model \\
+\hline
+{\em \hyperlink{class_shader}{Shader}} & instance \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 56 of file Resource\+Manager.\+cpp.
+
+\index{Resource\+Manager@{Resource\+Manager}!use\+Model@{use\+Model}}
+\index{use\+Model@{use\+Model}!Resource\+Manager@{Resource\+Manager}}
+\subsubsection[{\texorpdfstring{use\+Model(std\+::string model\+Path, G\+Luint shader, glm\+::vec3)}{useModel(std::string modelPath, GLuint shader, glm::vec3)}}]{\setlength{\rightskip}{0pt plus 5cm}void Resource\+Manager\+::use\+Model (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{model\+Path, }
+\item[{G\+Luint}]{shader, }
+\item[{glm\+::vec3}]{pos = {\ttfamily glm\+:\+:vec3(0,0,0)}}
+\end{DoxyParamCaption}
+)}\hypertarget{class_resource_manager_a0572626be5a022c000afd417c72d851b}{}\label{class_resource_manager_a0572626be5a022c000afd417c72d851b}
+
+
+Renders the asked model. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Path} & to the model \\
+\hline
+{\em \hyperlink{class_shader}{Shader}} & ID \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 69 of file Resource\+Manager.\+cpp.
+
+\index{Resource\+Manager@{Resource\+Manager}!use\+Shader@{use\+Shader}}
+\index{use\+Shader@{use\+Shader}!Resource\+Manager@{Resource\+Manager}}
+\subsubsection[{\texorpdfstring{use\+Shader(std\+::string shader\+Path)}{useShader(std::string shaderPath)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Shader} Resource\+Manager\+::use\+Shader (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{shader\+Path}
+\end{DoxyParamCaption}
+)}\hypertarget{class_resource_manager_a8c5654dad152328ad50a20f130464acf}{}\label{class_resource_manager_a8c5654dad152328ad50a20f130464acf}
+
+
+Returns an instance of the requested shader. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \hyperlink{class_shader}{Shader}} & Name \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{class_shader}{Shader} Instance 
+\end{DoxyReturn}
+
+
+Definition at line 270 of file Resource\+Manager.\+cpp.
+
+\index{Resource\+Manager@{Resource\+Manager}!use\+Texture@{use\+Texture}}
+\index{use\+Texture@{use\+Texture}!Resource\+Manager@{Resource\+Manager}}
+\subsubsection[{\texorpdfstring{use\+Texture(std\+::string tex\+Path)}{useTexture(std::string texPath)}}]{\setlength{\rightskip}{0pt plus 5cm}G\+Luint Resource\+Manager\+::use\+Texture (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{tex\+Path}
+\end{DoxyParamCaption}
+)}\hypertarget{class_resource_manager_a387876b621fafcf12ca31f3c23a35c5a}{}\label{class_resource_manager_a387876b621fafcf12ca31f3c23a35c5a}
+
+
+Returns a \hyperlink{struct_texture}{Texture} ID given a path. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Path} & to the texture \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\hyperlink{struct_texture}{Texture} ID 
+\end{DoxyReturn}
+
+
+Definition at line 147 of file Resource\+Manager.\+cpp.
+
+
+
+\subsection{Field Documentation}
+\index{Resource\+Manager@{Resource\+Manager}!Texture\+Queue@{Texture\+Queue}}
+\index{Texture\+Queue@{Texture\+Queue}!Resource\+Manager@{Resource\+Manager}}
+\subsubsection[{\texorpdfstring{Texture\+Queue}{TextureQueue}}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<$std\+::string$>$ Resource\+Manager\+::\+Texture\+Queue\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_resource_manager_a9e21ce059a8812bb3afe957f75a3120b}{}\label{class_resource_manager_a9e21ce059a8812bb3afe957f75a3120b}
+Temp Variables 
+
+Definition at line 223 of file Resource\+Manager.\+h.
+

@@ -1,0 +1,367 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="_entity_template_8cpp" kind="file" language="C++">
+    <compoundname>EntityTemplate.cpp</compoundname>
+    <includes refid="_entity_template_8h" local="no">EntityTemplate.h</includes>
+    <incdepgraph>
+      <node id="823">
+        <label>D:/Epsilon/Epsilon Engine/src/EntityTemplate.cpp</label>
+        <link refid="EntityTemplate.cpp"/>
+        <childnode refid="824" relation="include">
+        </childnode>
+      </node>
+      <node id="838">
+        <label>SOIL.h</label>
+      </node>
+      <node id="841">
+        <label>Shader.h</label>
+        <link refid="_shader_8h_source"/>
+        <childnode refid="834" relation="include">
+        </childnode>
+        <childnode refid="829" relation="include">
+        </childnode>
+        <childnode refid="826" relation="include">
+        </childnode>
+      </node>
+      <node id="848">
+        <label>Water.h</label>
+        <link refid="_water_8h_source"/>
+        <childnode refid="834" relation="include">
+        </childnode>
+        <childnode refid="827" relation="include">
+        </childnode>
+        <childnode refid="836" relation="include">
+        </childnode>
+        <childnode refid="841" relation="include">
+        </childnode>
+        <childnode refid="837" relation="include">
+        </childnode>
+        <childnode refid="849" relation="include">
+        </childnode>
+        <childnode refid="833" relation="include">
+        </childnode>
+        <childnode refid="843" relation="include">
+        </childnode>
+      </node>
+      <node id="829">
+        <label>string</label>
+      </node>
+      <node id="834">
+        <label>GL/glew.h</label>
+      </node>
+      <node id="824">
+        <label>EntityTemplate.h</label>
+        <link refid="_entity_template_8h_source"/>
+        <childnode refid="825" relation="include">
+        </childnode>
+        <childnode refid="826" relation="include">
+        </childnode>
+        <childnode refid="860" relation="include">
+        </childnode>
+        <childnode refid="843" relation="include">
+        </childnode>
+        <childnode refid="847" relation="include">
+        </childnode>
+      </node>
+      <node id="832">
+        <label>map</label>
+      </node>
+      <node id="850">
+        <label>GLFW/glfw3.h</label>
+      </node>
+      <node id="835">
+        <label>glm/gtc/quaternion.hpp</label>
+      </node>
+      <node id="837">
+        <label>Texture.h</label>
+        <link refid="_texture_8h_source"/>
+        <childnode refid="826" relation="include">
+        </childnode>
+        <childnode refid="829" relation="include">
+        </childnode>
+        <childnode refid="833" relation="include">
+        </childnode>
+        <childnode refid="834" relation="include">
+        </childnode>
+        <childnode refid="838" relation="include">
+        </childnode>
+        <childnode refid="839" relation="include">
+        </childnode>
+      </node>
+      <node id="830">
+        <label>fstream</label>
+      </node>
+      <node id="847">
+        <label>ResourceManager.h</label>
+        <link refid="_resource_manager_8h_source"/>
+        <childnode refid="837" relation="include">
+        </childnode>
+        <childnode refid="828" relation="include">
+        </childnode>
+        <childnode refid="848" relation="include">
+        </childnode>
+        <childnode refid="851" relation="include">
+        </childnode>
+        <childnode refid="852" relation="include">
+        </childnode>
+        <childnode refid="832" relation="include">
+        </childnode>
+        <childnode refid="841" relation="include">
+        </childnode>
+        <childnode refid="853" relation="include">
+        </childnode>
+        <childnode refid="854" relation="include">
+        </childnode>
+      </node>
+      <node id="859">
+        <label>BulletDynamics/Character/btKinematicCharacterController.h</label>
+      </node>
+      <node id="851">
+        <label>Terrain.h</label>
+        <link refid="_terrain_8h_source"/>
+        <childnode refid="833" relation="include">
+        </childnode>
+        <childnode refid="827" relation="include">
+        </childnode>
+        <childnode refid="836" relation="include">
+        </childnode>
+        <childnode refid="841" relation="include">
+        </childnode>
+        <childnode refid="837" relation="include">
+        </childnode>
+      </node>
+      <node id="846">
+        <label>btBulletCollisionCommon.h</label>
+      </node>
+      <node id="853">
+        <label>CubeMap.h</label>
+        <link refid="_cube_map_8h_source"/>
+        <childnode refid="827" relation="include">
+        </childnode>
+        <childnode refid="833" relation="include">
+        </childnode>
+        <childnode refid="829" relation="include">
+        </childnode>
+        <childnode refid="843" relation="include">
+        </childnode>
+        <childnode refid="837" relation="include">
+        </childnode>
+      </node>
+      <node id="842">
+        <label>emlFormat.h</label>
+        <link refid="eml_format_8h_source"/>
+        <childnode refid="829" relation="include">
+        </childnode>
+      </node>
+      <node id="860">
+        <label>typeinfo</label>
+      </node>
+      <node id="852">
+        <label>Grass.h</label>
+        <link refid="_grass_8h_source"/>
+        <childnode refid="834" relation="include">
+        </childnode>
+        <childnode refid="829" relation="include">
+        </childnode>
+        <childnode refid="826" relation="include">
+        </childnode>
+        <childnode refid="827" relation="include">
+        </childnode>
+        <childnode refid="836" relation="include">
+        </childnode>
+        <childnode refid="841" relation="include">
+        </childnode>
+      </node>
+      <node id="855">
+        <label>ctime</label>
+      </node>
+      <node id="833">
+        <label>vector</label>
+      </node>
+      <node id="856">
+        <label>Physics.h</label>
+        <link refid="_physics_8h_source"/>
+        <childnode refid="827" relation="include">
+        </childnode>
+        <childnode refid="857" relation="include">
+        </childnode>
+        <childnode refid="845" relation="include">
+        </childnode>
+        <childnode refid="846" relation="include">
+        </childnode>
+        <childnode refid="858" relation="include">
+        </childnode>
+        <childnode refid="859" relation="include">
+        </childnode>
+      </node>
+      <node id="831">
+        <label>sstream</label>
+      </node>
+      <node id="849">
+        <label>Camera.h</label>
+        <link refid="camera_8h_source"/>
+        <childnode refid="827" relation="include">
+        </childnode>
+        <childnode refid="836" relation="include">
+        </childnode>
+        <childnode refid="835" relation="include">
+        </childnode>
+        <childnode refid="850" relation="include">
+        </childnode>
+        <childnode refid="826" relation="include">
+        </childnode>
+      </node>
+      <node id="844">
+        <label>Types.h</label>
+        <link refid="_types_8h_source"/>
+        <childnode refid="845" relation="include">
+        </childnode>
+        <childnode refid="846" relation="include">
+        </childnode>
+      </node>
+      <node id="857">
+        <label>EpsilonMemory.h</label>
+        <link refid="_epsilon_memory_8h_source"/>
+        <childnode refid="843" relation="include">
+        </childnode>
+      </node>
+      <node id="826">
+        <label>iostream</label>
+      </node>
+      <node id="828">
+        <label>Model.h</label>
+        <link refid="_model_8h_source"/>
+        <childnode refid="829" relation="include">
+        </childnode>
+        <childnode refid="830" relation="include">
+        </childnode>
+        <childnode refid="831" relation="include">
+        </childnode>
+        <childnode refid="826" relation="include">
+        </childnode>
+        <childnode refid="832" relation="include">
+        </childnode>
+        <childnode refid="833" relation="include">
+        </childnode>
+        <childnode refid="834" relation="include">
+        </childnode>
+        <childnode refid="827" relation="include">
+        </childnode>
+        <childnode refid="835" relation="include">
+        </childnode>
+        <childnode refid="836" relation="include">
+        </childnode>
+        <childnode refid="837" relation="include">
+        </childnode>
+        <childnode refid="840" relation="include">
+        </childnode>
+        <childnode refid="844" relation="include">
+        </childnode>
+        <childnode refid="843" relation="include">
+        </childnode>
+        <childnode refid="842" relation="include">
+        </childnode>
+      </node>
+      <node id="836">
+        <label>glm/gtc/matrix_transform.hpp</label>
+      </node>
+      <node id="840">
+        <label>Mesh.h</label>
+        <link refid="_mesh_8h_source"/>
+        <childnode refid="829" relation="include">
+        </childnode>
+        <childnode refid="830" relation="include">
+        </childnode>
+        <childnode refid="831" relation="include">
+        </childnode>
+        <childnode refid="826" relation="include">
+        </childnode>
+        <childnode refid="833" relation="include">
+        </childnode>
+        <childnode refid="834" relation="include">
+        </childnode>
+        <childnode refid="827" relation="include">
+        </childnode>
+        <childnode refid="836" relation="include">
+        </childnode>
+        <childnode refid="841" relation="include">
+        </childnode>
+        <childnode refid="842" relation="include">
+        </childnode>
+        <childnode refid="843" relation="include">
+        </childnode>
+      </node>
+      <node id="854">
+        <label>Includes.h</label>
+        <link refid="_includes_8h_source"/>
+        <childnode refid="826" relation="include">
+        </childnode>
+        <childnode refid="829" relation="include">
+        </childnode>
+        <childnode refid="831" relation="include">
+        </childnode>
+        <childnode refid="855" relation="include">
+        </childnode>
+        <childnode refid="833" relation="include">
+        </childnode>
+        <childnode refid="835" relation="include">
+        </childnode>
+      </node>
+      <node id="845">
+        <label>btBulletDynamicsCommon.h</label>
+      </node>
+      <node id="858">
+        <label>BulletCollision/CollisionDispatch/btGhostObject.h</label>
+      </node>
+      <node id="839">
+        <label>ProgramData.h</label>
+        <link refid="_program_data_8h_source"/>
+      </node>
+      <node id="843">
+        <label>memory</label>
+      </node>
+      <node id="825">
+        <label>Component.h</label>
+        <link refid="_component_8h_source"/>
+        <childnode refid="826" relation="include">
+        </childnode>
+        <childnode refid="827" relation="include">
+        </childnode>
+        <childnode refid="828" relation="include">
+        </childnode>
+        <childnode refid="847" relation="include">
+        </childnode>
+        <childnode refid="843" relation="include">
+        </childnode>
+        <childnode refid="844" relation="include">
+        </childnode>
+        <childnode refid="856" relation="include">
+        </childnode>
+      </node>
+      <node id="827">
+        <label>glm/glm.hpp</label>
+      </node>
+    </incdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#include<sp/>&lt;EntityTemplate.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal">EntityTemplate::EntityTemplate(std::shared_ptr&lt;ResourceManager&gt;<sp/>rm)</highlight></codeline>
+<codeline lineno="4"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="5"><highlight class="normal"><sp/><sp/><sp/><sp/>resourceManager<sp/>=<sp/>rm;</highlight></codeline>
+<codeline lineno="6"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>EntityTemplate::Update()</highlight></codeline>
+<codeline lineno="10"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>ComponentList.size();<sp/>++i)</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ComponentList.at(i)-&gt;Update();</highlight></codeline>
+<codeline lineno="13"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+    </programlisting>
+    <location file="D:/Epsilon/Epsilon Engine/src/EntityTemplate.cpp"/>
+  </compounddef>
+</doxygen>

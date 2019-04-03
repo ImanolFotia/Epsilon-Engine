@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="struct_c_vector3" kind="struct" language="C++" prot="public">
+    <compoundname>CVector3</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_c_vector3_1a06b092361b335f9971323be0ddf759b1" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float CVector3::x</definition>
+        <argsstring></argsstring>
+        <name>x</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="36" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_c_vector3_1a20d0b1099477995b22a4f1407e41a7a1" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float CVector3::y</definition>
+        <argsstring></argsstring>
+        <name>y</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="36" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_c_vector3_1a9dd3ce85f6aaa17ccc67bfe50a089b3a" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float CVector3::z</definition>
+        <argsstring></argsstring>
+        <name>z</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="36" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="35" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="34" bodyend="37"/>
+    <listofallmembers>
+      <member refid="struct_c_vector3_1a06b092361b335f9971323be0ddf759b1" prot="public" virt="non-virtual"><scope>CVector3</scope><name>x</name></member>
+      <member refid="struct_c_vector3_1a20d0b1099477995b22a4f1407e41a7a1" prot="public" virt="non-virtual"><scope>CVector3</scope><name>y</name></member>
+      <member refid="struct_c_vector3_1a9dd3ce85f6aaa17ccc67bfe50a089b3a" prot="public" virt="non-virtual"><scope>CVector3</scope><name>z</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

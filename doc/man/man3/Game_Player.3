@@ -1,0 +1,242 @@
+.TH "Game::Player" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Game::Player \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPlayer\fP (float x, float y, float z, std::shared_ptr< \fBResourceManager\fP > resourceManager)"
+.br
+.RI "\fI(one liner) \fP"
+.ti -1c
+.RI "void \fBsetPosition\fP (glm::vec3 pos)"
+.br
+.RI "\fI(one liner) \fP"
+.ti -1c
+.RI "void \fBsetDirection\fP (glm::vec3 dir)"
+.br
+.RI "\fI(one liner) \fP"
+.ti -1c
+.RI "void \fBsetHealth\fP (unsigned short health)"
+.br
+.RI "\fI(one liner) \fP"
+.ti -1c
+.RI "void \fBsetSpeed\fP (float speed)"
+.br
+.RI "\fISet the player's speed\&. \fP"
+.ti -1c
+.RI "glm::vec3 \fBgetPosition\fP ()"
+.br
+.RI "\fI(one liner) \fP"
+.ti -1c
+.RI "bool \fBisOnGround\fP ()"
+.br
+.RI "\fI\fBPlayer\fP is on the ground\&. \fP"
+.ti -1c
+.RI "void \fBreset\fP ()"
+.br
+.ti -1c
+.RI "bool \fBcanJump\fP ()"
+.br
+.ti -1c
+.RI "void \fBJump\fP ()"
+.br
+.ti -1c
+.RI "void \fBwarp\fP (btVector3)"
+.br
+.ti -1c
+.RI "bool \fBHasObstacle\fP ()"
+.br
+.ti -1c
+.RI "void \fBpreStep\fP ()"
+.br
+.ti -1c
+.RI "void \fBMovement\fP (std::shared_ptr< \fBCamera\fP > cam, float dt)"
+.br
+.ti -1c
+.RI "void \fBCheckforPicking\fP (btVector3, btVector3)"
+.br
+.in -1c
+.SS "Private Member Functions"
+
+.in +1c
+.ti -1c
+.RI "bool \fBpickObject\fP (btVector3, btVector3)"
+.br
+.ti -1c
+.RI "bool \fBmoveObject\fP ()"
+.br
+.ti -1c
+.RI "void \fBdeleteConstraint\fP ()"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "btVector3 \fBm_Position\fP"
+.br
+.ti -1c
+.RI "btVector3 \fBm_Direction\fP"
+.br
+.ti -1c
+.RI "btVector3 \fBm_PrevPosition\fP"
+.br
+.ti -1c
+.RI "btVector3 \fBm_PrevDirection\fP"
+.br
+.ti -1c
+.RI "btVector3 \fBm_Front\fP"
+.br
+.ti -1c
+.RI "btVector3 \fBm_raySource\fP [2]"
+.br
+.ti -1c
+.RI "btVector3 \fBm_rayTarget\fP [2]"
+.br
+.ti -1c
+.RI "btScalar \fBm_rayLambda\fP [2]"
+.br
+.ti -1c
+.RI "btVector3 \fBm_rayNormal\fP [2]"
+.br
+.ti -1c
+.RI "btVector3 \fBm_rayPos\fP [2]"
+.br
+.ti -1c
+.RI "float \fBdistanceToGround\fP"
+.br
+.ti -1c
+.RI "btScalar \fBwalkSpeed\fP"
+.br
+.ti -1c
+.RI "btScalar \fBm_turnAngle\fP"
+.br
+.ti -1c
+.RI "bool \fBhigherthannormal\fP"
+.br
+.ti -1c
+.RI "btScalar \fBm_maxLinearVelocity\fP"
+.br
+.ti -1c
+.RI "btScalar \fBm_walkVelocity\fP"
+.br
+.ti -1c
+.RI "btScalar \fBm_turnVelocity\fP"
+.br
+.ti -1c
+.RI "btVector3 \fBm_rayHit\fP"
+.br
+.ti -1c
+.RI "unsigned short \fBm_Health\fP"
+.br
+.ti -1c
+.RI "float \fBm_Speed\fP"
+.br
+.ti -1c
+.RI "bool \fBm_IsOnGround\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< btRigidBody > \fBm_playerBody\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< btCapsuleShape > \fBm_playerCapsule\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< btMotionState > \fBm_MotionState\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBResourceManager\fP > \fBm_LocalResourceManagerPointer\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBPhysics::CollisionInfo\fP > \fBm_collinfo\fP"
+.br
+.ti -1c
+.RI "btRigidBody * \fBm_pickedBody\fP"
+.br
+.ti -1c
+.RI "btTypedConstraint * \fBm_pickedConstraint\fP"
+.br
+.ti -1c
+.RI "btVector3 \fBm_oldPickingPos\fP"
+.br
+.ti -1c
+.RI "btVector3 \fBm_hitPos\fP"
+.br
+.ti -1c
+.RI "btVector3 \fBrayTo\fP"
+.br
+.ti -1c
+.RI "btVector3 \fBrayFrom\fP"
+.br
+.ti -1c
+.RI "btScalar \fBm_oldPickingDist\fP"
+.br
+.ti -1c
+.RI "bool \fBactive\fP = false"
+.br
+.ti -1c
+.RI "btVector3 \fBpickedbodyangularfactor\fP"
+.br
+.ti -1c
+.RI "int \fBm_savedState\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 14 of file Player\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Game::Player::Player (float x, float y, float z, std::shared_ptr< \fBResourceManager\fP > resourceManager)"
+
+.PP
+(one liner) (documentation goes here) 
+.PP
+Definition at line 20 of file Player\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "glm::vec3 Game::Player::getPosition (void)"
+
+.PP
+(one liner) (documentation goes here) 
+.PP
+Definition at line 99 of file Player\&.cpp\&.
+.SS "bool Game::Player::isOnGround ()"
+
+.PP
+\fBPlayer\fP is on the ground\&. (documentation goes here) 
+.PP
+Definition at line 68 of file Player\&.cpp\&.
+.SS "void Game::Player::setDirection (glm::vec3 dir)"
+
+.PP
+(one liner) (documentation goes here) 
+.PP
+Definition at line 88 of file Player\&.cpp\&.
+.SS "void Game::Player::setHealth (unsigned short health)"
+
+.PP
+(one liner) (documentation goes here) 
+.PP
+Definition at line 83 of file Player\&.cpp\&.
+.SS "void Game::Player::setPosition (glm::vec3 pos)"
+
+.PP
+(one liner) (documentation goes here) 
+.PP
+Definition at line 93 of file Player\&.cpp\&.
+.SS "void Game::Player::setSpeed (float speed)"
+
+.PP
+Set the player's speed\&. (documentation goes here) 
+.PP
+Definition at line 77 of file Player\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

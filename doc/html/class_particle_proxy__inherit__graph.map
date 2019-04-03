@@ -1,0 +1,6 @@
+<map id="ParticleProxy" name="ParticleProxy">
+<area shape="rect" id="node2" href="$class_mist_particle_proxy.html" title="MistParticleProxy" alt="" coords="5,80,131,107"/>
+<area shape="rect" id="node3" href="$class_rain_particle_proxy.html" title="RainParticleProxy" alt="" coords="155,80,282,107"/>
+<area shape="rect" id="node4" href="$class_smoke_particle_proxy.html" title="SmokeParticleProxy" alt="" coords="307,80,448,107"/>
+<area shape="rect" id="node5" href="$class_snow_particle_proxy.html" title="SnowParticleProxy" alt="" coords="473,80,605,107"/>
+</map>

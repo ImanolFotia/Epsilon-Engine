@@ -1,0 +1,99 @@
+\hypertarget{class_c_bitset}{}\section{C\+Bitset Class Reference}
+\label{class_c_bitset}\index{C\+Bitset@{C\+Bitset}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Resize} (int count)\hypertarget{class_c_bitset_a452780d0a5bf716012e7706929885a27}{}\label{class_c_bitset_a452780d0a5bf716012e7706929885a27}
+
+\item 
+void {\bfseries Set} (int i)\hypertarget{class_c_bitset_a217900efa644dd8d739a756d6811e475}{}\label{class_c_bitset_a217900efa644dd8d739a756d6811e475}
+
+\item 
+int {\bfseries On} (int i)\hypertarget{class_c_bitset_a57dfc60d4a180f8166e94bd41612d3f8}{}\label{class_c_bitset_a57dfc60d4a180f8166e94bd41612d3f8}
+
+\item 
+void {\bfseries Clear} (int i)\hypertarget{class_c_bitset_a0278f6027f4bbc3177731ccadb638e2a}{}\label{class_c_bitset_a0278f6027f4bbc3177731ccadb638e2a}
+
+\item 
+void {\bfseries Clear\+All} ()\hypertarget{class_c_bitset_ad1cf97399375c29574079338ce02d7ac}{}\label{class_c_bitset_ad1cf97399375c29574079338ce02d7ac}
+
+\item 
+\hyperlink{class_c_bitset_a20e9448086472dcf6cba08abf8a55f0a}{C\+Bitset} ()\hypertarget{class_c_bitset_a20e9448086472dcf6cba08abf8a55f0a}{}\label{class_c_bitset_a20e9448086472dcf6cba08abf8a55f0a}
+
+\begin{DoxyCompactList}\small\item\em Initialize all the data members. \end{DoxyCompactList}\item 
+\hyperlink{class_c_bitset_a9332c709c4d655959bcdac749db593b4}{$\sim$\+C\+Bitset} ()
+\begin{DoxyCompactList}\small\item\em This is our deconstructor. \end{DoxyCompactList}\item 
+void \hyperlink{class_c_bitset_a452780d0a5bf716012e7706929885a27}{Resize} (int count)
+\begin{DoxyCompactList}\small\item\em This resizes our bitset to a size so each face has a bit associated with it. \end{DoxyCompactList}\item 
+void \hyperlink{class_c_bitset_a217900efa644dd8d739a756d6811e475}{Set} (int i)\hypertarget{class_c_bitset_a217900efa644dd8d739a756d6811e475}{}\label{class_c_bitset_a217900efa644dd8d739a756d6811e475}
+
+\begin{DoxyCompactList}\small\item\em This does the binary math to set the desired bit. \end{DoxyCompactList}\item 
+int \hyperlink{class_c_bitset_a57dfc60d4a180f8166e94bd41612d3f8}{On} (int i)\hypertarget{class_c_bitset_a57dfc60d4a180f8166e94bd41612d3f8}{}\label{class_c_bitset_a57dfc60d4a180f8166e94bd41612d3f8}
+
+\begin{DoxyCompactList}\small\item\em This returns if the desired bit slot is a 1 or a 0. \end{DoxyCompactList}\item 
+void \hyperlink{class_c_bitset_a0278f6027f4bbc3177731ccadb638e2a}{Clear} (int i)\hypertarget{class_c_bitset_a0278f6027f4bbc3177731ccadb638e2a}{}\label{class_c_bitset_a0278f6027f4bbc3177731ccadb638e2a}
+
+\begin{DoxyCompactList}\small\item\em This clears a bit to 0. \end{DoxyCompactList}\item 
+void \hyperlink{class_c_bitset_ad1cf97399375c29574079338ce02d7ac}{Clear\+All} ()\hypertarget{class_c_bitset_ad1cf97399375c29574079338ce02d7ac}{}\label{class_c_bitset_ad1cf97399375c29574079338ce02d7ac}
+
+\begin{DoxyCompactList}\small\item\em This initializes the bits to 0. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+unsigned int $\ast$ \hyperlink{class_c_bitset_ad652e9601865e54acd0d956b1493a535}{m\+\_\+bits}\hypertarget{class_c_bitset_ad652e9601865e54acd0d956b1493a535}{}\label{class_c_bitset_ad652e9601865e54acd0d956b1493a535}
+
+\begin{DoxyCompactList}\small\item\em Our private bit data that holds the bits and size. \end{DoxyCompactList}\item 
+int {\bfseries m\+\_\+size}\hypertarget{class_c_bitset_ab55d8030981a04787e0198a124fa8488}{}\label{class_c_bitset_ab55d8030981a04787e0198a124fa8488}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+========= Copyright Survtech, All rights reserved. ============//
+
+Purpose\+: 
+
+ 
+
+Definition at line 164 of file B\+S\+P.\+h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{C\+Bitset@{C\+Bitset}!````~C\+Bitset@{$\sim$\+C\+Bitset}}
+\index{````~C\+Bitset@{$\sim$\+C\+Bitset}!C\+Bitset@{C\+Bitset}}
+\subsubsection[{\texorpdfstring{$\sim$\+C\+Bitset()}{~CBitset()}}]{\setlength{\rightskip}{0pt plus 5cm}C\+Bitset\+::$\sim$\+C\+Bitset (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_c_bitset_a9332c709c4d655959bcdac749db593b4}{}\label{class_c_bitset_a9332c709c4d655959bcdac749db593b4}
+
+
+This is our deconstructor. 
+
+If we have valid memory, get rid of it 
+
+Definition at line 25 of file C\+Bitset.\+h.
+
+
+
+\subsection{Member Function Documentation}
+\index{C\+Bitset@{C\+Bitset}!Resize@{Resize}}
+\index{Resize@{Resize}!C\+Bitset@{C\+Bitset}}
+\subsubsection[{\texorpdfstring{Resize(int count)}{Resize(int count)}}]{\setlength{\rightskip}{0pt plus 5cm}void C\+Bitset\+::\+Resize (
+\begin{DoxyParamCaption}
+\item[{int}]{count}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_c_bitset_a452780d0a5bf716012e7706929885a27}{}\label{class_c_bitset_a452780d0a5bf716012e7706929885a27}
+
+
+This resizes our bitset to a size so each face has a bit associated with it. 
+
+Get the size of integers we need
+
+Make sure we haven\textquotesingle{}t already allocated memory for the bits
+
+Allocate the bits and initialize them 
+
+Definition at line 36 of file C\+Bitset.\+h.
+

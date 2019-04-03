@@ -1,0 +1,351 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="struct_m_d5_model_1_1_mesh" kind="struct" language="C++" prot="protected">
+    <compoundname>MD5Model::Mesh</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1a09c51a6f89f9c0f34e0f46f6a0a6a6c3" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string MD5Model::Mesh::m_Shader</definition>
+        <argsstring></argsstring>
+        <name>m_Shader</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="76" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1a9e72e3a3508f789eadcdffaa7b4d44a4" prot="public" static="no" mutable="no">
+        <type>VertexList</type>
+        <definition>VertexList MD5Model::Mesh::m_Verts</definition>
+        <argsstring></argsstring>
+        <name>m_Verts</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="78" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1a1914d7849199ce50ea09b087f60cd0a6" prot="public" static="no" mutable="no">
+        <type>TriangleList</type>
+        <definition>TriangleList MD5Model::Mesh::m_Tris</definition>
+        <argsstring></argsstring>
+        <name>m_Tris</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="79" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="79" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1a4bd0de7f52733a4cb9ae142e15671d0c" prot="public" static="no" mutable="no">
+        <type>WeightList</type>
+        <definition>WeightList MD5Model::Mesh::m_Weights</definition>
+        <argsstring></argsstring>
+        <name>m_Weights</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="80" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1a2cef39b010cf113490b01384974d6ad2" prot="public" static="no" mutable="no">
+        <type>glm::mat4</type>
+        <definition>glm::mat4 MD5Model::Mesh::m_BindPoseMatrix</definition>
+        <argsstring></argsstring>
+        <name>m_BindPoseMatrix</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="81" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1a020a2fb9eff2046bacba63f26c0c86be" prot="public" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint MD5Model::Mesh::m_TexID</definition>
+        <argsstring></argsstring>
+        <name>m_TexID</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="84" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="84" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1a04a92eab99efc139f4b01cba108277b5" prot="public" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint MD5Model::Mesh::m_nTexID</definition>
+        <argsstring></argsstring>
+        <name>m_nTexID</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="85" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="85" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1a6bcc28271f038437cbd5b142696e418b" prot="public" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint MD5Model::Mesh::m_sTexID</definition>
+        <argsstring></argsstring>
+        <name>m_sTexID</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="86" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="86" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1aed8cd78066ae55f779ac186481674ff3" prot="public" static="no" mutable="no">
+        <type>PositionBuffer</type>
+        <definition>PositionBuffer MD5Model::Mesh::m_PositionBuffer</definition>
+        <argsstring></argsstring>
+        <name>m_PositionBuffer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="89" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="89" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1aea7fe200e899eca26a7994fbf84720e6" prot="public" static="no" mutable="no">
+        <type>NormalBuffer</type>
+        <definition>NormalBuffer MD5Model::Mesh::m_NormalBuffer</definition>
+        <argsstring></argsstring>
+        <name>m_NormalBuffer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="90" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="90" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1ab82ba38ce73a803ec852471fb0da11bb" prot="public" static="no" mutable="no">
+        <type>TangentBuffer</type>
+        <definition>TangentBuffer MD5Model::Mesh::m_TangentBuffer</definition>
+        <argsstring></argsstring>
+        <name>m_TangentBuffer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="91" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="91" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1aecd28a89bd5535418beb43240f62f866" prot="public" static="no" mutable="no">
+        <type>BinormalBuffer</type>
+        <definition>BinormalBuffer MD5Model::Mesh::m_BinormalBuffer</definition>
+        <argsstring></argsstring>
+        <name>m_BinormalBuffer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="92" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="92" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1a0807b6567068bc0cf33d5c83869a95a9" prot="public" static="no" mutable="no">
+        <type>Tex2DBuffer</type>
+        <definition>Tex2DBuffer MD5Model::Mesh::m_Tex2DBuffer</definition>
+        <argsstring></argsstring>
+        <name>m_Tex2DBuffer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="93" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="93" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1af3d54eebe81467688cd87755fa968712" prot="public" static="no" mutable="no">
+        <type>IndexBuffer</type>
+        <definition>IndexBuffer MD5Model::Mesh::m_IndexBuffer</definition>
+        <argsstring></argsstring>
+        <name>m_IndexBuffer</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="94" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="94" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1a9b337aba6fec9a097454a1d014720edb" prot="public" static="no" mutable="no">
+        <type>WeightBuffer</type>
+        <definition>WeightBuffer MD5Model::Mesh::m_BoneWeights</definition>
+        <argsstring></argsstring>
+        <name>m_BoneWeights</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="95" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="95" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1a7c74ef5129fdd21aee5e48ba0a865a1e" prot="public" static="no" mutable="no">
+        <type>BoneIndexBuffer</type>
+        <definition>BoneIndexBuffer MD5Model::Mesh::m_BoneIndex</definition>
+        <argsstring></argsstring>
+        <name>m_BoneIndex</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="96" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="96" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1a6252b540c7526521bf78ccd25c5628bb" prot="public" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint MD5Model::Mesh::m_VAO</definition>
+        <argsstring></argsstring>
+        <name>m_VAO</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="98" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="98" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1a98aa0ff5ac915420eb95fbb18180077e" prot="public" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint MD5Model::Mesh::m_VBO</definition>
+        <argsstring></argsstring>
+        <name>m_VBO</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="99" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="99" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1adcabe263f86ef10b29abac98c230879c" prot="public" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint MD5Model::Mesh::m_NBO</definition>
+        <argsstring></argsstring>
+        <name>m_NBO</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="100" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="100" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1a2533ac25e8c08252eb92539b5fe2b777" prot="public" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint MD5Model::Mesh::m_TBO</definition>
+        <argsstring></argsstring>
+        <name>m_TBO</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="101" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="101" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1a235863a1864172bb0e9f4d105f60b08b" prot="public" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint MD5Model::Mesh::m_BBO</definition>
+        <argsstring></argsstring>
+        <name>m_BBO</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="102" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="102" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1ab2946e8f6ef57204414c39a9e4a116db" prot="public" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint MD5Model::Mesh::m_WBO</definition>
+        <argsstring></argsstring>
+        <name>m_WBO</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="103" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="103" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1a95b8afff402e6d310a8c967da1d08f12" prot="public" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint MD5Model::Mesh::m_IBBO</definition>
+        <argsstring></argsstring>
+        <name>m_IBBO</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="104" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="104" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_mesh_1ac2fdb4848bfa44fa2b0d1c0636412d82" prot="public" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint MD5Model::Mesh::m_IBO</definition>
+        <argsstring></argsstring>
+        <name>m_IBO</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="105" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="105" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="75" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="74" bodyend="106"/>
+    <listofallmembers>
+      <member refid="struct_m_d5_model_1_1_mesh_1a235863a1864172bb0e9f4d105f60b08b" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_BBO</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1a2cef39b010cf113490b01384974d6ad2" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_BindPoseMatrix</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1aecd28a89bd5535418beb43240f62f866" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_BinormalBuffer</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1a7c74ef5129fdd21aee5e48ba0a865a1e" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_BoneIndex</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1a9b337aba6fec9a097454a1d014720edb" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_BoneWeights</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1a95b8afff402e6d310a8c967da1d08f12" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_IBBO</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1ac2fdb4848bfa44fa2b0d1c0636412d82" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_IBO</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1af3d54eebe81467688cd87755fa968712" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_IndexBuffer</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1adcabe263f86ef10b29abac98c230879c" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_NBO</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1aea7fe200e899eca26a7994fbf84720e6" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_NormalBuffer</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1a04a92eab99efc139f4b01cba108277b5" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_nTexID</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1aed8cd78066ae55f779ac186481674ff3" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_PositionBuffer</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1a09c51a6f89f9c0f34e0f46f6a0a6a6c3" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_Shader</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1a6bcc28271f038437cbd5b142696e418b" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_sTexID</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1ab82ba38ce73a803ec852471fb0da11bb" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_TangentBuffer</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1a2533ac25e8c08252eb92539b5fe2b777" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_TBO</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1a0807b6567068bc0cf33d5c83869a95a9" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_Tex2DBuffer</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1a020a2fb9eff2046bacba63f26c0c86be" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_TexID</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1a1914d7849199ce50ea09b087f60cd0a6" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_Tris</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1a6252b540c7526521bf78ccd25c5628bb" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_VAO</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1a98aa0ff5ac915420eb95fbb18180077e" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_VBO</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1a9e72e3a3508f789eadcdffaa7b4d44a4" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_Verts</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1ab2946e8f6ef57204414c39a9e4a116db" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_WBO</name></member>
+      <member refid="struct_m_d5_model_1_1_mesh_1a4bd0de7f52733a4cb9ae142e15671d0c" prot="public" virt="non-virtual"><scope>MD5Model::Mesh</scope><name>m_Weights</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

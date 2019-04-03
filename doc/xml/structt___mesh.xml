@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="structt___mesh" kind="struct" language="C++" prot="public">
+    <compoundname>t_Mesh</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structt___mesh_1a4a82c6d4286a7df34c4dc28229c402b4" prot="public" static="no" mutable="no">
+        <type>char</type>
+        <definition>char t_Mesh::mMaterial[4][100]</definition>
+        <argsstring>[4][100]</argsstring>
+        <name>mMaterial</name>
+        <initializer>= {{0}}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/emlFormat.h" line="80" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/emlFormat.h" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structt___mesh_1ae51da38315ca5cec3cd5f8ac8a1f072d" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int t_Mesh::mNumVertices</definition>
+        <argsstring></argsstring>
+        <name>mNumVertices</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/emlFormat.h" line="81" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/emlFormat.h" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structt___mesh_1a8134e592c5bbfb7cff8fe3e7ec7712dc" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int t_Mesh::mFirstVertex</definition>
+        <argsstring></argsstring>
+        <name>mFirstVertex</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/emlFormat.h" line="82" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/emlFormat.h" bodystart="82" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structt___mesh_1a77c3917779b385020887bb415d45a8ce" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int t_Mesh::mNumIndices</definition>
+        <argsstring></argsstring>
+        <name>mNumIndices</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/emlFormat.h" line="83" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/emlFormat.h" bodystart="83" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structt___mesh_1ae9b0dd2e167c2f4f558263b32812f2b2" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int t_Mesh::mFirstIndex</definition>
+        <argsstring></argsstring>
+        <name>mFirstIndex</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/emlFormat.h" line="84" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/emlFormat.h" bodystart="84" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/emlFormat.h" line="79" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/emlFormat.h" bodystart="78" bodyend="85"/>
+    <listofallmembers>
+      <member refid="structt___mesh_1ae9b0dd2e167c2f4f558263b32812f2b2" prot="public" virt="non-virtual"><scope>t_Mesh</scope><name>mFirstIndex</name></member>
+      <member refid="structt___mesh_1a8134e592c5bbfb7cff8fe3e7ec7712dc" prot="public" virt="non-virtual"><scope>t_Mesh</scope><name>mFirstVertex</name></member>
+      <member refid="structt___mesh_1a4a82c6d4286a7df34c4dc28229c402b4" prot="public" virt="non-virtual"><scope>t_Mesh</scope><name>mMaterial</name></member>
+      <member refid="structt___mesh_1a77c3917779b385020887bb415d45a8ce" prot="public" virt="non-virtual"><scope>t_Mesh</scope><name>mNumIndices</name></member>
+      <member refid="structt___mesh_1ae51da38315ca5cec3cd5f8ac8a1f072d" prot="public" virt="non-virtual"><scope>t_Mesh</scope><name>mNumVertices</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

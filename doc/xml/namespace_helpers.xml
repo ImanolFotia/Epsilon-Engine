@@ -1,0 +1,176 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="namespace_helpers" kind="namespace" language="C++">
+    <compoundname>Helpers</compoundname>
+    <innerclass refid="class_helpers_1_1_elapsed_time" prot="public">Helpers::ElapsedTime</innerclass>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespace_helpers_1a17d4e5f43ffde45165fd1734903093dd" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::string</type>
+        <definition>static std::string Helpers::intTostring</definition>
+        <argsstring>(int number)</argsstring>
+        <name>intTostring</name>
+        <param>
+          <type>int</type>
+          <declname>number</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Includes.h" line="20" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Includes.h" bodystart="20" bodyend="25"/>
+      </memberdef>
+      <memberdef kind="function" id="namespace_helpers_1a8a359bd6e91550e29701baa0831f13d8" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::string</type>
+        <definition>static std::string Helpers::floatTostring</definition>
+        <argsstring>(float number)</argsstring>
+        <name>floatTostring</name>
+        <param>
+          <type>float</type>
+          <declname>number</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Includes.h" line="28" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Includes.h" bodystart="28" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="function" id="namespace_helpers_1a3ef45f1b25708c5dac83e95fb3ad9526" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>static int Helpers::GetFileLength</definition>
+        <argsstring>(std::istream &amp;file)</argsstring>
+        <name>GetFileLength</name>
+        <param>
+          <type>std::istream &amp;</type>
+          <declname>file</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Includes.h" line="36" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Includes.h" bodystart="36" bodyend="45"/>
+      </memberdef>
+      <memberdef kind="function" id="namespace_helpers_1a0c4250ef1929a210c417a21ad077ec92" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void Helpers::IgnoreLine</definition>
+        <argsstring>(std::istream &amp;file, int length)</argsstring>
+        <name>IgnoreLine</name>
+        <param>
+          <type>std::istream &amp;</type>
+          <declname>file</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>length</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Includes.h" line="47" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Includes.h" bodystart="47" bodyend="50"/>
+      </memberdef>
+      <memberdef kind="function" id="namespace_helpers_1a17751634f225772e9133749707b9dcb2" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void Helpers::RemoveQuotes</definition>
+        <argsstring>(std::string &amp;str)</argsstring>
+        <name>RemoveQuotes</name>
+        <param>
+          <type>std::string &amp;</type>
+          <declname>str</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Includes.h" line="52" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Includes.h" bodystart="52" bodyend="56"/>
+      </memberdef>
+      <memberdef kind="function" id="namespace_helpers_1a2fdcaeee48c2e96fd8cf8dca8b7e2cd9" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>static void Helpers::ComputeQuatW</definition>
+        <argsstring>(glm::quat &amp;quat)</argsstring>
+        <name>ComputeQuatW</name>
+        <param>
+          <type>glm::quat &amp;</type>
+          <declname>quat</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Includes.h" line="60" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Includes.h" bodystart="60" bodyend="71"/>
+      </memberdef>
+      <memberdef kind="function" id="namespace_helpers_1a1b4d31a8da380c85ca8863aebf865abb" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::string</type>
+        <definition>static std::string Helpers::getExtension</definition>
+        <argsstring>(std::string path)</argsstring>
+        <name>getExtension</name>
+        <param>
+          <type>std::string</type>
+          <declname>path</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Includes.h" line="73" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Includes.h" bodystart="73" bodyend="81"/>
+      </memberdef>
+      <memberdef kind="function" id="namespace_helpers_1a1c2c6599fa2aa2c8d6232f7a3f7a8f6a" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::string</type>
+        <definition>static std::string Helpers::removeExtension</definition>
+        <argsstring>(std::string path)</argsstring>
+        <name>removeExtension</name>
+        <param>
+          <type>std::string</type>
+          <declname>path</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Includes.h" line="83" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Includes.h" bodystart="83" bodyend="90"/>
+      </memberdef>
+      <memberdef kind="function" id="namespace_helpers_1a24e5fdb5e80e510e2d0801d27cee7b24" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>static int Helpers::findNearestPointFromSet</definition>
+        <argsstring>(glm::vec3 TestingPoint, std::vector&lt; glm::vec3 &gt; PointSet)</argsstring>
+        <name>findNearestPointFromSet</name>
+        <param>
+          <type>glm::vec3</type>
+          <declname>TestingPoint</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; glm::vec3 &gt;</type>
+          <declname>PointSet</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Includes.h" line="92" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Includes.h" bodystart="92" bodyend="110"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>========= Copyright Survtech, All rights reserved. ============//</para><para>Purpose: <hruler/>
+ </para>    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/Includes.h" line="17" column="1"/>
+  </compounddef>
+</doxygen>

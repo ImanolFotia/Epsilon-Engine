@@ -1,0 +1,185 @@
+\hypertarget{class_camera}{}\section{Camera Class Reference}
+\label{class_camera}\index{Camera@{Camera}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries Camera} (glm\+::vec3, glm\+::vec3)\hypertarget{class_camera_a7ac99ca06250df56ae81414fe54589e2}{}\label{class_camera_a7ac99ca06250df56ae81414fe54589e2}
+
+\item 
+void {\bfseries Update} (G\+L\+F\+Wwindow $\ast$\&)\hypertarget{class_camera_a0d9114c1c4de87842d227d511e045df5}{}\label{class_camera_a0d9114c1c4de87842d227d511e045df5}
+
+\item 
+void {\bfseries Update\+Matrices} (void)\hypertarget{class_camera_acdf18835a138363721f33a6d3bf085b2}{}\label{class_camera_acdf18835a138363721f33a6d3bf085b2}
+
+\item 
+glm\+::mat4 {\bfseries get\+View\+Matrix} (void)\hypertarget{class_camera_a5b68da2e7a27893a7a3a8ac85c5b788f}{}\label{class_camera_a5b68da2e7a27893a7a3a8ac85c5b788f}
+
+\item 
+glm\+::mat4 {\bfseries get\+Prev\+View\+Matrix} (void)\hypertarget{class_camera_a8566bc0b2a61fc6d74995f2dc4ea8017}{}\label{class_camera_a8566bc0b2a61fc6d74995f2dc4ea8017}
+
+\item 
+glm\+::mat4 {\bfseries get\+Projection\+Matrix} (void)\hypertarget{class_camera_a2ebb2fdd189345caa39113fcafcc6d5a}{}\label{class_camera_a2ebb2fdd189345caa39113fcafcc6d5a}
+
+\item 
+glm\+::vec3 {\bfseries get\+Position} (void)\hypertarget{class_camera_a0a32173c1f61b10ced8f674758872403}{}\label{class_camera_a0a32173c1f61b10ced8f674758872403}
+
+\item 
+glm\+::vec3 {\bfseries get\+Direction} (void)\hypertarget{class_camera_a50f87cd85fd230c6b5196e552c4fe45f}{}\label{class_camera_a50f87cd85fd230c6b5196e552c4fe45f}
+
+\item 
+glm\+::vec3 {\bfseries get\+Up} (void)\hypertarget{class_camera_ae3b6ae9df4f8003f7985e683a375899c}{}\label{class_camera_ae3b6ae9df4f8003f7985e683a375899c}
+
+\item 
+glm\+::vec3 {\bfseries get\+Right} (void)\hypertarget{class_camera_aa4797845d8c2179a0ad9d47a32e1abd5}{}\label{class_camera_aa4797845d8c2179a0ad9d47a32e1abd5}
+
+\item 
+void {\bfseries set\+Position} (glm\+::vec3 new\+Position)\hypertarget{class_camera_aac2d0a2bd337c4523d38aefbdaeb8d41}{}\label{class_camera_aac2d0a2bd337c4523d38aefbdaeb8d41}
+
+\item 
+void {\bfseries set\+Direction} (glm\+::vec3 new\+Direction)\hypertarget{class_camera_ae871e4e4e8903f77897fdcb911a3642e}{}\label{class_camera_ae871e4e4e8903f77897fdcb911a3642e}
+
+\item 
+void {\bfseries set\+FoV} (float FoV)\hypertarget{class_camera_ade678831d00089b370b08e71c81f5215}{}\label{class_camera_ade678831d00089b370b08e71c81f5215}
+
+\item 
+float {\bfseries get\+FoV} ()\hypertarget{class_camera_aef7933e312710e4ed87329dbabb15a99}{}\label{class_camera_aef7933e312710e4ed87329dbabb15a99}
+
+\item 
+void {\bfseries set\+Projection} (float F\+OV, float AR, float N\+E\+AR, float F\+AR)\hypertarget{class_camera_a1956749dfc92f5b9c75bcff120e8ab5a}{}\label{class_camera_a1956749dfc92f5b9c75bcff120e8ab5a}
+
+\item 
+void {\bfseries set\+Projection} (glm\+::mat4)\hypertarget{class_camera_aa1606d668b24df804e1e4358040caa7f}{}\label{class_camera_aa1606d668b24df804e1e4358040caa7f}
+
+\item 
+void {\bfseries set\+View\+Matrix} (glm\+::mat4)\hypertarget{class_camera_abb039add28392d053bbc0759afee84f7}{}\label{class_camera_abb039add28392d053bbc0759afee84f7}
+
+\item 
+bool {\bfseries is\+Moving} ()\hypertarget{class_camera_ae5e581022eba09a62f7e8dde90dd17b0}{}\label{class_camera_ae5e581022eba09a62f7e8dde90dd17b0}
+
+\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+glm\+::mat4 {\bfseries M\+VP}\hypertarget{class_camera_acbffeb464f0d15fa92f6780ef1e005d7}{}\label{class_camera_acbffeb464f0d15fa92f6780ef1e005d7}
+
+\item 
+float {\bfseries Movement\+Speed}\hypertarget{class_camera_a63221392d762df6a74f45bc9d43a2f61}{}\label{class_camera_a63221392d762df6a74f45bc9d43a2f61}
+
+\item 
+float {\bfseries Mouse\+Speed}\hypertarget{class_camera_a54fc599f1742077bbc84f623a23112ae}{}\label{class_camera_a54fc599f1742077bbc84f623a23112ae}
+
+\item 
+float {\bfseries Joystick\+Sensibility}\hypertarget{class_camera_af5985750a20cb55024671cf61b8f6c4a}{}\label{class_camera_af5985750a20cb55024671cf61b8f6c4a}
+
+\item 
+float {\bfseries Field\+Of\+View}\hypertarget{class_camera_aa58ac7abca90e0a182493b86f7b1c4d2}{}\label{class_camera_aa58ac7abca90e0a182493b86f7b1c4d2}
+
+\item 
+int {\bfseries winx}\hypertarget{class_camera_acb5a9b01adbd32a00e5d70c4f175c467}{}\label{class_camera_acb5a9b01adbd32a00e5d70c4f175c467}
+
+\item 
+int {\bfseries winy}\hypertarget{class_camera_a94f986f9ed4b4a07f2d9ee857d958b32}{}\label{class_camera_a94f986f9ed4b4a07f2d9ee857d958b32}
+
+\item 
+float {\bfseries Max\+Movement\+Speed}\hypertarget{class_camera_a161269518cec25e3597455472610a311}{}\label{class_camera_a161269518cec25e3597455472610a311}
+
+\item 
+bool {\bfseries m\+Is\+Moving} = false\hypertarget{class_camera_a0138317fb414868490876f0d23ef5ff3}{}\label{class_camera_a0138317fb414868490876f0d23ef5ff3}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Lock\+Camera} (void)\hypertarget{class_camera_abff5b93c71289be007f966060ff9a70d}{}\label{class_camera_abff5b93c71289be007f966060ff9a70d}
+
+\item 
+void \hyperlink{class_camera_a63bf578388a6ea87d2d0a250f91198ab}{Handle\+Inputs} (G\+L\+F\+Wwindow $\ast$\&)
+\item 
+void {\bfseries Get\+External\+Inputs} (void)\hypertarget{class_camera_ae26cc8359a03e57b9f26c149574e920d}{}\label{class_camera_ae26cc8359a03e57b9f26c149574e920d}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+glm\+::vec3 {\bfseries Rigth}\hypertarget{class_camera_a3b7666cf3dbaf02534a2644abaa5be76}{}\label{class_camera_a3b7666cf3dbaf02534a2644abaa5be76}
+
+\item 
+glm\+::vec3 {\bfseries Up}\hypertarget{class_camera_ad74c4a490bc8865e67e27a2036d0a72d}{}\label{class_camera_ad74c4a490bc8865e67e27a2036d0a72d}
+
+\item 
+glm\+::vec3 {\bfseries Frustrum}\hypertarget{class_camera_ae18be48fbe18e69438525168435bc745}{}\label{class_camera_ae18be48fbe18e69438525168435bc745}
+
+\item 
+glm\+::vec3 {\bfseries new\+Orientation}\hypertarget{class_camera_a0781b6d41623d8798e92a25151ff3cd8}{}\label{class_camera_a0781b6d41623d8798e92a25151ff3cd8}
+
+\item 
+glm\+::vec3 {\bfseries new\+Position}\hypertarget{class_camera_ab80cd05699e81ec019e256b2f1c07d3e}{}\label{class_camera_ab80cd05699e81ec019e256b2f1c07d3e}
+
+\item 
+glm\+::mat4 {\bfseries Prev\+View}\hypertarget{class_camera_a2f4f0321841106b34b9faa9a222580bc}{}\label{class_camera_a2f4f0321841106b34b9faa9a222580bc}
+
+\item 
+bool {\bfseries Orientationhas\+Changed}\hypertarget{class_camera_a73bb980786eb9ee9e23ad99ee06c3907}{}\label{class_camera_a73bb980786eb9ee9e23ad99ee06c3907}
+
+\item 
+bool {\bfseries Positionhas\+Changed}\hypertarget{class_camera_acc8ddad12bc8d2d6289df0884cfa9a9e}{}\label{class_camera_acc8ddad12bc8d2d6289df0884cfa9a9e}
+
+\item 
+float {\bfseries vertical\+Angle}\hypertarget{class_camera_a6582a5068d81b8de7a7fc67e5143e628}{}\label{class_camera_a6582a5068d81b8de7a7fc67e5143e628}
+
+\item 
+float {\bfseries horizontal\+Angle}\hypertarget{class_camera_aad9d573147be409e929251eca0bea339}{}\label{class_camera_aad9d573147be409e929251eca0bea339}
+
+\item 
+glm\+::mat4 {\bfseries View\+Matrix}\hypertarget{class_camera_a34f22e4635ee38206e4b9c59095d43bf}{}\label{class_camera_a34f22e4635ee38206e4b9c59095d43bf}
+
+\item 
+glm\+::mat4 {\bfseries Projection\+Matrix}\hypertarget{class_camera_a8f5424b6795715c8a44805d1c3a5b11c}{}\label{class_camera_a8f5424b6795715c8a44805d1c3a5b11c}
+
+\item 
+glm\+::vec3 {\bfseries Position}\hypertarget{class_camera_a9733b59f5340f6f1bca24d52a6679039}{}\label{class_camera_a9733b59f5340f6f1bca24d52a6679039}
+
+\item 
+glm\+::vec3 {\bfseries Orientation}\hypertarget{class_camera_ab998c79a8bcbd71dcaad201f536e36e1}{}\label{class_camera_ab998c79a8bcbd71dcaad201f536e36e1}
+
+\item 
+glm\+::vec3 {\bfseries Last\+Position}\hypertarget{class_camera_a274def711ceb63556a3074da11fb43df}{}\label{class_camera_a274def711ceb63556a3074da11fb43df}
+
+\item 
+glm\+::vec3 {\bfseries Delta\+Vector}\hypertarget{class_camera_a92ea5380dd9962b451e067fe1c3c81dc}{}\label{class_camera_a92ea5380dd9962b451e067fe1c3c81dc}
+
+\item 
+glm\+::vec3 {\bfseries Movement\+Vector}\hypertarget{class_camera_a0d450752f3639989bc813bb077dd9f13}{}\label{class_camera_a0d450752f3639989bc813bb077dd9f13}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+========= Copyright Survtech, All rights reserved. ============//
+
+Purpose\+: 
+
+ 
+
+Definition at line 16 of file camera.\+h.
+
+
+
+\subsection{Member Function Documentation}
+\index{Camera@{Camera}!Handle\+Inputs@{Handle\+Inputs}}
+\index{Handle\+Inputs@{Handle\+Inputs}!Camera@{Camera}}
+\subsubsection[{\texorpdfstring{Handle\+Inputs(\+G\+L\+F\+Wwindow $\ast$\&)}{HandleInputs(GLFWwindow *&)}}]{\setlength{\rightskip}{0pt plus 5cm}void Camera\+::\+Handle\+Inputs (
+\begin{DoxyParamCaption}
+\item[{G\+L\+F\+Wwindow $\ast$\&}]{window}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_camera_a63bf578388a6ea87d2d0a250f91198ab}{}\label{class_camera_a63bf578388a6ea87d2d0a250f91198ab}
+Keyboard \hyperlink{class_camera}{Camera} input 
+
+
+
+Joystick \hyperlink{class_camera}{Camera} input 
+
+
+
+Definition at line 73 of file Camera.\+cpp.
+

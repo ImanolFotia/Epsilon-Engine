@@ -1,0 +1,549 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="_b_s_pformat_8h" kind="file" language="C++">
+    <compoundname>BSPformat.h</compoundname>
+    <includes local="no">iostream</includes>
+    <includes local="no">vector</includes>
+    <includes local="no">string</includes>
+    <includes local="no">GL/glew.h</includes>
+    <includedby refid="_b_s_pfile_8h" local="no">D:/Epsilon/Epsilon Engine/include/BSPfile.h</includedby>
+    <incdepgraph>
+      <node id="55">
+        <label>string</label>
+      </node>
+      <node id="56">
+        <label>GL/glew.h</label>
+      </node>
+      <node id="54">
+        <label>vector</label>
+      </node>
+      <node id="53">
+        <label>iostream</label>
+      </node>
+      <node id="52">
+        <label>D:/Epsilon/Epsilon Engine/include/BSPformat.h</label>
+        <link refid="BSPformat.h"/>
+        <childnode refid="53" relation="include">
+        </childnode>
+        <childnode refid="54" relation="include">
+        </childnode>
+        <childnode refid="55" relation="include">
+        </childnode>
+        <childnode refid="56" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="58">
+        <label>D:/Epsilon/Epsilon Engine/include/BSPfile.h</label>
+        <link refid="_b_s_pfile_8h_source"/>
+      </node>
+      <node id="57">
+        <label>D:/Epsilon/Epsilon Engine/include/BSPformat.h</label>
+        <link refid="BSPformat.h"/>
+        <childnode refid="58" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="structt_vector3i" prot="public">tVector3i</innerclass>
+    <innerclass refid="structt_b_s_p_header" prot="public">tBSPHeader</innerclass>
+    <innerclass refid="structt_b_s_p_lump" prot="public">tBSPLump</innerclass>
+    <innerclass refid="structt_b_s_p_vertex" prot="public">tBSPVertex</innerclass>
+    <innerclass refid="structt_b_s_p_face" prot="public">tBSPFace</innerclass>
+    <innerclass refid="structt_b_s_p_texture" prot="public">tBSPTexture</innerclass>
+    <innerclass refid="structt_b_s_p_lightmap" prot="public">tBSPLightmap</innerclass>
+    <innerclass refid="structt_b_s_p_node" prot="public">tBSPNode</innerclass>
+    <innerclass refid="structt_b_s_p_leaf" prot="public">tBSPLeaf</innerclass>
+    <innerclass refid="structt_b_s_p_plane" prot="public">tBSPPlane</innerclass>
+    <innerclass refid="structt_b_s_p_vis_data" prot="public">tBSPVisData</innerclass>
+    <innerclass refid="structt_b_s_p_brush" prot="public">tBSPBrush</innerclass>
+    <innerclass refid="structt_b_s_p_brush_side" prot="public">tBSPBrushSide</innerclass>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="_b_s_pformat_8h_1afbe42073d50672332c0fae9d5fbe8134" prot="public" static="no">
+        <name>FACE_POLYGON</name>
+        <initializer>1</initializer>
+        <briefdescription>
+<para>This is the number that is associated with a face that is of type &quot;polygon&quot;. </para>        </briefdescription>
+        <detaileddescription>
+<para>========= Copyright Survtech, All rights reserved. ============//</para><para>Purpose: <hruler/>
+ </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSPformat.h" line="18" column="9" bodyfile="D:/Epsilon/Epsilon Engine/include/BSPformat.h" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_b_s_pformat_8h_1a161ed8ab2ad8edc88c65004b9b50e998" prot="public" static="no">
+        <name>TYPE_RAY</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSPformat.h" line="20" column="9" bodyfile="D:/Epsilon/Epsilon Engine/include/BSPformat.h" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_b_s_pformat_8h_1ac080d66d2d9f0eb201a05221f07d08e5" prot="public" static="no">
+        <name>TYPE_SPHERE</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSPformat.h" line="21" column="9" bodyfile="D:/Epsilon/Epsilon Engine/include/BSPformat.h" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_b_s_pformat_8h_1a9552ed64c0fc0fc2380acf36f0d55fbd" prot="public" static="no">
+        <name>TYPE_BOX</name>
+        <initializer>2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSPformat.h" line="22" column="9" bodyfile="D:/Epsilon/Epsilon Engine/include/BSPformat.h" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="enum">
+      <memberdef kind="enum" id="_b_s_pformat_8h_1a1f8053fe6989c08a51030944ff683eff" prot="public" static="no">
+        <name>eLumps</name>
+        <enumvalue id="_b_s_p_8h_1a1f8053fe6989c08a51030944ff683effaa231cb7bf01d4028a27a15c8b653fca7" prot="public">
+          <name>kEntities</name>
+          <initializer>= 0</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_p_8h_1a1f8053fe6989c08a51030944ff683effa939815e059bfccd1bd9a032fe0e8db3f" prot="public">
+          <name>kTextures</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_p_8h_1a1f8053fe6989c08a51030944ff683effa2b56abc91ace0d544b53c67cf377290a" prot="public">
+          <name>kPlanes</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_p_8h_1a1f8053fe6989c08a51030944ff683effa33ed5c97bb083c03e3f035b422877f2b" prot="public">
+          <name>kNodes</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_p_8h_1a1f8053fe6989c08a51030944ff683effabc1452652972ce84c4f2939e00ee9983" prot="public">
+          <name>kLeafs</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_p_8h_1a1f8053fe6989c08a51030944ff683effaa85267ab4fb5a2a719778cc1d587f5a9" prot="public">
+          <name>kLeafFaces</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_p_8h_1a1f8053fe6989c08a51030944ff683effa495fc32da6fefa72ba2e12c7a63ad994" prot="public">
+          <name>kLeafBrushes</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_p_8h_1a1f8053fe6989c08a51030944ff683effad7ca0b7587f486728bc06b1c9e90cc41" prot="public">
+          <name>kModels</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_p_8h_1a1f8053fe6989c08a51030944ff683effa4cc2a123b9057d74719d611768839143" prot="public">
+          <name>kBrushes</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_p_8h_1a1f8053fe6989c08a51030944ff683effafc710b021d112bd811c031945a88a0e4" prot="public">
+          <name>kBrushSides</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_p_8h_1a1f8053fe6989c08a51030944ff683effa9ee6d003e4e19f78b32b1730b97bd112" prot="public">
+          <name>kVertices</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_p_8h_1a1f8053fe6989c08a51030944ff683effa41710d026bda9386212741809d26fc67" prot="public">
+          <name>kIndices</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_p_8h_1a1f8053fe6989c08a51030944ff683effaf6d0a4ad272fd37630f48dd70fd832a1" prot="public">
+          <name>kShaders</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_p_8h_1a1f8053fe6989c08a51030944ff683effaa492aaf902c843e6ba689e3db0d4ba13" prot="public">
+          <name>kFaces</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_p_8h_1a1f8053fe6989c08a51030944ff683effa37eb074996e72ebebb9b79ab461ce9cf" prot="public">
+          <name>kLightmaps</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_p_8h_1a1f8053fe6989c08a51030944ff683effae8caf94ccb8313e0e33983db1624504b" prot="public">
+          <name>kLightVolumes</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_p_8h_1a1f8053fe6989c08a51030944ff683effa00a73573885681f227a493cb1ca4eef8" prot="public">
+          <name>kVisData</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_p_8h_1a1f8053fe6989c08a51030944ff683effabf630d1d7296923d4731ccb573416eef" prot="public">
+          <name>kMaxLumps</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_pformat_8h_1a1f8053fe6989c08a51030944ff683effaa231cb7bf01d4028a27a15c8b653fca7" prot="public">
+          <name>kEntities</name>
+          <initializer>= 0</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_pformat_8h_1a1f8053fe6989c08a51030944ff683effa939815e059bfccd1bd9a032fe0e8db3f" prot="public">
+          <name>kTextures</name>
+          <briefdescription>
+<para>Stores player/object positions, etc... </para>          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_pformat_8h_1a1f8053fe6989c08a51030944ff683effa2b56abc91ace0d544b53c67cf377290a" prot="public">
+          <name>kPlanes</name>
+          <briefdescription>
+<para>Stores texture information. </para>          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_pformat_8h_1a1f8053fe6989c08a51030944ff683effa33ed5c97bb083c03e3f035b422877f2b" prot="public">
+          <name>kNodes</name>
+          <briefdescription>
+<para>Stores the splitting planes. </para>          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_pformat_8h_1a1f8053fe6989c08a51030944ff683effabc1452652972ce84c4f2939e00ee9983" prot="public">
+          <name>kLeafs</name>
+          <briefdescription>
+<para>Stores the BSP nodes. </para>          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_pformat_8h_1a1f8053fe6989c08a51030944ff683effaa85267ab4fb5a2a719778cc1d587f5a9" prot="public">
+          <name>kLeafFaces</name>
+          <briefdescription>
+<para>Stores the leafs of the nodes. </para>          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_pformat_8h_1a1f8053fe6989c08a51030944ff683effa495fc32da6fefa72ba2e12c7a63ad994" prot="public">
+          <name>kLeafBrushes</name>
+          <briefdescription>
+<para>Stores the leaf&apos;s indices into the faces. </para>          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_pformat_8h_1a1f8053fe6989c08a51030944ff683effad7ca0b7587f486728bc06b1c9e90cc41" prot="public">
+          <name>kModels</name>
+          <briefdescription>
+<para>Stores the leaf&apos;s indices into the brushes. </para>          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_pformat_8h_1a1f8053fe6989c08a51030944ff683effa4cc2a123b9057d74719d611768839143" prot="public">
+          <name>kBrushes</name>
+          <briefdescription>
+<para>Stores the info of world models. </para>          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_pformat_8h_1a1f8053fe6989c08a51030944ff683effafc710b021d112bd811c031945a88a0e4" prot="public">
+          <name>kBrushSides</name>
+          <briefdescription>
+<para>Stores the brushes info (for collision) </para>          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_pformat_8h_1a1f8053fe6989c08a51030944ff683effa9ee6d003e4e19f78b32b1730b97bd112" prot="public">
+          <name>kVertices</name>
+          <briefdescription>
+<para>Stores the brush surfaces info. </para>          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_pformat_8h_1a1f8053fe6989c08a51030944ff683effa41710d026bda9386212741809d26fc67" prot="public">
+          <name>kIndices</name>
+          <briefdescription>
+<para>Stores the level vertices. </para>          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_pformat_8h_1a1f8053fe6989c08a51030944ff683effaf6d0a4ad272fd37630f48dd70fd832a1" prot="public">
+          <name>kShaders</name>
+          <briefdescription>
+<para>Stores the level indices. </para>          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_pformat_8h_1a1f8053fe6989c08a51030944ff683effaa492aaf902c843e6ba689e3db0d4ba13" prot="public">
+          <name>kFaces</name>
+          <briefdescription>
+<para>Stores the shader files (blending, anims..) </para>          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_pformat_8h_1a1f8053fe6989c08a51030944ff683effa37eb074996e72ebebb9b79ab461ce9cf" prot="public">
+          <name>kLightmaps</name>
+          <briefdescription>
+<para>Stores the faces for the level. </para>          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_pformat_8h_1a1f8053fe6989c08a51030944ff683effae8caf94ccb8313e0e33983db1624504b" prot="public">
+          <name>kLightVolumes</name>
+          <briefdescription>
+<para>Stores the lightmaps for the level. </para>          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_pformat_8h_1a1f8053fe6989c08a51030944ff683effa00a73573885681f227a493cb1ca4eef8" prot="public">
+          <name>kVisData</name>
+          <briefdescription>
+<para>Stores extra world lighting information. </para>          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_b_s_pformat_8h_1a1f8053fe6989c08a51030944ff683effabf630d1d7296923d4731ccb573416eef" prot="public">
+          <name>kMaxLumps</name>
+          <briefdescription>
+<para>Stores PVS and cluster info (visibility) </para>          </briefdescription>
+          <detaileddescription>
+<para>A constant to store the number of lumps </para>          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+<para>This is our lumps enumeration. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSPformat.h" line="149" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSPformat.h" bodystart="148" bodyend="168"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="var">
+      <memberdef kind="variable" id="_b_s_pformat_8h_1a6729c9b730868ee69b35e39742aa604f" prot="public" static="no" mutable="no">
+        <type>const float</type>
+        <definition>const float kEpsilon</definition>
+        <argsstring></argsstring>
+        <name>kEpsilon</name>
+        <initializer>=  0.03125f</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSPformat.h" line="24" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSPformat.h" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>BSPFORMAT_H_INCLUDED</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BSPFORMAT_H_INCLUDED</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;vector&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;GL/glew.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="preprocessor">#define<sp/>FACE_POLYGON<sp/><sp/><sp/><sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>TYPE_RAY<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="21"><highlight class="preprocessor">#define<sp/>TYPE_SPHERE<sp/><sp/><sp/><sp/><sp/>1<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="22"><highlight class="preprocessor">#define<sp/>TYPE_BOX<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="23"><highlight class="preprocessor"></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>kEpsilon<sp/>=<sp/><sp/>0.03125f;<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structt_vector3i" kindref="compound">tVector3i</ref></highlight></codeline>
+<codeline lineno="28"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>x,<sp/>y,<sp/>z;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="30"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structt_b_s_p_header" kindref="compound">tBSPHeader</ref></highlight></codeline>
+<codeline lineno="35"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>strID[4];<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>version;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="38"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structt_b_s_p_lump" kindref="compound">tBSPLump</ref></highlight></codeline>
+<codeline lineno="43"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>offset;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>length;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="46"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structt_b_s_p_vertex" kindref="compound">tBSPVertex</ref></highlight></codeline>
+<codeline lineno="51"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::vec3<sp/>vPosition;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::vec2<sp/>vTextureCoord;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::vec2<sp/>vLightmapCoord;<sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::vec3<sp/>vNormal;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="56" refid="structt_b_s_p_vertex_1a7a29413c246f1db2a40207b79e9bae03" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>color[4];<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="57"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structt_b_s_p_face" kindref="compound">tBSPFace</ref></highlight></codeline>
+<codeline lineno="62"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>textureID;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>effect;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>type;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>startVertIndex;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>numOfVerts;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>startIndex;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>numOfIndices;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>lightmapID;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>lMapCorner[2];<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>lMapSize[2];<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="73" refid="structt_b_s_p_face_1ae4c3e600f41679982e92e7ec1a04d08f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::vec3<sp/><ref refid="structt_b_s_p_face_1ae4c3e600f41679982e92e7ec1a04d08f" kindref="member">lMapPos</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="74" refid="structt_b_s_p_face_1acdb598e4743f0ef9256bcd8570ce3c04" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::vec3<sp/>lMapVecs[2];<sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="75" refid="structt_b_s_p_face_1a83b331a4870c485a46b47395e1ad5b11" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::vec3<sp/><ref refid="structt_b_s_p_face_1a83b331a4870c485a46b47395e1ad5b11" kindref="member">vNormal</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>size[2];<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="77"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structt_b_s_p_texture" kindref="compound">tBSPTexture</ref></highlight></codeline>
+<codeline lineno="82"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>strName[64];<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>flags;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="85" refid="structt_b_s_p_texture_1a759b56095afda6b996e877a4959c9460" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structt_b_s_p_texture_1a759b56095afda6b996e877a4959c9460" kindref="member">textureType</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="86"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structt_b_s_p_lightmap" kindref="compound">tBSPLightmap</ref></highlight></codeline>
+<codeline lineno="90"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>imageBits[128][128][3];<sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="92"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight></codeline>
+<codeline lineno="95"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structt_b_s_p_node" kindref="compound">tBSPNode</ref></highlight></codeline>
+<codeline lineno="96"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>plane;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>front;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>back;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="100" refid="structt_b_s_p_node_1a409af63ecc6a4b7524e7c3f578bcae58" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::vec3<sp/><ref refid="structt_b_s_p_node_1a409af63ecc6a4b7524e7c3f578bcae58" kindref="member">min</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="101" refid="structt_b_s_p_node_1a883eb4f441271d833d2f8ab8a65559c1" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::vec3<sp/><ref refid="structt_b_s_p_node_1a883eb4f441271d833d2f8ab8a65559c1" kindref="member">max</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="102"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structt_b_s_p_leaf" kindref="compound">tBSPLeaf</ref></highlight></codeline>
+<codeline lineno="106"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>cluster;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>area;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="109" refid="structt_b_s_p_leaf_1af291c3a70d15cf834d0b3e592d652660" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::vec3<sp/><ref refid="structt_b_s_p_leaf_1af291c3a70d15cf834d0b3e592d652660" kindref="member">min</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="110" refid="structt_b_s_p_leaf_1a659a8a62f3d9e8df122df037348cb4a8" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::vec3<sp/><ref refid="structt_b_s_p_leaf_1a659a8a62f3d9e8df122df037348cb4a8" kindref="member">max</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>leafface;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>numOfLeafFaces;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>leafBrush;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>numOfLeafBrushes;<sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="115"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"></highlight></codeline>
+<codeline lineno="118"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structt_b_s_p_plane" kindref="compound">tBSPPlane</ref></highlight></codeline>
+<codeline lineno="119"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="struct_c_vector3" kindref="compound">CVector3</ref><sp/>vNormal;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>d;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="122"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"></highlight></codeline>
+<codeline lineno="125"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structt_b_s_p_vis_data" kindref="compound">tBSPVisData</ref></highlight></codeline>
+<codeline lineno="126"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>numOfClusters;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>bytesPerCluster;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="129" refid="structt_b_s_p_vis_data_1ad76a2a995c6fb529ed85a2d07f145ba2" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/>*<ref refid="structt_b_s_p_vis_data_1ad76a2a995c6fb529ed85a2d07f145ba2" kindref="member">pBitsets</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="130"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"></highlight></codeline>
+<codeline lineno="133" refid="structt_b_s_p_brush" refkind="compound"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structt_b_s_p_brush" kindref="compound">tBSPBrush</ref></highlight></codeline>
+<codeline lineno="134"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>brushSide;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="136" refid="structt_b_s_p_brush_1a3ed7a8bacbf3d015ea51893ec4897e49" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structt_b_s_p_brush_1a3ed7a8bacbf3d015ea51893ec4897e49" kindref="member">numOfBrushSides</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="137" refid="structt_b_s_p_brush_1aa96129f6b9029dc0607ad647e311a8f7" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structt_b_s_p_brush_1aa96129f6b9029dc0607ad647e311a8f7" kindref="member">textureID</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="138"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"></highlight></codeline>
+<codeline lineno="141" refid="structt_b_s_p_brush_side" refkind="compound"><highlight class="keyword">struct<sp/></highlight><highlight class="normal"><ref refid="structt_b_s_p_brush_side" kindref="compound">tBSPBrushSide</ref></highlight></codeline>
+<codeline lineno="142"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>plane;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="144" refid="structt_b_s_p_brush_side_1a105080a44777702221236663fbe0926f" refkind="member"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="structt_b_s_p_brush_side_1a105080a44777702221236663fbe0926f" kindref="member">textureID</ref>;<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="145"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"></highlight></codeline>
+<codeline lineno="148"><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>eLumps</highlight></codeline>
+<codeline lineno="149"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"><sp/><sp/><sp/><sp/>kEntities<sp/>=<sp/>0,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/><sp/><sp/>kTextures,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/>kPlanes,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/>kNodes,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/>kLeafs,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/>kLeafFaces,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/>kLeafBrushes,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/>kModels,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/><sp/><sp/>kBrushes,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/>kBrushSides,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/><sp/><sp/>kVertices,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/>kIndices,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/>kShaders,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/><sp/><sp/>kFaces,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/>kLightmaps,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="165"><highlight class="normal"><sp/><sp/><sp/><sp/>kLightVolumes,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/><sp/><sp/>kVisData,<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="167"><highlight class="normal"><sp/><sp/><sp/><sp/>kMaxLumps<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="168"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"></highlight></codeline>
+<codeline lineno="170"><highlight class="normal"></highlight></codeline>
+<codeline lineno="171"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight></codeline>
+    </programlisting>
+    <location file="D:/Epsilon/Epsilon Engine/include/BSPformat.h"/>
+  </compounddef>
+</doxygen>

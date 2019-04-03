@@ -1,0 +1,397 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="class_light" kind="class" language="C++" prot="public">
+    <compoundname>Light</compoundname>
+    <includes refid="_light_8h" local="no">Light.h</includes>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_light_1a60bb6768b61863328f3b7101014befb0" prot="private" static="no" mutable="no">
+        <type>BYTE</type>
+        <definition>BYTE Light::type</definition>
+        <argsstring></argsstring>
+        <name>type</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="107" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="107" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_light_1a494230a45b5cfa2f9fb54dbd4de3812b" prot="private" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Light::direction</definition>
+        <argsstring></argsstring>
+        <name>direction</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="109" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="109" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_light_1a89bffe071ec6431a21c5b54021fe08d6" prot="private" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Light::position</definition>
+        <argsstring></argsstring>
+        <name>position</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="111" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="111" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_light_1ad06bc0fdc7b567ef9815244e1b8bbc45" prot="private" static="no" mutable="no">
+        <type>DECIMAL</type>
+        <definition>DECIMAL Light::radius</definition>
+        <argsstring></argsstring>
+        <name>radius</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="113" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="113" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_light_1a501fd64a440f6cd81b98ac94518352f1" prot="private" static="no" mutable="no">
+        <type>DECIMAL</type>
+        <definition>DECIMAL Light::quadratic</definition>
+        <argsstring></argsstring>
+        <name>quadratic</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="115" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="115" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_light_1a62b7e7523d94df8642541d37c189a04d" prot="private" static="no" mutable="no">
+        <type>DECIMAL</type>
+        <definition>DECIMAL Light::linear</definition>
+        <argsstring></argsstring>
+        <name>linear</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="117" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="117" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_light_1ac695890d3943ca9bf54fe93bad016dd0" prot="private" static="no" mutable="no">
+        <type>DECIMAL</type>
+        <definition>DECIMAL Light::constant</definition>
+        <argsstring></argsstring>
+        <name>constant</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="119" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="119" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_light_1ae514d277eac4324fee03eef454fe46be" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>Light::Light</definition>
+        <argsstring>(BYTE type, glm::vec3 direction, glm::vec3 position, DECIMAL radius, DECIMAL quadratic, DECIMAL linear, DECIMAL constant)</argsstring>
+        <name>Light</name>
+        <param>
+          <type>BYTE</type>
+          <declname>type</declname>
+        </param>
+        <param>
+          <type>glm::vec3</type>
+          <declname>direction</declname>
+        </param>
+        <param>
+          <type>glm::vec3</type>
+          <declname>position</declname>
+        </param>
+        <param>
+          <type>DECIMAL</type>
+          <declname>radius</declname>
+        </param>
+        <param>
+          <type>DECIMAL</type>
+          <declname>quadratic</declname>
+        </param>
+        <param>
+          <type>DECIMAL</type>
+          <declname>linear</declname>
+        </param>
+        <param>
+          <type>DECIMAL</type>
+          <declname>constant</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="18" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="18" bodyend="27"/>
+      </memberdef>
+      <memberdef kind="function" id="class_light_1abe675054027c4b4a4f3e9a31d330931f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type></type>
+        <definition>virtual Light::~Light</definition>
+        <argsstring>()</argsstring>
+        <name>~Light</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="29" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="29" bodyend="29"/>
+      </memberdef>
+      <memberdef kind="function" id="class_light_1ad0affd49a87b3b719cc7e18064ca6e51" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>BYTE</type>
+        <definition>BYTE Light::getType</definition>
+        <argsstring>()</argsstring>
+        <name>getType</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Getters </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="33" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="33" bodyend="36"/>
+      </memberdef>
+      <memberdef kind="function" id="class_light_1ae10c348537ea57b655960f027731fbf3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Light::getDirection</definition>
+        <argsstring>()</argsstring>
+        <name>getDirection</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="38" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="38" bodyend="41"/>
+      </memberdef>
+      <memberdef kind="function" id="class_light_1a7b29978fecfaaf90586a812c8f9648cd" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 Light::getPosition</definition>
+        <argsstring>()</argsstring>
+        <name>getPosition</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="43" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="43" bodyend="46"/>
+      </memberdef>
+      <memberdef kind="function" id="class_light_1ab9de67a0210070f5516137fba93e0eb7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>DECIMAL</type>
+        <definition>DECIMAL Light::getRadius</definition>
+        <argsstring>()</argsstring>
+        <name>getRadius</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="48" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="48" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="function" id="class_light_1adfef3fb60e79e2b3807e06a109668fe5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>DECIMAL</type>
+        <definition>DECIMAL Light::getQuadratic</definition>
+        <argsstring>()</argsstring>
+        <name>getQuadratic</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="53" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="53" bodyend="56"/>
+      </memberdef>
+      <memberdef kind="function" id="class_light_1a5c6b50d71dd893a5ca9c7be32a191d6e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>DECIMAL</type>
+        <definition>DECIMAL Light::getLinear</definition>
+        <argsstring>()</argsstring>
+        <name>getLinear</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="58" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="58" bodyend="61"/>
+      </memberdef>
+      <memberdef kind="function" id="class_light_1a5279614f0bb5f2a7eb52056c2e6820d6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>DECIMAL</type>
+        <definition>DECIMAL Light::getConstant</definition>
+        <argsstring>()</argsstring>
+        <name>getConstant</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="63" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="63" bodyend="66"/>
+      </memberdef>
+      <memberdef kind="function" id="class_light_1abba7a3cf02bc097fcb8950e00c113aa8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Light::setType</definition>
+        <argsstring>(BYTE newType)</argsstring>
+        <name>setType</name>
+        <param>
+          <type>BYTE</type>
+          <declname>newType</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Setters </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="70" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="70" bodyend="73"/>
+      </memberdef>
+      <memberdef kind="function" id="class_light_1a4eee07bdeb9540bf63f45546ffd6be1f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Light::setDirection</definition>
+        <argsstring>(glm::vec3 newDirection)</argsstring>
+        <name>setDirection</name>
+        <param>
+          <type>glm::vec3</type>
+          <declname>newDirection</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="75" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="75" bodyend="78"/>
+      </memberdef>
+      <memberdef kind="function" id="class_light_1ad35b48df38330b35a4ee1f8dd462acea" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Light::setPosition</definition>
+        <argsstring>(glm::vec3 newPosition)</argsstring>
+        <name>setPosition</name>
+        <param>
+          <type>glm::vec3</type>
+          <declname>newPosition</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="80" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="80" bodyend="83"/>
+      </memberdef>
+      <memberdef kind="function" id="class_light_1a9e619a7dfd13b45558a8a3648de0bb7b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Light::setRadius</definition>
+        <argsstring>(DECIMAL newRadius)</argsstring>
+        <name>setRadius</name>
+        <param>
+          <type>DECIMAL</type>
+          <declname>newRadius</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="85" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="85" bodyend="88"/>
+      </memberdef>
+      <memberdef kind="function" id="class_light_1a7c3ee77c9ba567cf19e409cf20cd908b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Light::setQuadratic</definition>
+        <argsstring>(DECIMAL newQuadratic)</argsstring>
+        <name>setQuadratic</name>
+        <param>
+          <type>DECIMAL</type>
+          <declname>newQuadratic</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="90" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="90" bodyend="93"/>
+      </memberdef>
+      <memberdef kind="function" id="class_light_1af3adf9b0474335ede08a3b00fe3d3030" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Light::setLinear</definition>
+        <argsstring>(DECIMAL newLinear)</argsstring>
+        <name>setLinear</name>
+        <param>
+          <type>DECIMAL</type>
+          <declname>newLinear</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="95" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="95" bodyend="98"/>
+      </memberdef>
+      <memberdef kind="function" id="class_light_1a55f05a78f1508c95fa493db2003f4545" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void Light::setConstant</definition>
+        <argsstring>(DECIMAL newConstant)</argsstring>
+        <name>setConstant</name>
+        <param>
+          <type>DECIMAL</type>
+          <declname>newConstant</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="100" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="100" bodyend="103"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>========= Copyright Survtech, All rights reserved. ============//</para><para>Purpose: <hruler/>
+ </para>    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/Light.h" line="15" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Light.h" bodystart="15" bodyend="122"/>
+    <listofallmembers>
+      <member refid="class_light_1ac695890d3943ca9bf54fe93bad016dd0" prot="private" virt="non-virtual"><scope>Light</scope><name>constant</name></member>
+      <member refid="class_light_1a494230a45b5cfa2f9fb54dbd4de3812b" prot="private" virt="non-virtual"><scope>Light</scope><name>direction</name></member>
+      <member refid="class_light_1a5279614f0bb5f2a7eb52056c2e6820d6" prot="public" virt="non-virtual"><scope>Light</scope><name>getConstant</name></member>
+      <member refid="class_light_1ae10c348537ea57b655960f027731fbf3" prot="public" virt="non-virtual"><scope>Light</scope><name>getDirection</name></member>
+      <member refid="class_light_1a5c6b50d71dd893a5ca9c7be32a191d6e" prot="public" virt="non-virtual"><scope>Light</scope><name>getLinear</name></member>
+      <member refid="class_light_1a7b29978fecfaaf90586a812c8f9648cd" prot="public" virt="non-virtual"><scope>Light</scope><name>getPosition</name></member>
+      <member refid="class_light_1adfef3fb60e79e2b3807e06a109668fe5" prot="public" virt="non-virtual"><scope>Light</scope><name>getQuadratic</name></member>
+      <member refid="class_light_1ab9de67a0210070f5516137fba93e0eb7" prot="public" virt="non-virtual"><scope>Light</scope><name>getRadius</name></member>
+      <member refid="class_light_1ad0affd49a87b3b719cc7e18064ca6e51" prot="public" virt="non-virtual"><scope>Light</scope><name>getType</name></member>
+      <member refid="class_light_1ae514d277eac4324fee03eef454fe46be" prot="public" virt="non-virtual"><scope>Light</scope><name>Light</name></member>
+      <member refid="class_light_1a62b7e7523d94df8642541d37c189a04d" prot="private" virt="non-virtual"><scope>Light</scope><name>linear</name></member>
+      <member refid="class_light_1a89bffe071ec6431a21c5b54021fe08d6" prot="private" virt="non-virtual"><scope>Light</scope><name>position</name></member>
+      <member refid="class_light_1a501fd64a440f6cd81b98ac94518352f1" prot="private" virt="non-virtual"><scope>Light</scope><name>quadratic</name></member>
+      <member refid="class_light_1ad06bc0fdc7b567ef9815244e1b8bbc45" prot="private" virt="non-virtual"><scope>Light</scope><name>radius</name></member>
+      <member refid="class_light_1a55f05a78f1508c95fa493db2003f4545" prot="public" virt="non-virtual"><scope>Light</scope><name>setConstant</name></member>
+      <member refid="class_light_1a4eee07bdeb9540bf63f45546ffd6be1f" prot="public" virt="non-virtual"><scope>Light</scope><name>setDirection</name></member>
+      <member refid="class_light_1af3adf9b0474335ede08a3b00fe3d3030" prot="public" virt="non-virtual"><scope>Light</scope><name>setLinear</name></member>
+      <member refid="class_light_1ad35b48df38330b35a4ee1f8dd462acea" prot="public" virt="non-virtual"><scope>Light</scope><name>setPosition</name></member>
+      <member refid="class_light_1a7c3ee77c9ba567cf19e409cf20cd908b" prot="public" virt="non-virtual"><scope>Light</scope><name>setQuadratic</name></member>
+      <member refid="class_light_1a9e619a7dfd13b45558a8a3648de0bb7b" prot="public" virt="non-virtual"><scope>Light</scope><name>setRadius</name></member>
+      <member refid="class_light_1abba7a3cf02bc097fcb8950e00c113aa8" prot="public" virt="non-virtual"><scope>Light</scope><name>setType</name></member>
+      <member refid="class_light_1a60bb6768b61863328f3b7101014befb0" prot="private" virt="non-virtual"><scope>Light</scope><name>type</name></member>
+      <member refid="class_light_1abe675054027c4b4a4f3e9a31d330931f" prot="public" virt="virtual"><scope>Light</scope><name>~Light</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

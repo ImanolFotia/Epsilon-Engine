@@ -1,0 +1,38 @@
+.TH "ParticleSystem" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ParticleSystem \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBaddNewSystem\fP (\fBMINMAX_POINTS\fP, PARTICLE_PROXY, unsigned int)"
+.br
+.ti -1c
+.RI "void \fBUpdateParticleSystem\fP ()"
+.br
+.ti -1c
+.RI "void \fBRender\fP ()"
+.br
+.ti -1c
+.RI "void \fBSimulate\fP (float, glm::vec3)"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "std::vector< std::shared_ptr< \fBParticleProxy\fP > > \fBm_ParticleProxyContainer\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 9 of file ParticleSystem\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

@@ -1,0 +1,10 @@
+<map id="MD5Animation" name="MD5Animation">
+<area shape="rect" id="node2" href="$struct_m_d5_animation_1_1_frame_skeleton.html" title="MD5Animation::FrameSkeleton" alt="" coords="639,56,841,83"/>
+<area shape="rect" id="node4" href="$struct_m_d5_animation_1_1_skeleton_joint.html" title="MD5Animation::SkeletonJoint" alt="" coords="5,28,199,55"/>
+<area shape="rect" id="node7" href="$struct_m_d5_animation_1_1_bound.html" title="MD5Animation::Bound" alt="" coords="664,137,816,164"/>
+<area shape="rect" id="node10" href="$struct_m_d5_animation_1_1_frame_data.html" title="MD5Animation::FrameData" alt="" coords="651,239,829,265"/>
+<area shape="rect" id="node12" title="STL class. " alt="" coords="356,307,436,333"/>
+<area shape="rect" id="node17" href="$struct_m_d5_animation_1_1_joint_info.html" title="MD5Animation::JointInfo" alt="" coords="659,340,821,367"/>
+<area shape="rect" id="node13" title="STL class. " alt="" coords="39,299,165,341"/>
+<area shape="rect" id="node15" href="$struct_m_d5_animation_1_1_base_frame.html" title="MD5Animation::BaseFrame" alt="" coords="649,391,831,417"/>
+</map>

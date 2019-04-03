@@ -1,0 +1,161 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="class_c_p_u_i_d" kind="class" language="C++" prot="public">
+    <compoundname>CPUID</compoundname>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_c_p_u_i_d_1a3f833ee5ea4135a5604c563d25aaa7e2" prot="private" static="no" mutable="no">
+        <type>uint32_t</type>
+        <definition>uint32_t CPUID::regs[4]</definition>
+        <argsstring>[4]</argsstring>
+        <name>regs</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CPUID.h" line="11" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CPUID.h" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_c_p_u_i_d_1a18c6241f3f65fce5f97d0cf89e75f367" prot="public" static="no" const="no" explicit="yes" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>CPUID::CPUID</definition>
+        <argsstring>(unsigned i)</argsstring>
+        <name>CPUID</name>
+        <param>
+          <type>unsigned</type>
+          <declname>i</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CPUID.h" line="14" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CPUID.h" bodystart="14" bodyend="27"/>
+      </memberdef>
+      <memberdef kind="function" id="class_c_p_u_i_d_1aa6601284e70a0916d9c469480966cbd7" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const uint32_t &amp;</type>
+        <definition>const uint32_t&amp; CPUID::EAX</definition>
+        <argsstring>() const </argsstring>
+        <name>EAX</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CPUID.h" line="29" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CPUID.h" bodystart="29" bodyend="32"/>
+      </memberdef>
+      <memberdef kind="function" id="class_c_p_u_i_d_1a00be36d9d083febb307c3ae6e38feac7" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const uint32_t &amp;</type>
+        <definition>const uint32_t&amp; CPUID::EBX</definition>
+        <argsstring>() const </argsstring>
+        <name>EBX</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CPUID.h" line="33" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CPUID.h" bodystart="33" bodyend="36"/>
+      </memberdef>
+      <memberdef kind="function" id="class_c_p_u_i_d_1a33f163100a8f91ad81cbe56e2bd506d0" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const uint32_t &amp;</type>
+        <definition>const uint32_t&amp; CPUID::ECX</definition>
+        <argsstring>() const </argsstring>
+        <name>ECX</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CPUID.h" line="37" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CPUID.h" bodystart="37" bodyend="40"/>
+      </memberdef>
+      <memberdef kind="function" id="class_c_p_u_i_d_1ab17d7f6f0a18ff5e5e8ecf1a22e25d89" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <type>const uint32_t &amp;</type>
+        <definition>const uint32_t&amp; CPUID::EDX</definition>
+        <argsstring>() const </argsstring>
+        <name>EDX</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CPUID.h" line="41" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CPUID.h" bodystart="41" bodyend="44"/>
+      </memberdef>
+      <memberdef kind="function" id="class_c_p_u_i_d_1ad9b9499f6e31a04536ee1242868faa17" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::string</type>
+        <definition>std::string CPUID::getCPUVendor</definition>
+        <argsstring>()</argsstring>
+        <name>getCPUVendor</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CPUID.h" line="46" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CPUID.h" bodystart="46" bodyend="54"/>
+      </memberdef>
+      <memberdef kind="function" id="class_c_p_u_i_d_1af31074460d6eae80a9920b58cbb19853" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool CPUID::getEndianes</definition>
+        <argsstring>()</argsstring>
+        <name>getEndianes</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CPUID.h" line="56" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CPUID.h" bodystart="56" bodyend="60"/>
+      </memberdef>
+      <memberdef kind="function" id="class_c_p_u_i_d_1a4785c8f6b530e3b4b0fbe042dcc91140" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>unsigned</type>
+        <definition>unsigned CPUID::getNumberOfThreads</definition>
+        <argsstring>()</argsstring>
+        <name>getNumberOfThreads</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CPUID.h" line="62" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CPUID.h" bodystart="62" bodyend="67"/>
+      </memberdef>
+      <memberdef kind="function" id="class_c_p_u_i_d_1ab1fa95dd39b3e393ac82099fe6354c5c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void CPUID::printHardwareInformation</definition>
+        <argsstring>()</argsstring>
+        <name>printHardwareInformation</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/CPUID.h" line="69" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CPUID.h" bodystart="69" bodyend="74"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/CPUID.h" line="10" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/CPUID.h" bodystart="9" bodyend="75"/>
+    <listofallmembers>
+      <member refid="class_c_p_u_i_d_1a18c6241f3f65fce5f97d0cf89e75f367" prot="public" virt="non-virtual"><scope>CPUID</scope><name>CPUID</name></member>
+      <member refid="class_c_p_u_i_d_1aa6601284e70a0916d9c469480966cbd7" prot="public" virt="non-virtual"><scope>CPUID</scope><name>EAX</name></member>
+      <member refid="class_c_p_u_i_d_1a00be36d9d083febb307c3ae6e38feac7" prot="public" virt="non-virtual"><scope>CPUID</scope><name>EBX</name></member>
+      <member refid="class_c_p_u_i_d_1a33f163100a8f91ad81cbe56e2bd506d0" prot="public" virt="non-virtual"><scope>CPUID</scope><name>ECX</name></member>
+      <member refid="class_c_p_u_i_d_1ab17d7f6f0a18ff5e5e8ecf1a22e25d89" prot="public" virt="non-virtual"><scope>CPUID</scope><name>EDX</name></member>
+      <member refid="class_c_p_u_i_d_1ad9b9499f6e31a04536ee1242868faa17" prot="public" virt="non-virtual"><scope>CPUID</scope><name>getCPUVendor</name></member>
+      <member refid="class_c_p_u_i_d_1af31074460d6eae80a9920b58cbb19853" prot="public" virt="non-virtual"><scope>CPUID</scope><name>getEndianes</name></member>
+      <member refid="class_c_p_u_i_d_1a4785c8f6b530e3b4b0fbe042dcc91140" prot="public" virt="non-virtual"><scope>CPUID</scope><name>getNumberOfThreads</name></member>
+      <member refid="class_c_p_u_i_d_1ab1fa95dd39b3e393ac82099fe6354c5c" prot="public" virt="non-virtual"><scope>CPUID</scope><name>printHardwareInformation</name></member>
+      <member refid="class_c_p_u_i_d_1a3f833ee5ea4135a5604c563d25aaa7e2" prot="private" virt="non-virtual"><scope>CPUID</scope><name>regs</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

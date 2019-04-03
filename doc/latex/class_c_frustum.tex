@@ -1,0 +1,141 @@
+\hypertarget{class_c_frustum}{}\section{C\+Frustum Class Reference}
+\label{class_c_frustum}\index{C\+Frustum@{C\+Frustum}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{class_c_frustum_a9c1738062b94376ab2b754bfd6b4c363}{Calculate\+Frustum} (glm\+::mat4 Projection\+Matrix, glm\+::mat4 Model\+Matrix)
+\item 
+bool \hyperlink{class_c_frustum_aff4dd14b8d2528621030756d21e37d7f}{Point\+In\+Frustum} (float x, float y, float z)
+\item 
+bool \hyperlink{class_c_frustum_af05ef901019c29f46d145c6ebe6ea62c}{Sphere\+In\+Frustum} (float x, float y, float z, float radius)
+\item 
+bool \hyperlink{class_c_frustum_a02d4b3e95c33f9f83fc4104a3f5363e5}{Cube\+In\+Frustum} (float x, float y, float z, float size)
+\item 
+bool \hyperlink{class_c_frustum_a06155e722ef85cce62f65d8667cf41fb}{Box\+In\+Frustum} (float x, float y, float z, float sizeX, float sizeY, float sizeZ)
+\item 
+bool \hyperlink{class_c_frustum_a34e0f4eee50fa86ab4dfbdb2b1a78264}{Box\+In\+Frustum} (\hyperlink{struct_m_i_n___m_a_x___p_o_i_n_t_s}{M\+I\+N\+\_\+\+M\+A\+X\+\_\+\+P\+O\+I\+N\+TS} points)
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+float {\bfseries m\+\_\+\+Frustum} \mbox{[}6\mbox{]}\mbox{[}4\mbox{]} = \{\{1\}, \{1\}\}\hypertarget{class_c_frustum_a2673b79facea7c41014cc9afdd7af138}{}\label{class_c_frustum_a2673b79facea7c41014cc9afdd7af138}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 7 of file Frustum.\+h.
+
+
+
+\subsection{Member Function Documentation}
+\index{C\+Frustum@{C\+Frustum}!Box\+In\+Frustum@{Box\+In\+Frustum}}
+\index{Box\+In\+Frustum@{Box\+In\+Frustum}!C\+Frustum@{C\+Frustum}}
+\subsubsection[{\texorpdfstring{Box\+In\+Frustum(float x, float y, float z, float size\+X, float size\+Y, float size\+Z)}{BoxInFrustum(float x, float y, float z, float sizeX, float sizeY, float sizeZ)}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Frustum\+::\+Box\+In\+Frustum (
+\begin{DoxyParamCaption}
+\item[{float}]{x, }
+\item[{float}]{y, }
+\item[{float}]{z, }
+\item[{float}]{sizeX, }
+\item[{float}]{sizeY, }
+\item[{float}]{sizeZ}
+\end{DoxyParamCaption}
+)}\hypertarget{class_c_frustum_a06155e722ef85cce62f65d8667cf41fb}{}\label{class_c_frustum_a06155e722ef85cce62f65d8667cf41fb}
+Go through all of the corners of the box and check then again each plane in the frustum. If all of them are behind one of the planes, then it most like is not in the frustum.
+
+If we get here, it isn\textquotesingle{}t in the frustum 
+
+Definition at line 282 of file Frustum.\+cpp.
+
+\index{C\+Frustum@{C\+Frustum}!Box\+In\+Frustum@{Box\+In\+Frustum}}
+\index{Box\+In\+Frustum@{Box\+In\+Frustum}!C\+Frustum@{C\+Frustum}}
+\subsubsection[{\texorpdfstring{Box\+In\+Frustum(\+M\+I\+N\+\_\+\+M\+A\+X\+\_\+\+P\+O\+I\+N\+T\+S points)}{BoxInFrustum(MIN_MAX_POINTS points)}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Frustum\+::\+Box\+In\+Frustum (
+\begin{DoxyParamCaption}
+\item[{{\bf M\+I\+N\+\_\+\+M\+A\+X\+\_\+\+P\+O\+I\+N\+TS}}]{points}
+\end{DoxyParamCaption}
+)}\hypertarget{class_c_frustum_a34e0f4eee50fa86ab4dfbdb2b1a78264}{}\label{class_c_frustum_a34e0f4eee50fa86ab4dfbdb2b1a78264}
+Go through all of the corners of the box and check then again each plane in the frustum. If all of them are behind one of the planes, then it most like is not in the frustum.
+
+If we get here, it isn\textquotesingle{}t in the frustum 
+
+Definition at line 306 of file Frustum.\+cpp.
+
+\index{C\+Frustum@{C\+Frustum}!Calculate\+Frustum@{Calculate\+Frustum}}
+\index{Calculate\+Frustum@{Calculate\+Frustum}!C\+Frustum@{C\+Frustum}}
+\subsubsection[{\texorpdfstring{Calculate\+Frustum(glm\+::mat4 Projection\+Matrix, glm\+::mat4 Model\+Matrix)}{CalculateFrustum(glm::mat4 ProjectionMatrix, glm::mat4 ModelMatrix)}}]{\setlength{\rightskip}{0pt plus 5cm}void C\+Frustum\+::\+Calculate\+Frustum (
+\begin{DoxyParamCaption}
+\item[{glm\+::mat4}]{Projection\+Matrix, }
+\item[{glm\+::mat4}]{Model\+Matrix}
+\end{DoxyParamCaption}
+)}\hypertarget{class_c_frustum_a9c1738062b94376ab2b754bfd6b4c363}{}\label{class_c_frustum_a9c1738062b94376ab2b754bfd6b4c363}
+Normalize the B\+O\+T\+T\+OM side
+
+This will extract the T\+OP side of the frustum
+
+Normalize the T\+OP side
+
+This will extract the B\+A\+CK side of the frustum
+
+Normalize the B\+A\+CK side
+
+Normalize the F\+R\+O\+NT side 
+
+Definition at line 67 of file Frustum.\+cpp.
+
+\index{C\+Frustum@{C\+Frustum}!Cube\+In\+Frustum@{Cube\+In\+Frustum}}
+\index{Cube\+In\+Frustum@{Cube\+In\+Frustum}!C\+Frustum@{C\+Frustum}}
+\subsubsection[{\texorpdfstring{Cube\+In\+Frustum(float x, float y, float z, float size)}{CubeInFrustum(float x, float y, float z, float size)}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Frustum\+::\+Cube\+In\+Frustum (
+\begin{DoxyParamCaption}
+\item[{float}]{x, }
+\item[{float}]{y, }
+\item[{float}]{z, }
+\item[{float}]{size}
+\end{DoxyParamCaption}
+)}\hypertarget{class_c_frustum_a02d4b3e95c33f9f83fc4104a3f5363e5}{}\label{class_c_frustum_a02d4b3e95c33f9f83fc4104a3f5363e5}
+Basically, what is going on is, that we are given the center of the cube, and half the length. Think of it like a radius. Then we checking each point in the cube and seeing if it is inside the frustum. If a point is found in front of a side, then we skip to the next side. If we get to a plane that does N\+OT have a point in front of it, then it will return false.
+
+{\itshape Note} -\/ This will sometimes say that a cube is inside the frustum when it isn\textquotesingle{}t. This happens when all the corners of the bounding box are not behind any one plane. This is rare and shouldn\textquotesingle{}t effect the overall rendering speed.
+
+If we get here, it isn\textquotesingle{}t in the frustum 
+
+Definition at line 236 of file Frustum.\+cpp.
+
+\index{C\+Frustum@{C\+Frustum}!Point\+In\+Frustum@{Point\+In\+Frustum}}
+\index{Point\+In\+Frustum@{Point\+In\+Frustum}!C\+Frustum@{C\+Frustum}}
+\subsubsection[{\texorpdfstring{Point\+In\+Frustum(float x, float y, float z)}{PointInFrustum(float x, float y, float z)}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Frustum\+::\+Point\+In\+Frustum (
+\begin{DoxyParamCaption}
+\item[{float}]{x, }
+\item[{float}]{y, }
+\item[{float}]{z}
+\end{DoxyParamCaption}
+)}\hypertarget{class_c_frustum_aff4dd14b8d2528621030756d21e37d7f}{}\label{class_c_frustum_aff4dd14b8d2528621030756d21e37d7f}
+The code below will allow us to make checks within the frustum. For example, if we want to see if a point, a sphere, or a cube lies inside of the frustum. Because all of our planes point I\+N\+W\+A\+R\+DS (The normals are all pointing inside the frustum) we then can assume that if a point is in F\+R\+O\+NT of all of the planes, it\textquotesingle{}s inside. Go through all the sides of the frustum
+
+Calculate the plane equation and check if the point is behind a side of the frustum
+
+The point was behind a side, so it I\+SN\textquotesingle{}T in the frustum
+
+The point was inside of the frustum (In front of A\+LL the sides of the frustum) 
+
+Definition at line 189 of file Frustum.\+cpp.
+
+\index{C\+Frustum@{C\+Frustum}!Sphere\+In\+Frustum@{Sphere\+In\+Frustum}}
+\index{Sphere\+In\+Frustum@{Sphere\+In\+Frustum}!C\+Frustum@{C\+Frustum}}
+\subsubsection[{\texorpdfstring{Sphere\+In\+Frustum(float x, float y, float z, float radius)}{SphereInFrustum(float x, float y, float z, float radius)}}]{\setlength{\rightskip}{0pt plus 5cm}bool C\+Frustum\+::\+Sphere\+In\+Frustum (
+\begin{DoxyParamCaption}
+\item[{float}]{x, }
+\item[{float}]{y, }
+\item[{float}]{z, }
+\item[{float}]{radius}
+\end{DoxyParamCaption}
+)}\hypertarget{class_c_frustum_af05ef901019c29f46d145c6ebe6ea62c}{}\label{class_c_frustum_af05ef901019c29f46d145c6ebe6ea62c}
+Go through all the sides of the frustum
+
+If the center of the sphere is farther away from the plane than the radius
+
+The distance was greater than the radius so the sphere is outside of the frustum 
+
+Definition at line 213 of file Frustum.\+cpp.
+

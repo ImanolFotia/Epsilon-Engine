@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="struct_m_d5_animation_1_1_bound" kind="struct" language="C++" prot="public">
+    <compoundname>MD5Animation::Bound</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_m_d5_animation_1_1_bound_1ac336feaf8013f6da93cd776c0e2ebd16" prot="public" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 MD5Animation::Bound::m_Min</definition>
+        <argsstring></argsstring>
+        <name>m_Min</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" line="36" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_animation_1_1_bound_1a9beb9b46e65c5314646761b4a0fec54e" prot="public" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 MD5Animation::Bound::m_Max</definition>
+        <argsstring></argsstring>
+        <name>m_Max</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" line="37" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" line="35" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" bodystart="34" bodyend="38"/>
+    <listofallmembers>
+      <member refid="struct_m_d5_animation_1_1_bound_1a9beb9b46e65c5314646761b4a0fec54e" prot="public" virt="non-virtual"><scope>MD5Animation::Bound</scope><name>m_Max</name></member>
+      <member refid="struct_m_d5_animation_1_1_bound_1ac336feaf8013f6da93cd776c0e2ebd16" prot="public" virt="non-virtual"><scope>MD5Animation::Bound</scope><name>m_Min</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

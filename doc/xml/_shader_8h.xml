@@ -1,0 +1,254 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="_shader_8h" kind="file" language="C++">
+    <compoundname>Shader.h</compoundname>
+    <includes local="no">GL/glew.h</includes>
+    <includes local="no">string</includes>
+    <includes local="no">iostream</includes>
+    <includedby refid="main_8cpp" local="no">D:/Epsilon/Epsilon Engine/src/main.cpp</includedby>
+    <includedby refid="_shader_8cpp" local="no">D:/Epsilon/Epsilon Engine/src/Shader.cpp</includedby>
+    <includedby refid="_epsilon_8h" local="no">D:/Epsilon/Epsilon Engine/include/Epsilon.h</includedby>
+    <includedby refid="_grass_8h" local="no">D:/Epsilon/Epsilon Engine/include/Grass.h</includedby>
+    <includedby refid="_mesh_8h" local="no">D:/Epsilon/Epsilon Engine/include/Mesh.h</includedby>
+    <includedby refid="_post_process_8h" local="no">D:/Epsilon/Epsilon Engine/include/PostProcess.h</includedby>
+    <includedby refid="_resource_manager_8h" local="no">D:/Epsilon/Epsilon Engine/include/ResourceManager.h</includedby>
+    <includedby refid="_scene_8h" local="no">D:/Epsilon/Epsilon Engine/include/Scene.h</includedby>
+    <includedby refid="_shadow_mapping_8h" local="no">D:/Epsilon/Epsilon Engine/include/ShadowMapping.h</includedby>
+    <includedby refid="_skybox_8h" local="no">D:/Epsilon/Epsilon Engine/include/Skybox.h</includedby>
+    <includedby refid="_sun_8h" local="no">D:/Epsilon/Epsilon Engine/include/Sun.h</includedby>
+    <includedby refid="_terrain_8h" local="no">D:/Epsilon/Epsilon Engine/include/Terrain.h</includedby>
+    <includedby refid="_text_8h" local="no">D:/Epsilon/Epsilon Engine/include/Text.h</includedby>
+    <includedby refid="_water_8h" local="no">D:/Epsilon/Epsilon Engine/include/Water.h</includedby>
+    <incdepgraph>
+      <node id="610">
+        <label>D:/Epsilon/Epsilon Engine/include/Shader.h</label>
+        <link refid="Shader.h"/>
+        <childnode refid="611" relation="include">
+        </childnode>
+        <childnode refid="612" relation="include">
+        </childnode>
+        <childnode refid="613" relation="include">
+        </childnode>
+      </node>
+      <node id="612">
+        <label>string</label>
+      </node>
+      <node id="611">
+        <label>GL/glew.h</label>
+      </node>
+      <node id="613">
+        <label>iostream</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="628">
+        <label>D:/Epsilon/Epsilon Engine/include/ShadowMapping.h</label>
+        <link refid="_shadow_mapping_8h_source"/>
+        <childnode refid="615" relation="include">
+        </childnode>
+        <childnode refid="627" relation="include">
+        </childnode>
+        <childnode refid="621" relation="include">
+        </childnode>
+      </node>
+      <node id="614">
+        <label>D:/Epsilon/Epsilon Engine/include/Shader.h</label>
+        <link refid="Shader.h"/>
+        <childnode refid="615" relation="include">
+        </childnode>
+        <childnode refid="617" relation="include">
+        </childnode>
+        <childnode refid="622" relation="include">
+        </childnode>
+        <childnode refid="627" relation="include">
+        </childnode>
+        <childnode refid="618" relation="include">
+        </childnode>
+        <childnode refid="621" relation="include">
+        </childnode>
+        <childnode refid="628" relation="include">
+        </childnode>
+        <childnode refid="626" relation="include">
+        </childnode>
+        <childnode refid="629" relation="include">
+        </childnode>
+        <childnode refid="630" relation="include">
+        </childnode>
+        <childnode refid="631" relation="include">
+        </childnode>
+        <childnode refid="632" relation="include">
+        </childnode>
+      </node>
+      <node id="632">
+        <label>D:/Epsilon/Epsilon Engine/include/Water.h</label>
+        <link refid="_water_8h_source"/>
+        <childnode refid="615" relation="include">
+        </childnode>
+        <childnode refid="618" relation="include">
+        </childnode>
+      </node>
+      <node id="621">
+        <label>D:/Epsilon/Epsilon Engine/include/Scene.h</label>
+        <link refid="_scene_8h_source"/>
+        <childnode refid="615" relation="include">
+        </childnode>
+      </node>
+      <node id="624">
+        <label>D:/Epsilon/Epsilon Engine/include/Frustum.h</label>
+        <link refid="_frustum_8h_source"/>
+        <childnode refid="625" relation="include">
+        </childnode>
+        <childnode refid="621" relation="include">
+        </childnode>
+      </node>
+      <node id="620">
+        <label>D:/Epsilon/Epsilon Engine/include/EntityTemplate.h</label>
+        <link refid="_entity_template_8h_source"/>
+        <childnode refid="615" relation="include">
+        </childnode>
+        <childnode refid="621" relation="include">
+        </childnode>
+      </node>
+      <node id="615">
+        <label>D:/Epsilon/Epsilon Engine/include/Epsilon.h</label>
+        <link refid="_epsilon_8h_source"/>
+        <childnode refid="616" relation="include">
+        </childnode>
+      </node>
+      <node id="618">
+        <label>D:/Epsilon/Epsilon Engine/include/ResourceManager.h</label>
+        <link refid="_resource_manager_8h_source"/>
+        <childnode refid="619" relation="include">
+        </childnode>
+        <childnode refid="620" relation="include">
+        </childnode>
+        <childnode refid="615" relation="include">
+        </childnode>
+        <childnode refid="621" relation="include">
+        </childnode>
+      </node>
+      <node id="630">
+        <label>D:/Epsilon/Epsilon Engine/include/Terrain.h</label>
+        <link refid="_terrain_8h_source"/>
+        <childnode refid="615" relation="include">
+        </childnode>
+        <childnode refid="618" relation="include">
+        </childnode>
+      </node>
+      <node id="629">
+        <label>D:/Epsilon/Epsilon Engine/include/Sun.h</label>
+        <link refid="_sun_8h_source"/>
+        <childnode refid="615" relation="include">
+        </childnode>
+        <childnode refid="621" relation="include">
+        </childnode>
+      </node>
+      <node id="617">
+        <label>D:/Epsilon/Epsilon Engine/include/Grass.h</label>
+        <link refid="_grass_8h_source"/>
+        <childnode refid="615" relation="include">
+        </childnode>
+        <childnode refid="618" relation="include">
+        </childnode>
+      </node>
+      <node id="626">
+        <label>D:/Epsilon/Epsilon Engine/include/Skybox.h</label>
+        <link refid="_skybox_8h_source"/>
+        <childnode refid="615" relation="include">
+        </childnode>
+        <childnode refid="621" relation="include">
+        </childnode>
+      </node>
+      <node id="625">
+        <label>D:/Epsilon/Epsilon Engine/include/BSP.h</label>
+        <link refid="_b_s_p_8h_source"/>
+        <childnode refid="615" relation="include">
+        </childnode>
+        <childnode refid="621" relation="include">
+        </childnode>
+      </node>
+      <node id="623">
+        <label>D:/Epsilon/Epsilon Engine/include/Model.h</label>
+        <link refid="_model_8h_source"/>
+        <childnode refid="624" relation="include">
+        </childnode>
+        <childnode refid="619" relation="include">
+        </childnode>
+        <childnode refid="615" relation="include">
+        </childnode>
+        <childnode refid="618" relation="include">
+        </childnode>
+        <childnode refid="626" relation="include">
+        </childnode>
+      </node>
+      <node id="627">
+        <label>D:/Epsilon/Epsilon Engine/include/PostProcess.h</label>
+        <link refid="_post_process_8h_source"/>
+        <childnode refid="615" relation="include">
+        </childnode>
+        <childnode refid="621" relation="include">
+        </childnode>
+      </node>
+      <node id="622">
+        <label>D:/Epsilon/Epsilon Engine/include/Mesh.h</label>
+        <link refid="_mesh_8h_source"/>
+        <childnode refid="623" relation="include">
+        </childnode>
+      </node>
+      <node id="631">
+        <label>D:/Epsilon/Epsilon Engine/include/Text.h</label>
+        <link refid="_text_8h_source"/>
+        <childnode refid="615" relation="include">
+        </childnode>
+      </node>
+      <node id="616">
+        <label>D:/Epsilon/Epsilon Engine/include/main.h</label>
+        <link refid="main_8h_source"/>
+      </node>
+      <node id="619">
+        <label>D:/Epsilon/Epsilon Engine/include/Component.h</label>
+        <link refid="_component_8h_source"/>
+        <childnode refid="620" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="class_shader" prot="public">Shader</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>SHADER_H_INCLUDED</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>SHADER_H_INCLUDED</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;GL/glew.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14" refid="class_shader" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="class_shader" kindref="compound">Shader</ref>{</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><ref refid="class_shader_1a06826fa137fa32fde05c3aca7605c6aa" kindref="member">Shader</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*);</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/>~<ref refid="class_shader" kindref="compound">Shader</ref>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">){</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Use(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">){glUseProgram(this-&gt;ProgramID);}</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Free(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">){glUseProgram(0);}</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/>GLuint<sp/>getProgramID(){</highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>this-&gt;ProgramID;}</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/>getPath(){</highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>this-&gt;Path;}</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/>GLuint<sp/>ProgramID;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/>Path;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight></codeline>
+    </programlisting>
+    <location file="D:/Epsilon/Epsilon Engine/include/Shader.h"/>
+  </compounddef>
+</doxygen>

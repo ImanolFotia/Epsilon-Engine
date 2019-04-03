@@ -1,0 +1,666 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="_types_8h" kind="file" language="C++">
+    <compoundname>Types.h</compoundname>
+    <includes local="no">btBulletDynamicsCommon.h</includes>
+    <includes local="no">btBulletCollisionCommon.h</includes>
+    <includedby refid="_epsilon_8cpp" local="no">D:/Epsilon/Epsilon Engine/src/Epsilon.cpp</includedby>
+    <includedby refid="_component_8h" local="no">D:/Epsilon/Epsilon Engine/include/Component.h</includedby>
+    <includedby refid="_light_8h" local="no">D:/Epsilon/Epsilon Engine/include/Light.h</includedby>
+    <includedby refid="_model_8h" local="no">D:/Epsilon/Epsilon Engine/include/Model.h</includedby>
+    <includedby refid="_shadow_mapping_8h" local="no">D:/Epsilon/Epsilon Engine/include/ShadowMapping.h</includedby>
+    <incdepgraph>
+      <node id="747">
+        <label>btBulletCollisionCommon.h</label>
+      </node>
+      <node id="745">
+        <label>D:/Epsilon/Epsilon Engine/include/Types.h</label>
+        <link refid="Types.h"/>
+        <childnode refid="746" relation="include">
+        </childnode>
+        <childnode refid="747" relation="include">
+        </childnode>
+      </node>
+      <node id="746">
+        <label>btBulletDynamicsCommon.h</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="760">
+        <label>D:/Epsilon/Epsilon Engine/include/ShadowMapping.h</label>
+        <link refid="_shadow_mapping_8h_source"/>
+        <childnode refid="751" relation="include">
+        </childnode>
+        <childnode refid="761" relation="include">
+        </childnode>
+        <childnode refid="753" relation="include">
+        </childnode>
+      </node>
+      <node id="753">
+        <label>D:/Epsilon/Epsilon Engine/include/Scene.h</label>
+        <link refid="_scene_8h_source"/>
+        <childnode refid="751" relation="include">
+        </childnode>
+      </node>
+      <node id="756">
+        <label>D:/Epsilon/Epsilon Engine/include/Frustum.h</label>
+        <link refid="_frustum_8h_source"/>
+        <childnode refid="757" relation="include">
+        </childnode>
+        <childnode refid="753" relation="include">
+        </childnode>
+      </node>
+      <node id="750">
+        <label>D:/Epsilon/Epsilon Engine/include/EntityTemplate.h</label>
+        <link refid="_entity_template_8h_source"/>
+        <childnode refid="751" relation="include">
+        </childnode>
+        <childnode refid="753" relation="include">
+        </childnode>
+      </node>
+      <node id="751">
+        <label>D:/Epsilon/Epsilon Engine/include/Epsilon.h</label>
+        <link refid="_epsilon_8h_source"/>
+        <childnode refid="752" relation="include">
+        </childnode>
+      </node>
+      <node id="758">
+        <label>D:/Epsilon/Epsilon Engine/include/ResourceManager.h</label>
+        <link refid="_resource_manager_8h_source"/>
+        <childnode refid="749" relation="include">
+        </childnode>
+        <childnode refid="750" relation="include">
+        </childnode>
+        <childnode refid="751" relation="include">
+        </childnode>
+        <childnode refid="753" relation="include">
+        </childnode>
+      </node>
+      <node id="759">
+        <label>D:/Epsilon/Epsilon Engine/include/Skybox.h</label>
+        <link refid="_skybox_8h_source"/>
+        <childnode refid="751" relation="include">
+        </childnode>
+        <childnode refid="753" relation="include">
+        </childnode>
+      </node>
+      <node id="757">
+        <label>D:/Epsilon/Epsilon Engine/include/BSP.h</label>
+        <link refid="_b_s_p_8h_source"/>
+        <childnode refid="751" relation="include">
+        </childnode>
+        <childnode refid="753" relation="include">
+        </childnode>
+      </node>
+      <node id="748">
+        <label>D:/Epsilon/Epsilon Engine/include/Types.h</label>
+        <link refid="Types.h"/>
+        <childnode refid="749" relation="include">
+        </childnode>
+        <childnode refid="754" relation="include">
+        </childnode>
+        <childnode refid="755" relation="include">
+        </childnode>
+        <childnode refid="760" relation="include">
+        </childnode>
+      </node>
+      <node id="755">
+        <label>D:/Epsilon/Epsilon Engine/include/Model.h</label>
+        <link refid="_model_8h_source"/>
+        <childnode refid="756" relation="include">
+        </childnode>
+        <childnode refid="749" relation="include">
+        </childnode>
+        <childnode refid="751" relation="include">
+        </childnode>
+        <childnode refid="758" relation="include">
+        </childnode>
+        <childnode refid="759" relation="include">
+        </childnode>
+      </node>
+      <node id="761">
+        <label>D:/Epsilon/Epsilon Engine/include/PostProcess.h</label>
+        <link refid="_post_process_8h_source"/>
+        <childnode refid="751" relation="include">
+        </childnode>
+        <childnode refid="753" relation="include">
+        </childnode>
+      </node>
+      <node id="752">
+        <label>D:/Epsilon/Epsilon Engine/include/main.h</label>
+        <link refid="main_8h_source"/>
+      </node>
+      <node id="754">
+        <label>D:/Epsilon/Epsilon Engine/include/Light.h</label>
+        <link refid="_light_8h_source"/>
+        <childnode refid="753" relation="include">
+        </childnode>
+      </node>
+      <node id="749">
+        <label>D:/Epsilon/Epsilon Engine/include/Component.h</label>
+        <link refid="_component_8h_source"/>
+        <childnode refid="750" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innernamespace refid="namespace_component">Component</innernamespace>
+      <sectiondef kind="define">
+      <memberdef kind="define" id="_types_8h_1a5f88e5325cc61fccace90f7306506ec0" prot="public" static="no">
+        <name>DEFAULT_FRAMEBUFFER</name>
+        <initializer>0x00000000</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>========= Copyright Survtech, All rights reserved. ============//</para><para>Purpose: <hruler/>
+ </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="14" column="13" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_types_8h_1a94f98367c377882b5e4503d8de842195" prot="public" static="no">
+        <name>LIGHT_DIRECTIONAL</name>
+        <initializer>0x00000001</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><ref refid="class_light" kindref="compound">Light</ref> types </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="18" column="13" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_types_8h_1a207e435765f232dbd56b500d1c9de085" prot="public" static="no">
+        <name>LIGHT_DIRECTIONAL_SHADOWS</name>
+        <initializer>0x00000010</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="19" column="13" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_types_8h_1a0aec8cb8d07edf5b235fe7fb94082b43" prot="public" static="no">
+        <name>LIGHT_POINT</name>
+        <initializer>0x00000011</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="20" column="13" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_types_8h_1a94738624edf00d768ca2f333bd46231b" prot="public" static="no">
+        <name>LIGHT_POINT_SHADOWS</name>
+        <initializer>0x00000100</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="21" column="13" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_types_8h_1a1c790daf3b526e02e0a7d5ad079f6a2e" prot="public" static="no">
+        <name>ENTITY_GRASS</name>
+        <initializer>0x00000101</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Entity types </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="25" column="13" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_types_8h_1a4f0e2a5197147c5a0dc54d6ed169711c" prot="public" static="no">
+        <name>ENTITY_LIGHT</name>
+        <initializer>0x00000110</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="26" column="13" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_types_8h_1a6c79b3447c413452afab33168d922045" prot="public" static="no">
+        <name>ENTITY_LADDER</name>
+        <initializer>0x00000111</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="27" column="13" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_types_8h_1a7423f5af37a319fc8b205d6b87c84b06" prot="public" static="no">
+        <name>ENTITY_FOG</name>
+        <initializer>0x00001000</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="28" column="13" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_types_8h_1a7aebbb02ea9710ea6749f6a2a839f35b" prot="public" static="no">
+        <name>ENTITY_SUN</name>
+        <initializer>0x00001001</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="29" column="13" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_types_8h_1a0c865215fc2dd1375f3ea77a2a16bab7" prot="public" static="no">
+        <name>ENTITY_RAIN</name>
+        <initializer>0x00001010</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="30" column="13" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_types_8h_1af9c80140686703cc0e734bc0ee45258b" prot="public" static="no">
+        <name>ENTITY_WEAPON</name>
+        <initializer>0x00001011</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="31" column="13" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_types_8h_1a6bbe797cc61a66a5e748dd685b938fb4" prot="public" static="no">
+        <name>EPSILON_PAUSE</name>
+        <initializer>0x10000000</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Engine States </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="34" column="13" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_types_8h_1a6a5da4cdf61af206e39b6775de1a58d5" prot="public" static="no">
+        <name>EPSILON_RUNNING</name>
+        <initializer>0x10000001</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="35" column="13" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="_types_8h_1a391a7473e83d73537f41451261043883" prot="public" static="no">
+        <name>EPSILON_MENU</name>
+        <initializer>0x10000010</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="36" column="13" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="enum">
+      <memberdef kind="enum" id="_types_8h_1a21ff452533e86444dde239bdc47b840b" prot="public" static="no">
+        <name>PHYSIC_SHAPE</name>
+        <enumvalue id="_types_8h_1a21ff452533e86444dde239bdc47b840baec70473d04ca2f371c2a6d00bd92669a" prot="public">
+          <name>PHYSICS_BOX_SHAPE</name>
+          <initializer>= BOX_SHAPE_PROXYTYPE</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_types_8h_1a21ff452533e86444dde239bdc47b840ba7b15abb4a97dffd82e6d35e7ad1699a9" prot="public">
+          <name>PHYSICS_SPHERE_SHAPE</name>
+          <initializer>= SPHERE_SHAPE_PROXYTYPE</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_types_8h_1a21ff452533e86444dde239bdc47b840bac463cdea4ac56a310fdfafe5a5efa592" prot="public">
+          <name>PHYSICS_CONE_SHAPE</name>
+          <initializer>= CONE_SHAPE_PROXYTYPE</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_types_8h_1a21ff452533e86444dde239bdc47b840ba48b216aadb8762c19a033b786045cb7a" prot="public">
+          <name>PHYSICS_CYLINDER_SHAPE</name>
+          <initializer>= CYLINDER_SHAPE_PROXYTYPE</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_types_8h_1a21ff452533e86444dde239bdc47b840baac0bd891d986fe4c7e95069820456fa4" prot="public">
+          <name>PHYSICS_TRIANGLEMESH_SHAPE</name>
+          <initializer>= TRIANGLE_MESH_SHAPE_PROXYTYPE</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="50" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="49" bodyend="56"/>
+      </memberdef>
+      <memberdef kind="enum" id="_types_8h_1a04534293e3157cccde859fe44b3acfef" prot="public" static="no">
+        <name>MODEL_TYPE</name>
+        <enumvalue id="_types_8h_1a04534293e3157cccde859fe44b3acfefa59a64fc14bea25b76ef0a701bc0797aa" prot="public">
+          <name>DYNAMIC_MODEL</name>
+          <initializer>= 0</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_types_8h_1a04534293e3157cccde859fe44b3acfefac3fae0e65cf2557f11de1e3121ced3b6" prot="public">
+          <name>STATIC_MODEL</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Enums </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="61" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="60" bodyend="64"/>
+      </memberdef>
+      <memberdef kind="enum" id="_types_8h_1a2a909c356bb44e5f2490e8ab9d6dedb2" prot="public" static="no">
+        <name>SHADER_TYPE</name>
+        <enumvalue id="_types_8h_1a2a909c356bb44e5f2490e8ab9d6dedb2ab8447f50ff8bc8492c58578b07d38a8a" prot="public">
+          <name>FORWARD_RENDERING_SHADER</name>
+          <initializer>= 0</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_types_8h_1a2a909c356bb44e5f2490e8ab9d6dedb2aa6aeb77a2f0080be5a59e29e1f4f2f11" prot="public">
+          <name>LIGHTNING_PASS_SHADER</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_types_8h_1a2a909c356bb44e5f2490e8ab9d6dedb2afa7ae4c7886477b5de1858ff5e7a038e" prot="public">
+          <name>SSAO_SHADER</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_types_8h_1a2a909c356bb44e5f2490e8ab9d6dedb2aa125f7a51166142c06affd971694c7ec" prot="public">
+          <name>GAUSSIAN_BLUR_SHADER</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_types_8h_1a2a909c356bb44e5f2490e8ab9d6dedb2a2e1f14b8fbdb96520e3f1114e5a9f871" prot="public">
+          <name>ANIMATION_SKINING_SHADER</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_types_8h_1a2a909c356bb44e5f2490e8ab9d6dedb2a8eb75b4d90e50f78649f7d95c0c9ef85" prot="public">
+          <name>SHADOW_MAPPING_SHADER</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_types_8h_1a2a909c356bb44e5f2490e8ab9d6dedb2a1f1fe622775a705a704fbf5aab6d9d1a" prot="public">
+          <name>ANIMATION_SKINING_SHADOW_MAPPING_SHADER</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_types_8h_1a2a909c356bb44e5f2490e8ab9d6dedb2a810ac9254db9a9ded16b242e3b83f268" prot="public">
+          <name>SUN_SHADER</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_types_8h_1a2a909c356bb44e5f2490e8ab9d6dedb2a9b5ce3bd7778ef2504feed1a2735aeaa" prot="public">
+          <name>SKYBOX_SHADER</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="_types_8h_1a2a909c356bb44e5f2490e8ab9d6dedb2aa50c3ab5bfef8fb6ae09873670dfd38d" prot="public">
+          <name>GEOMETRY_PASS_SHADER</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="67" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="66" bodyend="78"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="_types_8h_1a4f4bb67531a9bf6f0b9c6ad76aeba587" prot="public" static="no">
+        <type>unsigned char</type>
+        <definition>typedef unsigned char UCHAR</definition>
+        <argsstring></argsstring>
+        <name>UCHAR</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Datatypes </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="40" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="_types_8h_1a4ae1dab0fb4b072a66584546209e7d58" prot="public" static="no">
+        <type>unsigned char</type>
+        <definition>typedef unsigned char BYTE</definition>
+        <argsstring></argsstring>
+        <name>BYTE</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="41" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="_types_8h_1a392e62da233ed3e2f7c3fd4f487a3896" prot="public" static="no">
+        <type>int</type>
+        <definition>typedef int INT</definition>
+        <argsstring></argsstring>
+        <name>INT</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="42" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="_types_8h_1ab21fb4d319316048f5eece99fb8ac361" prot="public" static="no">
+        <type>int</type>
+        <definition>typedef int INTEGER</definition>
+        <argsstring></argsstring>
+        <name>INTEGER</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="43" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="_types_8h_1a36cb3b01d81ffd844bbbfb54003e06ec" prot="public" static="no">
+        <type>unsigned int</type>
+        <definition>typedef unsigned int UINT</definition>
+        <argsstring></argsstring>
+        <name>UINT</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="44" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="_types_8h_1a435584c0acc174a0bdd8628f66a08da6" prot="public" static="no">
+        <type>float</type>
+        <definition>typedef float DECIMAL</definition>
+        <argsstring></argsstring>
+        <name>DECIMAL</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="45" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="_types_8h_1a9909bd3cf05f0906045f2ee85be4eeac" prot="public" static="no">
+        <type>short</type>
+        <definition>typedef short SHORT</definition>
+        <argsstring></argsstring>
+        <name>SHORT</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="46" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="_types_8h_1a5850d5316caf7f4cedd742fdf8cd7c02" prot="public" static="no">
+        <type>unsigned short</type>
+        <definition>typedef unsigned short USHORT</definition>
+        <argsstring></argsstring>
+        <name>USHORT</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Types.h" line="47" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Types.h" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>TYPES_H_INCLUDED</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>TYPES_H_INCLUDED</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;btBulletDynamicsCommon.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;btBulletCollisionCommon.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/><sp/><sp/><sp/><sp/>DEFAULT_FRAMEBUFFER<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x00000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="preprocessor">#define<sp/><sp/><sp/><sp/><sp/>LIGHT_DIRECTIONAL<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x00000001</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/><sp/><sp/><sp/><sp/>LIGHT_DIRECTIONAL_SHADOWS<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x00000010</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/><sp/><sp/><sp/><sp/>LIGHT_POINT<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x00000011</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/><sp/><sp/><sp/><sp/>LIGHT_POINT_SHADOWS<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x00000100</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="preprocessor">#define<sp/><sp/><sp/><sp/><sp/>ENTITY_GRASS<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x00000101</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/><sp/><sp/><sp/><sp/>ENTITY_LIGHT<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x00000110</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/><sp/><sp/><sp/><sp/>ENTITY_LADDER<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x00000111</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/><sp/><sp/><sp/><sp/>ENTITY_FOG<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x00001000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/><sp/><sp/><sp/><sp/>ENTITY_SUN<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x00001001</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/><sp/><sp/><sp/><sp/>ENTITY_RAIN<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x00001010</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/><sp/><sp/><sp/><sp/>ENTITY_WEAPON<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x00001011</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="preprocessor">#define<sp/><sp/><sp/><sp/><sp/>EPSILON_PAUSE<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x10000000</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/><sp/><sp/><sp/><sp/>EPSILON_RUNNING<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x10000001</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/><sp/><sp/><sp/><sp/>EPSILON_MENU<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>0x10000010</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><sp/><sp/>UCHAR;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal"><sp/><sp/><sp/>BYTE;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>INT;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>INTEGER;</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><sp/><sp/><sp/>UINT;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>DECIMAL;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">short</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>SHORT;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">short</highlight><highlight class="normal"><sp/><sp/>USHORT;</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight><highlight class="keyword">enum<sp/>class</highlight><highlight class="normal"><sp/>PHYSIC_SHAPE</highlight></codeline>
+<codeline lineno="50"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/>PHYSICS_BOX_SHAPE<sp/>=<sp/>BOX_SHAPE_PROXYTYPE,</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/>PHYSICS_SPHERE_SHAPE<sp/>=<sp/>SPHERE_SHAPE_PROXYTYPE,</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/>PHYSICS_CONE_SHAPE<sp/>=<sp/>CONE_SHAPE_PROXYTYPE,</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/>PHYSICS_CYLINDER_SHAPE<sp/>=<sp/>CYLINDER_SHAPE_PROXYTYPE,</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/>PHYSICS_TRIANGLEMESH_SHAPE<sp/>=<sp/>TRIANGLE_MESH_SHAPE_PROXYTYPE</highlight></codeline>
+<codeline lineno="56"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>MODEL_TYPE</highlight></codeline>
+<codeline lineno="61"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/>DYNAMIC_MODEL<sp/>=<sp/>0,</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/>STATIC_MODEL</highlight></codeline>
+<codeline lineno="64"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>SHADER_TYPE</highlight></codeline>
+<codeline lineno="67"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/>FORWARD_RENDERING_SHADER<sp/>=<sp/>0,</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/>LIGHTNING_PASS_SHADER,</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/>SSAO_SHADER,</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/>GAUSSIAN_BLUR_SHADER,</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/>ANIMATION_SKINING_SHADER,</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/>SHADOW_MAPPING_SHADER,</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/>ANIMATION_SKINING_SHADOW_MAPPING_SHADER,</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/>SUN_SHADER,</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/>SKYBOX_SHADER,</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/>GEOMETRY_PASS_SHADER</highlight></codeline>
+<codeline lineno="78"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespace_component" kindref="compound">Component</ref></highlight></codeline>
+<codeline lineno="81"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>COMPONENT_TYPE</highlight></codeline>
+<codeline lineno="83"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/>MODELCOMPONENT<sp/>=<sp/>0,</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/>SPATIALCOMPONENT,</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/>PLAYERCOMPONENT,</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/>SOUNDCOMPONENT,</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/>PHYSICCOMPONENT</highlight></codeline>
+<codeline lineno="89"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="90"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight></codeline>
+    </programlisting>
+    <location file="D:/Epsilon/Epsilon Engine/include/Types.h"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,249 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="_includes_8h" kind="file" language="C++">
+    <compoundname>Includes.h</compoundname>
+    <includes local="no">iostream</includes>
+    <includes local="no">string</includes>
+    <includes local="no">sstream</includes>
+    <includes local="no">ctime</includes>
+    <includes local="no">vector</includes>
+    <includes local="no">glm/gtc/quaternion.hpp</includes>
+    <includedby refid="_epsilon_8cpp" local="no">D:/Epsilon/Epsilon Engine/src/Epsilon.cpp</includedby>
+    <includedby refid="_m_d5___anim_8cpp" local="no">D:/Epsilon/Epsilon Engine/src/MD5_Anim.cpp</includedby>
+    <includedby refid="_m_d5___model_8cpp" local="no">D:/Epsilon/Epsilon Engine/src/MD5_Model.cpp</includedby>
+    <includedby refid="_post_process_8cpp" local="no">D:/Epsilon/Epsilon Engine/src/PostProcess.cpp</includedby>
+    <includedby refid="_terrain_8cpp" local="no">D:/Epsilon/Epsilon Engine/src/Terrain.cpp</includedby>
+    <includedby refid="_resource_manager_8h" local="no">D:/Epsilon/Epsilon Engine/include/ResourceManager.h</includedby>
+    <incdepgraph>
+      <node id="311">
+        <label>string</label>
+      </node>
+      <node id="315">
+        <label>glm/gtc/quaternion.hpp</label>
+      </node>
+      <node id="313">
+        <label>ctime</label>
+      </node>
+      <node id="314">
+        <label>vector</label>
+      </node>
+      <node id="312">
+        <label>sstream</label>
+      </node>
+      <node id="310">
+        <label>iostream</label>
+      </node>
+      <node id="309">
+        <label>D:/Epsilon/Epsilon Engine/include/Includes.h</label>
+        <link refid="Includes.h"/>
+        <childnode refid="310" relation="include">
+        </childnode>
+        <childnode refid="311" relation="include">
+        </childnode>
+        <childnode refid="312" relation="include">
+        </childnode>
+        <childnode refid="313" relation="include">
+        </childnode>
+        <childnode refid="314" relation="include">
+        </childnode>
+        <childnode refid="315" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="322">
+        <label>D:/Epsilon/Epsilon Engine/include/Scene.h</label>
+        <link refid="_scene_8h_source"/>
+        <childnode refid="320" relation="include">
+        </childnode>
+      </node>
+      <node id="319">
+        <label>D:/Epsilon/Epsilon Engine/include/EntityTemplate.h</label>
+        <link refid="_entity_template_8h_source"/>
+        <childnode refid="320" relation="include">
+        </childnode>
+        <childnode refid="322" relation="include">
+        </childnode>
+      </node>
+      <node id="320">
+        <label>D:/Epsilon/Epsilon Engine/include/Epsilon.h</label>
+        <link refid="_epsilon_8h_source"/>
+        <childnode refid="321" relation="include">
+        </childnode>
+      </node>
+      <node id="317">
+        <label>D:/Epsilon/Epsilon Engine/include/ResourceManager.h</label>
+        <link refid="_resource_manager_8h_source"/>
+        <childnode refid="318" relation="include">
+        </childnode>
+        <childnode refid="319" relation="include">
+        </childnode>
+        <childnode refid="320" relation="include">
+        </childnode>
+        <childnode refid="322" relation="include">
+        </childnode>
+      </node>
+      <node id="321">
+        <label>D:/Epsilon/Epsilon Engine/include/main.h</label>
+        <link refid="main_8h_source"/>
+      </node>
+      <node id="316">
+        <label>D:/Epsilon/Epsilon Engine/include/Includes.h</label>
+        <link refid="Includes.h"/>
+        <childnode refid="317" relation="include">
+        </childnode>
+      </node>
+      <node id="318">
+        <label>D:/Epsilon/Epsilon Engine/include/Component.h</label>
+        <link refid="_component_8h_source"/>
+        <childnode refid="319" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="class_helpers_1_1_elapsed_time" prot="public">Helpers::ElapsedTime</innerclass>
+    <innernamespace refid="namespace_helpers">Helpers</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>INCLUDES_H_INCLUDED</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>INCLUDES_H_INCLUDED</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;sstream&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;ctime&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;vector&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;glm/gtc/quaternion.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16" refid="namespace_helpers" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespace_helpers" kindref="compound">Helpers</ref></highlight></codeline>
+<codeline lineno="17"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>std::string<sp/>intTostring(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>number)</highlight></codeline>
+<codeline lineno="21"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/>std::ostringstream<sp/>oss;</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/>oss<sp/>&lt;&lt;<sp/>number;</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>std::string(oss.str());</highlight></codeline>
+<codeline lineno="25"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="keyword">inline</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>std::string<sp/>floatTostring(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>number)</highlight></codeline>
+<codeline lineno="29"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/>std::ostringstream<sp/>oss;</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/>oss<sp/>&lt;&lt;<sp/>number;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>std::string(oss.str());</highlight></codeline>
+<codeline lineno="33"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Get&apos;s<sp/>the<sp/>size<sp/>of<sp/>the<sp/>file<sp/>in<sp/>bytes.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>GetFileLength(<sp/>std::istream&amp;<sp/>file<sp/>)</highlight></codeline>
+<codeline lineno="37"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pos<sp/>=<sp/>file.tellg();</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/>file.seekg(0,<sp/>std::ios::end<sp/>);</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>length<sp/>=<sp/>file.tellg();</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Restore<sp/>the<sp/>position<sp/>of<sp/>the<sp/>get<sp/>pointer</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/>file.seekg(pos);</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>length;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>IgnoreLine(<sp/>std::istream&amp;<sp/>file,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>length<sp/>)</highlight></codeline>
+<codeline lineno="48"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/>file.ignore(<sp/>length,<sp/></highlight><highlight class="charliteral">&apos;\n&apos;</highlight><highlight class="normal"><sp/>);</highlight></codeline>
+<codeline lineno="50"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>RemoveQuotes(<sp/>std::string&amp;<sp/>str<sp/>)</highlight></codeline>
+<codeline lineno="53"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">size_t</highlight><highlight class="normal"><sp/>n;</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">while</highlight><highlight class="normal"><sp/>(<sp/>(<sp/>n<sp/>=<sp/>str.find(</highlight><highlight class="charliteral">&apos;\&quot;&apos;</highlight><highlight class="normal">)<sp/>)<sp/>!=<sp/>std::string::npos<sp/>)<sp/>str.erase(n,1);</highlight></codeline>
+<codeline lineno="56"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Computes<sp/>the<sp/>W<sp/>component<sp/>of<sp/>the<sp/>quaternion<sp/>based<sp/>on<sp/>the<sp/>X,<sp/>Y,<sp/>and<sp/>Z<sp/>components.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight><highlight class="comment">//<sp/>This<sp/>method<sp/>assumes<sp/>the<sp/>quaternion<sp/>is<sp/>of<sp/>unit<sp/>length.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>ComputeQuatW(<sp/>glm::quat&amp;<sp/>quat<sp/>)</highlight></codeline>
+<codeline lineno="61"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>t<sp/>=<sp/>1.0f<sp/>-<sp/>(<sp/>quat.x<sp/>*<sp/>quat.x<sp/>)<sp/>-<sp/>(<sp/>quat.y<sp/>*<sp/>quat.y<sp/>)<sp/>-<sp/>(<sp/>quat.z<sp/>*<sp/>quat.z<sp/>);</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(<sp/>t<sp/>&lt;<sp/>0.0f<sp/>)</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>quat.w<sp/>=<sp/>0.0f;</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>quat.w<sp/>=<sp/>-sqrtf(t);</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="71"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>std::string<sp/>getExtension(std::string<sp/>path)</highlight></codeline>
+<codeline lineno="74"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/>ext;</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>path.length()-4<sp/>;<sp/>i<sp/>&lt;<sp/>path.length()<sp/>;<sp/>i++)</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ext<sp/>+=<sp/>path.at(i);</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>ext;</highlight></codeline>
+<codeline lineno="81"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>std::string<sp/>removeExtension(std::string<sp/>path)</highlight></codeline>
+<codeline lineno="84"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>path.length()-4<sp/>;<sp/>i<sp/>&lt;<sp/>path.length()<sp/>;<sp/>i++)</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>path.erase(i);</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>path;</highlight></codeline>
+<codeline lineno="90"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>findNearestPointFromSet(glm::vec3<sp/>TestingPoint,<sp/>std::vector&lt;glm::vec3&gt;<sp/>PointSet)</highlight></codeline>
+<codeline lineno="93"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;Finding<sp/>Nearest<sp/>cubemap<sp/>for<sp/>mesh&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;Point<sp/>set:<sp/>&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>PointSet.size()<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>pointIndex<sp/>=<sp/>1;</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>shortestLength<sp/>=<sp/>glm::length(PointSet[0]<sp/>-<sp/>TestingPoint);</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;llega&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i<sp/>=<sp/>0;<sp/>i<sp/>&lt;<sp/>PointSet.size();<sp/>++i)</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(glm::length(PointSet[i]<sp/>-<sp/>TestingPoint)<sp/>&lt;<sp/>shortestLength)</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>shortestLength<sp/>=<sp/>glm::length(PointSet[i]<sp/>-<sp/>TestingPoint);</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>pointIndex<sp/>=<sp/>i+1;</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;Returning<sp/>Nearest<sp/>cubemap<sp/>index&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/></highlight><highlight class="stringliteral">&quot;Shortest<sp/>lenght:<sp/>&quot;</highlight><highlight class="normal"><sp/>&lt;&lt;<sp/>shortestLength<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>pointIndex;</highlight></codeline>
+<codeline lineno="110"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Helper<sp/>class<sp/>to<sp/>count<sp/>frame<sp/>time</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="113" refid="class_helpers_1_1_elapsed_time" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="class_helpers_1_1_elapsed_time" kindref="compound">ElapsedTime</ref></highlight></codeline>
+<codeline lineno="114"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="class_helpers_1_1_elapsed_time" kindref="compound">ElapsedTime</ref>(<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>maxTimeStep<sp/>=<sp/>0.03333f<sp/><sp/>)</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>:<sp/>m_fMaxTimeStep(<sp/>maxTimeStep<sp/>)</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>,<sp/>m_fPrevious<sp/>(<sp/>std::clock()<sp/>/<sp/>(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal">)CLOCKS_PER_SEC<sp/>)</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/><sp/><sp/>{}</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>GetElapsedTime()</highlight><highlight class="keyword"><sp/>const</highlight></codeline>
+<codeline lineno="122"><highlight class="keyword"><sp/><sp/><sp/><sp/></highlight><highlight class="normal">{</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>fCurrentTime<sp/>=<sp/>std::clock()<sp/>/<sp/>(float)CLOCKS_PER_SEC;</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>fDeltaTime<sp/>=<sp/>fCurrentTime<sp/>-<sp/>m_fPrevious;</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>m_fPrevious<sp/>=<sp/>fCurrentTime;</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Clamp<sp/>to<sp/>the<sp/>max<sp/>time<sp/>step</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>fDeltaTime<sp/>=<sp/>std::min(<sp/>fDeltaTime,<sp/>m_fMaxTimeStep<sp/>);</highlight></codeline>
+<codeline lineno="129"><highlight class="normal"></highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>fDeltaTime;</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"></highlight></codeline>
+<codeline lineno="133"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>m_fMaxTimeStep;</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">mutable</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>m_fPrevious;</highlight></codeline>
+<codeline lineno="136"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="137"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"></highlight></codeline>
+<codeline lineno="139"><highlight class="normal"></highlight></codeline>
+<codeline lineno="140"><highlight class="normal"></highlight></codeline>
+<codeline lineno="141"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight></codeline>
+    </programlisting>
+    <location file="D:/Epsilon/Epsilon Engine/include/Includes.h"/>
+  </compounddef>
+</doxygen>

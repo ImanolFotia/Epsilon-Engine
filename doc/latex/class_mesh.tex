@@ -1,0 +1,170 @@
+\hypertarget{class_mesh}{}\section{Mesh Class Reference}
+\label{class_mesh}\index{Mesh@{Mesh}}
+
+
+Collaboration diagram for Mesh\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_mesh__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_mesh_ab1367e4facd2cd7165d7800c0f5e8f1a}{Mesh} (vector$<$ \hyperlink{structt___vertex}{t\+\_\+\+Vertex} $>$ \hyperlink{class_mesh_ae065969fc6d4864eca63f57d14030a5d}{vertices}, vector$<$ G\+Luint $>$ indices, vector$<$ \hyperlink{struct_texture}{Texture} $>$ textures, int Cube\+Mapindex=1)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+void \hyperlink{class_mesh_a175ba91175ae81444bb4d3a93c343c98}{Draw} (\hyperlink{class_shader}{Shader} $\ast$\&shader, std\+::shared\+\_\+ptr$<$ \hyperlink{class_resource_manager}{Resource\+Manager} $>$ resm, glm\+::vec3 pos)
+\begin{DoxyCompactList}\small\item\em Render the mesh. \end{DoxyCompactList}\item 
+void \hyperlink{class_mesh_abb81f637776b12623f7903aba64a597b}{Draw} (G\+Luint shader, std\+::shared\+\_\+ptr$<$ \hyperlink{class_resource_manager}{Resource\+Manager} $>$ resm, glm\+::vec3)
+\begin{DoxyCompactList}\small\item\em Render the mesh. \end{DoxyCompactList}\item 
+void \hyperlink{class_mesh_a0709742dcefaa68370096791963bf055}{Draw\+With\+Alpha} ()\hypertarget{class_mesh_a0709742dcefaa68370096791963bf055}{}\label{class_mesh_a0709742dcefaa68370096791963bf055}
+
+\begin{DoxyCompactList}\small\item\em Render the mesh. \end{DoxyCompactList}\item 
+void {\bfseries Draw\+No\+Texture} ()\hypertarget{class_mesh_acdb1558a5dd6337ac2fa6df4db67cd84}{}\label{class_mesh_acdb1558a5dd6337ac2fa6df4db67cd84}
+
+\item 
+void {\bfseries Destroy} ()\hypertarget{class_mesh_a7f5641e4a3f2504dc9a07a78c52b93f1}{}\label{class_mesh_a7f5641e4a3f2504dc9a07a78c52b93f1}
+
+\item 
+void \hyperlink{class_mesh_aafa4e21067a9b0c4407daf5e3c9ea991}{setup\+Mesh} ()
+\begin{DoxyCompactList}\small\item\em Initializes all the buffer objects/arrays. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+vector$<$ \hyperlink{structt___vertex}{t\+\_\+\+Vertex} $>$ \hyperlink{class_mesh_ae065969fc6d4864eca63f57d14030a5d}{vertices}
+\item 
+int {\bfseries Cube\+Map\+Index} = 1\hypertarget{class_mesh_a44fcd4d07b93cb0a57c7fa0d6ff8a8ba}{}\label{class_mesh_a44fcd4d07b93cb0a57c7fa0d6ff8a8ba}
+
+\item 
+vector$<$ \hyperlink{struct_vertex}{Vertex} $>$ {\bfseries ivertices}\hypertarget{class_mesh_a5853c81e7f7a948a75ca43d3e8747310}{}\label{class_mesh_a5853c81e7f7a948a75ca43d3e8747310}
+
+\item 
+vector$<$ G\+Luint $>$ {\bfseries indices}\hypertarget{class_mesh_a233e40975b5ddafda502c8c31b77db2c}{}\label{class_mesh_a233e40975b5ddafda502c8c31b77db2c}
+
+\item 
+vector$<$ \hyperlink{struct_texture}{Texture} $>$ {\bfseries textures}\hypertarget{class_mesh_a09bf4e8307bf7717c56501ca6293c6c0}{}\label{class_mesh_a09bf4e8307bf7717c56501ca6293c6c0}
+
+\item 
+G\+Luint \hyperlink{class_mesh_a09b989b9d4df8ae595d7e80e091a4a5b}{V\+AO}
+\item 
+G\+Luint {\bfseries V\+BO}\hypertarget{class_mesh_a0d28b2c6fee628a13f43cae3f858569b}{}\label{class_mesh_a0d28b2c6fee628a13f43cae3f858569b}
+
+\item 
+G\+Luint {\bfseries E\+BO}\hypertarget{class_mesh_a894c6723c0172f4e38b2509582abfa6c}{}\label{class_mesh_a894c6723c0172f4e38b2509582abfa6c}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 46 of file Mesh.\+h.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{Mesh@{Mesh}!Mesh@{Mesh}}
+\index{Mesh@{Mesh}!Mesh@{Mesh}}
+\subsubsection[{\texorpdfstring{Mesh(vector$<$ t\+\_\+\+Vertex $>$ vertices, vector$<$ G\+Luint $>$ indices, vector$<$ Texture $>$ textures, int Cube\+Mapindex=1)}{Mesh(vector< t_Vertex > vertices, vector< GLuint > indices, vector< Texture > textures, int CubeMapindex=1)}}]{\setlength{\rightskip}{0pt plus 5cm}Mesh\+::\+Mesh (
+\begin{DoxyParamCaption}
+\item[{vector$<$ {\bf t\+\_\+\+Vertex} $>$}]{vertices, }
+\item[{vector$<$ G\+Luint $>$}]{indices, }
+\item[{vector$<$ {\bf Texture} $>$}]{textures, }
+\item[{int}]{Cube\+Mapindex = {\ttfamily 1}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_mesh_ab1367e4facd2cd7165d7800c0f5e8f1a}{}\label{class_mesh_ab1367e4facd2cd7165d7800c0f5e8f1a}
+
+
+Constructor. 
+
+Functions cout $<$$<$ \char`\"{}number of textures for this mesh\+: \char`\"{} $<$$<$ textures.\+size() $<$$<$ endl;
+
+Now that we have all the required data, set the vertex buffers and its attribute pointers. 
+
+Definition at line 58 of file Mesh.\+h.
+
+
+
+\subsection{Member Function Documentation}
+\index{Mesh@{Mesh}!Draw@{Draw}}
+\index{Draw@{Draw}!Mesh@{Mesh}}
+\subsubsection[{\texorpdfstring{Draw(\+Shader $\ast$\&shader, std\+::shared\+\_\+ptr$<$ Resource\+Manager $>$ resm, glm\+::vec3 pos)}{Draw(Shader *&shader, std::shared_ptr< ResourceManager > resm, glm::vec3 pos)}}]{\setlength{\rightskip}{0pt plus 5cm}void Mesh\+::\+Draw (
+\begin{DoxyParamCaption}
+\item[{{\bf Shader} $\ast$\&}]{shader, }
+\item[{std\+::shared\+\_\+ptr$<$ {\bf Resource\+Manager} $>$}]{resm, }
+\item[{glm\+::vec3}]{pos}
+\end{DoxyParamCaption}
+)}\hypertarget{class_mesh_a175ba91175ae81444bb4d3a93c343c98}{}\label{class_mesh_a175ba91175ae81444bb4d3a93c343c98}
+
+
+Render the mesh. 
+
+Draw mesh 
+
+Definition at line 6 of file Mesh.\+cpp.
+
+\index{Mesh@{Mesh}!Draw@{Draw}}
+\index{Draw@{Draw}!Mesh@{Mesh}}
+\subsubsection[{\texorpdfstring{Draw(\+G\+Luint shader, std\+::shared\+\_\+ptr$<$ Resource\+Manager $>$ resm, glm\+::vec3)}{Draw(GLuint shader, std::shared_ptr< ResourceManager > resm, glm::vec3)}}]{\setlength{\rightskip}{0pt plus 5cm}void Mesh\+::\+Draw (
+\begin{DoxyParamCaption}
+\item[{G\+Luint}]{shader, }
+\item[{std\+::shared\+\_\+ptr$<$ {\bf Resource\+Manager} $>$}]{resm, }
+\item[{glm\+::vec3}]{pos}
+\end{DoxyParamCaption}
+)}\hypertarget{class_mesh_abb81f637776b12623f7903aba64a597b}{}\label{class_mesh_abb81f637776b12623f7903aba64a597b}
+
+
+Render the mesh. 
+
+Draw mesh 
+
+Definition at line 53 of file Mesh.\+cpp.
+
+\index{Mesh@{Mesh}!setup\+Mesh@{setup\+Mesh}}
+\index{setup\+Mesh@{setup\+Mesh}!Mesh@{Mesh}}
+\subsubsection[{\texorpdfstring{setup\+Mesh()}{setupMesh()}}]{\setlength{\rightskip}{0pt plus 5cm}void Mesh\+::setup\+Mesh (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}\hypertarget{class_mesh_aafa4e21067a9b0c4407daf5e3c9ea991}{}\label{class_mesh_aafa4e21067a9b0c4407daf5e3c9ea991}
+
+
+Initializes all the buffer objects/arrays. 
+
+Functions Create buffers/arrays
+
+Load data into vertex buffers
+
+A great thing about structs is that their memory layout is sequential for all its items. The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm\+::vec3/2 array which again translates to 3/2 floats which translates to a byte array.
+
+Set the vertex attribute pointers \hyperlink{struct_vertex}{Vertex} Positions
+
+\hyperlink{struct_vertex}{Vertex} \hyperlink{struct_texture}{Texture} Coords
+
+\hyperlink{struct_vertex}{Vertex} Normals
+
+\hyperlink{struct_vertex}{Vertex} Tangent
+
+\hyperlink{struct_vertex}{Vertex} Bitangent 
+
+Definition at line 111 of file Mesh.\+h.
+
+
+
+\subsection{Field Documentation}
+\index{Mesh@{Mesh}!V\+AO@{V\+AO}}
+\index{V\+AO@{V\+AO}!Mesh@{Mesh}}
+\subsubsection[{\texorpdfstring{V\+AO}{VAO}}]{\setlength{\rightskip}{0pt plus 5cm}G\+Luint Mesh\+::\+V\+AO}\hypertarget{class_mesh_a09b989b9d4df8ae595d7e80e091a4a5b}{}\label{class_mesh_a09b989b9d4df8ae595d7e80e091a4a5b}
+Render data 
+
+Definition at line 107 of file Mesh.\+h.
+
+\index{Mesh@{Mesh}!vertices@{vertices}}
+\index{vertices@{vertices}!Mesh@{Mesh}}
+\subsubsection[{\texorpdfstring{vertices}{vertices}}]{\setlength{\rightskip}{0pt plus 5cm}vector$<${\bf t\+\_\+\+Vertex}$>$ Mesh\+::vertices}\hypertarget{class_mesh_ae065969fc6d4864eca63f57d14030a5d}{}\label{class_mesh_ae065969fc6d4864eca63f57d14030a5d}
+\hyperlink{class_mesh}{Mesh} Data 
+
+Definition at line 50 of file Mesh.\+h.
+

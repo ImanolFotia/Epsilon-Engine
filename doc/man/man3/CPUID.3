@@ -1,0 +1,53 @@
+.TH "CPUID" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+CPUID \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCPUID\fP (unsigned i)"
+.br
+.ti -1c
+.RI "const uint32_t & \fBEAX\fP () const "
+.br
+.ti -1c
+.RI "const uint32_t & \fBEBX\fP () const "
+.br
+.ti -1c
+.RI "const uint32_t & \fBECX\fP () const "
+.br
+.ti -1c
+.RI "const uint32_t & \fBEDX\fP () const "
+.br
+.ti -1c
+.RI "std::string \fBgetCPUVendor\fP ()"
+.br
+.ti -1c
+.RI "bool \fBgetEndianes\fP ()"
+.br
+.ti -1c
+.RI "unsigned \fBgetNumberOfThreads\fP ()"
+.br
+.ti -1c
+.RI "void \fBprintHardwareInformation\fP ()"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "uint32_t \fBregs\fP [4]"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 10 of file CPUID\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

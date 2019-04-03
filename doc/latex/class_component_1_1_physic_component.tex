@@ -1,0 +1,91 @@
+\hypertarget{class_component_1_1_physic_component}{}\section{Component\+:\+:Physic\+Component Class Reference}
+\label{class_component_1_1_physic_component}\index{Component\+::\+Physic\+Component@{Component\+::\+Physic\+Component}}
+
+
+Physic Components.  
+
+
+
+
+Inheritance diagram for Component\+:\+:Physic\+Component\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=232pt]{class_component_1_1_physic_component__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Component\+:\+:Physic\+Component\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=232pt]{class_component_1_1_physic_component__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Fill} (float mass, std\+::shared\+\_\+ptr$<$ \hyperlink{class_physics_1_1_physic_object}{Physics\+::\+Physic\+Object} $>$ Physic\+Body\+Pointer)\hypertarget{class_component_1_1_physic_component_a8bdf756aed442b6ca55005c9d4574a1d}{}\label{class_component_1_1_physic_component_a8bdf756aed442b6ca55005c9d4574a1d}
+
+\item 
+void {\bfseries Update} (std\+::shared\+\_\+ptr$<$ \hyperlink{class_resource_manager}{Resource\+Manager} $>$ rm)\hypertarget{class_component_1_1_physic_component_a192e66143fd3dcd71453b5e96c7337c9}{}\label{class_component_1_1_physic_component_a192e66143fd3dcd71453b5e96c7337c9}
+
+\item 
+virtual void {\bfseries set\+User\+Pointer} (void $\ast$user\+Pointer)\hypertarget{class_component_1_1_physic_component_a9781ceeeaece338cecded734ad403bf1}{}\label{class_component_1_1_physic_component_a9781ceeeaece338cecded734ad403bf1}
+
+\item 
+virtual bt\+Transform {\bfseries get\+Transform} ()\hypertarget{class_component_1_1_physic_component_aaa220e6fc967ae7cc9cc7cd58fa3ce86}{}\label{class_component_1_1_physic_component_aaa220e6fc967ae7cc9cc7cd58fa3ce86}
+
+\item 
+virtual void {\bfseries set\+Transform} (bt\+Transform t)\hypertarget{class_component_1_1_physic_component_acb4610f231b36a154715b5c7bc22479f}{}\label{class_component_1_1_physic_component_acb4610f231b36a154715b5c7bc22479f}
+
+\item 
+virtual void \hyperlink{class_component_1_1_physic_component_a2aa38ff30a247be21fae04ac78e6188e}{Fill} (bool, bool)
+\item 
+virtual void {\bfseries Fill} (std\+::string path, std\+::shared\+\_\+ptr$<$ \hyperlink{class_resource_manager}{Resource\+Manager} $>$ \&rm, std\+::string shader)\hypertarget{class_component_1_1_physic_component_a1a314003e28bcb0e533762a52ce55b89}{}\label{class_component_1_1_physic_component_a1a314003e28bcb0e533762a52ce55b89}
+
+\item 
+void {\bfseries Render} (std\+::shared\+\_\+ptr$<$ \hyperlink{class_resource_manager}{Resource\+Manager} $>$ rm, glm\+::vec3)\hypertarget{class_component_1_1_physic_component_afe545e4cd5fc20c8932d7a9305542a06}{}\label{class_component_1_1_physic_component_afe545e4cd5fc20c8932d7a9305542a06}
+
+\item 
+virtual void {\bfseries set\+Transparency} (bool x)\hypertarget{class_component_1_1_physic_component_a689745c64f64e6edffab736810976cae}{}\label{class_component_1_1_physic_component_a689745c64f64e6edffab736810976cae}
+
+\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+float {\bfseries Mass}\hypertarget{class_component_1_1_physic_component_a89a99f45ba318be0927f7189861814ee}{}\label{class_component_1_1_physic_component_a89a99f45ba318be0927f7189861814ee}
+
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{class_physics_1_1_physic_object}{Physics\+::\+Physic\+Object} $>$ {\bfseries Rigid\+Body\+Pointer} = nullptr\hypertarget{class_component_1_1_physic_component_afc1cbfbe61e7a259d868db5024cdc585}{}\label{class_component_1_1_physic_component_afc1cbfbe61e7a259d868db5024cdc585}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Physic Components. 
+
+Definition at line 128 of file Component.\+h.
+
+
+
+\subsection{Member Function Documentation}
+\index{Component\+::\+Physic\+Component@{Component\+::\+Physic\+Component}!Fill@{Fill}}
+\index{Fill@{Fill}!Component\+::\+Physic\+Component@{Component\+::\+Physic\+Component}}
+\subsubsection[{\texorpdfstring{Fill(bool, bool)}{Fill(bool, bool)}}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Component\+::\+Physic\+Component\+::\+Fill (
+\begin{DoxyParamCaption}
+\item[{bool}]{, }
+\item[{bool}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\hypertarget{class_component_1_1_physic_component_a2aa38ff30a247be21fae04ac78e6188e}{}\label{class_component_1_1_physic_component_a2aa38ff30a247be21fae04ac78e6188e}
+Functions declared for the sake of pure virtual function polymorphism, must not be used for production 
+
+Implements \hyperlink{class_component_1_1_component}{Component\+::\+Component}.
+
+
+
+Definition at line 184 of file Component.\+h.
+

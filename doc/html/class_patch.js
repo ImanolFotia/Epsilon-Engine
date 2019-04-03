@@ -1,0 +1,27 @@
+var class_patch =
+[
+    [ "Patch", "class_patch.html#a325e0e4b125bf7b121a92b819a1829b6", null ],
+    [ "~Patch", "class_patch.html#a6c4de556c6a43cdd7a129034b2fca68f", null ],
+    [ "Destroy", "class_patch.html#ac92e88795e488d68f3d48c7f8c88b07f", null ],
+    [ "generateGeometry", "class_patch.html#a15da6bd801bd94e154840be9fafa0144", null ],
+    [ "Render", "class_patch.html#acf061ad5c711edadf53041dada53aeac", null ],
+    [ "Render", "class_patch.html#a54b25c84906b56239801329a86a62b61", null ],
+    [ "RenderShadows", "class_patch.html#aa1bad94df8b360742dd6792919d0d10c", null ],
+    [ "setupVertexBuffers", "class_patch.html#a707359ae572413835eed30aa581b4303", null ],
+    [ "updateVertexBuffers", "class_patch.html#a9be709377da88bbdb41d3be5bd0d1304", null ],
+    [ "EBO", "class_patch.html#ae244bc36389081cfbbb0385e496d7f40", null ],
+    [ "mHeight", "class_patch.html#afcafdb606806884f266c1be6e28c499e", null ],
+    [ "mIndices", "class_patch.html#a1b45d376a90ccfec624d6180d4edfcc0", null ],
+    [ "mNormals", "class_patch.html#a2c4a284c887f9b53e2421bd528b7f1a1", null ],
+    [ "mNormalTexture", "class_patch.html#a858af6054b09d30e12f60dfb3d4d37ce", null ],
+    [ "mPosition", "class_patch.html#a5c8e649806469a8e32ebae1bda2ae3c6", null ],
+    [ "mScale", "class_patch.html#ac4a3dafd158a7fae66c6bea99b75e9a4", null ],
+    [ "mTexCoords", "class_patch.html#ae1e2c42f6f536d30cff72ebff76d6a6e", null ],
+    [ "mTexture", "class_patch.html#a448c010ef227400a0c920eba2ceaaa6a", null ],
+    [ "mVertices", "class_patch.html#a91394b023be10f88bf2a0d859cfb2658", null ],
+    [ "mWidth", "class_patch.html#a84408002534919c7ebe17f336548b1b2", null ],
+    [ "NBO", "class_patch.html#a184323059ea595dd22186beeba0a5f84", null ],
+    [ "UVBO", "class_patch.html#aa7dc58c0c17fe9ad1006ca92c3d88c23", null ],
+    [ "VAO", "class_patch.html#a45679d9388d67dc900e2c11038124ba5", null ],
+    [ "VBO", "class_patch.html#a8f19701433a5a7d0ba92bd53e2b9e09d", null ]
+];

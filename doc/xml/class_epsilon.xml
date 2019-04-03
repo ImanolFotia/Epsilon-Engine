@@ -1,0 +1,889 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="class_epsilon" kind="class" language="C++" prot="public">
+    <compoundname>Epsilon</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_epsilon_1a4f660cdfabc6f3d825f5122601c5b4cd" prot="public" static="no" mutable="no">
+        <type>std::unique_ptr&lt; <ref refid="class_camera" kindref="compound">Camera</ref> &gt;</type>
+        <definition>std::unique_ptr&lt;Camera&gt; Epsilon::eCamera</definition>
+        <argsstring></argsstring>
+        <name>eCamera</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="99" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="99" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a80c03a3455fad80a7e146ebb04a8a2fd" prot="public" static="no" mutable="no">
+        <type>std::map&lt; string, <ref refid="class_shader" kindref="compound">Shader</ref> * &gt;</type>
+        <definition>std::map&lt;string, Shader*&gt; Epsilon::Shaders</definition>
+        <argsstring></argsstring>
+        <name>Shaders</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Shaders </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="102" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="102" bodyend="-1"/>
+        <referencedby refid="class_epsilon_1a78c0240886a4a651bbd68f32a8a83bcb" compoundref="_epsilon_8cpp" startline="137" endline="190">LoadGeometry</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1aa213c255e2fd3fde8d815106d193a031" prot="public" static="no" mutable="no">
+        <type>std::unique_ptr&lt; <ref refid="class_skybox" kindref="compound">Skybox</ref> &gt;</type>
+        <definition>std::unique_ptr&lt;Skybox&gt; Epsilon::skybox</definition>
+        <argsstring></argsstring>
+        <name>skybox</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="103" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="103" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a4b68ebd706db40620854d640c5f47e11" prot="public" static="no" mutable="no">
+        <type>std::unique_ptr&lt; <ref refid="class_water" kindref="compound">Water</ref> &gt;</type>
+        <definition>std::unique_ptr&lt;Water&gt; Epsilon::waterPlane</definition>
+        <argsstring></argsstring>
+        <name>waterPlane</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="104" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="104" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1ae0a6e3e7c24c4ea1ed750ffc039f5852" prot="public" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="class_grass" kindref="compound">Grass</ref> &gt;</type>
+        <definition>std::vector&lt;Grass&gt; Epsilon::grass</definition>
+        <argsstring></argsstring>
+        <name>grass</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="105" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="105" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a23cf64e07be032abc3ffe969f037c87b" prot="public" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="class_model" kindref="compound">Model</ref> &gt;</type>
+        <definition>std::vector&lt;Model&gt; Epsilon::model</definition>
+        <argsstring></argsstring>
+        <name>model</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="106" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="106" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1acb637f14e1d02d3286d4021dd546fbef" prot="public" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint Epsilon::VertexArrayID</definition>
+        <argsstring></argsstring>
+        <name>VertexArrayID</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="107" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="107" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a12aad9914ca9e20307ff65807b1db252" prot="public" static="no" mutable="no">
+        <type>GLFWwindow *</type>
+        <definition>GLFWwindow* Epsilon::window</definition>
+        <argsstring></argsstring>
+        <name>window</name>
+        <initializer>= nullptr</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="108" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="108" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1af6d1eb23305249ded60952a61a471eb9" prot="public" static="no" mutable="no">
+        <type>std::unique_ptr&lt; <ref refid="class_text" kindref="compound">Text</ref> &gt;</type>
+        <definition>std::unique_ptr&lt;Text&gt; Epsilon::text</definition>
+        <argsstring></argsstring>
+        <name>text</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="109" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="109" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a496dff4b4355aad12dc91dbfe2b32c97" prot="public" static="no" mutable="no">
+        <type>std::unique_ptr&lt; <ref refid="class_terrain" kindref="compound">Terrain</ref> &gt;</type>
+        <definition>std::unique_ptr&lt;Terrain&gt; Epsilon::terrain</definition>
+        <argsstring></argsstring>
+        <name>terrain</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="110" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="110" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a9123a170e3b6f0f345c7b76ccde79403" prot="public" static="no" mutable="no">
+        <type>std::shared_ptr&lt; <ref refid="class_sun" kindref="compound">Sun</ref> &gt;</type>
+        <definition>std::shared_ptr&lt;Sun&gt; Epsilon::sun</definition>
+        <argsstring></argsstring>
+        <name>sun</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="111" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="111" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a4209ad5c3f4198bedc354a3f453b90f6" prot="public" static="no" mutable="no">
+        <type>std::unique_ptr&lt; <ref refid="class_c_quake3_b_s_p" kindref="compound">CQuake3BSP</ref> &gt;</type>
+        <definition>std::unique_ptr&lt;CQuake3BSP&gt; Epsilon::BSPMap</definition>
+        <argsstring></argsstring>
+        <name>BSPMap</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="112" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="112" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1afb0e90e9c8c15c9091cbf6dea4500f53" prot="public" static="no" mutable="no">
+        <type>std::unique_ptr&lt; <ref refid="class_m_d5_model" kindref="compound">MD5Model</ref> &gt;</type>
+        <definition>std::unique_ptr&lt;MD5Model&gt; Epsilon::m_AnimModel</definition>
+        <argsstring></argsstring>
+        <name>m_AnimModel</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="113" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="113" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a5cec8f0efb9c91fb2f61b20264e3ef8d" prot="public" static="no" mutable="no">
+        <type>std::unique_ptr&lt; <ref refid="class_shadow_map" kindref="compound">ShadowMap</ref> &gt;</type>
+        <definition>std::unique_ptr&lt;ShadowMap&gt; Epsilon::shadowMap</definition>
+        <argsstring></argsstring>
+        <name>shadowMap</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="114" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="114" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a3522839e0199c6896e56e5ac9ee98550" prot="public" static="no" mutable="no">
+        <type>std::unique_ptr&lt; <ref refid="class_post_process" kindref="compound">PostProcess</ref> &gt;</type>
+        <definition>std::unique_ptr&lt;PostProcess&gt; Epsilon::PP</definition>
+        <argsstring></argsstring>
+        <name>PP</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="115" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="115" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1ad005199e74a13e0fc6dc1eb47416f073" prot="public" static="no" mutable="no">
+        <type>short</type>
+        <definition>short Epsilon::WIDTH</definition>
+        <argsstring></argsstring>
+        <name>WIDTH</name>
+        <initializer>= 16</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Window Properties </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="118" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="118" bodyend="-1"/>
+        <referencedby refid="class_epsilon_1abbabb1ab313440119a0ff1741d52d4ca" compoundref="_epsilon_8cpp" startline="517" endline="542">ComputeWater</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a7ad4ba1637a98f1def52a9488d3c69ac" prot="public" static="no" mutable="no">
+        <type>short</type>
+        <definition>short Epsilon::HEIGHT</definition>
+        <argsstring></argsstring>
+        <name>HEIGHT</name>
+        <initializer>= 16</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="119" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="119" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a40b12fc7256c567130cb22a4e3589436" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Epsilon::SSAO</definition>
+        <argsstring></argsstring>
+        <name>SSAO</name>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="120" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="120" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_epsilon_1a1fc7482adbabe15b7a201bbf82f0eefb" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Epsilon::Running</definition>
+        <argsstring></argsstring>
+        <name>Running</name>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="122" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="122" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a13ee7dfbabe704b302a60dad62f54615" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Epsilon::normal</definition>
+        <argsstring></argsstring>
+        <name>normal</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="123" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="123" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1aa9924c414ff6240268212fa2b7aa3f2d" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Epsilon::flashLight</definition>
+        <argsstring></argsstring>
+        <name>flashLight</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="124" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="124" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a5501cf7542b772a09cf4d4d90a9bb998" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Epsilon::hdr</definition>
+        <argsstring></argsstring>
+        <name>hdr</name>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="125" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="125" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a01da56903e0602a9b075f35e1c54daca" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Epsilon::lastTime</definition>
+        <argsstring></argsstring>
+        <name>lastTime</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="126" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="126" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a02eeaebcbdc08c1fba79f2da3f131b89" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Epsilon::frametime</definition>
+        <argsstring></argsstring>
+        <name>frametime</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="127" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="127" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a490cfdcf7c8055841a2c84c9351f8cd7" prot="private" static="no" mutable="no">
+        <type>double</type>
+        <definition>double Epsilon::etime</definition>
+        <argsstring></argsstring>
+        <name>etime</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="128" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="128" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a536df7a1ddb765cb5e66134b800e3b77" prot="private" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Epsilon::exposure</definition>
+        <argsstring></argsstring>
+        <name>exposure</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="129" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="129" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a337e26c855ae67cb3d45af0f2566001c" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Epsilon::parallax</definition>
+        <argsstring></argsstring>
+        <name>parallax</name>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="130" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="130" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a4c11e8a8f223c276ee6777d8d8a9d133" prot="private" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Epsilon::eventtime</definition>
+        <argsstring></argsstring>
+        <name>eventtime</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="131" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="131" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a6eda8c6f3d7757e0ff3f03bc83ae48cc" prot="private" static="no" mutable="no">
+        <type>short</type>
+        <definition>short Epsilon::fps</definition>
+        <argsstring></argsstring>
+        <name>fps</name>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="132" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="132" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a5c56615886879536842f8511c9c1cd94" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Epsilon::showtext</definition>
+        <argsstring></argsstring>
+        <name>showtext</name>
+        <initializer>= false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="133" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="133" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a4432cd2a36f4227e06a8e8642a160935" prot="private" static="no" mutable="no">
+        <type>vector&lt; glm::vec3 &gt;</type>
+        <definition>vector&lt;glm::vec3&gt; Epsilon::lightPositions</definition>
+        <argsstring></argsstring>
+        <name>lightPositions</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="134" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="134" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1ac96f8c02f0e5a73154e7036c7fb79450" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; glm::vec3 &gt;</type>
+        <definition>std::vector&lt;glm::vec3&gt; Epsilon::grassPos</definition>
+        <argsstring></argsstring>
+        <name>grassPos</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="135" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="135" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1a8f6ec2cc773f0a8a20b9293a1d59d8d9" prot="private" static="no" mutable="no">
+        <type>std::ostringstream</type>
+        <definition>std::ostringstream Epsilon::fpss</definition>
+        <argsstring></argsstring>
+        <name>fpss</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="136" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="136" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_epsilon_1aed713f9eef6e236d05ed4b2a36aab155" prot="private" static="no" mutable="no">
+        <type>std::shared_ptr&lt; <ref refid="class_resource_manager" kindref="compound">ResourceManager</ref> &gt;</type>
+        <definition>std::shared_ptr&lt;ResourceManager&gt; Epsilon::rM</definition>
+        <argsstring></argsstring>
+        <name>rM</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="137" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="137" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_epsilon_1a97302c6ca7b7d55d14f9ca742659ddca" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>Epsilon::Epsilon</definition>
+        <argsstring>(GLFWwindow *&amp;)</argsstring>
+        <name>Epsilon</name>
+        <param>
+          <type>GLFWwindow *&amp;</type>
+          <defname>win</defname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="42" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Epsilon.cpp" bodystart="24" bodyend="78"/>
+      </memberdef>
+      <memberdef kind="function" id="class_epsilon_1a2d56f50777a0cba533e9f3dc4abac02f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type></type>
+        <definition>virtual Epsilon::~Epsilon</definition>
+        <argsstring>(void)</argsstring>
+        <name>~Epsilon</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="44" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="44" bodyend="54"/>
+      </memberdef>
+      <memberdef kind="function" id="class_epsilon_1a2c59fe55bdbbfffbd7c3bca0532b4ec4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Epsilon::MainLoop</definition>
+        <argsstring>(void)</argsstring>
+        <name>MainLoop</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="56" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Epsilon.cpp" bodystart="472" bodyend="503"/>
+      </memberdef>
+      <memberdef kind="function" id="class_epsilon_1acdbbc212462949ba9bde213afc7b5a38" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Epsilon::InitResources</definition>
+        <argsstring>(void)</argsstring>
+        <name>InitResources</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="58" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Epsilon.cpp" bodystart="80" bodyend="114"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_epsilon_1a78c0240886a4a651bbd68f32a8a83bcb" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Epsilon::LoadGeometry</definition>
+        <argsstring>(void)</argsstring>
+        <name>LoadGeometry</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+<para>-11.8 </para>        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="62" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Epsilon.cpp" bodystart="137" bodyend="190"/>
+        <references refid="class_epsilon_1a80c03a3455fad80a7e146ebb04a8a2fd" compoundref="_epsilon_8h" startline="102">Shaders</references>
+      </memberdef>
+      <memberdef kind="function" id="class_epsilon_1af22c2e5923fcd5eef66d82b78ebaf45b" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Epsilon::LoadSound</definition>
+        <argsstring>(void)</argsstring>
+        <name>LoadSound</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="64" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Epsilon.cpp" bodystart="192" bodyend="195"/>
+      </memberdef>
+      <memberdef kind="function" id="class_epsilon_1a983a024c1507b66b8ac74319416dea46" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Epsilon::LoadShaders</definition>
+        <argsstring>(void)</argsstring>
+        <name>LoadShaders</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="66" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Epsilon.cpp" bodystart="116" bodyend="135"/>
+      </memberdef>
+      <memberdef kind="function" id="class_epsilon_1a755aeb43e7f4e87b93112ad0fa16b85f" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Epsilon::PollEvents</definition>
+        <argsstring>(void)</argsstring>
+        <name>PollEvents</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="68" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Epsilon.cpp" bodystart="409" bodyend="470"/>
+      </memberdef>
+      <memberdef kind="function" id="class_epsilon_1aeadd2aa7a23c0226666071cff65851f5" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Epsilon::Render3D</definition>
+        <argsstring>(int clip)</argsstring>
+        <name>Render3D</name>
+        <param>
+          <type>int</type>
+          <declname>clip</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="70" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Epsilon.cpp" bodystart="198" bodyend="279"/>
+      </memberdef>
+      <memberdef kind="function" id="class_epsilon_1a64c6ffc39309ac06ba984f676f34caa5" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Epsilon::Render3D</definition>
+        <argsstring>(void)</argsstring>
+        <name>Render3D</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="72" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Epsilon.cpp" bodystart="281" bodyend="323"/>
+      </memberdef>
+      <memberdef kind="function" id="class_epsilon_1affd17730239b1c11b926cee6f0e394a7" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Epsilon::Render2D</definition>
+        <argsstring>(void)</argsstring>
+        <name>Render2D</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="74" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Epsilon.cpp" bodystart="364" bodyend="378"/>
+      </memberdef>
+      <memberdef kind="function" id="class_epsilon_1af2a8325d6788484ff3e6755504189253" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Epsilon::RenderLegacy</definition>
+        <argsstring>(void)</argsstring>
+        <name>RenderLegacy</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="76" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="class_epsilon_1af3a4ef7297aa6e90f3018bc379a47499" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Epsilon::RenderSkybox</definition>
+        <argsstring>(void)</argsstring>
+        <name>RenderSkybox</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="78" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Epsilon.cpp" bodystart="398" bodyend="407"/>
+      </memberdef>
+      <memberdef kind="function" id="class_epsilon_1abbabb1ab313440119a0ff1741d52d4ca" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Epsilon::ComputeWater</definition>
+        <argsstring>(void)</argsstring>
+        <name>ComputeWater</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+<para>Render Reflection to <ref refid="struct_texture" kindref="compound">Texture</ref></para><para>Render Refraction to <ref refid="struct_texture" kindref="compound">Texture</ref></para>        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="80" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Epsilon.cpp" bodystart="517" bodyend="542"/>
+        <references refid="class_epsilon_1ad005199e74a13e0fc6dc1eb47416f073" compoundref="_epsilon_8h" startline="118">WIDTH</references>
+      </memberdef>
+      <memberdef kind="function" id="class_epsilon_1a5e75d17eb31e4a826234b5611d2f710b" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Epsilon::SwapBuffers</definition>
+        <argsstring>(void)</argsstring>
+        <name>SwapBuffers</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="82" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Epsilon.cpp" bodystart="505" bodyend="510"/>
+      </memberdef>
+      <memberdef kind="function" id="class_epsilon_1ac8ff48133df501675ef699c2e30d6c9c" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Epsilon::ClearBuffers</definition>
+        <argsstring>(void)</argsstring>
+        <name>ClearBuffers</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="84" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Epsilon.cpp" bodystart="512" bodyend="515"/>
+      </memberdef>
+      <memberdef kind="function" id="class_epsilon_1aec23d0bc6e70751880b20aa312e0e254" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Epsilon::RenderFrame</definition>
+        <argsstring>(void)</argsstring>
+        <name>RenderFrame</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="86" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Epsilon.cpp" bodystart="577" bodyend="587"/>
+      </memberdef>
+      <memberdef kind="function" id="class_epsilon_1a15d8da6ef70aabd9b8c13919bdf61bb2" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Epsilon::ProcessFrame</definition>
+        <argsstring>(void)</argsstring>
+        <name>ProcessFrame</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="88" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Epsilon.cpp" bodystart="564" bodyend="575"/>
+      </memberdef>
+      <memberdef kind="function" id="class_epsilon_1ab7df71b81feb2a69c433d621c3b707c3" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Epsilon::SetUniforms</definition>
+        <argsstring>(Shader *&amp;, glm::vec3 position, glm::vec3 scale, glm::quat rotation)</argsstring>
+        <name>SetUniforms</name>
+        <param>
+          <type><ref refid="class_shader" kindref="compound">Shader</ref> *&amp;</type>
+          <defname>shader</defname>
+        </param>
+        <param>
+          <type>glm::vec3</type>
+          <declname>position</declname>
+        </param>
+        <param>
+          <type>glm::vec3</type>
+          <declname>scale</declname>
+        </param>
+        <param>
+          <type>glm::quat</type>
+          <declname>rotation</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="90" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Epsilon.cpp" bodystart="326" bodyend="362"/>
+      </memberdef>
+      <memberdef kind="function" id="class_epsilon_1a485abd60922d9c5d1aabee3386b55266" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Epsilon::Clock</definition>
+        <argsstring>(void)</argsstring>
+        <name>Clock</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="92" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Epsilon.cpp" bodystart="380" bodyend="396"/>
+      </memberdef>
+      <memberdef kind="function" id="class_epsilon_1a6b985dc929718148dc54490e34dbf21f" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void Epsilon::ComputeShadow</definition>
+        <argsstring>(void)</argsstring>
+        <name>ComputeShadow</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="94" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Epsilon.cpp" bodystart="544" bodyend="562"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/Epsilon.h" line="39" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Epsilon.h" bodystart="38" bodyend="138"/>
+    <listofallmembers>
+      <member refid="class_epsilon_1a4209ad5c3f4198bedc354a3f453b90f6" prot="public" virt="non-virtual"><scope>Epsilon</scope><name>BSPMap</name></member>
+      <member refid="class_epsilon_1ac8ff48133df501675ef699c2e30d6c9c" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>ClearBuffers</name></member>
+      <member refid="class_epsilon_1a485abd60922d9c5d1aabee3386b55266" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>Clock</name></member>
+      <member refid="class_epsilon_1a6b985dc929718148dc54490e34dbf21f" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>ComputeShadow</name></member>
+      <member refid="class_epsilon_1abbabb1ab313440119a0ff1741d52d4ca" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>ComputeWater</name></member>
+      <member refid="class_epsilon_1a4f660cdfabc6f3d825f5122601c5b4cd" prot="public" virt="non-virtual"><scope>Epsilon</scope><name>eCamera</name></member>
+      <member refid="class_epsilon_1a97302c6ca7b7d55d14f9ca742659ddca" prot="public" virt="non-virtual"><scope>Epsilon</scope><name>Epsilon</name></member>
+      <member refid="class_epsilon_1a490cfdcf7c8055841a2c84c9351f8cd7" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>etime</name></member>
+      <member refid="class_epsilon_1a4c11e8a8f223c276ee6777d8d8a9d133" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>eventtime</name></member>
+      <member refid="class_epsilon_1a536df7a1ddb765cb5e66134b800e3b77" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>exposure</name></member>
+      <member refid="class_epsilon_1aa9924c414ff6240268212fa2b7aa3f2d" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>flashLight</name></member>
+      <member refid="class_epsilon_1a6eda8c6f3d7757e0ff3f03bc83ae48cc" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>fps</name></member>
+      <member refid="class_epsilon_1a8f6ec2cc773f0a8a20b9293a1d59d8d9" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>fpss</name></member>
+      <member refid="class_epsilon_1a02eeaebcbdc08c1fba79f2da3f131b89" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>frametime</name></member>
+      <member refid="class_epsilon_1ae0a6e3e7c24c4ea1ed750ffc039f5852" prot="public" virt="non-virtual"><scope>Epsilon</scope><name>grass</name></member>
+      <member refid="class_epsilon_1ac96f8c02f0e5a73154e7036c7fb79450" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>grassPos</name></member>
+      <member refid="class_epsilon_1a5501cf7542b772a09cf4d4d90a9bb998" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>hdr</name></member>
+      <member refid="class_epsilon_1a7ad4ba1637a98f1def52a9488d3c69ac" prot="public" virt="non-virtual"><scope>Epsilon</scope><name>HEIGHT</name></member>
+      <member refid="class_epsilon_1acdbbc212462949ba9bde213afc7b5a38" prot="public" virt="non-virtual"><scope>Epsilon</scope><name>InitResources</name></member>
+      <member refid="class_epsilon_1a01da56903e0602a9b075f35e1c54daca" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>lastTime</name></member>
+      <member refid="class_epsilon_1a4432cd2a36f4227e06a8e8642a160935" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>lightPositions</name></member>
+      <member refid="class_epsilon_1a78c0240886a4a651bbd68f32a8a83bcb" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>LoadGeometry</name></member>
+      <member refid="class_epsilon_1a983a024c1507b66b8ac74319416dea46" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>LoadShaders</name></member>
+      <member refid="class_epsilon_1af22c2e5923fcd5eef66d82b78ebaf45b" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>LoadSound</name></member>
+      <member refid="class_epsilon_1afb0e90e9c8c15c9091cbf6dea4500f53" prot="public" virt="non-virtual"><scope>Epsilon</scope><name>m_AnimModel</name></member>
+      <member refid="class_epsilon_1a2c59fe55bdbbfffbd7c3bca0532b4ec4" prot="public" virt="non-virtual"><scope>Epsilon</scope><name>MainLoop</name></member>
+      <member refid="class_epsilon_1a23cf64e07be032abc3ffe969f037c87b" prot="public" virt="non-virtual"><scope>Epsilon</scope><name>model</name></member>
+      <member refid="class_epsilon_1a13ee7dfbabe704b302a60dad62f54615" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>normal</name></member>
+      <member refid="class_epsilon_1a337e26c855ae67cb3d45af0f2566001c" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>parallax</name></member>
+      <member refid="class_epsilon_1a755aeb43e7f4e87b93112ad0fa16b85f" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>PollEvents</name></member>
+      <member refid="class_epsilon_1a3522839e0199c6896e56e5ac9ee98550" prot="public" virt="non-virtual"><scope>Epsilon</scope><name>PP</name></member>
+      <member refid="class_epsilon_1a15d8da6ef70aabd9b8c13919bdf61bb2" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>ProcessFrame</name></member>
+      <member refid="class_epsilon_1affd17730239b1c11b926cee6f0e394a7" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>Render2D</name></member>
+      <member refid="class_epsilon_1aeadd2aa7a23c0226666071cff65851f5" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>Render3D</name></member>
+      <member refid="class_epsilon_1a64c6ffc39309ac06ba984f676f34caa5" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>Render3D</name></member>
+      <member refid="class_epsilon_1aec23d0bc6e70751880b20aa312e0e254" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>RenderFrame</name></member>
+      <member refid="class_epsilon_1af2a8325d6788484ff3e6755504189253" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>RenderLegacy</name></member>
+      <member refid="class_epsilon_1af3a4ef7297aa6e90f3018bc379a47499" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>RenderSkybox</name></member>
+      <member refid="class_epsilon_1aed713f9eef6e236d05ed4b2a36aab155" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>rM</name></member>
+      <member refid="class_epsilon_1a1fc7482adbabe15b7a201bbf82f0eefb" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>Running</name></member>
+      <member refid="class_epsilon_1ab7df71b81feb2a69c433d621c3b707c3" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>SetUniforms</name></member>
+      <member refid="class_epsilon_1a80c03a3455fad80a7e146ebb04a8a2fd" prot="public" virt="non-virtual"><scope>Epsilon</scope><name>Shaders</name></member>
+      <member refid="class_epsilon_1a5cec8f0efb9c91fb2f61b20264e3ef8d" prot="public" virt="non-virtual"><scope>Epsilon</scope><name>shadowMap</name></member>
+      <member refid="class_epsilon_1a5c56615886879536842f8511c9c1cd94" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>showtext</name></member>
+      <member refid="class_epsilon_1aa213c255e2fd3fde8d815106d193a031" prot="public" virt="non-virtual"><scope>Epsilon</scope><name>skybox</name></member>
+      <member refid="class_epsilon_1a40b12fc7256c567130cb22a4e3589436" prot="public" virt="non-virtual"><scope>Epsilon</scope><name>SSAO</name></member>
+      <member refid="class_epsilon_1a9123a170e3b6f0f345c7b76ccde79403" prot="public" virt="non-virtual"><scope>Epsilon</scope><name>sun</name></member>
+      <member refid="class_epsilon_1a5e75d17eb31e4a826234b5611d2f710b" prot="private" virt="non-virtual"><scope>Epsilon</scope><name>SwapBuffers</name></member>
+      <member refid="class_epsilon_1a496dff4b4355aad12dc91dbfe2b32c97" prot="public" virt="non-virtual"><scope>Epsilon</scope><name>terrain</name></member>
+      <member refid="class_epsilon_1af6d1eb23305249ded60952a61a471eb9" prot="public" virt="non-virtual"><scope>Epsilon</scope><name>text</name></member>
+      <member refid="class_epsilon_1acb637f14e1d02d3286d4021dd546fbef" prot="public" virt="non-virtual"><scope>Epsilon</scope><name>VertexArrayID</name></member>
+      <member refid="class_epsilon_1a4b68ebd706db40620854d640c5f47e11" prot="public" virt="non-virtual"><scope>Epsilon</scope><name>waterPlane</name></member>
+      <member refid="class_epsilon_1ad005199e74a13e0fc6dc1eb47416f073" prot="public" virt="non-virtual"><scope>Epsilon</scope><name>WIDTH</name></member>
+      <member refid="class_epsilon_1a12aad9914ca9e20307ff65807b1db252" prot="public" virt="non-virtual"><scope>Epsilon</scope><name>window</name></member>
+      <member refid="class_epsilon_1a2d56f50777a0cba533e9f3dc4abac02f" prot="public" virt="virtual"><scope>Epsilon</scope><name>~Epsilon</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>
