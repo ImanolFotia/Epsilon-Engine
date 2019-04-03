@@ -11,7 +11,7 @@ Screenshots and more detailed information is available on [my Webpage](http://im
 
 Installers and binaries will be available soon
 
-![](http://imanolfotia.com/media/gallery/img1.jpg)
+![](http://imanolfotia.com/media/gallery/img3.jpg)
 
 ## Table of Contents
 
