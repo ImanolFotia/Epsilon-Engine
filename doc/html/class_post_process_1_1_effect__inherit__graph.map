@@ -1,0 +1,5 @@
+<map id="PostProcess::Effect" name="PostProcess::Effect">
+<area shape="rect" id="node2" href="$class_post_process_1_1_motion_blur.html" title="PostProcess::MotionBlur" alt="" coords="5,87,172,114"/>
+<area shape="rect" id="node3" href="$class_post_process_1_1_screen_space_reflections.html" title="PostProcess::ScreenSpace\lReflections" alt="" coords="196,80,379,121"/>
+<area shape="rect" id="node4" href="$class_post_process_1_1_s_s_a_o.html" title="PostProcess::SSAO" alt="" coords="403,87,545,114"/>
+</map>

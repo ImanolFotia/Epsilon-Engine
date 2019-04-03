@@ -1,0 +1,47 @@
+.TH "tBSPNode" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+tBSPNode \- This stores a node in the BSP tree\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "int \fBplane\fP"
+.br
+.ti -1c
+.RI "int \fBfront\fP"
+.br
+.RI "\fIThe index into the planes array\&. \fP"
+.ti -1c
+.RI "int \fBback\fP"
+.br
+.RI "\fIThe child index for the front node\&. \fP"
+.ti -1c
+.RI "\fBtVector3i\fP \fBmin\fP"
+.br
+.ti -1c
+.RI "\fBtVector3i\fP \fBmax\fP"
+.br
+.ti -1c
+.RI "glm::vec3 \fBmin\fP"
+.br
+.RI "\fIThe child index for the back node\&. \fP"
+.ti -1c
+.RI "glm::vec3 \fBmax\fP"
+.br
+.RI "\fIThe bounding box min position\&. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+This stores a node in the BSP tree\&. 
+.PP
+Definition at line 124 of file BSP\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

@@ -1,0 +1,6 @@
+<map id="BSPfile" name="BSPfile">
+<area shape="rect" id="node2" href="$structt_b_s_p_vertex.html" title="This is our BSP vertex structure. " alt="" coords="5,124,96,151"/>
+<area shape="rect" id="node3" href="$class_c_bitset.html" title="CBitset" alt="" coords="121,124,186,151"/>
+<area shape="rect" id="node4" href="$structt_b_s_p_face.html" title="This is our BSP face structure. " alt="" coords="237,124,320,151"/>
+<area shape="rect" id="node5" href="$struct_c_vector3.html" title="CVector3" alt="" coords="241,5,317,32"/>
+</map>

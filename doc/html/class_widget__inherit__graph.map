@@ -1,0 +1,7 @@
+<map id="Widget" name="Widget">
+<area shape="rect" id="node2" href="$class_button.html" title="Button" alt="" coords="5,80,65,107"/>
+<area shape="rect" id="node3" href="$class_check_box.html" title="CheckBox" alt="" coords="90,80,173,107"/>
+<area shape="rect" id="node4" href="$class_console.html" title="Console" alt="" coords="197,80,266,107"/>
+<area shape="rect" id="node5" href="$class_label.html" title="Label" alt="" coords="290,80,343,107"/>
+<area shape="rect" id="node6" href="$class_panel.html" title="Panel" alt="" coords="368,80,423,107"/>
+</map>

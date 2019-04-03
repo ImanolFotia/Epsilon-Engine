@@ -1,0 +1,111 @@
+\hypertarget{class_check_box}{}\section{Check\+Box Class Reference}
+\label{class_check_box}\index{Check\+Box@{Check\+Box}}
+
+
+Inheritance diagram for Check\+Box\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=142pt]{class_check_box__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Check\+Box\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=277pt]{class_check_box__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries Check\+Box} (float width, float height, int win\+Width, int win\+Height, std\+::string text)\hypertarget{class_check_box_a3d9390cf35471e93face354b98ff3001}{}\label{class_check_box_a3d9390cf35471e93face354b98ff3001}
+
+\item 
+void {\bfseries func} ()\hypertarget{class_check_box_a0b97039dee9e859cc9eb30d72e133a14}{}\label{class_check_box_a0b97039dee9e859cc9eb30d72e133a14}
+
+\item 
+const void {\bfseries Toggle} ()\hypertarget{class_check_box_a167a810d2ccddb3fec5a91520b6ae814}{}\label{class_check_box_a167a810d2ccddb3fec5a91520b6ae814}
+
+\item 
+glm\+::vec2 {\bfseries Calculate\+Resolution} (int w, int h, int ww, int wh)\hypertarget{class_check_box_ace23379528e35190569cf3e390d4632f}{}\label{class_check_box_ace23379528e35190569cf3e390d4632f}
+
+\item 
+void {\bfseries Render} (std\+::shared\+\_\+ptr$<$ \hyperlink{class_shader}{Shader} $>$ shader)\hypertarget{class_check_box_a52282c55293a750f37515b9bf1dc8aca}{}\label{class_check_box_a52282c55293a750f37515b9bf1dc8aca}
+
+\item 
+void {\bfseries Update} ()\hypertarget{class_check_box_a9ac8ab23419163e51aeb4bcf0a3b3114}{}\label{class_check_box_a9ac8ab23419163e51aeb4bcf0a3b3114}
+
+\item 
+void {\bfseries set\+Text} (std\+::string txt)\hypertarget{class_check_box_a9d2970b875aa42e476e656dfa0533e27}{}\label{class_check_box_a9d2970b875aa42e476e656dfa0533e27}
+
+\item 
+bool {\bfseries Checked} ()\hypertarget{class_check_box_a06cc98fa2259372559948cfe4656288c}{}\label{class_check_box_a06cc98fa2259372559948cfe4656288c}
+
+\item 
+void {\bfseries Check} ()\hypertarget{class_check_box_abab1504cfd126c3b13338db6171ae2d5}{}\label{class_check_box_abab1504cfd126c3b13338db6171ae2d5}
+
+\item 
+void {\bfseries Uncheck} ()\hypertarget{class_check_box_a79d07104121045ab7589e5bcee43c4c1}{}\label{class_check_box_a79d07104121045ab7589e5bcee43c4c1}
+
+\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{class_text}{Text} $>$ {\bfseries m\+\_\+\+Text\+Renderer\+Instance}\hypertarget{class_check_box_a89248e9f2d0168a99e480e2847f0b96b}{}\label{class_check_box_a89248e9f2d0168a99e480e2847f0b96b}
+
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static bool {\bfseries \+\_\+checked} = true\hypertarget{class_check_box_aaf46b8d854583decd71d82af3a84cd4c}{}\label{class_check_box_aaf46b8d854583decd71d82af3a84cd4c}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::function$<$ void()$>$ {\bfseries \+\_\+clickfunc}\hypertarget{class_check_box_af5af918560cc8733a4186a37af9d3ffc}{}\label{class_check_box_af5af918560cc8733a4186a37af9d3ffc}
+
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{classe_texture}{e\+Texture} $>$ {\bfseries \+\_\+checked\+Ico}\hypertarget{class_check_box_a57983f1421b9bdb7432fadb0d800dbfe}{}\label{class_check_box_a57983f1421b9bdb7432fadb0d800dbfe}
+
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{classe_texture}{e\+Texture} $>$ {\bfseries \+\_\+unchecked\+Ico}\hypertarget{class_check_box_ac2b7e23e182871b0b3c3f63b855dff38}{}\label{class_check_box_ac2b7e23e182871b0b3c3f63b855dff38}
+
+\item 
+glm\+::mat4 {\bfseries projection}\hypertarget{class_check_box_a9c7a7bbbdd801f86c54159dadf6761a9}{}\label{class_check_box_a9c7a7bbbdd801f86c54159dadf6761a9}
+
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{class_open_g_l_helpers_1_1_quad}{Open\+G\+L\+Helpers\+::\+Quad} $>$ {\bfseries m\+\_\+\+Quad}\hypertarget{class_check_box_a3eda2dffdfc108bcd052979c39ca061f}{}\label{class_check_box_a3eda2dffdfc108bcd052979c39ca061f}
+
+\item 
+std\+::string {\bfseries \+\_\+text}\hypertarget{class_check_box_adf8dfe43e7c761f7aa251c09d94536a6}{}\label{class_check_box_adf8dfe43e7c761f7aa251c09d94536a6}
+
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{class_shader}{Shader} $>$ {\bfseries m\+\_\+\+Check\+Box\+Shader}\hypertarget{class_check_box_a4f218da0aa68f868501e5a2c9194f4b2}{}\label{class_check_box_a4f218da0aa68f868501e5a2c9194f4b2}
+
+\item 
+float {\bfseries m\+\_\+\+Width}\hypertarget{class_check_box_a0ee5ae038afa76d504d657679e59b379}{}\label{class_check_box_a0ee5ae038afa76d504d657679e59b379}
+
+\item 
+float {\bfseries m\+\_\+\+Height}\hypertarget{class_check_box_ac89b5a9f404e10620e7451f22572c717}{}\label{class_check_box_ac89b5a9f404e10620e7451f22572c717}
+
+\item 
+float {\bfseries m\+\_\+win\+Width}\hypertarget{class_check_box_a532007421507bd6d4e7c71f1e788980f}{}\label{class_check_box_a532007421507bd6d4e7c71f1e788980f}
+
+\item 
+float {\bfseries m\+\_\+win\+Height}\hypertarget{class_check_box_a93bbceb8e7558727c7607b4b45f90305}{}\label{class_check_box_a93bbceb8e7558727c7607b4b45f90305}
+
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 7 of file Check\+Box.\+h.
+

@@ -1,0 +1,209 @@
+.TH "Terrain" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Terrain \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBTerrain\fP (const char *, const char *, float, int, std::shared_ptr< \fBResourceManager\fP > rm)"
+.br
+.ti -1c
+.RI "\fBTerrain\fP (const char *, const char *, const char *, float, int)"
+.br
+.ti -1c
+.RI "\fBTerrain\fP (const char *, const char *, const char *, const char *, const char *, float, int, glm::vec3, std::shared_ptr< \fBResourceManager\fP > rm)"
+.br
+.ti -1c
+.RI "void \fBRenderTerrain\fP (\fBShader\fP *)"
+.br
+.in -1c
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "std::vector< \fBTVertex\fP > \fBvertices\fP"
+.br
+.in -1c
+.SS "Private Member Functions"
+
+.in +1c
+.ti -1c
+.RI "bool \fBGenerateSmoothNormals\fP ()"
+.br
+.ti -1c
+.RI "bool \fBGenerateVertexBuffers\fP ()"
+.br
+.ti -1c
+.RI "bool \fBGetHeightData\fP ()"
+.br
+.ti -1c
+.RI "bool \fBGenerateGrid\fP (unsigned char *pixels)"
+.br
+.ti -1c
+.RI "bool \fBLoadTexture\fP ()"
+.br
+.ti -1c
+.RI "bool \fBLoadTexture\fP (const char *)"
+.br
+.ti -1c
+.RI "bool \fBLoadTexture\fP (const char *, const char *, const char *, const char *)"
+.br
+.ti -1c
+.RI "bool \fBcalculateTangentSpace\fP ()"
+.br
+.ti -1c
+.RI "float \fBFBM\fP (glm::vec2 p)"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "GLuint \fBGL_d_texture\fP"
+.br
+.ti -1c
+.RI "GLuint \fBGL_n_texture\fP"
+.br
+.ti -1c
+.RI "GLuint \fBGL_s_texture\fP"
+.br
+.ti -1c
+.RI "GLuint \fBGL_m_texture\fP"
+.br
+.ti -1c
+.RI "GLuint \fBGL_decal_texture\fP"
+.br
+.ti -1c
+.RI "const char * \fBdiffuseTexture\fP"
+.br
+.ti -1c
+.RI "const char * \fBspecularTexture\fP"
+.br
+.ti -1c
+.RI "const char * \fBheightMap\fP"
+.br
+.ti -1c
+.RI "int \fBwidth\fP"
+.br
+.ti -1c
+.RI "int \fBheight\fP"
+.br
+.ti -1c
+.RI "int \fBchannels\fP"
+.br
+.ti -1c
+.RI "int \fBgridSize\fP"
+.br
+.ti -1c
+.RI "int \fBcantPixels\fP"
+.br
+.ti -1c
+.RI "float \fBscale\fP"
+.br
+.ti -1c
+.RI "glm::vec3 \fBm_Position\fP"
+.br
+.ti -1c
+.RI "GLuint \fBVAO\fP"
+.br
+.ti -1c
+.RI "GLuint \fBEBO\fP"
+.br
+.ti -1c
+.RI "GLuint \fBVBO\fP"
+.br
+.ti -1c
+.RI "GLuint \fBNVB\fP"
+.br
+.ti -1c
+.RI "GLuint \fBTVB\fP"
+.br
+.ti -1c
+.RI "GLuint \fBBVB\fP"
+.br
+.ti -1c
+.RI "std::vector< \fBFace\fP > \fBvface\fP"
+.br
+.ti -1c
+.RI "std::vector< GLuint > \fBindices\fP"
+.br
+.ti -1c
+.RI "std::vector< glm::vec3 > \fBNormals\fP"
+.br
+.ti -1c
+.RI "std::vector< glm::vec3 > \fBTangents\fP"
+.br
+.ti -1c
+.RI "std::vector< glm::vec3 > \fBBitangents\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBResourceManager\fP > \fBrM\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< btRigidBody > \fBrigidBody\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBPhysics::CollisionInfo\fP > \fBcollinfo\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBPhysics::PhysicObject\fP > \fBCollisionObject\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 42 of file Terrain\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Terrain::Terrain (const char * heightMap, const char * diffuseTexture, float scale, int gridSize, std::shared_ptr< \fBResourceManager\fP > rm)"
+========= Copyright Survtech, All rights reserved\&. ============//
+.PP
+Purpose: 
+.PP
+ 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIgridSize\fP Must be Power of two 
+.br
+\fIrm\fP Must be Power of two 
+.RE
+.PP
+
+.PP
+Definition at line 17 of file Terrain\&.cpp\&.
+.SS "Terrain::Terrain (const char * heightMap, const char * diffuseTexture, const char * normalTexture, const char * specularTexture, const char * metalTexture, float sc, int gridSize, glm::vec3 Position, std::shared_ptr< \fBResourceManager\fP > rm)"
+
+.PP
+\fBParameters:\fP
+.RS 4
+\fIrm\fP Must be Power of two 
+.RE
+.PP
+
+.PP
+Definition at line 34 of file Terrain\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "bool Terrain::calculateTangentSpace ()\fC [private]\fP"
+calculate tangent/bitangent vectors of both triangles
+.PP
+tangent1 = glm::normalize(tangent1);
+.PP
+bitangent1 = glm::normalize(bitangent1); 
+.PP
+Definition at line 189 of file Terrain\&.cpp\&.
+.SS "bool Terrain::GenerateVertexBuffers ()\fC [private]\fP"
+\fBVertex\fP And UV buffer Attachments
+.PP
+Element buffer Attachments 
+.PP
+Definition at line 268 of file Terrain\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

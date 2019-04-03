@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="struct_m_d5_animation_1_1_base_frame" kind="struct" language="C++" prot="public">
+    <compoundname>MD5Animation::BaseFrame</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_m_d5_animation_1_1_base_frame_1a9586b0574582517cc2968703e07588b0" prot="public" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 MD5Animation::BaseFrame::m_Pos</definition>
+        <argsstring></argsstring>
+        <name>m_Pos</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" line="43" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_animation_1_1_base_frame_1ae60903c1a92bf95597fa9c5c963d0ea9" prot="public" static="no" mutable="no">
+        <type>glm::quat</type>
+        <definition>glm::quat MD5Animation::BaseFrame::m_Orient</definition>
+        <argsstring></argsstring>
+        <name>m_Orient</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" line="44" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" line="42" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Anim.h" bodystart="41" bodyend="45"/>
+    <listofallmembers>
+      <member refid="struct_m_d5_animation_1_1_base_frame_1ae60903c1a92bf95597fa9c5c963d0ea9" prot="public" virt="non-virtual"><scope>MD5Animation::BaseFrame</scope><name>m_Orient</name></member>
+      <member refid="struct_m_d5_animation_1_1_base_frame_1a9586b0574582517cc2968703e07588b0" prot="public" virt="non-virtual"><scope>MD5Animation::BaseFrame</scope><name>m_Pos</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

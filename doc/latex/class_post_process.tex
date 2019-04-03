@@ -1,0 +1,774 @@
+\hypertarget{class_post_process}{}\section{Post\+Process Class Reference}
+\label{class_post_process}\index{Post\+Process@{Post\+Process}}
+
+
+Collaboration diagram for Post\+Process\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_post_process__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{class_post_process_a38bb7420926e3eabf5f4f73ecff37aa9}{begin\+Off\+Screenrendering} (void)
+\item 
+void \hyperlink{class_post_process_a19cbfd261c0899f70035134e56ec0faa}{end\+Off\+Screen\+Rendering} (void)
+\item 
+void \hyperlink{class_post_process_acebaecb02b654eef8775ed01d7ac792d}{Show\+Frame} (glm\+::vec3, bool \&hdr, std\+::shared\+\_\+ptr$<$ \hyperlink{class_camera}{Camera} $>$ \&cam, float exposure, std\+::unique\+\_\+ptr$<$ \hyperlink{class_shadow_map}{Shadow\+Map} $>$ \&)
+\item 
+void \hyperlink{class_post_process_a91ba3f5417ef7302414ef22511542fb8}{apply\+S\+S\+AO} (std\+::shared\+\_\+ptr$<$ \hyperlink{class_camera}{Camera} $>$ \&cam)
+\item 
+void \hyperlink{class_post_process_a78f0a745809aa98913eeae01c00cfe68}{Show\+Post\+Process\+Image} (float exposure, G\+Luint, glm\+::vec3 \hyperlink{class_sun}{Sun}, std\+::shared\+\_\+ptr$<$ \hyperlink{class_camera}{Camera} $>$ \&cam)
+\item 
+G\+Luint {\bfseries get\+Scene\+Texture} ()\hypertarget{class_post_process_aca5a2fb8f56f160dc447e3f1a8406083}{}\label{class_post_process_aca5a2fb8f56f160dc447e3f1a8406083}
+
+\item 
+void {\bfseries Destroy} ()\hypertarget{class_post_process_a347f369fe253926301925a2628bdb9d2}{}\label{class_post_process_a347f369fe253926301925a2628bdb9d2}
+
+\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+G\+Luint {\bfseries color\+Buffer}\hypertarget{class_post_process_af6ac3992f1a6a8728aa53e035497a4b9}{}\label{class_post_process_af6ac3992f1a6a8728aa53e035497a4b9}
+
+\item 
+G\+Luint {\bfseries depth\+Buffer}\hypertarget{class_post_process_ae17db17c81e11a32fc20bc2b2421ca32}{}\label{class_post_process_ae17db17c81e11a32fc20bc2b2421ca32}
+
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{class_frame_buffer}{Frame\+Buffer}$<$ std\+::string $>$ $>$ {\bfseries hdr\+F\+BO}\hypertarget{class_post_process_aa3cc5d7e8298e283a829f2c4c0940fcb}{}\label{class_post_process_aa3cc5d7e8298e283a829f2c4c0940fcb}
+
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{class_frame_buffer}{Frame\+Buffer}$<$ int $>$ $>$ {\bfseries m\+Composite\+Image}\hypertarget{class_post_process_a7ed4bcff383006fb9382f8dbcb506be7}{}\label{class_post_process_a7ed4bcff383006fb9382f8dbcb506be7}
+
+\item 
+std\+::unique\+\_\+ptr$<$ \hyperlink{class_shader}{Shader} $>$ {\bfseries shader}\hypertarget{class_post_process_a02ff6a0163605ec1b9305a62f0d1efaa}{}\label{class_post_process_a02ff6a0163605ec1b9305a62f0d1efaa}
+
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{class_frame_buffer}{Frame\+Buffer}$<$ int $>$ $>$ {\bfseries Copy\+Texture\+F\+BO}\hypertarget{class_post_process_a4e567b3efb33e26fbfc712ee78f4cae9}{}\label{class_post_process_a4e567b3efb33e26fbfc712ee78f4cae9}
+
+\item 
+float {\bfseries m\+\_\+exposure}\hypertarget{class_post_process_ae6b3e05d49ce3db14e54fc69cecfae37}{}\label{class_post_process_ae6b3e05d49ce3db14e54fc69cecfae37}
+
+\item 
+G\+Luint {\bfseries g\+Depth}\hypertarget{class_post_process_a94f0a0ba6c405c3b4ad6ca8c8ac0b2cf}{}\label{class_post_process_a94f0a0ba6c405c3b4ad6ca8c8ac0b2cf}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{class_post_process_a6dae442b486eae1998836bb77055e684}{Load\+Offscreens\+Shaders} (void)
+\item 
+void \hyperlink{class_post_process_a08977c2caa835dd252648edaedbd320f}{Setup\+Framebuffer} (void)
+\item 
+void \hyperlink{class_post_process_ad0e21d0808e0a70d2c996a7ab9e3b0ce}{Render\+Quad} (void)
+\item 
+float \hyperlink{class_post_process_aef30f3a7c5c63af503e5bc8a943469c0}{lerp} (float y1, float y2, float mu)
+\item 
+void \hyperlink{class_post_process_aa34071cd45a83f46b63622d2710d7990}{Setup\+G\+Buffer} (void)
+\item 
+void \hyperlink{class_post_process_aa78e9436eb2ee584aa68f4a780dfb0d7}{setup\+S\+S\+AO} (void)
+\item 
+void \hyperlink{class_post_process_a4f569f4f7f341895fc01429d11053d17}{setup\+S\+SR} (void)
+\item 
+void \hyperlink{class_post_process_aa7f1380b9b6a59b264bd305935547a81}{S\+S\+R\+Pass} (std\+::shared\+\_\+ptr$<$ \hyperlink{class_camera}{Camera} $>$ \&cam)
+\item 
+void {\bfseries setup\+Down\+Sampled\+S\+SR} ()\hypertarget{class_post_process_a970e3b0c805141809ba796bd8a2ebbb9}{}\label{class_post_process_a970e3b0c805141809ba796bd8a2ebbb9}
+
+\item 
+void {\bfseries Down\+Sample\+S\+SR} (double)\hypertarget{class_post_process_a37fd8b3a1f4261c986a1d427e26daa25}{}\label{class_post_process_a37fd8b3a1f4261c986a1d427e26daa25}
+
+\item 
+G\+Luint \hyperlink{class_post_process_af633b9be568ce821e0c7affca38ae2f8}{blur\+Image} (G\+Luint Buffer, bool)
+\item 
+void \hyperlink{class_post_process_a0487c53687150b2c46f210f2aebf3eac}{Setup\+Ping\+Pong\+F\+BO} (void)
+\item 
+void \hyperlink{class_post_process_a0cec00da385424a8f0c67a44c61d1a0e}{Setup\+Ping\+Pong\+D\+OF} (void)
+\item 
+G\+Lfloat \hyperlink{class_post_process_ab337b3a4d3cce0fea1bc6ae3d25185bf}{apply\+Auto\+Axposure} (G\+Luint Buffer)
+\item 
+void {\bfseries Setup\+Motion\+Blur} ()\hypertarget{class_post_process_a64a4e67743d3967a678c0746234c3632}{}\label{class_post_process_a64a4e67743d3967a678c0746234c3632}
+
+\item 
+void {\bfseries Motion\+Blur} (float)\hypertarget{class_post_process_af8bd85f9b29a6a13b091d0a2b14be89d}{}\label{class_post_process_af8bd85f9b29a6a13b091d0a2b14be89d}
+
+\item 
+G\+Luint {\bfseries blur\+S\+SR} (G\+Luint)\hypertarget{class_post_process_a2d1200ad2a2ad2fe2c9002236b193bdd}{}\label{class_post_process_a2d1200ad2a2ad2fe2c9002236b193bdd}
+
+\item 
+void {\bfseries setup\+Ping\+Pong\+S\+SR} ()\hypertarget{class_post_process_a8070a951740df2c87f60aeefe08f3eab}{}\label{class_post_process_a8070a951740df2c87f60aeefe08f3eab}
+
+\item 
+void {\bfseries Composite\+Image} (bool)\hypertarget{class_post_process_a84ed266e2d9595173b3f2cedbb73deb2}{}\label{class_post_process_a84ed266e2d9595173b3f2cedbb73deb2}
+
+\item 
+G\+Luint {\bfseries Get\+Pixel} (G\+Luint)\hypertarget{class_post_process_aec465de212566b341ad2fa34e8510c8b}{}\label{class_post_process_aec465de212566b341ad2fa34e8510c8b}
+
+\item 
+void {\bfseries generate\+B\+R\+DF} ()\hypertarget{class_post_process_aa4620e807e18d9e67d7385c4792c81f5}{}\label{class_post_process_aa4620e807e18d9e67d7385c4792c81f5}
+
+\item 
+void {\bfseries setup\+Denoise} ()\hypertarget{class_post_process_a4738d365965538e3882c7225677cb252}{}\label{class_post_process_a4738d365965538e3882c7225677cb252}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ \hyperlink{structt__light}{t\+\_\+light} $>$ {\bfseries m\+\_\+\+Lights}\hypertarget{class_post_process_a0c4eb4ac4ad4d27d48a818e33b5fd18e}{}\label{class_post_process_a0c4eb4ac4ad4d27d48a818e33b5fd18e}
+
+\item 
+G\+Luint {\bfseries S\+S\+A\+Owidth}\hypertarget{class_post_process_a270641e52cd73aacd71e79ad6085f938}{}\label{class_post_process_a270641e52cd73aacd71e79ad6085f938}
+
+\item 
+G\+Luint {\bfseries S\+S\+A\+Oheight}\hypertarget{class_post_process_a976f4ef1f60fc1c56be30ee4dac9c854}{}\label{class_post_process_a976f4ef1f60fc1c56be30ee4dac9c854}
+
+\item 
+G\+Luint {\bfseries Motion\+Blur\+Buffer}\hypertarget{class_post_process_ad31325b68544d62f94e05b765ea5bfe8}{}\label{class_post_process_ad31325b68544d62f94e05b765ea5bfe8}
+
+\item 
+G\+Luint {\bfseries Motion\+Blur\+F\+BO}\hypertarget{class_post_process_a497dfb61aa506292933d119394d5d477}{}\label{class_post_process_a497dfb61aa506292933d119394d5d477}
+
+\item 
+G\+Luint {\bfseries S\+S\+R\+F\+BO}\hypertarget{class_post_process_a57e865ea7b71520da7f8f6b190c87df6}{}\label{class_post_process_a57e865ea7b71520da7f8f6b190c87df6}
+
+\item 
+G\+Luint {\bfseries S\+S\+R\+Texture}\hypertarget{class_post_process_a89ca68b09a9e5e1e6334a4a480d091c5}{}\label{class_post_process_a89ca68b09a9e5e1e6334a4a480d091c5}
+
+\item 
+G\+Luint {\bfseries pingpong\+S\+S\+R\+F\+BO} \mbox{[}2\mbox{]}\hypertarget{class_post_process_a429f9ebb91c0bb3aeee0495de728cac8}{}\label{class_post_process_a429f9ebb91c0bb3aeee0495de728cac8}
+
+\item 
+G\+Luint {\bfseries pingpong\+S\+S\+RT} \mbox{[}2\mbox{]}\hypertarget{class_post_process_a2578047a4697412f0cd6c013e6198ba5}{}\label{class_post_process_a2578047a4697412f0cd6c013e6198ba5}
+
+\item 
+G\+Luint {\bfseries Down\+Sampler\+F\+BO}\hypertarget{class_post_process_a7bee7c6ed9c05e5eecb22a12733d6381}{}\label{class_post_process_a7bee7c6ed9c05e5eecb22a12733d6381}
+
+\item 
+G\+Luint {\bfseries Down\+Sampled\+Texture}\hypertarget{class_post_process_ad8bc290e92c2b1712f73912484a5f336}{}\label{class_post_process_ad8bc290e92c2b1712f73912484a5f336}
+
+\item 
+G\+Luint {\bfseries Single\+Pixel\+Color\+Buffer}\hypertarget{class_post_process_ada483d6dd3adaa11f956a924eed03317}{}\label{class_post_process_ada483d6dd3adaa11f956a924eed03317}
+
+\item 
+G\+Luint {\bfseries g\+Extra\+Components}\hypertarget{class_post_process_a30d0ee1a8526989aa8aff4a4260bfd02}{}\label{class_post_process_a30d0ee1a8526989aa8aff4a4260bfd02}
+
+\item 
+bool {\bfseries S\+S\+R\+On}\hypertarget{class_post_process_ad30d4c5b307861b897e4d60515d1284c}{}\label{class_post_process_ad30d4c5b307861b897e4d60515d1284c}
+
+\item 
+bool {\bfseries m\+\_\+\+Motion\+Blur}\hypertarget{class_post_process_a016702dfa077a7204f4c077abc9db177}{}\label{class_post_process_a016702dfa077a7204f4c077abc9db177}
+
+\item 
+bool {\bfseries light\+Shafts}\hypertarget{class_post_process_a3aa495418af84b9f4a9843bedfe51cb2}{}\label{class_post_process_a3aa495418af84b9f4a9843bedfe51cb2}
+
+\item 
+bool {\bfseries m\+Parallax\+Mapping}\hypertarget{class_post_process_a6dfe50ed00017382fd4f687593a99b43}{}\label{class_post_process_a6dfe50ed00017382fd4f687593a99b43}
+
+\item 
+bool {\bfseries m\+Motion\+Blur\+Strength}\hypertarget{class_post_process_a7caef11e2356c116ba46173ccd2d7ce4}{}\label{class_post_process_a7caef11e2356c116ba46173ccd2d7ce4}
+
+\item 
+int {\bfseries m\+H\+B\+A\+O\+Quality}\hypertarget{class_post_process_a964c97d799a625d223bcf7f8cafb3557}{}\label{class_post_process_a964c97d799a625d223bcf7f8cafb3557}
+
+\item 
+bool {\bfseries m\+Chromatic\+Aberration}\hypertarget{class_post_process_ae455329304700f4eec0ea2bec2191824}{}\label{class_post_process_ae455329304700f4eec0ea2bec2191824}
+
+\item 
+bool {\bfseries m\+Bokeh\+D\+OF}\hypertarget{class_post_process_a58a502782040a717398ca8d0dd27c2bb}{}\label{class_post_process_a58a502782040a717398ca8d0dd27c2bb}
+
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{class_frame_buffer}{Frame\+Buffer}$<$ int $>$ $>$ {\bfseries B\+R\+D\+F\+Framebuffer}\hypertarget{class_post_process_a1d53ee6e17aabaa2b8b28cf795174292}{}\label{class_post_process_a1d53ee6e17aabaa2b8b28cf795174292}
+
+\item 
+G\+Luint {\bfseries ssao\+F\+BO}\hypertarget{class_post_process_a560ec6825b911f05a940ff6e90af6600}{}\label{class_post_process_a560ec6825b911f05a940ff6e90af6600}
+
+\item 
+G\+Luint {\bfseries ssao\+Blur\+F\+BO}\hypertarget{class_post_process_aa5a1c421781775cb4a18113b0644d914}{}\label{class_post_process_aa5a1c421781775cb4a18113b0644d914}
+
+\item 
+G\+Luint {\bfseries rbo\+Depth}\hypertarget{class_post_process_adfa2993fd0809b22f1e1d27d1dc2f4bf}{}\label{class_post_process_adfa2993fd0809b22f1e1d27d1dc2f4bf}
+
+\item 
+G\+Luint {\bfseries r\+Depth}\hypertarget{class_post_process_afd0632053fabcfd93fa93ab8bd757c32}{}\label{class_post_process_afd0632053fabcfd93fa93ab8bd757c32}
+
+\item 
+G\+Luint {\bfseries quad\+V\+AO} = 0\hypertarget{class_post_process_ac892657e2c03193ece1345e6047e0c40}{}\label{class_post_process_ac892657e2c03193ece1345e6047e0c40}
+
+\item 
+G\+Luint {\bfseries quad\+V\+BO}\hypertarget{class_post_process_a2f57cd2163651048c86218b24d472b3f}{}\label{class_post_process_a2f57cd2163651048c86218b24d472b3f}
+
+\item 
+G\+Luint {\bfseries sampler}\hypertarget{class_post_process_a605886eebec0fcc44846b1d9f96eb4bb}{}\label{class_post_process_a605886eebec0fcc44846b1d9f96eb4bb}
+
+\item 
+G\+Luint {\bfseries intermediate\+F\+BO}\hypertarget{class_post_process_af7ab6af3c0275eeeeee1629d653f616c}{}\label{class_post_process_af7ab6af3c0275eeeeee1629d653f616c}
+
+\item 
+G\+Luint {\bfseries Depth\+Texture}\hypertarget{class_post_process_aaec91922bacb1eaddaf9b25f255457d9}{}\label{class_post_process_aaec91922bacb1eaddaf9b25f255457d9}
+
+\item 
+G\+Luint {\bfseries lowres\+F\+BO}\hypertarget{class_post_process_a49a53d8a3ea6bd18eb455fe52de5dda2}{}\label{class_post_process_a49a53d8a3ea6bd18eb455fe52de5dda2}
+
+\item 
+float {\bfseries last\+Depth}\hypertarget{class_post_process_a3abc05d2892f0bfd536252612ce69e24}{}\label{class_post_process_a3abc05d2892f0bfd536252612ce69e24}
+
+\item 
+G\+Luint {\bfseries lowres\+Tex}\hypertarget{class_post_process_ae680a89b400e4530f570f74fc8b48b65}{}\label{class_post_process_ae680a89b400e4530f570f74fc8b48b65}
+
+\item 
+G\+Luint {\bfseries pingpong\+F\+BO} \mbox{[}2\mbox{]}\hypertarget{class_post_process_a2adb4ea7ba61d31a0facac5f69b062bc}{}\label{class_post_process_a2adb4ea7ba61d31a0facac5f69b062bc}
+
+\item 
+G\+Luint {\bfseries pingpong\+Colorbuffers} \mbox{[}2\mbox{]}\hypertarget{class_post_process_a7118702a4e3ccab9694a0754aa778c0e}{}\label{class_post_process_a7118702a4e3ccab9694a0754aa778c0e}
+
+\item 
+G\+Luint {\bfseries pingpong\+D\+OF} \mbox{[}2\mbox{]}\hypertarget{class_post_process_a0bb0221084bd5c1e1455b32489dddc05}{}\label{class_post_process_a0bb0221084bd5c1e1455b32489dddc05}
+
+\item 
+G\+Luint {\bfseries pingpong\+Colorbuffers\+D\+OF} \mbox{[}2\mbox{]}\hypertarget{class_post_process_a7aa3bb2fca1e8ef8a877a4f06316aea8}{}\label{class_post_process_a7aa3bb2fca1e8ef8a877a4f06316aea8}
+
+\item 
+G\+Luint {\bfseries D\+O\+F\+Buffer}\hypertarget{class_post_process_a443ab6ff49c01a284eff21cf51a0b6b7}{}\label{class_post_process_a443ab6ff49c01a284eff21cf51a0b6b7}
+
+\item 
+glm\+::vec3 {\bfseries Sun}\hypertarget{class_post_process_a0d4bc1dee1128ff4e35cb2504f891780}{}\label{class_post_process_a0d4bc1dee1128ff4e35cb2504f891780}
+
+\item 
+std\+::vector$<$ glm\+::vec3 $>$ {\bfseries ssao\+Noise}\hypertarget{class_post_process_a373cf87c4afb93b26bbad09882f609a3}{}\label{class_post_process_a373cf87c4afb93b26bbad09882f609a3}
+
+\item 
+G\+Lenum {\bfseries attachment\+\_\+type}\hypertarget{class_post_process_a123c0e3124940ba8aadc0abbe96f474c}{}\label{class_post_process_a123c0e3124940ba8aadc0abbe96f474c}
+
+\item 
+int {\bfseries width}\hypertarget{class_post_process_a65b8eb5b5bd81fd7cad569919a2559a3}{}\label{class_post_process_a65b8eb5b5bd81fd7cad569919a2559a3}
+
+\item 
+int {\bfseries height}\hypertarget{class_post_process_a01b97fc45027e3395f825daaa28109ef}{}\label{class_post_process_a01b97fc45027e3395f825daaa28109ef}
+
+\item 
+float {\bfseries exposure\+Time}\hypertarget{class_post_process_a6e872522e3576bae1b1edb6d02cf142c}{}\label{class_post_process_a6e872522e3576bae1b1edb6d02cf142c}
+
+\item 
+std\+::unique\+\_\+ptr$<$ \hyperlink{class_shader}{Shader} $>$ {\bfseries S\+S\+AO}\hypertarget{class_post_process_a5280896a590a2ba6ef6d3a400ed17f58}{}\label{class_post_process_a5280896a590a2ba6ef6d3a400ed17f58}
+
+\item 
+std\+::unique\+\_\+ptr$<$ \hyperlink{class_shader}{Shader} $>$ {\bfseries blur\+S\+S\+AO}\hypertarget{class_post_process_a80ad5cbd99ec98700781d49d3fb67362}{}\label{class_post_process_a80ad5cbd99ec98700781d49d3fb67362}
+
+\item 
+std\+::unique\+\_\+ptr$<$ \hyperlink{class_shader}{Shader} $>$ {\bfseries final\+Image}\hypertarget{class_post_process_afc5a961181ff7dd661270b5dbeb85ffc}{}\label{class_post_process_afc5a961181ff7dd661270b5dbeb85ffc}
+
+\item 
+std\+::unique\+\_\+ptr$<$ \hyperlink{class_shader}{Shader} $>$ {\bfseries blur\+Bloom}\hypertarget{class_post_process_a3486a820d3968491addd62096866a13e}{}\label{class_post_process_a3486a820d3968491addd62096866a13e}
+
+\item 
+std\+::unique\+\_\+ptr$<$ \hyperlink{class_shader}{Shader} $>$ {\bfseries Screen\+Space\+Reflection\+Shader}\hypertarget{class_post_process_a3899e326c875d37d35c898c46a25bafc}{}\label{class_post_process_a3899e326c875d37d35c898c46a25bafc}
+
+\item 
+std\+::unique\+\_\+ptr$<$ \hyperlink{class_shader}{Shader} $>$ {\bfseries blur\+S\+S\+R\+Shader}\hypertarget{class_post_process_a9a0346ac281251e3a7ab25592dbb5066}{}\label{class_post_process_a9a0346ac281251e3a7ab25592dbb5066}
+
+\item 
+std\+::unique\+\_\+ptr$<$ \hyperlink{class_shader}{Shader} $>$ {\bfseries Pass\+Through\+Shader}\hypertarget{class_post_process_a822b12610954935381a77a9a22cc4161}{}\label{class_post_process_a822b12610954935381a77a9a22cc4161}
+
+\item 
+std\+::unique\+\_\+ptr$<$ \hyperlink{class_shader}{Shader} $>$ {\bfseries Motion\+Blur\+Shader}\hypertarget{class_post_process_a66fbc9476445c5f5fd0244a5d5624984}{}\label{class_post_process_a66fbc9476445c5f5fd0244a5d5624984}
+
+\item 
+std\+::unique\+\_\+ptr$<$ \hyperlink{class_shader}{Shader} $>$ {\bfseries Composite\+Shader}\hypertarget{class_post_process_a6eb2776a528af973c3ec52f9204b6814}{}\label{class_post_process_a6eb2776a528af973c3ec52f9204b6814}
+
+\item 
+std\+::unique\+\_\+ptr$<$ \hyperlink{class_shader}{Shader} $>$ {\bfseries B\+R\+D\+F\+Shader}\hypertarget{class_post_process_a29a10cf915ff785fad4e9b7ef86ef9da}{}\label{class_post_process_a29a10cf915ff785fad4e9b7ef86ef9da}
+
+\item 
+std\+::unique\+\_\+ptr$<$ \hyperlink{class_shader}{Shader} $>$ {\bfseries Denoise\+Shader}\hypertarget{class_post_process_a4bc30a05f094474f0779b8ee7ed4201d}{}\label{class_post_process_a4bc30a05f094474f0779b8ee7ed4201d}
+
+\item 
+std\+::vector$<$ glm\+::vec3 $>$ {\bfseries Light\+Positions}\hypertarget{class_post_process_ae4c43bee583e81707ccb4ed69ced965e}{}\label{class_post_process_ae4c43bee583e81707ccb4ed69ced965e}
+
+\item 
+std\+::vector$<$ glm\+::vec3 $>$ \hyperlink{class_post_process_ad2b9c44c832a3be92faabf48dfd8009e}{ssao\+Kernel}\hypertarget{class_post_process_ad2b9c44c832a3be92faabf48dfd8009e}{}\label{class_post_process_ad2b9c44c832a3be92faabf48dfd8009e}
+
+\begin{DoxyCompactList}\small\item\em G-\/\+Buffer texture samplers. \end{DoxyCompactList}\item 
+G\+Luint {\bfseries noise\+Texture}\hypertarget{class_post_process_a4686a88757a73c7722ba3b35990ad284}{}\label{class_post_process_a4686a88757a73c7722ba3b35990ad284}
+
+\item 
+G\+Luint {\bfseries Denoise\+Texture}\hypertarget{class_post_process_af6cac07a2f0b8a65d68b4834fa3d1cf7}{}\label{class_post_process_af6cac07a2f0b8a65d68b4834fa3d1cf7}
+
+\item 
+G\+Luint {\bfseries Denoise\+F\+BO}\hypertarget{class_post_process_aa6c26fcb8cbfe0f2f1be49783ee89ba1}{}\label{class_post_process_aa6c26fcb8cbfe0f2f1be49783ee89ba1}
+
+\item 
+G\+Luint {\bfseries bright\+Color\+Buffer}\hypertarget{class_post_process_a2e3cfaf7b923348732d99882ed79140f}{}\label{class_post_process_a2e3cfaf7b923348732d99882ed79140f}
+
+\item 
+G\+Luint {\bfseries g\+Buffer}\hypertarget{class_post_process_aa8b2b51765180988517fb55102db93a2}{}\label{class_post_process_aa8b2b51765180988517fb55102db93a2}
+
+\item 
+G\+Luint {\bfseries g\+Albedo\+Spec}\hypertarget{class_post_process_afa5ba87edeb9c4c53ce6e862b0e72dfb}{}\label{class_post_process_afa5ba87edeb9c4c53ce6e862b0e72dfb}
+
+\item 
+G\+Luint {\bfseries g\+Position}\hypertarget{class_post_process_a005d84c255105b7d73888e97e6bb214c}{}\label{class_post_process_a005d84c255105b7d73888e97e6bb214c}
+
+\item 
+G\+Luint {\bfseries g\+Normal}\hypertarget{class_post_process_a462c1b1f5b96d7bb0c85872743bd950a}{}\label{class_post_process_a462c1b1f5b96d7bb0c85872743bd950a}
+
+\item 
+G\+Luint {\bfseries g\+Low\+Res\+Depth}\hypertarget{class_post_process_a39b9831c4da56288216fc57fce06ec67}{}\label{class_post_process_a39b9831c4da56288216fc57fce06ec67}
+
+\item 
+G\+Luint {\bfseries g\+Expensive\+Normal}\hypertarget{class_post_process_aee390abc9169b89a2b738c5280a333c2}{}\label{class_post_process_aee390abc9169b89a2b738c5280a333c2}
+
+\item 
+G\+Luint {\bfseries ssao\+Color\+Buffer}\hypertarget{class_post_process_a3f81c98c4a5e6dea0f95253699948a3f}{}\label{class_post_process_a3f81c98c4a5e6dea0f95253699948a3f}
+
+\item 
+G\+Luint {\bfseries ssao\+Color\+Buffer\+Blur}\hypertarget{class_post_process_a9f84dfc3be3b3a8894419438ecb1fea8}{}\label{class_post_process_a9f84dfc3be3b3a8894419438ecb1fea8}
+
+\item 
+G\+Luint {\bfseries g\+World\+Space\+Position}\hypertarget{class_post_process_ae41ec5a53a774012cd1208cd27ba3f3b}{}\label{class_post_process_ae41ec5a53a774012cd1208cd27ba3f3b}
+
+\item 
+G\+Luint {\bfseries g\+Light\+Accumulation}\hypertarget{class_post_process_a9ec31d85453885addcb4f2ef1314cd38}{}\label{class_post_process_a9ec31d85453885addcb4f2ef1314cd38}
+
+\item 
+G\+Luint {\bfseries m\+Last\+Frametexture}\hypertarget{class_post_process_a067b6f0c72c87a1933ca49d802fbe66f}{}\label{class_post_process_a067b6f0c72c87a1933ca49d802fbe66f}
+
+\item 
+G\+Luint {\bfseries m\+Blurred\+S\+SR}\hypertarget{class_post_process_ac08d956c85be818c5c6b23ecaa51f6ab}{}\label{class_post_process_ac08d956c85be818c5c6b23ecaa51f6ab}
+
+\item 
+G\+Luint {\bfseries B\+R\+DF} = 0\hypertarget{class_post_process_adb16998b4029278936a3f58f02c3fd94}{}\label{class_post_process_adb16998b4029278936a3f58f02c3fd94}
+
+\item 
+G\+Luint {\bfseries ssbo} = 0\hypertarget{class_post_process_a2a196884f22cec1c846cee570f0a8228}{}\label{class_post_process_a2a196884f22cec1c846cee570f0a8228}
+
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{classe_texture}{e\+Texture} $>$ {\bfseries lens\+Color}\hypertarget{class_post_process_a62018a688ecd4f43129cb155db3d3fc9}{}\label{class_post_process_a62018a688ecd4f43129cb155db3d3fc9}
+
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{classe_texture}{e\+Texture} $>$ {\bfseries lens\+Dirt}\hypertarget{class_post_process_af42dc428972b5293b4c9a0d96a5e8076}{}\label{class_post_process_af42dc428972b5293b4c9a0d96a5e8076}
+
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{classe_texture}{e\+Texture} $>$ {\bfseries lens\+Star}\hypertarget{class_post_process_ab326c2e2f17955ca2cb48f04151b3b39}{}\label{class_post_process_ab326c2e2f17955ca2cb48f04151b3b39}
+
+\item 
+glm\+::vec2 {\bfseries Focal\+Len}\hypertarget{class_post_process_a3ed78039bfa461aae333a58993c60d50}{}\label{class_post_process_a3ed78039bfa461aae333a58993c60d50}
+
+\item 
+glm\+::vec2 {\bfseries Inv\+Focal\+Len}\hypertarget{class_post_process_a5872a2cd6c7102be62666d61a67dfb9c}{}\label{class_post_process_a5872a2cd6c7102be62666d61a67dfb9c}
+
+\item 
+glm\+::vec2 {\bfseries U\+V\+To\+ViewA}\hypertarget{class_post_process_a3f013f8906583bdeda3ceba98a7c73dc}{}\label{class_post_process_a3f013f8906583bdeda3ceba98a7c73dc}
+
+\item 
+glm\+::vec2 {\bfseries U\+V\+To\+ViewB}\hypertarget{class_post_process_a2af2fe1523c35cb6ab990b99506eadb2}{}\label{class_post_process_a2af2fe1523c35cb6ab990b99506eadb2}
+
+\item 
+glm\+::vec2 {\bfseries Lin\+M\+AD}\hypertarget{class_post_process_a5aa081f6924860895df45dd3f30fb99b}{}\label{class_post_process_a5aa081f6924860895df45dd3f30fb99b}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+========= Copyright Survtech, All rights reserved. ============//
+
+Purpose\+: 
+
+ 
+
+Definition at line 20 of file Post\+Process.\+h.
+
+
+
+\subsection{Member Function Documentation}
+\index{Post\+Process@{Post\+Process}!apply\+Auto\+Axposure@{apply\+Auto\+Axposure}}
+\index{apply\+Auto\+Axposure@{apply\+Auto\+Axposure}!Post\+Process@{Post\+Process}}
+\subsubsection[{\texorpdfstring{apply\+Auto\+Axposure(\+G\+Luint Buffer)}{applyAutoAxposure(GLuint Buffer)}}]{\setlength{\rightskip}{0pt plus 5cm}G\+Lfloat Post\+Process\+::apply\+Auto\+Axposure (
+\begin{DoxyParamCaption}
+\item[{G\+Luint}]{Buffer}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_post_process_ab337b3a4d3cce0fea1bc6ae3d25185bf}{}\label{class_post_process_ab337b3a4d3cce0fea1bc6ae3d25185bf}
+gets the luminicense from a texture 
+
+Definition at line 460 of file Post\+Process.\+cpp.
+
+\index{Post\+Process@{Post\+Process}!apply\+S\+S\+AO@{apply\+S\+S\+AO}}
+\index{apply\+S\+S\+AO@{apply\+S\+S\+AO}!Post\+Process@{Post\+Process}}
+\subsubsection[{\texorpdfstring{apply\+S\+S\+A\+O(std\+::shared\+\_\+ptr$<$ Camera $>$ \&cam)}{applySSAO(std::shared_ptr< Camera > &cam)}}]{\setlength{\rightskip}{0pt plus 5cm}void Post\+Process\+::apply\+S\+S\+AO (
+\begin{DoxyParamCaption}
+\item[{std\+::shared\+\_\+ptr$<$ {\bf Camera} $>$ \&}]{cam}
+\end{DoxyParamCaption}
+)}\hypertarget{class_post_process_a91ba3f5417ef7302414ef22511542fb8}{}\label{class_post_process_a91ba3f5417ef7302414ef22511542fb8}
+Calculates the screen space ambient occlusion from the geometry 
+
+Definition at line 339 of file Post\+Process.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_post_process_a91ba3f5417ef7302414ef22511542fb8_cgraph}
+\end{center}
+\end{figure}
+
+
+\index{Post\+Process@{Post\+Process}!begin\+Off\+Screenrendering@{begin\+Off\+Screenrendering}}
+\index{begin\+Off\+Screenrendering@{begin\+Off\+Screenrendering}!Post\+Process@{Post\+Process}}
+\subsubsection[{\texorpdfstring{begin\+Off\+Screenrendering(void)}{beginOffScreenrendering(void)}}]{\setlength{\rightskip}{0pt plus 5cm}void Post\+Process\+::begin\+Off\+Screenrendering (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_post_process_a38bb7420926e3eabf5f4f73ecff37aa9}{}\label{class_post_process_a38bb7420926e3eabf5f4f73ecff37aa9}
+Attaches the off-\/screen rendering buffer 
+
+Definition at line 199 of file Post\+Process.\+cpp.
+
+\index{Post\+Process@{Post\+Process}!blur\+Image@{blur\+Image}}
+\index{blur\+Image@{blur\+Image}!Post\+Process@{Post\+Process}}
+\subsubsection[{\texorpdfstring{blur\+Image(\+G\+Luint Buffer, bool)}{blurImage(GLuint Buffer, bool)}}]{\setlength{\rightskip}{0pt plus 5cm}G\+Luint Post\+Process\+::blur\+Image (
+\begin{DoxyParamCaption}
+\item[{G\+Luint}]{Buffer, }
+\item[{bool}]{cheap = {\ttfamily false}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_post_process_af633b9be568ce821e0c7affca38ae2f8}{}\label{class_post_process_af633b9be568ce821e0c7affca38ae2f8}
+Blurs and image using a Gaussian Blur shader 
+
+Definition at line 426 of file Post\+Process.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_post_process_af633b9be568ce821e0c7affca38ae2f8_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_post_process_af633b9be568ce821e0c7affca38ae2f8_icgraph}
+\end{center}
+\end{figure}
+
+
+\index{Post\+Process@{Post\+Process}!end\+Off\+Screen\+Rendering@{end\+Off\+Screen\+Rendering}}
+\index{end\+Off\+Screen\+Rendering@{end\+Off\+Screen\+Rendering}!Post\+Process@{Post\+Process}}
+\subsubsection[{\texorpdfstring{end\+Off\+Screen\+Rendering(void)}{endOffScreenRendering(void)}}]{\setlength{\rightskip}{0pt plus 5cm}void Post\+Process\+::end\+Off\+Screen\+Rendering (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\hypertarget{class_post_process_a19cbfd261c0899f70035134e56ec0faa}{}\label{class_post_process_a19cbfd261c0899f70035134e56ec0faa}
+Disattaches the off-\/screen rendering buffer 
+
+Definition at line 208 of file Post\+Process.\+cpp.
+
+\index{Post\+Process@{Post\+Process}!lerp@{lerp}}
+\index{lerp@{lerp}!Post\+Process@{Post\+Process}}
+\subsubsection[{\texorpdfstring{lerp(float y1, float y2, float mu)}{lerp(float y1, float y2, float mu)}}]{\setlength{\rightskip}{0pt plus 5cm}float Post\+Process\+::lerp (
+\begin{DoxyParamCaption}
+\item[{float}]{y1, }
+\item[{float}]{y2, }
+\item[{float}]{mu}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_post_process_aef30f3a7c5c63af503e5bc8a943469c0}{}\label{class_post_process_aef30f3a7c5c63af503e5bc8a943469c0}
+Lerp function to interpolate values 
+
+Definition at line 1040 of file Post\+Process.\+cpp.
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_post_process_aef30f3a7c5c63af503e5bc8a943469c0_icgraph}
+\end{center}
+\end{figure}
+
+
+\index{Post\+Process@{Post\+Process}!Load\+Offscreens\+Shaders@{Load\+Offscreens\+Shaders}}
+\index{Load\+Offscreens\+Shaders@{Load\+Offscreens\+Shaders}!Post\+Process@{Post\+Process}}
+\subsubsection[{\texorpdfstring{Load\+Offscreens\+Shaders(void)}{LoadOffscreensShaders(void)}}]{\setlength{\rightskip}{0pt plus 5cm}void Post\+Process\+::\+Load\+Offscreens\+Shaders (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_post_process_a6dae442b486eae1998836bb77055e684}{}\label{class_post_process_a6dae442b486eae1998836bb77055e684}
+loads the shaders used for render off-\/screen and post process affects 
+
+Definition at line 184 of file Post\+Process.\+cpp.
+
+\index{Post\+Process@{Post\+Process}!Render\+Quad@{Render\+Quad}}
+\index{Render\+Quad@{Render\+Quad}!Post\+Process@{Post\+Process}}
+\subsubsection[{\texorpdfstring{Render\+Quad(void)}{RenderQuad(void)}}]{\setlength{\rightskip}{0pt plus 5cm}void Post\+Process\+::\+Render\+Quad (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_post_process_ad0e21d0808e0a70d2c996a7ab9e3b0ce}{}\label{class_post_process_ad0e21d0808e0a70d2c996a7ab9e3b0ce}
+Renders a quad that fills the screen 
+
+Definition at line 1044 of file Post\+Process.\+cpp.
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_post_process_ad0e21d0808e0a70d2c996a7ab9e3b0ce_icgraph}
+\end{center}
+\end{figure}
+
+
+\index{Post\+Process@{Post\+Process}!Setup\+Framebuffer@{Setup\+Framebuffer}}
+\index{Setup\+Framebuffer@{Setup\+Framebuffer}!Post\+Process@{Post\+Process}}
+\subsubsection[{\texorpdfstring{Setup\+Framebuffer(void)}{SetupFramebuffer(void)}}]{\setlength{\rightskip}{0pt plus 5cm}void Post\+Process\+::\+Setup\+Framebuffer (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_post_process_a08977c2caa835dd252648edaedbd320f}{}\label{class_post_process_a08977c2caa835dd252648edaedbd320f}
+Creates the framebuffer objects and attaches the proper textures 
+
+Definition at line 19 of file Post\+Process.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_post_process_a08977c2caa835dd252648edaedbd320f_cgraph}
+\end{center}
+\end{figure}
+
+
+\index{Post\+Process@{Post\+Process}!Setup\+G\+Buffer@{Setup\+G\+Buffer}}
+\index{Setup\+G\+Buffer@{Setup\+G\+Buffer}!Post\+Process@{Post\+Process}}
+\subsubsection[{\texorpdfstring{Setup\+G\+Buffer(void)}{SetupGBuffer(void)}}]{\setlength{\rightskip}{0pt plus 5cm}void Post\+Process\+::\+Setup\+G\+Buffer (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_post_process_aa34071cd45a83f46b63622d2710d7990}{}\label{class_post_process_aa34071cd45a83f46b63622d2710d7990}
+Creates the G\+Buffer and attaches the proper textures 
+\begin{DoxyItemize}
+\item Color + Specular color buffer
+\item Normal color buffer
+\item Create and attach depth buffer (renderbuffer) 
+\end{DoxyItemize}
+
+Definition at line 212 of file Post\+Process.\+cpp.
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_post_process_aa34071cd45a83f46b63622d2710d7990_icgraph}
+\end{center}
+\end{figure}
+
+
+\index{Post\+Process@{Post\+Process}!Setup\+Ping\+Pong\+D\+OF@{Setup\+Ping\+Pong\+D\+OF}}
+\index{Setup\+Ping\+Pong\+D\+OF@{Setup\+Ping\+Pong\+D\+OF}!Post\+Process@{Post\+Process}}
+\subsubsection[{\texorpdfstring{Setup\+Ping\+Pong\+D\+O\+F(void)}{SetupPingPongDOF(void)}}]{\setlength{\rightskip}{0pt plus 5cm}void Post\+Process\+::\+Setup\+Ping\+Pong\+D\+OF (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_post_process_a0cec00da385424a8f0c67a44c61d1a0e}{}\label{class_post_process_a0cec00da385424a8f0c67a44c61d1a0e}
+Set up buffers for blurring 
+
+Definition at line 535 of file Post\+Process.\+cpp.
+
+\index{Post\+Process@{Post\+Process}!Setup\+Ping\+Pong\+F\+BO@{Setup\+Ping\+Pong\+F\+BO}}
+\index{Setup\+Ping\+Pong\+F\+BO@{Setup\+Ping\+Pong\+F\+BO}!Post\+Process@{Post\+Process}}
+\subsubsection[{\texorpdfstring{Setup\+Ping\+Pong\+F\+B\+O(void)}{SetupPingPongFBO(void)}}]{\setlength{\rightskip}{0pt plus 5cm}void Post\+Process\+::\+Setup\+Ping\+Pong\+F\+BO (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_post_process_a0487c53687150b2c46f210f2aebf3eac}{}\label{class_post_process_a0487c53687150b2c46f210f2aebf3eac}
+Set up buffers for blurring 
+
+Definition at line 497 of file Post\+Process.\+cpp.
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_post_process_a0487c53687150b2c46f210f2aebf3eac_icgraph}
+\end{center}
+\end{figure}
+
+
+\index{Post\+Process@{Post\+Process}!setup\+S\+S\+AO@{setup\+S\+S\+AO}}
+\index{setup\+S\+S\+AO@{setup\+S\+S\+AO}!Post\+Process@{Post\+Process}}
+\subsubsection[{\texorpdfstring{setup\+S\+S\+A\+O(void)}{setupSSAO(void)}}]{\setlength{\rightskip}{0pt plus 5cm}void Post\+Process\+::setup\+S\+S\+AO (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_post_process_aa78e9436eb2ee584aa68f4a780dfb0d7}{}\label{class_post_process_aa78e9436eb2ee584aa68f4a780dfb0d7}
+Creates the \hyperlink{class_post_process_1_1_s_s_a_o}{S\+S\+AO} framebuffer and attaches the proper textures Also create framebuffer to hold \hyperlink{class_post_process_1_1_s_s_a_o}{S\+S\+AO} processing stage
+
+
+\begin{DoxyItemize}
+\item \hyperlink{class_post_process_1_1_s_s_a_o}{S\+S\+AO} color buffer
+\item and blur stage 
+\end{DoxyItemize}
+
+Definition at line 277 of file Post\+Process.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=342pt]{class_post_process_aa78e9436eb2ee584aa68f4a780dfb0d7_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_post_process_aa78e9436eb2ee584aa68f4a780dfb0d7_icgraph}
+\end{center}
+\end{figure}
+
+
+\index{Post\+Process@{Post\+Process}!setup\+S\+SR@{setup\+S\+SR}}
+\index{setup\+S\+SR@{setup\+S\+SR}!Post\+Process@{Post\+Process}}
+\subsubsection[{\texorpdfstring{setup\+S\+S\+R(void)}{setupSSR(void)}}]{\setlength{\rightskip}{0pt plus 5cm}void Post\+Process\+::setup\+S\+SR (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_post_process_a4f569f4f7f341895fc01429d11053d17}{}\label{class_post_process_a4f569f4f7f341895fc01429d11053d17}
+Creates the S\+SR framebuffer and attaches the proper textures 
+
+Definition at line 554 of file Post\+Process.\+cpp.
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_post_process_a4f569f4f7f341895fc01429d11053d17_icgraph}
+\end{center}
+\end{figure}
+
+
+\index{Post\+Process@{Post\+Process}!Show\+Frame@{Show\+Frame}}
+\index{Show\+Frame@{Show\+Frame}!Post\+Process@{Post\+Process}}
+\subsubsection[{\texorpdfstring{Show\+Frame(glm\+::vec3, bool \&hdr, std\+::shared\+\_\+ptr$<$ Camera $>$ \&cam, float exposure, std\+::unique\+\_\+ptr$<$ Shadow\+Map $>$ \&)}{ShowFrame(glm::vec3, bool &hdr, std::shared_ptr< Camera > &cam, float exposure, std::unique_ptr< ShadowMap > &)}}]{\setlength{\rightskip}{0pt plus 5cm}void Post\+Process\+::\+Show\+Frame (
+\begin{DoxyParamCaption}
+\item[{glm\+::vec3}]{Sun, }
+\item[{bool \&}]{hdr, }
+\item[{std\+::shared\+\_\+ptr$<$ {\bf Camera} $>$ \&}]{cam, }
+\item[{float}]{exposure, }
+\item[{std\+::unique\+\_\+ptr$<$ {\bf Shadow\+Map} $>$ \&}]{shadow\+Map}
+\end{DoxyParamCaption}
+)}\hypertarget{class_post_process_acebaecb02b654eef8775ed01d7ac792d}{}\label{class_post_process_acebaecb02b654eef8775ed01d7ac792d}
+Render the output from the G-\/\+Buffer copy texture
+
+end copy texture 
+
+Definition at line 944 of file Post\+Process.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_post_process_acebaecb02b654eef8775ed01d7ac792d_cgraph}
+\end{center}
+\end{figure}
+
+
+\index{Post\+Process@{Post\+Process}!Show\+Post\+Process\+Image@{Show\+Post\+Process\+Image}}
+\index{Show\+Post\+Process\+Image@{Show\+Post\+Process\+Image}!Post\+Process@{Post\+Process}}
+\subsubsection[{\texorpdfstring{Show\+Post\+Process\+Image(float exposure, G\+Luint, glm\+::vec3 Sun, std\+::shared\+\_\+ptr$<$ Camera $>$ \&cam)}{ShowPostProcessImage(float exposure, GLuint, glm::vec3 Sun, std::shared_ptr< Camera > &cam)}}]{\setlength{\rightskip}{0pt plus 5cm}void Post\+Process\+::\+Show\+Post\+Process\+Image (
+\begin{DoxyParamCaption}
+\item[{float}]{exposure, }
+\item[{G\+Luint}]{onmenu, }
+\item[{glm\+::vec3}]{Sun, }
+\item[{std\+::shared\+\_\+ptr$<$ {\bf Camera} $>$ \&}]{cam}
+\end{DoxyParamCaption}
+)}\hypertarget{class_post_process_a78f0a745809aa98913eeae01c00cfe68}{}\label{class_post_process_a78f0a745809aa98913eeae01c00cfe68}
+Render the post process image to the screen after the post-\/process effects has been applied 
+
+Definition at line 869 of file Post\+Process.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_post_process_a78f0a745809aa98913eeae01c00cfe68_cgraph}
+\end{center}
+\end{figure}
+
+
+\index{Post\+Process@{Post\+Process}!S\+S\+R\+Pass@{S\+S\+R\+Pass}}
+\index{S\+S\+R\+Pass@{S\+S\+R\+Pass}!Post\+Process@{Post\+Process}}
+\subsubsection[{\texorpdfstring{S\+S\+R\+Pass(std\+::shared\+\_\+ptr$<$ Camera $>$ \&cam)}{SSRPass(std::shared_ptr< Camera > &cam)}}]{\setlength{\rightskip}{0pt plus 5cm}void Post\+Process\+::\+S\+S\+R\+Pass (
+\begin{DoxyParamCaption}
+\item[{std\+::shared\+\_\+ptr$<$ {\bf Camera} $>$ \&}]{cam}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_post_process_aa7f1380b9b6a59b264bd305935547a81}{}\label{class_post_process_aa7f1380b9b6a59b264bd305935547a81}
+S\+SR Denoise S\+SR 
+
+Definition at line 640 of file Post\+Process.\+cpp.
+
+
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_post_process_aa7f1380b9b6a59b264bd305935547a81_cgraph}
+\end{center}
+\end{figure}
+
+
+
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_post_process_aa7f1380b9b6a59b264bd305935547a81_icgraph}
+\end{center}
+\end{figure}
+
+

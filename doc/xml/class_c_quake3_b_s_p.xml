@@ -1,0 +1,734 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="class_c_quake3_b_s_p" kind="class" language="C++" prot="public">
+    <compoundname>CQuake3BSP</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1ab3535b50e4d79b894aad24c1960ad718" prot="public" static="no" mutable="no">
+        <type><ref refid="class_c_frustum" kindref="compound">CFrustum</ref></type>
+        <definition>CFrustum CQuake3BSP::Frustum</definition>
+        <argsstring></argsstring>
+        <name>Frustum</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="245" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="245" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1a8ae3f4273747ba0c3895a8d633ce2454" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int CQuake3BSP::m_numOfVerts</definition>
+        <argsstring></argsstring>
+        <name>m_numOfVerts</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="257" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="257" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1af5a83586ec3fef2ccd908f35d5a7ed4f" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int CQuake3BSP::m_numOfFaces</definition>
+        <argsstring></argsstring>
+        <name>m_numOfFaces</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="258" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="258" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1aae87231445fa33c309d01df02fafb4a9" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int CQuake3BSP::m_numOfIndices</definition>
+        <argsstring></argsstring>
+        <name>m_numOfIndices</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="259" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="259" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1a993aca8bb89197243d7b10c69bc25a62" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int CQuake3BSP::m_numOfTextures</definition>
+        <argsstring></argsstring>
+        <name>m_numOfTextures</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="260" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="260" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1afe912e0cd3b2b30eb49637e0ce4c2538" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int CQuake3BSP::m_numOfLightmaps</definition>
+        <argsstring></argsstring>
+        <name>m_numOfLightmaps</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="261" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="261" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1ab36e7f94bcfa3bb51daa37ced0aa2b58" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int CQuake3BSP::m_numOfNodes</definition>
+        <argsstring></argsstring>
+        <name>m_numOfNodes</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="264" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="264" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1abd7ba3b4d1c3bfd69e501a37cd5fe8fc" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int CQuake3BSP::m_numOfLeafs</definition>
+        <argsstring></argsstring>
+        <name>m_numOfLeafs</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="265" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="265" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1ad8f12c640f5a931b3ef55f06b7056611" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int CQuake3BSP::m_numOfLeafFaces</definition>
+        <argsstring></argsstring>
+        <name>m_numOfLeafFaces</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="266" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="266" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1a65587e5eb28496e59f049cad7f5f7c1b" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int CQuake3BSP::m_numOfPlanes</definition>
+        <argsstring></argsstring>
+        <name>m_numOfPlanes</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="267" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="267" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1a58ccdf0e96cc03e690859e2205fbbe02" prot="private" static="no" mutable="no">
+        <type>int *</type>
+        <definition>int* CQuake3BSP::m_pIndices</definition>
+        <argsstring></argsstring>
+        <name>m_pIndices</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="269" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="269" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1aa8b1307c8cadac3fbdaa2d2090689b30" prot="private" static="no" mutable="no">
+        <type><ref refid="structt_b_s_p_vertex" kindref="compound">tBSPVertex</ref> *</type>
+        <definition>tBSPVertex* CQuake3BSP::m_pVerts</definition>
+        <argsstring></argsstring>
+        <name>m_pVerts</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="270" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="270" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1ac341d879b0d52ed6036be45b117b0800" prot="private" static="no" mutable="no">
+        <type><ref refid="structt_b_s_p_face" kindref="compound">tBSPFace</ref> *</type>
+        <definition>tBSPFace* CQuake3BSP::m_pFaces</definition>
+        <argsstring></argsstring>
+        <name>m_pFaces</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="271" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="271" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1a61af50f0545e0e9f17b30ba29a6d3012" prot="private" static="no" mutable="no">
+        <type><ref refid="structt_b_s_p_node" kindref="compound">tBSPNode</ref> *</type>
+        <definition>tBSPNode* CQuake3BSP::m_pNodes</definition>
+        <argsstring></argsstring>
+        <name>m_pNodes</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="274" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="274" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1ae45c76a84f9a10fd63a784a555018664" prot="private" static="no" mutable="no">
+        <type><ref refid="structt_b_s_p_leaf" kindref="compound">tBSPLeaf</ref> *</type>
+        <definition>tBSPLeaf* CQuake3BSP::m_pLeafs</definition>
+        <argsstring></argsstring>
+        <name>m_pLeafs</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="275" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="275" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1a3dcce071fe25a7e261b625ca136fbf6e" prot="private" static="no" mutable="no">
+        <type><ref refid="structt_b_s_p_plane" kindref="compound">tBSPPlane</ref> *</type>
+        <definition>tBSPPlane* CQuake3BSP::m_pPlanes</definition>
+        <argsstring></argsstring>
+        <name>m_pPlanes</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="276" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="276" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1ae9d2411614785d4dcb304f6a17ffd2d6" prot="private" static="no" mutable="no">
+        <type>int *</type>
+        <definition>int* CQuake3BSP::m_pLeafFaces</definition>
+        <argsstring></argsstring>
+        <name>m_pLeafFaces</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="277" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="277" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1af579c8cdab13d65d04b8fe21da37dde6" prot="private" static="no" mutable="no">
+        <type><ref refid="structt_b_s_p_vis_data" kindref="compound">tBSPVisData</ref></type>
+        <definition>tBSPVisData CQuake3BSP::m_clusters</definition>
+        <argsstring></argsstring>
+        <name>m_clusters</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="278" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="278" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1ad39344a841f60c33fbad46c354cc1c04" prot="private" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int CQuake3BSP::m_textures[MAX_TEXTURES]</definition>
+        <argsstring>[MAX_TEXTURES]</argsstring>
+        <name>m_textures</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="280" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="280" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1af1f7e1ed6e4012355c6424f4793426c3" prot="private" static="no" mutable="no">
+        <type>unsigned int *</type>
+        <definition>unsigned int* CQuake3BSP::VertexBufferArrays</definition>
+        <argsstring></argsstring>
+        <name>VertexBufferArrays</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="282" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="282" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1a91c15f2d32d87985fdd6ea874e1f9707" prot="private" static="no" mutable="no">
+        <type><ref refid="class_c_bitset" kindref="compound">CBitset</ref></type>
+        <definition>CBitset CQuake3BSP::m_FacesDrawn</definition>
+        <argsstring></argsstring>
+        <name>m_FacesDrawn</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="284" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="284" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1a3abb90858963d1d795b5e5e33a152f92" prot="private" static="no" mutable="no">
+        <type>std::map&lt; int, <ref refid="class_b_s_p_face" kindref="compound">BSPFace</ref> &gt;</type>
+        <definition>std::map&lt;int, BSPFace&gt; CQuake3BSP::Faces</definition>
+        <argsstring></argsstring>
+        <name>Faces</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="286" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="286" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1ae0e924f8e1ec9d4e911e4d9bdce5a1dd" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="struct_b_s_p_texture" kindref="compound">BSPTexture</ref> &gt;</type>
+        <definition>std::vector&lt;BSPTexture&gt; CQuake3BSP::Textures</definition>
+        <argsstring></argsstring>
+        <name>Textures</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="287" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="287" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1a83c453f608fa2799750da3705309aba4" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="struct_b_s_p_texture" kindref="compound">BSPTexture</ref> &gt;</type>
+        <definition>std::vector&lt;BSPTexture&gt; CQuake3BSP::normalTextures</definition>
+        <argsstring></argsstring>
+        <name>normalTextures</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="288" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="288" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1a38864b6aeb49897e7e836ca3ca306913" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; <ref refid="struct_b_s_p_texture" kindref="compound">BSPTexture</ref> &gt;</type>
+        <definition>std::vector&lt;BSPTexture&gt; CQuake3BSP::specularTextures</definition>
+        <argsstring></argsstring>
+        <name>specularTextures</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="289" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="289" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1adf1d74f1aa4e4bef4d0f467a6eaf863f" prot="private" static="no" mutable="no">
+        <type>std::map&lt; int, <ref refid="struct_b_s_p_texture" kindref="compound">BSPTexture</ref> &gt;</type>
+        <definition>std::map&lt;int, BSPTexture&gt; CQuake3BSP::faceTexture</definition>
+        <argsstring></argsstring>
+        <name>faceTexture</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="290" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="290" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1a93aa930777a9843962fe40811ae0c050" prot="private" static="no" mutable="no">
+        <type>std::map&lt; int, <ref refid="struct_b_s_p_texture" kindref="compound">BSPTexture</ref> &gt;</type>
+        <definition>std::map&lt;int, BSPTexture&gt; CQuake3BSP::faceTexture_normal</definition>
+        <argsstring></argsstring>
+        <name>faceTexture_normal</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="291" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="291" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1a1ccd0446e9df6e7e6ec5f8f5c7ef551b" prot="private" static="no" mutable="no">
+        <type>std::map&lt; int, <ref refid="struct_b_s_p_texture" kindref="compound">BSPTexture</ref> &gt;</type>
+        <definition>std::map&lt;int, BSPTexture&gt; CQuake3BSP::faceTexture_specular</definition>
+        <argsstring></argsstring>
+        <name>faceTexture_specular</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="292" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="292" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1aef6f1b37165988413a0b2e6c94cc8318" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool CQuake3BSP::lightmap</definition>
+        <argsstring></argsstring>
+        <name>lightmap</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="294" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="294" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1aab755fee798e3a61e5ea781565fd1d89" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool CQuake3BSP::color</definition>
+        <argsstring></argsstring>
+        <name>color</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="295" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="295" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1a7153ffaf217255a815b837862a9d2f9a" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int CQuake3BSP::faceCount</definition>
+        <argsstring></argsstring>
+        <name>faceCount</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="296" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="296" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_c_quake3_b_s_p_1a0daebdd8ca8923f8a0aa6d35e962a7b3" prot="private" static="no" mutable="no">
+        <type>GLuint</type>
+        <definition>GLuint CQuake3BSP::NormalTextureID</definition>
+        <argsstring></argsstring>
+        <name>NormalTextureID</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="297" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="297" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_c_quake3_b_s_p_1a8b79d3dda33e27399defef7e0b91ad99" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>CQuake3BSP::CQuake3BSP</definition>
+        <argsstring>()</argsstring>
+        <name>CQuake3BSP</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="232" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/BSP.cpp" bodystart="18" bodyend="28"/>
+      </memberdef>
+      <memberdef kind="function" id="class_c_quake3_b_s_p_1afb74d3f0f6656169b612011015650256" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type></type>
+        <definition>virtual CQuake3BSP::~CQuake3BSP</definition>
+        <argsstring>()</argsstring>
+        <name>~CQuake3BSP</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="234" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="234" bodyend="237"/>
+      </memberdef>
+      <memberdef kind="function" id="class_c_quake3_b_s_p_1a63f458d8e84eb5a4f0432460c849ba75" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool CQuake3BSP::LoadBSP</definition>
+        <argsstring>(const char *strFileName)</argsstring>
+        <name>LoadBSP</name>
+        <param>
+          <type>const char *</type>
+          <declname>strFileName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+<para>cout &lt;&lt; &quot;Number of lightmaps : &quot; &lt;&lt; lumps[kLightmaps].length / sizeof(tBSPLightmap) &lt;&lt; endl;</para><para>Used to Smooth the normals of the whole BSP map </para>        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="239" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/BSP.cpp" bodystart="31" bodyend="328"/>
+        <references refid="structt_b_s_p_lump_1afbc7425ba859229dba1872f143087407" compoundref="_b_s_p_8h" startline="55">tBSPLump::length</references>
+        <references refid="structt_b_s_p_face_1a040c921d8119084211d7c5b598e50d8c" compoundref="_b_s_p_8h" startline="74">tBSPFace::type</references>
+        <references refid="structt_b_s_p_face_1a1912406bb5b51899b39f9f2df91dcf23" compoundref="_b_s_p_8h" startline="76">tBSPFace::numOfVerts</references>
+        <references refid="structt_b_s_p_face_1a21d59300888f6b9b19c7ababcf3a0ebf" compoundref="_b_s_p_8h" startline="75">tBSPFace::startVertIndex</references>
+        <references refid="structt_b_s_p_face_1aaf6d0951f9efc27cc287fbbafd8b824a" compoundref="_b_s_p_8h" startline="78">tBSPFace::numOfIndices</references>
+        <references refid="structt_b_s_p_face_1ac637580cbe83702a142979852429e10f" compoundref="_b_s_p_8h" startline="77">tBSPFace::startIndex</references>
+        <references refid="class_b_s_p_face_1a19f538f17b7746ad1e13e36583a13955" compoundref="_b_s_p_face_8h" startline="37" endline="57">BSPFace::BuildFace</references>
+        <references refid="structt_b_s_p_face_1ac445f39cc2660d0953faeaf9324aec58" compoundref="_b_s_p_8h" startline="79">tBSPFace::lightmapID</references>
+      </memberdef>
+      <memberdef kind="function" id="class_c_quake3_b_s_p_1adb06c36ee906c9c4db1d16c1642c3aa2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void CQuake3BSP::RenderLevel</definition>
+        <argsstring>(glm::vec3 vPos, GLuint shader, bool Shadow)</argsstring>
+        <name>RenderLevel</name>
+        <param>
+          <type>glm::vec3</type>
+          <declname>vPos</declname>
+        </param>
+        <param>
+          <type>GLuint</type>
+          <declname>shader</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>Shadow</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+<para>glfwSetWindowTitle(window, (&quot;Faces Drawn: &quot; + to_string(g_VisibleFaces)).c_str()); </para>        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="241" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/BSP.cpp" bodystart="382" bodyend="425"/>
+        <references refid="structt_b_s_p_leaf_1af9c931abae0ae1c714c263d6f360cf80" compoundref="_b_s_p_8h" startline="142">tBSPLeaf::numOfLeafFaces</references>
+        <references refid="structt_b_s_p_leaf_1ae511900fc2a0644237f91bf87c54fec4" compoundref="_b_s_p_8h" startline="141">tBSPLeaf::leafface</references>
+      </memberdef>
+      <memberdef kind="function" id="class_c_quake3_b_s_p_1aa61b5bb7e4dfe39ce88a023f438cbe77" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void CQuake3BSP::Destroy</definition>
+        <argsstring>()</argsstring>
+        <name>Destroy</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="243" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/BSP.cpp" bodystart="428" bodyend="473"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_c_quake3_b_s_p_1a81aaf95313a6b9d59ea088042870bbca" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void CQuake3BSP::FindTextureExtension</definition>
+        <argsstring>(char *strFileName)</argsstring>
+        <name>FindTextureExtension</name>
+        <param>
+          <type>char *</type>
+          <declname>strFileName</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="249" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="class_c_quake3_b_s_p_1ae83aa7bd087d2a8163639286912c16f5" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void CQuake3BSP::RenderFace</definition>
+        <argsstring>(int faceIndex, GLuint shader)</argsstring>
+        <name>RenderFace</name>
+        <param>
+          <type>int</type>
+          <declname>faceIndex</declname>
+        </param>
+        <param>
+          <type>GLuint</type>
+          <declname>shader</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="251" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/BSP.cpp" bodystart="370" bodyend="378"/>
+      </memberdef>
+      <memberdef kind="function" id="class_c_quake3_b_s_p_1a8e69e5687f268bc56bff5faf341d597c" prot="private" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int CQuake3BSP::IsClusterVisible</definition>
+        <argsstring>(int current, int test)</argsstring>
+        <name>IsClusterVisible</name>
+        <param>
+          <type>int</type>
+          <declname>current</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>test</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="253" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/BSP.cpp" bodystart="358" bodyend="367"/>
+      </memberdef>
+      <memberdef kind="function" id="class_c_quake3_b_s_p_1a82ab93b599790d05ebf7039aa811cee5" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int CQuake3BSP::FindLeaf</definition>
+        <argsstring>(glm::vec3 vPos)</argsstring>
+        <name>FindLeaf</name>
+        <param>
+          <type>glm::vec3</type>
+          <declname>vPos</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+<para>Binary operation </para>        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="255" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/BSP.cpp" bodystart="331" bodyend="355"/>
+        <references refid="structt_b_s_p_plane_1a5b14756986ce09049188ae8219fcb0a6" compoundref="_b_s_p_8h" startline="151">tBSPPlane::d</references>
+        <references refid="structt_b_s_p_node_1a8e8f05774c8c65b46a9a89418d0347d4" compoundref="_b_s_p_8h" startline="129">tBSPNode::front</references>
+        <references refid="structt_b_s_p_node_1a814838f175570662e13bdb184039f8a1" compoundref="_b_s_p_8h" startline="130">tBSPNode::back</references>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="249">
+        <label>CBitset</label>
+        <link refid="class_c_bitset"/>
+      </node>
+      <node id="244">
+        <label>tVector3i</label>
+        <link refid="structt_vector3i"/>
+      </node>
+      <node id="248">
+        <label>CVector3</label>
+        <link refid="struct_c_vector3"/>
+      </node>
+      <node id="250">
+        <label>tBSPVisData</label>
+        <link refid="structt_b_s_p_vis_data"/>
+      </node>
+      <node id="251">
+        <label>tBSPFace</label>
+        <link refid="structt_b_s_p_face"/>
+        <childnode refid="248" relation="usage">
+          <edgelabel>vNormal</edgelabel>
+          <edgelabel>lMapVecs</edgelabel>
+          <edgelabel>lMapPos</edgelabel>
+        </childnode>
+      </node>
+      <node id="243">
+        <label>tBSPNode</label>
+        <link refid="structt_b_s_p_node"/>
+        <childnode refid="244" relation="usage">
+          <edgelabel>min</edgelabel>
+          <edgelabel>max</edgelabel>
+        </childnode>
+      </node>
+      <node id="246">
+        <label>CFrustum</label>
+        <link refid="class_c_frustum"/>
+      </node>
+      <node id="242">
+        <label>tBSPVertex</label>
+        <link refid="structt_b_s_p_vertex"/>
+      </node>
+      <node id="247">
+        <label>tBSPPlane</label>
+        <link refid="structt_b_s_p_plane"/>
+        <childnode refid="248" relation="usage">
+          <edgelabel>vNormal</edgelabel>
+        </childnode>
+      </node>
+      <node id="245">
+        <label>tBSPLeaf</label>
+        <link refid="structt_b_s_p_leaf"/>
+        <childnode refid="244" relation="usage">
+          <edgelabel>min</edgelabel>
+          <edgelabel>max</edgelabel>
+        </childnode>
+      </node>
+      <node id="241">
+        <label>CQuake3BSP</label>
+        <link refid="class_c_quake3_b_s_p"/>
+        <childnode refid="242" relation="usage">
+          <edgelabel>m_pVerts</edgelabel>
+        </childnode>
+        <childnode refid="243" relation="usage">
+          <edgelabel>m_pNodes</edgelabel>
+        </childnode>
+        <childnode refid="245" relation="usage">
+          <edgelabel>m_pLeafs</edgelabel>
+        </childnode>
+        <childnode refid="246" relation="usage">
+          <edgelabel>Frustum</edgelabel>
+        </childnode>
+        <childnode refid="247" relation="usage">
+          <edgelabel>m_pPlanes</edgelabel>
+        </childnode>
+        <childnode refid="249" relation="usage">
+          <edgelabel>m_FacesDrawn</edgelabel>
+        </childnode>
+        <childnode refid="250" relation="usage">
+          <edgelabel>m_clusters</edgelabel>
+        </childnode>
+        <childnode refid="251" relation="usage">
+          <edgelabel>m_pFaces</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="D:/Epsilon/Epsilon Engine/include/BSP.h" line="228" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/BSP.h" bodystart="227" bodyend="299"/>
+    <listofallmembers>
+      <member refid="class_c_quake3_b_s_p_1aab755fee798e3a61e5ea781565fd1d89" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>color</name></member>
+      <member refid="class_c_quake3_b_s_p_1a8b79d3dda33e27399defef7e0b91ad99" prot="public" virt="non-virtual"><scope>CQuake3BSP</scope><name>CQuake3BSP</name></member>
+      <member refid="class_c_quake3_b_s_p_1aa61b5bb7e4dfe39ce88a023f438cbe77" prot="public" virt="non-virtual"><scope>CQuake3BSP</scope><name>Destroy</name></member>
+      <member refid="class_c_quake3_b_s_p_1a7153ffaf217255a815b837862a9d2f9a" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>faceCount</name></member>
+      <member refid="class_c_quake3_b_s_p_1a3abb90858963d1d795b5e5e33a152f92" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>Faces</name></member>
+      <member refid="class_c_quake3_b_s_p_1adf1d74f1aa4e4bef4d0f467a6eaf863f" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>faceTexture</name></member>
+      <member refid="class_c_quake3_b_s_p_1a93aa930777a9843962fe40811ae0c050" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>faceTexture_normal</name></member>
+      <member refid="class_c_quake3_b_s_p_1a1ccd0446e9df6e7e6ec5f8f5c7ef551b" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>faceTexture_specular</name></member>
+      <member refid="class_c_quake3_b_s_p_1a82ab93b599790d05ebf7039aa811cee5" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>FindLeaf</name></member>
+      <member refid="class_c_quake3_b_s_p_1a81aaf95313a6b9d59ea088042870bbca" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>FindTextureExtension</name></member>
+      <member refid="class_c_quake3_b_s_p_1ab3535b50e4d79b894aad24c1960ad718" prot="public" virt="non-virtual"><scope>CQuake3BSP</scope><name>Frustum</name></member>
+      <member refid="class_c_quake3_b_s_p_1a8e69e5687f268bc56bff5faf341d597c" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>IsClusterVisible</name></member>
+      <member refid="class_c_quake3_b_s_p_1aef6f1b37165988413a0b2e6c94cc8318" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>lightmap</name></member>
+      <member refid="class_c_quake3_b_s_p_1a63f458d8e84eb5a4f0432460c849ba75" prot="public" virt="non-virtual"><scope>CQuake3BSP</scope><name>LoadBSP</name></member>
+      <member refid="class_c_quake3_b_s_p_1af579c8cdab13d65d04b8fe21da37dde6" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>m_clusters</name></member>
+      <member refid="class_c_quake3_b_s_p_1a91c15f2d32d87985fdd6ea874e1f9707" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>m_FacesDrawn</name></member>
+      <member refid="class_c_quake3_b_s_p_1af5a83586ec3fef2ccd908f35d5a7ed4f" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>m_numOfFaces</name></member>
+      <member refid="class_c_quake3_b_s_p_1aae87231445fa33c309d01df02fafb4a9" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>m_numOfIndices</name></member>
+      <member refid="class_c_quake3_b_s_p_1ad8f12c640f5a931b3ef55f06b7056611" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>m_numOfLeafFaces</name></member>
+      <member refid="class_c_quake3_b_s_p_1abd7ba3b4d1c3bfd69e501a37cd5fe8fc" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>m_numOfLeafs</name></member>
+      <member refid="class_c_quake3_b_s_p_1afe912e0cd3b2b30eb49637e0ce4c2538" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>m_numOfLightmaps</name></member>
+      <member refid="class_c_quake3_b_s_p_1ab36e7f94bcfa3bb51daa37ced0aa2b58" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>m_numOfNodes</name></member>
+      <member refid="class_c_quake3_b_s_p_1a65587e5eb28496e59f049cad7f5f7c1b" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>m_numOfPlanes</name></member>
+      <member refid="class_c_quake3_b_s_p_1a993aca8bb89197243d7b10c69bc25a62" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>m_numOfTextures</name></member>
+      <member refid="class_c_quake3_b_s_p_1a8ae3f4273747ba0c3895a8d633ce2454" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>m_numOfVerts</name></member>
+      <member refid="class_c_quake3_b_s_p_1ac341d879b0d52ed6036be45b117b0800" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>m_pFaces</name></member>
+      <member refid="class_c_quake3_b_s_p_1a58ccdf0e96cc03e690859e2205fbbe02" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>m_pIndices</name></member>
+      <member refid="class_c_quake3_b_s_p_1ae9d2411614785d4dcb304f6a17ffd2d6" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>m_pLeafFaces</name></member>
+      <member refid="class_c_quake3_b_s_p_1ae45c76a84f9a10fd63a784a555018664" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>m_pLeafs</name></member>
+      <member refid="class_c_quake3_b_s_p_1a61af50f0545e0e9f17b30ba29a6d3012" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>m_pNodes</name></member>
+      <member refid="class_c_quake3_b_s_p_1a3dcce071fe25a7e261b625ca136fbf6e" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>m_pPlanes</name></member>
+      <member refid="class_c_quake3_b_s_p_1aa8b1307c8cadac3fbdaa2d2090689b30" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>m_pVerts</name></member>
+      <member refid="class_c_quake3_b_s_p_1ad39344a841f60c33fbad46c354cc1c04" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>m_textures</name></member>
+      <member refid="class_c_quake3_b_s_p_1a0daebdd8ca8923f8a0aa6d35e962a7b3" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>NormalTextureID</name></member>
+      <member refid="class_c_quake3_b_s_p_1a83c453f608fa2799750da3705309aba4" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>normalTextures</name></member>
+      <member refid="class_c_quake3_b_s_p_1ae83aa7bd087d2a8163639286912c16f5" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>RenderFace</name></member>
+      <member refid="class_c_quake3_b_s_p_1adb06c36ee906c9c4db1d16c1642c3aa2" prot="public" virt="non-virtual"><scope>CQuake3BSP</scope><name>RenderLevel</name></member>
+      <member refid="class_c_quake3_b_s_p_1a38864b6aeb49897e7e836ca3ca306913" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>specularTextures</name></member>
+      <member refid="class_c_quake3_b_s_p_1ae0e924f8e1ec9d4e911e4d9bdce5a1dd" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>Textures</name></member>
+      <member refid="class_c_quake3_b_s_p_1af1f7e1ed6e4012355c6424f4793426c3" prot="private" virt="non-virtual"><scope>CQuake3BSP</scope><name>VertexBufferArrays</name></member>
+      <member refid="class_c_quake3_b_s_p_1afb74d3f0f6656169b612011015650256" prot="public" virt="virtual"><scope>CQuake3BSP</scope><name>~CQuake3BSP</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

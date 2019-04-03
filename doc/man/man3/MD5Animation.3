@@ -1,0 +1,153 @@
+.TH "MD5Animation" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+MD5Animation \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBBaseFrame\fP"
+.br
+.ti -1c
+.RI "struct \fBBound\fP"
+.br
+.ti -1c
+.RI "struct \fBFrameData\fP"
+.br
+.ti -1c
+.RI "struct \fBFrameSkeleton\fP"
+.br
+.ti -1c
+.RI "struct \fBJointInfo\fP"
+.br
+.ti -1c
+.RI "struct \fBSkeletonJoint\fP"
+.br
+.in -1c
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "typedef std::vector< \fBJointInfo\fP > \fBJointInfoList\fP"
+.br
+.ti -1c
+.RI "typedef std::vector< \fBBound\fP > \fBBoundList\fP"
+.br
+.ti -1c
+.RI "typedef std::vector< \fBBaseFrame\fP > \fBBaseFrameList\fP"
+.br
+.ti -1c
+.RI "typedef std::vector< \fBFrameData\fP > \fBFrameDataList\fP"
+.br
+.ti -1c
+.RI "typedef std::vector< \fBSkeletonJoint\fP > \fBSkeletonJointList\fP"
+.br
+.ti -1c
+.RI "typedef std::vector< glm::mat4x4 > \fBSkeletonMatrixList\fP"
+.br
+.ti -1c
+.RI "typedef std::vector< \fBFrameSkeleton\fP > \fBFrameSkeletonList\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "bool \fBLoadAnimation\fP (const std::string &filename)"
+.br
+.ti -1c
+.RI "void \fBUpdate\fP (float fDeltaTime)"
+.br
+.ti -1c
+.RI "void \fBRender\fP ()"
+.br
+.ti -1c
+.RI "const \fBFrameSkeleton\fP & \fBGetSkeleton\fP () const "
+.br
+.ti -1c
+.RI "int \fBGetNumJoints\fP () const "
+.br
+.ti -1c
+.RI "const \fBJointInfo\fP & \fBGetJointInfo\fP (unsigned int index) const "
+.br
+.ti -1c
+.RI "void \fBInterpolateSkeletons\fP (\fBFrameSkeleton\fP &finalSkeleton, const \fBFrameSkeleton\fP &skeleton0, const \fBFrameSkeleton\fP &skeleton1, float fInterpolate)"
+.br
+.ti -1c
+.RI "const SkeletonMatrixList & \fBGetSkeletonMatrixList\fP () const "
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBBuildFrameSkeleton\fP (FrameSkeletonList &skeletons, const JointInfoList &jointInfo, const BaseFrameList &baseFrames, const \fBFrameData\fP &frameData)"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "JointInfoList \fBm_JointInfos\fP"
+.br
+.ti -1c
+.RI "BoundList \fBm_Bounds\fP"
+.br
+.ti -1c
+.RI "BaseFrameList \fBm_BaseFrames\fP"
+.br
+.ti -1c
+.RI "FrameDataList \fBm_Frames\fP"
+.br
+.ti -1c
+.RI "FrameSkeletonList \fBm_Skeletons\fP"
+.br
+.ti -1c
+.RI "\fBFrameSkeleton\fP \fBm_AnimatedSkeleton\fP"
+.br
+.ti -1c
+.RI "std::vector< glm::mat4 > \fBfinalSkeletonMatrix\fP"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "int \fBm_iMD5Version\fP"
+.br
+.ti -1c
+.RI "int \fBm_iNumFrames\fP"
+.br
+.ti -1c
+.RI "int \fBm_iNumJoints\fP"
+.br
+.ti -1c
+.RI "int \fBm_iFramRate\fP"
+.br
+.ti -1c
+.RI "int \fBm_iNumAnimatedComponents\fP"
+.br
+.ti -1c
+.RI "float \fBm_fAnimDuration\fP"
+.br
+.ti -1c
+.RI "float \fBm_fFrameDuration\fP"
+.br
+.ti -1c
+.RI "float \fBm_fAnimTime\fP"
+.br
+.ti -1c
+.RI "std::string \fBm_AnimationName\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 10 of file MD5_Anim\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

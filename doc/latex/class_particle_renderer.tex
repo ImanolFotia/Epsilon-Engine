@@ -1,0 +1,100 @@
+\hypertarget{class_particle_renderer}{}\section{Particle\+Renderer Class Reference}
+\label{class_particle_renderer}\index{Particle\+Renderer@{Particle\+Renderer}}
+
+
+Collaboration diagram for Particle\+Renderer\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=203pt]{class_particle_renderer__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries Particle\+Renderer} (unsigned int ID, unsigned int num\+Particles, std\+::vector$<$ glm\+::mat4 $>$ init\+Pos)\hypertarget{class_particle_renderer_a36881e94f634b7ec31f8eba39d28567d}{}\label{class_particle_renderer_a36881e94f634b7ec31f8eba39d28567d}
+
+\item 
+void {\bfseries Render} ()\hypertarget{class_particle_renderer_aaec6cf2ac4e0a0a433c6bd35d2bc7371}{}\label{class_particle_renderer_aaec6cf2ac4e0a0a433c6bd35d2bc7371}
+
+\item 
+void {\bfseries Update\+Particle\+Renderer} (std\+::vector$<$ glm\+::mat4 $>$ new\+Positions)\hypertarget{class_particle_renderer_ad755ee803455a6207477b5e37e6cf04e}{}\label{class_particle_renderer_ad755ee803455a6207477b5e37e6cf04e}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Generate\+Particle\+Geometry} ()\hypertarget{class_particle_renderer_aff0b801a18319ef1ffa0aabde62ddac2}{}\label{class_particle_renderer_aff0b801a18319ef1ffa0aabde62ddac2}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ glm\+::mat4 $>$ {\bfseries m\+\_\+\+Positions}\hypertarget{class_particle_renderer_aaea7bcaea526e25b776bef6892de8c38}{}\label{class_particle_renderer_aaea7bcaea526e25b776bef6892de8c38}
+
+\item 
+unsigned int {\bfseries m\+\_\+\+Num\+Particles}\hypertarget{class_particle_renderer_aefa8d6a45e1e9074ed8bc2b864c8888a}{}\label{class_particle_renderer_aefa8d6a45e1e9074ed8bc2b864c8888a}
+
+\item 
+unsigned int {\bfseries System\+\_\+\+ID}\hypertarget{class_particle_renderer_ad222af206b523f93ee19a06e3e2770a2}{}\label{class_particle_renderer_ad222af206b523f93ee19a06e3e2770a2}
+
+\item 
+G\+Luint {\bfseries V\+AO}\hypertarget{class_particle_renderer_aabebb5220f544c3f38d0d95b8c32b66d}{}\label{class_particle_renderer_aabebb5220f544c3f38d0d95b8c32b66d}
+
+\item 
+G\+Luint {\bfseries V\+BO}\hypertarget{class_particle_renderer_a138f39ad4fb007a02effce41795057c9}{}\label{class_particle_renderer_a138f39ad4fb007a02effce41795057c9}
+
+\item 
+G\+Luint {\bfseries E\+BO}\hypertarget{class_particle_renderer_a85a2d6b6e5ed1e3a729e269c4afdb27f}{}\label{class_particle_renderer_a85a2d6b6e5ed1e3a729e269c4afdb27f}
+
+\item 
+G\+Luint {\bfseries Position\+Buffer}\hypertarget{class_particle_renderer_a3ecf4d143a72735431ccb807f7f180f6}{}\label{class_particle_renderer_a3ecf4d143a72735431ccb807f7f180f6}
+
+\item 
+G\+Lfloat {\bfseries Particle\+Vertices} \mbox{[}32\mbox{]}
+\item 
+G\+Luint {\bfseries Particles\+Indices} \mbox{[}6\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 6 of file Particle\+Renderer.\+h.
+
+
+
+\subsection{Field Documentation}
+\index{Particle\+Renderer@{Particle\+Renderer}!Particles\+Indices@{Particles\+Indices}}
+\index{Particles\+Indices@{Particles\+Indices}!Particle\+Renderer@{Particle\+Renderer}}
+\subsubsection[{\texorpdfstring{Particles\+Indices}{ParticlesIndices}}]{\setlength{\rightskip}{0pt plus 5cm}G\+Luint Particle\+Renderer\+::\+Particles\+Indices\mbox{[}6\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_particle_renderer_afcb1a06e978086291d76288d29ca5015}{}\label{class_particle_renderer_afcb1a06e978086291d76288d29ca5015}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+=
+    \{
+        0, 1, 3,
+        1, 2, 3,
+    \}
+\end{DoxyCode}
+
+
+Definition at line 110 of file Particle\+Renderer.\+h.
+
+\index{Particle\+Renderer@{Particle\+Renderer}!Particle\+Vertices@{Particle\+Vertices}}
+\index{Particle\+Vertices@{Particle\+Vertices}!Particle\+Renderer@{Particle\+Renderer}}
+\subsubsection[{\texorpdfstring{Particle\+Vertices}{ParticleVertices}}]{\setlength{\rightskip}{0pt plus 5cm}G\+Lfloat Particle\+Renderer\+::\+Particle\+Vertices\mbox{[}32\mbox{]}\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{class_particle_renderer_a5d656611858354276ac560ac41c751ba}{}\label{class_particle_renderer_a5d656611858354276ac560ac41c751ba}
+{\bfseries Initial value\+:}
+\begin{DoxyCode}
+=
+    \{
+        0.25f,  0.25f,  0.0f, 1.0f, 1.0f, 0.0, 1.0, 0.0,
+        0.25f, -0.25f,  0.0f, 1.0f, 0.0f, 0.0, 1.0, 0.0,
+        -0.25f, -0.25f,  0.0f, 0.0f, 0.0f, 0.0, 1.0, 0.0,
+        -0.25f,  0.25f,  0.0f, 0.0f, 1.0f, 0.0, 1.0, 0.0,
+    \}
+\end{DoxyCode}
+
+
+Definition at line 102 of file Particle\+Renderer.\+h.
+

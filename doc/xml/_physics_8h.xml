@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="_physics_8h" kind="file" language="C++">
+    <compoundname>Physics.h</compoundname>
+    <includes local="no">glm/glm.hpp</includes>
+    <includes refid="_epsilon_memory_8h" local="no">EpsilonMemory.h</includes>
+    <includes local="no">btBulletDynamicsCommon.h</includes>
+    <includes local="no">btBulletCollisionCommon.h</includes>
+    <includes local="no">BulletCollision/CollisionDispatch/btGhostObject.h</includes>
+    <includes local="no">BulletDynamics/Character/btKinematicCharacterController.h</includes>
+    <includedby refid="_component_8h" local="no">D:/Epsilon/Epsilon Engine/include/Component.h</includedby>
+    <incdepgraph>
+      <node id="477">
+        <label>BulletDynamics/Character/btKinematicCharacterController.h</label>
+      </node>
+      <node id="475">
+        <label>btBulletCollisionCommon.h</label>
+      </node>
+      <node id="470">
+        <label>D:/Epsilon/Epsilon Engine/include/Physics.h</label>
+        <link refid="Physics.h"/>
+        <childnode refid="471" relation="include">
+        </childnode>
+        <childnode refid="472" relation="include">
+        </childnode>
+        <childnode refid="474" relation="include">
+        </childnode>
+        <childnode refid="475" relation="include">
+        </childnode>
+        <childnode refid="476" relation="include">
+        </childnode>
+        <childnode refid="477" relation="include">
+        </childnode>
+      </node>
+      <node id="472">
+        <label>EpsilonMemory.h</label>
+        <link refid="_epsilon_memory_8h_source"/>
+        <childnode refid="473" relation="include">
+        </childnode>
+      </node>
+      <node id="474">
+        <label>btBulletDynamicsCommon.h</label>
+      </node>
+      <node id="476">
+        <label>BulletCollision/CollisionDispatch/btGhostObject.h</label>
+      </node>
+      <node id="473">
+        <label>memory</label>
+      </node>
+      <node id="471">
+        <label>glm/glm.hpp</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="483">
+        <label>D:/Epsilon/Epsilon Engine/include/Scene.h</label>
+        <link refid="_scene_8h_source"/>
+        <childnode refid="481" relation="include">
+        </childnode>
+      </node>
+      <node id="480">
+        <label>D:/Epsilon/Epsilon Engine/include/EntityTemplate.h</label>
+        <link refid="_entity_template_8h_source"/>
+        <childnode refid="481" relation="include">
+        </childnode>
+        <childnode refid="483" relation="include">
+        </childnode>
+      </node>
+      <node id="481">
+        <label>D:/Epsilon/Epsilon Engine/include/Epsilon.h</label>
+        <link refid="_epsilon_8h_source"/>
+        <childnode refid="482" relation="include">
+        </childnode>
+      </node>
+      <node id="478">
+        <label>D:/Epsilon/Epsilon Engine/include/Physics.h</label>
+        <link refid="Physics.h"/>
+        <childnode refid="479" relation="include">
+        </childnode>
+      </node>
+      <node id="482">
+        <label>D:/Epsilon/Epsilon Engine/include/main.h</label>
+        <link refid="main_8h_source"/>
+      </node>
+      <node id="479">
+        <label>D:/Epsilon/Epsilon Engine/include/Component.h</label>
+        <link refid="_component_8h_source"/>
+        <childnode refid="480" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="class_physics_1_1_physics" prot="public">Physics::Physics</innerclass>
+    <innernamespace refid="namespace_physics">Physics</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#pragma<sp/>once</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;glm/glm.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;EpsilonMemory.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;btBulletDynamicsCommon.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;btBulletCollisionCommon.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;BulletCollision/CollisionDispatch/btGhostObject.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;BulletDynamics/Character/btKinematicCharacterController.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal"><ref refid="namespace_physics" kindref="compound">Physics</ref></highlight></codeline>
+<codeline lineno="13"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="14" refid="class_physics_1_1_physics" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="namespace_physics" kindref="compound">Physics</ref></highlight></codeline>
+<codeline lineno="15"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="namespace_physics" kindref="compound">Physics</ref>();</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/>~<ref refid="namespace_physics" kindref="compound">Physics</ref>()</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Update(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>addCube(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal">,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal">,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>addSphere(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>addCone(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal">,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal">,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>addCylinder(</highlight><highlight class="keywordtype">float</highlight><highlight class="normal">,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal">,<sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>addTriangleMesh(std::vector&lt;glm::vec3&gt;);</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/>std::shared_ptr&lt;btDynamicsWorld&gt;<sp/>world;</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/>std::shared_ptr&lt;btDispatcher&gt;<sp/>dispatcher;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/>std::shared_ptr&lt;btCollisionConfiguration&gt;<sp/>collisionConfig;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/>std::shared_ptr&lt;btBroadphaseInterface&gt;<sp/>broadphase;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/>std::shared_ptr&lt;btConstraintSolver&gt;<sp/>solver;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="keyword">protected</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="47"><highlight class="normal">}</highlight></codeline>
+    </programlisting>
+    <location file="D:/Epsilon/Epsilon Engine/include/Physics.h"/>
+  </compounddef>
+</doxygen>

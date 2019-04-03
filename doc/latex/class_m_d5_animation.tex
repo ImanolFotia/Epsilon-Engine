@@ -1,0 +1,145 @@
+\hypertarget{class_m_d5_animation}{}\section{M\+D5\+Animation Class Reference}
+\label{class_m_d5_animation}\index{M\+D5\+Animation@{M\+D5\+Animation}}
+
+
+Collaboration diagram for M\+D5\+Animation\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_m_d5_animation__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_m_d5_animation_1_1_base_frame}{Base\+Frame}
+\item 
+struct \hyperlink{struct_m_d5_animation_1_1_bound}{Bound}
+\item 
+struct \hyperlink{struct_m_d5_animation_1_1_frame_data}{Frame\+Data}
+\item 
+struct \hyperlink{struct_m_d5_animation_1_1_frame_skeleton}{Frame\+Skeleton}
+\item 
+struct \hyperlink{struct_m_d5_animation_1_1_joint_info}{Joint\+Info}
+\item 
+struct \hyperlink{struct_m_d5_animation_1_1_skeleton_joint}{Skeleton\+Joint}
+\end{DoxyCompactItemize}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::vector$<$ \hyperlink{struct_m_d5_animation_1_1_joint_info}{Joint\+Info} $>$ {\bfseries Joint\+Info\+List}\hypertarget{class_m_d5_animation_a50328410a36f2445b6c03b7c1e8d2934}{}\label{class_m_d5_animation_a50328410a36f2445b6c03b7c1e8d2934}
+
+\item 
+typedef std\+::vector$<$ \hyperlink{struct_m_d5_animation_1_1_bound}{Bound} $>$ {\bfseries Bound\+List}\hypertarget{class_m_d5_animation_acbfdd9a96988ec0978732e0216a7f98f}{}\label{class_m_d5_animation_acbfdd9a96988ec0978732e0216a7f98f}
+
+\item 
+typedef std\+::vector$<$ \hyperlink{struct_m_d5_animation_1_1_base_frame}{Base\+Frame} $>$ {\bfseries Base\+Frame\+List}\hypertarget{class_m_d5_animation_afaabb682bcec86356fad3c41650737fc}{}\label{class_m_d5_animation_afaabb682bcec86356fad3c41650737fc}
+
+\item 
+typedef std\+::vector$<$ \hyperlink{struct_m_d5_animation_1_1_frame_data}{Frame\+Data} $>$ {\bfseries Frame\+Data\+List}\hypertarget{class_m_d5_animation_affa602032e56507139361d8678c7627e}{}\label{class_m_d5_animation_affa602032e56507139361d8678c7627e}
+
+\item 
+typedef std\+::vector$<$ \hyperlink{struct_m_d5_animation_1_1_skeleton_joint}{Skeleton\+Joint} $>$ {\bfseries Skeleton\+Joint\+List}\hypertarget{class_m_d5_animation_a22c12c62b7f4dbcf1075e531c00664d7}{}\label{class_m_d5_animation_a22c12c62b7f4dbcf1075e531c00664d7}
+
+\item 
+typedef std\+::vector$<$ glm\+::mat4x4 $>$ {\bfseries Skeleton\+Matrix\+List}\hypertarget{class_m_d5_animation_a3d6e12b4976ff212c795ac234bb0c872}{}\label{class_m_d5_animation_a3d6e12b4976ff212c795ac234bb0c872}
+
+\item 
+typedef std\+::vector$<$ \hyperlink{struct_m_d5_animation_1_1_frame_skeleton}{Frame\+Skeleton} $>$ {\bfseries Frame\+Skeleton\+List}\hypertarget{class_m_d5_animation_a1afa822d89f7aa1bbb5de1d31e12639b}{}\label{class_m_d5_animation_a1afa822d89f7aa1bbb5de1d31e12639b}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool {\bfseries Load\+Animation} (const std\+::string \&filename)\hypertarget{class_m_d5_animation_afccfff8962a0efc3cf52049a6b9e7a82}{}\label{class_m_d5_animation_afccfff8962a0efc3cf52049a6b9e7a82}
+
+\item 
+void {\bfseries Update} (float f\+Delta\+Time)\hypertarget{class_m_d5_animation_ae150a53834deb176c35ac63f7913c4e5}{}\label{class_m_d5_animation_ae150a53834deb176c35ac63f7913c4e5}
+
+\item 
+void {\bfseries Render} ()\hypertarget{class_m_d5_animation_a1f6cad453b4750412e0f708a1cc5122b}{}\label{class_m_d5_animation_a1f6cad453b4750412e0f708a1cc5122b}
+
+\item 
+const \hyperlink{struct_m_d5_animation_1_1_frame_skeleton}{Frame\+Skeleton} \& {\bfseries Get\+Skeleton} () const \hypertarget{class_m_d5_animation_a00e9899126768fb7bbbb96e65a51fed9}{}\label{class_m_d5_animation_a00e9899126768fb7bbbb96e65a51fed9}
+
+\item 
+int {\bfseries Get\+Num\+Joints} () const \hypertarget{class_m_d5_animation_a0ee75478e9a12fb1ddaf44e98bf0d517}{}\label{class_m_d5_animation_a0ee75478e9a12fb1ddaf44e98bf0d517}
+
+\item 
+const \hyperlink{struct_m_d5_animation_1_1_joint_info}{Joint\+Info} \& {\bfseries Get\+Joint\+Info} (unsigned int index) const \hypertarget{class_m_d5_animation_a6c786c02b5e01aac7395b0f21efbf792}{}\label{class_m_d5_animation_a6c786c02b5e01aac7395b0f21efbf792}
+
+\item 
+void {\bfseries Interpolate\+Skeletons} (\hyperlink{struct_m_d5_animation_1_1_frame_skeleton}{Frame\+Skeleton} \&final\+Skeleton, const \hyperlink{struct_m_d5_animation_1_1_frame_skeleton}{Frame\+Skeleton} \&skeleton0, const \hyperlink{struct_m_d5_animation_1_1_frame_skeleton}{Frame\+Skeleton} \&skeleton1, float f\+Interpolate)\hypertarget{class_m_d5_animation_acb2fcc23fdab580e1496a7c20f236a7f}{}\label{class_m_d5_animation_acb2fcc23fdab580e1496a7c20f236a7f}
+
+\item 
+const Skeleton\+Matrix\+List \& {\bfseries Get\+Skeleton\+Matrix\+List} () const \hypertarget{class_m_d5_animation_a463069288d498da1db25afaed3d8e70b}{}\label{class_m_d5_animation_a463069288d498da1db25afaed3d8e70b}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries Build\+Frame\+Skeleton} (Frame\+Skeleton\+List \&skeletons, const Joint\+Info\+List \&joint\+Info, const Base\+Frame\+List \&base\+Frames, const \hyperlink{struct_m_d5_animation_1_1_frame_data}{Frame\+Data} \&frame\+Data)\hypertarget{class_m_d5_animation_a0cff7f3ae566479937fa3935cdceff1a}{}\label{class_m_d5_animation_a0cff7f3ae566479937fa3935cdceff1a}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Joint\+Info\+List {\bfseries m\+\_\+\+Joint\+Infos}\hypertarget{class_m_d5_animation_a534dbc471789e8068f1fe7b2612d0473}{}\label{class_m_d5_animation_a534dbc471789e8068f1fe7b2612d0473}
+
+\item 
+Bound\+List {\bfseries m\+\_\+\+Bounds}\hypertarget{class_m_d5_animation_a563bead578187d904bcb05865a589a04}{}\label{class_m_d5_animation_a563bead578187d904bcb05865a589a04}
+
+\item 
+Base\+Frame\+List {\bfseries m\+\_\+\+Base\+Frames}\hypertarget{class_m_d5_animation_a63c8b797cfb34b237ef07c70cf57c042}{}\label{class_m_d5_animation_a63c8b797cfb34b237ef07c70cf57c042}
+
+\item 
+Frame\+Data\+List {\bfseries m\+\_\+\+Frames}\hypertarget{class_m_d5_animation_a6279a8f164832a31430c5c27a630c176}{}\label{class_m_d5_animation_a6279a8f164832a31430c5c27a630c176}
+
+\item 
+Frame\+Skeleton\+List {\bfseries m\+\_\+\+Skeletons}\hypertarget{class_m_d5_animation_a8f697d5eb44ede098e2c8da70f8bb3db}{}\label{class_m_d5_animation_a8f697d5eb44ede098e2c8da70f8bb3db}
+
+\item 
+\hyperlink{struct_m_d5_animation_1_1_frame_skeleton}{Frame\+Skeleton} {\bfseries m\+\_\+\+Animated\+Skeleton}\hypertarget{class_m_d5_animation_aa2089bc95c2ad6b30113989c49d305fd}{}\label{class_m_d5_animation_aa2089bc95c2ad6b30113989c49d305fd}
+
+\item 
+std\+::vector$<$ glm\+::mat4 $>$ {\bfseries final\+Skeleton\+Matrix}\hypertarget{class_m_d5_animation_a87b07f5e10f3bac5bab316e23b734704}{}\label{class_m_d5_animation_a87b07f5e10f3bac5bab316e23b734704}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries m\+\_\+i\+M\+D5\+Version}\hypertarget{class_m_d5_animation_ab7a550c488f2fe0506c246739cfdf8c7}{}\label{class_m_d5_animation_ab7a550c488f2fe0506c246739cfdf8c7}
+
+\item 
+int {\bfseries m\+\_\+i\+Num\+Frames}\hypertarget{class_m_d5_animation_ad3cebc892b485c7c338fcf492c8944ec}{}\label{class_m_d5_animation_ad3cebc892b485c7c338fcf492c8944ec}
+
+\item 
+int {\bfseries m\+\_\+i\+Num\+Joints}\hypertarget{class_m_d5_animation_a5e7b52a064927325874e6c331c432cd2}{}\label{class_m_d5_animation_a5e7b52a064927325874e6c331c432cd2}
+
+\item 
+int {\bfseries m\+\_\+i\+Fram\+Rate}\hypertarget{class_m_d5_animation_a5d12cabb97cdcddf0865adf5e1084300}{}\label{class_m_d5_animation_a5d12cabb97cdcddf0865adf5e1084300}
+
+\item 
+int {\bfseries m\+\_\+i\+Num\+Animated\+Components}\hypertarget{class_m_d5_animation_aa9f816179f3c711878378edbe32a5bfa}{}\label{class_m_d5_animation_aa9f816179f3c711878378edbe32a5bfa}
+
+\item 
+float {\bfseries m\+\_\+f\+Anim\+Duration}\hypertarget{class_m_d5_animation_a6dc7fae87e62b8e7ed8d3d52e254806f}{}\label{class_m_d5_animation_a6dc7fae87e62b8e7ed8d3d52e254806f}
+
+\item 
+float {\bfseries m\+\_\+f\+Frame\+Duration}\hypertarget{class_m_d5_animation_a68d64478bba383b596d51c130cf15c97}{}\label{class_m_d5_animation_a68d64478bba383b596d51c130cf15c97}
+
+\item 
+float {\bfseries m\+\_\+f\+Anim\+Time}\hypertarget{class_m_d5_animation_ae0310e7c463c5800ed18082af261d63d}{}\label{class_m_d5_animation_ae0310e7c463c5800ed18082af261d63d}
+
+\item 
+std\+::string {\bfseries m\+\_\+\+Animation\+Name}\hypertarget{class_m_d5_animation_a653d440c11d99febfae6c595920c14f4}{}\label{class_m_d5_animation_a653d440c11d99febfae6c595920c14f4}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 10 of file M\+D5\+\_\+\+Anim.\+h.
+

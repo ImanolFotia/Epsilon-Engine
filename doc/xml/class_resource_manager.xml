@@ -1,0 +1,535 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="class_resource_manager" kind="class" language="C++" prot="public">
+    <compoundname>ResourceManager</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_resource_manager_1a80b2ea2f322e1431bbc59b2a2a994d11" prot="public" static="no" mutable="no">
+        <type>std::shared_ptr&lt; <ref refid="class_camera" kindref="compound">Camera</ref> &gt;</type>
+        <definition>std::shared_ptr&lt;Camera&gt; ResourceManager::m_Camera</definition>
+        <argsstring></argsstring>
+        <name>m_Camera</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="263" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="263" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="class_resource_manager_1a736cf30f3149ae6226d5a009b07c9151" prot="private" static="no" mutable="no">
+        <type>std::map&lt; std::string, <ref refid="classe_texture" kindref="compound">eTexture</ref> &gt;</type>
+        <definition>std::map&lt;std::string, eTexture&gt; ResourceManager::TextureList</definition>
+        <argsstring></argsstring>
+        <name>TextureList</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="268" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="268" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_resource_manager_1a3b28e4995ea477def6e7d1d101466317" prot="private" static="no" mutable="no">
+        <type>std::map&lt; std::string, <ref refid="class_water" kindref="compound">Water</ref> &gt;</type>
+        <definition>std::map&lt;std::string, Water&gt; ResourceManager::WaterPlanesList</definition>
+        <argsstring></argsstring>
+        <name>WaterPlanesList</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="269" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="269" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_resource_manager_1a3e13d8ba49d868e8a0c57e7d1f04f6ea" prot="private" static="no" mutable="no">
+        <type>std::map&lt; std::string, <ref refid="class_terrain" kindref="compound">Terrain</ref> &gt;</type>
+        <definition>std::map&lt;std::string, Terrain&gt; ResourceManager::TerrainList</definition>
+        <argsstring></argsstring>
+        <name>TerrainList</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="270" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="270" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_resource_manager_1a2f9a6979889cf6d913bbb6aa5af7f993" prot="private" static="no" mutable="no">
+        <type>std::map&lt; std::string, <ref refid="class_model" kindref="compound">Model</ref> &gt;</type>
+        <definition>std::map&lt;std::string, Model&gt; ResourceManager::ModelList</definition>
+        <argsstring></argsstring>
+        <name>ModelList</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="271" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="271" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_resource_manager_1a828322cfec867ce19af8eb249e0c23b2" prot="private" static="no" mutable="no">
+        <type>std::map&lt; std::string, <ref refid="class_shader" kindref="compound">Shader</ref> &gt;</type>
+        <definition>std::map&lt;std::string, Shader&gt; ResourceManager::ShadersList</definition>
+        <argsstring></argsstring>
+        <name>ShadersList</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="272" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="272" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_resource_manager_1a263134bae4cf63699abe7db16557d73d" prot="private" static="no" mutable="no">
+        <type>std::map&lt; int, <ref refid="class_cube_map" kindref="compound">CubeMap</ref> &gt;</type>
+        <definition>std::map&lt;int, CubeMap&gt; ResourceManager::CubeMapList</definition>
+        <argsstring></argsstring>
+        <name>CubeMapList</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="273" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="273" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_resource_manager_1ae88330d471df1f1da98de27dbfd3b084" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; glm::vec3 &gt;</type>
+        <definition>std::vector&lt;glm::vec3&gt; ResourceManager::CubeMapPositions</definition>
+        <argsstring></argsstring>
+        <name>CubeMapPositions</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="274" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="274" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_resource_manager_1a9e21ce059a8812bb3afe957f75a3120b" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; std::string &gt;</type>
+        <definition>std::vector&lt;std::string&gt; ResourceManager::TextureQueue</definition>
+        <argsstring></argsstring>
+        <name>TextureQueue</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Temp Variables </para>        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="280" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="280" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_resource_manager_1ab4f1e2253295104d9a93ec8ca26816e4" prot="private" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int ResourceManager::modelCounter</definition>
+        <argsstring></argsstring>
+        <name>modelCounter</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="282" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="282" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_resource_manager_1a88d9b4bc80f4e31ea4eb9956a85f1b79" prot="private" static="no" mutable="no">
+        <type>unsigned int</type>
+        <definition>unsigned int ResourceManager::textureCounter</definition>
+        <argsstring></argsstring>
+        <name>textureCounter</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="283" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="283" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_resource_manager_1a3b32babd2e81909bbd90d7f2d566fadb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>ResourceManager::ResourceManager</definition>
+        <argsstring>()</argsstring>
+        <name>ResourceManager</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="21" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="21" bodyend="22"/>
+      </memberdef>
+      <memberdef kind="function" id="class_resource_manager_1a12370d1055e23dc57892690505f6f25b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type></type>
+        <definition>virtual ResourceManager::~ResourceManager</definition>
+        <argsstring>()</argsstring>
+        <name>~ResourceManager</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="24" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="24" bodyend="36"/>
+      </memberdef>
+      <memberdef kind="function" id="class_resource_manager_1a3d5f5a1f1ba52642b5e39b0c51c970f7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::string</type>
+        <definition>std::string ResourceManager::requestTexture</definition>
+        <argsstring>(std::string texPath)</argsstring>
+        <name>requestTexture</name>
+        <param>
+          <type>std::string</type>
+          <declname>texPath</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="38" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="38" bodyend="62"/>
+      </memberdef>
+      <memberdef kind="function" id="class_resource_manager_1a957b2daa207d299545d210fb2afc1049" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::string</type>
+        <definition>std::string ResourceManager::requestModel</definition>
+        <argsstring>(std::string modelPath, std::shared_ptr&lt; ResourceManager &gt; rm, glm::vec3 Pos, glm::vec3 scs, glm::quat rot)</argsstring>
+        <name>requestModel</name>
+        <param>
+          <type>std::string</type>
+          <declname>modelPath</declname>
+        </param>
+        <param>
+          <type>std::shared_ptr&lt; <ref refid="class_resource_manager" kindref="compound">ResourceManager</ref> &gt;</type>
+          <declname>rm</declname>
+        </param>
+        <param>
+          <type>glm::vec3</type>
+          <declname>Pos</declname>
+        </param>
+        <param>
+          <type>glm::vec3</type>
+          <declname>scs</declname>
+        </param>
+        <param>
+          <type>glm::quat</type>
+          <declname>rot</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="64" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="64" bodyend="88"/>
+      </memberdef>
+      <memberdef kind="function" id="class_resource_manager_1a89a3442d8e47f442c77c31b03a1d8edf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ResourceManager::useModel</definition>
+        <argsstring>(std::string modelPath, Shader *shader)</argsstring>
+        <name>useModel</name>
+        <param>
+          <type>std::string</type>
+          <declname>modelPath</declname>
+        </param>
+        <param>
+          <type><ref refid="class_shader" kindref="compound">Shader</ref> *</type>
+          <declname>shader</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="90" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="90" bodyend="101"/>
+      </memberdef>
+      <memberdef kind="function" id="class_resource_manager_1a97368ca128405495ccf1325b7df5f846" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="struct_m_i_n___m_a_x___p_o_i_n_t_s" kindref="compound">MIN_MAX_POINTS</ref></type>
+        <definition>MIN_MAX_POINTS ResourceManager::getModelBoundingBox</definition>
+        <argsstring>(std::string modelPath)</argsstring>
+        <name>getModelBoundingBox</name>
+        <param>
+          <type>std::string</type>
+          <declname>modelPath</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="103" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="103" bodyend="114"/>
+      </memberdef>
+      <memberdef kind="function" id="class_resource_manager_1a6e25cafdac62920c553b570604812650" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ResourceManager::setModelVisibility</definition>
+        <argsstring>(std::string path, bool visibility)</argsstring>
+        <name>setModelVisibility</name>
+        <param>
+          <type>std::string</type>
+          <declname>path</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>visibility</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="116" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="116" bodyend="119"/>
+      </memberdef>
+      <memberdef kind="function" id="class_resource_manager_1a45899dc887c74ecabcc3fce5e079b4e4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>glm::quat</type>
+        <definition>glm::quat ResourceManager::getModelRotation</definition>
+        <argsstring>(std::string path)</argsstring>
+        <name>getModelRotation</name>
+        <param>
+          <type>std::string</type>
+          <declname>path</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="121" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="121" bodyend="124"/>
+      </memberdef>
+      <memberdef kind="function" id="class_resource_manager_1a61f0223aaee7a6b11e197a4b68c0d17d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 ResourceManager::getModelPosition</definition>
+        <argsstring>(std::string path)</argsstring>
+        <name>getModelPosition</name>
+        <param>
+          <type>std::string</type>
+          <declname>path</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="126" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="126" bodyend="129"/>
+      </memberdef>
+      <memberdef kind="function" id="class_resource_manager_1a7f6456c08e57b52fa66ce2c293b6a947" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 ResourceManager::getModelScale</definition>
+        <argsstring>(std::string path)</argsstring>
+        <name>getModelScale</name>
+        <param>
+          <type>std::string</type>
+          <declname>path</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="131" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="131" bodyend="134"/>
+      </memberdef>
+      <memberdef kind="function" id="class_resource_manager_1a387876b621fafcf12ca31f3c23a35c5a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>GLuint</type>
+        <definition>GLuint ResourceManager::useTexture</definition>
+        <argsstring>(std::string texPath)</argsstring>
+        <name>useTexture</name>
+        <param>
+          <type>std::string</type>
+          <declname>texPath</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="136" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="136" bodyend="149"/>
+      </memberdef>
+      <memberdef kind="function" id="class_resource_manager_1afc152b5b5383745636924a18fcbbac47" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ResourceManager::addTextureToQueue</definition>
+        <argsstring>(std::string texture)</argsstring>
+        <name>addTextureToQueue</name>
+        <param>
+          <type>std::string</type>
+          <declname>texture</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="151" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="151" bodyend="158"/>
+      </memberdef>
+      <memberdef kind="function" id="class_resource_manager_1ad45541223c9f21701bf75107c5369203" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void ResourceManager::loadQueuedTextures</definition>
+        <argsstring>()</argsstring>
+        <name>loadQueuedTextures</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="160" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="160" bodyend="167"/>
+      </memberdef>
+      <memberdef kind="function" id="class_resource_manager_1a09c74cde552fc234412209cc9b9dd85a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::string</type>
+        <definition>std::string ResourceManager::requestShader</definition>
+        <argsstring>(std::string shaderPathv, std::string shaderPathf)</argsstring>
+        <name>requestShader</name>
+        <param>
+          <type>std::string</type>
+          <declname>shaderPathv</declname>
+        </param>
+        <param>
+          <type>std::string</type>
+          <declname>shaderPathf</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="169" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="169" bodyend="190"/>
+      </memberdef>
+      <memberdef kind="function" id="class_resource_manager_1a8c5654dad152328ad50a20f130464acf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="class_shader" kindref="compound">Shader</ref></type>
+        <definition>Shader ResourceManager::useShader</definition>
+        <argsstring>(std::string shaderPath)</argsstring>
+        <name>useShader</name>
+        <param>
+          <type>std::string</type>
+          <declname>shaderPath</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="192" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="192" bodyend="203"/>
+      </memberdef>
+      <memberdef kind="function" id="class_resource_manager_1a63f9e674e29969a32cb4ea906e9a5aa4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>GLuint</type>
+        <definition>GLuint ResourceManager::getShaderID</definition>
+        <argsstring>(std::string shaderPath)</argsstring>
+        <name>getShaderID</name>
+        <param>
+          <type>std::string</type>
+          <declname>shaderPath</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="205" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="205" bodyend="216"/>
+      </memberdef>
+      <memberdef kind="function" id="class_resource_manager_1aaa351ca8ae3ef95f4089398dc288552f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool ResourceManager::requestCubeMap</definition>
+        <argsstring>(int CubeMapID, glm::vec3 Position)</argsstring>
+        <name>requestCubeMap</name>
+        <param>
+          <type>int</type>
+          <declname>CubeMapID</declname>
+        </param>
+        <param>
+          <type>glm::vec3</type>
+          <declname>Position</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="218" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="218" bodyend="251"/>
+      </memberdef>
+      <memberdef kind="function" id="class_resource_manager_1ac1552bad163f9c3727faadaa9b055406" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>int ResourceManager::NearestCubeMap</definition>
+        <argsstring>(glm::vec3 TestingPoint)</argsstring>
+        <name>NearestCubeMap</name>
+        <param>
+          <type>glm::vec3</type>
+          <declname>TestingPoint</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="253" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="253" bodyend="256"/>
+      </memberdef>
+      <memberdef kind="function" id="class_resource_manager_1a07e56b885469a090c43606a13e451d62" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>GLuint</type>
+        <definition>GLuint ResourceManager::useCubeMap</definition>
+        <argsstring>(int ID)</argsstring>
+        <name>useCubeMap</name>
+        <param>
+          <type>int</type>
+          <declname>ID</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="258" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="258" bodyend="261"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" line="18" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/ResourceManager.h" bodystart="17" bodyend="285"/>
+    <listofallmembers>
+      <member refid="class_resource_manager_1afc152b5b5383745636924a18fcbbac47" prot="public" virt="non-virtual"><scope>ResourceManager</scope><name>addTextureToQueue</name></member>
+      <member refid="class_resource_manager_1a263134bae4cf63699abe7db16557d73d" prot="private" virt="non-virtual"><scope>ResourceManager</scope><name>CubeMapList</name></member>
+      <member refid="class_resource_manager_1ae88330d471df1f1da98de27dbfd3b084" prot="private" virt="non-virtual"><scope>ResourceManager</scope><name>CubeMapPositions</name></member>
+      <member refid="class_resource_manager_1a97368ca128405495ccf1325b7df5f846" prot="public" virt="non-virtual"><scope>ResourceManager</scope><name>getModelBoundingBox</name></member>
+      <member refid="class_resource_manager_1a61f0223aaee7a6b11e197a4b68c0d17d" prot="public" virt="non-virtual"><scope>ResourceManager</scope><name>getModelPosition</name></member>
+      <member refid="class_resource_manager_1a45899dc887c74ecabcc3fce5e079b4e4" prot="public" virt="non-virtual"><scope>ResourceManager</scope><name>getModelRotation</name></member>
+      <member refid="class_resource_manager_1a7f6456c08e57b52fa66ce2c293b6a947" prot="public" virt="non-virtual"><scope>ResourceManager</scope><name>getModelScale</name></member>
+      <member refid="class_resource_manager_1a63f9e674e29969a32cb4ea906e9a5aa4" prot="public" virt="non-virtual"><scope>ResourceManager</scope><name>getShaderID</name></member>
+      <member refid="class_resource_manager_1ad45541223c9f21701bf75107c5369203" prot="public" virt="non-virtual"><scope>ResourceManager</scope><name>loadQueuedTextures</name></member>
+      <member refid="class_resource_manager_1a80b2ea2f322e1431bbc59b2a2a994d11" prot="public" virt="non-virtual"><scope>ResourceManager</scope><name>m_Camera</name></member>
+      <member refid="class_resource_manager_1ab4f1e2253295104d9a93ec8ca26816e4" prot="private" virt="non-virtual"><scope>ResourceManager</scope><name>modelCounter</name></member>
+      <member refid="class_resource_manager_1a2f9a6979889cf6d913bbb6aa5af7f993" prot="private" virt="non-virtual"><scope>ResourceManager</scope><name>ModelList</name></member>
+      <member refid="class_resource_manager_1ac1552bad163f9c3727faadaa9b055406" prot="public" virt="non-virtual"><scope>ResourceManager</scope><name>NearestCubeMap</name></member>
+      <member refid="class_resource_manager_1aaa351ca8ae3ef95f4089398dc288552f" prot="public" virt="non-virtual"><scope>ResourceManager</scope><name>requestCubeMap</name></member>
+      <member refid="class_resource_manager_1a957b2daa207d299545d210fb2afc1049" prot="public" virt="non-virtual"><scope>ResourceManager</scope><name>requestModel</name></member>
+      <member refid="class_resource_manager_1a09c74cde552fc234412209cc9b9dd85a" prot="public" virt="non-virtual"><scope>ResourceManager</scope><name>requestShader</name></member>
+      <member refid="class_resource_manager_1a3d5f5a1f1ba52642b5e39b0c51c970f7" prot="public" virt="non-virtual"><scope>ResourceManager</scope><name>requestTexture</name></member>
+      <member refid="class_resource_manager_1a3b32babd2e81909bbd90d7f2d566fadb" prot="public" virt="non-virtual"><scope>ResourceManager</scope><name>ResourceManager</name></member>
+      <member refid="class_resource_manager_1a6e25cafdac62920c553b570604812650" prot="public" virt="non-virtual"><scope>ResourceManager</scope><name>setModelVisibility</name></member>
+      <member refid="class_resource_manager_1a828322cfec867ce19af8eb249e0c23b2" prot="private" virt="non-virtual"><scope>ResourceManager</scope><name>ShadersList</name></member>
+      <member refid="class_resource_manager_1a3e13d8ba49d868e8a0c57e7d1f04f6ea" prot="private" virt="non-virtual"><scope>ResourceManager</scope><name>TerrainList</name></member>
+      <member refid="class_resource_manager_1a88d9b4bc80f4e31ea4eb9956a85f1b79" prot="private" virt="non-virtual"><scope>ResourceManager</scope><name>textureCounter</name></member>
+      <member refid="class_resource_manager_1a736cf30f3149ae6226d5a009b07c9151" prot="private" virt="non-virtual"><scope>ResourceManager</scope><name>TextureList</name></member>
+      <member refid="class_resource_manager_1a9e21ce059a8812bb3afe957f75a3120b" prot="private" virt="non-virtual"><scope>ResourceManager</scope><name>TextureQueue</name></member>
+      <member refid="class_resource_manager_1a07e56b885469a090c43606a13e451d62" prot="public" virt="non-virtual"><scope>ResourceManager</scope><name>useCubeMap</name></member>
+      <member refid="class_resource_manager_1a89a3442d8e47f442c77c31b03a1d8edf" prot="public" virt="non-virtual"><scope>ResourceManager</scope><name>useModel</name></member>
+      <member refid="class_resource_manager_1a8c5654dad152328ad50a20f130464acf" prot="public" virt="non-virtual"><scope>ResourceManager</scope><name>useShader</name></member>
+      <member refid="class_resource_manager_1a387876b621fafcf12ca31f3c23a35c5a" prot="public" virt="non-virtual"><scope>ResourceManager</scope><name>useTexture</name></member>
+      <member refid="class_resource_manager_1a3b28e4995ea477def6e7d1d101466317" prot="private" virt="non-virtual"><scope>ResourceManager</scope><name>WaterPlanesList</name></member>
+      <member refid="class_resource_manager_1a12370d1055e23dc57892690505f6f25b" prot="public" virt="virtual"><scope>ResourceManager</scope><name>~ResourceManager</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,19 @@
+<map id="MD5Model" name="MD5Model">
+<area shape="rect" id="node2" href="$struct_m_d5_model_1_1_joint_draw_info.html" title="MD5Model::JointDrawInfo" alt="" coords="1734,261,1902,288"/>
+<area shape="rect" id="node4" href="$struct_m_d5_model_1_1_joint_info.html" title="MD5Model::JointInfo" alt="" coords="1032,255,1171,281"/>
+<area shape="rect" id="node5" href="$struct_m_d5_animation_1_1_frame_skeleton.html" title="MD5Animation::FrameSkeleton" alt="" coords="639,796,841,823"/>
+<area shape="rect" id="node27" href="$class_m_d5_animation.html" title="MD5Animation" alt="" coords="1410,585,1517,612"/>
+<area shape="rect" id="node7" href="$struct_m_d5_animation_1_1_skeleton_joint.html" title="MD5Animation::SkeletonJoint" alt="" coords="5,796,199,823"/>
+<area shape="rect" id="node11" href="$struct_m_d5_model_1_1_mesh.html" title="MD5Model::Mesh" alt="" coords="678,209,802,236"/>
+<area shape="rect" id="node17" href="$struct_m_d5_model_1_1_triangle.html" title="MD5Model::Triangle" alt="" coords="33,56,171,83"/>
+<area shape="rect" id="node18" title="STL class. " alt="" coords="356,456,436,483"/>
+<area shape="rect" id="node36" href="$struct_m_d5_animation_1_1_joint_info.html" title="MD5Animation::JointInfo" alt="" coords="659,529,821,556"/>
+<area shape="rect" id="node39" href="$struct_m_d5_model_1_1_joint.html" title="MD5Model::Joint" alt="" coords="681,397,799,424"/>
+<area shape="rect" id="node19" title="STL class. " alt="" coords="39,449,165,490"/>
+<area shape="rect" id="node21" href="$struct_m_d5_model_1_1_weight.html" title="MD5Model::Weight" alt="" coords="35,107,169,133"/>
+<area shape="rect" id="node23" href="$struct_vertex.html" title="Contains all the necessery OpenGL includes. " alt="" coords="72,157,132,184"/>
+<area shape="rect" id="node25" href="$struct_m_d5_model_1_1_skeleton.html" title="MD5Model::Skeleton" alt="" coords="1392,961,1535,988"/>
+<area shape="rect" id="node29" href="$struct_m_d5_animation_1_1_bound.html" title="MD5Animation::Bound" alt="" coords="664,631,816,657"/>
+<area shape="rect" id="node31" href="$struct_m_d5_animation_1_1_frame_data.html" title="MD5Animation::FrameData" alt="" coords="651,580,829,607"/>
+<area shape="rect" id="node34" href="$struct_m_d5_animation_1_1_base_frame.html" title="MD5Animation::BaseFrame" alt="" coords="649,681,831,708"/>
+</map>

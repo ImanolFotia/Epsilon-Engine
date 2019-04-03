@@ -1,0 +1,95 @@
+.TH "BSPfile" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+BSPfile \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "bool \fBLoadBSP\fP (const char *strFileName)"
+.br
+.RI "\fIThis loads a \&.bsp file by it's file name (Returns true if successful) \fP"
+.ti -1c
+.RI "void \fBRenderLevel\fP (const glm::vec3 &vPos)"
+.br
+.RI "\fIThis renders the level to the screen, currently the camera pos isn't being used\&. \fP"
+.ti -1c
+.RI "void \fBDestroy\fP ()"
+.br
+.RI "\fIThis destroys the level data\&. \fP"
+.in -1c
+.SS "Private Member Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBFindTextureExtension\fP (char *strFileName)"
+.br
+.RI "\fIThis attaches the correct extension to the file name, if found\&. \fP"
+.ti -1c
+.RI "void \fBRenderFace\fP (int faceIndex)"
+.br
+.RI "\fIThis renders a single face to the screen\&. \fP"
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "int \fBm_numOfVerts\fP"
+.br
+.ti -1c
+.RI "int \fBm_numOfFaces\fP"
+.br
+.RI "\fIThe number of verts in the model\&. \fP"
+.ti -1c
+.RI "int \fBm_numOfIndices\fP"
+.br
+.RI "\fIThe number of faces in the model\&. \fP"
+.ti -1c
+.RI "int \fBm_numOfTextures\fP"
+.br
+.RI "\fIThe number of indices for the model\&. \fP"
+.ti -1c
+.RI "int * \fBm_pIndices\fP"
+.br
+.RI "\fIThe number of texture maps\&. \fP"
+.ti -1c
+.RI "\fBtBSPVertex\fP * \fBm_pVerts\fP"
+.br
+.RI "\fIThe object's indices for rendering\&. \fP"
+.ti -1c
+.RI "\fBtBSPFace\fP * \fBm_pFaces\fP"
+.br
+.RI "\fIThe object's vertices\&. \fP"
+.ti -1c
+.RI "unsigned int \fBm_textures\fP [500]"
+.br
+.RI "\fIThe texture and lightmap array for the level\&. \fP"
+.ti -1c
+.RI "\fBCBitset\fP \fBm_FacesDrawn\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+========= Copyright Survtech, All rights reserved\&. ============//
+.PP
+Purpose: 
+.PP
+ 
+.PP
+Definition at line 19 of file BSPfile\&.h\&.
+.SH "Field Documentation"
+.PP 
+.SS "unsigned int BSPfile::m_textures[500]\fC [private]\fP"
+
+.PP
+The texture and lightmap array for the level\&. The faces information of the object 
+.PP
+Definition at line 52 of file BSPfile\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

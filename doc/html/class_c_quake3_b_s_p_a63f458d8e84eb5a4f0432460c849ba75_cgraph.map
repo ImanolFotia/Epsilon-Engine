@@ -1,0 +1,5 @@
+<map id="CQuake3BSP::LoadBSP" name="CQuake3BSP::LoadBSP">
+<area shape="rect" id="node2" href="$class_b_s_p_face.html#a4ae99df1fc45845b5a3049c73eb6ae25" title="BSPFace::BuildFace" alt="" coords="220,31,364,57"/>
+<area shape="rect" id="node3" href="$class_b_s_p_face.html#a5814b00d0169b2eb7808c0d64724dd94" title="BSPFace::CalcTangentSpace" alt="" coords="412,5,607,32"/>
+<area shape="rect" id="node4" href="$class_b_s_p_face.html#a53ccd893ab6d659edb33fb09de00d7be" title="BSPFace::prepareVAO" alt="" coords="431,56,588,83"/>
+</map>

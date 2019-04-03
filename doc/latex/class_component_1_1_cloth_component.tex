@@ -1,0 +1,98 @@
+\hypertarget{class_component_1_1_cloth_component}{}\section{Component\+:\+:Cloth\+Component Class Reference}
+\label{class_component_1_1_cloth_component}\index{Component\+::\+Cloth\+Component@{Component\+::\+Cloth\+Component}}
+
+
+Inheritance diagram for Component\+:\+:Cloth\+Component\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=224pt]{class_component_1_1_cloth_component__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Component\+:\+:Cloth\+Component\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=298pt]{class_component_1_1_cloth_component__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries Cloth\+Component} (std\+::shared\+\_\+ptr$<$ \hyperlink{class_camera}{Camera} $>$ \&in\+Pointer\+To\+Camera)\hypertarget{class_component_1_1_cloth_component_a9f1c6b25320d8c8ebb0a6db5a263954f}{}\label{class_component_1_1_cloth_component_a9f1c6b25320d8c8ebb0a6db5a263954f}
+
+\item 
+void {\bfseries Fill} (std\+::shared\+\_\+ptr$<$ \hyperlink{class_physics_1_1_physic_object}{Physics\+::\+Physic\+Object} $>$ Physic\+Body\+Pointer)\hypertarget{class_component_1_1_cloth_component_acb3b11f2564e72d5a0fb9c9baf61151f}{}\label{class_component_1_1_cloth_component_acb3b11f2564e72d5a0fb9c9baf61151f}
+
+\item 
+void {\bfseries Render} (std\+::shared\+\_\+ptr$<$ \hyperlink{class_resource_manager}{Resource\+Manager} $>$ rm, glm\+::vec3 pos)\hypertarget{class_component_1_1_cloth_component_a0c7111ca675b583947eec0db6325b879}{}\label{class_component_1_1_cloth_component_a0c7111ca675b583947eec0db6325b879}
+
+\item 
+virtual void {\bfseries Render\+Shadows} ()\hypertarget{class_component_1_1_cloth_component_acfc9cbff108906ad03de7fbd71a69a9a}{}\label{class_component_1_1_cloth_component_acfc9cbff108906ad03de7fbd71a69a9a}
+
+\item 
+void {\bfseries Update} (std\+::shared\+\_\+ptr$<$ \hyperlink{class_resource_manager}{Resource\+Manager} $>$ rm)\hypertarget{class_component_1_1_cloth_component_a8a65ac909f98708aa75775ab3621cafa}{}\label{class_component_1_1_cloth_component_a8a65ac909f98708aa75775ab3621cafa}
+
+\item 
+void {\bfseries set\+Shader} (std\+::string sh)\hypertarget{class_component_1_1_cloth_component_a1dd222f5b5b2dc28ff7dd5ed6821dd09}{}\label{class_component_1_1_cloth_component_a1dd222f5b5b2dc28ff7dd5ed6821dd09}
+
+\item 
+virtual void \hyperlink{class_component_1_1_cloth_component_a576710f899b875a602bf4768590a805e}{Fill} (bool, bool)
+\item 
+virtual void {\bfseries Fill} (float, std\+::shared\+\_\+ptr$<$ \hyperlink{class_physics_1_1_physic_object}{Physics\+::\+Physic\+Object} $>$ Physic\+Body\+Pointer)\hypertarget{class_component_1_1_cloth_component_ae8977bbe31adb63fced8a18d8dd1109c}{}\label{class_component_1_1_cloth_component_ae8977bbe31adb63fced8a18d8dd1109c}
+
+\item 
+virtual void {\bfseries Fill} (std\+::string path, std\+::shared\+\_\+ptr$<$ \hyperlink{class_resource_manager}{Resource\+Manager} $>$ \&rm, std\+::string shader)\hypertarget{class_component_1_1_cloth_component_a97e68ce0ee8a6f236f01969ced6b5140}{}\label{class_component_1_1_cloth_component_a97e68ce0ee8a6f236f01969ced6b5140}
+
+\item 
+void {\bfseries Render} ()\hypertarget{class_component_1_1_cloth_component_a18bbb264c9e8838068a7004258b7b3a8}{}\label{class_component_1_1_cloth_component_a18bbb264c9e8838068a7004258b7b3a8}
+
+\item 
+virtual void {\bfseries set\+Transparency} (bool x)\hypertarget{class_component_1_1_cloth_component_a0517b1f0aebec214588a8a8e7b5df8ea}{}\label{class_component_1_1_cloth_component_a0517b1f0aebec214588a8a8e7b5df8ea}
+
+\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{class_patch}{Patch} $>$ {\bfseries m\+Patch}\hypertarget{class_component_1_1_cloth_component_ae4cf4f211f24417a59b60ce4b2eb9e13}{}\label{class_component_1_1_cloth_component_ae4cf4f211f24417a59b60ce4b2eb9e13}
+
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{class_physics_1_1_physic_object}{Physics\+::\+Physic\+Object} $>$ {\bfseries Rigid\+Body\+Pointer} = nullptr\hypertarget{class_component_1_1_cloth_component_a35128603dac4023fa535f8b0d28e9332}{}\label{class_component_1_1_cloth_component_a35128603dac4023fa535f8b0d28e9332}
+
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{class_camera}{Camera} $>$ {\bfseries Pointer\+To\+Camera}\hypertarget{class_component_1_1_cloth_component_a81e871d180ce755dd3f0c73982b955ab}{}\label{class_component_1_1_cloth_component_a81e871d180ce755dd3f0c73982b955ab}
+
+\item 
+std\+::string {\bfseries shader\+Type}\hypertarget{class_component_1_1_cloth_component_ae35886ac9a93ab8547dbbc026190b716}{}\label{class_component_1_1_cloth_component_ae35886ac9a93ab8547dbbc026190b716}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 297 of file Component.\+h.
+
+
+
+\subsection{Member Function Documentation}
+\index{Component\+::\+Cloth\+Component@{Component\+::\+Cloth\+Component}!Fill@{Fill}}
+\index{Fill@{Fill}!Component\+::\+Cloth\+Component@{Component\+::\+Cloth\+Component}}
+\subsubsection[{\texorpdfstring{Fill(bool, bool)}{Fill(bool, bool)}}]{\setlength{\rightskip}{0pt plus 5cm}virtual void Component\+::\+Cloth\+Component\+::\+Fill (
+\begin{DoxyParamCaption}
+\item[{bool}]{, }
+\item[{bool}]{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}\hypertarget{class_component_1_1_cloth_component_a576710f899b875a602bf4768590a805e}{}\label{class_component_1_1_cloth_component_a576710f899b875a602bf4768590a805e}
+Functions declared for the sake of pure virtual function polymorphism, must not be used for production 
+
+Implements \hyperlink{class_component_1_1_component}{Component\+::\+Component}.
+
+
+
+Definition at line 345 of file Component.\+h.
+

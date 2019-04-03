@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="struct_m_d5_model_1_1_joint_info" kind="struct" language="C++" prot="private">
+    <compoundname>MD5Model::JointInfo</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_joint_info_1ab93ec32353acab4194a77df8c007bf59" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float MD5Model::JointInfo::x</definition>
+        <argsstring></argsstring>
+        <name>x</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="159" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="159" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_joint_info_1aecb9cf51fa82cf8bbcf90a8038b82d29" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float MD5Model::JointInfo::y</definition>
+        <argsstring></argsstring>
+        <name>y</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="160" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="160" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_joint_info_1a45dea9ea0b4c20b3d01b7dc6a2e1b2fe" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float MD5Model::JointInfo::z</definition>
+        <argsstring></argsstring>
+        <name>z</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="161" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="161" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_joint_info_1ae8a22b483fc5aa635895443a80fa9c6f" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float MD5Model::JointInfo::r</definition>
+        <argsstring></argsstring>
+        <name>r</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="163" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="163" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_joint_info_1ac0cb2ca2d6e93aa62ac048baacd97d79" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float MD5Model::JointInfo::g</definition>
+        <argsstring></argsstring>
+        <name>g</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="164" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="164" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_m_d5_model_1_1_joint_info_1a320a061e581d3dff7980c0c7a57a2543" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float MD5Model::JointInfo::b</definition>
+        <argsstring></argsstring>
+        <name>b</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="165" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="165" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" line="158" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/MD5_Model.h" bodystart="157" bodyend="166"/>
+    <listofallmembers>
+      <member refid="struct_m_d5_model_1_1_joint_info_1a320a061e581d3dff7980c0c7a57a2543" prot="public" virt="non-virtual"><scope>MD5Model::JointInfo</scope><name>b</name></member>
+      <member refid="struct_m_d5_model_1_1_joint_info_1ac0cb2ca2d6e93aa62ac048baacd97d79" prot="public" virt="non-virtual"><scope>MD5Model::JointInfo</scope><name>g</name></member>
+      <member refid="struct_m_d5_model_1_1_joint_info_1ae8a22b483fc5aa635895443a80fa9c6f" prot="public" virt="non-virtual"><scope>MD5Model::JointInfo</scope><name>r</name></member>
+      <member refid="struct_m_d5_model_1_1_joint_info_1ab93ec32353acab4194a77df8c007bf59" prot="public" virt="non-virtual"><scope>MD5Model::JointInfo</scope><name>x</name></member>
+      <member refid="struct_m_d5_model_1_1_joint_info_1aecb9cf51fa82cf8bbcf90a8038b82d29" prot="public" virt="non-virtual"><scope>MD5Model::JointInfo</scope><name>y</name></member>
+      <member refid="struct_m_d5_model_1_1_joint_info_1a45dea9ea0b4c20b3d01b7dc6a2e1b2fe" prot="public" virt="non-virtual"><scope>MD5Model::JointInfo</scope><name>z</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

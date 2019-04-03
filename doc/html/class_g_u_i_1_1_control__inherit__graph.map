@@ -1,0 +1,6 @@
+<map id="GUI::Control" name="GUI::Control">
+<area shape="rect" id="node2" href="$class_g_u_i_1_1_alert_box.html" title="GUI::AlertBox" alt="" coords="5,80,108,107"/>
+<area shape="rect" id="node3" href="$class_g_u_i_1_1_button.html" title="GUI::Button" alt="" coords="133,80,223,107"/>
+<area shape="rect" id="node4" href="$class_g_u_i_1_1_label.html" title="GUI::Label" alt="" coords="247,80,330,107"/>
+<area shape="rect" id="node5" href="$class_g_u_i_1_1_slider.html" title="GUI::Slider" alt="" coords="354,80,439,107"/>
+</map>

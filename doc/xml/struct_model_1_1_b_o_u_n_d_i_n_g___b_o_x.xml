@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x" kind="struct" language="C++" prot="public">
+    <compoundname>Model::BOUNDING_BOX</compoundname>
+    <includes refid="_model_8h" local="no">Model.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x_1a65787e6454e3e94e8144a039fe5eb1fc" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Model::BOUNDING_BOX::FRONT_TOP_LEFT</definition>
+        <argsstring></argsstring>
+        <name>FRONT_TOP_LEFT</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="92" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="92" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x_1a9ed20b67bb450f2e9dcb2f81265faaba" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Model::BOUNDING_BOX::FRONT_TOP_RIGHT</definition>
+        <argsstring></argsstring>
+        <name>FRONT_TOP_RIGHT</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="93" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="93" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x_1afd1d232efb0ca43160624cf3ae2b0ae6" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Model::BOUNDING_BOX::FRONT_BOTTOM_LEFT</definition>
+        <argsstring></argsstring>
+        <name>FRONT_BOTTOM_LEFT</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="94" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="94" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x_1a8cbb072a587d3453f961c0bb3cae0e59" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Model::BOUNDING_BOX::FRONT_BOTTOM_RIGHT</definition>
+        <argsstring></argsstring>
+        <name>FRONT_BOTTOM_RIGHT</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="95" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="95" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x_1aeb402ac7832ab6f1af573d85e64fe8a2" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Model::BOUNDING_BOX::BACK_TOP_LEFT</definition>
+        <argsstring></argsstring>
+        <name>BACK_TOP_LEFT</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="97" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="97" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x_1a43ea2d971ded0474794af07faa97bf68" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Model::BOUNDING_BOX::BACK_TOP_RIGHT</definition>
+        <argsstring></argsstring>
+        <name>BACK_TOP_RIGHT</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="98" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="98" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x_1af4c6ec7fac905c1ff6c2eeccc8272b7f" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Model::BOUNDING_BOX::BACK_BOTTOM_LEFT</definition>
+        <argsstring></argsstring>
+        <name>BACK_BOTTOM_LEFT</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="99" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="99" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x_1af638a06a328c69636b4e261a10940d1e" prot="public" static="no" mutable="no">
+        <type>float</type>
+        <definition>float Model::BOUNDING_BOX::BACK_BOTTOM_RIGHT</definition>
+        <argsstring></argsstring>
+        <name>BACK_BOTTOM_RIGHT</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="100" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="100" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para>Structure to store the models bounding box for visibility and collision computation. </para>    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/Model.h" line="91" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Model.h" bodystart="90" bodyend="101"/>
+    <listofallmembers>
+      <member refid="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x_1af4c6ec7fac905c1ff6c2eeccc8272b7f" prot="public" virt="non-virtual"><scope>Model::BOUNDING_BOX</scope><name>BACK_BOTTOM_LEFT</name></member>
+      <member refid="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x_1af638a06a328c69636b4e261a10940d1e" prot="public" virt="non-virtual"><scope>Model::BOUNDING_BOX</scope><name>BACK_BOTTOM_RIGHT</name></member>
+      <member refid="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x_1aeb402ac7832ab6f1af573d85e64fe8a2" prot="public" virt="non-virtual"><scope>Model::BOUNDING_BOX</scope><name>BACK_TOP_LEFT</name></member>
+      <member refid="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x_1a43ea2d971ded0474794af07faa97bf68" prot="public" virt="non-virtual"><scope>Model::BOUNDING_BOX</scope><name>BACK_TOP_RIGHT</name></member>
+      <member refid="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x_1afd1d232efb0ca43160624cf3ae2b0ae6" prot="public" virt="non-virtual"><scope>Model::BOUNDING_BOX</scope><name>FRONT_BOTTOM_LEFT</name></member>
+      <member refid="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x_1a8cbb072a587d3453f961c0bb3cae0e59" prot="public" virt="non-virtual"><scope>Model::BOUNDING_BOX</scope><name>FRONT_BOTTOM_RIGHT</name></member>
+      <member refid="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x_1a65787e6454e3e94e8144a039fe5eb1fc" prot="public" virt="non-virtual"><scope>Model::BOUNDING_BOX</scope><name>FRONT_TOP_LEFT</name></member>
+      <member refid="struct_model_1_1_b_o_u_n_d_i_n_g___b_o_x_1a9ed20b67bb450f2e9dcb2f81265faaba" prot="public" virt="non-virtual"><scope>Model::BOUNDING_BOX</scope><name>FRONT_TOP_RIGHT</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

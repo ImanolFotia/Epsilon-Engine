@@ -1,0 +1,203 @@
+.TH "Shader" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Shader \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBShader\fP (const char *, const char *)"
+.br
+.ti -1c
+.RI "\fBShader\fP (const char *, const char *, const char *)"
+.br
+.ti -1c
+.RI "\fBShader\fP (const char *, const char *, const char *, const char *, const char *)"
+.br
+.ti -1c
+.RI "\fBShader\fP (const char *)"
+.br
+.ti -1c
+.RI "void \fBUse\fP (void)"
+.br
+.ti -1c
+.RI "void \fBFree\fP (void)"
+.br
+.ti -1c
+.RI "GLuint \fBgenerateFragmentProgram\fP (std::string)"
+.br
+.ti -1c
+.RI "GLuint \fBgenerateVertexProgram\fP (std::string)"
+.br
+.ti -1c
+.RI "GLuint \fBgenerateGeometryProgram\fP (std::string)"
+.br
+.ti -1c
+.RI "GLuint \fBgetProgramID\fP ()"
+.br
+.ti -1c
+.RI "std::string \fBgetPath\fP ()"
+.br
+.ti -1c
+.RI "void \fBPushUniform\fP (std::string name, int data)"
+.br
+.ti -1c
+.RI "void \fBPushUniform\fP (std::string name, float data)"
+.br
+.ti -1c
+.RI "void \fBPushUniform\fP (std::string name, glm::vec2 data)"
+.br
+.ti -1c
+.RI "void \fBPushUniform\fP (std::string name, glm::vec3 data)"
+.br
+.ti -1c
+.RI "void \fBPushUniform\fP (std::string name, glm::vec4 data)"
+.br
+.ti -1c
+.RI "void \fBPushUniform\fP (std::string name, glm::mat3 data)"
+.br
+.ti -1c
+.RI "void \fBPushUniform\fP (std::string name, glm::mat4 data)"
+.br
+.in -1c
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "GLuint \fBMVP_Location\fP"
+.br
+.ti -1c
+.RI "GLuint \fBWorldTransform_Location\fP"
+.br
+.ti -1c
+.RI "GLuint \fBProjection_Location\fP"
+.br
+.ti -1c
+.RI "GLuint \fBView_Location\fP"
+.br
+.ti -1c
+.RI "GLuint \fBViewDirection_Location\fP"
+.br
+.ti -1c
+.RI "GLuint \fBViewPosition_Location\fP"
+.br
+.ti -1c
+.RI "GLuint \fBLightSpaceMatrix_Location\fP"
+.br
+.ti -1c
+.RI "GLuint \fBModelView3x3Matrix_Location\fP"
+.br
+.ti -1c
+.RI "GLuint \fBNormalMatrix_Location\fP"
+.br
+.ti -1c
+.RI "GLuint \fBLightDirection_Location\fP"
+.br
+.ti -1c
+.RI "GLuint \fBClipPlane_Location\fP"
+.br
+.ti -1c
+.RI "GLuint \fBTime_Location\fP"
+.br
+.ti -1c
+.RI "GLuint \fBtexture_diffuse_Location\fP"
+.br
+.ti -1c
+.RI "GLuint \fBtexture_specular_Location\fP"
+.br
+.ti -1c
+.RI "GLuint \fBtexture_normal_Location\fP"
+.br
+.ti -1c
+.RI "GLuint \fBtexture_height_Location\fP"
+.br
+.ti -1c
+.RI "GLuint \fBskybox_Location\fP"
+.br
+.ti -1c
+.RI "GLuint \fBviewPos_Location\fP"
+.br
+.ti -1c
+.RI "GLuint \fBPrevViewPos_Location\fP"
+.br
+.in -1c
+.SS "Private Member Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBgetUniformsLocations\fP ()"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "GLuint \fBProgramID\fP"
+.br
+.ti -1c
+.RI "std::string \fBPath\fP"
+.br
+.ti -1c
+.RI "std::string \fBvPath\fP"
+.br
+.ti -1c
+.RI "std::string \fBfPath\fP"
+.br
+.ti -1c
+.RI "std::unordered_map< std::string, GLuint > \fBm_Attributes\fP"
+.br
+.ti -1c
+.RI "std::unordered_map< std::string, GLuint > \fBm_Uniforms\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+========= Copyright Survtech, All rights reserved\&. ============//
+.PP
+Purpose: 
+.PP
+ 
+.PP
+Definition at line 19 of file Shader\&.h\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Shader::Shader (const char * vertex, const char * fragment)"
+========= Copyright Survtech, All rights reserved\&. ============//
+.PP
+Purpose: 
+.PP
+ Link the program
+.PP
+Check the program 
+.PP
+Definition at line 17 of file Shader\&.cpp\&.
+.SS "Shader::Shader (const char * vertex, const char * fragment, const char * geometry)"
+Link the program
+.PP
+Check the program 
+.PP
+Definition at line 60 of file Shader\&.cpp\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "GLuint Shader::generateFragmentProgram (std::string pShaderString)"
+Compile Fragment \fBShader\fP
+.PP
+Check Fragment \fBShader\fP 
+.PP
+Definition at line 105 of file Shader\&.cpp\&.
+.SS "GLuint Shader::generateGeometryProgram (std::string pShaderString)"
+Check \fBVertex\fP \fBShader\fP 
+.PP
+Definition at line 152 of file Shader\&.cpp\&.
+.SS "GLuint Shader::generateVertexProgram (std::string pShaderString)"
+Check \fBVertex\fP \fBShader\fP 
+.PP
+Definition at line 129 of file Shader\&.cpp\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

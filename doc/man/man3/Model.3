@@ -1,0 +1,134 @@
+.TH "Model" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Model \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBBOUNDING_BOX\fP"
+.br
+.RI "\fIStructure to store the models bounding box for visibility and collision computation\&. \fP"
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBModel\fP (const char *\fBpath\fP)"
+.br
+.ti -1c
+.RI "\fBModel\fP (const char *\fBpath\fP, std::shared_ptr< \fBResourceManager\fP > rm, glm::vec3 pos=glm::vec3(0, 0, 0), glm::vec3 sc=glm::vec3(0, 0, 0), glm::quat rot=glm::quat(0, 0, 0, 1))"
+.br
+.ti -1c
+.RI "std::string \fBgetPath\fP ()"
+.br
+.ti -1c
+.RI "void \fBDestroy\fP ()"
+.br
+.ti -1c
+.RI "void \fBDraw\fP (\fBShader\fP *shader, glm::vec3)"
+.br
+.RI "\fIDraws the model, and thus all its meshes\&. \fP"
+.ti -1c
+.RI "void \fBDraw\fP (GLuint shader, glm::vec3)"
+.br
+.RI "\fIDraws the model, and thus all its meshes\&. \fP"
+.ti -1c
+.RI "void \fBDrawNoTexture\fP ()"
+.br
+.RI "\fIDraws the model, and thus all its meshes\&. \fP"
+.ti -1c
+.RI "void \fBSetUniforms\fP (\fBShader\fP *shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation, glm::vec3 pposition, glm::vec3 pscale, glm::quat protation, std::shared_ptr< \fBCamera\fP > cam)"
+.br
+.ti -1c
+.RI "void \fBSetUniforms\fP (\fBShader\fP *shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation, std::shared_ptr< \fBCamera\fP > cam)"
+.br
+.ti -1c
+.RI "long \fBtoHash\fP ()"
+.br
+.in -1c
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "glm::vec3 \fBPosition\fP = glm::vec3(0,0,0)"
+.br
+.ti -1c
+.RI "glm::vec3 \fBScale\fP"
+.br
+.ti -1c
+.RI "glm::quat \fBRotation\fP"
+.br
+.ti -1c
+.RI "glm::mat4 \fBPrevModel\fP"
+.br
+.ti -1c
+.RI "glm::mat4 \fBModelMatrix\fP"
+.br
+.ti -1c
+.RI "glm::vec3 \fBPrevPos\fP"
+.br
+.ti -1c
+.RI "glm::vec3 \fBPrevScale\fP"
+.br
+.ti -1c
+.RI "glm::quat \fBPrevRot\fP"
+.br
+.ti -1c
+.RI "bool \fBm_CastShadows\fP"
+.br
+.ti -1c
+.RI "bool \fBm_IsVisible\fP"
+.br
+.ti -1c
+.RI "MODEL_TYPE \fBm_Type\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBResourceManager\fP > \fBresm\fP"
+.br
+.ti -1c
+.RI "const char * \fBpath\fP"
+.br
+.RI "\fIConstructor, expects a filepath to a 3D model\&. \fP"
+.ti -1c
+.RI "string \fBdirectory\fP"
+.br
+.ti -1c
+.RI "vector< \fBMesh\fP > \fBmeshes\fP"
+.br
+.ti -1c
+.RI "vector< \fBTexture\fP > \fBtextures_loaded\fP"
+.br
+.ti -1c
+.RI "\fBMIN_MAX_POINTS\fP \fBMinMaxPoints\fP"
+.br
+.ti -1c
+.RI "\fBBOUNDING_BOX\fP \fBBoundingBox\fP"
+.br
+.in -1c
+.SS "Private Member Functions"
+
+.in +1c
+.ti -1c
+.RI "bool \fBloadModel\fP (string emlPath, int a)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 32 of file Model\&.h\&.
+.SH "Field Documentation"
+.PP 
+.SS "const char* Model::path"
+
+.PP
+Constructor, expects a filepath to a 3D model\&. Functions 
+.PP
+Definition at line 50 of file Model\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

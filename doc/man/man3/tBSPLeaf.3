@@ -1,0 +1,59 @@
+.TH "tBSPLeaf" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+tBSPLeaf \- This stores a leaf (end node) in the BSP tree\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "int \fBcluster\fP"
+.br
+.ti -1c
+.RI "int \fBarea\fP"
+.br
+.RI "\fIThe visibility cluster\&. \fP"
+.ti -1c
+.RI "\fBtVector3i\fP \fBmin\fP"
+.br
+.ti -1c
+.RI "\fBtVector3i\fP \fBmax\fP"
+.br
+.ti -1c
+.RI "int \fBleafface\fP"
+.br
+.RI "\fIThe bounding box max position\&. \fP"
+.ti -1c
+.RI "int \fBnumOfLeafFaces\fP"
+.br
+.RI "\fIThe first index into the face array\&. \fP"
+.ti -1c
+.RI "int \fBleafBrush\fP"
+.br
+.RI "\fIThe number of faces for this leaf\&. \fP"
+.ti -1c
+.RI "int \fBnumOfLeafBrushes\fP"
+.br
+.RI "\fIThe first index for into the brushes\&. \fP"
+.ti -1c
+.RI "glm::vec3 \fBmin\fP"
+.br
+.RI "\fIThe area portal\&. \fP"
+.ti -1c
+.RI "glm::vec3 \fBmax\fP"
+.br
+.RI "\fIThe bounding box min position\&. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+This stores a leaf (end node) in the BSP tree\&. 
+.PP
+Definition at line 133 of file BSP\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

@@ -1,0 +1,103 @@
+\hypertarget{class_scene}{}\section{Scene Class Reference}
+\label{class_scene}\index{Scene@{Scene}}
+
+
+Collaboration diagram for Scene\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_scene__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries Scene} (string scene\+Name)\hypertarget{class_scene_a560981a699d1a725c5d80830fc32cd9a}{}\label{class_scene_a560981a699d1a725c5d80830fc32cd9a}
+
+\item 
+bool {\bfseries setup\+Scene} ()\hypertarget{class_scene_a6b806d01f6b3bcdfc47f6fb918ddfc75}{}\label{class_scene_a6b806d01f6b3bcdfc47f6fb918ddfc75}
+
+\item 
+bool {\bfseries Reload\+Scene} ()\hypertarget{class_scene_ae539c6790a579e51420966ffaefb0f84}{}\label{class_scene_ae539c6790a579e51420966ffaefb0f84}
+
+\item 
+void {\bfseries Update} (float deltatime, G\+L\+F\+Wwindow $\ast$window)\hypertarget{class_scene_ab12a3c580f885981907b5813a4b4b22b}{}\label{class_scene_ab12a3c580f885981907b5813a4b4b22b}
+
+\item 
+void {\bfseries Render} ()\hypertarget{class_scene_a91913b921d41d374e00eac347358dc14}{}\label{class_scene_a91913b921d41d374e00eac347358dc14}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool {\bfseries Load\+Geometry} ()\hypertarget{class_scene_aa5d6aed57a5640c318188b18f51f2d80}{}\label{class_scene_aa5d6aed57a5640c318188b18f51f2d80}
+
+\item 
+bool {\bfseries Load\+Entities} ()\hypertarget{class_scene_a1a8f3fe26766d0af1a3e823857266426}{}\label{class_scene_a1a8f3fe26766d0af1a3e823857266426}
+
+\item 
+bool {\bfseries Load\+Sounds} ()\hypertarget{class_scene_abc8ddcccced32a208d4d4b1968823833}{}\label{class_scene_abc8ddcccced32a208d4d4b1968823833}
+
+\item 
+void {\bfseries Calculate\+Visibility} ()\hypertarget{class_scene_a6d84a4166268d75e48fb5376b2e2554d}{}\label{class_scene_a6d84a4166268d75e48fb5376b2e2554d}
+
+\item 
+void {\bfseries Geometry\+Pre\+Pass} ()\hypertarget{class_scene_aadff4239f183b2edaeecff9480e672a5}{}\label{class_scene_aadff4239f183b2edaeecff9480e672a5}
+
+\item 
+void {\bfseries Deferred\+Rendering\+Pass} ()\hypertarget{class_scene_a53f61c29a484b806b28b01cb90ac38c4}{}\label{class_scene_a53f61c29a484b806b28b01cb90ac38c4}
+
+\item 
+void {\bfseries Forward\+Rendering\+Pass} ()\hypertarget{class_scene_a6151031a230527dfd4146317b92bad1b}{}\label{class_scene_a6151031a230527dfd4146317b92bad1b}
+
+\item 
+void {\bfseries Image\+Processing} ()\hypertarget{class_scene_aeeb0c33283db0dda53e14d66cf33f701}{}\label{class_scene_aeeb0c33283db0dda53e14d66cf33f701}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::shared\+\_\+ptr$<$ \hyperlink{class_resource_manager}{Resource\+Manager} $>$ {\bfseries m\+\_\+\+Resource\+Manager}\hypertarget{class_scene_acbc85b1c81aff53b9caeeda5f43ef3ff}{}\label{class_scene_acbc85b1c81aff53b9caeeda5f43ef3ff}
+
+\item 
+std\+::map$<$ int, std\+::shared\+\_\+ptr$<$ \hyperlink{class_entity_template}{Entity\+Template} $>$ $>$ {\bfseries map\+\_\+\+Entities}\hypertarget{class_scene_ae4844d20b0966cd8643a7e1856f290e8}{}\label{class_scene_ae4844d20b0966cd8643a7e1856f290e8}
+
+\item 
+std\+::map$<$ int, std\+::shared\+\_\+ptr$<$ \hyperlink{class_light}{Light} $>$ $>$ {\bfseries map\+\_\+\+Lights}\hypertarget{class_scene_acb3044ff71429b332b7ed746990b23e9}{}\label{class_scene_acb3044ff71429b332b7ed746990b23e9}
+
+\item 
+std\+::map$<$ int, std\+::shared\+\_\+ptr$<$ \hyperlink{class_shadow_map}{Shadow\+Map} $>$ $>$ {\bfseries map\+\_\+\+Shadow\+Maps}\hypertarget{class_scene_a284b38fe21e6d87fedb28e0d4e38b6ac}{}\label{class_scene_a284b38fe21e6d87fedb28e0d4e38b6ac}
+
+\item 
+std\+::unique\+\_\+ptr$<$ \hyperlink{class_c_quake3_b_s_p}{C\+Quake3\+B\+SP} $>$ {\bfseries m\+\_\+\+B\+S\+P\+Map}\hypertarget{class_scene_afa20f77078a752abb08e53ab5eb0b4c6}{}\label{class_scene_afa20f77078a752abb08e53ab5eb0b4c6}
+
+\item 
+std\+::unique\+\_\+ptr$<$ \hyperlink{class_sun}{Sun} $>$ {\bfseries m\+\_\+\+Sun}\hypertarget{class_scene_ac639c6e2ba159df8632bbe7cc4f9d461}{}\label{class_scene_ac639c6e2ba159df8632bbe7cc4f9d461}
+
+\item 
+std\+::unique\+\_\+ptr$<$ \hyperlink{class_skybox}{Skybox} $>$ {\bfseries m\+\_\+\+Skybox}\hypertarget{class_scene_adedb9598cae5aed3d68d6dfec392116d}{}\label{class_scene_adedb9598cae5aed3d68d6dfec392116d}
+
+\item 
+std\+::unique\+\_\+ptr$<$ \hyperlink{class_post_process}{Post\+Process} $>$ {\bfseries m\+\_\+\+Deferred\+Renderer}\hypertarget{class_scene_ae3c64ce169a652d6bcf1fc3120f0a702}{}\label{class_scene_ae3c64ce169a652d6bcf1fc3120f0a702}
+
+\item 
+std\+::unique\+\_\+ptr$<$ \hyperlink{class_post_process}{Post\+Process} $>$ {\bfseries m\+\_\+\+Post\+Process}\hypertarget{class_scene_a206acc18a7bc9f233c6f5bdde336f278}{}\label{class_scene_a206acc18a7bc9f233c6f5bdde336f278}
+
+\item 
+std\+::unique\+\_\+ptr$<$ \hyperlink{class_program_data}{Program\+Data} $>$ {\bfseries m\+\_\+\+Program\+Data}\hypertarget{class_scene_ae8d89e6c1a5c06cacea5e733dcf46207}{}\label{class_scene_ae8d89e6c1a5c06cacea5e733dcf46207}
+
+\item 
+std\+::unique\+\_\+ptr$<$ \hyperlink{class_c_frustum}{C\+Frustum} $>$ {\bfseries m\+\_\+\+Frustum}\hypertarget{class_scene_a8252214e11f2be643515899a52f9dc11}{}\label{class_scene_a8252214e11f2be643515899a52f9dc11}
+
+\item 
+std\+::string {\bfseries m\+\_\+\+Scene\+Name}\hypertarget{class_scene_a7ba4770364d9e1bfe7f450ddbe8d3e77}{}\label{class_scene_a7ba4770364d9e1bfe7f450ddbe8d3e77}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 25 of file Scene.\+h.
+

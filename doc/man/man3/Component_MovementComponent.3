@@ -1,0 +1,74 @@
+.TH "Component::MovementComponent" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Component::MovementComponent \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBComponent::Component\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBFill\fP (std::shared_ptr< \fBPhysics::PhysicObject\fP > rigidBody, glm::vec3 from, glm::vec3 to, float speed, bool loop)"
+.br
+.ti -1c
+.RI "void \fBUpdate\fP (std::shared_ptr< \fBResourceManager\fP > rm)"
+.br
+.ti -1c
+.RI "virtual void \fBFill\fP (bool, bool)"
+.br
+.ti -1c
+.RI "virtual void \fBFill\fP (std::string path, std::shared_ptr< \fBResourceManager\fP > &rm, std::string shader)"
+.br
+.ti -1c
+.RI "virtual void \fBFill\fP (float mass, std::shared_ptr< \fBPhysics::PhysicObject\fP > PhysicBodyPointer)"
+.br
+.ti -1c
+.RI "void \fBRender\fP (std::shared_ptr< \fBResourceManager\fP > rm)"
+.br
+.ti -1c
+.RI "virtual void \fBsetTransparency\fP (bool x)"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "glm::vec3 \fBm_FromPos\fP"
+.br
+.ti -1c
+.RI "glm::vec3 \fBm_ToPos\fP"
+.br
+.ti -1c
+.RI "glm::vec3 \fBm_CurrentPosition\fP"
+.br
+.ti -1c
+.RI "float \fBm_Speed\fP"
+.br
+.ti -1c
+.RI "float \fBm_Interpolation\fP = 0\&.0"
+.br
+.ti -1c
+.RI "float \fBm_Rate\fP = 0"
+.br
+.ti -1c
+.RI "bool \fBm_Loop\fP"
+.br
+.ti -1c
+.RI "bool \fBm_Up\fP = true"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBPhysics::PhysicObject\fP > \fBRigidBodyPointer\fP"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+Definition at line 190 of file Component\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

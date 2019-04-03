@@ -1,0 +1,72 @@
+.TH "Button" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Button \- 
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBWidget\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBButton\fP (float width, float height, int winWidth, int winHeight, std::string text)"
+.br
+.ti -1c
+.RI "void \fBRender\fP (std::shared_ptr< \fBShader\fP > shader)"
+.br
+.ti -1c
+.RI "void \fBUpdate\fP ()"
+.br
+.in -1c
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "std::shared_ptr< \fBText\fP > \fBm_TextRendererInstance\fP"
+.br
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "float \fBm_Opacity\fP"
+.br
+.ti -1c
+.RI "float \fBm_Width\fP"
+.br
+.ti -1c
+.RI "float \fBm_Height\fP"
+.br
+.ti -1c
+.RI "float \fBm_winWidth\fP"
+.br
+.ti -1c
+.RI "float \fBm_winHeight\fP"
+.br
+.ti -1c
+.RI "float \fBm_textWidth\fP = 0\&.0"
+.br
+.ti -1c
+.RI "float \fBm_textHeight\fP = 0\&.0"
+.br
+.ti -1c
+.RI "glm::mat4 \fBprojection\fP"
+.br
+.ti -1c
+.RI "std::shared_ptr< \fBOpenGLHelpers::Quad\fP > \fBm_Quad\fP"
+.br
+.ti -1c
+.RI "std::string \fBm_TextString\fP"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+Definition at line 7 of file Button\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

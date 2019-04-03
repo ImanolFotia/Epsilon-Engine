@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="dir_68267d1309a1af8e8297ef4c3efbcdba" kind="dir">
+    <compoundname>D:/Epsilon/Epsilon Engine/src</compoundname>
+    <innerfile refid="_b_s_p_8cpp">BSP.cpp</innerfile>
+    <innerfile refid="_camera_8cpp">Camera.cpp</innerfile>
+    <innerfile refid="_entity_template_8cpp">EntityTemplate.cpp</innerfile>
+    <innerfile refid="_epsilon_8cpp">Epsilon.cpp</innerfile>
+    <innerfile refid="_frustum_8cpp">Frustum.cpp</innerfile>
+    <innerfile refid="main_8cpp">main.cpp</innerfile>
+    <innerfile refid="_m_d5___anim_8cpp">MD5_Anim.cpp</innerfile>
+    <innerfile refid="_m_d5___model_8cpp">MD5_Model.cpp</innerfile>
+    <innerfile refid="_mesh_8cpp">Mesh.cpp</innerfile>
+    <innerfile refid="_model_8cpp">Model.cpp</innerfile>
+    <innerfile refid="_post_process_8cpp">PostProcess.cpp</innerfile>
+    <innerfile refid="_program_data_8cpp">ProgramData.cpp</innerfile>
+    <innerfile refid="_resource_manager_8cpp">ResourceManager.cpp</innerfile>
+    <innerfile refid="_scene_8cpp">Scene.cpp</innerfile>
+    <innerfile refid="_shader_8cpp">Shader.cpp</innerfile>
+    <innerfile refid="_shadow_mapping_8cpp">ShadowMapping.cpp</innerfile>
+    <innerfile refid="_skybox_8cpp">Skybox.cpp</innerfile>
+    <innerfile refid="_sun_8cpp">Sun.cpp</innerfile>
+    <innerfile refid="_terrain_8cpp">Terrain.cpp</innerfile>
+    <innerfile refid="_water_8cpp">Water.cpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/src/"/>
+  </compounddef>
+</doxygen>

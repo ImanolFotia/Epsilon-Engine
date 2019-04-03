@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="struct_t_vertex" kind="struct" language="C++" prot="public">
+    <compoundname>TVertex</compoundname>
+    <includes refid="_terrain_8h" local="no">Terrain.h</includes>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_t_vertex_1ac1054ca64a31d133466e8c6b8a269159" prot="public" static="no" mutable="no">
+        <type>glm::vec3</type>
+        <definition>glm::vec3 TVertex::Position</definition>
+        <argsstring></argsstring>
+        <name>Position</name>
+        <briefdescription>
+<para>Position. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Terrain.h" line="19" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Terrain.h" bodystart="19" bodyend="-1"/>
+        <referencedby refid="class_terrain_1a7a3a35d6642c98144e46b181ae639c73" compoundref="_terrain_8cpp" startline="34" endline="52">Terrain::Terrain</referencedby>
+      </memberdef>
+      <memberdef kind="variable" id="struct_t_vertex_1a937c3a7240256ad08cdc3a122b86e394" prot="public" static="no" mutable="no">
+        <type>glm::vec2</type>
+        <definition>glm::vec2 TVertex::TexCoords</definition>
+        <argsstring></argsstring>
+        <name>TexCoords</name>
+        <briefdescription>
+<para>TexCoords. </para>        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="D:/Epsilon/Epsilon Engine/include/Terrain.h" line="21" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Terrain.h" bodystart="21" bodyend="-1"/>
+        <referencedby refid="class_terrain_1a7a3a35d6642c98144e46b181ae639c73" compoundref="_terrain_8cpp" startline="34" endline="52">Terrain::Terrain</referencedby>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para>========= Copyright Survtech, All rights reserved. ============//</para><para>Purpose: <hruler/>
+ </para>    </detaileddescription>
+    <location file="D:/Epsilon/Epsilon Engine/include/Terrain.h" line="17" column="1" bodyfile="D:/Epsilon/Epsilon Engine/include/Terrain.h" bodystart="16" bodyend="22"/>
+    <listofallmembers>
+      <member refid="struct_t_vertex_1ac1054ca64a31d133466e8c6b8a269159" prot="public" virt="non-virtual"><scope>TVertex</scope><name>Position</name></member>
+      <member refid="struct_t_vertex_1a937c3a7240256ad08cdc3a122b86e394" prot="public" virt="non-virtual"><scope>TVertex</scope><name>TexCoords</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,54 @@
+.TH "Component::SoundComponent" 3 "Wed Mar 6 2019" "Version 1.0" "Epsilon Engine" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Component::SoundComponent \- Rendering Components\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBComponent::Component\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBFill\fP (float volume, float radius, glm::vec3 position, glm::vec3 direction)"
+.br
+.ti -1c
+.RI "void \fBUpdate\fP (std::shared_ptr< \fBResourceManager\fP > rm)"
+.br
+.ti -1c
+.RI "virtual void \fBFill\fP (bool, bool)"
+.br
+.ti -1c
+.RI "virtual void \fBFill\fP (float, std::shared_ptr< \fBPhysics::PhysicObject\fP > PhysicBodyPointer)"
+.br
+.ti -1c
+.RI "virtual void \fBFill\fP (std::string path, std::shared_ptr< \fBResourceManager\fP > &rm, std::string shader)"
+.br
+.ti -1c
+.RI "void \fBRender\fP ()"
+.br
+.ti -1c
+.RI "virtual void \fBsetTransparency\fP (bool x)"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+Rendering Components\&. 
+.PP
+Definition at line 265 of file Component\&.h\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "virtual void Component::SoundComponent::Fill (bool, bool)\fC [inline]\fP, \fC [virtual]\fP"
+Functions declared for the sake of pure virtual function polymorphism, must not be used for production 
+.PP
+Implements \fBComponent::Component\fP\&.
+.PP
+Definition at line 289 of file Component\&.h\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Epsilon Engine from the source code\&.

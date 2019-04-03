@@ -1,0 +1,63 @@
+\hypertarget{class_snow_particle_proxy}{}\section{Snow\+Particle\+Proxy Class Reference}
+\label{class_snow_particle_proxy}\index{Snow\+Particle\+Proxy@{Snow\+Particle\+Proxy}}
+
+
+Inheritance diagram for Snow\+Particle\+Proxy\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=179pt]{class_snow_particle_proxy__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Snow\+Particle\+Proxy\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_snow_particle_proxy__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries Snow\+Particle\+Proxy} (unsigned int id, \hyperlink{struct_m_i_n_m_a_x___p_o_i_n_t_s}{M\+I\+N\+M\+A\+X\+\_\+\+P\+O\+I\+N\+TS} limits, double numparts)\hypertarget{class_snow_particle_proxy_a97f249591d8c2ad4f6d7e12477f2c055}{}\label{class_snow_particle_proxy_a97f249591d8c2ad4f6d7e12477f2c055}
+
+\item 
+void {\bfseries sort\+Particles} ()\hypertarget{class_snow_particle_proxy_a10527dec808f3fa0b33d9bfea7e6bd59}{}\label{class_snow_particle_proxy_a10527dec808f3fa0b33d9bfea7e6bd59}
+
+\item 
+void {\bfseries calculate\+Distanceto\+Camera} (glm\+::vec3 cam\+Position)\hypertarget{class_snow_particle_proxy_af8cdb5f1cf26e8e970a13ac0b669a7d5}{}\label{class_snow_particle_proxy_af8cdb5f1cf26e8e970a13ac0b669a7d5}
+
+\item 
+void {\bfseries \+\_\+\+Simulate} (float delta\+Time, glm\+::vec3 cam\+Pos, int index, int end)\hypertarget{class_snow_particle_proxy_ae862b5caa3807f41f3ba7bb982ec3184}{}\label{class_snow_particle_proxy_ae862b5caa3807f41f3ba7bb982ec3184}
+
+\item 
+void {\bfseries Simulate} (float delta\+Time, glm\+::vec3 cam\+Pos)\hypertarget{class_snow_particle_proxy_adebca0b22e66d988354d734fc49df352}{}\label{class_snow_particle_proxy_adebca0b22e66d988354d734fc49df352}
+
+\item 
+glm\+::vec3 {\bfseries Fractional\+Brownian\+Motion} (glm\+::vec3 q)\hypertarget{class_snow_particle_proxy_a82ece4fbb4271253f4891fd743642bff}{}\label{class_snow_particle_proxy_a82ece4fbb4271253f4891fd743642bff}
+
+\item 
+void {\bfseries Initialize\+Proxy} ()\hypertarget{class_snow_particle_proxy_a379466736b5bb201ebabffa133e77ad5}{}\label{class_snow_particle_proxy_a379466736b5bb201ebabffa133e77ad5}
+
+\item 
+virtual void {\bfseries Render} ()\hypertarget{class_snow_particle_proxy_a9ee34d535e299338921a2fbaeb8333f0}{}\label{class_snow_particle_proxy_a9ee34d535e299338921a2fbaeb8333f0}
+
+\end{DoxyCompactItemize}
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ \hyperlink{class_particle}{Particle} $>$ {\bfseries Particles}\hypertarget{class_snow_particle_proxy_a3a46d5c4f047110ed32894f64cdfe5a7}{}\label{class_snow_particle_proxy_a3a46d5c4f047110ed32894f64cdfe5a7}
+
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 381 of file Particle\+Proxy.\+h.
+
