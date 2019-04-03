@@ -31,6 +31,13 @@ Written in modern C++ and GLSL 4.3+
 * Dynamic terrain generation
 * Custom GUI
 
-### G buffer structure
+## Software & Hardware Succesfully Tested
+* OS: Windows 7 & 10
+* CPU: Intel i7 4790K & Intel I7 6700HQ
+* RAM: 12 & 24 GB
+* GPU: Nvidia GTX 970 & 970M
 
-![media/G-Buffer.png](media/G-Buffer.png)
+## Notes
+
+* At the moment the only IDE supported is Code::Blocks, the idea is to migrate to CMake and make it IDE agnostic
+* It should compile almost unmodified under Linux
