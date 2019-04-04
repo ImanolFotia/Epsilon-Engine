@@ -1,5 +1,5 @@
 # Epsilon Engine
-![LICENSE.md](https://img.shields.io/badge/License-EULA-blue.svg)
+[![LICENSE.md](https://img.shields.io/badge/License-EULA-blue.svg)](LICENSE.md)
 [![Build Status](https://travis-ci.com/ImanolFotia/Epsilon-Engine.svg?token=eqNdpsuxZdxtFxRycvU4&branch=master)](https://travis-ci.com/ImanolFotia/Epsilon-Engine)
 
 Official repository for Epsilon Engine.
