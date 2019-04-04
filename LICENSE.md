@@ -33,13 +33,16 @@ Use the Software for any purpose that Imanol Fotia considers is a breach of this
 
 You may only Distribute the Licensed Technology as follows:
 
-          a. Distribution to end users - You may Distribute Epsilon Engine incorporated in object code format only as an inseparable part of a Product to end users who are subject to an end user license agreement which explicitly disclaims any representations, warranties, conditions, and liabilities related to the Epsilon Engine.  The Product may not contain any Paid Content Distributed in uncooked source format or any Engine Tools.  
+### _**a.**_ 
+Distribution to end users - You may Distribute Epsilon Engine incorporated in object code format only as an inseparable part of a Product to end users who are subject to an end user license agreement which explicitly disclaims any representations, warranties, conditions, and liabilities related to the Epsilon Engine.  The Product may not contain any Paid Content Distributed in uncooked source format or any Engine Tools.  
 
-          b.  Distribution to other licensees - You may Distribute Engine Code (including as modified by you under the License) in Source Code or object code format, or any Content, to an Engine Licensee who has rights under its license to the same Version of the Engine Code or Content that you are Distributing.  
+### _**b.**_  
+Distribution to other licensees - You may Distribute Engine Code (including as modified by you under the License) in Source Code or object code format, or any Content, to an Engine Licensee who has rights under its license to the same Version of the Engine Code or Content that you are Distributing.  
 	
      Any public Distribution (i.e., intended for Engine Licensees generally) which includes Engine Tools (including as modified by you under the License) must take place through a fork of Imanol Fotia’s Epsilon Engine Repository (e.g., for distributing source code). 
 
-          c.  Distributions to employees and contractors - You also may Distribute Content (other than Paid Plug-ins) to an Engine Licensee who is your employee or your contractor who does not have rights under their license to the same Content, but only to permit that Engine Licensee to utilize that Content in good faith to develop a Product on your behalf for Distribution by you under the License, and not for the purpose of Content pooling or any other Distribution or sublicensing of Content that is not permitted under this Agreement.  Recipients of such a Distribution have a limited license to use, reproduce, display, perform, and modify that Content to develop your Product as outlined above, and for no other purpose.  
+### _**c.**_  
+Distributions to employees and contractors - You also may Distribute Content (other than Paid Plug-ins) to an Engine Licensee who is your employee or your contractor who does not have rights under their license to the same Content, but only to permit that Engine Licensee to utilize that Content in good faith to develop a Product on your behalf for Distribution by you under the License, and not for the purpose of Content pooling or any other Distribution or sublicensing of Content that is not permitted under this Agreement.  Recipients of such a Distribution have a limited license to use, reproduce, display, perform, and modify that Content to develop your Product as outlined above, and for no other purpose.  
 
 You may not sublicense the Licensed Technology in Source Code format.  You may not sublicense the Licensed Technology in object code format, or any Content, except to grant end users the ability to use, or to permit your publishers and distributors to market and Distribute, a Product that you Distribute as permitted in Section 1(a) above.
 
