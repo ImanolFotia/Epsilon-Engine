@@ -18,7 +18,7 @@ Imanol Fotia hereby grants you a personal, non-transferable, non-exclusive licen
 
 You are permitted to load the Epsilon Engine software (for example a PC, laptop, mobile or tablet) under your control. You are responsible for ensuring your device meets the minimum requirements of the Epsilon Engine software.
 
-You are permitted to:
+#### You are permitted to:
 
 Edit, alter, modify, adapt, translate or otherwise change the whole or any part of the Software and permit the whole or any part of the Software to be combined with or become incorporated in any other software.
 
@@ -26,7 +26,8 @@ Reproduce, copy, distribute, resell or otherwise use the Software for any commer
 
 Allow any third party to use the Software on behalf of or for the benefit of any third party
 
-You are not permited to:
+#### You are not permited to:
+
 Use the Software in any way which breaches any applicable local, national or international law
 
 Use the Software for any purpose that Imanol Fotia considers is a breach of this EULA agreement
