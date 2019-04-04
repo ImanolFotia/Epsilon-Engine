@@ -32,6 +32,8 @@ Use the Software in any way which breaches any applicable local, national or int
 
 Use the Software for any purpose that Imanol Fotia considers is a breach of this EULA agreement
 
+## 2. Distribution
+
 You may only Distribute the Licensed Technology as follows:
 
 ### _**a.**_ 
@@ -47,18 +49,18 @@ Distributions to employees and contractors - You also may Distribute Content (ot
 
 You may not sublicense the Licensed Technology in Source Code format.  You may not sublicense the Licensed Technology in object code format, or any Content, except to grant end users the ability to use, or to permit your publishers and distributors to market and Distribute, a Product that you Distribute as permitted in Section 1(a) above.
 
-## 2. Intellectual Property and Ownership
+## 3. Intellectual Property and Ownership
 
 Imanol Fotia shall at all times retain ownership of the Software as originally downloaded by you and all subsequent downloads of the Software by you. The Software (and the copyright, and other intellectual property rights of whatever nature in the Software, including any modifications made thereto) are and shall remain the property of Imanol Fotia.
 
 Imanol Fotia reserves the right to grant licences to use the Software to third parties.
 
-## 3. Termination
+## 4. Termination
 
 This EULA agreement is effective from the date you first use the Software and shall continue until terminated. You may terminate it at any time upon written notice to Imanol Fotia.
 
 It will also terminate immediately if you fail to comply with any term of this EULA agreement. Upon such termination, the licenses granted by this EULA agreement will immediately terminate and you agree to stop all access and use of the Software. The provisions that by their nature continue and survive will survive any termination of this EULA agreement.
 
-## 4. Governing Law
+## 5. Governing Law
 
 This EULA agreement, and any dispute arising out of or in connection with this EULA agreement, shall be governed by and construed in accordance with the laws of Argentina.
