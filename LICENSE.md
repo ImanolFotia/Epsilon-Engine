@@ -39,7 +39,7 @@ Distribution to end users - You may Distribute Epsilon Engine incorporated in ob
 ### _**b.**_  
 Distribution to other licensees - You may Distribute Engine Code (including as modified by you under the License) in Source Code or object code format, or any Content, to an Engine Licensee who has rights under its license to the same Version of the Engine Code or Content that you are Distributing.  
 	
-     Any public Distribution (i.e., intended for Engine Licensees generally) which includes Engine Tools (including as modified by you under the License) must take place through a fork of Imanol Fotia’s Epsilon Engine Repository (e.g., for distributing source code). 
+Any public Distribution (i.e., intended for Engine Licensees generally) which includes Engine Tools (including as modified by you under the License) must take place through a fork of Imanol Fotia’s Epsilon Engine Repository (e.g., for distributing source code). 
 
 ### _**c.**_  
 Distributions to employees and contractors - You also may Distribute Content (other than Paid Plug-ins) to an Engine Licensee who is your employee or your contractor who does not have rights under their license to the same Content, but only to permit that Engine Licensee to utilize that Content in good faith to develop a Product on your behalf for Distribution by you under the License, and not for the purpose of Content pooling or any other Distribution or sublicensing of Content that is not permitted under this Agreement.  Recipients of such a Distribution have a limited license to use, reproduce, display, perform, and modify that Content to develop your Product as outlined above, and for no other purpose.  
