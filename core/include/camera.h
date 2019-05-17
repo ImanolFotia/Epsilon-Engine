@@ -97,6 +97,7 @@ private:
     glm::mat4 ProjectionMatrix;
     glm::vec3 Position;
     glm::vec3 Orientation;
+    glm::vec3 LastOrientation;
     glm::vec3 LastPosition;
     glm::vec3 DeltaVector, MovementVector;
 

@@ -1615,7 +1615,7 @@
 	<Particle.h>
 	<Shader.h>
 
-1554261194 d:\epsilon\epsilon engine\version.h
+1557976752 d:\epsilon\epsilon engine\version.h
 
 1489719397 d:\epsilon\epsilon engine\include\sys\cpuid.h
 	<string>
@@ -4705,7 +4705,7 @@
 	<memory>
 	<Includes.h>
 
-1554315729 d:\epsilon\epsilon engine\core\include\includes.h
+1554317762 d:\epsilon\epsilon engine\core\include\includes.h
 	<iostream>
 	<string>
 	<sstream>
@@ -4717,7 +4717,7 @@
 	<algorithm>
 	<limits>
 
-1554315729 source:d:\epsilon\epsilon engine\core\src\bsp.cpp
+1554320663 source:d:\epsilon\epsilon engine\core\src\bsp.cpp
 	<GL/glew.h>
 	<omp.h>
 	<BSP.h>
@@ -4850,7 +4850,7 @@
 1554315729 d:\epsilon\epsilon engine\core\include\emlformat.h
 	<string>
 
-1554315729 d:\epsilon\epsilon engine\core\include\camera.h
+1556497440 d:\epsilon\epsilon engine\core\include\camera.h
 	<glm/glm.hpp>
 	<glm/gtc/matrix_transform.hpp>
 	<glm/gtc/quaternion.hpp>
@@ -4976,7 +4976,7 @@
 	<ResourceManager.h>
 	<BSPFace.h>
 
-1554315729 source:d:\epsilon\epsilon engine\core\src\camera.cpp
+1556499821 source:d:\epsilon\epsilon engine\core\src\camera.cpp
 	<iostream>
 	<camera.h>
 	<math.h>
@@ -5001,7 +5001,7 @@
 
 1554315729 d:\epsilon\epsilon engine\core\include\sys\joystickwrapper.h
 
-1554315729 source:d:\epsilon\epsilon engine\core\src\cubemaprenderer.cpp
+1556490828 source:d:\epsilon\epsilon engine\core\src\cubemaprenderer.cpp
 	<cubemapRenderer.h>
 	<Texture.h>
 
@@ -5046,7 +5046,7 @@
 	<Shader.h>
 	<Texture.h>
 
-1554315729 source:d:\epsilon\epsilon engine\core\src\epsilon.cpp
+1557976752 source:d:\epsilon\epsilon engine\core\src\epsilon.cpp
 	<iostream>
 	<Epsilon.h>
 	<ProgramData.h>
@@ -5067,7 +5067,7 @@
 	<OpenGL/GlCache.h>
 	<sys/GPU.hpp>
 
-1554315729 d:\epsilon\epsilon engine\core\include\epsilon.h
+1557875033 d:\epsilon\epsilon engine\core\include\epsilon.h
 	<map>
 	<GL/glew.h>
 	<GL/wglew.h>
@@ -5113,6 +5113,7 @@
 	<CommandFunctions.h>
 	<Physics/ClothPhysicObject.h>
 	<Patch.h>
+	<PointShadow.hpp>
 
 1554315729 d:\epsilon\epsilon engine\core\include\skybox.h
 	<string>
@@ -5128,7 +5129,7 @@
 	<glm/gtc/matrix_transform.hpp>
 	<Shader.h>
 
-1554315729 d:\epsilon\epsilon engine\core\include\postprocess.h
+1556493566 d:\epsilon\epsilon engine\core\include\postprocess.h
 	<GL/glew.h>
 	<Shader.h>
 	<camera.h>
@@ -5360,7 +5361,7 @@
 	<assert.h>
 	<memory>
 
-1554315729 d:\epsilon\epsilon engine\core\include\main.h
+1554320663 d:\epsilon\epsilon engine\core\include\main.h
 	<ProgramData.h>
 	<Epsilon.h>
 	<memory>
@@ -5393,7 +5394,7 @@
 1554315729 source:d:\epsilon\epsilon engine\core\src\patch.cpp
 	<Patch.h>
 
-1554315729 source:d:\epsilon\epsilon engine\core\src\physics\clothphysicobject.cpp
+1554781206 source:d:\epsilon\epsilon engine\core\src\physics\clothphysicobject.cpp
 	<Physics/ClothPhysicObject.h>
 
 1554315729 source:d:\epsilon\epsilon engine\core\src\physics\cubephysicobject.cpp
@@ -5421,7 +5422,7 @@
 	<iostream>
 	<Physics/CollisionInfo.h>
 
-1554315729 source:d:\epsilon\epsilon engine\core\src\postprocess.cpp
+1557977024 source:d:\epsilon\epsilon engine\core\src\postprocess.cpp
 	<PostProcess.h>
 	<iostream>
 	<ProgramData.h>
@@ -5521,7 +5522,7 @@
 	<OpenGL/HelperFunctions/CheckError.h>
 	<cstdlib>
 
-1554315729 source:d:\epsilon\epsilon engine\core\src\sun.cpp
+1557973320 source:d:\epsilon\epsilon engine\core\src\sun.cpp
 	<Sun.h>
 	<sys/KeyBoard.h>
 
@@ -5547,4 +5548,9 @@
 
 1554315729 source:d:\epsilon\epsilon engine\core\src\water.cpp
 	<Water.h>
+
+1557971488 d:\epsilon\epsilon engine\core\include\pointshadow.hpp
+	<vector>
+	<GL/glew.h>
+	<Shader.h>
 

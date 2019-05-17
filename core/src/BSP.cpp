@@ -1,6 +1,6 @@
-///========= Copyright Survtech, All rights reserved. ============//
+///========= Copyright Imanol Fotia, All rights reserved. ============//
 ///
-/// Purpose:
+/// Purpose: Load and render Quake 3 BSP map file
 ///
 ///=============================================================================
 

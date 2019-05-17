@@ -22,7 +22,7 @@ void main()
 	float total = 0.0;
 	for (float x = -4.0; x <= 4.0; x += 1.0) {
 		for (float y = -4.0; y <= 4.0; y += 1.0) {
-			vec4 sample0 = texture(texture0, TexCoords + vec2(x, y) / resolution);
+			vec4 sample0 = texture(texture0, TexCoords + vec2(x, y) / resolution*0.5);
 			float weight = 1.0 - abs(dot(sample0.rgb - center.rgb, vec3(0.25)));
 			weight = pow(weight, exponent);
 			color += sample0 * weight;

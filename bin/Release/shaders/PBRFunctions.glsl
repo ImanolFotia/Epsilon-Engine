@@ -159,9 +159,9 @@ vec3 CalculateDirectionalPBR()
         vec3 brdf = nominator / denominator;
             
         // add to outgoing radiance Lo
-        float NdotL = LambertDiffuse(Normal, L);//orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.03, 1.0), 1.0);//              
+        float NdotL = orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.03, 1.0), 1.0);//              
         vec3 Lo = (kD * Diffuse / PI + brdf) * NdotL * clamp(1.0 - shadow, 0.0, 1.0); 
-        return mix(vec3(0.0), Lo, clamp(lightDir.y + 0.1, 0.0, 1.0));
+        return mix(vec3(0.0), Lo, clamp(lightDir.y + 0.1, 0.0, 1.0)) * 3.0;
 }
 
 float saturate(in float x)
@@ -213,7 +213,7 @@ vec3 SpotLightPBR(in vec3 pos, in vec3 dir, in float radius, in vec3 color)
         vec3 brdf = nominator / denominator;
             
         // add to outgoing radiance Lo
-        float NdotL = LambertDiffuse(Normal, L);//orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.05, 1.0), 1.0);             
+        float NdotL = orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.05, 1.0), 1.0);             
         vec3 Lo = (kD * Diffuse / PI + brdf) * radiance * NdotL; 
         vec3 outColor = Lo;
 

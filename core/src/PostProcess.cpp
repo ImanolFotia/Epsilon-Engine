@@ -16,6 +16,8 @@ PostProcess::PostProcess() {
 
 }
 
+static int TotalFrames = 0;
+
 void PostProcess::SetupFramebuffer() {
     ProgramData PG;
     width = PG.WINDOW_WIDTH;
@@ -86,6 +88,15 @@ void PostProcess::SetupFramebuffer() {
     tmpLight.color = glm::vec4(1, 0.8, 0.8, 1.0);
     tmpLight.radius = 0.25f;
     tmpLight.watts = 100.0f;
+    tmpLight.type = 2;
+    m_Lights.push_back(tmpLight);
+
+
+    tmpLight.position = glm::vec4(-18, 90, -2, 1.0);
+    tmpLight.direction = glm::vec4(0.74, -0.5761, -0.60, 1.0);
+    tmpLight.color = glm::vec4(1, 1.0, 1.0, 1.0);
+    tmpLight.radius = 0.25f;
+    tmpLight.watts = 1000.0f;
     tmpLight.type = 2;
     m_Lights.push_back(tmpLight);
 /*
@@ -552,17 +563,19 @@ void PostProcess::SetupPingPongDOF() {
 }
 
 void PostProcess::setupSSR() {
-    glGenFramebuffers(1, &SSRFBO);
-    glGenTextures(1, &SSRTexture);
-    glBindFramebuffer(GL_FRAMEBUFFER, SSRFBO);
-    glBindTexture(GL_TEXTURE_2D, SSRTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->width, this->height, 0, GL_RGBA, GL_FLOAT, NULL);
-    //glGenerateMipmap(GL_TEXTURE_2D);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // We clamp to the edge as the blur filter would otherwise sample repeated texture values!
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, SSRTexture, 0);
+    glGenFramebuffers(2, SSRFBO);
+        glGenTextures(2, SSRTexture);
+    for(int i = 0; i < 2; i++) {
+        glBindFramebuffer(GL_FRAMEBUFFER, SSRFBO[i]);
+        glBindTexture(GL_TEXTURE_2D, SSRTexture[i]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->width, this->height, 0, GL_RGBA, GL_FLOAT, NULL);
+        //glGenerateMipmap(GL_TEXTURE_2D);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // We clamp to the edge as the blur filter would otherwise sample repeated texture values!
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, SSRTexture[i], 0);
+    }
     // Also check if framebuffers are complete (no need for depth buffer)
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         std::cout << "Framebuffer not complete!" << std::endl;
@@ -638,9 +651,10 @@ void PostProcess::setupDownSampledSSR() {
 }
 
 void PostProcess::SSRPass(std::shared_ptr<Camera>& cam) {
-    glBindFramebuffer(GL_FRAMEBUFFER, SSRFBO);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, SSRFBO[this->CurrentSSR]);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glDisable(GL_BLEND);
     ScreenSpaceReflectionShader->Use();
     glViewport(0,0, this->width, this->height);
@@ -669,6 +683,10 @@ void PostProcess::SSRPass(std::shared_ptr<Camera>& cam) {
     glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "noiseTexture"), 5);
     glBindTexture(GL_TEXTURE_2D, this->noiseTexture);
 
+    glActiveTexture(GL_TEXTURE6);
+    glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "PreviousReflection"), 6);
+    glBindTexture(GL_TEXTURE_2D, this->SSRTexture[!this->CurrentSSR]);
+
     glm::mat4 proj = cam->getProjectionMatrix();
     glUniformMatrix4fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "projection"), 1, GL_FALSE, &proj[0][0]);
     glm::mat4 invproj = glm::inverse(proj);
@@ -682,6 +700,9 @@ void PostProcess::SSRPass(std::shared_ptr<Camera>& cam) {
     glUniform3fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "camPos"), 1, &cam->getPosition()[0]);
     ScreenSpaceReflectionShader->PushUniform("SSROn", SSROn);
     ScreenSpaceReflectionShader->PushUniform("LinMAD", LinMAD);
+    ScreenSpaceReflectionShader->PushUniform("Time", (float)glfwGetTime());
+    ScreenSpaceReflectionShader->PushUniform("ID", TotalFrames);
+    ScreenSpaceReflectionShader->PushUniform("isMoving", cam->isMoving());
     this->RenderQuad();
 
     glActiveTexture(GL_TEXTURE0);
@@ -696,10 +717,13 @@ void PostProcess::SSRPass(std::shared_ptr<Camera>& cam) {
     glBindTexture(GL_TEXTURE_2D, 4);
     glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_2D, 5);
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, 6);
 
     //glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     /** Denoise SSR*/
+
     if(cam->isMoving()){
         glBindFramebuffer(GL_FRAMEBUFFER, DenoiseFBO);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -709,7 +733,7 @@ void PostProcess::SSRPass(std::shared_ptr<Camera>& cam) {
         glViewport(0,0, this->width, this->height);
         glActiveTexture(GL_TEXTURE0);
         glUniform1i(glGetUniformLocation(DenoiseShader->getProgramID(), "texture0"), 0);
-        glBindTexture(GL_TEXTURE_2D, SSRTexture);
+        glBindTexture(GL_TEXTURE_2D, SSRTexture[this->CurrentSSR]);
 
         glUniform2f(glGetUniformLocation(DenoiseShader->getProgramID(), "resolution"), this->width, this->height);
         glUniform1f(glGetUniformLocation(DenoiseShader->getProgramID(), "exponent"), 0.05);
@@ -721,6 +745,7 @@ void PostProcess::SSRPass(std::shared_ptr<Camera>& cam) {
         glEnable(GL_BLEND);
         glViewport(0,0, this->width, this->height);
     }
+    this->CurrentSSR = !this->CurrentSSR;
 
 
     /*****************/
@@ -838,6 +863,12 @@ GLuint PostProcess::GetPixel(GLuint tex) {
 }
 
 void PostProcess::CompositeImage(bool isMoving) {
+
+    if(isMoving)
+        TotalFrames = 0;
+    else
+        TotalFrames++;
+
     mCompositeImage->bindFramebuffer();
     mCompositeImage->setViewport();
     mCompositeImage->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -857,8 +888,15 @@ void PostProcess::CompositeImage(bool isMoving) {
     CompositeShader->PushUniform("gReflectionSampler", 1);
     if(isMoving)
         glBindTexture(GL_TEXTURE_2D, DenoiseTexture);
-    else
-        glBindTexture(GL_TEXTURE_2D, SSRTexture);
+    else{
+        glBindTexture(GL_TEXTURE_2D, SSRTexture[this->CurrentSSR]);
+        if(TotalFrames >= 250)
+            glBindTexture(GL_TEXTURE_2D, SSRTexture[!this->CurrentSSR]);
+
+    }
+
+    CompositeShader->PushUniform("TotalFrames", TotalFrames);
+    CompositeShader->PushUniform("isMoving", isMoving);
 
     this->RenderQuad();
 

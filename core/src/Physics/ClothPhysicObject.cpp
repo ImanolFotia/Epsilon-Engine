@@ -11,8 +11,8 @@ namespace Physics {
             this->m_BodyCloth = std::shared_ptr<btSoftBody>(btSoftBodyHelpers::CreatePatch(*softWorldInfo.get(),
                                 btVector3(-s/2,s,0)+btVector3(position.x, position.y, position.z),
                                 btVector3(+s/2,s,0)+btVector3(position.x, position.y, position.z),
-                                btVector3(-s/2,s,+s*2.0)+btVector3(position.x, position.y, position.z),
-                                btVector3(+s/2,s,+s*2.0)+btVector3(position.x, position.y, position.z),
+                                btVector3(-s/2,s,+s)+btVector3(position.x, position.y, position.z),
+                                btVector3(+s/2,s,+s)+btVector3(position.x, position.y, position.z),
                                 numX,numY,
                                 fixed,false));
 
@@ -20,7 +20,7 @@ namespace Physics {
             this->mWidth = numX;
             this->mHeight = numY;
 
-            this->m_BodyCloth->getCollisionShape()->setMargin(0.3f);
+            this->m_BodyCloth->getCollisionShape()->setMargin(0.1f);
             this->m_BodyCloth->generateBendingConstraints(1.0,this->m_BodyCloth->appendMaterial());
             this->m_BodyCloth->setTotalMass(4.0);
             this->m_BodyCloth->m_cfg.piterations = 1;
@@ -28,12 +28,12 @@ namespace Physics {
             this->m_BodyCloth->m_cfg.diterations = 1;
             this->m_BodyCloth->m_cfg.kDP = 0.005f;
             this->m_BodyCloth->setFriction(0.0);
-            this->m_BodyCloth->setWindVelocity(btVector3(0, -40.0, -25.0));
+            this->m_BodyCloth->setWindVelocity(btVector3(0, -75.0, -50.0));
             this->m_BodyCloth->m_cfg.kLF = 0.05;
             this->m_BodyCloth->m_cfg.kDG = 0.01;
             this->m_BodyCloth->m_cfg.aeromodel = btSoftBody::eAeroModel::V_TwoSidedLiftDrag;
             this->m_BodyCloth->m_cfg.collisions |= btSoftBody::fCollision::SDF_RS ;
-            this->m_BodyCloth->setMass(5, 0);
+            //this->m_BodyCloth->setMass(5, 0);
             //this->m_BodyCloth->m_cfg.kDF =	1;
             //this->m_BodyCloth->randomizeConstraints();
             //this->m_BodyCloth->m_cfg.collisions	=	btSoftBody::fCollision::CL_SS+

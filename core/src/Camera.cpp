@@ -15,11 +15,6 @@
 #include <Types.h>
 #include <Includes.h>
 
-float lerp(float v0, float v1, float t)
-{
-    return (1-t)*v0 + t*v1;
-}
-
 Camera::Camera(glm::vec3 cPosition, glm::vec3 cOrientation)
 {
     this->Orientation = glm::vec3(cOrientation);
@@ -192,6 +187,9 @@ void Camera::HandleInputs(GLFWwindow*& window)
     }
     /** ------------------------------------------------------------------*/
 
+    if(MovementSpeed < 0.05)
+        MovementSpeed = 0.0f;
+
     LastTime = currentTime;
 
     Position += (MovementVector * MovementSpeed * DeltaTime);
@@ -202,16 +200,18 @@ void Camera::HandleInputs(GLFWwindow*& window)
         MovementVector = glm::normalize(DeltaVector / glm::vec3( glm::sqrt(glm::pow(DeltaVector.x, 2.0)  + glm::pow(DeltaVector.y, 2.0) + glm::pow(DeltaVector.z , 2.0) ) ));
         mIsMoving = true;
     }
+    if(LastOrientation != Orientation)
+        mIsMoving = true;
+
 
     LastPosition = Position;
+    LastOrientation = Orientation;
 
     Frustrum = Position+Orientation;
 }
 
 void Camera::UpdateMatrices(void)
 {
-
-
     float Aspectratio;
     Aspectratio = (float)winx/(float)winy;
 
@@ -224,7 +224,6 @@ void Camera::UpdateMatrices(void)
                            Position+Orientation,
                            glm::vec3(0,1,0)
                        );
-
 }
 
 glm::mat4 Camera::getViewMatrix(void)

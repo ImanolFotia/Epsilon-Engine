@@ -17,14 +17,17 @@
 #include <algorithm>
 #include <limits>
 
+//TODO: This file should be renamed as Helpers.hpp
 namespace Helpers {
 
+//Test point inside Box
 inline static bool PointInBox(MIN_MAX_POINTS box, glm::vec3 point) {
     return (point.x > box.MIN_X && point.x < box.MAX_X &&
             point.y > box.MIN_Y && point.y < box.MAX_Y &&
             point.z > box.MIN_Z && point.z < box.MAX_Z);
 }
 
+//Test point inside a transformed Box
 inline static bool PointInBox(MIN_MAX_POINTS box, glm::vec3 point, glm::mat4 model) {
 
     glm::vec4 min = model*glm::vec4(box.MIN_X, box.MIN_Y, box.MIN_Z, 1.0);
@@ -90,22 +93,26 @@ static void RemoveQuotes( std::string& str ) {
     while ( ( n = str.find('\"') ) != std::string::npos ) str.erase(n,1);
 }
 
+//Minimum value for any given type
 template <typename T>
 inline static T getMinimum() {
     return std::numeric_limits<T>::min();
 }
 
+//Maximum value for any given type
 template <typename T>
 inline static T getMaximum() {
     return std::numeric_limits<T>::max();
 }
 
+//Clamp between two values
 template <typename T>
 auto static clamp(T a, T b, T c, double d = 0.0, double e = 1.0) -> T {
     a = (a < b) ? (b+d)*e : a;
     return (a > c) ? (c+d)*e : a;
 };
 
+//Carmack's Inverse
 inline
 static float Invsqrt(float x) {
     float xhalf = 0.5f*x;
@@ -184,6 +191,7 @@ static int findNearestPointFromSet(glm::vec3 TestingPoint, std::vector<glm::vec3
     return pointIndex;
 }
 
+//Test device's endianess
 static bool isBigEndian() {
     int a=1;
     return !((char*)&a)[0];
@@ -243,6 +251,7 @@ private:
     mutable float m_fPrevious;
 };
 
+//Basic linear interpolation
 static float lerp(float v0, float v1, float t) {
     return (1.0f-t)*v0 + t*v1;
 }
