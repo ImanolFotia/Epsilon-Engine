@@ -1,5 +1,5 @@
 # Epsilon Engine
-![Hex.pm](https://img.shields.io/badge/License-EULA-blue.svg)
+[![LICENSE.md](https://img.shields.io/badge/License-EULA-blue.svg)](LICENSE.md)
 [![Build Status](https://travis-ci.com/ImanolFotia/Epsilon-Engine.svg?token=eqNdpsuxZdxtFxRycvU4&branch=master)](https://travis-ci.com/ImanolFotia/Epsilon-Engine)
 
 Official repository for Epsilon Engine.
@@ -20,11 +20,12 @@ Installers and binaries will be available soon
 | [Dependencies](#dependencies) | 
 | [Features](#features)| 
 | [Software & Hardware Succesfully Tested](#software_and_hardware_succesfully_tested)| 
-| [Contributors](#contributors)| 
+| [Contributors](#contributors)|  
 | [Notes](#notes)| 
+| [Documentation](#documentation)| 
 | [License](#license)| 
 
-<a name="dependencies"></a>
+<a name="dependencies"> </a>
 ## Dependencies 
 
 * Bullet Physics 2.82-r2704
@@ -79,6 +80,10 @@ Installers and binaries will be available soon
 
 * At the moment the only IDE supported is Code::Blocks, the idea is to migrate to CMake and make it IDE agnostic
 * It should compile almost unmodified under Linux
+
+<a name="documentation"></a>
+## Documentation
+A Doxygen auto generated documentation is available [here](http://imanolfotia.com/epsilon-documentation/html)
 
 <a name="license"></a>
 ## License
