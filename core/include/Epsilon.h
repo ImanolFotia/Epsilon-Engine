@@ -53,6 +53,7 @@
 #include <CommandFunctions.h>
 #include <Physics/ClothPhysicObject.h>
 #include <Patch.h>
+#include <PointShadow.hpp>
 
 class Epsilon
 {
@@ -188,6 +189,7 @@ public:
 
     GLuint AmbientLightSSBO;
 private:
+    std::shared_ptr<PointShadow> mPointShadow;
     bool normal = 0;
     bool flashLight = 0;
     bool hdr = true;

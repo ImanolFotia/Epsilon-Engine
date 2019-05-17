@@ -66,7 +66,7 @@ public:
         glDeleteTextures(1, &colorBuffer);
         glDeleteTextures(1, &depthBuffer);
         glDeleteTextures(1, &MotionBlurBuffer);
-        glDeleteTextures(1, &SSRTexture);
+        glDeleteTextures(2, SSRTexture);
         glDeleteTextures(2, pingpongSSRT);
         glDeleteTextures(1, &DownSampledTexture);
         glDeleteTextures(1, &SinglePixelColorBuffer);
@@ -83,12 +83,11 @@ public:
         glDeleteTextures(2, pingpongColorbuffersDOF);
 
         glDeleteFramebuffers(1, &MotionBlurFBO);
-        glDeleteFramebuffers(1, &SSRFBO);
+        glDeleteFramebuffers(2, SSRFBO);
         glDeleteFramebuffers(2, pingpongSSRFBO);
         glDeleteFramebuffers(1, &lowresFBO);
 
         glDeleteFramebuffers(1, &ssaoFBO);
-        glDeleteFramebuffers(1, &SSRFBO);
         glDeleteFramebuffers(2, pingpongFBO);
         glDeleteFramebuffers(1, &DownSamplerFBO);
     }
@@ -193,14 +192,15 @@ private:
     GLuint SSAOheight;
     GLuint MotionBlurBuffer;
     GLuint MotionBlurFBO;
-    GLuint SSRFBO;
-    GLuint SSRTexture;
+    GLuint SSRFBO[2];
+    GLuint SSRTexture[2];
     GLuint pingpongSSRFBO[2];
     GLuint pingpongSSRT[2];
     GLuint DownSamplerFBO;
     GLuint DownSampledTexture;
     GLuint SinglePixelColorBuffer;
     GLuint gExtraComponents;
+    bool CurrentSSR = 0;
     bool SSROn;
     bool m_MotionBlur;
     bool lightShafts;

@@ -37,11 +37,6 @@ public:
 
 };
 
-/*
-extern "C" {
-    _declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
-}*/
-
 std::ofstream Global::Log::FILE;
 void error_callback(int error, const char* description)
 {
@@ -74,7 +69,6 @@ GLFWwindow* InitEngine(const char* ProgramName) {
 
     Monitor = glfwGetMonitors(&numberofmonitors);
 
-   // std::cout << "Available monitor data" << std::endl;
     for(int i = 0; i < numberofmonitors; ++i)
     {
        // std::cout << "-----------------------------------" << std::endl;

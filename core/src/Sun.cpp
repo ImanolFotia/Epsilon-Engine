@@ -55,7 +55,7 @@ void Sun::Update()
         mMovement += 0.01;
     if(Input::KeyBoard::KEYS[Input::GLFW::Key::NINE])
         mMovement -= 0.01;
-    this->Position = glm::vec3(0,0,0) + glm::vec3(this->radius /* glm::cos(mMovement) *//** glm::cos(glfwGetTime()/10)*/, height /* glm::sin(mMovement)*/ /* glm::sin(glfwGetTime()/10)*/, this->radius*0.25/* * glm::sin(mMovement)*/ /* glm::sin(glfwGetTime()/10)*/);
+    this->Position = glm::vec3(0,0,0) + glm::vec3(this->radius * glm::cos(mMovement) /** glm::cos(glfwGetTime()/10)*/, height * glm::sin(mMovement) /* glm::sin(glfwGetTime()/10)*/, this->radius * glm::sin(mMovement) /* glm::sin(glfwGetTime()/10)*/);
     this->Direction = glm::normalize(this->Position - glm::vec3(0,0,0));
 }
 

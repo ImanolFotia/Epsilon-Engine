@@ -267,9 +267,9 @@ void main()
             break;
       }
     }
-
-    //light += TubeAreaLight(vec3(0, 0, 0), vec3(-40,11,6), vec3(63,11,6),  0.1, normalize(vec3(200,147,36)), 250);
-    //light += TubeAreaLight(vec3(0, 0, 0), vec3(-40,11,-12), vec3(63,11,-12),  0.1, normalize(vec3(200,147,36)), 250);
+/*
+    light += TubeAreaLight(vec3(0, 0, 0), vec3(-89,15,-23.5), vec3(70,15,-23.5),  0.1, normalize(vec3(1,1,1)), 250);
+    light += TubeAreaLight(vec3(0, 0, 0), vec3(-89,15,-15), vec3(70,15,-15),  0.1, normalize(vec3(1,1,1)), 250);*/
     //light += TubeAreaLight(vec3(0, 0, 0), vec3(-48,35,-113), vec3(-48,35,-170),  0.3, normalize(vec3(200,147,36)), 500);
     //light += calculatePointPBR(viewPos, vec3(1.0));
     light += max(ambient, 0.0);
@@ -288,10 +288,10 @@ void main()
     FragColor.rgb = mix(SkyColor, light, visibility);
     vec3 testHDR = FragColor.rgb;
     float brightness = dot(testHDR.rgb , vec3(0.2126, 0.7152, 0.0722));
-/*
-    if(brightness > 1.0)
-        blurImage.rgb = FragColor.rgb*0.015;
-    else*/
+
+    if(brightness > 0.6)
+        blurImage.rgb = FragColor.rgb;
+    else
         blurImage.rgb = vec3(0.0);
 
     FragColor.a = 1.0;

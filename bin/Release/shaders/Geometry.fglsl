@@ -173,8 +173,8 @@ vec3 bpcem (in vec3 v, vec3 Emax, vec3 Emin, vec3 Epos)
   return posonbox - Epos;
 }
 
-vec3 BoxMax = vec3(-72, 12, 19);
-vec3 BoxMin = vec3(-127,-7,-18);
+vec3 BoxMax = vec3(-6.5, 12, 19.5);
+vec3 BoxMin = vec3(-16, 0.5, -19);
 
 uniform ivec2 Resolution;
 uniform bool isTransparent = false;
@@ -300,9 +300,10 @@ void main()
 
   CubeMapcolor = textureLod(skybox, bpcem(
                                       reflect(normalize(fs_in.wFragPos - viewPos), normalize(gExpensiveNormal.rgb)), 
-                                      BoxMax, BoxMin, vec3(0, 7, -5)), gExpensiveNormal.a * MAX_REFLECTION_LOD);
+                                      BoxMax, BoxMin, vec3(-11.0, 6.0, -8.0)), gExpensiveNormal.a * MAX_REFLECTION_LOD);
 
   vec3 shc = sphericalHarmonics(normalize(gExpensiveNormal.rgb)) * u_scaleFactor;
+
   gLightAccumulation = shc;
   gDepth = vec4(gl_FragCoord.z, CubeMapcolor.rgb);
 }

@@ -1,7 +1,7 @@
 #include <cubemapRenderer.h>
 #include <Texture.h>
 CubemapRenderer::CubemapRenderer() {
-    this->mFrameBuffer = (std::shared_ptr<FrameBuffer<int> >)new FrameBuffer<int>(512, 512, true);
+    this->mFrameBuffer = (std::shared_ptr<FrameBuffer<int> >)new FrameBuffer<int>(1024, 1024, true);
     this->mFrameBuffer->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, true);
     this->mFrameBuffer->addDepthAttachment();
     this->mFrameBuffer->FinishFrameBuffer();
@@ -18,7 +18,7 @@ CubemapRenderer::CubemapRenderer() {
 */
 void CubemapRenderer::Begin(int index, GLuint texture, GLuint FBO) {
     glBindFramebuffer(GL_FRAMEBUFFER, FBO);
-    glViewport(0,0,512,512);
+    glViewport(0,0,1024,1024);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X+index, texture, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(0.0, 1.0, 0.0, 1.0);
@@ -36,7 +36,7 @@ void CubemapRenderer::CopyTexture(int index) {
     std::cout << "Bind copy texture framebuffer" << std::endl;
     this->mCopyTextureFrameBuffer->bindFramebuffer();
 
-    glViewport(0, 0, 512, 512);
+    glViewport(0, 0, 1024, 1024);
     glClear(GL_COLOR_BUFFER_BIT);
 
     std::cout << "Using Shader" << std::endl;

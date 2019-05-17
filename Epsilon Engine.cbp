@@ -169,6 +169,7 @@
 		<Unit filename="core/include/Physics/TriangleMeshPhysicObject.h" />
 		<Unit filename="core/include/Picking.h" />
 		<Unit filename="core/include/Player.h" />
+		<Unit filename="core/include/PointShadow.hpp" />
 		<Unit filename="core/include/PostProcess.h" />
 		<Unit filename="core/include/PostProcess/Effect.h" />
 		<Unit filename="core/include/PostProcess/MotionBlur.h" />
