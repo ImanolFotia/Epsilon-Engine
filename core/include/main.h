@@ -43,7 +43,7 @@ void error_callback(int error, const char* description)
     fprintf(stderr, "Error: %s\n", description);
 }
 extern "C" {
-    _declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+    __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
 }
 GLFWwindow* InitEngine(const char* ProgramName) {
 

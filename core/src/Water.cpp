@@ -20,7 +20,7 @@ Water::Water(glm::vec3 position, float scale)
     GeneratevertexArray();
 }
 
-void Water::RenderWater(std::shared_ptr<Camera> cam, GLuint colorBuffer, glm::vec3 lightDir, GLuint depthTexture)
+void Water::RenderWater(std::shared_ptr<Camera> cam, GLuint colorBuffer, glm::vec3 lightDir, GLuint depthTexture, GLuint reflectionTex)
 {
     shader->Use();
     glDisable(GL_CULL_FACE);
@@ -41,6 +41,10 @@ void Water::RenderWater(std::shared_ptr<Camera> cam, GLuint colorBuffer, glm::ve
     glActiveTexture(GL_TEXTURE3);
     glUniform1i(glGetUniformLocation(shader->getProgramID(), "gDepth"), 3);
     glBindTexture(GL_TEXTURE_2D, depthTexture);
+
+    glActiveTexture(GL_TEXTURE4);
+    glUniform1i(glGetUniformLocation(shader->getProgramID(), "Reflection"), 4);
+    glBindTexture(GL_TEXTURE_2D, reflectionTex);
 
 
     glm::mat4 model = glm::mat4();
@@ -78,7 +82,7 @@ void Water::RenderWater(std::shared_ptr<Camera> cam, GLuint colorBuffer, glm::ve
 
 void Water::LoadTextures(void)
 {
-    eTexture* tex = new eTexture("normalMap.png");
+    eTexture* tex = new eTexture("Wavy_Water_n.png", GL_REPEAT, GL_TEXTURE_2D, -1);
     normalTexture = tex->getTextureID();
 
     delete tex;

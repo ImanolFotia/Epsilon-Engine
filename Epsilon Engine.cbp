@@ -62,6 +62,7 @@
 					<Add option="-std=c++14" />
 					<Add directory="deppend/glew-2.0.0/include" />
 					<Add directory="deppend/glfw-3.2.bin.WIN32/include" />
+					<Add directory="deppend/lua-5.3.5/src" />
 					<Add directory="deppend/glm" />
 					<Add directory="deppend" />
 					<Add directory="deppend/SOIL/src" />
@@ -83,6 +84,8 @@
 					<Add option="deppend\openal-soft-master\openal-soft-master\build\libOpenAL32.dll.a" />
 					<Add option="-fopenmp" />
 					<Add option="-lgomp" />
+					<Add option="deppend\lua-5.3.5\src\lua53.dll" />
+					<Add option="deppend\lua-5.3.5\src\liblua.a -lm" />
 					<Add library="deppend/bullet-2.82-r2704/lib/libBulletSoftBody.a" />
 					<Add library="deppend/bullet-2.82-r2704/lib/libBulletDynamics.a" />
 					<Add library="deppend/bullet-2.82-r2704/lib/libBulletCollision.a" />
@@ -178,6 +181,7 @@
 		<Unit filename="core/include/ProgramData.h" />
 		<Unit filename="core/include/ResourceManager.h" />
 		<Unit filename="core/include/Scene.h" />
+		<Unit filename="core/include/Scripts/LuaScript.hpp" />
 		<Unit filename="core/include/Shader.h" />
 		<Unit filename="core/include/ShadowMapping.h" />
 		<Unit filename="core/include/Skybox.h" />
@@ -241,6 +245,7 @@
 		<Unit filename="core/src/ProgramData.cpp" />
 		<Unit filename="core/src/ResourceManager.cpp" />
 		<Unit filename="core/src/Scene.cpp" />
+		<Unit filename="core/src/Scripts/LuaScript.cpp" />
 		<Unit filename="core/src/Shader.cpp" />
 		<Unit filename="core/src/ShadowMapping.cpp" />
 		<Unit filename="core/src/Skybox.cpp" />

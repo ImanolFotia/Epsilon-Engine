@@ -8,6 +8,5 @@ noperspective in vec2 TexCoords;
 
 void main()
 {	
-
-	output0 = texture(texture0, TexCoords, 8.0);
+	output0 = max(texture(texture0, TexCoords, 3.0), vec4(vec3(0.001), 1.0));
 }
