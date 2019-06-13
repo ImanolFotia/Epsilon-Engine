@@ -32,7 +32,7 @@ public:
     void GenerateReflection(std::shared_ptr<Camera> cam);
     void GenerateRefraction(std::shared_ptr<Camera> cam);
     void FinishWatercomputation(void);
-    void RenderWater(std::shared_ptr<Camera> cam, GLuint colorBuffer, glm::vec3 lightDir, GLuint depthTexture);
+    void RenderWater(std::shared_ptr<Camera> cam, GLuint colorBuffer, glm::vec3 lightDir, GLuint depthTexture, GLuint);
 
 public:
     float scale;

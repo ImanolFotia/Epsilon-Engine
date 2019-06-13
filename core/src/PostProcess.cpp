@@ -147,12 +147,12 @@ void PostProcess::SetupFramebuffer() {
 
     hdrFBO = (std::shared_ptr<FrameBuffer<std::string> >) new FrameBuffer<std::string>(width, height, true);
 
-    hdrFBO->addRenderTarget("colorBuffer", GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
+    hdrFBO->addRenderTarget("colorBuffer", GL_RGB16F, GL_RGB, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, false);
     hdrFBO->addRenderTarget("brightColorBuffer", GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
     hdrFBO->FinishFrameBuffer();
 
     CopyTextureFBO = (std::shared_ptr<FrameBuffer<int> >) new FrameBuffer<int>(width, height, true);
-    CopyTextureFBO->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, true);
+    CopyTextureFBO->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, true);
     CopyTextureFBO->FinishFrameBuffer();
 
     SetupGBuffer();
@@ -163,7 +163,7 @@ void PostProcess::SetupFramebuffer() {
     setupDenoise();
 
     mCompositeImage = (std::shared_ptr<FrameBuffer<int> >) new FrameBuffer<int>(width, height, true);
-    mCompositeImage->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
+    mCompositeImage->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, true);
     mCompositeImage->FinishFrameBuffer();
 
 
@@ -569,7 +569,7 @@ void PostProcess::setupSSR() {
         glBindFramebuffer(GL_FRAMEBUFFER, SSRFBO[i]);
         glBindTexture(GL_TEXTURE_2D, SSRTexture[i]);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->width, this->height, 0, GL_RGBA, GL_FLOAT, NULL);
-        //glGenerateMipmap(GL_TEXTURE_2D);
+        glGenerateMipmap(GL_TEXTURE_2D);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // We clamp to the edge as the blur filter would otherwise sample repeated texture values!
@@ -734,6 +734,7 @@ void PostProcess::SSRPass(std::shared_ptr<Camera>& cam) {
         glActiveTexture(GL_TEXTURE0);
         glUniform1i(glGetUniformLocation(DenoiseShader->getProgramID(), "texture0"), 0);
         glBindTexture(GL_TEXTURE_2D, SSRTexture[this->CurrentSSR]);
+        glGenerateMipmap(GL_TEXTURE_2D);
 
         glUniform2f(glGetUniformLocation(DenoiseShader->getProgramID(), "resolution"), this->width, this->height);
         glUniform1f(glGetUniformLocation(DenoiseShader->getProgramID(), "exponent"), 0.05);
@@ -1051,7 +1052,7 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::shared_ptr<Camera>& 
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(glGetUniformLocation(PassThroughShader->getProgramID(), "texture0"), 0);
     glBindTexture(GL_TEXTURE_2D, hdrFBO->getRenderTargetHandler("colorBuffer"));
-    //glGenerateMipmap(GL_TEXTURE_2D);
+    glGenerateMipmap(GL_TEXTURE_2D);
 
     CopyTextureFBO->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -1066,6 +1067,11 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool & hdr, std::shared_ptr<Camera>& 
     glViewport(0,0,this->width, this->height);
 
     /** end copy texture*/
+
+    /**Fill mip maps begin*/
+
+
+    /**Fill mip maps end*/
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer);
     hdrFBO->setToDraw();

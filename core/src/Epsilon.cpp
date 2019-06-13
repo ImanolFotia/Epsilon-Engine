@@ -24,6 +24,7 @@
 #include <multithread/ThreadPool.hpp>
 #include <OpenGL/GlCache.h>
 #include <sys/GPU.hpp>
+#include <Scripts/LuaScript.hpp>
 
 GLenum glCache::CullFaceMode = 0;
 GLuint glCache::ShaderId = 0;
@@ -114,7 +115,9 @@ Epsilon::Epsilon(GLFWwindow*& win) {
 
     m_CameraMode = PLAYER_CONTROLLED;
 
-
+    Scripts::LuaScript _script;
+    _script.Load("scripts/Program.luac");
+    std::cout << "Sum is: " << _script.Exec<int>("sum", 3, 5) << std::endl;
 }
 
 void Epsilon::RenderSplashScreen(string text) {
@@ -544,7 +547,7 @@ void Epsilon::InitResources(void) {
     shadowMap->UnbindShadowFrameBuffer();
 
 
-    this->mCubemap = (std::shared_ptr<CubeMap>) new CubeMap(54, glm::vec3(-11.0, 6.0, -8.0));
+    this->mCubemap = (std::shared_ptr<CubeMap>) new CubeMap(54, glm::vec3(-11.0, 6.0, -50.0));
     //this->mCubemap[1] = (std::shared_ptr<CubeMap>) new CubeMap(55, glm::vec3(3, 7, 30));
 
 
@@ -686,13 +689,13 @@ void Epsilon::LoadShaders(void) {
 void Epsilon::LoadGeometry(void) {
     cout << "Loading World Geometry..." <<endl;
     vector<glm::vec3> grasspos2;
-    /*
-            terrain = (std::shared_ptr<Terrain>)new Terrain("materials/testmontana.jpg",
-                      "textures/epsilon/Wet_floor.png",
-                      "textures/epsilon/Wet_floor_n.png",
-                      "textures/epsilon/Wet_floor_s.png",
-                      "textures/epsilon/Wet_floor_m.png", 2.0, 150, glm::vec3(0, -70.0, 0),rM);
-    */
+
+            terrain = (std::shared_ptr<Terrain>)new Terrain("materials/terrain_1024_alpine3_height.png",
+                      "Rock_6_d.png",
+                      "Rock_6_n.png",
+                      "Rock_6_s.png",
+                      "Rock_6_ao.png", 0.5, 200, glm::vec3(0, -67.0, 0),rM);
+
     /*
 
             for(int i = 0 ; i < terrain->vertices.size() ; i+= 2) {
@@ -779,12 +782,12 @@ void Epsilon::Render3D(Shader* shader) {
     glm::mat4 RotationMatrix;
 
     shader->Use();
-    /*
-            Shaders["Terrain"]->Use();
-            this->SetUniforms(Shaders["Terrain"],glm::vec3(0, 0, 0), glm::vec3(1.0),  glm::quat(0, 0,0, 0));
-            terrain->RenderTerrain(Shaders["Terrain"]);
-            glCullFace(GL_BACK);
-    */
+
+    //Shaders["Terrain"]->Use();
+    this->SetUniforms(shader,glm::vec3(0,65, 0), glm::vec3(1.0),  glm::quat(0, 0,0, 0));
+    terrain->RenderTerrain(shader);
+    glCullFace(GL_BACK);
+
 
     glDisable(GL_CULL_FACE);
     for(unsigned int i =0; i < EntityList.size(); ++i) {
@@ -1235,11 +1238,11 @@ void Epsilon::RenderFrame(void) {
     glEnable(GL_DEPTH_CLAMP);
     this->RenderSkybox(false);
     glDisable(GL_DEPTH_CLAMP);
-/*
+
     glDisable(GL_BLEND);
-    this->waterPlane->RenderWater(eCamera, PP->CopyTextureFBO->getRenderTargetHandler(0), glm::normalize(glm::vec3(83, 6, -3) - glm::vec3(0, 6, -3)), PP->gDepth);
+    this->waterPlane->RenderWater(eCamera, PP->CopyTextureFBO->getRenderTargetHandler(0), glm::normalize(glm::vec3(83, 6, -3) - glm::vec3(0, 6, -3)), PP->gDepth, rM->useCubeMap(54) );
     glEnable(GL_BLEND);
-*/
+
     this->RenderParticles();
     PP->ShowPostProcessImage(this->frametime, (int)this->onMenu, this->sun->Direction, this->eCamera);
     glEnable(GL_BLEND);

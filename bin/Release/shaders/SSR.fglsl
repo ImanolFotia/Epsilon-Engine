@@ -157,7 +157,7 @@ void main()
          
             screenEdgefactor = clamp(1.0 - (dCoords.x + dCoords.y), 0.0, 1.0);
 
-            samples = texture(gFinalImage, coords.xy).rgb;
+            samples = textureLod(gFinalImage, coords.xy, 0).rgb;
         //}
                 ReflectionMultiplier =  
                         screenEdgefactor * 
@@ -177,7 +177,7 @@ void main()
     }
     else
     {
-        SSR = texture(gDepth, TexCoords).gba;
+        SSR = texture(gDepth, TexCoords, 0).gba;
         mask = 0;
     }
     //SSR = mix(vec3(1.0, 0.0, 0.0), vec3(0.0, 0.0, 1.0), clamp(1.0-(screenEdgefactor*(2.0*-reflected.z)), 0.0, 1.0)) * Fresnel;
