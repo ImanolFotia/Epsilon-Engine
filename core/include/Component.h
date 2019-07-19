@@ -190,7 +190,9 @@ namespace Component
     class MovementComponent : public Component
     {
     public:
-        MovementComponent() {}
+        MovementComponent() {
+            Type = MOVEMENTCOMPONENT;
+        }
         ~MovementComponent() {}
 
         void Fill(std::shared_ptr<Physics::PhysicObject> rigidBody, glm::vec3 from, glm::vec3 to, float speed, bool loop)
@@ -243,6 +245,7 @@ namespace Component
         virtual void Fill(std::string path, std::shared_ptr<ResourceManager>& rm, std::string shader) {}
         virtual void Fill(float mass, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer) {}
         void Render(std::shared_ptr<ResourceManager> rm){}
+        void Render(std::shared_ptr<ResourceManager> rm, glm::vec3){}
         virtual void setTransparency(bool x){}
 
     private:

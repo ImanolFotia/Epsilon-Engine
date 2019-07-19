@@ -150,7 +150,8 @@ namespace Component {
         PLAYERCOMPONENT,
         SOUNDCOMPONENT,
         PHYSICCOMPONENT,
-        CLOTHCOMPONENT
+        CLOTHCOMPONENT,
+        MOVEMENTCOMPONENT
     };
 
     enum MATERIAL {
