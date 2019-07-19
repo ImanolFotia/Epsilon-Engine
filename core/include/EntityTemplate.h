@@ -33,6 +33,8 @@ public:
             hasPlayerComponent = true;
         else if(t->Type == Component::CLOTHCOMPONENT)
             hasClothComponent = true;
+        else if(t->Type == Component::MOVEMENTCOMPONENT)
+            hasMovementComponent = true;
         else
             std::cout << " not added component" << std::endl;
 
@@ -55,6 +57,7 @@ public:
     bool hasModel = false;
     bool hasPhysicComponent = false;
     bool hasClothComponent = false;
+    bool hasMovementComponent = false;
     int ID;
     std::string modelPath;
     std::vector<std::shared_ptr<Component::Component>> ComponentList;

@@ -463,42 +463,43 @@ void Epsilon::InitResources(void) {
     //Compmodel->isTransparent = true;
 
         tmpEnt->addComponent(Compmodel);
-        EntityList.push_back(tmpEnt);
-/*
-    	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(13, 4, -2), glm::vec3(1.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
+        EntityList.push_back(tmpEnt);*/
+
+    	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(16, 4, 10), glm::vec3(0.25), glm::quat(1.0, 0.0, 0.0, 0.0)));
     	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    Compmodel->Fill("models/export3dcoat.eml", rM, "Main");
+        Compmodel->Fill("models/export3dcoat.eml", rM, "Main");
     	std::shared_ptr<Component::PhysicComponent> CompPhys = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
     	std::shared_ptr<Physics::CubePhysicObject> ph = (std::shared_ptr<Physics::CubePhysicObject>) new Physics::CubePhysicObject();
-    	rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(glm::vec3(13, 4, -2), 10.0, rM->getModelBoundingBox("models/export3dcoat.eml"), 3.0).get());
+    	rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(glm::vec3(16, 4, 10), 100.0, rM->getModelBoundingBox("models/export3dcoat.eml"), 0.25).get());
     	CompPhys->Fill(100.0f, ph);
     	tmpEnt->addComponent(Compmodel);
     	tmpEnt->addComponent(CompPhys);
-    	EntityList.push_back(tmpEnt);*/
+    	EntityList.push_back(tmpEnt);
 
     /*
     ph->addObject(2.0, glm::vec3(-20.5+(i*6.4),8.2,-8), 2.0).get()
 
         EntityList[7]->addComponent(Compmodel2);
-        EntityList[7]->addComponent(CompPhys2);
+        EntityList[7]->addComponent(CompPhys2);*/
         /////////////////////////////////////////////////////////
-        EntityList[8] = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(22, 5.5, -25.5), glm::vec3(5), glm::quat(-1.0, 0.0, -1.0, 0.0)));
-        std::shared_ptr<Component::RenderComponent> Compmodel3 = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-        Compmodel3->Fill("models/platform.eml", rM, "Main");
+        tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(22, 5.5, -25.5), glm::vec3(5), glm::quat(-1.0, 0.0, -1.0, 0.0)));
+        Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
+        Compmodel->Fill("models/platform.eml", rM, "Main");
 
-        std::shared_ptr<Component::PhysicComponent> CompPhys3 = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
+        CompPhys = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
 
         std::shared_ptr<Physics::CubePhysicObject> ph3 = (std::shared_ptr<Physics::CubePhysicObject>) new Physics::CubePhysicObject();
         rM->m_PhysicsWorld->world->addRigidBody(ph3->addObject(glm::vec3(22, 5.5, -25.5), 0.0, rM->getModelBoundingBox("models/platform.eml"), 5.0f).get());
-        CompPhys3->Fill(0.0f, ph3);
+        CompPhys->Fill(0.0f, ph3);
 
         std::shared_ptr<Component::MovementComponent> MovComp = (std::shared_ptr<Component::MovementComponent>) new Component::MovementComponent();
-        MovComp->Fill(ph3, glm::vec3(22, 8.0, -25.5), glm::vec3(22, 21.5, -25.5), 0.08, true);
+        MovComp->Fill(ph3, glm::vec3(22, 8.0, -25.5), glm::vec3(22, 21.5, -25.5), 9.0, true);
 
-        EntityList[8]->addComponent(Compmodel3);
-        EntityList[8]->addComponent(CompPhys3);
-        EntityList[8]->addComponent(MovComp);
-    */
+        tmpEnt->addComponent(Compmodel);
+        tmpEnt->addComponent(CompPhys);
+        tmpEnt->addComponent(MovComp);
+    	EntityList.push_back(tmpEnt);
+
     this->LoadSound();
 
     auto MenuAudio = [&]() -> void{m_AudioSystem->PlayByID(2);};
@@ -513,7 +514,7 @@ void Epsilon::InitResources(void) {
 
     PP = std::move((unique_ptr<PostProcess>)(new PostProcess()));
 
-    m_PlayerCapsule = (std::shared_ptr<Game::Player>) new Game::Player(-6,24.5, 14, this->rM);
+    m_PlayerCapsule = (std::shared_ptr<Game::Player>) new Game::Player(-6,3.0, 10, this->rM);
 //m_PlayerCapsule = (std::shared_ptr<Game::Player>) new Game::Player(170.0,5.25,-202.0, this->rM);
 
 
@@ -547,7 +548,7 @@ void Epsilon::InitResources(void) {
     shadowMap->UnbindShadowFrameBuffer();
 
 
-    this->mCubemap = (std::shared_ptr<CubeMap>) new CubeMap(54, glm::vec3(-11.0, 6.0, -50.0));
+    this->mCubemap = (std::shared_ptr<CubeMap>) new CubeMap(54, glm::vec3(-11.0, 6.0, -8.0));
     //this->mCubemap[1] = (std::shared_ptr<CubeMap>) new CubeMap(55, glm::vec3(3, 7, 30));
 
 
@@ -696,7 +697,7 @@ void Epsilon::LoadGeometry(void) {
                       "Rock_6_s.png",
                       "Rock_6_ao.png", 0.5, 200, glm::vec3(0, -67.0, 0),rM);
 
-    /*
+
 
             for(int i = 0 ; i < terrain->vertices.size() ; i+= 2) {
                 //if(terrain->vertices[i].Position.y < 0)
@@ -707,7 +708,7 @@ void Epsilon::LoadGeometry(void) {
                 else if(chance == 2)
                     grasspos2.push_back(terrain->vertices[i].Position + glm::vec3((rand()%6)-3, 3.5, (rand()%6)-3));
             }
-        */
+
     std::cout << "Resource manager in epsilon address: " << rM.get() << std::endl;
 
     rM->requestCubeMap(2, glm::vec3(4.8,80000.2,-8));
@@ -784,7 +785,7 @@ void Epsilon::Render3D(Shader* shader) {
     shader->Use();
 
     //Shaders["Terrain"]->Use();
-    this->SetUniforms(shader,glm::vec3(0,65, 0), glm::vec3(1.0),  glm::quat(0, 0,0, 0));
+    this->SetUniforms(shader,glm::vec3(0,0, 0), glm::vec3(1.0),  glm::quat(0, 0,0, 0));
     terrain->RenderTerrain(shader);
     glCullFace(GL_BACK);
 
@@ -920,7 +921,7 @@ void Epsilon::Render2D(void) {
 
 
     GPU _gpu;
-    int DEBUG_MODE = 0;
+    int DEBUG_MODE = 3;
 
     if(DEBUG_MODE >= 1) {
         this->text->RenderText("FPS: " + Helpers::intTostring(acumfps), 0.01, 0.95, 0.5, glm::vec3(1,1,1));
@@ -1184,15 +1185,15 @@ void Epsilon::ProcessFrame(void) {
     //glEnable(GL_DEPTH_CLAMP);
     this->RenderSkybox(true);
     glClearDepth( 1.0f );
-    /*
+
             Shaders["grass"]->Use();
-            this->SetUniforms(Shaders["grass"], glm::vec3(-512, 0, 512), glm::vec3(3,3,3), glm::quat(-1, 0, -1, 0) );
+            this->SetUniforms(Shaders["grass"], glm::vec3(0, 0, 0), glm::vec3(0.05), glm::quat(-1, 0, -1, 0) );
             grass.at(0).Render(Shaders["grass"]);
 
             Shaders["grass"]->Use();
-            this->SetUniforms(Shaders["grass"], glm::vec3(-512, 0, 512), glm::vec3(1,1,1), glm::quat(-1, 0, -1, 0) );
+            this->SetUniforms(Shaders["grass"], glm::vec3(0, 0, 0), glm::vec3(0.05), glm::quat(-1, 0, -1, 0) );
             grass.at(1).Render(Shaders["grass"]);
-    */
+
     this->Render3D(Shaders["Main"]);
 
     //glDisable(GL_DEPTH_CLAMP);

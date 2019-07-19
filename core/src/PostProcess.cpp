@@ -826,7 +826,7 @@ void PostProcess::DownSampleSSR(double frametime) {
 GLuint PostProcess::blurSSR(GLuint Buffer) {
 
     GLboolean horizontal = true, first_iteration = true, direction = true;
-    GLuint amount = 5;
+    GLuint amount = 15;
     blurSSRShader->Use();
 
     for(unsigned int i = 0 ; i < amount ; ++i) {
