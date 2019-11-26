@@ -40,9 +40,10 @@ std::string ResourceManager::requestModel(std::string modelPath, std::shared_ptr
             return modelPath;
         }
     }
-    catch(std::exception e)
+    catch(std::runtime_error& e)
     {
-        std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() <<std::endl;
+        std::cout << "Exception caught at: " << __FUNCTION__ << "\nMessage: " << e.what() <<std::endl;
+        std::cout << "Failed to load: " << modelPath.c_str() << std::endl;
     }
 }
 

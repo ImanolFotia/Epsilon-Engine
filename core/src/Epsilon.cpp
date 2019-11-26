@@ -1212,6 +1212,8 @@ void Epsilon::RenderParticles(void) {
     glUniform2f(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "resolution"),  this->WIDTH, this->HEIGHT);
     glUniformMatrix4fv(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "view"), 1, GL_FALSE,   &eCamera->getViewMatrix()[0][0]);
     glUniformMatrix4fv(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "PrevView"), 1, GL_FALSE,   &eCamera->getPrevViewMatrix()[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "lightSpaceMatrix"), 1, GL_FALSE, &shadowMap->getLightSpaceMatrix()[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "depthBias"), 1, GL_FALSE, &shadowMap->getBiasMatrix()[0][0]);
     this->SetUniforms(Shaders["DefaultParticle"], glm::vec3(0.0f), glm::vec3(4.0f), glm::quat(1.0, sin(glfwGetTime()*frametime), 0.0f, cos(glfwGetTime()*frametime) ));
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "texture0"), 0);
@@ -1219,6 +1221,9 @@ void Epsilon::RenderParticles(void) {
     glActiveTexture(GL_TEXTURE1);
     glUniform1i(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "bufferDepth"), 1);
     glBindTexture(GL_TEXTURE_2D, PP->gDepth);
+    glActiveTexture(GL_TEXTURE2);
+    glUniform1i(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "shadowMap"), 2);
+    glBindTexture(GL_TEXTURE_2D, this->shadowMap->getShadowTextureID());
     m_ParticleSystem->Render();
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);

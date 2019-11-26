@@ -135,6 +135,8 @@ void PostProcess::SetupFramebuffer() {
     lensDirt = (std::shared_ptr<eTexture>) new eTexture("effects/lensdirt.png");
     lensStar = (std::shared_ptr<eTexture>) new eTexture("effects/lensstar.png");
 
+    this->BlueNoiseTexture = (std::shared_ptr<eTexture>) new eTexture("LDR_RGBA_0_n.png", GL_REPEAT, GL_TEXTURE_2D, GL_LINEAR);
+
     /*
                 LightPositions.push_back(glm::vec3(-41, 12.0, -23));
                 LightPositions.push_back(glm::vec3(-39, 10.3, 2));
@@ -411,7 +413,7 @@ void PostProcess::applySSAO(std::shared_ptr<Camera>& cam) {
     glViewport(0,0,SSAOwidth, SSAOheight);
     this->RenderQuad();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-#define cheapblur
+//#define cheapblur
 
 #ifndef cheapblur
     glViewport(0,0,width, height);
@@ -681,7 +683,7 @@ void PostProcess::SSRPass(std::shared_ptr<Camera>& cam) {
 
     glActiveTexture(GL_TEXTURE5);
     glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "noiseTexture"), 5);
-    glBindTexture(GL_TEXTURE_2D, this->noiseTexture);
+    glBindTexture(GL_TEXTURE_2D, /*this->noiseTexture*/this->BlueNoiseTexture->getTextureID());
 
     glActiveTexture(GL_TEXTURE6);
     glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "PreviousReflection"), 6);
@@ -888,7 +890,7 @@ void PostProcess::CompositeImage(bool isMoving) {
     glActiveTexture(GL_TEXTURE1);
     CompositeShader->PushUniform("gReflectionSampler", 1);
     if(isMoving)
-        glBindTexture(GL_TEXTURE_2D, DenoiseTexture);
+        glBindTexture(GL_TEXTURE_2D, SSRTexture[!this->CurrentSSR]);
     else{
         glBindTexture(GL_TEXTURE_2D, SSRTexture[this->CurrentSSR]);
         if(TotalFrames >= 250)
