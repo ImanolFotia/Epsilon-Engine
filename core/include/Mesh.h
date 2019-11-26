@@ -53,6 +53,8 @@ public:
     vector<GLuint> indices;
     vector<Texture> textures;
 
+    bool isVisible = true;
+
     /**  Functions  */
     /// Constructor
     Mesh(vector<t_Vertex> vertices, vector<GLuint> indices, vector<Texture> textures, int CubeMapindex = 1)
@@ -81,18 +83,22 @@ public:
 /// Render the mesh
     void DrawWithAlpha()
     {
-        glBindTexture(GL_TEXTURE_2D, this->textures[0].id);
+        if(isVisible){
+            glBindTexture(GL_TEXTURE_2D, this->textures[0].id);
 
-        glBindVertexArray(this->VAO);
-        glCache::glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
+            glBindVertexArray(this->VAO);
+            glCache::glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
+            glBindVertexArray(0);
+        }
     }
 
     void DrawNoTexture()
     {
-        glBindVertexArray(this->VAO);
-        glCache::glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
+        if(isVisible){
+            glBindVertexArray(this->VAO);
+            glCache::glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
+            glBindVertexArray(0);
+        }
     }
 
     void Destroy()

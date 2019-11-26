@@ -101,20 +101,26 @@ public:
     /// Structure to store the models bounding box for visibility and collision computation
     struct BOUNDING_BOX
     {
-        float FRONT_TOP_LEFT;
-        float FRONT_TOP_RIGHT;
-        float FRONT_BOTTOM_LEFT;
-        float FRONT_BOTTOM_RIGHT;
+        float FRONT_TOP_LEFT = 0.f;
+        float FRONT_TOP_RIGHT = 0.f;
+        float FRONT_BOTTOM_LEFT = 0.f;
+        float FRONT_BOTTOM_RIGHT = 0.f;
 
-        float BACK_TOP_LEFT;
-        float BACK_TOP_RIGHT;
-        float BACK_BOTTOM_LEFT;
-        float BACK_BOTTOM_RIGHT;
+        float BACK_TOP_LEFT = 0.;
+        float BACK_TOP_RIGHT = 0.f;
+        float BACK_BOTTOM_LEFT = 0.f;
+        float BACK_BOTTOM_RIGHT = 0.f;
     };
 
     MIN_MAX_POINTS MinMaxPoints;
 
     BOUNDING_BOX BoundingBox;
+
+    std::vector<MIN_MAX_POINTS> mMeshesBoundingBoxes;
+
+    void setMeshVisibility(unsigned int meshIndex, bool state){
+        meshes.at(meshIndex).isVisible = state;
+    }
 
     long toHash()
     {

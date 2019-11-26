@@ -269,6 +269,7 @@ std::shared_ptr<FrameBuffer<int> > BRDFFramebuffer;
     std::shared_ptr<eTexture> lensColor;
     std::shared_ptr<eTexture> lensDirt;
     std::shared_ptr<eTexture> lensStar;
+    std::shared_ptr<eTexture> BlueNoiseTexture;
 
 
     glm::vec2 FocalLen, InvFocalLen, UVToViewA, UVToViewB, LinMAD;

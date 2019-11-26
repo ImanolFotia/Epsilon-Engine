@@ -43,7 +43,7 @@ void main()
 
     vec3 newPosition = vec4(positions * vec4(vertexPosition, 1.0)).xyz;
 
-    wFragPos = vec3(positions * vec4(newPosition, 1.0f));
+    wFragPos = newPosition; //vec3(positions * vec4(newPosition, 1.0f));
 
     FragPos = vec3(view * vec4(wFragPos, 1.0f));
     Position = gl_Position;
