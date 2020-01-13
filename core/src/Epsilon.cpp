@@ -741,7 +741,7 @@ void Epsilon::LoadGeometry(void) {
 
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "minecraft.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "intro.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 
@@ -1244,11 +1244,11 @@ void Epsilon::RenderFrame(void) {
     glEnable(GL_DEPTH_CLAMP);
     this->RenderSkybox(false);
     glDisable(GL_DEPTH_CLAMP);
-
+/*
     glDisable(GL_BLEND);
     this->waterPlane->RenderWater(eCamera, PP->CopyTextureFBO->getRenderTargetHandler(0), glm::normalize(glm::vec3(83, 6, -3) - glm::vec3(0, 6, -3)), PP->gDepth, rM->useCubeMap(54) );
     glEnable(GL_BLEND);
-
+*/
     this->RenderParticles();
     PP->ShowPostProcessImage(this->frametime, (int)this->onMenu, this->sun->Direction, this->eCamera);
     glEnable(GL_BLEND);

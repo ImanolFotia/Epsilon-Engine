@@ -266,6 +266,7 @@ std::shared_ptr<FrameBuffer<int> > BRDFFramebuffer;
     GLuint mBlurredSSR;
     GLuint BRDF = 0;
     GLuint ssbo = 0;
+    float blurSize = 0.0f;
     std::shared_ptr<eTexture> lensColor;
     std::shared_ptr<eTexture> lensDirt;
     std::shared_ptr<eTexture> lensStar;

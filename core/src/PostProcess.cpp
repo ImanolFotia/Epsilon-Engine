@@ -6,7 +6,7 @@
 #include <random>
 #include <string>
 #include <Includes.h>
-
+#include <sys/KeyBoard.h>
 #include <OpenGL/HelperFunctions/CheckError.h>
 #include <chrono>
 PostProcess::PostProcess() {
@@ -43,62 +43,62 @@ void PostProcess::SetupFramebuffer() {
 
     t_light tmpLight;
 
-    tmpLight.position = glm::vec4(-0.77, 11, -4.19, 1.0);
+    tmpLight.position = glm::vec4(-1.29, 5.64, 25.7, 1.0);
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-    tmpLight.color = glm::vec4(1.0, 0.8, 0.8, 1.0);
+    tmpLight.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
     tmpLight.radius = 0.5f;
-    tmpLight.watts = 100.0f;
+    tmpLight.watts = 300.0f;
     tmpLight.type = 2;
     m_Lights.push_back(tmpLight);
 
-    tmpLight.position = glm::vec4(22.6, 11, -6.8, 1.0);
+    tmpLight.position = glm::vec4(-0.4, 4.75, 16.21, 1.0);
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-    tmpLight.color = glm::vec4(1, 0.8, 0.8, 1.0);
+    tmpLight.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
     tmpLight.radius = 0.5f;
     tmpLight.watts = 100.0f;
     tmpLight.type = 2;
     m_Lights.push_back(tmpLight);
 
-    tmpLight.position = glm::vec4(8.6, 11, 16, 1.0);
+    tmpLight.position = glm::vec4(-85.072, 13.9, -44.56, 1.0);
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-    tmpLight.color = glm::vec4(1, 0.8, 0.8, 1.0);
+    tmpLight.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
     tmpLight.radius = 0.5f;
-    tmpLight.watts = 100.0f;
+    tmpLight.watts = 400.0f;
     tmpLight.type = 2;
     m_Lights.push_back(tmpLight);
 
-    tmpLight.position = glm::vec4(24.8, 11, 5.0, 1.0);
-    tmpLight.direction = glm::vec4(0.0, -1.0, 0.0, 1.0);
-    tmpLight.color = glm::vec4(1, 0.8, 0.8, 1.0);
+    tmpLight.position = glm::vec4(-14.4, 8.5, -2.81, 1.0);
+    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+    tmpLight.color = glm::vec4(1.0, 0.6, 0.6, 1.0);
     tmpLight.radius = 0.5f;
-    tmpLight.watts = 100.0f;
+    tmpLight.watts = 200.0f;
     tmpLight.type = 2;
     m_Lights.push_back(tmpLight);
 
-    tmpLight.position = glm::vec4(44.1, 11, 22, 1.0);
-    tmpLight.direction = glm::vec4(0.74, -0.5761, -0.60, 1.0);
-    tmpLight.color = glm::vec4(1, 0.8, 0.8, 1.0);
-    tmpLight.radius = 0.25f;
-    tmpLight.watts = 100.0f;
+    tmpLight.position = glm::vec4(21.4, 8.5, -2.81, 1.0);
+    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+    tmpLight.color = glm::vec4(1.0, 0.6, 0.6, 1.0);
+    tmpLight.radius = 0.5f;
+    tmpLight.watts = 200.0f;
     tmpLight.type = 2;
     m_Lights.push_back(tmpLight);
 
-    tmpLight.position = glm::vec4(23, 11, 27.3, 1.0);
-    tmpLight.direction = glm::vec4(0.74, -0.5761, -0.60, 1.0);
-    tmpLight.color = glm::vec4(1, 0.8, 0.8, 1.0);
-    tmpLight.radius = 0.25f;
-    tmpLight.watts = 100.0f;
+    tmpLight.position = glm::vec4(21.4, 8.5, 13.6, 1.0);
+    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+    tmpLight.color = glm::vec4(1.0, 0.6, 0.6, 1.0);
+    tmpLight.radius = 0.5f;
+    tmpLight.watts = 200.0f;
     tmpLight.type = 2;
     m_Lights.push_back(tmpLight);
 
-
-    tmpLight.position = glm::vec4(-18, 90, -2, 1.0);
-    tmpLight.direction = glm::vec4(0.74, -0.5761, -0.60, 1.0);
-    tmpLight.color = glm::vec4(1, 1.0, 1.0, 1.0);
-    tmpLight.radius = 0.25f;
-    tmpLight.watts = 1000.0f;
+    tmpLight.position = glm::vec4(-14.4, 8.5, 13.6, 1.0);
+    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+    tmpLight.color = glm::vec4(1.0, 0.6, 0.6, 1.0);
+    tmpLight.radius = 0.5f;
+    tmpLight.watts = 200.0f;
     tmpLight.type = 2;
     m_Lights.push_back(tmpLight);
+
 /*
     tmpLight.position = glm::vec4(-112, 7, -12, 1.0);
     tmpLight.direction = glm::vec4(0.74, -0.5761, -0.60, 1.0);
@@ -931,6 +931,13 @@ void PostProcess::ShowPostProcessImage(float frametime, GLuint onmenu, glm::vec3
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
+    if(Input::KeyBoard::KEYS[Input::GLFW::Key::ARROW_UP])
+        blurSize += 0.01;
+
+    if(Input::KeyBoard::KEYS[Input::GLFW::Key::ARROW_DOWN])
+        blurSize -= 0.01;
+
     glActiveTexture(GL_TEXTURE0);
     finalImage->PushUniform("compositeImage", 0);
     glBindTexture(GL_TEXTURE_2D, mCompositeImage->getRenderTargetHandler(0));
@@ -967,11 +974,12 @@ void PostProcess::ShowPostProcessImage(float frametime, GLuint onmenu, glm::vec3
     finalImage->PushUniform("projection", cam->getProjectionMatrix());
     finalImage->PushUniform("position", cam->getPosition());
     finalImage->PushUniform("sunPos", Sun);
+    finalImage->PushUniform("blurSize", blurSize);
     finalImage->PushUniform("lightShafts", this->lightShafts);
     finalImage->PushUniform("onmenu", (int)onmenu);
     finalImage->PushUniform("Resolution", glm::vec2(this->width, this->height));
 
-    finalImage->PushUniform("Bokeh", this->mBokehDOF);
+    finalImage->PushUniform("BokehOn", this->mBokehDOF);
     finalImage->PushUniform("ChromaticAberration", this->mChromaticAberration);
 
     finalImage->PushUniform("exposure", m_exposure);
