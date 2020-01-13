@@ -89,7 +89,7 @@ public:
                 ZLimit          (generator)
             );
 
-            Particles.push_back(Particle(CurrentParticlePosition, 1.0, 50.0, ParticlesLimits));
+            Particles.push_back(Particle(CurrentParticlePosition, 1.0, HorizonalLimit  (generator), ParticlesLimits));
         }
 
         for(auto &p: Particles) {
@@ -139,8 +139,8 @@ public:
 
                 Particles[i].setSpeed(glm::vec3(1.0, 0.0, 1.0));
                 Particles[i].m_Position.y = ParticlesLimits.MAX_Y - ((ParticlesLimits.MAX_Y - ParticlesLimits.MIN_Y)*0.5);
-                Particles[i].m_Position.x += deltaTime * 0.2;
-                Particles[i].m_Position.z += deltaTime * 0.2;
+                Particles[i].m_Position.x += deltaTime * 0.3;
+                Particles[i].m_Position.z += deltaTime * 0.4;
 
                 Particles[i].setLife(Particles[i].getLife() - deltaTime);
 

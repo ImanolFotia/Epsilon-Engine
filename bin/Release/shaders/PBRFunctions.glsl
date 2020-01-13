@@ -21,6 +21,7 @@ float DistributionGGX(vec3 N, vec3 H, float roughness)
 
 float DistributionGGX2(in vec3 N, in vec3 H, in float roughness, in vec3 L, in float rad)
 {
+    
     float a      = roughness*roughness;
     float a2     = a*a;
     float aP     = clamp( rad / ( length(L) * 2.0 ) + a, 0.0, 1.0 );
@@ -33,6 +34,18 @@ float DistributionGGX2(in vec3 N, in vec3 H, in float roughness, in vec3 L, in f
     denom = PI * denom * denom;
 
     return nom / denom;
+
+    
+    /*
+    float a      = roughness*roughness;
+    float a2 = pow(roughness, 4);
+    float NdotH  = max(dot(N, H), 0.0);
+    highp vec3 d = vec3(a * NdotH);
+    highp float d2 = dot(d, d);
+    float b2 = a2 / d2;
+    return a2 * b2 * b2 * (1.0 / PI);*/
+
+    
 }
 
 float visSchlickSmithMod( float NoL, float NoV, float r )
@@ -311,15 +324,15 @@ vec3 TubeAreaLight(in vec3 position, in vec3 tubeStart,in vec3 tubeEnd, in float
         vec3 radiance     = vec3(1.0) * attenuation;        
         
         // cook-torrance brdf
-        float NDF = DistributionGGX2(Normal, H, clamp(Specular, 0.05, 1.0), L, radius);       
-        float G   = GeometrySmith(Normal, V, L, Specular);      
+        float NDF = DistributionGGX2(N, H, clamp(Specular, 0.05, 1.0), L, radius);       
+        float G   = GeometrySmith(N, V, L, Specular);      
         
         vec3 nominator    = NDF * G * F;
-        float denominator = (4 * max(dot(V, Normal), 0.0) * max(dot(L, Normal), 0.0)) + 0.001; 
+        float denominator = (4 * max(dot(V, N), 0.0) * max(dot(L, N), 0.0)) + 0.001; 
         vec3 brdf = nominator / denominator;
             
         // add to outgoing radiance Lo
-        float NdotL = orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.05, 1.0), 1.0);             
+        float NdotL = orenNayarDiffuse(L, V, N, clamp(Specular, 0.05, 1.0), 1.0);             
         vec3 Lo = (kD * Diffuse / PI + brdf) * radiance * NdotL; 
         return Lo * normalize(color);
 }
