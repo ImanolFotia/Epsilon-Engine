@@ -27,7 +27,7 @@ void Patch::Render(Shader* inShader, glm::mat4 viewMatrix, glm::mat4 projectionM
 
     glDisable(GL_CULL_FACE);
     inShader->Use();
-    glm::mat4 model = glm::mat4();//glm::translate(glm::mat4(), this->mPosition);
+    glm::mat4 model = glm::mat4(1.0);//glm::translate(glm::mat4(1.0), this->mPosition);
     glm::mat4 MVP = projectionMatrix * viewMatrix * model;
     glBindVertexArray(this->VAO);
     inShader->PushUniform("MVP", MVP);
@@ -61,7 +61,7 @@ void Patch::RenderShadows()
 void Patch::Render(Shader inShader, glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
 
     inShader.Use();
-    glm::mat4 model = glm::mat4();//glm::translate(glm::mat4(), this->mPosition);
+    glm::mat4 model = glm::mat4(1.0);//glm::translate(glm::mat4(1.0), this->mPosition);
     glm::mat4 MVP = projectionMatrix * viewMatrix * model;
     glBindVertexArray(this->VAO);
     inShader.PushUniform("MVP", MVP);

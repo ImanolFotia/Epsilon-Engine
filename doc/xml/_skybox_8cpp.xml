@@ -362,10 +362,10 @@
 <codeline lineno="34"><highlight class="normal"></highlight></codeline>
 <codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::mat4<sp/>view<sp/>=<sp/>glm::mat4(glm::mat3(camera-&gt;getViewMatrix()));</highlight></codeline>
 <codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">float</highlight><highlight class="normal"><sp/>rotation<sp/>=<sp/>0.5<sp/>*<sp/>glfwGetTime();</highlight></codeline>
-<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::mat4<sp/>RotationMatrix<sp/>=<sp/>glm::rotate(glm::mat4(),glm::radians(rotation),<sp/>glm::vec3(0,1,0));</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::mat4<sp/>RotationMatrix<sp/>=<sp/>glm::rotate(glm::mat4(1.0),glm::radians(rotation),<sp/>glm::vec3(0,1,0));</highlight></codeline>
 <codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/>view<sp/>=<sp/>view<sp/>*<sp/>RotationMatrix;</highlight></codeline>
 <codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::mat4<sp/>projection<sp/>=<sp/>glm::mat4(camera-&gt;getProjectionMatrix());</highlight></codeline>
-<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::mat4<sp/>model<sp/>=<sp/>glm::mat4();</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::mat4<sp/>model<sp/>=<sp/>glm::mat4(1.0);</highlight></codeline>
 <codeline lineno="41"><highlight class="normal"></highlight></codeline>
 <codeline lineno="42"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::mat4<sp/>ScaleMatrix<sp/>=<sp/>glm::scale(model,<sp/>glm::vec3(1,1,1));</highlight></codeline>
 <codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::mat4<sp/>TranslationMatrix<sp/>=<sp/>glm::translate(model,<sp/>glm::vec3(0,0,0));</highlight></codeline>

@@ -47,8 +47,8 @@ void Water::RenderWater(std::shared_ptr<Camera> cam, GLuint colorBuffer, glm::ve
     glBindTexture(GL_TEXTURE_2D, reflectionTex);
 
 
-    glm::mat4 model = glm::mat4();
-    glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(scale,1,scale));
+    glm::mat4 model = glm::mat4(1.0);
+    glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1.0), glm::vec3(scale,1,scale));
     model = glm::translate(model, this->position);
     this->MVP = cam->getProjectionMatrix() * cam->getViewMatrix() * model;
 
@@ -306,6 +306,6 @@ void Water::FinishWatercomputation(void)
 
 void Water::GenerateModelViewProjection(std::shared_ptr<Camera> cam)
 {
-    glm::mat4 model = glm::mat4();
+    glm::mat4 model = glm::mat4(1.0);
     MVP = cam->getProjectionMatrix() * cam->getViewMatrix() * model;
 }

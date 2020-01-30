@@ -94,9 +94,10 @@ void main()
     vec2 MetallicEmmissive = texture(gExtraComponents, TexCoords).rg;
     Metallic = MetallicEmmissive.r;
 
-    if(Metallic <= 0.01){
-        outColor = vec4(0.0);
-        return;
+    bool isPlastic = false;
+
+    if(Metallic <= 0.1){
+        isPlastic = true;
     }
  
     vec3 worldNormal = normalize(vec3(texture(gNormal, TexCoords)));
@@ -140,7 +141,7 @@ void main()
         int mask = 0;
         vec2 brdf  = texture(BRDF, vec2(max(dot(worldNormal, viewDir), 0.0), spec)).rg;
         
-        if(SSROn == 1 && selfReflection){
+        if(SSROn == 1 && selfReflection && !isPlastic ){
 
             //for(int i = 0; i < 2; i++){
             vec2 NoiseScale = Resolution / 4.0;
@@ -177,16 +178,13 @@ void main()
                             clamp(1.0-(screenEdgefactor*(2.0*-reflected.z) * VNvector), 0.0, 1.0));
         
         mask = int(clamp((screenEdgefactor*(2.0-reflected.z)), 0.0, 1.0));
-
-        if(spec < 0.05) mask = 0;
     }
     else
     {
         SSR = texture(gDepth, TexCoords, 0).gba;
-        mask = 0;
     }
     //SSR = mix(vec3(1.0, 0.0, 0.0), vec3(0.0, 0.0, 1.0), clamp(1.0-(screenEdgefactor*(2.0*-reflected.z)), 0.0, 1.0)) * Fresnel;
-    outColor = vec4(SSR * (Fresnel * brdf.x + brdf.y), mask);
+    outColor = vec4(SSR * (Fresnel * brdf.x + brdf.y), 1.0);
 
     //outColor = ID == 1 ? vec4(1.0, 0.0 , 0.0, 1.0) : vec4(0.0, 1.0, 0.0, 1.0);//(outColor + PrevReflection) / 2.0;
     //outColor += ID == 1 ? vec4(1.0, 0.0 , 0.0, 1.0) : vec4(0.0, 1.0, 0.0, 1.0);
