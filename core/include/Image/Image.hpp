@@ -80,7 +80,7 @@ namespace IO {
                             std::cout << "Finished loading: " << path << std::endl;
                             mtx.unlock();
                         }
-                        catch(std::exception e)
+                        catch(std::exception &e)
                         {
                             std::cout << "Exception detected in IO::Image::Image::LoadFile::Thread (No arguments): \nArgument: " << path << " Code: " << e.what() << std::endl;
                         }

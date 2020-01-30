@@ -236,8 +236,8 @@ void main()
     vec3 F = fresnelSchlick(max(dot(Normal, V), 0.0), F0);
     
     vec3 kS = F;
-    vec3 kD = max(1.0 - kS, 0.04);
-    kD *= clamp(1.0 - ExtraComponents.x, 0.04, 1.0);
+    vec3 kD = vec3(1.0) - kS;//max(1.0 - kS, 0.04);
+    //kD *= clamp(1.0 - ExtraComponents.x, 0.04, 1.0);
 
     //vec3 shc = sphericalHarmonics(Normal) * u_scaleFactor;
     vec3 irradiance = texture(gLightAccumulation, TexCoords).rgb;
@@ -275,7 +275,8 @@ void main()
     light += TubeAreaLight(vec3(0, 0, 0), vec3(-89,15,-15), vec3(70,15,-15),  0.1, normalize(vec3(1,1,1)), 250);*/
     //light += TubeAreaLight(vec3(0, 0, 0), vec3(-48,35,-113), vec3(-48,35,-170),  0.3, normalize(vec3(200,147,36)), 500);
     //light += calculatePointPBR(viewPos, vec3(1.0));
-    light += max(ambient, 0.0);
+    light += max(kD * ambient, 0.0);
+
     const float lowerlimit = 0.0;
     const float upperlimit = 0.07;
     float scatteringFactor = clamp((FragPos.y - lowerlimit) / (upperlimit - lowerlimit), 0.0, 1.0);
@@ -288,7 +289,7 @@ void main()
     if(hdr)
       light*=AmbientOcclusion;
 
-    FragColor.rgb = max(vec3(0.0), mix(SkyColor, light, visibility));
+    FragColor.rgb = light;//max(vec3(0.0), mix(SkyColor, light, visibility));
     vec3 testHDR = FragColor.rgb;
     float brightness = dot(testHDR.rgb , vec3(0.2126, 0.7152, 0.0722));
 /*

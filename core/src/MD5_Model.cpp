@@ -3,6 +3,8 @@
 #include <MD5_Model.h>
 #include <Texture.h>
 #include <OpenGL/GlCache.h>
+#include <glm/gtx/matrix_interpolation.hpp>
+
 MD5Model::MD5Model()
     : m_iMD5Version(-1)
     , m_iNumJoints(0)
@@ -48,7 +50,7 @@ bool MD5Model::LoadModel( const std::string &filename )
         {
             file >> m_iNumJoints;
             m_Joints.reserve(m_iNumJoints);
-            m_AnimatedBones.assign( m_iNumJoints, glm::mat4x4(1.0f) );
+            m_AnimatedBones.assign( m_iNumJoints, glm::mat4(1.0f) );
         }
         else if ( param == "numMeshes" )
         {
@@ -325,7 +327,7 @@ void MD5Model::BuildBindPose( const JointList& joints )
     while ( iter != joints.end() )
     {
         const Joint& joint = (*iter);
-        glm::mat4x4 boneTranslation = glm::translate( glm::mat4x4() ,joint.m_Pos );
+        glm::mat4x4 boneTranslation = glm::translate( glm::mat4x4(1.0f) ,joint.m_Pos );
         glm::mat4x4 boneRotation = glm::mat4_cast( joint.m_Orient );
 
         glm::mat4x4 boneMatrix = boneTranslation * boneRotation;
@@ -619,7 +621,7 @@ void MD5Model::Update( float fDeltaTime, float blend )
 
         for ( int i = 0; i < m_iNumJoints; ++i )
         {
-            m_AnimatedBones[i] = glm::mix(animatedSkeleton[i], animatedSkeleton2[i], blend) * m_InverseBindPose[i] * glm::mat4x4(1);
+            m_AnimatedBones[i] =  ((float)(1.0 - blend) * animatedSkeleton[i] + animatedSkeleton2[i] * blend) * m_InverseBindPose[i] * glm::mat4(1.0f);
         }
 
     }

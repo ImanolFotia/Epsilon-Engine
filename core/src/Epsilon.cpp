@@ -12,7 +12,7 @@
 #include <time.h>
 #include <Includes.h>
 #include <Types.h>
-#include "../version.h"
+#include "../../version.h"
 #include <glm/gtc/quaternion.hpp>
 #include <cmath>
 #include <thread>
@@ -73,7 +73,7 @@ Epsilon::Epsilon(GLFWwindow*& win) {
     double plane[4] = {0.0, 5.0, 0.0, 15.0};
     glClipPlane(GL_CLIP_PLANE0, plane);
 
-    tex = (std::shared_ptr<eTexture>) new eTexture("smoke.png");
+    tex = (std::shared_ptr<eTexture>) new eTexture("6692-bump.jpg");
 
     std::cout << "Clip Plane: " << (glIsEnabled(GL_CLIP_PLANE0) ? "Enabled" : "Disabled") << endl;
 
@@ -115,9 +115,9 @@ Epsilon::Epsilon(GLFWwindow*& win) {
 
     m_CameraMode = PLAYER_CONTROLLED;
 
-    Scripts::LuaScript _script;
-    _script.Load("scripts/Program.luac");
-    std::cout << "Sum is: " << _script.Exec<int>("sum", 3, 5) << std::endl;
+    //Scripts::LuaScript _script;
+    //_script.Load("scripts/Program.luac");
+    //std::cout << "Sum is: " << _script.Exec<int>("sum", 3, 5) << std::endl;
 }
 
 void Epsilon::RenderSplashScreen(string text) {
@@ -148,7 +148,7 @@ void Epsilon::InitResources(void) {
     this->HEIGHT = DATA.WINDOW_HEIGHT;
     this->SSAO = DATA.HBAO;
     this->ParallaxOn = DATA.PARALLAX_OCLUSSION_MAPPING;
-
+/*
     text = (std::shared_ptr<Text>)new Text("resources/Roboto-Regular.ttf", DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT);
 
     m_GUI = (std::shared_ptr<GUI>) new GUI(this->WIDTH, this->HEIGHT);
@@ -205,9 +205,9 @@ void Epsilon::InitResources(void) {
     t_Container->addWidget(t_Panel);
     t_Container->addWidget(t_PanelSettings);
     m_GUI->AddContainer(t_Container);
-
     RenderSplashScreen("Initializing Engine...");
 
+*/
     eCamera = (std::shared_ptr<Camera>)(new Camera(glm::vec3(0.0f,8.25f,-7.0f), glm::vec3(0.0f,1.0f,0.0f)));
 
     shadowMap = std::move((unique_ptr<ShadowMap>)(new ShadowMap(DATA.SHADOWMAP_SIZE, DATA.SHADOWMAP_SIZE, -20.0f, 80.0f)));
@@ -219,7 +219,7 @@ void Epsilon::InitResources(void) {
     rM->m_PhysicsWorld = (std::shared_ptr<Physics::Physics>) new Physics::Physics();
     std::shared_ptr<EntityTemplate> tmpEnt;
     std::shared_ptr<Component::RenderComponent> Compmodel;
-/*
+
             {
                 std::shared_ptr<EntityTemplate> tmpEnt;
                 tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(10,3.5,10), glm::vec3(2.0), glm::quat(-1.0, 0.0, 0.0, 0.0)));
@@ -232,12 +232,12 @@ void Epsilon::InitResources(void) {
                 tmpEnt->addComponent(ClothComponent);
                 EntityList.push_back(tmpEnt);
 
-            }*/
+            }
 
-    RenderSplashScreen("Loading Shaders...");
+    //RenderSplashScreen("Loading Shaders...");
     this->LoadShaders();
 
-    RenderSplashScreen("Loading Geometry...");
+    //RenderSplashScreen("Loading Geometry...");
     this->LoadGeometry();
 
     std::vector<string> modelsNames;
@@ -503,12 +503,12 @@ void Epsilon::InitResources(void) {
     this->LoadSound();
 
     auto MenuAudio = [&]() -> void{m_AudioSystem->PlayByID(2);};
-
+/*
     t_ButtonQuit->OnEntering(MenuAudio);
     t_ButtonSettings->OnEntering(MenuAudio);
     t_ButtonResume->OnEntering(MenuAudio);
 
-    RenderSplashScreen("Loading Textures...");
+    RenderSplashScreen("Loading Textures...");*/
     rM->loadQueuedTextures();
 
 
@@ -573,7 +573,7 @@ void Epsilon::InitResources(void) {
             for(unsigned int i = 0; i < EntityList.size(); ++i) {
                 EntityList[i]->Update();
                 EntityList[i]->setShader("CubeMap");
-                glm::mat4 Model = glm::mat4();
+                glm::mat4 Model = glm::mat4(1.0);
                 if(EntityList[i]->hasClothComponent)
                     continue;
                 if(EntityList[i]->hasModel) {
@@ -597,8 +597,8 @@ void Epsilon::InitResources(void) {
             glCullFace(GL_FRONT);
             /****************************************************************************/
 
-            glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(0.1));
-            glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), glm::vec3(0.0));
+            glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1.0), glm::vec3(0.1));
+            glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1.0), glm::vec3(0.0));
             glm::mat4 cModel =  TranslationMatrix * ScaleMatrix;
 
             Shaders["CubeMap"]->PushUniform("model", cModel);
@@ -681,7 +681,7 @@ void Epsilon::LoadShaders(void) {
     Shaders["DefaultParticle"] = new Shader("shaders/defaultParticle.vglsl", "shaders/defaultParticle.fglsl");
 
     Shaders["Cloth"] = new Shader("shaders/Cloth.vglsl", "shaders/Cloth.fglsl");
-
+ 
     rM->requestShader("shaders/Geometry.vglsl", "shaders/Geometry.fglsl", "Main");
     rM->requestShader("shaders/Cloth.vglsl", "shaders/Cloth.fglsl", "Cloth");
     rM->requestShader("shaders/vertex.glsl", "shaders/fragment.glsl", "CubeMap");
@@ -691,12 +691,11 @@ void Epsilon::LoadGeometry(void) {
     cout << "Loading World Geometry..." <<endl;
     vector<glm::vec3> grasspos2;
 
-            terrain = (std::shared_ptr<Terrain>)new Terrain("materials/terrain_1024_alpine3_height.png",
+            terrain = std::make_shared<Terrain>("materials/terrain_1024_alpine3_height.png",
                       "Rock_6_d.png",
                       "Rock_6_n.png",
                       "Rock_6_s.png",
                       "Rock_6_ao.png", 0.5, 200, glm::vec3(0, -67.0, 0),rM);
-
 
 
             for(int i = 0 ; i < terrain->vertices.size() ; i+= 2) {
@@ -732,21 +731,21 @@ void Epsilon::LoadGeometry(void) {
     paths.push_back(path + "materials/skyboxes/Miramar/front.tga");
 
     skybox = std::move((unique_ptr<Skybox>)(new Skybox("plain")));
+
     grass.push_back(Grass("grass04.png", grassPos));
     grass.push_back(Grass("billboardgrass0002.png", grasspos2));
 
 
     waterPlane = (shared_ptr<Water>)(new Water(glm::vec3(0.0,0.5,0.0), 1.0f)); ///-11.8
     sun = std::move((shared_ptr<Sun>)(new Sun()));
-
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "intro.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "deathmatch.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 
     m_AnimModel->LoadModel("models/hellknight/hellknight.md5mesh");
-
+ 
     m_AnimModel->LoadAnim("models/hellknight/walk7.md5anim");
     m_AnimModel->LoadAnim("models/hellknight/idle2.md5anim");
 
@@ -793,7 +792,7 @@ void Epsilon::Render3D(Shader* shader) {
     glDisable(GL_CULL_FACE);
     for(unsigned int i =0; i < EntityList.size(); ++i) {
         EntityList[i]->Update();
-        Model = glm::mat4();
+        Model = glm::mat4(1.0);
         visible = true;
         if(EntityList[i]->hasModel) {
             shader->Use();
@@ -821,10 +820,10 @@ void Epsilon::Render3D(Shader* shader) {
     /*glCache::*/glCullFace(GL_FRONT);
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glm::mat4 BSPmodel = glm::mat4();
-    //glm::mat4 tmodel = glm::translate(glm::mat4(), glm::vec3(-30.0, 5.0, -120.0));
+    glm::mat4 BSPmodel = glm::mat4(1.0);
+    //glm::mat4 tmodel = glm::translate(glm::mat4(1.0), glm::vec3(-30.0, 5.0, -120.0));
 
-    glm::mat4 sModel = glm::scale(glm::mat4(), glm::vec3(0.1, 0.1, 0.1));
+    glm::mat4 sModel = glm::scale(glm::mat4(1.0), glm::vec3(0.1, 0.1, 0.1));
     BSPmodel = sModel;
     BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), BSPmodel);
     shader->Use();
@@ -857,9 +856,9 @@ void Epsilon::Render3D() {
 
     glDisable(GL_CULL_FACE);
 
-    glm::mat4 BSPmodel = glm::mat4();
-    //glm::mat4 tmodel = glm::translate(glm::mat4(), glm::vec3(-30.0, 5.0, -120.0));
-    glm::mat4 sModel = glm::scale(glm::mat4(), glm::vec3(0.1, 0.1, 0.1));
+    glm::mat4 BSPmodel = glm::mat4(1.0);
+    //glm::mat4 tmodel = glm::translate(glm::mat4(1.0), glm::vec3(-30.0, 5.0, -120.0));
+    glm::mat4 sModel = glm::scale(glm::mat4(1.0), glm::vec3(0.1, 0.1, 0.1));
     BSPmodel = sModel;
     BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), BSPmodel);
     Shaders["ShadowMapping"]->Use();
@@ -876,9 +875,9 @@ void Epsilon::Render3D() {
 
 
 void Epsilon::SetUniforms(Shader*& shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation) {
-    glm::mat4 Model = glm::mat4();
-    glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), scale);
-    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), position);
+    glm::mat4 Model = glm::mat4(1.0);
+    glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1.0), scale);
+    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1.0), position);
     glm::mat4 RotationMatrix;
     RotationMatrix = glm::mat4(1) * glm::toMat4(glm::normalize(rotation));
 
@@ -922,7 +921,7 @@ void Epsilon::Render2D(void) {
 
     GPU _gpu;
     int DEBUG_MODE = 3;
-
+/*
     if(DEBUG_MODE >= 1) {
         this->text->RenderText("FPS: " + Helpers::intTostring(acumfps), 0.01, 0.95, 0.5, glm::vec3(1,1,1));
         this->text->RenderText("Frame Time: " + Helpers::floatTostring(frametime*1000) + "ms", 0.01, 0.91, 0.3, glm::vec3(1,1,1));
@@ -951,11 +950,11 @@ void Epsilon::Render2D(void) {
         ("Direction: x = " + Helpers::floatTostring(this->eCamera->getDirection().x) + " y = " + Helpers::floatTostring(this->eCamera->getDirection().y) + " z = " + Helpers::floatTostring(this->eCamera->getDirection().z), 0.01, 0.75, 0.3, glm::vec3(1,1,1));
         //this->text->RenderText("Draw calls: " + Helpers::intTostring(glCache::DrawCalls), 0.01, 0.69, 0.3, glm::vec3(1,1,1));
     }
-
+*/
     //this->text->RenderText("On ground: " + std::string(m_PlayerCapsule->isOnGround() ? "YES" : "NO"),0.01, 0.79, 0.3, glm::vec3(1,1,1));/*
     //this->text->RenderText("Parallax Mapping: " + std::string(parallax ? "ON" : "OFF"),0.01, 0.83, 0.3, glm::vec3(1,1,1));*/
 
-    this->text->RenderText(".", 0.5, 0.5, 1.0, glm::vec3(1,1,1));
+    //this->text->RenderText(".", 0.5, 0.5, 1.0, glm::vec3(1,1,1));
 
     glEnable(GL_DEPTH_TEST);
 
@@ -989,7 +988,7 @@ void Epsilon::Clock() {
 
     rM->timestep = frametime;
 
-    timeBehind += etime - lastTime;
+    timeBehind += etime - lastTime; 
 }
 
 void Epsilon::RenderSkybox(bool state) {
@@ -998,10 +997,10 @@ void Epsilon::RenderSkybox(bool state) {
 
     glm::mat4 view = glm::mat4(glm::mat3(eCamera->getViewMatrix()));
     float rotation = 0.5 * glfwGetTime();
-    glm::mat4 RotationMatrix = glm::rotate(glm::mat4(),glm::radians(rotation), glm::vec3(0,1,0));
+    glm::mat4 RotationMatrix = glm::rotate(glm::mat4(1.0),glm::radians(rotation), glm::vec3(0,1,0));
     view = view/* * RotationMatrix*/;
     glm::mat4 projection = glm::mat4(eCamera->getProjectionMatrix());
-    glm::mat4 model = glm::mat4();
+    glm::mat4 model = glm::mat4(1.0);
 
     glm::mat4 ScaleMatrix = glm::scale(model, glm::vec3(1,1,1));
     glm::mat4 TranslationMatrix = glm::translate(model, glm::vec3(0,0,0));

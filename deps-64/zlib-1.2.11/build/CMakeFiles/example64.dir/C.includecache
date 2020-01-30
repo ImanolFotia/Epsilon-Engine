@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+..//zlib.h
+zconf.h
+../zconf.h
+
+C:/Users/Imanol/Downloads/zlib1211/zlib-1.2.11/test/example.c
+zlib.h
+C:/Users/Imanol/Downloads/zlib1211/zlib-1.2.11/test/zlib.h
+stdio.h
+-
+string.h
+-
+stdlib.h
+-
+
+zconf.h
+stddef.h
+-
+windows.h
+-
+limits.h
+-
+sys/types.h
+-
+stdarg.h
+-
+stddef.h
+-
+unistd.h
+-
+unixio.h
+-
+

@@ -8,13 +8,14 @@ Model::Model(const char* path, std::shared_ptr<ResourceManager> rm, glm::vec3 po
     Position = pos;
     Scale = sc;
     Rotation = rot;
-    PrevModel = glm::mat4();
-    ModelMatrix = glm::mat4();
+    PrevModel = glm::mat4(1.0f);
+    ModelMatrix = glm::mat4(1.0f);
 
     this->loadModel(path, 0);
 }
 
 bool Model::loadModel(string emlPath, int a) {
+     
     ifstream inFILE(emlPath, std::ios::binary);
     if(!inFILE.is_open()) {
         std::cout << "Fail to open EML file" << std::endl;
@@ -203,15 +204,15 @@ void Model::Draw(GLuint shader, glm::vec3 pos = glm::vec3(0,0,0)) {
 void Model::SetUniforms(Shader* shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation, std::shared_ptr<Camera> cam) {
 
     this->PrevModel = this->ModelMatrix;
-    glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), scale);
-    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), position);
+    glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1.0), scale);
+    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1.0), position);
     glm::mat4 RotationMatrix;
     RotationMatrix = glm::mat4(1) * glm::toMat4(glm::normalize(rotation));
     this->ModelMatrix = TranslationMatrix * ScaleMatrix * RotationMatrix;
 
 
-    ScaleMatrix = glm::scale(glm::mat4(), PrevScale);
-    TranslationMatrix = glm::translate(glm::mat4(), PrevPos);
+    ScaleMatrix = glm::scale(glm::mat4(1.0), PrevScale);
+    TranslationMatrix = glm::translate(glm::mat4(1.0), PrevPos);
     RotationMatrix = glm::mat4(1) * glm::toMat4(glm::normalize(PrevRot));
     this->PrevModel = TranslationMatrix * ScaleMatrix * RotationMatrix;
 
@@ -237,14 +238,14 @@ void Model::SetUniforms(Shader* shader, glm::vec3 position, glm::vec3 scale, glm
                         glm::vec3 pposition, glm::vec3 pscale, glm::quat protation,
                         std::shared_ptr<Camera> cam) {
 
-    glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), scale);
-    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), position);
+    glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1.0), scale);
+    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1.0), position);
     glm::mat4 RotationMatrix;
     RotationMatrix = glm::mat4(1) * glm::toMat4(glm::normalize(rotation));
     this->ModelMatrix = TranslationMatrix * ScaleMatrix * RotationMatrix;
 
-    ScaleMatrix = glm::scale(glm::mat4(), pscale);
-    TranslationMatrix = glm::translate(glm::mat4(), pposition);
+    ScaleMatrix = glm::scale(glm::mat4(1.0), pscale);
+    TranslationMatrix = glm::translate(glm::mat4(1.0), pposition);
     RotationMatrix = glm::mat4(1) * glm::toMat4(glm::normalize(protation));
     this->PrevModel = TranslationMatrix * ScaleMatrix * RotationMatrix;
     glm::mat4 MVP = cam->getProjectionMatrix() * cam->getViewMatrix() * this->ModelMatrix;

@@ -10,17 +10,18 @@
 Sun::Sun()
 {
     try{
-    tex = (std::shared_ptr<eTexture>) new eTexture("Sun.png");
-    this->TextureID = tex->getTextureID();
+        tex = std::make_shared<eTexture>("Sun.png");
+        this->TextureID = tex->getTextureID();
 
-    this->radius = 30.0;
+        this->radius = 30.0;
 
-    this->height = 30.0;
+        this->height = 30.0;
 
-    PrepareVAO();
-    std::cout << "Sun texture ID " << TextureID << std::endl;
-    //mMovement = 2.6;
-    mMovement = 1.0;
+        PrepareVAO();
+    std::cout << "Llega" << std::endl;
+        std::cout << "Sun texture ID " << TextureID << std::endl;
+        //mMovement = 2.6;
+        mMovement = 1.0;
     }
     catch(std::exception e)
     {
@@ -93,7 +94,5 @@ void Sun::PrepareVAO()
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
 
     glBindVertexArray(0);
-
-    delete vertices;
 
 }

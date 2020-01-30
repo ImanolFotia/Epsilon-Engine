@@ -183,7 +183,7 @@ public:
         glGenerateMipmap(type);
         glTexParameteri(type, GL_TEXTURE_WRAP_S, wrap);
         glTexParameteri(type, GL_TEXTURE_WRAP_T, wrap);
-        if(filtering  == -1) {
+        if(filtering  == -1u) {
             if(DATA.ANISOTROPY <= 0) {
                 glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
                 glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -302,7 +302,7 @@ public:
                     }
                 }
             }
-        } catch(std::exception e) {
+        } catch(std::exception& e) {
             std::cout << "Exception detected in checkLoading(): " << e.what() << std::endl;
         }
     }
