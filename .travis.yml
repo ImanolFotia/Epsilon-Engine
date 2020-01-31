@@ -8,8 +8,6 @@ before_install:
   - sudo apt-get install libsoil-dev
   - sudo apt-get install libopenal-dev
   - sudo apt-get install libbullet-dev
-  - sudo apt-get install mingw-w64
-  - sudo ln -s /usr/bin/x86_64-w64-mingw32-windres /usr/bin/windres
 
 script: make
 
