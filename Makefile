@@ -71,7 +71,7 @@ resource:
 else 
 resource:
 	-@mkdir -p ./obj
-	@objcopy --input binary --output pe-x86-64 --binary-architecture i386:x86-64 $(RES) -o $(OBJS_DIR)/resources.o
+	@objcopy --input binary --output pe-x86-64 --binary-architecture i386:x86-64 $(RES) $(OBJS_DIR)/resources.o
 endif
 
 $(OBJS_DIR)/%.o: $(SOURCE_DIR)/%.cpp
