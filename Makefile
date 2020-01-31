@@ -69,7 +69,7 @@ resource:
 	@windres -i $(RES) -o $(OBJS_DIR)/resources.o
 else 
 resource:
-	@x86_64-w64-mingw32-windres -i $(RES) -o $(OBJS_DIR)/resources.o
+	objcopy --input binary --output pe-x86-64 --binary-architecture i386:x86-64 data.txt data.o
 endif
 
 $(OBJS_DIR)/%.o: $(SOURCE_DIR)/%.cpp
