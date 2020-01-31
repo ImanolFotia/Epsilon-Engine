@@ -12,6 +12,7 @@ before_install:
   - sudo apt-get install lua5.3
   - git clone https://github.com/nothings/stb.git
   - sudo cp -r stb /usr/local/include/stb 
+  - ls /usr/local
 
 script: make
 
