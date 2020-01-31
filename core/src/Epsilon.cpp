@@ -1103,7 +1103,7 @@ void Epsilon::MainLoop(void) {
         if(!onMenu)
             this->ComputeCamera(m_CameraMode, glm::vec3(48.4247, 8.1507, -12.9128), glm::vec3(-0.785454, 0.0299956, 0.618193));
 
-        //this->ProcessAudio();
+        this->ProcessAudio();
 
 
         while( timeBehind >= 0.016 ) {
