@@ -39,6 +39,7 @@ INCLUDE_LIBS:= -I$(LIB)/glm \
 -I$(LIB)/inih/cpp \
 -I$(LIB)/lua-5.3.5/src \
 -I$(LIB)/stb-master \
+-I./core/include \
 -I/usr/include \
 -I/usr/include/bullet \
 -I/usr/include/glew \
