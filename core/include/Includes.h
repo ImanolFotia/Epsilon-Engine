@@ -58,11 +58,18 @@ template < typename T > static std::string to_upper(T& n) {
     return n;
 }
 
+template < typename T > static std::string to_lower(T& n) {
+    std::transform(n.begin(), n.end(), n.begin(), ::tolower);
+
+    return n;
+}
+
 template < typename T > static std::string to_string( const T& n ) {
     std::ostringstream stm ;
     stm << n ;
     return stm.str() ;
 }
+
 
 template< typename T >
 std::string to_hex( T i ) {

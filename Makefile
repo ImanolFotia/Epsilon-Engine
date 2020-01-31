@@ -36,6 +36,7 @@ INCLUDE_LIBS:= -I$(LIB)/glm \
 -I$(LIB)/openal-soft/include \
 -I$(LIB)/inih/cpp \
 -I$(LIB)/lua-5.3.5/src \
+-I$(LIB)/stb-master \
 
 LIBS_DIR := -L$(LIB)/soil/lib \
 -L$(LIB)/glfw/build/src \
@@ -67,7 +68,7 @@ resource:
 
 $(OBJS_DIR)/%.o: $(SOURCE_DIR)/%.cpp
 	-@mkdir -p $(@D)
-	$(CXX) $(INCLUDE_LIBS)  $(DEBUG_FLAGS) -I$(INCLUDE_DIR) $(CPPFLAGS) -o $@ -c $^  $(LD_FLAGS) 
+	$(CXX) $(INCLUDE_LIBS) -I$(INCLUDE_DIR) $(CPPFLAGS) -o $@ -c $^  $(LD_FLAGS) 
 
 $(BIN)/Release/Epsilon_Engine.exe: $(OBJECTS)
 	-@mkdir -p $(@D)
