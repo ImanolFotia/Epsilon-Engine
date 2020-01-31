@@ -29,6 +29,7 @@ INCLUDES:= $(call rwildcard,$(INCLUDE_DIR)/,*.hpp *.h)#$(wildcard $(INCLUDE_DIR)
 OBJECTS := $(patsubst $(SOURCE_DIR)/%.cpp,$(OBJS_DIR)/%.o,$(SOURCES))
 RES_OBJECTS := $(OBJS_DIR)/resources.o
 
+#- sudo add-apt-repository http://ppa.launchpad.net/keithw/glfw3/ubuntu -y
 #includes for windows and linux combined
 INCLUDE_LIBS:= -I$(LIB)/glm \
 -I$(LIB)/bullet3/src \
