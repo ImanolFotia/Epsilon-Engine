@@ -11,7 +11,7 @@ before_install:
   - sudo apt-get install -y libinih-dev
   - sudo apt-get install lua5.3
   - git clone https://github.com/nothings/stb.git
-  - sudo cp stb /usr/local/include/stb 
+  - sudo cp -r stb /usr/local/include/stb 
 
 script: make
 
