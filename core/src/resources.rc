@@ -1,4 +1,7 @@
+
+#ifdef _WIN32
 #include <Windows.h>
+#endif
 
 ICONO  ICON   "media/epsilon.ico"
 ICONO1  ICON   "media/epsilon.ico"
