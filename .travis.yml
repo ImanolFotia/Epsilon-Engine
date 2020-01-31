@@ -7,6 +7,6 @@ before_install:
   - sudo apt-get install libglew-dev
   - sudo apt-get install libsoil-dev
   - sudo apt-get install libopenal-dev
-  - sudo apt-get install libbullet3-dev
+  - sudo apt-get install libbullet-dev
 
 language: cpp
