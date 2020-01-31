@@ -66,10 +66,12 @@ epsilon-release: resource $(BIN)/Release/Epsilon_Engine.exe
 
 ifeq "$(OS)" "Windows_NT"
 resource:
+	-@mkdir -p ./obj
 	@windres -i $(RES) -o $(OBJS_DIR)/resources.o
 else 
 resource:
-	objcopy --input binary --output pe-x86-64 --binary-architecture i386:x86-64 $(RES) $(OBJS_DIR)/resources.o
+	-@mkdir -p ./obj
+	objcopy --input binary --output pe-x86-64 --binary-architecture i386:x86-64 $(RES) -o $(OBJS_DIR)/resources.o
 endif
 
 $(OBJS_DIR)/%.o: $(SOURCE_DIR)/%.cpp
