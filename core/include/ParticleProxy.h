@@ -112,9 +112,9 @@ public:
     void Simulate(float deltaTime, glm::vec3 camPos) {
             deltaTime = glm::clamp(deltaTime, 0.0f, 0.064f);
 
-            this->calculateDistancetoCamera(camPos);
+            //this->calculateDistancetoCamera(camPos);
 
-            this->sortParticles();
+            //this->sortParticles();
 
             std::uniform_real_distribution<GLfloat> HorizonalLimit(ParticlesLimits.MIN_X, ParticlesLimits.MAX_X);
             std::uniform_real_distribution<GLfloat> VerticalLimit(ParticlesLimits.MIN_Y, ParticlesLimits.MAX_Y);

@@ -73,7 +73,7 @@ Epsilon::Epsilon(GLFWwindow*& win) {
     double plane[4] = {0.0, 5.0, 0.0, 15.0};
     glClipPlane(GL_CLIP_PLANE0, plane);
 
-    tex = (std::shared_ptr<eTexture>) new eTexture("6692-bump.jpg");
+    tex = (std::shared_ptr<eTexture>) new eTexture("cloud-mist-png-5.png");
 
     std::cout << "Clip Plane: " << (glIsEnabled(GL_CLIP_PLANE0) ? "Enabled" : "Disabled") << endl;
 
@@ -130,7 +130,7 @@ void Epsilon::RenderSplashScreen(string text) {
     ClearBuffers();
     splsh.Draw(tmpShader.getProgramID(), texture.getTextureID());
     std::cout << "Splash llega" <<std::endl;
-    this->text->RenderText(text,0.01, 0.83, 0.4, glm::vec3(1,1,1));
+    //this->text->RenderText(text,0.01, 0.83, 0.4, glm::vec3(1,1,1));
 
     //this->text->RenderText(std::string("#include <iostream>\nusing namespace std;\nint main(int argc, char** argv) {\n\tstd::cout << \"Hello, World!\" << std::endl;\n\treturn 0;\n}") ,0.01, 0.79, 0.5, glm::vec3(1,1,1));
 
@@ -205,9 +205,9 @@ void Epsilon::InitResources(void) {
     t_Container->addWidget(t_Panel);
     t_Container->addWidget(t_PanelSettings);
     m_GUI->AddContainer(t_Container);
+*/
     RenderSplashScreen("Initializing Engine...");
 
-*/
     eCamera = (std::shared_ptr<Camera>)(new Camera(glm::vec3(0.0f,8.25f,-7.0f), glm::vec3(0.0f,1.0f,0.0f)));
 
     shadowMap = std::move((unique_ptr<ShadowMap>)(new ShadowMap(DATA.SHADOWMAP_SIZE, DATA.SHADOWMAP_SIZE, -20.0f, 80.0f)));
@@ -376,7 +376,7 @@ void Epsilon::InitResources(void) {
 */
         	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(-28, 3.8, 8), glm::vec3(4.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
         	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-        	Compmodel->Fill("models/pillar.eml", rM, "Main");
+        	Compmodel->Fill("models/chutulu.eml", rM, "Main");
         	tmpEnt->addComponent(Compmodel);
         	EntityList.push_back(tmpEnt);
 /*
@@ -447,9 +447,9 @@ void Epsilon::InitResources(void) {
         tmpEnt->addComponent(Compmodel);
         EntityList.push_back(tmpEnt);*/
 
-    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(19, 1.5, -8), glm::vec3(4.0f), glm::quat(0.0, 0.0, 1.0, 0.0)));
+    tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(19, 1.5, -8), glm::vec3(5.0f), glm::quat(0.0, 0.0, 1.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    Compmodel->Fill("models/Rock_6.eml", rM, "Main");
+    Compmodel->Fill("models/cerberus.eml", rM, "Main");
     tmpEnt->addComponent(Compmodel);
     EntityList.push_back(tmpEnt);
 
@@ -465,15 +465,15 @@ void Epsilon::InitResources(void) {
         tmpEnt->addComponent(Compmodel);
         EntityList.push_back(tmpEnt);*/
 
-    	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(16, 4, 10), glm::vec3(0.25), glm::quat(1.0, 0.0, 0.0, 0.0)));
+    	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(0.0f, 15.0f, -5.0f), glm::vec3(1.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
     	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-        Compmodel->Fill("models/export3dcoat.eml", rM, "Main");
-    	std::shared_ptr<Component::PhysicComponent> CompPhys = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
-    	std::shared_ptr<Physics::CubePhysicObject> ph = (std::shared_ptr<Physics::CubePhysicObject>) new Physics::CubePhysicObject();
-    	rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(glm::vec3(16, 4, 10), 100.0, rM->getModelBoundingBox("models/export3dcoat.eml"), 0.25).get());
-    	CompPhys->Fill(100.0f, ph);
+        Compmodel->Fill("models/shape_mat.eml", rM, "Main");
+    	//std::shared_ptr<Component::PhysicComponent> CompPhys = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
+    	//std::shared_ptr<Physics::CubePhysicObject> ph = (std::shared_ptr<Physics::CubePhysicObject>) new Physics::CubePhysicObject();
+    	//rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(glm::vec3(16, 15, 10), 100.0, rM->getModelBoundingBox("models/shape_mat.eml"), 0.25).get());
+    	//CompPhys->Fill(100.0f, ph);
     	tmpEnt->addComponent(Compmodel);
-    	tmpEnt->addComponent(CompPhys);
+    	//tmpEnt->addComponent(CompPhys);
     	EntityList.push_back(tmpEnt);
 
     /*
@@ -486,6 +486,7 @@ void Epsilon::InitResources(void) {
         Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
         Compmodel->Fill("models/platform.eml", rM, "Main");
 
+    	std::shared_ptr<Component::PhysicComponent> CompPhys = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
         CompPhys = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
 
         std::shared_ptr<Physics::CubePhysicObject> ph3 = (std::shared_ptr<Physics::CubePhysicObject>) new Physics::CubePhysicObject();
@@ -525,15 +526,15 @@ void Epsilon::InitResources(void) {
             xz[x][z] = (rand()%30) - 15;
 
     MINMAX_POINTS limits;
-    limits.MAX_X = 26.0;
-    limits.MIN_X = -50.0;
+    limits.MAX_X = 500.0;
+    limits.MIN_X = -500.0;
     limits.MAX_Y = 5.0;
-    limits.MIN_Y = -5.0;
-    limits.MAX_Z = 20.0;
-    limits.MIN_Z = -37.0;
+    limits.MIN_Y = -50.0;
+    limits.MAX_Z = 500.0;
+    limits.MIN_Z = -500.0;
 
     m_ParticleSystem = (std::shared_ptr<ParticleSystem>) new ParticleSystem();
-    m_ParticleSystem->addNewSystem(limits, MIST, 200);
+    m_ParticleSystem->addNewSystem(limits, MIST, 5000);
 
     //3 , 7, 30
     sun->Update();
@@ -740,7 +741,7 @@ void Epsilon::LoadGeometry(void) {
     sun = std::move((shared_ptr<Sun>)(new Sun()));
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "deathmatch.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "materials.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 

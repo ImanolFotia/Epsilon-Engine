@@ -15,7 +15,7 @@ in vec3 FragPos;
 uniform float time;
 uniform vec3 LightDirection;
 
-const vec3 Blue = normalize(vec3(29,91,186));
+const vec3 Blue = normalize(vec3(29,91,200));
 const vec3 Cian = normalize(vec3(125, 228, 247));
 const vec3 Orange = normalize(vec3(224,115,36));
 const vec3 Gray = normalize(vec3(0.001,0.001,0.001));
@@ -94,11 +94,11 @@ void main()
 
         vec3 MixedClouds = sqrt(vec3(vec3(Clouds.x * 0.2126 + Clouds.y * 0.7152 + Clouds.z * 0.0722)*1.5));
 
-    	vec3 color = mix(TimeColor, MixedClouds, clamp(pow(mix(0.0, Clouds.x*3.0, Clouds.z), 3.0), 0.0, 1.0)) * clamp(LightDirection.y, 0.1, 0.5);
+    	vec3 color = mix(TimeColor, MixedClouds, clamp(pow(mix(0.0, Clouds.x*3.0, Clouds.z), 3.0), 0.0, 1.0)) * clamp(LightDirection.y, 0.1, 0.7);
         //color = TimeColor;
         vec3 LightColor = normalize(vec3(218, 205, 118));
         float scattering  = max(dot(FragPos, LightDirection), 0.0);
-    	FragColor.rgb = color*0.1/*+(scattering*0.5)*/ /** max(0.1, LightDirection.y+0.2) */;
+    	FragColor.rgb = color*0.2/*+(scattering*0.5)*/ /** max(0.1, LightDirection.y+0.2) */;
         FragColor.a = 1.0;
 
 
@@ -108,7 +108,7 @@ void main()
         
         gDepth = vec4(vec3(1.0), 1.0);
         gLightAccumulation = vec3(1.0);
-        gExtraComponents = vec4(0.0);
+        gExtraComponents = vec4(0.0, 1.0, 0.0, 0.0);
 
     } else {
         FragColor.rgb = vec3(1.0);
