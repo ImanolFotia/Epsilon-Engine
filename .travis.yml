@@ -1,6 +1,7 @@
 dist: xenial
 
 before_install:
+  - sudo apt-get update -y
   - sudo add-apt-repository http://ppa.launchpad.net/keithw/glfw3/ubuntu -y
   - sudo apt-get install cmake xorg-dev libglu1-mesa-dev
   - sudo apt-get install libglfw3-dev libglfw3
@@ -8,7 +9,7 @@ before_install:
   - sudo apt-get install libsoil-dev
   - sudo apt-get install libopenal-dev
   - sudo apt-get install libbullet-dev
-  - sudo apt-get install libinih-dev
+  - sudo apt-get install -y libinih-dev
   - sudo apt-get install lua5.3
   - git clone https://github.com/nothings/stb.git
   - sudo cp stb /usr/local/include/stb 
