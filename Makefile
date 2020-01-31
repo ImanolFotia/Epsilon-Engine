@@ -39,12 +39,12 @@ INCLUDE_LIBS:= -I$(LIB)/glm \
 -I$(LIB)/inih/cpp \
 -I$(LIB)/lua-5.3.5/src \
 -I$(LIB)/stb-master \
--I/usr/local/include \
--I/usr/local/include/bullet \
--I/usr/local/include/glew \
--I/usr/local/include/glfw \
--I/usr/local/include/stb \
--I/usr/local/include/inih \
+-I/usr/include \
+-I/usr/include/bullet \
+-I/usr/include/glew \
+-I/usr/include/glfw \
+-I/usr/include/stb \
+-I/usr/include/inih \
 
 LIBS_DIR := -L$(LIB)/soil/lib \
 -L$(LIB)/glfw/build/src \
