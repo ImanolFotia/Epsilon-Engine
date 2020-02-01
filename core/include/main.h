@@ -42,9 +42,15 @@ void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
 }
-extern "C" {
-    __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
-}
+
+#ifdef _WIN32
+extern "C" {  __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001; }
+extern "C" { __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001; }
+#else
+extern "C" { int NvOptimusEnablement = 1; }
+extern "C" { int AmdPowerXpressRequestHighPerformance = 1; }
+#endif
+
 GLFWwindow* InitEngine(const char* ProgramName) {
 
     Global::Log::OpenFile("log.txt");

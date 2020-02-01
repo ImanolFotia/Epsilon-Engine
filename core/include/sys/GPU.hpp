@@ -49,7 +49,7 @@ public:
         glGetIntegerv(GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX,
                       &total_mem_kb);
 
-
+	#ifdef _WIN32 //These functions are not present in linux
         if(total_mem_kb <= 0) {
             GLuint uNoOfGPUs = wglGetGPUIDsAMD( 0, 0 );
             GLuint* uGPUIDs = new GLuint[uNoOfGPUs];
@@ -65,6 +65,7 @@ public:
             total_mem_kb *= 1024;
 
         }
+        #endif
 
         return total_mem_kb;
     }

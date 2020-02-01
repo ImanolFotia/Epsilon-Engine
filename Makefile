@@ -21,6 +21,12 @@ INCLUDE_DIR:= ./core/include
 LIB:= deps-64
 BIN:= ./bin
 
+ifeq "$(OS)" "Windows_NT"
+EXEC := Epsilon_Engine.exe
+else
+EXEC := Epsilon_Engine
+endif
+
 #recursive wildcard to include all files
 rwildcard=$(wildcard $(addsuffix $2, $1)) $(foreach d,$(wildcard $(addsuffix *, $1)),$(call rwildcard,$d/,$2))
 
@@ -31,6 +37,8 @@ RES_OBJECTS := $(OBJS_DIR)/resources.o
 
 #- sudo add-apt-repository http://ppa.launchpad.net/keithw/glfw3/ubuntu -y
 #includes for windows and linux combined
+
+ifeq "$(OS)" "Windows_NT"
 INCLUDE_LIBS:= -I$(LIB)/glm \
 -I$(LIB)/bullet3/src \
 -I$(LIB)/glew/include -I$(LIB)/glfw/include \
@@ -38,15 +46,22 @@ INCLUDE_LIBS:= -I$(LIB)/glm \
 -I$(LIB)/openal-soft/include \
 -I$(LIB)/inih/cpp \
 -I$(LIB)/lua-5.3.5/src \
--I$(LIB)/stb-master \
+-I$(LIB)/stb-master
+else
+INCLUDE_LIBS:=  -I$(LIB)/inih/cpp \
+-I$(LIB)/glm \
 -I/core/include \
 -I/usr/include \
 -I/usr/include/bullet \
 -I/usr/include/glew \
 -I/usr/include/glfw \
 -I/usr/include/stb \
+-I/usr/include/SOIL \
 -I/usr/include/inih \
+-I/usr/include/lua5.3 
+endif
 
+ifeq "$(OS)" "Windows_NT"
 LIBS_DIR := -L$(LIB)/soil/lib \
 -L$(LIB)/glfw/build/src \
 -L$(LIB)/inih \
@@ -54,8 +69,16 @@ LIBS_DIR := -L$(LIB)/soil/lib \
 -L$(LIB)/lua-5.3.5/src \
 -L$(LIB)/openal-soft/build \
 -L$(LIB)/bullet3/build/lib
+else 
+LIBS_DIR := -L$(LIB)/inih \
+-L/usr/lib/x86_64-linux-gnu 
+endif
 
+ifeq "$(OS)" "Windows_NT"
 LIBS:= -lSOIL -lglfw3dll -lopengl32 -linih -lglew32.dll -lgdi32 -lOpenAL32.dll -fopenmp -lgomp -llua -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
+else 
+LIBS:= -lSOIL -lglfw -linih -lGLEW -lGLU -lGL -lopenal -fopenmp -lgomp -llua5.3 -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
+endif
 
 LD_FLAGS := -fopenmp
 CPPFLAGS := --std=c++17 -Wall
@@ -68,9 +91,9 @@ RES := ./core/src/resources.rc
 
 all: resource epsilon-release
 
-epsilon-debug: resource $(BIN)/Debug/Epsilon_Engine.exe
+epsilon-debug: resource $(BIN)/Debug/$(EXEC)
 
-epsilon-release: resource $(BIN)/Release/Epsilon_Engine.exe
+epsilon-release: resource $(BIN)/Release/$(EXEC)
 
 
 ifeq "$(OS)" "Windows_NT"
@@ -87,11 +110,11 @@ $(OBJS_DIR)/%.o: $(SOURCE_DIR)/%.cpp
 	-@mkdir -p $(@D)
 	$(CXX) $(INCLUDE_LIBS) -I$(INCLUDE_DIR) $(CPPFLAGS) -o $@ -c $^  $(LD_FLAGS) 
 
-$(BIN)/Release/Epsilon_Engine.exe: $(OBJECTS)
+$(BIN)/Release/$(EXEC): $(OBJECTS)
 	-@mkdir -p $(@D)
 	$(CXX) $(CPPFLAGS) $(RELEASE_FLAGS) $(RES_OBJECTS) -o $@ $^ $(LIBS_DIR) $(LIBS) $(LD_FLAGS)
 
-$(BIN)/Debug/Epsilon_Engine.exe: $(OBJECTS)
+$(BIN)/Debug/$(EXEC): $(OBJECTS)
 	-@mkdir -p $(@D)
 	$(CXX) $(CPPFLAGS) $(DEBUG_FLAGS) $(RES_OBJECTS) -o $@ $^ $(LIBS_DIR) $(LIBS) $(LD_FLAGS)
 
