@@ -12,7 +12,7 @@
 #include <PostProcess.h>
 #include <Light.h>
 #include <EpsilonMemory.h>
-#include <Camera.h>
+#include <camera.h>
 #include <Frustum.h>
 #include <memory>
 #include <map>

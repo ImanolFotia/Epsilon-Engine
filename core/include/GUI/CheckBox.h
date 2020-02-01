@@ -24,7 +24,7 @@ public:
         this->HEIGHT = m_winHeight;
 
         this->_checked = true;
-        m_OnClickFunc = (void(*)())&func;
+        //m_OnClickFunc = static_cast<std::function<void()>>(func);
 
     }
 
