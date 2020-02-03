@@ -298,9 +298,9 @@ void main()
     //vec2 brdf  = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
     //vec3 specular = prefilteredColor * (F /** brdf.x + brdf.y*/);
 
-  CubeMapcolor = textureLod(skybox, bpcem(
+  CubeMapcolor = textureLod(skybox, /*bpcem(
                                       reflect(normalize(fs_in.wFragPos - viewPos), normalize(gExpensiveNormal.rgb)), 
-                                      BoxMax, BoxMin, vec3(-11.0, 6.0, -8.0)), gExpensiveNormal.a * MAX_REFLECTION_LOD);
+                                      BoxMax, BoxMin, vec3(-11.0, 6.0, -8.0))*/ reflect(normalize(fs_in.wFragPos - viewPos), normalize(gExpensiveNormal.rgb)), gExpensiveNormal.a * MAX_REFLECTION_LOD);
 
   vec3 shc = sphericalHarmonics(normalize(gExpensiveNormal.rgb)) * u_scaleFactor;
 

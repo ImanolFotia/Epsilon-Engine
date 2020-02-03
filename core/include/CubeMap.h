@@ -55,7 +55,7 @@ class CubeMap {
 		virtual void CaptureEnvironment(int index) {
 
 			//glClearColor(0.05,0.08,0.2, 1.0);
-			glClearColor(0.1,0.1,0.2, 1.0);
+			glClearColor(1.0,0.05,0.1, 1.0);
 			glViewport(0,0,512,512);
 			glEnable(GL_DEPTH_TEST);
 			glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
@@ -70,6 +70,11 @@ class CubeMap {
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		}
+
+		void pushViewMatrix(glm::mat4 view) {
+			mMainShader->Use();
+			glUniformMatrix4fv(glGetUniformLocation(mMainShader->getProgramID(), "view"), 1, GL_FALSE, (const float*)&view);
 		}
 
 		void endCapturingEnvironment() {
@@ -168,6 +173,10 @@ class CubeMap {
 
 		glm::mat4 getViewMatrixbyIndex(int index) {
 			return captureViews[index];
+		}
+
+		std::shared_ptr<Shader> getShader() {
+			return this->mMainShader;
 		}
 
 		glm::mat4 getProjectionMatrix() {
