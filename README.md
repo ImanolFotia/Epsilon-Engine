@@ -1,6 +1,7 @@
 # Epsilon Engine
 [![LICENSE.md](https://img.shields.io/badge/License-EULA-blue.svg)](LICENSE.md)
 [![Build Status](https://travis-ci.com/ImanolFotia/Epsilon-Engine.svg?token=eqNdpsuxZdxtFxRycvU4&branch=master)](https://travis-ci.com/ImanolFotia/Epsilon-Engine)
+![](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-orange)
 
 Official repository for Epsilon Engine.
 Epsilon Engine is a next-gen, multi-platform, general purpose game engine.
