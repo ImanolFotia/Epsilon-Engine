@@ -35,7 +35,6 @@ Installers and binaries will be available soon
 * GLEW 2.0.0
 * GLFW 3.2
 * libinih
-* Freetype 2
 * Soft OpenAL 1.18.2
 
 <a name="features"></a>
@@ -66,7 +65,7 @@ Installers and binaries will be available soon
 
 <a name="software_and_hardware_succesfully_tested"></a>
 ## Software & Hardware Succesfully Tested 
-* OS: Windows 7 & 10
+* OS: Windows 7 | Windows 10 | Ubuntu 18.0 LTS
 * CPU: Intel i7 4790K & Intel I7 6700HQ
 * RAM: 12 & 24 GB
 * GPU: Nvidia GTX 970 & 970M
