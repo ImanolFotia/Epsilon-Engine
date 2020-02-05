@@ -336,7 +336,7 @@ void Epsilon::InitResources(void)
 
     tmpEnt = (std::shared_ptr<EntityTemplate>)(new EntityTemplate(rM, glm::vec3(-14, 2.5, -17), glm::vec3(2.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>)new Component::RenderComponent();
-    Compmodel->Fill("models/esfera.eml", rM, "Main");
+    Compmodel->Fill("models/cube.eml", rM, "Main");
     std::shared_ptr<Component::MovementComponent> Compmov;
     tmpEnt->addComponent(Compmodel);
     EntityList.push_back(tmpEnt);
