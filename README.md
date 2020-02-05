@@ -1,6 +1,7 @@
 # Epsilon Engine
 [![LICENSE.md](https://img.shields.io/badge/License-EULA-blue.svg)](LICENSE.md)
 [![Build Status](https://travis-ci.com/ImanolFotia/Epsilon-Engine.svg?token=eqNdpsuxZdxtFxRycvU4&branch=master)](https://travis-ci.com/ImanolFotia/Epsilon-Engine)
+![](https://img.shields.io/badge/platforms-Windows%20%7C%20Linux-orange)
 
 Official repository for Epsilon Engine.
 Epsilon Engine is a next-gen, multi-platform, general purpose game engine.
@@ -34,7 +35,6 @@ Installers and binaries will be available soon
 * GLEW 2.0.0
 * GLFW 3.2
 * libinih
-* Freetype 2
 * Soft OpenAL 1.18.2
 
 <a name="features"></a>
@@ -65,7 +65,7 @@ Installers and binaries will be available soon
 
 <a name="software_and_hardware_succesfully_tested"></a>
 ## Software & Hardware Succesfully Tested 
-* OS: Windows 7 & 10
+* OS: Windows 7 | Windows 10 | Ubuntu 18.0 LTS
 * CPU: Intel i7 4790K & Intel I7 6700HQ
 * RAM: 12 & 24 GB
 * GPU: Nvidia GTX 970 & 970M
@@ -74,12 +74,6 @@ Installers and binaries will be available soon
 ## Contributors 
 
 **[Imanol Fotia](https://github.com/ImanolFotia)** - http://imanolfotia.com
-
-<a name="notes"></a>
-## Notes 
-
-* At the moment the only IDE supported is Code::Blocks, the idea is to migrate to CMake and make it IDE agnostic
-* It should compile almost unmodified under Linux
 
 <a name="documentation"></a>
 ## Documentation
