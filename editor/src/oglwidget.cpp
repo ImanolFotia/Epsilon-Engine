@@ -7,8 +7,8 @@
 #include <functional>
 #include <qopenglcontext.h>
 #include <include/texture.hpp>
+#include <include/leveleditor.h>
 
-#include <ui_leveleditor.h>
 extern "C" {
 __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
 }
@@ -95,12 +95,12 @@ void OGLWidget::initializeGL()
     this->BSP = nullptr;
     _GizmoTranslate = std::make_shared<GizmoTranslate>();
     _GizmoTranslate->Setup();
-    m_Shader = new Shader("assets/shaders/vertex.glsl", "assets/shaders/fragment.glsl");
-    m_TerrainShader = new Shader("assets/shaders/terrainvertex.glsl", "assets/shaders/terrainfragment.glsl");
-    m_BoundingBoxShader = new Shader("assets/shaders/vertex.glsl", "assets/shaders/fragment_BB.glsl");
-    m_OutlineShader = new Shader("assets/shaders/vertex.glsl", "assets/shaders/OutLineFragment.glsl");
-    brdfShader = new Shader("assets/shaders/brdfvertex.glsl", "assets/shaders/BRDF.glsl");
-    GizmosShader = new Shader("assets/shaders/Gizmos_v.glsl", "assets/shaders/Gizmos.glsl");
+    m_Shader = new Shader("../assets/shaders/vertex.glsl", "../assets/shaders/fragment.glsl");
+    m_TerrainShader = new Shader("../assets/shaders/terrainvertex.glsl", "../assets/shaders/terrainfragment.glsl");
+    m_BoundingBoxShader = new Shader("../assets/shaders/vertex.glsl", "../assets/shaders/fragment_BB.glsl");
+    m_OutlineShader = new Shader("../assets/shaders/vertex.glsl", "../assets/shaders/OutLineFragment.glsl");
+    brdfShader = new Shader("../assets/shaders/brdfvertex.glsl", "../assets/shaders/BRDF.glsl");
+    GizmosShader = new Shader("../assets/shaders/Gizmos_v.glsl", "../assets/shaders/Gizmos.glsl");
     this->modv.push_back(Model("shape_mat.eml", glm::vec3(0.0,0.0,0.0), glm::vec3(1), glm::quat(1.0, 0.0, 0.0, 0.0)));
     //this->m_Terrain = (std::shared_ptr<Terrain>)  new Terrain(128, 0.05, 128, glm::vec3(0,0,0));
 
@@ -116,12 +116,12 @@ void OGLWidget::initializeGL()
     pick = false;
 
     std::vector<std::string> texPaths;
-    texPaths.push_back("assets/textures/hdri/px.png");
-    texPaths.push_back("assets/textures/hdri/nx.png");
-    texPaths.push_back("assets/textures/hdri/py.png");
-    texPaths.push_back("assets/textures/hdri/ny.png");
-    texPaths.push_back("assets/textures/hdri/pz.png");
-    texPaths.push_back("assets/textures/hdri/nz.png");
+    texPaths.push_back("../assets/textures/hdri/px.png");
+    texPaths.push_back("../assets/textures/hdri/nx.png");
+    texPaths.push_back("../assets/textures/hdri/py.png");
+    texPaths.push_back("../assets/textures/hdri/ny.png");
+    texPaths.push_back("../assets/textures/hdri/pz.png");
+    texPaths.push_back("../assets/textures/hdri/nz.png");
 
     LoadCubemap = std::make_shared<OpenGL::Texture>();
 
@@ -783,3 +783,4 @@ void OGLWidget::RenderQuad() {
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glBindVertexArray(0);
 }
+

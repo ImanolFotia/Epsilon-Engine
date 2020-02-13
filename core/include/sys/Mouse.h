@@ -2,7 +2,6 @@
 
 namespace Input
 {
-
     class Mouse
     {
     public:

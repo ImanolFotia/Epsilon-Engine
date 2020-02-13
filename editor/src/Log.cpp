@@ -1,10 +1,10 @@
 #include <include/Log.hpp>
-#include <ui_leveleditor.h>
+#include <include/leveleditor.h>
 
 std::vector<Line> Log::mLines;
 std::vector<std::string> Log::mFormatedLines;
 Log* Log::mInstance;
-Ui_LevelEditor* Log::Ui_Ref;
+Ui::LevelEditor* Log::Ui_Ref;
 
 std::string Log::println(std::string tag, std::string content) {
     //Format as html
@@ -19,10 +19,11 @@ std::string Log::println(std::string tag, std::string content) {
     return p;
 }
 
-void Log::setUiReference(Ui_LevelEditor* ref){
+void Log::setUiReference(Ui::LevelEditor* ref){
     Ui_Ref = ref;
 }
 
-Ui_LevelEditor* Log::getUiReference() {
+Ui::LevelEditor* Log::getUiReference() {
     return Ui_Ref;
 }
+

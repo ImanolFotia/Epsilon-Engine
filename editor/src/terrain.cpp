@@ -19,7 +19,7 @@ Terrain::Terrain(int size, double roughness, double height,glm::vec3 pos)
         }
    // });
         texture = new OpenGL::Texture();
-        texture->Load("assets/textures/checkers.png");
+        texture->Load("../assets/textures/checkers.png");
     std::cout << "Done" << std::endl;
 }
 

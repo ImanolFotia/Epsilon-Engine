@@ -26,15 +26,27 @@ namespace Global {
     public:
         static void OpenFile(std::string path)
         {
-            FILE.open(path.c_str());
+            sOutFile.open(path.c_str());
         }
 
-        static void WriteToLog(std::string logmesage)
+        static void WriteToLog(std::string logmesage, uint8_t dest = FILE)
         {
-            FILE << currentDateTime() << ":  " << logmesage << std::endl;
+            if(dest & FILE){
+                sOutFile << currentDateTime() << ":  " << logmesage << std::endl;
+            }
+            if(dest & CONSOLE) {
+                std::cout << currentDateTime() << ":  " << logmesage << std::endl;
+            }
+            if(dest & CERROR) {
+                std::cerr << currentDateTime() << ":  " << logmesage << std::endl;
+            }
         }
 
-        static std::ofstream FILE;
+        static const unsigned FILE =     0x00000001;
+        static const unsigned CONSOLE =  0x00000010;
+        static const unsigned CERROR =    0x00000100;
+
+        static std::ofstream sOutFile;
     };
 }
 

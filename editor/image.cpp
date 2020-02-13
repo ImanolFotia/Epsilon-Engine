@@ -61,7 +61,7 @@ void Image::Load(std::string path, int id)
             else {
                     //Log::println("Error", std::string(std::string("STBI failed to load resource ") + path + std::string(", reason: ") +  stbi_failure_reason()));
                     //std::cerr << "STBI failed to load resource " << path <<  ", reason: " << stbi_failure_reason() << std::endl;
-                    mData = stbi_load("C:/Users/Imanol/Documents/Code/C++/Level Editor QT/build-LevelEditor-MingW64-Debug/assets/textures/checkers.png", &x, &y, &n, 0);
+                    mData = stbi_load("../assets/textures/checkers.png", &x, &y, &n, 0);
                     //mData = nullptr;
                     mLoaded = true;
                     empty = false;

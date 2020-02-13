@@ -5,6 +5,7 @@
 ///=============================================================================
 #define GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX 0x9048
 #define GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX 0x9049
+
 #include <iostream>
 #include <Epsilon.h>
 #include <ProgramData.h>

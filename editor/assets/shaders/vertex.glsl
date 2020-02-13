@@ -45,7 +45,7 @@ void main()
 
 	vec3 newPosition = position;
 
-	/*newPosition += normalize(normal)*texture(texture_height, vertexUV).r * 1.25;*/
+	//newPosition += normalize(normal)*normalize(texture(texture_height, vertexUV)).b * 0.7;
 
 	if(Picked == 1 && StencilPass == 1) {
 		newPosition += normalize(normal)*scaleFactor*0.0075;

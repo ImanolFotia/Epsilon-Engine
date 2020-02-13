@@ -96,11 +96,11 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
     return F0 + (F90 - F0) * pow(1.0 - clamp(cosTheta, 0.0, 1.0), 5.0);
 }
 
-vec3 NormalTex;
-vec4 tex;
-vec3 F;
-vec3 kS;
-vec3 kD;
+vec3 NormalTex = vec3(0.0);
+vec4 tex = vec4(0.0);
+vec3 F = vec3(0.0);
+vec3 kS = vec3(0.0);
+vec3 kD = vec3(0.0);
 
 vec3 CalculateDirectionalPBR() {
   // calculate per-light radiance
@@ -181,14 +181,14 @@ float calculateAttenuation(float power, float distance)
 }
 
 //https://colinbarrebrisebois.com/2011/03/07/gdc-2011-approximating-translucency-for-a-fast-cheap-and-convincing-subsurface-scattering-look/
-float SubsurfaceScattering(in vec3 L, in vec3 N, in vec3 V, in vec3 P){
+float SubsurfaceScattering(in vec3 L, in vec3 N, in vec3 V, in vec3 P, in bool A){
     
 	int iLPower = 5;
   float fLTScale = 10.;
   float fLTThickness = 0.5;
   float fLTAmbient = 0.0;
-  float fLightAttenuation = 1.0/pow(length(P + L), 2.0);
-  vec3 vLTLight = normalize(L + N * 0.0);
+  float fLightAttenuation = (A ? 1.0/pow(length(P + L), 2.0) : 1.0);
+  vec3 vLTLight = normalize(L + N * 1.0);
   float fLTDot = pow(saturate(dot(V, -vLTLight)), float(iLPower)) * fLTScale; 
   float fLT = fLightAttenuation * (fLTDot + fLTAmbient) * fLTThickness;
   
@@ -196,7 +196,7 @@ float SubsurfaceScattering(in vec3 L, in vec3 N, in vec3 V, in vec3 P){
 }
 
 void main() {
-
+  Color = vec4(0.0);
     if (isLine) {
       Color.rgb = vec3(0.5);
       if (isZ == 1) {
@@ -232,11 +232,11 @@ void main() {
     
 
     if (tex.a < 0.3) discard;
-
+/*
     if (emmisive > 0.5) {
       Color = tex;
       return;
-    }
+    }*/
 
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, tex.xyz, metallic);
@@ -250,7 +250,7 @@ void main() {
 
     vec3 L0 = normalize(-FragPos);
 
-    Lo += max(dot(N, L0), 0.0) * (1.0/pow(length(-FragPos), 2.0)) * kD * tex.rgb;
+    //Lo += max(dot(N, L0), 0.0) * (1.0/pow(length(-FragPos), 2.0)) * kD * tex.rgb;
 
     F0 = vec3(0.04);
     F0 = mix(F0, tex.rgb, metallic);
@@ -292,13 +292,13 @@ void main() {
       vec3 LP = vec3(0., 0., 0.);
       V = normalize(P - camPos);
 
-      //float SSS = SubsurfaceScattering(-L, N, V, P);
+      float SSS = SubsurfaceScattering(LightDir, N, V, P, false);
 
       L = P - LP;
       
-      float SSS = SubsurfaceScattering(L, N, V, P);
+      SSS += SubsurfaceScattering(L, N, V, P, true);
 
-      Color.rgb = HDR((ibl + Lo) + vec3(SSS) * vec3(1.0, 0.2, 0.1) * pow(tex.rgb, vec3(2.0)));
+      Color.rgb = HDR((ibl + Lo) + vec3(SSS) * /*vec3(1.0, 0.2, 0.1) **/ pow(tex.rgb, vec3(2.0)));
     }
 
     if (mode == 3) {
