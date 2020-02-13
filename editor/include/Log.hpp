@@ -5,6 +5,10 @@
 
 class Ui_LevelEditor;
 
+namespace Ui {
+    class LevelEditor;
+}
+
 class Line {
 public:
     Line(std::string tag, std::string content) : mTag(tag), mContent(content) {}
@@ -37,13 +41,13 @@ public:
 
     static std::vector<Line> getLines() { return mLines; }
 
-    static void setUiReference(Ui_LevelEditor* ref);
+    static void setUiReference(Ui::LevelEditor* ref);
 
-    static Ui_LevelEditor* getUiReference();
+    static Ui::LevelEditor* getUiReference();
 
 private:
     static Log* mInstance;
-    static Ui_LevelEditor* Ui_Ref;
+    static Ui::LevelEditor* Ui_Ref;
     static std::vector<Line> mLines;
     static std::vector<std::string> mFormatedLines;
 };

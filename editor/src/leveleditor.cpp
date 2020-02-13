@@ -1,10 +1,11 @@
-
-#include "include/leveleditor.h"
-#include "ui_leveleditor.h"
 #include <QFileDialog>
 #include <QFileSystemModel>
 #include <QDir>
+#include <ui_leveleditor.h>
 #include <include/Log.hpp>
+#include "include/leveleditor.h"
+
+
 
 LevelEditor::LevelEditor(QWidget *parent) :
     QMainWindow(parent),
@@ -48,14 +49,14 @@ LevelEditor::LevelEditor(QWidget *parent) :
         }
         */
     QFileSystemModel* model = new QFileSystemModel(this);
-    model->setRootPath("C:/Users/Imanol/Documents/Code/C++/epsilon-engine/Epsilon Engine/bin/Release");
+    model->setRootPath("C:/Users/Imanol/Documents/Code/C++/epsilon-engine/Epsilon Engine/bin/Release/models");
     model->setReadOnly(false);
     model->setNameFilters(QStringList()<<"*.eml");
     model->setFilter(QDir::AllDirs | QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     model->sort(QDir::Name);
     ui->treeView->setModel(model);
     ui->treeView->sortByColumn(QDir::Name, Qt::SortOrder::AscendingOrder);
-    ui->treeView->setRootIndex(model->index("C:/Users/Imanol/Documents/Code/C++/epsilon-engine/Epsilon Engine/bin/Release"));
+    ui->treeView->setRootIndex(model->index("C:/Users/Imanol/Documents/Code/C++/epsilon-engine/Epsilon Engine/bin/Release/models"));
     ui->treeView->setAnimated(false);
     ui->treeView->setIndentation(20);
     ui->treeView->setSortingEnabled(true);
@@ -242,3 +243,4 @@ void LevelEditor::on_pushButton_released()
 {
     ui->openGLWidget->removeCurrentModel();
 }
+

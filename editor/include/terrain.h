@@ -19,6 +19,11 @@ public:
 
     void setTexture(std::string tex)
     {
+        texture->Destroy();
+        delete texture;
+        texture = nullptr;
+
+        texture = new OpenGL::Texture();
         texture->Load(tex);
 
     }

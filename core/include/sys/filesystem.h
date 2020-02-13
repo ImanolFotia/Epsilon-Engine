@@ -16,9 +16,6 @@
 
 namespace IO {
     namespace Filesystem {
-
-
-
         class File {
         public:
             std::string name;

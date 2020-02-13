@@ -4,10 +4,9 @@
 #include <QMainWindow>
 #include <include/Types.h>
 #include <QListWidgetItem>
+#include <ui_leveleditor.h>
 
-namespace Ui {
-class LevelEditor;
-}
+class Ui_LevelEditor;
 
 class LevelEditor : public QMainWindow
 {

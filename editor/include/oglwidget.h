@@ -21,8 +21,8 @@
 #include <include/Log.hpp>
 #include <include/gizmos.hpp>
 
-class LevelEditor;
-class Ui_LevelEditor;
+//class LevelEditor;
+
 class OGLWidget : public QOpenGLWidget
 {
 public:
@@ -71,6 +71,9 @@ public:
 protected:
     void initializeGL();
     void paintGL();
+private slots:
+    void on_dial_actionTriggered(int action);
+
 private:
     /*Ui_LevelEditor UiReference;*/
     std::shared_ptr<BoundingBox> m_BoundingBox;
@@ -100,7 +103,7 @@ private:
     bool BSPLoaded;
     bool loadBSP;
     bool somethingPicked = false;
-    Ui_LevelEditor* UiReference;
+    Ui::LevelEditor* UiReference;
     QString mname;
     QString BSPName;
     QPoint mousePos;

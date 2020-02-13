@@ -10,7 +10,7 @@ public:
     Skybox(){
         mModel = (std::shared_ptr<Model>) new Model("sphere.eml");
         std::cout << "Llega" << std::endl;
-        mShader = (std::shared_ptr<Shader>) new Shader("assets/shaders/skybox.vglsl", "assets/shaders/skybox.fglsl");
+        mShader = (std::shared_ptr<Shader>) new Shader("../assets/shaders/skybox.vglsl", "../assets/shaders/skybox.fglsl");
 
         for(auto & m : mModel->meshes)
         {
