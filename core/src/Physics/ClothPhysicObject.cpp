@@ -22,24 +22,24 @@ namespace Physics {
 
             this->m_BodyCloth->getCollisionShape()->setMargin(0.1f);
             this->m_BodyCloth->generateBendingConstraints(1.0,this->m_BodyCloth->appendMaterial());
-            this->m_BodyCloth->setTotalMass(4.0);
+            this->m_BodyCloth->setTotalMass(1.5);
             this->m_BodyCloth->m_cfg.piterations = 1;
             this->m_BodyCloth->m_cfg.viterations = 1;
             this->m_BodyCloth->m_cfg.diterations = 1;
             this->m_BodyCloth->m_cfg.kDP = 0.005f;
             this->m_BodyCloth->setFriction(0.0);
-            this->m_BodyCloth->setWindVelocity(btVector3(0, -75.0, -50.0));
+            this->m_BodyCloth->setWindVelocity(btVector3(5, -50.0, -30.0));
             this->m_BodyCloth->m_cfg.kLF = 0.05;
             this->m_BodyCloth->m_cfg.kDG = 0.01;
             this->m_BodyCloth->m_cfg.aeromodel = btSoftBody::eAeroModel::V_TwoSidedLiftDrag;
             this->m_BodyCloth->m_cfg.collisions |= btSoftBody::fCollision::SDF_RS ;
             //this->m_BodyCloth->setMass(5, 0);
             //this->m_BodyCloth->m_cfg.kDF =	1;
-            //this->m_BodyCloth->randomizeConstraints();
+            this->m_BodyCloth->randomizeConstraints();
             //this->m_BodyCloth->m_cfg.collisions	=	btSoftBody::fCollision::CL_SS+
             //                           btSoftBody::fCollision::CL_RS;
-            //this->m_BodyCloth->generateClusters(2);
-            //this->m_BodyCloth->m_cfg.kVC = 0.005f;
+            this->m_BodyCloth->generateClusters(2);
+            this->m_BodyCloth->m_cfg.kVC = 0.005f;
             CollInfo.setName("Cloth");
             //btSoftBodyHelpers::ReoptimizeLinkOrder(this->m_BodyCloth.get());
             this->m_BodyCloth->setUserPointer(&CollInfo);

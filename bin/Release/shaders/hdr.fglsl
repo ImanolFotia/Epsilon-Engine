@@ -10,13 +10,13 @@ uniform sampler2D gDepth;
 uniform float time;
 out vec4 color;
 noperspective in vec2 TexCoords;
-uniform float exposure;
+//uniform float exposure;
 uniform mat4 choppedView;
 uniform mat4 projection;
 uniform vec3 sunPos;
 uniform bool lightShafts;
-const float gamma = 2.2;
-const float contrast = 0.2;
+//const float gamma = 2.2;
+//const float contrast = 0.2;
 uniform vec3 position;
 uniform vec2 Resolution;
 
@@ -29,6 +29,12 @@ int uGhosts = 5;               // number of ghost samples
 float uGhostDispersal = 0.3;  // dispersion factor
 float uHaloWidth = 10;
 float uDistortion = 5;
+
+
+
+const float gamma = 2.2;
+const float contrast = 0.3;
+const float exposure = 5.5;
 
 vec3 HDR(vec3 image) {
   vec3 result = vec3(1.0) - exp(-image.xyz * exposure);
@@ -47,6 +53,7 @@ float W = 11.2;
 vec3 Uncharted2Tonemap(vec3 x) {
   return ((x * (A * x + C * B) + D * E) / (x * (A * x + B) + D * F)) - E / F;
 }
+
 
 vec3 HDR2(vec3 image) {
   float ExposureBias = 2.0;

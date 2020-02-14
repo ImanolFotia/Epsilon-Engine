@@ -83,7 +83,7 @@ void main()
 	gAlbedoSpec = texture(texture0, TexCoords).rgb;
 
   	int negator = ( int(gl_FrontFacing) * 2 - 1 );
-  	gExpensiveNormal.rgb =  normalize(NormalTexture * TBN);
+  	gExpensiveNormal.rgb =  negator * normalize(NormalTexture * TBN);
 	gExpensiveNormal.a = 1.0;
 
 	gDepth.x = gl_FragCoord.z;

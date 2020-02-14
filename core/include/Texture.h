@@ -157,7 +157,12 @@ public:
         glGenTextures(1, &texture);
         glBindTexture(type, texture);
 
-        if(isNormal(TexName)) {
+        bool isNonColorData = isNormal(TexName);
+
+        std::cout << std::string(path) << ": " << (isNonColorData ? "RGBA" : "SRGBA") << std::endl;
+
+
+        if(isNonColorData) {
             if(type == GL_TEXTURE_2D) { //GL_COMPRESSED_RGBA_S3TC_DXT5_EXT
 
                 glTexImage2D(type, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
@@ -180,10 +185,14 @@ public:
             else if(type == GL_TEXTURE_1D)
                 glTexImage1D(type, 0, GL_RGBA, width, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
         }
+
+
         glGenerateMipmap(type);
         glTexParameteri(type, GL_TEXTURE_WRAP_S, wrap);
         glTexParameteri(type, GL_TEXTURE_WRAP_T, wrap);
-        if(filtering  == -1) {
+
+
+        if(filtering  == -1u) {
             if(DATA.ANISOTROPY <= 0) {
                 glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
                 glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -211,7 +220,8 @@ public:
     }
 
     bool isNormal(const char* TexName) {
-        string name = string(TexName);
+        std::string tex = std::string(TexName); 
+        string name = Helpers::to_lower(tex);
         std::size_t found2 = name.find("_s");
         std::size_t found1 = name.find("_n");
         std::size_t found3 = name.find("specular");
@@ -219,6 +229,12 @@ public:
         std::size_t found5 = name.find("ddn");
         std::size_t found6 = name.find("nrm");
         std::size_t found7 = name.find("Normal");
+        std::size_t found8 = name.find("_m");
+        std::size_t found9 = name.find("roughness");
+        std::size_t found10 = name.find("metallic"); 
+        std::size_t found11 = name.find("_metalness");
+        std::size_t found12 = name.find("_gloss");
+        std::size_t found13 = name.find("_r");
 
         std::size_t npos = std::string::npos;
 
@@ -228,7 +244,13 @@ public:
                         found4 != npos ||
                         found5 != npos ||
                         found6 != npos ||
-                        found7 != npos;
+                        found7 != npos ||
+                        found8 != npos ||
+                        found9 != npos ||
+                        found10 != npos ||
+                        found11 != npos ||
+                        found12 != npos ||
+                        found13 != npos;
     }
 
     void Destroy() {
@@ -238,7 +260,7 @@ public:
     }
 
     virtual ~eTexture() {
-        std::cout << "eTexture Destroyed: " << path << std::endl;
+        //std::cout << "eTexture Destroyed: " << path << std::endl;
 
     }
 
@@ -302,7 +324,7 @@ public:
                     }
                 }
             }
-        } catch(std::exception e) {
+        } catch(std::exception& e) {
             std::cout << "Exception detected in checkLoading(): " << e.what() << std::endl;
         }
     }

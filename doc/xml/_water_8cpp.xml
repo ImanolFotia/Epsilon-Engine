@@ -162,8 +162,8 @@
 <codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/>glBindTexture(GL_TEXTURE_2D,<sp/>this-&gt;diffuseTexture);</highlight></codeline>
 <codeline lineno="56"><highlight class="normal"></highlight></codeline>
 <codeline lineno="57"><highlight class="normal"></highlight></codeline>
-<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::mat4<sp/>model<sp/>=<sp/>glm::mat4();</highlight></codeline>
-<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::mat4<sp/>TranslationMatrix<sp/>=<sp/>glm::translate(glm::mat4(),<sp/>this-&gt;position);</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::mat4<sp/>model<sp/>=<sp/>glm::mat4(1.0);</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::mat4<sp/>TranslationMatrix<sp/>=<sp/>glm::translate(glm::mat4(1.0),<sp/>this-&gt;position);</highlight></codeline>
 <codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/>model<sp/>=<sp/>TranslationMatrix;</highlight></codeline>
 <codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/>this-&gt;MVP<sp/>=<sp/>cam-&gt;getProjectionMatrix()<sp/>*<sp/>cam-&gt;getViewMatrix()<sp/>*<sp/>model;</highlight></codeline>
 <codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::mat4<sp/>view<sp/>=<sp/>glm::mat4(cam-&gt;getViewMatrix());</highlight></codeline>
@@ -333,7 +333,7 @@
 <codeline lineno="227"><highlight class="normal"></highlight></codeline>
 <codeline lineno="228"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Water::GenerateModelViewProjection(std::unique_ptr&lt;Camera&gt;&amp;<sp/>cam)</highlight></codeline>
 <codeline lineno="229"><highlight class="normal">{</highlight></codeline>
-<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::mat4<sp/>model<sp/>=<sp/>glm::mat4();</highlight></codeline>
+<codeline lineno="230"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::mat4<sp/>model<sp/>=<sp/>glm::mat4(1.0);</highlight></codeline>
 <codeline lineno="231"><highlight class="normal"><sp/><sp/><sp/><sp/>MVP<sp/>=<sp/>cam-&gt;getProjectionMatrix()<sp/>*<sp/>cam-&gt;getViewMatrix()<sp/>*<sp/>model;</highlight></codeline>
 <codeline lineno="232"><highlight class="normal">}</highlight></codeline>
     </programlisting>

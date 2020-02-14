@@ -1,0 +1,19 @@
+Determining if the function fseeko exists failed with the following output:
+Change Dir: C:/Users/Imanol/Downloads/zlib1211/zlib-1.2.11/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"C:/MinGW/msys/1.0/bin/make.exe" "cmTC_e11e3/fast"
+/usr/bin/make -f CMakeFiles/cmTC_e11e3.dir/build.make CMakeFiles/cmTC_e11e3.dir/build
+make[1]: Entering directory `/c/Users/Imanol/Downloads/zlib1211/zlib-1.2.11/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_e11e3.dir/CheckFunctionExists.c.obj
+/C/MinGW/bin/gcc.exe   -DCHECK_FUNCTION_EXISTS=fseeko   -o CMakeFiles/cmTC_e11e3.dir/CheckFunctionExists.c.obj   -c "/C/Program Files/CMake/share/cmake-3.8/Modules/CheckFunctionExists.c"
+Linking C executable cmTC_e11e3.exe
+"/C/Program Files/CMake/bin/cmake.exe" -E remove -f CMakeFiles/cmTC_e11e3.dir/objects.a
+/C/MinGW/bin/ar.exe cr CMakeFiles/cmTC_e11e3.dir/objects.a @CMakeFiles/cmTC_e11e3.dir/objects1.rsp
+/C/MinGW/bin/gcc.exe  -DCHECK_FUNCTION_EXISTS=fseeko    -Wl,--whole-archive CMakeFiles/cmTC_e11e3.dir/objects.a -Wl,--no-whole-archive  -o cmTC_e11e3.exe -Wl,--out-implib,libcmTC_e11e3.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles/cmTC_e11e3.dir/linklibs.rsp
+CMakeFiles/cmTC_e11e3.dir/objects.a(CheckFunctionExists.c.obj):CheckFunctionExists.c:(.text+0xc): undefined reference to `fseeko'
+collect2.exe: error: ld returned 1 exit status
+make[1]: *** [cmTC_e11e3.exe] Error 1
+make[1]: Leaving directory `/c/Users/Imanol/Downloads/zlib1211/zlib-1.2.11/build/CMakeFiles/CMakeTmp'
+make: *** [cmTC_e11e3/fast] Error 2
+
+

@@ -449,7 +449,7 @@
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
-<para>glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), glm::vec3(scale,1,scale)); </para>        </inbodydescription>
+<para>glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1.0), glm::vec3(scale,1,scale)); </para>        </inbodydescription>
         <location file="D:/Epsilon/Epsilon Engine/include/Water.h" line="35" column="1" bodyfile="D:/Epsilon/Epsilon Engine/src/Water.cpp" bodystart="24" bodyend="91"/>
       </memberdef>
       </sectiondef>

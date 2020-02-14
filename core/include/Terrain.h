@@ -65,7 +65,7 @@ private:
     bool GenerateSmoothNormals();
     bool GenerateVertexBuffers();
     bool GetHeightData();
-    bool GenerateGrid(unsigned char* pixels);
+    bool GenerateGrid();
     bool LoadTexture();
     bool LoadTexture(const char*);
     bool LoadTexture(const char*, const char*, const char*, const char*);
@@ -78,9 +78,9 @@ private:
     GLuint GL_s_texture;
     GLuint GL_m_texture;
     GLuint GL_decal_texture;
-    const char* diffuseTexture;
-    const char* specularTexture;
-    const char* heightMap;
+    const char* diffuseTexture = nullptr;
+    const char* specularTexture = nullptr;
+    const char* heightMap = nullptr;
     int width;
     int height;
     int channels;

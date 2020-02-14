@@ -33,11 +33,12 @@ vec2 rotate(vec2 v, float a) {
 void main()
 {
 
+    Id = gl_InstanceID ;
     vec3 center = vec3(positions[0][3], positions[1][3],positions[2][3]);
     vec3 vertexPosition =
     center
-    + cameraRight * (position.x * cos(time*0.2+center.x) - position.y * sin(time*0.2+center.x)) * 25.0
-    + cameraUp * (position.y * cos(time*0.2+center.z) + position.x * sin(time*0.2+center.z)) * 25.0;
+    + cameraRight * (position.x * cos(time*0.2+center.x+Id) - position.y * sin(time*0.2+center.x+Id)) * 50.0
+    + cameraUp * (position.y * cos(time*0.2+center.z+Id) + position.x * sin(time*0.2+center.z+Id)) * 50.0;
 
     gl_Position = projection * view * positions * vec4(vertexPosition, 1.0) ;
 
@@ -48,7 +49,6 @@ void main()
     FragPos = vec3(view * vec4(wFragPos, 1.0f));
     Position = gl_Position;
     PrevPosition = projection * PrevView * positions * vec4(position, 1.0);
-    Id = gl_InstanceID ;
 
     UV = texCoords;//-position.xy + vec2(0.5, 0.5);
     Normal = normalize(normal * mat3(inverse(view)));

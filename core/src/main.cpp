@@ -6,20 +6,15 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <iostream>
-#include <Shader.h>
-#include <SOIL.h>
-#include <main.h>
-#include <exception>
-#include <assert.h>
+#include <App.hpp>
+#include <Init.hpp>
 #include <memory>
-using namespace std;
 
 int main(int argc, char* argv[])
 {
-    GLFWwindow* window = InitEngine("Epsilon Engine");
+    GLFWwindow* window = Init("Epsilon Engine");
 
-    std::unique_ptr<App> MainProgram = (std::unique_ptr<App>) (new App(window));
+    std::unique_ptr<App> MainProgram = std::make_unique<App>(window);
 
     MainProgram->Run();
 
