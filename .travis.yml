@@ -8,11 +8,12 @@ before_install:
   - sudo apt-get install libsoil-dev
   - sudo apt-get install libopenal-dev
   - sudo apt-get install libbullet-dev
-  - git clone https://github.com/benhoyt/inih.git ./deps-64/inih
-  - cd deps-64/inih/
+  - git clone https://github.com/benhoyt/inih.git ./deps-64/inih-test
+  - cd deps-64/inih-test/
   - g++ -c ini.c -o ini.o
   - g++ -c ./cpp/INIReader.cpp -o INIReader.o
   - ar -rvcs -o libinih.a INIReader.o ini.o
+  - cp libinih.a ../inih/
   - cd ..
   - cd ..
   - sudo apt-get install lua5.3-dev
