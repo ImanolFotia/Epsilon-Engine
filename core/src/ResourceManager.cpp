@@ -311,12 +311,17 @@ bool ResourceManager::requestCubeMap(int CubeMapID, glm::vec3 Position)
         paths.push_back(path + "bottom.tga");
         paths.push_back(path + "back.tga");
         paths.push_back(path + "front.tga");
-
+ 
         std::shared_ptr<CubeMap> tmpCubeMap = (std::shared_ptr<CubeMap>) new CubeMap(paths, CubeMapID, Position);
         std::cout << "Added Cubemap: " << CubeMapID << std::endl;
+        try {
         CubeMapList.insert(std::make_pair(CubeMapID, tmpCubeMap));
         CubeMapPositions.push_back(Position);
         mCubemapIndex.push_back(CubeMapID);
+        
+        } catch(...) {
+            std::cout << "Exception at requestCube" << std::endl;
+        }
     }
     catch(std::exception e)
     {

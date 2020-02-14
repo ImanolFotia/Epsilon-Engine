@@ -1,5 +1,5 @@
 #pragma once
-#include <Thread>
+#include <thread>
 #include <future>
 #include <atomic>
 #include <memory>

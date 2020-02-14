@@ -6,10 +6,10 @@
 
 #ifndef TEXT_H_INCLUDED
 #define TEXT_H_INCLUDED
-
+/*
 #include <ft2build.h>
 #include FT_FREETYPE_H
-
+*/
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -19,7 +19,7 @@ class Text {
 
 public:
     Text(const char* FontName, int WIDTH, int HEIGHT) {
-        shader = new Shader("shaders/text.vglsl", "shaders/text.fglsl");
+       /*shader = new Shader("shaders/text.vglsl", "shaders/text.fglsl");
         glm::mat4 projection = glm::ortho(0.0f, static_cast<GLfloat>(WIDTH), 0.0f, static_cast<GLfloat>(HEIGHT));
         shader->Use();
         this->WIDTH = WIDTH;
@@ -95,18 +95,18 @@ public:
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
+        glBindVertexArray(0);*/
     }
 
     virtual ~Text() {
-        delete shader;
+       /* delete shader;*/
         //std::cout << "Text Destroyed" << std::endl;
     }
 
 public:
 
     float getHorizontalLength(std::string text, GLfloat scale) {
-        std::string::const_iterator c;
+      /*  std::string::const_iterator c;
         float horizontalScale = 0.0;
         for (c = text.begin(); c != text.end(); c++) {
             Character ch = Characters[*c];
@@ -114,12 +114,12 @@ public:
             GLfloat w = ch.Size.x * scale;
             horizontalScale += w;
         }
-        return glm::abs(horizontalScale/WIDTH);
+        return glm::abs(horizontalScale/WIDTH);*/
     }
 
     void calculateHeight()
     {
-        std::map<GLchar, Character>::const_iterator c;
+      /*  std::map<GLchar, Character>::const_iterator c;
         float v = 0.0;
         for (c = Characters.begin(); c != Characters.end(); c++) {
             Character ch = c->second;
@@ -127,15 +127,15 @@ public:
             GLfloat h = (ch.Size.y - ch.Bearing.y);
             v = h>v?h:v;
         }
-        textHeight = glm::abs(v/HEIGTH);
+        textHeight = glm::abs(v/HEIGTH);*/
     }
 
     float getVerticalLength() {
-        return textHeight;
+       /* return textHeight;*/
     }
 
     void RenderText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color) {
-        /// Activate corresponding render state
+        /*/// Activate corresponding render state
         glEnable(GL_BLEND);
         shader->Use();
         glUniform3f(glGetUniformLocation(shader->getProgramID(), "textColor"), color.x, color.y, color.z);
@@ -197,7 +197,7 @@ public:
             x += (ch.Advance >> 6) * scale; /// Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
         }
         glBindVertexArray(0);
-        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindTexture(GL_TEXTURE_2D, 0);*/
     }
 
 

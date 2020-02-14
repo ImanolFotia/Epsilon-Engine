@@ -13,7 +13,7 @@
 
 #include <Shader.h>
 #include <Texture.h>
-#include <Camera.h>
+#include <camera.h>
 #include <Model.h>
 #include <vector>
 #include <memory>

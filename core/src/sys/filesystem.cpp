@@ -1,6 +1,7 @@
 #include <sys/filesystem.h>
 #include <fstream>
 #include <Log.h>
+#include <cstring>
 
 namespace IO {
     namespace Filesystem {
@@ -63,7 +64,7 @@ namespace IO {
             }
 #endif // _WIN32
 #ifdef __linux__
-            int len = strlen(path);
+           /* int len = strlen(path.c_str());
             DIR dirp, dp;
             dirp = opendir(".");
             while ((dp = readdir(dirp)) != NULL) {
@@ -72,7 +73,7 @@ namespace IO {
                     names.push_back(dp->d_name);
                 }
             }
-            (void)closedir(dirp);
+            (void)closedir(dirp);*/
 #endif // __linux__
             return names;
         }

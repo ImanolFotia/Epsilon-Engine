@@ -23,7 +23,7 @@ public:
 
     virtual void Render() {}
 
-    double m_NumParticles;
+    unsigned m_NumParticles;
     std::vector<glm::mat4> m_ParticlePositions;
     GLuint quadVAO, quadVBO;
     std::shared_ptr<ParticleRenderer> m_ParticleRenderer;
@@ -93,7 +93,7 @@ public:
         }
 
         for(auto &p: Particles) {
-            glm::mat4 modelPos = glm::mat4();
+            glm::mat4 modelPos = glm::mat4(1.0);
             modelPos = translate(modelPos, p.getPosition());
             m_ParticlePositions.push_back(modelPos);
         }
@@ -112,15 +112,15 @@ public:
     void Simulate(float deltaTime, glm::vec3 camPos) {
             deltaTime = glm::clamp(deltaTime, 0.0f, 0.064f);
 
-            this->calculateDistancetoCamera(camPos);
+            //this->calculateDistancetoCamera(camPos);
 
-            this->sortParticles();
+            //this->sortParticles();
 
             std::uniform_real_distribution<GLfloat> HorizonalLimit(ParticlesLimits.MIN_X, ParticlesLimits.MAX_X);
             std::uniform_real_distribution<GLfloat> VerticalLimit(ParticlesLimits.MIN_Y, ParticlesLimits.MAX_Y);
             std::uniform_real_distribution<GLfloat> ZLimit(ParticlesLimits.MIN_Z, ParticlesLimits.MAX_Z);
 
-            //#pragma omp parallel for simd
+            #pragma omp parallel for simd
             for(unsigned int i = 0; i < m_NumParticles; i++) {
 
             generator.seed(std::chrono::system_clock::now().time_since_epoch().count());
@@ -147,10 +147,10 @@ public:
             }
 
             for(int i = 0; i < Particles.size(); i++) {
-                glm::mat4 modelPos = glm::mat4();
+                glm::mat4 modelPos = glm::mat4(1.0);
                 static float time;
                 time += deltaTime;
-                glm::mat4 RotationMatrix = glm::rotate(glm::mat4(), glm::radians(time*0.1f), glm::vec3(0.0, 0.0, 1.0));
+                glm::mat4 RotationMatrix = glm::rotate(glm::mat4(1.0), glm::radians(time*0.1f), glm::vec3(0.0, 0.0, 1.0));
                 modelPos = translate(modelPos, Particles[i].getPosition());
                 m_ParticlePositions[i] = modelPos /** RotationMatrix*/;
             }
@@ -189,7 +189,7 @@ public:
 
         this->sortParticles();
 
-        //#pragma omp simd
+        #pragma omp simd
         for(unsigned int i = 0; i < Particles.size(); i++) {
 
             if(Particles[i].getPosition().y > ParticlesLimits.MAX_X) {
@@ -209,7 +209,7 @@ public:
         }
 
         for(int i = 0; i < m_NumParticles; i++) {
-            glm::mat4 modelPos = glm::mat4();
+            glm::mat4 modelPos = glm::mat4(1.0);
             modelPos = translate(modelPos, Particles[i].getPosition());
             m_ParticlePositions[i] = modelPos;
         }
@@ -238,7 +238,7 @@ public:
 
         generator.seed(std::chrono::system_clock::now().time_since_epoch().count());
 
-        //#pragma omp parallel for
+        #pragma omp parallel for
         for(unsigned int i = 0; i < m_NumParticles; ++i) {
 
             glm::vec3 CurrentParticlePosition(
@@ -258,8 +258,9 @@ public:
             //std::cout << "Particle #" << i << ": X: " << Particles[i].getPosition().x << " Y: " << Particles[i].getPosition().y << " Z: " << Particles[i].getPosition().z << std::endl;
         }
 
-        for(auto &p: Particles) {
-            glm::mat4 modelPos = glm::mat4();
+        for(unsigned i = 0; i < Particles.size(); i++) {
+            auto& p = Particles[i];
+            glm::mat4 modelPos = glm::mat4(1.0);
             modelPos = translate(modelPos, p.getPosition());
             m_ParticlePositions.push_back(modelPos);
         }
@@ -288,8 +289,9 @@ public:
 
     void calculateDistancetoCamera(glm::vec3 camPosition) {
 
-        //#pragma omp simd
-        for(auto &p: Particles) {
+        #pragma omp simd
+        for(unsigned i = 0; i < Particles.size(); i++) {
+            auto &p = Particles[i];
             p.setDistancetoCamera(glm::length(p.getPosition() - camPosition));
         }
     }
@@ -307,7 +309,7 @@ public:
         std::uniform_real_distribution<GLfloat> ZLimit(ParticlesLimits.MIN_Z, ParticlesLimits.MAX_Z);
         generator.seed(std::chrono::system_clock::now().time_since_epoch().count());
 
-        //#pragma omp parallel for
+        #pragma omp parallel for
         for(unsigned int i = 0; i < Particles.size(); ++i) {
 
             glm::vec3 CurrentParticlePosition(
@@ -322,7 +324,7 @@ public:
         }
 
         for(auto &p: Particles) {
-            glm::mat4 modelPos = glm::mat4();
+            glm::mat4 modelPos = glm::mat4(1.0);
             modelPos = translate(modelPos, p.getPosition());
             m_ParticlePositions.push_back(modelPos);
         }
@@ -344,7 +346,7 @@ public:
         // for(int t = 0; t < 8; t++)
         // {   th.emplace_back([&]()
         // {
-        //#pragma omp simd
+        #pragma omp simd
         for(unsigned int i = 0; i < Particles.size(); i++) {
 
             if(Particles[i].getPosition().y < ParticlesLimits.MIN_Y) {
@@ -364,7 +366,7 @@ public:
         }
 
         for(int i = 0; i < m_NumParticles; i++) {
-            glm::mat4 modelPos = glm::mat4();
+            glm::mat4 modelPos = glm::mat4(1.0);
             modelPos = translate(modelPos, Particles[i].getPosition());
             m_ParticlePositions[i] = modelPos;
         }
@@ -398,8 +400,9 @@ public:
     }
 
     void calculateDistancetoCamera(glm::vec3 camPosition) {
-        //#pragma omp simd
-        for(auto &p: Particles) {
+        #pragma omp simd
+        for(unsigned i = 0; i < Particles.size(); i++) {
+            auto &p = Particles[i];
             p.setDistancetoCamera(glm::length(p.getPosition() - camPosition));
         }
     }
@@ -413,7 +416,7 @@ public:
 
         this->sortParticles();
 
-        //#pragma omp parallel for simd
+        #pragma omp parallel for simd
         for(unsigned int i = index; i < end; i++) {
 
             if(Particles[i].getPosition().y < ParticlesLimits.MIN_Y) {
@@ -450,9 +453,9 @@ public:
         }
 
 
-        //#pragma omp parallel for simd
+        #pragma omp parallel for simd
         for(int i = 0; i < Particles.size(); i++) {
-            glm::mat4 modelPos = glm::mat4();
+            glm::mat4 modelPos = glm::mat4(1.0);
             modelPos = translate(modelPos, Particles[i].getPosition());
             m_ParticlePositions[i] = modelPos;
         }
@@ -508,8 +511,8 @@ public:
         std::uniform_real_distribution<GLfloat> ZLimit(ParticlesLimits.MIN_Z, ParticlesLimits.MAX_Z);
         generator.seed(std::chrono::system_clock::now().time_since_epoch().count());
 
-        //#pragma omp simd
-        for(int i = 0; i < m_NumParticles; i++) {
+        #pragma omp simd
+        for(unsigned i = 0; i < m_NumParticles; i++) {
 
             glm::vec3 CurrentParticlePosition(
                 HorizonalLimit  (generator),
@@ -521,7 +524,7 @@ public:
         }
 
         for(auto &p: Particles) {
-            glm::mat4 modelPos = glm::mat4();
+            glm::mat4 modelPos = glm::mat4(1.0);
             modelPos = translate(modelPos, p.getPosition());
             m_ParticlePositions.push_back(modelPos);
         }

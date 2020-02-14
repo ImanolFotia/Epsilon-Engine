@@ -688,6 +688,10 @@ void PostProcess::SSRPass(std::shared_ptr<Camera>& cam) {
     glActiveTexture(GL_TEXTURE6);
     glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "PreviousReflection"), 6);
     glBindTexture(GL_TEXTURE_2D, this->SSRTexture[!this->CurrentSSR]);
+    
+    glActiveTexture(GL_TEXTURE7);
+    glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "gAlbedo"), 7);
+    glBindTexture(GL_TEXTURE_2D, this->gAlbedoSpec);
 
     glm::mat4 proj = cam->getProjectionMatrix();
     glUniformMatrix4fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "projection"), 1, GL_FALSE, &proj[0][0]);
@@ -897,6 +901,10 @@ void PostProcess::CompositeImage(bool isMoving) {
             glBindTexture(GL_TEXTURE_2D, SSRTexture[!this->CurrentSSR]);
 
     }
+    
+    glActiveTexture(GL_TEXTURE2);
+    CompositeShader->PushUniform("ssaoColorBufferBlur", 2);
+    glBindTexture(GL_TEXTURE_2D, ssaoColorBufferBlur);
 
     CompositeShader->PushUniform("TotalFrames", TotalFrames);
     CompositeShader->PushUniform("isMoving", isMoving);
@@ -909,8 +917,6 @@ void PostProcess::CompositeImage(bool isMoving) {
 
 void PostProcess::ShowPostProcessImage(float frametime, GLuint onmenu, glm::vec3 Sun, std::shared_ptr<Camera>& cam) {
 
-
-    GLuint blurred = this->blurImage(hdrFBO->getRenderTargetHandler("brightColorBuffer"), false);
     //if(SSROn) {
     SSRPass(cam);
     //}
@@ -919,6 +925,8 @@ void PostProcess::ShowPostProcessImage(float frametime, GLuint onmenu, glm::vec3
         MotionBlur(frametime);
 
     this->CompositeImage(cam->isMoving());
+
+    GLuint blurred = this->blurImage(hdrFBO->getRenderTargetHandler("brightColorBuffer"), false);
 
     DownSampleSSR(frametime);
 

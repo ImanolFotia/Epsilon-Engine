@@ -6,6 +6,7 @@ out vec4 FragColor;
 
 layout (binding = 0) uniform sampler2D gColorSampler;
 layout (binding = 1) uniform sampler2D gReflectionSampler;
+layout (binding = 2) uniform sampler2D ssaoColorBufferBlur;
 
 
 uniform int TotalFrames;
@@ -14,11 +15,12 @@ uniform bool isMoving;
 void main()
 {
 	vec3 color = vec3(texture(gColorSampler, TexCoords).rgb);
-	vec3 reflection = texture(gReflectionSampler, TexCoords).rgb;
+	vec3 reflection = (texture(gReflectionSampler, TexCoords).rgb);
+	float ao = texture(ssaoColorBufferBlur, TexCoords).r;
 
 	if(!isMoving && TotalFrames < 252)
 		reflection /= TotalFrames;
 
-	FragColor.rgb = max(reflection, vec3(0.0)) +  max(color, vec3(0.0));
+	FragColor.rgb = vec3(reflection + color) * ao;//max(reflection, vec3(0.0)) +  max(color, vec3(0.0)) * ao;
 	FragColor.a = 1.0;
 }

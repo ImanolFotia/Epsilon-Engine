@@ -32,9 +32,9 @@ void Scene::CalculateVisibility()
         if(!map_Entities[itr->first]->hasModel)
             continue;
 
-        glm::mat4 Model = glm::mat4();
-        glm::mat4 ScaleMatrix = glm::scale(glm::mat4(), m_ResourceManager->getModelScale(map_Entities[itr->first]->modelPath));
-        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(), m_ResourceManager->getModelPosition(map_Entities[itr->first]->modelPath));
+        glm::mat4 Model = glm::mat4(1.0);
+        glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1.0), m_ResourceManager->getModelScale(map_Entities[itr->first]->modelPath));
+        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1.0), m_ResourceManager->getModelPosition(map_Entities[itr->first]->modelPath));
         glm::mat4 RotationMatrix = glm::toMat4(glm::normalize(m_ResourceManager->getModelRotation(map_Entities[itr->first]->modelPath)));
 
         Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
@@ -78,8 +78,8 @@ void Scene::Render()
     }
 
     glCullFace(GL_FRONT);
-    glm::mat4 BSPmodel = glm::mat4();
-    glm::mat4 sModel = glm::scale(glm::mat4(), glm::vec3(0.1, 0.1, 0.1));
+    glm::mat4 BSPmodel = glm::mat4(1.0);
+    glm::mat4 sModel = glm::scale(glm::mat4(1.0), glm::vec3(0.1, 0.1, 0.1));
     BSPmodel = sModel;
     m_BSPMap->Frustum.CalculateFrustum(glm::mat4(m_ResourceManager->m_Camera->getProjectionMatrix() * m_ResourceManager->m_Camera->getViewMatrix()), BSPmodel);
     m_ResourceManager->useShader("Main");

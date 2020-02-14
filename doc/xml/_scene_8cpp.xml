@@ -552,9 +552,9 @@
 <codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal">(!map_Entities[itr-&gt;first]-&gt;hasModel)</highlight></codeline>
 <codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">continue</highlight><highlight class="normal">;</highlight></codeline>
 <codeline lineno="33"><highlight class="normal"></highlight></codeline>
-<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>glm::mat4<sp/><ref refid="class_model" kindref="compound">Model</ref><sp/>=<sp/>glm::mat4();</highlight></codeline>
-<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>glm::mat4<sp/>ScaleMatrix<sp/>=<sp/>glm::scale(glm::mat4(),<sp/>m_ResourceManager-&gt;getModelScale(map_Entities[itr-&gt;first]-&gt;modelPath));</highlight></codeline>
-<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>glm::mat4<sp/>TranslationMatrix<sp/>=<sp/>glm::translate(glm::mat4(),<sp/>m_ResourceManager-&gt;getModelPosition(map_Entities[itr-&gt;first]-&gt;modelPath));</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>glm::mat4<sp/><ref refid="class_model" kindref="compound">Model</ref><sp/>=<sp/>glm::mat4(1.0);</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>glm::mat4<sp/>ScaleMatrix<sp/>=<sp/>glm::scale(glm::mat4(1.0),<sp/>m_ResourceManager-&gt;getModelScale(map_Entities[itr-&gt;first]-&gt;modelPath));</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>glm::mat4<sp/>TranslationMatrix<sp/>=<sp/>glm::translate(glm::mat4(1.0),<sp/>m_ResourceManager-&gt;getModelPosition(map_Entities[itr-&gt;first]-&gt;modelPath));</highlight></codeline>
 <codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>glm::mat4<sp/>RotationMatrix<sp/>=<sp/>glm::toMat4(glm::normalize(m_ResourceManager-&gt;getModelRotation(map_Entities[itr-&gt;first]-&gt;modelPath)));</highlight></codeline>
 <codeline lineno="38"><highlight class="normal"></highlight></codeline>
 <codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Model<sp/>=<sp/>TranslationMatrix<sp/>*<sp/>ScaleMatrix<sp/>*<sp/>RotationMatrix;</highlight></codeline>
@@ -596,8 +596,8 @@
 <codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="76"><highlight class="normal"></highlight></codeline>
 <codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/>glCullFace(GL_FRONT);</highlight></codeline>
-<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::mat4<sp/>BSPmodel<sp/>=<sp/>glm::mat4();</highlight></codeline>
-<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::mat4<sp/>sModel<sp/>=<sp/>glm::scale(glm::mat4(),<sp/>glm::vec3(0.1,<sp/>0.1,<sp/>0.1));</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::mat4<sp/>BSPmodel<sp/>=<sp/>glm::mat4(1.0);</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/>glm::mat4<sp/>sModel<sp/>=<sp/>glm::scale(glm::mat4(1.0),<sp/>glm::vec3(0.1,<sp/>0.1,<sp/>0.1));</highlight></codeline>
 <codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/>BSPmodel<sp/>=<sp/>sModel;</highlight></codeline>
 <codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/>m_BSPMap-&gt;Frustum.CalculateFrustum(glm::mat4(m_ResourceManager-&gt;m_Camera-&gt;getProjectionMatrix()<sp/>*<sp/>m_ResourceManager-&gt;m_Camera-&gt;getViewMatrix()),<sp/>BSPmodel);</highlight></codeline>
 <codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/>m_ResourceManager-&gt;useShader(</highlight><highlight class="stringliteral">&quot;Main&quot;</highlight><highlight class="normal">);</highlight></codeline>
