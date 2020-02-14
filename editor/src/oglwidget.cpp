@@ -325,7 +325,7 @@ void OGLWidget::paintGL()
                 //std::cout << "Moving" << std::endl;
                 glm::vec3 movVector = currentMouse3DPosition - lastMouse3DPosition;
                 //std::cout << "Distance: " << mDistanceToObject << std::endl;
-                std::cout << "x: " << movVector.x << " y: " << movVector.y << " z: " << movVector.z << std::endl;
+                //std::cout << "x: " << movVector.x << " y: " << movVector.y << " z: " << movVector.z << std::endl;
                 //if((lastp - p).manhattanLength() == 0)
                   //  movVector = glm::vec3(0.0f);
                 this->modv.at(selectID).Position += movVector;
@@ -550,7 +550,7 @@ void OGLWidget::keyReleaseEvent(QKeyEvent * event)
 
 void OGLWidget::mouseReleaseEvent(QMouseEvent *event)
 {
-    std::cout << event->button() << std::endl;
+    //std::cout << event->button() << std::endl;
     if(event->button() == Qt::LeftButton){
         LeftRising = false;
         LeftFalling = true;

@@ -117,7 +117,8 @@ void LevelEditor::on_pushButton_2_clicked()
 void LevelEditor::on_pushButton_3_clicked()
 {
     QModelIndex index = ui->treeView->currentIndex();
-    QVariant data = ui->treeView->model()->data(index);
+    QFileSystemModel* model = static_cast<QFileSystemModel*>(ui->treeView->model());
+    QVariant data = model->filePath(index);
     QString text = data.toString();
     ui->openGLWidget->shouldLoad(true, text, ui->doubleSpinBox_5->value(), ui->doubleSpinBox_4->value(), ui->doubleSpinBox_6->value(), ui->doubleSpinBox_8->value(), ui->doubleSpinBox_7->value(), ui->doubleSpinBox_9->value());
 }
