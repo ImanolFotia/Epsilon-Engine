@@ -21,7 +21,7 @@ bool Model::loadModel(string emlPath, int a)
     ifstream inFILE(emlPath, std::ios::binary);
     if(!inFILE.is_open())
     {
-        inFILE.open(std::string("C:/Users/Imanol/Documents/Code/C++/epsilon-engine/Epsilon Engine/bin/Release/models/") + emlPath, std::ios::binary);
+        inFILE.open(std::string("../../bin/Release/models/") + emlPath, std::ios::binary);
         if(!inFILE.is_open())
         {
             std::cout << "Fail to open EML file" << std::endl;
@@ -151,7 +151,7 @@ bool Model::loadModel(string emlPath, int a)
 
         if(!skip)
         for(int k = 0; k < 4; k++){
-            std::string path = std::string(std::string("C:/Users/Imanol/Documents/Code/C++/epsilon-engine/Epsilon Engine/bin/Release/materials/") + l_meshes[i].mMaterial[k]);
+            std::string path = std::string(std::string("../../bin/Release/materials/") + l_meshes[i].mMaterial[k]);
             tex[k] = nullptr;
             tex[k] = (std::shared_ptr<OpenGL::Texture>) new OpenGL::Texture();
             //std::cout << "Texture address in Model: " << &tex[k] << std::endl;
