@@ -52,7 +52,7 @@ void OGLWidget::initializeGL()
         std::cout << "Failed to initialize OpenGL context" << std::endl;
         return;
     }
-    glClearColor(0,0,0,1);
+    glClearColor(1,1,1,1);
 
     {
         glEnable(GL_DEPTH_TEST);
@@ -146,6 +146,7 @@ void OGLWidget::paintGL()
     glStencilMask(0x00);
     //std::cout << GetCPULoad() << std::endl;
     //setFocus();
+    glClearColor(1,1,1,1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     time += 0.16;
     PollEvents();
