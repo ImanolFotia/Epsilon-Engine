@@ -1,0 +1,2 @@
+C:\msys64\mingw64\bin\ar.exe qc libcommon.a  CMakeFiles/common.dir/common/alcomplex.cpp.obj CMakeFiles/common.dir/common/alexcpt.cpp.obj CMakeFiles/common.dir/common/alfstream.cpp.obj CMakeFiles/common.dir/common/almalloc.cpp.obj CMakeFiles/common.dir/common/alstring.cpp.obj CMakeFiles/common.dir/common/dynload.cpp.obj CMakeFiles/common.dir/common/polyphase_resampler.cpp.obj CMakeFiles/common.dir/common/strutils.cpp.obj CMakeFiles/common.dir/common/threads.cpp.obj
+C:\msys64\mingw64\bin\ranlib.exe libcommon.a
