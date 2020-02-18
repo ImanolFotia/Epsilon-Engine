@@ -4,7 +4,17 @@
 *.exe
 
 # Directories
-/bin
+/bin/Debug
+/bin/Release/materials
+/bin/Release/models
+/bin/Release/maps
+/bin/Release/sound
+/bin/Release/resources
+/bin/Release/ambient
+/bin/Release/*.exe
+/bin/Release/*.dll
+/bin/Release/*.log
+
 /obj
 
 # Specific Files
