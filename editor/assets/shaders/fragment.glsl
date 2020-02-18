@@ -230,8 +230,15 @@ void main() {
     vec3 N = NormalTex;
     vec2 brdf = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
     
+    if(tex.a < 0.999999999 )
+      tex.rgb = textureLod(texture_diffuse, TexCoords, 2).rgb;
 
-    if (tex.a < 0.3) discard;
+    tex.a = textureLod(texture_diffuse, TexCoords, 0).a;
+
+
+    //tex.a = smoothstep(0.5, 1.0, tex.a);
+      
+    if (tex.a < 0.999999 ) discard;
 /*
     if (emmisive > 0.5) {
       Color = tex;

@@ -49,14 +49,14 @@ LevelEditor::LevelEditor(QWidget *parent) :
         }
         */
     QFileSystemModel* model = new QFileSystemModel(this);
-    model->setRootPath("C:/Users/Imanol/Documents/Code/C++/epsilon-engine/Epsilon Engine/bin/Release/models");
+    model->setRootPath("../../bin/Release/models");
     model->setReadOnly(false);
     model->setNameFilters(QStringList()<<"*.eml");
     model->setFilter(QDir::AllDirs | QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     model->sort(QDir::Name);
     ui->treeView->setModel(model);
     ui->treeView->sortByColumn(QDir::Name, Qt::SortOrder::AscendingOrder);
-    ui->treeView->setRootIndex(model->index("C:/Users/Imanol/Documents/Code/C++/epsilon-engine/Epsilon Engine/bin/Release/models"));
+    ui->treeView->setRootIndex(model->index("../../bin/Release/models"));
     ui->treeView->setAnimated(false);
     ui->treeView->setIndentation(20);
     ui->treeView->setSortingEnabled(true);
@@ -117,7 +117,8 @@ void LevelEditor::on_pushButton_2_clicked()
 void LevelEditor::on_pushButton_3_clicked()
 {
     QModelIndex index = ui->treeView->currentIndex();
-    QVariant data = ui->treeView->model()->data(index);
+    QFileSystemModel* model = static_cast<QFileSystemModel*>(ui->treeView->model());
+    QVariant data = model->filePath(index);
     QString text = data.toString();
     ui->openGLWidget->shouldLoad(true, text, ui->doubleSpinBox_5->value(), ui->doubleSpinBox_4->value(), ui->doubleSpinBox_6->value(), ui->doubleSpinBox_8->value(), ui->doubleSpinBox_7->value(), ui->doubleSpinBox_9->value());
 }
