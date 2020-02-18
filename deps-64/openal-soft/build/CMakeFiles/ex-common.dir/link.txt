@@ -1,2 +1,0 @@
-C:\msys64\mingw64\bin\ar.exe qc libex-common.a  CMakeFiles/ex-common.dir/examples/common/alhelpers.c.obj
-C:\msys64\mingw64\bin\ranlib.exe libex-common.a

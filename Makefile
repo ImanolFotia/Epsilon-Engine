@@ -18,7 +18,7 @@ CXX= g++
 OBJS_DIR:= ./obj
 SOURCE_DIR:= ./core/src
 INCLUDE_DIR:= ./core/include
-LIB:= deps-64
+LIB:= thirdparty
 BIN:= ./bin
 
 ifeq "$(OS)" "Windows_NT"

@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/native-tools/bin2h.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+errno.h
+-
+

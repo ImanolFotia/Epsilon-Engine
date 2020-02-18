@@ -191,8 +191,8 @@ void main() {
     DOFRadius = clamp(dDepth * 15.0, 0.0, blurSize);
 
 
-  if(BokehOn)
-    composite = Bokeh(TexCoords, blurSize, .10, 1.0);
+  //if(BokehOn)
+  //  composite = Bokeh(TexCoords, blurSize, .10, 1.0);
 
   //if(ChromaticAberrationOn)
   //  composite = textureDistorted(compositeImage, TexCoords, normalize(fragcoord - vec2(0.0)), 0.001*pow(length((fragcoord * 2.0 - 1.0) - vec2(0.0)), 3.0)).rgb;
