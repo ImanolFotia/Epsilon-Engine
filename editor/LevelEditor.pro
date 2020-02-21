@@ -41,8 +41,8 @@ SOURCES += src/leveleditor.cpp \
     image.cpp \
     src/texture.cpp
 
-INCLUDEPATH += "../deps-64/glm" \
-               "../deps-64/soil/Simple OpenGL Image Library/src" \
+INCLUDEPATH += "../thirdparty/glm" \
+               "../thirdparty/soil/Simple OpenGL Image Library/src" \
                 "framelesswindow"
 #"C:\Users\Imanol\Documents\Code\C++\common-libs\glew\include" \
 

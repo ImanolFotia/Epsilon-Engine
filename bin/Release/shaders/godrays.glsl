@@ -36,6 +36,7 @@ vec4 godRays(in sampler2D brightBuffer, in vec3 blurOrigin) {
 
   ScreenPosition = ScreenPosition / ScreenPosition.w;
   vec2 FragCoord = gl_FragCoord.xy / Resolution;
+  //ScreenPosition.xy -= normalize(ScreenPosition.xy - FragCoord) * 0.1;
   vec2 deltaTextCoord = vec2((FragCoord - .5) - ScreenPosition.xy * 0.5);
   deltaTextCoord *= 1.0 / float(SAMPLES) * DENSITY;
   float illuminationDecay = 1.0;

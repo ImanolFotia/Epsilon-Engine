@@ -108,7 +108,7 @@ endif
 
 $(OBJS_DIR)/%.o: $(SOURCE_DIR)/%.cpp
 	-@mkdir -p $(@D)
-	$(CXX) $(INCLUDE_LIBS) -I$(INCLUDE_DIR) $(CPPFLAGS) -o $@ -c $^  $(LD_FLAGS) 
+	$(CXX) $(INCLUDE_LIBS) -I$(INCLUDE_DIR) $(CPPFLAGS) -o $@ -c $^  $(LD_FLAGS)
 
 $(BIN)/Release/$(EXEC): $(OBJECTS)
 	-@mkdir -p $(@D)

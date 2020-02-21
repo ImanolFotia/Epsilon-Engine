@@ -50,8 +50,8 @@ vec3 fbm(in vec3 q)
 }
 
 void main() {
-        vec4 tex = vec4(texture(texture_diffuse, TexCoords));
-      if(tex.a < 0.3) discard;
+    vec4 tex = vec4(texture(texture_diffuse, TexCoords));
+    //  if(tex.a < 0.3) discard;
     
     /*vec3 bordercolor = fbm(vec3(time*0.1+FragPos.x*0.2, time*0.1+FragPos.y*0.1, time*0.1+FragPos.z*0.3));*/
     

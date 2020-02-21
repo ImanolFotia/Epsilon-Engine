@@ -107,7 +107,7 @@ float orenNayarDiffuse(vec3 ld,vec3 vd,vec3 sn,float r,float a) {
     
   float ga = dot(vd-sn*NdotV,sn-sn*NdotL);
 
-  return max(0., NdotL) * (A + B * max(0., ga) * sqrt((1.0-NdotV*NdotV)*(1.0-NdotL*NdotL)) / max(NdotL, NdotV));
+  return max(0., NdotL) * (A + B * max(0., ga) * sqrt((1.0-NdotV*NdotV)*(1.0-NdotL*NdotL)) / max(NdotL, NdotV) + .00001);
 }
 
 float LambertDiffuse(in vec3 N, in vec3 L)
@@ -118,6 +118,7 @@ float LambertDiffuse(in vec3 N, in vec3 L)
 vec3 calculatePointPBR(vec3 pos, vec3 color)
 {
   // calculate per-light radiance
+        float SpecularFactor = texture(gAlbedoSpec, TexCoords).a * 2.0;
         vec3 lightcolor = normalize(color);
         if(pos.z == 56.0)
             lightcolor = vec3(0.0, 0.0, 0.7);
@@ -141,7 +142,7 @@ vec3 calculatePointPBR(vec3 pos, vec3 color)
         
         vec3 nominator    = NDF * G * F;
         float denominator = (4 * max(dot(V, Normal), 0.0) * max(dot(L, Normal), 0.0)) + 0.001; 
-        vec3 brdf = nominator / denominator;
+        vec3 brdf = SpecularFactor * (nominator / denominator+0.0001);
             
         // add to outgoing radiance Lo
         float NdotL = LambertDiffuse(Normal, L);//orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.05, 1.0), 1.0);             
@@ -152,6 +153,7 @@ vec3 calculatePointPBR(vec3 pos, vec3 color)
 vec3 CalculateDirectionalPBR()
 {
     // calculate per-light radiance
+        float SpecularFactor = texture(gAlbedoSpec, TexCoords).a * 2.0;
         vec3 lightcolor = normalize(vec3(68, 88, 135));
         vec3 V = normalize(viewPos - FragPos);
         vec3 L = normalize(lightDir);
@@ -169,7 +171,7 @@ vec3 CalculateDirectionalPBR()
         
         vec3 nominator    = NDF * G * F;
         float denominator = (4 * max(dot(V, Normal), 0.0) * max(dot(L, Normal), 0.0)) + 0.001; 
-        vec3 brdf = nominator / denominator;
+        vec3 brdf = SpecularFactor * (nominator / denominator+0.0001);
             
         // add to outgoing radiance Lo
         float NdotL = orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.03, 1.0), 1.0);//              
@@ -223,7 +225,7 @@ vec3 SpotLightPBR(in vec3 pos, in vec3 dir, in float radius, in vec3 color)
         
         vec3 nominator    = NDF * G * F;
         float denominator = (4 * max(dot(V, Normal), 0.0) * max(dot(L, Normal), 0.0)) + 0.001; 
-        vec3 brdf = nominator / denominator;
+        vec3 brdf = nominator / denominator+0.0001;
             
         // add to outgoing radiance Lo
         float NdotL = orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.05, 1.0), 1.0);             
@@ -246,6 +248,7 @@ vec3 SphereAreaLight(in vec3 position, in float radius, in vec3 color, in float 
     closestPoint = L + centerToRay*clamp(radius/length(centerToRay), 0.0, 1.0);
     vec3 l = normalize(closestPoint);
 
+        float SpecularFactor = texture(gAlbedoSpec, TexCoords).a * 2.0;
         L = l;//normalize(closestPoint - FragPos);
         vec3 H = normalize(V + L);
         vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
@@ -265,11 +268,11 @@ vec3 SphereAreaLight(in vec3 position, in float radius, in vec3 color, in float 
         
         vec3 nominator    = NDF * G * F;
         float denominator = (4 * max(dot(V, Normal), 0.0) * max(dot(L, Normal), 0.0)) + 0.001; 
-        vec3 brdf = nominator / denominator;
+        vec3 brdf = (nominator / denominator) * SpecularFactor;
             
         // add to outgoing radiance Lo
         float NdotL = orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.05, 1.0), 1.0);             
-        vec3 Lo = (kD * Diffuse / PI + brdf) * radiance * NdotL; 
+        vec3 Lo = ((kD * Diffuse / PI + brdf)) * radiance * NdotL; 
         return Lo * normalize(color);
 }
 
@@ -329,7 +332,7 @@ vec3 TubeAreaLight(in vec3 position, in vec3 tubeStart,in vec3 tubeEnd, in float
         
         vec3 nominator    = NDF * G * F;
         float denominator = (4 * max(dot(V, N), 0.0) * max(dot(L, N), 0.0)) + 0.001; 
-        vec3 brdf = nominator / denominator;
+        vec3 brdf = nominator / denominator+0.0001;
             
         // add to outgoing radiance Lo
         float NdotL = orenNayarDiffuse(L, V, N, clamp(Specular, 0.05, 1.0), 1.0);             

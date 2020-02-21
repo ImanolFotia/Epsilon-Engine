@@ -1,6 +1,6 @@
 #version 440 core
 
-layout (binding = 0) uniform sampler2D texture_diffuse;
+layout (binding = 0) uniform sampler2D gAlbedoSpec;
 layout (binding = 1) uniform sampler2D texture_specular;
 layout (binding = 2) uniform sampler2D texture_normal;
 layout (binding = 3) uniform sampler2D texture_height;
@@ -106,8 +106,8 @@ void main()
 	vec3 LightPosition = vec3(37, 6.5, 3.5);
 
 	ExtraComponents.xy = texture(texture_height, TexCoords).xy;
-	Diffuse = texture(texture_diffuse, TexCoords).rgb;
-	float alpha = texture(texture_diffuse, TexCoords).a;
+	Diffuse = texture(gAlbedoSpec, TexCoords).rgb;
+	float alpha = texture(gAlbedoSpec, TexCoords).a;
 
 	Specular = texture(texture_specular, TexCoords).r;
     	vec3 SpecDiff = Diffuse * Specular;

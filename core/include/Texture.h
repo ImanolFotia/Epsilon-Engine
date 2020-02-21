@@ -217,6 +217,7 @@ public:
 
     void loadFile(const char* path, unsigned char* &data, int *outwidth, int *outheight, int *outchannels) {
         data = SOIL_load_image(path, outwidth, outheight, outchannels, SOIL_LOAD_RGBA);
+        Global::Log::WriteToLog("Texture: " + std::string(path) + "Data Loaded.");
     }
 
     bool isNormal(const char* TexName) {
