@@ -76,7 +76,7 @@ Epsilon::Epsilon(GLFWwindow *&win)
     double plane[4] = {0.0, 5.0, 0.0, 15.0};
     glClipPlane(GL_CLIP_PLANE0, plane);
 
-    tex = (std::shared_ptr<eTexture>)new eTexture("cloud-mist-png-5.png");
+    tex = (std::shared_ptr<eTexture>)new eTexture("smoke.png");
 
     std::cout << "Clip Plane: " << (glIsEnabled(GL_CLIP_PLANE0) ? "Enabled" : "Disabled") << endl;
 
@@ -337,7 +337,7 @@ void Epsilon::InitResources(void)
 
     tmpEnt = (std::shared_ptr<EntityTemplate>)(new EntityTemplate(rM, glm::vec3(-14, 2.5, -17), glm::vec3(2.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>)new Component::RenderComponent();
-    Compmodel->Fill("models/cube.eml", rM, "Main");
+    Compmodel->Fill("models/esfera.eml", rM, "Main");
     std::shared_ptr<Component::MovementComponent> Compmov;
     tmpEnt->addComponent(Compmodel);
     EntityList.push_back(tmpEnt);
@@ -451,9 +451,10 @@ void Epsilon::InitResources(void)
         tmpEnt->addComponent(Compmodel);
         EntityList.push_back(tmpEnt);*/
 
-    tmpEnt = (std::shared_ptr<EntityTemplate>)(new EntityTemplate(rM, glm::vec3(19, 1.5, -8), glm::vec3(5.0f), glm::quat(0.0, 0.0, 1.0, 0.0)));
+    tmpEnt = (std::shared_ptr<EntityTemplate>)(new EntityTemplate(rM, glm::vec3(-12, 4.0, 7), glm::vec3(1.5f), glm::quat(0.0, 0.0, 1.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>)new Component::RenderComponent();
-    Compmodel->Fill("models/cerberus.eml", rM, "Main");
+    Compmodel->Fill("models/Tree.eml", rM, "Main");
+    Compmodel->isDoubleFaced = true;
     tmpEnt->addComponent(Compmodel);
     EntityList.push_back(tmpEnt);
 
@@ -574,9 +575,9 @@ void Epsilon::InitResources(void)
     //for(int a = 0; a < 2; a++) {
         
     float rotation = 0.5 * glfwGetTime();
-    for (int i = 0; i < 6; ++i)
+    for (int index = 0; index < 6; ++index)
     {
-        this->mCubemap->CaptureEnvironment(i);
+        this->mCubemap->CaptureEnvironment(index);
 
         //Render cubemap begin
         {
@@ -587,7 +588,7 @@ void Epsilon::InitResources(void)
             //glDepthMask(GL_FALSE); //makes solid colors appear
             Shaders["SkyBox_Cubemap"]->Use();
 
-            glm::mat4 view = captureViews[i];
+            glm::mat4 view = captureViews[index];
             glm::mat4 projection = this->mCubemap->getProjectionMatrix();
             glm::mat4 model = glm::mat4(1.0);
 
@@ -627,6 +628,10 @@ void Epsilon::InitResources(void)
                 glm::mat4 RotationMatrix = glm::toMat4(EntityList[i]->getRotation());
                 Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
                 cubeShader->PushUniform("model", Model);
+                glm::mat4 currentView = mCubemap->getViewMatrixbyIndex(index);
+                glm::mat4 currentProj = mCubemap->getProjectionMatrix();
+			    cubeShader->PushUniform("projection", currentProj);
+			    cubeShader->PushUniform("view", currentView);
                 glUniformMatrix4fv(glGetUniformLocation(cubeShader->getProgramID(), "lightSpaceMatrix"), 1, GL_FALSE, &shadowMap->getLightSpaceMatrix()[0][0]);
                 glUniformMatrix4fv(glGetUniformLocation(cubeShader->getProgramID(), "depthBias"), 1, GL_FALSE, &shadowMap->getBiasMatrix()[0][0]);
                 cubeShader->PushUniform("lightDir", sun->Direction);
@@ -639,14 +644,14 @@ void Epsilon::InitResources(void)
         glEnable(GL_CULL_FACE);
         glCullFace(GL_FRONT);
         /****************************************************************************/
-/*
+
         glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1.0), glm::vec3(0.1));
         glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1.0), glm::vec3(0.0));
         glm::mat4 cModel = TranslationMatrix * ScaleMatrix;
 
         cubeShader->PushUniform("model", cModel);
         glCullFace(GL_FRONT);
-        BSPMap->Frustum.CalculateFrustum(glm::mat4(this->mCubemap->captureProjection * this->mCubemap->captureViews[i]), cModel);
+        BSPMap->Frustum.CalculateFrustum(glm::mat4(this->mCubemap->captureProjection * this->mCubemap->captureViews[index]), cModel);
 
         glUniformMatrix4fv(glGetUniformLocation(cubeShader->getProgramID(), "lightSpaceMatrix"), 1, GL_FALSE, &shadowMap->getLightSpaceMatrix()[0][0]);
         glUniformMatrix4fv(glGetUniformLocation(cubeShader->getProgramID(), "depthBias"), 1, GL_FALSE, &shadowMap->getBiasMatrix()[0][0]);
@@ -654,7 +659,8 @@ void Epsilon::InitResources(void)
         glActiveTexture(GL_TEXTURE5);
         cubeShader->PushUniform("shadowMap", 5);
         glBindTexture(GL_TEXTURE_2D, shadowMap->getShadowTextureID());
-        BSPMap->RenderLevel(mCubemap->getPosition(), cubeShader->getProgramID(), true);*/
+        BSPMap->RenderLevel(mCubemap->getPosition(), cubeShader->getProgramID(), true);
+        cubeShader->Free();
     }
     mCubemap->endCapturingEnvironment();
 
@@ -781,7 +787,7 @@ void Epsilon::LoadGeometry(void)
     sun = std::move((shared_ptr<Sun>)(new Sun()));
     BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
 
-    BSPMap->LoadBSP((string("maps/") + "materials.bsp").c_str());
+    BSPMap->LoadBSP((string("maps/") + "minecraft.bsp").c_str());
 
     m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
 
@@ -825,7 +831,7 @@ void Epsilon::Render3D(Shader *shader)
 
     //Shaders["Terrain"]->Use();
     this->SetUniforms(shader, glm::vec3(0, 0, 0), glm::vec3(1.0), glm::quat(0, 0, 0, 0));
-    terrain->RenderTerrain(shader);
+    //terrain->RenderTerrain(shader);
     glCullFace(GL_BACK);
 
     glDisable(GL_CULL_FACE);
@@ -1259,7 +1265,7 @@ void Epsilon::ProcessFrame(void)
     //glEnable(GL_DEPTH_CLAMP);
     this->RenderSkybox(true);
     glClearDepth(1.0f);
-
+/*
     Shaders["grass"]->Use();
     this->SetUniforms(Shaders["grass"], glm::vec3(0, 0, 0), glm::vec3(0.05), glm::quat(-1, 0, -1, 0));
     grass.at(0).Render(Shaders["grass"]);
@@ -1267,7 +1273,7 @@ void Epsilon::ProcessFrame(void)
     Shaders["grass"]->Use();
     this->SetUniforms(Shaders["grass"], glm::vec3(0, 0, 0), glm::vec3(0.05), glm::quat(-1, 0, -1, 0));
     grass.at(1).Render(Shaders["grass"]);
-
+*/
     this->Render3D(Shaders["Main"]);
 
     //glDisable(GL_DEPTH_CLAMP);
@@ -1325,7 +1331,7 @@ void Epsilon::RenderFrame(void)
     this->waterPlane->RenderWater(eCamera, PP->CopyTextureFBO->getRenderTargetHandler(0), glm::normalize(glm::vec3(83, 6, -3) - glm::vec3(0, 6, -3)), PP->gDepth, rM->useCubeMap(54) );
     glEnable(GL_BLEND);
 */
-    this->RenderParticles();
+    //this->RenderParticles();
     PP->ShowPostProcessImage(this->frametime, (int)this->onMenu, this->sun->Direction, this->eCamera);
     glEnable(GL_BLEND);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

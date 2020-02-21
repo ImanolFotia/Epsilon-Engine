@@ -195,6 +195,8 @@ float SubsurfaceScattering(in vec3 L, in vec3 N, in vec3 V, in vec3 P, in bool A
   return fLT;
 }
 
+float fAlphaMultiplier = 1.5;
+
 void main() {
   Color = vec4(0.0);
     if (isLine) {
@@ -230,20 +232,30 @@ void main() {
     vec3 N = NormalTex;
     vec2 brdf = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
     
-    if(tex.a < 0.999999999 )
-      tex.rgb = textureLod(texture_diffuse, TexCoords, 2).rgb;
+    //if(tex.a < 0.999999999 )
+    //  tex.rgb = textureLod(texture_diffuse, TexCoords, 2).rgb;
 
-    tex.a = textureLod(texture_diffuse, TexCoords, 0).a;
+    //tex.a = textureLod(texture_diffuse, TexCoords, 0).a;
 
 
     //tex.a = smoothstep(0.5, 1.0, tex.a);
       
-    if (tex.a < 0.999999 ) discard;
+    //if (tex.a < 0.999999 ) discard;
 /*
     if (emmisive > 0.5) {
       Color = tex;
       return;
     }*/
+
+    float fAlphaTest = 0.75;
+
+    float fNewAlpha = tex.a * fAlphaMultiplier;
+    
+    if(fNewAlpha < fAlphaTest)
+      discard;
+      
+   if(fNewAlpha > 1.0f)
+      fNewAlpha = 1.0f; 
 
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, tex.xyz, metallic);
@@ -290,6 +302,7 @@ void main() {
     }
 
     if (mode == 2) {
+      //tex.rgb = textureLod(texture_diffuse, TexCoords, 0).rgb;
       vec4 texCube = pow(texture(texture_cubemap, -normalize(reflect(V, N)),  roughness * MAX_REFLECTION_LOD), vec4(2.2));
       vec3 diffuse = ambient * tex.rgb;
       vec3 specular = texCube.rgb * (F * brdf.x + brdf.y);
@@ -306,12 +319,14 @@ void main() {
       SSS += SubsurfaceScattering(L, N, V, P, true);
 
       Color.rgb = HDR((ibl + Lo) + vec3(SSS) * /*vec3(1.0, 0.2, 0.1) **/ pow(tex.rgb, vec3(2.0)));
+      
+
+      Color.a = fNewAlpha;
     }
 
     if (mode == 3) {
       Color.rgb = vec3(N)*0.5+0.5;
     }
 
-    Color.a = 1.0;
 
 }

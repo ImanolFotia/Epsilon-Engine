@@ -103,7 +103,9 @@ namespace Component
         void Render(std::shared_ptr<ResourceManager> rm, glm::vec3 pos)
         {
             glUniform1i(glGetUniformLocation(rm->getShaderID(shaderType), "isTransparent"), this->isTransparent);
+            if(isDoubleFaced) glDisable(GL_CULL_FACE);
             rm->useModel(modelPath, rm->getShaderID(shaderType), pos);
+            glEnable(GL_CULL_FACE);
         }
 
         void setShader(std::string sh)

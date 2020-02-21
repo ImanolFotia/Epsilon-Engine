@@ -2,6 +2,7 @@
 *.o
 *.so
 *.exe
+*.jar
 
 # Directories
 /bin/Debug

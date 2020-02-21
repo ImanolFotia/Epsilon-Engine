@@ -45,22 +45,36 @@ namespace IO{
 
         class TGA{
         public:
-            TGA(){}
+            TGA(){
+                mErrorStr = "No error";
+            }
             
-            TGA(const char* path) : mPath(path){}
+            TGA(const char* path) : mPath(path){
+                mErrorStr = "No error";
+            }
 
-            LoadFile(const char* path){
+            const unsigned char* LoadFile(const char* path){
 
             }
 
-            Destroy(){
-                delete mData;
-                mData = nullptr;
+            bool Destroy(){
+                if(mData != nullptr){
+                    delete mData;
+                    mData = nullptr;
+                    return true;
+                } else {
+                    mErrorStr = "Trying to delete nullptr";
+                }
+            }
+
+            const char* getError() {
+                    return mErrorStr;
             }
 
         private:
-            unsigned char* mData;
-            char* mPath;
+            unsigned char* mData = nullptr;
+            const char* mPath = nullptr;
+            const char* mErrorStr = nullptr;
         };
     }
 }

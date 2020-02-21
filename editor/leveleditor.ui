@@ -27,7 +27,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../../../Epsilon/Epsilon Engine/media/epsilon.ico</normaloff>../../../Epsilon/Epsilon Engine/media/epsilon.ico</iconset>
+    <normaloff>../media/epsilon.ico</normaloff>../media/epsilon.ico</iconset>
   </property>
   <property name="autoFillBackground">
    <bool>true</bool>
@@ -973,6 +973,9 @@
                </property>
                <property name="focusPolicy">
                 <enum>Qt::StrongFocus</enum>
+               </property>
+               <property name="autoFillBackground">
+                <bool>true</bool>
                </property>
               </widget>
               <widget class="QTabWidget" name="tabWidget_2">

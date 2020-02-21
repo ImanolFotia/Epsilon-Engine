@@ -22,6 +22,8 @@ OGLWidget::OGLWidget(QWidget* parent) : QOpenGLWidget(parent)
 
     QSurfaceFormat format = this->format();
     format.setSamples(8);
+    //format.setOption(QSurfaceFormat::FormatOption::):
+    format.setAlphaBufferSize(0);
     this->setFormat(format);
 
     this->setMouseTracking(true);
@@ -148,6 +150,8 @@ void OGLWidget::paintGL()
     //setFocus();
     glClearColor(1,1,1,1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
     time += 0.16;
     PollEvents();
 
@@ -159,7 +163,9 @@ void OGLWidget::paintGL()
 
     //m_Camera->setDirection(glm::vec3(-0.551257,-0.648795,-0.524576));
 
+    glDisable(GL_BLEND);
     skybox->Render(m_Camera->getViewMatrix(), m_Camera->getProjectionMatrix(), time);
+
 
     this->LoadModel();
 
@@ -183,6 +189,8 @@ void OGLWidget::paintGL()
     glUniform1i(glGetUniformLocation(this->m_Shader->getProgramID(), "Picked"), 0);
     glUniform1i(glGetUniformLocation(this->m_Shader->getProgramID(), "isLine"), 1);
     grid->Render();
+
+    glEnable(GL_BLEND);
     this->m_Shader->Free();
     this->m_Shader->Use();
     model = glm::translate(glm::mat4(1.0f), glm::vec3(0,0,0)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
@@ -294,6 +302,8 @@ void OGLWidget::paintGL()
 
 
     glDisable(GL_CULL_FACE);
+    glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+    //glDepthMask(GL_FALSE);
     for(unsigned i = 0; i < modv.size(); ++i){
 
         if(KEYS[Qt::Key_Escape])
@@ -440,6 +450,8 @@ void OGLWidget::paintGL()
     }
 
 
+    //glDepthMask(GL_TRUE);
+    glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
     glEnable(GL_CULL_FACE);
     glStencilMask(0xff);
 

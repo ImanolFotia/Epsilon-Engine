@@ -7,7 +7,7 @@ in vec3 FragPos;
 in vec3 wFragPos;
 in vec3 Normal;
 
-layout(location = 0) out vec3 gAlbedoSpec;
+layout(location = 0) out vec4 gAlbedoSpec;
 layout(location = 1) out vec4 gExpensiveNormal;
 layout(location = 2) out vec4 gDepth;
 layout(location = 3) out vec4 gExtraComponents; 
@@ -33,9 +33,10 @@ void main()
         discard;
 
     gAlbedoSpec.rgb = diff.rgb;
+    gAlbedoSpec.a = 0.0;
     //gPosition = FragPos.z;
-    gExpensiveNormal = vec4(vec3(0.0, -0.1, 0.0), 1.0);
-    gDepth = vec4(vec3(0.0), gl_FragCoord.z);
+    gExpensiveNormal = vec4(vec3(0.0, 0.5, 0.0), 1.0);
+    gDepth = vec4(gl_FragCoord.z, vec3(0.0));
     gExtraComponents = vec4(0.0, 0.0, 0.0, 0.0); 
     gLightAccumulation = vec3(0.2);
 
