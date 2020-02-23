@@ -93,7 +93,7 @@ void Camera::HandleInputs(GLFWwindow*& window)
     {
 
         horizontalAngle -= JoystickSensibility * float( Input::Joystick::JoystickAxes[2] ) ;
-        verticalAngle   += JoystickSensibility * float( Input::Joystick::JoystickAxes[3] ) ;
+        verticalAngle   -= JoystickSensibility * float( Input::Joystick::JoystickAxes[3] ) ;
     }
 
     LockCamera();

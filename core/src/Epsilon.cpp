@@ -363,7 +363,7 @@ void Epsilon::InitResources(void)
         tmpEnt->addComponent(Compmodel);
         EntityList.push_back(tmpEnt);*/
 
-    tmpEnt = (std::shared_ptr<EntityTemplate>)(new EntityTemplate(rM, glm::vec3(-28, 2, -6.0), glm::vec3(0.1), glm::quat(-1.0, 0.0, 1.0, 0.0)));
+    tmpEnt = (std::shared_ptr<EntityTemplate>)(new EntityTemplate(rM, glm::vec3(-12, 1.65, -3), glm::vec3(0.05), glm::quat(-1.0, 0.0, 1.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>)new Component::RenderComponent();
     Compmodel->Fill("models/full_rock.eml", rM, "Main");
     tmpEnt->addComponent(Compmodel);
@@ -378,7 +378,7 @@ void Epsilon::InitResources(void)
         	EntityList.push_back(tmpEnt);
 
 */
-    tmpEnt = (std::shared_ptr<EntityTemplate>)(new EntityTemplate(rM, glm::vec3(-28, 3.8, 8), glm::vec3(4.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
+    tmpEnt = (std::shared_ptr<EntityTemplate>)(new EntityTemplate(rM, glm::vec3(-12, 3.8, -10), glm::vec3(1.0), glm::quat(1.0, 0.0, 1.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>)new Component::RenderComponent();
     Compmodel->Fill("models/chutulu.eml", rM, "Main");
     tmpEnt->addComponent(Compmodel);

@@ -99,15 +99,15 @@ float orenNayarDiffuse(vec3 ld,vec3 vd,vec3 sn,float r,float a) {
   float NdotV = dot(sn, vd);
 
   float s = LdotV - NdotL * NdotV;
-  float t = mix(1., max(NdotL, NdotV), step(.0, s));
-
+  
+  r = max(0., r);
   float sigma2 = r * r;
-  float A = 1. - .5 * (sigma2/((sigma2 + .33) + .000001));
-  float B = .45 * sigma2 / (sigma2 + .09) + .00001;
+  float A = 1. - .5 * (sigma2+ .0001/((sigma2 + .33) + .0001));
+  float B = (.45 * sigma2)+ .0001 / (sigma2 + .09) + .0001;
     
   float ga = dot(vd-sn*NdotV,sn-sn*NdotL);
 
-  return max(0., NdotL) * (A + B * max(0., ga) * sqrt((1.0-NdotV*NdotV)*(1.0-NdotL*NdotL)) / max(NdotL, NdotV) + .00001);
+  return max(0., NdotL) * (A + B * max(0., ga) * sqrt( max((1.0-NdotV*NdotV)*(1.0-NdotL*NdotL), 0.0) ) + .0001 / max(NdotL, NdotV) + .0001);
 }
 
 float LambertDiffuse(in vec3 N, in vec3 L)
@@ -145,7 +145,7 @@ vec3 calculatePointPBR(vec3 pos, vec3 color)
         vec3 brdf = SpecularFactor * (nominator / denominator+0.0001);
             
         // add to outgoing radiance Lo
-        float NdotL = LambertDiffuse(Normal, L);//orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.05, 1.0), 1.0);             
+        float NdotL = orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.05, 1.0), 1.0);             
         vec3 Lo = (kD * Diffuse / PI + brdf) * radiance * NdotL; 
         return Lo * lightcolor;
 }
