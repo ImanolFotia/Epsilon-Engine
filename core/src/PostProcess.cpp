@@ -27,6 +27,7 @@ void PostProcess::SetupFramebuffer() {
     this->SSAOheight = height;
     this->lightShafts = PG.LIGHTSHAFTS;
     this->m_MotionBlur = PG.MOTION_BLUR;
+    this->HBAOOn = PG.HBAO;
 
     mParallaxMapping = PG.PARALLAX_OCLUSSION_MAPPING;
     mMotionBlurStrength = PG.MOTION_BLUR_STRENGTH;
@@ -906,6 +907,7 @@ void PostProcess::CompositeImage(bool isMoving) {
 
     CompositeShader->PushUniform("TotalFrames", TotalFrames);
     CompositeShader->PushUniform("isMoving", isMoving);
+    CompositeShader->PushUniform("HBAOOn", (int)HBAOOn);
 
     this->RenderQuad();
 

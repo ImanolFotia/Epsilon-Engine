@@ -342,7 +342,7 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
             {
                 throw;
             }
-
+        mIsLoaded = true;
         return true;
     }
 

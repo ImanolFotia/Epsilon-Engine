@@ -119,6 +119,11 @@ auto static clamp(T a, T b, T c, double d = 0.0, double e = 1.0) -> T {
     return (a > c) ? (c+d)*e : a;
 };
 
+template <typename T>
+auto static inRange(T x, T a, T b) -> bool {
+    return (x > a) && (x < b);
+};
+
 //Carmack's Inverse
 inline
 static float Invsqrt(float x) {

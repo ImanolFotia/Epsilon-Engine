@@ -5,78 +5,59 @@
 #include <random>
 #include <memory>
 #include "include/helpers.h"
+
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_FAILURE_USERMSG
 #include <deps/stb_image.h>
-#include <include/Log.hpp>
 #endif
+
+#include <include/Log.hpp>
+
 /* Constructor that loads and image given an absolute path*/
 Image::Image(std::string path)
 {
-    this->mPath = path;
+    mPath = path;
     int x,y,n;
-    this->mFormat = ExtractFormat(path);
-    //stbi_set_flip_vertically_on_load(true);
+    mFormat = ExtractFormat(path);
     mData = stbi_load(path.c_str(), &x, &y, &n, 0);
 
-    this->mWidth = x;
-    this->mHeight = y;
-    this->mChannels = n;
+    mWidth = x;
+    mHeight = y;
+    mChannels = n;
 
     mLoaded = true;
 }
 
 void Image::Load(std::string path, int id)
 {
-    this->mId = id;
+    mId = id;
     try{
-        //std::cout << "Entra load" << "\n";
         std::lock_guard<std::mutex> lock(m);
-        this->mPath = path;
+        mPath = path;
         int x = 0,y = 0,n = 0;
-        this->mFormat = ExtractFormat(path);
-        //stbi_set_flip_vertically_on_load(true);
+        mFormat = ExtractFormat(path);
         bool empty = true;
         int attempts = 0;
         while(empty){
-            //if(m.try_lock())
-            //else{
-            // m.lock();
-            //mData = loadImage(path.c_str(), &x, &y, &n);
-
             path = replace(path, '\\', '/');
             mData = stbi_load(path.c_str(), &x, &y, &n, 0);
-            //m.unlock();
             if(mData != nullptr) {
-                if(attempts > 0){
-                    //Log::println("Info", std::string(std::string("STBI could load image ") + path + std::string(" after ") + std::to_string(attempts) + std::string(" attempts!")));
-                    //std::cout << "STBI could load image " << path << " after " << attempts << " attempts!" << std::endl;
-                }
-
                 std::cout << "STBI could load image " << path << std::endl;
                 empty = false;
                 break;
             }
             else {
-                    //Log::println("Error", std::string(std::string("STBI failed to load resource ") + path + std::string(", reason: ") +  stbi_failure_reason()));
-                    //std::cerr << "STBI failed to load resource " << path <<  ", reason: " << stbi_failure_reason() << std::endl;
-                    mData = stbi_load("../assets/textures/checkers.png", &x, &y, &n, 0);
-                    //mData = nullptr;
-                    mLoaded = true;
-                    empty = false;
-                    break;
+                mData = stbi_load("../assets/textures/checkers.png", &x, &y, &n, 0);
+                mLoaded = true;
+                empty = false;
+                break;
             }
             attempts++;
-            // m.unlock();
-            //}
         }
-        // m.unlock();
-
-        this->mWidth = x;
-        this->mHeight = y;
-        this->mChannels = n;
-
+        mWidth = x;
+        mHeight = y;
+        mChannels = n;
         mLoaded = true;
     } catch(...)
     {

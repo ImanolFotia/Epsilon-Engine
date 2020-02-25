@@ -206,6 +206,7 @@ private:
     bool lightShafts;
     bool mParallaxMapping;
     bool mMotionBlurStrength;
+    bool HBAOOn;
     int mHBAOQuality;
     bool mChromaticAberration;
     bool mBokehDOF;
