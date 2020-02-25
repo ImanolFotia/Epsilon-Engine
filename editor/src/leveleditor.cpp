@@ -66,12 +66,18 @@ LevelEditor::LevelEditor(QWidget *parent) :
 
 LevelEditor::~LevelEditor()
 {
-    if(ui->openGLWidget->BSP != nullptr){
-        ui->openGLWidget->BSP->Destroy();
-        delete ui->openGLWidget->BSP;
-        ui->openGLWidget->BSP = nullptr;
+    CQuake3BSP* BSP = ui->openGLWidget->BSP;
+
+    if(BSP != nullptr){
+        if(BSP->isLoaded())
+            ui->openGLWidget->BSP->Destroy();
+        delete BSP;
     }
-    delete ui;
+
+    for(auto& m: ui->openGLWidget->modv)
+        m.Destroy();
+
+    //delete ui;
 }
 
 void LevelEditor::on_actionExit_triggered()

@@ -235,6 +235,8 @@ public:
 
     bool LoadBSP(const char *strFileName);
 
+    bool isLoaded() {return mIsLoaded; }
+
     void RenderLevel(glm::vec3 vPos, GLuint shader, bool Shadow);
 
     void Destroy();
@@ -293,6 +295,7 @@ private:
 
     bool lightmap;
     bool color;
+    bool mIsLoaded = false;
     int faceCount;
     GLuint NormalTextureID;
 

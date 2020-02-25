@@ -37,12 +37,8 @@ float blend = 1.0f;
 
 double Input::Mouse::XPOS = 500;
 double Input::Mouse::YPOS = 500;
-bool Input::Joystick::JoystickIsPresent = false;
-int Input::Joystick::JoystickAxesCount = 0;
-int Input::Joystick::JoystickButtonsCount = 0;
-const float *Input::Joystick::JoystickAxes = nullptr;
-const unsigned char *Input::Joystick::JoystickButtons = nullptr;
-bool Input::Joystick::BUTTONS[15] = {false};
+std::vector<Input::JoystickManager::Joystick_ptr> Input::JoystickManager::JoystickVector;
+Input::JoystickManager::Joystick_ptr Input::JoystickManager::dummyJoystick = std::make_shared<Input::Joystick>();
 bool CheckBox::_checked = true;
 ThreadPool::ThreadPool_ptr ThreadPool::_instance = nullptr;
 
@@ -55,6 +51,7 @@ Epsilon::Epsilon(GLFWwindow *&win)
     glClear(GL_COLOR_BUFFER_BIT);
     GPU _gpu;
 
+    Input::JoystickManager::JoystickVector.resize(Input::MAX_JOYSTICKS);
     cout << endl
          << endl
          << "Gathering Video Device information..." << endl;
@@ -573,7 +570,7 @@ void Epsilon::InitResources(void)
     //Shaders["CubeMap"]->Use();
     std::shared_ptr<Shader> cubeShader = this->mCubemap->getShader();
     //for(int a = 0; a < 2; a++) {
-        
+
     float rotation = 0.5 * glfwGetTime();
     for (int index = 0; index < 6; ++index)
     {
@@ -612,7 +609,7 @@ void Epsilon::InitResources(void)
         cubeShader->Use();
 
         /****************************************************************************/
-        
+
         glEnable(GL_CULL_FACE);
         for (unsigned int i = 0; i < EntityList.size(); ++i)
         {
@@ -630,8 +627,8 @@ void Epsilon::InitResources(void)
                 cubeShader->PushUniform("model", Model);
                 glm::mat4 currentView = mCubemap->getViewMatrixbyIndex(index);
                 glm::mat4 currentProj = mCubemap->getProjectionMatrix();
-			    cubeShader->PushUniform("projection", currentProj);
-			    cubeShader->PushUniform("view", currentView);
+                cubeShader->PushUniform("projection", currentProj);
+                cubeShader->PushUniform("view", currentView);
                 glUniformMatrix4fv(glGetUniformLocation(cubeShader->getProgramID(), "lightSpaceMatrix"), 1, GL_FALSE, &shadowMap->getLightSpaceMatrix()[0][0]);
                 glUniformMatrix4fv(glGetUniformLocation(cubeShader->getProgramID(), "depthBias"), 1, GL_FALSE, &shadowMap->getBiasMatrix()[0][0]);
                 cubeShader->PushUniform("lightDir", sun->Direction);
@@ -714,7 +711,7 @@ void Epsilon::LoadShaders(void)
     Shaders["Sun"] = new Shader("shaders/Sun.vglsl", "shaders/Sun.fglsl");
 
     Shaders["SkyBox"] = new Shader("shaders/skybox.vglsl", "shaders/_skybox.fglsl");
-    
+
     Shaders["SkyBox_Cubemap"] = new Shader("shaders/_skybox_cubemap_vertex.glsl", "shaders/_skybox_cubemap.glsl");
 
     Shaders["MD5Geometry"] = new Shader("shaders/MD5Geometryv.glsl", "shaders/MD5Geometryf.glsl");
@@ -1079,8 +1076,9 @@ void Epsilon::PollEvents(void)
     {
         glfwWaitEvents();
     }
-
-    Input::Joystick::PollJoystick();
+    Input::JoystickManager::DetectJoysticks();
+    Input::JoystickManager::PollJoystick();
+    auto _Joystick = Input::JoystickManager::PrimaryJoystick();
 
     if (glm::abs((timeGUI * 60) - (etime * 60)) > 2.0f && onMenu)
     {
@@ -1088,7 +1086,7 @@ void Epsilon::PollEvents(void)
         m_GUI->PollEvents(window);
     }
 
-    if (Input::KeyBoard::KEYS[Input::GLFW::Key::ESCAPE] || Input::Joystick::BUTTONS[Input::GLFW::Joystick::START])
+    if (Input::KeyBoard::KEYS[Input::GLFW::Key::ESCAPE] || _Joystick->BUTTONS[Input::GLFW::Joystick::START])
     {
         if (glm::abs((menuTime * 60) - (etime * 60)) > 60.0f)
         {
@@ -1265,7 +1263,7 @@ void Epsilon::ProcessFrame(void)
     //glEnable(GL_DEPTH_CLAMP);
     this->RenderSkybox(true);
     glClearDepth(1.0f);
-/*
+    /*
     Shaders["grass"]->Use();
     this->SetUniforms(Shaders["grass"], glm::vec3(0, 0, 0), glm::vec3(0.05), glm::quat(-1, 0, -1, 0));
     grass.at(0).Render(Shaders["grass"]);

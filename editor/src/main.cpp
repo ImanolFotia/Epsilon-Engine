@@ -9,16 +9,18 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     LevelEditor w;
-    //w.show();
+    w.show();
     // style our application with custom dark style
+    w.setWindowState(Qt::WindowMaximized);
+    w.showMaximized();
     a.setStyle(new DarkStyle);
 
     // create frameless window (and set windowState or title)
-    FramelessWindow framelessWindow;
-    framelessWindow.setWindowState(Qt::WindowMaximized);
-    framelessWindow.setWindowTitle("Epsilon Level Editor");
+    //FramelessWindow framelessWindow;
+    //framelessWindow.setWindowState(Qt::WindowMaximized);
+    //framelessWindow.setWindowTitle("Epsilon Level Editor");
     //framelessWindow.setWindowIcon(a.style()->standardIcon(QStyle::SP_DesktopIcon));
-    framelessWindow.setUpdatesEnabled(true);
+    //framelessWindow.setUpdatesEnabled(true);
 
     // create our mainwindow instance
 
@@ -28,9 +30,9 @@ int main(int argc, char *argv[])
     //mainWindow->showMaximized();
 
     // add the mainwindow to our custom frameless window
-    framelessWindow.setContent(w);
-    framelessWindow.show();
-    framelessWindow.setWindowState(Qt::WindowMaximized);
+    //framelessWindow.setContent(w);
+    //framelessWindow.show();
+    //framelessWindow.setWindowState(Qt::WindowMaximized);
     //framelessWindow.showMaximized();
 
     return a.exec();

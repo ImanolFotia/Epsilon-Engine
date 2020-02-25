@@ -97,8 +97,10 @@ void main()
     Metallic = MetallicEmmissive.r;
 
     bool isPlastic = false;
+    vec4 AlbedoSpec = texture(gAlbedo, TexCoords);
+    float Spec = AlbedoSpec.w * 2.0;
 
-    if(Metallic <= 0.1){
+    if(Metallic <= 0.1 || Spec <= 0.1){
         isPlastic = true;
     }
  
@@ -119,11 +121,10 @@ void main()
     vec3 viewDir = normalize(camPos - worldPos);
 
     float Roughness = texture(gNormal, TexCoords).w;
-    vec4 AlbedoSpec = texture(gAlbedo, TexCoords);
+    
     vec3 F0 = vec3(0.04); 
     F0      = mix(F0, pow(AlbedoSpec.rgb, vec3(1.0)), Metallic);
     vec3 Fresnel = fresnelSchlick(max(dot(worldNormal, viewDir), 0.0), F0);
-    float Spec = AlbedoSpec.w * 2.0;
     vec3 hitPos = viewPos;
     float dDepth;
 
@@ -229,7 +230,7 @@ vec3 BinarySearch(inout vec3 dir, inout vec3 hitCoord, inout float dDepth)
  
         //depth = texture(gPosition, projectedCoord.xy, 2.0).x;
         //depth = PositionFromDepth(textureLod(gDepth, projectedCoord.xy, 3.0).x).z;
-        depth = ViewSpaceZFromDepth(textureLod(gDepth, projectedCoord.xy, 1.0).x);
+        depth = ViewSpaceZFromDepth(textureLod(gDepth, projectedCoord.xy, 2.0).x);
         dDepth = hitCoord.z - depth;
 
         dir *= 0.5;
@@ -265,7 +266,7 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
  
         //depth = texture(gPosition, projectedCoord.xy, 2.0).x;
         //depth = PositionFromDepth(textureLod(gDepth, projectedCoord.xy, 3.0).x).z;
-        depth = ViewSpaceZFromDepth(textureLod(gDepth, projectedCoord.xy, 1.0).x);
+        depth = ViewSpaceZFromDepth(textureLod(gDepth, projectedCoord.xy, 2.0).x);
 
         if(depth > 1000.0){
             continue;
