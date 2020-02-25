@@ -4,6 +4,8 @@ Official level editor for Epsilon Engine. Developed using Qt5, it offers the bas
 
 It's in a very early stage at the moment, not even being able to output any kind of file for use in the Engine.
 
+![](https://github.com/ImanolFotia/imanolfotia.github.io/blob/master/media/editor.PNG?raw=true)
+
 ## Dependencies
 
 * Qt5
