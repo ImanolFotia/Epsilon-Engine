@@ -37,8 +37,12 @@ float blend = 1.0f;
 
 double Input::Mouse::XPOS = 500;
 double Input::Mouse::YPOS = 500;
-std::vector<Input::JoystickManager::Joystick_ptr> Input::JoystickManager::JoystickVector;
-Input::JoystickManager::Joystick_ptr Input::JoystickManager::dummyJoystick = std::make_shared<Input::Joystick>();
+
+namespace Joystick = Input::Joystick;
+
+std::unordered_map<unsigned, Joystick::JoystickManager::Joystick_ptr> Joystick::JoystickManager::JoystickVector;
+Joystick::JoystickManager::Joystick_ptr Joystick::JoystickManager::dummyJoystick = std::make_shared<Input::Joystick::Joystick>();
+
 bool CheckBox::_checked = true;
 ThreadPool::ThreadPool_ptr ThreadPool::_instance = nullptr;
 
@@ -50,8 +54,7 @@ Epsilon::Epsilon(GLFWwindow *&win)
     glClear(GL_COLOR_BUFFER_BIT);
     glClear(GL_COLOR_BUFFER_BIT);
     GPU _gpu;
-
-    Input::JoystickManager::JoystickVector.resize(Input::MAX_JOYSTICKS);
+    
     cout << endl
          << endl
          << "Gathering Video Device information..." << endl;
@@ -1076,9 +1079,9 @@ void Epsilon::PollEvents(void)
     {
         glfwWaitEvents();
     }
-    Input::JoystickManager::DetectJoysticks();
-    Input::JoystickManager::PollJoystick();
-    auto _Joystick = Input::JoystickManager::PrimaryJoystick();
+    Input::Joystick::JoystickManager::DetectJoysticks();
+    Input::Joystick::JoystickManager::PollJoystick();
+    auto _Joystick = Input::Joystick::JoystickManager::PrimaryJoystick();
 
     if (glm::abs((timeGUI * 60) - (etime * 60)) > 2.0f && onMenu)
     {
@@ -1086,7 +1089,7 @@ void Epsilon::PollEvents(void)
         m_GUI->PollEvents(window);
     }
 
-    if (Input::KeyBoard::KEYS[Input::GLFW::Key::ESCAPE] || _Joystick->BUTTONS[Input::GLFW::Joystick::START])
+    if (Input::KeyBoard::KEYS[Input::GLFW::Key::ESCAPE] || _Joystick->getJoystickButton(_Joystick->getMapping()->START()))
     {
         if (glm::abs((menuTime * 60) - (etime * 60)) > 60.0f)
         {

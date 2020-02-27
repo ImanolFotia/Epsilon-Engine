@@ -36,9 +36,9 @@
 #include <Scene.h>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
-#include <sys/KeyBoard.h>
-#include <sys/Mouse.h>
-#include <sys/Joystick.h>
+#include <IO/KeyBoard.h>
+#include <IO/Mouse.h>
+#include <IO/Joystick/Joystick.h>
 #include <Player.h>
 #include <Audio/Audio.h>
 #include <Audio/AudioElement.h>

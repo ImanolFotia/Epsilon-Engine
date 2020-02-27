@@ -8,9 +8,9 @@
 
 #include <camera.h>
 #include <math.h>
-#include <sys/KeyBoard.h>
-#include <sys/Mouse.h>
-#include <sys/Joystick.h>
+#include <IO/KeyBoard.h>
+#include <IO/Mouse.h>
+#include <IO/Joystick/Joystick.h>
 
 #include <Types.h>
 #include <Includes.h>
@@ -80,9 +80,9 @@ void Camera::HandleInputs(GLFWwindow *&window)
 
     glfwGetWindowSize(window, &winx, &winy);
 
-    auto _Joystick = Input::JoystickManager::PrimaryJoystick();
+    auto _Joystick = Input::Joystick::JoystickManager::PrimaryJoystick();
     
-    if (!_Joystick->JoystickIsPresent)
+    if (!_Joystick->getJoystickIsPresent())
     {
         horizontalAngle += MouseSpeed * float(lastX - Input::Mouse::XPOS);
         verticalAngle += MouseSpeed * float(lastY - Input::Mouse::YPOS);
@@ -116,7 +116,7 @@ void Camera::HandleInputs(GLFWwindow *&window)
     Up = glm::cross(Rigth, Orientation);
 
     /** Keyboard Camera input**/
-    if (!_Joystick->JoystickIsPresent)
+    if (!_Joystick->getJoystickIsPresent())
     {
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::W])
         {
@@ -153,7 +153,7 @@ void Camera::HandleInputs(GLFWwindow *&window)
     /**---------------------------------------------------------------**/
 
     /** Joystick Camera input**/
-    if (_Joystick->JoystickIsPresent)
+    if (_Joystick->getJoystickIsPresent())
     {
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::W] || _Joystick->L3().y < 0.0)
         {

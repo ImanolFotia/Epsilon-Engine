@@ -5,7 +5,7 @@
 ///=============================================================================
 
 #include <Sun.h>
-#include <sys/KeyBoard.h>
+#include <IO/KeyBoard.h>
 
 Sun::Sun()
 {
