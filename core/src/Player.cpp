@@ -6,8 +6,8 @@
 
 #include <Player.h>
 #include <ResourceManager.h>
-#include <sys/KeyBoard.h>
-#include <sys/Joystick.h>
+#include <IO/KeyBoard.h>
+#include <IO/Joystick/Joystick.h>
 #include <iostream>
 #include <Physics/CollisionInfo.h>
 

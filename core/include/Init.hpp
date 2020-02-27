@@ -124,7 +124,7 @@ GLFWwindow* Init(const char* ProgramName) {
     //Set up IO callbacks
     glfwSetKeyCallback(window, Input::KeyBoard::KeyBoardCallBack);
     glfwSetCursorPosCallback(window, Input::Mouse::MouseCallBack);
-    glfwSetJoystickCallback(Input::JoystickManager::JoystickCallback);
+    glfwSetJoystickCallback(Input::Joystick::JoystickManager::JoystickCallback);
 
     glfwSwapInterval(DATA.VSYNC);
 
