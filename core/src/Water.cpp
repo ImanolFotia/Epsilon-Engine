@@ -4,7 +4,7 @@
 ///
 ///=============================================================================
 
-#include <Water.h>
+#include <Water.hpp>
 
 Water::Water(glm::vec3 position, float scale)
 {

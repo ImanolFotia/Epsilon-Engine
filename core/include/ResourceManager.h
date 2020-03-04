@@ -3,7 +3,7 @@
 
 #include <Texture.h>
 #include <Model.h>
-#include <Water.h>
+#include <Water.hpp>
 #include <Terrain.h>
 #include <Grass.h>
 #include <map>
