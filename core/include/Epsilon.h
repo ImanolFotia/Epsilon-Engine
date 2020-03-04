@@ -24,7 +24,7 @@
 #include <Terrain.h>
 #include <Grass.h>
 #include <PostProcess.h>
-#include <Water.h>
+#include <Water.hpp>
 #include <Sun.h>
 #include <BSP.h>
 #include <MD5_Model.h>
