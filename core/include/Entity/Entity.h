@@ -28,11 +28,6 @@ public:
             mHasPhysicComponent = true;
             m_Position = glm::vec3(t->m_PhysicsWorldPosition.getX(), t->m_PhysicsWorldPosition.getY(), t->m_PhysicsWorldPosition.getZ());
             m_PrevPosition = m_Position;
-            btTransform transf = t->getTransform();
-            btQuaternion rot = btQuaternion(m_Rotation.x, m_Rotation.y, m_Rotation.z, m_Rotation.w);
-            transf.setRotation(rot);
-            t->setTransform(transf);
-            t->setUserPointer(&CollInfo);
             break;
         }
         case Component::PLAYERCOMPONENT:
@@ -229,7 +224,6 @@ private:
     glm::vec3 m_PrevPosition;
     glm::vec3 m_PrevScale;
     glm::quat m_PrevRotation;
-    Physics::CollisionInfo CollInfo;
 
     std::shared_ptr<ResourceManager> resourceManager;
 
