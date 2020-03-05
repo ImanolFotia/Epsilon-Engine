@@ -19,6 +19,11 @@
 #include <LinearMath/btTransform.h>
 #include <BulletSoftBody/btSoftBodyHelpers.h>
 
+#include <Physics/ClothPhysicObject.h>
+#include <Physics/CubePhysicObject.h>
+#include <Physics/SpherePhysicObject.h>
+#include <Physics/TriangleMeshPhysicObject.h>
+
 namespace Physics {
 	class CollisionInfo;
 

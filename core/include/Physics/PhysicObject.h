@@ -1,8 +1,16 @@
 #pragma once
 #include <Physics/Physics.h>
 
-
 namespace Physics {
+
+    enum Type {
+        CUBE = 0,
+        SPHERE,
+        TRIANGLE_MESH,
+        CLOTH,
+        
+    };
+
     class PhysicObject {
     public:
         struct t_ClothVertex {
@@ -30,7 +38,3 @@ namespace Physics {
     };
 }
 
-#include <Physics/ClothPhysicObject.h>
-#include <Physics/CubePhysicObject.h>
-#include <Physics/SpherePhysicObject.h>
-#include <Physics/TriangleMeshPhysicObject.h>
