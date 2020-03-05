@@ -146,7 +146,7 @@ namespace Component
         using DynamycWorld_ptr = std::shared_ptr<btDynamicsWorld>;
 
     public:
-        PhysicComponent(float mass, Type type, ) : Type(PHYSICCOMPONENT), mMass(mass)
+        PhysicComponent(float mass, Type type, DynamycWorld_ptr world) : Type(PHYSICCOMPONENT), mMass(mass)
         {
             BaseShape_ptr _shape;
             switch(type){
@@ -167,7 +167,7 @@ namespace Component
                 break;
             }
 
-            rM->m_PhysicsWorld->world->addRigidBody(_shape->addObject(glm::vec3(16, 15, 10), 100.0, rM->getModelBoundingBox("models/shape_mat.eml"), 0.25).get());
+            world->addRigidBody(_shape->addObject(glm::vec3(16, 15, 10), 100.0, rM->getModelBoundingBox("models/shape_mat.eml"), 0.25).get());
             
 
             m_PhysicsWorldPosition = mRigidBodyPointer->Body->getCenterOfMassPosition();
