@@ -13,7 +13,7 @@ static LPALCLOOPBACKOPENDEVICESOFT alcLoopbackOpenDeviceSOFT;
 static LPALCISRENDERFORMATSUPPORTEDSOFT alcIsRenderFormatSupportedSOFT;
 static LPALCRENDERSAMPLESSOFT alcRenderSamplesSOFT;
 
-static LPALBUFFERSAMPLESSOFT alBufferSamplesSOFT = wrap_BufferSamples;
+//static LPALBUFFERSAMPLESSOFT alBufferSamplesSOFT = wrap_BufferSamples;
 static LPALISBUFFERFORMATSUPPORTEDSOFT alIsBufferFormatSupportedSOFT;
 /* Effect object functions */
 static LPALGENEFFECTS alGenEffects;
