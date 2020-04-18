@@ -64,7 +64,7 @@ Audio::Audio()
     LOAD_PROC(alGetAuxiliaryEffectSlotfv, LPALGETAUXILIARYEFFECTSLOTFV);
     if(alIsExtensionPresent("AL_SOFT_buffer_samples"))
     {
-        LOAD_PROC(alBufferSamplesSOFT, LPALBUFFERSAMPLESSOFT);
+        //LOAD_PROC(alBufferSamplesSOFT, LPALBUFFERSAMPLESSOFT);
         LOAD_PROC(alIsBufferFormatSupportedSOFT, LPALISBUFFERFORMATSUPPORTEDSOFT);
     }
 #undef LOAD_PROC
