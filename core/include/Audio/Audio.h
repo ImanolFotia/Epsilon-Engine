@@ -7,7 +7,7 @@
 #include <AL/efx.h>
 #include <AL/efx-creative.h>
 #include <AL/efx-presets.h>
-#include <AL/alBufferSOFT.h>
+//#include <AL/alBufferSOFT.h>
 
 static LPALCLOOPBACKOPENDEVICESOFT alcLoopbackOpenDeviceSOFT;
 static LPALCISRENDERFORMATSUPPORTEDSOFT alcIsRenderFormatSupportedSOFT;
