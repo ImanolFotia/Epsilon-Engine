@@ -56,7 +56,7 @@ void ResourceManager::useModel(std::string modelPath, Shader* shader, glm::vec3 
 
     catch(std::exception e)
     {
-        std::cout << "Exception caught at: " << __FUNCTION__ << "useModel(std::string modelPath, Shader* shader, glm::vec3 pos = glm::vec3(0,0,0)) :::" << e.what() <<std::endl;
+        std::cout << "Exception caught at: " << __FUNCTION__ << "useModel(" << modelPath << ", shader" << ",glm:vec3(" << pos.x << ", " << pos.y << ", " << pos.z << ") :::" << e.what() <<std::endl;
     }
 }
 

@@ -4,7 +4,7 @@
 
 #include <ResourceManager.h>
 #include <Shader.h>
-#include <EntityTemplate.h>
+#include <Entity/Entity.h>
 #include <BSP.h>
 #include <ShadowMapping.h>
 #include <Sun.h>

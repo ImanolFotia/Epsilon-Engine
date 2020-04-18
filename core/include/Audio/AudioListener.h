@@ -24,14 +24,14 @@ namespace IO {
                 m_ListenerPosition = pos;
             }
 
-            void setListenerDirection(glm::vec3 dir) {
+            void setListenerDirection(glm::vec3 dir, glm::vec3 up) {
                 m_ListenerDirection = glm::normalize(dir);
                 m_ListenerOrientation[0] = this->m_ListenerDirection.x;
                 m_ListenerOrientation[1] = this->m_ListenerDirection.y;
                 m_ListenerOrientation[2] = this->m_ListenerDirection.z;
-                m_ListenerOrientation[3] = 0.0;
-                m_ListenerOrientation[4] = 1.0;
-                m_ListenerOrientation[5] = 0.0;
+                m_ListenerOrientation[3] = up.x;
+                m_ListenerOrientation[4] = up.y;
+                m_ListenerOrientation[5] = up.z;
             }
 
             glm::vec3 getListenerPosition() const {

@@ -54,7 +54,7 @@ Epsilon::Epsilon(GLFWwindow *&win)
     glClear(GL_COLOR_BUFFER_BIT);
     glClear(GL_COLOR_BUFFER_BIT);
     GPU _gpu;
-    
+
     cout << endl
          << endl
          << "Gathering Video Device information..." << endl;
@@ -212,15 +212,17 @@ void Epsilon::InitResources(void)
 */
     RenderSplashScreen("Initializing Engine...");
 
-    eCamera = (std::shared_ptr<Camera>)(new Camera(glm::vec3(0.0f, 8.25f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
+    eCamera = std::make_shared<Camera>(glm::vec3(0.0f, 8.25f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
     shadowMap = std::move((unique_ptr<ShadowMap>)(new ShadowMap(DATA.SHADOWMAP_SIZE, DATA.SHADOWMAP_SIZE, -20.0f, 80.0f)));
 
     //mPointShadow = std::make_shared(PointShadow,glm::vec3(0.,.0,.0));
     //mPointShadow->Setup();
 
-    rM = ((std::shared_ptr<ResourceManager>)(new ResourceManager()));
-    rM->m_PhysicsWorld = (std::shared_ptr<Physics::Physics>)new Physics::Physics();
+    rM = std::make_shared<ResourceManager>();
+
+    rM->m_PhysicsWorld = std::make_shared<Physics::Physics>();
+    /*
     std::shared_ptr<EntityTemplate> tmpEnt;
     std::shared_ptr<Component::RenderComponent> Compmodel;
 
@@ -236,12 +238,14 @@ void Epsilon::InitResources(void)
         tmpEnt->addComponent(ClothComponent);
         EntityList.push_back(tmpEnt);
     }
-
+*/
     //RenderSplashScreen("Loading Shaders...");
     this->LoadShaders();
 
     //RenderSplashScreen("Loading Geometry...");
     this->LoadGeometry();
+    
+    this->LoadSound();
 
     std::vector<string> modelsNames;
     std::vector<glm::vec3> modelsPositions;
@@ -334,14 +338,14 @@ void Epsilon::InitResources(void)
         Compmodel->Fill("models/cerberus.eml", rM, "Main");
         tmpEnt->addComponent(Compmodel);
         EntityList.push_back(tmpEnt);*/
-
+    /*
     tmpEnt = (std::shared_ptr<EntityTemplate>)(new EntityTemplate(rM, glm::vec3(-14, 2.5, -17), glm::vec3(2.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>)new Component::RenderComponent();
     Compmodel->Fill("models/esfera.eml", rM, "Main");
     std::shared_ptr<Component::MovementComponent> Compmov;
     tmpEnt->addComponent(Compmodel);
     EntityList.push_back(tmpEnt);
-
+*/
     /*
         tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(22, 8.0, 6), glm::vec3(2.0), glm::quat(-1.0, 0.0, -1.0, 0.0)));
         Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
@@ -362,12 +366,12 @@ void Epsilon::InitResources(void)
         Compmodel->Fill("models/export3dcoat.eml", rM, "Main");
         tmpEnt->addComponent(Compmodel);
         EntityList.push_back(tmpEnt);*/
-
+    /*
     tmpEnt = (std::shared_ptr<EntityTemplate>)(new EntityTemplate(rM, glm::vec3(-12, 1.65, -3), glm::vec3(0.05), glm::quat(-1.0, 0.0, 1.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>)new Component::RenderComponent();
     Compmodel->Fill("models/full_rock.eml", rM, "Main");
     tmpEnt->addComponent(Compmodel);
-    EntityList.push_back(tmpEnt);
+    EntityList.push_back(tmpEnt);*/
     /*
 
     /*
@@ -378,11 +382,12 @@ void Epsilon::InitResources(void)
         	EntityList.push_back(tmpEnt);
 
 */
+    /*
     tmpEnt = (std::shared_ptr<EntityTemplate>)(new EntityTemplate(rM, glm::vec3(-12, 3.8, -10), glm::vec3(1.0), glm::quat(1.0, 0.0, 1.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>)new Component::RenderComponent();
     Compmodel->Fill("models/chutulu.eml", rM, "Main");
     tmpEnt->addComponent(Compmodel);
-    EntityList.push_back(tmpEnt);
+    EntityList.push_back(tmpEnt);*/
     /*
         	tmpEnt = (std::shared_ptr<EntityTemplate>) (new EntityTemplate(rM, glm::vec3(23, 8.25+6.2, 14.5), glm::vec3(1.0), glm::quat(-1.0, 1.0, 1.0, 0.5)));
         	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
@@ -450,13 +455,13 @@ void Epsilon::InitResources(void)
         Compmodel->Fill("models/woodentable.eml", rM, "Main");
         tmpEnt->addComponent(Compmodel);
         EntityList.push_back(tmpEnt);*/
-
+    /*
     tmpEnt = (std::shared_ptr<EntityTemplate>)(new EntityTemplate(rM, glm::vec3(-12, 4.0, 7), glm::vec3(1.5f), glm::quat(0.0, 0.0, 1.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>)new Component::RenderComponent();
     Compmodel->Fill("models/Tree.eml", rM, "Main");
     Compmodel->isDoubleFaced = true;
     tmpEnt->addComponent(Compmodel);
-    EntityList.push_back(tmpEnt);
+    EntityList.push_back(tmpEnt);*/
 
     ///godrays tutorial end
 
@@ -468,17 +473,17 @@ void Epsilon::InitResources(void)
 
         tmpEnt->addComponent(Compmodel);
         EntityList.push_back(tmpEnt);*/
-
+    /*
     tmpEnt = (std::shared_ptr<EntityTemplate>)(new EntityTemplate(rM, glm::vec3(0.0f, 15.0f, -5.0f), glm::vec3(1.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>)new Component::RenderComponent();
-    Compmodel->Fill("models/shape_mat.eml", rM, "Main");
+    Compmodel->Fill("models/shape_mat.eml", rM, "Main");*/
     //std::shared_ptr<Component::PhysicComponent> CompPhys = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
     //std::shared_ptr<Physics::CubePhysicObject> ph = (std::shared_ptr<Physics::CubePhysicObject>) new Physics::CubePhysicObject();
     //rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(glm::vec3(16, 15, 10), 100.0, rM->getModelBoundingBox("models/shape_mat.eml"), 0.25).get());
     //CompPhys->Fill(100.0f, ph);
-    tmpEnt->addComponent(Compmodel);
+    /* tmpEnt->addComponent(Compmodel);
     //tmpEnt->addComponent(CompPhys);
-    EntityList.push_back(tmpEnt);
+    EntityList.push_back(tmpEnt);*/
 
     /*
     ph->addObject(2.0, glm::vec3(-20.5+(i*6.4),8.2,-8), 2.0).get()
@@ -486,7 +491,7 @@ void Epsilon::InitResources(void)
         EntityList[7]->addComponent(Compmodel2);
         EntityList[7]->addComponent(CompPhys2);*/
     /////////////////////////////////////////////////////////
-    tmpEnt = (std::shared_ptr<EntityTemplate>)(new EntityTemplate(rM, glm::vec3(22, 5.5, -25.5), glm::vec3(5), glm::quat(-1.0, 0.0, -1.0, 0.0)));
+    /*tmpEnt = (std::shared_ptr<EntityTemplate>)(new EntityTemplate(rM, glm::vec3(22, 5.5, -25.5), glm::vec3(5), glm::quat(-1.0, 0.0, -1.0, 0.0)));
     Compmodel = (std::shared_ptr<Component::RenderComponent>)new Component::RenderComponent();
     Compmodel->Fill("models/platform.eml", rM, "Main");
 
@@ -503,9 +508,27 @@ void Epsilon::InitResources(void)
     tmpEnt->addComponent(Compmodel);
     tmpEnt->addComponent(CompPhys);
     tmpEnt->addComponent(MovComp);
-    EntityList.push_back(tmpEnt);
+    EntityList.push_back(tmpEnt);*/
+    
 
-    this->LoadSound();
+
+    {
+        glm::vec3 tPosition = glm::vec3(-12.0f, 3.8f, -10.0f);
+        glm::vec3 tScale = glm::vec3(1.0f);
+        glm::quat tRotation = glm::quat(1.0, 0.0, 1.0, 0.0);
+        std::string tModelName = "models/chutulu.eml";
+
+        std::shared_ptr<EntityTemplate> _Entity = std::make_shared<EntityTemplate>(rM, tPosition, tScale, tRotation);
+
+        Component::Component_ptr _RComp = std::make_shared<Component::RenderComponent>(tModelName, tPosition, rM, "Main");
+        MIN_MAX_POINTS _BoundingBox = rM->getModelBoundingBox(tModelName);
+        Component::Component_ptr _PComp = std::make_shared<Component::PhysicComponent>(100, tPosition, tScale, Physics::Type::CUBE, _BoundingBox, rM);
+        Component::Component_ptr _SComp =  std::make_shared<Component::SoundComponent>("sound/File0279.wav", DYNAMIC_SOUND, tPosition, glm::vec3(0, 0, 0));
+
+        _Entity->addComponent(_RComp)->addComponent(_PComp)->addComponent(_SComp);
+
+        EntityList.push_back(_Entity);
+    }
 
     auto MenuAudio = [&]() -> void { m_AudioSystem->PlayByID(2); };
     /*
@@ -518,7 +541,7 @@ void Epsilon::InitResources(void)
 
     PP = std::move((unique_ptr<PostProcess>)(new PostProcess()));
 
-    m_PlayerCapsule = (std::shared_ptr<Game::Player>)new Game::Player(-6, 3.0, 10, this->rM);
+    m_PlayerCapsule = (std::shared_ptr<Game::Player>)new Game::Player(-10, 15.8, -10, this->rM);
     //m_PlayerCapsule = (std::shared_ptr<Game::Player>) new Game::Player(170.0,5.25,-202.0, this->rM);
 
     //m_Pick = (std::shared_ptr<Pick>) (new Pick(rM->m_PhysicsWorld->world));
@@ -573,7 +596,6 @@ void Epsilon::InitResources(void)
     //Shaders["CubeMap"]->Use();
     std::shared_ptr<Shader> cubeShader = this->mCubemap->getShader();
     //for(int a = 0; a < 2; a++) {
-
     float rotation = 0.5 * glfwGetTime();
     for (int index = 0; index < 6; ++index)
     {
@@ -619,9 +641,9 @@ void Epsilon::InitResources(void)
             EntityList[i]->Update();
             EntityList[i]->setShader("CubeMap");
             glm::mat4 Model = glm::mat4(1.0);
-            if (EntityList[i]->hasClothComponent)
+            if (EntityList[i]->HasClothComponent())
                 continue;
-            if (EntityList[i]->hasModel)
+            if (EntityList[i]->HasRenderComponent())
             {
                 glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1), EntityList[i]->getScale());
                 glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), EntityList[i]->getPosition());
@@ -683,7 +705,7 @@ void Epsilon::InitResources(void)
     for (unsigned int i = 0; i < EntityList.size(); ++i)
     {
         EntityList[i]->setShader("Main");
-        if (EntityList[i]->hasClothComponent)
+        if (EntityList[i]->HasClothComponent())
             EntityList[i]->setShader("Cloth");
     }
 
@@ -803,9 +825,10 @@ void Epsilon::LoadSound(void)
 
     m_AudioSystem = (std::unique_ptr<IO::Audio::Audio>)new IO::Audio::Audio();
     /*
-        std::shared_ptr<Audio::AudioElement> m_AudioElement = (std::shared_ptr<Audio::AudioElement>) new Audio::AudioElement("sound/File0279.wav", STATIC_SOUND, glm::vec3(-28, 10, 15), glm::vec3(0,0,0));
-        m_AudioSystem->addAudioElement(m_AudioElement);
+        std::shared_ptr<IO::Audio::AudioElement> m_AudioElement = (std::shared_ptr<IO::Audio::AudioElement>) new IO::Audio::AudioElement("sound/File0279.wav", STATIC_SOUND, glm::vec3(-28, 10, 15), glm::vec3(0,0,0));
+        m_AudioSystem->addAudioElement(3, m_AudioElement);
     */
+   
     std::shared_ptr<IO::Audio::AudioElement> m_AudioElement2 = (std::shared_ptr<IO::Audio::AudioElement>)new IO::Audio::AudioElement("sound/ambient.wav", MUSIC, glm::vec3(-28, 10, 15), glm::vec3(0, 0, 0));
     m_AudioSystem->addAudioElement(0, m_AudioElement2);
 
@@ -840,7 +863,7 @@ void Epsilon::Render3D(Shader *shader)
         EntityList[i]->Update();
         Model = glm::mat4(1.0);
         visible = true;
-        if (EntityList[i]->hasModel)
+        if (EntityList[i]->HasRenderComponent())
         {
             shader->Use();
             shader->PushUniform("parallaxOn", ParallaxOn);
@@ -848,7 +871,7 @@ void Epsilon::Render3D(Shader *shader)
             TranslationMatrix = glm::translate(glm::mat4(1), EntityList[i]->getPosition());
             RotationMatrix = glm::toMat4(EntityList[i]->getRotation());
             Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
-            this->rM->setModelUniforms(EntityList[i]->modelPath, shader, EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation(),
+            this->rM->setModelUniforms(EntityList[i]->getModelPath(), shader, EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation(),
                                        EntityList[i]->getPrevPosition(), EntityList[i]->getPrevScale(), EntityList[i]->getPrevRotation(),
                                        eCamera);
             //std::cout << "llega render 3d" <<std::endl;
@@ -890,12 +913,12 @@ void Epsilon::Render3D()
 {
     for (unsigned int i = 0; i < EntityList.size(); ++i)
     {
-        if (!EntityList[i]->hasModel)
+        if (!EntityList[i]->HasRenderComponent())
             continue;
 
         Shaders["ShadowMapping"]->Use();
         this->SetUniforms(Shaders["ShadowMapping"], EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation());
-        rM->useModel(EntityList[i]->modelPath, Shaders["ShadowMapping"], EntityList[i]->getPosition());
+        rM->useModel(EntityList[i]->getModelPath(), Shaders["ShadowMapping"], EntityList[i]->getPosition());
     }
 
     //mPatch->updateVertexBuffers(mCloth->getVertices());
@@ -1013,11 +1036,20 @@ void Epsilon::ProcessAudio()
 {
 
     m_AudioListener->setListenerPosition(this->eCamera->getPosition());
-    m_AudioListener->setListenerDirection(this->eCamera->getDirection());
+    m_AudioListener->setListenerDirection(this->eCamera->getDirection(), this->eCamera->getUp());
 
     m_AudioListener->UpdateListener();
 
+    for (unsigned int i = 0; i < EntityList.size(); ++i)
+    {
+        if (EntityList[i]->HasSoundComponent())
+        {
+            EntityList[i]->getComponent(Component::SOUNDCOMPONENT)->Render();
+        }
+    }
+    
     m_AudioSystem->PlayAudio();
+
 }
 
 void Epsilon::Clock()
@@ -1071,14 +1103,15 @@ void Epsilon::RenderSkybox(bool state)
 void Epsilon::PollEvents(void)
 {
 
-    if (glfwGetWindowAttrib(window, GLFW_FOCUSED))
+    /*if (glfwGetWindowAttrib(window, GLFW_FOCUSED))
     {
         glfwPollEvents();
     }
     else
     {
         glfwWaitEvents();
-    }
+    }*/
+    glfwPollEvents();
     Input::Joystick::JoystickManager::DetectJoysticks();
     Input::Joystick::JoystickManager::PollJoystick();
     auto _Joystick = Input::Joystick::JoystickManager::PrimaryJoystick();
@@ -1106,7 +1139,7 @@ void Epsilon::PollEvents(void)
     else
     {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        this->m_CameraMode = NO_CLIP;
+        this->m_CameraMode = PLAYER_CONTROLLED;
     }
 
     if (Input::KeyBoard::KEYS[Input::GLFW::Key::N])

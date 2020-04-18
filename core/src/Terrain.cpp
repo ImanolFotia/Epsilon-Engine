@@ -12,6 +12,7 @@
 #include <ResourceManager.h>
 #include <exception>
 #include <Physics/CollisionInfo.h>
+#include <Physics/TriangleMeshPhysicObject.h>
 #include <Includes.h>
 
 Terrain::Terrain(const char *heightMap, const char *diffuseTexture, float scale, int gridSize /**Must be Power of two*/, std::shared_ptr<ResourceManager> rm)

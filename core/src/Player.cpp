@@ -322,6 +322,7 @@ namespace Game
                 directionVelocity = btVector3(m_PrevDirection.x()*walkSpeed * dt,0.0, m_PrevDirection.z()*walkSpeed * dt);
             }
             else {
+                auto _Joystick = Input::Joystick::JoystickManager::PrimaryJoystick();
                 directionVelocity = btVector3(walkDirection.x()*walkSpeed * dt,0.0, walkDirection.z()*walkSpeed * dt);
             }
         }

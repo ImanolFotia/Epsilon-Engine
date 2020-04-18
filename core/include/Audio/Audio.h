@@ -1,15 +1,55 @@
 #pragma once
 #include <unordered_map>
 #include <memory>
-#include <Audio/AudioElement.h>
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <AL/alext.h>
+#include <AL/efx.h>
+#include <AL/efx-creative.h>
+#include <AL/efx-presets.h>
+//#include <AL/alBufferSOFT.h>
+
+static LPALCLOOPBACKOPENDEVICESOFT alcLoopbackOpenDeviceSOFT;
+static LPALCISRENDERFORMATSUPPORTEDSOFT alcIsRenderFormatSupportedSOFT;
+static LPALCRENDERSAMPLESSOFT alcRenderSamplesSOFT;
+
+//static LPALBUFFERSAMPLESSOFT alBufferSamplesSOFT = wrap_BufferSamples;
+static LPALISBUFFERFORMATSUPPORTEDSOFT alIsBufferFormatSupportedSOFT;
+/* Effect object functions */
+static LPALGENEFFECTS alGenEffects;
+static LPALDELETEEFFECTS alDeleteEffects;
+static LPALISEFFECT alIsEffect;
+static LPALEFFECTI alEffecti;
+static LPALEFFECTIV alEffectiv;
+static LPALEFFECTF alEffectf;
+static LPALEFFECTFV alEffectfv;
+static LPALGETEFFECTI alGetEffecti;
+static LPALGETEFFECTIV alGetEffectiv;
+static LPALGETEFFECTF alGetEffectf;
+static LPALGETEFFECTFV alGetEffectfv;
+/* Auxiliary Effect Slot object functions */
+static LPALGENAUXILIARYEFFECTSLOTS alGenAuxiliaryEffectSlots;
+static LPALDELETEAUXILIARYEFFECTSLOTS alDeleteAuxiliaryEffectSlots;
+static LPALISAUXILIARYEFFECTSLOT alIsAuxiliaryEffectSlot;
+static LPALAUXILIARYEFFECTSLOTI alAuxiliaryEffectSloti;
+static LPALAUXILIARYEFFECTSLOTIV alAuxiliaryEffectSlotiv;
+static LPALAUXILIARYEFFECTSLOTF alAuxiliaryEffectSlotf;
+static LPALAUXILIARYEFFECTSLOTFV alAuxiliaryEffectSlotfv;
+static LPALGETAUXILIARYEFFECTSLOTI alGetAuxiliaryEffectSloti;
+static LPALGETAUXILIARYEFFECTSLOTIV alGetAuxiliaryEffectSlotiv;
+static LPALGETAUXILIARYEFFECTSLOTF alGetAuxiliaryEffectSlotf;
+static LPALGETAUXILIARYEFFECTSLOTFV alGetAuxiliaryEffectSlotfv;
+
+static char g_szALC_EXT_EFX[256] = {'\0'};
 
 namespace IO {
     namespace Audio {
-
+        class AudioElement;
         class Audio {
         public:
             Audio();
             ~Audio();
+            void list_audio_devices(const ALCchar *devices, const char *message);
 
         public:
 
