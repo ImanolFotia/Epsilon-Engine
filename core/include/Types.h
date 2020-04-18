@@ -126,6 +126,12 @@ enum AUDIO_TYPE {
     MENU_SOUND
 };
 
+enum AUDIO_STATE {
+    PLAYING = 0,
+    PAUSED,
+    STOPPED
+};
+
 struct t_light {
     glm::vec4 position; // 4/*
     glm::vec4 direction; // 8
@@ -145,7 +151,7 @@ enum CUBEMAP_TYPE {
 
 namespace Component {
     enum COMPONENT_TYPE {
-        MODELCOMPONENT = 0,
+        RENDERCOMPONENT = 0,
         SPATIALCOMPONENT,
         PLAYERCOMPONENT,
         SOUNDCOMPONENT,

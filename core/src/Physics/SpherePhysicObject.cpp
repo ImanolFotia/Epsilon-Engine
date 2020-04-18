@@ -1,12 +1,12 @@
 #include <Physics/SpherePhysicObject.h>
 
 namespace Physics {
-	btRigidBody_ptr SpherePhysicObject::addObject(float  Radius,  glm::vec3 Position, float  Mass ) {
+	btRigidBody_ptr SpherePhysicObject::addObject(glm::vec3  Radius,  glm::vec3 Position, float  Mass ) {
 		btTransform t;  //position and rotation
 		t.setIdentity();
 		btVector3 pos = btVector3(Position.x, Position.y, Position.z);
 		t.setOrigin(pos);  //put it to x,y,z coordinates
-		SphereShape = (std::shared_ptr<btSphereShape>) new btSphereShape(Radius);
+		SphereShape = (std::shared_ptr<btSphereShape>) new btSphereShape(Radius.x);
 		btVector3 inertia(0,0,0);   //inertia is 0,0,0 for static object, else
 		if(Mass!=0.0)
 			SphereShape->calculateLocalInertia(Mass,inertia);    //it can be determined by this function (for all kind of shapes)

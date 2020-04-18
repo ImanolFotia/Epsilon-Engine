@@ -73,7 +73,7 @@
            </property>
            <property name="maximumSize">
             <size>
-             <width>400</width>
+             <width>300</width>
              <height>16777215</height>
             </size>
            </property>
@@ -926,7 +926,7 @@
             <item row="0" column="0">
              <widget class="QSplitter" name="splitter">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -942,7 +942,7 @@
               </property>
               <widget class="OGLWidget" name="openGLWidget">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -980,7 +980,7 @@
               </widget>
               <widget class="QTabWidget" name="tabWidget_2">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -988,7 +988,7 @@
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>100</height>
+                 <height>1</height>
                 </size>
                </property>
                <property name="maximumSize">
@@ -1000,7 +1000,7 @@
                <property name="baseSize">
                 <size>
                  <width>0</width>
-                 <height>100</height>
+                 <height>0</height>
                 </size>
                </property>
                <property name="currentIndex">
@@ -1076,7 +1076,7 @@ p, li { white-space: pre-wrap; }
           <widget class="QWidget" name="gridWidget" native="true">
            <property name="maximumSize">
             <size>
-             <width>320</width>
+             <width>280</width>
              <height>16777215</height>
             </size>
            </property>
@@ -1100,7 +1100,7 @@ p, li { white-space: pre-wrap; }
               </property>
               <property name="maximumSize">
                <size>
-                <width>320</width>
+                <width>270</width>
                 <height>16777215</height>
                </size>
               </property>
@@ -1118,8 +1118,8 @@ p, li { white-space: pre-wrap; }
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>300</width>
-                 <height>710</height>
+                 <width>263</width>
+                 <height>693</height>
                 </rect>
                </property>
                <property name="sizePolicy">
@@ -1149,6 +1149,12 @@ p, li { white-space: pre-wrap; }
                     <height>200</height>
                    </size>
                   </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>245</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="baseSize">
                    <size>
                     <width>200</width>
@@ -1172,6 +1178,12 @@ p, li { white-space: pre-wrap; }
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>245</width>
+                    <height>16777215</height>
+                   </size>
                   </property>
                   <property name="baseSize">
                    <size>

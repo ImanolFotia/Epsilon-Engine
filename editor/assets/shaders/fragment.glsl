@@ -22,6 +22,7 @@ uniform int Picked;
 uniform bool isLine;
 vec3 LightDir = vec3(0.5, -1.0, 0.5);
 
+uniform bool animated_skybox = false;
 
 const float PI = 3.14159265359;
 const float MAX_REFLECTION_LOD = 8.0;
@@ -277,20 +278,23 @@ void main() {
     //F = clamp(F, 0.0, 0.5);
 
 
-    vec3 ambient = (vec3(0.2, 0.2, 0.4) + tex.rgb) * 0.01;
+    vec3 ambient = vec3(0.05);//(vec3(0.2, 0.2, 0.4) + tex.rgb) * 0.01;
 
-    vec3 tnorm = normalize(N);
+    if(animated_skybox == true) {
 
-    ambient = C1 * L22 *(tnorm.x * tnorm.x - tnorm.y * tnorm.y) +
-              C3 * L20 * tnorm.z * tnorm.z +
-              C4 * L00 - C5 * L20 + 2.0 * C1 * L2m2 * tnorm.x * tnorm.y + 
-              2.0 * C1 * L21 * tnorm.x * tnorm.z + 
-              2.0 * C1 * L2m1 * tnorm.y * tnorm.z + 
-              2.0 * C2 * L11 * tnorm.x +
-              2.0 * C2 * L1m1 * tnorm.y +
-              2.0 * C2 * L10 * tnorm.z;
+      vec3 tnorm = normalize(N);
 
-    ambient *= 0.1;
+      ambient = C1 * L22 *(tnorm.x * tnorm.x - tnorm.y * tnorm.y) +
+                C3 * L20 * tnorm.z * tnorm.z +
+                C4 * L00 - C5 * L20 + 2.0 * C1 * L2m2 * tnorm.x * tnorm.y + 
+                2.0 * C1 * L21 * tnorm.x * tnorm.z + 
+                2.0 * C1 * L2m1 * tnorm.y * tnorm.z + 
+                2.0 * C2 * L11 * tnorm.x +
+                2.0 * C2 * L1m1 * tnorm.y +
+                2.0 * C2 * L10 * tnorm.z;
+
+      ambient *= 0.1;
+    }
 
     vec4 color = vec4(1.0);
     if (mode == 0) {
@@ -303,7 +307,10 @@ void main() {
 
     if (mode == 2) {
       //tex.rgb = textureLod(texture_diffuse, TexCoords, 0).rgb;
-      vec4 texCube = pow(texture(texture_cubemap, -normalize(reflect(V, N)),  roughness * MAX_REFLECTION_LOD), vec4(2.2));
+      vec4 texCube = vec4(vec3(0.1), 1.0);
+      if(animated_skybox == true) {
+        vec4 texCube = pow(texture(texture_cubemap, -normalize(reflect(V, N)),  roughness * MAX_REFLECTION_LOD), vec4(2.2));
+      }
       vec3 diffuse = ambient * tex.rgb;
       vec3 specular = texCube.rgb * (F * brdf.x + brdf.y);
       vec3 ibl = (kD * diffuse + specular);

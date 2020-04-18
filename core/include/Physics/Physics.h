@@ -19,6 +19,7 @@
 #include <LinearMath/btTransform.h>
 #include <BulletSoftBody/btSoftBodyHelpers.h>
 
+
 namespace Physics {
 	class CollisionInfo;
 
@@ -49,7 +50,6 @@ namespace Physics {
 		protected:
 
 	};
-
 }
 
 
