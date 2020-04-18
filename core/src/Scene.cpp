@@ -26,10 +26,10 @@ bool Scene::setupScene()
 }
 
 void Scene::CalculateVisibility()
-{
+{/*
     for(std::map<int, std::shared_ptr<EntityTemplate>>::iterator itr = this->map_Entities.begin(); itr != this->map_Entities.end(); itr++)
     {
-        if(!map_Entities[itr->first]->hasModel)
+        if(!map_Entities[itr->first]->mHasModel)
             continue;
 
         glm::mat4 Model = glm::mat4(1.0);
@@ -45,7 +45,7 @@ void Scene::CalculateVisibility()
         {
             m_ResourceManager->setModelVisibility(map_Entities[itr->first]->modelPath, true);
         }
-    }
+    }*/
 }
 
 bool Scene::LoadEntities()

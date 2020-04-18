@@ -155,28 +155,30 @@ void Camera::HandleInputs(GLFWwindow *&window)
     /** Joystick Camera input**/
     if (_Joystick->getJoystickIsPresent())
     {
-        if (Input::KeyBoard::KEYS[Input::GLFW::Key::W] || _Joystick->L3().y < 0.0)
+        if (Input::KeyBoard::KEYS[Input::GLFW::Key::W] || _Joystick->L3().y < -0.1)
         {
             MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-            Position += Orientation * MovementSpeed * DeltaTime * (glm::abs(_Joystick->L3().y * 2));
+            Position += Orientation * MovementSpeed * DeltaTime * (_Joystick->L3().y < -0.1 ? glm::abs(_Joystick->L3().y*2.0f) : 1.0f);
+            std::cout << (_Joystick->L3().y < -0.1 ? glm::abs(_Joystick->L3().y*2.0f) : 1.0f) << std::endl;
+            std::cout << Position.x << " " << Position.z << std::endl;
         }
 
-        if (Input::KeyBoard::KEYS[Input::GLFW::Key::S] || _Joystick->L3().y > 0.0)
+        if (Input::KeyBoard::KEYS[Input::GLFW::Key::S] || _Joystick->L3().y > 0.1)
         {
             MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-            Position -= Orientation * MovementSpeed * DeltaTime * (glm::abs(_Joystick->L3().y * 2));
+            Position -= Orientation * MovementSpeed * DeltaTime * (_Joystick->L3().y > 0.1 ? _Joystick->L3().y*2.0f : 1.0f);
         }
 
-        if (Input::KeyBoard::KEYS[Input::GLFW::Key::D] || _Joystick->L3().x > 0.0)
+        if (Input::KeyBoard::KEYS[Input::GLFW::Key::D] || _Joystick->L3().x > 0.1)
         {
             MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-            Position += Rigth * MovementSpeed * DeltaTime * (glm::abs(_Joystick->L3().x * 2));
+            Position += Rigth * MovementSpeed * DeltaTime* (_Joystick->L3().x > 0.1 ? glm::abs(_Joystick->L3().x*2.0f) : 1.0f);
         }
 
-        if (Input::KeyBoard::KEYS[Input::GLFW::Key::A] || _Joystick->L3().x < 0.0)
+        if (Input::KeyBoard::KEYS[Input::GLFW::Key::A] || _Joystick->L3().x < -0.1)
         {
             MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-            Position -= Rigth * MovementSpeed * DeltaTime * (glm::abs(_Joystick->L3().x * 2));
+            Position -= Rigth * MovementSpeed * DeltaTime * (_Joystick->L3().x < -0.1 ? glm::abs(_Joystick->L3().x*2.0f) : 1.0f);
         }
 
         if (
@@ -195,7 +197,7 @@ void Camera::HandleInputs(GLFWwindow *&window)
 
     LastTime = currentTime;
 
-    Position += (MovementVector * MovementSpeed * DeltaTime);
+    //Position += (MovementVector * MovementSpeed * DeltaTime);
     mIsMoving = false;
     if (LastPosition != Position)
     {

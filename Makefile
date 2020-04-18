@@ -85,7 +85,7 @@ CPPFLAGS := --std=c++17 -Wall
 
 DEBUG_FLAGS := -g -DDEBUG
 
-RELEASE_FLAGS := -O2
+RELEASE_FLAGS :=
 
 RES := ./core/src/resources.rc
 
