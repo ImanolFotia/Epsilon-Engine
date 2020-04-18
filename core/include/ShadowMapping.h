@@ -71,45 +71,25 @@ public:
     */
     void SetupPingPongFBO();
 
-    /**
-        Set the Shadow Map Position
-    **/
-
     void setShadowPosition(glm::vec3 newPos)
     {
         this->m_POSITION = newPos;
     }
-
-    /**
-        Set the Shadow Map Direction
-    **/
 
     void setShadowDirection(glm::vec3 newDir)
     {
         this->m_DIRECTION = newDir;
     }
 
-    /**
-        Get the Shadow Map texture Id where the depth from the scene was rendered to.
-    **/
-
     GLuint getShadowTextureID(void)
     {
         return this->m_ShadowTexture;
     }
 
-    /**
-        Get the Shadow Map LightSpace ProjectionView Matrix
-    **/
-
     glm::mat4 getLightSpaceMatrix(void)
     {
         return m_lightSpaceMatrix;
     }
-
-    /**
-        Get the Light/Proj Matrix multiplied by the Bias Matrix
-    **/
 
     glm::mat4 getBiasMatrix(void)
     {

@@ -30,7 +30,7 @@
 #include <MD5_Model.h>
 #include <MD5_Anim.h>
 #include <ShadowMapping.h>
-#include <EntityTemplate.h>
+#include <Entity/Entity.h>
 #include <memory>
 #include <ResourceManager.h>
 #include <Scene.h>

@@ -1,4 +1,4 @@
-#include <EntityTemplate.h>
+#include <Entity/Entity.h>
 
 EntityTemplate::EntityTemplate(std::shared_ptr<ResourceManager> rm, glm::vec3 pos, glm::vec3 sc, glm::quat rot)
 {
@@ -13,23 +13,32 @@ EntityTemplate::EntityTemplate(std::shared_ptr<ResourceManager> rm, glm::vec3 po
 
 void EntityTemplate::Update()
 {
-    for(unsigned int i = 0; i < ComponentList.size(); ++i)
+
+    if(mHasSoundComponent) {
+        glm::vec3 position = this->getPosition();
+        static_pointer_cast<Component::SoundComponent>(ComponentList.at(Component::SOUNDCOMPONENT))->setPosition(position);
+    }
+    
+    for(auto & c: ComponentList)
     {
         //if(ComponentList.at(i)->updateIfOutOfView)
-            ComponentList.at(i)->Update(resourceManager);
+            c.second->Update();
     }
 }
 
 void EntityTemplate::Render()
 {
-    for(unsigned int i = 0; i < ComponentList.size(); ++i){
-            if(ComponentList.at(i)->Type == Component::COMPONENT_TYPE::MODELCOMPONENT)
-                if(ComponentList.at(i)->isDoubleFaced)
+    for(auto & c: ComponentList){
+            if(c.second->getType() == Component::COMPONENT_TYPE::RENDERCOMPONENT){
+                if(static_pointer_cast<Component::RenderComponent>(c.second)->isDoubleFaced() == true)
                     glDisable(GL_CULL_FACE);
                 else
                     glEnable(GL_CULL_FACE);
+            } else if(c.second->getType() == Component::COMPONENT_TYPE::SOUNDCOMPONENT) {
+                continue;
+            }
 
-        ComponentList.at(i)->Render(resourceManager, this->getPosition());
+        c.second->Render();
     }
 }
 

@@ -25,7 +25,7 @@ namespace Physics {
         };
 
     public:
-        PhysicObject() = default;
+        PhysicObject() {}
         virtual ~PhysicObject() {}
 
     public:

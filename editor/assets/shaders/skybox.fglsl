@@ -10,6 +10,8 @@ in vec3 FragPos;
 uniform float time;
 vec3 LightDirection = vec3(0,1,0);
 
+uniform bool animated_skybox = false;
+
 const vec3 Blue = normalize(vec3(29,91,186));
 const vec3 Cian = normalize(vec3(31, 184, 138));
 const vec3 Orange = normalize(vec3(224,115,36));
@@ -94,18 +96,23 @@ vec3 HDR(vec3 image)
 
 void main()
 {
-	
-	vec3 Clouds = fbm(vec3(FragPos.x*3.0+time*0.02, FragPos.y*8.0+time*0.02, FragPos.z*3.0+time*0.02));
+    vec3 color = vec3(0.0);
 
-	float scatteringFactor = clamp((FragPos.y - lowerlimit) / (upperlimit - lowerlimit), 0.0, 1.0);
+	if(animated_skybox == true) {
+        vec3 Clouds = fbm(vec3(FragPos.x*3.0+time*0.02, FragPos.y*8.0+time*0.02, FragPos.z*3.0+time*0.02));
 
-	vec3 Background = mix(Cian, Blue, clamp(FragPos.y*5.0+0.15, 0.0, 1.0));
+        float scatteringFactor = clamp((FragPos.y - lowerlimit) / (upperlimit - lowerlimit), 0.0, 1.0);
 
-    vec3 SkyColor = mix(Orange, Background, scatteringFactor);
+        vec3 Background = mix(Cian, Blue, clamp(FragPos.y*5.0+0.15, 0.0, 1.0));
 
-	vec3 TimeColor = mix(Gray, SkyColor, /*clamp(LightDirection.y, 0.0, 1.0)*/ 1.0);
+        vec3 SkyColor = mix(Orange, Background, scatteringFactor);
 
-	vec3 color = 1.3*mix(TimeColor, vec3(2.0), clamp(pow(Clouds.x, 2.0), 0.0, 1.0)) * 0.2 /** clamp(LightDirection.y, 0.1, 0.5)*/;
+        vec3 TimeColor = mix(Gray, SkyColor, /*clamp(LightDirection.y, 0.0, 1.0)*/ 1.0);
+
+        color = 1.3*mix(TimeColor, vec3(2.0), clamp(pow(Clouds.x, 2.0), 0.0, 1.0)) * 0.2 /** clamp(LightDirection.y, 0.1, 0.5)*/;
+    } else {
+        color = vec3(.05);
+    }
 
 	FragColor.rgb = /*vec3(clamp((1-Clouds.x), 0.0, 1.0)*0.1);*/HDR(color.rgb);
     FragColor.a = 1.0;

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Component.h>
 #include <iostream>
 #include <glm/glm.hpp>
 #include <typeinfo>
@@ -8,7 +7,14 @@
 #include <ResourceManager.h>
 #include <Physics/CollisionInfo.h>
 
-class EntityTemplate
+#include <Entity/ClothComponent.hpp>
+#include <Entity/MovementComponent.hpp>
+#include <Entity/PhysicsComponent.hpp>
+#include <Entity/PlayerComponent.hpp>
+#include <Entity/RenderComponent.hpp>
+#include <Entity/SoundComponent.hpp>
+
+class EntityTemplate : public std::enable_shared_from_this<EntityTemplate>
 {
 
     using Component_ptr = std::shared_ptr<Component::Component>;
@@ -16,20 +22,16 @@ class EntityTemplate
 public:
     EntityTemplate(std::shared_ptr<ResourceManager> rm, glm::vec3 pos, glm::vec3 sc, glm::quat rot);
 
-    void addComponent(Component_ptr t)
+    std::shared_ptr<EntityTemplate> addComponent(Component_ptr t)
     {
-        switch (t->Type)
+        switch (t->getType())
         {
-        case Component::MODELCOMPONENT:
-            mHasModel = true;
+        case Component::RENDERCOMPONENT:
+            mHasRenderComponent = true;
             break;
         case Component::PHYSICCOMPONENT:
-        {
             mHasPhysicComponent = true;
-            m_Position = glm::vec3(t->m_PhysicsWorldPosition.getX(), t->m_PhysicsWorldPosition.getY(), t->m_PhysicsWorldPosition.getZ());
-            m_PrevPosition = m_Position;
             break;
-        }
         case Component::PLAYERCOMPONENT:
             mHasPlayerComponent = true;
             break;
@@ -39,15 +41,23 @@ public:
         case Component::MOVEMENTCOMPONENT:
             mHasMovementComponent = true;
             break;
-        default: 
-            std::cout << " not added component" << std::endl;
+        case Component::SOUNDCOMPONENT:
+            mHasSoundComponent = true;
+            break;
+        default:
             break;
         }
 
-        ComponentList.push_back(std::move(t));
-        this->ID = ComponentList.size();
+        ComponentList[t->getType()] = t;
+        this->mID = ComponentList.size();
 
-        CollInfo.setName("Entity_" + std::string(Helpers::to_hex(toHash())));
+        //mCollInfo.setName("Entity_" + std::string(Helpers::to_hex(toHash())));
+
+        return shared_from_this();
+    }
+
+    ~EntityTemplate()
+    {
     }
 
     void Update();
@@ -55,16 +65,30 @@ public:
 
     void RenderShadows()
     {
-        for (unsigned int i = 0; i < ComponentList.size(); ++i)
-            ComponentList.at(i)->RenderShadows();
+        std::cout << "begin render shadows" << std::endl;
+        static_pointer_cast<Component::RenderComponent>(ComponentList.at(Component::RENDERCOMPONENT))->RenderShadows(); //TODO: Static cast to render component
+        std::cout << "end render shadows" << std::endl;
+    }
+
+    bool HasPlayerComponent() { return mHasPlayerComponent; }
+    bool HasRenderComponent() { return mHasRenderComponent; }
+    bool HasPhysicComponent() { return mHasPhysicComponent; }
+    bool HasClothComponent() { return mHasClothComponent; }
+    bool HasMovementComponent() { return mHasMovementComponent; }
+    bool HasSoundComponent() { return mHasSoundComponent; }
+
+    Component_ptr getComponent(Component::COMPONENT_TYPE type) {
+        return ComponentList[type];
     }
 
 private:
     bool mHasPlayerComponent = false;
-    bool mHasModel = false;
+    bool mHasRenderComponent = false;
     bool mHasPhysicComponent = false;
     bool mHasClothComponent = false;
     bool mHasMovementComponent = false;
+    bool mHasSoundComponent = false;
+
     int mID;
     std::string modelPath;
     std::unordered_map<uint8_t, Component_ptr> ComponentList;
@@ -72,17 +96,14 @@ private:
 public:
     glm::vec3 getPosition()
     {
-        if (hasPhysicComponent)
+        if (mHasPhysicComponent)
         {
-            for (unsigned int i = 0; i < ComponentList.size(); ++i)
-            {
-                if (ComponentList.at(i)->Type == Component::PHYSICCOMPONENT)
-                {
-                    btVector3 v3 = ComponentList.at(i)->m_PhysicsWorldPosition;
-                    return glm::vec3(v3.getX(), v3.getY(), v3.getZ());
-                }
-                continue;
-            }
+            btVector3 v3 = static_pointer_cast<Component::PhysicComponent>(ComponentList[Component::PHYSICCOMPONENT])->m_PhysicsWorldPosition;
+            return glm::vec3(v3.getX(), v3.getY(), v3.getZ());
+        }
+        else if (mHasRenderComponent)
+        {
+            return static_pointer_cast<Component::RenderComponent>(ComponentList[Component::RENDERCOMPONENT])->getPosition();
         }
         else
         {
@@ -92,17 +113,10 @@ public:
 
     glm::vec3 getPrevPosition()
     {
-        if (hasPhysicComponent)
+        if (mHasPhysicComponent)
         {
-            for (unsigned int i = 0; i < ComponentList.size(); ++i)
-            {
-                if (ComponentList.at(i)->Type == Component::PHYSICCOMPONENT)
-                {
-                    btVector3 v3 = ComponentList.at(i)->m_LastPhysicsWorldPosition;
-                    return glm::vec3(v3.getX(), v3.getY(), v3.getZ());
-                }
-                continue;
-            }
+            btVector3 v3 = static_pointer_cast<Component::PhysicComponent>(ComponentList[Component::PHYSICCOMPONENT])->m_LastPhysicsWorldPosition;
+            return glm::vec3(v3.getX(), v3.getY(), v3.getZ());
         }
         else
         {
@@ -122,18 +136,10 @@ public:
 
     glm::quat getRotation()
     {
-        if (hasPhysicComponent)
+        if (mHasPhysicComponent)
         {
-            for (unsigned int i = 0; i < ComponentList.size(); ++i)
-            {
-                if (ComponentList.at(i)->Type == Component::PHYSICCOMPONENT)
-                {
-
-                    btQuaternion q = ComponentList.at(i)->m_PhysicsWorldRotation;
-                    return glm::quat(q.getW(), q.getX(), q.getY(), q.getZ());
-                }
-                continue;
-            }
+            btQuaternion q = static_pointer_cast<Component::PhysicComponent>(ComponentList[Component::PHYSICCOMPONENT])->m_PhysicsWorldRotation;
+            return glm::quat(q.getW(), q.getX(), q.getY(), q.getZ());
         }
         else
             return m_Rotation;
@@ -141,17 +147,10 @@ public:
 
     glm::quat getPrevRotation()
     {
-        if (hasPhysicComponent)
+        if (mHasPhysicComponent)
         {
-            for (unsigned int i = 0; i < ComponentList.size(); ++i)
-            {
-                if (ComponentList.at(i)->Type == Component::PHYSICCOMPONENT)
-                {
-                    btQuaternion q = ComponentList.at(i)->m_LastPhysicsWorldRotation;
-                    return glm::quat(q.getW(), q.getX(), q.getY(), q.getZ());
-                }
-                continue;
-            }
+            btQuaternion q = static_pointer_cast<Component::PhysicComponent>(ComponentList[Component::PHYSICCOMPONENT])->m_LastPhysicsWorldRotation;
+            return glm::quat(q.getW(), q.getX(), q.getY(), q.getZ());
         }
         else
         {
@@ -162,15 +161,21 @@ public:
     MIN_MAX_POINTS getBoundingBox()
     {
 
-        if (this->hasModel)
-        {
-            return resourceManager->getModelBoundingBox(modelPath);
-        }
-        else if (this->hasClothComponent)
+        if (this->mHasRenderComponent)
         {
             for (unsigned int i = 0; i < ComponentList.size(); ++i)
             {
-                if (ComponentList.at(i)->Type == Component::CLOTHCOMPONENT)
+                if (ComponentList.at(i)->getType() == Component::RENDERCOMPONENT)
+                {
+                    return resourceManager->getModelBoundingBox(std::static_pointer_cast<Component::RenderComponent>(ComponentList[i])->modelPath);
+                }
+            }
+        }
+        else if (this->mHasClothComponent)
+        {
+            for (unsigned int i = 0; i < ComponentList.size(); ++i)
+            {
+                if (ComponentList.at(i)->getType() == Component::CLOTHCOMPONENT)
                 {
                     btSoftBody *cloth = std::static_pointer_cast<Physics::ClothPhysicObject>(std::static_pointer_cast<Component::ClothComponent>(ComponentList[i])->RigidBodyPointer)->m_BodyCloth.get();
 
@@ -198,29 +203,30 @@ public:
 
     long toHash()
     {
-        return std::hash<float>{}(m_Position.x + m_Position.y + m_Position.z + ID);
+        return std::hash<float>{}(m_Position.x + m_Position.y + m_Position.z + mID);
     }
 
     void setShader(std::string sh)
     {
-        if (hasModel)
+        if (mHasRenderComponent)
         {
-            for (auto &c : ComponentList)
-            {
-                if (c->Type == Component::MODELCOMPONENT)
-                {
-                    (std::static_pointer_cast<Component::RenderComponent>(c))->setShader(sh);
-                }
-                continue;
-            }
+            std::static_pointer_cast<Component::RenderComponent>(ComponentList.at(Component::RENDERCOMPONENT))->setShader(sh);
         }
+    }
+
+    std::string getModelPath()
+    {
+        if (mHasRenderComponent)
+        {
+            return std::static_pointer_cast<Component::RenderComponent>(ComponentList[Component::RENDERCOMPONENT])->getModelPath();
+        }
+        return "";
     }
 
 private:
     glm::vec3 m_Position;
     glm::vec3 m_Scale;
     glm::quat m_Rotation;
-
     glm::vec3 m_PrevPosition;
     glm::vec3 m_PrevScale;
     glm::quat m_PrevRotation;

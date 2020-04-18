@@ -13,7 +13,7 @@ namespace Physics {
 				return nullptr;
 			}
 
-			virtual btRigidBody_ptr addObject(glm::vec3 /* Position */, float /* Mass */, MIN_MAX_POINTS /* Bounding Box */, float /* Scale*/);
+			virtual btRigidBody_ptr addObject(glm::vec3 /* Position */, float /* Mass */, MIN_MAX_POINTS /* Bounding Box */, glm::vec3 /* Scale*/);
 
 		private:
 

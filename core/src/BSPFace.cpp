@@ -1,4 +1,5 @@
 #include <Physics/Physics.h>
+#include <Physics/TriangleMeshPhysicObject.h>
 #include <ResourceManager.h>
 #include <BSPFace.h>
 
