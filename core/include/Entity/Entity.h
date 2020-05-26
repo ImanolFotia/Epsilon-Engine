@@ -207,10 +207,6 @@ public:
 
         MIN_MAX_POINTS BB;
         return BB;
-        /*
-        BB.MIN_X *= this->getScale().x; BB.MAX_X *= this->getScale().x;
-        BB.MIN_Y *= this->getScale().y; BB.MAX_Y *= this->getScale().y;
-        BB.MIN_Z *= this->getScale().z; BB.MAX_Z *= this->getScale().z;*/
     }
 
     long toHash()

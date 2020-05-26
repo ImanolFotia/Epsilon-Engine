@@ -16,7 +16,7 @@ namespace PostProcess
 
         ~ScreenSpaceReflections() {}
 
-        Apply(GLuint gFinalImage, GLuint gPosition, GLuint gNormal, GLuint gExpensiveNormal, GLuint gExtraComponents,
+        void Apply(GLuint gFinalImage, GLuint gPosition, GLuint gNormal, GLuint gExpensiveNormal, GLuint gExtraComponents,
               glm::mat4 proj, glm::mat4 view)
         {
             m_pShader->Use();
