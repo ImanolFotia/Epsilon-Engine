@@ -35,7 +35,7 @@ public:
             {
             case Physics::Type::CUBE:
                 mRigidBodyPointer = make_shared<Physics::CubePhysicObject>();
-                world->addRigidBody(static_pointer_cast<Physics::CubePhysicObject>(mRigidBodyPointer)->addObject(glm::vec3(16, 15, 10), 100.0, boundingBox, scale).get());
+                world->addRigidBody(static_pointer_cast<Physics::CubePhysicObject>(mRigidBodyPointer)->addObject(pos, 100.0, boundingBox, scale).get());
                 break;
             case Physics::Type::SPHERE:
                 mRigidBodyPointer = make_shared<Physics::SpherePhysicObject>();
@@ -129,4 +129,6 @@ public:
 
     glm::quat m_Rotation;
 };
+
+using PhysicComponent_ptr = std::shared_ptr<PhysicComponent>;
 } // namespace Component

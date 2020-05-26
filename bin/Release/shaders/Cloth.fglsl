@@ -6,8 +6,10 @@ layout(location = 2) out vec4 gDepth;
 layout(location = 3) out vec4 gExtraComponents; 
 layout(location = 4) out vec3 gLightAccumulation;
 
-layout (binding = 0) uniform sampler2D texture0;
-layout (binding = 1) uniform sampler2D texture1;
+layout (binding = 0) uniform sampler2D DiffuseSampler;
+layout (binding = 1) uniform sampler2D NormalSampler;
+layout (binding = 2) uniform sampler2D RoughnessSampler;
+//layout (binding = 3) uniform sampler2D NormalSampler;
 
 in vec3 Normal;
 in vec2 TexCoords;
@@ -77,10 +79,10 @@ in mat3 TBN;
 
 void main()
 {
-	if(texture(texture0, TexCoords).a < 0.4) discard;
+	if(texture(DiffuseSampler, TexCoords).a < 0.4) discard;
 
-	vec3 NormalTexture = normalize(texture(texture1, TexCoords).rgb * 2.0 - 1.0);
-	gAlbedoSpec = texture(texture0, TexCoords).rgb;
+	vec3 NormalTexture = normalize(texture(NormalSampler, TexCoords).rgb * 2.0 - 1.0);
+	gAlbedoSpec = texture(DiffuseSampler, TexCoords).rgb;
 
   	int negator = ( int(gl_FrontFacing) * 2 - 1 );
   	gExpensiveNormal.rgb =  negator * normalize(NormalTexture * TBN);

@@ -98,9 +98,10 @@ public:
     GLuint depthBuffer;
 
     std::shared_ptr<FrameBuffer<std::string> > hdrFBO;
-    std::shared_ptr<FrameBuffer<int> > mCompositeImage;
+    std::shared_ptr<FrameBuffer<int>> mCompositeImage;
     std::unique_ptr<Shader> shader;
-    std::shared_ptr<FrameBuffer<int> > CopyTextureFBO;
+    std::shared_ptr<FrameBuffer<int>> CopyTextureFBO;
+    std::shared_ptr<FrameBuffer<int>> CopyTextureBlurredFBO;
 
     float m_exposure;
     GLuint gDepth;

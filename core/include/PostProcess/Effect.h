@@ -11,17 +11,16 @@ namespace PostProcess {
 
     public:
 
-        Effect(int, int){}
+        Effect(int, int, std::shared_ptr<Shader>){}
 
         virtual ~Effect(){}
 
-        virtual GLuint Apply() = 0;
+        virtual void Apply(GLuint texture) = 0;
 
         virtual void Update() = 0;
 
     protected:
 
-        std::shared_ptr<FrameBuffer<std::string> > m_pFrameBuffer;
         std::shared_ptr<OpenGLHelpers::FullScreenQuad> m_pFullScreenQuad;
         std::shared_ptr<Shader> m_pShader;
         int m_Width;

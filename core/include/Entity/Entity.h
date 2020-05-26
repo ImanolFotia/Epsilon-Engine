@@ -77,9 +77,17 @@ public:
     bool HasMovementComponent() { return mHasMovementComponent; }
     bool HasSoundComponent() { return mHasSoundComponent; }
 
-    Component_ptr getComponent(Component::COMPONENT_TYPE type) {
+    Component::Component_ptr getComponent(Component::COMPONENT_TYPE type) noexcept
+    {
         return ComponentList[type];
     }
+
+    template <class T>
+    T getComponent()
+    {
+        return nullptr;
+    }
+
 
 private:
     bool mHasPlayerComponent = false;
@@ -99,6 +107,7 @@ public:
         if (mHasPhysicComponent)
         {
             btVector3 v3 = static_pointer_cast<Component::PhysicComponent>(ComponentList[Component::PHYSICCOMPONENT])->m_PhysicsWorldPosition;
+            static_pointer_cast<Component::RenderComponent>(ComponentList[Component::RENDERCOMPONENT])->setPosition(glm::vec3(v3.getX(), v3.getY(), v3.getZ()));
             return glm::vec3(v3.getX(), v3.getY(), v3.getZ());
         }
         else if (mHasRenderComponent)
@@ -177,7 +186,7 @@ public:
             {
                 if (ComponentList.at(i)->getType() == Component::CLOTHCOMPONENT)
                 {
-                    btSoftBody *cloth = std::static_pointer_cast<Physics::ClothPhysicObject>(std::static_pointer_cast<Component::ClothComponent>(ComponentList[i])->RigidBodyPointer)->m_BodyCloth.get();
+                    btSoftBody *cloth = std::static_pointer_cast<Physics::ClothPhysicObject>(std::static_pointer_cast<Component::ClothComponent>(ComponentList[i])->SoftBodyPointer)->m_BodyCloth.get();
 
                     btVector3 aabbMin, aabbMax;
                     cloth->getAabb(aabbMin, aabbMax);
@@ -195,6 +204,9 @@ public:
                 continue;
             }
         }
+
+        MIN_MAX_POINTS BB;
+        return BB;
         /*
         BB.MIN_X *= this->getScale().x; BB.MAX_X *= this->getScale().x;
         BB.MIN_Y *= this->getScale().y; BB.MAX_Y *= this->getScale().y;

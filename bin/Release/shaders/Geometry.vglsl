@@ -20,6 +20,8 @@ uniform mat4 view;
 uniform mat4 projection;
 uniform mat4 PrevModel;
 uniform mat4 PrevView;
+uniform mat3 invModelMatrix;
+uniform mat3 invNormalMatrix;
 //uniform vec4 clipplane;
 
 vec3 T;
@@ -58,9 +60,9 @@ void main()
   PrevPosition = projection * PrevView * PrevModel * vec4(position, 1.0);
   vs_out.TexCoords = vertexUV;
   
-  mat3 normalMatrix = transpose(inverse(mat3(model)));
+  mat3 normalMatrix = invModelMatrix;//transpose(inverse(mat3(model)));
   vs_out.TBN = CreateTBNMatrix(normalMatrix);
   vs_out.Normal = normalMatrix * normal;
-  normalMatrix = transpose(inverse(mat3(view * model)));
+  normalMatrix = invNormalMatrix;//transpose(inverse(mat3(view * model)));
   vs_out.TBN2 = CreateTBNMatrix(normalMatrix);
 }

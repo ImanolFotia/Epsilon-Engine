@@ -104,7 +104,7 @@ private:
 
     void Render3D(Shader*);
 
-    void Render3D(void);
+    void RenderShadows(void);
 
     void Render2D(void);
 
@@ -170,7 +170,7 @@ public:
    // std::shared_ptr<Pick> m_Pick;
     CAMERA_MODE m_CameraMode;
     std::vector<std::shared_ptr<CubeMap> > m_Cubemaps;
-    std::shared_ptr<CubeMap> mCubemap;
+    std::shared_ptr<CubeMap> mCubemap[7][5][7];
 
     std::shared_ptr<Game::Player> m_PlayerCapsule;
     std::shared_ptr<GUI> m_GUI;

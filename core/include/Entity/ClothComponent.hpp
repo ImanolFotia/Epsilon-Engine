@@ -4,21 +4,30 @@
 #include <Physics/ClothPhysicObject.h>
 #include <Patch.h>
 
+#include <random>
+
 namespace Component {
     
 class ClothComponent : public Component
 {
 public:
-    ClothComponent(std::shared_ptr<Camera> &inPointerToCamera, std::shared_ptr<Physics::PhysicObject> PhysicBodyPointer, std::shared_ptr<ResourceManager> rm)
+    ClothComponent(glm::vec3 pos, float sc, glm::quat rot, std::shared_ptr<Camera> inPointerToCamera, std::shared_ptr<ResourceManager> rm)
     {
         mResourceManager = rm;
         PointerToCamera = inPointerToCamera;
         updateIfOutOfView = false;
         mType = CLOTHCOMPONENT;
         
-        std::shared_ptr<Physics::ClothPhysicObject> cloth = std::static_pointer_cast<Physics::ClothPhysicObject>(PhysicBodyPointer);
-        mPatch = (std::shared_ptr<Patch>)new Patch(glm::vec3(0.0), cloth->getScale(), cloth->getWidth(), cloth->getHeight(), "sponza/sponza_curtain_diff.tga");
-        RigidBodyPointer = PhysicBodyPointer;
+        SoftBodyPointer = std::make_shared<Physics::ClothPhysicObject>();
+
+        SoftBodyPointer->addObject(mResourceManager->m_PhysicsWorld->softBodyWorldInfo, pos, sc, 30, 30, 1 + 2);
+        mPatch = (std::shared_ptr<Patch>)new Patch(glm::vec3(0.0), SoftBodyPointer->getScale(), SoftBodyPointer->getWidth(), SoftBodyPointer->getHeight(), "cloth/worn-blue-burlap-albedo.png");
+        
+        mResourceManager->m_PhysicsWorld->getSoftDynamicsWorld()->addSoftBody(SoftBodyPointer->m_BodyCloth.get());
+        
+        gen.seed(rd());
+        std::uniform_real_distribution<> d(-1.0, 0.5);
+        dis = d;
     }
 
     COMPONENT_TYPE getType() { return mType; }
@@ -32,7 +41,7 @@ public:
 
     void Render()
     {
-        mPatch->Render(mResourceManager->useShader(shaderType), PointerToCamera->getViewMatrix(), PointerToCamera->getProjectionMatrix());
+        mPatch->Render(mResourceManager->useShader(shaderType).get(), PointerToCamera->getViewMatrix(), PointerToCamera->getProjectionMatrix());
     }
 
     virtual void RenderShadows()
@@ -42,9 +51,20 @@ public:
 
     void Update()
     {
-        //std::cout << "Llega Update cloth" <<std::endl;
-        std::shared_ptr<Physics::ClothPhysicObject> cloth = std::static_pointer_cast<Physics::ClothPhysicObject>(RigidBodyPointer);
-        mPatch->updateVertexBuffers(cloth->getVertices());
+        double ts = mResourceManager->m_PhysicsWorld->getTimeStep();
+        double time = glfwGetTime();
+        double intensity = max((sin(time) * 0.5+0.5), 0.999);
+        mLastUpdate += ts;
+        if(mLastUpdate >= 1.5) {
+            btVector3 wVelocity = SoftBodyPointer->m_BodyCloth->getWindVelocity();
+            btVector3 rVector = btVector3(0.1, dis(gen), dis(gen));
+            btVector3 nVelocity = rVector + wVelocity;
+            wVelocity.lerp(nVelocity, 1.0);
+            SoftBodyPointer->m_BodyCloth->setWindVelocity(rVector*btVector3(30.0, 15.0, 40.0));
+        }
+
+
+        mPatch->updateVertexBuffers(SoftBodyPointer->getVertices());
     }
 
     void setShader(std::string sh)
@@ -52,13 +72,32 @@ public:
         shaderType = sh;
     }
 
+    glm::vec3 getPosition() {
+        return glm::vec3(0.0);
+    }
+    
+    glm::vec3 getScale() {
+        return glm::vec3(0.0);
+    }
+
+    glm::quat getRotation() {
+        return glm::quat(0.0, 0.0, 0.0, 0.0);
+    }
+
     std::shared_ptr<Patch> mPatch;
-    std::shared_ptr<Physics::PhysicObject> RigidBodyPointer = nullptr;
+    std::shared_ptr<Physics::ClothPhysicObject> SoftBodyPointer = nullptr;
     std::shared_ptr<Camera> PointerToCamera;
     bool updateIfOutOfView;
     virtual void setTransparency(bool x) {}
     std::string shaderType;
     COMPONENT_TYPE mType;
     std::shared_ptr<ResourceManager> mResourceManager;
+
+    private:
+        std::random_device rd;
+        std::mt19937 gen; 
+        std::uniform_real_distribution<> dis;
+
+        float mLastUpdate = 0.0f;
 };
 }

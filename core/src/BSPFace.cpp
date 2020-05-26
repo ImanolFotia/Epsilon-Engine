@@ -73,6 +73,7 @@ void BSPFace::RenderFace(GLuint shader, GLuint TextureID,GLuint normalID, GLuint
     glBindTexture(GL_TEXTURE_CUBE_MAP, resm->useCubeMap(resm->mCubemapIndex.at(resm->NearestCubeMap(mPosition))));
 
 	glUniform1i(glGetUniformLocation(shader, "CubemapID"), resm->NearestCubeMap(mPosition));
+        glUniform1i(glGetUniformLocation(shader, "AmbientProbeID"), resm->NearestCubeMap(mPosition) -1);
 
 	glBindVertexArray(this->VAO);
 	glCache::glDrawElements(GL_TRIANGLES, this->Indices.size(), GL_UNSIGNED_INT, 0);
