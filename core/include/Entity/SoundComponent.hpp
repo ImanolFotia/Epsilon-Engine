@@ -58,7 +58,7 @@ public:
     }
 
     void Render()
-    {
+    {/*
         switch (mState)
         {
         case AUDIO_STATE::PLAYING:
@@ -72,7 +72,7 @@ public:
             break;
         default:
             break;
-        }
+        }*/
     }
 
 private:
@@ -83,4 +83,6 @@ private:
     glm::vec3 mPosition;
     glm::quat mRotation;
 };
+
+using SoundComponent_ptr = std::shared_ptr<SoundComponent>;
 } // namespace Component

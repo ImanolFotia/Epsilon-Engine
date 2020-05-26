@@ -81,7 +81,7 @@ LIBS:= -lSOIL -lglfw -linih -lGLEW -lGLU -lGL -lopenal -fopenmp -lgomp -llua5.3 
 endif
 
 LD_FLAGS := -fopenmp
-CPPFLAGS := --std=c++17 -Wall
+CPPFLAGS := --std=c++17
 
 DEBUG_FLAGS := -g -DDEBUG
 

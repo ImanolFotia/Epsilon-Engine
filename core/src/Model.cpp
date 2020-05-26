@@ -195,11 +195,11 @@ void Model::Draw(Shader* shader, glm::vec3 pos = glm::vec3(0,0,0)) {
     for(GLuint i = 0; i < this->meshes.size(); i++)
         this->meshes[i].Draw(shader, this->resm, pos);
 }
-
+/*
 void Model::Draw(GLuint shader, glm::vec3 pos = glm::vec3(0,0,0)) {
     for(GLuint i = 0; i < this->meshes.size(); i++)
         this->meshes[i].Draw(shader, this->resm, pos);
-}
+}*/
 
 void Model::SetUniforms(Shader* shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation, std::shared_ptr<Camera> cam) {
 
@@ -253,6 +253,10 @@ void Model::SetUniforms(Shader* shader, glm::vec3 position, glm::vec3 scale, glm
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "PrevModel"), 1, GL_FALSE, &this->PrevModel[0][0]);
     glUniformMatrix4fv(shader->WorldTransform_Location, 1, GL_FALSE, &this->ModelMatrix[0][0]);
     glUniformMatrix4fv(shader->View_Location, 1, GL_FALSE, &cam->getViewMatrix()[0][0]);
+    glm::mat3 invModelMatrix = glm::transpose(glm::inverse(glm::mat3(this->ModelMatrix)));
+    glm::mat3 invNormalMatrix = glm::transpose(glm::inverse(glm::mat3(cam->getViewMatrix() * this->ModelMatrix)));
+    shader->PushUniform("invModelMatrix", invModelMatrix);
+    shader->PushUniform("invNormalMatrix", invNormalMatrix);
     glUniformMatrix4fv(shader->PrevViewPos_Location, 1, GL_FALSE, &cam->getPrevViewMatrix()[0][0]);
     glUniformMatrix4fv(shader->Projection_Location, 1, GL_FALSE, &cam->getProjectionMatrix()[0][0]);
     glUniform3f(shader->viewPos_Location,  cam->getPosition().x, cam->getPosition().y, cam->getPosition().z);

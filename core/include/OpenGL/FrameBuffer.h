@@ -89,6 +89,11 @@ public:
     {
         glViewport(0,0,WIDTH, HEIGHT);
     }
+    
+    void setViewport(int w, int h)
+    {
+        glViewport(0,0,w, h);
+    }
 
     void clearBuffer(int masks)
     {

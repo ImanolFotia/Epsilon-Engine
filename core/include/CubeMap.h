@@ -25,10 +25,10 @@ class CubeMap {
 			type = DYNAMIC;
 			prefilterShader = (std::shared_ptr<Shader>) new Shader("shaders/prefilter.vglsl", "shaders/prefilter.glsl");
 			mMainShader = (std::shared_ptr<Shader>) new Shader("shaders/vertex.glsl", "shaders/fragment.frag");
-
+			resolution = 32;
 			genFrameBuffer();
 
-			captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 1000.0f);
+			captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.001f, 1000.0f);
 
 			captureViews[0] = glm::lookAt(Position, glm::vec3( 1.0f,  0.0f,  0.0f) + Position, glm::vec3(0.0f, -1.0f,  0.0f));
 			captureViews[1] = glm::lookAt(Position, glm::vec3(-1.0f,  0.0f,  0.0f) + Position, glm::vec3(0.0f, -1.0f,  0.0f));
@@ -56,14 +56,16 @@ class CubeMap {
 
 			//glClearColor(0.05,0.08,0.2, 1.0);
 			glClearColor(1.0,0.05,0.1, 1.0);
-			glViewport(0,0,512,512);
+			glViewport(0,0,resolution,resolution);
 			glEnable(GL_DEPTH_TEST);
 			glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
 
 			mMainShader->Use();
 			mMainShader->PushUniform("projection", captureProjection);
 
-			glUniformMatrix4fv(glGetUniformLocation(mMainShader->getProgramID(), "view"), 1, GL_FALSE, (const float*)&captureViews[index]);
+			//glUniformMatrix4fv(mMainShader->getUniformLocation("view"), 1, GL_FALSE, (const float*)&captureViews[index]);
+
+			mMainShader->PushUniform("view", captureViews[index]);
 
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X+index, cubemapTex, 0);
 
@@ -74,7 +76,8 @@ class CubeMap {
 
 		void pushViewMatrix(glm::mat4 view) {
 			mMainShader->Use();
-			glUniformMatrix4fv(glGetUniformLocation(mMainShader->getProgramID(), "view"), 1, GL_FALSE, (const float*)&view);
+			//glUniformMatrix4fv(mMainShader->getUniformLocation("view"), 1, GL_FALSE, (const float*)&view);
+			mMainShader->PushUniform("view", view);
 		}
 
 		void endCapturingEnvironment() {
@@ -97,7 +100,7 @@ class CubeMap {
 			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			for (unsigned int i = 0; i < 6; ++i) {
-				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, 0, GL_RGB16F, 512, 512, 0, GL_RGB, GL_FLOAT, 0);
+				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, 0, GL_RGB16F, resolution, resolution, 0, GL_RGB, GL_FLOAT, 0);
 			}
 
 			glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
@@ -106,7 +109,7 @@ class CubeMap {
 
 			glGenRenderbuffers(1, &captureRBO);
 			glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32F, 512, 512);
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32F, resolution, resolution);
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, captureRBO);
 
 		}
@@ -115,7 +118,7 @@ class CubeMap {
 			glGenTextures(1, &prefilterMap);
 			glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap);
 			for (unsigned int i = 0; i < 6; ++i) {
-				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 512, 512, 0, GL_RGB, GL_FLOAT, nullptr);
+				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, resolution, resolution, 0, GL_RGB, GL_FLOAT, nullptr);
 			}
 			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -143,8 +146,8 @@ class CubeMap {
 			unsigned int maxMipLevels = 5;
 			for (unsigned int mip = 0; mip < maxMipLevels; ++mip) {
 				// reisze framebuffer according to mip-level size.
-				unsigned int mipWidth = 512 * std::pow(0.5, mip);
-				unsigned int mipHeight = 512 * std::pow(0.5, mip);
+				unsigned int mipWidth = resolution * std::pow(0.5, mip);
+				unsigned int mipHeight = resolution * std::pow(0.5, mip);
 				glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
 				glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32F, mipWidth, mipHeight);
 				glViewport(0, 0, mipWidth, mipHeight);
@@ -159,7 +162,8 @@ class CubeMap {
 					glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTex);
 					prefilterShader->PushUniform("environmentMap", 0);
 
-					glUniformMatrix4fv(glGetUniformLocation(prefilterShader->getProgramID(), "view"), 1, GL_FALSE, (const float*)&captureViews[i]);
+					//glUniformMatrix4fv(prefilterShader->getUniformLocation("view"), 1, GL_FALSE, (const float*)&captureViews[i]);
+					prefilterShader->PushUniform("view", captureViews[i]);
 					glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, prefilterMap, mip);
 
 					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -224,6 +228,7 @@ class CubeMap {
 		std::shared_ptr<Shader> mPassThroughShader;
 		std::shared_ptr<FrameBuffer<std::string> > hdrFBO;
 		CUBEMAP_TYPE type;
+		int resolution;
 
 	protected:
 

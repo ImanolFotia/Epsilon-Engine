@@ -23,6 +23,8 @@ namespace Physics {
 		//acum += deltaTime;
 		//if(acum >= 1/60){
 
+		mTimeStep = deltaTime;
+
 		world->stepSimulation(deltaTime, 5, 1.0/300.0);
 		//acum = 0.0;
 		//}

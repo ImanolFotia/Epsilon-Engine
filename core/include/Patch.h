@@ -54,6 +54,8 @@ private:
 private:
     std::shared_ptr<eTexture> mTexture;
     std::shared_ptr<eTexture> mNormalTexture;
+    std::shared_ptr<eTexture> mRoughtnessTexture;
+    std::shared_ptr<eTexture> mMetallicTexture;
 
     std::vector<glm::vec3> mVertices;
     std::vector<glm::vec3> mNormals;

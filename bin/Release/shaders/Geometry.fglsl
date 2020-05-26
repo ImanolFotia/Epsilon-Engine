@@ -24,6 +24,7 @@ in VS_OUT{
 uniform vec3 viewPos;
 uniform float time;
 uniform int CubemapID;
+uniform int AmbientProbeID;
 uniform mat4 projection;
 uniform bool parallaxOn;
 uniform float u_scaleFactor = 0.5;
@@ -72,7 +73,7 @@ struct SphericalHarmonicsFormat {
 
 layout(std430, binding = 1) buffer AmbientLightSSBO
 {
-    SphericalHarmonicsFormat ambientProbes;
+    SphericalHarmonicsFormat ambientProbes[7*5*7];
 
 } lp;
 
@@ -92,19 +93,19 @@ vec3 sphericalHarmonics(vec3 N)
 {
    return
       // band 0, constant value, details of lowest frequency
-      C4 * lp.ambientProbes.u_L00 +
+      C4 * lp.ambientProbes[AmbientProbeID].u_L00 +
 
       // band 1, oriented along main axes
-      2.0 * C2 * lp.ambientProbes.u_L11 * N.x +
-      2.0 * C2 * lp.ambientProbes.u_L1m1 * N.y +
-      2.0 * C2 * lp.ambientProbes.u_L10 * N.z +
+      2.0 * C2 * lp.ambientProbes[AmbientProbeID].u_L11 * N.x +
+      2.0 * C2 * lp.ambientProbes[AmbientProbeID].u_L1m1 * N.y +
+      2.0 * C2 * lp.ambientProbes[AmbientProbeID].u_L10 * N.z +
 
       // band 2, values depend on multiple axes, higher frequency details
-      C1 * lp.ambientProbes.u_L22 * (N.x * N.x - N.y * N.y) +
-      C3 * lp.ambientProbes.u_L20 * N.z * N.z - C5 * lp.ambientProbes.u_L20 +
-      2.0 * C1 * lp.ambientProbes.u_L2m2 * N.x * N.y +
-      2.0 * C1 * lp.ambientProbes.u_L21 * N.x * N.z +
-      2.0 * C1 * lp.ambientProbes.u_L2m1 * N.y * N.z;
+      C1 * lp.ambientProbes[AmbientProbeID].u_L22 * (N.x * N.x - N.y * N.y) +
+      C3 * lp.ambientProbes[AmbientProbeID].u_L20 * N.z * N.z - C5 * lp.ambientProbes[AmbientProbeID].u_L20 +
+      2.0 * C1 * lp.ambientProbes[AmbientProbeID].u_L2m2 * N.x * N.y +
+      2.0 * C1 * lp.ambientProbes[AmbientProbeID].u_L21 * N.x * N.z +
+      2.0 * C1 * lp.ambientProbes[AmbientProbeID].u_L2m1 * N.y * N.z;
 }
 
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
@@ -299,8 +300,8 @@ void main()
   gExtraComponents.zw = vec2(a - b);
   const float MAX_REFLECTION_LOD = 4.0;
 
-  CubeMapcolor = textureLod(skybox, bpcem(
-                                      reflect(normalize(fs_in.wFragPos - viewPos), normalize(gExpensiveNormal.rgb)), 
+  CubeMapcolor = textureLod(skybox, /*bpcem(*/
+                                      reflect(normalize(fs_in.wFragPos - viewPos), normalize(gExpensiveNormal.rgb))/*, 
                                       BoxMax, BoxMin, vec3(-11.0, 6.0, -8.0))/* reflect(normalize(fs_in.wFragPos - viewPos), normalize(gExpensiveNormal.rgb))*/, gExpensiveNormal.a * MAX_REFLECTION_LOD);
 
   vec3 shc = sphericalHarmonics(normalize(gExpensiveNormal.rgb)) * u_scaleFactor;

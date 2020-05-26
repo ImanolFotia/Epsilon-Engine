@@ -152,7 +152,7 @@ public:
      * \param Shader Name
      * \return Shader Instance
      */
-    Shader useShader(std::string shaderPath);
+    std::shared_ptr<Shader> useShader(std::string shaderPath);
 
     /** \brief Loads a new shader into the engine or returns the existing one if already loaded
      *
@@ -160,6 +160,9 @@ public:
      * \return Shader ID
      */
     GLuint getShaderID(std::string shaderPath);
+
+    
+    std::shared_ptr<Shader> getShader(std::string shaderPath);
 
     /** \brief Loads a new Cube Map into the engine or returns the existing one if already loaded
      *
@@ -214,7 +217,7 @@ private:
     std::map<std::string, Water>    WaterPlanesList;
     std::map<std::string, Terrain>  TerrainList;
     std::map<std::string, Model>    ModelList;
-    std::map<std::string, Shader> ShadersList;
+    std::map<std::string, std::shared_ptr<Shader>> ShadersList;
     std::vector<glm::vec3> CubeMapPositions;
 
     /*!

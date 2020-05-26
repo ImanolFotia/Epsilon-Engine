@@ -7,7 +7,9 @@ Patch::Patch(glm::vec3 position, float s, int w, int h, std::string texturePath)
     this->mPosition = position;
 
     this->mTexture = (std::shared_ptr<eTexture>) new eTexture(texturePath.c_str());
-    this->mNormalTexture = (std::shared_ptr<eTexture>) new eTexture("sponza/sponza_curtain_ddn.tga");
+    this->mNormalTexture = (std::shared_ptr<eTexture>) new eTexture("cloth/worn-blue-burlap-Normal-dx.png");
+    this->mRoughtnessTexture = (std::shared_ptr<eTexture>) new eTexture("cloth/worn-blue-burlap-Normal-dx.png");
+    this->mMetallicTexture = (std::shared_ptr<eTexture>) new eTexture("cloth/worn-blue-burlap-Normal-dx.png");
 
     this->generateGeometry();
     this->setupVertexBuffers();
@@ -60,6 +62,7 @@ void Patch::RenderShadows()
 
 void Patch::Render(Shader inShader, glm::mat4 viewMatrix, glm::mat4 projectionMatrix) {
 
+    glDisable(GL_CULL_FACE);
     inShader.Use();
     glm::mat4 model = glm::mat4(1.0);//glm::translate(glm::mat4(1.0), this->mPosition);
     glm::mat4 MVP = projectionMatrix * viewMatrix * model;
@@ -79,6 +82,7 @@ void Patch::Render(Shader inShader, glm::mat4 viewMatrix, glm::mat4 projectionMa
 
     inShader.Free();
     glBindVertexArray(0);
+    glEnable(GL_CULL_FACE);
 }
 
 void Patch::updateVertexBuffers(std::vector<Physics::PhysicObject::t_ClothVertex> inVertices) {

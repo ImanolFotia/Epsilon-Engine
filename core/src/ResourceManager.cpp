@@ -59,7 +59,7 @@ void ResourceManager::useModel(std::string modelPath, Shader* shader, glm::vec3 
         std::cout << "Exception caught at: " << __FUNCTION__ << "useModel(" << modelPath << ", shader" << ",glm:vec3(" << pos.x << ", " << pos.y << ", " << pos.z << ") :::" << e.what() <<std::endl;
     }
 }
-
+/*
 void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 pos = glm::vec3(0,0,0))
 {
     try
@@ -71,7 +71,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
     {
         std::cout << "Exception caught at: " << __FUNCTION__ << "(std::string modelPath, GLuint shader, glm::vec3 pos = glm::vec3(0,0,0)) :::" << e.what() <<std::endl;
     }
-}
+}*/
 
 Model ResourceManager::getModel(std::string modelPath)
 {
@@ -242,15 +242,15 @@ std::string ResourceManager::requestShader(std::string shaderPathv, std::string 
 {
     try
     {
-        std::map<std::string, Shader>::iterator it;
+        std::map<std::string, std::shared_ptr<Shader>>::iterator it;
         it = ShadersList.find(name);
         if(it != ShadersList.end())
         {
-            return ShadersList.at(it->first).getPath();
+            return ShadersList.at(it->first)->getPath();
         }
         else
         {
-            Shader tmpShader(shaderPathv.c_str(), shaderPathf.c_str());
+            std::shared_ptr<Shader> tmpShader = std::make_shared<Shader>(shaderPathv.c_str(), shaderPathf.c_str());
             ShadersList.insert(std::make_pair(name, tmpShader));
             return name;
         }
@@ -261,7 +261,7 @@ std::string ResourceManager::requestShader(std::string shaderPathv, std::string 
     }
 }
 
-Shader ResourceManager::useShader(std::string shaderPath)
+std::shared_ptr<Shader> ResourceManager::useShader(std::string shaderPath)
 {
     try
     {
@@ -278,7 +278,21 @@ GLuint ResourceManager::getShaderID(std::string shaderPath)
 {
     try
     {
-        return ShadersList.at(shaderPath).getProgramID();
+        return ShadersList.at(shaderPath)->getProgramID();
+    }
+
+    catch(std::exception e)
+    {
+        std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() <<std::endl;
+    }
+}
+
+
+std::shared_ptr<Shader> ResourceManager::getShader(std::string shaderPath)
+{
+    try
+    {
+        return ShadersList.at(shaderPath);
     }
 
     catch(std::exception e)
@@ -331,16 +345,16 @@ bool ResourceManager::requestCubeMap(int CubeMapID, glm::vec3 Position)
 
 bool ResourceManager::addCubemap(std::shared_ptr<CubeMap> cubemap, glm::vec3 position)
 {
-    if(cubemap != nullptr){
+    //if(cubemap != nullptr){
         CubeMapList.insert(std::make_pair(cubemap->getID(), cubemap));
         CubeMapPositions.push_back(position);
         mCubemapIndex.push_back(cubemap->getID());
         std::cout << "Added Cubemap: " << cubemap->getID() << std::endl;
         return true;
-    }
-    else{
-        return false;
-    }
+    //}
+    //else{
+    //    return false;
+    //}
 
 }
 
@@ -351,5 +365,6 @@ int ResourceManager::NearestCubeMap(glm::vec3 TestingPoint)
 
 GLuint ResourceManager::useCubeMap(int ID)
 {
-    return CubeMapList.at(ID)->getTextureID();
+    if(CubeMapList.at(ID) != nullptr)
+        return CubeMapList.at(ID)->getTextureID();
 }

@@ -95,6 +95,10 @@ public:
         glUniformMatrix4fv(m_Uniforms[name], 1, GL_FALSE, &data[0][0]);
     }
 
+    GLuint getUniformLocation(std::string name) {
+        return m_Uniforms.at(name);
+    }
+
 private:
 
     GLuint ProgramID;
