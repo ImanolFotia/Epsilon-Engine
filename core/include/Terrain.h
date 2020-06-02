@@ -16,7 +16,6 @@
 #include <Physics/Physics.h>
 #include <Physics/PhysicObject.h>
 
-class ResourceManager;
 
 struct TVertex
 {
@@ -43,9 +42,9 @@ class Terrain
 {
 public:
 
-    Terrain(const char*, const char*, float, int, std::shared_ptr<ResourceManager> rm /**Must be Power of two*/);
+    Terrain(const char*, const char*, float, int);
     Terrain(const char*, const char*, const char*, float, int/**Must be Power of two*/);
-    Terrain(const char*, const char*, const char*, const char*, const char*,float, int, glm::vec3,std::shared_ptr<ResourceManager> rm/**Must be Power of two*/);
+    Terrain(const char*, const char*, const char*, const char*, const char*,float, int, glm::vec3);
 
     virtual ~Terrain(){
 
@@ -105,7 +104,6 @@ private:
     std::vector<glm::vec3> Bitangents;
 
 private:
-    std::shared_ptr<ResourceManager> rM;
     std::shared_ptr<btRigidBody> rigidBody;
     std::shared_ptr<Physics::CollisionInfo> collinfo;
     std::shared_ptr<Physics::PhysicObject> CollisionObject;

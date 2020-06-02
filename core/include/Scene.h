@@ -56,7 +56,6 @@ private:
 
 private:
 
-    std::shared_ptr<ResourceManager> m_ResourceManager;
 
     std::map<int, std::shared_ptr<EntityTemplate>> map_Entities;
     std::map<int, std::shared_ptr<Light>> map_Lights;

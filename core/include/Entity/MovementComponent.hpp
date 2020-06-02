@@ -8,10 +8,9 @@ namespace Component
 class MovementComponent : public Component
 {
 public:
-    MovementComponent(std::shared_ptr<Physics::PhysicObject> rigidBody, glm::vec3 from, glm::vec3 to, float speed, bool loop, std::shared_ptr<ResourceManager> rm)
+    MovementComponent(std::shared_ptr<Physics::PhysicObject> rigidBody, glm::vec3 from, glm::vec3 to, float speed, bool loop)
     {
         mType = MOVEMENTCOMPONENT;
-        mResourceManager = rm;
         RigidBodyPointer = rigidBody;
         m_FromPos = from;
         m_ToPos = to;
@@ -43,13 +42,13 @@ public:
             }
 
             if (m_Up)
-                m_Rate += m_Speed * mResourceManager->timestep;
+                m_Rate += m_Speed * ResourceManager::Get().timestep;
             else
-                m_Rate -= m_Speed * mResourceManager->timestep;
+                m_Rate -= m_Speed * ResourceManager::Get().timestep;
         }
         else
         {
-            m_Rate += m_Speed * mResourceManager->timestep;
+            m_Rate += m_Speed * ResourceManager::Get().timestep;
         }
 
         m_CurrentPosition = glm::mix(m_FromPos, m_ToPos, m_Interpolation);
@@ -76,7 +75,6 @@ private:
     bool m_Loop;
     bool m_Up = true;
     std::shared_ptr<Physics::PhysicObject> RigidBodyPointer;
-    std::shared_ptr<ResourceManager> mResourceManager;
 
 protected:
 };

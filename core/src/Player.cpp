@@ -17,7 +17,7 @@ namespace Game
       *
       * (documentation goes here)
       */
-    Player::Player(float x, float y, float z, std::shared_ptr<ResourceManager> resourceManager)
+    Player::Player(float x, float y, float z)
     {
 
         m_rayLambda[0] = 1.0;
@@ -40,12 +40,11 @@ namespace Game
         btRigidBody::btRigidBodyConstructionInfo info(150.0,m_MotionState.get(),m_playerCapsule.get(),inertia);  //create the constructioninfo, you can create multiple bodies with the same info
         info.m_restitution = 0.0f;
         info.m_friction = 10.0f;
-        m_LocalResourceManagerPointer = resourceManager;
         m_playerBody = (std::shared_ptr<btRigidBody>) new btRigidBody(info);    //let's create the body itself
         m_collinfo = (std::shared_ptr<Physics::CollisionInfo>)new Physics::CollisionInfo();
         m_collinfo->setName(std::string("Player"));
         m_playerBody->setUserPointer(m_collinfo.get());
-        m_LocalResourceManagerPointer->m_PhysicsWorld->world->addRigidBody(m_playerBody.get());
+        ResourceManager::Get().getPhysicsWorld()->world->addRigidBody(m_playerBody.get());
         m_playerBody->setCollisionFlags(m_playerBody->getFlags());
         //m_playerBody->setFlags(btRigidBody::CO_SOFT_BODY);
         m_playerBody->setActivationState(DISABLE_DEACTIVATION);
@@ -141,7 +140,7 @@ namespace Game
         for(int i = 0; i <2; i++) {
             ClosestNotMe rayCallback(m_playerBody.get(), m_raySource[i], m_rayTarget[i]);
             rayCallback.m_closestHitFraction = 1.0;
-            m_LocalResourceManagerPointer->m_PhysicsWorld->world->rayTest(m_raySource[i], m_rayTarget[i], rayCallback);
+            ResourceManager::Get().getPhysicsWorld()->world->rayTest(m_raySource[i], m_rayTarget[i], rayCallback);
             if (rayCallback.hasHit())
             {
                 btRigidBody* body = (btRigidBody*)btRigidBody::upcast(rayCallback.m_collisionObject);
@@ -370,7 +369,7 @@ namespace Game
 
     bool Player::pickObject(btVector3 from, btVector3 to)
     {
-        if (m_LocalResourceManagerPointer->m_PhysicsWorld->world==0)
+        if (ResourceManager::Get().getPhysicsWorld()->world==0)
             return false;
 
         class ClosestNotMe : public btCollisionWorld::ClosestRayResultCallback
@@ -396,7 +395,7 @@ namespace Game
         btVector3 target = rayFrom + rayTo;
         ClosestNotMe rayCallback(m_playerBody.get(), rayFrom, target);
 
-        m_LocalResourceManagerPointer->m_PhysicsWorld->world->rayTest(rayFrom, target, rayCallback);
+        ResourceManager::Get().getPhysicsWorld()->world->rayTest(rayFrom, target, rayCallback);
         if (rayCallback.hasHit())
         {
             btVector3 pickPos = rayCallback.m_hitPointWorld;
@@ -411,7 +410,7 @@ namespace Game
                     m_pickedBody->setActivationState(DISABLE_DEACTIVATION);
                     btVector3 localPivot = body->getCenterOfMassTransform().inverse() * body->getCenterOfMassPosition();
                     btPoint2PointConstraint* p2p = new btPoint2PointConstraint(*body, localPivot);
-                    m_LocalResourceManagerPointer->m_PhysicsWorld->world->addConstraint(p2p, true);
+                    ResourceManager::Get().getPhysicsWorld()->world->addConstraint(p2p, true);
                     m_pickedConstraint = p2p;
                     btScalar mousePickClamping = 1000.f;
                     p2p->m_setting.m_impulseClamp = mousePickClamping;
@@ -458,7 +457,7 @@ namespace Game
             m_pickedBody->forceActivationState(m_savedState);
             m_pickedBody->activate();
             m_pickedBody->setAngularVelocity(pickedbodyangularfactor);
-            m_LocalResourceManagerPointer->m_PhysicsWorld->world->removeConstraint(m_pickedConstraint);
+            ResourceManager::Get().getPhysicsWorld()->world->removeConstraint(m_pickedConstraint);
             delete m_pickedConstraint;
             m_pickedConstraint = 0;
             m_pickedBody = 0;

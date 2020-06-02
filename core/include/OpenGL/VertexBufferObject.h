@@ -2,30 +2,50 @@
 
 #include <GL/glew.h>
 
-class VertexBufferObject
+namespace Epsilon
 {
-public:
-    VertexBufferObject()
+    namespace API
     {
-        glGenBuffers(1, &this->m_Handler);
-    }
+        namespace OpenGL
+        {
+            class VertexBufferObject
+            {
+            public:
+                VertexBufferObject()
+                {
+                    glGenBuffers(1, &this->m_Handler);
+                }
 
-    ~VertexBufferObject(){}
+                ~VertexBufferObject() {}
 
-    void FillData(GLenum target, GLsizeiptr size, GLvoid* data, GLenum usage)
-    {
-        glBindBuffer(target, this->m_Handler);
-        glBufferData(target, size, data, usage);
-    }
+                void FillData(GLenum target, GLsizeiptr size, GLvoid *data, GLenum usage)
+                {
+                    m_Target = target;
+                    glBindBuffer(m_Target, this->m_Handler);
+                    glBufferData(m_Target, size, data, usage);
+                }
 
-    void Update(){}
+                GLuint Get()
+                {
+                    return m_Handler;
+                }
 
-    void Destroy()
-    {
-        glDeleteBuffers(1, &m_Handler);
-    }
+                void Bind()
+                {
+                    glBindBuffer(m_Target, this->m_Handler);
+                }
 
-private:
-    GLuint m_Handler;
+                void Update() {}
 
-};
+                void Destroy()
+                {
+                    glDeleteBuffers(1, &m_Handler);
+                }
+
+            private:
+                GLuint m_Handler;
+                GLenum m_Target;
+            };
+        } // namespace OpenGL
+    } // namespace API
+} // namespace Epsilon

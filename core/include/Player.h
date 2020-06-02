@@ -14,7 +14,7 @@ namespace Game
 class Player
 {
 public:
-    Player(float x, float y, float z, std::shared_ptr<ResourceManager> resourceManager);
+    Player(float x, float y, float z);
     ~Player() {/*std::cout << "Deleted Player"<< std::endl;*/}
 
 public:
@@ -75,7 +75,6 @@ private:
     std::shared_ptr<btRigidBody> m_playerBody;
     std::shared_ptr<btCapsuleShape> m_playerCapsule;
     std::shared_ptr<btMotionState> m_MotionState;
-    std::shared_ptr<ResourceManager> m_LocalResourceManagerPointer;
     std::shared_ptr<Physics::CollisionInfo> m_collinfo;
 
 private:

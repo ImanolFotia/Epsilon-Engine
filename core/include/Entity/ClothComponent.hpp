@@ -11,19 +11,18 @@ namespace Component {
 class ClothComponent : public Component
 {
 public:
-    ClothComponent(glm::vec3 pos, float sc, glm::quat rot, std::shared_ptr<Camera> inPointerToCamera, std::shared_ptr<ResourceManager> rm)
+    ClothComponent(glm::vec3 pos, float sc, glm::quat rot, std::shared_ptr<Camera> inPointerToCamera)
     {
-        mResourceManager = rm;
         PointerToCamera = inPointerToCamera;
         updateIfOutOfView = false;
         mType = CLOTHCOMPONENT;
         
         SoftBodyPointer = std::make_shared<Physics::ClothPhysicObject>();
 
-        SoftBodyPointer->addObject(mResourceManager->m_PhysicsWorld->softBodyWorldInfo, pos, sc, 30, 30, 1 + 2);
+        SoftBodyPointer->addObject(ResourceManager::Get().getPhysicsWorld()->softBodyWorldInfo, pos, sc, 30, 30, 1 + 2);
         mPatch = (std::shared_ptr<Patch>)new Patch(glm::vec3(0.0), SoftBodyPointer->getScale(), SoftBodyPointer->getWidth(), SoftBodyPointer->getHeight(), "cloth/worn-blue-burlap-albedo.png");
         
-        mResourceManager->m_PhysicsWorld->getSoftDynamicsWorld()->addSoftBody(SoftBodyPointer->m_BodyCloth.get());
+        ResourceManager::Get().getPhysicsWorld()->getSoftDynamicsWorld()->addSoftBody(SoftBodyPointer->m_BodyCloth.get());
         
         gen.seed(rd());
         std::uniform_real_distribution<> d(-1.0, 0.5);
@@ -41,7 +40,7 @@ public:
 
     void Render()
     {
-        mPatch->Render(mResourceManager->useShader(shaderType).get(), PointerToCamera->getViewMatrix(), PointerToCamera->getProjectionMatrix());
+        mPatch->Render(ResourceManager::Get().useShader(shaderType).get(), PointerToCamera->getViewMatrix(), PointerToCamera->getProjectionMatrix());
     }
 
     virtual void RenderShadows()
@@ -51,7 +50,7 @@ public:
 
     void Update()
     {
-        double ts = mResourceManager->m_PhysicsWorld->getTimeStep();
+        double ts = ResourceManager::Get().getPhysicsWorld()->getTimeStep();
         double time = glfwGetTime();
         double intensity = max((sin(time) * 0.5+0.5), 0.999);
         mLastUpdate += ts;
@@ -91,7 +90,6 @@ public:
     virtual void setTransparency(bool x) {}
     std::string shaderType;
     COMPONENT_TYPE mType;
-    std::shared_ptr<ResourceManager> mResourceManager;
 
     private:
         std::random_device rd;

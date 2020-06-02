@@ -10,12 +10,12 @@ namespace Component
 class RenderComponent : public Component
 {
 public:
-    RenderComponent(std::string path, glm::vec3 pos, std::shared_ptr<ResourceManager> rm, std::string shader) 
-    : modelPath(path), mPosition(pos), mResourceManager(rm), shaderType(shader)
+    RenderComponent(std::string path, glm::vec3 pos, std::string shader) 
+    : modelPath(path), mPosition(pos), shaderType(shader)
     {
         mType = RENDERCOMPONENT;
         hasModel = true;
-        mResourceManager->requestModel(modelPath, rm, glm::vec3(0), glm::vec3(1), glm::quat(0, 0, 0, 0));
+        ResourceManager::Get().requestModel(modelPath, glm::vec3(0), glm::vec3(1), glm::quat(0, 0, 0, 0));
     }
 
     COMPONENT_TYPE getType() { return mType; }
@@ -53,17 +53,17 @@ public:
     void Render()
     {
         //glUniform1i(glGetUniformLocation(mResourceManager->getShader(shaderType).get(), "isTransparent"), this->isTransparent);
-        mResourceManager->getShader(shaderType)->PushUniform("isTransparent", this->isTransparent);
+        ResourceManager::Get().useShader(shaderType)->PushUniform("isTransparent", this->isTransparent);
         if (isDoubleFaced())
             glDisable(GL_CULL_FACE);
-        mResourceManager->useModel(modelPath, mResourceManager->getShader(shaderType).get(), mPosition);
+        ResourceManager::Get().useModel(modelPath, ResourceManager::Get().useShader(shaderType).get(), mPosition);
         
         glEnable(GL_CULL_FACE);
     }
     
     void RenderShadows()
     {
-        mResourceManager->useModel(modelPath, mResourceManager->getShader(shaderType).get(), mPosition);
+        ResourceManager::Get().useModel(modelPath, ResourceManager::Get().useShader(shaderType).get(), mPosition);
     }
 
     void setShader(std::string sh)
@@ -97,7 +97,6 @@ public:
     bool isTransparent;
     bool mIsDoubleFaced;
     bool mCastsShadows;
-    std::shared_ptr<ResourceManager> mResourceManager;
     glm::vec3 mPosition;
 };
 

@@ -297,6 +297,7 @@ void main() {
     }
 
     vec4 color = vec4(1.0);
+    Color.a = 1.0;
     if (mode == 0) {
       Color.rgb = HDR(tex.xyz);
     }

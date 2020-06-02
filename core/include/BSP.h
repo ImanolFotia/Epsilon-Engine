@@ -227,7 +227,7 @@ class CQuake3BSP
 
 public:
 
-    CQuake3BSP(std::shared_ptr<ResourceManager>);
+    CQuake3BSP();
 
     virtual ~CQuake3BSP(){
         //cout << "Destroyed BSP map" << endl;
@@ -287,7 +287,6 @@ private:
     std::map<int, BSPTexture> faceTexture_normal;
     std::map<int, BSPTexture> faceTexture_specular;
     std::map<int, BSPTexture> faceTexture_metallic;
-    std::shared_ptr<ResourceManager> resm;
 
     bool lightmap;
     bool color;

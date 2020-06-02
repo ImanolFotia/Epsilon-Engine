@@ -25,17 +25,17 @@ class PhysicComponent : public Component
     using DynamicWorld_ptr = std::shared_ptr<btDynamicsWorld>;
 
 public:
-    PhysicComponent(float mass, glm::vec3 pos, glm::vec3 scale, Physics::Type type, MIN_MAX_POINTS boundingBox, std::shared_ptr<ResourceManager> rm) : mType(PHYSICCOMPONENT), mMass(mass), mResourceManager(rm)
+    PhysicComponent(float mass, glm::vec3 pos, glm::vec3 scale, Physics::Type type, MIN_MAX_POINTS boundingBox) : mType(PHYSICCOMPONENT), mMass(mass)
     {
         try
         {
             BaseShape_ptr _shape;
-            DynamicWorld_ptr world = rm->m_PhysicsWorld->world;
+            DynamicWorld_ptr world = ResourceManager::Get().getPhysicsWorld()->world;
             switch (type)
             {
             case Physics::Type::CUBE:
                 mRigidBodyPointer = make_shared<Physics::CubePhysicObject>();
-                world->addRigidBody(static_pointer_cast<Physics::CubePhysicObject>(mRigidBodyPointer)->addObject(pos, 100.0, boundingBox, scale).get());
+                world->addRigidBody(static_pointer_cast<Physics::CubePhysicObject>(mRigidBodyPointer)->addObject(pos, mass, boundingBox, scale).get());
                 break;
             case Physics::Type::SPHERE:
                 mRigidBodyPointer = make_shared<Physics::SpherePhysicObject>();
@@ -57,10 +57,15 @@ public:
             //m_PhysicsWorldPosition = mRigidBodyPointer->Body->getCenterOfMassPosition();
             m_LastPhysicsWorldPosition = m_PhysicsWorldPosition;
             m_PhysicsWorldRotation = mRigidBodyPointer->Body->getOrientation();
+            
 
             btTransform transf = getTransform();
-            btQuaternion rot = btQuaternion(m_Rotation.x, m_Rotation.y, m_Rotation.z, m_Rotation.w);
-            transf.setRotation(rot);
+            //btQuaternion rot = btQuaternion(m_Rotation.x, m_Rotation.y, m_Rotation.z, m_Rotation.w);
+
+            glm::quat rot = glm::quat(m_PhysicsWorldRotation.getW(), m_PhysicsWorldRotation.getX(), m_PhysicsWorldRotation.getY(), m_PhysicsWorldRotation.getZ());
+            //btQuaternion rot = btQuaternion(m_Rotation.x, m_Rotation.y, m_Rotation.z, m_Rotation.w);
+            std::cout << " Rotation | x: " << rot.x << " y: " << rot.y << " z: " << rot.z << " w: " << rot.w << std::endl;
+            transf.setRotation(m_PhysicsWorldRotation);
             transf.setOrigin(m_PhysicsWorldPosition);
             setTransform(transf);
             setUserPointer(&CollInfo);
@@ -110,7 +115,10 @@ public:
         mRigidBodyPointer->Body->setCenterOfMassTransform(t);
     }
 
-    glm::vec3 getPosition() {}
+    glm::vec3 getPosition() {
+            return glm::vec3(m_PhysicsWorldPosition.getX(), m_PhysicsWorldPosition.getY(), m_PhysicsWorldPosition.getZ());
+    }
+    
     glm::quat getRotation() {}
     glm::vec3 getScale() {}
 
@@ -120,7 +128,6 @@ public:
     Physics::CollisionInfo CollInfo;
     BaseShape_ptr mRigidBodyPointer = nullptr;
     COMPONENT_TYPE mType;
-    std::shared_ptr<ResourceManager> mResourceManager;
 
     btVector3 m_PhysicsWorldPosition;
     btVector3 m_LastPhysicsWorldPosition;

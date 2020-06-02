@@ -20,7 +20,7 @@ class EntityTemplate : public std::enable_shared_from_this<EntityTemplate>
     using Component_ptr = std::shared_ptr<Component::Component>;
 
 public:
-    EntityTemplate(std::shared_ptr<ResourceManager> rm, glm::vec3 pos, glm::vec3 sc, glm::quat rot);
+    EntityTemplate(glm::vec3 pos, glm::vec3 sc, glm::quat rot);
 
     std::shared_ptr<EntityTemplate> addComponent(Component_ptr t)
     {
@@ -106,9 +106,9 @@ public:
     {
         if (mHasPhysicComponent)
         {
-            btVector3 v3 = static_pointer_cast<Component::PhysicComponent>(ComponentList[Component::PHYSICCOMPONENT])->m_PhysicsWorldPosition;
-            static_pointer_cast<Component::RenderComponent>(ComponentList[Component::RENDERCOMPONENT])->setPosition(glm::vec3(v3.getX(), v3.getY(), v3.getZ()));
-            return glm::vec3(v3.getX(), v3.getY(), v3.getZ());
+            glm::vec3 v3 = static_pointer_cast<Component::PhysicComponent>(ComponentList[Component::PHYSICCOMPONENT])->getPosition();
+            static_pointer_cast<Component::RenderComponent>(ComponentList[Component::RENDERCOMPONENT])->setPosition(glm::vec3(v3));
+            return v3;
         }
         else if (mHasRenderComponent)
         {
@@ -148,7 +148,8 @@ public:
         if (mHasPhysicComponent)
         {
             btQuaternion q = static_pointer_cast<Component::PhysicComponent>(ComponentList[Component::PHYSICCOMPONENT])->m_PhysicsWorldRotation;
-            return glm::quat(q.getW(), q.getX(), q.getY(), q.getZ());
+            glm::quat rot = glm::quat(q.getW(), q.getX(), q.getY(), q.getZ());
+            return rot;
         }
         else
             return m_Rotation;
@@ -176,10 +177,11 @@ public:
             {
                 if (ComponentList.at(i)->getType() == Component::RENDERCOMPONENT)
                 {
-                    return resourceManager->getModelBoundingBox(std::static_pointer_cast<Component::RenderComponent>(ComponentList[i])->modelPath);
+                    return ResourceManager::Get().getModelBoundingBox(std::static_pointer_cast<Component::RenderComponent>(ComponentList[i])->modelPath);
                 }
             }
         }
+
         else if (this->mHasClothComponent)
         {
             for (unsigned int i = 0; i < ComponentList.size(); ++i)
@@ -239,7 +241,6 @@ private:
     glm::vec3 m_PrevScale;
     glm::quat m_PrevRotation;
 
-    std::shared_ptr<ResourceManager> resourceManager;
 
 protected:
 };

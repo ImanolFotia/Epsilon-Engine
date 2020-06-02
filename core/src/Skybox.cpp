@@ -17,7 +17,7 @@ using namespace std;
 
 Skybox::Skybox(string SkyboxTex)
 {
-    skydome = (std::unique_ptr<Model>)new Model("models/sphere.eml");
+    skydome = (std::unique_ptr<Model>)new Model("models/sphere.eml", glm::vec3(0,0,0));
 
 }
 

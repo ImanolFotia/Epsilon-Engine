@@ -2,73 +2,81 @@
 #include <vector>
 #include <OpenGL/VertexBufferObject.h>
 
-class VertexArrayObject
+namespace Epsilon
 {
-public:
-    VertexArrayObject()
+    namespace API
     {
-        this->m_VertexAttributeCounter = 0;
-        this->m_Handler = 0;
-        glGenVertexArrays(1, this->m_Handler);
-    }
-
-    ~VertexArrayObject() {}
-
-    void setAttribute(int size, size_t stride, void* pointer)
-    {
-        try
+        namespace OpenGL
         {
-            this->Bind();
+            class VertexArrayObject
+            {
+            public:
+                VertexArrayObject()
+                {
+                    this->m_VertexAttributeCounter = 0;
+                    this->m_Handler = 0;
+                    glGenVertexArrays(1, &this->m_Handler);
+                }
 
-            glEnableVertexAttribArray(m_VertexAttributeCounter);
-            glVertexAttribPointer(m_VertexAttributeCounter, size, GL_FLOAT, GL_FALSE, stride, pointer);
-            this->m_VertexAttributeCounter++;
+                ~VertexArrayObject() {}
 
-            this->Unbind();
-        }
-        catch(...)
-        {
-            throw;
-        }
-    }
-    void addBuffer(GLenum target, GLsizeiptr size, GLvoid* data, GLenum usage)
-    {
-        try
-        {
-            this->Bind();
+                void setAttribute(int size, size_t stride, void *pointer)
+                {
+                    try
+                    {
+                        this->Bind();
 
-            VertexBufferObject tmpVBO;
+                        glEnableVertexAttribArray(m_VertexAttributeCounter);
+                        glVertexAttribPointer(m_VertexAttributeCounter, size, GL_FLOAT, GL_FALSE, stride, pointer);
+                        this->m_VertexAttributeCounter++;
 
-            tmpVBO.FillData(target, size, data, usage);
+                        this->Unbind();
+                    }
+                    catch (...)
+                    {
+                        throw;
+                    }
+                }
+                void addBuffer(GLenum target, GLsizeiptr size, GLvoid *data, GLenum usage)
+                {
+                    try
+                    {
+                        this->Bind();
 
-            m_VBOArray.push_back(tmpVBO);
+                        VertexBufferObject tmpVBO;
 
-            this->Unbind();
-        }
-        catch(...)
-        {
-            throw;
-        }
-    }
+                        tmpVBO.FillData(target, size, data, usage);
 
-    void Bind()
-    {
-        glBindVertexArray(this->m_Handler);
-    }
+                        m_VBOArray.push_back(tmpVBO);
 
-    void Unbind()
-    {
-        glBindVertexArray(0);
-    }
+                        this->Unbind();
+                    }
+                    catch (...)
+                    {
+                        throw;
+                    }
+                }
 
-    void Destroy()
-    {
-        glDeleteVertexArrays(1, this->m_Handler);
-    }
+                void Bind()
+                {
+                    glBindVertexArray(this->m_Handler);
+                }
 
-private:
-    std::vector<VertexBufferObject> m_VBOArray;
-    int m_VertexAttributeCounter;
-    GLuint m_Handler;
-};
+                void Unbind()
+                {
+                    glBindVertexArray(0);
+                }
 
+                void Destroy()
+                {
+                    glDeleteVertexArrays(1, &this->m_Handler);
+                }
+
+            private:
+                std::vector<VertexBufferObject> m_VBOArray;
+                int m_VertexAttributeCounter;
+                GLuint m_Handler;
+            };
+        } // namespace OpenGL
+    } // namespace API
+} // namespace Epsilon

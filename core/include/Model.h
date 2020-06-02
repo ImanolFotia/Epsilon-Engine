@@ -43,8 +43,6 @@ public:
     bool m_IsVisible;
     MODEL_TYPE m_Type;
 
-    std::shared_ptr<ResourceManager> resm;
-
     /**  Functions   */
     /// Constructor, expects a filepath to a 3D model.
     const char* path;
@@ -57,7 +55,7 @@ public:
         //cout << "Cantidad de texturas: " << textures_loaded.size() << endl;
     }
 
-    Model(const char* path, std::shared_ptr<ResourceManager> rm, glm::vec3 pos = glm::vec3(0,0,0), glm::vec3 sc = glm::vec3(0,0,0), glm::quat rot = glm::quat(0,0,0,1));
+    Model(const char* path, glm::vec3 pos = glm::vec3(0,0,0), glm::vec3 sc = glm::vec3(0,0,0), glm::quat rot = glm::quat(0,0,0,1));
 
     std::string getPath()
     {
