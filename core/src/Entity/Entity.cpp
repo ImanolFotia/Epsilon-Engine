@@ -15,9 +15,8 @@ using ::Component::SOUNDCOMPONENT;
 using ::Component::RENDERCOMPONENT;
 using ::Component::PHYSICCOMPONENT;
 
-EntityTemplate::EntityTemplate(std::shared_ptr<ResourceManager> rm, glm::vec3 pos, glm::vec3 sc, glm::quat rot)
+EntityTemplate::EntityTemplate(glm::vec3 pos, glm::vec3 sc, glm::quat rot)
 {
-    resourceManager = rm;
     m_Position = pos;
     m_Scale = sc;
     m_Rotation = rot;

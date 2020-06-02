@@ -46,6 +46,8 @@ Joystick::JoystickManager::Joystick_ptr Joystick::JoystickManager::dummyJoystick
 bool CheckBox::_checked = true;
 ThreadPool::ThreadPool_ptr ThreadPool::_instance = nullptr;
 
+ResourceManager ResourceManager::instance;
+
 Epsilon::Epsilon(GLFWwindow *&win)
 {
     window = win;
@@ -61,6 +63,8 @@ Epsilon::Epsilon(GLFWwindow *&win)
     GL_VEN = _gpu.getVendor();
     GL_REN = _gpu.getDevice();
     GL_VER = _gpu.getDriverVersion();
+    int max_tex_units = _gpu.getMaxtextureUnits();
+
     Console::Log("vendor", GL_VEN);
     std::cout << "OpenGL VENDOR: " << GL_VEN << std::endl;
     std::cout << "Video RENDERER: " << GL_REN << std::endl;
@@ -69,6 +73,7 @@ Epsilon::Epsilon(GLFWwindow *&win)
     Global::Log::WriteToLog(std::string("OpenGL VENDOR: " + GL_VEN));
     Global::Log::WriteToLog(std::string("Video RENDERER: " + GL_REN));
     Global::Log::WriteToLog(std::string("OpenGL VERSION: " + GL_VER));
+    Console::Log("OpenGL MaxtextureUnits: ", std::to_string(max_tex_units));
 
     glEnable(GL_CLIP_PLANE0);
     glEnable(GL_CLIP_DISTANCE0);
@@ -219,9 +224,12 @@ void Epsilon::InitResources(void)
     //mPointShadow = std::make_shared(PointShadow,glm::vec3(0.,.0,.0));
     //mPointShadow->Setup();
 
-    rM = std::make_shared<ResourceManager>();
+    //rM = std::make_shared<ResourceManager>();
 
-    rM->m_PhysicsWorld = std::make_shared<Physics::Physics>();
+    //rM = 
+
+    //rM->m_PhysicsWorld = std::make_shared<Physics::Physics>();
+    //ResourceManager::Get().getPhysicsWorld() = std::make_shared<Physics::Physics>();
     /*
     std::shared_ptr<EntityTemplate> tmpEnt;
     std::shared_ptr<Component::RenderComponent> Compmodel;
@@ -511,31 +519,31 @@ void Epsilon::InitResources(void)
     EntityList.push_back(tmpEnt);*/
 
     {
-        glm::vec3 tPosition = glm::vec3(16, 15, 10);
+        glm::vec3 tPosition = glm::vec3(5, 15, 5);
         glm::vec3 tScale = glm::vec3(2.0f);
-        glm::quat tRotation = glm::quat(-1.0, 0.0, 1.0, 0.0);
+        glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
         std::string tModelName = "models/cube.eml";
 
-        std::shared_ptr<EntityTemplate> _Entity = std::make_shared<EntityTemplate>(rM, tPosition, tScale, tRotation);
+        std::shared_ptr<EntityTemplate> _Entity = std::make_shared<EntityTemplate>(tPosition, tScale, tRotation);
 
-        Component::Component_ptr _RComp = std::make_shared<Component::RenderComponent>(tModelName, tPosition, rM, "Main");
+        Component::Component_ptr _RComp = std::make_shared<Component::RenderComponent>(tModelName, tPosition, "Main");
         static_pointer_cast<Component::RenderComponent>(_RComp)->CastsShadows(true);
-        MIN_MAX_POINTS _BoundingBox = rM->getModelBoundingBox(tModelName);
-        Component::Component_ptr _PComp = std::make_shared<Component::PhysicComponent>(100, tPosition, tScale, Physics::Type::CUBE, _BoundingBox, rM);
+        MIN_MAX_POINTS _BoundingBox = ResourceManager::Get().getModelBoundingBox(tModelName);
+        Component::Component_ptr _PComp = std::make_shared<Component::PhysicComponent>(100, tPosition, tScale, Physics::Type::CUBE, _BoundingBox);
 
         _Entity->addComponent(_RComp)->addComponent(_PComp);
 
         EntityList.push_back(_Entity);
     }
 
-    {
+    { 
         glm::vec3 tPosition = glm::vec3(10, 3.5, 10);
         float tScale = 5.0f;
         glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
 
-        std::shared_ptr<EntityTemplate> _Entity = std::make_shared<EntityTemplate>(rM, tPosition, glm::vec3(tScale), tRotation);
+        std::shared_ptr<EntityTemplate> _Entity = std::make_shared<EntityTemplate>(tPosition, glm::vec3(tScale), tRotation);
 
-        Component::Component_ptr _CComp = std::make_shared<Component::ClothComponent>(tPosition, tScale, tRotation, eCamera, rM);
+        Component::Component_ptr _CComp = std::make_shared<Component::ClothComponent>(tPosition, tScale, tRotation, eCamera);
 
         std::static_pointer_cast<Component::ClothComponent>(_CComp)->setShader("Cloth");
 
@@ -543,6 +551,7 @@ void Epsilon::InitResources(void)
 
         EntityList.push_back(_Entity);
     }
+
 
     glm::vec3 initCubemapPosition = glm::vec3(-15.0, 2.5, -16.0);
 
@@ -553,11 +562,11 @@ void Epsilon::InitResources(void)
     t_ButtonResume->OnEntering(MenuAudio);
 
     RenderSplashScreen("Loading Textures...");*/
-    rM->loadQueuedTextures();
+    ResourceManager::Get().loadQueuedTextures();
 
     PP = std::move((unique_ptr<PostProcess>)(new PostProcess()));
 
-    m_PlayerCapsule = (std::shared_ptr<Game::Player>)new Game::Player(-10, 15.8, -10, this->rM);
+    m_PlayerCapsule = (std::shared_ptr<Game::Player>)new Game::Player(-10, 15.8, -10);
     //m_PlayerCapsule = (std::shared_ptr<Game::Player>) new Game::Player(170.0,5.25,-202.0, this->rM);
 
     //m_Pick = (std::shared_ptr<Pick>) (new Pick(rM->m_PhysicsWorld->world));
@@ -585,9 +594,11 @@ void Epsilon::InitResources(void)
 
     shadowMap->SetupShadowMatrices();
 
+    std::cout << "llega" << std::endl;
     shadowMap->BindShadowFrameBuffer();
     this->RenderShadows();
     shadowMap->UnbindShadowFrameBuffer();
+    
     
     //this->mCubemap[1] = (std::shared_ptr<CubeMap>)new CubeMap(55, glm::vec3(10, 7, 10));
 
@@ -709,7 +720,7 @@ void Epsilon::InitResources(void)
 
                 mCubemap[a][b][c]->genAmbientConvolution();
 
-                rM->addCubemap(this->mCubemap[a][b][c], mCubemap[a][b][c]->getPosition());
+                ResourceManager::Get().addCubemap(this->mCubemap[a][b][c], mCubemap[a][b][c]->getPosition());
 
                 sph.CalculateCohefficients(this->mCubemap[a][b][c]->getTextureID(), 3);
 
@@ -796,9 +807,9 @@ void Epsilon::LoadShaders(void)
 
     Shaders["Cloth"] = new Shader("shaders/Cloth.vglsl", "shaders/Cloth.fglsl");
 
-    rM->requestShader("shaders/Geometry.vglsl", "shaders/Geometry.fglsl", "Main");
-    rM->requestShader("shaders/Cloth.vglsl", "shaders/Cloth.fglsl", "Cloth");
-    rM->requestShader("shaders/vertex.glsl", "shaders/fragment.glsl", "CubeMap");
+    ResourceManager::Get().requestShader("shaders/Geometry.vglsl", "shaders/Geometry.fglsl", "Main");
+    ResourceManager::Get().requestShader("shaders/Cloth.vglsl", "shaders/Cloth.fglsl", "Cloth");
+    ResourceManager::Get().requestShader("shaders/vertex.glsl", "shaders/fragment.glsl", "CubeMap");
     //rM->requestShader("shaders/vertex.glsl", "shaders/fragment.glsl", "CubeMap");
 }
 
@@ -807,11 +818,12 @@ void Epsilon::LoadGeometry(void)
     cout << "Loading World Geometry..." << endl;
     vector<glm::vec3> grasspos2;
 
+    std::cout << "Llega" << std::endl;
     terrain = std::make_shared<Terrain>("materials/terrain_1024_alpine3_height.png",
                                         "Rock_6_d.png",
                                         "Rock_6_n.png",
                                         "Rock_6_s.png",
-                                        "Rock_6_ao.png", 0.5, 200, glm::vec3(0, -67.0, 0), rM);
+                                        "Rock_6_ao.png", 0.5, 200, glm::vec3(0, -67.0, 0));
 
     for (int i = 0; i < terrain->vertices.size(); i += 2)
     {
@@ -824,14 +836,13 @@ void Epsilon::LoadGeometry(void)
             grasspos2.push_back(terrain->vertices[i].Position + glm::vec3((rand() % 6) - 3, 3.5, (rand() % 6) - 3));
     }
 
-    std::cout << "Resource manager in epsilon address: " << rM.get() << std::endl;
+    //std::cout << "Resource manager in epsilon address: " << rM.get() << std::endl;
 
-    rM->requestCubeMap(50000, glm::vec3(4.8, 80000.2, -8));
-    rM->requestModel("models/esfera.eml", rM, glm::vec3(78.0, 5.25, -57), glm::vec3(1), glm::quat(0.0, 0.0, 0.0, 0.0));
-    rM->requestModel("models/sphere.eml", rM, glm::vec3(78.0, 5.25, -57), glm::vec3(1), glm::quat(0.0, 0.0, 0.0, 0.0));
+    ResourceManager::Get().requestCubeMap(50000, glm::vec3(4.8, 80000.2, -8));
+    ResourceManager::Get().requestModel("models/esfera.eml", glm::vec3(78.0, 5.25, -57), glm::vec3(1), glm::quat(0.0, 0.0, 0.0, 0.0));
+    ResourceManager::Get().requestModel("models/sphere.eml", glm::vec3(78.0, 5.25, -57), glm::vec3(1), glm::quat(0.0, 0.0, 0.0, 0.0));
     //rM->requestModel("models/Desk.eml", rM, glm::vec3(-2.0,8.0,10.0), glm::vec3(0.9), glm::quat(1, 0.0, -1.0, 0.0));
     //rM->requestModel("models/sponza.eml", rM, glm::vec3(-16,5.0,-15), glm::vec3(0.025), glm::quat(0, 0.0, 0, 0.0));
-
     float first, second, delta;
     first = glfwGetTime();
     std::vector<std::string> paths;
@@ -851,7 +862,7 @@ void Epsilon::LoadGeometry(void)
 
     waterPlane = (shared_ptr<Water>)(new Water(glm::vec3(0.0, 0.5, 0.0), 1.0f)); ///-11.8
     sun = std::move((shared_ptr<Sun>)(new Sun()));
-    BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP(this->rM)));
+    BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP()));
 
     BSPMap->LoadBSP((string("maps/") + "minecraft.bsp").c_str());
 
@@ -915,7 +926,8 @@ void Epsilon::Render3D(Shader *shader)
             TranslationMatrix = glm::translate(glm::mat4(1), EntityList[i]->getPosition());
             RotationMatrix = glm::toMat4(EntityList[i]->getRotation());
             Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
-            this->rM->setModelUniforms(EntityList[i]->getModelPath(), shader, EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation(),
+
+            ResourceManager::Get().setModelUniforms(EntityList[i]->getModelPath(), shader, EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation(),
                                        EntityList[i]->getPrevPosition(), EntityList[i]->getPrevScale(), EntityList[i]->getPrevRotation(),
                                        eCamera);
             //std::cout << "llega render 3d" <<std::endl;
@@ -930,9 +942,11 @@ void Epsilon::Render3D(Shader *shader)
         {
         }
     }
-    /*glCache::*/ glEnable(GL_CULL_FACE);
+    /*glCache::*/ 
+    glEnable(GL_CULL_FACE);
 
-    /*glCache::*/ glCullFace(GL_FRONT);
+    /*glCache::*/ 
+    glCullFace(GL_FRONT);
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glm::mat4 BSPmodel = glm::mat4(1.0);
@@ -950,11 +964,11 @@ void Epsilon::Render3D(Shader *shader)
     this->SetUniforms(Shaders["MD5Geometry"], glm::vec3(mpos, 0.8, 15), glm::vec3(0.1, 0.1, 0.1), glm::quat(-1.0, 1.0, 0.0, 0.0));
 
     glActiveTexture(GL_TEXTURE4);
-    glUniform1i(glGetUniformLocation(Shaders["MD5Geometry"]->getProgramID(), "skybox"), 4);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, rM->useCubeMap(rM->mCubemapIndex.at(rM->NearestCubeMap(glm::vec3(mpos, 0.8, 15)))));
-    glUniform1i(glGetUniformLocation(Shaders["MD5Geometry"]->getProgramID(), "CubemapID"), rM->NearestCubeMap(glm::vec3(mpos, 0.8, 15)));
+    glUniform1i(glGetUniformLocation(Shaders["MD5Geometry"]->getProgramID(), "skybox"), 4); 
+    glBindTexture(GL_TEXTURE_CUBE_MAP, ResourceManager::Get().useCubeMap(ResourceManager::Get().getNearestCubemapIndex(glm::vec3(mpos, 0.8, 15))));
+    glUniform1i(glGetUniformLocation(Shaders["MD5Geometry"]->getProgramID(), "CubemapID"), ResourceManager::Get().NearestCubeMap(glm::vec3(mpos, 0.8, 15)));
     //std::cout << "Using cubemap id: " << resm->mCubemapIndex.at(resm->NearestCubeMap(pos)) << std::endl;
-    glUniform1i(glGetUniformLocation(Shaders["MD5Geometry"]->getProgramID(), "AmbientProbeID"), rM->NearestCubeMap(glm::vec3(mpos, 0.8, 15)) - 1);
+    glUniform1i(glGetUniformLocation(Shaders["MD5Geometry"]->getProgramID(), "AmbientProbeID"), ResourceManager::Get().NearestCubeMap(glm::vec3(mpos, 0.8, 15)) - 1);
 
     m_AnimModel->Render(Shaders["MD5Geometry"]->getProgramID());
     glCullFace(GL_BACK);
@@ -976,7 +990,7 @@ void Epsilon::RenderShadows()
 
         Shaders["ShadowMapping"]->Use();
         this->SetUniforms(Shaders["ShadowMapping"], EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation());
-        rM->useModel(EntityList[i]->getModelPath(), Shaders["ShadowMapping"], EntityList[i]->getPosition());
+        ResourceManager::Get().useModel(EntityList[i]->getModelPath(), Shaders["ShadowMapping"], EntityList[i]->getPosition());
         
     }
 
@@ -1131,7 +1145,7 @@ void Epsilon::Clock()
     //cout << eventtime << endl;
     sun->Update();
 
-    rM->timestep = frametime;
+    ResourceManager::Get().timestep = frametime;
 
     timeBehind += etime - lastTime;
 }
@@ -1269,7 +1283,7 @@ void Epsilon::MainLoop(void)
 
         while (timeBehind >= 0.016)
         {
-            rM->m_PhysicsWorld->Update(0.016);
+            ResourceManager::Get().getPhysicsWorld()->Update(0.016);
             timeBehind -= 0.016;
         }
 

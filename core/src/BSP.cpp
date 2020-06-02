@@ -15,7 +15,7 @@
 
 using namespace std;
 
-CQuake3BSP::CQuake3BSP(std::shared_ptr<ResourceManager> Resm)
+CQuake3BSP::CQuake3BSP()
 {
     m_numOfVerts    = 0;
     m_numOfFaces    = 0;
@@ -26,7 +26,6 @@ CQuake3BSP::CQuake3BSP(std::shared_ptr<ResourceManager> Resm)
     m_pFaces = NULL;
     m_pIndices = NULL;
 
-    resm = Resm;
 }
 
 
@@ -267,23 +266,24 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
             BSPTexture normal;
             BSPTexture specular;
             BSPTexture metallic;
+            
                 tex.path = std::string(pTextures[pFace->textureID].strName) + ".png";
-                resm->addTextureToQueue(tex.path);
+                ResourceManager::Get().addTextureToQueue(tex.path);
                 tex.type = 1;
                 Textures.push_back(tex);
 
                 normal.path = string(pTextures[pFace->textureID].strName) + "_n" + ".png";
-                resm->addTextureToQueue(normal.path);
+                ResourceManager::Get().addTextureToQueue(normal.path);
                 normal.type = 1;
                 normalTextures.push_back(normal);
 
                 specular.path = string(pTextures[pFace->textureID].strName) + "_s" + ".png";
-                resm->addTextureToQueue(specular.path);
+                ResourceManager::Get().addTextureToQueue(specular.path);
                 specular.type = 1;
                 specularTextures.push_back(specular);
 
                 metallic.path = string(pTextures[pFace->textureID].strName) + "_m" + ".png";
-                resm->addTextureToQueue(metallic.path);
+                ResourceManager::Get().addTextureToQueue(metallic.path);
                 metallic.type = 1;
                 metallicTextures.push_back(metallic);
 
@@ -294,7 +294,7 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
 
             BSPFace Face;
 
-            Face.BuildFace(faceVertices, faceNormals, faceTexCoords, faceLMTexCoords, faceIndices, i, pTextures[pFace->textureID].strName, pLightmaps[pFace->lightmapID], resm);
+            Face.BuildFace(faceVertices, faceNormals, faceTexCoords, faceLMTexCoords, faceIndices, i, pTextures[pFace->textureID].strName, pLightmaps[pFace->lightmapID]);
 
             this->Faces[i] = Face;
 
@@ -350,10 +350,10 @@ bool CQuake3BSP::LoadBSP(const char *strFileName)
     void CQuake3BSP::RenderFace(int faceIndex, GLuint shader, bool simpleRender)
     {
         this->Faces[faceIndex].RenderFace(shader,
-                                          resm->useTexture(faceTexture[faceIndex].path),
-                                          resm->useTexture(faceTexture_normal[faceIndex].path),
-                                          resm->useTexture(faceTexture_specular[faceIndex].path),
-                                          resm->useTexture(faceTexture_metallic[faceIndex].path),
+                                          ResourceManager::Get().useTexture(faceTexture[faceIndex].path),
+                                          ResourceManager::Get().useTexture(faceTexture_normal[faceIndex].path),
+                                          ResourceManager::Get().useTexture(faceTexture_specular[faceIndex].path),
+                                          ResourceManager::Get().useTexture(faceTexture_metallic[faceIndex].path),
                                           simpleRender);
     }
 

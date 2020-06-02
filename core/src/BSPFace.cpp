@@ -9,8 +9,7 @@ bool BSPFace::BuildFace(std::vector<glm::vec3> Vertices,
                         std::vector<glm::vec2> LMTexCoords,
                         std::vector<unsigned int> Indices,
                         int ID, string imagePath,
-                        tBSPLightmap LightMap,
-                        std::shared_ptr<ResourceManager> Resm)
+                        tBSPLightmap LightMap)
 {
 	this->Vertices = Vertices;
 	this->TexCoords = TexCoords;
@@ -38,13 +37,12 @@ bool BSPFace::BuildFace(std::vector<glm::vec3> Vertices,
 
 	mPosition /= Vertices.size();
 	bool res = this->prepareVAO();
-	this->resm = Resm;
 	std::shared_ptr<Physics::TriangleMeshPhysicObject> ph = (std::shared_ptr<Physics::TriangleMeshPhysicObject>) new Physics::TriangleMeshPhysicObject();
 	rigidBody = nullptr;
 	rigidBody = ph->addObject(this->Vertices, this->Indices, 0.1);
 	collinfo->setName(this->ObjectID);
 	ph->Body->setUserPointer(collinfo.get());
-	resm->m_PhysicsWorld->world->addRigidBody(rigidBody.get());
+	ResourceManager::Get().getPhysicsWorld()->world->addRigidBody(rigidBody.get());
 	this->CollisionObject = ph;
 	//this->LoadLightMapTexture();
 	return true;
@@ -70,10 +68,10 @@ void BSPFace::RenderFace(GLuint shader, GLuint TextureID,GLuint normalID, GLuint
 
 	glActiveTexture(GL_TEXTURE4);
 	glUniform1i(glGetUniformLocation(shader, "skybox"), 4);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, resm->useCubeMap(resm->mCubemapIndex.at(resm->NearestCubeMap(mPosition))));
+    glBindTexture(GL_TEXTURE_CUBE_MAP,ResourceManager::Get().useCubeMap(ResourceManager::Get().getNearestCubemapIndex(mPosition)));
 
-	glUniform1i(glGetUniformLocation(shader, "CubemapID"), resm->NearestCubeMap(mPosition));
-        glUniform1i(glGetUniformLocation(shader, "AmbientProbeID"), resm->NearestCubeMap(mPosition) -1);
+	glUniform1i(glGetUniformLocation(shader, "CubemapID"), ResourceManager::Get().NearestCubeMap(mPosition));
+        glUniform1i(glGetUniformLocation(shader, "AmbientProbeID"), ResourceManager::Get().NearestCubeMap(mPosition) -1);
 
 	glBindVertexArray(this->VAO);
 	glCache::glDrawElements(GL_TRIANGLES, this->Indices.size(), GL_UNSIGNED_INT, 0);

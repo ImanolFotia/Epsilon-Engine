@@ -23,7 +23,7 @@ std::string ResourceManager::requestTexture(std::string texPath)
     }
 }
 
-std::string ResourceManager::requestModel(std::string modelPath, std::shared_ptr<ResourceManager> rm, glm::vec3 Pos, glm::vec3 scs, glm::quat rot)
+std::string ResourceManager::requestModel(std::string modelPath, glm::vec3 Pos, glm::vec3 scs, glm::quat rot)
 {
     try
     {
@@ -35,7 +35,7 @@ std::string ResourceManager::requestModel(std::string modelPath, std::shared_ptr
         }
         else
         {
-            Model tmpModel(modelPath.c_str(), rm, Pos, scs, rot);
+            Model tmpModel(modelPath.c_str(), Pos, scs, rot);
             ModelList.insert(std::make_pair(modelPath, tmpModel));
             return modelPath;
         }
@@ -121,12 +121,12 @@ glm::vec3 ResourceManager::getModelScale(std::string path)
 
 void ResourceManager::setModelUniforms(std::string path, Shader* shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, std::shared_ptr<Camera> cam)
 {
-    this->ModelList.at(path).SetUniforms(shader, pos, sc, rot, cam);
+    ModelList.at(path).SetUniforms(shader, pos, sc, rot, cam);
 }
 
 void ResourceManager::setModelUniforms(std::string path, Shader* shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, glm::vec3 ppos, glm::vec3 psc, glm::quat prot, std::shared_ptr<Camera> cam)
 {
-    this->ModelList.at(path).SetUniforms(shader, pos, sc, rot, ppos, psc, prot, cam);
+    ModelList.at(path).SetUniforms(shader, pos, sc, rot, ppos, psc, prot, cam);
 }
 
 
@@ -147,6 +147,24 @@ GLuint ResourceManager::useTexture(std::string texPath)
         }
         else
             return 0;
+    }
+
+    catch(std::exception e)
+    {
+        std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() <<std::endl;
+    }
+}
+
+void ResourceManager::bindTexture(std::string texPath) {
+    
+    try
+    {
+        if(texPath.empty() != true){
+            //return TextureList.at(texPath)->getTextureID();
+            TextureList.at(texPath)->bind();
+        }
+        else
+            return;
     }
 
     catch(std::exception e)
@@ -368,3 +386,4 @@ GLuint ResourceManager::useCubeMap(int ID)
     if(CubeMapList.at(ID) != nullptr)
         return CubeMapList.at(ID)->getTextureID();
 }
+

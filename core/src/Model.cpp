@@ -2,9 +2,8 @@
 #include <ResourceManager.h>
 #include <Log.h>
 
-Model::Model(const char* path, std::shared_ptr<ResourceManager> rm, glm::vec3 pos, glm::vec3 sc, glm::quat rot) {
+Model::Model(const char* path, glm::vec3 pos, glm::vec3 sc, glm::quat rot) {
     this->path = path;
-    resm = rm;
     Position = pos;
     Scale = sc;
     Rotation = rot;
@@ -128,12 +127,12 @@ bool Model::loadModel(string emlPath, int a) {
                     tex.id = 0;
                     tex.path = std::string(l_meshes[i].mMaterial[j]);
                     tex.type = i;
-                    resm->addTextureToQueue(tex.path);
+                    ResourceManager::Get().addTextureToQueue(tex.path);
                     tmpTexturesVector.push_back(tex);
                 }
             }
             if(!a) {
-                meshes.push_back(Mesh(tmpVertVector, tmpIndicesVector, tmpTexturesVector, resm->NearestCubeMap(Position)));
+                meshes.push_back(Mesh(tmpVertVector, tmpIndicesVector, tmpTexturesVector, ResourceManager::Get().NearestCubeMap(Position)));
             } else
                 meshes.push_back(Mesh(tmpVertVector, tmpIndicesVector, tmpTexturesVector));
         }
@@ -193,7 +192,7 @@ bool Model::loadModel(string emlPath, int a) {
 
 void Model::Draw(Shader* shader, glm::vec3 pos = glm::vec3(0,0,0)) {
     for(GLuint i = 0; i < this->meshes.size(); i++)
-        this->meshes[i].Draw(shader, this->resm, pos);
+        this->meshes[i].Draw(shader, pos);
 }
 /*
 void Model::Draw(GLuint shader, glm::vec3 pos = glm::vec3(0,0,0)) {

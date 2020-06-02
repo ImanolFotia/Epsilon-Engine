@@ -71,9 +71,9 @@ public:
             itr->second = nullptr;
         }
 
-        rM->destroyAllTextures();
+        ResourceManager::Get().destroyAllTextures();
 
-        rM->destroyAllModels();
+        ResourceManager::Get().destroyAllModels();
 
         BSPMap->Destroy();
 
@@ -211,7 +211,6 @@ private:
     //vector<glm::vec3> lightPositions;
     std::vector<glm::vec3> grassPos;
     std::ostringstream fpss;
-    std::shared_ptr<ResourceManager> rM;
     std::shared_ptr<Physics::SpherePhysicObject> ph3;
     std::string GL_VER, GL_REN, GL_VEN;
     double m_TextAcum = 0.0;

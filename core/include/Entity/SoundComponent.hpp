@@ -57,28 +57,12 @@ public:
         mAudioElement->setPosition(mPosition);
     }
 
-    void Render()
-    {/*
-        switch (mState)
-        {
-        case AUDIO_STATE::PLAYING:
-            mAudioElement->Play();
-            break;
-        case AUDIO_STATE::PAUSED:
-            mAudioElement->Pause();
-            break;
-        case AUDIO_STATE::STOPPED:
-            mAudioElement->Stop();
-            break;
-        default:
-            break;
-        }*/
+    void Render(){
     }
 
 private:
     AUDIO_STATE mState;
     COMPONENT_TYPE mType;
-    std::shared_ptr<ResourceManager> mResourceManager;
     std::shared_ptr<IO::Audio::AudioElement> mAudioElement;
     glm::vec3 mPosition;
     glm::quat mRotation;

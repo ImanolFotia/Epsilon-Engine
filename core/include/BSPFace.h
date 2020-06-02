@@ -44,8 +44,7 @@ public:
                    std::vector<unsigned int> Indices,
                    int ID,
                    string imagePath,
-                   tBSPLightmap LightMap,
-                   std::shared_ptr<ResourceManager> Resm);
+                   tBSPLightmap LightMap);
 
 public:
 
@@ -189,7 +188,6 @@ private:
     tBSPLightmap LightMap;
     GLuint LightMaptexture;
     std::shared_ptr<Physics::PhysicObject> CollisionObject;
-    std::shared_ptr<ResourceManager> resm;
     std::vector<glm::vec3> Vertices;
     std::vector<glm::vec3> Normals;
     std::vector<glm::vec2> TexCoords;

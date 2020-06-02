@@ -50,7 +50,7 @@ void Scene::CalculateVisibility()
 
 bool Scene::LoadEntities()
 {
-    m_ResourceManager->m_Camera = ((shared_ptr<Camera>)(new Camera(glm::vec3(20.0, 11.0, 2.0), glm::vec3(0.0f,0.0f,0.0f))));
+   // m_ResourceManager->m_Camera = ((shared_ptr<Camera>)(new Camera(glm::vec3(20.0, 11.0, 2.0), glm::vec3(0.0f,0.0f,0.0f))));
 
     return true;
 }
@@ -62,8 +62,8 @@ bool Scene::LoadGeometry()
 
 void Scene::Update(float deltatime, GLFWwindow* window)
 {
-    m_ResourceManager->m_Camera->Update(window);
-    m_ResourceManager->m_Camera->UpdateMatrices();
+    //m_ResourceManager->m_Camera->Update(window);
+   // m_ResourceManager->m_Camera->UpdateMatrices();
 
     CalculateVisibility();
 
@@ -81,7 +81,7 @@ void Scene::Render()
     glm::mat4 BSPmodel = glm::mat4(1.0);
     glm::mat4 sModel = glm::scale(glm::mat4(1.0), glm::vec3(0.1, 0.1, 0.1));
     BSPmodel = sModel;
-    m_BSPMap->Frustum.CalculateFrustum(glm::mat4(m_ResourceManager->m_Camera->getProjectionMatrix() * m_ResourceManager->m_Camera->getViewMatrix()), BSPmodel);
-    m_ResourceManager->useShader("Main");
-    m_BSPMap->RenderLevel(m_ResourceManager->m_Camera->getPosition(), m_ResourceManager->getShaderID("Main"), true);
+    //m_BSPMap->Frustum.CalculateFrustum(glm::mat4(m_ResourceManager->m_Camera->getProjectionMatrix() * m_ResourceManager->m_Camera->getViewMatrix()), BSPmodel);
+    //m_ResourceManager->useShader("Main");
+    //m_BSPMap->RenderLevel(m_ResourceManager->m_Camera->getPosition(), m_ResourceManager->getShaderID("Main"), true);
 }

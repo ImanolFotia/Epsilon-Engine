@@ -15,11 +15,9 @@
 #include <Physics/TriangleMeshPhysicObject.h>
 #include <Includes.h>
 
-Terrain::Terrain(const char *heightMap, const char *diffuseTexture, float scale, int gridSize /**Must be Power of two*/, std::shared_ptr<ResourceManager> rm)
+Terrain::Terrain(const char *heightMap, const char *diffuseTexture, float scale, int gridSize /**Must be Power of two*/)
 {
     this->GL_n_texture = 0;
-
-    this->rM = rm;
 
     this->gridSize = gridSize;
 
@@ -32,15 +30,13 @@ Terrain::Terrain(const char *heightMap, const char *diffuseTexture, float scale,
     this->GenerateVertexBuffers();
 }
 
-Terrain::Terrain(const char *heightMap, const char *diffuseTexture, const char *normalTexture, const char *specularTexture, const char *metalTexture, float sc, int gridSize, glm::vec3 Position, std::shared_ptr<ResourceManager> rm /**Must be Power of two*/)
+Terrain::Terrain(const char *heightMap, const char *diffuseTexture, const char *normalTexture, const char *specularTexture, const char *metalTexture, float sc, int gridSize, glm::vec3 Position)
 {
     this->gridSize = gridSize;
 
     this->heightMap = heightMap;
 
     this->scale = sc;
-
-    this->rM = rm;
 
     this->m_Position = Position;
 
@@ -192,7 +188,7 @@ bool Terrain::GenerateGrid()
 
         TerrainPhysicsMesh->Body->setUserPointer(collinfo.get());
 
-        this->rM->m_PhysicsWorld->world->addRigidBody(rigidBody.get());
+        ResourceManager::Get().getPhysicsWorld()->world->addRigidBody(rigidBody.get());
 
         this->CollisionObject = TerrainPhysicsMesh;
     }

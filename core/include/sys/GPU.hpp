@@ -9,6 +9,7 @@ public:
         mVendor = (char*)glGetString(GL_VENDOR);
         mDriverVersion = (char*)glGetString(GL_RENDERER);
         mDevice = (char*)glGetString(GL_VERSION);
+        glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &mMaxTextureUnitsInFragmentShader);
     }
     ~GPU(){}
 
@@ -25,6 +26,11 @@ public:
     std::string getDevice()
     {
         return mDevice;
+    }
+    
+    GLint getMaxtextureUnits()
+    {
+        return mMaxTextureUnitsInFragmentShader;
     }
 
     size_t getAvailableMemory()
@@ -74,4 +80,5 @@ private:
     std::string mVendor;
     std::string mDriverVersion;
     std::string mDevice;
+    GLint mMaxTextureUnitsInFragmentShader = 0;
 };
