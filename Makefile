@@ -35,7 +35,7 @@ SOURCES:= $(call rwildcard,$(SOURCE_DIR)/,*.cpp) #$(wildcard $(SOURCE_DIR)/**.cp
 INCLUDES:= $(call rwildcard,$(INCLUDE_DIR)/,*.hpp *.h)#$(wildcard $(INCLUDE_DIR)/**.hpp $(INCLUDE_DIR)/**.h)
 OBJECTS_DEBUG := $(patsubst $(SOURCE_DIR)/%.cpp,$(OBJS_DIR_DEBUG)/%.o,$(SOURCES))
 OBJECTS_RELEASE := $(patsubst $(SOURCE_DIR)/%.cpp,$(OBJS_DIR_RELEASE)/%.o,$(SOURCES))
-RES_OBJECTS := $(OBJS_DIR)/resources.o
+RES_OBJECTS := ./obj/resources.o
 
 #- sudo add-apt-repository http://ppa.launchpad.net/keithw/glfw3/ubuntu -y
 #includes for windows and linux combined
