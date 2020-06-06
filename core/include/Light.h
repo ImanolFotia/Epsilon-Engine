@@ -67,7 +67,7 @@ public:
 
     t_light toStruct()
     {
-
+        return t_light();
     }
 
         /** Setters */

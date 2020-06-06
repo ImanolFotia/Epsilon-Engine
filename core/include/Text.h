@@ -14,6 +14,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <Shader.h>
+
+#include <map>
+
 #define nop 1+1
 class Text {
 
@@ -115,6 +118,8 @@ public:
             horizontalScale += w;
         }
         return glm::abs(horizontalScale/WIDTH);*/
+
+        return 0.0f;
     }
 
     void calculateHeight()
@@ -132,6 +137,7 @@ public:
 
     float getVerticalLength() {
        /* return textHeight;*/
+       return 0.0f;
     }
 
     void RenderText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color) {

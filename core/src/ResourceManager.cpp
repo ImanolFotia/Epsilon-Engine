@@ -21,6 +21,8 @@ std::string ResourceManager::requestTexture(std::string texPath)
     {
         std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() <<std::endl;
     }
+
+    return "";
 }
 
 std::string ResourceManager::requestModel(std::string modelPath, glm::vec3 Pos, glm::vec3 scs, glm::quat rot)
@@ -45,6 +47,7 @@ std::string ResourceManager::requestModel(std::string modelPath, glm::vec3 Pos, 
         std::cout << "Exception caught at: " << __FUNCTION__ << "\nMessage: " << e.what() <<std::endl;
         std::cout << "Failed to load: " << modelPath.c_str() << std::endl;
     }
+    return "";
 }
 
 void ResourceManager::useModel(std::string modelPath, Shader* shader, glm::vec3 pos = glm::vec3(0,0,0))
@@ -84,6 +87,8 @@ Model ResourceManager::getModel(std::string modelPath)
     {
         std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() <<std::endl;
     }
+    
+    return Model("", glm::vec3(0,0,0));
 }
 
 MIN_MAX_POINTS ResourceManager::getModelBoundingBox(std::string modelPath)
@@ -97,6 +102,8 @@ MIN_MAX_POINTS ResourceManager::getModelBoundingBox(std::string modelPath)
     {
         std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() <<std::endl;
     }
+
+    return MIN_MAX_POINTS();
 }
 
 void ResourceManager::setModelVisibility(std::string path ,bool visibility)
@@ -153,6 +160,8 @@ GLuint ResourceManager::useTexture(std::string texPath)
     {
         std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() <<std::endl;
     }
+
+    return -1;
 }
 
 void ResourceManager::bindTexture(std::string texPath) {
@@ -224,6 +233,8 @@ int ResourceManager::requestTextureUsage(std::string texPath)
     {
         std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() <<std::endl;
     }
+
+    return 0;
 }
 
 void ResourceManager::resetTextureUsage(std::string texPath)
@@ -277,6 +288,8 @@ std::string ResourceManager::requestShader(std::string shaderPathv, std::string 
     {
         std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() <<std::endl;
     }
+
+    return "";
 }
 
 std::shared_ptr<Shader> ResourceManager::useShader(std::string shaderPath)
@@ -290,6 +303,8 @@ std::shared_ptr<Shader> ResourceManager::useShader(std::string shaderPath)
     {
         std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() <<std::endl;
     }
+
+    return nullptr;
 }
 
 GLuint ResourceManager::getShaderID(std::string shaderPath)
@@ -303,6 +318,8 @@ GLuint ResourceManager::getShaderID(std::string shaderPath)
     {
         std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() <<std::endl;
     }
+
+    return -1;
 }
 
 
@@ -317,6 +334,8 @@ std::shared_ptr<Shader> ResourceManager::getShader(std::string shaderPath)
     {
         std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() <<std::endl;
     }
+
+    return std::make_shared<Shader>("", "");
 }
 
 bool ResourceManager::requestCubeMap(int CubeMapID, glm::vec3 Position)
@@ -354,11 +373,14 @@ bool ResourceManager::requestCubeMap(int CubeMapID, glm::vec3 Position)
         } catch(...) {
             std::cout << "Exception at requestCube" << std::endl;
         }
+
     }
     catch(std::exception e)
     {
         std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() <<std::endl;
     }
+    
+    return false;
 }
 
 bool ResourceManager::addCubemap(std::shared_ptr<CubeMap> cubemap, glm::vec3 position)
@@ -385,5 +407,7 @@ GLuint ResourceManager::useCubeMap(int ID)
 {
     if(CubeMapList.at(ID) != nullptr)
         return CubeMapList.at(ID)->getTextureID();
+
+    return 0;
 }
 

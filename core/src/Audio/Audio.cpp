@@ -145,9 +145,9 @@ void Audio::PlayByID(int ID)
     m_AudioElementsCollection[ID]->Play();
 }
 
-bool Audio::setMasterVolume(float) {}
-bool Audio::setMusicVolume(float) {}
-bool Audio::setGameVolume(float) {}
+bool Audio::setMasterVolume(float) { return false; }
+bool Audio::setMusicVolume(float) { return false; }
+bool Audio::setGameVolume(float) { return false; }
 
 } // namespace Audio
 } // namespace IO

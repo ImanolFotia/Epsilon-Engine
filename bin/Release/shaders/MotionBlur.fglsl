@@ -27,7 +27,9 @@
       float speed = length(velocity / texelSize);
       int nSamples = clamp(int(speed), 1, MAX_SAMPLES);
 
-      oResult = Degamma(texture(gFinalImage, screenTexCoords));
+      vec4 InitialSample = Degamma(texture(gFinalImage, screenTexCoords)); 
+
+      oResult = InitialSample;
 
       for (int i = 1; i < nSamples; ++i) {
          vec2 offset = velocity * (float(i) / float(nSamples - 1) - 0.5);

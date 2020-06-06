@@ -12,7 +12,7 @@ namespace IO {
             **/
 
         uint32_t File::generateHash(std::string filename) {
-
+            return 0;
         }
 
         /**Definition of the two types of file systems**/
@@ -25,6 +25,7 @@ namespace IO {
         }
 
         File ZipFileSystem::FindFile(const std::string) {
+            return File();
         }
 
         /**Second is the real filesystem, i.e. not contained within a zip file, a hard drive*/
@@ -79,7 +80,7 @@ namespace IO {
         }
 
         bool Filesystem::FileExists(std::string path) {
-
+            return false;
         }
 
         bool Filesystem::Mount(std::string path, std::string identifier) {

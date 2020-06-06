@@ -29,6 +29,7 @@ public:
 
 
     ~App(void) {
+        ResourceManager::Get().Destroy();
         std::cout << "Engine shuted down" << std::endl;
     }
 

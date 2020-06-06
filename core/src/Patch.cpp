@@ -87,22 +87,20 @@ void Patch::Render(Shader inShader, glm::mat4 viewMatrix, glm::mat4 projectionMa
 
 void Patch::updateVertexBuffers(std::vector<Physics::PhysicObject::t_ClothVertex> inVertices) {
 
-    std::vector<glm::vec3> tmpVerts;
-    std::vector<glm::vec3> tmpNormals;
 
     for(auto i = 0; i < inVertices.size(); i++) {
         glm::vec3 pos = glm::vec3(inVertices[i].position.x(), inVertices[i].position.y(), inVertices[i].position.z());
         glm::vec3 nor = glm::vec3(inVertices[i].normal.x(), inVertices[i].normal.y(), inVertices[i].normal.z());
-        tmpVerts.push_back(pos);
-        tmpNormals.push_back(nor);
+        mVertices.at(i) = pos;
+        mNormals.at(i) = nor;
     }
 
     glBindVertexArray(this->VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) *  inVertices.size(), &tmpVerts[0]);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) *  inVertices.size(), &mVertices[0]);
     glBindBuffer(GL_ARRAY_BUFFER, this->NBO);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) *  inVertices.size(), &tmpNormals[0]);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec3) *  inVertices.size(), &mNormals[0]);
 
     glBindVertexArray(0);
 }

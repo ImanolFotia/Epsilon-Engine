@@ -11,7 +11,6 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
-using namespace std;
 /// GL Includes
 #include <GL/glew.h> /// Contains all the necessery OpenGL includes
 #include <glm/glm.hpp>
@@ -37,8 +36,8 @@ struct Vertex
 struct Texture
 {
     GLuint id;
-    string type;
-    string path;
+    std::string type;
+    std::string path;
 };
 
 
@@ -46,17 +45,17 @@ class Mesh
 {
 public:
     /**  Mesh Data  */
-    vector<t_Vertex> vertices;
+    std::vector<t_Vertex> vertices;
     int CubeMapIndex = 1;
-    vector<Vertex> ivertices;
-    vector<GLuint> indices;
-    vector<Texture> textures;
+    std::vector<Vertex> ivertices;
+    std::vector<GLuint> indices;
+    std::vector<Texture> textures;
 
     bool isVisible = true;
 
     /**  Functions  */
     /// Constructor
-    Mesh(vector<t_Vertex> vertices, vector<GLuint> indices, vector<Texture> textures, int CubeMapindex = 1)
+    Mesh(std::vector<t_Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures, int CubeMapindex = 1)
     {
         this->vertices = vertices;
         this->indices = indices;

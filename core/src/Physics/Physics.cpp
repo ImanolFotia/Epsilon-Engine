@@ -7,7 +7,7 @@ namespace Physics {
 		dispatcher = (std::shared_ptr<btDispatcher>) (new btCollisionDispatcher(collisionConfig.get()));
 		broadphase = (std::shared_ptr<btBroadphaseInterface>) (new btDbvtBroadphase());
 		solver = (std::shared_ptr<btConstraintSolver>) (new btSequentialImpulseConstraintSolver());
-		world = (std::shared_ptr<btDynamicsWorld>) (new btSoftRigidDynamicsWorld(dispatcher.get(),broadphase.get(),solver.get(),collisionConfig.get()));
+		world = std::make_shared<btSoftRigidDynamicsWorld> (dispatcher.get(),broadphase.get(),solver.get(),collisionConfig.get());
 
 		world->setGravity(btVector3(0,GRAVITY,0));    //gravity on Earth
 

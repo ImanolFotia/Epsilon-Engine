@@ -199,6 +199,7 @@ bool Terrain::GenerateGrid()
 
     calculateTangentSpace();
     
+    return true;
 }
 
 bool Terrain::calculateTangentSpace()
@@ -288,6 +289,8 @@ bool Terrain::LoadTexture(const char *diff, const char *normal, const char *spec
     } catch(std::exception & e) {
         std::cout << "Exception after LoadTexture" << e.what() << std::endl;
     }
+
+    return false;
 }
 
 bool Terrain::GenerateVertexBuffers()

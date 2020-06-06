@@ -44,34 +44,35 @@ namespace Physics {
             //btSoftBodyHelpers::ReoptimizeLinkOrder(this->m_BodyCloth.get());
             this->m_BodyCloth->setUserPointer(&CollInfo);
             std::cout << this->m_BodyCloth << std::endl;
+            mVertices.resize(m_BodyCloth->m_nodes.size());
             return this->m_BodyCloth;
 
         } catch(std::exception e) {
             std::cout << "EXCEPTION OCURRED: " << e.what() << std::endl;
         }
+
+        return nullptr;
     }
 
-    std::vector<PhysicObject::t_ClothVertex> ClothPhysicObject::getVertices() {
+    const std::vector<PhysicObject::t_ClothVertex>& ClothPhysicObject::getVertices() {
 
         btSoftBody* cloth = (std::dynamic_pointer_cast<btSoftBody>(this->m_BodyCloth)).get();
         //cloth->addForce(cloth->getWindVelocity());
         //cloth->applyForces();
 
         btSoftBody::tNodeArray&   nodes(cloth->m_nodes);
-        std::vector<PhysicObject::t_ClothVertex> outVertices;
+        //std::vector<PhysicObject::t_ClothVertex> outVertices;
 
         //std::cout << nodes.size() << std::endl;
 
         for(auto i = 0; i < nodes.size(); i++) {
             PhysicObject::t_ClothVertex tmpVertex;
-            tmpVertex.position = nodes[i].m_x;
-            tmpVertex.normal = nodes[i].m_n;
+            mVertices.at(i).position = nodes[i].m_x;
+            mVertices.at(i).normal = nodes[i].m_n;
 
-
-            outVertices.push_back(tmpVertex);
         }
 
-        return outVertices;
+        return mVertices;
     }
 
     void ClothPhysicObject::setWind(btVector3 direction, float speed) {

@@ -9,7 +9,7 @@
 namespace Epsilon
 {
 
-    class Primitive
+    class PrimitiveBase
     {
     public:
         virtual void Update() = 0;
@@ -20,6 +20,11 @@ namespace Epsilon
 
         struct Vertex
         {
+            Vertex(glm::vec3 p, glm::vec3 n, glm::vec2 u) {
+                position = p;
+                normal = n;
+                uv = u;
+            }
             glm::vec3 position;
             glm::vec2 uv;
             glm::vec3 normal;

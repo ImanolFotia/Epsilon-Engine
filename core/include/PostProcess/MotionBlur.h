@@ -50,6 +50,8 @@ namespace PostProcess
 
             m_pFrameBuffer->unbindFramebuffer();
             m_pShader->Free();
+
+            return 0;
         }
 
         virtual void Update() {}
