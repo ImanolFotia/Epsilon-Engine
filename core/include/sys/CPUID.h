@@ -1,5 +1,4 @@
 #pragma once
-#define _GLIBCXX_USE_NANOSLEEP
 #include <string>
 #include <iostream>
 #include <limits.h>

@@ -21,6 +21,6 @@ before_install:
   - sudo cp -r stb /usr/include/stb 
   - ls 
 
-script: make all -j8
+script: make epsilon-release -j8
 
 language: cpp
