@@ -7,15 +7,11 @@ using ::Component::SoundComponent;
 using ::Component::RenderComponent;
 using ::Component::PhysicComponent;
 
-using ::Component::SoundComponent_ptr;
-using ::Component::RenderComponent_ptr;
-using ::Component::PhysicComponent_ptr;
-
 using ::Component::SOUNDCOMPONENT;
 using ::Component::RENDERCOMPONENT;
 using ::Component::PHYSICCOMPONENT;
 
-EntityTemplate::EntityTemplate(glm::vec3 pos, glm::vec3 sc, glm::quat rot)
+EntityBase::EntityBase(glm::vec3 pos, glm::vec3 sc, glm::quat rot)
 {
     m_Position = pos;
     m_Scale = sc;
@@ -24,7 +20,7 @@ EntityTemplate::EntityTemplate(glm::vec3 pos, glm::vec3 sc, glm::quat rot)
     m_PrevRotation = rot;
 }
 
-void EntityTemplate::Update()
+void EntityBase::Update()
 {
 
     if (mHasSoundComponent)
@@ -40,7 +36,7 @@ void EntityTemplate::Update()
     }
 }
 
-void EntityTemplate::Render()
+void EntityBase::Render()
 {
     for (auto &c : ComponentList)
     {
@@ -56,20 +52,4 @@ void EntityTemplate::Render()
     }
 }
 
-template <>
-inline RenderComponent_ptr EntityTemplate::getComponent()
-{
-    return std::static_pointer_cast<RenderComponent>(ComponentList[RENDERCOMPONENT]);
-} 
 
-template <>
-inline PhysicComponent_ptr EntityTemplate::getComponent()
-{
-    return std::static_pointer_cast<PhysicComponent>(ComponentList[PHYSICCOMPONENT]);
-}
-
-template <>
-inline SoundComponent_ptr EntityTemplate::getComponent()
-{
-    return std::static_pointer_cast<SoundComponent>(ComponentList[SOUNDCOMPONENT]);
-}

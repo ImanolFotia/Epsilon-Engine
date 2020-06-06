@@ -194,6 +194,8 @@ class CubeMap {
 		virtual GLuint getTextureID() {
 			if(type == STATIC) return texture->getTextureID();
 			if(type == DYNAMIC) return cubemapTex;
+
+			return 0;
 		}
 
 		virtual GLuint getCubemapFace(int index) {

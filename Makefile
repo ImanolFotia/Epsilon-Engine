@@ -15,7 +15,8 @@
 
 CXX= g++
 
-OBJS_DIR:= ./obj
+OBJS_DIR_RELEASE:= ./obj/Release
+OBJS_DIR_DEBUG:= ./obj/Debug
 SOURCE_DIR:= ./core/src
 INCLUDE_DIR:= ./core/include
 LIB:= thirdparty
@@ -32,7 +33,8 @@ rwildcard=$(wildcard $(addsuffix $2, $1)) $(foreach d,$(wildcard $(addsuffix *, 
 
 SOURCES:= $(call rwildcard,$(SOURCE_DIR)/,*.cpp) #$(wildcard $(SOURCE_DIR)/**.cpp) 
 INCLUDES:= $(call rwildcard,$(INCLUDE_DIR)/,*.hpp *.h)#$(wildcard $(INCLUDE_DIR)/**.hpp $(INCLUDE_DIR)/**.h)
-OBJECTS := $(patsubst $(SOURCE_DIR)/%.cpp,$(OBJS_DIR)/%.o,$(SOURCES))
+OBJECTS_DEBUG := $(patsubst $(SOURCE_DIR)/%.cpp,$(OBJS_DIR_DEBUG)/%.o,$(SOURCES))
+OBJECTS_RELEASE := $(patsubst $(SOURCE_DIR)/%.cpp,$(OBJS_DIR_RELEASE)/%.o,$(SOURCES))
 RES_OBJECTS := $(OBJS_DIR)/resources.o
 
 #- sudo add-apt-repository http://ppa.launchpad.net/keithw/glfw3/ubuntu -y
@@ -83,13 +85,13 @@ endif
 LD_FLAGS := -fopenmp
 CPPFLAGS := --std=c++17
 
-DEBUG_FLAGS := -g -DDEBUG
+DEBUG_FLAGS := -g -DDEBUG -ggdb -g3 -gdwarf-4 -fvar-tracking-assignments
 
 RELEASE_FLAGS :=
 
 RES := ./core/src/resources.rc
 
-all: resource epsilon-release
+all: clean resource epsilon-release
 
 epsilon-debug: resource $(BIN)/Debug/$(EXEC)
 
@@ -106,16 +108,20 @@ resource:
 	@objcopy --input binary --output pe-x86-64 --binary-architecture i386:x86-64 $(RES) $(OBJS_DIR)/resources.o
 endif
 
-$(OBJS_DIR)/%.o: $(SOURCE_DIR)/%.cpp
-	-@mkdir -p $(@D)
+$(OBJS_DIR_DEBUG)/%.o: $(SOURCE_DIR)/%.cpp
+	-@mkdir -p $(@D)/Debug
+	$(CXX) $(INCLUDE_LIBS) -I$(INCLUDE_DIR) $(CPPFLAGS) -o $@ -c $^  $(LD_FLAGS) $(DEBUG_FLAGS)
+	
+$(OBJS_DIR_RELEASE)/%.o: $(SOURCE_DIR)/%.cpp
+	-@mkdir -p $(@D)/Release
 	$(CXX) $(INCLUDE_LIBS) -I$(INCLUDE_DIR) $(CPPFLAGS) -o $@ -c $^  $(LD_FLAGS)
 
-$(BIN)/Release/$(EXEC): $(OBJECTS)
-	-@mkdir -p $(@D)
+$(BIN)/Release/$(EXEC): $(OBJECTS_RELEASE)
+	-@mkdir -p $(@D)/Release
 	$(CXX) $(CPPFLAGS) $(RELEASE_FLAGS) $(RES_OBJECTS) -o $@ $^ $(LIBS_DIR) $(LIBS) $(LD_FLAGS)
 
-$(BIN)/Debug/$(EXEC): $(OBJECTS)
-	-@mkdir -p $(@D)
+$(BIN)/Debug/$(EXEC): $(OBJECTS_DEBUG)
+	-@mkdir -p $(@D)/Debug
 	$(CXX) $(CPPFLAGS) $(DEBUG_FLAGS) $(RES_OBJECTS) -o $@ $^ $(LIBS_DIR) $(LIBS) $(LD_FLAGS)
 
 clean:

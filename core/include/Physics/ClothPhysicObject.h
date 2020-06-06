@@ -19,7 +19,7 @@ public:
                                                   const int numY,
                                                   const int fixed);
 
-    std::vector<PhysicObject::t_ClothVertex> getVertices();
+    const std::vector<PhysicObject::t_ClothVertex>& getVertices();
 
     float getScale();
     int getWidth();
@@ -33,6 +33,7 @@ public:
     CollisionInfo CollInfo;
 
 private:
+    std::vector<PhysicObject::t_ClothVertex> mVertices;
     float mScale;
     int mWidth;
     int mHeight;

@@ -33,7 +33,6 @@
 #include <Entity/Entity.h>
 #include <memory>
 #include <ResourceManager.h>
-#include <Scene.h>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <IO/KeyBoard.h>
@@ -160,7 +159,7 @@ public:
     std::unique_ptr<MD5Model> m_AnimModel;
     std::unique_ptr<ShadowMap> shadowMap;
     std::unique_ptr<PostProcess> PP;
-    std::vector<std::shared_ptr<EntityTemplate> > EntityList;
+    std::vector<std::shared_ptr<EntityBase> > EntityList;
     std::unique_ptr<IO::Audio::Audio> m_AudioSystem;
     std::unique_ptr<IO::Audio::AudioListener> m_AudioListener;
     std::shared_ptr<SphericalHarmonics> sphericalharmonics;

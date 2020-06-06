@@ -34,7 +34,7 @@ public:
     }
 
     virtual glm::vec3 getScale(){
-        glm::vec3(1., 1., 1.);
+        return glm::vec3(1., 1., 1.);
     }
 
     void setPosition(glm::vec3 pos) {

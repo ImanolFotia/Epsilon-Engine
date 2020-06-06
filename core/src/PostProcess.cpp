@@ -236,8 +236,8 @@ void PostProcess::SetupGBuffer()
     glGenTextures(1, &gAlbedoSpec);
     glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, gAlbedoSpec, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
     /// - Normal color buffer
@@ -245,8 +245,8 @@ void PostProcess::SetupGBuffer()
     glGenTextures(1, &gExpensiveNormal);
     glBindTexture(GL_TEXTURE_2D, gExpensiveNormal);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, gExpensiveNormal, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -262,8 +262,8 @@ void PostProcess::SetupGBuffer()
     glGenTextures(1, &gExtraComponents);
     glBindTexture(GL_TEXTURE_2D, gExtraComponents);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, gExtraComponents, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -765,7 +765,7 @@ void PostProcess::SSRPass(std::shared_ptr<Camera> &cam)
         glActiveTexture(GL_TEXTURE0);
         glUniform1i(glGetUniformLocation(DenoiseShader->getProgramID(), "texture0"), 0);
         glBindTexture(GL_TEXTURE_2D, SSRTexture[this->CurrentSSR]);
-        glGenerateMipmap(GL_TEXTURE_2D);
+        //glGenerateMipmap(GL_TEXTURE_2D);
 
         glUniform2f(glGetUniformLocation(DenoiseShader->getProgramID(), "resolution"), this->width, this->height);
         glUniform1f(glGetUniformLocation(DenoiseShader->getProgramID(), "exponent"), 0.05);
@@ -913,7 +913,7 @@ void PostProcess::CompositeImage(bool isMoving)
         glBindTexture(GL_TEXTURE_2D, this->MotionBlurBuffer);
     else
         glBindTexture(GL_TEXTURE_2D, hdrFBO->getRenderTargetHandler("colorBuffer"));
-    glGenerateMipmap(GL_TEXTURE_2D);
+    //glGenerateMipmap(GL_TEXTURE_2D);
 
     glActiveTexture(GL_TEXTURE1);
     CompositeShader->PushUniform("gReflectionSampler", 1);
@@ -1086,7 +1086,7 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool &hdr, std::shared_ptr<Camera> &c
     glCache::glUseProgram(0);
 
     /** copy texture */
-
+/*
     CopyTextureFBO->bindFramebuffer();
     CopyTextureFBO->setViewport();
     CopyTextureFBO->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -1108,10 +1108,11 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool &hdr, std::shared_ptr<Camera> &c
 
     CopyTextureFBO->unbindFramebuffer();
     glViewport(0, 0, this->width, this->height);
-
+*/
     /** end copy texture*/
 
     /**Fill mip maps begin*/
+    /*
     CopyTextureBlurredFBO->bindFramebuffer();
     blurBloom->Use();
 	unsigned int maxMipLevels = 5;
@@ -1139,8 +1140,8 @@ void PostProcess::ShowFrame(glm::vec3 Sun, bool &hdr, std::shared_ptr<Camera> &c
     glBindTexture(GL_TEXTURE_2D, 0);
     glViewport(0, 0, this->width, this->height);
 
+*/
     /**Fill mip maps end*/
-
     glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuffer);
     hdrFBO->setToDraw();
     glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);

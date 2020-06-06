@@ -159,6 +159,7 @@ private:
         }
 
         SOIL_free_image_data(image);
+        //delete image;
         glBindTexture(type, 0);
 
         Global::Log::WriteToLog("Texture: " + std::string(TexName) + " Loaded.");

@@ -29,7 +29,8 @@ namespace Physics {
 		public:
 			Physics();
 
-			~Physics() {}
+			~Physics() {
+			}
 
 			void Update(float);
 

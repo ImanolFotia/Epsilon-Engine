@@ -25,7 +25,7 @@ public:
 
     virtual ~ResourceManager()
     {
-        Destroy();
+        //Destroy();
     }
 
     void Destroy() {
@@ -33,7 +33,7 @@ public:
         for(std::map<std::string, std::shared_ptr<eTexture> >::iterator itr = TextureList.begin(); itr != TextureList.end(); itr++)
         {
             GLuint tex = itr->second->getTextureID();
-            glDeleteTextures(1, &tex);
+            itr->second->Destroy();
         }
 
         for(std::map<std::string, Model>::iterator itr = ModelList.begin(); itr != ModelList.end(); itr++)

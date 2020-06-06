@@ -70,6 +70,8 @@ namespace PostProcess
 
             m_pFrameBufferBlur->unbindFramebuffer();
             glBindTexture(GL_TEXTURE_2D, 0);
+
+            return 0;
         }
 
         void PrepareSSAOTexture()

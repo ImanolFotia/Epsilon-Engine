@@ -74,6 +74,8 @@ public:
     {
         if (i < mButtons.size())
             return mButtons.at(i);
+        
+        return 0;
     }
 
     const std::shared_ptr<Input::Joystick::Mappings::Mapping> getMapping() { return mMapping; }
@@ -151,6 +153,8 @@ public:
             std::cout << "Exception caught at: " << __FUNCTION__ << "\n line: " << __LINE__ << ".\n"
                       << "What(): " << e.what() << std::endl;
         }
+
+        return nullptr;
     }
 
     static void JoystickCallback(int joystick, int event)

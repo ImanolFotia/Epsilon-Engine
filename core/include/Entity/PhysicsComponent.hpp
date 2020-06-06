@@ -64,7 +64,7 @@ public:
 
             glm::quat rot = glm::quat(m_PhysicsWorldRotation.getW(), m_PhysicsWorldRotation.getX(), m_PhysicsWorldRotation.getY(), m_PhysicsWorldRotation.getZ());
             //btQuaternion rot = btQuaternion(m_Rotation.x, m_Rotation.y, m_Rotation.z, m_Rotation.w);
-            std::cout << " Rotation | x: " << rot.x << " y: " << rot.y << " z: " << rot.z << " w: " << rot.w << std::endl;
+            //std::cout << " Rotation | x: " << rot.x << " y: " << rot.y << " z: " << rot.z << " w: " << rot.w << std::endl;
             transf.setRotation(m_PhysicsWorldRotation);
             transf.setOrigin(m_PhysicsWorldPosition);
             setTransform(transf);
@@ -119,8 +119,8 @@ public:
             return glm::vec3(m_PhysicsWorldPosition.getX(), m_PhysicsWorldPosition.getY(), m_PhysicsWorldPosition.getZ());
     }
     
-    glm::quat getRotation() {}
-    glm::vec3 getScale() {}
+    glm::quat getRotation() { return glm::quat(1.0f, 0.0f, 0.0f, 0.0f); }
+    glm::vec3 getScale() { return glm::vec3(1.0f); }
 
     /** Functions declared for the sake of pure virtual function polymorphism, must not be used for production*/
     void Render() {}

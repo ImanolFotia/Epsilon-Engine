@@ -14,15 +14,15 @@
 #include <Entity/RenderComponent.hpp>
 #include <Entity/SoundComponent.hpp>
 
-class EntityTemplate : public std::enable_shared_from_this<EntityTemplate>
+class EntityBase : public std::enable_shared_from_this<EntityBase>
 {
 
     using Component_ptr = std::shared_ptr<Component::Component>;
 
 public:
-    EntityTemplate(glm::vec3 pos, glm::vec3 sc, glm::quat rot);
+    EntityBase(glm::vec3 pos, glm::vec3 sc, glm::quat rot);
 
-    std::shared_ptr<EntityTemplate> addComponent(Component_ptr t)
+    std::shared_ptr<EntityBase> addComponent(Component_ptr t)
     {
         switch (t->getType())
         {
@@ -56,7 +56,7 @@ public:
         return shared_from_this();
     }
 
-    ~EntityTemplate()
+    ~EntityBase()
     {
     }
 
@@ -85,9 +85,8 @@ public:
     template <class T>
     T getComponent()
     {
-        return nullptr;
+        return 0;
     }
-
 
 private:
     bool mHasPlayerComponent = false;
@@ -241,6 +240,23 @@ private:
     glm::vec3 m_PrevScale;
     glm::quat m_PrevRotation;
 
-
 protected:
 };
+
+template <>
+inline Component::RenderComponent_ptr EntityBase::getComponent()
+{
+    return std::static_pointer_cast<Component::RenderComponent>(ComponentList[Component::RENDERCOMPONENT]);
+}
+
+template <>
+inline Component::PhysicComponent_ptr EntityBase::getComponent()
+{
+    return std::static_pointer_cast<Component::PhysicComponent>(ComponentList[Component::PHYSICCOMPONENT]);
+}
+
+template <>
+inline Component::SoundComponent_ptr EntityBase::getComponent()
+{
+    return std::static_pointer_cast<Component::SoundComponent>(ComponentList[Component::SOUNDCOMPONENT]);
+}
