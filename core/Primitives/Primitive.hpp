@@ -3,8 +3,8 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-#include <OpenGL/VertexArrayObject.h>
-#include <OpenGL/VertexBufferObject.h>
+#include <Driver/API/OpenGL/VertexArrayObject.h>
+#include <Driver/API/OpenGL/VertexBufferObject.h>
 
 namespace Epsilon
 {

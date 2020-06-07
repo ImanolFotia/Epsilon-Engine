@@ -1,35 +1,40 @@
 #pragma once
 
-#include "Context.hpp"
+#include "API/Context.hpp"
 #include "Device.hpp"
+#include "WindowHandle.hpp"
 
 #include <memory>
 
-namespace Epsilon {
-    namespace Platform {
-        class WindowBase {
+namespace Epsilon
+{
+    namespace Platform
+    {
+        class WindowBase
+        {
 
-            class WindowData {
+            class WindowData
+            {
                 int Width;
                 int Height;
             };
 
-            public:
-                WindowBase() = default;
+        public:
+            WindowBase() = default;
 
-                virtual ~WindowBase() {}
+            virtual ~WindowBase() {}
 
-                virtual void Create(int, int) = 0;
-                virtual void Resize(int, int) = 0;
-                virtual void Destroy() = 0;
+            virtual void Init(const char*, int, int) const = 0;
+            virtual void Resize(int, int) const = 0;
+            virtual void Destroy() = 0;
 
-                const ContextBase_ptr getContext() {
-                    return mContext;
-                }
-            
-            private:
-                ContextBase_ptr mContext;
+            const API::ContextBase_ptr getContext()
+            {
+                return mContext;
+            }
 
-        }
-    };
-}
+        protected:
+            API::ContextBase_ptr mContext;
+        };
+    } // namespace Platform
+} // namespace Epsilon

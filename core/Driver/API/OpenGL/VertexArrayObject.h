@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <OpenGL/VertexBufferObject.h>
+#include <Driver/API/OpenGL/VertexBufferObject.h>
 
 namespace Epsilon
 {
