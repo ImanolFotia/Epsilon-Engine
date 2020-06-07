@@ -16,9 +16,9 @@ namespace Epsilon
 {
     PostProcess::PostProcess()
     {
-        this->LoadOffscreensShaders();
-        this->SetupFramebuffer();
-        this->lastDepth = 0.2;
+        LoadOffscreensShaders();
+        SetupFramebuffer();
+        lastDepth = 0.2;
     }
 
     static int TotalFrames = 0;
@@ -29,11 +29,11 @@ namespace Epsilon
         width = PG.WINDOW_WIDTH;
         height = PG.WINDOW_HEIGHT;
         SSROn = PG.SCREEN_SPACE_REFLECTIONS;
-        this->SSAOwidth = width;
-        this->SSAOheight = height;
-        this->lightShafts = PG.LIGHTSHAFTS;
-        this->m_MotionBlur = PG.MOTION_BLUR;
-        this->HBAOOn = PG.HBAO;
+        SSAOwidth = width;
+        SSAOheight = height;
+        lightShafts = PG.LIGHTSHAFTS;
+        m_MotionBlur = PG.MOTION_BLUR;
+        HBAOOn = PG.HBAO;
 
         mParallaxMapping = PG.PARALLAX_OCLUSSION_MAPPING;
         mMotionBlurStrength = PG.MOTION_BLUR_STRENGTH;
@@ -143,7 +143,7 @@ namespace Epsilon
         lensDirt = (std::shared_ptr<eTexture>)new eTexture("effects/lensdirt.png");
         lensStar = (std::shared_ptr<eTexture>)new eTexture("effects/lensstar.png");
 
-        this->BlueNoiseTexture = (std::shared_ptr<eTexture>)new eTexture("LDR_RGBA_0_n.png", GL_REPEAT, GL_TEXTURE_2D, GL_LINEAR);
+        BlueNoiseTexture = (std::shared_ptr<eTexture>)new eTexture("LDR_RGBA_0_n.png", GL_REPEAT, GL_TEXTURE_2D, GL_LINEAR);
         /*
                 LightPositions.push_back(glm::vec3(-41, 12.0, -23));
                 LightPositions.push_back(glm::vec3(-39, 10.3, 2));
@@ -194,7 +194,7 @@ namespace Epsilon
 
         BRDFShader->Use();
         glDisable(GL_BLEND);
-        this->RenderQuad();
+        RenderQuad();
         glEnable(GL_BLEND);
 
         BRDFFramebuffer->unbindFramebuffer();
@@ -222,7 +222,7 @@ namespace Epsilon
     {
         glDisable(GL_BLEND);
         glViewport(0, 0, width, height);
-        glBindFramebuffer(GL_FRAMEBUFFER, this->gBuffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     }
@@ -309,7 +309,7 @@ namespace Epsilon
         /// - SSAO color buffer
         glGenTextures(1, &ssaoColorBuffer);
         glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, this->SSAOwidth, this->SSAOheight, 0, GL_RGB, GL_FLOAT, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, SSAOwidth, SSAOheight, 0, GL_RGB, GL_FLOAT, NULL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ssaoColorBuffer, 0);
@@ -319,7 +319,7 @@ namespace Epsilon
         glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
         glGenTextures(1, &ssaoColorBufferBlur);
         glBindTexture(GL_TEXTURE_2D, ssaoColorBufferBlur);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, this->SSAOwidth, this->SSAOheight, 0, GL_RGB, GL_FLOAT, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, SSAOwidth, SSAOheight, 0, GL_RGB, GL_FLOAT, NULL);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ssaoColorBufferBlur, 0);
@@ -373,16 +373,16 @@ namespace Epsilon
         SSAO->Use();
         glActiveTexture(GL_TEXTURE0);
         SSAO->PushUniform("gDepth", 0);
-        glBindTexture(GL_TEXTURE_2D, this->gDepth);
+        glBindTexture(GL_TEXTURE_2D, gDepth);
         glGenerateMipmap(GL_TEXTURE_2D);
 
         glActiveTexture(GL_TEXTURE1);
         SSAO->PushUniform("texNoise", 1);
-        glBindTexture(GL_TEXTURE_2D, this->noiseTexture);
+        glBindTexture(GL_TEXTURE_2D, noiseTexture);
         /*
     	glActiveTexture(GL_TEXTURE2);
     	SSAO->PushUniform("gNormal", 2);
-    	glBindTexture(GL_TEXTURE_2D, this->gExpensiveNormal);
+    	glBindTexture(GL_TEXTURE_2D, gExpensiveNormal);
     */
         {
             FocalLen.x = 1.0f / tanf(glm::radians(cam->getFoV()) * 0.5f) * ((float)SSAOheight / (float)SSAOwidth);
@@ -406,7 +406,7 @@ namespace Epsilon
             SSAO->PushUniform("Resolution", glm::vec2(SSAOwidth, SSAOheight));
         }
 
-        switch (this->mHBAOQuality)
+        switch (mHBAOQuality)
         {
         case 0:
             SSAO->PushUniform("NumDirections", 3);
@@ -428,14 +428,14 @@ namespace Epsilon
         SSAO->PushUniform("view", cam->getViewMatrix());
         SSAO->PushUniform("invView", glm::inverse(cam->getViewMatrix()));
         glViewport(0, 0, SSAOwidth, SSAOheight);
-        this->RenderQuad();
+        RenderQuad();
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         //#define cheapblur
 
 #ifndef cheapblur
         glViewport(0, 0, width, height);
 
-        ssaoColorBufferBlur = this->blurImage(ssaoColorBuffer, true);
+        ssaoColorBufferBlur = blurImage(ssaoColorBuffer, true);
 #else
 
         glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
@@ -443,7 +443,7 @@ namespace Epsilon
         blurSSAO->Use();
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
-        this->RenderQuad();
+        RenderQuad();
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 #endif // cheapblur
 
@@ -596,7 +596,7 @@ namespace Epsilon
         {
             glBindFramebuffer(GL_FRAMEBUFFER, SSRFBO[i]);
             glBindTexture(GL_TEXTURE_2D, SSRTexture[i]);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->width, this->height, 0, GL_RGBA, GL_FLOAT, NULL);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
             glGenerateMipmap(GL_TEXTURE_2D);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -620,7 +620,7 @@ namespace Epsilon
         glGenTextures(1, &DenoiseTexture);
         glBindFramebuffer(GL_FRAMEBUFFER, DenoiseFBO);
         glBindTexture(GL_TEXTURE_2D, DenoiseTexture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, this->width, this->height, 0, GL_RGB, GL_FLOAT, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, NULL);
         //glGenerateMipmap(GL_TEXTURE_2D);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -659,7 +659,7 @@ namespace Epsilon
     {
         glGenFramebuffers(1, &DownSamplerFBO);
         glBindFramebuffer(GL_FRAMEBUFFER, DownSamplerFBO);
-        glGenTextures(1, &this->DownSampledTexture);
+        glGenTextures(1, &DownSampledTexture);
 
         glBindTexture(GL_TEXTURE_2D, DownSampledTexture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_FLOAT, NULL);
@@ -683,12 +683,12 @@ namespace Epsilon
     void PostProcess::SSRPass(std::shared_ptr<Camera> &cam)
     {
 
-        glBindFramebuffer(GL_FRAMEBUFFER, SSRFBO[this->CurrentSSR]);
+        glBindFramebuffer(GL_FRAMEBUFFER, SSRFBO[CurrentSSR]);
         //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glDisable(GL_BLEND);
         ScreenSpaceReflectionShader->Use();
-        glViewport(0, 0, this->width, this->height);
+        glViewport(0, 0, width, height);
         glActiveTexture(GL_TEXTURE0);
         glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "gFinalImage"), 0);
         glBindTexture(GL_TEXTURE_2D, hdrFBO->getRenderTargetHandler("colorBuffer"));
@@ -696,15 +696,15 @@ namespace Epsilon
 
         glActiveTexture(GL_TEXTURE1);
         glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "gNormal"), 1);
-        glBindTexture(GL_TEXTURE_2D, this->gExpensiveNormal);
+        glBindTexture(GL_TEXTURE_2D, gExpensiveNormal);
 
         glActiveTexture(GL_TEXTURE2);
         glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "gExtraComponents"), 2);
-        glBindTexture(GL_TEXTURE_2D, this->gExtraComponents);
+        glBindTexture(GL_TEXTURE_2D, gExtraComponents);
 
         glActiveTexture(GL_TEXTURE3);
         glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "gDepth"), 3);
-        glBindTexture(GL_TEXTURE_2D, this->gDepth);
+        glBindTexture(GL_TEXTURE_2D, gDepth);
 
         glActiveTexture(GL_TEXTURE4);
         glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "BRDF"), 4);
@@ -712,15 +712,15 @@ namespace Epsilon
 
         glActiveTexture(GL_TEXTURE5);
         glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "noiseTexture"), 5);
-        glBindTexture(GL_TEXTURE_2D, /*this->noiseTexture*/ this->BlueNoiseTexture->getTextureID());
+        glBindTexture(GL_TEXTURE_2D, /*noiseTexture*/ BlueNoiseTexture->getTextureID());
 
         glActiveTexture(GL_TEXTURE6);
         glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "PreviousReflection"), 6);
-        glBindTexture(GL_TEXTURE_2D, this->SSRTexture[!this->CurrentSSR]);
+        glBindTexture(GL_TEXTURE_2D, SSRTexture[!CurrentSSR]);
 
         glActiveTexture(GL_TEXTURE7);
         glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "gAlbedo"), 7);
-        glBindTexture(GL_TEXTURE_2D, this->gAlbedoSpec);
+        glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
 
         glm::mat4 proj = cam->getProjectionMatrix();
         glUniformMatrix4fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "projection"), 1, GL_FALSE, &proj[0][0]);
@@ -730,7 +730,7 @@ namespace Epsilon
         glUniformMatrix4fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "invView"), 1, GL_FALSE, &invView[0][0]);
         glm::mat4 view = cam->getViewMatrix();
         glUniformMatrix4fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "view"), 1, GL_FALSE, &view[0][0]);
-        glUniform2f(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "Resolution"), this->width, this->height);
+        glUniform2f(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "Resolution"), width, height);
         glUniform3fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "camDir"), 1, &cam->getDirection()[0]);
         glUniform3fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "camPos"), 1, &cam->getPosition()[0]);
         ScreenSpaceReflectionShader->PushUniform("SSROn", SSROn);
@@ -738,7 +738,7 @@ namespace Epsilon
         ScreenSpaceReflectionShader->PushUniform("Time", (float)glfwGetTime());
         ScreenSpaceReflectionShader->PushUniform("ID", TotalFrames);
         ScreenSpaceReflectionShader->PushUniform("isMoving", cam->isMoving());
-        this->RenderQuad();
+        RenderQuad();
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -766,23 +766,23 @@ namespace Epsilon
             glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
             DenoiseShader->Use();
-            glViewport(0, 0, this->width, this->height);
+            glViewport(0, 0, width, height);
             glActiveTexture(GL_TEXTURE0);
             glUniform1i(glGetUniformLocation(DenoiseShader->getProgramID(), "texture0"), 0);
-            glBindTexture(GL_TEXTURE_2D, SSRTexture[this->CurrentSSR]);
+            glBindTexture(GL_TEXTURE_2D, SSRTexture[CurrentSSR]);
             //glGenerateMipmap(GL_TEXTURE_2D);
 
-            glUniform2f(glGetUniformLocation(DenoiseShader->getProgramID(), "resolution"), this->width, this->height);
+            glUniform2f(glGetUniformLocation(DenoiseShader->getProgramID(), "resolution"), width, height);
             glUniform1f(glGetUniformLocation(DenoiseShader->getProgramID(), "exponent"), 0.05);
-            this->RenderQuad();
+            RenderQuad();
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, 0);
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
             glEnable(GL_BLEND);
-            glViewport(0, 0, this->width, this->height);
+            glViewport(0, 0, width, height);
         }
-        this->CurrentSSR = !this->CurrentSSR;
+        CurrentSSR = !CurrentSSR;
 
         /*****************/
     }
@@ -794,7 +794,7 @@ namespace Epsilon
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         MotionBlurShader->Use();
-        glViewport(0, 0, this->width, this->height);
+        glViewport(0, 0, width, height);
 
         glActiveTexture(GL_TEXTURE0);
         MotionBlurShader->PushUniform("gFinalImage", 0);
@@ -803,14 +803,14 @@ namespace Epsilon
 
         glActiveTexture(GL_TEXTURE1);
         MotionBlurShader->PushUniform("gExtraComponents", 1);
-        glBindTexture(GL_TEXTURE_2D, this->gExtraComponents);
+        glBindTexture(GL_TEXTURE_2D, gExtraComponents);
 
         float currentFPS = (1.0 / frametime);
         float targetFPS = (1.0 / 0.016f);
         float velocityScale = currentFPS / targetFPS;
-        MotionBlurShader->PushUniform("uVelocityScale", velocityScale * this->mMotionBlurStrength);
+        MotionBlurShader->PushUniform("uVelocityScale", velocityScale * mMotionBlurStrength);
 
-        this->RenderQuad();
+        RenderQuad();
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -833,7 +833,7 @@ namespace Epsilon
     glViewport(0,0, 1, 1);
     glBindTexture(GL_TEXTURE_2D, mCompositeImage->getRenderTargetHandler(0));
     glGenerateMipmap(GL_TEXTURE_2D);
-    this->RenderQuad();
+    RenderQuad();
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -874,7 +874,7 @@ namespace Epsilon
             glUniform1i(glGetUniformLocation(blurSSRShader->getProgramID(), "horizontal"), horizontal);
             glActiveTexture(GL_TEXTURE0);
             glUniform1i(glGetUniformLocation(blurSSRShader->getProgramID(), "image"), 0);
-            glBindTexture(GL_TEXTURE_2D, first_iteration ? this->DownSampledTexture : pingpongSSRT[!horizontal]); // bind texture of other framebuffer (or scene if first iteration)
+            glBindTexture(GL_TEXTURE_2D, first_iteration ? DownSampledTexture : pingpongSSRT[!horizontal]); // bind texture of other framebuffer (or scene if first iteration)
             RenderQuad();
 
             if (i >= 4)
@@ -915,7 +915,7 @@ namespace Epsilon
         glActiveTexture(GL_TEXTURE0);
         CompositeShader->PushUniform("gColorSampler", 0);
         if (m_MotionBlur)
-            glBindTexture(GL_TEXTURE_2D, this->MotionBlurBuffer);
+            glBindTexture(GL_TEXTURE_2D, MotionBlurBuffer);
         else
             glBindTexture(GL_TEXTURE_2D, hdrFBO->getRenderTargetHandler("colorBuffer"));
         //glGenerateMipmap(GL_TEXTURE_2D);
@@ -923,12 +923,12 @@ namespace Epsilon
         glActiveTexture(GL_TEXTURE1);
         CompositeShader->PushUniform("gReflectionSampler", 1);
         if (isMoving)
-            glBindTexture(GL_TEXTURE_2D, SSRTexture[!this->CurrentSSR]);
+            glBindTexture(GL_TEXTURE_2D, SSRTexture[!CurrentSSR]);
         else
         {
-            glBindTexture(GL_TEXTURE_2D, SSRTexture[this->CurrentSSR]);
+            glBindTexture(GL_TEXTURE_2D, SSRTexture[CurrentSSR]);
             if (TotalFrames >= 250)
-                glBindTexture(GL_TEXTURE_2D, SSRTexture[!this->CurrentSSR]);
+                glBindTexture(GL_TEXTURE_2D, SSRTexture[!CurrentSSR]);
         }
 
         glActiveTexture(GL_TEXTURE2);
@@ -939,7 +939,7 @@ namespace Epsilon
         CompositeShader->PushUniform("isMoving", isMoving);
         CompositeShader->PushUniform("HBAOOn", (int)HBAOOn);
 
-        this->RenderQuad();
+        RenderQuad();
 
         glBindTexture(GL_TEXTURE_2D, 0);
         mCompositeImage->unbindFramebuffer();
@@ -955,9 +955,9 @@ namespace Epsilon
         if (m_MotionBlur)
             MotionBlur(frametime);
 
-        this->CompositeImage(cam->isMoving());
+        CompositeImage(cam->isMoving());
 
-        GLuint blurred = this->blurImage(hdrFBO->getRenderTargetHandler("brightColorBuffer"), false);
+        GLuint blurred = blurImage(hdrFBO->getRenderTargetHandler("brightColorBuffer"), false);
 
         DownSampleSSR(frametime);
 
@@ -965,7 +965,7 @@ namespace Epsilon
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        glViewport(0, 0, this->width, this->height);
+        glViewport(0, 0, width, height);
         finalImage->Use();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -1012,17 +1012,17 @@ namespace Epsilon
         finalImage->PushUniform("position", cam->getPosition());
         finalImage->PushUniform("sunPos", Sun);
         finalImage->PushUniform("blurSize", blurSize);
-        finalImage->PushUniform("lightShafts", this->lightShafts);
+        finalImage->PushUniform("lightShafts", lightShafts);
         finalImage->PushUniform("onmenu", (int)onmenu);
-        finalImage->PushUniform("Resolution", glm::vec2(this->width, this->height));
+        finalImage->PushUniform("Resolution", glm::vec2(width, height));
 
-        finalImage->PushUniform("BokehOn", this->mBokehDOF);
-        finalImage->PushUniform("ChromaticAberration", this->mChromaticAberration);
+        finalImage->PushUniform("BokehOn", mBokehDOF);
+        finalImage->PushUniform("ChromaticAberration", mChromaticAberration);
 
         finalImage->PushUniform("exposure", m_exposure);
         finalImage->PushUniform("time", (float)glfwGetTime());
 
-        this->RenderQuad();
+        RenderQuad();
 
         glBindTexture(GL_TEXTURE_2D, 0);
     }
@@ -1033,26 +1033,26 @@ namespace Epsilon
         hdrFBO->bindFramebuffer();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        this->shader->Use();
+        shader->Use();
 
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-        glViewport(0, 0, this->width, this->height);
+        glViewport(0, 0, width, height);
         glActiveTexture(GL_TEXTURE0);
         glUniform1i(glGetUniformLocation(shader->getProgramID(), "gDepth"), 0);
-        glBindTexture(GL_TEXTURE_2D, this->gDepth);
+        glBindTexture(GL_TEXTURE_2D, gDepth);
         glGenerateMipmap(GL_TEXTURE_2D);
 
         glActiveTexture(GL_TEXTURE1);
         glUniform1i(glGetUniformLocation(shader->getProgramID(), "gNormal"), 1);
-        glBindTexture(GL_TEXTURE_2D, this->gExpensiveNormal);
+        glBindTexture(GL_TEXTURE_2D, gExpensiveNormal);
 
         glActiveTexture(GL_TEXTURE2);
         glUniform1i(glGetUniformLocation(shader->getProgramID(), "gAlbedoSpec"), 2);
-        glBindTexture(GL_TEXTURE_2D, this->gAlbedoSpec);
+        glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
 
         glActiveTexture(GL_TEXTURE3);
         glUniform1i(glGetUniformLocation(shader->getProgramID(), "ssaoColorBufferBlur"), 3);
-        glBindTexture(GL_TEXTURE_2D, this->ssaoColorBufferBlur);
+        glBindTexture(GL_TEXTURE_2D, ssaoColorBufferBlur);
 
         glActiveTexture(GL_TEXTURE4);
         glUniform1i(glGetUniformLocation(shader->getProgramID(), "shadowMap"), 4);
@@ -1060,15 +1060,15 @@ namespace Epsilon
 
         glActiveTexture(GL_TEXTURE5);
         glUniform1i(glGetUniformLocation(shader->getProgramID(), "gExtraComponents"), 5);
-        glBindTexture(GL_TEXTURE_2D, this->gExtraComponents);
+        glBindTexture(GL_TEXTURE_2D, gExtraComponents);
 
         glActiveTexture(GL_TEXTURE6);
         glUniform1i(glGetUniformLocation(shader->getProgramID(), "gLightAccumulation"), 6);
-        glBindTexture(GL_TEXTURE_2D, this->gLightAccumulation);
+        glBindTexture(GL_TEXTURE_2D, gLightAccumulation);
 
-        glUniform1i(glGetUniformLocation(this->shader->getProgramID(), "hdr"), hdr);
-        glUniform1f(glGetUniformLocation(this->shader->getProgramID(), "time"), glfwGetTime());
-        glUniform1f(glGetUniformLocation(this->shader->getProgramID(), "exposure"), exposure);
+        glUniform1i(glGetUniformLocation(shader->getProgramID(), "hdr"), hdr);
+        glUniform1f(glGetUniformLocation(shader->getProgramID(), "time"), glfwGetTime());
+        glUniform1f(glGetUniformLocation(shader->getProgramID(), "exposure"), exposure);
         glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "lightSpaceMatrix"), 1, GL_FALSE, &shadowMap->getLightSpaceMatrix()[0][0]);
         glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "depthBias"), 1, GL_FALSE, &shadowMap->getBiasMatrix()[0][0]);
 
@@ -1083,7 +1083,7 @@ namespace Epsilon
         glUniform3f(glGetUniformLocation(shader->getProgramID(), "uViewDir"), cam->getDirection().x, cam->getDirection().y, cam->getDirection().z);
         glUniform3f(glGetUniformLocation(shader->getProgramID(), "lightDir"), Sun.x, Sun.y, Sun.z);
 
-        this->RenderQuad();
+        RenderQuad();
 
         glBindTexture(GL_TEXTURE_2D, 0);
         glBindVertexArray(0);
@@ -1104,7 +1104,7 @@ namespace Epsilon
 
     CopyTextureFBO->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    this->RenderQuad();
+    RenderQuad();
 
     PassThroughShader->Free();
 
@@ -1112,7 +1112,7 @@ namespace Epsilon
     glBindTexture(GL_TEXTURE_2D, 0);
 
     CopyTextureFBO->unbindFramebuffer();
-    glViewport(0, 0, this->width, this->height);
+    glViewport(0, 0, width, height);
 */
         /** end copy texture*/
 
@@ -1137,13 +1137,13 @@ namespace Epsilon
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, CopyTextureBlurredFBO->getRenderTargetHandler(0), mip);
 
         CopyTextureBlurredFBO->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        this->RenderQuad();
+        RenderQuad();
     }
     blurBloom->Free();
     CopyTextureBlurredFBO->unbindFramebuffer();
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);
-    glViewport(0, 0, this->width, this->height);
+    glViewport(0, 0, width, height);
 
 */
         /**Fill mip maps end*/
