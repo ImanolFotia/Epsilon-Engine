@@ -17,8 +17,8 @@ CXX= g++
 
 OBJS_DIR_RELEASE:= ./obj/Release
 OBJS_DIR_DEBUG:= ./obj/Debug
-SOURCE_DIR:= ./core/src
-INCLUDE_DIR:= ./core/include
+SOURCE_DIR:= ./core
+INCLUDE_DIR:= ./core
 LIB:= thirdparty
 BIN:= ./bin
 
@@ -89,7 +89,7 @@ DEBUG_FLAGS := -g -DDEBUG -ggdb -g3 -gdwarf-4 -fvar-tracking-assignments
 
 RELEASE_FLAGS :=
 
-RES := ./core/src/resources.rc
+RES := ./core/resources.rc
 
 all: clean resource epsilon-release
 
