@@ -1,3 +1,4 @@
+#include <Core.hpp>
 #include <Physics/Physics.h>
 #include <Physics/TriangleMeshPhysicObject.h>
 #include <ResourceManager.h>
@@ -45,7 +46,7 @@ namespace Epsilon
 		rigidBody = ph->addObject(this->Vertices, this->Indices, 0.1);
 		collinfo->setName(this->ObjectID);
 		ph->Body->setUserPointer(collinfo.get());
-		ResourceManager::Get().getPhysicsWorld()->world->addRigidBody(rigidBody.get());
+		ResourceManager::Get().getPhysicsWorld()->getSoftDynamicsWorld()->addRigidBody(rigidBody.get());
 		this->CollisionObject = ph;
 		//this->LoadLightMapTexture();
 		return true;
@@ -53,6 +54,12 @@ namespace Epsilon
 
 	void BSPFace::RenderFace(GLuint shader, GLuint TextureID, GLuint normalID, GLuint specularID, GLuint metallicID, bool simpleRender)
 	{
+
+		if(ResourceManager::Get().cubemapsLoaded && this->CubemapId == -1)
+		{
+			CubemapId = ResourceManager::Get().NearestCubeMap(mPosition);
+			GIProbeID = ResourceManager::Get().NearestCubeMap(mPosition) - 1;
+		}
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, TextureID);
 		glUniform1i(glGetUniformLocation(shader, "texture_diffuse"), 0);
@@ -71,10 +78,11 @@ namespace Epsilon
 
 		glActiveTexture(GL_TEXTURE4);
 		glUniform1i(glGetUniformLocation(shader, "skybox"), 4);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, ResourceManager::Get().useCubeMap(ResourceManager::Get().getNearestCubemapIndex(mPosition)));
+		if(this->CubemapId != -1)
+		glBindTexture(GL_TEXTURE_CUBE_MAP, ResourceManager::Get().useCubeMap(CubemapId));
 
-		glUniform1i(glGetUniformLocation(shader, "CubemapID"), ResourceManager::Get().NearestCubeMap(mPosition));
-		glUniform1i(glGetUniformLocation(shader, "AmbientProbeID"), ResourceManager::Get().NearestCubeMap(mPosition) - 1);
+		glUniform1i(glGetUniformLocation(shader, "CubemapID"), CubemapId);
+		glUniform1i(glGetUniformLocation(shader, "AmbientProbeID"), GIProbeID);
 
 		glBindVertexArray(this->VAO);
 		glCache::glDrawElements(GL_TRIANGLES, this->Indices.size(), GL_UNSIGNED_INT, 0);

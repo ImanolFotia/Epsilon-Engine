@@ -14,12 +14,12 @@ namespace Epsilon
 			solver = (std::shared_ptr<btConstraintSolver>)(new btSequentialImpulseConstraintSolver());
 			world = std::make_shared<btSoftRigidDynamicsWorld>(dispatcher.get(), broadphase.get(), solver.get(), collisionConfig.get());
 
-			world->setGravity(btVector3(0, GRAVITY, 0)); //gravity on Earth
+			std::static_pointer_cast<btSoftRigidDynamicsWorld>(world)->setGravity(btVector3(0, GRAVITY, 0)); //gravity on Earth
 
 			softBodyWorldInfo = (std::shared_ptr<btSoftBodyWorldInfo>)new btSoftBodyWorldInfo();
 			softBodyWorldInfo->m_broadphase = broadphase.get();
 			softBodyWorldInfo->m_dispatcher = dispatcher.get();
-			softBodyWorldInfo->m_gravity = world->getGravity();
+			softBodyWorldInfo->m_gravity = getSoftDynamicsWorld()->getGravity();
 			softBodyWorldInfo->m_sparsesdf.Initialize();
 		}
 
@@ -31,7 +31,7 @@ namespace Epsilon
 
 			mTimeStep = deltaTime;
 
-			world->stepSimulation(deltaTime, 5, 1.0 / 300.0);
+			std::static_pointer_cast<btSoftRigidDynamicsWorld>(world)->stepSimulation(deltaTime, 5, 1.0 / 300.0);
 			//acum = 0.0;
 			//}
 		}
@@ -66,7 +66,7 @@ namespace Epsilon
 
 		std::shared_ptr<btSoftRigidDynamicsWorld> Physics::getSoftDynamicsWorld()
 		{
-			return std::static_pointer_cast<btSoftRigidDynamicsWorld>(this->world);
+			return std::static_pointer_cast<btSoftRigidDynamicsWorld>(world);
 		}
 
 		glm::vec3 Physics::getCollisionPosition(btVector3 rayPosition, btVector3 rayTarget)

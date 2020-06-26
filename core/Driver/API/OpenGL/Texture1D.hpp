@@ -1,6 +1,7 @@
 #pragma once
 
-#include "TextureBase.hpp"
+#include "../TextureBase.hpp"
+
 namespace Epsilon
 {
     namespace API
@@ -14,6 +15,24 @@ namespace Epsilon
                 {
                     mData.Width = w;
                     mData.Height = 0;
+                    mData.Target = GL_TEXTURE_1D;
+
+                    //Default texture parameters
+                    mData.Wrapping = GL_REPEAT;
+                    mData.Compressed = false;
+                    mData.Filtering = 1;
+                    mData.AnisotropyLevel = 2;
+                    mData.SRGB = true;
+                    mData.Type = GL_UNSIGNED_BYTE;
+                    mData.Format = GL_RGBA;
+                    mData.Border = 0;
+
+                    _Create();
+                }
+                
+                Texture1D(TextureData data)
+                {
+                    mData = data;
                     mData.Target = GL_TEXTURE_1D;
 
                     _Create();
@@ -42,6 +61,23 @@ namespace Epsilon
                     glBindTexture(mData.Target, mData.TextureId);
                     glTexSubImage1D(mData.Target, level, offset, mData.Width, mData.InternalFormat, mData.Type, data);
                     glBindTexture(mData.Target, 0);
+                }
+                
+                void Bind(){
+                    glBindTexture(GL_TEXTURE_2D, mData.TextureId);
+                }
+
+                void Bind(int slot){
+                    glActiveTexture(slot);
+                    glBindTexture(GL_TEXTURE_2D, mData.TextureId);
+                }
+
+                void Unbind(){
+                    glBindTexture(GL_TEXTURE_2D, 0);
+                }
+                
+                void Destroy(){
+                    glDeleteTextures(1, &mData.TextureId);
                 }
 
             private:

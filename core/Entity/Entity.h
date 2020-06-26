@@ -206,7 +206,7 @@ public:
             }
         }
 
-        MIN_MAX_POINTS BB;
+        MIN_MAX_POINTS BB = {};
         return BB;
     }
 

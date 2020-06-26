@@ -16,7 +16,6 @@
 #include <sys/ioctl.h>
 #elif _WIN32
 #include <winsock2.h>
-#include <windows.h>
 #include <ws2tcpip.h>
 #include <iphlpapi.h>
 #define ioctl ioctlsocket

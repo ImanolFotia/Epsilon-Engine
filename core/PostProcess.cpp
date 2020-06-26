@@ -1,3 +1,5 @@
+
+#include <Core.hpp>
 #include <PostProcess.h>
 #include <iostream>
 #include <ProgramData.h>
@@ -10,7 +12,6 @@
 #include <Driver/API/OpenGL/HelperFunctions/CheckError.h>
 #include <chrono>
 
-#include <Core.hpp>
 
 namespace Epsilon
 {
@@ -204,18 +205,18 @@ namespace Epsilon
 
     void PostProcess::LoadOffscreensShaders()
     {
-        shader = (std::unique_ptr<Shader>)(new Shader("shaders/Lighting.vglsl", "shaders/Lighting.fglsl"));
-        SSAO = (std::unique_ptr<Shader>)(new Shader("shaders/SSAO.vglsl", "shaders/HBAO.glsl"));
-        blurSSAO = (std::unique_ptr<Shader>)(new Shader("shaders/blurSSAO.vglsl", "shaders/blurSSAO.fglsl"));
-        finalImage = (std::unique_ptr<Shader>)(new Shader("shaders/hdr.vglsl", "shaders/hdr.fglsl"));
-        blurBloom = (std::unique_ptr<Shader>)(new Shader("shaders/blurBloom.vglsl", "shaders/blurBloom.fglsl"));
-        blurSSRShader = (std::unique_ptr<Shader>)(new Shader("shaders/blurSSR.vglsl", "shaders/blurSSR.fglsl"));
-        ScreenSpaceReflectionShader = (std::unique_ptr<Shader>)(new Shader("shaders/SSR.vglsl", "shaders/SSR.fglsl"));
-        PassThroughShader = (std::unique_ptr<Shader>)(new Shader("shaders/PassThrough.vglsl", "shaders/PassThrough.fglsl"));
-        MotionBlurShader = (std::unique_ptr<Shader>)(new Shader("shaders/MotionBlur.vglsl", "shaders/MotionBlur.fglsl"));
-        CompositeShader = (std::unique_ptr<Shader>)(new Shader("shaders/Composite.vglsl", "shaders/Composite.fglsl"));
-        BRDFShader = (std::unique_ptr<Shader>)(new Shader("shaders/Composite.vglsl", "shaders/BRDF.glsl"));
-        DenoiseShader = (std::unique_ptr<Shader>)(new Shader("shaders/Composite.vglsl", "shaders/denoise.glsl"));
+        shader = (std::shared_ptr<Shader>)(new Shader("shaders/Lighting.vglsl", "shaders/Lighting.fglsl"));
+        SSAO = (std::shared_ptr<Shader>)(new Shader("shaders/SSAO.vglsl", "shaders/HBAO.glsl"));
+        blurSSAO = (std::shared_ptr<Shader>)(new Shader("shaders/blurSSAO.vglsl", "shaders/blurSSAO.fglsl"));
+        finalImage = (std::shared_ptr<Shader>)(new Shader("shaders/hdr.vglsl", "shaders/hdr.fglsl"));
+        blurBloom = (std::shared_ptr<Shader>)(new Shader("shaders/blurBloom.vglsl", "shaders/blurBloom.fglsl"));
+        blurSSRShader = (std::shared_ptr<Shader>)(new Shader("shaders/blurSSR.vglsl", "shaders/blurSSR.fglsl"));
+        ScreenSpaceReflectionShader = (std::shared_ptr<Shader>)(new Shader("shaders/SSR.vglsl", "shaders/SSR.fglsl"));
+        PassThroughShader = (std::shared_ptr<Shader>)(new Shader("shaders/PassThrough.vglsl", "shaders/PassThrough.fglsl"));
+        MotionBlurShader = (std::shared_ptr<Shader>)(new Shader("shaders/MotionBlur.vglsl", "shaders/MotionBlur.fglsl"));
+        CompositeShader = (std::shared_ptr<Shader>)(new Shader("shaders/Composite.vglsl", "shaders/Composite.fglsl"));
+        BRDFShader = (std::shared_ptr<Shader>)(new Shader("shaders/Composite.vglsl", "shaders/BRDF.glsl"));
+        DenoiseShader = (std::shared_ptr<Shader>)(new Shader("shaders/Composite.vglsl", "shaders/denoise.glsl"));
     }
 
     void PostProcess::beginOffScreenrendering()
@@ -274,7 +275,7 @@ namespace Epsilon
 
         glGenTextures(1, &gLightAccumulation);
         glBindTexture(GL_TEXTURE_2D, gLightAccumulation);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_R11F_G11F_B10F, width, height, 0, GL_RGB, GL_FLOAT, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGB, GL_FLOAT, 0);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT4, GL_TEXTURE_2D, gLightAccumulation, 0);
@@ -923,9 +924,9 @@ namespace Epsilon
         glActiveTexture(GL_TEXTURE1);
         CompositeShader->PushUniform("gReflectionSampler", 1);
         if (isMoving)
-            glBindTexture(GL_TEXTURE_2D, SSRTexture[!CurrentSSR]);
+            glBindTexture(GL_TEXTURE_2D, DenoiseTexture/*SSRTexture[!CurrentSSR]*/);
         else
-        {
+        { 
             glBindTexture(GL_TEXTURE_2D, SSRTexture[CurrentSSR]);
             if (TotalFrames >= 250)
                 glBindTexture(GL_TEXTURE_2D, SSRTexture[!CurrentSSR]);
@@ -1027,7 +1028,7 @@ namespace Epsilon
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    void PostProcess::ShowFrame(glm::vec3 Sun, bool &hdr, std::shared_ptr<Camera> &cam, float exposure, std::unique_ptr<ShadowMap> &shadowMap)
+    void PostProcess::ShowFrame(glm::vec3 Sun, bool &hdr, std::shared_ptr<Camera> &cam, float exposure, std::shared_ptr<ShadowMap> &shadowMap)
     {
 
         hdrFBO->bindFramebuffer();

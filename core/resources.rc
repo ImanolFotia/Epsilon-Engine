@@ -2,8 +2,10 @@
 #include <Windows.h>
 #endif
 
+#ifndef EPSILON_STATIC
 ICONO  ICON   "media/epsilon.ico"
 ICONO1  ICON   "media/epsilon.ico"
+#endif
 
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 

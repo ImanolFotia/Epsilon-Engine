@@ -7,14 +7,14 @@
 #ifndef WATER_H_INCLUDED
 #define WATER_H_INCLUDED
 
-#include <GL/glew.h>
+#include <Core.hpp>
+#include <Renderer/Model.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <Shader.h>
 #include <Texture.h>
 #include <camera.h>
-#include <Model.h>
 #include <vector>
 #include <memory>
 namespace Epsilon {

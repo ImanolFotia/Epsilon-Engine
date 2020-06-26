@@ -1,5 +1,5 @@
 #pragma once
-#include <GL/glew.h>
+#include <Core.hpp>
 #include <Driver/API/OpenGL/GlCache.h>
 
 namespace Epsilon {
@@ -34,7 +34,7 @@ namespace OpenGLHelpers {
                 glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
             }
             glBindVertexArray(quadVAO);
-            glCache::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+            /*glCache::*/glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
             glBindVertexArray(0);
         }
     private:

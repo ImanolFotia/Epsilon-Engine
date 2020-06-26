@@ -1,8 +1,7 @@
 #pragma once
 
-#include <GL/glew.h>
-
 #include <Core.hpp>
+
 
 class GPU
 {
@@ -58,6 +57,7 @@ public:
                       &total_mem_kb);
 
 	#ifdef _WIN32 //These functions are not present in linux
+#ifndef EPSILON_STATIC
         if(total_mem_kb <= 0) {
             GLuint uNoOfGPUs = wglGetGPUIDsAMD( 0, 0 );
             GLuint* uGPUIDs = new GLuint[uNoOfGPUs];
@@ -74,6 +74,7 @@ public:
 
         }
         #endif
+#endif
 
         return total_mem_kb;
     }

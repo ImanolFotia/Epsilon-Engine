@@ -1,0 +1,2 @@
+D:\Epsilon\Epsilon Engine\creator\Project6\x64\Debug\Glad.pdb
+D:\Epsilon\Epsilon Engine\creator\Project6\Glad\x64\Debug\Glad.pdb

@@ -27,6 +27,10 @@
 #include <sys/GPU.hpp>
 #include <Scripts/LuaScript.hpp>
 
+#include <Driver/Audio/XAudio2/XAudio2.hpp>
+
+#include <Engine.hpp>
+
 GLenum glCache::CullFaceMode = 0;
 GLuint glCache::ShaderId = 0;
 unsigned glCache::DrawCalls = 0;
@@ -58,6 +62,8 @@ ResourceManager ResourceManager::instance;
         glClear(GL_COLOR_BUFFER_BIT);
         glClear(GL_COLOR_BUFFER_BIT);
         GPU _gpu;
+
+        Engine::Get().ContextType(API::CONTEXT_TYPE::OGL);
 
         cout << endl
              << endl
@@ -105,6 +111,9 @@ ResourceManager ResourceManager::instance;
 
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         }
+
+        //Driver::Audio::XAudio2Driver xAudio2;
+        //xAudio2.Init();
 
         normal = true;
 
@@ -221,7 +230,7 @@ ResourceManager ResourceManager::instance;
 
         eCamera = std::make_shared<Camera>(glm::vec3(0.0f, 8.25f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
-        shadowMap = std::move((unique_ptr<ShadowMap>)(new ShadowMap(DATA.SHADOWMAP_SIZE, DATA.SHADOWMAP_SIZE, -20.0f, 80.0f)));
+        shadowMap = std::move((shared_ptr<ShadowMap>)(new ShadowMap(DATA.SHADOWMAP_SIZE, DATA.SHADOWMAP_SIZE, -20.0f, 80.0f)));
 
         //mPointShadow = std::make_shared(PointShadow,glm::vec3(0.,.0,.0));
         //mPointShadow->Setup();
@@ -530,6 +539,7 @@ ResourceManager ResourceManager::instance;
 
             Component::Component_ptr _RComp = std::make_shared<Component::RenderComponent>(tModelName, tPosition, "Main");
             static_pointer_cast<Component::RenderComponent>(_RComp)->CastsShadows(true);
+            static_pointer_cast<Component::RenderComponent>(_RComp)->setTransparency(false);
             MIN_MAX_POINTS _BoundingBox = ResourceManager::Get().getModelBoundingBox(tModelName);
             Component::Component_ptr _PComp = std::make_shared<Component::PhysicComponent>(100, tPosition, tScale, Physics::Type::CUBE, _BoundingBox);
 
@@ -537,6 +547,23 @@ ResourceManager ResourceManager::instance;
 
             EntityList.push_back(_Entity);
         }
+        /*
+        {
+            glm::vec3 tPosition = glm::vec3(0, 50, 0);
+            glm::vec3 tScale = glm::vec3(0.025);
+            glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
+            std::string tModelName = "models/sponza.eml";
+
+            std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(tPosition, tScale, tRotation);
+
+            Component::Component_ptr _RComp = std::make_shared<Component::RenderComponent>(tModelName, tPosition, "Main");
+            static_pointer_cast<Component::RenderComponent>(_RComp)->CastsShadows(true);
+            static_pointer_cast<Component::RenderComponent>(_RComp)->setTransparency(false);
+
+            _Entity->addComponent(_RComp);
+
+            EntityList.push_back(_Entity);
+        }*/
 
         {
             glm::vec3 tPosition = glm::vec3(10, 3.5, 10);
@@ -553,8 +580,13 @@ ResourceManager ResourceManager::instance;
 
             EntityList.push_back(_Entity);
         }
+        //33 34 14
+        //-32 54 -13
 
-        glm::vec3 initCubemapPosition = glm::vec3(-15.0, 2.5, -16.0);
+
+        //-32 34 -13
+        //33 54 14
+        glm::vec3 initCubemapPosition = glm::vec3(-32.0, 34, -13.0);
 
         auto MenuAudio = [&]() -> void { m_AudioSystem->PlayByID(2); };
 
@@ -566,7 +598,7 @@ ResourceManager ResourceManager::instance;
     RenderSplashScreen("Loading Textures...");*/
         ResourceManager::Get().loadQueuedTextures();
 
-        PP = std::move((unique_ptr<PostProcess>)(new PostProcess()));
+        PP = std::move((shared_ptr<PostProcess>)(new PostProcess()));
 
         m_PlayerCapsule = (std::shared_ptr<Player>)new Player(-10, 15.8, -10);
         //m_PlayerCapsule = (std::shared_ptr<Game::Player>) new Game::Player(170.0,5.25,-202.0, this->rM);
@@ -600,6 +632,7 @@ ResourceManager ResourceManager::instance;
         this->RenderShadows();
         shadowMap->UnbindShadowFrameBuffer();
 
+
         //this->mCubemap[1] = (std::shared_ptr<CubeMap>)new CubeMap(55, glm::vec3(10, 7, 10));
 
         glClearColor(0.1, 0.1, 0.1, 1.0);
@@ -617,7 +650,8 @@ ResourceManager ResourceManager::instance;
         captureViews[3] = glm::lookAt(glm::vec3(0.0), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f));
         captureViews[4] = glm::lookAt(glm::vec3(0.0), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
         captureViews[5] = glm::lookAt(glm::vec3(0.0), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-
+        //33 34 14
+        //-32 54 -13
         SphericalHarmonics::SphericalHarmonicsFormat sphStruct[7][5][7];
         //Shaders["CubeMap"]->Use();
         int index = 0;
@@ -626,7 +660,7 @@ ResourceManager ResourceManager::instance;
                 for (int c = 0; c < 7; c++)
                 {
 
-                    this->mCubemap[a][b][c] = (std::shared_ptr<CubeMap>)new CubeMap(index, initCubemapPosition + glm::vec3(a, b, c) * glm::vec3(6.f, 2.0, 6.0));
+                    this->mCubemap[a][b][c] = (std::shared_ptr<CubeMap>)new CubeMap(index, initCubemapPosition + glm::vec3(a, b, c) * glm::vec3(8.f, 8.0, 8.2));
                     std::shared_ptr<Shader> cubeShader = this->mCubemap[a][b][c]->getShader();
                     float rotation = 0.5 * glfwGetTime();
                     for (int index = 0; index < 6; ++index)
@@ -727,13 +761,15 @@ ResourceManager ResourceManager::instance;
                     sph.setId(this->mCubemap[a][b][c]->getID());
                     sphStruct[a][b][c] = sph.toStruct();
 
-                    std::cout << "Generating SPH for cubemap " << a << std::endl;
+                    //std::cout << "Generating SPH for cubemap " << a << std::endl;
                     /*for (unsigned int i = 0; i < sph.getCohefficients().size(); i++)
                 {
                     std::cout << "vec3 " << sph.mCohefficientsNames[i] << " = vec3(" << sph.getCohefficients()[i].x << ", " << sph.getCohefficients()[i].y << ", " << sph.getCohefficients()[i].z << ");" << std::endl;
                 }*/
                     index++;
                 }
+
+                ResourceManager::Get().cubemapsLoaded = true;
 
         glCullFace(GL_BACK);
 
@@ -742,7 +778,7 @@ ResourceManager ResourceManager::instance;
                 for (int b = 0; b < 5; b++)
                     for (int c = 0; c < 7; c++)
                     {
-                        glm::vec3 positions = initCubemapPosition + glm::vec3(a, b, c) * glm::vec3(6.f, 3.0, 6.0);
+                        glm::vec3 positions = initCubemapPosition + glm::vec3(a, b, c) * glm::vec3(8.f, 8.0, 8.2);
                         glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
                         std::string tModelName = "models/probe.eml";
 
@@ -750,11 +786,14 @@ ResourceManager ResourceManager::instance;
                         Component::Component_ptr _RComp = std::make_shared<Component::RenderComponent>(tModelName, positions, "Main");
                         static_pointer_cast<Component::RenderComponent>(_RComp)->CastsShadows(false);
                         static_pointer_cast<Component::RenderComponent>(_RComp)->isDoubleFaced(false);
+                        static_pointer_cast<Component::RenderComponent>(_RComp)->setTransparency(false);
 
                         _Entity->addComponent(_RComp);
                         EntityList.push_back(_Entity);
                     }
         }
+        
+        ResourceManager::Get().loadQueuedTextures();
 
         for (unsigned int i = 0; i < EntityList.size(); ++i)
         {
@@ -779,33 +818,33 @@ ResourceManager ResourceManager::instance;
     {
         cout << "Loading Shaders..." << endl;
 
-        Shaders["grass"] = new Shader("shaders/grass.vglsl", "shaders/grass.fglsl");
+        Shaders["grass"] = std::make_shared<Shader>("shaders/grass.vglsl", "shaders/grass.fglsl");
 
-        Shaders["Main"] = new Shader("shaders/Geometry.vglsl", "shaders/Geometry.fglsl");
+        Shaders["Main"] = std::make_shared<Shader>("shaders/Geometry.vglsl", "shaders/Geometry.fglsl");
 
-        Shaders["Terrain"] = new Shader("shaders/Geometry.vglsl", "shaders/GeometryTerrain.fglsl");
+        Shaders["Terrain"] = std::make_shared<Shader>("shaders/Geometry.vglsl", "shaders/GeometryTerrain.fglsl");
 
         //Shaders["Terrain"] = new Shader( "shaders/testshader.vglsl", "shaders/testshader.fglsl" );
 
-        Shaders["Sun"] = new Shader("shaders/Sun.vglsl", "shaders/Sun.fglsl");
+        Shaders["Sun"] = std::make_shared<Shader>("shaders/Sun.vglsl", "shaders/Sun.fglsl");
 
-        Shaders["SkyBox"] = new Shader("shaders/skybox.vglsl", "shaders/_skybox.fglsl");
+        Shaders["SkyBox"] = std::make_shared<Shader>("shaders/skybox.vglsl", "shaders/_skybox.fglsl");
 
-        Shaders["SkyBox_Cubemap"] = new Shader("shaders/_skybox_cubemap_vertex.glsl", "shaders/_skybox_cubemap.glsl");
+        Shaders["SkyBox_Cubemap"] = std::make_shared<Shader>("shaders/_skybox_cubemap_vertex.glsl", "shaders/_skybox_cubemap.glsl");
 
-        Shaders["MD5Geometry"] = new Shader("shaders/MD5Geometryv.glsl", "shaders/MD5Geometryf.glsl");
+        Shaders["MD5Geometry"] = std::make_shared<Shader>("shaders/MD5Geometryv.glsl", "shaders/MD5Geometryf.glsl");
 
-        Shaders["ShadowMapping"] = new Shader("shaders/ShadowMappingv.glsl", "shaders/ShadowMappingf.glsl");
+        Shaders["ShadowMapping"] = std::make_shared<Shader>("shaders/ShadowMappingv.glsl", "shaders/ShadowMappingf.glsl");
 
-        Shaders["MD5ShadowMapping"] = new Shader("shaders/MD5GeometryShadowv.glsl", "shaders/ShadowMappingf.glsl");
+        Shaders["MD5ShadowMapping"] = std::make_shared<Shader>("shaders/MD5GeometryShadowv.glsl", "shaders/ShadowMappingf.glsl");
 
-        Shaders["CubeMap"] = new Shader("shaders/vertex.glsl", "shaders/fragment.frag");
+        Shaders["CubeMap"] = std::make_shared<Shader>("shaders/vertex.glsl", "shaders/fragment.frag");
 
-        Shaders["ForwardShader"] = new Shader("shaders/TransformVertexShader.vglsl", "shaders/TextureFragmentShader.fglsl");
+        Shaders["ForwardShader"] = std::make_shared<Shader>("shaders/TransformVertexShader.vglsl", "shaders/TextureFragmentShader.fglsl");
 
-        Shaders["DefaultParticle"] = new Shader("shaders/defaultParticle.vglsl", "shaders/defaultParticle.fglsl");
+        Shaders["DefaultParticle"] = std::make_shared<Shader>("shaders/defaultParticle.vglsl", "shaders/defaultParticle.fglsl");
 
-        Shaders["Cloth"] = new Shader("shaders/Cloth.vglsl", "shaders/Cloth.fglsl");
+        Shaders["Cloth"] = std::make_shared<Shader>("shaders/Cloth.vglsl", "shaders/Cloth.fglsl");
 
         ResourceManager::Get().requestShader("shaders/Geometry.vglsl", "shaders/Geometry.fglsl", "Main");
         ResourceManager::Get().requestShader("shaders/Cloth.vglsl", "shaders/Cloth.fglsl", "Cloth");
@@ -855,18 +894,18 @@ ResourceManager ResourceManager::instance;
         paths.push_back(path + "materials/skyboxes/Miramar/back.tga");
         paths.push_back(path + "materials/skyboxes/Miramar/front.tga");
 
-        skybox = std::move((unique_ptr<Skybox>)(new Skybox("plain")));
+        skybox = std::move((shared_ptr<Skybox>)(new Skybox("plain")));
 
         grass.push_back(Grass("grass04.png", grassPos));
         grass.push_back(Grass("billboardgrass0002.png", grasspos2));
 
         waterPlane = (shared_ptr<Water>)(new Water(glm::vec3(0.0, 0.5, 0.0), 1.0f)); ///-11.8
         sun = std::move((shared_ptr<Sun>)(new Sun()));
-        BSPMap = std::move((unique_ptr<CQuake3BSP>)(new CQuake3BSP()));
+        BSPMap = std::move((shared_ptr<CQuake3BSP>)(new CQuake3BSP()));
 
-        BSPMap->LoadBSP((string("maps/") + "minecraft.bsp").c_str());
+        BSPMap->LoadBSP((string("maps/") + "godrays_tutorial.bsp").c_str());
 
-        m_AnimModel = std::move((unique_ptr<MD5Model>)(new MD5Model()));
+        m_AnimModel = std::move((shared_ptr<MD5Model>)(new MD5Model()));
 
         m_AnimModel->LoadModel("models/hellknight/hellknight.md5mesh");
 
@@ -878,7 +917,7 @@ ResourceManager ResourceManager::instance;
     {
         cout << "Loading Sound..." << endl;
 
-        m_AudioSystem = (std::unique_ptr<IO::Audio::Audio>)new IO::Audio::Audio();
+        m_AudioSystem = (std::shared_ptr<IO::Audio::Audio>)new IO::Audio::Audio();
         /*
         std::shared_ptr<IO::Audio::AudioElement> m_AudioElement = (std::shared_ptr<IO::Audio::AudioElement>) new IO::Audio::AudioElement("sound/File0279.wav", STATIC_SOUND, glm::vec3(-28, 10, 15), glm::vec3(0,0,0));
         m_AudioSystem->addAudioElement(3, m_AudioElement);
@@ -893,12 +932,12 @@ ResourceManager ResourceManager::instance;
         std::shared_ptr<IO::Audio::AudioElement> m_AudioElement4 = (std::shared_ptr<IO::Audio::AudioElement>)new IO::Audio::AudioElement("sound/hover.wav", MENU_SOUND, glm::vec3(96, 16, 6), glm::vec3(0, 0, 0));
         m_AudioSystem->addAudioElement(2, m_AudioElement4);
 
-        m_AudioListener = (std::unique_ptr<IO::Audio::AudioListener>)new IO::Audio::AudioListener();
+        m_AudioListener = (std::shared_ptr<IO::Audio::AudioListener>)new IO::Audio::AudioListener();
     }
 
     bool visible = true;
     float acum = -1.0;
-    void Epsilon::Render3D(Shader *shader)
+    void Epsilon::Render3D(std::shared_ptr<Shader> shader)
     {
         glm::mat4 Model = glm::mat4(1);
         glm::mat4 ScaleMatrix;
@@ -913,6 +952,7 @@ ResourceManager ResourceManager::instance;
         glCullFace(GL_BACK);
 
         glDisable(GL_CULL_FACE);
+        
         for (unsigned int i = 0; i < EntityList.size(); ++i)
         {
             EntityList[i]->Update();
@@ -992,6 +1032,7 @@ ResourceManager ResourceManager::instance;
             this->SetUniforms(Shaders["ShadowMapping"], EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation());
             ResourceManager::Get().useModel(EntityList[i]->getModelPath(), Shaders["ShadowMapping"], EntityList[i]->getPosition());
         }
+        
 
         //mPatch->updateVertexBuffers(mCloth->getVertices());
         //this->SetUniforms(Shaders["ShadowMapping"], glm::vec3(0.0), glm::vec3(1.0), glm::quat(0.0f, 0.0, 0.0, 0.0));
@@ -1007,6 +1048,7 @@ ResourceManager ResourceManager::instance;
         Shaders["ShadowMapping"]->Use();
         this->SetUniforms(Shaders["ShadowMapping"], glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.1, 0.1, 0.1), glm::quat(0.0, 0.0, 0.0, 0.0));
         BSPMap->RenderLevel(eCamera->getPosition(), Shaders["ShadowMapping"]->getProgramID(), false);
+        
         /*
     Shaders["MD5ShadowMapping"]->Use();
     glUniformMatrix4fv(glGetUniformLocation(Shaders["MD5ShadowMapping"]->getProgramID(), "mSkinned"), 150, GL_FALSE, &m_AnimModel->m_AnimatedBones[0][0][0]);
@@ -1016,7 +1058,7 @@ ResourceManager ResourceManager::instance;
         glEnable(GL_CULL_FACE);
     }
 
-    void Epsilon::SetUniforms(Shader *&shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation)
+    void Epsilon::SetUniforms(std::shared_ptr<Shader> shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation)
     {
         glm::mat4 Model = glm::mat4(1.0);
         glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1.0), scale);
@@ -1070,6 +1112,13 @@ ResourceManager ResourceManager::instance;
 
         GPU _gpu;
         int DEBUG_MODE = 3;
+/*
+        IO::PrintLine("Position: x = ", 
+        Helpers::floatTostring(this->eCamera->getPosition().x), 
+        " y = ", 
+        Helpers::floatTostring(this->eCamera->getPosition().y), 
+        " z = ", 
+        Helpers::floatTostring(this->eCamera->getPosition().z));*/
         /*
     if(DEBUG_MODE >= 1) {
         this->text->RenderText("FPS: " + Helpers::intTostring(acumfps), 0.01, 0.95, 0.5, glm::vec3(1,1,1));
@@ -1194,7 +1243,7 @@ ResourceManager ResourceManager::instance;
         if (glm::abs((timeGUI * 60) - (etime * 60)) > 2.0f && onMenu)
         {
             timeGUI = this->etime;
-            m_GUI->PollEvents(window);
+            //m_GUI->PollEvents(window);
         }
 
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::ESCAPE] || _Joystick->getJoystickButton(_Joystick->getMapping()->START()))
@@ -1215,7 +1264,7 @@ ResourceManager ResourceManager::instance;
         else
         {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            this->m_CameraMode = PLAYER_CONTROLLED;
+            this->m_CameraMode = NO_CLIP;
         }
 
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::N])
@@ -1233,7 +1282,6 @@ ResourceManager ResourceManager::instance;
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::ADD])
         {
             windSpeed += frametime;
-            mCloth->setWind(btVector3(0.0, -1.0, -1.0), windSpeed);
         }
         //exposure += 0.5 * frametime;
 

@@ -4,11 +4,6 @@
 
 #include <Core.hpp>
 
-#define GLEW_STATIC
-#include <GL/glew.h>
-#ifdef _WIN32
-#include <GL/wglew.h>
-#endif
 #include <GLFW/glfw3.h>
 
 #include <ProgramData.h>
@@ -33,8 +28,6 @@ extern "C"
 
 namespace Epsilon
 {
-    std::ofstream Log::sOutFile;
-
     void error_callback(int error, const char *description)
     {
         fprintf(stderr, "Error: %s\n", description);
@@ -131,8 +124,10 @@ namespace Epsilon
             Log::WriteToLog("Window could not be created");
         }
 
+#ifndef EPSILON_STATIC
         glewExperimental = GL_TRUE;
         glewInit();
+#endif
 
         glfwSetInputMode(window, GLFW_STICKY_KEYS, true);
 

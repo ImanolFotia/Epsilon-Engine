@@ -9,7 +9,7 @@
 
 #include <Shader.h>
 #include <Types.h>
-#include <GL/glew.h>
+#include <Core.hpp>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -131,6 +131,6 @@ private:
     glm::mat4 m_lightSpaceMatrix;
     glm::mat4 m_biasMatrix;
 
-    //std::unique_ptr<Shader> blurShader;
+    //std::shared_ptr<Shader> blurShader;
 };
 #endif // SHADOWMAPPING_H_INCLUDED

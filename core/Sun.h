@@ -7,7 +7,7 @@
 #ifndef SUN_H_INCLUDED
 #define SUN_H_INCLUDED
 
-#include <GL/glew.h>
+#include <Core.hpp>
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
@@ -29,9 +29,9 @@ public:
         //std::cout << "Sun Destroyed" << std::endl;
     }
 
-    void Render(Shader*&);
+    void Render(std::shared_ptr<Shader>);
     void Update();
-    void SetUniforms(std::shared_ptr<Camera>, Shader*&);
+    void SetUniforms(std::shared_ptr<Camera>, std::shared_ptr<Shader>);
 
     void Destroy()
     {

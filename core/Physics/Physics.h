@@ -3,7 +3,6 @@
 #include <glm/glm.hpp>
 #include <EpsilonMemory.h>
 #include <Types.h>
-#include <Model.h>
 
 #include <vector>
 
@@ -43,13 +42,13 @@ namespace Epsilon
 			std::string getCollisionObjectName(btVector3 rayPosition, btVector3 rayTarget);
 			glm::vec3 getCollisionPosition(btVector3 rayPosition, btVector3 rayTarget);
 
-			std::shared_ptr<btDynamicsWorld> world;
 			std::shared_ptr<btBroadphaseInterface> broadphase;
 			std::shared_ptr<btSoftBodyWorldInfo> softBodyWorldInfo;
 
 			double getTimeStep() { return mTimeStep; }
 
 		private:
+			std::shared_ptr<btCollisionWorld> world;
 			std::shared_ptr<btDispatcher> dispatcher;
 			std::shared_ptr<btCollisionConfiguration> collisionConfig;
 			std::shared_ptr<btConstraintSolver> solver;

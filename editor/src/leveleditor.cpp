@@ -30,6 +30,8 @@ LevelEditor::LevelEditor(QWidget *parent) :
 
     ui->property_tree->setHeaderLabels({tr("Property"), tr("Value")});
 
+    ui->EntityTree->setHeaderLabels({tr("*"), tr("*")});
+
     ui->openGLWidget->PosXRef = ui->doubleSpinBox_5;
     ui->openGLWidget->PosYRef = ui->doubleSpinBox_4;
     ui->openGLWidget->PosZRef = ui->doubleSpinBox_6;

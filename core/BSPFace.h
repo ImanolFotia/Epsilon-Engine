@@ -6,12 +6,11 @@
 
 #pragma once
 
+#include <Core.hpp>
 #include <glm/glm.hpp>
-#include <GL/glew.h>
 #include <iostream>
 #include <string>
 #include <vector>
-#include <SOIL.h>
 #include <Physics/Physics.h>
 #include <Physics/PhysicObject.h>
 #include <Physics/CollisionInfo.h>
@@ -39,6 +38,9 @@ namespace Epsilon
         {
             //std::cout << "Destroyed BSP Face" << std::endl;
         }
+
+        int GIProbeID = -1;
+        int CubemapId = -1;
 
     public:
         bool BuildFace(std::vector<glm::vec3> Vertices,

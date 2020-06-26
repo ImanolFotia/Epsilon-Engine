@@ -32,7 +32,7 @@ namespace Epsilon
         }
     }
 
-    void Sun::Render(Shader *&shader)
+    void Sun::Render(std::shared_ptr<Shader> shader)
     {
         glDepthFunc(GL_LEQUAL);
         shader->Use();
@@ -62,7 +62,7 @@ namespace Epsilon
         this->Direction = glm::normalize(this->Position - glm::vec3(0, 0, 0));
     }
 
-    void Sun::SetUniforms(std::shared_ptr<Camera> cam, Shader *&shader)
+    void Sun::SetUniforms(std::shared_ptr<Camera> cam, std::shared_ptr<Shader> shader)
     {
         glUniform3f(glGetUniformLocation(shader->getProgramID(), "CameraRight"), cam->getViewMatrix()[0][0], cam->getViewMatrix()[1][0], cam->getViewMatrix()[2][0]);
         glUniform3f(glGetUniformLocation(shader->getProgramID(), "CameraUp"), cam->getViewMatrix()[0][1], cam->getViewMatrix()[1][1], cam->getViewMatrix()[2][1]);

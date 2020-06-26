@@ -260,7 +260,7 @@ void main()
     //kD *= clamp(1.0 - ExtraComponents.x, 0.04, 1.0);
 
     //vec3 shc = sphericalHarmonics(Normal) * u_scaleFactor;
-    vec3 irradiance = textureLod(gLightAccumulation, TexCoords, 0).rgb;
+    vec4 irradiance_subsurf = textureLod(gLightAccumulation, TexCoords, 0).rgba;
     //vec3 diff = irradiance * Diffuse;
     //ambient = kD * (shc*Diffuse);
     //ambient = /*vec3(shc);//*/ clamp(Diffuse *  0.0008, 0.0, 1.0);
@@ -268,7 +268,7 @@ void main()
     shadow  = poissonShadowMapping(FragPosLightSpace);
 
     vec3 light = vec3(0.0);
-    ambient = (irradiance * Diffuse);
+    ambient = (irradiance_subsurf.rgb * Diffuse);
 
     //if(hdr)
     //  ambient *= (AmbientOcclusion);
@@ -276,9 +276,9 @@ void main()
     light += CalculateDirectionalPBR();
     
     vec3 L = normalize(lightDir);
-    //float SSS = SubsurfaceScattering(L, Normal, V, FragPos, false);
+    float SSS = SubsurfaceScattering(L, Normal, V, FragPos, false);
 
-    //light += SSS * pow(Diffuse, vec3(2.2)) * 0.3;
+    light += SSS * pow(Diffuse, vec3(2.2)) * irradiance_subsurf.a;
     
     for(int i = 0 ; i < outBuffer.Lights.length() ; i++)
     {

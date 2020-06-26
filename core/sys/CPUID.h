@@ -6,6 +6,10 @@
 #include <thread>
 #include <exception>
 #include <Log.h>
+
+#if defined(_MSC_VER) || defined(__INTEL_COMPILER)
+#include <intrin.h>
+#endif
 namespace Epsilon
 {
     class CPUID
@@ -17,8 +21,14 @@ namespace Epsilon
         {
             try
             {
-                asm volatile("cpuid" : "=a"(regs[0]), "=b"(regs[1]), "=c"(regs[2]), "=d"(regs[3]) : "a"(i), "c"(0));
+#if defined(_MSC_VER) || defined(__INTEL_COMPILER) // Microsoft or Intel compiler, intrin.h included
+                __cpuidex((int *)regs, i, 0);
+#else
                 // ECX is set to zero for CPUID function 4
+                asm volatile("cpuid"
+                             : "=a"(regs[0]), "=b"(regs[1]), "=c"(regs[2]), "=d"(regs[3])
+                             : "a"(i), "c"(0));
+#endif
             }
             catch (...)
             {

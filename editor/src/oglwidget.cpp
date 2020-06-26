@@ -631,7 +631,18 @@ void OGLWidget::LoadModel()
         std::cout << "Loading Model: " << this->mname.toStdString() << std::endl;
         should = false;
         this->modv.push_back(Model(this->mname.toStdString().c_str(), glm::vec3(0.0f, 0.0f, 0.0f), this->m_ModelData.back().sc, glm::quat(-1.0, 0.0, -1.0, 0.0)));
-        this->UiReference->ItemsList->addItem(this->mname.toStdString().c_str());
+
+        QTreeWidgetItem* item = new QTreeWidgetItem();
+        QPlainTextEdit* te = new QPlainTextEdit();
+        te->setFixedHeight(27);
+        QIcon icon("epsilon.ico");
+        item->setIcon(0, icon);
+        //item->setText(0, this->mname.toStdString().c_str());
+
+        this->UiReference->EntityTree->addTopLevelItem(item);
+        this->UiReference->EntityTree->setItemWidget(item, 1, te);
+
+        //this->UiReference->EntityTree-> addItem(this->mname.toStdString().c_str());
     }
 }
 

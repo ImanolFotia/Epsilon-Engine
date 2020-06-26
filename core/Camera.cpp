@@ -4,6 +4,8 @@
 ///
 ///=============================================================================
 
+#include <Helpers.hpp>
+
 #include <iostream>
 
 #include <camera.h>
@@ -13,13 +15,14 @@
 #include <IO/Joystick/Joystick.h>
 
 #include <Types.h>
-#include <Helpers.hpp>
 
 namespace Epsilon {
 Camera::Camera(glm::vec3 cPosition, glm::vec3 cOrientation)
 {
     this->Orientation = glm::vec3(cOrientation);
     this->Position = glm::vec3(cPosition);
+    this->Up = glm::vec3(0.0f, 1.0f, 0.0f);
+    this->Rigth = glm::cross(Orientation, Up);
     this->FieldOfView = 65.0f;
     this->MovementSpeed = 0.0f;
     this->MouseSpeed = 0.002f;
@@ -77,7 +80,7 @@ void Camera::HandleInputs(GLFWwindow *&window)
 
     float DeltaTime = float(currentTime - LastTime);
 
-    static double lastX, lastY;
+    static double lastX = 0.0, lastY = 0.0;
 
     glfwGetWindowSize(window, &winx, &winy);
 

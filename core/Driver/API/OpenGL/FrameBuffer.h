@@ -4,7 +4,8 @@
 #include <iostream>
 #include <string>
 #include <memory>
-#include <GL/glew.h>
+#include <vector>
+#include <Core.hpp>
 #include <Driver/API/OpenGL/RenderTarget.h>
 
 template <typename T>
@@ -51,12 +52,12 @@ public:
 
         this->bindFramebuffer();
 
-        GLenum DrawBuffers[m_RenderTargetCount];
+        std::vector<GLenum> DrawBuffers(m_RenderTargetCount);
 
         for(auto i = 0; i < m_RenderTargetCount; ++i)
             DrawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
 
-        glDrawBuffers(m_RenderTargetCount, DrawBuffers);
+        glDrawBuffers(m_RenderTargetCount, &DrawBuffers[0]);
 
         this->checkFramebuffer();
 

@@ -5,6 +5,8 @@
 ///=============================================================================
 #pragma once
 
+#include <Core.hpp>
+
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -15,6 +17,11 @@
 #include <Types.h>
 #include <algorithm>
 #include <limits>
+
+#undef min
+#undef max
+#undef MAX
+#undef MIN
 
 namespace Epsilon
 {

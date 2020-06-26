@@ -23,7 +23,7 @@ namespace Epsilon
             using SphereShape_ptr = std::shared_ptr<Physics::SpherePhysicObject>;
             using TriangleMeshShape_ptr = std::shared_ptr<Physics::TriangleMeshPhysicObject>;
             using ClothShape_ptr = std::shared_ptr<Physics::ClothPhysicObject>;
-            using DynamicWorld_ptr = std::shared_ptr<btDynamicsWorld>;
+            using SoftRigidDynamicsWorld_ptr = std::shared_ptr<btSoftRigidDynamicsWorld>;
 
         public:
             PhysicComponent(float mass, glm::vec3 pos, glm::vec3 scale, Physics::Type type, MIN_MAX_POINTS boundingBox) : mType(PHYSICCOMPONENT), mMass(mass)
@@ -31,7 +31,7 @@ namespace Epsilon
                 try
                 {
                     BaseShape_ptr _shape;
-                    DynamicWorld_ptr world = ResourceManager::Get().getPhysicsWorld()->world;
+                    SoftRigidDynamicsWorld_ptr world = ResourceManager::Get().getPhysicsWorld()->getSoftDynamicsWorld();
                     switch (type)
                     {
                     case Physics::Type::CUBE:

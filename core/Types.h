@@ -5,11 +5,12 @@
 ///=============================================================================
 
 #pragma once
-
+/*
 #include <btBulletDynamicsCommon.h>
-#include <btBulletCollisionCommon.h>
+#include <btBulletCollisionCommon.h>*/
 #include <memory>
 #include <glm/glm.hpp>
+
 namespace Epsilon
 {
 ///64 BSP units equals 1 meter
@@ -60,14 +61,6 @@ namespace Epsilon
         float MIN_Z;
     };
 
-    enum class PHYSIC_SHAPE
-    {
-        PHYSICS_BOX_SHAPE = BOX_SHAPE_PROXYTYPE,
-        PHYSICS_SPHERE_SHAPE = SPHERE_SHAPE_PROXYTYPE,
-        PHYSICS_CONE_SHAPE = CONE_SHAPE_PROXYTYPE,
-        PHYSICS_CYLINDER_SHAPE = CYLINDER_SHAPE_PROXYTYPE,
-        PHYSICS_TRIANGLEMESH_SHAPE = TRIANGLE_MESH_SHAPE_PROXYTYPE
-    };
 
     enum PARTICLE_PROXY
     {

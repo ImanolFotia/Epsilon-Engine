@@ -1,6 +1,7 @@
 #pragma once
+
 #include <glm/glm.hpp>
-#include <GL/glew.h>
+#include <Core.hpp>
 #include <Types.h>
 
 namespace Epsilon {

@@ -30,7 +30,7 @@ namespace Epsilon
         static inline void PrintLine(const T &in, Args... args)
         {
             std::cout << in << " ";
-            Print(args...);
+            PrintLine(args...);
         }
     } // namespace IO
 } // namespace Epsilon

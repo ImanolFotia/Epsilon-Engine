@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <fstream>
+#include <cstring>
 #include <memory>
 #include <Helpers.hpp>
 

@@ -1,5 +1,7 @@
 #include <Physics/ClothPhysicObject.h>
 
+#include <iostream>
+
 namespace Epsilon
 {
     namespace Physics
@@ -75,7 +77,6 @@ namespace Epsilon
 
             for (auto i = 0; i < nodes.size(); i++)
             {
-                PhysicObject::t_ClothVertex tmpVertex;
                 mVertices.at(i).position = nodes[i].m_x;
                 mVertices.at(i).normal = nodes[i].m_n;
             }

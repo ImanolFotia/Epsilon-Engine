@@ -15,6 +15,7 @@
 #include <Driver/API/OpenGL/ShaderPreProcessor.h>
 
 namespace Epsilon {
+
 Shader::Shader(const char* vertex, const char* fragment)
 {
     Path = std::string(vertex);
@@ -30,7 +31,7 @@ Shader::Shader(const char* vertex, const char* fragment)
 	GLuint FragmentShaderID = generateFragmentProgram(FragmentShaderCode);
 
 
-		std::cout << Path << std::endl;
+		//std::cout << Path << std::endl;
 
 	/// Link the program
     ProgramID = glCreateProgram();
@@ -44,17 +45,16 @@ Shader::Shader(const char* vertex, const char* fragment)
 	glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
 	glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
 	if ( InfoLogLength > 0 ){
-		char ProgramErrorMessage[InfoLogLength+1];
-		glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, ProgramErrorMessage);
+		std::vector<char> ProgramErrorMessage(InfoLogLength+1);
+		glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
 		//printf("%s\n", &ProgramErrorMessage[0]);
-		std::cout << ProgramErrorMessage << std::endl;
+		std::cout << &ProgramErrorMessage[0] << std::endl;
 		Log::WriteToLog("Error while compiling: " + Helpers::removeExtension(Path));
-		Log::WriteToLog(std::string(ProgramErrorMessage));
+		Log::WriteToLog(std::string(&ProgramErrorMessage[0]));
 	}
 	glDeleteShader(VertexShaderID);
 	glDeleteShader(FragmentShaderID);
 	this->getUniformsLocations();
-
 }
 
 Shader::Shader(const char* vertex, const char* fragment, const char* geometry)
@@ -89,12 +89,12 @@ Shader::Shader(const char* vertex, const char* fragment, const char* geometry)
 	glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
 	glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
 	if ( InfoLogLength > 0 ){
-		char ProgramErrorMessage[InfoLogLength+1];
-		glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, ProgramErrorMessage);
+		std::vector<char> ProgramErrorMessage(InfoLogLength+1);
+		glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
 		//printf("%s\n", &ProgramErrorMessage[0]);
-		std::cout << ProgramErrorMessage << std::endl;
+		std::cout << &ProgramErrorMessage[0] << std::endl;
 		Log::WriteToLog("Error while compiling: " + Helpers::removeExtension(Path));
-		Log::WriteToLog(std::string(ProgramErrorMessage));
+		Log::WriteToLog(std::string(&ProgramErrorMessage[0]));
 	}
 	glDeleteShader(VertexShaderID);
 	glDeleteShader(FragmentShaderID);

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
+  <metadata minClientVersion="2.8.6">
+    <id>Microsoft.XAudio2.Redist</id>
+    <version>1.2.1</version>
+    <title>XAudio2Redist</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <license type="file">LICENSE.txt</license>
+    <licenseUrl>https://aka.ms/deprecateLicenseUrl</licenseUrl>
+    <projectUrl>http://aka.ms/XAudio2Redist</projectUrl>
+    <description>XAudio 2.9 redistributable for Windows 7 SP1, Windows 8, Windows 8.1 and Windows 10.</description>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+    <tags>native XAudio XAudio2</tags>
+    <dependencies>
+      <group targetFramework="native0.0" />
+    </dependencies>
+  </metadata>
+</package>

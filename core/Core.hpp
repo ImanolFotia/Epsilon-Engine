@@ -1,4 +1,26 @@
 #pragma once
+#ifdef EPSILON_STATIC
+#ifndef GLAD_INCLUDED
+#define GLAD_INCLUDED
+#include <glad/glad.h>
+#endif
+#else
+#ifndef GLEW_INCLUDED
+    #define GLEW_INCLUDED
+    #if defined(__gl_h_) || defined(__GL_H__) || defined(__X_GL_H)
+        //#error "Attempting to include glew while gl is included in file: " __FILE__
+    #else
+        //#pragma message "Attempting to include glew while gl is not in file: " 
+    #endif
+    #ifndef GLEW_STATIC
+        #define GLEW_STATIC
+    #endif
+    #include <GL/glew.h>
+    #ifdef _WIN32
+        #include <GL/wglew.h>
+    #endif
+#endif
+#endif
 
 #define DEBUG 1
 
@@ -15,14 +37,25 @@
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <GL/wgl.h>
+#include <GL/wglext.h>
 typedef unsigned long DWORD, *PDWORD, *LPDWORD; //Defining because windows.h has defines that interfere with some declarations
 
 //just in case, we don't care about ancient code :)
 //Windows x64 uses a flat memory model anyway
 #undef near
 #undef far
+#undef NEAR
+#undef FAR
 #define NOMINNMAX //exclude these terrible names
 #endif
+
+#undef near
+#undef far
+#undef NEAR
+#undef FAR
+#define NOMINNMAX //exclude these terrible names(twice)
 
 #ifdef __linux__
 #endif

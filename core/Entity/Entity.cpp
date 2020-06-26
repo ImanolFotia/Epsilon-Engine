@@ -7,6 +7,7 @@ using Epsilon::Component::PhysicComponent;
 using Epsilon::Component::RenderComponent;
 using Epsilon::Component::SoundComponent;
 
+using Epsilon::Component::CLOTHCOMPONENT;
 using Epsilon::Component::PHYSICCOMPONENT;
 using Epsilon::Component::RENDERCOMPONENT;
 using Epsilon::Component::SOUNDCOMPONENT;
@@ -42,14 +43,6 @@ namespace Epsilon
     {
         for (auto &c : ComponentList)
         {
-            if (c.second->getType() == RENDERCOMPONENT)
-            {
-                if (std::static_pointer_cast<RenderComponent>(c.second)->isDoubleFaced() == true)
-                    glDisable(GL_CULL_FACE);
-                else
-                    glEnable(GL_CULL_FACE);
-            }
-
             c.second->Render();
         }
     }

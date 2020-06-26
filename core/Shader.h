@@ -7,7 +7,7 @@
 #ifndef SHADER_H_INCLUDED
 #define SHADER_H_INCLUDED
 
-#include <GL/glew.h>
+#include <Core.hpp>
 #include <string>
 #include <iostream>
 #include <unordered_map>
@@ -38,10 +38,10 @@ public:
     }
 
     void Use(void)
-    {   glCache::glUseProgram(this->ProgramID); }
+    {   /*glCache::*/glUseProgram(this->ProgramID); }
 
     void Free(void)
-    {   glCache::glUseProgram(0); }
+    {   /*glCache::*/glUseProgram(0); }
 
     GLuint generateFragmentProgram(std::string);
 
@@ -55,48 +55,48 @@ public:
     std::string getPath()
     {   return this->Path; }
 
-    void PushUniform(std::string name, int data)
+    void PushUniform(const std::string& name, int data)
     {
         if(m_Uniforms.find(name) == m_Uniforms.end()) return;
         glUniform1i(m_Uniforms[name], data);
     }
 
-    void PushUniform(std::string name, float data)
+    void PushUniform(const std::string& name, float data)
     {
         if(m_Uniforms.find(name) == m_Uniforms.end()) return;
         glUniform1f(m_Uniforms[name], data);
     }
 
-    void PushUniform(std::string name, glm::vec2 data)
+    void PushUniform(const std::string& name, glm::vec2 data)
     {
         if(m_Uniforms.find(name) == m_Uniforms.end()) return;
         glUniform2fv(m_Uniforms[name], 1, &data[0]);
     }
 
-    void PushUniform(std::string name, glm::vec3 data)
+    void PushUniform(const std::string& name, glm::vec3 data)
     {
         if(m_Uniforms.find(name) == m_Uniforms.end()) return;
         glUniform3fv(m_Uniforms[name], 1, &data[0]);
     }
 
-    void PushUniform(std::string name, glm::vec4 data)
+    void PushUniform(const std::string& name, glm::vec4 data)
     {
         if(m_Uniforms.find(name) == m_Uniforms.end()) return;
         glUniform4fv(m_Uniforms[name], 1, &data[0]);
     }
 
-    void PushUniform(std::string name, glm::mat3 data)
+    void PushUniform(const std::string& name, glm::mat3 data)
     {
         if(m_Uniforms.find(name) == m_Uniforms.end()) return;
         glUniformMatrix3fv(m_Uniforms[name], 1, GL_FALSE, &data[0][0]);
     }
 
-    void PushUniform(std::string name, glm::mat4 data)
+    void PushUniform(const std::string& name, glm::mat4 data)
     {
         glUniformMatrix4fv(m_Uniforms[name], 1, GL_FALSE, &data[0][0]);
     }
 
-    GLuint getUniformLocation(std::string name) {
+    GLuint getUniformLocation(const std::string&  name) {
         return m_Uniforms.at(name);
     }
 

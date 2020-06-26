@@ -4,15 +4,15 @@
 ///
 ///=============================================================================
 
-#include <GL/glew.h>
+#include <Core.hpp>
 #include <omp.h>
 #include <BSP.h>
 #include <glm/glm.hpp>
 #include <vector>
 #include <iostream>
 #include <Frustum.h>
-#include <Texture.h>
 #include <ResourceManager.h>
+#include <Texture.h>
 
 namespace Epsilon
 {
@@ -152,9 +152,9 @@ namespace Epsilon
 
             fseek(fp, lumps[kEntities].offset, SEEK_SET);
 
-            char ents[lumps[kEntities].length];
+            std::vector<char> ents(lumps[kEntities].length);
 
-            fread(ents, lumps[kEntities].length, sizeof(char), fp);
+            fread(&ents[0], lumps[kEntities].length, sizeof(char), fp);
 
             fclose(fp);
 

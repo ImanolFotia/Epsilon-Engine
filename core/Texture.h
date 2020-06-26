@@ -7,14 +7,22 @@
 #ifndef TEXTURE_H_INCLUDED
 #define TEXTURE_H_INCLUDED
 
+#include <Core.hpp>
+
+#include <Engine.hpp>
+
 #include <iostream>
 #include <string>
 #include <vector>
-#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <mutex>
 #include <memory>
-#include <SOIL.h>
+
+
+
+#include <Driver/API/Context.hpp>
+#include <Driver/API/OpenGL/Texture2D.hpp>
+
 #include <Image/Image.hpp>
 #include <ProgramData.h>
 #include <Helpers.hpp>
@@ -22,7 +30,106 @@
 #include <Log.h>
 #include <IO/IO.hpp>
 
-namespace Epsilon {
+
+
+namespace Epsilon
+{
+    namespace Renderer
+    {
+        class Texture
+        {
+        public:
+            Texture() {}
+            Texture(const API::ContextBase_ptr) {}
+
+            virtual ~Texture() {}
+
+            virtual void Create(API::TextureBase::TextureData) = 0;
+
+            virtual void Create(int, int) = 0;
+
+            virtual void setData(uint8_t *, size_t) = 0;
+
+            virtual void Bind() = 0;
+
+            virtual void Bind(int) = 0;
+
+            virtual void Unbind() = 0;
+
+        protected:
+            std::shared_ptr<API::TextureBase> mTexture;
+            API::ContextBase_ptr mContext;
+        };
+
+        class Texture2D : public Texture
+        {
+        public:
+        
+            Texture2D() {}
+            Texture2D(const API::ContextBase_ptr context) {
+                mContext = context;
+            }
+
+            ~Texture2D() {}
+
+            void Create(API::TextureBase::TextureData data) override {
+                
+                using API::CONTEXT_TYPE;
+                auto type = Engine::Get().ContextType();//CONTEXT_TYPE::OGL;//mContext->getType();
+                switch (type)
+                {
+                case CONTEXT_TYPE::OGL:
+                    mTexture = std::make_shared<API::OpenGL::Texture2D>(data);
+                    break;
+                
+                default:
+                    IO::PrintLine("Context type: ", type, " is not yet implemented...");
+                    break;
+                }
+            }
+
+            
+            void Create(int w, int h) override {
+                
+                using API::CONTEXT_TYPE;
+                auto type = Engine::Get().ContextType();//CONTEXT_TYPE::OGL;//mContext->getType();
+                switch (type)
+                {
+                case CONTEXT_TYPE::OGL:
+                    mTexture = std::make_shared<API::OpenGL::Texture2D>(w, h);
+                    break;
+                
+                default:
+                    IO::PrintLine("Context type: ", type, " is not yet implemented...");
+                    break;
+                }
+            }
+
+            void setData(uint8_t * data, size_t size) override {
+                mTexture->Fill(data, 0, 0);
+            }
+
+            void Bind() override {
+                mTexture->Bind();
+            }
+            
+            void Bind(int slot) override {
+                mTexture->Bind(slot);
+            }
+
+            void Unbind() override {
+                mTexture->Unbind();
+            }
+
+            void Destroy() {
+                mTexture->Destroy();
+            }
+
+            private:
+                void _Create(){}
+        };
+    } // namespace Renderer
+    
 class eTexture {
 
 public:
@@ -31,6 +138,7 @@ public:
         int channels;
         std::string ext = Helpers::getExtension(TexName);
         path = ("materials/" + std::string(TexName)).c_str();
+        std::cout << "Loading Texture: " << path << std::endl;
         loadFile(path.c_str(), image, &width, &height, &channels);
         createGLTexture(image, TexName, wrap, type, filtering);
     }
@@ -137,7 +245,7 @@ private:
             CreateTexture1D();
 
 
-        if(filtering == -1u) {
+        if(filtering == -1) {
             if(DATA.ANISOTROPY <= 0) {
                 glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
                 glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -270,5 +378,6 @@ private:
 
 };
 
-}
+
+} // namespace Epsilon
 #endif /// TEXTURE_H_INCLUDED

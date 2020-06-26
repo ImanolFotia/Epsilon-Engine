@@ -23,13 +23,13 @@ namespace Epsilon
                 btVector3 position;
                 btVector3 normal;
             };
-
+/*
             struct t_Face
             {
                 t_Vertex vextex0;
                 t_Vertex vextex1;
                 t_Vertex vextex2;
-            };
+            };*/
 
         public:
             PhysicObject() {}

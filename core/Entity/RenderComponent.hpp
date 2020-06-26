@@ -2,7 +2,7 @@
 
 #include <Entity/Component.h>
 
-#include <Model.h>
+#include <Renderer/Model.h>
 namespace Epsilon
 {
     namespace Component
@@ -61,14 +61,16 @@ namespace Epsilon
                 ResourceManager::Get().useShader(shaderType)->PushUniform("isTransparent", this->isTransparent);
                 if (isDoubleFaced())
                     glDisable(GL_CULL_FACE);
-                ResourceManager::Get().useModel(modelPath, ResourceManager::Get().useShader(shaderType).get(), mPosition);
+                else 
+                    glEnable(GL_CULL_FACE);
+                ResourceManager::Get().useModel(modelPath, ResourceManager::Get().useShader(shaderType), mPosition);
 
                 glEnable(GL_CULL_FACE);
             }
 
             void RenderShadows()
             {
-                ResourceManager::Get().useModel(modelPath, ResourceManager::Get().useShader(shaderType).get(), mPosition);
+                ResourceManager::Get().useModel(modelPath, ResourceManager::Get().useShader(shaderType), mPosition);
             }
 
             void setShader(std::string sh)

@@ -2,9 +2,9 @@
 #define RESOURCEMANAGER_H
 
 #include <Texture.h>
-#include <Model.h>
+#include <Renderer/Model.h>
 #include <Water.hpp>
-#include <Terrain.h>
+#include <Renderer/Terrain.h>
 #include <Grass.h>
 #include <map>
 #include <Shader.h>
@@ -12,6 +12,7 @@
 #include <Helpers.hpp>
 #include <Physics/Physics.h>
 #include <Audio/Audio.h>
+
 namespace Epsilon
 {
     class ResourceManager
@@ -26,12 +27,11 @@ namespace Epsilon
 
         virtual ~ResourceManager()
         {
-            //Destroy();
+            Destroy();
         }
 
         void Destroy()
         {
-
             for (std::map<std::string, std::shared_ptr<eTexture>>::iterator itr = TextureList.begin(); itr != TextureList.end(); itr++)
             {
                 GLuint tex = itr->second->getTextureID();
@@ -45,47 +45,47 @@ namespace Epsilon
             std::cout << "Deleted Resource Manager" << std::endl;
         }
 
-        std::string requestTexture(std::string texPath);
+        std::string requestTexture(const std::string& texPath);
 
-        std::string requestModel(std::string modelPath, glm::vec3 Pos, glm::vec3 scs, glm::quat rot);
+        std::string requestModel(const std::string& modelPath, glm::vec3 Pos, glm::vec3 scs, glm::quat rot);
 
-        void useModel(std::string modelPath, Shader *shader, glm::vec3);
+        void useModel(const std::string& modelPath, std::shared_ptr<Shader> shader, glm::vec3);
 
-        void useModel(std::string modelPath, GLuint shader, glm::vec3);
+        void useModel(const std::string& modelPath, GLuint shader, glm::vec3);
 
-        MIN_MAX_POINTS getModelBoundingBox(std::string modelPath);
+        MIN_MAX_POINTS getModelBoundingBox(const std::string& modelPath);
 
-        void setModelVisibility(std::string path, bool visibility);
+        void setModelVisibility(const std::string& path, bool visibility);
 
-        glm::quat getModelRotation(std::string path);
+        glm::quat getModelRotation(const std::string& path);
 
-        glm::vec3 getModelPosition(std::string path);
+        glm::vec3 getModelPosition(const std::string& path);
 
-        glm::vec3 getModelScale(std::string path);
+        glm::vec3 getModelScale(const std::string& path);
 
-        void setModelUniforms(std::string, Shader *, glm::vec3, glm::vec3, glm::quat, std::shared_ptr<Camera>);
+        void setModelUniforms(const std::string&, std::shared_ptr<Shader>, glm::vec3, glm::vec3, glm::quat, std::shared_ptr<Camera>);
 
-        void setModelUniforms(std::string path, Shader *shader, glm::vec3, glm::vec3, glm::quat, glm::vec3, glm::vec3, glm::quat, std::shared_ptr<Camera> cam);
+        void setModelUniforms(const std::string& path, std::shared_ptr<Shader> shader, glm::vec3, glm::vec3, glm::quat, glm::vec3, glm::vec3, glm::quat, std::shared_ptr<Camera> cam);
 
         void destroyAllModels();
 
-        GLuint useTexture(std::string texPath);
+        GLuint useTexture(const std::string& texPath);
 
-        void bindTexture(std::string texPath);
+        void bindTexture(const std::string& texPath);
 
-        void addTextureToQueue(std::string texture);
+        void addTextureToQueue(const std::string& texture);
 
         void loadQueuedTextures();
 
-        std::string requestShader(std::string shaderPathv, std::string shaderPathf, std::string name);
+        std::string requestShader(const std::string& shaderPathv, const std::string& shaderPathf, const std::string& name);
 
         void destroyAllTextures();
 
-        std::shared_ptr<Shader> useShader(std::string shaderPath);
+        std::shared_ptr<Shader> useShader(const std::string& shaderPath);
 
-        GLuint getShaderID(std::string shaderPath);
+        GLuint getShaderID(const std::string& shaderPath);
 
-        std::shared_ptr<Shader> getShader(std::string shaderPath);
+        std::shared_ptr<Shader> getShader(const std::string& shaderPath);
 
         bool requestCubeMap(int CubeMapID, glm::vec3 Position);
 
@@ -93,13 +93,13 @@ namespace Epsilon
 
         GLuint useCubeMap(int ID);
 
-        int requestTextureUsage(std::string);
+        int requestTextureUsage(const std::string&);
 
-        void resetTextureUsage(std::string);
+        void resetTextureUsage(const std::string&);
 
         bool addCubemap(std::shared_ptr<CubeMap>, glm::vec3);
 
-        Model getModel(std::string modelPath);
+        Model getModel(const std::string& modelPath);
 
         std::shared_ptr<Physics::Physics> getPhysicsWorld()
         {
@@ -111,8 +111,13 @@ namespace Epsilon
             return mCubemapIndex.at(NearestCubeMap(pos));
         }
 
+        uint32_t getNumCubemaps() {
+            return mCubemapIndex.size();
+        }
+
         float timestep;
 
+        bool cubemapsLoaded = false;
     private:
         ResourceManager()
         {
@@ -120,8 +125,6 @@ namespace Epsilon
         }
 
         static ResourceManager instance;
-
-        std::shared_ptr<Camera> m_Camera;
 
         std::shared_ptr<Physics::Physics> m_PhysicsWorld;
 

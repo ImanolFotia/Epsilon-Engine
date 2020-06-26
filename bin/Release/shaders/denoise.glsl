@@ -35,7 +35,7 @@ void main()
 
 */
 
-const float offset = 1.0 / 300.0;  
+const float offset = 1.0 / 600.0;  
 
 void main()
 {

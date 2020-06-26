@@ -5,9 +5,6 @@
 #include <dirent.h>
 #endif // __linux__
 
-#ifdef _WIN32
-#include <windows.h>
-#endif // WIN32
 
 #include <string>
 #include <fstream>

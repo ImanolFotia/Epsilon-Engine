@@ -2,7 +2,7 @@
 
 #include <Entity/Component.h>
 #include <Physics/ClothPhysicObject.h>
-#include <Patch.h>
+#include <Renderer/Patch.h>
 
 #include <random>
 namespace Epsilon
@@ -22,7 +22,7 @@ namespace Epsilon
                 SoftBodyPointer = std::make_shared<Physics::ClothPhysicObject>();
 
                 SoftBodyPointer->addObject(ResourceManager::Get().getPhysicsWorld()->softBodyWorldInfo, pos, sc, 30, 30, 1 + 2);
-                mPatch = (std::shared_ptr<Patch>)new Patch(glm::vec3(0.0), SoftBodyPointer->getScale(), SoftBodyPointer->getWidth(), SoftBodyPointer->getHeight(), "cloth/worn-blue-burlap-albedo.png");
+                mPatch = (std::shared_ptr<Patch>)new Patch(glm::vec3(0.0), SoftBodyPointer->getScale(), SoftBodyPointer->getWidth(), SoftBodyPointer->getHeight(), "Epsilon LOGO6.png");
 
                 ResourceManager::Get().getPhysicsWorld()->getSoftDynamicsWorld()->addSoftBody(SoftBodyPointer->m_BodyCloth.get());
 

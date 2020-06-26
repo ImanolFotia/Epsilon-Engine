@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 {
     GLFWwindow* window = Epsilon::Init("Epsilon Engine");
 
-    std::unique_ptr<Epsilon::App> MainProgram = std::make_unique<Epsilon::App>(window);
+    std::shared_ptr<Epsilon::App> MainProgram = std::make_shared<Epsilon::App>(window);
 
     MainProgram->Run();
 

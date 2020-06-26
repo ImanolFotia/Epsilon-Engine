@@ -7,11 +7,11 @@
 #ifndef SKYBOX_H_INCLUDED
 #define SKYBOX_H_INCLUDED
 #include <string>
-#include <GL/glew.h>
+#include <Core.hpp>
 #include <camera.h>
-#include <Model.h>
 #include <Shader.h>
 #include <memory>
+#include <Renderer/Model.h>
 
 namespace Epsilon
 {
@@ -25,10 +25,10 @@ namespace Epsilon
         }
 
     public:
-        void Render(std::shared_ptr<Camera> &, Shader *, float, bool);
+        void Render(std::shared_ptr<Camera> &, std::shared_ptr<Shader>, float, bool);
 
     private:
-        std::unique_ptr<Model> skydome;
+        std::shared_ptr<Model> skydome;
     };
 } // namespace Epsilon
 #endif /// SKYBOX_H_INCLUDED

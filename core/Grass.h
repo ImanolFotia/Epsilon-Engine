@@ -7,7 +7,7 @@
 #ifndef GRASS_H_INCLUDED
 #define GRASS_H_INCLUDED
 
-#include <GL/glew.h>
+#include <Core.hpp>
 #include <string>
 #include <iostream>
 #include <glm/glm.hpp>

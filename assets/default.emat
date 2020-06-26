@@ -1,0 +1,49 @@
+{
+    "name": "defaultMaterial",
+    "wrapping": "repeat",
+    "UsesTextures": true,
+    "textures": {
+        "Albedo": "/textures/defaultAlbedo.png",
+        "Roughness": "/textures/defaultRoughness.png",
+        "Metallic": "/textures/defaultMetallic.png",
+        "Normal": "/textures/defaultNormal.png"
+    },
+    "properties": {
+        "AlbedoColor": {
+            "hex": "#fff",
+            "rgb": [255, 255, 255]
+        },
+        "RoughnessColor": {
+            "hex": "#808080",
+            "rgb": [128, 128, 128]
+        },
+        "SpecularColor": {
+            "hex": "#808080",
+            "rgb": [128, 128, 128]
+        },
+        "MetallicColor": {
+            "hex": "#000",
+            "rgb": [0, 0, 0]
+        },
+        "NormalColor": {
+            "hex": "#8080ff",
+            "rgb": [128, 128, 255]
+        },
+        "Emissive": {
+            "hex": "#000",
+            "rgb": [0, 0, 0]
+        },
+        "Height": {
+            "hex": "#000",
+            "rgb": [0, 0, 0]
+        },
+        "SubSurfaceScattering": {
+            "hex": "#000",
+            "rgb": [0, 0, 0]
+        },
+        "Transmision": {
+            "hex": "#000",
+            "rgb": [0, 0, 0]
+        }
+    }
+}

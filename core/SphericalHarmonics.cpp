@@ -3,6 +3,7 @@
 #include <Driver/API/OpenGL/HelperFunctions/CheckError.h>
 
 #include <cstdlib>
+#include <cmath>
 
 
 namespace Epsilon {
@@ -16,7 +17,7 @@ void SphericalHarmonics::CalculateCohefficients(GLuint cubemap, const unsigned i
     std::vector<float> resultB(sqOrder);
 
     // variables that describe current face of cube texture
-    std::unique_ptr<float[]> data;
+    float* data;
     GLint width, height;
     GLint internalFormat;
     GLint numComponents;
@@ -59,18 +60,18 @@ void SphericalHarmonics::CalculateCohefficients(GLuint cubemap, const unsigned i
         // get data from texture
         if(internalFormat == GL_RGBA) {
             numComponents = 4;
-            data = (std::unique_ptr<GLfloat[]>)(new GLfloat[numComponents * width * width]);
+            data = new GLfloat[numComponents * width * width];
         } else if(internalFormat == GL_RGB16F || internalFormat == GL_SRGB) {
             numComponents = 3;
-            data = (std::unique_ptr<GLfloat[]>)(new GLfloat[numComponents * width * width]);
+            data = new GLfloat[numComponents * width * width];
         } else {
             std::cout << "Format not compatible" << std::endl;
             return;
         }
-        glGetTexImage(GL_TEXTURE_CUBE_MAP_POSITIVE_X+face, 0, GL_RGB, GL_FLOAT, data.get());
+        glGetTexImage(GL_TEXTURE_CUBE_MAP_POSITIVE_X+face, 0, GL_RGB, GL_FLOAT, data);
         glCheckError();
 
-        if(std::isnan(data[0])) std::cout << "data[0] " << data[0] << std::endl;
+        if(std::isnan((float)data[0])) std::cout << "data[0] " << data[0] << std::endl;
 
         // step between two texels for range [0, 1]
         float invWidth = 1.0f / float(width);
@@ -132,7 +133,7 @@ void SphericalHarmonics::CalculateCohefficients(GLuint cubemap, const unsigned i
                 dir = glm::normalize(dir);
 
                 // scale factor depending on distance from center of the face
-                if(fV == 0 || std::isnan(fV)) {
+                if(fV == 0 || std::isnan((float)fV)) {
                     std::cout << "fV is not valid or nan" << std::endl;
                     return;
                 }
@@ -144,38 +145,38 @@ void SphericalHarmonics::CalculateCohefficients(GLuint cubemap, const unsigned i
                 sphericalHarmonicsEvaluateDirection(shBuff.data(), order, dir, "Evaluating direction");
 
                 // index of texel in texture
-                unsigned int pixOffsetIndex = (x + y * width) * numComponents;
+                const unsigned int pixOffsetIndex = (x + y * width) * numComponents;
 
-                if(std::isnan(pixOffsetIndex)) std::cout << "pixOffsetIndex == " << pixOffsetIndex << std::endl;
+                //if(std::isnan((int)pixOffsetIndex)) std::cout << "pixOffsetIndex == " << pixOffsetIndex << std::endl;
 
 
-                if(std::isnan(data[pixOffsetIndex])){
+                if(std::isnan((float)data[pixOffsetIndex])){
                     data[pixOffsetIndex] = 0.0f;
                     //std::cout << "data[pixOffsetIndex] is nan on face: " << face << " for pixOffsetIndex = " << pixOffsetIndex  << std::endl;
 
                 }
-                if(std::isnan(data[pixOffsetIndex+1])){
+                if(std::isnan((float)data[pixOffsetIndex+1])){
                     data[pixOffsetIndex+1] = 0.0f;
                     //std::cout << "data[pixOffsetIndex+1] is nan on face: " << face << " for pixOffsetIndex = " << pixOffsetIndex  << std::endl;
 
                 }
-                if(std::isnan(data[pixOffsetIndex+2])){
+                if(std::isnan((float)data[pixOffsetIndex+2])){
                     data[pixOffsetIndex+2] = 0.0f;
                     //std::cout << "data[pixOffsetIndex+2] is nan on face: " << face << " for pixOffsetIndex = " << pixOffsetIndex  << std::endl;
 
                 }
                 // get color from texture and map to range [0, 1]
                 glm::vec3 clr(
-                    float(data[pixOffsetIndex]) /*/ 255.0f*/,
-                    float(data[pixOffsetIndex+1]) /*/ 255.0f*/,
-                    float(data[pixOffsetIndex+2]) /*/ 255.0f*/
+                    data[pixOffsetIndex] /*/ 255.0f*/,
+                    data[pixOffsetIndex+1] /*/ 255.0f*/,
+                    data[pixOffsetIndex+2] /*/ 255.0f*/
                 );
 
 
-                if(std::isnan(clr.r)) {
+                if(std::isnan((float)clr.r)) {
                     std::cout << "clr.r is nan" << std::endl;
                 }
-                if(std::isnan(fDiffSolid)) {
+                if(std::isnan((float)fDiffSolid)) {
                     std::cout << "fDiffSolid is nan" << std::endl;
                 }
 

@@ -4,7 +4,7 @@
 ///
 ///=============================================================================
 #pragma once
-
+#include <Core.hpp>
 #include <ProgramData.h>
 #include <Epsilon.h>
 #include <memory>
@@ -17,12 +17,12 @@ namespace Epsilon
     public:
         App(GLFWwindow *&win)
         {
-            EpsilonEngine = (std::unique_ptr<Epsilon>)(new Epsilon(win));
+            EpsilonEngine = std::make_shared<Epsilon>(win);
 
             EpsilonEngine->InitResources();
         }
 
-        void Run(void)
+        void Run()
         {
             std::cout << "==================================================" << std::endl;
             std::cout << "Engine Initialization Complete." << std::endl;
@@ -31,13 +31,12 @@ namespace Epsilon
             EpsilonEngine->MainLoop();
         }
 
-        ~App(void)
+        ~App()
         {
-            ResourceManager::Get().Destroy();
-            std::cout << "Engine shuted down" << std::endl;
+            std::cout << "Engine shutted down" << std::endl;
         }
 
     public:
-        std::unique_ptr<Epsilon> EpsilonEngine;
+        std::shared_ptr<Epsilon> EpsilonEngine;
     };
 } // namespace Epsilon

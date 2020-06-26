@@ -20,7 +20,6 @@
 
 #include "BSPFace.h"
 #include "Frustum.h"
-#include <ResourceManager.h>
 
 namespace Epsilon
 {

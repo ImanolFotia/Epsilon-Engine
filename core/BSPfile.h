@@ -7,15 +7,15 @@
 #ifndef BSPFILE_H_INCLUDED
 #define BSPFILE_H_INCLUDED
 
+#include <Core.hpp>
 #include <iostream>
 #include <vector>
 #include <string>
 
-#include <GL/glew.h>
 
 #include <BSPformat.h>
 #include <CBitset.h>
-
+namespace Epsilon{
 class BSPfile
 {
 public:
@@ -54,5 +54,6 @@ private:
     CBitset m_FacesDrawn;		/// The bitset for the faces that have/haven't been drawn
 
 };
+}
 
 #endif /// BSPFILE_H_INCLUDED

@@ -2,7 +2,7 @@
 #define GLFW_STATIC
 #include <iostream>
 #include <vector>
-#include <GL/glew.h>
+#include <Core.h>
 #include <GLFW/glfw3.h>
 #include "DDS.h"
 #include "Shader.h"

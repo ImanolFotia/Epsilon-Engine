@@ -3,7 +3,7 @@
 /// Purpose:
 ///
 ///=============================================================================
-
+#include <Core.hpp>
 #include <Player.h>
 #include <ResourceManager.h>
 #include <IO/KeyBoard.h>
@@ -44,7 +44,7 @@ namespace Epsilon
         m_collinfo = (std::shared_ptr<Physics::CollisionInfo>)new Physics::CollisionInfo();
         m_collinfo->setName(std::string("Player"));
         m_playerBody->setUserPointer(m_collinfo.get());
-        ResourceManager::Get().getPhysicsWorld()->world->addRigidBody(m_playerBody.get());
+        ResourceManager::Get().getPhysicsWorld()->getSoftDynamicsWorld()->addRigidBody(m_playerBody.get());
         m_playerBody->setCollisionFlags(m_playerBody->getFlags());
         //m_playerBody->setFlags(btRigidBody::CO_SOFT_BODY);
         m_playerBody->setActivationState(DISABLE_DEACTIVATION);
@@ -142,7 +142,7 @@ namespace Epsilon
         {
             ClosestNotMe rayCallback(m_playerBody.get(), m_raySource[i], m_rayTarget[i]);
             rayCallback.m_closestHitFraction = 1.0;
-            ResourceManager::Get().getPhysicsWorld()->world->rayTest(m_raySource[i], m_rayTarget[i], rayCallback);
+            ResourceManager::Get().getPhysicsWorld()->getSoftDynamicsWorld()->rayTest(m_raySource[i], m_rayTarget[i], rayCallback);
             if (rayCallback.hasHit())
             {
                 btRigidBody *body = (btRigidBody *)btRigidBody::upcast(rayCallback.m_collisionObject);
@@ -370,7 +370,7 @@ namespace Epsilon
 
     bool Player::pickObject(btVector3 from, btVector3 to)
     {
-        if (ResourceManager::Get().getPhysicsWorld()->world == 0)
+        if (ResourceManager::Get().getPhysicsWorld()->getSoftDynamicsWorld() == 0)
             return false;
 
         class ClosestNotMe : public btCollisionWorld::ClosestRayResultCallback
@@ -397,7 +397,7 @@ namespace Epsilon
         btVector3 target = rayFrom + rayTo;
         ClosestNotMe rayCallback(m_playerBody.get(), rayFrom, target);
 
-        ResourceManager::Get().getPhysicsWorld()->world->rayTest(rayFrom, target, rayCallback);
+        ResourceManager::Get().getPhysicsWorld()->getSoftDynamicsWorld()->rayTest(rayFrom, target, rayCallback);
         if (rayCallback.hasHit())
         {
             btVector3 pickPos = rayCallback.m_hitPointWorld;
@@ -412,7 +412,7 @@ namespace Epsilon
                     m_pickedBody->setActivationState(DISABLE_DEACTIVATION);
                     btVector3 localPivot = body->getCenterOfMassTransform().inverse() * body->getCenterOfMassPosition();
                     btPoint2PointConstraint *p2p = new btPoint2PointConstraint(*body, localPivot);
-                    ResourceManager::Get().getPhysicsWorld()->world->addConstraint(p2p, true);
+                    ResourceManager::Get().getPhysicsWorld()->getSoftDynamicsWorld()->addConstraint(p2p, true);
                     m_pickedConstraint = p2p;
                     btScalar mousePickClamping = 1000.f;
                     p2p->m_setting.m_impulseClamp = mousePickClamping;
@@ -458,7 +458,7 @@ namespace Epsilon
             m_pickedBody->forceActivationState(m_savedState);
             m_pickedBody->activate();
             m_pickedBody->setAngularVelocity(pickedbodyangularfactor);
-            ResourceManager::Get().getPhysicsWorld()->world->removeConstraint(m_pickedConstraint);
+            ResourceManager::Get().getPhysicsWorld()->getSoftDynamicsWorld()->removeConstraint(m_pickedConstraint);
             delete m_pickedConstraint;
             m_pickedConstraint = 0;
             m_pickedBody = 0;

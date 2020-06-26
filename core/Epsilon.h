@@ -8,20 +8,16 @@
 #define EPSILON_H_INCLUDED
 
 #include <map>
-#define GLEW_STATIC
-#include <GL/glew.h>
-#ifdef _WIN32
-#include <GL/wglew.h>
-#endif
+
 #include <GLFW/glfw3.h>
 #include <thread>
 #include <Texture.h>
 #include <Shader.h>
 #include <Skybox.h>
 #include <camera.h>
-#include <Model.h>
+#include <Renderer/Model.h>
 #include <Text.h>
-#include <Terrain.h>
+#include <Renderer/Terrain.h>
 #include <Grass.h>
 #include <PostProcess.h>
 #include <Water.hpp>
@@ -53,7 +49,7 @@
 #include <CubeMap.h>
 #include <CommandFunctions.h>
 #include <Physics/ClothPhysicObject.h>
-#include <Patch.h>
+#include <Renderer/Patch.h>
 #include <PointShadow.hpp>
 
 namespace Epsilon
@@ -65,16 +61,6 @@ namespace Epsilon
 
         virtual ~Epsilon(void)
         {
-            for (std::map<std::string, Shader *>::iterator itr = Shaders.begin(); itr != Shaders.end(); itr++)
-            {
-                delete itr->second;
-                itr->second = nullptr;
-            }
-
-            ResourceManager::Get().destroyAllTextures();
-
-            ResourceManager::Get().destroyAllModels();
-
             BSPMap->Destroy();
 
             sun->Destroy();
@@ -101,7 +87,7 @@ namespace Epsilon
 
         void PollEvents(void);
 
-        void Render3D(Shader *);
+        void Render3D(std::shared_ptr<Shader>);
 
         void RenderShadows(void);
 
@@ -125,7 +111,7 @@ namespace Epsilon
 
         void ProcessFrame(void);
 
-        void SetUniforms(Shader *&, glm::vec3 position, glm::vec3 scale, glm::quat rotation);
+        void SetUniforms(std::shared_ptr<Shader>, glm::vec3 position, glm::vec3 scale, glm::quat rotation);
 
         void Clock(void);
 
@@ -137,29 +123,26 @@ namespace Epsilon
 
     public:
         std::shared_ptr<Camera> eCamera;
-        std::shared_ptr<Physics::ClothPhysicObject> mCloth;
         std::shared_ptr<Patch> mPatch;
         /**Shaders**/
         GLuint cubemapTex = 0;
         GLuint cubemapDepthTex = 0;
-        std::map<string, Shader *> Shaders;
-        std::unique_ptr<Skybox> skybox;
+        std::map<string, std::shared_ptr<Shader>> Shaders;
+        std::shared_ptr<Skybox> skybox;
         std::shared_ptr<Water> waterPlane;
         std::vector<Grass> grass;
-        std::vector<Model> model;
-        GLuint VertexArrayID;
         GLFWwindow *window = nullptr;
         std::shared_ptr<Text> text;
-        //std::unique_ptr<Text> text2;
+        //std::shared_ptr<Text> text2;
         std::shared_ptr<Terrain> terrain;
         std::shared_ptr<Sun> sun;
-        std::unique_ptr<CQuake3BSP> BSPMap;
-        std::unique_ptr<MD5Model> m_AnimModel;
-        std::unique_ptr<ShadowMap> shadowMap;
-        std::unique_ptr<PostProcess> PP;
+        std::shared_ptr<CQuake3BSP> BSPMap;
+        std::shared_ptr<MD5Model> m_AnimModel;
+        std::shared_ptr<ShadowMap> shadowMap;
+        std::shared_ptr<PostProcess> PP;
         std::vector<std::shared_ptr<EntityBase>> EntityList;
-        std::unique_ptr<IO::Audio::Audio> m_AudioSystem;
-        std::unique_ptr<IO::Audio::AudioListener> m_AudioListener;
+        std::shared_ptr<IO::Audio::Audio> m_AudioSystem;
+        std::shared_ptr<IO::Audio::AudioListener> m_AudioListener;
         std::shared_ptr<SphericalHarmonics> sphericalharmonics;
         std::thread t1;
         std::shared_ptr<ParticleSystem> m_ParticleSystem;
@@ -170,12 +153,12 @@ namespace Epsilon
         std::shared_ptr<CubeMap> mCubemap[7][5][7];
 
         std::shared_ptr<Player> m_PlayerCapsule;
-        std::shared_ptr<GUI> m_GUI;
-        std::shared_ptr<Panel> m_Panel;
+        //std::shared_ptr<GUI> m_GUI;
+        /*std::shared_ptr<Panel> m_Panel;
         std::shared_ptr<Button> t_ButtonSettings;
         std::shared_ptr<Panel> t_PanelSettings;
         std::shared_ptr<Button> t_ButtonResume;
-        std::shared_ptr<CheckBox> t_CheckBox;
+        std::shared_ptr<CheckBox> t_CheckBox;*/
         bool ParallaxOn;
         /** Window Properties **/
         float xz[5][5];

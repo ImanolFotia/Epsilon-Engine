@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <GL/glew.h>
 #include <Shader.h>
 #include <camera.h>
 #include <vector>
@@ -42,7 +41,7 @@ namespace Epsilon
         /**
         Render the output from the G-Buffer
     */
-        void ShowFrame(glm::vec3, bool &hdr, std::shared_ptr<Camera> &cam, float exposure, std::unique_ptr<ShadowMap> &);
+        void ShowFrame(glm::vec3, bool &hdr, std::shared_ptr<Camera> &cam, float exposure, std::shared_ptr<ShadowMap> &);
 
         /**
         Calculates the screen space ambient occlusion
@@ -98,7 +97,7 @@ namespace Epsilon
 
         std::shared_ptr<FrameBuffer<std::string>> hdrFBO;
         std::shared_ptr<FrameBuffer<int>> mCompositeImage;
-        std::unique_ptr<Shader> shader;
+        std::shared_ptr<Shader> shader;
         std::shared_ptr<FrameBuffer<int>> CopyTextureFBO;
         std::shared_ptr<FrameBuffer<int>> CopyTextureBlurredFBO;
 
@@ -234,17 +233,17 @@ namespace Epsilon
         GLenum attachment_type;
         int width, height;
         float exposureTime;
-        std::unique_ptr<Shader> SSAO;
-        std::unique_ptr<Shader> blurSSAO;
-        std::unique_ptr<Shader> finalImage;
-        std::unique_ptr<Shader> blurBloom;
-        std::unique_ptr<Shader> ScreenSpaceReflectionShader;
-        std::unique_ptr<Shader> blurSSRShader;
-        std::unique_ptr<Shader> PassThroughShader;
-        std::unique_ptr<Shader> MotionBlurShader;
-        std::unique_ptr<Shader> CompositeShader;
-        std::unique_ptr<Shader> BRDFShader;
-        std::unique_ptr<Shader> DenoiseShader;
+        std::shared_ptr<Shader> SSAO;
+        std::shared_ptr<Shader> blurSSAO;
+        std::shared_ptr<Shader> finalImage;
+        std::shared_ptr<Shader> blurBloom;
+        std::shared_ptr<Shader> ScreenSpaceReflectionShader;
+        std::shared_ptr<Shader> blurSSRShader;
+        std::shared_ptr<Shader> PassThroughShader;
+        std::shared_ptr<Shader> MotionBlurShader;
+        std::shared_ptr<Shader> CompositeShader;
+        std::shared_ptr<Shader> BRDFShader;
+        std::shared_ptr<Shader> DenoiseShader;
 
         std::vector<glm::vec3> LightPositions;
         /// G-Buffer texture samplers

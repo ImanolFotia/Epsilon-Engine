@@ -3,27 +3,23 @@
 #include "Driver/API/Context.hpp"
 #include "Log.h"
 
-
 namespace Epsilon
 {
-    namespace Platform
+    class WindowBase;
+
+    namespace API
     {
-        class WindowBase;
-
-        namespace API
+        namespace OpenGL
         {
-            namespace OpenGL
+            class Context : public ContextBase
             {
-                class Context : public ContextBase
-                {
-                public:
-                    Context();
+            public:
+                Context();
 
-                    void Init(std::shared_ptr<WindowHandle<>>, CONTEXT_TYPE) override;
-                    void SwapBuffers() override;
-                    void Shutdown() override;
-                };
-            } // namespace OpenGL
-        } // namespace API
-    } // namespace Platform
+                void Init(std::shared_ptr<Platform::WindowHandle<>>, CONTEXT_TYPE) override;
+                void SwapBuffers() override;
+                void Shutdown() override;
+            };
+        } // namespace OpenGL
+    }     // namespace API
 } // namespace Epsilon

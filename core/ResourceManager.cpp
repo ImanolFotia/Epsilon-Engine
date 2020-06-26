@@ -2,7 +2,7 @@
 
 namespace Epsilon
 {
-    std::string ResourceManager::requestTexture(std::string texPath)
+    std::string ResourceManager::requestTexture(const std::string& texPath)
     {
         try
         {
@@ -27,7 +27,7 @@ namespace Epsilon
         return "";
     }
 
-    std::string ResourceManager::requestModel(std::string modelPath, glm::vec3 Pos, glm::vec3 scs, glm::quat rot)
+    std::string ResourceManager::requestModel(const std::string& modelPath, glm::vec3 Pos, glm::vec3 scs, glm::quat rot)
     {
         try
         {
@@ -52,10 +52,11 @@ namespace Epsilon
         return "";
     }
 
-    void ResourceManager::useModel(std::string modelPath, Shader *shader, glm::vec3 pos = glm::vec3(0, 0, 0))
+    void ResourceManager::useModel(const std::string& modelPath, std::shared_ptr<Shader> shader, glm::vec3 pos = glm::vec3(0, 0, 0))
     {
         try
         {
+            
             ModelList.at(modelPath).Draw(shader, pos);
         }
 
@@ -79,7 +80,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
     }
 }*/
 
-    Model ResourceManager::getModel(std::string modelPath)
+    Model ResourceManager::getModel(const std::string& modelPath)
     {
         try
         {
@@ -94,7 +95,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         return Model("", glm::vec3(0, 0, 0));
     }
 
-    MIN_MAX_POINTS ResourceManager::getModelBoundingBox(std::string modelPath)
+    MIN_MAX_POINTS ResourceManager::getModelBoundingBox(const std::string& modelPath)
     {
         try
         {
@@ -109,32 +110,32 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         return MIN_MAX_POINTS();
     }
 
-    void ResourceManager::setModelVisibility(std::string path, bool visibility)
+    void ResourceManager::setModelVisibility(const std::string& path, bool visibility)
     {
         ModelList.at(path).m_IsVisible = visibility;
     }
 
-    glm::quat ResourceManager::getModelRotation(std::string path)
+    glm::quat ResourceManager::getModelRotation(const std::string& path)
     {
         return ModelList.at(path).Rotation;
     }
 
-    glm::vec3 ResourceManager::getModelPosition(std::string path)
+    glm::vec3 ResourceManager::getModelPosition(const std::string& path)
     {
         return ModelList.at(path).Position;
     }
 
-    glm::vec3 ResourceManager::getModelScale(std::string path)
+    glm::vec3 ResourceManager::getModelScale(const std::string& path)
     {
         return ModelList.at(path).Scale;
     }
 
-    void ResourceManager::setModelUniforms(std::string path, Shader *shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, std::shared_ptr<Camera> cam)
+    void ResourceManager::setModelUniforms(const std::string& path, std::shared_ptr<Shader> shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, std::shared_ptr<Camera> cam)
     {
         ModelList.at(path).SetUniforms(shader, pos, sc, rot, cam);
     }
 
-    void ResourceManager::setModelUniforms(std::string path, Shader *shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, glm::vec3 ppos, glm::vec3 psc, glm::quat prot, std::shared_ptr<Camera> cam)
+    void ResourceManager::setModelUniforms(const std::string& path, std::shared_ptr<Shader> shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, glm::vec3 ppos, glm::vec3 psc, glm::quat prot, std::shared_ptr<Camera> cam)
     {
         ModelList.at(path).SetUniforms(shader, pos, sc, rot, ppos, psc, prot, cam);
     }
@@ -147,7 +148,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         }
     }
 
-    GLuint ResourceManager::useTexture(std::string texPath)
+    GLuint ResourceManager::useTexture(const std::string& texPath)
     {
         try
         {
@@ -167,7 +168,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         return -1;
     }
 
-    void ResourceManager::bindTexture(std::string texPath)
+    void ResourceManager::bindTexture(const std::string& texPath)
     {
 
         try
@@ -183,11 +184,11 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
 
         catch (std::exception e)
         {
-            std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
+            std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << "//" << texPath << std::endl;
         }
     }
 
-    void ResourceManager::addTextureToQueue(std::string texture)
+    void ResourceManager::addTextureToQueue(const std::string& texture)
     {
         try
         {
@@ -218,7 +219,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         }
     }
 
-    int ResourceManager::requestTextureUsage(std::string texPath)
+    int ResourceManager::requestTextureUsage(const std::string& texPath)
     {
         try
         {
@@ -243,7 +244,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         return 0;
     }
 
-    void ResourceManager::resetTextureUsage(std::string texPath)
+    void ResourceManager::resetTextureUsage(const std::string& texPath)
     {
         try
         {
@@ -274,7 +275,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         }
     }
 
-    std::string ResourceManager::requestShader(std::string shaderPathv, std::string shaderPathf, std::string name)
+    std::string ResourceManager::requestShader(const std::string& shaderPathv, const std::string& shaderPathf, const std::string& name)
     {
         try
         {
@@ -299,7 +300,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         return "";
     }
 
-    std::shared_ptr<Shader> ResourceManager::useShader(std::string shaderPath)
+    std::shared_ptr<Shader> ResourceManager::useShader(const std::string& shaderPath)
     {
         try
         {
@@ -314,7 +315,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         return nullptr;
     }
 
-    GLuint ResourceManager::getShaderID(std::string shaderPath)
+    GLuint ResourceManager::getShaderID(const std::string& shaderPath)
     {
         try
         {
@@ -329,7 +330,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         return -1;
     }
 
-    std::shared_ptr<Shader> ResourceManager::getShader(std::string shaderPath)
+    std::shared_ptr<Shader> ResourceManager::getShader(const std::string& shaderPath)
     {
         try
         {

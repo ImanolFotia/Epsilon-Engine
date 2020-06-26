@@ -1,11 +1,11 @@
 #pragma once
 #include <unordered_map>
-#include <GL/glew.h>
+#include <Core.hpp>
 
 class glCache
 {
 public:
-    static void glUseProgram(GLuint program)
+    inline static void glUseProgram(GLuint program)
     {
         if(program != ShaderId)
         {
@@ -14,7 +14,7 @@ public:
         }
     }
 
-    static void glCullFace(GLenum mode)
+    inline static void glCullFace(GLenum mode)
     {
         if(CullFaceMode != mode){
             ::glCullFace(mode);
@@ -22,7 +22,7 @@ public:
         }
     }
 
-    static void glEnable(GLenum cap)
+    inline static void glEnable(GLenum cap)
     {
         if(!glIsEnabled(cap))
         {
@@ -30,13 +30,13 @@ public:
         }
     }
 
-    static void glDrawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid * indices)
+    inline static void glDrawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid * indices)
     {
         ::glDrawElements(mode, count, type, indices);
         DrawCalls++;
     }
 
-    static void glDrawArrays(GLenum mode, GLint first, GLsizei count)
+    inline static void glDrawArrays(GLenum mode, GLint first, GLsizei count)
     {
         ::glDrawArrays(mode, first, count);
         DrawCalls++;
