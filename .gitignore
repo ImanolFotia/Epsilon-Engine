@@ -1,9 +1,11 @@
 # Compiled files
 *.o
 *.so
+*.obj
 *.exe
 *.jar
 *.sln
+*.suo
 *.lib
 *.log
 *.pdb
@@ -13,7 +15,12 @@
 *.vcxproj.filters
 *.vcxproj.user
 *.db
+*.db-shm
+*.db-wal
+*.opendb
 *.a
+*.tlog
+*.dll
 
 # Directories
 /bin/Debug
