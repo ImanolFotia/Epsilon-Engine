@@ -1,0 +1,4 @@
+D:\Epsilon\Epsilon Engine\build\EpsilonCreator\x64\Debug\EpsilonCreator.MainWindow.resources
+D:\Epsilon\Epsilon Engine\build\EpsilonCreator\x64\Debug\EpsilonCreator.vcxproj.GenerateResource.cache
+D:\Epsilon\Epsilon Engine\build\EpsilonCreator\x64\Debug\EpsilonCreator.exe
+D:\Epsilon\Epsilon Engine\build\EpsilonCreator\x64\Debug\EpsilonCreator.pdb

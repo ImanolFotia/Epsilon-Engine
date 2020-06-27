@@ -12,6 +12,8 @@
 *.vcxproj
 *.vcxproj.filters
 *.vcxproj.user
+*.db
+*.a
 
 # Directories
 /bin/Debug
@@ -26,6 +28,8 @@
 /bin/Release/*.log
 /creator
 /lib
+
+/.vs
 
 /obj
 

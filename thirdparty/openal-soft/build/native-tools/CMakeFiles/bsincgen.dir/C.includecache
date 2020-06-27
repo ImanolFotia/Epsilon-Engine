@@ -6,13 +6,13 @@
 
 #IncludeRegexTransform: 
 
-C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/common/win_main_utf8.h
+D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/win_main_utf8.h
 windows.h
 -
 shellapi.h
 -
 
-C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/native-tools/bsincgen.c
+D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/native-tools/bsincgen.c
 stdio.h
 -
 math.h
@@ -22,5 +22,5 @@ string.h
 stdlib.h
 -
 ../common/win_main_utf8.h
-C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/common/win_main_utf8.h
+D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/win_main_utf8.h
 

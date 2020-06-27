@@ -45,14 +45,14 @@ unset(_expectedTargets)
 add_library(OpenAL::OpenAL SHARED IMPORTED)
 
 set_target_properties(OpenAL::OpenAL PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES "C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/include"
+  INTERFACE_INCLUDE_DIRECTORIES "D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/include"
 )
 
 # Import target "OpenAL::OpenAL" for configuration "RelWithDebInfo"
 set_property(TARGET OpenAL::OpenAL APPEND PROPERTY IMPORTED_CONFIGURATIONS RELWITHDEBINFO)
 set_target_properties(OpenAL::OpenAL PROPERTIES
-  IMPORTED_IMPLIB_RELWITHDEBINFO "C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/build/libOpenAL32.dll.a"
-  IMPORTED_LOCATION_RELWITHDEBINFO "C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/build/OpenAL32.dll"
+  IMPORTED_IMPLIB_RELWITHDEBINFO "D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/build/libOpenAL32.dll.a"
+  IMPORTED_LOCATION_RELWITHDEBINFO "D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/build/OpenAL32.dll"
   )
 
 # This file does not depend on other imported targets which have

@@ -34,7 +34,7 @@ alc.h
 al.h
 ../include/AL/al.h
 
-C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/utils/openal-info.c
+D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/utils/openal-info.c
 stdio.h
 -
 string.h
@@ -42,11 +42,11 @@ string.h
 stdlib.h
 -
 AL/alc.h
-C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/utils/AL/alc.h
+D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/utils/AL/alc.h
 AL/al.h
-C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/utils/AL/al.h
+D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/utils/AL/al.h
 AL/alext.h
-C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/utils/AL/alext.h
+D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/utils/AL/alext.h
 windows.h
 -
 
