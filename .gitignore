@@ -3,6 +3,15 @@
 *.so
 *.exe
 *.jar
+*.sln
+*.lib
+*.log
+*.pdb
+*.idb
+*.exe.metagen
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
 
 # Directories
 /bin/Debug
@@ -15,6 +24,8 @@
 /bin/Release/*.exe
 /bin/Release/*.dll
 /bin/Release/*.log
+/creator
+/lib
 
 /obj
 
