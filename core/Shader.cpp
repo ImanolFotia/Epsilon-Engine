@@ -182,7 +182,7 @@ void Shader::getUniformsLocations()
         // NOTE(Joey): iterate over all active attributes
         char buffer[128];
         int Size;
-        for (unsigned int i = 0; i < nrAttributes; ++i)
+        for (int i = 0; i < nrAttributes; ++i)
         {
             GLenum glType;
             glGetActiveAttrib(ProgramID, i, sizeof(buffer), 0, &Size, &glType, buffer);
@@ -192,7 +192,7 @@ void Shader::getUniformsLocations()
         }
 
         // NOTE(Joey): iterate over all active uniforms
-        for (unsigned int i = 0; i < nrUniforms; ++i)
+        for (int i = 0; i < nrUniforms; ++i)
         {
             GLenum glType;
             glGetActiveUniform(ProgramID, i, sizeof(buffer), 0, &Size, &glType, buffer);

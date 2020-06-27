@@ -26,7 +26,7 @@ namespace Epsilon
             //mMovement = 2.6;
             mMovement = 1.0;
         }
-        catch (std::exception e)
+        catch (std::exception &e)
         {
             std::cout << e.what() << std::endl;
         }

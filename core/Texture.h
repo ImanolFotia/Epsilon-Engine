@@ -245,7 +245,7 @@ private:
             CreateTexture1D();
 
 
-        if(filtering == -1) {
+        if(filtering == 0) {
             if(DATA.ANISOTROPY <= 0) {
                 glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
                 glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);

@@ -34,7 +34,7 @@ namespace Epsilon
         {
             for (std::map<std::string, std::shared_ptr<eTexture>>::iterator itr = TextureList.begin(); itr != TextureList.end(); itr++)
             {
-                GLuint tex = itr->second->getTextureID();
+                //GLuint tex = itr->second->getTextureID();
                 itr->second->Destroy();
             }
 

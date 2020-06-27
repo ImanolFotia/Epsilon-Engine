@@ -20,6 +20,7 @@ OBJS_DIR_DEBUG:= ./obj/Debug
 SOURCE_DIR:= ./core
 INCLUDE_DIR:= ./core
 LIB:= thirdparty
+OUT_LIB := lib
 BIN:= ./bin
 
 ifeq "$(OS)" "Windows_NT"
@@ -27,6 +28,9 @@ EXEC := Epsilon_Engine.exe
 else
 EXEC := Epsilon_Engine
 endif
+
+LIB_NAME:= libEpsilon.a
+LIB_NAME_DEBUG:= libEpsilon_d.a
 
 #recursive wildcard to include all files
 rwildcard=$(wildcard $(addsuffix $2, $1)) $(foreach d,$(wildcard $(addsuffix *, $1)),$(call rwildcard,$d/,$2))
@@ -91,11 +95,11 @@ LIBS:= -lSOIL -lglfw -linih -lGLEW -lGLU -lGL -lopenal -fopenmp -lgomp -llua5.3 
 endif
 
 LD_FLAGS := -fopenmp
-CPPFLAGS := --std=c++17 
+CPPFLAGS := --std=c++17
 
 DEBUG_FLAGS := -g -DDEBUG -ggdb -g3 -gdwarf-4 -fvar-tracking-assignments
 
-RELEASE_FLAGS :=
+RELEASE_FLAGS := -O3
 
 RES := ./core/resources.rc
 
@@ -104,6 +108,10 @@ all: clean resource epsilon-release
 epsilon-debug: resource $(BIN)/Debug/$(EXEC)
 
 epsilon-release: resource $(BIN)/Release/$(EXEC)
+
+epsilon-static-lib-debug: clean $(OUT_LIB)/Debug/$(LIB_NAME_DEBUG)
+
+epsilon-static-lib-release: clean $(OUT_LIB)/Release/$(LIB_NAME)
 
 
 resource:
@@ -130,6 +138,14 @@ $(BIN)/Release/$(EXEC): $(OBJECTS_RELEASE)
 $(BIN)/Debug/$(EXEC): $(OBJECTS_DEBUG)
 	-@mkdir -p $(@D)/Debug
 	$(CXX) $(CPPFLAGS) $(DEBUG_FLAGS) $(RES_OBJECTS) -o $@ $^ $(LIBS_DIR) $(LIBS) $(LD_FLAGS)
+
+$(OUT_LIB)/Debug/$(LIB_NAME_DEBUG): $(OBJECTS_DEBUG)
+	-@mkdir -p $(@D)
+	ar rcs $@ $(OBJECTS_DEBUG) 
+	
+$(OUT_LIB)/Release/$(LIB_NAME): $(OBJECTS_RELEASE)
+	-@mkdir -p $(@D)
+	ar rcs $@ $(OBJECTS_RELEASE) 
 
 clean:
 	-@rm -rf ./obj/*

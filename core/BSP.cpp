@@ -243,7 +243,7 @@ namespace Epsilon
                     faceIndices.push_back(m_pIndices[pFace->startIndex + k]);
                 }
 
-                int texture = -1;
+                unsigned int texture = -1;
 
                 string str(pTextures[pFace->textureID].strName);
                 std::size_t found = str.find("skies");

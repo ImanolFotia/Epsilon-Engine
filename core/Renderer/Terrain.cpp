@@ -63,7 +63,7 @@ namespace Epsilon
 
     bool Terrain::GetHeightData()
     {
-        int w, h;
+        //int w, h;
 
         unsigned char *pixels = SOIL_load_image(this->heightMap, &this->width, &this->height, 0, SOIL_LOAD_L);
 
@@ -88,8 +88,8 @@ namespace Epsilon
         {
             TVertex vert;
 
-            float texU = float(this->gridSize);
-            float texV = float(this->gridSize);
+            //float texU = float(this->gridSize);
+            //float texV = float(this->gridSize);
             int counter = 0;
 
             std::vector<std::vector<float>> Grid;
@@ -116,9 +116,9 @@ namespace Epsilon
 
             int mod = 0;
             counter = 0;
-            for (unsigned int i = 0; i < this->gridSize; i++)
+            for (int i = 0; i < this->gridSize; i++)
             {
-                for (unsigned int j = 0; j < this->gridSize; j++)
+                for (int j = 0; j < this->gridSize; j++)
                 {
                     if (i > 0 && j > 0 && i < Grid.size() - 1 && j < Grid.size() - 1)
                     {
@@ -196,7 +196,7 @@ namespace Epsilon
 
             this->CollisionObject = TerrainPhysicsMesh;
         }
-        catch (std::exception e)
+        catch (std::exception& e)
         {
             std::cout << "Exception caught at Terrain::GenerateGrid()"
                       << "\nInfo: " << e.what() << std::endl;
@@ -247,7 +247,7 @@ namespace Epsilon
 
     bool Terrain::LoadTexture(const char *diff)
     {
-        int texwidth, texheight, texchannels;
+        int texwidth = 0, texheight = 0, texchannels;
 
         eTexture dTex(diff);
 
