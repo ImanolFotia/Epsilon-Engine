@@ -43,6 +43,8 @@ namespace Epsilon
             
             //mCubemapIndex = ResourceManager::Get().getNearestCubemapIndex(pos);
             //mGIIndex = ResourceManager::Get().NearestCubeMap(pos) - 1;
+            
+
             if(finalCubemaps)
                 glBindTexture(GL_TEXTURE_CUBE_MAP, ResourceManager::Get().useCubeMap(mCubemapIndex));
 

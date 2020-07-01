@@ -37,6 +37,11 @@ namespace Epsilon
             //if(ComponentList.at(i)->updateIfOutOfView)
             c.second->Update();
         }
+
+        for(auto &e: mChildrenEntities) 
+        {
+           // e->Update();
+        }
     }
 
     void EntityBase::Render()
@@ -44,6 +49,11 @@ namespace Epsilon
         for (auto &c : ComponentList)
         {
             c.second->Render();
+        }
+        
+        for(auto &e: mChildrenEntities) 
+        {
+           // e->Render();
         }
     }
 } // namespace Epsilon

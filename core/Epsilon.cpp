@@ -52,7 +52,7 @@ ThreadPool::ThreadPool_ptr ThreadPool::_instance = nullptr;
 
 namespace Epsilon
 {
-ResourceManager ResourceManager::instance;
+    ResourceManager ResourceManager::instance;
 
     Epsilon::Epsilon(GLFWwindow *&win)
     {
@@ -583,10 +583,9 @@ ResourceManager ResourceManager::instance;
         //33 34 14
         //-32 54 -13
 
-
         //-32 34 -13
         //33 54 14
-        glm::vec3 initCubemapPosition = glm::vec3(-32.0, 34, -13.0);
+        glm::vec3 initCubemapPosition = glm::vec3(-37.0, 3, -20.0);
 
         auto MenuAudio = [&]() -> void { m_AudioSystem->PlayByID(2); };
 
@@ -600,7 +599,7 @@ ResourceManager ResourceManager::instance;
 
         PP = std::move((shared_ptr<PostProcess>)(new PostProcess()));
 
-        m_PlayerCapsule = (std::shared_ptr<Player>)new Player(-10, 15.8, -10);
+        m_PlayerCapsule = (std::shared_ptr<Player>)new Player(10, 15.8, -10);
         //m_PlayerCapsule = (std::shared_ptr<Game::Player>) new Game::Player(170.0,5.25,-202.0, this->rM);
 
         //m_Pick = (std::shared_ptr<Pick>) (new Pick(rM->m_PhysicsWorld->world));
@@ -632,7 +631,6 @@ ResourceManager ResourceManager::instance;
         this->RenderShadows();
         shadowMap->UnbindShadowFrameBuffer();
 
-
         //this->mCubemap[1] = (std::shared_ptr<CubeMap>)new CubeMap(55, glm::vec3(10, 7, 10));
 
         glClearColor(0.1, 0.1, 0.1, 1.0);
@@ -660,7 +658,7 @@ ResourceManager ResourceManager::instance;
                 for (int c = 0; c < 7; c++)
                 {
 
-                    this->mCubemap[a][b][c] = (std::shared_ptr<CubeMap>)new CubeMap(index, initCubemapPosition + glm::vec3(a, b, c) * glm::vec3(8.f, 8.0, 8.2));
+                    this->mCubemap[a][b][c] = (std::shared_ptr<CubeMap>)new CubeMap(index, initCubemapPosition + glm::vec3(a, b, c) * glm::vec3(12.0, 6.0, 7.0));
                     std::shared_ptr<Shader> cubeShader = this->mCubemap[a][b][c]->getShader();
                     float rotation = 0.5 * glfwGetTime();
                     for (int index = 0; index < 6; ++index)
@@ -769,16 +767,16 @@ ResourceManager ResourceManager::instance;
                     index++;
                 }
 
-                ResourceManager::Get().cubemapsLoaded = true;
+        ResourceManager::Get().cubemapsLoaded = true;
 
         glCullFace(GL_BACK);
-
+/*
         {
             for (int a = 0; a < 7; a++)
                 for (int b = 0; b < 5; b++)
                     for (int c = 0; c < 7; c++)
                     {
-                        glm::vec3 positions = initCubemapPosition + glm::vec3(a, b, c) * glm::vec3(8.f, 8.0, 8.2);
+                        glm::vec3 positions = initCubemapPosition + glm::vec3(a, b, c) * glm::vec3(12.0, 6.0, 7.0);
                         glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
                         std::string tModelName = "models/probe.eml";
 
@@ -791,8 +789,8 @@ ResourceManager ResourceManager::instance;
                         _Entity->addComponent(_RComp);
                         EntityList.push_back(_Entity);
                     }
-        }
-        
+        }*/
+
         ResourceManager::Get().loadQueuedTextures();
 
         for (unsigned int i = 0; i < EntityList.size(); ++i)
@@ -952,35 +950,19 @@ ResourceManager ResourceManager::instance;
         glCullFace(GL_BACK);
 
         glDisable(GL_CULL_FACE);
-        
+
         for (unsigned int i = 0; i < EntityList.size(); ++i)
         {
-            EntityList[i]->Update();
-            Model = glm::mat4(1.0);
-            visible = true;
             if (EntityList[i]->HasRenderComponent())
             {
                 shader->Use();
                 shader->PushUniform("parallaxOn", ParallaxOn);
-                ScaleMatrix = glm::scale(glm::mat4(1), EntityList[i]->getScale());
-                TranslationMatrix = glm::translate(glm::mat4(1), EntityList[i]->getPosition());
-                RotationMatrix = glm::toMat4(EntityList[i]->getRotation());
-                Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
 
                 ResourceManager::Get().setModelUniforms(EntityList[i]->getModelPath(), shader, EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation(),
                                                         EntityList[i]->getPrevPosition(), EntityList[i]->getPrevScale(), EntityList[i]->getPrevRotation(),
                                                         eCamera);
-                //std::cout << "llega render 3d" <<std::endl;
-                BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), Model);
-                visible = BSPMap->Frustum.BoxInFrustum(EntityList[i]->getBoundingBox());
             }
-            if (visible)
-            {
-                EntityList[i]->Render();
-            }
-            else
-            {
-            }
+            EntityList[i]->Render();
         }
         /*glCache::*/
         glEnable(GL_CULL_FACE);
@@ -1032,7 +1014,6 @@ ResourceManager ResourceManager::instance;
             this->SetUniforms(Shaders["ShadowMapping"], EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation());
             ResourceManager::Get().useModel(EntityList[i]->getModelPath(), Shaders["ShadowMapping"], EntityList[i]->getPosition());
         }
-        
 
         //mPatch->updateVertexBuffers(mCloth->getVertices());
         //this->SetUniforms(Shaders["ShadowMapping"], glm::vec3(0.0), glm::vec3(1.0), glm::quat(0.0f, 0.0, 0.0, 0.0));
@@ -1048,7 +1029,7 @@ ResourceManager ResourceManager::instance;
         Shaders["ShadowMapping"]->Use();
         this->SetUniforms(Shaders["ShadowMapping"], glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.1, 0.1, 0.1), glm::quat(0.0, 0.0, 0.0, 0.0));
         BSPMap->RenderLevel(eCamera->getPosition(), Shaders["ShadowMapping"]->getProgramID(), false);
-        
+
         /*
     Shaders["MD5ShadowMapping"]->Use();
     glUniformMatrix4fv(glGetUniformLocation(Shaders["MD5ShadowMapping"]->getProgramID(), "mSkinned"), 150, GL_FALSE, &m_AnimModel->m_AnimatedBones[0][0][0]);
@@ -1113,12 +1094,12 @@ ResourceManager ResourceManager::instance;
         GPU _gpu;
         int DEBUG_MODE = 3;
 /*
-        IO::PrintLine("Position: x = ", 
-        Helpers::floatTostring(this->eCamera->getPosition().x), 
-        " y = ", 
-        Helpers::floatTostring(this->eCamera->getPosition().y), 
-        " z = ", 
-        Helpers::floatTostring(this->eCamera->getPosition().z));*/
+        IO::PrintLine("Position: x = ",
+                      Helpers::floatTostring(this->eCamera->getPosition().x),
+                      " y = ",
+                      Helpers::floatTostring(this->eCamera->getPosition().y),
+                      " z = ",
+                      Helpers::floatTostring(this->eCamera->getPosition().z));
         /*
     if(DEBUG_MODE >= 1) {
         this->text->RenderText("FPS: " + Helpers::intTostring(acumfps), 0.01, 0.95, 0.5, glm::vec3(1,1,1));
@@ -1264,7 +1245,7 @@ ResourceManager ResourceManager::instance;
         else
         {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            this->m_CameraMode = NO_CLIP;
+            this->m_CameraMode = PLAYER_CONTROLLED;
         }
 
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::N])
@@ -1337,6 +1318,8 @@ ResourceManager ResourceManager::instance;
 
             this->ComputeShadow();
 
+            this->CalculateVisibility();
+
             this->ProcessFrame();
 
             this->RenderFrame();
@@ -1346,6 +1329,29 @@ ResourceManager ResourceManager::instance;
             this->SwapBuffers();
 
             glCache::DrawCalls = 0;
+        }
+    }
+
+    void Epsilon::CalculateVisibility()
+    {
+        for (unsigned int i = 0; i < EntityList.size(); ++i)
+        {
+            EntityList[i]->Update();
+
+            if (!EntityList[i]->HasRenderComponent())
+                continue;
+
+            Component::RenderComponent_ptr rComponent = EntityList[i]->getComponent<Component::RenderComponent_ptr>();
+
+            glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1), EntityList[i]->getScale());
+            glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), EntityList[i]->getPosition());
+            glm::mat4 RotationMatrix = glm::toMat4(EntityList[i]->getRotation());
+            glm::mat4 Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
+
+            BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), Model);
+            bool visible = BSPMap->Frustum.BoxInFrustum(EntityList[i]->getBoundingBox());
+
+            rComponent->setVisibility(visible);
         }
     }
 

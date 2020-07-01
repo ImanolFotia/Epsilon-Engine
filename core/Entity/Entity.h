@@ -51,9 +51,18 @@ public:
         ComponentList[t->getType()] = t;
         this->mID = ComponentList.size();
 
+        //mChildrenEntities
+
         //mCollInfo.setName("Entity_" + std::string(Helpers::to_hex(toHash())));
 
         return shared_from_this();
+    }
+    std::shared_ptr<EntityBase> addEntity(std::shared_ptr<EntityBase> t)
+    {
+        
+        //mChildrenEntities.push_back(t);
+
+        //return shared_from_this();
     }
 
     ~EntityBase()
@@ -99,6 +108,8 @@ private:
     int mID;
     std::string modelPath;
     std::unordered_map<uint8_t, Component_ptr> ComponentList;
+
+    std::vector<std::shared_ptr<EntityBase>> mChildrenEntities;
 
 public:
     glm::vec3 getPosition()

@@ -35,7 +35,7 @@ void main()
 
 */
 
-const float offset = 1.0 / 600.0;  
+const float offset = 1.0 / 500.0;  
 
 void main()
 {
@@ -68,6 +68,7 @@ void main()
         sampleTex[i] = vec3(texture(texture0, TexCoords.st + offsets[i]));
     }
     vec3 col = vec3(0.0);
+
     for(int i = 0; i < 9; i++)
         col += sampleTex[i] * kernel[i];
     

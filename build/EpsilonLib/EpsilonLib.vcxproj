@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\core\App.hpp" />
+    <ClInclude Include="..\..\core\Audio\Audio.h" />
+    <ClInclude Include="..\..\core\Audio\AudioElement.h" />
+    <ClInclude Include="..\..\core\Audio\AudioListener.h" />
+    <ClInclude Include="..\..\core\Audio\Loaders\WAVFile.h" />
+    <ClInclude Include="..\..\core\BSP.h" />
+    <ClInclude Include="..\..\core\BSPFace.h" />
+    <ClInclude Include="..\..\core\BSPfile.h" />
+    <ClInclude Include="..\..\core\BSPformat.h" />
+    <ClInclude Include="..\..\core\camera.h" />
+    <ClInclude Include="..\..\core\CBitset.h" />
+    <ClInclude Include="..\..\core\CommandFunctions.h" />
+    <ClInclude Include="..\..\core\ConvexHull.hpp" />
+    <ClInclude Include="..\..\core\Core.hpp" />
+    <ClInclude Include="..\..\core\CubeMap.h" />
+    <ClInclude Include="..\..\core\cubemapRenderer.h" />
+    <ClInclude Include="..\..\core\Driver\API\Context.hpp" />
+    <ClInclude Include="..\..\core\Driver\API\OpenGL\Context.hpp" />
+    <ClInclude Include="..\..\core\Driver\API\OpenGL\FrameBuffer.h" />
+    <ClInclude Include="..\..\core\Driver\API\OpenGL\GlCache.h" />
+    <ClInclude Include="..\..\core\Driver\API\OpenGL\HelperFunctions\CheckError.h" />
+    <ClInclude Include="..\..\core\Driver\API\OpenGL\HelperFunctions\FullScreenQuad.h" />
+    <ClInclude Include="..\..\core\Driver\API\OpenGL\HelperFunctions\Quad.h" />
+    <ClInclude Include="..\..\core\Driver\API\OpenGL\Renderers\DeferredRenderer.h" />
+    <ClInclude Include="..\..\core\Driver\API\OpenGL\Renderers\renderer.h" />
+    <ClInclude Include="..\..\core\Driver\API\OpenGL\RenderTarget.h" />
+    <ClInclude Include="..\..\core\Driver\API\OpenGL\ShaderPreProcessor.h" />
+    <ClInclude Include="..\..\core\Driver\API\OpenGL\ShaderStorageBuffer.h" />
+    <ClInclude Include="..\..\core\Driver\API\OpenGL\Texture1D.hpp" />
+    <ClInclude Include="..\..\core\Driver\API\OpenGL\Texture2D.hpp" />
+    <ClInclude Include="..\..\core\Driver\API\OpenGL\VertexArrayObject.h" />
+    <ClInclude Include="..\..\core\Driver\API\OpenGL\VertexBufferObject.h" />
+    <ClInclude Include="..\..\core\Driver\API\TextureBase.hpp" />
+    <ClInclude Include="..\..\core\Driver\Audio\AudioDriver.hpp" />
+    <ClInclude Include="..\..\core\Driver\Audio\XAudio2\backup\audiodefs.h" />
+    <ClInclude Include="..\..\core\Driver\Audio\XAudio2\backup\comdecl.h" />
+    <ClInclude Include="..\..\core\Driver\Audio\XAudio2\backup\dxcompat.hpp" />
+    <ClInclude Include="..\..\core\Driver\Audio\XAudio2\backup\XAudio2.h" />
+    <ClInclude Include="..\..\core\Driver\Audio\XAudio2\backup\XAudio2Compat.hpp" />
+    <ClInclude Include="..\..\core\Driver\Audio\XAudio2\backup\xma2defs.h" />
+    <ClInclude Include="..\..\core\Driver\Audio\XAudio2\XAudio2.hpp" />
+    <ClInclude Include="..\..\core\Driver\Network\ConnectionEntity.hpp" />
+    <ClInclude Include="..\..\core\Driver\Network\Socket.hpp" />
+    <ClInclude Include="..\..\core\emlFormat.h" />
+    <ClInclude Include="..\..\core\empFormat.h" />
+    <ClInclude Include="..\..\core\Engine.hpp" />
+    <ClInclude Include="..\..\core\Entity\ClothComponent.hpp" />
+    <ClInclude Include="..\..\core\Entity\Component.h" />
+    <ClInclude Include="..\..\core\Entity\Entity.h" />
+    <ClInclude Include="..\..\core\Entity\MovementComponent.hpp" />
+    <ClInclude Include="..\..\core\Entity\PhysicsComponent.hpp" />
+    <ClInclude Include="..\..\core\Entity\PlayerComponent.hpp" />
+    <ClInclude Include="..\..\core\Entity\RenderComponent.hpp" />
+    <ClInclude Include="..\..\core\Entity\SoundComponent.hpp" />
+    <ClInclude Include="..\..\core\Epsilon.h" />
+    <ClInclude Include="..\..\core\EpsilonMemory.h" />
+    <ClInclude Include="..\..\core\Frustum.h" />
+    <ClInclude Include="..\..\core\Grass.h" />
+    <ClInclude Include="..\..\core\GUI\Button.h" />
+    <ClInclude Include="..\..\core\GUI\CheckBox.h" />
+    <ClInclude Include="..\..\core\GUI\Console.h" />
+    <ClInclude Include="..\..\core\GUI\Container.h" />
+    <ClInclude Include="..\..\core\GUI\GUI.h" />
+    <ClInclude Include="..\..\core\GUI\Label.h" />
+    <ClInclude Include="..\..\core\GUI\Panel.h" />
+    <ClInclude Include="..\..\core\GUI\Widget.h" />
+    <ClInclude Include="..\..\core\GUI_Initialization.h" />
+    <ClInclude Include="..\..\core\Helpers.hpp" />
+    <ClInclude Include="..\..\core\Image\BMP.hpp" />
+    <ClInclude Include="..\..\core\Image\DDS.h" />
+    <ClInclude Include="..\..\core\Image\DDSFile.h" />
+    <ClInclude Include="..\..\core\Image\Image.hpp" />
+    <ClInclude Include="..\..\core\Image\TGA.hpp" />
+    <ClInclude Include="..\..\core\Init.hpp" />
+    <ClInclude Include="..\..\core\IO\File\Json.hpp" />
+    <ClInclude Include="..\..\core\IO\IO.hpp" />
+    <ClInclude Include="..\..\core\IO\Joystick\Joystick.h" />
+    <ClInclude Include="..\..\core\IO\Joystick\JoystickWrapper.h" />
+    <ClInclude Include="..\..\core\IO\Joystick\Mappings.hpp" />
+    <ClInclude Include="..\..\core\IO\KeyBoard.h" />
+    <ClInclude Include="..\..\core\IO\KeyboardWrapper.h" />
+    <ClInclude Include="..\..\core\IO\Mouse.h" />
+    <ClInclude Include="..\..\core\Light.h" />
+    <ClInclude Include="..\..\core\LightProbe.h" />
+    <ClInclude Include="..\..\core\Log.h" />
+    <ClInclude Include="..\..\core\MD5_Anim.h" />
+    <ClInclude Include="..\..\core\MD5_Model.h" />
+    <ClInclude Include="..\..\core\multithread\Job.h" />
+    <ClInclude Include="..\..\core\multithread\Lambda.hpp" />
+    <ClInclude Include="..\..\core\multithread\Mutex.h" />
+    <ClInclude Include="..\..\core\multithread\Promise.hpp" />
+    <ClInclude Include="..\..\core\multithread\Thread.h" />
+    <ClInclude Include="..\..\core\multithread\ThreadManager.hpp" />
+    <ClInclude Include="..\..\core\multithread\ThreadPool.hpp" />
+    <ClInclude Include="..\..\core\Particle.h" />
+    <ClInclude Include="..\..\core\ParticleProxy.h" />
+    <ClInclude Include="..\..\core\ParticleRenderer.h" />
+    <ClInclude Include="..\..\core\ParticleSystem.h" />
+    <ClInclude Include="..\..\core\Physics\ClothPhysicObject.h" />
+    <ClInclude Include="..\..\core\Physics\CollisionInfo.h" />
+    <ClInclude Include="..\..\core\Physics\CubePhysicObject.h" />
+    <ClInclude Include="..\..\core\Physics\PhysicObject.h" />
+    <ClInclude Include="..\..\core\Physics\Physics.h" />
+    <ClInclude Include="..\..\core\Physics\PlayerControlledPhysicsObject.h" />
+    <ClInclude Include="..\..\core\Physics\SpherePhysicObject.h" />
+    <ClInclude Include="..\..\core\Physics\TriangleMeshPhysicObject.h" />
+    <ClInclude Include="..\..\core\Picking.h" />
+    <ClInclude Include="..\..\core\Platform\Device.hpp" />
+    <ClInclude Include="..\..\core\Platform\WindowBase.hpp" />
+    <ClInclude Include="..\..\core\Platform\WindowHandle.hpp" />
+    <ClInclude Include="..\..\core\Platform\Windows\Window.hpp" />
+    <ClInclude Include="..\..\core\Platform\Windows\WindowsFormsComponent.hpp" />
+    <ClInclude Include="..\..\core\Player.h" />
+    <ClInclude Include="..\..\core\PointShadow.hpp" />
+    <ClInclude Include="..\..\core\PostProcess.h" />
+    <ClInclude Include="..\..\core\PostProcess\BlurMips.hpp" />
+    <ClInclude Include="..\..\core\PostProcess\Effect.h" />
+    <ClInclude Include="..\..\core\PostProcess\Helpers.hpp" />
+    <ClInclude Include="..\..\core\PostProcess\MotionBlur.h" />
+    <ClInclude Include="..\..\core\PostProcess\ScreenSpaceReflections.h" />
+    <ClInclude Include="..\..\core\PostProcess\SSAO.h" />
+    <ClInclude Include="..\..\core\Primitives\Cube.hpp" />
+    <ClInclude Include="..\..\core\Primitives\Cylinder.hpp" />
+    <ClInclude Include="..\..\core\Primitives\Plane.hpp" />
+    <ClInclude Include="..\..\core\Primitives\Primitive.hpp" />
+    <ClInclude Include="..\..\core\Primitives\Sphere.hpp" />
+    <ClInclude Include="..\..\core\Primitives\Toroid.hpp" />
+    <ClInclude Include="..\..\core\ProgramData.h" />
+    <ClInclude Include="..\..\core\Renderer\Decal.hpp" />
+    <ClInclude Include="..\..\core\Renderer\Drawable.hpp" />
+    <ClInclude Include="..\..\core\Renderer\Material.hpp" />
+    <ClInclude Include="..\..\core\Renderer\MaterialPBR.hpp" />
+    <ClInclude Include="..\..\core\Renderer\Mesh.h" />
+    <ClInclude Include="..\..\core\Renderer\Model.h" />
+    <ClInclude Include="..\..\core\Renderer\Patch.h" />
+    <ClInclude Include="..\..\core\Renderer\Renderer.hpp" />
+    <ClInclude Include="..\..\core\Renderer\Terrain.h" />
+    <ClInclude Include="..\..\core\ResourceManager.h" />
+    <ClInclude Include="..\..\core\Scripts\LuaScript.hpp" />
+    <ClInclude Include="..\..\core\Shader.h" />
+    <ClInclude Include="..\..\core\ShadowMapping.h" />
+    <ClInclude Include="..\..\core\Skybox.h" />
+    <ClInclude Include="..\..\core\SkyboxData.h" />
+    <ClInclude Include="..\..\core\SphericalHarmonics.h" />
+    <ClInclude Include="..\..\core\SplashScreen.h" />
+    <ClInclude Include="..\..\core\Sun.h" />
+    <ClInclude Include="..\..\core\sys\Console.hpp" />
+    <ClInclude Include="..\..\core\sys\CPUID.h" />
+    <ClInclude Include="..\..\core\sys\filesystem.h" />
+    <ClInclude Include="..\..\core\sys\GPU.hpp" />
+    <ClInclude Include="..\..\core\Text.h" />
+    <ClInclude Include="..\..\core\Texture.h" />
+    <ClInclude Include="..\..\core\Types.h" />
+    <ClInclude Include="..\..\core\Water.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\core\Audio\Audio.cpp" />
+    <ClCompile Include="..\..\core\BSP.cpp" />
+    <ClCompile Include="..\..\core\BSPFace.cpp" />
+    <ClCompile Include="..\..\core\Camera.cpp" />
+    <ClCompile Include="..\..\core\cubemapRenderer.cpp" />
+    <ClCompile Include="..\..\core\Driver\API\OpenGL\Context.cpp" />
+    <ClCompile Include="..\..\core\Engine.cpp" />
+    <ClCompile Include="..\..\core\Entity\Entity.cpp" />
+    <ClCompile Include="..\..\core\Epsilon.cpp" />
+    <ClCompile Include="..\..\core\Frustum.cpp" />
+    <ClCompile Include="..\..\core\Image\DDS.cpp" />
+    <ClCompile Include="..\..\core\Image\Image.cpp" />
+    <ClCompile Include="..\..\core\IO\KeyBoard.cpp" />
+    <ClCompile Include="..\..\core\main.cpp" />
+    <ClCompile Include="..\..\core\MD5_Anim.cpp" />
+    <ClCompile Include="..\..\core\MD5_Model.cpp" />
+    <ClCompile Include="..\..\core\ParticleSystem.cpp" />
+    <ClCompile Include="..\..\core\Physics\ClothPhysicObject.cpp" />
+    <ClCompile Include="..\..\core\Physics\CubePhysicObject.cpp" />
+    <ClCompile Include="..\..\core\Physics\Physics.cpp" />
+    <ClCompile Include="..\..\core\Physics\SpherePhysicObject.cpp" />
+    <ClCompile Include="..\..\core\Physics\TriangleMeshPhysicObject.cpp" />
+    <ClCompile Include="..\..\core\Picking.cpp" />
+    <ClCompile Include="..\..\core\Player.cpp" />
+    <ClCompile Include="..\..\core\PostProcess.cpp" />
+    <ClCompile Include="..\..\core\PostProcess\BlurMips.cpp" />
+    <ClCompile Include="..\..\core\PostProcess\MotionBlur.cpp" />
+    <ClCompile Include="..\..\core\PostProcess\ScreenSpaceReflections.cpp" />
+    <ClCompile Include="..\..\core\PostProcess\SSAO.cpp" />
+    <ClCompile Include="..\..\core\ProgramData.cpp" />
+    <ClCompile Include="..\..\core\Renderer\Mesh.cpp" />
+    <ClCompile Include="..\..\core\Renderer\Model.cpp" />
+    <ClCompile Include="..\..\core\Renderer\Patch.cpp" />
+    <ClCompile Include="..\..\core\Renderer\Terrain.cpp" />
+    <ClCompile Include="..\..\core\ResourceManager.cpp" />
+    <ClCompile Include="..\..\core\Scripts\LuaScript.cpp" />
+    <ClCompile Include="..\..\core\Shader.cpp" />
+    <ClCompile Include="..\..\core\ShadowMapping.cpp" />
+    <ClCompile Include="..\..\core\Skybox.cpp" />
+    <ClCompile Include="..\..\core\SphericalHarmonics.cpp" />
+    <ClCompile Include="..\..\core\Sun.cpp" />
+    <ClCompile Include="..\..\core\sys\filesystem.cpp" />
+    <ClCompile Include="..\..\core\Water.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{7c301e0c-43ee-4cae-b762-b15bd05b2199}</ProjectGuid>
+    <RootNamespace>EpsilonLib</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>H:\Epsilon\Epsilon Engine\thirdparty\OpenGL\include;H:\Epsilon\Epsilon Engine\thirdparty\glew\include;H:\Epsilon\Epsilon Engine\thirdparty\lua-5.3.5\src;H:\Epsilon\Epsilon Engine\thirdparty\openal-soft\include;H:\Epsilon\Epsilon Engine\thirdparty\soil\Simple OpenGL Image Library\src;H:\Epsilon\Epsilon Engine\thirdparty\glfw\include;H:\Epsilon\Epsilon Engine\thirdparty\bullet3\src;H:\Epsilon\Epsilon Engine\core;H:\Epsilon\Epsilon Engine\thirdparty\json-develop\include;H:\Epsilon\Epsilon Engine\thirdparty\glm;H:\Epsilon\Epsilon Engine\thirdparty\inih\cpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

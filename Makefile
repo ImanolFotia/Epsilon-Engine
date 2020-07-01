@@ -42,9 +42,9 @@ OBJECTS_RELEASE := $(patsubst $(SOURCE_DIR)/%.cpp,$(OBJS_DIR_RELEASE)/%.o,$(SOUR
 RES_OBJECTS := ./obj/resources.o
 
 #DX_SDK_INCLUDE := /c/Program\ Files\ \\(x86\\)/Microsoft\ DirectX\ SDK\ \\(June\ 2010\\)/Include
-DX_SDK_INCLUDE := D:/Epsilon/Epsilon\ Engine/thirdparty/XAudio2/microsoft.xaudio2.redist.1.2.1/build/native/include
+DX_SDK_INCLUDE := H:/Epsilon/Epsilon\ Engine/thirdparty/XAudio2/microsoft.xaudio2.redist.1.2.1/build/native/include
 #DX_SDK_LIB := /c/Program\ Files\ \\(x86\\)/Microsoft\ DirectX\ SDK\ \\(June\ 2010\\)/Lib/x64
-DX_SDK_LIB := D:/Epsilon\Epsilon\ Engine/thirdparty/XAudio2/microsoft.xaudio2.redist.1.2.1/build/native/release/lib/x64
+DX_SDK_LIB := H:/Epsilon\Epsilon\ Engine/thirdparty/XAudio2/microsoft.xaudio2.redist.1.2.1/build/native/release/lib/x64
 #- sudo add-apt-repository http://ppa.launchpad.net/keithw/glfw3/ubuntu -y
 #includes for windows and linux combined
 
@@ -57,8 +57,7 @@ INCLUDE_LIBS:= -I$(LIB)/glm \
 -I$(LIB)/inih/cpp \
 -I$(LIB)/lua-5.3.5/src \
 -I$(LIB)/stb-master \
--I$(LIB)json-develop/include \
--I$(DX_SDK_INCLUDE)
+-I$(LIB)json-develop/include 
 else
 INCLUDE_LIBS:=  -I$(LIB)/inih/cpp \
 -I$(LIB)/glm \
@@ -89,13 +88,13 @@ LIBS_DIR := -L$(LIB)/inih \
 endif
 
 ifeq "$(OS)" "Windows_NT"
-LIBS:= -lSOIL -lglfw3dll -lopengl32 -linih -lglew32.dll -lkernel32 -luser32 -lgdi32 $(DX_SDK_LIB)/xaudio2_9redist.lib -lxapobaseredist_md -lxapobaseredist -lOpenAL32.dll -fopenmp -lgomp -llua -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
+LIBS:= -lSOIL -lglfw3dll -lopengl32 -linih -lglew32.dll -lgdi32 -lOpenAL32.dll -llua -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
 else 
-LIBS:= -lSOIL -lglfw -linih -lGLEW -lGLU -lGL -lopenal -fopenmp -lgomp -llua5.3 -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
+LIBS:= -lSOIL -lglfw -linih -lGLEW -lGLU -lGL -lopenal -llua5.3 -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
 endif
 
 LD_FLAGS := -fopenmp
-CPPFLAGS := --std=c++17
+CPPFLAGS := --std=c++17 -static -static-libgcc -static-libstdc++
 
 DEBUG_FLAGS := -g -DDEBUG -ggdb -g3 -gdwarf-4 -fvar-tracking-assignments
 
@@ -115,7 +114,7 @@ epsilon-static-lib-release: clean $(OUT_LIB)/Release/$(LIB_NAME)
 
 
 resource:
-ifeq "$(OS)" "Windows_NT"
+ifeq "$(OS)" "Windows_NT" 
 	-@mkdir -p ./obj
 	windres -i $(RES) -o ./obj/resources.o
 else 

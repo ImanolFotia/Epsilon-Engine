@@ -121,6 +121,8 @@ namespace Epsilon
 
         void RenderParticles();
 
+        void CalculateVisibility();
+
     public:
         std::shared_ptr<Camera> eCamera;
         std::shared_ptr<Patch> mPatch;

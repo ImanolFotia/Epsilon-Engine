@@ -1,4 +1,4 @@
-#version 440 core
+#version 450 core
 
 in vec2 TexCoords;
 
@@ -216,6 +216,62 @@ float SubsurfaceScattering(in vec3 L, in vec3 N, in vec3 V, in vec3 P, in bool A
   return fLT;
 }
 
+/*
+GLSL implementation of NormalMappingShadows 
+Author: Boris Vorontsov (c) 2020
+http://enbdev.com
+http://enbdev.com/doc_normalmappingshadows.htm
+*/
+float NormalMapShadows(in vec3 lightdir) {
+
+    float LodBias = 1.0;
+    float HeightScale = 0.1;
+    float ShadowHardness = 30.0;
+    float SampleCount = 50;
+
+    float invsamplecount = 1.0/SampleCount;
+	float hardness = HeightScale * ShadowHardness;
+
+	vec2 uvddx = dFdx(TexCoords) * LodBias;
+	vec2 uvddy = dFdy(TexCoords) * LodBias;
+    //lightdir = (uView * vec4(lightdir, 1.0)).xyz;
+    lightdir = normalize(lightdir);
+    vec2 dir = lightdir.xy * vec2(1.0,-1.0) * HeightScale;
+    
+	vec3 normal = textureGrad(gNormal, TexCoords, uvddx, uvddy).rgb;
+    
+    
+	float step = invsamplecount;
+	float pos = step;
+
+	float slope = 0.0;
+	float maxslope = 0.0;
+
+    float nmshadow = 0.0;
+
+    while (pos <= 1.0)
+	{
+		vec3 tmpNormal = textureGrad(gNormal, TexCoords+ dir * pos, uvddx, uvddy).rgb;
+		//tmpNormal = tmpNormal * 2.0 - 1.0;
+
+		float tmpLighting = dot(lightdir, tmpNormal);
+
+		float shadowed = -tmpLighting;
+
+		slope += shadowed;
+
+		if (slope > maxslope) //more suitable for calculating soft shadows by distance or/and angle
+		{
+			nmshadow += hardness * (1.0-pos);
+		}
+		maxslope = max(maxslope, slope);
+
+		pos += step;
+	}
+
+    return saturate(1.0 - nmshadow * invsamplecount);;
+}
+
 void main()
 {
 
@@ -245,7 +301,7 @@ void main()
     	return;
     }
 
-    Specular = textureLod(gNormal, TexCoords, 0).a;
+    Specular = texture(gNormal, TexCoords).a;
     SpecDiff = Diffuse * Specular;
     AmbientOcclusion = textureLod(ssaoColorBufferBlur, TexCoords, 0).r;
     vec4 FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0f);
@@ -267,18 +323,22 @@ void main()
 
     shadow  = poissonShadowMapping(FragPosLightSpace);
 
+
     vec3 light = vec3(0.0);
     ambient = (irradiance_subsurf.rgb * Diffuse);
 
     //if(hdr)
     //  ambient *= (AmbientOcclusion);
+    //shadow = min(1.0-pow(NormalMapShadows(lightDir), 3.0), shadow);
 
     light += CalculateDirectionalPBR();
     
     vec3 L = normalize(lightDir);
     float SSS = SubsurfaceScattering(L, Normal, V, FragPos, false);
 
-    light += SSS * pow(Diffuse, vec3(2.2)) * irradiance_subsurf.a;
+    //shadow = 0.0;//min(NormalMapShadows(lightDir)*0.2, shadow);
+
+    //light += SSS * pow(Diffuse, vec3(2.2)) * irradiance_subsurf.a;
     
     for(int i = 0 ; i < outBuffer.Lights.length() ; i++)
     {
@@ -316,7 +376,7 @@ void main()
 
     vec3 fogColor = clamp(mix(Gray, Background, clamp(lightDir.y, 0.0, 1.0)), vec3(0.00011), normalize(vec3(221,221,221)));
 
-
+    //vec3 testNormals = ((vec4(Normal, 1.0) * 0.5+0.5)).rgb;
     FragColor.rgb = light;//max(vec3(0.0), mix(SkyColor, light, visibility));
     vec3 testHDR = FragColor.rgb;
     float brightness = dot(testHDR.rgb , vec3(0.2126, 0.7152, 0.0722));

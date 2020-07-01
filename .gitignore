@@ -4,14 +4,12 @@
 *.obj
 *.exe
 *.jar
-*.sln
 *.suo
 *.lib
 *.log
 *.pdb
 *.idb
 *.exe.metagen
-*.vcxproj
 *.vcxproj.filters
 *.vcxproj.user
 *.db
