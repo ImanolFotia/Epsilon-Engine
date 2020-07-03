@@ -90,7 +90,7 @@ endif
 ifeq "$(OS)" "Windows_NT"
 LIBS:= -lSOIL -lglfw3dll -lopengl32 -linih -lglew32.dll -lgdi32 -lOpenAL32.dll -llua -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
 else 
-LIBS:= -lSOIL -lglfw -linih -lGLEW -lGLU -lGL -lopenal -llua5.3 -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
+LIBS:= -lSOIL -lglfw -linih -lGLEW -lGLU -lGL -lopenal -fopenmp -lgomp -llua5.3 -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
 endif
 
 LD_FLAGS := -fopenmp
