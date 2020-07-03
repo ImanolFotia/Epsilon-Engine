@@ -27,7 +27,7 @@ float rayStep = 0.1;
 const float minRayStep = 0.1;
 const float maxRayStep = 0.1;
 const float rayIncrement = 1.01;
-const float maxSteps = 50;
+const float maxSteps = 30;
 const float searchDist = 5;
 const float searchDistInv = 0.2;
 const int numBinarySearchSteps = 5;
@@ -213,8 +213,6 @@ vec3 BinarySearch(inout vec3 dir, inout vec3 hitCoord, inout float dDepth)
         projectedCoord.xy /= projectedCoord.w;
         projectedCoord.xy = projectedCoord.xy * 0.5 + 0.5;
  
-        //depth = texture(gPosition, projectedCoord.xy, 2.0).x;
-        //depth = PositionFromDepth(textureLod(gDepth, projectedCoord.xy, 3.0).x).z;
         depth = ViewSpaceZFromDepth(textureLod(gDepth, projectedCoord.xy, 0.0).x);
         dDepth = hitCoord.z - depth;
 
@@ -251,7 +249,7 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
  
         //depth = texture(gPosition, projectedCoord.xy, 2.0).x;
         //depth = PositionFromDepth(textureLod(gDepth, projectedCoord.xy, 3.0).x).z;
-        depth = ViewSpaceZFromDepth(textureLod(gDepth, projectedCoord.xy, 2.0).x);
+        depth = ViewSpaceZFromDepth(textureLod(gDepth, projectedCoord.xy, 3.0).x);
 
         if(depth > 1000.0){
             continue;
@@ -263,10 +261,6 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
             if(dDepth < 0.0){   
                 vec4 Result;
                 Result = vec4(BinarySearch(dir, hitCoord, dDepth), 1.0);
-
-                //if(Result.z > 0.5)
-                //    return vec4(0.0); 
-
                 return Result;
             }
         }

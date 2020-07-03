@@ -1,0 +1,7 @@
+--start_demo_name=Fracture demo
+--mouse_move_multiplier=0.400000
+--mouse_wheel_multiplier=0.010000
+--background_color_red= 0.700000
+--background_color_green= 0.700000
+--background_color_blue= 0.800000
+--fixed_timestep= 0.000000
