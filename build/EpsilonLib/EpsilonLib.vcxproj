@@ -319,13 +319,14 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_LIB;EPSILON_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>H:\Epsilon\Epsilon Engine\thirdparty\OpenGL\include;H:\Epsilon\Epsilon Engine\thirdparty\glew\include;H:\Epsilon\Epsilon Engine\thirdparty\lua-5.3.5\src;H:\Epsilon\Epsilon Engine\thirdparty\openal-soft\include;H:\Epsilon\Epsilon Engine\thirdparty\soil\Simple OpenGL Image Library\src;H:\Epsilon\Epsilon Engine\thirdparty\glfw\include;H:\Epsilon\Epsilon Engine\thirdparty\bullet3\src;H:\Epsilon\Epsilon Engine\core;H:\Epsilon\Epsilon Engine\thirdparty\json-develop\include;H:\Epsilon\Epsilon Engine\thirdparty\glm;H:\Epsilon\Epsilon Engine\thirdparty\inih\cpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>H:\Epsilon\Epsilon Engine\thirdparty\glad\include;H:\Epsilon\Epsilon Engine\thirdparty\OpenGL\include;H:\Epsilon\Epsilon Engine\thirdparty\glew\include;H:\Epsilon\Epsilon Engine\thirdparty\lua-5.3.5\src;H:\Epsilon\Epsilon Engine\thirdparty\openal-soft\include;H:\Epsilon\Epsilon Engine\thirdparty\soil\Simple OpenGL Image Library\src;H:\Epsilon\Epsilon Engine\thirdparty\glfw\include;H:\Epsilon\Epsilon Engine\thirdparty\bullet3\src;H:\Epsilon\Epsilon Engine\core;H:\Epsilon\Epsilon Engine\thirdparty\json-develop\include;H:\Epsilon\Epsilon Engine\thirdparty\glm;H:\Epsilon\Epsilon Engine\thirdparty\inih\cpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -333,10 +334,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;BulletSoftBody_Debug.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>BulletSoftBody_Debug.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;OpenAL32.lib;glad.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>H:\Epsilon\Epsilon Engine\thirdparty\openal-soft-1.20.1-bin\libs\Win64;H:\Epsilon\Epsilon Engine\thirdparty\bullet3\buildvs\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>H:\Epsilon\Epsilon Engine\build\EpsilonCreator\x64\Debug;H:\Epsilon\Epsilon Engine\build\glad\x64\Debug;H:\Epsilon\Epsilon Engine\thirdparty\openal-soft-1.20.1-bin\libs\Win64;H:\Epsilon\Epsilon Engine\thirdparty\bullet3\buildvs\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

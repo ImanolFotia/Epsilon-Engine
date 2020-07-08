@@ -11,15 +11,17 @@
 #include <ResourceManager.h>
 #include <memory>
 #include <Types.h>
+
 namespace Epsilon
 {
+    class EntityBase;
     namespace Component
     {
 
         class Component
         {
         public:
-            Component() {}
+            Component(){}
             virtual ~Component()
             {
                 std::cout << "Component Destroyed" << std::endl;
@@ -34,6 +36,9 @@ namespace Epsilon
             virtual glm::vec3 getScale() = 0;
 
             virtual COMPONENT_TYPE getType() = 0;
+
+        protected:
+            EntityBase* mParent;
         };
 
         typedef std::shared_ptr<Component> Component_ptr;

@@ -54,7 +54,7 @@ namespace Epsilon
 {
     ResourceManager ResourceManager::instance;
 
-    Epsilon::Epsilon(GLFWwindow *&win)
+    Epsilon::Epsilon(std::shared_ptr<Platform::WindowBase> win)
     {
         window = win;
         glClear(GL_COLOR_BUFFER_BIT);
@@ -149,12 +149,12 @@ namespace Epsilon
         SplashScreen splsh;
         ClearBuffers();
         splsh.Draw(tmpShader.getProgramID(), texture.getTextureID());
-        std::cout << "Splash llega" << std::endl;
         //this->text->RenderText(text,0.01, 0.83, 0.4, glm::vec3(1,1,1));
 
         //this->text->RenderText(std::string("#include <iostream>\nusing namespace std;\nint main(int argc, char** argv) {\n\tstd::cout << \"Hello, World!\" << std::endl;\n\treturn 0;\n}") ,0.01, 0.79, 0.5, glm::vec3(1,1,1));
 
         this->SwapBuffers();
+        std::cout << "Splash llega" << std::endl;
         texture.Destroy();
     }
 
@@ -228,7 +228,8 @@ namespace Epsilon
 */
         RenderSplashScreen("Initializing Engine...");
 
-        eCamera = std::make_shared<Camera>(glm::vec3(0.0f, 8.25f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        eCamera.push_back(std::make_shared<Camera>(glm::vec3(0.0f, 8.25f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
+        eCamera.push_back(std::make_shared<Camera>(glm::vec3(20.0f, 30.25f, -60.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
 
         shadowMap = std::move((shared_ptr<ShadowMap>)(new ShadowMap(DATA.SHADOWMAP_SIZE, DATA.SHADOWMAP_SIZE, -20.0f, 80.0f)));
 
@@ -542,8 +543,8 @@ namespace Epsilon
             static_pointer_cast<Component::RenderComponent>(_RComp)->setTransparency(false);
             MIN_MAX_POINTS _BoundingBox = ResourceManager::Get().getModelBoundingBox(tModelName);
             Component::Component_ptr _PComp = std::make_shared<Component::PhysicComponent>(100, tPosition, tScale, Physics::Type::CUBE, _BoundingBox);
-
-            _Entity->addComponent(_RComp)->addComponent(_PComp);
+            Component::Component_ptr _SComp = std::make_shared<Component::ScriptComponent>("scripts/test.lua");
+            _Entity->addComponent(_RComp)->addComponent(_PComp)->addComponent(_SComp);
 
             EntityList.push_back(_Entity);
         }
@@ -572,7 +573,7 @@ namespace Epsilon
 
             std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(tPosition, glm::vec3(tScale), tRotation);
 
-            Component::Component_ptr _CComp = std::make_shared<Component::ClothComponent>(tPosition, tScale, tRotation, eCamera);
+            Component::Component_ptr _CComp = std::make_shared<Component::ClothComponent>(tPosition, tScale, tRotation, eCamera[mCurrentCamera]);
 
             std::static_pointer_cast<Component::ClothComponent>(_CComp)->setShader("Cloth");
 
@@ -636,8 +637,8 @@ namespace Epsilon
         glClearColor(0.1, 0.1, 0.1, 1.0);
         glViewport(0, 0, 1024, 1024);
         glEnable(GL_DEPTH_TEST);
-        eCamera->Update(window);
-        eCamera->UpdateMatrices();
+        eCamera[mCurrentCamera]->Update(window->getHandle()->getHandle());
+        eCamera[mCurrentCamera]->UpdateMatrices();
         sun->Update();
         glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
         glDisable(GL_CULL_FACE);
@@ -663,15 +664,12 @@ namespace Epsilon
                     float rotation = 0.5 * glfwGetTime();
                     for (int index = 0; index < 6; ++index)
                     {
-                        this->mCubemap[a][b][c]->CaptureEnvironment(index);
+                        this->mCubemap[a][b][c]->Begin(index);
 
                         //Render cubemap begin
                         {
                             glDisable(GL_CULL_FACE);
-                            //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                            //glDisable(GL_BLEND);
                             glDisable(GL_DEPTH_TEST);
-                            //glDepthMask(GL_FALSE); //makes solid colors appear
                             Shaders["SkyBox_Cubemap"]->Use();
 
                             glm::mat4 view = captureViews[index];
@@ -686,7 +684,7 @@ namespace Epsilon
                             glUniformMatrix4fv(glGetUniformLocation(Shaders["SkyBox_Cubemap"]->getProgramID(), "projection"), 1, GL_FALSE, &projection[0][0]);
 
                             glUniform3f(glGetUniformLocation(Shaders["SkyBox_Cubemap"]->getProgramID(), "LightDirection"), sun->Direction.x, sun->Direction.y, sun->Direction.z);
-                            skybox->Render(this->eCamera, Shaders["SkyBox_Cubemap"], PP->m_exposure, false);
+                            skybox->Render(this->eCamera[mCurrentCamera], Shaders["SkyBox_Cubemap"], PP->m_exposure, false);
 
                             Shaders["SkyBox_Cubemap"]->Free();
 
@@ -748,7 +746,7 @@ namespace Epsilon
                         BSPMap->RenderLevel(mCubemap[a][b][c]->getPosition(), cubeShader->getProgramID(), true);
                         cubeShader->Free();
                     }
-                    mCubemap[a][b][c]->endCapturingEnvironment();
+                    mCubemap[a][b][c]->End();
 
                     mCubemap[a][b][c]->genAmbientConvolution();
 
@@ -770,7 +768,7 @@ namespace Epsilon
         ResourceManager::Get().cubemapsLoaded = true;
 
         glCullFace(GL_BACK);
-/*
+        /*
         {
             for (int a = 0; a < 7; a++)
                 for (int b = 0; b < 5; b++)
@@ -960,7 +958,7 @@ namespace Epsilon
 
                 ResourceManager::Get().setModelUniforms(EntityList[i]->getModelPath(), shader, EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation(),
                                                         EntityList[i]->getPrevPosition(), EntityList[i]->getPrevScale(), EntityList[i]->getPrevRotation(),
-                                                        eCamera);
+                                                        eCamera[mCurrentCamera]);
             }
             EntityList[i]->Render();
         }
@@ -976,10 +974,10 @@ namespace Epsilon
 
         glm::mat4 sModel = glm::scale(glm::mat4(1.0), glm::vec3(0.1, 0.1, 0.1));
         BSPmodel = sModel;
-        BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), BSPmodel);
+        BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera[mCurrentCamera]->getProjectionMatrix() * eCamera[mCurrentCamera]->getViewMatrix()), BSPmodel);
         shader->Use();
         this->SetUniforms(shader, glm::vec3(0.0), glm::vec3(0.1), glm::quat(0, 0, 0, 0));
-        BSPMap->RenderLevel(eCamera->getPosition(), shader->getProgramID(), true);
+        BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), shader->getProgramID(), true);
         /*
     Shaders["MD5Geometry"]->Use();
     glUniformMatrix4fv(glGetUniformLocation(Shaders["MD5Geometry"]->getProgramID(), "mSkinned"), 150, GL_FALSE, &m_AnimModel->m_AnimatedBones[0][0][0]);
@@ -1025,10 +1023,10 @@ namespace Epsilon
         //glm::mat4 tmodel = glm::translate(glm::mat4(1.0), glm::vec3(-30.0, 5.0, -120.0));
         glm::mat4 sModel = glm::scale(glm::mat4(1.0), glm::vec3(0.1, 0.1, 0.1));
         BSPmodel = sModel;
-        BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), BSPmodel);
+        BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera[mCurrentCamera]->getProjectionMatrix() * eCamera[mCurrentCamera]->getViewMatrix()), BSPmodel);
         Shaders["ShadowMapping"]->Use();
         this->SetUniforms(Shaders["ShadowMapping"], glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.1, 0.1, 0.1), glm::quat(0.0, 0.0, 0.0, 0.0));
-        BSPMap->RenderLevel(eCamera->getPosition(), Shaders["ShadowMapping"]->getProgramID(), false);
+        BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), Shaders["ShadowMapping"]->getProgramID(), false);
 
         /*
     Shaders["MD5ShadowMapping"]->Use();
@@ -1049,19 +1047,19 @@ namespace Epsilon
 
         Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
 
-        glm::mat4 MVP = eCamera->getProjectionMatrix() * eCamera->getViewMatrix() * Model;
+        glm::mat4 MVP = eCamera[mCurrentCamera]->getProjectionMatrix() * eCamera[mCurrentCamera]->getViewMatrix() * Model;
         shader->PushUniform("MVP", MVP);
-        shader->PushUniform("viewDir", eCamera->getDirection());
-        shader->PushUniform("viewPos", eCamera->getPosition());
+        shader->PushUniform("viewDir", eCamera[mCurrentCamera]->getDirection());
+        shader->PushUniform("viewPos", eCamera[mCurrentCamera]->getPosition());
         //glUniformMatrix4fv(shader->MVP_Location, 1, GL_FALSE, &MVP[0][0]);
         glUniformMatrix4fv(shader->WorldTransform_Location, 1, GL_FALSE, &Model[0][0]);
         glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "PrevModel"), 1, GL_FALSE, &Model[0][0]);
-        glUniformMatrix4fv(shader->View_Location, 1, GL_FALSE, &eCamera->getViewMatrix()[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "PrevView"), 1, GL_FALSE, &eCamera->getPrevViewMatrix()[0][0]);
-        glUniformMatrix4fv(shader->Projection_Location, 1, GL_FALSE, &eCamera->getProjectionMatrix()[0][0]);
+        glUniformMatrix4fv(shader->View_Location, 1, GL_FALSE, &eCamera[mCurrentCamera]->getViewMatrix()[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "PrevView"), 1, GL_FALSE, &eCamera[mCurrentCamera]->getPrevViewMatrix()[0][0]);
+        glUniformMatrix4fv(shader->Projection_Location, 1, GL_FALSE, &eCamera[mCurrentCamera]->getProjectionMatrix()[0][0]);
         glUniformMatrix4fv(shader->LightSpaceMatrix_Location, 1, GL_FALSE, &shadowMap->getLightSpaceMatrix()[0][0]);
         glm::mat3 invModelMatrix = glm::transpose(glm::inverse(glm::mat3(Model)));
-        glm::mat3 invNormalMatrix = glm::transpose(glm::inverse(glm::mat3(eCamera->getViewMatrix() * Model)));
+        glm::mat3 invNormalMatrix = glm::transpose(glm::inverse(glm::mat3(eCamera[mCurrentCamera]->getViewMatrix() * Model)));
         shader->PushUniform("invModelMatrix", invModelMatrix);
         shader->PushUniform("invNormalMatrix", invNormalMatrix);
 
@@ -1093,7 +1091,7 @@ namespace Epsilon
 
         GPU _gpu;
         int DEBUG_MODE = 3;
-/*
+        /*
         IO::PrintLine("Position: x = ",
                       Helpers::floatTostring(this->eCamera->getPosition().x),
                       " y = ",
@@ -1141,8 +1139,8 @@ namespace Epsilon
     void Epsilon::ProcessAudio()
     {
 
-        m_AudioListener->setListenerPosition(this->eCamera->getPosition());
-        m_AudioListener->setListenerDirection(this->eCamera->getDirection(), this->eCamera->getUp());
+        m_AudioListener->setListenerPosition(this->eCamera[mCurrentCamera]->getPosition());
+        m_AudioListener->setListenerDirection(this->eCamera[mCurrentCamera]->getDirection(), this->eCamera[mCurrentCamera]->getUp());
 
         m_AudioListener->UpdateListener();
 
@@ -1183,11 +1181,11 @@ namespace Epsilon
     {
         Shaders["SkyBox"]->Use();
 
-        glm::mat4 view = glm::mat4(glm::mat3(eCamera->getViewMatrix()));
+        glm::mat4 view = glm::mat4(glm::mat3(eCamera[mCurrentCamera]->getViewMatrix()));
         float rotation = 0.5 * glfwGetTime();
         glm::mat4 RotationMatrix = glm::rotate(glm::mat4(1.0), glm::radians(rotation), glm::vec3(0, 1, 0));
         view = view /* * RotationMatrix*/;
-        glm::mat4 projection = glm::mat4(eCamera->getProjectionMatrix());
+        glm::mat4 projection = glm::mat4(eCamera[mCurrentCamera]->getProjectionMatrix());
         glm::mat4 model = glm::mat4(1.0);
 
         glm::mat4 ScaleMatrix = glm::scale(model, glm::vec3(1, 1, 1));
@@ -1198,10 +1196,10 @@ namespace Epsilon
         glUniformMatrix4fv(glGetUniformLocation(Shaders["SkyBox"]->getProgramID(), "projection"), 1, GL_FALSE, &projection[0][0]);
 
         glUniform3f(glGetUniformLocation(Shaders["SkyBox"]->getProgramID(), "LightDirection"), sun->Direction.x, sun->Direction.y, sun->Direction.z);
-        skybox->Render(this->eCamera, Shaders["SkyBox"], PP->m_exposure, state);
+        skybox->Render(this->eCamera[mCurrentCamera], Shaders["SkyBox"], PP->m_exposure, state);
 
         Shaders["Sun"]->Use();
-        sun->SetUniforms(eCamera, Shaders["Sun"]);
+        sun->SetUniforms(eCamera[mCurrentCamera], Shaders["Sun"]);
         sun->Render(Shaders["Sun"]);
     }
 
@@ -1238,14 +1236,14 @@ namespace Epsilon
         }
         if (onMenu)
         {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-            ComputeCamera(CAMERA_FIXED, eCamera->getPosition(), eCamera->getDirection(), eCamera->getProjectionMatrix(), eCamera->getViewMatrix());
+            glfwSetInputMode(window->getHandle()->getHandle(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            ComputeCamera(CAMERA_FIXED, eCamera[mCurrentCamera]->getPosition(), eCamera[mCurrentCamera]->getDirection(), eCamera[mCurrentCamera]->getProjectionMatrix(), eCamera[mCurrentCamera]->getViewMatrix());
             this->m_CameraMode = CAMERA_FIXED;
         }
         else
         {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            this->m_CameraMode = PLAYER_CONTROLLED;
+            glfwSetInputMode(window->getHandle()->getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            this->m_CameraMode = NO_CLIP;
         }
 
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::N])
@@ -1256,6 +1254,17 @@ namespace Epsilon
 
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::SPACE])
             SSAO = !SSAO;
+
+        if (glm::abs((menuTime * 60) - (etime * 60)) > 60.0f)
+        {
+            if (Input::KeyBoard::KEYS[Input::GLFW::Key::C])
+            {
+                mCurrentCamera = (int)!mCurrentCamera;
+                eCamera[mCurrentCamera]->isMoving(true);
+                eCamera[!mCurrentCamera]->isMoving(true);
+                menuTime = etime;
+            }
+        }
 
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::P])
             parallax = !parallax;
@@ -1288,8 +1297,8 @@ namespace Epsilon
         m_Pick->CheckforPicking(btVector3(eCamera->getPosition().x, eCamera->getPosition().y, eCamera->getPosition().z),
                                 btVector3(eCamera->getDirection().x*1000, eCamera->getDirection().y*1000, eCamera->getDirection().z*1000), 1000, this->rM->m_PhysicsWorld->world);
         */
-        m_PlayerCapsule->CheckforPicking(btVector3(eCamera->getPosition().x, eCamera->getPosition().y, eCamera->getPosition().z),
-                                         btVector3(eCamera->getDirection().x * 1000, eCamera->getDirection().y * 1000, eCamera->getDirection().z * 1000));
+        m_PlayerCapsule->CheckforPicking(btVector3(eCamera[mCurrentCamera]->getPosition().x, eCamera[mCurrentCamera]->getPosition().y, eCamera[mCurrentCamera]->getPosition().z),
+                                         btVector3(eCamera[mCurrentCamera]->getDirection().x * 1000, eCamera[mCurrentCamera]->getDirection().y * 1000, eCamera[mCurrentCamera]->getDirection().z * 1000));
 
         //m_ParticleSystem->Simulate(this->frametime, this->eCamera->getPosition());
     }
@@ -1348,7 +1357,7 @@ namespace Epsilon
             glm::mat4 RotationMatrix = glm::toMat4(EntityList[i]->getRotation());
             glm::mat4 Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
 
-            BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera->getProjectionMatrix() * eCamera->getViewMatrix()), Model);
+            BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera[mCurrentCamera]->getProjectionMatrix() * eCamera[mCurrentCamera]->getViewMatrix()), Model);
             bool visible = BSPMap->Frustum.BoxInFrustum(EntityList[i]->getBoundingBox());
 
             rComponent->setVisibility(visible);
@@ -1357,8 +1366,8 @@ namespace Epsilon
 
     void Epsilon::SwapBuffers(void)
     {
-        glfwSwapBuffers(this->window);
-
+        //glfwSwapBuffers(this->window->getHandle()->getHandle());
+        this->window->SwapBuffers();
         lastTime = etime;
     }
 
@@ -1369,25 +1378,25 @@ namespace Epsilon
 
     void Epsilon::ComputeCamera(CAMERA_MODE mode, glm::vec3 position, glm::vec3 direction, glm::mat4 proj, glm::mat4 view)
     {
-        this->eCamera->Update(this->window);
+        this->eCamera[mCurrentCamera]->Update(this->window->getHandle()->getHandle());
 
         if (mode == PLAYER_CONTROLLED)
         {
             m_PlayerCapsule->preStep();
-            m_PlayerCapsule->Movement(this->eCamera, frametime);
-            eCamera->setPosition(m_PlayerCapsule->getPosition());
+            m_PlayerCapsule->Movement(this->eCamera[mCurrentCamera], frametime);
+            eCamera[mCurrentCamera]->setPosition(m_PlayerCapsule->getPosition());
         }
         else if (mode == CAMERA_FIXED)
         {
-            eCamera->setPosition(position);
-            eCamera->setDirection(direction);
+            eCamera[mCurrentCamera]->setPosition(position);
+            eCamera[mCurrentCamera]->setDirection(direction);
         }
         else if (mode == CAMERA_OVERRIDE)
         {
-            eCamera->setPosition(position);
-            eCamera->setDirection(direction);
-            eCamera->setViewMatrix(view);
-            eCamera->setProjection(proj);
+            eCamera[mCurrentCamera]->setPosition(position);
+            eCamera[mCurrentCamera]->setDirection(direction);
+            eCamera[mCurrentCamera]->setViewMatrix(view);
+            eCamera[mCurrentCamera]->setProjection(proj);
         }
         else if (mode == NO_CLIP)
         {
@@ -1397,14 +1406,14 @@ namespace Epsilon
         {
         }
 
-        this->eCamera->UpdateMatrices();
+        this->eCamera[mCurrentCamera]->UpdateMatrices();
     }
 
     void Epsilon::ComputeShadow()
     {
 
-        glm::vec3 camPos = eCamera->getPosition();
-        glm::vec3 camDir = eCamera->getDirection();
+        glm::vec3 camPos = eCamera[mCurrentCamera]->getPosition();
+        glm::vec3 camDir = eCamera[mCurrentCamera]->getDirection();
 
         shadowMap->setShadowPosition(glm::vec3(camPos.x + camDir.x * 30, camPos.y + 45.0f, camPos.z + camDir.z * 30));
 
@@ -1446,17 +1455,17 @@ namespace Epsilon
         //glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
         if (this->SSAO)
-            PP->applySSAO(this->eCamera);
+            PP->applySSAO(this->eCamera[mCurrentCamera]);
     }
 
     void Epsilon::RenderParticles(void)
     {
         Shaders["DefaultParticle"]->Use();
-        glUniform3f(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "cameraRight"), eCamera->getRight().x, eCamera->getRight().y, eCamera->getRight().z);
-        glUniform3f(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "cameraUp"), eCamera->getUp().x, eCamera->getUp().y, eCamera->getUp().z);
+        glUniform3f(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "cameraRight"), eCamera[mCurrentCamera]->getRight().x, eCamera[mCurrentCamera]->getRight().y, eCamera[mCurrentCamera]->getRight().z);
+        glUniform3f(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "cameraUp"), eCamera[mCurrentCamera]->getUp().x, eCamera[mCurrentCamera]->getUp().y, eCamera[mCurrentCamera]->getUp().z);
         glUniform2f(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "resolution"), this->WIDTH, this->HEIGHT);
-        glUniformMatrix4fv(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "view"), 1, GL_FALSE, &eCamera->getViewMatrix()[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "PrevView"), 1, GL_FALSE, &eCamera->getPrevViewMatrix()[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "view"), 1, GL_FALSE, &eCamera[mCurrentCamera]->getViewMatrix()[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "PrevView"), 1, GL_FALSE, &eCamera[mCurrentCamera]->getPrevViewMatrix()[0][0]);
         glUniformMatrix4fv(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "lightSpaceMatrix"), 1, GL_FALSE, &shadowMap->getLightSpaceMatrix()[0][0]);
         glUniformMatrix4fv(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "depthBias"), 1, GL_FALSE, &shadowMap->getBiasMatrix()[0][0]);
         this->SetUniforms(Shaders["DefaultParticle"], glm::vec3(0.0f), glm::vec3(4.0f), glm::quat(1.0, sin(glfwGetTime() * frametime), 0.0f, cos(glfwGetTime() * frametime)));
@@ -1486,7 +1495,7 @@ namespace Epsilon
         glViewport(0, 0, this->WIDTH, this->HEIGHT);
 
         glEnable(GL_BLEND);
-        PP->ShowFrame(sun->Direction, SSAO, this->eCamera, exposure, this->shadowMap);
+        PP->ShowFrame(sun->Direction, SSAO, this->eCamera[mCurrentCamera], exposure, this->shadowMap);
         glEnable(GL_DEPTH_CLAMP);
         this->RenderSkybox(false);
         glDisable(GL_DEPTH_CLAMP);
@@ -1496,7 +1505,7 @@ namespace Epsilon
     glEnable(GL_BLEND);
 */
         //this->RenderParticles();
-        PP->ShowPostProcessImage(this->frametime, (int)this->onMenu, this->sun->Direction, this->eCamera);
+        PP->ShowPostProcessImage(this->frametime, (int)this->onMenu, this->sun->Direction, this->eCamera[mCurrentCamera]);
         glEnable(GL_BLEND);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }

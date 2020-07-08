@@ -88,14 +88,15 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <PreprocessorDefinitions>_DEBUG;EPSILON_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>H:\Epsilon\Epsilon Engine\thirdparty\OpenGL\include;H:\Epsilon\Epsilon Engine\thirdparty\glad\include;H:\Epsilon\Epsilon Engine\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>H:\Epsilon\Epsilon Engine\thirdparty\glew\include;H:\Epsilon\Epsilon Engine\thirdparty\glm;H:\Epsilon\Epsilon Engine\thirdparty\OpenGL\include;H:\Epsilon\Epsilon Engine\thirdparty\glad\include;H:\Epsilon\Epsilon Engine\core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAsManaged>true</CompileAsManaged>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>glad.lib;opengl32.lib;gdi32.lib;user32.lib;kernel32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>H:\Epsilon\Epsilon Engine\build\EpsilonCreator\x64\Debug;glad.lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glad.lib;opengl32.lib;gdi32.lib;user32.lib;kernel32.lib;SOIL.lib;inih.lib;Lua5.lib;EpsilonLib.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>H:\Epsilon\Epsilon Engine\build\Lua5\x64\Debug;H:\Epsilon\Epsilon Engine\build\inih\x64\Debug;H:\Epsilon\Epsilon Engine\build\SOIL\x64\Debug;H:\Epsilon\Epsilon Engine\build\EpsilonCreator\x64\Debug;H:\Epsilon\Epsilon Engine\thirdparty\bullet3\buildvs\lib\Debug;glad.lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

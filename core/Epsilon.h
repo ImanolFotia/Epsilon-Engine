@@ -52,12 +52,14 @@
 #include <Renderer/Patch.h>
 #include <PointShadow.hpp>
 
+#include <Platform/WindowBase.hpp>
+
 namespace Epsilon
 {
     class Epsilon
     {
     public:
-        Epsilon(GLFWwindow *&);
+        Epsilon(std::shared_ptr<Platform::WindowBase>);
 
         virtual ~Epsilon(void)
         {
@@ -124,7 +126,8 @@ namespace Epsilon
         void CalculateVisibility();
 
     public:
-        std::shared_ptr<Camera> eCamera;
+        std::vector<std::shared_ptr<Camera>> eCamera;
+        int mCurrentCamera = 0;
         std::shared_ptr<Patch> mPatch;
         /**Shaders**/
         GLuint cubemapTex = 0;
@@ -133,7 +136,7 @@ namespace Epsilon
         std::shared_ptr<Skybox> skybox;
         std::shared_ptr<Water> waterPlane;
         std::vector<Grass> grass;
-        GLFWwindow *window = nullptr;
+        std::shared_ptr<Platform::WindowBase> window = nullptr;
         std::shared_ptr<Text> text;
         //std::shared_ptr<Text> text2;
         std::shared_ptr<Terrain> terrain;

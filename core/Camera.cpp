@@ -37,7 +37,7 @@ namespace Epsilon
         this->verticalAngle = 0.0;
     }
 
-    void Camera::Update(GLFWwindow *&win)
+    void Camera::Update(GLFWwindow *win)
     {
         HandleInputs(win);
 
@@ -221,16 +221,20 @@ namespace Epsilon
 
         //Position += (MovementVector * MovementSpeed * DeltaTime);
         //Position += MovementVector;
-        mIsMoving = false;
-        //DeltaVector = (Position - LastPosition);
-        if (LastPosition != Position)
-        {
+        if(!externallymodified){
+            mIsMoving = false;
             //DeltaVector = (Position - LastPosition);
-            //MovementVector = glm::normalize(DeltaVector / glm::vec3(glm::sqrt(glm::pow(DeltaVector.x, 2.0) + glm::pow(DeltaVector.y, 2.0) + glm::pow(DeltaVector.z, 2.0))));
-            mIsMoving = true;
+            if (LastPosition != Position)
+            {
+                //DeltaVector = (Position - LastPosition);
+                //MovementVector = glm::normalize(DeltaVector / glm::vec3(glm::sqrt(glm::pow(DeltaVector.x, 2.0) + glm::pow(DeltaVector.y, 2.0) + glm::pow(DeltaVector.z, 2.0))));
+                mIsMoving = true;
+            }
+            if (LastOrientation != Orientation)
+                mIsMoving = true;
+        } else {
+            externallymodified = false;
         }
-        if (LastOrientation != Orientation)
-            mIsMoving = true;
 
         LastPosition = Position;
         LastOrientation = Orientation;
@@ -266,6 +270,11 @@ namespace Epsilon
     bool Camera::isMoving()
     {
         return mIsMoving;
+    }
+
+    void Camera::isMoving(bool x) {
+        externallymodified = true;
+        mIsMoving = x;
     }
 
     glm::vec3 Camera::getPosition(void)

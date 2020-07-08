@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 
-Epsilon::Engine Epsilon::Engine::instance;
+
+//Epsilon::Engine Epsilon::Engine::instance;
 
 namespace EpsilonCreator {
 
@@ -22,6 +23,7 @@ namespace EpsilonCreator {
 		this->Show();
 		StartUp^ formStartUp = gcnew StartUp();
 		auto result = formStartUp->ShowDialog();
+
 	}
 
 	System::Void MainWindow::MainLoop(System::Object^ sender, System::EventArgs^ e) {
