@@ -1,0 +1,3 @@
+D:\Epsilon\Epsilon Engine\build\EpsilonCreator\Debug\EpsilonCreator.vcxprojAssemblyReference.cache
+D:\Epsilon\Epsilon Engine\build\EpsilonCreator\Debug\EpsilonCreator.exe
+D:\Epsilon\Epsilon Engine\build\EpsilonCreator\Debug\EpsilonCreator.pdb

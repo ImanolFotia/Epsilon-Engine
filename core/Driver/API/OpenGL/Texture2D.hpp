@@ -134,6 +134,8 @@ namespace Epsilon
                     }
                     else /*Texture uses some level of anisotropic filtering*/
                     {
+                        glTexParameteri(mData.Target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+                        glTexParameteri(mData.Target, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
                         glTexParameterf(mData.Target, GL_TEXTURE_MAX_ANISOTROPY_EXT, mData.AnisotropyLevel);
                         glGenerateMipmap(mData.Target);
                     }

@@ -13,6 +13,8 @@
 #include <Entity/PlayerComponent.hpp>
 #include <Entity/RenderComponent.hpp>
 #include <Entity/SoundComponent.hpp>
+#include <Entity/ScriptComponent.hpp>
+
 namespace Epsilon { 
 class EntityBase : public std::enable_shared_from_this<EntityBase>
 {
@@ -44,6 +46,10 @@ public:
         case Component::SOUNDCOMPONENT:
             mHasSoundComponent = true;
             break;
+        case Component::SCRIPTCOMPONENT:
+            mHasScriptComponent = true;
+            std::static_pointer_cast<Component::ScriptComponent>(t)->setParent(this);
+            break;
         default:
             break;
         }
@@ -51,7 +57,16 @@ public:
         ComponentList[t->getType()] = t;
         this->mID = ComponentList.size();
 
+        //mChildrenEntities
+
         //mCollInfo.setName("Entity_" + std::string(Helpers::to_hex(toHash())));
+
+        return shared_from_this();
+    }
+    std::shared_ptr<EntityBase> addEntity(std::shared_ptr<EntityBase> t)
+    {
+        
+        mChildrenEntities.push_back(t);
 
         return shared_from_this();
     }
@@ -76,6 +91,7 @@ public:
     bool HasClothComponent() { return mHasClothComponent; }
     bool HasMovementComponent() { return mHasMovementComponent; }
     bool HasSoundComponent() { return mHasSoundComponent; }
+    bool HasScriptComponent() { return mHasScriptComponent; }
 
     Component::Component_ptr getComponent(Component::COMPONENT_TYPE type) noexcept
     {
@@ -95,10 +111,12 @@ private:
     bool mHasClothComponent = false;
     bool mHasMovementComponent = false;
     bool mHasSoundComponent = false;
+    bool mHasScriptComponent = false;
 
     int mID;
     std::string modelPath;
     std::unordered_map<uint8_t, Component_ptr> ComponentList;
+    std::vector<std::shared_ptr<EntityBase>> mChildrenEntities;
 
 public:
     glm::vec3 getPosition()
@@ -171,23 +189,27 @@ public:
     {
 
         if (this->mHasRenderComponent)
-        {
+        {/*
             for (unsigned int i = 0; i < ComponentList.size(); ++i)
             {
                 if (ComponentList.at(i)->getType() == Component::RENDERCOMPONENT)
                 {
                     return ResourceManager::Get().getModelBoundingBox(std::static_pointer_cast<Component::RenderComponent>(ComponentList[i])->modelPath);
                 }
-            }
+            }*/
+
+            return ResourceManager::Get().getModelBoundingBox(
+                    std::static_pointer_cast<Component::RenderComponent> (ComponentList[Component::RENDERCOMPONENT])->modelPath
+                );
         }
 
         else if (this->mHasClothComponent)
         {
-            for (unsigned int i = 0; i < ComponentList.size(); ++i)
+           /* for (unsigned int i = 0; i < ComponentList.size(); ++i)
             {
                 if (ComponentList.at(i)->getType() == Component::CLOTHCOMPONENT)
-                {
-                    btSoftBody *cloth = std::static_pointer_cast<Physics::ClothPhysicObject>(std::static_pointer_cast<Component::ClothComponent>(ComponentList[i])->SoftBodyPointer)->m_BodyCloth.get();
+                {*/
+                    btSoftBody *cloth = std::static_pointer_cast<Physics::ClothPhysicObject>(std::static_pointer_cast<Component::ClothComponent>(ComponentList[Component::CLOTHCOMPONENT])->SoftBodyPointer)->m_BodyCloth.get();
 
                     btVector3 aabbMin, aabbMax;
                     cloth->getAabb(aabbMin, aabbMax);
@@ -201,18 +223,13 @@ public:
                     BB.MIN_Z = aabbMin.z();
 
                     return BB;
-                }
+               /* }
                 continue;
-            }
+            }*/
         }
 
         MIN_MAX_POINTS BB = {};
         return BB;
-    }
-
-    long toHash()
-    {
-        return std::hash<float>{}(m_Position.x + m_Position.y + m_Position.z + mID);
     }
 
     void setShader(std::string sh)
@@ -242,6 +259,8 @@ private:
 
 protected:
 };
+
+using EntityBase_ptr = std::shared_ptr<EntityBase>;
 
 template <>
 inline Component::RenderComponent_ptr EntityBase::getComponent()

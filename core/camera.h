@@ -27,7 +27,7 @@ namespace Epsilon
         }
 
     public:
-        void Update(GLFWwindow *&);
+        void Update(GLFWwindow *);
 
         void UpdateMatrices(void);
 
@@ -60,6 +60,8 @@ namespace Epsilon
         void setViewMatrix(glm::mat4);
 
         bool isMoving();
+        
+        void isMoving(bool);
 
     private:
         void LockCamera(void);
@@ -79,6 +81,7 @@ namespace Epsilon
         int winy;
         float MaxMovementSpeed;
         bool mIsMoving = false;
+        bool externallymodified = true;
 
     private:
         glm::vec3 Rigth;

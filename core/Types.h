@@ -164,7 +164,9 @@ namespace Epsilon
             SOUNDCOMPONENT,
             PHYSICCOMPONENT,
             CLOTHCOMPONENT,
-            MOVEMENTCOMPONENT
+            MOVEMENTCOMPONENT,
+            SCRIPTCOMPONENT,
+            ENTITY
         };
 
         enum MATERIAL

@@ -34,7 +34,7 @@ alc.h
 al.h
 ../include/AL/al.h
 
-C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/examples/altonegen.c
+D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/examples/altonegen.c
 stdio.h
 -
 stdlib.h
@@ -48,15 +48,15 @@ limits.h
 math.h
 -
 AL/al.h
-C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/examples/AL/al.h
+D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/examples/AL/al.h
 AL/alc.h
-C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/examples/AL/alc.h
+D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/examples/AL/alc.h
 AL/alext.h
-C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/examples/AL/alext.h
+D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/examples/AL/alext.h
 common/alhelpers.h
-C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/examples/common/alhelpers.h
+D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/examples/common/alhelpers.h
 
-C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/examples/common/alhelpers.h
+D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/examples/common/alhelpers.h
 AL/al.h
-C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/examples/common/AL/al.h
+D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/examples/common/AL/al.h
 

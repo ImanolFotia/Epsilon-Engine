@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <iostream>
 
 struct GLFWwindow;
 
@@ -26,14 +27,14 @@ namespace Epsilon
             {
             }
 
-            void SetHandle(T handle)
+            void SetHandle(T* handle)
             {
                 mHandle = handle;
             }
 
-            T *getHandle()
+            T* getHandle()
             {
-                return mHandle.get();
+                return mHandle;
             }
 
             const WINDOW_HANDLE_TYPE getType()
@@ -41,13 +42,14 @@ namespace Epsilon
                 return mType;
             }
 
-            void operator=(const T *t)
+            void operator=(T* t)
             {
+                std::cout << "window assigned" << std::endl;
                 mHandle = t;
             }
 
         private:
-            std::shared_ptr<T> mHandle;
+            T* mHandle;
             WINDOW_HANDLE_TYPE mType;
         };
 

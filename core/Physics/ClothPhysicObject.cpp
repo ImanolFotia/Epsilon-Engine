@@ -30,7 +30,7 @@ namespace Epsilon
 
                 this->m_BodyCloth->getCollisionShape()->setMargin(0.1f);
                 this->m_BodyCloth->generateBendingConstraints(1.0, this->m_BodyCloth->appendMaterial());
-                this->m_BodyCloth->setTotalMass(3.0);
+                this->m_BodyCloth->setTotalMass(5.0);
                 this->m_BodyCloth->m_cfg.piterations = 1;
                 this->m_BodyCloth->m_cfg.viterations = 1;
                 this->m_BodyCloth->m_cfg.diterations = 1;

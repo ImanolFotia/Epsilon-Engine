@@ -28,7 +28,7 @@ namespace Epsilon
 
                 if (!alcIsExtensionPresent(alcGetContextsDevice(alcGetCurrentContext()), "ALC_EXT_EFX"))
                 {
-                    sprintf_s(g_szALC_EXT_EFX, "`xff0000Error: EFX not supported");
+                    std::cout << g_szALC_EXT_EFX << "`xff0000Error: EFX not supported" << std::endl;
                     return;
                 }
 

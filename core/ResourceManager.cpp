@@ -19,7 +19,7 @@ namespace Epsilon
                 return texPath;
             }
         }
-        catch (std::exception e)
+        catch (std::exception& e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
@@ -60,7 +60,7 @@ namespace Epsilon
             ModelList.at(modelPath).Draw(shader, pos);
         }
 
-        catch (std::exception e)
+        catch (std::exception& e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << "useModel(" << modelPath << ", shader"
                       << ",glm:vec3(" << pos.x << ", " << pos.y << ", " << pos.z << ") :::" << e.what() << std::endl;
@@ -87,7 +87,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
             return ModelList.at(modelPath);
         }
 
-        catch (std::exception e)
+        catch (std::exception &e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
@@ -102,7 +102,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
             return ModelList.at(modelPath).MinMaxPoints;
         }
 
-        catch (std::exception e)
+        catch (std::exception& e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
@@ -160,7 +160,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
                 return 0;
         }
 
-        catch (std::exception e)
+        catch (std::exception& e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
@@ -182,7 +182,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
                 return;
         }
 
-        catch (std::exception e)
+        catch (std::exception& e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << "//" << texPath << std::endl;
         }
@@ -195,7 +195,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
             TextureQueue.push_back(texture);
             //std::cout << texture << " Added to the Queue." << std::endl;
         }
-        catch (std::exception e)
+        catch (std::exception& e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
@@ -213,7 +213,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
                 TextureQueue.at(i).pop_back();
             }
         }
-        catch (std::exception e)
+        catch (std::exception& e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
@@ -236,7 +236,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
                 return 0;
             }
         }
-        catch (std::exception e)
+        catch (std::exception& e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
@@ -261,7 +261,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
                 return;
             }
         }
-        catch (std::exception e)
+        catch (std::exception &e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
@@ -292,7 +292,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
                 return name;
             }
         }
-        catch (std::exception e)
+        catch (std::exception& e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
@@ -307,7 +307,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
             return ShadersList.at(shaderPath);
         }
 
-        catch (std::exception e)
+        catch (std::exception &e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
@@ -322,7 +322,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
             return ShadersList.at(shaderPath)->getProgramID();
         }
 
-        catch (std::exception e)
+        catch (std::exception &e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
@@ -337,7 +337,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
             return ShadersList.at(shaderPath);
         }
 
-        catch (std::exception e)
+        catch (std::exception& e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
@@ -382,7 +382,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
                 std::cout << "Exception at requestCube" << std::endl;
             }
         }
-        catch (std::exception e)
+        catch (std::exception& e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }

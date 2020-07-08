@@ -1,8 +1,24 @@
 # Compiled files
 *.o
 *.so
+*.obj
 *.exe
 *.jar
+*.suo
+*.lib
+*.log
+*.pdb
+*.idb
+*.exe.metagen
+*.vcxproj.filters
+*.vcxproj.user
+*.db
+*.db-shm
+*.db-wal
+*.opendb
+*.a
+*.tlog
+*.dll
 
 # Directories
 /bin/Debug
@@ -15,8 +31,15 @@
 /bin/Release/*.exe
 /bin/Release/*.dll
 /bin/Release/*.log
+/creator
+/lib
+
+/.vs
 
 /obj
+
+/deppend
+/thirdparty/openal-soft/buildvs
 
 # Specific Files
 Epsilon.code-workspace

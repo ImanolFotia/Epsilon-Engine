@@ -15,7 +15,7 @@ namespace Epsilon
     class App
     {
     public:
-        App(GLFWwindow *&win)
+        App(std::shared_ptr<Platform::WindowBase> win)
         {
             EpsilonEngine = std::make_shared<Epsilon>(win);
 

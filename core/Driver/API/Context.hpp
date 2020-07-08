@@ -27,7 +27,10 @@ namespace Epsilon
             {
 
             public:
-                virtual void Init(std::shared_ptr<Platform::WindowHandle<>>, CONTEXT_TYPE) = 0;
+                ContextBase() {}
+                virtual ~ContextBase() {}
+                virtual void Init(CONTEXT_TYPE) = 0;
+                virtual void AttachContext(std::shared_ptr<Platform::WindowHandle<>>) = 0;
                 virtual void SwapBuffers() = 0;
                 virtual void Shutdown() = 0;
                 virtual CONTEXT_TYPE getType()
@@ -35,6 +38,7 @@ namespace Epsilon
                     return mType;
                 }
 
+                
             protected:
                 std::shared_ptr<Platform::WindowHandle<>> mWindowHandle;
                 CONTEXT_TYPE mType;

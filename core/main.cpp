@@ -10,9 +10,11 @@
 #include <Init.hpp>
 #include <memory>
 
+#include <Platform/WindowBase.hpp>
+
 int main(int argc, char* argv[])
 {
-    GLFWwindow* window = Epsilon::Init("Epsilon Engine");
+    std::shared_ptr<Epsilon::Platform::WindowBase> window = Epsilon::Init("Epsilon Engine");
 
     std::shared_ptr<Epsilon::App> MainProgram = std::make_shared<Epsilon::App>(window);
 

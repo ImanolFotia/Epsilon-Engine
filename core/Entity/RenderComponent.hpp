@@ -57,15 +57,17 @@ namespace Epsilon
 
             void Render()
             {
-                //glUniform1i(glGetUniformLocation(mResourceManager->getShader(shaderType).get(), "isTransparent"), this->isTransparent);
-                ResourceManager::Get().useShader(shaderType)->PushUniform("isTransparent", this->isTransparent);
-                if (isDoubleFaced())
-                    glDisable(GL_CULL_FACE);
-                else 
-                    glEnable(GL_CULL_FACE);
-                ResourceManager::Get().useModel(modelPath, ResourceManager::Get().useShader(shaderType), mPosition);
+                if(isVisible) {
+                    //glUniform1i(glGetUniformLocation(mResourceManager->getShader(shaderType).get(), "isTransparent"), this->isTransparent);
+                    ResourceManager::Get().useShader(shaderType)->PushUniform("isTransparent", this->isTransparent);
+                    if (isDoubleFaced())
+                        glDisable(GL_CULL_FACE);
+                    else 
+                        glEnable(GL_CULL_FACE);
+                    ResourceManager::Get().useModel(modelPath, ResourceManager::Get().useShader(shaderType), mPosition);
 
-                glEnable(GL_CULL_FACE);
+                    glEnable(GL_CULL_FACE);
+                }
             }
 
             void RenderShadows()
@@ -100,6 +102,10 @@ namespace Epsilon
 
             void setTransparency(bool x) { isTransparent = x; }
 
+            void setVisibility(bool x) {
+                isVisible = x;
+            }
+
             bool hasModel = false;
             COMPONENT_TYPE mType;
             std::string modelPath;
@@ -108,6 +114,7 @@ namespace Epsilon
             bool isTransparent;
             bool mIsDoubleFaced;
             bool mCastsShadows;
+            bool isVisible = false;
             glm::vec3 mPosition;
         };
 

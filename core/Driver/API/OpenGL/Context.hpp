@@ -16,7 +16,8 @@ namespace Epsilon
             public:
                 Context();
 
-                void Init(std::shared_ptr<Platform::WindowHandle<>>, CONTEXT_TYPE) override;
+                void Init(CONTEXT_TYPE) override;
+                void AttachContext(std::shared_ptr<Platform::WindowHandle<>> windowHandle) override;
                 void SwapBuffers() override;
                 void Shutdown() override;
             };

@@ -133,7 +133,7 @@ namespace Epsilon
 class eTexture {
 
 public:
-    eTexture(const char* TexName, GLenum wrap = GL_REPEAT, GLenum type = GL_TEXTURE_2D, GLuint filtering = -1) : mType(type) {
+    eTexture(const char* TexName, GLenum wrap = GL_REPEAT, GLenum type = GL_TEXTURE_2D, int filtering = -1) : mType(type) {
         ProgramData DATA;
         int channels;
         std::string ext = Helpers::getExtension(TexName);
@@ -225,7 +225,7 @@ private:
         glTexImage1D(mType, 0, GL_RGBA, width, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
     }
 
-    void createGLTexture(unsigned char* image, const char* TexName, GLenum wrap = GL_REPEAT, GLenum type = GL_TEXTURE_2D, GLuint filtering = -1) {
+    void createGLTexture(unsigned char* image, const char* TexName, GLenum wrap = GL_REPEAT, GLenum type = GL_TEXTURE_2D, int filtering = -1) {
 
         ProgramData DATA;
         if(!image)
@@ -236,8 +236,24 @@ private:
 
         bool isNonColorData = isNormal(TexName);
 
-        internalFormat = isNonColorData ? GL_RGBA : GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT;
-        internalFormat = DATA.COMPRESSED_TEXTURES ? internalFormat : GL_SRGB_ALPHA;
+        //internalFormat = isNonColorData ? GL_RGBA : GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT;
+        //internalFormat = DATA.COMPRESSED_TEXTURES ? internalFormat : GL_SRGB_ALPHA;
+
+        if(DATA.COMPRESSED_TEXTURES) {
+            if(isNonColorData){
+                internalFormat = GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
+            }
+            else {
+                internalFormat = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT;
+            }
+        } else {
+            if(isNonColorData){
+                internalFormat = GL_RGBA;
+            }
+            else {
+                internalFormat = GL_SRGB_ALPHA;
+            }
+        }
         
         if(mType == GL_TEXTURE_2D)
             CreateTexture2D();
@@ -250,6 +266,8 @@ private:
                 glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
                 glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
             } else {
+                glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+                glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
                 glTexParameterf(type, GL_TEXTURE_MAX_ANISOTROPY_EXT, DATA.ANISOTROPY);
             }
         } else {

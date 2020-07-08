@@ -40,7 +40,7 @@ namespace Epsilon
 		}
 
 		mPosition /= Vertices.size();
-		bool res = this->prepareVAO();
+		this->prepareVAO();
 		std::shared_ptr<Physics::TriangleMeshPhysicObject> ph = (std::shared_ptr<Physics::TriangleMeshPhysicObject>)new Physics::TriangleMeshPhysicObject();
 		rigidBody = nullptr;
 		rigidBody = ph->addObject(this->Vertices, this->Indices, 0.1);

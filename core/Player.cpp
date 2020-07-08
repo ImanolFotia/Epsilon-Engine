@@ -214,7 +214,7 @@ namespace Epsilon
         this->m_playerBody->getMotionState()->getWorldTransform(xform);
 
         btVector3 linearVelocity = m_playerBody->getLinearVelocity();
-        btScalar speed = m_playerBody->getLinearVelocity().length();
+        //btScalar speed = m_playerBody->getLinearVelocity().length();
         btVector3 velocity = linearVelocity;
         btVector3 LinearVelocity = m_playerBody->getLinearVelocity();
 
@@ -317,7 +317,7 @@ namespace Epsilon
                 !Input::KeyBoard::KEYS[Input::GLFW::Key::S] &&
                 !Input::KeyBoard::KEYS[Input::GLFW::Key::D])
             {
-                btScalar downVelocity = 0.0;
+                //btScalar downVelocity = 0.0;
                 walkSpeed = glm::mix((float)walkSpeed, 0.0f, dt);
                 directionVelocity = btVector3(m_PrevDirection.x() * walkSpeed * dt, 0.0, m_PrevDirection.z() * walkSpeed * dt);
             }
@@ -334,7 +334,7 @@ namespace Epsilon
         if (isOnGround())
             m_PrevDirection = btVector3(0.0, 0.0, 0.0);
 
-        btScalar deltaPos = glm::length((float)pos.y() - (float)m_rayPos[0].y());
+        //btScalar deltaPos = glm::length((float)pos.y() - (float)m_rayPos[0].y());
 
         if (!Input::KeyBoard::KEYS[Input::GLFW::Key::A] &&
             !Input::KeyBoard::KEYS[Input::GLFW::Key::W] &&

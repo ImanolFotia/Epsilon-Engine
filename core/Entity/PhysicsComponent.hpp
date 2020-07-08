@@ -11,6 +11,9 @@
 #include <Physics/ClothPhysicObject.h>
 
 #include <iostream>
+
+#include <Helpers.hpp>
+
 namespace Epsilon
 {
     namespace Component
@@ -24,6 +27,11 @@ namespace Epsilon
             using TriangleMeshShape_ptr = std::shared_ptr<Physics::TriangleMeshPhysicObject>;
             using ClothShape_ptr = std::shared_ptr<Physics::ClothPhysicObject>;
             using SoftRigidDynamicsWorld_ptr = std::shared_ptr<btSoftRigidDynamicsWorld>;
+            
+            long toHash()
+            {
+                return std::hash<float>{}(m_PhysicsWorldPosition.x() + m_PhysicsWorldPosition.y() + m_PhysicsWorldPosition.z() + mMass);
+            }
 
         public:
             PhysicComponent(float mass, glm::vec3 pos, glm::vec3 scale, Physics::Type type, MIN_MAX_POINTS boundingBox) : mType(PHYSICCOMPONENT), mMass(mass)
@@ -55,20 +63,18 @@ namespace Epsilon
 
                     m_PhysicsWorldPosition = btVector3(pos.x, pos.y, pos.z);
 
-                    //m_PhysicsWorldPosition = mRigidBodyPointer->Body->getCenterOfMassPosition();
                     m_LastPhysicsWorldPosition = m_PhysicsWorldPosition;
                     m_PhysicsWorldRotation = mRigidBodyPointer->Body->getOrientation();
 
                     btTransform transf = getTransform();
-                    //btQuaternion rot = btQuaternion(m_Rotation.x, m_Rotation.y, m_Rotation.z, m_Rotation.w);
 
                     glm::quat rot = glm::quat(m_PhysicsWorldRotation.getW(), m_PhysicsWorldRotation.getX(), m_PhysicsWorldRotation.getY(), m_PhysicsWorldRotation.getZ());
-                    //btQuaternion rot = btQuaternion(m_Rotation.x, m_Rotation.y, m_Rotation.z, m_Rotation.w);
-                    //std::cout << " Rotation | x: " << rot.x << " y: " << rot.y << " z: " << rot.z << " w: " << rot.w << std::endl;
+
                     transf.setRotation(m_PhysicsWorldRotation);
                     transf.setOrigin(m_PhysicsWorldPosition);
+                    mCollInfo.setName("Entity_" + std::string(Helpers::to_hex(toHash())));
                     setTransform(transf);
-                    setUserPointer(&CollInfo);
+                    setUserPointer(&mCollInfo);
                 }
                 catch (std::exception &e)
                 {
@@ -89,13 +95,6 @@ namespace Epsilon
 
                 m_LastPhysicsWorldPosition = m_PhysicsWorldPosition;
                 m_PhysicsWorldPosition = mRigidBodyPointer->Body->getCenterOfMassPosition();
-
-                /*
-                    glm::vec3 pos  = glm::mix(glm::vec3(m_LastPhysicsWorldPosition.getX(), m_LastPhysicsWorldPosition.getY(), m_LastPhysicsWorldPosition.getZ()),
-                                                 glm::vec3(m_PhysicsWorldPosition.getX(), m_PhysicsWorldPosition.getY(), m_PhysicsWorldPosition.getZ()),
-                                                 rm->timestep*60);
-
-                    m_PhysicsWorldPosition = btVector3(pos.x, pos.y, pos.z);*/
                 m_LastPhysicsWorldRotation = m_PhysicsWorldRotation;
                 m_PhysicsWorldRotation = mRigidBodyPointer->Body->getOrientation();
             }
@@ -126,7 +125,7 @@ namespace Epsilon
             /** Functions declared for the sake of pure virtual function polymorphism, must not be used for production*/
             void Render() {}
 
-            Physics::CollisionInfo CollInfo;
+            Physics::CollisionInfo mCollInfo;
             BaseShape_ptr mRigidBodyPointer = nullptr;
             COMPONENT_TYPE mType;
 

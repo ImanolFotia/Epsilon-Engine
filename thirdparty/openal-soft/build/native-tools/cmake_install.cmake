@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/native-tools
+# Install script for directory: D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/native-tools
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -27,6 +27,11 @@ if(NOT CMAKE_INSTALL_COMPONENT)
   endif()
 endif()
 
+# Is this installation the result of a crosscompile?
+if(NOT DEFINED CMAKE_CROSSCOMPILING)
+  set(CMAKE_CROSSCOMPILING "FALSE")
+endif()
+
 if(CMAKE_INSTALL_COMPONENT)
   set(CMAKE_INSTALL_MANIFEST "install_manifest_${CMAKE_INSTALL_COMPONENT}.txt")
 else()
@@ -35,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/build/native-tools/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/build/native-tools/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
