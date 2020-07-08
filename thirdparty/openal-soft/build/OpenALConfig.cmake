@@ -4,7 +4,11 @@ if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" LESS 2.5)
    message(FATAL_ERROR "CMake >= 2.6.0 required")
 endif()
 cmake_policy(PUSH)
+<<<<<<< HEAD
 cmake_policy(VERSION 2.6...3.17)
+=======
+cmake_policy(VERSION 2.6)
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
 #----------------------------------------------------------------
 # Generated CMake target import file.
 #----------------------------------------------------------------
@@ -45,14 +49,23 @@ unset(_expectedTargets)
 add_library(OpenAL::OpenAL SHARED IMPORTED)
 
 set_target_properties(OpenAL::OpenAL PROPERTIES
+<<<<<<< HEAD
   INTERFACE_INCLUDE_DIRECTORIES "H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/include"
+=======
+  INTERFACE_INCLUDE_DIRECTORIES "C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/include"
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
 )
 
 # Import target "OpenAL::OpenAL" for configuration "RelWithDebInfo"
 set_property(TARGET OpenAL::OpenAL APPEND PROPERTY IMPORTED_CONFIGURATIONS RELWITHDEBINFO)
 set_target_properties(OpenAL::OpenAL PROPERTIES
+<<<<<<< HEAD
   IMPORTED_IMPLIB_RELWITHDEBINFO "H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/build/libOpenAL32.dll.a"
   IMPORTED_LOCATION_RELWITHDEBINFO "H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/build/OpenAL32.dll"
+=======
+  IMPORTED_IMPLIB_RELWITHDEBINFO "C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/build/libOpenAL32.dll.a"
+  IMPORTED_LOCATION_RELWITHDEBINFO "C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/build/OpenAL32.dll"
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
   )
 
 # This file does not depend on other imported targets which have

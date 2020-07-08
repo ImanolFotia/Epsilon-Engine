@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 "C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\alrecord.dir/objects.a
 H:\msys2\msys64\msys64\mingw64\bin\ar.exe cr CMakeFiles\alrecord.dir/objects.a @CMakeFiles\alrecord.dir\objects1.rsp
 H:\msys2\msys64\msys64\mingw64\bin\gcc.exe -O2 -g -D_DEBUG -Wl,--whole-archive CMakeFiles\alrecord.dir/objects.a -Wl,--no-whole-archive -o alrecord.exe -Wl,--out-implib,libalrecord.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\alrecord.dir\linklibs.rsp
+=======
+"C:\Program Files\CMake\bin\cmake.exe" -E remove -f CMakeFiles\alrecord.dir/objects.a
+C:\msys64\mingw64\bin\ar.exe cr CMakeFiles\alrecord.dir/objects.a @CMakeFiles\alrecord.dir\objects1.rsp
+C:\msys64\mingw64\bin\gcc.exe -O2 -g -D_DEBUG   -Wl,--whole-archive CMakeFiles\alrecord.dir/objects.a -Wl,--no-whole-archive  -o alrecord.exe -Wl,--out-implib,libalrecord.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\alrecord.dir\linklibs.rsp
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed

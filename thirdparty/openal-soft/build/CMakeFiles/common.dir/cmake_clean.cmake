@@ -8,8 +8,13 @@ file(REMOVE_RECURSE
   "CMakeFiles/common.dir/common/polyphase_resampler.cpp.obj"
   "CMakeFiles/common.dir/common/strutils.cpp.obj"
   "CMakeFiles/common.dir/common/threads.cpp.obj"
+<<<<<<< HEAD
   "libcommon.a"
   "libcommon.pdb"
+=======
+  "libcommon.pdb"
+  "libcommon.a"
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
 )
 
 # Per-language clean rules from dependency scanning.

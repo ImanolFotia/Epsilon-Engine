@@ -1,5 +1,5 @@
 #pragma once
-#include <Core.hpp>
+#include <GL/glew.h>
 
 template <typename T>
 class ShaderStorageBuffer {

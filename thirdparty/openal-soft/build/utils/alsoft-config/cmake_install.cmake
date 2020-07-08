@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # Install script for directory: H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/utils/alsoft-config
+=======
+# Install script for directory: C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/utils/alsoft-config
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -27,6 +31,7 @@ if(NOT CMAKE_INSTALL_COMPONENT)
   endif()
 endif()
 
+<<<<<<< HEAD
 # Is this installation the result of a crosscompile?
 if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
@@ -37,3 +42,5 @@ if(NOT DEFINED CMAKE_OBJDUMP)
   set(CMAKE_OBJDUMP "H:/msys2/msys64/msys64/mingw64/bin/objdump.exe")
 endif()
 
+=======
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed

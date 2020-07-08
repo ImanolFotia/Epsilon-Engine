@@ -7,13 +7,11 @@
 #ifndef BSPFORMAT_H_INCLUDED
 #define BSPFORMAT_H_INCLUDED
 
-#include <Core.hpp>
 #include <iostream>
 #include <vector>
 #include <string>
 
-#include <BSP.h>
-#include <glm/glm.hpp>
+#include <GL/glew.h>
 
 
 /// This is the number that is associated with a face that is of type "polygon"
@@ -22,7 +20,7 @@
 #define TYPE_RAY		0				/// This is the type for tracing a RAY
 #define TYPE_SPHERE		1				/// This is the type for tracing a SPHERE
 #define TYPE_BOX		2				/// This is the type for tracing a AABB (BOX)
-namespace Epsilon {
+
 const float kEpsilon =  0.03125f;		/// This is our small number to compensate for float errors
 
 /// This is our integer vector structure
@@ -168,6 +166,6 @@ enum eLumps
     kVisData,					/// Stores PVS and cluster info (visibility)
     kMaxLumps					/// A constant to store the number of lumps
 };
-}
+
 
 #endif /// BSPFORMAT_H_INCLUDED

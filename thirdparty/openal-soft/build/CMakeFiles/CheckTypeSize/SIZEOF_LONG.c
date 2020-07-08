@@ -8,6 +8,7 @@
 # define KEY '_','_','i','3','8','6'
 #elif defined(__x86_64)
 # define KEY '_','_','x','8','6','_','6','4'
+<<<<<<< HEAD
 #elif defined(__PPC64__)
 # define KEY '_','_','P','P','C','6','4','_','_'
 #elif defined(__ppc64__)
@@ -26,6 +27,16 @@
 
 #define SIZE (sizeof(long))
 static char info_size[] =  {'I', 'N', 'F', 'O', ':', 's','i','z','e','[',
+=======
+#elif defined(__ppc__)
+# define KEY '_','_','p','p','c','_','_'
+#elif defined(__ppc64__)
+# define KEY '_','_','p','p','c','6','4','_','_'
+#endif
+
+#define SIZE (sizeof(long))
+char info_size[] =  {'I', 'N', 'F', 'O', ':', 's','i','z','e','[',
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
   ('0' + ((SIZE / 10000)%10)),
   ('0' + ((SIZE / 1000)%10)),
   ('0' + ((SIZE / 100)%10)),

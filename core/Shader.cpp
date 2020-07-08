@@ -15,7 +15,6 @@
 #include <Driver/API/OpenGL/ShaderPreProcessor.h>
 
 namespace Epsilon {
-
 Shader::Shader(const char* vertex, const char* fragment)
 {
     Path = std::string(vertex);

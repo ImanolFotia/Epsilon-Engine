@@ -617,8 +617,8 @@ namespace Epsilon
         limits.MAX_Z = 500.0;
         limits.MIN_Z = -500.0;
 
-        m_ParticleSystem = (std::shared_ptr<ParticleSystem>)new ParticleSystem();
-        m_ParticleSystem->addNewSystem(limits, MIST, 5000);
+       // m_ParticleSystem = (std::shared_ptr<ParticleSystem>)new ParticleSystem();
+       // m_ParticleSystem->addNewSystem(limits, MIST, 5000);
 
         //3 , 7, 30
         sun->Update();
@@ -1478,7 +1478,7 @@ namespace Epsilon
         glActiveTexture(GL_TEXTURE2);
         glUniform1i(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "shadowMap"), 2);
         glBindTexture(GL_TEXTURE_2D, this->shadowMap->getShadowTextureID());
-        m_ParticleSystem->Render();
+       // m_ParticleSystem->Render();
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, 0);
         glActiveTexture(GL_TEXTURE1);

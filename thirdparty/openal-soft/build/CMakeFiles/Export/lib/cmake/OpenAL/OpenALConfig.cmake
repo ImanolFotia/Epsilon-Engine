@@ -4,7 +4,11 @@ if("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" LESS 2.5)
    message(FATAL_ERROR "CMake >= 2.6.0 required")
 endif()
 cmake_policy(PUSH)
+<<<<<<< HEAD
 cmake_policy(VERSION 2.6...3.17)
+=======
+cmake_policy(VERSION 2.6)
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
 #----------------------------------------------------------------
 # Generated CMake target import file.
 #----------------------------------------------------------------

@@ -1,6 +1,10 @@
 #pragma once
 
+<<<<<<< HEAD
 #include <Core.hpp>
+=======
+#include <GL/glew.h>
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
 
 class Renderer
 {

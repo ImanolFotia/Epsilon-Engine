@@ -8,7 +8,6 @@
 #define EPSILON_H_INCLUDED
 
 #include <map>
-
 #include <GLFW/glfw3.h>
 #include <thread>
 #include <Texture.h>
@@ -44,7 +43,6 @@
 #include <Log.h>
 #include <GUI/GUI.h>
 #include <sys/filesystem.h>
-#include <ParticleSystem.h>
 #include <cubemapRenderer.h>
 #include <CubeMap.h>
 #include <CommandFunctions.h>
@@ -150,7 +148,6 @@ namespace Epsilon
         std::shared_ptr<IO::Audio::AudioListener> m_AudioListener;
         std::shared_ptr<SphericalHarmonics> sphericalharmonics;
         std::thread t1;
-        std::shared_ptr<ParticleSystem> m_ParticleSystem;
         std::shared_ptr<eTexture> tex;
         // std::shared_ptr<Pick> m_Pick;
         CAMERA_MODE m_CameraMode;

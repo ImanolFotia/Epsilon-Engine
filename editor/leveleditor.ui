@@ -44,7 +44,11 @@
       </property>
       <widget class="QWidget" name="tab_5">
        <attribute name="title">
+<<<<<<< HEAD
         <string>Scene Editor</string>
+=======
+        <string>Scene</string>
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
        </attribute>
        <layout class="QGridLayout" name="gridLayout_12">
         <item row="0" column="0">
@@ -87,6 +91,7 @@
             <property name="horizontalSpacing">
              <number>0</number>
             </property>
+<<<<<<< HEAD
             <property name="verticalSpacing">
              <number>0</number>
             </property>
@@ -102,6 +107,8 @@
             <property name="bottomMargin">
              <number>0</number>
             </property>
+=======
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
             <item row="0" column="0" colspan="2">
              <widget class="QTabWidget" name="tabWidget">
               <property name="enabled">
@@ -172,6 +179,58 @@
                 <string>Models</string>
                </attribute>
                <layout class="QGridLayout" name="gridLayout_2">
+<<<<<<< HEAD
+=======
+                <item row="0" column="0">
+                 <widget class="QGroupBox" name="groupBox_11">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="title">
+                   <string>GroupBox</string>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout">
+                   <property name="sizeConstraint">
+                    <enum>QLayout::SetMaximumSize</enum>
+                   </property>
+                   <item>
+                    <widget class="QTreeView" name="treeView">
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>400</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="pushButton">
+                     <property name="text">
+                      <string>Remove</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="pushButton_4">
+                     <property name="text">
+                      <string>Visualize</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="pushButton_3">
+                     <property name="text">
+                      <string>Add To scene</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
                 <item row="1" column="0">
                  <widget class="QGroupBox" name="groupBox">
                   <property name="sizePolicy">
@@ -387,6 +446,7 @@
                   </widget>
                  </widget>
                 </item>
+<<<<<<< HEAD
                 <item row="0" column="0">
                  <widget class="QGroupBox" name="groupBox_11">
                   <property name="sizePolicy">
@@ -457,6 +517,8 @@
                   </layout>
                  </widget>
                 </item>
+=======
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
                </layout>
               </widget>
               <widget class="QWidget" name="tab_2">
@@ -947,7 +1009,11 @@
           </widget>
           <widget class="QWidget" name="widget" native="true">
            <property name="sizePolicy">
+<<<<<<< HEAD
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+=======
+            <sizepolicy hsizetype="Expanding" vsizetype="Ignored">
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -959,6 +1025,7 @@
             </size>
            </property>
            <layout class="QGridLayout" name="gridLayout_3">
+<<<<<<< HEAD
             <property name="leftMargin">
              <number>0</number>
             </property>
@@ -978,6 +1045,12 @@
              <widget class="QSplitter" name="splitter">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+=======
+            <item row="0" column="0">
+             <widget class="QSplitter" name="splitter">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -1135,6 +1208,7 @@ p, li { white-space: pre-wrap; }
             <property name="sizeConstraint">
              <enum>QLayout::SetDefaultConstraint</enum>
             </property>
+<<<<<<< HEAD
             <property name="leftMargin">
              <number>0</number>
             </property>
@@ -1150,6 +1224,8 @@ p, li { white-space: pre-wrap; }
             <property name="spacing">
              <number>0</number>
             </property>
+=======
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
             <item row="0" column="0">
              <widget class="QScrollArea" name="scrollArea">
               <property name="sizePolicy">
@@ -1184,8 +1260,13 @@ p, li { white-space: pre-wrap; }
                 <rect>
                  <x>0</x>
                  <y>0</y>
+<<<<<<< HEAD
                  <width>268</width>
                  <height>728</height>
+=======
+                 <width>263</width>
+                 <height>693</height>
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
                 </rect>
                </property>
                <property name="sizePolicy">
@@ -1228,6 +1309,7 @@ p, li { white-space: pre-wrap; }
                    </size>
                   </property>
                   <property name="title">
+<<<<<<< HEAD
                    <string>Scene</string>
                   </property>
                   <layout class="QGridLayout" name="gridLayout_4">
@@ -1257,6 +1339,67 @@ p, li { white-space: pre-wrap; }
                    </item>
                    <item row="1" column="0">
                     <widget class="QTreeWidget" name="property_tree">
+=======
+                   <string>Items</string>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_4">
+                   <item row="0" column="0">
+                    <widget class="QListWidget" name="ItemsList"/>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QGroupBox" name="groupBox_9">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>245</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="baseSize">
+                   <size>
+                    <width>200</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="title">
+                   <string>Properties</string>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_10">
+                   <item row="0" column="0">
+                    <widget class="QTreeWidget" name="property_tree">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="baseSize">
+                      <size>
+                       <width>200</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="alternatingRowColors">
+                      <bool>true</bool>
+                     </property>
+                     <property name="selectionBehavior">
+                      <enum>QAbstractItemView::SelectItems</enum>
+                     </property>
+                     <property name="sortingEnabled">
+                      <bool>true</bool>
+                     </property>
+                     <property name="animated">
+                      <bool>true</bool>
+                     </property>
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
                      <column>
                       <property name="text">
                        <string notr="true">1</string>

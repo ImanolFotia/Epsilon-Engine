@@ -12,7 +12,6 @@
 #include <Helpers.hpp>
 #include <Physics/Physics.h>
 #include <Audio/Audio.h>
-
 namespace Epsilon
 {
     class ResourceManager

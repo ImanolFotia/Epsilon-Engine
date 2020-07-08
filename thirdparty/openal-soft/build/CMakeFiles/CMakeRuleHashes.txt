@@ -1,5 +1,13 @@
 # Hashes of file build rules.
+<<<<<<< HEAD
 37f3f51cd9f0a2caee8ff082b41f5d7f CMakeFiles/native-tools
 a53819c778986b146ce70b9bf8355320 bsinc_inc.h
 61e986d0961454efdb31b8d45225204f hrtf_default.h
 ab64a9e960376d639ad1b3ba491140ea native-tools/bin2h
+=======
+a0ef15b4b639f7c59c450e13dbbb9a90 CMakeFiles/build_version
+63e64983af7ececc97422dbc930797d1 CMakeFiles/native-tools
+efd33244940ac5daceb1c4087370d31e bsinc_inc.h
+2eb4fcb01d16b97074ab2b7e20342a5a hrtf_default.h
+0d403c23d66be2461105aa6c645aaaf5 native-tools/bin2h
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed

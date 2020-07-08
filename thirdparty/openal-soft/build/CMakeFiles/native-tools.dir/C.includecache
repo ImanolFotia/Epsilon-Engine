@@ -6,13 +6,21 @@
 
 #IncludeRegexTransform: 
 
+<<<<<<< HEAD
 H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/win_main_utf8.h
+=======
+C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/common/win_main_utf8.h
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
 windows.h
 -
 shellapi.h
 -
 
+<<<<<<< HEAD
 H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/native-tools/bin2h.c
+=======
+C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/native-tools/bin2h.c
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
 stdio.h
 -
 stdlib.h
@@ -22,7 +30,11 @@ string.h
 errno.h
 -
 
+<<<<<<< HEAD
 H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/native-tools/bsincgen.c
+=======
+C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/native-tools/bsincgen.c
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
 stdio.h
 -
 math.h
@@ -32,5 +44,9 @@ string.h
 stdlib.h
 -
 ../common/win_main_utf8.h
+<<<<<<< HEAD
 H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/win_main_utf8.h
+=======
+C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/common/win_main_utf8.h
+>>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
 
