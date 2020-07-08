@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/bsincgen.dir/bsincgen.c.obj"
-  "bsincgen.pdb"
   "bsincgen.exe"
   "bsincgen.exe.manifest"
+  "bsincgen.pdb"
   "libbsincgen.dll.a"
 )
 

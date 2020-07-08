@@ -8,11 +8,11 @@
 
 ../include/AL/alc.h
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alcomplex.cpp
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alcomplex.cpp
 config.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/config.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/config.h
 alcomplex.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alcomplex.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alcomplex.h
 algorithm
 -
 cmath
@@ -22,43 +22,43 @@ cstddef
 utility
 -
 math_defs.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/math_defs.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/math_defs.h
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alcomplex.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alcomplex.h
 complex
 -
 alspan.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alspan.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alspan.h
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alexcpt.cpp
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alexcpt.cpp
 config.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/config.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/config.h
 alexcpt.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alexcpt.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alexcpt.h
 cstdio
 -
 cstdarg
 -
 opthelpers.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/opthelpers.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/opthelpers.h
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alexcpt.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alexcpt.h
 exception
 -
 string
 -
 AL/alc.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/AL/alc.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/AL/alc.h
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alfstream.cpp
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alfstream.cpp
 config.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/config.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/config.h
 alfstream.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alfstream.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alfstream.h
 strutils.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/strutils.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/strutils.h
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alfstream.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alfstream.h
 windows.h
 -
 array
@@ -70,11 +70,11 @@ fstream
 fstream
 -
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/almalloc.cpp
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/almalloc.cpp
 config.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/config.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/config.h
 almalloc.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/almalloc.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/almalloc.h
 cassert
 -
 cstddef
@@ -86,7 +86,7 @@ cstring
 malloc.h
 -
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/almalloc.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/almalloc.h
 algorithm
 -
 cstddef
@@ -104,9 +104,9 @@ type_traits
 utility
 -
 pragmadefs.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/pragmadefs.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/pragmadefs.h
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/aloptional.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/aloptional.h
 initializer_list
 -
 type_traits
@@ -114,9 +114,9 @@ type_traits
 utility
 -
 almalloc.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/almalloc.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/almalloc.h
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alspan.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alspan.h
 array
 -
 cstddef
@@ -128,83 +128,83 @@ iterator
 type_traits
 -
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alstring.cpp
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alstring.cpp
 config.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/config.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/config.h
 alstring.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alstring.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alstring.h
 cctype
 -
 string
 -
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alstring.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/alstring.h
 cstddef
 -
 string
 -
 almalloc.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/almalloc.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/almalloc.h
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/dynload.cpp
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/dynload.cpp
 config.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/config.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/config.h
 dynload.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/dynload.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/dynload.h
 strutils.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/strutils.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/strutils.h
 windows.h
 -
 dlfcn.h
 -
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/dynload.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/dynload.h
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/math_defs.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/math_defs.h
 math.h
 -
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/opthelpers.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/opthelpers.h
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/polyphase_resampler.cpp
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/polyphase_resampler.cpp
 polyphase_resampler.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/polyphase_resampler.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/polyphase_resampler.h
 algorithm
 -
 cmath
 -
 opthelpers.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/opthelpers.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/opthelpers.h
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/polyphase_resampler.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/polyphase_resampler.h
 vector
 -
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/pragmadefs.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/pragmadefs.h
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/strutils.cpp
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/strutils.cpp
 config.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/config.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/config.h
 strutils.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/strutils.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/strutils.h
 cstdlib
 -
 windows.h
 -
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/strutils.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/strutils.h
 string
 -
 aloptional.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/aloptional.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/aloptional.h
 wchar.h
 -
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/threads.cpp
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/threads.cpp
 config.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/config.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/config.h
 threads.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/threads.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/threads.h
 system_error
 -
 limits
@@ -216,7 +216,7 @@ pthread_np.h
 cerrno
 -
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/threads.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/common/threads.h
 windows.h
 -
 dispatch/dispatch.h

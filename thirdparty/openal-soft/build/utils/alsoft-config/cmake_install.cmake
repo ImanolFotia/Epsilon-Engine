@@ -1,4 +1,4 @@
-# Install script for directory: D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/utils/alsoft-config
+# Install script for directory: H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/utils/alsoft-config
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -30,5 +30,10 @@ endif()
 # Is this installation the result of a crosscompile?
 if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
+endif()
+
+# Set default install directory permissions.
+if(NOT DEFINED CMAKE_OBJDUMP)
+  set(CMAKE_OBJDUMP "H:/msys2/msys64/msys64/mingw64/bin/objdump.exe")
 endif()
 

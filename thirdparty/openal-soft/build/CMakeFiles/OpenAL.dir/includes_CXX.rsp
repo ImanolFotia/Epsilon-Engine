@@ -1,1 +1,1 @@
--ID:/Epsilon/EPSILO~1/THIRDP~1/OPENAL~1/include -ID:/Epsilon/EPSILO~1/THIRDP~1/OPENAL~1/build -ID:/Epsilon/EPSILO~1/THIRDP~1/OPENAL~1 -ID:/Epsilon/EPSILO~1/THIRDP~1/OPENAL~1/alc -ID:/Epsilon/EPSILO~1/THIRDP~1/OPENAL~1/common 
+-IH:/Epsilon/EPSILO~1/THIRDP~1/OPENAL~1/include -IH:/msys2/msys64/msys64/usr/include -IH:/Epsilon/EPSILO~1/THIRDP~1/OPENAL~1/build -IH:/Epsilon/EPSILO~1/THIRDP~1/OPENAL~1 -IH:/Epsilon/EPSILO~1/THIRDP~1/OPENAL~1/alc -IH:/Epsilon/EPSILO~1/THIRDP~1/OPENAL~1/common

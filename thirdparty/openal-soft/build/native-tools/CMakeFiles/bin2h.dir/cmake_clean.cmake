@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/bin2h.dir/bin2h.c.obj"
-  "bin2h.pdb"
   "bin2h.exe"
   "bin2h.exe.manifest"
+  "bin2h.pdb"
   "libbin2h.dll.a"
 )
 

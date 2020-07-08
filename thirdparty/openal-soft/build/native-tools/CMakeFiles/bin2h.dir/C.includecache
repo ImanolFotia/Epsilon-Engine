@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/native-tools/bin2h.c
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/native-tools/bin2h.c
 stdio.h
 -
 stdlib.h

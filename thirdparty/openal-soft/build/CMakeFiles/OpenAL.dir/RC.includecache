@@ -6,15 +6,15 @@
 
 #IncludeRegexTransform: 
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/resources/openal32.rc
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/resources/openal32.rc
 windows.h
 -
 resource.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/resources/resource.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/resources/resource.h
 version.h
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/resources/version.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/resources/version.h
 
-D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/resources/resource.h
+H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/resources/resource.h
 
 version.h
 

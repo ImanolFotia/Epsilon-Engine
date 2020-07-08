@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/ex-common.dir/examples/common/alhelpers.c.obj"
-  "libex-common.pdb"
   "libex-common.a"
+  "libex-common.pdb"
 )
 
 # Per-language clean rules from dependency scanning.

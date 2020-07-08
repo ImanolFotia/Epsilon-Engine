@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/utils/openal-info.c" "D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/build/CMakeFiles/openal-info.dir/utils/openal-info.c.obj"
+  "H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/utils/openal-info.c" "H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/build/CMakeFiles/openal-info.dir/utils/openal-info.c.obj"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 
@@ -16,7 +16,7 @@ set(CMAKE_C_TARGET_INCLUDE_PATH
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
-  "D:/Epsilon/Epsilon Engine/thirdparty/openal-soft/build/CMakeFiles/OpenAL.dir/DependInfo.cmake"
+  "H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/build/CMakeFiles/OpenAL.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

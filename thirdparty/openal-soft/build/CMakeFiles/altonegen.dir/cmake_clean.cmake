@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/altonegen.dir/examples/altonegen.c.obj"
-  "altonegen.pdb"
   "altonegen.exe"
   "altonegen.exe.manifest"
+  "altonegen.pdb"
   "libaltonegen.dll.a"
 )
 

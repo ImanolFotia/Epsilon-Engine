@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/alrecord.dir/examples/alrecord.c.obj"
-  "alrecord.pdb"
   "alrecord.exe"
   "alrecord.exe.manifest"
+  "alrecord.pdb"
   "libalrecord.dll.a"
 )
 
