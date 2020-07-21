@@ -10,6 +10,7 @@
 
 #include <Platform/WindowBase.hpp>
 #include <Platform/Windows/Window.hpp>
+#include <Platform/Linux/Window.hpp>
 
 #include <GLFW/glfw3.h>
 
@@ -41,7 +42,7 @@ namespace Epsilon
         
         int lWindowWidth = DATA.WINDOW_WIDTH;
         int lWindowHeight = DATA.WINDOW_HEIGHT;
-        std::shared_ptr<Platform::Windows::Window> lWindow;
+        std::shared_ptr<Platform::WindowBase> lWindow;
         #ifdef _WIN32
             lWindow = std::make_shared<Platform::Windows::Window>();
         #elif defined(__linux__)
