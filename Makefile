@@ -72,7 +72,7 @@ INCLUDE_LIBS:=  -I$(LIB)/inih/cpp \
 -I/usr/include/stb \
 -I/usr/include/SOIL \
 -I/usr/include/inih \
--I/usr/glad/include \
+-I$(LIB)/glad/include \
 -I/usr/include/lua5.3 
 endif
 
@@ -87,17 +87,24 @@ LIBS_DIR := -L$(LIB)/soil/lib \
 -L$(DX_SDK_LIB)
 else 
 LIBS_DIR := -L$(LIB)/inih \
--L/usr/lib/x86_64-linux-gnu 
+-L/usr/lib/x86_64-linux-gnu \
+-L$(LIB)/glad/lib \
+-L/usr/lib
 endif
 
 ifeq "$(OS)" "Windows_NT"
 LIBS:= -lSOIL -lglfw3dll -lopengl32 -lglad -linih -lgdi32 -lOpenAL32.dll -llua -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
 else 
-LIBS:= -lSOIL -lglfw -linih -lGLU -lGL -lopenal -fopenmp -lgomp -llua5.3 -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
+LIBS:= -lGLU -lGL -lSOIL -lglad -ldl -lglfw -linih -lopenal -fopenmp -lgomp -llua5.3 -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
 endif
 
 LD_FLAGS := -fopenmp
+
+ifeq "$(OS)" "Windows_NT"
 CPPFLAGS := --std=c++17 -static -static-libgcc -static-libstdc++
+else 
+CPPFLAGS := --std=c++17
+endif
 
 DEBUG_FLAGS := -g -DDEBUG -ggdb -g3 -gdwarf-4 -fvar-tracking-assignments
 
@@ -151,4 +158,3 @@ $(OUT_LIB)/Release/$(LIB_NAME): $(OBJECTS_RELEASE)
 
 clean:
 	-@rm -rf ./obj/*
-

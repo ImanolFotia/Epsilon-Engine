@@ -16,6 +16,10 @@ before_install:
   - cp libinih.a ../inih/
   - cd ..
   - cd ..
+  - cd thirdparty/glad
+  - make 
+  - cd ..
+  - cd ..
   - sudo apt-get install lua5.3-dev
   - git clone https://github.com/nothings/stb.git
   - sudo cp -r stb /usr/include/stb 
