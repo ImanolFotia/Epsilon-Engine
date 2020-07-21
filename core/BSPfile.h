@@ -11,7 +11,7 @@
 #include <vector>
 #include <string>
 
-#include <GL/glew.h>
+#include <Core.hpp>
 
 #include <BSPformat.h>
 #include <CBitset.h>

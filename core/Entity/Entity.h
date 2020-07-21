@@ -10,7 +10,6 @@
 #include <Entity/ClothComponent.hpp>
 #include <Entity/MovementComponent.hpp>
 #include <Entity/PhysicsComponent.hpp>
-#include <Entity/PlayerComponent.hpp>
 #include <Entity/RenderComponent.hpp>
 #include <Entity/SoundComponent.hpp>
 #include <Entity/ScriptComponent.hpp>
@@ -33,9 +32,6 @@ public:
             break;
         case Component::PHYSICCOMPONENT:
             mHasPhysicComponent = true;
-            break;
-        case Component::PLAYERCOMPONENT:
-            mHasPlayerComponent = true;
             break;
         case Component::CLOTHCOMPONENT:
             mHasClothComponent = true;
@@ -85,7 +81,6 @@ public:
         std::cout << "end render shadows" << std::endl;
     }
 
-    bool HasPlayerComponent() { return mHasPlayerComponent; }
     bool HasRenderComponent() { return mHasRenderComponent; }
     bool HasPhysicComponent() { return mHasPhysicComponent; }
     bool HasClothComponent() { return mHasClothComponent; }
@@ -105,7 +100,6 @@ public:
     }
 
 private:
-    bool mHasPlayerComponent = false;
     bool mHasRenderComponent = false;
     bool mHasPhysicComponent = false;
     bool mHasClothComponent = false;

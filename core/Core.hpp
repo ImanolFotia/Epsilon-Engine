@@ -1,28 +1,12 @@
 #pragma once
-#ifdef EPSILON_STATIC
+
+//#define DEBUG 1
+
+//#define EPSILON_STATIC
 #ifndef GLAD_INCLUDED
 #define GLAD_INCLUDED
 #include <glad/glad.h>
 #endif
-#else
-#ifndef GLEW_INCLUDED
-    #define GLEW_INCLUDED
-    #if defined(__gl_h_) || defined(__GL_H__) || defined(__X_GL_H)
-        //#error "Attempting to include glew while gl is included in file: " __FILE__
-    #else
-        //#pragma message "Attempting to include glew while gl is not in file: " 
-    #endif
-    #ifndef GLEW_STATIC
-        #define GLEW_STATIC
-    #endif
-    #include <GL/glew.h>
-    #ifdef _WIN32
-        #include <GL/wglew.h>
-    #endif
-#endif
-#endif
-
-//#define DEBUG 1
 
 #ifndef GL_SHADER_STORAGE_BUFFER
 #define GL_SHADER_STORAGE_BUFFER 0x90D2 // According to https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_shader_storage_buffer_object.txt
@@ -37,8 +21,9 @@
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
+#define WGL_WGLEXT_PROTOTYPES
 #include <windows.h>
-#include <GL/wgl.h>
+//#include <GL/wgl.h>
 #include <GL/wglext.h>
 typedef unsigned long DWORD, *PDWORD, *LPDWORD; //Defining because windows.h has defines that interfere with some declarations
 
@@ -91,3 +76,4 @@ typedef unsigned long DWORD, *PDWORD, *LPDWORD; //Defining because windows.h has
 #else
 
 #endif
+

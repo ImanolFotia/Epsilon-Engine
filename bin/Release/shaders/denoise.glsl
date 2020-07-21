@@ -8,6 +8,7 @@ uniform float exponent;
 
 
 uniform sampler2D texture0;
+uniform sampler2D roughnessTex;
 /*
 void main()
 {
@@ -44,6 +45,15 @@ void main()
 		outColor = center;
 		return;
 	}
+
+	float roughness = texture(roughnessTex, TexCoords).a;
+
+	if(roughness < 0.2) {
+		
+		outColor = center;
+		return;
+	}
+
     vec2 offsets[9] = vec2[](
         vec2(-offset,  offset), // top-left
         vec2( 0.0f,    offset), // top-center

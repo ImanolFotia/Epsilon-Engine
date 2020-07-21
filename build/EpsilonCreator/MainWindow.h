@@ -73,9 +73,14 @@ namespace EpsilonCreator {
 	private: System::Windows::Forms::ToolStripMenuItem^ editToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^ projectToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^ helpToolStripMenuItem;
-	private: System::Windows::Forms::Button^ button1;
+
 	private: System::Windows::Forms::Label^ label3;
 	private: System::Windows::Forms::ComboBox^ comboBox1;
+	private: System::Windows::Forms::Button^ button3;
+	private: System::Windows::Forms::Button^ button2;
+	private: System::Windows::Forms::ToolStripMenuItem^ compileToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ compileAndRunToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripStatusLabel^ toolStripStatusLabel1;
 
 
 
@@ -100,7 +105,8 @@ namespace EpsilonCreator {
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(MainWindow::typeid));
 			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->label3 = (gcnew System::Windows::Forms::Label());
+			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
 			this->WindowMenu = (gcnew System::Windows::Forms::MenuStrip());
 			this->fileToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->newToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -135,10 +141,14 @@ namespace EpsilonCreator {
 			this->splitContainer1 = (gcnew System::Windows::Forms::SplitContainer());
 			this->splitter2 = (gcnew System::Windows::Forms::Splitter());
 			this->splitter1 = (gcnew System::Windows::Forms::Splitter());
-			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
-			this->label3 = (gcnew System::Windows::Forms::Label());
+			this->button2 = (gcnew System::Windows::Forms::Button());
+			this->button3 = (gcnew System::Windows::Forms::Button());
+			this->compileToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->compileAndRunToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 			this->panel1->SuspendLayout();
 			this->WindowMenu->SuspendLayout();
+			this->statusStrip1->SuspendLayout();
 			this->toolStrip1->SuspendLayout();
 			this->LeftPanel->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainer2))->BeginInit();
@@ -165,7 +175,6 @@ namespace EpsilonCreator {
 			this->panel1->BackColor = System::Drawing::SystemColors::ActiveCaption;
 			this->panel1->Controls->Add(this->label3);
 			this->panel1->Controls->Add(this->comboBox1);
-			this->panel1->Controls->Add(this->button1);
 			this->panel1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->panel1->Location = System::Drawing::Point(285, 0);
 			this->panel1->Name = L"panel1";
@@ -173,14 +182,30 @@ namespace EpsilonCreator {
 			this->panel1->TabIndex = 0;
 			this->panel1->SizeChanged += gcnew System::EventHandler(this, &MainWindow::ResizeRenderArea);
 			// 
-			// button1
+			// label3
 			// 
-			this->button1->Location = System::Drawing::Point(136, 25);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(75, 23);
-			this->button1->TabIndex = 0;
-			this->button1->Text = L"button1";
-			this->button1->UseVisualStyleBackColor = true;
+			this->label3->AutoSize = true;
+			this->label3->BackColor = System::Drawing::Color::Transparent;
+			this->label3->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->label3->Location = System::Drawing::Point(10, 11);
+			this->label3->Name = L"label3";
+			this->label3->Size = System::Drawing::Size(43, 13);
+			this->label3->TabIndex = 2;
+			this->label3->Text = L"Camera";
+			// 
+			// comboBox1
+			// 
+			this->comboBox1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(47)), static_cast<System::Int32>(static_cast<System::Byte>(47)),
+				static_cast<System::Int32>(static_cast<System::Byte>(53)));
+			this->comboBox1->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			this->comboBox1->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->comboBox1->ForeColor = System::Drawing::SystemColors::ScrollBar;
+			this->comboBox1->FormattingEnabled = true;
+			this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(2) { L"Perspective", L"Orthogonal" });
+			this->comboBox1->Location = System::Drawing::Point(9, 27);
+			this->comboBox1->Name = L"comboBox1";
+			this->comboBox1->Size = System::Drawing::Size(121, 21);
+			this->comboBox1->TabIndex = 1;
 			// 
 			// WindowMenu
 			// 
@@ -284,6 +309,10 @@ namespace EpsilonCreator {
 			// 
 			// projectToolStripMenuItem
 			// 
+			this->projectToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
+				this->compileToolStripMenuItem,
+					this->compileAndRunToolStripMenuItem
+			});
 			this->projectToolStripMenuItem->ForeColor = System::Drawing::SystemColors::ControlLight;
 			this->projectToolStripMenuItem->Name = L"projectToolStripMenuItem";
 			this->projectToolStripMenuItem->Size = System::Drawing::Size(56, 20);
@@ -299,6 +328,7 @@ namespace EpsilonCreator {
 			// statusStrip1
 			// 
 			this->statusStrip1->ImageScalingSize = System::Drawing::Size(32, 32);
+			this->statusStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->toolStripStatusLabel1 });
 			this->statusStrip1->Location = System::Drawing::Point(0, 541);
 			this->statusStrip1->Name = L"statusStrip1";
 			this->statusStrip1->Size = System::Drawing::Size(1134, 22);
@@ -380,6 +410,10 @@ namespace EpsilonCreator {
 			// 
 			// splitContainer2.Panel2
 			// 
+			this->splitContainer2->Panel2->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(71)),
+				static_cast<System::Int32>(static_cast<System::Byte>(71)), static_cast<System::Int32>(static_cast<System::Byte>(71)));
+			this->splitContainer2->Panel2->Controls->Add(this->button3);
+			this->splitContainer2->Panel2->Controls->Add(this->button2);
 			this->splitContainer2->Panel2->Controls->Add(this->groupBox1);
 			this->splitContainer2->Size = System::Drawing::Size(285, 320);
 			this->splitContainer2->SplitterDistance = 155;
@@ -413,9 +447,9 @@ namespace EpsilonCreator {
 			this->groupBox1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(37)), static_cast<System::Int32>(static_cast<System::Byte>(37)),
 				static_cast<System::Int32>(static_cast<System::Byte>(38)));
 			this->groupBox1->ForeColor = System::Drawing::SystemColors::ControlLight;
-			this->groupBox1->Location = System::Drawing::Point(4, 4);
+			this->groupBox1->Location = System::Drawing::Point(4, 43);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(281, 154);
+			this->groupBox1->Size = System::Drawing::Size(281, 115);
 			this->groupBox1->TabIndex = 0;
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Components";
@@ -490,7 +524,7 @@ namespace EpsilonCreator {
 			this->ConsoleTab->Location = System::Drawing::Point(4, 22);
 			this->ConsoleTab->Name = L"ConsoleTab";
 			this->ConsoleTab->Padding = System::Windows::Forms::Padding(3);
-			this->ConsoleTab->Size = System::Drawing::Size(1126, 129);
+			this->ConsoleTab->Size = System::Drawing::Size(1126, 125);
 			this->ConsoleTab->TabIndex = 1;
 			this->ConsoleTab->Text = L"Console";
 			// 
@@ -547,26 +581,49 @@ namespace EpsilonCreator {
 			this->splitter1->TabIndex = 7;
 			this->splitter1->TabStop = false;
 			// 
-			// comboBox1
+			// button2
 			// 
-			this->comboBox1->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->comboBox1->FormattingEnabled = true;
-			this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(2) { L"Perspective", L"Orthogonal" });
-			this->comboBox1->Location = System::Drawing::Point(9, 27);
-			this->comboBox1->Name = L"comboBox1";
-			this->comboBox1->Size = System::Drawing::Size(121, 21);
-			this->comboBox1->TabIndex = 1;
+			this->button2->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Center;
+			this->button2->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->button2->ForeColor = System::Drawing::SystemColors::ControlLight;
+			this->button2->Location = System::Drawing::Point(8, 3);
+			this->button2->Name = L"button2";
+			this->button2->Size = System::Drawing::Size(45, 34);
+			this->button2->TabIndex = 1;
+			this->button2->Text = L"Add";
+			this->button2->UseVisualStyleBackColor = true;
 			// 
-			// label3
+			// button3
 			// 
-			this->label3->AutoSize = true;
-			this->label3->BackColor = System::Drawing::Color::Transparent;
-			this->label3->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
-			this->label3->Location = System::Drawing::Point(10, 11);
-			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(43, 13);
-			this->label3->TabIndex = 2;
-			this->label3->Text = L"Camera";
+			this->button3->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
+			this->button3->ForeColor = System::Drawing::SystemColors::ControlLight;
+			this->button3->Location = System::Drawing::Point(59, 3);
+			this->button3->Name = L"button3";
+			this->button3->Size = System::Drawing::Size(63, 34);
+			this->button3->TabIndex = 2;
+			this->button3->Text = L"Remove";
+			this->button3->UseVisualStyleBackColor = true;
+			// 
+			// compileToolStripMenuItem
+			// 
+			this->compileToolStripMenuItem->Name = L"compileToolStripMenuItem";
+			this->compileToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+			this->compileToolStripMenuItem->Text = L"Compile";
+			// 
+			// compileAndRunToolStripMenuItem
+			// 
+			this->compileAndRunToolStripMenuItem->Name = L"compileAndRunToolStripMenuItem";
+			this->compileAndRunToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+			this->compileAndRunToolStripMenuItem->Text = L"Compile and run";
+			// 
+			// toolStripStatusLabel1
+			// 
+			this->toolStripStatusLabel1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(28)),
+				static_cast<System::Int32>(static_cast<System::Byte>(142)), static_cast<System::Int32>(static_cast<System::Byte>(227)));
+			this->toolStripStatusLabel1->ForeColor = System::Drawing::SystemColors::ControlLight;
+			this->toolStripStatusLabel1->Name = L"toolStripStatusLabel1";
+			this->toolStripStatusLabel1->Size = System::Drawing::Size(39, 17);
+			this->toolStripStatusLabel1->Text = L"Ready";
 			// 
 			// MainWindow
 			// 
@@ -591,6 +648,8 @@ namespace EpsilonCreator {
 			this->panel1->PerformLayout();
 			this->WindowMenu->ResumeLayout(false);
 			this->WindowMenu->PerformLayout();
+			this->statusStrip1->ResumeLayout(false);
+			this->statusStrip1->PerformLayout();
 			this->toolStrip1->ResumeLayout(false);
 			this->toolStrip1->PerformLayout();
 			this->LeftPanel->ResumeLayout(false);

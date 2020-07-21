@@ -12,6 +12,7 @@
 # OpenAL Soft
 # Lua 5.3.5
 # SOIL (soon to be replaced)
+# GLAD
 
 CXX= g++
 
@@ -51,12 +52,14 @@ DX_SDK_LIB := H:/Epsilon\Epsilon\ Engine/thirdparty/XAudio2/microsoft.xaudio2.re
 ifeq "$(OS)" "Windows_NT"
 INCLUDE_LIBS:= -I$(LIB)/glm \
 -I$(LIB)/bullet3/src \
--I$(LIB)/glew/include -I$(LIB)/glfw/include \
+-I$(LIB)/glfw/include \
 -I$(LIB)/soil/Simple\ OpenGL\ Image\ Library/src \
 -I$(LIB)/openal-soft/include \
 -I$(LIB)/inih/cpp \
 -I$(LIB)/lua-5.3.5/src \
 -I$(LIB)/stb-master \
+-I$(LIB)/glad/include \
+-I$(LIB)/OpenGL/include/ \
 -I$(LIB)json-develop/include 
 else
 INCLUDE_LIBS:=  -I$(LIB)/inih/cpp \
@@ -65,11 +68,11 @@ INCLUDE_LIBS:=  -I$(LIB)/inih/cpp \
 -I/core/include \
 -I/usr/include \
 -I/usr/include/bullet \
--I/usr/include/glew \
 -I/usr/include/glfw \
 -I/usr/include/stb \
 -I/usr/include/SOIL \
 -I/usr/include/inih \
+-I/usr/glad/include \
 -I/usr/include/lua5.3 
 endif
 
@@ -77,10 +80,10 @@ ifeq "$(OS)" "Windows_NT"
 LIBS_DIR := -L$(LIB)/soil/lib \
 -L$(LIB)/glfw/build/src \
 -L$(LIB)/inih \
--L$(LIB)/glew/lib \
 -L$(LIB)/lua-5.3.5/src \
 -L$(LIB)/openal-soft/build \
 -L$(LIB)/bullet3/build/lib \
+-L$(LIB)/glad/lib \
 -L$(DX_SDK_LIB)
 else 
 LIBS_DIR := -L$(LIB)/inih \
@@ -88,9 +91,9 @@ LIBS_DIR := -L$(LIB)/inih \
 endif
 
 ifeq "$(OS)" "Windows_NT"
-LIBS:= -lSOIL -lglfw3dll -lopengl32 -linih -lglew32.dll -lgdi32 -lOpenAL32.dll -llua -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
+LIBS:= -lSOIL -lglfw3dll -lopengl32 -lglad -linih -lgdi32 -lOpenAL32.dll -llua -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
 else 
-LIBS:= -lSOIL -lglfw -linih -lGLEW -lGLU -lGL -lopenal -fopenmp -lgomp -llua5.3 -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
+LIBS:= -lSOIL -lglfw -linih -lGLU -lGL -lopenal -fopenmp -lgomp -llua5.3 -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
 endif
 
 LD_FLAGS := -fopenmp

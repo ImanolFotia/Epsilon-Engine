@@ -325,7 +325,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>H:\Epsilon\Epsilon Engine\thirdparty\glad\include;H:\Epsilon\Epsilon Engine\thirdparty\OpenGL\include;H:\Epsilon\Epsilon Engine\thirdparty\glew\include;H:\Epsilon\Epsilon Engine\thirdparty\lua-5.3.5\src;H:\Epsilon\Epsilon Engine\thirdparty\openal-soft\include;H:\Epsilon\Epsilon Engine\thirdparty\soil\Simple OpenGL Image Library\src;H:\Epsilon\Epsilon Engine\thirdparty\glfw\include;H:\Epsilon\Epsilon Engine\thirdparty\bullet3\src;H:\Epsilon\Epsilon Engine\core;H:\Epsilon\Epsilon Engine\thirdparty\json-develop\include;H:\Epsilon\Epsilon Engine\thirdparty\glm;H:\Epsilon\Epsilon Engine\thirdparty\inih\cpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>H:\Epsilon\Epsilon Engine\thirdparty\glad\include;H:\Epsilon\Epsilon Engine\thirdparty\OpenGL\include;H:\Epsilon\Epsilon Engine\thirdparty\lua-5.3.5\src;H:\Epsilon\Epsilon Engine\thirdparty\openal-soft\include;H:\Epsilon\Epsilon Engine\thirdparty\soil\Simple OpenGL Image Library\src;H:\Epsilon\Epsilon Engine\thirdparty\glfw\include;H:\Epsilon\Epsilon Engine\thirdparty\bullet3\src;H:\Epsilon\Epsilon Engine\core;H:\Epsilon\Epsilon Engine\thirdparty\json-develop\include;H:\Epsilon\Epsilon Engine\thirdparty\glm;H:\Epsilon\Epsilon Engine\thirdparty\inih\cpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>

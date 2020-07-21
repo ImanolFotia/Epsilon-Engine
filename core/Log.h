@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <mutex>
 
 #include <time.h>
 
@@ -13,10 +14,20 @@ namespace Epsilon {
         time_t     now = time(0);
         struct tm  tstruct;
         char       buf[80];
-       // tstruct = *localtime(&now);
+        //tstruct = *localtime(&now);
+        std::tm bt{};
+#if defined(__unix__)
+        localtime_r(&now, &tstruct);
+#elif defined(_MSC_VER)
+        localtime_s(&tstruct, &now);
+#else
+        static std::mutex mtx;
+        std::lock_guard<std::mutex> lock(mtx);
+        tstruct = *std::localtime(&now);
+#endif
         // Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
         // for more information about date/time format
-        //strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
+        strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
 
         return buf;
     }

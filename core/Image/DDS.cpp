@@ -2,7 +2,7 @@
 #include <fstream>
 #include <cstring>
 #include "Image/DDS.h"
-#include <GL/glew.h>
+#include <Core.hpp>
 
 namespace IO {
     namespace Image {

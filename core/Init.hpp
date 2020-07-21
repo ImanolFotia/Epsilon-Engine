@@ -41,12 +41,14 @@ namespace Epsilon
         
         int lWindowWidth = DATA.WINDOW_WIDTH;
         int lWindowHeight = DATA.WINDOW_HEIGHT;
-
+        std::shared_ptr<Platform::Windows::Window> lWindow;
         #ifdef _WIN32
-            std::shared_ptr<Platform::Windows::Window> lWindow = std::make_shared<Platform::Windows::Window>();
+            lWindow = std::make_shared<Platform::Windows::Window>();
+        #elif defined(__linux__)
+            lWindow = std::make_shared<Platform::Linux::Window>();
         #endif
         
-        Platform::WindowData wData;
+        Platform::WindowData wData = Platform::WindowData();
 
         wData.CurrentMonitor = wData.CurrentMonitor;
         wData.Width = lWindowWidth;

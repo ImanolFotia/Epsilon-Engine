@@ -27,10 +27,10 @@ float rayStep = 0.1;
 const float minRayStep = 0.1;
 const float maxRayStep = 0.1;
 const float rayIncrement = 1.01;
-const float maxSteps = 30;
+const float maxSteps = 50;
 const float searchDist = 5;
 const float searchDistInv = 0.2;
-const int numBinarySearchSteps = 5;
+const int numBinarySearchSteps = 10;
 const float maxDDepth = 1.0;
 const float maxDDepthInv = 1.0;
 const float reflectionSpecularFalloffExponent = 3.0;
@@ -143,38 +143,42 @@ void main()
     float ReflectionMultiplier;
     vec3 hs = vec3(0.0);
     bool selfReflection = dot(reflected, normalize(viewPos)) > 0.01;
-    vec4 coords;
+    vec4 coords = vec4(0.0);
     vec2 dCoords;
     float iTime = Time;
     vec3 SSR;
     int mask = 0;
     vec2 brdf  = texture(BRDF, vec2(max(dot(worldNormal, viewDir), 0.0), Roughness)).rg;
     iTime = !isMoving ? iTime : 1.0;
-
+    vec2 edge = vec2(0.0);
     if(SSROn == 1 && !isPlastic ){
         vec2 NoiseScale = Resolution / 4.0;
-        vec3 wp = vec3(vec4(viewPos, 1.0) * invView);
-        vec3 random = vec3(texture(noiseTexture, (TexCoords.xy*2.0) + (1.0 - iTime)).rgb);
+        vec3 random = vec3(texture(noiseTexture, (TexCoords.xy*100) + (1.0 - iTime)).rgb);
         float factor = Roughness*0.20;
-        hs = hash(wp*iTime);
-        hs = random;
-        hs.x += -0.5;
+        hs = random;//clamp(random, vec3(0.0), vec3(1.0))*2.0-1.0;
+        /*hs.x += -0.5;
         hs.z += -1.0;
         hs.x *= 0.5;
-        hs.z *= 0.5;
-        vec3 jitt = mix(vec3(0.0), hs, factor);
+        hs.z *= 0.5;*/
+        vec3 jitt = mix(vec3(0.0), hs, Fresnel * factor);
         coords = RayCast((jitt + reflected) * max(maxRayStep, -viewPos.z), hitPos, dDepth);
         dCoords = smoothstep(0.2, 0.6, abs(vec2(0.5, 0.5) - coords.xy));
         screenEdgefactor = clamp(1.0 - (dCoords.x + dCoords.y), 0.0, 1.0);
         samples += textureLod(gFinalImage, coords.xy, 0).rgb;
-        ReflectionMultiplier = screenEdgefactor * -reflected.z;
+        ReflectionMultiplier = clamp(screenEdgefactor * (2.0-reflected.z), 0.0, 1.0);
         // Get color
         vec3 hN = texture(gNormal, coords.xy).xyz;
         float VNvector = dot(hN, viewDir);
 
+        mask = int(clamp((1.0-screenEdgefactor*(2.0-reflected.z)), 0.0, 1.0));
+
+        float f = min(clamp(ReflectionMultiplier, 0.0, 1.0),
+                        clamp(screenEdgefactor*(2.0-reflected.z), 0.0, 1.0));
+
+        edge = smoothstep(0.3, 0.7, abs(TexCoords.xy));
+
         SSR = mix(samples, texture(gDepth, TexCoords).gba, clamp(1.0-screenEdgefactor, 0.0, 1.0));
         
-        mask = int(clamp((screenEdgefactor*(2.0-reflected.z)), 0.0, 1.0));
     }
     else
     {
@@ -184,7 +188,9 @@ void main()
 
     if(!isMoving && ID <= 250)
         outColor = outColor + PrevReflection;
-
+        
+    //outColor = vec4(mix(vec3(1.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0), min(edge.x, edge.y)), 1.0);
+    //outColor = vec4(edge.xy, 0.0, 1.0);
     //outColor /= 2.0;
 }
 
@@ -240,6 +246,7 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
 
  
     hitCoord += dir;
+    int miplevel = 0;
     for(int i = 0; i < maxSteps; i++)
     {
  
@@ -249,25 +256,37 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
  
         //depth = texture(gPosition, projectedCoord.xy, 2.0).x;
         //depth = PositionFromDepth(textureLod(gDepth, projectedCoord.xy, 3.0).x).z;
-        depth = ViewSpaceZFromDepth(textureLod(gDepth, projectedCoord.xy, 3.0).x);
+        depth = ViewSpaceZFromDepth(texture(gDepth, projectedCoord.xy, miplevel).x);
 
         if(depth > 1000.0){
             continue;
         }
  
         dDepth = hitCoord.z - depth;
+        
+        //if((dir.z - dDepth) < 1.0)
+        if(dDepth < 0.0 || (dir.z - dDepth) < 1.5) {
+            do {
 
-        if((dir.z - dDepth) < 1.0){
-            if(dDepth < 0.0){   
-                vec4 Result;
-                Result = vec4(BinarySearch(dir, hitCoord, dDepth), 1.0);
-                return Result;
-            }
+                depth = ViewSpaceZFromDepth(texture(gDepth, projectedCoord.xy, miplevel).x);
+                dDepth = hitCoord.z - depth;
+
+                if(miplevel > 0 && dDepth < 0.0){   
+                    miplevel--;
+                } else if(miplevel == 0 && dDepth < 0.0) {
+                    vec4 Result = vec4(BinarySearch(dir, hitCoord, dDepth), 1.0);
+                    return Result;
+                } else break;
+            
+            } while(miplevel > 0 && dDepth > 0.0);
+            miplevel--;
         }
         
         hitCoord += dir;
         dir *= rayIncrement;
         steps++;
+        miplevel++;
+        miplevel = clamp(miplevel, 0, 5);
     }
  
     if(depth<1000)

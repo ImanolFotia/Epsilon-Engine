@@ -104,6 +104,7 @@ namespace Epsilon
         float m_exposure;
         GLuint gDepth;
 
+        bool HBAOOn;
     private:
         /**
         loads the shaders used for render off-screen
@@ -205,7 +206,6 @@ namespace Epsilon
         bool lightShafts;
         bool mParallaxMapping;
         bool mMotionBlurStrength;
-        bool HBAOOn;
         int mHBAOQuality;
         bool mChromaticAberration;
         bool mBokehDOF;

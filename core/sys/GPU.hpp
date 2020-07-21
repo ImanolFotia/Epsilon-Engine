@@ -2,7 +2,6 @@
 
 #include <Core.hpp>
 
-
 class GPU
 {
 public:

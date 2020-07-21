@@ -259,8 +259,8 @@ namespace Epsilon
         glGenTextures(1, &gDepth);
         glBindTexture(GL_TEXTURE_2D, gDepth);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gDepth, 0);
         glBindTexture(GL_TEXTURE_2D, 0);
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -349,7 +349,7 @@ namespace Epsilon
         }
 
         // Noise texture
-        for (GLuint i = 0; i < 16; i++)
+        for (GLuint i = 0; i < 64; i++)
         {
             glm::vec3 noise(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, 0.0f); // rotate around z-axis (in tangent space)
             ssaoNoise.push_back(noise);
@@ -357,7 +357,7 @@ namespace Epsilon
 
         glGenTextures(1, &noiseTexture);
         glBindTexture(GL_TEXTURE_2D, noiseTexture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 4, 4, 0, GL_RGB, GL_FLOAT, &ssaoNoise[0]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 8, 8, 0, GL_RGB, GL_FLOAT, &ssaoNoise[0]);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -711,9 +711,14 @@ namespace Epsilon
         glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "BRDF"), 4);
         glBindTexture(GL_TEXTURE_2D, BRDFFramebuffer->getRenderTargetHandler(0));
 
-        glActiveTexture(GL_TEXTURE5);
+        /*glActiveTexture(GL_TEXTURE5);
         glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "noiseTexture"), 5);
-        glBindTexture(GL_TEXTURE_2D, /*noiseTexture*/ BlueNoiseTexture->getTextureID());
+        glBindTexture(GL_TEXTURE_2D, /*noiseTexture BlueNoiseTexture->getTextureID());
+*/
+        
+        glActiveTexture(GL_TEXTURE5);
+        ScreenSpaceReflectionShader->PushUniform("noiseTexture", 5);
+        glBindTexture(GL_TEXTURE_2D, noiseTexture);
 
         glActiveTexture(GL_TEXTURE6);
         glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "PreviousReflection"), 6);
@@ -771,6 +776,10 @@ namespace Epsilon
             glActiveTexture(GL_TEXTURE0);
             glUniform1i(glGetUniformLocation(DenoiseShader->getProgramID(), "texture0"), 0);
             glBindTexture(GL_TEXTURE_2D, SSRTexture[CurrentSSR]);
+            
+            glActiveTexture(GL_TEXTURE1);
+            glUniform1i(glGetUniformLocation(DenoiseShader->getProgramID(), "roughnessTex"), 1);
+            glBindTexture(GL_TEXTURE_2D, gExpensiveNormal);
             //glGenerateMipmap(GL_TEXTURE_2D);
 
             glUniform2f(glGetUniformLocation(DenoiseShader->getProgramID(), "resolution"), width, height);

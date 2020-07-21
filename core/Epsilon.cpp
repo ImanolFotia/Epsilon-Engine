@@ -543,8 +543,27 @@ namespace Epsilon
             static_pointer_cast<Component::RenderComponent>(_RComp)->setTransparency(false);
             MIN_MAX_POINTS _BoundingBox = ResourceManager::Get().getModelBoundingBox(tModelName);
             Component::Component_ptr _PComp = std::make_shared<Component::PhysicComponent>(100, tPosition, tScale, Physics::Type::CUBE, _BoundingBox);
-            Component::Component_ptr _SComp = std::make_shared<Component::ScriptComponent>("scripts/test.lua");
-            _Entity->addComponent(_RComp)->addComponent(_PComp)->addComponent(_SComp);
+            //Component::Component_ptr _SComp = std::make_shared<Component::ScriptComponent>("scripts/test.lua");
+            _Entity->addComponent(_RComp)->addComponent(_PComp)/*->addComponent(_SComp)*/;
+
+            EntityList.push_back(_Entity);
+        }
+        
+        {
+            glm::vec3 tPosition = glm::vec3(10, 15, 10);
+            glm::vec3 tScale = glm::vec3(2.0f);
+            glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
+            std::string tModelName = "models/esfera.eml";
+
+            std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(tPosition, tScale, tRotation);
+
+            Component::Component_ptr _RComp = std::make_shared<Component::RenderComponent>(tModelName, tPosition, "Main");
+            static_pointer_cast<Component::RenderComponent>(_RComp)->CastsShadows(true);
+            static_pointer_cast<Component::RenderComponent>(_RComp)->setTransparency(false);
+            MIN_MAX_POINTS _BoundingBox = ResourceManager::Get().getModelBoundingBox(tModelName);
+            Component::Component_ptr _PComp = std::make_shared<Component::PhysicComponent>(100, tPosition, tScale, Physics::Type::SPHERE, _BoundingBox);
+            //Component::Component_ptr _SComp = std::make_shared<Component::ScriptComponent>("scripts/test.lua");
+            _Entity->addComponent(_RComp)->addComponent(_PComp)/*->addComponent(_SComp)*/;
 
             EntityList.push_back(_Entity);
         }
@@ -1243,7 +1262,7 @@ namespace Epsilon
         else
         {
             glfwSetInputMode(window->getHandle()->getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            this->m_CameraMode = NO_CLIP;
+            this->m_CameraMode = PLAYER_CONTROLLED;
         }
 
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::N])
@@ -1252,8 +1271,10 @@ namespace Epsilon
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::F])
             flashLight = !flashLight;
 
-        if (Input::KeyBoard::KEYS[Input::GLFW::Key::SPACE])
+        if (Input::KeyBoard::KEYS[Input::GLFW::Key::SPACE]){
+            PP->HBAOOn = !PP->HBAOOn;
             SSAO = !SSAO;
+        }
 
         if (glm::abs((menuTime * 60) - (etime * 60)) > 60.0f)
         {

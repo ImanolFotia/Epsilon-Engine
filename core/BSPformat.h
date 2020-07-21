@@ -11,7 +11,7 @@
 #include <vector>
 #include <string>
 
-#include <GL/glew.h>
+#include <Core.hpp>
 
 
 /// This is the number that is associated with a face that is of type "polygon"

@@ -31,9 +31,9 @@ namespace Epsilon {
 
             void Render(){}
 
-            glm::vec3 getPosition(){}
-            glm::quat getRotation(){}
-            glm::vec3 getScale(){}
+            glm::vec3 getPosition() { return glm::vec3(0.0); }
+            glm::quat getRotation(){ return glm::quat(0.0, 0.0, 0.0, 0.0); }
+            glm::vec3 getScale(){ return glm::vec3(0.0); }
 
             COMPONENT_TYPE getType(){
                 return mType;

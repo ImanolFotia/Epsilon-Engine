@@ -3,6 +3,7 @@
 
 #include "Context.hpp"
 
+#include <GLFW/glfw3.h>
 #ifndef EPSILON_STATIC
 #include <GLFW/glfw3.h>
 #endif
@@ -26,28 +27,26 @@ namespace Epsilon
             {
 
                 mWindowHandle = windowHandle;
-#ifndef EPSILON_STATIC
+/*#ifndef EPSILON_STATIC
                 glewExperimental = GL_TRUE;
                 glewInit();
-#else
-                if (mWindowHandle->getType() == Platform::WINDOW_HANDLE_TYPE::GLAD)
+#else*/
+                if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
                 {
-                    if (!gladLoadGL())
-                    {
-                        IO::PrintLine("Failed to initialize GLAD");
-                        return;
-                    }
-#endif
+                    IO::PrintLine("Failed to initialize GLAD");
+                    std::exit(255);
+                    return;
+                }
+/*#endif*/
             }
-
             void Context::SwapBuffers()
             {
 #ifndef EPSILON_STATIC
                 if (mWindowHandle->getType() == Platform::WINDOW_HANDLE_TYPE::GLFW)
                     glfwSwapBuffers(mWindowHandle->getHandle());
 #else
-                    if (mWindowHandle->getType() == Platform::WINDOW_HANDLE_TYPE::HDC)
-                        ::SwapBuffers((HDC)mWindowHandle->getHandle()); //Calling SwapBuffers inside windows.h
+                if (mWindowHandle->getType() == Platform::WINDOW_HANDLE_TYPE::HDC)
+                    ::SwapBuffers((HDC)mWindowHandle->getHandle()); //Calling SwapBuffers inside windows.h
 
 #endif
             }
