@@ -1,10 +1,9 @@
 #pragma once
 
+#include <pch.hpp>
 #include <glm/glm.hpp>
 #include <EpsilonMemory.h>
 #include <Types.h>
-
-#include <vector>
 
 #include <btBulletDynamicsCommon.h>
 #include <BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.h>

@@ -4,8 +4,9 @@
 ///
 ///=============================================================================
 
+#include <pch.hpp>
+
 #include "Frustum.h"
-#include <iostream>
 
 // This is the index in our selection buffer that has the closet object ID clicked
 #define FIRST_OBJECT_ID 3

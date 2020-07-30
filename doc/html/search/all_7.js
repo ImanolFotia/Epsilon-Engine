@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['handleinputs',['HandleInputs',['../class_camera.html#a63bf578388a6ea87d2d0a250f91198ab',1,'Camera']]],
-  ['helpers',['Helpers',['../namespace_helpers.html',1,'']]]
+  ['handleinputs_119',['HandleInputs',['../class_epsilon_1_1_camera.html#ab4aa7ef7da680fdbfabf7841b8477609',1,'Epsilon::Camera']]]
 ];

@@ -7,9 +7,9 @@
 #ifndef EPSILON_H_INCLUDED
 #define EPSILON_H_INCLUDED
 
-#include <map>
+#include <pch.hpp>
+
 #include <GLFW/glfw3.h>
-#include <thread>
 #include <Texture.h>
 #include <Shader.h>
 #include <Skybox.h>
@@ -26,7 +26,6 @@
 #include <MD5_Anim.h>
 #include <ShadowMapping.h>
 #include <Entity/Entity.h>
-#include <memory>
 #include <ResourceManager.h>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>

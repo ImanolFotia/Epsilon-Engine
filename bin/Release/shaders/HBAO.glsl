@@ -21,7 +21,7 @@ uniform vec2 LinMAD;// = vec2(0.1-10.0, 0.1+10.0) / (2.0*0.1*10.0);
 
 vec2 AORes = vec2(Resolution);
 vec2 InvAORes = vec2(1.0/Resolution.x, 1.0/Resolution.y);
-vec2 NoiseScale = Resolution / 4.0;
+vec2 NoiseScale = Resolution / 8.0;
 
 float AOStrength = 80.0;
 float R = 1.5;

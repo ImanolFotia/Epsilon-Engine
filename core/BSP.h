@@ -10,11 +10,7 @@
 #define FACE_UNUSED 2
 #define FACE_MESHVERT 3
 
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-#include <vector>
-#include <map>
+#include <pch.hpp>
 
 #include <GLFW/glfw3.h>
 

@@ -1,9 +1,8 @@
 #pragma once
 
+#include <pch.hpp>
 #include <OpenGL/Renderers/renderer.h>
 #include <Light.h>
-
-#include <vector>
 
 namespace Epsilon {
 class DeferredRenderer : public Renderer

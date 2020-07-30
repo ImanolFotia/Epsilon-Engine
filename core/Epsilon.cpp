@@ -6,20 +6,17 @@
 
 #include <Core.hpp>
 
-#include <iostream>
+#include <pch.hpp>
+
 #include <Epsilon.h>
 #include <ProgramData.h>
-#include <cstdlib>
 #include <time.h>
 #include <Helpers.hpp>
 #include <Types.h>
 #include "../../version.h"
 #include <glm/gtc/quaternion.hpp>
-#include <cmath>
-#include <thread>
 #include <EpsilonMemory.h>
 #include <sys/CPUID.h>
-#include <chrono>
 #include <Log.h>
 #include <sys/Console.hpp>
 #include <multithread/ThreadPool.hpp>
@@ -1262,7 +1259,7 @@ namespace Epsilon
         else
         {
             glfwSetInputMode(window->getHandle()->getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            this->m_CameraMode = PLAYER_CONTROLLED;
+            this->m_CameraMode = NO_CLIP;
         }
 
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::N])

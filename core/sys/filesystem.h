@@ -1,15 +1,11 @@
 #pragma once
 
+#include <pch.hpp>
 #ifdef __linux__
 #include <sys/types.h>
 #include <dirent.h>
 #endif // __linux__
 
-
-#include <string>
-#include <fstream>
-#include <vector>
-#include <unordered_map>
 
 namespace Epsilon
 {

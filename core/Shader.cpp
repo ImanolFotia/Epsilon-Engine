@@ -3,13 +3,8 @@
 /// Purpose:
 ///
 ///=============================================================================
+#include <pch.hpp>
 #include <Shader.h>
-#include <stdio.h>
-#include <string>
-#include <vector>
-#include <iostream>
-#include <fstream>
-#include <algorithm>
 #include <Log.h>
 #include <Helpers.hpp>
 #include <Driver/API/OpenGL/ShaderPreProcessor.h>

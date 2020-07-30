@@ -1,9 +1,9 @@
+
+#include <pch.hpp>
 #include <SphericalHarmonics.h>
 #include <Types.h>
 #include <Driver/API/OpenGL/HelperFunctions/CheckError.h>
 
-#include <cstdlib>
-#include <cmath>
 
 
 namespace Epsilon {

@@ -1,7 +1,7 @@
+
+#include <pch.hpp>
 #include <sys/filesystem.h>
-#include <fstream>
 #include <Log.h>
-#include <cstring>
 
 namespace Epsilon
 {

@@ -1,7 +1,6 @@
 #pragma once
 
-#include <memory>
-#include <iostream>
+#include <pch.hpp>
 
 struct GLFWwindow;
 

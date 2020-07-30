@@ -1,6 +1,6 @@
 #pragma once
-#include <memory>
-#include <typeinfo>
+#include <pch.hpp>
+
 namespace Memory
 {
     template <class T>

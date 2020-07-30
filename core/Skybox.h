@@ -6,11 +6,9 @@
 
 #ifndef SKYBOX_H_INCLUDED
 #define SKYBOX_H_INCLUDED
-#include <string>
 #include <Core.hpp>
 #include <camera.h>
 #include <Shader.h>
-#include <memory>
 #include <Renderer/Model.h>
 
 namespace Epsilon

@@ -1,9 +1,8 @@
 #pragma once
+#include <pch.hpp>
 #include <GUI/Widget.h>
 #include <OpenGL/HelperFunctions/Quad.h>
 #include <Text.h>
-#include <string>
-#include <vector>
 
 namespace Epsilon
 {

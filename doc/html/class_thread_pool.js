@@ -4,7 +4,7 @@ var class_thread_pool =
     [ "~ThreadPool", "class_thread_pool.html#a7abddad345c33ec4d062535e9b71a987", null ],
     [ "ThreadPool", "class_thread_pool.html#a3225e86aa7835545b3f6c2c8d363d5e5", null ],
     [ "ThreadPool", "class_thread_pool.html#a8af7ebd9779dcab6e0a48f80e8962d08", null ],
-    [ "EmplaceTask", "class_thread_pool.html#a12bb5bd591b845f20323c465e3f28a9d", null ],
+    [ "EmplaceTask", "class_thread_pool.html#ae806afd9e19391742176b6c3cc948af6", null ],
     [ "getInstance", "class_thread_pool.html#a425d9481a69be20791ab1cc60e33c8ad", null ],
     [ "getInstance_shared_ptr", "class_thread_pool.html#ab0024061b3024e412e984ae88deda402", null ],
     [ "operator=", "class_thread_pool.html#aa03d0a10cada99d2839b1baba688bc08", null ],

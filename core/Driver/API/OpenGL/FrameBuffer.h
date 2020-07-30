@@ -1,10 +1,6 @@
 #pragma once
 
-#include <unordered_map>
-#include <iostream>
-#include <string>
-#include <memory>
-#include <vector>
+#include <pch.hpp>
 #include <Core.hpp>
 #include <Driver/API/OpenGL/RenderTarget.h>
 

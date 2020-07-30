@@ -7,10 +7,8 @@
 #ifndef SHADER_H_INCLUDED
 #define SHADER_H_INCLUDED
 
+#include <pch.hpp>
 #include <Core.hpp>
-#include <string>
-#include <iostream>
-#include <unordered_map>
 #include <glm/glm.hpp>
 
 #include <Types.h>

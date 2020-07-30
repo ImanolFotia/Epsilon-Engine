@@ -1,10 +1,6 @@
 #pragma once 
 
-#include <tuple>
-#include <typeindex>
-#include <typeinfo>
-#include <unordered_map>
-#include <vector>
+#include <pch.hpp>
 
 template <typename... TArgs>
 class View {

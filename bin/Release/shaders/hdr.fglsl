@@ -84,7 +84,8 @@ vec4 textureDistorted(in sampler2D tex, in vec2 texcoord, in vec2 direction,
         vec4 colR = texture(tex, uvR);
         vec4 colG = texture(tex, uvG);
         vec4 colB = texture(tex, uvB);
-        return vec4(colR.r, colG.g, colB.b, 0.8f);
+        vec4 orig = texture(tex,texcoord);
+        return orig - vec4(colR.r, colG.g, colB.b, 0.8f);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -111,6 +112,24 @@ vec3 changeSaturation(vec3 color, float saturation) {
 
 uniform int onmenu;
 
+vec3 getColorBox(in sampler2D tex, in vec2 tx) {
+  vec3 Out = vec3(0.0);
+
+  vec2 pixelSize = 1.0 / Resolution.xy;
+
+  Out += texture(tex,                                           tx).rgb*0.75;
+  //Out += texture(tex,                               tx - pixelSize).rgb;
+  //Out += texture(tex,                               tx + pixelSize).rgb;
+  Out += texture(tex,               vec2(tx.x, tx.y + pixelSize.y)).rgb * 0.0625;
+  Out += texture(tex,               vec2(tx.x, tx.y - pixelSize.y)).rgb * 0.0625;
+  Out += texture(tex,               vec2(tx.x - pixelSize.x, tx.y)).rgb * 0.0625;
+  Out += texture(tex,               vec2(tx.x + pixelSize.x, tx.y)).rgb * 0.0625;
+  //Out += texture(tex, vec2(tx.x - pixelSize.x, tx.y + pixelSize.y)).rgb;
+  //Out += texture(tex, vec2(tx.x + pixelSize.x, tx.y - pixelSize.y)).rgb;
+
+  return Out/* / vec3(5)*/;
+}
+
 vec3 Bokeh(vec2 uv, float rad, float thres, float mult) {
   vec3 col = vec3(0.0), res = vec3(0.0);
   float r = 1.0;
@@ -118,11 +137,13 @@ vec3 Bokeh(vec2 uv, float rad, float thres, float mult) {
   vec2 pixelSize = 1.0 / Resolution.xy;
   float i = 0.0;
   int numLoops = 0;
+  //this loop will give roughly 64 iterations
   for (i = 0.0001; i < PI * 2.0; i += PI * 0.031415) {
     r += (1.0 / r);
 
     vec2 disk = vec2(sin(i * 10.0) * (1.0 - r), cos(i * 10.0) * (1.0 - r)) * rad;
 
+    //col = getColorBox(compositeImage, uv + pixelSize * disk); //higher quality at big radiuses, more expensive
     col = texture(compositeImage, uv + pixelSize * disk).rgb;
 
     res += col;
@@ -180,22 +201,22 @@ void main() {
   float DOFRadius =
       smoothstep(0.0, 1.75, length(vec2(0.0) - (fragcoord * 2.0 - 1.0)));
 
-  float referenceDepth = texture(gDepth, vec2(0.5), 4).r;
-  float currentDepth = texture(gDepth, TexCoords, 4).r;
+  float referenceDepth = texture(gDepth, vec2(0.5), 1).r;
+  float currentDepth = texture(gDepth, TexCoords, 1).r;
 
   float dDepth = abs(currentDepth - referenceDepth);
 
   if(onmenu == 1)
     DOFRadius = 1.0;
   else
-    DOFRadius = clamp(dDepth * 15.0, 0.0, blurSize);
+    DOFRadius = clamp(dDepth * 40.0, 0.0, blurSize);
 
-
-  //if(BokehOn)
-  //  composite = Bokeh(TexCoords, blurSize, .10, 1.0);
+  //DOFRadius = 20.0;
+  if(BokehOn)
+    composite = Bokeh(TexCoords, DOFRadius, .10, 1.0);
 
   //if(ChromaticAberrationOn)
-  //  composite = textureDistorted(compositeImage, TexCoords, normalize(fragcoord - vec2(0.0)), 0.001*pow(length((fragcoord * 2.0 - 1.0) - vec2(0.0)), 3.0)).rgb;
+  //composite += textureDistorted(compositeImage, TexCoords, normalize(fragcoord - vec2(0.0)), 0.001*pow(length((fragcoord * 2.0 - 1.0) - vec2(0.0)), 3.0)).rgb ;
 
   composite = changeSaturation(composite, 1.0);
 

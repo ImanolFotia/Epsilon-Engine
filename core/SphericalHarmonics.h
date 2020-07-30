@@ -1,7 +1,6 @@
 #pragma once
+#include <pch.hpp>
 #include <CubeMap.h>
-#include <memory>
-#include <fstream>
 #include <Helpers.hpp>
 
 namespace Epsilon

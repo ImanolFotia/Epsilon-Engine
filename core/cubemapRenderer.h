@@ -1,8 +1,7 @@
 #pragma once
 
+#include <pch.hpp>
 #include <Core.hpp>
-#include <vector>
-#include <memory>
 #include <Driver/API/OpenGL/FrameBuffer.h>
 #include <Driver/API/OpenGL/HelperFunctions/FullScreenQuad.h>
 #include <Driver/API/OpenGL/FrameBuffer.h>

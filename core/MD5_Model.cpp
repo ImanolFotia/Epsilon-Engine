@@ -1,6 +1,6 @@
+#include <pch.hpp>
 #include <Core.hpp>
 #include <Helpers.hpp>
-#include <iostream>
 #include <MD5_Model.h>
 #include <Texture.h>
 #include <glm/gtx/matrix_interpolation.hpp>

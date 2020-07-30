@@ -7,6 +7,7 @@
 #ifndef WATER_H_INCLUDED
 #define WATER_H_INCLUDED
 
+#include <pch.hpp>
 #include <Core.hpp>
 #include <Renderer/Model.h>
 #include <glm/glm.hpp>
@@ -15,8 +16,6 @@
 #include <Shader.h>
 #include <Texture.h>
 #include <camera.h>
-#include <vector>
-#include <memory>
 namespace Epsilon {
 class Water{
 

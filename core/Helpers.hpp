@@ -5,17 +5,13 @@
 ///=============================================================================
 #pragma once
 
+#include <pch.hpp>
 #include <Core.hpp>
 
-#include <iostream>
-#include <string>
 #include <sstream>
-#include <ctime>
-#include <vector>
 #include <iomanip>
 #include <glm/gtc/quaternion.hpp>
 #include <Types.h>
-#include <algorithm>
 #include <limits>
 
 #undef min

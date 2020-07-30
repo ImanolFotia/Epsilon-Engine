@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['xz',['xz',['../class_epsilon.html#aa59709ace8b71ed123e818708edc0543',1,'Epsilon']]]
+  ['xz_790',['xz',['../class_epsilon_1_1_epsilon.html#acd59cc8b1f7f5f9f9636cdfc6f388257',1,'Epsilon::Epsilon']]]
 ];

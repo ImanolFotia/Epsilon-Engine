@@ -1,8 +1,6 @@
 #pragma once
 
-#include <vector>
-#include <iostream>
-#include <algorithm>
+#include <pch.hpp>
 #include <Particle.h>
 #include <ParticleProxy.h>
 

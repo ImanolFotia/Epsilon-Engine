@@ -1,8 +1,8 @@
 #pragma once
 
+#include <pch.hpp>
 #include <PostProcess/Effect.h>
 #include <Helpers.hpp>
-#include <random>
 
 namespace Epsilon
 {

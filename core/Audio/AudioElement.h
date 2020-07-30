@@ -1,8 +1,8 @@
 #pragma once
 
+#include <pch.hpp>
 #include <Types.h>
 #include <Audio/Loaders/WAVFile.h>
-#include <iostream>
 #include <Audio/Audio.h>
 namespace Epsilon
 {

@@ -4,8 +4,7 @@
 ///
 ///=============================================================================
 
-#include <vector>
-#include <iostream>
+#include <pch.hpp>
 #include <SOIL.h>
 #include <Skybox.h>
 #include <SkyboxData.h>

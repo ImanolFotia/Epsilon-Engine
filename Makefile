@@ -114,13 +114,15 @@ RES := ./core/resources.rc
 
 all: clean resource epsilon-release
 
-epsilon-debug: resource $(BIN)/Debug/$(EXEC)
+pch: $(INCLUDE_DIR)/pch.hpp.gch
 
-epsilon-release: resource $(BIN)/Release/$(EXEC)
+epsilon-debug: pch resource $(BIN)/Debug/$(EXEC)
 
-epsilon-static-lib-debug: clean $(OUT_LIB)/Debug/$(LIB_NAME_DEBUG)
+epsilon-release: pch resource $(BIN)/Release/$(EXEC)
 
-epsilon-static-lib-release: clean $(OUT_LIB)/Release/$(LIB_NAME)
+epsilon-static-lib-debug: pch clean $(OUT_LIB)/Debug/$(LIB_NAME_DEBUG)
+
+epsilon-static-lib-release: pch clean $(OUT_LIB)/Release/$(LIB_NAME)
 
 
 resource:
@@ -131,6 +133,10 @@ else
 	-@mkdir -p ./obj
 	objcopy --input binary --output pe-x86-64 --binary-architecture i386:x86-64 $(RES) ./obj/resources.o
 endif
+
+$(INCLUDE_DIR)/pch.hpp.gch:
+	-@mkdir -p $(@D)
+	$(CXX) -x c++-header -c $(@D)/pch.hpp -o $@
 
 $(OBJS_DIR_DEBUG)/%.o: $(SOURCE_DIR)/%.cpp
 	-@mkdir -p $(@D)/Debug

@@ -1,12 +1,12 @@
 #ifndef RESOURCEMANAGER_H
 #define RESOURCEMANAGER_H
 
+#include <pch.hpp>
 #include <Texture.h>
 #include <Renderer/Model.h>
 #include <Water.hpp>
 #include <Renderer/Terrain.h>
 #include <Grass.h>
-#include <map>
 #include <Shader.h>
 #include <CubeMap.h>
 #include <Helpers.hpp>

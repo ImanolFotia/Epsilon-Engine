@@ -1,9 +1,8 @@
 #pragma once
 
+#include <pch.hpp>
 #include <Core.hpp>
 
-#include <string>
-#include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include "MD5_Anim.h"

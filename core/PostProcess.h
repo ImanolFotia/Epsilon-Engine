@@ -5,12 +5,10 @@
 ///=============================================================================
 
 #pragma once
-
+#include <pch.hpp>
 #include <Shader.h>
 #include <camera.h>
-#include <vector>
 #include <ShadowMapping.h>
-#include <memory>
 #include <Light.h>
 #include <Texture.h>
 #include <Driver/API/OpenGL/FrameBuffer.h>

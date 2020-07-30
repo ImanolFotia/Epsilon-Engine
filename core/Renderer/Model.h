@@ -4,13 +4,7 @@
 ///
 ///=============================================================================
 #pragma once
-/// Std. Includes
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <map>
-#include <vector>
+#include <pch.hpp>
 /// GL Includes
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
@@ -19,7 +13,6 @@
 
 #include "Mesh.h"
 #include <Types.h>
-#include <memory>
 #include <emlFormat.h>
 #include <camera.h>
 

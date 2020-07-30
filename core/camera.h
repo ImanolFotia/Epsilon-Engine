@@ -6,12 +6,13 @@
 #ifndef CAMERA_H_INCLUDED
 #define CAMERA_H_INCLUDED
 
+#include <pch.hpp>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <glm/gtc/quaternion.hpp>
 #include <GLFW/glfw3.h>
-#include <iostream>
 
 namespace Epsilon
 {

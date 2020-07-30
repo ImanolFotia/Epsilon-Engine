@@ -7,9 +7,8 @@
 #ifndef GRASS_H_INCLUDED
 #define GRASS_H_INCLUDED
 
+#include <pch.hpp>
 #include <Core.hpp>
-#include <string>
-#include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 

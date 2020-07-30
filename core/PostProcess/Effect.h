@@ -1,9 +1,8 @@
 #pragma once
+#include <pch.hpp>
 #include <Driver/API/OpenGL/FrameBuffer.h>
 #include <Driver/API/OpenGL/HelperFunctions/FullScreenQuad.h>
 #include <Shader.h>
-#include <vector>
-#include <memory>
 #include <glm/glm.hpp>
 
 namespace Epsilon

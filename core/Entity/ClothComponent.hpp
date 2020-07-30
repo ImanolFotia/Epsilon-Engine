@@ -1,10 +1,10 @@
 #pragma once
 
+#include <pch.hpp>
 #include <Entity/Component.h>
 #include <Physics/ClothPhysicObject.h>
 #include <Renderer/Patch.h>
 
-#include <random>
 namespace Epsilon
 {
     namespace Component

@@ -22,6 +22,6 @@ void main()
 	if(!isMoving && TotalFrames < 252)
 		reflection /= TotalFrames;
 
-	FragColor.rgb = vec3(reflection + color) * ao;//max(reflection, vec3(0.0)) +  max(color, vec3(0.0)) * ao;
+	FragColor.rgb = vec3(reflection + color) * pow(ao, 1.5);//max(reflection, vec3(0.0)) +  max(color, vec3(0.0)) * ao;
 	FragColor.a = 1.0;
 }

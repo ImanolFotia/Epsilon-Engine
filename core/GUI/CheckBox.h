@@ -1,8 +1,8 @@
 #pragma once
 
+#include <pch.hpp>
 #include <GUI/Widget.h>
 #include <Text.h>
-#include <string>
 
 namespace Epsilon
 {

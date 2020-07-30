@@ -10,12 +10,12 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 */
+#include <pch.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <Shader.h>
 
-#include <map>
 
 #define nop 1 + 1
 
@@ -106,10 +106,9 @@ namespace Epsilon
         glBindVertexArray(0);*/
         }
 
-        virtual ~Text()
-        {
-            /* delete shader;*/
-            //std::cout << "Text Destroyed" << std::endl;
+        //Default constructor uses an SDF Roboto font
+        Text() {
+
         }
 
     public:

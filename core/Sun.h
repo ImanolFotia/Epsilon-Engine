@@ -7,6 +7,7 @@
 #ifndef SUN_H_INCLUDED
 #define SUN_H_INCLUDED
 
+#include <pch.hpp>
 #include <Core.hpp>
 #include <GLFW/glfw3.h>
 
@@ -15,7 +16,6 @@
 #include <Texture.h>
 #include <Shader.h>
 #include <camera.h>
-#include <memory>
 
 namespace Epsilon
 {

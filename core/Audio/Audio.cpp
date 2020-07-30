@@ -1,6 +1,7 @@
+
+#include <pch.hpp>
 #include <Audio/Audio.h>
 #include <Audio/AudioElement.h>
-#include <cstring>
 
 namespace Epsilon
 {

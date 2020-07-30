@@ -1,15 +1,12 @@
 #pragma once
+#include <pch.hpp>
+
 #include <Types.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <ParticleRenderer.h>
-#include <random>
 #include <Types.h>
-#include <chrono>
 #include <Texture.h>
-#include <atomic>
-#include <thread>
-#include <atomic>
 #include <omp.h>
 
 namespace Epsilon {

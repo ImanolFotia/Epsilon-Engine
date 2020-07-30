@@ -1,11 +1,6 @@
 #pragma once
 
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <vector>
-#include <map>
-#include <algorithm>
+#include <pch.hpp>
 
 namespace GLSLPreProcessor {
 

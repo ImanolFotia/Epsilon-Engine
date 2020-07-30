@@ -1,11 +1,8 @@
 #pragma once
 
+#include <pch.hpp>
 #include <SOIL.h>
-#include <fstream>
 #include <Helpers.hpp>
-#include <thread>
-#include <exception>
-#include <functional>
 
 namespace Epsilon
 {

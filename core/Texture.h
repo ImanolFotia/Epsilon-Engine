@@ -7,23 +7,18 @@
 #ifndef TEXTURE_H_INCLUDED
 #define TEXTURE_H_INCLUDED
 
+#include <pch.hpp>
 #include <Core.hpp>
 
 #include <Engine.hpp>
 
 #include <iostream>
-#include <string>
-#include <vector>
 #include <GLFW/glfw3.h>
-#include <mutex>
-#include <memory>
-
 
 
 #include <Driver/API/Context.hpp>
 #include <Driver/API/OpenGL/Texture2D.hpp>
 
-#include <Image/Image.hpp>
 #include <ProgramData.h>
 #include <Helpers.hpp>
 #include <Image/Image.hpp>

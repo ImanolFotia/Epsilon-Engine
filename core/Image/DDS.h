@@ -1,6 +1,6 @@
 #pragma once
+#include <pch.hpp>
 #include "DDSFile.h"
-#include <memory>
 namespace IO {
     namespace Image {
         class DDS {

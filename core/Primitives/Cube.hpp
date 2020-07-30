@@ -1,8 +1,7 @@
 #pragma once
 
+#include <pch.hpp>
 #include "Primitive.hpp"
-
-#include <memory>
 
 namespace Epsilon
 {

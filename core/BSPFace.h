@@ -6,11 +6,9 @@
 
 #pragma once
 
+#include <pch.hpp>
 #include <Core.hpp>
 #include <glm/glm.hpp>
-#include <iostream>
-#include <string>
-#include <vector>
 #include <Physics/Physics.h>
 #include <Physics/PhysicObject.h>
 #include <Physics/CollisionInfo.h>

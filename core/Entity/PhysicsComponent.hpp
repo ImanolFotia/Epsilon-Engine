@@ -1,5 +1,6 @@
 #pragma once
 
+#include <pch.hpp>
 #include <Entity/Component.h>
 
 #include <Physics/Physics.h>
@@ -10,7 +11,6 @@
 #include <Physics/TriangleMeshPhysicObject.h>
 #include <Physics/ClothPhysicObject.h>
 
-#include <iostream>
 
 #include <Helpers.hpp>
 

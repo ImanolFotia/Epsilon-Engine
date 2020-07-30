@@ -1,5 +1,5 @@
 #pragma once
-#include <string>
+#include <pch.hpp>
 // Format identifier must always be 0x53454D4C || SEML
 #define EMLHEADER (('L'<<24)+('M'<<16)+('E'<<8)+'S')
 

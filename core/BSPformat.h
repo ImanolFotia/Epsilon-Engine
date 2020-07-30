@@ -7,9 +7,7 @@
 #ifndef BSPFORMAT_H_INCLUDED
 #define BSPFORMAT_H_INCLUDED
 
-#include <iostream>
-#include <vector>
-#include <string>
+#include <pch.hpp>
 
 #include <Core.hpp>
 

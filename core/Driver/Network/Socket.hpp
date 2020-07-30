@@ -1,13 +1,10 @@
 #pragma once
 
-#include <exception>
-#include <iostream>
+#include <pch.hpp>
 #include <unistd.h>
 
 #define PORT 80
 #define SPORT 443
-
-#define DEFAULT_MASK 255.255.255.0
 
 #if __linux__
 #include <sys/socket.h> //socket
@@ -16,10 +13,6 @@
 #include <sys/ioctl.h>
 #elif _WIN32
 #include <winsock2.h>
-<<<<<<< HEAD
-=======
-#include <windows.h>
->>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
 #include <ws2tcpip.h>
 #include <iphlpapi.h>
 #define ioctl ioctlsocket

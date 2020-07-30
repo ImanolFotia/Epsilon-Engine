@@ -1,11 +1,8 @@
 #pragma once
 
-#include <vector>
-#include <memory>
+#include <pch.hpp>
 #include <glm/glm.hpp>
 #include <Shader.h>
-#include <functional>
-#include <exception>
 #include <Types.h>
 
 namespace Epsilon {

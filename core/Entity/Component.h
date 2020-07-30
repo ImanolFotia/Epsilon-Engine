@@ -6,10 +6,9 @@
 
 #pragma once
 
-#include <iostream>
+#include <pch.hpp>
 #include <glm/glm.hpp>
 #include <ResourceManager.h>
-#include <memory>
 #include <Types.h>
 
 namespace Epsilon

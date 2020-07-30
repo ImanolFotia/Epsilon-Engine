@@ -1,10 +1,5 @@
 #pragma once
-#include <string>
-#include <iostream>
-#include <limits.h>
-#include <stdint.h>
-#include <thread>
-#include <exception>
+#include <pch.hpp>
 #include <Log.h>
 
 #if defined(_MSC_VER) || defined(__INTEL_COMPILER)

@@ -6,9 +6,10 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <pch.hpp>
+
 #include <App.hpp>
 #include <Init.hpp>
-#include <memory>
 
 #include <Platform/WindowBase.hpp>
 

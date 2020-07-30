@@ -1,4 +1,4 @@
 var structt_b_s_p_lightmap =
 [
-    [ "imageBits", "structt_b_s_p_lightmap.html#aa06c1426bcd49921ecc14e8756ee04af", null ]
+    [ "imageBits", "structt_b_s_p_lightmap.html#a524e33d452d2bfc65980ba5e3494a374", null ]
 ];

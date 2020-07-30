@@ -1,6 +1,5 @@
-#include <iostream>
-#include <fstream>
-#include <cstring>
+
+#include <pch.hpp>
 #include "Image/DDS.h"
 #include <Core.hpp>
 

@@ -1,12 +1,9 @@
 #pragma once
 
+#include <pch.hpp>
+
 #include <EntityComponent/Entity.hpp>
 #include <ComponentManager.hpp>
-
-#include <vector>
-#include <unordered_map>
-#include <typeindex>
-#include <any>
 
 namespace Epsilon {
     

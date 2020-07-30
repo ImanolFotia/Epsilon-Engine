@@ -1,9 +1,7 @@
 #pragma once
 
-#include <iostream>
+#include <pch.hpp>
 #include <glm/glm.hpp>
-#include <typeinfo>
-#include <memory>
 #include <ResourceManager.h>
 #include <Physics/CollisionInfo.h>
 

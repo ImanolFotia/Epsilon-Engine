@@ -1,8 +1,6 @@
 #pragma once
 
-#include <vector>
-#include <string>
-#include <memory>
+#include <pch.hpp>
 
 #include <Texture.h>
 #include <Driver/API/OpenGL/HelperFunctions/FullScreenQuad.h>
@@ -12,7 +10,6 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <exception>
 
 #include <GIProbe.hpp>
 

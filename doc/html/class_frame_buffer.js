@@ -13,6 +13,7 @@ var class_frame_buffer =
     [ "setToDraw", "class_frame_buffer.html#a7fc09c39eb24e6cadc57b006dd6af0cc", null ],
     [ "setToRead", "class_frame_buffer.html#aab0e90a873662766c8aeb7d034bf981c", null ],
     [ "setViewport", "class_frame_buffer.html#a38d76aa81993cb1bcf28b811ccb7e97e", null ],
+    [ "setViewport", "class_frame_buffer.html#a0edb1ed53952c5f62afc7a2d334097da", null ],
     [ "unbindFramebuffer", "class_frame_buffer.html#a28daa4e95495388f1d58ba72cc6b3116", null ],
     [ "UpdateMipMaps", "class_frame_buffer.html#ae547f88e0e9081bfd4e8c2cc98ca3198", null ],
     [ "HEIGHT", "class_frame_buffer.html#ab85b82233910477a28c1ca8f69dbe555", null ],

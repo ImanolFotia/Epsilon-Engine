@@ -4,12 +4,11 @@
 ///
 ///=============================================================================
 
+#include <pch.hpp>
 #include <Core.hpp>
 #include <omp.h>
 #include <BSP.h>
 #include <glm/glm.hpp>
-#include <vector>
-#include <iostream>
 #include <Frustum.h>
 #include <ResourceManager.h>
 #include <Texture.h>

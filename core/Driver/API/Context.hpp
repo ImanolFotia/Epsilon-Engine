@@ -1,15 +1,8 @@
 #pragma once
-/*
-#if defined(EPSILON_STATIC) || defined(__cplusplus_cli)
-#include <GLFW/glfw3.h>
-#include <glad/glad.h>
-#else
-#include <GLFW/glfw3.h>
-#endif*/
 
+#include <pch.hpp>
 #include <Core.hpp>
 
-#include <memory>
 #include "Platform/WindowHandle.hpp"
 
 namespace Epsilon

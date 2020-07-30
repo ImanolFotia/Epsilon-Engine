@@ -4,10 +4,10 @@
 ///
 ///=============================================================================
 #pragma once
+#include <pch.hpp>
 #include <Core.hpp>
 #include <ProgramData.h>
 #include <Epsilon.h>
-#include <memory>
 #include <Log.h>
 
 namespace Epsilon

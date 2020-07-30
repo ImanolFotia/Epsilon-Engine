@@ -7,12 +7,11 @@
 #ifndef TERRAIN_H_INCLUDED
 #define TERRAIN_H_INCLUDED
 
-#include <vector>
+#include <pch.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <Shader.h>
 #include <Texture.h>
-#include <memory>
 #include <Physics/Physics.h>
 #include <Physics/PhysicObject.h>
 

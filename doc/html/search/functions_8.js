@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['initresources',['InitResources',['../class_epsilon.html#acdbbc212462949ba9bde213afc7b5a38',1,'Epsilon']]],
-  ['isonground',['isOnGround',['../class_game_1_1_player.html#af6ac1597903155f7300f8aa01b774959',1,'Game::Player']]]
+  ['initresources_674',['InitResources',['../class_epsilon_1_1_epsilon.html#ab16754b00d9edf17f55098f07696e867',1,'Epsilon::Epsilon']]],
+  ['isonground_675',['isOnGround',['../class_epsilon_1_1_player.html#aa2f8e5d3e2b84e0077fcf81f394b4e72',1,'Epsilon::Player']]]
 ];

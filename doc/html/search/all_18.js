@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['zipfilesystem',['ZipFileSystem',['../class_i_o_1_1_filesystem_1_1_zip_file_system.html',1,'IO::Filesystem']]],
-  ['zipfilesystem',['ZipFileSystem',['../class_i_o_1_1_filesystem_1_1_zip_file_system.html#ab210f3aec23a424619f818d56b4b8bd6',1,'IO::Filesystem::ZipFileSystem']]]
+  ['zipfilesystem_387',['ZipFileSystem',['../class_epsilon_1_1_i_o_1_1_filesystem_1_1_zip_file_system.html',1,'Epsilon::IO::Filesystem::ZipFileSystem'],['../class_epsilon_1_1_i_o_1_1_filesystem_1_1_zip_file_system.html#a2845f76f9479793bcf0857975aef431b',1,'Epsilon::IO::Filesystem::ZipFileSystem::ZipFileSystem()']]]
 ];

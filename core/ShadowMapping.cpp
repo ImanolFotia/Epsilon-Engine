@@ -1,6 +1,5 @@
+#include <pch.hpp>
 #include <ShadowMapping.h>
-#include <iostream>
-#include <cmath>
 
 void ShadowMap::SetupShadowMap()
 {

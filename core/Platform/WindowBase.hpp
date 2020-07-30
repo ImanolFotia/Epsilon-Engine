@@ -1,10 +1,9 @@
 #pragma once
 
+#include <pch.hpp>
 #include <Driver/API/Context.hpp>
 #include "Device.hpp"
 #include "WindowHandle.hpp"
-
-#include <memory>
 
 namespace Epsilon
 {

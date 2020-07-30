@@ -1,16 +1,12 @@
-
+#include <pch.hpp>
 #include <Core.hpp>
 #include <PostProcess.h>
-#include <iostream>
 #include <ProgramData.h>
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <random>
-#include <string>
 #include <Helpers.hpp>
 #include <IO/KeyBoard.h>
 #include <Driver/API/OpenGL/HelperFunctions/CheckError.h>
-#include <chrono>
 
 
 namespace Epsilon
@@ -259,8 +255,8 @@ namespace Epsilon
         glGenTextures(1, &gDepth);
         glBindTexture(GL_TEXTURE_2D, gDepth);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, 0);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gDepth, 0);
         glBindTexture(GL_TEXTURE_2D, 0);
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -418,8 +414,8 @@ namespace Epsilon
             SSAO->PushUniform("NumSamples", 6);
 
         case 2:
-            SSAO->PushUniform("NumDirections", 6);
-            SSAO->PushUniform("NumSamples", 8);
+            SSAO->PushUniform("NumDirections", 8);
+            SSAO->PushUniform("NumSamples", 12);
         }
 
         glUniform3fv(glGetUniformLocation(SSAO->getProgramID(), "samples"), 9, &ssaoKernel[0][0]);
@@ -463,7 +459,7 @@ namespace Epsilon
         for (unsigned int i = 0; i < amount; ++i)
         {
             glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[horizontal]);
-            glViewport(0, 0, 426, 240);
+            glViewport(0, 0, width, height);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             glUniform1i(glGetUniformLocation(blurBloom->getProgramID(), "horizontal"), horizontal);
@@ -535,7 +531,7 @@ namespace Epsilon
         {
             glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[i]);
             glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[i]);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, 426, 240, 0, GL_RGB, GL_FLOAT, NULL);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, NULL);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // We clamp to the edge as the blur filter would otherwise sample repeated texture values!
@@ -718,7 +714,7 @@ namespace Epsilon
         
         glActiveTexture(GL_TEXTURE5);
         ScreenSpaceReflectionShader->PushUniform("noiseTexture", 5);
-        glBindTexture(GL_TEXTURE_2D, noiseTexture);
+        glBindTexture(GL_TEXTURE_2D, BlueNoiseTexture->getTextureID());
 
         glActiveTexture(GL_TEXTURE6);
         glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "PreviousReflection"), 6);
@@ -1076,22 +1072,21 @@ namespace Epsilon
         glUniform1i(glGetUniformLocation(shader->getProgramID(), "gLightAccumulation"), 6);
         glBindTexture(GL_TEXTURE_2D, gLightAccumulation);
 
-        glUniform1i(glGetUniformLocation(shader->getProgramID(), "hdr"), hdr);
-        glUniform1f(glGetUniformLocation(shader->getProgramID(), "time"), glfwGetTime());
-        glUniform1f(glGetUniformLocation(shader->getProgramID(), "exposure"), exposure);
-        glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "lightSpaceMatrix"), 1, GL_FALSE, &shadowMap->getLightSpaceMatrix()[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "depthBias"), 1, GL_FALSE, &shadowMap->getBiasMatrix()[0][0]);
-
         glm::mat4 invProj = glm::inverse(cam->getProjectionMatrix());
         glm::mat4 invView = glm::inverse(cam->getViewMatrix());
-        glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "projection"), 1, GL_FALSE, &invProj[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "view"), 1, GL_FALSE, &invView[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "uView"), 1, GL_FALSE, &cam->getViewMatrix()[0][0]);
-        //glUniform3fv(glGetUniformLocation(shader->getProgramID(), "LightPositions"), LightPositions.size(), &LightPositions[0][0]);
-        glUniform1i(glGetUniformLocation(shader->getProgramID(), "NUMLIGHTS"), m_Lights.size());
-        glUniform3f(glGetUniformLocation(shader->getProgramID(), "viewPos"), cam->getPosition().x, cam->getPosition().y, cam->getPosition().z);
-        glUniform3f(glGetUniformLocation(shader->getProgramID(), "uViewDir"), cam->getDirection().x, cam->getDirection().y, cam->getDirection().z);
-        glUniform3f(glGetUniformLocation(shader->getProgramID(), "lightDir"), Sun.x, Sun.y, Sun.z);
+
+        shader->PushUniform("hdr", hdr);
+        shader->PushUniform("time", (float)glfwGetTime());
+        shader->PushUniform("exposure", exposure);
+        shader->PushUniform("depthBias", shadowMap->getBiasMatrix());
+        shader->PushUniform("lightSpaceMatrix", shadowMap->getLightSpaceMatrix());
+        shader->PushUniform("projection", invProj);
+        shader->PushUniform("view", invView);
+        shader->PushUniform("uView", cam->getViewMatrix());
+        shader->PushUniform("NUMLIGHTS", (int)m_Lights.size());
+        shader->PushUniform("viewPos", glm::vec3(cam->getPosition().x, cam->getPosition().y, cam->getPosition().z));
+        shader->PushUniform("uViewDir", glm::vec3(cam->getDirection().x, cam->getDirection().y, cam->getDirection().z));
+        shader->PushUniform("lightDir", glm::vec3(Sun.x, Sun.y, Sun.z));
 
         RenderQuad();
 
