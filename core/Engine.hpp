@@ -23,10 +23,19 @@ namespace Epsilon
             mContextType = type;
         }
 
+        unsigned Width() { return WindowWidth; }
+        unsigned Height() { return WindowHeight; }
+        
+        void Width(unsigned w) { WindowWidth = w; }
+        void Height(unsigned h) { WindowHeight = h; }
+
     private:
         Engine() = default;
 
         API::CONTEXT_TYPE mContextType;
         static Engine instance;
+
+        unsigned WindowWidth = 800;
+        unsigned WindowHeight = 600;
     };
 } // namespace Epsilon

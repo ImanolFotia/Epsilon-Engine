@@ -27,6 +27,7 @@
 #include <Driver/Audio/XAudio2/XAudio2.hpp>
 
 #include <Engine.hpp>
+#include <Clock.hpp>
 
 GLenum glCache::CullFaceMode = 0;
 GLuint glCache::ShaderId = 0;
@@ -531,13 +532,14 @@ namespace Epsilon
             glm::vec3 tPosition = glm::vec3(5, 15, 5);
             glm::vec3 tScale = glm::vec3(2.0f);
             glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
-            std::string tModelName = "models/cube.eml";
+            std::string tModelName = "models/android.eml";
 
             std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(tPosition, tScale, tRotation);
 
             Component::Component_ptr _RComp = std::make_shared<Component::RenderComponent>(tModelName, tPosition, "Main");
             static_pointer_cast<Component::RenderComponent>(_RComp)->CastsShadows(true);
             static_pointer_cast<Component::RenderComponent>(_RComp)->setTransparency(false);
+            static_pointer_cast<Component::RenderComponent>(_RComp)->setVisibility(true);
             MIN_MAX_POINTS _BoundingBox = ResourceManager::Get().getModelBoundingBox(tModelName);
             Component::Component_ptr _PComp = std::make_shared<Component::PhysicComponent>(100, tPosition, tScale, Physics::Type::CUBE, _BoundingBox);
             //Component::Component_ptr _SComp = std::make_shared<Component::ScriptComponent>("scripts/test.lua");
@@ -564,23 +566,24 @@ namespace Epsilon
 
             EntityList.push_back(_Entity);
         }
-        /*
+        
         {
-            glm::vec3 tPosition = glm::vec3(0, 50, 0);
-            glm::vec3 tScale = glm::vec3(0.025);
+            glm::vec3 tPosition = glm::vec3(0, 8, 0);
+            glm::vec3 tScale = glm::vec3(2.05);
             glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
-            std::string tModelName = "models/sponza.eml";
+            std::string tModelName = "models/map.eml";
 
             std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(tPosition, tScale, tRotation);
 
             Component::Component_ptr _RComp = std::make_shared<Component::RenderComponent>(tModelName, tPosition, "Main");
             static_pointer_cast<Component::RenderComponent>(_RComp)->CastsShadows(true);
             static_pointer_cast<Component::RenderComponent>(_RComp)->setTransparency(false);
+            static_pointer_cast<Component::RenderComponent>(_RComp)->setVisibility(true);
 
             _Entity->addComponent(_RComp);
 
             EntityList.push_back(_Entity);
-        }*/
+        }
 
         {
             glm::vec3 tPosition = glm::vec3(10, 3.5, 10);
@@ -597,12 +600,33 @@ namespace Epsilon
 
             EntityList.push_back(_Entity);
         }
+
+        
+        glm::vec3 initCubemapPosition = glm::vec3(-35.0, 0, -35.0);
+        {
+            for (int a = 0; a < 8; a++)
+                for (int b = 0; b < 5; b++)
+                    for (int c = 0; c < 7; c++)
+                    {
+                        glm::vec3 positions = initCubemapPosition + glm::vec3(a, b, c) * glm::vec3(10.0, 5.0, 10.0);
+                        glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
+                        std::string tModelName = "models/probe.eml";
+
+                        std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(positions, glm::vec3(1.0), tRotation);
+                        Component::Component_ptr _RComp = std::make_shared<Component::RenderComponent>(tModelName, positions, "Main");
+                        static_pointer_cast<Component::RenderComponent>(_RComp)->CastsShadows(false);
+                        static_pointer_cast<Component::RenderComponent>(_RComp)->isDoubleFaced(false);
+                        static_pointer_cast<Component::RenderComponent>(_RComp)->setTransparency(false);
+
+                        _Entity->addComponent(_RComp);
+                        EntityList.push_back(_Entity);
+                    }
+        }
         //33 34 14
         //-32 54 -13
 
         //-32 34 -13
         //33 54 14
-        glm::vec3 initCubemapPosition = glm::vec3(-37.0, 3, -20.0);
 
         auto MenuAudio = [&]() -> void { m_AudioSystem->PlayByID(2); };
 
@@ -667,17 +691,18 @@ namespace Epsilon
         captureViews[5] = glm::lookAt(glm::vec3(0.0), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
         //33 34 14
         //-32 54 -13
-        SphericalHarmonics::SphericalHarmonicsFormat sphStruct[7][5][7];
+        SphericalHarmonics::SphericalHarmonicsFormat sphStruct[8][5][7];
+        auto start = std::chrono::steady_clock::now();
         //Shaders["CubeMap"]->Use();
         int index = 0;
-        for (int a = 0; a < 7; a++)
+        for (int a = 0; a < 8; a++)
             for (int b = 0; b < 5; b++)
                 for (int c = 0; c < 7; c++)
                 {
 
-                    this->mCubemap[a][b][c] = (std::shared_ptr<CubeMap>)new CubeMap(index, initCubemapPosition + glm::vec3(a, b, c) * glm::vec3(12.0, 6.0, 7.0));
+                    this->mCubemap[a][b][c] = (std::shared_ptr<CubeMap>)new CubeMap(index, initCubemapPosition + glm::vec3(a, b, c) * glm::vec3(10.0, 5.0, 10.0));
                     std::shared_ptr<Shader> cubeShader = this->mCubemap[a][b][c]->getShader();
-                    float rotation = 0.5 * glfwGetTime();
+                    float rotation = 0.5 * Clock::TimeSeconds();
                     for (int index = 0; index < 6; ++index)
                     {
                         this->mCubemap[a][b][c]->Begin(index);
@@ -723,9 +748,9 @@ namespace Epsilon
                                 continue;
                             if (EntityList[i]->HasRenderComponent())
                             {
-                                glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1), EntityList[i]->getScale());
-                                glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), EntityList[i]->getPosition());
-                                glm::mat4 RotationMatrix = glm::toMat4(EntityList[i]->getRotation());
+                                glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1.0), EntityList[i]->getScale());
+                                glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1.0), EntityList[i]->getPosition());
+                                glm::mat4 RotationMatrix = glm::mat4(1.0f) * glm::toMat4(glm::normalize(EntityList[i]->getRotation()));
                                 Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
                                 cubeShader->PushUniform("model", Model);
                                 glm::mat4 currentView = mCubemap[a][b][c]->getViewMatrixbyIndex(index);
@@ -759,20 +784,20 @@ namespace Epsilon
                         glActiveTexture(GL_TEXTURE5);
                         cubeShader->PushUniform("shadowMap", 5);
                         glBindTexture(GL_TEXTURE_2D, shadowMap->getShadowTextureID());
-                        BSPMap->RenderLevel(mCubemap[a][b][c]->getPosition(), cubeShader->getProgramID(), true);
+                        //BSPMap->RenderLevel(mCubemap[a][b][c]->getPosition(), cubeShader->getProgramID(), true);
                         cubeShader->Free();
                     }
                     mCubemap[a][b][c]->End();
-
                     mCubemap[a][b][c]->genAmbientConvolution();
-
                     ResourceManager::Get().addCubemap(this->mCubemap[a][b][c], mCubemap[a][b][c]->getPosition());
-
                     sph.CalculateCohefficients(this->mCubemap[a][b][c]->getTextureID(), 3);
-
                     sph.setId(this->mCubemap[a][b][c]->getID());
                     sphStruct[a][b][c] = sph.toStruct();
+/*
 
+
+
+*/
                     //std::cout << "Generating SPH for cubemap " << a << std::endl;
                     /*for (unsigned int i = 0; i < sph.getCohefficients().size(); i++)
                 {
@@ -780,30 +805,15 @@ namespace Epsilon
                 }*/
                     index++;
                 }
+        auto finish =  std::chrono::steady_clock::now();
+        auto interval = std::chrono::duration_cast<std::chrono::milliseconds>(finish - start).count();
+        std::cout << "Cubemap generation took: " << interval << " milliseconds" << std::endl;
+        std::cout << interval/245 << " per cubemap" << std::endl;
 
         ResourceManager::Get().cubemapsLoaded = true;
 
         glCullFace(GL_BACK);
-        /*
-        {
-            for (int a = 0; a < 7; a++)
-                for (int b = 0; b < 5; b++)
-                    for (int c = 0; c < 7; c++)
-                    {
-                        glm::vec3 positions = initCubemapPosition + glm::vec3(a, b, c) * glm::vec3(12.0, 6.0, 7.0);
-                        glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
-                        std::string tModelName = "models/probe.eml";
-
-                        std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(positions, glm::vec3(1.0), tRotation);
-                        Component::Component_ptr _RComp = std::make_shared<Component::RenderComponent>(tModelName, positions, "Main");
-                        static_pointer_cast<Component::RenderComponent>(_RComp)->CastsShadows(false);
-                        static_pointer_cast<Component::RenderComponent>(_RComp)->isDoubleFaced(false);
-                        static_pointer_cast<Component::RenderComponent>(_RComp)->setTransparency(false);
-
-                        _Entity->addComponent(_RComp);
-                        EntityList.push_back(_Entity);
-                    }
-        }*/
+        
 
         ResourceManager::Get().loadQueuedTextures();
 
@@ -816,7 +826,7 @@ namespace Epsilon
 
         glGenBuffers(1, &AmbientLightSSBO);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, AmbientLightSSBO);
-        glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(SphericalHarmonics::SphericalHarmonicsFormat) * 7 * 5 * 7, (const void *)&sphStruct, GL_DYNAMIC_COPY);
+        glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(SphericalHarmonics::SphericalHarmonicsFormat) * 8 * 5 * 7, (const void *)&sphStruct, GL_DYNAMIC_COPY);
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, AmbientLightSSBO);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
@@ -895,7 +905,7 @@ namespace Epsilon
         //rM->requestModel("models/Desk.eml", rM, glm::vec3(-2.0,8.0,10.0), glm::vec3(0.9), glm::quat(1, 0.0, -1.0, 0.0));
         //rM->requestModel("models/sponza.eml", rM, glm::vec3(-16,5.0,-15), glm::vec3(0.025), glm::quat(0, 0.0, 0, 0.0));
         float first, second, delta;
-        first = glfwGetTime();
+        first = Clock::TimeSeconds();
         std::vector<std::string> paths;
         std::string path;
 
@@ -993,7 +1003,7 @@ namespace Epsilon
         BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera[mCurrentCamera]->getProjectionMatrix() * eCamera[mCurrentCamera]->getViewMatrix()), BSPmodel);
         shader->Use();
         this->SetUniforms(shader, glm::vec3(0.0), glm::vec3(0.1), glm::quat(0, 0, 0, 0));
-        BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), shader->getProgramID(), true);
+        //BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), shader->getProgramID(), true);
         /*
     Shaders["MD5Geometry"]->Use();
     glUniformMatrix4fv(glGetUniformLocation(Shaders["MD5Geometry"]->getProgramID(), "mSkinned"), 150, GL_FALSE, &m_AnimModel->m_AnimatedBones[0][0][0]);
@@ -1042,7 +1052,7 @@ namespace Epsilon
         BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera[mCurrentCamera]->getProjectionMatrix() * eCamera[mCurrentCamera]->getViewMatrix()), BSPmodel);
         Shaders["ShadowMapping"]->Use();
         this->SetUniforms(Shaders["ShadowMapping"], glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.1, 0.1, 0.1), glm::quat(0.0, 0.0, 0.0, 0.0));
-        BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), Shaders["ShadowMapping"]->getProgramID(), false);
+        //BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), Shaders["ShadowMapping"]->getProgramID(), false);
 
         /*
     Shaders["MD5ShadowMapping"]->Use();
@@ -1079,7 +1089,7 @@ namespace Epsilon
         shader->PushUniform("invModelMatrix", invModelMatrix);
         shader->PushUniform("invNormalMatrix", invNormalMatrix);
 
-        glUniform1f(glGetUniformLocation(shader->getProgramID(), "time"), glfwGetTime());
+        glUniform1f(glGetUniformLocation(shader->getProgramID(), "time"), Clock::TimeSeconds());
         glUniform1i(glGetUniformLocation(shader->getProgramID(), "isTransparent"), 0);
     }
 
@@ -1109,11 +1119,11 @@ namespace Epsilon
         int DEBUG_MODE = 3;
         /*
         IO::PrintLine("Position: x = ",
-                      Helpers::floatTostring(this->eCamera->getPosition().x),
+                      Helpers::floatTostring(this->eCamera[0]->getPosition().x),
                       " y = ",
-                      Helpers::floatTostring(this->eCamera->getPosition().y),
+                      Helpers::floatTostring(this->eCamera[0]->getPosition().y),
                       " z = ",
-                      Helpers::floatTostring(this->eCamera->getPosition().z));
+                      Helpers::floatTostring(this->eCamera[0]->getPosition().z));
         /*
     if(DEBUG_MODE >= 1) {
         this->text->RenderText("FPS: " + Helpers::intTostring(acumfps), 0.01, 0.95, 0.5, glm::vec3(1,1,1));
@@ -1173,7 +1183,8 @@ namespace Epsilon
 
     void Epsilon::Clock()
     {
-        etime = glfwGetTime();
+        Clock::Tick();
+        etime = Clock::TimeSeconds();
         frametime = etime - lastTime;
         double t = 0.0;
 
@@ -1198,7 +1209,7 @@ namespace Epsilon
         Shaders["SkyBox"]->Use();
 
         glm::mat4 view = glm::mat4(glm::mat3(eCamera[mCurrentCamera]->getViewMatrix()));
-        float rotation = 0.5 * glfwGetTime();
+        float rotation = 0.5 * Clock::TimeSeconds();
         glm::mat4 RotationMatrix = glm::rotate(glm::mat4(1.0), glm::radians(rotation), glm::vec3(0, 1, 0));
         view = view /* * RotationMatrix*/;
         glm::mat4 projection = glm::mat4(eCamera[mCurrentCamera]->getProjectionMatrix());
@@ -1486,7 +1497,7 @@ namespace Epsilon
         glUniformMatrix4fv(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "PrevView"), 1, GL_FALSE, &eCamera[mCurrentCamera]->getPrevViewMatrix()[0][0]);
         glUniformMatrix4fv(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "lightSpaceMatrix"), 1, GL_FALSE, &shadowMap->getLightSpaceMatrix()[0][0]);
         glUniformMatrix4fv(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "depthBias"), 1, GL_FALSE, &shadowMap->getBiasMatrix()[0][0]);
-        this->SetUniforms(Shaders["DefaultParticle"], glm::vec3(0.0f), glm::vec3(4.0f), glm::quat(1.0, sin(glfwGetTime() * frametime), 0.0f, cos(glfwGetTime() * frametime)));
+        this->SetUniforms(Shaders["DefaultParticle"], glm::vec3(0.0f), glm::vec3(4.0f), glm::quat(1.0, sin(Clock::TimeSeconds() * frametime), 0.0f, cos(Clock::TimeSeconds() * frametime)));
         glActiveTexture(GL_TEXTURE0);
         glUniform1i(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "texture0"), 0);
         glBindTexture(GL_TEXTURE_2D, tex->getTextureID());

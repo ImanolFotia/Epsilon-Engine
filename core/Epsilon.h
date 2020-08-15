@@ -151,7 +151,7 @@ namespace Epsilon
         // std::shared_ptr<Pick> m_Pick;
         CAMERA_MODE m_CameraMode;
         std::vector<std::shared_ptr<CubeMap>> m_Cubemaps;
-        std::shared_ptr<CubeMap> mCubemap[7][5][7];
+        std::shared_ptr<CubeMap> mCubemap[8][5][7];
 
         std::shared_ptr<Player> m_PlayerCapsule;
         //std::shared_ptr<GUI> m_GUI;

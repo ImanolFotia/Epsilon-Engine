@@ -52,13 +52,13 @@ namespace Epsilon
 
     struct MIN_MAX_POINTS
     {
-        float MAX_X;
-        float MAX_Y;
-        float MAX_Z;
+        float MAX_X = 0.0f;
+        float MAX_Y = 0.0f;
+        float MAX_Z = 0.0f;
 
-        float MIN_X;
-        float MIN_Y;
-        float MIN_Z;
+        float MIN_X = 0.0f;
+        float MIN_Y = 0.0f;
+        float MIN_Z = 0.0f;
     };
 
 

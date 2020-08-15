@@ -30,6 +30,7 @@ namespace Epsilon
         bool m_CastShadows;
         bool m_IsVisible;
         MODEL_TYPE m_Type;
+        bool uniformsSet = false;
 
         /**  Functions   */
         /// Constructor, expects a filepath to a 3D model.
@@ -37,6 +38,7 @@ namespace Epsilon
 
         Model(const char *path)
         {
+            uniformsSet = false;
             this->loadModel(path, 1);
             this->path = path;
 
@@ -62,7 +64,7 @@ namespace Epsilon
         }
         std::string directory;
         /// Draws the model, and thus all its meshes
-        void Draw(std::shared_ptr<Shader> shader, glm::vec3);
+        void Draw(std::shared_ptr<Shader> shader);
 
         /// Draws the model, and thus all its meshes
         void Draw(GLuint shader, glm::vec3);

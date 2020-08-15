@@ -22,9 +22,6 @@ class Water{
 public:
 
     Water(glm::vec3 position, float scale);
-    virtual ~Water(){
-        //std::cout << "Deleted Water" << std::endl;
-    }
 
 public:
 

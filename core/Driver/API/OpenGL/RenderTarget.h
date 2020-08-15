@@ -39,6 +39,6 @@ public:
     }
 
 private:
-    GLuint m_RenderTextureTarget;
+    GLuint m_RenderTextureTarget = 0;
 };
 

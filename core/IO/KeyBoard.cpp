@@ -12,7 +12,7 @@ Input::KeyWraps Input::KeyBoard::KeyWrap;
 namespace Input
 {
 
-void KeyBoard::KeyBoardCallBack(GLFWwindow* window, int key, int scancode, int action, int mode)
+void KeyBoard::KeyBoardCallBackGLFW(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
     if (key >= 0 && key < 1024)
     {

@@ -7,7 +7,7 @@ const float PI = 3.14159265;
 
 layout (binding = 0) uniform sampler2D gDepth;
 layout (binding = 1) uniform sampler2D texNoise;
-//layout (binding = 2) uniform sampler2D gNormal;
+layout (binding = 2) uniform sampler2D gNormal;
 
 layout(location = 0) out float FragColor;
 
@@ -15,16 +15,18 @@ uniform vec2 FocalLen;
 uniform vec2 UVToViewA;
 uniform vec2 UVToViewB;
 uniform vec2 Resolution;
+uniform mat4 view;
+uniform mat4 invView;
 in vec2 ViewRay;
 
 uniform vec2 LinMAD;// = vec2(0.1-10.0, 0.1+10.0) / (2.0*0.1*10.0);
 
 vec2 AORes = vec2(Resolution);
 vec2 InvAORes = vec2(1.0/Resolution.x, 1.0/Resolution.y);
-vec2 NoiseScale = Resolution / 8.0;
+vec2 NoiseScale = Resolution / 4.0;
 
 float AOStrength = 80.0;
-float R = 1.5;
+float R = 2.0;
 float R2 = R*R;
 float NegInvR2 = - 1.0 / R2;
 float TanBias = tan(45.0 * PI / 180.0);
@@ -134,7 +136,6 @@ float HorizonOcclusion(	vec2 deltaUV,
 	vec2 uv = TexCoords + SnapUVOffset(randstep*deltaUV);
 	deltaUV = SnapUVOffset( deltaUV );
 
-	// Calculate the tangent vector
 	vec3 T = deltaUV.x * dPdu + deltaUV.y * dPdv;
 
 	// Get the angle of the tangent vector from the viewspace axis

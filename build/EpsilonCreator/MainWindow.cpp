@@ -3,7 +3,7 @@
 #include <Engine.hpp>
 
 
-//Epsilon::Engine Epsilon::Engine::instance;
+Epsilon::Engine Epsilon::Engine::instance;
 
 namespace EpsilonCreator {
 
@@ -19,6 +19,7 @@ namespace EpsilonCreator {
 		//TODO: Add the constructor code here
 		//
 
+		m_Renderer = new Renderer();
 
 		panel1->Controls->Add(OGLComponent);
 
@@ -31,6 +32,11 @@ namespace EpsilonCreator {
 	System::Void MainWindow::MainLoop(System::Object^ sender, System::EventArgs^ e) {
 		if (OGLComponent == nullptr) return;
 		OGLComponent->Render();
+
+		m_Renderer->OnUpdate();
+
+		m_Renderer->OnRender();
+
 		OGLComponent->SwapOpenGLBuffers();
 	}
 

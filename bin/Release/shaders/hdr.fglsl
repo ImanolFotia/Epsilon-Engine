@@ -1,12 +1,12 @@
-#version 330 core
+#version 440 core
 
-uniform sampler2D compositeImage;
-uniform sampler2D blurredSampler;
-uniform sampler1D uLensColor;
-uniform sampler2D uLensDirtTex;
-uniform sampler2D uLensStarTex;
-uniform sampler2D brightColorBuffer;
-uniform sampler2D gDepth;
+layout (binding = 0) uniform  sampler2D compositeImage; 
+layout (binding = 1) uniform  sampler2D blurredSampler;
+layout (binding = 2) uniform  sampler1D uLensColor;
+layout (binding = 3) uniform  sampler2D uLensDirtTex;
+layout (binding = 4) uniform  sampler2D uLensStarTex;
+layout (binding = 5) uniform  sampler2D brightColorBuffer;
+layout (binding = 6) uniform  sampler2D gDepth;
 uniform float time;
 out vec4 color;
 noperspective in vec2 TexCoords;

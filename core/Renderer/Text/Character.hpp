@@ -14,4 +14,8 @@ namespace Epsilon
         glm::vec4 color;
     };
 
+    struct CharacterGlyph {
+        CharacterVertex vertex[6];
+    };
+
 } // namespace Epsilon

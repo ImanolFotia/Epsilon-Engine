@@ -41,6 +41,7 @@ namespace Epsilon
             {
                 itr->second.Destroy();
             }
+            
             std::cout << "Deleted Resource Manager" << std::endl;
         }
 
@@ -62,7 +63,7 @@ namespace Epsilon
 
         glm::vec3 getModelScale(const std::string& path);
 
-        void setModelUniforms(const std::string&, std::shared_ptr<Shader>, glm::vec3, glm::vec3, glm::quat, std::shared_ptr<Camera>);
+        //void setModelUniforms(const std::string&, std::shared_ptr<Shader>, glm::vec3, glm::vec3, glm::quat, std::shared_ptr<Camera>);
 
         void setModelUniforms(const std::string& path, std::shared_ptr<Shader> shader, glm::vec3, glm::vec3, glm::quat, glm::vec3, glm::vec3, glm::quat, std::shared_ptr<Camera> cam);
 

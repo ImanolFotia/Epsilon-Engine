@@ -9,7 +9,7 @@ CubeMap::CubeMap(int ID, glm::vec3 Pos)
 			type = DYNAMIC;
 			prefilterShader = (std::shared_ptr<Shader>)new Shader("shaders/prefilter.vglsl", "shaders/prefilter.glsl");
 			mMainShader = (std::shared_ptr<Shader>)new Shader("shaders/vertex.glsl", "shaders/fragment.frag");
-			resolution = 32;
+			resolution = 64;
 			genFrameBuffer();
 
 			captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.001f, 1000.0f);

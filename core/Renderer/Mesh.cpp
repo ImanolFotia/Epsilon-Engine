@@ -11,6 +11,7 @@ namespace Epsilon
         if(ResourceManager::Get().cubemapsLoaded && finalCubemaps != true)
         {
             finalCubemaps = true;
+            updateCubemaps = false;
             mCubemapIndex = ResourceManager::Get().getNearestCubemapIndex(pos);
             mGIIndex = ResourceManager::Get().NearestCubeMap(pos) - 1;
             IO::PrintLine("Cubemap index registered: ", mGIIndex, " at position: ", pos.x, pos.y, pos.z);
@@ -37,9 +38,9 @@ namespace Epsilon
 
             glActiveTexture(GL_TEXTURE4);
             shader->PushUniform("skybox", 4);
-/*
+
             mCubemapIndex = ResourceManager::Get().getNearestCubemapIndex(pos);
-            mGIIndex = ResourceManager::Get().NearestCubeMap(pos) - 1;*/
+            mGIIndex = ResourceManager::Get().NearestCubeMap(pos) - 1;
             
             //mCubemapIndex = ResourceManager::Get().getNearestCubemapIndex(pos);
             //mGIIndex = ResourceManager::Get().NearestCubeMap(pos) - 1;

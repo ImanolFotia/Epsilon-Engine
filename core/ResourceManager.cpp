@@ -57,7 +57,7 @@ namespace Epsilon
         try
         {
             
-            ModelList.at(modelPath).Draw(shader, pos);
+            ModelList.at(modelPath).Draw(shader);
         }
 
         catch (std::exception& e)
@@ -130,10 +130,10 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         return ModelList.at(path).Scale;
     }
 
-    void ResourceManager::setModelUniforms(const std::string& path, std::shared_ptr<Shader> shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, std::shared_ptr<Camera> cam)
-    {
-        ModelList.at(path).SetUniforms(shader, pos, sc, rot, cam);
-    }
+    //void ResourceManager::setModelUniforms(const std::string& path, std::shared_ptr<Shader> shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, std::shared_ptr<Camera> cam)
+    //{
+        //ModelList.at(path).SetUniforms(shader, pos, sc, rot, cam);
+    //}
 
     void ResourceManager::setModelUniforms(const std::string& path, std::shared_ptr<Shader> shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, glm::vec3 ppos, glm::vec3 psc, glm::quat prot, std::shared_ptr<Camera> cam)
     {

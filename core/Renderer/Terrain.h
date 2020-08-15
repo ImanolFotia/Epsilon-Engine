@@ -47,14 +47,6 @@ public:
     Terrain(const char*, const char*, const char*, float, int/**Must be Power of two*/);
     Terrain(const char*, const char*, const char*, const char*, const char*,float, int, glm::vec3);
 
-    virtual ~Terrain(){
-
-        //std::cout <<"Deleted terrain" << std::endl;
-        //delete diffuseTexture;
-        //delete specularTexture;
-        //delete heightMap;
-    }
-
 public:
 
     void RenderTerrain(Shader*);

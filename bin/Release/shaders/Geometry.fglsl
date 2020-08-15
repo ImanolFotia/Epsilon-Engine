@@ -73,7 +73,7 @@ struct SphericalHarmonicsFormat {
 
 layout(std430, binding = 1) buffer AmbientLightSSBO
 {
-    SphericalHarmonicsFormat ambientProbes[7*5*7];
+    SphericalHarmonicsFormat ambientProbes[8*5*7];
 
 } lp;
 

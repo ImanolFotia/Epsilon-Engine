@@ -95,7 +95,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>glad.lib;opengl32.lib;gdi32.lib;user32.lib;kernel32.lib;SOIL.lib;inih.lib;Lua5.lib;EpsilonLib.lib</AdditionalDependencies>
+      <AdditionalDependencies>glad.lib;opengl32.lib;gdi32.lib;user32.lib;kernel32.lib;SOIL.lib;inih.lib;Lua5.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>H:\Epsilon\Epsilon Engine\build\Lua5\x64\Debug;H:\Epsilon\Epsilon Engine\build\inih\x64\Debug;H:\Epsilon\Epsilon Engine\build\SOIL\x64\Debug;H:\Epsilon\Epsilon Engine\build\EpsilonCreator\x64\Debug;H:\Epsilon\Epsilon Engine\thirdparty\bullet3\buildvs\lib\Debug;glad.lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -131,6 +131,7 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="StartUp.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -138,6 +139,7 @@
       <FileType>CppForm</FileType>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </ClInclude>
+    <ClInclude Include="Renderer.hpp" />
     <ClInclude Include="StartUp.h">
       <FileType>CppForm</FileType>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>

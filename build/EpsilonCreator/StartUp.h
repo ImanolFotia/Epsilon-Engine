@@ -76,8 +76,6 @@ namespace EpsilonCreator {
 			// 
 			// panel1
 			// 
-			this->panel1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(45)), static_cast<System::Int32>(static_cast<System::Byte>(45)),
-				static_cast<System::Int32>(static_cast<System::Byte>(48)));
 			this->panel1->Controls->Add(this->btnNewProject);
 			this->panel1->Controls->Add(this->btnCancel);
 			this->panel1->Controls->Add(this->btnOpen);
@@ -88,12 +86,9 @@ namespace EpsilonCreator {
 			// 
 			// btnNewProject
 			// 
-			this->btnNewProject->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(75)), static_cast<System::Int32>(static_cast<System::Byte>(75)),
-				static_cast<System::Int32>(static_cast<System::Byte>(78)));
 			this->btnNewProject->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
 			this->btnNewProject->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 10, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->btnNewProject->ForeColor = System::Drawing::SystemColors::ControlLight;
 			this->btnNewProject->ImageAlign = System::Drawing::ContentAlignment::MiddleLeft;
 			this->btnNewProject->Location = System::Drawing::Point(0, 0);
 			this->btnNewProject->Margin = System::Windows::Forms::Padding(0);
@@ -107,12 +102,9 @@ namespace EpsilonCreator {
 			// 
 			// btnCancel
 			// 
-			this->btnCancel->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(75)), static_cast<System::Int32>(static_cast<System::Byte>(75)),
-				static_cast<System::Int32>(static_cast<System::Byte>(78)));
 			this->btnCancel->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
 			this->btnCancel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 10, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->btnCancel->ForeColor = System::Drawing::SystemColors::ControlLight;
 			this->btnCancel->Location = System::Drawing::Point(0, 265);
 			this->btnCancel->Margin = System::Windows::Forms::Padding(0);
 			this->btnCancel->Name = L"btnCancel";
@@ -124,12 +116,9 @@ namespace EpsilonCreator {
 			// 
 			// btnOpen
 			// 
-			this->btnOpen->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(75)), static_cast<System::Int32>(static_cast<System::Byte>(75)),
-				static_cast<System::Int32>(static_cast<System::Byte>(78)));
 			this->btnOpen->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
 			this->btnOpen->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 10, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->btnOpen->ForeColor = System::Drawing::SystemColors::ControlLight;
 			this->btnOpen->Location = System::Drawing::Point(0, 65);
 			this->btnOpen->Margin = System::Windows::Forms::Padding(0);
 			this->btnOpen->Name = L"btnOpen";
@@ -144,7 +133,6 @@ namespace EpsilonCreator {
 			this->label1->AutoSize = true;
 			this->label1->Font = (gcnew System::Drawing::Font(L"Mercy", 30, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label1->ForeColor = System::Drawing::SystemColors::ControlLightLight;
 			this->label1->Location = System::Drawing::Point(278, 110);
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(247, 38);
@@ -171,7 +159,6 @@ namespace EpsilonCreator {
 			// label2
 			// 
 			this->label2->AutoSize = true;
-			this->label2->ForeColor = System::Drawing::SystemColors::ControlLight;
 			this->label2->Location = System::Drawing::Point(208, 162);
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(85, 13);
@@ -190,12 +177,9 @@ namespace EpsilonCreator {
 			// 
 			// btnOpenRecent
 			// 
-			this->btnOpenRecent->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(75)), static_cast<System::Int32>(static_cast<System::Byte>(75)),
-				static_cast<System::Int32>(static_cast<System::Byte>(78)));
 			this->btnOpenRecent->FlatStyle = System::Windows::Forms::FlatStyle::Popup;
 			this->btnOpenRecent->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->btnOpenRecent->ForeColor = System::Drawing::SystemColors::ControlLight;
 			this->btnOpenRecent->Location = System::Drawing::Point(480, 266);
 			this->btnOpenRecent->Margin = System::Windows::Forms::Padding(0);
 			this->btnOpenRecent->Name = L"btnOpenRecent";
@@ -209,8 +193,6 @@ namespace EpsilonCreator {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(55)), static_cast<System::Int32>(static_cast<System::Byte>(55)),
-				static_cast<System::Int32>(static_cast<System::Byte>(58)));
 			this->ClientSize = System::Drawing::Size(591, 328);
 			this->Controls->Add(this->btnOpenRecent);
 			this->Controls->Add(this->linkLabel1);

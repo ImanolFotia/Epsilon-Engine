@@ -116,13 +116,13 @@ all: clean resource epsilon-release
 
 pch: $(INCLUDE_DIR)/pch.hpp.gch
 
-epsilon-debug: pch resource $(BIN)/Debug/$(EXEC)
+epsilon-debug: resource $(BIN)/Debug/$(EXEC)
 
-epsilon-release: pch resource $(BIN)/Release/$(EXEC)
+epsilon-release: resource $(BIN)/Release/$(EXEC)
 
-epsilon-static-lib-debug: pch clean $(OUT_LIB)/Debug/$(LIB_NAME_DEBUG)
+epsilon-static-lib-debug: clean pch $(OUT_LIB)/Debug/$(LIB_NAME_DEBUG)
 
-epsilon-static-lib-release: pch clean $(OUT_LIB)/Release/$(LIB_NAME)
+epsilon-static-lib-release: clean pch $(OUT_LIB)/Release/$(LIB_NAME)
 
 
 resource:

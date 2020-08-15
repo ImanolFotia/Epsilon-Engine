@@ -38,7 +38,7 @@ namespace Input
 
         static bool KEYS[1024];
 
-        static void KeyBoardCallBack(GLFWwindow *window, int key, int scancode, int action, int mode);
+        static void KeyBoardCallBackGLFW(GLFWwindow *window, int key, int scancode, int action, int mode);
 
         static bool getKey(uint16_t);
 

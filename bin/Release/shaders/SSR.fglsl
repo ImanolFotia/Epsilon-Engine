@@ -23,9 +23,9 @@ noperspective in vec2 TexCoords;
 
 out vec4 outColor;
 
-float rayStep = 0.1;
-const float minRayStep = 0.1;
-const float maxRayStep = 0.1;
+float rayStep = 0.05;
+const float minRayStep = 0.05;
+const float maxRayStep = 0.05;
 const float rayIncrement = 1.01;
 const float maxSteps = 50;
 const float searchDist = 5;
@@ -162,7 +162,7 @@ void main()
         hs.z *= 0.5;
         vec3 jitt = (mix(vec3(0.0), hs, factor));
         coords = RayCast((jitt + reflected) * max(maxRayStep, -viewPos.z), hitPos, dDepth);
-        dCoords = smoothstep(0.2, 0.6, abs(vec2(0.5, 0.5) - coords.xy));
+        dCoords = smoothstep(0.0, 0.55, abs(vec2(0.5, 0.5) - coords.xy));
         screenEdgefactor = clamp(1.0 - (dCoords.x + dCoords.y), 0.0, 1.0);
         samples += textureLod(gFinalImage, coords.xy, 0).rgb;
         ReflectionMultiplier = clamp(screenEdgefactor * (2.0-reflected.z), 0.0, 1.0);

@@ -31,7 +31,7 @@ namespace Epsilon
 
 			mTimeStep = deltaTime;
 
-			std::static_pointer_cast<btSoftRigidDynamicsWorld>(world)->stepSimulation(deltaTime, 5, 1.0 / 300.0);
+			std::static_pointer_cast<btSoftRigidDynamicsWorld>(world)->stepSimulation(deltaTime, 8, 1.0 / 300.0);
 			//acum = 0.0;
 			//}
 		}

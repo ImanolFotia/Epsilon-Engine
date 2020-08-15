@@ -4,44 +4,35 @@
 
 #include "Command.hpp"
 #include "IText.hpp"
-#include "SDFText.hpp"
+#include "SDFTextRenderer.hpp"
 
 namespace Epsilon
 {
     namespace Text
-    {
+    {   
+        enum class TEXT_TYPE: uint8_t {
+            TTF = 0,
+            SDF,
+        };
+
         class TextManager
         {
         public:
-            TextManager() = default;
+            TextManager(enum TEXT_TYPE type);
 
-            void Print(const std::string &str, const glm::vec3 &pos, const glm::vec4 &col) {
-                mCommandQueue.emplace(str, pos, col, false);
-            }
-            void PrintLn(const std::string &str, const glm::vec3 &pos, const glm::vec4 &col) {
-                mCommandQueue.emplace(str, pos, col, true);
-            }
+            void Print(const std::string &, const glm::vec3 &, const glm::vec4 &);
+            void Print(std::string &&, glm::vec3 &&, glm::vec4 &&);
 
-            void Flush() {
-                while(!mCommandQueue.empty()){
-                    auto & front = mCommandQueue.front();
-                    if(front.NewLine()) {
-                        mText->PrintLn(front.Text(), front.Position(), front.Color());
-                    } else {
-                        mText->Print(front.Text(), front.Position(), front.Color());
-                    }
-                    mCommandQueue.pop();
-                }
-            }
+            void PrintLn(const std::string &, const glm::vec3 &, const glm::vec4 &);
+            void PrintLn(std::string &&, glm::vec3 &&, glm::vec4 &&);
 
-            void Clear() {
-                while(!mCommandQueue.empty()) mCommandQueue.pop();
-                mText->Clear();
-            }
+            void Flush();
+
+            void Clear();
 
         private:
             std::queue<Command> mCommandQueue;
-            std::unique_ptr<IText> mText;
+            std::unique_ptr<IText> mTextRenderer;
         };
     } // namespace Text
 } // namespace Epsilon

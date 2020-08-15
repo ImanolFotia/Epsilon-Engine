@@ -12,6 +12,7 @@ namespace Epsilon
         Rotation = rot;
         PrevModel = glm::mat4(1.0f);
         ModelMatrix = glm::mat4(1.0f);
+        uniformsSet = false;
 
         this->loadModel(path, 0);
     }
@@ -101,12 +102,14 @@ namespace Epsilon
         {
             mMeshesBoundingBoxes.reserve(numMeshes);
             mMeshesPositionsRelative.reserve(numMeshes);
+            
 
             for (int i = 0; i < numMeshes; ++i)
             {
                 std::vector<t_Vertex> tmpVertVector;
                 std::vector<unsigned int> tmpIndicesVector;
                 std::vector<Texture> tmpTexturesVector;
+                MIN_MAX_POINTS tmp_MinMax;
 
                 for (int j = 0; j < l_meshes[i].mNumVertices; ++j)
                 {
@@ -126,9 +129,25 @@ namespace Epsilon
                     if (l_vertices[l_meshes[i].mFirstVertex + j].position.z < MinMaxPoints.MIN_Z)
                         MinMaxPoints.MIN_Z = l_vertices[l_meshes[i].mFirstVertex + j].position.z;
 
-                    mMeshesBoundingBoxes.push_back(MinMaxPoints);
+                    //min max for this mesh
+                    
+                    if (l_vertices[l_meshes[i].mFirstVertex + j].position.x > tmp_MinMax.MAX_X)
+                        tmp_MinMax.MAX_X = l_vertices[l_meshes[i].mFirstVertex + j].position.x;
+                    if (l_vertices[l_meshes[i].mFirstVertex + j].position.y > tmp_MinMax.MAX_Y)
+                        tmp_MinMax.MAX_Y = l_vertices[l_meshes[i].mFirstVertex + j].position.y;
+                    if (l_vertices[l_meshes[i].mFirstVertex + j].position.z > tmp_MinMax.MAX_Z)
+                        tmp_MinMax.MAX_Z = l_vertices[l_meshes[i].mFirstVertex + j].position.z;
+
+                    if (l_vertices[l_meshes[i].mFirstVertex + j].position.x < tmp_MinMax.MIN_X)
+                        tmp_MinMax.MIN_X = l_vertices[l_meshes[i].mFirstVertex + j].position.x;
+                    if (l_vertices[l_meshes[i].mFirstVertex + j].position.y < tmp_MinMax.MIN_Y)
+                        tmp_MinMax.MIN_Y = l_vertices[l_meshes[i].mFirstVertex + j].position.y;
+                    if (l_vertices[l_meshes[i].mFirstVertex + j].position.z < tmp_MinMax.MIN_Z)
+                        tmp_MinMax.MIN_Z = l_vertices[l_meshes[i].mFirstVertex + j].position.z;
+
                 }
 
+                mMeshesBoundingBoxes.push_back(tmp_MinMax);
                 float dx, dy, dz;
                 dx = (mMeshesBoundingBoxes.back().MAX_X - mMeshesBoundingBoxes.back().MIN_X);
                 dy = (mMeshesBoundingBoxes.back().MAX_Y - mMeshesBoundingBoxes.back().MIN_Y);
@@ -139,7 +158,7 @@ namespace Epsilon
                                                    mMeshesBoundingBoxes.back().MIN_Z + (dz * 0.5));
 
                 mMeshesPositionsRelative.push_back(centerOfMass);
-                mMeshesPositions.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
+                mMeshesPositions.push_back(centerOfMass);
 
                 for (int j = 0; j < l_meshes[i].mNumIndices; ++j)
                 {
@@ -221,13 +240,11 @@ namespace Epsilon
         return true;
     }
 
-    void Model::Draw(std::shared_ptr<Shader> shader, glm::vec3 pos = glm::vec3(0, 0, 0))
+    void Model::Draw(std::shared_ptr<Shader> shader)
     {
 
         for (GLuint i = 0; i < this->meshes.size(); i++)
         {
-            /*if (pos != glm::vec3(0, 0, 0))
-                this->meshes[i].updateCubemaps = true;*/
             this->meshes[i].Draw(shader, mMeshesPositions.at(i));
         }
     }
@@ -237,9 +254,9 @@ void Model::Draw(GLuint shader, glm::vec3 pos = glm::vec3(0,0,0)) {
         this->meshes[i].Draw(shader, this->resm, pos);
 }*/
 
-    void Model::SetUniforms(std::shared_ptr<Shader> shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation, std::shared_ptr<Camera> cam)
+    /*void Model::SetUniforms(std::shared_ptr<Shader> shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation, std::shared_ptr<Camera> cam)
     {
-
+        uniformsSet  = true;
         this->PrevModel = this->ModelMatrix;
         glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1.0), scale);
         glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1.0), position);
@@ -269,20 +286,19 @@ void Model::Draw(GLuint shader, glm::vec3 pos = glm::vec3(0,0,0)) {
         PrevRot = rotation;
         int index = 0;
         for(auto &i : mMeshesPositionsRelative) {
-            mMeshesPositions.at(index) = glm::vec3(ModelMatrix * glm::vec4(i, 1.0));
+            mMeshesPositions.at(index) = position;
+            //IO::PrintLine("mesh position:", mMeshesPositions.at(index).x, mMeshesPositions.at(index).y, mMeshesPositions.at(index).z);
             index++;
         }
-    }
+    }*/
 
     void Model::SetUniforms(std::shared_ptr<Shader> shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation,
                             glm::vec3 pposition, glm::vec3 pscale, glm::quat protation,
                             std::shared_ptr<Camera> cam)
     {
-
         glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1.0), scale);
         glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1.0), position);
-        glm::mat4 RotationMatrix;
-        RotationMatrix = glm::mat4(1) * glm::toMat4(glm::normalize(rotation));
+        glm::mat4 RotationMatrix = glm::mat4(1.0f) * glm::toMat4(glm::normalize(rotation));
         this->ModelMatrix = TranslationMatrix * ScaleMatrix * RotationMatrix;
 
         ScaleMatrix = glm::scale(glm::mat4(1.0), pscale);
@@ -308,9 +324,13 @@ void Model::Draw(GLuint shader, glm::vec3 pos = glm::vec3(0,0,0)) {
         //glUniform2i(glGetUniformLocation(shader->getProgramID(), "Resolution"), 1920, 1080);
         shader->PushUniform("Resolution", glm::ivec2(1920, 1080));
         int index = 0;
+        if(!uniformsSet) IO::PrintLine("Position for model ", this->path, position.x, position.y, position.z);
         for(auto &i : mMeshesPositionsRelative) {
-            mMeshesPositions.at(index) = glm::vec3(ModelMatrix * glm::vec4(i, 1.0));
+            mMeshesPositions.at(index) = (i * scale) + position;
+            //IO::PrintLine("mesh position:", mMeshesPositions.at(index).x, mMeshesPositions.at(index).y, mMeshesPositions.at(index).z);
             index++;
         }
+        
+        uniformsSet = true;
     }
 } // namespace Epsilon

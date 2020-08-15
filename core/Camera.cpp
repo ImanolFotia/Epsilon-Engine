@@ -16,6 +16,8 @@
 
 #include <Types.h>
 
+#include <Clock.hpp>
+
 namespace Epsilon
 {
     Camera::Camera(glm::vec3 cPosition, glm::vec3 cOrientation)
@@ -77,9 +79,9 @@ namespace Epsilon
         if (glm::isnan(this->Position.z))
             this->Position.z = 0;
 
-        static double LastTime = glfwGetTime();
+        static double LastTime = Clock::TimeSeconds();
 
-        double currentTime = glfwGetTime();
+        double currentTime = Clock::TimeSeconds();
 
         float DeltaTime = float(currentTime - LastTime);
 
@@ -88,6 +90,8 @@ namespace Epsilon
         glfwGetWindowSize(window, &winx, &winy);
 
         auto _Joystick = Input::Joystick::JoystickManager::PrimaryJoystick();
+
+        float horizontal = 0.0f, vertical = 0.0f;
 
         if (!_Joystick->getJoystickIsPresent())
         {
@@ -108,6 +112,8 @@ namespace Epsilon
             lastX = Input::Mouse::XPOS;
             lastY = Input::Mouse::YPOS;
         }
+
+        //horizontalAngle += ()
 
         LockCamera();
 

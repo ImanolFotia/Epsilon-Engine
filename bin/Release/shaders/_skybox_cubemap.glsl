@@ -84,7 +84,7 @@ void main()
 
     	vec3 Background = mix(Cian, Blue, clamp(lFragPos.y*5.0+0.15, 0.0, 1.0));
 
-        vec3 SkyColor = mix(Orange, Background, scatteringFactor);
+        vec3 SkyColor = pow(mix(Gray, Background, scatteringFactor), vec3(2.0));
 
     	vec3 TimeColor = mix(Gray, SkyColor, clamp(LightDirection.y, 0.0, 1.0));//DarkRootwood*0.2;
 
@@ -94,8 +94,6 @@ void main()
         //color = TimeColor;
         vec3 LightColor = normalize(vec3(218, 205, 118));
         float scattering  = max(dot(lFragPos, LightDirection), 0.0);
-    	FragColor.rgb = color*0.2/*+(scattering*0.5)*/ /** max(0.1, LightDirection.y+0.2) */;
+    	FragColor.rgb = TimeColor*0.2;//color*0.2/*+(scattering*0.5)*/ /** max(0.1, LightDirection.y+0.2) */;
         FragColor.a = 1.0;
-
-
 }

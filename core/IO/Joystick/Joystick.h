@@ -157,7 +157,7 @@ public:
         return nullptr;
     }
 
-    static void JoystickCallback(int joystick, int event)
+    static void JoystickCallbackGLFW(int joystick, int event)
     {
         try
         {

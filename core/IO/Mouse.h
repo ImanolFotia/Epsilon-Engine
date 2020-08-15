@@ -8,7 +8,7 @@ namespace Input
         static double XPOS;
         static double YPOS;
 
-        static void MouseCallBack(GLFWwindow* window, double xpos, double ypos)
+        static void MouseCallBackGLFW(GLFWwindow* window, double xpos, double ypos)
         {
             XPOS = xpos;
             YPOS = ypos;

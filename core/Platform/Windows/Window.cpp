@@ -101,9 +101,10 @@ namespace Epsilon
                 });
 
                 //Set up IO callbacks
-                glfwSetKeyCallback(mWindowHandle->getHandle(), Input::KeyBoard::KeyBoardCallBack);
-                glfwSetCursorPosCallback(mWindowHandle->getHandle(), Input::Mouse::MouseCallBack);
-                glfwSetJoystickCallback(Input::Joystick::JoystickManager::JoystickCallback);
+                glfwSetKeyCallback(mWindowHandle->getHandle(), Input::KeyBoard::KeyBoardCallBackGLFW);
+                glfwSetCursorPosCallback(mWindowHandle->getHandle(), Input::Mouse::MouseCallBackGLFW);
+                glfwSetJoystickCallback(Input::Joystick::JoystickManager::JoystickCallbackGLFW);
+                
                 glfwSetInputMode(mWindowHandle->getHandle(), GLFW_STICKY_KEYS, true);
                 glfwSwapInterval(mWindowData.VSync);
             }

@@ -42,6 +42,10 @@ namespace Epsilon
         
         int lWindowWidth = DATA.WINDOW_WIDTH;
         int lWindowHeight = DATA.WINDOW_HEIGHT;
+
+        Engine::Get().Width(lWindowWidth);
+        Engine::Get().Height(lWindowHeight);
+
         std::shared_ptr<Platform::WindowBase> lWindow;
         #ifdef _WIN32
             lWindow = std::make_shared<Platform::Windows::Window>();

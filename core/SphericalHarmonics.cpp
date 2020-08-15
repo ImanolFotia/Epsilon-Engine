@@ -182,13 +182,13 @@ void SphericalHarmonics::CalculateCohefficients(GLuint cubemap, const unsigned i
 
                 // scale color and add to previously accumulated coefficients
                 sphericalHarmonicsScale(shBuffB.data(), order,
-                                        shBuff.data(), clr.r * fDiffSolid, "Calculating B first time");
+                                        shBuff.data(), clr.r * fDiffSolid, "Calculating R first time");
 
                 sphericalHarmonicsAdd(resultR.data(), order,
                                       resultR.data(), shBuffB.data(), "Calculating R");
 
                 sphericalHarmonicsScale(shBuffB.data(), order,
-                                        shBuff.data(), clr.g * fDiffSolid, "Calculating B first time");
+                                        shBuff.data(), clr.g * fDiffSolid, "Calculating G first time");
                 sphericalHarmonicsAdd(resultG.data(), order,
                                       resultG.data(), shBuffB.data(), "Calculating G");
                 sphericalHarmonicsScale(shBuffB.data(), order,
