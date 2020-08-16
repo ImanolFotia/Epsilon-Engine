@@ -1,7 +1,7 @@
 #pragma once
 
 #include <pch.hpp>
-#include <Texture.h>
+#include "../Texture2D.hpp"
 
 #include "Character.hpp"
 

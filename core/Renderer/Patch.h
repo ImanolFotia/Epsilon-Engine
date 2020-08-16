@@ -4,7 +4,7 @@
 
 #include <Physics/PhysicObject.h>
 #include <Shader.h>
-#include <Texture.h>
+#include "Texture2D.hpp"
 
 namespace Epsilon
 {
