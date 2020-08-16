@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top custom-height">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Epsilon Hub</title>
+    <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
+    <link rel="stylesheet" type="text/css" href="./thirdparty/bulma-0.9.0/css/bulma.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+</head>
+
+<body class="">
+    <nav class="navbar is-transparent is-fixed-top is-black custom-height" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item custom-height" href="https://imanolfotia.com/epsilon_engine">
+                <img src="./media/Epsilon LOGO3.png" width="60px" height="60px">
+            </a>
+
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
+                data-target="navbarBasicExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div id="navbarBasicExample" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item">
+                    Home
+                </a>
+
+                <a class="navbar-item">
+                    Documentation
+                </a>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        More
+                    </a>
+
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item">
+                            About
+                        </a>
+                        <a class="navbar-item">
+                            Jobs
+                        </a>
+                        <a class="navbar-item">
+                            Contact
+                        </a>
+                        <hr class="navbar-divider">
+                        <a class="navbar-item">
+                            Report an issue
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-black">
+                            <span class="icon">
+                                <i class="fas fa-download"></i>
+                              </span>
+                            <span class="has-text-warning-dark">Download Epsilon Engine v0.1.0-alpha</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container is-fluid">
+        <div class="columns  is-dark">
+            <div class="column is-one-fifth">
+                <div id="left-panel-container" class="container ">
+                    <aside class="menu">
+                        <p class="menu-label">
+                            General
+                        </p>
+                        <ul class="menu-list">
+                            <li><a>Dashboard</a></li>
+                            <li><a>Customers</a></li>
+                        </ul>
+                        <p class="menu-label">
+                            Administration
+                        </p>
+                        <ul class="menu-list">
+                            <li><a>Team Settings</a></li>
+                            <li>
+                                <a class="is-active">Manage Your Team</a>
+                                <ul>
+                                    <li><a>Members</a></li>
+                                    <li><a>Plugins</a></li>
+                                    <li><a>Add a member</a></li>
+                                </ul>
+                            </li>
+                            <li><a>Invitations</a></li>
+                            <li><a>Cloud Storage Environment Settings</a></li>
+                            <li><a>Authentication</a></li>
+                        </ul>
+                        <p class="menu-label">
+                            Transactions
+                        </p>
+                        <ul class="menu-list">
+                            <li><a>Payments</a></li>
+                            <li><a>Transfers</a></li>
+                            <li><a>Balance</a></li>
+                        </ul>
+                    </aside>
+                </div>
+            </div>
+            <div class="column is-three-fifths">
+
+                <h1 class="title">
+                    Epsilon Engine
+                </h1>
+                <div class="container is-fluid">
+                    <div class="tile is-ancestor">
+                        <div class="tile is-vertical is-8">
+                            <div class="tile">
+                                <div class="tile is-parent is-vertical">
+                                    <article class="tile is-child notification is-primary">
+                                        <p class="title">Vertical...</p>
+                                        <p class="subtitle">Top tile</p>
+                                    </article>
+                                    <article class="tile is-child notification is-warning">
+                                        <p class="title">...tiles</p>
+                                        <p class="subtitle">Bottom tile</p>
+                                    </article>
+                                </div>
+                                <div class="tile is-parent">
+                                    <article class="tile is-child notification is-info">
+                                        <p class="title">Middle tile</p>
+                                        <p class="subtitle">With an image</p>
+                                        <figure class="image is-4by3">
+                                            <img src="https://bulma.io/images/placeholders/640x480.png">
+                                        </figure>
+                                    </article>
+                                </div>
+                            </div>
+                            <div class="tile is-parent">
+                                <article class="tile is-child notification is-danger">
+                                    <p class="title">Wide tile</p>
+                                    <p class="subtitle">Aligned with the right tile</p>
+                                    <div class="content">
+                                        <!-- Content -->
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+                        <div class="tile is-parent">
+                            <article class="tile is-child notification is-success">
+                                <div class="content">
+                                    <p class="title">Tall tile</p>
+                                    <p class="subtitle">With even more content</p>
+                                    <div class="content">
+                                        <!-- Content -->
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="container is-fluid">
+                    <h1 class="title">
+                        News
+                    </h1>
+                </div>
+            </div>
+            <div class="column is-one-fifth">
+
+                <h1 class="title">
+                    Github
+                </h1>
+                <div class="container">
+                    <nav class="panel">
+                        <p class="panel-heading">
+                            Repositories
+                        </p>
+                        <div class="panel-block">
+                            <p class="control has-icons-left">
+                                <input class="input" type="text" placeholder="Search">
+                                <span class="icon is-left">
+                                    <i class="fas fa-search" aria-hidden="true"></i>
+                                </span>
+                            </p>
+                        </div>
+                        <p class="panel-tabs">
+                            <a class="is-active">All</a>
+                            <a>Public</a>
+                            <a>Private</a>
+                            <a>Sources</a>
+                            <a>Forks</a>
+                        </p>
+                        <a class="panel-block is-active">
+                            <span class="panel-icon">
+                                <i class="fas fa-book" aria-hidden="true"></i>
+                            </span>
+                            
+
+                            <div class="control">
+                                epsilon-engine
+                                <div class="tags has-addons is-pulled-right">
+                                    <img
+                                        src="https://travis-ci.com/ImanolFotia/Epsilon-Engine.svg?token=eqNdpsuxZdxtFxRycvU4&branch=master" />
+                                </div>
+                            </div>
+
+                        </a>
+                        <a class="panel-block">
+                            <span class="panel-icon">
+                                <i class="fas fa-book" aria-hidden="true"></i>
+                            </span>
+                            epsilon-engine-docs
+                        </a>
+                        <a class="panel-block">
+                            <span class="panel-icon">
+                                <i class="fas fa-book" aria-hidden="true"></i>
+                            </span>
+                            epsilon-engine-examples
+                        </a>
+                        <label class="panel-block">
+                            <input type="checkbox">
+                            remember me
+                        </label>
+                        <div class="panel-block">
+                            <button class="button is-link is-outlined is-fullwidth">
+                                Reset all filters
+                            </button>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

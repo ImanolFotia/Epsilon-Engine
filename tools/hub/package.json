@@ -1,0 +1,15 @@
+{
+  "name": "epsilon_hub",
+  "version": "1.0.0",
+  "description": "Epsilon Engine hub",
+  "main": "main.js",
+  "scripts": {
+    "test": "editor_test",
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^9.2.0"
+  }
+}
