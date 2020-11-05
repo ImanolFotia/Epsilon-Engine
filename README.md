@@ -29,10 +29,9 @@ Installers and binaries will be available soon
 <a name="dependencies"> </a>
 ## Dependencies 
 
-* Bullet Physics 2.82-r2704
+* Bullet Physics 2.83
 * Zlib
 * GLM 0.9.7.1 
-* GLEW 2.0.0
 * GLFW 3.2
 * libinih
 * Soft OpenAL 1.18.2
@@ -65,10 +64,17 @@ Installers and binaries will be available soon
 
 <a name="software_and_hardware_succesfully_tested"></a>
 ## Software & Hardware Succesfully Tested 
-* OS: Windows 7 | Windows 10 | Ubuntu 18.0 LTS
-* CPU: Intel i7 4790K & Intel I7 6700HQ
-* RAM: 12 & 24 GB
-* GPU: Nvidia GTX 970 & 970M
+* OS: 
+  * Windows 7 
+  * Windows 10 
+  * Ubuntu 18.0 LTS
+* CPU: 
+  * Intel i7 4790K 
+  * Intel I7 6700HQ
+* GPU: 
+  * Nvidia GTX 970 
+  * Nvidia GTX 970M
+  * Nvidia RTX 2080 Ti
 
 <a name="contributors"></a>
 ## Contributors 
