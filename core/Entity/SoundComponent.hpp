@@ -21,6 +21,7 @@ namespace Epsilon
                 mRotation = glm::quat(AudioDirection);
                 mAudioElement = std::make_shared<IO::Audio::AudioElement>(fileName, type, AudioPosition, AudioDirection);
                 mState = AUDIO_STATE::PLAYING;
+                mAudioFile = fileName;
             }
 
             COMPONENT_TYPE getType() { return mType; }
@@ -30,6 +31,10 @@ namespace Epsilon
             ~SoundComponent()
             {
                 std::cout << "SoundComponent Destructor" << std::endl;
+            }
+
+            const std::string & getFilename() {
+                return mAudioFile;
             }
 
             void setPosition(glm::vec3 position)
@@ -68,6 +73,7 @@ namespace Epsilon
             std::shared_ptr<IO::Audio::AudioElement> mAudioElement;
             glm::vec3 mPosition;
             glm::quat mRotation;
+            std::string mAudioFile;
         };
 
         using SoundComponent_ptr = std::shared_ptr<SoundComponent>;

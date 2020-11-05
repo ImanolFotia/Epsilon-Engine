@@ -20,10 +20,10 @@ namespace Epsilon
     public:
         PostProcess();
 
-        virtual ~PostProcess()
+       /* virtual ~PostProcess()
         {
             //std::cout << "Deleted PostProcess" << std::endl;
-        }
+        }*/
 
     public:
         /**
@@ -103,7 +103,7 @@ namespace Epsilon
         GLuint gDepth;
 
         bool HBAOOn;
-    private:
+    public:
         /**
         loads the shaders used for render off-screen
         and post process affects
@@ -182,7 +182,7 @@ namespace Epsilon
 
         void setupDenoise();
 
-    private:
+    public:
         //#pragma pack(push, 1)
 
         std::vector<t_light> m_Lights;
@@ -271,6 +271,8 @@ namespace Epsilon
         std::shared_ptr<eTexture> BlueNoiseTexture;
 
         glm::vec2 FocalLen, InvFocalLen, UVToViewA, UVToViewB, LinMAD;
+
+        GLuint ReflectionTexture;
     };
 } // namespace Epsilon
 

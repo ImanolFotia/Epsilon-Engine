@@ -2,11 +2,10 @@
 
 #include <Driver/Audio/AudioDriver.hpp>
 
-#define EPSILON_XAUDIO_FIXED 0
+#ifdef _WIN32
 
-#if EPSILON_XAUDIO_FIXED
-
-#include <xaudio2redist.h>
+#include <windows.h>
+#include "XAudio2.h"
 
 namespace Epsilon
 {
@@ -27,14 +26,14 @@ namespace Epsilon
                         return hr;
                 }
                 
-                virtual int Shutdown(){}
+                virtual int Shutdown(){ return 0; }
 
-                virtual int getNumDevices(){}
+                virtual int getNumDevices(){ return 0; }
 
-                virtual int Start(){}
-                virtual int End(){}
+                virtual int Start(){ return 0; }
+                virtual int End(){ return 0; }
 
-                virtual bool isActive(){}
+                virtual bool isActive(){ return 0; }
             };
         } // namespace Audio
     } // namespace API

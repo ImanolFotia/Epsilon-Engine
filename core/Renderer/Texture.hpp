@@ -5,11 +5,12 @@
 
 #include <Driver/API/TextureBase.hpp>
 #include <Driver/API/OpenGL/Texture2D.hpp>
+#include <Driver/API/OpenGL/Texture1D.hpp>
 #include <Driver/API/OpenGL/Context.hpp>
 
 #include <Driver/API/Context.hpp>
 
-#include <Image/Image.hpp>
+#include <Resource/Image/Image.hpp>
 
 namespace Epsilon
 {

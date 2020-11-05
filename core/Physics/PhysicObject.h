@@ -6,14 +6,6 @@ namespace Epsilon
     namespace Physics
     {
 
-        enum Type
-        {
-            CUBE = 0,
-            SPHERE,
-            TRIANGLE_MESH,
-            CLOTH,
-
-        };
 
         class PhysicObject
         {
@@ -33,7 +25,7 @@ namespace Epsilon
 
         public:
             PhysicObject() {}
-            virtual ~PhysicObject() {}
+            //virtual ~PhysicObject() {}
 
         public:
             virtual btRigidBody_ptr addObject(glm::vec3 /* Position */, float /* Mass */, float /* Size */) { return nullptr; }

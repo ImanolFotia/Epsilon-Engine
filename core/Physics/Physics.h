@@ -30,9 +30,9 @@ namespace Epsilon
 		public:
 			Physics();
 
-			~Physics()
+			/*~Physics()
 			{
-			}
+			}*/
 
 			void Update(float);
 
@@ -47,7 +47,7 @@ namespace Epsilon
 			double getTimeStep() { return mTimeStep; }
 
 		private:
-			std::shared_ptr<btCollisionWorld> world;
+			std::shared_ptr<btDynamicsWorld> world;
 			std::shared_ptr<btDispatcher> dispatcher;
 			std::shared_ptr<btCollisionConfiguration> collisionConfig;
 			std::shared_ptr<btConstraintSolver> solver;

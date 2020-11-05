@@ -107,9 +107,9 @@ namespace Epsilon
         }
 
         //Default constructor uses an SDF Roboto font
-        Text() {
+        /*Text() {
 
-        }
+        }*/
 
     public:
         float getHorizontalLength(std::string text, GLfloat scale)

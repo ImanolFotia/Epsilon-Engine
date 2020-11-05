@@ -46,7 +46,7 @@ namespace Epsilon
 
         t_light tmpLight;
 
-        tmpLight.position = glm::vec4(5, 5, 9, 1.0);  //-1.29, 5.64, 25.7
+        tmpLight.position = glm::vec4(5, 70, -5, 1.0);  //-1.29, 5.64, 25.7
         tmpLight.direction = glm::vec4(0, 0, 0, 1.0); //5, 15, 5
         tmpLight.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
         tmpLight.radius = 0.5f;
@@ -942,13 +942,19 @@ namespace Epsilon
 
         glActiveTexture(GL_TEXTURE0);
         CompositeShader->PushUniform("gReflectionSampler", 0);
-        if (isMoving)
+
+        if (isMoving) {
             glBindTexture(GL_TEXTURE_2D, DenoiseTexture /*SSRTexture[CurrentSSR]*/);
+            ReflectionTexture = DenoiseTexture;
+        }
         else
         {
             glBindTexture(GL_TEXTURE_2D, SSRTexture[CurrentSSR]);
-            if (TotalFrames >= 250)
+            ReflectionTexture = SSRTexture[CurrentSSR];
+            if (TotalFrames >= 250){
                 glBindTexture(GL_TEXTURE_2D, SSRTexture[!CurrentSSR]);
+            ReflectionTexture = SSRTexture[!CurrentSSR];
+            }
             glGenerateMipmap(GL_TEXTURE_2D);
         }
 
@@ -1050,7 +1056,7 @@ namespace Epsilon
         finalImage->PushUniform("sunPos", Sun);
         finalImage->PushUniform("blurSize", blurSize);
         finalImage->PushUniform("lightShafts", lightShafts);
-        finalImage->PushUniform("onmenu", (int)onmenu);
+        finalImage->PushUniform("onmenu", (int)0);
         finalImage->PushUniform("Resolution", glm::vec2(width, height));
 
         finalImage->PushUniform("BokehOn", mBokehDOF);

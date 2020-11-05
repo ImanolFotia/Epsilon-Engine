@@ -51,6 +51,10 @@
 
 #include <Platform/WindowBase.hpp>
 
+#include <imgui_imp/imgui_impl_glfw.h>
+#include <imgui_imp/imgui_impl_opengl3.h>
+#include <imgui_imp/imgui_menubar.hpp>
+
 namespace Epsilon
 {
     class Epsilon
@@ -142,6 +146,8 @@ namespace Epsilon
         std::shared_ptr<MD5Model> m_AnimModel;
         std::shared_ptr<ShadowMap> shadowMap;
         std::shared_ptr<PostProcess> PP;
+        
+        glm::vec3 ambientDivider;
         std::vector<std::shared_ptr<EntityBase>> EntityList;
         std::shared_ptr<IO::Audio::Audio> m_AudioSystem;
         std::shared_ptr<IO::Audio::AudioListener> m_AudioListener;
@@ -151,7 +157,7 @@ namespace Epsilon
         // std::shared_ptr<Pick> m_Pick;
         CAMERA_MODE m_CameraMode;
         std::vector<std::shared_ptr<CubeMap>> m_Cubemaps;
-        std::shared_ptr<CubeMap> mCubemap[8][5][7];
+        std::shared_ptr<CubeMap> mCubemap[7][7][7];
 
         std::shared_ptr<Player> m_PlayerCapsule;
         //std::shared_ptr<GUI> m_GUI;
@@ -196,6 +202,17 @@ namespace Epsilon
         std::shared_ptr<Physics::SpherePhysicObject> ph3;
         std::string GL_VER, GL_REN, GL_VEN;
         double m_TextAcum = 0.0;
+
+        //IMGUI variables
+
+        
+        bool show_demo_window = true;
+        bool show_another_window = false;
+        ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+        float KeyTime[1024] = {0.0f};
+
+        glm::ivec2 CursorBeforeMenu;
     };
 }
 #endif /// EPSILON_H_INCLUDED

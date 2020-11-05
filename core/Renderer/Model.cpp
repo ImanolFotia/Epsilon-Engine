@@ -1,6 +1,7 @@
 #include "Model.h"
 #include <ResourceManager.h>
 #include <Log.h>
+#include <Engine.hpp>
 
 namespace Epsilon
 {
@@ -213,13 +214,13 @@ namespace Epsilon
                     meshes.at(i).vertices[j].position.y += delta.y;
                     meshes.at(i).vertices[j].position.z += delta.z;
                 }
-                mMeshesBoundingBoxes.at(i).MIN_X += delta.x;
+                /*mMeshesBoundingBoxes.at(i).MIN_X += delta.x;
                 mMeshesBoundingBoxes.at(i).MIN_Y += delta.y;
                 mMeshesBoundingBoxes.at(i).MIN_Z += delta.z;
 
                 mMeshesBoundingBoxes.at(i).MAX_X += delta.x;
                 mMeshesBoundingBoxes.at(i).MAX_Y += delta.y;
-                mMeshesBoundingBoxes.at(i).MAX_Z += delta.z;
+                mMeshesBoundingBoxes.at(i).MAX_Z += delta.z;*/
                 meshes.at(i).setupMesh();
             }
         }
@@ -248,49 +249,6 @@ namespace Epsilon
             this->meshes[i].Draw(shader, mMeshesPositions.at(i));
         }
     }
-    /*
-void Model::Draw(GLuint shader, glm::vec3 pos = glm::vec3(0,0,0)) {
-    for(GLuint i = 0; i < this->meshes.size(); i++)
-        this->meshes[i].Draw(shader, this->resm, pos);
-}*/
-
-    /*void Model::SetUniforms(std::shared_ptr<Shader> shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation, std::shared_ptr<Camera> cam)
-    {
-        uniformsSet  = true;
-        this->PrevModel = this->ModelMatrix;
-        glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1.0), scale);
-        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1.0), position);
-        glm::mat4 RotationMatrix;
-        RotationMatrix = glm::mat4(1) * glm::toMat4(glm::normalize(rotation));
-        this->ModelMatrix = TranslationMatrix * ScaleMatrix * RotationMatrix;
-
-        ScaleMatrix = glm::scale(glm::mat4(1.0), PrevScale);
-        TranslationMatrix = glm::translate(glm::mat4(1.0), PrevPos);
-        RotationMatrix = glm::mat4(1) * glm::toMat4(glm::normalize(PrevRot));
-        this->PrevModel = TranslationMatrix * ScaleMatrix * RotationMatrix;
-
-        glm::mat4 MVP = cam->getProjectionMatrix() * cam->getViewMatrix() * this->ModelMatrix;
-        glUniformMatrix4fv(shader->MVP_Location, 1, GL_FALSE, &MVP[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "PrevModel"), 1, GL_FALSE, &this->PrevModel[0][0]);
-        glUniformMatrix4fv(shader->WorldTransform_Location, 1, GL_FALSE, &this->ModelMatrix[0][0]);
-        glUniformMatrix4fv(shader->View_Location, 1, GL_FALSE, &cam->getViewMatrix()[0][0]);
-        glUniformMatrix4fv(shader->PrevViewPos_Location, 1, GL_FALSE, &cam->getPrevViewMatrix()[0][0]);
-        glUniformMatrix4fv(shader->Projection_Location, 1, GL_FALSE, &cam->getProjectionMatrix()[0][0]);
-        glUniform3f(shader->viewPos_Location, cam->getPosition().x, cam->getPosition().y, cam->getPosition().z);
-
-        glUniform1f(glGetUniformLocation(shader->getProgramID(), "time"), glfwGetTime());
-        glUniform2i(glGetUniformLocation(shader->getProgramID(), "Resolution"), 1920, 1080);
-        
-        PrevPos = position;
-        PrevScale = scale;
-        PrevRot = rotation;
-        int index = 0;
-        for(auto &i : mMeshesPositionsRelative) {
-            mMeshesPositions.at(index) = position;
-            //IO::PrintLine("mesh position:", mMeshesPositions.at(index).x, mMeshesPositions.at(index).y, mMeshesPositions.at(index).z);
-            index++;
-        }
-    }*/
 
     void Model::SetUniforms(std::shared_ptr<Shader> shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation,
                             glm::vec3 pposition, glm::vec3 pscale, glm::quat protation,
@@ -300,16 +258,17 @@ void Model::Draw(GLuint shader, glm::vec3 pos = glm::vec3(0,0,0)) {
         glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1.0), position);
         glm::mat4 RotationMatrix = glm::mat4(1.0f) * glm::toMat4(glm::normalize(rotation));
         this->ModelMatrix = TranslationMatrix * ScaleMatrix * RotationMatrix;
+        shader->PushUniform("model", this->ModelMatrix);
 
         ScaleMatrix = glm::scale(glm::mat4(1.0), pscale);
         TranslationMatrix = glm::translate(glm::mat4(1.0), pposition);
         RotationMatrix = glm::mat4(1) * glm::toMat4(glm::normalize(protation));
         this->PrevModel = TranslationMatrix * ScaleMatrix * RotationMatrix;
         glm::mat4 MVP = cam->getProjectionMatrix() * cam->getViewMatrix() * this->ModelMatrix;
-        glUniformMatrix4fv(shader->MVP_Location, 1, GL_FALSE, &MVP[0][0]);
+        shader->PushUniform("MVP", MVP);
         shader->PushUniform("PrevModel", this->PrevModel);
         //glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "PrevModel"), 1, GL_FALSE, &this->PrevModel[0][0]);
-        glUniformMatrix4fv(shader->WorldTransform_Location, 1, GL_FALSE, &this->ModelMatrix[0][0]);
+        //glUniformMatrix4fv(shader->WorldTransform_Location, 1, GL_FALSE, &this->ModelMatrix[0][0]);
         glUniformMatrix4fv(shader->View_Location, 1, GL_FALSE, &cam->getViewMatrix()[0][0]);
         glm::mat3 invModelMatrix = glm::transpose(glm::inverse(glm::mat3(this->ModelMatrix)));
         glm::mat3 invNormalMatrix = glm::transpose(glm::inverse(glm::mat3(cam->getViewMatrix() * this->ModelMatrix)));
@@ -322,7 +281,7 @@ void Model::Draw(GLuint shader, glm::vec3 pos = glm::vec3(0,0,0)) {
         //glUniform1f(glGetUniformLocation(shader->getProgramID(), "time"), glfwGetTime());
         shader->PushUniform("time", (float)glfwGetTime());
         //glUniform2i(glGetUniformLocation(shader->getProgramID(), "Resolution"), 1920, 1080);
-        shader->PushUniform("Resolution", glm::ivec2(1920, 1080));
+        shader->PushUniform("Resolution", glm::ivec2(Engine::Width(), Engine::Height()));
         int index = 0;
         if(!uniformsSet) IO::PrintLine("Position for model ", this->path, position.x, position.y, position.z);
         for(auto &i : mMeshesPositionsRelative) {

@@ -26,7 +26,7 @@ namespace Epsilon
 
         virtual ~ResourceManager()
         {
-            Destroy();
+            //Destroy();
         }
 
         void Destroy()

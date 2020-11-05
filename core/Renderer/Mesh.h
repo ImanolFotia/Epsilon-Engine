@@ -48,6 +48,7 @@ namespace Epsilon
         std::vector<Texture> textures;
 
         bool isVisible = true;
+        glm::vec3 mPosition = glm::vec3(0.0, 0.0, 0.0);
 
         /**  Functions  */
         /// Constructor

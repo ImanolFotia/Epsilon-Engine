@@ -20,7 +20,7 @@
 
 #include <ProgramData.h>
 #include <Helpers.hpp>
-#include <Image/Image.hpp>
+#include <Resource/Image/Image.hpp>
 #include <Log.h>
 #include <IO/IO.hpp>
 
@@ -312,7 +312,7 @@ namespace Epsilon
         GLuint texture = 0;
         bool ispng = false;
         bool mLoaded = false;
-        std::shared_ptr<IO::Image::Image> mImage = nullptr;
+        std::shared_ptr<Resources::Image::Image> mImage = nullptr;
         unsigned char *image;
 
         std::string path;

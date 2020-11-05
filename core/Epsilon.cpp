@@ -13,7 +13,6 @@
 #include <time.h>
 #include <Helpers.hpp>
 #include <Types.h>
-#include "../../version.h"
 #include <glm/gtc/quaternion.hpp>
 #include <EpsilonMemory.h>
 #include <sys/CPUID.h>
@@ -132,6 +131,24 @@ namespace Epsilon
 
         m_CameraMode = PLAYER_CONTROLLED;
 
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO &io = ImGui::GetIO();
+        (void)io;
+        //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+        //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+        const char *glsl_version = "#version 410 core";
+        // Setup Dear ImGui style
+        ImGui::StyleColorsDark();
+        //ImGui::StyleColorsClassic();
+
+        // Setup Platform/Renderer bindings
+        ImGui_ImplGlfw_InitForOpenGL(window->getHandle()->getHandle(), true);
+        ImGui_ImplOpenGL3_Init(glsl_version);
+
+        onMenu = true;
+
         //Scripts::LuaScript _script;
         //_script.Load("scripts/Program.luac");
         //std::cout << "Sum is: " << _script.Exec<int>("sum", 3, 5) << std::endl;
@@ -229,34 +246,10 @@ namespace Epsilon
         eCamera.push_back(std::make_shared<Camera>(glm::vec3(0.0f, 8.25f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
         eCamera.push_back(std::make_shared<Camera>(glm::vec3(20.0f, 30.25f, -60.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
 
+        this->ComputeCamera(NO_CLIP, glm::vec3(0.0f, 8.25f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
         shadowMap = std::move((shared_ptr<ShadowMap>)(new ShadowMap(DATA.SHADOWMAP_SIZE, DATA.SHADOWMAP_SIZE, -20.0f, 80.0f)));
 
-        //mPointShadow = std::make_shared(PointShadow,glm::vec3(0.,.0,.0));
-        //mPointShadow->Setup();
-
-        //rM = std::make_shared<ResourceManager>();
-
-        //rM =
-
-        //rM->m_PhysicsWorld = std::make_shared<Physics::Physics>();
-        //ResourceManager::Get().getPhysicsWorld() = std::make_shared<Physics::Physics>();
-        /*
-    std::shared_ptr<EntityBase> tmpEnt;
-    std::shared_ptr<Component::RenderComponent> Compmodel;
-
-    {
-        std::shared_ptr<EntityBase> tmpEnt;
-        tmpEnt = (std::shared_ptr<EntityBase>)(new EntityBase(rM, glm::vec3(10, 3.5, 10), glm::vec3(2.0), glm::quat(-1.0, 0.0, 0.0, 0.0)));
-        std::shared_ptr<Component::ClothComponent> ClothComponent = (std::shared_ptr<Component::ClothComponent>)new Component::ClothComponent(eCamera);
-        mCloth = (std::shared_ptr<Physics::ClothPhysicObject>)new Physics::ClothPhysicObject();
-        rM->m_PhysicsWorld->getSoftDynamicsWorld()->addSoftBody(mCloth->addObject(rM->m_PhysicsWorld->softBodyWorldInfo, glm::vec3(10, 3.5, 10), 5, 15, 15, 1 + 2).get());
-        //mCloth->setWind(btVector3(0,0,1), 0.5);
-        ClothComponent->Fill(mCloth);
-        ClothComponent->setShader("Cloth");
-        tmpEnt->addComponent(ClothComponent);
-        EntityList.push_back(tmpEnt);
-    }
-*/
         //RenderSplashScreen("Loading Shaders...");
         this->LoadShaders();
 
@@ -268,269 +261,10 @@ namespace Epsilon
         std::vector<string> modelsNames;
         std::vector<glm::vec3> modelsPositions;
         std::vector<float> modelsScales;
-        /*
-            modelsNames.push_back("models/tree_2.eml");
-            modelsPositions.push_back(glm::vec3(77, -20, -7));
-            modelsScales.push_back(3.0);
-
-            modelsNames.push_back("models/Tree.eml");
-            modelsPositions.push_back(glm::vec3(80, -20, 35));
-            modelsScales.push_back(3.0);*/
-
-        /*
-        for(int i = 0; i < modelsNames.size(); ++i) {
-            std::shared_ptr<EntityBase> tmpEnt;
-            tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, modelsPositions.at(i), glm::vec3(modelsScales.at(i)), glm::quat(0.5, 0.0, 0.0, 0.0)));
-            std::shared_ptr<Component::RenderComponent> Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-            Compmodel->Fill(modelsNames.at(i), rM, "Main");
-
-            std::shared_ptr<Component::PhysicComponent> CompPhys = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
-
-            std::shared_ptr<Physics::CubePhysicObject> ph = (std::shared_ptr<Physics::CubePhysicObject>) new Physics::CubePhysicObject();
-            rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(modelsPositions.at(i), 10.0, rM->getModelBoundingBox(modelsNames.at(i)), modelsScales.at(i)).get());
-            CompPhys->Fill(100.0f, ph);
-
-            tmpEnt->addComponent(Compmodel);
-            tmpEnt->addComponent(CompPhys);
-
-            EntityList.push_back(tmpEnt);
-        }*/
-        /*
-    for(int i = 0; i < 5; i++) {
-        std::shared_ptr<EntityBase> tmpEnt;
-        tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, glm::vec3(-5.5+(i*6.4),9.0,-2), glm::vec3(0.25), glm::quat(-1.0, 0.0, 0.0, 0.0)));
-        std::shared_ptr<Component::RenderComponent> Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-        Compmodel->Fill("models/rock.eml", rM, "Main");
-
-        std::shared_ptr<Component::PhysicComponent> CompPhys = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
-
-        std::shared_ptr<Physics::CubePhysicObject> ph = (std::shared_ptr<Physics::CubePhysicObject>) new Physics::CubePhysicObject();
-        //rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(2.0, glm::vec3(-20.5+(i*6.4),9.0,-8), 50.0f).get());
-        rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(glm::vec3(-5.5+(i*6.4),9.0,-2), 100.0f, rM->getModelBoundingBox("models/rock.eml"), 0.25f).get());
-        CompPhys->Fill(100.0f, ph);
-
-        //Compmodel->isTransparent = true;
-        tmpEnt->addComponent(Compmodel);
-        tmpEnt->addComponent(CompPhys);
-
-        EntityList.push_back(tmpEnt);
-    /*}
-
-    /*
-        std::shared_ptr<EntityBase> tmpEnt;
-        std::shared_ptr<Component::RenderComponent> Compmodel;*/
-        /*
-    tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, glm::vec3(4.0, -1.2, 9.0), glm::vec3(0.6, 0.85, 0.6), glm::quat(1.0, 0.0, 0.6, 0.0)));
-    std::shared_ptr<Component::RenderComponent> Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    Compmodel->Fill("models/rock_wall.eml", rM, "Main");
-    tmpEnt->addComponent(Compmodel);
-    EntityList.push_back(tmpEnt);
-
-
-    tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, glm::vec3(-1.3, -1.2, -5.0), glm::vec3(0.6, 0.85, 0.6), glm::quat(-0.6, 0.0, 1.0, 0.0)));
-    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    Compmodel->Fill("models/rock_wall.eml", rM, "Main");
-    tmpEnt->addComponent(Compmodel);
-    EntityList.push_back(tmpEnt);
-    */
-        /*
-    for(int i = 0; i < 2; i++) {
-        for(int j = 0; j < 2; j++) {
-            tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, glm::vec3(-30+i*50, 1.3, 15-j*20), glm::vec3(0.125), glm::quat(-1.0, 0.0, 0.0, 0.0)));
-            Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-            Compmodel->Fill("models/grass.eml", rM, "Main");
-            Compmodel->isDoubleFaced = true;
-            tmpEnt->addComponent(Compmodel);
-            EntityList.push_back(tmpEnt);
-        }
-    }*/
-        /*
-        tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, glm::vec3(14, 10.0, 0.0), glm::vec3(4.0), glm::quat(-1.0, 0.0, 0.0, 0.0)));
-        Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-        Compmodel->Fill("models/vrdemo.eml", rM, "Main");
-        tmpEnt->addComponent(Compmodel);
-        EntityList.push_back(tmpEnt);
-    /*
-        tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, glm::vec3(0,4.3, 3), glm::vec3(4.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
-        Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-        Compmodel->Fill("models/cerberus.eml", rM, "Main");
-        tmpEnt->addComponent(Compmodel);
-        EntityList.push_back(tmpEnt);*/
-        /*
-    tmpEnt = (std::shared_ptr<EntityBase>)(new EntityBase(rM, glm::vec3(-14, 2.5, -17), glm::vec3(2.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
-    Compmodel = (std::shared_ptr<Component::RenderComponent>)new Component::RenderComponent();
-    Compmodel->Fill("models/esfera.eml", rM, "Main");
-    std::shared_ptr<Component::MovementComponent> Compmov;
-    tmpEnt->addComponent(Compmodel);
-    EntityList.push_back(tmpEnt);
-*/
-        /*
-        tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, glm::vec3(22, 8.0, 6), glm::vec3(2.0), glm::quat(-1.0, 0.0, -1.0, 0.0)));
-        Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-        Compmodel->Fill("models/Bigger_tree.eml", rM, "Main");
-        Compmodel->isDoubleFaced = true;
-        tmpEnt->addComponent(Compmodel);
-        EntityList.push_back(tmpEnt);*/
-        /*
-        tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, glm::vec3(52, 0.0, -10.0), glm::vec3(2.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
-        Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-        Compmodel->Fill("models/tree_o.eml", rM, "Main");
-        tmpEnt->addComponent(Compmodel);
-        EntityList.push_back(tmpEnt);
-*/
-        /*
-        tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, glm::vec3(22, 2.0, -20.0), glm::vec3(2.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
-        Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-        Compmodel->Fill("models/export3dcoat.eml", rM, "Main");
-        tmpEnt->addComponent(Compmodel);
-        EntityList.push_back(tmpEnt);*/
-        /*
-    tmpEnt = (std::shared_ptr<EntityBase>)(new EntityBase(rM, glm::vec3(-12, 1.65, -3), glm::vec3(0.05), glm::quat(-1.0, 0.0, 1.0, 0.0)));
-    Compmodel = (std::shared_ptr<Component::RenderComponent>)new Component::RenderComponent();
-    Compmodel->Fill("models/full_rock.eml", rM, "Main");
-    tmpEnt->addComponent(Compmodel);
-    EntityList.push_back(tmpEnt);*/
-        /*
-
-    /*
-        	tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, glm::vec3(34, 3.8, 3.5), glm::vec3(3.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
-        	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-        	Compmodel->Fill("models/swords.eml", rM, "Main");
-        	tmpEnt->addComponent(Compmodel);
-        	EntityList.push_back(tmpEnt);
-
-*/
-        /*
-    tmpEnt = (std::shared_ptr<EntityBase>)(new EntityBase(rM, glm::vec3(-12, 3.8, -10), glm::vec3(1.0), glm::quat(1.0, 0.0, 1.0, 0.0)));
-    Compmodel = (std::shared_ptr<Component::RenderComponent>)new Component::RenderComponent();
-    Compmodel->Fill("models/chutulu.eml", rM, "Main");
-    tmpEnt->addComponent(Compmodel);
-    EntityList.push_back(tmpEnt);*/
-        /*
-        	tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, glm::vec3(23, 8.25+6.2, 14.5), glm::vec3(1.0), glm::quat(-1.0, 1.0, 1.0, 0.5)));
-        	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-        	Compmodel->Fill("models/ember.eml", rM, "Main");
-        	tmpEnt->addComponent(Compmodel);
-        	EntityList.push_back(tmpEnt);*/
-        /*
-    	tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, glm::vec3(21, 1.5, -7), glm::vec3(2.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
-    	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    	Compmodel->Fill("models/Tree.eml", rM, "Main");
-    	tmpEnt->addComponent(Compmodel);
-    	EntityList.push_back(tmpEnt);
-
-    	tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, glm::vec3(21, 1.5, 14), glm::vec3(2.0), glm::quat(-1.0, 0.0, -1.0, 0.0)));
-    	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    	Compmodel->Fill("models/Tree.eml", rM, "Main");
-    	tmpEnt->addComponent(Compmodel);
-    	EntityList.push_back(tmpEnt);*/
-
-        ///godrays tutorial begin
-        /*
-    	tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, glm::vec3(-20, 2.0, 0.0), glm::vec3(0.06, 0.1, 0.06), glm::quat(-1.0, 0.0, 0.0, 0.0)));
-    	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    	Compmodel->Fill("models/grass.eml", rM, "Main");
-    	tmpEnt->addComponent(Compmodel);
-    	EntityList.push_back(tmpEnt);*/
-        /**/
-        /*
-    tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, glm::vec3(6, 27, 15.0), glm::vec3(2.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
-    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    Compmodel->Fill("models/BigBell.eml", rM, "Main");
-    tmpEnt->addComponent(Compmodel);
-    EntityList.push_back(tmpEnt);
-*/
-        /*
-    tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, glm::vec3(-13, 8.0, -3), glm::vec3(0.5), glm::quat(1.0, 0.0, 0.0, 0.0)));
-    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    Compmodel->Fill("models/zweihander.eml", rM, "Main");
-    tmpEnt->addComponent(Compmodel);
-    EntityList.push_back(tmpEnt);*/
-        /*
-    tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, glm::vec3(-58, 0.5, -3), glm::vec3(1.5), glm::quat(1.0, 0.0, 0.0, 0.0)));
-    Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-    Compmodel->Fill("models/column.eml", rM, "Main");
-    tmpEnt->addComponent(Compmodel);
-    EntityList.push_back(tmpEnt);*/
-        /*
-        	tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, glm::vec3(-18, 100.0, 0.0), glm::vec3(0.025), glm::quat(0.0, 0.0, 0.0, 0.0)));
-        	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-        	Compmodel->Fill("models/sponza.eml", rM, "Main");
-        	tmpEnt->addComponent(Compmodel);
-        	EntityList.push_back(tmpEnt);
-*/
-
-        /*
-        	tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, glm::vec3(-20, 0.8, -15.0), glm::vec3(4.0), glm::quat(-1.0, 0.0, 1.0, 0.0)));
-        	Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-        	Compmodel->Fill("models/case.eml", rM, "Main");
-        	tmpEnt->addComponent(Compmodel);
-        	EntityList.push_back(tmpEnt);
-*/
-        /*
-        tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, glm::vec3(-120, -4.5, 13.5), glm::vec3(5.5), glm::quat(0.0, 0.0, 1.0, 0.0)));
-        Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-        Compmodel->Fill("models/woodentable.eml", rM, "Main");
-        tmpEnt->addComponent(Compmodel);
-        EntityList.push_back(tmpEnt);*/
-        /*
-    tmpEnt = (std::shared_ptr<EntityBase>)(new EntityBase(rM, glm::vec3(-12, 4.0, 7), glm::vec3(1.5f), glm::quat(0.0, 0.0, 1.0, 0.0)));
-    Compmodel = (std::shared_ptr<Component::RenderComponent>)new Component::RenderComponent();
-    Compmodel->Fill("models/Tree.eml", rM, "Main");
-    Compmodel->isDoubleFaced = true;
-    tmpEnt->addComponent(Compmodel);
-    EntityList.push_back(tmpEnt);*/
-
-        ///godrays tutorial end
-
-        /*
-        tmpEnt = (std::shared_ptr<EntityBase>) (new EntityBase(rM, glm::vec3(-114, 1, 11.0), glm::vec3(2), glm::quat(-0.5, 0.0, -1.0, 0.0)));
-        Compmodel = (std::shared_ptr<Component::RenderComponent>) new Component::RenderComponent();
-        Compmodel->Fill("models/oldtv.eml", rM, "Main");
-    //Compmodel->isTransparent = true;
-
-        tmpEnt->addComponent(Compmodel);
-        EntityList.push_back(tmpEnt);*/
-        /*
-    tmpEnt = (std::shared_ptr<EntityBase>)(new EntityBase(rM, glm::vec3(0.0f, 15.0f, -5.0f), glm::vec3(1.0), glm::quat(1.0, 0.0, 0.0, 0.0)));
-    Compmodel = (std::shared_ptr<Component::RenderComponent>)new Component::RenderComponent();
-    Compmodel->Fill("models/shape_mat.eml", rM, "Main");*/
-        //std::shared_ptr<Component::PhysicComponent> CompPhys = (std::shared_ptr<Component::PhysicComponent>) new Component::PhysicComponent();
-        //std::shared_ptr<Physics::CubePhysicObject> ph = (std::shared_ptr<Physics::CubePhysicObject>) new Physics::CubePhysicObject();
-        //rM->m_PhysicsWorld->world->addRigidBody(ph->addObject(glm::vec3(16, 15, 10), 100.0, rM->getModelBoundingBox("models/shape_mat.eml"), 0.25).get());
-        //CompPhys->Fill(100.0f, ph);
-        /* tmpEnt->addComponent(Compmodel);
-    //tmpEnt->addComponent(CompPhys);
-    EntityList.push_back(tmpEnt);*/
-
-        /*
-    ph->addObject(2.0, glm::vec3(-20.5+(i*6.4),8.2,-8), 2.0).get()
-
-        EntityList[7]->addComponent(Compmodel2);
-        EntityList[7]->addComponent(CompPhys2);*/
-        /////////////////////////////////////////////////////////
-        /*tmpEnt = (std::shared_ptr<EntityBase>)(new EntityBase(rM, glm::vec3(22, 5.5, -25.5), glm::vec3(5), glm::quat(-1.0, 0.0, -1.0, 0.0)));
-    Compmodel = (std::shared_ptr<Component::RenderComponent>)new Component::RenderComponent();
-    Compmodel->Fill("models/platform.eml", rM, "Main");
-
-    std::shared_ptr<Component::PhysicComponent> CompPhys = (std::shared_ptr<Component::PhysicComponent>)new Component::PhysicComponent();
-    CompPhys = (std::shared_ptr<Component::PhysicComponent>)new Component::PhysicComponent();
-
-    std::shared_ptr<Physics::CubePhysicObject> ph3 = (std::shared_ptr<Physics::CubePhysicObject>)new Physics::CubePhysicObject();
-    rM->m_PhysicsWorld->world->addRigidBody(ph3->addObject(glm::vec3(22, 5.5, -25.5), 0.0, rM->getModelBoundingBox("models/platform.eml"), 5.0f).get());
-    CompPhys->Fill(0.0f, ph3);
-
-    std::shared_ptr<Component::MovementComponent> MovComp = (std::shared_ptr<Component::MovementComponent>)new Component::MovementComponent();
-    MovComp->Fill(ph3, glm::vec3(22, 8.0, -25.5), glm::vec3(22, 21.5, -25.5), 9.0, true);
-
-    tmpEnt->addComponent(Compmodel);
-    tmpEnt->addComponent(CompPhys);
-    tmpEnt->addComponent(MovComp);
-    EntityList.push_back(tmpEnt);*/
 
         {
-            glm::vec3 tPosition = glm::vec3(5, 15, 5);
-            glm::vec3 tScale = glm::vec3(2.0f);
+            glm::vec3 tPosition = glm::vec3(-18, 4.5, 0);
+            glm::vec3 tScale = glm::vec3(1.3 * GOLDEN_RATIO);
             glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
             std::string tModelName = "models/android.eml";
 
@@ -540,16 +274,14 @@ namespace Epsilon
             static_pointer_cast<Component::RenderComponent>(_RComp)->CastsShadows(true);
             static_pointer_cast<Component::RenderComponent>(_RComp)->setTransparency(false);
             static_pointer_cast<Component::RenderComponent>(_RComp)->setVisibility(true);
-            MIN_MAX_POINTS _BoundingBox = ResourceManager::Get().getModelBoundingBox(tModelName);
-            Component::Component_ptr _PComp = std::make_shared<Component::PhysicComponent>(100, tPosition, tScale, Physics::Type::CUBE, _BoundingBox);
             //Component::Component_ptr _SComp = std::make_shared<Component::ScriptComponent>("scripts/test.lua");
-            _Entity->addComponent(_RComp)->addComponent(_PComp)/*->addComponent(_SComp)*/;
+            _Entity->addComponent(_RComp);
 
             EntityList.push_back(_Entity);
         }
-        
+
         {
-            glm::vec3 tPosition = glm::vec3(10, 15, 10);
+            glm::vec3 tPosition = glm::vec3(10, 18, 10);
             glm::vec3 tScale = glm::vec3(2.0f);
             glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
             std::string tModelName = "models/esfera.eml";
@@ -559,17 +291,53 @@ namespace Epsilon
             Component::Component_ptr _RComp = std::make_shared<Component::RenderComponent>(tModelName, tPosition, "Main");
             static_pointer_cast<Component::RenderComponent>(_RComp)->CastsShadows(true);
             static_pointer_cast<Component::RenderComponent>(_RComp)->setTransparency(false);
+            static_pointer_cast<Component::RenderComponent>(_RComp)->setVisibility(true);
             MIN_MAX_POINTS _BoundingBox = ResourceManager::Get().getModelBoundingBox(tModelName);
             Component::Component_ptr _PComp = std::make_shared<Component::PhysicComponent>(100, tPosition, tScale, Physics::Type::SPHERE, _BoundingBox);
             //Component::Component_ptr _SComp = std::make_shared<Component::ScriptComponent>("scripts/test.lua");
-            _Entity->addComponent(_RComp)->addComponent(_PComp)/*->addComponent(_SComp)*/;
+            _Entity->addComponent(_RComp)->addComponent(_PComp) /*->addComponent(_SComp)*/;
 
             EntityList.push_back(_Entity);
         }
-        
         {
-            glm::vec3 tPosition = glm::vec3(0, 8, 0);
-            glm::vec3 tScale = glm::vec3(2.05);
+            glm::vec3 tPosition = glm::vec3(5, 15, 5);
+            glm::vec3 tScale = glm::vec3(2.0f);
+            glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
+            std::string tModelName = "models/cube.eml";
+
+            std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(tPosition, tScale, tRotation);
+
+            Component::Component_ptr _RComp = std::make_shared<Component::RenderComponent>(tModelName, tPosition, "Main");
+            static_pointer_cast<Component::RenderComponent>(_RComp)->CastsShadows(true);
+            static_pointer_cast<Component::RenderComponent>(_RComp)->setTransparency(false);
+            MIN_MAX_POINTS _BoundingBox = ResourceManager::Get().getModelBoundingBox(tModelName);
+            Component::Component_ptr _PComp = std::make_shared<Component::PhysicComponent>(100, tPosition, tScale, Physics::Type::CUBE, _BoundingBox);
+            _Entity->addComponent(_RComp)->addComponent(_PComp);
+
+            EntityList.push_back(_Entity);
+        }
+
+        /* {
+            glm::vec3 tPosition = glm::vec3(-5, 15, -5);
+            glm::vec3 tScale = glm::vec3(0.025);
+            glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
+            std::string tModelName = "models/sponza.eml";
+
+            std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(tPosition, tScale, tRotation);
+
+            Component::Component_ptr _RComp = std::make_shared<Component::RenderComponent>(tModelName, tPosition, "Main");
+            static_pointer_cast<Component::RenderComponent>(_RComp)->CastsShadows(true);
+            static_pointer_cast<Component::RenderComponent>(_RComp)->setTransparency(false);
+            static_pointer_cast<Component::RenderComponent>(_RComp)->setVisibility(true);
+                        static_pointer_cast<Component::RenderComponent>(_RComp)->isDoubleFaced(false);
+
+            _Entity->addComponent(_RComp);
+
+            EntityList.push_back(_Entity);
+        }*/
+        /*  {
+            glm::vec3 tPosition = glm::vec3(-5, 5, -5);
+            glm::vec3 tScale = glm::vec3(1.85);
             glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
             std::string tModelName = "models/map.eml";
 
@@ -583,10 +351,9 @@ namespace Epsilon
             _Entity->addComponent(_RComp);
 
             EntityList.push_back(_Entity);
-        }
-
+    }*/
         {
-            glm::vec3 tPosition = glm::vec3(10, 3.5, 10);
+            glm::vec3 tPosition = glm::vec3(10, 5.5, 10);
             float tScale = 5.0f;
             glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
 
@@ -601,11 +368,10 @@ namespace Epsilon
             EntityList.push_back(_Entity);
         }
 
-        
         glm::vec3 initCubemapPosition = glm::vec3(-35.0, 0, -35.0);
         {
-            for (int a = 0; a < 8; a++)
-                for (int b = 0; b < 5; b++)
+            /*  for (int a = 0; a < 7; a++)
+                for (int b = 0; b < 7; b++)
                     for (int c = 0; c < 7; c++)
                     {
                         glm::vec3 positions = initCubemapPosition + glm::vec3(a, b, c) * glm::vec3(10.0, 5.0, 10.0);
@@ -617,10 +383,11 @@ namespace Epsilon
                         static_pointer_cast<Component::RenderComponent>(_RComp)->CastsShadows(false);
                         static_pointer_cast<Component::RenderComponent>(_RComp)->isDoubleFaced(false);
                         static_pointer_cast<Component::RenderComponent>(_RComp)->setTransparency(false);
+                        static_pointer_cast<Component::RenderComponent>(_RComp)->setVisibility(false);
 
                         _Entity->addComponent(_RComp);
                         EntityList.push_back(_Entity);
-                    }
+                    }*/
         }
         //33 34 14
         //-32 54 -13
@@ -657,8 +424,8 @@ namespace Epsilon
         limits.MAX_Z = 500.0;
         limits.MIN_Z = -500.0;
 
-       // m_ParticleSystem = (std::shared_ptr<ParticleSystem>)new ParticleSystem();
-       // m_ParticleSystem->addNewSystem(limits, MIST, 5000);
+        // m_ParticleSystem = (std::shared_ptr<ParticleSystem>)new ParticleSystem();
+        // m_ParticleSystem->addNewSystem(limits, MIST, 5000);
 
         //3 , 7, 30
         sun->Update();
@@ -691,12 +458,12 @@ namespace Epsilon
         captureViews[5] = glm::lookAt(glm::vec3(0.0), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
         //33 34 14
         //-32 54 -13
-        SphericalHarmonics::SphericalHarmonicsFormat sphStruct[8][5][7];
+        SphericalHarmonics::SphericalHarmonicsFormat sphStruct[7][7][7];
         auto start = std::chrono::steady_clock::now();
         //Shaders["CubeMap"]->Use();
         int index = 0;
-        for (int a = 0; a < 8; a++)
-            for (int b = 0; b < 5; b++)
+        for (int a = 0; a < 7; a++)
+            for (int b = 0; b < 7; b++)
                 for (int c = 0; c < 7; c++)
                 {
 
@@ -748,8 +515,8 @@ namespace Epsilon
                                 continue;
                             if (EntityList[i]->HasRenderComponent())
                             {
-                                glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1.0), EntityList[i]->getScale());
-                                glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1.0), EntityList[i]->getPosition());
+                                glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1.0f), EntityList[i]->getScale());
+                                glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1.0f), EntityList[i]->getPosition());
                                 glm::mat4 RotationMatrix = glm::mat4(1.0f) * glm::toMat4(glm::normalize(EntityList[i]->getRotation()));
                                 Model = TranslationMatrix * ScaleMatrix * RotationMatrix;
                                 cubeShader->PushUniform("model", Model);
@@ -763,6 +530,8 @@ namespace Epsilon
                                 glActiveTexture(GL_TEXTURE5);
                                 cubeShader->PushUniform("shadowMap", 5);
                                 glBindTexture(GL_TEXTURE_2D, shadowMap->getShadowTextureID());
+                                //if(EntityList[i]->getModelPath() == "models/android.eml")
+                                //IO::PrintLine(EntityList[i]->getModelPath(), "position is ", EntityList[i]->getPosition().x, EntityList[i]->getPosition().y, EntityList[i]->getPosition().z);
                             }
                             EntityList[i]->Render();
                         }
@@ -784,7 +553,7 @@ namespace Epsilon
                         glActiveTexture(GL_TEXTURE5);
                         cubeShader->PushUniform("shadowMap", 5);
                         glBindTexture(GL_TEXTURE_2D, shadowMap->getShadowTextureID());
-                        //BSPMap->RenderLevel(mCubemap[a][b][c]->getPosition(), cubeShader->getProgramID(), true);
+                        BSPMap->RenderLevel(mCubemap[a][b][c]->getPosition(), cubeShader->getProgramID(), true);
                         cubeShader->Free();
                     }
                     mCubemap[a][b][c]->End();
@@ -793,7 +562,7 @@ namespace Epsilon
                     sph.CalculateCohefficients(this->mCubemap[a][b][c]->getTextureID(), 3);
                     sph.setId(this->mCubemap[a][b][c]->getID());
                     sphStruct[a][b][c] = sph.toStruct();
-/*
+                    /*
 
 
 
@@ -805,15 +574,14 @@ namespace Epsilon
                 }*/
                     index++;
                 }
-        auto finish =  std::chrono::steady_clock::now();
+        auto finish = std::chrono::steady_clock::now();
         auto interval = std::chrono::duration_cast<std::chrono::milliseconds>(finish - start).count();
         std::cout << "Cubemap generation took: " << interval << " milliseconds" << std::endl;
-        std::cout << interval/245 << " per cubemap" << std::endl;
+        std::cout << interval / 245 << " per cubemap" << std::endl;
 
         ResourceManager::Get().cubemapsLoaded = true;
 
         glCullFace(GL_BACK);
-        
 
         ResourceManager::Get().loadQueuedTextures();
 
@@ -826,7 +594,7 @@ namespace Epsilon
 
         glGenBuffers(1, &AmbientLightSSBO);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, AmbientLightSSBO);
-        glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(SphericalHarmonics::SphericalHarmonicsFormat) * 8 * 5 * 7, (const void *)&sphStruct, GL_DYNAMIC_COPY);
+        glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(SphericalHarmonics::SphericalHarmonicsFormat) * 7 * 7 * 7, (const void *)&sphStruct, GL_DYNAMIC_COPY);
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, AmbientLightSSBO);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
@@ -867,6 +635,8 @@ namespace Epsilon
         Shaders["DefaultParticle"] = std::make_shared<Shader>("shaders/defaultParticle.vglsl", "shaders/defaultParticle.fglsl");
 
         Shaders["Cloth"] = std::make_shared<Shader>("shaders/Cloth.vglsl", "shaders/Cloth.fglsl");
+
+        Shaders["ImGui_gamma"] = std::make_shared<Shader>("shaders/ImGui_gamma_correct_vertex.glsl", "shaders/ImGui_gamma_correct_fragment.glsl");
 
         ResourceManager::Get().requestShader("shaders/Geometry.vglsl", "shaders/Geometry.fglsl", "Main");
         ResourceManager::Get().requestShader("shaders/Cloth.vglsl", "shaders/Cloth.fglsl", "Cloth");
@@ -981,6 +751,7 @@ namespace Epsilon
             {
                 shader->Use();
                 shader->PushUniform("parallaxOn", ParallaxOn);
+                shader->PushUniform("ambientDivider", ambientDivider);
 
                 ResourceManager::Get().setModelUniforms(EntityList[i]->getModelPath(), shader, EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation(),
                                                         EntityList[i]->getPrevPosition(), EntityList[i]->getPrevScale(), EntityList[i]->getPrevRotation(),
@@ -1003,7 +774,7 @@ namespace Epsilon
         BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera[mCurrentCamera]->getProjectionMatrix() * eCamera[mCurrentCamera]->getViewMatrix()), BSPmodel);
         shader->Use();
         this->SetUniforms(shader, glm::vec3(0.0), glm::vec3(0.1), glm::quat(0, 0, 0, 0));
-        //BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), shader->getProgramID(), true);
+        BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), shader->getProgramID(), true);
         /*
     Shaders["MD5Geometry"]->Use();
     glUniformMatrix4fv(glGetUniformLocation(Shaders["MD5Geometry"]->getProgramID(), "mSkinned"), 150, GL_FALSE, &m_AnimModel->m_AnimatedBones[0][0][0]);
@@ -1052,7 +823,7 @@ namespace Epsilon
         BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera[mCurrentCamera]->getProjectionMatrix() * eCamera[mCurrentCamera]->getViewMatrix()), BSPmodel);
         Shaders["ShadowMapping"]->Use();
         this->SetUniforms(Shaders["ShadowMapping"], glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.1, 0.1, 0.1), glm::quat(0.0, 0.0, 0.0, 0.0));
-        //BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), Shaders["ShadowMapping"]->getProgramID(), false);
+        BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), Shaders["ShadowMapping"]->getProgramID(), false);
 
         /*
     Shaders["MD5ShadowMapping"]->Use();
@@ -1117,8 +888,8 @@ namespace Epsilon
 
         GPU _gpu;
         int DEBUG_MODE = 3;
-        /*
-        IO::PrintLine("Position: x = ",
+
+        /*IO::PrintLine("Position: x = ",
                       Helpers::floatTostring(this->eCamera[0]->getPosition().x),
                       " y = ",
                       Helpers::floatTostring(this->eCamera[0]->getPosition().y),
@@ -1159,6 +930,290 @@ namespace Epsilon
 
         //this->text->RenderText(".", 0.5, 0.5, 1.0, glm::vec3(1,1,1));
 
+        //if (show_demo_window)
+        //    ImGui::ShowDemoWindow(&show_demo_window);
+
+        bool show_app_metrics = false;
+        bool show_app_style_editor = false;
+        bool show_app_about = false;
+        bool p_cross = false;
+        static bool show_pipeline_viewer = false;
+        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
+        {
+            static float f = 0.0f;
+            static int counter = 0;
+
+            ImGui::SetNextWindowSize(ImVec2(this->WIDTH, this->HEIGHT));
+            ImGui::SetNextWindowPos(ImVec2(0, 0));
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(30.0f, 10.0f));
+            ImGui::Begin("Hello, world!", NULL, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBringToFrontOnFocus); // Create a window called "Hello, world!" and append into it.
+                                                                                                                                                                                    //ImGui::
+            if (ImGui::BeginMainMenuBar())
+            {
+                if (ImGui::BeginMenu("File"))
+                {
+                    ImGui::MenuItem("(demo menu)", NULL, false, false);
+                    if (ImGui::MenuItem("New"))
+                    {
+                    }
+                    if (ImGui::MenuItem("Open", "Ctrl+O"))
+                    {
+                    }
+                    if (ImGui::BeginMenu("Open Recent"))
+                    {
+                        ImGui::MenuItem("fish_hat.c");
+                        ImGui::MenuItem("fish_hat.inl");
+                        ImGui::MenuItem("fish_hat.h");
+                        if (ImGui::BeginMenu("More.."))
+                        {
+                            ImGui::MenuItem("Hello");
+                            ImGui::MenuItem("Sailor");
+                            if (ImGui::BeginMenu("Recurse.."))
+                            {
+                                ShowExampleMenuFile();
+                                ImGui::EndMenu();
+                            }
+                            ImGui::EndMenu();
+                        }
+                        ImGui::EndMenu();
+                    }
+                    if (ImGui::MenuItem("Save", "Ctrl+S"))
+                    {
+                    }
+                    if (ImGui::MenuItem("Save As.."))
+                    {
+                    }
+
+                    ImGui::Separator();
+                    if (ImGui::BeginMenu("Options"))
+                    {
+                        static bool enabled = true;
+                        ImGui::MenuItem("Enabled", "", &enabled);
+                        ImGui::BeginChild("child", ImVec2(0, 60), true);
+                        for (int i = 0; i < 10; i++)
+                            ImGui::Text("Scrolling Text %d", i);
+                        ImGui::EndChild();
+                        static float f = 0.5f;
+                        static int n = 0;
+                        ImGui::SliderFloat("Value", &f, 0.0f, 1.0f);
+                        ImGui::InputFloat("Input", &f, 0.1f);
+                        ImGui::Combo("Combo", &n, "Yes\0No\0Maybe\0\0");
+                        ImGui::EndMenu();
+                    }
+
+                    if (ImGui::BeginMenu("Colors"))
+                    {
+                        float sz = ImGui::GetTextLineHeight();
+                        for (int i = 0; i < ImGuiCol_COUNT; i++)
+                        {
+                            const char *name = ImGui::GetStyleColorName((ImGuiCol)i);
+                            ImVec2 p = ImGui::GetCursorScreenPos();
+                            ImGui::GetWindowDrawList()->AddRectFilled(p, ImVec2(p.x + sz, p.y + sz), ImGui::GetColorU32((ImGuiCol)i));
+                            ImGui::Dummy(ImVec2(sz, sz));
+                            ImGui::SameLine();
+                            ImGui::MenuItem(name);
+                        }
+                        ImGui::EndMenu();
+                    }
+
+                    // Here we demonstrate appending again to the "Options" menu (which we already created above)
+                    // Of course in this demo it is a little bit silly that this function calls BeginMenu("Options") twice.
+                    // In a real code-base using it would make senses to use this feature from very different code locations.
+                    if (ImGui::BeginMenu("Options")) // <-- Append!
+                    {
+                        static bool b = true;
+                        ImGui::Checkbox("SomeOption", &b);
+                        ImGui::EndMenu();
+                    }
+
+                    if (ImGui::BeginMenu("Disabled", false)) // Disabled
+                    {
+                        IM_ASSERT(0);
+                    }
+                    if (ImGui::MenuItem("Checked", NULL, true))
+                    {
+                    }
+                    if (ImGui::MenuItem("Quit", "Alt+F4", &g_Running))
+                    {
+                    }
+                    ImGui::EndMenu();
+                }
+                if (ImGui::BeginMenu("Debugger"))
+                {
+                    ImGui::MenuItem("(demo menu)", NULL, false, false);
+                    if (ImGui::MenuItem("Pipeline viewer", NULL, &show_pipeline_viewer))
+                    {
+                    }
+                    ImGui::EndMenu();
+                }
+                if (ImGui::BeginMenu("Help"))
+                {
+                    ImGui::MenuItem("Metrics", NULL, &show_app_metrics);
+                    ImGui::MenuItem("Style Editor", NULL, &show_app_style_editor);
+                    ImGui::MenuItem("About ImGui", NULL, &show_app_about);
+                    ImGui::EndMenu();
+                }
+                ImGui::EndMainMenuBar();
+            }
+
+            ImGui::PopStyleVar();
+
+            /*Begin skybox window*/
+
+            ImGui::Begin("Skybox"); // Create a window called "Hello, world!" and append into it.
+
+            ImGui::Checkbox("Clouds", &skybox->clouds); // Edit bools storing our window open/close state
+
+            ImGui::SliderFloat("Horizon Height", &skybox->Horizon_Height, 0.0f, 1.0f); // Edit 1 float using a slider from 0.0f to 1.0f
+            ImGui::ColorEdit3("Upper Sky Color", (float *)&skybox->UpperSky_color);    // Edit 3 floats representing a color
+            ImGui::ColorEdit3("Lower Sky Color", (float *)&skybox->LowerSky_color);    // Edit 3 floats representing a color
+            ImGui::ColorEdit3("Tint", (float *)&skybox->Horizon_color);                // Edit 3 floats representing a color
+
+            ImGui::Separator();
+            ImGui::SliderFloat3("Ambient divider", &ambientDivider[0], 0, 50);
+
+            ImGui::End();
+
+            /*End Skybox window*/
+
+            /*Begin scene window*/
+            if (show_pipeline_viewer)
+            {
+                static ImVec2 fu = ImVec2(300, 300);
+                ImGui::SetNextWindowSize(fu, ImGuiCond_FirstUseEver);
+                ImGui::Begin("Debug Framebuffer", &show_pipeline_viewer);
+
+                //get the mouse position
+                ImVec2 pos = ImGui::GetCursorScreenPos();
+
+                static const char *items[] = {"gBuffer Normal", "Light Pass", "HBAO", "Screen Space Reflections"};
+                static const char *item_current = items[0];
+                static ImGuiComboFlags flags = 0;
+                if (ImGui::BeginCombo("Display", item_current, flags))
+                {
+                    for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+                    {
+                        bool is_selected = (item_current == items[n]);
+                        if (ImGui::Selectable(items[n], is_selected))
+                            item_current = items[n];
+                        if (is_selected)
+                            ImGui::SetItemDefaultFocus(); // Set the initial focus when opening the combo (scrolling + for keyboard navigation support in the upcoming navigation branch)
+                    }
+                    ImGui::EndCombo();
+                }
+
+                auto fov = eCamera[mCurrentCamera]->getFoV();
+
+                auto TextureId = 0;
+
+                if (item_current == "Light Pass")
+                    TextureId = PP->getSceneTexture();
+                else if (item_current == "gBuffer Normal")
+                    TextureId = PP->gExpensiveNormal;
+                else if (item_current == "Screen Space Reflections")
+                    TextureId = PP->ReflectionTexture;
+                else if (item_current == "HBAO")
+                    TextureId = PP->ssaoColorBufferBlur;
+
+                //we are done working with this window
+                unsigned int fb_size[3] = {(unsigned int)this->WIDTH, (unsigned int)this->HEIGHT, Shaders["ImGui_gamma"]->getProgramID()};
+
+                //ImGui::GetWindowDrawList()->AddCallback([]() { }, nullptr);
+                ImGui::Image((void *)TextureId, ImVec2(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y - 60), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 0.5f));
+
+                //ImGui::GetWindowDrawList()->AddCallback(ImDrawCallback_ResetRenderState, nullptr);
+                ImGui::End();
+            }
+
+            ImGui::Begin("Hierarchy");
+            if (ImGui::TreeNode("Entities"))
+            {
+                for (const auto &ent : EntityList)
+                {
+                    if (ImGui::TreeNode(ent->getHash().c_str()))
+                    {
+                        ImGui::Indent();
+                        if (ent->HasRenderComponent())
+                        {
+                            if (ImGui::TreeNode("Render Component"))
+                            {
+                                ImGui::Indent();
+                                ImGui::Text(ent->getComponent<Component::RenderComponent_ptr>()->getModelPath().c_str());
+                                ImGui::TreePop();
+                                ImGui::Unindent();
+                            }
+                        }
+                        if (ent->HasClothComponent())
+                        {
+                            if (ImGui::TreeNode("Cloth Component"))
+                            {
+                                ImGui::TreePop();
+                            }
+                        }
+                        if (ent->HasSoundComponent())
+                        {
+                            if (ImGui::TreeNode("Sound Component"))
+                            {
+                                ImGui::Indent();
+                                ImGui::Text(ent->getComponent<Component::SoundComponent_ptr>()->getFilename().c_str());
+                                ImGui::Unindent();
+                                ImGui::TreePop();
+                            }
+                        }
+                        if (ent->HasPhysicComponent())
+                        {
+                            if (ImGui::TreeNode("Physic Component"))
+                            {
+                                auto comp = ent->getComponent<Component::PhysicComponent_ptr>();
+                                ImGui::Indent();
+                                ImGui::Text((std::string("State: ") + std::string(comp->isStatic() ? "Static" : "Dynamic")).c_str());
+                                ImGui::Text((std::string("Type: ") + std::string(comp->getTypeStr())).c_str());
+                                ImGui::Unindent();
+                                ImGui::TreePop();
+                            }
+                        }
+                        if (ImGui::TreeNode("Transform"))
+                        {
+                            const glm::vec3 &pos = ent->getPosition();
+                            const glm::vec3 &sc = ent->getScale();
+                            const glm::quat &rot = ent->getRotation();
+                            ImGui::Indent();
+                            ImGui::Text(std::string(std::string("Position: x=") + std::to_string(pos.x) + " y=" + std::to_string(pos.y) + " z=" + std::to_string(pos.z)).c_str());
+                            ImGui::Text(std::string(std::string("Scale: x=") + std::to_string(sc.x) + " y=" + std::to_string(sc.y) + " z=" + std::to_string(sc.z)).c_str());
+                            ImGui::Text(std::string(std::string("Rotation (quat): x=") + std::to_string(rot.x) + " y=" + std::to_string(rot.y) + " z=" + std::to_string(rot.z) + " w=" + std::to_string(rot.w)).c_str());
+                            ImGui::Unindent();
+                            ImGui::TreePop();
+                        }
+                        //ImGui::Text("Num Slots");
+                        //ImGui::Text("Count");
+                        ImGui::Unindent();
+                        ImGui::TreePop();
+                    }
+                }
+                ImGui::TreePop();
+            }
+            //ImGui::Indent();
+            //ImGui::Text("Previous Modifications");
+            //ImGui::Text("Debug Ticks");
+            //ImGui::Unindent();
+            ImGui::End();
+            /*End scene window*/
+
+            ImGui::SetCursorScreenPos(ImVec2(8, this->HEIGHT - 60));
+            ImGui::Text("View position: x=%.2f, y=%.2f, z=%.2f", eCamera[mCurrentCamera]->getPosition().x, eCamera[mCurrentCamera]->getPosition().y, eCamera[mCurrentCamera]->getPosition().z );
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+            ImGui::End();
+        }
+
+        // Rendering
+        ImGui::Render();
+        int display_w, display_h;
+        glfwGetFramebufferSize(window->getHandle()->getHandle(), &display_w, &display_h);
+        glViewport(0, 0, display_w, display_h);
+        //glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+        //glClear(GL_COLOR_BUFFER_BIT);
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
         glEnable(GL_DEPTH_TEST);
     }
 
@@ -1195,13 +1250,13 @@ namespace Epsilon
             t = etime + (double)1.000;
         }
 
-        eventtime += 1 * frametime;
+        eventtime += 1 * Clock::DeltaSeconds();
         //cout << eventtime << endl;
         sun->Update();
 
-        ResourceManager::Get().timestep = frametime;
+        ResourceManager::Get().timestep = Clock::LastSeconds();
 
-        timeBehind += etime - lastTime;
+        timeBehind += Clock::TimeSeconds() - Clock::LastSeconds();
     }
 
     void Epsilon::RenderSkybox(bool state)
@@ -1241,10 +1296,15 @@ namespace Epsilon
     {
         glfwWaitEvents();
     }*/
+
         glfwPollEvents();
         Input::Joystick::JoystickManager::DetectJoysticks();
         Input::Joystick::JoystickManager::PollJoystick();
         auto _Joystick = Input::Joystick::JoystickManager::PrimaryJoystick();
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
 
         if (glm::abs((timeGUI * 60) - (etime * 60)) > 2.0f && onMenu)
         {
@@ -1256,12 +1316,12 @@ namespace Epsilon
         {
             if (glm::abs((menuTime * 60) - (etime * 60)) > 60.0f)
             {
-                g_Running = false;
+                //g_Running = false;
                 onMenu = !onMenu;
                 menuTime = this->etime;
             }
         }
-        if (onMenu)
+        /* if (onMenu)
         {
             glfwSetInputMode(window->getHandle()->getHandle(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             ComputeCamera(CAMERA_FIXED, eCamera[mCurrentCamera]->getPosition(), eCamera[mCurrentCamera]->getDirection(), eCamera[mCurrentCamera]->getProjectionMatrix(), eCamera[mCurrentCamera]->getViewMatrix());
@@ -1271,7 +1331,7 @@ namespace Epsilon
         {
             glfwSetInputMode(window->getHandle()->getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             this->m_CameraMode = NO_CLIP;
-        }
+        }*/
 
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::N])
             normal = !normal;
@@ -1279,20 +1339,49 @@ namespace Epsilon
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::F])
             flashLight = !flashLight;
 
-        if (Input::KeyBoard::KEYS[Input::GLFW::Key::SPACE]){
+        if (Input::KeyBoard::KEYS[Input::GLFW::Key::SPACE])
+        {
             PP->HBAOOn = !PP->HBAOOn;
             SSAO = !SSAO;
         }
 
-        if (glm::abs((menuTime * 60) - (etime * 60)) > 60.0f)
+        auto resolveTime = [kt = KeyTime, t = etime](int key) -> bool { return glm::abs((kt[key] * 60) - (t * 60)) > 60.0f; };
+
+        if (Input::KeyBoard::KEYS[Input::GLFW::Key::C] && resolveTime(Input::GLFW::Key::C))
         {
-            if (Input::KeyBoard::KEYS[Input::GLFW::Key::C])
+            mCurrentCamera = (int)!mCurrentCamera;
+            eCamera[mCurrentCamera]->isMoving(true);
+            eCamera[!mCurrentCamera]->isMoving(true);
+            KeyTime[Input::GLFW::Key::C] = etime;
+        }
+
+        if (Input::KeyBoard::KEYS[Input::GLFW::Key::M] && resolveTime(Input::GLFW::Key::M))
+        {
+            auto &XPOS = Input::Mouse::XPOS;
+            auto &YPOS = Input::Mouse::YPOS;
+            if (this->m_CameraMode == CAMERA_FIXED)
             {
-                mCurrentCamera = (int)!mCurrentCamera;
-                eCamera[mCurrentCamera]->isMoving(true);
-                eCamera[!mCurrentCamera]->isMoving(true);
-                menuTime = etime;
+                XPOS = CursorBeforeMenu.x; //mod(CursorBeforeMenu.x, this->WIDTH);
+                YPOS = CursorBeforeMenu.y; //mod(CursorBeforeMenu.y, this->HEIGHT);
+                glfwSetCursorPos(window->getHandle()->getHandle(), CursorBeforeMenu.x, CursorBeforeMenu.y);
+                window->HideCursor();
+                this->m_CameraMode = NO_CLIP;
+                onMenu = false;
             }
+            else
+            {
+                CursorBeforeMenu.x = XPOS;
+                CursorBeforeMenu.y = YPOS;
+
+                XPOS = this->WIDTH / 2;
+                YPOS = this->HEIGHT / 2;
+                window->ShowCursor();
+                glfwSetCursorPos(window->getHandle()->getHandle(), this->WIDTH / 2, this->HEIGHT / 2);
+                this->m_CameraMode = CAMERA_FIXED;
+                onMenu = true;
+            }
+
+            KeyTime[Input::GLFW::Key::M] = etime;
         }
 
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::P])
@@ -1507,7 +1596,7 @@ namespace Epsilon
         glActiveTexture(GL_TEXTURE2);
         glUniform1i(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "shadowMap"), 2);
         glBindTexture(GL_TEXTURE_2D, this->shadowMap->getShadowTextureID());
-       // m_ParticleSystem->Render();
+        // m_ParticleSystem->Render();
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, 0);
         glActiveTexture(GL_TEXTURE1);

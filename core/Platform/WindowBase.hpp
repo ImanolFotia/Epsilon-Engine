@@ -33,6 +33,8 @@ namespace Epsilon
             virtual void Resize(int, int) const = 0;
             virtual void Destroy() = 0;
             virtual void SwapBuffers() = 0;
+            virtual void ShowCursor() = 0;
+            virtual void HideCursor() = 0;
 
             void setWindowData(const WindowData &data)
             {
@@ -52,6 +54,7 @@ namespace Epsilon
             const std::shared_ptr<WindowHandle<>> getHandle() {
                 return mWindowHandle;
             }
+
             
 
         protected:

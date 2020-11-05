@@ -91,10 +91,10 @@ namespace Epsilon
 
             delete[] modelMatrices;
         }
-        virtual ~Grass()
+        /*virtual ~Grass()
         {
             //std::cout << "Deleted Grass" << std::endl;
-        }
+        }*/
 
     public:
         void Render(Shader *shader)

@@ -9,7 +9,7 @@ namespace Epsilon
 		{
 		public:
 			PlayerControlledPhysicsObject(btScalar x, btScalar y, btScalar z);
-			~PlayerControlledPhysicsObject() {}
+			//~PlayerControlledPhysicsObject() {}
 
 			glm::vec3 getPosition();
 			glm::vec3 getOrientation();

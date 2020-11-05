@@ -5,12 +5,12 @@
 
 #include <Physics/Physics.h>
 
+#include <Physics/CollisionInfo.h>
 #include <Physics/PhysicObject.h>
 #include <Physics/CubePhysicObject.h>
 #include <Physics/SpherePhysicObject.h>
 #include <Physics/TriangleMeshPhysicObject.h>
 #include <Physics/ClothPhysicObject.h>
-
 
 #include <Helpers.hpp>
 
@@ -27,14 +27,14 @@ namespace Epsilon
             using TriangleMeshShape_ptr = std::shared_ptr<Physics::TriangleMeshPhysicObject>;
             using ClothShape_ptr = std::shared_ptr<Physics::ClothPhysicObject>;
             using SoftRigidDynamicsWorld_ptr = std::shared_ptr<btSoftRigidDynamicsWorld>;
-            
+
             long toHash()
             {
                 return std::hash<float>{}(m_PhysicsWorldPosition.x() + m_PhysicsWorldPosition.y() + m_PhysicsWorldPosition.z() + mMass);
             }
 
         public:
-            PhysicComponent(float mass, glm::vec3 pos, glm::vec3 scale, Physics::Type type, MIN_MAX_POINTS boundingBox) : mType(PHYSICCOMPONENT), mMass(mass)
+            PhysicComponent(float mass, glm::vec3 pos, glm::vec3 scale, Physics::Type type, MIN_MAX_POINTS boundingBox) : mType(PHYSICCOMPONENT), mMass(mass), mPhysicComponentType(type)
             {
                 try
                 {
@@ -44,11 +44,11 @@ namespace Epsilon
                     {
                     case Physics::Type::CUBE:
                         mRigidBodyPointer = std::make_shared<Physics::CubePhysicObject>();
-                        world->addRigidBody(std::static_pointer_cast<Physics::CubePhysicObject>(mRigidBodyPointer)->addObject(pos, mass, boundingBox, scale).get());
+                        world->addRigidBody(std::static_pointer_cast<Physics::CubePhysicObject>(mRigidBodyPointer)->addObject(pos, mMass, boundingBox, scale).get());
                         break;
                     case Physics::Type::SPHERE:
                         mRigidBodyPointer = std::make_shared<Physics::SpherePhysicObject>();
-                        world->addRigidBody(std::static_pointer_cast<Physics::SpherePhysicObject>(mRigidBodyPointer)->addObject(scale, pos, mass).get());
+                        world->addRigidBody(std::static_pointer_cast<Physics::SpherePhysicObject>(mRigidBodyPointer)->addObject(scale, pos, mMass).get());
                         break;
                     case Physics::Type::TRIANGLE_MESH:
                         mRigidBodyPointer = std::make_shared<Physics::TriangleMeshPhysicObject>();
@@ -73,6 +73,7 @@ namespace Epsilon
                     transf.setRotation(m_PhysicsWorldRotation);
                     transf.setOrigin(m_PhysicsWorldPosition);
                     mCollInfo.setName("Entity_" + std::string(Helpers::to_hex(toHash())));
+                    mCollInfo.setType(mPhysicComponentType);
                     setTransform(transf);
                     setUserPointer(&mCollInfo);
                 }
@@ -89,6 +90,10 @@ namespace Epsilon
             COMPONENT_TYPE getType() { return mType; }
 
             float mMass;
+
+            bool isStatic() { 
+                return mMass > 0 ? false : true;
+            }
 
             void Update()
             {
@@ -119,6 +124,26 @@ namespace Epsilon
                 return glm::vec3(m_PhysicsWorldPosition.getX(), m_PhysicsWorldPosition.getY(), m_PhysicsWorldPosition.getZ());
             }
 
+            const char * getTypeStr()
+            {
+                switch (mPhysicComponentType)
+                {
+                case Physics::Type::CUBE:
+                    return "Cube";
+                    break;
+                case Physics::Type::SPHERE:
+                    return "Sphere";
+                    break;
+                case Physics::Type::TRIANGLE_MESH:
+                    return "Triangle Mesh";
+                    break;
+                case Physics::Type::CLOTH:
+                    return "Cloth";
+                    break;
+                }
+                return "";
+            }
+
             glm::quat getRotation() { return glm::quat(1.0f, 0.0f, 0.0f, 0.0f); }
             glm::vec3 getScale() { return glm::vec3(1.0f); }
 
@@ -128,6 +153,8 @@ namespace Epsilon
             Physics::CollisionInfo mCollInfo;
             BaseShape_ptr mRigidBodyPointer = nullptr;
             COMPONENT_TYPE mType;
+
+            enum Physics::Type mPhysicComponentType;
 
             btVector3 m_PhysicsWorldPosition;
             btVector3 m_LastPhysicsWorldPosition;

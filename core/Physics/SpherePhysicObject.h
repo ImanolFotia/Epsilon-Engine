@@ -10,7 +10,7 @@ namespace Epsilon
 		{
 		public:
 			SpherePhysicObject() = default;
-			virtual ~SpherePhysicObject() {}
+			//virtual ~SpherePhysicObject() {}
 
 		public:
 			virtual btRigidBody_ptr addObject(float /* Radius */, float /* Mass */)

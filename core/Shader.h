@@ -76,6 +76,12 @@ public:
         if(m_Uniforms.find(name) == m_Uniforms.end()) return;
         glUniform3fv(m_Uniforms[name], 1, &data[0]);
     }
+    
+    void PushUniform(const std::string& name, glm::ivec3 data)
+    {
+        if(m_Uniforms.find(name) == m_Uniforms.end()) return;
+        glUniform3iv(m_Uniforms[name], 1, &data[0]);
+    } 
 
     void PushUniform(const std::string& name, glm::vec4 data)
     {

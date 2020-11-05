@@ -4,23 +4,28 @@
 #include <SOIL.h>
 #include <Helpers.hpp>
 
+#include "../Resource.hpp"
+#include <Error.hpp>
+
 namespace Epsilon
 {
-    namespace IO
+    namespace Resources
     {
         namespace Image
         {
 
             constexpr int PNG_SIZE_OFFSET = 16;
 
-            class Image
+            class Image : public Resource<ResourceType::IMAGE>
             {
 
             public:
-                typedef std::shared_ptr<IO::Image::Image> Image_ptr;
+                typedef std::shared_ptr<Image> Image_ptr;
                 Image()
                 {
                     OnLoad = nullptr;
+                    mData = std::make_shared<unsigned char>();
+                    mData = nullptr;
                 }
 
                 //Image(char* path) : mPath(path) {}
@@ -35,16 +40,16 @@ namespace Epsilon
 
                         th1 = (std::shared_ptr<std::thread>)new std::thread([&]() -> void {
                             mPath = path;
-                            mData = SOIL_load_image(path, outwidth, outheight, outchannels, SOIL_LOAD_RGBA);
+                            mData.reset(SOIL_load_image(path, outwidth, outheight, outchannels, SOIL_LOAD_RGBA));
 
                             if (mData == 0)
                             {
                                 mLoaded = true;
-                                data = mData;
+                                data = mData.get();
                                 return;
                             }
 
-                            data = mData;
+                            data = mData.get();
                             mLoaded = true;
                         });
 
@@ -79,7 +84,7 @@ namespace Epsilon
 
                                 mPath = path;
                                 std::cout << "Loading " << path << std::endl;
-                                mData = SOIL_load_image(path, &width, &height, &channels, SOIL_LOAD_RGBA);
+                                mData.reset(SOIL_load_image(path, &width, &height, &channels, SOIL_LOAD_RGBA));
 
                                 if (mData == 0)
                                 {
@@ -175,9 +180,25 @@ namespace Epsilon
                     OnLoad = f;
                 }
 
-                unsigned char *getData()
+                std::shared_ptr<unsigned char> getData()
                 {
                     return mData;
+                }
+
+                std::variant<std::monostate, std::shared_ptr<unsigned char>, Error> Get()
+                {
+                    //...
+                    if (mData != nullptr)
+                    {
+                        return mData;
+                    }
+                    else if (mError.Type() != NOT_SPECIFIED)
+                    {
+                        return mError;
+                    }
+                    else {
+
+                    }
                 }
 
                 std::function<void()> OnLoad = nullptr;
@@ -185,13 +206,13 @@ namespace Epsilon
 
             private:
                 bool mLoaded = false;
-                unsigned char *mData = nullptr;
                 std::string mPath = "";
                 int mWidth = 0;
                 int mHeight = 0;
+                Error mError;
             };
 
-            typedef std::shared_ptr<IO::Image::Image> Image_ptr;
+            typedef std::shared_ptr<Image> Image_ptr;
         } // namespace Image
-    }     // namespace IO
+    }     // namespace Resources
 } // namespace Epsilon

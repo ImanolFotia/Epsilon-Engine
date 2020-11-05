@@ -32,7 +32,7 @@ class Clock {
         }
         
         static long double DeltaSeconds() {
-            return instance.delta() * 1000.0;
+            return instance.delta() / 1000.0;
         }
 
         static void Tick() {

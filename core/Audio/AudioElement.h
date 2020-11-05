@@ -2,8 +2,11 @@
 
 #include <pch.hpp>
 #include <Types.h>
-#include <Audio/Loaders/WAVFile.h>
+#include <Resource/Audio/Loaders/WAVFile.h>
 #include <Audio/Audio.h>
+
+#include <Resource/Audio/Audio.hpp>
+
 namespace Epsilon
 {
     namespace IO
@@ -21,15 +24,15 @@ namespace Epsilon
                         this->m_Position = AudioPosition;
                         this->m_Direction = AudioDirection;
 
-                        IO::Audio::File::WAVfile SoundFile;
-                        data = (std::shared_ptr<char>)SoundFile.Load(fileName);
+                        mAudioResource = std::make_shared<Resources::Audio>(fileName);
+                        data = mAudioResource->Data();//(std::shared_ptr<char>)SoundFile.Load(fileName);
 
                         alGenBuffers(1, &this->m_BufferID);
 
-                        this->m_Channels = SoundFile.getNumberOfChannels();
+                        this->m_Channels = mAudioResource->Channels();//SoundFile.getNumberOfChannels();
                         std::cout << "Number of Channels: " << this->m_Channels << std::endl;
 
-                        this->m_BytesPerSecond = SoundFile.getBPS();
+                        this->m_BytesPerSecond = mAudioResource->BitsPerSecond();
                         std::cout << "Bytes per Second: " << this->m_BytesPerSecond << std::endl;
 
                         if (this->m_Channels == 1)
@@ -42,7 +45,7 @@ namespace Epsilon
                         }
 
                         //alBufferSamplesSOFT(this->m_BufferID, SoundFile.getSampleRate(), this->m_Format, SoundFile.getFileSize(),this->m_Channels, AL_UNSIGNED_BYTE_SOFT, data.get());
-                        alBufferData(m_BufferID, m_Format, data.get(), SoundFile.getFileSize(), SoundFile.getSampleRate());
+                        alBufferData(m_BufferID, m_Format, data.get(), mAudioResource->FileSize(), mAudioResource->BitRate() );
 
                         alGenSources(1, &this->m_AudioID);
 
@@ -192,7 +195,7 @@ namespace Epsilon
                 int m_Channels;
                 unsigned int m_Format;
                 int m_BytesPerSecond;
-                std::shared_ptr<char> data;
+                std::shared_ptr<unsigned char> data;
 
                 AUDIO_TYPE m_Type;
 
@@ -200,6 +203,8 @@ namespace Epsilon
                 glm::vec3 m_Direction;
                 glm::vec3 m_Velocity;
                 float m_Radius;
+
+                std::shared_ptr<Resources::Audio> mAudioResource;
             };
         } // namespace Audio
     }     // namespace IO

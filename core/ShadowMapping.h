@@ -41,10 +41,10 @@ public:
     /**
         Destructor
     **/
-    virtual ~ShadowMap()
+   /* virtual ~ShadowMap()
     {
         //std::cout << "ShadowMap Destroyed" << std::endl;
-    }
+    }*/
 
 public:
 

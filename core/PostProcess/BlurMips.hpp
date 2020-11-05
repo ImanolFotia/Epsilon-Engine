@@ -58,7 +58,7 @@ namespace Epsilon
                         mLastUsedFBO = horizontal;
                         horizontal = !horizontal;
 
-                        first_iteration = first_iteration ? false : false; //negate this no matter what
+                        first_iteration = false; //negate this no matter what
                     }
                 }
                 m_pShader->Free();

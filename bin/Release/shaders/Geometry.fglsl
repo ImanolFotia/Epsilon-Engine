@@ -27,7 +27,7 @@ uniform int CubemapID;
 uniform int AmbientProbeID;
 uniform mat4 projection;
 uniform bool parallaxOn;
-uniform float u_scaleFactor = 0.5;
+uniform float u_scaleFactor = 1.0;
 uniform ivec2 Resolution;
 uniform bool isTransparent = false;
 
@@ -73,9 +73,12 @@ struct SphericalHarmonicsFormat {
 
 layout(std430, binding = 1) buffer AmbientLightSSBO
 {
-    SphericalHarmonicsFormat ambientProbes[8*5*7];
+    SphericalHarmonicsFormat ambientProbes[7][7][7];
 
 } lp;
+
+int WIDTH = 7;
+int DEPTH = 7;
 
 float LinearizeDepth(float depth)
 {
@@ -89,23 +92,26 @@ float deLinearizeDepth(float depth){
     return nonLinearDepth;
 }
 
-vec3 sphericalHarmonics(vec3 N)
+uniform vec3 ambientDivider;
+
+vec3 sphericalHarmonics(vec3 N, ivec3 index)
 {
+   ivec3 i = clamp(index, ivec3(0), ivec3(6));
    return
       // band 0, constant value, details of lowest frequency
-      C4 * lp.ambientProbes[AmbientProbeID].u_L00 +
+      C4 * lp.ambientProbes[i.x][i.y][i.z].u_L00 +
 
       // band 1, oriented along main axes
-      2.0 * C2 * lp.ambientProbes[AmbientProbeID].u_L11 * N.x +
-      2.0 * C2 * lp.ambientProbes[AmbientProbeID].u_L1m1 * N.y +
-      2.0 * C2 * lp.ambientProbes[AmbientProbeID].u_L10 * N.z +
+      2.0 * C2 * lp.ambientProbes[i.x][i.y][i.z].u_L11 * N.x +
+      2.0 * C2 * lp.ambientProbes[i.x][i.y][i.z].u_L1m1 * N.y +
+      2.0 * C2 * lp.ambientProbes[i.x][i.y][i.z].u_L10 * N.z +
 
       // band 2, values depend on multiple axes, higher frequency details
-      C1 * lp.ambientProbes[AmbientProbeID].u_L22 * (N.x * N.x - N.y * N.y) +
-      C3 * lp.ambientProbes[AmbientProbeID].u_L20 * N.z * N.z - C5 * lp.ambientProbes[AmbientProbeID].u_L20 +
-      2.0 * C1 * lp.ambientProbes[AmbientProbeID].u_L2m2 * N.x * N.y +
-      2.0 * C1 * lp.ambientProbes[AmbientProbeID].u_L21 * N.x * N.z +
-      2.0 * C1 * lp.ambientProbes[AmbientProbeID].u_L2m1 * N.y * N.z;
+      C1 * lp.ambientProbes[i.x][i.y][i.z].u_L22 * (N.x * N.x - N.y * N.y) +
+      C3 * lp.ambientProbes[i.x][i.y][i.z].u_L20 * N.z * N.z - C5 * lp.ambientProbes[i.x][i.y][i.z].u_L20 +
+      2.0 * C1 * lp.ambientProbes[i.x][i.y][i.z].u_L2m2 * N.x * N.y +
+      2.0 * C1 * lp.ambientProbes[i.x][i.y][i.z].u_L21 * N.x * N.z +
+      2.0 * C1 * lp.ambientProbes[i.x][i.y][i.z].u_L2m1 * N.y * N.z;
 }
 
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
@@ -243,6 +249,32 @@ float ScreenDoor(int x, int y, float v)
 {
     return step(threshold[4*y+x],v);
 }
+int myround(float i, int v){
+    return int(round(i/v) * v);
+}
+int to1D( int x, int y, int z, int xMax, int yMax, int zMax ) {
+    return (z * xMax * yMax) + (y * xMax) + x;
+}
+
+vec3 bilinear( 
+    inout float tx, 
+    inout float ty, 
+    in vec3 c00, 
+    in vec3 c10, 
+    in vec3 c01, 
+    in vec3 c11) 
+{ 
+#if 1 
+    vec3 a = c00 * (1. - tx) + c10 * tx; 
+    vec3 b = c01 * (1. - tx) + c11 * tx; 
+    return a * (1. - ty) + b * ty; 
+#else 
+    return (1 - tx) * (1 - ty) * c00 + 
+        tx * (1 - ty) * c10 + 
+        (1.f - tx) * ty * c01 + 
+        tx * ty * c11; 
+#endif 
+} 
 
 void main()
 {
@@ -291,7 +323,7 @@ void main()
   vec3 R = vec3(0.0);
 
   gAlbedoSpec.rgb = Diffuse.rgb;
-  gAlbedoSpec.a = r_tex.z;
+  gAlbedoSpec.a = r_tex.z; //Specular multiplier
   
   vec2 MetallicHeight = texture(texture_height, texCoords).rg;
   gExtraComponents.x = min(MetallicHeight.x, 1.0); 
@@ -306,8 +338,47 @@ void main()
                                       reflect(normalize(fs_in.wFragPos - viewPos), normalize(gExpensiveNormal.rgb))/*, 
                                       BoxMax, BoxMin, vec3(-11.0, 6.0, -8.0))/* reflect(normalize(fs_in.wFragPos - viewPos), normalize(gExpensiveNormal.rgb))*/, gExpensiveNormal.a * MAX_REFLECTION_LOD);
 
-  vec3 shc = sphericalHarmonics(normalize(gExpensiveNormal.rgb)) * u_scaleFactor;
 
-  gLightAccumulation.rgb = shc;
+  ivec3 l_probeId;
+  float mov = 0;//((sin(time)*0.5+0.5) * 10);
+  float mov2 = 0;//((cos(time)*0.5+0.5) * 10);
+
+  vec3 SPHFragPos = fs_in.wFragPos + vec3(0, 0, 0);
+
+  l_probeId.x = (myround(SPHFragPos.x, 10) + 35);
+  l_probeId.y = (myround(SPHFragPos.y, 5));
+  l_probeId.z = (myround(SPHFragPos.z, 10) + 35);
+  
+  vec3 l_probe_pos = l_probeId;
+
+  l_probeId /= ivec3(10, 5, 10);
+
+  l_probeId.x = clamp(l_probeId.x, 0, 6); 
+  l_probeId.y = clamp(l_probeId.y, 0, 6); 
+  l_probeId.z = clamp(l_probeId.z, 0, 6); 
+
+  int index = int(l_probeId.x) + (int(l_probeId.y)*WIDTH) + (int(l_probeId.z)*WIDTH*DEPTH);
+  //int index = int(l_probeId.x) + WIDTH * (int(l_probeId.y) + DEPTH * int(l_probeId.z));
+
+  //index = clamp(index, 0, 7*7*7);
+  vec3 c000 = sphericalHarmonics(normalize(gExpensiveNormal.rgb), l_probeId) * u_scaleFactor;
+  vec3 c010    = sphericalHarmonics(normalize(gExpensiveNormal.rgb), l_probeId + ivec3(0,1,0)) * u_scaleFactor;
+  vec3 c011 = sphericalHarmonics(normalize(gExpensiveNormal.rgb), l_probeId + ivec3(0,1,1)) * u_scaleFactor;
+  vec3 c100  = sphericalHarmonics(normalize(gExpensiveNormal.rgb), l_probeId + ivec3(1,0,0)) * u_scaleFactor;
+  vec3 c110   = sphericalHarmonics(normalize(gExpensiveNormal.rgb), l_probeId + ivec3(1,1,0)) * u_scaleFactor;
+  vec3 c001  = sphericalHarmonics(normalize(gExpensiveNormal.rgb), l_probeId + ivec3(0,0,1)) * u_scaleFactor;
+  vec3 c101   = sphericalHarmonics(normalize(gExpensiveNormal.rgb), l_probeId + ivec3(1,0,1)) * u_scaleFactor;
+  vec3 c111   = sphericalHarmonics(normalize(gExpensiveNormal.rgb), l_probeId + ivec3(1,1,1)) * u_scaleFactor;
+
+  float tx, ty, tz; 
+  float gx = SPHFragPos.x / ambientDivider.x; int gxi = int(gx); tx = gx - gxi; 
+  float gy = SPHFragPos.y / ambientDivider.y; int gyi = int(gy); ty = gy - gyi; 
+  float gz = SPHFragPos.z / ambientDivider.z; int gzi = int(gz); tz = gz - gzi; 
+  vec3 e = bilinear(tx, ty, c000, c100, c010, c110); 
+  vec3 f = bilinear(tx, ty, c001, c101, c011, c111); 
+  vec3 g = e * (1 - tz) + f * tz; 
+
+  gLightAccumulation.rgb = c000;//mix(left, right, rl_d); 
+
   gDepth = vec4(gl_FragCoord.z, CubeMapcolor.rgb);
 }

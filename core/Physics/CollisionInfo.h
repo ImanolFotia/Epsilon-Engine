@@ -4,6 +4,15 @@ namespace Epsilon
 {
 	namespace Physics
 	{
+		
+        enum Type
+        {
+            CUBE = 0,
+            SPHERE,
+            TRIANGLE_MESH,
+            CLOTH,
+
+        };
 		class CollisionInfo
 		{
 		public:
@@ -11,7 +20,7 @@ namespace Epsilon
 			{
 				m_Name = "";
 			}
-			~CollisionInfo() {}
+			//~CollisionInfo() {}
 
 			std::string getName()
 			{
@@ -23,7 +32,16 @@ namespace Epsilon
 				m_Name = name;
 			}
 
+			void setType(enum Type t) {
+				mType = t;
+			}
+
+			enum Type getType() {
+				return mType;
+			}
+
 		private:
+			enum Type mType;
 			std::string m_Name;
 		};
 	} // namespace Physics

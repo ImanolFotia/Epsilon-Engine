@@ -58,10 +58,10 @@ namespace Epsilon
                 meshes[i].Destroy();
         }
 
-        ~Model()
+       /* ~Model()
         {
             //std::cout << "Deleted Model" << std::endl;
-        }
+        }*/
         std::string directory;
         /// Draws the model, and thus all its meshes
         void Draw(std::shared_ptr<Shader> shader);

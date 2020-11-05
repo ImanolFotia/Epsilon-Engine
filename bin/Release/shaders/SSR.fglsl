@@ -164,7 +164,17 @@ void main()
         coords = RayCast((jitt + reflected) * max(maxRayStep, -viewPos.z), hitPos, dDepth);
         dCoords = smoothstep(0.0, 0.55, abs(vec2(0.5, 0.5) - coords.xy));
         screenEdgefactor = clamp(1.0 - (dCoords.x + dCoords.y), 0.0, 1.0);
+        vec2 pixelSize = 1.0 / textureSize(gFinalImage, 0).xy;
+
         samples += textureLod(gFinalImage, coords.xy, 0).rgb;
+
+        samples += textureLod(gFinalImage, coords.xy + pixelSize, 0).rgb * 0.25;
+        samples += textureLod(gFinalImage, coords.xy - pixelSize, 0).rgb * 0.25;
+        samples += textureLod(gFinalImage, coords.xy + vec2(-pixelSize.x, pixelSize.y), 0).rgb * 0.25;
+        samples += textureLod(gFinalImage, coords.xy + vec2(pixelSize.x, -pixelSize.y), 0).rgb * 0.25;
+
+        samples *= 0.5;
+
         ReflectionMultiplier = clamp(screenEdgefactor * (2.0-reflected.z), 0.0, 1.0);
         // Get color
         vec3 hN = texture(gNormal, coords.xy).xyz;

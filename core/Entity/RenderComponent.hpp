@@ -16,7 +16,7 @@ namespace Epsilon
             {
                 mType = RENDERCOMPONENT;
                 hasModel = true;
-                ResourceManager::Get().requestModel(modelPath, glm::vec3(0), glm::vec3(1), glm::quat(0, 0, 0, 0));
+                ResourceManager::Get().requestModel(modelPath, mPosition, glm::vec3(1), glm::quat(0, 0, 0, 0));
             }
 
             COMPONENT_TYPE getType() { return mType; }

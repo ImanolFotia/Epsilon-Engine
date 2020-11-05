@@ -11,7 +11,7 @@ namespace Epsilon
         {
         public:
             ClothPhysicObject() = default;
-            virtual ~ClothPhysicObject() {}
+            //virtual ~ClothPhysicObject() {}
 
         public:
             virtual std::shared_ptr<btSoftBody> addObject(std::shared_ptr<btSoftBodyWorldInfo> softWorldInfo,

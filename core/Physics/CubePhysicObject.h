@@ -11,7 +11,7 @@ namespace Epsilon
 		{
 		public:
 			CubePhysicObject() = default;
-			virtual ~CubePhysicObject() {}
+			//virtual ~CubePhysicObject() {}
 
 		public:
 			virtual btRigidBody_ptr addObject(float /* Position X */, float /* Position Y */, float /* Position Z */, float /* Mass */, float /* Size*/)
@@ -28,7 +28,7 @@ namespace Epsilon
 
 			std::shared_ptr<btBoxShape> CubeShape;
 			std::shared_ptr<btMotionState> motionState;
-			std::shared_ptr<btCompoundShape> m_ColShape;
+			//std::shared_ptr<btCompoundShape> m_ColShape;
 
 			virtual btRigidBody_ptr addObject(float /* Radius */, float /* Mass */)
 			{

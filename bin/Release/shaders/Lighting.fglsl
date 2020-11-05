@@ -352,8 +352,8 @@ void main()
         case 2:
         {
             light += SphereAreaLight(outBuffer.Lights[i].position.rgb,  outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts);
-            SSS = SubsurfaceScattering(-normalize(FragPos - outBuffer.Lights[i].position.rgb), Normal, V, FragPos, false);
-            light += vec3(SSS * Diffuse /* pow(Diffuse, vec3(2.2))*/ * irradiance_subsurf.a);
+            //SSS = SubsurfaceScattering(-normalize(FragPos - outBuffer.Lights[i].position.rgb), Normal, V, FragPos, false);
+            //light += vec3(SSS * Diffuse /* pow(Diffuse, vec3(2.2))*/ * irradiance_subsurf.a);
         }
             break;
       }

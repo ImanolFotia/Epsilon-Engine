@@ -10,16 +10,16 @@ namespace Epsilon
     {
         if(ResourceManager::Get().cubemapsLoaded && finalCubemaps != true)
         {
+            mPosition = pos;
             finalCubemaps = true;
             updateCubemaps = false;
             mCubemapIndex = ResourceManager::Get().getNearestCubemapIndex(pos);
             mGIIndex = ResourceManager::Get().NearestCubeMap(pos) - 1;
-            IO::PrintLine("Cubemap index registered: ", mGIIndex, " at position: ", pos.x, pos.y, pos.z);
+            //IO::PrintLine("Cubemap index registered: ", mGIIndex, " at position: ", pos.x, pos.y, pos.z);
         }
 
         if (isVisible)
         {
-
             glActiveTexture(GL_TEXTURE0);
             shader->PushUniform("texture_diffuse", 0);
             ResourceManager::Get().bindTexture(textures[0].path);
@@ -39,8 +39,11 @@ namespace Epsilon
             glActiveTexture(GL_TEXTURE4);
             shader->PushUniform("skybox", 4);
 
-            mCubemapIndex = ResourceManager::Get().getNearestCubemapIndex(pos);
-            mGIIndex = ResourceManager::Get().NearestCubeMap(pos) - 1;
+            if(mPosition != pos) {
+                mPosition = pos;
+                mCubemapIndex = ResourceManager::Get().getNearestCubemapIndex(pos);
+                mGIIndex = ResourceManager::Get().NearestCubeMap(pos) - 1;
+            }
             
             //mCubemapIndex = ResourceManager::Get().getNearestCubemapIndex(pos);
             //mGIIndex = ResourceManager::Get().NearestCubeMap(pos) - 1;

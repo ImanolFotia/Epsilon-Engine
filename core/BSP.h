@@ -210,10 +210,10 @@ namespace Epsilon
     public:
         CQuake3BSP();
 
-        virtual ~CQuake3BSP()
+        /*virtual ~CQuake3BSP()
         {
             //cout << "Destroyed BSP map" << endl;
-        }
+        }*/
 
         bool LoadBSP(const char *strFileName);
 

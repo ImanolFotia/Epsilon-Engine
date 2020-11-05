@@ -1,6 +1,6 @@
 
 #include <pch.hpp>
-#include "Image/DDS.h"
+#include "DDS.h"
 #include <Core.hpp>
 
 namespace IO {

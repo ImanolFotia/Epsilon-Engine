@@ -70,7 +70,7 @@ namespace Epsilon
                         window = glfwCreateWindow(mWindowData.Width, mWindowData.Height, mWindowData.Title, lCurrentMonitor, 0);
                     }
                     //Window is created in borderless fullscreen mode
-                    else if (mWindowData.State == 2)
+                    else if (mWindowData.State == 2 && mode->width == mWindowData.Width && mode->height == mWindowData.Height)
                     {
                         mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
                         glfwWindowHint(GLFW_RED_BITS, mode->redBits);
@@ -79,6 +79,17 @@ namespace Epsilon
                         glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
                         glfwWindowHint(GLFW_DECORATED, GL_FALSE);
                         window = glfwCreateWindow(mode->width, mode->height, mWindowData.Title, lCurrentMonitor, 0);
+                    }
+                    else if (mWindowData.State == 2 && mode->width != mWindowData.Width && mode->height != mWindowData.Height)
+                    {
+                        mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+                        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+                        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+                        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+                        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+                        glfwWindowHint(GLFW_DECORATED, GL_FALSE);
+                        window = glfwCreateWindow(mWindowData.Width, mWindowData.Height, mWindowData.Title, nullptr, 0);
+                        glfwSetWindowPos(window, (mode->width / 2) - (mWindowData.Width * 0.5), (mode->height / 2) - (mWindowData.Height * 0.5));
                     }
                     //Window is created in windowed mode and centered in the middle of the display
                     else
@@ -116,6 +127,13 @@ namespace Epsilon
             void Window::SwapBuffers()
             {
                 mContext->SwapBuffers();
+            }
+
+            void Window::ShowCursor() {
+                glfwSetInputMode(mWindowHandle->getHandle(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            }
+            void Window::HideCursor() {
+                glfwSetInputMode(mWindowHandle->getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             }
         } // namespace Windows
     }     // namespace Platform

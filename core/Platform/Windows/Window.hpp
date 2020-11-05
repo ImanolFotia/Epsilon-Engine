@@ -33,6 +33,10 @@ namespace Epsilon
                 
                 virtual void SwapBuffers() override;
 
+                virtual void ShowCursor() override;
+
+                virtual void HideCursor() override;
+
             private:
             };
         } // namespace Windows

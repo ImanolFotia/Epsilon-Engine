@@ -33,10 +33,14 @@ endif
 LIB_NAME:= libEpsilon.a
 LIB_NAME_DEBUG:= libEpsilon_d.a
 
+IMGUI_INC := -I$(LIB)/imgui/imgui/examples \
+-I$(LIB)/imgui/imgui
+
 #recursive wildcard to include all files
 rwildcard=$(wildcard $(addsuffix $2, $1)) $(foreach d,$(wildcard $(addsuffix *, $1)),$(call rwildcard,$d/,$2))
 
-SOURCES:= $(call rwildcard,$(SOURCE_DIR)/,*.cpp) #$(wildcard $(SOURCE_DIR)/**.cpp) 
+SOURCES:= $(call rwildcard,$(SOURCE_DIR)/,*.cpp)
+#$(wildcard $(SOURCE_DIR)/**.cpp) 
 INCLUDES:= $(call rwildcard,$(INCLUDE_DIR)/,*.hpp *.h)#$(wildcard $(INCLUDE_DIR)/**.hpp $(INCLUDE_DIR)/**.h)
 OBJECTS_DEBUG := $(patsubst $(SOURCE_DIR)/%.cpp,$(OBJS_DIR_DEBUG)/%.o,$(SOURCES))
 OBJECTS_RELEASE := $(patsubst $(SOURCE_DIR)/%.cpp,$(OBJS_DIR_RELEASE)/%.o,$(SOURCES))
@@ -60,7 +64,8 @@ INCLUDE_LIBS:= -I$(LIB)/glm \
 -I$(LIB)/stb-master \
 -I$(LIB)/glad/include \
 -I$(LIB)/OpenGL/include/ \
--I$(LIB)json-develop/include 
+-I$(LIB)/json-develop/include \
+-I$(LIB)/imgui/imgui
 else
 INCLUDE_LIBS:=  -I$(LIB)/inih/cpp \
 -I$(LIB)/glm \
@@ -84,6 +89,7 @@ LIBS_DIR := -L$(LIB)/soil/lib \
 -L$(LIB)/openal-soft/build \
 -L$(LIB)/bullet3/build/lib \
 -L$(LIB)/glad/lib \
+-L$(LIB)/imgui/imgui \
 -L$(DX_SDK_LIB)
 else 
 LIBS_DIR := -L$(LIB)/inih \
@@ -93,17 +99,17 @@ LIBS_DIR := -L$(LIB)/inih \
 endif
 
 ifeq "$(OS)" "Windows_NT"
-LIBS:= -lSOIL -lglfw3dll -lopengl32 -lglad -linih -lgdi32 -lOpenAL32.dll -llua -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
+LIBS:= -lSOIL -limgui -lglfw3dll -lopengl32 -lglad -linih -lgdi32 -lole32 -lxaudio2_8 -lOpenAL32.dll -llua -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
 else 
-LIBS:= -lGLU -lGL -lSOIL -lglad -ldl -lglfw -linih -lopenal -fopenmp -lgomp -llua5.3 -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
+LIBS:= -lGLU -lGL -lSOIL -lglad -ldl -lglfw -linih -lopenal -fopenmp -static-libasan -lgomp -llua5.3 -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
 endif
 
 LD_FLAGS := -fopenmp
 
 ifeq "$(OS)" "Windows_NT"
-CPPFLAGS := --std=c++17 -static -static-libgcc -static-libstdc++
+CPPFLAGS := --std=c++17 -static -static-libgcc -static-libstdc++ 
 else 
-CPPFLAGS := --std=c++17
+CPPFLAGS := --std=c++17 -static -static-libgcc -static-libstdc++ 
 endif
 
 DEBUG_FLAGS := -g -DDEBUG -ggdb -g3 -gdwarf-4 -fvar-tracking-assignments
@@ -116,9 +122,9 @@ all: clean resource epsilon-release
 
 pch: $(INCLUDE_DIR)/pch.hpp.gch
 
-epsilon-debug: resource $(BIN)/Debug/$(EXEC)
+epsilon-debug: pch resource $(BIN)/Debug/$(EXEC)
 
-epsilon-release: resource $(BIN)/Release/$(EXEC)
+epsilon-release: pch resource $(BIN)/Release/$(EXEC)
 
 epsilon-static-lib-debug: clean pch $(OUT_LIB)/Debug/$(LIB_NAME_DEBUG)
 

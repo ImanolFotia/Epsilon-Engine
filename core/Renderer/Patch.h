@@ -16,7 +16,7 @@ namespace Epsilon
     */
         Patch(glm::vec3 position, float s, int w, int h, const std::string& texturePath);
 
-        virtual ~Patch() {}
+        //virtual ~Patch() {}
 
         /**
     * In case the vertex attributes change (Cloth simulation, etc), this function will update them

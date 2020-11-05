@@ -11,7 +11,7 @@ namespace Epsilon
 		{
 		public:
 			TriangleMeshPhysicObject() = default;
-			virtual ~TriangleMeshPhysicObject() {}
+			//virtual ~TriangleMeshPhysicObject() {}
 
 		public:
 			virtual btRigidBody_ptr addObject(std::vector<glm::vec3> /* Vertices */, std::vector<unsigned int> /* Indices */, glm::vec3 /* Position */, float /* Mass */)

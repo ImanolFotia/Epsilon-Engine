@@ -202,12 +202,13 @@ namespace Epsilon
             }
 
             if (
-                _Joystick->L3().x > -0.1 &&
-                _Joystick->L3().x < 0.1 &&
-                _Joystick->L3().y > -0.1 &&
-                _Joystick->L3().y < 0.1)
+                (!Input::KeyBoard::getKey(Input::GLFW::Key::W) || _Joystick->L3().x > -0.1) &&
+                (!Input::KeyBoard::KEYS[Input::GLFW::Key::S] || _Joystick->L3().x < 0.1) &&
+                (!Input::KeyBoard::KEYS[Input::GLFW::Key::D] || _Joystick->L3().y > -0.1) &&
+                (!Input::KeyBoard::KEYS[Input::GLFW::Key::A] || _Joystick->L3().y < 0.1))
             {
-                MovementSpeed = 0.0f; //glm::mix(MovementSpeed, 0.0f, 2.0f * DeltaTime);
+                //MovementSpeed = 0.0f; //glm::mix(MovementSpeed, 0.0f, 2.0f * DeltaTime);
+                MovementSpeed = glm::mix(MovementSpeed, 0.0f, 2.0f * DeltaTime);
             }
         }
         /** ------------------------------------------------------------------*/
@@ -253,7 +254,7 @@ namespace Epsilon
         float Aspectratio;
         Aspectratio = (float)winx / (float)winy;
 
-        ProjectionMatrix = glm::perspective(glm::radians(FieldOfView), glm::max(Aspectratio, 1.0f), 0.1f, 3000.0f);
+        ProjectionMatrix = glm::perspective(glm::radians(FieldOfView), glm::clamp(Aspectratio, 0.0f, 10.0f), 0.1f, 3000.0f);
 
         PrevView = ViewMatrix;
 
@@ -275,7 +276,7 @@ namespace Epsilon
 
     bool Camera::isMoving()
     {
-        return mIsMoving;
+        return true;//mIsMoving; //return true to cancel temporal SSR denoiser
     }
 
     void Camera::isMoving(bool x) {

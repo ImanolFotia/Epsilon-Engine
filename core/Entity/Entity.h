@@ -52,6 +52,7 @@ public:
         this->mID = ComponentList.size();
 
         //mChildrenEntities
+        mHash = std::string("0x"+toHash(m_Position, m_Scale, m_Rotation));
 
         //mCollInfo.setName("Entity_" + std::string(Helpers::to_hex(toHash())));
 
@@ -63,6 +64,16 @@ public:
         mChildrenEntities.push_back(t);
 
         return shared_from_this();
+    }
+
+    std::string mHash;
+
+    std::string toHash(glm::vec3 pos, glm::vec3 sc, glm::quat rot) {
+        return std::to_string(mID * pos.x + pos.y * pos.z * pos.z + sc.x - rot.x * rot.z);
+    }
+
+    const std::string & getHash() {
+        return mHash;
     }
 
     ~EntityBase()
