@@ -299,6 +299,30 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
 
         return "";
     }
+        std::string ResourceManager::requestShader(const std::string& shaderPathv, const std::string& shaderPathf, const std::string& shaderPathg, const std::string& name)
+    {
+        try
+        {
+            std::map<std::string, std::shared_ptr<Shader>>::iterator it;
+            it = ShadersList.find(name);
+            if (it != ShadersList.end())
+            {
+                return ShadersList.at(it->first)->getPath();
+            }
+            else
+            {
+                std::shared_ptr<Shader> tmpShader = std::make_shared<Shader>(shaderPathv.c_str(), shaderPathf.c_str(), shaderPathg.c_str());
+                ShadersList.insert(std::make_pair(name, tmpShader));
+                return name;
+            }
+        }
+        catch (std::exception& e)
+        {
+            std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
+        }
+
+        return "";
+    }
 
     std::shared_ptr<Shader> ResourceManager::useShader(const std::string& shaderPath)
     {

@@ -4,7 +4,7 @@
 ///
 ///=============================================================================
 #pragma once
-
+ 
 #include <pch.hpp>
 #include <Core.hpp>
 
@@ -240,6 +240,28 @@ static int ByteToInt(char* buffer,int len) {
         for(int i=0; i<len; i++)
             ((char*)&a)[3-i]=buffer[i];
     return a;
+}
+
+
+static glm::vec2 halton (int index)
+{
+    const glm::vec2 coprimes = glm::vec2(2.0f, 3.0f);
+    glm::vec2 s = glm::vec2(index, index);
+	glm::vec4 a = glm::vec4(1,1,0,0);
+    while (s.x > 0. && s.y > 0.)
+    {
+        glm::vec2 ar0 = glm::vec2(a.x, a.y)/coprimes;
+
+        a.x = ar0.x;
+        a.y = ar0.y;
+
+        glm::vec2 ar1 = glm::vec2(a.x, a.y)*glm::mod(s, coprimes);
+        
+        a.z += ar1.x;
+        a.w += ar1.y;
+        s = glm::floor(s/coprimes);
+    }
+    return glm::vec2(a.z, a.w);
 }
 
 // Helper class to count frame time

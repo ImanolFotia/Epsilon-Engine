@@ -24,6 +24,7 @@ namespace Epsilon
 			info.m_restitution = 0.1f;
 			info.m_friction = 0.8f;
 			Body = (btRigidBody_ptr) new btRigidBody(info);
+			Body->setActivationState(0);
 
 			return Body;
 		}

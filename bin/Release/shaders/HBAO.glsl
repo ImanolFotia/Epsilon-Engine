@@ -17,6 +17,7 @@ uniform vec2 UVToViewB;
 uniform vec2 Resolution;
 uniform mat4 view;
 uniform mat4 invView;
+uniform vec3 viewPos;
 in vec2 ViewRay;
 
 uniform vec2 LinMAD;// = vec2(0.1-10.0, 0.1+10.0) / (2.0*0.1*10.0);
@@ -132,19 +133,20 @@ float HorizonOcclusion(	vec2 deltaUV,
 {
 	float ao = 0;
 
-	// Offset the first coord with some noise
 	vec2 uv = TexCoords + SnapUVOffset(randstep*deltaUV);
+	vec3 S = GetViewPos(uv);
+	vec3 V = S - P;
+	// Offset the first coord with some noise
 	deltaUV = SnapUVOffset( deltaUV );
 
-	vec3 T = deltaUV.x * dPdu + deltaUV.y * dPdv;
+	vec3 T = (deltaUV.x * dPdu + deltaUV.y * dPdv);
 
 	// Get the angle of the tangent vector from the viewspace axis
 	float tanH = BiasedTangent(T);
 	float sinH = TanToSin(tanH);
 
 	float tanS;
-	float d2;
-	vec3 S;
+	float d2 = Length2(V);
 
 	// Sample to find the maximum angle
 	for(float s = 1; s <= numSamples; ++s)
@@ -152,14 +154,15 @@ float HorizonOcclusion(	vec2 deltaUV,
 		uv += deltaUV;
 		S = GetViewPos(uv);
 		tanS = Tangent(P, S);
-		d2 = Length2(S - P);
+		V = S - P;
+		d2 = Length2(V);
 
 		// Is the sample within the radius and the angle greater?
 		if(d2 < R2 && tanS > tanH)
 		{
 			float sinS = TanToSin(tanS);
 			// Apply falloff based on the distance
-			ao += Falloff(d2) * (sinS - sinH);
+			ao += clamp(Falloff(d2), 0.0, 1.0) * (sinS - sinH);
 
 			tanH = tanS;
 			sinH = sinS;
@@ -223,6 +226,15 @@ void main(void)
 
     float ao = 1.0;
 
+	
+    mat4 invMatrix = transpose(inverse(view));
+
+    vec3 N = (texture(gNormal, TexCoords) * inverse(view)).rgb;
+    
+    // Create TBN change-of-basis matrix: from tangent-space to view-space
+    vec3 tangent = normalize(dPdu - N * dot(dPdu, N));
+    vec3 bitangent = normalize(cross(N, tangent));
+
     // Make sure the radius of the evaluated hemisphere is more than a pixel
     if(rayRadiusPix > 1.0)
     {
@@ -235,6 +247,7 @@ void main(void)
 
 		float alpha = 2.0 * PI / numDirections;
 		float test = 0.0;
+
 		// Calculate the horizon occlusion of each direction
 		for(float d = 0; d < numDirections; ++d)
 		{

@@ -78,6 +78,7 @@ namespace Epsilon
         void loadQueuedTextures();
 
         std::string requestShader(const std::string& shaderPathv, const std::string& shaderPathf, const std::string& name);
+        std::string requestShader(const std::string& shaderPathv, const std::string& shaderPathf, const std::string& shaderPathg, const std::string& name);
 
         void destroyAllTextures();
 

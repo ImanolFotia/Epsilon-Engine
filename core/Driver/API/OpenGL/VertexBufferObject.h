@@ -25,6 +25,11 @@ namespace Epsilon
                     glBufferData(m_Target, size, data, usage);
                 }
 
+                void UpdateData(GLintptr offset, GLsizeiptr size, const void *data) {
+                    glBindBuffer(m_Target, this->m_Handler);
+                    glBufferSubData(m_Target, offset, size, data);
+                }
+
                 GLuint Get()
                 {
                     return m_Handler;

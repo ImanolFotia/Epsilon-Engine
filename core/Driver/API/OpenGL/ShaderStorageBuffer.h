@@ -1,30 +1,86 @@
 #pragma once
 #include <Core.hpp>
 
-template <typename T>
-class ShaderStorageBuffer {
-public:
-    ShaderStorageBuffer(T* data, int sData) {
-        glGenBuffers(1, &SSBO);
-        glBindBuffer(GL_SHADER_STORAGE_BUFFER, SSBO);
-        glBufferData(GL_SHADER_STORAGE_BUFFER, sData, data, GL_DYNAMIC_COPY);
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, SSBO);
-        glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-    }
+#include "../ShaderStorage.hpp"
 
-    ~ShaderStorageBuffer() {}
+namespace Epsilon
+{
+    namespace API
+    {
+        namespace OpenGL
+        {
+            class ShaderStorageBuffer : public ShaderStorage
+            {
+            public:
+                ShaderStorageBuffer(size_t size, unsigned int binding_point, size_t offset = 0, unsigned int usage = GL_DYNAMIC_COPY)
+                {
+                    mSize = size;
+                    mBindingPoint = binding_point;
+                    mOffset = offset;
+                    mUsage = usage;
 
-    void Bind() {
-        glBindBuffer(GL_SHADER_STORAGE_BUFFER, SSBO
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, SSBO);
-    }
+                    glGenBuffers(1, &mHandle);
+                    glBindBuffer(GL_SHADER_STORAGE_BUFFER, mHandle);
+                    glBufferData(GL_SHADER_STORAGE_BUFFER, size, nullptr, mUsage);
+                    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, binding_point, mHandle);
+                    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+                }
 
-    void Unbind() {
-        glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, 0);
-    }
+                ~ShaderStorageBuffer() {}
 
-private:
-    GLuint SSBO;
-};
+                void Bind()
+                {
+                    glBindBuffer(GL_SHADER_STORAGE_BUFFER, mHandle);
+                }
 
+                void Unbind()
+                {
+                    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+                }
+
+                virtual void Init(const void *data) override
+                {
+
+                    if (mHandle == 0)
+                    {
+                        std::cout << "Error: Shader Storage not initialized" << std::endl;
+                        return;
+                    }
+                    glBindBuffer(GL_SHADER_STORAGE_BUFFER, mHandle);
+                    glBufferData(GL_SHADER_STORAGE_BUFFER, mSize, data, mUsage);
+                    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+                }
+
+                virtual void Update(size_t size, unsigned int offset, const void *data) override
+                {
+                    if (mHandle == 0)
+                    {
+                        std::cout << "Error: Shader Storage not initialized" << std::endl;
+                        return;
+                    }
+
+                    glBindBuffer(GL_SHADER_STORAGE_BUFFER, mHandle);
+                    glBufferSubData(GL_SHADER_STORAGE_BUFFER, offset, size, data);
+                    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+                }
+
+                virtual void Get(void *data) override
+                {
+                    glBindBuffer(GL_SHADER_STORAGE_BUFFER, mHandle);
+                    glGetNamedBufferSubData(mHandle, 0, mSize, data);
+                    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+                }
+
+                virtual void GetSubData(size_t size, unsigned int offset, void *data) override
+                {
+                    glBindBuffer(GL_SHADER_STORAGE_BUFFER, mHandle);
+                    glGetNamedBufferSubData(mHandle, offset, size, data);
+                    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+                }
+
+            private:
+                GLuint mHandle;
+            };
+        } // namespace OpenGL
+    }     // namespace API
+} // namespace Epsilon

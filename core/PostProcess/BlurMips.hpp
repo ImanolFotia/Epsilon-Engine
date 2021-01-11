@@ -10,7 +10,7 @@ namespace Epsilon
         template <typename T>
         class BlurMips : public Effect
         {
-            using FrameBuffer_ptr = std::shared_ptr<FrameBuffer<T>>;
+            using FrameBuffer_ptr = std::shared_ptr<OpenGL::FrameBuffer<T>>;
 
         public:
             BlurMips(int w, int h, std::shared_ptr<Shader> shader) : m_Width(w), m_Height(h), m_pShader(shader)

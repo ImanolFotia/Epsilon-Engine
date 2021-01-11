@@ -158,6 +158,11 @@ public:
         return m_Scale;
     }
 
+    void setPosition(glm::vec3 pos) {
+        //if(this->mHasPhysicComponent)
+        m_Position = pos;
+    }
+
     glm::vec3 getPrevScale()
     {
         return m_PrevScale;

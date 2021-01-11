@@ -48,6 +48,13 @@ float DistributionGGX2(in vec3 N, in vec3 H, in float roughness, in vec3 L, in f
     
 }
 
+float specTrowbridgeReitz( float HoN, float a, float aP )
+{
+	float a2 = a * a;
+	float aP2 = aP * aP;
+	return ( a2 * aP2 ) / pow( HoN * HoN * ( a2 - 1.0 ) + 1.0, 2.0 );
+}
+
 float visSchlickSmithMod( float NoL, float NoV, float r )
 {
     float k = pow( r * 0.5 + 0.5, 2.0 ) * 0.5;
@@ -284,6 +291,7 @@ vec3 TubeAreaLight(in vec3 position, in vec3 tubeStart,in vec3 tubeEnd, in float
     L = (position - FragPos);
     vec3 N = Normal;
     vec3 V = normalize(viewPos - FragPos);
+    float NoV = dot(Normal, V);
     r = (reflect(V, Normal));
 
     vec3 L0         = (tubeStart) - FragPos;
@@ -293,7 +301,7 @@ vec3 TubeAreaLight(in vec3 position, in vec3 tubeStart,in vec3 tubeEnd, in float
     
     float NoL0      = dot( L0, N ) / ( 2.0 * distL0 );
     float NoL1      = dot( L1, N ) / ( 2.0 * distL1 );
-    float NoL             = ( 2.0 * clamp( NoL0 + NoL1, 0.0, 1.0 ) ) 
+    float NoL             = ( 2.0 * clamp( NoL0 + NoL1, 0.0, 1.0 ) )
                     / ( distL0 * distL1 + dot( L0, L1 ) + 2.0 );
     
     vec3 Ld         = L1 - L0;
@@ -308,11 +316,22 @@ vec3 TubeAreaLight(in vec3 position, in vec3 tubeStart,in vec3 tubeEnd, in float
     centerToRay    = dot( closestPoint, r ) * r - closestPoint;
     closestPoint        = closestPoint + centerToRay * clamp( radius / length( centerToRay ), 0.0, 1.0 );
     vec3 l              = normalize( closestPoint );
+	vec3 h				= normalize( V + l );
+	
+	float HoN		= clamp( dot( h, N ), 0.0, 1.0 );
+	float HoV		= dot( h, V );
+    float distLight	= length( closestPoint );
+	float alpha		= Specular * Specular;
+	float alphaPrime	= clamp( radius / ( distLight * 2.0 ) + alpha, 0.0, 1.0 );
+	
+	float specD		= specTrowbridgeReitz( HoN, alpha, alphaPrime );
+	float specF		= fresnelSchlick( HoV, F0 ).x;
+	float specV		= visSchlickSmithMod( NoL, NoV, Specular );
     //*******************************************
         L = l;//normalize(closestPoint - FragPos);
         //float NoV       = clamp( dot( N, V ), 0.0, 1.0 );
         //float specV = visSchlickSmithMod(NoL, NoV, Specular);
-        float distLight = length( closestPoint );
+        //float distLight = length( closestPoint );
         vec3 H = normalize(V + L);
         vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
         vec3 kS = F;
@@ -324,18 +343,11 @@ vec3 TubeAreaLight(in vec3 position, in vec3 tubeStart,in vec3 tubeEnd, in float
         float watts = power;
         float attenuation = calculateAttenuation(watts, distance);//1.0 / (1.0 + 0.1/*factor*/ * pow(distance, 2));
         //attenuation *= smoothstep(watts, watts - 5.0, distance);
-        vec3 radiance     = vec3(1.0) * attenuation;        
-        
-        // cook-torrance brdf
-        float NDF = DistributionGGX2(N, H, clamp(Specular, 0.05, 1.0), L, radius);       
-        float G   = GeometrySmith(N, V, L, Specular);      
-        
-        vec3 nominator    = NDF * G * F;
-        float denominator = (4 * max(dot(V, N), 0.0) * max(dot(L, N), 0.0)) + 0.001; 
-        vec3 brdf = nominator / denominator+0.0001;
+        vec3 radiance     = vec3(1.0) * (1.0/pow(distance, 1.0));//* attenuation;        
             
         // add to outgoing radiance Lo
-        float NdotL = orenNayarDiffuse(L, V, N, clamp(Specular, 0.05, 1.0), 1.0);             
-        vec3 Lo = (kD * Diffuse / PI + brdf) * radiance * NdotL; 
-        return Lo * normalize(color);
+        float NdotL = NoL * power;//orenNayarDiffuse(L, V, N, clamp(Specular, 0.05, 1.0), 1.0);     
+        float brdf = specD * specF * specV;
+        vec3 Lo = (kD * Diffuse / PI + brdf) * NdotL * vec3(1.0); 
+        return clamp(Lo * normalize(color), 0.0, 1.0);
 }

@@ -36,6 +36,8 @@ public:
     bool FXAA;
     bool HBAO;
     int HBAO_QUALITY;
+    int AMBIENT_PROBE_RES;
+    int CUBEMAP_RES;
 
 };
 #endif

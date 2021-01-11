@@ -35,8 +35,8 @@ private:
     float mNEAR, mFAR;
     int mWIDTH, mHEIGHT;
     glm::vec3 mPosition;
-    std::shared_ptr<FrameBuffer<int> > mFrameBuffer;
-    std::shared_ptr<FrameBuffer<int> > mCopyTextureFrameBuffer;
+    std::shared_ptr<OpenGL::FrameBuffer<int> > mFrameBuffer;
+    std::shared_ptr<OpenGL::FrameBuffer<int> > mCopyTextureFrameBuffer;
     std::shared_ptr<OpenGLHelpers::FullScreenQuad> mFullScreenQuad;
     std::shared_ptr<Shader> mPassThroughShader;
     std::vector<GLuint> mRenderTargets;

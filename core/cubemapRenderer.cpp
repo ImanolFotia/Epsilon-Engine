@@ -3,7 +3,7 @@
 
 namespace Epsilon {
 CubemapRenderer::CubemapRenderer() {
-    this->mFrameBuffer = (std::shared_ptr<FrameBuffer<int> >)new FrameBuffer<int>(1024, 1024, true);
+    this->mFrameBuffer = (std::shared_ptr<OpenGL::FrameBuffer<int> >)new OpenGL::FrameBuffer<int>(1024, 1024, true);
     
     this->mFrameBuffer->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, true);
     this->mFrameBuffer->addDepthAttachment();

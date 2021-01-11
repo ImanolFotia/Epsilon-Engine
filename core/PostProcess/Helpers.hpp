@@ -14,7 +14,7 @@ namespace Epsilon
         namespace Helpers
         {
 
-            static std::shared_ptr<FrameBuffer<int>> CopyTextureFBO;
+            static std::shared_ptr<OpenGL::FrameBuffer<int>> CopyTextureFBO;
             static std::shared_ptr<Shader> CopyShader;
             static std::shared_ptr<OpenGLHelpers::FullScreenQuad> FSQ;
 
@@ -47,7 +47,7 @@ namespace Epsilon
 
             static void Init(int width, int height)
             {
-                CopyTextureFBO = std::make_shared<FrameBuffer<int>>(width, height, false);
+                CopyTextureFBO = std::make_shared<OpenGL::FrameBuffer<int>>(width, height, false);
                 CopyTextureFBO->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
                 CopyTextureFBO->FinishFrameBuffer();
 

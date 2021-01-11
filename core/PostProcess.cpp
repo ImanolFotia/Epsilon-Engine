@@ -45,31 +45,31 @@ namespace Epsilon
         std::default_random_engine generator(glfwGetTime());
 
         t_light tmpLight;
-
-        tmpLight.position = glm::vec4(5, 70, -5, 1.0);  //-1.29, 5.64, 25.7
-        tmpLight.direction = glm::vec4(0, 0, 0, 1.0); //5, 15, 5
+        /*
+        tmpLight.position = glm::vec4(20, 10, 22, 1.0); //-1.29, 5.64, 25.7
+        tmpLight.direction = glm::vec4(0, 0, 0, 1.0);  //5, 15, 5
         tmpLight.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
-        tmpLight.radius = 0.5f;
-        tmpLight.watts = 300.0f;
+        tmpLight.radius = 2.0;
+        tmpLight.watts = 500.0f;
+        tmpLight.type = 2;
+        m_Lights.push_back(tmpLight);
+        */
+        tmpLight.position = glm::vec4(4, 10, 22, 1.0);
+        tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+        tmpLight.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
+        tmpLight.radius = 2.0f;
+        tmpLight.watts = 700.0f;
+        tmpLight.type = 2;
+        m_Lights.push_back(tmpLight);
+
+        tmpLight.position = glm::vec4(-25, 10, 22, 1.0);
+        tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+        tmpLight.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
+        tmpLight.radius = 2.0f;
+        tmpLight.watts = 700.0f;
         tmpLight.type = 2;
         m_Lights.push_back(tmpLight);
         /*
-    tmpLight.position = glm::vec4(-0.4, 4.75, 16.21, 1.0);
-    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-    tmpLight.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
-    tmpLight.radius = 0.5f;
-    tmpLight.watts = 100.0f;
-    tmpLight.type = 2;
-    m_Lights.push_back(tmpLight);
-
-    tmpLight.position = glm::vec4(-85.072, 13.9, -44.56, 1.0);
-    tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-    tmpLight.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
-    tmpLight.radius = 0.5f;
-    tmpLight.watts = 400.0f;
-    tmpLight.type = 2;
-    m_Lights.push_back(tmpLight);
-
     tmpLight.position = glm::vec4(-14.4, 8.5, -2.81, 1.0);
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1.0, 0.6, 0.6, 1.0);
@@ -77,7 +77,7 @@ namespace Epsilon
     tmpLight.watts = 200.0f;
     tmpLight.type = 2;
     m_Lights.push_back(tmpLight);
-
+/*
     tmpLight.position = glm::vec4(21.4, 8.5, -2.81, 1.0);
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1.0, 0.6, 0.6, 1.0);
@@ -150,32 +150,33 @@ namespace Epsilon
                 LightPositions.push_back(glm::vec3(80.5, 17.21, 1.57));
     */
 
-        hdrFBO = (std::shared_ptr<FrameBuffer<std::string>>)new FrameBuffer<std::string>(width, height, true);
+        hdrFBO = (std::shared_ptr<OpenGL::FrameBuffer<std::string>>)new OpenGL::FrameBuffer<std::string>(width, height, true);
 
         hdrFBO->addRenderTarget("colorBuffer", GL_RGB16F, GL_RGB, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, false);
         hdrFBO->addRenderTarget("brightColorBuffer", GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
         hdrFBO->FinishFrameBuffer();
 
-        CopyTextureFBO = (std::shared_ptr<FrameBuffer<int>>)new FrameBuffer<int>(width, height, false);
+        CopyTextureFBO = (std::shared_ptr<OpenGL::FrameBuffer<int>>)new OpenGL::FrameBuffer<int>(width, height, false);
         CopyTextureFBO->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
         CopyTextureFBO->FinishFrameBuffer();
 
-        CopyTextureBlurredFBO = (std::shared_ptr<FrameBuffer<int>>)new FrameBuffer<int>(width, height, true);
+        CopyTextureBlurredFBO = (std::shared_ptr<OpenGL::FrameBuffer<int>>)new OpenGL::FrameBuffer<int>(width, height, true);
         CopyTextureBlurredFBO->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, true);
         CopyTextureBlurredFBO->FinishFrameBuffer();
 
         SetupGBuffer();
         setupSSAO();
+        setupHBIL();
         SetupPingPongFBO();
         setupSSR();
         SetupMotionBlur();
         setupDenoise();
 
-        mCompositeImage = (std::shared_ptr<FrameBuffer<int>>)new FrameBuffer<int>(width, height, true);
+        mCompositeImage = (std::shared_ptr<OpenGL::FrameBuffer<int>>)new OpenGL::FrameBuffer<int>(width, height, true);
         mCompositeImage->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, true);
         mCompositeImage->FinishFrameBuffer();
 
-        BRDFFramebuffer = (std::shared_ptr<FrameBuffer<int>>)new FrameBuffer<int>(512, 512, true);
+        BRDFFramebuffer = (std::shared_ptr<OpenGL::FrameBuffer<int>>)new OpenGL::FrameBuffer<int>(512, 512, true);
         BRDFFramebuffer->addRenderTarget(0, GL_RG16F, GL_RG, GL_LINEAR, GL_LINEAR, false);
         BRDFFramebuffer->FinishFrameBuffer();
 
@@ -202,6 +203,7 @@ namespace Epsilon
     {
         shader = (std::shared_ptr<Shader>)(new Shader("shaders/Lighting.vglsl", "shaders/Lighting.fglsl"));
         SSAO = (std::shared_ptr<Shader>)(new Shader("shaders/SSAO.vglsl", "shaders/HBAO.glsl"));
+        HBIL = (std::shared_ptr<Shader>)(new Shader("shaders/SSAO.vglsl", "shaders/HBIL.glsl"));
         blurSSAO = (std::shared_ptr<Shader>)(new Shader("shaders/blurSSAO.vglsl", "shaders/blurSSAO.fglsl"));
         finalImage = (std::shared_ptr<Shader>)(new Shader("shaders/hdr.vglsl", "shaders/hdr.fglsl"));
         blurBloom = (std::shared_ptr<Shader>)(new Shader("shaders/blurBloom.vglsl", "shaders/blurBloom.fglsl"));
@@ -344,7 +346,7 @@ namespace Epsilon
         }
 
         // Noise texture
-        for (GLuint i = 0; i < 16; i++)
+        for (GLuint i = 0; i < 16 * 3; i++)
         {
             glm::vec3 noise(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, 0.0f); // rotate around z-axis (in tangent space)
             ssaoNoise.push_back(noise);
@@ -352,12 +354,63 @@ namespace Epsilon
 
         glGenTextures(1, &noiseTexture);
         glBindTexture(GL_TEXTURE_2D, noiseTexture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 4, 4, 0, GL_RGB, GL_FLOAT, &ssaoNoise[0]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 4, 4, 0, GL_RGB, GL_FLOAT, &ssaoNoise[0]);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
+    void PostProcess::setupHBIL()
+    {
+
+        HBILFramebuffer = (std::shared_ptr<OpenGL::FrameBuffer<int>>)new OpenGL::FrameBuffer<int>(SSAOwidth, SSAOheight, true);
+        HBILFramebuffer->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
+        HBILFramebuffer->FinishFrameBuffer();
+    }
+
+    void PostProcess::applyHBIL(std::shared_ptr<Camera> &cam)
+    {
+
+        HBILFramebuffer->bindFramebuffer();
+        HBILFramebuffer->setViewport();
+        HBILFramebuffer->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        HBIL->Use();
+
+        glActiveTexture(GL_TEXTURE0);
+        HBIL->PushUniform("gDepth", 0);
+        glBindTexture(GL_TEXTURE_2D, gDepth);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glActiveTexture(GL_TEXTURE1);
+        HBIL->PushUniform("gNormal", 1);
+        glBindTexture(GL_TEXTURE_2D, gExpensiveNormal);
+
+        glActiveTexture(GL_TEXTURE2);
+        HBIL->PushUniform("texNoise", 2);
+        glBindTexture(GL_TEXTURE_2D, noiseTexture);
+
+        HBIL->PushUniform("ViewMatrix", cam->getViewMatrix());
+        glUniform3fv(glGetUniformLocation(HBIL->getProgramID(), "samples"), 9, &ssaoKernel[0][0]);
+
+        HBIL->PushUniform("FocalLen", FocalLen);
+        HBIL->PushUniform("UVToViewA", UVToViewA);
+        HBIL->PushUniform("UVToViewB", UVToViewB);
+        HBIL->PushUniform("LinMAD", LinMAD);
+        HBIL->PushUniform("Resolution", glm::vec2(SSAOwidth, SSAOheight));
+
+        HBIL->PushUniform("projection", cam->getProjectionMatrix());
+        HBIL->PushUniform("invprojection", glm::inverse(cam->getProjectionMatrix()));
+        HBIL->PushUniform("view", cam->getViewMatrix());
+        HBIL->PushUniform("invView", glm::inverse(cam->getViewMatrix()));
+        HBIL->PushUniform("viewPos", cam->getPosition());
+
+        RenderQuad();
+
+        HBILFramebuffer->unbindFramebuffer();
+        HBIL->Free();
     }
 
     void PostProcess::applySSAO(std::shared_ptr<Camera> &cam)
@@ -375,12 +428,14 @@ namespace Epsilon
         glActiveTexture(GL_TEXTURE1);
         SSAO->PushUniform("texNoise", 1);
         glBindTexture(GL_TEXTURE_2D, noiseTexture);
-        
-    	glActiveTexture(GL_TEXTURE2);
-    	SSAO->PushUniform("gNormal", 2);
-    	glBindTexture(GL_TEXTURE_2D, gExpensiveNormal);
-    
+
+        glActiveTexture(GL_TEXTURE2);
+        SSAO->PushUniform("gNormal", 2);
+        glBindTexture(GL_TEXTURE_2D, gExpensiveNormal);
+
+        if (!HBAO_params_calculated)
         {
+            HBAO_params_calculated = true;
             FocalLen.x = 1.0f / tanf(glm::radians(cam->getFoV()) * 0.5f) * ((float)SSAOheight / (float)SSAOwidth);
             FocalLen.y = 1.0f / tanf(glm::radians(cam->getFoV()) * 0.5f);
             InvFocalLen.x = 1.0f / FocalLen.x;
@@ -394,13 +449,13 @@ namespace Epsilon
             float near = 0.1f, far = 3000.0f;
             LinMAD.x = (near - far) / (2.0f * near * far);
             LinMAD.y = (near + far) / (2.0f * near * far);
-
-            SSAO->PushUniform("FocalLen", FocalLen);
-            SSAO->PushUniform("UVToViewA", UVToViewA);
-            SSAO->PushUniform("UVToViewB", UVToViewB);
-            SSAO->PushUniform("LinMAD", LinMAD);
-            SSAO->PushUniform("Resolution", glm::vec2(SSAOwidth, SSAOheight));
         }
+
+        SSAO->PushUniform("FocalLen", FocalLen);
+        SSAO->PushUniform("UVToViewA", UVToViewA);
+        SSAO->PushUniform("UVToViewB", UVToViewB);
+        SSAO->PushUniform("LinMAD", LinMAD);
+        SSAO->PushUniform("Resolution", glm::vec2(SSAOwidth, SSAOheight));
 
         switch (mHBAOQuality)
         {
@@ -413,8 +468,8 @@ namespace Epsilon
             SSAO->PushUniform("NumSamples", 6);
 
         case 2:
-            SSAO->PushUniform("NumDirections", 8);
-            SSAO->PushUniform("NumSamples", 12);
+            SSAO->PushUniform("NumDirections", 7);
+            SSAO->PushUniform("NumSamples", 8);
         }
 
         glUniform3fv(glGetUniformLocation(SSAO->getProgramID(), "samples"), 9, &ssaoKernel[0][0]);
@@ -423,6 +478,7 @@ namespace Epsilon
         SSAO->PushUniform("invprojection", glm::inverse(cam->getProjectionMatrix()));
         SSAO->PushUniform("view", cam->getViewMatrix());
         SSAO->PushUniform("invView", glm::inverse(cam->getViewMatrix()));
+        SSAO->PushUniform("viewPos", cam->getPosition());
         glViewport(0, 0, SSAOwidth, SSAOheight);
         RenderQuad();
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -908,7 +964,7 @@ namespace Epsilon
 
     void PostProcess::CompositeImage(bool isMoving)
     {
-        
+
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, 0);
         glActiveTexture(GL_TEXTURE2);
@@ -943,7 +999,8 @@ namespace Epsilon
         glActiveTexture(GL_TEXTURE0);
         CompositeShader->PushUniform("gReflectionSampler", 0);
 
-        if (isMoving) {
+        if (isMoving)
+        {
             glBindTexture(GL_TEXTURE_2D, DenoiseTexture /*SSRTexture[CurrentSSR]*/);
             ReflectionTexture = DenoiseTexture;
         }
@@ -951,9 +1008,10 @@ namespace Epsilon
         {
             glBindTexture(GL_TEXTURE_2D, SSRTexture[CurrentSSR]);
             ReflectionTexture = SSRTexture[CurrentSSR];
-            if (TotalFrames >= 250){
+            if (TotalFrames >= 250)
+            {
                 glBindTexture(GL_TEXTURE_2D, SSRTexture[!CurrentSSR]);
-            ReflectionTexture = SSRTexture[!CurrentSSR];
+                ReflectionTexture = SSRTexture[!CurrentSSR];
             }
             glGenerateMipmap(GL_TEXTURE_2D);
         }
@@ -984,11 +1042,33 @@ namespace Epsilon
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, 0);
         mCompositeImage->unbindFramebuffer();
+
+        CopyTextureFBO->bindFramebuffer();
+        CopyTextureFBO->setViewport();
+        CopyTextureFBO->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        PassThroughShader->Use();
+
+        glActiveTexture(GL_TEXTURE0);
+        glUniform1i(glGetUniformLocation(PassThroughShader->getProgramID(), "texture0"), 0);
+        glBindTexture(GL_TEXTURE_2D, hdrFBO->getRenderTargetHandler("colorBuffer"));
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        CopyTextureFBO->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        RenderQuad();
+
+        PassThroughShader->Free();
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        CopyTextureFBO->unbindFramebuffer();
+        glViewport(0, 0, width, height);
     }
 
     void PostProcess::ShowPostProcessImage(float frametime, GLuint onmenu, glm::vec3 Sun, std::shared_ptr<Camera> &cam)
     {
-        
+
         //hdrFBO->setToRead();
         hdrFBO->unbindFramebuffer();
         //if(SSROn) {
@@ -1070,7 +1150,7 @@ namespace Epsilon
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    void PostProcess::ShowFrame(glm::vec3 Sun, bool &hdr, std::shared_ptr<Camera> &cam, float exposure, std::shared_ptr<ShadowMap> &shadowMap)
+    void PostProcess::ShowFrame(glm::vec3 Sun, bool &hdr, std::shared_ptr<Camera> &cam, float exposure, std::shared_ptr<Renderer::ShadowMap> shadowMap, std::shared_ptr<Renderer::PointShadow> pointShadow)
     {
 
         hdrFBO->bindFramebuffer();
@@ -1109,6 +1189,10 @@ namespace Epsilon
         glUniform1i(glGetUniformLocation(shader->getProgramID(), "gLightAccumulation"), 6);
         glBindTexture(GL_TEXTURE_2D, gLightAccumulation);
 
+        glActiveTexture(GL_TEXTURE7);
+        glUniform1i(glGetUniformLocation(shader->getProgramID(), "gPointShadowMap"), 7);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, pointShadow->getTexture());
+
         glm::mat4 invProj = glm::inverse(cam->getProjectionMatrix());
         glm::mat4 invView = glm::inverse(cam->getViewMatrix());
 
@@ -1124,6 +1208,7 @@ namespace Epsilon
         shader->PushUniform("viewPos", glm::vec3(cam->getPosition().x, cam->getPosition().y, cam->getPosition().z));
         shader->PushUniform("uViewDir", glm::vec3(cam->getDirection().x, cam->getDirection().y, cam->getDirection().z));
         shader->PushUniform("lightDir", glm::vec3(Sun.x, Sun.y, Sun.z));
+        shader->PushUniform("far_plane", (float)pointShadow->Far());
 
         RenderQuad();
 
@@ -1133,29 +1218,7 @@ namespace Epsilon
         glCache::glUseProgram(0);
 
         /** copy texture */
-        /*
-    CopyTextureFBO->bindFramebuffer();
-    CopyTextureFBO->setViewport();
-    CopyTextureFBO->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    PassThroughShader->Use();
 
-    glActiveTexture(GL_TEXTURE0);
-    glUniform1i(glGetUniformLocation(PassThroughShader->getProgramID(), "texture0"), 0);
-    glBindTexture(GL_TEXTURE_2D, hdrFBO->getRenderTargetHandler("colorBuffer"));
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-    CopyTextureFBO->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    RenderQuad();
-
-    PassThroughShader->Free();
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    CopyTextureFBO->unbindFramebuffer();
-    glViewport(0, 0, width, height);
-*/
         /** end copy texture*/
 
         /**Fill mip maps begin*/

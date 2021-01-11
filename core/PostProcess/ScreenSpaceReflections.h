@@ -58,7 +58,7 @@ namespace Epsilon
 
             void PrepareSSRTexture()
             {
-                m_pFrameBuffer = (std::shared_ptr<FrameBuffer<std::string>>)new FrameBuffer<std::string>(m_Width, m_Height, false);
+                m_pFrameBuffer = (std::shared_ptr<OpenGL::FrameBuffer<std::string>>)new OpenGL::FrameBuffer<std::string>(m_Width, m_Height, false);
                 m_pFrameBuffer->addRenderTarget("SSRBuffer", GL_RED, GL_RGB, GL_LINEAR, GL_LINEAR, true);
                 m_pFrameBuffer->FinishFrameBuffer();
             }
@@ -69,7 +69,7 @@ namespace Epsilon
             /**           SSR Specific Code           */
             /**----------------------------------------*/
 
-            std::shared_ptr<FrameBuffer<T>> m_pFrameBuffer;
+            std::shared_ptr<OpenGL::FrameBuffer<T>> m_pFrameBuffer;
         };
     } // namespace PostProcess
 } // namespace Epsilon

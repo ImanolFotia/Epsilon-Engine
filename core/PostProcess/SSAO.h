@@ -78,14 +78,14 @@ namespace Epsilon
 
             void PrepareSSAOTexture()
             {
-                m_pFrameBuffer = (std::shared_ptr<FrameBuffer<std::string>>)new FrameBuffer<std::string>(m_Width, m_Height, false);
+                m_pFrameBuffer = (std::shared_ptr<OpenGL::FrameBuffer<std::string>>)new OpenGL::FrameBuffer<std::string>(m_Width, m_Height, false);
                 m_pFrameBuffer->addRenderTarget("SSAOBuffer", GL_RED, GL_RGB, GL_LINEAR, GL_LINEAR, true);
                 m_pFrameBuffer->FinishFrameBuffer();
             }
 
             void PrepareSSAOBlurTexture()
             {
-                m_pFrameBufferBlur = (std::shared_ptr<FrameBuffer<std::string>>)new FrameBuffer<std::string>(m_Width, m_Height, false);
+                m_pFrameBufferBlur = (std::shared_ptr<OpenGL::FrameBuffer<std::string>>)new OpenGL::FrameBuffer<std::string>(m_Width, m_Height, false);
                 m_pFrameBufferBlur->addRenderTarget("ssaoBlur", GL_RED, GL_RGB, GL_LINEAR, GL_LINEAR, true);
                 m_pFrameBufferBlur->FinishFrameBuffer();
             }
@@ -129,9 +129,9 @@ namespace Epsilon
             GLuint noiseTexture;
             std::vector<glm::vec3> ssaoKernel;
             std::shared_ptr<Shader> blurShader;
-            std::shared_ptr<FrameBuffer<std::string>> m_pFrameBufferBlur;
+            std::shared_ptr<OpenGL::FrameBuffer<std::string>> m_pFrameBufferBlur;
             std::vector<glm::vec3> ssaoNoise;
-            std::shared_ptr<FrameBuffer<T>> m_pFrameBuffer;
+            std::shared_ptr<OpenGL::FrameBuffer<T>> m_pFrameBuffer;
 
         protected:
         };

@@ -18,7 +18,7 @@ namespace Epsilon
 
             this->radius = 30.0;
 
-            this->height = 30.0;
+            this->height = -30.0;
 
             PrepareVAO();
             std::cout << "Llega" << std::endl;

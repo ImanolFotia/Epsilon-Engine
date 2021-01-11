@@ -37,7 +37,7 @@ namespace Epsilon
                         throw;
                     }
                 }
-                void addBuffer(GLenum target, GLsizeiptr size, GLvoid *data, GLenum usage)
+                unsigned int addBuffer(GLenum target, GLsizeiptr size, GLvoid *data, GLenum usage)
                 {
                     try
                     {
@@ -50,11 +50,18 @@ namespace Epsilon
                         m_VBOArray.push_back(tmpVBO);
 
                         this->Unbind();
+
+                        return m_VBOArray.size() - 1;
                     }
                     catch (...)
                     {
                         throw;
                     }
+                }
+
+                void UpdateBuffer(uint32_t bufferHandler, GLintptr offset, GLsizeiptr size, const void *data) {
+                    auto & buffer = m_VBOArray[bufferHandler];
+                    buffer.UpdateData(offset, size, data);
                 }
 
                 void Bind()

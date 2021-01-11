@@ -20,7 +20,7 @@ namespace Epsilon
 
     bool Model::loadModel(std::string emlPath, int a)
     {
-
+        using namespace Renderer;
         std::ifstream inFILE(emlPath, std::ios::binary);
         if (!inFILE.is_open())
         {
@@ -281,7 +281,7 @@ namespace Epsilon
         //glUniform1f(glGetUniformLocation(shader->getProgramID(), "time"), glfwGetTime());
         shader->PushUniform("time", (float)glfwGetTime());
         //glUniform2i(glGetUniformLocation(shader->getProgramID(), "Resolution"), 1920, 1080);
-        shader->PushUniform("Resolution", glm::ivec2(Engine::Width(), Engine::Height()));
+        shader->PushUniform("Resolution", glm::ivec2(Engine::Get().Width(), Engine::Get().Height()));
         int index = 0;
         if(!uniformsSet) IO::PrintLine("Position for model ", this->path, position.x, position.y, position.z);
         for(auto &i : mMeshesPositionsRelative) {

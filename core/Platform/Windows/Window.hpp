@@ -36,6 +36,10 @@ namespace Epsilon
                 virtual void ShowCursor() override;
 
                 virtual void HideCursor() override;
+                
+                virtual bool WantsToClose() override;
+                
+                virtual unsigned FrameNumber() override;
 
             private:
             };

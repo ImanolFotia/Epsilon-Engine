@@ -15,7 +15,7 @@ namespace Epsilon
 
             MotionBlur(int w, int h, std::shared_ptr<Shader> s) : Effect(w, h)
             {
-                m_pFrameBuffer = (std::shared_ptr<FrameBuffer<std::string>>)new FrameBuffer<std::string>(w, h, false);
+                m_pFrameBuffer = (std::shared_ptr<OpenGL::FrameBuffer<std::string>>)new OpenGL::FrameBuffer<std::string>(w, h, false);
                 m_pFrameBuffer->addRenderTarget("MotionBlurBuffer", GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
                 m_pFrameBuffer->FinishFrameBuffer();
             }
@@ -59,7 +59,7 @@ namespace Epsilon
 
         private:
             bool m_Activated;
-            std::shared_ptr<FrameBuffer<T>> m_pFrameBuffer;
+            std::shared_ptr<OpenGL::FrameBuffer<T>> m_pFrameBuffer;
             float m_Intesity;
         };
     } // namespace PostProcess

@@ -368,10 +368,10 @@ namespace Epsilon
         }
     }
 
-    bool Player::pickObject(btVector3 from, btVector3 to)
+    btRigidBody* Player::pickObject(btVector3 from, btVector3 to)
     {
         if (ResourceManager::Get().getPhysicsWorld()->getSoftDynamicsWorld() == 0)
-            return false;
+            return nullptr;
 
         class ClosestNotMe : public btCollisionWorld::ClosestRayResultCallback
         {
@@ -423,8 +423,10 @@ namespace Epsilon
             m_oldPickingPos = target;
             m_hitPos = pickPos;
             m_oldPickingDist = (rayFrom - pickPos).length();
+
+            return m_pickedBody;
         }
-        return false;
+        return nullptr;
     }
 
     bool Player::moveObject()

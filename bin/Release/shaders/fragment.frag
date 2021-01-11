@@ -105,9 +105,9 @@ void main()
 
 	vec3 LightPosition = vec3(37, 6.5, 3.5);
 
-	ExtraComponents.xy = texture(texture_height, TexCoords).xy;
-	Diffuse = texture(gAlbedoSpec, TexCoords).rgb;
-	float alpha = texture(gAlbedoSpec, TexCoords).a;
+	ExtraComponents.xy = textureLod(texture_height, TexCoords, 3.0).xy;
+	Diffuse = textureLod(gAlbedoSpec, TexCoords, 3.0).rgb;
+	float alpha = textureLod(gAlbedoSpec, TexCoords, 3.0).a;
 
 	Specular = 1.0;//texture(texture_specular, TexCoords).r;
     	vec3 SpecDiff = Diffuse * Specular;
@@ -125,7 +125,7 @@ void main()
 		return;
 	}
 
-	vec3 NormalTexture = normalize(texture(texture_normal, TexCoords).rgb * 2.0 - 1.0);
+	vec3 NormalTexture = normalize(textureLod(texture_normal, TexCoords, 3.0).rgb * 2.0 - 1.0);
 
 	vec3 mNormal = vec3(0.0);
 

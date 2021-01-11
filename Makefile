@@ -33,8 +33,8 @@ endif
 LIB_NAME:= libEpsilon.a
 LIB_NAME_DEBUG:= libEpsilon_d.a
 
-IMGUI_INC := -I$(LIB)/imgui/imgui/examples \
--I$(LIB)/imgui/imgui
+IMGUI_INC := -I$(LIB)/imgui-docking/imgui-docking/examples \
+-I$(LIB)/imgui-docking/imgui-docking
 
 #recursive wildcard to include all files
 rwildcard=$(wildcard $(addsuffix $2, $1)) $(foreach d,$(wildcard $(addsuffix *, $1)),$(call rwildcard,$d/,$2))
@@ -65,7 +65,7 @@ INCLUDE_LIBS:= -I$(LIB)/glm \
 -I$(LIB)/glad/include \
 -I$(LIB)/OpenGL/include/ \
 -I$(LIB)/json-develop/include \
--I$(LIB)/imgui/imgui
+-I$(LIB)/imgui-docking/imgui-docking
 else
 INCLUDE_LIBS:=  -I$(LIB)/inih/cpp \
 -I$(LIB)/glm \
@@ -89,7 +89,7 @@ LIBS_DIR := -L$(LIB)/soil/lib \
 -L$(LIB)/openal-soft/build \
 -L$(LIB)/bullet3/build/lib \
 -L$(LIB)/glad/lib \
--L$(LIB)/imgui/imgui \
+-L$(LIB)/imgui-docking/imgui-docking \
 -L$(DX_SDK_LIB)
 else 
 LIBS_DIR := -L$(LIB)/inih \

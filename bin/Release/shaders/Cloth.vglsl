@@ -24,6 +24,7 @@ mat3 CreateTBNMatrix(mat3 normalMatrix)
     return transpose(mat3(T, B, N));
 }
 
+out vec3 wFragPos;
 void main()
 {
 
@@ -43,6 +44,7 @@ void main()
 	//    tangent = c2;
 	//}
 
+  	wFragPos = vec3(Model * vec4(position, 1.0));
 	tangent = normalize(tangent);
 
 	bitangent = cross(normal, tangent);

@@ -8,10 +8,12 @@
 #include <pch.hpp>
 #include <Shader.h>
 #include <camera.h>
-#include <ShadowMapping.h>
+#include <Renderer/Shadows/ShadowMapping.h>
+
 #include <Light.h>
 #include <Texture.h>
 #include <Driver/API/OpenGL/FrameBuffer.h>
+#include <Renderer/Shadows/PointShadow.hpp>
 
 namespace Epsilon
 {
@@ -39,13 +41,15 @@ namespace Epsilon
         /**
         Render the output from the G-Buffer
     */
-        void ShowFrame(glm::vec3, bool &hdr, std::shared_ptr<Camera> &cam, float exposure, std::shared_ptr<ShadowMap> &);
+        void ShowFrame(glm::vec3, bool &hdr, std::shared_ptr<Camera> &cam, float exposure, std::shared_ptr<Renderer::ShadowMap>, std::shared_ptr<Renderer::PointShadow>);
 
         /**
         Calculates the screen space ambient occlusion
         from the geometry
     */
         void applySSAO(std::shared_ptr<Camera> &cam);
+        
+        void applyHBIL(std::shared_ptr<Camera> &cam);
 
         /**
         Render the post process image to the screen
@@ -93,11 +97,11 @@ namespace Epsilon
         GLuint colorBuffer;
         GLuint depthBuffer;
 
-        std::shared_ptr<FrameBuffer<std::string>> hdrFBO;
-        std::shared_ptr<FrameBuffer<int>> mCompositeImage;
+        std::shared_ptr<OpenGL::FrameBuffer<std::string>> hdrFBO;
+        std::shared_ptr<OpenGL::FrameBuffer<int>> mCompositeImage;
         std::shared_ptr<Shader> shader;
-        std::shared_ptr<FrameBuffer<int>> CopyTextureFBO;
-        std::shared_ptr<FrameBuffer<int>> CopyTextureBlurredFBO;
+        std::shared_ptr<OpenGL::FrameBuffer<int>> CopyTextureFBO;
+        std::shared_ptr<OpenGL::FrameBuffer<int>> CopyTextureBlurredFBO;
 
         float m_exposure;
         GLuint gDepth;
@@ -134,6 +138,8 @@ namespace Epsilon
         Creates the SSAO framebuffer and attaches the proper textures
     */
         void setupSSAO(void);
+        
+        void setupHBIL(void);
 
         /**
         Creates the SSR framebuffer and attaches the proper textures
@@ -208,7 +214,8 @@ namespace Epsilon
         bool mChromaticAberration;
         bool mBokehDOF;
 
-        std::shared_ptr<FrameBuffer<int>> BRDFFramebuffer;
+        std::shared_ptr<OpenGL::FrameBuffer<int>> BRDFFramebuffer;
+        std::shared_ptr<OpenGL::FrameBuffer<int>> HBILFramebuffer;
         GLuint ssaoFBO;
         GLuint ssaoBlurFBO;
         GLuint rboDepth;
@@ -232,6 +239,7 @@ namespace Epsilon
         int width, height;
         float exposureTime;
         std::shared_ptr<Shader> SSAO;
+        std::shared_ptr<Shader> HBIL;
         std::shared_ptr<Shader> blurSSAO;
         std::shared_ptr<Shader> finalImage;
         std::shared_ptr<Shader> blurBloom;
@@ -273,6 +281,7 @@ namespace Epsilon
         glm::vec2 FocalLen, InvFocalLen, UVToViewA, UVToViewB, LinMAD;
 
         GLuint ReflectionTexture;
+        bool HBAO_params_calculated = false;
     };
 } // namespace Epsilon
 

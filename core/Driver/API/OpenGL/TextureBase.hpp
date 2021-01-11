@@ -10,7 +10,7 @@ namespace Epsilon
         namespace OpenGL
         {
             //Base abstract class for OpenGL texture
-            class TextureBase
+            class TextureBase : public ::TextureBase
             {
 
                 class TextureData

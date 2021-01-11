@@ -36,7 +36,7 @@ namespace Epsilon
 			vert.bitangent = -Bitangents[i];
 			mVertices.push_back(vert);
 
-			mPosition += Vertices[i] * 0.1f;
+			mPosition *= Vertices[i] * (1.0f / Vertices.size());
 		}
 
 		mPosition /= Vertices.size();
@@ -55,11 +55,11 @@ namespace Epsilon
 	void BSPFace::RenderFace(GLuint shader, GLuint TextureID, GLuint normalID, GLuint specularID, GLuint metallicID, bool simpleRender)
 	{
 
-		/*if(ResourceManager::Get().cubemapsLoaded && this->CubemapId == -1)
+		if(ResourceManager::Get().cubemapsLoaded && this->CubemapId == -1)
 		{
 			CubemapId = ResourceManager::Get().NearestCubeMap(mPosition);
 			GIProbeID = ResourceManager::Get().NearestCubeMap(mPosition) - 1;
-		}*/
+		}
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, TextureID);
 		glUniform1i(glGetUniformLocation(shader, "texture_diffuse"), 0);
@@ -78,8 +78,8 @@ namespace Epsilon
 
 		glActiveTexture(GL_TEXTURE4);
 		glUniform1i(glGetUniformLocation(shader, "skybox"), 4);
-		//if(this->CubemapId != -1)
-		//glBindTexture(GL_TEXTURE_CUBE_MAP, ResourceManager::Get().useCubeMap(CubemapId));
+		if(this->CubemapId != -1)
+		glBindTexture(GL_TEXTURE_CUBE_MAP, ResourceManager::Get().useCubeMap(CubemapId));
 
 		//glUniform1i(glGetUniformLocation(shader, "CubemapID"), CubemapId);
 		//glUniform1i(glGetUniformLocation(shader, "AmbientProbeID"), GIProbeID);

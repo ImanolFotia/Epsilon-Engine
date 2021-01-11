@@ -22,14 +22,14 @@ namespace Epsilon
         std::string path_suffix = "materials/";
 
         int outwidth = 0, outheight = 0, outchannels = 0;
-        unsigned char* data = SOIL_load_image((path_suffix + texturePath).c_str(), &outwidth, &outheight, &outchannels, SOIL_LOAD_RGBA);
+        unsigned char* data = SOIL_load_image("materials/old-soiled-cloth1-albedo.png", &outwidth, &outheight, &outchannels, SOIL_LOAD_RGBA);
         mTexture = std::make_shared<Texture2D>();
         mTexture->Create(outwidth, outheight);
         mTexture->setData(data, 0);
         SOIL_free_image_data(data);
         data = nullptr;
 
-        data = SOIL_load_image(std::string(path_suffix + "cloth/worn-blue-burlap-Normal-dx.png").c_str(), &outwidth, &outheight, &outchannels, SOIL_LOAD_RGBA);
+        data = SOIL_load_image(std::string(path_suffix + "old-soiled-cloth1-Normal-dx.png").c_str(), &outwidth, &outheight, &outchannels, SOIL_LOAD_RGBA);
         TextureData.Width = outwidth;
         TextureData.Height = outheight;
         mNormalTexture = std::make_shared<Texture2D>();
@@ -38,7 +38,7 @@ namespace Epsilon
         SOIL_free_image_data(data);
         data = nullptr;
 
-        data = SOIL_load_image(std::string(path_suffix + "cloth/worn-blue-burlap-Roughness.png").c_str(), &outwidth, &outheight, &outchannels, SOIL_LOAD_RGBA);
+        data = SOIL_load_image(std::string(path_suffix + "old-soiled-cloth1-Roughness.png").c_str(), &outwidth, &outheight, &outchannels, SOIL_LOAD_RGBA);
         TextureData.Width = outwidth;
         TextureData.Height = outheight;
         mRoughtnessTexture = std::make_shared<Texture2D>();
@@ -47,7 +47,7 @@ namespace Epsilon
         SOIL_free_image_data(data);
         data = nullptr; 
 
-        data = SOIL_load_image(std::string(path_suffix + "cloth/worn-blue-burlap-Metallic.png").c_str(), &outwidth, &outheight, &outchannels, SOIL_LOAD_RGBA);
+        data = SOIL_load_image(std::string(path_suffix + "old-soiled-cloth1-Metallic.png").c_str(), &outwidth, &outheight, &outchannels, SOIL_LOAD_RGBA);
         TextureData.Width = outwidth;
         TextureData.Height = outheight;
         mMetallicTexture = std::make_shared<Texture2D>();
@@ -86,15 +86,19 @@ namespace Epsilon
         inShader->PushUniform("Model", model);
         inShader->PushUniform("view", viewMatrix);
 
-        glActiveTexture(GL_TEXTURE0);
-        //glBindTexture(GL_TEXTURE_2D, this->mTexture->);
-        mTexture->Bind();
+        //glActiveTexture();
+        mTexture->Bind(GL_TEXTURE0);
         inShader->PushUniform("DiffuseSampler", 0);
 
-        glActiveTexture(GL_TEXTURE1);
-        mNormalTexture->Bind();
-        //glBindTexture(GL_TEXTURE_2D, this->mNormalTexture->getTextureID());
+        //glActiveTexture();
+        mNormalTexture->Bind(GL_TEXTURE1);
         inShader->PushUniform("NormalSampler", 1);
+        
+        mRoughtnessTexture->Bind(GL_TEXTURE2);
+        inShader->PushUniform("RoughnessSampler", 2);
+        
+        mMetallicTexture->Bind(GL_TEXTURE3);
+        inShader->PushUniform("MetallicSampler", 3);
         
         glActiveTexture(GL_TEXTURE4);
         inShader->PushUniform("skybox", 4);
@@ -109,6 +113,8 @@ namespace Epsilon
 
         mTexture->Unbind();
         mNormalTexture->Unbind();
+        mRoughtnessTexture->Unbind();
+        mMetallicTexture->Unbind();
     }
 
     void Patch::RenderShadows()

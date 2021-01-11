@@ -35,6 +35,8 @@ namespace Epsilon
             virtual void SwapBuffers() = 0;
             virtual void ShowCursor() = 0;
             virtual void HideCursor() = 0;
+            virtual bool WantsToClose() = 0;
+            virtual unsigned FrameNumber() = 0;
 
             void setWindowData(const WindowData &data)
             {
@@ -55,12 +57,16 @@ namespace Epsilon
                 return mWindowHandle;
             }
 
-            
+            void IncrementFrame() {
+                mFrameNumber++;
+            }
 
+        
         protected:
             std::shared_ptr<API::ContextBase> mContext;
             std::shared_ptr<WindowHandle<>> mWindowHandle;
             WindowData mWindowData;
+            unsigned mFrameNumber = 0;
         };
     } // namespace Platform
 } // namespace Epsilon

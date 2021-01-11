@@ -23,7 +23,7 @@ namespace Epsilon
         UpperSky_color = glm::vec3(29,91,255) / 255.0f; 
         LowerSky_color = glm::vec3(125, 228, 247) / 255.0f;
         Horizon_color = glm::vec3(1,1,1) / 255.0f;
-        Horizon_Height = 0.276f
+        Horizon_Height = 0.276f;
     }
 
     void Skybox::Render(std::shared_ptr<Camera> &camera, std::shared_ptr<Shader> SkyShader, float exposure, bool state)

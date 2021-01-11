@@ -13,7 +13,7 @@
 
 #include "Mesh.h"
 #include <Types.h>
-#include <emlFormat.h>
+#include "./EML/eml1_0.h"
 #include <camera.h>
 
 namespace Epsilon

@@ -24,7 +24,7 @@
 #include <BSP.h>
 #include <MD5_Model.h>
 #include <MD5_Anim.h>
-#include <ShadowMapping.h>
+#include <Renderer/Shadows/ShadowMapping.h>
 #include <Entity/Entity.h>
 #include <ResourceManager.h>
 #include <glm/gtc/quaternion.hpp>
@@ -47,13 +47,18 @@
 #include <CommandFunctions.h>
 #include <Physics/ClothPhysicObject.h>
 #include <Renderer/Patch.h>
-#include <PointShadow.hpp>
+#include <Renderer/Shadows/PointShadow.hpp>
+#include <Driver/API/BufferObject.hpp>
+#include <Renderer/ShaderStorage.hpp>
+#include <ParticleSystem.h>
 
 #include <Platform/WindowBase.hpp>
 
 #include <imgui_imp/imgui_impl_glfw.h>
 #include <imgui_imp/imgui_impl_opengl3.h>
 #include <imgui_imp/imgui_menubar.hpp>
+
+#include <Driver/API/OpenGL/FrameBuffer.h>
 
 namespace Epsilon
 {
@@ -92,7 +97,7 @@ namespace Epsilon
 
         void Render3D(std::shared_ptr<Shader>);
 
-        void RenderShadows(void);
+        void RenderShadows(std::shared_ptr<Shader>);
 
         void Render2D(void);
 
@@ -118,7 +123,7 @@ namespace Epsilon
 
         void Clock(void);
 
-        void ComputeShadow(void);
+        void ComputeShadow();
 
         void RenderToCubemaps();
 
@@ -144,7 +149,8 @@ namespace Epsilon
         std::shared_ptr<Sun> sun;
         std::shared_ptr<CQuake3BSP> BSPMap;
         std::shared_ptr<MD5Model> m_AnimModel;
-        std::shared_ptr<ShadowMap> shadowMap;
+        std::shared_ptr<Renderer::ShadowMap> shadowMap;
+        std::shared_ptr<Renderer::PointShadow> mPointShadow;
         std::shared_ptr<PostProcess> PP;
         
         glm::vec3 ambientDivider;
@@ -160,6 +166,7 @@ namespace Epsilon
         std::shared_ptr<CubeMap> mCubemap[7][7][7];
 
         std::shared_ptr<Player> m_PlayerCapsule;
+        std::shared_ptr<ParticleSystem> m_ParticleSystem;
         //std::shared_ptr<GUI> m_GUI;
         /*std::shared_ptr<Panel> m_Panel;
         std::shared_ptr<Button> t_ButtonSettings;
@@ -176,10 +183,10 @@ namespace Epsilon
         float timeGUI = 0.0;
         SphericalHarmonics sph;
 
-        GLuint AmbientLightSSBO;
+        std::shared_ptr<Renderer::ShaderStorage> AmbientLightSSBO;
+        std::shared_ptr<API::BufferObject> mGlobalUniformBuffer;
 
     private:
-        std::shared_ptr<PointShadow> mPointShadow;
         bool normal = 0;
         bool flashLight = 0;
         bool hdr = true;
@@ -202,6 +209,8 @@ namespace Epsilon
         std::shared_ptr<Physics::SpherePhysicObject> ph3;
         std::string GL_VER, GL_REN, GL_VEN;
         double m_TextAcum = 0.0;
+
+        std::shared_ptr<OpenGL::FrameBuffer<int>> mDefaultFrameBuffer; 
 
         //IMGUI variables
 

@@ -135,6 +135,14 @@ namespace Epsilon
             void Window::HideCursor() {
                 glfwSetInputMode(mWindowHandle->getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             }
+
+            bool Window::WantsToClose() {
+                return glfwWindowShouldClose(mWindowHandle->getHandle());
+            }
+
+            unsigned Window::FrameNumber() {
+                return mFrameNumber;
+            }
         } // namespace Windows
     }     // namespace Platform
 } // namespace Epsilon

@@ -12,6 +12,7 @@ layout (binding = 3) uniform sampler2D ssaoColorBufferBlur;
 layout (binding = 4) uniform sampler2DShadow shadowMap;
 layout (binding = 5) uniform sampler2D gExtraComponents;
 layout (binding = 6) uniform sampler2D gLightAccumulation; 
+layout (binding = 7) uniform samplerCube gPointShadowMap; 
 
 uniform float exposure;
 uniform mat4 lightSpaceMatrix;
@@ -21,6 +22,7 @@ uniform bool hdr;
 uniform int NUMLIGHTS;
 const int NR_LIGHTS = 32;
 uniform float time;
+uniform float far_plane;
 //uniform vec3 LightPositions[NR_LIGHTS];
 struct t_light {
 
@@ -127,6 +129,73 @@ vec2 poissonDisk[16] = vec2[](
    vec2( 0.14383161, -0.14100790 ) 
 );
 
+const vec2 BlueNoiseInDisk[64] = vec2[64](
+    vec2(0.478712,0.875764),
+    vec2(-0.337956,-0.793959),
+    vec2(-0.955259,-0.028164),
+    vec2(0.864527,0.325689),
+    vec2(0.209342,-0.395657),
+    vec2(-0.106779,0.672585),
+    vec2(0.156213,0.235113),
+    vec2(-0.413644,-0.082856),
+    vec2(-0.415667,0.323909),
+    vec2(0.141896,-0.939980),
+    vec2(0.954932,-0.182516),
+    vec2(-0.766184,0.410799),
+    vec2(-0.434912,-0.458845),
+    vec2(0.415242,-0.078724),
+    vec2(0.728335,-0.491777),
+    vec2(-0.058086,-0.066401),
+    vec2(0.202990,0.686837),
+    vec2(-0.808362,-0.556402),
+    vec2(0.507386,-0.640839),
+    vec2(-0.723494,-0.229240),
+    vec2(0.489740,0.317826),
+    vec2(-0.622663,0.765301),
+    vec2(-0.010640,0.929347),
+    vec2(0.663146,0.647618),
+    vec2(-0.096674,-0.413835),
+    vec2(0.525945,-0.321063),
+    vec2(-0.122533,0.366019),
+    vec2(0.195235,-0.687983),
+    vec2(-0.563203,0.098748),
+    vec2(0.418563,0.561335),
+    vec2(-0.378595,0.800367),
+    vec2(0.826922,0.001024),
+    vec2(-0.085372,-0.766651),
+    vec2(-0.921920,0.183673),
+    vec2(-0.590008,-0.721799),
+    vec2(0.167751,-0.164393),
+    vec2(0.032961,-0.562530),
+    vec2(0.632900,-0.107059),
+    vec2(-0.464080,0.569669),
+    vec2(-0.173676,-0.958758),
+    vec2(-0.242648,-0.234303),
+    vec2(-0.275362,0.157163),
+    vec2(0.382295,-0.795131),
+    vec2(0.562955,0.115562),
+    vec2(0.190586,0.470121),
+    vec2(0.770764,-0.297576),
+    vec2(0.237281,0.931050),
+    vec2(-0.666642,-0.455871),
+    vec2(-0.905649,-0.298379),
+    vec2(0.339520,0.157829),
+    vec2(0.701438,-0.704100),
+    vec2(-0.062758,0.160346),
+    vec2(-0.220674,0.957141),
+    vec2(0.642692,0.432706),
+    vec2(-0.773390,-0.015272),
+    vec2(-0.671467,0.246880),
+    vec2(0.158051,0.062859),
+    vec2(0.806009,0.527232),
+    vec2(-0.057620,-0.247071),
+    vec2(0.333436,-0.516710),
+    vec2(-0.550658,-0.315773),
+    vec2(-0.652078,0.589846),
+    vec2(0.008818,0.530556),
+    vec2(-0.210004,0.519896) 
+);
+
 float random(vec3 seed, int i){
     vec4 seed4 = vec4(seed,i);
     float dot_product = dot(seed4, vec4(12.9898,78.233,45.164,94.673));
@@ -163,8 +232,8 @@ float poissonShadowMapping(vec4 fragPosLightSpace){
     float distance = current - closest;
 
     for (int i=0;i<8;i++){
-        int index = int(16.0*random(floor(FragPos.xyz*1000.0), i))%16;
-        visibility -= 0.125*(texture(shadowMap, vec3(fragPosLightSpace.xy+ poissonDisk[index]/1400, fragPosLightSpace.z - bias)/fragPosLightSpace.w).r);
+        int index = int(64.0*random(floor(FragPos.xyz*1000.0), i))%64;
+        visibility -= 0.125*(texture(shadowMap, vec3(fragPosLightSpace.xy+ BlueNoiseInDisk[index]/700.0, fragPosLightSpace.z - bias)/fragPosLightSpace.w).r);
     }
     //visibility -= step(fragPosLightSpace.z, texture(shadowMap, vec3(fragPosLightSpace.xy, fragPosLightSpace.z-bias)).r);
     return visibility;
@@ -271,6 +340,43 @@ float NormalMapShadows(in vec3 lightdir) {
 
     return saturate(1.0 - nmshadow * invsamplecount);;
 }
+vec3 gridSamplingDisk[20] = vec3[]
+(
+   vec3(1, 1,  1), vec3( 1, -1,  1), vec3(-1, -1,  1), vec3(-1, 1,  1), 
+   vec3(1, 1, -1), vec3( 1, -1, -1), vec3(-1, -1, -1), vec3(-1, 1, -1),
+   vec3(1, 1,  0), vec3( 1, -1,  0), vec3(-1, -1,  0), vec3(-1, 1,  0),
+   vec3(1, 0,  1), vec3(-1,  0,  1), vec3( 1,  0, -1), vec3(-1, 0, -1),
+   vec3(0, 1,  1), vec3( 0, -1,  1), vec3( 0, -1, -1), vec3( 0, 1, -1)
+);
+
+float PointShadowCalculation(vec3 fragPos, vec3 LightPos, inout bool in_range)
+{
+    //float far_plane = 30.;
+    vec3 fragToLight = fragPos - LightPos;
+    float currentDepth = length(fragToLight);
+    float shadow = 0.0;
+    float bias = 0.15;
+    int samples = 20;
+    float viewDistance = length(viewPos - fragPos);
+    in_range = true;
+    if(currentDepth >= far_plane) {
+        in_range = false;
+        return 1.0;
+    }
+        
+    float strength = pow(currentDepth / far_plane, 20.0);
+
+    float diskRadius = (1.0 + (viewDistance / far_plane)) / 25.0;
+    for(int i = 0; i < samples; ++i)
+    {
+        float closestDepth = texture(gPointShadowMap, fragToLight + gridSamplingDisk[i] * BlueNoiseInDisk[i].xyx * diskRadius).r;
+        closestDepth *= far_plane;   // undo mapping [0;1]
+        if(currentDepth - bias > closestDepth)
+            shadow += 1.0;
+    }
+    shadow /= float(samples);
+    return mix((1.0 - shadow), 1.0, strength);
+}
 
 void main()
 {
@@ -339,27 +445,30 @@ void main()
     //shadow = 0.0;//min(NormalMapShadows(lightDir)*0.2, shadow);
 
     //light += SSS * pow(Diffuse, vec3(2.2)) * irradiance_subsurf.a;
-    
+    bool in_range = false;
     for(int i = 0 ; i < outBuffer.Lights.length() ; i++)
     {
       switch(outBuffer.Lights[i].type){
         case 0:
-            light += calculatePointPBR(outBuffer.Lights[i].position.rgb, outBuffer.Lights[i].color.rgb);
+                light += calculatePointPBR(outBuffer.Lights[i].position.rgb, outBuffer.Lights[i].color.rgb);
             break;
         case 1:
             light += SpotLightPBR(outBuffer.Lights[i].position.rgb, outBuffer.Lights[i].direction.rgb, outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb);
             break;
         case 2:
-        {
-            light += SphereAreaLight(outBuffer.Lights[i].position.rgb,  outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts);
-            //SSS = SubsurfaceScattering(-normalize(FragPos - outBuffer.Lights[i].position.rgb), Normal, V, FragPos, false);
-            //light += vec3(SSS * Diffuse /* pow(Diffuse, vec3(2.2))*/ * irradiance_subsurf.a);
-        }
+        //{
+            vec3 res = SphereAreaLight(outBuffer.Lights[i].position.rgb + vec3(0.0, sin(time), 0.0),  outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts);
+            /*if(i == 0 && in_range){
+                res *= pointShadow;
+            }*/
+            light += res;
+        //}
             break;
       }
     }
 
-    //light += TubeAreaLight(vec3(0, 0, 0), vec3(-70.51,-1.5,-45), vec3(-70.51,-20,-45),  5.0, normalize(vec3(1,1,1)), 350);
+    float pointShadow = PointShadowCalculation(FragPos, vec3(-5, 19.2,-28.74), in_range);
+    light += TubeAreaLight(vec3(0, 0, 0), vec3(19.37,19.2,-28.74), vec3(-28.37,19.2,-28.74),  0.2, normalize(vec3(1,0,0)), 100) * pointShadow;
 
 
     //if(hdr)
@@ -377,12 +486,12 @@ void main()
     vec3 fogColor = clamp(mix(Gray, Background, clamp(lightDir.y, 0.0, 1.0)), vec3(0.00011), normalize(vec3(221,221,221)));
 
     //vec3 testNormals = ((vec4(Normal, 1.0) * 0.5+0.5)).rgb;
-    FragColor.rgb = light;//max(vec3(0.0), mix(SkyColor, light, visibility));
+    FragColor.rgb = max(light, vec3(0.0));//max(vec3(0.0), mix(SkyColor, light, visibility));
     vec3 testHDR = FragColor.rgb;
     float brightness = dot(testHDR.rgb , vec3(0.2126, 0.7152, 0.0722));
-/*
-    if(brightness > 1.0)
-        blurImage.rgb = FragColor.rgb;
+
+    /*if(brightness > 1.0)
+        blurImage.rgb = clamp(FragColor.rgb * 0.01, vec3(1.0), vec3(1.01));
     else*/
     blurImage.rgb = vec3(0.0);
 

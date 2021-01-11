@@ -1,6 +1,6 @@
 
 // Falloff, as we radiate outwards.
-const float DECAY = 0.97;
+const float DECAY = 1.0;
 // Controls the sample density, which in turn, controls the sample spread.
 const float DENSITY = 1.0;
 // Sample weight. Decays as we radiate outwards.

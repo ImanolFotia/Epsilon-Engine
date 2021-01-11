@@ -33,7 +33,7 @@ float uDistortion = 5;
 
 
 const float gamma = 2.2;
-const float contrast = 0.3;
+const float contrast = 0.5;
 const float exposure = 5.5;
 
 vec3 HDR(vec3 image) {
@@ -192,7 +192,8 @@ void main() {
 
   vec2 fragcoord = gl_FragCoord.xy / Resolution;
 
-  vec4 GodRays = godRays(brightColorBuffer, sunPos/*normalize(vec3(83, 6, -3) - vec3(0, 6, -3))*/ );
+  vec3 lp = vec3(4, 10, 22);
+  vec4 GodRays = godRays(brightColorBuffer, normalize(lp - position)/*normalize(vec3(83, 6, -3) - vec3(0, 6, -3))*/ );
 
   fragcoord = gl_FragCoord.xy / Resolution;
   float vignete =

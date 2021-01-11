@@ -35,6 +35,7 @@
          vec2 offset = velocity * (float(i) / float(nSamples - 1) - 0.5);
          oResult +=  Degamma(texture(gFinalImage, screenTexCoords + offset));
       }
+      
       oResult /= max(1.0, float(nSamples));
 
       oResult = Gamma(oResult);

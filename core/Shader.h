@@ -97,6 +97,7 @@ public:
 
     void PushUniform(const std::string& name, glm::mat4 data)
     {
+        if(m_Uniforms.find(name) == m_Uniforms.end()) return;
         glUniformMatrix4fv(m_Uniforms[name], 1, GL_FALSE, &data[0][0]);
     }
 
@@ -117,25 +118,25 @@ private:
     void getUniformsLocations();
 
 public:
-    GLuint MVP_Location;
-    GLuint WorldTransform_Location;
-    GLuint Projection_Location;
-    GLuint View_Location;
-    GLuint ViewDirection_Location;
-    GLuint ViewPosition_Location;
-    GLuint LightSpaceMatrix_Location;
-    GLuint ModelView3x3Matrix_Location;
-    GLuint NormalMatrix_Location;
-    GLuint LightDirection_Location;
-    GLuint ClipPlane_Location;
-    GLuint Time_Location;
-    GLuint texture_diffuse_Location;
-    GLuint texture_specular_Location;
-    GLuint texture_normal_Location;
-    GLuint texture_height_Location;
-    GLuint skybox_Location;
-    GLuint viewPos_Location;
-    GLuint PrevViewPos_Location;
+    GLuint MVP_Location = -1;
+    GLuint WorldTransform_Location = -1;
+    GLuint Projection_Location = -1;
+    GLuint View_Location = -1;
+    GLuint ViewDirection_Location = -1;
+    GLuint ViewPosition_Location = -1;
+    GLuint LightSpaceMatrix_Location = -1;
+    GLuint ModelView3x3Matrix_Location = -1;
+    GLuint NormalMatrix_Location = -1;
+    GLuint LightDirection_Location = -1;
+    GLuint ClipPlane_Location = -1;
+    GLuint Time_Location = -1;
+    GLuint texture_diffuse_Location = -1;
+    GLuint texture_specular_Location = -1;
+    GLuint texture_normal_Location = -1;
+    GLuint texture_height_Location = -1;
+    GLuint skybox_Location = -1;
+    GLuint viewPos_Location = -1;
+    GLuint PrevViewPos_Location = -1;
 
 };
 }

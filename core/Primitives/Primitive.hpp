@@ -6,6 +6,8 @@
 #include <Driver/API/OpenGL/VertexArrayObject.h>
 #include <Driver/API/OpenGL/VertexBufferObject.h>
 
+#include "Helpers.hpp"
+
 namespace Epsilon
 {
 

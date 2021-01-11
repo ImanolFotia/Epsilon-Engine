@@ -20,6 +20,7 @@ namespace GLSLPreProcessor {
 
         std::string Line = "";
         bool excludeLine = false;
+        unsigned int LineCount = 0;
 		while(getline(InputShaderStringStream, Line))
         {
             for(int i = 0; i < 2; i++)
@@ -49,7 +50,10 @@ namespace GLSLPreProcessor {
                 excludeLine = false;
             }
             else{
-                OutputShaderString += "\n" + Line;}
+                OutputShaderString += "\n" + Line;
+                }
+
+            LineCount++;
         }
 		InputShaderStringStream.close();
 

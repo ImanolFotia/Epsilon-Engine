@@ -27,9 +27,11 @@ uniform int CubemapID;
 uniform int AmbientProbeID;
 uniform mat4 projection;
 uniform bool parallaxOn;
-uniform float u_scaleFactor = 1.0;
+uniform float u_scaleFactor = 2.5;
 uniform ivec2 Resolution;
 uniform bool isTransparent = false;
+
+const float PI = 3.14159;
 
 //Near and far camera planes (should be turned into uniforms at some point)
 const float NEAR = 0.1;
@@ -79,6 +81,9 @@ layout(std430, binding = 1) buffer AmbientLightSSBO
 
 int WIDTH = 7;
 int DEPTH = 7;
+
+
+
 
 float LinearizeDepth(float depth)
 {
@@ -276,6 +281,23 @@ vec3 bilinear(
 #endif 
 } 
 
+vec3 CosineInterpolate(
+    inout float tx, 
+    inout float ty, 
+    in vec3 c00, 
+    in vec3 c10, 
+    in vec3 c01, 
+    in vec3 c11) {
+
+    float ax = (1.0 - cos(tx * PI)) / 2.0;  
+    float ay = (1.0 - cos(ty * PI)) / 2.0;  
+
+    vec3 a = (c00*(1.0 - ax) + c10*ax);
+    vec3 b = (c01*(1.0 - ax) + c11*ax);
+
+    return (a * (1.0 - ay) + b * ay);
+}
+
 void main()
 {
   vec3 camDir = normalize((fs_in.TBN * viewPos) - (fs_in.TBN * fs_in.wFragPos));
@@ -285,6 +307,7 @@ void main()
     texCoords = ParallaxMapping(fs_in.TexCoords, camDir);
   else
     texCoords = fs_in.TexCoords;
+
 
   ivec2 invFragCoord = ivec2(gl_FragCoord);///ivec2(fragCoord);  
   int indexX = int(mod(int(invFragCoord.x), 4)); 
@@ -343,12 +366,15 @@ void main()
   float mov = 0;//((sin(time)*0.5+0.5) * 10);
   float mov2 = 0;//((cos(time)*0.5+0.5) * 10);
 
-  vec3 SPHFragPos = fs_in.wFragPos + vec3(0, 0, 0);
+  vec3 SPHFragPos = fs_in.wFragPos + vec3(34, 0, 34);
 
-  l_probeId.x = (myround(SPHFragPos.x, 10) + 35);
-  l_probeId.y = (myround(SPHFragPos.y, 5));
-  l_probeId.z = (myround(SPHFragPos.z, 10) + 35);
-  
+  vec3 gridSize = vec3(10, 5, 10);
+
+  //l_probeId.x = //(myround(SPHFragPos.x, 10) + 35);
+  //l_probeId.y = //(myround(SPHFragPos.y, 5));
+  //l_probeId.z = //(myround(SPHFragPos.z, 10) + 35);
+  l_probeId = ivec3(SPHFragPos) /*+ ivec3(34, 0, 34)*/;
+
   vec3 l_probe_pos = l_probeId;
 
   l_probeId /= ivec3(10, 5, 10);
@@ -360,25 +386,29 @@ void main()
   int index = int(l_probeId.x) + (int(l_probeId.y)*WIDTH) + (int(l_probeId.z)*WIDTH*DEPTH);
   //int index = int(l_probeId.x) + WIDTH * (int(l_probeId.y) + DEPTH * int(l_probeId.z));
 
+  
+
   //index = clamp(index, 0, 7*7*7);
   vec3 c000 = sphericalHarmonics(normalize(gExpensiveNormal.rgb), l_probeId) * u_scaleFactor;
-  vec3 c010    = sphericalHarmonics(normalize(gExpensiveNormal.rgb), l_probeId + ivec3(0,1,0)) * u_scaleFactor;
-  vec3 c011 = sphericalHarmonics(normalize(gExpensiveNormal.rgb), l_probeId + ivec3(0,1,1)) * u_scaleFactor;
-  vec3 c100  = sphericalHarmonics(normalize(gExpensiveNormal.rgb), l_probeId + ivec3(1,0,0)) * u_scaleFactor;
-  vec3 c110   = sphericalHarmonics(normalize(gExpensiveNormal.rgb), l_probeId + ivec3(1,1,0)) * u_scaleFactor;
-  vec3 c001  = sphericalHarmonics(normalize(gExpensiveNormal.rgb), l_probeId + ivec3(0,0,1)) * u_scaleFactor;
-  vec3 c101   = sphericalHarmonics(normalize(gExpensiveNormal.rgb), l_probeId + ivec3(1,0,1)) * u_scaleFactor;
-  vec3 c111   = sphericalHarmonics(normalize(gExpensiveNormal.rgb), l_probeId + ivec3(1,1,1)) * u_scaleFactor;
+  vec3 c010    = sphericalHarmonics(normalize(gExpensiveNormal.rgb), clamp(l_probeId + ivec3(0,1,0), ivec3(0), ivec3(6))) * u_scaleFactor;
+  vec3 c011 = sphericalHarmonics(normalize(gExpensiveNormal.rgb), clamp(l_probeId + ivec3(0,1,1), ivec3(0), ivec3(6))) * u_scaleFactor;
+  vec3 c100  = sphericalHarmonics(normalize(gExpensiveNormal.rgb), clamp(l_probeId + ivec3(1,0,0), ivec3(0), ivec3(6))) * u_scaleFactor;
+  vec3 c110   = sphericalHarmonics(normalize(gExpensiveNormal.rgb), clamp(l_probeId + ivec3(1,1,0), ivec3(0), ivec3(6))) * u_scaleFactor;
+  vec3 c001  = sphericalHarmonics(normalize(gExpensiveNormal.rgb), clamp(l_probeId + ivec3(0,0,1), ivec3(0), ivec3(6))) * u_scaleFactor;
+  vec3 c101   = sphericalHarmonics(normalize(gExpensiveNormal.rgb), clamp(l_probeId + ivec3(1,0,1), ivec3(0), ivec3(6))) * u_scaleFactor;
+  vec3 c111   = sphericalHarmonics(normalize(gExpensiveNormal.rgb), clamp(l_probeId + ivec3(1,1,1), ivec3(0), ivec3(6))) * u_scaleFactor;
 
-  float tx, ty, tz; 
-  float gx = SPHFragPos.x / ambientDivider.x; int gxi = int(gx); tx = gx - gxi; 
-  float gy = SPHFragPos.y / ambientDivider.y; int gyi = int(gy); ty = gy - gyi; 
-  float gz = SPHFragPos.z / ambientDivider.z; int gzi = int(gz); tz = gz - gzi; 
-  vec3 e = bilinear(tx, ty, c000, c100, c010, c110); 
-  vec3 f = bilinear(tx, ty, c001, c101, c011, c111); 
-  vec3 g = e * (1 - tz) + f * tz; 
+  vec3 t; 
+  ivec3 gi;
+  vec3 g = SPHFragPos / gridSize; gi = ivec3(g); t = g - gi; 
+  //vec3 e = bilinear(t.x, t.y, c000, c100, c010, c110); 
+  //vec3 f = bilinear(t.x, t.y, c001, c101, c011, c111); 
 
-  gLightAccumulation.rgb = c000;//mix(left, right, rl_d); 
+  vec3 e = CosineInterpolate(t.x, t.y, c000, c100, c010, c110);
+  vec3 f = CosineInterpolate(t.x, t.y, c001, c101, c011, c111); 
+  vec3 c = e * (1.0 - t.z) + f * t.z; 
+
+  gLightAccumulation.rgb = clamp(c, vec3(0.01), vec3(1.0));//mix(left, right, rl_d); 
 
   gDepth = vec4(gl_FragCoord.z, CubeMapcolor.rgb);
 }

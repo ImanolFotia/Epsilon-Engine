@@ -40,9 +40,18 @@ namespace Epsilon
 				return mType;
 			}
 
+			void setID(uint32_t id) {
+				mId = id;
+			}
+
+			uint32_t getID() {
+				return mId;
+			}
+
 		private:
 			enum Type mType;
 			std::string m_Name;
+			uint32_t mId;
 		};
 	} // namespace Physics
 } // namespace Epsilon

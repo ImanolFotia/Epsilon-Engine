@@ -41,7 +41,7 @@ namespace Epsilon
         void CheckforPicking(btVector3, btVector3);
 
     private:
-        bool pickObject(btVector3, btVector3);
+        btRigidBody * pickObject(btVector3, btVector3);
 
         bool moveObject();
 

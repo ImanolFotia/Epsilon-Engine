@@ -2,6 +2,8 @@
 
 #include <Driver/API/Context.hpp>
 
+#include <ProgramData.h>
+
 namespace Epsilon
 {
     class Engine
@@ -29,6 +31,10 @@ namespace Epsilon
         void Width(unsigned w) { WindowWidth = w; }
         void Height(unsigned h) { WindowHeight = h; }
 
+        const ProgramData & Settings() {
+            return mProgramData;
+        }
+
     private:
         Engine() = default;
 
@@ -37,5 +43,7 @@ namespace Epsilon
 
         unsigned WindowWidth = 800;
         unsigned WindowHeight = 600;
+
+        ProgramData mProgramData;
     };
 } // namespace Epsilon

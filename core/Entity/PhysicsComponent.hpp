@@ -65,6 +65,7 @@ namespace Epsilon
 
                     m_LastPhysicsWorldPosition = m_PhysicsWorldPosition;
                     m_PhysicsWorldRotation = mRigidBodyPointer->Body->getOrientation();
+                    //mRigidBodyPointer->Body->
 
                     btTransform transf = getTransform();
 
@@ -95,11 +96,23 @@ namespace Epsilon
                 return mMass > 0 ? false : true;
             }
 
+            void addForce(glm::vec3 force) {
+                mAtractor = force;
+            }
+
             void Update()
             {
+                
+                auto position = mRigidBodyPointer->Body->getCenterOfMassPosition();
+                btVector3 Body2Atractor = btVector3(mAtractor.x, mAtractor.y, mAtractor.z) - position ;
+
+                float distance = Body2Atractor.length();
+
+                mRigidBodyPointer->Body->applyCentralImpulse(Body2Atractor.normalize() * 600.0 * 1.0 / distance);
 
                 m_LastPhysicsWorldPosition = m_PhysicsWorldPosition;
                 m_PhysicsWorldPosition = mRigidBodyPointer->Body->getCenterOfMassPosition();
+                
                 m_LastPhysicsWorldRotation = m_PhysicsWorldRotation;
                 m_PhysicsWorldRotation = mRigidBodyPointer->Body->getOrientation();
             }
@@ -107,6 +120,12 @@ namespace Epsilon
             void setUserPointer(void *userPointer)
             {
                 mRigidBodyPointer->Body->setUserPointer(userPointer);
+            }
+
+            void setID(uint32_t id) {
+                Physics::CollisionInfo* collinfo = reinterpret_cast<Physics::CollisionInfo*>(mRigidBodyPointer->Body->getUserPointer());
+                collinfo->setID(id);
+                mRigidBodyPointer->Body->setUserPointer(collinfo);
             }
 
             btTransform getTransform()
@@ -162,8 +181,10 @@ namespace Epsilon
             btQuaternion m_LastPhysicsWorldRotation;
 
             glm::quat m_Rotation;
+            glm::vec3 mAtractor;
         };
 
         using PhysicComponent_ptr = std::shared_ptr<PhysicComponent>;
+
     } // namespace Component
 } // namespace Epsilon

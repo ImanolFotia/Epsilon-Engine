@@ -3,153 +3,177 @@
 #include <pch.hpp>
 #include <Core.hpp>
 #include <Driver/API/OpenGL/RenderTarget.h>
-
-template <typename T>
-class FrameBuffer
+namespace Epsilon
 {
-public:
-    FrameBuffer(int width, int height, bool DepthAttachment)
+    namespace OpenGL
     {
-        glGetIntegerv(GL_MAX_DRAW_BUFFERS, &MAX_RENDER_TARGETS);
-        glGenFramebuffers(1, &m_FramebufferHandler);
-        m_RenderTargetCount = 0;
-
-        WIDTH = width;
-        HEIGHT = height;
-
-        isDepthAttachment = DepthAttachment;
-    }
-
-    ~FrameBuffer() {}
-
-    bool addRenderTarget(T name, int internalformat, int format, int magfilter, int minfilter, bool mipmaps, GLuint target = GL_TEXTURE_2D)
-    {
-        if(m_RenderTargetCount >= MAX_RENDER_TARGETS)
+        template <typename T>
+        class FrameBuffer
         {
-            std::cout << "FRAMEBUFFER ERROR: MAX DRAW BUFFERS REACHED" << std::endl;
-            return false;
-        }
+        public:
+            FrameBuffer(int width, int height, bool DepthAttachment)
+            {
+                glGetIntegerv(GL_MAX_DRAW_BUFFERS, &MAX_RENDER_TARGETS);
+                glGenFramebuffers(1, &m_FramebufferHandler);
+                m_RenderTargetCount = 0;
 
-        this->bindFramebuffer();
+                WIDTH = width;
+                HEIGHT = height;
 
-        m_RenderTargets[name] = (std::shared_ptr<RenderTarget>) new RenderTarget(WIDTH, HEIGHT, internalformat, format, magfilter, minfilter, GL_COLOR_ATTACHMENT0 + m_RenderTargetCount, mipmaps, target);
+                isDepthAttachment = DepthAttachment;
+            }
 
-        m_RenderTargetCount++;
+            ~FrameBuffer() {}
 
-        this->unbindFramebuffer();
+            bool addRenderTarget(T name, int internalformat, int format, int magfilter, int minfilter, bool mipmaps, GLuint target = GL_TEXTURE_2D)
+            {
+                if (m_RenderTargetCount >= MAX_RENDER_TARGETS)
+                {
+                    std::cout << "FRAMEBUFFER ERROR: MAX DRAW BUFFERS REACHED" << std::endl;
+                    return false;
+                }
 
-        return true;
-    }
+                this->bindFramebuffer();
 
-    bool FinishFrameBuffer()
-    {
-        if(isDepthAttachment)
-            addDepthAttachment();
+                m_RenderTargets[name] = (std::shared_ptr<RenderTarget>)new RenderTarget(WIDTH, HEIGHT, internalformat, format, magfilter, minfilter, GL_COLOR_ATTACHMENT0 + m_RenderTargetCount, mipmaps, target);
 
-        this->bindFramebuffer();
+                m_RenderTargetCount++;
 
-        std::vector<GLenum> DrawBuffers(m_RenderTargetCount);
+                this->unbindFramebuffer();
 
-        for(auto i = 0; i < m_RenderTargetCount; ++i)
-            DrawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
+                return true;
+            }
 
-        glDrawBuffers(m_RenderTargetCount, &DrawBuffers[0]);
+            bool FinishFrameBuffer(bool no_color_buffers = false)
+            {
+                if (isDepthAttachment)
+                    addDepthAttachment();
 
-        this->checkFramebuffer();
+                this->bindFramebuffer();
 
-        return true;
-    }
+                std::vector<GLenum> DrawBuffers(m_RenderTargetCount);
 
-    bool addDepthAttachment()
-    {
-        this->bindFramebuffer();
-        glGenRenderbuffers(1, &m_DepthTextureTarget);
-        glBindRenderbuffer(GL_RENDERBUFFER, m_DepthTextureTarget);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_DepthTextureTarget);
-        this->unbindFramebuffer();
+                if(!no_color_buffers) {
+                    for (auto i = 0; i < m_RenderTargetCount; ++i)
+                        DrawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
 
-        return true;
-    }
+                    glDrawBuffers(m_RenderTargetCount, &DrawBuffers[0]);
+                }
 
-    void bindFramebuffer()
-    {
-        glBindFramebuffer(GL_FRAMEBUFFER, m_FramebufferHandler);
-    }
+                this->checkFramebuffer();
 
-    void unbindFramebuffer()
-    {
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    }
+                return true;
+            }
 
-    void setViewport()
-    {
-        glViewport(0,0,WIDTH, HEIGHT);
-    }
-    
-    void setViewport(int w, int h)
-    {
-        glViewport(0,0,w, h);
-    }
+            bool addDepthAttachment()
+            {
+                this->bindFramebuffer();
+                glGenRenderbuffers(1, &m_DepthTextureTarget);
+                glBindRenderbuffer(GL_RENDERBUFFER, m_DepthTextureTarget);
+                glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
+                glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_DepthTextureTarget);
+                this->unbindFramebuffer();
 
-    void clearBuffer(int masks)
-    {
-        glClear(masks);
-    }
+                return true;
+            }
 
-    void UpdateMipMaps()
-    {
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
+            void bindFramebuffer()
+            {
+                glBindFramebuffer(GL_FRAMEBUFFER, m_FramebufferHandler);
+            }
 
-    void setToRead()
-    {
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, m_FramebufferHandler);
-    }
+            void unbindFramebuffer()
+            {
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            }
 
-    void setToDraw()
-    {
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_FramebufferHandler);
-    }
+            void AttachRenderBuffer(T index) {
+                m_RenderTargets[index]->Attach();
+            }
 
-    bool checkFramebuffer()
-    {
-        this->bindFramebuffer();
-        GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+            void setViewport()
+            {
+                glViewport(0, 0, WIDTH, HEIGHT);
+            }
 
-        if (Status != GL_FRAMEBUFFER_COMPLETE)
-        {
-            std::cout << "Framebuffer error, status: " << Status << std::endl;
-            return false;
-        }
-        this->unbindFramebuffer();
+            void setViewport(int w, int h)
+            {
+                glViewport(0, 0, w, h);
+            }
 
-        return true;
-    }
+            void clearBuffer(int masks)
+            {
+                glClear(masks);
+            }
 
-    bool Destroy()
-    {
-        glDeleteFramebuffers(1, &m_FramebufferHandler);
+            void UpdateMipMaps()
+            {
+                glGenerateMipmap(GL_TEXTURE_2D);
+            }
 
-        return true;
-    }
+            void setToRead()
+            {
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, m_FramebufferHandler);
+            }
 
-    GLuint getRenderTargetHandler(T name)
-    {
-        return m_RenderTargets[name]->getRenderTextureTarget();
-    }
+            void setToDraw()
+            {
+                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_FramebufferHandler);
+            }
 
-    std::unordered_map<T, std::shared_ptr<RenderTarget> > m_RenderTargets;
+            void Resize(uint32_t w, uint32_t h) {
+                WIDTH = w;
+                HEIGHT = h;
 
-    int m_RenderTargetCount;
-    int MAX_RENDER_TARGETS;
-    int WIDTH;
-    int HEIGHT;
+                for(const auto& rt: m_RenderTargets) {
+                    rt->Resize(WIDTH, HEIGHT);
+                }
+            }
 
-    GLuint m_FramebufferHandler;
-    GLuint m_DepthTextureTarget;
+            bool checkFramebuffer()
+            {
+                this->bindFramebuffer();
+                GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
-    bool isDepthAttachment;
-};
+                if (Status != GL_FRAMEBUFFER_COMPLETE)
+                {
+                    std::cout << "Framebuffer error, status: " << Status << std::endl;
+                    return false;
+                }
+                this->unbindFramebuffer();
 
+                return true;
+            }
 
+            bool Destroy()
+            {
+                glDeleteFramebuffers(1, &m_FramebufferHandler);
+
+                return true;
+            }
+
+            void MakeInmutable(T index) {
+                glBindFramebuffer(GL_FRAMEBUFFER, m_FramebufferHandler);
+                m_RenderTargets.at(index)->MakeInmutable();
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            }
+
+            GLuint getRenderTargetHandler(T name)
+            {
+                return m_RenderTargets.at(name)->getRenderTextureTarget();
+            }
+
+            std::unordered_map<T, std::shared_ptr<RenderTarget>> m_RenderTargets;
+
+            int m_RenderTargetCount;
+            int MAX_RENDER_TARGETS;
+            int WIDTH;
+            int HEIGHT;
+
+            GLuint m_FramebufferHandler;
+            GLuint m_DepthTextureTarget;
+
+            bool isDepthAttachment;
+        };
+    } // namespace OpenGL
+} // namespace Epsilon

@@ -99,7 +99,6 @@ namespace Epsilon
 		std::vector<GLuint> m_renderTargets;
 		std::shared_ptr<OpenGLHelpers::FullScreenQuad> m_Quad;
 		std::shared_ptr<Shader> mPassThroughShader;
-		std::shared_ptr<FrameBuffer<std::string>> hdrFBO;
 		CUBEMAP_TYPE type;
 		int resolution;
 
