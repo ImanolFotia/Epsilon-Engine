@@ -1,6 +1,21 @@
 dist: focal
 
+compiler: gcc
+
+matrix:
+  include:
+      - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+      env:
+        - MATRIX_EVAL="CC=gcc-10 && CXX=g++-10"
+  
 before_install:
+  - eval "${MATRIX_EVAL}"
   - sudo apt-get update -y
   - sudo apt-get install cmake xorg-dev libglu1-mesa-dev
   - sudo apt-get install libglfw3-dev libglfw3
@@ -8,6 +23,10 @@ before_install:
   - sudo apt-get install libsoil-dev
   - sudo apt-get install libopenal-dev
   - sudo apt-get install libbullet-dev
+  - git clone https://github.com/ocornut/imgui.git ./thirdparty/imgui-docking/imgui-docking
+  - cd thirdpraty/imgui-docking/imgui-docking
+  - make
+  - cd ..; cd ..; cd ..
   - git clone https://github.com/benhoyt/inih.git ./thirdparty/inih-test
   - cd thirdparty/inih-test/
   - g++ -c ini.c -o ini.o
