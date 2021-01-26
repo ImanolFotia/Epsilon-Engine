@@ -19,7 +19,7 @@ namespace Epsilon {
             Renderer() = default;
 
             void PushCommand(RenderCommand_ptr comm) {
-                mQueue.Push(comm);
+                mQueue->Push(comm);
             }
 
             void Flush() {
@@ -32,6 +32,6 @@ namespace Epsilon {
 
         private:
 
-            RenderQueue mQueue;
+            RenderQueue_ptr mQueue;
     };
 }

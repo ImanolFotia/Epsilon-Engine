@@ -4,17 +4,20 @@
 
 #include "RenderCommand.hpp"
 
+#include <vector>
+
 namespace Epsilon
 {
     class RenderQueue
     {
         enum Order
         {
-            ASCEND = 0;
+            ASCEND = 0,
             DESCEND
         };
 
-    public : RenderQueue() = default;
+    public:
+        RenderQueue() = default;
         void Push(RenderCommand_ptr comm)
         {
             mQueue.push_back(comm);
@@ -69,4 +72,6 @@ namespace Epsilon
     private:
         std::vector<RenderCommand_ptr> mQueue;
     };
+
+    using RenderQueue_ptr = std::shared_ptr<RenderQueue>;
 } // namespace Epsilon
