@@ -30,7 +30,7 @@ private:
     btVector3 m_hitPos;
     btVector3 rayTo, rayFrom;
     btScalar m_oldPickingDist;
-
+ 
     bool active = false;
 
     int m_savedState;
