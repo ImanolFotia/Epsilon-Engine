@@ -2,7 +2,7 @@
 
 SRC = imgui.cpp imgui_draw.cpp imgui_widgets.cpp
 OBJ = $(SRC:.cpp=.o)
-OUT = libimgui_test.a
+OUT = libimgui.a
 INCLUDES = ./
 CCFLAGS = -g -O2
 CC = g++
