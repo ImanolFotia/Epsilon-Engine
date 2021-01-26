@@ -29,8 +29,9 @@ namespace Epsilon
 			//acum += deltaTime;
 			//if(acum >= 1/60){
 
-			mTimeStep = 1.0 / 240.0;//(deltaTime < 1.0 / 300.0) ? deltaTime : 1.0 / 60.0;
-
+			mTimeStep = (deltaTime < 1.0 / 240.0) ? deltaTime : 1.0 / 60.0;
+			mTimeStep = mTimeStep > .5 ? 1.0 / 60.0 : mTimeStep;
+			mTimeStep = 1.0 / 240.0;
 			std::static_pointer_cast<btSoftRigidDynamicsWorld>(world)->stepSimulation(deltaTime, 10, mTimeStep);
 			//acum = 0.0;
 			//}

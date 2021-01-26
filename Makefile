@@ -107,9 +107,9 @@ endif
 LD_FLAGS := -fopenmp
 
 ifeq "$(OS)" "Windows_NT"
-CPPFLAGS := --std=c++17 -static -static-libgcc -static-libstdc++ 
+CPPFLAGS := --std=c++20 -static -static-libgcc -static-libstdc++ 
 else 
-CPPFLAGS := --std=c++17 -static -static-libgcc -static-libstdc++ 
+CPPFLAGS := --std=c++20 -static -static-libgcc -static-libstdc++ 
 endif
 
 DEBUG_FLAGS := -g -DDEBUG -ggdb -g3 -gdwarf-4 -fvar-tracking-assignments

@@ -27,6 +27,7 @@
 
 #include <Engine.hpp>
 #include <Clock.hpp>
+#include <IO/File/Json.hpp>
 
 GLenum glCache::CullFaceMode = 0;
 GLuint glCache::ShaderId = 0;
@@ -255,7 +256,7 @@ namespace Epsilon
 
         shadowMap = std::move((shared_ptr<Renderer::ShadowMap>)(new Renderer::ShadowMap(DATA.SHADOWMAP_SIZE, DATA.SHADOWMAP_SIZE, -20.0f, 80.0f)));
 
-        mPointShadow = std::make_shared<Renderer::PointShadow>(glm::vec3(-5, 19.2,-28.74));
+        mPointShadow = std::make_shared<Renderer::PointShadow>(glm::vec3(-5, 19.2, -28.74));
         mPointShadow->Setup();
 
         //RenderSplashScreen("Loading Shaders...");
@@ -311,8 +312,8 @@ namespace Epsilon
         for (int a = 0; a < 3; a++)
             for (int b = 0; b < 3; b++)
                 for (int c = 0; c < 3; c++)
-                { 
-                    glm::vec3 tPosition = glm::vec3(3, -1.25, 21);
+                {
+                    glm::vec3 tPosition = glm::vec3(3, -1.0, 21);
                     glm::vec3 positions = tPosition + glm::vec3(a, b, c) * glm::vec3(2.0, 2.0, 2.0);
                     glm::vec3 tScale = glm::vec3(1.0f);
                     glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
@@ -367,7 +368,7 @@ namespace Epsilon
             EntityList.push_back(_Entity);
     }*/
         {
-            glm::vec3 tPosition = glm::vec3(-23, 1, 28); 
+            glm::vec3 tPosition = glm::vec3(-23, 1, 28);
             float tScale = 5.0f;
             glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
 
@@ -412,15 +413,15 @@ namespace Epsilon
                 xz[x][z] = (rand() % 30) - 15;
 
         MINMAX_POINTS limits;
-        limits.MAX_X = -36+(7*10);
+        limits.MAX_X = -36 + (7 * 10);
         limits.MIN_X = -36;
         limits.MAX_Y = -3.0;
         limits.MIN_Y = -12.0;
-        limits.MAX_Z = -36+(7*10);
+        limits.MAX_Z = -36 + (7 * 10);
         limits.MIN_Z = -36;
 
-         m_ParticleSystem = (std::shared_ptr<ParticleSystem>)new ParticleSystem();
-         m_ParticleSystem->addNewSystem(limits, MIST, 200);
+        m_ParticleSystem = (std::shared_ptr<ParticleSystem>)new ParticleSystem();
+        m_ParticleSystem->addNewSystem(limits, MIST, 200);
 
         //3 , 7, 30
         sun->Update();
@@ -632,7 +633,8 @@ namespace Epsilon
 
         AmbientLightSSBO = std::make_shared<Renderer::ShaderStorage>(SSBOSize, 1);
         AmbientLightSSBO->Init(&sphStruct);
-/*
+
+        /*
         glGenBuffers(1, &AmbientLightSSBO);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, AmbientLightSSBO);
         glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(SphericalHarmonics::SphericalHarmonicsFormat) * 7 * 7 * 7, (const void *)&sphStruct, GL_DYNAMIC_COPY);
@@ -868,7 +870,7 @@ namespace Epsilon
         BSPmodel = sModel;
         BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera[mCurrentCamera]->getProjectionMatrix() * eCamera[mCurrentCamera]->getViewMatrix()), BSPmodel);
         //shader->Use();
-        
+
         shader->PushUniform("FrameNumber", (int)window->FrameNumber());
         this->SetUniforms(shader, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.1, 0.1, 0.1), glm::quat(0.0, 0.0, 0.0, 0.0));
         BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), shader->getProgramID(), false);
@@ -996,12 +998,11 @@ namespace Epsilon
             //ImGui::SetNextWindowPos(ImVec2(0, 0));
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(30.0f, 10.0f));
             //
-            
-                                    
+
             ImGui::SetNextWindowSize(ImVec2(this->WIDTH, this->HEIGHT), ImGuiCond_FirstUseEver);
             ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
             ImGui::Begin("Main Window", NULL, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBringToFrontOnFocus); // Create a window called "Hello, world!" and append into it.
-                                                                                                                                         //ImGui::
+                                                                                                                                                                                  //ImGui::
             if (ImGui::BeginMainMenuBar())
             {
                 if (ImGui::BeginMenu("File"))
@@ -1036,6 +1037,26 @@ namespace Epsilon
                     }
                     if (ImGui::MenuItem("Save As.."))
                     {
+                    }
+                    if (ImGui::MenuItem("Add dummy object..."))
+                    {
+                        {
+                            glm::vec3 tPosition = glm::vec3(0, 0, 0);
+                            glm::vec3 tScale = glm::vec3(1.0f);
+                            glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
+                            std::string tModelName = "models/DRAGON.eml";
+
+                            std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(tPosition, tScale, tRotation);
+
+                            auto _RComp = std::make_shared<Component::RenderComponent>(tModelName, tPosition, "Main");
+                            _RComp->CastsShadows(true);
+                            _RComp->setTransparency(false);
+                            _RComp->setVisibility(true);
+                            //Component::Component_ptr _SComp = std::make_shared<Component::ScriptComponent>("scripts/test.lua");
+                            _Entity->addComponent(_RComp);
+
+                            EntityList.push_back(_Entity);
+                        }
                     }
 
                     ImGui::Separator();
@@ -1109,9 +1130,9 @@ namespace Epsilon
                 }
                 ImGui::EndMainMenuBar();
             }
-            
+
             ImGui::PopStyleVar();
-            //ImGui::Begin("Canvas", NULL);   
+            //ImGui::Begin("Canvas", NULL);
 
             /*Begin skybox window*/
 
@@ -1262,7 +1283,7 @@ namespace Epsilon
             ImGui::Text("View position: x=%.2f, y=%.2f, z=%.2f", eCamera[mCurrentCamera]->getPosition().x, eCamera[mCurrentCamera]->getPosition().y, eCamera[mCurrentCamera]->getPosition().z);
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             //ImGui::End();
-            
+
             ImGui::End();
         }
 
@@ -1316,7 +1337,6 @@ namespace Epsilon
         sun->Update();
 
         ResourceManager::Get().timestep = Clock::LastSeconds();
-
     }
 
     void Epsilon::RenderSkybox(bool state)
@@ -1598,8 +1618,10 @@ namespace Epsilon
     void Epsilon::ComputeShadow()
     {
 
-        for(auto & ent: EntityList) {
-            if(ent->HasPhysicComponent()) {
+        for (auto &ent : EntityList)
+        {
+            if (ent->HasPhysicComponent())
+            {
                 auto comp = ent->getComponent<Component::PhysicComponent_ptr>();
                 comp->addForce(glm::vec3(4, 10, 22));
             }
@@ -1609,14 +1631,14 @@ namespace Epsilon
         glm::vec3 camDir = eCamera[mCurrentCamera]->getDirection();
 
         shadowMap->setShadowPosition(glm::vec3(camPos.x + camDir.x * 30, camPos.y + 45.0f, camPos.z + camDir.z * 30));
- 
+
         shadowMap->setShadowDirection(sun->Direction);
 
         shadowMap->SetupShadowMatrices();
- 
+
         shadowMap->Begin(0);
         Shaders["ShadowMapping"]->Use();
-  
+
         //glEnable(GL_DEPTH_CLAMP);
         if (sun->height > 0.0)
             this->RenderShadows(Shaders["ShadowMapping"]);
@@ -1648,7 +1670,6 @@ namespace Epsilon
     this->SetUniforms(Shaders["grass"], glm::vec3(0, 0, 0), glm::vec3(0.05), glm::quat(-1, 0, -1, 0));
     grass.at(1).Render(Shaders["grass"]);
 */
-
 
         this->Render3D(Shaders["Main"]);
 
@@ -1714,14 +1735,13 @@ namespace Epsilon
         glEnable(GL_BLEND);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-
         //Blit to named default framebuffer
-        
+
         glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
         mDefaultFrameBuffer->setToDraw();
 
         glBlitFramebuffer(0, 0, this->WIDTH, this->HEIGHT, 0, 0, this->WIDTH, this->HEIGHT, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-        
+
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 } // namespace Epsilon

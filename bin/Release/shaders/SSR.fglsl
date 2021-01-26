@@ -103,16 +103,16 @@ void main()
     vec4 AlbedoSpec = texture(gAlbedo, TexCoords);
     float Spec = AlbedoSpec.w * 2.0;
 
-    if(Metallic <= 0.1 || Spec <= 0.1){
+    if(Metallic <= 0.0){
         isPlastic = true;
     }
  
     vec3 worldNormal = normalize(vec3(texture(gNormal, TexCoords)));
     vec3 seed = vec3(TexCoords, 1.0);
     vec3 viewNormal = vec3(vec4(worldNormal, 1.0) * invView);
-	viewNormal.x *= 0.05;
+	//viewNormal.x *= 0.05;
     vec3 viewPos = PositionFromDepth( texture(gDepth, TexCoords).x);
-    vec3 worldPos = vec3(invView * vec4(viewPos, 1.0));
+    vec3 worldPos = vec3(vec4(viewPos, 1.0) * invView);
     //vec3 albedo = texture(gAlbedo, TexCoords).rgb;
 
     if(texture(gDepth, TexCoords).x > 0.9999999)
@@ -136,8 +136,8 @@ void main()
  
     vec3 q = hitPos * 2.0 - 1.0;
     vec3 reflected = normalize(reflect(normalize(viewPos), normalize(viewNormal)));
-    float inAngle = dot(normalize(viewPos), normalize(worldNormal))*0.5+0.5;
-    inAngle = min(inAngle*2.0, 1.0);
+    float inAngle = abs(dot(normalize(viewPos), normalize(worldNormal)));
+    inAngle = min(inAngle, 0.0);
     rayStep = mix(minRayStep, maxRayStep, inAngle);
     vec3 samples = vec3(0.0);
     float screenEdgefactor;
@@ -156,19 +156,16 @@ void main()
         vec2 NoiseScale = Resolution / 4.0;
         vec3 random = vec3(texture(noiseTexture, (TexCoords.xy*20.0) + (1.0 - iTime)).rgb);
         float factor = Roughness*0.20;
-        hs = random;//clamp(random, vec3(0.0), vec3(1.0))*2.0-1.0;
+        hs = random;
         hs.x += -0.5;
-        hs.z += -1.0;
         hs.x *= 0.5;
-        hs.z *= 0.5;
         vec3 jitt = (mix(vec3(0.0), hs, factor));
         coords = RayCast((jitt + reflected) * max(maxRayStep, -viewPos.z), hitPos, dDepth);
-        dCoords = smoothstep(0.0, 0.55, abs(vec2(0.5, 0.5) - coords.xy));
+        dCoords = smoothstep(0.0, 0.5, abs(vec2(0.5, 0.5) - coords.xy));
         screenEdgefactor = clamp(1.0 - (dCoords.x + dCoords.y), 0.0, 1.0);
         vec2 pixelSize = 1.0 / textureSize(gFinalImage, 0).xy;
 
         samples += textureLod(gFinalImage, coords.xy, 0).rgb;
-
         samples += textureLod(gFinalImage, coords.xy + pixelSize, 0).rgb * 0.25;
         samples += textureLod(gFinalImage, coords.xy - pixelSize, 0).rgb * 0.25;
         samples += textureLod(gFinalImage, coords.xy + vec2(-pixelSize.x, pixelSize.y), 0).rgb * 0.25;
@@ -176,33 +173,17 @@ void main()
 
         samples *= 0.5;
 
-        ReflectionMultiplier = clamp(screenEdgefactor * (2.0-reflected.z), 0.0, 1.0);
-        // Get color
-        vec3 hN = texture(gNormal, coords.xy).xyz;
-        float VNvector = dot(hN, viewDir);
-
-        mask = int(clamp((1.0-screenEdgefactor*(2.0-reflected.z)), 0.0, 1.0));
-
-        float f = min(clamp(ReflectionMultiplier, 0.0, 1.0),
-                        clamp(screenEdgefactor*(2.0-reflected.z), 0.0, 1.0));
-
-        edge = smoothstep(0.3, 0.7, abs(TexCoords.xy));
-
         SSR = mix(samples, texture(gDepth, TexCoords).gba, clamp(1.0-screenEdgefactor, 0.0, 1.0));
-        
     }
     else
     {
         SSR = texture(gDepth, TexCoords, 0).gba;
     }
-    outColor = vec4(SSR * Spec * (Fresnel * brdf.x + brdf.y), 1.0);
+    outColor = vec4(SSR * (1.0 - Roughness) * (Fresnel * brdf.x + brdf.y), 1.0);
 
     if(!isMoving && ID <= 250)
         outColor = outColor + PrevReflection;
         
-    //outColor = vec4(mix(vec3(1.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0), min(edge.x, edge.y)), 1.0);
-    //outColor = vec4(edge.xy, 0.0, 1.0);
-    //outColor /= 2.0;
 }
 
 vec3 PositionFromDepth(float depth) {
@@ -211,7 +192,6 @@ vec3 PositionFromDepth(float depth) {
     vec4 clipSpacePosition = vec4(TexCoords * 2.0 - 1.0, z, 1.0);
     vec4 viewSpacePosition = invprojection * clipSpacePosition;
 
-    // Perspective division
     viewSpacePosition /= viewSpacePosition.w;
 
     return viewSpacePosition.xyz;
@@ -237,7 +217,6 @@ vec3 BinarySearch(inout vec3 dir, inout vec3 hitCoord, inout float dDepth)
 
         hitCoord += (dDepth > 0.0) ? dir : -dir;
     }
-
         projectedCoord = projection * vec4(hitCoord, 1.0);
         projectedCoord.xy /= projectedCoord.w;
         projectedCoord.xy = projectedCoord.xy * 0.5 + 0.5;
@@ -247,15 +226,12 @@ vec3 BinarySearch(inout vec3 dir, inout vec3 hitCoord, inout float dDepth)
 
 vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
 {
-
     dir *= rayStep;
- 
  
     float depth;
     int steps = 0;
     vec4 projectedCoord;
 
- 
     hitCoord += dir;
     int miplevel = 0;
     for(int i = 0; i < maxSteps; i++)
@@ -265,8 +241,6 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
         projectedCoord.xy /= projectedCoord.w;
         projectedCoord.xy = projectedCoord.xy * 0.5 + 0.5;
  
-        //depth = texture(gPosition, projectedCoord.xy, 2.0).x;
-        //depth = PositionFromDepth(textureLod(gDepth, projectedCoord.xy, 3.0).x).z;
         depth = ViewSpaceZFromDepth(texture(gDepth, projectedCoord.xy, miplevel).x);
 
         if(depth > 1000.0){
@@ -274,8 +248,7 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
         }
  
         dDepth = hitCoord.z - depth;
-        
-        //if((dir.z - dDepth) < 1.0)
+    
         if(dDepth < 0.0 || (dir.z - dDepth) < 1.5) {
             do {
 
@@ -300,9 +273,7 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
         miplevel = clamp(miplevel, 0, 5);
     }
  
-    if(depth<1000)
-        return vec4(0.0);
-
+    if(depth<1000) return vec4(0.0);
 
     return vec4(projectedCoord.xy, 0.0, 0.0);
 }
@@ -316,7 +287,6 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
     float F90 = saturate(dot(F0, vec3(50.0 * 0.33)));
     return F0 + (F90 - F0) * pow(1.0 - clamp(cosTheta, 0.0, 1.0), 5.0);
 }
-
 
 vec3 hash(vec3 a)
 {

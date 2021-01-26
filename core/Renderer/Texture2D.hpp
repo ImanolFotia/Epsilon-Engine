@@ -81,6 +81,10 @@ namespace Epsilon
                 mTexture->Destroy();
             }
 
+            unsigned int ID() override {
+                return mTexture->ID();
+            }
+
         private:
             void _Create() {}
         };

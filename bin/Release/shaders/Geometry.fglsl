@@ -379,9 +379,9 @@ void main()
 
   l_probeId /= ivec3(10, 5, 10);
 
-  l_probeId.x = clamp(l_probeId.x, 0, 6); 
-  l_probeId.y = clamp(l_probeId.y, 0, 6); 
-  l_probeId.z = clamp(l_probeId.z, 0, 6); 
+  l_probeId.x = clamp(l_probeId.x, 0, 7); 
+  l_probeId.y = clamp(l_probeId.y, 0, 7); 
+  l_probeId.z = clamp(l_probeId.z, 0, 7); 
 
   int index = int(l_probeId.x) + (int(l_probeId.y)*WIDTH) + (int(l_probeId.z)*WIDTH*DEPTH);
   //int index = int(l_probeId.x) + WIDTH * (int(l_probeId.y) + DEPTH * int(l_probeId.z));

@@ -2,24 +2,46 @@
 
 namespace Epsilon
 {
-    std::string ResourceManager::requestTexture(const std::string& texPath)
+    std::string ResourceManager::requestTexture(const std::string &texPath)
     {
         try
         {
-            std::map<std::string, std::shared_ptr<eTexture>>::iterator it;
+            std::map<std::string, std::shared_ptr<Renderer::Texture2D>>::iterator it;
             it = TextureList.find(texPath);
             if (it != TextureList.end())
             {
-                return TextureList.at(it->first)->getPath();
+                return texPath;//TextureList.at(it->first)->getPath();
             }
             else
             {
-                std::shared_ptr<eTexture> tmpTex = (std::shared_ptr<eTexture>)new eTexture(texPath.c_str());
+                /*std::shared_ptr<eTexture> tmpTex = (std::shared_ptr<eTexture>)new eTexture(texPath.c_str());
+                TextureList.insert(std::make_pair(texPath, tmpTex));
+                return texPath;*/
+
+                using Renderer::Texture2D;
+
+                API::TextureBase::TextureBase::TextureData TextureData;
+                TextureData.MakeDefaultGL();
+
+                auto is_normal = Helpers::isNormal(texPath.c_str());
+                TextureData.Compressed = !is_normal;
+                TextureData.SRGB = !is_normal;
+
+                int outwidth = 0, outheight = 0, outchannels = 0;
+                auto path = ("materials/" + std::string(texPath)).c_str();
+                auto data = SOIL_load_image(path, &outwidth, &outheight, &outchannels, SOIL_LOAD_RGBA);
+                TextureData.Width = outwidth;
+                TextureData.Height = outheight;
+                auto tmpTex = std::make_shared<Texture2D>();
+                tmpTex->Create(TextureData);
+                tmpTex->setData(data, 0);
+                SOIL_free_image_data(data);
+                data = nullptr;
                 TextureList.insert(std::make_pair(texPath, tmpTex));
                 return texPath;
             }
         }
-        catch (std::exception& e)
+        catch (std::exception &e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
@@ -27,7 +49,7 @@ namespace Epsilon
         return "";
     }
 
-    std::string ResourceManager::requestModel(const std::string& modelPath, glm::vec3 Pos, glm::vec3 scs, glm::quat rot)
+    std::string ResourceManager::requestModel(const std::string &modelPath, glm::vec3 Pos, glm::vec3 scs, glm::quat rot)
     {
         try
         {
@@ -52,15 +74,15 @@ namespace Epsilon
         return "";
     }
 
-    void ResourceManager::useModel(const std::string& modelPath, std::shared_ptr<Shader> shader, glm::vec3 pos = glm::vec3(0, 0, 0))
+    void ResourceManager::useModel(const std::string &modelPath, std::shared_ptr<Shader> shader, glm::vec3 pos = glm::vec3(0, 0, 0))
     {
         try
         {
-            
+
             ModelList.at(modelPath).Draw(shader);
         }
 
-        catch (std::exception& e)
+        catch (std::exception &e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << "useModel(" << modelPath << ", shader"
                       << ",glm:vec3(" << pos.x << ", " << pos.y << ", " << pos.z << ") :::" << e.what() << std::endl;
@@ -80,7 +102,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
     }
 }*/
 
-    Model ResourceManager::getModel(const std::string& modelPath)
+    Model ResourceManager::getModel(const std::string &modelPath)
     {
         try
         {
@@ -95,14 +117,14 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         return Model("", glm::vec3(0, 0, 0));
     }
 
-    MIN_MAX_POINTS ResourceManager::getModelBoundingBox(const std::string& modelPath)
+    MIN_MAX_POINTS ResourceManager::getModelBoundingBox(const std::string &modelPath)
     {
         try
         {
             return ModelList.at(modelPath).MinMaxPoints;
         }
 
-        catch (std::exception& e)
+        catch (std::exception &e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
@@ -110,32 +132,32 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         return MIN_MAX_POINTS();
     }
 
-    void ResourceManager::setModelVisibility(const std::string& path, bool visibility)
+    void ResourceManager::setModelVisibility(const std::string &path, bool visibility)
     {
         ModelList.at(path).m_IsVisible = visibility;
     }
 
-    glm::quat ResourceManager::getModelRotation(const std::string& path)
+    glm::quat ResourceManager::getModelRotation(const std::string &path)
     {
         return ModelList.at(path).Rotation;
     }
 
-    glm::vec3 ResourceManager::getModelPosition(const std::string& path)
+    glm::vec3 ResourceManager::getModelPosition(const std::string &path)
     {
         return ModelList.at(path).Position;
     }
 
-    glm::vec3 ResourceManager::getModelScale(const std::string& path)
+    glm::vec3 ResourceManager::getModelScale(const std::string &path)
     {
         return ModelList.at(path).Scale;
     }
 
     //void ResourceManager::setModelUniforms(const std::string& path, std::shared_ptr<Shader> shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, std::shared_ptr<Camera> cam)
     //{
-        //ModelList.at(path).SetUniforms(shader, pos, sc, rot, cam);
+    //ModelList.at(path).SetUniforms(shader, pos, sc, rot, cam);
     //}
 
-    void ResourceManager::setModelUniforms(const std::string& path, std::shared_ptr<Shader> shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, glm::vec3 ppos, glm::vec3 psc, glm::quat prot, std::shared_ptr<Camera> cam)
+    void ResourceManager::setModelUniforms(const std::string &path, std::shared_ptr<Shader> shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, glm::vec3 ppos, glm::vec3 psc, glm::quat prot, std::shared_ptr<Camera> cam)
     {
         ModelList.at(path).SetUniforms(shader, pos, sc, rot, ppos, psc, prot, cam);
     }
@@ -148,19 +170,19 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         }
     }
 
-    GLuint ResourceManager::useTexture(const std::string& texPath)
+    GLuint ResourceManager::useTexture(const std::string &texPath)
     {
         try
         {
             if (texPath.empty() != true)
             {
-                return TextureList.at(texPath)->getTextureID();
+                return TextureList.at(texPath)->ID();
             }
             else
                 return 0;
         }
 
-        catch (std::exception& e)
+        catch (std::exception &e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
@@ -168,34 +190,40 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         return -1;
     }
 
-    void ResourceManager::bindTexture(const std::string& texPath)
+    void ResourceManager::bindTexture(const std::string &texPath)
     {
 
         try
         {
             if (texPath.empty() != true)
             {
-                //return TextureList.at(texPath)->getTextureID();
-                TextureList.at(texPath)->bind();
+                if (TextureList.contains(texPath))
+                {
+                    TextureList.at(texPath)->Bind();
+                }
+                else
+                {
+                    requestTexture(texPath);
+                }
             }
             else
                 return;
         }
 
-        catch (std::exception& e)
+        catch (std::exception &e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << "//" << texPath << std::endl;
         }
     }
 
-    void ResourceManager::addTextureToQueue(const std::string& texture)
+    void ResourceManager::addTextureToQueue(const std::string &texture)
     {
         try
         {
             TextureQueue.push_back(texture);
             //std::cout << texture << " Added to the Queue." << std::endl;
         }
-        catch (std::exception& e)
+        catch (std::exception &e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
@@ -213,21 +241,21 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
                 TextureQueue.at(i).pop_back();
             }
         }
-        catch (std::exception& e)
+        catch (std::exception &e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
     }
 
-    int ResourceManager::requestTextureUsage(const std::string& texPath)
+    int ResourceManager::requestTextureUsage(const std::string &texPath)
     {
         try
         {
-            std::map<std::string, std::shared_ptr<eTexture>>::iterator it;
+            std::map<std::string, std::shared_ptr<Renderer::Texture2D>>::iterator it;
             it = TextureList.find(texPath);
             if (it != TextureList.end())
             {
-                return TextureList.at(it->first)->getTimesUsed();
+                return 0;//TextureList.at(it->first)->getTimesUsed();
             }
             else
             {
@@ -236,7 +264,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
                 return 0;
             }
         }
-        catch (std::exception& e)
+        catch (std::exception &e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
@@ -244,15 +272,15 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         return 0;
     }
 
-    void ResourceManager::resetTextureUsage(const std::string& texPath)
+    void ResourceManager::resetTextureUsage(const std::string &texPath)
     {
         try
         {
-            std::map<std::string, std::shared_ptr<eTexture>>::iterator it;
+            std::map<std::string, std::shared_ptr<Renderer::Texture2D>>::iterator it;
             it = TextureList.find(texPath);
             if (it != TextureList.end())
             {
-                TextureList.at(it->first)->resetRequestCount();
+                //TextureList.at(it->first)->resetRequestCount();
             }
             else
             {
@@ -269,13 +297,13 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
 
     void ResourceManager::destroyAllTextures()
     {
-        for (std::map<std::string, std::shared_ptr<eTexture>>::iterator itr = TextureList.begin(); itr != TextureList.end(); itr++)
+        for (std::map<std::string, std::shared_ptr<Renderer::Texture2D>>::iterator itr = TextureList.begin(); itr != TextureList.end(); itr++)
         {
             itr->second->Destroy();
         }
     }
 
-    std::string ResourceManager::requestShader(const std::string& shaderPathv, const std::string& shaderPathf, const std::string& name)
+    std::string ResourceManager::requestShader(const std::string &shaderPathv, const std::string &shaderPathf, const std::string &name)
     {
         try
         {
@@ -292,14 +320,14 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
                 return name;
             }
         }
-        catch (std::exception& e)
+        catch (std::exception &e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
 
         return "";
     }
-        std::string ResourceManager::requestShader(const std::string& shaderPathv, const std::string& shaderPathf, const std::string& shaderPathg, const std::string& name)
+    std::string ResourceManager::requestShader(const std::string &shaderPathv, const std::string &shaderPathf, const std::string &shaderPathg, const std::string &name)
     {
         try
         {
@@ -316,7 +344,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
                 return name;
             }
         }
-        catch (std::exception& e)
+        catch (std::exception &e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
@@ -324,7 +352,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         return "";
     }
 
-    std::shared_ptr<Shader> ResourceManager::useShader(const std::string& shaderPath)
+    std::shared_ptr<Shader> ResourceManager::useShader(const std::string &shaderPath)
     {
         try
         {
@@ -339,7 +367,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         return nullptr;
     }
 
-    GLuint ResourceManager::getShaderID(const std::string& shaderPath)
+    GLuint ResourceManager::getShaderID(const std::string &shaderPath)
     {
         try
         {
@@ -354,14 +382,14 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         return -1;
     }
 
-    std::shared_ptr<Shader> ResourceManager::getShader(const std::string& shaderPath)
+    std::shared_ptr<Shader> ResourceManager::getShader(const std::string &shaderPath)
     {
         try
         {
             return ShadersList.at(shaderPath);
         }
 
-        catch (std::exception& e)
+        catch (std::exception &e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
@@ -406,7 +434,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
                 std::cout << "Exception at requestCube" << std::endl;
             }
         }
-        catch (std::exception& e)
+        catch (std::exception &e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }

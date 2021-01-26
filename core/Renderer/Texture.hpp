@@ -36,6 +36,8 @@ namespace Epsilon
 
             virtual void Unbind() = 0;
 
+            virtual unsigned int ID() = 0;
+
         protected:
             std::shared_ptr<API::TextureBase> mTexture;
             API::ContextBase_ptr mContext;

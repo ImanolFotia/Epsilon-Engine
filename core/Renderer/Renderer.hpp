@@ -10,3 +10,28 @@
 
 #include <Renderer/Texture1D.hpp>
 #include <Renderer/Texture2D.hpp>
+
+#include "RenderQueue.hpp"
+
+namespace Epsilon {
+    class Renderer {
+        public:
+            Renderer() = default;
+
+            void PushCommand(RenderCommand_ptr comm) {
+                mQueue.Push(comm);
+            }
+
+            void Flush() {
+                
+            }
+
+            void RenderOpaque() {}
+
+            void RenderTransparent() {}
+
+        private:
+
+            RenderQueue mQueue;
+    };
+}

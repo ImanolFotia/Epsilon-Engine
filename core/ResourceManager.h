@@ -12,6 +12,8 @@
 #include <Helpers.hpp>
 #include <Physics/Physics.h>
 #include <Audio/Audio.h>
+#include <Renderer/Texture2D.hpp>
+
 namespace Epsilon
 {
     class ResourceManager
@@ -31,7 +33,7 @@ namespace Epsilon
 
         void Destroy()
         {
-            for (std::map<std::string, std::shared_ptr<eTexture>>::iterator itr = TextureList.begin(); itr != TextureList.end(); itr++)
+            for (std::map<std::string, std::shared_ptr<Renderer::Texture2D>>::iterator itr = TextureList.begin(); itr != TextureList.end(); itr++)
             {
                 //GLuint tex = itr->second->getTextureID();
                 itr->second->Destroy();
@@ -135,7 +137,7 @@ namespace Epsilon
 
         std::vector<int> mCubemapIndex;
 
-        std::map<std::string, std::shared_ptr<eTexture>> TextureList;
+        std::map<std::string, std::shared_ptr<Renderer::Texture2D>> TextureList;
         std::map<std::string, Water> WaterPlanesList;
         std::map<std::string, Terrain> TerrainList;
         std::map<std::string, Model> ModelList;
