@@ -18,13 +18,13 @@ namespace Epsilon
 
             this->radius = 30.0;
 
-            this->height = -30.0;
+            this->height = 30.0;
 
             PrepareVAO();
             std::cout << "Llega" << std::endl;
             std::cout << "Sun texture ID " << TextureID << std::endl;
             //mMovement = 2.6;
-            mMovement = 1.0;
+            mMovement = -1.0;
         }
         catch (std::exception &e)
         {

@@ -136,6 +136,7 @@ namespace Epsilon
         ImGui::CreateContext();
         ImGuiIO &io = ImGui::GetIO();
         (void)io;
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
         //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
@@ -435,6 +436,12 @@ namespace Epsilon
         this->RenderShadows(Shaders["ShadowMapping"]);
         shadowMap->End();
 
+        mPointShadow->Begin(0);
+
+        RenderShadows(ResourceManager::Get().getShader("PointShadow"));
+
+        mPointShadow->End();
+
         //this->mCubemap[1] = (std::shared_ptr<CubeMap>)new CubeMap(55, glm::vec3(10, 7, 10));
 
         glClearColor(0.1, 0.1, 0.1, 1.0);
@@ -527,6 +534,10 @@ namespace Epsilon
                                 glActiveTexture(GL_TEXTURE5);
                                 cubeShader->PushUniform("shadowMap", 5);
                                 glBindTexture(GL_TEXTURE_2D, shadowMap->getShadowTextureID());
+
+                                glActiveTexture(GL_TEXTURE6);
+                                cubeShader->PushUniform("gPointShadowMap", 6);
+                                glBindTexture(GL_TEXTURE_CUBE_MAP, mPointShadow->getTexture());
                                 //if(EntityList[i]->getModelPath() == "models/android.eml")
                                 //IO::PrintLine(EntityList[i]->getModelPath(), "position is ", EntityList[i]->getPosition().x, EntityList[i]->getPosition().y, EntityList[i]->getPosition().z);
                             }
@@ -940,50 +951,6 @@ namespace Epsilon
         GPU _gpu;
         int DEBUG_MODE = 3;
 
-        /*IO::PrintLine("Position: x = ",
-                      Helpers::floatTostring(this->eCamera[0]->getPosition().x),
-                      " y = ",
-                      Helpers::floatTostring(this->eCamera[0]->getPosition().y),
-                      " z = ",
-                      Helpers::floatTostring(this->eCamera[0]->getPosition().z));
-        /*
-    if(DEBUG_MODE >= 1) {
-        this->text->RenderText("FPS: " + Helpers::intTostring(acumfps), 0.01, 0.95, 0.5, glm::vec3(1,1,1));
-        this->text->RenderText("Frame Time: " + Helpers::floatTostring(frametime*1000) + "ms", 0.01, 0.91, 0.3, glm::vec3(1,1,1));
-        this->text->RenderText("Draw calls: " + Helpers::intTostring(glCache::DrawCalls), 0.01, 0.69, 0.3, glm::vec3(1,1,1));
-    }
-
-    if(DEBUG_MODE >= 2) {
-        this->text->RenderText("OpenGL: " + GL_VER,0.01, 0.89, 0.3, glm::vec3(1,1,1));
-        this->text->RenderText(GL_REN,0.01, 0.87, 0.3, glm::vec3(1,1,1));
-        this->text->RenderText(GL_VEN,0.01, 0.85, 0.3, glm::vec3(1,1,1));
-        this->text->RenderText(std::string("Total GPU Memory: " + Helpers::intTostring(_gpu.getTotalMemory()/1024) + "MB"),0.01, 0.83, 0.3, glm::vec3(1,1,1));
-        this->text->RenderText(std::string("Current GPU Memory Available: " + Helpers::intTostring(_gpu.getAvailableMemory()/1024) + "MB"),0.01, 0.81, 0.3, glm::vec3(1,1,1));
-        //this->text->RenderText(std::string("Current GPU Memory Available: " + Helpers::intTostring(cur_avail_mem_kb/1024) + "MB"),0.01, 0.77, 0.3, glm::vec3(1,1,1));
-        this->text->RenderText(std::string("Resolution: " + Helpers::intTostring(this->WIDTH) + "x" + Helpers::intTostring(this->HEIGHT)),0.01, 0.79, 0.3, glm::vec3(1,1,1));
-    }
-
-    if(DEBUG_MODE >= 3) {
-        std::string obj = rM->m_PhysicsWorld->getCollisionObjectName(btVector3(eCamera->getPosition().x, eCamera->getPosition().y, eCamera->getPosition().z),
-                          btVector3(eCamera->getDirection().x * 1000, eCamera->getDirection().y * 1000, eCamera->getDirection().z * 1000));
-
-        this->text->RenderText(std::string("Pointing at: ") + obj, 0.01, 0.71, 0.3, glm::vec3(1,0,0));
-        this->text->RenderText("Epsilon Engine Alpha Build. Version: " + std::string(AutoVersion::FULLVERSION_STRING), 0.01, 0.73, 0.3, glm::vec3(1,1,1));
-        this->text->RenderText
-        ("Position: x = " + Helpers::floatTostring(this->eCamera->getPosition().x) + " y = " + Helpers::floatTostring(this->eCamera->getPosition().y) + " z = " + Helpers::floatTostring(this->eCamera->getPosition().z), 0.01, 0.77, 0.3, glm::vec3(1,1,1));
-        this->text->RenderText
-        ("Direction: x = " + Helpers::floatTostring(this->eCamera->getDirection().x) + " y = " + Helpers::floatTostring(this->eCamera->getDirection().y) + " z = " + Helpers::floatTostring(this->eCamera->getDirection().z), 0.01, 0.75, 0.3, glm::vec3(1,1,1));
-        //this->text->RenderText("Draw calls: " + Helpers::intTostring(glCache::DrawCalls), 0.01, 0.69, 0.3, glm::vec3(1,1,1));
-    }
-*/
-        //this->text->RenderText("On ground: " + std::string(m_PlayerCapsule->isOnGround() ? "YES" : "NO"),0.01, 0.79, 0.3, glm::vec3(1,1,1));/*
-        //this->text->RenderText("Parallax Mapping: " + std::string(parallax ? "ON" : "OFF"),0.01, 0.83, 0.3, glm::vec3(1,1,1));*/
-
-        //this->text->RenderText(".", 0.5, 0.5, 1.0, glm::vec3(1,1,1));
-
-        //if (show_demo_window)
-        //    ImGui::ShowDemoWindow(&show_demo_window);
-
         bool show_app_metrics = false;
         bool show_app_style_editor = false;
         bool show_app_about = false;
@@ -994,15 +961,45 @@ namespace Epsilon
             static float f = 0.0f;
             static int counter = 0;
 
-            //ImGui::SetNextWindowSize(ImVec2(this->WIDTH, this->HEIGHT));
-            //ImGui::SetNextWindowPos(ImVec2(0, 0));
-            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(30.0f, 10.0f));
-            //
+            static ImGuiDockNodeFlags opt_flags = ImGuiDockNodeFlags_PassthruCentralNode;
 
-            ImGui::SetNextWindowSize(ImVec2(this->WIDTH, this->HEIGHT), ImGuiCond_FirstUseEver);
-            ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
-            ImGui::Begin("Main Window", NULL, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBringToFrontOnFocus); // Create a window called "Hello, world!" and append into it.
-                                                                                                                                                                                  //ImGui::
+            ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+
+            bool opt_fullscreen = true;
+            if (opt_fullscreen)
+            {
+                ImGuiViewport *viewport = ImGui::GetMainViewport();
+                ImGui::SetNextWindowPos(viewport->Pos);
+                ImGui::SetNextWindowSize(viewport->Size);
+                ImGui::SetNextWindowViewport(viewport->ID);
+                ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+                ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+                window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+                window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+            }
+
+            if (opt_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+                window_flags |= ImGuiWindowFlags_NoBackground;
+            ImGui::PushStyleColor(ImGuiCol_DockingEmptyBg);
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+            ImGui::Begin("Main Window", NULL, window_flags); // Create a window called "Hello, world!" and append into it.
+            ImGui::PopStyleVar();
+            ImGui::PopStyleColor();
+
+            if (opt_fullscreen)
+                ImGui::PopStyleVar(2);
+
+            ImGuiIO &io = ImGui::GetIO();
+            if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+            {
+                ImGuiID dockspace_id = ImGui::GetID("RootDockspace");
+                ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), opt_flags);
+            }
+            else
+            {
+                //ShowDockingDisabledMessage();
+            }
+
             if (ImGui::BeginMainMenuBar())
             {
                 if (ImGui::BeginMenu("File"))
@@ -1044,7 +1041,7 @@ namespace Epsilon
                             glm::vec3 tPosition = glm::vec3(0, 0, 0);
                             glm::vec3 tScale = glm::vec3(1.0f);
                             glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
-                            std::string tModelName = "models/DRAGON.eml";
+                            std::string tModelName = "models/esfera.eml";
 
                             std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(tPosition, tScale, tRotation);
 
@@ -1131,7 +1128,7 @@ namespace Epsilon
                 ImGui::EndMainMenuBar();
             }
 
-            ImGui::PopStyleVar();
+            //ImGui::PopStyleVar();
             //ImGui::Begin("Canvas", NULL);
 
             /*Begin skybox window*/
@@ -1155,7 +1152,7 @@ namespace Epsilon
             /*Begin scene window*/
             if (show_pipeline_viewer)
             {
-                static ImVec2 fu = ImVec2(300, 300);
+                static ImVec2 fu = ImVec2(960, 300);
                 ImGui::SetNextWindowSize(fu, ImGuiCond_FirstUseEver);
                 ImGui::Begin("Debug Framebuffer", &show_pipeline_viewer);
 
@@ -1199,7 +1196,7 @@ namespace Epsilon
                 unsigned int fb_size[3] = {(unsigned int)this->WIDTH, (unsigned int)this->HEIGHT, Shaders["ImGui_gamma"]->getProgramID()};
 
                 //ImGui::GetWindowDrawList()->AddCallback([]() { }, nullptr);
-                ImGui::Image((void *)TextureId, ImVec2(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y - 60), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 0.5f));
+                ImGui::Image((void *)TextureId, ImVec2(640, 360), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 0.5f));
 
                 //ImGui::GetWindowDrawList()->AddCallback(ImDrawCallback_ResetRenderState, nullptr);
                 ImGui::End();
@@ -1644,6 +1641,8 @@ namespace Epsilon
             this->RenderShadows(Shaders["ShadowMapping"]);
         //glDisable(GL_DEPTH_CLAMP);
         shadowMap->End();
+
+        Shaders["ShadowMapping"]->Free();
 
         //------------- Point Shadow ---------------
         mPointShadow->Begin(0);

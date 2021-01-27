@@ -232,8 +232,8 @@ float poissonShadowMapping(vec4 fragPosLightSpace){
     float distance = current - closest;
 
     for (int i=0;i<8;i++){
-        int index = int(64.0*random(floor(FragPos.xyz*1000.0), i))%64;
-        visibility -= 0.125*(texture(shadowMap, vec3(fragPosLightSpace.xy+ BlueNoiseInDisk[index]/700.0, fragPosLightSpace.z - bias)/fragPosLightSpace.w).r);
+        int index = int(16.0*random(floor(FragPos.xyz*1000.0), i))%16;
+        visibility -= 0.125*(texture(shadowMap, vec3(fragPosLightSpace.xy+ poissonDisk[index]/1400, fragPosLightSpace.z - bias)/fragPosLightSpace.w).r);
     }
     //visibility -= step(fragPosLightSpace.z, texture(shadowMap, vec3(fragPosLightSpace.xy, fragPosLightSpace.z-bias)).r);
     return visibility;
