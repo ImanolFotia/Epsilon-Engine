@@ -30,13 +30,14 @@ namespace Epsilon
             virtual ~WindowBase() {}
 
             virtual void Init(const char *, int, int) = 0;
-            virtual void Resize(int, int) const = 0;
+            virtual void OnResize(GLFWwindow*, int, int) = 0;
             virtual void Destroy() = 0;
             virtual void SwapBuffers() = 0;
             virtual void ShowCursor() = 0;
             virtual void HideCursor() = 0;
             virtual bool WantsToClose() = 0;
             virtual unsigned FrameNumber() = 0;
+            virtual bool NeedsToResize() = 0;
 
             void setWindowData(const WindowData &data)
             {
@@ -61,12 +62,13 @@ namespace Epsilon
                 mFrameNumber++;
             }
 
-        
         protected:
             std::shared_ptr<API::ContextBase> mContext;
             std::shared_ptr<WindowHandle<>> mWindowHandle;
-            WindowData mWindowData;
+            static WindowData mWindowData;
+            std::function<void(GLFWwindow*, int, int)> mOnResize;
             unsigned mFrameNumber = 0;
+            static bool mNeedsToResize;
         };
     } // namespace Platform
 } // namespace Epsilon

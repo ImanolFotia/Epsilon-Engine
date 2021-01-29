@@ -30,7 +30,7 @@ namespace Epsilon
     public:
         void Update(GLFWwindow *);
 
-        void UpdateMatrices(int);
+        void UpdateMatrices(int, int, int);
 
         glm::mat4 getViewMatrix(void);
 

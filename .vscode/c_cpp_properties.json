@@ -1,0 +1,27 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/core",
+                "${workspaceFolder}/thirdparty/glm",
+                "${workspaceFolder}/thirdparty/soil/Simple OpenGL Image Library/src",
+                "${workspaceFolder}/thirdparty/glfw/include",
+                "${workspaceFolder}/thirdparty/imgui/imgui",
+                "${workspaceFolder}/thirdparty/inih"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "windowsSdkVersion": "10.0.17134.0",
+            "compilerPath": "H:\\msys2\\msys64\\msys64\\mingw64\\bin\\g++.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-x64"
+        }
+    ],
+    "version": 4
+}

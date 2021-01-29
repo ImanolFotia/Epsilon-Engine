@@ -9,7 +9,7 @@ public:
     {
         glGenTextures(1, &m_RenderTextureTarget);
         glBindTexture(target, m_RenderTextureTarget);
-
+        mAttachment = attachment;
         if (internalformat == GL_DEPTH_COMPONENT)
             mAttachment = GL_DEPTH_ATTACHMENT;
 
@@ -62,10 +62,13 @@ public:
         mWidth = w;
         mHeight = h;
 
-        glDeleteTextures(1, &m_RenderTextureTarget);
+        //glDeleteTextures(1, &m_RenderTextureTarget);
 
         glGenTextures(1, &m_RenderTextureTarget);
         glBindTexture(mTarget, m_RenderTextureTarget);
+
+        if (mInternalFormat == GL_DEPTH_COMPONENT)
+            mAttachment = GL_DEPTH_ATTACHMENT;
 
         if (mTarget == GL_TEXTURE_CUBE_MAP)
         {
@@ -84,13 +87,14 @@ public:
             glTexParameteri(mTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(mTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glTexParameteri(mTarget, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, mAttachment, mTarget, m_RenderTextureTarget, 0);
+            glFramebufferTexture(GL_FRAMEBUFFER, mAttachment, m_RenderTextureTarget, 0);
         }
         glTexParameteri(mTarget, GL_TEXTURE_MAG_FILTER, mMagFilter);
         glTexParameteri(mTarget, GL_TEXTURE_MIN_FILTER, mMinFilter);
 
         if (mMipMaps)
             glGenerateMipmap(mTarget);
+
         glBindTexture(mTarget, 0);
     }
 

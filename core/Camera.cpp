@@ -249,17 +249,19 @@ namespace Epsilon
         Frustrum = Position + Orientation;
     }
 
-    void Camera::UpdateMatrices(int FrameNumber)
+    void Camera::UpdateMatrices(int FrameNumber, int frame_w, int frame_h)
     {
+        winx = frame_w;
+        winy = frame_h;
         float Aspectratio;
         Aspectratio = (float)winx / (float)winy;
         static const glm::vec2 Res = glm::vec2((float)winx, (float)winy);
         static const glm::vec2 iRes = 1.0f / glm::vec2((float)winx, (float)winy);
 
-        glm::vec2 Jitter = Helpers::halton(FrameNumber % 16 + 1) * iRes * glm::radians(FieldOfView) * 2.0f;
+        glm::vec2 Jitter = Helpers::halton(FrameNumber % 16 + 1) * iRes * glm::radians(FieldOfView);
         
 
-        ProjectionMatrix = glm::perspective(glm::radians(FieldOfView), glm::clamp(Aspectratio, 0.0f, 10.0f), 0.1f, 3000.0f);
+        ProjectionMatrix = glm::perspective(glm::radians(FieldOfView), glm::clamp(Aspectratio, -10.0f, 10.0f), 0.1f, 3000.0f);
 
         //std::cout << "Jitter.x: " << Jitter.x << "  Jitter.y: " << Jitter.y << "\n";
 

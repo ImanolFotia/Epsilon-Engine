@@ -20,6 +20,15 @@ namespace Epsilon
     class PostProcess
     {
     public:
+
+        enum GBUFFER_TARGETS {
+            GBUFFER_ALBEDO_SPEC = 0,
+            GBUFFER_NORMAL,
+            GBUFFER_IBL_DEPTH,
+            GBUFFER_MOTION_EXTRA,
+            GBUFFER_GI
+        };
+
         PostProcess();
 
        /* virtual ~PostProcess()
@@ -55,7 +64,7 @@ namespace Epsilon
         Render the post process image to the screen
         after the post-process effects has been applied
     */
-        void ShowPostProcessImage(float exposure, GLuint, glm::vec3 Sun, std::shared_ptr<Camera> &cam);
+        void ShowPostProcessImage(float exposure, GLuint, glm::vec3 Sun, std::shared_ptr<Camera> &cam, std::shared_ptr<Epsilon::OpenGL::FrameBuffer<int>>);
 
         GLuint getSceneTexture()
         {
@@ -66,37 +75,51 @@ namespace Epsilon
         {
             glDeleteTextures(1, &colorBuffer);
             glDeleteTextures(1, &depthBuffer);
-            glDeleteTextures(1, &MotionBlurBuffer);
+            //glDeleteTextures(1, &MotionBlurBuffer);
             glDeleteTextures(2, SSRTexture);
             glDeleteTextures(2, pingpongSSRT);
             glDeleteTextures(1, &DownSampledTexture);
             glDeleteTextures(1, &SinglePixelColorBuffer);
-            glDeleteTextures(1, &gExtraComponents);
-            glDeleteTextures(1, &rboDepth);
-            glDeleteTextures(1, &rDepth);
-            glDeleteTextures(1, &gDepth);
+            //glDeleteTextures(1, &gExtraComponents);
+            //glDeleteTextures(1, &rboDepth);
+            //glDeleteTextures(1, &rDepth);
+            //glDeleteTextures(1, &gDepth);
             glDeleteTextures(1, &DepthTexture);
             glDeleteTextures(1, &lowresTex);
             glDeleteTextures(1, &DOFBuffer);
             glDeleteTextures(1, &sampler);
             glDeleteTextures(2, pingpongDOF);
-            glDeleteTextures(2, pingpongColorbuffers);
+            //glDeleteTextures(2, pingpongColorbuffers);
             glDeleteTextures(2, pingpongColorbuffersDOF);
 
-            glDeleteFramebuffers(1, &MotionBlurFBO);
+            //glDeleteFramebuffers(1, &MotionBlurFBO);
             glDeleteFramebuffers(2, SSRFBO);
             glDeleteFramebuffers(2, pingpongSSRFBO);
             glDeleteFramebuffers(1, &lowresFBO);
 
-            glDeleteFramebuffers(1, &ssaoFBO);
-            glDeleteFramebuffers(2, pingpongFBO);
+            //glDeleteFramebuffers(1, &ssaoFBO);
+            //glDeleteFramebuffers(2, pingpongFBO);
             glDeleteFramebuffers(1, &DownSamplerFBO);
+        }
+
+        void Resize(int w, int h) {
+            width = w;
+            height = h;
+            mRecalculateSSAO = true;
+            gBufferFramebuffer->Resize(w, h);
+            mCompositeImage->Resize(w, h);
+            mHBAOFramebuffer->Resize(w, h);
+            mHBAOBlurFramebuffer->Resize(w, h);
+            hdrFBO->Resize(w, h);
+            mPingPongFramebuffer[0]->Resize(w, h);
+            mPingPongFramebuffer[1]->Resize(w, h);
+            mMotionBlurFramebuffer->Resize(w, h);
         }
 
     public:
         GLuint colorBuffer;
         GLuint depthBuffer;
-
+        bool mRecalculateSSAO = false;
         std::shared_ptr<OpenGL::FrameBuffer<std::string>> hdrFBO;
         std::shared_ptr<OpenGL::FrameBuffer<int>> mCompositeImage;
         std::shared_ptr<Shader> shader;
@@ -104,7 +127,7 @@ namespace Epsilon
         std::shared_ptr<OpenGL::FrameBuffer<int>> CopyTextureBlurredFBO;
 
         float m_exposure;
-        GLuint gDepth;
+        //GLuint gDepth;
 
         bool HBAOOn;
     public:
@@ -194,8 +217,8 @@ namespace Epsilon
         std::vector<t_light> m_Lights;
         GLuint SSAOwidth;
         GLuint SSAOheight;
-        GLuint MotionBlurBuffer;
-        GLuint MotionBlurFBO;
+        //GLuint MotionBlurBuffer;
+        //GLuint MotionBlurFBO;
         GLuint SSRFBO[2];
         GLuint SSRTexture[2];
         GLuint pingpongSSRFBO[2];
@@ -203,7 +226,7 @@ namespace Epsilon
         GLuint DownSamplerFBO;
         GLuint DownSampledTexture;
         GLuint SinglePixelColorBuffer;
-        GLuint gExtraComponents;
+       // GLuint gExtraComponents;
         bool CurrentSSR = 0;
         bool SSROn;
         bool m_MotionBlur;
@@ -216,10 +239,19 @@ namespace Epsilon
 
         std::shared_ptr<OpenGL::FrameBuffer<int>> BRDFFramebuffer;
         std::shared_ptr<OpenGL::FrameBuffer<int>> HBILFramebuffer;
-        GLuint ssaoFBO;
-        GLuint ssaoBlurFBO;
-        GLuint rboDepth;
-        GLuint rDepth;
+        std::shared_ptr<OpenGL::FrameBuffer<int>> mHBAOFramebuffer;
+        std::shared_ptr<OpenGL::FrameBuffer<int>> mHBAOBlurFramebuffer;
+        
+        std::shared_ptr<OpenGL::FrameBuffer<int>> gBufferFramebuffer; 
+        std::shared_ptr<OpenGL::FrameBuffer<int>> mMotionBlurFramebuffer;
+
+        
+        std::shared_ptr<OpenGL::FrameBuffer<int>> mPingPongFramebuffer[2];
+
+        //GLuint ssaoFBO;
+        //GLuint ssaoBlurFBO;
+        //GLuint rboDepth;
+        //GLuint rDepth;
         GLuint quadVAO = 0;
         GLuint quadVBO;
         GLuint sampler;
@@ -228,8 +260,8 @@ namespace Epsilon
         GLuint lowresFBO;
         float lastDepth;
         GLuint lowresTex;
-        GLuint pingpongFBO[2];
-        GLuint pingpongColorbuffers[2];
+        //GLuint pingpongFBO[2];
+        //GLuint pingpongColorbuffers[2];
         GLuint pingpongDOF[2];
         GLuint pingpongColorbuffersDOF[2];
         GLuint DOFBuffer;
@@ -258,16 +290,16 @@ namespace Epsilon
         GLuint DenoiseTexture;
         GLuint DenoiseFBO;
         GLuint brightColorBuffer;
-        GLuint gBuffer;
-        GLuint gAlbedoSpec;
+        //GLuint gBuffer;
+        //GLuint gAlbedoSpec;
         GLuint gPosition;
         GLuint gNormal;
         GLuint gLowResDepth;
-        GLuint gExpensiveNormal;
+        //GLuint gExpensiveNormal;
         GLuint ssaoColorBuffer;
         GLuint ssaoColorBufferBlur;
         GLuint gWorldSpacePosition;
-        GLuint gLightAccumulation;
+        //GLuint gLightAccumulation;
         GLuint mLastFrametexture;
         GLuint mBlurredSSR;
         GLuint BRDF = 0;

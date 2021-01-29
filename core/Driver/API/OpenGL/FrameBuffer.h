@@ -124,10 +124,28 @@ namespace Epsilon
             void Resize(uint32_t w, uint32_t h) {
                 WIDTH = w;
                 HEIGHT = h;
+                
+                //glDeleteFramebuffers(1, &m_FramebufferHandler);
+                m_FramebufferHandler = 0;
+                glGenFramebuffers(1, &m_FramebufferHandler);
 
-                for(const auto& rt: m_RenderTargets) {
-                    rt->Resize(WIDTH, HEIGHT);
+                this->bindFramebuffer();
+
+                for(const auto & [name, target]: m_RenderTargets) {
+                    target->Resize(WIDTH, HEIGHT);
                 }
+
+                if(isDepthAttachment) {
+                    //glDeleteRenderbuffers(1, &m_DepthTextureTarget);
+                    glGenRenderbuffers(1, &m_DepthTextureTarget);
+                    glBindRenderbuffer(GL_RENDERBUFFER, m_DepthTextureTarget);
+                    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
+                    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_DepthTextureTarget);
+                }
+                
+                FinishFrameBuffer();
+
+                this->unbindFramebuffer();
             }
 
             bool checkFramebuffer()

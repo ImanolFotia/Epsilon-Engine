@@ -40,6 +40,10 @@ float blend = 1.0f;
 double Input::Mouse::XPOS = 500;
 double Input::Mouse::YPOS = 500;
 
+Input::Mouse::STATE Input::Mouse::LEFT = Input::Mouse::RELEASED;
+Input::Mouse::STATE Input::Mouse::MIDDLE = Input::Mouse::RELEASED;
+Input::Mouse::STATE Input::Mouse::RIGHT = Input::Mouse::RELEASED;
+
 namespace Joystick = Input::Joystick;
 
 std::unordered_map<unsigned, Joystick::JoystickManager::Joystick_ptr> Joystick::JoystickManager::JoystickVector;
@@ -150,7 +154,7 @@ namespace Epsilon
         ImGui_ImplOpenGL3_Init(glsl_version);
 
         onMenu = false;
-        window->HideCursor();
+        //window->HideCursor();
 
         mDefaultFrameBuffer = std::make_shared<OpenGL::FrameBuffer<int>>(window->getWindowData().Width, window->getWindowData().Height, false);
         mDefaultFrameBuffer->addRenderTarget(0, GL_RGB, GL_RGB, GL_NEAREST, GL_NEAREST, false);
@@ -448,7 +452,7 @@ namespace Epsilon
         glViewport(0, 0, 1024, 1024);
         glEnable(GL_DEPTH_TEST);
         eCamera[mCurrentCamera]->Update(window->getHandle()->getHandle());
-        eCamera[mCurrentCamera]->UpdateMatrices(0);
+        eCamera[mCurrentCamera]->UpdateMatrices(0, WIDTH, HEIGHT);
         sun->Update();
         glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
         glDisable(GL_CULL_FACE);
@@ -980,11 +984,11 @@ namespace Epsilon
 
             if (opt_flags & ImGuiDockNodeFlags_PassthruCentralNode)
                 window_flags |= ImGuiWindowFlags_NoBackground;
-            ImGui::PushStyleColor(ImGuiCol_DockingEmptyBg);
+            //ImGui::PushStyleColor(ImGuiCol_DockingEmptyBg);
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
             ImGui::Begin("Main Window", NULL, window_flags); // Create a window called "Hello, world!" and append into it.
             ImGui::PopStyleVar();
-            ImGui::PopStyleColor();
+            //ImGui::PopStyleColor();
 
             if (opt_fullscreen)
                 ImGui::PopStyleVar(2);
@@ -1182,7 +1186,7 @@ namespace Epsilon
                 if (item_current == "Light Pass")
                     TextureId = PP->getSceneTexture();
                 else if (item_current == "gBuffer Normal")
-                    TextureId = PP->gExpensiveNormal;
+                    TextureId = PP->gBufferFramebuffer->getRenderTargetHandler(PostProcess::GBUFFER_TARGETS::GBUFFER_NORMAL);
                 else if (item_current == "Screen Space Reflections")
                     TextureId = PP->ReflectionTexture;
                 else if (item_current == "HBAO")
@@ -1202,6 +1206,22 @@ namespace Epsilon
                 ImGui::End();
             }
 
+            {
+                ImGui::Begin("Main Render");
+                ImVec2 window_size = ImGui::GetContentRegionAvail();
+                mLastImguiRenderWindow = mImguiRenderWindow;
+                mImguiRenderWindow = glm::ivec2(window_size.x, window_size.y);
+
+                mShouldResize = mImguiRenderWindow != mLastImguiRenderWindow;
+
+                auto TextureId = mDefaultFrameBuffer->getRenderTargetHandler(0);
+
+                ImGui::Image((void *)TextureId, ImVec2(window_size.x, window_size.y - 5), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 0.5f));
+                ImGui::SetCursorPos(ImVec2(5, 30));
+                ImGui::Text("Window size: %.0f x %.0f", window_size.x, window_size.y);
+                ImGui::Text("Image size: %.0f x %.0f", window_size.x, window_size.y);
+                ImGui::End();
+            }
             ImGui::Begin("Hierarchy");
             if (ImGui::TreeNode("Entities"))
             {
@@ -1294,6 +1314,7 @@ namespace Epsilon
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glEnable(GL_DEPTH_TEST);
+        glViewport(0, 0, WIDTH, HEIGHT);
     }
 
     void Epsilon::ProcessAudio()
@@ -1375,6 +1396,24 @@ namespace Epsilon
     }*/
 
         glfwPollEvents();
+        if (mShouldResize || mWaitingResize)
+        {
+            if(Input::Mouse::LEFT == Input::Mouse::PRESSED) {
+                mWaitingResize = true;
+            } 
+            else {
+
+                //auto &window_data = window->getWindowData();
+                //this->WIDTH = window_data.Width;
+                //this->HEIGHT = window_data.Height;
+                this->WIDTH = mImguiRenderWindow.x;
+                this->HEIGHT = mImguiRenderWindow.y;
+                mDefaultFrameBuffer->Resize(WIDTH, HEIGHT);
+                PP->Resize(WIDTH, HEIGHT);
+                std::cout << "Needs to resize " << WIDTH << " " << HEIGHT << std::endl;
+                mWaitingResize = false;
+            }
+        }
         Input::Joystick::JoystickManager::DetectJoysticks();
         Input::Joystick::JoystickManager::PollJoystick();
         auto _Joystick = Input::Joystick::JoystickManager::PrimaryJoystick();
@@ -1455,6 +1494,8 @@ namespace Epsilon
                 window->ShowCursor();
                 glfwSetCursorPos(window->getHandle()->getHandle(), this->WIDTH / 2, this->HEIGHT / 2);
                 this->m_CameraMode = CAMERA_FIXED;
+                mLastCameraDirection = eCamera[mCurrentCamera]->getDirection();
+                mLastCameraPosition = eCamera[mCurrentCamera]->getPosition();
                 onMenu = true;
             }
 
@@ -1509,7 +1550,7 @@ namespace Epsilon
 
             this->PollEvents();
 
-            if (!onMenu)
+            //if (!onMenu)
                 this->ComputeCamera(m_CameraMode, glm::vec3(48.4247, 8.1507, -12.9128), glm::vec3(-0.785454, 0.0299956, 0.618193));
 
             this->ProcessAudio();
@@ -1591,8 +1632,9 @@ namespace Epsilon
         }
         else if (mode == CAMERA_FIXED)
         {
-            eCamera[mCurrentCamera]->setPosition(position);
-            eCamera[mCurrentCamera]->setDirection(direction);
+            //eCamera[mCurrentCamera]->getDirection()
+            eCamera[mCurrentCamera]->setPosition(mLastCameraPosition);
+            eCamera[mCurrentCamera]->setDirection(mLastCameraDirection);
         }
         else if (mode == CAMERA_OVERRIDE)
         {
@@ -1609,7 +1651,7 @@ namespace Epsilon
         {
         }
 
-        this->eCamera[mCurrentCamera]->UpdateMatrices(window->FrameNumber());
+        this->eCamera[mCurrentCamera]->UpdateMatrices(window->FrameNumber(), WIDTH, HEIGHT);
     }
 
     void Epsilon::ComputeShadow()
@@ -1699,7 +1741,7 @@ namespace Epsilon
         glBindTexture(GL_TEXTURE_2D, tex->getTextureID());
         glActiveTexture(GL_TEXTURE1);
         glUniform1i(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "bufferDepth"), 1);
-        glBindTexture(GL_TEXTURE_2D, PP->gDepth);
+        glBindTexture(GL_TEXTURE_2D, PP->gBufferFramebuffer->getRenderTargetHandler(PostProcess::GBUFFER_TARGETS::GBUFFER_IBL_DEPTH));
         glActiveTexture(GL_TEXTURE2);
         glUniform1i(glGetUniformLocation(Shaders["DefaultParticle"]->getProgramID(), "shadowMap"), 2);
         glBindTexture(GL_TEXTURE_2D, this->shadowMap->getShadowTextureID());
@@ -1730,16 +1772,16 @@ namespace Epsilon
     glEnable(GL_BLEND);
 */
         //this->RenderParticles();
-        PP->ShowPostProcessImage(this->frametime, (int)this->onMenu, this->sun->Direction, this->eCamera[mCurrentCamera]);
+        PP->ShowPostProcessImage(this->frametime, (int)this->onMenu, this->sun->Direction, this->eCamera[mCurrentCamera], mDefaultFrameBuffer);
         glEnable(GL_BLEND);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         //Blit to named default framebuffer
 
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-        mDefaultFrameBuffer->setToDraw();
+        //glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+        //mDefaultFrameBuffer->setToDraw();
 
-        glBlitFramebuffer(0, 0, this->WIDTH, this->HEIGHT, 0, 0, this->WIDTH, this->HEIGHT, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        //glBlitFramebuffer(0, 0, this->WIDTH, this->HEIGHT, 0, 0, this->WIDTH, this->HEIGHT, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }

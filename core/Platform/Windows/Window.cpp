@@ -111,12 +111,20 @@ namespace Epsilon
                     fprintf(stderr, "Error: %s\n", description);
                 });
 
+                glfwSetWindowSizeCallback(mWindowHandle->getHandle(), [](GLFWwindow* window, int w, int h) {
+                    mWindowData.Width = w;
+                    mWindowData.Height = h;
+                    Window::mNeedsToResize = true;
+                });
+
                 //Set up IO callbacks
                 glfwSetKeyCallback(mWindowHandle->getHandle(), Input::KeyBoard::KeyBoardCallBackGLFW);
                 glfwSetCursorPosCallback(mWindowHandle->getHandle(), Input::Mouse::MouseCallBackGLFW);
                 glfwSetJoystickCallback(Input::Joystick::JoystickManager::JoystickCallbackGLFW);
+                glfwSetMouseButtonCallback(mWindowHandle->getHandle(), Input::Mouse::MouseButtonCallbackGLFW);
                 
                 glfwSetInputMode(mWindowHandle->getHandle(), GLFW_STICKY_KEYS, true);
+                glfwSetInputMode(mWindowHandle->getHandle(), GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
                 glfwSwapInterval(mWindowData.VSync);
             }
             void Window::Destroy()
@@ -127,6 +135,7 @@ namespace Epsilon
             void Window::SwapBuffers()
             {
                 mContext->SwapBuffers();
+                mNeedsToResize = false;
             }
 
             void Window::ShowCursor() {
@@ -138,6 +147,15 @@ namespace Epsilon
 
             bool Window::WantsToClose() {
                 return glfwWindowShouldClose(mWindowHandle->getHandle());
+            }
+            
+            void Window::OnResize(GLFWwindow* window, int w, int h) {
+                    mWindowData.Width = w;
+                    mWindowData.Height = h;
+            }
+
+            bool Window::NeedsToResize() {
+                return mNeedsToResize;
             }
 
             unsigned Window::FrameNumber() {

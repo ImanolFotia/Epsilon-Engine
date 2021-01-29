@@ -27,7 +27,7 @@ namespace Epsilon
 
                 virtual void Init(const char *title, int w, int h) override;
 
-                virtual void Resize(int w, int h) const override {}
+                virtual void OnResize(GLFWwindow*, int, int) override;
 
                 virtual void Destroy() override;
                 
@@ -40,6 +40,8 @@ namespace Epsilon
                 virtual bool WantsToClose() override;
                 
                 virtual unsigned FrameNumber() override;
+
+                virtual bool NeedsToResize() override;
 
             private:
             };
