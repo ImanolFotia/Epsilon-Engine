@@ -9,6 +9,7 @@ before_install:
   - sudo apt-get install libsoil-dev
   - sudo apt-get install libopenal-dev
   - sudo apt-get install libbullet-dev
+  - mkdir ./thirdparty/imgui-docking/imgui-docking
   - git clone --single-branch --branch docking https://github.com/ocornut/imgui.git ./thirdparty/imgui-docking/imgui-docking
   - cd thirdpraty/imgui-docking/imgui-docking
   - make
