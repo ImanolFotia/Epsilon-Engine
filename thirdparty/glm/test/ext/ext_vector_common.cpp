@@ -1,4 +1,5 @@
 #include <glm/ext/vector_common.hpp>
+
 #include <glm/ext/vector_bool1.hpp>
 #include <glm/ext/vector_bool1_precision.hpp>
 #include <glm/ext/vector_bool2.hpp>
@@ -226,6 +227,112 @@ static int test_fmax()
 	return Error;
 }
 
+static int test_clamp()
+{
+	int Error = 0;
+
+	glm::vec2 K = glm::clamp(glm::vec2(0.5f));
+	Error += glm::all(glm::equal(K, glm::vec2(0.5f), glm::vec2(0.00001f))) ? 0 : 1;
+
+	glm::vec3 L = glm::clamp(glm::vec3(0.5f));
+	Error += glm::all(glm::equal(L, glm::vec3(0.5f), glm::vec3(0.00001f))) ? 0 : 1;
+
+	glm::vec4 M = glm::clamp(glm::vec4(0.5f));
+	Error += glm::all(glm::equal(M, glm::vec4(0.5f), glm::vec4(0.00001f))) ? 0 : 1;
+
+	glm::vec1 N = glm::clamp(glm::vec1(0.5f));
+	Error += glm::all(glm::equal(N, glm::vec1(0.5f), glm::vec1(0.00001f))) ? 0 : 1;
+
+	return Error;
+}
+
+static int test_repeat()
+{
+	int Error = 0;
+
+	glm::vec2 K = glm::repeat(glm::vec2(0.5f));
+	Error += glm::all(glm::equal(K, glm::vec2(0.5f), glm::vec2(0.00001f))) ? 0 : 1;
+
+	glm::vec3 L = glm::repeat(glm::vec3(0.5f));
+	Error += glm::all(glm::equal(L, glm::vec3(0.5f), glm::vec3(0.00001f))) ? 0 : 1;
+
+	glm::vec4 M = glm::repeat(glm::vec4(0.5f));
+	Error += glm::all(glm::equal(M, glm::vec4(0.5f), glm::vec4(0.00001f))) ? 0 : 1;
+
+	glm::vec1 N = glm::repeat(glm::vec1(0.5f));
+	Error += glm::all(glm::equal(N, glm::vec1(0.5f), glm::vec1(0.00001f))) ? 0 : 1;
+
+	return Error;
+}
+
+static int test_mirrorClamp()
+{
+	int Error = 0;
+
+	glm::vec2 K = glm::mirrorClamp(glm::vec2(0.5f));
+	Error += glm::all(glm::equal(K, glm::vec2(0.5f), glm::vec2(0.00001f))) ? 0 : 1;
+
+	glm::vec3 L = glm::mirrorClamp(glm::vec3(0.5f));
+	Error += glm::all(glm::equal(L, glm::vec3(0.5f), glm::vec3(0.00001f))) ? 0 : 1;
+
+	glm::vec4 M = glm::mirrorClamp(glm::vec4(0.5f));
+	Error += glm::all(glm::equal(M, glm::vec4(0.5f), glm::vec4(0.00001f))) ? 0 : 1;
+
+	glm::vec1 N = glm::mirrorClamp(glm::vec1(0.5f));
+	Error += glm::all(glm::equal(N, glm::vec1(0.5f), glm::vec1(0.00001f))) ? 0 : 1;
+
+	return Error;
+}
+
+static int test_mirrorRepeat()
+{
+	int Error = 0;
+
+	glm::vec2 K = glm::mirrorRepeat(glm::vec2(0.5f));
+	Error += glm::all(glm::equal(K, glm::vec2(0.5f), glm::vec2(0.00001f))) ? 0 : 1;
+
+	glm::vec3 L = glm::mirrorRepeat(glm::vec3(0.5f));
+	Error += glm::all(glm::equal(L, glm::vec3(0.5f), glm::vec3(0.00001f))) ? 0 : 1;
+
+	glm::vec4 M = glm::mirrorRepeat(glm::vec4(0.5f));
+	Error += glm::all(glm::equal(M, glm::vec4(0.5f), glm::vec4(0.00001f))) ? 0 : 1;
+
+	glm::vec1 N = glm::mirrorRepeat(glm::vec1(0.5f));
+	Error += glm::all(glm::equal(N, glm::vec1(0.5f), glm::vec1(0.00001f))) ? 0 : 1;
+
+	return Error;
+}
+
+static int test_iround()
+{
+	int Error = 0;
+
+	for(float f = 0.0f; f < 3.1f; f += 0.05f)
+	{
+		int RoundFast = static_cast<int>(glm::iround(f));
+		int RoundSTD = static_cast<int>(glm::round(f));
+		Error += RoundFast == RoundSTD ? 0 : 1;
+		assert(!Error);
+	}
+
+	return Error;
+}
+
+static int test_uround()
+{
+	int Error = 0;
+
+	for(float f = 0.0f; f < 3.1f; f += 0.05f)
+	{
+		int RoundFast = static_cast<int>(glm::uround(f));
+		int RoundSTD = static_cast<int>(glm::round(f));
+		Error += RoundFast == RoundSTD ? 0 : 1;
+		assert(!Error);
+	}
+
+	return Error;
+}
+
 int main()
 {
 	int Error = 0;
@@ -245,6 +352,14 @@ int main()
 
 	Error += test_fmax<glm::vec3>();
 	Error += test_fmax<glm::vec2>();
+
+	Error += test_clamp();
+	Error += test_repeat();
+	Error += test_mirrorClamp();
+	Error += test_mirrorRepeat();
+
+	Error += test_iround();
+	Error += test_uround();
 
 	return Error;
 }

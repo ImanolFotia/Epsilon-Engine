@@ -50,15 +50,15 @@
 #include <Renderer/Shadows/PointShadow.hpp>
 #include <Driver/API/BufferObject.hpp>
 #include <Renderer/ShaderStorage.hpp>
-#include <ParticleSystem.h>
-
 #include <Platform/WindowBase.hpp>
+
+#include <ParticleSystem.h>
+#include <Driver/API/OpenGL/FrameBuffer.h>
 
 #include <imgui_imp/imgui_impl_glfw.h>
 #include <imgui_imp/imgui_impl_opengl3.h>
 #include <imgui_imp/imgui_menubar.hpp>
-
-#include <Driver/API/OpenGL/FrameBuffer.h>
+#include <imgui_imp/imgui_Init.hpp>
 
 namespace Epsilon
 {
@@ -203,12 +203,8 @@ namespace Epsilon
         bool showtext = false;
         bool onMenu = false;
         float menuTime = 0.0;
-        glm::ivec2 mImguiRenderWindow;
-        glm::ivec2 mLastImguiRenderWindow;
         glm::vec3 mLastCameraDirection;
         glm::vec3 mLastCameraPosition;
-        bool mShouldResize = false;
-        bool mWaitingResize = false;
         //vector<glm::vec3> lightPositions;
         std::vector<glm::vec3> grassPos;
         std::ostringstream fpss;

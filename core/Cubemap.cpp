@@ -92,6 +92,7 @@ CubeMap::CubeMap(int ID, glm::vec3 Pos)
 		}
         void CubeMap::genAmbientConvolution()
 		{
+			isConvoluted = true;
 			glGenTextures(1, &prefilterMap);
 			glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap);
 			for (unsigned int i = 0; i < 6; ++i)

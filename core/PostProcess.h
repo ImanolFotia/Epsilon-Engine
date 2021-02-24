@@ -76,7 +76,7 @@ namespace Epsilon
             glDeleteTextures(1, &colorBuffer);
             glDeleteTextures(1, &depthBuffer);
             //glDeleteTextures(1, &MotionBlurBuffer);
-            glDeleteTextures(2, SSRTexture);
+            //glDeleteTextures(2, SSRTexture);
             glDeleteTextures(2, pingpongSSRT);
             glDeleteTextures(1, &DownSampledTexture);
             glDeleteTextures(1, &SinglePixelColorBuffer);
@@ -93,7 +93,7 @@ namespace Epsilon
             glDeleteTextures(2, pingpongColorbuffersDOF);
 
             //glDeleteFramebuffers(1, &MotionBlurFBO);
-            glDeleteFramebuffers(2, SSRFBO);
+            //glDeleteFramebuffers(2, SSRFBO);
             glDeleteFramebuffers(2, pingpongSSRFBO);
             glDeleteFramebuffers(1, &lowresFBO);
 
@@ -114,6 +114,9 @@ namespace Epsilon
             mPingPongFramebuffer[0]->Resize(w, h);
             mPingPongFramebuffer[1]->Resize(w, h);
             mMotionBlurFramebuffer->Resize(w, h);
+            mSSRFramebuffer[0]->Resize(w, h);
+            mSSRFramebuffer[1]->Resize(w, h);
+            mDenoiseFramebuffer->Resize(w, h);
         }
 
     public:
@@ -219,8 +222,8 @@ namespace Epsilon
         GLuint SSAOheight;
         //GLuint MotionBlurBuffer;
         //GLuint MotionBlurFBO;
-        GLuint SSRFBO[2];
-        GLuint SSRTexture[2];
+        //GLuint SSRFBO[2];
+        //GLuint SSRTexture[2];
         GLuint pingpongSSRFBO[2];
         GLuint pingpongSSRT[2];
         GLuint DownSamplerFBO;
@@ -244,9 +247,12 @@ namespace Epsilon
         
         std::shared_ptr<OpenGL::FrameBuffer<int>> gBufferFramebuffer; 
         std::shared_ptr<OpenGL::FrameBuffer<int>> mMotionBlurFramebuffer;
+        std::shared_ptr<OpenGL::FrameBuffer<int>> mDenoiseFramebuffer;
 
         
         std::shared_ptr<OpenGL::FrameBuffer<int>> mPingPongFramebuffer[2];
+
+        std::shared_ptr<OpenGL::FrameBuffer<int>> mSSRFramebuffer[2];
 
         //GLuint ssaoFBO;
         //GLuint ssaoBlurFBO;
@@ -287,8 +293,6 @@ namespace Epsilon
         /// G-Buffer texture samplers
         std::vector<glm::vec3> ssaoKernel;
         GLuint noiseTexture;
-        GLuint DenoiseTexture;
-        GLuint DenoiseFBO;
         GLuint brightColorBuffer;
         //GLuint gBuffer;
         //GLuint gAlbedoSpec;

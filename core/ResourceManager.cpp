@@ -448,7 +448,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         CubeMapList.insert(std::make_pair(cubemap->getID(), cubemap));
         CubeMapPositions.push_back(position);
         mCubemapIndex.push_back(cubemap->getID());
-        std::cout << "Added Cubemap: " << cubemap->getID() << std::endl;
+        //std::cout << "Added Cubemap: " << cubemap->getID() << std::endl;
         return true;
         //}
         //else{

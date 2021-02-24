@@ -14,6 +14,7 @@
 + [1.2. Using separated headers](#section1_2)
 + [1.3. Using extension headers](#section1_3)
 + [1.4. Dependencies](#section1_4)
++ [1.5. Finding GLM with CMake](#section1_5)
 + [2. Preprocessor configurations](#section2)
 + [2.1. GLM\_FORCE\_MESSAGES: Platform auto detection and default configuration](#section2_1)
 + [2.2. GLM\_FORCE\_PLATFORM\_UNKNOWN: Force GLM to no detect the build platform](#section2_2)
@@ -216,7 +217,7 @@ GLM relies on C++ templates heavily, and may significantly increase compilation 
 #include <glm/mat4x4.hpp>             // mat4, dmat4
 #include <glm/common.hpp>             // all the GLSL common functions: abs, min, mix, isnan, fma, etc.
 #include <glm/exponential.hpp>        // all the GLSL exponential functions: pow, log, exp2, sqrt, etc.
-#include <glm/geometry.hpp>           // all the GLSL geometry functions: dot, cross, reflect, etc.
+#include <glm/geometric.hpp>          // all the GLSL geometry functions: dot, cross, reflect, etc.
 #include <glm/integer.hpp>            // all the GLSL integer functions: findMSB, bitfieldExtract, etc.
 #include <glm/matrix.hpp>             // all the GLSL matrix functions: transpose, inverse, etc.
 #include <glm/packing.hpp>            // all the GLSL packing functions: packUnorm4x8, unpackHalf2x16, etc.
@@ -273,6 +274,20 @@ glm::mat4 transform(glm::vec2 const& Orientation, glm::vec3 const& Translate, gl
 ### <a name="section1_4"></a> 1.4. Dependencies
 
 GLM does not depend on external libraries or headers such as `<GL/gl.h>`, [`<GL/glcorearb.h>`](http://www.opengl.org/registry/api/GL/glcorearb.h), `<GLES3/gl3.h>`, `<GL/glu.h>`, or `<windows.h>`.
+
+### <a name="section1_5"></a> 1.5. Finding GLM with CMake
+
+GLM provides the CMake package configuration files `glmConfig.cmake` and `glmConfig-version.cmake`.
+
+To use these configurations files, you may need to set the `glm_DIR` variable to the directory containing the configuration files `<path to glm root>/cmake/glm/`.
+
+Use the `find_package` CMake command to load the configurations into your project. Lastly, either link your executable against the `glm::glm` target or add `${GLM_INCLUDE_DIRS}` to your target's include directories:
+
+```cmake
+set(glm_DIR <path to glm root>/cmake/glm) # if necessary
+find_package(glm REQUIRED)
+target_link_libraries(<your executable> glm::glm)
+```
 
 ---
 <div style="page-break-after: always;"> </div>
@@ -1688,7 +1703,7 @@ From `GLM_GTC_matrix_transform` extension: &lt;glm/gtc/matrix\_transform.hpp&gt;
 [***glLoadIdentity:***](https://www.opengl.org/sdk/docs/man2/xhtml/glLoadIdentity.xml)
 
 ```cpp
-glm::mat4(1.0) or glm::mat4(1.0);
+glm::mat4(1.0) or glm::mat4();
 glm::dmat4(1.0) or glm::dmat4();
 ```
 
@@ -1697,7 +1712,7 @@ From GLM core library: `<glm/glm.hpp>`
 [***glMultMatrix{f, d}:***](https://www.opengl.org/sdk/docs/man2/xhtml/glMultMatrix.xml)
 
 ```cpp
-glm::mat4(1.0) * glm::mat4(1.0);
+glm::mat4() * glm::mat4();
 glm::dmat4() * glm::dmat4();
 ```
 
@@ -1706,7 +1721,7 @@ From GLM core library: `<glm/glm.hpp>`
 [***glLoadTransposeMatrix{f, d}:***](https://www.opengl.org/sdk/docs/man2/xhtml/glLoadTransposeMatrix.xml)
 
 ```cpp
-glm::transpose(glm::mat4(1.0));
+glm::transpose(glm::mat4());
 glm::transpose(glm::dmat4());
 ```
 
@@ -1715,7 +1730,7 @@ From GLM core library: `<glm/glm.hpp>`
 [***glMultTransposeMatrix{f, d}:***](https://www.opengl.org/sdk/docs/man2/xhtml/glMultTransposeMatrix.xml)
 
 ```cpp
-glm::mat4(1.0) * glm::transpose(glm::mat4(1.0));
+glm::mat4() * glm::transpose(glm::mat4());
 glm::dmat4() * glm::transpose(glm::dmat4());
 ```
 
@@ -2336,7 +2351,7 @@ Cinder is production-proven, powerful enough to be the primary tool for professi
 
 ![](/doc/manual/references-cinder.png)
 
-[***opencloth***](http://code.google.com/p/opencloth/)
+[***opencloth***](https://github.com/mmmovania/opencloth/)
 
 A collection of source codes implementing cloth simulation algorithms in OpenGL.
 

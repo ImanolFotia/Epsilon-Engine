@@ -18,6 +18,14 @@ public:
         mCohefficientsNames.push_back("u_L20");
         mCohefficientsNames.push_back("u_L21");
         mCohefficientsNames.push_back("u_L22");
+
+        m_Cohefficients.resize(9);
+        for(unsigned int i=0; i < 3; i++) {
+            m_Cohefficients[i].x = 0.5;
+            m_Cohefficients[i].y = 0.5;
+            m_Cohefficients[i].z = 0.5;
+        }
+    
     }
 
     ~SphericalHarmonics() {}

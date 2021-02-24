@@ -19,15 +19,15 @@ void SphericalHarmonics::CalculateCohefficients(GLuint cubemap, const unsigned i
     // variables that describe current face of cube texture
     float* data;
     GLint width, height;
-    GLint internalFormat;
+    GLint internalFormat; 
     GLint numComponents;
 
     // initialize values
     float fWt = 0.0f;
     for(unsigned int i=0; i < sqOrder; i++) {
-        m_Cohefficients[i].x = 0;
-        m_Cohefficients[i].y = 0;
-        m_Cohefficients[i].z = 0;
+        m_Cohefficients[i].x = 0.0;
+        m_Cohefficients[i].y = 0.0;
+        m_Cohefficients[i].z = 0.0;
         resultR[i] = 0;
         resultG[i] = 0;
         resultB[i] = 0;

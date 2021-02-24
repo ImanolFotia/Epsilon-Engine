@@ -46,6 +46,7 @@ namespace Epsilon
         std::vector<Vertex> ivertices;
         std::vector<GLuint> indices;
         std::vector<Texture> textures;
+        glm::mat4 mLocalTransform;
 
         bool isVisible = true;
         glm::vec3 mPosition = glm::vec3(0.0, 0.0, 0.0);

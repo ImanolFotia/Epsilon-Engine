@@ -183,6 +183,9 @@ namespace Epsilon
                 }
                 else
                     meshes.push_back(Mesh(tmpVertVector, tmpIndicesVector, tmpTexturesVector));
+
+                    
+                meshes.back().mLocalTransform = glm::translate(glm::mat4(0.0f), centerOfMass);
             }
 
             float dx, dy, dz;

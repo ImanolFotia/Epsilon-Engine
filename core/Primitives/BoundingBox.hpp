@@ -13,15 +13,15 @@ namespace Epsilon
             mInstanced = mNumInstances > 0;
 
             mVertexArray.addBuffer(GL_ARRAY_BUFFER, sizeof(float) * sizeof(PrimitiveHelpers::BoundingBoxVertices), &PrimitiveHelpers::BoundingBoxVertices, GL_STATIC_DRAW);
-            mVertexArray.setAttribute(3, sizeof(float) * 3, (GLvoid *)0);
+            mVertexArray.setAttribute(3, sizeof(float) * 3, (void *)0);
 
             if (mInstanced)
             {
                 mPositionBufferHandler = mVertexArray.addBuffer(GL_ARRAY_BUFFER, mNumInstances * sizeof(glm::mat4), nullptr, GL_STREAM_DRAW);
-                mVertexArray.setAttribute(4, sizeof(glm::mat4), (GLvoid *)0);
-                mVertexArray.setAttribute(4, sizeof(glm::mat4), (GLvoid *)(sizeof(glm::vec4)));
-                mVertexArray.setAttribute(4, sizeof(glm::mat4), (GLvoid *)(2 * sizeof(glm::vec4)));
-                mVertexArray.setAttribute(4, sizeof(glm::mat4), (GLvoid *)(3 * sizeof(glm::vec4)));
+                mVertexArray.setAttribute(4, sizeof(glm::mat4), (void *)0);
+                mVertexArray.setAttribute(4, sizeof(glm::mat4), (void *)(sizeof(glm::vec4)));
+                mVertexArray.setAttribute(4, sizeof(glm::mat4), (void *)(2 * sizeof(glm::vec4)));
+                mVertexArray.setAttribute(4, sizeof(glm::mat4), (void *)(3 * sizeof(glm::vec4)));
             }
         }
 

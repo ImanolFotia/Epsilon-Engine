@@ -27,7 +27,7 @@ static int test_length_mat()
 	
 	Error += glm::mat2().length() == 2 ? 0 : 1;
 	Error += glm::mat3().length() == 3 ? 0 : 1;
-	Error += glm::mat4(1.0).length() == 4 ? 0 : 1;
+	Error += glm::mat4().length() == 4 ? 0 : 1;
 	Error += glm::mat2x2().length() == 2 ? 0 : 1;
 	Error += glm::mat3x3().length() == 3 ? 0 : 1;
 	Error += glm::mat4x4().length() == 4 ? 0 : 1;
@@ -44,7 +44,6 @@ static int test_length_mat()
 
 static int test_length_vec()
 {
-
 	int Error = 0;
 	
 	Error += glm::vec2().length() == 2 ? 0 : 1;

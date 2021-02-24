@@ -59,10 +59,14 @@ namespace Epsilon
 
 		virtual GLuint getTextureID()
 		{
-			if (type == STATIC)
-				return texture->getTextureID();
-			if (type == DYNAMIC)
+			if(isConvoluted) {
+				if (type == STATIC)
+					return texture->getTextureID();
+				if (type == DYNAMIC)
+					return mTexture;
+			} else {
 				return mTexture;
+			}
 
 			return 0;
 		}
@@ -105,6 +109,7 @@ namespace Epsilon
 	protected:
 		unsigned int cubeVAO = 0;
 		unsigned int cubeVBO = 0;
+		bool isConvoluted = false;
 		void renderCube()
 		{
 			// initialize (if necessary)

@@ -258,35 +258,6 @@ namespace Epsilon
         mHBAOBlurFramebuffer->addRenderTarget(0, GL_RED, GL_RGB, GL_LINEAR, GL_LINEAR, false); //gAlbedoSpec
         mHBAOBlurFramebuffer->FinishFrameBuffer();
 
-
-/*
-        /// Also create framebuffer to hold SSAO processing stage
-        glGenFramebuffers(1, &ssaoFBO);
-        glGenFramebuffers(1, &ssaoBlurFBO);
-        glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
-        /// - SSAO color buffer
-        glGenTextures(1, &ssaoColorBuffer);
-        glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, SSAOwidth, SSAOheight, 0, GL_RGB, GL_FLOAT, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ssaoColorBuffer, 0);
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            std::cout << "SSAO Framebuffer not complete!" << std::endl;
-        /// - and blur stage
-        glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
-        glGenTextures(1, &ssaoColorBufferBlur);
-        glBindTexture(GL_TEXTURE_2D, ssaoColorBufferBlur);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, SSAOwidth, SSAOheight, 0, GL_RGB, GL_FLOAT, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ssaoColorBufferBlur, 0);
-        //glGenerateMipmap(GL_TEXTURE_2D);
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            std::cout << "SSAO Blur Framebuffer not complete!" << std::endl;
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        //glGenerateMipmap(GL_TEXTURE_2D);
-*/
         // Sample kernel
         std::uniform_real_distribution<GLfloat> randomFloatsClamped(0.0, 1.0); // generates random floats between 0.0 and 1.0
         std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0);        // generates random floats between 0.0 and 1.0
@@ -441,13 +412,13 @@ namespace Epsilon
         SSAO->PushUniform("view", cam->getViewMatrix());
         SSAO->PushUniform("invView", glm::inverse(cam->getViewMatrix()));
         SSAO->PushUniform("viewPos", cam->getPosition());
-        glViewport(0, 0, width, height);
+        //glViewport(0, 0, width, height);
         RenderQuad();
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         //#define cheapblur
 
 #ifndef cheapblur
-        glViewport(0, 0, width, height);
+        //glViewport(0, 0, width, height);
 
         ssaoColorBufferBlur = blurImage(mHBAOFramebuffer->getRenderTargetHandler(0), false);
 #else
@@ -463,7 +434,7 @@ namespace Epsilon
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glBindTexture(GL_TEXTURE_2D, 0);
-        glViewport(0, 0, width, height);
+        //glViewport(0, 0, width, height);
     }
 
     GLuint PostProcess::blurImage(GLuint Buffer, bool cheap = false)
@@ -507,39 +478,6 @@ namespace Epsilon
 
     GLfloat PostProcess::applyAutoAxposure(GLuint Buffer)
     {
-        /*
-    	GLboolean horizontal = true, first_iteration = true;
-    	blurBloom->Use();
-
-    	float Ewidth = 640;
-    	float Eheight = 480;
-
-    	while(Ewidth > 1) {
-    		glBindFramebuffer(GL_FRAMEBUFFER, pingpongDOF[horizontal]);
-    		Ewidth /= 2;
-    		Eheight /= 2;
-    		glViewport(0,0,Ewidth, Eheight);
-    		glUniform1i(glGetUniformLocation(blurBloom->getProgramID(), "horizontal"), horizontal);
-    		glBindTexture(GL_TEXTURE_2D, first_iteration ? Buffer : pingpongColorbuffersDOF[!horizontal]);  // bind texture of other framebuffer (or scene if first iteration)
-    		RenderQuad();
-    		horizontal = !horizontal;
-    		if (first_iteration)
-    			first_iteration = false;
-
-    	}
-    	// Once done read the luminescence value of 1x1 texture
-    	GLfloat luminescence[3];
-    	//glReadPixels(0, 0, 1, 1, GL_RGB, GL_FLOAT, &luminescence);
-    	glm::vec3 rgbColor = glm::vec3(luminescence[0], luminescence[1], luminescence[2]);
-    	rgbColor = rgbColor * glm::vec3(0.2126, 0.7152, 0.0722);
-    	float lum = rgbColor.x + rgbColor.y + rgbColor.z;
-    	m_exposure = lerp(m_exposure, 2.0 / lum, 0.005); // slowly adjust exposure based on average brightness
-
-
-    	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    	glViewport(0,0,width, height);
-    */
         return 3.5;
     }
 
@@ -552,24 +490,7 @@ namespace Epsilon
         mPingPongFramebuffer[1] = (std::shared_ptr<OpenGL::FrameBuffer<int>>)new OpenGL::FrameBuffer<int>(width, height, true);
         mPingPongFramebuffer[1]->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
         mPingPongFramebuffer[1]->FinishFrameBuffer();
-/*
-        glGenFramebuffers(2, pingpongFBO);
-        glGenTextures(2, pingpongColorbuffers);
-        for (GLuint i = 0; i < 2; i++)
-        {
-            glBindFramebuffer(GL_FRAMEBUFFER, pingpongFBO[i]);
-            glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[i]);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, NULL);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // We clamp to the edge as the blur filter would otherwise sample repeated texture values!
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, pingpongColorbuffers[i], 0);
-            // Also check if framebuffers are complete (no need for depth buffer)
-            if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-                std::cout << "Framebuffer not complete!" << std::endl;
-        }
-        glBindTexture(GL_TEXTURE_2D, 0);*/
+
     }
 
     void PostProcess::SetupMotionBlur()
@@ -602,49 +523,23 @@ namespace Epsilon
 
     void PostProcess::setupSSR()
     {
-        glGenFramebuffers(2, SSRFBO);
-        glGenTextures(2, SSRTexture);
-        for (int i = 0; i < 2; i++)
-        {
-            glBindFramebuffer(GL_FRAMEBUFFER, SSRFBO[i]);
-            glBindTexture(GL_TEXTURE_2D, SSRTexture[i]);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
-            glGenerateMipmap(GL_TEXTURE_2D);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // We clamp to the edge as the blur filter would otherwise sample repeated texture values!
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, SSRTexture[i], 0);
-        }
-        // Also check if framebuffers are complete (no need for depth buffer)
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            std::cout << "Framebuffer not complete!" << std::endl;
+        
+        mSSRFramebuffer[0] = (std::shared_ptr<OpenGL::FrameBuffer<int>>)new OpenGL::FrameBuffer<int>(width, height, false);
+        mSSRFramebuffer[0]->addRenderTarget(0, GL_RGBA16F, GL_RGBA, GL_NEAREST, GL_NEAREST, false);
+        mSSRFramebuffer[0]->FinishFrameBuffer();
+        
+        mSSRFramebuffer[1] = (std::shared_ptr<OpenGL::FrameBuffer<int>>)new OpenGL::FrameBuffer<int>(width, height, false);
+        mSSRFramebuffer[1]->addRenderTarget(0, GL_RGBA16F, GL_RGBA, GL_NEAREST, GL_NEAREST, false);
+        mSSRFramebuffer[1]->FinishFrameBuffer();
 
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        //setupPingPongSSR();
-        setupDownSampledSSR();
     }
 
     void PostProcess::setupDenoise()
     {
-        glGenFramebuffers(1, &DenoiseFBO);
-        glGenTextures(1, &DenoiseTexture);
-        glBindFramebuffer(GL_FRAMEBUFFER, DenoiseFBO);
-        glBindTexture(GL_TEXTURE_2D, DenoiseTexture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, NULL);
-        //glGenerateMipmap(GL_TEXTURE_2D);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // We clamp to the edge as the blur filter would otherwise sample repeated texture values!
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, DenoiseTexture, 0);
-        // Also check if framebuffers are complete (no need for depth buffer)
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            std::cout << "Framebuffer not complete!" << std::endl;
 
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        mDenoiseFramebuffer = (std::shared_ptr<OpenGL::FrameBuffer<int>>)new OpenGL::FrameBuffer<int>(width, height, false);
+        mDenoiseFramebuffer->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_NEAREST, GL_NEAREST, false);
+        mDenoiseFramebuffer->FinishFrameBuffer();
     }
 
     void PostProcess::setupPingPongSSR()
@@ -695,12 +590,12 @@ namespace Epsilon
     void PostProcess::SSRPass(std::shared_ptr<Camera> &cam)
     {
 
-        glBindFramebuffer(GL_FRAMEBUFFER, SSRFBO[CurrentSSR]);
+        mSSRFramebuffer[CurrentSSR]->bindFramebuffer();
+        mSSRFramebuffer[CurrentSSR]->setViewport();
         //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glDisable(GL_BLEND);
         ScreenSpaceReflectionShader->Use();
-        glViewport(0, 0, width, height);
         glActiveTexture(GL_TEXTURE0);
         glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "gFinalImage"), 0);
         glBindTexture(GL_TEXTURE_2D, hdrFBO->getRenderTargetHandler("colorBuffer"));
@@ -735,7 +630,7 @@ namespace Epsilon
 
         glActiveTexture(GL_TEXTURE6);
         glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "PreviousReflection"), 6);
-        glBindTexture(GL_TEXTURE_2D, SSRTexture[!CurrentSSR]);
+        glBindTexture(GL_TEXTURE_2D, mSSRFramebuffer[!CurrentSSR]->getRenderTargetHandler(0));
 
         glActiveTexture(GL_TEXTURE7);
         glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "gAlbedo"), 7);
@@ -780,15 +675,15 @@ namespace Epsilon
 
         if (cam->isMoving())
         {
-            glBindFramebuffer(GL_FRAMEBUFFER, DenoiseFBO);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            mDenoiseFramebuffer->bindFramebuffer();
+            mDenoiseFramebuffer->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            mDenoiseFramebuffer->setViewport();
             glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
             DenoiseShader->Use();
-            glViewport(0, 0, width, height);
             glActiveTexture(GL_TEXTURE0);
             glUniform1i(glGetUniformLocation(DenoiseShader->getProgramID(), "texture0"), 0);
-            glBindTexture(GL_TEXTURE_2D, SSRTexture[CurrentSSR]);
+            glBindTexture(GL_TEXTURE_2D, mSSRFramebuffer[CurrentSSR]->getRenderTargetHandler(0));
 
             glActiveTexture(GL_TEXTURE1);
             glUniform1i(glGetUniformLocation(DenoiseShader->getProgramID(), "roughnessTex"), 1);
@@ -849,38 +744,7 @@ namespace Epsilon
 
     void PostProcess::DownSampleSSR(double frametime)
     {
-        /*
-    glBindFramebuffer(GL_FRAMEBUFFER, DownSamplerFBO);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
-
-    PassThroughShader->Use();
-    glViewport(0,0, 1, 1);
-    glBindTexture(GL_TEXTURE_2D, mCompositeImage->getRenderTargetHandler(0));
-    glGenerateMipmap(GL_TEXTURE_2D);
-    RenderQuad();
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    PassThroughShader->Free();
-
-    glBindFramebuffer(GL_FRAMEBUFFER, DownSamplerFBO);
-
-    GLfloat luminescence[3];
-    glReadPixels(0, 0, 1, 1, GL_RGB, GL_FLOAT, &luminescence);
-    GLfloat lum = 0.2126 * luminescence[0] + 0.7152 * luminescence[1] + 0.0722 * luminescence[2];
-    if((0.07/lum) > m_exposure)
-    	m_exposure += frametime * 2.0f;
-    else if((0.07/lum) < m_exposure)
-    	m_exposure -= frametime * 2.0f;
-    else {}
-
-    m_exposure = glm::clamp(m_exposure, 7.0f, 12.0f);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    */
         m_exposure = 10.0f;
-        // std::cout << m_exposure << std::endl;
     }
 
     GLuint PostProcess::blurSSR(GLuint Buffer)
@@ -963,17 +827,17 @@ namespace Epsilon
 
         if (isMoving)
         {
-            glBindTexture(GL_TEXTURE_2D, DenoiseTexture /*SSRTexture[CurrentSSR]*/);
-            ReflectionTexture = DenoiseTexture;
+            glBindTexture(GL_TEXTURE_2D, mDenoiseFramebuffer->getRenderTargetHandler(0) /*SSRTexture[CurrentSSR]*/);
+            ReflectionTexture = mDenoiseFramebuffer->getRenderTargetHandler(0);
         }
         else
         {
-            glBindTexture(GL_TEXTURE_2D, SSRTexture[CurrentSSR]);
-            ReflectionTexture = SSRTexture[CurrentSSR];
+            glBindTexture(GL_TEXTURE_2D, mSSRFramebuffer[CurrentSSR]->getRenderTargetHandler(0));
+            ReflectionTexture = mSSRFramebuffer[CurrentSSR]->getRenderTargetHandler(0);
             if (TotalFrames >= 250)
             {
-                glBindTexture(GL_TEXTURE_2D, SSRTexture[!CurrentSSR]);
-                ReflectionTexture = SSRTexture[!CurrentSSR];
+                glBindTexture(GL_TEXTURE_2D, mSSRFramebuffer[!CurrentSSR]->getRenderTargetHandler(0));
+                ReflectionTexture = mSSRFramebuffer[!CurrentSSR]->getRenderTargetHandler(0);
             }
             glGenerateMipmap(GL_TEXTURE_2D);
         }

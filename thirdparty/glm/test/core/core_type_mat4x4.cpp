@@ -146,7 +146,7 @@ static int test_member_alloc_bug()
 	
 	struct repro
 	{
-		repro(){ this->matrix = new glm::mat4(1.0); }
+		repro(){ this->matrix = new glm::mat4(); }
 		~repro(){delete this->matrix;}
 		
 		glm::mat4* matrix;
@@ -163,7 +163,7 @@ static int test_size()
 
 	Error += 64 == sizeof(glm::mat4) ? 0 : 1;
 	Error += 128 == sizeof(glm::dmat4) ? 0 : 1;
-	Error += glm::mat4(1.0).length() == 4 ? 0 : 1;
+	Error += glm::mat4().length() == 4 ? 0 : 1;
 	Error += glm::dmat4().length() == 4 ? 0 : 1;
 	Error += glm::mat4::length() == 4 ? 0 : 1;
 	Error += glm::dmat4::length() == 4 ? 0 : 1;
