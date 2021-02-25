@@ -122,6 +122,7 @@ namespace Epsilon
                 glfwSetCursorPosCallback(mWindowHandle->getHandle(), Input::Mouse::MouseCallBackGLFW);
                 glfwSetJoystickCallback(Input::Joystick::JoystickManager::JoystickCallbackGLFW);
                 glfwSetMouseButtonCallback(mWindowHandle->getHandle(), Input::Mouse::MouseButtonCallbackGLFW);
+                glfwSetScrollCallback(mWindowHandle->getHandle(), Input::Mouse::MouseWheelCallbackGLFW);
                 
                 glfwSetInputMode(mWindowHandle->getHandle(), GLFW_STICKY_KEYS, true);
                 glfwSetInputMode(mWindowHandle->getHandle(), GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);

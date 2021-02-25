@@ -39,15 +39,22 @@ using namespace std::placeholders;
 float mpos = -20.0;
 float blend = 1.0f;
 
-double Input::Mouse::XPOS = 500;
-double Input::Mouse::YPOS = 500;
+double Epsilon::Input::Mouse::XPOS = 500;
+double Epsilon::Input::Mouse::YPOS = 500;
 
-Input::Mouse::STATE Input::Mouse::LEFT = Input::Mouse::RELEASED;
-Input::Mouse::STATE Input::Mouse::MIDDLE = Input::Mouse::RELEASED;
-Input::Mouse::STATE Input::Mouse::RIGHT = Input::Mouse::RELEASED;
+double Epsilon::Input::Mouse::prevxOffset = 0.0;
+double Epsilon::Input::Mouse::prevyOffset = 0.0;
 
-namespace Joystick = Input::Joystick;
+Epsilon::Input::STATE Epsilon::Input::Mouse::LEFT = Input::RELEASED;
+Epsilon::Input::STATE Epsilon::Input::Mouse::MIDDLE = Input::RELEASED;
+Epsilon::Input::STATE Epsilon::Input::Mouse::RIGHT = Input::RELEASED;
+ 
+//Epsilon::Input::MouseArgs Epsilon::Input::Mouse::mouseArgs;
 
+Epsilon::Event::Handler<Epsilon::Input::MouseArgs> Epsilon::Input::Mouse::MouseEventHandler;
+ 
+namespace Joystick = Epsilon::Input::Joystick;
+ 
 std::unordered_map<unsigned, Joystick::JoystickManager::Joystick_ptr> Joystick::JoystickManager::JoystickVector;
 Joystick::JoystickManager::Joystick_ptr Joystick::JoystickManager::dummyJoystick = std::make_shared<Input::Joystick::Joystick>();
 
@@ -245,10 +252,19 @@ namespace Epsilon
         eCamera.push_back(std::make_shared<Camera>(glm::vec3(0.0f, 8.25f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
         eCamera.push_back(std::make_shared<Camera>(glm::vec3(20.0f, 30.25f, -60.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
 
+        Input::Mouse::MouseEventHandler += ([](auto* sender, Event::EventArgs* args){
+            if(args == nullptr) return;
+
+            auto obj = args->to<Input::MouseArgs>();
+            if(obj.Left().State == Input::PRESSED) {
+                std::cout << "Left button pressed" << std::endl;
+            }
+        }); 
+
         this->ComputeCamera(NO_CLIP, glm::vec3(0.0f, 8.25f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
         shadowMap = std::move((shared_ptr<Renderer::ShadowMap>)(new Renderer::ShadowMap(DATA.SHADOWMAP_SIZE, DATA.SHADOWMAP_SIZE, -20.0f, 80.0f)));
-
+ 
         mPointShadow = std::make_shared<Renderer::PointShadow>(glm::vec3(-5, 19.2, -28.74));
         mPointShadow->Setup();
 

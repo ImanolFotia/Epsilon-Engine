@@ -1,7 +1,7 @@
 #pragma once
 
 #include <IO/Joystick/JoystickWrapper.h>
-
+namespace Epsilon {
 namespace Input
 {
 
@@ -460,3 +460,4 @@ namespace DUALSHOCK3
 
 } // namespace Joystick
 } // namespace Input
+}

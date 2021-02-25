@@ -14,6 +14,12 @@
 #include <glm/gtc/quaternion.hpp>
 #include <GLFW/glfw3.h>
 
+#include <IO/KeyBoard.h>
+#include <IO/Mouse.h>
+#include <IO/Joystick/Joystick.h>
+
+#include <Event/EventSystem.hpp>
+
 namespace Epsilon
 {
     class Camera
@@ -61,8 +67,14 @@ namespace Epsilon
         void setViewMatrix(glm::mat4);
 
         bool isMoving();
-        
+
         void isMoving(bool);
+
+        void onMouseMoveCallback(Event::Sender *sender, Event::EventArgs *args)
+        {
+        }
+
+        void onMouseWheelCallback(Event::Sender *sender, Event::EventArgs *args);
 
     private:
         void LockCamera(void);

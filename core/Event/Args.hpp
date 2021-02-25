@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Event.hpp"
+#include "Handler.hpp"
 
 namespace Epsilon
 {
@@ -10,6 +11,11 @@ namespace Epsilon
         {
         public:
             virtual ~EventArgs() {}
+
+        protected:
+            HandlerType indentifier;
+
+            friend class Handler<EventArgs>;
         };
     }
 }

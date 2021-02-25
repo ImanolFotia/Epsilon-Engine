@@ -9,42 +9,44 @@
 #include <pch.hpp>
 #include <GLFW/glfw3.h>
 #include <IO/KeyboardWrapper.h>
-
-namespace Input
+namespace Epsilon
 {
-
-    class KeyWraps
+    namespace Input
     {
-    public:
-        void addKey(const char *alias, uint16_t key)
-        {
-            kw[alias] = key;
-        }
 
-        uint16_t getKey(const char *alias)
+        class KeyWraps
         {
-            return kw.at(alias);
-        }
+        public:
+            void addKey(const char *alias, uint16_t key)
+            {
+                kw[alias] = key;
+            }
+
+            uint16_t getKey(const char *alias)
+            {
+                return kw.at(alias);
+            }
+
         private:
-        std::unordered_map<const char *, uint16_t> kw;
-    };
+            std::unordered_map<const char *, uint16_t> kw;
+        };
 
-    class KeyBoard
-    {
-    private:
+        class KeyBoard
+        {
+        private:
+        public:
+            static KeyWraps KeyWrap;
 
-    public:
-        static KeyWraps KeyWrap;
+            static bool KEYS[1024];
 
-        static bool KEYS[1024];
+            static void KeyBoardCallBackGLFW(GLFWwindow *window, int key, int scancode, int action, int mode);
 
-        static void KeyBoardCallBackGLFW(GLFWwindow *window, int key, int scancode, int action, int mode);
+            static bool getKey(uint16_t);
 
-        static bool getKey(uint16_t);
+            static bool getKey(const char *);
 
-        static bool getKey(const char *);
+            static void wrapKey(const char *, uint16_t);
+        };
 
-        static void wrapKey(const char *, uint16_t);
-    };
-
-} // namespace Input
+    } // namespace Input
+}

@@ -2,44 +2,47 @@
 #include <pch.hpp>
 #include <IO/KeyBoard.h>
 
-bool Input::KeyBoard::KEYS[1024] = {false};
-
-//std::unordered_map<const char *, uint16_t> Input::KeyWraps::kw;
-
-Input::KeyWraps Input::KeyBoard::KeyWrap;
-
-
-namespace Input
+namespace Epsilon
 {
+    bool Input::KeyBoard::KEYS[1024] = {false};
 
-void KeyBoard::KeyBoardCallBackGLFW(GLFWwindow* window, int key, int scancode, int action, int mode)
-{
-    if (key >= 0 && key < 1024)
+    //std::unordered_map<const char *, uint16_t> Input::KeyWraps::kw;
+
+    Input::KeyWraps Input::KeyBoard::KeyWrap;
+    namespace Input
     {
-        if (action == GLFW_PRESS)
+
+        void KeyBoard::KeyBoardCallBackGLFW(GLFWwindow *window, int key, int scancode, int action, int mode)
         {
-            KEYS[key] = true;
-            //std::cout << "Pressed: " << KEYS[key] << std::endl;
+            if (key >= 0 && key < 1024)
+            {
+                if (action == GLFW_PRESS)
+                {
+                    KEYS[key] = true;
+                    //std::cout << "Pressed: " << KEYS[key] << std::endl;
+                }
+                else if (action == GLFW_RELEASE)
+                {
+                    KEYS[key] = false;
+                    //std::cout << "Released: " << KEYS[key] << std::endl;
+                }
+            }
         }
-        else if (action == GLFW_RELEASE)
+
+        bool KeyBoard::getKey(uint16_t key)
         {
-            KEYS[key] = false;
-            //std::cout << "Released: " << KEYS[key] << std::endl;
+            return KEYS[key];
+        }
+
+        bool KeyBoard::getKey(const char *alias)
+        {
+            return KEYS[KeyWrap.getKey(alias)];
+        }
+
+        void KeyBoard::wrapKey(const char *alias, uint16_t key)
+        {
+            KeyWrap.addKey(alias, key);
         }
 
     }
-}
-
-bool KeyBoard::getKey(uint16_t key) {
-    return KEYS[key];
-}
-
-bool KeyBoard::getKey(const char* alias) {
-    return KEYS[KeyWrap.getKey(alias)];
-}
-
-void KeyBoard::wrapKey(const char* alias, uint16_t key){
-    KeyWrap.addKey(alias, key);
-}
-
 }

@@ -1,4 +1,5 @@
 #include "ResourceManager.h"
+#include "ProgramData.h"
 
 namespace Epsilon
 {
@@ -18,6 +19,7 @@ namespace Epsilon
                 TextureList.insert(std::make_pair(texPath, tmpTex));
                 return texPath;*/
 
+                ProgramData DATA;
                 using Renderer::Texture2D;
 
                 API::TextureBase::TextureBase::TextureData TextureData;
@@ -32,6 +34,7 @@ namespace Epsilon
                 auto data = SOIL_load_image(path, &outwidth, &outheight, &outchannels, SOIL_LOAD_RGBA);
                 TextureData.Width = outwidth;
                 TextureData.Height = outheight;
+                TextureData.AnisotropyLevel = DATA.ANISOTROPY;
                 auto tmpTex = std::make_shared<Texture2D>();
                 tmpTex->Create(TextureData);
                 tmpTex->setData(data, 0);

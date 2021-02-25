@@ -8,6 +8,7 @@ namespace Epsilon
     {
         class EventArgs;
         class Sender;
+        class Event;
 
         // using Sender = void *;
         using EventFunction = std::function<void(const Event &)>;
@@ -28,6 +29,11 @@ namespace Epsilon
                 return static_cast<const EventType &>(*this);
             }
         };
+
+        template <typename F, typename T>
+        static EventFunctionwSendernArgs bind(F const & fn, T* o) {
+            return std::bind(fn, o, std::placeholders::_1, std::placeholders::_2);
+        }
 
     }
 }

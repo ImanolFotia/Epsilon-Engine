@@ -1,6 +1,7 @@
 #pragma once
 
 
+namespace Epsilon {
 namespace Input
 {
 
@@ -17,3 +18,4 @@ static constexpr const char * XBOX360 = "Controller ";
 static constexpr const char * XBOXONE = "Xbox Controller";
 }
 } // namespace Input
+}

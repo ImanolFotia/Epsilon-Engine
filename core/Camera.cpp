@@ -10,9 +10,6 @@
 
 #include <camera.h>
 #include <math.h>
-#include <IO/KeyBoard.h>
-#include <IO/Mouse.h>
-#include <IO/Joystick/Joystick.h>
 
 #include <Types.h>
 
@@ -37,7 +34,28 @@ namespace Epsilon
         this->MaxMovementSpeed = 5.3;
         this->horizontalAngle = 0.0;
         this->verticalAngle = 0.0;
+        
+        using namespace Input;
+
+        Mouse::MouseEventHandler.addListener<MouseArgs>(Event::bind(&onMouseWheelCallback, this));
     }
+
+    void Camera::onMouseWheelCallback(Event::Sender *sender, Event::EventArgs *args)
+        {
+            if(args == nullptr) return;
+
+            using Input::STATE::UP, Input::STATE::DOWN;
+            auto obj = args->to<Input::MouseArgs>();
+
+            if (obj.Wheel().State == UP)
+            {
+                Position = Position + Orientation * (float)obj.Wheel().yOffset;
+            }
+            else if (obj.Wheel().State == DOWN)
+            {
+                Position = Position - Orientation * (float)obj.Wheel().yOffset;
+            }
+        }
 
     void Camera::Update(GLFWwindow *win)
     {
@@ -86,7 +104,7 @@ namespace Epsilon
         float DeltaTime = float(currentTime - LastTime);
 
         static double lastX = 0.0, lastY = 0.0;
-
+ 
         glfwGetWindowSize(window, &winx, &winy);
 
         auto _Joystick = Input::Joystick::JoystickManager::PrimaryJoystick();

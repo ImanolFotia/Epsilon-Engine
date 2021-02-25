@@ -105,7 +105,5 @@ namespace Epsilon
             }
         };
 
-        CallbackMap Dispatcher::callbackMap;
-        HandlerMapping Dispatcher::Mapping;
     }
 }

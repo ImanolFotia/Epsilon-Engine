@@ -13,7 +13,7 @@ void Pick::CheckforPicking(btVector3 from, btVector3 to, btScalar length, std::s
 {
     this->rayTo = to;
     this->rayFrom = from;
-    if(Input::KeyBoard::KEYS[Input::GLFW::Key::E])
+    if(Epsilon::Input::KeyBoard::KEYS[Epsilon::Input::GLFW::Key::E])
     {
         if(!active)
         {

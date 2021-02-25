@@ -475,7 +475,7 @@ namespace Epsilon
             {
                 if (mShouldResize || mWaitingResize)
                 {
-                    if (Input::Mouse::LEFT == Input::Mouse::PRESSED)
+                    if (Input::Mouse::LEFT == Input::PRESSED)
                     {
                         mWaitingResize = true;
                     }
