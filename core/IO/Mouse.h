@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include <Event/EventSystem.hpp>
+#include <beacon/beacon.hpp>
 
 namespace Epsilon
 {
@@ -25,7 +25,7 @@ namespace Epsilon
             double yOffset = 0.0;
         };
 
-        class MouseArgs : public Event::EventArgs
+        class MouseArgs : public beacon::args
         {
         public:
             const Button &Right() { return right; }
@@ -62,7 +62,7 @@ namespace Epsilon
             static STATE MIDDLE;
             static STATE LEFT;
 
-            static Event::Handler<MouseArgs> MouseEventHandler;
+            static beacon::single_handler<MouseArgs> MouseEventHandler;
 
             static double prevxOffset;
             static double prevyOffset;

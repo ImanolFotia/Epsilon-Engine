@@ -1,4 +1,0 @@
-D:\Epsilon\Epsilon Engine\build\EpsilonCreator\x64\Debug\glad.pdb
-D:\Epsilon\Epsilon Engine\build\glad\x64\Debug\glad.pdb
-H:\Epsilon\Epsilon Engine\build\EpsilonCreator\x64\Debug\glad.pdb
-H:\Epsilon\Epsilon Engine\build\glad\x64\Debug\glad.pdb

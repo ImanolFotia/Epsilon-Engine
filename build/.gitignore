@@ -1,9 +1,0 @@
-*.db
-*.lib
-*.exe
-*.ipch
-*.pdb
-
-/Epsilon
-
-/.vs

@@ -30,6 +30,9 @@ extern "C"
 }
 #endif
 
+
+
+
 namespace Epsilon
 {   
     std::shared_ptr<Platform::WindowBase> Init(const char *ProgramName)

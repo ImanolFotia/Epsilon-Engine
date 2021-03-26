@@ -65,6 +65,7 @@ INCLUDE_LIBS:= -I$(LIB)/glm \
 -I$(LIB)/glad/include \
 -I$(LIB)/OpenGL/include/ \
 -I$(LIB)/json-develop/include \
+-I$(LIB)/beacon \
 -I$(LIB)/imgui-docking/imgui-docking
 else
 INCLUDE_LIBS:=  -I$(LIB)/inih/cpp \

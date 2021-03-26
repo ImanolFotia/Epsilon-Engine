@@ -18,7 +18,7 @@
 #include <IO/Mouse.h>
 #include <IO/Joystick/Joystick.h>
 
-#include <Event/EventSystem.hpp>
+#include <beacon/beacon.hpp>
 
 namespace Epsilon
 {
@@ -70,11 +70,11 @@ namespace Epsilon
 
         void isMoving(bool);
 
-        void onMouseMoveCallback(Event::Sender *sender, Event::EventArgs *args)
+        void onMouseMoveCallback(beacon::sender *sender, beacon::args *args)
         {
         }
 
-        void onMouseWheelCallback(Event::Sender *sender, Event::EventArgs *args);
+        void onMouseWheelCallback(beacon::sender *sender, beacon::args *args);
 
     private:
         void LockCamera(void);

@@ -18,10 +18,16 @@ namespace Epsilon
 {
     class ResourceManager
     {
+        using TextureArray = std::map<std::string, std::shared_ptr<Renderer::Texture2D>>;
     public:
         ResourceManager(const ResourceManager &) = delete;
 
         static ResourceManager &Get()
+        {
+            return instance;
+        }
+        
+        static ResourceManager &Instance()
         {
             return instance;
         }
@@ -39,9 +45,9 @@ namespace Epsilon
                 itr->second->Destroy();
             }
 
-            for (std::map<std::string, Model>::iterator itr = ModelList.begin(); itr != ModelList.end(); itr++)
+            for (std::map<std::string, std::shared_ptr<Model>>::iterator itr = ModelList.begin(); itr != ModelList.end(); itr++)
             {
-                itr->second.Destroy();
+                itr->second->Destroy();
             }
             
             std::cout << "Deleted Resource Manager" << std::endl;
@@ -49,21 +55,15 @@ namespace Epsilon
 
         std::string requestTexture(const std::string& texPath);
 
-        std::string requestModel(const std::string& modelPath, glm::vec3 Pos, glm::vec3 scs, glm::quat rot);
+        std::string requestModel(const std::string& modelPath);
 
-        void useModel(const std::string& modelPath, std::shared_ptr<Shader> shader, glm::vec3);
+        //std::shared_ptr<Model> useModel(const std::string& modelPath, std::shared_ptr<Shader> shader, glm::vec3);
 
-        void useModel(const std::string& modelPath, GLuint shader, glm::vec3);
+        //std::shared_ptr<Model> useModel(const std::string& modelPath, GLuint shader, glm::vec3);
 
         MIN_MAX_POINTS getModelBoundingBox(const std::string& modelPath);
 
         void setModelVisibility(const std::string& path, bool visibility);
-
-        glm::quat getModelRotation(const std::string& path);
-
-        glm::vec3 getModelPosition(const std::string& path);
-
-        glm::vec3 getModelScale(const std::string& path);
 
         //void setModelUniforms(const std::string&, std::shared_ptr<Shader>, glm::vec3, glm::vec3, glm::quat, std::shared_ptr<Camera>);
 
@@ -102,7 +102,12 @@ namespace Epsilon
 
         bool addCubemap(std::shared_ptr<CubeMap>, glm::vec3);
 
-        Model getModel(const std::string& modelPath);
+        [[nodiscard]] std::shared_ptr<Model> getModel(const std::string& modelPath);
+        
+        template<class T>
+        [[nodiscard]] T Get(const std::string&) {
+            return 0;
+        }
 
         std::shared_ptr<Physics::Physics> getPhysicsWorld()
         {
@@ -116,6 +121,18 @@ namespace Epsilon
 
         uint32_t getNumCubemaps() {
             return mCubemapIndex.size();
+        }
+
+        uint32_t getNumTextures() {
+            return TextureList.size();
+        }
+        
+        uint32_t getNumModels() {
+            return ModelList.size();
+        }
+
+        const TextureArray & getTextureArray() {
+            return TextureList;
         }
 
         float timestep;
@@ -137,10 +154,10 @@ namespace Epsilon
 
         std::vector<int> mCubemapIndex;
 
-        std::map<std::string, std::shared_ptr<Renderer::Texture2D>> TextureList;
+        TextureArray TextureList;
         std::map<std::string, Water> WaterPlanesList;
         std::map<std::string, Terrain> TerrainList;
-        std::map<std::string, Model> ModelList;
+        std::map<std::string, std::shared_ptr<Model>> ModelList;
         std::map<std::string, std::shared_ptr<Shader>> ShadersList;
         std::vector<glm::vec3> CubeMapPositions;
 

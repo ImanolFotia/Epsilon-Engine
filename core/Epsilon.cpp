@@ -18,8 +18,6 @@
 #include <sys/CPUID.h>
 #include <Log.h>
 #include <sys/Console.hpp>
-#include <multithread/ThreadPool.hpp>
-#include <Driver/API/OpenGL/GlCache.h>
 #include <sys/GPU.hpp>
 #include <Scripts/LuaScript.hpp>
 
@@ -31,43 +29,16 @@
 
 #include <EditorGUI/Editor.hpp>
 
-GLenum glCache::CullFaceMode = 0;
-GLuint glCache::ShaderId = 0;
-unsigned glCache::DrawCalls = 0;
-
-using namespace std::placeholders;
 float mpos = -20.0;
 float blend = 1.0f;
-
-double Epsilon::Input::Mouse::XPOS = 500;
-double Epsilon::Input::Mouse::YPOS = 500;
-
-double Epsilon::Input::Mouse::prevxOffset = 0.0;
-double Epsilon::Input::Mouse::prevyOffset = 0.0;
-
-Epsilon::Input::STATE Epsilon::Input::Mouse::LEFT = Input::RELEASED;
-Epsilon::Input::STATE Epsilon::Input::Mouse::MIDDLE = Input::RELEASED;
-Epsilon::Input::STATE Epsilon::Input::Mouse::RIGHT = Input::RELEASED;
- 
-//Epsilon::Input::MouseArgs Epsilon::Input::Mouse::mouseArgs;
-
-Epsilon::Event::Handler<Epsilon::Input::MouseArgs> Epsilon::Input::Mouse::MouseEventHandler;
- 
-namespace Joystick = Epsilon::Input::Joystick;
- 
-std::unordered_map<unsigned, Joystick::JoystickManager::Joystick_ptr> Joystick::JoystickManager::JoystickVector;
-Joystick::JoystickManager::Joystick_ptr Joystick::JoystickManager::dummyJoystick = std::make_shared<Input::Joystick::Joystick>();
-
-bool Epsilon::CheckBox::_checked = true;
-ThreadPool::ThreadPool_ptr ThreadPool::_instance = nullptr;
 
 namespace Epsilon
 {
     ResourceManager ResourceManager::instance;
 
-    Epsilon::Epsilon(std::shared_ptr<Platform::WindowBase> win)
+    Epsilon::Epsilon(const char* name) : App(name)
     {
-        window = win;
+        //window = win;
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -145,13 +116,13 @@ namespace Epsilon
 
         m_CameraMode = NO_CLIP;
 
-        Editor::GUI::Init(window);
+        Editor::GUI::Init(mWindow);
 
         Editor::GUI::WIDTH = &WIDTH;
         Editor::GUI::HEIGHT = &HEIGHT;
         //window->HideCursor();
 
-        mDefaultFrameBuffer = std::make_shared<OpenGL::FrameBuffer<int>>(window->getWindowData().Width, window->getWindowData().Height, false);
+        mDefaultFrameBuffer = std::make_shared<OpenGL::FrameBuffer<int>>(mWindow->getWindowData().Width, mWindow->getWindowData().Height, false);
         mDefaultFrameBuffer->addRenderTarget(0, GL_RGB, GL_RGB, GL_NEAREST, GL_NEAREST, false);
         mDefaultFrameBuffer->FinishFrameBuffer();
 
@@ -179,7 +150,7 @@ namespace Epsilon
         texture.Destroy();
     }
 
-    void Epsilon::InitResources(void)
+    void Epsilon::onCreate()
     {
         cout << "Initializing Resources..." << endl;
 
@@ -252,7 +223,7 @@ namespace Epsilon
         eCamera.push_back(std::make_shared<Camera>(glm::vec3(0.0f, 8.25f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
         eCamera.push_back(std::make_shared<Camera>(glm::vec3(20.0f, 30.25f, -60.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
 
-        Input::Mouse::MouseEventHandler += ([](auto* sender, Event::EventArgs* args){
+        Input::Mouse::MouseEventHandler += ([](auto* sender, beacon::args* args){
             if(args == nullptr) return;
 
             auto obj = args->to<Input::MouseArgs>();
@@ -273,7 +244,7 @@ namespace Epsilon
 
         //RenderSplashScreen("Loading Geometry...");
         this->LoadGeometry();
-
+ 
         this->LoadSound();
 
         std::vector<string> modelsNames;
@@ -455,7 +426,7 @@ namespace Epsilon
         glClearColor(0.1, 0.1, 0.1, 1.0);
         glViewport(0, 0, 1024, 1024);
         glEnable(GL_DEPTH_TEST);
-        eCamera[mCurrentCamera]->Update(window->getHandle()->getHandle());
+        eCamera[mCurrentCamera]->Update(mWindow->getHandle()->getHandle());
         eCamera[mCurrentCamera]->UpdateMatrices(0, WIDTH, HEIGHT);
         sun->Update();
         glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
@@ -735,8 +706,8 @@ namespace Epsilon
         //std::cout << "Resource manager in epsilon address: " << rM.get() << std::endl;
 
         ResourceManager::Get().requestCubeMap(50000, glm::vec3(4.8, 80000.2, -8));
-        ResourceManager::Get().requestModel("models/esfera.eml", glm::vec3(78.0, 5.25, -57), glm::vec3(1), glm::quat(0.0, 0.0, 0.0, 0.0));
-        ResourceManager::Get().requestModel("models/sphere.eml", glm::vec3(78.0, 5.25, -57), glm::vec3(1), glm::quat(0.0, 0.0, 0.0, 0.0));
+        ResourceManager::Get().requestModel("models/esfera.eml"/*, glm::vec3(78.0, 5.25, -57), glm::vec3(1), glm::quat(0.0, 0.0, 0.0, 0.0)*/);
+        ResourceManager::Get().requestModel("models/sphere.eml"/*, glm::vec3(78.0, 5.25, -57), glm::vec3(1), glm::quat(0.0, 0.0, 0.0, 0.0)*/);
         //rM->requestModel("models/Desk.eml", rM, glm::vec3(-2.0,8.0,10.0), glm::vec3(0.9), glm::quat(1, 0.0, -1.0, 0.0));
         //rM->requestModel("models/sponza.eml", rM, glm::vec3(-16,5.0,-15), glm::vec3(0.025), glm::quat(0, 0.0, 0, 0.0));
         float first, second, delta;
@@ -817,7 +788,7 @@ namespace Epsilon
                 shader->Use();
                 shader->PushUniform("parallaxOn", ParallaxOn);
                 shader->PushUniform("ambientDivider", Editor::GUI::ambientDivider);
-                shader->PushUniform("FrameNumber", (int)window->FrameNumber());
+                shader->PushUniform("FrameNumber", (int)mWindow->FrameNumber());
 
                 ResourceManager::Get().setModelUniforms(EntityList[i]->getModelPath(), shader, EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation(),
                                                         EntityList[i]->getPrevPosition(), EntityList[i]->getPrevScale(), EntityList[i]->getPrevRotation(),
@@ -872,9 +843,10 @@ namespace Epsilon
                     continue;
 
             //shader->Use();
-            shader->PushUniform("FrameNumber", (int)window->FrameNumber());
+            shader->PushUniform("FrameNumber", (int)mWindow->FrameNumber());
             this->SetUniforms(shader, EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation());
-            ResourceManager::Get().useModel(EntityList[i]->getModelPath(), shader, EntityList[i]->getPosition());
+            auto tModel = ResourceManager::Get().getModel(EntityList[i]->getModelPath()/*, shader, EntityList[i]->getPosition()*/);
+            tModel->Draw(shader);
         }
 
         //mPatch->updateVertexBuffers(mCloth->getVertices());
@@ -890,7 +862,7 @@ namespace Epsilon
         BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera[mCurrentCamera]->getProjectionMatrix() * eCamera[mCurrentCamera]->getViewMatrix()), BSPmodel);
         //shader->Use();
 
-        shader->PushUniform("FrameNumber", (int)window->FrameNumber());
+        shader->PushUniform("FrameNumber", (int)mWindow->FrameNumber());
         this->SetUniforms(shader, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.1, 0.1, 0.1), glm::quat(0.0, 0.0, 0.0, 0.0));
         BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), shader->getProgramID(), false);
 
@@ -975,13 +947,15 @@ namespace Epsilon
 
             Editor::GUI::DebugView(PP, mDefaultFrameBuffer, eCamera[mCurrentCamera]);
             Editor::GUI::MainViewport(mDefaultFrameBuffer, eCamera[mCurrentCamera]);
-
+ 
             Editor::GUI::SceneHierarchy(EntityList);
+ 
+            Editor::GUI::TextureList();
 
-            Editor::GUI::Render(window);
+            Editor::GUI::Render(mWindow);
         }
     }
-
+ 
     void Epsilon::ProcessAudio()
     {
 
@@ -1007,25 +981,25 @@ namespace Epsilon
         etime = Clock::TimeSeconds();
         frametime = etime - lastTime;
         double t = 0.0;
-
+ 
         fps = 1.0 / frametime;
         if (etime > t)
-        {
+        { 
             fpss << fps;
             t = etime + (double)1.000;
-        }
-
+        }  
+  
         eventtime += 1 * Clock::DeltaSeconds();
         //cout << eventtime << endl;
         sun->Update();
-
+ 
         ResourceManager::Get().timestep = Clock::LastSeconds();
-    }
-
+    } 
+  
     void Epsilon::RenderSkybox(bool state)
     {
         Shaders["SkyBox"]->Use();
-
+  
         glm::mat4 view = glm::mat4(glm::mat3(eCamera[mCurrentCamera]->getViewMatrix()));
         float rotation = 0.5 * Clock::TimeSeconds();
         glm::mat4 RotationMatrix = glm::rotate(glm::mat4(1.0), glm::radians(rotation), glm::vec3(0, 1, 0));
@@ -1124,8 +1098,8 @@ namespace Epsilon
             {
                 XPOS = CursorBeforeMenu.x; //mod(CursorBeforeMenu.x, this->WIDTH);
                 YPOS = CursorBeforeMenu.y; //mod(CursorBeforeMenu.y, this->HEIGHT);
-                glfwSetCursorPos(window->getHandle()->getHandle(), CursorBeforeMenu.x, CursorBeforeMenu.y);
-                window->HideCursor();
+                glfwSetCursorPos(mWindow->getHandle()->getHandle(), CursorBeforeMenu.x, CursorBeforeMenu.y);
+                mWindow->HideCursor();
                 this->m_CameraMode = NO_CLIP;
                 onMenu = false;
             }
@@ -1136,8 +1110,8 @@ namespace Epsilon
 
                 XPOS = this->WIDTH / 2;
                 YPOS = this->HEIGHT / 2;
-                window->ShowCursor();
-                glfwSetCursorPos(window->getHandle()->getHandle(), this->WIDTH / 2, this->HEIGHT / 2);
+                mWindow->ShowCursor();
+                glfwSetCursorPos(mWindow->getHandle()->getHandle(), this->WIDTH / 2, this->HEIGHT / 2);
                 this->m_CameraMode = CAMERA_FIXED;
                 mLastCameraDirection = eCamera[mCurrentCamera]->getDirection();
                 mLastCameraPosition = eCamera[mCurrentCamera]->getPosition();
@@ -1184,10 +1158,10 @@ namespace Epsilon
         //m_ParticleSystem->Simulate(this->frametime, eCamera[mCurrentCamera]->getPosition());
     }
 
-    void Epsilon::MainLoop(void)
+    void Epsilon::onRender()
     {
         // 0 8 6
-        while (g_Running && !window->WantsToClose())
+        while (g_Running && !mWindow->WantsToClose())
         {
             this->ClearBuffers();
 
@@ -1254,9 +1228,9 @@ namespace Epsilon
 
     void Epsilon::SwapBuffers(void)
     {
-        //glfwSwapBuffers(this->window->getHandle()->getHandle());
-        this->window->IncrementFrame();
-        this->window->SwapBuffers();
+        //glfwSwapBuffers(this->mWindow->getHandle()->getHandle());
+        this->mWindow->IncrementFrame();
+        this->mWindow->SwapBuffers();
         lastTime = etime;
     }
 
@@ -1267,7 +1241,7 @@ namespace Epsilon
 
     void Epsilon::ComputeCamera(CAMERA_MODE mode, glm::vec3 position, glm::vec3 direction, glm::mat4 proj, glm::mat4 view)
     {
-        this->eCamera[mCurrentCamera]->Update(this->window->getHandle()->getHandle());
+        this->eCamera[mCurrentCamera]->Update(this->mWindow->getHandle()->getHandle());
 
         if (mode == PLAYER_CONTROLLED)
         {
@@ -1296,7 +1270,7 @@ namespace Epsilon
         {
         }
 
-        this->eCamera[mCurrentCamera]->UpdateMatrices(window->FrameNumber(), WIDTH, HEIGHT);
+        this->eCamera[mCurrentCamera]->UpdateMatrices(mWindow->FrameNumber(), WIDTH, HEIGHT);
     }
 
     void Epsilon::ComputeShadow()

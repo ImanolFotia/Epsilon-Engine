@@ -1,2 +1,0 @@
-H:\Epsilon\Epsilon Engine\build\EpsilonCreator\x64\Debug\SOIL.pdb
-H:\Epsilon\Epsilon Engine\build\SOIL\x64\Debug\SOIL.pdb

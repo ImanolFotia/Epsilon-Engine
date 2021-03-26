@@ -7,36 +7,31 @@
 #include <pch.hpp>
 #include <Core.hpp>
 #include <ProgramData.h>
-#include <Epsilon.h>
 #include <Log.h>
+
+#include <Platform/WindowBase.hpp>
 
 namespace Epsilon
 {
     class App
     {
     public:
-        App(std::shared_ptr<Platform::WindowBase> win)
-        {
-            EpsilonEngine = std::make_shared<Epsilon>(win);
+        App(const char* appName);
 
-            EpsilonEngine->InitResources();
-        }
+        App() = default;
 
-        void Run()
-        {
-            std::cout << "==================================================" << std::endl;
-            std::cout << "Engine Initialization Complete." << std::endl;
-            std::cout << "Now Rendering." << std::endl;
+        void Begin();
 
-            EpsilonEngine->MainLoop();
-        }
+        void Run();
 
-        ~App()
-        {
-            std::cout << "Engine shutted down" << std::endl;
-        }
+        ~App();
 
     public:
-        std::shared_ptr<Epsilon> EpsilonEngine;
+        virtual void onCreate() = 0;
+        virtual void onRender() = 0;
+        virtual void onExit() = 0;
+
+    protected:
+        std::shared_ptr<Platform::WindowBase> mWindow;
     };
 } // namespace Epsilon

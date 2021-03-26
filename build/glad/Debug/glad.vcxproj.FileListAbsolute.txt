@@ -1,2 +1,0 @@
-D:\Epsilon\Epsilon Engine\build\EpsilonCreator\Debug\glad.pdb
-D:\Epsilon\Epsilon Engine\build\glad\Debug\glad.pdb

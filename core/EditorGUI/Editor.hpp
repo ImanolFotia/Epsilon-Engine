@@ -66,7 +66,7 @@ namespace Epsilon
                 onMenu = false;
             }
 
-            static void MainWindow(std::vector<std::shared_ptr<EntityBase>> & EntityList)
+            static void MainWindow(std::vector<std::shared_ptr<EntityBase>> &EntityList)
             {
                 static float f = 0.0f;
                 static int counter = 0;
@@ -280,7 +280,7 @@ namespace Epsilon
             }
 
             static void DebugView(std::shared_ptr<PostProcess> PP, std::shared_ptr<OpenGL::FrameBuffer<int>> framebuffer, std::shared_ptr<Camera> camera)
-            {/*
+            { /*
                 if (show_pipeline_viewer)
                 {
                     static ImVec2 fu = ImVec2(960, 300);
@@ -351,7 +351,7 @@ namespace Epsilon
                 ImGui::End();
             }
 
-            static void MainViewport(std::shared_ptr<OpenGL::FrameBuffer<int> > framebuffer, std::shared_ptr<Camera> camera)
+            static void MainViewport(std::shared_ptr<OpenGL::FrameBuffer<int>> framebuffer, std::shared_ptr<Camera> camera)
             {
 
                 ImGui::Begin("Main Render");
@@ -375,7 +375,65 @@ namespace Epsilon
                 ImGui::End();
             }
 
-            static void SceneHierarchy(std::vector<std::shared_ptr<EntityBase>> & EntityList)
+            static void TextureList()
+            {
+                static int imgSize = 128;
+
+                int numChoices = 4;
+
+                ImGui::Begin("Textures");
+                //Image size choise
+                {
+                    static std::string sizes[] = {"64", "128", "256", "512"};
+                    static std::string current_item = "128";
+                    if (ImGui::BeginCombo("Image size", current_item.c_str()))
+                    {
+                        for (int n = 0; n < numChoices; n++)
+                        {
+                            bool is_selected = (current_item == sizes[n]); // You can store your selection however you want, outside or inside your objects
+                            if (ImGui::Selectable(sizes[n].c_str(), is_selected))
+                            {
+                                current_item = sizes[n];
+                                imgSize = (n+1) * 64;
+                            }
+                        }
+                        ImGui::EndCombo();
+                    }
+                }
+
+                ImGuiStyle *style = &ImGui::GetStyle();
+                imgSize = glm::max(imgSize, 64);
+
+                float window_width = ImGui::GetWindowContentRegionWidth();
+
+                int numHorizontalImages = glm::max(((int)window_width / (int)(imgSize + (style->ItemSpacing.x * 2))), 1);
+
+                const auto &TextureArray = ResourceManager::Instance().getTextureArray();
+
+                ImGui::Columns(numHorizontalImages, NULL);
+                ImGui::Separator();
+
+                int counter = 0;
+                for (auto &texture : TextureArray)
+                {
+
+                    if (counter < 0 && counter % glm::max(numHorizontalImages, 1) == 0)
+                        ImGui::Separator();
+
+                    auto textureId = texture.second->ID();
+                    ImGui::Image((void *)textureId, ImVec2(imgSize, imgSize), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 0.5f));
+                    ImGui::Text(texture.first.c_str());
+                    ImGui::NextColumn();
+                    counter++;
+                }
+
+                ImGui::Columns(1);
+                ImGui::Separator();
+
+                ImGui::End();
+            }
+
+            static void SceneHierarchy(std::vector<std::shared_ptr<EntityBase>> &EntityList)
             {
                 ImGui::Begin("Hierarchy");
                 if (ImGui::TreeNode("Entities"))
@@ -491,11 +549,10 @@ namespace Epsilon
                         std::cout << "Needs to resize " << *WIDTH << " " << *HEIGHT << std::endl;
                         mWaitingResize = false;
                     }
-
                 }
-                    ImGui_ImplOpenGL3_NewFrame();
-                    ImGui_ImplGlfw_NewFrame();
-                    ImGui::NewFrame();
+                ImGui_ImplOpenGL3_NewFrame();
+                ImGui_ImplGlfw_NewFrame();
+                ImGui::NewFrame();
             }
         }
     }

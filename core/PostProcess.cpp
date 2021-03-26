@@ -239,7 +239,7 @@ namespace Epsilon
         gBufferFramebuffer = std::make_shared<OpenGL::FrameBuffer<int>>(width, height, true);
         gBufferFramebuffer->addRenderTarget(GBUFFER_ALBEDO_SPEC, GL_RGBA, GL_RGBA, GL_LINEAR, GL_LINEAR, false); //gAlbedoSpec
         gBufferFramebuffer->addRenderTarget(GBUFFER_NORMAL, GL_RGBA16F, GL_RGBA, GL_LINEAR, GL_LINEAR, false); //gExpensiveNormal
-        gBufferFramebuffer->addRenderTarget(GBUFFER_IBL_DEPTH, GL_RGBA32F, GL_RGBA, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, true); //gDepth
+        gBufferFramebuffer->addRenderTarget(GBUFFER_IBL_DEPTH, GL_RGBA32F, GL_RGBA, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST_MIPMAP_NEAREST, true); //gDepth
         gBufferFramebuffer->addRenderTarget(GBUFFER_MOTION_EXTRA, GL_RGBA16F, GL_RGBA, GL_NEAREST, GL_NEAREST, false); //gExtraComponents
         gBufferFramebuffer->addRenderTarget(GBUFFER_GI, GL_RGBA16F, GL_RGBA, GL_NEAREST, GL_NEAREST, false); //gLightAccumulation
         gBufferFramebuffer->FinishFrameBuffer();

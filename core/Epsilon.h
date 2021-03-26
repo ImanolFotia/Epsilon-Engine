@@ -9,6 +9,8 @@
 
 #include <pch.hpp>
 
+#include "App.hpp"
+
 #include <GLFW/glfw3.h>
 #include <Texture.h>
 #include <Shader.h>
@@ -29,9 +31,6 @@
 #include <ResourceManager.h>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
-#include <IO/KeyBoard.h>
-#include <IO/Mouse.h>
-#include <IO/Joystick/Joystick.h>
 #include <Player.h>
 #include <Audio/Audio.h>
 #include <Audio/AudioElement.h>
@@ -40,7 +39,6 @@
 #include <SphericalHarmonics.h>
 #include <Picking.h>
 #include <Log.h>
-#include <GUI/GUI.h>
 #include <sys/filesystem.h>
 #include <cubemapRenderer.h>
 #include <CubeMap.h>
@@ -60,14 +58,16 @@
 #include <imgui_imp/imgui_menubar.hpp>
 #include <imgui_imp/imgui_Init.hpp>
 
+#include <Renderer/Gizmos.hpp>
+
 namespace Epsilon
 {
-    class Epsilon
+    class Epsilon : public App
     {
     public:
-        Epsilon(std::shared_ptr<Platform::WindowBase>);
+        Epsilon(const char* name);
 
-        virtual ~Epsilon(void)
+        virtual ~Epsilon()
         {
             BSPMap->Destroy();
 
@@ -79,10 +79,6 @@ namespace Epsilon
 
             Log::WriteToLog("Epsilon Engine has closed Succesfully.");
         }
-
-        void MainLoop(void);
-
-        void InitResources(void);
 
     private:
         void LoadGeometry(void);
@@ -132,6 +128,15 @@ namespace Epsilon
         void CalculateVisibility();
 
     public:
+        void onRender() override;
+
+        void onCreate() override;
+
+        void onExit() override
+        {
+        }
+
+    public:
         std::vector<std::shared_ptr<Camera>> eCamera;
         int mCurrentCamera = 0;
         std::shared_ptr<Patch> mPatch;
@@ -152,7 +157,7 @@ namespace Epsilon
         std::shared_ptr<Renderer::ShadowMap> shadowMap;
         std::shared_ptr<Renderer::PointShadow> mPointShadow;
         std::shared_ptr<PostProcess> PP;
-        
+
         glm::vec3 ambientDivider;
         std::vector<std::shared_ptr<EntityBase>> EntityList;
         std::shared_ptr<IO::Audio::Audio> m_AudioSystem;
@@ -212,11 +217,10 @@ namespace Epsilon
         std::string GL_VER, GL_REN, GL_VEN;
         double m_TextAcum = 0.0;
 
-        std::shared_ptr<OpenGL::FrameBuffer<int>> mDefaultFrameBuffer; 
+        std::shared_ptr<OpenGL::FrameBuffer<int>> mDefaultFrameBuffer;
 
         //IMGUI variables
 
-        
         bool show_demo_window = true;
         bool show_another_window = false;
         ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);

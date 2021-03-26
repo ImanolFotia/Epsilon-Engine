@@ -16,7 +16,7 @@ namespace Epsilon
             {
                 mType = RENDERCOMPONENT;
                 hasModel = true;
-                ResourceManager::Get().requestModel(modelPath, mPosition, glm::vec3(1), glm::quat(0, 0, 0, 0));
+                ResourceManager::Get().requestModel(modelPath /*, mPosition, glm::vec3(1), glm::quat(0, 0, 0, 0)*/);
             }
 
             COMPONENT_TYPE getType() { return mType; }
@@ -57,14 +57,17 @@ namespace Epsilon
 
             void Render()
             {
-                if(isVisible) {
+                if (isVisible)
+                {
                     //glUniform1i(glGetUniformLocation(mResourceManager->getShader(shaderType).get(), "isTransparent"), this->isTransparent);
                     ResourceManager::Get().useShader(shaderType)->PushUniform("isTransparent", this->isTransparent);
                     if (isDoubleFaced())
                         glDisable(GL_CULL_FACE);
-                    else 
+                    else
                         glEnable(GL_CULL_FACE);
-                    ResourceManager::Get().useModel(modelPath, ResourceManager::Get().useShader(shaderType), mPosition);
+                    auto tModel = ResourceManager::Get().getModel(modelPath /*ResourceManager::Get().useShader(shaderType), mPosition*/);
+                    auto tShader = ResourceManager::Get().useShader(shaderType);
+                    tModel->Draw(tShader);
 
                     glEnable(GL_CULL_FACE);
                 }
@@ -72,7 +75,9 @@ namespace Epsilon
 
             void RenderShadows()
             {
-                ResourceManager::Get().useModel(modelPath, ResourceManager::Get().useShader(shaderType), mPosition);
+                auto tModel = ResourceManager::Get().getModel(modelPath /*ResourceManager::Get().useShader(shaderType), mPosition*/);
+                auto tShader = ResourceManager::Get().useShader(shaderType);
+                tModel->Draw(tShader);
             }
 
             void setShader(std::string sh)
@@ -102,7 +107,8 @@ namespace Epsilon
 
             void setTransparency(bool x) { isTransparent = x; }
 
-            void setVisibility(bool x) {
+            void setVisibility(bool x)
+            {
                 isVisible = x;
             }
 

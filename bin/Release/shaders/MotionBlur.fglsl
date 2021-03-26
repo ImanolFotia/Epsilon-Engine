@@ -32,7 +32,7 @@
       oResult = InitialSample;
 
       for (int i = 1; i < nSamples; ++i) {
-         vec2 offset = velocity * (float(i) / float(nSamples - 1) - 0.5);
+         vec2 offset = velocity * (float(i) / (float(nSamples - 1.0) - 0.5) );
          oResult +=  Degamma(texture(gFinalImage, screenTexCoords + offset));
       }
       

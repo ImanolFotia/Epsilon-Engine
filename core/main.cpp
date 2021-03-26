@@ -8,20 +8,16 @@
 
 #include <pch.hpp>
 
-#include <App.hpp>
-#include <Init.hpp>
+#include <Epsilon.h>
 
-#include <Platform/WindowBase.hpp>
 
 int main(int argc, char* argv[])
 {
-    std::shared_ptr<Epsilon::Platform::WindowBase> window = Epsilon::Init("Epsilon Engine");
+    Epsilon::Epsilon MainProgram("Epsilon Engine");
 
-    std::shared_ptr<Epsilon::App> MainProgram = std::make_shared<Epsilon::App>(window);
+    MainProgram.Begin();
 
-    MainProgram->Run();
-
-    glfwTerminate();
+    MainProgram.Run();
 
     return 0;
 }

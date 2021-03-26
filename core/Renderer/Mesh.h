@@ -39,6 +39,20 @@ namespace Epsilon
 
     class Mesh
     {
+
+        class MeshData
+        {
+            unsigned numVertices;
+            unsigned numIndices;
+            unsigned vertexOffset;
+            unsigned indexOffset;
+
+            public:
+                MeshData() = default;
+                MeshData(auto a, auto b, auto c, auto d)
+                        : numVertices(a), numIndices(b), vertexOffset(c), indexOffset(d) {}
+        };
+
     public:
         /**  Mesh Data  */
         std::vector<Renderer::t_Vertex> vertices;
@@ -53,11 +67,15 @@ namespace Epsilon
 
         /**  Functions  */
         /// Constructor
-        Mesh(std::vector<Renderer::t_Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures, int CubeMapindex = 1)
+        Mesh(std::vector<Renderer::t_Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures, unsigned vOffset, unsigned iOffset, int CubeMapindex = 1)
         {
             this->vertices = vertices;
             this->indices = indices;
             this->textures = textures;
+
+            mData = { vertices.size(), indices.size(), 0, 0 };
+
+
             CubeMapIndex = CubeMapindex;
             mGIIndex = 0;
             mCubemapIndex = 1;
@@ -160,8 +178,9 @@ namespace Epsilon
             glBindVertexArray(0);
         }
 
-        private:
-            uint32_t mGIIndex;
-            uint32_t mCubemapIndex;
+    private:
+        uint32_t mGIIndex;
+        uint32_t mCubemapIndex;
+        MeshData mData;
     };
 } // namespace Epsilon

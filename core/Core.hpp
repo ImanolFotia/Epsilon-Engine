@@ -78,4 +78,3 @@ typedef unsigned long DWORD, *PDWORD, *LPDWORD; //Defining because windows.h has
 #define COMPILE_FOR_GL
 
 #endif
-

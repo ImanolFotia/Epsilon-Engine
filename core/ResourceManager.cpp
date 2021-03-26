@@ -11,7 +11,7 @@ namespace Epsilon
             it = TextureList.find(texPath);
             if (it != TextureList.end())
             {
-                return texPath;//TextureList.at(it->first)->getPath();
+                return texPath; //TextureList.at(it->first)->getPath();
             }
             else
             {
@@ -52,20 +52,20 @@ namespace Epsilon
         return "";
     }
 
-    std::string ResourceManager::requestModel(const std::string &modelPath, glm::vec3 Pos, glm::vec3 scs, glm::quat rot)
+    std::string ResourceManager::requestModel(const std::string &modelPath)
     {
         try
         {
-            std::map<std::string, Model>::iterator it;
+            std::map<std::string, std::shared_ptr<Model>>::iterator it;
             it = ModelList.find(modelPath);
             if (it != ModelList.end())
             {
-                return ModelList.at(it->first).getPath();
+                return ModelList.at(it->first)->getPath();
             }
             else
             {
-                Model tmpModel(modelPath.c_str(), Pos, scs, rot);
-                ModelList.insert(std::make_pair(modelPath, tmpModel));
+                //std::shared_ptr<Model> tmpModel(modelPath.c_str());
+                ModelList.insert(std::make_pair(modelPath, std::make_shared<Model>(modelPath.c_str())));
                 return modelPath;
             }
         }
@@ -76,13 +76,13 @@ namespace Epsilon
         }
         return "";
     }
-
+    /*
     void ResourceManager::useModel(const std::string &modelPath, std::shared_ptr<Shader> shader, glm::vec3 pos = glm::vec3(0, 0, 0))
     {
         try
         {
 
-            ModelList.at(modelPath).Draw(shader);
+            ModelList.at(modelPath)->Draw(shader);
         }
 
         catch (std::exception &e)
@@ -90,7 +90,7 @@ namespace Epsilon
             std::cout << "Exception caught at: " << __FUNCTION__ << "useModel(" << modelPath << ", shader"
                       << ",glm:vec3(" << pos.x << ", " << pos.y << ", " << pos.z << ") :::" << e.what() << std::endl;
         }
-    }
+    }*/
     /*
 void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 pos = glm::vec3(0,0,0))
 {
@@ -105,7 +105,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
     }
 }*/
 
-    Model ResourceManager::getModel(const std::string &modelPath)
+    [[nodiscard]] std::shared_ptr<Model> ResourceManager::getModel(const std::string &modelPath)
     {
         try
         {
@@ -117,14 +117,14 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
 
-        return Model("", glm::vec3(0, 0, 0));
+        return nullptr;
     }
 
     MIN_MAX_POINTS ResourceManager::getModelBoundingBox(const std::string &modelPath)
     {
         try
         {
-            return ModelList.at(modelPath).MinMaxPoints;
+            return ModelList.at(modelPath)->MinMaxPoints;
         }
 
         catch (std::exception &e)
@@ -137,22 +137,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
 
     void ResourceManager::setModelVisibility(const std::string &path, bool visibility)
     {
-        ModelList.at(path).m_IsVisible = visibility;
-    }
-
-    glm::quat ResourceManager::getModelRotation(const std::string &path)
-    {
-        return ModelList.at(path).Rotation;
-    }
-
-    glm::vec3 ResourceManager::getModelPosition(const std::string &path)
-    {
-        return ModelList.at(path).Position;
-    }
-
-    glm::vec3 ResourceManager::getModelScale(const std::string &path)
-    {
-        return ModelList.at(path).Scale;
+        ModelList.at(path)->m_IsVisible = visibility;
     }
 
     //void ResourceManager::setModelUniforms(const std::string& path, std::shared_ptr<Shader> shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, std::shared_ptr<Camera> cam)
@@ -162,14 +147,14 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
 
     void ResourceManager::setModelUniforms(const std::string &path, std::shared_ptr<Shader> shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, glm::vec3 ppos, glm::vec3 psc, glm::quat prot, std::shared_ptr<Camera> cam)
     {
-        ModelList.at(path).SetUniforms(shader, pos, sc, rot, ppos, psc, prot, cam);
+        ModelList.at(path)->SetUniforms(shader, pos, sc, rot, ppos, psc, prot, cam);
     }
 
     void ResourceManager::destroyAllModels()
     {
-        for (std::map<std::string, Model>::iterator itr = ModelList.begin(); itr != ModelList.end(); itr++)
+        for (std::map<std::string, std::shared_ptr<Model>>::iterator itr = ModelList.begin(); itr != ModelList.end(); itr++)
         {
-            itr->second.Destroy();
+            itr->second->Destroy();
         }
     }
 
@@ -258,7 +243,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
             it = TextureList.find(texPath);
             if (it != TextureList.end())
             {
-                return 0;//TextureList.at(it->first)->getTimesUsed();
+                return 0; //TextureList.at(it->first)->getTimesUsed();
             }
             else
             {
@@ -470,6 +455,42 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
             return CubeMapList.at(ID)->getTextureID();
 
         return 0;
+    }
+    
+    template <>
+    [[nodiscard]] std::shared_ptr<Model> ResourceManager::Get(const std::string &name)
+    {
+        try
+        {
+            return ModelList.at(name);
+        }
+
+        catch (std::exception &e)
+        {
+            std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
+        }
+
+        return nullptr;
+    }
+
+    template <>
+    [[nodiscard]] std::shared_ptr<Renderer::Texture2D> ResourceManager::Get(const std::string &name)
+    {
+        try
+        {
+            if (name.empty() != true)
+            {
+                return TextureList.at(name);
+            }
+            else
+                return 0;
+        }
+
+        catch (std::exception &e)
+        {
+            std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
+        }
+        return nullptr;
     }
 
 } // namespace Epsilon

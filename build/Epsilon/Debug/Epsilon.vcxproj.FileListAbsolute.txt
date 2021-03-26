@@ -1,2 +1,0 @@
-D:\Epsilon\Epsilon Engine\build\Epsilon\Debug\Epsilon.lib
-D:\Epsilon\Epsilon Engine\build\Epsilon\Debug\Epsilon.pdb

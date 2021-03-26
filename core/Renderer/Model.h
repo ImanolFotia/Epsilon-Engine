@@ -21,8 +21,7 @@ namespace Epsilon
     class Model
     {
     public:
-        glm::vec3 Position = glm::vec3(0, 0, 0), Scale;
-        glm::quat Rotation;
+       
         glm::mat4 PrevModel;
         glm::mat4 ModelMatrix;
         glm::vec3 PrevPos, PrevScale;
@@ -36,16 +35,9 @@ namespace Epsilon
         /// Constructor, expects a filepath to a 3D model.
         const char *path;
 
-        Model(const char *path)
-        {
-            uniformsSet = false;
-            this->loadModel(path, 1);
-            this->path = path;
+        Model(const char *path);
 
-            //cout << "Cantidad de texturas: " << textures_loaded.size() << endl;
-        }
-
-        Model(const char *path, glm::vec3 pos = glm::vec3(0, 0, 0), glm::vec3 sc = glm::vec3(0, 0, 0), glm::quat rot = glm::quat(0, 0, 0, 1));
+        //Model(const char *path, glm::vec3 pos = glm::vec3(0, 0, 0), glm::vec3 sc = glm::vec3(0, 0, 0), glm::quat rot = glm::quat(0, 0, 0, 1));
 
         std::string getPath()
         {
@@ -54,8 +46,8 @@ namespace Epsilon
 
         void Destroy()
         {
-            for (unsigned i = 0; i < meshes.size(); ++i)
-                meshes[i].Destroy();
+            for (unsigned i = 0; i < mMeshes.size(); ++i)
+                mMeshes[i].Destroy();
         }
 
        /* ~Model()
@@ -72,8 +64,8 @@ namespace Epsilon
         /// Draws the model, and thus all its meshes
         void DrawNoTexture()
         {
-            for (GLuint i = 0; i < this->meshes.size(); i++)
-                this->meshes[i].DrawNoTexture();
+            for (GLuint i = 0; i < this->mMeshes.size(); i++)
+                this->mMeshes[i].DrawNoTexture();
         }
 
         void SetUniforms(std::shared_ptr<Shader> shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation,
@@ -82,7 +74,7 @@ namespace Epsilon
 
         void SetUniforms(std::shared_ptr<Shader> shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation,
                          std::shared_ptr<Camera> cam);
-        std::vector<Mesh> meshes;
+
 
 
         /// Structure to store the models bounding box for visibility and collision computation
@@ -110,7 +102,7 @@ namespace Epsilon
 
         void setMeshVisibility(unsigned int meshIndex, bool state)
         {
-            meshes.at(meshIndex).isVisible = state;
+            mMeshes.at(meshIndex).isVisible = state;
         }
 
         long toHash()
@@ -118,7 +110,15 @@ namespace Epsilon
             return std::hash<std::string>{}(path);
         }
 
+        const std::vector<Mesh> & Meshes() {
+            return mMeshes;
+        }
+
     private:
         bool loadModel(std::string emlPath, int a);
+        
+        std::vector<Mesh> mMeshes;
     };
+
+    using Model_ptr = std::shared_ptr<Model>;
 } // namespace Epsilon

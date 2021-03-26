@@ -37,10 +37,10 @@ namespace Epsilon
         
         using namespace Input;
 
-        Mouse::MouseEventHandler.addListener<MouseArgs>(Event::bind(&onMouseWheelCallback, this));
+        Mouse::MouseEventHandler += beacon::bind(&onMouseWheelCallback, this);
     }
 
-    void Camera::onMouseWheelCallback(Event::Sender *sender, Event::EventArgs *args)
+    void Camera::onMouseWheelCallback(beacon::sender *sender, beacon::args *args)
         {
             if(args == nullptr) return;
 
@@ -55,7 +55,7 @@ namespace Epsilon
             {
                 Position = Position - Orientation * (float)obj.Wheel().yOffset;
             }
-        }
+        } 
 
     void Camera::Update(GLFWwindow *win)
     {

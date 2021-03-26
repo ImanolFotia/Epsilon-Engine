@@ -5,12 +5,9 @@
 
 namespace Epsilon
 {
-    Model::Model(const char *path, glm::vec3 pos, glm::vec3 sc, glm::quat rot)
+    Model::Model(const char *path)
     {
         this->path = path;
-        Position = pos;
-        Scale = sc;
-        Rotation = rot;
         PrevModel = glm::mat4(1.0f);
         ModelMatrix = glm::mat4(1.0f);
         uniformsSet = false;
@@ -99,6 +96,8 @@ namespace Epsilon
         MinMaxPoints.MIN_Z = 0;
 
         //Pre Process the model and create it's bounding boxes
+        unsigned currentvOffset = 0;
+        unsigned currentiOffset = 0;
         try
         {
             mMeshesBoundingBoxes.reserve(numMeshes);
@@ -107,6 +106,9 @@ namespace Epsilon
 
             for (int i = 0; i < numMeshes; ++i)
             {
+                currentvOffset += l_meshes[i].mNumVertices;
+                currentiOffset += l_meshes[i].mNumIndices;
+
                 std::vector<t_Vertex> tmpVertVector;
                 std::vector<unsigned int> tmpIndicesVector;
                 std::vector<struct Epsilon::Texture> tmpTexturesVector;
@@ -177,15 +179,15 @@ namespace Epsilon
                         tmpTexturesVector.push_back(tex);
                     }
                 }
-                if (!a)
+                /*if (!a)
                 {
-                    meshes.push_back(Mesh(tmpVertVector, tmpIndicesVector, tmpTexturesVector, ResourceManager::Get().NearestCubeMap(Position)));
+                    meshes.push_back(Mesh(tmpVertVector, tmpIndicesVector, tmpTexturesVector, currentvOffset, currentiOffset, ResourceManager::Get().NearestCubeMap(Position)));
                 }
-                else
-                    meshes.push_back(Mesh(tmpVertVector, tmpIndicesVector, tmpTexturesVector));
+                else*/
+                    mMeshes.push_back(Mesh(tmpVertVector, tmpIndicesVector, tmpTexturesVector, currentvOffset, currentiOffset));
 
                     
-                meshes.back().mLocalTransform = glm::translate(glm::mat4(0.0f), centerOfMass);
+                mMeshes.back().mLocalTransform = glm::translate(glm::mat4(0.0f), centerOfMass);
             }
 
             float dx, dy, dz;
@@ -211,11 +213,11 @@ namespace Epsilon
 
             for (int i = 0; i < numMeshes; ++i)
             {
-                for (int j = 0; j < meshes.at(i).vertices.size(); j++)
+                for (int j = 0; j < mMeshes.at(i).vertices.size(); j++)
                 {
-                    meshes.at(i).vertices[j].position.x += delta.x;
-                    meshes.at(i).vertices[j].position.y += delta.y;
-                    meshes.at(i).vertices[j].position.z += delta.z;
+                    mMeshes.at(i).vertices[j].position.x += delta.x;
+                    mMeshes.at(i).vertices[j].position.y += delta.y;
+                    mMeshes.at(i).vertices[j].position.z += delta.z;
                 }
                 /*mMeshesBoundingBoxes.at(i).MIN_X += delta.x;
                 mMeshesBoundingBoxes.at(i).MIN_Y += delta.y;
@@ -224,7 +226,7 @@ namespace Epsilon
                 mMeshesBoundingBoxes.at(i).MAX_X += delta.x;
                 mMeshesBoundingBoxes.at(i).MAX_Y += delta.y;
                 mMeshesBoundingBoxes.at(i).MAX_Z += delta.z;*/
-                meshes.at(i).setupMesh();
+                mMeshes.at(i).setupMesh();
             }
         }
         catch (std::exception &e)
@@ -247,9 +249,9 @@ namespace Epsilon
     void Model::Draw(std::shared_ptr<Shader> shader)
     {
 
-        for (GLuint i = 0; i < this->meshes.size(); i++)
+        for (GLuint i = 0; i < this->mMeshes.size(); i++)
         {
-            this->meshes[i].Draw(shader, mMeshesPositions.at(i));
+            this->mMeshes[i].Draw(shader, mMeshesPositions.at(i));
         }
     }
 
