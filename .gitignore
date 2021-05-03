@@ -1,0 +1,7 @@
+*.exe
+*.lib
+*.a
+*.dll
+
+/thirdparty
+/.vscode
