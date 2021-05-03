@@ -4,14 +4,17 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <cstring>
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 
 #include "framework/common.hpp"
-
+#include "framework/def.hpp"
 #include "framework/window.hpp"
+
+#include "vk_aux/device.hpp"
 
 namespace LearningVulkan
 {
@@ -26,7 +29,9 @@ namespace LearningVulkan
         {
             initWindow();
             initVulkan();
+
             mainLoop();
+
             cleanup();
         }
 
@@ -39,6 +44,7 @@ namespace LearningVulkan
         void initVulkan()
         {
             createInstance();
+            pickPhysicalDevice(instance);
         }
 
         void mainLoop()
@@ -54,6 +60,10 @@ namespace LearningVulkan
 
         void createInstance()
         {
+            if (enableValidationLayers && !checkValidationLayerSupport())
+            {
+                throw std::runtime_error("validation layers requested, but not available!");
+            }
             VkApplicationInfo appInfo{};
             appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
             appInfo.pApplicationName = mApplicationName.c_str();
@@ -75,13 +85,23 @@ namespace LearningVulkan
             createInfo.ppEnabledExtensionNames = glfwExtensions;
             createInfo.enabledLayerCount = 0;
 
+            if (enableValidationLayers)
+            {
+                createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
+                createInfo.ppEnabledLayerNames = validationLayers.data();
+            }
+            else
+            {
+                createInfo.enabledLayerCount = 0;
+            }
+
             VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
 
             if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS)
             {
                 throw std::runtime_error("failed to create instance!");
             }
-            
+
             checkExtensions();
         }
 
@@ -97,11 +117,53 @@ namespace LearningVulkan
             {
                 std::cout << '\t' << extension.extensionName << '\n';
             }
+
+            std::cout << std::endl;
         }
+
+        bool checkValidationLayerSupport()
+        {
+            uint32_t layerCount;
+            vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+
+            std::vector<VkLayerProperties> availableLayers(layerCount);
+            vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
+
+            for (const char *layerName : validationLayers)
+            {
+                bool layerFound = false;
+
+                for (const auto &layerProperties : availableLayers)
+                {
+                    if (std::strcmp(layerName, layerProperties.layerName) == 0)
+                    {
+                        layerFound = true;
+                        break;
+                    }
+                }
+
+                if (!layerFound)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
 
     private:
         Window mWindow;
         std::string mApplicationName = "Default";
         VkInstance instance;
+
+        const std::vector<const char *> validationLayers = {
+            "VK_LAYER_KHRONOS_validation"};
+
+#ifdef NDEBUG
+        const bool enableValidationLayers = false;
+#else
+        const bool enableValidationLayers = true;
+#endif
     };
 }
