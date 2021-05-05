@@ -6,6 +6,7 @@
 #include <vulkan/vulkan.h>
 
 #include "../framework/common.hpp"
+#include "queues.hpp"
 
 namespace LearningVulkan
 {
@@ -22,12 +23,14 @@ namespace LearningVulkan
         IO::Log("\tID: ", deviceProperties.deviceID);
         IO::Log("\tDriver version: ", deviceProperties.driverVersion);
         IO::Log("\tVendor ID: ", deviceProperties.vendorID);
+        
+        QueueFamilyIndices indices = findQueueFamilies(device);
 
-        return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU &&
-               deviceFeatures.geometryShader;
+        return indices.isComplete();
+
     }
 
-    void pickPhysicalDevice(VkInstance instance)
+    VkPhysicalDevice pickPhysicalDevice(VkInstance instance)
     {
         VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 
@@ -55,6 +58,8 @@ namespace LearningVulkan
         {
             throw std::runtime_error("failed to find a suitable GPU!");
         }
+
+        return physicalDevice;
     }
 
 }
