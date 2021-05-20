@@ -33,6 +33,9 @@
 
       for (int i = 1; i < nSamples; ++i) {
          vec2 offset = velocity * (float(i) / (float(nSamples - 1.0) - 0.5) );
+         
+         if(screenTexCoords + offset == screenTexCoords) continue;
+
          oResult +=  Degamma(texture(gFinalImage, screenTexCoords + offset));
       }
       

@@ -1,14 +1,37 @@
 #pragma once
 
-namespace Epsilon
+namespace Epsilon::Renderer
 {
-    namespace Renderer
+    class Material
     {
-        class MaterialBase
+    public:
+        enum class MaterialParameter
         {
-            public:
-                MaterialBase() {}
-                virtual ~MaterialBase() {}
+            //Identifiers for when a texture path or object is passed
+            Albedo,
+            Metallic,
+            Roughness,
+            Normal,
+            SubsurfaceScattering,
+            Specular,
+            Emission
         };
-    } // namespace Renderer
+
+        enum class ParameterType {
+            Color,
+            Texture
+        };
+
+        enum class MaterialParameterTexture
+        {
+        };
+
+        unsigned long mId;
+
+    public:
+        Material() {}
+        virtual ~Material() {}
+    
+        unsigned long Id() const { return mId; }
+    };
 } // namespace Epsilon

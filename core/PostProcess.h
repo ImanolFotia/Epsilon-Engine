@@ -17,6 +17,58 @@
 
 namespace Epsilon
 {
+    class PostProcessData {
+        public:
+
+        struct ScreenSpaceReflection_t {
+            bool Active = true;
+            float RoughnessCutoff = 0.8;
+            float AngleCutoff = 0.05;
+            float MaxDistance;
+            float MinRayStep = 0.05;
+            float MaxRayStep = 0.045;
+            int MaxSteps = 70;
+            int MaxRefinementSteps = 5;
+            float DepthCutoff = -4.1;
+        } ScreenSpaceReflections;
+        
+        struct HBAO_t {
+            bool Active = true;
+            int Samples = 32;
+            int NumDirections = 8;
+        } HBAO;
+        
+        struct MotionBlur_t {
+            bool Active = true;
+            int Samples = 8;
+            float FrameTimeTarget = 0.016;
+            int Strength = 3;
+        } MotionBlur;
+
+        struct ImageSettings_t {
+            float Brightness = 0.0;
+            float Saturation = 0.0;
+            float Gamma = 2.2;
+            float Contrast = 0.5;
+            float Exposure = 5.5;
+        } ImageSettings;
+        
+        struct DenoiseSettings_t {
+            bool Active = true;
+            float Sigma = 5.0;
+            float kSigma = 2.0;
+            float Threshold = 0.1;
+            float RoughnessCutoff = 0.1;
+        } DenoiseSettings;
+
+        struct AntiAliasingSettings_t {
+            bool Active = true;
+            float LerpAmount = 0.1;
+            float JitterMultiplier = 1.0;
+            int ClampingKernelSize = 1;
+        } AntiAliasingSettings;
+
+    };
     class PostProcess
     {
     public:
@@ -117,6 +169,9 @@ namespace Epsilon
             mSSRFramebuffer[0]->Resize(w, h);
             mSSRFramebuffer[1]->Resize(w, h);
             mDenoiseFramebuffer->Resize(w, h);
+            mTAAFramebuffer[0]->Resize(w, h);
+            mTAAFramebuffer[1]->Resize(w, h);
+            mTAAFramebufferCopy->Resize(w, h);
         }
 
     public:
@@ -166,6 +221,8 @@ namespace Epsilon
         void setupSSAO(void);
         
         void setupHBIL(void);
+
+        void TAAPass();
 
         /**
         Creates the SSR framebuffer and attaches the proper textures
@@ -244,15 +301,15 @@ namespace Epsilon
         std::shared_ptr<OpenGL::FrameBuffer<int>> HBILFramebuffer;
         std::shared_ptr<OpenGL::FrameBuffer<int>> mHBAOFramebuffer;
         std::shared_ptr<OpenGL::FrameBuffer<int>> mHBAOBlurFramebuffer;
-        
         std::shared_ptr<OpenGL::FrameBuffer<int>> gBufferFramebuffer; 
         std::shared_ptr<OpenGL::FrameBuffer<int>> mMotionBlurFramebuffer;
         std::shared_ptr<OpenGL::FrameBuffer<int>> mDenoiseFramebuffer;
-
-        
         std::shared_ptr<OpenGL::FrameBuffer<int>> mPingPongFramebuffer[2];
-
         std::shared_ptr<OpenGL::FrameBuffer<int>> mSSRFramebuffer[2];
+        std::shared_ptr<OpenGL::FrameBuffer<int>> mTAAFramebuffer[2];
+        std::shared_ptr<OpenGL::FrameBuffer<int>> mTAAFramebufferCopy;
+
+        bool TAACurrentBuffer = false;
 
         //GLuint ssaoFBO;
         //GLuint ssaoBlurFBO;
@@ -288,6 +345,7 @@ namespace Epsilon
         std::shared_ptr<Shader> CompositeShader;
         std::shared_ptr<Shader> BRDFShader;
         std::shared_ptr<Shader> DenoiseShader;
+        std::shared_ptr<Shader> TAAShader;
 
         std::vector<glm::vec3> LightPositions;
         /// G-Buffer texture samplers
@@ -313,11 +371,19 @@ namespace Epsilon
         std::shared_ptr<eTexture> lensDirt;
         std::shared_ptr<eTexture> lensStar;
         std::shared_ptr<eTexture> BlueNoiseTexture;
+        int jitter_step = 0;
 
         glm::vec2 FocalLen, InvFocalLen, UVToViewA, UVToViewB, LinMAD;
 
         GLuint ReflectionTexture;
         bool HBAO_params_calculated = false;
+
+        PostProcessData & getPostProcessData() {
+            return mPostProcessData;
+        }
+
+    private:
+        PostProcessData mPostProcessData;
     };
 } // namespace Epsilon
 

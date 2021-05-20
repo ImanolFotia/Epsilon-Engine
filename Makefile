@@ -14,6 +14,29 @@
 # SOIL (soon to be replaced)
 # GLAD
 
+# define standard colors
+ifneq (,$(findstring xterm,${TERM}))
+	BLACK        := $(shell tput -Txterm setaf 0)
+	RED          := $(shell tput -Txterm setaf 1)
+	GREEN        := $(shell tput -Txterm setaf 2)
+	YELLOW       := $(shell tput -Txterm setaf 3)
+	LIGHTPURPLE  := $(shell tput -Txterm setaf 4)
+	PURPLE       := $(shell tput -Txterm setaf 5)
+	BLUE         := $(shell tput -Txterm setaf 6)
+	WHITE        := $(shell tput -Txterm setaf 7)
+	RESET := $(shell tput -Txterm sgr0)
+else
+	BLACK        := ""
+	RED          := ""
+	GREEN        := ""
+	YELLOW       := ""
+	LIGHTPURPLE  := ""
+	PURPLE       := ""
+	BLUE         := ""
+	WHITE        := ""
+	RESET        := ""
+endif
+
 CXX= g++
 
 OBJS_DIR_RELEASE:= ./obj/Release
@@ -57,6 +80,7 @@ ifeq "$(OS)" "Windows_NT"
 INCLUDE_LIBS:= -I$(LIB)/glm \
 -I$(LIB)/bullet3/src \
 -I$(LIB)/glfw/include \
+-IC:/VulkanSDK/1.2.170.0/Include \
 -I$(LIB)/soil/Simple\ OpenGL\ Image\ Library/src \
 -I$(LIB)/openal-soft/include \
 -I$(LIB)/inih/cpp \
@@ -100,7 +124,7 @@ LIBS_DIR := -L$(LIB)/inih \
 endif
 
 ifeq "$(OS)" "Windows_NT"
-LIBS:= -lSOIL -limgui -lglfw3dll -lopengl32 -lglad -linih -lgdi32 -lole32 -lxaudio2_8 -lOpenAL32.dll -llua -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
+LIBS:= -lSOIL -limgui -lglfw3dll "/c/VulkanSDK/1.2.170.0/Lib/vulkan-1.lib" -lopengl32 -lglad -linih -lgdi32 -lole32 -lxaudio2_8 -lOpenAL32.dll -llua -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
 else 
 LIBS:= -lGLU -lGL -lSOIL -lglad -ldl -lglfw -linih -lopenal -fopenmp -static-libasan -lgomp -llua5.3 -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
 endif
@@ -108,7 +132,7 @@ endif
 LD_FLAGS := -fopenmp
 
 ifeq "$(OS)" "Windows_NT"
-CPPFLAGS := --std=c++20 -static -static-libgcc -static-libstdc++ 
+CPPFLAGS := --std=c++20 -static -static-libgcc -static-libstdc++
 else 
 CPPFLAGS := --std=c++20 -static -static-libgcc -static-libstdc++ 
 endif

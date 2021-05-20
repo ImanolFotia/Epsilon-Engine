@@ -166,6 +166,7 @@ namespace Epsilon
             CLOTHCOMPONENT,
             MOVEMENTCOMPONENT,
             SCRIPTCOMPONENT,
+            TRANSFORMCOMPONENT,
             ENTITY
         };
 

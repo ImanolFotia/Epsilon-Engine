@@ -7,20 +7,17 @@ namespace Epsilon
 {
     class WindowBase;
 
-    namespace API
+    namespace API::OpenGL
     {
-        namespace OpenGL
+        class Context : public ContextBase
         {
-            class Context : public ContextBase
-            {
-            public:
-                Context();
+        public:
+            Context();
 
-                void Init(CONTEXT_TYPE) override;
-                void AttachContext(std::shared_ptr<Platform::WindowHandle<>> windowHandle) override;
-                void SwapBuffers() override;
-                void Shutdown() override;
-            };
-        } // namespace OpenGL
-    }     // namespace API
+            void Init(CONTEXT_TYPE) override;
+            void AttachContext(std::shared_ptr<Platform::WindowHandle<>> windowHandle) override;
+            void SwapBuffers() override;
+            void Shutdown() override;
+        };
+    } // namespace OpenGL
 } // namespace Epsilon

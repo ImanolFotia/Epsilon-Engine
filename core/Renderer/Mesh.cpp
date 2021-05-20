@@ -2,13 +2,42 @@
 #include <ResourceManager.h>
 
 #include <IO/IO.hpp>
+#include "MaterialPBR.hpp"
 
-namespace Epsilon
+namespace Epsilon::Renderer
 {
+
+    Mesh::Mesh(std::vector<Renderer::t_Vertex> vertices, std::vector<GLuint> indices, std::vector<MeshTexture> textures, unsigned vOffset, unsigned iOffset, int CubeMapindex)
+    {
+        using Tex2D_ptr = std::shared_ptr<Texture2D>;
+        std::cout << "Setting up mesh" << std::endl;
+        this->vertices = vertices;
+        this->indices = indices;
+        this->textures = textures;
+
+        mData = {vertices.size(), indices.size(), 0, 0};
+
+        mMaterial = std::make_shared<Renderer::MaterialPBR>();
+
+        auto &ref = ResourceManager::Get();
+
+        mMaterial->setMaterial(Material::MaterialParameter::Albedo, ref.Get<Tex2D_ptr>(textures[0].path));
+        mMaterial->setMaterial(Material::MaterialParameter::Roughness, ref.Get<Tex2D_ptr>(textures[1].path));
+        mMaterial->setMaterial(Material::MaterialParameter::Normal, ref.Get<Tex2D_ptr>(textures[2].path));
+        mMaterial->setMaterial(Material::MaterialParameter::Metallic, ref.Get<Tex2D_ptr>(textures[3].path));
+
+        CubeMapIndex = CubeMapindex;
+        mGIIndex = 0;
+        mCubemapIndex = 1;
+        finalCubemaps = false;
+        
+        std::cout << "Finished setting up mesh" << std::endl;
+    }
     /// Render the mesh
     void Mesh::Draw(std::shared_ptr<Shader> shader, glm::vec3 pos)
     {
-        if(ResourceManager::Get().cubemapsLoaded && finalCubemaps != true)
+        using Tex2D_ptr = std::shared_ptr<Texture2D>;
+        if (ResourceManager::Get().cubemapsLoaded && finalCubemaps != true)
         {
             mPosition = pos;
             finalCubemaps = true;
@@ -20,36 +49,46 @@ namespace Epsilon
 
         if (isVisible)
         {
-            glActiveTexture(GL_TEXTURE0);
-            shader->PushUniform("texture_diffuse", 0);
-            ResourceManager::Get().bindTexture(textures[0].path);
 
-            glActiveTexture(GL_TEXTURE1);
-            shader->PushUniform("texture_specular", 1);
-            ResourceManager::Get().bindTexture(textures[1].path);
-
-            glActiveTexture(GL_TEXTURE2);
-            shader->PushUniform("texture_normal", 2);
-            ResourceManager::Get().bindTexture(textures[2].path);
-
-            glActiveTexture(GL_TEXTURE3);
-            shader->PushUniform("texture_height", 3);
-            ResourceManager::Get().bindTexture(textures[3].path);
+            auto albedo = mMaterial->get<Tex2D_ptr>(Material::MaterialParameter::Albedo);
+            auto roughness = mMaterial->get<Tex2D_ptr>(Material::MaterialParameter::Roughness);
+            auto metallic = mMaterial->get<Tex2D_ptr>(Material::MaterialParameter::Metallic);
+            auto normal = mMaterial->get<Tex2D_ptr>(Material::MaterialParameter::Normal);
+            
+            if (albedo != nullptr)
+            {
+                albedo->Bind(GL_TEXTURE0);
+                shader->PushUniform("texture_diffuse", 0);
+            }
+            if (roughness != nullptr)
+            {
+                roughness->Bind(GL_TEXTURE1);
+                shader->PushUniform("texture_specular", 1);
+            }
+            if (normal != nullptr)
+            {
+                normal->Bind(GL_TEXTURE2);
+                shader->PushUniform("texture_normal", 2);
+            }
+            if (metallic != nullptr)
+            {
+                metallic->Bind(GL_TEXTURE3);
+                shader->PushUniform("texture_height", 3);
+            }
 
             glActiveTexture(GL_TEXTURE4);
             shader->PushUniform("skybox", 4);
 
-            if(mPosition != pos) {
+            if (mPosition != pos)
+            {
                 mPosition = pos;
                 mCubemapIndex = ResourceManager::Get().getNearestCubemapIndex(pos);
                 mGIIndex = ResourceManager::Get().NearestCubeMap(pos) - 1;
             }
-            
-            //mCubemapIndex = ResourceManager::Get().getNearestCubemapIndex(pos);
-            //mGIIndex = ResourceManager::Get().NearestCubeMap(pos) - 1;
-            
 
-            if(finalCubemaps)
+
+
+            if (finalCubemaps)
                 glBindTexture(GL_TEXTURE_CUBE_MAP, ResourceManager::Get().useCubeMap(mCubemapIndex));
 
             shader->PushUniform("AmbientProbeID", (int)mGIIndex);

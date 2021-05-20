@@ -16,7 +16,7 @@
 #include "./EML/eml1_0.h"
 #include <camera.h>
 
-namespace Epsilon
+namespace Epsilon::Renderer
 {
     class Model
     {

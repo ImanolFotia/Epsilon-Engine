@@ -88,7 +88,7 @@ private:
     GLuint EBO;
 
     std::shared_ptr<Shader> shader;
-    std::shared_ptr<Model> m_Model;
+    std::shared_ptr<Renderer::Model> m_Model;
 
     glm::mat4 MVP;
     double ActiveClip;

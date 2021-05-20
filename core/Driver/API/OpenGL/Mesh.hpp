@@ -5,39 +5,33 @@
 
 #include <vector>
 
-namespace Epsilon
+namespace Epsilon::API::OpenGL
 {
-    namespace API
+    class Mesh
     {
-        namespace OpenGL
+
+        std::vector<Vertex> mVertices;
+
+    public:
+        struct Vertex
         {
-            class Mesh
-            {
+            /// Position
+            glm::vec3 Position;
+            /// Normal
+            glm::vec3 Normal;
+            /// TexCoords
+            glm::vec2 TexCoords;
+            ///Tangents
+            glm::vec3 Tangent;
+            ///Bitangents
+            glm::vec3 Bitangent;
+        };
 
-                std::vector<Vertex> mVertices;
+    public:
+        Mesh() = default;
 
-            public:
-                struct Vertex
-                {
-                    /// Position
-                    glm::vec3 Position;
-                    /// Normal
-                    glm::vec3 Normal;
-                    /// TexCoords
-                    glm::vec2 TexCoords;
-                    ///Tangents
-                    glm::vec3 Tangent;
-                    ///Bitangents
-                    glm::vec3 Bitangent;
-                };
-
-            public:
-                Mesh() = default;
-
-                void Init(std::vector<t_Vertex> vertices, std::vector<GLuint> indices)
-                {
-                }
-            };
-        } // namespace OpenGL
-    }     // namespace API
+        void Init(std::vector<t_Vertex> vertices, std::vector<GLuint> indices)
+        {
+        }
+    };
 } // namespace Epsilon

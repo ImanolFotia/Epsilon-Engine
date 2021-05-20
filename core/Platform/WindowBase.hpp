@@ -62,6 +62,14 @@ namespace Epsilon
                 mFrameNumber++;
             }
 
+            int Width() {
+                return mWindowData.Width;
+            }
+            
+            int Height() {
+                return mWindowData.Height;
+            }
+
         protected:
             std::shared_ptr<API::ContextBase> mContext;
             std::shared_ptr<WindowHandle<>> mWindowHandle;

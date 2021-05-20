@@ -32,9 +32,11 @@ float uDistortion = 5;
 
 
 
-const float gamma = 2.2;
-const float contrast = 0.5;
-const float exposure = 5.5;
+uniform float gamma = 2.2;
+uniform float contrast = 0.5;
+uniform float saturation = 0.0;
+uniform float exposure = 5.5;
+uniform float brightness = 5.5;
 
 vec3 HDR(vec3 image) {
   vec3 result = vec3(1.0) - exp(-image.xyz * exposure);
@@ -102,9 +104,9 @@ vec3 lOff() {
   return l;
 }
 
-vec3 changeSaturation(vec3 color, float saturation) {
+vec3 changeSaturation(vec3 color, float s) {
   float luma = dot(vec3(0.213, 0.715, 0.072) * color, vec3(1.));
-  return mix(vec3(luma), color, saturation);
+  return mix(vec3(luma), color, (s * 0.2) + 1);
 }
 
 #define PI 3.14159265359
@@ -207,9 +209,9 @@ void main() {
 
   float dDepth = abs(currentDepth - referenceDepth);
 
-  if(onmenu == 1)
+ /* if(onmenu == 1)
     DOFRadius = 1.0;
-  else
+  else*/
     DOFRadius = clamp(dDepth * 40.0, 0.0, blurSize);
 
   //DOFRadius = 20.0;
@@ -219,7 +221,7 @@ void main() {
   //if(ChromaticAberrationOn)
   //composite += textureDistorted(compositeImage, TexCoords, normalize(fragcoord - vec2(0.0)), 0.001*pow(length((fragcoord * 2.0 - 1.0) - vec2(0.0)), 3.0)).rgb ;
 
-  composite = changeSaturation(composite, 1.0);
+  composite = changeSaturation(composite, saturation);
 
   color.rgb = HDR2(composite + (GodRays.rgb) + (bloom) + (result.rgb * lensMod.rgb * 5)) * vignete;
 

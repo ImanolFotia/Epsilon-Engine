@@ -8,56 +8,50 @@
 #include <GLFW/glfw3.h>
 #endif
 
-namespace Epsilon
+namespace Epsilon::API::OpenGL
 {
-    namespace API
+    Context::Context()
     {
-        namespace OpenGL
-        {
-            Context::Context()
-            {
-            }
+    }
 
-            void Context::Init(CONTEXT_TYPE type)
-            {
-                mType = type;
-            }
+    void Context::Init(CONTEXT_TYPE type)
+    {
+        mType = type;
+    }
 
-            void Context::AttachContext(std::shared_ptr<Platform::WindowHandle<>> windowHandle)
-            {
+    void Context::AttachContext(std::shared_ptr<Platform::WindowHandle<>> windowHandle)
+    {
 
-                mWindowHandle = windowHandle;
-/*#ifndef EPSILON_STATIC
+        mWindowHandle = windowHandle;
+        /*#ifndef EPSILON_STATIC
                 glewExperimental = GL_TRUE;
                 glewInit();
 #else*/
-                if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
-                {
-                    IO::PrintLine("Failed to initialize GLAD");
-                    std::exit(255);
-                    return;
-                }
-/*#endif*/
-            }
-            void Context::SwapBuffers()
-            {
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+        {
+            IO::PrintLine("Failed to initialize GLAD");
+            std::exit(255);
+            return;
+        }
+        /*#endif*/
+    }
+    void Context::SwapBuffers()
+    {
 #ifndef EPSILON_STATIC
-                if (mWindowHandle->getType() == Platform::WINDOW_HANDLE_TYPE::GLFW)
-                    glfwSwapBuffers(mWindowHandle->getHandle());
+        if (mWindowHandle->getType() == Platform::WINDOW_HANDLE_TYPE::GLFW)
+            glfwSwapBuffers(mWindowHandle->getHandle());
 #else
-                if (mWindowHandle->getType() == Platform::WINDOW_HANDLE_TYPE::HDC)
-                    ::SwapBuffers((HDC)mWindowHandle->getHandle()); //Calling SwapBuffers inside windows.h
+        if (mWindowHandle->getType() == Platform::WINDOW_HANDLE_TYPE::HDC)
+            ::SwapBuffers((HDC)mWindowHandle->getHandle()); //Calling SwapBuffers inside windows.h
 
 #endif
-            }
+    }
 
-            void Context::Shutdown()
-            {
+    void Context::Shutdown()
+    {
 #ifndef EPSILON_STATIC
-                if (mWindowHandle->getType() == Platform::WINDOW_HANDLE_TYPE::GLFW)
-                    glfwTerminate();
+        if (mWindowHandle->getType() == Platform::WINDOW_HANDLE_TYPE::GLFW)
+            glfwTerminate();
 #endif
-            }
-        } // namespace OpenGL
-    }     // namespace API
+    }
 } // namespace Epsilon

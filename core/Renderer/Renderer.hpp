@@ -30,6 +30,10 @@ namespace Epsilon {
 
             void RenderTransparent() {}
 
+            void Clear() {
+                
+            }
+
         private:
 
             RenderQueue_ptr mQueue;

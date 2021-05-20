@@ -102,5 +102,6 @@ namespace Epsilon
 
             float mLastUpdate = 0.0f;
         };
+        using ClothComponent_ptr = std::shared_ptr<ClothComponent>;
     } // namespace Component
 } // namespace Epsilon

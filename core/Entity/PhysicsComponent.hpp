@@ -96,6 +96,11 @@ namespace Epsilon
                 return mMass > 0 ? false : true;
             }
 
+            void setState(bool s) {
+			    mRigidBodyPointer->Body->activate(s);
+                mRigidBodyPointer->Body->setActivationState((int)s);
+            }
+
             void addForce(glm::vec3 force) {
                 mAtractor = force;
             }
@@ -182,6 +187,8 @@ namespace Epsilon
 
             glm::quat m_Rotation;
             glm::vec3 mAtractor;
+
+            bool isActive = false;
         };
 
         using PhysicComponent_ptr = std::shared_ptr<PhysicComponent>;

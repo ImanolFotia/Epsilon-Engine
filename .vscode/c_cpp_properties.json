@@ -13,7 +13,8 @@
                 "${workspaceFolder}/thirdparty/json-develop",
                 "${workspaceFolder}/thirdparty/openal-soft",
                 "${workspaceFolder}/thirdparty/lua-5.3.5/src",
-                "H:/msys2/msys64/msys64/mingw64/include/c++/10.1.0"
+                "H:/msys2/msys64/msys64/mingw64/include/c++/10.1.0",
+                "C:/VulkanSDK/1.2.170.0/Include"
             ],
             "defines": [
                 "_DEBUG",

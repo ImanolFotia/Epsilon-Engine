@@ -135,11 +135,11 @@ namespace Epsilon
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
-        lensColor = (std::shared_ptr<eTexture>)new eTexture("effects/lenscolor2.png", GL_REPEAT, GL_TEXTURE_1D);
-        lensDirt = (std::shared_ptr<eTexture>)new eTexture("effects/lensdirt.png");
-        lensStar = (std::shared_ptr<eTexture>)new eTexture("effects/lensstar.png");
+        lensColor = std::make_shared<eTexture>("effects/lenscolor2.png", GL_REPEAT, GL_TEXTURE_1D);
+        lensDirt = std::make_shared<eTexture>("effects/lensdirt.png");
+        lensStar = std::make_shared<eTexture>("effects/lensstar.png");
 
-        BlueNoiseTexture = (std::shared_ptr<eTexture>)new eTexture("LDR_RGBA_0_n.png", GL_REPEAT, GL_TEXTURE_2D, GL_LINEAR);
+        BlueNoiseTexture = std::make_shared<eTexture>("LDR_RGBA_0_n.png", GL_REPEAT, GL_TEXTURE_2D, GL_LINEAR);
         /*
                 LightPositions.push_back(glm::vec3(-41, 12.0, -23));
                 LightPositions.push_back(glm::vec3(-39, 10.3, 2));
@@ -150,17 +150,17 @@ namespace Epsilon
                 LightPositions.push_back(glm::vec3(80.5, 17.21, 1.57));
     */
 
-        hdrFBO = (std::shared_ptr<OpenGL::FrameBuffer<std::string>>)new OpenGL::FrameBuffer<std::string>(width, height, true);
+        hdrFBO = std::make_shared<OpenGL::FrameBuffer<std::string>>(width, height, true);
 
         hdrFBO->addRenderTarget("colorBuffer", GL_RGB16F, GL_RGB, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, false);
         hdrFBO->addRenderTarget("brightColorBuffer", GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
         hdrFBO->FinishFrameBuffer();
 
-        CopyTextureFBO = (std::shared_ptr<OpenGL::FrameBuffer<int>>)new OpenGL::FrameBuffer<int>(width, height, false);
+        CopyTextureFBO = std::make_shared<OpenGL::FrameBuffer<int>>(width, height, false);
         CopyTextureFBO->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
         CopyTextureFBO->FinishFrameBuffer();
 
-        CopyTextureBlurredFBO = (std::shared_ptr<OpenGL::FrameBuffer<int>>)new OpenGL::FrameBuffer<int>(width, height, true);
+        CopyTextureBlurredFBO = std::make_shared<OpenGL::FrameBuffer<int>>(width, height, true);
         CopyTextureBlurredFBO->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, true);
         CopyTextureBlurredFBO->FinishFrameBuffer();
 
@@ -172,11 +172,23 @@ namespace Epsilon
         SetupMotionBlur();
         setupDenoise();
 
-        mCompositeImage = (std::shared_ptr<OpenGL::FrameBuffer<int>>)new OpenGL::FrameBuffer<int>(width, height, true);
+        mCompositeImage = std::make_shared<OpenGL::FrameBuffer<int>>(width, height, true);
         mCompositeImage->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, true);
         mCompositeImage->FinishFrameBuffer();
+        
+        mTAAFramebuffer[0] = std::make_shared<OpenGL::FrameBuffer<int>>(width, height, false);
+        mTAAFramebuffer[0]->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
+        mTAAFramebuffer[0]->FinishFrameBuffer();
+        
+        mTAAFramebuffer[1] = std::make_shared<OpenGL::FrameBuffer<int>>(width, height, false);
+        mTAAFramebuffer[1]->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
+        mTAAFramebuffer[1]->FinishFrameBuffer();
+        
+        mTAAFramebufferCopy = std::make_shared<OpenGL::FrameBuffer<int>>(width, height, false);
+        mTAAFramebufferCopy->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
+        mTAAFramebufferCopy->FinishFrameBuffer();
 
-        BRDFFramebuffer = (std::shared_ptr<OpenGL::FrameBuffer<int>>)new OpenGL::FrameBuffer<int>(512, 512, true);
+        BRDFFramebuffer = std::make_shared<OpenGL::FrameBuffer<int>>(512, 512, true);
         BRDFFramebuffer->addRenderTarget(0, GL_RG16F, GL_RG, GL_LINEAR, GL_LINEAR, false);
         BRDFFramebuffer->FinishFrameBuffer();
 
@@ -214,6 +226,7 @@ namespace Epsilon
         CompositeShader = (std::shared_ptr<Shader>)(new Shader("shaders/Composite.vglsl", "shaders/Composite.fglsl"));
         BRDFShader = (std::shared_ptr<Shader>)(new Shader("shaders/Composite.vglsl", "shaders/BRDF.glsl"));
         DenoiseShader = (std::shared_ptr<Shader>)(new Shader("shaders/Composite.vglsl", "shaders/denoise.glsl"));
+        TAAShader = (std::shared_ptr<Shader>)(new Shader("shaders/Composite.vglsl", "shaders/TAA.glsl"));
     }
 
     void PostProcess::beginOffScreenrendering()
@@ -240,11 +253,9 @@ namespace Epsilon
         gBufferFramebuffer->addRenderTarget(GBUFFER_ALBEDO_SPEC, GL_RGBA, GL_RGBA, GL_LINEAR, GL_LINEAR, false); //gAlbedoSpec
         gBufferFramebuffer->addRenderTarget(GBUFFER_NORMAL, GL_RGBA16F, GL_RGBA, GL_LINEAR, GL_LINEAR, false); //gExpensiveNormal
         gBufferFramebuffer->addRenderTarget(GBUFFER_IBL_DEPTH, GL_RGBA32F, GL_RGBA, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST_MIPMAP_NEAREST, true); //gDepth
-        gBufferFramebuffer->addRenderTarget(GBUFFER_MOTION_EXTRA, GL_RGBA16F, GL_RGBA, GL_NEAREST, GL_NEAREST, false); //gExtraComponents
+        gBufferFramebuffer->addRenderTarget(GBUFFER_MOTION_EXTRA, GL_RGBA32F, GL_RGBA, GL_NEAREST, GL_NEAREST, false); //gExtraComponents
         gBufferFramebuffer->addRenderTarget(GBUFFER_GI, GL_RGBA16F, GL_RGBA, GL_NEAREST, GL_NEAREST, false); //gLightAccumulation
         gBufferFramebuffer->FinishFrameBuffer();
-
-
     }
 
     void PostProcess::setupSSAO()
@@ -389,7 +400,7 @@ namespace Epsilon
         SSAO->PushUniform("UVToViewB", UVToViewB);
         SSAO->PushUniform("LinMAD", LinMAD);
         SSAO->PushUniform("Resolution", glm::vec2(width, height));
-
+/*
         switch (mHBAOQuality)
         {
         case 0:
@@ -403,7 +414,10 @@ namespace Epsilon
         case 2:
             SSAO->PushUniform("NumDirections", 7);
             SSAO->PushUniform("NumSamples", 8);
-        }
+        }*/
+        
+        SSAO->PushUniform("NumDirections", mPostProcessData.HBAO.NumDirections);
+        SSAO->PushUniform("NumSamples", mPostProcessData.HBAO.Samples);
 
         glUniform3fv(glGetUniformLocation(SSAO->getProgramID(), "samples"), 9, &ssaoKernel[0][0]);
 
@@ -647,11 +661,20 @@ namespace Epsilon
         glUniform2f(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "Resolution"), width, height);
         glUniform3fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "camDir"), 1, &cam->getDirection()[0]);
         glUniform3fv(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "camPos"), 1, &cam->getPosition()[0]);
-        ScreenSpaceReflectionShader->PushUniform("SSROn", SSROn);
+        ScreenSpaceReflectionShader->PushUniform("SSROn", mPostProcessData.ScreenSpaceReflections.Active);
         ScreenSpaceReflectionShader->PushUniform("LinMAD", LinMAD);
         ScreenSpaceReflectionShader->PushUniform("Time", (float)glfwGetTime());
         ScreenSpaceReflectionShader->PushUniform("ID", TotalFrames);
         ScreenSpaceReflectionShader->PushUniform("isMoving", cam->isMoving());
+
+        
+        ScreenSpaceReflectionShader->PushUniform("minRayStep", mPostProcessData.ScreenSpaceReflections.MinRayStep);
+        ScreenSpaceReflectionShader->PushUniform("maxRayStep", mPostProcessData.ScreenSpaceReflections.MaxRayStep);
+        ScreenSpaceReflectionShader->PushUniform("maxSteps", mPostProcessData.ScreenSpaceReflections.MaxSteps);
+        ScreenSpaceReflectionShader->PushUniform("numBinarySearchSteps", mPostProcessData.ScreenSpaceReflections.MaxRefinementSteps);
+        ScreenSpaceReflectionShader->PushUniform("roughnessCutoff", mPostProcessData.ScreenSpaceReflections.RoughnessCutoff);
+        ScreenSpaceReflectionShader->PushUniform("depthCutoff", mPostProcessData.ScreenSpaceReflections.DepthCutoff);
+  
         RenderQuad();
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -673,7 +696,7 @@ namespace Epsilon
 
         /** Denoise SSR*/
 
-        if (cam->isMoving())
+        //if (cam->isMoving())
         {
             mDenoiseFramebuffer->bindFramebuffer();
             mDenoiseFramebuffer->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -692,6 +715,11 @@ namespace Epsilon
 
             glUniform2f(glGetUniformLocation(DenoiseShader->getProgramID(), "resolution"), width, height);
             glUniform1f(glGetUniformLocation(DenoiseShader->getProgramID(), "exponent"), 0.05);
+
+            DenoiseShader->PushUniform("Sigma", mPostProcessData.DenoiseSettings.Sigma);
+            DenoiseShader->PushUniform("kSigma", mPostProcessData.DenoiseSettings.kSigma);
+            DenoiseShader->PushUniform("Threshold", mPostProcessData.DenoiseSettings.Threshold); 
+            DenoiseShader->PushUniform("RoughnessCutoff", mPostProcessData.DenoiseSettings.RoughnessCutoff);
             RenderQuad();
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, 0);
@@ -718,7 +746,7 @@ namespace Epsilon
 
         glActiveTexture(GL_TEXTURE0);
         MotionBlurShader->PushUniform("gFinalImage", 0);
-        glBindTexture(GL_TEXTURE_2D, mCompositeImage->getRenderTargetHandler(0) /* hdrFBO->getRenderTargetHandler("colorBuffer")*/);
+        glBindTexture(GL_TEXTURE_2D, mTAAFramebuffer[TAACurrentBuffer]->getRenderTargetHandler(0) /* hdrFBO->getRenderTargetHandler("colorBuffer")*/);
         glGenerateMipmap(GL_TEXTURE_2D);
 
         glActiveTexture(GL_TEXTURE1);
@@ -726,9 +754,9 @@ namespace Epsilon
         glBindTexture(GL_TEXTURE_2D, gBufferFramebuffer->getRenderTargetHandler(GBUFFER_MOTION_EXTRA));
 
         float currentFPS = (1.0 / frametime);
-        float targetFPS = (1.0 / 0.016f);
+        float targetFPS = 1.0 / mPostProcessData.MotionBlur.FrameTimeTarget;
         float velocityScale = currentFPS / targetFPS;
-        MotionBlurShader->PushUniform("uVelocityScale", velocityScale * mMotionBlurStrength);
+        MotionBlurShader->PushUniform("uVelocityScale", velocityScale * mPostProcessData.MotionBlur.Strength);
 
         RenderQuad();
 
@@ -857,7 +885,7 @@ namespace Epsilon
 
         CompositeShader->PushUniform("TotalFrames", TotalFrames);
         CompositeShader->PushUniform("isMoving", isMoving);
-        CompositeShader->PushUniform("HBAOOn", (int)HBAOOn);
+        CompositeShader->PushUniform("HBAOOn", (int)mPostProcessData.HBAO.Active);
 
         RenderQuad();
 
@@ -892,6 +920,69 @@ namespace Epsilon
         glViewport(0, 0, width, height);
     }
 
+    void PostProcess::TAAPass() {
+
+        mTAAFramebuffer[TAACurrentBuffer]->bindFramebuffer();
+        mTAAFramebuffer[TAACurrentBuffer]->setViewport();
+        glDisable(GL_BLEND);
+        
+        TAAShader->Use();
+
+        glActiveTexture(GL_TEXTURE0);
+        TAAShader->PushUniform("sCurrentFrame", 0);
+        glBindTexture(GL_TEXTURE_2D, mCompositeImage->getRenderTargetHandler(0));
+        glGenerateMipmap(GL_TEXTURE_2D);
+        
+        glActiveTexture(GL_TEXTURE1);
+        TAAShader->PushUniform("sLastFrame", 1);
+        glBindTexture(GL_TEXTURE_2D, mTAAFramebuffer[!TAACurrentBuffer]->getRenderTargetHandler(0));
+        
+        glActiveTexture(GL_TEXTURE2);
+        TAAShader->PushUniform("sVelocityBuffer", 2);
+        glBindTexture(GL_TEXTURE_2D, gBufferFramebuffer->getRenderTargetHandler(GBUFFER_MOTION_EXTRA));
+        
+        glActiveTexture(GL_TEXTURE3);
+        TAAShader->PushUniform("sDepthBuffer", 3);
+        glBindTexture(GL_TEXTURE_2D, gBufferFramebuffer->getRenderTargetHandler(GBUFFER_IBL_DEPTH));
+
+        TAAShader->PushUniform("iResolution", mTAAFramebuffer[TAACurrentBuffer]->Resolution());
+        TAAShader->PushUniform("active", mPostProcessData.AntiAliasingSettings.Active);
+        TAAShader->PushUniform("lerpAmount", mPostProcessData.AntiAliasingSettings.LerpAmount);
+        TAAShader->PushUniform("clampingKernelSize", mPostProcessData.AntiAliasingSettings.ClampingKernelSize);
+        
+        RenderQuad();
+        
+        TAAShader->Free();
+
+        mTAAFramebuffer[TAACurrentBuffer]->unbindFramebuffer();
+        TAACurrentBuffer = !TAACurrentBuffer;
+
+        /***Copy TAA texture for gamma correction***/
+
+        mTAAFramebufferCopy->bindFramebuffer();
+        mTAAFramebufferCopy->setViewport();
+        mTAAFramebufferCopy->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        PassThroughShader->Use();
+
+        glActiveTexture(GL_TEXTURE0);
+        glUniform1i(glGetUniformLocation(PassThroughShader->getProgramID(), "texture0"), 0);
+        glBindTexture(GL_TEXTURE_2D, mTAAFramebuffer[!TAACurrentBuffer]->getRenderTargetHandler(0));
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        mTAAFramebufferCopy->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        RenderQuad();
+
+        PassThroughShader->Free();
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        mTAAFramebufferCopy->unbindFramebuffer();
+        glViewport(0, 0, width, height);
+
+    }
+
     void PostProcess::ShowPostProcessImage(float frametime, GLuint onmenu, glm::vec3 Sun, std::shared_ptr<Camera> &cam, std::shared_ptr<Epsilon::OpenGL::FrameBuffer<int>> framebuffer)
     {
 
@@ -903,7 +994,9 @@ namespace Epsilon
 
         CompositeImage(cam->isMoving());
 
-        if (m_MotionBlur)
+        TAAPass();
+
+        if (mPostProcessData.MotionBlur.Active)
             MotionBlur(frametime);
 
         GLuint blurred = blurImage(hdrFBO->getRenderTargetHandler("brightColorBuffer"), false);
@@ -927,10 +1020,10 @@ namespace Epsilon
         glActiveTexture(GL_TEXTURE0);
         finalImage->PushUniform("compositeImage", 0);
 
-        if (m_MotionBlur)
+        if (mPostProcessData.MotionBlur.Active)
             glBindTexture(GL_TEXTURE_2D, mMotionBlurFramebuffer->getRenderTargetHandler(0));
         else
-            glBindTexture(GL_TEXTURE_2D, mCompositeImage->getRenderTargetHandler(0));
+            glBindTexture(GL_TEXTURE_2D, mTAAFramebuffer[TAACurrentBuffer]->getRenderTargetHandler(0));
 
         glActiveTexture(GL_TEXTURE1);
         finalImage->PushUniform("blurredSampler", 1);
@@ -972,6 +1065,13 @@ namespace Epsilon
 
         finalImage->PushUniform("exposure", m_exposure);
         finalImage->PushUniform("time", (float)glfwGetTime());
+
+        
+        finalImage->PushUniform("gamma", mPostProcessData.ImageSettings.Gamma);
+        finalImage->PushUniform("contrast", mPostProcessData.ImageSettings.Contrast);
+        finalImage->PushUniform("saturation", mPostProcessData.ImageSettings.Saturation);
+        finalImage->PushUniform("exposure", mPostProcessData.ImageSettings.Exposure);
+        finalImage->PushUniform("brightness", mPostProcessData.ImageSettings.Brightness);
 
         RenderQuad();
 

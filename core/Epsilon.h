@@ -11,6 +11,7 @@
 
 #include "App.hpp"
 
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <Texture.h>
 #include <Shader.h>
@@ -69,15 +70,6 @@ namespace Epsilon
 
         virtual ~Epsilon()
         {
-            BSPMap->Destroy();
-
-            sun->Destroy();
-
-            PP->Destroy();
-
-            cout << "Epsilon Engine has closed Succesfully." << endl;
-
-            Log::WriteToLog("Epsilon Engine has closed Succesfully.");
         }
 
     private:
@@ -132,9 +124,7 @@ namespace Epsilon
 
         void onCreate() override;
 
-        void onExit() override
-        {
-        }
+        void onExit() override;
 
     public:
         std::vector<std::shared_ptr<Camera>> eCamera;

@@ -36,7 +36,7 @@ namespace Epsilon
 {
     ResourceManager ResourceManager::instance;
 
-    Epsilon::Epsilon(const char* name) : App(name)
+    Epsilon::Epsilon(const char *name) : App(name)
     {
         //window = win;
         glClear(GL_COLOR_BUFFER_BIT);
@@ -133,7 +133,6 @@ namespace Epsilon
 
     void Epsilon::RenderSplashScreen(string text)
     {
-
         glClear(GL_COLOR_BUFFER_BIT);
         glViewport(0, 0, WIDTH, HEIGHT);
         Shader tmpShader("shaders/splashv.glsl", "shaders/splashf.glsl");
@@ -223,19 +222,21 @@ namespace Epsilon
         eCamera.push_back(std::make_shared<Camera>(glm::vec3(0.0f, 8.25f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
         eCamera.push_back(std::make_shared<Camera>(glm::vec3(20.0f, 30.25f, -60.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
 
-        Input::Mouse::MouseEventHandler += ([](auto* sender, beacon::args* args){
-            if(args == nullptr) return;
+        Input::Mouse::MouseEventHandler += ([](auto *sender, beacon::args *args) {
+            if (args == nullptr)
+                return;
 
             auto obj = args->to<Input::MouseArgs>();
-            if(obj.Left().State == Input::PRESSED) {
+            if (obj.Left().State == Input::PRESSED)
+            {
                 std::cout << "Left button pressed" << std::endl;
             }
-        }); 
+        });
 
         this->ComputeCamera(NO_CLIP, glm::vec3(0.0f, 8.25f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
         shadowMap = std::move((shared_ptr<Renderer::ShadowMap>)(new Renderer::ShadowMap(DATA.SHADOWMAP_SIZE, DATA.SHADOWMAP_SIZE, -20.0f, 80.0f)));
- 
+
         mPointShadow = std::make_shared<Renderer::PointShadow>(glm::vec3(-5, 19.2, -28.74));
         mPointShadow->Setup();
 
@@ -244,7 +245,7 @@ namespace Epsilon
 
         //RenderSplashScreen("Loading Geometry...");
         this->LoadGeometry();
- 
+
         this->LoadSound();
 
         std::vector<string> modelsNames;
@@ -261,14 +262,25 @@ namespace Epsilon
 
             auto _RComp = std::make_shared<Component::RenderComponent>(tModelName, tPosition, "Main");
             _RComp->CastsShadows(true);
-            _RComp->setTransparency(false);
             _RComp->setVisibility(true);
+            _RComp->setTransparency(false);
             _Entity->addComponent(_RComp);
 
+            _Entity->mFunction = [cam = eCamera[mCurrentCamera]](EntityBase *ent) {
+                Component::TransformComponent_ptr t = std::static_pointer_cast<Component::TransformComponent>(ent->getComponentList()[Component::TRANSFORMCOMPONENT]);
+                if (glm::length(cam->getPosition() - t->Position()) < 10.0f)
+                {
+                    t->PrevRotation(t->Rotation());
+                    t->Rotation(glm::quat(glm::rotate(glm::mat4(1.0), (float)glm::radians(Clock::Time() * .2), glm::vec3(0.0, 1.0, 0.0))));
+                } else {
+                    t->PrevRotation(t->Rotation());
+                }
+            };
+ 
             EntityList.push_back(_Entity);
         }
-
-        {
+  
+        { 
             glm::vec3 tPosition = glm::vec3(10, 10, 10);
             glm::vec3 tScale = glm::vec3(2.0f);
             glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
@@ -412,7 +424,9 @@ namespace Epsilon
         shadowMap->SetupShadowMatrices();
 
         shadowMap->Begin(0);
+    
         this->RenderShadows(Shaders["ShadowMapping"]);
+        
         shadowMap->End();
 
         mPointShadow->Begin(0);
@@ -420,6 +434,7 @@ namespace Epsilon
         RenderShadows(ResourceManager::Get().getShader("PointShadow"));
 
         mPointShadow->End();
+
 
         //this->mCubemap[1] = (std::shared_ptr<CubeMap>)new CubeMap(55, glm::vec3(10, 7, 10));
 
@@ -540,7 +555,7 @@ namespace Epsilon
                         glActiveTexture(GL_TEXTURE5);
                         cubeShader->PushUniform("shadowMap", 5);
                         glBindTexture(GL_TEXTURE_2D, shadowMap->getShadowTextureID());
-                        BSPMap->RenderLevel(mCubemap[a][b][c]->getPosition(), cubeShader->getProgramID(), true);
+                        BSPMap->RenderLevel(mCubemap[a][b][c]->getPosition(), cubeShader, true);
                         cubeShader->Free();
                     }
                     mCubemap[a][b][c]->End();
@@ -624,7 +639,8 @@ namespace Epsilon
         AmbientLightSSBO = std::make_shared<Renderer::ShaderStorage>(SSBOSize, 1);
         AmbientLightSSBO->Init(&sphStruct);
 
-        /*
+        Editor::GUI::sSelectedEntity = EntityList.at(1);
+        /* 
         glGenBuffers(1, &AmbientLightSSBO);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, AmbientLightSSBO);
         glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(SphericalHarmonics::SphericalHarmonicsFormat) * 7 * 7 * 7, (const void *)&sphStruct, GL_DYNAMIC_COPY);
@@ -706,8 +722,8 @@ namespace Epsilon
         //std::cout << "Resource manager in epsilon address: " << rM.get() << std::endl;
 
         ResourceManager::Get().requestCubeMap(50000, glm::vec3(4.8, 80000.2, -8));
-        ResourceManager::Get().requestModel("models/esfera.eml"/*, glm::vec3(78.0, 5.25, -57), glm::vec3(1), glm::quat(0.0, 0.0, 0.0, 0.0)*/);
-        ResourceManager::Get().requestModel("models/sphere.eml"/*, glm::vec3(78.0, 5.25, -57), glm::vec3(1), glm::quat(0.0, 0.0, 0.0, 0.0)*/);
+        ResourceManager::Get().requestModel("models/esfera.eml" /*, glm::vec3(78.0, 5.25, -57), glm::vec3(1), glm::quat(0.0, 0.0, 0.0, 0.0)*/);
+        ResourceManager::Get().requestModel("models/sphere.eml" /*, glm::vec3(78.0, 5.25, -57), glm::vec3(1), glm::quat(0.0, 0.0, 0.0, 0.0)*/);
         //rM->requestModel("models/Desk.eml", rM, glm::vec3(-2.0,8.0,10.0), glm::vec3(0.9), glm::quat(1, 0.0, -1.0, 0.0));
         //rM->requestModel("models/sponza.eml", rM, glm::vec3(-16,5.0,-15), glm::vec3(0.025), glm::quat(0, 0.0, 0, 0.0));
         float first, second, delta;
@@ -811,7 +827,7 @@ namespace Epsilon
         BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera[mCurrentCamera]->getProjectionMatrix() * eCamera[mCurrentCamera]->getViewMatrix()), BSPmodel);
         shader->Use();
         this->SetUniforms(shader, glm::vec3(0.0), glm::vec3(0.1), glm::quat(0, 0, 0, 0));
-        BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), shader->getProgramID(), true);
+        BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), shader, true);
         /*
     Shaders["MD5Geometry"]->Use();
     glUniformMatrix4fv(glGetUniformLocation(Shaders["MD5Geometry"]->getProgramID(), "mSkinned"), 150, GL_FALSE, &m_AnimModel->m_AnimatedBones[0][0][0]);
@@ -845,7 +861,7 @@ namespace Epsilon
             //shader->Use();
             shader->PushUniform("FrameNumber", (int)mWindow->FrameNumber());
             this->SetUniforms(shader, EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation());
-            auto tModel = ResourceManager::Get().getModel(EntityList[i]->getModelPath()/*, shader, EntityList[i]->getPosition()*/);
+            auto tModel = ResourceManager::Get().getModel(EntityList[i]->getModelPath() /*, shader, EntityList[i]->getPosition()*/);
             tModel->Draw(shader);
         }
 
@@ -864,7 +880,7 @@ namespace Epsilon
 
         shader->PushUniform("FrameNumber", (int)mWindow->FrameNumber());
         this->SetUniforms(shader, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.1, 0.1, 0.1), glm::quat(0.0, 0.0, 0.0, 0.0));
-        BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), shader->getProgramID(), false);
+        BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), shader, false);
 
         /*
     Shaders["MD5ShadowMapping"]->Use();
@@ -934,6 +950,7 @@ namespace Epsilon
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
         {
             Editor::GUI::MainWindow(EntityList);
+            Editor::GUI::ToolbarUI();
 
             //ImGui::PopStyleVar();
             //ImGui::Begin("Canvas", NULL);
@@ -945,17 +962,21 @@ namespace Epsilon
 
             /*Begin scene window*/
 
-            Editor::GUI::DebugView(PP, mDefaultFrameBuffer, eCamera[mCurrentCamera]);
+            Editor::GUI::DebugView(PP, mDefaultFrameBuffer, eCamera[mCurrentCamera], Shaders["ImGui_gamma"]);
             Editor::GUI::MainViewport(mDefaultFrameBuffer, eCamera[mCurrentCamera]);
- 
+
             Editor::GUI::SceneHierarchy(EntityList);
- 
+
             Editor::GUI::TextureList();
+ 
+            Editor::GUI::PostprocessSettings(PP);
+
+            Editor::GUI::EntityProperties();
 
             Editor::GUI::Render(mWindow);
         }
     }
- 
+
     void Epsilon::ProcessAudio()
     {
 
@@ -981,25 +1002,25 @@ namespace Epsilon
         etime = Clock::TimeSeconds();
         frametime = etime - lastTime;
         double t = 0.0;
- 
+
         fps = 1.0 / frametime;
         if (etime > t)
-        { 
+        {
             fpss << fps;
             t = etime + (double)1.000;
-        }  
-  
+        }
+
         eventtime += 1 * Clock::DeltaSeconds();
         //cout << eventtime << endl;
         sun->Update();
- 
+
         ResourceManager::Get().timestep = Clock::LastSeconds();
-    } 
-  
+    }
+
     void Epsilon::RenderSkybox(bool state)
     {
         Shaders["SkyBox"]->Use();
-  
+
         glm::mat4 view = glm::mat4(glm::mat3(eCamera[mCurrentCamera]->getViewMatrix()));
         float rotation = 0.5 * Clock::TimeSeconds();
         glm::mat4 RotationMatrix = glm::rotate(glm::mat4(1.0), glm::radians(rotation), glm::vec3(0, 1, 0));
@@ -1033,10 +1054,10 @@ namespace Epsilon
     {
         glfwWaitEvents();
     }*/
- 
+
         glfwPollEvents();
         Editor::GUI::PollEvents(mDefaultFrameBuffer, PP);
- 
+
         Input::Joystick::JoystickManager::DetectJoysticks();
         Input::Joystick::JoystickManager::PollJoystick();
         auto _Joystick = Input::Joystick::JoystickManager::PrimaryJoystick();
@@ -1056,6 +1077,12 @@ namespace Epsilon
                 menuTime = this->etime;
             }
         }
+
+        auto & ref = ResourceManager::Get();
+
+        if(ref.ShouldLoadQueuedTextures()) {
+            ref.loadQueuedTextures();
+        } 
         /* if (onMenu)
         {
             glfwSetInputMode(window->getHandle()->getHandle(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -1067,7 +1094,7 @@ namespace Epsilon
             glfwSetInputMode(window->getHandle()->getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             this->m_CameraMode = NO_CLIP;
         }*/
-
+  
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::N])
             normal = !normal;
 
@@ -1161,43 +1188,40 @@ namespace Epsilon
     void Epsilon::onRender()
     {
         // 0 8 6
-        while (g_Running && !mWindow->WantsToClose())
+        this->ClearBuffers();
+
+        this->Clock();
+
+        this->PollEvents();
+
+        //if (!onMenu)
+        this->ComputeCamera(m_CameraMode, glm::vec3(48.4247, 8.1507, -12.9128), glm::vec3(-0.785454, 0.0299956, 0.618193));
+
+        this->ProcessAudio();
+
+        static float FixedTimestep = 1.f / 120.f;
+
+        timeBehind += Clock::DeltaSeconds();
+
+        while (timeBehind >= FixedTimestep)
         {
-            this->ClearBuffers();
-
-            this->Clock();
-
-            this->PollEvents();
-
-            //if (!onMenu)
-            this->ComputeCamera(m_CameraMode, glm::vec3(48.4247, 8.1507, -12.9128), glm::vec3(-0.785454, 0.0299956, 0.618193));
-
-            this->ProcessAudio();
-
-            static float FixedTimestep = 1.f / 120.f;
-
-            timeBehind += Clock::DeltaSeconds();
-
-            while (timeBehind >= FixedTimestep)
-            {
-                ResourceManager::Get().getPhysicsWorld()->Update(FixedTimestep);
-                timeBehind -= FixedTimestep;
-            }
-
-            this->ComputeShadow();
-
-            this->CalculateVisibility();
-
-            this->ProcessFrame();
-
-            this->RenderFrame();
-
-            this->Render2D();
-
-            this->SwapBuffers();
-
-            glCache::DrawCalls = 0;
+            ResourceManager::Get().getPhysicsWorld()->Update(FixedTimestep);
+            timeBehind -= FixedTimestep;
         }
+
+        this->ComputeShadow();
+
+        this->CalculateVisibility();
+
+        this->ProcessFrame();
+
+        this->RenderFrame();
+
+        this->Render2D();
+
+        this->SwapBuffers();
+
+        glCache::DrawCalls = 0;
     }
 
     void Epsilon::CalculateVisibility()
@@ -1268,8 +1292,11 @@ namespace Epsilon
         }
         else
         {
-        }
+        } 
 
+        if(PP)
+        this->eCamera[mCurrentCamera]->UpdateMatrices(mWindow->FrameNumber(), WIDTH, HEIGHT, PP->getPostProcessData().AntiAliasingSettings.Active);
+        else
         this->eCamera[mCurrentCamera]->UpdateMatrices(mWindow->FrameNumber(), WIDTH, HEIGHT);
     }
 
@@ -1312,7 +1339,7 @@ namespace Epsilon
 
         mPointShadow->End();
     }
-
+ 
     void Epsilon::ProcessFrame(void)
     {
         PP->beginOffScreenrendering();
@@ -1396,12 +1423,26 @@ namespace Epsilon
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         //Blit to named default framebuffer
-
+ 
         //glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
         //mDefaultFrameBuffer->setToDraw();
 
         //glBlitFramebuffer(0, 0, this->WIDTH, this->HEIGHT, 0, 0, this->WIDTH, this->HEIGHT, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
+ 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    void Epsilon::onExit()
+    {
+ 
+        BSPMap->Destroy();
+
+        sun->Destroy();
+
+        PP->Destroy();
+
+        cout << "Epsilon Engine has closed Succesfully." << endl;
+
+        Log::WriteToLog("Epsilon Engine has closed Succesfully.");
     }
 } // namespace Epsilon

@@ -2,13 +2,11 @@
 
 #include <Core.hpp>
 
-namespace Epsilon
-{
-    namespace API
-    {
-        namespace OpenGL
+#include <Driver/API/VertexBufferObject.hpp>
+
+namespace Epsilon::API::OpenGL
         {
-            class VertexBufferObject
+            class VertexBufferObject : public API::VertexBufferObject
             {
             public:
                 VertexBufferObject()
@@ -51,6 +49,4 @@ namespace Epsilon
                 GLuint m_Handler;
                 GLenum m_Target;
             };
-        } // namespace OpenGL
-    } // namespace API
 } // namespace Epsilon

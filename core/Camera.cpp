@@ -34,28 +34,29 @@ namespace Epsilon
         this->MaxMovementSpeed = 5.3;
         this->horizontalAngle = 0.0;
         this->verticalAngle = 0.0;
-        
+
         using namespace Input;
 
         Mouse::MouseEventHandler += beacon::bind(&onMouseWheelCallback, this);
     }
 
     void Camera::onMouseWheelCallback(beacon::sender *sender, beacon::args *args)
+    {
+        if (args == nullptr)
+            return;
+
+        using Input::STATE::UP, Input::STATE::DOWN;
+        auto obj = args->to<Input::MouseArgs>();
+
+        if (obj.Wheel().State == UP)
         {
-            if(args == nullptr) return;
-
-            using Input::STATE::UP, Input::STATE::DOWN;
-            auto obj = args->to<Input::MouseArgs>();
-
-            if (obj.Wheel().State == UP)
-            {
-                Position = Position + Orientation * (float)obj.Wheel().yOffset;
-            }
-            else if (obj.Wheel().State == DOWN)
-            {
-                Position = Position - Orientation * (float)obj.Wheel().yOffset;
-            }
-        } 
+            Position = Position + Orientation * (float)obj.Wheel().yOffset;
+        }
+        else if (obj.Wheel().State == DOWN)
+        {
+            Position = Position - Orientation * (float)obj.Wheel().yOffset;
+        }
+    }
 
     void Camera::Update(GLFWwindow *win)
     {
@@ -104,7 +105,7 @@ namespace Epsilon
         float DeltaTime = float(currentTime - LastTime);
 
         static double lastX = 0.0, lastY = 0.0;
- 
+
         glfwGetWindowSize(window, &winx, &winy);
 
         auto _Joystick = Input::Joystick::JoystickManager::PrimaryJoystick();
@@ -235,8 +236,8 @@ namespace Epsilon
         if (MovementSpeed < 0.01)
             MovementSpeed = 0.0f;
         if (LastPosition != Position)
-        DeltaVector = Position - LastPosition;
-        
+            DeltaVector = Position - LastPosition;
+
         DeltaVector.x = glm::isnan(DeltaVector.x) ? 0.0 : DeltaVector.x;
         DeltaVector.y = glm::isnan(DeltaVector.y) ? 0.0 : DeltaVector.y;
         DeltaVector.z = glm::isnan(DeltaVector.z) ? 0.0 : DeltaVector.z;
@@ -246,7 +247,8 @@ namespace Epsilon
 
         //Position += (MovementVector * MovementSpeed * DeltaTime);
         //Position += MovementVector;
-        if(!externallymodified){
+        if (!externallymodified)
+        {
             mIsMoving = false;
             //DeltaVector = (Position - LastPosition);
             if (LastPosition != Position)
@@ -257,7 +259,9 @@ namespace Epsilon
             }
             if (LastOrientation != Orientation)
                 mIsMoving = true;
-        } else {
+        }
+        else
+        {
             externallymodified = false;
         }
 
@@ -267,7 +271,7 @@ namespace Epsilon
         Frustrum = Position + Orientation;
     }
 
-    void Camera::UpdateMatrices(int FrameNumber, int frame_w, int frame_h)
+    void Camera::UpdateMatrices(int FrameNumber, int frame_w, int frame_h, bool jitter)
     {
         winx = frame_w;
         winy = frame_h;
@@ -276,16 +280,17 @@ namespace Epsilon
         static const glm::vec2 Res = glm::vec2((float)winx, (float)winy);
         static const glm::vec2 iRes = 1.0f / glm::vec2((float)winx, (float)winy);
 
-        glm::vec2 Jitter = Helpers::halton(FrameNumber % 16 + 1) * iRes * glm::radians(FieldOfView);
-        
-
         ProjectionMatrix = glm::perspective(glm::radians(FieldOfView), glm::clamp(Aspectratio, -10.0f, 10.0f), 0.1f, 3000.0f);
 
-        //std::cout << "Jitter.x: " << Jitter.x << "  Jitter.y: " << Jitter.y << "\n";
+        if (jitter)
+        {
+            glm::vec2 Sample = Helpers::halton(FrameNumber % 16 + 1);
+            glm::vec2 Jitter = ((Sample * 2.0f - 1.0f)) / Res;
 
-        ProjectionMatrix[2][0] += Jitter.x;
-        ProjectionMatrix[2][1] += Jitter.y;
-
+            Jitter *= 1.0f;
+            ProjectionMatrix[2][0] += Jitter.x;
+            ProjectionMatrix[2][1] += Jitter.y;
+        }
         PrevView = ViewMatrix;
 
         ViewMatrix = glm::lookAt(
@@ -309,7 +314,8 @@ namespace Epsilon
         return mIsMoving; //return true to cancel temporal SSR denoiser
     }
 
-    void Camera::isMoving(bool x) {
+    void Camera::isMoving(bool x)
+    {
         externallymodified = true;
         mIsMoving = x;
     }

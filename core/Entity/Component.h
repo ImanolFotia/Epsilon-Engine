@@ -30,10 +30,6 @@ namespace Epsilon
 
             virtual void Render() = 0;
 
-            virtual glm::vec3 getPosition() = 0;
-            virtual glm::quat getRotation() = 0;
-            virtual glm::vec3 getScale() = 0;
-
             virtual COMPONENT_TYPE getType() = 0;
 
         protected:

@@ -67,6 +67,7 @@ float shadow = 0.0;
 vec4 ExtraComponents;
 vec3 F0;
 
+
 #include <PBRFunctions.glsl>
 
 #define Scale vec3(0.3, 0.1, 0.1)
@@ -232,8 +233,8 @@ float poissonShadowMapping(vec4 fragPosLightSpace){
     float distance = current - closest;
 
     for (int i=0;i<8;i++){
-        int index = int(16.0*random(floor(FragPos.xyz*1000.0), i))%16;
-        visibility -= 0.125*(texture(shadowMap, vec3(fragPosLightSpace.xy+ poissonDisk[index]/1400, fragPosLightSpace.z - bias)/fragPosLightSpace.w).r);
+        int index = int(16.0*random(floor(FragPos.xyz*100.0)+time, i))%16;
+        visibility -= 0.125*(texture(shadowMap, vec3(fragPosLightSpace.xy+ poissonDisk[index]/700, fragPosLightSpace.z - bias)/fragPosLightSpace.w).r);
     }
     //visibility -= step(fragPosLightSpace.z, texture(shadowMap, vec3(fragPosLightSpace.xy, fragPosLightSpace.z-bias)).r);
     return visibility;
@@ -378,6 +379,7 @@ float PointShadowCalculation(vec3 fragPos, vec3 LightPos, inout bool in_range)
     return mix((1.0 - shadow), 1.0, strength);
 }
 
+
 void main()
 {
 
@@ -400,6 +402,7 @@ void main()
     ExtraComponents = textureLod(gExtraComponents, TexCoords, 0).rgba;
 
     Diffuse = textureLod(gAlbedoSpec, TexCoords, 0).rgb;
+    clearcoat = textureLod(gAlbedoSpec, TexCoords, 0).a;
 
     if(ExtraComponents.y > 0.1){
     	FragColor.rgb = mix(SkyColor, Diffuse, visibility) * ExtraComponents.y;
@@ -407,7 +410,7 @@ void main()
     	return;
     }
 
-    Specular = texture(gNormal, TexCoords).a;
+    Specular = clamp(texture(gNormal, TexCoords).a, 0.089, 1.0);
     SpecDiff = Diffuse * Specular;
     AmbientOcclusion = textureLod(ssaoColorBufferBlur, TexCoords, 0).r;
     vec4 FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0f);
@@ -457,15 +460,21 @@ void main()
             break;
         case 2:
         //{
-            vec3 res = SphereAreaLight(outBuffer.Lights[i].position.rgb + vec3(0.0, sin(time), 0.0),  outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts);
+            vec3 res = SphereAreaLight(outBuffer.Lights[i].position.rgb,  outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts);
             /*if(i == 0 && in_range){
                 res *= pointShadow;
             }*/
-            light += res;
+            
+            vec3 clearcoat_res = vec3(0.0);
+            if(clearcoat > 0.0) {
+                clearcoat_res = SphereAreaLight(outBuffer.Lights[i].position.rgb,  outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts, true);
+            }
+            light += mix(res, clearcoat_res, 0.5);
         //}
             break;
       }
     }
+    
 
     float pointShadow = PointShadowCalculation(FragPos, vec3(-5, 19.2,-28.74), in_range);
     light += TubeAreaLight(vec3(0, 0, 0), vec3(19.37,19.2,-28.74), vec3(-28.37,19.2,-28.74),  0.2, normalize(vec3(1,1,1)), 100) * pointShadow;

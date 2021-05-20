@@ -55,7 +55,7 @@ namespace Epsilon
 
                 //Check is button is pressed
                 //Returns false (not pressed) if button is out of range
-                bool isButtonPressed(unsigned button)
+                bool isButtonPressed(int button)
                 {
                     if (button < mJoystickButtonsCount)
                         return mButtons.at(button);
@@ -253,7 +253,7 @@ namespace Epsilon
                 {
                     try
                     {
-                        for (int i = 0; i < JoystickVector.size(); i++)
+                        for (std::size_t i = 0; i < JoystickVector.size(); i++)
                         {
                             if (JoystickVector.at(i)->getJoystickIsPresent() && JoystickVector.find(i) != JoystickVector.end())
                             {
@@ -264,7 +264,7 @@ namespace Epsilon
                                     _joystick->setJoystickAxes(glfwGetJoystickAxes(_joystick->getJoystickId(), &axesCount));
                                     _joystick->setJoystickButtons(glfwGetJoystickButtons(_joystick->getJoystickId(), &buttonsCount));
 
-                                    for (int k = 0; k < _joystick->getJoystickButtonsCount(); k++)
+                                    for (unsigned int k = 0; k < _joystick->getJoystickButtonsCount(); k++)
                                     {
                                         if (_joystick->getJoystickButtons()[k] == GLFW_PRESS)
                                         {

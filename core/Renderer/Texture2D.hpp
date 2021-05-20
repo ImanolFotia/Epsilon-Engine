@@ -6,9 +6,7 @@
 #include <Engine.hpp>
 #include "Texture.hpp"
 
-namespace Epsilon
-{
-    namespace Renderer
+namespace Epsilon::Renderer
     {
 
         class Texture2D : public Texture
@@ -22,9 +20,8 @@ namespace Epsilon
 
             ~Texture2D() {}
 
-            void Create(API::TextureBase::TextureData data) override
+            void Create(API::Texture::TextureData data) override
             {
-
                 using API::CONTEXT_TYPE;
                 auto type = Engine::Get().ContextType(); //CONTEXT_TYPE::OGL;//mContext->getType();
                 switch (type)
@@ -58,35 +55,45 @@ namespace Epsilon
 
             void setData(uint8_t *data, size_t size) override
             {
+                if(!mTexture) return;
                 mTexture->Fill(data, 0, 0);
             }
 
             void Bind() override
             {
+                if(!mTexture) return;
                 mTexture->Bind();
             }
 
             void Bind(int slot) override
             {
+                if(!mTexture) return;
                 mTexture->Bind(slot);
             }
 
             void Unbind() override
             {
+                if(!mTexture) return;
                 mTexture->Unbind();
             }
 
             void Destroy()
             {
+                if(!mTexture) return;
                 mTexture->Destroy();
             }
 
             unsigned int ID() override {
+                if(!mTexture) return 0;
                 return mTexture->ID();
+            }
+
+            bool wasCreated() {
+                if(mTexture == nullptr) return false;
+                return mTexture->wasCreated();
             }
 
         private:
             void _Create() {}
         };
-    } // namespace Renderer
 } // namespace Epsilon

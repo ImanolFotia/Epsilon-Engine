@@ -8,7 +8,7 @@
 #include "Model.h"
 #include <IO/Mouse.h>
 
-namespace Epsilon { 
+namespace Epsilon::Renderer { 
     class Gizmo {
 
         enum gizmo {

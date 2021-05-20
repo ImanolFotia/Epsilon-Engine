@@ -9,7 +9,6 @@
 #include <IO/Mouse.h>
 #include <IO/Joystick/Joystick.h>
 
-
 GLenum glCache::CullFaceMode = 0;
 GLuint glCache::ShaderId = 0;
 unsigned glCache::DrawCalls = 0;
@@ -21,17 +20,17 @@ double Epsilon::Input::Mouse::YPOS = 500;
 
 double Epsilon::Input::Mouse::prevxOffset = 0.0;
 double Epsilon::Input::Mouse::prevyOffset = 0.0;
- 
+
 Epsilon::Input::STATE Epsilon::Input::Mouse::LEFT = Input::RELEASED;
 Epsilon::Input::STATE Epsilon::Input::Mouse::MIDDLE = Input::RELEASED;
 Epsilon::Input::STATE Epsilon::Input::Mouse::RIGHT = Input::RELEASED;
- 
+
 //Epsilon::Input::MouseArgs Epsilon::Input::Mouse::mouseArgs;
 
 beacon::single_handler<Epsilon::Input::MouseArgs> Epsilon::Input::Mouse::MouseEventHandler;
- 
+
 namespace Joystick = Epsilon::Input::Joystick;
- 
+
 std::unordered_map<unsigned, Joystick::JoystickManager::Joystick_ptr> Joystick::JoystickManager::JoystickVector;
 Joystick::JoystickManager::Joystick_ptr Joystick::JoystickManager::dummyJoystick = std::make_shared<Input::Joystick::Joystick>();
 
@@ -56,7 +55,12 @@ namespace Epsilon
         std::cout << "Engine Initialization Complete." << std::endl;
         std::cout << "Now Rendering." << std::endl;
 
-        this->onRender();
+        while (!mWindow->WantsToClose())
+        {
+            this->onRender();
+        }
+
+        this->onExit();
     }
 
     App::~App()

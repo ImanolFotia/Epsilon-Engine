@@ -139,6 +139,7 @@ public:
     GLuint PrevViewPos_Location = -1;
 
 };
+using Shader_ptr = std::shared_ptr<Shader>;
 }
 
 #endif /// SHADER_H_INCLUDED

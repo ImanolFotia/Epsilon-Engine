@@ -3,7 +3,7 @@
 #include <Log.h>
 #include <Engine.hpp>
 
-namespace Epsilon
+namespace Epsilon::Renderer
 {
     Model::Model(const char *path)
     {
@@ -111,7 +111,7 @@ namespace Epsilon
 
                 std::vector<t_Vertex> tmpVertVector;
                 std::vector<unsigned int> tmpIndicesVector;
-                std::vector<struct Epsilon::Texture> tmpTexturesVector;
+                std::vector<struct MeshTexture> tmpTexturesVector;
                 MIN_MAX_POINTS tmp_MinMax;
 
                 for (int j = 0; j < l_meshes[i].mNumVertices; ++j)
@@ -171,7 +171,7 @@ namespace Epsilon
                 {
                     for (int j = 0; j < 4; ++j)
                     {
-                        struct Epsilon::Texture tex;
+                        MeshTexture tex;
                         tex.id = 0;
                         tex.path = std::string(l_meshes[i].mMaterial[j]);
                         tex.type = i;

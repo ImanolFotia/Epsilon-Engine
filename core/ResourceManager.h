@@ -13,12 +13,14 @@
 #include <Physics/Physics.h>
 #include <Audio/Audio.h>
 #include <Renderer/Texture2D.hpp>
+#include <beacon/beacon.hpp>
 
 namespace Epsilon
 {
     class ResourceManager
     {
         using TextureArray = std::map<std::string, std::shared_ptr<Renderer::Texture2D>>;
+        using Texture2D_ptr = std::shared_ptr<Renderer::Texture2D>;
     public:
         ResourceManager(const ResourceManager &) = delete;
 
@@ -45,7 +47,7 @@ namespace Epsilon
                 itr->second->Destroy();
             }
 
-            for (std::map<std::string, std::shared_ptr<Model>>::iterator itr = ModelList.begin(); itr != ModelList.end(); itr++)
+            for (std::map<std::string, std::shared_ptr<Renderer::Model>>::iterator itr = ModelList.begin(); itr != ModelList.end(); itr++)
             {
                 itr->second->Destroy();
             }
@@ -102,12 +104,10 @@ namespace Epsilon
 
         bool addCubemap(std::shared_ptr<CubeMap>, glm::vec3);
 
-        [[nodiscard]] std::shared_ptr<Model> getModel(const std::string& modelPath);
+        [[nodiscard]] std::shared_ptr<Renderer::Model> getModel(const std::string& modelPath);
         
         template<class T>
-        [[nodiscard]] T Get(const std::string&) {
-            return 0;
-        }
+        [[maybe_unused]] T Get(const std::string&);
 
         std::shared_ptr<Physics::Physics> getPhysicsWorld()
         {
@@ -135,6 +135,18 @@ namespace Epsilon
             return TextureList;
         }
 
+        Texture2D_ptr getTexture2D(const std::string & name) {
+            return TextureList.at(name);
+        }
+
+        unsigned long getTextureBytesAllocation() {
+            return mTextureMemoryAllocated;
+        }
+
+        bool ShouldLoadQueuedTextures() {
+            return mShouldLoadQueuedTextures;
+        }
+
         float timestep;
 
         bool cubemapsLoaded = false;
@@ -142,6 +154,7 @@ namespace Epsilon
         ResourceManager()
         {
             m_PhysicsWorld = std::make_shared<Physics::Physics>();
+            mQueuedTexturesInterval.set(500, [&mShouldLoadQueuedTextures = mShouldLoadQueuedTextures](){mShouldLoadQueuedTextures = true;});
         }
 
         static ResourceManager instance;
@@ -157,17 +170,20 @@ namespace Epsilon
         TextureArray TextureList;
         std::map<std::string, Water> WaterPlanesList;
         std::map<std::string, Terrain> TerrainList;
-        std::map<std::string, std::shared_ptr<Model>> ModelList;
+        std::map<std::string, std::shared_ptr<Renderer::Model>> ModelList;
         std::map<std::string, std::shared_ptr<Shader>> ShadersList;
         std::vector<glm::vec3> CubeMapPositions;
+        bool mShouldLoadQueuedTextures = false;
 
         /*!
     Temp Variables
     */
         std::vector<std::string> TextureQueue;
+        beacon::interval mQueuedTexturesInterval;
 
         unsigned int modelCounter;
         unsigned int textureCounter;
+        unsigned long mTextureMemoryAllocated = 0;
     };
 } // namespace Epsilon
 #endif // RESOURCEMANAGER_H

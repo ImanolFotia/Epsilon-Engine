@@ -7,9 +7,24 @@ namespace Epsilon
     {
         try
         {
+            bool should_create = false;
             std::map<std::string, std::shared_ptr<Renderer::Texture2D>>::iterator it;
+            if (TextureList.contains(texPath))
+            {
+                if (TextureList.at(texPath) != nullptr)
+                {
+                    if (!TextureList.at(texPath)->wasCreated())
+                    {
+                        should_create = true;
+                    }
+                }
+                else
+                {
+                    should_create = true;
+                }
+            }
             it = TextureList.find(texPath);
-            if (it != TextureList.end())
+            if (!should_create)
             {
                 return texPath; //TextureList.at(it->first)->getPath();
             }
@@ -22,7 +37,7 @@ namespace Epsilon
                 ProgramData DATA;
                 using Renderer::Texture2D;
 
-                API::TextureBase::TextureBase::TextureData TextureData;
+                API::Texture::Texture::TextureData TextureData;
                 TextureData.MakeDefaultGL();
 
                 auto is_normal = Helpers::isNormal(texPath.c_str());
@@ -34,16 +49,17 @@ namespace Epsilon
                 auto data = SOIL_load_image(path, &outwidth, &outheight, &outchannels, SOIL_LOAD_RGBA);
                 TextureData.Width = outwidth;
                 TextureData.Height = outheight;
+                int lod_zero_size = outwidth * outheight * sizeof(unsigned char) * outchannels;
+                mTextureMemoryAllocated += (unsigned long)((float)lod_zero_size * 1.3);
                 TextureData.AnisotropyLevel = DATA.ANISOTROPY;
-                auto tmpTex = std::make_shared<Texture2D>();
+                auto &tmpTex = TextureList.at(texPath);
                 tmpTex->Create(TextureData);
                 tmpTex->setData(data, 0);
                 SOIL_free_image_data(data);
                 data = nullptr;
-                TextureList.insert(std::make_pair(texPath, tmpTex));
                 return texPath;
             }
-        }
+        } 
         catch (std::exception &e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
@@ -56,7 +72,7 @@ namespace Epsilon
     {
         try
         {
-            std::map<std::string, std::shared_ptr<Model>>::iterator it;
+            std::map<std::string, std::shared_ptr<Renderer::Model>>::iterator it;
             it = ModelList.find(modelPath);
             if (it != ModelList.end())
             {
@@ -65,7 +81,7 @@ namespace Epsilon
             else
             {
                 //std::shared_ptr<Model> tmpModel(modelPath.c_str());
-                ModelList.insert(std::make_pair(modelPath, std::make_shared<Model>(modelPath.c_str())));
+                ModelList.insert(std::make_pair(modelPath, std::make_shared<Renderer::Model>(modelPath.c_str())));
                 return modelPath;
             }
         }
@@ -105,7 +121,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
     }
 }*/
 
-    [[nodiscard]] std::shared_ptr<Model> ResourceManager::getModel(const std::string &modelPath)
+    [[nodiscard]] std::shared_ptr<Renderer::Model> ResourceManager::getModel(const std::string &modelPath)
     {
         try
         {
@@ -152,7 +168,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
 
     void ResourceManager::destroyAllModels()
     {
-        for (std::map<std::string, std::shared_ptr<Model>>::iterator itr = ModelList.begin(); itr != ModelList.end(); itr++)
+        for (std::map<std::string, std::shared_ptr<Renderer::Model>>::iterator itr = ModelList.begin(); itr != ModelList.end(); itr++)
         {
             itr->second->Destroy();
         }
@@ -164,7 +180,11 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         {
             if (texPath.empty() != true)
             {
-                return TextureList.at(texPath)->ID();
+                auto texture = TextureList.at(texPath);
+                if (texture != nullptr)
+                    return texture->ID();
+                else
+                    return 0;
             }
             else
                 return 0;
@@ -181,13 +201,15 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
     void ResourceManager::bindTexture(const std::string &texPath)
     {
 
+        std::cout << "trying to bind: " << texPath << std::endl;
         try
         {
             if (texPath.empty() != true)
             {
                 if (TextureList.contains(texPath))
                 {
-                    TextureList.at(texPath)->Bind();
+                    if (TextureList.at(texPath) != nullptr)
+                        TextureList.at(texPath)->Bind();
                 }
                 else
                 {
@@ -208,7 +230,12 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
     {
         try
         {
+            auto tmpTex = std::make_shared<Renderer::Texture2D>();
+            if (!TextureList.contains(texture))
+                TextureList.insert(std::make_pair(texture, tmpTex));
             TextureQueue.push_back(texture);
+
+            std::cout << texture << " added to queue." << std::endl;
             //std::cout << texture << " Added to the Queue." << std::endl;
         }
         catch (std::exception &e)
@@ -222,17 +249,22 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         try
         {
 #pragma omp
-            for (unsigned int i = 0; i < TextureQueue.size(); ++i)
+            if (TextureQueue.size() > 0)
             {
-                requestTexture(TextureQueue.at(i));
-                //std::cout << "Loaded: " << i+1 << " out of " << TextureQueue.size() << std::endl << std::endl ;
-                TextureQueue.at(i).pop_back();
+                for (int i = static_cast<int>(TextureQueue.size())-1; i >= 0; i--)
+                {
+                    std::cout << "Loading queued texture: " << TextureQueue.at(i) << ":::" << i << std::endl;
+                    requestTexture(TextureQueue.at(i));
+                    //std::cout << "Loaded: " << i+1 << " out of " << TextureQueue.size() << std::endl << std::endl ;
+                    TextureQueue.pop_back();
+                }
             }
         }
         catch (std::exception &e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
         }
+        mShouldLoadQueuedTextures = false;
     }
 
     int ResourceManager::requestTextureUsage(const std::string &texPath)
@@ -456,9 +488,9 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
 
         return 0;
     }
-    
+
     template <>
-    [[nodiscard]] std::shared_ptr<Model> ResourceManager::Get(const std::string &name)
+    [[nodiscard]] std::shared_ptr<Renderer::Model> ResourceManager::Get(const std::string &name)
     {
         try
         {

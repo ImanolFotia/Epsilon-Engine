@@ -8,11 +8,14 @@
 
 #include <pch.hpp>
 
+#include <Engine.hpp>
 #include <Epsilon.h>
 
 
 int main(int argc, char* argv[])
 {
+    Epsilon::Engine::Get().ParseArguments(argc, argv);
+
     Epsilon::Epsilon MainProgram("Epsilon Engine");
 
     MainProgram.Begin();

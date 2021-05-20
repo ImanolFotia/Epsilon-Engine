@@ -14,8 +14,9 @@
 #include <Shader.h>
 #include <Renderer/EML/eml1_0.h>
 
-namespace Epsilon
+namespace Epsilon::Renderer
 {
+
     struct Vertex
     {
         /// Position
@@ -30,15 +31,18 @@ namespace Epsilon
         glm::vec3 Bitangent;
     };
 
-    struct Texture
+    struct MeshTexture
     {
         GLuint id;
         std::string type;
         std::string path;
     };
 
+    class MaterialPBR;
     class Mesh
     {
+
+        using MaterialPBR_ptr = std::shared_ptr<MaterialPBR>;
 
         class MeshData
         {
@@ -47,10 +51,10 @@ namespace Epsilon
             unsigned vertexOffset;
             unsigned indexOffset;
 
-            public:
-                MeshData() = default;
-                MeshData(auto a, auto b, auto c, auto d)
-                        : numVertices(a), numIndices(b), vertexOffset(c), indexOffset(d) {}
+        public:
+            MeshData() = default;
+            MeshData(auto a, auto b, auto c, auto d)
+                : numVertices(a), numIndices(b), vertexOffset(c), indexOffset(d) {}
         };
 
     public:
@@ -59,7 +63,7 @@ namespace Epsilon
         int CubeMapIndex = 1;
         std::vector<Vertex> ivertices;
         std::vector<GLuint> indices;
-        std::vector<Texture> textures;
+        std::vector<MeshTexture> textures;
         glm::mat4 mLocalTransform;
 
         bool isVisible = true;
@@ -67,24 +71,7 @@ namespace Epsilon
 
         /**  Functions  */
         /// Constructor
-        Mesh(std::vector<Renderer::t_Vertex> vertices, std::vector<GLuint> indices, std::vector<Texture> textures, unsigned vOffset, unsigned iOffset, int CubeMapindex = 1)
-        {
-            this->vertices = vertices;
-            this->indices = indices;
-            this->textures = textures;
-
-            mData = { vertices.size(), indices.size(), 0, 0 };
-
-
-            CubeMapIndex = CubeMapindex;
-            mGIIndex = 0;
-            mCubemapIndex = 1;
-            finalCubemaps = false;
-            ///cout << "number of textures for this mesh: " << textures.size() << endl;
-
-            /// Now that we have all the required data, set the vertex buffers and its attribute pointers.
-            //this->setupMesh();
-        }
+        Mesh(std::vector<Renderer::t_Vertex> vertices, std::vector<GLuint> indices, std::vector<MeshTexture> textures, unsigned vOffset, unsigned iOffset, int CubeMapindex = 1);
 
         ~Mesh()
         {
@@ -182,5 +169,7 @@ namespace Epsilon
         uint32_t mGIIndex;
         uint32_t mCubemapIndex;
         MeshData mData;
+
+        MaterialPBR_ptr mMaterial;
     };
 } // namespace Epsilon

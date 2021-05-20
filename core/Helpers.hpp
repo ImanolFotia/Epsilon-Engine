@@ -326,6 +326,7 @@ namespace Epsilon
                 a.z += ar1.x;
                 a.w += ar1.y;
                 s = glm::floor(s / coprimes);
+                
             }
             return glm::vec2(a.z, a.w);
         }

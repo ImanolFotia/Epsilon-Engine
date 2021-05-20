@@ -17,7 +17,7 @@ namespace Epsilon
 
     Skybox::Skybox(std::string SkyboxTex)
     {
-        skydome = (std::shared_ptr<Model>)new Model("models/sphere.eml"/*, glm::vec3(0, 0, 0)*/);
+        skydome = (std::shared_ptr<Renderer::Model>)new Renderer::Model("models/sphere.eml"/*, glm::vec3(0, 0, 0)*/);
 
         clouds = false;
         UpperSky_color = glm::vec3(29,91,255) / 255.0f; 

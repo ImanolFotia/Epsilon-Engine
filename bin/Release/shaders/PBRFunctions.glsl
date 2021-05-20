@@ -244,7 +244,8 @@ vec3 SpotLightPBR(in vec3 pos, in vec3 dir, in float radius, in vec3 color)
     
 }
 
-vec3 SphereAreaLight(in vec3 position, in float radius, in vec3 color, in float power)
+float clearcoat = 0.0;
+vec3 SphereAreaLight(in vec3 position, in float radius, in vec3 color, in float power, in bool uses_clearcoat = false)
 {
     vec3 I;
     vec3 L, centerToRay, r, closestPoint;
@@ -256,6 +257,7 @@ vec3 SphereAreaLight(in vec3 position, in float radius, in vec3 color, in float 
     vec3 l = normalize(closestPoint);
 
         float SpecularFactor = texture(gAlbedoSpec, TexCoords).a * 2.0;
+        float spec_copy = uses_clearcoat ? clearcoat : Specular;
         L = l;//normalize(closestPoint - FragPos);
         vec3 H = normalize(V + L);
         vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
@@ -270,17 +272,19 @@ vec3 SphereAreaLight(in vec3 position, in float radius, in vec3 color, in float 
         vec3 radiance     = vec3(1.0) * attenuation;        
         
         // cook-torrance brdf
-        float NDF = DistributionGGX2(Normal, H, clamp(Specular, 0.05, 1.0), L, radius);       
-        float G   = GeometrySmith(Normal, V, L, Specular);      
+        float NDF = DistributionGGX2(Normal, H, clamp(spec_copy, 0.05, 1.0), L, radius);       
+        float G   = GeometrySmith(Normal, V, L, clamp(spec_copy, 0.05, 1.0));      
         
         vec3 nominator    = NDF * G * F;
         float denominator = (4 * max(dot(V, Normal), 0.0) * max(dot(L, Normal), 0.0)) + 0.001; 
-        vec3 brdf = (nominator / denominator) * SpecularFactor;
+        vec3 brdf = (nominator / denominator);
             
         // add to outgoing radiance Lo
-        float NdotL = orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.05, 1.0), 1.0);             
+        float NdotL = orenNayarDiffuse(L, V, Normal, clamp(spec_copy, 0.05, 1.0), 1.0);             
         vec3 Lo = ((kD * Diffuse / PI + brdf)) * radiance * NdotL; 
+        
         return Lo * normalize(color);
+        
 }
 
 

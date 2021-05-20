@@ -32,7 +32,7 @@ namespace Epsilon
         float Horizon_Height = 0.276f;
 
     private:
-        std::shared_ptr<Model> skydome;
+        std::shared_ptr<Renderer::Model> skydome;
     };
 } // namespace Epsilon
 #endif /// SKYBOX_H_INCLUDED

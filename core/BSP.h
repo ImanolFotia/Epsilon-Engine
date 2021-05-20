@@ -217,7 +217,7 @@ namespace Epsilon
 
         bool LoadBSP(const char *strFileName);
 
-        void RenderLevel(glm::vec3 vPos, GLuint shader, bool Shadow);
+        void RenderLevel(glm::vec3 vPos, Shader_ptr shader, bool Shadow);
 
         void Destroy();
 
@@ -226,7 +226,7 @@ namespace Epsilon
     private:
         void FindTextureExtension(char *strFileName);
 
-        void RenderFace(int faceIndex, GLuint shader, bool);
+        void RenderFace(int faceIndex, Shader_ptr shader, bool);
 
         int IsClusterVisible(int current, int test);
 

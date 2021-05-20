@@ -13,7 +13,6 @@ namespace Epsilon {
         struct tm  tstruct;
         char       buf[80];
         //tstruct = *localtime(&now);
-        std::tm bt{};
 #if defined(__unix__)
         localtime_r(&now, &tstruct);
 #elif defined(_MSC_VER)

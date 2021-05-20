@@ -16,6 +16,7 @@ namespace Epsilon
             {
                 mType = RENDERCOMPONENT;
                 hasModel = true;
+                mPrevPosition = pos;
                 ResourceManager::Get().requestModel(modelPath /*, mPosition, glm::vec3(1), glm::quat(0, 0, 0, 0)*/);
             }
 
@@ -42,6 +43,7 @@ namespace Epsilon
 
             void setPosition(glm::vec3 pos)
             {
+                mPrevPosition = mPosition;
                 mPosition = pos;
             }
 
@@ -117,11 +119,12 @@ namespace Epsilon
             std::string modelPath;
             std::string shaderType;
             MODEL_TYPE ModelType;
-            bool isTransparent;
+            bool isTransparent = false;
             bool mIsDoubleFaced;
             bool mCastsShadows;
             bool isVisible = false;
             glm::vec3 mPosition;
+            glm::vec3 mPrevPosition;
         };
 
         using RenderComponent_ptr = std::shared_ptr<RenderComponent>;

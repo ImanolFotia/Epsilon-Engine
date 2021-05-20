@@ -12,6 +12,7 @@
 #include <Frustum.h>
 #include <ResourceManager.h>
 #include <Texture.h>
+#include <Shader.h>
 
 namespace Epsilon
 {
@@ -295,6 +296,7 @@ namespace Epsilon
 
                 Face.BuildFace(faceVertices, faceNormals, faceTexCoords, faceLMTexCoords, faceIndices, i, pTextures[pFace->textureID].strName, pLightmaps[pFace->lightmapID]);
 
+                Face.setTextures(faceTexture[i].path.c_str(), faceTexture_metallic[i].path.c_str(), faceTexture_specular[i].path.c_str(), faceTexture_normal[i].path.c_str());
                 this->Faces[i] = Face;
             }
         }
@@ -343,19 +345,15 @@ namespace Epsilon
         return (result);
     }
 
-    void CQuake3BSP::RenderFace(int faceIndex, GLuint shader, bool simpleRender)
+    void CQuake3BSP::RenderFace(int faceIndex, Shader_ptr shader, bool simpleRender)
     {
         this->Faces[faceIndex].RenderFace(shader,
-                                          ResourceManager::Get().useTexture(faceTexture[faceIndex].path),
-                                          ResourceManager::Get().useTexture(faceTexture_normal[faceIndex].path),
-                                          ResourceManager::Get().useTexture(faceTexture_specular[faceIndex].path),
-                                          ResourceManager::Get().useTexture(faceTexture_metallic[faceIndex].path),
                                           simpleRender);
     }
 
     int g_VisibleFaces;
 
-    void CQuake3BSP::RenderLevel(glm::vec3 vPos, GLuint shader, bool Shadow)
+    void CQuake3BSP::RenderLevel(glm::vec3 vPos, Shader_ptr shader, bool Shadow)
     {
 
         m_FacesDrawn.ClearAll();

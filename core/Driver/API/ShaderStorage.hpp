@@ -1,8 +1,6 @@
 #pragma once
 
-namespace Epsilon
-{
-    namespace API
+namespace Epsilon::API
     {
         class ShaderStorage
         {
@@ -28,5 +26,4 @@ namespace Epsilon
             virtual void Bind() = 0;
             virtual void Unbind() = 0;
         };
-    } // namespace API
 } // namespace Epsilon

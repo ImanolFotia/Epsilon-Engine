@@ -52,34 +52,41 @@ namespace Epsilon
 		return true;
 	}
 
-	void BSPFace::RenderFace(GLuint shader, GLuint TextureID, GLuint normalID, GLuint specularID, GLuint metallicID, bool simpleRender)
+	void BSPFace::RenderFace(Shader_ptr shader, bool simpleRender)
 	{
 
-		if(ResourceManager::Get().cubemapsLoaded && this->CubemapId == -1)
+		auto & Instance = ResourceManager::Get();
+
+		if(Instance.cubemapsLoaded && this->CubemapId == -1)
 		{
-			CubemapId = ResourceManager::Get().NearestCubeMap(mPosition);
-			GIProbeID = ResourceManager::Get().NearestCubeMap(mPosition) - 1;
+			CubemapId = Instance.NearestCubeMap(mPosition);
+			GIProbeID = Instance.NearestCubeMap(mPosition) - 1;
 		}
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, TextureID);
-		glUniform1i(glGetUniformLocation(shader, "texture_diffuse"), 0);
+		
+		/*glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, Instance.useTexture(albedoTexture));*/
+		Instance.getTexture2D(albedoTexture)->Bind(GL_TEXTURE0);
+		shader->PushUniform("texture_diffuse", 0);
 
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, specularID);
-		glUniform1i(glGetUniformLocation(shader, "texture_specular"), 1);
+		/*glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, Instance.useTexture(roughnessTexture));*/
+		Instance.getTexture2D(roughnessTexture)->Bind(GL_TEXTURE1);
+		shader->PushUniform("texture_specular", 1);
 
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, normalID);
-		glUniform1i(glGetUniformLocation(shader, "texture_normal"), 2);
+		/*glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, Instance.useTexture(normalTexture));*/
+		Instance.getTexture2D(normalTexture)->Bind(GL_TEXTURE2);
+		shader->PushUniform("texture_normal", 2);
 
-		glActiveTexture(GL_TEXTURE3);
-		glBindTexture(GL_TEXTURE_2D, metallicID);
-		glUniform1i(glGetUniformLocation(shader, "texture_height"), 3);
+		/*glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, Instance.useTexture(metallicTexture));*/
+		Instance.getTexture2D(metallicTexture)->Bind(GL_TEXTURE3);
+		shader->PushUniform("texture_height", 3);
 
 		glActiveTexture(GL_TEXTURE4);
-		glUniform1i(glGetUniformLocation(shader, "skybox"), 4);
+		shader->PushUniform("skybox", 4);
 		if(this->CubemapId != -1)
-		glBindTexture(GL_TEXTURE_CUBE_MAP, ResourceManager::Get().useCubeMap(CubemapId));
+		glBindTexture(GL_TEXTURE_CUBE_MAP, Instance.useCubeMap(CubemapId));
 
 		//glUniform1i(glGetUniformLocation(shader, "CubemapID"), CubemapId);
 		//glUniform1i(glGetUniformLocation(shader, "AmbientProbeID"), GIProbeID);

@@ -9,7 +9,7 @@ namespace Epsilon
     {
         using Renderer::Texture2D;
         
-        API::TextureBase::TextureBase::TextureData TextureData;
+        API::Texture::TextureData TextureData;
         TextureData.MakeDefaultGL();
         TextureData.Compressed = false;
         TextureData.SRGB = false;

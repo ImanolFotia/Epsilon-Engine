@@ -3,8 +3,8 @@
 #include <pch.hpp>
 #include <glm/glm.hpp>
 
-#include <Driver/API/OpenGL/VertexArrayObject.h>
-#include <Driver/API/OpenGL/VertexBufferObject.h>
+#include <Driver/API/VertexArrayObject.hpp>
+#include <Driver/API/VertexBufferObject.hpp>
 
 #include "Helpers.hpp"
 
@@ -37,8 +37,8 @@ namespace Epsilon
     protected:
         std::vector<Vertex> mVertices;
 
-        API::OpenGL::VertexArrayObject mVertexArray;
-        API::OpenGL::VertexBufferObject mVertexBuffer;
+        std::shared_ptr<API::VertexArrayObject> mVertexArray;
+        std::shared_ptr<API::VertexBufferObject> mVertexBuffer;
     };
 
 } // namespace Epsilon

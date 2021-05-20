@@ -14,6 +14,9 @@
 #include <Physics/CollisionInfo.h>
 #include <Helpers.hpp>
 
+#include <Renderer/Texture2D.hpp>
+#include <Shader.h>
+
 namespace Epsilon
 {
 
@@ -51,7 +54,14 @@ namespace Epsilon
                        tBSPLightmap LightMap);
 
     public:
-        void RenderFace(GLuint shader, GLuint TextureID, GLuint normalID, GLuint specularID, GLuint metallicID, bool);
+        void RenderFace(Shader_ptr shader, bool);
+        
+        void setTextures(const char* a, const char* m, const char* r, const char* n) {
+            albedoTexture = a;
+            metallicTexture = m;
+            roughnessTexture = r;
+            normalTexture = n;
+        }
 
     public:
         std::string ObjectID;
@@ -182,6 +192,7 @@ namespace Epsilon
             return true;
         }
 
+
     private:
         GLuint VAO;
 
@@ -200,6 +211,12 @@ namespace Epsilon
         std::vector<glm::vec3> Tangents;
         std::vector<glm::vec3> Bitangents;
         std::vector<unsigned int> Indices;
+
+        const char* albedoTexture = nullptr;
+        const char* metallicTexture = nullptr;
+        const char* roughnessTexture = nullptr;
+        const char* normalTexture = nullptr;
+
         std::shared_ptr<Physics::CollisionInfo> collinfo;
     };
 

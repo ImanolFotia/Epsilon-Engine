@@ -6,25 +6,25 @@
 using Epsilon::Component::PhysicComponent;
 using Epsilon::Component::RenderComponent;
 using Epsilon::Component::SoundComponent;
+using Epsilon::Component::TransformComponent;
 
 using Epsilon::Component::CLOTHCOMPONENT;
 using Epsilon::Component::PHYSICCOMPONENT;
 using Epsilon::Component::RENDERCOMPONENT;
 using Epsilon::Component::SOUNDCOMPONENT;
+using Epsilon::Component::TRANSFORMCOMPONENT;
 
 namespace Epsilon
 {
     EntityBase::EntityBase(glm::vec3 pos, glm::vec3 sc, glm::quat rot)
     {
-        m_Position = pos;
-        m_Scale = sc;
-        m_Rotation = rot;
-        m_PrevScale = sc;
-        m_PrevRotation = rot;
+        ComponentList[TRANSFORMCOMPONENT] = std::make_shared<TransformComponent>(pos, sc, rot);
     }
 
     void EntityBase::Update()
     {
+        if(mFunction)
+            mFunction(this);
 
         if (mHasSoundComponent)
         {

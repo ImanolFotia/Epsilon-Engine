@@ -1,8 +1,23 @@
 #pragma once
 #include <Core.hpp>
+#include "../Texture.hpp"
+#include "Texture2D.hpp"
 
 class RenderTarget
 {
+
+    unsigned int mWidth;
+    unsigned int mHeight;
+    GLuint mInternalFormat = 0;
+    GLuint mFormat;
+    GLuint mMagFilter;
+    GLuint mMinFilter;
+    bool mMipMaps;
+    GLuint mTarget;
+    GLuint mAttachment = GL_DEPTH_ATTACHMENT;
+    GLuint m_RenderTextureTarget = 0;
+    Epsilon::API::Texture_ptr mTexture;
+
 public:
     RenderTarget(uint32_t width, uint32_t height, uint32_t internalformat, uint32_t format, uint32_t magfilter, uint32_t minfilter, uint32_t attachment, bool mipmaps, GLuint target)
         : mWidth{width}, mHeight{height}, mInternalFormat{internalformat}, mFormat{format}, mMagFilter{magfilter}, mMinFilter{minfilter}, mMipMaps{mipmaps}, mTarget{target}
@@ -38,6 +53,14 @@ public:
         if (mMipMaps)
             glGenerateMipmap(target);
         glBindTexture(target, 0);
+
+        using namespace Epsilon::API;
+
+        //Texture::TextureData textureData = {internalformat, 3, 0, m_RenderTextureTarget, GL_FLOAT, target, 1, GL_CLAMP_TO_EDGE, true, false};
+
+        Texture::TextureData textureData(internalformat, 3, 0, m_RenderTextureTarget, GL_FLOAT, target, 1, GL_CLAMP_TO_EDGE, true, false);
+
+        mTexture = std::make_shared<OpenGL::Texture2D>(textureData);
     }
     ~RenderTarget() {}
 
@@ -108,14 +131,4 @@ public:
     }
 
 private:
-    GLuint mTarget;
-    GLuint mFormat;
-    GLuint mAttachment = GL_DEPTH_ATTACHMENT;
-    GLuint m_RenderTextureTarget = 0;
-    GLuint mInternalFormat = 0;
-    GLuint mMagFilter;
-    GLuint mMinFilter;
-    bool mMipMaps;
-    unsigned int mWidth;
-    unsigned int mHeight;
 };
