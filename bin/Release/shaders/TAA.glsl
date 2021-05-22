@@ -3,7 +3,10 @@
 layout (binding = 0) uniform sampler2D sCurrentFrame;
 layout (binding = 1) uniform sampler2D sLastFrame;
 layout (binding = 2) uniform sampler2D sVelocityBuffer;
-layout (binding = 2) uniform sampler2D sDepthBuffer;
+layout (binding = 3) uniform sampler2D sDepthBuffer;
+
+#pragma optionNV (unroll all)
+#define USE_YCOCG
 
 layout(location = 0) out vec4 FragColor;
 
@@ -13,6 +16,64 @@ uniform vec2 iResolution;
 uniform float lerpAmount;
 uniform int clampingKernelSize;
 uniform int TotalFrames;
+uniform float _FeedbackMin;
+uniform float _FeedbackMax;
+
+const float FLT_EPS = 0.00000001;
+
+/**
+ * Luminance function taken from https://github.com/CesiumGS/cesium
+ */
+float Luminance(vec3 rgb)
+{
+    // Algorithm from Chapter 10 of Graphics Shaders.
+    const vec3 W = vec3(0.2125, 0.7154, 0.0721);
+    return dot(rgb, W);
+}
+
+#define ZCMP_GT(a, b) (a > b)
+
+vec3 find_closest_fragment_3x3(vec2 uv)
+{
+    vec2 texelSize = 1.0 / vec2(textureSize(sDepthBuffer, 0));
+	vec2 dd = abs(texelSize);
+	vec2 du = vec2(dd.x, 0.0);
+	vec2 dv = vec2(0.0, dd.y);
+
+	vec3 dtl = vec3(-1, -1, texture(sDepthBuffer, uv - dv - du).x);
+	vec3 dtc = vec3( 0, -1, texture(sDepthBuffer, uv - dv).x);
+	vec3 dtr = vec3( 1, -1, texture(sDepthBuffer, uv - dv + du).x);
+
+	vec3 dml = vec3(-1, 0, texture(sDepthBuffer, uv - du).x);
+	vec3 dmc = vec3( 0, 0, texture(sDepthBuffer, uv).x);
+	vec3 dmr = vec3( 1, 0, texture(sDepthBuffer, uv + du).x);
+
+	vec3 dbl = vec3(-1, 1, texture(sDepthBuffer, uv + dv - du).x);
+	vec3 dbc = vec3( 0, 1, texture(sDepthBuffer, uv + dv).x);
+	vec3 dbr = vec3( 1, 1, texture(sDepthBuffer, uv + dv + du).x);
+
+	vec3 dmin = dtl;
+	if (ZCMP_GT(dmin.z, dtc.z)) dmin = dtc;
+	if (ZCMP_GT(dmin.z, dtr.z)) dmin = dtr;
+
+	if (ZCMP_GT(dmin.z, dml.z)) dmin = dml;
+	if (ZCMP_GT(dmin.z, dmc.z)) dmin = dmc;
+	if (ZCMP_GT(dmin.z, dmr.z)) dmin = dmr;
+
+	if (ZCMP_GT(dmin.z, dbl.z)) dmin = dbl;
+	if (ZCMP_GT(dmin.z, dbc.z)) dmin = dbc;
+	if (ZCMP_GT(dmin.z, dbr.z)) dmin = dbr;
+
+	return vec3(uv + dd.xy * dmin.xy, dmin.z);
+}
+
+float NEAR = 0.1;
+float FAR = 3000.0;
+
+float LinearizeDepth(float depth) {
+  float z = depth * 2.0 - 1.0;  // Back to NDC
+  return ((2.0 * NEAR * FAR) / (FAR + NEAR - z * (FAR - NEAR)));
+}
 
 vec3 Gamma(in vec3 img) {
     return pow(img, vec3(1.0/2.2));
@@ -21,7 +82,6 @@ vec3 Gamma(in vec3 img) {
 vec3 Degamma(in vec3 img) {
     return pow(img, vec3(2.2));
 }
-
 
 vec3 RGBToYCoCg( vec3 RGB )
 {
@@ -42,15 +102,48 @@ vec3 YCoCgToRGB( vec3 YCoCg )
 	return vec3(R,G,B);
 }
 
+vec3 sampleTex(sampler2D tex, vec2 uv) {
+    #ifdef USE_YCOCG
+        return RGBToYCoCg(texture(tex, uv).rgb);
+    #else
+        return texture(tex, uv).rgb;
+    #endif
+}
+
+vec3 resolve(vec3 tex) {
+    #ifdef USE_YCOCG
+        return YCoCgToRGB(tex);
+    #else
+        return tex;
+    #endif
+}
+
+float weightLuminance(vec3 col0, vec3 col1) {
+
+    float lum0 = col0.r;
+	float lum1 = col1.r;
+    float unbiased_diff = abs(lum0 - lum1) / max(lum0, max(lum1, 0.2));
+	float unbiased_weight = 1.0 - unbiased_diff;
+	float unbiased_weight_sqr = unbiased_weight * unbiased_weight;
+	float k_feedback = mix(_FeedbackMin, _FeedbackMax, unbiased_weight_sqr);
+
+    return k_feedback;
+}
+
 void main()
 { 
     vec2 fragCoord = gl_FragCoord.xy;
-    vec2 velocity = texture(sVelocityBuffer, TexCoords).zw;
+
+    
+	vec3 c_frag = find_closest_fragment_3x3(TexCoords);
+    vec2 velocity = texture(sVelocityBuffer, c_frag.xy).zw;
+	float vs_dist = LinearizeDepth(c_frag.z);
     
     // get the neighborhood min / max from this frame's render
-    vec3 center = (Degamma(texture(sCurrentFrame, TexCoords).rgb));
+    vec3 center = sampleTex(sCurrentFrame, TexCoords);
     vec3 minColor = center;
     vec3 maxColor = center;
+
     for (int iy = -clampingKernelSize; iy <= clampingKernelSize; ++iy)
     {
         for (int ix = -clampingKernelSize; ix <= clampingKernelSize; ++ix)
@@ -59,21 +152,25 @@ void main()
                 continue;
            
             vec2 offsetUV = ((fragCoord + vec2(ix, iy)) / iResolution.xy);
-            vec3 color = (Degamma(texture(sCurrentFrame, offsetUV).rgb));
+            vec3 color = sampleTex(sCurrentFrame, offsetUV);
             minColor = min(minColor, color);
             maxColor = max(maxColor, color);
         }
     }
     
     // get last frame's pixel and clamp it to the neighborhood of this frame
-    vec3 old = (Degamma(texture(sLastFrame, TexCoords - velocity).rgb));    
+    vec3 old = sampleTex(sLastFrame, TexCoords - velocity);    
     old = max(minColor, old);
     old = min(maxColor, old);
     
-    // interpolate from the clamped old color to the new color.
-    vec3 pixelColor = mix(old, center, lerpAmount);   
+    float weight = weightLuminance(center, old);
+	// output
+	//return lerp(texel0, texel1, k_feedback);
     
-    FragColor = vec4((Gamma(pixelColor)), 1.0);
+    // interpolate from the clamped old color to the new color.
+    vec3 pixelColor = resolve(mix(old, center, weight));   
+    
+    FragColor = vec4(pixelColor, 1.0);
 
     FragColor.a = 1.0;
 }

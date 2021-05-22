@@ -47,6 +47,8 @@ namespace Epsilon
             m_numOfVerts = lumps[kVertices].length / sizeof(tBSPVertex);
             m_pVerts = new tBSPVertex[m_numOfVerts];
 
+            std::cout << "Map has " << m_numOfVerts << " vertices\n";
+
             m_numOfFaces = lumps[kFaces].length / sizeof(tBSPFace);
             m_pFaces = new tBSPFace[m_numOfFaces];
 
@@ -348,9 +350,31 @@ namespace Epsilon
     void CQuake3BSP::RenderFace(int faceIndex, Shader_ptr shader, bool simpleRender)
     {
         this->Faces[faceIndex].RenderFace(shader,
-                                          simpleRender);
+                                          simpleRender, true);
     }
 
+    void CQuake3BSP::ScheduleFace(int faceIndex) {
+        texture_hash_queue.insert({Faces[faceIndex].getHash(), faceIndex});
+        
+    }
+
+    void CQuake3BSP::Flush(Shader_ptr shader, bool Shadow) {
+        std::size_t current_hash = texture_hash_queue.begin()->first;
+        bool change_material = true;
+
+        for(auto& face: texture_hash_queue) {
+            if(current_hash != face.first) {
+                current_hash = face.first;
+                change_material = true;
+            }
+
+            this->Faces[face.second].RenderFace(shader, Shadow, change_material);
+            change_material = false;
+        }
+
+        texture_hash_queue.clear();
+    }
+ 
     int g_VisibleFaces;
 
     void CQuake3BSP::RenderLevel(glm::vec3 vPos, Shader_ptr shader, bool Shadow)
@@ -388,10 +412,13 @@ namespace Epsilon
                 {
                     g_VisibleFaces++;
                     m_FacesDrawn.Set(faceIndex);
-                    RenderFace(faceIndex, shader, !Shadow);
+                    /*RenderFace(faceIndex, shader, !Shadow);*/
+                    ScheduleFace(faceIndex);
                 }
             }
         }
+
+        Flush(shader, !Shadow);
     }
 
     void CQuake3BSP::Destroy()

@@ -455,6 +455,8 @@ namespace Epsilon::Editor::GUI
             ImGui::SliderInt("Clamping Kernel Size", &PostprocessData.AntiAliasingSettings.ClampingKernelSize, 1, 6);
             ImGui::SliderFloat("Lerp Amount", &PostprocessData.AntiAliasingSettings.LerpAmount, 0.0, 1.0);
             ImGui::SliderFloat("Jitter Multiplier", &PostprocessData.AntiAliasingSettings.JitterMultiplier, 0.0, 3.0);
+            ImGui::SliderFloat("Feedback Min", &PostprocessData.AntiAliasingSettings.FeedbackMin, 0.0, 1.0);
+            ImGui::SliderFloat("Feedback Max", &PostprocessData.AntiAliasingSettings.FeedbackMax, 0.0, 1.0);
         }
 
         ImGui::End();

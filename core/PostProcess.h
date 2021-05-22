@@ -66,6 +66,8 @@ namespace Epsilon
             float LerpAmount = 0.1;
             float JitterMultiplier = 1.0;
             int ClampingKernelSize = 1;
+            float FeedbackMin = 0.0;
+            float FeedbackMax = 1.0;
         } AntiAliasingSettings;
 
     };

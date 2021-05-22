@@ -284,7 +284,7 @@ namespace Epsilon
             glm::vec3 tPosition = glm::vec3(10, 10, 10);
             glm::vec3 tScale = glm::vec3(2.0f);
             glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
-            std::string tModelName = "models/esfera.eml";
+            std::string tModelName = "models/esfera.eml"; 
 
             std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(tPosition, tScale, tRotation);
 

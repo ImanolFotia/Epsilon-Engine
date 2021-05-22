@@ -464,12 +464,12 @@ void main()
             /*if(i == 0 && in_range){
                 res *= pointShadow;
             }*/
-            
+            /*
             vec3 clearcoat_res = vec3(0.0);
             if(clearcoat > 0.0) {
                 clearcoat_res = SphereAreaLight(outBuffer.Lights[i].position.rgb,  outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts, true);
-            }
-            light += mix(res, clearcoat_res, 0.5);
+            }*/
+            light += res;//mix(res, clearcoat_res, 0.5);
         //}
             break;
       }

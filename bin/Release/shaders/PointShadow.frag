@@ -8,8 +8,6 @@ uniform sampler2D texture_diffuse;
 in vec2 TexCoords;
 
 void main() {
-    if(texture(texture_diffuse, TexCoords).a < 0.2)
-        discard;   
 
     vec3 LightPosition = LightPosition;
     gl_FragDepth = length(FragPos.xyz - LightPosition) / Far;

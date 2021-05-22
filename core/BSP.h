@@ -225,6 +225,10 @@ namespace Epsilon
 
     private:
         void FindTextureExtension(char *strFileName);
+        
+        void ScheduleFace(int faceIndex);
+
+        void Flush(Shader_ptr shader, bool Shadow);
 
         void RenderFace(int faceIndex, Shader_ptr shader, bool);
 
@@ -266,6 +270,8 @@ namespace Epsilon
         std::map<int, BSPTexture> faceTexture_normal;
         std::map<int, BSPTexture> faceTexture_specular;
         std::map<int, BSPTexture> faceTexture_metallic;
+
+        std::multimap<std::size_t, int> texture_hash_queue;
 
         bool lightmap;
         bool color;

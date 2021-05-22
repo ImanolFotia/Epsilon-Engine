@@ -949,6 +949,9 @@ namespace Epsilon
         TAAShader->PushUniform("active", mPostProcessData.AntiAliasingSettings.Active);
         TAAShader->PushUniform("lerpAmount", mPostProcessData.AntiAliasingSettings.LerpAmount);
         TAAShader->PushUniform("clampingKernelSize", mPostProcessData.AntiAliasingSettings.ClampingKernelSize);
+        TAAShader->PushUniform("clampingKernelSize", mPostProcessData.AntiAliasingSettings.ClampingKernelSize);
+        TAAShader->PushUniform("_FeedbackMin", mPostProcessData.AntiAliasingSettings.FeedbackMin);
+        TAAShader->PushUniform("_FeedbackMax", mPostProcessData.AntiAliasingSettings.FeedbackMax);
         
         RenderQuad();
         

@@ -36,6 +36,10 @@ namespace Epsilon::Renderer
 
             virtual unsigned int ID() = 0;
 
+            uint64_t Handle() { return mTexture->Handle(); }
+            
+            bool isResident() { return mTexture->isResident(); }
+
         protected:
             std::shared_ptr<API::Texture> mTexture;
             API::ContextBase_ptr mContext;

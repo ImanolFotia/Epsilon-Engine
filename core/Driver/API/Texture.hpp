@@ -17,7 +17,8 @@ namespace Epsilon::API
             uint32_t Height;
             uint32_t InternalFormat;
 
-            GLuint TextureId;
+            GLuint TextureId = 0;
+            GLuint64 ResidentHandle = 0;
             GLuint Border;
 
             GLenum Type;
@@ -69,6 +70,10 @@ namespace Epsilon::API
         virtual ~Texture() {}
 
         virtual uint32_t ID() { return mData.TextureId; }
+        
+        virtual uint32_t isResident() { return mIsResident; }
+        
+        virtual uint32_t Handle() { return mData.ResidentHandle; }
 
         virtual uint32_t Width() = 0;
 
@@ -91,6 +96,7 @@ namespace Epsilon::API
     protected:
         TextureData mData;
         bool texture_was_created = false;
+        bool mIsResident = false;
     };
 
     using Texture_ptr = std::shared_ptr<Texture>;

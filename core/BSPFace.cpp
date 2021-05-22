@@ -52,7 +52,24 @@ namespace Epsilon
 		return true;
 	}
 
-	void BSPFace::RenderFace(Shader_ptr shader, bool simpleRender)
+	void BSPFace::setMaterial(Shader_ptr shader) {
+
+		auto & Instance = ResourceManager::Get();
+
+		Instance.getTexture2D(albedoTexture)->Bind(GL_TEXTURE0);
+		shader->PushUniform("texture_diffuse", 0);
+
+		Instance.getTexture2D(roughnessTexture)->Bind(GL_TEXTURE1);
+		shader->PushUniform("texture_specular", 1);
+
+		Instance.getTexture2D(normalTexture)->Bind(GL_TEXTURE2);
+		shader->PushUniform("texture_normal", 2);
+
+		Instance.getTexture2D(metallicTexture)->Bind(GL_TEXTURE3);
+		shader->PushUniform("texture_height", 3);
+	}
+
+	void BSPFace::RenderFace(Shader_ptr shader, bool simpleRender, bool change_material)
 	{
 
 		auto & Instance = ResourceManager::Get();
@@ -63,25 +80,7 @@ namespace Epsilon
 			GIProbeID = Instance.NearestCubeMap(mPosition) - 1;
 		}
 		
-		/*glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, Instance.useTexture(albedoTexture));*/
-		Instance.getTexture2D(albedoTexture)->Bind(GL_TEXTURE0);
-		shader->PushUniform("texture_diffuse", 0);
-
-		/*glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, Instance.useTexture(roughnessTexture));*/
-		Instance.getTexture2D(roughnessTexture)->Bind(GL_TEXTURE1);
-		shader->PushUniform("texture_specular", 1);
-
-		/*glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, Instance.useTexture(normalTexture));*/
-		Instance.getTexture2D(normalTexture)->Bind(GL_TEXTURE2);
-		shader->PushUniform("texture_normal", 2);
-
-		/*glActiveTexture(GL_TEXTURE3);
-		glBindTexture(GL_TEXTURE_2D, Instance.useTexture(metallicTexture));*/
-		Instance.getTexture2D(metallicTexture)->Bind(GL_TEXTURE3);
-		shader->PushUniform("texture_height", 3);
+		if(change_material) setMaterial(shader);
 
 		glActiveTexture(GL_TEXTURE4);
 		shader->PushUniform("skybox", 4);
@@ -95,4 +94,4 @@ namespace Epsilon
 		glCache::glDrawElements(GL_TRIANGLES, this->Indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
-} // namespace Epsilon
+} // namespace Epsilon 

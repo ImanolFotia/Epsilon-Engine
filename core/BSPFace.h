@@ -54,13 +54,19 @@ namespace Epsilon
                        tBSPLightmap LightMap);
 
     public:
-        void RenderFace(Shader_ptr shader, bool);
+        void RenderFace(Shader_ptr shader, bool, bool);
         
         void setTextures(const char* a, const char* m, const char* r, const char* n) {
             albedoTexture = a;
             metallicTexture = m;
             roughnessTexture = r;
             normalTexture = n;
+
+            material_hash = std::hash<std::string>{}(albedoTexture);
+        }
+
+        std::size_t getHash() {
+            return material_hash;
         }
 
     public:
@@ -193,6 +199,7 @@ namespace Epsilon
         }
 
 
+        void setMaterial(Shader_ptr shader);
     private:
         GLuint VAO;
 
@@ -216,6 +223,8 @@ namespace Epsilon
         const char* metallicTexture = nullptr;
         const char* roughnessTexture = nullptr;
         const char* normalTexture = nullptr;
+
+        std::size_t material_hash;
 
         std::shared_ptr<Physics::CollisionInfo> collinfo;
     };

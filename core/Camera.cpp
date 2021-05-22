@@ -311,7 +311,7 @@ namespace Epsilon
 
     bool Camera::isMoving()
     {
-        return mIsMoving; //return true to cancel temporal SSR denoiser
+        return true;//mIsMoving; //return true to cancel temporal SSR denoiser
     }
 
     void Camera::isMoving(bool x)
