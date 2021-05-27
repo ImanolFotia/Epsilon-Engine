@@ -54,21 +54,21 @@ namespace Epsilon
         tmpLight.type = 2;
         m_Lights.push_back(tmpLight);
         */
-        tmpLight.position = glm::vec4(4, 10, 22, 1.0);
+        tmpLight.position = glm::vec4(10, 7.5, 6, 1.0);
+        tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
+        tmpLight.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
+        tmpLight.radius = 1.0f;
+        tmpLight.watts = 200.0f;
+        tmpLight.type = 2;
+        m_Lights.push_back(tmpLight);
+/*
+        tmpLight.position = glm::vec4(-20, 10, 2, 1.0);
         tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
         tmpLight.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
         tmpLight.radius = 2.0f;
         tmpLight.watts = 700.0f;
         tmpLight.type = 2;
-        m_Lights.push_back(tmpLight);
-
-        tmpLight.position = glm::vec4(-25, 10, 22, 1.0);
-        tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-        tmpLight.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
-        tmpLight.radius = 2.0f;
-        tmpLight.watts = 700.0f;
-        tmpLight.type = 2;
-        m_Lights.push_back(tmpLight);
+        m_Lights.push_back(tmpLight);*/
         /*
     tmpLight.position = glm::vec4(-14.4, 8.5, -2.81, 1.0);
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
@@ -332,10 +332,18 @@ namespace Epsilon
 
         glActiveTexture(GL_TEXTURE2);
         HBIL->PushUniform("texNoise", 2);
-        glBindTexture(GL_TEXTURE_2D, noiseTexture);
+        glBindTexture(GL_TEXTURE_2D, BlueNoiseTexture->getTextureID());
+
+        glActiveTexture(GL_TEXTURE3);
+        HBIL->PushUniform("gAlbedo", 3);
+        glBindTexture(GL_TEXTURE_2D, gBufferFramebuffer->getRenderTargetHandler(GBUFFER_ALBEDO_SPEC));
 
         HBIL->PushUniform("ViewMatrix", cam->getViewMatrix());
         glUniform3fv(glGetUniformLocation(HBIL->getProgramID(), "samples"), 9, &ssaoKernel[0][0]);
+        
+        glm::mat4 proj = cam->getProjectionMatrix();
+        glm::mat4 invproj = glm::inverse(proj);
+        glUniformMatrix4fv(glGetUniformLocation(HBIL->getProgramID(), "invprojection"), 1, GL_FALSE, &invproj[0][0]);
 
         HBIL->PushUniform("FocalLen", FocalLen);
         HBIL->PushUniform("UVToViewA", UVToViewA);
@@ -348,6 +356,7 @@ namespace Epsilon
         HBIL->PushUniform("view", cam->getViewMatrix());
         HBIL->PushUniform("invView", glm::inverse(cam->getViewMatrix()));
         HBIL->PushUniform("viewPos", cam->getPosition());
+        HBIL->PushUniform("iTime", (float)glfwGetTime());
 
         RenderQuad();
 
@@ -991,11 +1000,13 @@ namespace Epsilon
 
         //hdrFBO->setToRead();
         hdrFBO->unbindFramebuffer();
+        
         //if(SSROn) {
         SSRPass(cam);
         //}
 
         CompositeImage(cam->isMoving());
+        
 
         TAAPass();
 
@@ -1124,10 +1135,14 @@ namespace Epsilon
         glActiveTexture(GL_TEXTURE7);
         glUniform1i(glGetUniformLocation(shader->getProgramID(), "gPointShadowMap"), 7);
         glBindTexture(GL_TEXTURE_CUBE_MAP, pointShadow->getTexture());
+        
+        glActiveTexture(GL_TEXTURE8);
+        glUniform1i(glGetUniformLocation(shader->getProgramID(), "SSGI"), 8);
+        glBindTexture(GL_TEXTURE_2D, HBILFramebuffer->getRenderTargetHandler(0));
 
         glm::mat4 invProj = glm::inverse(cam->getProjectionMatrix());
         glm::mat4 invView = glm::inverse(cam->getViewMatrix());
-
+ 
         shader->PushUniform("hdr", hdr);
         shader->PushUniform("time", (float)glfwGetTime());
         shader->PushUniform("exposure", exposure);
@@ -1144,7 +1159,33 @@ namespace Epsilon
 
         RenderQuad();
 
+        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, 0);
+        
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        
+        glActiveTexture(GL_TEXTURE4);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        
+        glActiveTexture(GL_TEXTURE5);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        
+        glActiveTexture(GL_TEXTURE6);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        
+        glActiveTexture(GL_TEXTURE7);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        
+        glActiveTexture(GL_TEXTURE8);
+        glBindTexture(GL_TEXTURE_2D, 0);
+
         glBindVertexArray(0);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
         glCache::glUseProgram(0);

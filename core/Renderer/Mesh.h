@@ -120,6 +120,8 @@ namespace Epsilon::Renderer
     public:
         /**  Render data  */
         GLuint VAO, VBO, EBO;
+        
+        MIN_MAX_POINTS MinMaxPoints;
 
         /**  Functions    */
         /// Initializes all the buffer objects/arrays

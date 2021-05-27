@@ -102,7 +102,6 @@ namespace Epsilon::Renderer
         {
             mMeshesBoundingBoxes.reserve(numMeshes);
             mMeshesPositionsRelative.reserve(numMeshes);
-            
 
             for (int i = 0; i < numMeshes; ++i)
             {
@@ -133,7 +132,7 @@ namespace Epsilon::Renderer
                         MinMaxPoints.MIN_Z = l_vertices[l_meshes[i].mFirstVertex + j].position.z;
 
                     //min max for this mesh
-                    
+
                     if (l_vertices[l_meshes[i].mFirstVertex + j].position.x > tmp_MinMax.MAX_X)
                         tmp_MinMax.MAX_X = l_vertices[l_meshes[i].mFirstVertex + j].position.x;
                     if (l_vertices[l_meshes[i].mFirstVertex + j].position.y > tmp_MinMax.MAX_Y)
@@ -147,18 +146,30 @@ namespace Epsilon::Renderer
                         tmp_MinMax.MIN_Y = l_vertices[l_meshes[i].mFirstVertex + j].position.y;
                     if (l_vertices[l_meshes[i].mFirstVertex + j].position.z < tmp_MinMax.MIN_Z)
                         tmp_MinMax.MIN_Z = l_vertices[l_meshes[i].mFirstVertex + j].position.z;
-
                 }
 
-                mMeshesBoundingBoxes.push_back(tmp_MinMax);
                 float dx, dy, dz;
-                dx = (mMeshesBoundingBoxes.back().MAX_X - mMeshesBoundingBoxes.back().MIN_X);
-                dy = (mMeshesBoundingBoxes.back().MAX_Y - mMeshesBoundingBoxes.back().MIN_Y);
-                dz = (mMeshesBoundingBoxes.back().MAX_Z - mMeshesBoundingBoxes.back().MIN_Z);
+                dx = (tmp_MinMax.MAX_X - tmp_MinMax.MIN_X);
+                dy = (tmp_MinMax.MAX_Y - tmp_MinMax.MIN_Y);
+                dz = (tmp_MinMax.MAX_Z - tmp_MinMax.MIN_Z);
 
-                glm::vec3 centerOfMass = glm::vec3(mMeshesBoundingBoxes.back().MIN_X + (dx * 0.5),
-                                                   mMeshesBoundingBoxes.back().MIN_Y + (dy * 0.5),
-                                                   mMeshesBoundingBoxes.back().MIN_Z + (dz * 0.5));
+                glm::vec3 centerOfMass = glm::vec3(tmp_MinMax.MIN_X + (dx * 0.5),
+                                                   tmp_MinMax.MIN_Y + (dy * 0.5),
+                                                   tmp_MinMax.MIN_Z + (dz * 0.5));
+
+                glm::vec3 origin = glm::vec3(0.0f, 0.0f, 0.0f);
+
+                glm::vec3 delta = origin - centerOfMass;
+                /*
+                tmp_MinMax.MIN_X += delta.x;
+                tmp_MinMax.MIN_Y += delta.y;
+                tmp_MinMax.MIN_Z += delta.z;
+
+                tmp_MinMax.MAX_X += delta.x;
+                tmp_MinMax.MAX_Y += delta.y;
+                tmp_MinMax.MAX_Z += delta.z;*/
+                
+                mMeshesBoundingBoxes.push_back(tmp_MinMax);
 
                 mMeshesPositionsRelative.push_back(centerOfMass);
                 mMeshesPositions.push_back(centerOfMass);
@@ -184,10 +195,10 @@ namespace Epsilon::Renderer
                     meshes.push_back(Mesh(tmpVertVector, tmpIndicesVector, tmpTexturesVector, currentvOffset, currentiOffset, ResourceManager::Get().NearestCubeMap(Position)));
                 }
                 else*/
-                    mMeshes.push_back(Mesh(tmpVertVector, tmpIndicesVector, tmpTexturesVector, currentvOffset, currentiOffset));
+                mMeshes.push_back(Mesh(tmpVertVector, tmpIndicesVector, tmpTexturesVector, currentvOffset, currentiOffset));
 
-                    
                 mMeshes.back().mLocalTransform = glm::translate(glm::mat4(0.0f), centerOfMass);
+                mMeshes.back().MinMaxPoints = tmp_MinMax;
             }
 
             float dx, dy, dz;
@@ -219,13 +230,14 @@ namespace Epsilon::Renderer
                     mMeshes.at(i).vertices[j].position.y += delta.y;
                     mMeshes.at(i).vertices[j].position.z += delta.z;
                 }
-                /*mMeshesBoundingBoxes.at(i).MIN_X += delta.x;
-                mMeshesBoundingBoxes.at(i).MIN_Y += delta.y;
-                mMeshesBoundingBoxes.at(i).MIN_Z += delta.z;
+                mMeshes.at(i).MinMaxPoints.MIN_X += delta.x;
+                mMeshes.at(i).MinMaxPoints.MIN_Y += delta.y;
+                mMeshes.at(i).MinMaxPoints.MIN_Z += delta.z;
 
-                mMeshesBoundingBoxes.at(i).MAX_X += delta.x;
-                mMeshesBoundingBoxes.at(i).MAX_Y += delta.y;
-                mMeshesBoundingBoxes.at(i).MAX_Z += delta.z;*/
+                mMeshes.at(i).MinMaxPoints.MAX_X += delta.x;
+                mMeshes.at(i).MinMaxPoints.MAX_Y += delta.y;
+                mMeshes.at(i).MinMaxPoints.MAX_Z += delta.z;
+                
                 mMeshes.at(i).setupMesh();
             }
         }
@@ -246,12 +258,32 @@ namespace Epsilon::Renderer
         return true;
     }
 
-    void Model::Draw(std::shared_ptr<Shader> shader)
+    MIN_MAX_POINTS Model::getMeshBoundingBox(unsigned int index, glm::vec3 position, glm::vec3 scale, glm::quat rotation)
+    {
+        if (index > mMeshes.size() - 1)
+        {
+            std::cerr << "Index for mesh bounding box is out of bounds\n";
+            return MIN_MAX_POINTS{};
+        }
+        MIN_MAX_POINTS BB = mMeshes.at(index).MinMaxPoints;
+        BB.MAX_X = (BB.MAX_X * scale.x) + position.x;
+        BB.MAX_Y = (BB.MAX_Y * scale.y) + position.y;
+        BB.MAX_Z = (BB.MAX_Z * scale.z) + position.z;
+        BB.MIN_X = (BB.MIN_X * scale.x) + position.x;
+        BB.MIN_Y = (BB.MIN_Y * scale.y) + position.y;
+        BB.MIN_Z = (BB.MIN_Z * scale.z) + position.z;
+        return mMeshes.at(index).MinMaxPoints;
+    }
+
+    void Model::Draw(std::shared_ptr<Shader> shader, bool force_draw )
     {
 
         for (GLuint i = 0; i < this->mMeshes.size(); i++)
         {
-            this->mMeshes[i].Draw(shader, mMeshesPositions.at(i));
+            if(force_draw) mMeshes[i].isVisible = force_draw;
+
+            if (mMeshes[i].isVisible)
+                this->mMeshes[i].Draw(shader, mMeshesPositions.at(i));
         }
     }
 
@@ -288,13 +320,15 @@ namespace Epsilon::Renderer
         //glUniform2i(glGetUniformLocation(shader->getProgramID(), "Resolution"), 1920, 1080);
         shader->PushUniform("Resolution", glm::ivec2(Engine::Get().Width(), Engine::Get().Height()));
         int index = 0;
-        if(!uniformsSet) IO::PrintLine("Position for model ", this->path, position.x, position.y, position.z);
-        for(auto &i : mMeshesPositionsRelative) {
+        if (!uniformsSet)
+            IO::PrintLine("Position for model ", this->path, position.x, position.y, position.z);
+        for (auto &i : mMeshesPositionsRelative)
+        {
             mMeshesPositions.at(index) = (i * scale) + position;
             //IO::PrintLine("mesh position:", mMeshesPositions.at(index).x, mMeshesPositions.at(index).y, mMeshesPositions.at(index).z);
             index++;
         }
-        
+
         uniformsSet = true;
     }
 } // namespace Epsilon

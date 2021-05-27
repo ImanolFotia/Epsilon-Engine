@@ -13,6 +13,7 @@ layout (binding = 4) uniform sampler2DShadow shadowMap;
 layout (binding = 5) uniform sampler2D gExtraComponents;
 layout (binding = 6) uniform sampler2D gLightAccumulation; 
 layout (binding = 7) uniform samplerCube gPointShadowMap; 
+layout (binding = 8) uniform sampler2D SSGI; 
 
 uniform float exposure;
 uniform mat4 lightSpaceMatrix;
@@ -413,7 +414,7 @@ void main()
     Specular = clamp(texture(gNormal, TexCoords).a, 0.089, 1.0);
     SpecDiff = Diffuse * Specular;
     AmbientOcclusion = textureLod(ssaoColorBufferBlur, TexCoords, 0).r;
-    vec4 FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0f);
+    vec4 FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);
     
     F0 = vec3(0.04);
     F0 = mix(F0, Diffuse, ExtraComponents.x);
@@ -432,9 +433,10 @@ void main()
 
     shadow  = poissonShadowMapping(FragPosLightSpace);
 
-
+    vec3 SSGI_cont = texture(SSGI, TexCoords).rgb;
     vec3 light = vec3(0.0);
-    ambient = (irradiance_subsurf.rgb * Diffuse);
+    ambient = (irradiance_subsurf.rgb * 0.5) * Diffuse;
+    //ambient /= 2.0;
 
     //if(hdr)
     //  ambient *= (AmbientOcclusion);
@@ -460,10 +462,11 @@ void main()
             break;
         case 2:
         //{
+            float pointShadow = PointShadowCalculation(FragPos, vec3(10, 7.5, 6.0), in_range);
             vec3 res = SphereAreaLight(outBuffer.Lights[i].position.rgb,  outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts);
-            /*if(i == 0 && in_range){
+            if(i == 0 && in_range){
                 res *= pointShadow;
-            }*/
+            }
             /*
             vec3 clearcoat_res = vec3(0.0);
             if(clearcoat > 0.0) {
@@ -476,8 +479,8 @@ void main()
     }
     
 
-    float pointShadow = PointShadowCalculation(FragPos, vec3(-5, 19.2,-28.74), in_range);
-    light += TubeAreaLight(vec3(0, 0, 0), vec3(19.37,19.2,-28.74), vec3(-28.37,19.2,-28.74),  0.2, normalize(vec3(1,1,1)), 100) * pointShadow;
+    //float pointShadow = PointShadowCalculation(FragPos, vec3(-5, 19.2,-28.74), in_range);
+    //light += TubeAreaLight(vec3(0, 0, 0), vec3(19.37,10.2,12.74), vec3(-28.37,10.2,12.74),  0.2, normalize(vec3(1,1,1)), 100) * pointShadow;
 
 
     //if(hdr)

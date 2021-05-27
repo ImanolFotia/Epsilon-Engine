@@ -58,7 +58,7 @@ public:
 
         //Texture::TextureData textureData = {internalformat, 3, 0, m_RenderTextureTarget, GL_FLOAT, target, 1, GL_CLAMP_TO_EDGE, true, false};
 
-        Texture::TextureData textureData(internalformat, 3, 0, m_RenderTextureTarget, GL_FLOAT, target, 1, GL_CLAMP_TO_EDGE, true, false);
+        Texture::TextureData textureData(internalformat, 4, 0, m_RenderTextureTarget, GL_FLOAT, target, 1, GL_CLAMP_TO_EDGE, true, false);
 
         mTexture = std::make_shared<OpenGL::Texture2D>(textureData);
     }

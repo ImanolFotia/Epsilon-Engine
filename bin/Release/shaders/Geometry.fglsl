@@ -27,7 +27,7 @@ uniform int CubemapID;
 uniform int AmbientProbeID;
 uniform mat4 projection;
 uniform bool parallaxOn;
-uniform float u_scaleFactor = 2.5;
+uniform float u_scaleFactor = 1.5;
 uniform ivec2 Resolution;
 uniform bool isTransparent = false;
 
@@ -339,7 +339,7 @@ void main()
   float Roughness = clamp(r_tex.x, 0.05, 1.0);
   //float Roughness = RoughnessWetnessSpec.x;
   float SSS = r_tex.y;
-  gLightAccumulation.a = SSS;
+  gLightAccumulation.a = 1.0;//SSS;
   gExpensiveNormal.a = clamp(Roughness*Roughness, 0.0, 1.0);
 
   vec4 CubeMapcolor = vec4(0.0);
@@ -408,7 +408,7 @@ void main()
   vec3 f = CosineInterpolate(t.x, t.y, c001, c101, c011, c111); 
   vec3 c = e * (1.0 - t.z) + f * t.z; 
 
-  gLightAccumulation.rgb = clamp(c, vec3(0.01), vec3(1.0));//mix(left, right, rl_d); 
+  gLightAccumulation.rgb = clamp(c, vec3(0.01), vec3(10.0));//mix(left, right, rl_d); 
 
   gDepth = vec4(gl_FragCoord.z, CubeMapcolor.rgb);
 }

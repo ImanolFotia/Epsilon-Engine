@@ -6,7 +6,7 @@ layout (binding = 2) uniform sampler2D texture_normal;
 layout (binding = 3) uniform sampler2D texture_height;
 layout (binding = 4) uniform samplerCube skybox;
 layout (binding = 5) uniform sampler2DShadow shadowMap;
-layout (binding = 6) uniform samplerCube gPointShadowMap; 
+layout (binding = 6) uniform samplerCube gPointShadowMap;
 
 out vec4 Color;
 
@@ -99,17 +99,6 @@ float poissonShadowMapping(vec4 fragPosLightSpace){
     return visibility;
 }
 
-
-vec3 gridSamplingDisk[20] = vec3[]
-(
-   vec3(1, 1,  1), vec3( 1, -1,  1), vec3(-1, -1,  1), vec3(-1, 1,  1), 
-   vec3(1, 1, -1), vec3( 1, -1, -1), vec3(-1, -1, -1), vec3(-1, 1, -1),
-   vec3(1, 1,  0), vec3( 1, -1,  0), vec3(-1, -1,  0), vec3(-1, 1,  0),
-   vec3(1, 0,  1), vec3(-1,  0,  1), vec3( 1,  0, -1), vec3(-1, 0, -1),
-   vec3(0, 1,  1), vec3( 0, -1,  1), vec3( 0, -1, -1), vec3( 0, 1, -1)
-);
-
-
 const vec2 BlueNoiseInDisk[64] = vec2[64](
     vec2(0.478712,0.875764),
     vec2(-0.337956,-0.793959),
@@ -177,12 +166,22 @@ const vec2 BlueNoiseInDisk[64] = vec2[64](
     vec2(-0.210004,0.519896) 
 );
 
+
+vec3 gridSamplingDisk[20] = vec3[]
+(
+   vec3(1, 1,  1), vec3( 1, -1,  1), vec3(-1, -1,  1), vec3(-1, 1,  1), 
+   vec3(1, 1, -1), vec3( 1, -1, -1), vec3(-1, -1, -1), vec3(-1, 1, -1),
+   vec3(1, 1,  0), vec3( 1, -1,  0), vec3(-1, -1,  0), vec3(-1, 1,  0),
+   vec3(1, 0,  1), vec3(-1,  0,  1), vec3( 1,  0, -1), vec3(-1, 0, -1),
+   vec3(0, 1,  1), vec3( 0, -1,  1), vec3( 0, -1, -1), vec3( 0, 1, -1)
+);
+
 float PointShadowCalculation(vec3 fragPos, vec3 LightPos, inout bool in_range)
 {
-    float far_plane = 30.;
+    float far_plane = 100.;
     vec3 fragToLight = fragPos - LightPos;
     float currentDepth = length(fragToLight);
-    float shadow = 0.0;
+    float cshadow = 0.0;
     float bias = 0.15;
     int samples = 20;
     float viewDistance = length(viewPos - fragPos);
@@ -194,16 +193,16 @@ float PointShadowCalculation(vec3 fragPos, vec3 LightPos, inout bool in_range)
         
     float strength = pow(currentDepth / far_plane, 20.0);
 
-    float diskRadius = (1.0 + (1.0 / far_plane)) / 25.0;
+    float diskRadius = (1.0 + (viewDistance / far_plane)) / 25.0;
     for(int i = 0; i < samples; ++i)
     {
-        float closestDepth = texture(gPointShadowMap, fragToLight + gridSamplingDisk[i] * BlueNoiseInDisk[i].xyx * 1.0).r;
+        float closestDepth = texture(gPointShadowMap, fragToLight + gridSamplingDisk[i] * BlueNoiseInDisk[i].xyx * diskRadius).r;
         closestDepth *= far_plane;   // undo mapping [0;1]
         if(currentDepth - bias > closestDepth)
-            shadow += 1.0;
+            cshadow += 1.0;
     }
-    shadow /= float(samples);
-    return mix((1.0 - shadow), 1.0, strength);
+    cshadow /= float(samples);
+    return mix((1.0 - cshadow), 1.0, strength);
 }
 
 
@@ -213,9 +212,9 @@ void main()
 
 	vec3 LightPosition = vec3(37, 6.5, 3.5);
 
-	ExtraComponents.xy = textureLod(texture_height, TexCoords, 3.0).xy;
-	Diffuse = textureLod(gAlbedoSpec, TexCoords, 3.0).rgb;
-	float alpha = textureLod(gAlbedoSpec, TexCoords, 3.0).a;
+	ExtraComponents.xy = texture(texture_height, TexCoords).xy;
+	Diffuse = texture(gAlbedoSpec, TexCoords).rgb;
+	float alpha = texture(gAlbedoSpec, TexCoords).a;
 
 	Specular = 1.0;//texture(texture_specular, TexCoords).r;
     	vec3 SpecDiff = Diffuse * Specular;
@@ -233,7 +232,7 @@ void main()
 		return;
 	}
 
-	vec3 NormalTexture = normalize(textureLod(texture_normal, TexCoords, 3.0).rgb * 2.0 - 1.0);
+	vec3 NormalTexture = normalize(texture(texture_normal, TexCoords).rgb * 2.0 - 1.0);
 
 	vec3 mNormal = vec3(0.0);
 
@@ -254,19 +253,25 @@ void main()
 	vec3 light = vec3(0.0);
 
     light = CalculateDirectionalPBR();
-
+    bool in_range = false;
     for(int i = 0 ; i < outBuffer.Lights.length() ; i++)
     {
         if(outBuffer.Lights[i].type == 0)
             light += calculatePointPBR(outBuffer.Lights[i].position.rgb, outBuffer.Lights[i].color.rgb);
         else if(outBuffer.Lights[i].type == 1)
             light += SpotLightPBR(outBuffer.Lights[i].position.rgb, outBuffer.Lights[i].direction.rgb, outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb);
-        else if(outBuffer.Lights[i].type == 2)
-            light += SphereAreaLight(outBuffer.Lights[i].position.rgb,  outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts);
+        else if(outBuffer.Lights[i].type == 2){
+            
+            float pointShadow = PointShadowCalculation(FragPos, vec3(10, 7.5, 6.0), in_range);
+            vec3 res = SphereAreaLight(outBuffer.Lights[i].position.rgb,  outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts);
+            if(i == 0 && in_range) {
+                res *= pointShadow;
+            }
+
+            light += res;
+        }
     }
-    bool in_range = false;
-    float pointShadow = PointShadowCalculation(FragPos, vec3(-5, 19.2,-28.74), in_range);
-    light += TubeAreaLight(vec3(0, 0, 0), vec3(19.37,19.2,-28.74), vec3(-28.37,19.2,-28.74),  0.2, normalize(vec3(1,1,1)), 100) * pointShadow;
+
     //light += TubeAreaLight(vec3(0, 0, 0), vec3(-89,15,-23.5), vec3(70,15,-23.5),  0.1, normalize(vec3(1,1,1)), 250);
     //light += TubeAreaLight(vec3(0, 0, 0), vec3(-89,15,-15), vec3(70,15,-15),  0.1, normalize(vec3(1,1,1)), 250);
     //light += TubeAreaLight(vec3(0, 0, 0), vec3(-38,11,6), vec3(63,11,6),  0.25, normalize(vec3(200,147,3)), 500);
@@ -274,6 +279,3 @@ void main()
 
 	Color = (vec4(max(vec3(light), vec3(0.001)), 1.0));
 }
-
-
-

@@ -44,7 +44,7 @@ public:
     glm::vec3 Position;
     glm::vec3 Direction;
 
-    float height;
+    float height = 1.0;
 private:
 
     std::shared_ptr<eTexture> tex;

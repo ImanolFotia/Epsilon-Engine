@@ -128,7 +128,7 @@ namespace Epsilon
 
     public:
         std::vector<std::shared_ptr<Camera>> eCamera;
-        int mCurrentCamera = 0;
+        const int mCurrentCamera = 0;
         std::shared_ptr<Patch> mPatch;
         /**Shaders**/
         GLuint cubemapTex = 0;

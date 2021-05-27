@@ -23,17 +23,12 @@ namespace Epsilon::API::OpenGL
     {
 
         mWindowHandle = windowHandle;
-        /*#ifndef EPSILON_STATIC
-                glewExperimental = GL_TRUE;
-                glewInit();
-#else*/
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
         {
             IO::PrintLine("Failed to initialize GLAD");
             std::exit(255);
             return;
         }
-        /*#endif*/
     }
     void Context::SwapBuffers()
     {
@@ -45,6 +40,14 @@ namespace Epsilon::API::OpenGL
             ::SwapBuffers((HDC)mWindowHandle->getHandle()); //Calling SwapBuffers inside windows.h
 
 #endif
+    }
+
+    void Context::getConextInfo()
+    {
+
+        const char* mVendor = (char *)glGetString(GL_VENDOR);
+        const char* mDriverVersion = (char *)glGetString(GL_RENDERER);
+        const char* mDevice = (char *)glGetString(GL_VERSION);
     }
 
     void Context::Shutdown()

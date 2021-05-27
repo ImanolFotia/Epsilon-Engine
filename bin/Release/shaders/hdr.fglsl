@@ -194,7 +194,7 @@ void main() {
 
   vec2 fragcoord = gl_FragCoord.xy / Resolution;
 
-  vec3 lp = vec3(4, 10, 22);
+  vec3 lp = vec3(10.0, 7.5, 56.0);
   vec4 GodRays = godRays(brightColorBuffer, normalize(lp - position)/*normalize(vec3(83, 6, -3) - vec3(0, 6, -3))*/ );
 
   fragcoord = gl_FragCoord.xy / Resolution;

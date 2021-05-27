@@ -21,7 +21,7 @@ namespace Epsilon
             oFrameBuffer->FinishFrameBuffer(true);
 
             mProjection = glm::perspective(glm::radians(90.0), 1.0, (double)mNear, (double)mFar);
-
+ 
             mViews.push_back(mProjection * glm::lookAt(mPosition, mPosition + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
             mViews.push_back(mProjection * glm::lookAt(mPosition, mPosition + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
             mViews.push_back(mProjection * glm::lookAt(mPosition, mPosition + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));

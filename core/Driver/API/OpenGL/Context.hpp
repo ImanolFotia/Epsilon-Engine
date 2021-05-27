@@ -9,6 +9,12 @@ namespace Epsilon
 
     namespace API::OpenGL
     {
+        struct oglContextInfo_t {
+            const char* vendor;
+            const char* version;
+            const char* device_name;
+        };
+        
         class Context : public ContextBase
         {
         public:
@@ -18,6 +24,9 @@ namespace Epsilon
             void AttachContext(std::shared_ptr<Platform::WindowHandle<>> windowHandle) override;
             void SwapBuffers() override;
             void Shutdown() override;
+
+        private:
+            void getConextInfo();
         };
     } // namespace OpenGL
 } // namespace Epsilon

@@ -30,28 +30,27 @@ namespace Epsilon
             }
             else
             {
-                /*std::shared_ptr<eTexture> tmpTex = (std::shared_ptr<eTexture>)new eTexture(texPath.c_str());
-                TextureList.insert(std::make_pair(texPath, tmpTex));
-                return texPath;*/
 
                 ProgramData DATA;
                 using Renderer::Texture2D;
 
-                API::Texture::Texture::TextureData TextureData;
-                TextureData.MakeDefaultGL();
-
                 auto is_normal = Helpers::isNormal(texPath.c_str());
-                TextureData.Compressed = !is_normal;
-                TextureData.SRGB = !is_normal;
 
                 int outwidth = 0, outheight = 0, outchannels = 0;
                 auto path = ("materials/" + std::string(texPath)).c_str();
                 auto data = SOIL_load_image(path, &outwidth, &outheight, &outchannels, SOIL_LOAD_RGBA);
+                int lod_zero_size = outwidth * outheight * sizeof(unsigned char) * outchannels;
+
+                mTextureMemoryAllocated += (unsigned long)((float)lod_zero_size * 1.3);
+
+                API::Texture::Texture::TextureData TextureData;
+                TextureData.MakeDefaultGL();
+                TextureData.Compressed = !is_normal;
+                TextureData.SRGB = !is_normal;
                 TextureData.Width = outwidth;
                 TextureData.Height = outheight;
-                int lod_zero_size = outwidth * outheight * sizeof(unsigned char) * outchannels;
-                mTextureMemoryAllocated += (unsigned long)((float)lod_zero_size * 1.3);
                 TextureData.AnisotropyLevel = DATA.ANISOTROPY;
+
                 auto &tmpTex = TextureList.at(texPath);
                 tmpTex->Create(TextureData);
                 tmpTex->setData(data, 0);
@@ -59,7 +58,7 @@ namespace Epsilon
                 data = nullptr;
                 return texPath;
             }
-        } 
+        }
         catch (std::exception &e)
         {
             std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
@@ -251,7 +250,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
 #pragma omp
             if (TextureQueue.size() > 0)
             {
-                for (int i = static_cast<int>(TextureQueue.size())-1; i >= 0; i--)
+                for (int i = static_cast<int>(TextureQueue.size()) - 1; i >= 0; i--)
                 {
                     std::cout << "Loading queued texture: " << TextureQueue.at(i) << ":::" << i << std::endl;
                     requestTexture(TextureQueue.at(i));

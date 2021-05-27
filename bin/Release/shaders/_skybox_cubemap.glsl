@@ -14,7 +14,7 @@ uniform vec3 LightDirection;
 const vec3 Blue = normalize(vec3(29,91,200));
 const vec3 Cian = normalize(vec3(125, 228, 247));
 const vec3 Orange = normalize(vec3(224,115,36));
-const vec3 Gray = normalize(vec3(0.001,0.001,0.001));
+const vec3 Gray = normalize(vec3(0.0001,0.0001,0.0001));
 const vec3 Black = normalize(vec3(0.0,0.0,0.0));
 const vec3 Brown = normalize(vec3(123.0,91.0,68.0));
 const vec3 DarkRootwood = normalize(vec3(43, 52, 81));
@@ -94,6 +94,6 @@ void main()
         //color = TimeColor;
         vec3 LightColor = normalize(vec3(218, 205, 118));
         float scattering  = max(dot(lFragPos, LightDirection), 0.0);
-    	FragColor.rgb = TimeColor*0.2;//color*0.2/*+(scattering*0.5)*/ /** max(0.1, LightDirection.y+0.2) */;
+    	FragColor.rgb = TimeColor*0.05;//clamp(LightDirection.y, 0.01, 1.0);//color*0.2/*+(scattering*0.5)*/ /** max(0.1, LightDirection.y+0.2) */;
         FragColor.a = 1.0;
 }

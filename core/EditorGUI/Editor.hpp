@@ -290,7 +290,7 @@ namespace Epsilon::Editor::GUI
                     //get the mouse position
                     ImVec2 pos = ImGui::GetCursorScreenPos();
 
-                    static const char *items[] = {"gBuffer Normal", "Light Pass", "TAA", "HBIL", "Screen Space Reflections", "FrameBuffer"};
+                    static const char *items[] = {"gBuffer Normal", "Light Pass", "TAA", "SSGI", "Screen Space Reflections", "Global Illumination"};
                     static const char *item_current = items[0];
                     static ImGuiComboFlags flags = 0;
                     if (ImGui::BeginCombo("Display", item_current, flags))
@@ -318,10 +318,10 @@ namespace Epsilon::Editor::GUI
                         TextureId = PP->ReflectionTexture;
                     else if (item_current == "TAA")
                         TextureId = PP->mTAAFramebufferCopy->getRenderTargetHandler(0);
-                    else if (item_current == "HBIL")
+                    else if (item_current == "SSGI")
                         TextureId = PP->HBILFramebuffer->getRenderTargetHandler(0);
-                    else if (item_current == "FrameBuffer")
-                        TextureId = framebuffer->getRenderTargetHandler(0);
+                    else if (item_current == "Global Illumination")
+                        TextureId = PP->gBufferFramebuffer->getRenderTargetHandler(PostProcess::GBUFFER_TARGETS::GBUFFER_GI); 
 
                     //we are done working with this window
                     unsigned int fb_size[3] = {(unsigned int)*WIDTH, (unsigned int)*HEIGHT, GammaShader->getProgramID()};

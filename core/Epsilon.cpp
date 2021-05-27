@@ -222,22 +222,23 @@ namespace Epsilon
         eCamera.push_back(std::make_shared<Camera>(glm::vec3(0.0f, 8.25f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
         eCamera.push_back(std::make_shared<Camera>(glm::vec3(20.0f, 30.25f, -60.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
 
-        Input::Mouse::MouseEventHandler += ([](auto *sender, beacon::args *args) {
-            if (args == nullptr)
-                return;
+        Input::Mouse::MouseEventHandler += ([](auto *sender, beacon::args *args)
+                                            {
+                                                if (args == nullptr)
+                                                    return;
 
-            auto obj = args->to<Input::MouseArgs>();
-            if (obj.Left().State == Input::PRESSED)
-            {
-                std::cout << "Left button pressed" << std::endl;
-            }
-        });
+                                                auto obj = args->to<Input::MouseArgs>();
+                                                if (obj.Left().State == Input::PRESSED)
+                                                {
+                                                    std::cout << "Left button pressed" << std::endl;
+                                                }
+                                            });
 
         this->ComputeCamera(NO_CLIP, glm::vec3(0.0f, 8.25f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
         shadowMap = std::move((shared_ptr<Renderer::ShadowMap>)(new Renderer::ShadowMap(DATA.SHADOWMAP_SIZE, DATA.SHADOWMAP_SIZE, -20.0f, 80.0f)));
 
-        mPointShadow = std::make_shared<Renderer::PointShadow>(glm::vec3(-5, 19.2, -28.74));
+        mPointShadow = std::make_shared<Renderer::PointShadow>(glm::vec3(10, 7.5, 6));
         mPointShadow->Setup();
 
         //RenderSplashScreen("Loading Shaders...");
@@ -253,10 +254,10 @@ namespace Epsilon
         std::vector<float> modelsScales;
 
         {
-            glm::vec3 tPosition = glm::vec3(-18, 4.5, 0);
-            glm::vec3 tScale = glm::vec3(1.3 * GOLDEN_RATIO);
+            glm::vec3 tPosition = glm::vec3(-5, 11.3, 6.0);
+            glm::vec3 tScale = glm::vec3(0.007 * GOLDEN_RATIO);
             glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
-            std::string tModelName = "models/android.eml";
+            std::string tModelName = "models/sponza.eml";
 
             auto _Entity = std::make_shared<EntityBase>(tPosition, tScale, tRotation);
 
@@ -266,7 +267,7 @@ namespace Epsilon
             _RComp->setTransparency(false);
             _Entity->addComponent(_RComp);
 
-            _Entity->mFunction = [cam = eCamera[mCurrentCamera]](EntityBase *ent) {
+            /*_Entity->mFunction = [cam = eCamera[mCurrentCamera]](EntityBase *ent) {
                 Component::TransformComponent_ptr t = std::static_pointer_cast<Component::TransformComponent>(ent->getComponentList()[Component::TRANSFORMCOMPONENT]);
                 if (glm::length(cam->getPosition() - t->Position()) < 10.0f)
                 {
@@ -275,16 +276,16 @@ namespace Epsilon
                 } else {
                     t->PrevRotation(t->Rotation());
                 }
-            };
- 
+            };*/
+
             EntityList.push_back(_Entity);
         }
-  
-        { 
+
+        {
             glm::vec3 tPosition = glm::vec3(10, 10, 10);
             glm::vec3 tScale = glm::vec3(2.0f);
             glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
-            std::string tModelName = "models/esfera.eml"; 
+            std::string tModelName = "models/esfera.eml";
 
             std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(tPosition, tScale, tRotation);
 
@@ -301,15 +302,23 @@ namespace Epsilon
             EntityList.push_back(_Entity);
         }
 
+        auto random_double = []() -> double
+        {
+            std::uniform_real_distribution<double> distribution(0.0, 2.0);
+            std::mt19937 generator;
+            //generator.seed(time(NULL));
+            return distribution(generator);
+        };
+
         for (int a = 0; a < 3; a++)
             for (int b = 0; b < 3; b++)
                 for (int c = 0; c < 3; c++)
                 {
-                    glm::vec3 tPosition = glm::vec3(3, -1.0, 21);
+                    glm::vec3 tPosition = glm::vec3(0, 10.0, 0);
                     glm::vec3 positions = tPosition + glm::vec3(a, b, c) * glm::vec3(2.0, 2.0, 2.0);
-                    glm::vec3 tScale = glm::vec3(1.0f);
+                    glm::vec3 tScale = glm::vec3((random_double() * 2.0) + 0.1);
                     glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
-                    std::string tModelName = "models/cube.eml";
+                    std::string tModelName = "models/esfera.eml";
 
                     std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(positions, tScale, tRotation);
 
@@ -319,6 +328,7 @@ namespace Epsilon
                     MIN_MAX_POINTS _BoundingBox = ResourceManager::Get().getModelBoundingBox(tModelName);
                     auto _PComp = std::make_shared<Component::PhysicComponent>(100, positions, tScale, Physics::Type::CUBE, _BoundingBox);
                     _PComp->setID(EntityList.size());
+                    //_PComp->setState(true);
                     _Entity->addComponent(_RComp)->addComponent(_PComp);
 
                     EntityList.push_back(_Entity);
@@ -383,7 +393,8 @@ namespace Epsilon
         //-32 34 -13
         //33 54 14
 
-        auto MenuAudio = [&]() -> void { m_AudioSystem->PlayByID(2); };
+        auto MenuAudio = [&]() -> void
+        { m_AudioSystem->PlayByID(2); };
 
         /*
     t_ButtonQuit->OnEntering(MenuAudio);
@@ -416,7 +427,8 @@ namespace Epsilon
         m_ParticleSystem->addNewSystem(limits, MIST, 200);
 
         //3 , 7, 30
-        sun->Update();
+        sun->Update(); /*glm::vec3(6 + 1.0 * 30, 8 + 45.0f, -8 + 0.0 * 30)*/
+
         shadowMap->setShadowPosition(glm::vec3(6 + 1.0 * 30, 8 + 45.0f, -8 + 0.0 * 30));
 
         shadowMap->setShadowDirection(sun->Direction);
@@ -424,9 +436,9 @@ namespace Epsilon
         shadowMap->SetupShadowMatrices();
 
         shadowMap->Begin(0);
-    
+
         this->RenderShadows(Shaders["ShadowMapping"]);
-        
+
         shadowMap->End();
 
         mPointShadow->Begin(0);
@@ -435,10 +447,9 @@ namespace Epsilon
 
         mPointShadow->End();
 
-
         //this->mCubemap[1] = (std::shared_ptr<CubeMap>)new CubeMap(55, glm::vec3(10, 7, 10));
 
-        glClearColor(0.1, 0.1, 0.1, 1.0);
+        glClearColor(0.0, 0.0, 0.0, 1.0);
         glViewport(0, 0, 1024, 1024);
         glEnable(GL_DEPTH_TEST);
         eCamera[mCurrentCamera]->Update(mWindow->getHandle()->getHandle());
@@ -464,7 +475,6 @@ namespace Epsilon
             for (int b = 0; b < 7; b++)
                 for (int c = 0; c < 7; c++)
                 {
-
                     this->mCubemap[a][b][c] = (std::shared_ptr<CubeMap>)new CubeMap(index, initCubemapPosition + glm::vec3(a, b, c) * glm::vec3(10.0, 5.0, 10.0));
                     std::shared_ptr<Shader> cubeShader = this->mCubemap[a][b][c]->getShader();
                     float rotation = 0.5 * Clock::TimeSeconds();
@@ -555,7 +565,7 @@ namespace Epsilon
                         glActiveTexture(GL_TEXTURE5);
                         cubeShader->PushUniform("shadowMap", 5);
                         glBindTexture(GL_TEXTURE_2D, shadowMap->getShadowTextureID());
-                        BSPMap->RenderLevel(mCubemap[a][b][c]->getPosition(), cubeShader, true);
+                        //BSPMap->RenderLevel(mCubemap[a][b][c]->getPosition(), cubeShader, true);
                         cubeShader->Free();
                     }
                     mCubemap[a][b][c]->End();
@@ -580,9 +590,9 @@ namespace Epsilon
         auto interval = std::chrono::duration_cast<std::chrono::milliseconds>(finish - start).count();
         std::cout << "Cubemap generation took: " << interval << " milliseconds" << std::endl;
         std::cout << interval / (7 * 7 * 7) << " per cubemap" << std::endl;
-
+        /*
         {
-            /*  for (int a = 0; a < 7; a++)
+              for (int a = 0; a < 7; a++)
                 for (int b = 0; b < 7; b++)
                     for (int c = 0; c < 7; c++)
                     {
@@ -599,15 +609,33 @@ namespace Epsilon
 
                         _Entity->addComponent(_RComp);
                         EntityList.push_back(_Entity);
-                    }*/
-        }
+                    }
+        }*/
 
-        {
-            glm::vec3 positions = glm::vec3(4, 10, 22);
+        /* {
+            glm::vec3 positions = glm::vec3(-20, 10, 2);
             glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
             std::string tModelName = "models/probe.eml";
 
             std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(positions, glm::vec3(2.0f), tRotation);
+            Component::Component_ptr _RComp = std::make_shared<Component::RenderComponent>(tModelName, positions, "Main");
+            static_pointer_cast<Component::RenderComponent>(_RComp)->CastsShadows(false);
+            static_pointer_cast<Component::RenderComponent>(_RComp)->isDoubleFaced(false);
+            static_pointer_cast<Component::RenderComponent>(_RComp)->setTransparency(false);
+            static_pointer_cast<Component::RenderComponent>(_RComp)->setVisibility(false);
+
+            MIN_MAX_POINTS _BoundingBox = ResourceManager::Get().getModelBoundingBox(tModelName);
+            Component::Component_ptr _PComp = std::make_shared<Component::PhysicComponent>(0.0f, positions, glm::vec3(2.0f), Physics::Type::SPHERE, _BoundingBox);
+
+            _Entity->addComponent(_RComp)->addComponent(_PComp);
+            EntityList.push_back(_Entity);
+        }*/
+        {
+            glm::vec3 positions = glm::vec3(10, 7.5, 6);
+            glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
+            std::string tModelName = "models/probe.eml";
+
+            std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(positions, glm::vec3(1.0f), tRotation);
             Component::Component_ptr _RComp = std::make_shared<Component::RenderComponent>(tModelName, positions, "Main");
             static_pointer_cast<Component::RenderComponent>(_RComp)->CastsShadows(false);
             static_pointer_cast<Component::RenderComponent>(_RComp)->isDoubleFaced(false);
@@ -747,7 +775,7 @@ namespace Epsilon
         sun = std::move((shared_ptr<Sun>)(new Sun()));
         BSPMap = std::move((shared_ptr<CQuake3BSP>)(new CQuake3BSP()));
 
-        BSPMap->LoadBSP((string("maps/") + "GI.bsp").c_str());
+        BSPMap->LoadBSP((string("maps/") + "godrays_tutorial.bsp").c_str());
 
         m_AnimModel = std::move((shared_ptr<MD5Model>)(new MD5Model()));
 
@@ -827,7 +855,7 @@ namespace Epsilon
         BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera[mCurrentCamera]->getProjectionMatrix() * eCamera[mCurrentCamera]->getViewMatrix()), BSPmodel);
         shader->Use();
         this->SetUniforms(shader, glm::vec3(0.0), glm::vec3(0.1), glm::quat(0, 0, 0, 0));
-        BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), shader, true);
+        //BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), shader, true);
         /*
     Shaders["MD5Geometry"]->Use();
     glUniformMatrix4fv(glGetUniformLocation(Shaders["MD5Geometry"]->getProgramID(), "mSkinned"), 150, GL_FALSE, &m_AnimModel->m_AnimatedBones[0][0][0]);
@@ -858,7 +886,7 @@ namespace Epsilon
                 if (!RComponent->CastsShadows())
                     continue;
 
-            //shader->Use();
+            shader->Use();
             shader->PushUniform("FrameNumber", (int)mWindow->FrameNumber());
             this->SetUniforms(shader, EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation());
             auto tModel = ResourceManager::Get().getModel(EntityList[i]->getModelPath() /*, shader, EntityList[i]->getPosition()*/);
@@ -880,7 +908,7 @@ namespace Epsilon
 
         shader->PushUniform("FrameNumber", (int)mWindow->FrameNumber());
         this->SetUniforms(shader, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.1, 0.1, 0.1), glm::quat(0.0, 0.0, 0.0, 0.0));
-        BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), shader, false);
+        //BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), shader, false);
 
         /*
     Shaders["MD5ShadowMapping"]->Use();
@@ -968,7 +996,7 @@ namespace Epsilon
             Editor::GUI::SceneHierarchy(EntityList);
 
             Editor::GUI::TextureList();
- 
+
             Editor::GUI::PostprocessSettings(PP);
 
             Editor::GUI::EntityProperties();
@@ -1078,11 +1106,12 @@ namespace Epsilon
             }
         }
 
-        auto & ref = ResourceManager::Get();
+        auto &ref = ResourceManager::Get();
 
-        if(ref.ShouldLoadQueuedTextures()) {
+        if (ref.ShouldLoadQueuedTextures())
+        {
             ref.loadQueuedTextures();
-        } 
+        }
         /* if (onMenu)
         {
             glfwSetInputMode(window->getHandle()->getHandle(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -1094,7 +1123,7 @@ namespace Epsilon
             glfwSetInputMode(window->getHandle()->getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             this->m_CameraMode = NO_CLIP;
         }*/
-  
+
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::N])
             normal = !normal;
 
@@ -1107,18 +1136,19 @@ namespace Epsilon
             SSAO = !SSAO;
         }
 
-        auto resolveTime = [kt = KeyTime, t = etime](int key) -> bool { return glm::abs((kt[key] * 60) - (t * 60)) > 60.0f; };
+        auto resolveTime = [kt = KeyTime, t = etime](int key) -> bool
+        { return glm::abs((kt[key] * 60) - (t * 60)) > 60.0f; };
 
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::C] && resolveTime(Input::GLFW::Key::C))
         {
-            mCurrentCamera = (int)!mCurrentCamera;
+            //mCurrentCamera = (int)!mCurrentCamera;
             eCamera[mCurrentCamera]->isMoving(true);
             eCamera[!mCurrentCamera]->isMoving(true);
             KeyTime[Input::GLFW::Key::C] = etime;
         }
 
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::M] && resolveTime(Input::GLFW::Key::M))
-        {
+        { 
             auto &XPOS = Input::Mouse::XPOS;
             auto &YPOS = Input::Mouse::YPOS;
             if (this->m_CameraMode == CAMERA_FIXED)
@@ -1243,6 +1273,31 @@ namespace Epsilon
             BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera[mCurrentCamera]->getProjectionMatrix() * eCamera[mCurrentCamera]->getViewMatrix()), Model);
             bool visible = BSPMap->Frustum.BoxInFrustum(EntityList[i]->getBoundingBox());
 
+            if (visible)
+            {
+                auto &ref = ResourceManager::Get();
+                auto model = ref.getModel(rComponent->getModelPath());
+
+                if (model != nullptr)
+                {
+                    BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera[mCurrentCamera]->getProjectionMatrix() * eCamera[mCurrentCamera]->getViewMatrix()), Model);
+                    for (unsigned int j = 0; j < model->Meshes().size(); j++)
+                    {
+                        auto BB = model->getMeshBoundingBox(j, EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation());
+                        auto vis = BSPMap->Frustum.BoxInFrustum(BB);
+
+                        if (vis)
+                        {
+                            model->setMeshVisibility(j, true);
+                        }
+                        else
+                        {
+                            model->setMeshVisibility(j, false);
+                        }
+                    }
+                }
+            }
+
             rComponent->setVisibility(visible);
         }
 
@@ -1292,12 +1347,12 @@ namespace Epsilon
         }
         else
         {
-        } 
+        }
 
-        if(PP)
-        this->eCamera[mCurrentCamera]->UpdateMatrices(mWindow->FrameNumber(), WIDTH, HEIGHT, PP->getPostProcessData().AntiAliasingSettings.Active);
+        if (PP)
+            this->eCamera[mCurrentCamera]->UpdateMatrices(mWindow->FrameNumber(), WIDTH, HEIGHT, PP->getPostProcessData().AntiAliasingSettings.Active);
         else
-        this->eCamera[mCurrentCamera]->UpdateMatrices(mWindow->FrameNumber(), WIDTH, HEIGHT);
+            this->eCamera[mCurrentCamera]->UpdateMatrices(mWindow->FrameNumber(), WIDTH, HEIGHT);
     }
 
     void Epsilon::ComputeShadow()
@@ -1308,7 +1363,7 @@ namespace Epsilon
             if (ent->HasPhysicComponent())
             {
                 auto comp = ent->getComponent<Component::PhysicComponent_ptr>();
-                comp->addForce(glm::vec3(4, 10, 22));
+                comp->addForce(glm::vec3(glm::sin(Clock::Time()) * 10, 10, 2));
             }
         }
 
@@ -1316,6 +1371,8 @@ namespace Epsilon
         glm::vec3 camDir = eCamera[mCurrentCamera]->getDirection();
 
         shadowMap->setShadowPosition(glm::vec3(camPos.x + camDir.x * 30, camPos.y + 45.0f, camPos.z + camDir.z * 30));
+
+        //std::cout << "x: " <<camPos.x + camDir.x * 30 << " y: " << camPos.y + 45.0f << " z: " << camPos.z + camDir.z * 30 << std::endl;
 
         shadowMap->setShadowDirection(sun->Direction);
 
@@ -1339,7 +1396,7 @@ namespace Epsilon
 
         mPointShadow->End();
     }
- 
+
     void Epsilon::ProcessFrame(void)
     {
         PP->beginOffScreenrendering();
@@ -1368,7 +1425,7 @@ namespace Epsilon
         if (this->SSAO)
             PP->applySSAO(this->eCamera[mCurrentCamera]);
 
-        PP->applyHBIL(this->eCamera[mCurrentCamera]);
+        //PP->applyHBIL(this->eCamera[mCurrentCamera]);
     }
 
     void Epsilon::RenderParticles(void)
@@ -1423,18 +1480,18 @@ namespace Epsilon
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         //Blit to named default framebuffer
- 
+
         //glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
         //mDefaultFrameBuffer->setToDraw();
 
         //glBlitFramebuffer(0, 0, this->WIDTH, this->HEIGHT, 0, 0, this->WIDTH, this->HEIGHT, GL_COLOR_BUFFER_BIT, GL_NEAREST);
- 
+
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
     void Epsilon::onExit()
     {
- 
+
         BSPMap->Destroy();
 
         sun->Destroy();

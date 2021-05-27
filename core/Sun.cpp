@@ -16,15 +16,15 @@ namespace Epsilon
             tex = std::make_shared<eTexture>("Sun.png");
             this->TextureID = tex->getTextureID();
 
-            this->radius = 30.0;
+            this->radius = 20.0;
 
-            this->height = 30.0;
+            this->height = 10.0;
 
             PrepareVAO();
             std::cout << "Llega" << std::endl;
             std::cout << "Sun texture ID " << TextureID << std::endl;
             //mMovement = 2.6;
-            mMovement = -1.0;
+            mMovement = 1.0;
         }
         catch (std::exception &e)
         {
@@ -34,21 +34,24 @@ namespace Epsilon
 
     void Sun::Render(std::shared_ptr<Shader> shader)
     {
-        glDepthFunc(GL_LEQUAL);
-        shader->Use();
-        glBindVertexArray(this->VAO);
-        glActiveTexture(GL_TEXTURE0);
-        glUniform1i(glGetUniformLocation(shader->getProgramID(), "sSampler"), 0);
-        glBindTexture(GL_TEXTURE_2D, this->TextureID);
+        if (mMovement > 0.0)
+        {
+            glDepthFunc(GL_LEQUAL);
+            shader->Use();
+            glBindVertexArray(this->VAO);
+            glActiveTexture(GL_TEXTURE0);
+            glUniform1i(glGetUniformLocation(shader->getProgramID(), "sSampler"), 0);
+            glBindTexture(GL_TEXTURE_2D, this->TextureID);
 
-        glUniform3f(glGetUniformLocation(shader->getProgramID(), "sunPos"), this->Position.x, this->Position.y, this->Position.z);
-        glCache::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+            glUniform3f(glGetUniformLocation(shader->getProgramID(), "sunPos"), this->Position.x, this->Position.y, this->Position.z);
+            glCache::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glBindVertexArray(0);
-        glCache::glUseProgram(0);
-        glDepthFunc(GL_LESS);
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, 0);
+            glBindVertexArray(0);
+            glCache::glUseProgram(0);
+            glDepthFunc(GL_LESS);
+        }
     }
 
     void Sun::Update()
@@ -58,7 +61,7 @@ namespace Epsilon
             mMovement += 0.01;
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::NINE])
             mMovement -= 0.01;
-        this->Position = glm::vec3(0, 0, 0) + glm::vec3(this->radius * glm::cos(mMovement) /** glm::cos(glfwGetTime()/10)*/, height * glm::sin(mMovement) /* glm::sin(glfwGetTime()/10)*/, this->radius * glm::sin(mMovement) /* glm::sin(glfwGetTime()/10)*/);
+        this->Position = glm::vec3(0, 0, 0) + glm::vec3(/*this->radius * glm::cos(mMovement)*/20.0 /** glm::cos(glfwGetTime()/10)*/, 36.0/*height * glm::sin(mMovement)*/ /* glm::sin(glfwGetTime()/10)*/, 10.0/*this->radius * glm::sin(mMovement) /* glm::sin(glfwGetTime()/10)*/);
         this->Direction = glm::normalize(this->Position - glm::vec3(0, 0, 0));
     }
 

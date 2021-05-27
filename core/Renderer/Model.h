@@ -21,7 +21,6 @@ namespace Epsilon::Renderer
     class Model
     {
     public:
-       
         glm::mat4 PrevModel;
         glm::mat4 ModelMatrix;
         glm::vec3 PrevPos, PrevScale;
@@ -50,13 +49,13 @@ namespace Epsilon::Renderer
                 mMeshes[i].Destroy();
         }
 
-       /* ~Model()
+        /* ~Model()
         {
             //std::cout << "Deleted Model" << std::endl;
         }*/
         std::string directory;
         /// Draws the model, and thus all its meshes
-        void Draw(std::shared_ptr<Shader> shader);
+        void Draw(std::shared_ptr<Shader> shader, bool force_draw = false);
 
         /// Draws the model, and thus all its meshes
         void Draw(GLuint shader, glm::vec3);
@@ -75,7 +74,7 @@ namespace Epsilon::Renderer
         void SetUniforms(std::shared_ptr<Shader> shader, glm::vec3 position, glm::vec3 scale, glm::quat rotation,
                          std::shared_ptr<Camera> cam);
 
-
+        MIN_MAX_POINTS getMeshBoundingBox(unsigned int index, glm::vec3 position, glm::vec3 scale, glm::quat rotation);
 
         /// Structure to store the models bounding box for visibility and collision computation
         struct BOUNDING_BOX
@@ -110,15 +109,19 @@ namespace Epsilon::Renderer
             return std::hash<std::string>{}(path);
         }
 
-        const std::vector<Mesh> & Meshes() {
+        const std::vector<Mesh> &Meshes()
+        {
             return mMeshes;
         }
 
+        std::vector<unsigned int> mVisibleMeshes;
+
     private:
         bool loadModel(std::string emlPath, int a);
-        
+
         std::vector<Mesh> mMeshes;
     };
 
     using Model_ptr = std::shared_ptr<Model>;
+
 } // namespace Epsilon
