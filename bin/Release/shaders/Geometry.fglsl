@@ -27,7 +27,7 @@ uniform int CubemapID;
 uniform int AmbientProbeID;
 uniform mat4 projection;
 uniform bool parallaxOn;
-uniform float u_scaleFactor = 1.5;
+uniform float u_scaleFactor = 4.5;
 uniform ivec2 Resolution;
 uniform bool isTransparent = false;
 
@@ -44,8 +44,8 @@ const float fAlphaTest = 0.25;
 //Spherical harmonics pre calculated values
 const float Pi = 3.141592654f;
 const float CosineA0 = Pi;
-const float CosineA1 = (2.0f * Pi) / 3.0f;
-const float CosineA2 = Pi * 0.25f;
+const float CosineA1 = (2.0 * Pi) / 3.0;
+const float CosineA2 = Pi * 0.25;
 const float C1 = 0.429043;
 const float C2 = 0.511664;
 const float C3 = 0.743125;
@@ -400,7 +400,9 @@ void main()
 
   vec3 t; 
   ivec3 gi;
-  vec3 g = SPHFragPos / gridSize; gi = ivec3(g); t = g - gi; 
+  vec3 g = SPHFragPos / gridSize; 
+  gi = ivec3(g); 
+  t = g - gi; 
   //vec3 e = bilinear(t.x, t.y, c000, c100, c010, c110); 
   //vec3 f = bilinear(t.x, t.y, c001, c101, c011, c111); 
 
@@ -408,7 +410,7 @@ void main()
   vec3 f = CosineInterpolate(t.x, t.y, c001, c101, c011, c111); 
   vec3 c = e * (1.0 - t.z) + f * t.z; 
 
-  gLightAccumulation.rgb = clamp(c, vec3(0.01), vec3(10.0));//mix(left, right, rl_d); 
+  gLightAccumulation.rgb = clamp(c, vec3(0.01), vec3(100.0));//mix(left, right, rl_d); 
 
   gDepth = vec4(gl_FragCoord.z, CubeMapcolor.rgb);
 }

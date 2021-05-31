@@ -254,7 +254,7 @@ namespace Epsilon
         std::vector<float> modelsScales;
 
         {
-            glm::vec3 tPosition = glm::vec3(-5, 11.3, 6.0);
+            glm::vec3 tPosition = glm::vec3(-5, 10.5, 6.0);
             glm::vec3 tScale = glm::vec3(0.007 * GOLDEN_RATIO);
             glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
             std::string tModelName = "models/sponza.eml";
@@ -265,6 +265,7 @@ namespace Epsilon
             _RComp->CastsShadows(true);
             _RComp->setVisibility(true);
             _RComp->setTransparency(false);
+            _RComp->isDoubleFaced(false);
             _Entity->addComponent(_RComp);
 
             /*_Entity->mFunction = [cam = eCamera[mCurrentCamera]](EntityBase *ent) {
@@ -385,6 +386,26 @@ namespace Epsilon
             EntityList.push_back(_Entity);
         }
 
+        
+        {
+            glm::vec3 positions = glm::vec3(-31.0, 11.2, 5.8);
+            glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
+            std::string tModelName = "models/probe.eml";
+
+            std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(positions, glm::vec3(1.0f), tRotation);
+            Component::Component_ptr _RComp = std::make_shared<Component::RenderComponent>(tModelName, positions, "Main");
+            static_pointer_cast<Component::RenderComponent>(_RComp)->CastsShadows(false);
+            static_pointer_cast<Component::RenderComponent>(_RComp)->isDoubleFaced(false);
+            static_pointer_cast<Component::RenderComponent>(_RComp)->setTransparency(false);
+            static_pointer_cast<Component::RenderComponent>(_RComp)->setVisibility(true);
+
+            MIN_MAX_POINTS _BoundingBox = ResourceManager::Get().getModelBoundingBox(tModelName);
+            Component::Component_ptr _PComp = std::make_shared<Component::PhysicComponent>(0.0f, positions, glm::vec3(2.0f), Physics::Type::SPHERE, _BoundingBox);
+
+            _Entity->addComponent(_RComp)->addComponent(_PComp);
+            EntityList.push_back(_Entity);
+        }
+
         glm::vec3 initCubemapPosition = glm::vec3(-35.0, 0, -35.0);
 
         //33 34 14
@@ -418,13 +439,13 @@ namespace Epsilon
         MINMAX_POINTS limits;
         limits.MAX_X = -36 + (7 * 10);
         limits.MIN_X = -36;
-        limits.MAX_Y = -3.0;
-        limits.MIN_Y = -12.0;
+        limits.MAX_Y = 40.0;
+        limits.MIN_Y = 0.0;
         limits.MAX_Z = -36 + (7 * 10);
         limits.MIN_Z = -36;
 
         m_ParticleSystem = (std::shared_ptr<ParticleSystem>)new ParticleSystem();
-        m_ParticleSystem->addNewSystem(limits, MIST, 200);
+        m_ParticleSystem->addNewSystem(limits, MIST, 50);
 
         //3 , 7, 30
         sun->Update(); /*glm::vec3(6 + 1.0 * 30, 8 + 45.0f, -8 + 0.0 * 30)*/
@@ -598,7 +619,7 @@ namespace Epsilon
                     {
                         glm::vec3 positions = initCubemapPosition + glm::vec3(a, b, c) * glm::vec3(10.0, 5.0, 10.0);
                         glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
-                        std::string tModelName = "models/probe.eml";
+                        std::string tModelName = "models/esfera.eml";
 
                         std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(positions, glm::vec3(1.0), tRotation);
                         Component::Component_ptr _RComp = std::make_shared<Component::RenderComponent>(tModelName, positions, "Main");
@@ -610,8 +631,8 @@ namespace Epsilon
                         _Entity->addComponent(_RComp);
                         EntityList.push_back(_Entity);
                     }
-        }*/
-
+        }
+*/
         /* {
             glm::vec3 positions = glm::vec3(-20, 10, 2);
             glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
@@ -630,24 +651,6 @@ namespace Epsilon
             _Entity->addComponent(_RComp)->addComponent(_PComp);
             EntityList.push_back(_Entity);
         }*/
-        {
-            glm::vec3 positions = glm::vec3(10, 7.5, 6);
-            glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
-            std::string tModelName = "models/probe.eml";
-
-            std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(positions, glm::vec3(1.0f), tRotation);
-            Component::Component_ptr _RComp = std::make_shared<Component::RenderComponent>(tModelName, positions, "Main");
-            static_pointer_cast<Component::RenderComponent>(_RComp)->CastsShadows(false);
-            static_pointer_cast<Component::RenderComponent>(_RComp)->isDoubleFaced(false);
-            static_pointer_cast<Component::RenderComponent>(_RComp)->setTransparency(false);
-            static_pointer_cast<Component::RenderComponent>(_RComp)->setVisibility(false);
-
-            MIN_MAX_POINTS _BoundingBox = ResourceManager::Get().getModelBoundingBox(tModelName);
-            Component::Component_ptr _PComp = std::make_shared<Component::PhysicComponent>(0.0f, positions, glm::vec3(2.0f), Physics::Type::SPHERE, _BoundingBox);
-
-            _Entity->addComponent(_RComp)->addComponent(_PComp);
-            EntityList.push_back(_Entity);
-        }
 
         ResourceManager::Get().cubemapsLoaded = true;
 

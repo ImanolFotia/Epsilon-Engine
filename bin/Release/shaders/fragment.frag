@@ -252,7 +252,7 @@ void main()
 
 	vec3 light = vec3(0.0);
 
-    light = CalculateDirectionalPBR();
+    light = CalculateDirectionalPBR() * 3.0;
     bool in_range = false;
     for(int i = 0 ; i < outBuffer.Lights.length() ; i++)
     {

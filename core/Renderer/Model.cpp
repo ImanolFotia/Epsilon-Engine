@@ -85,7 +85,7 @@ namespace Epsilon::Renderer
         {
             inFILE.read((char *)&l_meshes[i], sizeof(t_Mesh));
         }
-        //std::cout << "Num of meshes: " << numMeshes << std::endl;
+        std::cout << "Model " << emlPath << " has " << numMeshes << " meshes" << std::endl;
 
         MinMaxPoints.MAX_X = 0;
         MinMaxPoints.MAX_Y = 0;

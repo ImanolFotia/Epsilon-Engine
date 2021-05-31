@@ -54,11 +54,11 @@ namespace Epsilon
         tmpLight.type = 2;
         m_Lights.push_back(tmpLight);
         */
-        tmpLight.position = glm::vec4(10, 7.5, 6, 1.0);
+        tmpLight.position = glm::vec4(10, 700.5, 6, 1.0);
         tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
         tmpLight.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
         tmpLight.radius = 1.0f;
-        tmpLight.watts = 200.0f;
+        tmpLight.watts = 600.0f;
         tmpLight.type = 2;
         m_Lights.push_back(tmpLight);
 /*
@@ -220,7 +220,7 @@ namespace Epsilon
         finalImage = (std::shared_ptr<Shader>)(new Shader("shaders/hdr.vglsl", "shaders/hdr.fglsl"));
         blurBloom = (std::shared_ptr<Shader>)(new Shader("shaders/blurBloom.vglsl", "shaders/blurBloom.fglsl"));
         blurSSRShader = (std::shared_ptr<Shader>)(new Shader("shaders/blurSSR.vglsl", "shaders/blurSSR.fglsl"));
-        ScreenSpaceReflectionShader = (std::shared_ptr<Shader>)(new Shader("shaders/SSR.vglsl", "shaders/SSR.fglsl"));
+        ScreenSpaceReflectionShader = (std::shared_ptr<Shader>)(new Shader("shaders/SSR.vglsl", "shaders/SSR.glsl"));
         PassThroughShader = (std::shared_ptr<Shader>)(new Shader("shaders/PassThrough.vglsl", "shaders/PassThrough.fglsl"));
         MotionBlurShader = (std::shared_ptr<Shader>)(new Shader("shaders/MotionBlur.vglsl", "shaders/MotionBlur.fglsl"));
         CompositeShader = (std::shared_ptr<Shader>)(new Shader("shaders/Composite.vglsl", "shaders/Composite.fglsl"));
@@ -254,7 +254,7 @@ namespace Epsilon
         gBufferFramebuffer->addRenderTarget(GBUFFER_NORMAL, GL_RGBA16F, GL_RGBA, GL_LINEAR, GL_LINEAR, false); //gExpensiveNormal
         gBufferFramebuffer->addRenderTarget(GBUFFER_IBL_DEPTH, GL_RGBA32F, GL_RGBA, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST_MIPMAP_NEAREST, true); //gDepth
         gBufferFramebuffer->addRenderTarget(GBUFFER_MOTION_EXTRA, GL_RGBA32F, GL_RGBA, GL_NEAREST, GL_NEAREST, false); //gExtraComponents
-        gBufferFramebuffer->addRenderTarget(GBUFFER_GI, GL_RGBA16F, GL_RGBA, GL_NEAREST, GL_NEAREST, false); //gLightAccumulation
+        gBufferFramebuffer->addRenderTarget(GBUFFER_GI, GL_RGBA32F, GL_RGBA, GL_NEAREST, GL_NEAREST, false); //gLightAccumulation
         gBufferFramebuffer->FinishFrameBuffer();
     }
 
