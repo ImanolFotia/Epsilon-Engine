@@ -125,7 +125,7 @@ endif
 ifeq "$(OS)" "Windows_NT"
 LIBS:= -limgui -lglfw3dll "/c/VulkanSDK/1.2.170.0/Lib/vulkan-1.lib" -lopengl32 -lglad -linih -lgdi32 -lole32 -lxaudio2_8 -lOpenAL32.dll -llua -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
 else 
-LIBS:= -lGLU -lGL -lSOIL -lglad -ldl -lglfw -linih -lopenal -fopenmp -static-libasan -lgomp -llua5.3 -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
+LIBS:= -lGLU -lSOIL -lglad -ldl -lglfw -linih -lopenal -fopenmp -static-libasan -lgomp -llua5.3 -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
 endif
 
 LD_FLAGS := -fopenmp
