@@ -8,11 +8,13 @@ namespace Epsilon::API {
     class VertexArrayObject {
         public:
         
-        virtual void setAttribute(int size, size_t stride, void *pointer) = 0;
+        virtual void setAttribute(int size, GLsizei  stride,  const void *pointer) = 0;
 
-        virtual unsigned int addBuffer(unsigned target, GLsizeiptr size, GLvoid *data, GLenum usage) = 0;
+        virtual unsigned int addBuffer(GLsizeiptr size, const GLvoid *data, GLenum usage) = 0;
 
         virtual void UpdateBuffer(uint32_t bufferHandler, GLintptr offset, GLsizeiptr size, const void *data) = 0;
+
+        virtual void IndexBuffer(const std::vector<unsigned int>& indices) = 0;
 
         virtual void Bind() = 0;
 

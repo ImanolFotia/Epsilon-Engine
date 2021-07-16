@@ -15,17 +15,20 @@ namespace Epsilon::API::OpenGL
             mSize = size;
             mOffset = offset;
             mUsage = usage;
+            mBindingPoint = binding_point;
 
             glGenBuffers(1, &mHandle);
             glBindBuffer(GL_UNIFORM_BUFFER, mHandle);
             glBufferData(GL_UNIFORM_BUFFER, mSize, nullptr, mUsage);
             glBindBufferRange(GL_UNIFORM_BUFFER, binding_point, mHandle, offset, mSize);
             glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
         }
 
         void Bind() override
         {
             glBindBuffer(GL_UNIFORM_BUFFER, mHandle);
+            glBindBufferBase(GL_UNIFORM_BUFFER, mBindingPoint, mHandle);
         }
 
         void Unbind() override
@@ -59,5 +62,7 @@ namespace Epsilon::API::OpenGL
             glBufferSubData(GL_UNIFORM_BUFFER, offset, size, data);
             glBindBuffer(GL_UNIFORM_BUFFER, 0);
         }
+
+        unsigned int mBindingPoint;
     };
 } // namespace Epsilon

@@ -20,6 +20,8 @@ namespace Epsilon
 
             void End() override;
 
+            void updateMatrices(glm::vec3);
+
             GLuint getTexture() { return oFrameBuffer->getRenderTargetHandler(0); } //mShadowTexture; }
 
         private:

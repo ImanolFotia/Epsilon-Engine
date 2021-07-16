@@ -12,7 +12,7 @@
 #include <iostream>
 #include <memory>
 #include "include/Frustum.h"
-#include <SOIL.h>
+#include <stb_image.h>
 #include <include/helpers.h>
 #include <include/texture.hpp>
 #include <exception>

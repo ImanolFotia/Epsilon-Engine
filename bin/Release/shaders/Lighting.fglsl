@@ -41,6 +41,20 @@ layout(std430, binding = 0) buffer ssbo
 
  } outBuffer;
 
+
+layout (std140, binding = 1) uniform CameraData_t
+{
+    vec4 position;
+    vec4 direction;
+    mat4 projection;
+    mat4 view;
+    mat4 invprojection;
+    mat4 invview;
+    int CurrentSelectedEntity; float padding2[3];
+    float near; float padding0[3];
+    float far; float padding1[3];
+} CameraData;
+
 uniform mat4 projection;
 uniform vec3 uViewDir;
 uniform mat4 view;
@@ -67,7 +81,6 @@ float AmbientOcclusion;
 float shadow = 0.0;
 vec4 ExtraComponents;
 vec3 F0;
-
 
 #include <PBRFunctions.glsl>
 
@@ -435,7 +448,7 @@ void main()
 
     vec3 SSGI_cont = texture(SSGI, TexCoords).rgb;
     vec3 light = vec3(0.0);
-    ambient = (irradiance_subsurf.rgb * 0.5) * Diffuse;
+    ambient = /*((SSGI_cont * 0.5) + (irradiance_subsurf.rgb * 0.5))*/irradiance_subsurf.rgb * Diffuse;
     //ambient /= 2.0;
 
     //if(hdr)
@@ -455,14 +468,17 @@ void main()
     {
       switch(outBuffer.Lights[i].type){
         case 0:
-                light += calculatePointPBR(outBuffer.Lights[i].position.rgb, outBuffer.Lights[i].color.rgb);
+                light += calculatePointPBR(outBuffer.Lights[i].position.rgb, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts);
             break;
         case 1:
             light += SpotLightPBR(outBuffer.Lights[i].position.rgb, outBuffer.Lights[i].direction.rgb, outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb);
             break;
         case 2:
         //{
-            float pointShadow = PointShadowCalculation(FragPos, vec3(10, 7.5, 6.0), in_range);
+            float pointShadow = 1.0;
+            if(i == 0)
+                pointShadow = PointShadowCalculation(FragPos, outBuffer.Lights[i].position.rgb, in_range);
+            
             vec3 res = SphereAreaLight(outBuffer.Lights[i].position.rgb,  outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts);
             if(i == 0 && in_range){
                 res *= pointShadow;

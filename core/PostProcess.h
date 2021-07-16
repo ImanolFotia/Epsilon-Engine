@@ -40,23 +40,23 @@ namespace Epsilon
         
         struct MotionBlur_t {
             bool Active = true;
-            int Samples = 8;
-            float FrameTimeTarget = 0.016;
-            int Strength = 3;
+            int Samples = 16;
+            float FrameTimeTarget = 0.004;
+            int Strength = 1;
         } MotionBlur;
 
         struct ImageSettings_t {
             float Brightness = 0.0;
             float Saturation = 0.0;
             float Gamma = 2.2;
-            float Contrast = 0.5;
+            float Contrast = 0.0;
             float Exposure = 5.5;
         } ImageSettings;
         
         struct DenoiseSettings_t {
             bool Active = true;
             float Sigma = 5.0;
-            float kSigma = 2.0;
+            float kSigma = 0.0;
             float Threshold = 0.1;
             float RoughnessCutoff = 0.1;
         } DenoiseSettings;
@@ -80,7 +80,8 @@ namespace Epsilon
             GBUFFER_NORMAL,
             GBUFFER_IBL_DEPTH,
             GBUFFER_MOTION_EXTRA,
-            GBUFFER_GI
+            GBUFFER_GI,
+            GBUFFER_ENTITY
         };
 
         PostProcess();
@@ -112,7 +113,7 @@ namespace Epsilon
     */
         void applySSAO(std::shared_ptr<Camera> &cam);
         
-        void applyHBIL(std::shared_ptr<Camera> &cam);
+        void applyHBIL(std::shared_ptr<Camera> &cam, std::shared_ptr<Renderer::ShadowMap> shadowMap, std::shared_ptr<Shader> shader, std::shared_ptr<Renderer::PointShadow> mPointShadow);
 
         /**
         Render the post process image to the screen
@@ -273,6 +274,16 @@ namespace Epsilon
 
         void setupDenoise();
 
+        uint32_t addLight(glm::vec3 position, glm::vec3 direction = glm::vec3(0.0), int type = 1, float watts = 10.0, float radius = 1.0, glm::vec4 color = glm::vec4(1.0));
+
+        bool updateLight(uint32_t id, t_light light);
+
+        bool removeLight(uint32_t id);
+
+        t_light& getLight(uint32_t id);
+
+        const std::vector<t_light> & getLights() { return m_Lights; }
+
     public:
         //#pragma pack(push, 1)
 
@@ -336,7 +347,7 @@ namespace Epsilon
         int width, height;
         float exposureTime;
         std::shared_ptr<Shader> SSAO;
-        std::shared_ptr<Shader> HBIL;
+        //std::shared_ptr<Shader> HBIL;
         std::shared_ptr<Shader> blurSSAO;
         std::shared_ptr<Shader> finalImage;
         std::shared_ptr<Shader> blurBloom;

@@ -30,7 +30,7 @@ namespace Epsilon
         lightShafts = PG.LIGHTSHAFTS;
         m_MotionBlur = PG.MOTION_BLUR;
         HBAOOn = PG.HBAO;
- 
+
         mParallaxMapping = PG.PARALLAX_OCLUSSION_MAPPING;
         mMotionBlurStrength = PG.MOTION_BLUR_STRENGTH;
         mHBAOQuality = PG.HBAO_QUALITY;
@@ -54,14 +54,14 @@ namespace Epsilon
         tmpLight.type = 2;
         m_Lights.push_back(tmpLight);
         */
-        tmpLight.position = glm::vec4(10, 700.5, 6, 1.0);
+        tmpLight.position = glm::vec4(-31.0, 11.2, 5.8, 1.0);
         tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
-        tmpLight.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
+        tmpLight.color = glm::vec4(255.0 / 255.0, 209.0 / 255.0, 147.0 / 255.0, 1.0);
         tmpLight.radius = 1.0f;
-        tmpLight.watts = 600.0f;
+        tmpLight.watts = 300.0f;
         tmpLight.type = 2;
         m_Lights.push_back(tmpLight);
-/*
+        /*
         tmpLight.position = glm::vec4(-20, 10, 2, 1.0);
         tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
         tmpLight.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
@@ -131,7 +131,7 @@ namespace Epsilon
 */
         glGenBuffers(1, &ssbo);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-        glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(t_light) * m_Lights.size(), (const void *)&m_Lights[0], GL_DYNAMIC_COPY);
+        glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(t_light) * m_Lights.size(), (const void *)&m_Lights[0], GL_DYNAMIC_DRAW);
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
@@ -175,15 +175,15 @@ namespace Epsilon
         mCompositeImage = std::make_shared<OpenGL::FrameBuffer<int>>(width, height, true);
         mCompositeImage->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, true);
         mCompositeImage->FinishFrameBuffer();
-        
+
         mTAAFramebuffer[0] = std::make_shared<OpenGL::FrameBuffer<int>>(width, height, false);
         mTAAFramebuffer[0]->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
         mTAAFramebuffer[0]->FinishFrameBuffer();
-        
+
         mTAAFramebuffer[1] = std::make_shared<OpenGL::FrameBuffer<int>>(width, height, false);
         mTAAFramebuffer[1]->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
         mTAAFramebuffer[1]->FinishFrameBuffer();
-        
+
         mTAAFramebufferCopy = std::make_shared<OpenGL::FrameBuffer<int>>(width, height, false);
         mTAAFramebufferCopy->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
         mTAAFramebufferCopy->FinishFrameBuffer();
@@ -215,7 +215,6 @@ namespace Epsilon
     {
         shader = (std::shared_ptr<Shader>)(new Shader("shaders/Lighting.vglsl", "shaders/Lighting.fglsl"));
         SSAO = (std::shared_ptr<Shader>)(new Shader("shaders/SSAO.vglsl", "shaders/HBAO.glsl"));
-        HBIL = (std::shared_ptr<Shader>)(new Shader("shaders/SSAO.vglsl", "shaders/HBIL.glsl"));
         blurSSAO = (std::shared_ptr<Shader>)(new Shader("shaders/blurSSAO.vglsl", "shaders/blurSSAO.fglsl"));
         finalImage = (std::shared_ptr<Shader>)(new Shader("shaders/hdr.vglsl", "shaders/hdr.fglsl"));
         blurBloom = (std::shared_ptr<Shader>)(new Shader("shaders/blurBloom.vglsl", "shaders/blurBloom.fglsl"));
@@ -239,6 +238,8 @@ namespace Epsilon
         gBufferFramebuffer->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        const int red[1] = {-1};
+        //gBufferFramebuffer->ClearAttachment(GBUFFER_ENTITY, &red);
     }
 
     void PostProcess::endOffScreenRendering()
@@ -250,11 +251,12 @@ namespace Epsilon
     void PostProcess::SetupGBuffer()
     {
         gBufferFramebuffer = std::make_shared<OpenGL::FrameBuffer<int>>(width, height, true);
-        gBufferFramebuffer->addRenderTarget(GBUFFER_ALBEDO_SPEC, GL_RGBA, GL_RGBA, GL_LINEAR, GL_LINEAR, false); //gAlbedoSpec
-        gBufferFramebuffer->addRenderTarget(GBUFFER_NORMAL, GL_RGBA16F, GL_RGBA, GL_LINEAR, GL_LINEAR, false); //gExpensiveNormal
-        gBufferFramebuffer->addRenderTarget(GBUFFER_IBL_DEPTH, GL_RGBA32F, GL_RGBA, GL_NEAREST_MIPMAP_NEAREST, GL_NEAREST_MIPMAP_NEAREST, true); //gDepth
-        gBufferFramebuffer->addRenderTarget(GBUFFER_MOTION_EXTRA, GL_RGBA32F, GL_RGBA, GL_NEAREST, GL_NEAREST, false); //gExtraComponents
-        gBufferFramebuffer->addRenderTarget(GBUFFER_GI, GL_RGBA32F, GL_RGBA, GL_NEAREST, GL_NEAREST, false); //gLightAccumulation
+        gBufferFramebuffer->addRenderTarget(GBUFFER_ALBEDO_SPEC, GL_RGBA, GL_RGBA, GL_LINEAR, GL_LINEAR, false);                             //gAlbedoSpec
+        gBufferFramebuffer->addRenderTarget(GBUFFER_NORMAL, GL_RGBA16F, GL_RGBA, GL_LINEAR, GL_LINEAR, false);                               //gExpensiveNormal
+        gBufferFramebuffer->addRenderTarget(GBUFFER_IBL_DEPTH, GL_RGBA32F, GL_RGBA, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, true); //gDepth
+        gBufferFramebuffer->addRenderTarget(GBUFFER_MOTION_EXTRA, GL_RGBA32F, GL_RGBA, GL_NEAREST, GL_NEAREST, false);                       //gExtraComponents
+        gBufferFramebuffer->addRenderTarget(GBUFFER_GI, GL_RGBA32F, GL_RGBA, GL_NEAREST, GL_NEAREST, false);                                 //gLightAccumulation
+        gBufferFramebuffer->addRenderTarget(GBUFFER_ENTITY, GL_RGB32I, GL_RGB_INTEGER, GL_NEAREST, GL_NEAREST, false, GL_TEXTURE_2D, GL_INT, false);
         gBufferFramebuffer->FinishFrameBuffer();
     }
 
@@ -264,7 +266,7 @@ namespace Epsilon
         mHBAOFramebuffer = std::make_shared<OpenGL::FrameBuffer<int>>(SSAOwidth, SSAOheight, false);
         mHBAOFramebuffer->addRenderTarget(0, GL_RED, GL_RGB, GL_LINEAR, GL_LINEAR, false); //gAlbedoSpec
         mHBAOFramebuffer->FinishFrameBuffer();
-        
+
         mHBAOBlurFramebuffer = std::make_shared<OpenGL::FrameBuffer<int>>(SSAOwidth, SSAOheight, false);
         mHBAOBlurFramebuffer->addRenderTarget(0, GL_RED, GL_RGB, GL_LINEAR, GL_LINEAR, false); //gAlbedoSpec
         mHBAOBlurFramebuffer->FinishFrameBuffer();
@@ -312,56 +314,60 @@ namespace Epsilon
         HBILFramebuffer->FinishFrameBuffer();
     }
 
-    void PostProcess::applyHBIL(std::shared_ptr<Camera> &cam)
+    void PostProcess::applyHBIL(std::shared_ptr<Camera> &cam, std::shared_ptr<Renderer::ShadowMap> shadowMap, std::shared_ptr<Shader> shader, std::shared_ptr<Renderer::PointShadow> pointshadow)
     {
 
         HBILFramebuffer->bindFramebuffer();
         HBILFramebuffer->setViewport();
         HBILFramebuffer->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        HBIL->Use();
+        shader->Use();
 
         glActiveTexture(GL_TEXTURE0);
-        HBIL->PushUniform("gDepth", 0);
+        shader->PushUniform("gDepth", 0);
         glBindTexture(GL_TEXTURE_2D, gBufferFramebuffer->getRenderTargetHandler(GBUFFER_IBL_DEPTH));
         glGenerateMipmap(GL_TEXTURE_2D);
 
         glActiveTexture(GL_TEXTURE1);
-        HBIL->PushUniform("gNormal", 1);
-        glBindTexture(GL_TEXTURE_2D, gBufferFramebuffer->getRenderTargetHandler(GBUFFER_NORMAL));
-
-        glActiveTexture(GL_TEXTURE2);
-        HBIL->PushUniform("texNoise", 2);
-        glBindTexture(GL_TEXTURE_2D, BlueNoiseTexture->getTextureID());
-
-        glActiveTexture(GL_TEXTURE3);
-        HBIL->PushUniform("gAlbedo", 3);
-        glBindTexture(GL_TEXTURE_2D, gBufferFramebuffer->getRenderTargetHandler(GBUFFER_ALBEDO_SPEC));
-
-        HBIL->PushUniform("ViewMatrix", cam->getViewMatrix());
-        glUniform3fv(glGetUniformLocation(HBIL->getProgramID(), "samples"), 9, &ssaoKernel[0][0]);
+        shader->PushUniform("shadowMap", 1);
+        glBindTexture(GL_TEXTURE_2D, shadowMap->getShadowTextureID());
         
+        glActiveTexture(GL_TEXTURE2);
+        shader->PushUniform("pointShadow", 2);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, pointshadow->getTexture());
+
+        shader->PushUniform("ViewMatrix", cam->getViewMatrix());
+        glUniform3fv(glGetUniformLocation(shader->getProgramID(), "samples"), 9, &ssaoKernel[0][0]);
+
         glm::mat4 proj = cam->getProjectionMatrix();
         glm::mat4 invproj = glm::inverse(proj);
-        glUniformMatrix4fv(glGetUniformLocation(HBIL->getProgramID(), "invprojection"), 1, GL_FALSE, &invproj[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(shader->getProgramID(), "invprojection"), 1, GL_FALSE, &invproj[0][0]);
 
-        HBIL->PushUniform("FocalLen", FocalLen);
-        HBIL->PushUniform("UVToViewA", UVToViewA);
-        HBIL->PushUniform("UVToViewB", UVToViewB);
-        HBIL->PushUniform("LinMAD", LinMAD);
-        HBIL->PushUniform("Resolution", glm::vec2(SSAOwidth, SSAOheight));
+        shader->PushUniform("FocalLen", FocalLen);
+        shader->PushUniform("UVToViewA", UVToViewA);
+        shader->PushUniform("UVToViewB", UVToViewB);
+        shader->PushUniform("LinMAD", LinMAD);
+        shader->PushUniform("Resolution", glm::vec2(SSAOwidth, SSAOheight));
 
-        HBIL->PushUniform("projection", cam->getProjectionMatrix());
-        HBIL->PushUniform("invprojection", glm::inverse(cam->getProjectionMatrix()));
-        HBIL->PushUniform("view", cam->getViewMatrix());
-        HBIL->PushUniform("invView", glm::inverse(cam->getViewMatrix()));
-        HBIL->PushUniform("viewPos", cam->getPosition());
-        HBIL->PushUniform("iTime", (float)glfwGetTime());
+        shader->PushUniform("projection", cam->getProjectionMatrix());
+        shader->PushUniform("invprojection", glm::inverse(cam->getProjectionMatrix()));
+        shader->PushUniform("view", cam->getViewMatrix());
+        shader->PushUniform("invView", glm::inverse(cam->getViewMatrix()));
+        shader->PushUniform("viewPos", cam->getPosition());
+        shader->PushUniform("iTime", (float)glfwGetTime());
+
+        shader->PushUniform("depthBias", shadowMap->getBiasMatrix());
+        shader->PushUniform("lightSpaceMatrix", shadowMap->getLightSpaceMatrix());
+
+        shader->PushUniform("camPos", cam->getPosition());
+        shader->PushUniform("camDir", cam->getDirection());
+        
+        shader->PushUniform("uLightPosition", m_Lights[0].position);
 
         RenderQuad();
 
         HBILFramebuffer->unbindFramebuffer();
-        HBIL->Free();
+        shader->Free();
     }
 
     void PostProcess::applySSAO(std::shared_ptr<Camera> &cam)
@@ -409,7 +415,7 @@ namespace Epsilon
         SSAO->PushUniform("UVToViewB", UVToViewB);
         SSAO->PushUniform("LinMAD", LinMAD);
         SSAO->PushUniform("Resolution", glm::vec2(width, height));
-/*
+        /*
         switch (mHBAOQuality)
         {
         case 0:
@@ -424,7 +430,7 @@ namespace Epsilon
             SSAO->PushUniform("NumDirections", 7);
             SSAO->PushUniform("NumSamples", 8);
         }*/
-        
+
         SSAO->PushUniform("NumDirections", mPostProcessData.HBAO.NumDirections);
         SSAO->PushUniform("NumSamples", mPostProcessData.HBAO.Samples);
 
@@ -509,11 +515,10 @@ namespace Epsilon
         mPingPongFramebuffer[0] = (std::shared_ptr<OpenGL::FrameBuffer<int>>)new OpenGL::FrameBuffer<int>(width, height, true);
         mPingPongFramebuffer[0]->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
         mPingPongFramebuffer[0]->FinishFrameBuffer();
-        
+
         mPingPongFramebuffer[1] = (std::shared_ptr<OpenGL::FrameBuffer<int>>)new OpenGL::FrameBuffer<int>(width, height, true);
         mPingPongFramebuffer[1]->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
         mPingPongFramebuffer[1]->FinishFrameBuffer();
-
     }
 
     void PostProcess::SetupMotionBlur()
@@ -546,15 +551,14 @@ namespace Epsilon
 
     void PostProcess::setupSSR()
     {
-        
+
         mSSRFramebuffer[0] = (std::shared_ptr<OpenGL::FrameBuffer<int>>)new OpenGL::FrameBuffer<int>(width, height, false);
         mSSRFramebuffer[0]->addRenderTarget(0, GL_RGBA16F, GL_RGBA, GL_NEAREST, GL_NEAREST, false);
         mSSRFramebuffer[0]->FinishFrameBuffer();
-        
+
         mSSRFramebuffer[1] = (std::shared_ptr<OpenGL::FrameBuffer<int>>)new OpenGL::FrameBuffer<int>(width, height, false);
         mSSRFramebuffer[1]->addRenderTarget(0, GL_RGBA16F, GL_RGBA, GL_NEAREST, GL_NEAREST, false);
         mSSRFramebuffer[1]->FinishFrameBuffer();
-
     }
 
     void PostProcess::setupDenoise()
@@ -676,14 +680,13 @@ namespace Epsilon
         ScreenSpaceReflectionShader->PushUniform("ID", TotalFrames);
         ScreenSpaceReflectionShader->PushUniform("isMoving", cam->isMoving());
 
-        
         ScreenSpaceReflectionShader->PushUniform("minRayStep", mPostProcessData.ScreenSpaceReflections.MinRayStep);
         ScreenSpaceReflectionShader->PushUniform("maxRayStep", mPostProcessData.ScreenSpaceReflections.MaxRayStep);
         ScreenSpaceReflectionShader->PushUniform("maxSteps", mPostProcessData.ScreenSpaceReflections.MaxSteps);
         ScreenSpaceReflectionShader->PushUniform("numBinarySearchSteps", mPostProcessData.ScreenSpaceReflections.MaxRefinementSteps);
         ScreenSpaceReflectionShader->PushUniform("roughnessCutoff", mPostProcessData.ScreenSpaceReflections.RoughnessCutoff);
         ScreenSpaceReflectionShader->PushUniform("depthCutoff", mPostProcessData.ScreenSpaceReflections.DepthCutoff);
-  
+
         RenderQuad();
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -727,7 +730,7 @@ namespace Epsilon
 
             DenoiseShader->PushUniform("Sigma", mPostProcessData.DenoiseSettings.Sigma);
             DenoiseShader->PushUniform("kSigma", mPostProcessData.DenoiseSettings.kSigma);
-            DenoiseShader->PushUniform("Threshold", mPostProcessData.DenoiseSettings.Threshold); 
+            DenoiseShader->PushUniform("Threshold", mPostProcessData.DenoiseSettings.Threshold);
             DenoiseShader->PushUniform("RoughnessCutoff", mPostProcessData.DenoiseSettings.RoughnessCutoff);
             RenderQuad();
             glActiveTexture(GL_TEXTURE0);
@@ -892,6 +895,10 @@ namespace Epsilon
         CompositeShader->PushUniform("ssaoColorBufferBlur", 2);
         glBindTexture(GL_TEXTURE_2D, ssaoColorBufferBlur);
 
+        glActiveTexture(GL_TEXTURE3);
+        CompositeShader->PushUniform("volumetricFogSampler", 3);
+        glBindTexture(GL_TEXTURE_2D, HBILFramebuffer->getRenderTargetHandler(0));
+
         CompositeShader->PushUniform("TotalFrames", TotalFrames);
         CompositeShader->PushUniform("isMoving", isMoving);
         CompositeShader->PushUniform("HBAOOn", (int)mPostProcessData.HBAO.Active);
@@ -929,27 +936,28 @@ namespace Epsilon
         glViewport(0, 0, width, height);
     }
 
-    void PostProcess::TAAPass() {
+    void PostProcess::TAAPass()
+    {
 
         mTAAFramebuffer[TAACurrentBuffer]->bindFramebuffer();
         mTAAFramebuffer[TAACurrentBuffer]->setViewport();
         glDisable(GL_BLEND);
-        
+
         TAAShader->Use();
 
         glActiveTexture(GL_TEXTURE0);
         TAAShader->PushUniform("sCurrentFrame", 0);
         glBindTexture(GL_TEXTURE_2D, mCompositeImage->getRenderTargetHandler(0));
         glGenerateMipmap(GL_TEXTURE_2D);
-        
+
         glActiveTexture(GL_TEXTURE1);
         TAAShader->PushUniform("sLastFrame", 1);
         glBindTexture(GL_TEXTURE_2D, mTAAFramebuffer[!TAACurrentBuffer]->getRenderTargetHandler(0));
-        
+
         glActiveTexture(GL_TEXTURE2);
         TAAShader->PushUniform("sVelocityBuffer", 2);
         glBindTexture(GL_TEXTURE_2D, gBufferFramebuffer->getRenderTargetHandler(GBUFFER_MOTION_EXTRA));
-        
+
         glActiveTexture(GL_TEXTURE3);
         TAAShader->PushUniform("sDepthBuffer", 3);
         glBindTexture(GL_TEXTURE_2D, gBufferFramebuffer->getRenderTargetHandler(GBUFFER_IBL_DEPTH));
@@ -961,9 +969,9 @@ namespace Epsilon
         TAAShader->PushUniform("clampingKernelSize", mPostProcessData.AntiAliasingSettings.ClampingKernelSize);
         TAAShader->PushUniform("_FeedbackMin", mPostProcessData.AntiAliasingSettings.FeedbackMin);
         TAAShader->PushUniform("_FeedbackMax", mPostProcessData.AntiAliasingSettings.FeedbackMax);
-        
+
         RenderQuad();
-        
+
         TAAShader->Free();
 
         mTAAFramebuffer[TAACurrentBuffer]->unbindFramebuffer();
@@ -992,7 +1000,6 @@ namespace Epsilon
 
         mTAAFramebufferCopy->unbindFramebuffer();
         glViewport(0, 0, width, height);
-
     }
 
     void PostProcess::ShowPostProcessImage(float frametime, GLuint onmenu, glm::vec3 Sun, std::shared_ptr<Camera> &cam, std::shared_ptr<Epsilon::OpenGL::FrameBuffer<int>> framebuffer)
@@ -1000,13 +1007,12 @@ namespace Epsilon
 
         //hdrFBO->setToRead();
         hdrFBO->unbindFramebuffer();
-        
+
         //if(SSROn) {
         SSRPass(cam);
         //}
 
         CompositeImage(cam->isMoving());
-        
 
         TAAPass();
 
@@ -1047,7 +1053,7 @@ namespace Epsilon
         glActiveTexture(GL_TEXTURE2);
         finalImage->PushUniform("uLensColor", 2);
         glBindTexture(GL_TEXTURE_1D, lensColor->getTextureID());
- 
+
         glActiveTexture(GL_TEXTURE3);
         finalImage->PushUniform("uLensDirtTex", 3);
         glBindTexture(GL_TEXTURE_2D, lensDirt->getTextureID());
@@ -1080,7 +1086,6 @@ namespace Epsilon
         finalImage->PushUniform("exposure", m_exposure);
         finalImage->PushUniform("time", (float)glfwGetTime());
 
-        
         finalImage->PushUniform("gamma", mPostProcessData.ImageSettings.Gamma);
         finalImage->PushUniform("contrast", mPostProcessData.ImageSettings.Contrast);
         finalImage->PushUniform("saturation", mPostProcessData.ImageSettings.Saturation);
@@ -1135,14 +1140,14 @@ namespace Epsilon
         glActiveTexture(GL_TEXTURE7);
         glUniform1i(glGetUniformLocation(shader->getProgramID(), "gPointShadowMap"), 7);
         glBindTexture(GL_TEXTURE_CUBE_MAP, pointShadow->getTexture());
-        
+
         glActiveTexture(GL_TEXTURE8);
         glUniform1i(glGetUniformLocation(shader->getProgramID(), "SSGI"), 8);
         glBindTexture(GL_TEXTURE_2D, HBILFramebuffer->getRenderTargetHandler(0));
 
         glm::mat4 invProj = glm::inverse(cam->getProjectionMatrix());
         glm::mat4 invView = glm::inverse(cam->getViewMatrix());
- 
+
         shader->PushUniform("hdr", hdr);
         shader->PushUniform("time", (float)glfwGetTime());
         shader->PushUniform("exposure", exposure);
@@ -1161,28 +1166,28 @@ namespace Epsilon
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, 0);
-        
+
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, 0);
-        
+
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, 0);
-        
+
         glActiveTexture(GL_TEXTURE3);
         glBindTexture(GL_TEXTURE_2D, 0);
-        
+
         glActiveTexture(GL_TEXTURE4);
         glBindTexture(GL_TEXTURE_2D, 0);
-        
+
         glActiveTexture(GL_TEXTURE5);
         glBindTexture(GL_TEXTURE_2D, 0);
-        
+
         glActiveTexture(GL_TEXTURE6);
         glBindTexture(GL_TEXTURE_2D, 0);
-        
+
         glActiveTexture(GL_TEXTURE7);
         glBindTexture(GL_TEXTURE_2D, 0);
-        
+
         glActiveTexture(GL_TEXTURE8);
         glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -1262,5 +1267,55 @@ namespace Epsilon
         glBindVertexArray(quadVAO);
         glCache::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         glBindVertexArray(0);
+    }
+
+    //Light related stuff, TODO: this should be somewhere else
+
+    uint32_t PostProcess::addLight(glm::vec3 position, glm::vec3 direction, int type, float watts, float radius, glm::vec4 color) {
+        t_light light = {};
+        
+        light.position = glm::vec4(position, 1.0); 
+        light.direction = glm::vec4(direction, 1.0); // 8
+        light.color = glm::vec4(color);     // 12
+        light.radius = radius;
+        light.watts = watts;
+        light.type = type;
+
+        m_Lights.push_back(light);
+
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+        glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(t_light) * m_Lights.size(), (const void *)&m_Lights[0], GL_DYNAMIC_DRAW);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    }
+
+    bool PostProcess::updateLight(uint32_t id, t_light light) {
+
+        t_light& light_ref = m_Lights.at(id);
+
+        light_ref = light;
+        
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+        //glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(t_light) * m_Lights.size(), (const void *)&m_Lights[0], GL_DYNAMIC_COPY);
+        glBufferSubData(GL_SHADER_STORAGE_BUFFER, sizeof(t_light) * id, sizeof(t_light), (const void *)&light_ref);
+        //glBindBufferRange(GL_SHADER_STORAGE_BUFFER, 0, ssbo, sizeof(t_light) * id, sizeof(t_light));
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+    }
+
+    bool PostProcess::removeLight(uint32_t id) {
+        m_Lights.erase(m_Lights.begin() + id);
+
+        m_Lights.shrink_to_fit();
+        
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+        glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(t_light) * m_Lights.size(), (const void *)&m_Lights[0], GL_DYNAMIC_DRAW);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+        
+    }
+
+    t_light& PostProcess::getLight(uint32_t id) {
+        return m_Lights.at(id); 
     }
 } // namespace Epsilon

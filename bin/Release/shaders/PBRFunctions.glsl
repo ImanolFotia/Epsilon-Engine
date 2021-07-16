@@ -122,7 +122,7 @@ float LambertDiffuse(in vec3 N, in vec3 L)
     return max(dot(N, L), 0.0);
 }
 
-vec3 calculatePointPBR(vec3 pos, vec3 color)
+vec3 calculatePointPBR(vec3 pos, vec3 color, float watts)
 {
   // calculate per-light radiance
         float SpecularFactor = texture(gAlbedoSpec, TexCoords).a * 2.0;
@@ -138,9 +138,8 @@ vec3 calculatePointPBR(vec3 pos, vec3 color)
         kD *= clamp(1.0 - ExtraComponents.x, 0.0, 1.0);
         //float distance    = length(pos - FragPos);
         float distance = length(pos - FragPos);
-        float watts = 300;
         float attenuation = calculateAttenuation(watts, distance);//1.0 / (1.0 + 0.1/*factor*/ * pow(distance, 2));
-        //attenuation *= smoothstep(watts, watts - 5.0, distance);
+        attenuation *= smoothstep(watts, watts - 5.0, distance);
         vec3 radiance     = vec3(1.0) * attenuation;        
         
         // cook-torrance brdf
@@ -283,7 +282,7 @@ vec3 SphereAreaLight(in vec3 position, in float radius, in vec3 color, in float 
         float NdotL = orenNayarDiffuse(L, V, Normal, clamp(spec_copy, 0.05, 1.0), 1.0);             
         vec3 Lo = ((kD * Diffuse / PI + brdf)) * radiance * NdotL; 
         
-        return Lo * normalize(color);
+        return Lo * vec3(color);
         
 }
 

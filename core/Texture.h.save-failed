@@ -14,7 +14,8 @@
 #include <GLFW/glfw3.h>
 #include <mutex>
 #include <memory>
-#include <SOIL.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 #include <Image/Image.hpp>
 #include <ProgramData.h>
 #include <Includes.h>

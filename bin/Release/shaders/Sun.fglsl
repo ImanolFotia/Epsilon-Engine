@@ -26,7 +26,7 @@ void main()
   //if(-SunTexture.a > altitude)
   	//discard;
 
-  FragColor.rgb = HDR(SunTexture.xyz);
+  FragColor.rgb = HDR(SunTexture.xyz) * vec3(5.0, 2.5, 2.5);
   FragColor.a = SunTexture.a;
   blurImage = vec4(FragColor);
   //gExpensiveNormal.rgb = vec3(0.0);

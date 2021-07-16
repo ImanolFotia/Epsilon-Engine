@@ -43,7 +43,7 @@ namespace Epsilon::API
     namespace GL
     {
 
-        std::unordered_map<unsigned, int> TYPES_LUT{
+        static std::unordered_map<unsigned, int> TYPES_LUT{
             {EPS_TEXTURE1D, GL_TEXTURE_1D},
             {EPS_TEXTURE2D, GL_TEXTURE_2D},
             {EPS_TEXTURE3D, GL_TEXTURE_3D},

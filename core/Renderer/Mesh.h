@@ -13,6 +13,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <Shader.h>
 #include <Renderer/EML/eml1_0.h>
+#include <Driver/API/OpenGL/VertexArrayObject.h>
 
 namespace Epsilon::Renderer
 {
@@ -94,9 +95,9 @@ namespace Epsilon::Renderer
             {
                 glBindTexture(GL_TEXTURE_2D, this->textures[0].id);
 
-                glBindVertexArray(this->VAO);
+                mVAO->Bind();
                 glCache::glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
-                glBindVertexArray(0);
+                mVAO->Unbind();
             }
         }
 
@@ -104,22 +105,18 @@ namespace Epsilon::Renderer
         {
             if (isVisible)
             {
-                glBindVertexArray(this->VAO);
+                mVAO->Bind();
                 glCache::glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
-                glBindVertexArray(0);
+                mVAO->Unbind();
             }
         }
 
         void Destroy()
         {
-            glDeleteBuffers(1, &VBO);
-            glDeleteBuffers(1, &EBO);
-            glDeleteVertexArrays(1, &VAO);
+            mVAO->Destroy();
         }
 
     public:
-        /**  Render data  */
-        GLuint VAO, VBO, EBO;
         
         MIN_MAX_POINTS MinMaxPoints;
 
@@ -127,44 +124,16 @@ namespace Epsilon::Renderer
         /// Initializes all the buffer objects/arrays
         void setupMesh()
         {
-            /// Create buffers/arrays
-            glGenVertexArrays(1, &this->VAO);
-            glGenBuffers(1, &this->VBO);
-            glGenBuffers(1, &this->EBO);
+            mVAO = std::make_shared<API::OpenGL::VertexArrayObject>();
 
-            glBindVertexArray(this->VAO);
-            /// Load data into vertex buffers
-            glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-            /// A great thing about structs is that their memory layout is sequential for all its items.
-            /// The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
-            /// again translates to 3/2 floats which translates to a byte array.
-            glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(Renderer::t_Vertex), &this->vertices[0], GL_STATIC_DRAW);
-
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(GLuint), &this->indices[0], GL_STATIC_DRAW);
-
-            /// Set the vertex attribute pointers
-            /// Vertex Positions
-            glEnableVertexAttribArray(0);
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Renderer::t_Vertex), (GLvoid *)0);
-
-            /// Vertex Texture Coords
-            glEnableVertexAttribArray(1);
-            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Renderer::t_Vertex), (GLvoid *)offsetof(Renderer::t_Vertex, texcoord));
-
-            /// Vertex Normals
-            glEnableVertexAttribArray(2);
-            glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Renderer::t_Vertex), (GLvoid *)offsetof(Renderer::t_Vertex, normal));
-
-            /// Vertex Tangent
-            glEnableVertexAttribArray(3);
-            glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Renderer::t_Vertex), (GLvoid *)offsetof(Renderer::t_Vertex, tangent));
-
-            /// Vertex Bitangent
-            glEnableVertexAttribArray(4);
-            glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Renderer::t_Vertex), (GLvoid *)offsetof(Renderer::t_Vertex, bitangent));
-
-            glBindVertexArray(0);
+            mVAO->addBuffer(vertices.size() * sizeof(t_Vertex), &vertices[0], GL_STATIC_DRAW);
+            mVAO->setAttribute(3, sizeof(t_Vertex), (GLvoid *)0);
+            mVAO->setAttribute(2, sizeof(t_Vertex), (void *)offsetof(t_Vertex, texcoord));
+            mVAO->setAttribute(3, sizeof(t_Vertex), (void *)offsetof(t_Vertex, normal));
+            mVAO->setAttribute(3, sizeof(t_Vertex), (void *)offsetof(t_Vertex, tangent));
+            mVAO->setAttribute(3, sizeof(t_Vertex), (void *)offsetof(t_Vertex, bitangent));
+            
+            mVAO->IndexBuffer(indices);
         }
 
     private:
@@ -173,5 +142,7 @@ namespace Epsilon::Renderer
         MeshData mData;
 
         MaterialPBR_ptr mMaterial;
+
+        std::shared_ptr<API::OpenGL::VertexArrayObject> mVAO;
     };
 } // namespace Epsilon

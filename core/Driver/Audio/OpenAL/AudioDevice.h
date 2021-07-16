@@ -6,6 +6,8 @@
 #include <AL/efx.h>
 #include <AL/efx-creative.h>
 #include <AL/efx-presets.h>
+
+#include "../AudioDevice.hpp"
 //#include <AL/alBufferSOFT.h>
 
 static LPALCLOOPBACKOPENDEVICESOFT alcLoopbackOpenDeviceSOFT;
@@ -40,40 +42,36 @@ static LPALGETAUXILIARYEFFECTSLOTF alGetAuxiliaryEffectSlotf;
 static LPALGETAUXILIARYEFFECTSLOTFV alGetAuxiliaryEffectSlotfv;
 
 static char g_szALC_EXT_EFX[256] = {'\0'};
-namespace Epsilon
+namespace Epsilon::Audio::OpenAL
 {
-    namespace IO
+    class AudioSource;
+    class AudioDevice : public Epsilon::Audio::AudioDevice
     {
-        namespace Audio
-        {
-            class AudioElement;
-            class Audio
-            {
-            public:
-                Audio();
-                ~Audio();
-                void list_audio_devices(const ALCchar *devices, const char *message);
+    public:
+        AudioDevice();
+        ~AudioDevice();
+        void list_audio_devices(const ALCchar *devices, const char *message);
 
-            public:
-                void addAudioElement(int, std::shared_ptr<AudioElement> element);
+    public:
+        void addAudioElement(int, std::shared_ptr<AudioSource> element);
 
-                void PlayAudio();
-                void PlayByID(int);
+        void PlayAudio();
+        void PlayByID(int);
+        void Destroy();
 
-                bool setMasterVolume(float);
-                bool setMusicVolume(float);
-                bool setGameVolume(float);
+        bool setMasterVolume(float);
+        bool setMusicVolume(float);
+        bool setGameVolume(float);
+        const std::unordered_map<int, std::shared_ptr<AudioSource>> &getAudioElements();
 
-            private:
-                float m_MasterVolume;
-                float m_MusicVolume;
-                float m_GameVolume;
+    private:
+        float m_MasterVolume;
+        float m_MusicVolume;
+        float m_GameVolume;
 
-                ALCdevice *device;
-                ALCcontext *context;
+        ALCdevice *device;
+        ALCcontext *context;
 
-                std::unordered_map<int, std::shared_ptr<AudioElement>> m_AudioElementsCollection;
-            };
-        } // namespace Audio
-    }     // namespace IO
-} // namespace Epsilon
+        std::unordered_map<int, std::shared_ptr<AudioSource>> m_AudioElementsCollection;
+    };
+} // namespace Audio

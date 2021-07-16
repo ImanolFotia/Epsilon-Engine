@@ -26,7 +26,7 @@ namespace Epsilon::OpenGL
 
         ~FrameBuffer() {}
 
-        bool addRenderTarget(T name, int internalformat, int format, int magfilter, int minfilter, bool mipmaps, GLuint target = GL_TEXTURE_2D)
+        bool addRenderTarget(T name, int internalformat, int format, int magfilter, int minfilter, bool mipmaps, GLuint target = GL_TEXTURE_2D, GLenum internal_type = GL_FLOAT, bool srgb = true)
         {
             if (m_RenderTargetCount >= MAX_RENDER_TARGETS)
             {
@@ -36,7 +36,7 @@ namespace Epsilon::OpenGL
 
             this->bindFramebuffer();
 
-            m_RenderTargets[name] = (std::shared_ptr<RenderTarget>)new RenderTarget(WIDTH, HEIGHT, internalformat, format, magfilter, minfilter, GL_COLOR_ATTACHMENT0 + m_RenderTargetCount, mipmaps, target);
+            m_RenderTargets[name] = (std::shared_ptr<RenderTarget>)new RenderTarget(WIDTH, HEIGHT, internalformat, format, magfilter, minfilter, GL_COLOR_ATTACHMENT0 + m_RenderTargetCount, mipmaps, target, internal_type, srgb);
 
             m_RenderTargetCount++;
 
@@ -72,8 +72,8 @@ namespace Epsilon::OpenGL
             this->bindFramebuffer();
             glGenRenderbuffers(1, &m_DepthTextureTarget);
             glBindRenderbuffer(GL_RENDERBUFFER, m_DepthTextureTarget);
-            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_DepthTextureTarget);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WIDTH, HEIGHT);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_DepthTextureTarget);
             this->unbindFramebuffer();
 
             return true;
@@ -92,6 +92,13 @@ namespace Epsilon::OpenGL
         void AttachRenderBuffer(T index)
         {
             m_RenderTargets[index]->Attach();
+        }
+
+        void ClearAttachment(T att, const void* col)
+        {
+            auto target = m_RenderTargets.at(att);
+            auto tex =  target->getRenderTextureTarget();
+            glClearTexImage(tex, 0, target->mInternalFormat, target->mInternalType, col);
         }
 
         void setViewport()
@@ -188,11 +195,13 @@ namespace Epsilon::OpenGL
             return m_RenderTargets.at(name)->getRenderTextureTarget();
         }
 
-        Epsilon::API::Texture_ptr getTexture(T name) {
+        Epsilon::API::Texture_ptr getTexture(T name)
+        {
             return m_RenderTargets.at(name)->mTexture;
         }
 
-        glm::vec2 Resolution() {
+        glm::vec2 Resolution()
+        {
             return glm::vec2(WIDTH, HEIGHT);
         }
 

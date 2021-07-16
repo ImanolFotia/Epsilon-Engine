@@ -22,7 +22,7 @@ namespace Epsilon
         {
             mCommandQueue.emplace(str, pos, col, false);
         }
-        
+         
         void TextManager::Print(std::string &&str, glm::vec3 &&pos, glm::vec4 &&col)
         {
             mCommandQueue.emplace(str, pos, col, false);

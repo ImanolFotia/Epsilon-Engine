@@ -5,7 +5,7 @@
 
 namespace Epsilon::Renderer
 {
-    Model::Model(const char *path)
+    Model::Model(const std::string & path)
     {
         this->path = path;
         PrevModel = glm::mat4(1.0f);

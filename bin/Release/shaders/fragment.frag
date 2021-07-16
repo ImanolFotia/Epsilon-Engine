@@ -208,8 +208,6 @@ float PointShadowCalculation(vec3 fragPos, vec3 LightPos, inout bool in_range)
 
 void main()
 {
-
-
 	vec3 LightPosition = vec3(37, 6.5, 3.5);
 
 	ExtraComponents.xy = texture(texture_height, TexCoords).xy;
@@ -257,12 +255,12 @@ void main()
     for(int i = 0 ; i < outBuffer.Lights.length() ; i++)
     {
         if(outBuffer.Lights[i].type == 0)
-            light += calculatePointPBR(outBuffer.Lights[i].position.rgb, outBuffer.Lights[i].color.rgb);
+            light += calculatePointPBR(outBuffer.Lights[i].position.rgb, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts);
         else if(outBuffer.Lights[i].type == 1)
             light += SpotLightPBR(outBuffer.Lights[i].position.rgb, outBuffer.Lights[i].direction.rgb, outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb);
         else if(outBuffer.Lights[i].type == 2){
             
-            float pointShadow = PointShadowCalculation(FragPos, vec3(10, 7.5, 6.0), in_range);
+            float pointShadow = PointShadowCalculation(FragPos, vec3(-31.0, 11.2, 5.8), in_range);
             vec3 res = SphereAreaLight(outBuffer.Lights[i].position.rgb,  outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts);
             if(i == 0 && in_range) {
                 res *= pointShadow;
@@ -277,5 +275,5 @@ void main()
     //light += TubeAreaLight(vec3(0, 0, 0), vec3(-38,11,6), vec3(63,11,6),  0.25, normalize(vec3(200,147,3)), 500);
     //light += TubeAreaLight(vec3(0, 0, 0), vec3(-38,11,-12), vec3(63,11,-12),  0.25, normalize(vec3(200,147,3)), 500);
 
-	Color = (vec4(max(vec3(light), vec3(0.001)), 1.0));
+	Color = (vec4(max(vec3(light), vec3(0.0)), 1.0));
 }

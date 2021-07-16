@@ -9,6 +9,7 @@
 #include "IO/Joystick/Joystick.h"
 
 #include <Driver/API/OpenGL/Context.hpp>
+#include <Driver/API/Vulkan/Context.hpp>
 
 
 #ifdef __linux__
@@ -22,17 +23,23 @@ namespace Epsilon
             class Window : public WindowBase
             {
             public:
-                Window(){}
+                Window(API::CONTEXT_TYPE type);
 
                 ~Window() {}
 
                 virtual void Init(const char *title, int w, int h) override{}
 
-                virtual void Resize(int w, int h) const override {}
+                virtual void OnResize(GLFWwindow*, int, int) override {}
 
                 virtual void Destroy() override{}
                 
                 virtual void SwapBuffers() override{}
+
+                virtual void ShowCursor() override{}
+                virtual void HideCursor() override{}
+                virtual bool WantsToClose() override{}
+                virtual unsigned FrameNumber() override{}
+                virtual bool NeedsToResize() override{}
 
             private:
             };

@@ -45,12 +45,12 @@ public:
     glm::vec3 Direction;
 
     float height = 1.0;
+    float radius;
 private:
 
     std::shared_ptr<eTexture> tex;
     void PrepareVAO();
 
-    float radius;
 
     GLuint TextureID;
 

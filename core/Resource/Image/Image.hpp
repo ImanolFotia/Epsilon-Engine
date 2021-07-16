@@ -1,11 +1,15 @@
 #pragma once
 
 #include <pch.hpp>
-#include <SOIL.h>
 #include <Helpers.hpp>
 
 #include "../Resource.hpp"
 #include <Error.hpp>
+
+#define STB_IMAGE_STATIC
+#define STB_IMAGE_IMPLEMENTATION
+#define STBI_FAILURE_USERMSG
+#include <stb_image.h>
 
 namespace Epsilon
 {
@@ -40,7 +44,7 @@ namespace Epsilon
 
                         th1 = (std::shared_ptr<std::thread>)new std::thread([&]() -> void {
                             mPath = path;
-                            mData.reset(SOIL_load_image(path, outwidth, outheight, outchannels, SOIL_LOAD_RGBA));
+                            mData.reset(stbi_load(path, outwidth, outheight, outchannels, 4));
 
                             if (mData == 0)
                             {
@@ -84,7 +88,7 @@ namespace Epsilon
 
                                 mPath = path;
                                 std::cout << "Loading " << path << std::endl;
-                                mData.reset(SOIL_load_image(path, &width, &height, &channels, SOIL_LOAD_RGBA));
+                                mData.reset(stbi_load(path, &width, &height, &channels, 4));
 
                                 if (mData == 0)
                                 {

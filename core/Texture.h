@@ -24,6 +24,7 @@
 #include <Log.h>
 #include <IO/IO.hpp>
 
+
 namespace Epsilon
 {
 
@@ -53,7 +54,7 @@ namespace Epsilon
             glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
             for (GLuint i = 0; i < CubeMapPath.size(); i++)
             {
-                image = SOIL_load_image(CubeMapPath[i].c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
+                image = stbi_load(CubeMapPath[i].c_str(), &width, &height, &channels, 4);
                 std::cout << CubeMapPath[i] << std::endl;
                 glTexImage2D(
                     GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
@@ -208,7 +209,7 @@ namespace Epsilon
                 return;
             }
 
-            SOIL_free_image_data(image);
+            stbi_image_free(image);
             //delete image;
             glBindTexture(type, 0);
 
@@ -218,7 +219,7 @@ namespace Epsilon
 
         void loadFile(const char *path, unsigned char *&data, int *outwidth, int *outheight, int *outchannels)
         {
-            data = SOIL_load_image(path, outwidth, outheight, outchannels, SOIL_LOAD_RGBA);
+            data = stbi_load(path, outwidth, outheight, outchannels, 4);
             Log::WriteToLog("Texture: " + std::string(path) + "Data Loaded.");
         }
 

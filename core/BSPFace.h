@@ -17,6 +17,9 @@
 #include <Renderer/Texture2D.hpp>
 #include <Shader.h>
 
+#include <Driver/API/OpenGL/VertexArrayObject.h>
+#include <Driver/API/OpenGL/VertexBufferObject.h>
+
 namespace Epsilon
 {
 
@@ -153,48 +156,22 @@ namespace Epsilon
             return true;
         }
 
+        std::shared_ptr<API::OpenGL::VertexArrayObject> mVAO;
+
         bool prepareVAO()
         {
 
-            glGenVertexArrays(1, &this->VAO);
+            mVAO = std::make_shared<API::OpenGL::VertexArrayObject>();
 
-            glGenBuffers(1, &VBO);
-            glGenBuffers(1, &EBO);
-
-            glBindVertexArray(this->VAO);
-
-            /// Load data into vertex buffers
-            glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-            /// A great thing about structs is that their memory layout is sequential for all its items.
-            /// The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
-            /// again translates to 3/2 floats which translates to a byte array.
-            glBufferData(GL_ARRAY_BUFFER, this->mVertices.size() * sizeof(t_Vertex), &this->mVertices[0], GL_STATIC_DRAW);
-
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->Indices.size() * sizeof(GLuint), &this->Indices[0], GL_STATIC_DRAW);
-
-            /// Set the vertex attribute pointers
-            /// Vertex Positions
-            glEnableVertexAttribArray(0);
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(t_Vertex), (GLvoid *)0);
-
-            /// Vertex Texture Coords
-            glEnableVertexAttribArray(1);
-            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(t_Vertex), (GLvoid *)offsetof(t_Vertex, texcoord));
-
-            /// Vertex Normals
-            glEnableVertexAttribArray(2);
-            glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(t_Vertex), (GLvoid *)offsetof(t_Vertex, normal));
-
-            /// Vertex Tangent
-            glEnableVertexAttribArray(3);
-            glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(t_Vertex), (GLvoid *)offsetof(t_Vertex, tangent));
-
-            /// Vertex Bitangent
-            glEnableVertexAttribArray(4);
-            glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(t_Vertex), (GLvoid *)offsetof(t_Vertex, bitangent));
-
-            glBindVertexArray(0);
+            mVAO->addBuffer(mVertices.size() * sizeof(t_Vertex), &mVertices[0], GL_DYNAMIC_DRAW);
+            mVAO->setAttribute(3, sizeof(t_Vertex), (GLvoid *)0);
+            mVAO->setAttribute(2, sizeof(t_Vertex), (void *)offsetof(t_Vertex, texcoord));
+            mVAO->setAttribute(3, sizeof(t_Vertex), (void *)offsetof(t_Vertex, normal));
+            mVAO->setAttribute(3, sizeof(t_Vertex), (void *)offsetof(t_Vertex, tangent));
+            mVAO->setAttribute(3, sizeof(t_Vertex), (void *)offsetof(t_Vertex, bitangent));
+            
+            mVAO->IndexBuffer(Indices);
+            
             return true;
         }
 

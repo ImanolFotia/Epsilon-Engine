@@ -102,7 +102,7 @@ namespace Epsilon::API::OpenGL
                 }
             }
             else
-            {
+            {/*
                 if (mData.Compressed)
                 {
                     mData.InternalFormat = GL_RGBA;
@@ -110,7 +110,7 @@ namespace Epsilon::API::OpenGL
                 else
                 {
                     mData.InternalFormat = GL_RGBA;
-                }
+                }*/
             }
             glTexImage2D(mData.Target, 0, mData.InternalFormat, mData.Width, mData.Height, mData.Border, mData.Format, mData.Type, nullptr);
         }

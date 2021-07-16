@@ -31,14 +31,15 @@ namespace Epsilon
             else
             {
 
-                ProgramData DATA;
+                //ProgramData DATA;
                 using Renderer::Texture2D;
 
                 auto is_normal = Helpers::isNormal(texPath.c_str());
 
                 int outwidth = 0, outheight = 0, outchannels = 0;
-                auto path = ("materials/" + std::string(texPath)).c_str();
-                auto data = SOIL_load_image(path, &outwidth, &outheight, &outchannels, SOIL_LOAD_RGBA);
+                auto path = std::string("./materials/") + std::string(texPath);
+                getTextureInfo(path, &outwidth, &outheight, &outchannels);
+                //auto data = stbi_load(path, &outwidth, &outheight, &outchannels, 4);
                 int lod_zero_size = outwidth * outheight * sizeof(unsigned char) * outchannels;
 
                 mTextureMemoryAllocated += (unsigned long)((float)lod_zero_size * 1.3);
@@ -49,13 +50,15 @@ namespace Epsilon
                 TextureData.SRGB = !is_normal;
                 TextureData.Width = outwidth;
                 TextureData.Height = outheight;
-                TextureData.AnisotropyLevel = DATA.ANISOTROPY;
+                TextureData.AnisotropyLevel = 16;
 
                 auto &tmpTex = TextureList.at(texPath);
                 tmpTex->Create(TextureData);
-                tmpTex->setData(data, 0);
-                SOIL_free_image_data(data);
-                data = nullptr;
+
+                //tmpTex->setData(data, 0);
+                //stbi_image_free(data);
+                //SOIL_free_image_data(data);
+                TextureQueueFuture[texPath] = LoadTextureAsync(path);
                 return texPath;
             }
         }
@@ -200,7 +203,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
     void ResourceManager::bindTexture(const std::string &texPath)
     {
 
-        std::cout << "trying to bind: " << texPath << std::endl;
+        //std::cout << "trying to bind: " << texPath << std::endl;
         try
         {
             if (texPath.empty() != true)
@@ -234,7 +237,7 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
                 TextureList.insert(std::make_pair(texture, tmpTex));
             TextureQueue.push_back(texture);
 
-            std::cout << texture << " added to queue." << std::endl;
+            //std::cout << texture << " added to queue." << std::endl;
             //std::cout << texture << " Added to the Queue." << std::endl;
         }
         catch (std::exception &e)
@@ -243,25 +246,132 @@ void ResourceManager::useModel(std::string modelPath, GLuint shader, glm::vec3 p
         }
     }
 
+    void ResourceManager::getTextureInfo(const std::string & path, int *w, int *h, int *c)
+    {
+        stbi_info(path.c_str(), w, h, c);
+    }
+
+    uint8_t *ResourceManager::LoadTexture(std::string path)
+    {
+        
+        int attemps = 0;
+        uint8_t *data = nullptr;
+        //while (attemps < 15)
+        {
+            int w, h, c;
+            auto* f = fopen64(path.c_str(), "rb");
+            if(f == nullptr) { std::puts(path.c_str());std::cerr << std::strerror(errno) << std::endl; std::cout << GetLastError() << std::endl; }
+            if(f != nullptr)
+            data = stbi_load_from_file(f, &w, &h, &c, 4);
+            fclose(f);
+            
+            
+            //if (data != nullptr)
+            //    break;
+            attemps++; 
+        }  
+ 
+        if (data == nullptr)
+        {
+            std::cout << "texture could not be loaded" << std::endl;
+            std::cout << stbi_failure_reason() << std::endl;
+        }
+        return data;
+    }
+
+    //std::mutex m;
+    std::future<uint8_t *> ResourceManager::LoadTextureAsync(std::string path )
+    { 
+        return std::async(std::launch::async, &ResourceManager::LoadTexture, this, path);
+    }
+
     void ResourceManager::loadQueuedTextures()
     {
+        int index = 0;
         try
         {
-#pragma omp
             if (TextureQueue.size() > 0)
             {
-                for (int i = static_cast<int>(TextureQueue.size()) - 1; i >= 0; i--)
+                for (index = 0; index < static_cast<int>(TextureQueue.size()); ++index)
                 {
-                    std::cout << "Loading queued texture: " << TextureQueue.at(i) << ":::" << i << std::endl;
-                    requestTexture(TextureQueue.at(i));
+                    //std::cout << "Loading queued texture: " << TextureQueue.at(index) << ":::" << index << std::endl;
+                    requestTexture(TextureQueue.at(index));
                     //std::cout << "Loaded: " << i+1 << " out of " << TextureQueue.size() << std::endl << std::endl ;
-                    TextureQueue.pop_back();
+                    TextureQueue.erase(TextureQueue.begin() + index);
+                }
+            }
+
+            if (TextureQueueFuture.size() > 0)
+            {
+                for (auto &[key, future] : TextureQueueFuture)
+                {
+                    auto status = future.wait_for(std::chrono::milliseconds(0));
+
+                    if (status == std::future_status::timeout)
+                    {
+                    }
+                    else if (status == std::future_status::ready && future.valid())
+                    {
+                        auto data = future.get();
+
+                        if (data != nullptr)
+                        {
+
+                            auto &tmpTex = TextureList.at(key);
+                            tmpTex->setData(data, 0);
+                            auto it = TextureQueueFuture.find(key);
+
+                            if (it != TextureQueueFuture.end())
+                                TextureQueueFuture.erase(it);
+
+                            stbi_image_free(data);
+                        }
+                        else
+                        {
+                            std::cout << "future for " << key << " is null" << std::endl;
+                            auto it = TextureQueueFuture.find(key);
+
+                            if (it != TextureQueueFuture.end())
+                                TextureQueueFuture.erase(it);
+                        }
+                    }
+                    else if (status == std::future_status::deferred)
+                    {
+
+                        std::cout << "texture" << key << " is deferred" << std::endl;
+
+                        auto data = future.get();
+
+                        if (data != nullptr)
+                        {
+
+                            auto &tmpTex = TextureList.at(key);
+                            tmpTex->setData(data, 0);
+                            auto it = TextureQueueFuture.find(key);
+
+                            if (it != TextureQueueFuture.end())
+                                TextureQueueFuture.erase(it);
+
+                            stbi_image_free(data);
+                        }
+                        else
+                        {
+                            std::cout << "texture " << key << " could not be loaded" << std::endl;
+                            auto it = TextureQueueFuture.find(key);
+
+                            if (it != TextureQueueFuture.end())
+                                TextureQueueFuture.erase(it);
+                        }
+                    }
+                    else
+                    {
+                    }
                 }
             }
         }
         catch (std::exception &e)
         {
-            std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << std::endl;
+            std::cout << "Exception caught at: " << __FUNCTION__ << ":::" << e.what() << " at index " << index << std::endl;
         }
         mShouldLoadQueuedTextures = false;
     }

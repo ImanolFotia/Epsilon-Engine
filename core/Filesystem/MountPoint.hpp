@@ -4,9 +4,9 @@
 #include <memory>
 
 namespace Epsilon::Filesystem {
-    class MountingPoint {
-        std::string mName;
-        std::string mAbsolutePath;
+    struct MountingPoint {
+        std::string Name;
+        std::string AbsolutePath;
 
     };
 

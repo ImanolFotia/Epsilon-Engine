@@ -54,9 +54,9 @@ namespace Epsilon
             this->mID = ComponentList.size();
 
             using Component::TRANSFORMCOMPONENT;
-            Transform = std::static_pointer_cast<Component::TransformComponent>(ComponentList[TRANSFORMCOMPONENT]);
             //mChildrenEntities
             mHash = std::string("0x" + toHash(Transform->Position(), Transform->Scale(), Transform->Rotation()));
+            mName = "";
 
             //mCollInfo.setName("Entity_" + std::string(Helpers::to_hex(toHash())));
 
@@ -71,10 +71,19 @@ namespace Epsilon
         }
 
         std::string mHash;
+        std::string mName;
 
         std::string toHash(glm::vec3 pos, glm::vec3 sc, glm::quat rot)
         {
             return std::to_string(mID * pos.x + pos.y * pos.z * pos.z + sc.x - rot.x * rot.z);
+        }
+
+        void setName(const std::string & name) {
+            mName = name;
+        }
+        
+        const std::string & getName() {
+            return mName;
         }
 
         const std::string &getHash()
@@ -88,6 +97,7 @@ namespace Epsilon
 
         void Update();
         void Render();
+        void PostUpdate();
 
         void RenderShadows()
         {
@@ -114,6 +124,8 @@ namespace Epsilon
             return 0;
         }
 
+        std::shared_ptr<Component::TransformComponent> Transform;
+
     private:
         bool mHasRenderComponent = false;
         bool mHasPhysicComponent = false;
@@ -121,7 +133,6 @@ namespace Epsilon
         bool mHasMovementComponent = false;
         bool mHasSoundComponent = false;
         bool mHasScriptComponent = false;
-        std::shared_ptr<Component::TransformComponent> Transform;
 
         int mID;
         std::string modelPath;
@@ -129,44 +140,35 @@ namespace Epsilon
         std::vector<std::shared_ptr<EntityBase>> mChildrenEntities;
 
     public:
-
-        auto & getComponentList() {
+        auto &getComponentList()
+        {
             return ComponentList;
         }
 
         glm::vec3 getPosition()
         {
-            if (mHasPhysicComponent)
+            auto tcomp = std::static_pointer_cast<Component::TransformComponent>(ComponentList[Component::TRANSFORMCOMPONENT]);
+            if (mHasPhysicComponent && !tcomp->externally_modified_position)
             {
                 glm::vec3 v3 = std::static_pointer_cast<Component::PhysicComponent>(ComponentList[Component::PHYSICCOMPONENT])->getPosition();
-                std::static_pointer_cast<Component::RenderComponent>(ComponentList[Component::RENDERCOMPONENT])->setPosition(glm::vec3(v3));
-                return v3;
+                /*std::static_pointer_cast<Component::RenderComponent>(ComponentList[Component::RENDERCOMPONENT])->setPosition(glm::vec3(v3));*/
+
+                tcomp->Position(v3);
             }
-            else if (mHasRenderComponent)
-            {
-                return std::static_pointer_cast<Component::RenderComponent>(ComponentList[Component::RENDERCOMPONENT])->getPosition();
-            }
-            else
-            {
-                return Transform->Position();
-            }
+            return tcomp->Position();
         }
 
         glm::vec3 getPrevPosition()
         {
-            if (mHasPhysicComponent)
+            auto tcomp = std::static_pointer_cast<Component::TransformComponent>(ComponentList[Component::TRANSFORMCOMPONENT]);
+            if (mHasPhysicComponent && !tcomp->externally_modified_position)
             {
                 btVector3 v3 = std::static_pointer_cast<Component::PhysicComponent>(ComponentList[Component::PHYSICCOMPONENT])->m_LastPhysicsWorldPosition;
-                return glm::vec3(v3.getX(), v3.getY(), v3.getZ());
+                auto outVec = glm::vec3(v3.getX(), v3.getY(), v3.getZ());
+                tcomp->PrevPosition(outVec);
             }
-            else if (mHasRenderComponent)
-            {
-                return std::static_pointer_cast<Component::RenderComponent>(ComponentList[Component::RENDERCOMPONENT])->mPrevPosition;
-            }
-            else
-            {
-                return Transform->PrevPosition();
-            }
+
+            return tcomp->PrevPosition();
         }
 
         glm::vec3 getScale()
@@ -188,27 +190,27 @@ namespace Epsilon
 
         glm::quat getRotation()
         {
-            if (mHasPhysicComponent)
+            auto tcomp = std::static_pointer_cast<Component::TransformComponent>(ComponentList[Component::TRANSFORMCOMPONENT]);
+            if (mHasPhysicComponent && !tcomp->externally_modified_rotation)
             {
                 btQuaternion q = std::static_pointer_cast<Component::PhysicComponent>(ComponentList[Component::PHYSICCOMPONENT])->m_PhysicsWorldRotation;
                 glm::quat rot = glm::quat(q.getW(), q.getX(), q.getY(), q.getZ());
-                return rot;
+                Transform->Rotation(rot);
             }
-            else
-                return Transform->Rotation();
+
+            return Transform->Rotation();
         }
 
         glm::quat getPrevRotation()
         {
-            if (mHasPhysicComponent)
+            auto tcomp = std::static_pointer_cast<Component::TransformComponent>(ComponentList[Component::TRANSFORMCOMPONENT]);
+            if (mHasPhysicComponent && !tcomp->externally_modified_rotation)
             {
                 btQuaternion q = std::static_pointer_cast<Component::PhysicComponent>(ComponentList[Component::PHYSICCOMPONENT])->m_LastPhysicsWorldRotation;
-                return glm::quat(q.getW(), q.getX(), q.getY(), q.getZ());
+                Transform->PrevRotation(glm::quat(q.getW(), q.getX(), q.getY(), q.getZ()));
             }
-            else
-            {
-                return Transform->PrevRotation();
-            }
+
+            return Transform->PrevRotation();
         }
 
         MIN_MAX_POINTS getBoundingBox()
@@ -274,7 +276,7 @@ namespace Epsilon
             return "";
         }
 
-        std::function<void(EntityBase*)> mFunction;
+        std::function<void(EntityBase *)> mFunction;
 
     protected:
     };

@@ -13,7 +13,7 @@
                 "${workspaceFolder}/thirdparty/json-develop",
                 "${workspaceFolder}/thirdparty/openal-soft",
                 "${workspaceFolder}/thirdparty/lua-5.3.5/src",
-                "H:/msys2/msys64/msys64/mingw64/include/c++/10.1.0",
+                "H:/msys2/msys64/msys64/mingw64/include/c++/10.3.0",
                 "C:/VulkanSDK/1.2.170.0/Include"
             ],
             "defines": [
@@ -25,7 +25,7 @@
             "compilerPath": "H:\\msys2\\msys64\\msys64\\mingw64\\bin\\g++.exe",
             "cStandard": "c11",
             "cppStandard": "c++20",
-            "intelliSenseMode": "gcc-x64"
+            "intelliSenseMode": "${default}"
         }
     ],
     "version": 4

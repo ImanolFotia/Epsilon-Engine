@@ -2,7 +2,7 @@
 #define HELPERS_H
 
 #include <glm/glm.hpp>
-#include <SOIL.h>
+#include <stb_image.h>
 #include <GL/glad.h>
 #include <iostream>
 #include <string>

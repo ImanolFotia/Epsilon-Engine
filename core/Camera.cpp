@@ -34,6 +34,8 @@ namespace Epsilon
         this->MaxMovementSpeed = 5.3;
         this->horizontalAngle = 0.0;
         this->verticalAngle = 0.0;
+        near_plane = 0.1;
+        far_plane = 3000.0;
 
         using namespace Input;
 
@@ -264,15 +266,15 @@ namespace Epsilon
         {
             externallymodified = false;
         }
+    }
+
+    void Camera::UpdateMatrices(int FrameNumber, int frame_w, int frame_h, bool jitter)
+    {
 
         LastPosition = Position;
         LastOrientation = Orientation;
 
         Frustrum = Position + Orientation;
-    }
-
-    void Camera::UpdateMatrices(int FrameNumber, int frame_w, int frame_h, bool jitter)
-    {
         winx = frame_w;
         winy = frame_h;
         float Aspectratio;
@@ -280,14 +282,14 @@ namespace Epsilon
         static const glm::vec2 Res = glm::vec2((float)winx, (float)winy);
         static const glm::vec2 iRes = 1.0f / glm::vec2((float)winx, (float)winy);
 
-        ProjectionMatrix = glm::perspective(glm::radians(FieldOfView), glm::clamp(Aspectratio, -10.0f, 10.0f), 0.1f, 3000.0f);
-
+        ProjectionMatrix = glm::perspective(glm::radians(FieldOfView), glm::clamp(Aspectratio, -10.0f, 10.0f), near_plane, far_plane);
+ 
         if (jitter)
         {
             glm::vec2 Sample = Helpers::halton(FrameNumber % 16 + 1);
             glm::vec2 Jitter = ((Sample * 2.0f - 1.0f)) / Res;
 
-            Jitter *= 1.0f;
+            Jitter *= jitter_multiplier;
             ProjectionMatrix[2][0] += Jitter.x;
             ProjectionMatrix[2][1] += Jitter.y;
         }
@@ -297,6 +299,15 @@ namespace Epsilon
             Position,
             Position + Orientation,
             glm::vec3(0, 1, 0));
+
+            CameraData.direction = glm::vec4(Orientation, 1.0);
+            CameraData.position = glm::vec4(Position, 1.0);
+            CameraData.view = ViewMatrix;
+            CameraData.projection = ProjectionMatrix;
+            CameraData.invview = glm::inverse(ViewMatrix);
+            CameraData.invprojection = glm::inverse(ProjectionMatrix);
+            CameraData.near = near_plane;
+            CameraData.far = far_plane;
     }
 
     glm::mat4 Camera::getViewMatrix(void)
@@ -311,7 +322,7 @@ namespace Epsilon
 
     bool Camera::isMoving()
     {
-        return true;//mIsMoving; //return true to cancel temporal SSR denoiser
+        return true; //mIsMoving; //return true to cancel temporal SSR denoiser
     }
 
     void Camera::isMoving(bool x)
@@ -377,5 +388,6 @@ namespace Epsilon
     void Camera::setViewMatrix(glm::mat4 newView)
     {
         this->ViewMatrix = newView;
-    }
+    } 
 } // namespace Epsilon
+ 

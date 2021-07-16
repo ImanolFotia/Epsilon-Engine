@@ -171,7 +171,7 @@ void main()
         vec3 jitt = hs * factor;
         vec3 reflected = normalize(reflect(normalize(viewPos), normalize(viewNormal)));
         float dDepth = 0.0;
-        vec4 coords = RayCast(normalize(reflected + jitt) * max(minRayStep, -viewPos.z), hitPos, dDepth);
+        vec4 coords = RayCast(normalize(reflected + jitt) * max(maxRayStep, -viewPos.z), hitPos, dDepth);
         vec2 centered_coords = abs(coords.xy * 2.0 - 1.0);
         float mixer = min(1.0, max(centered_coords.x, centered_coords.y));
 

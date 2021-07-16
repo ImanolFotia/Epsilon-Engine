@@ -4,7 +4,6 @@
 
 #include "SDFs/Roboto.hpp"
 
-#include <SOIL.h>
 
 namespace Epsilon
 {
@@ -14,9 +13,9 @@ namespace Epsilon
         mFontTexture = std::make_unique<Renderer::Texture2D>();
         mFontTexture->Create(SDF::Roboto::Width, SDF::Roboto::Height);
         int w, h, c;
-        unsigned char *data = SOIL_load_image((path_suffix + SDF::Roboto::TextureName).c_str(), &w, &h, &c, SOIL_LOAD_RGBA);
+        unsigned char *data = stbi_load((path_suffix + SDF::Roboto::TextureName).c_str(), &w, &h, &c, 4);
         mFontTexture->setData(data, 0);
-        SOIL_free_image_data(data);
+        stbi_image_free(data);
 
         for (unsigned i = 0; i < SDF::Roboto::CharacterCount; i++)
         {
@@ -30,8 +29,8 @@ namespace Epsilon
         mFontTexture = std::make_unique<Renderer::Texture2D>();
         mFontTexture->Create(SDF::Roboto::Width, SDF::Roboto::Height);
         int w, h, c;
-        unsigned char *data = SOIL_load_image((path_suffix + tex).c_str(), &w, &h, &c, SOIL_LOAD_RGBA);
+        unsigned char *data = stbi_load((path_suffix + tex).c_str(), &w, &h, &c, 4);
         mFontTexture->setData(data, 0);
-        SOIL_free_image_data(data);
+        stbi_image_free(data);
     }
 } // namespace Epsilon

@@ -41,6 +41,13 @@ public:
     void Free(void)
     {   /*glCache::*/glUseProgram(0); }
 
+    bool Reload();
+
+    void Destroy() {
+        glUseProgram(0);
+	    glDeleteProgram(this->ProgramID);
+    }
+
     GLuint generateFragmentProgram(std::string);
 
     GLuint generateVertexProgram(std::string);
@@ -109,6 +116,10 @@ private:
 
     GLuint ProgramID;
     std::string Path;
+
+    std::string mVertexPath = "";
+    std::string mFragmentPath = "";
+    std::string mGeometryPath = "";
 
     std::string vPath, fPath;
 

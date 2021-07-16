@@ -1,36 +1,82 @@
 dist: focal
+
   
+
 before_install:
+
   - sudo apt-get update -y
+
   - sudo apt-get install gcc
-  - sudo apt-get install cmake xorg-dev libglu1-mesa-dev
+
+  - sudo apt-get install cmake xorg-dev libglu1-mesa-dev freeglut3-dev mesa-common-dev
+
   - sudo apt-get install libglfw3-dev libglfw3
+
   - sudo apt-get install libglew-dev
+
   - sudo apt-get install libsoil-dev
+
   - sudo apt-get install libopenal-dev
+
   - sudo apt-get install libbullet-dev
+
   - mkdir ./thirdparty/imgui-docking/imgui-docking
+
   - git clone --single-branch --branch docking https://github.com/ocornut/imgui.git ./thirdparty/imgui-docking/imgui-docking
+
   - cd thirdpraty/imgui-docking/imgui-docking
-  - make
+
+  - g++ -g -O2 -c imgui.cpp -o imgui.o
+
+  - g++ -g -O2 -c imgui_draw.cpp -o imgui_draw.o
+
+  - g++ -g -O2 -c imgui_widgets.cpp -o imgui_widgets.o
+
+  - ar rcs libimgui.a imgui.o imgui_draw.o imgui_widgets.o
+
   - cd ..; cd ..; cd ..
+
   - git clone https://github.com/benhoyt/inih.git ./thirdparty/inih-test
+
   - cd thirdparty/inih-test/
+
   - g++ -c ini.c -o ini.o
+
   - g++ -c ./cpp/INIReader.cpp -o INIReader.o
+
   - ar -rvcs -o libinih.a INIReader.o ini.o
+
   - cp libinih.a ../inih/
+
   - cd ..
+
   - cd ..
+
   - cd thirdparty/glad
+
   - make 
+
   - cd ..
+
   - cd ..
+
   - sudo apt-get install lua5.3-dev
+
   - git clone https://github.com/nothings/stb.git
+
   - sudo cp -r stb /usr/include/stb 
+
+  - cd thirdparty
+
+  - git clone https://github.com/ImanolFotia/beacon.git
+
   - ls 
+
+
 
 script: make epsilon-release -j8
 
+
+
 language: cpp
+

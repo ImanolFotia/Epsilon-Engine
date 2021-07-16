@@ -1,8 +1,8 @@
 #pragma once
 
 #include <Entity/Component.h>
-#include <Audio/Audio.h>
-#include <Audio/AudioElement.h>
+//#include <Audio/Audio.h>
+//#include <Audio/AudioElement.h>
 #include <Types.h>
 namespace Epsilon::Component
 {
@@ -17,7 +17,7 @@ namespace Epsilon::Component
             mType = SOUNDCOMPONENT;
             mPosition = AudioPosition;
             mRotation = glm::quat(AudioDirection);
-            mAudioElement = std::make_shared<IO::Audio::AudioElement>(fileName, type, AudioPosition, AudioDirection);
+            //mAudioElement = std::make_shared<IO::Audio::AudioElement>(fileName, type, AudioPosition, AudioDirection);
             mState = AUDIO_STATE::PLAYING;
             mAudioFile = fileName;
         }
@@ -59,7 +59,7 @@ namespace Epsilon::Component
     public:
         void Update()
         {
-            mAudioElement->setPosition(mPosition);
+            //mAudioElement->setPosition(mPosition);
         }
 
         void Render()
@@ -69,7 +69,7 @@ namespace Epsilon::Component
     private:
         AUDIO_STATE mState;
         COMPONENT_TYPE mType;
-        std::shared_ptr<IO::Audio::AudioElement> mAudioElement;
+        //std::shared_ptr<IO::Audio::AudioElement> mAudioElement;
         glm::vec3 mPosition;
         glm::quat mRotation;
         std::string mAudioFile;

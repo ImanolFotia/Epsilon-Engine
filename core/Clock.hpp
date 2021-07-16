@@ -68,7 +68,7 @@ class Clock {
         Clock() {
             std::cout << "created" << std::endl;
             using namespace std::chrono; 
-            mCurrentTime = 0;
+            mCurrentTime = 1;
             mLastTime = 0;
             mDeltaTime = 0;
             std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();

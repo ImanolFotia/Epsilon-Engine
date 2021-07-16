@@ -14,11 +14,13 @@ namespace Epsilon
         try
         {
             tex = std::make_shared<eTexture>("Sun.png");
-            this->TextureID = tex->getTextureID();
+            TextureID = tex->getTextureID();
 
-            this->radius = 20.0;
+            radius = 20.0;
 
-            this->height = 10.0;
+            height = 10.0;
+
+            Position = glm::vec3(0.0, -50.0, 3.0);
 
             PrepareVAO();
             std::cout << "Llega" << std::endl;
@@ -38,12 +40,12 @@ namespace Epsilon
         {
             glDepthFunc(GL_LEQUAL);
             shader->Use();
-            glBindVertexArray(this->VAO);
+            glBindVertexArray(VAO);
             glActiveTexture(GL_TEXTURE0);
             glUniform1i(glGetUniformLocation(shader->getProgramID(), "sSampler"), 0);
-            glBindTexture(GL_TEXTURE_2D, this->TextureID);
+            glBindTexture(GL_TEXTURE_2D, TextureID);
 
-            glUniform3f(glGetUniformLocation(shader->getProgramID(), "sunPos"), this->Position.x, this->Position.y, this->Position.z);
+            glUniform3f(glGetUniformLocation(shader->getProgramID(), "sunPos"), Position.x + radius, Position.y + radius, Position.z + radius);
             glCache::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
             glActiveTexture(GL_TEXTURE0);
@@ -61,8 +63,7 @@ namespace Epsilon
             mMovement += 0.01;
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::NINE])
             mMovement -= 0.01;
-        this->Position = glm::vec3(0, 0, 0) + glm::vec3(/*this->radius * glm::cos(mMovement)*/20.0 /** glm::cos(glfwGetTime()/10)*/, 36.0/*height * glm::sin(mMovement)*/ /* glm::sin(glfwGetTime()/10)*/, 10.0/*this->radius * glm::sin(mMovement) /* glm::sin(glfwGetTime()/10)*/);
-        this->Direction = glm::normalize(this->Position - glm::vec3(0, 0, 0));
+        Direction = glm::normalize(Position + glm::vec3(radius));
     }
 
     void Sun::SetUniforms(std::shared_ptr<Camera> cam, std::shared_ptr<Shader> shader)
@@ -85,10 +86,10 @@ namespace Epsilon
                 1.0f, -1.0f, 0.0f, 1.0f, 1.0f   /// Bottom Left
             };
 
-        glGenVertexArrays(1, &this->VAO);
+        glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
         glGenBuffers(1, &EBO);
-        glBindVertexArray(this->VAO);
+        glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 

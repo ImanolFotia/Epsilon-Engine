@@ -7,6 +7,7 @@ layout(location = 0) out vec4 FragColor;
 layout (binding = 0) uniform sampler2D gReflectionSampler;
 layout (binding = 1) uniform sampler2D gColorSampler;
 layout (binding = 2) uniform sampler2D ssaoColorBufferBlur;
+layout (binding = 2) uniform sampler2D volumetricFogSampler;
 
 
 uniform int TotalFrames;
@@ -18,10 +19,11 @@ void main()
 	vec3 color = vec3(texture(gColorSampler, TexCoords).rgb);
 	vec3 reflection = (texture(gReflectionSampler, TexCoords).rgb);
 	float ao = HBAOOn == 1 ? texture(ssaoColorBufferBlur, TexCoords).r : 1;
+	vec3 volumetricFog = texture(volumetricFogSampler, TexCoords).rgb;
 
 	if(!isMoving && TotalFrames < 252)
 		reflection /= TotalFrames;
 
-	FragColor.rgb = vec3(reflection + color) * ao;//max(reflection, vec3(0.0)) +  max(color, vec3(0.0)) * ao;
+	FragColor.rgb = (vec3(reflection + color) * ao) + volumetricFog;//max(reflection, vec3(0.0)) +  max(color, vec3(0.0)) * ao;
 	FragColor.a = 1.0;
 }

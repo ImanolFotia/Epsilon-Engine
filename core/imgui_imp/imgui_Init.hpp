@@ -2,6 +2,8 @@
 #include <imgui_internal.h>
 #include <imgui.h>
 
+#include "IconsFontAwesome5.h"
+
 static void Init_ImGui_Custom()
 {
 
@@ -76,7 +78,7 @@ static void Init_ImGui_Custom()
     style->Colors[ImGuiCol_PlotHistogram] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
     style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
     style->Colors[ImGuiCol_TextSelectedBg] = TextColorSelected;
-    style->Colors[ImGuiCol_ModalWindowDarkening] = ImVec4(1.00f, 0.98f, 0.95f, 0.73f);
+    style->Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(1.00f, 0.98f, 0.95f, 0.73f);
 
     
     style->Colors[ImGuiCol_Tab] = BackgroundDark;
@@ -94,6 +96,11 @@ static void Init_ImGui_Custom()
     //io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 12);
     //io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 10);
     io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 15);
-    //io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 18);
+    static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+    ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
+    icons_config.GlyphOffset.y = 0.5;
+    io.Fonts->AddFontFromFileTTF("./resources/fa-regular-400.ttf", 15.0f, &icons_config, icons_ranges );
+    io.Fonts->AddFontFromFileTTF("./resources/fa-brands-400.ttf", 15.0f, &icons_config, icons_ranges );
+    io.Fonts->AddFontFromFileTTF("./resources/fa-solid-900.ttf", 15.0f, &icons_config, icons_ranges );
     
 }

@@ -94,9 +94,11 @@ namespace Epsilon::Renderer
             shader->PushUniform("AmbientProbeID", (int)mGIIndex);
 
             /// Draw mesh
-            glBindVertexArray(this->VAO);
+            //glBindVertexArray(this->VAO);
+            mVAO->Bind();
             glCache::glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
-            glBindVertexArray(0);
+            //glBindVertexArray(0);
+            mVAO->Unbind();
 
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, 0);

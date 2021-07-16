@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include "MD5_Anim.h"
-#include <SOIL.h>
+
 
 namespace Epsilon {
 class MD5Model

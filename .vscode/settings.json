@@ -83,5 +83,6 @@
         "xtree": "cpp",
         "xutility": "cpp"
     },
-    "C_Cpp.dimInactiveRegions": false
+    "C_Cpp.dimInactiveRegions": false,
+
 }

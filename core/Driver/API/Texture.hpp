@@ -55,6 +55,7 @@ namespace Epsilon::API
                 SRGB = true;
                 Type = GL_UNSIGNED_BYTE;
                 Format = GL_RGBA;
+                InternalFormat = GL_RGBA;
                 Border = 0;
             }
         };

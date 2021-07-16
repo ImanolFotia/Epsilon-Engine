@@ -2,11 +2,13 @@
 
 namespace Epsilon
 {
-    static GLenum glCheckError_(const char *file, int line)
+    static bool glCheckError_(const char *file, int line)
     {
         GLenum errorCode;
+        bool generated_error = false;
         while ((errorCode = glGetError()) != GL_NO_ERROR)
         {
+            generated_error = true;
             std::string error;
             switch (errorCode)
             {
@@ -34,7 +36,7 @@ namespace Epsilon
             }
             std::cout << error << " | " << file << " (" << line << ")" << std::endl;
         }
-        return errorCode;
+        return generated_error;
     }
 #define glCheckError() glCheckError_(__FILE__, __LINE__)
 } // namespace Epsilon

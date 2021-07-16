@@ -3,7 +3,11 @@
 #include <cassert>
 
 #include "Driver/API/Context.hpp"
+#ifdef __linux__
+#include <GLFW/glfw3.h>
+#else
 #include <glfw/glfw3.h>
+#endif
 
 #include "Device.hpp"
 

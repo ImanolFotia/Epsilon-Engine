@@ -22,7 +22,7 @@ namespace Epsilon
                 mData.insert(mData.begin(), std::make_unique<CharacterGlyph[]>(NUM_CHARACTERS_RESERVE));
                 IO::PrintLine("Allocated", sizeof(CharacterGlyph) * NUM_CHARACTERS_RESERVE, "bytes for text rendering");
                 mVAO = std::make_unique<API::OpenGL::VertexArrayObject>();
-                mVAO->addBuffer(GL_ARRAY_BUFFER, sizeof(CharacterGlyph) * NUM_CHARACTERS_RESERVE, nullptr, GL_DYNAMIC_DRAW);
+                mVAO->addBuffer(sizeof(CharacterGlyph) * NUM_CHARACTERS_RESERVE, nullptr, GL_DYNAMIC_DRAW);
                 mVAO->setAttribute(3, sizeof(glm::vec3), (GLvoid*) offsetof(CharacterVertex, position));
                 mVAO->setAttribute(2, sizeof(glm::vec2), (GLvoid*) offsetof(CharacterVertex, texcoords));
                 mVAO->setAttribute(4, sizeof(glm::vec4), (GLvoid*) offsetof(CharacterVertex, color));
@@ -38,7 +38,7 @@ namespace Epsilon
             void Clear() override{}
             void Destroy() override{}
 
-        private:
+        private: 
             std::unique_ptr<Font> mFont;
             std::unique_ptr<API::OpenGL::VertexArrayObject> mVAO;
             std::unique_ptr<Shader> mShader;

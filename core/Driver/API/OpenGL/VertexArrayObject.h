@@ -13,37 +13,40 @@ namespace Epsilon::API::OpenGL
         {
             this->m_VertexAttributeCounter = 0;
             this->m_Handler = 0;
-            glGenVertexArrays(1, &this->m_Handler);
+
+            glGenVertexArrays(1, &m_Handler);
+            glGenBuffers(1, &EBO);
         }
 
         ~VertexArrayObject() {}
 
-        void setAttribute(int size, size_t stride, void *pointer)
+        void setAttribute(int size, GLsizei stride, const void *pointer)
         {
             try
             {
-                this->Bind();
+                Bind();
 
+                auto &tmpVBO = m_VBOArray.back();
+                tmpVBO.Bind();
                 glEnableVertexAttribArray(m_VertexAttributeCounter);
                 glVertexAttribPointer(m_VertexAttributeCounter, size, GL_FLOAT, GL_FALSE, stride, pointer);
-                this->m_VertexAttributeCounter++;
+                m_VertexAttributeCounter++;
 
-                this->Unbind();
+                Unbind();
             }
             catch (...)
             {
                 throw;
             }
         }
-        unsigned int addBuffer(unsigned target, GLsizeiptr size, GLvoid *data, GLenum usage)
+        unsigned int addBuffer(GLsizeiptr size, const GLvoid *data, GLenum usage)
         {
             try
             {
                 this->Bind();
 
-                VertexBufferObject tmpVBO;
-
-                tmpVBO.FillData(GL::TYPES_LUT[target], size, data, usage);
+                OpenGL::VertexBufferObject tmpVBO;
+                tmpVBO.Fill(size, data, usage);
 
                 m_VBOArray.push_back(tmpVBO);
 
@@ -57,10 +60,18 @@ namespace Epsilon::API::OpenGL
             }
         }
 
+        void IndexBuffer(const std::vector<unsigned int> &indices)
+        {
+            Bind();
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_DYNAMIC_DRAW);
+            Unbind();
+        }
+
         void UpdateBuffer(uint32_t bufferHandler, GLintptr offset, GLsizeiptr size, const void *data)
         {
             auto &buffer = m_VBOArray[bufferHandler];
-            buffer.UpdateData(offset, size, data);
+            buffer.Update(offset, size, data);
         }
 
         void Bind()
@@ -79,7 +90,8 @@ namespace Epsilon::API::OpenGL
         }
 
     private:
-        std::vector<VertexBufferObject> m_VBOArray;
+        std::vector<OpenGL::VertexBufferObject> m_VBOArray;
+        GLuint EBO;
         int m_VertexAttributeCounter;
         GLuint m_Handler;
     };

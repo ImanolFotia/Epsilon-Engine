@@ -33,9 +33,9 @@
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <Player.h>
-#include <Audio/Audio.h>
-#include <Audio/AudioElement.h>
-#include <Audio/AudioListener.h>
+//#include <Audio/Audio.h>
+//#include <Audio/AudioElement.h>
+//#include <Audio/AudioListener.h>
 #include <SplashScreen.h>
 #include <SphericalHarmonics.h>
 #include <Picking.h>
@@ -48,6 +48,7 @@
 #include <Renderer/Patch.h>
 #include <Renderer/Shadows/PointShadow.hpp>
 #include <Driver/API/BufferObject.hpp>
+#include <Driver/API/OpenGL/UniformBuffer.hpp>
 #include <Renderer/ShaderStorage.hpp>
 #include <Platform/WindowBase.hpp>
 
@@ -150,8 +151,8 @@ namespace Epsilon
 
         glm::vec3 ambientDivider;
         std::vector<std::shared_ptr<EntityBase>> EntityList;
-        std::shared_ptr<IO::Audio::Audio> m_AudioSystem;
-        std::shared_ptr<IO::Audio::AudioListener> m_AudioListener;
+        //std::shared_ptr<IO::Audio::Audio> m_AudioSystem;
+        //std::shared_ptr<IO::Audio::AudioListener> m_AudioListener;
         std::shared_ptr<SphericalHarmonics> sphericalharmonics;
         std::thread t1;
         std::shared_ptr<eTexture> tex;
@@ -180,6 +181,7 @@ namespace Epsilon
 
         std::shared_ptr<Renderer::ShaderStorage> AmbientLightSSBO;
         std::shared_ptr<API::BufferObject> mGlobalUniformBuffer;
+        std::shared_ptr<API::BufferObject> mCameraData;
 
     private:
         bool normal = 0;

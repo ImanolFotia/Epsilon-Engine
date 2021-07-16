@@ -12,7 +12,6 @@
 #include <Physics/TriangleMeshPhysicObject.h>
 #include <Helpers.hpp>
 
-#include <SOIL.h>
 
 namespace Epsilon
 {
@@ -63,7 +62,7 @@ namespace Epsilon
     {
         //int w, h;
 
-        unsigned char *pixels = SOIL_load_image(this->heightMap, &this->width, &this->height, 0, SOIL_LOAD_L);
+        unsigned char *pixels = stbi_load(this->heightMap, &this->width, &this->height, 0, 4);
 
         if (this->width != this->height)
         {
@@ -75,7 +74,7 @@ namespace Epsilon
 
         this->GenerateGrid();
 
-        SOIL_free_image_data(pixels);
+        stbi_image_free(pixels);
 
         return true;
     }

@@ -2,7 +2,7 @@
 
 #include "Component.h"
 
-#include <Scripts/LuaScript.hpp>
+#include <Scripts/Lua/LuaScript.hpp>
 
 namespace Epsilon {
 

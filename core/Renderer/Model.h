@@ -14,11 +14,12 @@
 #include "Mesh.h"
 #include <Types.h>
 #include "./EML/eml1_0.h"
+#include "ModelBase.hpp"
 #include <camera.h>
 
 namespace Epsilon::Renderer
 {
-    class Model
+    class Model : public ModelBase
     {
     public:
         glm::mat4 PrevModel;
@@ -32,9 +33,9 @@ namespace Epsilon::Renderer
 
         /**  Functions   */
         /// Constructor, expects a filepath to a 3D model.
-        const char *path;
+        std::string path;
 
-        Model(const char *path);
+        Model(const std::string &path);
 
         //Model(const char *path, glm::vec3 pos = glm::vec3(0, 0, 0), glm::vec3 sc = glm::vec3(0, 0, 0), glm::quat rot = glm::quat(0, 0, 0, 1));
 

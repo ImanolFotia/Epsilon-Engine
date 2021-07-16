@@ -14,7 +14,7 @@ namespace Epsilon
         class Audio : public Resource<ResourceType::AUDIO>
         {
             public:
-            Audio(const char *filepath)
+            Audio(const char *filepath) : mName(filepath)
             {
                 //Only WAV files supported for now
                 
@@ -31,14 +31,18 @@ namespace Epsilon
             const uint32_t Channels() { return mChannels; }
             const uint32_t BitsPerSecond() { return mBitsPerSecond; }
             const uint32_t FileSize() { return mFileSize; }
+            const std::string& Name() { return mName; }
 
             private:
+                std::string mName;
+                
                 uint32_t mBitRate;
                 uint32_t mChannels;
                 uint32_t mBitsPerSecond;
                 uint32_t mFileSize;
 
                 std::shared_ptr<WAVfile> mAudioFile;
+
 
         };
     } // namespace Resources

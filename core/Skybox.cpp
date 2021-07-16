@@ -5,7 +5,6 @@
 ///=============================================================================
 
 #include <pch.hpp>
-#include <SOIL.h>
 #include <Skybox.h>
 #include <SkyboxData.h>
 #include <ResourceManager.h>

@@ -3,9 +3,11 @@
 #include "../Texture.hpp"
 #include "Texture2D.hpp"
 
+#include "HelperFunctions/CheckError.h"
+
 class RenderTarget
 {
-
+    public:
     unsigned int mWidth;
     unsigned int mHeight;
     GLuint mInternalFormat = 0;
@@ -17,10 +19,11 @@ class RenderTarget
     GLuint mAttachment = GL_DEPTH_ATTACHMENT;
     GLuint m_RenderTextureTarget = 0;
     Epsilon::API::Texture_ptr mTexture;
+    GLenum mInternalType;
 
 public:
-    RenderTarget(uint32_t width, uint32_t height, uint32_t internalformat, uint32_t format, uint32_t magfilter, uint32_t minfilter, uint32_t attachment, bool mipmaps, GLuint target)
-        : mWidth{width}, mHeight{height}, mInternalFormat{internalformat}, mFormat{format}, mMagFilter{magfilter}, mMinFilter{minfilter}, mMipMaps{mipmaps}, mTarget{target}
+    RenderTarget(uint32_t width, uint32_t height, uint32_t internalformat, uint32_t format, uint32_t magfilter, uint32_t minfilter, uint32_t attachment, bool mipmaps, GLuint target, GLenum internal_type, bool srgb)
+        : mWidth{width}, mHeight{height}, mInternalFormat{internalformat}, mFormat{format}, mMagFilter{magfilter}, mMinFilter{minfilter}, mMipMaps{mipmaps}, mTarget{target}, mInternalType{internal_type}
     {
         glGenTextures(1, &m_RenderTextureTarget);
         glBindTexture(target, m_RenderTextureTarget);
@@ -35,13 +38,13 @@ public:
             {
                 // note that we store each face with 16 bit floating point values
                 glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, internalformat,
-                             width, height, 0, format, GL_FLOAT, nullptr);
+                             width, height, 0, format, mInternalType, nullptr);
             }
             glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
         }
         else if (target == GL_TEXTURE_2D)
         {
-            glTexImage2D(target, 0, internalformat, width, height, 0, format, GL_FLOAT, 0);
+            glTexImage2D(target, 0, internalformat, width, height, 0, format, mInternalType, 0);
             glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glTexParameteri(target, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
@@ -54,13 +57,23 @@ public:
             glGenerateMipmap(target);
         glBindTexture(target, 0);
 
+        auto errorCode = Epsilon::glCheckError();
+        if(errorCode != GL_NO_ERROR) {
+            std::cout << "Error on: " << "Framebuffer texture: " << "\n" <<
+                "Id: " << m_RenderTextureTarget << "\n" <<
+                "Internal Format: " << mInternalFormat << "\n" <<
+                "Target: " << mTarget << "\n" <<
+                "Internal Type: " << mInternalType << std::endl;
+
+        }
         using namespace Epsilon::API;
 
         //Texture::TextureData textureData = {internalformat, 3, 0, m_RenderTextureTarget, GL_FLOAT, target, 1, GL_CLAMP_TO_EDGE, true, false};
 
-        Texture::TextureData textureData(internalformat, 4, 0, m_RenderTextureTarget, GL_FLOAT, target, 1, GL_CLAMP_TO_EDGE, true, false);
+        Texture::TextureData textureData(internalformat, 4, 0, m_RenderTextureTarget, internal_type, target, 1, GL_CLAMP_TO_EDGE, srgb, false);
+        textureData.Format = format;
 
-        mTexture = std::make_shared<OpenGL::Texture2D>(textureData);
+        //mTexture = std::make_shared<OpenGL::Texture2D>(textureData, true);
     }
     ~RenderTarget() {}
 
@@ -100,13 +113,13 @@ public:
             {
                 // note that we store each face with 16 bit floating point values
                 glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, mInternalFormat,
-                             mWidth, mHeight, 0, mFormat, GL_FLOAT, nullptr);
+                             mWidth, mHeight, 0, mFormat, mInternalType, nullptr);
             }
             glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
         }
         else if (mTarget == GL_TEXTURE_2D)
         {
-            glTexImage2D(mTarget, 0, mInternalFormat, mWidth, mHeight, 0, mFormat, GL_FLOAT, 0);
+            glTexImage2D(mTarget, 0, mInternalFormat, mWidth, mHeight, 0, mFormat, mInternalType, 0);
             glTexParameteri(mTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(mTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glTexParameteri(mTarget, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);

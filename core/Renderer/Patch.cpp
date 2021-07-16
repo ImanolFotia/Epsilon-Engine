@@ -1,7 +1,6 @@
 #include "Patch.h"
 #include <ResourceManager.h>
 
-#include <SOIL.h>
 
 namespace Epsilon
 {
@@ -22,38 +21,38 @@ namespace Epsilon
         std::string path_suffix = "materials/";
 
         int outwidth = 0, outheight = 0, outchannels = 0;
-        unsigned char* data = SOIL_load_image("materials/old-soiled-cloth1-albedo.png", &outwidth, &outheight, &outchannels, SOIL_LOAD_RGBA);
+        unsigned char* data = stbi_load("materials/old-soiled-cloth1-albedo.png", &outwidth, &outheight, &outchannels, 4);
         mTexture = std::make_shared<Texture2D>();
         mTexture->Create(outwidth, outheight);
         mTexture->setData(data, 0);
-        SOIL_free_image_data(data);
+        stbi_image_free(data);
         data = nullptr;
 
-        data = SOIL_load_image(std::string(path_suffix + "old-soiled-cloth1-Normal-dx.png").c_str(), &outwidth, &outheight, &outchannels, SOIL_LOAD_RGBA);
+        data = stbi_load(std::string(path_suffix + "old-soiled-cloth1-Normal-dx.png").c_str(), &outwidth, &outheight, &outchannels, 4);
         TextureData.Width = outwidth;
         TextureData.Height = outheight;
         mNormalTexture = std::make_shared<Texture2D>();
         mNormalTexture->Create(TextureData);
         mNormalTexture->setData(data, 0);
-        SOIL_free_image_data(data);
+        stbi_image_free(data);
         data = nullptr;
 
-        data = SOIL_load_image(std::string(path_suffix + "old-soiled-cloth1-Roughness.png").c_str(), &outwidth, &outheight, &outchannels, SOIL_LOAD_RGBA);
+        data = stbi_load(std::string(path_suffix + "old-soiled-cloth1-Roughness.png").c_str(), &outwidth, &outheight, &outchannels, 4);
         TextureData.Width = outwidth;
         TextureData.Height = outheight;
         mRoughtnessTexture = std::make_shared<Texture2D>();
         mRoughtnessTexture->Create(TextureData);
         mRoughtnessTexture->setData(data, 0);
-        SOIL_free_image_data(data);
+        stbi_image_free(data);
         data = nullptr; 
 
-        data = SOIL_load_image(std::string(path_suffix + "old-soiled-cloth1-Metallic.png").c_str(), &outwidth, &outheight, &outchannels, SOIL_LOAD_RGBA);
+        data = stbi_load(std::string(path_suffix + "old-soiled-cloth1-Metallic.png").c_str(), &outwidth, &outheight, &outchannels, 4);
         TextureData.Width = outwidth;
         TextureData.Height = outheight;
         mMetallicTexture = std::make_shared<Texture2D>();
         mMetallicTexture->Create(TextureData);
         mMetallicTexture->setData(data, 0);
-        SOIL_free_image_data(data);
+        stbi_image_free(data);
         data = nullptr;
 
         generateGeometry();
@@ -231,22 +230,22 @@ namespace Epsilon
         glBindVertexArray(this->VAO);
         /// Load data into vertex buffers
         glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-        glBufferData(GL_ARRAY_BUFFER, this->mVertices.size() * sizeof(glm::vec3), &this->mVertices[0], GL_STREAM_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, this->mVertices.size() * sizeof(glm::vec3), &this->mVertices[0], GL_DYNAMIC_DRAW );
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (GLvoid *)0);
 
         glBindBuffer(GL_ARRAY_BUFFER, this->UVBO);
-        glBufferData(GL_ARRAY_BUFFER, this->mTexCoords.size() * sizeof(glm::vec2), &this->mTexCoords[0], GL_STREAM_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, this->mTexCoords.size() * sizeof(glm::vec2), &this->mTexCoords[0], GL_DYNAMIC_DRAW );
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (GLvoid *)0);
 
         glBindBuffer(GL_ARRAY_BUFFER, this->NBO);
-        glBufferData(GL_ARRAY_BUFFER, this->mNormals.size() * sizeof(glm::vec3), &this->mNormals[0], GL_STREAM_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, this->mNormals.size() * sizeof(glm::vec3), &this->mNormals[0], GL_DYNAMIC_DRAW );
         glEnableVertexAttribArray(2);
         glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (GLvoid *)0);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->mIndices.size() * sizeof(unsigned int), &this->mIndices[0], GL_STREAM_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->mIndices.size() * sizeof(unsigned int), &this->mIndices[0], GL_DYNAMIC_DRAW );
 
         glBindVertexArray(0);
     }

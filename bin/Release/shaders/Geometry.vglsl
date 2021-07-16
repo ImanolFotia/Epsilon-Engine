@@ -26,12 +26,27 @@ uniform float time;
 uniform int FrameNumber;
 //uniform vec4 clipplane;
 
+
+layout (std140, binding = 1) uniform CameraData_t
+{
+    vec4 position;
+    vec4 direction;
+    mat4 projection;
+    mat4 view;
+    mat4 invprojection;
+    mat4 invview;
+    int CurrentSelectedEntity; float padding2[3];
+    float near; float padding0[3];
+    float far; float padding1[3];
+} CameraData;
+
 vec3 T;
 vec3 B;
 vec3 N;
 
 out vec4 PrevPosition;
 out vec4 Position;
+out flat int varCurrEnt;
 mat3 CreateTBNMatrix(mat3 normalMatrix)
 {
      T = normalize(normalMatrix * tangent);
@@ -53,24 +68,25 @@ mat3 CreateTBNMatrix2(mat3 normalMatrix)
 
 void main()
 {
+  varCurrEnt = CameraData.CurrentSelectedEntity;
   vec4 worldPos = model * vec4(position, 1.0);
   //gl_ClipDistance[0] = dot(worldPos, clipplane);
 
-  mat4 ViewMatrix = view;
-  mat4 Projection = projection;
+  mat4 ViewMatrix = CameraData.view;
+  mat4 Projection = CameraData.projection;
 
   vec4 viewPos = ViewMatrix * worldPos;
 
   vs_out.FragPos = viewPos.xyz;
   vs_out.wFragPos = worldPos.xyz;
-  Position = projection * viewPos;
+  Position = Projection * viewPos;
   gl_Position = Projection * viewPos;
-  PrevPosition = projection * PrevView * PrevModel * vec4(position, 1.0);
+  PrevPosition = Projection * PrevView * PrevModel * vec4(position, 1.0);
   vs_out.TexCoords = vertexUV;
   
   mat3 normalMatrix = invModelMatrix;//transpose(inverse(mat3(model)));
   vs_out.TBN = CreateTBNMatrix(normalMatrix);
-  vs_out.Normal = normalMatrix * normal;
+  vs_out.Normal = normalize(normalMatrix * normalize(normal));
   normalMatrix = invNormalMatrix;//transpose(inverse(mat3(view * model)));
   vs_out.TBN2 = CreateTBNMatrix(normalMatrix);
 }

@@ -13,10 +13,10 @@ namespace Epsilon
 							std::vector<unsigned int> Indices,
 							int ID, string imagePath,
 							tBSPLightmap LightMap)
-	{
+	{ 
 		this->Vertices = Vertices;
 		this->TexCoords = TexCoords;
-		this->Indices = Indices;
+		this->Indices = Indices; 
 		this->Normals = Normals;
 		this->faceID = ID;
 		this->ObjectID = "BSPFace_" + Helpers::intTostring(ID);
@@ -38,7 +38,7 @@ namespace Epsilon
 
 			mPosition *= Vertices[i] * (1.0f / Vertices.size());
 		}
-
+ 
 		mPosition /= Vertices.size();
 		this->prepareVAO();
 		std::shared_ptr<Physics::TriangleMeshPhysicObject> ph = (std::shared_ptr<Physics::TriangleMeshPhysicObject>)new Physics::TriangleMeshPhysicObject();
@@ -79,19 +79,16 @@ namespace Epsilon
 			CubemapId = Instance.NearestCubeMap(mPosition);
 			GIProbeID = Instance.NearestCubeMap(mPosition) - 1;
 		}
-		
+
 		if(change_material) setMaterial(shader);
 
 		glActiveTexture(GL_TEXTURE4);
 		shader->PushUniform("skybox", 4);
 		if(this->CubemapId != -1)
 		glBindTexture(GL_TEXTURE_CUBE_MAP, Instance.useCubeMap(CubemapId));
-
-		//glUniform1i(glGetUniformLocation(shader, "CubemapID"), CubemapId);
-		//glUniform1i(glGetUniformLocation(shader, "AmbientProbeID"), GIProbeID);
-
-		glBindVertexArray(this->VAO);
-		glCache::glDrawElements(GL_TRIANGLES, this->Indices.size(), GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
-	}
-} // namespace Epsilon 
+  
+		mVAO->Bind();  
+		glDrawElements(GL_TRIANGLES, this->Indices.size(), GL_UNSIGNED_INT, 0);
+		mVAO->Unbind();
+	}        
+} // namespace Epsilon  

@@ -24,6 +24,22 @@ namespace Epsilon
 {
     class Camera
     {
+    public:
+        struct CameraData_t
+        {
+            glm::vec4 position;
+            glm::vec4 direction;
+            glm::mat4 projection;
+            glm::mat4 view;
+            glm::mat4 invprojection;
+            glm::mat4 invview;
+            int CurrentSelectedEntity = -1.0;
+            float padding2[3];
+            float near;
+            float padding0[3];
+            float far;
+            float padding1[3];
+        };
 
     public:
         Camera(glm::vec3, glm::vec3);
@@ -95,6 +111,9 @@ namespace Epsilon
         float MaxMovementSpeed;
         bool mIsMoving = false;
         bool externallymodified = true;
+        float jitter_multiplier = 1.0;
+
+        CameraData_t CameraData = {};
 
     private:
         glm::vec3 Rigth;
@@ -107,6 +126,8 @@ namespace Epsilon
         bool PositionhasChanged;
         double verticalAngle;
         double horizontalAngle;
+        float near_plane;
+        float far_plane;
         glm::mat4 ViewMatrix;
         glm::mat4 ProjectionMatrix;
         glm::vec3 Position;

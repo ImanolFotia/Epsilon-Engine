@@ -12,11 +12,11 @@ namespace Epsilon
         {
         public:
             RenderComponent(std::string path, glm::vec3 pos, std::string shader)
-                : modelPath(path), mPosition(pos), shaderType(shader)
+                : modelPath(path)/*, mPosition(pos),*/ ,shaderType(shader)
             {
                 mType = RENDERCOMPONENT;
                 hasModel = true;
-                mPrevPosition = pos;
+                /*mPrevPosition = pos;*/
                 ResourceManager::Get().requestModel(modelPath /*, mPosition, glm::vec3(1), glm::quat(0, 0, 0, 0)*/);
             }
 
@@ -26,6 +26,10 @@ namespace Epsilon
                 std::cout << "RenderComponent Destructor" << std::endl;
             }
 
+            void setRenderId(int id) {
+                mId = id;
+            }
+/*
             virtual glm::vec3 getPosition()
             {
                 return mPosition;
@@ -46,8 +50,8 @@ namespace Epsilon
                 mPrevPosition = mPosition;
                 mPosition = pos;
             }
-
-            std::string getModelPath()
+*/
+            const std::string& getModelPath()
             {
                 return modelPath;
             }
@@ -63,6 +67,7 @@ namespace Epsilon
                 {
                     //glUniform1i(glGetUniformLocation(mResourceManager->getShader(shaderType).get(), "isTransparent"), this->isTransparent);
                     ResourceManager::Get().useShader(shaderType)->PushUniform("isTransparent", this->isTransparent);
+                    ResourceManager::Get().useShader(shaderType)->PushUniform("EntityId", this->mId);
                     if (isDoubleFaced())
                         glDisable(GL_CULL_FACE);
                     else
@@ -123,8 +128,9 @@ namespace Epsilon
             bool mIsDoubleFaced;
             bool mCastsShadows;
             bool isVisible = false;
-            glm::vec3 mPosition;
-            glm::vec3 mPrevPosition;
+            int mId = 0;
+           /* glm::vec3 mPosition;
+            glm::vec3 mPrevPosition;*/
         };
 
         using RenderComponent_ptr = std::shared_ptr<RenderComponent>;

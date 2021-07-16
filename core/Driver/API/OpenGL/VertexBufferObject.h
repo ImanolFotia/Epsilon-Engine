@@ -16,37 +16,38 @@ namespace Epsilon::API::OpenGL
 
                 ~VertexBufferObject() {}
 
-                void FillData(GLenum target, GLsizeiptr size, GLvoid *data, GLenum usage)
+                void Reserve(std::size_t size) override {
+                    glBindBuffer(GL_ARRAY_BUFFER, this->m_Handler);
+                    glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+                }
+
+                void Fill(GLsizeiptr size, const GLvoid *data, GLenum usage) override
                 {
-                    m_Target = target;
-                    glBindBuffer(m_Target, this->m_Handler);
-                    glBufferData(m_Target, size, data, usage);
+                    glBindBuffer(GL_ARRAY_BUFFER, this->m_Handler);
+                    glBufferData(GL_ARRAY_BUFFER, size, data, usage);
                 }
 
-                void UpdateData(GLintptr offset, GLsizeiptr size, const void *data) {
-                    glBindBuffer(m_Target, this->m_Handler);
-                    glBufferSubData(m_Target, offset, size, data);
+                void Update(GLintptr offset, GLsizeiptr size, const void *data) override {
+                    glBindBuffer(GL_ARRAY_BUFFER, this->m_Handler);
+                    glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
                 }
 
-                GLuint Get()
+                GLuint Get() override
                 {
                     return m_Handler;
                 }
 
-                void Bind()
+                void Bind() override
                 {
-                    glBindBuffer(m_Target, this->m_Handler);
+                    glBindBuffer(GL_ARRAY_BUFFER, this->m_Handler);
                 }
 
-                void Update() {}
-
-                void Destroy()
+                void Destroy() override
                 {
                     glDeleteBuffers(1, &m_Handler);
                 }
 
             private:
                 GLuint m_Handler;
-                GLenum m_Target;
             };
 } // namespace Epsilon

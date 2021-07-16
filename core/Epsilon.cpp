@@ -19,7 +19,6 @@
 #include <Log.h>
 #include <sys/Console.hpp>
 #include <sys/GPU.hpp>
-#include <Scripts/LuaScript.hpp>
 
 #include <Driver/Audio/XAudio2/XAudio2.hpp>
 
@@ -93,27 +92,27 @@ namespace Epsilon
 
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         }
-
+   
         //Driver::Audio::XAudio2Driver xAudio2;
         //xAudio2.Init();
 
         normal = true;
-
+  
         g_Running = true;
 
         flashLight = false;
 
         hdr = true;
-
+ 
         parallax = false;
-
+ 
         exposure = 3.0;
-
+  
         this->frametime = 0.0;
         this->lastTime = 0.0;
-
+  
         srand(time(NULL)); //
-
+  
         m_CameraMode = NO_CLIP;
 
         Editor::GUI::Init(mWindow);
@@ -121,12 +120,15 @@ namespace Epsilon
         Editor::GUI::WIDTH = &WIDTH;
         Editor::GUI::HEIGHT = &HEIGHT;
         //window->HideCursor();
-
+ 
         mDefaultFrameBuffer = std::make_shared<OpenGL::FrameBuffer<int>>(mWindow->getWindowData().Width, mWindow->getWindowData().Height, false);
         mDefaultFrameBuffer->addRenderTarget(0, GL_RGB, GL_RGB, GL_NEAREST, GL_NEAREST, false);
         mDefaultFrameBuffer->FinishFrameBuffer();
 
-        //Scripts::LuaScript _script;
+        mCameraData = std::make_shared<API::OpenGL::UniformBuffer>(sizeof(Camera::CameraData_t), 1, 0, GL_DYNAMIC_DRAW);
+        mCameraData->Bind();
+
+        //Scripts::LuaS cript _script;
         //_script.Load("scripts/Program.luac");
         //std::cout << "Sum is: " << _script.Exec<int>("sum", 3, 5) << std::endl;
     }
@@ -143,82 +145,24 @@ namespace Epsilon
         //this->text->RenderText(text,0.01, 0.83, 0.4, glm::vec3(1,1,1));
 
         //this->text->RenderText(std::string("#include <iostream>\nusing namespace std;\nint main(int argc, char** argv) {\n\tstd::cout << \"Hello, World!\" << std::endl;\n\treturn 0;\n}") ,0.01, 0.79, 0.5, glm::vec3(1,1,1));
-
+  
         this->SwapBuffers();
         std::cout << "Splash llega" << std::endl;
         texture.Destroy();
     }
 
     void Epsilon::onCreate()
-    {
+    { 
         cout << "Initializing Resources..." << endl;
 
-        ProgramData DATA;
+        ProgramData DATA; 
 
         this->WIDTH = DATA.WINDOW_WIDTH;
         this->HEIGHT = DATA.WINDOW_HEIGHT;
         this->SSAO = DATA.HBAO;
         this->ParallaxOn = DATA.PARALLAX_OCLUSSION_MAPPING;
-        /*
-    text = (std::shared_ptr<Text>)new Text("resources/Roboto-Regular.ttf", DATA.WINDOW_WIDTH, DATA.WINDOW_HEIGHT);
-
-    m_GUI = (std::shared_ptr<GUI>) new GUI(this->WIDTH, this->HEIGHT);
-    std::shared_ptr<Container> t_Container = (std::shared_ptr<Container>) new Container();
-    std::shared_ptr<Panel> t_Panel = (std::shared_ptr<Panel>) new Panel(this->WIDTH, this->HEIGHT, 0.3*WIDTH, 1.0*HEIGHT, glm::vec2(-0.7, 0.0));
-    t_PanelSettings = (std::shared_ptr<Panel>) new Panel(this->WIDTH, this->HEIGHT, 0.5*WIDTH, 0.5*HEIGHT, glm::vec2(0.3, 0.0));
-
-    std::shared_ptr<Button> t_ButtonQuit = (std::shared_ptr<Button>) new Button(0.15, 0.1, this->WIDTH, this->HEIGHT, "Quit");
-    t_ButtonQuit->SizeX = 0.15;
-    t_ButtonQuit->SizeY = 0.1;
-    t_ButtonQuit->PositionX = -0.75;
-    t_ButtonQuit->PositionY = -0.45;
-    t_ButtonQuit->OnClickCallback(endgame);
-    t_ButtonQuit->m_isHidden = false;
-    t_ButtonQuit->m_TextRendererInstance = text;
-    t_Container->addWidget(t_ButtonQuit);
-
-    t_CheckBox = (std::shared_ptr<CheckBox>) new CheckBox(0.05, 0.05, this->WIDTH, this->HEIGHT, "Quit");
-    t_CheckBox->SizeX = 0.5;
-    t_CheckBox->SizeY = 0.5;
-    t_CheckBox->PositionX = 0.0;
-    t_CheckBox->PositionY = 0.0;
-    t_CheckBox->m_isHidden = false;
-    t_CheckBox->m_TextRendererInstance = text;
-    t_CheckBox->setText("CheckBox");
-    t_Container->addWidget(t_CheckBox);
-
-    t_ButtonSettings = (std::shared_ptr<Button>) new Button(0.15, 0.1, this->WIDTH, this->HEIGHT, "Settings");
-    t_ButtonSettings->SizeX = 0.15;
-    t_ButtonSettings->SizeY = 0.1;
-    t_ButtonSettings->PositionX = -0.75;
-    t_ButtonSettings->PositionY = -0.2;
-    t_PanelSettings->m_isHidden = true;
-    std::function<void()> lSettings = [&]()->void {t_PanelSettings->ChangeVisibility();};
-    t_ButtonSettings->OnClickCallback(lSettings);
-    t_ButtonSettings->m_isHidden = false;
-    t_ButtonSettings->m_TextRendererInstance = text;
-    t_Container->addWidget(t_ButtonSettings);
-
-    t_ButtonResume = (std::shared_ptr<Button>) new Button(0.15, 0.1, this->WIDTH, this->HEIGHT, "Resume");
-    t_ButtonResume->SizeX = 0.15;
-    t_ButtonResume->SizeY = 0.1;
-    t_ButtonResume->PositionX = -0.75;
-    t_ButtonResume->PositionY = 0.05;
-    std::function<void()> lResume = [&]()->void {
-        this->onMenu = false;
-        menuTime = this->etime;
-    };
-    t_ButtonResume->OnClickCallback(lResume);
-    t_ButtonResume->m_isHidden = false;
-    t_ButtonResume->m_TextRendererInstance = text;
-
-    t_Container->addWidget(t_ButtonResume);
-    t_Container->addWidget(t_Panel);
-    t_Container->addWidget(t_PanelSettings);
-    m_GUI->AddContainer(t_Container);
-*/
         RenderSplashScreen("Initializing Engine...");
-
+ 
         eCamera.push_back(std::make_shared<Camera>(glm::vec3(0.0f, 8.25f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
         eCamera.push_back(std::make_shared<Camera>(glm::vec3(20.0f, 30.25f, -60.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
 
@@ -237,9 +181,8 @@ namespace Epsilon
         this->ComputeCamera(NO_CLIP, glm::vec3(0.0f, 8.25f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
         shadowMap = std::move((shared_ptr<Renderer::ShadowMap>)(new Renderer::ShadowMap(DATA.SHADOWMAP_SIZE, DATA.SHADOWMAP_SIZE, -20.0f, 80.0f)));
+        shadowMap->setShadowPosition(glm::vec3(0.0, -1.0, 0.0));
 
-        mPointShadow = std::make_shared<Renderer::PointShadow>(glm::vec3(10, 7.5, 6));
-        mPointShadow->Setup();
 
         //RenderSplashScreen("Loading Shaders...");
         this->LoadShaders();
@@ -247,12 +190,12 @@ namespace Epsilon
         //RenderSplashScreen("Loading Geometry...");
         this->LoadGeometry();
 
-        this->LoadSound();
+        //this->LoadSound();
 
         std::vector<string> modelsNames;
         std::vector<glm::vec3> modelsPositions;
         std::vector<float> modelsScales;
-
+        /*
         {
             glm::vec3 tPosition = glm::vec3(-5, 10.5, 6.0);
             glm::vec3 tScale = glm::vec3(0.007 * GOLDEN_RATIO);
@@ -266,12 +209,13 @@ namespace Epsilon
             _RComp->setVisibility(true);
             _RComp->setTransparency(false);
             _RComp->isDoubleFaced(false);
+            _RComp->setRenderId(EntityList.size());
             _Entity->addComponent(_RComp);
 
             /*_Entity->mFunction = [cam = eCamera[mCurrentCamera]](EntityBase *ent) {
                 Component::TransformComponent_ptr t = std::static_pointer_cast<Component::TransformComponent>(ent->getComponentList()[Component::TRANSFORMCOMPONENT]);
                 if (glm::length(cam->getPosition() - t->Position()) < 10.0f)
-                {
+                { 
                     t->PrevRotation(t->Rotation());
                     t->Rotation(glm::quat(glm::rotate(glm::mat4(1.0), (float)glm::radians(Clock::Time() * .2), glm::vec3(0.0, 1.0, 0.0))));
                 } else {
@@ -279,7 +223,7 @@ namespace Epsilon
                 }
             };*/
 
-            EntityList.push_back(_Entity);
+        /*EntityList.push_back(_Entity);
         }
 
         {
@@ -298,10 +242,12 @@ namespace Epsilon
             auto _PComp = std::make_shared<Component::PhysicComponent>(100, tPosition, tScale, Physics::Type::SPHERE, _BoundingBox);
             _PComp->setID(EntityList.size());
             //Component::Component_ptr _SComp = std::make_shared<Component::ScriptComponent>("scripts/test.lua");
-            _Entity->addComponent(_RComp)->addComponent(_PComp) /*->addComponent(_SComp)*/;
+            _Entity->addComponent(_RComp)->addComponent(_PComp) /*->addComponent(_SComp)*/
+        /* ;
 
+            _Entity->setName(std::string("Entity") + std::to_string(EntityList.size()));
             EntityList.push_back(_Entity);
-        }
+        }*/
 
         auto random_double = []() -> double
         {
@@ -310,30 +256,6 @@ namespace Epsilon
             //generator.seed(time(NULL));
             return distribution(generator);
         };
-
-        for (int a = 0; a < 3; a++)
-            for (int b = 0; b < 3; b++)
-                for (int c = 0; c < 3; c++)
-                {
-                    glm::vec3 tPosition = glm::vec3(0, 10.0, 0);
-                    glm::vec3 positions = tPosition + glm::vec3(a, b, c) * glm::vec3(2.0, 2.0, 2.0);
-                    glm::vec3 tScale = glm::vec3((random_double() * 2.0) + 0.1);
-                    glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
-                    std::string tModelName = "models/esfera.eml";
-
-                    std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(positions, tScale, tRotation);
-
-                    auto _RComp = std::make_shared<Component::RenderComponent>(tModelName, positions, "Main");
-                    _RComp->CastsShadows(true);
-                    _RComp->setTransparency(false);
-                    MIN_MAX_POINTS _BoundingBox = ResourceManager::Get().getModelBoundingBox(tModelName);
-                    auto _PComp = std::make_shared<Component::PhysicComponent>(100, positions, tScale, Physics::Type::CUBE, _BoundingBox);
-                    _PComp->setID(EntityList.size());
-                    //_PComp->setState(true);
-                    _Entity->addComponent(_RComp)->addComponent(_PComp);
-
-                    EntityList.push_back(_Entity);
-                }
 
         /* {
             glm::vec3 tPosition = glm::vec3(-5, 15, -5);
@@ -383,10 +305,10 @@ namespace Epsilon
 
             _Entity->addComponent(_CComp);
 
+            _Entity->setName(std::string("Entity") + std::to_string(EntityList.size()));
             EntityList.push_back(_Entity);
         }
 
-        
         {
             glm::vec3 positions = glm::vec3(-31.0, 11.2, 5.8);
             glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
@@ -398,11 +320,13 @@ namespace Epsilon
             static_pointer_cast<Component::RenderComponent>(_RComp)->isDoubleFaced(false);
             static_pointer_cast<Component::RenderComponent>(_RComp)->setTransparency(false);
             static_pointer_cast<Component::RenderComponent>(_RComp)->setVisibility(true);
+            static_pointer_cast<Component::RenderComponent>(_RComp)->setRenderId(EntityList.size());
 
             MIN_MAX_POINTS _BoundingBox = ResourceManager::Get().getModelBoundingBox(tModelName);
             Component::Component_ptr _PComp = std::make_shared<Component::PhysicComponent>(0.0f, positions, glm::vec3(2.0f), Physics::Type::SPHERE, _BoundingBox);
 
             _Entity->addComponent(_RComp)->addComponent(_PComp);
+            _Entity->setName(std::string("Entity") + std::to_string(EntityList.size()));
             EntityList.push_back(_Entity);
         }
 
@@ -414,8 +338,8 @@ namespace Epsilon
         //-32 34 -13
         //33 54 14
 
-        auto MenuAudio = [&]() -> void
-        { m_AudioSystem->PlayByID(2); };
+        /*auto MenuAudio = [&]() -> void
+        { m_AudioSystem->PlayByID(2); };*/
 
         /*
     t_ButtonQuit->OnEntering(MenuAudio);
@@ -426,6 +350,11 @@ namespace Epsilon
         ResourceManager::Get().loadQueuedTextures();
 
         PP = std::move((shared_ptr<PostProcess>)(new PostProcess()));
+        Editor::GUI::PostProcess_ref = PP;
+
+        
+        mPointShadow = std::make_shared<Renderer::PointShadow>(PP->getLight(0).position);
+        mPointShadow->Setup();
 
         m_PlayerCapsule = (std::shared_ptr<Player>)new Player(10, 15.8, -10);
         //m_PlayerCapsule = (std::shared_ptr<Game::Player>) new Game::Player(170.0,5.25,-202.0, this->rM);
@@ -450,7 +379,7 @@ namespace Epsilon
         //3 , 7, 30
         sun->Update(); /*glm::vec3(6 + 1.0 * 30, 8 + 45.0f, -8 + 0.0 * 30)*/
 
-        shadowMap->setShadowPosition(glm::vec3(6 + 1.0 * 30, 8 + 45.0f, -8 + 0.0 * 30));
+        shadowMap->setShadowPosition(sun->Position);
 
         shadowMap->setShadowDirection(sun->Direction);
 
@@ -475,6 +404,7 @@ namespace Epsilon
         glEnable(GL_DEPTH_TEST);
         eCamera[mCurrentCamera]->Update(mWindow->getHandle()->getHandle());
         eCamera[mCurrentCamera]->UpdateMatrices(0, WIDTH, HEIGHT);
+        mCameraData->Init(&eCamera[mCurrentCamera]->CameraData);
         sun->Update();
         glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
         glDisable(GL_CULL_FACE);
@@ -586,9 +516,10 @@ namespace Epsilon
                         glActiveTexture(GL_TEXTURE5);
                         cubeShader->PushUniform("shadowMap", 5);
                         glBindTexture(GL_TEXTURE_2D, shadowMap->getShadowTextureID());
-                        //BSPMap->RenderLevel(mCubemap[a][b][c]->getPosition(), cubeShader, true);
+                        BSPMap->RenderLevel(mCubemap[a][b][c]->getPosition(), cubeShader, true);
                         cubeShader->Free();
                     }
+
                     mCubemap[a][b][c]->End();
                     mCubemap[a][b][c]->genAmbientConvolution();
                     ResourceManager::Get().addCubemap(this->mCubemap[a][b][c], mCubemap[a][b][c]->getPosition());
@@ -610,18 +541,45 @@ namespace Epsilon
         auto finish = std::chrono::steady_clock::now();
         auto interval = std::chrono::duration_cast<std::chrono::milliseconds>(finish - start).count();
         std::cout << "Cubemap generation took: " << interval << " milliseconds" << std::endl;
-        std::cout << interval / (7 * 7 * 7) << " per cubemap" << std::endl;
-        /*
-        {
-              for (int a = 0; a < 7; a++)
-                for (int b = 0; b < 7; b++)
-                    for (int c = 0; c < 7; c++)
-                    {
-                        glm::vec3 positions = initCubemapPosition + glm::vec3(a, b, c) * glm::vec3(10.0, 5.0, 10.0);
-                        glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
-                        std::string tModelName = "models/esfera.eml";
+        std::cout << interval / (14 * 7 * 9) << " per cubemap" << std::endl;
 
-                        std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(positions, glm::vec3(1.0), tRotation);
+        for (int a = 0; a < 3; a++)
+            for (int b = 0; b < 3; b++)
+                for (int c = 0; c < 3; c++)
+                {
+                    glm::vec3 tPosition = glm::vec3(0, 10.0, 0);
+                    glm::vec3 positions = tPosition + glm::vec3(a, b, c) * glm::vec3(2.0, 2.0, 2.0);
+                    glm::vec3 tScale = glm::vec3((random_double() * 2.0) + 0.1);
+                    glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
+                    std::string tModelName = "models/esfera.eml";
+
+                    std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(positions, tScale, tRotation);
+
+                    auto _RComp = std::make_shared<Component::RenderComponent>(tModelName, positions, "Main");
+                    _RComp->CastsShadows(true);
+                    _RComp->setTransparency(false);
+                    _RComp->setRenderId(EntityList.size());
+                    MIN_MAX_POINTS _BoundingBox = ResourceManager::Get().getModelBoundingBox(tModelName);
+                    auto _PComp = std::make_shared<Component::PhysicComponent>(100, positions, tScale, Physics::Type::SPHERE, _BoundingBox);
+                    _PComp->setID(EntityList.size());
+                    //_PComp->setState(true);
+                    _Entity->addComponent(_RComp)->addComponent(_PComp);
+
+                    _Entity->setName(std::string("Entity") + std::to_string(EntityList.size()));
+                    EntityList.push_back(_Entity);
+                }
+
+        { /*
+              for (int a = 0; a < 14; a++)
+                for (int b = 0; b < 7; b++)
+                    for (int c = 0; c < 9; c++)
+                    {
+                        glm::vec3 positions = initCubemapPosition + glm::vec3(a, b, c) * glm::vec3(5.0, 4.0, 3.0);
+                        glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
+                        glm::vec3 tScale = glm::vec3(0.5);
+                        std::string tModelName = "models/probe.eml";
+
+                        std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(positions, tScale, tRotation);
                         Component::Component_ptr _RComp = std::make_shared<Component::RenderComponent>(tModelName, positions, "Main");
                         static_pointer_cast<Component::RenderComponent>(_RComp)->CastsShadows(false);
                         static_pointer_cast<Component::RenderComponent>(_RComp)->isDoubleFaced(false);
@@ -630,9 +588,9 @@ namespace Epsilon
 
                         _Entity->addComponent(_RComp);
                         EntityList.push_back(_Entity);
-                    }
+                    }*/
         }
-*/
+
         /* {
             glm::vec3 positions = glm::vec3(-20, 10, 2);
             glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
@@ -681,11 +639,13 @@ namespace Epsilon
         glEnable(GL_CULL_FACE);
         glDepthFunc(GL_LESS);
         std::cout << "All Resources Initialized." << std::endl;
+
+        
         //exit(0);
     }
-
+ 
     void Epsilon::LoadShaders(void)
-    {
+    { 
         cout << "Loading Shaders..." << endl;
 
         Shaders["grass"] = std::make_shared<Shader>("shaders/grass.vglsl", "shaders/grass.fglsl");
@@ -717,6 +677,8 @@ namespace Epsilon
         Shaders["Cloth"] = std::make_shared<Shader>("shaders/Cloth.vglsl", "shaders/Cloth.fglsl");
 
         Shaders["ImGui_gamma"] = std::make_shared<Shader>("shaders/ImGui_gamma_correct_vertex.glsl", "shaders/ImGui_gamma_correct_fragment.glsl");
+
+        Shaders["HBIL"] = std::make_shared<Shader>("shaders/SSAO.vglsl", "shaders/HBIL.glsl");
 
         ResourceManager::Get().requestShader("shaders/Geometry.vglsl", "shaders/Geometry.fglsl", "Main");
         ResourceManager::Get().requestShader("shaders/Cloth.vglsl", "shaders/Cloth.fglsl", "Cloth");
@@ -778,7 +740,7 @@ namespace Epsilon
         sun = std::move((shared_ptr<Sun>)(new Sun()));
         BSPMap = std::move((shared_ptr<CQuake3BSP>)(new CQuake3BSP()));
 
-        BSPMap->LoadBSP((string("maps/") + "godrays_tutorial.bsp").c_str());
+        BSPMap->LoadBSP((string("maps/") + "GI.bsp").c_str());
 
         m_AnimModel = std::move((shared_ptr<MD5Model>)(new MD5Model()));
 
@@ -791,13 +753,13 @@ namespace Epsilon
     void Epsilon::LoadSound(void)
     {
         cout << "Loading Sound..." << endl;
-
+        /*
         m_AudioSystem = (std::shared_ptr<IO::Audio::Audio>)new IO::Audio::Audio();
         /*
         std::shared_ptr<IO::Audio::AudioElement> m_AudioElement = (std::shared_ptr<IO::Audio::AudioElement>) new IO::Audio::AudioElement("sound/File0279.wav", STATIC_SOUND, glm::vec3(-28, 10, 15), glm::vec3(0,0,0));
         m_AudioSystem->addAudioElement(3, m_AudioElement);
     */
-
+        /*
         std::shared_ptr<IO::Audio::AudioElement> m_AudioElement2 = (std::shared_ptr<IO::Audio::AudioElement>)new IO::Audio::AudioElement("sound/ambient.wav", MUSIC, glm::vec3(-28, 10, 15), glm::vec3(0, 0, 0));
         m_AudioSystem->addAudioElement(0, m_AudioElement2);
 
@@ -807,7 +769,7 @@ namespace Epsilon
         std::shared_ptr<IO::Audio::AudioElement> m_AudioElement4 = (std::shared_ptr<IO::Audio::AudioElement>)new IO::Audio::AudioElement("sound/hover.wav", MENU_SOUND, glm::vec3(96, 16, 6), glm::vec3(0, 0, 0));
         m_AudioSystem->addAudioElement(2, m_AudioElement4);
 
-        m_AudioListener = (std::shared_ptr<IO::Audio::AudioListener>)new IO::Audio::AudioListener();
+        m_AudioListener = (std::shared_ptr<IO::Audio::AudioListener>)new IO::Audio::AudioListener();*/
     }
 
     bool visible = true;
@@ -858,19 +820,19 @@ namespace Epsilon
         BSPMap->Frustum.CalculateFrustum(glm::mat4(eCamera[mCurrentCamera]->getProjectionMatrix() * eCamera[mCurrentCamera]->getViewMatrix()), BSPmodel);
         shader->Use();
         this->SetUniforms(shader, glm::vec3(0.0), glm::vec3(0.1), glm::quat(0, 0, 0, 0));
-        //BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), shader, true);
-        /*
+        BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), shader, true);
+        /*   
     Shaders["MD5Geometry"]->Use();
     glUniformMatrix4fv(glGetUniformLocation(Shaders["MD5Geometry"]->getProgramID(), "mSkinned"), 150, GL_FALSE, &m_AnimModel->m_AnimatedBones[0][0][0]);
     this->SetUniforms(Shaders["MD5Geometry"], glm::vec3(mpos, 0.8, 15), glm::vec3(0.1, 0.1, 0.1), glm::quat(-1.0, 1.0, 0.0, 0.0));
-
+   
     glActiveTexture(GL_TEXTURE4);
     glUniform1i(glGetUniformLocation(Shaders["MD5Geometry"]->getProgramID(), "skybox"), 4); 
     glBindTexture(GL_TEXTURE_CUBE_MAP, ResourceManager::Get().useCubeMap(ResourceManager::Get().getNearestCubemapIndex(glm::vec3(mpos, 0.8, 15))));
     glUniform1i(glGetUniformLocation(Shaders["MD5Geometry"]->getProgramID(), "CubemapID"), ResourceManager::Get().NearestCubeMap(glm::vec3(mpos, 0.8, 15)));
     //std::cout << "Using cubemap id: " << resm->mCubemapIndex.at(resm->NearestCubeMap(pos)) << std::endl;
     glUniform1i(glGetUniformLocation(Shaders["MD5Geometry"]->getProgramID(), "AmbientProbeID"), ResourceManager::Get().NearestCubeMap(glm::vec3(mpos, 0.8, 15)) - 1);
-
+ 
     m_AnimModel->Render(Shaders["MD5Geometry"]->getProgramID());*/
         glCullFace(GL_BACK);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -911,9 +873,9 @@ namespace Epsilon
 
         shader->PushUniform("FrameNumber", (int)mWindow->FrameNumber());
         this->SetUniforms(shader, glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.1, 0.1, 0.1), glm::quat(0.0, 0.0, 0.0, 0.0));
-        //BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), shader, false);
+        BSPMap->RenderLevel(eCamera[mCurrentCamera]->getPosition(), shader, false);
 
-        /*
+        /*   
     Shaders["MD5ShadowMapping"]->Use();
     glUniformMatrix4fv(glGetUniformLocation(Shaders["MD5ShadowMapping"]->getProgramID(), "mSkinned"), 150, GL_FALSE, &m_AnimModel->m_AnimatedBones[0][0][0]);
     this->SetUniforms(Shaders["MD5ShadowMapping"], glm::vec3(mpos, 0.8, 15), glm::vec3(0.1, 0.1, 0.1), glm::quat(-1.0, 1.0, 0.0, 0.0f));
@@ -979,38 +941,44 @@ namespace Epsilon
         int DEBUG_MODE = 3;
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
-        {
+        { 
             Editor::GUI::MainWindow(EntityList);
-            Editor::GUI::ToolbarUI();
-
-            //ImGui::PopStyleVar();
-            //ImGui::Begin("Canvas", NULL);
 
             /*Begin skybox window*/
-
-            Editor::GUI::SkySettings(skybox);
+            Editor::GUI::SkySettings(skybox, sun);
             /*End Skybox window*/
 
             /*Begin scene window*/
-
+ 
             Editor::GUI::DebugView(PP, mDefaultFrameBuffer, eCamera[mCurrentCamera], Shaders["ImGui_gamma"]);
             Editor::GUI::MainViewport(mDefaultFrameBuffer, eCamera[mCurrentCamera]);
 
             Editor::GUI::SceneHierarchy(EntityList);
-
+ 
             Editor::GUI::TextureList();
+  
+            Editor::GUI::ShaderView(Shaders);
+ 
+            //Editor::GUI::AudioControl(m_AudioSystem);
+
+            Editor::GUI::FileSystemWindow();
 
             Editor::GUI::PostprocessSettings(PP);
-
-            Editor::GUI::EntityProperties();
+  
+            Editor::GUI::EntityProperties(eCamera[mCurrentCamera]);
 
             Editor::GUI::Render(mWindow);
-        }
-    }
 
+            if (Editor::GUI::sSelectedEntityIndex != -1)
+            {
+                Editor::GUI::sSelectedEntity = EntityList[Editor::GUI::sSelectedEntityIndex];
+            }
+        } 
+    }     
+       
     void Epsilon::ProcessAudio()
     {
-
+        /*
         m_AudioListener->setListenerPosition(this->eCamera[mCurrentCamera]->getPosition());
         m_AudioListener->setListenerDirection(this->eCamera[mCurrentCamera]->getDirection(), this->eCamera[mCurrentCamera]->getUp());
 
@@ -1022,53 +990,53 @@ namespace Epsilon
             {
                 EntityList[i]->getComponent(Component::SOUNDCOMPONENT)->Render();
             }
-        }
+        } 
 
-        m_AudioSystem->PlayAudio();
+        m_AudioSystem->PlayAudio();*/
     }
-
+ 
     void Epsilon::Clock()
-    {
+    { 
         Clock::Tick();
         etime = Clock::TimeSeconds();
         frametime = etime - lastTime;
         double t = 0.0;
-
+ 
         fps = 1.0 / frametime;
         if (etime > t)
         {
             fpss << fps;
             t = etime + (double)1.000;
-        }
-
+        }  
+  
         eventtime += 1 * Clock::DeltaSeconds();
         //cout << eventtime << endl;
         sun->Update();
 
         ResourceManager::Get().timestep = Clock::LastSeconds();
     }
-
+  
     void Epsilon::RenderSkybox(bool state)
     {
         Shaders["SkyBox"]->Use();
-
+   
         glm::mat4 view = glm::mat4(glm::mat3(eCamera[mCurrentCamera]->getViewMatrix()));
         float rotation = 0.5 * Clock::TimeSeconds();
         glm::mat4 RotationMatrix = glm::rotate(glm::mat4(1.0), glm::radians(rotation), glm::vec3(0, 1, 0));
         view = view /* * RotationMatrix*/;
         glm::mat4 projection = glm::mat4(eCamera[mCurrentCamera]->getProjectionMatrix());
         glm::mat4 model = glm::mat4(1.0);
-
+  
         glm::mat4 ScaleMatrix = glm::scale(model, glm::vec3(1, 1, 1));
         glm::mat4 TranslationMatrix = glm::translate(model, glm::vec3(0, 0, 0));
         model = model * ScaleMatrix * TranslationMatrix;
         glUniformMatrix4fv(glGetUniformLocation(Shaders["SkyBox"]->getProgramID(), "model"), 1, GL_FALSE, &model[0][0]);
         glUniformMatrix4fv(glGetUniformLocation(Shaders["SkyBox"]->getProgramID(), "view"), 1, GL_FALSE, &view[0][0]);
         glUniformMatrix4fv(glGetUniformLocation(Shaders["SkyBox"]->getProgramID(), "projection"), 1, GL_FALSE, &projection[0][0]);
-
+   
         glUniform3f(glGetUniformLocation(Shaders["SkyBox"]->getProgramID(), "LightDirection"), sun->Direction.x, sun->Direction.y, sun->Direction.z);
         skybox->Render(this->eCamera[mCurrentCamera], Shaders["SkyBox"], PP->m_exposure, state);
-
+ 
         Shaders["Sun"]->Use();
         sun->SetUniforms(eCamera[mCurrentCamera], Shaders["Sun"]);
         sun->Render(Shaders["Sun"]);
@@ -1076,15 +1044,6 @@ namespace Epsilon
 
     void Epsilon::PollEvents(void)
     {
-
-        /*if (glfwGetWindowAttrib(window, GLFW_FOCUSED))
-    {
-        glfwPollEvents();
-    } 
-    else
-    {
-        glfwWaitEvents();
-    }*/
 
         glfwPollEvents();
         Editor::GUI::PollEvents(mDefaultFrameBuffer, PP);
@@ -1096,60 +1055,46 @@ namespace Epsilon
         if (glm::abs((timeGUI * 60) - (etime * 60)) > 2.0f && onMenu)
         {
             timeGUI = this->etime;
-            //m_GUI->PollEvents(window);
         }
 
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::ESCAPE] || _Joystick->getJoystickButton(_Joystick->getMapping()->START()))
         {
             if (glm::abs((menuTime * 60) - (etime * 60)) > 60.0f)
             {
-                //g_Running = false;
                 onMenu = !onMenu;
                 menuTime = this->etime;
             }
         }
-
+ 
         auto &ref = ResourceManager::Get();
 
         if (ref.ShouldLoadQueuedTextures())
         {
             ref.loadQueuedTextures();
         }
-        /* if (onMenu)
-        {
-            glfwSetInputMode(window->getHandle()->getHandle(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-            ComputeCamera(CAMERA_FIXED, eCamera[mCurrentCamera]->getPosition(), eCamera[mCurrentCamera]->getDirection(), eCamera[mCurrentCamera]->getProjectionMatrix(), eCamera[mCurrentCamera]->getViewMatrix());
-            this->m_CameraMode = CAMERA_FIXED;
-        }
-        else
-        {
-            glfwSetInputMode(window->getHandle()->getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            this->m_CameraMode = NO_CLIP;
-        }*/
 
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::N])
             normal = !normal;
 
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::F])
             flashLight = !flashLight;
-
+ 
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::SPACE])
         {
             PP->HBAOOn = !PP->HBAOOn;
             SSAO = !SSAO;
         }
-
+ 
         auto resolveTime = [kt = KeyTime, t = etime](int key) -> bool
         { return glm::abs((kt[key] * 60) - (t * 60)) > 60.0f; };
-
+  
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::C] && resolveTime(Input::GLFW::Key::C))
         {
-            //mCurrentCamera = (int)!mCurrentCamera;
             eCamera[mCurrentCamera]->isMoving(true);
             eCamera[!mCurrentCamera]->isMoving(true);
             KeyTime[Input::GLFW::Key::C] = etime;
         }
-
+ 
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::M] && resolveTime(Input::GLFW::Key::M))
         { 
             auto &XPOS = Input::Mouse::XPOS;
@@ -1188,7 +1133,6 @@ namespace Epsilon
         {
             windSpeed += frametime;
         }
-        //exposure += 0.5 * frametime;
 
         if (Input::KeyBoard::KEYS[Input::GLFW::Key::SUBTRACT])
             exposure -= 0.5 * frametime;
@@ -1214,20 +1158,16 @@ namespace Epsilon
         */
         m_PlayerCapsule->CheckforPicking(btVector3(eCamera[mCurrentCamera]->getPosition().x, eCamera[mCurrentCamera]->getPosition().y, eCamera[mCurrentCamera]->getPosition().z),
                                          btVector3(eCamera[mCurrentCamera]->getDirection().x * 1000, eCamera[mCurrentCamera]->getDirection().y * 1000, eCamera[mCurrentCamera]->getDirection().z * 1000));
-
-        //m_ParticleSystem->Simulate(this->frametime, eCamera[mCurrentCamera]->getPosition());
     }
 
     void Epsilon::onRender()
     {
-        // 0 8 6
         this->ClearBuffers();
 
         this->Clock();
 
         this->PollEvents();
 
-        //if (!onMenu)
         this->ComputeCamera(m_CameraMode, glm::vec3(48.4247, 8.1507, -12.9128), glm::vec3(-0.785454, 0.0299956, 0.618193));
 
         this->ProcessAudio();
@@ -1289,14 +1229,7 @@ namespace Epsilon
                         auto BB = model->getMeshBoundingBox(j, EntityList[i]->getPosition(), EntityList[i]->getScale(), EntityList[i]->getRotation());
                         auto vis = BSPMap->Frustum.BoxInFrustum(BB);
 
-                        if (vis)
-                        {
-                            model->setMeshVisibility(j, true);
-                        }
-                        else
-                        {
-                            model->setMeshVisibility(j, false);
-                        }
+                        model->setMeshVisibility(j, vis);
                     }
                 }
             }
@@ -1304,12 +1237,16 @@ namespace Epsilon
             rComponent->setVisibility(visible);
         }
 
-        auto prev_pos = EntityList[1]->getPosition();
-        EntityList[1]->setPosition(glm::vec3(prev_pos.x, prev_pos.y + glm::sin(Clock::TimeSeconds()), prev_pos.z));
+        //auto prev_pos = EntityList[1]->getPosition();
+        //EntityList[1]->setPosition(glm::vec3(prev_pos.x, prev_pos.y + glm::sin(Clock::TimeSeconds()), prev_pos.z));
     }
 
     void Epsilon::SwapBuffers(void)
     {
+        for (unsigned int i = 0; i < EntityList.size(); ++i)
+        {
+            EntityList[i]->PostUpdate();
+        }
         //glfwSwapBuffers(this->mWindow->getHandle()->getHandle());
         this->mWindow->IncrementFrame();
         this->mWindow->SwapBuffers();
@@ -1323,10 +1260,10 @@ namespace Epsilon
 
     void Epsilon::ComputeCamera(CAMERA_MODE mode, glm::vec3 position, glm::vec3 direction, glm::mat4 proj, glm::mat4 view)
     {
-        this->eCamera[mCurrentCamera]->Update(this->mWindow->getHandle()->getHandle());
 
         if (mode == PLAYER_CONTROLLED)
         {
+            this->eCamera[mCurrentCamera]->Update(this->mWindow->getHandle()->getHandle());
             m_PlayerCapsule->preStep();
             m_PlayerCapsule->Movement(this->eCamera[mCurrentCamera], frametime);
             eCamera[mCurrentCamera]->setPosition(m_PlayerCapsule->getPosition());
@@ -1334,11 +1271,13 @@ namespace Epsilon
         else if (mode == CAMERA_FIXED)
         {
             //eCamera[mCurrentCamera]->getDirection()
-            eCamera[mCurrentCamera]->setPosition(mLastCameraPosition);
-            eCamera[mCurrentCamera]->setDirection(mLastCameraDirection);
+            //eCamera[mCurrentCamera]->setPosition(mLastCameraPosition);
+            //eCamera[mCurrentCamera]->setDirection(mLastCameraDirection);
         }
         else if (mode == CAMERA_OVERRIDE)
         {
+
+            this->eCamera[mCurrentCamera]->Update(this->mWindow->getHandle()->getHandle());
             eCamera[mCurrentCamera]->setPosition(position);
             eCamera[mCurrentCamera]->setDirection(direction);
             eCamera[mCurrentCamera]->setViewMatrix(view);
@@ -1346,6 +1285,7 @@ namespace Epsilon
         }
         else if (mode == NO_CLIP)
         {
+            this->eCamera[mCurrentCamera]->Update(this->mWindow->getHandle()->getHandle());
             /*default mode: everything is calculated automatically*/
         }
         else
@@ -1353,9 +1293,17 @@ namespace Epsilon
         }
 
         if (PP)
+        {
+
+            eCamera[mCurrentCamera]->jitter_multiplier = PP->getPostProcessData().AntiAliasingSettings.JitterMultiplier;
             this->eCamera[mCurrentCamera]->UpdateMatrices(mWindow->FrameNumber(), WIDTH, HEIGHT, PP->getPostProcessData().AntiAliasingSettings.Active);
+        }
         else
             this->eCamera[mCurrentCamera]->UpdateMatrices(mWindow->FrameNumber(), WIDTH, HEIGHT);
+
+        eCamera[mCurrentCamera]->CameraData.CurrentSelectedEntity = Editor::GUI::sSelectedEntityIndex;
+        mCameraData->Update(sizeof(Camera::CameraData_t), 0, (const void *)&eCamera[mCurrentCamera]->CameraData);
+        mCameraData->Bind();
     }
 
     void Epsilon::ComputeShadow()
@@ -1375,8 +1323,6 @@ namespace Epsilon
 
         shadowMap->setShadowPosition(glm::vec3(camPos.x + camDir.x * 30, camPos.y + 45.0f, camPos.z + camDir.z * 30));
 
-        //std::cout << "x: " <<camPos.x + camDir.x * 30 << " y: " << camPos.y + 45.0f << " z: " << camPos.z + camDir.z * 30 << std::endl;
-
         shadowMap->setShadowDirection(sun->Direction);
 
         shadowMap->SetupShadowMatrices();
@@ -1384,35 +1330,32 @@ namespace Epsilon
         shadowMap->Begin(0);
         Shaders["ShadowMapping"]->Use();
 
-        //glEnable(GL_DEPTH_CLAMP);
         if (sun->height > 0.0)
             this->RenderShadows(Shaders["ShadowMapping"]);
-        //glDisable(GL_DEPTH_CLAMP);
         shadowMap->End();
 
         Shaders["ShadowMapping"]->Free();
 
         //------------- Point Shadow ---------------
+        mPointShadow->updateMatrices(PP->getLight(0).position);
         mPointShadow->Begin(0);
 
         RenderShadows(ResourceManager::Get().getShader("PointShadow"));
 
         mPointShadow->End();
     }
-
+ 
     void Epsilon::ProcessFrame(void)
-    {
+    { 
         PP->beginOffScreenrendering();
 
-        //glBindBuffer(GL_SHADER_STORAGE_BUFFER, this->AmbientLightSSBO);
-        //glEnable(GL_DEPTH_CLAMP);
         this->RenderSkybox(true);
         glClearDepth(1.0f);
-        /*
+        /*  
     Shaders["grass"]->Use();
     this->SetUniforms(Shaders["grass"], glm::vec3(0, 0, 0), glm::vec3(0.05), glm::quat(-1, 0, -1, 0));
     grass.at(0).Render(Shaders["grass"]);
-
+ 
     Shaders["grass"]->Use();
     this->SetUniforms(Shaders["grass"], glm::vec3(0, 0, 0), glm::vec3(0.05), glm::quat(-1, 0, -1, 0));
     grass.at(1).Render(Shaders["grass"]);
@@ -1420,15 +1363,12 @@ namespace Epsilon
 
         this->Render3D(Shaders["Main"]);
 
-        //glDisable(GL_DEPTH_CLAMP);
         PP->endOffScreenRendering();
-
-        //glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
         if (this->SSAO)
             PP->applySSAO(this->eCamera[mCurrentCamera]);
 
-        //PP->applyHBIL(this->eCamera[mCurrentCamera]);
+        PP->applyHBIL(this->eCamera[mCurrentCamera], shadowMap, Shaders["HBIL"], mPointShadow);
     }
 
     void Epsilon::RenderParticles(void)

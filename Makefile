@@ -81,11 +81,10 @@ INCLUDE_LIBS:= -I$(LIB)/glm \
 -I$(LIB)/bullet3/src \
 -I$(LIB)/glfw/include \
 -IC:/VulkanSDK/1.2.170.0/Include \
--I$(LIB)/soil/Simple\ OpenGL\ Image\ Library/src \
 -I$(LIB)/openal-soft/include \
 -I$(LIB)/inih/cpp \
 -I$(LIB)/lua-5.3.5/src \
--I$(LIB)/stb-master \
+-I$(LIB)/stb_image \
 -I$(LIB)/glad/include \
 -I$(LIB)/OpenGL/include/ \
 -I$(LIB)/json-develop/include \
@@ -124,7 +123,7 @@ LIBS_DIR := -L$(LIB)/inih \
 endif
 
 ifeq "$(OS)" "Windows_NT"
-LIBS:= -lSOIL -limgui -lglfw3dll "/c/VulkanSDK/1.2.170.0/Lib/vulkan-1.lib" -lopengl32 -lglad -linih -lgdi32 -lole32 -lxaudio2_8 -lOpenAL32.dll -llua -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
+LIBS:= -limgui -lglfw3dll "/c/VulkanSDK/1.2.170.0/Lib/vulkan-1.lib" -lopengl32 -lglad -linih -lgdi32 -lole32 -lxaudio2_8 -lOpenAL32.dll -llua -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
 else 
 LIBS:= -lGLU -lGL -lSOIL -lglad -ldl -lglfw -linih -lopenal -fopenmp -static-libasan -lgomp -llua5.3 -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
 endif
