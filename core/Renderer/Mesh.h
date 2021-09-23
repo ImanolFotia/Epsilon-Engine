@@ -68,6 +68,7 @@ namespace Epsilon::Renderer
         glm::mat4 mLocalTransform;
 
         bool isVisible = true;
+        bool isSettedUp = false;
         glm::vec3 mPosition = glm::vec3(0.0, 0.0, 0.0);
 
         /**  Functions  */
@@ -106,35 +107,21 @@ namespace Epsilon::Renderer
             if (isVisible)
             {
                 mVAO->Bind();
-                glCache::glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
+                glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
                 mVAO->Unbind();
             }
         }
 
-        void Destroy()
-        {
-            mVAO->Destroy();
-        }
+        void Destroy();
+
+        void setMaterial(MaterialPBR_ptr);
 
     public:
-        
         MIN_MAX_POINTS MinMaxPoints;
 
         /**  Functions    */
         /// Initializes all the buffer objects/arrays
-        void setupMesh()
-        {
-            mVAO = std::make_shared<API::OpenGL::VertexArrayObject>();
-
-            mVAO->addBuffer(vertices.size() * sizeof(t_Vertex), &vertices[0], GL_STATIC_DRAW);
-            mVAO->setAttribute(3, sizeof(t_Vertex), (GLvoid *)0);
-            mVAO->setAttribute(2, sizeof(t_Vertex), (void *)offsetof(t_Vertex, texcoord));
-            mVAO->setAttribute(3, sizeof(t_Vertex), (void *)offsetof(t_Vertex, normal));
-            mVAO->setAttribute(3, sizeof(t_Vertex), (void *)offsetof(t_Vertex, tangent));
-            mVAO->setAttribute(3, sizeof(t_Vertex), (void *)offsetof(t_Vertex, bitangent));
-            
-            mVAO->IndexBuffer(indices);
-        }
+        void setupMesh();
 
     private:
         uint32_t mGIIndex;

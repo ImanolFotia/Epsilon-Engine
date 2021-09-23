@@ -2,7 +2,7 @@
 
 #include <pch.hpp>
 #include <glm/glm.hpp>
-#include <ResourceManager.h>
+#include <Resource/ResourceManager.h>
 #include <Physics/CollisionInfo.h>
 
 #include <Entity/ClothComponent.hpp>
@@ -78,11 +78,13 @@ namespace Epsilon
             return std::to_string(mID * pos.x + pos.y * pos.z * pos.z + sc.x - rot.x * rot.z);
         }
 
-        void setName(const std::string & name) {
+        void setName(const std::string &name)
+        {
             mName = name;
         }
-        
-        const std::string & getName() {
+
+        const std::string &getName()
+        {
             return mName;
         }
 
@@ -225,9 +227,13 @@ namespace Epsilon
                     return ResourceManager::Get().getModelBoundingBox(std::static_pointer_cast<Component::RenderComponent>(ComponentList[i])->modelPath);
                 }
             }*/
-
-                return ResourceManager::Get().getModelBoundingBox(
-                    std::static_pointer_cast<Component::RenderComponent>(ComponentList[Component::RENDERCOMPONENT])->modelPath);
+                if (
+                    auto rcomp = std::static_pointer_cast<Component::RenderComponent>(ComponentList[Component::RENDERCOMPONENT]); 
+                    rcomp->hasModel)
+                    return ResourceManager::Get().getModelBoundingBox(
+                        std::static_pointer_cast<Component::RenderComponent>(ComponentList[Component::RENDERCOMPONENT])->modelPath);
+                else 
+                    return {1.0, 1.0, 1.0, -1.0, -1.0, 1.0};
             }
 
             else if (this->mHasClothComponent)

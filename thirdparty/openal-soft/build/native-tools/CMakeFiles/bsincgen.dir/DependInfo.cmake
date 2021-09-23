@@ -1,24 +1,14 @@
+
+# Consider dependencies only in project.
+set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
+
 # The set of languages for which implicit dependencies are needed:
 set(CMAKE_DEPENDS_LANGUAGES
-  "C"
-  )
-# The set of files for implicit dependencies of each language:
-set(CMAKE_DEPENDS_CHECK_C
-<<<<<<< HEAD
-  "H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/native-tools/bsincgen.c" "H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/build/native-tools/CMakeFiles/bsincgen.dir/bsincgen.c.obj"
-=======
-  "C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/native-tools/bsincgen.c" "C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/build/native-tools/CMakeFiles/bsincgen.dir/bsincgen.c.obj"
->>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
-  )
-set(CMAKE_C_COMPILER_ID "GNU")
-
-# Preprocessor definitions for this target.
-set(CMAKE_TARGET_DEFINITIONS_C
-  "_WIN32"
   )
 
-# The include file search paths:
-set(CMAKE_C_TARGET_INCLUDE_PATH
+# The set of dependency files which are needed:
+set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "I:/Epsilon/Epsilon Engine/thirdparty/openal-soft/native-tools/bsincgen.c" "CMakeFiles/bsincgen.dir/bsincgen.c.obj" "gcc" "CMakeFiles/bsincgen.dir/bsincgen.c.obj.d"
   )
 
 # Targets to which this target links.

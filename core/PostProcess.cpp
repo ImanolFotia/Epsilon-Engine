@@ -152,8 +152,8 @@ namespace Epsilon
 
         hdrFBO = std::make_shared<OpenGL::FrameBuffer<std::string>>(width, height, true);
 
-        hdrFBO->addRenderTarget("colorBuffer", GL_RGB16F, GL_RGB, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, false);
-        hdrFBO->addRenderTarget("brightColorBuffer", GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
+        hdrFBO->addRenderTarget("colorBuffer", GL_RGBA16F, GL_RGBA, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, false);
+        hdrFBO->addRenderTarget("brightColorBuffer", GL_RGBA16F, GL_RGBA, GL_LINEAR, GL_LINEAR, false);
         hdrFBO->FinishFrameBuffer();
 
         CopyTextureFBO = std::make_shared<OpenGL::FrameBuffer<int>>(width, height, false);
@@ -256,7 +256,7 @@ namespace Epsilon
         gBufferFramebuffer->addRenderTarget(GBUFFER_IBL_DEPTH, GL_RGBA32F, GL_RGBA, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, true); //gDepth
         gBufferFramebuffer->addRenderTarget(GBUFFER_MOTION_EXTRA, GL_RGBA32F, GL_RGBA, GL_NEAREST, GL_NEAREST, false);                       //gExtraComponents
         gBufferFramebuffer->addRenderTarget(GBUFFER_GI, GL_RGBA32F, GL_RGBA, GL_NEAREST, GL_NEAREST, false);                                 //gLightAccumulation
-        gBufferFramebuffer->addRenderTarget(GBUFFER_ENTITY, GL_RGB32I, GL_RGB_INTEGER, GL_NEAREST, GL_NEAREST, false, GL_TEXTURE_2D, GL_INT, false);
+        gBufferFramebuffer->addRenderTarget(GBUFFER_ENTITY, GL_RGBA32I, GL_RGBA_INTEGER, GL_NEAREST, GL_NEAREST, false, GL_TEXTURE_2D, GL_INT, false);
         gBufferFramebuffer->FinishFrameBuffer();
     }
 

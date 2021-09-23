@@ -27,7 +27,7 @@ namespace Epsilon
 		/////// * /////////// * /////////// * NEW * /////// * /////////// * /////////// *
 
 		// This checks if a box is in the frustum
-		bool BoxInFrustum(float x, float y, float z, float sizeX, float sizeY, float sizeZ);
+		bool BoxInFrustum(float x, float y, float z, float sizeX, float sizeY, float sizeZ) const;
 
 		// This checks if a box is in the frustum
 		bool BoxInFrustum(MIN_MAX_POINTS points);

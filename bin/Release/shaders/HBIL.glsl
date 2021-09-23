@@ -1,4 +1,4 @@
-#version 440 core
+#version 420 core
 
 layout (binding = 0) uniform sampler2D gDepth;
 layout (binding = 1) uniform sampler2DShadow shadowMap;
@@ -117,8 +117,8 @@ float PointShadowCalculation(vec3 fragPos, vec3 LightPos, vec3 viewPos)
 
 float getDensity(vec3 p) {
 
-    const float density = 0.05;
-    const float gradient = 0.05;
+    const float density = 0.1;
+    const float gradient = 0.5;
 
     const float bottomLimit = -1.5;
     const float upperLimit = 30.0;
@@ -126,11 +126,11 @@ float getDensity(vec3 p) {
     float dist = length(camPos - p);
     float visibility = exp(-pow((dist*density), gradient));
 
-    float heightInfluence = smoothstep(bottomLimit, upperLimit, p.y);
+    float heightInfluence = smoothstep(upperLimit, bottomLimit, p.y);
 
     vec3 sunpos = vec3(13.0, 12.0, 0.0);
 
-    return heightInfluence * visibility + density;//exp( (-p.y - 1.0) / (length(p - sunpos)) * 5.0 );
+    return heightInfluence * visibility;//exp( (-p.y - 1.0) / (length(p - sunpos)) * 5.0 );
 }
 
 const int MAX_STEPS = 100;
@@ -175,11 +175,11 @@ vec3 intersect(in vec3 ro, in vec3 rd, out float dd) {
         steps++;
     }
 
-    return (lightAccum / steps);
+    return (lightAccum / (steps*2.0));
 }
 
 float calcAttenuation(vec3 ro) {
-    return clamp((length(ro - camPos)) * 0.05, 0.0, 0.5);
+    return clamp((length(ro - camPos)) * 0.01, 0.0, 0.5);
 }
 void main() {
     

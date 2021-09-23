@@ -29,7 +29,7 @@
 #include <MD5_Anim.h>
 #include <Renderer/Shadows/ShadowMapping.h>
 #include <Entity/Entity.h>
-#include <ResourceManager.h>
+#include <Resource/ResourceManager.h>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <Player.h>
@@ -40,7 +40,7 @@
 #include <SphericalHarmonics.h>
 #include <Picking.h>
 #include <Log.h>
-#include <sys/filesystem.h>
+#include <System/filesystem.h>
 #include <cubemapRenderer.h>
 #include <CubeMap.h>
 #include <CommandFunctions.h>
@@ -61,6 +61,7 @@
 #include <imgui_imp/imgui_Init.hpp>
 
 #include <Renderer/Gizmos.hpp>
+#include <Renderer/Primitives/Sphere.hpp>
 
 namespace Epsilon
 {
@@ -120,6 +121,8 @@ namespace Epsilon
 
         void CalculateVisibility();
 
+        void RenderGlobalIllumination();
+
     public:
         void onRender() override;
 
@@ -177,11 +180,12 @@ namespace Epsilon
         bool SSAO = false;
         double timeBehind = 0.0;
         float timeGUI = 0.0;
-        SphericalHarmonics sph;
 
         std::shared_ptr<Renderer::ShaderStorage> AmbientLightSSBO;
         std::shared_ptr<API::BufferObject> mGlobalUniformBuffer;
         std::shared_ptr<API::BufferObject> mCameraData;
+
+        std::shared_ptr<Renderer::Gizmo> mGizmo;
 
     private:
         bool normal = 0;
@@ -208,8 +212,9 @@ namespace Epsilon
         std::shared_ptr<Physics::SpherePhysicObject> ph3;
         std::string GL_VER, GL_REN, GL_VEN;
         double m_TextAcum = 0.0;
-
+        CFrustum Frustum;
         std::shared_ptr<OpenGL::FrameBuffer<int>> mDefaultFrameBuffer;
+        std::shared_ptr<Renderer::Sphere> mSphere;
 
         //IMGUI variables
 

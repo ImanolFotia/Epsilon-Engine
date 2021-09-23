@@ -4,6 +4,7 @@
 
 #include "OpenAL/AudioDevice.h"
 #include "OpenAL/AudioSource.h"
+#include "OpenAL/AudioListener.h"
 
 #include <glm/glm.hpp>
 
@@ -11,6 +12,8 @@ namespace Epsilon::Audio
 {
     class AudioSystem
     {
+        using Listener_ptr = std::shared_ptr<AudioListener>;
+        using Source_ptr = std::shared_ptr<AudioSource>;
     public:
         AudioSystem()
         {
@@ -21,12 +24,12 @@ namespace Epsilon::Audio
 
         }
 
-        void addAudioSource(std::shared_ptr<AudioSource> source) {
-
+        void addAudioSource(Source_ptr source) {
+            mSources.insert(mSources.end(), source);
         }
 
         void setSourcePosition(uint32_t id, glm::vec3 pos) {
-
+            mSources.at(id)->setPosition(pos);
         }
 
         void setSourceDirection(uint32_t id, glm::vec3 dir) {
@@ -51,5 +54,8 @@ namespace Epsilon::Audio
 
     private:
         std::shared_ptr<AudioDevice> AudioDevice;
+        std::vector<Listener_ptr> mListeners;
+        std::vector<Source_ptr> mSources;
+
     };
 }

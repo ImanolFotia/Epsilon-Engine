@@ -1,4 +1,4 @@
-#version 440 core
+#version 420 core
 
 
 layout(location = 0) out vec4 FragColor;
@@ -94,6 +94,6 @@ void main()
         //color = TimeColor;
         vec3 LightColor = normalize(vec3(218, 205, 118));
         float scattering  = max(dot(lFragPos, LightDirection), 0.0);
-    	FragColor.rgb = TimeColor*0.00;//clamp(LightDirection.y, 0.01, 1.0);//color*0.2/*+(scattering*0.5)*/ /** max(0.1, LightDirection.y+0.2) */;
+    	FragColor.rgb = /*TimeColor*0.05*/vec3(0.0);//clamp(LightDirection.y, 0.01, 1.0);//color*0.2/*+(scattering*0.5)*/ /** max(0.1, LightDirection.y+0.2) */;
         FragColor.a = 1.0;
 }

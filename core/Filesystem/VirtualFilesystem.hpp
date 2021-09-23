@@ -43,6 +43,8 @@ namespace Epsilon::Filesystem
         virtual File &find(const std::string& dir) = 0;
 
         virtual bool exists(const std::string& dir) = 0;
+        
+        virtual bool CreateDirectory(const std::string& name, const std::string path = "") = 0;
 
         void status(Status s)
         {

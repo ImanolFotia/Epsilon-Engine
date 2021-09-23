@@ -13,7 +13,7 @@ namespace Epsilon::Audio::OpenAL
     class AudioSource : public Epsilon::Audio::AudioSource
     {
     public:
-        AudioSource(const char *fileName, AUDIO_TYPE type, glm::vec3 AudioPosition, glm::vec3 AudioDirection)
+        AudioSource(const char *fileName, AUDIO_TYPE type, glm::vec3 AudioPosition, glm::vec3 AudioDirection) : Audio::AudioSource(fileName, type, AudioPosition, AudioDirection)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace Epsilon::Audio::OpenAL
             }
         }
 
-        void Destroy()
+        void Destroy() override
         {
             std::cout << "Deleted AudioSource" << std::endl;
             //char* tmpData = data.reset();
@@ -104,7 +104,7 @@ namespace Epsilon::Audio::OpenAL
         }
 
     public:
-        void Play()
+        void Play() override
         {
             ALint source_state;
             alGetSourcei(m_AudioID, AL_SOURCE_STATE, &source_state);
@@ -151,7 +151,7 @@ namespace Epsilon::Audio::OpenAL
             }
         }
 
-        void Pause()
+        void Pause() override
         {
             ALint source_state;
             alGetSourcei(m_AudioID, AL_SOURCE_STATE, &source_state);
@@ -162,7 +162,7 @@ namespace Epsilon::Audio::OpenAL
             }
         }
 
-        void Stop()
+        void Stop() override
         {
             ALint source_state;
             alGetSourcei(m_AudioID, AL_SOURCE_STATE, &source_state);
@@ -178,11 +178,24 @@ namespace Epsilon::Audio::OpenAL
             return m_Type;
         }
 
-        void setPosition(glm::vec3 position)
+        void setPosition(glm::vec3 position) override
         {
             m_Position = position;
             alSource3f(m_AudioID, AL_POSITION, m_Position.x, m_Position.y, m_Position.z);
             //alSourcePlay(m_AudioID);
+        }
+        
+        glm::vec3 getPosition() override
+        {
+            return m_Position;
+        }
+        
+        void setDirection(glm::vec3 dir) override {
+            m_Direction = dir;
+        }
+
+        virtual glm::vec3 getDirection() override {
+            return m_Direction;
         }
 
     private:

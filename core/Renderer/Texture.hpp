@@ -34,14 +34,23 @@ namespace Epsilon::Renderer
 
             virtual void Unbind() = 0;
 
+            virtual void Destroy() = 0;
+
             virtual unsigned int ID() = 0;
 
             uint64_t Handle() { return mTexture->Handle(); }
             
             bool isResident() { return mTexture->isResident(); }
+            
+            uint32_t RefCount() { return mRefCount; }
+
+            void increaseRefCount() { mRefCount++; }
+            
+            void decreaseRefCount() { mRefCount--; }
 
         protected:
             std::shared_ptr<API::Texture> mTexture;
             API::ContextBase_ptr mContext;
+            uint32_t mRefCount = 1;
         };
 } // namespace Epsilon

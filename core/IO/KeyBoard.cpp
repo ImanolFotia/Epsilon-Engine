@@ -16,16 +16,19 @@ namespace Epsilon
         {
             if (key >= 0 && key < 1024)
             {
+                KeyboardArgs args;
                 if (action == GLFW_PRESS)
                 {
                     KEYS[key] = true;
-                    //std::cout << "Pressed: " << KEYS[key] << std::endl;
+                    args.key_down_index = key;
                 }
                 else if (action == GLFW_RELEASE)
                 {
                     KEYS[key] = false;
-                    //std::cout << "Released: " << KEYS[key] << std::endl;
+                    args.key_up_index = key;
                 }
+
+                KeyboardEventHandler.raise(nullptr, &args);
             }
         }
 

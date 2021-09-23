@@ -9,6 +9,9 @@
 #include <pch.hpp>
 #include <GLFW/glfw3.h>
 #include <IO/KeyboardWrapper.h>
+
+#include <beacon/beacon.hpp>
+
 namespace Epsilon
 {
     namespace Input
@@ -31,6 +34,12 @@ namespace Epsilon
             std::unordered_map<const char *, uint16_t> kw;
         };
 
+        class KeyboardArgs : public beacon::args {
+            public:
+                int key_up_index = -1;
+                int key_down_index = -1;
+        };
+
         class KeyBoard
         {
         private:
@@ -46,6 +55,8 @@ namespace Epsilon
             static bool getKey(const char *);
 
             static void wrapKey(const char *, uint16_t);
+            
+            static beacon::single_handler<KeyboardArgs> KeyboardEventHandler;
         };
 
     } // namespace Input

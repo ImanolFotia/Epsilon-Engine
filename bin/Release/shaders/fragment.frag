@@ -1,4 +1,4 @@
-#version 440 core
+#version 430 core
 
 layout (binding = 0) uniform sampler2D gAlbedoSpec;
 layout (binding = 1) uniform sampler2D texture_specular;
@@ -260,7 +260,7 @@ void main()
             light += SpotLightPBR(outBuffer.Lights[i].position.rgb, outBuffer.Lights[i].direction.rgb, outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb);
         else if(outBuffer.Lights[i].type == 2){
             
-            float pointShadow = PointShadowCalculation(FragPos, vec3(-31.0, 11.2, 5.8), in_range);
+            float pointShadow = PointShadowCalculation(FragPos, outBuffer.Lights[i].position.rgb, in_range);
             vec3 res = SphereAreaLight(outBuffer.Lights[i].position.rgb,  outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts);
             if(i == 0 && in_range) {
                 res *= pointShadow;

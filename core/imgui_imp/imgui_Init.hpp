@@ -95,7 +95,10 @@ static void Init_ImGui_Custom()
     (void)io;
     //io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 12);
     //io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 10);
-    io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 15);
+    //io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 15); 
+    ImFontConfig config;
+    config.OversampleH = 2; 
+    io.Fonts->AddFontFromFileTTF("./resources/chirp-regular-web.ttf", 16, &config);
     static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
     ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
     icons_config.GlyphOffset.y = 0.5;

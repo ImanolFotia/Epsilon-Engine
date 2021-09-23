@@ -23,9 +23,9 @@ namespace Epsilon
                 IO::PrintLine("Allocated", sizeof(CharacterGlyph) * NUM_CHARACTERS_RESERVE, "bytes for text rendering");
                 mVAO = std::make_unique<API::OpenGL::VertexArrayObject>();
                 mVAO->addBuffer(sizeof(CharacterGlyph) * NUM_CHARACTERS_RESERVE, nullptr, GL_DYNAMIC_DRAW);
-                mVAO->setAttribute(3, sizeof(glm::vec3), (GLvoid*) offsetof(CharacterVertex, position));
-                mVAO->setAttribute(2, sizeof(glm::vec2), (GLvoid*) offsetof(CharacterVertex, texcoords));
-                mVAO->setAttribute(4, sizeof(glm::vec4), (GLvoid*) offsetof(CharacterVertex, color));
+                mVAO->setAttribute(VERTEX_POINTER_INDEX::POSITION, 3, sizeof(glm::vec3), (GLvoid*) offsetof(CharacterVertex, position));
+                mVAO->setAttribute(VERTEX_POINTER_INDEX::UV, 2, sizeof(glm::vec2), (GLvoid*) offsetof(CharacterVertex, texcoords));
+                mVAO->setAttribute(VERTEX_POINTER_INDEX::NORMAL, 4, sizeof(glm::vec4), (GLvoid*) offsetof(CharacterVertex, color));
             }
 
             void Print(const std::string &, const glm::vec3 &pos, const glm::vec4 &col) override {

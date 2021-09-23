@@ -8,7 +8,7 @@
 
 #include <pch.hpp>
 #include <glm/glm.hpp>
-#include <ResourceManager.h>
+#include <Resource/ResourceManager.h>
 #include <Types.h>
 
 namespace Epsilon

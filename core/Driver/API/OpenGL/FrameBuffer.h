@@ -6,10 +6,12 @@
 #include <Driver/API/OpenGL/RenderTarget.h>
 #include "Texture2D.hpp"
 
+#include "../Framebuffer.hpp"
+
 namespace Epsilon::OpenGL
 {
     template <typename T>
-    class FrameBuffer
+    class FrameBuffer : public API::Framebuffer
     {
     public:
         FrameBuffer(int width, int height, bool DepthAttachment)
@@ -24,10 +26,21 @@ namespace Epsilon::OpenGL
             isDepthAttachment = DepthAttachment;
         }
 
+        FrameBuffer() //Default constructor, is used to refernce default framebuffer
+        {
+            mIsDefaultFramebuffer = true;
+            m_FramebufferHandler = 0;
+        }
+
+        FrameBuffer(const FrameBuffer&) = delete;
+        FrameBuffer(FrameBuffer&&) = delete;
+
         ~FrameBuffer() {}
 
         bool addRenderTarget(T name, int internalformat, int format, int magfilter, int minfilter, bool mipmaps, GLuint target = GL_TEXTURE_2D, GLenum internal_type = GL_FLOAT, bool srgb = true)
         {
+            if(mIsDefaultFramebuffer) return false;
+
             if (m_RenderTargetCount >= MAX_RENDER_TARGETS)
             {
                 std::cout << "FRAMEBUFFER ERROR: MAX DRAW BUFFERS REACHED" << std::endl;
@@ -47,6 +60,8 @@ namespace Epsilon::OpenGL
 
         bool FinishFrameBuffer(bool no_color_buffers = false)
         {
+            if(mIsDefaultFramebuffer) return false;
+
             if (isDepthAttachment)
                 addDepthAttachment();
 
@@ -69,6 +84,8 @@ namespace Epsilon::OpenGL
 
         bool addDepthAttachment()
         {
+            if(mIsDefaultFramebuffer) return false;
+
             this->bindFramebuffer();
             glGenRenderbuffers(1, &m_DepthTextureTarget);
             glBindRenderbuffer(GL_RENDERBUFFER, m_DepthTextureTarget);
@@ -91,11 +108,14 @@ namespace Epsilon::OpenGL
 
         void AttachRenderBuffer(T index)
         {
+            if(mIsDefaultFramebuffer) return;
             m_RenderTargets[index]->Attach();
         }
 
         void ClearAttachment(T att, const void* col)
         {
+            if(mIsDefaultFramebuffer) return;
+
             auto target = m_RenderTargets.at(att);
             auto tex =  target->getRenderTextureTarget();
             glClearTexImage(tex, 0, target->mInternalFormat, target->mInternalType, col);
@@ -133,6 +153,8 @@ namespace Epsilon::OpenGL
 
         void Resize(uint32_t w, uint32_t h)
         {
+            
+            if(mIsDefaultFramebuffer) return;
             WIDTH = w;
             HEIGHT = h;
 
@@ -163,6 +185,8 @@ namespace Epsilon::OpenGL
 
         bool checkFramebuffer()
         {
+            
+            if(mIsDefaultFramebuffer) return false;
             this->bindFramebuffer();
             GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
@@ -178,6 +202,7 @@ namespace Epsilon::OpenGL
 
         bool Destroy()
         {
+            if(mIsDefaultFramebuffer) return false;
             glDeleteFramebuffers(1, &m_FramebufferHandler);
 
             return true;
@@ -185,6 +210,7 @@ namespace Epsilon::OpenGL
 
         void MakeInmutable(T index)
         {
+            if(mIsDefaultFramebuffer) return;
             glBindFramebuffer(GL_FRAMEBUFFER, m_FramebufferHandler);
             m_RenderTargets.at(index)->MakeInmutable();
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -216,5 +242,6 @@ namespace Epsilon::OpenGL
         GLuint m_DepthTextureTarget;
 
         bool isDepthAttachment;
+        bool mIsDefaultFramebuffer = false;
     };
 } // namespace Epsilon

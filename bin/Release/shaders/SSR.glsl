@@ -1,4 +1,4 @@
-#version 440 core
+#version 420 core
 
 #define Scale vec3(.8, .8, .8)
 #define K 19.19
@@ -171,7 +171,7 @@ void main()
         vec3 jitt = hs * factor;
         vec3 reflected = normalize(reflect(normalize(viewPos), normalize(viewNormal)));
         float dDepth = 0.0;
-        vec4 coords = RayCast(normalize(reflected + jitt) * max(maxRayStep, -viewPos.z), hitPos, dDepth);
+        vec4 coords = RayCast(normalize(reflected + jitt) * max(0.1, -viewPos.z), hitPos, dDepth);
         vec2 centered_coords = abs(coords.xy * 2.0 - 1.0);
         float mixer = min(1.0, max(centered_coords.x, centered_coords.y));
 
@@ -243,7 +243,7 @@ bool isSignificant(float dd) {
 
 vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
 {
-    dir *= rayStep;
+    dir *= maxRayStep;
  
     float depth;
     int steps = 0;

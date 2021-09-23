@@ -8,7 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <ResourceManager.h>
+#include <Resource/ResourceManager.h>
 #include <Driver/API/OpenGL/FrameBuffer.h>
 
 namespace Epsilon

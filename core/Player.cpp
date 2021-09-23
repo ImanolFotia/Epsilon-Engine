@@ -6,7 +6,7 @@
 #include <pch.hpp>
 #include <Core.hpp>
 #include <Player.h>
-#include <ResourceManager.h>
+#include <Resource/ResourceManager.h>
 #include <IO/KeyBoard.h>
 #include <IO/Joystick/Joystick.h>
 #include <Physics/CollisionInfo.h>

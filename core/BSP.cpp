@@ -10,7 +10,7 @@
 #include <BSP.h>
 #include <glm/glm.hpp>
 #include <Frustum.h>
-#include <ResourceManager.h>
+#include <Resource/ResourceManager.h>
 #include <Texture.h>
 #include <Shader.h>
 
@@ -306,7 +306,7 @@ namespace Epsilon
         {
             throw;
         }
-
+        mMapIsLoaded = true;
         return true;
     }
 
@@ -377,9 +377,9 @@ namespace Epsilon
  
     int g_VisibleFaces;
 
-    void CQuake3BSP::RenderLevel(glm::vec3 vPos, Shader_ptr shader, bool Shadow)
+    void CQuake3BSP::RenderLevel(glm::vec3 vPos, Shader_ptr shader, bool Shadow, const CFrustum* Frustum)
     {
-
+        if(!mMapIsLoaded) return;
         m_FacesDrawn.ClearAll();
 
         int leafIndex = FindLeaf(vPos);
@@ -395,7 +395,7 @@ namespace Epsilon
 
             if (Shadow)
             {
-                if (!Frustum.BoxInFrustum((float)pLeaf->min.x, (float)pLeaf->min.y, (float)pLeaf->min.z,
+                if (!Frustum->BoxInFrustum((float)pLeaf->min.x, (float)pLeaf->min.y, (float)pLeaf->min.z,
                                           (float)pLeaf->max.x, (float)pLeaf->max.y, (float)pLeaf->max.z))
                     continue;
             }

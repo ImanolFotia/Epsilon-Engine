@@ -1,7 +1,7 @@
 // This is a HBAO-Shader for OpenGL, based upon nvidias directX implementation
 // supplied in their SampleSDK available from nvidia.com
 
-#version 440 core
+#version 420 core
 
 const float PI = 3.14159265;
 

@@ -1,5 +1,1 @@
-<<<<<<< HEAD
- libcommon.a -latomic -lm -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 
-=======
-libcommon.a -static-libgcc C:/Windows/System32/winmm.dll -latomic -lm -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 
->>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
+ libcommon.a -static-libgcc -Wl,--push-state,-Bstatic,-lstdc++,--pop-state -Wl,--push-state,-Bstatic,-lwinpthread,--pop-state -latomic -lm -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 

@@ -164,11 +164,11 @@ namespace Epsilon
             mVAO = std::make_shared<API::OpenGL::VertexArrayObject>();
 
             mVAO->addBuffer(mVertices.size() * sizeof(t_Vertex), &mVertices[0], GL_DYNAMIC_DRAW);
-            mVAO->setAttribute(3, sizeof(t_Vertex), (GLvoid *)0);
-            mVAO->setAttribute(2, sizeof(t_Vertex), (void *)offsetof(t_Vertex, texcoord));
-            mVAO->setAttribute(3, sizeof(t_Vertex), (void *)offsetof(t_Vertex, normal));
-            mVAO->setAttribute(3, sizeof(t_Vertex), (void *)offsetof(t_Vertex, tangent));
-            mVAO->setAttribute(3, sizeof(t_Vertex), (void *)offsetof(t_Vertex, bitangent));
+            mVAO->setAttribute(VERTEX_POINTER_INDEX::POSITION, 3, sizeof(t_Vertex), (GLvoid *)0);
+            mVAO->setAttribute(VERTEX_POINTER_INDEX::UV, 2, sizeof(t_Vertex), (void *)offsetof(t_Vertex, texcoord));
+            mVAO->setAttribute(VERTEX_POINTER_INDEX::NORMAL, 3, sizeof(t_Vertex), (void *)offsetof(t_Vertex, normal));
+            mVAO->setAttribute(VERTEX_POINTER_INDEX::TANGENT, 3, sizeof(t_Vertex), (void *)offsetof(t_Vertex, tangent));
+            mVAO->setAttribute(VERTEX_POINTER_INDEX::BITANGENT, 3, sizeof(t_Vertex), (void *)offsetof(t_Vertex, bitangent));
             
             mVAO->IndexBuffer(Indices);
             

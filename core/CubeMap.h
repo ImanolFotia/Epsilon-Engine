@@ -37,6 +37,8 @@ namespace Epsilon
 
 		void genAmbientConvolution();
 
+		void Destroy();
+
 		glm::mat4 getViewMatrixbyIndex(int index)
 		{
 			return captureViews[index];
@@ -59,16 +61,16 @@ namespace Epsilon
 
 		virtual GLuint getTextureID()
 		{
-			if(isConvoluted) {
+			/*if(isConvoluted) {
 				if (type == STATIC)
 					return texture->getTextureID();
 				if (type == DYNAMIC)
 					return mTexture;
 			} else {
 				return mTexture;
-			}
+			}*/
 
-			return 0;
+			return mTexture;
 		}
 
 		virtual GLuint getCubemapFace(int index)
@@ -91,7 +93,7 @@ namespace Epsilon
 		std::shared_ptr<Shader> prefilterShader;
 		glm::mat4 captureProjection;
 
-		unsigned int prefilterMap;
+		unsigned int prefilterMap = 0;
 		GLuint captureFBO = 0;
 		GLuint captureRBO = 0;
 

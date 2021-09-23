@@ -1,5 +1,1 @@
-<<<<<<< HEAD
- libOpenAL32.dll.a -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 
-=======
--static-libgcc libOpenAL32.dll.a -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 
->>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
+ -static-libgcc -Wl,--push-state,-Bstatic,-lstdc++,--pop-state -Wl,--push-state,-Bstatic,-lwinpthread,--pop-state libOpenAL32.dll.a -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 

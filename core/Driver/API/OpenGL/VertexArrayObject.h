@@ -20,7 +20,7 @@ namespace Epsilon::API::OpenGL
 
         ~VertexArrayObject() {}
 
-        void setAttribute(int size, GLsizei stride, const void *pointer)
+        void setAttribute(int index, int size, GLsizei stride, const void *pointer)
         {
             try
             {
@@ -28,8 +28,8 @@ namespace Epsilon::API::OpenGL
 
                 auto &tmpVBO = m_VBOArray.back();
                 tmpVBO.Bind();
-                glEnableVertexAttribArray(m_VertexAttributeCounter);
-                glVertexAttribPointer(m_VertexAttributeCounter, size, GL_FLOAT, GL_FALSE, stride, pointer);
+                glEnableVertexAttribArray(index);
+                glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride, pointer);
                 m_VertexAttributeCounter++;
 
                 Unbind();

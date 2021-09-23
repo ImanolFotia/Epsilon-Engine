@@ -11,15 +11,19 @@ namespace Epsilon::Renderer
         {
         case MaterialParameter::Albedo:
             mAlbedoTex = p;
+            mAlbedoTex->increaseRefCount();
             return true;
         case MaterialParameter::Roughness:
             mRoughnessTex = p;
+            mRoughnessTex->increaseRefCount();
             return true;
         case MaterialParameter::Metallic:
             mMetallicTex = p;
+            mMetallicTex->increaseRefCount();
             return true;
         case MaterialParameter::Normal:
             mNormalTex = p;
+            mNormalTex->increaseRefCount();
             return true;
         default:
             return false;

@@ -33,11 +33,7 @@
 /* #undef HAVE_ALSA */
 
 /* Define if we have the OSS backend */
-<<<<<<< HEAD
-#define HAVE_OSS
-=======
 /* #undef HAVE_OSS */
->>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
 
 /* Define if we have the Solaris backend */
 /* #undef HAVE_SOLARIS */
@@ -55,11 +51,7 @@
 /* #undef HAVE_DSOUND */
 
 /* Define if we have the Windows Multimedia backend */
-<<<<<<< HEAD
 /* #undef HAVE_WINMM */
-=======
-#define HAVE_WINMM
->>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
 
 /* Define if we have the PortAudio backend */
 /* #undef HAVE_PORTAUDIO */

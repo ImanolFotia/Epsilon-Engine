@@ -8,7 +8,7 @@ namespace Epsilon::API::OpenGL
     class ShaderStorageBuffer : public ShaderStorage
     {
     public:
-        ShaderStorageBuffer(size_t size, unsigned int binding_point, size_t offset = 0, unsigned int usage = GL_DYNAMIC_COPY)
+        ShaderStorageBuffer(size_t size, unsigned int binding_point, size_t offset = 0, unsigned int usage = GL_DYNAMIC_DRAW)
         {
             mSize = size;
             mBindingPoint = binding_point;

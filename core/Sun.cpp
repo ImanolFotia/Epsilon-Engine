@@ -20,7 +20,7 @@ namespace Epsilon
 
             height = 10.0;
 
-            Position = glm::vec3(0.0, -50.0, 3.0);
+            Position = glm::vec3(0.0, 10.0, 3.0);
 
             PrepareVAO();
             std::cout << "Llega" << std::endl;

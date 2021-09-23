@@ -217,7 +217,7 @@ namespace Epsilon
 
         bool LoadBSP(const char *strFileName);
 
-        void RenderLevel(glm::vec3 vPos, Shader_ptr shader, bool Shadow);
+        void RenderLevel(glm::vec3 vPos, Shader_ptr shader, bool Shadow, const CFrustum* Frustum);
 
         void Destroy();
 
@@ -275,6 +275,7 @@ namespace Epsilon
 
         bool lightmap;
         bool color;
+        bool mMapIsLoaded = false;
         int faceCount;
         GLuint NormalTextureID;
     };

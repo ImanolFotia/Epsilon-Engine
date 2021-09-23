@@ -21,6 +21,8 @@ namespace Epsilon::Renderer
 {
     class Model : public ModelBase
     {
+
+        bool mIsResident = false;
     public:
         glm::mat4 PrevModel;
         glm::mat4 ModelMatrix;
@@ -31,11 +33,15 @@ namespace Epsilon::Renderer
         MODEL_TYPE m_Type;
         bool uniformsSet = false;
 
+        bool isResident() {
+            return mIsResident;
+        }
+
         /**  Functions   */
         /// Constructor, expects a filepath to a 3D model.
         std::string path;
 
-        Model(const std::string &path);
+        Model(const std::string &path = "");
 
         //Model(const char *path, glm::vec3 pos = glm::vec3(0, 0, 0), glm::vec3 sc = glm::vec3(0, 0, 0), glm::quat rot = glm::quat(0, 0, 0, 1));
 
@@ -56,10 +62,13 @@ namespace Epsilon::Renderer
         }*/
         std::string directory;
         /// Draws the model, and thus all its meshes
-        void Draw(std::shared_ptr<Shader> shader, bool force_draw = false);
+        void Draw(std::shared_ptr<Shader> shader, bool force_draw = false, std::initializer_list<unsigned int> mesh_index_list = {});
 
         /// Draws the model, and thus all its meshes
         void Draw(GLuint shader, glm::vec3);
+        
+        void Render() override {}
+        void Update() override {}
 
         /// Draws the model, and thus all its meshes
         void DrawNoTexture()
@@ -110,16 +119,17 @@ namespace Epsilon::Renderer
             return std::hash<std::string>{}(path);
         }
 
-        const std::vector<Mesh> &Meshes()
+        std::vector<Mesh> &Meshes()
         {
             return mMeshes;
         }
 
         std::vector<unsigned int> mVisibleMeshes;
 
-    private:
+        bool toGPU();
         bool loadModel(std::string emlPath, int a);
 
+    private:
         std::vector<Mesh> mMeshes;
     };
 

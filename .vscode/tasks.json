@@ -6,7 +6,7 @@
         {
             "label": "Debug Build",
             "type": "shell",
-            "command": "mingw32-make clean;mingw32-make epsilon-debug -j7",
+            "command": "mingw32-make clean;mingw32-make epsilon-debug -j 16",
             "problemMatcher": [
                 "$gcc"
             ]
@@ -14,7 +14,7 @@
         {
             "label": "Release Build",
             "type": "shell",
-            "command": "mingw32-make epsilon-release -j7",
+            "command": "mingw32-make epsilon-release -j 16",
             "problemMatcher": [
                 "$gcc"
             ],
@@ -26,7 +26,7 @@
         {
             "label": "Release Static Lib",
             "type": "shell",
-            "command": "mingw32-make epsilon-static-lib-release -j7",
+            "command": "mingw32-make epsilon-static-lib-release -j 16",
             "problemMatcher": [
                 "$gcc"
             ],
@@ -34,7 +34,7 @@
         {
             "label": "Debug Static Lib",
             "type": "shell",
-            "command": "mingw32-make epsilon-static-lib-debug -j7",
+            "command": "mingw32-make epsilon-static-lib-debug -j 16",
             "problemMatcher": [
                 "$gcc"
             ],
@@ -54,7 +54,7 @@
             "problemMatcher": [
                 "$gcc"
             ],
-            "group": "none"
+            "group": "none",
         }
     ]
 }

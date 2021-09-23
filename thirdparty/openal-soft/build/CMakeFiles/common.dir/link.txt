@@ -1,7 +1,2 @@
-<<<<<<< HEAD
-H:\msys2\msys64\msys64\mingw64\bin\ar.exe qc libcommon.a CMakeFiles/common.dir/common/alcomplex.cpp.obj CMakeFiles/common.dir/common/alexcpt.cpp.obj CMakeFiles/common.dir/common/alfstream.cpp.obj CMakeFiles/common.dir/common/almalloc.cpp.obj CMakeFiles/common.dir/common/alstring.cpp.obj CMakeFiles/common.dir/common/dynload.cpp.obj CMakeFiles/common.dir/common/polyphase_resampler.cpp.obj CMakeFiles/common.dir/common/strutils.cpp.obj CMakeFiles/common.dir/common/threads.cpp.obj
-H:\msys2\msys64\msys64\mingw64\bin\ranlib.exe libcommon.a
-=======
-C:\msys64\mingw64\bin\ar.exe qc libcommon.a  CMakeFiles/common.dir/common/alcomplex.cpp.obj CMakeFiles/common.dir/common/alexcpt.cpp.obj CMakeFiles/common.dir/common/alfstream.cpp.obj CMakeFiles/common.dir/common/almalloc.cpp.obj CMakeFiles/common.dir/common/alstring.cpp.obj CMakeFiles/common.dir/common/dynload.cpp.obj CMakeFiles/common.dir/common/polyphase_resampler.cpp.obj CMakeFiles/common.dir/common/strutils.cpp.obj CMakeFiles/common.dir/common/threads.cpp.obj
+C:\msys64\mingw64\bin\ar.exe qc libcommon.a CMakeFiles/common.dir/common/alcomplex.cpp.obj CMakeFiles/common.dir/common/alexcpt.cpp.obj CMakeFiles/common.dir/common/alfstream.cpp.obj CMakeFiles/common.dir/common/almalloc.cpp.obj CMakeFiles/common.dir/common/alstring.cpp.obj CMakeFiles/common.dir/common/dynload.cpp.obj CMakeFiles/common.dir/common/polyphase_resampler.cpp.obj CMakeFiles/common.dir/common/strutils.cpp.obj CMakeFiles/common.dir/common/threads.cpp.obj
 C:\msys64\mingw64\bin\ranlib.exe libcommon.a
->>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed

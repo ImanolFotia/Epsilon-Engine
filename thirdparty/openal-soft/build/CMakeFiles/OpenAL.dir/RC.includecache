@@ -6,27 +6,15 @@
 
 #IncludeRegexTransform: 
 
-<<<<<<< HEAD
-H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/resources/openal32.rc
+I:/Epsilon/Epsilon Engine/thirdparty/openal-soft/resources/openal32.rc
 windows.h
 -
 resource.h
-H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/resources/resource.h
+I:/Epsilon/Epsilon Engine/thirdparty/openal-soft/resources/resource.h
 version.h
-H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/resources/version.h
+I:/Epsilon/Epsilon Engine/thirdparty/openal-soft/resources/version.h
 
-H:/Epsilon/Epsilon Engine/thirdparty/openal-soft/resources/resource.h
-=======
-C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/resources/openal32.rc
-windows.h
--
-resource.h
-C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/resources/resource.h
-version.h
-C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/resources/version.h
-
-C:/Users/Imanol/Documents/Code/C++/Epsilon/deps-64/openal-soft/resources/resource.h
->>>>>>> f87825e45cd4ab71b09c8c50f30bd763892779ed
+I:/Epsilon/Epsilon Engine/thirdparty/openal-soft/resources/resource.h
 
 version.h
 

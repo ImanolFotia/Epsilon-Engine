@@ -3,21 +3,18 @@
 #include <pch.hpp>
 #include "Primitive.hpp"
 
-namespace Epsilon
+namespace Epsilon::Renderer
 {
 
-    template <typename T>
     class Cube : public PrimitiveBase
     {
     public:
-        using Cube_ptr = std::shared_ptr<Cube<T>>;
-
-        Cube(T w, T h, T l) : m_Width(w), m_Height(h), m_Length(l)
+        Cube()
         {
-            using vtx = Primitive::Vertex;
+            using vtx = PrimitiveBase::Vertex;
             using v3 = glm::vec3;
             using v2 = glm::vec2;
-            mVertices = {
+            Mesh.Vertices = {
                 // back face
                 vtx(v3(-1.0f, -1.0f, -1.0f), v3(0.0f, 0.0f, -1.0f), v2(0.0f, 0.0f)), // bottom-left
                 vtx(v3(1.0f, 1.0f, -1.0f), v3(0.0f, 0.0f, -1.0f), v2(1.0f, 1.0f)),   // top-right
@@ -66,16 +63,20 @@ namespace Epsilon
         void Render() override {}
         void Update() override {}
         void Destroy() override {}
-
-        glm::vec3 getDimension()
+        
+        virtual void Draw(std::shared_ptr<Shader> shader, bool force_draw = false, std::initializer_list<unsigned int> mesh_index_list = {}) override
         {
-            return glm::vec3(m_Width, m_Height, m_Length);
-        }
+            mVertexArray->Bind();
 
-    private:
-        T m_Width;
-        T m_Height;
-        T m_Length;
+            glDrawElements(GL_TRIANGLES, Mesh.Indices.size(), GL_UNSIGNED_INT, 0);
+
+            mVertexArray->Unbind();
+        }
+        
+        virtual std::shared_ptr<MaterialPBR> getMaterial() override
+        {
+            return mMaterial;
+        }
     };
 
 } // namespace Epsilon

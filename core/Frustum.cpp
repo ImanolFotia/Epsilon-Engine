@@ -276,7 +276,7 @@ namespace Epsilon
     /////
     ///////////////////////////////// BOX IN FRUSTUM \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*
 
-    bool CFrustum::BoxInFrustum(float x, float y, float z, float x2, float y2, float z2)
+    bool CFrustum::BoxInFrustum(float x, float y, float z, float x2, float y2, float z2) const
     {
         /// Go through all of the corners of the box and check then again each plane
         /// in the frustum.  If all of them are behind one of the planes, then it most

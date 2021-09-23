@@ -1,22 +1,23 @@
 #include "Model.h"
-#include <ResourceManager.h>
+#include <Resource/ResourceManager.h>
 #include <Log.h>
 #include <Engine.hpp>
 
 namespace Epsilon::Renderer
 {
-    Model::Model(const std::string & path)
+    Model::Model(const std::string &path)
     {
-        this->path = path;
+        //this->path = path;
         PrevModel = glm::mat4(1.0f);
         ModelMatrix = glm::mat4(1.0f);
         uniformsSet = false;
 
-        this->loadModel(path, 0);
+        //this->loadModel(path, 0);
     }
 
     bool Model::loadModel(std::string emlPath, int a)
     {
+        this->path = emlPath;
         using namespace Renderer;
         std::ifstream inFILE(emlPath, std::ios::binary);
         if (!inFILE.is_open())
@@ -85,6 +86,8 @@ namespace Epsilon::Renderer
         {
             inFILE.read((char *)&l_meshes[i], sizeof(t_Mesh));
         }
+
+        inFILE.close();
         std::cout << "Model " << emlPath << " has " << numMeshes << " meshes" << std::endl;
 
         MinMaxPoints.MAX_X = 0;
@@ -168,7 +171,7 @@ namespace Epsilon::Renderer
                 tmp_MinMax.MAX_X += delta.x;
                 tmp_MinMax.MAX_Y += delta.y;
                 tmp_MinMax.MAX_Z += delta.z;*/
-                
+
                 mMeshesBoundingBoxes.push_back(tmp_MinMax);
 
                 mMeshesPositionsRelative.push_back(centerOfMass);
@@ -186,7 +189,7 @@ namespace Epsilon::Renderer
                         tex.id = 0;
                         tex.path = std::string(l_meshes[i].mMaterial[j]);
                         tex.type = i;
-                        ResourceManager::Get().addTextureToQueue(tex.path);
+                        //ResourceManager::Get().addTextureToQueue(tex.path);
                         tmpTexturesVector.push_back(tex);
                     }
                 }
@@ -237,10 +240,13 @@ namespace Epsilon::Renderer
                 mMeshes.at(i).MinMaxPoints.MAX_X += delta.x;
                 mMeshes.at(i).MinMaxPoints.MAX_Y += delta.y;
                 mMeshes.at(i).MinMaxPoints.MAX_Z += delta.z;
-                
-                mMeshes.at(i).setupMesh();
+
+                //mMeshes.at(i).setupMesh();
             }
+            mIsResident = true;
+            //toGPU();
         }
+
         catch (std::exception &e)
         {
             throw std::runtime_error(std::string("Exception while pre processing the model ::: ") + std::string(e.what()));
@@ -251,11 +257,19 @@ namespace Epsilon::Renderer
         delete[] l_vertices;
         delete[] l_indices;
         delete[] l_meshes;
+        //std::cout << "llega model" << std::endl;
 
-        inFILE.close();
         Log::WriteToLog("Model: " + std::string(emlPath) + " Loaded.");
 
         return true;
+    }
+
+    bool Model::toGPU()
+    {
+        for (int i = 0; i < mMeshes.size(); ++i)
+        {
+            mMeshes.at(i).setupMesh();
+        }
     }
 
     MIN_MAX_POINTS Model::getMeshBoundingBox(unsigned int index, glm::vec3 position, glm::vec3 scale, glm::quat rotation)
@@ -275,15 +289,26 @@ namespace Epsilon::Renderer
         return mMeshes.at(index).MinMaxPoints;
     }
 
-    void Model::Draw(std::shared_ptr<Shader> shader, bool force_draw )
+    void Model::Draw(std::shared_ptr<Shader> shader, bool force_draw, std::initializer_list<unsigned int> mesh_index_list)
     {
-
-        for (GLuint i = 0; i < this->mMeshes.size(); i++)
+        if (mesh_index_list.size() == 0)
         {
-            if(force_draw) mMeshes[i].isVisible = force_draw;
+            for (GLuint i = 0; i < this->mMeshes.size(); i++)
+            {
+                if (force_draw)
+                    mMeshes[i].isVisible = force_draw;
 
-            if (mMeshes[i].isVisible)
-                this->mMeshes[i].Draw(shader, mMeshesPositions.at(i));
+                if (mMeshes[i].isVisible)
+                    this->mMeshes[i].Draw(shader, mMeshesPositions.at(i));
+            }
+        }
+        else
+        {
+            for (const auto &index : mesh_index_list)
+            {
+                if (index > 0 && index < mMeshes.size())
+                    this->mMeshes[index].Draw(shader, mMeshesPositions.at(index));
+            }
         }
     }
 

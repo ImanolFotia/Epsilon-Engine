@@ -1,5 +1,5 @@
 
-#version 440 core
+#version 420 core
 
 uniform sampler2D gFinalImage;
 uniform sampler2D gPosition;

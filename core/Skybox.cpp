@@ -7,7 +7,7 @@
 #include <pch.hpp>
 #include <Skybox.h>
 #include <SkyboxData.h>
-#include <ResourceManager.h>
+#include <Resource/ResourceManager.h>
 
 #include <glm/glm.hpp>
 
@@ -17,6 +17,8 @@ namespace Epsilon
     Skybox::Skybox(std::string SkyboxTex)
     {
         skydome = (std::shared_ptr<Renderer::Model>)new Renderer::Model("models/sphere.eml"/*, glm::vec3(0, 0, 0)*/);
+        skydome->loadModel("models/sphere.eml", 0);
+        skydome->toGPU();
 
         clouds = false;
         UpperSky_color = glm::vec3(29,91,255) / 255.0f; 

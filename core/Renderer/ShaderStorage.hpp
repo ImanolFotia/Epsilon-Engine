@@ -34,6 +34,7 @@ namespace Epsilon
             {
                 mShaderStorageObject->Init(data);
             }
+            
             void Update(size_t size, unsigned int offset, const void *data)
             {
                 mShaderStorageObject->Update(size, offset, data);

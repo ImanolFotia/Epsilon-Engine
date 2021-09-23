@@ -1,5 +1,5 @@
 #include "Patch.h"
-#include <ResourceManager.h>
+#include <Resource/ResourceManager.h>
 
 
 namespace Epsilon

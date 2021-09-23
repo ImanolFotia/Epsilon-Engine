@@ -7,7 +7,7 @@
 #include <pch.hpp>
 #include "Terrain.h"
 #include <Physics/Physics.h>
-#include <ResourceManager.h>
+#include <Resource/ResourceManager.h>
 #include <Physics/CollisionInfo.h>
 #include <Physics/TriangleMeshPhysicObject.h>
 #include <Helpers.hpp>

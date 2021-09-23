@@ -1,4 +1,4 @@
-#version 440 core
+#version 420 core
 
 #extension GL_EXT_geometry_shader4 : enable
 #extension GL_NV_viewport_array2 : enable

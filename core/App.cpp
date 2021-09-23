@@ -29,6 +29,8 @@ Epsilon::Input::STATE Epsilon::Input::Mouse::RIGHT = Input::RELEASED;
 
 beacon::single_handler<Epsilon::Input::MouseArgs> Epsilon::Input::Mouse::MouseEventHandler;
 
+beacon::single_handler<Epsilon::Input::KeyboardArgs> Epsilon::Input::KeyBoard::KeyboardEventHandler;
+
 namespace Joystick = Epsilon::Input::Joystick;
 
 std::unordered_map<unsigned, Joystick::JoystickManager::Joystick_ptr> Joystick::JoystickManager::JoystickVector;

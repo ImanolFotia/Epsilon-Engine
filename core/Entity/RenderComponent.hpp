@@ -3,6 +3,7 @@
 #include <Entity/Component.h>
 
 #include <Renderer/Model.h>
+#include <Renderer/Primitives/Sphere.hpp>
 namespace Epsilon
 {
     namespace Component
@@ -12,12 +13,18 @@ namespace Epsilon
         {
         public:
             RenderComponent(std::string path, glm::vec3 pos, std::string shader)
-                : modelPath(path)/*, mPosition(pos),*/ ,shaderType(shader)
+                : modelPath(path) /*, mPosition(pos),*/, shaderType(shader)
             {
                 mType = RENDERCOMPONENT;
                 hasModel = true;
                 /*mPrevPosition = pos;*/
-                ResourceManager::Get().requestModel(modelPath /*, mPosition, glm::vec3(1), glm::quat(0, 0, 0, 0)*/);
+                ResourceManager::Get().addModelToQueue(modelPath /*, mPosition, glm::vec3(1), glm::quat(0, 0, 0, 0)*/);
+            }
+
+            RenderComponent(std::shared_ptr<Renderer::Drawable> drawable, std::string shader) : shaderType(shader)
+            {
+                mDrawable = drawable;
+                hasModel = false;
             }
 
             COMPONENT_TYPE getType() { return mType; }
@@ -26,34 +33,17 @@ namespace Epsilon
                 std::cout << "RenderComponent Destructor" << std::endl;
             }
 
-            void setRenderId(int id) {
+            void setRenderId(int id)
+            {
                 mId = id;
             }
-/*
-            virtual glm::vec3 getPosition()
-            {
-                return mPosition;
-            };
-
-            virtual glm::quat getRotation()
-            {
-                return glm::quat(1.0, 0.0, 0.0, 0.0);
-            }
-
-            virtual glm::vec3 getScale()
-            {
-                return glm::vec3(1., 1., 1.);
-            }
-
-            void setPosition(glm::vec3 pos)
-            {
-                mPrevPosition = mPosition;
-                mPosition = pos;
-            }
-*/
-            const std::string& getModelPath()
+            const std::string &getModelPath()
             {
                 return modelPath;
+            }
+
+            void Destroy()
+            {
             }
 
         public:
@@ -66,15 +56,36 @@ namespace Epsilon
                 if (isVisible)
                 {
                     //glUniform1i(glGetUniformLocation(mResourceManager->getShader(shaderType).get(), "isTransparent"), this->isTransparent);
-                    ResourceManager::Get().useShader(shaderType)->PushUniform("isTransparent", this->isTransparent);
-                    ResourceManager::Get().useShader(shaderType)->PushUniform("EntityId", this->mId);
                     if (isDoubleFaced())
                         glDisable(GL_CULL_FACE);
                     else
                         glEnable(GL_CULL_FACE);
-                    auto tModel = ResourceManager::Get().getModel(modelPath /*ResourceManager::Get().useShader(shaderType), mPosition*/);
+
                     auto tShader = ResourceManager::Get().useShader(shaderType);
-                    tModel->Draw(tShader);
+
+                    tShader->PushUniform("isTransparent", this->isTransparent);
+                    tShader->PushUniform("EntityId", this->mId);
+                    if (hasModel)
+                    {
+                        auto tModel = ResourceManager::Get().getModel(modelPath /*ResourceManager::Get().useShader(shaderType), mPosition*/);
+                        tModel->Draw(tShader);
+                    }
+                    else
+                    {
+
+                        using Tex2D_ptr = std::shared_ptr<Renderer::Texture2D>;
+                        auto SphereMaterial = std::static_pointer_cast<Renderer::Sphere>(mDrawable)->getMaterial();
+
+                        SphereMaterial->get<Tex2D_ptr>(Renderer::Material::MaterialParameter::Albedo)->Bind(GL_TEXTURE0);
+                        tShader->PushUniform("texture_diffuse", 0);
+                        SphereMaterial->get<Tex2D_ptr>(Renderer::Material::MaterialParameter::Roughness)->Bind(GL_TEXTURE1);
+                        tShader->PushUniform("texture_specular", 1);
+                        SphereMaterial->get<Tex2D_ptr>(Renderer::Material::MaterialParameter::Normal)->Bind(GL_TEXTURE2);
+                        tShader->PushUniform("texture_normal", 2);
+                        SphereMaterial->get<Tex2D_ptr>(Renderer::Material::MaterialParameter::Metallic)->Bind(GL_TEXTURE3);
+                        tShader->PushUniform("texture_height", 3);
+                        mDrawable->Render();
+                    }
 
                     glEnable(GL_CULL_FACE);
                 }
@@ -82,9 +93,16 @@ namespace Epsilon
 
             void RenderShadows()
             {
-                auto tModel = ResourceManager::Get().getModel(modelPath /*ResourceManager::Get().useShader(shaderType), mPosition*/);
-                auto tShader = ResourceManager::Get().useShader(shaderType);
-                tModel->Draw(tShader);
+                if (hasModel)
+                {
+                    auto tModel = ResourceManager::Get().getModel(modelPath /*ResourceManager::Get().useShader(shaderType), mPosition*/);
+                    auto tShader = ResourceManager::Get().useShader(shaderType);
+                    tModel->Draw(tShader);
+                }
+                else
+                {
+                    mDrawable->Render();
+                }
             }
 
             void setShader(std::string sh)
@@ -120,16 +138,17 @@ namespace Epsilon
             }
 
             bool hasModel = false;
-            COMPONENT_TYPE mType;
+            COMPONENT_TYPE mType = RENDERCOMPONENT;
             std::string modelPath;
             std::string shaderType;
             MODEL_TYPE ModelType;
+            std::shared_ptr<Renderer::Drawable> mDrawable;
             bool isTransparent = false;
             bool mIsDoubleFaced;
             bool mCastsShadows;
             bool isVisible = false;
             int mId = 0;
-           /* glm::vec3 mPosition;
+            /* glm::vec3 mPosition;
             glm::vec3 mPrevPosition;*/
         };
 

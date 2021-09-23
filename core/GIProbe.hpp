@@ -15,7 +15,7 @@ namespace Epsilon
         virtual void End() = 0;
 
     protected:
-        GLuint mTexture;
+        GLuint mTexture = 0;
         glm::vec3 mPosition;
     };
 } // namespace Epsilon

@@ -1,7 +1,7 @@
 #include <Core.hpp>
 #include <Physics/Physics.h>
 #include <Physics/TriangleMeshPhysicObject.h>
-#include <ResourceManager.h>
+#include <Resource/ResourceManager.h>
 #include <BSPFace.h>
 
 namespace Epsilon

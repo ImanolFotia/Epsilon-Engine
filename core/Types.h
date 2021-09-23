@@ -83,7 +83,8 @@ namespace Epsilon
     enum MODEL_TYPE
     {
         DYNAMIC_MODEL = 0,
-        STATIC_MODEL
+        STATIC_MODEL,
+        PRIMITIVE
     };
 
     enum CAMERA_MODE
@@ -106,6 +107,14 @@ namespace Epsilon
         SUN_SHADER,
         SKYBOX_SHADER,
         GEOMETRY_PASS_SHADER
+    };
+
+    enum VERTEX_POINTER_INDEX {
+        POSITION = 0,
+        UV,
+        NORMAL,
+        TANGENT,
+        BITANGENT
     };
 
     enum UNIFORM_TYPE
