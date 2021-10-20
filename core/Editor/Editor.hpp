@@ -69,6 +69,7 @@ namespace Epsilon::Editor::GUI
     bool show_app_about = false;
     bool show_new_project_window = false;
     bool showSystemStatus = false;
+    bool show_material_editor = false;
     bool p_cross = false;
     STATUS status = Stopped;
     static bool show_pipeline_viewer = false;
@@ -119,6 +120,7 @@ namespace Epsilon::Editor::GUI
     int sSelectedEntityIndex = -1;
     void onLeftClickCallback(beacon::sender *sender, beacon::args *args);
     void onKeyPress(beacon::sender *sender, beacon::args *args);
+    static void MaterialEditor();
 
     static void Init(std::shared_ptr<Platform::WindowBase> window)
     {
@@ -158,17 +160,24 @@ namespace Epsilon::Editor::GUI
         //FileSystemReference.list();
     }
 
-    void onKeyPress(beacon::sender *sender, beacon::args *args) {
+    void onKeyPress(beacon::sender *sender, beacon::args *args)
+    {
         auto obj = args->to<Input::KeyboardArgs>();
 
-        if(obj.key_down_index == Input::GLFW::Key::G) {
+        if (obj.key_down_index == Input::GLFW::Key::G)
+        {
             gizmo_status = Renderer::Gizmo::gizmo::translate;
-        } else if(obj.key_down_index == Input::GLFW::Key::R) {
+        }
+        else if (obj.key_down_index == Input::GLFW::Key::R)
+        {
             gizmo_status = Renderer::Gizmo::gizmo::rotate;
-        } else if(obj.key_down_index == Input::GLFW::Key::S) {
+        }
+        else if (obj.key_down_index == Input::GLFW::Key::S)
+        {
             gizmo_status = Renderer::Gizmo::gizmo::scale;
-        } else {
-
+        }
+        else
+        {
         }
     }
 
@@ -535,7 +544,7 @@ namespace Epsilon::Editor::GUI
             if (ImGui::BeginMenu("Materials"))
             {
                 ImGui::MenuItem("Material Selection", NULL, false, false);
-                ImGui::MenuItem("Material Editor", NULL, false, false);
+                ImGui::MenuItem("Material Editor", NULL, &show_material_editor);
                 ImGui::EndMenu();
             }
             if (ImGui::BeginMenu("Render"))
@@ -591,6 +600,10 @@ namespace Epsilon::Editor::GUI
             ImGui::Begin("Dear ImGui Style Editor", &show_app_style_editor);
             ShowStyleEditor(nullptr);
             ImGui::End();
+        }
+
+        if(show_material_editor) {
+            MaterialEditor();
         }
 
         if (showSystemStatus)
@@ -881,38 +894,132 @@ namespace Epsilon::Editor::GUI
         using namespace Component;
         if (sSelectedEntity->HasRenderComponent())
         {
-
-            auto RComponent = std::static_pointer_cast<RenderComponent>(sSelectedEntity->getComponent<RenderComponent_ptr>());
-            auto &ref = ResourceManager::Get();
-            if(RComponent->hasModel) {
-                auto model = ref.getModel(RComponent->getModelPath());
-                auto &meshes = model->Meshes();
+            auto RComponent = sSelectedEntity->getComponent<Component::RenderComponent_ptr>();
+            if (!RComponent->hasModel)
+            {
+                return;
             }
+            auto &ref = ResourceManager::Get();
 
-            ImGui::Begin("Material Editor");
+            auto model = ref.getModel(RComponent->getModelPath());
+            auto* meshes = &model->Meshes();
 
-            /*
+            ImGui::Begin("Material Editor", &show_material_editor);
+
             static std::string sizes[] = {"64", "128", "256", "512"};
             static std::string current_item = "1";
+            static int selected_item = 0;
             if (ImGui::BeginCombo("Selected Mesh", current_item.c_str()))
             {
-                for (int n = 0; n < meshes.size(); n++)
+
+                for (int n = 0; n < meshes->size(); n++)
                 {
                     bool is_selected = (current_item == sizes[n]); // You can store your selection however you want, outside or inside your objects
                     if (ImGui::Selectable(sizes[n].c_str(), is_selected))
                     {
                         current_item = sizes[n];
-                        imgSize = (n + 1) * 64;
+                        //selected_item = n;
                     }
                 }
                 ImGui::EndCombo();
             }
 
+            auto* current_mesh = &model->Meshes()[selected_item];
+            Renderer::MaterialPBR_ptr material = current_mesh->getMaterial();
 
-            if(ImGui::CollapsingHeader("Albedo")) {
-                ImGui::Checkbox("Use albedo texture", &); // Edit bools storing our window open/close state
+            if (ImGui::CollapsingHeader("Albedo"))
+            {
+                bool sUseAlbedoTexture = !material->usingAlbedoColor();
+                ImGui::Checkbox("Use albedo texture", &sUseAlbedoTexture);
+                if (sUseAlbedoTexture)
+                {
+                    auto texture = material->get<std::shared_ptr<Renderer::Texture2D>>(Renderer::Material::MaterialParameter::Albedo);
+                    auto textureId = texture->ID();
+
+                    ImGui::ImageButton((void *)(unsigned int)textureId, ImVec2(64, 64), ImVec2(0, 0), ImVec2(1, 1), 8, ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+                    ImGui::SameLine();
+                    ImGui::Text(current_mesh->textures[0].path.c_str());
+                    material->setMaterial(Renderer::Material::MaterialParameter::Albedo, texture);
+                    //ImGui::Text(texture.getData(). );
+                }
+                else
+                {
+                    static float color[3] = {0.0};
+                    ImGui::ColorEdit3("Color##albedocolor", color);
+                    material->setMaterial(Renderer::Material::MaterialParameter::Albedo, glm::vec3(color[0], color[1], color[2]));
+                }
             }
 
+            if (ImGui::CollapsingHeader("Roughness"))
+            {
+                bool sUseRoughnessTexture = !material->usingRoughnessColor();
+                ImGui::Checkbox("Use roughness texture", &sUseRoughnessTexture);
+                if (sUseRoughnessTexture)
+                {
+                    auto texture = material->get<std::shared_ptr<Renderer::Texture2D>>(Renderer::Material::MaterialParameter::Roughness);
+                    auto textureId = texture->ID();
+
+                    ImGui::ImageButton((void *)(unsigned int)textureId, ImVec2(64, 64), ImVec2(0, 0), ImVec2(1, 1), 8, ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+                    ImGui::SameLine();
+                    ImGui::Text(current_mesh->textures[1].path.c_str());
+                    
+                    material->setMaterial(Renderer::Material::MaterialParameter::Roughness, texture);
+                    //ImGui::Text(texture.getData(). );
+                }
+                else
+                {
+                    static float color[3] = {0.0};
+                    ImGui::ColorEdit3("Color##roughnesscolor", color);
+                    material->setMaterial(Renderer::Material::MaterialParameter::Roughness, glm::vec3(color[0], color[1], color[2]));
+                }
+            }
+
+            if (ImGui::CollapsingHeader("Normal"))
+            {
+                bool sUseNormalTexture = !material->usingNormalColor();
+                ImGui::Checkbox("Use normal texture", &sUseNormalTexture);
+                if (sUseNormalTexture)
+                {
+                    auto texture = material->get<std::shared_ptr<Renderer::Texture2D>>(Renderer::Material::MaterialParameter::Normal);
+                    auto textureId = texture->ID();
+
+                    ImGui::ImageButton((void *)(unsigned int)textureId, ImVec2(64, 64), ImVec2(0, 0), ImVec2(1, 1), 8, ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+                    ImGui::SameLine();
+                    ImGui::Text(current_mesh->textures[2].path.c_str());
+                    material->setMaterial(Renderer::Material::MaterialParameter::Normal, texture);
+                    //ImGui::Text(texture.getData(). );
+                }
+                else
+                {
+                    static float color[3] = {0.5, 0.5, 1.0};
+                    ImGui::ColorEdit3("Color##normalcolor", color);
+                    material->setMaterial(Renderer::Material::MaterialParameter::Normal, glm::vec3(color[0], color[1], color[2]));
+                }
+            }
+
+            if (ImGui::CollapsingHeader("Metallic"))
+            {
+                bool sUseMetallicTexture = !material->usingMetallicColor();
+                ImGui::Checkbox("Use metallic texture", &sUseMetallicTexture);
+                if (sUseMetallicTexture)
+                {
+                    auto texture = material->get<std::shared_ptr<Renderer::Texture2D>>(Renderer::Material::MaterialParameter::Metallic);
+                    auto textureId = texture->ID();
+
+                    ImGui::ImageButton((void *)(unsigned int)textureId, ImVec2(64, 64), ImVec2(0, 0), ImVec2(1, 1), 8, ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+                    ImGui::SameLine();
+                    ImGui::Text(current_mesh->textures[3].path.c_str());
+                    material->setMaterial(Renderer::Material::MaterialParameter::Metallic, texture);
+                    //ImGui::Text(texture.getData(). );
+                }
+                else
+                {
+                    static float color[3] = {0};
+                    ImGui::ColorEdit3("Color##metalliccolor", color);
+                    material->setMaterial(Renderer::Material::MaterialParameter::Metallic, glm::vec3(color[0], color[1], color[2]));
+                }
+            }
+/*
             ImGui::SliderFloat("Horizon Height", &skybox->Horizon_Height, 0.0f, 1.0f); // Edit 1 float using a slider from 0.0f to 1.0f
             ImGui::ColorEdit3("Upper Sky Color", (float *)&skybox->UpperSky_color);    // Edit 3 floats representing a color
             ImGui::ColorEdit3("Lower Sky Color", (float *)&skybox->LowerSky_color);    // Edit 3 floats representing a color

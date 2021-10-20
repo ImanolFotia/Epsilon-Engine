@@ -47,25 +47,53 @@ namespace Epsilon::Renderer
             auto metallic = mMaterial->get<Tex2D_ptr>(Material::MaterialParameter::Metallic);
             auto normal = mMaterial->get<Tex2D_ptr>(Material::MaterialParameter::Normal);
 
-            if (albedo != nullptr)
+            if (albedo != nullptr && !mMaterial->usingAlbedoColor())
             {
                 albedo->Bind(GL_TEXTURE0);
                 shader->PushUniform("texture_diffuse", 0);
+                shader->PushUniform("using_color_diffuse", 0);
             }
-            if (roughness != nullptr)
+            else
+            {
+                shader->PushUniform("texture_diffuse", 0);
+                shader->PushUniform("using_color_diffuse", 1);
+                shader->PushUniform("color_diffuse", glm::vec4(mMaterial->get<glm::vec3>(Material::MaterialParameter::Albedo), 1.0));
+            }
+            if (roughness != nullptr && !mMaterial->usingRoughnessColor())
             {
                 roughness->Bind(GL_TEXTURE1);
                 shader->PushUniform("texture_specular", 1);
+                shader->PushUniform("using_color_specular", 0);
             }
-            if (normal != nullptr)
+            else
+            {
+                shader->PushUniform("texture_specular", 1);
+                shader->PushUniform("using_color_specular", 1);
+                shader->PushUniform("color_specular", glm::vec4(mMaterial->get<glm::vec3>(Material::MaterialParameter::Roughness), 1.0));
+            }
+            if (normal != nullptr && !mMaterial->usingNormalColor())
             {
                 normal->Bind(GL_TEXTURE2);
                 shader->PushUniform("texture_normal", 2);
+                shader->PushUniform("using_color_normal", 0);
             }
-            if (metallic != nullptr)
+            else
+            {
+                shader->PushUniform("texture_normal", 2);
+                shader->PushUniform("using_color_normal", 1);
+                shader->PushUniform("color_normal", glm::vec4(mMaterial->get<glm::vec3>(Material::MaterialParameter::Normal), 1.0));
+            }
+            if (metallic != nullptr && !mMaterial->usingMetallicColor())
             {
                 metallic->Bind(GL_TEXTURE3);
                 shader->PushUniform("texture_height", 3);
+                shader->PushUniform("using_color_height", 0);
+            }
+            else
+            {
+                shader->PushUniform("texture_height", 3);
+                shader->PushUniform("using_color_height", 1);
+                shader->PushUniform("color_height", glm::vec4(mMaterial->get<glm::vec3>(Material::MaterialParameter::Metallic), 1.0));
             }
 
             glActiveTexture(GL_TEXTURE4);
@@ -99,6 +127,7 @@ namespace Epsilon::Renderer
             glActiveTexture(GL_TEXTURE3);
             glBindTexture(GL_TEXTURE_2D, 0);
             glActiveTexture(GL_TEXTURE4);
+
             glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
         }
     }

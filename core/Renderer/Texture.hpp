@@ -28,6 +28,8 @@ namespace Epsilon::Renderer
 
             virtual void setData(uint8_t *, size_t) = 0;
 
+            virtual API::Texture::TextureData getData() = 0;
+
             virtual void Bind() = 0;
 
             virtual void Bind(int) = 0;

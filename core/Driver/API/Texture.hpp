@@ -94,6 +94,8 @@ namespace Epsilon::API
         
         virtual bool wasCreated() { return texture_was_created; }
 
+        TextureData getData() { return mData; }
+
     protected:
         TextureData mData;
         bool texture_was_created = false;

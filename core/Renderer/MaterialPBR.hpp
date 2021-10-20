@@ -23,15 +23,21 @@ namespace Epsilon
             template <typename T>
             T get(Material::MaterialParameter);
 
+            bool usingAlbedoColor() { return use_albedo_color; }
+            bool usingRoughnessColor() { return use_roughness_color; }
+            bool usingMetallicColor() { return use_metallic_color; }
+            bool usingNormalColor() { return use_normal_color; }
+
         private:
             Texture2D_ptr mAlbedoTex;
             Texture2D_ptr mRoughnessTex;
             Texture2D_ptr mMetallicTex;
             Texture2D_ptr mNormalTex;
 
-            bool use_albedo_color;
-            bool use_roughness_color;
-            bool use_metallic_color;
+            bool use_albedo_color = false;
+            bool use_roughness_color = false;
+            bool use_metallic_color = false;
+            bool use_normal_color = false;
 
             glm::vec3 albedo_color = glm::vec3(0.0f);
             glm::vec3 roughness_color = glm::vec3(0.0f);

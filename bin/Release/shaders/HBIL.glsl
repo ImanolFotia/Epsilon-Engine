@@ -117,8 +117,8 @@ float PointShadowCalculation(vec3 fragPos, vec3 LightPos, vec3 viewPos)
 
 float getDensity(vec3 p) {
 
-    const float density = 0.1;
-    const float gradient = 0.5;
+    const float density = 0.5;
+    const float gradient = 0.2;
 
     const float bottomLimit = -1.5;
     const float upperLimit = 30.0;
@@ -130,7 +130,7 @@ float getDensity(vec3 p) {
 
     vec3 sunpos = vec3(13.0, 12.0, 0.0);
 
-    return heightInfluence * visibility;//exp( (-p.y - 1.0) / (length(p - sunpos)) * 5.0 );
+    return visibility;//exp( (-p.y - 1.0) / (length(p - sunpos)) * 5.0 );
 }
 
 const int MAX_STEPS = 100;
@@ -168,7 +168,7 @@ vec3 intersect(in vec3 ro, in vec3 rd, out float dd) {
         vec4 FragPosLightSpace = lightSpaceMatrix * vec4(samplingPos, 1.0);
         vec3 sh = vec3(0.0);
         sh += vec3(shadow(FragPosLightSpace, ro));
-        sh += vec3(PointShadowCalculation(samplingPos, uLightPosition.rgb, camPos) * vec3(1.0, 47.0/255.0, 0.0));
+        sh += vec3(PointShadowCalculation(samplingPos, uLightPosition.rgb, camPos) * vec3(1.0));
         lightAccum += sh * getDensity(samplingPos); 
         t += stepSize * hash23(FragPosLightSpace.rgb).x;
         stepSize *= 0.99;

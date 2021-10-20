@@ -116,6 +116,10 @@ namespace Epsilon::Renderer
 
         void setMaterial(MaterialPBR_ptr);
 
+        MaterialPBR_ptr getMaterial() {
+            return mMaterial;
+        }
+
     public:
         MIN_MAX_POINTS MinMaxPoints;
 

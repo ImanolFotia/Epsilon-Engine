@@ -10,18 +10,26 @@ namespace Epsilon::Renderer
         switch (t)
         {
         case MaterialParameter::Albedo:
+            use_albedo_color = false;
+            if(mAlbedoTex) mAlbedoTex->decreaseRefCount();
             mAlbedoTex = p;
             mAlbedoTex->increaseRefCount();
             return true;
         case MaterialParameter::Roughness:
+            use_roughness_color = false;
+            if(mRoughnessTex) mRoughnessTex->decreaseRefCount();
             mRoughnessTex = p;
             mRoughnessTex->increaseRefCount();
             return true;
         case MaterialParameter::Metallic:
+            use_metallic_color = false;
+            if(mMetallicTex) mMetallicTex->decreaseRefCount();
             mMetallicTex = p;
             mMetallicTex->increaseRefCount();
             return true;
         case MaterialParameter::Normal:
+            use_normal_color = false;
+            if(mNormalTex) mNormalTex->decreaseRefCount();
             mNormalTex = p;
             mNormalTex->increaseRefCount();
             return true;
@@ -36,13 +44,19 @@ namespace Epsilon::Renderer
         switch (t)
         {
         case MaterialParameter::Albedo:
+            use_albedo_color = true;
             albedo_color = p;
             return true;
         case MaterialParameter::Roughness:
+            use_roughness_color = true;
             roughness_color = p;
             return true;
         case MaterialParameter::Metallic:
+            use_metallic_color = true;
             metallic_color = p;
+            return true;
+        case MaterialParameter::Normal:
+            use_normal_color = true;
             return true;
         default:
             return false;

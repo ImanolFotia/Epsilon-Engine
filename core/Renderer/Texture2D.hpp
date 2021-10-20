@@ -7,93 +7,107 @@
 #include "Texture.hpp"
 
 namespace Epsilon::Renderer
+{
+
+    class Texture2D : public Texture
     {
-
-        class Texture2D : public Texture
+    public:
+        Texture2D() {}
+        Texture2D(const API::ContextBase_ptr context)
         {
-        public:
-            Texture2D() {}
-            Texture2D(const API::ContextBase_ptr context)
+            mContext = context;
+        }
+
+        ~Texture2D() {}
+
+        void Create(API::Texture::TextureData data) override
+        {
+            using API::CONTEXT_TYPE;
+            auto type = Engine::Get().ContextType(); //CONTEXT_TYPE::OGL;//mContext->getType();
+            switch (type)
             {
-                mContext = context;
+            case CONTEXT_TYPE::OGL:
+                mTexture = std::make_shared<API::OpenGL::Texture2D>(data);
+                break;
+
+            default:
+                IO::PrintLine("Context type: ", type, " is not yet implemented...");
+                break;
             }
+        }
 
-            ~Texture2D() {}
+        void Create(int w, int h) override
+        {
 
-            void Create(API::Texture::TextureData data) override
+            using API::CONTEXT_TYPE;
+            auto type = Engine::Get().ContextType(); //CONTEXT_TYPE::OGL;//mContext->getType();
+            switch (type)
             {
-                using API::CONTEXT_TYPE;
-                auto type = Engine::Get().ContextType(); //CONTEXT_TYPE::OGL;//mContext->getType();
-                switch (type)
-                {
-                case CONTEXT_TYPE::OGL:
-                    mTexture = std::make_shared<API::OpenGL::Texture2D>(data);
-                    break;
+            case CONTEXT_TYPE::OGL:
+                mTexture = std::make_shared<API::OpenGL::Texture2D>(w, h);
+                break;
 
-                default:
-                    IO::PrintLine("Context type: ", type, " is not yet implemented...");
-                    break;
-                }
+            default:
+                IO::PrintLine("Context type: ", type, " is not yet implemented...");
+                break;
             }
+        }
 
-            void Create(int w, int h) override
-            {
+        void setData(uint8_t *data, size_t size) override
+        {
+            if (!mTexture)
+                return;
+            mTexture->Fill(data, 0, 0);
+        }
 
-                using API::CONTEXT_TYPE;
-                auto type = Engine::Get().ContextType(); //CONTEXT_TYPE::OGL;//mContext->getType();
-                switch (type)
-                {
-                case CONTEXT_TYPE::OGL:
-                    mTexture = std::make_shared<API::OpenGL::Texture2D>(w, h);
-                    break;
+        API::Texture::TextureData getData() override
+        {
+            return mTexture->getData();
+        }
 
-                default:
-                    IO::PrintLine("Context type: ", type, " is not yet implemented...");
-                    break;
-                }
-            }
+        void Bind() override
+        {
+            if (!mTexture)
+                return;
+            mTexture->Bind();
+        }
 
-            void setData(uint8_t *data, size_t size) override
-            {
-                if(!mTexture) return;
-                mTexture->Fill(data, 0, 0);
-            }
+        void Bind(int slot) override
+        {
+            if (!mTexture)
+                return;
+            mTexture->Bind(slot);
+        }
 
-            void Bind() override
-            {
-                if(!mTexture) return;
-                mTexture->Bind();
-            }
+        void Unbind() override
+        {
+            if (!mTexture)
+                return;
+            mTexture->Unbind();
+        }
 
-            void Bind(int slot) override
-            {
-                if(!mTexture) return;
-                mTexture->Bind(slot);
-            }
+        void Destroy()
+        {
+            if (!mTexture)
+                return;
+            mTexture->Destroy();
+        }
 
-            void Unbind() override
-            {
-                if(!mTexture) return;
-                mTexture->Unbind();
-            }
+        unsigned int ID() override
+        {
+            if (!mTexture)
+                return 0;
+            return mTexture->ID();
+        }
 
-            void Destroy()
-            {
-                if(!mTexture) return;
-                mTexture->Destroy();
-            }
+        bool wasCreated()
+        {
+            if (mTexture == nullptr)
+                return false;
+            return mTexture->wasCreated();
+        }
 
-            unsigned int ID() override {
-                if(!mTexture) return 0;
-                return mTexture->ID();
-            }
-
-            bool wasCreated() {
-                if(mTexture == nullptr) return false;
-                return mTexture->wasCreated();
-            }
-
-        private:
-            void _Create() {}
-        };
+    private:
+        void _Create() {}
+    };
 } // namespace Epsilon

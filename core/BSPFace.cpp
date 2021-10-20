@@ -58,15 +58,20 @@ namespace Epsilon
 
 		Instance.getTexture2D(albedoTexture)->Bind(GL_TEXTURE0);
 		shader->PushUniform("texture_diffuse", 0);
+        shader->PushUniform("using_color_diffuse", false);
+		
 
 		Instance.getTexture2D(roughnessTexture)->Bind(GL_TEXTURE1);
 		shader->PushUniform("texture_specular", 1);
+        shader->PushUniform("using_color_specular", false);
 
 		Instance.getTexture2D(normalTexture)->Bind(GL_TEXTURE2);
 		shader->PushUniform("texture_normal", 2);
+        shader->PushUniform("using_color_normal", false);
 
 		Instance.getTexture2D(metallicTexture)->Bind(GL_TEXTURE3);
 		shader->PushUniform("texture_height", 3);
+        shader->PushUniform("using_color_height", false);
 	}
 
 	void BSPFace::RenderFace(Shader_ptr shader, bool simpleRender, bool change_material)

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace Epsilon::Renderer
 {
     class Material
@@ -27,11 +29,16 @@ namespace Epsilon::Renderer
         };
 
         unsigned long mId;
+        std::string mName;
 
     public:
         Material() {}
         virtual ~Material() {}
     
         unsigned long Id() const { return mId; }
+        
+        void Name(const std::string& name) { mName = name; }
+
+        const std::string& Name() const { return mName; }
     };
 } // namespace Epsilon

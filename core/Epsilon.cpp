@@ -179,7 +179,7 @@ namespace Epsilon
                                             });
 
         this->ComputeCamera(NO_CLIP, glm::vec3(0.0f, 8.25f, -7.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
+ 
         shadowMap = std::move((shared_ptr<Renderer::ShadowMap>)(new Renderer::ShadowMap(DATA.SHADOWMAP_SIZE, DATA.SHADOWMAP_SIZE, -20.0f, 80.0f)));
         shadowMap->setShadowPosition(glm::vec3(0.0, -1.0, 0.0));
 
@@ -189,25 +189,25 @@ namespace Epsilon
         //RenderSplashScreen("Loading Geometry...");
         this->LoadGeometry();
 
-        mSphere = std::make_shared<Renderer::Sphere>(20);
+        mSphere = std::make_shared<Renderer::Sphere>(40);
 
         auto SphereMaterial = mSphere->getMaterial();
 
         using Tex2D_ptr = std::shared_ptr<Renderer::Texture2D>;
         auto &ref = ResourceManager::Get();
-
+ 
         ref.addTextureToQueue("textures/epsilon/industrial-tile1-albedo.png");
         ref.addTextureToQueue("textures/epsilon/industrial-tile1-metallic.png");
         ref.addTextureToQueue("textures/epsilon/industrial-tile1-normal-dx.png");
         ref.addTextureToQueue("textures/epsilon/industrial-tile1-roughness.png");
 
         ref.ForceLoading();
-
+      
         SphereMaterial->setMaterial(Renderer::Material::MaterialParameter::Albedo, ref.Get<Tex2D_ptr>("textures/epsilon/industrial-tile1-albedo.png"));
         SphereMaterial->setMaterial(Renderer::Material::MaterialParameter::Metallic, ref.Get<Tex2D_ptr>("textures/epsilon/industrial-tile1-metallic.png"));
         SphereMaterial->setMaterial(Renderer::Material::MaterialParameter::Normal, ref.Get<Tex2D_ptr>("textures/epsilon/industrial-tile1-normal-dx.png"));
         SphereMaterial->setMaterial(Renderer::Material::MaterialParameter::Roughness, ref.Get<Tex2D_ptr>("textures/epsilon/industrial-tile1-roughness.png"));
-
+ 
         {
             glm::vec3 tPosition = glm::vec3(0.0f, 3.0f, 0.0f);
             glm::vec3 tScale = glm::vec3(1.0);
@@ -322,6 +322,26 @@ namespace Epsilon
             glm::vec3 tScale = glm::vec3(1.0);
             glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
             std::string tModelName = "models/cube.eml";
+
+            std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(tPosition, tScale, tRotation);
+
+            Component::RenderComponent_ptr _RComp = std::make_shared<Component::RenderComponent>(tModelName, tPosition, "Main");
+            _RComp->CastsShadows(true);
+            _RComp->setTransparency(false);
+            _RComp->setVisibility(true);
+            _RComp->setRenderId(EntityList.size());
+
+            _Entity->addComponent(_RComp);
+            _Entity->setName(std::string("Entity") + std::to_string(EntityList.size()));
+
+            EntityList.push_back(_Entity);
+        }
+        
+        {
+            glm::vec3 tPosition = glm::vec3(0.0f);
+            glm::vec3 tScale = glm::vec3(1.0);
+            glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
+            std::string tModelName = "models/DRAGON.eml";
 
             std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(tPosition, tScale, tRotation);
 

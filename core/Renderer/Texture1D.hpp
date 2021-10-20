@@ -59,6 +59,11 @@ namespace Epsilon::Renderer
             mTexture->Fill(data, 0, 0);
         }
 
+        API::Texture::TextureData getData() override
+        {
+            return mTexture->getData();
+        }
+
         void Bind() override
         {
             mTexture->Bind();
