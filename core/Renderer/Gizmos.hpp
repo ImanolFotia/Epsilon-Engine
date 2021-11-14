@@ -47,11 +47,19 @@ namespace Epsilon::Renderer
 
         void Render(gizmo type, glm::vec3 pos, glm::vec3 camPos)
         {
+            
+        glDisable(GL_CULL_FACE);
+        glDisable(GL_BLEND);
+        glDisable(GL_DEPTH_TEST);
             mShader->Use();
             mShader->PushUniform("ModelMatrix", glm::translate(glm::mat4(1.0), pos) * glm::scale(glm::mat4(1.0), glm::vec3(glm::length(camPos - pos) * 0.08f)));
             mShader->PushUniform("EntityId", 2147483646);
             drawGuizmo(type);
             mShader->Free();
+            
+        glEnable(GL_CULL_FACE);
+        glEnable(GL_BLEND);
+        glEnable(GL_DEPTH_TEST);
         }
 
         void Clear()

@@ -39,7 +39,7 @@ namespace Epsilon
 
         using namespace Input;
 
-        Mouse::MouseEventHandler += beacon::bind(&onMouseWheelCallback, this);
+        //Mouse::MouseEventHandler += beacon::bind(&onMouseWheelCallback, this);
     }
 
     void Camera::onMouseWheelCallback(beacon::sender *sender, beacon::args *args)

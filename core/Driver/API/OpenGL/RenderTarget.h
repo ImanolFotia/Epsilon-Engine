@@ -7,7 +7,7 @@
 
 class RenderTarget
 {
-    public:
+public:
     unsigned int mWidth;
     unsigned int mHeight;
     GLuint mInternalFormat = 0;
@@ -45,26 +45,30 @@ public:
         else if (target == GL_TEXTURE_2D)
         {
             glTexImage2D(target, 0, internalformat, width, height, 0, format, mInternalType, 0);
-            glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTexParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            glTexParameteri(target, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
             glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, target, m_RenderTextureTarget, 0);
         }
+
+        glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(target, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
         glTexParameteri(target, GL_TEXTURE_MAG_FILTER, magfilter);
         glTexParameteri(target, GL_TEXTURE_MIN_FILTER, minfilter);
 
+        Epsilon::glCheckError();
         if (mMipMaps)
             glGenerateMipmap(target);
         glBindTexture(target, 0);
 
         auto errorCode = Epsilon::glCheckError();
-        if(errorCode != GL_NO_ERROR) {
-            std::cout << "Error on: " << "Framebuffer texture: " << "\n" <<
-                "Id: " << m_RenderTextureTarget << "\n" <<
-                "Internal Format: " << mInternalFormat << "\n" <<
-                "Target: " << mTarget << "\n" <<
-                "Internal Type: " << mInternalType << std::endl;
-
+        if (errorCode != GL_NO_ERROR)
+        {
+            std::cout << "Error on: "
+                      << "Framebuffer texture: "
+                      << "\n"
+                      << "Id: " << m_RenderTextureTarget << "\n"
+                      << "Internal Format: " << mInternalFormat << "\n"
+                      << "Target: " << mTarget << "\n"
+                      << "Internal Type: " << mInternalType << std::endl;
         }
         using namespace Epsilon::API;
 
@@ -91,6 +95,23 @@ public:
     void Attach()
     {
         glFramebufferTexture(GL_FRAMEBUFFER, mAttachment, m_RenderTextureTarget, 0);
+    }
+
+    void Attach(int face, int mip = 0)
+    {
+        //glFramebufferTexture(GL_FRAMEBUFFER, mAttachment, m_RenderTextureTarget, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, mAttachment, GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, m_RenderTextureTarget, mip);
+    }
+
+    void Bind()
+    {
+        glBindTexture(mTarget, m_RenderTextureTarget);
+    }
+
+    void Bind(int slot)
+    {
+        glActiveTexture(GL_TEXTURE0 + slot);
+        glBindTexture(mTarget, m_RenderTextureTarget);
     }
 
     void Resize(unsigned int w, unsigned int h)

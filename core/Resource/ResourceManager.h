@@ -13,6 +13,7 @@
 #include <Physics/Physics.h>
 //#include <Audio/Audio.h>
 #include <Renderer/Texture2D.hpp>
+#include <Renderer/TextureCube.hpp>
 #include <beacon/beacon.hpp>
 
 namespace Epsilon
@@ -108,6 +109,8 @@ namespace Epsilon
 
         GLuint useCubeMap(int ID);
 
+        std::shared_ptr<Renderer::TextureCube> getCubemap(int Id);
+
         int requestTextureUsage(const std::string &);
 
         void resetTextureUsage(const std::string &);
@@ -166,10 +169,10 @@ namespace Epsilon
         void LaunchIntervals()
         {
 
-            mQueuedTexturesInterval.set(200, [&mShouldLoadQueuedTextures = mShouldLoadQueuedTextures]()
+            mQueuedTexturesInterval.set(100, [&mShouldLoadQueuedTextures = mShouldLoadQueuedTextures]()
                                         { mShouldLoadQueuedTextures = true; });
 
-            mQueuedModelsInterval.set(500, [&mShouldLoadQueuedModels = mShouldLoadQueuedModels]()
+            mQueuedModelsInterval.set(100, [&mShouldLoadQueuedModels = mShouldLoadQueuedModels]()
                                       { mShouldLoadQueuedModels = true; });
         }
 

@@ -6,7 +6,7 @@ uniform sampler2D image;
 uniform bool horizontal;
 uniform bool cheap;
 
-uniform float weight[11] = float[] (0.082607,    0.080977,   0.076276,   0.069041,   0.060049,   0.050187, 0.040306,     0.031105, 0.023066,     0.016436, 0.011254);
+uniform float weight[11] = float[] (0.082607,    0.080977,   0.076276,   0.069041,   0.060049,   0.050187, 0.040306, 0.031105, 0.023066, 0.016436, 0.011254);
 
 const float weight2[5] = float[] (0.227027, 0.1945946, 0.1216216, 0.054054, 0.016216);
 void main()

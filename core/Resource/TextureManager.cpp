@@ -5,7 +5,17 @@ namespace Epsilon
 
     uint32_t ResourceManager::getNearestCubemapIndex(glm::vec3 pos)
     {
-        return mCubemapIndex.at(NearestCubeMap(pos));
+        try
+        {
+            return mCubemapIndex.at(NearestCubeMap(pos));
+        }
+        catch (std::exception &e)
+        {
+            std::cout << "Exception: " << __FUNCTION__ << std::endl;
+            std::cout << "what(): " << e.what() << std::endl;
+            std::cout << "argument: "
+                      << "glm::vec3(" << pos.x << ", " << pos.y << ", " << pos.z << ")" << std::endl;
+        }
     }
 
     uint32_t ResourceManager::getNumCubemaps()
@@ -398,10 +408,38 @@ namespace Epsilon
 
     GLuint ResourceManager::useCubeMap(int ID)
     {
-        if (CubeMapList.at(ID) != nullptr)
-            return CubeMapList.at(ID)->getTextureID();
+        try
+        {
+            if (CubeMapList.at(ID) != nullptr)
+                return CubeMapList.at(ID)->getTextureCube()->ID();
+        }
+        catch (std::exception &e)
+        {
+            std::cout << "Exception: " << __FUNCTION__ << std::endl;
+            std::cout << "what(): " << e.what() << std::endl;
+            std::cout << "argument: "
+                      << "id: " << ID << std::endl;
+        }
 
         return 0;
+    }
+
+    std::shared_ptr<Renderer::TextureCube> ResourceManager::getCubemap(int Id)
+    {
+        try
+        {
+            if (CubeMapList.at(Id) != nullptr)
+                return CubeMapList.at(Id)->getTextureCube();
+        }
+        catch (std::exception &e)
+        {
+            std::cout << "Exception: " << __FUNCTION__ << std::endl;
+            std::cout << "what(): " << e.what() << std::endl;
+            std::cout << "argument: "
+                      << "id: " << Id << std::endl;
+        }
+
+        return nullptr;
     }
 
     template <>

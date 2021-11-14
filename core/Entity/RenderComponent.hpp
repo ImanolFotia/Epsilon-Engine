@@ -76,15 +76,67 @@ namespace Epsilon
                         using Tex2D_ptr = std::shared_ptr<Renderer::Texture2D>;
                         auto SphereMaterial = std::static_pointer_cast<Renderer::Sphere>(mDrawable)->getMaterial();
 
-                        SphereMaterial->get<Tex2D_ptr>(Renderer::Material::MaterialParameter::Albedo)->Bind(GL_TEXTURE0);
-                        tShader->PushUniform("texture_diffuse", 0);
-                        SphereMaterial->get<Tex2D_ptr>(Renderer::Material::MaterialParameter::Roughness)->Bind(GL_TEXTURE1);
-                        tShader->PushUniform("texture_specular", 1);
-                        SphereMaterial->get<Tex2D_ptr>(Renderer::Material::MaterialParameter::Normal)->Bind(GL_TEXTURE2);
-                        tShader->PushUniform("texture_normal", 2);
-                        SphereMaterial->get<Tex2D_ptr>(Renderer::Material::MaterialParameter::Metallic)->Bind(GL_TEXTURE3);
-                        tShader->PushUniform("texture_height", 3);
+                        auto albedo = SphereMaterial->get<Tex2D_ptr>(Renderer::Material::MaterialParameter::Albedo);
+                        auto roughness = SphereMaterial->get<Tex2D_ptr>(Renderer::Material::MaterialParameter::Roughness);
+                        auto metallic = SphereMaterial->get<Tex2D_ptr>(Renderer::Material::MaterialParameter::Metallic);
+                        auto normal = SphereMaterial->get<Tex2D_ptr>(Renderer::Material::MaterialParameter::Normal);
+
+                        if (albedo != nullptr && !SphereMaterial->usingAlbedoColor())
+                        {
+                            albedo->Bind(0);
+                            tShader->PushUniform("texture_diffuse", 0);
+                            tShader->PushUniform("using_color_diffuse", 0);
+                        }
+                        else
+                        {
+                            tShader->PushUniform("texture_diffuse", 0);
+                            tShader->PushUniform("using_color_diffuse", 1);
+                            tShader->PushUniform("color_diffuse", glm::vec4(SphereMaterial->get<glm::vec3>(Renderer::Material::MaterialParameter::Albedo), 1.0));
+                        }
+                        if (roughness != nullptr && !SphereMaterial->usingRoughnessColor())
+                        {
+                            roughness->Bind(1);
+                            tShader->PushUniform("texture_specular", 1);
+                            tShader->PushUniform("using_color_specular", 0);
+                        }
+                        else
+                        {
+                            tShader->PushUniform("texture_specular", 1);
+                            tShader->PushUniform("using_color_specular", 1);
+                            tShader->PushUniform("color_specular", glm::vec4(SphereMaterial->get<glm::vec3>(Renderer::Material::MaterialParameter::Roughness), 1.0));
+                        }
+                        if (normal != nullptr && !SphereMaterial->usingNormalColor())
+                        {
+                            normal->Bind(2);
+                            tShader->PushUniform("texture_normal", 2);
+                            tShader->PushUniform("using_color_normal", 0);
+                        }
+                        else
+                        {
+                            tShader->PushUniform("texture_normal", 2);
+                            tShader->PushUniform("using_color_normal", 1);
+                            tShader->PushUniform("color_normal", glm::vec4(SphereMaterial->get<glm::vec3>(Renderer::Material::MaterialParameter::Normal), 1.0));
+                        }
+                        if (metallic != nullptr)
+                        {
+                            metallic->Bind(3);
+                            tShader->PushUniform("texture_height", 3);
+                            tShader->PushUniform("using_color_height", SphereMaterial->usingMetallicColor());
+                            tShader->PushUniform("color_height", glm::vec4(SphereMaterial->get<glm::vec3>(Renderer::Material::MaterialParameter::Metallic), 1.0));
+                        }
+                        
+
                         mDrawable->Render();
+
+                        glActiveTexture(GL_TEXTURE0);
+                        glBindTexture(GL_TEXTURE_2D, 0);
+                        glActiveTexture(GL_TEXTURE1);
+                        glBindTexture(GL_TEXTURE_2D, 0);
+                        glActiveTexture(GL_TEXTURE2);
+                        glBindTexture(GL_TEXTURE_2D, 0);
+                        glActiveTexture(GL_TEXTURE3);
+                        glBindTexture(GL_TEXTURE_2D, 0);
+                        glActiveTexture(GL_TEXTURE4);
                     }
 
                     glEnable(GL_CULL_FACE);

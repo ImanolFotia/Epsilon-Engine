@@ -4,6 +4,7 @@
 #include <Core.hpp>
 
 #include <Driver/API/Texture.hpp>
+#include <Driver/API/OpenGL/TextureCube.hpp>
 #include <Driver/API/OpenGL/Texture2D.hpp>
 #include <Driver/API/OpenGL/Texture1D.hpp>
 #include <Driver/API/OpenGL/Context.hpp>

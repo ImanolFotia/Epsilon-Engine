@@ -66,6 +66,7 @@ void SphericalHarmonics::CalculateCohefficients(GLuint cubemap, const unsigned i
             data = new GLfloat[numComponents * width * width];
         } else {
             std::cout << "Format not compatible" << std::endl;
+            std::cout << internalFormat << std::endl;
             return;
         }
         glGetTexImage(GL_TEXTURE_CUBE_MAP_POSITIVE_X+face, 0, GL_RGB, GL_FLOAT, data);

@@ -122,10 +122,10 @@ float LambertDiffuse(in vec3 N, in vec3 L)
     return max(dot(N, L), 0.0);
 }
 
+float SpecularFactor = 0.0;
 vec3 calculatePointPBR(vec3 pos, vec3 color, float watts)
 {
   // calculate per-light radiance
-        float SpecularFactor = texture(gAlbedoSpec, TexCoords).a * 2.0;
         vec3 lightcolor = normalize(color);
         if(pos.z == 56.0)
             lightcolor = vec3(0.0, 0.0, 0.7);
@@ -159,7 +159,6 @@ vec3 calculatePointPBR(vec3 pos, vec3 color, float watts)
 vec3 CalculateDirectionalPBR()
 {
     // calculate per-light radiance
-        float SpecularFactor = texture(gAlbedoSpec, TexCoords).a * 2.0;
         vec3 lightcolor = normalize(vec3(68, 88, 135));
         vec3 V = normalize(viewPos - FragPos);
         vec3 L = normalize(lightDir);
@@ -255,7 +254,6 @@ vec3 SphereAreaLight(in vec3 position, in float radius, in vec3 color, in float 
     closestPoint = L + centerToRay*clamp(radius/length(centerToRay), 0.0, 1.0);
     vec3 l = normalize(closestPoint);
 
-        float SpecularFactor = texture(gAlbedoSpec, TexCoords).a * 2.0;
         float spec_copy = uses_clearcoat ? clearcoat : Specular;
         L = l;//normalize(closestPoint - FragPos);
         vec3 H = normalize(V + L);

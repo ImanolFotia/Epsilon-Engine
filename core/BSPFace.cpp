@@ -56,20 +56,20 @@ namespace Epsilon
 
 		auto & Instance = ResourceManager::Get();
 
-		Instance.getTexture2D(albedoTexture)->Bind(GL_TEXTURE0);
+		Instance.getTexture2D(albedoTexture)->Bind(0);
 		shader->PushUniform("texture_diffuse", 0);
         shader->PushUniform("using_color_diffuse", false);
 		
 
-		Instance.getTexture2D(roughnessTexture)->Bind(GL_TEXTURE1);
+		Instance.getTexture2D(roughnessTexture)->Bind(1);
 		shader->PushUniform("texture_specular", 1);
         shader->PushUniform("using_color_specular", false);
 
-		Instance.getTexture2D(normalTexture)->Bind(GL_TEXTURE2);
+		Instance.getTexture2D(normalTexture)->Bind(2);
 		shader->PushUniform("texture_normal", 2);
         shader->PushUniform("using_color_normal", false);
 
-		Instance.getTexture2D(metallicTexture)->Bind(GL_TEXTURE3);
+		Instance.getTexture2D(metallicTexture)->Bind(3);
 		shader->PushUniform("texture_height", 3);
         shader->PushUniform("using_color_height", false);
 	}
@@ -86,11 +86,15 @@ namespace Epsilon
 		}
 
 		if(change_material) setMaterial(shader);
+		std::shared_ptr<Epsilon::Renderer::TextureCube> cubemap;
+		if(CubemapId >= 0)
+		cubemap = Instance.getCubemap(CubemapId);
 
-		glActiveTexture(GL_TEXTURE4);
-		shader->PushUniform("skybox", 4);
-		if(this->CubemapId != -1)
-		glBindTexture(GL_TEXTURE_CUBE_MAP, Instance.useCubeMap(CubemapId));
+		if(cubemap) {
+			cubemap->Bind(4);
+			shader->PushUniform("skybox", 4);
+		}
+
   
 		mVAO->Bind();  
 		glDrawElements(GL_TRIANGLES, this->Indices.size(), GL_UNSIGNED_INT, 0);

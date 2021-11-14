@@ -29,7 +29,7 @@ public:
     Shader(const char*, const char*, const char*, const char*, const char*) {}
 
     //Compute Shader Constructor
-    Shader(const char*) {}
+    Shader(const char*);
 
     virtual ~Shader(void)
     {   //std::cout << "Shader Destroyed" << std::endl;
@@ -120,6 +120,7 @@ private:
     std::string mVertexPath = "";
     std::string mFragmentPath = "";
     std::string mGeometryPath = "";
+    std::string mComputePath = "";
 
     std::string vPath, fPath;
 

@@ -5,32 +5,31 @@
 namespace Epsilon::API::OpenGL
 {
 
-    class Texture2D : public Texture
+    class TextureCube : public Texture
     {
     public:
-        Texture2D(int w, int h)
+        TextureCube(int w, int h)
         {
             mData.Width = w;
             mData.Height = h;
-            mData.Target = GL_TEXTURE_2D;
+            mData.Target = GL_TEXTURE_CUBE_MAP;
             mData.MakeDefaultGL();
 
             _Create();
             texture_was_created = true;
         }
 
-        Texture2D(TextureData data, bool was_created = false)
+        TextureCube(TextureData data, bool was_created = false)
         {
             mData = data;
-            mData.Target = GL_TEXTURE_2D;
+            mData.Target = GL_TEXTURE_CUBE_MAP;
 
-            if(!was_created)
+            if (!was_created)
                 _Create();
             texture_was_created = true;
         }
-        
 
-        ~Texture2D() {}
+        ~TextureCube() {}
 
         virtual uint32_t Width() override
         {
@@ -44,13 +43,17 @@ namespace Epsilon::API::OpenGL
 
         virtual uint32_t NumFaces() override
         {
-            return 1;
+            return 6;
         }
 
         void Fill(uint8_t *data, size_t level = 0, size_t offset = 0) override
         {
             glBindTexture(mData.Target, mData.TextureId);
-            glTexSubImage2D(mData.Target, level, offset, offset, mData.Width, mData.Height, mData.Format, mData.Type, data);
+
+            for (unsigned int i = 0; i < 6; ++i)
+            {
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, level, mData.InternalFormat, mData.Width, mData.Height, 0, mData.Format, mData.Type, data);
+            }
             glGenerateMipmap(mData.Target);
             glBindTexture(mData.Target, 0);
         }
@@ -62,18 +65,18 @@ namespace Epsilon::API::OpenGL
 
         void Bind() override
         {
-            glBindTexture(GL_TEXTURE_2D, mData.TextureId);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, mData.TextureId);
         }
 
         void Bind(int slot) override
         {
             glActiveTexture(GL_TEXTURE0 + slot);
-            glBindTexture(GL_TEXTURE_2D, mData.TextureId);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, mData.TextureId);
         }
 
         void Unbind() override
         {
-            glBindTexture(GL_TEXTURE_2D, 0);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
         }
 
     private:
@@ -85,34 +88,18 @@ namespace Epsilon::API::OpenGL
             _EvaluateFiltering();
             glTexParameteri(mData.Target, GL_TEXTURE_WRAP_S, mData.Wrapping);
             glTexParameteri(mData.Target, GL_TEXTURE_WRAP_T, mData.Wrapping);
+            glTexParameteri(mData.Target, GL_TEXTURE_WRAP_R, mData.Wrapping);
             glBindTexture(mData.Target, 0);
         }
 
         void _EvaluateInternalFormat()
         {
-            if (mData.SRGB)
+            for (unsigned int i = 0; i < 6; ++i)
             {
-                if (mData.Compressed)
-                {
-                    mData.InternalFormat = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT;
-                }
-                else
-                {
-                    mData.InternalFormat = GL_SRGB_ALPHA;
-                }
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, mData.InternalFormat, mData.Width, mData.Height, 0, mData.Format, mData.Type, nullptr);
             }
-            else
-            {/*
-                if (mData.Compressed)
-                {
-                    mData.InternalFormat = GL_RGBA;
-                }
-                else
-                {
-                    mData.InternalFormat = GL_RGBA;
-                }*/
-            }
-            glTexImage2D(mData.Target, 0, mData.InternalFormat, mData.Width, mData.Height, mData.Border, mData.Format, mData.Type, nullptr);
+
+            glGenerateMipmap(mData.Target);
         }
 
         void _EvaluateFiltering()

@@ -49,7 +49,7 @@ namespace Epsilon::Renderer
 
             if (albedo != nullptr && !mMaterial->usingAlbedoColor())
             {
-                albedo->Bind(GL_TEXTURE0);
+                albedo->Bind(0);
                 shader->PushUniform("texture_diffuse", 0);
                 shader->PushUniform("using_color_diffuse", 0);
             }
@@ -61,7 +61,7 @@ namespace Epsilon::Renderer
             }
             if (roughness != nullptr && !mMaterial->usingRoughnessColor())
             {
-                roughness->Bind(GL_TEXTURE1);
+                roughness->Bind(1);
                 shader->PushUniform("texture_specular", 1);
                 shader->PushUniform("using_color_specular", 0);
             }
@@ -73,7 +73,7 @@ namespace Epsilon::Renderer
             }
             if (normal != nullptr && !mMaterial->usingNormalColor())
             {
-                normal->Bind(GL_TEXTURE2);
+                normal->Bind(2);
                 shader->PushUniform("texture_normal", 2);
                 shader->PushUniform("using_color_normal", 0);
             }
@@ -85,7 +85,7 @@ namespace Epsilon::Renderer
             }
             if (metallic != nullptr && !mMaterial->usingMetallicColor())
             {
-                metallic->Bind(GL_TEXTURE3);
+                metallic->Bind(3);
                 shader->PushUniform("texture_height", 3);
                 shader->PushUniform("using_color_height", 0);
             }

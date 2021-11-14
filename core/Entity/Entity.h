@@ -233,7 +233,7 @@ namespace Epsilon
                     return ResourceManager::Get().getModelBoundingBox(
                         std::static_pointer_cast<Component::RenderComponent>(ComponentList[Component::RENDERCOMPONENT])->modelPath);
                 else 
-                    return {1.0, 1.0, 1.0, -1.0, -1.0, 1.0};
+                    return {1.0, 1.0, 1.0, -1.0, -1.0, -1.0};
             }
 
             else if (this->mHasClothComponent)

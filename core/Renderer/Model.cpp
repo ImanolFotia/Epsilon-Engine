@@ -316,8 +316,8 @@ namespace Epsilon::Renderer
                             glm::vec3 pposition, glm::vec3 pscale, glm::quat protation,
                             std::shared_ptr<Camera> cam)
     {
-        glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1.0), scale);
-        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1.0), position);
+        glm::mat4 ScaleMatrix = glm::scale(glm::mat4(1.0f), scale);
+        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1.0f), position);
         glm::mat4 RotationMatrix = glm::mat4(1.0f) * glm::toMat4(glm::normalize(rotation));
         this->ModelMatrix = TranslationMatrix * ScaleMatrix * RotationMatrix;
         shader->PushUniform("model", this->ModelMatrix);

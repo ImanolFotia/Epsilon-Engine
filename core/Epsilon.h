@@ -62,9 +62,14 @@
 
 #include <Renderer/Gizmos.hpp>
 #include <Renderer/Primitives/Sphere.hpp>
+#include <Editor/Editor.hpp>
+#include <Renderer/Primitives/Bezier.hpp>
+#include <Renderer/Primitives/CubicBezier.hpp>
 
 namespace Epsilon
 {
+    class Editor::Editor;
+    
     class Epsilon : public App
     {
     public:
@@ -151,6 +156,7 @@ namespace Epsilon
         std::shared_ptr<Renderer::ShadowMap> shadowMap;
         std::shared_ptr<Renderer::PointShadow> mPointShadow;
         std::shared_ptr<PostProcess> PP;
+        std::shared_ptr<Renderer::CubicBezier> mBezierCurve;
 
         glm::vec3 ambientDivider;
         std::vector<std::shared_ptr<EntityBase>> EntityList;
@@ -180,6 +186,7 @@ namespace Epsilon
         bool SSAO = false;
         double timeBehind = 0.0;
         float timeGUI = 0.0;
+        Editor::Editor editor;
 
         std::shared_ptr<Renderer::ShaderStorage> AmbientLightSSBO;
         std::shared_ptr<API::BufferObject> mGlobalUniformBuffer;

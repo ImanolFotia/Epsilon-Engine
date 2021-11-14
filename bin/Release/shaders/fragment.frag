@@ -1,12 +1,22 @@
 #version 430 core
 
-layout (binding = 0) uniform sampler2D gAlbedoSpec;
+layout (binding = 0) uniform sampler2D texture_diffuse;
 layout (binding = 1) uniform sampler2D texture_specular;
 layout (binding = 2) uniform sampler2D texture_normal;
 layout (binding = 3) uniform sampler2D texture_height;
 layout (binding = 4) uniform samplerCube skybox;
 layout (binding = 5) uniform sampler2DShadow shadowMap;
 layout (binding = 6) uniform samplerCube gPointShadowMap;
+
+uniform bool using_color_diffuse = false;
+uniform bool using_color_specular = false;
+uniform bool using_color_normal = false;
+uniform bool using_color_height = false;
+
+uniform vec4 color_diffuse;
+uniform vec4 color_specular;
+uniform vec4 color_normal;
+uniform vec4 color_height;
 
 out vec4 Color;
 
@@ -210,19 +220,36 @@ void main()
 {
 	vec3 LightPosition = vec3(37, 6.5, 3.5);
 
-	ExtraComponents.xy = texture(texture_height, TexCoords).xy;
-	Diffuse = texture(gAlbedoSpec, TexCoords).rgb;
-	float alpha = texture(gAlbedoSpec, TexCoords).a;
+    
+  vec2 MetallicHeight = vec2(0.0);
+  vec3 normal_tex = vec3(0.0);
+  vec3 r_tex = vec3(0.0);
+  
+  if(!using_color_diffuse) Diffuse = texture(texture_diffuse,TexCoords).rgb;
+  else Diffuse = color_diffuse.rgb;
+  
+  if(!using_color_specular) r_tex = texture(texture_specular,TexCoords).xyz;
+  else r_tex = color_specular.xyz;
+  
+  if(!using_color_normal) normal_tex = texture(texture_normal,TexCoords).xyz;
+  else normal_tex = color_normal.xyz;
+  
+  if(!using_color_height) MetallicHeight = texture(texture_height,TexCoords).xy;
+  else MetallicHeight = color_height.xy;
+
+	ExtraComponents.xy = MetallicHeight;
+	//Diffuse = texture(gAlbedoSpec, TexCoords).rgb;
+	float alpha = texture(texture_diffuse, TexCoords).a;
 
 	Specular = 1.0;//texture(texture_specular, TexCoords).r;
-    	vec3 SpecDiff = Diffuse * Specular;
+    	vec3 SpecDiff = Diffuse.rgb * Specular;
     
     	F0 = vec3(0.04);
-    	F0      = mix(F0, Diffuse, ExtraComponents.x);
+    	F0      = mix(F0, Diffuse.rgb, ExtraComponents.x);
 
 
-	if(alpha < 0.5)
-    		discard; 
+	//if(alpha < 0.5)
+    //		discard; 
 
 	if(ExtraComponents.y > 0.1)
 	{
@@ -230,7 +257,7 @@ void main()
 		return;
 	}
 
-	vec3 NormalTexture = normalize(texture(texture_normal, TexCoords).rgb * 2.0 - 1.0);
+	vec3 NormalTexture = normalize(normal_tex.rgb * 2.0 - 1.0);
 
 	vec3 mNormal = vec3(0.0);
 

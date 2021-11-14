@@ -244,8 +244,6 @@ float poissonShadowMapping(vec4 fragPosLightSpace){
     float closest = texture(shadowMap, vec3(fragPosLightSpace.xy, fragPosLightSpace.z - bias)/fragPosLightSpace.w).r;
     float current = fragPosLightSpace.z/fragPosLightSpace.w;
 
-    float distance = current - closest;
-
     for (int i=0;i<8;i++){
         int index = int(16.0*random(floor(FragPos.xyz*100.0)+time, i))%16;
         visibility -= 0.125*(texture(shadowMap, vec3(fragPosLightSpace.xy+ poissonDisk[index]/700, fragPosLightSpace.z - bias)/fragPosLightSpace.w).r);
@@ -417,6 +415,8 @@ void main()
 
     Diffuse = textureLod(gAlbedoSpec, TexCoords, 0).rgb;
     clearcoat = textureLod(gAlbedoSpec, TexCoords, 0).a;
+    
+    SpecularFactor = texture(gAlbedoSpec, TexCoords).a * 2.0;
 
     if(ExtraComponents.y > 0.1){
     	FragColor.rgb = mix(SkyColor, Diffuse, visibility) * ExtraComponents.y;

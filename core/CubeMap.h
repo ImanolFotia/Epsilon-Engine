@@ -13,6 +13,10 @@
 
 #include <GIProbe.hpp>
 
+#include <Driver/API/Framebuffer.hpp>
+
+#include <Renderer/TextureCube.hpp>
+
 namespace Epsilon
 {
 	class CubeMap : public GIProbe
@@ -69,8 +73,13 @@ namespace Epsilon
 			} else {
 				return mTexture;
 			}*/
-
+			if(isConvoluted) return prefilterMap;
 			return mTexture;
+		}
+
+		std::shared_ptr<Renderer::TextureCube> getTextureCube() {
+			if(isConvoluted) return mPrefilter;
+			return nullptr;
 		}
 
 		virtual GLuint getCubemapFace(int index)
@@ -93,9 +102,12 @@ namespace Epsilon
 		std::shared_ptr<Shader> prefilterShader;
 		glm::mat4 captureProjection;
 
-		unsigned int prefilterMap = 0;
+		GLuint prefilterMap = 0;
 		GLuint captureFBO = 0;
 		GLuint captureRBO = 0;
+
+		std::shared_ptr<OpenGL::FrameBuffer<int>> mFramebuffer;
+		std::shared_ptr<Renderer::TextureCube> mPrefilter = nullptr;
 
 	private:
 		int ID = 0;

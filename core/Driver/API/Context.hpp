@@ -14,6 +14,17 @@ namespace Epsilon::API
         VULKAN,
         METAL
     };
+
+    enum PRIMITIVE {
+        LINE,
+        TRIANGLES
+    };
+
+    enum STATE {
+        DEPTH_TEST,
+        BLEND
+    };
+
     class ContextBase
     {
 

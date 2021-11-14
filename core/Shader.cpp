@@ -52,18 +52,59 @@ namespace Epsilon
 		this->getUniformsLocations();
 	}
 
+	Shader::Shader(const char *comp_shader_path) : mComputePath(comp_shader_path)
+	{
+		GLuint ProgramID = glCreateProgram();
+		GLuint cs = glCreateShader(GL_COMPUTE_SHADER);
+
+		std::string csSrc = GLSLPreProcessor::PreProcessGLSL(mComputePath);
+		const char *cs_code_cstr = csSrc.c_str();
+		glShaderSource(cs, 2, &cs_code_cstr, NULL);
+		glCompileShader(cs);
+		int rvalue;
+		glGetShaderiv(cs, GL_COMPILE_STATUS, &rvalue);
+		if (!rvalue)
+		{
+			fprintf(stderr, "Error in compiling the compute shader\n");
+			GLchar log[10240];
+			GLsizei length;
+			glGetShaderInfoLog(cs, 10239, &length, log);
+			fprintf(stderr, "Compiler log:\n%s\n", log);
+			exit(40);
+		}
+		glAttachShader(ProgramID, cs);
+
+		glLinkProgram(ProgramID);
+		glGetProgramiv(ProgramID, GL_LINK_STATUS, &rvalue);
+		if (!rvalue)
+		{
+			fprintf(stderr, "Error in linking compute shader program\n");
+			GLchar log[10240];
+			GLsizei length;
+			glGetProgramInfoLog(ProgramID, 10239, &length, log);
+			fprintf(stderr, "Linker log:\n%s\n", log);
+			exit(41);
+		}
+
+		glDeleteShader(cs);
+		glUseProgram(ProgramID);
+		this->getUniformsLocations();
+	}
 	bool Shader::Reload()
 	{
-
 		std::string VertexShaderCode = GLSLPreProcessor::PreProcessGLSL(std::string(mVertexPath));
 
 		std::string FragmentShaderCode = GLSLPreProcessor::PreProcessGLSL(std::string(mFragmentPath));
-		
+
+		std::string ComputeShaderCode = GLSLPreProcessor::PreProcessGLSL(std::string(mComputePath));
+
 		GLuint VertexShaderID = generateVertexProgram(VertexShaderCode);
 
 		GLuint FragmentShaderID = generateFragmentProgram(FragmentShaderCode);
 
 		GLuint GeometryShaderID = 0;
+		
+		GLuint ComputeShaderID = 0;
 
 		if (!mGeometryPath.empty())
 		{
@@ -93,7 +134,9 @@ namespace Epsilon
 			Log::WriteToLog("Error while compiling: " + Helpers::removeExtension(Path));
 			Log::WriteToLog(std::string(&ProgramErrorMessage[0]));
 			return false;
-		} else {
+		}
+		else
+		{
 			glDeleteShader(VertexShaderID);
 			glDeleteShader(FragmentShaderID);
 			glDeleteShader(GeometryShaderID);
@@ -102,7 +145,6 @@ namespace Epsilon
 			this->getUniformsLocations();
 			return true;
 		}
-
 	}
 
 	Shader::Shader(const char *vertex, const char *fragment, const char *geometry)

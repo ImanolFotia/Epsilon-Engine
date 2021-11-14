@@ -66,7 +66,7 @@ namespace Epsilon::API::OpenGL
 
         void Bind(int slot)
         {
-            glActiveTexture(slot);
+            glActiveTexture(GL_TEXTURE0 + slot);
             glBindTexture(GL_TEXTURE_2D, mData.TextureId);
         }
 
