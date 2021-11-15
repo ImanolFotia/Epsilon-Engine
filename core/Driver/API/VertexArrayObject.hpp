@@ -5,6 +5,7 @@
 #include "3DTypes.hpp"
 
 namespace Epsilon::API {
+    class VertexBufferObject;
     class VertexArrayObject {
         public:
         
@@ -21,5 +22,9 @@ namespace Epsilon::API {
         virtual void Unbind() = 0;
 
         virtual void Destroy() = 0;
+        
+        virtual VertexBufferObject* getBuffer(unsigned int id) = 0;
+
+        virtual void DestroyBuffer(unsigned int Id) = 0;
     };
 }

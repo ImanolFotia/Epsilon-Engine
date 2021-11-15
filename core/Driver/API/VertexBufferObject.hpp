@@ -17,5 +17,7 @@ namespace Epsilon::API {
                 virtual void Bind() = 0;
 
                 virtual void Destroy() = 0;
+
+                virtual GLsizeiptr Size() = 0;
     };
 }

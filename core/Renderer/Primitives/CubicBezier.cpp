@@ -70,10 +70,24 @@ namespace Epsilon::Renderer
     {
         mVertexArray = std::make_shared<API::OpenGL::VertexArrayObject>();
 
-        mVertexArray->addBuffer(mSamples.size() * sizeof(ControlPoint), &mSamples[0], GL_STATIC_DRAW);
+        VertexBufferId = mVertexArray->addBuffer(mSamples.size() * sizeof(ControlPoint), &mSamples[0], GL_STATIC_DRAW);
         mVertexArray->setAttribute(VERTEX_POINTER_INDEX::POSITION, 3, sizeof(ControlPoint), (GLvoid *)0);
         mVertexArray->setAttribute(1, 3, sizeof(ControlPoint), (void *)offsetof(ControlPoint, tangent));
         mVertexArray->setAttribute(VERTEX_POINTER_INDEX::NORMAL, 3, sizeof(ControlPoint), (void *)offsetof(ControlPoint, normal));
+    }
+    
+    void CubicBezier::updateGeometry()
+    {
+        if(mSamples.size() * sizeof(ControlPoint) != mVertexArray->getBuffer(VertexBufferId)->Size()) {
+            mVertexArray->DestroyBuffer(VertexBufferId);
+            VertexBufferId = mVertexArray->addBuffer(mSamples.size() * sizeof(ControlPoint), &mSamples[0], GL_STATIC_DRAW);
+            mVertexArray->setAttribute(VERTEX_POINTER_INDEX::POSITION, 3, sizeof(ControlPoint), (GLvoid *)0);
+            mVertexArray->setAttribute(1, 3, sizeof(ControlPoint), (void *)offsetof(ControlPoint, tangent));
+            mVertexArray->setAttribute(VERTEX_POINTER_INDEX::NORMAL, 3, sizeof(ControlPoint), (void *)offsetof(ControlPoint, normal));
+            return;
+        } else {
+            mVertexArray->UpdateBuffer(mVertexArray->getBuffer(VertexBufferId)->Get(),0, mSamples.size() * sizeof(ControlPoint), &mSamples[0]);
+        }
     }
 
     void CubicBezier::createSamplePoints(int numSamples)
@@ -134,5 +148,47 @@ namespace Epsilon::Renderer
     {
         return (1.0f - t) * a + t * b;
     }
+
+    
+        void CubicBezier::addSegment(ControlPoint p0, ControlPoint p1, ControlPoint p2, ControlPoint p3)
+        {
+            BezierSegment segment;
+
+            mPoints.push_back(p0);
+            mPoints.push_back(p1);
+            mPoints.push_back(p2);
+            mPoints.push_back(p3);
+            
+            segment.set(&mPoints[mNumSegments * 4], 0);
+            segment.set(&mPoints[mNumSegments * 4 + 1], 1);
+            segment.set(&mPoints[mNumSegments * 4 + 2], 2);
+            segment.set(&mPoints[mNumSegments * 4 + 3], 3);
+
+
+            segment.index = mNumSegments;
+
+            mSegments.push_back(segment);
+            mNumSegments++;
+        }
+
+        void CubicBezier::concatenateSegment(ControlPoint p2, ControlPoint p3) {
+            
+            BezierSegment segment;
+
+            segment.set(&mPoints.back(), 0);
+
+            mPoints.push_back(mPoints.back().position + (mPoints.back().position - mPoints[mPoints.size() - 2].position) );
+            mPoints.push_back(p2);
+            mPoints.push_back(p3);
+            
+            segment.set(&mPoints[mNumSegments * 4], 1);
+            segment.set(&mPoints[mNumSegments * 4 + 1], 2);
+            segment.set(&mPoints[mNumSegments * 4 + 2], 3);
+
+            segment.index = mNumSegments;
+
+            mSegments.push_back(segment);
+            mNumSegments++;
+        }
 
 }

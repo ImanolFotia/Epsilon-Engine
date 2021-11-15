@@ -60,6 +60,12 @@ namespace Epsilon::API::OpenGL
             }
         }
 
+        void DestroyBuffer(unsigned int Id)
+        {
+            m_VBOArray.at(Id).Destroy();
+            m_VBOArray.erase(m_VBOArray.begin() + Id);
+        }
+
         void IndexBuffer(const std::vector<unsigned int> &indices)
         {
             Bind();
@@ -89,10 +95,15 @@ namespace Epsilon::API::OpenGL
             glDeleteVertexArrays(1, &this->m_Handler);
         }
 
+        OpenGL::VertexBufferObject* getBuffer(unsigned int id) {
+            return &m_VBOArray.at(id);
+        }
+
     private:
         std::vector<OpenGL::VertexBufferObject> m_VBOArray;
         GLuint EBO;
         int m_VertexAttributeCounter;
         GLuint m_Handler;
+        GLsizeiptr mSize = 0;
     };
 } // namespace Epsilon

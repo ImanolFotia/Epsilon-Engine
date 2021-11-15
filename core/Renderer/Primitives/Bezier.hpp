@@ -47,6 +47,7 @@ namespace Epsilon::Renderer
 
         ControlPoint d()
         {
+            if(numPoints < 4) throw std::runtime_error("trying to get inexistent point in bezier segment");
             return *mPoints[3];
         }
 
@@ -66,47 +67,6 @@ namespace Epsilon::Renderer
 
         std::vector<CurveSegment<numPoints>> getSegments() { return mSegments; }
 
-        void addSegment(ControlPoint p0, ControlPoint p1, ControlPoint p2, ControlPoint p3)
-        {
-            CurveSegment<numPoints> segment;
-
-            mPoints.push_back(p0);
-            mPoints.push_back(p1);
-            mPoints.push_back(p2);
-            mPoints.push_back(p3);
-            
-            segment.set(&mPoints[mNumSegments * 4], 0);
-            segment.set(&mPoints[mNumSegments * 4 + 1], 1);
-            segment.set(&mPoints[mNumSegments * 4 + 2], 2);
-            segment.set(&mPoints[mNumSegments * 4 + 3], 3);
-
-
-            segment.index = mNumSegments;
-
-            mSegments.push_back(segment);
-            mNumSegments++;
-        }
-
-        void concatenateSegment(ControlPoint p2, ControlPoint p3) {
-            
-            CurveSegment<numPoints> segment;
-
-            segment.set(&mPoints.back(), 0);
-
-            mPoints.push_back(mPoints.back().position + (mPoints.back().position - mPoints[mPoints.size() - 2].position) );
-            mPoints.push_back(p2);
-            mPoints.push_back(p3);
-            
-            segment.set(&mPoints[mNumSegments * 4], 1);
-            segment.set(&mPoints[mNumSegments * 4 + 1], 2);
-            segment.set(&mPoints[mNumSegments * 4 + 2], 3);
-
-            segment.index = mNumSegments;
-
-            mSegments.push_back(segment);
-            mNumSegments++;
-        }
-
         uint32_t numSegments() { return mNumSegments; }
 
     protected:
@@ -114,6 +74,7 @@ namespace Epsilon::Renderer
         std::vector<ControlPoint> mPoints;
 
         std::shared_ptr<API::VertexArrayObject> mVertexArray;
+        unsigned int VertexBufferId = 0;
         uint32_t mNumSegments = 0;
     };
 }
