@@ -27,10 +27,10 @@
 #include <vector>
 
 #include "sofa-support.h"
-#include "win_main_utf8.h"
 
 #include "mysofa.h"
 
+#include "win_main_utf8.h"
 
 using uint = unsigned int;
 
@@ -67,14 +67,24 @@ static void PrintCompatibleLayout(const uint m, const float *xyzs)
         return;
     }
 
-    fprintf(stdout, "Compatible Layout:\n\ndistance = %.3f", fds[0].mDistance);
+    uint used_elems{0};
+    for(size_t fi{0u};fi < fds.size();++fi)
+    {
+        for(uint ei{fds[fi].mEvStart};ei < fds[fi].mEvCount;++ei)
+            used_elems += fds[fi].mAzCounts[ei];
+    }
+
+    fprintf(stdout, "Compatible Layout (%u of %u measurements):\n\ndistance = %.3f", used_elems, m,
+        fds[0].mDistance);
     for(size_t fi{1u};fi < fds.size();fi++)
         fprintf(stdout, ", %.3f", fds[fi].mDistance);
 
     fprintf(stdout, "\nazimuths = ");
-    for(size_t fi{0u};fi < fds.size();fi++)
+    for(size_t fi{0u};fi < fds.size();++fi)
     {
-        for(uint ei{0u};ei < fds[fi].mEvCount;ei++)
+        for(uint ei{0u};ei < fds[fi].mEvStart;++ei)
+            fprintf(stdout, "%d%s", fds[fi].mAzCounts[fds[fi].mEvCount - 1 - ei], ", ");
+        for(uint ei{fds[fi].mEvStart};ei < fds[fi].mEvCount;++ei)
             fprintf(stdout, "%d%s", fds[fi].mAzCounts[ei],
                 (ei < (fds[fi].mEvCount - 1)) ? ", " :
                 (fi < (fds.size() - 1)) ? ";\n           " : "\n");
@@ -88,7 +98,8 @@ static void SofaInfo(const char *filename)
     MySofaHrtfPtr sofa{mysofa_load(filename, &err)};
     if(!sofa)
     {
-        fprintf(stdout, "Error: Could not load source file '%s'.\n", filename);
+        fprintf(stdout, "Error: Could not load source file '%s' (%s).\n", filename,
+            SofaErrorStr(err));
         return;
     }
 
@@ -115,8 +126,6 @@ static void SofaInfo(const char *filename)
 
 int main(int argc, char *argv[])
 {
-    GET_UNICODE_ARGS(&argc, &argv);
-
     if(argc != 2)
     {
         fprintf(stdout, "Usage: %s <sofa-file>\n", argv[0]);

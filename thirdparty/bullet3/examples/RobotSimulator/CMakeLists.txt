@@ -18,6 +18,7 @@ RobotSimulatorMain.cpp
 	../SharedMemory/GraphicsServerExample.cpp
 	../SharedMemory/GraphicsClientExample.cpp
 	../SharedMemory/RemoteGUIHelper.cpp
+        ../SharedMemory/RemoteGUIHelperTCP.cpp
 	../SharedMemory/GraphicsServerExample.h
 	../SharedMemory/GraphicsClientExample.h
 	../SharedMemory/RemoteGUIHelper.h
@@ -32,6 +33,7 @@ RobotSimulatorMain.cpp
 
 IF(BUILD_CLSOCKET)
  ADD_DEFINITIONS(-DBT_ENABLE_CLSOCKET)
+ ADD_DEFINITIONS(${OSDEF})
 ENDIF(BUILD_CLSOCKET)
 
 
@@ -56,7 +58,8 @@ ELSE(WIN32)
 		ADD_DEFINITIONS("-DGLEW_STATIC")
 		ADD_DEFINITIONS("-DGLEW_DYNAMIC_LOAD_ALL_GLX_FUNCTIONS=1")
 
-		LINK_LIBRARIES(  pthread ${DL} )
+		FIND_PACKAGE(Threads)
+		LINK_LIBRARIES( ${CMAKE_THREAD_LIBS_INIT} ${DL} )
 	ENDIF(APPLE)
 ENDIF(WIN32)
 
@@ -108,7 +111,8 @@ IF(WIN32)
 ELSE()
 	IF(APPLE)
 	ELSE(APPLE)
-		TARGET_LINK_LIBRARIES( App_RobotSimulator_NoGUI pthread ${DL} )
+		FIND_PACKAGE(Threads)
+		LINK_LIBRARIES( ${CMAKE_THREAD_LIBS_INIT} ${DL} )
 	ENDIF(APPLE)
 ENDIF(WIN32)
 
@@ -142,10 +146,10 @@ IF(WIN32)
                 TARGET_LINK_LIBRARIES(App_HelloBulletRobotics ws2_32 Winmm)
         ENDIF(BUILD_ENET OR BUILD_CLSOCKET)
 ELSE()
-        IF(APPLE)
-        ELSE(APPLE)
-                TARGET_LINK_LIBRARIES( App_HelloBulletRobotics pthread ${DL} )
-        ENDIF(APPLE)
+	IF(NOT APPLE)
+		FIND_PACKAGE(Threads)
+		TARGET_LINK_LIBRARIES( App_HelloBulletRobotics ${CMAKE_THREAD_LIBS_INIT} ${DL} )
+	ENDIF(NOT APPLE)
 ENDIF(WIN32)
 
 

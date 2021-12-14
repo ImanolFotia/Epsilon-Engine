@@ -62,7 +62,7 @@ namespace Epsilon::Renderer
         }*/
         std::string directory;
         /// Draws the model, and thus all its meshes
-        void Draw(std::shared_ptr<Shader> shader, bool force_draw = false, std::initializer_list<unsigned int> mesh_index_list = {});
+        void Draw(std::shared_ptr<Shader> shader, bool force_draw = false, std::initializer_list<unsigned int> mesh_index_list = {}) override;
 
         /// Draws the model, and thus all its meshes
         void Draw(GLuint shader, glm::vec3);
@@ -128,6 +128,8 @@ namespace Epsilon::Renderer
 
         bool toGPU();
         bool loadModel(std::string emlPath, int a);
+
+        bool isLoaded = false;
 
     private:
         std::vector<Mesh> mMeshes;

@@ -31,7 +31,7 @@ uniform float roughnessCutoff = 0.8;
 uniform float depthCutoff = 0.0;
 
 uniform float minRayStep = 0.01;
-uniform float maxRayStep = 0.05;
+uniform float maxRayStep;
 
 noperspective in vec2 TexCoords;
 
@@ -111,6 +111,8 @@ vec3 hash33(vec3 src) {
     return uintBitsToFloat(h & 0x007fffffu | 0x3f800000u) - 1.0;
 }
 
+vec3 worldNormal = vec3(0.0);
+vec3 viewDir = vec3(0.0);
 void main()
 {
 
@@ -173,13 +175,14 @@ void main()
         float dDepth = 0.0;
         vec4 coords = RayCast(normalize(reflected + jitt) * max(0.1, -viewPos.z), hitPos, dDepth);
         vec2 centered_coords = abs(coords.xy * 2.0 - 1.0);
-        float mixer = min(1.0, max(centered_coords.x, centered_coords.y));
+        float mixer = smoothstep(0.8, 1.0, max(centered_coords.x, centered_coords.y));
 
         float screenEdgefactor = float(mixer >= 0.9);
 
         vec2 pixelSize = 1.0 / textureSize(gFinalImage, 0).xy;
 
         vec3 samples = textureLod(gFinalImage, coords.xy, 0).rgb;
+        vec3 sNormal = normalize(texture(gNormal, coords.xy).rgb);
 
         SSR = mix(samples, texture(gDepth, TexCoords).gba, screenEdgefactor);
     }
@@ -238,12 +241,12 @@ vec3 BinarySearch(inout vec3 dir, inout vec3 hitCoord, inout float dDepth)
 }
 
 bool isSignificant(float dd) {
-    return dd < 0.05 && dd > depthCutoff;
+    return dd < maxRayStep && dd > depthCutoff;
 }
 
 vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
 {
-    dir *= maxRayStep;
+    dir *= mix(minRayStep, maxRayStep, abs(dot(worldNormal, viewDir)));//maxRayStep;
  
     float depth;
     int steps = 0;
@@ -266,7 +269,7 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
  
         dDepth = hitCoord.z - depth;
     
-        if(isSignificant(dDepth) || (dir.z - dDepth) < 1.5) {
+        if(isSignificant(dDepth) || (dir.z - dDepth) < maxRayStep) {
             do {
 
                 depth = ViewSpaceZFromDepth(texture(gDepth, projectedCoord.xy, miplevel).x);

@@ -9,7 +9,7 @@ namespace Epsilon::Component
     public:
         TransformComponent(glm::vec3 a, glm::vec3 b, glm::quat c) : m_Position(a), m_Scale(b), m_Rotation(c), m_PrevPosition(a), m_PrevScale(b), m_PrevRotation(c) {}
 
-        COMPONENT_TYPE getType()
+        COMPONENT_TYPE getType() override
         {
             return TRANSFORMCOMPONENT;
         }

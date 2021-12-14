@@ -55,6 +55,7 @@ namespace Epsilon::Filesystem
                             output.second.push_back(tmpFile);
                         }
                         break;
+                        default: break;
                     }
                 }
             }

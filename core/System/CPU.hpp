@@ -9,6 +9,10 @@
 #include <intrin.h>
 #endif
 
+#ifdef __linux__
+#include <cpuid.h>
+#endif
+
 namespace Epsilon::System
 {
     class CPU
@@ -180,6 +184,7 @@ namespace Epsilon::System
                 unsigned nExIds, k = 0;
                 char CPUBrandString[0x40];
                 // Get the information associated with each extended ID.
+                #ifdef _WIN32
                 __cpuid(CPUInfo, 0x80000000);
                 nExIds = CPUInfo[0];
                 for (k = 0x80000000; k <= nExIds; ++k)
@@ -193,6 +198,7 @@ namespace Epsilon::System
                     else if (k == 0x80000004)
                         memcpy(CPUBrandString + 32, CPUInfo, sizeof(CPUInfo));
                 }
+                #endif
                 //string includes manufacturer, model and clockspeed
                 mProcessorName = CPUBrandString;
             }

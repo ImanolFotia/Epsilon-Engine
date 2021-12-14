@@ -16,6 +16,7 @@ namespace Epsilon
             std::cout << "argument: "
                       << "glm::vec3(" << pos.x << ", " << pos.y << ", " << pos.z << ")" << std::endl;
         }
+        return 0;
     }
 
     uint32_t ResourceManager::getNumCubemaps()

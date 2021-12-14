@@ -34,10 +34,10 @@ namespace Epsilon
             Texture2D_ptr mMetallicTex;
             Texture2D_ptr mNormalTex;
 
-            bool use_albedo_color = false;
-            bool use_roughness_color = false;
-            bool use_metallic_color = false;
-            bool use_normal_color = false;
+            bool use_albedo_color = true;
+            bool use_roughness_color = true;
+            bool use_metallic_color = true;
+            bool use_normal_color = true;
 
             glm::vec3 albedo_color = glm::vec3(0.0f);
             glm::vec3 roughness_color = glm::vec3(0.0f);

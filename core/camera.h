@@ -33,7 +33,7 @@ namespace Epsilon
             glm::mat4 view;
             glm::mat4 invprojection;
             glm::mat4 invview;
-            int CurrentSelectedEntity = -1.0;
+            int CurrentSelectedEntity = -1;
             float padding2[3];
             float near;
             float padding0[3];

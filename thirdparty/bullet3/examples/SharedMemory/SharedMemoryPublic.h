@@ -7,7 +7,14 @@
 //Please don't replace an existing magic number:
 //instead, only ADD a new one at the top, comment-out previous one
 
-#define SHARED_MEMORY_MAGIC_NUMBER 201911280
+
+
+#define SHARED_MEMORY_MAGIC_NUMBER 202010061
+//#define SHARED_MEMORY_MAGIC_NUMBER 202007060
+//#define SHARED_MEMORY_MAGIC_NUMBER 202005070
+//#define SHARED_MEMORY_MAGIC_NUMBER 202002030
+//#define SHARED_MEMORY_MAGIC_NUMBER 202001230
+//#define SHARED_MEMORY_MAGIC_NUMBER 201911280
 //#define SHARED_MEMORY_MAGIC_NUMBER 201911180
 //#define SHARED_MEMORY_MAGIC_NUMBER 201909030
 //#define SHARED_MEMORY_MAGIC_NUMBER 201908110
@@ -108,7 +115,9 @@ enum EnumSharedMemoryClientCommand
 	CMD_REMOVE_USER_DATA,
 	CMD_COLLISION_FILTER,
 	CMD_REQUEST_MESH_DATA,
-
+	
+	CMD_PERFORM_COLLISION_DETECTION,
+	CMD_RESET_MESH_DATA,
 	//don't go beyond this command!
 	CMD_MAX_CLIENT_COMMANDS,
 };
@@ -231,6 +240,10 @@ enum EnumSharedMemoryServerStatus
 
 	CMD_REQUEST_MESH_DATA_COMPLETED,
 	CMD_REQUEST_MESH_DATA_FAILED,
+
+	CMD_PERFORM_COLLISION_DETECTION_COMPLETED,
+	CMD_RESET_MESH_DATA_COMPLETED,
+	CMD_RESET_MESH_DATA_FAILED,
 	//don't go beyond 'CMD_MAX_SERVER_COMMANDS!
 	CMD_MAX_SERVER_COMMANDS
 };
@@ -386,6 +399,8 @@ struct b3DynamicsInfo
 	double m_ccdSweptSphereRadius;
 	double m_contactProcessingThreshold;
 	int m_frictionAnchor;
+	double m_collisionMargin;
+	int m_dynamicType;
 };
 
 // copied from btMultiBodyLink.h
@@ -446,6 +461,20 @@ struct b3MeshVertex
 	double x, y, z, w;
 };
 
+
+enum eMeshDataFlags
+{
+	B3_MESH_DATA_SIMULATION_MESH=1,
+	B3_MESH_DATA_SIMULATION_INDICES,
+	B3_MESH_DATA_GRAPHICS_INDICES,
+};
+
+enum eMeshDataEnum
+{
+	B3_MESH_DATA_COLLISIONSHAPEINDEX=1,
+	B3_MESH_DATA_FLAGS=2,
+};
+
 struct b3MeshData
 {
 	int m_numVertices;
@@ -494,6 +523,7 @@ enum b3VREventType
 
 #define MAX_SDF_BODIES 512
 #define MAX_USER_DATA_KEY_LENGTH 256
+#define MAX_REQUESTED_BODIES_LENGTH 256
 
 enum b3VRButtonInfo
 {
@@ -892,11 +922,14 @@ enum eCONNECT_METHOD
 	eCONNECT_GRPC = 12,
 	eCONNECT_PHYSX=13,
 	eCONNECT_SHARED_MEMORY_GUI=14,
+	eCONNECT_GRAPHICS_SERVER = 15,
+	eCONNECT_GRAPHICS_SERVER_TCP = 16,
+	eCONNECT_GRAPHICS_SERVER_MAIN_THREAD=17
 };
 
 enum eURDF_Flags
 {
-	URDF_USE_INERTIA_FROM_FILE = 2,  //sync with URDF2Bullet.h 'ConvertURDFFlags'
+	URDF_USE_INERTIA_FROM_FILE = 2,  //sync with URDFJointTypes.h 'ConvertURDFFlags'
 	URDF_USE_SELF_COLLISION = 8,     //see CUF_USE_SELF_COLLISION
 	URDF_USE_SELF_COLLISION_EXCLUDE_PARENT = 16,
 	URDF_USE_SELF_COLLISION_EXCLUDE_ALL_PARENTS = 32,
@@ -912,7 +945,12 @@ enum eURDF_Flags
 	URDF_USE_MATERIAL_COLORS_FROM_MTL = 32768,
 	URDF_USE_MATERIAL_TRANSPARANCY_FROM_MTL = 65536,
 	URDF_MAINTAIN_LINK_ORDER = 131072,
-	URDF_ENABLE_WAKEUP = 262144,
+	URDF_ENABLE_WAKEUP = 1 << 18,
+	URDF_MERGE_FIXED_LINKS = 1 << 19,
+	URDF_IGNORE_VISUAL_SHAPES = 1 << 20,
+	URDF_IGNORE_COLLISION_SHAPES = 1 << 21,
+	URDF_PRINT_URDF_INFO = 1 << 22,
+	URDF_GOOGLEY_UNDEFINED_COLORS = 1 << 23,
 };
 
 enum eUrdfGeomTypes  //sync with UrdfParser UrdfGeomTypes
@@ -932,6 +970,7 @@ enum eUrdfCollisionFlags
 {
 	GEOM_FORCE_CONCAVE_TRIMESH = 1,
 	GEOM_CONCAVE_INTERNAL_EDGE = 2,
+	GEOM_INITIALIZE_SAT_FEATURES = URDF_INITIALIZE_SAT_FEATURES,
 };
 
 enum eUrdfVisualFlags
@@ -963,6 +1002,12 @@ struct b3PluginArguments
 	int m_ints[B3_MAX_PLUGIN_ARG_SIZE];
 	int m_numFloats;
 	double m_floats[B3_MAX_PLUGIN_ARG_SIZE];
+};
+
+enum eInternalSimFlags
+{
+	eVRTinyGUI = 1<<1,
+	eDeformableAlternativeIndexing = 1<<2,
 };
 
 struct b3PhysicsSimulationParameters
@@ -998,6 +1043,7 @@ struct b3PhysicsSimulationParameters
 	int m_minimumSolverIslandSize;
 	int m_reportSolverAnalytics;
 	double m_sparseSdfVoxelSize;
+	int m_numNonContactInnerIterations;
 };
 
 
@@ -1030,6 +1076,13 @@ struct b3ForwardDynamicsAnalyticsArgs
 	struct b3ForwardDynamicsAnalyticsIslandData m_islandData[MAX_ISLANDS_ANALYTICS];
 };
 
+enum eDynamicTypes
+{
+	eDynamic= 0,
+	eStatic= 1,
+	eKinematic= 2
+};
+
 enum eFileIOActions
 {
 	eAddFileIOAction = 1024,//avoid collision with eFileIOTypes
@@ -1045,6 +1098,10 @@ enum eFileIOTypes
 	eInMemoryFileIO,
 };
 
+enum eEnumUpdateVisualShapeFlags
+{
+	eVISUAL_SHAPE_DOUBLE_SIDED = 4,//see B3_INSTANCE_DOUBLE_SIDED
+};
 
 //limits for vertices/indices in PyBullet::createCollisionShape
 //Make sure the data fits in SHARED_MEMORY_MAX_STREAM_CHUNK_SIZE

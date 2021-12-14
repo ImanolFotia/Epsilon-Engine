@@ -37,7 +37,7 @@ else
 	RESET        := ""
 endif
 
-CXX= g++
+CXX= clang++
 
 OBJS_DIR_RELEASE:= ./obj/Release
 OBJS_DIR_DEBUG:= ./obj/Debug
@@ -93,16 +93,22 @@ INCLUDE_LIBS:= -I$(LIB)/glm \
 else
 INCLUDE_LIBS:=  -I$(LIB)/inih/cpp \
 -I$(LIB)/glm \
--I$(LIB)json-develop/include \
+-I$(LIB)/json-develop/include \
 -I/core/include \
+-I$(LIB)/stb_image \
 -I/usr/include \
--I/usr/include/bullet \
 -I/usr/include/glfw \
+-I$(LIB)/glfw/include \
 -I/usr/include/stb \
 -I/usr/include/SOIL \
 -I/usr/include/inih \
+-I/usr/include/lua5.3 \
 -I$(LIB)/glad/include \
--I/usr/include/lua5.3 
+-I/usr/include/lua5.3 \
+-I$(LIB)/imgui-docking \
+-I$(LIB)/beacon \
+-I$(LIB)/openal-soft/include \
+-I$(LIB)/bullet3/src 
 endif
 
 ifeq "$(OS)" "Windows_NT"
@@ -113,24 +119,32 @@ LIBS_DIR := -L$(LIB)/soil/lib \
 -L$(LIB)/openal-soft/build \
 -L$(LIB)/bullet3/build/lib \
 -L$(LIB)/glad/lib \
--L$(LIB)/imgui-docking/imgui-docking \
+-L$(LIB)/imgui-docking\
 -L$(DX_SDK_LIB)
 else 
 LIBS_DIR := -L$(LIB)/inih \
 -L/usr/lib/x86_64-linux-gnu \
 -L$(LIB)/glad/lib \
--L/usr/lib
+-L/usr/local/lib \
+-L$(LIB)/glfw/src \
+-L$(LIB)/openal-soft/build \
+-L$(LIB)/bullet3/bin \
+-L$(LIB)/imgui-docking
 endif
 
 ifeq "$(OS)" "Windows_NT"
 LIBS:=  -static -lpthread -limgui -lglfw3dll "/c/VulkanSDK/1.2.182.0/Lib/vulkan-1.lib" -lopengl32 -lglad -linih -lpdh -lgdi32 -lole32 -lxaudio2_8 -lOpenAL32.dll -llua -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
 else 
-LIBS:= -lGLU -lSOIL -lglad -ldl -lglfw -linih -lopenal -fopenmp -static-libasan -lgomp -llua5.3 -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
+LIBS:= -lGLU -lvulkan -lopenal -lglad -ldl -lglfw3 -pthread -ldl -lGLU -lrt -lXrandr -lXxf86vm -lXi -lXinerama -lX11 -lxcb -linih -lXdmcp -lXau -limgui -fopenmp  -lgomp -llua5.3 -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
 endif
+
+#-static-libasan
 
 LD_FLAGS := -fopenmp
 
-CPPFLAGS := --std=c++20 -Bstatic -static -static-libgcc -static-libstdc++  -lstdc++
+CPPFLAGS := --std=c++20 -Werror
+
+#-static-libgcc -static-libstdc++ -lstdc++
 
 DEBUG_FLAGS := -g -DDEBUG -ggdb -g3 -gdwarf-4 -fvar-tracking-assignments
 
@@ -138,7 +152,7 @@ RELEASE_FLAGS := -O3
 
 RES := ./core/resources.rc
 
-all: clean resource epsilon-release
+all: clean  epsilon-release
 
 pch: $(INCLUDE_DIR)/pch.hpp.gch
 

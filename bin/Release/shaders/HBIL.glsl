@@ -198,5 +198,7 @@ void main() {
 
     col = ((vec3(t)* lightColor) * calcAttenuation(ro)) + vec3(0.005 * getDensity(FragPos)) ;
     
-    FragColor = col;
+    FragColor = vec3(0.0);//col;
 }
+
+//mishto

@@ -16,7 +16,8 @@ namespace Epsilon::Renderer
 
         mData = {vertices.size(), indices.size(), 0, 0};
 
-        mMaterial = std::make_shared<Renderer::MaterialPBR>();
+        mMaterial = MaterialManager::Get().createMaterial<MaterialPBR>();
+        //mMaterial = std::make_shared<Renderer::MaterialPBR>();
 
         CubeMapIndex = CubeMapindex;
         mGIIndex = 0;
@@ -42,12 +43,12 @@ namespace Epsilon::Renderer
         if (isVisible && isSettedUp)
         {
 
-            auto albedo = mMaterial->get<Tex2D_ptr>(Material::MaterialParameter::Albedo);
-            auto roughness = mMaterial->get<Tex2D_ptr>(Material::MaterialParameter::Roughness);
-            auto metallic = mMaterial->get<Tex2D_ptr>(Material::MaterialParameter::Metallic);
-            auto normal = mMaterial->get<Tex2D_ptr>(Material::MaterialParameter::Normal);
+            auto albedo = MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial)->get<Tex2D_ptr>(Material::MaterialParameter::Albedo);
+            auto roughness = MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial)->get<Tex2D_ptr>(Material::MaterialParameter::Roughness);
+            auto metallic = MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial)->get<Tex2D_ptr>(Material::MaterialParameter::Metallic);
+            auto normal = MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial)->get<Tex2D_ptr>(Material::MaterialParameter::Normal);
 
-            if (albedo != nullptr && !mMaterial->usingAlbedoColor())
+            if (albedo != nullptr && !MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial)->usingAlbedoColor())
             {
                 albedo->Bind(0);
                 shader->PushUniform("texture_diffuse", 0);
@@ -57,9 +58,9 @@ namespace Epsilon::Renderer
             {
                 shader->PushUniform("texture_diffuse", 0);
                 shader->PushUniform("using_color_diffuse", 1);
-                shader->PushUniform("color_diffuse", glm::vec4(mMaterial->get<glm::vec3>(Material::MaterialParameter::Albedo), 1.0));
+                shader->PushUniform("color_diffuse", glm::vec4(MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial)->get<glm::vec3>(Material::MaterialParameter::Albedo), 1.0));
             }
-            if (roughness != nullptr && !mMaterial->usingRoughnessColor())
+            if (roughness != nullptr && !MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial)->usingRoughnessColor())
             {
                 roughness->Bind(1);
                 shader->PushUniform("texture_specular", 1);
@@ -69,9 +70,9 @@ namespace Epsilon::Renderer
             {
                 shader->PushUniform("texture_specular", 1);
                 shader->PushUniform("using_color_specular", 1);
-                shader->PushUniform("color_specular", glm::vec4(mMaterial->get<glm::vec3>(Material::MaterialParameter::Roughness), 1.0));
+                shader->PushUniform("color_specular", glm::vec4(MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial)->get<glm::vec3>(Material::MaterialParameter::Roughness), 1.0));
             }
-            if (normal != nullptr && !mMaterial->usingNormalColor())
+            if (normal != nullptr && !MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial)->usingNormalColor())
             {
                 normal->Bind(2);
                 shader->PushUniform("texture_normal", 2);
@@ -81,9 +82,9 @@ namespace Epsilon::Renderer
             {
                 shader->PushUniform("texture_normal", 2);
                 shader->PushUniform("using_color_normal", 1);
-                shader->PushUniform("color_normal", glm::vec4(mMaterial->get<glm::vec3>(Material::MaterialParameter::Normal), 1.0));
+                shader->PushUniform("color_normal", glm::vec4(MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial)->get<glm::vec3>(Material::MaterialParameter::Normal), 1.0));
             }
-            if (metallic != nullptr && !mMaterial->usingMetallicColor())
+            if (metallic != nullptr && !MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial)->usingMetallicColor())
             {
                 metallic->Bind(3);
                 shader->PushUniform("texture_height", 3);
@@ -93,7 +94,7 @@ namespace Epsilon::Renderer
             {
                 shader->PushUniform("texture_height", 3);
                 shader->PushUniform("using_color_height", 1);
-                shader->PushUniform("color_height", glm::vec4(mMaterial->get<glm::vec3>(Material::MaterialParameter::Metallic), 1.0));
+                shader->PushUniform("color_height", glm::vec4(MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial)->get<glm::vec3>(Material::MaterialParameter::Metallic), 1.0));
             }
 
             glActiveTexture(GL_TEXTURE4);
@@ -153,28 +154,28 @@ namespace Epsilon::Renderer
 
         mVAO->IndexBuffer(indices);
 
-        mMaterial->setMaterial(Material::MaterialParameter::Albedo, ref.Get<Tex2D_ptr>(textures[0].path));
-        mMaterial->setMaterial(Material::MaterialParameter::Roughness, ref.Get<Tex2D_ptr>(textures[1].path));
-        mMaterial->setMaterial(Material::MaterialParameter::Normal, ref.Get<Tex2D_ptr>(textures[2].path));
-        mMaterial->setMaterial(Material::MaterialParameter::Metallic, ref.Get<Tex2D_ptr>(textures[3].path));
+        MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial)->setMaterial(Material::MaterialParameter::Albedo, ref.Get<Tex2D_ptr>(textures[0].path));
+        MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial)->setMaterial(Material::MaterialParameter::Roughness, ref.Get<Tex2D_ptr>(textures[1].path));
+        MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial)->setMaterial(Material::MaterialParameter::Normal, ref.Get<Tex2D_ptr>(textures[2].path));
+        MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial)->setMaterial(Material::MaterialParameter::Metallic, ref.Get<Tex2D_ptr>(textures[3].path));
 
         isSettedUp = true;
     }
-
+/*
     void Mesh::setMaterial(MaterialPBR_ptr material)
     {
         mMaterial = material;
-    }
+    }*/
 
     void Mesh::Destroy()
     {
         using Tex2D_ptr = std::shared_ptr<Texture2D>;
         mVAO->Destroy();
 
-        auto albedo = mMaterial->get<Tex2D_ptr>(Material::MaterialParameter::Albedo);
-        auto roughness = mMaterial->get<Tex2D_ptr>(Material::MaterialParameter::Roughness);
-        auto metallic = mMaterial->get<Tex2D_ptr>(Material::MaterialParameter::Metallic);
-        auto normal = mMaterial->get<Tex2D_ptr>(Material::MaterialParameter::Normal);
+        auto albedo = MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial)->get<Tex2D_ptr>(Material::MaterialParameter::Albedo);
+        auto roughness = MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial)->get<Tex2D_ptr>(Material::MaterialParameter::Roughness);
+        auto metallic = MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial)->get<Tex2D_ptr>(Material::MaterialParameter::Metallic);
+        auto normal = MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial)->get<Tex2D_ptr>(Material::MaterialParameter::Normal);
 
         albedo->decreaseRefCount();
         roughness->decreaseRefCount();

@@ -59,23 +59,23 @@ namespace Epsilon::API::OpenGL
             glBindTexture(mData.Target, 0);
         }
 
-        void Bind()
+        void Bind() override
         {
             glBindTexture(GL_TEXTURE_2D, mData.TextureId);
         }
 
-        void Bind(int slot)
+        void Bind(int slot) override
         {
             glActiveTexture(GL_TEXTURE0 + slot);
             glBindTexture(GL_TEXTURE_2D, mData.TextureId);
         }
 
-        void Unbind()
+        void Unbind() override
         {
             glBindTexture(GL_TEXTURE_2D, 0);
         }
 
-        void Destroy()
+        void Destroy() override
         {
             glDeleteTextures(1, &mData.TextureId);
         }

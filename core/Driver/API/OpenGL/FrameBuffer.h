@@ -183,7 +183,7 @@ namespace Epsilon::OpenGL
             WIDTH = w;
             HEIGHT = h;
 
-            //glDeleteFramebuffers(1, &m_FramebufferHandler);
+            glDeleteFramebuffers(1, &m_FramebufferHandler);
             m_FramebufferHandler = 0;
             glGenFramebuffers(1, &m_FramebufferHandler);
 
@@ -196,11 +196,11 @@ namespace Epsilon::OpenGL
 
             if (isDepthAttachment)
             {
-                //glDeleteRenderbuffers(1, &m_DepthTextureTarget);
+                glDeleteRenderbuffers(1, &m_DepthTextureTarget);/*
                 glGenRenderbuffers(1, &m_DepthTextureTarget);
                 glBindRenderbuffer(GL_RENDERBUFFER, m_DepthTextureTarget);
                 glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
-                glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_DepthTextureTarget);
+                glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_DepthTextureTarget);*/
             }
 
             FinishFrameBuffer();

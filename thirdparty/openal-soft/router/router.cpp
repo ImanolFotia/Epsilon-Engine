@@ -226,6 +226,42 @@ static void AddModule(HMODULE module, const WCHAR *name)
             LOAD_PROC(alcSetThreadContext);
             LOAD_PROC(alcGetThreadContext);
         }
+        if(newdrv.alcIsExtensionPresent(nullptr, "ALC_EXT_EFX"))
+        {
+            LOAD_PROC(alGenFilters);
+            LOAD_PROC(alDeleteFilters);
+            LOAD_PROC(alIsFilter);
+            LOAD_PROC(alFilterf);
+            LOAD_PROC(alFilterfv);
+            LOAD_PROC(alFilteri);
+            LOAD_PROC(alFilteriv);
+            LOAD_PROC(alGetFilterf);
+            LOAD_PROC(alGetFilterfv);
+            LOAD_PROC(alGetFilteri);
+            LOAD_PROC(alGetFilteriv);
+            LOAD_PROC(alGenEffects);
+            LOAD_PROC(alDeleteEffects);
+            LOAD_PROC(alIsEffect);
+            LOAD_PROC(alEffectf);
+            LOAD_PROC(alEffectfv);
+            LOAD_PROC(alEffecti);
+            LOAD_PROC(alEffectiv);
+            LOAD_PROC(alGetEffectf);
+            LOAD_PROC(alGetEffectfv);
+            LOAD_PROC(alGetEffecti);
+            LOAD_PROC(alGetEffectiv);
+            LOAD_PROC(alGenAuxiliaryEffectSlots);
+            LOAD_PROC(alDeleteAuxiliaryEffectSlots);
+            LOAD_PROC(alIsAuxiliaryEffectSlot);
+            LOAD_PROC(alAuxiliaryEffectSlotf);
+            LOAD_PROC(alAuxiliaryEffectSlotfv);
+            LOAD_PROC(alAuxiliaryEffectSloti);
+            LOAD_PROC(alAuxiliaryEffectSlotiv);
+            LOAD_PROC(alGetAuxiliaryEffectSlotf);
+            LOAD_PROC(alGetAuxiliaryEffectSlotfv);
+            LOAD_PROC(alGetAuxiliaryEffectSloti);
+            LOAD_PROC(alGetAuxiliaryEffectSlotiv);
+        }
     }
 
     if(err)
@@ -360,7 +396,7 @@ PtrIntMap::~PtrIntMap()
     mCapacity = 0;
 }
 
-ALenum PtrIntMap::insert(ALvoid *key, ALint value)
+ALenum PtrIntMap::insert(void *key, int value)
 {
     std::lock_guard<std::mutex> maplock{mLock};
     auto iter = std::lower_bound(mKeys, mKeys+mSize, key);
@@ -370,15 +406,15 @@ ALenum PtrIntMap::insert(ALvoid *key, ALint value)
     {
         if(mSize == mCapacity)
         {
-            ALvoid **newkeys{nullptr};
+            void **newkeys{nullptr};
             ALsizei newcap{mCapacity ? (mCapacity<<1) : 4};
             if(newcap > mCapacity)
-                newkeys = static_cast<ALvoid**>(
+                newkeys = static_cast<void**>(
                     al_calloc(16, (sizeof(mKeys[0])+sizeof(mValues[0]))*newcap)
                 );
             if(!newkeys)
                 return AL_OUT_OF_MEMORY;
-            auto newvalues = reinterpret_cast<ALint*>(&newkeys[newcap]);
+            auto newvalues = reinterpret_cast<int*>(&newkeys[newcap]);
 
             if(mKeys)
             {
@@ -404,9 +440,9 @@ ALenum PtrIntMap::insert(ALvoid *key, ALint value)
     return AL_NO_ERROR;
 }
 
-ALint PtrIntMap::removeByKey(ALvoid *key)
+int PtrIntMap::removeByKey(void *key)
 {
-    ALint ret = -1;
+    int ret = -1;
 
     std::lock_guard<std::mutex> maplock{mLock};
     auto iter = std::lower_bound(mKeys, mKeys+mSize, key);
@@ -425,9 +461,9 @@ ALint PtrIntMap::removeByKey(ALvoid *key)
     return ret;
 }
 
-ALint PtrIntMap::lookupByKey(ALvoid *key)
+int PtrIntMap::lookupByKey(void *key)
 {
-    ALint ret = -1;
+    int ret = -1;
 
     std::lock_guard<std::mutex> maplock{mLock};
     auto iter = std::lower_bound(mKeys, mKeys+mSize, key);

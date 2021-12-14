@@ -90,6 +90,13 @@ namespace Epsilon
 		glUseProgram(ProgramID);
 		this->getUniformsLocations();
 	}
+
+	Shader::Shader(const char* path, int zzz) {
+		mShaderFile.Open(path);
+
+		//mShaderFile[];
+	}
+
 	bool Shader::Reload()
 	{
 		std::string VertexShaderCode = GLSLPreProcessor::PreProcessGLSL(std::string(mVertexPath));

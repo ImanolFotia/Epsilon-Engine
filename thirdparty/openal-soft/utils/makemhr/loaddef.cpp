@@ -26,13 +26,14 @@
 #include <algorithm>
 #include <cctype>
 #include <cmath>
-#include <cstring>
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <iterator>
 #include <limits>
 #include <memory>
+#include <cstdarg>
 #include <vector>
 
 #include "alfstream.h"
@@ -1715,18 +1716,10 @@ static double AverageHrirOnset(const uint rate, const uint n, const double *hrir
         rs.process(n, hrir, 10 * n, upsampled.data());
     }
 
-    double mag{0.0};
-    for(uint i{0u};i < 10*n;i++)
-        mag = std::max(std::abs(upsampled[i]), mag);
-
-    mag *= 0.15;
-    uint i{0u};
-    for(;i < 10*n;i++)
-    {
-        if(std::abs(upsampled[i]) >= mag)
-            break;
-    }
-    return Lerp(onset, static_cast<double>(i) / (10*rate), f);
+    auto abs_lt = [](const double &lhs, const double &rhs) -> bool
+    { return std::abs(lhs) < std::abs(rhs); };
+    auto iter = std::max_element(upsampled.cbegin(), upsampled.cend(), abs_lt);
+    return Lerp(onset, static_cast<double>(std::distance(upsampled.cbegin(), iter))/(10*rate), f);
 }
 
 // Calculate the magnitude response of an HRIR and average it with any

@@ -196,12 +196,9 @@ namespace Epsilon
                     {
                         return mData;
                     }
-                    else if (mError.Type() != NOT_SPECIFIED)
+                    else
                     {
                         return mError;
-                    }
-                    else {
-
                     }
                 }
 

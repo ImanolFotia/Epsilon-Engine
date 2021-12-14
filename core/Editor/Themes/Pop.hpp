@@ -27,7 +27,7 @@ namespace Epsilon::Editor::GUI::Theme::Pop
         style->Colors[ImGuiCol_CheckMark] = ImVec4(1.00f, 0.81f, 0.32f, 1.00f);
         style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.28f, 0.73f, 0.78f, 1.00f);
         style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
-        style->Colors[ImGuiCol_Button] = ImVec4(0.02f, 0.60f, 0.60f, 1.00f);
+        style->Colors[ImGuiCol_Button] = ImVec4(0.02f, 0.60f, 0.60f, 0.00f);
         style->Colors[ImGuiCol_ButtonHovered] = ImVec4(1.00f, 0.81f, 0.32f, 1.00f);
         style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.06f, 0.53f, 0.98f, 1.00f);
         style->Colors[ImGuiCol_Header] = ImVec4(0.12f, 0.12f, 0.12f, 1.00f);

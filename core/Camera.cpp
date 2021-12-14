@@ -235,7 +235,7 @@ namespace Epsilon
         /** ------------------------------------------------------------------*/
 
         //MovementSpeed = glm::mix(MovementSpeed, 0.0f, 2.0f * DeltaTime);
-        if (MovementSpeed < 0.01)
+        if (MovementSpeed < 0.01f)
             MovementSpeed = 0.0f;
         if (LastPosition != Position)
             DeltaVector = Position - LastPosition;
@@ -298,10 +298,10 @@ namespace Epsilon
         ViewMatrix = glm::lookAt(
             Position,
             Position + Orientation,
-            glm::vec3(0, 1, 0));
+            glm::vec3(0.0f, 1.0f, 0.0f));
 
-            CameraData.direction = glm::vec4(Orientation, 1.0);
-            CameraData.position = glm::vec4(Position, 1.0);
+            CameraData.direction = glm::vec4(Orientation, 1.0f);
+            CameraData.position = glm::vec4(Position, 1.0f);
             CameraData.view = ViewMatrix;
             CameraData.projection = ProjectionMatrix;
             CameraData.invview = glm::inverse(ViewMatrix);

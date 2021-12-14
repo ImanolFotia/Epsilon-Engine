@@ -1,10 +1,7 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/alrecord.dir/examples/alrecord.c.obj"
-  "CMakeFiles/alrecord.dir/examples/alrecord.c.obj.d"
-  "alrecord.exe"
-  "alrecord.exe.manifest"
+  "CMakeFiles/alrecord.dir/examples/alrecord.c.o"
+  "alrecord"
   "alrecord.pdb"
-  "libalrecord.dll.a"
 )
 
 # Per-language clean rules from dependency scanning.

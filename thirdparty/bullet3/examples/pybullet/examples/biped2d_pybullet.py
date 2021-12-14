@@ -5,6 +5,7 @@ import time
 GRAVITY = -9.8
 dt = 1e-3
 iters = 2000
+import pybullet_data
 
 physicsClient = p.connect(p.GUI)
 p.setAdditionalSearchPath(pybullet_data.getDataPath())

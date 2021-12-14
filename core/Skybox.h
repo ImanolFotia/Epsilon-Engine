@@ -9,7 +9,7 @@
 #include <Core.hpp>
 #include <camera.h>
 #include <Shader.h>
-#include <Renderer/Model.h>
+#include <Renderer/Primitives/Sphere.hpp>
 
 namespace Epsilon
 {
@@ -32,7 +32,8 @@ namespace Epsilon
         float Horizon_Height = 0.276f;
 
     private:
-        std::shared_ptr<Renderer::Model> skydome;
+        
+        std::shared_ptr<Renderer::Sphere> mSphere;
     };
 } // namespace Epsilon
 #endif /// SKYBOX_H_INCLUDED

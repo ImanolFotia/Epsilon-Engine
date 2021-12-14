@@ -24,12 +24,12 @@ namespace Epsilon::API::OpenGL
 
         ~ShaderStorageBuffer() {}
 
-        void Bind()
+        void Bind() override
         {
             glBindBuffer(GL_SHADER_STORAGE_BUFFER, mHandle);
         }
 
-        void Unbind()
+        void Unbind() override
         {
             glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
         }

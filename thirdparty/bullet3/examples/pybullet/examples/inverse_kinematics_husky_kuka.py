@@ -3,10 +3,19 @@ import time
 import math
 from datetime import datetime
 from datetime import datetime
+import pybullet_data
 
 clid = p.connect(p.SHARED_MEMORY)
+
+
 if (clid < 0):
   p.connect(p.GUI)
+
+p.setPhysicsEngineParameter(enableConeFriction=0)
+
+p.setAdditionalSearchPath(pybullet_data.getDataPath())
+
+
 p.loadURDF("plane.urdf", [0, 0, -0.3])
 husky = p.loadURDF("husky/husky.urdf", [0.290388, 0.329902, -0.310270],
                    [0.002328, -0.000984, 0.996491, 0.083659])
@@ -58,7 +67,7 @@ useNullSpace = 0
 useOrientation = 0
 #If we set useSimulation=0, it sets the arm pose to be the IK result directly without using dynamic control.
 #This can be used to test the IK result accuracy.
-useSimulation = 0
+useSimulation = 1
 useRealTimeSimulation = 1
 p.setRealTimeSimulation(useRealTimeSimulation)
 #trailDuration is duration (in seconds) after debug lines will be removed automatically

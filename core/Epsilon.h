@@ -62,13 +62,13 @@
 
 #include <Renderer/Gizmos.hpp>
 #include <Renderer/Primitives/Sphere.hpp>
+#include <Renderer/Primitives/Cube.hpp>
 #include <Editor/Editor.hpp>
 #include <Renderer/Primitives/Bezier.hpp>
 #include <Renderer/Primitives/CubicBezier.hpp>
 
 namespace Epsilon
 {
-    class Editor::Editor;
     
     class Epsilon : public App
     {
@@ -222,6 +222,7 @@ namespace Epsilon
         CFrustum Frustum;
         std::shared_ptr<OpenGL::FrameBuffer<int>> mDefaultFrameBuffer;
         std::shared_ptr<Renderer::Sphere> mSphere;
+        std::shared_ptr<Renderer::Cube> mCube;
 
         //IMGUI variables
 

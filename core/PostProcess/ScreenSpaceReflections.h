@@ -10,7 +10,7 @@ namespace Epsilon
         class ScreenSpaceReflections : public Effect
         {
         public:
-            ScreenSpaceReflections(int w, int h, std::shared_ptr<Shader> s) : Effect(w, h)
+            ScreenSpaceReflections(int w, int h, std::shared_ptr<Shader> s) : Effect(w, h, s)
             {
                 m_Width = w;
                 m_Height = h;

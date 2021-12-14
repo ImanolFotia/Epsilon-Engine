@@ -6,7 +6,7 @@
 #include <Renderer/Gizmos.hpp>
 #include <Skybox.h>
 #include <Sun.h>
-#include <glfw/glfw3.h>
+#include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -29,7 +29,7 @@
 #include <System/Memory.hpp>
 
 #include <IO/Mouse.h>
-#include <IO/Keyboard.h>
+#include <IO/KeyBoard.h>
 #include <beacon/beacon.hpp>
 
 #include "ImPlot/implot.h"
@@ -84,6 +84,7 @@ namespace Epsilon::Editor
         bool show_pipeline_viewer = false;
         bool camera_selected = false;
         std::shared_ptr<Camera> current_camera_viewport = nullptr;
+        std::string filesystem_last_dir_clicked;
         //selection_t current_selection;
 
         Renderer::Gizmo::gizmo gizmo_status = Renderer::Gizmo::gizmo::translate;
@@ -131,6 +132,7 @@ namespace Epsilon::Editor
 
         std::shared_ptr<EntityBase> sSelectedEntity;
         int sSelectedEntityIndex = -1;
+        std::vector<std::shared_ptr<EntityBase>> *localEntityList;
         
         enum ShaderAction
         {

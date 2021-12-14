@@ -4,6 +4,7 @@
 #include <Resource/Resource.hpp>
 #include <Platform/WindowBase.hpp>
 #include <Filesystem/Filesystem.hpp>
+#include <Renderer/MaterialManager.hpp>
 
 namespace Epsilon
 {
@@ -13,6 +14,7 @@ namespace Epsilon
     Clock Clock::instance;
     Filesystem::Filesystem Filesystem::Filesystem::mInstance;
     uint32_t Resources::ResourceInternal::gResourceIndex = 0;
+    Renderer::MaterialManager Renderer::MaterialManager::instance;
 
     bool Platform::WindowBase::mNeedsToResize = false;
     Platform::WindowData Platform::WindowBase::mWindowData = {};

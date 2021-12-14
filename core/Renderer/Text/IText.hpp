@@ -7,6 +7,7 @@ namespace Epsilon
     {
     public:
         IText() = default;
+        virtual ~IText(){}
 
         virtual void Print(const std::string &, const glm::vec3 &pos, const glm::vec4 &col) = 0;
         virtual void PrintLn(const std::string &, const glm::vec3 &pos, const glm::vec4 &col) = 0;

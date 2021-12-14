@@ -119,7 +119,7 @@ public:
         mWidth = w;
         mHeight = h;
 
-        //glDeleteTextures(1, &m_RenderTextureTarget);
+        glDeleteTextures(1, &m_RenderTextureTarget);
 
         glGenTextures(1, &m_RenderTextureTarget);
         glBindTexture(mTarget, m_RenderTextureTarget);

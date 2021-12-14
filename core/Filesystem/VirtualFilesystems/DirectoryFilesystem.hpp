@@ -19,6 +19,8 @@ namespace Epsilon::Filesystem
             if (exists(dir))
             {
             }
+
+            return mEmptyFile;
         }
 
         virtual bool exists(const std::string &dir) override
@@ -36,5 +38,7 @@ namespace Epsilon::Filesystem
 
             return true;
         }
+
+        File mEmptyFile;
     };
 }

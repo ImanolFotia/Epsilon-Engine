@@ -20,7 +20,7 @@
 
 #include "config.h"
 
-#include "backends/wasapi.h"
+#include "wasapi.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -47,6 +47,7 @@
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
+#include <cstring>
 #include <deque>
 #include <functional>
 #include <future>
@@ -55,12 +56,14 @@
 #include <thread>
 #include <vector>
 
-#include "alcmain.h"
-#include "alexcpt.h"
-#include "alu.h"
+#include "albit.h"
+#include "alnumeric.h"
+#include "comptr.h"
+#include "core/converter.h"
+#include "core/device.h"
+#include "core/helpers.h"
+#include "core/logging.h"
 #include "ringbuffer.h"
-#include "compat.h"
-#include "converter.h"
 #include "strutils.h"
 #include "threads.h"
 
@@ -99,10 +102,8 @@ inline constexpr ReferenceTime operator "" _reftime(unsigned long long int n) no
 #define X5DOT1REAR (SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_LOW_FREQUENCY|SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT)
 #define X6DOT1 (SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_LOW_FREQUENCY|SPEAKER_BACK_CENTER|SPEAKER_SIDE_LEFT|SPEAKER_SIDE_RIGHT)
 #define X7DOT1 (SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_LOW_FREQUENCY|SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT|SPEAKER_SIDE_LEFT|SPEAKER_SIDE_RIGHT)
-#define X7DOT1_WIDE (SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT|SPEAKER_FRONT_CENTER|SPEAKER_LOW_FREQUENCY|SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT|SPEAKER_FRONT_LEFT_OF_CENTER|SPEAKER_FRONT_RIGHT_OF_CENTER)
 
-/* TODO: This can't be constexpr in C++11. */
-inline uint32_t MaskFromTopBits(uint32_t b) noexcept
+constexpr inline DWORD MaskFromTopBits(DWORD b) noexcept
 {
     b |= b>>1;
     b |= b>>2;
@@ -111,23 +112,23 @@ inline uint32_t MaskFromTopBits(uint32_t b) noexcept
     b |= b>>16;
     return b;
 }
-const uint32_t MonoMask{MaskFromTopBits(MONO)};
-const uint32_t StereoMask{MaskFromTopBits(STEREO)};
-const uint32_t QuadMask{MaskFromTopBits(QUAD)};
-const uint32_t X51Mask{MaskFromTopBits(X5DOT1)};
-const uint32_t X51RearMask{MaskFromTopBits(X5DOT1REAR)};
-const uint32_t X61Mask{MaskFromTopBits(X6DOT1)};
-const uint32_t X71Mask{MaskFromTopBits(X7DOT1)};
-const uint32_t X71WideMask{MaskFromTopBits(X7DOT1_WIDE)};
+constexpr DWORD MonoMask{MaskFromTopBits(MONO)};
+constexpr DWORD StereoMask{MaskFromTopBits(STEREO)};
+constexpr DWORD QuadMask{MaskFromTopBits(QUAD)};
+constexpr DWORD X51Mask{MaskFromTopBits(X5DOT1)};
+constexpr DWORD X51RearMask{MaskFromTopBits(X5DOT1REAR)};
+constexpr DWORD X61Mask{MaskFromTopBits(X6DOT1)};
+constexpr DWORD X71Mask{MaskFromTopBits(X7DOT1)};
 
-#define DEVNAME_HEAD "OpenAL Soft on "
+constexpr char DevNameHead[] = "OpenAL Soft on ";
+constexpr size_t DevNameHeadLen{al::size(DevNameHead) - 1};
 
 
-/* Scales the given reftime value, ceiling the result. */
-inline ALuint RefTime2Samples(const ReferenceTime &val, ALuint srate)
+/* Scales the given reftime value, rounding the result. */
+inline uint RefTime2Samples(const ReferenceTime &val, uint srate)
 {
-    const auto retval = (val*srate + (seconds{1}-1_reftime)) / seconds{1};
-    return static_cast<ALuint>(retval);
+    const auto retval = (val*srate + ReferenceTime{seconds{1}}/2) / seconds{1};
+    return static_cast<uint>(mini64(retval, std::numeric_limits<uint>::max()));
 }
 
 
@@ -177,10 +178,9 @@ struct DevMap {
 
 bool checkName(const al::vector<DevMap> &list, const std::string &name)
 {
-    return std::find_if(list.cbegin(), list.cend(),
-        [&name](const DevMap &entry) -> bool
-        { return entry.name == name; }
-    ) != list.cend();
+    auto match_name = [&name](const DevMap &entry) -> bool
+    { return entry.name == name; };
+    return std::find_if(list.cbegin(), list.cend(), match_name) != list.cend();
 }
 
 al::vector<DevMap> PlaybackDevices;
@@ -190,15 +190,16 @@ al::vector<DevMap> CaptureDevices;
 using NameGUIDPair = std::pair<std::string,std::string>;
 NameGUIDPair get_device_name_and_guid(IMMDevice *device)
 {
-    std::string name{DEVNAME_HEAD};
-    std::string guid;
+    static constexpr char UnknownName[]{"Unknown Device Name"};
+    static constexpr char UnknownGuid[]{"Unknown Device GUID"};
+    std::string name, guid;
 
-    IPropertyStore *ps;
-    HRESULT hr = device->OpenPropertyStore(STGM_READ, &ps);
+    ComPtr<IPropertyStore> ps;
+    HRESULT hr = device->OpenPropertyStore(STGM_READ, ps.getPtr());
     if(FAILED(hr))
     {
         WARN("OpenPropertyStore failed: 0x%08lx\n", hr);
-        return { name+"Unknown Device Name", "Unknown Device GUID" };
+        return std::make_pair(UnknownName, UnknownGuid);
     }
 
     PropVariant pvprop;
@@ -206,14 +207,14 @@ NameGUIDPair get_device_name_and_guid(IMMDevice *device)
     if(FAILED(hr))
     {
         WARN("GetValue Device_FriendlyName failed: 0x%08lx\n", hr);
-        name += "Unknown Device Name";
+        name += UnknownName;
     }
     else if(pvprop->vt == VT_LPWSTR)
         name += wstr_to_utf8(pvprop->pwszVal);
     else
     {
         WARN("Unexpected PROPVARIANT type: 0x%04x\n", pvprop->vt);
-        name += "Unknown Device Name";
+        name += UnknownName;
     }
 
     pvprop.clear();
@@ -221,60 +222,61 @@ NameGUIDPair get_device_name_and_guid(IMMDevice *device)
     if(FAILED(hr))
     {
         WARN("GetValue AudioEndpoint_GUID failed: 0x%08lx\n", hr);
-        guid = "Unknown Device GUID";
+        guid = UnknownGuid;
     }
     else if(pvprop->vt == VT_LPWSTR)
         guid = wstr_to_utf8(pvprop->pwszVal);
     else
     {
         WARN("Unexpected PROPVARIANT type: 0x%04x\n", pvprop->vt);
-        guid = "Unknown Device GUID";
+        guid = UnknownGuid;
     }
 
-    ps->Release();
-
-    return {name, guid};
+    return std::make_pair(std::move(name), std::move(guid));
 }
 
-void get_device_formfactor(IMMDevice *device, EndpointFormFactor *formfactor)
+EndpointFormFactor get_device_formfactor(IMMDevice *device)
 {
-    IPropertyStore *ps;
-    HRESULT hr = device->OpenPropertyStore(STGM_READ, &ps);
+    ComPtr<IPropertyStore> ps;
+    HRESULT hr{device->OpenPropertyStore(STGM_READ, ps.getPtr())};
     if(FAILED(hr))
     {
         WARN("OpenPropertyStore failed: 0x%08lx\n", hr);
-        return;
+        return UnknownFormFactor;
     }
 
+    EndpointFormFactor formfactor{UnknownFormFactor};
     PropVariant pvform;
-    hr = ps->GetValue(reinterpret_cast<const PROPERTYKEY&>(PKEY_AudioEndpoint_FormFactor), pvform.get());
+    hr = ps->GetValue(PKEY_AudioEndpoint_FormFactor, pvform.get());
     if(FAILED(hr))
         WARN("GetValue AudioEndpoint_FormFactor failed: 0x%08lx\n", hr);
     else if(pvform->vt == VT_UI4)
-        *formfactor = static_cast<EndpointFormFactor>(pvform->ulVal);
-    else if(pvform->vt == VT_EMPTY)
-        *formfactor = UnknownFormFactor;
-    else
+        formfactor = static_cast<EndpointFormFactor>(pvform->ulVal);
+    else if(pvform->vt != VT_EMPTY)
         WARN("Unexpected PROPVARIANT type: 0x%04x\n", pvform->vt);
-
-    ps->Release();
+    return formfactor;
 }
 
 
 void add_device(IMMDevice *device, const WCHAR *devid, al::vector<DevMap> &list)
 {
-    std::string basename, guidstr;
-    std::tie(basename, guidstr) = get_device_name_and_guid(device);
+    for(auto &entry : list)
+    {
+        if(entry.devid == devid)
+            return;
+    }
+
+    auto name_guid = get_device_name_and_guid(device);
 
     int count{1};
-    std::string newname{basename};
+    std::string newname{name_guid.first};
     while(checkName(list, newname))
     {
-        newname = basename;
+        newname = name_guid.first;
         newname += " #";
         newname += std::to_string(++count);
     }
-    list.emplace_back(std::move(newname), std::move(guidstr), devid);
+    list.emplace_back(std::move(newname), std::move(name_guid.second), devid);
     const DevMap &newentry = list.back();
 
     TRACE("Got device \"%s\", \"%s\", \"%ls\"\n", newentry.name.c_str(),
@@ -285,7 +287,7 @@ WCHAR *get_device_id(IMMDevice *device)
 {
     WCHAR *devid;
 
-    HRESULT hr = device->GetId(&devid);
+    const HRESULT hr{device->GetId(&devid)};
     if(FAILED(hr))
     {
         ERR("Failed to get device id: %lx\n", hr);
@@ -295,55 +297,47 @@ WCHAR *get_device_id(IMMDevice *device)
     return devid;
 }
 
-HRESULT probe_devices(IMMDeviceEnumerator *devenum, EDataFlow flowdir, al::vector<DevMap> &list)
+void probe_devices(IMMDeviceEnumerator *devenum, EDataFlow flowdir, al::vector<DevMap> &list)
 {
-    IMMDeviceCollection *coll;
-    HRESULT hr{devenum->EnumAudioEndpoints(flowdir, DEVICE_STATE_ACTIVE, &coll)};
+    al::vector<DevMap>{}.swap(list);
+
+    ComPtr<IMMDeviceCollection> coll;
+    HRESULT hr{devenum->EnumAudioEndpoints(flowdir, DEVICE_STATE_ACTIVE, coll.getPtr())};
     if(FAILED(hr))
     {
         ERR("Failed to enumerate audio endpoints: 0x%08lx\n", hr);
-        return hr;
+        return;
     }
 
-    IMMDevice *defdev{nullptr};
-    WCHAR *defdevid{nullptr};
     UINT count{0};
     hr = coll->GetCount(&count);
     if(SUCCEEDED(hr) && count > 0)
-    {
-        list.clear();
         list.reserve(count);
 
-        hr = devenum->GetDefaultAudioEndpoint(flowdir, eMultimedia, &defdev);
-    }
-    if(SUCCEEDED(hr) && defdev != nullptr)
+    ComPtr<IMMDevice> device;
+    hr = devenum->GetDefaultAudioEndpoint(flowdir, eMultimedia, device.getPtr());
+    if(SUCCEEDED(hr))
     {
-        defdevid = get_device_id(defdev);
-        if(defdevid)
-            add_device(defdev, defdevid, list);
+        if(WCHAR *devid{get_device_id(device.get())})
+        {
+            add_device(device.get(), devid, list);
+            CoTaskMemFree(devid);
+        }
+        device = nullptr;
     }
 
     for(UINT i{0};i < count;++i)
     {
-        IMMDevice *device;
-        hr = coll->Item(i, &device);
+        hr = coll->Item(i, device.getPtr());
         if(FAILED(hr)) continue;
 
-        WCHAR *devid{get_device_id(device)};
-        if(devid)
+        if(WCHAR *devid{get_device_id(device.get())})
         {
-            if(!defdevid || wcscmp(devid, defdevid) != 0)
-                add_device(device, devid, list);
+            add_device(device.get(), devid, list);
             CoTaskMemFree(devid);
         }
-        device->Release();
+        device = nullptr;
     }
-
-    if(defdev) defdev->Release();
-    if(defdevid) CoTaskMemFree(defdevid);
-    coll->Release();
-
-    return S_OK;
 }
 
 
@@ -428,26 +422,27 @@ void TraceFormat(const char *msg, const WAVEFORMATEX *format)
 
 enum class MsgType {
     OpenDevice,
+    ReopenDevice,
     ResetDevice,
     StartDevice,
     StopDevice,
     CloseDevice,
     EnumeratePlayback,
     EnumerateCapture,
-    QuitThread,
 
-    Count
+    Count,
+    QuitThread = Count
 };
 
 constexpr char MessageStr[static_cast<size_t>(MsgType::Count)][20]{
     "Open Device",
+    "Reopen Device",
     "Reset Device",
     "Start Device",
     "Stop Device",
     "Close Device",
     "Enumerate Playback",
-    "Enumerate Capture",
-    "Quit"
+    "Enumerate Capture"
 };
 
 
@@ -455,7 +450,7 @@ constexpr char MessageStr[static_cast<size_t>(MsgType::Count)][20]{
 struct WasapiProxy {
     virtual ~WasapiProxy() = default;
 
-    virtual HRESULT openProxy() = 0;
+    virtual HRESULT openProxy(const char *name) = 0;
     virtual void closeProxy() = 0;
 
     virtual HRESULT resetProxy() = 0;
@@ -465,19 +460,22 @@ struct WasapiProxy {
     struct Msg {
         MsgType mType;
         WasapiProxy *mProxy;
+        const char *mParam;
         std::promise<HRESULT> mPromise;
+
+        operator bool() const noexcept { return mType != MsgType::QuitThread; }
     };
     static std::deque<Msg> mMsgQueue;
     static std::mutex mMsgQueueLock;
     static std::condition_variable mMsgQueueCond;
 
-    std::future<HRESULT> pushMessage(MsgType type)
+    std::future<HRESULT> pushMessage(MsgType type, const char *param=nullptr)
     {
         std::promise<HRESULT> promise;
         std::future<HRESULT> future{promise.get_future()};
         {
             std::lock_guard<std::mutex> _{mMsgQueueLock};
-            mMsgQueue.emplace_back(Msg{type, this, std::move(promise)});
+            mMsgQueue.emplace_back(Msg{type, this, param, std::move(promise)});
         }
         mMsgQueueCond.notify_one();
         return future;
@@ -489,20 +487,19 @@ struct WasapiProxy {
         std::future<HRESULT> future{promise.get_future()};
         {
             std::lock_guard<std::mutex> _{mMsgQueueLock};
-            mMsgQueue.emplace_back(Msg{type, nullptr, std::move(promise)});
+            mMsgQueue.emplace_back(Msg{type, nullptr, nullptr, std::move(promise)});
         }
         mMsgQueueCond.notify_one();
         return future;
     }
 
-    static bool popMessage(Msg &msg)
+    static Msg popMessage()
     {
         std::unique_lock<std::mutex> lock{mMsgQueueLock};
-        while(mMsgQueue.empty())
-            mMsgQueueCond.wait(lock);
-        msg = std::move(mMsgQueue.front());
+        mMsgQueueCond.wait(lock, []{return !mMsgQueue.empty();});
+        Msg msg{std::move(mMsgQueue.front())};
         mMsgQueue.pop_front();
-        return msg.mType != MsgType::QuitThread;
+        return msg;
     }
 
     static int messageHandler(std::promise<HRESULT> *promise);
@@ -515,7 +512,7 @@ int WasapiProxy::messageHandler(std::promise<HRESULT> *promise)
 {
     TRACE("Starting message thread\n");
 
-    HRESULT cohr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+    HRESULT cohr{CoInitializeEx(nullptr, COINIT_MULTITHREADED)};
     if(FAILED(cohr))
     {
         WARN("Failed to initialize COM: 0x%08lx\n", cohr);
@@ -533,9 +530,7 @@ int WasapiProxy::messageHandler(std::promise<HRESULT> *promise)
         CoUninitialize();
         return 0;
     }
-    auto Enumerator = static_cast<IMMDeviceEnumerator*>(ptr);
-    Enumerator->Release();
-    Enumerator = nullptr;
+    static_cast<IMMDeviceEnumerator*>(ptr)->Release();
     CoUninitialize();
 
     TRACE("Message thread initialization complete\n");
@@ -543,13 +538,12 @@ int WasapiProxy::messageHandler(std::promise<HRESULT> *promise)
     promise = nullptr;
 
     TRACE("Starting message loop\n");
-    ALuint deviceCount{0};
-    Msg msg;
-    while(popMessage(msg))
+    uint deviceCount{0};
+    while(Msg msg{popMessage()})
     {
-        TRACE("Got message \"%s\" (0x%04x, this=%p)\n",
-            MessageStr[static_cast<size_t>(msg.mType)], static_cast<int>(msg.mType),
-            decltype(std::declval<void*>()){msg.mProxy});
+        TRACE("Got message \"%s\" (0x%04x, this=%p, param=%p)\n",
+            MessageStr[static_cast<size_t>(msg.mType)], static_cast<uint>(msg.mType),
+            static_cast<void*>(msg.mProxy), static_cast<const void*>(msg.mParam));
 
         switch(msg.mType)
         {
@@ -558,7 +552,7 @@ int WasapiProxy::messageHandler(std::promise<HRESULT> *promise)
             if(++deviceCount == 1)
                 hr = cohr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
             if(SUCCEEDED(hr))
-                hr = msg.mProxy->openProxy();
+                hr = msg.mProxy->openProxy(msg.mParam);
             msg.mPromise.set_value(hr);
 
             if(FAILED(hr))
@@ -566,6 +560,11 @@ int WasapiProxy::messageHandler(std::promise<HRESULT> *promise)
                 if(--deviceCount == 0 && SUCCEEDED(cohr))
                     CoUninitialize();
             }
+            continue;
+
+        case MsgType::ReopenDevice:
+            hr = msg.mProxy->openProxy(msg.mParam);
+            msg.mPromise.set_value(hr);
             continue;
 
         case MsgType::ResetDevice:
@@ -597,32 +596,30 @@ int WasapiProxy::messageHandler(std::promise<HRESULT> *promise)
             if(++deviceCount == 1)
                 hr = cohr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
             if(SUCCEEDED(hr))
-                hr = CoCreateInstance(CLSID_MMDeviceEnumerator, nullptr, CLSCTX_INPROC_SERVER, IID_IMMDeviceEnumerator, &ptr);
+                hr = CoCreateInstance(CLSID_MMDeviceEnumerator, nullptr, CLSCTX_INPROC_SERVER,
+                    IID_IMMDeviceEnumerator, &ptr);
             if(FAILED(hr))
                 msg.mPromise.set_value(hr);
             else
             {
-                Enumerator = static_cast<IMMDeviceEnumerator*>(ptr);
+                ComPtr<IMMDeviceEnumerator> enumerator{static_cast<IMMDeviceEnumerator*>(ptr)};
 
                 if(msg.mType == MsgType::EnumeratePlayback)
-                    hr = probe_devices(Enumerator, eRender, PlaybackDevices);
+                    probe_devices(enumerator.get(), eRender, PlaybackDevices);
                 else if(msg.mType == MsgType::EnumerateCapture)
-                    hr = probe_devices(Enumerator, eCapture, CaptureDevices);
-                msg.mPromise.set_value(hr);
-
-                Enumerator->Release();
-                Enumerator = nullptr;
+                    probe_devices(enumerator.get(), eCapture, CaptureDevices);
+                msg.mPromise.set_value(S_OK);
             }
 
             if(--deviceCount == 0 && SUCCEEDED(cohr))
                 CoUninitialize();
             continue;
 
-        default:
-            ERR("Unexpected message: %u\n", static_cast<unsigned int>(msg.mType));
-            msg.mPromise.set_value(E_FAIL);
-            continue;
+        case MsgType::QuitThread:
+            break;
         }
+        ERR("Unexpected message: %u\n", static_cast<uint>(msg.mType));
+        msg.mPromise.set_value(E_FAIL);
     }
     TRACE("Message loop finished\n");
 
@@ -631,33 +628,34 @@ int WasapiProxy::messageHandler(std::promise<HRESULT> *promise)
 
 
 struct WasapiPlayback final : public BackendBase, WasapiProxy {
-    WasapiPlayback(ALCdevice *device) noexcept : BackendBase{device} { }
+    WasapiPlayback(DeviceBase *device) noexcept : BackendBase{device} { }
     ~WasapiPlayback() override;
 
     int mixerProc();
 
-    void open(const ALCchar *name) override;
-    HRESULT openProxy() override;
+    void open(const char *name) override;
+    HRESULT openProxy(const char *name) override;
     void closeProxy() override;
 
     bool reset() override;
     HRESULT resetProxy() override;
-    bool start() override;
+    void start() override;
     HRESULT startProxy() override;
     void stop() override;
     void stopProxy() override;
 
     ClockLatency getClockLatency() override;
 
-    std::wstring mDevId;
-
-    IMMDevice *mMMDev{nullptr};
-    IAudioClient *mClient{nullptr};
-    IAudioRenderClient *mRender{nullptr};
+    HRESULT mOpenStatus{E_FAIL};
+    ComPtr<IMMDevice> mMMDev{nullptr};
+    ComPtr<IAudioClient> mClient{nullptr};
+    ComPtr<IAudioRenderClient> mRender{nullptr};
     HANDLE mNotifyEvent{nullptr};
 
     UINT32 mFrameStep{0u};
     std::atomic<UINT32> mPadding{0u};
+
+    std::mutex mMutex;
 
     std::atomic<bool> mKillNow{true};
     std::thread mThread;
@@ -667,7 +665,9 @@ struct WasapiPlayback final : public BackendBase, WasapiProxy {
 
 WasapiPlayback::~WasapiPlayback()
 {
-    pushMessage(MsgType::CloseDevice).wait();
+    if(SUCCEEDED(mOpenStatus))
+        pushMessage(MsgType::CloseDevice).wait();
+    mOpenStatus = E_FAIL;
 
     if(mNotifyEvent != nullptr)
         CloseHandle(mNotifyEvent);
@@ -677,18 +677,18 @@ WasapiPlayback::~WasapiPlayback()
 
 FORCE_ALIGN int WasapiPlayback::mixerProc()
 {
-    HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+    HRESULT hr{CoInitializeEx(nullptr, COINIT_MULTITHREADED)};
     if(FAILED(hr))
     {
         ERR("CoInitializeEx(nullptr, COINIT_MULTITHREADED) failed: 0x%08lx\n", hr);
-        aluHandleDisconnect(mDevice, "COM init failed: 0x%08lx", hr);
+        mDevice->handleDisconnect("COM init failed: 0x%08lx", hr);
         return 1;
     }
 
     SetRTPriority();
     althrd_setname(MIXER_THREAD_NAME);
 
-    const ALuint update_size{mDevice->UpdateSize};
+    const uint update_size{mDevice->UpdateSize};
     const UINT32 buffer_len{mDevice->BufferSize};
     while(!mKillNow.load(std::memory_order_relaxed))
     {
@@ -697,12 +697,12 @@ FORCE_ALIGN int WasapiPlayback::mixerProc()
         if(FAILED(hr))
         {
             ERR("Failed to get padding: 0x%08lx\n", hr);
-            aluHandleDisconnect(mDevice, "Failed to retrieve buffer padding: 0x%08lx", hr);
+            mDevice->handleDisconnect("Failed to retrieve buffer padding: 0x%08lx", hr);
             break;
         }
         mPadding.store(written, std::memory_order_relaxed);
 
-        ALuint len{buffer_len - written};
+        uint len{buffer_len - written};
         if(len < update_size)
         {
             DWORD res{WaitForSingleObjectEx(mNotifyEvent, 2000, FALSE)};
@@ -715,16 +715,17 @@ FORCE_ALIGN int WasapiPlayback::mixerProc()
         hr = mRender->GetBuffer(len, &buffer);
         if(SUCCEEDED(hr))
         {
-            std::unique_lock<WasapiPlayback> dlock{*this};
-            aluMixData(mDevice, buffer, len, mFrameStep);
-            mPadding.store(written + len, std::memory_order_relaxed);
-            dlock.unlock();
+            {
+                std::lock_guard<std::mutex> _{mMutex};
+                mDevice->renderSamples(buffer, len, mFrameStep);
+                mPadding.store(written + len, std::memory_order_relaxed);
+            }
             hr = mRender->ReleaseBuffer(len, 0);
         }
         if(FAILED(hr))
         {
             ERR("Failed to buffer data: 0x%08lx\n", hr);
-            aluHandleDisconnect(mDevice, "Failed to send playback samples: 0x%08lx", hr);
+            mDevice->handleDisconnect("Failed to send playback samples: 0x%08lx", hr);
             break;
         }
     }
@@ -735,15 +736,18 @@ FORCE_ALIGN int WasapiPlayback::mixerProc()
 }
 
 
-void WasapiPlayback::open(const ALCchar *name)
+void WasapiPlayback::open(const char *name)
 {
     HRESULT hr{S_OK};
 
-    mNotifyEvent = CreateEventW(nullptr, FALSE, FALSE, nullptr);
-    if(mNotifyEvent == nullptr)
+    if(!mNotifyEvent)
     {
-        ERR("Failed to create notify events: %lu\n", GetLastError());
-        hr = E_FAIL;
+        mNotifyEvent = CreateEventW(nullptr, FALSE, FALSE, nullptr);
+        if(mNotifyEvent == nullptr)
+        {
+            ERR("Failed to create notify events: %lu\n", GetLastError());
+            hr = E_FAIL;
+        }
     }
 
     if(SUCCEEDED(hr))
@@ -751,87 +755,82 @@ void WasapiPlayback::open(const ALCchar *name)
         if(name)
         {
             if(PlaybackDevices.empty())
-                pushMessage(MsgType::EnumeratePlayback).wait();
+                pushMessage(MsgType::EnumeratePlayback);
+            if(std::strncmp(name, DevNameHead, DevNameHeadLen) == 0)
+            {
+                name += DevNameHeadLen;
+                if(*name == '\0')
+                    name = nullptr;
+            }
+        }
 
-            hr = E_FAIL;
-            auto iter = std::find_if(PlaybackDevices.cbegin(), PlaybackDevices.cend(),
-                [name](const DevMap &entry) -> bool
-                { return entry.name == name || entry.endpoint_guid == name; }
-            );
-            if(iter == PlaybackDevices.cend())
-            {
-                std::wstring wname{utf8_to_wstr(name)};
-                iter = std::find_if(PlaybackDevices.cbegin(), PlaybackDevices.cend(),
-                    [&wname](const DevMap &entry) -> bool
-                    { return entry.devid == wname; }
-                );
-            }
-            if(iter == PlaybackDevices.cend())
-                WARN("Failed to find device name matching \"%s\"\n", name);
-            else
-            {
-                mDevId = iter->devid;
-                mDevice->DeviceName = iter->name;
-                hr = S_OK;
-            }
+        if(SUCCEEDED(mOpenStatus))
+            hr = pushMessage(MsgType::ReopenDevice, name).get();
+        else
+        {
+            hr = pushMessage(MsgType::OpenDevice, name).get();
+            mOpenStatus = hr;
         }
     }
 
-    if(SUCCEEDED(hr))
-        hr = pushMessage(MsgType::OpenDevice).get();
-
     if(FAILED(hr))
-    {
-        if(mNotifyEvent != nullptr)
-            CloseHandle(mNotifyEvent);
-        mNotifyEvent = nullptr;
-
-        mDevId.clear();
-
-        throw al::backend_exception{ALC_INVALID_VALUE, "Device init failed: 0x%08lx", hr};
-    }
+        throw al::backend_exception{al::backend_error::DeviceError, "Device init failed: 0x%08lx",
+            hr};
 }
 
-HRESULT WasapiPlayback::openProxy()
+HRESULT WasapiPlayback::openProxy(const char *name)
 {
-    void *ptr;
-    HRESULT hr{CoCreateInstance(CLSID_MMDeviceEnumerator, nullptr, CLSCTX_INPROC_SERVER, IID_IMMDeviceEnumerator, &ptr)};
-    if(SUCCEEDED(hr))
+    const wchar_t *devid{nullptr};
+    if(name)
     {
-        auto Enumerator = static_cast<IMMDeviceEnumerator*>(ptr);
-        if(mDevId.empty())
-            hr = Enumerator->GetDefaultAudioEndpoint(eRender, eMultimedia, &mMMDev);
-        else
-            hr = Enumerator->GetDevice(mDevId.c_str(), &mMMDev);
-        Enumerator->Release();
-    }
-    if(SUCCEEDED(hr))
-        hr = mMMDev->Activate(IID_IAudioClient, CLSCTX_INPROC_SERVER, nullptr, &ptr);
-    if(SUCCEEDED(hr))
-    {
-        mClient = static_cast<IAudioClient*>(ptr);
-        if(mDevice->DeviceName.empty())
-            mDevice->DeviceName = get_device_name_and_guid(mMMDev).first;
+        auto iter = std::find_if(PlaybackDevices.cbegin(), PlaybackDevices.cend(),
+            [name](const DevMap &entry) -> bool
+            { return entry.name == name || entry.endpoint_guid == name; });
+        if(iter == PlaybackDevices.cend())
+        {
+            const std::wstring wname{utf8_to_wstr(name)};
+            iter = std::find_if(PlaybackDevices.cbegin(), PlaybackDevices.cend(),
+                [&wname](const DevMap &entry) -> bool
+                { return entry.devid == wname; });
+        }
+        if(iter == PlaybackDevices.cend())
+        {
+            WARN("Failed to find device name matching \"%s\"\n", name);
+            return E_FAIL;
+        }
+        name = iter->name.c_str();
+        devid = iter->devid.c_str();
     }
 
+    void *ptr;
+    ComPtr<IMMDevice> mmdev;
+    HRESULT hr{CoCreateInstance(CLSID_MMDeviceEnumerator, nullptr, CLSCTX_INPROC_SERVER,
+        IID_IMMDeviceEnumerator, &ptr)};
+    if(SUCCEEDED(hr))
+    {
+        ComPtr<IMMDeviceEnumerator> enumerator{static_cast<IMMDeviceEnumerator*>(ptr)};
+        if(!devid)
+            hr = enumerator->GetDefaultAudioEndpoint(eRender, eMultimedia, mmdev.getPtr());
+        else
+            hr = enumerator->GetDevice(devid, mmdev.getPtr());
+    }
     if(FAILED(hr))
     {
-        if(mMMDev)
-            mMMDev->Release();
-        mMMDev = nullptr;
+        WARN("Failed to open device \"%s\"\n", name?name:"(default)");
+        return hr;
     }
+
+    mClient = nullptr;
+    mMMDev = std::move(mmdev);
+    if(name) mDevice->DeviceName = std::string{DevNameHead} + name;
+    else mDevice->DeviceName = DevNameHead + get_device_name_and_guid(mMMDev.get()).first;
 
     return hr;
 }
 
 void WasapiPlayback::closeProxy()
 {
-    if(mClient)
-        mClient->Release();
     mClient = nullptr;
-
-    if(mMMDev)
-        mMMDev->Release();
     mMMDev = nullptr;
 }
 
@@ -840,24 +839,22 @@ bool WasapiPlayback::reset()
 {
     HRESULT hr{pushMessage(MsgType::ResetDevice).get()};
     if(FAILED(hr))
-        throw al::backend_exception{ALC_INVALID_VALUE, "0x%08lx", hr};
+        throw al::backend_exception{al::backend_error::DeviceError, "0x%08lx", hr};
     return true;
 }
 
 HRESULT WasapiPlayback::resetProxy()
 {
-    if(mClient)
-        mClient->Release();
     mClient = nullptr;
 
     void *ptr;
-    HRESULT hr = mMMDev->Activate(IID_IAudioClient, CLSCTX_INPROC_SERVER, nullptr, &ptr);
+    HRESULT hr{mMMDev->Activate(IID_IAudioClient, CLSCTX_INPROC_SERVER, nullptr, &ptr)};
     if(FAILED(hr))
     {
         ERR("Failed to reactivate audio client: 0x%08lx\n", hr);
         return hr;
     }
-    mClient = static_cast<IAudioClient*>(ptr);
+    mClient = ComPtr<IAudioClient>{static_cast<IAudioClient*>(ptr)};
 
     WAVEFORMATEX *wfx;
     hr = mClient->GetMixFormat(&wfx);
@@ -879,20 +876,19 @@ HRESULT WasapiPlayback::resetProxy()
     const ReferenceTime per_time{ReferenceTime{seconds{mDevice->UpdateSize}} / mDevice->Frequency};
     const ReferenceTime buf_time{ReferenceTime{seconds{mDevice->BufferSize}} / mDevice->Frequency};
 
-    if(!mDevice->Flags.get<FrequencyRequest>())
+    if(!mDevice->Flags.test(FrequencyRequest))
         mDevice->Frequency = OutputType.Format.nSamplesPerSec;
-    if(!mDevice->Flags.get<ChannelsRequest>())
+    if(!mDevice->Flags.test(ChannelsRequest))
     {
         const uint32_t chancount{OutputType.Format.nChannels};
         const DWORD chanmask{OutputType.dwChannelMask};
-        if(chancount >= 8 && ((chanmask&X71Mask)==X7DOT1 || (chanmask&X71WideMask)==X7DOT1_WIDE))
+        if(chancount >= 8 && (chanmask&X71Mask) == X7DOT1)
             mDevice->FmtChans = DevFmtX71;
         else if(chancount >= 7 && (chanmask&X61Mask) == X6DOT1)
             mDevice->FmtChans = DevFmtX61;
-        else if(chancount >= 6 && (chanmask&X51Mask) == X5DOT1)
+        else if(chancount >= 6 && ((chanmask&X51Mask) == X5DOT1
+            || (chanmask&X51RearMask) == X5DOT1REAR))
             mDevice->FmtChans = DevFmtX51;
-        else if(chancount >= 6 && (chanmask&X51RearMask) == X5DOT1REAR)
-            mDevice->FmtChans = DevFmtX51Rear;
         else if(chancount >= 4 && (chanmask&QuadMask) == QUAD)
             mDevice->FmtChans = DevFmtQuad;
         else if(chancount >= 2 && (chanmask&StereoMask) == STEREO)
@@ -924,10 +920,6 @@ HRESULT WasapiPlayback::resetProxy()
     case DevFmtX51:
         OutputType.Format.nChannels = 6;
         OutputType.dwChannelMask = X5DOT1;
-        break;
-    case DevFmtX51Rear:
-        OutputType.Format.nChannels = 6;
-        OutputType.dwChannelMask = X5DOT1REAR;
         break;
     case DevFmtX61:
         OutputType.Format.nChannels = 7;
@@ -1004,27 +996,60 @@ HRESULT WasapiPlayback::resetProxy()
         mDevice->Frequency = OutputType.Format.nSamplesPerSec;
         const uint32_t chancount{OutputType.Format.nChannels};
         const DWORD chanmask{OutputType.dwChannelMask};
-        if(chancount >= 8 && ((chanmask&X71Mask)==X7DOT1 || (chanmask&X71WideMask)==X7DOT1_WIDE))
-            mDevice->FmtChans = DevFmtX71;
-        else if(chancount >= 7 && (chanmask&X61Mask) == X6DOT1)
-            mDevice->FmtChans = DevFmtX61;
-        else if(chancount >= 6 && (chanmask&X51Mask) == X5DOT1)
-            mDevice->FmtChans = DevFmtX51;
-        else if(chancount >= 6 && (chanmask&X51RearMask) == X5DOT1REAR)
-            mDevice->FmtChans = DevFmtX51Rear;
-        else if(chancount >= 4 && (chanmask&QuadMask) == QUAD)
-            mDevice->FmtChans = DevFmtQuad;
-        else if(chancount >= 2 && (chanmask&StereoMask) == STEREO)
-            mDevice->FmtChans = DevFmtStereo;
-        else if(chancount >= 1 && (chanmask&MonoMask) == MONO)
-            mDevice->FmtChans = DevFmtMono;
-        else
+        /* Don't update the channel format if the requested format fits what's
+         * supported.
+         */
+        bool chansok{false};
+        if(mDevice->Flags.test(ChannelsRequest))
         {
-            ERR("Unhandled extensible channels: %d -- 0x%08lx\n", OutputType.Format.nChannels,
-                OutputType.dwChannelMask);
-            mDevice->FmtChans = DevFmtStereo;
-            OutputType.Format.nChannels = 2;
-            OutputType.dwChannelMask = STEREO;
+            switch(mDevice->FmtChans)
+            {
+            case DevFmtMono:
+                chansok = (chancount >= 1 && (chanmask&MonoMask) == MONO);
+                break;
+            case DevFmtStereo:
+                chansok = (chancount >= 2 && (chanmask&StereoMask) == STEREO);
+                break;
+            case DevFmtQuad:
+                chansok = (chancount >= 4 && (chanmask&QuadMask) == QUAD);
+                break;
+            case DevFmtX51:
+                chansok = (chancount >= 6 && ((chanmask&X51Mask) == X5DOT1
+                        || (chanmask&X51RearMask) == X5DOT1REAR));
+                break;
+            case DevFmtX61:
+                chansok = (chancount >= 7 && (chanmask&X61Mask) == X6DOT1);
+                break;
+            case DevFmtX71:
+                chansok = (chancount >= 8 && (chanmask&X71Mask) == X7DOT1);
+                break;
+            case DevFmtAmbi3D:
+                break;
+            }
+        }
+        if(!chansok)
+        {
+            if(chancount >= 8 && (chanmask&X71Mask) == X7DOT1)
+                mDevice->FmtChans = DevFmtX71;
+            else if(chancount >= 7 && (chanmask&X61Mask) == X6DOT1)
+                mDevice->FmtChans = DevFmtX61;
+            else if(chancount >= 6 && ((chanmask&X51Mask) == X5DOT1
+                || (chanmask&X51RearMask) == X5DOT1REAR))
+                mDevice->FmtChans = DevFmtX51;
+            else if(chancount >= 4 && (chanmask&QuadMask) == QUAD)
+                mDevice->FmtChans = DevFmtQuad;
+            else if(chancount >= 2 && (chanmask&StereoMask) == STEREO)
+                mDevice->FmtChans = DevFmtStereo;
+            else if(chancount >= 1 && (chanmask&MonoMask) == MONO)
+                mDevice->FmtChans = DevFmtMono;
+            else
+            {
+                ERR("Unhandled extensible channels: %d -- 0x%08lx\n", OutputType.Format.nChannels,
+                    OutputType.dwChannelMask);
+                mDevice->FmtChans = DevFmtStereo;
+                OutputType.Format.nChannels = 2;
+                OutputType.dwChannelMask = STEREO;
+            }
         }
 
         if(IsEqualGUID(OutputType.SubFormat, KSDATAFORMAT_SUBTYPE_PCM))
@@ -1059,12 +1084,10 @@ HRESULT WasapiPlayback::resetProxy()
     }
     mFrameStep = OutputType.Format.nChannels;
 
-    EndpointFormFactor formfactor{UnknownFormFactor};
-    get_device_formfactor(mMMDev, &formfactor);
-    mDevice->IsHeadphones = (mDevice->FmtChans == DevFmtStereo
-        && (formfactor == Headphones || formfactor == Headset));
+    const EndpointFormFactor formfactor{get_device_formfactor(mMMDev.get())};
+    mDevice->Flags.set(DirectEar, (formfactor == Headphones || formfactor == Headset));
 
-    SetDefaultWFXChannelOrder(mDevice);
+    setChannelOrderFromWFXMask(OutputType.dwChannelMask);
 
     hr = mClient->Initialize(AUDCLNT_SHAREMODE_SHARED, AUDCLNT_STREAMFLAGS_EVENTCALLBACK,
         buf_time.count(), 0, &OutputType.Format, nullptr);
@@ -1102,17 +1125,19 @@ HRESULT WasapiPlayback::resetProxy()
 }
 
 
-bool WasapiPlayback::start()
+void WasapiPlayback::start()
 {
-    HRESULT hr{pushMessage(MsgType::StartDevice).get()};
-    return SUCCEEDED(hr) ? true : false;
+    const HRESULT hr{pushMessage(MsgType::StartDevice).get()};
+    if(FAILED(hr))
+        throw al::backend_exception{al::backend_error::DeviceError,
+            "Failed to start playback: 0x%lx", hr};
 }
 
 HRESULT WasapiPlayback::startProxy()
 {
     ResetEvent(mNotifyEvent);
 
-    HRESULT hr = mClient->Start();
+    HRESULT hr{mClient->Start()};
     if(FAILED(hr))
     {
         ERR("Failed to start audio client: 0x%08lx\n", hr);
@@ -1123,13 +1148,12 @@ HRESULT WasapiPlayback::startProxy()
     hr = mClient->GetService(IID_IAudioRenderClient, &ptr);
     if(SUCCEEDED(hr))
     {
-        mRender = static_cast<IAudioRenderClient*>(ptr);
+        mRender = ComPtr<IAudioRenderClient>{static_cast<IAudioRenderClient*>(ptr)};
         try {
             mKillNow.store(false, std::memory_order_release);
             mThread = std::thread{std::mem_fn(&WasapiPlayback::mixerProc), this};
         }
         catch(...) {
-            mRender->Release();
             mRender = nullptr;
             ERR("Failed to start thread\n");
             hr = E_FAIL;
@@ -1154,7 +1178,6 @@ void WasapiPlayback::stopProxy()
     mKillNow.store(true, std::memory_order_release);
     mThread.join();
 
-    mRender->Release();
     mRender = nullptr;
     mClient->Stop();
 }
@@ -1164,7 +1187,7 @@ ClockLatency WasapiPlayback::getClockLatency()
 {
     ClockLatency ret;
 
-    std::lock_guard<WasapiPlayback> _{*this};
+    std::lock_guard<std::mutex> _{mMutex};
     ret.ClockTime = GetDeviceClockTime(mDevice);
     ret.Latency  = std::chrono::seconds{mPadding.load(std::memory_order_relaxed)};
     ret.Latency /= mDevice->Frequency;
@@ -1174,29 +1197,28 @@ ClockLatency WasapiPlayback::getClockLatency()
 
 
 struct WasapiCapture final : public BackendBase, WasapiProxy {
-    WasapiCapture(ALCdevice *device) noexcept : BackendBase{device} { }
+    WasapiCapture(DeviceBase *device) noexcept : BackendBase{device} { }
     ~WasapiCapture() override;
 
     int recordProc();
 
-    void open(const ALCchar *name) override;
-    HRESULT openProxy() override;
+    void open(const char *name) override;
+    HRESULT openProxy(const char *name) override;
     void closeProxy() override;
 
     HRESULT resetProxy() override;
-    bool start() override;
+    void start() override;
     HRESULT startProxy() override;
     void stop() override;
     void stopProxy() override;
 
-    ALCenum captureSamples(al::byte *buffer, ALCuint samples) override;
-    ALCuint availableSamples() override;
+    void captureSamples(al::byte *buffer, uint samples) override;
+    uint availableSamples() override;
 
-    std::wstring mDevId;
-
-    IMMDevice *mMMDev{nullptr};
-    IAudioClient *mClient{nullptr};
-    IAudioCaptureClient *mCapture{nullptr};
+    HRESULT mOpenStatus{E_FAIL};
+    ComPtr<IMMDevice> mMMDev{nullptr};
+    ComPtr<IAudioClient> mClient{nullptr};
+    ComPtr<IAudioCaptureClient> mCapture{nullptr};
     HANDLE mNotifyEvent{nullptr};
 
     ChannelConverter mChannelConv{};
@@ -1211,7 +1233,9 @@ struct WasapiCapture final : public BackendBase, WasapiProxy {
 
 WasapiCapture::~WasapiCapture()
 {
-    pushMessage(MsgType::CloseDevice).wait();
+    if(SUCCEEDED(mOpenStatus))
+        pushMessage(MsgType::CloseDevice).wait();
+    mOpenStatus = E_FAIL;
 
     if(mNotifyEvent != nullptr)
         CloseHandle(mNotifyEvent);
@@ -1221,11 +1245,11 @@ WasapiCapture::~WasapiCapture()
 
 FORCE_ALIGN int WasapiCapture::recordProc()
 {
-    HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+    HRESULT hr{CoInitializeEx(nullptr, COINIT_MULTITHREADED)};
     if(FAILED(hr))
     {
         ERR("CoInitializeEx(nullptr, COINIT_MULTITHREADED) failed: 0x%08lx\n", hr);
-        aluHandleDisconnect(mDevice, "COM init failed: 0x%08lx", hr);
+        mDevice->handleDisconnect("COM init failed: 0x%08lx", hr);
         return 1;
     }
 
@@ -1261,11 +1285,11 @@ FORCE_ALIGN int WasapiCapture::recordProc()
                 size_t dstframes;
                 if(mSampleConv)
                 {
-                    const ALvoid *srcdata{rdata};
-                    ALuint srcframes{numsamples};
+                    const void *srcdata{rdata};
+                    uint srcframes{numsamples};
 
                     dstframes = mSampleConv->convert(&srcdata, &srcframes, data.first.buf,
-                        static_cast<ALuint>(minz(data.first.len, INT_MAX)));
+                        static_cast<uint>(minz(data.first.len, INT_MAX)));
                     if(srcframes > 0 && dstframes == data.first.len && data.second.len > 0)
                     {
                         /* If some source samples remain, all of the first dest
@@ -1273,12 +1297,12 @@ FORCE_ALIGN int WasapiCapture::recordProc()
                          * dest block, do another run for the second block.
                          */
                         dstframes += mSampleConv->convert(&srcdata, &srcframes, data.second.buf,
-                            static_cast<ALuint>(minz(data.second.len, INT_MAX)));
+                            static_cast<uint>(minz(data.second.len, INT_MAX)));
                     }
                 }
                 else
                 {
-                    const auto framesize = static_cast<ALuint>(mDevice->frameSizeFromFmt());
+                    const uint framesize{mDevice->frameSizeFromFmt()};
                     size_t len1{minz(data.first.len, numsamples)};
                     size_t len2{minz(data.second.len, numsamples-len1)};
 
@@ -1297,7 +1321,7 @@ FORCE_ALIGN int WasapiCapture::recordProc()
 
         if(FAILED(hr))
         {
-            aluHandleDisconnect(mDevice, "Failed to capture samples: 0x%08lx", hr);
+            mDevice->handleDisconnect("Failed to capture samples: 0x%08lx", hr);
             break;
         }
 
@@ -1311,7 +1335,7 @@ FORCE_ALIGN int WasapiCapture::recordProc()
 }
 
 
-void WasapiCapture::open(const ALCchar *name)
+void WasapiCapture::open(const char *name)
 {
     HRESULT hr{S_OK};
 
@@ -1327,103 +1351,87 @@ void WasapiCapture::open(const ALCchar *name)
         if(name)
         {
             if(CaptureDevices.empty())
-                pushMessage(MsgType::EnumerateCapture).wait();
-
-            hr = E_FAIL;
-            auto iter = std::find_if(CaptureDevices.cbegin(), CaptureDevices.cend(),
-                [name](const DevMap &entry) -> bool
-                { return entry.name == name || entry.endpoint_guid == name; }
-            );
-            if(iter == CaptureDevices.cend())
+                pushMessage(MsgType::EnumerateCapture);
+            if(std::strncmp(name, DevNameHead, DevNameHeadLen) == 0)
             {
-                std::wstring wname{utf8_to_wstr(name)};
-                iter = std::find_if(CaptureDevices.cbegin(), CaptureDevices.cend(),
-                    [&wname](const DevMap &entry) -> bool
-                    { return entry.devid == wname; }
-                );
-            }
-            if(iter == CaptureDevices.cend())
-                WARN("Failed to find device name matching \"%s\"\n", name);
-            else
-            {
-                mDevId = iter->devid;
-                mDevice->DeviceName = iter->name;
-                hr = S_OK;
+                name += DevNameHeadLen;
+                if(*name == '\0')
+                    name = nullptr;
             }
         }
+        hr = pushMessage(MsgType::OpenDevice, name).get();
     }
-
-    if(SUCCEEDED(hr))
-        hr = pushMessage(MsgType::OpenDevice).get();
+    mOpenStatus = hr;
 
     if(FAILED(hr))
-    {
-        if(mNotifyEvent != nullptr)
-            CloseHandle(mNotifyEvent);
-        mNotifyEvent = nullptr;
-
-        mDevId.clear();
-
-        throw al::backend_exception{ALC_INVALID_VALUE, "Device init failed: 0x%08lx", hr};
-    }
+        throw al::backend_exception{al::backend_error::DeviceError, "Device init failed: 0x%08lx",
+            hr};
 
     hr = pushMessage(MsgType::ResetDevice).get();
     if(FAILED(hr))
     {
         if(hr == E_OUTOFMEMORY)
-            throw al::backend_exception{ALC_OUT_OF_MEMORY, "Out of memory"};
-        throw al::backend_exception{ALC_INVALID_VALUE, "Device reset failed"};
+            throw al::backend_exception{al::backend_error::OutOfMemory, "Out of memory"};
+        throw al::backend_exception{al::backend_error::DeviceError, "Device reset failed"};
     }
 }
 
-HRESULT WasapiCapture::openProxy()
+HRESULT WasapiCapture::openProxy(const char *name)
 {
+    const wchar_t *devid{nullptr};
+    if(name)
+    {
+        auto iter = std::find_if(CaptureDevices.cbegin(), CaptureDevices.cend(),
+            [name](const DevMap &entry) -> bool
+            { return entry.name == name || entry.endpoint_guid == name; });
+        if(iter == CaptureDevices.cend())
+        {
+            const std::wstring wname{utf8_to_wstr(name)};
+            iter = std::find_if(CaptureDevices.cbegin(), CaptureDevices.cend(),
+                [&wname](const DevMap &entry) -> bool
+                { return entry.devid == wname; });
+        }
+        if(iter == CaptureDevices.cend())
+        {
+            WARN("Failed to find device name matching \"%s\"\n", name);
+            return E_FAIL;
+        }
+        name = iter->name.c_str();
+        devid = iter->devid.c_str();
+    }
+
     void *ptr;
     HRESULT hr{CoCreateInstance(CLSID_MMDeviceEnumerator, nullptr, CLSCTX_INPROC_SERVER,
         IID_IMMDeviceEnumerator, &ptr)};
     if(SUCCEEDED(hr))
     {
-        auto Enumerator = static_cast<IMMDeviceEnumerator*>(ptr);
-        if(mDevId.empty())
-            hr = Enumerator->GetDefaultAudioEndpoint(eCapture, eMultimedia, &mMMDev);
+        ComPtr<IMMDeviceEnumerator> enumerator{static_cast<IMMDeviceEnumerator*>(ptr)};
+        if(!devid)
+            hr = enumerator->GetDefaultAudioEndpoint(eCapture, eMultimedia, mMMDev.getPtr());
         else
-            hr = Enumerator->GetDevice(mDevId.c_str(), &mMMDev);
-        Enumerator->Release();
+            hr = enumerator->GetDevice(devid, mMMDev.getPtr());
     }
-    if(SUCCEEDED(hr))
-        hr = mMMDev->Activate(IID_IAudioClient, CLSCTX_INPROC_SERVER, nullptr, &ptr);
-    if(SUCCEEDED(hr))
-    {
-        mClient = static_cast<IAudioClient*>(ptr);
-        if(mDevice->DeviceName.empty())
-            mDevice->DeviceName = get_device_name_and_guid(mMMDev).first;
-    }
-
     if(FAILED(hr))
     {
-        if(mMMDev)
-            mMMDev->Release();
-        mMMDev = nullptr;
+        WARN("Failed to open device \"%s\"\n", name?name:"(default)");
+        return hr;
     }
+
+    mClient = nullptr;
+    if(name) mDevice->DeviceName = std::string{DevNameHead} + name;
+    else mDevice->DeviceName = DevNameHead + get_device_name_and_guid(mMMDev.get()).first;
 
     return hr;
 }
 
 void WasapiCapture::closeProxy()
 {
-    if(mClient)
-        mClient->Release();
     mClient = nullptr;
-
-    if(mMMDev)
-        mMMDev->Release();
     mMMDev = nullptr;
 }
 
 HRESULT WasapiCapture::resetProxy()
 {
-    if(mClient)
-        mClient->Release();
     mClient = nullptr;
 
     void *ptr;
@@ -1433,43 +1441,39 @@ HRESULT WasapiCapture::resetProxy()
         ERR("Failed to reactivate audio client: 0x%08lx\n", hr);
         return hr;
     }
-    mClient = static_cast<IAudioClient*>(ptr);
+    mClient = ComPtr<IAudioClient>{static_cast<IAudioClient*>(ptr)};
 
     // Make sure buffer is at least 100ms in size
     ReferenceTime buf_time{ReferenceTime{seconds{mDevice->BufferSize}} / mDevice->Frequency};
     buf_time = std::max(buf_time, ReferenceTime{milliseconds{100}});
 
-    WAVEFORMATEXTENSIBLE OutputType{};
-    OutputType.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
+    WAVEFORMATEXTENSIBLE InputType{};
+    InputType.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
     switch(mDevice->FmtChans)
     {
     case DevFmtMono:
-        OutputType.Format.nChannels = 1;
-        OutputType.dwChannelMask = MONO;
+        InputType.Format.nChannels = 1;
+        InputType.dwChannelMask = MONO;
         break;
     case DevFmtStereo:
-        OutputType.Format.nChannels = 2;
-        OutputType.dwChannelMask = STEREO;
+        InputType.Format.nChannels = 2;
+        InputType.dwChannelMask = STEREO;
         break;
     case DevFmtQuad:
-        OutputType.Format.nChannels = 4;
-        OutputType.dwChannelMask = QUAD;
+        InputType.Format.nChannels = 4;
+        InputType.dwChannelMask = QUAD;
         break;
     case DevFmtX51:
-        OutputType.Format.nChannels = 6;
-        OutputType.dwChannelMask = X5DOT1;
-        break;
-    case DevFmtX51Rear:
-        OutputType.Format.nChannels = 6;
-        OutputType.dwChannelMask = X5DOT1REAR;
+        InputType.Format.nChannels = 6;
+        InputType.dwChannelMask = X5DOT1;
         break;
     case DevFmtX61:
-        OutputType.Format.nChannels = 7;
-        OutputType.dwChannelMask = X6DOT1;
+        InputType.Format.nChannels = 7;
+        InputType.dwChannelMask = X6DOT1;
         break;
     case DevFmtX71:
-        OutputType.Format.nChannels = 8;
-        OutputType.dwChannelMask = X7DOT1;
+        InputType.Format.nChannels = 8;
+        InputType.dwChannelMask = X7DOT1;
         break;
 
     case DevFmtAmbi3D:
@@ -1480,36 +1484,36 @@ HRESULT WasapiCapture::resetProxy()
     /* NOTE: Signedness doesn't matter, the converter will handle it. */
     case DevFmtByte:
     case DevFmtUByte:
-        OutputType.Format.wBitsPerSample = 8;
-        OutputType.SubFormat = KSDATAFORMAT_SUBTYPE_PCM;
+        InputType.Format.wBitsPerSample = 8;
+        InputType.SubFormat = KSDATAFORMAT_SUBTYPE_PCM;
         break;
     case DevFmtShort:
     case DevFmtUShort:
-        OutputType.Format.wBitsPerSample = 16;
-        OutputType.SubFormat = KSDATAFORMAT_SUBTYPE_PCM;
+        InputType.Format.wBitsPerSample = 16;
+        InputType.SubFormat = KSDATAFORMAT_SUBTYPE_PCM;
         break;
     case DevFmtInt:
     case DevFmtUInt:
-        OutputType.Format.wBitsPerSample = 32;
-        OutputType.SubFormat = KSDATAFORMAT_SUBTYPE_PCM;
+        InputType.Format.wBitsPerSample = 32;
+        InputType.SubFormat = KSDATAFORMAT_SUBTYPE_PCM;
         break;
     case DevFmtFloat:
-        OutputType.Format.wBitsPerSample = 32;
-        OutputType.SubFormat = KSDATAFORMAT_SUBTYPE_IEEE_FLOAT;
+        InputType.Format.wBitsPerSample = 32;
+        InputType.SubFormat = KSDATAFORMAT_SUBTYPE_IEEE_FLOAT;
         break;
     }
-    OutputType.Samples.wValidBitsPerSample = OutputType.Format.wBitsPerSample;
-    OutputType.Format.nSamplesPerSec = mDevice->Frequency;
+    InputType.Samples.wValidBitsPerSample = InputType.Format.wBitsPerSample;
+    InputType.Format.nSamplesPerSec = mDevice->Frequency;
 
-    OutputType.Format.nBlockAlign = static_cast<WORD>(OutputType.Format.nChannels *
-        OutputType.Format.wBitsPerSample / 8);
-    OutputType.Format.nAvgBytesPerSec = OutputType.Format.nSamplesPerSec *
-        OutputType.Format.nBlockAlign;
-    OutputType.Format.cbSize = sizeof(OutputType) - sizeof(OutputType.Format);
+    InputType.Format.nBlockAlign = static_cast<WORD>(InputType.Format.nChannels *
+        InputType.Format.wBitsPerSample / 8);
+    InputType.Format.nAvgBytesPerSec = InputType.Format.nSamplesPerSec *
+        InputType.Format.nBlockAlign;
+    InputType.Format.cbSize = sizeof(InputType) - sizeof(InputType.Format);
 
-    TraceFormat("Requesting capture format", &OutputType.Format);
+    TraceFormat("Requesting capture format", &InputType.Format);
     WAVEFORMATEX *wfx;
-    hr = mClient->IsFormatSupported(AUDCLNT_SHAREMODE_SHARED, &OutputType.Format, &wfx);
+    hr = mClient->IsFormatSupported(AUDCLNT_SHAREMODE_SHARED, &InputType.Format, &wfx);
     if(FAILED(hr))
     {
         ERR("Failed to check format support: 0x%08lx\n", hr);
@@ -1522,92 +1526,128 @@ HRESULT WasapiCapture::resetProxy()
     if(wfx != nullptr)
     {
         TraceFormat("Got capture format", wfx);
-        if(!(wfx->nChannels == OutputType.Format.nChannels ||
-             (wfx->nChannels == 1 && OutputType.Format.nChannels == 2) ||
-             (wfx->nChannels == 2 && OutputType.Format.nChannels == 1)))
-        {
-            ERR("Failed to get matching format, wanted: %s %s %uhz, got: %d channel%s %d-bit %luhz\n",
-                DevFmtChannelsString(mDevice->FmtChans), DevFmtTypeString(mDevice->FmtType),
-                mDevice->Frequency, wfx->nChannels, (wfx->nChannels==1)?"":"s", wfx->wBitsPerSample,
-                wfx->nSamplesPerSec);
-            CoTaskMemFree(wfx);
-            return E_FAIL;
-        }
-
-        if(!MakeExtensible(&OutputType, wfx))
+        if(!MakeExtensible(&InputType, wfx))
         {
             CoTaskMemFree(wfx);
             return E_FAIL;
         }
         CoTaskMemFree(wfx);
         wfx = nullptr;
-    }
 
-    DevFmtType srcType;
-    if(IsEqualGUID(OutputType.SubFormat, KSDATAFORMAT_SUBTYPE_PCM))
-    {
-        if(OutputType.Format.wBitsPerSample == 8)
-            srcType = DevFmtUByte;
-        else if(OutputType.Format.wBitsPerSample == 16)
-            srcType = DevFmtShort;
-        else if(OutputType.Format.wBitsPerSample == 32)
-            srcType = DevFmtInt;
-        else
+        auto validate_fmt = [](DeviceBase *device, uint32_t chancount, DWORD chanmask) noexcept
+            -> bool
         {
-            ERR("Unhandled integer bit depth: %d\n", OutputType.Format.wBitsPerSample);
+            switch(device->FmtChans)
+            {
+            /* If the device wants mono, we can handle any input. */
+            case DevFmtMono:
+                return true;
+            /* If the device wants stereo, we can handle mono or stereo input. */
+            case DevFmtStereo:
+                return (chancount == 2 && (chanmask == 0 || (chanmask&StereoMask) == STEREO))
+                    || (chancount == 1 && (chanmask&MonoMask) == MONO);
+            /* Otherwise, the device must match the input type. */
+            case DevFmtQuad:
+                return (chancount == 4 && (chanmask == 0 || (chanmask&QuadMask) == QUAD));
+            /* 5.1 (Side) and 5.1 (Rear) are interchangeable here. */
+            case DevFmtX51:
+                return (chancount == 6 && (chanmask == 0 || (chanmask&X51Mask) == X5DOT1
+                        || (chanmask&X51RearMask) == X5DOT1REAR));
+            case DevFmtX61:
+                return (chancount == 7 && (chanmask == 0 || (chanmask&X61Mask) == X6DOT1));
+            case DevFmtX71:
+                return (chancount == 8 && (chanmask == 0 || (chanmask&X71Mask) == X7DOT1));
+            case DevFmtAmbi3D:
+                return (chanmask == 0 && chancount == device->channelsFromFmt());
+            }
+            return false;
+        };
+        if(!validate_fmt(mDevice, InputType.Format.nChannels, InputType.dwChannelMask))
+        {
+            ERR("Failed to match format, wanted: %s %s %uhz, got: 0x%08lx mask %d channel%s %d-bit %luhz\n",
+                DevFmtChannelsString(mDevice->FmtChans), DevFmtTypeString(mDevice->FmtType),
+                mDevice->Frequency, InputType.dwChannelMask, InputType.Format.nChannels,
+                (InputType.Format.nChannels==1)?"":"s", InputType.Format.wBitsPerSample,
+                InputType.Format.nSamplesPerSec);
             return E_FAIL;
         }
     }
-    else if(IsEqualGUID(OutputType.SubFormat, KSDATAFORMAT_SUBTYPE_IEEE_FLOAT))
+
+    DevFmtType srcType{};
+    if(IsEqualGUID(InputType.SubFormat, KSDATAFORMAT_SUBTYPE_PCM))
     {
-        if(OutputType.Format.wBitsPerSample == 32)
+        if(InputType.Format.wBitsPerSample == 8)
+            srcType = DevFmtUByte;
+        else if(InputType.Format.wBitsPerSample == 16)
+            srcType = DevFmtShort;
+        else if(InputType.Format.wBitsPerSample == 32)
+            srcType = DevFmtInt;
+        else
+        {
+            ERR("Unhandled integer bit depth: %d\n", InputType.Format.wBitsPerSample);
+            return E_FAIL;
+        }
+    }
+    else if(IsEqualGUID(InputType.SubFormat, KSDATAFORMAT_SUBTYPE_IEEE_FLOAT))
+    {
+        if(InputType.Format.wBitsPerSample == 32)
             srcType = DevFmtFloat;
         else
         {
-            ERR("Unhandled float bit depth: %d\n", OutputType.Format.wBitsPerSample);
+            ERR("Unhandled float bit depth: %d\n", InputType.Format.wBitsPerSample);
             return E_FAIL;
         }
     }
     else
     {
-        ERR("Unhandled format sub-type: %s\n", GuidPrinter{OutputType.SubFormat}.c_str());
+        ERR("Unhandled format sub-type: %s\n", GuidPrinter{InputType.SubFormat}.c_str());
         return E_FAIL;
     }
 
-    if(mDevice->FmtChans == DevFmtMono && OutputType.Format.nChannels == 2)
+    if(mDevice->FmtChans == DevFmtMono && InputType.Format.nChannels != 1)
     {
-        mChannelConv = ChannelConverter{srcType, DevFmtStereo, mDevice->FmtChans};
-        TRACE("Created %s stereo-to-mono converter\n", DevFmtTypeString(srcType));
+        uint chanmask{(1u<<InputType.Format.nChannels) - 1u};
+        /* Exclude LFE from the downmix. */
+        if((InputType.dwChannelMask&SPEAKER_LOW_FREQUENCY))
+        {
+            constexpr auto lfemask = MaskFromTopBits(SPEAKER_LOW_FREQUENCY);
+            const int lfeidx{al::popcount(InputType.dwChannelMask&lfemask) - 1};
+            chanmask &= ~(1u << lfeidx);
+        }
+
+        mChannelConv = ChannelConverter{srcType, InputType.Format.nChannels, chanmask,
+            mDevice->FmtChans};
+        TRACE("Created %s multichannel-to-mono converter\n", DevFmtTypeString(srcType));
         /* The channel converter always outputs float, so change the input type
          * for the resampler/type-converter.
          */
         srcType = DevFmtFloat;
     }
-    else if(mDevice->FmtChans == DevFmtStereo && OutputType.Format.nChannels == 1)
+    else if(mDevice->FmtChans == DevFmtStereo && InputType.Format.nChannels == 1)
     {
-        mChannelConv = ChannelConverter{srcType, DevFmtMono, mDevice->FmtChans};
+        mChannelConv = ChannelConverter{srcType, 1, 0x1, mDevice->FmtChans};
         TRACE("Created %s mono-to-stereo converter\n", DevFmtTypeString(srcType));
         srcType = DevFmtFloat;
     }
 
-    if(mDevice->Frequency != OutputType.Format.nSamplesPerSec || mDevice->FmtType != srcType)
+    if(mDevice->Frequency != InputType.Format.nSamplesPerSec || mDevice->FmtType != srcType)
     {
         mSampleConv = CreateSampleConverter(srcType, mDevice->FmtType, mDevice->channelsFromFmt(),
-            OutputType.Format.nSamplesPerSec, mDevice->Frequency, Resampler::FastBSinc24);
+            InputType.Format.nSamplesPerSec, mDevice->Frequency, Resampler::FastBSinc24);
         if(!mSampleConv)
         {
             ERR("Failed to create converter for %s format, dst: %s %uhz, src: %s %luhz\n",
                 DevFmtChannelsString(mDevice->FmtChans), DevFmtTypeString(mDevice->FmtType),
-                mDevice->Frequency, DevFmtTypeString(srcType), OutputType.Format.nSamplesPerSec);
+                mDevice->Frequency, DevFmtTypeString(srcType), InputType.Format.nSamplesPerSec);
             return E_FAIL;
         }
         TRACE("Created converter for %s format, dst: %s %uhz, src: %s %luhz\n",
             DevFmtChannelsString(mDevice->FmtChans), DevFmtTypeString(mDevice->FmtType),
-            mDevice->Frequency, DevFmtTypeString(srcType), OutputType.Format.nSamplesPerSec);
+            mDevice->Frequency, DevFmtTypeString(srcType), InputType.Format.nSamplesPerSec);
     }
 
     hr = mClient->Initialize(AUDCLNT_SHAREMODE_SHARED, AUDCLNT_STREAMFLAGS_EVENTCALLBACK,
-        buf_time.count(), 0, &OutputType.Format, nullptr);
+        buf_time.count(), 0, &InputType.Format, nullptr);
     if(FAILED(hr))
     {
         ERR("Failed to initialize audio client: 0x%08lx\n", hr);
@@ -1640,10 +1680,12 @@ HRESULT WasapiCapture::resetProxy()
 }
 
 
-bool WasapiCapture::start()
+void WasapiCapture::start()
 {
-    HRESULT hr{pushMessage(MsgType::StartDevice).get()};
-    return SUCCEEDED(hr) ? true : false;
+    const HRESULT hr{pushMessage(MsgType::StartDevice).get()};
+    if(FAILED(hr))
+        throw al::backend_exception{al::backend_error::DeviceError,
+            "Failed to start recording: 0x%lx", hr};
 }
 
 HRESULT WasapiCapture::startProxy()
@@ -1661,13 +1703,12 @@ HRESULT WasapiCapture::startProxy()
     hr = mClient->GetService(IID_IAudioCaptureClient, &ptr);
     if(SUCCEEDED(hr))
     {
-        mCapture = static_cast<IAudioCaptureClient*>(ptr);
+        mCapture = ComPtr<IAudioCaptureClient>{static_cast<IAudioCaptureClient*>(ptr)};
         try {
             mKillNow.store(false, std::memory_order_release);
             mThread = std::thread{std::mem_fn(&WasapiCapture::recordProc), this};
         }
         catch(...) {
-            mCapture->Release();
             mCapture = nullptr;
             ERR("Failed to start thread\n");
             hr = E_FAIL;
@@ -1695,21 +1736,17 @@ void WasapiCapture::stopProxy()
     mKillNow.store(true, std::memory_order_release);
     mThread.join();
 
-    mCapture->Release();
     mCapture = nullptr;
     mClient->Stop();
     mClient->Reset();
 }
 
 
-ALCuint WasapiCapture::availableSamples()
-{ return static_cast<ALCuint>(mRing->readSpace()); }
+void WasapiCapture::captureSamples(al::byte *buffer, uint samples)
+{ mRing->read(buffer, samples); }
 
-ALCenum WasapiCapture::captureSamples(al::byte *buffer, ALCuint samples)
-{
-    mRing->read(buffer, samples);
-    return ALC_NO_ERROR;
-}
+uint WasapiCapture::availableSamples()
+{ return static_cast<uint>(mRing->readSpace()); }
 
 } // namespace
 
@@ -1729,39 +1766,39 @@ bool WasapiBackendFactory::init()
     catch(...) {
     }
 
-    return SUCCEEDED(InitResult) ? ALC_TRUE : ALC_FALSE;
+    return SUCCEEDED(InitResult);
 }
 
 bool WasapiBackendFactory::querySupport(BackendType type)
 { return type == BackendType::Playback || type == BackendType::Capture; }
 
-void WasapiBackendFactory::probe(DevProbe type, std::string *outnames)
+std::string WasapiBackendFactory::probe(BackendType type)
 {
-    auto add_device = [outnames](const DevMap &entry) -> void
-    {
-        /* +1 to also append the null char (to ensure a null-separated list and
-         * double-null terminated list).
-         */
-        outnames->append(entry.name.c_str(), entry.name.length()+1);
-    };
-    HRESULT hr{};
+    std::string outnames;
     switch(type)
     {
-    case DevProbe::Playback:
-        hr = WasapiProxy::pushMessageStatic(MsgType::EnumeratePlayback).get();
-        if(SUCCEEDED(hr))
-            std::for_each(PlaybackDevices.cbegin(), PlaybackDevices.cend(), add_device);
+    case BackendType::Playback:
+        WasapiProxy::pushMessageStatic(MsgType::EnumeratePlayback).wait();
+        for(const DevMap &entry : PlaybackDevices)
+        {
+            /* +1 to also append the null char (to ensure a null-separated list
+             * and double-null terminated list).
+             */
+            outnames.append(DevNameHead).append(entry.name.c_str(), entry.name.length()+1);
+        }
         break;
 
-    case DevProbe::Capture:
-        hr = WasapiProxy::pushMessageStatic(MsgType::EnumerateCapture).get();
-        if(SUCCEEDED(hr))
-            std::for_each(CaptureDevices.cbegin(), CaptureDevices.cend(), add_device);
+    case BackendType::Capture:
+        WasapiProxy::pushMessageStatic(MsgType::EnumerateCapture).wait();
+        for(const DevMap &entry : CaptureDevices)
+            outnames.append(DevNameHead).append(entry.name.c_str(), entry.name.length()+1);
         break;
     }
+
+    return outnames;
 }
 
-BackendPtr WasapiBackendFactory::createBackend(ALCdevice *device, BackendType type)
+BackendPtr WasapiBackendFactory::createBackend(DeviceBase *device, BackendType type)
 {
     if(type == BackendType::Playback)
         return BackendPtr{new WasapiPlayback{device}};

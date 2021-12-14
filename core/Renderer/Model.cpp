@@ -260,7 +260,7 @@ namespace Epsilon::Renderer
         //std::cout << "llega model" << std::endl;
 
         Log::WriteToLog("Model: " + std::string(emlPath) + " Loaded.");
-
+        isLoaded = true;
         return true;
     }
 
@@ -270,6 +270,8 @@ namespace Epsilon::Renderer
         {
             mMeshes.at(i).setupMesh();
         }
+
+        return true;
     }
 
     MIN_MAX_POINTS Model::getMeshBoundingBox(unsigned int index, glm::vec3 position, glm::vec3 scale, glm::quat rotation)

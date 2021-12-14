@@ -152,6 +152,7 @@ class UrdfEditor(object):
     baseLinkIndex = -1
     self.convertLinkFromMultiBody(bodyUid, baseLinkIndex, baseLink, physicsClientId)
     baseLink.link_name = p.getBodyInfo(bodyUid, physicsClientId=physicsClientId)[0].decode("utf-8")
+    self.robotName = p.getBodyInfo(bodyUid, physicsClientId=physicsClientId)[1].decode("utf-8")
     self.linkNameToIndex[baseLink.link_name] = len(self.urdfLinks)
     self.urdfLinks.append(baseLink)
 
@@ -168,6 +169,8 @@ class UrdfEditor(object):
       urdfJoint.link = urdfLink
       urdfJoint.joint_name = jointInfo[1].decode("utf-8")
       urdfJoint.joint_type = jointInfo[2]
+      urdfJoint.joint_lower_limit = jointInfo[8]
+      urdfJoint.joint_upper_limit = jointInfo[9]
       urdfJoint.joint_axis_xyz = jointInfo[13]
       orgParentIndex = jointInfo[16]
       if (orgParentIndex < 0):

@@ -16,12 +16,10 @@ namespace Epsilon
 
     Skybox::Skybox(std::string SkyboxTex)
     {
-        skydome = (std::shared_ptr<Renderer::Model>)new Renderer::Model("models/sphere.eml"/*, glm::vec3(0, 0, 0)*/);
-        skydome->loadModel("models/sphere.eml", 0);
-        skydome->toGPU();
+        mSphere = std::make_shared<Renderer::Sphere>(10);
 
         clouds = false;
-        UpperSky_color = glm::vec3(29,91,255) / 255.0f; 
+        UpperSky_color = glm::vec3(29,91,0) / 255.0f; 
         LowerSky_color = glm::vec3(125, 228, 247) / 255.0f;
         Horizon_color = glm::vec3(1,1,1) / 255.0f;
         Horizon_Height = 0.276f;
@@ -38,9 +36,10 @@ namespace Epsilon
         SkyShader->PushUniform("UpperSkyColor", UpperSky_color);
         SkyShader->PushUniform("LowerSkyColor", LowerSky_color);
         SkyShader->PushUniform("HorizonColor", Horizon_color);
-        SkyShader->PushUniform("RenderClouds", clouds);
+        SkyShader->PushUniform("RenderClouds", clouds); 
         SkyShader->PushUniform("HorizonHeight", Horizon_Height);
-        skydome->DrawNoTexture();
+        SkyShader->PushUniform("cameraPosition", camera->getPosition());
+        mSphere->Render();
         glCache::glUseProgram(0);
         glDepthFunc(GL_LESS);
     }

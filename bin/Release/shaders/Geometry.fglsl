@@ -38,7 +38,7 @@ uniform int CubemapID;
 uniform int AmbientProbeID;
 uniform mat4 projection;
 uniform bool parallaxOn;
-uniform float u_scaleFactor = 1.1;
+uniform float u_scaleFactor = 0.1;
 uniform ivec2 Resolution;
 uniform bool isTransparent = false;
 

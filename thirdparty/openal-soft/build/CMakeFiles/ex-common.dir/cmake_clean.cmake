@@ -1,6 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/ex-common.dir/examples/common/alhelpers.c.obj"
-  "CMakeFiles/ex-common.dir/examples/common/alhelpers.c.obj.d"
+  "CMakeFiles/ex-common.dir/examples/common/alhelpers.c.o"
   "libex-common.a"
   "libex-common.pdb"
 )

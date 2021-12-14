@@ -20,8 +20,6 @@ SET(RobotSimulator_SRCS
 		../../examples/ExampleBrowser/InProcessExampleBrowser.cpp
 		../../examples/SharedMemory/plugins/tinyRendererPlugin/tinyRendererPlugin.cpp
 		../../examples/SharedMemory/plugins/tinyRendererPlugin/TinyRendererVisualShapeConverter.cpp
-		../../examples/OpenGLWindow/SimpleCamera.cpp
-		../../examples/OpenGLWindow/SimpleCamera.h
 		../../examples/TinyRenderer/geometry.cpp
 		../../examples/TinyRenderer/model.cpp
 		../../examples/TinyRenderer/tgaimage.cpp
@@ -35,6 +33,7 @@ SET(RobotSimulator_SRCS
 		../SharedMemory/GraphicsServerExample.cpp
 		../SharedMemory/GraphicsClientExample.cpp
 		../SharedMemory/RemoteGUIHelper.cpp
+		../SharedMemory/RemoteGUIHelperTCP.cpp
 		../SharedMemory/GraphicsServerExample.h
 		../SharedMemory/GraphicsClientExample.h
 		../SharedMemory/RemoteGUIHelper.h

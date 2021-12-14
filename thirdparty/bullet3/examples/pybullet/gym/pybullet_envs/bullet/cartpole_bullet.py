@@ -1,6 +1,6 @@
 """
 Classic cart-pole system implemented by Rich Sutton et al.
-Copied from https://webdocs.cs.ualberta.ca/~sutton/book/code/pole.c
+Copied from http://incompleteideas.net/book/code/pole.c
 """
 import os, inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -17,7 +17,7 @@ import time
 import subprocess
 import pybullet as p2
 import pybullet_data
-import pybullet_utils.bullet_client as bc
+from pybullet_utils import bullet_client as bc
 from pkg_resources import parse_version
 
 logger = logging.getLogger(__name__)

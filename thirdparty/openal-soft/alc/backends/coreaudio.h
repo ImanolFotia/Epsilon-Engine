@@ -1,7 +1,7 @@
 #ifndef BACKENDS_COREAUDIO_H
 #define BACKENDS_COREAUDIO_H
 
-#include "backends/base.h"
+#include "base.h"
 
 struct CoreAudioBackendFactory final : public BackendFactory {
 public:
@@ -9,9 +9,9 @@ public:
 
     bool querySupport(BackendType type) override;
 
-    void probe(DevProbe type, std::string *outnames) override;
+    std::string probe(BackendType type) override;
 
-    BackendPtr createBackend(ALCdevice *device, BackendType type) override;
+    BackendPtr createBackend(DeviceBase *device, BackendType type) override;
 
     static BackendFactory &getFactory();
 };

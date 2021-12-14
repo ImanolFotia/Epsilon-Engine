@@ -13,7 +13,7 @@ namespace Epsilon
         public:
             ~MotionBlur() {}
 
-            MotionBlur(int w, int h, std::shared_ptr<Shader> s) : Effect(w, h)
+            MotionBlur(int w, int h, std::shared_ptr<Shader> s) : Effect(w, h, s)
             {
                 m_pFrameBuffer = (std::shared_ptr<OpenGL::FrameBuffer<std::string>>)new OpenGL::FrameBuffer<std::string>(w, h, false);
                 m_pFrameBuffer->addRenderTarget("MotionBlurBuffer", GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);

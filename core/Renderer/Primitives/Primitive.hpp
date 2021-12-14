@@ -4,11 +4,12 @@
 #include <Types.h>
 #include <glm/glm.hpp>
 
-#include <Driver/API/VertexArrayObject.hpp>
+#include <Driver/API/OpenGL/VertexArrayObject.h>
 #include <Driver/API/VertexBufferObject.hpp>
 
 #include "../Drawable.hpp"
 #include "../MaterialPBR.hpp"
+#include "../MaterialManager.hpp"
 
 #include "Helpers.hpp"
 
@@ -27,6 +28,10 @@ namespace Epsilon::Renderer
         virtual void Draw(std::shared_ptr<Shader> shader, bool force_draw = false, std::initializer_list<unsigned int> mesh_index_list = {}) = 0;
 
         virtual std::shared_ptr<MaterialPBR> getMaterial() = 0;
+
+        virtual MaterialManager::Material_id getMaterialId() = 0;
+
+        virtual void setMaterial(MaterialManager::Material_id mat_id) = 0;
 
         struct Vertex
         {
@@ -90,7 +95,7 @@ namespace Epsilon::Renderer
 
     protected:
         std::shared_ptr<API::VertexArrayObject> mVertexArray;
-        std::shared_ptr<MaterialPBR> mMaterial;
+        MaterialManager::Material_id mMaterial;
     };
 
 } // namespace Epsilon

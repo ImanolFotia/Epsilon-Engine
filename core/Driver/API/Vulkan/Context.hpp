@@ -23,7 +23,7 @@ namespace Epsilon::API::Vulkan
             mType = type;
         }
 
-        virtual void AttachContext(std::shared_ptr<Platform::WindowHandle<>> windowHandle)
+        virtual void AttachContext(std::shared_ptr<Platform::WindowHandle<>> windowHandle) override
         {
 
             mWindowHandle = windowHandle;
@@ -31,7 +31,7 @@ namespace Epsilon::API::Vulkan
             initVulkan();
         }
 
-        virtual void SwapBuffers()
+        virtual void SwapBuffers() override
         {
             assert(false);
         }

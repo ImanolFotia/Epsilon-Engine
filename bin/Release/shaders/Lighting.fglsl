@@ -419,7 +419,7 @@ void main()
     SpecularFactor = texture(gAlbedoSpec, TexCoords).a * 2.0;
 
     if(ExtraComponents.y > 0.1){
-    	FragColor.rgb = mix(SkyColor, Diffuse, visibility) * ExtraComponents.y;
+    	FragColor.rgb = Diffuse;//mix(SkyColor, Diffuse, visibility) * ExtraComponents.y;
     	blurImage.rgb = mix(SkyColor, Diffuse, visibility) * ExtraComponents.y;
     	return;
     }

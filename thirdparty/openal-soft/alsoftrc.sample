@@ -48,10 +48,10 @@
 ## channels:
 #  Sets the output channel configuration. If left unspecified, one will try to
 #  be detected from the system, and defaulting to stereo. The available values
-#  are: mono, stereo, quad, surround51, surround51rear, surround61, surround71,
-#  ambi1, ambi2, ambi3. Note that the ambi* configurations provide ambisonic
-#  channels of the given order (using ACN ordering and SN3D normalization by
-#  default), which need to be decoded to play correctly on speakers.
+#  are: mono, stereo, quad, surround51, surround61, surround71, ambi1, ambi2,
+#  ambi3. Note that the ambi* configurations provide ambisonic channels of the
+#  given order (using ACN ordering and SN3D normalization by default), which
+#  need to be decoded to play correctly on speakers.
 #channels =
 
 ## sample-type:
@@ -107,8 +107,7 @@
 
 ## hrtf:
 #  Controls HRTF processing. These filters provide better spatialization of
-#  sounds while using headphones, but do require a bit more CPU power. The
-#  default filters will only work with 44100hz or 48000hz stereo output. While
+#  sounds while using headphones, but do require a bit more CPU power. While
 #  HRTF is used, the cf_level option is ignored. Setting this to auto (default)
 #  will allow HRTF to be used when headphones are detected or the app requests
 #  it, while setting true or false will forcefully enable or disable HRTF
@@ -187,9 +186,14 @@
 #  (eg. PortAudio) as they already control the priority of the mixing thread.
 #  0 and negative values will disable it. Note that this may constitute a
 #  security risk since a real-time priority thread can indefinitely block
-#  normal-priority threads if it fails to wait. As such, the default is
-#  disabled.
-#rt-prio = 0
+#  normal-priority threads if it fails to wait. Disable this if it turns out to
+#  be a problem.
+#rt-prio = 1
+
+## rt-time-limit: (global)
+#  On non-Windows systems, allows reducing the process's RLIMIT_RTTIME resource
+#  as necessary for acquiring real-time priority from RTKit.
+#rt-time-limit = true
 
 ## sources:
 #  Sets the maximum number of allocatable sources. Lower values may help for
@@ -206,7 +210,7 @@
 ## sends:
 #  Limits the number of auxiliary sends allowed per source. Setting this higher
 #  than the default has no effect.
-#sends = 16
+#sends = 6
 
 ## front-stablizer:
 #  Applies filters to "stablize" front sound imaging. A psychoacoustic method
@@ -402,6 +406,13 @@
 #  case-sensitive.
 #device-prefix- =
 
+## custom-devices: (global)
+#  Specifies a list of enumerated playback devices and the ALSA devices they
+#  refer to. The list pattern is "Display Name=ALSA device;...". The display
+#  names will be returned for device enumeration, and the ALSA device is the
+#  device name to open for each enumerated device.
+#custom-devices =
+
 ## capture: (global)
 #  Sets the device name for the default capture device.
 #capture = default
@@ -418,6 +429,13 @@
 #  capture-prefix-NVidia), or the card id and device index (eg,
 #  capture-prefix-NVidia-0). The card id is case-sensitive.
 #capture-prefix- =
+
+## custom-captures: (global)
+#  Specifies a list of enumerated capture devices and the ALSA devices they
+#  refer to. The list pattern is "Display Name=ALSA device;...". The display
+#  names will be returned for device enumeration, and the ALSA device is the
+#  device name to open for each enumerated device.
+#custom-captures =
 
 ## mmap:
 #  Sets whether to try using mmap mode (helps reduce latencies and CPU
@@ -466,9 +484,28 @@
 [jack]
 
 ## spawn-server: (global)
-#  Attempts to autospawn a JACK server whenever needed (initializing the
-#  backend, opening devices, etc).
+#  Attempts to autospawn a JACK server when initializing.
 #spawn-server = false
+
+## custom-devices: (global)
+#  Specifies a list of enumerated devices and the ports they connect to. The
+#  list pattern is "Display Name=ports regex;Display Name=ports regex;...". The
+#  display names will be returned for device enumeration, and the ports regex
+#  is the regular expression to identify the target ports on the server (as
+#  given by the jack_get_ports function) for each enumerated device.
+#custom-devices =
+
+## rt-mix:
+#  Renders samples directly in the real-time processing callback. This allows
+#  for lower latency and less overall CPU utilization, but can increase the
+#  risk of underruns when increasing the amount of work the mixer needs to do.
+#rt-mix = true
+
+## connect-ports:
+#  Attempts to automatically connect the client ports to physical server ports.
+#  Client ports that fail to connect will leave the remaining channels
+#  unconnected and silent (the device format won't change to accommodate).
+#connect-ports = true
 
 ## buffer-size:
 #  Sets the update buffer size, in samples, that the backend will keep buffered
@@ -477,6 +514,7 @@
 #  less than JACK's buffer update size, it will be clamped. This option may
 #  be useful in case the server's update size is too small and doesn't give the
 #  mixer time to keep enough audio available for the processing requests.
+#  Ignored when rt-mix is true.
 #buffer-size = 0
 
 ##

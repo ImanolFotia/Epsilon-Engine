@@ -21,7 +21,6 @@ namespace Epsilon
 		this->faceID = ID;
 		this->ObjectID = "BSPFace_" + Helpers::intTostring(ID);
 		this->imagePath = imagePath;
-		this->imagePath = this->imagePath;
 		this->LightMap = LightMap;
 		this->LMTexCoords = LMTexCoords;
 

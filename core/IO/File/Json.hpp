@@ -23,9 +23,14 @@ namespace Epsilon
                 mJsonObject = std::make_shared<nlohmann::json>();
             }
 
+            Json(const char *path, MODE mode = INPUT)
+            {
+                mJsonObject = std::make_shared<nlohmann::json>();
+                Open(path, mode);
+            }
+
             bool Open(const char *path, MODE mode = INPUT)
             {
-
                 if (mode == INPUT)
                 {
                     mInputFile = std::make_shared<std::ifstream>();
@@ -50,7 +55,12 @@ namespace Epsilon
             }
 
             template<typename T>
-            const auto & operator [](T t) {
+            const auto & property(T t) {
+                return &mJsonObject[t];
+            }
+
+            template<typename T>
+            const auto & operator [](T t) noexcept {
                 return &mJsonObject[t];
             }
 

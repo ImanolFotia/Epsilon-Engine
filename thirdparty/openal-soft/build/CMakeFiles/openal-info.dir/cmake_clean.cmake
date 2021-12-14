@@ -1,9 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/openal-info.dir/utils/openal-info.c.obj"
-  "CMakeFiles/openal-info.dir/utils/openal-info.c.obj.d"
-  "libopenal-info.dll.a"
-  "openal-info.exe"
-  "openal-info.exe.manifest"
+  "CMakeFiles/openal-info.dir/utils/openal-info.c.o"
+  "openal-info"
   "openal-info.pdb"
 )
 

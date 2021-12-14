@@ -196,27 +196,38 @@ namespace Epsilon
         //RenderSplashScreen("Loading Geometry...");
         this->LoadGeometry();
 
+        editor.localEntityList = &EntityList;
+
         mBezierCurve = std::make_shared<Renderer::CubicBezier>();
 
-        mSphere = std::make_shared<Renderer::Sphere>(40);
+        mCube = std::make_shared<Renderer::Cube>();
 
-        auto SphereMaterial = mSphere->getMaterial();
+        mSphere = std::make_shared<Renderer::Sphere>(40);
+        auto SphereMaterial = mSphere->getMaterialId();
+        auto mat = Renderer::MaterialManager::Get().getMaterial<Renderer::MaterialPBR>(SphereMaterial);
 
         using Tex2D_ptr = std::shared_ptr<Renderer::Texture2D>;
         auto &ref = ResourceManager::Get();
 
-        ref.addTextureToQueue("textures/epsilon/industrial-tile1-albedo.png");
-        ref.addTextureToQueue("textures/epsilon/industrial-tile1-metallic.png");
-        ref.addTextureToQueue("textures/epsilon/industrial-tile1-normal-dx.png");
-        ref.addTextureToQueue("textures/epsilon/industrial-tile1-roughness.png");
+        ref.addTextureToQueue("galvanized metal/Galvanized_Metal_basecolor.jpg");
+        ref.addTextureToQueue("galvanized metal/Galvanized_Metal_normal.jpg");
+        ref.addTextureToQueue("galvanized metal/Galvanized_Metal_metallic.jpg");
+        ref.addTextureToQueue("galvanized metal/Galvanized_Metal_roughness.jpg");
 
+        std::cout << "Material Id: " << SphereMaterial << std::endl;
+        std::cout << "Material is nullptr: " << (mat != nullptr ? "no" : "yes") << std::endl;
         ref.ForceLoading();
-
-        SphereMaterial->setMaterial(Renderer::Material::MaterialParameter::Albedo, ref.Get<Tex2D_ptr>("textures/epsilon/industrial-tile1-albedo.png"));
-        SphereMaterial->setMaterial(Renderer::Material::MaterialParameter::Metallic, ref.Get<Tex2D_ptr>("textures/epsilon/industrial-tile1-metallic.png"));
-        SphereMaterial->setMaterial(Renderer::Material::MaterialParameter::Normal, ref.Get<Tex2D_ptr>("textures/epsilon/industrial-tile1-normal-dx.png"));
-        SphereMaterial->setMaterial(Renderer::Material::MaterialParameter::Roughness, ref.Get<Tex2D_ptr>("textures/epsilon/industrial-tile1-roughness.png"));
-
+ 
+        mat->setMaterial(Renderer::Material::MaterialParameter::Albedo, ref.Get<Tex2D_ptr>("galvanized metal/Galvanized_Metal_basecolor.jpg"));
+        mat->setMaterial(Renderer::Material::MaterialParameter::Metallic, ref.Get<Tex2D_ptr>("galvanized metal/Galvanized_Metal_metallic.jpg"));
+        mat->setMaterial(Renderer::Material::MaterialParameter::Normal, ref.Get<Tex2D_ptr>("galvanized metal/Galvanized_Metal_normal.jpg"));
+        mat->setMaterial(Renderer::Material::MaterialParameter::Roughness, ref.Get<Tex2D_ptr>("galvanized metal/Galvanized_Metal_roughness.jpg"));
+/*
+        SphereMaterial->setMaterial(Renderer::Material::MaterialParameter::Albedo, glm::vec3(1.0f, 1.0f, 1.0f));
+        SphereMaterial->setMaterial(Renderer::Material::MaterialParameter::Metallic, glm::vec3(0.0f));
+        SphereMaterial->setMaterial(Renderer::Material::MaterialParameter::Normal, glm::vec3(0.5, 1.0, 0.5));
+        SphereMaterial->setMaterial(Renderer::Material::MaterialParameter::Roughness, glm::vec3(1.0));
+*/
         {
             glm::vec3 tPosition = glm::vec3(0.0f, 3.0f, 0.0f);
             glm::vec3 tScale = glm::vec3(1.0);
@@ -260,7 +271,7 @@ namespace Epsilon
             _RComp->setRenderId(EntityList.size());
             _Entity->addComponent(_RComp);
 
-            /*_Entity->mFunction = [cam = eCamera[mCurrentCamera]](EntityBase *ent) {
+            _Entity->mFunction = [cam = eCamera[mCurrentCamera]](EntityBase *ent) {
                 Component::TransformComponent_ptr t = std::static_pointer_cast<Component::TransformComponent>(ent->getComponentList()[Component::TRANSFORMCOMPONENT]);
                 if (glm::length(cam->getPosition() - t->Position()) < 10.0f)
                 { 
@@ -269,9 +280,9 @@ namespace Epsilon
                 } else {
                     t->PrevRotation(t->Rotation());
                 }
-            };*/
+            };
 
-        /*EntityList.push_back(_Entity);
+        EntityList.push_back(_Entity);
         }
 
         {
@@ -290,8 +301,8 @@ namespace Epsilon
             auto _PComp = std::make_shared<Component::PhysicComponent>(100, tPosition, tScale, Physics::Type::SPHERE, _BoundingBox);
             _PComp->setID(EntityList.size());
             //Component::Component_ptr _SComp = std::make_shared<Component::ScriptComponent>("scripts/test.lua");
-            _Entity->addComponent(_RComp)->addComponent(_PComp) /*->addComponent(_SComp)*/
-        /* ;
+            _Entity->addComponent(_RComp)->addComponent(_PComp) ->addComponent(_SComp)
+         ;
 
             _Entity->setName(std::string("Entity") + std::to_string(EntityList.size()));
             EntityList.push_back(_Entity);
@@ -326,7 +337,7 @@ namespace Epsilon
             EntityList.push_back(_Entity);
         }
 */
-
+/*
         {
             glm::vec3 tPosition = glm::vec3(0.0f);
             glm::vec3 tScale = glm::vec3(1.0);
@@ -345,7 +356,7 @@ namespace Epsilon
             _Entity->setName(std::string("Entity") + std::to_string(EntityList.size()));
 
             EntityList.push_back(_Entity);
-        }
+        }*/
 
         auto RotationBetweenVectors = [](glm::vec3 start, glm::vec3 dest)
         {
@@ -379,7 +390,7 @@ namespace Epsilon
                 rotationAxis.y * invs,
                 rotationAxis.z * invs);
         };
-
+/*
         {
             glm::vec3 tPosition = glm::vec3(0.0f);
             glm::vec3 tScale = glm::vec3(0.25);
@@ -466,7 +477,7 @@ namespace Epsilon
             };
             EntityList.push_back(_Entity);
         }
-        
+        */
         /*{
             glm::vec3 tPosition = glm::vec3(-23, 1, 28);
             float tScale = 5.0f;
@@ -715,6 +726,8 @@ namespace Epsilon
 
         Shaders["HBIL"] = std::make_shared<Shader>("shaders/SSAO.vglsl", "shaders/HBIL.glsl");
 
+        Shaders["Transmission"] = std::make_shared<Shader>("shaders/Transmission.vglsl", "shaders/Transmission.glsl");
+
         Shaders["BezierCurve"] = std::make_shared<Shader>("shaders/BezierCurve.vert.glsl", "shaders/BezierCurve.frag.glsl");
         Shaders["BezierCurveNormal"] = std::make_shared<Shader>("shaders/BezierCurveNormal.vert.glsl", "shaders/BezierCurve.frag.glsl", "shaders/BezierCurve.geom.glsl");
 
@@ -775,21 +788,21 @@ namespace Epsilon
 
         skybox = std::move((shared_ptr<Skybox>)(new Skybox("plain")));
 
+    std::cout << "llega" << std::endl;
         grass.push_back(Grass("grass04.png", grassPos));
         grass.push_back(Grass("billboardgrass0002.png", grasspos2));
 
         waterPlane = (shared_ptr<Water>)(new Water(glm::vec3(0.0, 0.5, 0.0), 1.0f)); ///-11.8
         sun = std::move((shared_ptr<Sun>)(new Sun()));
         BSPMap = std::make_shared<CQuake3BSP>();
-
-        BSPMap->LoadBSP((string("maps/") + "GI.bsp").c_str());
+        //BSPMap->LoadBSP((string("maps/") + "GI.bsp").c_str());
 
         m_AnimModel = std::move((shared_ptr<MD5Model>)(new MD5Model()));
 
-        m_AnimModel->LoadModel("models/hellknight/hellknight.md5mesh");
+        //m_AnimModel->LoadModel("models/hellknight/hellknight.md5mesh");
 
-        m_AnimModel->LoadAnim("models/hellknight/walk7.md5anim");
-        m_AnimModel->LoadAnim("models/hellknight/idle2.md5anim");
+        //m_AnimModel->LoadAnim("models/hellknight/walk7.md5anim");
+        //m_AnimModel->LoadAnim("models/hellknight/idle2.md5anim");
     }
 
     void Epsilon::LoadSound(void)
@@ -797,7 +810,7 @@ namespace Epsilon
         cout << "Loading Sound..." << endl;
         /*
         m_AudioSystem = (std::shared_ptr<IO::Audio::Audio>)new IO::Audio::Audio();
-        /*
+        
         std::shared_ptr<IO::Audio::AudioElement> m_AudioElement = (std::shared_ptr<IO::Audio::AudioElement>) new IO::Audio::AudioElement("sound/File0279.wav", STATIC_SOUND, glm::vec3(-28, 10, 15), glm::vec3(0,0,0));
         m_AudioSystem->addAudioElement(3, m_AudioElement);
     */
@@ -1096,7 +1109,7 @@ namespace Epsilon
         glm::mat4 projection = glm::mat4(eCamera[mCurrentCamera]->getProjectionMatrix());
         glm::mat4 model = glm::mat4(1.0);
 
-        glm::mat4 ScaleMatrix = glm::scale(model, glm::vec3(1, 1, 1));
+        glm::mat4 ScaleMatrix = glm::scale(model, glm::vec3(1.0, 1.0, 1.0));
         glm::mat4 TranslationMatrix = glm::translate(model, glm::vec3(0, 0, 0));
         model = model * ScaleMatrix * TranslationMatrix;
         glUniformMatrix4fv(glGetUniformLocation(Shaders["SkyBox"]->getProgramID(), "model"), 1, GL_FALSE, &model[0][0]);
@@ -1105,7 +1118,7 @@ namespace Epsilon
 
         glUniform3f(glGetUniformLocation(Shaders["SkyBox"]->getProgramID(), "LightDirection"), sun->Direction.x, sun->Direction.y, sun->Direction.z);
         skybox->Render(this->eCamera[mCurrentCamera], Shaders["SkyBox"], PP->m_exposure, state);
-
+        
         Shaders["Sun"]->Use();
         sun->SetUniforms(eCamera[mCurrentCamera], Shaders["Sun"]);
         sun->Render(Shaders["Sun"]);
@@ -1429,6 +1442,7 @@ namespace Epsilon
     {
         PP->beginOffScreenrendering();
 
+        //glClearDepth(1.0f);
         this->RenderSkybox(true);
         glClearDepth(1.0f);
         /*  
@@ -1490,7 +1504,9 @@ namespace Epsilon
         glEnable(GL_BLEND);
         PP->ShowFrame(sun->Direction, SSAO, this->eCamera[mCurrentCamera], exposure, this->shadowMap, mPointShadow);
         glEnable(GL_DEPTH_CLAMP);
+        glDisable(GL_CULL_FACE);
         this->RenderSkybox(false);
+        glEnable(GL_CULL_FACE);
         glDisable(GL_DEPTH_CLAMP);
         glDisable(GL_BLEND);
         /*
@@ -1503,11 +1519,31 @@ namespace Epsilon
                                         ref.useCubeMap(0));
         */
 
-        if (editor.sSelectedEntityIndex >= 0)
-            mGizmo->Render(editor.gizmo_status, EntityList[editor.sSelectedEntityIndex]->getPosition(), this->eCamera[mCurrentCamera]->getPosition());
+        //TODO: Fix gismoz
+        //if (editor.sSelectedEntityIndex >= 0)
+        //    mGizmo->Render(editor.gizmo_status, EntityList[editor.sSelectedEntityIndex]->getPosition(), this->eCamera[mCurrentCamera]->getPosition());
 
         //mBezierCurve->Draw(Shaders["BezierCurve"], true);
         mBezierCurve->Draw(Shaders["BezierCurveNormal"], true);
+
+
+        PP->FramebufferBlurPass();
+        /*
+        PP->hdrFBO->bindFramebuffer();
+        PP->hdrFBO->setViewport();
+
+        Shaders["Transmission"]->Use();
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, PP->mFramebufferBlur[0]->getRenderTargetHandler(0));
+        Shaders["Transmission"]->PushUniform("blurredTexture", 0);
+        Shaders["Transmission"]->PushUniform("roughness", 0.5f);
+        Shaders["Transmission"]->PushUniform("resX", PP->width);
+        Shaders["Transmission"]->PushUniform("resY", PP->height);
+        this->SetUniforms(Shaders["Transmission"], glm::vec3(0.0f), glm::vec3(1.0f), glm::quat(0.0, 0.0, 0.0, 0.0));
+        mCube->Render();
+        Shaders["Transmission"]->Free();
+
+        PP->PostProcessPass(frametime, this->eCamera[mCurrentCamera]);*/
 
         //this->RenderParticles();
         PP->ShowPostProcessImage(this->frametime, (int)this->onMenu, this->sun->Direction, this->eCamera[mCurrentCamera], mDefaultFrameBuffer);

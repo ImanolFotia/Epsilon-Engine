@@ -24,6 +24,12 @@ extern "C"
 }
 #endif
 
+//Should force the OS to use the dedicated GPU, however, it doesn't work while using hybrid graphics on Pop!_OS, so the command must be run using:
+//For OpenGL:
+//__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia <application>
+//For Vulkan:
+//__NV_PRIME_RENDER_OFFLOAD=1 <application>
+
 #ifdef __linux__
 extern "C"
 {

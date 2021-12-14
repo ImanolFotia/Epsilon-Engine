@@ -13,6 +13,7 @@
 
 #include <Types.h>
 #include <Driver/API/OpenGL/GlCache.h>
+#include <IO/File/Json.hpp>
 
 namespace Epsilon {
 class Shader
@@ -30,6 +31,8 @@ public:
 
     //Compute Shader Constructor
     Shader(const char*);
+
+    Shader(const char*, int);
 
     virtual ~Shader(void)
     {   //std::cout << "Shader Destroyed" << std::endl;
@@ -127,6 +130,8 @@ private:
     std::unordered_map<std::string, GLuint> m_Attributes;
     std::unordered_map<std::string, GLuint> m_Uniforms;
 
+    IO::Json mShaderFile;
+
     void getUniformsLocations();
 
 public:
@@ -149,6 +154,9 @@ public:
     GLuint skybox_Location = -1;
     GLuint viewPos_Location = -1;
     GLuint PrevViewPos_Location = -1;
+
+
+
 
 };
 using Shader_ptr = std::shared_ptr<Shader>;

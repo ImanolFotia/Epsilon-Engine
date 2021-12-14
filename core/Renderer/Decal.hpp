@@ -6,6 +6,8 @@
 #include <Renderer/MaterialPBR.hpp>
 #include <Primitives/Cube.hpp>
 
+#include <Renderer/MaterialManager.hpp>
+
 namespace Epsilon
 {
     namespace Renderer
@@ -31,7 +33,7 @@ namespace Epsilon
 
         private:
             Cube<double>::Cube_ptr mCube;
-            Material_ptr mMaterial;
+            MaterialManager::Material_id mMaterial;
         };
     } // namespace Renderer
 } //namespace Epsilon

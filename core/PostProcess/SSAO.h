@@ -13,7 +13,7 @@ namespace Epsilon
         class SSAO : public Effect
         {
         public:
-            SSAO(int width, int height, std::shared_ptr<Shader> s) : Effect(width, height)
+            SSAO(int width, int height, std::shared_ptr<Shader> s) : Effect(width, height, s)
             {
                 m_Width = width;
                 m_Height = height;

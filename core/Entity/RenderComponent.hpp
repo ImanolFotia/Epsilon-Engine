@@ -117,11 +117,17 @@ namespace Epsilon
                             tShader->PushUniform("using_color_normal", 1);
                             tShader->PushUniform("color_normal", glm::vec4(SphereMaterial->get<glm::vec3>(Renderer::Material::MaterialParameter::Normal), 1.0));
                         }
-                        if (metallic != nullptr)
+                        if (metallic != nullptr && !SphereMaterial->usingMetallicColor())
                         {
                             metallic->Bind(3);
                             tShader->PushUniform("texture_height", 3);
-                            tShader->PushUniform("using_color_height", SphereMaterial->usingMetallicColor());
+                            tShader->PushUniform("using_color_height", 0);
+                            tShader->PushUniform("color_height", glm::vec4(SphereMaterial->get<glm::vec3>(Renderer::Material::MaterialParameter::Metallic), 1.0));
+                        }
+                        else
+                        {
+                            tShader->PushUniform("texture_height", 3);
+                            tShader->PushUniform("using_color_height", 1);
                             tShader->PushUniform("color_height", glm::vec4(SphereMaterial->get<glm::vec3>(Renderer::Material::MaterialParameter::Metallic), 1.0));
                         }
                         
@@ -136,7 +142,6 @@ namespace Epsilon
                         glBindTexture(GL_TEXTURE_2D, 0);
                         glActiveTexture(GL_TEXTURE3);
                         glBindTexture(GL_TEXTURE_2D, 0);
-                        glActiveTexture(GL_TEXTURE4);
                     }
 
                     glEnable(GL_CULL_FACE);

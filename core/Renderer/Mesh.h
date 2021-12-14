@@ -14,6 +14,7 @@
 #include <Shader.h>
 #include <Renderer/EML/eml1_0.h>
 #include <Driver/API/OpenGL/VertexArrayObject.h>
+#include "MaterialManager.hpp"
 
 namespace Epsilon::Renderer
 {
@@ -117,7 +118,7 @@ namespace Epsilon::Renderer
         void setMaterial(MaterialPBR_ptr);
 
         MaterialPBR_ptr getMaterial() {
-            return mMaterial;
+            return MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial);
         }
 
     public:
@@ -132,7 +133,7 @@ namespace Epsilon::Renderer
         uint32_t mCubemapIndex;
         MeshData mData;
 
-        MaterialPBR_ptr mMaterial;
+        MaterialManager::Material_id mMaterial;
 
         std::shared_ptr<API::OpenGL::VertexArrayObject> mVAO;
     };

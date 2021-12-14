@@ -35,12 +35,10 @@
 #include "AL/al.h"
 #include "AL/alc.h"
 
-#include "alcontext.h"
-#include "alexcpt.h"
+#include "alc/context.h"
 #include "almalloc.h"
-#include "event.h"
-#include "inprogext.h"
-#include "logging.h"
+#include "core/except.h"
+#include "core/logging.h"
 #include "opthelpers.h"
 #include "vector.h"
 
@@ -65,7 +63,6 @@ void ALCcontext::setError(ALenum errorCode, const char *msg, ...)
 
     if(msglen >= 0) msg = message.data();
     else msg = "<internal error constructing message>";
-    msglen = static_cast<int>(strlen(msg));
 
     WARN("Error generated on context %p, code 0x%04x, \"%s\"\n",
         decltype(std::declval<void*>()){this}, errorCode, msg);
@@ -82,21 +79,13 @@ void ALCcontext::setError(ALenum errorCode, const char *msg, ...)
 
     ALenum curerr{AL_NO_ERROR};
     mLastError.compare_exchange_strong(curerr, errorCode);
-    if((mEnabledEvts.load(std::memory_order_relaxed)&EventType_Error))
-    {
-        std::lock_guard<std::mutex> _{mEventCbLock};
-        ALbitfieldSOFT enabledevts{mEnabledEvts.load(std::memory_order_relaxed)};
-        if((enabledevts&EventType_Error) && mEventCb)
-            (*mEventCb)(AL_EVENT_TYPE_ERROR_SOFT, 0, static_cast<ALuint>(errorCode), msglen, msg,
-                mEventParam);
-    }
 }
 
 AL_API ALenum AL_APIENTRY alGetError(void)
 START_API_FUNC
 {
     ContextRef context{GetContextRef()};
-    if UNLIKELY(!context)
+    if(unlikely(!context))
     {
         constexpr ALenum deferror{AL_INVALID_OPERATION};
         WARN("Querying error state on null context (implicitly 0x%04x)\n", deferror);

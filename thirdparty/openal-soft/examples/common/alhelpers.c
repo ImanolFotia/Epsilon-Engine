@@ -36,6 +36,7 @@
 
 #include "AL/al.h"
 #include "AL/alc.h"
+#include "AL/alext.h"
 
 
 /* InitAL opens a device and sets up a context using default attributes, making
@@ -107,10 +108,18 @@ const char *FormatName(ALenum format)
 {
     switch(format)
     {
-        case AL_FORMAT_MONO8: return "Mono, U8";
-        case AL_FORMAT_MONO16: return "Mono, S16";
-        case AL_FORMAT_STEREO8: return "Stereo, U8";
-        case AL_FORMAT_STEREO16: return "Stereo, S16";
+    case AL_FORMAT_MONO8: return "Mono, U8";
+    case AL_FORMAT_MONO16: return "Mono, S16";
+    case AL_FORMAT_MONO_FLOAT32: return "Mono, Float32";
+    case AL_FORMAT_STEREO8: return "Stereo, U8";
+    case AL_FORMAT_STEREO16: return "Stereo, S16";
+    case AL_FORMAT_STEREO_FLOAT32: return "Stereo, Float32";
+    case AL_FORMAT_BFORMAT2D_8: return "B-Format 2D, U8";
+    case AL_FORMAT_BFORMAT2D_16: return "B-Format 2D, S16";
+    case AL_FORMAT_BFORMAT2D_FLOAT32: return "B-Format 2D, Float32";
+    case AL_FORMAT_BFORMAT3D_8: return "B-Format 3D, U8";
+    case AL_FORMAT_BFORMAT3D_16: return "B-Format 3D, S16";
+    case AL_FORMAT_BFORMAT3D_FLOAT32: return "B-Format 3D, Float32";
     }
     return "Unknown Format";
 }

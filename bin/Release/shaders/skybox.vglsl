@@ -27,12 +27,12 @@ mat3 CreateTBNMatrix(mat3 normalMatrix)
 void main()
 {   
     mat4 cView = mat4(mat3(view));
-    vec4 pos = projection * cView * model * vec4(position, 1.0);
+    vec4 pos = projection * cView * vec4(position, 1.0);
 
     FragPos = vec3(model * vec4(position, 1.0));
     gl_Position = pos.xyww;
-    gl_Position.z = clamp(pos.w, 0.0, 1.0);
-    gl_Position.w = clamp(pos.w, 0.0, 1.0);
+    //gl_Position.z = max(pos.w, 0.0);
+    //gl_Position.w = max(pos.w, 0.0);
     TexCoords = position;
     TexCoord = UV;
     Normal = normalize(normal);

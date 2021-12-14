@@ -8,9 +8,10 @@
 
 class PhysicsClientSharedMemory : public PhysicsClient
 {
-	struct PhysicsClientSharedMemoryInternalData* m_data;
+	
 
 protected:
+	struct PhysicsClientSharedMemoryInternalData* m_data;
 	virtual void setSharedMemoryInterface(class SharedMemoryInterface* sharedMem);
 	void processBodyJointInfo(int bodyUniqueId, const struct SharedMemoryStatus& serverCmd);
 	void resetData();
@@ -88,6 +89,8 @@ public:
 	virtual void getCachedRaycastHits(struct b3RaycastInformation* raycastHits);
 
 	virtual void getCachedMassMatrix(int dofCountCheck, double* massMatrix);
+
+	virtual bool getCachedReturnData(b3UserDataValue* returnData);
 
 	virtual void setTimeOut(double timeOutInSeconds);
 	virtual double getTimeOut() const;

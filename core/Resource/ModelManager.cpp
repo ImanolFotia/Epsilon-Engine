@@ -71,7 +71,7 @@ namespace Epsilon
     {
         try
         {
-            if(ModelList.contains(modelPath))
+            if (ModelList.contains(modelPath))
                 return ModelList.at(modelPath);
             return nullptr;
         }
@@ -88,8 +88,8 @@ namespace Epsilon
     {
         try
         {
-            if(ModelList.contains(modelPath))
-            return ModelList.at(modelPath)->MinMaxPoints;
+            if (ModelList.contains(modelPath))
+                return ModelList.at(modelPath)->MinMaxPoints;
         }
 
         catch (std::exception &e)
@@ -102,8 +102,8 @@ namespace Epsilon
 
     void ResourceManager::setModelVisibility(const std::string &path, bool visibility)
     {
-            if(ModelList.contains(path))
-        ModelList.at(path)->m_IsVisible = visibility;
+        if (ModelList.contains(path))
+            ModelList.at(path)->m_IsVisible = visibility;
     }
 
     //void ResourceManager::setModelUniforms(const std::string& path, std::shared_ptr<Shader> shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, std::shared_ptr<Camera> cam)
@@ -113,8 +113,8 @@ namespace Epsilon
 
     void ResourceManager::setModelUniforms(const std::string &path, std::shared_ptr<Shader> shader, glm::vec3 pos, glm::vec3 sc, glm::quat rot, glm::vec3 ppos, glm::vec3 psc, glm::quat prot, std::shared_ptr<Camera> cam)
     {
-            if(ModelList.contains(path))
-        ModelList.at(path)->SetUniforms(shader, pos, sc, rot, ppos, psc, prot, cam);
+        if (ModelList.contains(path))
+            ModelList.at(path)->SetUniforms(shader, pos, sc, rot, ppos, psc, prot, cam);
     }
 
     void ResourceManager::destroyAllModels()
@@ -180,9 +180,11 @@ namespace Epsilon
                     {
                         //auto data = future.get();
                         //std::cout << "Loading future model: " << key << ":::" << index << std::endl;
-
                         auto &tmpModel = ModelList.at(key);
-                        tmpModel->toGPU();
+                        if (tmpModel->isLoaded)
+                        {
+                            tmpModel->toGPU();
+                        }
                         //std::cout << "llega" << std::endl;
                         auto it = ModelQueueFuture.find(key);
 
@@ -205,7 +207,7 @@ namespace Epsilon
     {
         try
         {
-            if(ModelList.contains(name))
+            if (ModelList.contains(name))
                 return ModelList.at(name);
         }
 

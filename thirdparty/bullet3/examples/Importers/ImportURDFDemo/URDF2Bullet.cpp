@@ -21,12 +21,12 @@
 //static int bodyCollisionFilterMask=btBroadphaseProxy::AllFilter&(~btBroadphaseProxy::CharacterFilter);
 static bool enableConstraints = true;
 
-static btVector4 colors[4] =
-	{
-		btVector4(1, 0, 0, 1),
-		btVector4(0, 1, 0, 1),
-		btVector4(0, 1, 1, 1),
-		btVector4(1, 1, 0, 1),
+static btVector4 gGoogleyColors[4] =
+{
+		btVector4(60. / 256., 186. / 256., 84. / 256., 1),
+		btVector4(244. / 256., 194. / 256., 13. / 256., 1),
+		btVector4(219. / 256., 50. / 256., 54. / 256., 1),
+		btVector4(72. / 256., 133. / 256., 237. / 256., 1),
 };
 
 static btVector4 selectColor2()
@@ -36,7 +36,7 @@ static btVector4 selectColor2()
 	sMutex.lock();
 #endif
 	static int curColor = 0;
-	btVector4 color = colors[curColor];
+	btVector4 color = gGoogleyColors[curColor];
 	curColor++;
 	curColor &= 3;
 #ifdef BT_THREADSAFE
@@ -199,7 +199,15 @@ btScalar tmpUrdfScaling = 2;
 btTransform ConvertURDF2BulletInternal(
 	const URDFImporterInterface& u2b, MultiBodyCreationInterface& creation,
 	URDF2BulletCachedData& cache, int urdfLinkIndex,
-	const btTransform& parentTransformInWorldSpace, btMultiBodyDynamicsWorld* world1,
+	const btTransform& parentTransformInWorldSpace, 
+	
+#ifdef USE_DISCRETE_DYNAMICS_WORLD
+	btDiscreteDynamicsWorld* world1,
+#else
+	btMultiBodyDynamicsWorld* world1,
+#endif
+
+
 	bool createMultiBody, const char* pathPrefix,
 	int flags, UrdfVisualShapeCache* cachedLinkGraphicsShapesIn, UrdfVisualShapeCache* cachedLinkGraphicsShapesOut, bool recursive)
 {
@@ -303,7 +311,8 @@ btTransform ConvertURDF2BulletInternal(
 	if (compoundShape)
 	{
 		UrdfMaterialColor matColor;
-		btVector4 color2 = selectColor2();
+		
+		btVector4 color2 = (flags & CUF_GOOGLEY_UNDEFINED_COLORS) ? selectColor2() : btVector4(1, 1, 1, 1);
 		btVector3 specular(0.5, 0.5, 0.5);
 		if (u2b.getLinkColor2(urdfLinkIndex, matColor))
 		{
@@ -504,6 +513,7 @@ btTransform ConvertURDF2BulletInternal(
 					creation.addLinkMapping(urdfLinkIndex, mbLinkIndex);
 					if (createMultiBody)
 					{
+#ifndef USE_DISCRETE_DYNAMICS_WORLD
 						cache.m_bulletMultiBody->setupRevolute(mbLinkIndex, mass, localInertiaDiagonal, mbParentIndex,
 															   parentRotToThis, quatRotate(offsetInB.getRotation(), 
 																   jointAxisInJointSpace), 
@@ -518,8 +528,10 @@ btTransform ConvertURDF2BulletInternal(
 							btMultiBodyConstraint* con = new btMultiBodyJointLimitConstraint(cache.m_bulletMultiBody, mbLinkIndex, jointLowerLimit, jointUpperLimit);
 							world1->addMultiBodyConstraint(con);
 						}
+#endif
 					}
 					else
+
 					{
 						btGeneric6DofSpring2Constraint* dof6 = 0;
 						if (jointType == URDFRevoluteJoint && jointLowerLimit <= jointUpperLimit)
@@ -559,6 +571,7 @@ btTransform ConvertURDF2BulletInternal(
 
 					if (createMultiBody)
 					{
+#ifndef USE_DISCRETE_DYNAMICS_WORLD
 						cache.m_bulletMultiBody->setupPrismatic(mbLinkIndex, mass, localInertiaDiagonal, mbParentIndex,
 																parentRotToThis, quatRotate(offsetInB.getRotation(), jointAxisInJointSpace), offsetInA.getOrigin(),  //parent2joint.getOrigin(),
 																-offsetInB.getOrigin(),
@@ -573,6 +586,7 @@ btTransform ConvertURDF2BulletInternal(
 							world1->addMultiBodyConstraint(con);
 						}
 						//printf("joint lower limit=%d, upper limit = %f\n", jointLowerLimit, jointUpperLimit);
+#endif
 					}
 					else
 					{
@@ -642,7 +656,7 @@ btTransform ConvertURDF2BulletInternal(
 				}
 				world1->addCollisionObject(col, collisionFilterGroup, collisionFilterMask);
 
-				btVector4 color2 = selectColor2();  //(0.0,0.0,0.5);
+				btVector4 color2 = (flags & CUF_GOOGLEY_UNDEFINED_COLORS) ? selectColor2() : btVector4(1, 1, 1, 1);
 				btVector3 specularColor(1, 1, 1);
 				UrdfMaterialColor matCol;
 				if (u2b.getLinkColor2(urdfLinkIndex, matCol))
@@ -774,10 +788,18 @@ bool MyIntCompareFunc(childParentIndex a, childParentIndex b)
 }
 
 
+	
+
+
 void ConvertURDF2Bullet(
 	const URDFImporterInterface& u2b, MultiBodyCreationInterface& creation,
 	const btTransform& rootTransformInWorldSpace,
+
+#ifdef USE_DISCRETE_DYNAMICS_WORLD
+	btDiscreteDynamicsWorld* world1,
+#else
 	btMultiBodyDynamicsWorld* world1,
+#endif
 	bool createMultiBody, const char* pathPrefix, int flags, UrdfVisualShapeCache* cachedLinkGraphicsShapes)
 {
 	URDF2BulletCachedData cache;
@@ -828,7 +850,7 @@ void ConvertURDF2Bullet(
 	{
 		*cachedLinkGraphicsShapes = cachedLinkGraphicsShapesOut;
 	}
-
+#ifndef USE_DISCRETE_DYNAMICS_WORLD
 	if (world1 && cache.m_bulletMultiBody)
 	{
 		B3_PROFILE("Post process");
@@ -854,4 +876,5 @@ void ConvertURDF2Bullet(
 
 		world1->addMultiBody(mb);
 	}
+	#endif
 }

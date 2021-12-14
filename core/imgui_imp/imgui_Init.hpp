@@ -4,6 +4,9 @@
 
 #include "IconsFontAwesome5.h"
 
+#include <Resource/ResourceManager.h>
+#include <Editor/EditorIcons.hpp>
+
 static void Init_ImGui_Custom()
 {
 
@@ -98,12 +101,35 @@ static void Init_ImGui_Custom()
     //io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 15); 
     ImFontConfig config;
     config.OversampleH = 2; 
-    io.Fonts->AddFontFromFileTTF("./resources/chirp-regular-web.ttf", 16, &config);
+    #ifdef _WIN32
+    io.Fonts->AddFontFromFileTTF("./resources/JetBrainsMono-Regular.ttf", 16, &config);
+    #endif
+    #ifdef __linux__
+    io.Fonts->AddFontFromFileTTF("./resources/FiraMono-Regular.ttf", 16, &config);
+    #endif
     static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
     ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
     icons_config.GlyphOffset.y = 0.5;
     io.Fonts->AddFontFromFileTTF("./resources/fa-regular-400.ttf", 15.0f, &icons_config, icons_ranges );
     io.Fonts->AddFontFromFileTTF("./resources/fa-brands-400.ttf", 15.0f, &icons_config, icons_ranges );
     io.Fonts->AddFontFromFileTTF("./resources/fa-solid-900.ttf", 15.0f, &icons_config, icons_ranges );
-    
+
+    Epsilon::ResourceManager::Get().addTextureToQueue(Epsilon::Editor::EDITOR_ICON_BLENDER);
+    Epsilon::ResourceManager::Get().addTextureToQueue(Epsilon::Editor::EDITOR_ICON_BMP);
+    Epsilon::ResourceManager::Get().addTextureToQueue(Epsilon::Editor::EDITOR_ICON_CPP);
+    Epsilon::ResourceManager::Get().addTextureToQueue(Epsilon::Editor::EDITOR_ICON_CPP_HDR);
+    Epsilon::ResourceManager::Get().addTextureToQueue(Epsilon::Editor::EDITOR_ICON_CSHARP);
+    Epsilon::ResourceManager::Get().addTextureToQueue(Epsilon::Editor::EDITOR_ICON_CSRC);
+    Epsilon::ResourceManager::Get().addTextureToQueue(Epsilon::Editor::EDITOR_ICON_EXECUTABLE);
+    Epsilon::ResourceManager::Get().addTextureToQueue(Epsilon::Editor::EDITOR_ICON_FOLDER);
+    Epsilon::ResourceManager::Get().addTextureToQueue(Epsilon::Editor::EDITOR_ICON_GIF);
+    Epsilon::ResourceManager::Get().addTextureToQueue(Epsilon::Editor::EDITOR_ICON_JAVASCRIPT);
+    Epsilon::ResourceManager::Get().addTextureToQueue(Epsilon::Editor::EDITOR_ICON_JSON);
+    Epsilon::ResourceManager::Get().addTextureToQueue(Epsilon::Editor::EDITOR_ICON_LOG);
+    Epsilon::ResourceManager::Get().addTextureToQueue(Epsilon::Editor::EDITOR_ICON_LUA);
+    Epsilon::ResourceManager::Get().addTextureToQueue(Epsilon::Editor::EDITOR_ICON_MP4);
+    Epsilon::ResourceManager::Get().addTextureToQueue(Epsilon::Editor::EDITOR_ICON_MPEG);
+    Epsilon::ResourceManager::Get().addTextureToQueue(Epsilon::Editor::EDITOR_ICON_OGG);
+    Epsilon::ResourceManager::Get().addTextureToQueue(Epsilon::Editor::EDITOR_ICON_TEXT);
+
 }

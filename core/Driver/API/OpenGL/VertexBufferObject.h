@@ -50,7 +50,7 @@ namespace Epsilon::API::OpenGL
                     glDeleteBuffers(1, &m_Handler);
                 }
 
-                GLsizeiptr Size() {
+                GLsizeiptr Size() override {
                     return mSize;
                 }
 

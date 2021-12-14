@@ -7,6 +7,7 @@
 #include <Helpers.hpp>
 #include <IO/KeyBoard.h>
 #include <Driver/API/OpenGL/HelperFunctions/CheckError.h>
+#include <Gaussian.hpp>
 
 namespace Epsilon
 {
@@ -77,7 +78,7 @@ namespace Epsilon
     tmpLight.watts = 200.0f;
     tmpLight.type = 2;
     m_Lights.push_back(tmpLight);
-/*
+
     tmpLight.position = glm::vec4(21.4, 8.5, -2.81, 1.0);
     tmpLight.direction = glm::vec4(0, 0, 0, 1.0);
     tmpLight.color = glm::vec4(1.0, 0.6, 0.6, 1.0);
@@ -160,9 +161,23 @@ namespace Epsilon
         CopyTextureFBO->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
         CopyTextureFBO->FinishFrameBuffer();
 
+        mForwardBuffer = std::make_shared<OpenGL::FrameBuffer<int>>(width, height, true);
+        mForwardBuffer->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR, GL_LINEAR, false);
+        mForwardBuffer->FinishFrameBuffer();
+
         CopyTextureBlurredFBO = std::make_shared<OpenGL::FrameBuffer<int>>(width, height, true);
         CopyTextureBlurredFBO->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, true);
         CopyTextureBlurredFBO->FinishFrameBuffer();
+        auto kernel = GaussianKernel1D<10, float>(mPostProcessData.BloomSettings.a, mPostProcessData.BloomSettings.b, mPostProcessData.BloomSettings.sigma);
+        int index = 0;
+        for (int i = 11; i < 21; i++)
+        {
+            mPostProcessData.BloomSettings.kernel[index] = kernel[i];
+        }
+        //mPostProcessData.BloomSettings.kernel = GaussianKernel1D<10, float>(mPostProcessData.BloomSettings.a, mPostProcessData.BloomSettings.b, mPostProcessData.BloomSettings.sigma);
+        for (auto &x : mPostProcessData.BloomSettings.kernel)
+            std::cout << x << " ";
+        std::cout << "\n";
 
         SetupGBuffer();
         setupSSAO();
@@ -171,6 +186,7 @@ namespace Epsilon
         setupSSR();
         SetupMotionBlur();
         setupDenoise();
+        SetupFramebufferBlur();
 
         mCompositeImage = std::make_shared<OpenGL::FrameBuffer<int>>(width, height, true);
         mCompositeImage->addRenderTarget(0, GL_RGB16F, GL_RGB, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, true);
@@ -238,8 +254,15 @@ namespace Epsilon
         gBufferFramebuffer->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        const int red[1] = {-1};
-        //gBufferFramebuffer->ClearAttachment(GBUFFER_ENTITY, &red);
+        const int black[4] = {0};
+        const float fblack[4] = {0.0, .0, .0, 0.0};
+        const float fblack2[4] = {0.0, .0, .0, 1.0};
+        //gBufferFramebuffer->ClearAttachment(GBUFFER_ALBEDO_SPEC, &fblack);
+        //glClearBufferiv(GL_COLOR, GBUFFER_ALBEDO_SPEC, black);
+        glClearBufferfv(GL_COLOR, GBUFFER_NORMAL, fblack);
+        //glClearBufferfv(GL_COLOR, GBUFFER_IBL_DEPTH, fblack2);
+        glClearBufferfv(GL_COLOR, GBUFFER_MOTION_EXTRA, fblack);
+        //gBufferFramebuffer->ClearAttachment(GBUFFER_MOTION_EXTRA, &fblack);
     }
 
     void PostProcess::endOffScreenRendering()
@@ -314,6 +337,67 @@ namespace Epsilon
         HBILFramebuffer->FinishFrameBuffer();
     }
 
+    void PostProcess::SetupFramebufferBlur()
+    {
+
+        mFramebufferBlur[0] = std::make_shared<OpenGL::FrameBuffer<int>>(SSAOwidth, SSAOheight, false);
+        mFramebufferBlur[0]->addRenderTarget(0, GL_RGBA16F, GL_RGBA, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, true);
+        mFramebufferBlur[0]->FinishFrameBuffer();
+
+        mFramebufferBlur[1] = std::make_shared<OpenGL::FrameBuffer<int>>(SSAOwidth, SSAOheight, false);
+        mFramebufferBlur[1]->addRenderTarget(0, GL_RGBA16F, GL_RGBA, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR_MIPMAP_LINEAR, true);
+        mFramebufferBlur[1]->FinishFrameBuffer();
+    }
+
+    void PostProcess::FramebufferBlurPass()
+    {
+
+        unsigned int maxMipLevels = 5;
+        blurBloom->Use();
+        for (unsigned int mip = 0; mip < maxMipLevels; ++mip)
+        {
+            unsigned int mipWidth = width * std::pow(0.5, mip);
+            unsigned int mipHeight = height * std::pow(0.5, mip);
+
+            glViewport(0, 0, mipWidth, mipHeight);
+
+            float roughness = (float)mip / (float)(maxMipLevels - 1);
+
+            GLboolean horizontal = true, first_iteration = true;
+            GLuint amount = 3;
+
+            for (unsigned int i = 0; i < amount; ++i)
+            {
+                mFramebufferBlur[horizontal]->bindFramebuffer();
+
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mFramebufferBlur[horizontal]->getRenderTargetHandler(0), mip);
+                //mFramebufferBlur[horizontal]->setViewport();
+                //mFramebufferBlur[horizontal]->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+                glViewport(0, 0, mipWidth, mipHeight);
+                glUniform1i(glGetUniformLocation(blurBloom->getProgramID(), "horizontal"), horizontal);
+                glUniform1fv(glGetUniformLocation(blurBloom->getProgramID(), "weights"), 10, mPostProcessData.BloomSettings.kernel.data());
+
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, first_iteration ? mCompositeImage->getRenderTargetHandler(0) : mFramebufferBlur[!horizontal]->getRenderTargetHandler(0)); // bind texture of other framebuffer (or scene if first iteration)
+
+                RenderQuad();
+
+                horizontal = !horizontal;
+
+                if (first_iteration)
+                    first_iteration = false;
+            }
+        }
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        glViewport(0, 0, width, height);
+
+        shader->Use();
+    }
+
     void PostProcess::applyHBIL(std::shared_ptr<Camera> &cam, std::shared_ptr<Renderer::ShadowMap> shadowMap, std::shared_ptr<Shader> shader, std::shared_ptr<Renderer::PointShadow> pointshadow)
     {
 
@@ -331,7 +415,7 @@ namespace Epsilon
         glActiveTexture(GL_TEXTURE1);
         shader->PushUniform("shadowMap", 1);
         glBindTexture(GL_TEXTURE_2D, shadowMap->getShadowTextureID());
-        
+
         glActiveTexture(GL_TEXTURE2);
         shader->PushUniform("pointShadow", 2);
         glBindTexture(GL_TEXTURE_CUBE_MAP, pointshadow->getTexture());
@@ -361,7 +445,7 @@ namespace Epsilon
 
         shader->PushUniform("camPos", cam->getPosition());
         shader->PushUniform("camDir", cam->getDirection());
-        
+
         shader->PushUniform("uLightPosition", m_Lights[0].position);
 
         RenderQuad();
@@ -448,8 +532,7 @@ namespace Epsilon
 
 #ifndef cheapblur
         //glViewport(0, 0, width, height);
-
-        ssaoColorBufferBlur = blurImage(mHBAOFramebuffer->getRenderTargetHandler(0), false);
+        ssaoColorBufferBlur = blurImage(mHBAOFramebuffer->getRenderTargetHandler(0), true);
 #else
         mHBAOBlurFramebuffer->bindFramebuffer();
         mHBAOBlurFramebuffer->setViewport();
@@ -482,7 +565,24 @@ namespace Epsilon
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             glUniform1i(glGetUniformLocation(blurBloom->getProgramID(), "horizontal"), horizontal);
-            glUniform1i(glGetUniformLocation(blurBloom->getProgramID(), "cheap"), cheap);
+            glUniform1i(glGetUniformLocation(blurBloom->getProgramID(), "cheap"), false);
+            //std::copy(mPostProcessData.BloomSettings.kernel.begin(), mPostProcessData.BloomSettings.kernel.end(), std::back_inserter(kernel));
+            /*int index = 0;
+            for (auto &x : mPostProcessData.BloomSettings.kernel)
+            {
+                blurBloom->PushUniform("weights[" + std::to_string(index) + "]", (float)x);
+                index++; 
+            }*/
+            //const float* kernel = mPostProcessData.BloomSettings.kernel.data();
+            if (!cheap)
+                glUniform1fv(glGetUniformLocation(blurBloom->getProgramID(), "weights"), 10, mPostProcessData.BloomSettings.kernel.data());
+            else
+            {
+
+                float kernel[] = {0.082607, 0.080977, 0.076276, 0.069041, 0.060049, 0.050187, 0.040306, 0.031105, 0.023066, 0.016436};
+                glUniform1fv(glGetUniformLocation(blurBloom->getProgramID(), "weights"), 10, kernel);
+            }
+
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, first_iteration ? Buffer : mPingPongFramebuffer[!horizontal]->getRenderTargetHandler(0)); // bind texture of other framebuffer (or scene if first iteration)
             RenderQuad();
@@ -648,7 +748,7 @@ namespace Epsilon
 
         /*glActiveTexture(GL_TEXTURE5);
         glUniform1i(glGetUniformLocation(ScreenSpaceReflectionShader->getProgramID(), "noiseTexture"), 5);
-        glBindTexture(GL_TEXTURE_2D, /*noiseTexture BlueNoiseTexture->getTextureID());
+        glBindTexture(GL_TEXTURE_2D, noiseTexture BlueNoiseTexture->getTextureID());
 */
 
         glActiveTexture(GL_TEXTURE5);
@@ -912,7 +1012,11 @@ namespace Epsilon
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, 0);
         mCompositeImage->unbindFramebuffer();
-
+        
+        mForwardBuffer->setToRead();
+        hdrFBO->setToDraw();
+        glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+        /*
         CopyTextureFBO->bindFramebuffer();
         CopyTextureFBO->setViewport();
         CopyTextureFBO->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -932,7 +1036,7 @@ namespace Epsilon
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, 0);
 
-        CopyTextureFBO->unbindFramebuffer();
+        CopyTextureFBO->unbindFramebuffer();*/
         glViewport(0, 0, width, height);
     }
 
@@ -1002,12 +1106,24 @@ namespace Epsilon
         glViewport(0, 0, width, height);
     }
 
+    void PostProcess::PostProcessPass(float frametime, std::shared_ptr<Camera> &cam)
+    {
+
+        //if(SSROn) {
+        SSRPass(cam);
+        //}
+
+        CompositeImage(cam->isMoving());
+    }
+
     void PostProcess::ShowPostProcessImage(float frametime, GLuint onmenu, glm::vec3 Sun, std::shared_ptr<Camera> &cam, std::shared_ptr<Epsilon::OpenGL::FrameBuffer<int>> framebuffer)
     {
 
         //hdrFBO->setToRead();
         hdrFBO->unbindFramebuffer();
 
+        
+        
         //if(SSROn) {
         SSRPass(cam);
         //}
@@ -1016,10 +1132,21 @@ namespace Epsilon
 
         TAAPass();
 
+
         if (mPostProcessData.MotionBlur.Active)
             MotionBlur(frametime);
 
         GLuint blurred = blurImage(hdrFBO->getRenderTargetHandler("brightColorBuffer"), false);
+        
+/*
+        TAAPass();
+
+        if (mPostProcessData.MotionBlur.Active)
+            MotionBlur(frametime);
+
+        blurred = blurImage(hdrFBO->getRenderTargetHandler("brightColorBuffer"), false);*/
+
+        //FramebufferBlurPass();
 
         //DownSampleSSR(frametime);
 
@@ -1195,8 +1322,35 @@ namespace Epsilon
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
         glCache::glUseProgram(0);
 
-        /** copy texture */
+        GLenum attachments[gBufferFramebuffer->m_RenderTargetCount];
+        for(int i = 0 ;i < gBufferFramebuffer->m_RenderTargetCount; i++) {
+            attachments[i] = GL_COLOR_ATTACHMENT0 + i;
+        }
+        glInvalidateFramebuffer(gBufferFramebuffer->m_FramebufferHandler, gBufferFramebuffer->m_RenderTargetCount, attachments);
+        
 
+        /** copy texture */
+        /*
+        CopyTextureFBO->bindFramebuffer();
+        CopyTextureFBO->setViewport();
+        CopyTextureFBO->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        PassThroughShader->Use();
+
+        glActiveTexture(GL_TEXTURE0);
+        glUniform1i(glGetUniformLocation(PassThroughShader->getProgramID(), "texture0"), 0);
+        glBindTexture(GL_TEXTURE_2D, hdrFBO->getRenderTargetHandler("colorBuffer"));
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        CopyTextureFBO->clearBuffer(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        RenderQuad();
+
+        PassThroughShader->Free();
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        CopyTextureFBO->unbindFramebuffer();*/
         /** end copy texture*/
 
         /**Fill mip maps begin*/
@@ -1271,12 +1425,13 @@ namespace Epsilon
 
     //Light related stuff, TODO: this should be somewhere else
 
-    uint32_t PostProcess::addLight(glm::vec3 position, glm::vec3 direction, int type, float watts, float radius, glm::vec4 color) {
+    uint32_t PostProcess::addLight(glm::vec3 position, glm::vec3 direction, int type, float watts, float radius, glm::vec4 color)
+    {
         t_light light = {};
-        
-        light.position = glm::vec4(position, 1.0); 
+
+        light.position = glm::vec4(position, 1.0);
         light.direction = glm::vec4(direction, 1.0); // 8
-        light.color = glm::vec4(color);     // 12
+        light.color = glm::vec4(color);              // 12
         light.radius = radius;
         light.watts = watts;
         light.type = type;
@@ -1287,35 +1442,39 @@ namespace Epsilon
         glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(t_light) * m_Lights.size(), (const void *)&m_Lights[0], GL_DYNAMIC_DRAW);
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+        return 0;
     }
 
-    bool PostProcess::updateLight(uint32_t id, t_light light) {
+    bool PostProcess::updateLight(uint32_t id, t_light light)
+    {
 
-        t_light& light_ref = m_Lights.at(id);
+        t_light &light_ref = m_Lights.at(id);
 
         light_ref = light;
-        
+
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
         //glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(t_light) * m_Lights.size(), (const void *)&m_Lights[0], GL_DYNAMIC_COPY);
         glBufferSubData(GL_SHADER_STORAGE_BUFFER, sizeof(t_light) * id, sizeof(t_light), (const void *)&light_ref);
         //glBindBufferRange(GL_SHADER_STORAGE_BUFFER, 0, ssbo, sizeof(t_light) * id, sizeof(t_light));
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-
+        return true;
     }
 
-    bool PostProcess::removeLight(uint32_t id) {
+    bool PostProcess::removeLight(uint32_t id)
+    {
         m_Lights.erase(m_Lights.begin() + id);
 
         m_Lights.shrink_to_fit();
-        
+
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
         glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(t_light) * m_Lights.size(), (const void *)&m_Lights[0], GL_DYNAMIC_DRAW);
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-        
+        return true;
     }
 
-    t_light& PostProcess::getLight(uint32_t id) {
-        return m_Lights.at(id); 
+    t_light &PostProcess::getLight(uint32_t id)
+    {
+        return m_Lights.at(id);
     }
 } // namespace Epsilon

@@ -28,7 +28,7 @@ namespace Epsilon
             float MinRayStep = 0.05;
             float MaxRayStep = 0.045;
             int MaxSteps = 70;
-            int MaxRefinementSteps = 5;
+            int MaxRefinementSteps = 10;
             float DepthCutoff = -4.1;
         } ScreenSpaceReflections;
         
@@ -69,6 +69,13 @@ namespace Epsilon
             float FeedbackMin = 0.0;
             float FeedbackMax = 0.125;
         } AntiAliasingSettings;
+
+        struct BloomSettings_t {
+            float a = 1.0;
+            float b = 0.0;
+            float sigma = 3.0;
+            std::array<float, 10> kernel;
+        } BloomSettings;
 
     };
     class PostProcess
@@ -175,6 +182,9 @@ namespace Epsilon
             mTAAFramebuffer[0]->Resize(w, h);
             mTAAFramebuffer[1]->Resize(w, h);
             mTAAFramebufferCopy->Resize(w, h);
+            mFramebufferBlur[0]->Resize(w, h);
+            mFramebufferBlur[1]->Resize(w, h);
+            mForwardBuffer->Resize(w, h);
         }
 
     public:
@@ -225,7 +235,11 @@ namespace Epsilon
         
         void setupHBIL(void);
 
+        void SetupFramebufferBlur();
+
         void TAAPass();
+        void FramebufferBlurPass();
+        void PostProcessPass(float frametime,std::shared_ptr<Camera> &cam);
 
         /**
         Creates the SSR framebuffer and attaches the proper textures
@@ -320,7 +334,9 @@ namespace Epsilon
         std::shared_ptr<OpenGL::FrameBuffer<int>> mPingPongFramebuffer[2];
         std::shared_ptr<OpenGL::FrameBuffer<int>> mSSRFramebuffer[2];
         std::shared_ptr<OpenGL::FrameBuffer<int>> mTAAFramebuffer[2];
+		std::shared_ptr<OpenGL::FrameBuffer<int>> mFramebufferBlur[2];
         std::shared_ptr<OpenGL::FrameBuffer<int>> mTAAFramebufferCopy;
+        std::shared_ptr<OpenGL::FrameBuffer<int>> mForwardBuffer;
 
         bool TAACurrentBuffer = false;
 
@@ -385,6 +401,7 @@ namespace Epsilon
         std::shared_ptr<eTexture> lensStar;
         std::shared_ptr<eTexture> BlueNoiseTexture;
         int jitter_step = 0;
+        GLuint blurred;
 
         glm::vec2 FocalLen, InvFocalLen, UVToViewA, UVToViewB, LinMAD;
 

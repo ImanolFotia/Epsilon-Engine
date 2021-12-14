@@ -13,7 +13,7 @@ namespace Epsilon::Renderer
 
             createVertexBuffers();
 
-            mMaterial = std::make_shared<MaterialPBR>();
+            mMaterial = MaterialManager::Get().createMaterial<MaterialPBR>();
         }
 
         void Update() override
@@ -45,7 +45,15 @@ namespace Epsilon::Renderer
 
         virtual std::shared_ptr<MaterialPBR> getMaterial() override
         {
+            return MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial);
+        }
+
+        virtual MaterialManager::Material_id getMaterialId() override {
             return mMaterial;
+        }
+
+        void setMaterial(MaterialManager::Material_id mat_id) override {
+            mMaterial = mat_id;
         }
 
     private:

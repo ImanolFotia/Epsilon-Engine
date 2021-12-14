@@ -79,7 +79,7 @@ namespace Epsilon::Renderer
             mTexture->Unbind();
         }
 
-        void Destroy()
+        void Destroy() override
         {
             mTexture->Destroy();
         }

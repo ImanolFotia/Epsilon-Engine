@@ -4,6 +4,20 @@
 /// this will make it easier to load complex obj files into pybullet
 /// see for example export in data/kitchens/fathirmutfak.sdf
 
+///Bullet Continuous Collision Detection and Physics Library
+///Erwin Coumans (C) 2018
+///http://bulletphysics.org
+///
+///This software is provided 'as-is', without any express or implied warranty.
+///In no event will the authors be held liable for any damages arising from the use of this software.
+///Permission is granted to anyone to use this software for any purpose,
+///including commercial applications, and to alter it and redistribute it freely,
+///subject to the following restrictions:
+///
+///1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+///2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+///3. This notice may not be removed or altered from any source distribution.
+	
 #include <string.h>
 #include <stdio.h>
 #include <assert.h>
@@ -16,6 +30,8 @@
 #include "Bullet3Common/b3HashMap.h"
 #include "../Utils/b3BulletDefaultFileIO.h"
 
+using tinyobj::index_t;
+
 struct ShapeContainer
 {
 	std::string m_matName;
@@ -24,8 +40,7 @@ struct ShapeContainer
 	std::vector<float> positions;
 	std::vector<float> normals;
 	std::vector<float> texcoords;
-	std::vector<unsigned int> indices;
-
+	std::vector<index_t> indices;
 	b3AlignedObjectArray<int> m_shapeIndices;
 };
 
@@ -141,9 +156,14 @@ int main(int argc, char* argv[])
 					continue;
 				}
 
-				shapeC->indices.push_back(shape.mesh.indices[face].vertex_index + curPositions);
-				shapeC->indices.push_back(shape.mesh.indices[face + 1].vertex_index + curPositions);
-				shapeC->indices.push_back(shape.mesh.indices[face + 2].vertex_index + curPositions);
+				index_t index;
+				for (int ii = 0; ii < 3; ii++)
+				{
+					index.vertex_index = shape.mesh.indices[face + ii].vertex_index + curPositions;
+					index.normal_index = shape.mesh.indices[face + ii].normal_index + curNormals;
+					index.texcoord_index = shape.mesh.indices[face + ii].texcoord_index + curTexcoords;
+					shapeC->indices.push_back(index);
+				}
 			}
 		}
 	}
@@ -237,9 +257,9 @@ int main(int argc, char* argv[])
 					continue;
 				}
 				fprintf(f, "f %d/%d/%d %d/%d/%d %d/%d/%d\n",
-						shapeCon->indices[face] + 1, shapeCon->indices[face] + 1, shapeCon->indices[face] + 1,
-						shapeCon->indices[face + 1] + 1, shapeCon->indices[face + 1] + 1, shapeCon->indices[face + 1] + 1,
-						shapeCon->indices[face + 2] + 1, shapeCon->indices[face + 2] + 1, shapeCon->indices[face + 2] + 1);
+						shapeCon->indices[face].vertex_index + 1, shapeCon->indices[face].texcoord_index + 1, shapeCon->indices[face].normal_index + 1,
+						shapeCon->indices[face + 1].vertex_index + 1, shapeCon->indices[face + 1].texcoord_index + 1, shapeCon->indices[face + 1].normal_index + 1,
+						shapeCon->indices[face + 2].vertex_index + 1, shapeCon->indices[face + 2].texcoord_index + 1, shapeCon->indices[face + 2].normal_index + 1);
 			}
 			fclose(f);
 
@@ -251,7 +271,7 @@ int main(int argc, char* argv[])
 			fprintf(sdfFile,
 					"\t\t<model name='%s'>\n"
 					"\t\t\t<static>1</static>\n"
-					"\t\t\t<pose frame=''>0 0 0 0 0 0</pose>\n"
+					"\t\t\t<pose >0 0 0 0 0 0</pose>\n"
 					"\t\t\t<link name='link_d%d'>\n"
 					"\t\t\t<inertial>\n"
 					"\t\t\t<mass>0</mass>\n"
@@ -376,11 +396,11 @@ int main(int argc, char* argv[])
 					continue;
 				}
 				fprintf(f, "f %d/%d/%d %d/%d/%d %d/%d/%d\n",
-						shape.mesh.indices[face].vertex_index + 1, shape.mesh.indices[face].vertex_index + 1, shape.mesh.indices[face].vertex_index + 1,
-						shape.mesh.indices[face + 1].vertex_index + 1, shape.mesh.indices[face + 1].vertex_index + 1, shape.mesh.indices[face + 1].vertex_index + 1,
-						shape.mesh.indices[face + 2].vertex_index + 1, shape.mesh.indices[face + 2].vertex_index + 1, shape.mesh.indices[face + 2].vertex_index + 1);
+                                        shape.mesh.indices[face].vertex_index + 1,     shape.mesh.indices[face].texcoord_index + 1,     shape.mesh.indices[face].normal_index + 1,
+                                        shape.mesh.indices[face + 1].vertex_index + 1, shape.mesh.indices[face + 1].texcoord_index + 1, shape.mesh.indices[face + 1].normal_index + 1,
+                                        shape.mesh.indices[face + 2].vertex_index + 1, shape.mesh.indices[face + 2].texcoord_index + 1, shape.mesh.indices[face + 2].normal_index + 1);
 			}
-			fclose(f);
+                        fclose(f);
 
 			float kdRed = mat.diffuse[0];
 			float kdGreen = mat.diffuse[1];
@@ -391,7 +411,7 @@ int main(int argc, char* argv[])
 			fprintf(sdfFile,
 					"\t\t<model name='%s'>\n"
 					"\t\t\t<static>1</static>\n"
-					"\t\t\t<pose frame=''>0 0 0 0 0 0</pose>\n"
+					"\t\t\t<pose>0 0 0 0 0 0</pose>\n"
 					"\t\t\t<link name='link_d%d'>\n"
 					"\t\t\t<inertial>\n"
 					"\t\t\t<mass>0</mass>\n"

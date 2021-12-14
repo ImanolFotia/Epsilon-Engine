@@ -10,7 +10,7 @@ namespace Epsilon
         class PointShadow : public ShadowBase
         {
         public:
-            PointShadow(glm::vec3 p, unsigned short r = 1024, unsigned short n = 0.1, unsigned short f = 100.0);
+            PointShadow(glm::vec3 p, unsigned short r = 1024, unsigned short n = 1, unsigned short f = 100);
 
             void Setup();
 
