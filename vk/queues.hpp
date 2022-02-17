@@ -7,9 +7,10 @@
 
 #include "surface.hpp"
 
-namespace LearningVulkan
+namespace vk
 {
     VkQueue presentQueue;
+    VkQueue graphicsQueue;
 
     struct QueueFamilyIndices
     {

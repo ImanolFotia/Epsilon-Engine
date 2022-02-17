@@ -9,7 +9,7 @@
 #include "surface.hpp"
 
 
-namespace LearningVulkan
+namespace vk
 {
     VkSwapchainKHR swapChain;
     std::vector<VkImage> swapChainImages;

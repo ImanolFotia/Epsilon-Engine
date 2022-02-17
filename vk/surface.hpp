@@ -4,7 +4,7 @@
 
 #define USE_GLFW 1
 
-namespace LearningVulkan
+namespace vk
 {
         VkSurfaceKHR surface;
 

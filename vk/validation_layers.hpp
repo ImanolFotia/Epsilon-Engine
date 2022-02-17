@@ -2,7 +2,7 @@
 
 #include <vulkan/vulkan.h>
 
-namespace LearningVulkan
+namespace vk
 {
     VkDebugUtilsMessengerEXT debugMessenger;
 
