@@ -7,12 +7,16 @@
 
 #include "../framework/common.hpp"
 #include "queues.hpp"
+#include "swap_chain.hpp"
 
 namespace LearningVulkan
 {
+    const std::vector<const char *> deviceExtensions = {
+        VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
-    bool isDeviceSuitable(VkPhysicalDevice device)
+    void showDeviceFeatures(VkPhysicalDevice device)
     {
+
         VkPhysicalDeviceProperties deviceProperties;
         vkGetPhysicalDeviceProperties(device, &deviceProperties);
 
@@ -23,11 +27,42 @@ namespace LearningVulkan
         IO::Log("\tID: ", deviceProperties.deviceID);
         IO::Log("\tDriver version: ", deviceProperties.driverVersion);
         IO::Log("\tVendor ID: ", deviceProperties.vendorID);
-        
+    }
+
+    bool checkDeviceExtensionSupport(VkPhysicalDevice device)
+    {
+        uint32_t extensionCount;
+        vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
+
+        std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+        vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
+
+        std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
+
+        for (const auto &extension : availableExtensions)
+        {
+            requiredExtensions.erase(extension.extensionName);
+        }
+
+        return requiredExtensions.empty();
+    }
+
+    bool isDeviceSuitable(VkPhysicalDevice device)
+    {
+        showDeviceFeatures(device);
+
+        bool extensionsSupported = checkDeviceExtensionSupport(device);
+
         QueueFamilyIndices indices = findQueueFamilies(device);
 
-        return indices.isComplete();
+        bool swapChainAdequate = false;
+        if (extensionsSupported)
+        {
+            SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device);
+            swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
+        }
 
+        return indices.isComplete() && extensionsSupported && swapChainAdequate;
     }
 
     VkPhysicalDevice pickPhysicalDevice(VkInstance instance)

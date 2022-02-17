@@ -3,11 +3,11 @@
     The makefile is for MSYS2 MingW
 */
 
-#include "LearningVulkanApplication.hpp"
+#include "Example.hpp"
 
 int main(int argc, char** argv) {
 
-    LearningVulkan::LearningVulkanApplication app("LearningVulkan");
+    ExampleApp::ExampleApp app("LearningVulkan");
 
     try {
         app.run();
