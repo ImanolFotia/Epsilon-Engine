@@ -31,8 +31,12 @@ namespace LearningVulkan
             initWindow();
             initVulkan();
             mainLoop();
-            onExit();
+            exit();
         }
+
+        virtual void onCreate() = 0;
+        virtual void onRender() = 0;
+        virtual void onExit() = 0;
 
     protected:
         bool mShouldClose = false;
@@ -58,21 +62,20 @@ namespace LearningVulkan
             vk::createImageViews(vk::logicalDevice);
         }
 
-        
-
         void mainLoop()
         {
             while (!mWindow.ShouldClose())
             {
-                if(mShouldClose) break;
-                Loop();
+                if (mShouldClose)
+                    break;
+                onRender();
                 mWindow.PollEvents();
             }
         }
 
-        virtual void Loop() = 0;
-
-        void onExit() {
+        void exit()
+        {
+            onExit();
             vk::cleanup();
             mWindow.cleanup();
         }
