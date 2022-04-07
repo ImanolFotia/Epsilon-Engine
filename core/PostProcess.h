@@ -73,8 +73,8 @@ namespace Epsilon
         struct BloomSettings_t {
             float a = 1.0;
             float b = 0.0;
-            float sigma = 3.0;
-            std::array<float, 10> kernel;
+            float sigma = 1.0;
+            std::array<float, 11> kernel;
         } BloomSettings;
 
     };
@@ -297,6 +297,10 @@ namespace Epsilon
         t_light& getLight(uint32_t id);
 
         const std::vector<t_light> & getLights() { return m_Lights; }
+
+        void beginForwardPass();
+
+        void endForwardPass();
 
     public:
         //#pragma pack(push, 1)

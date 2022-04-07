@@ -257,8 +257,6 @@ namespace Epsilon
         int *m_pLeafFaces;
         tBSPVisData m_clusters;
 
-        unsigned int m_textures[MAX_TEXTURES];
-
         CBitset m_FacesDrawn;
 
         std::map<int, BSPFace> Faces;

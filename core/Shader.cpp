@@ -273,14 +273,12 @@ namespace Epsilon
 	void Shader::getUniformsLocations()
 	{
 
-		// NOTE(Joey): query the number of active uniforms and attributes
 		int nrAttributes, nrUniforms;
 		glGetProgramiv(ProgramID, GL_ACTIVE_ATTRIBUTES, &nrAttributes);
 		glGetProgramiv(ProgramID, GL_ACTIVE_UNIFORMS, &nrUniforms);
 		//m_Attributes.resize(nrAttributes);
 		//m_Uniforms.resize(nrUniforms);
 
-		// NOTE(Joey): iterate over all active attributes
 		char buffer[128];
 		int Size;
 		for (int i = 0; i < nrAttributes; ++i)
@@ -292,7 +290,6 @@ namespace Epsilon
 			//std::cout << "Attribute: " << i << " :: " << buffer << std::endl;
 		}
 
-		// NOTE(Joey): iterate over all active uniforms
 		for (int i = 0; i < nrUniforms; ++i)
 		{
 			GLenum glType;

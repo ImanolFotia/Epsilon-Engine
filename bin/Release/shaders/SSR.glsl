@@ -164,6 +164,9 @@ void main()
     vec3 SSR;
     vec2 brdf  = texture(BRDF, vec2(max(dot(worldNormal, viewDir), 0.0), Roughness)).rg;
     iTime = iTime;//!isMoving ? iTime : 1.0;
+    float dDepth = 0.0;
+    vec4 coords = vec4(0.0);
+
     if(SSROn == 1 && !isPlastic ){
         vec2 NoiseScale = Resolution / 4.0;
         vec3 random = hash33(worldPos + iTime);//vec3(texture(noiseTexture, (TexCoords.xy*10.0) + (1.0 - iTime)).rgb);
@@ -172,19 +175,23 @@ void main()
         vec3 hs = random * 2.0 - 1.0;
         vec3 jitt = hs * factor;
         vec3 reflected = normalize(reflect(normalize(viewPos), normalize(viewNormal)));
-        float dDepth = 0.0;
-        vec4 coords = RayCast(normalize(reflected + jitt) * max(0.1, -viewPos.z), hitPos, dDepth);
-        vec2 centered_coords = abs(coords.xy * 2.0 - 1.0);
-        float mixer = smoothstep(0.8, 1.0, max(centered_coords.x, centered_coords.y));
 
-        float screenEdgefactor = float(mixer >= 0.9);
+        if(reflected.z > 0.0) {
+            SSR = texture(gDepth, TexCoords, 0).gba;
+        } else {
+            coords = RayCast(normalize(reflected + jitt) * max(0.1, -viewPos.z), hitPos, dDepth);
+            vec2 centered_coords = abs(coords.xy * 2.0 - 1.0);
+            float mixer = smoothstep(0.8, 1.0, max(centered_coords.x, centered_coords.y));
 
-        vec2 pixelSize = 1.0 / textureSize(gFinalImage, 0).xy;
+            float screenEdgefactor = float(mixer >= 0.9);
 
-        vec3 samples = textureLod(gFinalImage, coords.xy, 0).rgb;
-        vec3 sNormal = normalize(texture(gNormal, coords.xy).rgb);
+            vec2 pixelSize = 1.0 / textureSize(gFinalImage, 0).xy;
 
-        SSR = mix(samples, texture(gDepth, TexCoords).gba, screenEdgefactor);
+            vec3 samples = textureLod(gFinalImage, coords.xy, 0).rgb;
+            vec3 sNormal = normalize(texture(gNormal, coords.xy).rgb);
+
+            SSR = mix(samples, texture(gDepth, TexCoords).gba, screenEdgefactor);
+        }
     }
     else
     {
@@ -192,10 +199,10 @@ void main()
     }
     
     vec3 F0 = vec3(0.04); 
-    F0 = mix(F0, pow(AlbedoSpec.rgb, vec3(1.0)), Metallic);
+    F0 = mix(F0, AlbedoSpec.rgb, Metallic);
     vec3 Fresnel = fresnelSchlick(max(dot(worldNormal, viewDir), 0.0), F0);
 
-    outColor = vec4(SSR * (1.0 - AlbedoSpec.w) * (Fresnel * brdf.x + brdf.y), 1.0);
+    outColor = vec4(SSR * (AlbedoSpec.w) * (Fresnel * brdf.x + brdf.y), 1.0);
 
     if(!isMoving && ID <= 250)
         outColor = outColor + PrevReflection;
@@ -271,15 +278,15 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
     
         if(isSignificant(dDepth) || (dir.z - dDepth) < maxRayStep) {
             do {
-
                 depth = ViewSpaceZFromDepth(texture(gDepth, projectedCoord.xy, miplevel).x);
                 dDepth = hitCoord.z - depth;
 
                 if(miplevel > 0 && isSignificant(dDepth)){   
                     miplevel--;
+                    hitCoord -= dir;
+                    dir *= 0.5;
                 } else if(miplevel == 0 && isSignificant(dDepth)) {
                     return vec4(BinarySearch(dir, hitCoord, dDepth), 1.0);
-                    
                 } else break;
             
             } while(miplevel > 0 && isSignificant(dDepth));
@@ -295,7 +302,7 @@ vec4 RayCast(vec3 dir, inout vec3 hitCoord, out float dDepth)
  
     if(depth<1000) return vec4(0.0);
 
-    return vec4(BinarySearch(dir, hitCoord, dDepth), 1.0);
+    return vec4(BinarySearch(dir, hitCoord, dDepth), steps);
     //return vec4(projectedCoord.xy, 0.0, 0.0);
 }
 

@@ -5,7 +5,7 @@
 namespace Epsilon::Renderer
 {
     template <>
-    [[maybe_unused]] bool MaterialPBR::setMaterial(Material::MaterialParameter t, std::shared_ptr<Texture2D> p)
+    [[maybe_unused]] bool MaterialPBR::setMaterial(MaterialBase::MaterialParameter t, std::shared_ptr<Texture2D> p)
     {
         switch (t)
         {
@@ -39,7 +39,7 @@ namespace Epsilon::Renderer
     }
 
     template <>
-    [[maybe_unused]] bool MaterialPBR::setMaterial(Material::MaterialParameter t, glm::vec3 p)
+    [[maybe_unused]] bool MaterialPBR::setMaterial(MaterialBase::MaterialParameter t, glm::vec4 p)
     {
         switch (t)
         {
@@ -64,7 +64,7 @@ namespace Epsilon::Renderer
     }
 
     template <>
-    [[maybe_unused]] std::shared_ptr<Texture2D> MaterialPBR::get(Material::MaterialParameter t)
+    [[maybe_unused]] std::shared_ptr<Texture2D> MaterialPBR::get(MaterialBase::MaterialParameter t)
     {
         switch (t)
         {
@@ -82,7 +82,7 @@ namespace Epsilon::Renderer
     }
 
     template <>
-    [[maybe_unused]] glm::vec3 MaterialPBR::get(Material::MaterialParameter t)
+    [[maybe_unused]] glm::vec4 MaterialPBR::get(MaterialBase::MaterialParameter t)
     {
         switch (t)
         {
@@ -95,7 +95,7 @@ namespace Epsilon::Renderer
         case MaterialParameter::Normal:
             return normal_color;
         default:
-            return glm::vec3(0.0f);
+            return glm::vec4(0.0f);
         }
     }
 }

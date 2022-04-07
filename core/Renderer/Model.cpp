@@ -7,6 +7,7 @@ namespace Epsilon::Renderer
 {
     Model::Model(const std::string &path)
     {
+        type = DrawableType::TRIANGLE_MESH;
         //this->path = path;
         PrevModel = glm::mat4(1.0f);
         ModelMatrix = glm::mat4(1.0f);
@@ -108,6 +109,8 @@ namespace Epsilon::Renderer
 
             for (int i = 0; i < numMeshes; ++i)
             {
+                
+                mMeshesNames[i] = std::to_string(i);
                 currentvOffset += l_meshes[i].mNumVertices;
                 currentiOffset += l_meshes[i].mNumIndices;
 
@@ -327,7 +330,7 @@ namespace Epsilon::Renderer
         ScaleMatrix = glm::scale(glm::mat4(1.0), pscale);
         TranslationMatrix = glm::translate(glm::mat4(1.0), pposition);
         RotationMatrix = glm::mat4(1) * glm::toMat4(glm::normalize(protation));
-        this->PrevModel = TranslationMatrix * ScaleMatrix * RotationMatrix;
+        this->PrevModel = TranslationMatrix * RotationMatrix * ScaleMatrix;
         glm::mat4 MVP = cam->getProjectionMatrix() * cam->getViewMatrix() * this->ModelMatrix;
         shader->PushUniform("MVP", MVP);
         shader->PushUniform("PrevModel", this->PrevModel);

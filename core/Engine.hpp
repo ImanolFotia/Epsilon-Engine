@@ -4,10 +4,14 @@
 
 #include <ProgramData.h>
 
+#include <glm/glm.hpp>
+
 namespace Epsilon
 {
     class Engine
     {
+    public:
+
     public:
         static Engine &Get()
         {
@@ -59,6 +63,7 @@ namespace Epsilon
             return mArguments.contains(x);
         }
 
+
         struct arguments_names_t {
         const char* width = "-width";
         const char* height = "-height";
@@ -109,5 +114,6 @@ namespace Epsilon
         int mNumArguments = 0;
 
         std::unordered_map<std::string, std::string> mArguments;
+
     };
 } // namespace Epsilon

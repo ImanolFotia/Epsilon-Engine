@@ -28,8 +28,8 @@ namespace Epsilon::API::OpenGL
 
                 auto &tmpVBO = m_VBOArray.back();
                 tmpVBO.Bind();
-                glEnableVertexAttribArray(index);
                 glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride, pointer);
+                glEnableVertexAttribArray(index);
                 m_VertexAttributeCounter++;
 
                 Unbind();
@@ -90,12 +90,25 @@ namespace Epsilon::API::OpenGL
             glBindVertexArray(0);
         }
 
+        void bindBuffer(uint32_t b)
+        {
+            Bind();
+            m_VBOArray[b].Bind();
+        }
+
         void Destroy()
         {
             glDeleteVertexArrays(1, &this->m_Handler);
         }
 
-        OpenGL::VertexBufferObject* getBuffer(unsigned int id) {
+        void setAttributeDivisor(int attrib, int div)
+        {
+            Bind();
+            glVertexAttribDivisor(attrib, div);
+        }
+
+        OpenGL::VertexBufferObject *getBuffer(unsigned int id)
+        {
             return &m_VBOArray.at(id);
         }
 

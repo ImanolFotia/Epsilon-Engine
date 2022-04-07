@@ -11,6 +11,22 @@
 
 namespace Epsilon::Renderer
 {
+    
+    enum DrawableType {
+        TRIANGLE_MESH = 0,
+        SPHERE,
+        CUBE,
+        PLANE,
+        TOROID,
+        CYLINDER,
+        CURVE,
+        CUBIC_BEZIER,
+        CUADRATIC_BEZIER,
+        BEZIER,
+        PATCH,
+        UNDEFINED
+    };
+
     class Drawable
     {
 
@@ -36,9 +52,17 @@ namespace Epsilon::Renderer
             return mRotation;
         }
 
+        auto getType() -> DrawableType {
+            return type;
+        }
+
     protected:
         glm::vec3 mPosition;
         glm::vec3 mScale;
         glm::quat mRotation;
+
+        DrawableType type = DrawableType::UNDEFINED;
+
+
     };
 } // namespace Renderer

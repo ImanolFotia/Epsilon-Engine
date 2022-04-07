@@ -218,6 +218,10 @@ void InitNearFieldCtrl(ALCdevice *device, float ctrl_dist, uint order, bool is3d
     device->AvgSpeakerDist = clampf(ctrl_dist, 0.1f, 10.0f);
     TRACE("Using near-field reference distance: %.2f meters\n", device->AvgSpeakerDist);
 
+    const float w1{SpeedOfSoundMetersPerSec /
+        (device->AvgSpeakerDist * static_cast<float>(device->Frequency))};
+    device->mNFCtrlFilter.init(w1);
+
     auto iter = std::copy_n(is3d ? chans_per_order3d : chans_per_order2d, order+1u,
         std::begin(device->NumChannelsPerOrder));
     std::fill(iter, std::end(device->NumChannelsPerOrder), 0u);
@@ -734,6 +738,19 @@ void InitHrtfPanning(ALCdevice *device)
 
     static_assert(al::size(AmbiPoints1O) == al::size(AmbiMatrix1O), "First-Order Ambisonic HRTF mismatch");
     static_assert(al::size(AmbiPoints2O) == al::size(AmbiMatrix2O), "Second-Order Ambisonic HRTF mismatch");
+
+    /* A 700hz crossover frequency provides tighter sound imaging at the sweet
+     * spot with ambisonic decoding, as the distance between the ears is closer
+     * to half this frequency wavelength, which is the optimal point where the
+     * response should change between optimizing phase vs volume. Normally this
+     * tighter imaging is at the cost of a smaller sweet spot, but since the
+     * listener is fixed in the center of the HRTF responses for the decoder,
+     * we don't have to worry about ever being out of the sweet spot.
+     *
+     * A better option here may be to have the head radius as part of the HRTF
+     * data set and calculate the optimal crossover frequency from that.
+     */
+    device->mXOverFreq = 700.0f;
 
     /* Don't bother with HOA when using full HRTF rendering. Nothing needs it,
      * and it eases the CPU/memory load.

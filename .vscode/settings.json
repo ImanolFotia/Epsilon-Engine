@@ -102,4 +102,12 @@
     },
     "C_Cpp.dimInactiveRegions": false,
     "cmake.configureOnOpen": false,
+    "glsl-linter.validatorPath": "I:\\Epsilon\\Epsilon Engine\\bin\\Release\\shaders",
+    "glsl-linter.fileExtensions": {
+        ".fs.glsl": "frag",
+        ".vs.glsl": "vert",
+        ".tes.glsl": "tese",
+        ".tcs.glsl": "tesc",
+        ".gs.glsl": "geom"
+    }
 }

@@ -86,17 +86,17 @@ namespace Epsilon
         inShader->PushUniform("view", viewMatrix);
 
         //glActiveTexture();
-        mTexture->Bind(GL_TEXTURE0);
+        mTexture->Bind(0);
         inShader->PushUniform("DiffuseSampler", 0);
 
         //glActiveTexture();
-        mNormalTexture->Bind(GL_TEXTURE1);
+        mNormalTexture->Bind(1);
         inShader->PushUniform("NormalSampler", 1);
         
-        mRoughtnessTexture->Bind(GL_TEXTURE2);
+        mRoughtnessTexture->Bind(2);
         inShader->PushUniform("RoughnessSampler", 2);
         
-        mMetallicTexture->Bind(GL_TEXTURE3);
+        mMetallicTexture->Bind(3);
         inShader->PushUniform("MetallicSampler", 3);
         
         glActiveTexture(GL_TEXTURE4);

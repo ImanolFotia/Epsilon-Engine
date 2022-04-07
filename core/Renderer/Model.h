@@ -23,6 +23,7 @@ namespace Epsilon::Renderer
     {
 
         bool mIsResident = false;
+
     public:
         glm::mat4 PrevModel;
         glm::mat4 ModelMatrix;
@@ -33,7 +34,8 @@ namespace Epsilon::Renderer
         MODEL_TYPE m_Type;
         bool uniformsSet = false;
 
-        bool isResident() {
+        bool isResident()
+        {
             return mIsResident;
         }
 
@@ -43,7 +45,7 @@ namespace Epsilon::Renderer
 
         Model(const std::string &path = "");
 
-        //Model(const char *path, glm::vec3 pos = glm::vec3(0, 0, 0), glm::vec3 sc = glm::vec3(0, 0, 0), glm::quat rot = glm::quat(0, 0, 0, 1));
+        // Model(const char *path, glm::vec3 pos = glm::vec3(0, 0, 0), glm::vec3 sc = glm::vec3(0, 0, 0), glm::quat rot = glm::quat(0, 0, 0, 1));
 
         std::string getPath()
         {
@@ -66,7 +68,7 @@ namespace Epsilon::Renderer
 
         /// Draws the model, and thus all its meshes
         void Draw(GLuint shader, glm::vec3);
-        
+
         void Render() override {}
         void Update() override {}
 
@@ -130,6 +132,8 @@ namespace Epsilon::Renderer
         bool loadModel(std::string emlPath, int a);
 
         bool isLoaded = false;
+
+        std::unordered_map<int, std::string> mMeshesNames;
 
     private:
         std::vector<Mesh> mMeshes;

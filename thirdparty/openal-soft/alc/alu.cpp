@@ -313,8 +313,8 @@ void DeviceBase::ProcessUhj(const size_t SamplesToDo)
     const uint ridx{RealOut.ChannelIndex[FrontRight]};
 
     /* Encode to stereo-compatible 2-channel UHJ output. */
-    mUhjEncoder->encode(RealOut.Buffer[lidx], RealOut.Buffer[ridx], Dry.Buffer.data(),
-        SamplesToDo);
+    mUhjEncoder->encode(RealOut.Buffer[lidx].data(), RealOut.Buffer[ridx].data(),
+        Dry.Buffer.data(), SamplesToDo);
 }
 
 void DeviceBase::ProcessBs2b(const size_t SamplesToDo)
@@ -771,18 +771,18 @@ void CalcPanningAndFilters(Voice *voice, const float xpos, const float ypos, con
     case FmtUHJ2:
     case FmtUHJ3:
     case FmtUHJ4:
+    case FmtSuperStereo:
         DirectChannels = DirectMode::Off;
         break;
     }
 
     voice->mFlags &= ~(VoiceHasHrtf | VoiceHasNfc);
-    if(voice->mFmtChannels == FmtBFormat2D || voice->mFmtChannels == FmtBFormat3D
-        || voice->mFmtChannels == FmtUHJ2 || voice->mFmtChannels == FmtUHJ3
-        || voice->mFmtChannels == FmtUHJ4)
+    if(IsAmbisonic(voice->mFmtChannels))
     {
-        /* Special handling for B-Format sources. */
+        /* Special handling for B-Format and UHJ sources. */
 
-        if(Device->AvgSpeakerDist > 0.0f && voice->mFmtChannels != FmtUHJ2)
+        if(Device->AvgSpeakerDist > 0.0f && voice->mFmtChannels != FmtUHJ2
+            && voice->mFmtChannels != FmtSuperStereo)
         {
             if(!(Distance > std::numeric_limits<float>::epsilon()))
             {
@@ -881,9 +881,7 @@ void CalcPanningAndFilters(Voice *voice, const float xpos, const float ypos, con
             /* Convert the rotation matrix for input ordering and scaling, and
              * whether input is 2D or 3D.
              */
-            const uint8_t *index_map{
-                (voice->mFmtChannels == FmtBFormat2D || voice->mFmtChannels == FmtUHJ2
-                    || voice->mFmtChannels == FmtUHJ3) ?
+            const uint8_t *index_map{Is2DAmbisonic(voice->mFmtChannels) ?
                 GetAmbi2DLayout(voice->mAmbiLayout).data() :
                 GetAmbiLayout(voice->mAmbiLayout).data()};
 
@@ -1379,7 +1377,6 @@ void CalcAttnSourceParams(Voice *voice, const VoiceProps *props, const ContextBa
             break;
 
         case DistanceModel::Disable:
-            ClampedDist = props->RefDistance;
             break;
     }
 
@@ -1540,10 +1537,8 @@ void CalcSourceParams(Voice *voice, ContextBase *context, bool force)
     }
 
     if((voice->mProps.DirectChannels != DirectMode::Off && voice->mFmtChannels != FmtMono
-            && voice->mFmtChannels != FmtBFormat2D && voice->mFmtChannels != FmtBFormat3D
-            && voice->mFmtChannels != FmtUHJ2 && voice->mFmtChannels != FmtUHJ3
-            && voice->mFmtChannels != FmtUHJ3)
-        || voice->mProps.mSpatializeMode==SpatializeMode::Off
+            && !IsAmbisonic(voice->mFmtChannels))
+        || voice->mProps.mSpatializeMode == SpatializeMode::Off
         || (voice->mProps.mSpatializeMode==SpatializeMode::Auto && voice->mFmtChannels != FmtMono))
         CalcNonAttnSourceParams(voice, &voice->mProps, context);
     else

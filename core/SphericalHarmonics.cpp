@@ -153,17 +153,17 @@ void SphericalHarmonics::CalculateCohefficients(GLuint cubemap, const unsigned i
 
                 if(std::isnan((float)data[pixOffsetIndex])){
                     data[pixOffsetIndex] = 0.0f;
-                    //std::cout << "data[pixOffsetIndex] is nan on face: " << face << " for pixOffsetIndex = " << pixOffsetIndex  << std::endl;
+                    std::cout << "data[pixOffsetIndex] is nan on face: " << face << " for pixOffsetIndex = " << pixOffsetIndex  << std::endl;
 
                 }
                 if(std::isnan((float)data[pixOffsetIndex+1])){
                     data[pixOffsetIndex+1] = 0.0f;
-                    //std::cout << "data[pixOffsetIndex+1] is nan on face: " << face << " for pixOffsetIndex = " << pixOffsetIndex  << std::endl;
+                    std::cout << "data[pixOffsetIndex+1] is nan on face: " << face << " for pixOffsetIndex = " << pixOffsetIndex  << std::endl;
 
                 }
                 if(std::isnan((float)data[pixOffsetIndex+2])){
                     data[pixOffsetIndex+2] = 0.0f;
-                    //std::cout << "data[pixOffsetIndex+2] is nan on face: " << face << " for pixOffsetIndex = " << pixOffsetIndex  << std::endl;
+                    std::cout << "data[pixOffsetIndex+2] is nan on face: " << face << " for pixOffsetIndex = " << pixOffsetIndex  << std::endl;
 
                 }
                 // get color from texture and map to range [0, 1]

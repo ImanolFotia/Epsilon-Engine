@@ -129,6 +129,10 @@ namespace Epsilon
             return m_PhysicsWorld;
         }
 
+        auto getShaders() {
+            return ShadersList;
+        }
+
         uint32_t getNearestCubemapIndex(glm::vec3 pos);
 
         uint32_t getNumCubemaps();

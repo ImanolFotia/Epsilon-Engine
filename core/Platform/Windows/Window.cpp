@@ -1,6 +1,6 @@
 #include "Window.hpp"
 
-#ifdef WIN32
+#ifdef _WIN32
 namespace Epsilon
 {
     namespace Platform

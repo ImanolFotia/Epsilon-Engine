@@ -39,7 +39,7 @@ namespace Epsilon
 
         using namespace Input;
 
-        //Mouse::MouseEventHandler += beacon::bind(&onMouseWheelCallback, this);
+        // Mouse::MouseEventHandler += beacon::bind(&onMouseWheelCallback, this);
     }
 
     void Camera::onMouseWheelCallback(beacon::sender *sender, beacon::args *args)
@@ -134,7 +134,7 @@ namespace Epsilon
             lastY = Input::Mouse::YPOS;
         }
 
-        //horizontalAngle += ()
+        // horizontalAngle += ()
 
         LockCamera();
 
@@ -158,28 +158,28 @@ namespace Epsilon
             if (Input::KeyBoard::KEYS[Input::GLFW::Key::W])
             {
                 MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-                //MovementVector += Orientation * MovementSpeed * DeltaTime;
+                // MovementVector += Orientation * MovementSpeed * DeltaTime;
                 Position += Orientation * MovementSpeed * DeltaTime;
             }
 
             if (Input::KeyBoard::KEYS[Input::GLFW::Key::S])
             {
                 MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-                //MovementVector -= Orientation * MovementSpeed * DeltaTime;
+                // MovementVector -= Orientation * MovementSpeed * DeltaTime;
                 Position -= Orientation * MovementSpeed * DeltaTime;
             }
 
             if (Input::KeyBoard::KEYS[Input::GLFW::Key::D])
             {
                 MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-                //MovementVector += Rigth * MovementSpeed * DeltaTime;
+                // MovementVector += Rigth * MovementSpeed * DeltaTime;
                 Position += Rigth * MovementSpeed * DeltaTime;
             }
 
             if (Input::KeyBoard::KEYS[Input::GLFW::Key::A])
             {
                 MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-                //MovementVector -= Rigth * MovementSpeed * DeltaTime;
+                // MovementVector -= Rigth * MovementSpeed * DeltaTime;
                 Position -= Rigth * MovementSpeed * DeltaTime;
             }
 
@@ -199,9 +199,7 @@ namespace Epsilon
             if (Input::KeyBoard::getKey(Input::GLFW::Key::W) || _Joystick->L3().y < -0.1)
             {
                 MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-                Position += Orientation * MovementSpeed * DeltaTime * (_Joystick->L3().y < -0.1 ? glm::abs(_Joystick->L3().y * 2.0f) : 1.0f);
-                std::cout << (_Joystick->L3().y < -0.1 ? glm::abs(_Joystick->L3().y * 2.0f) : 1.0f) << std::endl;
-                std::cout << Position.x << " " << Position.z << std::endl;
+                Position += Orientation * MovementSpeed * DeltaTime * (_Joystick->L3().y < -0.1 ? glm::abs(_Joystick->L3().y * 2.0f) : 2.0f);
             }
 
             if (Input::KeyBoard::KEYS[Input::GLFW::Key::S] || _Joystick->L3().y > 0.1)
@@ -223,18 +221,18 @@ namespace Epsilon
             }
 
             if (
-                (!Input::KeyBoard::getKey(Input::GLFW::Key::W) || _Joystick->L3().x > -0.1) &&
-                (!Input::KeyBoard::KEYS[Input::GLFW::Key::S] || _Joystick->L3().x < 0.1) &&
-                (!Input::KeyBoard::KEYS[Input::GLFW::Key::D] || _Joystick->L3().y > -0.1) &&
-                (!Input::KeyBoard::KEYS[Input::GLFW::Key::A] || _Joystick->L3().y < 0.1))
+                (!Input::KeyBoard::getKey(Input::GLFW::Key::W) && _Joystick->L3().x > -0.1) &&
+                (!Input::KeyBoard::KEYS[Input::GLFW::Key::S] && _Joystick->L3().x < 0.1) &&
+                (!Input::KeyBoard::KEYS[Input::GLFW::Key::D] && _Joystick->L3().y > -0.1) &&
+                (!Input::KeyBoard::KEYS[Input::GLFW::Key::A] && _Joystick->L3().y < 0.1))
             {
-                //MovementSpeed = 0.0f; //glm::mix(MovementSpeed, 0.0f, 2.0f * DeltaTime);
+                // MovementSpeed = 0.0f; //glm::mix(MovementSpeed, 0.0f, 2.0f * DeltaTime);
                 MovementSpeed = glm::mix(MovementSpeed, 0.0f, 2.0f * DeltaTime);
             }
         }
         /** ------------------------------------------------------------------*/
 
-        //MovementSpeed = glm::mix(MovementSpeed, 0.0f, 2.0f * DeltaTime);
+        // MovementSpeed = glm::mix(MovementSpeed, 0.0f, 2.0f * DeltaTime);
         if (MovementSpeed < 0.01f)
             MovementSpeed = 0.0f;
         if (LastPosition != Position)
@@ -247,16 +245,16 @@ namespace Epsilon
 
         LastTime = currentTime;
 
-        //Position += (MovementVector * MovementSpeed * DeltaTime);
-        //Position += MovementVector;
+        // Position += (MovementVector * MovementSpeed * DeltaTime);
+        // Position += MovementVector;
         if (!externallymodified)
         {
             mIsMoving = false;
-            //DeltaVector = (Position - LastPosition);
+            // DeltaVector = (Position - LastPosition);
             if (LastPosition != Position)
             {
-                //DeltaVector = (Position - LastPosition);
-                //MovementVector = glm::normalize(DeltaVector / glm::vec3(glm::sqrt(glm::pow(DeltaVector.x, 2.0) + glm::pow(DeltaVector.y, 2.0) + glm::pow(DeltaVector.z, 2.0))));
+                // DeltaVector = (Position - LastPosition);
+                // MovementVector = glm::normalize(DeltaVector / glm::vec3(glm::sqrt(glm::pow(DeltaVector.x, 2.0) + glm::pow(DeltaVector.y, 2.0) + glm::pow(DeltaVector.z, 2.0))));
                 mIsMoving = true;
             }
             if (LastOrientation != Orientation)
@@ -268,7 +266,7 @@ namespace Epsilon
         }
     }
 
-    void Camera::UpdateMatrices(int FrameNumber, int frame_w, int frame_h, bool jitter)
+    glm::vec2 Camera::UpdateMatrices(int FrameNumber, int frame_w, int frame_h, bool jitter)
     {
 
         LastPosition = Position;
@@ -283,7 +281,8 @@ namespace Epsilon
         static const glm::vec2 iRes = 1.0f / glm::vec2((float)winx, (float)winy);
 
         ProjectionMatrix = glm::perspective(glm::radians(FieldOfView), glm::clamp(Aspectratio, -10.0f, 10.0f), near_plane, far_plane);
- 
+
+        glm::vec2 Jitter;
         if (jitter)
         {
             glm::vec2 Sample = Helpers::halton(FrameNumber % 16 + 1);
@@ -300,14 +299,7 @@ namespace Epsilon
             Position + Orientation,
             glm::vec3(0.0f, 1.0f, 0.0f));
 
-            CameraData.direction = glm::vec4(Orientation, 1.0f);
-            CameraData.position = glm::vec4(Position, 1.0f);
-            CameraData.view = ViewMatrix;
-            CameraData.projection = ProjectionMatrix;
-            CameraData.invview = glm::inverse(ViewMatrix);
-            CameraData.invprojection = glm::inverse(ProjectionMatrix);
-            CameraData.near = near_plane;
-            CameraData.far = far_plane;
+        return Jitter;
     }
 
     glm::mat4 Camera::getViewMatrix(void)
@@ -322,7 +314,7 @@ namespace Epsilon
 
     bool Camera::isMoving()
     {
-        return true; //mIsMoving; //return true to cancel temporal SSR denoiser
+        return true; // mIsMoving; //return true to cancel temporal SSR denoiser
     }
 
     void Camera::isMoving(bool x)
@@ -388,6 +380,5 @@ namespace Epsilon
     void Camera::setViewMatrix(glm::mat4 newView)
     {
         this->ViewMatrix = newView;
-    } 
+    }
 } // namespace Epsilon
- 

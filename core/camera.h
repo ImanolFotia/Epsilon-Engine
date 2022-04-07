@@ -25,21 +25,6 @@ namespace Epsilon
     class Camera
     {
     public:
-        struct CameraData_t
-        {
-            glm::vec4 position;
-            glm::vec4 direction;
-            glm::mat4 projection;
-            glm::mat4 view;
-            glm::mat4 invprojection;
-            glm::mat4 invview;
-            int CurrentSelectedEntity = -1;
-            float padding2[3];
-            float near;
-            float padding0[3];
-            float far;
-            float padding1[3];
-        };
 
     public:
         Camera(glm::vec3, glm::vec3);
@@ -52,7 +37,7 @@ namespace Epsilon
     public:
         void Update(GLFWwindow *);
 
-        void UpdateMatrices(int, int, int, bool jitter = true);
+        glm::vec2 UpdateMatrices(int, int, int, bool jitter = true);
 
         glm::mat4 getViewMatrix(void);
 
@@ -91,6 +76,9 @@ namespace Epsilon
         }
 
         void onMouseWheelCallback(beacon::sender *sender, beacon::args *args);
+        
+        float getNearPlane() { return near_plane; }
+        float getFarPlane() { return far_plane; }
 
     private:
         void LockCamera(void);
@@ -98,6 +86,7 @@ namespace Epsilon
         void HandleInputs(GLFWwindow *&);
 
         void GetExternalInputs(void);
+
 
     public:
         glm::mat4 MVP;
@@ -112,8 +101,6 @@ namespace Epsilon
         bool mIsMoving = false;
         bool externallymodified = true;
         float jitter_multiplier = 1.0;
-
-        CameraData_t CameraData = {};
 
     private:
         glm::vec3 Rigth;

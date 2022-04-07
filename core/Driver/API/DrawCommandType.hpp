@@ -9,4 +9,7 @@ namespace Epsilon::API
         MultiIndirect,
         Size
     };
+
+    struct DrawCommandDataBase_t {
+    };
 }

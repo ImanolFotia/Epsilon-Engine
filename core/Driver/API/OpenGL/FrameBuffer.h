@@ -11,7 +11,7 @@
 namespace Epsilon::OpenGL
 {
     template <typename T>
-    class FrameBuffer : public API::Framebuffer
+    class FrameBuffer : public Epsilon::API::Framebuffer<T>
     {
     public:
         FrameBuffer(int width, int height, bool DepthAttachment)
@@ -65,7 +65,10 @@ namespace Epsilon::OpenGL
                 return false;
 
             if (isDepthAttachment)
-                addDepthAttachment();
+                if(mDepthAttachmentType == GL_DEPTH_COMPONENT32F || mDepthAttachmentType == GL_DEPTH_COMPONENT16)
+                    addDepthAttachment();
+                else 
+                    addStencilAttachment();
 
             this->bindFramebuffer();
 
@@ -88,6 +91,11 @@ namespace Epsilon::OpenGL
         {
             if (mIsDefaultFramebuffer)
                 return false;
+                
+            mDepthAttachmentType = GL_DEPTH_COMPONENT32F;
+
+            if(m_DepthTextureTarget != 0)
+            glDeleteRenderbuffers(1, &m_DepthTextureTarget);
 
             this->bindFramebuffer();
             glGenRenderbuffers(1, &m_DepthTextureTarget);
@@ -99,12 +107,29 @@ namespace Epsilon::OpenGL
             return true;
         }
 
+        bool addStencilAttachment() {
+            if(mIsDefaultFramebuffer) return false;
+            mDepthAttachmentType = GL_DEPTH32F_STENCIL8;
+
+            if(m_DepthTextureTarget != 0)
+            glDeleteRenderbuffers(1, &m_DepthTextureTarget);
+
+            bindFramebuffer(); 
+            glGenRenderbuffers(1, &m_DepthTextureTarget);
+            glBindRenderbuffer(GL_RENDERBUFFER, m_DepthTextureTarget);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH32F_STENCIL8, WIDTH, HEIGHT);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_DepthTextureTarget);
+            unbindFramebuffer();
+
+            return true;
+        }
+
         void bindFramebuffer()
         {
             glBindFramebuffer(GL_FRAMEBUFFER, m_FramebufferHandler);
         }
 
-        void unbindFramebuffer()
+        void unbindFramebuffer() override
         {
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }
@@ -126,13 +151,13 @@ namespace Epsilon::OpenGL
         void BindDepthBuffer(int w, int h)
         {
             glBindRenderbuffer(GL_RENDERBUFFER, m_DepthTextureTarget);
-            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32F, w, h);
+            glRenderbufferStorage(GL_RENDERBUFFER, mDepthAttachmentType, w, h);
         }
         
         void BindDepthBuffer()
         {
             glBindRenderbuffer(GL_RENDERBUFFER, m_DepthTextureTarget);
-            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32F, WIDTH, HEIGHT);
+            glRenderbufferStorage(GL_RENDERBUFFER, mDepthAttachmentType, WIDTH, HEIGHT);
         }
 
         void ClearAttachment(T att, const void *col)
@@ -271,5 +296,7 @@ namespace Epsilon::OpenGL
 
         bool isDepthAttachment;
         bool mIsDefaultFramebuffer = false;
+
+        GLenum mDepthAttachmentType;
     };
 } // namespace Epsilon

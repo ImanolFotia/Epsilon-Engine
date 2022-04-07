@@ -6,6 +6,7 @@
 
 #include <Renderer/Primitives/Primitive.hpp>
 #include <Renderer/Primitives/Cube.hpp>
+#include <Renderer/Primitives/Plane.hpp>
 #include <Gaussian.hpp>
 
 namespace Epsilon::Editor
@@ -21,13 +22,13 @@ namespace Epsilon::Editor
         (void)io;
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-        //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-        //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+        // io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+        // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
         const char *glsl_version = "#version 410 core";
         // Setup Dear ImGui style
-        //ImGui::StyleColorsDark();
-        //ImGui::StyleColorsClassic();
+        // ImGui::StyleColorsDark();
+        // ImGui::StyleColorsClassic();
 
         Init_ImGui_Custom();
 
@@ -37,8 +38,8 @@ namespace Epsilon::Editor
 
         using namespace Input;
         Mouse::MouseEventHandler += beacon::bind(&Editor::onLeftClickCallback, this);
-
-        Mouse::MouseEventHandler += beacon::bind(&Editor::onMouseWheelCallback, this);
+        Mouse::MouseEventHandler += beacon::bind(&Editor::onMouseMove, this);
+        // Mouse::MouseEventHandler += beacon::bind(&Editor::onMouseWheelCallback, this);
 
         KeyBoard::KeyboardEventHandler += beacon::bind(&Editor::onKeyPress, this);
 
@@ -48,27 +49,66 @@ namespace Epsilon::Editor
         FileSystemReference.mount(std::filesystem::current_path().string(), Filesystem::VirtualFilesystem::Type::directory, "Root");
 
         GUI::Theme::Pop::set();
-        //FileSystemReference.list();
+        // FileSystemReference.list();
     }
 
     void Editor::onKeyPress(beacon::sender *sender, beacon::args *args)
     {
         auto obj = args->to<Input::KeyboardArgs>();
 
-        if (obj.key_down_index == Input::GLFW::Key::G)
+        if (*CameraMode != CAMERA_MODE::NO_CLIP)
         {
-            gizmo_status = Renderer::Gizmo::gizmo::translate;
+            if (obj.key_down_index == Input::GLFW::Key::G)
+            {
+                isInModifyMode = !isInModifyMode;
+                gizmo_status = Renderer::Gizmo::gizmo::translate;
+            }
+            else if (obj.key_down_index == Input::GLFW::Key::R)
+            {
+                isInModifyMode = !isInModifyMode;
+                gizmo_status = Renderer::Gizmo::gizmo::rotate;
+            }
+            else if (obj.key_down_index == Input::GLFW::Key::S)
+            {
+                isInModifyMode = !isInModifyMode;
+                gizmo_status = Renderer::Gizmo::gizmo::scale;
+            }
+            else
+            {
+            }
         }
-        else if (obj.key_down_index == Input::GLFW::Key::R)
+    }
+
+    void Editor::onMouseMove(beacon::sender *sender, beacon::args *args)
+    {
+        if (sSelectedEntity == nullptr)
+            return;
+
+        auto obj = args->to<Input::MouseArgs>();
+
+        if (!isInModifyMode)
+            return;
+
+        auto position = sSelectedEntity->Transform->Position();
+        auto scale = sSelectedEntity->Transform->Scale();
+        auto rotation = sSelectedEntity->Transform->Rotation();
+
+        switch (gizmo_status)
         {
-            gizmo_status = Renderer::Gizmo::gizmo::rotate;
+        case Renderer::Gizmo::gizmo::translate:
+        {
+            auto right = m_StrategyControllerReference->getRight();
+            auto direction = m_StrategyControllerReference->getOrientation();
+            glm::vec2 m_Movement = glm::normalize(right) * (float)obj.X();
+            m_Movement += glm::normalize(direction) * (float)obj.Y();
+            position += glm::normalize(glm::vec3(m_Movement.x, 0.0, m_Movement.y));
+            sSelectedEntity->Transform->Position(position);
+            break;
         }
-        else if (obj.key_down_index == Input::GLFW::Key::S)
-        {
-            gizmo_status = Renderer::Gizmo::gizmo::scale;
-        }
-        else
-        {
+        case Renderer::Gizmo::gizmo::rotate:
+            break;
+        case Renderer::Gizmo::gizmo::scale:
+            break;
         }
     }
 
@@ -103,6 +143,10 @@ namespace Epsilon::Editor
             return;
 
         auto obj = args->to<Input::MouseArgs>();
+        
+        if (isInModifyMode && obj.Left().State == Input::PRESSED)
+            isInModifyMode = !isInModifyMode;
+
         if (obj.Left().State == Input::PRESSED && isMainWindowFocused)
         {
             auto is_valid = [](glm::vec4 vec)
@@ -117,7 +161,7 @@ namespace Epsilon::Editor
                 int32_t selectedPixel[4] = {-1, -1, -1, -1};
                 glReadBuffer(GL_COLOR_ATTACHMENT0 + PostProcess::GBUFFER_TARGETS::GBUFFER_ENTITY);
                 glReadPixels(MousePosOnViewport.x, MousePosOnViewport.y, 1, 1, GL_RGBA_INTEGER, GL_INT, &selectedPixel);
-                //std::cout << selectedPixel << std::endl;
+                // std::cout << selectedPixel << std::endl;
                 std::cout << "selection: " << selectedPixel[0] << " " << selectedPixel[1] << " " << selectedPixel[2] << std::endl;
                 sSelectedEntityIndex = selectedPixel[0];
                 PostProcess_ref->gBufferFramebuffer->unbindFramebuffer();
@@ -131,7 +175,7 @@ namespace Epsilon::Editor
         ImPlot::SetNextPlotLimits(0, count - 1, min_v, max_v, ImGuiCond_Always);
         if (ImPlot::BeginPlot(id, 0, 0, size, ImPlotFlags_CanvasOnly | ImPlotFlags_NoChild, ImPlotAxisFlags_NoDecorations, ImPlotAxisFlags_NoDecorations))
         {
-            //ImPlot::PlotText(overlay, 10.0, 6.0, );
+            // ImPlot::PlotText(overlay, 10.0, 6.0, );
             ImPlot::PushStyleColor(ImPlotCol_Line, col);
             ImPlot::PlotLine(id, values, count, 1, 0, offset);
             ImPlot::PushStyleVar(ImPlotStyleVar_FillAlpha, 0.25f);
@@ -167,7 +211,7 @@ namespace Epsilon::Editor
 
                 ImGui::BulletText("%s", overlay);
                 SparkLine("CPU Usage", overlay, values, IM_ARRAYSIZE(values), 0.0, 100.0, values_offset, CPU_Color, ImVec2(-1, 60));
-                //ImGui::PlotLines("CPU Usage", values, IM_ARRAYSIZE(values), values_offset, overlay, 0.0f, 100.0f, ImVec2(0, 60.0f));
+                // ImGui::PlotLines("CPU Usage", values, IM_ARRAYSIZE(values), values_offset, overlay, 0.0f, 100.0f, ImVec2(0, 60.0f));
             }
         }
 
@@ -203,7 +247,7 @@ namespace Epsilon::Editor
 
                 ImGui::BulletText("%s", overlay);
                 SparkLine("Frametime", overlay, frametime_values, 100, 0.0, average * 3.0f, frametime_values_offset, Frametime_Color, ImVec2(-1, 60));
-                //ImGui::PlotLines("Frametime", frametime_values, IM_ARRAYSIZE(frametime_values), frametime_values_offset, overlay, 0.0f, 1.0f, ImVec2(0, 60.0f));
+                // ImGui::PlotLines("Frametime", frametime_values, IM_ARRAYSIZE(frametime_values), frametime_values_offset, overlay, 0.0f, 1.0f, ImVec2(0, 60.0f));
             }
         }
         {
@@ -224,7 +268,7 @@ namespace Epsilon::Editor
 
                 ImGui::BulletText("%s", overlay);
                 SparkLine("Framerate", overlay, framerate_values, IM_ARRAYSIZE(framerate_values), 0.0, average * 2.0f, framerate_values_offset, Framerate_Color, ImVec2(-1, 60));
-                //ImGui::PlotLines("Framerate", framerate_values, IM_ARRAYSIZE(framerate_values), framerate_values_offset, overlay, 0.0f, 500.0f, ImVec2(0, 60.0f));
+                // ImGui::PlotLines("Framerate", framerate_values, IM_ARRAYSIZE(framerate_values), framerate_values_offset, overlay, 0.0f, 500.0f, ImVec2(0, 60.0f));
             }
         }
         ImGui::Separator();
@@ -260,7 +304,7 @@ namespace Epsilon::Editor
 
                 ImGui::BulletText("%s", overlay);
                 SparkLine("Memory", overlay, memory_values, IM_ARRAYSIZE(memory_values), 0.0, mMemory.TotalPhysicalMemory() / div, memory_values_offset, Framerate_Color, ImVec2(-1, 60));
-                //ImGui::PlotLines("Framerate", framerate_values, IM_ARRAYSIZE(framerate_values), framerate_values_offset, overlay, 0.0f, 500.0f, ImVec2(0, 60.0f));
+                // ImGui::PlotLines("Framerate", framerate_values, IM_ARRAYSIZE(framerate_values), framerate_values_offset, overlay, 0.0f, 500.0f, ImVec2(0, 60.0f));
             }
         }
     }
@@ -336,11 +380,11 @@ namespace Epsilon::Editor
 
         if (opt_flags & ImGuiDockNodeFlags_PassthruCentralNode)
             window_flags |= ImGuiWindowFlags_NoBackground;
-        //ImGui::PushStyleColor(ImGuiCol_DockingEmptyBg);
+        // ImGui::PushStyleColor(ImGuiCol_DockingEmptyBg);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
         ImGui::Begin("Main Window", NULL, window_flags); // Create a window called "Hello, world!" and append into it.
         ImGui::PopStyleVar();
-        //ImGui::PopStyleColor();
+        // ImGui::PopStyleColor();
 
         if (opt_fullscreen)
             ImGui::PopStyleVar(2);
@@ -353,7 +397,7 @@ namespace Epsilon::Editor
         }
         else
         {
-            //ShowDockingDisabledMessage();
+            // ShowDockingDisabledMessage();
         }
 
         if (ImGui::BeginMainMenuBar())
@@ -364,7 +408,7 @@ namespace Epsilon::Editor
                 if (ImGui::MenuItem(ICON_FA_FILE " New Project", NULL, &show_new_project_window))
                 {
                 }
-                if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Open Project", "Ctrl+O"))
+                if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Open Project", "Ctrl+O", &show_open_project_window))
                 {
                 }
                 if (ImGui::BeginMenu(ICON_FA_FOLDER_OPEN " Open Recent Project"))
@@ -387,6 +431,7 @@ namespace Epsilon::Editor
                 }
                 if (ImGui::MenuItem(ICON_FA_SAVE " Save", "Ctrl+S"))
                 {
+                    SaveProject();
                 }
                 if (ImGui::MenuItem(ICON_FA_SAVE " Save As.."))
                 {
@@ -395,10 +440,10 @@ namespace Epsilon::Editor
                 {
                     {
 
-                        glm::vec3 tPosition = glm::vec3(-5, 15, -5);
-                        glm::vec3 tScale = glm::vec3(0.025);
+                        glm::vec3 tPosition = glm::vec3(1.0, 1.0, 1.0);
+                        glm::vec3 tScale = glm::vec3(1.0);
                         glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
-                        std::string tModelName = "models/sponza.eml";
+                        std::string tModelName = "models/bigboss.eml";
 
                         std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(tPosition, tScale, tRotation);
 
@@ -406,8 +451,9 @@ namespace Epsilon::Editor
                         _RComp->CastsShadows(true);
                         _RComp->setTransparency(false);
                         _RComp->setVisibility(true);
+                        _RComp->isDoubleFaced(false);
                         _RComp->setRenderId(EntityList.size());
-                        //Component::Component_ptr _SComp = std::make_shared<Component::ScriptComponent>("scripts/test.lua");
+                        // Component::Component_ptr _SComp = std::make_shared<Component::ScriptComponent>("scripts/test.lua");
                         _Entity->addComponent(_RComp);
 
                         _Entity->setName(std::string("Entity") + std::to_string(EntityList.size()));
@@ -475,7 +521,7 @@ namespace Epsilon::Editor
                 if (ImGui::MenuItem("Update GI"))
                 {
 
-                    //mRenderGIFunction();
+                    // mRenderGIFunction();
                     mShouldRenewGI = true;
                 }
                 ImGui::EndMenu();
@@ -510,6 +556,12 @@ namespace Epsilon::Editor
         {
             ImGui::OpenPopup("New Project");
             GUI::Project::NewProject(&show_new_project_window);
+        }
+
+        if (show_open_project_window)
+        {
+            ImGui::OpenPopup("Open Project");
+            GUI::Project::OpenProject(&show_open_project_window);
         }
 
         if (show_app_style_editor)
@@ -628,8 +680,130 @@ namespace Epsilon::Editor
 #endif
                 {
                     Shader_ptr item = iter->second;
-                    //if (!filter.PassFilter(item->Name))
-                    //    continue;
+                    // if (!filter.PassFilter(item->Name))
+                    //     continue;
+
+                    const bool item_is_selected = selection.contains(iter->first);
+                    ImGui::PushID(iter->first.c_str());
+                    ImGui::TableNextRow(ImGuiTableRowFlags_None, row_min_height);
+
+                    // For the demo purpose we can select among different type of items submitted in the first column
+                    ImGui::TableSetColumnIndex(0);
+                    char label[32];
+                    sprintf(label, "%04d", iter->second->getProgramID());
+                    if (contents_type == CT_Text)
+                        ImGui::TextUnformatted(label);
+                    else if (contents_type == CT_Button)
+                        ImGui::Button(label);
+                    else if (contents_type == CT_SmallButton)
+                        ImGui::SmallButton(label);
+                    else if (contents_type == CT_FillButton)
+                        ImGui::Button(label, ImVec2(-FLT_MIN, 0.0f));
+                    else if (contents_type == CT_Selectable || contents_type == CT_SelectableSpanRow)
+                    {
+                        ImGuiSelectableFlags selectable_flags = (contents_type == CT_SelectableSpanRow) ? ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowItemOverlap : ImGuiSelectableFlags_None;
+                        if (ImGui::Selectable(label, item_is_selected, selectable_flags, ImVec2(0, row_min_height)))
+                        {
+                            if (ImGui::GetIO().KeyCtrl)
+                            {
+                                if (item_is_selected)
+                                    selection.find_erase_unsorted(iter->first);
+                                else
+                                    selection.push_back(iter->first);
+                            }
+                            else
+                            {
+                                selection.clear();
+                                selection.push_back(iter->first);
+                            }
+                        }
+                    }
+
+                    if (ImGui::TableSetColumnIndex(1))
+                        ImGui::TextUnformatted(iter->first.c_str());
+
+                    // Here we demonstrate marking our data set as needing to be sorted again if we modified a quantity,
+                    // and we are currently sorting on the column showing the Quantity.
+                    // To avoid triggering a sort while holding the button, we only trigger it when the button has been released.
+                    // You will probably need a more advanced system in your code if you want to automatically sort when a specific entry changes.
+                    if (ImGui::TableSetColumnIndex(2))
+                    {
+                        if (ImGui::Button(ICON_FA_SYNC ""))
+                        {
+                            item->Reload();
+                        }
+                        if (ImGui::IsItemDeactivated())
+                        {
+                            items_need_sort = true;
+                        }
+                    }
+
+                    ImGui::PopID();
+                }
+            }
+            ImGui::PopButtonRepeat();
+
+            // Store some info to display debug details below
+            table_scroll_cur = ImVec2(ImGui::GetScrollX(), ImGui::GetScrollY());
+            table_scroll_max = ImVec2(ImGui::GetScrollMaxX(), ImGui::GetScrollMaxY());
+            table_draw_list = ImGui::GetWindowDrawList();
+            ImGui::EndTable();
+        }
+
+        if (ImGui::BeginTable("table_advanced_2", 3, flags, outer_size_enabled ? outer_size_value : ImVec2(0, 0), inner_width_to_use))
+        {
+            // Declare columns
+            // We use the "user_id" parameter of TableSetupColumn() to specify a user id that will be stored in the sort specifications.
+            // This is so our sort function can identify a column given our own identifier. We could also identify them based on their index!
+            ImGui::TableSetupColumn("ID", ImGuiTableColumnFlags_DefaultSort | ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoHide, 0.0f, ShaderAction_Id);
+            ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_WidthFixed, 0.0f, ShaderAction_Name);
+            ImGui::TableSetupColumn("Action", ImGuiTableColumnFlags_NoSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, ShaderAction_Reload);
+            ImGui::TableSetupScrollFreeze(0, 0);
+
+            // Sort our data if sort specs have been changed!
+            /* ImGuiTableSortSpecs *sorts_specs = ImGui::TableGetSortSpecs();
+            if (sorts_specs && sorts_specs->SpecsDirty)
+                items_need_sort = true;
+            if (sorts_specs && items_need_sort && items.Size > 1)
+            {
+                MyItem::s_current_sort_specs = sorts_specs; // Store in variable accessible by the sort function.
+                qsort(&items[0], (size_t)items.Size, sizeof(items[0]), MyItem::CompareWithSortSpecs);
+                MyItem::s_current_sort_specs = NULL;
+                sorts_specs->SpecsDirty = false;
+            }
+            items_need_sort = false;*/
+
+            // Take note of whether we are currently sorting based on the Quantity field,
+            // we will use this to trigger sorting when we know the data of this column has been modified.
+
+            // Show headers
+            if (show_headers)
+                ImGui::TableHeadersRow();
+
+            // Show data
+            // FIXME-TABLE FIXME-NAV: How we can get decent up/down even though we have the buttons here?
+            ImGui::PushButtonRepeat(true);
+
+            auto &ref = ResourceManager::Get();
+            auto ref_shaders = ref.getShaders();
+
+            auto iter = ref_shaders.begin();
+#if 1
+            // Demonstrate using clipper for large vertical lists
+            ImGuiListClipper clipper;
+            clipper.Begin(ref_shaders.size());
+            while (clipper.Step())
+            {
+                for (int row_n = clipper.DisplayStart; row_n < clipper.DisplayEnd; row_n++, iter++)
+#else
+            // Without clipper
+            {
+                for (int row_n = 0; row_n < items.Size; row_n++, iter++)
+#endif
+                {
+                    Shader_ptr item = iter->second;
+                    // if (!filter.PassFilter(item->Name))
+                    //     continue;
 
                     const bool item_is_selected = selection.contains(iter->first);
                     ImGui::PushID(iter->first.c_str());
@@ -709,7 +883,7 @@ namespace Epsilon::Editor
             ImGui::SetNextWindowSize(fu, ImGuiCond_FirstUseEver);
             ImGui::Begin("Debug Framebuffer", &show_pipeline_viewer);
 
-            //get the mouse position
+            // get the mouse position
             ImVec2 pos = ImGui::GetCursorScreenPos();
 
             static const char *items[] = {"gBuffer Normal", "Light Pass", "TAA", "SSGI", "Screen Space Reflections", "Global Illumination", "Entity"};
@@ -732,7 +906,7 @@ namespace Epsilon::Editor
 
             auto TextureId = 0;
 
-            if (!std::strcmp(item_current,"Light Pass"))
+            if (!std::strcmp(item_current, "Light Pass"))
                 TextureId = PP->getSceneTexture();
             else if (!std::strcmp(item_current, "gBuffer Normal"))
                 TextureId = PP->gBufferFramebuffer->getRenderTargetHandler(PostProcess::GBUFFER_TARGETS::GBUFFER_NORMAL);
@@ -747,20 +921,20 @@ namespace Epsilon::Editor
             else if (!std::strcmp(item_current, "Entity"))
                 TextureId = PP->gBufferFramebuffer->getRenderTargetHandler(PostProcess::GBUFFER_TARGETS::GBUFFER_ENTITY);
 
-            //we are done working with this window
+            // we are done working with this window
             unsigned int fb_size[3] = {(unsigned int)*WIDTH, (unsigned int)*HEIGHT, GammaShader->getProgramID()};
 
-            //ImGui::GetWindowDrawList()->AddCallback([]() { }, nullptr);
-            ImGui::Image((void*)(intptr_t)(TextureId), ImVec2(mImguiRenderWindow.x, mImguiRenderWindow.y), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 0.5f));
+            // ImGui::GetWindowDrawList()->AddCallback([]() { }, nullptr);
+            ImGui::Image((void *)(intptr_t)(TextureId), ImVec2(mImguiRenderWindow.x, mImguiRenderWindow.y), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 0.5f));
 
-            //ImGui::GetWindowDrawList()->AddCallback(ImDrawCallback_ResetRenderState, nullptr);
+            // ImGui::GetWindowDrawList()->AddCallback(ImDrawCallback_ResetRenderState, nullptr);
             ImGui::End();
         }
     }
 
     void Editor::SkySettings(std::shared_ptr<Skybox> skybox, std::shared_ptr<Sun> sun)
     {
-        //if (!ImGui::CollapsingHeader("Skybox")) return;
+        // if (!ImGui::CollapsingHeader("Skybox")) return;
 
         ImGui::Begin("Skybox"); // Create a window called "Hello, world!" and append into it.
 
@@ -827,18 +1001,21 @@ namespace Epsilon::Editor
                     model = ref.getModel(RComponent->getModelPath());
                     auto *meshes = &model->Meshes();
 
-                    static std::string sizes[] = {"64", "128", "256", "512"};
-                    static std::string current_item = "1";
+                    static std::string current_item = model->mMeshesNames[0];
                     static int selected_item = 0;
+
+                    if (selected_item >= model->mMeshesNames.size())
+                        selected_item = 0;
+
                     if (ImGui::BeginCombo("Selected Mesh", current_item.c_str()))
                     {
                         for (int n = 0; n < meshes->size(); n++)
                         {
-                            bool is_selected = (current_item == sizes[n]); // You can store your selection however you want, outside or inside your objects
-                            if (ImGui::Selectable(sizes[n].c_str(), is_selected))
+                            bool is_selected = (current_item == model->mMeshesNames[n]); // You can store your selection however you want, outside or inside your objects
+                            if (ImGui::Selectable(model->mMeshesNames[n].c_str(), is_selected))
                             {
-                                current_item = sizes[n];
-                                //selected_item = n;
+                                current_item = model->mMeshesNames[n];
+                                selected_item = n;
                             }
                         }
                         ImGui::EndCombo();
@@ -852,8 +1029,15 @@ namespace Epsilon::Editor
                     material = std::static_pointer_cast<Renderer::Sphere>(RComponent->mDrawable)->getMaterial();
                 }
                 {
-
-                    std::string current_item = std::static_pointer_cast<Renderer::PrimitiveBase>(RComponent->mDrawable)->getMaterialId();
+                    std::string current_item;
+                    if (RComponent->mDrawable)
+                    {
+                        current_item = std::static_pointer_cast<Renderer::PrimitiveBase>(RComponent->mDrawable)->getMaterialId();
+                    }
+                    else
+                    {
+                        current_item = current_mesh->getMaterialId();
+                    }
                     auto &matRef = Renderer::MaterialManager::Get();
                     auto &materials = matRef.getMaterials();
                     if (ImGui::BeginCombo("Material:", current_item.c_str()))
@@ -864,12 +1048,19 @@ namespace Epsilon::Editor
                             if (ImGui::Selectable(key.c_str(), is_selected))
                             {
                                 current_item = key;
-                                //selected_item = n;
+                                // selected_item = n;
                             }
                         }
                         ImGui::EndCombo();
                     }
-                    std::static_pointer_cast<Renderer::PrimitiveBase>(RComponent->mDrawable)->setMaterial(current_item);
+                    if (RComponent->mDrawable)
+                    {
+                        std::static_pointer_cast<Renderer::PrimitiveBase>(RComponent->mDrawable)->setMaterial(current_item);
+                    }
+                    else
+                    {
+                        current_mesh->setMaterialId(current_item);
+                    }
                 }
 
                 if (ImGui::CollapsingHeader("Albedo"))
@@ -878,7 +1069,7 @@ namespace Epsilon::Editor
                     ImGui::Checkbox("Use albedo texture", &sUseAlbedoTexture);
                     if (sUseAlbedoTexture)
                     {
-                        auto texture = material->get<std::shared_ptr<Renderer::Texture2D>>(Renderer::Material::MaterialParameter::Albedo);
+                        auto texture = material->get<std::shared_ptr<Renderer::Texture2D>>(Renderer::MaterialBase::MaterialParameter::Albedo);
                         if (texture)
                         {
                             auto textureId = texture->ID();
@@ -890,7 +1081,7 @@ namespace Epsilon::Editor
                             }
                             std::pair<std::string, std::shared_ptr<Renderer::Texture2D>> texturePair = {name, texture};
 
-                            if (ImGui::ImageButton((void*)(uintptr_t)textureId, ImVec2(64, 64), ImVec2(0, 0), ImVec2(1, 1), 8, ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f)))
+                            if (ImGui::ImageButton((void *)(uintptr_t)textureId, ImVec2(64, 64), ImVec2(0, 0), ImVec2(1, 1), 8, ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f)))
                             {
                                 textureListVisible = true;
                             }
@@ -908,7 +1099,7 @@ namespace Epsilon::Editor
                                 ImGui::SameLine();
                                 ImGui::Text("%s", current_mesh->textures[0].path.c_str());
                             }
-                            material->setMaterial(Renderer::Material::MaterialParameter::Albedo, texture);
+                            material->setMaterial(Renderer::MaterialBase::MaterialParameter::Albedo, texture);
                         }
                         else
                         {
@@ -916,15 +1107,17 @@ namespace Epsilon::Editor
                             ref.addTextureToQueue("Survtech.png");
                             auto texture = ref.getTexture2D("Survtech.png");
 
-                            material->setMaterial(Renderer::Material::MaterialParameter::Albedo, texture);
+                            material->setMaterial(Renderer::MaterialBase::MaterialParameter::Albedo, texture);
                         }
-                        //ImGui::Text(texture.getData(). );
+                        // ImGui::Text(texture.getData(). );
                     }
                     else
                     {
-                        glm::vec3 color = material->get<glm::vec3>(Renderer::Material::MaterialParameter::Albedo);
-                        ImGui::ColorEdit3("Color##albedocolor", &color[0]);
-                        material->setMaterial(Renderer::Material::MaterialParameter::Albedo, color);
+                        //! THERE MIGHT BE SOMETHING WRONG GOING ON HERE
+                        glm::vec4 color = material->get<glm::vec4>(Renderer::MaterialBase::MaterialParameter::Albedo);
+                        float colorf[4] = {color.x, color.y, color.z, color.a};
+                        ImGui::ColorEdit4("Color##albedocolor", colorf);
+                        material->setMaterial(Renderer::MaterialBase::MaterialParameter::Albedo, glm::vec4(colorf[0], colorf[1], colorf[2], colorf[3]));
                     }
                 }
 
@@ -934,12 +1127,12 @@ namespace Epsilon::Editor
                     ImGui::Checkbox("Use roughness texture", &sUseRoughnessTexture);
                     if (sUseRoughnessTexture)
                     {
-                        auto texture = material->get<std::shared_ptr<Renderer::Texture2D>>(Renderer::Material::MaterialParameter::Roughness);
+                        auto texture = material->get<std::shared_ptr<Renderer::Texture2D>>(Renderer::MaterialBase::MaterialParameter::Roughness);
                         if (texture)
                         {
                             auto textureId = texture->ID();
 
-                            ImGui::ImageButton((void*)(uintptr_t)textureId, ImVec2(64, 64), ImVec2(0, 0), ImVec2(1, 1), 8, ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+                            ImGui::ImageButton((void *)(uintptr_t)textureId, ImVec2(64, 64), ImVec2(0, 0), ImVec2(1, 1), 8, ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
 
                             if (current_mesh)
                             {
@@ -947,18 +1140,18 @@ namespace Epsilon::Editor
                                 ImGui::Text("%s", current_mesh->textures[1].path.c_str());
                             }
 
-                            material->setMaterial(Renderer::Material::MaterialParameter::Roughness, texture);
+                            material->setMaterial(Renderer::MaterialBase::MaterialParameter::Roughness, texture);
                         }
-                        //ImGui::Text(texture.getData(). );
+                        // ImGui::Text(texture.getData(). );
                     }
                     else
                     {
-                        glm::vec3 color = material->get<glm::vec3>(Renderer::Material::MaterialParameter::Roughness);
-                        //ImGui::ColorEdit3("Color##roughnesscolor", &color[0]);
+                        glm::vec4 color = material->get<glm::vec4>(Renderer::MaterialBase::MaterialParameter::Roughness);
+                        // ImGui::ColorEdit3("Color##roughnesscolor", &color[0]);
                         ImGui::SliderFloat("Roughness##roughnesscolor", &color[0], 0.0, 1.0);
                         ImGui::SliderFloat("Subsurface Scattering##roughnesssss", &color[1], 0.0, 1.0);
                         ImGui::SliderFloat("Specular##roughnessspecular", &color[2], 0.0, 1.0);
-                        material->setMaterial(Renderer::Material::MaterialParameter::Roughness, color);
+                        material->setMaterial(Renderer::MaterialBase::MaterialParameter::Roughness, color);
                     }
                 }
 
@@ -968,26 +1161,26 @@ namespace Epsilon::Editor
                     ImGui::Checkbox("Use normal texture", &sUseNormalTexture);
                     if (sUseNormalTexture)
                     {
-                        auto texture = material->get<std::shared_ptr<Renderer::Texture2D>>(Renderer::Material::MaterialParameter::Normal);
+                        auto texture = material->get<std::shared_ptr<Renderer::Texture2D>>(Renderer::MaterialBase::MaterialParameter::Normal);
                         if (texture)
                         {
                             auto textureId = texture->ID();
 
-                            ImGui::ImageButton((void*)(uintptr_t)textureId, ImVec2(64, 64), ImVec2(0, 0), ImVec2(1, 1), 8, ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+                            ImGui::ImageButton((void *)(uintptr_t)textureId, ImVec2(64, 64), ImVec2(0, 0), ImVec2(1, 1), 8, ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
 
                             if (current_mesh)
                             {
                                 ImGui::SameLine();
                                 ImGui::Text("%s", current_mesh->textures[2].path.c_str());
                             }
-                            material->setMaterial(Renderer::Material::MaterialParameter::Normal, texture);
+                            material->setMaterial(Renderer::MaterialBase::MaterialParameter::Normal, texture);
                         }
-                        //ImGui::Text(texture.getData(). );
+                        // ImGui::Text(texture.getData(). );
                     }
                     else
                     {
-                        float color[3] = {0.5, 0.5, 1.0};
-                        material->setMaterial(Renderer::Material::MaterialParameter::Normal, glm::vec3(color[0], color[1], color[2]));
+                        float color[4] = {0.5, 0.5, 1.0, 1.0};
+                        material->setMaterial(Renderer::MaterialBase::MaterialParameter::Normal, glm::vec4(color[0], color[1], color[2], color[3]));
                     }
                 }
 
@@ -997,29 +1190,29 @@ namespace Epsilon::Editor
                     ImGui::Checkbox("Use metallic texture", &sUseMetallicTexture);
                     if (sUseMetallicTexture)
                     {
-                        auto texture = material->get<std::shared_ptr<Renderer::Texture2D>>(Renderer::Material::MaterialParameter::Metallic);
+                        auto texture = material->get<std::shared_ptr<Renderer::Texture2D>>(Renderer::MaterialBase::MaterialParameter::Metallic);
                         if (texture)
                         {
                             auto textureId = texture->ID();
 
-                            ImGui::ImageButton((void*)(uintptr_t)textureId, ImVec2(64, 64), ImVec2(0, 0), ImVec2(1, 1), 8, ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+                            ImGui::ImageButton((void *)(uintptr_t)textureId, ImVec2(64, 64), ImVec2(0, 0), ImVec2(1, 1), 8, ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
 
                             if (current_mesh)
                             {
                                 ImGui::SameLine();
                                 ImGui::Text("%s", current_mesh->textures[3].path.c_str());
                             }
-                            material->setMaterial(Renderer::Material::MaterialParameter::Metallic, texture);
+                            material->setMaterial(Renderer::MaterialBase::MaterialParameter::Metallic, texture);
                         }
                     }
                     else
                     {
-                        glm::vec3 color = material->get<glm::vec3>(Renderer::Material::MaterialParameter::Metallic);
-                        //ImGui::slider ("Color##metalliccolor", &color[0]);
+                        glm::vec4 color = material->get<glm::vec4>(Renderer::MaterialBase::MaterialParameter::Metallic);
+                        // ImGui::slider ("Color##metalliccolor", &color[0]);
                         ImGui::SliderFloat("Metallic##metalliccolor", &color[0], 0.0, 1.0);
                         ImGui::SliderFloat("Emissive##metallicemissive", &color[1], 0.0, 1.0);
                         ImGui::SliderFloat("Height##metallicheight", &color[2], 0.0, 1.0);
-                        material->setMaterial(Renderer::Material::MaterialParameter::Metallic, color);
+                        material->setMaterial(Renderer::MaterialBase::MaterialParameter::Metallic, color);
                     }
                 }
                 /*
@@ -1094,18 +1287,18 @@ namespace Epsilon::Editor
         }
 
         if (ImGui::CollapsingHeader("Bloom"))
-        {  
+        {
             ImGui::SliderFloat("a", &PostprocessData.BloomSettings.a, 0.0f, 5.0f);
             ImGui::SliderFloat("b", &PostprocessData.BloomSettings.b, 0.0f, 5.0f);
-            ImGui::SliderFloat("Amount", &PostprocessData.BloomSettings.sigma, 0.0f, 10.0f);
+            ImGui::SliderFloat("Amount", &PostprocessData.BloomSettings.sigma, 0.0f, 5.0f);
             auto kernel = GaussianKernel1D<10, float>(PostprocessData.BloomSettings.a, PostprocessData.BloomSettings.b, PostprocessData.BloomSettings.sigma);
             int index = 0;
-            for (int i = 11; i < 21; i++)
-            { 
+            for (int i = 10; i < 21; i++)
+            {
                 PostprocessData.BloomSettings.kernel[index] = kernel[i];
                 index++;
             }
-            //PostprocessData.BloomSettings.kernel = GaussianKernel1D<5, float>(PostprocessData.BloomSettings.a,PostprocessData.BloomSettings.b,PostprocessData.BloomSettings.sigma);
+            // PostprocessData.BloomSettings.kernel = GaussianKernel1D<5, float>(PostprocessData.BloomSettings.a,PostprocessData.BloomSettings.b,PostprocessData.BloomSettings.sigma);
         }
 
         ImGui::End();
@@ -1138,7 +1331,7 @@ namespace Epsilon::Editor
             if (ImGui::Button("Next"))
             {
                 if (current_item == component_type[0])
-                { //Render Component
+                { // Render Component
                 }
             }
 
@@ -1242,9 +1435,9 @@ namespace Epsilon::Editor
                     bool &transparent = RComponent->isTransparent;
                     bool &visible = RComponent->isVisible;
                     bool &double_faced = RComponent->mIsDoubleFaced;
-                    //auto p = RComponent->getPosition();
-                    //float tmpppos[3] = {p.x, p.y, p.z};
-                    //ImGui::DragFloat3("Position##4", tmpppos, 1.0, -30.0, 30.0);
+                    // auto p = RComponent->getPosition();
+                    // float tmpppos[3] = {p.x, p.y, p.z};
+                    // ImGui::DragFloat3("Position##4", tmpppos, 1.0, -30.0, 30.0);
                     static int buffer_size = modelPath.size();
                     char *buffer = (char *)modelPath.c_str();
                     if (modelPath.size() > 0)
@@ -1261,16 +1454,19 @@ namespace Epsilon::Editor
                     ImGui::Checkbox("Transparent", &transparent);
                     ImGui::Checkbox("Visible", &visible);
                     ImGui::Checkbox("Double Faced", &double_faced);
-                    //p = glm::vec3(tmpppos[0], tmpppos[1], tmpppos[2]);
-                    //RComponent->setPosition(p);
+                    // p = glm::vec3(tmpppos[0], tmpppos[1], tmpppos[2]);
+                    // RComponent->setPosition(p);
                 }
             }
         }
         else if (camera_selected)
         {
             auto fov = camera->getFoV();
-            auto direction = camera->getDirection();
-            auto position = camera->getPosition();
+            auto direction = m_StrategyControllerReference->getDirection();
+            auto position = m_StrategyControllerReference->getPosition();
+
+            auto pitch = m_StrategyControllerReference->getPitch();
+            auto yaw = m_StrategyControllerReference->getYaw();
 
             float p[3] = {position.x, position.y, position.z};
             float d[3] = {direction.x, direction.y, direction.z};
@@ -1280,10 +1476,16 @@ namespace Epsilon::Editor
                 ImGui::DragFloat3("Position###camerapos", p);
                 ImGui::SliderFloat3("Direction###cameradir", d, -1.0f, 1.0f);
                 ImGui::SliderFloat("Fov###camerafov", &fov, 10.0f, 100.0f);
+                constexpr float PI = 3.14159265359;
+                constexpr float HPI = PI * 0.5;
+                ImGui::SliderFloat("Pitch###camerapitch", &pitch, -HPI, HPI);
+                ImGui::SliderFloat("Yaw###camerayaw", &yaw, -PI, PI);
             }
             camera->setFoV(fov);
-            camera->setDirection(glm::vec3(d[0], d[1], d[2]));
-            camera->setPosition(glm::vec3(p[0], p[1], p[2]));
+            m_StrategyControllerReference->setDirection(glm::vec3(d[0], d[1], d[2]));
+            m_StrategyControllerReference->setPosition(glm::vec3(p[0], p[1], p[2]));
+            m_StrategyControllerReference->setPitch(pitch);
+            m_StrategyControllerReference->setYaw(yaw);
         }
         else if (lightSelected)
         {
@@ -1348,7 +1550,7 @@ namespace Epsilon::Editor
         {
             ImVec2 mwindow_size = ImGui::GetContentRegionAvail();
             ImVec2 mwindow_pos = ImGui::GetWindowPos();
-            //ImGuiViewport *viewport = ImGui::GetMainViewport();
+            // ImGuiViewport *viewport = ImGui::GetMainViewport();
             ImVec2 work_pos = mwindow_pos; // Use work area to avoid menu-bar/task-bar, if any!
             ImVec2 work_size = mwindow_size;
             ImVec2 window_pos, window_pos_pivot;
@@ -1403,7 +1605,7 @@ namespace Epsilon::Editor
         static std::string options[] = {ICON_FA_DRAW_POLYGON " Mesh", ICON_FA_SHAPES " Primitive", ICON_FA_LIGHTBULB " Light", ICON_FA_CAMERA " Camera"};
 
         static std::string options_mesh[] = {ICON_FA_DRAW_POLYGON " Triangle", ICON_FA_CUBES " SDF"};
-        static std::string options_primitive[] = {ICON_FA_CUBE " Cube", ICON_FA_GLOBE " Sphere", ICON_FA_DICE_D20 " Ico-Sphere", ICON_FA_RING " Torus", ICON_FA_DATABASE " Cylinder"};
+        static std::string options_primitive[] = {ICON_FA_CUBE " Cube", ICON_FA_GLOBE " Sphere", ICON_FA_DICE_D20 " Ico-Sphere", ICON_FA_RING " Torus", ICON_FA_DATABASE " Cylinder", "Plane"};
         static std::string options_light[] = {ICON_FA_CERTIFICATE " Point", ICON_FA_SUN " Directional", ICON_FA_CIRCLE " Sphere", "Tube", ICON_FA_SQUARE " Quad"};
         static std::string options_camera[] = {ICON_FA_VIDEO " Perspective", ICON_FA_BORDER_ALL " Orthogonal"};
         if (ImGui::Button(ICON_FA_PLUS " Add..."))
@@ -1423,7 +1625,7 @@ namespace Epsilon::Editor
                         break;
                     case 1:
                         tmp_str_array = options_primitive;
-                        num_items = 5;
+                        num_items = 6;
                         break;
                     case 2:
                         tmp_str_array = options_light;
@@ -1439,7 +1641,7 @@ namespace Epsilon::Editor
                         if (ImGui::MenuItem(tmp_str_array[j].c_str()))
                         {
                             if (tmp_str_array[j] == options_light[0])
-                            { //Point light
+                            { // Point light
                                 PostProcess_ref->addLight(glm::vec3(0.0), glm::vec3(0.0), 0);
                             }
                             else if (tmp_str_array[j] == options_light[2])
@@ -1452,10 +1654,10 @@ namespace Epsilon::Editor
 
                                 auto SphereMaterial = mCube->getMaterial();
 
-                                SphereMaterial->setMaterial(Renderer::Material::MaterialParameter::Albedo, glm::vec3(1.0f, 1.0f, 1.0f));
-                                SphereMaterial->setMaterial(Renderer::Material::MaterialParameter::Metallic, glm::vec3(0.0f));
-                                SphereMaterial->setMaterial(Renderer::Material::MaterialParameter::Normal, glm::vec3(0.5, 1.0, 0.5));
-                                SphereMaterial->setMaterial(Renderer::Material::MaterialParameter::Roughness, glm::vec3(1.0));
+                                SphereMaterial->setMaterial(Renderer::MaterialBase::MaterialParameter::Albedo, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+                                SphereMaterial->setMaterial(Renderer::MaterialBase::MaterialParameter::Metallic, glm::vec4(0.0f));
+                                SphereMaterial->setMaterial(Renderer::MaterialBase::MaterialParameter::Normal, glm::vec4(0.5, 1.0, 0.5, 1.0f));
+                                SphereMaterial->setMaterial(Renderer::MaterialBase::MaterialParameter::Roughness, glm::vec4(1.0));
                                 {
                                     glm::vec3 tPosition = glm::vec3(0.0f, 0.0f, 0.0f);
                                     glm::vec3 tScale = glm::vec3(1.0);
@@ -1475,6 +1677,11 @@ namespace Epsilon::Editor
                                     _Entity->setName(std::string("Entity") + std::to_string(localEntityList->size()));
 
                                     localEntityList->push_back(_Entity);
+                                    sSelectedLight = -1;
+                                    sSelectedEntity = _Entity;
+                                    sSelectedEntityIndex = localEntityList->size() - 1;
+                                    camera_selected = false;
+                                    lightSelected = true;
                                 }
                             }
                             else if (tmp_str_array[j] == options_primitive[1])
@@ -1484,10 +1691,10 @@ namespace Epsilon::Editor
 
                                 auto SphereMaterial = mSphere->getMaterial();
 
-                                SphereMaterial->setMaterial(Renderer::Material::MaterialParameter::Albedo, glm::vec3(1.0f, 1.0f, 1.0f));
-                                SphereMaterial->setMaterial(Renderer::Material::MaterialParameter::Metallic, glm::vec3(0.0f));
-                                SphereMaterial->setMaterial(Renderer::Material::MaterialParameter::Normal, glm::vec3(0.5, 1.0, 0.5));
-                                SphereMaterial->setMaterial(Renderer::Material::MaterialParameter::Roughness, glm::vec3(1.0));
+                                SphereMaterial->setMaterial(Renderer::MaterialBase::MaterialParameter::Albedo, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+                                SphereMaterial->setMaterial(Renderer::MaterialBase::MaterialParameter::Metallic, glm::vec4(0.0f));
+                                SphereMaterial->setMaterial(Renderer::MaterialBase::MaterialParameter::Normal, glm::vec4(0.5f, 1.0f, 0.5f, 1.0f));
+                                SphereMaterial->setMaterial(Renderer::MaterialBase::MaterialParameter::Roughness, glm::vec4(1.0f));
                                 {
                                     glm::vec3 tPosition = glm::vec3(0.0f, 0.0f, 0.0f);
                                     glm::vec3 tScale = glm::vec3(1.0);
@@ -1507,6 +1714,50 @@ namespace Epsilon::Editor
                                     _Entity->setName(std::string("Entity") + std::to_string(localEntityList->size()));
 
                                     localEntityList->push_back(_Entity);
+
+                                    sSelectedLight = -1;
+                                    sSelectedEntity = _Entity;
+                                    sSelectedEntityIndex = localEntityList->size() - 1;
+                                    camera_selected = false;
+                                    lightSelected = true;
+                                }
+                            }
+                            else if (tmp_str_array[j] == options_primitive[5])
+                            {
+
+                                std::shared_ptr<Renderer::Plane> mPlane = std::make_shared<Renderer::Plane>();
+
+                                auto PlaneMaterial = mPlane->getMaterial();
+
+                                PlaneMaterial->setMaterial(Renderer::MaterialBase::MaterialParameter::Albedo, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+                                PlaneMaterial->setMaterial(Renderer::MaterialBase::MaterialParameter::Metallic, glm::vec4(0.0f));
+                                PlaneMaterial->setMaterial(Renderer::MaterialBase::MaterialParameter::Normal, glm::vec4(0.5f, 1.0f, 0.5f, 1.0f));
+                                PlaneMaterial->setMaterial(Renderer::MaterialBase::MaterialParameter::Roughness, glm::vec4(1.0f));
+                                {
+                                    glm::vec3 tPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+                                    glm::vec3 tScale = glm::vec3(1.0);
+                                    glm::quat tRotation = glm::quat(1.0, 0.0, 0.0, 0.0);
+                                    std::string tModelName = "";
+
+                                    std::shared_ptr<EntityBase> _Entity = std::make_shared<EntityBase>(tPosition, tScale, tRotation);
+
+                                    Component::RenderComponent_ptr _RComp = std::make_shared<Component::RenderComponent>(mPlane, "Main");
+                                    _RComp->CastsShadows(true);
+                                    _RComp->setTransparency(false);
+                                    _RComp->setVisibility(true);
+                                    _RComp->setRenderId(localEntityList->size());
+                                    _RComp->isDoubleFaced(true);
+
+                                    _Entity->addComponent(_RComp);
+                                    _Entity->setName(std::string("Entity") + std::to_string(localEntityList->size()));
+
+                                    localEntityList->push_back(_Entity);
+
+                                    sSelectedLight = -1;
+                                    sSelectedEntity = _Entity;
+                                    sSelectedEntityIndex = localEntityList->size() - 1;
+                                    camera_selected = false;
+                                    lightSelected = true;
                                 }
                             }
                         }
@@ -1536,12 +1787,13 @@ namespace Epsilon::Editor
         auto mousePos = io.MousePos;
         MousePosOnViewport = glm::vec4((mousePos.x - window_pos.x) - 8.0, (mousePos.y - window_pos.y) - 30.0, window_size.x, window_size.y - 5.0);
         MousePosOnViewport.y = (window_size.y) - MousePosOnViewport.y;
-        //MousePosOnViewport = glm::clamp(MousePosOnViewport, glm::vec2(0.0f), glm::vec2(window_size.x, window_size.y));
-
+        // MousePosOnViewport = glm::clamp(MousePosOnViewport, glm::vec2(0.0f), glm::vec2(window_size.x, window_size.y));
+        glm::vec2 norm_cursor_position = (glm::vec2(MousePosOnViewport.x, MousePosOnViewport.y) / glm::vec2(window_size.x, window_size.y)) * 2.0f - 1.0f;
+        m_StrategyControllerReference->setMousePosOnViewport(norm_cursor_position);
         if (showOverlay)
             InfoOverlay(&showOverlay, window_pos, window_size, camera);
 
-        ImGui::Image((void*)(uintptr_t)TextureId, ImVec2(window_size.x, window_size.y), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 0.5f));
+        ImGui::Image((void *)(uintptr_t)TextureId, ImVec2(window_size.x, window_size.y), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 0.5f));
 
         cursor_pos = ImVec2(cursor_pos.x + 20.0f, cursor_pos.y + 20.0f);
         ImGui::SetCursorPos(cursor_pos);
@@ -1557,7 +1809,7 @@ namespace Epsilon::Editor
         int numChoices = 4;
 
         ImGui::Begin("Textures", &textureListVisible);
-        //Image size choise
+        // Image size choise
         {
             static std::string sizes[] = {"64", "128", "256", "512"};
             static std::string current_item = "128";
@@ -1596,7 +1848,7 @@ namespace Epsilon::Editor
                 ImGui::Separator();
 
             auto textureId = texture.second->ID();
-            if (ImGui::ImageButton((void*)(uintptr_t)textureId, ImVec2(imgSize, imgSize), ImVec2(0, 0), ImVec2(1, 1), -1, ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 0.5f)))
+            if (ImGui::ImageButton((void *)(uintptr_t)textureId, ImVec2(imgSize, imgSize), ImVec2(0, 0), ImVec2(1, 1), -1, ImVec4(1.0f, 1.0f, 1.0f, 1.0f), ImVec4(1.0f, 1.0f, 1.0f, 0.5f)))
             {
                 *refTexture = texture;
                 textureListVisible = false;
@@ -1717,8 +1969,8 @@ namespace Epsilon::Editor
                         ImGui::Unindent();
                         ImGui::TreePop();
                     }
-                    //ImGui::Text("Num Slots");
-                    //ImGui::Text("Count");
+                    // ImGui::Text("Num Slots");
+                    // ImGui::Text("Count");
                     ImGui::Unindent();
                     ImGui::TreePop();
                 }
@@ -1765,14 +2017,14 @@ namespace Epsilon::Editor
             ImGui::TreePop();
         }
         ImGui::EndChild();
-        //ImGui::Indent();
-        //ImGui::Text("Previous Modifications");
-        //ImGui::Text("Debug Ticks");
-        //ImGui::Unindent();
+        // ImGui::Indent();
+        // ImGui::Text("Previous Modifications");
+        // ImGui::Text("Debug Ticks");
+        // ImGui::Unindent();
         ImGui::End();
         /*End scene window*/
 
-        //ImGui::End();
+        // ImGui::End();
 
         ImGui::End();
     }
@@ -1784,8 +2036,8 @@ namespace Epsilon::Editor
         int display_w, display_h;
         glfwGetFramebufferSize(window->getHandle()->getHandle(), &display_w, &display_h);
         glViewport(0, 0, display_w, display_h);
-        //glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-        //glClear(GL_COLOR_BUFFER_BIT);
+        // glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+        // glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         ImGuiIO &io = ImGui::GetIO();
         (void)io;
@@ -1811,9 +2063,9 @@ namespace Epsilon::Editor
             }
             else
             {
-                //auto &window_data = window->getWindowData();
-                //this->WIDTH = window_data.Width;
-                //this->HEIGHT = window_data.Height;
+                // auto &window_data = window->getWindowData();
+                // this->WIDTH = window_data.Width;
+                // this->HEIGHT = window_data.Height;
                 *WIDTH = mImguiRenderWindow.x;
                 *HEIGHT = mImguiRenderWindow.y;
                 framebuffer->Resize(*WIDTH, *HEIGHT);
@@ -1839,7 +2091,7 @@ namespace Epsilon::Editor
 
         if (is_folder)
         {
-            //std::cout << f.Name() << "is a dir" << std::endl;
+            // std::cout << f.Name() << "is a dir" << std::endl;
             std::string name = ICON_FA_FOLDER " " + f.Name();
 
             if (ImGui::TreeNodeEx(name.c_str(), ImGuiTreeNodeFlags_SpanFullWidth))
@@ -1854,7 +2106,7 @@ namespace Epsilon::Editor
                 auto fs = lst.second;
                 for (const auto &file : fs)
                 {
-                    //std::cout << file.AbsolutePath() << std::endl;
+                    // std::cout << file.AbsolutePath() << std::endl;
                     DrawDirectoryOpen(file.AbsolutePath(), file);
                 }
                 ImGui::TreePop();
@@ -1901,13 +2153,13 @@ namespace Epsilon::Editor
             ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 18.0f);
             ImGui::TableHeadersRow();
             Filesystem::File top_dir(std::to_string(fs->Id().get()), Filesystem::File::Type::directory);
-            //std::cout << fs->mount_point().AbsolutePath << std::endl;
+            // std::cout << fs->mount_point().AbsolutePath << std::endl;
             DrawDirectoryOpen(fs->mount_point().AbsolutePath, top_dir);
 
             if (pfs != nullptr)
             {
                 Filesystem::File top_dir(std::to_string(pfs->Id().get()), Filesystem::File::Type::directory);
-                //std::cout << fs->mount_point().AbsolutePath << std::endl;
+                // std::cout << fs->mount_point().AbsolutePath << std::endl;
                 DrawDirectoryOpen(pfs->mount_point().AbsolutePath, top_dir);
             }
 
@@ -1926,7 +2178,7 @@ namespace Epsilon::Editor
 
         int numChoices = 4;
 
-        //Image size choise
+        // Image size choise
         {
             static std::string sizes[] = {"64", "128", "256", "512"};
             static std::string current_item = "128";
@@ -1984,7 +2236,7 @@ namespace Epsilon::Editor
                     textureId = ResourceManager::Get().getTexture2D(EDITOR_ICON_TEXT)->ID();
                 }
 
-                ImGui::ImageButton((void*)(uintptr_t)textureId, ImVec2(imgSize - 8, imgSize - 8), ImVec2(0, 0), ImVec2(1, 1), 0, ImVec4(0.0f, 0.0f, 0.0f, 0.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+                ImGui::ImageButton((void *)(uintptr_t)textureId, ImVec2(imgSize - 8, imgSize - 8), ImVec2(0, 0), ImVec2(1, 1), 0, ImVec4(0.0f, 0.0f, 0.0f, 0.0f), ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
                 {
                     if (ImGui::IsItemClicked())
                         if (file.type() == Filesystem::File::Type::directory)
@@ -2004,5 +2256,15 @@ namespace Epsilon::Editor
         ImGui::EndChild();
         ImGui::PopStyleVar();
         ImGui::End();
+    }
+
+    void Editor::SaveProject()
+    {
+        for (auto &e : *localEntityList)
+        {
+            Transform t(e->getPosition(), e->getScale(), e->getRotation());
+            Actor a(t, e->getName(), ACTOR_TYPE::ENTITY);
+            GUI::Project::AddActor(a);
+        }
     }
 }

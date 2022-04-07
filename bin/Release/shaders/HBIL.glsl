@@ -196,9 +196,10 @@ void main() {
 
     vec3 lightColor = normalize(vec3(60, 50, 50));
 
-    col = ((vec3(t)* lightColor) * calcAttenuation(ro)) + vec3(0.005 * getDensity(FragPos)) ;
+    col = ((vec3(t)* lightColor) * calcAttenuation(ro)) + vec3(0.005 * getDensity(FragPos));
     
-    FragColor = vec3(0.0);//col;
+    //! SOMEHOW THIS PRODUCES A SINGLE PIXEL NAN!!!!!!
+    FragColor = vec3(0.0);//col; 
 }
 
 //mishto

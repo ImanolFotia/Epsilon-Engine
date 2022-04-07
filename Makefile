@@ -37,7 +37,7 @@ else
 	RESET        := ""
 endif
 
-CXX= clang++
+CXX= g++
 
 OBJS_DIR_RELEASE:= ./obj/Release
 OBJS_DIR_DEBUG:= ./obj/Debug
@@ -119,7 +119,7 @@ LIBS_DIR := -L$(LIB)/soil/lib \
 -L$(LIB)/openal-soft/build \
 -L$(LIB)/bullet3/build/lib \
 -L$(LIB)/glad/lib \
--L$(LIB)/imgui-docking\
+-L$(LIB)/imgui-docking/imgui-docking\
 -L$(DX_SDK_LIB)
 else 
 LIBS_DIR := -L$(LIB)/inih \
@@ -142,7 +142,7 @@ endif
 
 LD_FLAGS := -fopenmp
 
-CPPFLAGS := --std=c++20 -Werror
+CPPFLAGS := --std=c++20 -Bstatic -static -static-libgcc -static-libstdc++ -lstdc++
 
 #-static-libgcc -static-libstdc++ -lstdc++
 
@@ -152,7 +152,7 @@ RELEASE_FLAGS := -O3
 
 RES := ./core/resources.rc
 
-all: clean  epsilon-release
+all: clean resource epsilon-release
 
 pch: $(INCLUDE_DIR)/pch.hpp.gch
 

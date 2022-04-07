@@ -116,9 +116,15 @@ namespace Epsilon::Renderer
         void Destroy();
 
         void setMaterial(MaterialPBR_ptr);
+        
+        void setMaterialId(MaterialManager::Material_id id) { mMaterial = id; }
 
         MaterialPBR_ptr getMaterial() {
             return MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial);
+        }
+
+        MaterialManager::Material_id getMaterialId() {
+            return mMaterial;
         }
 
     public:

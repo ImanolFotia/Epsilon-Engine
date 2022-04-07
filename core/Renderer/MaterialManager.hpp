@@ -11,7 +11,7 @@ namespace Epsilon::Renderer
     class MaterialManager
     {
     public:
-        using Material_ptr = std::shared_ptr<Material>;
+        using Material_ptr = std::shared_ptr<MaterialBase>;
         using Material_id = std::string;
 
     public:

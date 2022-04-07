@@ -21,5 +21,3 @@ add_executable (Epsilon_Engine.exe "${EPSILON_DIR}/main.cpp" ${HEADER_FILES})
 
 target_include_directories(Epsilon_Engine.exe PRIVATE "${INCLUDES_DIR}")
 target_link_libraries(Epsilon_Engine.exe "${GLAD_DIR}/lib/libglad.a")
-
-#compuesto floable para recubrimiento de semillas

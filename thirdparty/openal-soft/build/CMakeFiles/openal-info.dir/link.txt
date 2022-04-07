@@ -1,1 +1,0 @@
-/usr/bin/cc -O2 -g -D_DEBUG -rdynamic CMakeFiles/openal-info.dir/utils/openal-info.c.o -o openal-info  -Wl,-rpath,/home/solaire/Documents/Code/C++/Epsilon-Engine/thirdparty/openal-soft/build: -static-libgcc -Wl,--push-state,-Bstatic,-lstdc++,--pop-state -pthread libopenal.so.1.21.1 

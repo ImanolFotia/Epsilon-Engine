@@ -11,6 +11,10 @@ namespace Epsilon::API
     {
         virtual void Draw(PRIMITIVE, unsigned, unsigned) = 0;
 
+        virtual void DrawInstanced(PRIMITIVE, unsigned, unsigned, unsigned) = 0;
+
+        virtual void DrawIndirect(PRIMITIVE, unsigned, unsigned) = 0;
+
         virtual void Enable(STATE) = 0;
         virtual void Disable(STATE) = 0;
 

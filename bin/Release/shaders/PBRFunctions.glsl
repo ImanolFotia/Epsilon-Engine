@@ -34,18 +34,6 @@ float DistributionGGX2(in vec3 N, in vec3 H, in float roughness, in vec3 L, in f
     denom = PI * denom * denom;
 
     return nom / denom;
-
-    
-    /*
-    float a      = roughness*roughness;
-    float a2 = pow(roughness, 4);
-    float NdotH  = max(dot(N, H), 0.0);
-    highp vec3 d = vec3(a * NdotH);
-    highp float d2 = dot(d, d);
-    float b2 = a2 / d2;
-    return a2 * b2 * b2 * (1.0 / PI);*/
-
-    
 }
 
 float specTrowbridgeReitz( float HoN, float a, float aP )
@@ -94,9 +82,9 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
     return F0 + (1.0 - F0) * pow(1.0 - clamp(cosTheta, 0.0, 1.0), 5.0);
 }
 
-float calculateAttenuation(float power, float distance)
+float calculateAttenuation(float power, float distance, float radius = 1.0)
 {
-    return power / (4.0f * PI * (distance*distance));
+    return radius * power / (4.0f * PI * (distance*distance));
 }
 
 float orenNayarDiffuse(vec3 ld,vec3 vd,vec3 sn,float r,float a) {
@@ -264,7 +252,7 @@ vec3 SphereAreaLight(in vec3 position, in float radius, in vec3 color, in float 
         //float distance    = length(pos - FragPos);
         float distance = length(closestPoint);
         float watts = power;
-        float attenuation = calculateAttenuation(watts, distance);//1.0 / (1.0 + 0.1/*factor*/ * pow(distance, 2));
+        float attenuation = calculateAttenuation(watts, distance, radius);//1.0 / (1.0 + 0.1/*factor*/ * pow(distance, 2));
         attenuation *= smoothstep(watts, watts - 5.0, distance);
         vec3 radiance     = vec3(1.0) * attenuation;        
         
@@ -278,6 +266,54 @@ vec3 SphereAreaLight(in vec3 position, in float radius, in vec3 color, in float 
             
         // add to outgoing radiance Lo
         float NdotL = orenNayarDiffuse(L, V, Normal, clamp(spec_copy, 0.05, 1.0), 1.0);             
+        vec3 Lo = ((kD * Diffuse / PI + brdf)) * radiance * NdotL; 
+        
+        return Lo * vec3(color);
+        
+}
+
+
+vec3 HalfLambertSphereAreaLight(in vec3 position, in float radius, in vec3 color, in float power, in bool uses_clearcoat = false)
+{
+    vec3 I;
+    vec3 L, centerToRay, r, closestPoint;
+    L = (position - FragPos);
+    vec3 V = normalize(viewPos - FragPos);
+    r = normalize(reflect(V, Normal));
+    centerToRay = dot(L, r) * r - L;
+    closestPoint = L + centerToRay*clamp(radius/length(centerToRay), 0.0, 1.0);
+    vec3 l = normalize(closestPoint);
+
+        float spec_copy = uses_clearcoat ? clearcoat : Specular;
+        L = l;//normalize(closestPoint - FragPos);
+        vec3 H = normalize(V + L);
+        vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+        vec3 kS = F;
+        vec3 kD = vec3(1.0) - kS;
+        kD *= clamp(1.0 - ExtraComponents.x, 0.0, 1.0);
+        //float distance    = length(pos - FragPos);
+        float distance = length(closestPoint);
+        float watts = power;
+        float attenuation = calculateAttenuation(watts, distance);//1.0 / (1.0 + 0.1/*factor*/ * pow(distance, 2));
+        attenuation *= smoothstep(watts, watts - 5.0, distance);
+        vec3 radiance     = vec3(1.0) * attenuation;        
+        
+        // cook-torrance brdf
+        float NDF = DistributionGGX2(Normal, H, clamp(spec_copy, 0.05, 1.0), L, radius);       
+        float G   = GeometrySmith(Normal, V, L, clamp(spec_copy, 0.05, 1.0));      
+        
+        vec3 nominator    = NDF * G * F;
+        float denominator = (4 * max(dot(V, Normal), 0.0) * max(dot(L, Normal), 0.0)) + 0.001; 
+        vec3 brdf = (nominator / denominator);
+            
+        // add to outgoing radiance Lo
+        //float NdotL = orenNayarDiffuse(L, V, Normal, clamp(spec_copy, 0.05, 1.0), 1.0);     
+        
+        float w = 0.5;
+        float n = 0.4;
+        float half_lambert = dot(Normal, L) * 0.5 + 0.5;
+        float NdotL =  pow(half_lambert / (1.0 + w), n) * (n + 1.0) / (2.0 * (1.0 + w));     
+           
         vec3 Lo = ((kD * Diffuse / PI + brdf)) * radiance * NdotL; 
         
         return Lo * vec3(color);

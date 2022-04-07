@@ -342,7 +342,7 @@ namespace Epsilon
             return 1;
 
         char visSet = m_clusters.pBitsets[(current * m_clusters.bytesPerCluster) + (test / 8)];
-        int result = visSet & (1 << ((test)&7));
+        int result = visSet & ( 1 << ( test & 7) );
 
         return (result);
     }
@@ -353,17 +353,20 @@ namespace Epsilon
                                           simpleRender, true);
     }
 
-    void CQuake3BSP::ScheduleFace(int faceIndex) {
+    void CQuake3BSP::ScheduleFace(int faceIndex)
+    {
         texture_hash_queue.insert({Faces[faceIndex].getHash(), faceIndex});
-        
     }
 
-    void CQuake3BSP::Flush(Shader_ptr shader, bool Shadow) {
+    void CQuake3BSP::Flush(Shader_ptr shader, bool Shadow)
+    {
         std::size_t current_hash = texture_hash_queue.begin()->first;
         bool change_material = true;
 
-        for(auto& face: texture_hash_queue) {
-            if(current_hash != face.first) {
+        for (auto &face : texture_hash_queue)
+        {
+            if (current_hash != face.first)
+            {
                 current_hash = face.first;
                 change_material = true;
             }
@@ -374,12 +377,13 @@ namespace Epsilon
 
         texture_hash_queue.clear();
     }
- 
+
     int g_VisibleFaces;
 
-    void CQuake3BSP::RenderLevel(glm::vec3 vPos, Shader_ptr shader, bool Shadow, const CFrustum* Frustum)
+    void CQuake3BSP::RenderLevel(glm::vec3 vPos, Shader_ptr shader, bool Shadow, const CFrustum *Frustum)
     {
-        if(!mMapIsLoaded) return;
+        if (!mMapIsLoaded)
+            return;
         m_FacesDrawn.ClearAll();
 
         int leafIndex = FindLeaf(vPos);
@@ -396,7 +400,7 @@ namespace Epsilon
             if (Shadow)
             {
                 if (!Frustum->BoxInFrustum((float)pLeaf->min.x, (float)pLeaf->min.y, (float)pLeaf->min.z,
-                                          (float)pLeaf->max.x, (float)pLeaf->max.y, (float)pLeaf->max.z))
+                                           (float)pLeaf->max.x, (float)pLeaf->max.y, (float)pLeaf->max.z))
                     continue;
             }
 
@@ -458,6 +462,5 @@ namespace Epsilon
             delete[] m_pLeafFaces;
             m_pLeafFaces = NULL;
         }
-        glDeleteTextures(m_numOfTextures, m_textures);
     }
 } // namespace Epsilon

@@ -4,7 +4,7 @@
 
 namespace Epsilon::Renderer
 {
-    class Material
+    class MaterialBase
     {
     public:
         enum class MaterialParameter
@@ -32,8 +32,8 @@ namespace Epsilon::Renderer
         std::string mName;
 
     public:
-        Material() {}
-        virtual ~Material() {}
+        MaterialBase() {}
+        virtual ~MaterialBase() {}
     
         unsigned long Id() const { return mId; }
         

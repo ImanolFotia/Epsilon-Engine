@@ -55,16 +55,20 @@ namespace Epsilon
             {
                 if (isVisible)
                 {
-                    //glUniform1i(glGetUniformLocation(mResourceManager->getShader(shaderType).get(), "isTransparent"), this->isTransparent);
+                    // glUniform1i(glGetUniformLocation(mResourceManager->getShader(shaderType).get(), "isTransparent"), this->isTransparent);
                     if (isDoubleFaced())
                         glDisable(GL_CULL_FACE);
                     else
                         glEnable(GL_CULL_FACE);
 
                     auto tShader = ResourceManager::Get().useShader(shaderType);
+                    
 
-                    tShader->PushUniform("isTransparent", this->isTransparent);
-                    tShader->PushUniform("EntityId", this->mId);
+                    if (mPass == 0)
+                    {
+                        tShader->PushUniform("isTransparent", this->isTransparent);
+                        tShader->PushUniform("EntityId", this->mId);
+                    }
                     if (hasModel)
                     {
                         auto tModel = ResourceManager::Get().getModel(modelPath /*ResourceManager::Get().useShader(shaderType), mPosition*/);
@@ -76,10 +80,10 @@ namespace Epsilon
                         using Tex2D_ptr = std::shared_ptr<Renderer::Texture2D>;
                         auto SphereMaterial = std::static_pointer_cast<Renderer::Sphere>(mDrawable)->getMaterial();
 
-                        auto albedo = SphereMaterial->get<Tex2D_ptr>(Renderer::Material::MaterialParameter::Albedo);
-                        auto roughness = SphereMaterial->get<Tex2D_ptr>(Renderer::Material::MaterialParameter::Roughness);
-                        auto metallic = SphereMaterial->get<Tex2D_ptr>(Renderer::Material::MaterialParameter::Metallic);
-                        auto normal = SphereMaterial->get<Tex2D_ptr>(Renderer::Material::MaterialParameter::Normal);
+                        auto albedo = SphereMaterial->get<Tex2D_ptr>(Renderer::MaterialBase::MaterialParameter::Albedo);
+                        auto roughness = SphereMaterial->get<Tex2D_ptr>(Renderer::MaterialBase::MaterialParameter::Roughness);
+                        auto metallic = SphereMaterial->get<Tex2D_ptr>(Renderer::MaterialBase::MaterialParameter::Metallic);
+                        auto normal = SphereMaterial->get<Tex2D_ptr>(Renderer::MaterialBase::MaterialParameter::Normal);
 
                         if (albedo != nullptr && !SphereMaterial->usingAlbedoColor())
                         {
@@ -91,7 +95,7 @@ namespace Epsilon
                         {
                             tShader->PushUniform("texture_diffuse", 0);
                             tShader->PushUniform("using_color_diffuse", 1);
-                            tShader->PushUniform("color_diffuse", glm::vec4(SphereMaterial->get<glm::vec3>(Renderer::Material::MaterialParameter::Albedo), 1.0));
+                            tShader->PushUniform("color_diffuse", glm::vec4(SphereMaterial->get<glm::vec4>(Renderer::MaterialBase::MaterialParameter::Albedo)));
                         }
                         if (roughness != nullptr && !SphereMaterial->usingRoughnessColor())
                         {
@@ -103,7 +107,7 @@ namespace Epsilon
                         {
                             tShader->PushUniform("texture_specular", 1);
                             tShader->PushUniform("using_color_specular", 1);
-                            tShader->PushUniform("color_specular", glm::vec4(SphereMaterial->get<glm::vec3>(Renderer::Material::MaterialParameter::Roughness), 1.0));
+                            tShader->PushUniform("color_specular", glm::vec4(SphereMaterial->get<glm::vec4>(Renderer::MaterialBase::MaterialParameter::Roughness)));
                         }
                         if (normal != nullptr && !SphereMaterial->usingNormalColor())
                         {
@@ -115,22 +119,39 @@ namespace Epsilon
                         {
                             tShader->PushUniform("texture_normal", 2);
                             tShader->PushUniform("using_color_normal", 1);
-                            tShader->PushUniform("color_normal", glm::vec4(SphereMaterial->get<glm::vec3>(Renderer::Material::MaterialParameter::Normal), 1.0));
+                            tShader->PushUniform("color_normal", glm::vec4(SphereMaterial->get<glm::vec4>(Renderer::MaterialBase::MaterialParameter::Normal)));
                         }
                         if (metallic != nullptr && !SphereMaterial->usingMetallicColor())
                         {
                             metallic->Bind(3);
                             tShader->PushUniform("texture_height", 3);
                             tShader->PushUniform("using_color_height", 0);
-                            tShader->PushUniform("color_height", glm::vec4(SphereMaterial->get<glm::vec3>(Renderer::Material::MaterialParameter::Metallic), 1.0));
+                            tShader->PushUniform("color_height", glm::vec4(SphereMaterial->get<glm::vec4>(Renderer::MaterialBase::MaterialParameter::Metallic)));
                         }
                         else
                         {
                             tShader->PushUniform("texture_height", 3);
                             tShader->PushUniform("using_color_height", 1);
-                            tShader->PushUniform("color_height", glm::vec4(SphereMaterial->get<glm::vec3>(Renderer::Material::MaterialParameter::Metallic), 1.0));
+                            tShader->PushUniform("color_height", glm::vec4(SphereMaterial->get<glm::vec4>(Renderer::MaterialBase::MaterialParameter::Metallic)));
                         }
-                        
+                        /*
+                                                auto &Instance = ResourceManager::Get();
+
+                                                unsigned CubemapId = 0;
+
+                                                if (Instance.cubemapsLoaded)
+                                                {
+                                                    CubemapId = Instance.NearestCubeMap(mPosition);
+                                                }
+                                                std::shared_ptr<Epsilon::Renderer::TextureCube> cubemap;
+                                                if (CubemapId >= 0)
+                                                    cubemap = Instance.getCubemap(CubemapId);
+
+                                                if (cubemap)
+                                                {
+                                                    cubemap->Bind(4);
+                                                    tShader->PushUniform("skybox", 4);
+                                                }*/
 
                         mDrawable->Render();
 
@@ -142,9 +163,9 @@ namespace Epsilon
                         glBindTexture(GL_TEXTURE_2D, 0);
                         glActiveTexture(GL_TEXTURE3);
                         glBindTexture(GL_TEXTURE_2D, 0);
-                    }
 
-                    glEnable(GL_CULL_FACE);
+                        glEnable(GL_CULL_FACE);
+                    }
                 }
             }
 
@@ -194,6 +215,11 @@ namespace Epsilon
                 isVisible = x;
             }
 
+            void setPass(int p)
+            {
+                mPass = p;
+            }
+
             bool hasModel = false;
             COMPONENT_TYPE mType = RENDERCOMPONENT;
             std::string modelPath;
@@ -205,6 +231,7 @@ namespace Epsilon
             bool mCastsShadows;
             bool isVisible = false;
             int mId = 0;
+            int mPass = 0;
             /* glm::vec3 mPosition;
             glm::vec3 mPrevPosition;*/
         };

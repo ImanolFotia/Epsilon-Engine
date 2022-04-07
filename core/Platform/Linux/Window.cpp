@@ -1,5 +1,5 @@
 #include "Window.hpp"
-
+#ifdef __linux__
 namespace Epsilon::Platform::Linux
 {
     Window::Window(API::CONTEXT_TYPE type)
@@ -267,3 +267,5 @@ namespace Epsilon::Platform::Linux
         mContext->AttachContext(mWindowHandle);
     }
 }
+
+#endif

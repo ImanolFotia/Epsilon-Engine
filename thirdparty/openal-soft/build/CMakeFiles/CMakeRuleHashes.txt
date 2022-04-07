@@ -1,3 +1,0 @@
-# Hashes of file build rules.
-7a089f210c465f32aba8410dc16452e3 CMakeFiles/build_version
-11bccc7f0e664942c432a02ed5459bcb hrtf_default.h

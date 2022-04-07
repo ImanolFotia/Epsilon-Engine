@@ -66,14 +66,32 @@
 #include <Editor/Editor.hpp>
 #include <Renderer/Primitives/Bezier.hpp>
 #include <Renderer/Primitives/CubicBezier.hpp>
+#include <Renderer/Modifiers/InstancedDrawable.hpp>
+#include <Renderer/CameraController/StrategyController.hpp>
 
 namespace Epsilon
 {
-    
+
+    struct GlobalTransform_t
+    {
+        glm::vec4 position;
+        glm::vec4 direction;
+        glm::mat4 projection;
+        glm::mat4 view;
+        glm::mat4 invprojection;
+        glm::mat4 invview;
+        int CurrentSelectedEntity = -1;
+        float padding2[3];
+        float near;
+        float padding0[3];
+        float far;
+        float padding1[3];
+    };
+
     class Epsilon : public App
     {
     public:
-        Epsilon(const char* name);
+        Epsilon(const char *name);
 
         virtual ~Epsilon()
         {
@@ -128,6 +146,16 @@ namespace Epsilon
 
         void RenderGlobalIllumination();
 
+        void setGlobalTransform(GlobalTransform_t t)
+        {
+            mGlobalTransform = t;
+        }
+
+        GlobalTransform_t getGlobalTransform()
+        {
+            return mGlobalTransform;
+        }
+
     public:
         void onRender() override;
 
@@ -148,7 +176,7 @@ namespace Epsilon
         std::vector<Grass> grass;
         std::shared_ptr<Platform::WindowBase> window = nullptr;
         std::shared_ptr<Text> text;
-        //std::shared_ptr<Text> text2;
+        // std::shared_ptr<Text> text2;
         std::shared_ptr<Terrain> terrain;
         std::shared_ptr<Sun> sun;
         std::shared_ptr<CQuake3BSP> BSPMap;
@@ -160,8 +188,8 @@ namespace Epsilon
 
         glm::vec3 ambientDivider;
         std::vector<std::shared_ptr<EntityBase>> EntityList;
-        //std::shared_ptr<IO::Audio::Audio> m_AudioSystem;
-        //std::shared_ptr<IO::Audio::AudioListener> m_AudioListener;
+        // std::shared_ptr<IO::Audio::Audio> m_AudioSystem;
+        // std::shared_ptr<IO::Audio::AudioListener> m_AudioListener;
         std::shared_ptr<SphericalHarmonics> sphericalharmonics;
         std::thread t1;
         std::shared_ptr<eTexture> tex;
@@ -172,7 +200,7 @@ namespace Epsilon
 
         std::shared_ptr<Player> m_PlayerCapsule;
         std::shared_ptr<ParticleSystem> m_ParticleSystem;
-        //std::shared_ptr<GUI> m_GUI;
+        // std::shared_ptr<GUI> m_GUI;
         /*std::shared_ptr<Panel> m_Panel;
         std::shared_ptr<Button> t_ButtonSettings;
         std::shared_ptr<Panel> t_PanelSettings;
@@ -191,8 +219,12 @@ namespace Epsilon
         std::shared_ptr<Renderer::ShaderStorage> AmbientLightSSBO;
         std::shared_ptr<API::BufferObject> mGlobalUniformBuffer;
         std::shared_ptr<API::BufferObject> mCameraData;
+        std::shared_ptr<Renderer::InstancedDrawable> mInstancedDrawable;
 
         std::shared_ptr<Renderer::Gizmo> mGizmo;
+
+        glm::vec3 bottleSpeed = glm::vec3(0.0f);
+        float bottleSettleTimer = 0.0f;
 
     private:
         bool normal = 0;
@@ -211,9 +243,10 @@ namespace Epsilon
         bool showtext = false;
         bool onMenu = false;
         float menuTime = 0.0;
+        glm::vec2 TAAJitter;
         glm::vec3 mLastCameraDirection;
         glm::vec3 mLastCameraPosition;
-        //vector<glm::vec3> lightPositions;
+        // vector<glm::vec3> lightPositions;
         std::vector<glm::vec3> grassPos;
         std::ostringstream fpss;
         std::shared_ptr<Physics::SpherePhysicObject> ph3;
@@ -223,8 +256,12 @@ namespace Epsilon
         std::shared_ptr<OpenGL::FrameBuffer<int>> mDefaultFrameBuffer;
         std::shared_ptr<Renderer::Sphere> mSphere;
         std::shared_ptr<Renderer::Cube> mCube;
+        std::shared_ptr<Renderer::StrategyController> m_StrategyController;
 
-        //IMGUI variables
+        //Testing
+        int TransparentCubeId = 0;
+
+        // IMGUI variables
 
         bool show_demo_window = true;
         bool show_another_window = false;
@@ -233,6 +270,7 @@ namespace Epsilon
         float KeyTime[1024] = {0.0f};
 
         glm::ivec2 CursorBeforeMenu;
+        GlobalTransform_t mGlobalTransform;
     };
 }
 #endif /// EPSILON_H_INCLUDED

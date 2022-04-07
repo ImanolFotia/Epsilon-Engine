@@ -1,2 +1,0 @@
-/usr/bin/ar qc libcommon.a CMakeFiles/common.dir/common/alcomplex.cpp.o CMakeFiles/common.dir/common/alfstream.cpp.o CMakeFiles/common.dir/common/almalloc.cpp.o CMakeFiles/common.dir/common/alstring.cpp.o CMakeFiles/common.dir/common/dynload.cpp.o CMakeFiles/common.dir/common/polyphase_resampler.cpp.o CMakeFiles/common.dir/common/ringbuffer.cpp.o CMakeFiles/common.dir/common/strutils.cpp.o CMakeFiles/common.dir/common/threads.cpp.o
-/usr/bin/ranlib libcommon.a

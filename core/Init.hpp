@@ -59,11 +59,11 @@ namespace Epsilon
         if(!ref.hasArgument(ref.ArgumentNames.height)) ref.Height(lWindowHeight);
 
         std::shared_ptr<Platform::WindowBase> lWindow;
-#ifdef _WIN32
+/*#ifdef _WIN32*/
         lWindow = std::make_shared<Platform::Windows::Window>(API::CONTEXT_TYPE::OGL);
-#elif defined(__linux__)
+/*#elif defined(__linux__)
         lWindow = std::make_shared<Platform::Linux::Window>(API::CONTEXT_TYPE::OGL);
-#endif
+#endif*/
 
         Platform::WindowData wData = Platform::WindowData();
 

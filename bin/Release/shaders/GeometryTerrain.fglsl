@@ -105,8 +105,10 @@ void main()
   if(texture(texture_diffuse, fs_in.TexCoords).a < 0.3)
     discard;    
 
+  float n_mul =  mix(0.1, 1.0, clamp(fs_in.wFragPos.y + 65.0, 0.0, 1.0));
+
   vec3 normalTexture = (textureNoTile(texture_normal, fs_in.TexCoords).rgb * 2.0 - 1.0);
-  gExpensiveNormal.rgb = normalize(normalTexture * fs_in.TBN);
+  gExpensiveNormal.rgb = normalize(n_mul*normalTexture * fs_in.TBN);
   //vec4 decalTex = texture(texture_decal, fs_in.TexCoords + (vec2(viewPos.x - 225.0, viewPos.z-300.0)));
 
   //gAlbedoSpec.a = texture(texture_specular, fs_in.TexCoords).r;
@@ -116,7 +118,16 @@ void main()
   vec4 CubeMapcolor = vec4(0.0);
   vec3 R = vec3(0.0);
 
-  gAlbedoSpec.rgb = textureNoTile(texture_diffuse,fs_in.TexCoords).rgb* (max(dot(vec3(0,1,0), fs_in.Normal), 0.0));
+  const vec3 red = vec3(0.6, 0.6, 0.1) * 0.2;
+  const vec3 snow = vec3(1.0, 1.0, 1.0);
+
+  vec3 tex_color  =textureNoTile(texture_diffuse,fs_in.TexCoords).rgb;
+
+  vec3 height_color = mix(tex_color, snow, clamp(fs_in.wFragPos.y + 55.0, 0.0, 1.0));
+
+  height_color = mix(red, height_color, clamp(fs_in.wFragPos.y + 64.0, 0.0, 1.0));
+
+  gAlbedoSpec.rgb = height_color;
   
   float Depth = LinearizeDepth(gl_FragCoord.z);
   gDepth.x = gl_FragCoord.z;

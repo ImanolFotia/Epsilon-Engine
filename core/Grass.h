@@ -97,7 +97,7 @@ namespace Epsilon
         }*/
 
     public:
-        void Render(Shader *shader)
+        void Render(std::shared_ptr<Shader>shader)
         {
             glDisable(GL_CULL_FACE);
             glActiveTexture(GL_TEXTURE0);

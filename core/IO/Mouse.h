@@ -23,6 +23,7 @@ namespace Epsilon
 
             double xOffset = 0.0;
             double yOffset = 0.0;
+            
         };
 
         class MouseArgs : public beacon::args
@@ -82,13 +83,17 @@ namespace Epsilon
             static void MouseWheelCallbackGLFW(GLFWwindow *window, double xoffset, double yoffset)
             {
                 MouseArgs mouseArgs;
-                if (yoffset >= prevyOffset)
+                if (yoffset >= 0)
                     mouseArgs.wheel.State = UP;
                 else
                     mouseArgs.wheel.State = DOWN;
 
                 mouseArgs.wheel.xOffset = xoffset;
                 mouseArgs.wheel.yOffset = yoffset;
+
+                
+                mouseArgs.x = XPOS;
+                mouseArgs.y = YPOS;
 
                 MouseEventHandler.raise(nullptr, &mouseArgs);
                 prevyOffset = yoffset;
@@ -125,6 +130,10 @@ namespace Epsilon
                 mouseArgs.right.State = RIGHT;
                 mouseArgs.left.State = LEFT;
                 mouseArgs.middle.State = MIDDLE;
+
+                
+                mouseArgs.x = XPOS;
+                mouseArgs.y = YPOS;
 
                 MouseEventHandler.raise(nullptr, &mouseArgs);
             }

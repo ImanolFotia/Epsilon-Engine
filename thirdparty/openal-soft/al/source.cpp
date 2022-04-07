@@ -496,10 +496,8 @@ void InitVoice(Voice *voice, ALsource *source, ALbufferQueueItem *BufferList, AL
     voice->mFmtType = buffer->mType;
     voice->mNumChannels = buffer->channelsFromFmt();
     voice->mFrameSize = buffer->frameSizeFromFmt();
-    voice->mAmbiLayout = (buffer->mChannels == FmtUHJ2 || buffer->mChannels == FmtUHJ3
-        || buffer->mChannels == FmtUHJ4) ? AmbiLayout::FuMa : buffer->mAmbiLayout;
-    voice->mAmbiScaling = (buffer->mChannels == FmtUHJ2 || buffer->mChannels == FmtUHJ3
-        || buffer->mChannels == FmtUHJ4) ? AmbiScaling::UHJ : buffer->mAmbiScaling;
+    voice->mAmbiLayout = buffer->isUhj() ? AmbiLayout::FuMa : buffer->mAmbiLayout;
+    voice->mAmbiScaling = buffer->isUhj() ? AmbiScaling::UHJ : buffer->mAmbiScaling;
     voice->mAmbiOrder = buffer->mAmbiOrder;
 
     if(buffer->mCallback) voice->mFlags |= VoiceIsCallback;
@@ -509,8 +507,7 @@ void InitVoice(Voice *voice, ALsource *source, ALbufferQueueItem *BufferList, AL
     /* Even if storing really high order ambisonics, we only mix channels for
      * orders up to MaxAmbiOrder. The rest are simply dropped.
      */
-    ALuint num_channels{(buffer->mChannels == FmtUHJ2) ? 3 :
-        ChannelsFromFmt(buffer->mChannels, minu(buffer->mAmbiOrder, MaxAmbiOrder))};
+    ALuint num_channels{buffer->mixerChannelsFromFmt()};
     if UNLIKELY(num_channels > device->mSampleData.size())
     {
         ERR("Unexpected channel count: %u (limit: %zu, %d:%d)\n", num_channels,
@@ -1923,7 +1920,7 @@ bool GetSourcedv(ALsource *Source, ALCcontext *Context, SourceProp prop, const a
         values[0] = GetSourceSecOffset(Source, Context, &srcclock);
         {
             std::lock_guard<std::mutex> _{device->StateLock};
-            clocktime = GetClockLatency(device);
+            clocktime = GetClockLatency(device, device->Backend.get());
         }
         if(srcclock == clocktime.ClockTime)
             values[1] = static_cast<double>(clocktime.Latency.count()) / 1000000000.0;
@@ -2216,7 +2213,7 @@ bool GetSourcei64v(ALsource *Source, ALCcontext *Context, SourceProp prop, const
         values[0] = GetSourceSampleOffset(Source, Context, &srcclock);
         {
             std::lock_guard<std::mutex> _{device->StateLock};
-            clocktime = GetClockLatency(device);
+            clocktime = GetClockLatency(device, device->Backend.get());
         }
         if(srcclock == clocktime.ClockTime)
             values[1] = clocktime.Latency.count();

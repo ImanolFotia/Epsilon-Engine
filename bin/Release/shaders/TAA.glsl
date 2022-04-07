@@ -91,6 +91,12 @@ vec3 RGBToYCoCg( vec3 RGB )
 	return vec3(Y, Co, Cg);
 }
 
+
+float IGN(int pixelX, int pixelY)
+{
+    return mod(52.9829189 * mod(0.06711056*float(pixelX) + 0.00583715*float(pixelY), 1.0), 1.0);
+}
+
 vec3 YCoCgToRGB( vec3 YCoCg )
 {
 	float Y= YCoCg.x;

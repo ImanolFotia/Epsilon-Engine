@@ -10,7 +10,7 @@
 #include <Driver/API/OpenGL/Context.hpp>
 #include <Driver/API/Vulkan/Context.hpp>
 
-#ifdef WIN32
+#ifdef _WIN32
 
 namespace Epsilon
 {

@@ -7,7 +7,9 @@ namespace Epsilon::Renderer
     class CuadraticBezier : public Bezier<3>
     {
     public:
-        CuadraticBezier() : Bezier<3>() {}
+        CuadraticBezier() : Bezier<3>() {
+            type = DrawableType::CUADRATIC_BEZIER;
+        }
 
         virtual void Update() override {}
 

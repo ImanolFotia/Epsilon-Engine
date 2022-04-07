@@ -102,7 +102,7 @@ static void Init_ImGui_Custom()
     ImFontConfig config;
     config.OversampleH = 2; 
     #ifdef _WIN32
-    io.Fonts->AddFontFromFileTTF("./resources/JetBrainsMono-Regular.ttf", 16, &config);
+    io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 16, &config);
     #endif
     #ifdef __linux__
     io.Fonts->AddFontFromFileTTF("./resources/FiraMono-Regular.ttf", 16, &config);

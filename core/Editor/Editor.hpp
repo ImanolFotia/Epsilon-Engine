@@ -33,6 +33,10 @@
 #include <beacon/beacon.hpp>
 
 #include "ImPlot/implot.h"
+#include <Types.h>
+#include <Renderer/CameraController/StrategyController.hpp>
+
+#include "Actor.hpp"
 
 
 
@@ -79,11 +83,13 @@ namespace Epsilon::Editor
         bool show_material_editor = false;
         bool add_new_entity_dialog = false;
         bool add_new_component_dialog = false;
+        bool show_open_project_window = false;
         bool p_cross = false;
         STATUS status = Stopped;
         bool show_pipeline_viewer = false;
         bool camera_selected = false;
         std::shared_ptr<Camera> current_camera_viewport = nullptr;
+        std::shared_ptr<Renderer::StrategyController> m_StrategyControllerReference;
         std::string filesystem_last_dir_clicked;
         //selection_t current_selection;
 
@@ -122,8 +128,10 @@ namespace Epsilon::Editor
         bool mWaitingResize = false;
         bool lightSelected = false;
         bool isMainWindowFocused = false;
+        bool isInModifyMode = false;
 
         bool textureListVisible = false;
+        CAMERA_MODE* CameraMode = nullptr;
 
         glm::vec3 ambientDivider;
 
@@ -144,7 +152,7 @@ namespace Epsilon::Editor
         void onLeftClickCallback(beacon::sender *sender, beacon::args *args);
         void onKeyPress(beacon::sender *sender, beacon::args *args);
         void onMouseWheelCallback(beacon::sender *sender, beacon::args *args);
-
+        void onMouseMove(beacon::sender *sender, beacon::args *args);
         void Init(std::shared_ptr<Platform::WindowBase> window);
         void SparkLine(const char *id, const char *overlay, const float *values, int count, float min_v, float max_v, int offset, const ImVec4 &col, const ImVec2 &size);
         void SystemStatus();
@@ -185,5 +193,7 @@ namespace Epsilon::Editor
         void DrawDirectoryOpen(const std::string &dir, const Filesystem::File &f);
 
         void FileSystemWindow();
+
+        void SaveProject();
     };
 }

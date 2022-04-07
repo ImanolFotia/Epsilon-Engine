@@ -2,9 +2,11 @@
 
 #include <glad/glad.h>
 
+#include "../DrawCommandType.hpp"
+
 namespace Epsilon::API::OpenGL
 {
-    struct DrawCommandData_t {
+    struct DrawCommandData_t : DrawCommandDataBase_t {
         GLuint a;
         GLuint b;
         GLuint c;

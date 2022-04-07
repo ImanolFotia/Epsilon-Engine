@@ -31,8 +31,8 @@ void main()
 
     FragPos = vec3(model * vec4(position, 1.0));
     gl_Position = pos.xyww;
-    //gl_Position.z = max(pos.w, 0.0);
-    //gl_Position.w = max(pos.w, 0.0);
+    //gl_Position.z = min(pos.w, 0.0);
+    //gl_Position.w = min(pos.w, 0.0);
     TexCoords = position;
     TexCoord = UV;
     Normal = normalize(normal);

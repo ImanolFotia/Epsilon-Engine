@@ -16,9 +16,9 @@ namespace Epsilon
             tex = std::make_shared<eTexture>("Sun.png");
             TextureID = tex->getTextureID();
 
-            radius = 20.0;
+            radius = -20.0;
 
-            height = 10.0;
+            height = 20.0;
 
             Position = glm::vec3(0.0, 10.0, 3.0);
 

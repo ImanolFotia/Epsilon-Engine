@@ -416,26 +416,28 @@ void main()
     Diffuse = textureLod(gAlbedoSpec, TexCoords, 0).rgb;
     clearcoat = textureLod(gAlbedoSpec, TexCoords, 0).a;
     
-    SpecularFactor = texture(gAlbedoSpec, TexCoords).a * 2.0;
+    SpecularFactor = texture(gAlbedoSpec, TexCoords).a;
 
     if(ExtraComponents.y > 0.1){
     	FragColor.rgb = Diffuse;//mix(SkyColor, Diffuse, visibility) * ExtraComponents.y;
-    	blurImage.rgb = mix(SkyColor, Diffuse, visibility) * ExtraComponents.y;
+        if(ExtraComponents.y > 0.15)
+    	    blurImage.rgb = mix(SkyColor, Diffuse, visibility) * ExtraComponents.y;
     	return;
     }
 
-    Specular = clamp(texture(gNormal, TexCoords).a, 0.089, 1.0);
+    Specular = texture(gNormal, TexCoords).a;
     SpecDiff = Diffuse * Specular;
     AmbientOcclusion = textureLod(ssaoColorBufferBlur, TexCoords, 0).r;
     vec4 FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);
     
     F0 = vec3(0.04);
-    F0 = mix(F0, Diffuse, ExtraComponents.x);
+    F0 = mix(F0, Diffuse, vec3(ExtraComponents.x));
     //vec3 V = normalize(viewPos - FragPos);
     vec3 F = fresnelSchlickRoughness(max(dot(Normal, V), 0.0), F0, Specular);
     
     vec3 kS = F;
     vec3 kD = vec3(1.0) - kS;//max(1.0 - kS, 0.04);
+    kD *= 1.0 - ExtraComponents.x;
     //kD *= clamp(1.0 - ExtraComponents.x, 0.04, 1.0);
 
     //vec3 shc = sphericalHarmonics(Normal) * u_scaleFactor;
@@ -476,10 +478,14 @@ void main()
         case 2:
         //{
             float pointShadow = 1.0;
-            if(i == 0)
+            vec3 res = vec3(0.0);
+            if(i == 0){
                 pointShadow = PointShadowCalculation(FragPos, outBuffer.Lights[i].position.rgb, in_range);
+                res = SphereAreaLight(outBuffer.Lights[i].position.rgb,  outBuffer.Lights[i].radius, pow((normalize(outBuffer.Lights[i].position.rgb - FragPos)*0.5+0.5), 1.0/vec3(2.2)), outBuffer.Lights[i].watts);
+            } else {
+                res = SphereAreaLight(outBuffer.Lights[i].position.rgb,  outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts);
+            }
             
-            vec3 res = SphereAreaLight(outBuffer.Lights[i].position.rgb,  outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts);
             if(i == 0 && in_range){
                 res *= pointShadow;
             }
@@ -491,6 +497,10 @@ void main()
             light += res;//mix(res, clearcoat_res, 0.5);
         //}
             break;
+        case 3:
+            light += HalfLambertSphereAreaLight(outBuffer.Lights[i].position.rgb,  outBuffer.Lights[i].radius, outBuffer.Lights[i].color.rgb, outBuffer.Lights[i].watts);
+            break;
+
       }
     }
     

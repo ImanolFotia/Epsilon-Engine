@@ -8,7 +8,7 @@ namespace Epsilon
 {
     namespace Renderer
     {
-        class MaterialPBR : public Material
+        class MaterialPBR : public MaterialBase
         {
             
         using Texture2D_ptr = std::shared_ptr<Texture2D>;
@@ -18,10 +18,10 @@ namespace Epsilon
             ~MaterialPBR() {}
 
             template <typename Param>
-            [[maybe_unused]] bool setMaterial(Material::MaterialParameter, Param p);
+            [[maybe_unused]] bool setMaterial(MaterialBase::MaterialParameter, Param p);
 
             template <typename T>
-            T get(Material::MaterialParameter);
+            T get(MaterialBase::MaterialParameter);
 
             bool usingAlbedoColor() { return use_albedo_color; }
             bool usingRoughnessColor() { return use_roughness_color; }
@@ -39,11 +39,11 @@ namespace Epsilon
             bool use_metallic_color = true;
             bool use_normal_color = true;
 
-            glm::vec3 albedo_color = glm::vec3(0.0f);
-            glm::vec3 roughness_color = glm::vec3(0.0f);
-            glm::vec3 metallic_color = glm::vec3(0.0f);
+            glm::vec4 albedo_color = glm::vec4(0.0f);
+            glm::vec4 roughness_color = glm::vec4(0.0f);
+            glm::vec4 metallic_color = glm::vec4(0.0f);
 
-            const glm::vec3 normal_color = glm::vec3(0.5f, 0.5f, 1.0f);
+            const glm::vec4 normal_color = glm::vec4(0.5f, 0.5f, 1.0f, 1.0f);
         };
         using MaterialPBR_ptr = std::shared_ptr<MaterialPBR>;
 

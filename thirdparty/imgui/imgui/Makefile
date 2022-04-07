@@ -1,6 +1,6 @@
 # Simple makefile to build inih as a static library using g++
 
-SRC = imgui.cpp imgui_draw.cpp imgui_widgets.cpp
+SRC = imgui.cpp imgui_draw.cpp imgui_widgets.cpp imgui_tables.cpp
 OBJ = $(SRC:.cpp=.o)
 OUT = libimgui_test.a
 INCLUDES = ./

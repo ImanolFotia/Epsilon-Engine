@@ -34,15 +34,15 @@ namespace Epsilon::Renderer
 
             {
                 auto lmat_x = std::make_shared<MaterialPBR>();
-                lmat_x->setMaterial(Material::MaterialParameter::Albedo, glm::vec3(0.0, 0.5, 0.0));
+                lmat_x->setMaterial(MaterialBase::MaterialParameter::Albedo, glm::vec4(0.0, 0.5, 0.0, 1.0));
                 mat_x = matRef.addMaterial("gizmo_x", lmat_x);
 
                 auto lmat_y = std::make_shared<MaterialPBR>();
-                lmat_y->setMaterial(Material::MaterialParameter::Albedo, glm::vec3(0.0, 0.0, 0.5));
+                lmat_y->setMaterial(MaterialBase::MaterialParameter::Albedo, glm::vec4(0.0, 0.0, 0.5, 1.0));
                 mat_y = matRef.addMaterial("gizmo_y", lmat_y);
 
                 auto lmat_z = std::make_shared<MaterialPBR>();
-                lmat_z->setMaterial(Material::MaterialParameter::Albedo, glm::vec3(0.5, 0.0, 0.0));
+                lmat_z->setMaterial(MaterialBase::MaterialParameter::Albedo, glm::vec4(0.5, 0.0, 0.0, 1.0));
                 mat_z = matRef.addMaterial("gizmo_z", lmat_z);
             }
 
@@ -97,21 +97,21 @@ namespace Epsilon::Renderer
 
             auto &matRef = MaterialManager::Get();
             mShader->PushUniform("subObjectId", offset);
-            mShader->PushUniform("inColor", matRef.getMaterial<MaterialPBR>(mat_x)->get<glm::vec3>(Material::MaterialParameter::Albedo));
+            mShader->PushUniform("inColor", matRef.getMaterial<MaterialPBR>(mat_x)->get<glm::vec4>(MaterialBase::MaterialParameter::Albedo));
             tModel->Meshes().at(offset).DrawNoTexture();
             mShader->PushUniform("subObjectId", offset+1);
-            mShader->PushUniform("inColor", matRef.getMaterial<MaterialPBR>(mat_y)->get<glm::vec3>(Material::MaterialParameter::Albedo));
+            mShader->PushUniform("inColor", matRef.getMaterial<MaterialPBR>(mat_y)->get<glm::vec4>(MaterialBase::MaterialParameter::Albedo));
             tModel->Meshes().at(offset + 1).DrawNoTexture();
             mShader->PushUniform("subObjectId", offset);
-            mShader->PushUniform("inColor", matRef.getMaterial<MaterialPBR>(mat_z)->get<glm::vec3>(Material::MaterialParameter::Albedo));
+            mShader->PushUniform("inColor", matRef.getMaterial<MaterialPBR>(mat_z)->get<glm::vec4>(MaterialBase::MaterialParameter::Albedo));
             tModel->Meshes().at(offset + 2).DrawNoTexture();
 
             
-            mShader->PushUniform("inColor", matRef.getMaterial<MaterialPBR>(mat_x)->get<glm::vec3>(Material::MaterialParameter::Albedo));
+            mShader->PushUniform("inColor", matRef.getMaterial<MaterialPBR>(mat_x)->get<glm::vec4>(MaterialBase::MaterialParameter::Albedo));
             tModel->Meshes().at(handle_index_offset).DrawNoTexture();
-            mShader->PushUniform("inColor", matRef.getMaterial<MaterialPBR>(mat_y)->get<glm::vec3>(Material::MaterialParameter::Albedo));
+            mShader->PushUniform("inColor", matRef.getMaterial<MaterialPBR>(mat_y)->get<glm::vec4>(MaterialBase::MaterialParameter::Albedo));
             tModel->Meshes().at(handle_index_offset + 1).DrawNoTexture();
-            mShader->PushUniform("inColor", matRef.getMaterial<MaterialPBR>(mat_z)->get<glm::vec3>(Material::MaterialParameter::Albedo));
+            mShader->PushUniform("inColor", matRef.getMaterial<MaterialPBR>(mat_z)->get<glm::vec4>(MaterialBase::MaterialParameter::Albedo));
             tModel->Meshes().at(handle_index_offset + 2).DrawNoTexture();
         }
 

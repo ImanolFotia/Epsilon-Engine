@@ -176,7 +176,8 @@ namespace Epsilon
             MOVEMENTCOMPONENT,
             SCRIPTCOMPONENT,
             TRANSFORMCOMPONENT,
-            ENTITY
+            ENTITY,
+            SIZE
         };
 
         enum MATERIAL

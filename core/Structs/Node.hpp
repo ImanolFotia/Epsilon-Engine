@@ -12,18 +12,18 @@ namespace Epsilon::Structs
     public:
         Node() = default;
 
-        Node_ptr Previous() {
-            return mPrevious;
+        Node_ptr previous() {
+            return m_Previous;
         }
 
-        Node_ptr Next() {
-            return mNext;
+        Node_ptr next() {
+            return m_Next;
         }
 
     protected:
-        Node_ptr mPrevious;
-        Node_ptr mNext;
-        bool mIsRoot;
+        Node_ptr m_Previous;
+        Node_ptr m_Next;
+        bool m_IsRoot;
     };
 
 }

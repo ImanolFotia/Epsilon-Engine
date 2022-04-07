@@ -1,10 +1,10 @@
 #pragma once
 
-#include <ResourceManager.h>
+#include <Resource/ResourceManager.h>
 
 #include <Renderer/Drawable.hpp>
 #include <Renderer/MaterialPBR.hpp>
-#include <Primitives/Cube.hpp>
+#include "Primitives/Cube.hpp"
 
 #include <Renderer/MaterialManager.hpp>
 

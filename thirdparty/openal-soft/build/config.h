@@ -2,10 +2,10 @@
 #define ALSOFT_EMBED_HRTF_DATA
 
 /* Define if we have the posix_memalign function */
-#define HAVE_POSIX_MEMALIGN
+/* #undef HAVE_POSIX_MEMALIGN */
 
 /* Define if we have the _aligned_malloc function */
-/* #undef HAVE__ALIGNED_MALLOC */
+#define HAVE__ALIGNED_MALLOC
 
 /* Define if we have the proc_pidpath function */
 /* #undef HAVE_PROC_PIDPATH */
@@ -14,7 +14,7 @@
 #define HAVE_GETOPT
 
 /* Define if we have DBus/RTKit */
-#define HAVE_RTKIT
+/* #undef HAVE_RTKIT */
 
 /* Define if we have SSE CPU extensions */
 #define HAVE_SSE
@@ -26,10 +26,10 @@
 /* #undef HAVE_NEON */
 
 /* Define if we have the ALSA backend */
-#define HAVE_ALSA
+/* #undef HAVE_ALSA */
 
 /* Define if we have the OSS backend */
-#define HAVE_OSS
+/* #undef HAVE_OSS */
 
 /* Define if we have the PipeWire backend */
 /* #undef HAVE_PIPEWIRE */
@@ -38,22 +38,22 @@
 /* #undef HAVE_SOLARIS */
 
 /* Define if we have the SndIO backend */
-#define HAVE_SNDIO
+/* #undef HAVE_SNDIO */
 
 /* Define if we have the WASAPI backend */
-/* #undef HAVE_WASAPI */
+#define HAVE_WASAPI
 
 /* Define if we have the DSound backend */
-/* #undef HAVE_DSOUND */
+#define HAVE_DSOUND
 
 /* Define if we have the Windows Multimedia backend */
-/* #undef HAVE_WINMM */
+#define HAVE_WINMM
 
 /* Define if we have the PortAudio backend */
 /* #undef HAVE_PORTAUDIO */
 
 /* Define if we have the PulseAudio backend */
-#define HAVE_PULSEAUDIO
+/* #undef HAVE_PULSEAUDIO */
 
 /* Define if we have the JACK backend */
 /* #undef HAVE_JACK */
@@ -74,7 +74,7 @@
 /* #undef HAVE_SDL2 */
 
 /* Define if we have dlfcn.h */
-#define HAVE_DLFCN_H
+/* #undef HAVE_DLFCN_H */
 
 /* Define if we have pthread_np.h */
 /* #undef HAVE_PTHREAD_NP_H */
@@ -86,10 +86,10 @@
 #define HAVE_CPUID_H
 
 /* Define if we have intrin.h */
-/* #undef HAVE_INTRIN_H */
+#define HAVE_INTRIN_H
 
 /* Define if we have guiddef.h */
-/* #undef HAVE_GUIDDEF_H */
+#define HAVE_GUIDDEF_H
 
 /* Define if we have initguid.h */
 /* #undef HAVE_INITGUID_H */
@@ -98,13 +98,13 @@
 #define HAVE_GCC_GET_CPUID
 
 /* Define if we have the __cpuid() intrinsic */
-/* #undef HAVE_CPUID_INTRINSIC */
+#define HAVE_CPUID_INTRINSIC
 
 /* Define if we have SSE intrinsics */
 #define HAVE_SSE_INTRINSICS
 
 /* Define if we have pthread_setschedparam() */
-#define HAVE_PTHREAD_SETSCHEDPARAM
+/* #undef HAVE_PTHREAD_SETSCHEDPARAM */
 
 /* Define if we have pthread_setname_np() */
 /* #undef HAVE_PTHREAD_SETNAME_NP */

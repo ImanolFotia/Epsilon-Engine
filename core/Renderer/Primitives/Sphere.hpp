@@ -9,6 +9,7 @@ namespace Epsilon::Renderer
     public:
         Sphere(uint32_t subdivisions) : mNumSubdivisions(subdivisions)
         {
+            type = DrawableType::SPHERE;
             createGeometry(mNumSubdivisions);
 
             createVertexBuffers();
@@ -29,9 +30,9 @@ namespace Epsilon::Renderer
             mVertexArray->Unbind();
         }
 
-        
         virtual void Draw(std::shared_ptr<Shader> shader, bool force_draw = false, std::initializer_list<unsigned int> mesh_index_list = {}) override
         {
+
             mVertexArray->Bind();
 
             glDrawElements(GL_TRIANGLES, Mesh.Indices.size(), GL_UNSIGNED_INT, 0);
@@ -48,18 +49,20 @@ namespace Epsilon::Renderer
             return MaterialManager::Get().getMaterial<MaterialPBR>(mMaterial);
         }
 
-        virtual MaterialManager::Material_id getMaterialId() override {
+        virtual MaterialManager::Material_id getMaterialId() override
+        {
             return mMaterial;
         }
 
-        void setMaterial(MaterialManager::Material_id mat_id) override {
+        void setMaterial(MaterialManager::Material_id mat_id) override
+        {
             mMaterial = mat_id;
         }
 
     private:
         void createGeometry(uint32_t subdivisions)
         {
-            //Generate vertices
+            // Generate vertices
             Mesh.Vertices.emplace_back(glm::vec3(0.0, 1.0, 0.0), glm::vec3(0.0, 1.0, 0.0), glm::vec2(1.0));
 
             int parallel_count = subdivisions;
@@ -89,7 +92,7 @@ namespace Epsilon::Renderer
 
             Mesh.Vertices.emplace_back(glm::vec3(0.0, -1.0, 0.0), glm::vec3(0.0, -1.0, 0.0), glm::vec2(0.0));
 
-            //Generate triangles from vertices
+            // Generate triangles from vertices
             for (int i = 0; i < meridian_count; ++i)
             {
                 uint32_t a = i + 1;
@@ -120,7 +123,7 @@ namespace Epsilon::Renderer
                 Mesh.addTriangle(Mesh.Vertices.size() - 1, a, b);
             }
 
-            //Generate Normals from vertices
+            // Generate Normals from vertices
             for (unsigned int i = 0; i < Mesh.Indices.size(); i += 3)
             {
                 glm::vec3 v0 = Mesh.Vertices[Mesh.Indices[i]].position;
@@ -134,20 +137,20 @@ namespace Epsilon::Renderer
                 Mesh.Vertices[Mesh.Indices[i + 2]].normal = glm::normalize(-normal);
             }
 
-            //Generate tangent space vectors
+            // Generate tangent space vectors
 
             uint32_t num_triangles = Mesh.Indices.size() / 3;
             // calculate tangent/bitangent vectors of both triangles
             glm::vec3 tangent1, bitangent1;
-            //std::cout << mesh.m_Tris.size() <<  std::endl;
+            // std::cout << mesh.m_Tris.size() <<  std::endl;
             for (int i = 0; i < Mesh.Indices.size(); i += 3)
             {
                 glm::vec3 v0 = Mesh.Vertices[Mesh.Indices[i]].position;
                 glm::vec3 v1 = Mesh.Vertices[Mesh.Indices[i + 1]].position;
                 glm::vec3 v2 = Mesh.Vertices[Mesh.Indices[i + 2]].position;
 
-                glm::vec3 edge1 = v2 - v0;
-                glm::vec3 edge2 = v1 - v0;
+                glm::vec3 edge1 = v1 - v0;
+                glm::vec3 edge2 = v2 - v0;
 
                 glm::vec2 t0 = Mesh.Vertices[Mesh.Indices[i]].uv;
                 glm::vec2 t1 = Mesh.Vertices[Mesh.Indices[i + 1]].uv;
@@ -156,22 +159,22 @@ namespace Epsilon::Renderer
                 glm::vec2 deltaUV1 = t1 - t0;
                 glm::vec2 deltaUV2 = t2 - t0;
 
-                //GLfloat f = 1.0f / (deltaUV1.x * deltaUV2.y + deltaUV2.x * deltaUV1.y);
+                // GLfloat f = 1.0f / (deltaUV1.x * deltaUV2.y + deltaUV2.x * deltaUV1.y);
 
                 float f = (deltaUV2.x * deltaUV1.x - deltaUV2.y * deltaUV1.y) == 0.0f ? -1.0f : 1.0f;
                 // when t1, t2, t3 in same position in UV space, just use default UV direction.
-                if (0 == deltaUV2.x && 0 == deltaUV2.y && 0 == deltaUV1.x && 0 == deltaUV1.y)
-                {
-                    deltaUV1.x = 0.0;
-                    deltaUV1.y = 1.0;
-                    deltaUV2.y = 1.0;
-                    deltaUV2.y = 0.0;
-                }
+                /* if (0 == deltaUV2.x && 0 == deltaUV2.y && 0 == deltaUV1.x && 0 == deltaUV1.y)
+                 {
+                     deltaUV1.x = 0.0;
+                     deltaUV1.y = 1.0;
+                     deltaUV2.y = 1.0;
+                     deltaUV2.y = 0.0;
+                 }*/
 
                 tangent1.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
                 tangent1.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
                 tangent1.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
-                //tangent1 = glm::normalize(tangent1);
+                // tangent1 = glm::normalize(tangent1);
 
                 Mesh.Vertices[Mesh.Indices[i]].tangent = tangent1;
                 Mesh.Vertices[Mesh.Indices[i + 1]].tangent = tangent1;
@@ -180,13 +183,13 @@ namespace Epsilon::Renderer
                 bitangent1.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
                 bitangent1.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
                 bitangent1.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
-                //bitangent1 = glm::normalize(bitangent1);
+                // bitangent1 = glm::normalize(bitangent1);
 
                 Mesh.Vertices[Mesh.Indices[i]].bitangent = bitangent1;
                 Mesh.Vertices[Mesh.Indices[i + 1]].bitangent = bitangent1;
                 Mesh.Vertices[Mesh.Indices[i + 2]].bitangent = bitangent1;
             }
-
+/*
             for (unsigned int i = 0; i < Mesh.Vertices.size(); ++i)
             {
                 Vertex &vert = Mesh.Vertices[i];
@@ -200,9 +203,10 @@ namespace Epsilon::Renderer
                 {
                     vert.tangent = vert.tangent * -1.0f;
                 }
-            }
+            }*/
         }
 
         uint32_t mNumSubdivisions = 4;
+        int32_t CubemapId = -1;
     };
 }
