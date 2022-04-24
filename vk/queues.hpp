@@ -23,7 +23,7 @@ namespace vk
         }
     };
 
-    static QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device)
+    QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device)
     {
         QueueFamilyIndices indices;
 
