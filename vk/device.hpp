@@ -9,6 +9,7 @@
 #include "queues.hpp"
 #include "swap_chain.hpp"
 #include "validation_layers.hpp"
+#include "pipeline.hpp"
 #include "instance.hpp"
 
 namespace vk
@@ -152,10 +153,10 @@ namespace vk
         return physicalDevice;
     }
 
-
     void cleanup()
     {
         vkDestroySwapchainKHR(logicalDevice, swapChain, nullptr);
+        vkDestroyPipelineLayout(logicalDevice, pipelineLayout, nullptr);
 
         for (auto imageView : swapChainImageViews)
         {
@@ -170,6 +171,5 @@ namespace vk
         }
 
         cleanupSurface(instance);
-
     }
 }
