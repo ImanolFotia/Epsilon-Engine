@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vulka/vulkan.h>
+#include <vulkan/vulkan.h>
 
 #include <vector>
 #include <fstream>
@@ -26,7 +26,7 @@ namespace vk::shader
         return buffer;
     }
 
-    VkShaderModule createShaderModule(const std::vector<char> &code, VkPhysicalDevice device)
+    VkShaderModule createShaderModule(const std::vector<char> &code, VkDevice device)
     {
         VkShaderModuleCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;

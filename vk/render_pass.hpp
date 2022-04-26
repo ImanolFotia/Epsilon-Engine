@@ -11,9 +11,9 @@ namespace vk
         VkSubpassDescription subpass{};
     };
 
-    VkRenderPass createRenderPass()
+    VkRenderPass createRenderPass(VkDevice device)
     {
-        render_pass_t render_pass_data{};
+        render_pass_data_t render_pass_data{};
         render_pass_data.colorAttachment.format = swapChainImageFormat;
         render_pass_data.colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
         render_pass_data.colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
@@ -28,8 +28,21 @@ namespace vk
 
         render_pass_data.subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
         render_pass_data.subpass.colorAttachmentCount = 1;
-        render_pass_data.subpass.pColorAttachments = &colorAttachmentRef;
+        render_pass_data.subpass.pColorAttachments = &render_pass_data.colorAttachmentRef;
 
-        return render_pass;
+        VkRenderPass renderPass;
+        VkRenderPassCreateInfo renderPassInfo{};
+        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+        renderPassInfo.attachmentCount = 1;
+        renderPassInfo.pAttachments = &render_pass_data.colorAttachment;
+        renderPassInfo.subpassCount = 1;
+        renderPassInfo.pSubpasses = &render_pass_data.subpass;
+
+        if (vkCreateRenderPass(device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS)
+        {
+            throw std::runtime_error("failed to create render pass!");
+        }
+
+        return renderPass;
     }
 }

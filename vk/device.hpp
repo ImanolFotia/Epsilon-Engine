@@ -17,6 +17,8 @@ namespace vk
 
     VkDevice logicalDevice;
     VkPhysicalDevice physicalDevice;
+    std::vector<VkFramebuffer> swapChainFramebuffers;
+
     const std::vector<const char *> deviceExtensions = {
         VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
@@ -157,6 +159,13 @@ namespace vk
     {
         vkDestroySwapchainKHR(logicalDevice, swapChain, nullptr);
         vkDestroyPipelineLayout(logicalDevice, pipelineLayout, nullptr);
+
+        for (auto framebuffer : swapChainFramebuffers)
+        {
+            vkDestroyFramebuffer(logicalDevice, framebuffer, nullptr);
+        }
+
+        vkDestroyRenderPass(logicalDevice, renderPass, nullptr);
 
         for (auto imageView : swapChainImageViews)
         {

@@ -2,21 +2,25 @@
 
 #include <vulkan/vulkan.h>
 
-#include <shader.hpp>
-#include <swap_chain.hpp>
-#include <viewport.hpp>
+#include "shader.hpp"
+#include "swap_chain.hpp"
+#include "viewport.hpp"
+#include "rasterizer.hpp"
+#include "render_pass.hpp"
 
 namespace vk
 {
 
     VkPipelineLayout pipelineLayout;
-    void createGraphicsPipeline(VkPhysicalDevice device)
-    {
-        auto vertShaderCode = shader::readFile("shaders/vert.spv");
-        auto fragShaderCode = shader::readFile("shaders/frag.spv");
 
-        VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
-        VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
+    VkRenderPass renderPass;
+    void createGraphicsPipeline(VkDevice device)
+    {
+        auto vertShaderCode = shader::readFile("../assets/shaders/vertex.glsl");
+        auto fragShaderCode = shader::readFile("../assets/shaders/fragment.glsl");
+
+        VkShaderModule vertShaderModule = shader::createShaderModule(vertShaderCode, device);
+        VkShaderModule fragShaderModule = shader::createShaderModule(fragShaderCode, device);
 
         VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
         vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -72,6 +76,8 @@ namespace vk
         {
             throw std::runtime_error("failed to create pipeline layout!");
         }
+
+        renderPass = createRenderPass(device);
 
         vkDestroyShaderModule(device, fragShaderModule, nullptr);
         vkDestroyShaderModule(device, vertShaderModule, nullptr);
