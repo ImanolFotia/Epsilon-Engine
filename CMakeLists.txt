@@ -1,23 +1,66 @@
-cmake_minimum_required(VERSION 3.10)
-project(Epsilon_Engine)
+cmake_minimum_required(VERSION 3.0.0)
+project(Epsilon-Engine VERSION 0.1.0)
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(EPSILON_DIR "${PROJECT_SOURCE_DIR}/core")
-set(INCLUDES_DIR "${EPSILON_DIR}")
-set(HEADER_FILES "${INCLUDES_DIR}/pch.hpp")
+include(CTest)
+enable_testing()
 
-set(GLAD_DIR "${PROJECT_SOURCE_DIR}/thirdparty/glad")
-set(GLAD_INCLUDE_DIR "${GLAD_DIR}/include")
+set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 
-option(DEBUG "Include debug symbols in the executable" OFF)
+include(ExternalProject)
+#Download and include Glad
+ExternalProject_Add(glad
+    GIT_REPOSITORY https://github.com/Dav1dde/glad.git
+    INSTALL_COMMAND cmake -E echo "Skipping install step."
 
-include_directories(${INCLUDES_DIR})
-add_subdirectory(${INCLUDES_DIR})
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/thirdparty/glad
+)
+ExternalProject_Get_property(glad BINARY_DIR)
+set(GLAD_BUILD_DIR ${BINARY_DIR})
 
-include_directories(${GLAD_INCLUDE_DIR})
+include_directories(${GLAD_BUILD_DIR}/include)
 
-add_executable (Epsilon_Engine.exe "${EPSILON_DIR}/main.cpp" ${HEADER_FILES})
+#Download and include glm
+ExternalProject_Add(glm
+    GIT_REPOSITORY https://github.com/g-truc/glm.git
+    INSTALL_COMMAND cmake -E echo "Skipping install step."
 
-target_include_directories(Epsilon_Engine.exe PRIVATE "${INCLUDES_DIR}")
-target_link_libraries(Epsilon_Engine.exe "${GLAD_DIR}/lib/libglad.a")
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/thirdparty/glm
+)
+
+ExternalProject_Get_property(glm SOURCE_DIR)
+set(GLM_BUILD_DIR ${SOURCE_DIR})
+message(${GLM_BUILD_DIR})
+
+include_directories(${GLM_BUILD_DIR})
+
+#Download and include glfw3  https://github.com/glfw/glfw.git
+
+ExternalProject_Add(glfw3
+    GIT_REPOSITORY https://github.com/glfw/glfw.git
+    INSTALL_COMMAND cmake -E echo "Skipping install step."
+
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/thirdparty/glfw3
+)
+
+ExternalProject_Get_property(glfw3 SOURCE_DIR)
+ExternalProject_Get_property(glfw3 BINARY_DIR)
+set(GLFW3_BUILD_DIR ${BINARY_DIR})
+message(${SOURCE_DIR})
+
+include_directories(${SOURCE_DIR}/include)
+link_directories(${GLFW3_BUILD_DIR}/src)
+
+SET(HEADERS
+    ${CMAKE_SOURCE_DIR}/core
+)
+
+include_directories( ${HEADERS} )
+
+add_executable(Epsilon-Engine ${CMAKE_SOURCE_DIR}/core/main.cpp)
+add_dependencies(Epsilon-Engine glad)
+
+#target_link_libraries(Epsilon-Engine PRIVATE glad)
+
+set(CPACK_PROJECT_NAME ${PROJECT_NAME})
+set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+include(CPack)

@@ -76,6 +76,9 @@ Installers and binaries will be available soon
   * Nvidia GTX 970M
   * Nvidia RTX 2080 Ti
 
+<a name="compiling"></a>
+## Compiling
+Check out compilation instructions [here](COMPILING.md)
 <a name="contributors"></a>
 ## Contributors 
 
