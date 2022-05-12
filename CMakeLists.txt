@@ -6,8 +6,6 @@ set (CMAKE_CXX_STANDARD 20)
 #link_directories(/c/VulkanSDK/1.2.182.0/Lib)
 #link_directories(/c/VulkanSDK/1.2.182.0/Bin)
 
-
-
 set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 
 include(ExternalProject)
