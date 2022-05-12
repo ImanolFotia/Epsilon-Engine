@@ -5,19 +5,25 @@
 
 #include <vulkan/vulkan.h>
 
-namespace LearningVulkan
+#include "surface.hpp"
+
+namespace vk
 {
+    VkQueue presentQueue;
+    VkQueue graphicsQueue;
+
     struct QueueFamilyIndices
     {
         std::optional<uint32_t> graphicsFamily;
+        std::optional<uint32_t> presentFamily;
 
         bool isComplete()
         {
-            return graphicsFamily.has_value();
+            return graphicsFamily.has_value() && presentFamily.has_value();
         }
     };
 
-    static QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device)
+    QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device)
     {
         QueueFamilyIndices indices;
 
@@ -34,10 +40,17 @@ namespace LearningVulkan
             {
                 indices.graphicsFamily = i;
             }
-            
+
             if (indices.isComplete())
             {
                 break;
+            }
+
+            VkBool32 presentSupport = false;
+            vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
+            if (presentSupport)
+            {
+                indices.presentFamily = i;
             }
 
             i++;
@@ -45,4 +58,5 @@ namespace LearningVulkan
 
         return indices;
     }
+
 }

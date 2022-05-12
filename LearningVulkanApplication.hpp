@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <cstring>
+#include <set>
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -14,7 +15,7 @@
 #include "framework/def.hpp"
 #include "framework/window.hpp"
 
-#include "vk_aux/device.hpp"
+#include "vk/vk.hpp"
 
 namespace LearningVulkan
 {
@@ -29,10 +30,21 @@ namespace LearningVulkan
         {
             initWindow();
             initVulkan();
-
+            createRenderPass();
+            onCreate();
             mainLoop();
+            exit();
+        }
 
-            cleanup();
+        virtual void onCreate() = 0;
+        virtual void onRender() = 0;
+        virtual void onExit() = 0;
+
+    protected:
+        bool mShouldClose = false;
+        void ShouldClose()
+        {
+            mShouldClose = true;
         }
 
     private:
@@ -43,170 +55,49 @@ namespace LearningVulkan
 
         void initVulkan()
         {
-            createInstance();
-            physicalDevice = pickPhysicalDevice(instance);
-            createLogicalDevice();
+            vk::createInstance(mApplicationName);
+            vk::setupDebugMessenger(vk::instance);
+            vk::createSurface(vk::instance, mWindow.getWindow());
+            vk::physicalDevice = vk::pickPhysicalDevice(vk::instance);
+            vk::createLogicalDevice();
+            vk::createSwapChain(vk::logicalDevice, vk::physicalDevice, mWindow.getWindow());
+            vk::createImageViews(vk::logicalDevice);
+            vk::createGraphicsPipeline(vk::logicalDevice);
         }
 
-        void createLogicalDevice()
+        void createRenderPass()
         {
-            QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
-
-            VkDeviceQueueCreateInfo queueCreateInfo{};
-            queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-            queueCreateInfo.queueFamilyIndex = indices.graphicsFamily.value();
-            queueCreateInfo.queueCount = 1;
-
-            float queuePriority = 1.0f;
-            queueCreateInfo.pQueuePriorities = &queuePriority;
-
-            VkPhysicalDeviceFeatures deviceFeatures{};
-
-            VkDeviceCreateInfo createInfo{};
-            createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-            createInfo.pQueueCreateInfos = &queueCreateInfo;
-            createInfo.queueCreateInfoCount = 1;
-
-            createInfo.pEnabledFeatures = &deviceFeatures;
-            createInfo.enabledExtensionCount = 0;
-
-            if (enableValidationLayers)
-            {
-                createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
-                createInfo.ppEnabledLayerNames = validationLayers.data();
-            }
-            else
-            {
-                createInfo.enabledLayerCount = 0;
-            }
-
-            if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &logicalDevice) != VK_SUCCESS)
-            {
-                throw std::runtime_error("failed to create logical device!");
-            }
-            vkGetDeviceQueue(logicalDevice, indices.graphicsFamily.value(), 0, &graphicsQueue);
+            VkAttachmentDescription colorAttachment{};
+            colorAttachment.format = vk::swapChainImageFormat;
+            colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+            colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+            colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+            colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+            colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+            colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+            colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
         }
 
         void mainLoop()
         {
-            mWindow.mainLoop();
+            while (!mWindow.ShouldClose())
+            {
+                if (mShouldClose)
+                    break;
+                onRender();
+                mWindow.PollEvents();
+            }
         }
 
-        void cleanup()
+        void exit()
         {
-            vkDestroyDevice(logicalDevice, nullptr);
-            vkDestroyInstance(instance, nullptr);
+            onExit();
+            vk::cleanup();
             mWindow.cleanup();
-        }
-
-        void createInstance()
-        {
-            if (enableValidationLayers && !checkValidationLayerSupport())
-            {
-                throw std::runtime_error("validation layers requested, but not available!");
-            }
-            VkApplicationInfo appInfo{};
-            appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-            appInfo.pApplicationName = mApplicationName.c_str();
-            appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-            appInfo.pEngineName = "No Engine";
-            appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-            appInfo.apiVersion = VK_API_VERSION_1_0;
-
-            VkInstanceCreateInfo createInfo{};
-            createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-            createInfo.pApplicationInfo = &appInfo;
-
-            uint32_t glfwExtensionCount = 0;
-            const char **glfwExtensions;
-
-            glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
-
-            createInfo.enabledExtensionCount = glfwExtensionCount;
-            createInfo.ppEnabledExtensionNames = glfwExtensions;
-            createInfo.enabledLayerCount = 0;
-
-            if (enableValidationLayers)
-            {
-                createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
-                createInfo.ppEnabledLayerNames = validationLayers.data();
-            }
-            else
-            {
-                createInfo.enabledLayerCount = 0;
-            }
-
-            VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
-
-            if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS)
-            {
-                throw std::runtime_error("failed to create instance!");
-            }
-
-            checkExtensions();
-        }
-
-        void checkExtensions()
-        {
-            uint32_t extensionCount = 0;
-            vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
-            std::vector<VkExtensionProperties> extensions(extensionCount);
-            vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
-            std::cout << "available extensions:\n";
-
-            for (const auto &extension : extensions)
-            {
-                std::cout << '\t' << extension.extensionName << '\n';
-            }
-
-            std::cout << std::endl;
-        }
-
-        bool checkValidationLayerSupport()
-        {
-            uint32_t layerCount;
-            vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
-
-            std::vector<VkLayerProperties> availableLayers(layerCount);
-            vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
-
-            for (const char *layerName : validationLayers)
-            {
-                bool layerFound = false;
-
-                for (const auto &layerProperties : availableLayers)
-                {
-                    if (std::strcmp(layerName, layerProperties.layerName) == 0)
-                    {
-                        layerFound = true;
-                        break;
-                    }
-                }
-
-                if (!layerFound)
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
 
     private:
         Window mWindow;
         std::string mApplicationName = "Default";
-        VkInstance instance;
-        VkDevice logicalDevice;
-        VkPhysicalDevice physicalDevice;
-        VkQueue graphicsQueue;
-
-        const std::vector<const char *> validationLayers = {
-            "VK_LAYER_KHRONOS_validation"};
-
-#ifdef NDEBUG
-        const bool enableValidationLayers = false;
-#else
-        const bool enableValidationLayers = true;
-#endif
     };
 }
