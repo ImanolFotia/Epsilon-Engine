@@ -2,6 +2,9 @@
 
 #include <vulkan/vulkan.h>
 
+#include "device.hpp"
+#include "swap_chain.hpp"
+
 namespace vk
 {
     struct render_pass_data_t
@@ -44,5 +47,25 @@ namespace vk
         }
 
         return renderPass;
+    }
+
+    VkRenderPassBeginInfo createRenderPassInfo(const VkRenderPass &renderPass, uint32_t imageIndex)
+    {
+        VkRenderPassBeginInfo renderPassInfo{};
+        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        renderPassInfo.renderPass = renderPass;
+        renderPassInfo.framebuffer = swapChainFramebuffers[imageIndex];
+        renderPassInfo.renderArea.offset = {0, 0};
+        renderPassInfo.renderArea.extent = swapChainExtent;
+
+        VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
+        renderPassInfo.clearValueCount = 1;
+        renderPassInfo.pClearValues = &clearColor;
+
+        return renderPassInfo;
+    }
+
+    void beginRenderPass(const VkCommandBuffer& commandBuffer, const VkRenderPassBeginInfo& renderPassInfo) {
+        vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
     }
 }

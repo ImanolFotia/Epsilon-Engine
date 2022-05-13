@@ -16,6 +16,8 @@ namespace vk
     VkFormat swapChainImageFormat;
     VkExtent2D swapChainExtent;
     std::vector<VkImageView> swapChainImageViews;
+    
+    std::vector<VkFramebuffer> swapChainFramebuffers;
 
     struct SwapChainSupportDetails
     {

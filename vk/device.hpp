@@ -11,16 +11,18 @@
 #include "validation_layers.hpp"
 #include "pipeline.hpp"
 #include "instance.hpp"
+#include "command.hpp"
 
 namespace vk
 {
 
     VkDevice logicalDevice;
     VkPhysicalDevice physicalDevice;
-    std::vector<VkFramebuffer> swapChainFramebuffers;
 
     const std::vector<const char *> deviceExtensions = {
         VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+
+    VkPipeline graphicsPipeline;
 
     void createLogicalDevice()
     {
@@ -157,8 +159,11 @@ namespace vk
 
     void cleanup()
     {
+        cleanCommandPool(logicalDevice);
+
         vkDestroySwapchainKHR(logicalDevice, swapChain, nullptr);
         vkDestroyPipelineLayout(logicalDevice, pipelineLayout, nullptr);
+        destroyGraphicsPipeline(logicalDevice, graphicsPipeline);
 
         for (auto framebuffer : swapChainFramebuffers)
         {
