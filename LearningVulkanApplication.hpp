@@ -68,22 +68,24 @@ namespace LearningVulkan
 
         void mainLoop()
         {
-            const uint32_t imageIndex = 0;
-            
-            auto commandBuffer = vk::createCommandBuffer(vk::logicalDevice);
-
-            auto renderPassInfo = vk::createRenderPassInfo(vk::renderPass, imageIndex);
-
-            commandBuffer = vk::recordCommandBuffer(renderPassInfo, commandBuffer, imageIndex);
-
-            vk::beginRenderPass(commandBuffer, renderPassInfo);
-            vk::bindPipeline(commandBuffer, vk::graphicsPipeline);
 
             while (!mWindow.ShouldClose())
             {
                 if (mShouldClose)
                     break;
                 onRender();
+
+                const uint32_t imageIndex = 0;
+
+                auto commandBuffer = vk::createCommandBuffer(vk::logicalDevice);
+
+                auto renderPassInfo = vk::createRenderPassInfo(vk::renderPass, imageIndex);
+
+                commandBuffer = vk::recordCommandBuffer(renderPassInfo, commandBuffer, imageIndex);
+
+                vk::beginRenderPass(commandBuffer, renderPassInfo);
+                vk::bindPipeline(commandBuffer, vk::graphicsPipeline);
+
                 mWindow.PollEvents();
             }
         }

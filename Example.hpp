@@ -16,8 +16,8 @@ namespace ExampleApp
 
         void onRender() override
         {
-            std::cout << "Hello Vulkan App" << std::endl;
-            ShouldClose();
+            //std::cout << "Hello Vulkan App" << std::endl;
+            //ShouldClose();
         }
         
         void onExit() override {
