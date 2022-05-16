@@ -26,7 +26,7 @@ namespace vk::shader
         return buffer;
     }
 
-    VkShaderModule createShaderModule(const std::vector<char> &code, VkDevice device)
+    VkShaderModule createShaderModule(const std::vector<char> &code, const VkDevice& device)
     {
         VkShaderModuleCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;

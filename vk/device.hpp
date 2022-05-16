@@ -12,6 +12,7 @@
 #include "pipeline.hpp"
 #include "instance.hpp"
 #include "command.hpp"
+#include "sync_objects.hpp"
 
 namespace vk
 {
@@ -159,6 +160,7 @@ namespace vk
 
     void cleanup()
     {
+        cleanupSyncObjects(logicalDevice);
         cleanCommandPool(logicalDevice);
 
         vkDestroySwapchainKHR(logicalDevice, swapChain, nullptr);

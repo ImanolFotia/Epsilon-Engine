@@ -96,6 +96,7 @@ namespace vk
             actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
             actualExtent.height = std::clamp(actualExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
 
+            std::cout << "swapchain extent size:\n x: " << actualExtent.width << "\n y: " << actualExtent.height << std::endl;
             return actualExtent;
         }
     }

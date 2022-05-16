@@ -13,12 +13,10 @@ namespace vk
 
     VkPipelineLayout pipelineLayout;
 
-    VkRenderPass renderPass;
-
-    VkPipeline createGraphicsPipeline(VkDevice device)
+    VkPipeline createGraphicsPipeline(const VkDevice& device)
     {
-        auto vertShaderCode = shader::readFile("../assets/shaders/vertex.glsl");
-        auto fragShaderCode = shader::readFile("../assets/shaders/fragment.glsl");
+        auto vertShaderCode = shader::readFile("../assets/shaders/vertex.spv");
+        auto fragShaderCode = shader::readFile("../assets/shaders/fragment.spv");
 
         VkShaderModule vertShaderModule = shader::createShaderModule(vertShaderCode, device);
         VkShaderModule fragShaderModule = shader::createShaderModule(fragShaderCode, device);
@@ -78,11 +76,11 @@ namespace vk
             throw std::runtime_error("failed to create pipeline layout!");
         }
 
-        renderPass = createRenderPass(device);
+        createRenderPass(device);
 
         // Creating the graphics pipeline
 
-        VkGraphicsPipelineCreateInfo pipelineInfo{};
+        VkGraphicsPipelineCreateInfo pipelineInfo = {};
         pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
         pipelineInfo.stageCount = 2;
         pipelineInfo.pStages = shaderStages;
@@ -104,9 +102,10 @@ namespace vk
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
         pipelineInfo.basePipelineIndex = -1;
 
-        VkPipeline graphicsPipeline;
-        if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS)
+        VkPipeline graphicsPipeline{};
+        if (auto res = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline); res != VK_SUCCESS)
         {
+            std::cerr << "Result id: " << res << std::endl;
             throw std::runtime_error("failed to create graphics pipeline!");
         }
 

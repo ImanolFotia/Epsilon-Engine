@@ -10,7 +10,7 @@ namespace vk
         "VK_LAYER_KHRONOS_validation"};
 
 #if 1
-    const bool enableValidationLayers = false;
+    const bool enableValidationLayers = true;
 #else
     const bool enableValidationLayers = true;
 #endif

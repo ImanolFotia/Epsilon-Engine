@@ -9,3 +9,4 @@
 #include "validation_layers.hpp"
 #include "pipeline.hpp"
 #include "framebuffer.hpp"
+#include "sync_objects.hpp"

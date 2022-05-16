@@ -56,6 +56,10 @@ namespace vk
         return commandBuffer;
     }
 
+    void endRecording(const VkCommandBuffer& commandBuffer) {
+        vkEndCommandBuffer(commandBuffer);
+    }
+
     void cleanCommandPool(const VkDevice &device)
     {
         vkDestroyCommandPool(device, commandPool, nullptr);
