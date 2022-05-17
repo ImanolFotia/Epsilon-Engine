@@ -7,24 +7,8 @@
 
 namespace vk
 {
-    void createFramebuffer(VkDevice device, VkFramebuffer *framebuffer, VkImageView *attachments)
-    {
-        VkFramebufferCreateInfo framebufferInfo{};
-        framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-        framebufferInfo.renderPass = myRenderPass;
-        framebufferInfo.attachmentCount = 1;
-        framebufferInfo.pAttachments = attachments;
-        framebufferInfo.width = swapChainExtent.width;
-        framebufferInfo.height = swapChainExtent.height;
-        framebufferInfo.layers = 1;
 
-        if (vkCreateFramebuffer(device, &framebufferInfo, nullptr, framebuffer) != VK_SUCCESS)
-        {
-            throw std::runtime_error("failed to create framebuffer!");
-        }
-    }
-
-    void createFramebuffers(VkDevice device)
+    void createFramebuffers(vk_data_t& vk_data)
     {
         /*swapChainFramebuffers.resize(swapChainImageViews.size());
 
@@ -37,23 +21,23 @@ namespace vk
         }
         */
 
-        swapChainFramebuffers.resize(swapChainImageViews.size());
+        vk_data.swapChainFramebuffers.resize(vk_data.swapChainImageViews.size());
 
-        for (size_t i = 0; i < swapChainImageViews.size(); i++)
+        for (size_t i = 0; i < vk_data.swapChainImageViews.size(); i++)
         {
             VkImageView attachments[] = {
-                swapChainImageViews[i]};
+                vk_data.swapChainImageViews[i]};
 
             VkFramebufferCreateInfo framebufferInfo{};
             framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-            framebufferInfo.renderPass = myRenderPass;
+            framebufferInfo.renderPass = vk_data.myRenderPass;
             framebufferInfo.attachmentCount = 1;
             framebufferInfo.pAttachments = attachments;
-            framebufferInfo.width = swapChainExtent.width;
-            framebufferInfo.height = swapChainExtent.height;
+            framebufferInfo.width = vk_data.swapChainExtent.width;
+            framebufferInfo.height = vk_data.swapChainExtent.height;
             framebufferInfo.layers = 1;
 
-            if (vkCreateFramebuffer(device, &framebufferInfo, nullptr, &swapChainFramebuffers[i]) != VK_SUCCESS)
+            if (vkCreateFramebuffer(vk_data.logicalDevice, &framebufferInfo, nullptr, &vk_data.swapChainFramebuffers[i]) != VK_SUCCESS)
             {
                 throw std::runtime_error("failed to create framebuffer!");
             }

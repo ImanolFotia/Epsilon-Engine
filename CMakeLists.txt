@@ -44,6 +44,7 @@ add_dependencies(glfw3 hidapi_external)
 SET(HEADERS
     ${CMAKE_SOURCE_DIR}/framework
     ${CMAKE_SOURCE_DIR}/vk
+    ${CMAKE_SOURCE_DIR}/engine
 )
 
 add_executable(LearningVulkan main.cpp)

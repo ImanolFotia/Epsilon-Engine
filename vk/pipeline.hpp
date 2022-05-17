@@ -8,19 +8,20 @@
 #include "rasterizer.hpp"
 #include "render_pass.hpp"
 
+#include "../vk_data.hpp"
+
 namespace vk
 {
 
-    VkPipelineLayout pipelineLayout{};
+    //std::pair<>
 
-    VkPipeline graphicsPipeline;
-    VkPipeline createGraphicsPipeline(const VkDevice& device)
+    VkPipeline createGraphicsPipeline(vk_data_t& vk_data)
     {
-        auto vertShaderCode = shader::readFile("../assets/shaders/vertex.spv");
-        auto fragShaderCode = shader::readFile("../assets/shaders/fragment.spv");
+        auto vertShaderCode = shader::readFile("../assets/shaders/vertex.spv", vk_data);
+        auto fragShaderCode = shader::readFile("../assets/shaders/fragment.spv", vk_data);
 
-        VkShaderModule vertShaderModule = shader::createShaderModule(vertShaderCode, device);
-        VkShaderModule fragShaderModule = shader::createShaderModule(fragShaderCode, device);
+        VkShaderModule vertShaderModule = shader::createShaderModule(vertShaderCode, vk_data);
+        VkShaderModule fragShaderModule = shader::createShaderModule(fragShaderCode, vk_data);
 
         VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
         vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -50,10 +51,10 @@ namespace vk
         inputAssembly.primitiveRestartEnable = VK_FALSE;
 
         // Viewport stage
-        createViewport();
+        createViewport(vk_data);
 
         // Rasterizer stage
-        setupRasterizer();
+        setupRasterizer(vk_data);
 
         std::vector<VkDynamicState> dynamicStates = {
             VK_DYNAMIC_STATE_VIEWPORT,
@@ -72,7 +73,7 @@ namespace vk
         pipelineLayoutInfo.pushConstantRangeCount = 0;    // Optional
         pipelineLayoutInfo.pPushConstantRanges = nullptr; // Optional
 
-        if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS)
+        if (vkCreatePipelineLayout(vk_data.logicalDevice, &pipelineLayoutInfo, nullptr, &vk_data.pipelineLayout) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to create pipeline layout!");
         }
@@ -86,29 +87,30 @@ namespace vk
 
         pipelineInfo.pVertexInputState = &vertexInputInfo;
         pipelineInfo.pInputAssemblyState = &inputAssembly;
-        pipelineInfo.pViewportState = &viewportState;
-        pipelineInfo.pRasterizationState = &rasterizer;
-        pipelineInfo.pMultisampleState = &multisampling;// Optional
-        pipelineInfo.pColorBlendState = &colorBlending;
+        pipelineInfo.pViewportState = &vk_data.viewportState;
+        pipelineInfo.pRasterizationState = &vk_data.rasterizer;
+        pipelineInfo.pMultisampleState = &vk_data.multisampling;// Optional
+        pipelineInfo.pColorBlendState = &vk_data.colorBlending;
        
-        pipelineInfo.layout = pipelineLayout;
+        pipelineInfo.layout = vk_data.pipelineLayout;
 
-        pipelineInfo.renderPass = myRenderPass;
+        pipelineInfo.renderPass = vk_data.myRenderPass;
         pipelineInfo.subpass = 0;
+        //pipelineInfo.pDynamicState = &dynamicState;
 
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
         
 
-        if (auto res = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline); res != VK_SUCCESS)
+        if (auto res = vkCreateGraphicsPipelines(vk_data.logicalDevice, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &vk_data.graphicsPipeline); res != VK_SUCCESS)
         {
             std::cerr << "Result id: " << res << std::endl;
             throw std::runtime_error("failed to create graphics pipeline!");
         }
 
-        vkDestroyShaderModule(device, fragShaderModule, nullptr);
-        vkDestroyShaderModule(device, vertShaderModule, nullptr);
+        vkDestroyShaderModule(vk_data.logicalDevice, fragShaderModule, nullptr);
+        vkDestroyShaderModule(vk_data.logicalDevice, vertShaderModule, nullptr);
 
-        return graphicsPipeline;
+        return vk_data.graphicsPipeline;
     }
 
     void draw(const VkCommandBuffer &commandBuffer,
@@ -120,14 +122,14 @@ namespace vk
         vkCmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
     }
 
-    void destroyGraphicsPipeline(const VkDevice &device, const VkPipeline &graphicsPipeline)
+    void destroyGraphicsPipeline(const vk_data_t& vk_data)
     {
-        vkDestroyPipeline(device, graphicsPipeline, nullptr);
-        vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
+        vkDestroyPipeline(vk_data.logicalDevice, vk_data.graphicsPipeline, nullptr);
+        vkDestroyPipelineLayout(vk_data.logicalDevice, vk_data.pipelineLayout, nullptr);
     }
 
-    void bindPipeline(const VkCommandBuffer &commandBuffer, const VkPipeline &graphicsPipeline)
+    void bindPipeline(const vk_data_t& vk_data, const VkCommandBuffer& commandBuffer)
     {
-        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_data.graphicsPipeline);
     }
 }

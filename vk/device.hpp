@@ -17,15 +17,11 @@
 namespace vk
 {
 
-    VkDevice logicalDevice;
-    VkPhysicalDevice physicalDevice;
 
-    const std::vector<const char *> deviceExtensions = {
-        VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
-    void createLogicalDevice()
+    void createLogicalDevice(vk_data_t& vk_data)
     {
-        QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
+        QueueFamilyIndices indices = findQueueFamilies(vk_data.physicalDevice, vk_data);
 
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
         std::set<uint32_t> uniqueQueueFamilies = {indices.graphicsFamily.value(), indices.presentFamily.value()};
@@ -48,8 +44,8 @@ namespace vk
         createInfo.pQueueCreateInfos = queueCreateInfos.data();
         createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
 
-        createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
-        createInfo.ppEnabledExtensionNames = deviceExtensions.data();
+        createInfo.enabledExtensionCount = static_cast<uint32_t>(vk_data.deviceExtensions.size());
+        createInfo.ppEnabledExtensionNames = vk_data.deviceExtensions.data();
 
         createInfo.pEnabledFeatures = &deviceFeatures;
         // createInfo.enabledExtensionCount = 0;
@@ -64,13 +60,13 @@ namespace vk
             createInfo.enabledLayerCount = 0;
         }
 
-        if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &logicalDevice) != VK_SUCCESS)
+        if (vkCreateDevice(vk_data.physicalDevice, &createInfo, nullptr, &vk_data.logicalDevice) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to create logical device!");
         }
-        vkGetDeviceQueue(logicalDevice, indices.presentFamily.value(), 0, &presentQueue);
+        vkGetDeviceQueue(vk_data.logicalDevice, indices.presentFamily.value(), 0, &vk_data.presentQueue);
         //????????
-        vkGetDeviceQueue(logicalDevice, indices.graphicsFamily.value(), 0, &graphicsQueue);
+        vkGetDeviceQueue(vk_data.logicalDevice, indices.graphicsFamily.value(), 0, &vk_data.graphicsQueue);
     }
 
     void showDeviceFeatures(VkPhysicalDevice device)
@@ -88,7 +84,7 @@ namespace vk
         IO::Log("\tVendor ID: ", deviceProperties.vendorID);
     }
 
-    bool checkDeviceExtensionSupport(VkPhysicalDevice device)
+    bool checkDeviceExtensionSupport(VkPhysicalDevice device, const vk_data_t& vk_data)
     {
         uint32_t extensionCount;
         vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
@@ -96,7 +92,7 @@ namespace vk
         std::vector<VkExtensionProperties> availableExtensions(extensionCount);
         vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
 
-        std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
+        std::set<std::string> requiredExtensions(vk_data.deviceExtensions.begin(), vk_data.deviceExtensions.end());
 
         for (const auto &extension : availableExtensions)
         {
@@ -106,30 +102,32 @@ namespace vk
         return requiredExtensions.empty();
     }
 
-    bool isDeviceSuitable(VkPhysicalDevice device)
+    bool isDeviceSuitable(VkPhysicalDevice device, const vk_data_t& vk_data)
     {
         showDeviceFeatures(device);
 
-        bool extensionsSupported = checkDeviceExtensionSupport(device);
+        bool extensionsSupported = checkDeviceExtensionSupport(device, vk_data);
 
-        QueueFamilyIndices indices = findQueueFamilies(device);
+
+        QueueFamilyIndices indices = findQueueFamilies(device, vk_data);
 
         bool swapChainAdequate = false;
+
         if (extensionsSupported)
         {
-            SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device);
+            SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device, vk_data);
             swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
         }
 
         return indices.isComplete() && extensionsSupported && swapChainAdequate;
     }
 
-    VkPhysicalDevice pickPhysicalDevice(VkInstance instance)
+    VkPhysicalDevice pickPhysicalDevice(vk_data_t& vk_data)
     {
         VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 
         uint32_t deviceCount = 0;
-        vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
+        vkEnumeratePhysicalDevices(vk_data.instance, &deviceCount, nullptr);
 
         if (deviceCount == 0)
         {
@@ -137,11 +135,11 @@ namespace vk
         }
 
         std::vector<VkPhysicalDevice> devices(deviceCount);
-        vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
+        vkEnumeratePhysicalDevices(vk_data.instance, &deviceCount, devices.data());
 
         for (const auto &device : devices)
         {
-            if (isDeviceSuitable(device))
+            if (isDeviceSuitable(device, vk_data))
             {
                 physicalDevice = device;
                 break;
@@ -152,41 +150,42 @@ namespace vk
         {
             throw std::runtime_error("failed to find a suitable GPU!");
         }
+        vk_data.physicalDevice = physicalDevice;
 
         return physicalDevice;
     }
 
-    void cleanup()
+    void cleanup(vk_data_t& vk_data)
     {
-        cleanupSyncObjects(logicalDevice);
-        cleanCommandPool(logicalDevice);
+        cleanupSyncObjects(vk_data);
+        cleanCommandPool(vk_data);
 
 
-        destroyGraphicsPipeline(logicalDevice, graphicsPipeline);
+        destroyGraphicsPipeline(vk_data);
 
-        vkDestroyRenderPass(logicalDevice, myRenderPass, nullptr);
+        vkDestroyRenderPass(vk_data.logicalDevice, vk_data.myRenderPass, nullptr);
 
-        vkDestroySwapchainKHR(logicalDevice, swapChain, nullptr);
+        vkDestroySwapchainKHR(vk_data.logicalDevice, vk_data.swapChain, nullptr);
 
 
-        for (auto framebuffer : swapChainFramebuffers)
+        for (auto framebuffer : vk_data.swapChainFramebuffers)
         {
-            vkDestroyFramebuffer(logicalDevice, framebuffer, nullptr);
+            vkDestroyFramebuffer(vk_data.logicalDevice, framebuffer, nullptr);
         }
 
-        for (auto imageView : swapChainImageViews)
+        for (auto imageView : vk_data.swapChainImageViews)
         {
-            vkDestroyImageView(logicalDevice, imageView, nullptr);
+            vkDestroyImageView(vk_data.logicalDevice, imageView, nullptr);
         }
 
         if (enableValidationLayers)
         {
-            DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
+            DestroyDebugUtilsMessengerEXT(vk_data.instance, debugMessenger, nullptr);
         }
 
 
-        vkDestroyDevice(logicalDevice, nullptr);
+        vkDestroyDevice(vk_data.logicalDevice, nullptr);
 
-        cleanupSurface(instance);
+        cleanupSurface(vk_data);
     }
 }

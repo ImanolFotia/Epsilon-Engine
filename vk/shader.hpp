@@ -5,9 +5,11 @@
 #include <vector>
 #include <fstream>
 
+#include "../vk_data.hpp"
+
 namespace vk::shader
 {
-    std::vector<char> readFile(const std::string &filename)
+    std::vector<char> readFile(const std::string &filename, const vk_data_t& vk_data)
     {
         std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
@@ -26,7 +28,7 @@ namespace vk::shader
         return buffer;
     }
 
-    VkShaderModule createShaderModule(const std::vector<char> &code, const VkDevice& device)
+    VkShaderModule createShaderModule(const std::vector<char> &code, const vk_data_t& vk_data)
     {
         VkShaderModuleCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -34,7 +36,7 @@ namespace vk::shader
         createInfo.pCode = reinterpret_cast<const uint32_t *>(code.data());
 
         VkShaderModule shaderModule;
-        if (vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule) != VK_SUCCESS)
+        if (vkCreateShaderModule(vk_data.logicalDevice, &createInfo, nullptr, &shaderModule) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to create shader module!");
         }

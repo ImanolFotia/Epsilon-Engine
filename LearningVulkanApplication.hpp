@@ -17,14 +17,21 @@
 
 #include "vk/vk.hpp"
 
+#include "vk_data.hpp"
+
 namespace LearningVulkan
 {
     class LearningVulkanApplication
     {
+
+        uint32_t m_CurrentFrame = 0;
+        Window m_Window;
+        std::string m_ApplicationName = "Default";
+
     public:
         LearningVulkanApplication() = default;
 
-        LearningVulkanApplication(std::string appName) : mApplicationName(appName) {}
+        LearningVulkanApplication(std::string appName) : m_ApplicationName(appName) {}
 
         void run()
         {
@@ -40,166 +47,84 @@ namespace LearningVulkan
         virtual void onExit() = 0;
 
     protected:
+
+        vk::vk_data_t m_VkData;
+        std::vector<VkCommandBuffer> m_CommandBuffers;
+
         bool mShouldClose = false;
         void ShouldClose()
         {
             mShouldClose = true;
         }
 
+
     private:
         void initWindow()
         {
-            mWindow.init(mApplicationName, 1280, 720);
+            m_Window.init(m_ApplicationName, 1280, 720);
         }
 
         void initVulkan()
         {
-            vk::createInstance(mApplicationName);
-            vk::setupDebugMessenger(vk::instance);
-            vk::createSurface(vk::instance, mWindow.getWindow());
-            vk::physicalDevice = vk::pickPhysicalDevice(vk::instance);
-            vk::createLogicalDevice();
-            vk::createSwapChain(vk::logicalDevice, vk::physicalDevice, mWindow.getWindow());
-            vk::createImageViews(vk::logicalDevice);
-            vk::createRenderPass(vk::logicalDevice);
-            vk::createGraphicsPipeline(vk::logicalDevice);
-            vk::createFramebuffers(vk::logicalDevice);
-            vk::createCommandPool(vk::physicalDevice, vk::logicalDevice);
-        }
+            vk::createInstance(m_ApplicationName, m_VkData);
+            vk::setupDebugMessenger(m_VkData.instance);
+            vk::createSurface(m_VkData, m_Window.getWindow());
+            vk::pickPhysicalDevice(m_VkData);
+            vk::createLogicalDevice(m_VkData);
+            vk::createSwapChain(m_VkData, m_Window.getWindow());
+            vk::createImageViews(m_VkData);
+            vk::createRenderPass(m_VkData);
+            vk::createGraphicsPipeline(m_VkData);
+            vk::createFramebuffers(m_VkData);
+            vk::createCommandPool(m_VkData);
 
-        void recreateSwapChain()
-        {
-
-            vkDeviceWaitIdle(vk::logicalDevice);
-
-            cleanupSwapChain();
-
-            vk::createSwapChain(vk::logicalDevice, vk::physicalDevice, mWindow.getWindow());
-            vk::createImageViews(vk::logicalDevice);
-            vk::createRenderPass(vk::logicalDevice);
-            vk::createGraphicsPipeline(vk::logicalDevice);
-            vk::createFramebuffers(vk::logicalDevice);
-        }
-
-        void cleanupSwapChain()
-        {
-            for (size_t i = 0; i < vk::swapChainFramebuffers.size(); i++)
-            {
-                vkDestroyFramebuffer(vk::logicalDevice, vk::swapChainFramebuffers[i], nullptr);
-            }
-
-            vkDestroyPipeline(vk::logicalDevice, vk::graphicsPipeline, nullptr);
-            vkDestroyPipelineLayout(vk::logicalDevice, vk::pipelineLayout, nullptr);
-            vkDestroyRenderPass(vk::logicalDevice, vk::myRenderPass, nullptr);
-
-            for (size_t i = 0; i < vk::swapChainImageViews.size(); i++)
-            {
-                vkDestroyImageView(vk::logicalDevice, vk::swapChainImageViews[i], nullptr);
-            }
-
-            vkDestroySwapchainKHR(vk::logicalDevice, vk::swapChain, nullptr);
+            vk::createCommandBuffers(m_VkData, m_CommandBuffers);
+            vk::createSyncObjects(m_VkData);
         }
 
         void mainLoop()
         {
-            const uint32_t imageIndex = 0;
-
-            auto commandBuffer = vk::createCommandBuffer(vk::logicalDevice);
-
-            vk::createSyncObjects(vk::logicalDevice);
-
-            while (!mWindow.ShouldClose())
+            while (!m_Window.ShouldClose())
             {
                 if (mShouldClose)
                     break;
                 onRender();
-                drawFrame(commandBuffer);
-                mWindow.PollEvents();
-
-                // mShouldClose = true;
+                drawFrame();
+                m_Window.PollEvents();
             }
 
-            vkDeviceWaitIdle(vk::logicalDevice);
+            vkDeviceWaitIdle(m_VkData.logicalDevice);
         }
 
-        void drawFrame(const VkCommandBuffer &commandBuffer)
+        void drawFrame()
         {
-            vkWaitForFences(vk::logicalDevice, 1, &vk::inFlightFence, VK_TRUE, UINT64_MAX);
+            uint32_t imageIndex = prepareSyncObjects(m_VkData, m_Window.getWindow(), m_CurrentFrame);
+            // vkAcquireNextImageKHR(vk::logicalDevice, vk::swapChain, UINT64_MAX, vk::imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
+            vkResetCommandBuffer(m_CommandBuffers[m_CurrentFrame], 0);
 
-            uint32_t imageIndex;
-            VkResult result = vkAcquireNextImageKHR(vk::logicalDevice, vk::swapChain, UINT64_MAX, vk::imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
+            vk::recordCommandBuffer(m_CommandBuffers[m_CurrentFrame], imageIndex);
+            vk::createRenderPassInfo(imageIndex, m_VkData);
+            vk::beginRenderPass(m_CommandBuffers[m_CurrentFrame], m_VkData);
+            vk::bindPipeline(m_VkData, m_CommandBuffers[m_CurrentFrame]);
+            vk::draw(m_CommandBuffers[m_CurrentFrame], 6, 1, 0, 0);
+            vk::endRenderPass(m_CommandBuffers[m_CurrentFrame], m_VkData);
+            vk::endRecording(m_CommandBuffers[m_CurrentFrame]);
 
-            if (result == VK_ERROR_OUT_OF_DATE_KHR)
-            {
-                recreateSwapChain();
-                return;
-            }
-            else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
-            {
-                throw std::runtime_error("failed to acquire swap chain image!");
-            }
+            VkSemaphore signalSemaphores[] = {m_VkData.renderFinishedSemaphores[m_CurrentFrame]};
 
-            // Only reset the fence if we are submitting work
-            vkResetFences(vk::logicalDevice, 1, &vk::inFlightFence);
+            vk::Sync(m_VkData, m_CommandBuffers[m_CurrentFrame], m_CurrentFrame);
 
-            //vkAcquireNextImageKHR(vk::logicalDevice, vk::swapChain, UINT64_MAX, vk::imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
-            vkResetCommandBuffer(commandBuffer, 0);
+            vk::Present(m_VkData, signalSemaphores, imageIndex);
 
-            vk::recordCommandBuffer(commandBuffer, imageIndex);
-            vk::createRenderPassInfo(imageIndex);
-            vk::beginRenderPass(commandBuffer);
-            vk::bindPipeline(commandBuffer, vk::graphicsPipeline);
-            vk::draw(commandBuffer, 3, 1, 0, 0);
-            vk::endRenderPass(commandBuffer);
-            vk::endRecording(commandBuffer);
-
-            VkSubmitInfo submitInfo{};
-            submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-
-            VkSemaphore waitSemaphores[] = {vk::imageAvailableSemaphore};
-            VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
-            submitInfo.waitSemaphoreCount = 1;
-            submitInfo.pWaitSemaphores = waitSemaphores;
-            submitInfo.pWaitDstStageMask = waitStages;
-
-            submitInfo.commandBufferCount = 1;
-            submitInfo.pCommandBuffers = &commandBuffer;
-
-            VkSemaphore signalSemaphores[] = {vk::renderFinishedSemaphore};
-            submitInfo.signalSemaphoreCount = 1;
-            submitInfo.pSignalSemaphores = signalSemaphores;
-
-            if (vkQueueSubmit(vk::graphicsQueue, 1, &submitInfo, vk::inFlightFence) != VK_SUCCESS)
-            {
-                throw std::runtime_error("failed to submit draw command buffer!");
-            }
-
-            // PResentation
-            VkPresentInfoKHR presentInfo{};
-            presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-
-            presentInfo.waitSemaphoreCount = 1;
-            presentInfo.pWaitSemaphores = signalSemaphores;
-
-            VkSwapchainKHR swapChains[] = {vk::swapChain};
-            presentInfo.swapchainCount = 1;
-            presentInfo.pSwapchains = swapChains;
-            presentInfo.pImageIndices = &imageIndex;
-
-            presentInfo.pResults = nullptr; // Optional
-
-            vkQueuePresentKHR(vk::presentQueue, &presentInfo);
+            m_CurrentFrame = (m_CurrentFrame + 1) % vk::MAX_FRAMES_IN_FLIGHT;
         }
 
         void exit()
         {
             onExit();
-            vk::cleanup();
-            mWindow.cleanup();
+            vk::cleanup(m_VkData);
+            m_Window.cleanup();
         }
 
-    private:
-        Window mWindow;
-        std::string mApplicationName = "Default";
     };
 }

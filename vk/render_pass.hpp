@@ -15,13 +15,12 @@ namespace vk
         VkSubpassDependency dependency{};
     };
 
-    VkRenderPass myRenderPass{};
 
 
-    void createRenderPass(VkDevice device)
+    void createRenderPass(vk_data_t& vk_data)
     {
         render_pass_data_t render_pass_data{};
-        render_pass_data.colorAttachment.format = swapChainImageFormat;
+        render_pass_data.colorAttachment.format = vk_data.swapChainImageFormat;
         render_pass_data.colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
         render_pass_data.colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
         render_pass_data.colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -53,32 +52,31 @@ namespace vk
         renderPassCreateInfo.dependencyCount = 1;
         renderPassCreateInfo.pDependencies = &render_pass_data.dependency;
 
-        if (vkCreateRenderPass(device, &renderPassCreateInfo, nullptr, &myRenderPass) != VK_SUCCESS)
+        if (vkCreateRenderPass(vk_data.logicalDevice, &renderPassCreateInfo, nullptr, &vk_data.myRenderPass) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to create render pass!");
         }
     }
 
-    VkRenderPassBeginInfo renderPassInfo{};
-    void createRenderPassInfo(uint32_t imageIndex)
+    void createRenderPassInfo(uint32_t imageIndex, vk_data_t& vk_data)
     {
-        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        renderPassInfo.renderPass = myRenderPass;
-        renderPassInfo.framebuffer = swapChainFramebuffers[imageIndex];
-        renderPassInfo.renderArea.offset = {0, 0};
-        renderPassInfo.renderArea.extent = swapChainExtent;
+        vk_data.renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        vk_data.renderPassInfo.renderPass = vk_data.myRenderPass;
+        vk_data.renderPassInfo.framebuffer = vk_data.swapChainFramebuffers[imageIndex];
+        vk_data.renderPassInfo.renderArea.offset = {0, 0};
+        vk_data.renderPassInfo.renderArea.extent = vk_data.swapChainExtent;
 
         VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
-        renderPassInfo.clearValueCount = 1;
-        renderPassInfo.pClearValues = &clearColor;
+        vk_data.renderPassInfo.clearValueCount = 1;
+        vk_data.renderPassInfo.pClearValues = &clearColor;
     }
 
-    void beginRenderPass(const VkCommandBuffer &commandBuffer)
+    void beginRenderPass(const VkCommandBuffer &commandBuffer, const vk_data_t& vk_data)
     {
-        vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+        vkCmdBeginRenderPass(commandBuffer, &vk_data.renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
     }
 
-    void endRenderPass(const VkCommandBuffer &commandBuffer)
+    void endRenderPass(const VkCommandBuffer &commandBuffer, const vk_data_t& vk_data)
     {
         vkCmdEndRenderPass(commandBuffer);
     }

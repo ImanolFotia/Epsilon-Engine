@@ -14,8 +14,7 @@
 namespace vk
 {
 
-    VkInstance instance;
-    void createInstance(const std::string appName)
+    void createInstance(const std::string appName, vk_data_t& vk_data)
     {
         if (enableValidationLayers && !checkValidationLayerSupport())
         {
@@ -56,9 +55,9 @@ namespace vk
             createInfo.enabledLayerCount = 0;
         }
 
-        VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
+        VkResult result = vkCreateInstance(&createInfo, nullptr, &vk_data.instance);
 
-        if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS)
+        if (vkCreateInstance(&createInfo, nullptr, &vk_data.instance) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to create instance!");
         }

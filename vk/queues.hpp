@@ -9,8 +9,6 @@
 
 namespace vk
 {
-    VkQueue presentQueue;
-    VkQueue graphicsQueue;
 
     struct QueueFamilyIndices
     {
@@ -23,15 +21,15 @@ namespace vk
         }
     };
 
-    QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device)
+    QueueFamilyIndices findQueueFamilies(VkPhysicalDevice & physicalDevice, const vk_data_t& vk_data)
     {
         QueueFamilyIndices indices;
 
         uint32_t queueFamilyCount = 0;
-        vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+        vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, nullptr);
 
         std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-        vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+        vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, queueFamilies.data());
 
         uint32_t i = 0;
         for (const auto &queueFamily : queueFamilies)
@@ -47,7 +45,7 @@ namespace vk
             }
 
             VkBool32 presentSupport = false;
-            vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
+            vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, i, vk_data.surface, &presentSupport);
             if (presentSupport)
             {
                 indices.presentFamily = i;

@@ -2,16 +2,17 @@
 
 #include <vulkan/vulkan.hpp>
 
+#include "../vk_data.hpp"
+
 #define USE_GLFW 1
 
 namespace vk
 {
-        VkSurfaceKHR surface;
 
-        void createSurface(const VkInstance &instance, GLFWwindow *window)
+        void createSurface(vk_data_t& vk_data, GLFWwindow *window)
         {
 #if USE_GLFW
-                if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS)
+                if (glfwCreateWindowSurface(vk_data.instance, window, nullptr, &vk_data.surface) != VK_SUCCESS)
                 {
                         throw std::runtime_error("failed to create window surface!");
                 }
@@ -22,7 +23,7 @@ namespace vk
                 createInfo.hwnd = glfwGetWin32Window(window);
                 createInfo.hinstance = GetModuleHandle(nullptr);
 
-                if (vkCreateWin32SurfaceKHR(instance, &createInfo, nullptr, &surface) != VK_SUCCESS)
+                if (vkCreateWin32SurfaceKHR(vk_data.instance, &vk_data.createInfo, nullptr, &vk_data.surface) != VK_SUCCESS)
                 {
                         throw std::runtime_error("failed to create window surface!");
                 }
@@ -30,10 +31,10 @@ namespace vk
 #endif
         }
 
-        void cleanupSurface(const VkInstance &instance)
+        void cleanupSurface(const vk_data_t& vk_data)
         {
-                vkDestroySurfaceKHR(instance, surface, nullptr);
-                vkDestroyInstance(instance, nullptr);
+                vkDestroySurfaceKHR(vk_data.instance, vk_data.surface, nullptr);
+                vkDestroyInstance(vk_data.instance, nullptr);
         }
 
 }
