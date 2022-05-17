@@ -3,6 +3,7 @@
 *.a
 *.dll
 *.spv
+*.so
 
 /thirdparty
 /.vscode

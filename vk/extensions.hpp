@@ -7,7 +7,7 @@
 #include <cstring>
 #include <set>
 
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan.hpp>
 
 namespace vk
 {

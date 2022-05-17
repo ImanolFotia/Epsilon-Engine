@@ -67,6 +67,39 @@ namespace LearningVulkan
             vk::createCommandPool(vk::physicalDevice, vk::logicalDevice);
         }
 
+        void recreateSwapChain()
+        {
+
+            vkDeviceWaitIdle(vk::logicalDevice);
+
+            cleanupSwapChain();
+
+            vk::createSwapChain(vk::logicalDevice, vk::physicalDevice, mWindow.getWindow());
+            vk::createImageViews(vk::logicalDevice);
+            vk::createRenderPass(vk::logicalDevice);
+            vk::createGraphicsPipeline(vk::logicalDevice);
+            vk::createFramebuffers(vk::logicalDevice);
+        }
+
+        void cleanupSwapChain()
+        {
+            for (size_t i = 0; i < vk::swapChainFramebuffers.size(); i++)
+            {
+                vkDestroyFramebuffer(vk::logicalDevice, vk::swapChainFramebuffers[i], nullptr);
+            }
+
+            vkDestroyPipeline(vk::logicalDevice, vk::graphicsPipeline, nullptr);
+            vkDestroyPipelineLayout(vk::logicalDevice, vk::pipelineLayout, nullptr);
+            vkDestroyRenderPass(vk::logicalDevice, vk::myRenderPass, nullptr);
+
+            for (size_t i = 0; i < vk::swapChainImageViews.size(); i++)
+            {
+                vkDestroyImageView(vk::logicalDevice, vk::swapChainImageViews[i], nullptr);
+            }
+
+            vkDestroySwapchainKHR(vk::logicalDevice, vk::swapChain, nullptr);
+        }
+
         void mainLoop()
         {
             const uint32_t imageIndex = 0;
@@ -92,9 +125,24 @@ namespace LearningVulkan
         void drawFrame(const VkCommandBuffer &commandBuffer)
         {
             vkWaitForFences(vk::logicalDevice, 1, &vk::inFlightFence, VK_TRUE, UINT64_MAX);
-            vkResetFences(vk::logicalDevice, 1, &vk::inFlightFence);
+
             uint32_t imageIndex;
-            vkAcquireNextImageKHR(vk::logicalDevice, vk::swapChain, UINT64_MAX, vk::imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
+            VkResult result = vkAcquireNextImageKHR(vk::logicalDevice, vk::swapChain, UINT64_MAX, vk::imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
+
+            if (result == VK_ERROR_OUT_OF_DATE_KHR)
+            {
+                recreateSwapChain();
+                return;
+            }
+            else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+            {
+                throw std::runtime_error("failed to acquire swap chain image!");
+            }
+
+            // Only reset the fence if we are submitting work
+            vkResetFences(vk::logicalDevice, 1, &vk::inFlightFence);
+
+            //vkAcquireNextImageKHR(vk::logicalDevice, vk::swapChain, UINT64_MAX, vk::imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
             vkResetCommandBuffer(commandBuffer, 0);
 
             vk::recordCommandBuffer(commandBuffer, imageIndex);

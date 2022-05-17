@@ -4,7 +4,7 @@
 #include <cstdint>   // Necessary for UINT32_MAX
 #include <algorithm> // Necessary for std::clamp
 
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan.hpp>
 
 #include "surface.hpp"
 

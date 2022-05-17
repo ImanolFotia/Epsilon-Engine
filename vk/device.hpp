@@ -3,7 +3,7 @@
 #include <vector>
 #include <stdexcept>
 
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan.hpp>
 
 #include "../framework/common.hpp"
 #include "queues.hpp"
@@ -22,7 +22,6 @@ namespace vk
 
     const std::vector<const char *> deviceExtensions = {
         VK_KHR_SWAPCHAIN_EXTENSION_NAME};
-
 
     void createLogicalDevice()
     {
@@ -163,31 +162,31 @@ namespace vk
         cleanCommandPool(logicalDevice);
 
 
+        destroyGraphicsPipeline(logicalDevice, graphicsPipeline);
+
+        vkDestroyRenderPass(logicalDevice, myRenderPass, nullptr);
+
+        vkDestroySwapchainKHR(logicalDevice, swapChain, nullptr);
+
+
         for (auto framebuffer : swapChainFramebuffers)
         {
             vkDestroyFramebuffer(logicalDevice, framebuffer, nullptr);
         }
-        
-        destroyGraphicsPipeline(logicalDevice, graphicsPipeline);
-        
-
-        vkDestroyRenderPass(logicalDevice, renderPass, nullptr);
 
         for (auto imageView : swapChainImageViews)
         {
             vkDestroyImageView(logicalDevice, imageView, nullptr);
         }
 
-        
-        vkDestroySwapchainKHR(logicalDevice, swapChain, nullptr);
-        vkDestroyDevice(logicalDevice, nullptr);
-
-
         if (enableValidationLayers)
         {
             DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
         }
-        
+
+
+        vkDestroyDevice(logicalDevice, nullptr);
+
         cleanupSurface(instance);
     }
 }

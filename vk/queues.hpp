@@ -3,7 +3,7 @@
 #include <optional>
 #include <vector>
 
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan.hpp>
 
 #include "surface.hpp"
 

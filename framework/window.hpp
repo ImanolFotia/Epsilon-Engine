@@ -27,7 +27,7 @@ namespace LearningVulkan
             glfwInit();
 
             glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-            glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+            glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
             mWindow = glfwCreateWindow(mWidth, mHeight, appName.c_str(), nullptr, nullptr);
         }

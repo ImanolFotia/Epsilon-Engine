@@ -56,8 +56,6 @@ target_link_libraries(${PROJECT_NAME} glfw3)
 add_dependencies(${PROJECT_NAME} glfw3_d)
 add_dependencies(${PROJECT_NAME} glm)
 
-
-
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)

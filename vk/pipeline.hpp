@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan.hpp>
 
 #include "shader.hpp"
 #include "swap_chain.hpp"
@@ -77,8 +77,6 @@ namespace vk
             throw std::runtime_error("failed to create pipeline layout!");
         }
 
-        createRenderPass(device);
-
         // Creating the graphics pipeline
 
         VkGraphicsPipelineCreateInfo pipelineInfo = {};
@@ -95,7 +93,7 @@ namespace vk
        
         pipelineInfo.layout = pipelineLayout;
 
-        pipelineInfo.renderPass = renderPass;
+        pipelineInfo.renderPass = myRenderPass;
         pipelineInfo.subpass = 0;
 
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional

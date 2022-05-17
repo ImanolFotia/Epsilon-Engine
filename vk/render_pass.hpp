@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan.hpp>
 
 #include "device.hpp"
 #include "swap_chain.hpp"
@@ -15,13 +15,12 @@ namespace vk
         VkSubpassDependency dependency{};
     };
 
-    VkRenderPass renderPass;
-    render_pass_data_t render_pass_data{};
+    VkRenderPass myRenderPass{};
 
-    VkRenderPassCreateInfo renderPassCreateInfo{};
 
     void createRenderPass(VkDevice device)
     {
+        render_pass_data_t render_pass_data{};
         render_pass_data.colorAttachment.format = swapChainImageFormat;
         render_pass_data.colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
         render_pass_data.colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
@@ -45,6 +44,7 @@ namespace vk
         render_pass_data.dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
         render_pass_data.dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 
+        VkRenderPassCreateInfo renderPassCreateInfo{};
         renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
         renderPassCreateInfo.attachmentCount = 1;
         renderPassCreateInfo.pAttachments = &render_pass_data.colorAttachment;
@@ -53,17 +53,17 @@ namespace vk
         renderPassCreateInfo.dependencyCount = 1;
         renderPassCreateInfo.pDependencies = &render_pass_data.dependency;
 
-        if (vkCreateRenderPass(device, &renderPassCreateInfo, nullptr, &renderPass) != VK_SUCCESS)
+        if (vkCreateRenderPass(device, &renderPassCreateInfo, nullptr, &myRenderPass) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to create render pass!");
         }
     }
 
     VkRenderPassBeginInfo renderPassInfo{};
-    VkRenderPassBeginInfo createRenderPassInfo(uint32_t imageIndex)
+    void createRenderPassInfo(uint32_t imageIndex)
     {
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        renderPassInfo.renderPass = renderPass;
+        renderPassInfo.renderPass = myRenderPass;
         renderPassInfo.framebuffer = swapChainFramebuffers[imageIndex];
         renderPassInfo.renderArea.offset = {0, 0};
         renderPassInfo.renderArea.extent = swapChainExtent;
@@ -71,8 +71,6 @@ namespace vk
         VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
         renderPassInfo.clearValueCount = 1;
         renderPassInfo.pClearValues = &clearColor;
-
-        return renderPassInfo;
     }
 
     void beginRenderPass(const VkCommandBuffer &commandBuffer)
