@@ -41,7 +41,7 @@ namespace vk
         return commandBuffer;
     }
 
-    VkCommandBuffer recordCommandBuffer(const VkRenderPassBeginInfo& renderPassInfo, const VkCommandBuffer& commandBuffer, uint32_t imageIndex)
+    VkCommandBuffer recordCommandBuffer(const VkCommandBuffer& commandBuffer, uint32_t imageIndex)
     {
         VkCommandBufferBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -57,7 +57,9 @@ namespace vk
     }
 
     void endRecording(const VkCommandBuffer& commandBuffer) {
-        vkEndCommandBuffer(commandBuffer);
+        if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
+            throw std::runtime_error("failed to record command buffer!");
+        }
     }
 
     void cleanCommandPool(const VkDevice &device)

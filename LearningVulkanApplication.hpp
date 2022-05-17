@@ -61,7 +61,8 @@ namespace LearningVulkan
             vk::createLogicalDevice();
             vk::createSwapChain(vk::logicalDevice, vk::physicalDevice, mWindow.getWindow());
             vk::createImageViews(vk::logicalDevice);
-            vk::graphicsPipeline = vk::createGraphicsPipeline(vk::logicalDevice);
+            vk::createRenderPass(vk::logicalDevice);
+            vk::createGraphicsPipeline(vk::logicalDevice);
             vk::createFramebuffers(vk::logicalDevice);
             vk::createCommandPool(vk::physicalDevice, vk::logicalDevice);
         }
@@ -71,7 +72,6 @@ namespace LearningVulkan
             const uint32_t imageIndex = 0;
 
             auto commandBuffer = vk::createCommandBuffer(vk::logicalDevice);
-
 
             vk::createSyncObjects(vk::logicalDevice);
 
@@ -83,8 +83,10 @@ namespace LearningVulkan
                 drawFrame(commandBuffer);
                 mWindow.PollEvents();
 
-                mShouldClose = true;
+                // mShouldClose = true;
             }
+
+            vkDeviceWaitIdle(vk::logicalDevice);
         }
 
         void drawFrame(const VkCommandBuffer &commandBuffer)
@@ -94,12 +96,14 @@ namespace LearningVulkan
             uint32_t imageIndex;
             vkAcquireNextImageKHR(vk::logicalDevice, vk::swapChain, UINT64_MAX, vk::imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
             vkResetCommandBuffer(commandBuffer, 0);
-            
 
-            auto renderPassInfo = vk::createRenderPassInfo(vk::renderPass, imageIndex);
-            vk::recordCommandBuffer(renderPassInfo, commandBuffer, imageIndex);
-            vk::beginRenderPass(commandBuffer, renderPassInfo);
+            vk::recordCommandBuffer(commandBuffer, imageIndex);
+            vk::createRenderPassInfo(imageIndex);
+            vk::beginRenderPass(commandBuffer);
             vk::bindPipeline(commandBuffer, vk::graphicsPipeline);
+            vk::draw(commandBuffer, 3, 1, 0, 0);
+            vk::endRenderPass(commandBuffer);
+            vk::endRecording(commandBuffer);
 
             VkSubmitInfo submitInfo{};
             submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -117,22 +121,10 @@ namespace LearningVulkan
             submitInfo.signalSemaphoreCount = 1;
             submitInfo.pSignalSemaphores = signalSemaphores;
 
-
-            vk::endRecording(commandBuffer);
             if (vkQueueSubmit(vk::graphicsQueue, 1, &submitInfo, vk::inFlightFence) != VK_SUCCESS)
             {
                 throw std::runtime_error("failed to submit draw command buffer!");
             }
-
-            VkSubpassDependency dependency{};
-            dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-            dependency.dstSubpass = 0;
-            dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-            dependency.srcAccessMask = 0;
-            dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-            dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-            vk::renderPassCreateInfo.dependencyCount = 1;
-            vk::renderPassCreateInfo.pDependencies = &dependency;
 
             // PResentation
             VkPresentInfoKHR presentInfo{};

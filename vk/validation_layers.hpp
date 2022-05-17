@@ -9,8 +9,8 @@ namespace vk
     const std::vector<const char *> validationLayers = {
         "VK_LAYER_KHRONOS_validation"};
 
-#if 1
-    const bool enableValidationLayers = true;
+#if 0
+    const bool enableValidationLayers = false;
 #else
     const bool enableValidationLayers = true;
 #endif

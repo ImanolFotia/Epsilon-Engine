@@ -8,9 +8,10 @@ namespace vk
 {
     
     VkPipelineViewportStateCreateInfo viewportState{};
-    VkViewport createViewport()
-    {
+        VkRect2D scissor{};
         VkViewport viewport{};
+    void createViewport()
+    {
         viewport.x = 0.0f;
         viewport.y = 0.0f;
         viewport.width = (float)vk::swapChainExtent.width;
@@ -18,7 +19,6 @@ namespace vk
         viewport.minDepth = 0.0f;
         viewport.maxDepth = 1.0f;
 
-        VkRect2D scissor{};
         scissor.offset = {0, 0};
         scissor.extent = vk::swapChainExtent;
 
@@ -28,6 +28,5 @@ namespace vk
         viewportState.scissorCount = 1;
         viewportState.pScissors = &scissor;
 
-        return viewport;
     }
 }

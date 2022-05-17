@@ -80,8 +80,10 @@ namespace vk
 
     VkExtent2D chooseSwapExtent(GLFWwindow *window, const VkSurfaceCapabilitiesKHR &capabilities)
     {
-        if (capabilities.currentExtent.width != UINT32_MAX)
+        if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max())
         {
+
+            std::cout << "swapchain extent size:\n x: " << capabilities.currentExtent.width << "\n y: " << capabilities.currentExtent.height<< std::endl;
             return capabilities.currentExtent;
         }
         else

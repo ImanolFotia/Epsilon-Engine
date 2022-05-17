@@ -11,8 +11,9 @@
 namespace vk
 {
 
-    VkPipelineLayout pipelineLayout;
+    VkPipelineLayout pipelineLayout{};
 
+    VkPipeline graphicsPipeline;
     VkPipeline createGraphicsPipeline(const VkDevice& device)
     {
         auto vertShaderCode = shader::readFile("../assets/shaders/vertex.spv");
@@ -49,7 +50,7 @@ namespace vk
         inputAssembly.primitiveRestartEnable = VK_FALSE;
 
         // Viewport stage
-        VkViewport viewport = createViewport();
+        createViewport();
 
         // Rasterizer stage
         setupRasterizer();
@@ -89,20 +90,17 @@ namespace vk
         pipelineInfo.pInputAssemblyState = &inputAssembly;
         pipelineInfo.pViewportState = &viewportState;
         pipelineInfo.pRasterizationState = &rasterizer;
-        pipelineInfo.pMultisampleState = &multisampling;
-        pipelineInfo.pDepthStencilState = nullptr; // Optional
+        pipelineInfo.pMultisampleState = &multisampling;// Optional
         pipelineInfo.pColorBlendState = &colorBlending;
-        pipelineInfo.pDynamicState = nullptr;
-
+       
         pipelineInfo.layout = pipelineLayout;
 
         pipelineInfo.renderPass = renderPass;
         pipelineInfo.subpass = 0;
 
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
-        pipelineInfo.basePipelineIndex = -1;
+        
 
-        VkPipeline graphicsPipeline{};
         if (auto res = vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline); res != VK_SUCCESS)
         {
             std::cerr << "Result id: " << res << std::endl;
@@ -122,15 +120,6 @@ namespace vk
               uint32_t firstInstance)
     {
         vkCmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
-    }
-
-    void endRenderPass(const VkCommandBuffer &commandBuffer)
-    {
-        vkCmdEndRenderPass(commandBuffer);
-        if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
-        {
-            throw std::runtime_error("failed to record command buffer!");
-        }
     }
 
     void destroyGraphicsPipeline(const VkDevice &device, const VkPipeline &graphicsPipeline)

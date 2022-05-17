@@ -23,7 +23,6 @@ namespace vk
     const std::vector<const char *> deviceExtensions = {
         VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
-    VkPipeline graphicsPipeline;
 
     void createLogicalDevice()
     {
@@ -163,14 +162,14 @@ namespace vk
         cleanupSyncObjects(logicalDevice);
         cleanCommandPool(logicalDevice);
 
-        vkDestroySwapchainKHR(logicalDevice, swapChain, nullptr);
-        vkDestroyPipelineLayout(logicalDevice, pipelineLayout, nullptr);
-        destroyGraphicsPipeline(logicalDevice, graphicsPipeline);
 
         for (auto framebuffer : swapChainFramebuffers)
         {
             vkDestroyFramebuffer(logicalDevice, framebuffer, nullptr);
         }
+        
+        destroyGraphicsPipeline(logicalDevice, graphicsPipeline);
+        
 
         vkDestroyRenderPass(logicalDevice, renderPass, nullptr);
 
@@ -178,14 +177,17 @@ namespace vk
         {
             vkDestroyImageView(logicalDevice, imageView, nullptr);
         }
-        vkDeviceWaitIdle(logicalDevice);
+
+        
+        vkDestroySwapchainKHR(logicalDevice, swapChain, nullptr);
         vkDestroyDevice(logicalDevice, nullptr);
+
 
         if (enableValidationLayers)
         {
             DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
         }
-
+        
         cleanupSurface(instance);
     }
 }

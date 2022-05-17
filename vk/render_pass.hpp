@@ -12,15 +12,15 @@ namespace vk
         VkAttachmentDescription colorAttachment{};
         VkAttachmentReference colorAttachmentRef{};
         VkSubpassDescription subpass{};
+        VkSubpassDependency dependency{};
     };
 
+    VkRenderPass renderPass;
+    render_pass_data_t render_pass_data{};
 
-        VkRenderPass renderPass;
-        render_pass_data_t render_pass_data{};
+    VkRenderPassCreateInfo renderPassCreateInfo{};
 
-        VkRenderPassCreateInfo renderPassCreateInfo{};
-
-    VkRenderPass createRenderPass(VkDevice device)
+    void createRenderPass(VkDevice device)
     {
         render_pass_data.colorAttachment.format = swapChainImageFormat;
         render_pass_data.colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
@@ -38,22 +38,29 @@ namespace vk
         render_pass_data.subpass.colorAttachmentCount = 1;
         render_pass_data.subpass.pColorAttachments = &render_pass_data.colorAttachmentRef;
 
+        render_pass_data.dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+        render_pass_data.dependency.dstSubpass = 0;
+        render_pass_data.dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        render_pass_data.dependency.srcAccessMask = 0;
+        render_pass_data.dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        render_pass_data.dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
         renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
         renderPassCreateInfo.attachmentCount = 1;
         renderPassCreateInfo.pAttachments = &render_pass_data.colorAttachment;
         renderPassCreateInfo.subpassCount = 1;
         renderPassCreateInfo.pSubpasses = &render_pass_data.subpass;
+        renderPassCreateInfo.dependencyCount = 1;
+        renderPassCreateInfo.pDependencies = &render_pass_data.dependency;
 
         if (vkCreateRenderPass(device, &renderPassCreateInfo, nullptr, &renderPass) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to create render pass!");
         }
-
-        return renderPass;
     }
 
-        VkRenderPassBeginInfo renderPassInfo{};
-    VkRenderPassBeginInfo createRenderPassInfo(const VkRenderPass &renderPass, uint32_t imageIndex)
+    VkRenderPassBeginInfo renderPassInfo{};
+    VkRenderPassBeginInfo createRenderPassInfo(uint32_t imageIndex)
     {
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderPassInfo.renderPass = renderPass;
@@ -68,7 +75,13 @@ namespace vk
         return renderPassInfo;
     }
 
-    void beginRenderPass(const VkCommandBuffer& commandBuffer, const VkRenderPassBeginInfo& renderPassInfo) {
+    void beginRenderPass(const VkCommandBuffer &commandBuffer)
+    {
         vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+    }
+
+    void endRenderPass(const VkCommandBuffer &commandBuffer)
+    {
+        vkCmdEndRenderPass(commandBuffer);
     }
 }
