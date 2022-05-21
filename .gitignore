@@ -5,10 +5,10 @@
 *.spv
 *.so
 
-./CMakeSettings.json
 
 /thirdparty
 /.vscode
 /.vs
 /build
 /out
+CMakeSettings.json
