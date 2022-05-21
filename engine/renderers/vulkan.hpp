@@ -3,16 +3,16 @@
 #include "renderer.hpp"
 #include "vk_data.hpp"
 
-#include "../../vk/vk.hpp"
+#include <vk/vk.hpp>
 
 #include <vector>
 
-class framework::Window;
 
 namespace engine
 {
     class VulkanRenderer : public Renderer
     {
+        
     public:
         VulkanRenderer();
 

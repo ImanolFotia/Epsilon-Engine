@@ -1,7 +1,5 @@
 #pragma once
 
-class framework::Window{};
-
 namespace engine
 {
     enum renderer_type
