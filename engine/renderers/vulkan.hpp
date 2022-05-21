@@ -31,6 +31,7 @@ namespace engine
     private:
         framework::Window* m_pWindow;
         uint32_t m_pCurrentFrame;
+        uint32_t m_pImageIndex;
         vk_data_t m_pVkData;
 
         VkCommandPool m_pCommandPool;

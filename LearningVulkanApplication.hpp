@@ -86,7 +86,11 @@ namespace LearningVulkan
 
         void drawFrame()
         {
+            m_pRenderer->Begin();
+
             m_pRenderer->Flush();
+            
+            m_pRenderer->End();
         }
 
         void exit()

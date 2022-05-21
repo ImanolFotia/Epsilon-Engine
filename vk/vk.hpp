@@ -10,3 +10,4 @@
 #include "pipeline.hpp"
 #include "framebuffer.hpp"
 #include "sync_objects.hpp"
+#include "vertex_buffer.hpp"
