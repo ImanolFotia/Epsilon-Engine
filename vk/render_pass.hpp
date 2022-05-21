@@ -17,7 +17,7 @@ namespace vk
 
 
 
-    void createRenderPass(vk_data_t& vk_data)
+    static void createRenderPass(engine::vk_data_t& vk_data)
     {
         render_pass_data_t render_pass_data{};
         render_pass_data.colorAttachment.format = vk_data.swapChainImageFormat;
@@ -52,16 +52,16 @@ namespace vk
         renderPassCreateInfo.dependencyCount = 1;
         renderPassCreateInfo.pDependencies = &render_pass_data.dependency;
 
-        if (vkCreateRenderPass(vk_data.logicalDevice, &renderPassCreateInfo, nullptr, &vk_data.myRenderPass) != VK_SUCCESS)
+        if (vkCreateRenderPass(vk_data.logicalDevice, &renderPassCreateInfo, nullptr, &vk_data.renderPass) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to create render pass!");
         }
     }
 
-    void createRenderPassInfo(uint32_t imageIndex, vk_data_t& vk_data)
+    static void createRenderPassInfo(uint32_t imageIndex, engine::vk_data_t& vk_data)
     {
         vk_data.renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        vk_data.renderPassInfo.renderPass = vk_data.myRenderPass;
+        vk_data.renderPassInfo.renderPass = vk_data.renderPass;
         vk_data.renderPassInfo.framebuffer = vk_data.swapChainFramebuffers[imageIndex];
         vk_data.renderPassInfo.renderArea.offset = {0, 0};
         vk_data.renderPassInfo.renderArea.extent = vk_data.swapChainExtent;
@@ -71,12 +71,12 @@ namespace vk
         vk_data.renderPassInfo.pClearValues = &clearColor;
     }
 
-    void beginRenderPass(const VkCommandBuffer &commandBuffer, const vk_data_t& vk_data)
+    static void beginRenderPass(const VkCommandBuffer &commandBuffer, const engine::vk_data_t& vk_data)
     {
         vkCmdBeginRenderPass(commandBuffer, &vk_data.renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
     }
 
-    void endRenderPass(const VkCommandBuffer &commandBuffer, const vk_data_t& vk_data)
+    static void endRenderPass(const VkCommandBuffer &commandBuffer, const engine::vk_data_t& vk_data)
     {
         vkCmdEndRenderPass(commandBuffer);
     }

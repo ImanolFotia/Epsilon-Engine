@@ -9,7 +9,7 @@ namespace vk
 {
 
     const int MAX_FRAMES_IN_FLIGHT = 2;
-    void createSyncObjects(vk_data_t &vk_data)
+    static void createSyncObjects(engine::vk_data_t &vk_data)
     {
 
         vk_data.imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
@@ -32,7 +32,7 @@ namespace vk
         }
     }
 
-    uint32_t prepareSyncObjects(vk_data_t &vk_data, GLFWwindow* window, uint32_t currentFrame) {
+    static uint32_t prepareSyncObjects(engine::vk_data_t &vk_data, GLFWwindow* window, uint32_t currentFrame) {
 
             vkWaitForFences(vk_data.logicalDevice, 1, &vk_data.inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
@@ -55,7 +55,7 @@ namespace vk
             return imageIndex;
     }
 
-    void Sync(const vk_data_t &vk_data, VkCommandBuffer& commandBuffer, uint32_t currentFrame) {
+    static void Sync(const engine::vk_data_t &vk_data, VkCommandBuffer& commandBuffer, uint32_t currentFrame) {
 
             VkSubmitInfo submitInfo{};
             submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -80,7 +80,7 @@ namespace vk
 
     }
 
-    void Present(const vk_data_t &vk_data, VkSemaphore* signalSemaphores, uint32_t imageIndex) {
+    static void Present(const engine::vk_data_t &vk_data, VkSemaphore* signalSemaphores, uint32_t imageIndex) {
 
             // PResentation
             VkPresentInfoKHR presentInfo{};
@@ -99,7 +99,7 @@ namespace vk
             vkQueuePresentKHR(vk_data.presentQueue, &presentInfo);
     }
 
-    void cleanupSyncObjects(const vk_data_t &vk_data)
+    static void cleanupSyncObjects(const engine::vk_data_t &vk_data)
     {
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)

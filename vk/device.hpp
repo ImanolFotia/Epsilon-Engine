@@ -19,7 +19,7 @@ namespace vk
 
 
 
-    void createLogicalDevice(vk_data_t& vk_data)
+    static void createLogicalDevice(engine::vk_data_t& vk_data)
     {
         QueueFamilyIndices indices = findQueueFamilies(vk_data.physicalDevice, vk_data);
 
@@ -69,7 +69,7 @@ namespace vk
         vkGetDeviceQueue(vk_data.logicalDevice, indices.graphicsFamily.value(), 0, &vk_data.graphicsQueue);
     }
 
-    void showDeviceFeatures(VkPhysicalDevice device)
+    static void showDeviceFeatures(VkPhysicalDevice device)
     {
 
         VkPhysicalDeviceProperties deviceProperties;
@@ -84,7 +84,7 @@ namespace vk
         IO::Log("\tVendor ID: ", deviceProperties.vendorID);
     }
 
-    bool checkDeviceExtensionSupport(VkPhysicalDevice device, const vk_data_t& vk_data)
+    static bool checkDeviceExtensionSupport(VkPhysicalDevice device, const engine::vk_data_t& vk_data)
     {
         uint32_t extensionCount;
         vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
@@ -102,7 +102,7 @@ namespace vk
         return requiredExtensions.empty();
     }
 
-    bool isDeviceSuitable(VkPhysicalDevice device, const vk_data_t& vk_data)
+    static bool isDeviceSuitable(VkPhysicalDevice device, const engine::vk_data_t& vk_data)
     {
         showDeviceFeatures(device);
 
@@ -122,7 +122,7 @@ namespace vk
         return indices.isComplete() && extensionsSupported && swapChainAdequate;
     }
 
-    VkPhysicalDevice pickPhysicalDevice(vk_data_t& vk_data)
+    static VkPhysicalDevice pickPhysicalDevice(engine::vk_data_t& vk_data)
     {
         VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 
@@ -155,15 +155,13 @@ namespace vk
         return physicalDevice;
     }
 
-    void cleanup(vk_data_t& vk_data)
+    static void cleanup(engine::vk_data_t& vk_data)
     {
-        cleanupSyncObjects(vk_data);
-        cleanCommandPool(vk_data);
 
 
         destroyGraphicsPipeline(vk_data);
 
-        vkDestroyRenderPass(vk_data.logicalDevice, vk_data.myRenderPass, nullptr);
+        vkDestroyRenderPass(vk_data.logicalDevice, vk_data.renderPass, nullptr);
 
         vkDestroySwapchainKHR(vk_data.logicalDevice, vk_data.swapChain, nullptr);
 

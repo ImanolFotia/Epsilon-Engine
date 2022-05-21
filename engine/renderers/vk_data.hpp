@@ -3,7 +3,7 @@
 #include <vulkan/vulkan.hpp>
 #include <vector>
 
-namespace vk
+namespace engine
 {
     struct vk_data_t
     {
@@ -24,7 +24,7 @@ namespace vk
         VkPipelineColorBlendAttachmentState colorBlendAttachment{};
         VkPipelineColorBlendStateCreateInfo colorBlending{};
 
-        VkRenderPass myRenderPass{};
+        VkRenderPass renderPass{};
 
         VkRenderPassBeginInfo renderPassInfo{};
         const std::vector<const char *> deviceExtensions = {

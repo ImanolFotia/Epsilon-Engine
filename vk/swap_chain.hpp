@@ -1,5 +1,7 @@
 #pragma once
 
+#include <limits>
+#include <cstddef>
 #include <vector>
 #include <cstdint>   // Necessary for UINT32_MAX
 #include <algorithm> // Necessary for std::clamp
@@ -21,7 +23,7 @@ namespace vk
         std::vector<VkPresentModeKHR> presentModes;
     };
 
-    SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice &physicalDevice, const vk_data_t& vk_data)
+    static SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice &physicalDevice, const engine::vk_data_t &vk_data)
     {
         SwapChainSupportDetails details;
         vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, vk_data.surface, &details.capabilities);
@@ -47,7 +49,7 @@ namespace vk
         return details;
     }
 
-    VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats)
+    static VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats)
     {
         for (const auto &availableFormat : availableFormats)
         {
@@ -60,7 +62,7 @@ namespace vk
         return availableFormats[0];
     }
 
-    VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes)
+    static VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes)
     {
         for (const auto &availablePresentMode : availablePresentModes)
         {
@@ -73,12 +75,12 @@ namespace vk
         return VK_PRESENT_MODE_FIFO_KHR;
     }
 
-    VkExtent2D chooseSwapExtent(GLFWwindow *window, const VkSurfaceCapabilitiesKHR &capabilities)
+    static VkExtent2D chooseSwapExtent(GLFWwindow *window, const VkSurfaceCapabilitiesKHR &capabilities)
     {
         if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max())
         {
 
-            std::cout << "swapchain extent size:\n x: " << capabilities.currentExtent.width << "\n y: " << capabilities.currentExtent.height<< std::endl;
+            std::cout << "swapchain extent size:\n x: " << capabilities.currentExtent.width << "\n y: " << capabilities.currentExtent.height << std::endl;
             return capabilities.currentExtent;
         }
         else
@@ -98,7 +100,7 @@ namespace vk
         }
     }
 
-    void createSwapChain(vk_data_t& vk_data, GLFWwindow* window)
+    static void createSwapChain(engine::vk_data_t &vk_data, GLFWwindow *window)
     {
         SwapChainSupportDetails swapChainSupport = querySwapChainSupport(vk_data.physicalDevice, vk_data);
 
@@ -152,7 +154,7 @@ namespace vk
         vk_data.swapChainExtent = extent;
     }
 
-    void createImageViews(vk_data_t& vk_data)
+    static void createImageViews(engine::vk_data_t &vk_data)
     {
         vk_data.swapChainImageViews.resize(vk_data.swapChainImages.size());
         for (size_t i = 0; i < vk_data.swapChainImages.size(); i++)
@@ -178,37 +180,35 @@ namespace vk
         }
     }
 
-
-        void cleanupSwapChain(const vk_data_t& vk_data)
+    static void cleanupSwapChain(const engine::vk_data_t &vk_data)
+    {
+        for (size_t i = 0; i < vk_data.swapChainFramebuffers.size(); i++)
         {
-            for (size_t i = 0; i < vk_data.swapChainFramebuffers.size(); i++)
-            {
-                vkDestroyFramebuffer(vk_data.logicalDevice, vk_data.swapChainFramebuffers[i], nullptr);
-            }
-
-            vkDestroyPipeline(vk_data.logicalDevice, vk_data.graphicsPipeline, nullptr);
-            vkDestroyPipelineLayout(vk_data.logicalDevice, vk_data.pipelineLayout, nullptr);
-            vkDestroyRenderPass(vk_data.logicalDevice, vk_data.myRenderPass, nullptr);
-
-            for (size_t i = 0; i < vk_data.swapChainImageViews.size(); i++)
-            {
-                vkDestroyImageView(vk_data.logicalDevice, vk_data.swapChainImageViews[i], nullptr);
-            }
-
-            vkDestroySwapchainKHR(vk_data.logicalDevice, vk_data.swapChain, nullptr);
+            vkDestroyFramebuffer(vk_data.logicalDevice, vk_data.swapChainFramebuffers[i], nullptr);
         }
 
+        vkDestroyPipeline(vk_data.logicalDevice, vk_data.graphicsPipeline, nullptr);
+        vkDestroyPipelineLayout(vk_data.logicalDevice, vk_data.pipelineLayout, nullptr);
+        vkDestroyRenderPass(vk_data.logicalDevice, vk_data.renderPass, nullptr);
 
-        void recreateSwapChain(vk_data_t& vk_data, GLFWwindow* window)
+        for (size_t i = 0; i < vk_data.swapChainImageViews.size(); i++)
         {
-            vkDeviceWaitIdle(vk_data.logicalDevice);
-
-            cleanupSwapChain(vk_data);
-
-            vk::createSwapChain(vk_data, window);
-            vk::createImageViews(vk_data);
-            vk::createRenderPass(vk_data);
-            vk::createGraphicsPipeline(vk_data);
-            vk::createFramebuffers(vk_data);
+            vkDestroyImageView(vk_data.logicalDevice, vk_data.swapChainImageViews[i], nullptr);
         }
+
+        vkDestroySwapchainKHR(vk_data.logicalDevice, vk_data.swapChain, nullptr);
+    }
+
+    static void recreateSwapChain(engine::vk_data_t &vk_data, GLFWwindow *window)
+    {
+        vkDeviceWaitIdle(vk_data.logicalDevice);
+
+        cleanupSwapChain(vk_data);
+
+        vk::createSwapChain(vk_data, window);
+        vk::createImageViews(vk_data);
+        vk::createRenderPass(vk_data);
+        vk::createGraphicsPipeline(vk_data);
+        vk::createFramebuffers(vk_data);
+    }
 }

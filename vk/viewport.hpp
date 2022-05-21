@@ -7,7 +7,7 @@
 namespace vk
 {
     
-    void createViewport(vk_data_t& vk_data)
+    static void createViewport(engine::vk_data_t& vk_data)
     {
         vk_data.viewport.x = 0.0f;
         vk_data.viewport.y = 0.0f;

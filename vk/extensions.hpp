@@ -12,7 +12,7 @@
 namespace vk
 {
 
-    void checkExtensions()
+    static void checkExtensions()
     {
         uint32_t extensionCount = 0;
         vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
@@ -28,7 +28,7 @@ namespace vk
         std::cout << std::endl;
     }
 
-    std::vector<const char *> getRequiredExtensions()
+    static std::vector<const char *> getRequiredExtensions()
     {
         uint32_t glfwExtensionCount = 0;
         const char **glfwExtensions;

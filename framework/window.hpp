@@ -14,7 +14,7 @@
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
 
-namespace LearningVulkan
+namespace framework
 {
     class Window
     {
@@ -54,7 +54,7 @@ namespace LearningVulkan
             glfwTerminate();
         }
 
-        GLFWwindow* getWindow() {
+        GLFWwindow* getWindow() const {
             return mWindow;
         }
 

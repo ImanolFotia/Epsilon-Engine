@@ -8,14 +8,14 @@
 #include "rasterizer.hpp"
 #include "render_pass.hpp"
 
-#include "../vk_data.hpp"
+#include "../engine/renderers/vk_data.hpp"
 
 namespace vk
 {
 
     //std::pair<>
 
-    VkPipeline createGraphicsPipeline(vk_data_t& vk_data)
+    static VkPipeline createGraphicsPipeline(engine::vk_data_t& vk_data)
     {
         auto vertShaderCode = shader::readFile("../assets/shaders/vertex.spv", vk_data);
         auto fragShaderCode = shader::readFile("../assets/shaders/fragment.spv", vk_data);
@@ -94,7 +94,7 @@ namespace vk
        
         pipelineInfo.layout = vk_data.pipelineLayout;
 
-        pipelineInfo.renderPass = vk_data.myRenderPass;
+        pipelineInfo.renderPass = vk_data.renderPass;
         pipelineInfo.subpass = 0;
         //pipelineInfo.pDynamicState = &dynamicState;
 
@@ -113,7 +113,7 @@ namespace vk
         return vk_data.graphicsPipeline;
     }
 
-    void draw(const VkCommandBuffer &commandBuffer,
+    static void draw(const VkCommandBuffer &commandBuffer,
               uint32_t vertexCount,
               uint32_t instanceCount,
               uint32_t firstVertex,
@@ -122,13 +122,13 @@ namespace vk
         vkCmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
     }
 
-    void destroyGraphicsPipeline(const vk_data_t& vk_data)
+    static void destroyGraphicsPipeline(const engine::vk_data_t& vk_data)
     {
         vkDestroyPipeline(vk_data.logicalDevice, vk_data.graphicsPipeline, nullptr);
         vkDestroyPipelineLayout(vk_data.logicalDevice, vk_data.pipelineLayout, nullptr);
     }
 
-    void bindPipeline(const vk_data_t& vk_data, const VkCommandBuffer& commandBuffer)
+    static void bindPipeline(const engine::vk_data_t& vk_data, const VkCommandBuffer& commandBuffer)
     {
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, vk_data.graphicsPipeline);
     }

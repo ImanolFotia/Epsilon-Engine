@@ -4,14 +4,12 @@
 
 #include "render_pass.hpp"
 #include "sync_objects.hpp"
-#include "../vk_data.hpp"
+#include "../engine/renderers/vk_data.hpp"
 
 namespace vk
 {
-    VkCommandPool commandPool;
-    VkCommandBuffer commandBuffer;
 
-    void createCommandPool(vk_data_t& vk_data)
+    static void createCommandPool(engine::vk_data_t& vk_data, VkCommandPool& commandPool)
     {
         QueueFamilyIndices queueFamilyIndices = findQueueFamilies(vk_data.physicalDevice, vk_data);
 
@@ -26,7 +24,7 @@ namespace vk
         }
     }
 
-    void createCommandBuffers(const vk_data_t& vk_data, std::vector<VkCommandBuffer>& commandBuffers)
+    static void createCommandBuffers(const engine::vk_data_t& vk_data, VkCommandPool& commandPool, std::vector<VkCommandBuffer>& commandBuffers)
     {
 
         commandBuffers.resize(vk::MAX_FRAMES_IN_FLIGHT);
@@ -43,7 +41,7 @@ namespace vk
         }
     }
 
-    VkCommandBuffer recordCommandBuffer(const VkCommandBuffer& commandBuffer, uint32_t imageIndex)
+    static VkCommandBuffer recordCommandBuffer(const VkCommandBuffer& commandBuffer, uint32_t imageIndex)
     {
         VkCommandBufferBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -58,13 +56,13 @@ namespace vk
         return commandBuffer;
     }
 
-    void endRecording(const VkCommandBuffer& commandBuffer) {
+    static void endRecording(const VkCommandBuffer& commandBuffer) {
         if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
             throw std::runtime_error("failed to record command buffer!");
         }
     }
 
-    void cleanCommandPool(const vk_data_t& vk_data)
+    static void cleanCommandPool(const engine::vk_data_t& vk_data, VkCommandPool& commandPool)
     {
         vkDestroyCommandPool(vk_data.logicalDevice, commandPool, nullptr);
     }

@@ -14,7 +14,7 @@
 namespace vk
 {
 
-    void createInstance(const std::string appName, vk_data_t& vk_data)
+    static void createInstance(const char* appName, engine::vk_data_t& vk_data)
     {
         if (enableValidationLayers && !checkValidationLayerSupport())
         {
@@ -22,7 +22,7 @@ namespace vk
         }
         VkApplicationInfo appInfo{};
         appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-        appInfo.pApplicationName = appName.c_str();
+        appInfo.pApplicationName = appName;
         appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
         appInfo.pEngineName = "No Engine";
         appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);

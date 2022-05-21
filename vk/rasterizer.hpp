@@ -2,12 +2,12 @@
 
 #include <vulkan/vulkan.hpp>
 
-#include "../vk_data.hpp"
+#include "../engine/renderers/vk_data.hpp"
 
 namespace vk
 {
 
-    void setupRasterizer(vk_data_t& vk_data)
+    static void setupRasterizer(engine::vk_data_t& vk_data)
     {
         vk_data.rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
         vk_data.rasterizer.depthClampEnable = VK_FALSE;

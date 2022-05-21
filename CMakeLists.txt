@@ -35,12 +35,19 @@ include_directories(${SOURCE_DIR}/include)
 link_directories(${GLFW3_BUILD_DIR}/src)
 
 SET(HEADERS 
+    ${HEADERS}
+    ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/framework
     ${CMAKE_SOURCE_DIR}/vk
     ${CMAKE_SOURCE_DIR}/engine
 )
 
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
+
 add_executable(${PROJECT_NAME} main.cpp)
+
+target_sources(${PROJECT_NAME} PUBLIC
+    ${CMAKE_SOURCE_DIR}/engine/renderers/vulkan.cpp)
 
 find_package(Vulkan REQUIRED)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${Vulkan_LIBRARIES})

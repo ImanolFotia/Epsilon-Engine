@@ -2,14 +2,14 @@
 
 #include <vulkan/vulkan.hpp>
 
-#include "../vk_data.hpp"
+#include "../engine/renderers/vk_data.hpp"
 
 #define USE_GLFW 1
 
 namespace vk
 {
 
-        void createSurface(vk_data_t& vk_data, GLFWwindow *window)
+        static void createSurface(engine::vk_data_t& vk_data, GLFWwindow *window)
         {
 #if USE_GLFW
                 if (glfwCreateWindowSurface(vk_data.instance, window, nullptr, &vk_data.surface) != VK_SUCCESS)
@@ -31,7 +31,7 @@ namespace vk
 #endif
         }
 
-        void cleanupSurface(const vk_data_t& vk_data)
+        static void cleanupSurface(const engine::vk_data_t& vk_data)
         {
                 vkDestroySurfaceKHR(vk_data.instance, vk_data.surface, nullptr);
                 vkDestroyInstance(vk_data.instance, nullptr);
