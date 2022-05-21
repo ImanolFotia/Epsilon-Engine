@@ -21,7 +21,7 @@ namespace vk
         }
     };
 
-    static QueueFamilyIndices findQueueFamilies(VkPhysicalDevice & physicalDevice, const engine::vk_data_t& vk_data)
+    static QueueFamilyIndices findQueueFamilies(VkPhysicalDevice & physicalDevice, const engine::VulkanData& vk_data)
     {
         QueueFamilyIndices indices;
 

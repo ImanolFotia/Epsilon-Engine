@@ -7,18 +7,20 @@
 
 #include <vector>
 
-
 namespace engine
 {
     class VulkanRenderer : public Renderer
     {
-        
+        using RenderPipelines = std::vector<VulkanRenderPipeline>;
+        using CommandPools = std::vector<VkCommandPool>;
+        using CommandBuffers = std::vector<VkCommandBuffer>;
+
     public:
         VulkanRenderer();
 
         ~VulkanRenderer();
 
-        void Init(const char* appName, framework::Window&) override;
+        void Init(const char *appName, framework::Window &) override;
 
         void Begin() override;
 
@@ -29,12 +31,15 @@ namespace engine
         void Cleanup() override;
 
     private:
-        framework::Window* m_pWindow;
+        framework::Window *m_pWindow;
+        
         uint32_t m_pCurrentFrame;
         uint32_t m_pImageIndex;
-        vk_data_t m_pVkData;
 
-        VkCommandPool m_pCommandPool;
-        std::vector<VkCommandBuffer> m_pCommandBuffers;
+        VulkanData m_pVkData;
+
+        RenderPipelines m_pRenderPipelines;
+        CommandPools m_pCommandPools;
+        CommandBuffers m_pCommandBuffers;
     };
 }

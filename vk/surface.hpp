@@ -9,7 +9,7 @@
 namespace vk
 {
 
-        static void createSurface(engine::vk_data_t& vk_data, GLFWwindow *window)
+        static void createSurface(engine::VulkanData& vk_data, GLFWwindow *window)
         {
 #if USE_GLFW
                 if (glfwCreateWindowSurface(vk_data.instance, window, nullptr, &vk_data.surface) != VK_SUCCESS)
@@ -31,7 +31,7 @@ namespace vk
 #endif
         }
 
-        static void cleanupSurface(const engine::vk_data_t& vk_data)
+        static void cleanupSurface(const engine::VulkanData& vk_data)
         {
                 vkDestroySurfaceKHR(vk_data.instance, vk_data.surface, nullptr);
                 vkDestroyInstance(vk_data.instance, nullptr);

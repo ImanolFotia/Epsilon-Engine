@@ -16,15 +16,17 @@ namespace vk
         return bindingDescription;
     }
 
-    template <typename T, uint32_t num_descriptors>
-    static std::array<VkVertexInputAttributeDescription, num_descriptors> getAttributeDescriptions()
+    template <uint32_t num_descriptors>
+    static std::array<VkVertexInputAttributeDescription, num_descriptors> getAttributeDescriptions(uint32_t binding, std::initializer_list<std::pair<uint32_t, size_t>> vertexLayout)
     {
         std::array<VkVertexInputAttributeDescription, num_descriptors> attributeDescriptions{};
-        for(int i = 0; i < num_descriptors; i++) {
-            attributeDescriptions[i].binding = 0;
-            attributeDescriptions[i].location = i;
-            attributeDescriptions[i].format = VK_FORMAT_R32G32_SFLOAT;
-            attributeDescriptions[i].offset = offset;
+        uint32_t index = 0;
+        for(auto& [format, offset]: vertexLayout) {
+            attributeDescriptions[index].binding = binding;
+            attributeDescriptions[index].location = index;
+            attributeDescriptions[index].format = format;
+            attributeDescriptions[index].offset = offset;
+            index++;
         }
         return attributeDescriptions;
     }

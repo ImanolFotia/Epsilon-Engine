@@ -5,7 +5,23 @@
 
 namespace engine
 {
-    struct vk_data_t
+    struct VulkanRenderPipeline
+    {
+        VkPipelineLayout pipelineLayout{};
+        VkPipeline graphicsPipeline;
+        VkRenderPass renderPass;
+        VkRenderPassBeginInfo renderPassInfo{};
+        VkPipelineViewportStateCreateInfo viewportState{};
+        VkRect2D scissor{};
+        VkViewport viewport{};
+
+        VkPipelineRasterizationStateCreateInfo rasterizer{};
+        VkPipelineMultisampleStateCreateInfo multisampling{};
+        VkPipelineColorBlendAttachmentState colorBlendAttachment{};
+        VkPipelineColorBlendStateCreateInfo colorBlending{};
+    };
+
+    struct VulkanData
     {
         VkInstance instance;
 
@@ -13,20 +29,9 @@ namespace engine
         VkDevice logicalDevice;
         VkPhysicalDevice physicalDevice;
 
-        VkPipelineLayout pipelineLayout{};
-
         VkQueue presentQueue;
         VkQueue graphicsQueue;
-        VkPipeline graphicsPipeline;
 
-        VkPipelineRasterizationStateCreateInfo rasterizer{};
-        VkPipelineMultisampleStateCreateInfo multisampling{};
-        VkPipelineColorBlendAttachmentState colorBlendAttachment{};
-        VkPipelineColorBlendStateCreateInfo colorBlending{};
-
-        VkRenderPass renderPass{};
-
-        VkRenderPassBeginInfo renderPassInfo{};
         const std::vector<const char *> deviceExtensions = {
             VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
@@ -41,9 +46,5 @@ namespace engine
         std::vector<VkSemaphore> imageAvailableSemaphores;
         std::vector<VkSemaphore> renderFinishedSemaphores;
         std::vector<VkFence> inFlightFences;
-
-        VkPipelineViewportStateCreateInfo viewportState{};
-        VkRect2D scissor{};
-        VkViewport viewport{};
     };
 }

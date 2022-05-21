@@ -19,7 +19,7 @@ namespace vk
 
 
 
-    static void createLogicalDevice(engine::vk_data_t& vk_data)
+    static void createLogicalDevice(engine::VulkanData& vk_data)
     {
         QueueFamilyIndices indices = findQueueFamilies(vk_data.physicalDevice, vk_data);
 
@@ -84,7 +84,7 @@ namespace vk
         IO::Log("\tVendor ID: ", deviceProperties.vendorID);
     }
 
-    static bool checkDeviceExtensionSupport(VkPhysicalDevice device, const engine::vk_data_t& vk_data)
+    static bool checkDeviceExtensionSupport(VkPhysicalDevice device, const engine::VulkanData& vk_data)
     {
         uint32_t extensionCount;
         vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
@@ -102,7 +102,7 @@ namespace vk
         return requiredExtensions.empty();
     }
 
-    static bool isDeviceSuitable(VkPhysicalDevice device, const engine::vk_data_t& vk_data)
+    static bool isDeviceSuitable(VkPhysicalDevice device, const engine::VulkanData& vk_data)
     {
         showDeviceFeatures(device);
 
@@ -122,7 +122,7 @@ namespace vk
         return indices.isComplete() && extensionsSupported && swapChainAdequate;
     }
 
-    static VkPhysicalDevice pickPhysicalDevice(engine::vk_data_t& vk_data)
+    static VkPhysicalDevice pickPhysicalDevice(engine::VulkanData& vk_data)
     {
         VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 
@@ -155,13 +155,10 @@ namespace vk
         return physicalDevice;
     }
 
-    static void cleanup(engine::vk_data_t& vk_data)
+    static void cleanup(engine::VulkanData& vk_data)
     {
 
 
-        destroyGraphicsPipeline(vk_data);
-
-        vkDestroyRenderPass(vk_data.logicalDevice, vk_data.renderPass, nullptr);
 
         vkDestroySwapchainKHR(vk_data.logicalDevice, vk_data.swapChain, nullptr);
 

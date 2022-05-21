@@ -9,7 +9,7 @@
 namespace vk
 {
 
-    static void createCommandPool(engine::vk_data_t& vk_data, VkCommandPool& commandPool)
+    static void createCommandPool(engine::VulkanData& vk_data, VkCommandPool& commandPool)
     {
         QueueFamilyIndices queueFamilyIndices = findQueueFamilies(vk_data.physicalDevice, vk_data);
 
@@ -24,7 +24,7 @@ namespace vk
         }
     }
 
-    static void createCommandBuffers(const engine::vk_data_t& vk_data, VkCommandPool& commandPool, std::vector<VkCommandBuffer>& commandBuffers)
+    static void createCommandBuffers(const engine::VulkanData& vk_data, VkCommandPool& commandPool, std::vector<VkCommandBuffer>& commandBuffers)
     {
 
         commandBuffers.resize(vk::MAX_FRAMES_IN_FLIGHT);
@@ -62,7 +62,7 @@ namespace vk
         }
     }
 
-    static void cleanCommandPool(const engine::vk_data_t& vk_data, VkCommandPool& commandPool)
+    static void cleanCommandPool(const engine::VulkanData& vk_data, VkCommandPool& commandPool)
     {
         vkDestroyCommandPool(vk_data.logicalDevice, commandPool, nullptr);
     }

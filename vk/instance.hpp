@@ -14,7 +14,7 @@
 namespace vk
 {
 
-    static void createInstance(const char* appName, engine::vk_data_t& vk_data)
+    static void createInstance(const char* appName, engine::VulkanData& vk_data)
     {
         if (enableValidationLayers && !checkValidationLayerSupport())
         {

@@ -8,7 +8,7 @@
 namespace vk
 {
 
-    static void createFramebuffers(engine::vk_data_t& vk_data)
+    static void createFramebuffers(engine::VulkanData& vk_data, engine::VulkanRenderPipeline& renderPipeline)
     {
         /*swapChainFramebuffers.resize(swapChainImageViews.size());
 
@@ -30,7 +30,7 @@ namespace vk
 
             VkFramebufferCreateInfo framebufferInfo{};
             framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-            framebufferInfo.renderPass = vk_data.renderPass;
+            framebufferInfo.renderPass = renderPipeline.renderPass;
             framebufferInfo.attachmentCount = 1;
             framebufferInfo.pAttachments = attachments;
             framebufferInfo.width = vk_data.swapChainExtent.width;

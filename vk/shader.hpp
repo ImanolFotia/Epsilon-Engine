@@ -9,7 +9,7 @@
 
 namespace vk::shader
 {
-    static std::vector<char> readFile(const std::string &filename, const engine::vk_data_t& vk_data)
+    static std::vector<char> readFile(const std::string &filename, const engine::VulkanData& vk_data)
     {
         std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
@@ -28,7 +28,7 @@ namespace vk::shader
         return buffer;
     }
 
-    static VkShaderModule createShaderModule(const std::vector<char> &code, const engine::vk_data_t& vk_data)
+    static VkShaderModule createShaderModule(const std::vector<char> &code, const engine::VulkanData& vk_data)
     {
         VkShaderModuleCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;

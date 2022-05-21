@@ -15,9 +15,7 @@ namespace vk
         VkSubpassDependency dependency{};
     };
 
-
-
-    static void createRenderPass(engine::vk_data_t& vk_data)
+    static void createRenderPass(engine::VulkanData& vk_data, engine::VulkanRenderPipeline& renderPipeline)
     {
         render_pass_data_t render_pass_data{};
         render_pass_data.colorAttachment.format = vk_data.swapChainImageFormat;
@@ -52,32 +50,37 @@ namespace vk
         renderPassCreateInfo.dependencyCount = 1;
         renderPassCreateInfo.pDependencies = &render_pass_data.dependency;
 
-        if (vkCreateRenderPass(vk_data.logicalDevice, &renderPassCreateInfo, nullptr, &vk_data.renderPass) != VK_SUCCESS)
+        if (vkCreateRenderPass(vk_data.logicalDevice, &renderPassCreateInfo, nullptr, &renderPipeline.renderPass) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to create render pass!");
         }
     }
 
-    static void createRenderPassInfo(uint32_t imageIndex, engine::vk_data_t& vk_data)
+    static void createRenderPassInfo(uint32_t imageIndex, engine::VulkanData& vk_data, engine::VulkanRenderPipeline& renderPipeline)
     {
-        vk_data.renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        vk_data.renderPassInfo.renderPass = vk_data.renderPass;
-        vk_data.renderPassInfo.framebuffer = vk_data.swapChainFramebuffers[imageIndex];
-        vk_data.renderPassInfo.renderArea.offset = {0, 0};
-        vk_data.renderPassInfo.renderArea.extent = vk_data.swapChainExtent;
+        renderPipeline.renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        renderPipeline.renderPassInfo.renderPass = renderPipeline.renderPass;
+        renderPipeline.renderPassInfo.framebuffer = vk_data.swapChainFramebuffers[imageIndex];
+        renderPipeline.renderPassInfo.renderArea.offset = {0, 0};
+        renderPipeline.renderPassInfo.renderArea.extent = vk_data.swapChainExtent;
 
         VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
-        vk_data.renderPassInfo.clearValueCount = 1;
-        vk_data.renderPassInfo.pClearValues = &clearColor;
+        renderPipeline.renderPassInfo.clearValueCount = 1;
+        renderPipeline.renderPassInfo.pClearValues = &clearColor;
     }
 
-    static void beginRenderPass(const VkCommandBuffer &commandBuffer, const engine::vk_data_t& vk_data)
+    static void beginRenderPass(const VkCommandBuffer &commandBuffer, engine::VulkanRenderPipeline& renderPipeline)
     {
-        vkCmdBeginRenderPass(commandBuffer, &vk_data.renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+        vkCmdBeginRenderPass(commandBuffer, &renderPipeline.renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
     }
 
-    static void endRenderPass(const VkCommandBuffer &commandBuffer, const engine::vk_data_t& vk_data)
+    static void endRenderPass(const VkCommandBuffer &commandBuffer, const engine::VulkanData& vk_data)
     {
         vkCmdEndRenderPass(commandBuffer);
+    }
+
+    static void cleanupRenderPass(const engine::VulkanData& vk_data, VkRenderPass& renderPass) {
+
+        vkDestroyRenderPass(vk_data.logicalDevice, renderPass, nullptr);
     }
 }

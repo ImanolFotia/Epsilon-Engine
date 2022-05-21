@@ -23,7 +23,7 @@ namespace vk
         std::vector<VkPresentModeKHR> presentModes;
     };
 
-    static SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice &physicalDevice, const engine::vk_data_t &vk_data)
+    static SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice &physicalDevice, const engine::VulkanData &vk_data)
     {
         SwapChainSupportDetails details;
         vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, vk_data.surface, &details.capabilities);
@@ -100,7 +100,7 @@ namespace vk
         }
     }
 
-    static void createSwapChain(engine::vk_data_t &vk_data, GLFWwindow *window)
+    static void createSwapChain(engine::VulkanData &vk_data, GLFWwindow *window)
     {
         SwapChainSupportDetails swapChainSupport = querySwapChainSupport(vk_data.physicalDevice, vk_data);
 
@@ -154,7 +154,7 @@ namespace vk
         vk_data.swapChainExtent = extent;
     }
 
-    static void createImageViews(engine::vk_data_t &vk_data)
+    static void createImageViews(engine::VulkanData &vk_data)
     {
         vk_data.swapChainImageViews.resize(vk_data.swapChainImages.size());
         for (size_t i = 0; i < vk_data.swapChainImages.size(); i++)
@@ -180,16 +180,16 @@ namespace vk
         }
     }
 
-    static void cleanupSwapChain(const engine::vk_data_t &vk_data)
+    static void cleanupSwapChain(const engine::VulkanData &vk_data, engine::VulkanRenderPipeline& renderPipeline)
     {
         for (size_t i = 0; i < vk_data.swapChainFramebuffers.size(); i++)
         {
             vkDestroyFramebuffer(vk_data.logicalDevice, vk_data.swapChainFramebuffers[i], nullptr);
         }
 
-        vkDestroyPipeline(vk_data.logicalDevice, vk_data.graphicsPipeline, nullptr);
-        vkDestroyPipelineLayout(vk_data.logicalDevice, vk_data.pipelineLayout, nullptr);
-        vkDestroyRenderPass(vk_data.logicalDevice, vk_data.renderPass, nullptr);
+        vkDestroyPipeline(vk_data.logicalDevice, renderPipeline.graphicsPipeline, nullptr);
+        vkDestroyPipelineLayout(vk_data.logicalDevice, renderPipeline.pipelineLayout, nullptr);
+        vkDestroyRenderPass(vk_data.logicalDevice, renderPipeline.renderPass, nullptr);
 
         for (size_t i = 0; i < vk_data.swapChainImageViews.size(); i++)
         {
@@ -199,16 +199,16 @@ namespace vk
         vkDestroySwapchainKHR(vk_data.logicalDevice, vk_data.swapChain, nullptr);
     }
 
-    static void recreateSwapChain(engine::vk_data_t &vk_data, GLFWwindow *window)
+    static void recreateSwapChain(engine::VulkanData &vk_data, GLFWwindow *window, engine::VulkanRenderPipeline& renderPipeline)
     {
         vkDeviceWaitIdle(vk_data.logicalDevice);
 
-        cleanupSwapChain(vk_data);
+        cleanupSwapChain(vk_data, renderPipeline);
 
         vk::createSwapChain(vk_data, window);
         vk::createImageViews(vk_data);
-        vk::createRenderPass(vk_data);
-        vk::createGraphicsPipeline(vk_data);
-        vk::createFramebuffers(vk_data);
+        vk::createRenderPass(vk_data, renderPipeline);
+        vk::createGraphicsPipeline(vk_data, renderPipeline);
+        vk::createFramebuffers(vk_data, renderPipeline);
     }
 }
