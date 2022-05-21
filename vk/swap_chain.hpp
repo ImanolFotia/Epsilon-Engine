@@ -14,6 +14,8 @@
 #include "pipeline.hpp"
 #include "framebuffer.hpp"
 
+#include "vk_data.hpp"
+
 namespace vk
 {
     struct SwapChainSupportDetails
@@ -23,7 +25,7 @@ namespace vk
         std::vector<VkPresentModeKHR> presentModes;
     };
 
-    static SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice &physicalDevice, const engine::VulkanData &vk_data)
+    static SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice &physicalDevice, const VulkanData &vk_data)
     {
         SwapChainSupportDetails details;
         vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, vk_data.surface, &details.capabilities);
@@ -53,7 +55,7 @@ namespace vk
     {
         for (const auto &availableFormat : availableFormats)
         {
-            if (availableFormat.format == VK_FORMAT_B8G8R8A8_UINT && availableFormat.colorSpace == VK_COLOR_SPACE_ADOBERGB_NONLINEAR_EXT)
+            if (availableFormat.format == VK_FORMAT_R8G8B8A8_UNORM && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
             {
                 return availableFormat;
             }
@@ -100,7 +102,7 @@ namespace vk
         }
     }
 
-    static void createSwapChain(engine::VulkanData &vk_data, GLFWwindow *window)
+    static void createSwapChain(VulkanData &vk_data, GLFWwindow *window)
     {
         SwapChainSupportDetails swapChainSupport = querySwapChainSupport(vk_data.physicalDevice, vk_data);
 
@@ -154,7 +156,7 @@ namespace vk
         vk_data.swapChainExtent = extent;
     }
 
-    static void createImageViews(engine::VulkanData &vk_data)
+    static void createImageViews(VulkanData &vk_data)
     {
         vk_data.swapChainImageViews.resize(vk_data.swapChainImages.size());
         for (size_t i = 0; i < vk_data.swapChainImages.size(); i++)
@@ -180,7 +182,7 @@ namespace vk
         }
     }
 
-    static void cleanupSwapChain(const engine::VulkanData &vk_data, engine::VulkanRenderPipeline& renderPipeline)
+    static void cleanupSwapChain(const VulkanData &vk_data, VulkanRenderPipeline& renderPipeline)
     {
         for (size_t i = 0; i < vk_data.swapChainFramebuffers.size(); i++)
         {
@@ -199,7 +201,7 @@ namespace vk
         vkDestroySwapchainKHR(vk_data.logicalDevice, vk_data.swapChain, nullptr);
     }
 
-    static void recreateSwapChain(engine::VulkanData &vk_data, GLFWwindow *window, engine::VulkanRenderPipeline& renderPipeline)
+    static void recreateSwapChain(VulkanData &vk_data, GLFWwindow *window, VulkanRenderPipeline& renderPipeline)
     {
         vkDeviceWaitIdle(vk_data.logicalDevice);
 

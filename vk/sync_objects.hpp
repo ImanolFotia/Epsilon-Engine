@@ -4,12 +4,13 @@
 #include <GLFW/glfw3.h>
 
 #include <stdexcept>
+#include "vk_data.hpp"
 
 namespace vk
 {
 
     const int MAX_FRAMES_IN_FLIGHT = 2;
-    static void createSyncObjects(engine::VulkanData &vk_data)
+    static void createSyncObjects(VulkanData &vk_data)
     {
 
         vk_data.imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
@@ -32,7 +33,7 @@ namespace vk
         }
     }
 
-    static uint32_t prepareSyncObjects(engine::VulkanData &vk_data, GLFWwindow* window, uint32_t currentFrame, engine::VulkanRenderPipeline& renderPipeline) {
+    static uint32_t prepareSyncObjects(VulkanData &vk_data, GLFWwindow* window, uint32_t currentFrame, VulkanRenderPipeline& renderPipeline) {
 
             vkWaitForFences(vk_data.logicalDevice, 1, &vk_data.inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
@@ -55,7 +56,7 @@ namespace vk
             return imageIndex;
     }
 
-    static void Sync(const engine::VulkanData &vk_data, VkCommandBuffer& commandBuffer, uint32_t currentFrame) {
+    static void Sync(const VulkanData &vk_data, VkCommandBuffer& commandBuffer, uint32_t currentFrame) {
 
             VkSubmitInfo submitInfo{};
             submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -80,7 +81,7 @@ namespace vk
 
     }
 
-    static void Present(const engine::VulkanData &vk_data, VkSemaphore* signalSemaphores, uint32_t imageIndex) {
+    static void Present(const VulkanData &vk_data, VkSemaphore* signalSemaphores, uint32_t imageIndex) {
 
             // PResentation
             VkPresentInfoKHR presentInfo{};
@@ -99,7 +100,7 @@ namespace vk
             vkQueuePresentKHR(vk_data.presentQueue, &presentInfo);
     }
 
-    static void cleanupSyncObjects(const engine::VulkanData &vk_data)
+    static void cleanupSyncObjects(const VulkanData &vk_data)
     {
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)

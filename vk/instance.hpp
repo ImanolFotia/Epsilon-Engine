@@ -10,11 +10,12 @@
 #include <vulkan/vulkan.hpp>
 
 #include "extensions.hpp"
+#include "vk_data.hpp"
 
 namespace vk
 {
 
-    static void createInstance(const char* appName, engine::VulkanData& vk_data)
+    static void createInstance(const char* appName, VulkanData& vk_data)
     {
         if (enableValidationLayers && !checkValidationLayerSupport())
         {

@@ -4,6 +4,7 @@
 
 #include "device.hpp"
 #include "swap_chain.hpp"
+#include "vk_data.hpp"
 
 namespace vk
 {
@@ -15,7 +16,7 @@ namespace vk
         VkSubpassDependency dependency{};
     };
 
-    static void createRenderPass(engine::VulkanData& vk_data, engine::VulkanRenderPipeline& renderPipeline)
+    static void createRenderPass(VulkanData& vk_data, VulkanRenderPipeline& renderPipeline)
     {
         render_pass_data_t render_pass_data{};
         render_pass_data.colorAttachment.format = vk_data.swapChainImageFormat;
@@ -56,7 +57,7 @@ namespace vk
         }
     }
 
-    static void createRenderPassInfo(uint32_t imageIndex, engine::VulkanData& vk_data, engine::VulkanRenderPipeline& renderPipeline)
+    static void createRenderPassInfo(uint32_t imageIndex, VulkanData& vk_data, VulkanRenderPipeline& renderPipeline)
     {
         renderPipeline.renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderPipeline.renderPassInfo.renderPass = renderPipeline.renderPass;
@@ -64,22 +65,22 @@ namespace vk
         renderPipeline.renderPassInfo.renderArea.offset = {0, 0};
         renderPipeline.renderPassInfo.renderArea.extent = vk_data.swapChainExtent;
 
-        VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
+    
         renderPipeline.renderPassInfo.clearValueCount = 1;
-        renderPipeline.renderPassInfo.pClearValues = &clearColor;
+        renderPipeline.renderPassInfo.pClearValues = &renderPipeline.clearColor;
     }
 
-    static void beginRenderPass(const VkCommandBuffer &commandBuffer, engine::VulkanRenderPipeline& renderPipeline)
+    static void beginRenderPass(const VkCommandBuffer &commandBuffer, VulkanRenderPipeline& renderPipeline)
     {
         vkCmdBeginRenderPass(commandBuffer, &renderPipeline.renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
     }
 
-    static void endRenderPass(const VkCommandBuffer &commandBuffer, const engine::VulkanData& vk_data)
+    static void endRenderPass(const VkCommandBuffer &commandBuffer, const VulkanData& vk_data)
     {
         vkCmdEndRenderPass(commandBuffer);
     }
 
-    static void cleanupRenderPass(const engine::VulkanData& vk_data, VkRenderPass& renderPass) {
+    static void cleanupRenderPass(const VulkanData& vk_data, VkRenderPass& renderPass) {
 
         vkDestroyRenderPass(vk_data.logicalDevice, renderPass, nullptr);
     }

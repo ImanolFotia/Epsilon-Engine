@@ -6,6 +6,7 @@
 #include <vulkan/vulkan.hpp>
 
 #include "surface.hpp"
+#include "vk_data.hpp"
 
 namespace vk
 {
@@ -21,7 +22,7 @@ namespace vk
         }
     };
 
-    static QueueFamilyIndices findQueueFamilies(VkPhysicalDevice & physicalDevice, const engine::VulkanData& vk_data)
+    static QueueFamilyIndices findQueueFamilies(VkPhysicalDevice & physicalDevice, const VulkanData& vk_data)
     {
         QueueFamilyIndices indices;
 

@@ -3,12 +3,12 @@
 #include <vulkan/vulkan.hpp>
 
 #include "swap_chain.hpp"
-#include <engine/renderers/vk_data.hpp>
+#include "vk_data.hpp"
 
 namespace vk
 {
     
-    static void createViewport(engine::VulkanData& vk_data, engine::VulkanRenderPipeline& renderPipeline)
+    static void createViewport(VulkanData& vk_data, VulkanRenderPipeline& renderPipeline)
     {
         renderPipeline.viewport.x = 0.0f;
         renderPipeline.viewport.y = 0.0f;

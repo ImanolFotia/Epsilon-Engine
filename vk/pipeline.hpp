@@ -8,7 +8,7 @@
 #include "rasterizer.hpp"
 #include "render_pass.hpp"
 
-#include "../engine/renderers/vk_data.hpp"
+#include "vk_data.hpp"
 
 namespace vk
 {
@@ -20,7 +20,7 @@ namespace vk
                                                                                       const char *fragmentPath,
                                                                                       VkShaderModule& vertShaderModule,
                                                                                       VkShaderModule& fragShaderModule,
-                                                                                      engine::VulkanData& vk_data)
+                                                                                      VulkanData& vk_data)
     {
 
         auto vertShaderCode = shader::readFile(vertexPath /*"../assets/shaders/vertex.spv"*/, vk_data);
@@ -44,7 +44,7 @@ namespace vk
         return {vertShaderStageInfo, fragShaderStageInfo};
     }
 
-    static VkPipeline createGraphicsPipeline(engine::VulkanData &vk_data, engine::VulkanRenderPipeline& renderPipeline)
+    static VkPipeline createGraphicsPipeline(VulkanData &vk_data, VulkanRenderPipeline& renderPipeline)
     {
         VkShaderModule vertShaderModule;
         VkShaderModule fragShaderModule;
@@ -133,13 +133,13 @@ namespace vk
         vkCmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
     }
 
-    static void destroyGraphicsPipeline(const engine::VulkanData &vk_data, engine::VulkanRenderPipeline& renderPipeline)
+    static void destroyGraphicsPipeline(const VulkanData &vk_data, VulkanRenderPipeline& renderPipeline)
     {
         vkDestroyPipeline(vk_data.logicalDevice, renderPipeline.graphicsPipeline, nullptr);
         vkDestroyPipelineLayout(vk_data.logicalDevice, renderPipeline.pipelineLayout, nullptr);
     }
 
-    static void bindPipeline(const engine::VulkanRenderPipeline &renderPipeline, const VkCommandBuffer &commandBuffer)
+    static void bindPipeline(const VulkanRenderPipeline &renderPipeline, const VkCommandBuffer &commandBuffer)
     {
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, renderPipeline.graphicsPipeline);
     }

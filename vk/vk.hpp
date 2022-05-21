@@ -1,5 +1,6 @@
 #pragma once
 
+#include "vk_data.hpp"
 #include "device.hpp"
 #include "extensions.hpp"
 #include "instance.hpp"

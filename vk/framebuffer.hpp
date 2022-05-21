@@ -8,7 +8,7 @@
 namespace vk
 {
 
-    static void createFramebuffers(engine::VulkanData& vk_data, engine::VulkanRenderPipeline& renderPipeline)
+    static void createFramebuffers(VulkanData& vk_data, VulkanRenderPipeline& renderPipeline)
     {
         /*swapChainFramebuffers.resize(swapChainImageViews.size());
 

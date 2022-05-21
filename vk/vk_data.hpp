@@ -1,10 +1,8 @@
-#pragma once
+#pragma once 
 
 #include <vulkan/vulkan.hpp>
-#include <vector>
 
-namespace engine
-{
+namespace vk{
     struct VulkanRenderPipeline
     {
         VkPipelineLayout pipelineLayout{};
@@ -19,6 +17,7 @@ namespace engine
         VkPipelineMultisampleStateCreateInfo multisampling{};
         VkPipelineColorBlendAttachmentState colorBlendAttachment{};
         VkPipelineColorBlendStateCreateInfo colorBlending{};
+        VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
     };
 
     struct VulkanData
