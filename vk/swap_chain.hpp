@@ -205,7 +205,6 @@ namespace vk
     static void recreateSwapChain(VulkanData &vk_data, GLFWwindow *window, VulkanRenderPipeline& renderPipeline, VulkanVertexInfo<C> vertexInfo)
     {
         vkDeviceWaitIdle(vk_data.logicalDevice);
-
         cleanupSwapChain(vk_data, renderPipeline);
 
         vk::createSwapChain(vk_data, window);

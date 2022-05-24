@@ -14,7 +14,7 @@ namespace engine
         using RenderPipelines = std::vector<vk::VulkanRenderPipeline>;
         using CommandPools = std::vector<VkCommandPool>;
         using CommandBuffers = std::vector<VkCommandBuffer>;
-        using VertexBuffers = std::vector<VkBuffer>;
+        using VertexBuffers = std::vector<vk::VulkanBuffer>;
 
     public:
         VulkanRenderer();
@@ -48,8 +48,6 @@ namespace engine
         CommandBuffers m_pCommandBuffers;
         VertexBuffers m_pVertexBuffers;
         vk::VulkanVertexInfo<6> m_pVertexInfo;
-        VkDeviceMemory m_pDeviceMemory;
-        VkBufferCreateInfo m_pBufferInfo;
 
         uint32_t current_vertex_count = 0;
     };

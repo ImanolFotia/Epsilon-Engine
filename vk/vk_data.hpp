@@ -9,6 +9,12 @@ namespace vk{
         std::array<VkVertexInputAttributeDescription, num_attributes> attributeDescriptions{};
         VkVertexInputBindingDescription bindingDescription{};
     };
+
+    struct VulkanBuffer {
+        VkBuffer buffer;
+        VkDeviceMemory deviceMemory;
+        VkBufferCreateInfo bufferInfo;
+    };
     
     struct VulkanRenderPipeline
     {

@@ -50,13 +50,14 @@ namespace engine
     }
 
     uint32_t VulkanRenderer::Stage(const std::vector<Vertex> &vertices, const MaterialInfo &) {
-        m_pVertexBuffers.emplace_back();
-        uint32_t vertex_buffer_id = m_pVertexBuffers.size()-1;
-        m_pBufferInfo = vk::createVertexBuffer(m_pVkData, m_pVertexBuffers.back(), vertices.size() * sizeof(vertices[0]));
+        auto* buffer = &m_pVertexBuffers.emplace_back();
 
-        m_pDeviceMemory = vk::allocateMemory(m_pVkData, m_pVertexBuffers.back());
-        vk::mapMemory(m_pVkData, m_pDeviceMemory, m_pBufferInfo.size, vertices.data());
+        uint32_t vertex_buffer_id = m_pVertexBuffers.size()-1;
+        buffer->bufferInfo = vk::createVertexBuffer(m_pVkData, buffer->buffer, vertices.size() * sizeof(vertices[0]));
+        buffer->deviceMemory = vk::allocateMemory(m_pVkData, buffer->buffer);
+        vk::mapMemory(m_pVkData, buffer->deviceMemory, buffer->bufferInfo.size, vertices.data());
         current_vertex_count += vertices.size();
+
         return vertex_buffer_id;
     }
 
@@ -67,7 +68,11 @@ namespace engine
 
     void VulkanRenderer::Begin()
     {
-        m_pImageIndex = vk::prepareSyncObjects(m_pVkData, m_pWindow->getWindow(), m_pCurrentFrame, m_pRenderPipelines[0], m_pVertexInfo);
+        m_pImageIndex = vk::prepareSyncObjects( m_pVkData, 
+                                                m_pWindow->getWindow(), 
+                                                m_pCurrentFrame, 
+                                                m_pRenderPipelines[0], 
+                                                m_pVertexInfo);
         // vkAcquireNextImageKHR(vk::logicalDevice, vk::swapChain, UINT64_MAX, vk::imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
         vkResetCommandBuffer(m_pCommandBuffers[m_pCurrentFrame], 0);
 
@@ -95,7 +100,7 @@ namespace engine
         vk::bindPipeline(m_pRenderPipelines[0], m_pCommandBuffers[m_pCurrentFrame]);
 
         for (auto& vertexBuffer: m_pVertexBuffers)
-            vk::bindVertexBuffer(m_pVkData, m_pCommandBuffers[m_pCurrentFrame], vertexBuffer);
+            vk::bindVertexBuffer(m_pVkData, m_pCommandBuffers[m_pCurrentFrame], vertexBuffer.buffer);
 
         vk::draw(m_pCommandBuffers[m_pCurrentFrame], current_vertex_count, 1, 0, 0);
     }
@@ -106,10 +111,11 @@ namespace engine
         vk::cleanupSyncObjects(m_pVkData);
         vk::cleanCommandPool(m_pVkData, m_pCommandPools[0]);
 
-        for(auto& buffer: m_pVertexBuffers)
-            vk::destroyVertexBuffer(m_pVkData, buffer);
+        for(auto& buffer: m_pVertexBuffers) {
+            vk::destroyVertexBuffer(m_pVkData, buffer.buffer);
+            vk::freeMemory(m_pVkData, buffer.deviceMemory);
+        }
 
-        vk::freeMemory(m_pVkData, m_pDeviceMemory);
 
         vk::destroyGraphicsPipeline(m_pVkData, m_pRenderPipelines[0]);
         vk::cleanupRenderPass(m_pVkData, m_pRenderPipelines[0].renderPass);
