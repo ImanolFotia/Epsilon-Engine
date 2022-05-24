@@ -14,8 +14,8 @@ layout (location = 0) out vec3 color;
 
 void main() {
     color = inColor.rgb;
-    //vec2 outVert = positions[gl_VertexIndex];
-    //outVert.y *= (iResolution.x / iResolution.y);
+    vec3 outVert = inPosition;
+    outVert.y *= (iResolution.x / iResolution.y);
 
-    gl_Position = vec4(inPosition, 1.0);
+    gl_Position = vec4(outVert, 1.0);
 }

@@ -89,7 +89,7 @@ namespace LearningVulkan
             m_pRenderer->Begin();
 
             m_pRenderer->Flush();
-            
+
             m_pRenderer->End();
         }
 
@@ -101,8 +101,12 @@ namespace LearningVulkan
         }
 
         protected:
-            void Submit(const std::vector<engine::Vertex>& vertices, const engine::MaterialInfo& materialInfo) {
-                m_pRenderer->Stage(vertices, materialInfo);
+            uint32_t Submit(const std::vector<engine::Vertex>& vertices, const engine::MaterialInfo& materialInfo) {
+                return m_pRenderer->Submit(vertices, materialInfo);
+            }
+
+            void Draw(uint32_t object_id) {
+                m_pRenderer->Push(object_id);
             }
     };
 }

@@ -11,11 +11,38 @@ namespace ExampleApp
 
         void onCreate() override
         {
-            Submit(vertices, {});
+            const std::vector<engine::Vertex> vertices = {
+            {   
+                glm::vec3(0.0f, -0.5f, 0.0f), 
+                glm::vec2(0.0f, 1.0f), 
+                glm::vec3(0.0f, 0.0f, 0.0f), 
+                glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 
+                glm::vec3(0.0f, 0.0f, 0.0f), 
+                glm::vec3(0.0f, 0.0f, 0.0f)
+            },
+            {
+                glm::vec3(0.5f, 0.5f, 0.0f), 
+                glm::vec2(0.0f, 0.0f), 
+                glm::vec3(0.0f, 0.0f, 0.0f), 
+                glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), 
+                glm::vec3(0.0f, 0.0f, 0.0f), 
+                glm::vec3(0.0f, 0.0f, 0.0f)
+            },
+            {
+                glm::vec3(-0.5f, 0.5f, 0.0f), 
+                glm::vec2(1.0f, 0.0f), 
+                glm::vec3(0.0f, 0.0f, 0.0f), 
+                glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), 
+                glm::vec3(0.0f, 0.0f, 0.0f), 
+                glm::vec3(0.0f, 0.0f, 0.0f)
+            }};
+            
+            myObjectId = Submit(vertices, {});
         }
 
         void onRender() override
         {
+            Draw(myObjectId);
         }
 
         void onExit() override
@@ -23,9 +50,8 @@ namespace ExampleApp
         }
 
     private:
-        const std::vector<engine::Vertex> vertices = {
-            {glm::vec3(0.0f, -0.5f, 0.0f), glm::vec2(0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
-            {glm::vec3(0.5f, 0.5f, 0.0f), glm::vec2(0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
-            {glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)}};
+        uint32_t myObjectId = 0;
+
+
     };
 }

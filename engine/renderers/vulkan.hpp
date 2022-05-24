@@ -6,6 +6,7 @@
 
 
 #include <vector>
+#include <list>
 
 namespace engine
 {
@@ -25,7 +26,9 @@ namespace engine
 
         uint32_t Stage(const std::vector<Vertex> &, const MaterialInfo &) override;
 
-        void Submit(const std::vector<Vertex>&, const MaterialInfo&) override;
+        uint32_t Submit(const std::vector<Vertex>&, const MaterialInfo&) override;
+
+        void Push(uint32_t) override;
 
         void Begin() override;
 
@@ -50,5 +53,6 @@ namespace engine
         vk::VulkanVertexInfo<6> m_pVertexInfo;
 
         uint32_t current_vertex_count = 0;
+        std::list<uint32_t> m_pCurrentFrameObjects; 
     };
 }

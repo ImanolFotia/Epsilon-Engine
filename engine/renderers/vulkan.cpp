@@ -26,33 +26,34 @@ namespace engine
 
         vk::createRenderPass(m_pVkData, m_pRenderPipelines[0]);
 
-        m_pVertexInfo.attributeDescriptions = vk::getAttributeDescriptions<6>(0, 
-        {
-            {VK_FORMAT_R32G32B32_SFLOAT,    offsetof(Vertex, position)},
-            {VK_FORMAT_R32G32_SFLOAT,       offsetof(Vertex, texCoords)},
-            {VK_FORMAT_R32G32B32_SFLOAT,    offsetof(Vertex, normal)},
-            {VK_FORMAT_R32G32B32A32_SFLOAT, offsetof(Vertex, color)},
-            {VK_FORMAT_R32G32B32_SFLOAT,    offsetof(Vertex, tangent)},
-            {VK_FORMAT_R32G32B32_SFLOAT,    offsetof(Vertex, bitangent)}
-        });
+        m_pVertexInfo.attributeDescriptions =
+            vk::getAttributeDescriptions<6>(0,
+                                            {{VK_FORMAT_R32G32B32_SFLOAT,    offsetof(Vertex, position)},
+                                             {VK_FORMAT_R32G32_SFLOAT,       offsetof(Vertex, texCoords)},
+                                             {VK_FORMAT_R32G32B32_SFLOAT,    offsetof(Vertex, normal)},
+                                             {VK_FORMAT_R32G32B32A32_SFLOAT, offsetof(Vertex, color)},
+                                             {VK_FORMAT_R32G32B32_SFLOAT,    offsetof(Vertex, tangent)},
+                                             {VK_FORMAT_R32G32B32_SFLOAT,    offsetof(Vertex, bitangent)}
+                                             });
 
         m_pVertexInfo.bindingDescription = vk::getBindingDescription<Vertex>();
 
-        vk::createGraphicsPipeline(m_pVkData, m_pRenderPipelines[0], m_pVertexInfo);
-        vk::createFramebuffers(m_pVkData, m_pRenderPipelines[0]);
+        vk::createGraphicsPipeline(m_pVkData, m_pRenderPipelines.back(), m_pVertexInfo);
+        vk::createFramebuffers(m_pVkData, m_pRenderPipelines.back());
 
         m_pCommandPools.emplace_back();
 
-        vk::createCommandPool(m_pVkData, m_pCommandPools[0]);
+        vk::createCommandPool(m_pVkData, m_pCommandPools.back());
 
-        vk::createCommandBuffers(m_pVkData, m_pCommandPools[0], m_pCommandBuffers);
+        vk::createCommandBuffers(m_pVkData, m_pCommandPools.back(), m_pCommandBuffers);
         vk::createSyncObjects(m_pVkData);
     }
 
-    uint32_t VulkanRenderer::Stage(const std::vector<Vertex> &vertices, const MaterialInfo &) {
-        auto* buffer = &m_pVertexBuffers.emplace_back();
+    uint32_t VulkanRenderer::Stage(const std::vector<Vertex> &vertices, const MaterialInfo &)
+    {
+        auto *buffer = &m_pVertexBuffers.emplace_back();
 
-        uint32_t vertex_buffer_id = m_pVertexBuffers.size()-1;
+        uint32_t vertex_buffer_id = m_pVertexBuffers.size() - 1;
         buffer->bufferInfo = vk::createVertexBuffer(m_pVkData, buffer->buffer, vertices.size() * sizeof(vertices[0]));
         buffer->deviceMemory = vk::allocateMemory(m_pVkData, buffer->buffer);
         vk::mapMemory(m_pVkData, buffer->deviceMemory, buffer->bufferInfo.size, vertices.data());
@@ -61,18 +62,30 @@ namespace engine
         return vertex_buffer_id;
     }
 
-    void VulkanRenderer::Submit(const std::vector<Vertex> &, const MaterialInfo &)
+    uint32_t VulkanRenderer::Submit(const std::vector<Vertex> &vertices, const MaterialInfo &)
     {
+        auto *buffer = &m_pVertexBuffers.emplace_back();
 
+        uint32_t vertex_buffer_id = m_pVertexBuffers.size() - 1;
+        buffer->bufferInfo = vk::createVertexBuffer(m_pVkData, buffer->buffer, vertices.size() * sizeof(vertices[0]));
+        buffer->deviceMemory = vk::allocateMemory(m_pVkData, buffer->buffer);
+        vk::mapMemory(m_pVkData, buffer->deviceMemory, buffer->bufferInfo.size, vertices.data());
+        current_vertex_count += vertices.size();
+
+        return vertex_buffer_id;
+    }
+
+    void VulkanRenderer::Push(uint32_t object_id) {
+        m_pCurrentFrameObjects.push_back(object_id);
     }
 
     void VulkanRenderer::Begin()
     {
-        m_pImageIndex = vk::prepareSyncObjects( m_pVkData, 
-                                                m_pWindow->getWindow(), 
-                                                m_pCurrentFrame, 
-                                                m_pRenderPipelines[0], 
-                                                m_pVertexInfo);
+        m_pImageIndex = vk::prepareSyncObjects(m_pVkData,
+                                               m_pWindow->getWindow(),
+                                               m_pCurrentFrame,
+                                               m_pRenderPipelines[0],
+                                               m_pVertexInfo);
         // vkAcquireNextImageKHR(vk::logicalDevice, vk::swapChain, UINT64_MAX, vk::imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
         vkResetCommandBuffer(m_pCommandBuffers[m_pCurrentFrame], 0);
 
@@ -99,8 +112,10 @@ namespace engine
     {
         vk::bindPipeline(m_pRenderPipelines[0], m_pCommandBuffers[m_pCurrentFrame]);
 
-        for (auto& vertexBuffer: m_pVertexBuffers)
-            vk::bindVertexBuffer(m_pVkData, m_pCommandBuffers[m_pCurrentFrame], vertexBuffer.buffer);
+        for (auto id: m_pCurrentFrameObjects)
+            vk::bindVertexBuffer(m_pVkData, m_pCommandBuffers[m_pCurrentFrame], m_pVertexBuffers[id].buffer);
+            
+        m_pCurrentFrameObjects.clear();
 
         vk::draw(m_pCommandBuffers[m_pCurrentFrame], current_vertex_count, 1, 0, 0);
     }
@@ -111,11 +126,11 @@ namespace engine
         vk::cleanupSyncObjects(m_pVkData);
         vk::cleanCommandPool(m_pVkData, m_pCommandPools[0]);
 
-        for(auto& buffer: m_pVertexBuffers) {
+        for (auto &buffer : m_pVertexBuffers)
+        {
             vk::destroyVertexBuffer(m_pVkData, buffer.buffer);
             vk::freeMemory(m_pVkData, buffer.deviceMemory);
         }
-
 
         vk::destroyGraphicsPipeline(m_pVkData, m_pRenderPipelines[0]);
         vk::cleanupRenderPass(m_pVkData, m_pRenderPipelines[0].renderPass);

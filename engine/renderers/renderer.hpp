@@ -42,7 +42,9 @@ namespace engine
 
         virtual uint32_t Stage(const std::vector<Vertex> &, const MaterialInfo &) = 0;
 
-        virtual void Submit(const std::vector<Vertex>&, const MaterialInfo&) = 0;
+        virtual uint32_t Submit(const std::vector<Vertex>&, const MaterialInfo&) = 0;
+        
+        virtual void Push(uint32_t) = 0;
         
         virtual void Begin() = 0;
 
