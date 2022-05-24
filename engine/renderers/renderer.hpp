@@ -1,5 +1,9 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
+#include <vector>
+
 namespace engine
 {
     enum renderer_type
@@ -12,6 +16,21 @@ namespace engine
         size // if we ever want to iterate over renderer types
     };
 
+    struct Vertex {
+        Vertex(glm::vec3 p, glm::vec2 uv, glm::vec3 n, glm::vec4 c, glm::vec3 t, glm::vec3 bt) :
+            position(p), texCoords(uv), normal(n), color(c), tangent(t), bitangent(bt) 
+        {}
+        
+        glm::vec3 position;
+        glm::vec2 texCoords;
+        glm::vec3 normal;
+        glm::vec4 color;
+        glm::vec3 tangent;
+        glm::vec3 bitangent;
+    };
+
+    struct MaterialInfo {};
+
     /**
      * @brief Renderer abstract class, do not instantiate directly
      *
@@ -20,6 +39,10 @@ namespace engine
     {
     public:
         virtual void Init(const char*, framework::Window&) = 0;
+
+        virtual uint32_t Stage(const std::vector<Vertex> &, const MaterialInfo &) = 0;
+
+        virtual void Submit(const std::vector<Vertex>&, const MaterialInfo&) = 0;
         
         virtual void Begin() = 0;
 

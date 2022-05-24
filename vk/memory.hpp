@@ -1,0 +1,65 @@
+#pragma once
+
+#include <vulkan/vulkan.hpp>
+
+#include "vk_data.hpp"
+
+namespace vk
+{
+    static uint32_t findMemoryType(VulkanData &vkData, uint32_t typeFilter, VkMemoryPropertyFlags properties)
+    {
+        VkPhysicalDeviceMemoryProperties memProperties;
+        vkGetPhysicalDeviceMemoryProperties(vkData.physicalDevice, &memProperties);
+        for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++)
+        {
+            if (typeFilter & (1 << i))
+            {
+                return i;
+            }
+        }
+
+        throw std::runtime_error("failed to find suitable memory type!");
+        for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++)
+        {
+            if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties)
+            {
+                return i;
+            }
+        }
+    }
+
+    static VkDeviceMemory allocateMemory(VulkanData &vkData, VkBuffer buffer)
+    {
+
+        VkDeviceMemory vertexBufferMemory;
+
+        VkMemoryRequirements memRequirements;
+        vkGetBufferMemoryRequirements(vkData.logicalDevice, buffer, &memRequirements);
+
+        VkMemoryAllocateInfo allocInfo{};
+        allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+        allocInfo.allocationSize = memRequirements.size;
+        allocInfo.memoryTypeIndex = findMemoryType(vkData, memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+        if (vkAllocateMemory(vkData.logicalDevice, &allocInfo, nullptr, &vertexBufferMemory) != VK_SUCCESS)
+        {
+            throw std::runtime_error("failed to allocate vertex buffer memory!");
+        }
+        vkBindBufferMemory(vkData.logicalDevice, buffer, vertexBufferMemory, 0);
+
+        return vertexBufferMemory;
+    }
+
+    template <typename T>
+    static void mapMemory(VulkanData &vkData, VkDeviceMemory &bufferMemory, size_t size, T* vertexData)
+    {
+        void *data;
+        vkMapMemory(vkData.logicalDevice, bufferMemory, 0, size, 0, &data);
+        memcpy(data, vertexData, size);
+        vkUnmapMemory(vkData.logicalDevice, bufferMemory);
+    }
+
+    static void freeMemory(VulkanData &vkData, VkDeviceMemory &bufferMemory)
+    {
+        vkFreeMemory(vkData.logicalDevice, bufferMemory, nullptr);
+    }
+}

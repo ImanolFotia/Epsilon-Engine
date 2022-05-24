@@ -11,17 +11,21 @@ namespace ExampleApp
 
         void onCreate() override
         {
-
+            Submit(vertices, {});
         }
 
         void onRender() override
         {
-            //std::cout << "Hello Vulkan App" << std::endl;
-            //ShouldClose();
         }
-        
-        void onExit() override {
 
+        void onExit() override
+        {
         }
+
+    private:
+        const std::vector<engine::Vertex> vertices = {
+            {glm::vec3(0.0f, -0.5f, 0.0f), glm::vec2(0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
+            {glm::vec3(0.5f, 0.5f, 0.0f), glm::vec2(0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
+            {glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)}};
     };
 }

@@ -5,11 +5,11 @@
 namespace engine
 {
 
-    VulkanRenderer::VulkanRenderer() {
-
+    VulkanRenderer::VulkanRenderer()
+    {
     }
-    VulkanRenderer::~VulkanRenderer() {
-
+    VulkanRenderer::~VulkanRenderer()
+    {
     }
     void VulkanRenderer::Init(const char *appName, framework::Window &window)
     {
@@ -25,20 +25,49 @@ namespace engine
         m_pRenderPipelines.emplace_back();
 
         vk::createRenderPass(m_pVkData, m_pRenderPipelines[0]);
-        vk::createGraphicsPipeline(m_pVkData, m_pRenderPipelines[0]);
+
+        m_pVertexInfo.attributeDescriptions = vk::getAttributeDescriptions<6>(0, 
+        {
+            {VK_FORMAT_R32G32B32_SFLOAT,    offsetof(Vertex, position)},
+            {VK_FORMAT_R32G32_SFLOAT,       offsetof(Vertex, texCoords)},
+            {VK_FORMAT_R32G32B32_SFLOAT,    offsetof(Vertex, normal)},
+            {VK_FORMAT_R32G32B32A32_SFLOAT, offsetof(Vertex, color)},
+            {VK_FORMAT_R32G32B32_SFLOAT,    offsetof(Vertex, tangent)},
+            {VK_FORMAT_R32G32B32_SFLOAT,    offsetof(Vertex, bitangent)}
+        });
+
+        m_pVertexInfo.bindingDescription = vk::getBindingDescription<Vertex>();
+
+        vk::createGraphicsPipeline(m_pVkData, m_pRenderPipelines[0], m_pVertexInfo);
         vk::createFramebuffers(m_pVkData, m_pRenderPipelines[0]);
 
         m_pCommandPools.emplace_back();
 
         vk::createCommandPool(m_pVkData, m_pCommandPools[0]);
+
         vk::createCommandBuffers(m_pVkData, m_pCommandPools[0], m_pCommandBuffers);
         vk::createSyncObjects(m_pVkData);
     }
 
+    uint32_t VulkanRenderer::Stage(const std::vector<Vertex> &vertices, const MaterialInfo &) {
+        m_pVertexBuffers.emplace_back();
+        uint32_t vertex_buffer_id = m_pVertexBuffers.size()-1;
+        m_pBufferInfo = vk::createVertexBuffer(m_pVkData, m_pVertexBuffers.back(), vertices.size() * sizeof(vertices[0]));
+
+        m_pDeviceMemory = vk::allocateMemory(m_pVkData, m_pVertexBuffers.back());
+        vk::mapMemory(m_pVkData, m_pDeviceMemory, m_pBufferInfo.size, vertices.data());
+        current_vertex_count += vertices.size();
+        return vertex_buffer_id;
+    }
+
+    void VulkanRenderer::Submit(const std::vector<Vertex> &, const MaterialInfo &)
+    {
+
+    }
+
     void VulkanRenderer::Begin()
     {
-        
-        m_pImageIndex = vk::prepareSyncObjects(m_pVkData, m_pWindow->getWindow(), m_pCurrentFrame, m_pRenderPipelines[0]);
+        m_pImageIndex = vk::prepareSyncObjects(m_pVkData, m_pWindow->getWindow(), m_pCurrentFrame, m_pRenderPipelines[0], m_pVertexInfo);
         // vkAcquireNextImageKHR(vk::logicalDevice, vk::swapChain, UINT64_MAX, vk::imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
         vkResetCommandBuffer(m_pCommandBuffers[m_pCurrentFrame], 0);
 
@@ -49,7 +78,6 @@ namespace engine
 
     void VulkanRenderer::End()
     {
-        
         vk::endRenderPass(m_pCommandBuffers[m_pCurrentFrame], m_pVkData);
         vk::endRecording(m_pCommandBuffers[m_pCurrentFrame]);
 
@@ -65,7 +93,11 @@ namespace engine
     void VulkanRenderer::Flush()
     {
         vk::bindPipeline(m_pRenderPipelines[0], m_pCommandBuffers[m_pCurrentFrame]);
-        vk::draw(m_pCommandBuffers[m_pCurrentFrame], 6, 1, 0, 0);
+
+        for (auto& vertexBuffer: m_pVertexBuffers)
+            vk::bindVertexBuffer(m_pVkData, m_pCommandBuffers[m_pCurrentFrame], vertexBuffer);
+
+        vk::draw(m_pCommandBuffers[m_pCurrentFrame], current_vertex_count, 1, 0, 0);
     }
 
     void VulkanRenderer::Cleanup()
@@ -73,6 +105,11 @@ namespace engine
         vkDeviceWaitIdle(m_pVkData.logicalDevice);
         vk::cleanupSyncObjects(m_pVkData);
         vk::cleanCommandPool(m_pVkData, m_pCommandPools[0]);
+
+        for(auto& buffer: m_pVertexBuffers)
+            vk::destroyVertexBuffer(m_pVkData, buffer);
+
+        vk::freeMemory(m_pVkData, m_pDeviceMemory);
 
         vk::destroyGraphicsPipeline(m_pVkData, m_pRenderPipelines[0]);
         vk::cleanupRenderPass(m_pVkData, m_pRenderPipelines[0].renderPass);

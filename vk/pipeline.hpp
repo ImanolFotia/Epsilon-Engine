@@ -44,7 +44,8 @@ namespace vk
         return {vertShaderStageInfo, fragShaderStageInfo};
     }
 
-    static VkPipeline createGraphicsPipeline(VulkanData &vk_data, VulkanRenderPipeline& renderPipeline)
+    template<uint32_t C>
+    static VkPipeline createGraphicsPipeline(VulkanData &vk_data, VulkanRenderPipeline& renderPipeline, VulkanVertexInfo<C> VertexInfo)
     {
         VkShaderModule vertShaderModule;
         VkShaderModule fragShaderModule;
@@ -52,10 +53,10 @@ namespace vk
         // Vertex Stage
         VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
         vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-        vertexInputInfo.vertexBindingDescriptionCount = 0;
-        vertexInputInfo.pVertexBindingDescriptions = nullptr; // Optional
-        vertexInputInfo.vertexAttributeDescriptionCount = 0;
-        vertexInputInfo.pVertexAttributeDescriptions = nullptr;
+        vertexInputInfo.vertexBindingDescriptionCount = 1;
+        vertexInputInfo.pVertexBindingDescriptions = &VertexInfo.bindingDescription; // Optional
+        vertexInputInfo.vertexAttributeDescriptionCount = VertexInfo.attributeDescriptions.size();
+        vertexInputInfo.pVertexAttributeDescriptions = VertexInfo.attributeDescriptions.data();
 
         VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
         inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;

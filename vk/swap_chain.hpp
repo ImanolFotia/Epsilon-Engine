@@ -201,7 +201,8 @@ namespace vk
         vkDestroySwapchainKHR(vk_data.logicalDevice, vk_data.swapChain, nullptr);
     }
 
-    static void recreateSwapChain(VulkanData &vk_data, GLFWwindow *window, VulkanRenderPipeline& renderPipeline)
+    template<uint32_t C>
+    static void recreateSwapChain(VulkanData &vk_data, GLFWwindow *window, VulkanRenderPipeline& renderPipeline, VulkanVertexInfo<C> vertexInfo)
     {
         vkDeviceWaitIdle(vk_data.logicalDevice);
 
@@ -210,7 +211,7 @@ namespace vk
         vk::createSwapChain(vk_data, window);
         vk::createImageViews(vk_data);
         vk::createRenderPass(vk_data, renderPipeline);
-        vk::createGraphicsPipeline(vk_data, renderPipeline);
+        vk::createGraphicsPipeline(vk_data, renderPipeline, vertexInfo);
         vk::createFramebuffers(vk_data, renderPipeline);
     }
 }

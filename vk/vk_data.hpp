@@ -3,6 +3,13 @@
 #include <vulkan/vulkan.hpp>
 
 namespace vk{
+
+    template <uint32_t num_attributes>
+    struct VulkanVertexInfo {
+        std::array<VkVertexInputAttributeDescription, num_attributes> attributeDescriptions{};
+        VkVertexInputBindingDescription bindingDescription{};
+    };
+    
     struct VulkanRenderPipeline
     {
         VkPipelineLayout pipelineLayout{};
@@ -18,6 +25,7 @@ namespace vk{
         VkPipelineColorBlendAttachmentState colorBlendAttachment{};
         VkPipelineColorBlendStateCreateInfo colorBlending{};
         VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
+        
     };
 
     struct VulkanData

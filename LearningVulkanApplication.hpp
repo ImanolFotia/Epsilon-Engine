@@ -99,5 +99,10 @@ namespace LearningVulkan
             m_pRenderer->Cleanup();
             m_Window.cleanup();
         }
+
+        protected:
+            void Submit(const std::vector<engine::Vertex>& vertices, const engine::MaterialInfo& materialInfo) {
+                m_pRenderer->Stage(vertices, materialInfo);
+            }
     };
 }

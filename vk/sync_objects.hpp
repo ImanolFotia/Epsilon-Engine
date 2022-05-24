@@ -33,7 +33,8 @@ namespace vk
         }
     }
 
-    static uint32_t prepareSyncObjects(VulkanData &vk_data, GLFWwindow* window, uint32_t currentFrame, VulkanRenderPipeline& renderPipeline) {
+    template<uint32_t C>
+    static uint32_t prepareSyncObjects(VulkanData &vk_data, GLFWwindow* window, uint32_t currentFrame, VulkanRenderPipeline& renderPipeline, VulkanVertexInfo<C> vertexInfo) {
 
             vkWaitForFences(vk_data.logicalDevice, 1, &vk_data.inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
@@ -42,7 +43,7 @@ namespace vk
 
             if (result == VK_ERROR_OUT_OF_DATE_KHR)
             {
-                recreateSwapChain(vk_data, window, renderPipeline);
+                recreateSwapChain(vk_data, window, renderPipeline, vertexInfo);
                 return imageIndex;
             }
             else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)

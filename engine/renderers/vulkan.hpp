@@ -14,6 +14,7 @@ namespace engine
         using RenderPipelines = std::vector<vk::VulkanRenderPipeline>;
         using CommandPools = std::vector<VkCommandPool>;
         using CommandBuffers = std::vector<VkCommandBuffer>;
+        using VertexBuffers = std::vector<VkBuffer>;
 
     public:
         VulkanRenderer();
@@ -21,6 +22,10 @@ namespace engine
         ~VulkanRenderer();
 
         void Init(const char *appName, framework::Window &) override;
+
+        uint32_t Stage(const std::vector<Vertex> &, const MaterialInfo &) override;
+
+        void Submit(const std::vector<Vertex>&, const MaterialInfo&) override;
 
         void Begin() override;
 
@@ -41,5 +46,11 @@ namespace engine
         RenderPipelines m_pRenderPipelines;
         CommandPools m_pCommandPools;
         CommandBuffers m_pCommandBuffers;
+        VertexBuffers m_pVertexBuffers;
+        vk::VulkanVertexInfo<6> m_pVertexInfo;
+        VkDeviceMemory m_pDeviceMemory;
+        VkBufferCreateInfo m_pBufferInfo;
+
+        uint32_t current_vertex_count = 0;
     };
 }
