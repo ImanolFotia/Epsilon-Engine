@@ -44,10 +44,10 @@ namespace vk
     }
 
     template <typename T>
-    static void mapMemory(VulkanData &vkData, VkDeviceMemory &bufferMemory, size_t size, T* vertexData)
+    static void mapMemory(VulkanData &vkData, VkDeviceMemory &bufferMemory, size_t size, size_t offset, T* vertexData)
     {
         void *data;
-        vkMapMemory(vkData.logicalDevice, bufferMemory, 0, size, 0, &data);
+        vkMapMemory(vkData.logicalDevice, bufferMemory, offset, size, 0, &data);
         memcpy(data, vertexData, size);
         vkUnmapMemory(vkData.logicalDevice, bufferMemory);
     }

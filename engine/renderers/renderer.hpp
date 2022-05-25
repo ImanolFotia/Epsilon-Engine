@@ -6,6 +6,7 @@
 
 namespace engine
 {
+    const uint32_t MAX_VERTICES_PER_BUFFER = 10000;
     enum renderer_type
     {
         vulkan = 0,
@@ -39,8 +40,6 @@ namespace engine
     {
     public:
         virtual void Init(const char*, framework::Window&) = 0;
-
-        virtual uint32_t Stage(const std::vector<Vertex> &, const MaterialInfo &) = 0;
 
         virtual uint32_t Submit(const std::vector<Vertex>&, const MaterialInfo&) = 0;
         

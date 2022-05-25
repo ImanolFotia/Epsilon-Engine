@@ -4,7 +4,6 @@
 
 #include <vk/vk.hpp>
 
-
 #include <vector>
 #include <list>
 
@@ -24,9 +23,7 @@ namespace engine
 
         void Init(const char *appName, framework::Window &) override;
 
-        uint32_t Stage(const std::vector<Vertex> &, const MaterialInfo &) override;
-
-        uint32_t Submit(const std::vector<Vertex>&, const MaterialInfo&) override;
+        uint32_t Submit(const std::vector<Vertex> &, const MaterialInfo &) override;
 
         void Push(uint32_t) override;
 
@@ -37,6 +34,9 @@ namespace engine
         void Flush() override;
 
         void Cleanup() override;
+
+    private:
+        vk::VulkanBuffer *allocateBuffer();
 
     private:
         framework::Window *m_pWindow;
@@ -53,6 +53,6 @@ namespace engine
         vk::VulkanVertexInfo<6> m_pVertexInfo;
 
         uint32_t current_vertex_count = 0;
-        std::list<uint32_t> m_pCurrentFrameObjects; 
+        std::list<uint32_t> m_pCurrentFrameObjects;
     };
 }

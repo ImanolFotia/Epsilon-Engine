@@ -47,32 +47,38 @@ namespace engine
 
         vk::createCommandBuffers(m_pVkData, m_pCommandPools.back(), m_pCommandBuffers);
         vk::createSyncObjects(m_pVkData);
+
+        allocateBuffer();
+        
     }
 
-    uint32_t VulkanRenderer::Stage(const std::vector<Vertex> &vertices, const MaterialInfo &)
-    {
+    vk::VulkanBuffer* VulkanRenderer::allocateBuffer() {
+
         auto *buffer = &m_pVertexBuffers.emplace_back();
 
-        uint32_t vertex_buffer_id = m_pVertexBuffers.size() - 1;
-        buffer->bufferInfo = vk::createVertexBuffer(m_pVkData, buffer->buffer, vertices.size() * sizeof(vertices[0]));
+        buffer->bufferInfo = vk::createVertexBuffer(m_pVkData, buffer->buffer, MAX_VERTICES_PER_BUFFER * sizeof(Vertex));
         buffer->deviceMemory = vk::allocateMemory(m_pVkData, buffer->buffer);
-        vk::mapMemory(m_pVkData, buffer->deviceMemory, buffer->bufferInfo.size, vertices.data());
-        current_vertex_count += vertices.size();
+        std::cout << "allocating " << MAX_VERTICES_PER_BUFFER * sizeof(Vertex) << " bytes\n";
 
-        return vertex_buffer_id;
+        return buffer;
     }
 
     uint32_t VulkanRenderer::Submit(const std::vector<Vertex> &vertices, const MaterialInfo &)
     {
-        auto *buffer = &m_pVertexBuffers.emplace_back();
+        vk::VulkanBuffer* buffer = &m_pVertexBuffers.back();
 
-        uint32_t vertex_buffer_id = m_pVertexBuffers.size() - 1;
-        buffer->bufferInfo = vk::createVertexBuffer(m_pVkData, buffer->buffer, vertices.size() * sizeof(vertices[0]));
-        buffer->deviceMemory = vk::allocateMemory(m_pVkData, buffer->buffer);
-        vk::mapMemory(m_pVkData, buffer->deviceMemory, buffer->bufferInfo.size, vertices.data());
+        if(buffer->allocatedVertices >= MAX_VERTICES_PER_BUFFER) 
+        {
+            buffer = allocateBuffer();
+        }
+
+        std::cout << "mapping " << vertices.size() << " vertices, of size " << vertices.size() * sizeof(Vertex) << " bytes, at offset " << current_vertex_count * sizeof(Vertex) << "\n";
+        
+        auto *buffer = &m_pVertexBuffers.back();
+        vk::mapMemory(m_pVkData, buffer->deviceMemory, vertices.size() * sizeof(Vertex), current_vertex_count* sizeof(Vertex), vertices.data());
         current_vertex_count += vertices.size();
-
-        return vertex_buffer_id;
+        buffer->allocatedVertices += vertices.size();
+        return 0;
     }
 
     void VulkanRenderer::Push(uint32_t object_id) {
@@ -112,12 +118,13 @@ namespace engine
     {
         vk::bindPipeline(m_pRenderPipelines[0], m_pCommandBuffers[m_pCurrentFrame]);
 
-        for (auto id: m_pCurrentFrameObjects)
-            vk::bindVertexBuffer(m_pVkData, m_pCommandBuffers[m_pCurrentFrame], m_pVertexBuffers[id].buffer);
+        //for (auto id: m_pCurrentFrameObjects) {
+        vk::bindVertexBuffer(m_pVkData, m_pCommandBuffers[m_pCurrentFrame], m_pVertexBuffers[0].buffer);
+        vk::draw(m_pCommandBuffers[m_pCurrentFrame], current_vertex_count, 1, 0, 0);
+        //}
             
         m_pCurrentFrameObjects.clear();
 
-        vk::draw(m_pCommandBuffers[m_pCurrentFrame], current_vertex_count, 1, 0, 0);
     }
 
     void VulkanRenderer::Cleanup()

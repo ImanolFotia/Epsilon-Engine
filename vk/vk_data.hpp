@@ -14,6 +14,8 @@ namespace vk{
         VkBuffer buffer;
         VkDeviceMemory deviceMemory;
         VkBufferCreateInfo bufferInfo;
+        uint32_t allocatedVertices = 0;
+        std::unordered_map<uint32_t, uint32_t> subBufferOffset;
     };
     
     struct VulkanRenderPipeline
