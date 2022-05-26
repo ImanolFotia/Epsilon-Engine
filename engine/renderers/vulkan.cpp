@@ -123,7 +123,6 @@ namespace engine
         vk::bindVertexBuffer(m_pVkData, m_pCommandBuffers[m_pCurrentFrame], m_pVertexBuffers[0].buffer);
         vk::draw(m_pCommandBuffers[m_pCurrentFrame], current_vertex_count, 1, 0, 0);
         //}
-            
         m_pCurrentFrameObjects.clear();
 
     }

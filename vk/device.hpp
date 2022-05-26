@@ -17,9 +17,6 @@
 
 namespace vk
 {
-
-
-
     static void createLogicalDevice(VulkanData& vk_data)
     {
         QueueFamilyIndices indices = findQueueFamilies(vk_data.physicalDevice, vk_data);
