@@ -22,12 +22,12 @@ namespace engine
             position(p), texCoords(uv), normal(n), color(c), tangent(t), bitangent(bt) 
         {}
         
-        glm::vec3 position;
-        glm::vec2 texCoords;
-        glm::vec3 normal;
-        glm::vec4 color;
-        glm::vec3 tangent;
-        glm::vec3 bitangent;
+        glm::vec3 position = vec3(0.0f);
+        glm::vec2 texCoords = vec2(0.0f);;
+        glm::vec3 normal = vec3(0.0f);;
+        glm::vec4 color = vec4(0.0f);;
+        glm::vec3 tangent = vec3(0.0f);;
+        glm::vec3 bitangent = vec3(0.0f);;
     };
 
     struct MaterialInfo {};
@@ -42,7 +42,7 @@ namespace engine
         virtual void Init(const char*, framework::Window&) = 0;
 
         virtual uint32_t Submit(const std::vector<Vertex>&, const MaterialInfo&) = 0;
-        
+
         virtual void Push(uint32_t) = 0;
         
         virtual void Begin() = 0;

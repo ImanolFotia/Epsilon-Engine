@@ -39,10 +39,10 @@ namespace engine
         vk::VulkanBuffer *allocateBuffer();
 
     private:
-        framework::Window *m_pWindow;
+        framework::Window *m_pWindow = nullptr;
 
-        uint32_t m_pCurrentFrame;
-        uint32_t m_pImageIndex;
+        uint32_t m_pCurrentFrame = 0;
+        uint32_t m_pImageIndex = 0;
 
         vk::VulkanData m_pVkData;
 

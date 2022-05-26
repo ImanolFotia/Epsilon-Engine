@@ -1,6 +1,8 @@
 #pragma once
 
 #include <iostream>
+#include <ctime>   
+#include <chrono>
 
 class IO
 {
@@ -8,6 +10,6 @@ public:
     template <class... Args>
     static void Log(Args &&...args)
     {
-        (std::cout << ... << args) << std::endl;
+        (std::clog << ... << args) << std::endl;
     }
 };

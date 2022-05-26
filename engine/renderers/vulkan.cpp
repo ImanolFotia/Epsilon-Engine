@@ -1,6 +1,7 @@
 #include <framework/window.hpp>
 
 #include "vulkan.hpp"
+#include <framework/common.hpp>
 
 namespace engine
 {
@@ -58,7 +59,8 @@ namespace engine
 
         buffer->bufferInfo = vk::createVertexBuffer(m_pVkData, buffer->buffer, MAX_VERTICES_PER_BUFFER * sizeof(Vertex));
         buffer->deviceMemory = vk::allocateMemory(m_pVkData, buffer->buffer);
-        std::cout << "allocating " << MAX_VERTICES_PER_BUFFER * sizeof(Vertex) << " bytes\n";
+        
+        IO::Log("allocating ", MAX_VERTICES_PER_BUFFER * sizeof(Vertex), " bytes");
 
         return buffer;
     }
@@ -72,13 +74,12 @@ namespace engine
             buffer = allocateBuffer();
         }
 
-        std::cout << "mapping " << vertices.size() << " vertices, of size " << vertices.size() * sizeof(Vertex) << " bytes, at offset " << current_vertex_count * sizeof(Vertex) << "\n";
+        IO::Log("mapping ", vertices.size(),  " vertices, of size ",vertices.size() * sizeof(Vertex), " bytes, at offset ", current_vertex_count * sizeof(Vertex));
         
-        auto *buffer = &m_pVertexBuffers.back();
         vk::mapMemory(m_pVkData, buffer->deviceMemory, vertices.size() * sizeof(Vertex), current_vertex_count* sizeof(Vertex), vertices.data());
         current_vertex_count += vertices.size();
         buffer->allocatedVertices += vertices.size();
-        return 0;
+        return m_pVertexBuffers.size() - 1;
     }
 
     void VulkanRenderer::Push(uint32_t object_id) {

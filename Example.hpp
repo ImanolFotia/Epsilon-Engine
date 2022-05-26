@@ -69,7 +69,7 @@ namespace ExampleApp
 
         void onRender() override
         {
-            Draw(myObjectId);
+            //Draw(myObjectId);
             Draw(myObjectId2);
         }
 

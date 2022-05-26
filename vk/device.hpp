@@ -158,11 +158,7 @@ namespace vk
 
     static void cleanup(VulkanData& vk_data)
     {
-
-
-
         vkDestroySwapchainKHR(vk_data.logicalDevice, vk_data.swapChain, nullptr);
-
 
         for (auto framebuffer : vk_data.swapChainFramebuffers)
         {
@@ -178,7 +174,6 @@ namespace vk
         {
             DestroyDebugUtilsMessengerEXT(vk_data.instance, debugMessenger, nullptr);
         }
-
 
         vkDestroyDevice(vk_data.logicalDevice, nullptr);
 
