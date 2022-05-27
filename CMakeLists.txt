@@ -54,6 +54,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC ${Vulkan_LIBRARIES})
 target_include_directories(${PROJECT_NAME} PUBLIC ${Vulkan_INCLUDE_DIR})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC glfw3)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_DL_LIBS})
 add_dependencies(${PROJECT_NAME} glfw3_d)
 add_dependencies(${PROJECT_NAME} glm)
 
