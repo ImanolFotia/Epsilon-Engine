@@ -54,6 +54,10 @@ namespace framework
             glfwTerminate();
         }
 
+        void setWindowTitle(const char* title) {
+            glfwSetWindowTitle(mWindow, title);
+        }
+
         GLFWwindow* getWindow() const {
             return mWindow;
         }

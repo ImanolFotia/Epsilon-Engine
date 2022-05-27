@@ -18,9 +18,9 @@ namespace vk
     template <uint32_t num_stages>
     static std::array<VkPipelineShaderStageCreateInfo, num_stages> createShaderStages(const char *vertexPath,
                                                                                       const char *fragmentPath,
-                                                                                      VkShaderModule& vertShaderModule,
-                                                                                      VkShaderModule& fragShaderModule,
-                                                                                      VulkanData& vk_data)
+                                                                                      VkShaderModule &vertShaderModule,
+                                                                                      VkShaderModule &fragShaderModule,
+                                                                                      VulkanData &vk_data)
     {
 
         auto vertShaderCode = shader::readFile(vertexPath /*"../assets/shaders/vertex.spv"*/, vk_data);
@@ -44,8 +44,8 @@ namespace vk
         return {vertShaderStageInfo, fragShaderStageInfo};
     }
 
-    template<uint32_t C>
-    static VkPipeline createGraphicsPipeline(VulkanData &vk_data, VulkanRenderPipeline& renderPipeline, VulkanVertexInfo<C> VertexInfo)
+    template <uint32_t C>
+    static VkPipeline createGraphicsPipeline(VulkanData &vk_data, VulkanRenderPipeline &renderPipeline, VulkanVertexInfo<C> VertexInfo)
     {
         VkShaderModule vertShaderModule;
         VkShaderModule fragShaderModule;
@@ -134,7 +134,17 @@ namespace vk
         vkCmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
     }
 
-    static void destroyGraphicsPipeline(const VulkanData &vk_data, VulkanRenderPipeline& renderPipeline)
+    static void drawIndexed(const VkCommandBuffer &commandBuffer,
+                            uint32_t indexCount,
+                            uint32_t instanceCount,
+                            uint32_t firstIndex,
+                            int32_t vertexOffset,
+                            uint32_t firstInstance)
+    {
+        vkCmdDrawIndexed(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
+    }
+
+    static void destroyGraphicsPipeline(const VulkanData &vk_data, VulkanRenderPipeline &renderPipeline)
     {
         vkDestroyPipeline(vk_data.logicalDevice, renderPipeline.graphicsPipeline, nullptr);
         vkDestroyPipelineLayout(vk_data.logicalDevice, renderPipeline.pipelineLayout, nullptr);

@@ -7,6 +7,7 @@
 namespace engine
 {
     const uint32_t MAX_VERTICES_PER_BUFFER = 10000;
+    const uint32_t MAX_INDICES_PER_BUFFER = 10000;
     enum renderer_type
     {
         vulkan = 0,
@@ -38,10 +39,11 @@ namespace engine
      */
     class Renderer
     {
+        using IndexType = uint32_t;
     public:
         virtual void Init(const char*, framework::Window&) = 0;
 
-        virtual uint32_t Submit(const std::vector<Vertex>&, const MaterialInfo&) = 0;
+        virtual uint32_t Submit(const std::vector<Vertex>&, const std::vector<IndexType>& indices, const MaterialInfo&) = 0;
 
         virtual void Push(uint32_t) = 0;
         

@@ -32,7 +32,7 @@ extern "C"
 int main(int argc, char **argv)
 {
 
-    ExampleApp::ExampleApp app("LearningVulkan");
+    ExampleApp::ExampleApp app("Vulkan Engine");
 
     try
     {

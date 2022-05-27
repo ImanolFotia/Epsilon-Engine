@@ -21,7 +21,9 @@ namespace vk
         throw std::runtime_error("failed to find suitable memory type!");
     }
 
-    static VkDeviceMemory allocateMemory(VulkanData &vkData, VkBuffer buffer)
+    static VkDeviceMemory allocateMemory(VulkanData &vkData, 
+                                         VkBuffer buffer, 
+                                         VkMemoryPropertyFlags properties)
     {
 
         VkDeviceMemory vertexBufferMemory;
@@ -32,7 +34,7 @@ namespace vk
         VkMemoryAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         allocInfo.allocationSize = memRequirements.size;
-        allocInfo.memoryTypeIndex = findMemoryType(vkData, memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+        allocInfo.memoryTypeIndex = findMemoryType(vkData, memRequirements.memoryTypeBits, properties);
     
         if (vkAllocateMemory(vkData.logicalDevice, &allocInfo, nullptr, &vertexBufferMemory) != VK_SUCCESS)
         {

@@ -17,8 +17,6 @@
 
 #include "engine/renderers/vulkan.hpp"
 
-
-
 namespace LearningVulkan
 {
     class LearningVulkanApplication
@@ -30,10 +28,14 @@ namespace LearningVulkan
 
         std::unique_ptr<engine::Renderer> m_pRenderer;
 
+        uint32_t nbFrames = 0;
+        uint32_t lastTime = 0.0;
+
     public:
         LearningVulkanApplication() = default;
 
-        LearningVulkanApplication(std::string appName) : m_ApplicationName(appName) {
+        LearningVulkanApplication(std::string appName) : m_ApplicationName(appName)
+        {
             m_pRenderer = std::make_unique<engine::VulkanRenderer>();
         }
 
@@ -51,14 +53,11 @@ namespace LearningVulkan
         virtual void onExit() = 0;
 
     protected:
-
-
         bool mShouldClose = false;
         void ShouldClose()
         {
             mShouldClose = true;
         }
-
 
     private:
         void initWindow()
@@ -75,13 +74,14 @@ namespace LearningVulkan
         {
             while (!m_Window.ShouldClose())
             {
+                showFPS();
                 if (mShouldClose)
                     break;
                 onRender();
                 drawFrame();
                 m_Window.PollEvents();
-            }
 
+            }
         }
 
         void drawFrame()
@@ -93,6 +93,26 @@ namespace LearningVulkan
             m_pRenderer->End();
         }
 
+        void showFPS()
+        {
+            // Measure speed
+            double currentTime = glfwGetTime();
+            double delta = currentTime - lastTime;
+            nbFrames++;
+            if (delta >= 1.0)
+            {
+                double fps = double(nbFrames) / delta;
+
+                std::stringstream ss;
+                ss << m_ApplicationName << " | " << " [" << (int)fps << " FPS] | [" << (1000.0 / double(nbFrames)) << " MS]";
+
+                m_Window.setWindowTitle(ss.str().c_str());
+
+                nbFrames = 0;
+                lastTime = currentTime;
+            }
+        }
+
         void exit()
         {
             onExit();
@@ -100,13 +120,15 @@ namespace LearningVulkan
             m_Window.cleanup();
         }
 
-        protected:
-            uint32_t Submit(const std::vector<engine::Vertex>& vertices, const engine::MaterialInfo& materialInfo) {
-                return m_pRenderer->Submit(vertices, materialInfo);
-            }
+    protected:
+        uint32_t Submit(const std::vector<engine::Vertex> &vertices, const std::vector<uint32_t> &indices, const engine::MaterialInfo &materialInfo)
+        {
+            return m_pRenderer->Submit(vertices, indices, materialInfo);
+        }
 
-            void Draw(uint32_t object_id) {
-                m_pRenderer->Push(object_id);
-            }
+        void Draw(uint32_t object_id)
+        {
+            m_pRenderer->Push(object_id);
+        }
     };
 }
