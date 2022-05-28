@@ -18,6 +18,8 @@ namespace engine
         using IndexBuffers = std::vector<vk::VulkanBuffer>;
         using IndexType = uint32_t;
 
+        using VertexContainer = std::vector<Vertex>;
+        using IndexContainer = std::vector<IndexType>;
 
     public:
         VulkanRenderer();
@@ -39,8 +41,12 @@ namespace engine
         void Cleanup() override;
 
     private:
-        vk::VulkanBuffer *createVertexBuffer();
+        vk::VulkanBuffer* createVertexBuffer();
         vk::VulkanBuffer* createIndexBuffer();
+
+
+        std::pair<vk::VulkanBuffer*, vk::VulkanBuffer*> getBuffers(const VertexContainer& vertices, const IndexContainer& indices);
+
         void createStagingBuffer(const std::vector<Vertex> &);
         void createStagingIndexBuffer(const std::vector<IndexType> &);
 

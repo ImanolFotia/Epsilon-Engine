@@ -92,20 +92,12 @@ namespace engine
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", indices.size() * sizeof(IndexType), " bytes in hosted staging buffer");
     }
 
-    uint32_t VulkanRenderer::Submit(const std::vector<Vertex> &vertices, const std::vector<IndexType>& indices, const MaterialInfo &)
+    uint32_t VulkanRenderer::Submit(const std::vector<Vertex> &vertices, const std::vector<IndexType> &indices, const MaterialInfo &)
     {
-        vk::VulkanBuffer *buffer;
-        if (m_pVertexBuffers.size() < 1)
-            &m_pVertexBuffers.emplace_back();
-
-        buffer = &m_pVertexBuffers.back();
-
-        if (buffer->allocatedVertices >= MAX_VERTICES_PER_BUFFER)
-        {
-            buffer = createVertexBuffer();
-        }
+        auto [buffer, indexBuffer] = getBuffers(vertices, indices);
 
         createStagingBuffer(vertices);
+        createStagingIndexBuffer(indices);
 
         vk::copyBuffer(m_pVkData, m_pCommandPools.back(), m_pStagingBuffer.buffer, buffer->buffer, vertices.size() * sizeof(Vertex), current_vertex_count * sizeof(Vertex));
 
@@ -113,19 +105,6 @@ namespace engine
         vkFreeMemory(m_pVkData.logicalDevice, m_pStagingBuffer.deviceMemory, nullptr);
 
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "copied ", vertices.size(), " vertices, of size ", vertices.size() * sizeof(Vertex), " bytes, at offset ", current_vertex_count * sizeof(Vertex), " to local buffer");
-
-        //Index Buffer
-        if (m_pIndexBuffers.size() < 1)
-            &m_pIndexBuffers.emplace_back();
-
-        vk::VulkanBuffer *indexBuffer = &m_pIndexBuffers.back();
-
-        if (indexBuffer->allocatedVertices >= MAX_INDICES_PER_BUFFER)
-        {
-            indexBuffer = createIndexBuffer();
-        }
-
-        createStagingIndexBuffer(indices);
 
         vk::copyBuffer(m_pVkData, m_pCommandPools.back(), m_pStagingIndexBuffer.buffer, indexBuffer->buffer, indices.size() * sizeof(IndexType), current_index_count * sizeof(IndexType));
 
@@ -139,8 +118,33 @@ namespace engine
         current_index_count += indices.size();
 
         buffer->allocatedVertices += vertices.size();
+        indexBuffer->allocatedVertices += indices.size();
+
         return m_pVertexBuffers.size() - 1;
     }
+
+    std::pair<vk::VulkanBuffer*, vk::VulkanBuffer*> VulkanRenderer::getBuffers(const VertexContainer& vertices, const IndexContainer& indices)
+    {
+        vk::VulkanBuffer *buffer;
+        vk::VulkanBuffer *ibuffer;
+
+        if (m_pVertexBuffers.size() < 1) &m_pVertexBuffers.emplace_back();
+        if (m_pIndexBuffers.size() < 1) &m_pIndexBuffers.emplace_back();
+
+        buffer = &m_pVertexBuffers.back();
+        ibuffer = &m_pIndexBuffers.back();
+
+        if (buffer->allocatedVertices + vertices.size() > MAX_VERTICES_PER_BUFFER ||
+            ibuffer->allocatedVertices + indices.size() > MAX_INDICES_PER_BUFFER
+            )
+        {
+            buffer = createVertexBuffer();
+            ibuffer = createIndexBuffer();
+        }
+
+        return {buffer, ibuffer};
+    }
+
 
     void VulkanRenderer::Push(uint32_t object_id)
     {
@@ -183,9 +187,9 @@ namespace engine
         vk::bindVertexBuffer(m_pVkData, m_pCommandBuffers[m_pCurrentFrame], m_pVertexBuffers[0].buffer);
 
         vkCmdBindIndexBuffer(m_pCommandBuffers[m_pCurrentFrame], m_pIndexBuffers[0].buffer, 0, VK_INDEX_TYPE_UINT32);
-        
+
         vk::drawIndexed(m_pCommandBuffers[m_pCurrentFrame], current_index_count, 1, 0, 0, 0);
-        
+
         m_pCurrentFrameObjects.clear();
     }
 
@@ -199,7 +203,7 @@ namespace engine
         {
             vk::destroyVertexBuffer(m_pVkData, buffer.buffer);
             vk::freeMemory(m_pVkData, buffer.deviceMemory);
-        } 
+        }
 
         for (auto &buffer : m_pIndexBuffers)
         {
