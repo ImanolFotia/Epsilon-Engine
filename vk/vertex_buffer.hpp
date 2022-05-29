@@ -78,7 +78,9 @@ namespace vk
         copyRegion.dstOffset = dstOffset; // Optional
         copyRegion.size = size;
         vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
+
         vkEndCommandBuffer(commandBuffer);
+
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
         submitInfo.commandBufferCount = 1;
@@ -86,6 +88,7 @@ namespace vk
 
         vkQueueSubmit(vkData.graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
         vkQueueWaitIdle(vkData.graphicsQueue);
+        
         vkFreeCommandBuffers(vkData.logicalDevice, commandPool, 1, &commandBuffer);
     }
 

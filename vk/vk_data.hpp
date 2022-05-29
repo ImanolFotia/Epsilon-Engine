@@ -30,6 +30,7 @@ namespace vk
 
     struct VulkanRenderPipeline
     {
+        VkDescriptorSetLayout descriptorSetLayout;
         VkPipelineLayout pipelineLayout{};
         VkPipeline graphicsPipeline;
         VkRenderPass renderPass;

@@ -131,5 +131,15 @@ namespace LearningVulkan
         {
             m_pRenderer->Push(object_id);
         }
+
+        void PushCameraData(const engine::CameraData& camData) {
+            m_pRenderer->PushCameraData(camData);
+        }
+
+        std::pair<int, int> getWindowDimensions() {
+            int w, h;
+            glfwGetWindowSize(m_Window.getWindow(), &w, &h);
+            return {w, h};
+        }
     };
 }

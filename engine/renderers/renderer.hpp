@@ -33,6 +33,12 @@ namespace engine
 
     struct MaterialInfo {};
 
+    struct CameraData {
+        glm::mat4 model;
+        glm::mat4 view;
+        glm::mat4 proj;
+    };
+
     /**
      * @brief Renderer abstract class, do not instantiate directly
      *
@@ -46,6 +52,8 @@ namespace engine
         virtual uint32_t Submit(const std::vector<Vertex>&, const std::vector<IndexType>& indices, const MaterialInfo&) = 0;
 
         virtual void Push(uint32_t) = 0;
+
+        virtual void PushCameraData(const CameraData& camData) = 0;
         
         virtual void Begin() = 0;
 

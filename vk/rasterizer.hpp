@@ -15,7 +15,7 @@ namespace vk
         renderPipeline.rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
         renderPipeline.rasterizer.lineWidth = 1.0f;
         renderPipeline.rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
-        renderPipeline.rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
+        renderPipeline.rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
         renderPipeline.rasterizer.depthBiasEnable = VK_FALSE;
         renderPipeline.rasterizer.depthBiasConstantFactor = 0.0f; // Optional
         renderPipeline.rasterizer.depthBiasClamp = 0.0f;          // Optional

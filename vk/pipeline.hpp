@@ -81,8 +81,9 @@ namespace vk
         // Pipeline layout
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        pipelineLayoutInfo.setLayoutCount = 0;            // Optional
-        pipelineLayoutInfo.pSetLayouts = nullptr;         // Optional
+        pipelineLayoutInfo.setLayoutCount = 1;            // Optional
+        //pipelineLayoutInfo.pSetLayouts = nullptr;         // Optional
+        pipelineLayoutInfo.pSetLayouts = &renderPipeline.descriptorSetLayout;
         pipelineLayoutInfo.pushConstantRangeCount = 0;    // Optional
         pipelineLayoutInfo.pPushConstantRanges = nullptr; // Optional
 
@@ -146,6 +147,9 @@ namespace vk
 
     static void destroyGraphicsPipeline(const VulkanData &vk_data, VulkanRenderPipeline &renderPipeline)
     {
+
+
+        vkDestroyDescriptorSetLayout(vk_data.logicalDevice, renderPipeline.descriptorSetLayout, nullptr);
         vkDestroyPipeline(vk_data.logicalDevice, renderPipeline.graphicsPipeline, nullptr);
         vkDestroyPipelineLayout(vk_data.logicalDevice, renderPipeline.pipelineLayout, nullptr);
     }

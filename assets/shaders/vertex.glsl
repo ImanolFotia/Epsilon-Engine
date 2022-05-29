@@ -2,7 +2,6 @@
 
 const vec2 iResolution = vec2(1280.0, 720.0);
 
-
 layout(location = 0) in vec3 inPosition;
 layout(location = 1) in vec2 inTexCoord;
 layout(location = 2) in vec3 inNormal;
@@ -12,10 +11,16 @@ layout(location = 5) in vec3 inBitangent;
 
 layout (location = 0) out vec3 color;
 
+layout(binding = 0) uniform UniformBufferObject {
+    mat4 model;
+    mat4 view;
+    mat4 proj;
+} ubo;
+
 void main() {
     color = inColor.rgb;
     vec3 outVert = inPosition;
-    outVert.y *= (iResolution.x / iResolution.y);
+    //outVert.y *= (iResolution.x / iResolution.y);
 
-    gl_Position = vec4(outVert, 1.0);
+    gl_Position = ubo.proj * ubo.view * ubo.model * vec4(outVert, 1.0);
 }
