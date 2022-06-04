@@ -6,7 +6,7 @@
 
 namespace vk
 {
-    template <typename T>
+    template<typename T>
     static VkVertexInputBindingDescription getBindingDescription()
     {
         VkVertexInputBindingDescription bindingDescription{};
@@ -16,10 +16,10 @@ namespace vk
         return bindingDescription;
     }
 
-    template <uint32_t num_descriptors>
-    static std::array<VkVertexInputAttributeDescription, num_descriptors> getAttributeDescriptions(uint32_t binding, std::initializer_list<std::pair<VkFormat, size_t>> vertexLayout)
+    template<uint32_t C>
+    static std::array<VkVertexInputAttributeDescription, C> getAttributeDescriptions(uint32_t binding, std::initializer_list<std::pair<VkFormat, size_t>> vertexLayout)
     {
-        std::array<VkVertexInputAttributeDescription, num_descriptors> attributeDescriptions{};
+        std::array<VkVertexInputAttributeDescription, C> attributeDescriptions{};
         uint32_t index = 0;
         for (auto &[format, offset] : vertexLayout)
         {

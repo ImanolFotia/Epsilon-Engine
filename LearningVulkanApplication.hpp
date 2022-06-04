@@ -15,8 +15,9 @@
 #include "framework/common.hpp"
 #include "framework/def.hpp"
 #include "framework/window.hpp"
+#include "framework/env.hpp"
 
-#include "engine/renderers/vulkan.hpp"
+#include "engine/renderer/vulkan.hpp"
 
 namespace LearningVulkan
 {
@@ -25,6 +26,7 @@ namespace LearningVulkan
 
         uint32_t m_CurrentFrame = 0;
         framework::Window m_Window;
+
         std::string m_ApplicationName = "Default";
 
         std::unique_ptr<engine::Renderer> m_pRenderer;
@@ -122,17 +124,17 @@ namespace LearningVulkan
         }
 
     protected:
-        uint32_t Submit(const std::vector<engine::Vertex> &vertices, const std::vector<uint32_t> &indices, const engine::MaterialInfo &materialInfo)
+        engine::Renderer::ObjectDataId Submit(const std::vector<engine::Vertex> &vertices, std::vector<uint32_t> &indices, const engine::MaterialInfo &materialInfo, bool group)
         {
-            return m_pRenderer->Submit(vertices, indices, materialInfo);
+            return m_pRenderer->Submit(vertices, indices, materialInfo, group);
         }
 
-        void Draw(uint32_t object_id)
+        void Draw(engine::Renderer::ObjectDataId object_id)
         {
             m_pRenderer->Push(object_id);
         }
 
-        void PushCameraData(const engine::CameraData& camData) {
+        void PushCameraData(const engine::ShaderData& camData) {
             m_pRenderer->PushCameraData(camData);
         }
 
@@ -141,5 +143,7 @@ namespace LearningVulkan
             glfwGetWindowSize(m_Window.getWindow(), &w, &h);
             return {w, h};
         }
+
+
     };
 }

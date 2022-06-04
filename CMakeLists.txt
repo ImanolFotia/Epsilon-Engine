@@ -47,7 +47,9 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
 add_executable(${PROJECT_NAME} main.cpp)
 
 target_sources(${PROJECT_NAME} PUBLIC
-    ${CMAKE_SOURCE_DIR}/engine/renderers/vulkan.cpp)
+    ${CMAKE_SOURCE_DIR}/framework/env.cpp
+    ${CMAKE_SOURCE_DIR}/engine/renderer/vulkan_impl.cpp
+    ${CMAKE_SOURCE_DIR}/engine/renderer/vulkan.cpp)
 
 find_package(Vulkan REQUIRED)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${Vulkan_LIBRARIES})

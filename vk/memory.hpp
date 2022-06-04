@@ -30,7 +30,6 @@ namespace vk
 
         VkMemoryRequirements memRequirements;
         vkGetBufferMemoryRequirements(vkData.logicalDevice, buffer, &memRequirements);
-
         VkMemoryAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         allocInfo.allocationSize = memRequirements.size;

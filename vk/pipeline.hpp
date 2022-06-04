@@ -44,8 +44,23 @@ namespace vk
         return {vertShaderStageInfo, fragShaderStageInfo};
     }
 
-    template <uint32_t C>
-    static VkPipeline createGraphicsPipeline(VulkanData &vk_data, VulkanRenderPipeline &renderPipeline, VulkanVertexInfo<C> VertexInfo)
+
+    template <class PushConstantType>
+    static VkPushConstantRange setupPushConstant()
+    {
+        VkPushConstantRange push_constant;
+        push_constant.offset = 0;
+        push_constant.size = sizeof(PushConstantType);
+        push_constant.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+        return push_constant;
+    }
+
+    template <typename PushConstantType, uint32_t C>
+    static VkPipeline createGraphicsPipeline(
+        VulkanData &vk_data,
+        VulkanRenderPass &renderPass,
+        uint32_t renderPipelineIndex,
+        VulkanVertexInfo<C> VertexInfo)
     {
         VkShaderModule vertShaderModule;
         VkShaderModule fragShaderModule;
@@ -63,11 +78,14 @@ namespace vk
         inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
         inputAssembly.primitiveRestartEnable = VK_FALSE;
 
+        auto &renderPipeline = renderPass.renderPipelines.back();
         // Viewport stage
         createViewport(vk_data, renderPipeline);
 
         // Rasterizer stage
         setupRasterizer(renderPipeline);
+
+        auto push_constant = setupPushConstant<PushConstantType>();
 
         std::vector<VkDynamicState> dynamicStates = {
             VK_DYNAMIC_STATE_VIEWPORT,
@@ -81,11 +99,11 @@ namespace vk
         // Pipeline layout
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        pipelineLayoutInfo.setLayoutCount = 1;            // Optional
-        //pipelineLayoutInfo.pSetLayouts = nullptr;         // Optional
+        pipelineLayoutInfo.setLayoutCount = 1; // Optional
+        // pipelineLayoutInfo.pSetLayouts = nullptr;         // Optional
         pipelineLayoutInfo.pSetLayouts = &renderPipeline.descriptorSetLayout;
-        pipelineLayoutInfo.pushConstantRangeCount = 0;    // Optional
-        pipelineLayoutInfo.pPushConstantRanges = nullptr; // Optional
+        pipelineLayoutInfo.pushConstantRangeCount = 1;           // Optional
+        pipelineLayoutInfo.pPushConstantRanges = &push_constant; // Optional
 
         if (vkCreatePipelineLayout(vk_data.logicalDevice, &pipelineLayoutInfo, nullptr, &renderPipeline.pipelineLayout) != VK_SUCCESS)
         {
@@ -108,12 +126,11 @@ namespace vk
 
         pipelineInfo.layout = renderPipeline.pipelineLayout;
 
-        pipelineInfo.renderPass = renderPipeline.renderPass;
+        pipelineInfo.renderPass = renderPass.renderPass;
         pipelineInfo.subpass = 0;
         // pipelineInfo.pDynamicState = &dynamicState;
 
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
-
         if (auto res = vkCreateGraphicsPipelines(vk_data.logicalDevice, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &renderPipeline.graphicsPipeline); res != VK_SUCCESS)
         {
             std::cerr << "Result id: " << res << std::endl;
@@ -125,6 +142,7 @@ namespace vk
 
         return renderPipeline.graphicsPipeline;
     }
+
 
     static void draw(const VkCommandBuffer &commandBuffer,
                      uint32_t vertexCount,
@@ -148,8 +166,7 @@ namespace vk
     static void destroyGraphicsPipeline(const VulkanData &vk_data, VulkanRenderPipeline &renderPipeline)
     {
 
-
-        vkDestroyDescriptorSetLayout(vk_data.logicalDevice, renderPipeline.descriptorSetLayout, nullptr);
+        // vkDestroyDescriptorSetLayout(vk_data.logicalDevice, renderPipeline.descriptorSetLayout, nullptr);
         vkDestroyPipeline(vk_data.logicalDevice, renderPipeline.graphicsPipeline, nullptr);
         vkDestroyPipelineLayout(vk_data.logicalDevice, renderPipeline.pipelineLayout, nullptr);
     }

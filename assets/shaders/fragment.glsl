@@ -2,8 +2,36 @@
 
 layout(location = 0) out vec4 outColor;
 
-layout (location = 0) in vec3 color;
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec2 texCoords;
+layout (location = 2) in vec3 normal;
+layout (location = 3) in vec4 color;
+
+
+layout(binding = 0) uniform UniformBufferObject {
+    float iTime;
+    vec2 iResolution;
+    mat4 view;
+    mat4 proj;
+} ubo;
+
+vec3 Gamma(in vec3 img) {
+    return pow(img, vec3(1.0/2.2));
+}
+   
+vec3 Degamma(in vec3 img) {
+    return pow(img, vec3(2.2));
+}
 
 void main() {
-    outColor = vec4(color, 1.0);
+    vec3 lightPos = vec3(sin(4.0 * ubo.iTime), cos(4.0 * ubo.iTime), 3.0);
+    float l = length(lightPos - position);
+    float NoL = max(dot(lightPos, normal), 0.0);
+    float i = 1.0 / (l*l);
+    
+    vec3 ambient = vec3(0.05);
+
+    outColor = vec4((vec3(NoL) * i) + ambient, 1.0) ;
+
+    outColor.rgb = (outColor.rgb);
 }
