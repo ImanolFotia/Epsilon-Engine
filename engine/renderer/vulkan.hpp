@@ -16,17 +16,20 @@ namespace engine
         const VkBufferUsageFlags VERTEX_BUFFER_USAGE = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
         const VkBufferUsageFlags INDEX_BUFFER_USAGE = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
         const VkBufferUsageFlags STAGING_BUFFER_USAGE = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+        const VkBufferUsageFlags TEXTURE_BUFFER_USAGE = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
 
         const VkMemoryPropertyFlags STAGING_BUFFER_PROP = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
         const VkMemoryPropertyFlags VERTEX_BUFFER_PROP = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
         const VkMemoryPropertyFlags INDEX_BUFFER_PROP = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
         const VkMemoryPropertyFlags UNIFORM_BUFFER_PROP = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+        const VkMemoryPropertyFlags TEXTURE_BUFFER_PROP = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
 
-        using RenderPasses = std::vector<vk::VulkanRenderPass>;
+        using RenderPasses = std::unordered_map<uint32_t, vk::VulkanRenderPass>;
         using CommandPools = std::vector<VkCommandPool>;
         using CommandBuffers = std::vector<VkCommandBuffer>;
         using VertexBuffers = std::vector<vk::VulkanBuffer>;
         using IndexBuffers = std::vector<vk::VulkanBuffer>;
+        using TextureBuffers = std::vector<vk::VulkanBuffer>;
         using MemoryAllocations = std::unordered_map<VkMemoryPropertyFlags, vk::VulkanAllocation>;
         using IndexType = uint32_t;
 
@@ -69,6 +72,7 @@ namespace engine
         void pCreateVertexBuffer();
         void pCreateIndexBuffer();
         void pCreateUniformBuffer(size_t);
+        void pCreateTextureBuffer();
 
         void pCreateBuffer(vk::VulkanBuffer&, size_t, VkBufferUsageFlags, VkMemoryPropertyFlags);
 
@@ -76,6 +80,8 @@ namespace engine
 
         void pCreateStagingBuffer(const std::vector<Vertex> &);
         void pCreateStagingIndexBuffer(const std::vector<IndexType> &);
+        void pCreateStagingTextureBuffer(void*);
+
         void pCreateUniformBuffers();
         void pCreateDescriptorPool();
         void pCreateDescriptorSets();
@@ -99,6 +105,7 @@ namespace engine
 
         VertexBuffers m_pVertexBuffers;
         IndexBuffers m_pIndexBuffers;
+        TextureBuffers m_pTextureBuffers;
 
         UniformBuffers m_pUniformBuffers;
         VkDescriptorPool m_pDescriptorPool;
@@ -108,6 +115,7 @@ namespace engine
 
         vk::VulkanBuffer m_pStagingBuffer;
         vk::VulkanBuffer m_pStagingIndexBuffer;
+        vk::VulkanBuffer m_pStagingTextureBuffer;
 
         vk::VulkanVertexInfo<6> m_pVertexInfo;
 

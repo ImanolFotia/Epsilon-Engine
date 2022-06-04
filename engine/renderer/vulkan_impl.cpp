@@ -80,8 +80,6 @@ namespace engine
     {
         buffer.bufferInfo = vk::createVertexBuffer(m_pVkData, buffer.buffer, size, usage);
         buffer.deviceMemory = vk::allocateMemory(m_pVkData, buffer.buffer, properties);
-        //vk::VulkanAllocation allocation = pGetOrCreateDeviceMemory(properties, buffer);
-        //buffer.offset = allocation.allocatedBytes;
         allocations_count++;
     }
 
@@ -95,6 +93,13 @@ namespace engine
         {
             pCreateUniformBuffer(bufferSize);
         }
+    }
+
+    void VulkanRenderer::pCreateTextureBuffer() {
+        auto &buffer = m_pTextureBuffers.emplace_back();
+        pCreateBuffer(buffer, sizeof(unsigned char) * vk::ALLOCATION_SIZE_MB, TEXTURE_BUFFER_USAGE, TEXTURE_BUFFER_PROP);
+        IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", size, " bytes in local uniform buffer");
+    
     }
 
     void VulkanRenderer::pCreateDescriptorPool()
@@ -115,7 +120,7 @@ namespace engine
 
     void VulkanRenderer::pCreateDescriptorSets()
     {
-        std::vector<VkDescriptorSetLayout> layouts(vk::MAX_FRAMES_IN_FLIGHT, m_pRenderPasses.back().renderPipelines.back().descriptorSetLayout);
+        std::vector<VkDescriptorSetLayout> layouts(vk::MAX_FRAMES_IN_FLIGHT, m_pRenderPasses.at(DefaultRenderPass).renderPipelines.back().descriptorSetLayout);
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
         allocInfo.descriptorPool = m_pDescriptorPool;

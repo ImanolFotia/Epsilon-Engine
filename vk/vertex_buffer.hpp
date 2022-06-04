@@ -6,20 +6,19 @@
 
 namespace vk
 {
-    template<typename T>
-    static VkVertexInputBindingDescription getBindingDescription()
+    static VkVertexInputBindingDescription getBindingDescription(size_t size)
     {
         VkVertexInputBindingDescription bindingDescription{};
         bindingDescription.binding = 0;
-        bindingDescription.stride = sizeof(T);
+        bindingDescription.stride = size;
         bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
         return bindingDescription;
     }
 
-    template<uint32_t C>
-    static std::array<VkVertexInputAttributeDescription, C> getAttributeDescriptions(uint32_t binding, std::initializer_list<std::pair<VkFormat, size_t>> vertexLayout)
+    static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions(uint32_t binding, std::initializer_list<std::pair<VkFormat, size_t>> vertexLayout)
     {
-        std::array<VkVertexInputAttributeDescription, C> attributeDescriptions{};
+        std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
+        attributeDescriptions.resize(vertexLayout.size());
         uint32_t index = 0;
         for (auto &[format, offset] : vertexLayout)
         {

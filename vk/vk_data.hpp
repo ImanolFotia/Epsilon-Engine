@@ -9,7 +9,7 @@ namespace vk
     template <uint32_t num_attributes>
     struct VulkanVertexInfo
     {
-        std::array<VkVertexInputAttributeDescription, 6> attributeDescriptions{};
+        std::vector<VkVertexInputAttributeDescription> attributeDescriptions{};
         VkVertexInputBindingDescription bindingDescription{};
     };
 
@@ -65,6 +65,12 @@ namespace vk
         VkSemaphore imageAvailableSemaphores;
         VkSemaphore renderFinishedSemaphores;
         VkFence inFlightFences;
+    };
+
+    struct VulkanTexture {
+        uint32_t width;
+        uint32_t height;
+        uint32_t numChannels;
     };
 
     struct VulkanData
