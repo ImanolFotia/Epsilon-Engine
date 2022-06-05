@@ -4,11 +4,12 @@
 
 namespace vk
 {
+    const size_t ALLOCATION_SIZE_MB = 0xFFFFFFF;
 
     template <uint32_t num_attributes>
     struct VulkanVertexInfo
     {
-        std::array<VkVertexInputAttributeDescription, num_attributes> attributeDescriptions{};
+        std::vector<VkVertexInputAttributeDescription> attributeDescriptions{};
         VkVertexInputBindingDescription bindingDescription{};
     };
 
@@ -21,28 +22,55 @@ namespace vk
     struct VulkanBuffer
     {
         VkBuffer buffer;
-        VkDeviceMemory deviceMemory;
         VkBufferCreateInfo bufferInfo;
         uint32_t allocatedVertices = 0;
+        VkDeviceMemory deviceMemory;
+        size_t offset = 0;
         std::vector<SubBuffer> subBuffers;
         std::unordered_map<uint32_t, uint32_t> subBufferIndex;
     };
 
+    struct VulkanAllocation {
+        VkDeviceMemory deviceMemory;
+        VkMemoryPropertyFlags properties;
+        std::vector<VulkanBuffer> ownedBuffers;
+        size_t allocatedBytes;
+    };
+
     struct VulkanRenderPipeline
     {
+        VkDescriptorSetLayout descriptorSetLayout;
         VkPipelineLayout pipelineLayout{};
         VkPipeline graphicsPipeline;
-        VkRenderPass renderPass;
-        VkRenderPassBeginInfo renderPassInfo{};
         VkPipelineViewportStateCreateInfo viewportState{};
         VkRect2D scissor{};
         VkViewport viewport{};
-
         VkPipelineRasterizationStateCreateInfo rasterizer{};
         VkPipelineMultisampleStateCreateInfo multisampling{};
         VkPipelineColorBlendAttachmentState colorBlendAttachment{};
         VkPipelineColorBlendStateCreateInfo colorBlending{};
         VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
+    };
+
+    struct VulkanRenderPass {
+        VkRenderPass renderPass;
+        VkRenderPassBeginInfo renderPassInfo{};
+        std::vector<VulkanRenderPipeline> renderPipelines;
+        VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
+    };
+
+
+    struct VulkanSyncObject {
+
+        VkSemaphore imageAvailableSemaphores;
+        VkSemaphore renderFinishedSemaphores;
+        VkFence inFlightFences;
+    };
+
+    struct VulkanTexture {
+        uint32_t width;
+        uint32_t height;
+        uint32_t numChannels;
     };
 
     struct VulkanData
@@ -67,8 +95,6 @@ namespace vk
 
         std::vector<VkFramebuffer> swapChainFramebuffers;
 
-        std::vector<VkSemaphore> imageAvailableSemaphores;
-        std::vector<VkSemaphore> renderFinishedSemaphores;
-        std::vector<VkFence> inFlightFences;
+        std::vector<VulkanSyncObject> syncObjects;
     };
 }

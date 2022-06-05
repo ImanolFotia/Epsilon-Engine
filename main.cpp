@@ -31,6 +31,7 @@ extern "C"
 
 int main(int argc, char **argv)
 {
+    framework::env::setArgs(argc, argv);
 
     ExampleApp::ExampleApp app("Vulkan Engine");
 
@@ -45,6 +46,4 @@ int main(int argc, char **argv)
     }
 
     return EXIT_SUCCESS;
-
-    return 0;
 }

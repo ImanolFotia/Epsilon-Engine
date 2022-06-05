@@ -55,7 +55,7 @@ namespace vk
     {
         for (const auto &availableFormat : availableFormats)
         {
-            if (availableFormat.format == VK_FORMAT_R8G8B8A8_UNORM && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
+            if (availableFormat.format == VK_FORMAT_R8G8B8A8_UNORM && availableFormat.colorSpace == VK_COLOR_SPACE_ADOBERGB_LINEAR_EXT)
             {
                 return availableFormat;
             }
@@ -182,16 +182,19 @@ namespace vk
         }
     }
 
-    static void cleanupSwapChain(const VulkanData &vk_data, VulkanRenderPipeline& renderPipeline)
+    static void cleanupSwapChain(const VulkanData &vk_data, VulkanRenderPass &renderPass)
     {
         for (size_t i = 0; i < vk_data.swapChainFramebuffers.size(); i++)
         {
             vkDestroyFramebuffer(vk_data.logicalDevice, vk_data.swapChainFramebuffers[i], nullptr);
         }
 
-        vkDestroyPipeline(vk_data.logicalDevice, renderPipeline.graphicsPipeline, nullptr);
-        vkDestroyPipelineLayout(vk_data.logicalDevice, renderPipeline.pipelineLayout, nullptr);
-        vkDestroyRenderPass(vk_data.logicalDevice, renderPipeline.renderPass, nullptr);
+
+        for (auto &pipeline : renderPass.renderPipelines) {
+            vkDestroyPipeline(vk_data.logicalDevice, pipeline.graphicsPipeline, nullptr);
+            vkDestroyPipelineLayout(vk_data.logicalDevice, pipeline.pipelineLayout, nullptr);
+        }
+        vkDestroyRenderPass(vk_data.logicalDevice, renderPass.renderPass, nullptr);
 
         for (size_t i = 0; i < vk_data.swapChainImageViews.size(); i++)
         {
@@ -201,16 +204,23 @@ namespace vk
         vkDestroySwapchainKHR(vk_data.logicalDevice, vk_data.swapChain, nullptr);
     }
 
-    template<uint32_t C>
-    static void recreateSwapChain(VulkanData &vk_data, GLFWwindow *window, VulkanRenderPipeline& renderPipeline, VulkanVertexInfo<C> vertexInfo)
+    template <typename T, uint32_t C>
+    static void recreateSwapChain(VulkanData &vk_data, GLFWwindow *window, VulkanRenderPass &renderPass, VulkanVertexInfo<C> vertexInfo)
     {
         vkDeviceWaitIdle(vk_data.logicalDevice);
-        cleanupSwapChain(vk_data, renderPipeline);
+        cleanupSwapChain(vk_data, renderPass);
 
         vk::createSwapChain(vk_data, window);
         vk::createImageViews(vk_data);
-        vk::createRenderPass(vk_data, renderPipeline);
-        vk::createGraphicsPipeline(vk_data, renderPipeline, vertexInfo);
-        vk::createFramebuffers(vk_data, renderPipeline);
+
+        //for (auto &pipeline : renderPass.renderPipelines)
+        {
+            vk::createRenderPass(vk_data, renderPass);
+            
+            for(auto i = 0; i < renderPass.renderPipelines.size(); i++)
+                vk::createGraphicsPipeline<T>(vk_data, renderPass, i, vertexInfo);
+
+            vk::createFramebuffers(vk_data, renderPass);
+        }
     }
 }

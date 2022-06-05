@@ -6,20 +6,19 @@
 
 namespace vk
 {
-    template <typename T>
-    static VkVertexInputBindingDescription getBindingDescription()
+    static VkVertexInputBindingDescription getBindingDescription(size_t size)
     {
         VkVertexInputBindingDescription bindingDescription{};
         bindingDescription.binding = 0;
-        bindingDescription.stride = sizeof(T);
+        bindingDescription.stride = size;
         bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
         return bindingDescription;
     }
 
-    template <uint32_t num_descriptors>
-    static std::array<VkVertexInputAttributeDescription, num_descriptors> getAttributeDescriptions(uint32_t binding, std::initializer_list<std::pair<VkFormat, size_t>> vertexLayout)
+    static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions(uint32_t binding, std::initializer_list<std::pair<VkFormat, size_t>> vertexLayout)
     {
-        std::array<VkVertexInputAttributeDescription, num_descriptors> attributeDescriptions{};
+        std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
+        attributeDescriptions.resize(vertexLayout.size());
         uint32_t index = 0;
         for (auto &[format, offset] : vertexLayout)
         {
@@ -78,7 +77,9 @@ namespace vk
         copyRegion.dstOffset = dstOffset; // Optional
         copyRegion.size = size;
         vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
+
         vkEndCommandBuffer(commandBuffer);
+
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
         submitInfo.commandBufferCount = 1;
@@ -86,6 +87,7 @@ namespace vk
 
         vkQueueSubmit(vkData.graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
         vkQueueWaitIdle(vkData.graphicsQueue);
+        
         vkFreeCommandBuffers(vkData.logicalDevice, commandPool, 1, &commandBuffer);
     }
 

@@ -8,19 +8,8 @@
 namespace vk
 {
 
-    static void createFramebuffers(VulkanData& vk_data, VulkanRenderPipeline& renderPipeline)
+    static void createFramebuffers(VulkanData& vk_data, VulkanRenderPass& renderPass)
     {
-        /*swapChainFramebuffers.resize(swapChainImageViews.size());
-
-        for (size_t i = 0; i < swapChainImageViews.size(); i++)
-        {
-            VkImageView attachments[] = {
-                swapChainImageViews[i]};
-
-            createFramebuffer(device, &swapChainFramebuffers[i], attachments);
-        }
-        */
-
         vk_data.swapChainFramebuffers.resize(vk_data.swapChainImageViews.size());
 
         for (size_t i = 0; i < vk_data.swapChainImageViews.size(); i++)
@@ -30,7 +19,7 @@ namespace vk
 
             VkFramebufferCreateInfo framebufferInfo{};
             framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-            framebufferInfo.renderPass = renderPipeline.renderPass;
+            framebufferInfo.renderPass = renderPass.renderPass;
             framebufferInfo.attachmentCount = 1;
             framebufferInfo.pAttachments = attachments;
             framebufferInfo.width = vk_data.swapChainExtent.width;

@@ -13,3 +13,4 @@
 #include "sync_objects.hpp"
 #include "vertex_buffer.hpp"
 #include "memory.hpp"
+#include "descriptors.hpp"
