@@ -10,7 +10,7 @@ namespace engine
     void VulkanRenderer::pUpdateUniforms()
     {
         void *data;
-        //auto allocation = getDeviceMemory(UNIFORM_BUFFER_PROP);
+        // auto allocation = getDeviceMemory(UNIFORM_BUFFER_PROP);
         vkMapMemory(m_pVkData.logicalDevice, m_pFrame.UniformBuffer().deviceMemory, 0, sizeof(ShaderData), 0, &data);
         memcpy(data, &m_pCameraData, sizeof(m_pCameraData));
         vkUnmapMemory(m_pVkData.logicalDevice, m_pFrame.UniformBuffer().deviceMemory);
@@ -20,8 +20,8 @@ namespace engine
     {
         auto &buffer = m_pVertexBuffers.emplace_back();
         pCreateBuffer(buffer, sizeof(Vertex) * MAX_VERTICES_PER_BUFFER, VERTEX_BUFFER_USAGE, VERTEX_BUFFER_PROP);
-        //auto allocation = pGetOrCreateDeviceMemory(VERTEX_BUFFER_PROP, buffer);
-        //vkBindBufferMemory(m_pVkData.logicalDevice, buffer.buffer, allocation.deviceMemory, allocation.allocatedBytes);
+        // auto allocation = pGetOrCreateDeviceMemory(VERTEX_BUFFER_PROP, buffer);
+        // vkBindBufferMemory(m_pVkData.logicalDevice, buffer.buffer, allocation.deviceMemory, allocation.allocatedBytes);
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", sizeof(Vertex) * MAX_VERTICES_PER_BUFFER, " bytes in local vertex buffer");
     }
 
@@ -29,8 +29,8 @@ namespace engine
     {
         auto &buffer = m_pIndexBuffers.emplace_back();
         pCreateBuffer(buffer, sizeof(IndexType) * MAX_INDICES_PER_BUFFER, INDEX_BUFFER_USAGE, INDEX_BUFFER_PROP);
-        
-        //vkBindBufferMemory(m_pVkData.logicalDevice, buffer.buffer, allocation.deviceMemory, allocation.allocatedBytes);
+
+        // vkBindBufferMemory(m_pVkData.logicalDevice, buffer.buffer, allocation.deviceMemory, allocation.allocatedBytes);
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", sizeof(IndexType) * MAX_INDICES_PER_BUFFER, " bytes in local index buffer");
     }
 
@@ -38,11 +38,22 @@ namespace engine
     {
         auto &buffer = m_pUniformBuffers.emplace_back();
         pCreateBuffer(buffer, size, UNIFORM_BUFFER_USAGE, UNIFORM_BUFFER_PROP);
-        //auto allocation = pGetOrCreateDeviceMemory(UNIFORM_BUFFER_PROP, buffer);
-        //vkBindBufferMemory(m_pVkData.logicalDevice, buffer.buffer, allocation.deviceMemory, allocation.allocatedBytes);
-    
-        
+        // auto allocation = pGetOrCreateDeviceMemory(UNIFORM_BUFFER_PROP, buffer);
+        // vkBindBufferMemory(m_pVkData.logicalDevice, buffer.buffer, allocation.deviceMemory, allocation.allocatedBytes);
+
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", size, " bytes in local uniform buffer");
+    }
+
+    void VulkanRenderer::pCreateStagingTextureBuffer(unsigned char *pixels, TextureInfo textureInfo)
+    {
+        VkBuffer stagingBuffer;
+        VkDeviceMemory stagingBufferMemory;
+        auto imageSize = textureInfo.width * textureInfo.height * textureInfo.numChannels;
+        pCreateBuffer(m_pStagingTextureBuffer, imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+        void *data;
+        vkMapMemory(m_pVkData.logicalDevice, m_pStagingTextureBuffer.deviceMemory, 0, imageSize, 0, &data);
+        memcpy(data, pixels, static_cast<size_t>(imageSize));
+        vkUnmapMemory(m_pVkData.logicalDevice, m_pStagingTextureBuffer.deviceMemory);
     }
 
     vk::VulkanAllocation VulkanRenderer::pGetOrCreateDeviceMemory(VkMemoryPropertyFlags properties, const vk::VulkanBuffer &buffer)
@@ -60,7 +71,6 @@ namespace engine
             allocation.ownedBuffers.push_back(buffer);
         }*/
 
-
         allocation.allocatedBytes += size;
 
         return allocation;
@@ -69,10 +79,10 @@ namespace engine
     vk::VulkanAllocation VulkanRenderer::getDeviceMemory(VkMemoryPropertyFlags properties)
     {
         vk::VulkanAllocation allocation;
-       /* if (m_pMemoryAllocations.contains(properties))
-        {
-            allocation = m_pMemoryAllocations[properties];
-        }*/
+        /* if (m_pMemoryAllocations.contains(properties))
+         {
+             allocation = m_pMemoryAllocations[properties];
+         }*/
         return allocation;
     }
 
@@ -95,11 +105,11 @@ namespace engine
         }
     }
 
-    void VulkanRenderer::pCreateTextureBuffer() {
+    void VulkanRenderer::pCreateTextureBuffer()
+    {
         auto &buffer = m_pTextureBuffers.emplace_back();
         pCreateBuffer(buffer, sizeof(unsigned char) * vk::ALLOCATION_SIZE_MB, TEXTURE_BUFFER_USAGE, TEXTURE_BUFFER_PROP);
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", size, " bytes in local uniform buffer");
-    
     }
 
     void VulkanRenderer::pCreateDescriptorPool()
@@ -159,29 +169,29 @@ namespace engine
 
     void VulkanRenderer::pCreateStagingBuffer(const std::vector<Vertex> &vertices)
     {
-         //auto &buffer = m_pStagingBuffer.emplace_back();
-        //pCreateBuffer(m_pStagingBuffer, vertices.size() * sizeof(Vertex), STAGING_BUFFER_USAGE, STAGING_BUFFER_PROP);
-         m_pStagingBuffer.bufferInfo = vk::createVertexBuffer(m_pVkData, m_pStagingBuffer.buffer, vertices.size() * sizeof(Vertex), VK_BUFFER_USAGE_TRANSFER_SRC_BIT);
-         m_pStagingBuffer.deviceMemory = vk::allocateMemory(m_pVkData, m_pStagingBuffer.buffer, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-         allocations_count++;
+        // auto &buffer = m_pStagingBuffer.emplace_back();
+        // pCreateBuffer(m_pStagingBuffer, vertices.size() * sizeof(Vertex), STAGING_BUFFER_USAGE, STAGING_BUFFER_PROP);
+        m_pStagingBuffer.bufferInfo = vk::createVertexBuffer(m_pVkData, m_pStagingBuffer.buffer, vertices.size() * sizeof(Vertex), VK_BUFFER_USAGE_TRANSFER_SRC_BIT);
+        m_pStagingBuffer.deviceMemory = vk::allocateMemory(m_pVkData, m_pStagingBuffer.buffer, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+        allocations_count++;
 
-        //vk::VulkanAllocation allocation = pGetOrCreateDeviceMemory(STAGING_BUFFER_PROP, m_pStagingBuffer);
+        // vk::VulkanAllocation allocation = pGetOrCreateDeviceMemory(STAGING_BUFFER_PROP, m_pStagingBuffer);
 
-        //vkBindBufferMemory(m_pVkData.logicalDevice, m_pStagingBuffer.buffer, allocation.deviceMemory, allocation.allocatedBytes);
+        // vkBindBufferMemory(m_pVkData.logicalDevice, m_pStagingBuffer.buffer, allocation.deviceMemory, allocation.allocatedBytes);
         vk::mapMemory(m_pVkData, m_pStagingBuffer.deviceMemory, vertices.size() * sizeof(Vertex), m_pStagingBuffer.offset, vertices.data());
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", vertices.size() * sizeof(Vertex), " bytes in hosted staging buffer");
     }
 
     void VulkanRenderer::pCreateStagingIndexBuffer(const std::vector<IndexType> &indices)
     {
-         m_pStagingIndexBuffer.bufferInfo = vk::createVertexBuffer(m_pVkData, m_pStagingIndexBuffer.buffer, indices.size() * sizeof(IndexType), VK_BUFFER_USAGE_TRANSFER_SRC_BIT);
-         m_pStagingIndexBuffer.deviceMemory = vk::allocateMemory(m_pVkData, m_pStagingIndexBuffer.buffer, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-         allocations_count++;
-        //pCreateBuffer(m_pStagingIndexBuffer, indices.size() * sizeof(IndexType), STAGING_BUFFER_USAGE, STAGING_BUFFER_PROP);
+        m_pStagingIndexBuffer.bufferInfo = vk::createVertexBuffer(m_pVkData, m_pStagingIndexBuffer.buffer, indices.size() * sizeof(IndexType), VK_BUFFER_USAGE_TRANSFER_SRC_BIT);
+        m_pStagingIndexBuffer.deviceMemory = vk::allocateMemory(m_pVkData, m_pStagingIndexBuffer.buffer, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+        allocations_count++;
+        // pCreateBuffer(m_pStagingIndexBuffer, indices.size() * sizeof(IndexType), STAGING_BUFFER_USAGE, STAGING_BUFFER_PROP);
 
-        //vk::VulkanAllocation allocation = pGetOrCreateDeviceMemory(STAGING_BUFFER_PROP, m_pStagingIndexBuffer);
+        // vk::VulkanAllocation allocation = pGetOrCreateDeviceMemory(STAGING_BUFFER_PROP, m_pStagingIndexBuffer);
 
-        //vkBindBufferMemory(m_pVkData.logicalDevice, m_pStagingBuffer.buffer, allocation.deviceMemory, allocation.allocatedBytes);
+        // vkBindBufferMemory(m_pVkData.logicalDevice, m_pStagingBuffer.buffer, allocation.deviceMemory, allocation.allocatedBytes);
         vk::mapMemory(m_pVkData, m_pStagingIndexBuffer.deviceMemory, indices.size() * sizeof(IndexType), 0, indices.data());
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", indices.size() * sizeof(IndexType), " bytes in hosted staging buffer");
     }

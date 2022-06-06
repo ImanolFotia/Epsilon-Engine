@@ -30,6 +30,23 @@ namespace vk
         std::unordered_map<uint32_t, uint32_t> subBufferIndex;
     };
 
+    struct VulkanTextureInfo {
+        int width = 0;
+        int height = 0;
+        int num_channels = 0;
+    };
+
+    struct VulkanTextureBuffer
+    {
+        VkImage image;
+        VkImageCreateInfo imageInfo;
+        size_t allocatedSize = 0;
+        VkDeviceMemory deviceMemory;
+        size_t offset = 0;
+        std::vector<SubBuffer> subImages;
+        std::unordered_map<uint32_t, uint32_t> subImageIndex;
+    };
+
     struct VulkanAllocation {
         VkDeviceMemory deviceMemory;
         VkMemoryPropertyFlags properties;
@@ -67,11 +84,6 @@ namespace vk
         VkFence inFlightFences;
     };
 
-    struct VulkanTexture {
-        uint32_t width;
-        uint32_t height;
-        uint32_t numChannels;
-    };
 
     struct VulkanData
     {

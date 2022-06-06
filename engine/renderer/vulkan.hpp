@@ -29,7 +29,7 @@ namespace engine
         using CommandBuffers = std::vector<VkCommandBuffer>;
         using VertexBuffers = std::vector<vk::VulkanBuffer>;
         using IndexBuffers = std::vector<vk::VulkanBuffer>;
-        using TextureBuffers = std::vector<vk::VulkanBuffer>;
+        using TextureBuffers = std::vector<vk::VulkanTextureBuffer>;
         using MemoryAllocations = std::unordered_map<VkMemoryPropertyFlags, vk::VulkanAllocation>;
         using IndexType = uint32_t;
 
@@ -54,7 +54,9 @@ namespace engine
 
         uint32_t addRenderpass(RenderPassInfo) override;
 
-        ObjectDataId Submit(const std::vector<Vertex> &, std::vector<IndexType>& indices, const MaterialInfo &, bool) override;
+        ObjectDataId RegisterMesh(const std::vector<Vertex> &, std::vector<IndexType>& indices, const MaterialInfo &, bool) override;
+
+        TexturesDataId RegisterTexture(unsigned char*, TextureInfo) override;
 
         void Push(ObjectDataId) override;
 
@@ -80,7 +82,7 @@ namespace engine
 
         void pCreateStagingBuffer(const std::vector<Vertex> &);
         void pCreateStagingIndexBuffer(const std::vector<IndexType> &);
-        void pCreateStagingTextureBuffer(void*);
+        void pCreateStagingTextureBuffer(unsigned char*, TextureInfo);
 
         void pCreateUniformBuffers();
         void pCreateDescriptorPool();

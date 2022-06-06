@@ -45,10 +45,10 @@ namespace ExampleApp
             std::vector<uint32_t> indices = {
                 0, 1, 2, 2, 3, 0};
 
-            myObjectId = Submit(vertices, indices, {}, false);
+            myObjectId = RegisterMesh(vertices, indices, {}, false);
 
             auto cube_data = m_pCube.data();
-            CubeId = Submit(cube_data.Vertices, cube_data.Indices, {}, false);
+            CubeId = RegisterMesh(cube_data.Vertices, cube_data.Indices, {}, false);
         }
 
         void onRender() override

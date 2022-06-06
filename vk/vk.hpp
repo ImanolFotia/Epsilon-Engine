@@ -14,3 +14,4 @@
 #include "vertex_buffer.hpp"
 #include "memory.hpp"
 #include "descriptors.hpp"
+#include "texture.hpp"

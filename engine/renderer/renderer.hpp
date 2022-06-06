@@ -59,6 +59,12 @@ namespace engine
         MeshPushConstant push_constant;
     };
 
+    struct TextureData {
+        size_t size;
+        size_t offset;
+        size_t texture_bucket;
+    };
+
     struct RenderPassInfo {
         uint32_t numDescriptors;
         size_t size;
@@ -78,12 +84,17 @@ namespace engine
         using ObjectsData = std::list<ObjectData>;
         using ObjectDataId = std::list<ObjectData>::iterator;
 
+        using TexturesData = std::list<TextureData>;
+        using TexturesDataId = std::list<TextureData>::iterator;
+
         using IndexType = uint32_t;
 
     public:
         virtual void Init(const char*, framework::Window&) = 0;
 
-        virtual ObjectDataId Submit(const std::vector<Vertex>&, std::vector<IndexType>& indices, const MaterialInfo&, bool) = 0;
+        virtual ObjectDataId RegisterMesh(const std::vector<Vertex>&, std::vector<IndexType>& indices, const MaterialInfo&, bool) = 0;
+
+        virtual TexturesDataId RegisterTexture(unsigned char*, TextureInfo) = 0;
 
         virtual uint32_t addRenderpass(RenderPassInfo) = 0;
 

@@ -19,6 +19,22 @@ message(${GLM_BUILD_DIR})
 
 include_directories(${GLM_BUILD_DIR})
 
+#Download and include stb-image
+ExternalProject_Add(stb
+    GIT_REPOSITORY https://github.com/nothings/stb.git
+    INSTALL_COMMAND cmake -E echo "Skipping install step for stb-image."
+    BUILD_COMMAND ""
+    UPDATE_COMMAND ""
+    CONFIGURE_COMMAND ""
+)
+
+ExternalProject_Get_property(stb SOURCE_DIR)
+set(STB_BUILD_DIR ${SOURCE_DIR})
+message(${STB_BUILD_DIR})
+
+include_directories(${STB_BUILD_DIR})
+
+# download and include glfw3
 ExternalProject_Add(glfw3_d
     GIT_REPOSITORY https://github.com/glfw/glfw.git
     INSTALL_COMMAND cmake -E echo "Skipping install step."
@@ -46,6 +62,12 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
 
 add_executable(${PROJECT_NAME} main.cpp)
 
+#if(MSVC)
+#  target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
+#else()
+#  target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic -Werror)
+#endif()
+
 target_sources(${PROJECT_NAME} PUBLIC
     ${CMAKE_SOURCE_DIR}/framework/env.cpp
     ${CMAKE_SOURCE_DIR}/engine/renderer/vulkan_impl.cpp
@@ -64,6 +86,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
 
 add_dependencies(${PROJECT_NAME} glfw3_d)
 add_dependencies(${PROJECT_NAME} glm)
+add_dependencies(${PROJECT_NAME} stb)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

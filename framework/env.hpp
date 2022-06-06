@@ -29,7 +29,7 @@ namespace framework
 
         static void setArgs(int argc, char **argv)
         {
-            for (unsigned i = 1; i < argc; i++)
+            for (int i = 1; i < argc; i++)
             {
                 std::string arg = std::string(argv[i]);
                 if (arg == "--gapi")

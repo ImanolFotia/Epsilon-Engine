@@ -101,7 +101,7 @@ namespace engine
         return ++renderpass_id;
     }
 
-    Renderer::ObjectDataId VulkanRenderer::Submit(const std::vector<Vertex> &vertices, std::vector<IndexType> &indices, const MaterialInfo &, bool group = true)
+    Renderer::ObjectDataId VulkanRenderer::RegisterMesh(const std::vector<Vertex> &vertices, std::vector<IndexType> &indices, const MaterialInfo &, bool group = true)
     {
         for (auto &index : indices)
         {
@@ -135,6 +135,19 @@ namespace engine
 
         m_pObjectData.push_back({vertices.size(), indices.size(), curr_vertex_offset, curr_index_offset, m_pVertexBuffers.size() - 1, m_pIndexBuffers.size() - 1, group});
         return std::prev(m_pObjectData.end());
+    }
+
+    Renderer::TexturesDataId VulkanRenderer::RegisterTexture(unsigned char * data, TextureInfo textureInfo)
+    {
+        auto buffer = m_pTextureBuffers.back();
+        
+        pCreateStagingTextureBuffer(data, textureInfo);
+        auto size = textureInfo.width * textureInfo.height * textureInfo.numChannels;
+        vk::copyBuffer(m_pVkData, m_pCommandPools.back(), m_pStagingBuffer.buffer, buffer.image, size, 0);
+
+        vkDestroyBuffer(m_pVkData.logicalDevice, m_pStagingBuffer.buffer, nullptr);
+        vkFreeMemory(m_pVkData.logicalDevice, m_pStagingBuffer.deviceMemory, nullptr);
+
     }
 
     void VulkanRenderer::Push(Renderer::ObjectDataId object_id)
@@ -276,10 +289,10 @@ namespace engine
 
             vkFreeMemory(m_pVkData.logicalDevice, buffer.deviceMemory, nullptr);
         }
-        
+
         for (auto &buffer : m_pTextureBuffers)
         {
-            vk::destroyVertexBuffer(m_pVkData, buffer.buffer);
+            vk::destroyImage(m_pVkData, buffer);
 
             vkFreeMemory(m_pVkData.logicalDevice, buffer.deviceMemory, nullptr);
         }

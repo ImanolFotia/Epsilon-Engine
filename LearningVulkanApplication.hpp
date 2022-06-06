@@ -124,9 +124,15 @@ namespace LearningVulkan
         }
 
     protected:
-        engine::Renderer::ObjectDataId Submit(const std::vector<engine::Vertex> &vertices, std::vector<uint32_t> &indices, const engine::MaterialInfo &materialInfo, bool group)
+        engine::Renderer::ObjectDataId RegisterMesh(const std::vector<engine::Vertex> &vertices, std::vector<uint32_t> &indices, const engine::MaterialInfo &materialInfo, bool group)
         {
-            return m_pRenderer->Submit(vertices, indices, materialInfo, group);
+            return m_pRenderer->RegisterMesh(vertices, indices, materialInfo, group);
+        }
+
+
+        engine::Renderer::TexturesDataId RegisterTexture(unsigned char* data, engine::TextureInfo info)
+        {
+            return m_pRenderer->RegisterTexture(data, info);
         }
 
         void Draw(engine::Renderer::ObjectDataId object_id)

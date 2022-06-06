@@ -21,8 +21,8 @@ namespace vk
         throw std::runtime_error("failed to find suitable memory type!");
     }
 
-    static VkDeviceMemory allocateMemory(VulkanData &vkData, 
-                                         VkBuffer buffer, 
+    static VkDeviceMemory allocateMemory(VulkanData &vkData,
+                                         VkBuffer buffer,
                                          VkMemoryPropertyFlags properties)
     {
 
@@ -34,7 +34,7 @@ namespace vk
         allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         allocInfo.allocationSize = memRequirements.size;
         allocInfo.memoryTypeIndex = findMemoryType(vkData, memRequirements.memoryTypeBits, properties);
-    
+
         if (vkAllocateMemory(vkData.logicalDevice, &allocInfo, nullptr, &vertexBufferMemory) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to allocate vertex buffer memory!");
@@ -44,8 +44,26 @@ namespace vk
         return vertexBufferMemory;
     }
 
+    static void allocateTextureMemory(VulkanData &vkData, VulkanTextureBuffer& textureBuffer)
+    {
+        VkMemoryRequirements memRequirements;
+        vkGetImageMemoryRequirements(vkData.logicalDevice, textureBuffer.image, &memRequirements);
+
+        VkMemoryAllocateInfo allocInfo{};
+        allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+        allocInfo.allocationSize = memRequirements.size;
+        allocInfo.memoryTypeIndex = findMemoryType(vkData, memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+        if (vkAllocateMemory(vkData.logicalDevice, &allocInfo, nullptr, &textureBuffer.deviceMemory) != VK_SUCCESS)
+        {
+            throw std::runtime_error("failed to allocate image memory!");
+        }
+
+        vkBindImageMemory(vkData.logicalDevice, textureBuffer.image, textureBuffer.deviceMemory, 0);
+    }
+
     template <typename T>
-    static void mapMemory(VulkanData &vkData, VkDeviceMemory &bufferMemory, size_t size, size_t offset, T* vertexData)
+    static void mapMemory(VulkanData &vkData, VkDeviceMemory &bufferMemory, size_t size, size_t offset, T *vertexData)
     {
         void *data;
         vkMapMemory(vkData.logicalDevice, bufferMemory, offset, size, 0, &data);

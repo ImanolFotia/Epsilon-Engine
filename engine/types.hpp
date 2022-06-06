@@ -61,4 +61,40 @@ namespace engine
         alignas(16) glm::mat4 view;
         alignas(16) glm::mat4 proj;
     };
+
+    enum eTextureFormat {
+        //INTEGER IMAGE
+        COLOR_R = 0,
+        COLOR_RG,
+        COLOR_RGB,
+        COLOR_RGBA,
+        NON_COLOR_R,
+        NON_COLOR_RG,
+        NON_COLOR_RGB,
+        NON_COLOR_RGBA,
+        //FLOATING POINT IMAGE
+        COLOR_R_16F,
+        COLOR_R_32F,
+        COLOR_RG_16F,
+        COLOR_RG_32F,
+        COLOR_RGB_16F,
+        COLOR_RGB_32F,
+        COLOR_RGBA_16F,
+        COLOR_RGBA_32F,
+        NON_COLOR_R_16F,
+        NON_COLOR_R_32F,
+        NON_COLOR_RG_16F,
+        NON_COLOR_RG_32F,
+        NON_COLOR_RGB_16F,
+        NON_COLOR_RGB_32F,
+        NON_COLOR_RGBA_16F,
+        NON_COLOR_RGBA_32F
+    };
+
+    struct TextureInfo {
+        uint32_t width;
+        uint32_t height;
+        uint32_t numChannels;
+        eTextureFormat format;
+    };
 }
