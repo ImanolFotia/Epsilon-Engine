@@ -116,6 +116,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
 add_dependencies(${PROJECT_NAME} glfw3_d)
 add_dependencies(${PROJECT_NAME} glm)
 add_dependencies(${PROJECT_NAME} stb)
+add_dependencies(${PROJECT_NAME} vma)
 #add_dependencies(${PROJECT_NAME} LearningVulkan)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
