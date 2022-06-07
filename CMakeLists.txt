@@ -3,6 +3,9 @@ project(LearningVulkan VERSION 0.1.0)
 set (CMAKE_CXX_STANDARD 20)
 
 set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
+set(DBUILD_SHARED_LIBS OFF CACHE BOOL "Build as a shared library")
+
+option (BUILD_AS_LIBRARY "Build as a library" OFF)
 
 include(ExternalProject)
 
@@ -18,6 +21,21 @@ set(GLM_BUILD_DIR ${SOURCE_DIR})
 message(${GLM_BUILD_DIR})
 
 include_directories(${GLM_BUILD_DIR})
+
+
+#Download and include vma
+ExternalProject_Add(vma
+    GIT_REPOSITORY https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
+    INSTALL_COMMAND cmake -E echo "Skipping install step."
+    UPDATE_COMMAND ""
+)
+
+ExternalProject_Get_property(vma SOURCE_DIR)
+set(VMA_BUILD_DIR ${SOURCE_DIR})
+message(${VMA_BUILD_DIR})
+
+include_directories(${VMA_BUILD_DIR})
+
 
 #Download and include stb-image
 ExternalProject_Add(stb
@@ -60,13 +78,24 @@ SET(HEADERS
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
 
-add_executable(${PROJECT_NAME} main.cpp)
-
+#add_library(${PROJECT_NAME} SHARED main_lib.cpp)
 #if(MSVC)
 #  target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
 #else()
 #  target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic -Werror)
 #endif()
+
+option(CREATE_STATIC_LIB "Build static library" ON)
+
+if(BUILD_AS_LIBRARY)
+    if(CREATE_STATIC_LIB)
+        add_library(${PROJECT_NAME} STATIC main_lib.cpp)
+    else()
+        add_library(${PROJECT_NAME} SHARED main_lib.cpp)
+    endif()
+else()
+    add_executable(${PROJECT_NAME} main.cpp)
+endif()
 
 target_sources(${PROJECT_NAME} PUBLIC
     ${CMAKE_SOURCE_DIR}/framework/env.cpp
@@ -87,7 +116,31 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
 add_dependencies(${PROJECT_NAME} glfw3_d)
 add_dependencies(${PROJECT_NAME} glm)
 add_dependencies(${PROJECT_NAME} stb)
+#add_dependencies(${PROJECT_NAME} LearningVulkan)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
+
+execute_process (
+    COMMAND bash -c ${CMAKE_SOURCE_DIR}/build_shaders.sh
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE outVar
+)
+
+add_custom_command(
+        TARGET ${PROJECT_NAME}  POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+                ./assets/shaders/vertex.spv 
+                ./build/examples/assets/shaders/vertex.spv
+        
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
+add_custom_command(
+    TARGET ${PROJECT_NAME}  POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+            ./assets/shaders/fragment.spv 
+            ./build/examples/assets/shaders/fragment.spv
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
+#add_subdirectory(examples/basic)

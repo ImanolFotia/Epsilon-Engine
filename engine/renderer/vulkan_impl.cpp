@@ -107,9 +107,9 @@ namespace engine
 
     void VulkanRenderer::pCreateTextureBuffer()
     {
-        auto &buffer = m_pTextureBuffers.emplace_back();
-        pCreateBuffer(buffer, sizeof(unsigned char) * vk::ALLOCATION_SIZE_MB, TEXTURE_BUFFER_USAGE, TEXTURE_BUFFER_PROP);
-        IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", size, " bytes in local uniform buffer");
+        //auto &buffer = m_pTextureBuffers.emplace_back();
+        //pCreateBuffer(buffer, sizeof(unsigned char) * vk::ALLOCATION_SIZE_MB, TEXTURE_BUFFER_USAGE, TEXTURE_BUFFER_PROP);
+        //IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", size, " bytes in local uniform buffer");
     }
 
     void VulkanRenderer::pCreateDescriptorPool()

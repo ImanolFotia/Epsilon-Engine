@@ -2,6 +2,7 @@
 
 #include <vulkan/vulkan.hpp>
 
+#include <GLFW/glfw3.h>
 #include "vk_data.hpp"
 
 #define USE_GLFW 1

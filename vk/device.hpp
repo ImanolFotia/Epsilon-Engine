@@ -17,7 +17,7 @@
 
 namespace vk
 {
-    static void createLogicalDevice(VulkanData& vk_data)
+    static void createLogicalDevice(VulkanData &vk_data)
     {
         QueueFamilyIndices indices = findQueueFamilies(vk_data.physicalDevice, vk_data);
 
@@ -67,6 +67,40 @@ namespace vk
         vkGetDeviceQueue(vk_data.logicalDevice, indices.graphicsFamily.value(), 0, &vk_data.graphicsQueue);
     }
 
+    static VkSampleCountFlagBits getMaxUsableSampleCount(VkPhysicalDevice physicalDevice)
+    {
+        VkPhysicalDeviceProperties physicalDeviceProperties;
+        vkGetPhysicalDeviceProperties(physicalDevice, &physicalDeviceProperties);
+
+        VkSampleCountFlags counts = physicalDeviceProperties.limits.framebufferColorSampleCounts & physicalDeviceProperties.limits.framebufferDepthSampleCounts;
+        if (counts & VK_SAMPLE_COUNT_64_BIT)
+        {
+            return VK_SAMPLE_COUNT_64_BIT;
+        }
+        if (counts & VK_SAMPLE_COUNT_32_BIT)
+        {
+            return VK_SAMPLE_COUNT_32_BIT;
+        }
+        if (counts & VK_SAMPLE_COUNT_16_BIT)
+        {
+            return VK_SAMPLE_COUNT_16_BIT;
+        }
+        if (counts & VK_SAMPLE_COUNT_8_BIT)
+        {
+            return VK_SAMPLE_COUNT_8_BIT;
+        }
+        if (counts & VK_SAMPLE_COUNT_4_BIT)
+        {
+            return VK_SAMPLE_COUNT_4_BIT;
+        }
+        if (counts & VK_SAMPLE_COUNT_2_BIT)
+        {
+            return VK_SAMPLE_COUNT_2_BIT;
+        }
+
+        return VK_SAMPLE_COUNT_1_BIT;
+    }
+
     static void showDeviceFeatures(VkPhysicalDevice device)
     {
 
@@ -82,7 +116,7 @@ namespace vk
         IO::Log("\tVendor ID: ", deviceProperties.vendorID);
     }
 
-    static bool checkDeviceExtensionSupport(VkPhysicalDevice device, const VulkanData& vk_data)
+    static bool checkDeviceExtensionSupport(VkPhysicalDevice device, const VulkanData &vk_data)
     {
         uint32_t extensionCount;
         vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
@@ -100,12 +134,11 @@ namespace vk
         return requiredExtensions.empty();
     }
 
-    static bool isDeviceSuitable(VkPhysicalDevice device, const VulkanData& vk_data)
+    static bool isDeviceSuitable(VkPhysicalDevice device, const VulkanData &vk_data)
     {
         showDeviceFeatures(device);
 
         bool extensionsSupported = checkDeviceExtensionSupport(device, vk_data);
-
 
         QueueFamilyIndices indices = findQueueFamilies(device, vk_data);
 
@@ -120,7 +153,7 @@ namespace vk
         return indices.isComplete() && extensionsSupported && swapChainAdequate;
     }
 
-    static VkPhysicalDevice pickPhysicalDevice(VulkanData& vk_data)
+    static VkPhysicalDevice pickPhysicalDevice(VulkanData &vk_data)
     {
         VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 
@@ -140,6 +173,7 @@ namespace vk
             if (isDeviceSuitable(device, vk_data))
             {
                 physicalDevice = device;
+                vk_data.msaaSamples = getMaxUsableSampleCount(physicalDevice);
                 break;
             }
         }
@@ -153,7 +187,7 @@ namespace vk
         return physicalDevice;
     }
 
-    static void cleanup(VulkanData& vk_data)
+    static void cleanup(VulkanData &vk_data)
     {
         vkDestroySwapchainKHR(vk_data.logicalDevice, vk_data.swapChain, nullptr);
 

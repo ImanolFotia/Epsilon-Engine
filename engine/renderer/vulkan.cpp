@@ -143,7 +143,7 @@ namespace engine
         
         pCreateStagingTextureBuffer(data, textureInfo);
         auto size = textureInfo.width * textureInfo.height * textureInfo.numChannels;
-        vk::copyBuffer(m_pVkData, m_pCommandPools.back(), m_pStagingBuffer.buffer, buffer.image, size, 0);
+        //vk::copyBuffer(m_pVkData, m_pCommandPools.back(), m_pStagingBuffer.buffer, buffer.image, size, 0);
 
         vkDestroyBuffer(m_pVkData.logicalDevice, m_pStagingBuffer.buffer, nullptr);
         vkFreeMemory(m_pVkData.logicalDevice, m_pStagingBuffer.deviceMemory, nullptr);

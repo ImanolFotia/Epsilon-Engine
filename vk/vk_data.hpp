@@ -88,7 +88,7 @@ namespace vk
     struct VulkanData
     {
         VkInstance instance;
-
+        VkSampleCountFlagBits msaaSamples = VK_SAMPLE_COUNT_1_BIT;
         VkSurfaceKHR surface;
         VkDevice logicalDevice;
         VkPhysicalDevice physicalDevice;
