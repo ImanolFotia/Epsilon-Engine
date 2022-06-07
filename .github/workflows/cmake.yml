@@ -19,6 +19,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: Update System
+      run: sudo apt update && sudo apt upgrade -y 
     
     - name: Install Dependencies
       run: sudo apt install vulkan-tools libvulkan-dev vulkan-validationlayers-dev spirv-tools libxcb-keysyms1-dev xorg-dev
