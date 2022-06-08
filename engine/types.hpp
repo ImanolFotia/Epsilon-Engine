@@ -56,7 +56,7 @@ namespace engine
 
     struct ShaderData
     {
-        alignas(4) float iTime;
+        alignas(4) float iTime = 0.0f;
         alignas(8) glm::vec2 iResolution;
         alignas(16) glm::mat4 view;
         alignas(16) glm::mat4 proj;
