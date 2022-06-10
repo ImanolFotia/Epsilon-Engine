@@ -12,17 +12,17 @@ add_executable(${PROJECT_NAME} basic.cpp)
 #  target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic -Werror)
 #endif()
 
-
+#link_directories(${CMAKE_BINARY_DIR})
 find_package(Vulkan REQUIRED)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${Vulkan_LIBRARIES})
 target_include_directories(${PROJECT_NAME} PUBLIC ${Vulkan_INCLUDE_DIR})
 
-target_link_libraries(${PROJECT_NAME} PUBLIC glfw3 LearningVulkan)
-target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_DL_LIBS}) 
+target_link_libraries(${PROJECT_NAME} PRIVATE LearningVulkan)
+#target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_DL_LIBS}) 
 
 
-add_dependencies(${PROJECT_NAME} glfw3_d)
-add_dependencies(${PROJECT_NAME} glm)
-add_dependencies(${PROJECT_NAME} stb)
-add_dependencies(${PROJECT_NAME} LearningVulkan)
+#add_dependencies(${PROJECT_NAME} glfw3_d)
+#add_dependencies(${PROJECT_NAME} glm)
+#add_dependencies(${PROJECT_NAME} stb)
+#add_dependencies(${PROJECT_NAME} LearningVulkan)
 

@@ -3,9 +3,9 @@ project(LearningVulkan VERSION 0.1.0)
 set (CMAKE_CXX_STANDARD 20)
 
 set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
-set(DBUILD_SHARED_LIBS OFF CACHE BOOL "Build as a shared library")
+set(DBUILD_SHARED_LIBS ON CACHE BOOL "Build as a shared library")
 
-option (BUILD_AS_LIBRARY "Build as a library" OFF)
+option (BUILD_AS_LIBRARY "Build as a library" ON)
 
 include(ExternalProject)
 
@@ -85,7 +85,7 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
 #  target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic -Werror)
 #endif()
 
-option(CREATE_STATIC_LIB "Build static library" ON)
+option(CREATE_STATIC_LIB "Build static library" OFF)
 
 if(BUILD_AS_LIBRARY)
     if(CREATE_STATIC_LIB)
@@ -103,10 +103,10 @@ target_sources(${PROJECT_NAME} PUBLIC
     ${CMAKE_SOURCE_DIR}/engine/renderer/vulkan.cpp)
 
 find_package(Vulkan REQUIRED)
-target_link_libraries(${PROJECT_NAME} PUBLIC ${Vulkan_LIBRARIES})
-target_include_directories(${PROJECT_NAME} PUBLIC ${Vulkan_INCLUDE_DIR})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${Vulkan_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PRIVATE ${Vulkan_INCLUDE_DIR})
 
-target_link_libraries(${PROJECT_NAME} PUBLIC glfw3)
+target_link_libraries(${PROJECT_NAME} PRIVATE glfw3)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_DL_LIBS}) 
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -138,4 +138,4 @@ install(DIRECTORY "./assets/shaders/"
         FILES_MATCHING PATTERN "*.spv" )
 
 
-#add_subdirectory(examples/basic)
+add_subdirectory(examples/basic)
