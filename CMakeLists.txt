@@ -129,19 +129,13 @@ execute_process (
     OUTPUT_VARIABLE outVar
 )
 
-add_custom_command(
-        TARGET ${PROJECT_NAME}  POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy
-                ./assets/shaders/vertex.spv 
-                ./build/examples/assets/shaders/vertex.spv
-        
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+#execute_process(
+#    COMMAND mkdir -p ${PROJECT_BINARY_DIR}/examples/assets/shaders/
+#)
 
-add_custom_command(
-    TARGET ${PROJECT_NAME}  POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy
-            ./assets/shaders/fragment.spv 
-            ./build/examples/assets/shaders/fragment.spv
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+install(DIRECTORY "./assets/shaders/" 
+        DESTINATION ${PROJECT_BINARY_DIR}/examples/assets/shaders/
+        FILES_MATCHING PATTERN "*.spv" )
+
 
 #add_subdirectory(examples/basic)
