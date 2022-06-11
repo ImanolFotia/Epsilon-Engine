@@ -105,22 +105,28 @@ namespace engine
         }
     }
 
-    void VulkanRenderer::pCreateTextureBuffer()
+    vk::VulkanTexture VulkanRenderer::pCreateTextureBuffer(vk::VulkanTextureInfo texInfo)
     {
-        //auto &buffer = m_pTextureBuffers.emplace_back();
-        //pCreateBuffer(buffer, sizeof(unsigned char) * vk::ALLOCATION_SIZE_MB, TEXTURE_BUFFER_USAGE, TEXTURE_BUFFER_PROP);
-        //IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", size, " bytes in local uniform buffer");
+        auto &buffer = m_pTextureBuffers.emplace_back();
+        auto texture = vk::createImage(m_pVkData, texInfo);
+        buffer.deviceMemory = vk::allocateTextureMemory(m_pVkData, texture);
+        IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", size, " bytes in local uniform buffer");
+        return texture;
     }
 
     void VulkanRenderer::pCreateDescriptorPool()
     {
-        VkDescriptorPoolSize poolSize{};
-        poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        poolSize.descriptorCount = static_cast<uint32_t>(vk::MAX_FRAMES_IN_FLIGHT);
+        std::array<VkDescriptorPoolSize, 2> poolSizes{};
+        poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        poolSizes[0].descriptorCount = static_cast<uint32_t>(vk::MAX_FRAMES_IN_FLIGHT);
+        poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        poolSizes[1].descriptorCount = static_cast<uint32_t>(vk::MAX_FRAMES_IN_FLIGHT);
+
         VkDescriptorPoolCreateInfo poolInfo{};
         poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-        poolInfo.poolSizeCount = 1;
-        poolInfo.pPoolSizes = &poolSize;
+        poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
+        poolInfo.pPoolSizes = poolSizes.data();
+
         poolInfo.maxSets = static_cast<uint32_t>(vk::MAX_FRAMES_IN_FLIGHT);
         if (vkCreateDescriptorPool(m_pVkData.logicalDevice, &poolInfo, nullptr, &m_pDescriptorPool) != VK_SUCCESS)
         {
@@ -150,15 +156,18 @@ namespace engine
             bufferInfo.offset = 0;
             bufferInfo.range = sizeof(ShaderData);
 
+            VkDescriptorImageInfo imageInfo{};
+            imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            imageInfo.imageView = textureImageView;
+            imageInfo.sampler = textureSampler;
+
             VkWriteDescriptorSet descriptorWrite{};
             descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             descriptorWrite.dstSet = m_pDescriptorSets[i];
             descriptorWrite.dstBinding = 0;
             descriptorWrite.dstArrayElement = 0;
-
             descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
             descriptorWrite.descriptorCount = 1;
-
             descriptorWrite.pBufferInfo = &bufferInfo;
             descriptorWrite.pImageInfo = nullptr;       // Optional
             descriptorWrite.pTexelBufferView = nullptr; // Optional

@@ -30,24 +30,33 @@ namespace vk
         std::unordered_map<uint32_t, uint32_t> subBufferIndex;
     };
 
-    struct VulkanTextureInfo {
-        int width = 0;
-        int height = 0;
-        int num_channels = 0;
+    struct VulkanTextureInfo
+    {
+        uint32_t width = 0;
+        uint32_t height = 0;
+        uint32_t num_channels = 0;
+    };
+
+    struct VulkanTexture
+    {
+        VulkanTextureInfo info;
+        VkImageCreateInfo imageInfo;
+        VkImage image;
+        VkImageView imageView;
+        VkFormat format;
+        VkSampler sampler;
     };
 
     struct VulkanTextureBuffer
     {
-        VkImage image;
         VkImageCreateInfo imageInfo;
         size_t allocatedSize = 0;
         VkDeviceMemory deviceMemory;
         size_t offset = 0;
-        std::vector<SubBuffer> subImages;
-        std::unordered_map<uint32_t, uint32_t> subImageIndex;
     };
 
-    struct VulkanAllocation {
+    struct VulkanAllocation
+    {
         VkDeviceMemory deviceMemory;
         VkMemoryPropertyFlags properties;
         std::vector<VulkanBuffer> ownedBuffers;
@@ -69,21 +78,21 @@ namespace vk
         VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
     };
 
-    struct VulkanRenderPass {
+    struct VulkanRenderPass
+    {
         VkRenderPass renderPass;
         VkRenderPassBeginInfo renderPassInfo{};
         std::vector<VulkanRenderPipeline> renderPipelines;
         VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
     };
 
-
-    struct VulkanSyncObject {
+    struct VulkanSyncObject
+    {
 
         VkSemaphore imageAvailableSemaphores;
         VkSemaphore renderFinishedSemaphores;
         VkFence inFlightFences;
     };
-
 
     struct VulkanData
     {

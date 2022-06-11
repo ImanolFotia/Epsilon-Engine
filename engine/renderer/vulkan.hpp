@@ -30,6 +30,7 @@ namespace engine
         using VertexBuffers = std::vector<vk::VulkanBuffer>;
         using IndexBuffers = std::vector<vk::VulkanBuffer>;
         using TextureBuffers = std::vector<vk::VulkanTextureBuffer>;
+        using Textures = std::vector<vk::VulkanTexture>;
         using MemoryAllocations = std::unordered_map<VkMemoryPropertyFlags, vk::VulkanAllocation>;
         using IndexType = uint32_t;
 
@@ -74,7 +75,7 @@ namespace engine
         void pCreateVertexBuffer();
         void pCreateIndexBuffer();
         void pCreateUniformBuffer(size_t);
-        void pCreateTextureBuffer();
+        vk::VulkanTexture pCreateTextureBuffer(vk::VulkanTextureInfo);
 
         void pCreateBuffer(vk::VulkanBuffer&, size_t, VkBufferUsageFlags, VkMemoryPropertyFlags);
 
@@ -108,6 +109,7 @@ namespace engine
         VertexBuffers m_pVertexBuffers;
         IndexBuffers m_pIndexBuffers;
         TextureBuffers m_pTextureBuffers;
+        Textures m_pTextures;
 
         UniformBuffers m_pUniformBuffers;
         VkDescriptorPool m_pDescriptorPool;
@@ -125,9 +127,13 @@ namespace engine
         uint32_t current_index_count = 0;
         uint32_t allocations_count = 0;
 
+
+        uint32_t current_texture_offset = 0;
+
         uint32_t renderpass_id = 0;
 
         ObjectsData m_pObjectData;
+        TexturesData m_pTextureData;
         std::list<typename ObjectsData::iterator> m_pCurrentCommandQueue;
 
         ShaderData m_pCameraData{};

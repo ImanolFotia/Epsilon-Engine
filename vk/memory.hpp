@@ -44,8 +44,9 @@ namespace vk
         return vertexBufferMemory;
     }
 
-    static void allocateTextureMemory(VulkanData &vkData, VulkanTextureBuffer& textureBuffer)
+    static VkDeviceMemory allocateTextureMemory(VulkanData &vkData, VulkanTexture& textureBuffer)
     {
+        VkDeviceMemory textureBufferMemory;
         VkMemoryRequirements memRequirements;
         vkGetImageMemoryRequirements(vkData.logicalDevice, textureBuffer.image, &memRequirements);
 
@@ -54,12 +55,14 @@ namespace vk
         allocInfo.allocationSize = memRequirements.size;
         allocInfo.memoryTypeIndex = findMemoryType(vkData, memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-        if (vkAllocateMemory(vkData.logicalDevice, &allocInfo, nullptr, &textureBuffer.deviceMemory) != VK_SUCCESS)
+        if (vkAllocateMemory(vkData.logicalDevice, &allocInfo, nullptr, &textureBufferMemory) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to allocate image memory!");
         }
 
-        vkBindImageMemory(vkData.logicalDevice, textureBuffer.image, textureBuffer.deviceMemory, 0);
+        vkBindImageMemory(vkData.logicalDevice, textureBuffer.image, textureBufferMemory, 0);
+
+        return textureBufferMemory;
     }
 
     template <typename T>

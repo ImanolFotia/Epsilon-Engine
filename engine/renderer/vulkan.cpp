@@ -65,7 +65,6 @@ namespace engine
         pCreateVertexBuffer();
         pCreateIndexBuffer();
         pCreateUniformBuffers();
-        pCreateTextureBuffer();
 
         pCreateDescriptorPool();
         pCreateDescriptorSets();
@@ -137,17 +136,38 @@ namespace engine
         return std::prev(m_pObjectData.end());
     }
 
-    Renderer::TexturesDataId VulkanRenderer::RegisterTexture(unsigned char * data, TextureInfo textureInfo)
+    Renderer::TexturesDataId VulkanRenderer::RegisterTexture(unsigned char *data, TextureInfo textureInfo)
     {
-        auto buffer = m_pTextureBuffers.back();
-        
+
         pCreateStagingTextureBuffer(data, textureInfo);
+
+        auto texture = pCreateTextureBuffer({.width = textureInfo.width,
+                                             .height = textureInfo.height,
+                                             .num_channels = textureInfo.numChannels});
+
         auto size = textureInfo.width * textureInfo.height * textureInfo.numChannels;
-        //vk::copyBuffer(m_pVkData, m_pCommandPools.back(), m_pStagingBuffer.buffer, buffer.image, size, 0);
+        uint16_t curr_texture_offset = current_texture_offset;
+        current_texture_offset += size;
+        // vk::copyBuffer(m_pVkData, m_pCommandPools.back(), m_pStagingBuffer.buffer, buffer.image, size, 0);
 
-        vkDestroyBuffer(m_pVkData.logicalDevice, m_pStagingBuffer.buffer, nullptr);
-        vkFreeMemory(m_pVkData.logicalDevice, m_pStagingBuffer.deviceMemory, nullptr);
+        transitionImageLayout(m_pVkData, m_pCommandPools.back(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+        copyBufferToImage(m_pVkData, m_pCommandPools.back(), m_pStagingTextureBuffer.buffer, texture.image, static_cast<uint32_t>(textureInfo.width), static_cast<uint32_t>(textureInfo.height));
+        transitionImageLayout(m_pVkData, m_pCommandPools.back(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
+        vkDestroyBuffer(m_pVkData.logicalDevice, m_pStagingTextureBuffer.buffer, nullptr);
+        vkFreeMemory(m_pVkData.logicalDevice, m_pStagingTextureBuffer.deviceMemory, nullptr);
+        
+        texture.format = VK_FORMAT_R8G8B8A8_SRGB;
+        vk::createImageView(m_pVkData, texture);
+        vk::createTextureSampler(m_pVkData, texture);
+
+        m_pTextures.push_back(texture);
+
+        m_pTextureData.push_back({.size = size,
+                                  .offset = curr_texture_offset,
+                                  .texture_bucket = 0});
+
+        return std::prev(m_pTextureData.end());
     }
 
     void VulkanRenderer::Push(Renderer::ObjectDataId object_id)
@@ -290,10 +310,15 @@ namespace engine
             vkFreeMemory(m_pVkData.logicalDevice, buffer.deviceMemory, nullptr);
         }
 
+        for (auto &texture : m_pTextures)
+        {
+
+            vkDestroySampler(m_pVkData.logicalDevice, texture.sampler, nullptr);
+            vkDestroyImageView(m_pVkData.logicalDevice, texture.imageView, nullptr);
+            vk::destroyImage(m_pVkData, texture);
+        }
         for (auto &buffer : m_pTextureBuffers)
         {
-            vk::destroyImage(m_pVkData, buffer);
-
             vkFreeMemory(m_pVkData.logicalDevice, buffer.deviceMemory, nullptr);
         }
         /*
