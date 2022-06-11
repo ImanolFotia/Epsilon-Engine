@@ -14,6 +14,7 @@
 #include "command.hpp"
 #include "sync_objects.hpp"
 #include "vk_data.hpp"
+#include <bits/stdc++.h>
 
 namespace vk
 {
@@ -167,16 +168,31 @@ namespace vk
 
         std::vector<VkPhysicalDevice> devices(deviceCount);
         vkEnumeratePhysicalDevices(vk_data.instance, &deviceCount, devices.data());
-
+        VkPhysicalDevice candidate;
+        bool found = false;
         for (const auto &device : devices)
         {
             if (isDeviceSuitable(device, vk_data))
             {
-                physicalDevice = device;
-                vk_data.msaaSamples = getMaxUsableSampleCount(physicalDevice);
-                break;
+
+                vk_data.msaaSamples = getMaxUsableSampleCount(device);
+                VkPhysicalDeviceProperties deviceProperties;
+                vkGetPhysicalDeviceProperties(device, &deviceProperties);
+                std::string deviceName = deviceProperties.deviceName;
+                std::transform(deviceName.begin(), deviceName.end(), deviceName.begin(), ::toupper);
+                if (deviceName.find("INTEL") != std::string::npos)
+                {
+                    physicalDevice = device;
+                    std::cout << "found nvidia" << std::endl;
+                    found = true;
+                    break;
+                }
+                candidate = device;
             }
         }
+
+        if (!found)
+            physicalDevice = candidate;
 
         if (physicalDevice == VK_NULL_HANDLE)
         {
