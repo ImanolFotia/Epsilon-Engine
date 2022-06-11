@@ -12,3 +12,4 @@
 /build
 /out
 CMakeSettings.json
+assets/shaders/fragment.spv

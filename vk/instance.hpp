@@ -63,7 +63,7 @@ namespace vk
             throw std::runtime_error("failed to create instance!");
         }
 
-        checkExtensions();
+        //checkExtensions();
     }
 
 }
