@@ -50,7 +50,7 @@ namespace ExampleApp
             CubeId = RegisterMesh(cube_data.Vertices, cube_data.Indices, false);
             {
                 int w, h, nc;
-                unsigned char *pixels = framework::load_image_from_file("myImage.png", &w, &h, &nc);
+                unsigned char *pixels = framework::load_image_from_file("../assets/images/texture.png", &w, &h, &nc);
                 engine::TextureInfo texInfo;
                 texInfo.width = w;
                 texInfo.height = h;
