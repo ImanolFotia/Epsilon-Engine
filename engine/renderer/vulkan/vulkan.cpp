@@ -67,7 +67,7 @@ namespace engine
         pCreateUniformBuffers();
 
         pCreateDescriptorPool();
-        // pCreateDescriptorSets();
+        //pCreateDescriptorSets();
 
         vk::createCommandBuffers(m_pVkData, m_pCommandPools.back(), m_pCommandBuffers);
         vk::createSyncObjects(m_pVkData);
@@ -171,6 +171,7 @@ namespace engine
         auto &material = m_pMaterials.emplace_back();
         material.textures.push_back(&m_pTextures[texture->id]);
         pCreateDescriptorSets(material);
+        //pUpdateMaterial(material);
         Material mat;
         mat.id = m_pMaterials.size() - 1;
         return mat;
@@ -231,9 +232,17 @@ namespace engine
 
         bool should_recreate_swapchain = vk::Present(m_pVkData, signalSemaphores, m_pImageIndex);
 
-        if (should_recreate_swapchain)
+        if (should_recreate_swapchain) {
             vk::recreateSwapChain<MeshPushConstant>(m_pVkData, m_pWindow->getWindow(), m_pRenderPasses.at(attachedRenderPass), m_pVertexInfo);
+            
+            vkDestroyDescriptorPool(m_pVkData.logicalDevice, m_pDescriptorPool, nullptr);
+            pCreateDescriptorPool();
 
+            for(auto& material: m_pMaterials) {
+                pCreateDescriptorSets(material);
+            }
+            std::cout << "swap chain recreated\n";
+        }
         m_pCurrentFrame = (m_pCurrentFrame + 1) % vk::MAX_FRAMES_IN_FLIGHT;
     }
 

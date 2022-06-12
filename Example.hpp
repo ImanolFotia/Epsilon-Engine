@@ -59,10 +59,10 @@ namespace ExampleApp
 
                 material = m_pRenderer->CreateMaterial(texture);
             }
-/*
+
             {
                 int w, h, nc;
-                unsigned char *pixels = framework::load_image_from_file("untitled.png", &w, &h, &nc);
+                unsigned char *pixels = framework::load_image_from_file("../assets/images/texture2.png", &w, &h, &nc);
                 engine::TextureInfo texInfo;
                 texInfo.width = w;
                 texInfo.height = h;
@@ -70,7 +70,7 @@ namespace ExampleApp
                 auto texture = m_pRenderer->RegisterTexture(pixels, texInfo);
 
                 material2 = m_pRenderer->CreateMaterial(texture);
-            }*/
+            }
         }
 
         void onRender() override
@@ -101,7 +101,7 @@ namespace ExampleApp
             CubeId->push_constant.model = glm::scale(CubeId->push_constant.model, glm::vec3(0.5));
 
             renderObject.objectId = CubeId;
-            renderObject.materialId = material.id;
+            renderObject.materialId = material2.id;
             renderObject.uniformData = camData;
             Draw(renderObject);
         }

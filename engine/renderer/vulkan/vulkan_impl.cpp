@@ -127,14 +127,14 @@ namespace engine
         poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
         poolInfo.pPoolSizes = poolSizes.data();
 
-        poolInfo.maxSets = static_cast<uint32_t>(vk::MAX_FRAMES_IN_FLIGHT);
+        poolInfo.maxSets = static_cast<uint32_t>(vk::MAX_FRAMES_IN_FLIGHT * 2);
         if (vkCreateDescriptorPool(m_pVkData.logicalDevice, &poolInfo, nullptr, &m_pDescriptorPool) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to create descriptor pool!");
         }
     }
 
-    void VulkanRenderer::pCreateDescriptorSets(vk::VulkanMaterial &material)
+    void VulkanRenderer::pCreateDescriptorSets(vk::VulkanMaterial& material)
     {
         std::vector<VkDescriptorSetLayout> layouts(vk::MAX_FRAMES_IN_FLIGHT, m_pRenderPasses.at(0).renderPipelines.back().descriptorSetLayout);
         VkDescriptorSetAllocateInfo allocInfo{};
@@ -142,15 +142,20 @@ namespace engine
         allocInfo.descriptorPool = m_pDescriptorPool;
         allocInfo.descriptorSetCount = static_cast<uint32_t>(vk::MAX_FRAMES_IN_FLIGHT);
         allocInfo.pSetLayouts = layouts.data();
+        //material.descriptorSets.resize(vk::MAX_FRAMES_IN_FLIGHT);
         material.descriptorSets.resize(vk::MAX_FRAMES_IN_FLIGHT);
-        // m_pDescriptorSets.resize(vk::MAX_FRAMES_IN_FLIGHT);
         if (vkAllocateDescriptorSets(m_pVkData.logicalDevice, &allocInfo, material.descriptorSets.data()) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to allocate descriptor sets!");
         }
 
-        for (size_t i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
-        {
+        pUpdateMaterial(material);
+
+    }
+
+    void VulkanRenderer::pUpdateMaterial(vk::VulkanMaterial &material){
+
+        for(int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
             VkDescriptorBufferInfo bufferInfo{};
             bufferInfo.buffer = m_pUniformBuffers[i].buffer;
             bufferInfo.offset = 0;
@@ -180,8 +185,9 @@ namespace engine
             descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
             descriptorWrites[1].descriptorCount = 1;
             descriptorWrites[1].pImageInfo = &imageInfo;
-
+            
             vkUpdateDescriptorSets(m_pVkData.logicalDevice, 2, descriptorWrites.data(), 0, nullptr);
+            //vk::updateDescriptorSet(m_pVkData, material);
         }
     }
 

@@ -94,6 +94,7 @@ namespace engine
         void pCreateDescriptorSets(vk::VulkanMaterial&);
 
         void pUpdateUniforms();
+        void pUpdateMaterial(vk::VulkanMaterial&);
 
         vk::VulkanAllocation pGetOrCreateDeviceMemory(VkMemoryPropertyFlags, const vk::VulkanBuffer&);
         vk::VulkanAllocation getDeviceMemory(VkMemoryPropertyFlags properties);

@@ -32,4 +32,8 @@ namespace vk
             throw std::runtime_error("failed to create descriptor set layout!");
         }
     }
+
+    static void updateDescriptorSet(const VulkanData &vkData, VulkanMaterial& material) {
+        //vkUpdateDescriptorSets(vkData.logicalDevice, 2, material.descriptorWrites.data(), 0, nullptr);
+    }
 }
