@@ -5,15 +5,15 @@
 namespace engine::vulkan {
     struct VulkanResourceManager : ResourceManager {
 
-        virtual Ref<Texture> createTexture(CreateTextureInfo) = 0; 
-        virtual Ref<Mesh> createMesh(CreateMeshInfo) = 0; 
-        virtual Ref<Shader> createShader(CreateShaderInfo) = 0; 
-        virtual Ref<UniformData> createUniformData(CreateUniformDataInfo) = 0; 
+        Ref<Texture> createTexture(CreateTextureInfo) final override; 
+        Ref<Mesh> createMesh(CreateMeshInfo) final override; 
+        Ref<Shader> createShader(CreateShaderInfo) final override; 
+        Ref<UniformData> createUniformData(CreateUniformDataInfo) final override; 
 
-        virtual void destroyTexture(Ref<Texture>) = 0; 
-        virtual void destroyMesh(Ref<Mesh>) = 0; 
-        virtual void destroyShader(Ref<Shader>) = 0; 
-        virtual void destroyUniformData(Ref<UniformData>) = 0; 
+        void destroyTexture(Ref<Texture>) final override; 
+        void destroyMesh(Ref<Mesh>) final override; 
+        void destroyShader(Ref<Shader>) final override; 
+        void destroyUniformData(Ref<UniformData>) final override; 
 
     };
 }
