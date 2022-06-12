@@ -31,9 +31,9 @@ void main() {
     float NoL = max(dot(lightPos, normal), 0.0);
     float i = 1.0 / (l*l);
     
-    vec3 ambient = vec3(0.05);
+    vec3 texCol = texture(texSampler, texCoords).rgb;
+    vec3 ambient = vec3(0.05) * texCol;
+    outColor = vec4(texCol * (vec3(NoL) * i) + ambient, 1.0) ;
 
-    outColor = vec4((vec3(NoL) * i) + ambient, 1.0) ;
-
-    outColor.rgb = texture(texSampler, texCoords).rgb;//(outColor.rgb);
+    outColor.rgb = (outColor.rgb);
 }
