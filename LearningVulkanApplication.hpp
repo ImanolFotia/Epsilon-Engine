@@ -16,8 +16,9 @@
 #include "framework/def.hpp"
 #include "framework/window.hpp"
 #include "framework/env.hpp"
+#include "framework/utils/image.hpp"
 
-#include "engine/renderer/vulkan.hpp"
+#include "engine/renderer/vulkan/vulkan.hpp"
 
 namespace LearningVulkan
 {
@@ -28,8 +29,8 @@ namespace LearningVulkan
         framework::Window m_Window;
 
         std::string m_ApplicationName = "Default";
-
-        std::unique_ptr<engine::Renderer> m_pRenderer;
+    protected:
+        std::unique_ptr<engine::VulkanRenderer> m_pRenderer;
 
         uint32_t nbFrames = 0;
         uint32_t lastTime = 0.0;
@@ -89,7 +90,7 @@ namespace LearningVulkan
 
         void drawFrame()
         {
-            m_pRenderer->Begin();
+            m_pRenderer->Begin(0);
 
             m_pRenderer->Flush();
 
@@ -124,9 +125,9 @@ namespace LearningVulkan
         }
 
     protected:
-        engine::Renderer::ObjectDataId RegisterMesh(const std::vector<engine::Vertex> &vertices, std::vector<uint32_t> &indices, const engine::MaterialInfo &materialInfo, bool group)
+        engine::Renderer::ObjectDataId RegisterMesh(const std::vector<engine::Vertex> &vertices, std::vector<uint32_t> &indices, bool group)
         {
-            return m_pRenderer->RegisterMesh(vertices, indices, materialInfo, group);
+            return m_pRenderer->RegisterMesh(vertices, indices, group);
         }
 
 
@@ -135,7 +136,7 @@ namespace LearningVulkan
             return m_pRenderer->RegisterTexture(data, info);
         }
 
-        void Draw(engine::Renderer::ObjectDataId object_id)
+        void Draw(engine::RenderObject object_id)
         {
             m_pRenderer->Push(object_id);
         }

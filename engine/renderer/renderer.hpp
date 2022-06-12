@@ -14,7 +14,6 @@ namespace engine
     const uint32_t MAX_VERTICES_PER_BUFFER = 10000;
     const uint32_t MAX_INDICES_PER_BUFFER = 10000;
 
-
     enum shader_module_stage {
         FRAGMENT = 0x1,
         VERTEX = 0x10,
@@ -34,11 +33,6 @@ namespace engine
         protected:
             RenderPass() = default;
     };
-
-    struct DrawCommandIndirect {
-
-    };
-
 
     struct MeshPushConstant {
         alignas(16) glm::mat4 model;
@@ -60,9 +54,14 @@ namespace engine
     };
 
     struct TextureData {
+        size_t id;
         size_t size;
         size_t offset;
         size_t texture_bucket;
+    };
+
+    struct Material {
+        size_t id;
     };
 
     struct RenderPassInfo {
@@ -71,7 +70,11 @@ namespace engine
         std::vector<std::pair<VkFormat, size_t>> vertexLayout;
     };
 
-    struct MaterialInfo {};
+    struct RenderObject {
+        std::list<ObjectData>::iterator objectId;
+        uint32_t materialId;
+        ShaderData uniformData;
+    };
 
     /**
      * @brief Renderer abstract class, do not instantiate directly
@@ -92,17 +95,19 @@ namespace engine
     public:
         virtual void Init(const char*, framework::Window&) = 0;
 
-        virtual ObjectDataId RegisterMesh(const std::vector<Vertex>&, std::vector<IndexType>& indices, const MaterialInfo&, bool) = 0;
+        virtual ObjectDataId RegisterMesh(const std::vector<Vertex>&, std::vector<IndexType>& indices, bool) = 0;
 
         virtual TexturesDataId RegisterTexture(unsigned char*, TextureInfo) = 0;
 
         virtual uint32_t addRenderpass(RenderPassInfo) = 0;
 
-        virtual void Push(ObjectDataId) = 0;
+        virtual Material CreateMaterial(Renderer::TexturesDataId) = 0;
+
+        virtual void Push(RenderObject) = 0;
 
         virtual void PushCameraData(const ShaderData& camData) = 0;
         
-        virtual void Begin() = 0;
+        virtual void Begin(uint32_t) = 0;
 
         virtual void End() = 0;
 

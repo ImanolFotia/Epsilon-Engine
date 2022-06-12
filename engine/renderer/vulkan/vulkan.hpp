@@ -1,7 +1,8 @@
 #pragma once
 
-#include "renderer.hpp"
-#include "frame.hpp"
+#include "../renderer.hpp"
+#include "../frame.hpp"
+#include "../types.hpp"
 
 #include <vk/vk.hpp>
 
@@ -31,6 +32,7 @@ namespace engine
         using IndexBuffers = std::vector<vk::VulkanBuffer>;
         using TextureBuffers = std::vector<vk::VulkanTextureBuffer>;
         using Textures = std::vector<vk::VulkanTexture>;
+        using Materials = std::vector<vk::VulkanMaterial>;
         using MemoryAllocations = std::unordered_map<VkMemoryPropertyFlags, vk::VulkanAllocation>;
         using IndexType = uint32_t;
 
@@ -55,15 +57,17 @@ namespace engine
 
         uint32_t addRenderpass(RenderPassInfo) override;
 
-        ObjectDataId RegisterMesh(const std::vector<Vertex> &, std::vector<IndexType>& indices, const MaterialInfo &, bool) override;
+        ObjectDataId RegisterMesh(const std::vector<Vertex> &, std::vector<IndexType>& indices, bool) override;
 
         TexturesDataId RegisterTexture(unsigned char*, TextureInfo) override;
 
-        void Push(ObjectDataId) override;
+        Material CreateMaterial(Renderer::TexturesDataId texture);
+
+        void Push(RenderObject) override;
 
         void PushCameraData(const ShaderData& camData);
 
-        void Begin() override;
+        void Begin(uint32_t) override;
 
         void End() override;
 
@@ -87,7 +91,7 @@ namespace engine
 
         void pCreateUniformBuffers();
         void pCreateDescriptorPool();
-        void pCreateDescriptorSets();
+        void pCreateDescriptorSets(vk::VulkanMaterial&);
 
         void pUpdateUniforms();
 
@@ -110,6 +114,7 @@ namespace engine
         IndexBuffers m_pIndexBuffers;
         TextureBuffers m_pTextureBuffers;
         Textures m_pTextures;
+        Materials m_pMaterials;
 
         UniformBuffers m_pUniformBuffers;
         VkDescriptorPool m_pDescriptorPool;
@@ -131,10 +136,11 @@ namespace engine
         uint32_t current_texture_offset = 0;
 
         uint32_t renderpass_id = 0;
+        uint32_t attachedRenderPass = 0;
 
         ObjectsData m_pObjectData;
         TexturesData m_pTextureData;
-        std::list<typename ObjectsData::iterator> m_pCurrentCommandQueue;
+        std::list<RenderObject> m_pCurrentCommandQueue;
 
         ShaderData m_pCameraData{};
     };

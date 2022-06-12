@@ -35,6 +35,7 @@ namespace vk
         uint32_t width = 0;
         uint32_t height = 0;
         uint32_t num_channels = 0;
+        VkFormat format = VK_FORMAT_R8G8B8A8_SRGB;
     };
 
     struct VulkanTexture
@@ -63,9 +64,15 @@ namespace vk
         size_t allocatedBytes;
     };
 
+    struct VulkanMaterial {
+        std::vector<VkDescriptorSet> descriptorSets;
+        VkPipelineLayout* pipelineLayout;
+        std::vector<VulkanTexture*> textures;
+    };
+
     struct VulkanRenderPipeline
     {
-        VkDescriptorSetLayout descriptorSetLayout;
+        VkDescriptorSetLayout descriptorSetLayout{};
         VkPipelineLayout pipelineLayout{};
         VkPipeline graphicsPipeline;
         VkPipelineViewportStateCreateInfo viewportState{};
@@ -78,6 +85,7 @@ namespace vk
         VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
     };
 
+
     struct VulkanRenderPass
     {
         VkRenderPass renderPass;
@@ -88,7 +96,6 @@ namespace vk
 
     struct VulkanSyncObject
     {
-
         VkSemaphore imageAvailableSemaphores;
         VkSemaphore renderFinishedSemaphores;
         VkFence inFlightFences;

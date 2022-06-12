@@ -5,7 +5,7 @@ set (CMAKE_CXX_STANDARD 20)
 set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 set(DBUILD_SHARED_LIBS ON CACHE BOOL "Build as a shared library")
 
-option (BUILD_AS_LIBRARY "Build as a library" ON)
+option (BUILD_AS_LIBRARY "Build as a library" OFF)
 
 include(ExternalProject)
 
@@ -99,8 +99,8 @@ endif()
 
 target_sources(${PROJECT_NAME} PUBLIC
     ${CMAKE_SOURCE_DIR}/framework/env.cpp
-    ${CMAKE_SOURCE_DIR}/engine/renderer/vulkan_impl.cpp
-    ${CMAKE_SOURCE_DIR}/engine/renderer/vulkan.cpp)
+    ${CMAKE_SOURCE_DIR}/engine/renderer/vulkan/vulkan_impl.cpp
+    ${CMAKE_SOURCE_DIR}/engine/renderer/vulkan/vulkan.cpp)
 
 find_package(Vulkan REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${Vulkan_LIBRARIES})
@@ -138,4 +138,4 @@ install(DIRECTORY "./assets/shaders/"
         FILES_MATCHING PATTERN "*.spv" )
 
 
-add_subdirectory(examples/basic)
+#add_subdirectory(examples/basic)

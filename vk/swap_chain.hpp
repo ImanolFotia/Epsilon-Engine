@@ -13,6 +13,7 @@
 #include "render_pass.hpp"
 #include "pipeline.hpp"
 #include "framebuffer.hpp"
+#include "texture.hpp"
 
 #include "vk_data.hpp"
 
@@ -55,7 +56,7 @@ namespace vk
     {
         for (const auto &availableFormat : availableFormats)
         {
-            if (availableFormat.format == VK_FORMAT_R8G8B8A8_UNORM && availableFormat.colorSpace == VK_COLOR_SPACE_ADOBERGB_LINEAR_EXT)
+            if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
             {
                 return availableFormat;
             }
@@ -68,7 +69,7 @@ namespace vk
     {
         for (const auto &availablePresentMode : availablePresentModes)
         {
-            if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR)
+            if (availablePresentMode == /*VK_PRESENT_MODE_MAILBOX_KHR*/VK_PRESENT_MODE_IMMEDIATE_KHR)
             {
                 return availablePresentMode;
             }
@@ -158,27 +159,16 @@ namespace vk
 
     static void createImageViews(VulkanData &vk_data)
     {
+
         vk_data.swapChainImageViews.resize(vk_data.swapChainImages.size());
         for (size_t i = 0; i < vk_data.swapChainImages.size(); i++)
         {
-            VkImageViewCreateInfo createInfo{};
-            createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-            createInfo.image = vk_data.swapChainImages[i];
-            createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-            createInfo.format = vk_data.swapChainImageFormat;
-            createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-            createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-            createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-            createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-            createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-            createInfo.subresourceRange.baseMipLevel = 0;
-            createInfo.subresourceRange.levelCount = 1;
-            createInfo.subresourceRange.baseArrayLayer = 0;
-            createInfo.subresourceRange.layerCount = 1;
-            if (vkCreateImageView(vk_data.logicalDevice, &createInfo, nullptr, &vk_data.swapChainImageViews[i]) != VK_SUCCESS)
-            {
-                throw std::runtime_error("failed to create image views!");
-            }
+
+            VulkanTexture texture;
+            texture.format = vk_data.swapChainImageFormat;
+            texture.image = vk_data.swapChainImages[i] ;
+            createImageView(vk_data, texture);
+            vk_data.swapChainImageViews[i] = texture.imageView;
         }
     }
 
@@ -189,8 +179,8 @@ namespace vk
             vkDestroyFramebuffer(vk_data.logicalDevice, vk_data.swapChainFramebuffers[i], nullptr);
         }
 
-
-        for (auto &pipeline : renderPass.renderPipelines) {
+        for (auto &pipeline : renderPass.renderPipelines)
+        {
             vkDestroyPipeline(vk_data.logicalDevice, pipeline.graphicsPipeline, nullptr);
             vkDestroyPipelineLayout(vk_data.logicalDevice, pipeline.pipelineLayout, nullptr);
         }
@@ -213,12 +203,12 @@ namespace vk
         vk::createSwapChain(vk_data, window);
         vk::createImageViews(vk_data);
 
-        //for (auto &pipeline : renderPass.renderPipelines)
+        // for (auto &pipeline : renderPass.renderPipelines)
         {
             vk::createRenderPass(vk_data, renderPass);
-            
-            for(auto i = 0; i < renderPass.renderPipelines.size(); i++)
-                vk::createGraphicsPipeline<T>(vk_data, renderPass, i, vertexInfo);
+
+            for (auto i = 0; i < renderPass.renderPipelines.size(); i++)
+                vk::createGraphicsPipeline<T>(vk_data, renderPass, renderPass.renderPipelines[i], vertexInfo);
 
             vk::createFramebuffers(vk_data, renderPass);
         }

@@ -15,6 +15,8 @@ layout(binding = 0) uniform UniformBufferObject {
     mat4 proj;
 } ubo;
 
+layout(binding = 1) uniform sampler2D texSampler;
+
 vec3 Gamma(in vec3 img) {
     return pow(img, vec3(1.0/2.2));
 }
@@ -33,5 +35,5 @@ void main() {
 
     outColor = vec4((vec3(NoL) * i) + ambient, 1.0) ;
 
-    outColor.rgb = (outColor.rgb);
+    outColor.rgb = texture(texSampler, texCoords).rgb;//(outColor.rgb);
 }

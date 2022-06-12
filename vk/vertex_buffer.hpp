@@ -31,6 +31,23 @@ namespace vk
         return attributeDescriptions;
     }
 
+
+    static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions(uint32_t binding, std::vector<std::pair<VkFormat, size_t>> vertexLayout)
+    {
+        std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
+        attributeDescriptions.resize(vertexLayout.size());
+        uint32_t index = 0;
+        for (auto &[format, offset] : vertexLayout)
+        {
+            attributeDescriptions[index].binding = binding;
+            attributeDescriptions[index].location = index;
+            attributeDescriptions[index].format = format;
+            attributeDescriptions[index].offset = offset;
+            index++;
+        }
+        return attributeDescriptions;
+    }
+
     static VkBufferCreateInfo createVertexBuffer(VulkanData &vkData,
                                                  VkBuffer &vertexBuffer,
                                                  size_t size,

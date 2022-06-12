@@ -44,10 +44,10 @@ namespace ExampleApp
             std::vector<uint32_t> indices = {
                 0, 1, 2, 2, 3, 0};
 
-            myObjectId = RegisterMesh(vertices, indices, {}, false);
+            myObjectId = RegisterMesh(vertices, indices, false);
 
             auto cube_data = m_pCube.data();
-            CubeId = RegisterMesh(cube_data.Vertices, cube_data.Indices, {}, false);
+            CubeId = RegisterMesh(cube_data.Vertices, cube_data.Indices, false);
         }
 
         void onRender() override
@@ -66,11 +66,11 @@ namespace ExampleApp
 
             PushCameraData(camData);
 
-            myObjectId->push_constant.model = glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f)); 
+            myObjectId.objectId->push_constant.model = glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f)); 
             Draw(myObjectId);
 
-            CubeId->push_constant.model = glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(.0f, .0f, 1.0f));
-            CubeId->push_constant.model = glm::scale(CubeId->push_constant.model, glm::vec3(0.5));
+            CubeId.objectId->push_constant.model = glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(.0f, .0f, 1.0f));
+            CubeId.objectId->push_constant.model = glm::scale(CubeId.objectId->push_constant.model, glm::vec3(0.5));
             
             Draw(CubeId);
         }
@@ -80,10 +80,9 @@ namespace ExampleApp
         }
 
     private:
-        engine::Renderer::ObjectDataId myObjectId = {};
-
+        engine::RenderObject myObjectId = {};
         engine::Cube m_pCube;
-        engine::Renderer::ObjectDataId CubeId = {};
+        engine::RenderObject CubeId = {};
     };
 }
 

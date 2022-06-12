@@ -124,9 +124,9 @@ namespace engine
         }
 
     protected:
-        Renderer::ObjectDataId RegisterMesh(const std::vector<Vertex> &vertices, std::vector<uint32_t> &indices, const MaterialInfo &materialInfo, bool group)
+        Renderer::ObjectDataId RegisterMesh(const std::vector<Vertex> &vertices, std::vector<uint32_t> &indices, bool group)
         {
-            return m_pRenderer->RegisterMesh(vertices, indices, materialInfo, group);
+            return m_pRenderer->RegisterMesh(vertices, indices, group);
         }
 
 
@@ -135,7 +135,7 @@ namespace engine
             return m_pRenderer->RegisterTexture(data, info);
         }
 
-        void Draw(Renderer::ObjectDataId object_id)
+        void Draw(engine::RenderObject object_id)
         {
             m_pRenderer->Push(object_id);
         }
