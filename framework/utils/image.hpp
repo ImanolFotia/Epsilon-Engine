@@ -17,4 +17,8 @@ namespace framework
         }
         return data;
     }
+
+    static inline void free_image_data(unsigned char* data) {
+        stbi_image_free(data);
+    }
 }

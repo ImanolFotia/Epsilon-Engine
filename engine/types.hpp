@@ -62,7 +62,7 @@ namespace engine
         alignas(16) glm::mat4 proj;
     };
 
-    enum eTextureFormat {
+    enum TextureFormat {
         //INTEGER IMAGE
         COLOR_R = 0,
         COLOR_RG,
@@ -95,6 +95,15 @@ namespace engine
         uint32_t width;
         uint32_t height;
         uint32_t numChannels;
-        eTextureFormat format;
+        TextureFormat format;
+    };
+
+    struct TextureBuilder {
+        TextureBuilder width(uint32_t w) { self.width = w; return *this; }
+        TextureBuilder height(uint32_t h) { self.height = h; return *this; }
+        TextureBuilder numChannels(uint32_t nc) { self.numChannels = nc; return *this; }
+        TextureBuilder format(TextureFormat f) { self.format = f; return *this; }
+        operator TextureInfo() { return self; }
+        TextureInfo self;
     };
 }

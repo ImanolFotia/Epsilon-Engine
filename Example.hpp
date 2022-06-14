@@ -51,11 +51,14 @@ namespace ExampleApp
             {
                 int w, h, nc;
                 unsigned char *pixels = framework::load_image_from_file("../assets/images/texture.png", &w, &h, &nc);
-                engine::TextureInfo texInfo;
-                texInfo.width = w;
-                texInfo.height = h;
-                texInfo.numChannels = nc;
+                engine::TextureInfo texInfo = engine::TextureBuilder()
+                    .width(w)
+                    .height(h)
+                    .numChannels(nc);
+
                 auto texture = m_pRenderer->RegisterTexture(pixels, texInfo);
+
+                framework::free_image_data(pixels);
 
                 material = m_pRenderer->CreateMaterial(texture);
             }
@@ -63,12 +66,15 @@ namespace ExampleApp
             {
                 int w, h, nc;
                 unsigned char *pixels = framework::load_image_from_file("../assets/images/texture2.png", &w, &h, &nc);
-                engine::TextureInfo texInfo;
-                texInfo.width = w;
-                texInfo.height = h;
-                texInfo.numChannels = nc;
+                
+                engine::TextureInfo texInfo = engine::TextureBuilder()
+                    .width(w)
+                    .height(h)
+                    .numChannels(nc);
+                
                 auto texture = m_pRenderer->RegisterTexture(pixels, texInfo);
-
+                
+                framework::free_image_data(pixels);
                 material2 = m_pRenderer->CreateMaterial(texture);
             }
         }

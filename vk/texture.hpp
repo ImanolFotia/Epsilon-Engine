@@ -76,6 +76,7 @@ namespace vk
         viewInfo.subresourceRange.levelCount = 1;
         viewInfo.subresourceRange.baseArrayLayer = 0;
         viewInfo.subresourceRange.layerCount = 1;
+        
 
         if (vkCreateImageView(vkData.logicalDevice, &viewInfo, nullptr, &texture.imageView) != VK_SUCCESS)
         {
