@@ -194,23 +194,4 @@ namespace vk
         vkDestroySwapchainKHR(vk_data.logicalDevice, vk_data.swapChain, nullptr);
     }
 
-    template <typename T, uint32_t C>
-    static void recreateSwapChain(VulkanData &vk_data, GLFWwindow *window, VulkanRenderPass &renderPass, VulkanVertexInfo<C> vertexInfo)
-    {
-        vkDeviceWaitIdle(vk_data.logicalDevice);
-        cleanupSwapChain(vk_data, renderPass);
-
-        vk::createSwapChain(vk_data, window);
-        vk::createImageViews(vk_data);
-
-        // for (auto &pipeline : renderPass.renderPipelines)
-        {
-            vk::createRenderPass(vk_data, renderPass);
-
-            for (auto i = 0; i < renderPass.renderPipelines.size(); i++)
-                vk::createGraphicsPipeline<T>(vk_data, renderPass, renderPass.renderPipelines[i], vertexInfo);
-
-            vk::createFramebuffers(vk_data, renderPass);
-        }
-    }
 }

@@ -7,6 +7,7 @@
 #include "viewport.hpp"
 #include "rasterizer.hpp"
 #include "render_pass.hpp"
+#include <engine/renderer/types.hpp>
 
 #include "vk_data.hpp"
 
@@ -44,6 +45,35 @@ namespace vk
         return {vertShaderStageInfo, fragShaderStageInfo};
     }
 
+    static VkPipelineShaderStageCreateInfo createShaderStage(VulkanData &vk_data, engine::ShaderStageInfo info)
+    {
+
+        VkPipelineShaderStageCreateInfo shaderStageInfo{};
+
+        shaderStageInfo.pName = info.entryPoint;
+        shaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+
+        if (info.stage == engine::ShaderModuleStage::FRAGMENT)
+        {
+            shaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+        }
+        else if (info.stage == engine::ShaderModuleStage::VERTEX)
+        {
+            shaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
+        }
+        else if (info.stage == engine::ShaderModuleStage::COMPUTE)
+        {
+            shaderStageInfo.stage = VK_SHADER_STAGE_COMPUTE_BIT;
+        }
+        else
+        {
+        }
+
+        shaderStageInfo.module = shader::createShaderModule(info.shaderCode, vk_data);
+
+        return shaderStageInfo;
+    }
+
     template <class PushConstantType>
     static VkPushConstantRange setupPushConstant()
     {
@@ -56,9 +86,9 @@ namespace vk
 
     template <typename PushConstantType>
     static void createPipelineLayout(
-        VulkanData &vk_data, 
+        VulkanData &vk_data,
         VkPushConstantRange push_constant,
-        VulkanRenderPipeline& renderPipeline)
+        VulkanRenderPipeline &renderPipeline)
     {
         // Pipeline layout
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
@@ -79,13 +109,24 @@ namespace vk
     static VkPipeline createGraphicsPipeline(
         VulkanData &vk_data,
         VulkanRenderPass &renderPass,
-        VulkanRenderPipeline& renderPipeline,
-        VulkanVertexInfo<C> VertexInfo)
+        VulkanRenderPipeline &renderPipeline,
+        VulkanVertexInfo<C> VertexInfo,
+        engine::ShaderInfo shaderInfo)
     {
-        VkShaderModule vertShaderModule;
-        VkShaderModule fragShaderModule;
-        auto shaderStages = createShaderStages<2>("../assets/shaders/vertex.spv", "../assets/shaders/fragment.spv", vertShaderModule, fragShaderModule, vk_data);
-        // Vertex Stage
+
+        // VkShaderModule vertShaderModule;
+        // VkShaderModule fragShaderModule;
+        std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
+        shaderStages.resize(shaderInfo.stages.size());
+
+        for (unsigned i = 0; i < shaderInfo.stages.size(); i++)
+        {
+            std::cout << shaderInfo.stages[i].shaderCode.data() << std::endl;
+            shaderStages[i] = createShaderStage(vk_data, shaderInfo.stages[i]);
+        }
+
+        // auto shaderStages = createShaderStages<2>("../assets/shaders/vertex.spv", "../assets/shaders/fragment.spv", vertShaderModule, fragShaderModule, vk_data);
+        //   Vertex Stage
         VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
         vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
         vertexInputInfo.vertexBindingDescriptionCount = 1;
@@ -115,7 +156,7 @@ namespace vk
         dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
         dynamicState.pDynamicStates = dynamicStates.data();
 
-        //createPipelineLayout<PushConstantType>(vk_data, push_constant);
+        // createPipelineLayout<PushConstantType>(vk_data, push_constant);
 
         // Pipeline layout
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
@@ -135,7 +176,7 @@ namespace vk
 
         VkGraphicsPipelineCreateInfo pipelineInfo = {};
         pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-        pipelineInfo.stageCount = 2;
+        pipelineInfo.stageCount = shaderStages.size();
         pipelineInfo.pStages = shaderStages.data();
 
         pipelineInfo.pVertexInputState = &vertexInputInfo;
@@ -157,9 +198,10 @@ namespace vk
             std::cerr << "Result id: " << res << std::endl;
             throw std::runtime_error("failed to create graphics pipeline!");
         }
-
-        vkDestroyShaderModule(vk_data.logicalDevice, fragShaderModule, nullptr);
-        vkDestroyShaderModule(vk_data.logicalDevice, vertShaderModule, nullptr);
+        for (auto &stage : shaderStages)
+        {
+            vkDestroyShaderModule(vk_data.logicalDevice, stage.module, nullptr);
+        }
 
         return renderPipeline.graphicsPipeline;
     }

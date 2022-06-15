@@ -43,7 +43,7 @@ namespace vk
 
         if (result == VK_ERROR_OUT_OF_DATE_KHR)
         {   
-            recreateSwapChain<T>(vk_data, window, renderPass, vertexInfo);
+            //recreateSwapChain<T>(vk_data, window, renderPass, vertexInfo);
             return -1;
             // return imageIndex;
         }
