@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/types.hpp"
+#include "types.hpp"
 
 #include "framework/window.hpp"
 
@@ -14,11 +14,6 @@ namespace engine
     const uint32_t MAX_VERTICES_PER_BUFFER = 10000;
     const uint32_t MAX_INDICES_PER_BUFFER = 10000;
 
-    enum shader_module_stage {
-        FRAGMENT = 0x1,
-        VERTEX = 0x10,
-        COMPUTE = 0x100
-    };
 
     struct ShaderModuleInfo {
         uint16_t stage_flags;
@@ -60,15 +55,8 @@ namespace engine
         size_t texture_bucket;
     };
 
-    struct Material {
-        size_t id;
-    };
 
-    struct RenderPassInfo {
-        uint32_t numDescriptors;
-        size_t size;
-        std::vector<std::pair<VkFormat, size_t>> vertexLayout;
-    };
+    
 
     struct RenderObject {
         std::list<ObjectData>::iterator objectId;
@@ -99,7 +87,7 @@ namespace engine
 
         virtual TexturesDataId RegisterTexture(unsigned char*, TextureInfo) = 0;
 
-        virtual uint32_t addRenderpass(RenderPassInfo) = 0;
+        virtual uint32_t addRenderpass(engine::RenderPassInfo) = 0;
 
         virtual Material CreateMaterial(Renderer::TexturesDataId) = 0;
 

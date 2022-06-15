@@ -100,7 +100,8 @@ endif()
 target_sources(${PROJECT_NAME} PUBLIC
     ${CMAKE_SOURCE_DIR}/framework/env.cpp
     ${CMAKE_SOURCE_DIR}/engine/renderer/vulkan/vulkan_impl.cpp
-    ${CMAKE_SOURCE_DIR}/engine/renderer/vulkan/vulkan.cpp)
+    ${CMAKE_SOURCE_DIR}/engine/renderer/vulkan/vulkan.cpp
+    ${CMAKE_SOURCE_DIR}/engine/renderer/vulkan/resource_manager.cpp)
 
 find_package(Vulkan REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${Vulkan_LIBRARIES})

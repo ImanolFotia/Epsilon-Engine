@@ -11,8 +11,8 @@ namespace engine
         vk::VulkanSyncObject* m_pSyncObjects = nullptr;
         VkCommandBuffer* m_pCommandBuffer = nullptr;
 
-        uint32_t m_pFrameIndex;
-        uint32_t m_pCurrentImage;
+        uint32_t m_pFrameIndex = 0;
+        uint32_t m_pCurrentImage = 0;
 
     public:
         Frame() = default;

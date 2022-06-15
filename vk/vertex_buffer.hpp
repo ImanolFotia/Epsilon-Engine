@@ -3,6 +3,7 @@
 #include <array>
 
 #include <vulkan/vulkan.hpp>
+#include <engine/types.hpp>
 
 namespace vk
 {
@@ -15,24 +16,21 @@ namespace vk
         return bindingDescription;
     }
 
-    static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions(uint32_t binding, std::initializer_list<std::pair<VkFormat, size_t>> vertexLayout)
-    {
-        std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
-        attributeDescriptions.resize(vertexLayout.size());
-        uint32_t index = 0;
-        for (auto &[format, offset] : vertexLayout)
-        {
-            attributeDescriptions[index].binding = binding;
-            attributeDescriptions[index].location = index;
-            attributeDescriptions[index].format = format;
-            attributeDescriptions[index].offset = offset;
-            index++;
-        }
-        return attributeDescriptions;
+    static VkFormat resolveVertexType(enum engine::VertexFormat format) {
+
+        if(format == engine::XY_UINT) return VK_FORMAT_R32G32_UINT;
+        if(format == engine::XY_FLOAT) return VK_FORMAT_R32G32_SFLOAT;
+
+        if(format == engine::XYZ_UINT) return VK_FORMAT_R32G32B32_UINT;
+        if(format == engine::XYZ_FLOAT) return VK_FORMAT_R32G32B32_SFLOAT;
+
+        if(format == engine::XYZW_UINT) return VK_FORMAT_R32G32B32A32_UINT;
+        if(format == engine::XYZW_FLOAT) return VK_FORMAT_R32G32B32A32_SFLOAT;
+
+        return VK_FORMAT_R32_SFLOAT;
     }
 
-
-    static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions(uint32_t binding, std::vector<std::pair<VkFormat, size_t>> vertexLayout)
+    static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions(uint32_t binding, std::vector<engine::VertexDescriptorInfo> vertexLayout)
     {
         std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
         attributeDescriptions.resize(vertexLayout.size());
@@ -41,7 +39,7 @@ namespace vk
         {
             attributeDescriptions[index].binding = binding;
             attributeDescriptions[index].location = index;
-            attributeDescriptions[index].format = format;
+            attributeDescriptions[index].format = resolveVertexType(format);
             attributeDescriptions[index].offset = offset;
             index++;
         }

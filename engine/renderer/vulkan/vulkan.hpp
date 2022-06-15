@@ -55,7 +55,7 @@ namespace engine
 
         void Init(const char *appName, framework::Window &) override;
 
-        uint32_t addRenderpass(RenderPassInfo) override;
+        uint32_t addRenderpass(engine::RenderPassInfo) override;
 
         ObjectDataId RegisterMesh(const std::vector<Vertex> &, std::vector<IndexType>& indices, bool) override;
 
@@ -96,6 +96,9 @@ namespace engine
         void pUpdateUniforms();
         void pUpdateMaterial(vk::VulkanMaterial&);
 
+        void pRecreateSwapChain();
+        int32_t pPrepareSyncObjects();
+
         vk::VulkanAllocation pGetOrCreateDeviceMemory(VkMemoryPropertyFlags, const vk::VulkanBuffer&);
         vk::VulkanAllocation getDeviceMemory(VkMemoryPropertyFlags properties);
     private:
@@ -107,6 +110,7 @@ namespace engine
         vk::VulkanData m_pVkData;
 
         RenderPasses m_pRenderPasses;
+        std::unordered_map<uint32_t, engine::RenderPassInfo> m_pRenderPassInfo;
 
         CommandPools m_pCommandPools;
         CommandBuffers m_pCommandBuffers;

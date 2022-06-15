@@ -17,8 +17,12 @@
 #include "framework/window.hpp"
 #include "framework/env.hpp"
 #include "framework/utils/image.hpp"
+#include "framework/utils/file.hpp"
 
 #include "engine/renderer/vulkan/vulkan.hpp"
+
+#include "engine/renderer/resource_manager.hpp"
+#include "engine/renderer/vulkan/resource_manager.hpp"
 
 namespace LearningVulkan
 {
@@ -29,8 +33,10 @@ namespace LearningVulkan
         framework::Window m_Window;
 
         std::string m_ApplicationName = "Default";
+
     protected:
-        std::unique_ptr<engine::VulkanRenderer> m_pRenderer;
+        std::shared_ptr<engine::VulkanRenderer> m_pRenderer;
+        engine::VulkanResourceManager m_pResourceManager;
 
         uint32_t nbFrames = 0;
         uint32_t lastTime = 0.0;
@@ -40,7 +46,8 @@ namespace LearningVulkan
 
         LearningVulkanApplication(std::string appName) : m_ApplicationName(appName)
         {
-            m_pRenderer = std::make_unique<engine::VulkanRenderer>();
+            m_pRenderer = std::make_shared<engine::VulkanRenderer>();
+            m_pResourceManager.get()->setRendererReference(m_pRenderer);
         }
 
         void run()
@@ -72,6 +79,32 @@ namespace LearningVulkan
         void initVulkan()
         {
             m_pRenderer->Init(m_ApplicationName.c_str(), m_Window);
+            using namespace engine;
+
+            auto vertexCode = utils::readFile("../assets/shaders/vertex.spv");
+            auto fragmentCode = utils::readFile("../assets/shaders/fragment.spv");
+
+            ShaderInfo shaderInfo = {
+                .stages = {
+                    {.entryPoint = "main", .shaderCode = vertexCode, .stage = VERTEX},
+                    {.entryPoint = "main", .shaderCode = fragmentCode, .stage = FRAGMENT}},
+                .usedStages = ShaderModuleStage(VERTEX | FRAGMENT)};
+
+            RenderPassInfo renderPassInfo =
+                RenderPassFactory()
+                    .numDescriptors(6)
+                    .size(sizeof(Vertex))
+                    .depthAttachment(true)
+                    .subpasses({})
+                    .vertexLayout({{XYZ_FLOAT, offsetof(Vertex, position)},
+                                   {XY_FLOAT, offsetof(Vertex, texCoords)},
+                                   {XYZ_FLOAT, offsetof(Vertex, normal)},
+                                   {XYZW_FLOAT, offsetof(Vertex, color)},
+                                   {XYZ_FLOAT, offsetof(Vertex, tangent)},
+                                   {XYZ_FLOAT, offsetof(Vertex, bitangent)}})
+                    .shaderInfo(shaderInfo);
+
+            m_pRenderer->addRenderpass(renderPassInfo);
         }
 
         void mainLoop()
@@ -84,7 +117,6 @@ namespace LearningVulkan
                 onRender();
                 drawFrame();
                 m_Window.PollEvents();
-
             }
         }
 
@@ -108,7 +140,8 @@ namespace LearningVulkan
                 double fps = double(nbFrames) / delta;
 
                 std::stringstream ss;
-                ss << m_ApplicationName << " | " << " [" << (int)fps << " FPS] | [" << (1000.0 / double(nbFrames)) << " MS]";
+                ss << m_ApplicationName << " | "
+                   << " [" << (int)fps << " FPS] | [" << (1000.0 / double(nbFrames)) << " MS]";
 
                 m_Window.setWindowTitle(ss.str().c_str());
 
@@ -130,8 +163,7 @@ namespace LearningVulkan
             return m_pRenderer->RegisterMesh(vertices, indices, group);
         }
 
-
-        engine::Renderer::TexturesDataId RegisterTexture(unsigned char* data, engine::TextureInfo info)
+        engine::Renderer::TexturesDataId RegisterTexture(unsigned char *data, engine::TextureInfo info)
         {
             return m_pRenderer->RegisterTexture(data, info);
         }
@@ -141,16 +173,16 @@ namespace LearningVulkan
             m_pRenderer->Push(object_id);
         }
 
-        void PushCameraData(const engine::ShaderData& camData) {
+        void PushCameraData(const engine::ShaderData &camData)
+        {
             m_pRenderer->PushCameraData(camData);
         }
 
-        std::pair<int, int> getWindowDimensions() {
+        std::pair<int, int> getWindowDimensions()
+        {
             int w, h;
             glfwGetWindowSize(m_Window.getWindow(), &w, &h);
             return {w, h};
         }
-
-
     };
 }

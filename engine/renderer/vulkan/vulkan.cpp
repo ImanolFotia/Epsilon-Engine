@@ -28,36 +28,6 @@ namespace engine
         vk::createSwapChain(m_pVkData, window.getWindow());
         vk::createImageViews(m_pVkData);
 
-        RenderPassInfo renderPassInfo;
-        renderPassInfo.numDescriptors = 6;
-        renderPassInfo.size = sizeof(Vertex);
-        renderPassInfo.vertexLayout = {{VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, position)},
-                                       {VK_FORMAT_R32G32_SFLOAT, offsetof(Vertex, texCoords)},
-                                       {VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, normal)},
-                                       {VK_FORMAT_R32G32B32A32_SFLOAT, offsetof(Vertex, color)},
-                                       {VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, tangent)},
-                                       {VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, bitangent)}};
-
-        addRenderpass(renderPassInfo);
-        /*m_pRenderPasses.emplace_back();
-        m_pRenderPasses.back().renderPipelines.emplace_back();
-        vk::createRenderPass(m_pVkData, m_pRenderPasses.back());
-
-        m_pVertexInfo.attributeDescriptions =
-            vk::getAttributeDescriptions<6>(0,
-                                            {{VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, position)},
-                                             {VK_FORMAT_R32G32_SFLOAT, offsetof(Vertex, texCoords)},
-                                             {VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, normal)},
-                                             {VK_FORMAT_R32G32B32A32_SFLOAT, offsetof(Vertex, color)},
-                                             {VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, tangent)},
-                                             {VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, bitangent)}});
-
-        m_pVertexInfo.bindingDescription = vk::getBindingDescription<Vertex>();
-        vk::createDescriptorSetLayout(m_pVkData, m_pRenderPasses.back().renderPipelines.back());
-
-        vk::createGraphicsPipeline<MeshPushConstant>(m_pVkData, m_pRenderPasses.back(), 0, m_pVertexInfo);
-        vk::createFramebuffers(m_pVkData,  m_pRenderPasses.back());
-*/
         m_pCommandPools.emplace_back();
 
         vk::createCommandPool(m_pVkData, m_pCommandPools.back());
@@ -67,17 +37,19 @@ namespace engine
         pCreateUniformBuffers();
 
         pCreateDescriptorPool();
-        //pCreateDescriptorSets();
+        // pCreateDescriptorSets();
 
         vk::createCommandBuffers(m_pVkData, m_pCommandPools.back(), m_pCommandBuffers);
         vk::createSyncObjects(m_pVkData);
     }
 
-    uint32_t VulkanRenderer::addRenderpass(RenderPassInfo renderPassInfo)
+    uint32_t VulkanRenderer::addRenderpass(engine::RenderPassInfo renderPassInfo)
     {
         m_pRenderPasses[renderpass_id] = {};
 
         m_pRenderPasses.at(renderpass_id).renderPipelines.emplace_back();
+
+        m_pRenderPassInfo[renderpass_id] = renderPassInfo;
 
         vk::createRenderPass(m_pVkData, m_pRenderPasses.at(renderpass_id));
 
@@ -88,7 +60,12 @@ namespace engine
 
         vk::createDescriptorSetLayout(m_pVkData, m_pRenderPasses.at(renderpass_id).renderPipelines.back());
 
-        vk::createGraphicsPipeline<MeshPushConstant>(m_pVkData, m_pRenderPasses.at(renderpass_id), m_pRenderPasses.at(renderpass_id).renderPipelines.back(), m_pVertexInfo);
+
+        vk::createGraphicsPipeline<MeshPushConstant>(m_pVkData,
+                                                     m_pRenderPasses.at(renderpass_id),
+                                                     m_pRenderPasses.at(renderpass_id).renderPipelines.back(),
+                                                     m_pVertexInfo,
+                                                     renderPassInfo.shaderInfo);
 
         vk::createFramebuffers(m_pVkData, m_pRenderPasses.at(renderpass_id));
 
@@ -171,7 +148,7 @@ namespace engine
         auto &material = m_pMaterials.emplace_back();
         material.textures.push_back(&m_pTextures[texture->id]);
         pCreateDescriptorSets(material);
-        //pUpdateMaterial(material);
+        // pUpdateMaterial(material);
         Material mat;
         mat.id = m_pMaterials.size() - 1;
         return mat;
@@ -190,18 +167,17 @@ namespace engine
     void VulkanRenderer::Begin(uint32_t renderPassId)
     {
         attachedRenderPass = renderPassId;
-        m_pImageIndex = vk::prepareSyncObjects<MeshPushConstant>(m_pVkData,
+        /*m_pImageIndex = vk::prepareSyncObjects<MeshPushConstant>(m_pVkData,
                                                                  m_pWindow->getWindow(),
                                                                  m_pCurrentFrame,
                                                                  m_pRenderPasses.at(attachedRenderPass),
-                                                                 m_pVertexInfo);
-        if (m_pImageIndex == -1)
-            return;
+                                                                 m_pVertexInfo);*/
+        m_pImageIndex = pPrepareSyncObjects();
+        
         if (m_pImageIndex >= vk::MAX_FRAMES_IN_FLIGHT)
             m_pImageIndex = vk::MAX_FRAMES_IN_FLIGHT - 1;
 
         m_pFrame.FrameIndex(m_pCurrentFrame);
-        m_pFrame.CurrentImage(m_pImageIndex);
 
         m_pFrame.CommandBuffer(&m_pCommandBuffers.at(m_pCurrentFrame));
         m_pFrame.UniformBuffer(&m_pUniformBuffers.at(m_pCurrentFrame));
@@ -232,13 +208,15 @@ namespace engine
 
         bool should_recreate_swapchain = vk::Present(m_pVkData, signalSemaphores, m_pImageIndex);
 
-        if (should_recreate_swapchain) {
-            vk::recreateSwapChain<MeshPushConstant>(m_pVkData, m_pWindow->getWindow(), m_pRenderPasses.at(attachedRenderPass), m_pVertexInfo);
-            
+        if (should_recreate_swapchain)
+        {
+            // vk::recreateSwapChain<MeshPushConstant>(m_pVkData, m_pWindow->getWindow(), m_pRenderPasses.at(attachedRenderPass), m_pVertexInfo);
+            pRecreateSwapChain();
             vkDestroyDescriptorPool(m_pVkData.logicalDevice, m_pDescriptorPool, nullptr);
             pCreateDescriptorPool();
 
-            for(auto& material: m_pMaterials) {
+            for (auto &material : m_pMaterials)
+            {
                 pCreateDescriptorSets(material);
             }
             std::cout << "swap chain recreated\n";
@@ -295,6 +273,47 @@ namespace engine
         m_pCurrentCommandQueue.clear();
     }
 
+    void VulkanRenderer::pRecreateSwapChain()
+    {
+        vkDeviceWaitIdle(m_pVkData.logicalDevice);
+
+        vk::createSwapChain(m_pVkData, m_pWindow->getWindow());
+        vk::createImageViews(m_pVkData);
+
+        for (auto [index, pass] : m_pRenderPasses)
+        {
+            cleanupSwapChain(m_pVkData, pass);
+            vk::createRenderPass(m_pVkData, pass);
+
+            for (auto i = 0; i < pass.renderPipelines.size(); i++)
+                vk::createGraphicsPipeline<MeshPushConstant>(m_pVkData, pass, pass.renderPipelines[i], m_pVertexInfo, m_pRenderPassInfo[index].shaderInfo);
+
+            vk::createFramebuffers(m_pVkData, pass);
+        }
+    }
+    int32_t VulkanRenderer::pPrepareSyncObjects()
+    {
+
+        vkWaitForFences(m_pVkData.logicalDevice, 1, &m_pVkData.syncObjects[m_pCurrentFrame].inFlightFences, VK_TRUE, UINT64_MAX);
+
+        uint32_t imageIndex = 0;
+        VkResult result = vkAcquireNextImageKHR(m_pVkData.logicalDevice, m_pVkData.swapChain, UINT64_MAX, m_pVkData.syncObjects[m_pCurrentFrame].imageAvailableSemaphores, VK_NULL_HANDLE, &imageIndex);
+        //m_pFrame.CurrentImage(imageIndex);
+
+        if (result == VK_ERROR_OUT_OF_DATE_KHR)
+        {
+            pRecreateSwapChain();
+            return -1;
+        }
+        else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+        {
+            throw std::runtime_error("failed to acquire swap chain image!");
+        }
+
+        // Only reset the fence if we are submitting work
+        vkResetFences(m_pVkData.logicalDevice, 1, &m_pVkData.syncObjects[m_pCurrentFrame].inFlightFences);
+        return imageIndex;
+    }
     void VulkanRenderer::Cleanup()
     {
         vkDeviceWaitIdle(m_pVkData.logicalDevice);
@@ -306,7 +325,6 @@ namespace engine
         }
 
         vkDestroyDescriptorPool(m_pVkData.logicalDevice, m_pDescriptorPool, nullptr);
-
 
         vk::cleanupSyncObjects(m_pVkData);
         vk::cleanCommandPool(m_pVkData, m_pCommandPools[0]);
@@ -347,7 +365,6 @@ namespace engine
             vk::cleanupRenderPass(m_pVkData, pass.second.renderPass);
             for (auto &pipeline : pass.second.renderPipelines)
                 vk::destroyGraphicsPipeline(m_pVkData, pipeline);
-            
         }
 
         vk::cleanup(m_pVkData);
