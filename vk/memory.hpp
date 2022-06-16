@@ -44,7 +44,7 @@ namespace vk
         return vertexBufferMemory;
     }
 
-    static VkDeviceMemory allocateTextureMemory(VulkanData &vkData, VulkanTexture& textureBuffer)
+    static VkDeviceMemory allocateTextureMemory(VulkanData &vkData, VulkanTexture& textureBuffer, VkMemoryPropertyFlags properties)
     {
         VkDeviceMemory textureBufferMemory;
         VkMemoryRequirements memRequirements;
@@ -53,7 +53,7 @@ namespace vk
         VkMemoryAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         allocInfo.allocationSize = memRequirements.size;
-        allocInfo.memoryTypeIndex = findMemoryType(vkData, memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+        allocInfo.memoryTypeIndex = findMemoryType(vkData, memRequirements.memoryTypeBits, properties);
 
         if (vkAllocateMemory(vkData.logicalDevice, &allocInfo, nullptr, &textureBufferMemory) != VK_SUCCESS)
         {

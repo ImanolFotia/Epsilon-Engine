@@ -108,8 +108,10 @@ namespace engine
     vk::VulkanTexture VulkanRenderer::pCreateTextureBuffer(vk::VulkanTextureInfo texInfo)
     {
         auto &buffer = m_pTextureBuffers.emplace_back();
+
+        texInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
         auto texture = vk::createImage(m_pVkData, texInfo);
-        buffer.deviceMemory = vk::allocateTextureMemory(m_pVkData, texture);
+        buffer.deviceMemory = vk::allocateTextureMemory(m_pVkData, texture, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", size, " bytes in local uniform buffer");
         return texture;
     }
@@ -134,7 +136,7 @@ namespace engine
         }
     }
 
-    void VulkanRenderer::pCreateDescriptorSets(vk::VulkanMaterial& material)
+    void VulkanRenderer::pCreateDescriptorSets(vk::VulkanMaterial &material)
     {
         std::vector<VkDescriptorSetLayout> layouts(vk::MAX_FRAMES_IN_FLIGHT, m_pRenderPasses.at(0).renderPipelines.back().descriptorSetLayout);
         VkDescriptorSetAllocateInfo allocInfo{};
@@ -142,7 +144,7 @@ namespace engine
         allocInfo.descriptorPool = m_pDescriptorPool;
         allocInfo.descriptorSetCount = static_cast<uint32_t>(vk::MAX_FRAMES_IN_FLIGHT);
         allocInfo.pSetLayouts = layouts.data();
-        //material.descriptorSets.resize(vk::MAX_FRAMES_IN_FLIGHT);
+        // material.descriptorSets.resize(vk::MAX_FRAMES_IN_FLIGHT);
         material.descriptorSets.resize(vk::MAX_FRAMES_IN_FLIGHT);
         if (vkAllocateDescriptorSets(m_pVkData.logicalDevice, &allocInfo, material.descriptorSets.data()) != VK_SUCCESS)
         {
@@ -150,12 +152,13 @@ namespace engine
         }
 
         pUpdateMaterial(material);
-
     }
 
-    void VulkanRenderer::pUpdateMaterial(vk::VulkanMaterial &material){
+    void VulkanRenderer::pUpdateMaterial(vk::VulkanMaterial &material)
+    {
 
-        for(int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
+        for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
+        {
             VkDescriptorBufferInfo bufferInfo{};
             bufferInfo.buffer = m_pUniformBuffers[i].buffer;
             bufferInfo.offset = 0;
@@ -163,8 +166,13 @@ namespace engine
 
             VkDescriptorImageInfo imageInfo{};
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            imageInfo.imageView = material.textures.at(0)->imageView;
-            imageInfo.sampler = material.textures.at(0)->sampler;
+            auto texture = material.textures.at(0);
+            //texture->format = VK_FORMAT_R8G8B8A8_SRGB;
+            //vk::createImageView(m_pVkData, *texture, VK_IMAGE_ASPECT_COLOR_BIT);
+            //vk::createTextureSampler(m_pVkData, *texture);
+
+            imageInfo.imageView = texture->imageView;
+            imageInfo.sampler = texture->sampler;
 
             std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
 
@@ -185,9 +193,9 @@ namespace engine
             descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
             descriptorWrites[1].descriptorCount = 1;
             descriptorWrites[1].pImageInfo = &imageInfo;
-            
+
             vkUpdateDescriptorSets(m_pVkData.logicalDevice, 2, descriptorWrites.data(), 0, nullptr);
-            //vk::updateDescriptorSet(m_pVkData, material);
+            // vk::updateDescriptorSet(m_pVkData, material);
         }
     }
 

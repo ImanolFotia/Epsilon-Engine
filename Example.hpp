@@ -73,7 +73,7 @@ namespace ExampleApp
                     .numChannels(nc);
                 
                 auto texture = m_pRenderer->RegisterTexture(pixels, texInfo);
-                
+
                 framework::free_image_data(pixels);
                 material2 = m_pRenderer->CreateMaterial(texture);
             }
@@ -89,7 +89,7 @@ namespace ExampleApp
             float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
             camData.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-            camData.proj = glm::perspective(glm::radians(45.0f), getWindowDimensions().first / (float)getWindowDimensions().second, 0.1f, 10.0f);
+            camData.proj = glm::perspective(glm::radians(45.0f), getWindowDimensions().first / ((float)getWindowDimensions().second + std::numeric_limits<float>::epsilon()), 0.1f, 10.0f);
             camData.proj[1][1] *= -1;
             camData.iTime += time;
 
