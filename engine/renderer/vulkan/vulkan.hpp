@@ -9,6 +9,8 @@
 #include <vector>
 #include <list>
 
+#include <vk_mem_alloc.h>
+
 namespace engine
 {
     class VulkanRenderer : public Renderer
@@ -148,5 +150,7 @@ namespace engine
         std::list<RenderObject> m_pCurrentCommandQueue;
 
         ShaderData m_pCameraData{};
+
+        VmaAllocator m_pAllocator;
     };
 }

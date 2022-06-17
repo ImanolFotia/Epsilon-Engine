@@ -8,6 +8,9 @@
  *
  */
 
+#define VMA_IMPLEMENTATION
+#include <vk_mem_alloc.h>
+
 namespace engine
 {
 
@@ -25,6 +28,14 @@ namespace engine
         vk::createSurface(m_pVkData, window.getWindow());
         vk::pickPhysicalDevice(m_pVkData);
         vk::createLogicalDevice(m_pVkData);
+
+
+	VmaAllocatorCreateInfo allocatorInfo = {};
+	allocatorInfo.physicalDevice = m_pVkData.physicalDevice;
+	allocatorInfo.device = m_pVkData.logicalDevice;
+	allocatorInfo.instance = m_pVkData.instance;
+	vmaCreateAllocator(&allocatorInfo, &m_pAllocator);
+
         vk::createSwapChain(m_pVkData, window.getWindow());
         vk::createImageViews(m_pVkData);
 
@@ -338,15 +349,16 @@ namespace engine
             vkDestroyImageView(m_pVkData.logicalDevice, texture.imageView, nullptr);
             vk::destroyImage(m_pVkData, texture);
         }
-        for (auto &buffer : m_pTextureBuffers)
+        /*for (auto &buffer : m_pTextureBuffers)
         {
             vkFreeMemory(m_pVkData.logicalDevice, buffer.deviceMemory, nullptr);
-        }
+        }*/
         /*
                 for (auto &allocations : m_pMemoryAllocations)
                 {
                     vkFreeMemory(m_pVkData.logicalDevice, allocations.second.deviceMemory, nullptr);
                 }*/
+        vmaDestroyAllocator(m_pAllocator);
 
         for (auto &pass : m_pRenderPasses)
         {

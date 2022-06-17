@@ -1,5 +1,7 @@
 #include "vulkan.hpp"
 
+#include <vk_mem_alloc.h>
+
 /**
  * @brief Implementation of the Vulkan renderer private methods
  *
@@ -109,9 +111,38 @@ namespace engine
     {
         auto &buffer = m_pTextureBuffers.emplace_back();
 
+        vk::VulkanTexture texture;
         texInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-        auto texture = vk::createImage(m_pVkData, texInfo);
-        buffer.deviceMemory = vk::allocateTextureMemory(m_pVkData, texture, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+        texture.info = texInfo;
+
+        texture.imageInfo = {VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO};
+        texture.imageInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+
+        texture.imageInfo.extent.width = static_cast<uint32_t>(texInfo.width);
+        texture.imageInfo.extent.height = static_cast<uint32_t>(texInfo.height);
+        texture.imageInfo.extent.depth = 1;
+
+        texture.imageInfo.mipLevels = 1;
+        texture.imageInfo.arrayLayers = 1;
+        texture.imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+        texture.imageInfo.imageType = VK_IMAGE_TYPE_2D;
+   
+        texture.imageInfo.format = texInfo.format;
+        texture.imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+        texture.imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        texture.imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        texture.imageInfo.flags = 0; // Optional
+
+        VmaAllocationCreateInfo allocInfo = {};
+        allocInfo.usage = VMA_MEMORY_USAGE_AUTO;
+
+        VmaAllocation allocation;
+        vmaCreateImage(m_pAllocator, &texture.imageInfo, &allocInfo, &texture.image, &allocation, nullptr);
+        //vmaCreateBuffer(allocator, &bufferInfo, &allocInfo, &buffer, &allocation, nullptr);
+
+         //auto texture = vk::createImage(m_pVkData, texInfo);
+        // buffer.deviceMemory = vk::allocateTextureMemory(m_pVkData, texture, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", size, " bytes in local uniform buffer");
         return texture;
     }
@@ -166,10 +197,10 @@ namespace engine
 
             VkDescriptorImageInfo imageInfo{};
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            auto& texture = material.textures.at(0);
-            //texture->format = VK_FORMAT_R8G8B8A8_SRGB;
-            //vk::createImageView(m_pVkData, *texture, VK_IMAGE_ASPECT_COLOR_BIT);
-            //vk::createTextureSampler(m_pVkData, *texture);
+            auto &texture = material.textures.at(0);
+            // texture->format = VK_FORMAT_R8G8B8A8_SRGB;
+            // vk::createImageView(m_pVkData, *texture, VK_IMAGE_ASPECT_COLOR_BIT);
+            // vk::createTextureSampler(m_pVkData, *texture);
 
             imageInfo.imageView = texture.imageView;
             imageInfo.sampler = texture.sampler;
