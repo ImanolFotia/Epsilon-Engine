@@ -111,11 +111,12 @@ namespace vk
 
         VkPhysicalDeviceFeatures deviceFeatures;
         vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
-        IO::Log("Device found: ", deviceProperties.deviceName);
+        IO::Log("Selected device: ", deviceProperties.deviceName);
         IO::Log("\tApi version: ", deviceProperties.apiVersion);
         IO::Log("\tID: ", deviceProperties.deviceID);
         IO::Log("\tDriver version: ", deviceProperties.driverVersion);
         IO::Log("\tVendor ID: ", deviceProperties.vendorID);
+        IO::Log("\tIs discrete device: ", (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU ? "yes" : "no"));
     }
 
     static bool checkDeviceExtensionSupport(VkPhysicalDevice device, const VulkanData &vk_data)
@@ -184,7 +185,7 @@ namespace vk
                 vkGetPhysicalDeviceProperties(device, &deviceProperties);
                 std::string deviceName = deviceProperties.deviceName;
                 std::transform(deviceName.begin(), deviceName.end(), deviceName.begin(), ::toupper);
-                if (deviceName.find("NVIDIA") != std::string::npos)
+                if (deviceName.find("INTEL") != std::string::npos)
                 {
                     physicalDevice = device;
                     std::cout << "found nvidia" << std::endl;

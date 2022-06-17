@@ -178,9 +178,9 @@ namespace vk
         pipelineInfo.stageCount = shaderStages.size();
         pipelineInfo.pStages = shaderStages.data();
 
+        VkPipelineDepthStencilStateCreateInfo depthStencil{};
         if (renderPass.renderPassData.hasDepthAttachment)
         {
-            VkPipelineDepthStencilStateCreateInfo depthStencil{};
             depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
             depthStencil.depthTestEnable = VK_TRUE;
             depthStencil.depthWriteEnable = VK_TRUE;
@@ -189,8 +189,8 @@ namespace vk
             depthStencil.minDepthBounds = 0.0f; // Optional
             depthStencil.maxDepthBounds = 1.0f; // Optional
             depthStencil.stencilTestEnable = VK_FALSE;
-            depthStencil.front = {}; // Optional
-            depthStencil.back = {};  // Optional
+            depthStencil.pNext = NULL;
+            depthStencil.flags = 0;
             pipelineInfo.pDepthStencilState = &depthStencil;
         }
 

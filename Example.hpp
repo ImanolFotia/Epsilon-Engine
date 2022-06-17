@@ -121,6 +121,7 @@ namespace ExampleApp
 
             
             SphereId->push_constant.model = glm::translate(glm::mat4(1.0f), glm::vec3(0.75, 0.0, 0.5));
+            SphereId->push_constant.model = glm::rotate(SphereId->push_constant.model, (float)glfwGetTime(), glm::vec3(-0.2f, 1.0f, 0.5f));
             SphereId->push_constant.model = glm::scale(SphereId->push_constant.model, glm::vec3(0.25));
             renderObject.objectId = SphereId;
             renderObject.materialId = material.id;
