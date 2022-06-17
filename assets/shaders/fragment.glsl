@@ -29,11 +29,11 @@ void main() {
     vec3 lightPos = vec3(sin(4.0 * ubo.iTime), cos(4.0 * ubo.iTime), 3.0);
     float l = length(lightPos - position);
     float NoL = max(dot(lightPos, normal), 0.0);
-    float i = 1.0 / (l*l);
+    float i = 5.0 / (l*l);
     
     vec3 texCol = texture(texSampler, texCoords).rgb;
     vec3 ambient = vec3(0.05) * texCol;
     outColor = vec4(texCol * (vec3(NoL) * i) + ambient, 1.0) ;
 
-    outColor.rgb = (outColor.rgb);
+    outColor.rgb = (Gamma(outColor.rgb));
 }

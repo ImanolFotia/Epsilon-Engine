@@ -174,7 +174,6 @@ namespace vk
 
     static VkFormat findSupportedFormat(VulkanData &vkData, const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
     {
-        return VK_FORMAT_D32_SFLOAT_S8_UINT;
         for (VkFormat format : candidates)
         {
             VkFormatProperties props;

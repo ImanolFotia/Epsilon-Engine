@@ -53,20 +53,19 @@ namespace vk
         return details;
     }
 
-    static VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats)
+    static VkSurfaceFormatKHR chooseSwapSurfaceFormat(VulkanData &vk_data, const std::vector<VkSurfaceFormatKHR> &availableFormats)
     {
         for (const auto &availableFormat : availableFormats)
-        {std::cout << "avaliable format: " << availableFormats[0].format << " || " <<availableFormats[0].colorSpace << std::endl;
-
-            if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
+        {
+            VkFormatProperties props;
+            vkGetPhysicalDeviceFormatProperties(vk_data.physicalDevice, availableFormat.format, &props);
+            VkFormatFeatureFlags features = VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
+            //if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
+            if ((props.optimalTilingFeatures & features) == features)
             {
-        std::cout << "avaliable format found!!: " << availableFormats[0].format << " || " <<availableFormats[0].colorSpace << std::endl;
                 return availableFormat;
             }
         }
-        
-        std::cout << "avaliable format used: " << availableFormats[0].format << " || " <<availableFormats[0].colorSpace << std::endl;
-
         return availableFormats[0];
     }
 
@@ -112,7 +111,7 @@ namespace vk
     {
         SwapChainSupportDetails swapChainSupport = querySwapChainSupport(vk_data.physicalDevice, vk_data);
 
-        VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
+        VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(vk_data, swapChainSupport.formats);
         VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
         VkExtent2D extent = chooseSwapExtent(window, swapChainSupport.capabilities);
 
