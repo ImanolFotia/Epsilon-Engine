@@ -145,7 +145,7 @@ namespace engine
     Material VulkanRenderer::CreateMaterial(Renderer::TexturesDataId texture)
     {
         auto &material = m_pMaterials.emplace_back();
-        material.textures.push_back(&m_pTextures[texture->id]);
+        material.textures.push_back(m_pTextures[texture->id]);
         pCreateDescriptorSets(material);
         // pUpdateMaterial(material);
         Material mat;

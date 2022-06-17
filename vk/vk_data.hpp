@@ -69,7 +69,7 @@ namespace vk
     {
         std::vector<VkDescriptorSet> descriptorSets;
         VkPipelineLayout *pipelineLayout = nullptr;
-        std::vector<VulkanTexture *> textures;
+        std::vector<VulkanTexture> textures;
     };
 
     struct VulkanRenderPipeline
@@ -87,6 +87,19 @@ namespace vk
 
         VkClearColorValue clearColor = {0.0f, 0.0f, 0.0f, 1.0f};
         VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
+    };
+
+    struct VulkanRenderPassData {
+        std::vector<VkAttachmentDescription> colorAttachments{};
+        std::vector<VkAttachmentReference> colorAttachmentRefs{};
+
+        VkSubpassDescription subpass{};
+        VkSubpassDependency dependency{};
+
+        VkAttachmentDescription depthAttachment{};
+        VkAttachmentReference depthAttachmentRef{};
+
+        bool hasDepthAttachment = false;
     };
 
     struct VulkanRenderPassAttachment
@@ -110,10 +123,9 @@ namespace vk
         VkRenderPass renderPass;
         VkRenderPassBeginInfo renderPassInfo{};
         std::vector<VulkanRenderPipeline> renderPipelines;
-        std::vector<VulkanRenderPassAttachment> attachments;
+        VulkanRenderPassData renderPassData;
         VkClearColorValue clearColor = {0.0f, 0.0f, 0.0f, 1.0f};
         VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
-
         VkClearValue clearValues[2] = {};
     };
 

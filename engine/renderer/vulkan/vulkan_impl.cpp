@@ -166,13 +166,13 @@ namespace engine
 
             VkDescriptorImageInfo imageInfo{};
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            auto texture = material.textures.at(0);
+            auto& texture = material.textures.at(0);
             //texture->format = VK_FORMAT_R8G8B8A8_SRGB;
             //vk::createImageView(m_pVkData, *texture, VK_IMAGE_ASPECT_COLOR_BIT);
             //vk::createTextureSampler(m_pVkData, *texture);
 
-            imageInfo.imageView = texture->imageView;
-            imageInfo.sampler = texture->sampler;
+            imageInfo.imageView = texture.imageView;
+            imageInfo.sampler = texture.sampler;
 
             std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
 

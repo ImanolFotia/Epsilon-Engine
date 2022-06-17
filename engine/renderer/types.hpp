@@ -234,6 +234,8 @@ namespace engine
     struct RenderPassAttachment {
 
         TextureFormat format;
+        bool isDepthAttachment;
+        bool isSwapChainAttachment = false;
     };
 
     struct RenderPassInfo

@@ -100,7 +100,18 @@ namespace LearningVulkan
                                    {XYZW_FLOAT, offsetof(Vertex, color)},
                                    {XYZ_FLOAT, offsetof(Vertex, tangent)},
                                    {XYZ_FLOAT, offsetof(Vertex, bitangent)}})
-                    .attachments({{.format = DEPTH_F32_STENCIL_8}})
+                    .attachments(
+                        {
+                            {
+                                .format = COLOR_RGBA,
+                                .isDepthAttachment = false,
+                                .isSwapChainAttachment = true
+                            },
+                            {
+                                .format = DEPTH_F32_STENCIL_8,
+                                .isDepthAttachment = true
+                            }
+                        })
                     .shaderInfo(shaderInfo);
 
             m_pRenderer->addRenderpass(renderPassInfo);

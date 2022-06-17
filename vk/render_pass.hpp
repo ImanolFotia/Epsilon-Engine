@@ -9,81 +9,104 @@
 
 namespace vk
 {
-    struct render_pass_data_t
-    {
-        VkAttachmentDescription colorAttachment{};
-        VkAttachmentReference colorAttachmentRef{};
-        VkSubpassDescription subpass{};
-        VkSubpassDependency dependency{};
-
-        VkAttachmentDescription depthAttachment{};
-        VkAttachmentReference depthAttachmentRef{};
-    };
 
     static void createRenderPass(VulkanData &vk_data, VulkanRenderPass &renderPass, engine::RenderPassInfo &renderPassInfo)
     {
-        render_pass_data_t render_pass_data{};
-        render_pass_data.colorAttachment.format = vk_data.swapChainImageFormat;
-        render_pass_data.colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-        render_pass_data.colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-        render_pass_data.colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-        render_pass_data.colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-        render_pass_data.colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-        render_pass_data.colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-        render_pass_data.colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+        bool containsDepthAttachment = false;
+        unsigned index = 0;
+        renderPass.renderPassData.colorAttachments.clear();
+        renderPass.renderPassData.colorAttachments.resize(0);
 
-        render_pass_data.colorAttachmentRef.attachment = 0;
-        render_pass_data.colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+        renderPass.renderPassData.colorAttachmentRefs.clear();
+        renderPass.renderPassData.colorAttachmentRefs.resize(0);
 
         for (auto &attachment : renderPassInfo.attachments)
         {
-           /* if (attachment.format == engine::DEPTH_F32_STENCIL_8 ||
-                attachment.format == engine::DEPTH_F16_STENCIL_8 ||
-                attachment.format == engine::DEPTH_F32 ||
-                attachment.format == engine::DEPTH_F16 ||
-                attachment.format == engine::DEPTH_UNORM ||
-                attachment.format == engine::DEPTH_UNORM_STENCIL_8)*/
+            if (attachment.isDepthAttachment)
             {
-                render_pass_data.depthAttachment.format = findDepthFormat(vk_data);
-            }
-            render_pass_data.depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-            render_pass_data.depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-            render_pass_data.depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-            render_pass_data.depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-            render_pass_data.depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-            render_pass_data.depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-            render_pass_data.depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+                containsDepthAttachment = true;
+                if (attachment.format == engine::DEPTH_F32_STENCIL_8 ||
+                    attachment.format == engine::DEPTH_F16_STENCIL_8 ||
+                    attachment.format == engine::DEPTH_F32 ||
+                    attachment.format == engine::DEPTH_F16 ||
+                    attachment.format == engine::DEPTH_UNORM ||
+                    attachment.format == engine::DEPTH_UNORM_STENCIL_8)
+                {
+                    renderPass.renderPassData.depthAttachment.format = findDepthFormat(vk_data);
+                }
+                renderPass.renderPassData.depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+                renderPass.renderPassData.depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+                renderPass.renderPassData.depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+                renderPass.renderPassData.depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+                renderPass.renderPassData.depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+                renderPass.renderPassData.depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+                renderPass.renderPassData.depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
-            render_pass_data.depthAttachmentRef.attachment = 1;
-            render_pass_data.depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+                renderPass.renderPassData.depthAttachmentRef.attachment = index;
+                renderPass.renderPassData.depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+            }
+            else
+            {
+                VkAttachmentDescription attachmentDesc{};
+                attachmentDesc.format = vk_data.swapChainImageFormat;
+                attachmentDesc.samples = VK_SAMPLE_COUNT_1_BIT;
+                attachmentDesc.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+                attachmentDesc.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+                attachmentDesc.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+                attachmentDesc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+                attachmentDesc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+                attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+                renderPass.renderPassData.colorAttachments.push_back(attachmentDesc);
+
+                VkAttachmentReference attachmentRef{};
+                attachmentRef.attachment = 0;
+                attachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+                renderPass.renderPassData.colorAttachmentRefs.push_back(attachmentRef);
+            }
+
+            index++;
         }
 
-        render_pass_data.subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-        render_pass_data.subpass.colorAttachmentCount = 1;
-        render_pass_data.subpass.pColorAttachments = &render_pass_data.colorAttachmentRef;
-        render_pass_data.subpass.pDepthStencilAttachment = &render_pass_data.depthAttachmentRef;
+        renderPass.renderPassData.hasDepthAttachment = containsDepthAttachment;
 
-        render_pass_data.dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-        render_pass_data.dependency.dstSubpass = 0;
-        render_pass_data.dependency.srcAccessMask = 0;
-        
-        //render_pass_data.dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-        render_pass_data.dependency.srcAccessMask = 0;
-        //render_pass_data.dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-        //render_pass_data.dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-        render_pass_data.dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-        render_pass_data.dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-        render_pass_data.dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+        renderPass.renderPassData.subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+        renderPass.renderPassData.subpass.colorAttachmentCount = renderPass.renderPassData.colorAttachments.size();
+        renderPass.renderPassData.subpass.pColorAttachments = renderPass.renderPassData.colorAttachmentRefs.data();
 
-        std::array<VkAttachmentDescription, 2> attachments = {render_pass_data.colorAttachment, render_pass_data.depthAttachment};
+        if (containsDepthAttachment)
+            renderPass.renderPassData.subpass.pDepthStencilAttachment = &renderPass.renderPassData.depthAttachmentRef;
+
+        renderPass.renderPassData.dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+        renderPass.renderPassData.dependency.dstSubpass = 0;
+        renderPass.renderPassData.dependency.srcAccessMask = 0;
+
+        renderPass.renderPassData.dependency.srcAccessMask = 0;
+
+        if (containsDepthAttachment)
+        {
+            renderPass.renderPassData.dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+            renderPass.renderPassData.dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+            renderPass.renderPassData.dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+        }
+        else
+        {
+            renderPass.renderPassData.dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+            renderPass.renderPassData.dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+            renderPass.renderPassData.dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+        }
+
+        std::vector<VkAttachmentDescription> attachments = renderPass.renderPassData.colorAttachments;
+        if (containsDepthAttachment)
+            attachments.push_back(renderPass.renderPassData.depthAttachment);
+
         VkRenderPassCreateInfo renderPassCreateInfo{};
         renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
         renderPassCreateInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
         renderPassCreateInfo.pAttachments = attachments.data();
         renderPassCreateInfo.subpassCount = 1;
-        renderPassCreateInfo.pSubpasses = &render_pass_data.subpass;
+        renderPassCreateInfo.pSubpasses = &renderPass.renderPassData.subpass;
         renderPassCreateInfo.dependencyCount = 1;
-        renderPassCreateInfo.pDependencies = &render_pass_data.dependency;
+        renderPassCreateInfo.pDependencies = &renderPass.renderPassData.dependency;
 
         if (vkCreateRenderPass(vk_data.logicalDevice, &renderPassCreateInfo, nullptr, &renderPass.renderPass) != VK_SUCCESS)
         {
