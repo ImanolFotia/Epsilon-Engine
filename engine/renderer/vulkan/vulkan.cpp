@@ -240,36 +240,15 @@ namespace engine
         int curr_offset = 0;
         int curr_indices = 0;
 
-        /*m_pCurrentCommandQueue.sort([](auto first, auto second){
-            return first->index_offset < second->index_offset;
-        });*/
+
         bool prev_group = false;
         for (auto &command : m_pCurrentCommandQueue)
         {
-            /*if (command->index_offset == num_indices && command->group != true)
-            {
-                num_indices += command->num_indices;
-                curr_indices += command->num_indices;
-                continue;
-            }
-            else
-            {*/
-            /*vk::drawIndexed(m_pFrame.CommandBuffer(), curr_indices, 1, curr_offset, 0, 0);
-            curr_indices = 0;
-            curr_offset = command->index_offset;
-            num_indices = curr_offset + command->num_indices;
-            curr_indices = curr_offset + command->num_indices;
-            */
-            //}
             vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, m_pRenderPasses.at(0).renderPipelines.back().pipelineLayout, 0, 1, &m_pMaterials.at(command.materialId).descriptorSets[m_pCurrentFrame], 0, nullptr);
             vkCmdPushConstants(m_pFrame.CommandBuffer(), m_pRenderPasses.at(0).renderPipelines.back().pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(MeshPushConstant), &command.objectId->push_constant);
 
             vk::drawIndexed(m_pFrame.CommandBuffer(), command.objectId->num_indices, 1, command.objectId->index_offset, 0, 0);
         }
-        /*
-                if (curr_indices > 0)
-                    vk::drawIndexed(m_pFrame.CommandBuffer(), curr_indices, 1, curr_offset, 0, 0);
-        */
         m_pCurrentCommandQueue.clear();
     }
 
