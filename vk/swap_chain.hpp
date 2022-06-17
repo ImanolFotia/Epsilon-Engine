@@ -14,6 +14,7 @@
 #include "pipeline.hpp"
 #include "framebuffer.hpp"
 #include "texture.hpp"
+#include "memory.hpp"
 
 #include "vk_data.hpp"
 
@@ -52,16 +53,19 @@ namespace vk
         return details;
     }
 
-    static VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats)
+    static VkSurfaceFormatKHR chooseSwapSurfaceFormat(VulkanData &vk_data, const std::vector<VkSurfaceFormatKHR> &availableFormats)
     {
         for (const auto &availableFormat : availableFormats)
         {
-            if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
+            VkFormatProperties props;
+            vkGetPhysicalDeviceFormatProperties(vk_data.physicalDevice, availableFormat.format, &props);
+            VkFormatFeatureFlags features = VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
+            //if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
+            if ((props.optimalTilingFeatures & features) == features)
             {
                 return availableFormat;
             }
         }
-
         return availableFormats[0];
     }
 
@@ -107,7 +111,7 @@ namespace vk
     {
         SwapChainSupportDetails swapChainSupport = querySwapChainSupport(vk_data.physicalDevice, vk_data);
 
-        VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
+        VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(vk_data, swapChainSupport.formats);
         VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
         VkExtent2D extent = chooseSwapExtent(window, swapChainSupport.capabilities);
 
@@ -150,7 +154,8 @@ namespace vk
         {
             throw std::runtime_error("failed to create swap chain!");
         }
-        vkGetSwapchainImagesKHR(vk_data.logicalDevice, vk_data.swapChain, &imageCount, nullptr);
+        //vkGetSwapchainImagesKHR(vk_data.logicalDevice, vk_data.swapChain, &imageCount, nullptr);
+        vk_data.swapChainImages.clear();
         vk_data.swapChainImages.resize(imageCount);
         vkGetSwapchainImagesKHR(vk_data.logicalDevice, vk_data.swapChain, &imageCount, vk_data.swapChainImages.data());
         vk_data.swapChainImageFormat = surfaceFormat.format;
@@ -159,15 +164,28 @@ namespace vk
 
     static void createImageViews(VulkanData &vk_data)
     {
-
+        vk_data.swapChainImageViews.clear();
         vk_data.swapChainImageViews.resize(vk_data.swapChainImages.size());
+
+        vk_data.swapChainDepthTextureInfo.format = findDepthFormat(vk_data);
+        vk_data.swapChainDepthTextureInfo.width = vk_data.swapChainExtent.width;
+        vk_data.swapChainDepthTextureInfo.height = vk_data.swapChainExtent.height;
+        vk_data.swapChainDepthTextureInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+
+        vk_data.swapChainDepthTexture = createImage(vk_data, vk_data.swapChainDepthTextureInfo);
+        vk_data.swapChainDepthTexture.format = findDepthFormat(vk_data);
+        vk_data.swapChainDepthTextureBuffer.deviceMemory = allocateTextureMemory(vk_data, vk_data.swapChainDepthTexture, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+        createImageView(vk_data, vk_data.swapChainDepthTexture, VK_IMAGE_ASPECT_DEPTH_BIT);
+        
         for (size_t i = 0; i < vk_data.swapChainImages.size(); i++)
         {
 
             VulkanTexture texture;
             texture.format = vk_data.swapChainImageFormat;
-            texture.image = vk_data.swapChainImages[i] ;
-            createImageView(vk_data, texture);
+            texture.image = vk_data.swapChainImages[i];
+
+            createImageView(vk_data, texture, VK_IMAGE_ASPECT_COLOR_BIT);
+
             vk_data.swapChainImageViews[i] = texture.imageView;
         }
     }
@@ -190,6 +208,10 @@ namespace vk
         {
             vkDestroyImageView(vk_data.logicalDevice, vk_data.swapChainImageViews[i], nullptr);
         }
+
+        vkDestroyImageView(vk_data.logicalDevice, vk_data.swapChainDepthTexture.imageView, nullptr);
+        vkDestroyImage(vk_data.logicalDevice, vk_data.swapChainDepthTexture.image, nullptr);
+        vkFreeMemory(vk_data.logicalDevice, vk_data.swapChainDepthTextureBuffer.deviceMemory, nullptr);
 
         vkDestroySwapchainKHR(vk_data.logicalDevice, vk_data.swapChain, nullptr);
     }

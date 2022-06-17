@@ -36,7 +36,6 @@ namespace LearningVulkan
 
     protected:
         std::shared_ptr<engine::VulkanRenderer> m_pRenderer;
-        engine::VulkanResourceManager m_pResourceManager;
 
         uint32_t nbFrames = 0;
         uint32_t lastTime = 0.0;
@@ -47,7 +46,6 @@ namespace LearningVulkan
         LearningVulkanApplication(std::string appName) : m_ApplicationName(appName)
         {
             m_pRenderer = std::make_shared<engine::VulkanRenderer>();
-            m_pResourceManager.get()->setRendererReference(m_pRenderer);
         }
 
         void run()
@@ -102,6 +100,18 @@ namespace LearningVulkan
                                    {XYZW_FLOAT, offsetof(Vertex, color)},
                                    {XYZ_FLOAT, offsetof(Vertex, tangent)},
                                    {XYZ_FLOAT, offsetof(Vertex, bitangent)}})
+                    .attachments(
+                        {
+                            {
+                                .format = COLOR_RGBA,
+                                .isDepthAttachment = false,
+                                .isSwapChainAttachment = true
+                            },
+                            {
+                                .format = DEPTH_F32_STENCIL_8,
+                                .isDepthAttachment = true
+                            }
+                        })
                     .shaderInfo(shaderInfo);
 
             m_pRenderer->addRenderpass(renderPassInfo);

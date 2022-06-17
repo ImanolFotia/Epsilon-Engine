@@ -184,7 +184,7 @@ namespace vk
                 vkGetPhysicalDeviceProperties(device, &deviceProperties);
                 std::string deviceName = deviceProperties.deviceName;
                 std::transform(deviceName.begin(), deviceName.end(), deviceName.begin(), ::toupper);
-                if (deviceName.find("INTEL") != std::string::npos)
+                if (deviceName.find("NVIDIA") != std::string::npos)
                 {
                     physicalDevice = device;
                     std::cout << "found nvidia" << std::endl;
@@ -220,6 +220,12 @@ namespace vk
         {
             vkDestroyImageView(vk_data.logicalDevice, imageView, nullptr);
         }
+
+        
+        vkDestroyImageView(vk_data.logicalDevice, vk_data.swapChainDepthTexture.imageView, nullptr);
+        vkDestroyImage(vk_data.logicalDevice, vk_data.swapChainDepthTexture.image, nullptr);
+        vkFreeMemory(vk_data.logicalDevice, vk_data.swapChainDepthTextureBuffer.deviceMemory, nullptr);
+
 
         if (enableValidationLayers)
         {

@@ -173,11 +173,26 @@ namespace vk
         }
 
         // Creating the graphics pipeline
-
         VkGraphicsPipelineCreateInfo pipelineInfo = {};
         pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
         pipelineInfo.stageCount = shaderStages.size();
         pipelineInfo.pStages = shaderStages.data();
+
+        if (renderPass.renderPassData.hasDepthAttachment)
+        {
+            VkPipelineDepthStencilStateCreateInfo depthStencil{};
+            depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+            depthStencil.depthTestEnable = VK_TRUE;
+            depthStencil.depthWriteEnable = VK_TRUE;
+            depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
+            depthStencil.depthBoundsTestEnable = VK_FALSE;
+            depthStencil.minDepthBounds = 0.0f; // Optional
+            depthStencil.maxDepthBounds = 1.0f; // Optional
+            depthStencil.stencilTestEnable = VK_FALSE;
+            depthStencil.front = {}; // Optional
+            depthStencil.back = {};  // Optional
+            pipelineInfo.pDepthStencilState = &depthStencil;
+        }
 
         pipelineInfo.pVertexInputState = &vertexInputInfo;
         pipelineInfo.pInputAssemblyState = &inputAssembly;

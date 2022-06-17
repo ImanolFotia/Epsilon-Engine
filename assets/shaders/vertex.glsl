@@ -30,7 +30,7 @@ void main() {
     color = inColor;
     position = inPosition;
     texCoords = inTexCoord;
-    normal = inNormal;
+    normal = normalize(mat3(transpose(inverse(PushConstants.model))) * inNormal);
 
     vec3 outVert = inPosition;
     //outVert.y *= (iResolution.x / iResolution.y);

@@ -26,9 +26,13 @@ namespace engine
 
     struct Vertex
     {
+        
+        Vertex(glm::vec3 p, glm::vec2 uv, glm::vec3 n): position(p), texCoords(uv), normal(n) {}
+        
         Vertex(glm::vec3 p, glm::vec2 uv, glm::vec3 n, glm::vec4 c, glm::vec3 t, glm::vec3 bt) : position(p), texCoords(uv), normal(n), color(c), tangent(t), bitangent(bt)
         {
         }
+
 
         glm::vec3 position = glm::vec3(0.0f);
         glm::vec2 texCoords = glm::vec2(0.0f);
@@ -152,7 +156,16 @@ namespace engine
         NON_COLOR_RGB_16F,
         NON_COLOR_RGB_32F,
         NON_COLOR_RGBA_16F,
-        NON_COLOR_RGBA_32F
+        NON_COLOR_RGBA_32F,
+
+        //DEPTH IMAGES
+        DEPTH_F32,
+        DEPTH_F32_STENCIL_8,
+        DEPTH_F16,
+        DEPTH_F16_STENCIL_8,
+
+        DEPTH_UNORM,
+        DEPTH_UNORM_STENCIL_8,
     };
 
     enum VertexFormat
@@ -163,7 +176,7 @@ namespace engine
         XYZ_FLOAT,
         XYZW_UINT,
         XYZW_FLOAT
-    };
+    }; 
 
     struct TextureInfo
     {
@@ -222,6 +235,13 @@ namespace engine
         size_t size;
     };
 
+    struct RenderPassAttachment {
+
+        TextureFormat format;
+        bool isDepthAttachment;
+        bool isSwapChainAttachment = false;
+    };
+
     struct RenderPassInfo
     {
         uint32_t numDescriptors;
@@ -229,6 +249,7 @@ namespace engine
         bool depthAttachment;
         std::vector<SubPassInfo> subpasses;
         std::vector<VertexDescriptorInfo> vertexLayout;
+        std::vector<RenderPassAttachment> attachments;
         ShaderInfo shaderInfo;
     };
 
@@ -257,6 +278,12 @@ namespace engine
         RenderPassFactory vertexLayout(std::vector<VertexDescriptorInfo> vl)
         {
             info.vertexLayout = vl;
+            return *this;
+        }
+        
+        RenderPassFactory attachments(std::vector<RenderPassAttachment> a)
+        {
+            info.attachments = a;
             return *this;
         }
 

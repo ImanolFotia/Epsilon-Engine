@@ -36,6 +36,7 @@ namespace vk
         uint32_t height = 0;
         uint32_t num_channels = 0;
         VkFormat format = VK_FORMAT_R8G8B8A8_SRGB;
+        VkImageUsageFlags usage;
     };
 
     struct VulkanTexture
@@ -64,10 +65,11 @@ namespace vk
         size_t allocatedBytes;
     };
 
-    struct VulkanMaterial {
+    struct VulkanMaterial
+    {
         std::vector<VkDescriptorSet> descriptorSets;
-        VkPipelineLayout* pipelineLayout;
-        std::vector<VulkanTexture*> textures;
+        VkPipelineLayout *pipelineLayout = nullptr;
+        std::vector<VulkanTexture> textures;
     };
 
     struct VulkanRenderPipeline
@@ -82,16 +84,49 @@ namespace vk
         VkPipelineMultisampleStateCreateInfo multisampling{};
         VkPipelineColorBlendAttachmentState colorBlendAttachment{};
         VkPipelineColorBlendStateCreateInfo colorBlending{};
-        VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
+
+        VkClearColorValue clearColor = {0.0f, 0.0f, 0.0f, 1.0f};
+        VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
     };
 
+    struct VulkanRenderPassData {
+        std::vector<VkAttachmentDescription> colorAttachments{};
+        std::vector<VkAttachmentReference> colorAttachmentRefs{};
+
+        VkSubpassDescription subpass{};
+        VkSubpassDependency dependency{};
+
+        VkAttachmentDescription depthAttachment{};
+        VkAttachmentReference depthAttachmentRef{};
+
+        bool hasDepthAttachment = false;
+    };
+
+    struct VulkanRenderPassAttachment
+    {
+        VkFormat format;
+        VkSampleCountFlags sampleCount;
+        VkAttachmentLoadOp loadOp;
+        VkAttachmentStoreOp storeOp;
+        VkAttachmentLoadOp stencilLoadOp;
+        VkAttachmentStoreOp stencilStoreOp;
+        VkImageLayout initialLayout;
+        VkImageLayout finalLayout;
+    };
 
     struct VulkanRenderPass
     {
+        VulkanRenderPass() {
+            clearValues[0].color = clearColor;
+            clearValues[1].depthStencil = depthStencilClearColor;
+        }
         VkRenderPass renderPass;
         VkRenderPassBeginInfo renderPassInfo{};
         std::vector<VulkanRenderPipeline> renderPipelines;
-        VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
+        VulkanRenderPassData renderPassData;
+        VkClearColorValue clearColor = {0.0f, 0.0f, 0.0f, 1.0f};
+        VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
+        VkClearValue clearValues[2] = {};
     };
 
     struct VulkanSyncObject
@@ -99,6 +134,22 @@ namespace vk
         VkSemaphore imageAvailableSemaphores;
         VkSemaphore renderFinishedSemaphores;
         VkFence inFlightFences;
+    };
+
+    struct VulkanSwapChain
+    {
+
+        const std::vector<const char *> deviceExtensions = {
+            VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+
+        VkSwapchainKHR swapChain;
+        std::vector<VkImage> swapChainImages;
+        VkImage swapChainDepthImage;
+        VkFormat swapChainImageFormat;
+        VkExtent2D swapChainExtent;
+        std::vector<VkImageView> swapChainImageViews;
+
+        std::vector<VkFramebuffer> swapChainFramebuffers;
     };
 
     struct VulkanData
@@ -117,6 +168,9 @@ namespace vk
 
         VkSwapchainKHR swapChain;
         std::vector<VkImage> swapChainImages;
+        VulkanTexture swapChainDepthTexture;
+        VulkanTextureInfo swapChainDepthTextureInfo;
+        VulkanTextureBuffer swapChainDepthTextureBuffer;
         VkFormat swapChainImageFormat;
         VkExtent2D swapChainExtent;
         std::vector<VkImageView> swapChainImageViews;

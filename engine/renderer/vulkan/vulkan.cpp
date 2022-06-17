@@ -51,7 +51,7 @@ namespace engine
 
         m_pRenderPassInfo[renderpass_id] = renderPassInfo;
 
-        vk::createRenderPass(m_pVkData, m_pRenderPasses.at(renderpass_id));
+        vk::createRenderPass(m_pVkData, m_pRenderPasses.at(renderpass_id), renderPassInfo);
 
         m_pVertexInfo.attributeDescriptions =
             vk::getAttributeDescriptions(0, renderPassInfo.vertexLayout);
@@ -59,7 +59,6 @@ namespace engine
         m_pVertexInfo.bindingDescription = vk::getBindingDescription(renderPassInfo.size);
 
         vk::createDescriptorSetLayout(m_pVkData, m_pRenderPasses.at(renderpass_id).renderPipelines.back());
-
 
         vk::createGraphicsPipeline<MeshPushConstant>(m_pVkData,
                                                      m_pRenderPasses.at(renderpass_id),
@@ -130,7 +129,7 @@ namespace engine
         vkFreeMemory(m_pVkData.logicalDevice, m_pStagingTextureBuffer.deviceMemory, nullptr);
 
         texture.format = VK_FORMAT_R8G8B8A8_SRGB;
-        vk::createImageView(m_pVkData, texture);
+        vk::createImageView(m_pVkData, texture, VK_IMAGE_ASPECT_COLOR_BIT);
         vk::createTextureSampler(m_pVkData, texture);
 
         m_pTextures.push_back(texture);
@@ -146,7 +145,7 @@ namespace engine
     Material VulkanRenderer::CreateMaterial(Renderer::TexturesDataId texture)
     {
         auto &material = m_pMaterials.emplace_back();
-        material.textures.push_back(&m_pTextures[texture->id]);
+        material.textures.push_back(m_pTextures[texture->id]);
         pCreateDescriptorSets(material);
         // pUpdateMaterial(material);
         Material mat;
@@ -173,6 +172,9 @@ namespace engine
                                                                  m_pRenderPasses.at(attachedRenderPass),
                                                                  m_pVertexInfo);*/
         m_pImageIndex = pPrepareSyncObjects();
+
+        if (m_pImageIndex == -1)
+            return;
         
         if (m_pImageIndex >= vk::MAX_FRAMES_IN_FLIGHT)
             m_pImageIndex = vk::MAX_FRAMES_IN_FLIGHT - 1;
@@ -214,7 +216,8 @@ namespace engine
             pRecreateSwapChain();
             vkDestroyDescriptorPool(m_pVkData.logicalDevice, m_pDescriptorPool, nullptr);
             pCreateDescriptorPool();
-
+            
+            std::cout << "recreating descriptor sets\n";
             for (auto &material : m_pMaterials)
             {
                 pCreateDescriptorSets(material);
@@ -249,20 +252,26 @@ namespace engine
 
             vk::drawIndexed(m_pFrame.CommandBuffer(), command.objectId->num_indices, 1, command.objectId->index_offset, 0, 0);
         }
+
         m_pCurrentCommandQueue.clear();
     }
 
     void VulkanRenderer::pRecreateSwapChain()
     {
         vkDeviceWaitIdle(m_pVkData.logicalDevice);
-
-        vk::createSwapChain(m_pVkData, m_pWindow->getWindow());
-        vk::createImageViews(m_pVkData);
-
-        for (auto [index, pass] : m_pRenderPasses)
+        
+        for (auto& [index, pass] : m_pRenderPasses)
         {
             cleanupSwapChain(m_pVkData, pass);
-            vk::createRenderPass(m_pVkData, pass);
+        }
+
+        vk::createSwapChain(m_pVkData, m_pWindow->getWindow());
+
+        vk::createImageViews(m_pVkData);
+
+        for (auto& [index, pass] : m_pRenderPasses)
+        {
+            vk::createRenderPass(m_pVkData, pass, m_pRenderPassInfo[index]);
 
             for (auto i = 0; i < pass.renderPipelines.size(); i++)
                 vk::createGraphicsPipeline<MeshPushConstant>(m_pVkData, pass, pass.renderPipelines[i], m_pVertexInfo, m_pRenderPassInfo[index].shaderInfo);

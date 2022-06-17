@@ -5,51 +5,108 @@
 #include "device.hpp"
 #include "swap_chain.hpp"
 #include "vk_data.hpp"
+#include "texture.hpp"
 
 namespace vk
 {
-    struct render_pass_data_t
+
+    static void createRenderPass(VulkanData &vk_data, VulkanRenderPass &renderPass, engine::RenderPassInfo &renderPassInfo)
     {
-        VkAttachmentDescription colorAttachment{};
-        VkAttachmentReference colorAttachmentRef{};
-        VkSubpassDescription subpass{};
-        VkSubpassDependency dependency{};
-    };
+        bool containsDepthAttachment = false;
+        unsigned index = 0;
+        renderPass.renderPassData.colorAttachments.clear();
+        renderPass.renderPassData.colorAttachments.resize(0);
 
-    static void createRenderPass(VulkanData& vk_data, VulkanRenderPass& renderPass)
-    {
-        render_pass_data_t render_pass_data{};
-        render_pass_data.colorAttachment.format = vk_data.swapChainImageFormat;
-        render_pass_data.colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-        render_pass_data.colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-        render_pass_data.colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-        render_pass_data.colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-        render_pass_data.colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-        render_pass_data.colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-        render_pass_data.colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+        renderPass.renderPassData.colorAttachmentRefs.clear();
+        renderPass.renderPassData.colorAttachmentRefs.resize(0);
 
-        render_pass_data.colorAttachmentRef.attachment = 0;
-        render_pass_data.colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+        for (auto &attachment : renderPassInfo.attachments)
+        {
+            if (attachment.isDepthAttachment)
+            {
+                containsDepthAttachment = true;
+                if (attachment.format == engine::DEPTH_F32_STENCIL_8 ||
+                    attachment.format == engine::DEPTH_F16_STENCIL_8 ||
+                    attachment.format == engine::DEPTH_F32 ||
+                    attachment.format == engine::DEPTH_F16 ||
+                    attachment.format == engine::DEPTH_UNORM ||
+                    attachment.format == engine::DEPTH_UNORM_STENCIL_8)
+                {
+                    renderPass.renderPassData.depthAttachment.format = findDepthFormat(vk_data);
+                }
+                renderPass.renderPassData.depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+                renderPass.renderPassData.depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+                renderPass.renderPassData.depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+                renderPass.renderPassData.depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+                renderPass.renderPassData.depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+                renderPass.renderPassData.depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+                renderPass.renderPassData.depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
-        render_pass_data.subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-        render_pass_data.subpass.colorAttachmentCount = 1;
-        render_pass_data.subpass.pColorAttachments = &render_pass_data.colorAttachmentRef;
+                renderPass.renderPassData.depthAttachmentRef.attachment = index;
+                renderPass.renderPassData.depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+            }
+            else
+            {
+                VkAttachmentDescription attachmentDesc{};
+                attachmentDesc.format = vk_data.swapChainImageFormat;
+                attachmentDesc.samples = VK_SAMPLE_COUNT_1_BIT;
+                attachmentDesc.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+                attachmentDesc.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+                attachmentDesc.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+                attachmentDesc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+                attachmentDesc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+                attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+                renderPass.renderPassData.colorAttachments.push_back(attachmentDesc);
 
-        render_pass_data.dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-        render_pass_data.dependency.dstSubpass = 0;
-        render_pass_data.dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-        render_pass_data.dependency.srcAccessMask = 0;
-        render_pass_data.dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-        render_pass_data.dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+                VkAttachmentReference attachmentRef{};
+                attachmentRef.attachment = 0;
+                attachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+                renderPass.renderPassData.colorAttachmentRefs.push_back(attachmentRef);
+            }
+
+            index++;
+        }
+
+        renderPass.renderPassData.hasDepthAttachment = containsDepthAttachment;
+
+        renderPass.renderPassData.subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+        renderPass.renderPassData.subpass.colorAttachmentCount = renderPass.renderPassData.colorAttachments.size();
+        renderPass.renderPassData.subpass.pColorAttachments = renderPass.renderPassData.colorAttachmentRefs.data();
+
+        if (containsDepthAttachment)
+            renderPass.renderPassData.subpass.pDepthStencilAttachment = &renderPass.renderPassData.depthAttachmentRef;
+
+        renderPass.renderPassData.dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+        renderPass.renderPassData.dependency.dstSubpass = 0;
+        renderPass.renderPassData.dependency.srcAccessMask = 0;
+
+        renderPass.renderPassData.dependency.srcAccessMask = 0;
+
+        if (containsDepthAttachment)
+        {
+            renderPass.renderPassData.dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+            renderPass.renderPassData.dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+            renderPass.renderPassData.dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+        }
+        else
+        {
+            renderPass.renderPassData.dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+            renderPass.renderPassData.dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+            renderPass.renderPassData.dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+        }
+
+        std::vector<VkAttachmentDescription> attachments = renderPass.renderPassData.colorAttachments;
+        if (containsDepthAttachment)
+            attachments.push_back(renderPass.renderPassData.depthAttachment);
 
         VkRenderPassCreateInfo renderPassCreateInfo{};
         renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-        renderPassCreateInfo.attachmentCount = 1;
-        renderPassCreateInfo.pAttachments = &render_pass_data.colorAttachment;
+        renderPassCreateInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
+        renderPassCreateInfo.pAttachments = attachments.data();
         renderPassCreateInfo.subpassCount = 1;
-        renderPassCreateInfo.pSubpasses = &render_pass_data.subpass;
+        renderPassCreateInfo.pSubpasses = &renderPass.renderPassData.subpass;
         renderPassCreateInfo.dependencyCount = 1;
-        renderPassCreateInfo.pDependencies = &render_pass_data.dependency;
+        renderPassCreateInfo.pDependencies = &renderPass.renderPassData.dependency;
 
         if (vkCreateRenderPass(vk_data.logicalDevice, &renderPassCreateInfo, nullptr, &renderPass.renderPass) != VK_SUCCESS)
         {
@@ -57,7 +114,7 @@ namespace vk
         }
     }
 
-    static void createRenderPassInfo(uint32_t imageIndex, VulkanData& vk_data, VulkanRenderPass& renderPass)
+    static void createRenderPassInfo(uint32_t imageIndex, VulkanData &vk_data, VulkanRenderPass &renderPass)
     {
         renderPass.renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderPass.renderPassInfo.renderPass = renderPass.renderPass;
@@ -65,22 +122,22 @@ namespace vk
         renderPass.renderPassInfo.renderArea.offset = {0, 0};
         renderPass.renderPassInfo.renderArea.extent = vk_data.swapChainExtent;
 
-    
-        renderPass.renderPassInfo.clearValueCount = 1;
-        renderPass.renderPassInfo.pClearValues = &renderPass.clearColor;
+        renderPass.renderPassInfo.clearValueCount = 2;
+        renderPass.renderPassInfo.pClearValues = renderPass.clearValues;
     }
 
-    static void beginRenderPass(const VkCommandBuffer &commandBuffer, VulkanRenderPass& renderPass)
+    static void beginRenderPass(const VkCommandBuffer &commandBuffer, VulkanRenderPass &renderPass)
     {
         vkCmdBeginRenderPass(commandBuffer, &renderPass.renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
     }
 
-    static void endRenderPass(const VkCommandBuffer &commandBuffer, const VulkanData& vk_data)
+    static void endRenderPass(const VkCommandBuffer &commandBuffer, const VulkanData &vk_data)
     {
         vkCmdEndRenderPass(commandBuffer);
     }
 
-    static void cleanupRenderPass(const VulkanData& vk_data, VkRenderPass& renderPass) {
+    static void cleanupRenderPass(const VulkanData &vk_data, VkRenderPass &renderPass)
+    {
 
         vkDestroyRenderPass(vk_data.logicalDevice, renderPass, nullptr);
     }
