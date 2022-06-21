@@ -29,12 +29,11 @@ namespace engine
         vk::pickPhysicalDevice(m_pVkData);
         vk::createLogicalDevice(m_pVkData);
 
-
-	VmaAllocatorCreateInfo allocatorInfo = {};
-	allocatorInfo.physicalDevice = m_pVkData.physicalDevice;
-	allocatorInfo.device = m_pVkData.logicalDevice;
-	allocatorInfo.instance = m_pVkData.instance;
-	vmaCreateAllocator(&allocatorInfo, &m_pAllocator);
+        VmaAllocatorCreateInfo allocatorInfo = {};
+        allocatorInfo.physicalDevice = m_pVkData.physicalDevice;
+        allocatorInfo.device = m_pVkData.logicalDevice;
+        allocatorInfo.instance = m_pVkData.instance;
+        vmaCreateAllocator(&allocatorInfo, &m_pAllocator);
 
         vk::createSwapChain(m_pVkData, window.getWindow());
         vk::createImageViews(m_pVkData);
@@ -95,15 +94,15 @@ namespace engine
 
         vk::copyBuffer(m_pVkData, m_pCommandPools.back(), m_pStagingBuffer.buffer, buffer->buffer, vertices.size() * sizeof(Vertex), current_vertex_count * sizeof(Vertex));
 
-        vkDestroyBuffer(m_pVkData.logicalDevice, m_pStagingBuffer.buffer, nullptr);
-        vkFreeMemory(m_pVkData.logicalDevice, m_pStagingBuffer.deviceMemory, nullptr);
+        vmaDestroyBuffer(m_pAllocator, m_pStagingBuffer.buffer, m_pStagingBuffer.allocation);
+        //vmaFreeMemory(m_pAllocator, m_pStagingBuffer.allocation);
 
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "copied ", vertices.size(), " vertices, of size ", vertices.size() * sizeof(Vertex), " bytes, at offset ", current_vertex_count * sizeof(Vertex), " to local buffer");
 
         vk::copyBuffer(m_pVkData, m_pCommandPools.back(), m_pStagingIndexBuffer.buffer, indexBuffer->buffer, indices.size() * sizeof(IndexType), current_index_count * sizeof(IndexType));
 
-        vkDestroyBuffer(m_pVkData.logicalDevice, m_pStagingIndexBuffer.buffer, nullptr);
-        vkFreeMemory(m_pVkData.logicalDevice, m_pStagingIndexBuffer.deviceMemory, nullptr);
+        vmaDestroyBuffer(m_pAllocator, m_pStagingIndexBuffer.buffer, m_pStagingIndexBuffer.allocation);
+        //vmaFreeMemory(m_pAllocator, m_pStagingIndexBuffer.allocation);
 
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "copied ", indices.size(), " indices, of size ", indices.size() * sizeof(IndexType), " bytes, at offset ", current_index_count * sizeof(IndexType), " to local buffer");
         uint16_t curr_vertex_offset = current_vertex_count;
@@ -136,8 +135,8 @@ namespace engine
         copyBufferToImage(m_pVkData, m_pCommandPools.back(), m_pStagingTextureBuffer.buffer, texture.image, static_cast<uint32_t>(textureInfo.width), static_cast<uint32_t>(textureInfo.height));
         transitionImageLayout(m_pVkData, m_pCommandPools.back(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
-        vkDestroyBuffer(m_pVkData.logicalDevice, m_pStagingTextureBuffer.buffer, nullptr);
-        vkFreeMemory(m_pVkData.logicalDevice, m_pStagingTextureBuffer.deviceMemory, nullptr);
+        vmaDestroyBuffer(m_pAllocator, m_pStagingTextureBuffer.buffer, m_pStagingTextureBuffer.allocation);
+        //vmaFreeMemory(m_pAllocator, m_pStagingTextureBuffer.allocation);
 
         texture.format = VK_FORMAT_R8G8B8A8_SRGB;
         vk::createImageView(m_pVkData, texture, VK_IMAGE_ASPECT_COLOR_BIT);
@@ -186,7 +185,7 @@ namespace engine
 
         if (m_pImageIndex == -1)
             return;
-        
+
         if (m_pImageIndex >= vk::MAX_FRAMES_IN_FLIGHT)
             m_pImageIndex = vk::MAX_FRAMES_IN_FLIGHT - 1;
 
@@ -227,7 +226,7 @@ namespace engine
             pRecreateSwapChain();
             vkDestroyDescriptorPool(m_pVkData.logicalDevice, m_pDescriptorPool, nullptr);
             pCreateDescriptorPool();
-            
+
             std::cout << "recreating descriptor sets\n";
             for (auto &material : m_pMaterials)
             {
@@ -254,7 +253,6 @@ namespace engine
         int curr_offset = 0;
         int curr_indices = 0;
 
-
         bool prev_group = false;
         for (auto &command : m_pCurrentCommandQueue)
         {
@@ -270,8 +268,8 @@ namespace engine
     void VulkanRenderer::pRecreateSwapChain()
     {
         vkDeviceWaitIdle(m_pVkData.logicalDevice);
-        
-        for (auto& [index, pass] : m_pRenderPasses)
+
+        for (auto &[index, pass] : m_pRenderPasses)
         {
             cleanupSwapChain(m_pVkData, pass);
         }
@@ -280,7 +278,7 @@ namespace engine
 
         vk::createImageViews(m_pVkData);
 
-        for (auto& [index, pass] : m_pRenderPasses)
+        for (auto &[index, pass] : m_pRenderPasses)
         {
             vk::createRenderPass(m_pVkData, pass, m_pRenderPassInfo[index]);
 
@@ -297,7 +295,7 @@ namespace engine
 
         uint32_t imageIndex = 0;
         VkResult result = vkAcquireNextImageKHR(m_pVkData.logicalDevice, m_pVkData.swapChain, UINT64_MAX, m_pVkData.syncObjects[m_pCurrentFrame].imageAvailableSemaphores, VK_NULL_HANDLE, &imageIndex);
-        //m_pFrame.CurrentImage(imageIndex);
+        // m_pFrame.CurrentImage(imageIndex);
 
         if (result == VK_ERROR_OUT_OF_DATE_KHR)
         {
@@ -319,8 +317,9 @@ namespace engine
 
         for (size_t i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
         {
-            vkDestroyBuffer(m_pVkData.logicalDevice, m_pUniformBuffers[i].buffer, nullptr);
-            vkFreeMemory(m_pVkData.logicalDevice, m_pUniformBuffers[i].deviceMemory, nullptr);
+
+            vmaDestroyBuffer(m_pAllocator, m_pUniformBuffers[i].buffer, m_pUniformBuffers[i].allocation);
+            //vmaFreeMemory(m_pAllocator, m_pUniformBuffers[i].allocation);
         }
 
         vkDestroyDescriptorPool(m_pVkData.logicalDevice, m_pDescriptorPool, nullptr);
@@ -330,16 +329,14 @@ namespace engine
 
         for (auto &buffer : m_pVertexBuffers)
         {
-            vk::destroyVertexBuffer(m_pVkData, buffer.buffer);
-
-            vkFreeMemory(m_pVkData.logicalDevice, buffer.deviceMemory, nullptr);
+            vmaDestroyBuffer(m_pAllocator, buffer.buffer, buffer.allocation);
+            //vmaFreeMemory(m_pAllocator, buffer.allocation);
         }
 
         for (auto &buffer : m_pIndexBuffers)
         {
-            vk::destroyVertexBuffer(m_pVkData, buffer.buffer);
-
-            vkFreeMemory(m_pVkData.logicalDevice, buffer.deviceMemory, nullptr);
+            vmaDestroyBuffer(m_pAllocator, buffer.buffer, buffer.allocation);
+            //vmaFreeMemory(m_pAllocator, buffer.allocation);
         }
 
         for (auto &texture : m_pTextures)

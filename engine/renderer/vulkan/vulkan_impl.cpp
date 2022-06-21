@@ -12,16 +12,15 @@ namespace engine
     void VulkanRenderer::pUpdateUniforms()
     {
         void *data;
-        // auto allocation = getDeviceMemory(UNIFORM_BUFFER_PROP);
-        vkMapMemory(m_pVkData.logicalDevice, m_pFrame.UniformBuffer().deviceMemory, 0, sizeof(ShaderData), 0, &data);
+        vmaMapMemory(m_pAllocator, m_pFrame.UniformBuffer().allocation, &data);
         memcpy(data, &m_pCameraData, sizeof(m_pCameraData));
-        vkUnmapMemory(m_pVkData.logicalDevice, m_pFrame.UniformBuffer().deviceMemory);
+        vmaUnmapMemory(m_pAllocator, m_pFrame.UniformBuffer().allocation);
     }
 
     void VulkanRenderer::pCreateVertexBuffer()
     {
         auto &buffer = m_pVertexBuffers.emplace_back();
-        pCreateBuffer(buffer, sizeof(Vertex) * MAX_VERTICES_PER_BUFFER, VERTEX_BUFFER_USAGE, VERTEX_BUFFER_PROP);
+        pCreateBuffer(buffer, sizeof(Vertex) * MAX_VERTICES_PER_BUFFER, VERTEX_BUFFER_USAGE, VERTEX_BUFFER_PROP, VERTEX_BUFFER_MEM_USAGE);
         // auto allocation = pGetOrCreateDeviceMemory(VERTEX_BUFFER_PROP, buffer);
         // vkBindBufferMemory(m_pVkData.logicalDevice, buffer.buffer, allocation.deviceMemory, allocation.allocatedBytes);
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", sizeof(Vertex) * MAX_VERTICES_PER_BUFFER, " bytes in local vertex buffer");
@@ -30,7 +29,7 @@ namespace engine
     void VulkanRenderer::pCreateIndexBuffer()
     {
         auto &buffer = m_pIndexBuffers.emplace_back();
-        pCreateBuffer(buffer, sizeof(IndexType) * MAX_INDICES_PER_BUFFER, INDEX_BUFFER_USAGE, INDEX_BUFFER_PROP);
+        pCreateBuffer(buffer, sizeof(IndexType) * MAX_INDICES_PER_BUFFER, INDEX_BUFFER_USAGE, INDEX_BUFFER_PROP, INDEX_BUFFER_MEM_USAGE);
 
         // vkBindBufferMemory(m_pVkData.logicalDevice, buffer.buffer, allocation.deviceMemory, allocation.allocatedBytes);
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", sizeof(IndexType) * MAX_INDICES_PER_BUFFER, " bytes in local index buffer");
@@ -39,7 +38,7 @@ namespace engine
     void VulkanRenderer::pCreateUniformBuffer(size_t size)
     {
         auto &buffer = m_pUniformBuffers.emplace_back();
-        pCreateBuffer(buffer, size, UNIFORM_BUFFER_USAGE, UNIFORM_BUFFER_PROP);
+        pCreateBuffer(buffer, size, UNIFORM_BUFFER_USAGE, UNIFORM_BUFFER_PROP, UNIFORM_BUFFER_MEM_USAGE);
         // auto allocation = pGetOrCreateDeviceMemory(UNIFORM_BUFFER_PROP, buffer);
         // vkBindBufferMemory(m_pVkData.logicalDevice, buffer.buffer, allocation.deviceMemory, allocation.allocatedBytes);
 
@@ -48,31 +47,19 @@ namespace engine
 
     void VulkanRenderer::pCreateStagingTextureBuffer(unsigned char *pixels, TextureInfo textureInfo)
     {
-        VkBuffer stagingBuffer;
-        VkDeviceMemory stagingBufferMemory;
         auto imageSize = textureInfo.width * textureInfo.height * textureInfo.numChannels;
-        pCreateBuffer(m_pStagingTextureBuffer, imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+        pCreateBuffer(m_pStagingTextureBuffer, imageSize, TEXTURE_BUFFER_USAGE, TEXTURE_BUFFER_PROP, TEXTURE_BUFFER_MEM_USAGE);
+
         void *data;
-        vkMapMemory(m_pVkData.logicalDevice, m_pStagingTextureBuffer.deviceMemory, 0, imageSize, 0, &data);
+        vmaMapMemory(m_pAllocator, m_pStagingTextureBuffer.allocation, &data);
         memcpy(data, pixels, static_cast<size_t>(imageSize));
-        vkUnmapMemory(m_pVkData.logicalDevice, m_pStagingTextureBuffer.deviceMemory);
+        vmaUnmapMemory(m_pAllocator, m_pStagingTextureBuffer.allocation);
     }
 
     vk::VulkanAllocation VulkanRenderer::pGetOrCreateDeviceMemory(VkMemoryPropertyFlags properties, const vk::VulkanBuffer &buffer)
     {
 
         vk::VulkanAllocation allocation;
-        /*if (m_pMemoryAllocations.contains(properties))
-        {
-            allocation = m_pMemoryAllocations[properties];
-        }
-        else
-        {
-            allocation.deviceMemory = vk::allocateMemory(m_pVkData, buffer.buffer, properties);
-            allocation.properties = properties;
-            allocation.ownedBuffers.push_back(buffer);
-        }*/
-
         allocation.allocatedBytes += size;
 
         return allocation;
@@ -88,10 +75,25 @@ namespace engine
         return allocation;
     }
 
-    void VulkanRenderer::pCreateBuffer(vk::VulkanBuffer &buffer, size_t size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties)
+    void VulkanRenderer::pCreateBuffer(vk::VulkanBuffer &buffer, size_t size, VkBufferUsageFlags usage, VmaAllocationCreateFlags properties, VmaMemoryUsage mem_usage)
     {
-        buffer.bufferInfo = vk::createVertexBuffer(m_pVkData, buffer.buffer, size, usage);
-        buffer.deviceMemory = vk::allocateMemory(m_pVkData, buffer.buffer, properties);
+        // buffer.bufferInfo = vk::createVertexBuffer(m_pVkData, buffer.buffer, size, usage);
+        // buffer.deviceMemory = vk::allocateMemory(m_pVkData, buffer.buffer, properties);
+
+        VkBufferCreateInfo bufferInfo{};
+        bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+        bufferInfo.size = size;
+        bufferInfo.usage = usage;
+        bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+        VmaAllocationCreateInfo allocInfo = {};
+        allocInfo.usage = mem_usage;
+        allocInfo.flags = properties;
+
+        VmaAllocation allocation;
+
+        vmaCreateBuffer(m_pAllocator, &bufferInfo, &allocInfo, &buffer.buffer, &buffer.allocation, nullptr);
+
         allocations_count++;
     }
 
@@ -127,7 +129,7 @@ namespace engine
         texture.imageInfo.arrayLayers = 1;
         texture.imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
         texture.imageInfo.imageType = VK_IMAGE_TYPE_2D;
-   
+
         texture.imageInfo.format = texInfo.format;
         texture.imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
         texture.imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
@@ -139,9 +141,9 @@ namespace engine
 
         VmaAllocation allocation;
         vmaCreateImage(m_pAllocator, &texture.imageInfo, &allocInfo, &texture.image, &allocation, nullptr);
-        //vmaCreateBuffer(allocator, &bufferInfo, &allocInfo, &buffer, &allocation, nullptr);
+        // vmaCreateBuffer(allocator, &bufferInfo, &allocInfo, &buffer, &allocation, nullptr);
 
-         //auto texture = vk::createImage(m_pVkData, texInfo);
+        // auto texture = vk::createImage(m_pVkData, texInfo);
         // buffer.deviceMemory = vk::allocateTextureMemory(m_pVkData, texture, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", size, " bytes in local uniform buffer");
         return texture;
@@ -232,30 +234,26 @@ namespace engine
 
     void VulkanRenderer::pCreateStagingBuffer(const std::vector<Vertex> &vertices)
     {
-        // auto &buffer = m_pStagingBuffer.emplace_back();
-        // pCreateBuffer(m_pStagingBuffer, vertices.size() * sizeof(Vertex), STAGING_BUFFER_USAGE, STAGING_BUFFER_PROP);
-        m_pStagingBuffer.bufferInfo = vk::createVertexBuffer(m_pVkData, m_pStagingBuffer.buffer, vertices.size() * sizeof(Vertex), VK_BUFFER_USAGE_TRANSFER_SRC_BIT);
-        m_pStagingBuffer.deviceMemory = vk::allocateMemory(m_pVkData, m_pStagingBuffer.buffer, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+        pCreateBuffer(m_pStagingBuffer, vertices.size() * sizeof(Vertex), STAGING_BUFFER_USAGE, STAGING_BUFFER_PROP, STAGING_BUFFER_MEM_USAGE);
         allocations_count++;
+        void *data;
+        vmaMapMemory(m_pAllocator, m_pStagingBuffer.allocation, &data);
+        memcpy(data, vertices.data(), vertices.size() * sizeof(Vertex));
+        vmaUnmapMemory(m_pAllocator, m_pStagingBuffer.allocation);
 
-        // vk::VulkanAllocation allocation = pGetOrCreateDeviceMemory(STAGING_BUFFER_PROP, m_pStagingBuffer);
-
-        // vkBindBufferMemory(m_pVkData.logicalDevice, m_pStagingBuffer.buffer, allocation.deviceMemory, allocation.allocatedBytes);
-        vk::mapMemory(m_pVkData, m_pStagingBuffer.deviceMemory, vertices.size() * sizeof(Vertex), m_pStagingBuffer.offset, vertices.data());
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", vertices.size() * sizeof(Vertex), " bytes in hosted staging buffer");
     }
 
     void VulkanRenderer::pCreateStagingIndexBuffer(const std::vector<IndexType> &indices)
     {
-        m_pStagingIndexBuffer.bufferInfo = vk::createVertexBuffer(m_pVkData, m_pStagingIndexBuffer.buffer, indices.size() * sizeof(IndexType), VK_BUFFER_USAGE_TRANSFER_SRC_BIT);
-        m_pStagingIndexBuffer.deviceMemory = vk::allocateMemory(m_pVkData, m_pStagingIndexBuffer.buffer, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+        pCreateBuffer(m_pStagingIndexBuffer, indices.size() * sizeof(IndexType), STAGING_BUFFER_USAGE, STAGING_BUFFER_PROP, STAGING_BUFFER_MEM_USAGE);
         allocations_count++;
-        // pCreateBuffer(m_pStagingIndexBuffer, indices.size() * sizeof(IndexType), STAGING_BUFFER_USAGE, STAGING_BUFFER_PROP);
-
-        // vk::VulkanAllocation allocation = pGetOrCreateDeviceMemory(STAGING_BUFFER_PROP, m_pStagingIndexBuffer);
-
-        // vkBindBufferMemory(m_pVkData.logicalDevice, m_pStagingBuffer.buffer, allocation.deviceMemory, allocation.allocatedBytes);
-        vk::mapMemory(m_pVkData, m_pStagingIndexBuffer.deviceMemory, indices.size() * sizeof(IndexType), 0, indices.data());
+        // void* data;
+        void *data;
+        vmaMapMemory(m_pAllocator, m_pStagingIndexBuffer.allocation, &data);
+        memcpy(data, indices.data(), indices.size() * sizeof(Vertex));
+        vmaUnmapMemory(m_pAllocator, m_pStagingIndexBuffer.allocation);
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", indices.size() * sizeof(IndexType), " bytes in hosted staging buffer");
     }
 

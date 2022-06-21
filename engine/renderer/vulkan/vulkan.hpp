@@ -21,12 +21,19 @@ namespace engine
         const VkBufferUsageFlags STAGING_BUFFER_USAGE = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
         const VkBufferUsageFlags TEXTURE_BUFFER_USAGE = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
 
-        const VkMemoryPropertyFlags STAGING_BUFFER_PROP = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
-        const VkMemoryPropertyFlags VERTEX_BUFFER_PROP = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-        const VkMemoryPropertyFlags INDEX_BUFFER_PROP = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-        const VkMemoryPropertyFlags UNIFORM_BUFFER_PROP = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
-        const VkMemoryPropertyFlags TEXTURE_BUFFER_PROP = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+        const VmaAllocationCreateFlags STAGING_BUFFER_PROP = VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT;
+        
+        const VmaAllocationCreateFlags VERTEX_BUFFER_PROP = VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT;
+        const VmaAllocationCreateFlags INDEX_BUFFER_PROP = VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT;
+        const VmaAllocationCreateFlags UNIFORM_BUFFER_PROP = VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT;
+        const VmaAllocationCreateFlags TEXTURE_BUFFER_PROP = VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT;
 
+        const VmaMemoryUsage STAGING_BUFFER_MEM_USAGE = VMA_MEMORY_USAGE_CPU_ONLY; 
+        const VmaMemoryUsage VERTEX_BUFFER_MEM_USAGE = VMA_MEMORY_USAGE_GPU_ONLY;
+        const VmaMemoryUsage INDEX_BUFFER_MEM_USAGE = VMA_MEMORY_USAGE_GPU_ONLY;
+        const VmaMemoryUsage TEXTURE_BUFFER_MEM_USAGE = VMA_MEMORY_USAGE_AUTO;
+        const VmaMemoryUsage UNIFORM_BUFFER_MEM_USAGE = VMA_MEMORY_USAGE_AUTO;
+        
         using RenderPasses = std::unordered_map<uint32_t, vk::VulkanRenderPass>;
         using CommandPools = std::vector<VkCommandPool>;
         using CommandBuffers = std::vector<VkCommandBuffer>;
@@ -83,7 +90,7 @@ namespace engine
         void pCreateUniformBuffer(size_t);
         vk::VulkanTexture pCreateTextureBuffer(vk::VulkanTextureInfo);
 
-        void pCreateBuffer(vk::VulkanBuffer&, size_t, VkBufferUsageFlags, VkMemoryPropertyFlags);
+        void pCreateBuffer(vk::VulkanBuffer&, size_t, VkBufferUsageFlags, VmaAllocationCreateFlags, VmaMemoryUsage);
 
         std::pair<vk::VulkanBuffer*, vk::VulkanBuffer*> pGetBuffers(const VertexContainer& vertices, const IndexContainer& indices);
 
