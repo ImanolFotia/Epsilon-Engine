@@ -56,30 +56,8 @@ namespace engine
         vmaUnmapMemory(m_pAllocator, m_pStagingTextureBuffer.allocation);
     }
 
-    vk::VulkanAllocation VulkanRenderer::pGetOrCreateDeviceMemory(VkMemoryPropertyFlags properties, const vk::VulkanBuffer &buffer)
-    {
-
-        vk::VulkanAllocation allocation;
-        allocation.allocatedBytes += size;
-
-        return allocation;
-    }
-
-    vk::VulkanAllocation VulkanRenderer::getDeviceMemory(VkMemoryPropertyFlags properties)
-    {
-        vk::VulkanAllocation allocation;
-        /* if (m_pMemoryAllocations.contains(properties))
-         {
-             allocation = m_pMemoryAllocations[properties];
-         }*/
-        return allocation;
-    }
-
     void VulkanRenderer::pCreateBuffer(vk::VulkanBuffer &buffer, size_t size, VkBufferUsageFlags usage, VmaAllocationCreateFlags properties, VmaMemoryUsage mem_usage)
     {
-        // buffer.bufferInfo = vk::createVertexBuffer(m_pVkData, buffer.buffer, size, usage);
-        // buffer.deviceMemory = vk::allocateMemory(m_pVkData, buffer.buffer, properties);
-
         VkBufferCreateInfo bufferInfo{};
         bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         bufferInfo.size = size;
