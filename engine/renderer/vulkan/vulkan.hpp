@@ -107,9 +107,7 @@ namespace engine
 
         void pRecreateSwapChain();
         int32_t pPrepareSyncObjects();
-
-        vk::VulkanAllocation pGetOrCreateDeviceMemory(VkMemoryPropertyFlags, const vk::VulkanBuffer&);
-        vk::VulkanAllocation getDeviceMemory(VkMemoryPropertyFlags properties);
+        
     private:
         framework::Window *m_pWindow = nullptr;
 
