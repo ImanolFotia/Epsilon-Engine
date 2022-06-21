@@ -83,6 +83,7 @@ namespace vk
         copyRegion.size = size;
         vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
 
+
         endSingleTimeCommands(vkData, commandPool, commandBuffer);
 
     }

@@ -34,7 +34,7 @@ ExternalProject_Get_property(vma SOURCE_DIR)
 set(VMA_BUILD_DIR ${SOURCE_DIR})
 message(${VMA_BUILD_DIR})
 
-include_directories(${VMA_BUILD_DIR})
+include_directories(${VMA_BUILD_DIR}/include)
 
 
 #Download and include stb-image

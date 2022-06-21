@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vulkan/vulkan.hpp>
+#include <vk_mem_alloc.h>
 
 namespace vk
 {
@@ -24,10 +25,10 @@ namespace vk
         VkBuffer buffer;
         VkBufferCreateInfo bufferInfo;
         uint32_t allocatedVertices = 0;
-        VkDeviceMemory deviceMemory;
         size_t offset = 0;
         std::vector<SubBuffer> subBuffers;
         std::unordered_map<uint32_t, uint32_t> subBufferIndex;
+        VmaAllocation allocation;
     };
 
     struct VulkanTextureInfo
