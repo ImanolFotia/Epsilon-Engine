@@ -114,6 +114,8 @@ namespace engine
         indexBuffer->allocatedVertices += indices.size();
 
         m_pObjectData.push_back({vertices.size(), indices.size(), curr_vertex_offset, curr_index_offset, m_pVertexBuffers.size() - 1, m_pIndexBuffers.size() - 1, group});
+        
+        
         return std::prev(m_pObjectData.end());
     }
 
