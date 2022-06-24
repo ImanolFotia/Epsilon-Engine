@@ -185,7 +185,7 @@ namespace vk
                 vkGetPhysicalDeviceProperties(device, &deviceProperties);
                 std::string deviceName = deviceProperties.deviceName;
                 std::transform(deviceName.begin(), deviceName.end(), deviceName.begin(), ::toupper);
-                if (deviceName.find("NVIDIA") != std::string::npos)
+                if (deviceName.find("INTEL") != std::string::npos)
                 {
                     physicalDevice = device;
                     std::cout << "found nvidia" << std::endl;
