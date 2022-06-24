@@ -83,6 +83,7 @@ namespace ExampleApp
                 framework::free_image_data(pixels);
                 material2 = m_pRenderer->CreateMaterial(texture);
             }
+
         }
 
         void onRender() override
@@ -135,11 +136,11 @@ namespace ExampleApp
 
     private:
         engine::Renderer::ObjectDataId myObjectId = {};
-        engine::Material material;
-        engine::Material material2;
+        engine::Material material = {};
+        engine::Material material2 = {};
 
-        engine::Cube m_pCube;
-        engine::Sphere m_pSphere;
+        engine::Cube m_pCube = {};
+        engine::Sphere m_pSphere = {};
         engine::Renderer::ObjectDataId CubeId = {};
         engine::Renderer::ObjectDataId SphereId = {};
     };

@@ -227,10 +227,11 @@ namespace engine
     {
         pCreateBuffer(m_pStagingIndexBuffer, indices.size() * sizeof(IndexType), STAGING_BUFFER_USAGE, STAGING_BUFFER_PROP, STAGING_BUFFER_MEM_USAGE);
         allocations_count++;
+        
         // void* data;
         void *data;
         vmaMapMemory(m_pAllocator, m_pStagingIndexBuffer.allocation, &data);
-        memcpy(data, indices.data(), indices.size() * sizeof(Vertex));
+        memcpy(data, indices.data(), indices.size() * sizeof(IndexType));
         vmaUnmapMemory(m_pAllocator, m_pStagingIndexBuffer.allocation);
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", indices.size() * sizeof(IndexType), " bytes in hosted staging buffer");
     }

@@ -38,7 +38,7 @@ namespace LearningVulkan
         std::shared_ptr<engine::VulkanRenderer> m_pRenderer;
 
         uint32_t nbFrames = 0;
-        uint32_t lastTime = 0.0;
+        uint32_t lastTime = 0;
 
     public:
         LearningVulkanApplication() = default;
