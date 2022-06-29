@@ -29,11 +29,6 @@ namespace engine
         vk::pickPhysicalDevice(m_pVkData);
         vk::createLogicalDevice(m_pVkData);
 
-        VmaAllocatorCreateInfo allocatorInfo = {};
-        allocatorInfo.physicalDevice = m_pVkData.physicalDevice;
-        allocatorInfo.device = m_pVkData.logicalDevice;
-        allocatorInfo.instance = m_pVkData.instance;
-        vmaCreateAllocator(&allocatorInfo, &m_pAllocator);
 
         vk::createSwapChain(m_pVkData, window.getWindow());
         vk::createImageViews(m_pVkData);
@@ -154,9 +149,11 @@ namespace engine
         return std::prev(m_pTextureData.end());
     }
 
-    Material VulkanRenderer::CreateMaterial(Renderer::TexturesDataId texture)
+    Material VulkanRenderer::CreateMaterial(Ref<Material> material)
     {
         auto &material = m_pMaterials.emplace_back();
+
+        for()
         material.textures.push_back(m_pTextures[texture->id]);
         pCreateDescriptorSets(material);
         // pUpdateMaterial(material);
@@ -321,7 +318,6 @@ namespace engine
         {
 
             vmaDestroyBuffer(m_pAllocator, m_pUniformBuffers[i].buffer, m_pUniformBuffers[i].allocation);
-            //vmaFreeMemory(m_pAllocator, m_pUniformBuffers[i].allocation);
         }
 
         vkDestroyDescriptorPool(m_pVkData.logicalDevice, m_pDescriptorPool, nullptr);
@@ -332,13 +328,11 @@ namespace engine
         for (auto &buffer : m_pVertexBuffers)
         {
             vmaDestroyBuffer(m_pAllocator, buffer.buffer, buffer.allocation);
-            //vmaFreeMemory(m_pAllocator, buffer.allocation);
         }
 
         for (auto &buffer : m_pIndexBuffers)
         {
             vmaDestroyBuffer(m_pAllocator, buffer.buffer, buffer.allocation);
-            //vmaFreeMemory(m_pAllocator, buffer.allocation);
         }
 
         for (auto &texture : m_pTextures)
@@ -348,15 +342,7 @@ namespace engine
             vkDestroyImageView(m_pVkData.logicalDevice, texture.imageView, nullptr);
             vk::destroyImage(m_pVkData, texture);
         }
-        /*for (auto &buffer : m_pTextureBuffers)
-        {
-            vkFreeMemory(m_pVkData.logicalDevice, buffer.deviceMemory, nullptr);
-        }*/
-        /*
-                for (auto &allocations : m_pMemoryAllocations)
-                {
-                    vkFreeMemory(m_pVkData.logicalDevice, allocations.second.deviceMemory, nullptr);
-                }*/
+
         vmaDestroyAllocator(m_pAllocator);
 
         for (auto &pass : m_pRenderPasses)

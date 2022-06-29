@@ -1,6 +1,7 @@
 #pragma once
 
 #include "types.hpp"
+#include "object_pool.hpp"
 
 #include "framework/window.hpp"
 
@@ -55,9 +56,6 @@ namespace engine
         size_t texture_bucket;
     };
 
-
-    
-
     struct RenderObject {
         std::list<ObjectData>::iterator objectId;
         uint32_t materialId;
@@ -89,7 +87,7 @@ namespace engine
 
         virtual uint32_t addRenderpass(engine::RenderPassInfo) = 0;
 
-        virtual Material CreateMaterial(Renderer::TexturesDataId) = 0;
+        virtual Material CreateMaterial(Ref<Material>) = 0;
 
         virtual void Push(RenderObject) = 0;
 

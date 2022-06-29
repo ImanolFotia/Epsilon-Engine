@@ -299,4 +299,41 @@ namespace engine
         RenderPassInfo info;
     };
 
+    struct BufferInfo {
+        size_t size;
+        size_t offset;
+    };
+
+    struct BufferInfoFactory {
+
+        BufferInfoFactory size(size_t s) {
+            info.size = s;
+            return *this;
+        }
+
+        BufferInfoFactory offset(size_t o) {
+            info.offset = o;
+            return *this;
+        }
+
+        operator BufferInfo() {
+            return info;
+        }
+        BufferInfo info;
+    };
+
+    struct UniformBindingInfo {
+        //...
+    };
+
+    struct UniformBindingFactory {
+        operator UniformBindingInfo() { return info; }
+        UniformBindingInfo info;
+    };
+
+    struct MaterialInfo {
+        std::vector<Ref<Texture>> textures;
+        UniformBindingInfo bindingInfo;
+    };
+
 }
