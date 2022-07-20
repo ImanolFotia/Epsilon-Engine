@@ -17,8 +17,6 @@ namespace engine
     {
         
         using RenderPasses = std::unordered_map<uint32_t, vk::VulkanRenderPass>;
-        using CommandPools = std::vector<VkCommandPool>;
-        using CommandBuffers = std::vector<VkCommandBuffer>;
         using VertexBuffers = std::vector<vk::VulkanBuffer>;
         using IndexBuffers = std::vector<vk::VulkanBuffer>;
         using TextureBuffers = std::vector<vk::VulkanTextureBuffer>;
@@ -66,8 +64,6 @@ namespace engine
 
         void Cleanup() override;
 
-
-
         void pUpdateUniforms();
         void pUpdateMaterial(vk::VulkanMaterial&);
 
@@ -82,42 +78,15 @@ namespace engine
 
         vk::VulkanData m_pVkData;
 
-        RenderPasses m_pRenderPasses;
-        std::unordered_map<uint32_t, engine::RenderPassInfo> m_pRenderPassInfo;
-
-        CommandPools m_pCommandPools;
-        CommandBuffers m_pCommandBuffers;
-
-        VertexBuffers m_pVertexBuffers;
-        IndexBuffers m_pIndexBuffers;
-        TextureBuffers m_pTextureBuffers;
-        Textures m_pTextures;
-        Materials m_pMaterials;
-
-        UniformBuffers m_pUniformBuffers;
-        VkDescriptorPool m_pDescriptorPool;
-        std::vector<VkDescriptorSet> m_pDescriptorSets;
 
         Frame m_pFrame;
 
-        vk::VulkanBuffer m_pStagingBuffer;
-        vk::VulkanBuffer m_pStagingIndexBuffer;
-        vk::VulkanBuffer m_pStagingTextureBuffer;
 
-        vk::VulkanVertexInfo<6> m_pVertexInfo;
-
-        uint32_t current_vertex_count = 0;
-        uint32_t current_index_count = 0;
-        uint32_t allocations_count = 0;
-
-
-        uint32_t current_texture_offset = 0;
+        vk::VulkanVertexInfo m_pVertexInfo;
 
         uint32_t renderpass_id = 0;
         uint32_t attachedRenderPass = 0;
 
-        ObjectsData m_pObjectData;
-        TexturesData m_pTextureData;
         std::list<RenderObject> m_pCurrentCommandQueue;
 
         ShaderData m_pCameraData{};

@@ -5,7 +5,7 @@
 
 namespace vk
 {
-    static void createDescriptorSetLayout(const VulkanData &vkData, VulkanRenderPipeline &renderPipeline)
+    static void createDescriptorSetLayout(const VulkanData &vkData, VkDescriptorSetLayout &renderPipeline)
     {
         VkDescriptorSetLayoutBinding uboLayoutBinding{};
         uboLayoutBinding.binding = 0;
@@ -27,7 +27,7 @@ namespace vk
         layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());
         layoutInfo.pBindings = bindings.data();;
 
-        if (vkCreateDescriptorSetLayout(vkData.logicalDevice, &layoutInfo, nullptr, &renderPipeline.descriptorSetLayout) != VK_SUCCESS)
+        if (vkCreateDescriptorSetLayout(vkData.logicalDevice, &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to create descriptor set layout!");
         }

@@ -7,7 +7,6 @@ namespace vk
 {
     const size_t ALLOCATION_SIZE_MB = 0xFFFFFFF;
 
-    template <uint32_t num_attributes>
     struct VulkanVertexInfo
     {
         std::vector<VkVertexInputAttributeDescription> attributeDescriptions{};

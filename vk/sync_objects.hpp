@@ -32,8 +32,8 @@ namespace vk
         }
     }
 
-    template <typename T, uint32_t C>
-    static int32_t prepareSyncObjects(VulkanData &vk_data, GLFWwindow *window, uint32_t currentFrame, VulkanRenderPass &renderPass, VulkanVertexInfo<C> vertexInfo)
+    template <typename T>
+    static int32_t prepareSyncObjects(VulkanData &vk_data, GLFWwindow *window, uint32_t currentFrame, VulkanRenderPass &renderPass, VulkanVertexInfo vertexInfo)
     {
 
         vkWaitForFences(vk_data.logicalDevice, 1, &vk_data.syncObjects[currentFrame].inFlightFences, VK_TRUE, UINT64_MAX);

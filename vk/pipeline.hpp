@@ -105,12 +105,12 @@ namespace vk
         }
     }
 
-    template <typename PushConstantType, uint32_t C>
+    template <typename PushConstantType>
     static VkPipeline createGraphicsPipeline(
         VulkanData &vk_data,
         VulkanRenderPass &renderPass,
         VulkanRenderPipeline &renderPipeline,
-        VulkanVertexInfo<C> VertexInfo,
+        VulkanVertexInfo VertexInfo,
         engine::ShaderInfo shaderInfo)
     {
 

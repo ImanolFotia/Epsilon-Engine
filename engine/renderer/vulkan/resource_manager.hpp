@@ -8,6 +8,8 @@ namespace engine
     struct VulkanResourceManager : ResourceManager
     {
         using IndexType = uint32_t;
+        using CommandPools = std::vector<VkCommandPool>;
+        using CommandBuffers = std::vector<VkCommandBuffer>;
 
         VulkanResourceManager();
         ~VulkanResourceManager();
@@ -24,12 +26,14 @@ namespace engine
         Ref<Shader> createShader(ShaderInfo) override;
         Ref<UniformBindings> createUniformData(UniformBindingInfo) override;
         Ref<Material> createMaterial(MaterialInfo) override;
+        Ref<RenderPass> createRenderPass(RenderPassInfo) override;
 
         void destroyTexture(Ref<Texture>) override;
         void destroyBuffer(Ref<Buffer>) override;
         void destroyShader(Ref<Shader>) override;
         void destroyUniformData(Ref<UniformBindings>) override;
         void destroyMaterial(Ref<Material>) override;
+        void destroyRenderPass(Ref<RenderPass>) override;
 
         vk::VulkanTexture *getTexture(Ref<Texture>);
         vk::VulkanBuffer *getBuffer(Ref<Buffer>);
@@ -39,19 +43,19 @@ namespace engine
 
     private:
         VmaAllocator m_pAllocator;
-        const vk::VulkanData *m_pVkDataPtr = nullptr;
+        vk::VulkanData *m_pVkDataPtr = nullptr;
 
     private:
-        void pCreateVertexBuffer();
-        void pCreateIndexBuffer();
-        void pCreateUniformBuffer(size_t);
+        vk::VulkanBuffer pCreateVertexBuffer();
+        vk::VulkanBuffer pCreateIndexBuffer();
+        vk::VulkanBuffer pCreateUniformBuffer(size_t);
         vk::VulkanTexture pCreateTextureBuffer(vk::VulkanTextureInfo);
 
         void pCreateBuffer(vk::VulkanBuffer &, size_t, VkBufferUsageFlags, VmaAllocationCreateFlags, VmaMemoryUsage);
 
         vk::VulkanBuffer pCreateStagingBuffer(const std::vector<Vertex> &);
         vk::VulkanBuffer pCreateStagingIndexBuffer(const std::vector<IndexType> &);
-        void pCreateStagingTextureBuffer(unsigned char *, TextureInfo);
+        vk::VulkanBuffer pCreateStagingTextureBuffer(unsigned char *, TextureInfo);
 
         void pCreateUniformBuffers();
         void pCreateDescriptorPool();
@@ -82,5 +86,12 @@ namespace engine
         Pool<Buffer, vk::VulkanBuffer> bufferPool;
         Pool<UniformBindings, VkDescriptorSetLayoutBinding> uniformBindingPool;
         Pool<Material, vk::VulkanMaterial> materialPool;
+        Pool<RenderPass, vk::VulkanRenderPass> renderPassPool;
+
+        VkDescriptorPool m_pDescriptorPool;
+        std::vector<VkDescriptorSet> m_pDescriptorSets;
+
+        CommandPools m_pCommandPools;
+        CommandBuffers m_pCommandBuffers;
     };
 }

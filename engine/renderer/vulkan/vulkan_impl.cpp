@@ -9,51 +9,43 @@
 namespace engine
 {
 
-    void VulkanResourceManager::pUpdateUniforms()
-    {
-        void *data;
-        vmaMapMemory(m_pAllocator, m_pFrame.UniformBuffer().allocation, &data);
-        memcpy(data, &m_pCameraData, sizeof(m_pCameraData));
-        vmaUnmapMemory(m_pAllocator, m_pFrame.UniformBuffer().allocation);
-    }
 
-    void VulkanResourceManager::pCreateVertexBuffer()
+    vk::VulkanBuffer VulkanResourceManager::pCreateVertexBuffer()
     {
-        auto &buffer = m_pVertexBuffers.emplace_back();
+        vk::VulkanBuffer buffer;
         pCreateBuffer(buffer, sizeof(Vertex) * MAX_VERTICES_PER_BUFFER, VERTEX_BUFFER_USAGE, VERTEX_BUFFER_PROP, VERTEX_BUFFER_MEM_USAGE);
-        // auto allocation = pGetOrCreateDeviceMemory(VERTEX_BUFFER_PROP, buffer);
-        // vkBindBufferMemory(m_pVkData.logicalDevice, buffer.buffer, allocation.deviceMemory, allocation.allocatedBytes);
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", sizeof(Vertex) * MAX_VERTICES_PER_BUFFER, " bytes in local vertex buffer");
+        return buffer;
     }
 
-    void VulkanResourceManager::pCreateIndexBuffer()
+    vk::VulkanBuffer VulkanResourceManager::pCreateIndexBuffer()
     {
-        auto &buffer = m_pIndexBuffers.emplace_back();
+        vk::VulkanBuffer buffer;
         pCreateBuffer(buffer, sizeof(IndexType) * MAX_INDICES_PER_BUFFER, INDEX_BUFFER_USAGE, INDEX_BUFFER_PROP, INDEX_BUFFER_MEM_USAGE);
-
-        // vkBindBufferMemory(m_pVkData.logicalDevice, buffer.buffer, allocation.deviceMemory, allocation.allocatedBytes);
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", sizeof(IndexType) * MAX_INDICES_PER_BUFFER, " bytes in local index buffer");
+        return buffer;
     }
 
-    void VulkanResourceManager::pCreateUniformBuffer(size_t size)
+    vk::VulkanBuffer VulkanResourceManager::pCreateUniformBuffer(size_t size)
     {
-        auto &buffer = m_pUniformBuffers.emplace_back();
+        vk::VulkanBuffer buffer;
         pCreateBuffer(buffer, size, UNIFORM_BUFFER_USAGE, UNIFORM_BUFFER_PROP, UNIFORM_BUFFER_MEM_USAGE);
-        // auto allocation = pGetOrCreateDeviceMemory(UNIFORM_BUFFER_PROP, buffer);
-        // vkBindBufferMemory(m_pVkData.logicalDevice, buffer.buffer, allocation.deviceMemory, allocation.allocatedBytes);
-
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", size, " bytes in local uniform buffer");
+        return buffer;
     }
 
-    void VulkanResourceManager::pCreateStagingTextureBuffer(unsigned char *pixels, TextureInfo textureInfo)
+    vk::VulkanBuffer VulkanResourceManager::pCreateStagingTextureBuffer(unsigned char *pixels, TextureInfo textureInfo)
     {
+        vk::VulkanBuffer stagingBuffer;
         auto imageSize = textureInfo.width * textureInfo.height * textureInfo.numChannels;
-        pCreateBuffer(m_pStagingTextureBuffer, imageSize, TEXTURE_BUFFER_USAGE, TEXTURE_BUFFER_PROP, TEXTURE_BUFFER_MEM_USAGE);
+        pCreateBuffer(stagingBuffer, imageSize, TEXTURE_BUFFER_USAGE, TEXTURE_BUFFER_PROP, TEXTURE_BUFFER_MEM_USAGE);
 
         void *data;
-        vmaMapMemory(m_pAllocator, m_pStagingTextureBuffer.allocation, &data);
+        vmaMapMemory(m_pAllocator, stagingBuffer.allocation, &data);
         memcpy(data, pixels, static_cast<size_t>(imageSize));
-        vmaUnmapMemory(m_pAllocator, m_pStagingTextureBuffer.allocation);
+        vmaUnmapMemory(m_pAllocator, stagingBuffer.allocation);
+
+        return stagingBuffer;
     }
 
     void VulkanResourceManager::pCreateBuffer(vk::VulkanBuffer &buffer, size_t size, VkBufferUsageFlags usage, VmaAllocationCreateFlags properties, VmaMemoryUsage mem_usage)
@@ -71,8 +63,6 @@ namespace engine
         VmaAllocation allocation;
 
         vmaCreateBuffer(m_pAllocator, &bufferInfo, &allocInfo, &buffer.buffer, &buffer.allocation, nullptr);
-
-        allocations_count++;
     }
 
     void VulkanResourceManager::pCreateUniformBuffers()
@@ -89,8 +79,6 @@ namespace engine
 
     vk::VulkanTexture VulkanResourceManager::pCreateTextureBuffer(vk::VulkanTextureInfo texInfo)
     {
-        auto &buffer = m_pTextureBuffers.emplace_back();
-
         vk::VulkanTexture texture;
         texInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 
@@ -165,50 +153,7 @@ namespace engine
         pUpdateMaterial(material);
     }
 
-    void VulkanResourceManager::pUpdateMaterial(vk::VulkanMaterial &material)
-    {
-        for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
-        {
-            VkDescriptorBufferInfo bufferInfo{};
-            bufferInfo.buffer = m_pUniformBuffers[i].buffer;
-            bufferInfo.offset = 0;
-            bufferInfo.range = sizeof(ShaderData);
-
-            VkDescriptorImageInfo imageInfo{};
-            imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            auto &texture = material.textures.at(0);
-            // texture->format = VK_FORMAT_R8G8B8A8_SRGB;
-            // vk::createImageView(m_pVkData, *texture, VK_IMAGE_ASPECT_COLOR_BIT);
-            // vk::createTextureSampler(m_pVkData, *texture);
-
-            imageInfo.imageView = texture.imageView;
-            imageInfo.sampler = texture.sampler;
-
-            std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
-
-            descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrites[0].dstSet = material.descriptorSets[i];
-            descriptorWrites[0].dstBinding = 0;
-            descriptorWrites[0].dstArrayElement = 0;
-            descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-            descriptorWrites[0].descriptorCount = 1;
-            descriptorWrites[0].pBufferInfo = &bufferInfo;
-            descriptorWrites[0].pImageInfo = nullptr;       // Optional
-            descriptorWrites[0].pTexelBufferView = nullptr; // Optional
-
-            descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrites[1].dstSet = material.descriptorSets[i];
-            descriptorWrites[1].dstBinding = 1;
-            descriptorWrites[1].dstArrayElement = 0;
-            descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-            descriptorWrites[1].descriptorCount = 1;
-            descriptorWrites[1].pImageInfo = &imageInfo;
-
-            vkUpdateDescriptorSets(m_pVkDataPtr->logicalDevice, 2, descriptorWrites.data(), 0, nullptr);
-            // vk::updateDescriptorSet(m_pVkData, material);
-        }
-    }
-
+    
     vk::VulkanBuffer VulkanResourceManager::pCreateStagingBuffer(const std::vector<Vertex> &vertices)
     {
         vk::VulkanBuffer stagingBuffer;
@@ -217,7 +162,7 @@ namespace engine
         void *data;
         vmaMapMemory(m_pAllocator, stagingBuffer.allocation, &data);
         memcpy(data, vertices.data(), vertices.size() * sizeof(Vertex));
-        vmaUnmapMemory(m_pAllocator, m_pStagingBuffer.allocation);
+        vmaUnmapMemory(m_pAllocator, stagingBuffer.allocation);
 
         IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", vertices.size() * sizeof(Vertex), " bytes in hosted staging buffer");
         return stagingBuffer;

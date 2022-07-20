@@ -21,52 +21,76 @@ namespace engine
     {
         Ref<Texture> refTexture;
 
-        pCreateStagingTextureBuffer(pixels, texInfo);
+        auto stagingBuffer = pCreateStagingTextureBuffer(pixels, texInfo);
 
         auto texture = pCreateTextureBuffer({.width = texInfo.width,
                                              .height = texInfo.height,
                                              .num_channels = texInfo.numChannels});
 
         auto size = texInfo.width * texInfo.height * texInfo.numChannels;
-        uint16_t curr_texture_offset = current_texture_offset;
-        current_texture_offset += size;
         // vk::copyBuffer(m_pVkData, m_pCommandPools.back(), m_pStagingBuffer.buffer, buffer.image, size, 0);
 
-        transitionImageLayout(m_pVkDataPtr, m_pCommandPools.back(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-        copyBufferToImage(m_pVkDataPtr, m_pCommandPools.back(), m_pStagingTextureBuffer.buffer, texture.image, static_cast<uint32_t>(textureInfo.width), static_cast<uint32_t>(textureInfo.height));
-        transitionImageLayout(m_pVkDataPtr, m_pCommandPools.back(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        transitionImageLayout(*m_pVkDataPtr, m_pCommandPools.back(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+        copyBufferToImage(*m_pVkDataPtr, m_pCommandPools.back(), stagingBuffer.buffer, texture.image, static_cast<uint32_t>(textureInfo.width), static_cast<uint32_t>(textureInfo.height));
+        transitionImageLayout(*m_pVkDataPtr, m_pCommandPools.back(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
-        vmaDestroyBuffer(m_pAllocator, m_pStagingTextureBuffer.buffer, m_pStagingTextureBuffer.allocation);
+        vmaDestroyBuffer(m_pAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
         // vmaFreeMemory(m_pAllocator, m_pStagingTextureBuffer.allocation);
 
         texture.format = VK_FORMAT_R8G8B8A8_SRGB;
-        vk::createImageView(m_pVkDataPtr, texture, VK_IMAGE_ASPECT_COLOR_BIT);
-        vk::createTextureSampler(m_pVkDataPtr, texture);
+        vk::createImageView(*m_pVkDataPtr, texture, VK_IMAGE_ASPECT_COLOR_BIT);
+        vk::createTextureSampler(*m_pVkDataPtr, texture);
 
-        m_pTextures.push_back(texture);
-
-        m_pTextureData.push_back({.id = m_pTextures.size() - 1,
-                                  .size = size,
-                                  .offset = curr_texture_offset,
-                                  .texture_bucket = 0});
-
-        return std::prev(m_pTextureData.end());
+        auto ref = texPool.insert(texture);
+        return ref;
     }
 
-    Ref<Material> createMaterial(MaterialInfo material) {
+    Ref<Material> VulkanResourceManager::createMaterial(MaterialInfo material)
+    {
         Ref<Material> materialRef;
+        vk::VulkanMaterial vkMaterial;
 
         auto &materialdata = m_pMaterials.emplace_back();
 
-        for(auto& texture: material.textures){
+        for (auto &texture : material.textures)
+        {
             materialdata.textures.push_back(m_pTextures[texture->id]);
         }
 
-        pCreateDescriptorSets(material);
-        // pUpdateMaterial(material);
-        Material mat;
-        mat.id = m_pMaterials.size() - 1;
-        
+        pCreateDescriptorSets(vkMaterial);
+
         return materialRef;
+    }
+
+    Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPassInfo)
+    {
+        vk::VulkanRenderPass renderPass = {};
+
+        renderPass.renderPipelines.emplace_back();
+
+        //m_pRenderPassInfo[renderpass_id] = renderPassInfo;
+
+        vk::createRenderPass(*m_pVkDataPtr, renderPass, renderPassInfo);
+        
+        vk::VulkanVertexInfo vertexInfo;
+
+        vertexInfo.attributeDescriptions =
+            vk::getAttributeDescriptions(0, renderPassInfo.vertexLayout);
+
+        vertexInfo.bindingDescription = vk::getBindingDescription(renderPassInfo.size);
+
+        vk::createDescriptorSetLayout(*m_pVkDataPtr, renderPass.renderPipelines.back().descriptorSetLayout);
+
+        vk::createGraphicsPipeline<MeshPushConstant>(*m_pVkDataPtr,
+                                                     renderPass,
+                                                     renderPass.renderPipelines.back(),
+                                                     vertexInfo,
+                                                     renderPassInfo.shaderInfo);
+
+        vk::createFramebuffers(*m_pVkDataPtr, renderPass);
+
+        auto ref = renderPassPool.insert(renderPass);
+
+        return ref;
     }
 }

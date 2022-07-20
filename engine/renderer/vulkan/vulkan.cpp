@@ -36,12 +36,12 @@ namespace engine
         m_pCommandPools.emplace_back();
 
         vk::createCommandPool(m_pVkData, m_pCommandPools.back());
-
+/*
         pCreateVertexBuffer();
         pCreateIndexBuffer();
         pCreateUniformBuffers();
 
-        pCreateDescriptorPool();
+        pCreateDescriptorPool();*/
         // pCreateDescriptorSets();
 
         vk::createCommandBuffers(m_pVkData, m_pCommandPools.back(), m_pCommandBuffers);
@@ -354,4 +354,57 @@ namespace engine
 
         vk::cleanup(m_pVkData);
     }
+
+    void VulkanRenderer::pUpdateUniforms()
+    {
+        void *data;
+        vmaMapMemory(m_pAllocator, m_pFrame.UniformBuffer().allocation, &data);
+        memcpy(data, &m_pCameraData, sizeof(m_pCameraData));
+        vmaUnmapMemory(m_pAllocator, m_pFrame.UniformBuffer().allocation);
+    }
+
+    void VulkanRenderer::pUpdateMaterial(vk::VulkanMaterial &material)
+    {
+        for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
+        {
+            VkDescriptorBufferInfo bufferInfo{};
+            bufferInfo.buffer = m_pUniformBuffers[i].buffer;
+            bufferInfo.offset = 0;
+            bufferInfo.range = sizeof(ShaderData);
+
+            VkDescriptorImageInfo imageInfo{};
+            imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            auto &texture = material.textures.at(0);
+            // texture->format = VK_FORMAT_R8G8B8A8_SRGB;
+            // vk::createImageView(m_pVkData, *texture, VK_IMAGE_ASPECT_COLOR_BIT);
+            // vk::createTextureSampler(m_pVkData, *texture);
+
+            imageInfo.imageView = texture.imageView;
+            imageInfo.sampler = texture.sampler;
+
+            std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
+
+            descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            descriptorWrites[0].dstSet = material.descriptorSets[i];
+            descriptorWrites[0].dstBinding = 0;
+            descriptorWrites[0].dstArrayElement = 0;
+            descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+            descriptorWrites[0].descriptorCount = 1;
+            descriptorWrites[0].pBufferInfo = &bufferInfo;
+            descriptorWrites[0].pImageInfo = nullptr;       // Optional
+            descriptorWrites[0].pTexelBufferView = nullptr; // Optional
+
+            descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            descriptorWrites[1].dstSet = material.descriptorSets[i];
+            descriptorWrites[1].dstBinding = 1;
+            descriptorWrites[1].dstArrayElement = 0;
+            descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+            descriptorWrites[1].descriptorCount = 1;
+            descriptorWrites[1].pImageInfo = &imageInfo;
+
+            vkUpdateDescriptorSets(m_pVkData.logicalDevice, 2, descriptorWrites.data(), 0, nullptr);
+            // vk::updateDescriptorSet(m_pVkData, material);
+        }
+    }
+
 }

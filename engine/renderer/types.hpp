@@ -2,6 +2,7 @@
 
 #include <engine/types.hpp>
 #include <string>
+#include <vector>
 
 namespace engine
 {
@@ -245,6 +246,7 @@ namespace engine
     struct RenderPassInfo
     {
         uint32_t numDescriptors;
+        uint32_t numAttributes;
         size_t size;
         bool depthAttachment;
         std::vector<SubPassInfo> subpasses;
@@ -332,7 +334,7 @@ namespace engine
     };
 
     struct MaterialInfo {
-        std::vector<Ref<Texture>> textures;
+        std::vector<TextureInfo> textures;
         UniformBindingInfo bindingInfo;
     };
 
