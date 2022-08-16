@@ -137,7 +137,7 @@ namespace engine
 
     void VulkanResourceManager::pCreateDescriptorSets(vk::VulkanMaterial &material)
     {
-        std::vector<VkDescriptorSetLayout> layouts(vk::MAX_FRAMES_IN_FLIGHT, m_pRenderPasses.at(0).renderPipelines.back().descriptorSetLayout);
+        std::vector<VkDescriptorSetLayout> layouts(vk::MAX_FRAMES_IN_FLIGHT, material.descriptorSetLayout);
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
         allocInfo.descriptorPool = m_pDescriptorPool;
@@ -149,8 +149,6 @@ namespace engine
         {
             throw std::runtime_error("failed to allocate descriptor sets!");
         }
-
-        pUpdateMaterial(material);
     }
 
     

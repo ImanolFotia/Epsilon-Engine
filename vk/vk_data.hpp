@@ -67,6 +67,7 @@ namespace vk
 
     struct VulkanMaterial
     {
+        VkDescriptorSetLayout descriptorSetLayout{};
         std::vector<VkDescriptorSet> descriptorSets;
         VkPipelineLayout *pipelineLayout = nullptr;
         std::vector<VulkanTexture> textures;
@@ -154,6 +155,10 @@ namespace vk
 
     struct VulkanData
     {
+
+        using CommandPools = std::vector<VkCommandPool>;
+        using CommandBuffers = std::vector<VkCommandBuffer>;
+        
         VkInstance instance;
         VkSampleCountFlagBits msaaSamples = VK_SAMPLE_COUNT_1_BIT;
         VkSurfaceKHR surface;
@@ -178,5 +183,9 @@ namespace vk
         std::vector<VkFramebuffer> swapChainFramebuffers;
 
         std::vector<VulkanSyncObject> syncObjects;
+
+
+        CommandPools m_pCommandPools;
+        CommandBuffers m_pCommandBuffers;
     };
 }

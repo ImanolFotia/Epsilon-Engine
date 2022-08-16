@@ -85,8 +85,6 @@ namespace engine
 
         virtual TexturesDataId RegisterTexture(unsigned char*, TextureInfo) = 0;
 
-        virtual uint32_t addRenderpass(engine::RenderPassInfo) = 0;
-
         virtual Material CreateMaterial(Ref<Material>) = 0;
 
         virtual void Push(RenderObject) = 0;

@@ -338,4 +338,6 @@ namespace engine
         UniformBindingInfo bindingInfo;
     };
 
+    struct MeshInfo {};
+
 }

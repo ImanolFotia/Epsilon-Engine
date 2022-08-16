@@ -28,11 +28,10 @@ namespace engine
                                              .num_channels = texInfo.numChannels});
 
         auto size = texInfo.width * texInfo.height * texInfo.numChannels;
-        // vk::copyBuffer(m_pVkData, m_pCommandPools.back(), m_pStagingBuffer.buffer, buffer.image, size, 0);
 
-        transitionImageLayout(*m_pVkDataPtr, m_pCommandPools.back(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-        copyBufferToImage(*m_pVkDataPtr, m_pCommandPools.back(), stagingBuffer.buffer, texture.image, static_cast<uint32_t>(textureInfo.width), static_cast<uint32_t>(textureInfo.height));
-        transitionImageLayout(*m_pVkDataPtr, m_pCommandPools.back(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        transitionImageLayout(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+        copyBufferToImage(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), stagingBuffer.buffer, texture.image, static_cast<uint32_t>(texInfo.width), static_cast<uint32_t>(texInfo.height));
+        transitionImageLayout(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
         vmaDestroyBuffer(m_pAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
         // vmaFreeMemory(m_pAllocator, m_pStagingTextureBuffer.allocation);
@@ -46,20 +45,20 @@ namespace engine
     }
 
     Ref<Material> VulkanResourceManager::createMaterial(MaterialInfo material)
-    {
-        Ref<Material> materialRef;
-        vk::VulkanMaterial vkMaterial;
+    { /*
+         Ref<Material> materialRef;
+         vk::VulkanMaterial vkMaterial;
 
-        auto &materialdata = m_pMaterials.emplace_back();
+         auto &materialdata = m_pMaterials.emplace_back();
 
-        for (auto &texture : material.textures)
-        {
-            materialdata.textures.push_back(m_pTextures[texture->id]);
-        }
+         for (auto &texture : material.textures)
+         {
+             materialdata.textures.push_back(m_pTextures[texture->id]);
+         }
 
-        pCreateDescriptorSets(vkMaterial);
+         pCreateDescriptorSets(vkMaterial);
 
-        return materialRef;
+         return materialRef;*/
     }
 
     Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPassInfo)
@@ -68,10 +67,10 @@ namespace engine
 
         renderPass.renderPipelines.emplace_back();
 
-        //m_pRenderPassInfo[renderpass_id] = renderPassInfo;
+        // m_pRenderPassInfo[renderpass_id] = renderPassInfo;
 
         vk::createRenderPass(*m_pVkDataPtr, renderPass, renderPassInfo);
-        
+
         vk::VulkanVertexInfo vertexInfo;
 
         vertexInfo.attributeDescriptions =
@@ -92,5 +91,37 @@ namespace engine
         auto ref = renderPassPool.insert(renderPass);
 
         return ref;
+    }
+
+    void VulkanResourceManager::clean()
+    {
+        for (auto &buffer: bufferPool)
+        {
+            vmaDestroyBuffer(m_pAllocator, buffer.buffer, buffer.allocation);
+        }
+
+        vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool, nullptr);
+
+        vk::cleanupSyncObjects(*m_pVkDataPtr);
+        vk::cleanCommandPool(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools[0]);
+
+        for (auto &texture : texPool)
+        {
+
+            vkDestroySampler(m_pVkDataPtr->logicalDevice, texture.sampler, nullptr);
+            vkDestroyImageView(m_pVkDataPtr->logicalDevice, texture.imageView, nullptr);
+            vk::destroyImage(*m_pVkDataPtr, texture);
+        }
+
+        vmaDestroyAllocator(m_pAllocator);
+
+        for (auto &pass : renderPassPool)
+        {
+            vk::cleanupRenderPass(*m_pVkDataPtr, pass.renderPass);
+            for (auto &pipeline : pass.renderPipelines)
+                vk::destroyGraphicsPipeline(*m_pVkDataPtr, pipeline);
+        }
+
+        vk::cleanup(*m_pVkDataPtr);
     }
 }

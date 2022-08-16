@@ -13,9 +13,11 @@
 
 namespace engine
 {
+    class VulkanResourceManager;
     class VulkanRenderer : public Renderer
     {
         
+
         using RenderPasses = std::unordered_map<uint32_t, vk::VulkanRenderPass>;
         using VertexBuffers = std::vector<vk::VulkanBuffer>;
         using IndexBuffers = std::vector<vk::VulkanBuffer>;
@@ -43,8 +45,6 @@ namespace engine
         ~VulkanRenderer();
 
         void Init(const char *appName, framework::Window &) override;
-
-        uint32_t addRenderpass(engine::RenderPassInfo) override;
 
         ObjectDataId RegisterMesh(const std::vector<Vertex> &, std::vector<IndexType>& indices, bool) override;
 
@@ -78,9 +78,7 @@ namespace engine
 
         vk::VulkanData m_pVkData;
 
-
         Frame m_pFrame;
-
 
         vk::VulkanVertexInfo m_pVertexInfo;
 
@@ -90,6 +88,9 @@ namespace engine
         std::list<RenderObject> m_pCurrentCommandQueue;
 
         ShaderData m_pCameraData{};
+
+        VulkanResourceManager* m_pResourseManagerRef = nullptr;
+
 
     };
 }

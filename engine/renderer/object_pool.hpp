@@ -110,6 +110,15 @@ namespace engine
                       << std::endl;
         }
 
+        auto begin()
+        {
+            return m_pInternalData.begin();
+        }
+
+        auto end() {
+            return m_pInternalData.end(); 
+        }
+
     private:
         GenerationArray m_pGeneration;
         IndexArray m_pIndexArray;

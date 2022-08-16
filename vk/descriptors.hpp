@@ -5,7 +5,7 @@
 
 namespace vk
 {
-    static void createDescriptorSetLayout(const VulkanData &vkData, VkDescriptorSetLayout &renderPipeline)
+    static void createDescriptorSetLayout(const VulkanData &vkData, VkDescriptorSetLayout &descriptorSetLayout)
     {
         VkDescriptorSetLayoutBinding uboLayoutBinding{};
         uboLayoutBinding.binding = 0;

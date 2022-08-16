@@ -2,6 +2,7 @@
 
 #include "vulkan.hpp"
 #include <framework/common.hpp>
+#include "resource_manager.hpp"
 
 /**
  * @brief Implementation of the Vulkan renderer public API
@@ -33,9 +34,9 @@ namespace engine
         vk::createSwapChain(m_pVkData, window.getWindow());
         vk::createImageViews(m_pVkData);
 
-        m_pCommandPools.emplace_back();
+        m_pVkData.m_pCommandPools.emplace_back();
 
-        vk::createCommandPool(m_pVkData, m_pCommandPools.back());
+        vk::createCommandPool(m_pVkData, m_pVkData.m_pCommandPools.back());
 /*
         pCreateVertexBuffer();
         pCreateIndexBuffer();
@@ -44,36 +45,8 @@ namespace engine
         pCreateDescriptorPool();*/
         // pCreateDescriptorSets();
 
-        vk::createCommandBuffers(m_pVkData, m_pCommandPools.back(), m_pCommandBuffers);
+        vk::createCommandBuffers(m_pVkData, m_pVkData.m_pCommandPools.back(), m_pVkData.m_pCommandBuffers);
         vk::createSyncObjects(m_pVkData);
-    }
-
-    uint32_t VulkanRenderer::addRenderpass(engine::RenderPassInfo renderPassInfo)
-    {
-        m_pRenderPasses[renderpass_id] = {};
-
-        m_pRenderPasses.at(renderpass_id).renderPipelines.emplace_back();
-
-        m_pRenderPassInfo[renderpass_id] = renderPassInfo;
-
-        vk::createRenderPass(m_pVkData, m_pRenderPasses.at(renderpass_id), renderPassInfo);
-
-        m_pVertexInfo.attributeDescriptions =
-            vk::getAttributeDescriptions(0, renderPassInfo.vertexLayout);
-
-        m_pVertexInfo.bindingDescription = vk::getBindingDescription(renderPassInfo.size);
-
-        vk::createDescriptorSetLayout(m_pVkData, m_pRenderPasses.at(renderpass_id).renderPipelines.back());
-
-        vk::createGraphicsPipeline<MeshPushConstant>(m_pVkData,
-                                                     m_pRenderPasses.at(renderpass_id),
-                                                     m_pRenderPasses.at(renderpass_id).renderPipelines.back(),
-                                                     m_pVertexInfo,
-                                                     renderPassInfo.shaderInfo);
-
-        vk::createFramebuffers(m_pVkData, m_pRenderPasses.at(renderpass_id));
-
-        return ++renderpass_id;
     }
 
     Renderer::ObjectDataId VulkanRenderer::RegisterMesh(const std::vector<Vertex> &vertices, std::vector<IndexType> &indices, bool group = true)
@@ -82,12 +55,12 @@ namespace engine
         {
             index += current_vertex_count;
         }
-        auto [buffer, indexBuffer] = pGetBuffers(vertices, indices);
+        //auto [buffer, indexBuffer] = pGetBuffers(vertices, indices);
 
-        pCreateStagingBuffer(vertices);
-        pCreateStagingIndexBuffer(indices);
+        //m_pResourseManagerRef->pCreateStagingBuffer(vertices);
+        //m_pResourseManagerRef->pCreateStagingIndexBuffer(indices);
 
-        vk::copyBuffer(m_pVkData, m_pCommandPools.back(), m_pStagingBuffer.buffer, buffer->buffer, vertices.size() * sizeof(Vertex), current_vertex_count * sizeof(Vertex));
+        vk::copyBuffer(m_pVkData, m_pVkData.m_pCommandPools.back(), m_pStagingBuffer.buffer, buffer->buffer, vertices.size() * sizeof(Vertex), current_vertex_count * sizeof(Vertex));
 
         vmaDestroyBuffer(m_pAllocator, m_pStagingBuffer.buffer, m_pStagingBuffer.allocation);
         //vmaFreeMemory(m_pAllocator, m_pStagingBuffer.allocation);
@@ -172,14 +145,9 @@ namespace engine
         m_pCameraData = camData;
     }
 
-    void VulkanRenderer::Begin(uint32_t renderPassId)
+    void VulkanRenderer::Begin(vk::VulkanRenderPass &renderPass)
     {
-        attachedRenderPass = renderPassId;
-        /*m_pImageIndex = vk::prepareSyncObjects<MeshPushConstant>(m_pVkData,
-                                                                 m_pWindow->getWindow(),
-                                                                 m_pCurrentFrame,
-                                                                 m_pRenderPasses.at(attachedRenderPass),
-                                                                 m_pVertexInfo);*/
+
         m_pImageIndex = pPrepareSyncObjects();
 
         if (m_pImageIndex == -1)
@@ -190,8 +158,8 @@ namespace engine
 
         m_pFrame.FrameIndex(m_pCurrentFrame);
 
-        m_pFrame.CommandBuffer(&m_pCommandBuffers.at(m_pCurrentFrame));
-        m_pFrame.UniformBuffer(&m_pUniformBuffers.at(m_pCurrentFrame));
+        m_pFrame.CommandBuffer(&m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
+        //m_pFrame.UniformBuffer(&m_pUniformBuffers.at(m_pCurrentFrame));
 
         m_pFrame.SyncObjects(&m_pVkData.syncObjects.at(m_pCurrentFrame));
 
@@ -201,8 +169,8 @@ namespace engine
         vkResetCommandBuffer(m_pFrame.CommandBuffer(), 0);
 
         vk::recordCommandBuffer(m_pFrame.CommandBuffer(), m_pImageIndex);
-        vk::createRenderPassInfo(m_pImageIndex, m_pVkData, m_pRenderPasses.at(attachedRenderPass));
-        vk::beginRenderPass(m_pFrame.CommandBuffer(), m_pRenderPasses.at(attachedRenderPass));
+        vk::createRenderPassInfo(m_pImageIndex, m_pVkData, renderPass);
+        vk::beginRenderPass(m_pFrame.CommandBuffer(), renderPass);
     }
 
     void VulkanRenderer::End()
@@ -230,6 +198,7 @@ namespace engine
             for (auto &material : m_pMaterials)
             {
                 pCreateDescriptorSets(material);
+                pUpdateMaterial(material);
             }
             std::cout << "swap chain recreated\n";
         }
@@ -240,10 +209,10 @@ namespace engine
     {
         if (m_pImageIndex == -1)
             return;
-
+/*
         if (m_pRenderPasses.at(attachedRenderPass).renderPipelines.at(DefaultRenderPass).graphicsPipeline == NULL)
             std::cout << "pipeline is null\n";
-
+*/
         vk::bindPipeline(m_pRenderPasses.at(attachedRenderPass).renderPipelines.at(DefaultRenderPass), m_pFrame.CommandBuffer());
         vk::bindVertexBuffer(m_pVkData, m_pFrame.CommandBuffer(), m_pVertexBuffers[0].buffer);
         vkCmdBindIndexBuffer(m_pFrame.CommandBuffer(), m_pIndexBuffers[0].buffer, 0, VK_INDEX_TYPE_UINT32);

@@ -13,6 +13,7 @@ namespace engine {
     struct UniformBindings;
     struct Material;
     struct RenderPass;
+    struct Mesh;
 
     struct ResourceManager {
 
@@ -23,6 +24,7 @@ namespace engine {
         virtual Ref<Shader> createShader(ShaderInfo) = 0; 
         virtual Ref<UniformBindings> createUniformData(UniformBindingInfo) = 0; 
         virtual Ref<Material> createMaterial(MaterialInfo) = 0;
+        virtual Ref<Mesh> createMesh(MeshInfo) = 0;
         virtual Ref<RenderPass> createRenderPass(RenderPassInfo) = 0;
 
         virtual void destroyTexture(Ref<Texture>) = 0; 
@@ -30,7 +32,10 @@ namespace engine {
         virtual void destroyShader(Ref<Shader>) = 0; 
         virtual void destroyUniformData(Ref<UniformBindings>) = 0; 
         virtual void destroyMaterial(Ref<Material>) = 0;
+        virtual void destroyMesh(Ref<Mesh>) = 0;
         virtual void destroyRenderPass(Ref<RenderPass>) = 0;
+
+        virtual void clean() = 0;
 
         protected:
             ResourceManager* m_pSelf;

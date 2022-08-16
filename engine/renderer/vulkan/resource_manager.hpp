@@ -7,9 +7,9 @@ namespace engine
 {
     struct VulkanResourceManager : ResourceManager
     {
+        friend class VulkanRenderer;
+        
         using IndexType = uint32_t;
-        using CommandPools = std::vector<VkCommandPool>;
-        using CommandBuffers = std::vector<VkCommandBuffer>;
 
         VulkanResourceManager();
         ~VulkanResourceManager();
@@ -26,6 +26,7 @@ namespace engine
         Ref<Shader> createShader(ShaderInfo) override;
         Ref<UniformBindings> createUniformData(UniformBindingInfo) override;
         Ref<Material> createMaterial(MaterialInfo) override;
+        Ref<Mesh> createMesh(MeshInfo) override;
         Ref<RenderPass> createRenderPass(RenderPassInfo) override;
 
         void destroyTexture(Ref<Texture>) override;
@@ -33,7 +34,10 @@ namespace engine
         void destroyShader(Ref<Shader>) override;
         void destroyUniformData(Ref<UniformBindings>) override;
         void destroyMaterial(Ref<Material>) override;
+        void destroyMesh(Ref<Mesh>) override;
         void destroyRenderPass(Ref<RenderPass>) override;
+
+        void clean() override;
 
         vk::VulkanTexture *getTexture(Ref<Texture>);
         vk::VulkanBuffer *getBuffer(Ref<Buffer>);
@@ -91,7 +95,5 @@ namespace engine
         VkDescriptorPool m_pDescriptorPool;
         std::vector<VkDescriptorSet> m_pDescriptorSets;
 
-        CommandPools m_pCommandPools;
-        CommandBuffers m_pCommandBuffers;
     };
 }
