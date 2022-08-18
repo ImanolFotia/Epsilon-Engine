@@ -56,7 +56,7 @@ namespace engine
 
         void PushCameraData(const ShaderData& camData);
 
-        void Begin(uint32_t) override;
+        void Begin(Ref<RenderPass>) override;
 
         void End() override;
 

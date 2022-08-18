@@ -151,6 +151,11 @@ namespace engine
         }
     }
 
+    void VulkanResourceManager::pRecreateDescriptorSets() {
+        for (auto &material: materialPool) {
+            pCreateDescriptorSets(material);
+        }
+    }
     
     vk::VulkanBuffer VulkanResourceManager::pCreateStagingBuffer(const std::vector<Vertex> &vertices)
     {

@@ -49,92 +49,6 @@ namespace engine
         vk::createSyncObjects(m_pVkData);
     }
 
-    Renderer::ObjectDataId VulkanRenderer::RegisterMesh(const std::vector<Vertex> &vertices, std::vector<IndexType> &indices, bool group = true)
-    {
-        for (auto &index : indices)
-        {
-            index += current_vertex_count;
-        }
-        //auto [buffer, indexBuffer] = pGetBuffers(vertices, indices);
-
-        //m_pResourseManagerRef->pCreateStagingBuffer(vertices);
-        //m_pResourseManagerRef->pCreateStagingIndexBuffer(indices);
-
-        vk::copyBuffer(m_pVkData, m_pVkData.m_pCommandPools.back(), m_pStagingBuffer.buffer, buffer->buffer, vertices.size() * sizeof(Vertex), current_vertex_count * sizeof(Vertex));
-
-        vmaDestroyBuffer(m_pAllocator, m_pStagingBuffer.buffer, m_pStagingBuffer.allocation);
-        //vmaFreeMemory(m_pAllocator, m_pStagingBuffer.allocation);
-
-        IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "copied ", vertices.size(), " vertices, of size ", vertices.size() * sizeof(Vertex), " bytes, at offset ", current_vertex_count * sizeof(Vertex), " to local buffer");
-
-        vk::copyBuffer(m_pVkData, m_pCommandPools.back(), m_pStagingIndexBuffer.buffer, indexBuffer->buffer, indices.size() * sizeof(IndexType), current_index_count * sizeof(IndexType));
-
-        vmaDestroyBuffer(m_pAllocator, m_pStagingIndexBuffer.buffer, m_pStagingIndexBuffer.allocation);
-        //vmaFreeMemory(m_pAllocator, m_pStagingIndexBuffer.allocation);
-
-        IO::Log("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "copied ", indices.size(), " indices, of size ", indices.size() * sizeof(IndexType), " bytes, at offset ", current_index_count * sizeof(IndexType), " to local buffer");
-        uint16_t curr_vertex_offset = current_vertex_count;
-        uint16_t curr_index_offset = current_index_count;
-        current_vertex_count += vertices.size();
-        current_index_count += indices.size();
-
-        buffer->allocatedVertices += vertices.size();
-        indexBuffer->allocatedVertices += indices.size();
-
-        m_pObjectData.push_back({vertices.size(), indices.size(), curr_vertex_offset, curr_index_offset, m_pVertexBuffers.size() - 1, m_pIndexBuffers.size() - 1, group});
-        
-        
-        return std::prev(m_pObjectData.end());
-    }
-
-    Renderer::TexturesDataId VulkanRenderer::RegisterTexture(unsigned char *data, TextureInfo textureInfo)
-    {
-
-        pCreateStagingTextureBuffer(data, textureInfo);
-
-        auto texture = pCreateTextureBuffer({.width = textureInfo.width,
-                                             .height = textureInfo.height,
-                                             .num_channels = textureInfo.numChannels});
-
-        auto size = textureInfo.width * textureInfo.height * textureInfo.numChannels;
-        uint16_t curr_texture_offset = current_texture_offset;
-        current_texture_offset += size;
-        // vk::copyBuffer(m_pVkData, m_pCommandPools.back(), m_pStagingBuffer.buffer, buffer.image, size, 0);
-
-        transitionImageLayout(m_pVkData, m_pCommandPools.back(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-        copyBufferToImage(m_pVkData, m_pCommandPools.back(), m_pStagingTextureBuffer.buffer, texture.image, static_cast<uint32_t>(textureInfo.width), static_cast<uint32_t>(textureInfo.height));
-        transitionImageLayout(m_pVkData, m_pCommandPools.back(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-
-        vmaDestroyBuffer(m_pAllocator, m_pStagingTextureBuffer.buffer, m_pStagingTextureBuffer.allocation);
-        //vmaFreeMemory(m_pAllocator, m_pStagingTextureBuffer.allocation);
-
-        texture.format = VK_FORMAT_R8G8B8A8_SRGB;
-        vk::createImageView(m_pVkData, texture, VK_IMAGE_ASPECT_COLOR_BIT);
-        vk::createTextureSampler(m_pVkData, texture);
-
-        m_pTextures.push_back(texture);
-
-        m_pTextureData.push_back({.id = m_pTextures.size() - 1,
-                                  .size = size,
-                                  .offset = curr_texture_offset,
-                                  .texture_bucket = 0});
-
-        return std::prev(m_pTextureData.end());
-    }
-
-    Material VulkanRenderer::CreateMaterial(Ref<Material> material)
-    {
-        auto &material = m_pMaterials.emplace_back();
-
-        for()
-        material.textures.push_back(m_pTextures[texture->id]);
-        pCreateDescriptorSets(material);
-        // pUpdateMaterial(material);
-        Material mat;
-        mat.id = m_pMaterials.size() - 1;
-        return mat;
-    }
-
     void VulkanRenderer::Push(RenderObject object_id)
     {
         m_pCurrentCommandQueue.push_back(object_id);
@@ -145,7 +59,7 @@ namespace engine
         m_pCameraData = camData;
     }
 
-    void VulkanRenderer::Begin(vk::VulkanRenderPass &renderPass)
+    void VulkanRenderer::Begin(Ref<RenderPass> renderPassRef)
     {
 
         m_pImageIndex = pPrepareSyncObjects();
@@ -167,10 +81,11 @@ namespace engine
 
         pUpdateUniforms();
         vkResetCommandBuffer(m_pFrame.CommandBuffer(), 0);
-
+        auto renderPass = m_pResourseManagerRef->getRenderPass(renderPassRef);
+        m_pFrame.RenderPass(renderPassRef);
         vk::recordCommandBuffer(m_pFrame.CommandBuffer(), m_pImageIndex);
-        vk::createRenderPassInfo(m_pImageIndex, m_pVkData, renderPass);
-        vk::beginRenderPass(m_pFrame.CommandBuffer(), renderPass);
+        vk::createRenderPassInfo(m_pImageIndex, m_pVkData, *renderPass);
+        vk::beginRenderPass(m_pFrame.CommandBuffer(), *renderPass);
     }
 
     void VulkanRenderer::End()
@@ -191,8 +106,8 @@ namespace engine
         {
             // vk::recreateSwapChain<MeshPushConstant>(m_pVkData, m_pWindow->getWindow(), m_pRenderPasses.at(attachedRenderPass), m_pVertexInfo);
             pRecreateSwapChain();
-            vkDestroyDescriptorPool(m_pVkData.logicalDevice, m_pDescriptorPool, nullptr);
-            pCreateDescriptorPool();
+            vkDestroyDescriptorPool(m_pVkData.logicalDevice, m_pResourseManagerRef->m_pDescriptorPool, nullptr);
+            m_pResourseManagerRef->pCreateDescriptorPool();
 
             std::cout << "recreating descriptor sets\n";
             for (auto &material : m_pMaterials)
@@ -236,6 +151,8 @@ namespace engine
     void VulkanRenderer::pRecreateSwapChain()
     {
         vkDeviceWaitIdle(m_pVkData.logicalDevice);
+
+        m_pResourseManagerRef->get();
 
         for (auto &[index, pass] : m_pRenderPasses)
         {

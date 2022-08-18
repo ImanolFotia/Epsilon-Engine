@@ -2,12 +2,16 @@
 
 #include <vk/vk.hpp>
 
+#include "resource_manager.hpp"
+
 namespace engine
 {
     class Frame
     {
-        vk::VulkanBuffer* m_pUniformBuffer = nullptr;
-        vk::VulkanBuffer* m_pIndirectBuffer = nullptr;
+        Ref<Buffer> m_pUniformBuffer = Ref<Buffer>::makeEmpty();
+        Ref<Buffer> m_pIndirectBuffer = Ref<Buffer>::makeEmpty();
+        Ref<RenderPass> m_pRenderPass;
+        
         vk::VulkanSyncObject* m_pSyncObjects = nullptr;
         VkCommandBuffer* m_pCommandBuffer = nullptr;
 
@@ -19,14 +23,19 @@ namespace engine
         /**
          * Getters
          */
-        vk::VulkanBuffer& UniformBuffer()
+        Ref<RenderPass> RenderPass()
         {
-            return *m_pUniformBuffer;
+            return m_pRenderPass;
+        }
+        
+        Ref<Buffer> UniformBuffer()
+        {
+            return m_pUniformBuffer;
         }
 
-        vk::VulkanBuffer& IndirectBuffer()
+        Ref<Buffer> IndirectBuffer()
         {
-            return *m_pIndirectBuffer;
+            return m_pIndirectBuffer;
         }
 
         VkCommandBuffer& CommandBuffer()
@@ -50,11 +59,16 @@ namespace engine
         /**
          * Setters
          */
-        void UniformBuffer(vk::VulkanBuffer* buffer)
+
+        void RenderPass(Ref<RenderPass> renderPass)
+        {
+            m_pRenderPass = renderPass;
+        }
+        void UniformBuffer(Ref<Buffer> buffer)
         {
             m_pUniformBuffer = buffer;
         }
-        void IndirectBuffer(vk::VulkanBuffer* buffer)
+        void IndirectBuffer(Ref<Buffer> buffer)
         {
             m_pIndirectBuffer = buffer;
         }

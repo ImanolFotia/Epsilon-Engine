@@ -9,6 +9,10 @@ namespace engine
     {
         Ref() = default;
 
+        static Ref<T> makeEmpty() {
+            return Ref(0, 0);
+        }
+
     private:
         Ref(uint32_t i, uint32_t b) : m_pIndex(i), m_pGeneration(b) {}
 

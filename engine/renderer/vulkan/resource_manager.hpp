@@ -44,6 +44,7 @@ namespace engine
         ShaderStageInfo *getShader(Ref<Shader>);
         VkDescriptorSetLayoutBinding *getUniformData(Ref<UniformBindings>);
         vk::VulkanMaterial *getMaterial(Ref<Material>);
+        vk::VulkanRenderPass *getRenderPass(Ref<RenderPass>);
 
     private:
         VmaAllocator m_pAllocator;
@@ -64,6 +65,7 @@ namespace engine
         void pCreateUniformBuffers();
         void pCreateDescriptorPool();
         void pCreateDescriptorSets(vk::VulkanMaterial &);
+        void pRecreateDescriptorSets();
 
         const VkBufferUsageFlags UNIFORM_BUFFER_USAGE = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
         const VkBufferUsageFlags VERTEX_BUFFER_USAGE = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;

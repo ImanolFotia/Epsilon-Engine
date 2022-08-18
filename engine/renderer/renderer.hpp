@@ -91,7 +91,7 @@ namespace engine
 
         virtual void PushCameraData(const ShaderData& camData) = 0;
         
-        virtual void Begin(uint32_t) = 0;
+        virtual void Begin(Ref<RenderPass>) = 0;
 
         virtual void End() = 0;
 
