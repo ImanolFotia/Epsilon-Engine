@@ -2,7 +2,7 @@
 
 #include "types.hpp"
 #include "object_pool.hpp"
-
+#include "draw_command.hpp"
 #include "framework/window.hpp"
 
 #include <string>
@@ -87,7 +87,7 @@ namespace engine
 
         virtual Material CreateMaterial(Ref<Material>) = 0;
 
-        virtual void Push(RenderObject) = 0;
+        virtual void Push(DrawCommand) = 0;
 
         virtual void PushCameraData(const ShaderData& camData) = 0;
         

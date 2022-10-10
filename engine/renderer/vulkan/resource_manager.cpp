@@ -61,13 +61,37 @@ namespace engine
          return materialRef;*/
     }
 
+    void VulkanResourceManager::pRecreateSwapChain(GLFWwindow* window)
+    {
+        vkDeviceWaitIdle(m_pVkDataPtr->logicalDevice);
+
+        for (auto &pass : renderPassPool)
+        {
+            cleanupSwapChain(*m_pVkDataPtr, pass);
+        }
+
+        vk::createSwapChain(*m_pVkDataPtr, window);
+
+        vk::createImageViews(*m_pVkDataPtr);
+
+        for (auto &pass : renderPassPool)
+        {
+            vk::createRenderPass(*m_pVkDataPtr, pass, m_pRenderPassInfo[pass.id]);
+
+            for (auto i = 0; i < pass.renderPipelines.size(); i++)
+                vk::createGraphicsPipeline<MeshPushConstant>(*m_pVkDataPtr, pass, pass.renderPipelines[i], pass.vertexInfo, m_pRenderPassInfo[pass.id].shaderInfo);
+
+            vk::createFramebuffers(*m_pVkDataPtr, pass);
+        }
+    }
+
     Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPassInfo)
     {
         vk::VulkanRenderPass renderPass = {};
 
         renderPass.renderPipelines.emplace_back();
-
-        // m_pRenderPassInfo[renderpass_id] = renderPassInfo;
+        renderPass.id = m_pRenderPassCount;
+        m_pRenderPassInfo[m_pRenderPassCount] = renderPassInfo;
 
         vk::createRenderPass(*m_pVkDataPtr, renderPass, renderPassInfo);
 
@@ -88,14 +112,16 @@ namespace engine
 
         vk::createFramebuffers(*m_pVkDataPtr, renderPass);
 
+        renderPass.vertexInfo = vertexInfo;
         auto ref = renderPassPool.insert(renderPass);
 
+        m_pRenderPassCount++;
         return ref;
     }
 
     void VulkanResourceManager::clean()
     {
-        for (auto &buffer: bufferPool)
+        for (auto &buffer : bufferPool)
         {
             vmaDestroyBuffer(m_pAllocator, buffer.buffer, buffer.allocation);
         }

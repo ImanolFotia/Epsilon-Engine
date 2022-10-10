@@ -23,7 +23,7 @@ namespace engine
         /**
          * Getters
          */
-        Ref<RenderPass> RenderPass()
+        Ref<RenderPass> getRenderPass()
         {
             return m_pRenderPass;
         }
@@ -60,7 +60,7 @@ namespace engine
          * Setters
          */
 
-        void RenderPass(Ref<RenderPass> renderPass)
+        void setRenderPass(Ref<RenderPass> renderPass)
         {
             m_pRenderPass = renderPass;
         }

@@ -27,6 +27,7 @@ namespace vk
         size_t offset = 0;
         std::vector<SubBuffer> subBuffers;
         std::unordered_map<uint32_t, uint32_t> subBufferIndex;
+        VkDescriptorBufferInfo descriptorInfo;
         VmaAllocation allocation;
     };
 
@@ -71,6 +72,7 @@ namespace vk
         std::vector<VkDescriptorSet> descriptorSets;
         VkPipelineLayout *pipelineLayout = nullptr;
         std::vector<VulkanTexture> textures;
+        VkDescriptorBufferInfo bufferInfo;
     };
 
     struct VulkanRenderPipeline
@@ -121,13 +123,16 @@ namespace vk
             clearValues[0].color = clearColor;
             clearValues[1].depthStencil = depthStencilClearColor;
         }
+        
         VkRenderPass renderPass;
         VkRenderPassBeginInfo renderPassInfo{};
         std::vector<VulkanRenderPipeline> renderPipelines;
         VulkanRenderPassData renderPassData;
+        VulkanVertexInfo vertexInfo;
         VkClearColorValue clearColor = {0.0f, 0.0f, 0.0f, 1.0f};
         VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
         VkClearValue clearValues[2] = {};
+        uint32_t id;
     };
 
     struct VulkanSyncObject

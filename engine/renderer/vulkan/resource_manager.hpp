@@ -14,7 +14,7 @@ namespace engine
         VulkanResourceManager();
         ~VulkanResourceManager();
 
-        ResourceManager *get()
+        ResourceManager *get() override
         {
             if (m_pSelf == nullptr)
                 m_pSelf = new VulkanResourceManager();
@@ -55,6 +55,7 @@ namespace engine
         vk::VulkanBuffer pCreateIndexBuffer();
         vk::VulkanBuffer pCreateUniformBuffer(size_t);
         vk::VulkanTexture pCreateTextureBuffer(vk::VulkanTextureInfo);
+        void pRecreateSwapChain(GLFWwindow* window);
 
         void pCreateBuffer(vk::VulkanBuffer &, size_t, VkBufferUsageFlags, VmaAllocationCreateFlags, VmaMemoryUsage);
 
@@ -97,5 +98,7 @@ namespace engine
         VkDescriptorPool m_pDescriptorPool;
         std::vector<VkDescriptorSet> m_pDescriptorSets;
 
+        std::vector<RenderPassInfo> m_pRenderPassInfo;
+        uint32_t m_pRenderPassCount = 0;
     };
 }

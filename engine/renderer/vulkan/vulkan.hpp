@@ -50,11 +50,11 @@ namespace engine
 
         TexturesDataId RegisterTexture(unsigned char*, TextureInfo) override;
 
-        Material CreateMaterial(Ref<Material>);
+        Material CreateMaterial(Ref<Material>) override;
 
-        void Push(RenderObject) override;
+        void Push(DrawCommand) override;
 
-        void PushCameraData(const ShaderData& camData);
+        void PushCameraData(const ShaderData& camData) override;
 
         void Begin(Ref<RenderPass>) override;
 
@@ -85,11 +85,11 @@ namespace engine
         uint32_t renderpass_id = 0;
         uint32_t attachedRenderPass = 0;
 
-        std::list<RenderObject> m_pCurrentCommandQueue;
+        std::list<DrawCommand> m_pCurrentCommandQueue;
 
         ShaderData m_pCameraData{};
 
-        VulkanResourceManager* m_pResourseManagerRef = nullptr;
+        VulkanResourceManager* m_pResourceManagerRef = nullptr;
 
 
     };

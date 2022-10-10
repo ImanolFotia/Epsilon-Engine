@@ -19,6 +19,8 @@
 #include "framework/utils/image.hpp"
 #include "framework/utils/file.hpp"
 
+#include "engine/context.hpp"
+
 #include "engine/renderer/vulkan/vulkan.hpp"
 
 #include "engine/renderer/resource_manager.hpp"
@@ -30,22 +32,22 @@ namespace LearningVulkan
     {
 
         uint32_t m_CurrentFrame = 0;
-        framework::Window m_Window;
 
-        std::string m_ApplicationName = "Default";
 
     protected:
-        std::shared_ptr<engine::VulkanRenderer> m_pRenderer;
+        engine::Context m_pContext;
+        std::string m_ApplicationName;
 
         uint32_t nbFrames = 0;
         uint32_t lastTime = 0;
+        engine::Ref<engine::RenderPass> renderPassRef;
 
     public:
         LearningVulkanApplication() = default;
 
         LearningVulkanApplication(std::string appName) : m_ApplicationName(appName)
         {
-            m_pRenderer = std::make_shared<engine::VulkanRenderer>();
+            m_pContext.Init(appName, engine::renderer_type::vulkan);
         }
 
         void run()
@@ -71,12 +73,12 @@ namespace LearningVulkan
     private:
         void initWindow()
         {
-            m_Window.init(m_ApplicationName, 1280, 720);
+            m_pContext.Window().init(m_ApplicationName, 1280, 720);
         }
 
         void initVulkan()
         {
-            m_pRenderer->Init(m_ApplicationName.c_str(), m_Window);
+            m_pContext.Renderer()->Init(m_ApplicationName.c_str(), m_pContext.Window());
             using namespace engine;
 
             auto vertexCode = utils::readFile("../assets/shaders/vertex.spv");
@@ -107,36 +109,37 @@ namespace LearningVulkan
                                 .isDepthAttachment = false,
                                 .isSwapChainAttachment = true
                             },
-                            {
-                                .format = DEPTH_F32_STENCIL_8,
-                                .isDepthAttachment = true
-                            }
+                         {
+                            .format = DEPTH_F32_STENCIL_8,
+                           .isDepthAttachment = true
+                           }
                         })
                     .shaderInfo(shaderInfo);
 
-            m_pRenderer->addRenderpass(renderPassInfo);
+            // m_pRenderer->addRenderpass(renderPassInfo);
+            renderPassRef = m_pContext.ResourceManager()->createRenderPass(renderPassInfo);
         }
 
         void mainLoop()
         {
-            while (!m_Window.ShouldClose())
+            while (!m_pContext.Window().ShouldClose())
             {
                 showFPS();
                 if (mShouldClose)
                     break;
                 onRender();
                 drawFrame();
-                m_Window.PollEvents();
+                m_pContext.Window().PollEvents();
             }
         }
 
         void drawFrame()
         {
-            m_pRenderer->Begin(0);
+            m_pContext.Renderer()->Begin(renderPassRef);
 
-            m_pRenderer->Flush();
+            m_pContext.Renderer()->Flush();
 
-            m_pRenderer->End();
+            m_pContext.Renderer()->End();
         }
 
         void showFPS()
@@ -153,7 +156,7 @@ namespace LearningVulkan
                 ss << m_ApplicationName << " | "
                    << " [" << (int)fps << " FPS] | [" << (1000.0 / double(nbFrames)) << " MS]";
 
-                m_Window.setWindowTitle(ss.str().c_str());
+                m_pContext.Window().setWindowTitle(ss.str().c_str());
 
                 nbFrames = 0;
                 lastTime = currentTime;
@@ -163,35 +166,35 @@ namespace LearningVulkan
         void exit()
         {
             onExit();
-            m_pRenderer->Cleanup();
-            m_Window.cleanup();
+            m_pContext.Renderer()->Cleanup();
+            m_pContext.Window().cleanup();
         }
 
     protected:
         engine::Renderer::ObjectDataId RegisterMesh(const std::vector<engine::Vertex> &vertices, std::vector<uint32_t> &indices, bool group)
         {
-            return m_pRenderer->RegisterMesh(vertices, indices, group);
+            return m_pContext.Renderer()->RegisterMesh(vertices, indices, group);
         }
 
         engine::Renderer::TexturesDataId RegisterTexture(unsigned char *data, engine::TextureInfo info)
         {
-            return m_pRenderer->RegisterTexture(data, info);
+            return m_pContext.Renderer()->RegisterTexture(data, info);
         }
 
         void Draw(engine::RenderObject object_id)
         {
-            m_pRenderer->Push(object_id);
+            //m_pContext.Renderer()->Push(object_id);
         }
 
         void PushCameraData(const engine::ShaderData &camData)
         {
-            m_pRenderer->PushCameraData(camData);
+            m_pContext.Renderer()->PushCameraData(camData);
         }
 
         std::pair<int, int> getWindowDimensions()
         {
             int w, h;
-            glfwGetWindowSize(m_Window.getWindow(), &w, &h);
+            glfwGetWindowSize(m_pContext.Window().getWindow(), &w, &h);
             return {w, h};
         }
     };

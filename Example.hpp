@@ -62,11 +62,11 @@ namespace ExampleApp
                     .height(h)
                     .numChannels(nc);
 
-                auto texture = m_pRenderer->RegisterTexture(pixels, texInfo);
+                //auto texture = m_pRenderer->RegisterTexture(pixels, texInfo);
 
                 framework::free_image_data(pixels);
 
-                material = m_pRenderer->CreateMaterial(texture);
+                //material = m_pRenderer->CreateMaterial(texture);
             }
 
             {
@@ -78,10 +78,10 @@ namespace ExampleApp
                     .height(h)
                     .numChannels(nc);
                 
-                auto texture = m_pRenderer->RegisterTexture(pixels, texInfo);
+                //auto texture = m_pRenderer->RegisterTexture(pixels, texInfo);
 
                 framework::free_image_data(pixels);
-                material2 = m_pRenderer->CreateMaterial(texture);
+                //material2 = m_pRenderer->CreateMaterial(texture);
             }
 
         }
@@ -107,7 +107,7 @@ namespace ExampleApp
             CubeId->push_constant.model = glm::scale(CubeId->push_constant.model, glm::vec3(0.25));
             engine::RenderObject renderObject;
             renderObject.objectId = CubeId;
-            renderObject.materialId = material.id;
+            //renderObject.materialId = material.id;
             renderObject.uniformData = camData;
             Draw(renderObject);
 
@@ -125,7 +125,7 @@ namespace ExampleApp
             SphereId->push_constant.model = glm::rotate(SphereId->push_constant.model, (float)glfwGetTime(), glm::vec3(-0.2f, 1.0f, 0.5f));
             SphereId->push_constant.model = glm::scale(SphereId->push_constant.model, glm::vec3(0.25));
             renderObject.objectId = SphereId;
-            renderObject.materialId = material.id;
+            //renderObject.materialId = material.id;
             renderObject.uniformData = camData;
             Draw(renderObject);
         }
