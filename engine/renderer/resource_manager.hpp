@@ -8,32 +8,13 @@
 namespace engine
 {
 
-    struct Texture
-    {
-    };
-    struct Buffer
-    {
-    };
-    struct Shader
-    {
-    };
-    struct UniformBindings
-    {
-    };
-    struct Material
-    {
-    };
-    struct RenderPass
-    {
-    };
-    struct Mesh
-    {
-    };
-
     struct ResourceManager
     {
 
         virtual ResourceManager *get() = 0;
+
+
+        virtual void Init() = 0;
 
         virtual Ref<Texture> createTexture(unsigned char *pixels, TextureInfo) = 0;
         virtual Ref<Buffer> destroyBuffer(BufferInfo) = 0;

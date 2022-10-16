@@ -69,6 +69,10 @@ namespace engine
 
         void pRecreateSwapChain();
         int32_t pPrepareSyncObjects();
+
+        void setResourceManagerRef(engine::VulkanResourceManager* ref) {
+            m_pResourceManagerRef = ref;
+        }
         
     private:
         framework::Window *m_pWindow = nullptr;

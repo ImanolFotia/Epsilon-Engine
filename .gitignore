@@ -11,5 +11,6 @@
 /.vs
 /build
 /out
+/CMakeFiles
 CMakeSettings.json
 assets/shaders/fragment.spv

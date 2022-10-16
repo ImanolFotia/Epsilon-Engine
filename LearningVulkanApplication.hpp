@@ -48,6 +48,7 @@ namespace LearningVulkan
         LearningVulkanApplication(std::string appName) : m_ApplicationName(appName)
         {
             m_pContext.Init(appName, engine::renderer_type::vulkan);
+
         }
 
         void run()
@@ -79,6 +80,7 @@ namespace LearningVulkan
         void initVulkan()
         {
             m_pContext.Renderer()->Init(m_ApplicationName.c_str(), m_pContext.Window());
+            m_pContext.ResourceManager()->Init();
             using namespace engine;
 
             auto vertexCode = utils::readFile("../assets/shaders/vertex.spv");

@@ -21,12 +21,17 @@ namespace engine
             {
             case renderer_type::vulkan:
                 m_pResourceManager = std::make_shared<engine::VulkanResourceManager>();
+
                 m_pRenderer = std::make_shared<engine::VulkanRenderer>();
+                std::static_pointer_cast<engine::VulkanRenderer>(m_pRenderer)->setResourceManagerRef(
+                    std::static_pointer_cast<engine::VulkanResourceManager>(m_pResourceManager).get());
                 break;
             default:
             throw "Not Implemented";
                 break;
             }
+            
+            std::cout << "Initiated API context" << std::endl;
         }
 
         const std::string& ApplicationName() { return m_pApplicationName;}

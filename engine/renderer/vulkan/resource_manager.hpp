@@ -21,6 +21,8 @@ namespace engine
             return m_pSelf;
         }
 
+        void Init() override;
+
         Ref<Texture> createTexture(unsigned char *pixels, TextureInfo) override;
         Ref<Buffer> destroyBuffer(BufferInfo) override;
         Ref<Shader> createShader(ShaderInfo) override;

@@ -24,18 +24,18 @@ namespace engine
     void VulkanRenderer::Init(const char *appName, framework::Window &window)
     {
         m_pWindow = &window;
-        vk::createInstance(appName, m_pVkData);
-        vk::setupDebugMessenger(m_pVkData.instance);
-        vk::createSurface(m_pVkData, window.getWindow());
-        vk::pickPhysicalDevice(m_pVkData);
-        vk::createLogicalDevice(m_pVkData);
+        vk::createInstance(appName, *m_pResourceManagerRef->m_pVkDataPtr);
+        vk::setupDebugMessenger(m_pResourceManagerRef->m_pVkDataPtr->instance);
+        vk::createSurface(*m_pResourceManagerRef->m_pVkDataPtr, window.getWindow());
+        vk::pickPhysicalDevice(*m_pResourceManagerRef->m_pVkDataPtr);
+        vk::createLogicalDevice(*m_pResourceManagerRef->m_pVkDataPtr);
 
-        vk::createSwapChain(m_pVkData, window.getWindow());
-        vk::createImageViews(m_pVkData);
+        vk::createSwapChain(*m_pResourceManagerRef->m_pVkDataPtr, window.getWindow());
+        vk::createImageViews(*m_pResourceManagerRef->m_pVkDataPtr);
 
-        m_pVkData.m_pCommandPools.emplace_back();
+        *m_pResourceManagerRef->m_pVkDataPtr->m_pCommandPools.emplace_back();
 
-        vk::createCommandPool(m_pVkData, m_pVkData.m_pCommandPools.back());
+        vk::createCommandPool(*m_pResourceManagerRef->m_pVkDataPtr, m_pResourceManagerRef->m_pVkDataPtr->m_pCommandPools.back());
         /*
                 pCreateVertexBuffer();
                 pCreateIndexBuffer();
@@ -44,8 +44,25 @@ namespace engine
                 pCreateDescriptorPool();*/
         // pCreateDescriptorSets();
 
-        vk::createCommandBuffers(m_pVkData, m_pVkData.m_pCommandPools.back(), m_pVkData.m_pCommandBuffers);
+        vk::createCommandBuffers(*m_pResourceManagerRef->m_pVkDataPtr, 
+        m_pResourceManagerRef->m_pVkDataPtr->m_pCommandPools.back(), 
+        m_pResourceManagerRef->m_pVkDataPtr->m_pCommandBuffers);
         vk::createSyncObjects(m_pVkData);
+    }
+
+    engine::Renderer::ObjectDataId VulkanRenderer::RegisterMesh(const std::vector<Vertex> &, std::vector<IndexType> &indices, bool)
+    {
+        throw "Not implemented";
+    }
+
+    engine::Renderer::TexturesDataId VulkanRenderer::RegisterTexture(unsigned char *, TextureInfo)
+    {
+        throw "Not implemented";
+    }
+
+    Material VulkanRenderer::CreateMaterial(Ref<Material>)
+    {
+        throw "Not implemented";
     }
 
     void VulkanRenderer::Push(DrawCommand object_id)
@@ -100,22 +117,22 @@ namespace engine
         vk::Sync(m_pVkData, m_pFrame.CommandBuffer(), m_pCurrentFrame);
 
         bool should_recreate_swapchain = vk::Present(m_pVkData, signalSemaphores, m_pImageIndex);
-/*
-        if (should_recreate_swapchain)
-        {
-            // vk::recreateSwapChain<MeshPushConstant>(m_pVkData, m_pWindow->getWindow(), m_pRenderPasses.at(attachedRenderPass), m_pVertexInfo);
-            pRecreateSwapChain();
-            vkDestroyDescriptorPool(m_pVkData.logicalDevice, m_pResourceManagerRef->m_pDescriptorPool, nullptr);
-            m_pResourceManagerRef->pCreateDescriptorPool();
+        /*
+                if (should_recreate_swapchain)
+                {
+                    // vk::recreateSwapChain<MeshPushConstant>(m_pVkData, m_pWindow->getWindow(), m_pRenderPasses.at(attachedRenderPass), m_pVertexInfo);
+                    pRecreateSwapChain();
+                    vkDestroyDescriptorPool(m_pVkData.logicalDevice, m_pResourceManagerRef->m_pDescriptorPool, nullptr);
+                    m_pResourceManagerRef->pCreateDescriptorPool();
 
-            std::cout << "recreating descriptor sets\n";
-            for (auto &material : m_pMaterials)
-            {
-                pCreateDescriptorSets(material);
-                pUpdateMaterial(material);
-            }
-            std::cout << "swap chain recreated\n";
-        }*/
+                    std::cout << "recreating descriptor sets\n";
+                    for (auto &material : m_pMaterials)
+                    {
+                        pCreateDescriptorSets(material);
+                        pUpdateMaterial(material);
+                    }
+                    std::cout << "swap chain recreated\n";
+                }*/
         m_pCurrentFrame = (m_pCurrentFrame + 1) % vk::MAX_FRAMES_IN_FLIGHT;
     }
 
@@ -145,7 +162,7 @@ namespace engine
 
             vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->renderPipelines.back().pipelineLayout, 0, 1, &material->descriptorSets[m_pCurrentFrame], 0, nullptr);
             /** TODO:
-             *  Find a way to cleanly implement push constants 
+             *  Find a way to cleanly implement push constants
                 vkCmdPushConstants(m_pFrame.CommandBuffer(), renderPass->renderPipelines.back().pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(MeshPushConstant), &command.objectId->push_constant);
             */
             vk::drawIndexed(m_pFrame.CommandBuffer(), command.numIndices, 1, command.indexOffset, 0, 0);
@@ -153,8 +170,6 @@ namespace engine
 
         m_pCurrentCommandQueue.clear();
     }
-
-
 
     int32_t VulkanRenderer::pPrepareSyncObjects()
     {
@@ -181,11 +196,16 @@ namespace engine
     }
 
     void VulkanRenderer::pUpdateUniforms()
-    {/*
-        void *data;
-        vmaMapMemory(m_pAllocator, m_pFrame.UniformBuffer().allocation, &data);
-        memcpy(data, &m_pCameraData, sizeof(m_pCameraData));
-        vmaUnmapMemory(m_pAllocator, m_pFrame.UniformBuffer().allocation);*/
+    { /*
+         void *data;
+         vmaMapMemory(m_pAllocator, m_pFrame.UniformBuffer().allocation, &data);
+         memcpy(data, &m_pCameraData, sizeof(m_pCameraData));
+         vmaUnmapMemory(m_pAllocator, m_pFrame.UniformBuffer().allocation);*/
+    }
+
+    void VulkanRenderer::Cleanup()
+    {
+        throw "Not implemented";
     }
 
 }

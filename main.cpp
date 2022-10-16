@@ -33,6 +33,7 @@ int main(int argc, char **argv)
 {
     framework::env::setArgs(argc, argv);
 
+
     ExampleApp::ExampleApp app("Vulkan Engine");
 
     try

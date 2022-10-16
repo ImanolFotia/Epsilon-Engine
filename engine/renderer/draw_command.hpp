@@ -4,7 +4,6 @@
 
 namespace engine
 {
-
     class DrawCommand
     {
     public:

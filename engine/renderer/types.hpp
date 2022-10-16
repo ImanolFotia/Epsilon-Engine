@@ -7,6 +7,15 @@
 namespace engine
 {
 
+
+    struct Texture;
+    struct Buffer;
+    struct Shader;
+    struct UniformBindings;
+    struct Material;
+    struct RenderPass;
+    struct Mesh;
+    
     enum renderer_type
     {
         vulkan = 0,

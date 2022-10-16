@@ -6,15 +6,21 @@ namespace engine
 {
     VulkanResourceManager::VulkanResourceManager()
     {
-        VmaAllocatorCreateInfo allocatorInfo = {};
-        allocatorInfo.physicalDevice = m_pVkDataPtr->physicalDevice;
-        allocatorInfo.device = m_pVkDataPtr->logicalDevice;
-        allocatorInfo.instance = m_pVkDataPtr->instance;
-        vmaCreateAllocator(&allocatorInfo, &m_pAllocator);
+        m_pVkDataPtr = new vk::VulkanData();
     }
 
     VulkanResourceManager::~VulkanResourceManager()
     {
+    }
+
+    void VulkanResourceManager::Init() {
+
+        VmaAllocatorCreateInfo allocatorInfo = {};
+        allocatorInfo.physicalDevice = m_pVkDataPtr->physicalDevice;
+        allocatorInfo.device = m_pVkDataPtr->logicalDevice;
+        allocatorInfo.instance = m_pVkDataPtr->instance;
+
+        vmaCreateAllocator(&allocatorInfo, &m_pAllocator);
     }
 
     Ref<Texture> VulkanResourceManager::createTexture(unsigned char *pixels, TextureInfo texInfo)
@@ -61,7 +67,7 @@ namespace engine
          return materialRef;*/
     }
 
-    void VulkanResourceManager::pRecreateSwapChain(GLFWwindow* window)
+    void VulkanResourceManager::pRecreateSwapChain(GLFWwindow *window)
     {
         vkDeviceWaitIdle(m_pVkDataPtr->logicalDevice);
 
@@ -149,5 +155,87 @@ namespace engine
         }
 
         vk::cleanup(*m_pVkDataPtr);
+    }
+
+    /**
+     * Create functions
+     */
+    Ref<Buffer> VulkanResourceManager::destroyBuffer(BufferInfo)
+    {
+        throw "Not implemented";
+    }
+    Ref<Shader> VulkanResourceManager::createShader(ShaderInfo)
+    {
+        throw "Not implemented";
+    }
+    Ref<UniformBindings> VulkanResourceManager::createUniformData(UniformBindingInfo)
+    {
+        throw "Not implemented";
+    }
+    Ref<Mesh> VulkanResourceManager::createMesh(MeshInfo)
+    {
+        throw "Not implemented";
+    }
+
+    /**
+     * Get functions
+     *
+     */
+
+    vk::VulkanTexture *VulkanResourceManager::getTexture(Ref<Texture>)
+    {
+        throw "Not implemented";
+    }
+    vk::VulkanBuffer *VulkanResourceManager::getBuffer(Ref<Buffer>)
+    {
+        throw "Not implemented";
+    }
+    ShaderStageInfo *VulkanResourceManager::getShader(Ref<Shader>)
+    {
+        throw "Not implemented";
+    }
+    VkDescriptorSetLayoutBinding *VulkanResourceManager::getUniformData(Ref<UniformBindings>)
+    {
+        throw "Not implemented";
+    }
+    vk::VulkanMaterial *VulkanResourceManager::getMaterial(Ref<Material>)
+    {
+        throw "Not implemented";
+    }
+    vk::VulkanRenderPass *VulkanResourceManager::getRenderPass(Ref<RenderPass>)
+    {
+        throw "Not implemented";
+    }
+
+    /**
+     * Destroy functions
+     */
+    void VulkanResourceManager::destroyTexture(Ref<Texture>)
+    {
+        throw "Not implemented";
+    }
+    void VulkanResourceManager::destroyBuffer(Ref<Buffer>)
+    {
+        throw "Not implemented";
+    }
+    void VulkanResourceManager::destroyShader(Ref<Shader>)
+    {
+        throw "Not implemented";
+    }
+    void VulkanResourceManager::destroyUniformData(Ref<UniformBindings>)
+    {
+        throw "Not implemented";
+    }
+    void VulkanResourceManager::destroyMaterial(Ref<Material>)
+    {
+        throw "Not implemented";
+    }
+    void VulkanResourceManager::destroyMesh(Ref<Mesh>)
+    {
+        throw "Not implemented";
+    }
+    void VulkanResourceManager::destroyRenderPass(Ref<RenderPass>)
+    {
+        throw "Not implemented";
     }
 }
