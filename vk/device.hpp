@@ -14,7 +14,10 @@
 #include "command.hpp"
 #include "sync_objects.hpp"
 #include "vk_data.hpp"
+
+#ifdef __linux__
 #include <bits/stdc++.h>
+#endif
 
 namespace vk
 {
@@ -185,7 +188,7 @@ namespace vk
                 vkGetPhysicalDeviceProperties(device, &deviceProperties);
                 std::string deviceName = deviceProperties.deviceName;
                 std::transform(deviceName.begin(), deviceName.end(), deviceName.begin(), ::toupper);
-                if (deviceName.find("INTEL") != std::string::npos)
+                if (deviceName.find("NVIDIA") != std::string::npos)
                 {
                     physicalDevice = device;
                     std::cout << "found nvidia" << std::endl;

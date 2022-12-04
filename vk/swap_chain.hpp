@@ -18,6 +18,11 @@
 
 #include "vk_data.hpp"
 
+#ifdef _WIN32
+#undef min
+#undef max
+#endif
+
 namespace vk
 {
     struct SwapChainSupportDetails
@@ -60,12 +65,16 @@ namespace vk
             VkFormatProperties props;
             vkGetPhysicalDeviceFormatProperties(vk_data.physicalDevice, availableFormat.format, &props);
             VkFormatFeatureFlags features = VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
-            //if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
-            if ((props.optimalTilingFeatures & features) == features)
+            VkFormatFeatureFlags tilingFeatures = VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT;
+
+            if ((props.optimalTilingFeatures & features) == features && (props.linearTilingFeatures & tilingFeatures) == tilingFeatures)
             {
+                std::cout << availableFormat.format;
+                exit(1);
                 return availableFormat;
             }
         }
+        std::cout << "could not find a desirable format, returning default value" << std::endl;
         return availableFormats[0];
     }
 
