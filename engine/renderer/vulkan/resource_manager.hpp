@@ -5,11 +5,24 @@
 
 namespace engine
 {
+
+    struct MeshResource {
+        Ref<Buffer> vertexBuffer;
+        Ref<Buffer> indexBuffer;
+        uint32_t vertexOffset;
+        uint32_t indexOffset;
+        uint32_t numVertices;
+        uint32_t numIndices;
+    };
+
     struct VulkanResourceManager : ResourceManager
     {
         friend class VulkanRenderer;
         
         using IndexType = uint32_t;
+
+        using CommandPools = std::vector<VkCommandPool>;
+        using CommandBuffers = std::vector<VkCommandBuffer>;
 
         VulkanResourceManager();
         ~VulkanResourceManager();
@@ -27,7 +40,7 @@ namespace engine
         Ref<Buffer> destroyBuffer(BufferInfo) override;
         Ref<Shader> createShader(ShaderInfo) override;
         Ref<UniformBindings> createUniformData(UniformBindingInfo) override;
-        Ref<Material> createMaterial(MaterialInfo) override;
+        Ref<Material> createMaterial(MaterialInfo, Ref<Buffer>, Ref<RenderPass> ) override;
         Ref<Mesh> createMesh(MeshInfo) override;
         Ref<RenderPass> createRenderPass(RenderPassInfo) override;
 
@@ -55,8 +68,13 @@ namespace engine
     private:
         vk::VulkanBuffer pCreateVertexBuffer();
         vk::VulkanBuffer pCreateIndexBuffer();
-        vk::VulkanBuffer pCreateUniformBuffer(size_t);
+        vk::VulkanBuffer pCreateUniformBuffer(UniformBindingInfo);
         vk::VulkanTexture pCreateTextureBuffer(vk::VulkanTextureInfo);
+
+        Ref<Buffer> pFetchVertexBuffer(uint32_t numVertices);
+
+        Ref<Buffer> pFetchIndexBuffer(uint32_t numIndices);
+
         void pRecreateSwapChain(GLFWwindow* window);
 
         void pCreateBuffer(vk::VulkanBuffer &, size_t, VkBufferUsageFlags, VmaAllocationCreateFlags, VmaMemoryUsage);
@@ -69,6 +87,8 @@ namespace engine
         void pCreateDescriptorPool();
         void pCreateDescriptorSets(vk::VulkanMaterial &);
         void pRecreateDescriptorSets();
+
+        void pUpdateMaterial(vk::VulkanMaterial&);
 
         const VkBufferUsageFlags UNIFORM_BUFFER_USAGE = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
         const VkBufferUsageFlags VERTEX_BUFFER_USAGE = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
@@ -92,15 +112,24 @@ namespace engine
     protected:
         Pool<Texture, vk::VulkanTexture> texPool;
         Pool<Shader, ShaderStageInfo> shaderPool;
-        Pool<Buffer, vk::VulkanBuffer> bufferPool;
+        Pool<Buffer, vk::VulkanBuffer> vertexBufferPool;
+        Pool<Buffer, vk::VulkanBuffer> indexBufferPool;
+        Pool<Buffer, vk::VulkanBuffer> uniformBufferPool;
         Pool<UniformBindings, VkDescriptorSetLayoutBinding> uniformBindingPool;
         Pool<Material, vk::VulkanMaterial> materialPool;
         Pool<RenderPass, vk::VulkanRenderPass> renderPassPool;
+        Pool<Mesh, MeshResource> meshPool;
+
+        std::vector<Ref<Buffer>> indexBufferReferences;
+        std::vector<Ref<Buffer>> vertexBufferReferences;
 
         VkDescriptorPool m_pDescriptorPool;
         std::vector<VkDescriptorSet> m_pDescriptorSets;
 
         std::vector<RenderPassInfo> m_pRenderPassInfo;
         uint32_t m_pRenderPassCount = 0;
+
+        CommandPools m_pCommandPools;
+        CommandBuffers m_pCommandBuffers;
     };
 }

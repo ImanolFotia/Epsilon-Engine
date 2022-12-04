@@ -1,4 +1,5 @@
 #include <framework/window.hpp>
+#include <framework/exception.hpp>
 
 #include "vulkan.hpp"
 #include <framework/common.hpp>
@@ -24,50 +25,63 @@ namespace engine
     void VulkanRenderer::Init(const char *appName, framework::Window &window)
     {
         m_pWindow = &window;
-        vk::createInstance(appName, *m_pResourceManagerRef->m_pVkDataPtr);
-        vk::setupDebugMessenger(m_pResourceManagerRef->m_pVkDataPtr->instance);
-        vk::createSurface(*m_pResourceManagerRef->m_pVkDataPtr, window.getWindow());
-        vk::pickPhysicalDevice(*m_pResourceManagerRef->m_pVkDataPtr);
-        vk::createLogicalDevice(*m_pResourceManagerRef->m_pVkDataPtr);
+        m_pResourceManagerRef->m_pVkDataPtr = &m_pVkData;
 
-        vk::createSwapChain(*m_pResourceManagerRef->m_pVkDataPtr, window.getWindow());
-        vk::createImageViews(*m_pResourceManagerRef->m_pVkDataPtr);
+        vk::createInstance(appName, m_pVkData);
+        vk::setupDebugMessenger(m_pVkData.instance);
+        vk::createSurface(m_pVkData, window.getWindow());
+        vk::pickPhysicalDevice(m_pVkData);
+        vk::createLogicalDevice(m_pVkData);
 
-        *m_pResourceManagerRef->m_pVkDataPtr->m_pCommandPools.emplace_back();
+        vk::createSwapChain(m_pVkData, window.getWindow());
+        vk::createImageViews(m_pVkData);
 
-        vk::createCommandPool(*m_pResourceManagerRef->m_pVkDataPtr, m_pResourceManagerRef->m_pVkDataPtr->m_pCommandPools.back());
+        m_pVkData.m_pCommandPools.emplace_back();
+
+        vk::createCommandPool(m_pVkData, m_pVkData.m_pCommandPools.back());
         /*
                 pCreateVertexBuffer();
                 pCreateIndexBuffer();
                 pCreateUniformBuffers();
+*/
+        m_pResourceManagerRef->pCreateDescriptorPool();
 
-                pCreateDescriptorPool();*/
-        // pCreateDescriptorSets();
-
-        vk::createCommandBuffers(*m_pResourceManagerRef->m_pVkDataPtr, 
-        m_pResourceManagerRef->m_pVkDataPtr->m_pCommandPools.back(), 
-        m_pResourceManagerRef->m_pVkDataPtr->m_pCommandBuffers);
+        vk::createCommandBuffers(m_pVkData, m_pVkData.m_pCommandPools.back(), m_pVkData.m_pCommandBuffers);
         vk::createSyncObjects(m_pVkData);
     }
 
     engine::Renderer::ObjectDataId VulkanRenderer::RegisterMesh(const std::vector<Vertex> &, std::vector<IndexType> &indices, bool)
     {
-        throw "Not implemented";
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
 
     engine::Renderer::TexturesDataId VulkanRenderer::RegisterTexture(unsigned char *, TextureInfo)
     {
-        throw "Not implemented";
+        
+        
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
 
     Material VulkanRenderer::CreateMaterial(Ref<Material>)
     {
-        throw "Not implemented";
+        
+        
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
 
-    void VulkanRenderer::Push(DrawCommand object_id)
+    void VulkanRenderer::Push(ObjectData object)
     {
-        m_pCurrentCommandQueue.push_back(object_id);
+        DrawCommand drawCommand;
+        auto mesh = m_pResourceManagerRef->meshPool.get(object.mesh);
+        drawCommand.indexBuffer = mesh->indexBuffer;
+        drawCommand.indexOffset = mesh->indexOffset;
+        drawCommand.numIndices = mesh->numIndices;
+        drawCommand.numVertices = mesh->numVertices;
+        drawCommand.vertexBuffer = mesh->vertexBuffer;
+        drawCommand.vertexOffset = mesh->vertexOffset;
+
+        drawCommand.material = object.material;
+        m_pCurrentCommandQueue.push_back(drawCommand);
     }
 
     void VulkanRenderer::PushCameraData(const ShaderData &camData)
@@ -154,9 +168,10 @@ namespace engine
         bool prev_group = false;
         for (auto &command : m_pCurrentCommandQueue)
         {
-            auto vertexBuffer = m_pResourceManagerRef->getBuffer(command.vertexBuffer);
-            auto indexBuffer = m_pResourceManagerRef->getBuffer(command.indexBuffer);
-            auto material = m_pResourceManagerRef->getMaterial(command.material);
+            auto material = m_pResourceManagerRef->materialPool.get(command.material);
+            auto vertexBuffer = m_pResourceManagerRef->vertexBufferPool.get(command.vertexBuffer);//m_pResourceManagerRef->getBuffer(command.vertexBuffer);
+            auto indexBuffer = m_pResourceManagerRef->indexBufferPool.get(command.indexBuffer);//m_pResourceManagerRef->getBuffer(command.indexBuffer);
+            //auto material = m_pResourceManagerRef->getMaterial(command.material);
             vk::bindVertexBuffer(m_pVkData, m_pFrame.CommandBuffer(), vertexBuffer->buffer);
             vkCmdBindIndexBuffer(m_pFrame.CommandBuffer(), indexBuffer->buffer, 0, VK_INDEX_TYPE_UINT32);
 
@@ -205,7 +220,8 @@ namespace engine
 
     void VulkanRenderer::Cleanup()
     {
-        throw "Not implemented";
+        
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
 
 }

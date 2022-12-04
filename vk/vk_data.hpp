@@ -31,6 +31,7 @@ namespace vk
         VmaAllocation allocation;
     };
 
+
     struct VulkanTextureInfo
     {
         uint32_t width = 0;
@@ -73,6 +74,7 @@ namespace vk
         VkPipelineLayout *pipelineLayout = nullptr;
         std::vector<VulkanTexture> textures;
         VkDescriptorBufferInfo bufferInfo;
+        size_t bufferOffset = 0;
     };
 
     struct VulkanRenderPipeline

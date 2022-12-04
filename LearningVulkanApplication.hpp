@@ -56,6 +56,7 @@ namespace LearningVulkan
             initWindow();
             initVulkan();
             onCreate();
+            
             mainLoop();
             exit();
         }
@@ -85,6 +86,7 @@ namespace LearningVulkan
 
             auto vertexCode = utils::readFile("../assets/shaders/vertex.spv");
             auto fragmentCode = utils::readFile("../assets/shaders/fragment.spv");
+
 
             ShaderInfo shaderInfo = {
                 .stages = {
@@ -118,8 +120,15 @@ namespace LearningVulkan
                         })
                     .shaderInfo(shaderInfo);
 
+
             // m_pRenderer->addRenderpass(renderPassInfo);
             renderPassRef = m_pContext.ResourceManager()->createRenderPass(renderPassInfo);
+
+        vk::VulkanMaterial material;
+
+        //material.descriptorSetLayout = m_pContext.ResourceManager()->getRenderPass();
+        //m_pResourceManagerRef->pCreateDescriptorSets(material);
+
         }
 
         void mainLoop()
@@ -175,7 +184,7 @@ namespace LearningVulkan
     protected:
         engine::Renderer::ObjectDataId RegisterMesh(const std::vector<engine::Vertex> &vertices, std::vector<uint32_t> &indices, bool group)
         {
-            return m_pContext.Renderer()->RegisterMesh(vertices, indices, group);
+            //return m_pContext.ResourceManager()->RegisterMesh(vertices, indices, group);
         }
 
         engine::Renderer::TexturesDataId RegisterTexture(unsigned char *data, engine::TextureInfo info)

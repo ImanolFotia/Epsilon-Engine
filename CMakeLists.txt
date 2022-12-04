@@ -4,6 +4,17 @@ set (CMAKE_CXX_STANDARD 20)
 
 set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 set(DBUILD_SHARED_LIBS ON CACHE BOOL "Build as a shared library")
+#set (BACKTRACE_SUPPORTED 1)
+
+
+#include (CheckSymbolExists)
+#check_symbol_exists (_Unwind_Backtrace unwind.h HAVE_BACKTRACE)
+
+#if(HAVE_BACKTRACE)
+#    message (STATUS "_Unwind_Backtrace() found. Enabling Backtrace support.")
+#else()
+#    message (STATUS "_Unwind_Backtrace() not found. Disabling Backtrace support.")
+#endif()
 
 option (BUILD_AS_LIBRARY "Build as a library" OFF)
 
@@ -113,6 +124,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_DL_LIBS})
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
+target_link_libraries(${PROJECT_NAME} PUBLIC -rdynamic)
 
 add_dependencies(${PROJECT_NAME} glfw3_d)
 add_dependencies(${PROJECT_NAME} glm)

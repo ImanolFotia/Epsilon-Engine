@@ -3,6 +3,7 @@
 #include "../renderer.hpp"
 #include "../frame.hpp"
 #include "../types.hpp"
+#include "../drawables/vertex.hpp"
 
 #include <vk/vk.hpp>
 
@@ -52,7 +53,7 @@ namespace engine
 
         Material CreateMaterial(Ref<Material>) override;
 
-        void Push(DrawCommand) override;
+        void Push(ObjectData) override;
 
         void PushCameraData(const ShaderData& camData) override;
 

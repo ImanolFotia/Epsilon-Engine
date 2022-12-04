@@ -5,6 +5,9 @@
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
+#define NOMINMAX 
+#undef min
+#undef max
 #include <windows.h>
 extern "C"
 {
@@ -32,7 +35,6 @@ extern "C"
 int main(int argc, char **argv)
 {
     framework::env::setArgs(argc, argv);
-
 
     ExampleApp::ExampleApp app("Vulkan Engine");
 

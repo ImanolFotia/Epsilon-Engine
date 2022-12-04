@@ -3,7 +3,8 @@
 #include "types.hpp"
 #include "object_pool.hpp"
 #include "draw_command.hpp"
-#include "framework/window.hpp"
+#include <framework/window.hpp>
+#include "drawables/vertex.hpp"
 
 #include <string>
 #include <vector>
@@ -30,12 +31,9 @@ namespace engine
             RenderPass() = default;
     };
 
-    struct MeshPushConstant {
-        alignas(16) glm::mat4 model;
-    };
 
     struct ObjectData {
-        size_t num_vertices;
+        /*size_t num_vertices;
         size_t num_indices;
 
         size_t vert_offset;
@@ -44,7 +42,14 @@ namespace engine
         size_t vertex_bucket;
         size_t index_bucket;
 
-        bool group = false;
+        bool group = false;*/
+
+        Ref<Mesh> mesh;
+        Ref<Material> material;
+        glm::mat4 modelMatrix;
+        glm::vec3 position;
+        glm::vec3 scale;
+        glm::quat rotation;
 
         MeshPushConstant push_constant;
     };
@@ -87,7 +92,7 @@ namespace engine
 
         virtual Material CreateMaterial(Ref<Material>) = 0;
 
-        virtual void Push(DrawCommand) = 0;
+        virtual void Push(ObjectData) = 0;
 
         virtual void PushCameraData(const ShaderData& camData) = 0;
         

@@ -11,6 +11,17 @@ namespace ExampleApp
 {
     class ExampleApp : public LearningVulkan::LearningVulkanApplication
     {
+        struct Model
+        {
+            engine::Ref<engine::Mesh> mesh;
+            engine::Ref<engine::Texture> texture;
+            engine::Ref<engine::UniformBindings> bindings;
+            engine::Ref<engine::Material> material;
+            engine::MeshPushConstant pushConstant;
+        };
+
+        engine::Ref<engine::Buffer> uniformBuffer0;
+
     public:
         ExampleApp(std::string appName) : LearningVulkan::LearningVulkanApplication(appName) {}
 
@@ -47,29 +58,47 @@ namespace ExampleApp
                 std::vector<uint32_t> indices = {
                     0, 1, 2, 2, 3, 0};
 
-                myObjectId = RegisterMesh(vertices, indices, false);
+                using namespace engine;
+
+                myObjectId.mesh = m_pContext.ResourceManager()->createMesh({.vertices = vertices,
+                                                                            .indices = indices});
 
                 auto cube_data = m_pCube.data();
-                CubeId = RegisterMesh(cube_data.Vertices, cube_data.Indices, false);
+                CubeId.mesh = m_pContext.ResourceManager()->createMesh({.vertices = cube_data.Vertices,
+                                                                        .indices = cube_data.Indices});
 
                 m_pSphere = engine::Sphere(20);
                 auto sphere_data = m_pSphere.data();
-                SphereId = RegisterMesh(sphere_data.Vertices, sphere_data.Indices, false);
 
+                SphereId.mesh = m_pContext.ResourceManager()->createMesh({.vertices = sphere_data.Vertices,
+                                                                          .indices = sphere_data.Indices});
+
+                MaterialInfo material;
                 {
                     int w, h, nc;
-                    unsigned char *pixels = framework::load_image_from_file("../assets/images/texture.png", &w, &h, &nc);
+                    unsigned char *pixels = framework::load_image_from_file("../assets/images/texture.png",
+                                                                            &w,
+                                                                            &h,
+                                                                            &nc);
                     engine::TextureInfo texInfo = engine::TextureBuilder()
                                                       .width(w)
                                                       .height(h)
-                                                      .numChannels(nc);
+                                                      .numChannels(nc)
+                                                      .pixels(pixels);
 
-                    // auto texture = m_pRenderer->RegisterTexture(pixels, texInfo);
+                    material.textures.push_back(texInfo);
+
+                    uniformBuffer0 = 
+                    
+                    SphereId.material = m_pContext.ResourceManager()->createMaterial(material, renderPassRef);
 
                     framework::free_image_data(pixels);
 
                     // material = m_pRenderer->CreateMaterial(texture);
                 }
+
+                CubeId.material = SphereId.material;
+                myObjectId.material = SphereId.material;
 
                 {
                     int w, h, nc;
@@ -88,7 +117,8 @@ namespace ExampleApp
             }
             catch (std::exception &e)
             {
-                std::cout << e.what() << std::endl;
+                std::cout << "\033[1;31mEXCEPTION ON: " << __PRETTY_FUNCTION__ << "\033[0m\n"
+                          << e.what() << std::endl;
             }
         }
 
@@ -108,31 +138,43 @@ namespace ExampleApp
 
             PushCameraData(camData);
 
-            CubeId->push_constant.model = glm::translate(glm::mat4(1.0f), glm::vec3(-0.75, 0.0, 0.5));
-            CubeId->push_constant.model = glm::rotate(CubeId->push_constant.model, (float)glfwGetTime(), glm::vec3(0.2f, -1.0f, 0.5f));
-            CubeId->push_constant.model = glm::scale(CubeId->push_constant.model, glm::vec3(0.25));
-            engine::RenderObject renderObject;
-            renderObject.objectId = CubeId;
-            // renderObject.materialId = material.id;
-            renderObject.uniformData = camData;
-            Draw(renderObject);
+            CubeId.pushConstant.model = glm::translate(glm::mat4(1.0f), glm::vec3(-0.75, 0.0, 0.5));
+            CubeId.pushConstant.model = glm::rotate(CubeId.pushConstant.model, (float)glfwGetTime(), glm::vec3(0.2f, -1.0f, 0.5f));
+            CubeId.pushConstant.model = glm::scale(CubeId.pushConstant.model, glm::vec3(0.25));
 
-            myObjectId->push_constant.model = glm::mat4(1.0f);
+            engine::ObjectData objectData;
+            objectData.mesh = CubeId.mesh;
+            objectData.material = CubeId.material;
+            objectData.modelMatrix = CubeId.pushConstant.model;
+            objectData.position = glm::vec3(-0.75, 0.0, 0.5);
+            objectData.scale = glm::vec3(0.25);
+            objectData.rotation = glm::rotate(CubeId.pushConstant.model, (float)glfwGetTime(), glm::vec3(0.2f, -1.0f, 0.5f));
+            m_pContext.Renderer()->Push(objectData);
+            // engine::DrawCommand drawCommand;
+
+            // drawCommand = CubeId.mesh;
+            //  engine::RenderObject renderObject;
+            //  renderObject.objectId = CubeId;
+            //   renderObject.materialId = material.id;
+            //  renderObject.uniformData = camData;
+            //  Draw(renderObject);
+
+            myObjectId.pushConstant.model = glm::mat4(1.0f);
             // myObjectId->push_constant.model = glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(.0f, .0f, 1.0f));
             // myObjectId->push_constant.model = glm::scale(CubeId->push_constant.model, glm::vec3(0.5));
 
-            renderObject.objectId = myObjectId;
-            renderObject.materialId = material2.id;
-            renderObject.uniformData = camData;
-            Draw(renderObject);
+            // renderObject.objectId = myObjectId;
+            // renderObject.materialId = material2.id;
+            // renderObject.uniformData = camData;
+            // Draw(renderObject);
 
-            SphereId->push_constant.model = glm::translate(glm::mat4(1.0f), glm::vec3(0.75, 0.0, 0.5));
-            SphereId->push_constant.model = glm::rotate(SphereId->push_constant.model, (float)glfwGetTime(), glm::vec3(-0.2f, 1.0f, 0.5f));
-            SphereId->push_constant.model = glm::scale(SphereId->push_constant.model, glm::vec3(0.25));
-            renderObject.objectId = SphereId;
-            // renderObject.materialId = material.id;
-            renderObject.uniformData = camData;
-            Draw(renderObject);
+            SphereId.pushConstant.model = glm::translate(glm::mat4(1.0f), glm::vec3(0.75, 0.0, 0.5));
+            SphereId.pushConstant.model = glm::rotate(SphereId.pushConstant.model, (float)glfwGetTime(), glm::vec3(-0.2f, 1.0f, 0.5f));
+            SphereId.pushConstant.model = glm::scale(SphereId.pushConstant.model, glm::vec3(0.25));
+            // renderObject.objectId = SphereId;
+            //  renderObject.materialId = material.id;
+            // renderObject.uniformData = camData;
+            // Draw(renderObject);
         }
 
         void onExit() override
@@ -140,13 +182,14 @@ namespace ExampleApp
         }
 
     private:
-        engine::Renderer::ObjectDataId myObjectId = {};
+        Model myObjectId = {};
+        Model CubeId = {};
+        Model SphereId = {};
+
         engine::Material material = {};
         engine::Material material2 = {};
 
         engine::Cube m_pCube = {};
         engine::Sphere m_pSphere = {};
-        engine::Renderer::ObjectDataId CubeId = {};
-        engine::Renderer::ObjectDataId SphereId = {};
     };
 }

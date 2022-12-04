@@ -20,7 +20,7 @@ namespace engine
         virtual Ref<Buffer> destroyBuffer(BufferInfo) = 0;
         virtual Ref<Shader> createShader(ShaderInfo) = 0;
         virtual Ref<UniformBindings> createUniformData(UniformBindingInfo) = 0;
-        virtual Ref<Material> createMaterial(MaterialInfo) = 0;
+        virtual Ref<Material> createMaterial(MaterialInfo, Ref<Buffer>, Ref<RenderPass>) = 0;
         virtual Ref<Mesh> createMesh(MeshInfo) = 0;
         virtual Ref<RenderPass> createRenderPass(RenderPassInfo) = 0;
 

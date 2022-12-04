@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../framework/window.hpp"
+#include "../framework/exception.hpp"
 #include "renderer/resource_manager.hpp"
 #include "renderer/renderer.hpp"
 #include "renderer/vulkan/resource_manager.hpp"
@@ -27,7 +28,9 @@ namespace engine
                     std::static_pointer_cast<engine::VulkanResourceManager>(m_pResourceManager).get());
                 break;
             default:
-            throw "Not Implemented";
+            
+        
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
                 break;
             }
             

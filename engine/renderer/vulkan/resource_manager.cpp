@@ -1,19 +1,19 @@
 #include "resource_manager.hpp"
 
-#include <stdexcept>
+#include <framework/exception.hpp>
 
 namespace engine
 {
     VulkanResourceManager::VulkanResourceManager()
     {
-        m_pVkDataPtr = new vk::VulkanData();
     }
 
     VulkanResourceManager::~VulkanResourceManager()
     {
     }
 
-    void VulkanResourceManager::Init() {
+    void VulkanResourceManager::Init()
+    {
 
         VmaAllocatorCreateInfo allocatorInfo = {};
         allocatorInfo.physicalDevice = m_pVkDataPtr->physicalDevice;
@@ -21,6 +21,10 @@ namespace engine
         allocatorInfo.instance = m_pVkDataPtr->instance;
 
         vmaCreateAllocator(&allocatorInfo, &m_pAllocator);
+
+        m_pCommandPools.emplace_back();
+
+        vk::createCommandPool(*m_pVkDataPtr, m_pCommandPools.back());
     }
 
     Ref<Texture> VulkanResourceManager::createTexture(unsigned char *pixels, TextureInfo texInfo)
@@ -50,21 +54,37 @@ namespace engine
         return ref;
     }
 
-    Ref<Material> VulkanResourceManager::createMaterial(MaterialInfo material)
-    { /*
-         Ref<Material> materialRef;
-         vk::VulkanMaterial vkMaterial;
+    Ref<Material> VulkanResourceManager::createMaterial(MaterialInfo material, Ref<Buffer> uniformBuffer, Ref<RenderPass> renderPass)
+    {
 
-         auto &materialdata = m_pMaterials.emplace_back();
+        try{
+        vk::VulkanMaterial vkMaterial;
+        vkMaterial.descriptorSetLayout = renderPassPool.get(renderPass)->renderPipelines.back().descriptorSetLayout;
+        //auto &materialdata = m_pMaterials.emplace_back();
 
-         for (auto &texture : material.textures)
-         {
-             materialdata.textures.push_back(m_pTextures[texture->id]);
-         }
+        for (auto &texture : material.textures)
+        {
 
-         pCreateDescriptorSets(vkMaterial);
+            auto tex = createTexture(texture.pixels, texture);
+            vkMaterial.textures.push_back(*texPool.get(tex)); 
+        }
 
-         return materialRef;*/
+
+
+        vkMaterial.bufferInfo.offset = 0;
+        vkMaterial.bufferInfo.buffer = uniformBufferPool.get(uniformBuffer)->buffer;
+
+        pCreateDescriptorSets(vkMaterial);
+
+        
+        Ref<Material> materialRef = materialPool.insert(vkMaterial);
+        return materialRef;
+        }
+        catch(std::exception& e) {
+
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
+        }
+
     }
 
     void VulkanResourceManager::pRecreateSwapChain(GLFWwindow *window)
@@ -97,7 +117,7 @@ namespace engine
 
         renderPass.renderPipelines.emplace_back();
         renderPass.id = m_pRenderPassCount;
-        m_pRenderPassInfo[m_pRenderPassCount] = renderPassInfo;
+        m_pRenderPassInfo.push_back(renderPassInfo);
 
         vk::createRenderPass(*m_pVkDataPtr, renderPass, renderPassInfo);
 
@@ -127,7 +147,12 @@ namespace engine
 
     void VulkanResourceManager::clean()
     {
-        for (auto &buffer : bufferPool)
+        for (auto &buffer : vertexBufferPool)
+        {
+            vmaDestroyBuffer(m_pAllocator, buffer.buffer, buffer.allocation);
+        }
+
+        for (auto &buffer : indexBufferPool)
         {
             vmaDestroyBuffer(m_pAllocator, buffer.buffer, buffer.allocation);
         }
@@ -162,19 +187,63 @@ namespace engine
      */
     Ref<Buffer> VulkanResourceManager::destroyBuffer(BufferInfo)
     {
-        throw "Not implemented";
+
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
     Ref<Shader> VulkanResourceManager::createShader(ShaderInfo)
     {
-        throw "Not implemented";
+
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
-    Ref<UniformBindings> VulkanResourceManager::createUniformData(UniformBindingInfo)
+    Ref<UniformBindings> VulkanResourceManager::createUniformData(UniformBindingInfo bindingInfo)
     {
-        throw "Not implemented";
+        for (size_t i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
+        {
+            pCreateUniformBuffer(bindingInfo);
+        }
+        
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
-    Ref<Mesh> VulkanResourceManager::createMesh(MeshInfo)
+    Ref<Mesh> VulkanResourceManager::createMesh(MeshInfo meshInfo)
     {
-        throw "Not implemented";
+        std::vector<Vertex> *vertices = &meshInfo.vertices;
+        std::vector<uint32_t> *indices = &meshInfo.indices;
+
+        Ref<Buffer> vertexBufferRef = pFetchVertexBuffer(vertices->size());
+        Ref<Buffer> indexBufferRef = pFetchIndexBuffer(indices->size());
+
+        vk::VulkanBuffer *vertexBuffer = vertexBufferPool.get(vertexBufferRef);
+        vk::VulkanBuffer *indexBuffer = indexBufferPool.get(indexBufferRef);
+
+        auto vertexStagingBuffer = pCreateStagingBuffer(*vertices);
+        auto indexStagingBuffer = pCreateStagingIndexBuffer(*indices);
+
+        vk::copyBuffer(*m_pVkDataPtr, m_pCommandPools.back(), vertexStagingBuffer.buffer, vertexBuffer->buffer, vertices->size() * sizeof(Vertex), (vertexBuffer->allocatedVertices - vertices->size()) * sizeof(Vertex));
+
+        IO::Info("From function ", __PRETTY_FUNCTION__, "\n\tin (", __FILE__, ":", __LINE__, ") \n\t", "copied ", vertices->size(), " vertices, of size ", vertices->size() * sizeof(Vertex), " bytes, at offset ", (vertexBuffer->allocatedVertices - vertices->size()) * sizeof(Vertex), " to local buffer");
+
+        vmaDestroyBuffer(m_pAllocator, vertexStagingBuffer.buffer, vertexStagingBuffer.allocation);
+
+        vk::copyBuffer(*m_pVkDataPtr, m_pCommandPools.back(), indexStagingBuffer.buffer, indexBuffer->buffer, indices->size() * sizeof(IndexType), (indexBuffer->allocatedVertices - indices->size()) * sizeof(IndexType));
+
+        vmaDestroyBuffer(m_pAllocator, indexStagingBuffer.buffer, indexStagingBuffer.allocation);
+
+        IO::Info("From function ", __PRETTY_FUNCTION__, "\n\tin (", __FILE__, ":", __LINE__, ") \n\t", "copied ", indices->size(), " indices, of size ", indices->size() * sizeof(IndexType), " bytes, at offset ", (indexBuffer->allocatedVertices - indices->size()) * sizeof(IndexType), " to local buffer");
+
+        MeshResource meshResource = {
+            .vertexBuffer = vertexBufferRef,
+            .indexBuffer = indexBufferRef,
+            .vertexOffset = static_cast<uint32_t>((vertexBuffer->allocatedVertices - (uint32_t)vertices->size()) * sizeof(Vertex)),
+            .indexOffset = static_cast<uint32_t>((indexBuffer->allocatedVertices - (uint32_t)indices->size()) * sizeof(IndexType)),
+            .numVertices = (uint32_t)vertices->size(),
+            .numIndices = (uint32_t)indices->size()};
+        auto ref = meshPool.insert(meshResource);
+
+        IO::Warning("Function ready, testing required\n\t", __PRETTY_FUNCTION__,
+                    "\n\tin ", __FILE__, ":", __LINE__);
+
+        // throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
+        return ref;
     }
 
     /**
@@ -184,27 +253,33 @@ namespace engine
 
     vk::VulkanTexture *VulkanResourceManager::getTexture(Ref<Texture>)
     {
-        throw "Not implemented";
+
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
     vk::VulkanBuffer *VulkanResourceManager::getBuffer(Ref<Buffer>)
     {
-        throw "Not implemented";
+
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
     ShaderStageInfo *VulkanResourceManager::getShader(Ref<Shader>)
     {
-        throw "Not implemented";
+
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
     VkDescriptorSetLayoutBinding *VulkanResourceManager::getUniformData(Ref<UniformBindings>)
     {
-        throw "Not implemented";
+
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
     vk::VulkanMaterial *VulkanResourceManager::getMaterial(Ref<Material>)
     {
-        throw "Not implemented";
+
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
-    vk::VulkanRenderPass *VulkanResourceManager::getRenderPass(Ref<RenderPass>)
+    vk::VulkanRenderPass *VulkanResourceManager::getRenderPass(Ref<RenderPass> ref)
     {
-        throw "Not implemented";
+
+        return renderPassPool.get(ref);
     }
 
     /**
@@ -212,30 +287,37 @@ namespace engine
      */
     void VulkanResourceManager::destroyTexture(Ref<Texture>)
     {
-        throw "Not implemented";
+
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
     void VulkanResourceManager::destroyBuffer(Ref<Buffer>)
     {
-        throw "Not implemented";
+
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
     void VulkanResourceManager::destroyShader(Ref<Shader>)
     {
-        throw "Not implemented";
+
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
     void VulkanResourceManager::destroyUniformData(Ref<UniformBindings>)
     {
-        throw "Not implemented";
+
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
     void VulkanResourceManager::destroyMaterial(Ref<Material>)
     {
-        throw "Not implemented";
+
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
     void VulkanResourceManager::destroyMesh(Ref<Mesh>)
     {
-        throw "Not implemented";
+
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
     void VulkanResourceManager::destroyRenderPass(Ref<RenderPass>)
     {
-        throw "Not implemented";
+
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
 }

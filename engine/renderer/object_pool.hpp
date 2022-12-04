@@ -2,6 +2,7 @@
 #include <iostream>
 #include <list>
 #include <vector>
+#include <unordered_map>
 
 namespace engine
 {
@@ -81,7 +82,7 @@ namespace engine
             return ref;
         }
 
-        R *get(Ref<T> ref)
+        [[nodiscard]] R *get(Ref<T> ref)
         {
             if (m_pIndexArray.size() > ref.m_pIndex && ref.isValid())
             {

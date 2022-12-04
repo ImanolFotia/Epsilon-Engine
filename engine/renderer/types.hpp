@@ -1,13 +1,12 @@
 #pragma once
 
-#include <engine/types.hpp>
 #include <string>
 #include <vector>
+#include <glm/glm.hpp>
+#include "drawables/mesh.hpp"
 
 namespace engine
 {
-
-
     struct Texture;
     struct Buffer;
     struct Shader;
@@ -34,46 +33,8 @@ namespace engine
         ALL = FRAGMENT | VERTEX | COMPUTE
     };
 
-    struct Vertex
-    {
-        
-        Vertex(glm::vec3 p, glm::vec2 uv, glm::vec3 n): position(p), texCoords(uv), normal(n) {}
-        
-        Vertex(glm::vec3 p, glm::vec2 uv, glm::vec3 n, glm::vec4 c, glm::vec3 t, glm::vec3 bt) : position(p), texCoords(uv), normal(n), color(c), tangent(t), bitangent(bt)
-        {
-        }
-
-
-        glm::vec3 position = glm::vec3(0.0f);
-        glm::vec2 texCoords = glm::vec2(0.0f);
-        glm::vec3 normal = glm::vec3(0.0f);
-        glm::vec4 color = glm::vec4(0.0f);
-        glm::vec3 tangent = glm::vec3(0.0f);
-        glm::vec3 bitangent = glm::vec3(0.0f);
-    };
-
-    struct Mesh
-    {
-
-        void addTriangle(uint32_t a, uint32_t b, uint32_t c)
-        {
-            Indices.push_back(a);
-            Indices.push_back(b);
-            Indices.push_back(c);
-        }
-
-        void addQuad(uint32_t a, uint32_t b, uint32_t c, uint32_t d)
-        {
-            Indices.push_back(a);
-            Indices.push_back(b);
-            Indices.push_back(d);
-            Indices.push_back(b);
-            Indices.push_back(c);
-            Indices.push_back(d);
-        }
-
-        std::vector<Vertex> Vertices;
-        std::vector<uint32_t> Indices;
+    struct MeshPushConstant {
+        alignas(16) glm::mat4 model;
     };
 
     struct ShaderData
@@ -194,7 +155,9 @@ namespace engine
         uint32_t height;
         uint32_t numChannels;
         TextureFormat format;
+        unsigned char* pixels = nullptr;
     };
+
 
     struct TextureBuilder
     {
@@ -218,6 +181,12 @@ namespace engine
             self.format = f;
             return *this;
         }
+
+        TextureBuilder pixels(unsigned char* p)
+        {
+            self.pixels = p;
+            return *this;
+        }
         operator TextureInfo() { return self; }
         TextureInfo self;
     };
@@ -226,6 +195,7 @@ namespace engine
     {
         size_t id;
     };
+
 
     struct IndirectPack
     {
@@ -335,10 +305,23 @@ namespace engine
 
     struct UniformBindingInfo {
         //...
+
+        size_t size;
+        size_t offset;
     };
 
     struct UniformBindingFactory {
         operator UniformBindingInfo() { return info; }
+
+        UniformBindingInfo size(size_t s) {
+            info.size = s;
+            return *this;
+        }
+        UniformBindingInfo offset(size_t o) {
+            info.offset = o;
+            return *this;
+        }
+
         UniformBindingInfo info;
     };
 
@@ -347,6 +330,23 @@ namespace engine
         UniformBindingInfo bindingInfo;
     };
 
-    struct MeshInfo {};
+    struct MeshInfo {
+        std::vector<Vertex> vertices;
+        std::vector<uint32_t> indices;
+    };
+
+    struct MeshInfoFactory {
+        MeshInfoFactory vertices(std::vector<Vertex> v) {
+            info.vertices = v;
+            return *this;
+        }
+
+        MeshInfoFactory indices(std::vector<uint32_t> i) {
+            info.indices = i;
+            return *this;
+        }
+        operator MeshInfo() { return info; }
+        MeshInfo info;
+    };
 
 }
