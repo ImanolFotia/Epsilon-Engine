@@ -45,10 +45,9 @@ namespace LearningVulkan
     public:
         LearningVulkanApplication() = default;
 
-        LearningVulkanApplication(std::string appName) : m_ApplicationName(appName)
+        explicit LearningVulkanApplication(const std::string& appName) : m_ApplicationName(appName)
         {
             m_pContext.Init(appName, engine::renderer_type::vulkan);
-
         }
 
         void run()
@@ -56,7 +55,6 @@ namespace LearningVulkan
             initWindow();
             initVulkan();
             onCreate();
-            
             mainLoop();
             exit();
         }
@@ -120,15 +118,9 @@ namespace LearningVulkan
                         })
                     .shaderInfo(shaderInfo);
 
-
-            // m_pRenderer->addRenderpass(renderPassInfo);
             renderPassRef = m_pContext.ResourceManager()->createRenderPass(renderPassInfo);
 
         vk::VulkanMaterial material;
-
-        //material.descriptorSetLayout = m_pContext.ResourceManager()->getRenderPass();
-        //m_pResourceManagerRef->pCreateDescriptorSets(material);
-
         }
 
         void mainLoop()
@@ -147,9 +139,7 @@ namespace LearningVulkan
         void drawFrame()
         {
             m_pContext.Renderer()->Begin(renderPassRef);
-
             m_pContext.Renderer()->Flush();
-
             m_pContext.Renderer()->End();
         }
 

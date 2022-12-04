@@ -8,7 +8,7 @@ namespace framework
     class NotImplemented : public std::logic_error
     {
     public:
-        NotImplemented(std::string file, std::string funcName) 
+        NotImplemented(const std::string& file, const std::string& funcName)
         : std::logic_error("On file: " + file + "\nFunction not yet implemented: " + funcName + "\n")
         {
 

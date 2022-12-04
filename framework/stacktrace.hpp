@@ -12,7 +12,7 @@
 #ifdef __linux__
 #include <zconf.h>
 #include <execinfo.h>
-#include <errno.h>
+#include <cerrno>
 #include <unistd.h>
 #include <linux/limits.h>
 
@@ -27,9 +27,9 @@ static std::string get_path()
     return "";
 }
 
-static std::string sh(std::string cmd)
+static std::string sh(const std::string& cmd)
 {
-    std::array<char, 128> buffer;
+    std::array<char, 128> buffer = {0};
     std::string result;
     std::shared_ptr<FILE> pipe(popen(cmd.c_str(), "r"), pclose);
     if (!pipe)
@@ -69,7 +69,7 @@ static std::vector<std::string> split(const std::string &s, char seperator)
 
 class entry
 {
-    void *m_pAddress;
+    void *m_pAddress = nullptr;
     std::string m_pDescription;
     std::string m_pSourceFile;
     std::string m_pSourceLine;
@@ -86,7 +86,7 @@ public:
 class stacktrace
 {
 public:
-    static const stacktrace current()
+    static stacktrace current()
     {
         stacktrace current;
 

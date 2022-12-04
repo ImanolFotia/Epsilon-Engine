@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <stdexcept>
+#include <algorithm>
 
 namespace framework
 {
@@ -18,12 +19,12 @@ namespace framework
     
     struct env
     {
-        static std::string getArgument(std::string arg) {
+        static std::string getArgument(const std::string& arg) {
             if(args.contains(arg)) return args.at(arg);
             return "";
         }
 
-        static bool hasArgument(std::string arg) {
+        static bool hasArgument(const std::string& arg) {
             return args.contains(arg);
         }
 
@@ -74,8 +75,9 @@ namespace framework
 
     private:
         template <class... Args>
-        static bool checkArgs(std::string arg, Args... test)
+        static bool checkArgs(const std::string& arg, Args&&... test)
         {
+            //std::ranges::any_of(test..., [arg](const std::string& t) {t == arg;});
             for (auto &t : {test...})
             {
                 if (t == arg)

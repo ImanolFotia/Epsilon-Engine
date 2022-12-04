@@ -6,6 +6,7 @@
 *.so
 
 
+/.idea
 /thirdparty
 /.vscode
 /.vs

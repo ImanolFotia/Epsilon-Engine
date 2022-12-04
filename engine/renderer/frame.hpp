@@ -47,12 +47,12 @@ namespace engine
             return *m_pSyncObjects;
         }
 
-        uint32_t FrameIndex()
+        uint32_t FrameIndex() const
         {
             return m_pFrameIndex;
         }
 
-        uint32_t CurrentImage()
+        uint32_t CurrentImage() const
         {
             return m_pCurrentImage;
         }

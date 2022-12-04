@@ -1,7 +1,6 @@
 #pragma once
 
 #include <glm/glm.hpp>
-
 #include "mesh.hpp"
 
 namespace engine
@@ -30,6 +29,6 @@ namespace engine
         DrawableType getType() { return m_pType; }
     protected:
         Mesh m_pMesh;
-        DrawableType m_pType;
+        DrawableType m_pType = UNDEFINED;
     };
 } // namespace Renderer

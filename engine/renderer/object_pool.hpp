@@ -14,7 +14,6 @@ namespace engine
         static Ref<T> makeEmpty() {
             return Ref(0, 0);
         }
-
     private:
         Ref(uint32_t i, uint32_t b) : m_pIndex(i), m_pGeneration(b) {}
 
@@ -26,6 +25,7 @@ namespace engine
         template <typename A, typename B>
         friend class Pool;
     };
+
     template <typename T, typename R>
     struct Pool
     {

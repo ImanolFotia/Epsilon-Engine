@@ -23,7 +23,7 @@ namespace ExampleApp
         engine::Ref<engine::Buffer> uniformBuffer0;
 
     public:
-        ExampleApp(std::string appName) : LearningVulkan::LearningVulkanApplication(appName) {}
+        explicit ExampleApp(std::string appName) : LearningVulkan::LearningVulkanApplication(appName) {}
 
         void onCreate() override
         {
@@ -88,7 +88,7 @@ namespace ExampleApp
 
                     material.textures.push_back(texInfo);
 
-                    uniformBuffer0 = 
+                    //uniformBuffer0 =
                     
                     SphereId.material = m_pContext.ResourceManager()->createMaterial(material, renderPassRef);
 
