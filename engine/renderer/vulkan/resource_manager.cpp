@@ -2,6 +2,15 @@
 
 #include <framework/exception.hpp>
 
+
+#ifdef WIN32
+#if !defined(__PRETTY_FUNCTION__) && !defined(__GNUC__)
+#define __PRETTY_FUNCTION__ __FUNCSIG__
+#endif
+
+#endif
+
+
 namespace engine
 {
     VulkanResourceManager::VulkanResourceManager()

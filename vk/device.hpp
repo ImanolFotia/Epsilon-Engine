@@ -14,7 +14,10 @@
 #include "command.hpp"
 #include "sync_objects.hpp"
 #include "vk_data.hpp"
+
+#ifdef __linux__
 #include <bits/stdc++.h>
+#endif
 
 namespace vk
 {

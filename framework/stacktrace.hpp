@@ -15,8 +15,11 @@
 #include <cerrno>
 #include <unistd.h>
 #include <linux/limits.h>
+#endif
 
 namespace framework {
+
+#ifdef __linux__
 static std::string get_path()
 {
     char result[PATH_MAX];
@@ -90,6 +93,7 @@ public:
     {
         stacktrace current;
 
+#ifdef __linux__
         void *buffer[512];
         int numFrames = backtrace(buffer, 32);
         char **framesDescriptions = backtrace_symbols(buffer, numFrames);
@@ -126,6 +130,7 @@ public:
         }
 
         free(framesDescriptions);
+#endif
 
         return current;
     }

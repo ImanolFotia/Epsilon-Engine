@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 #include "mesh.hpp"
 
+#include "../types.hpp"
+
 namespace engine
 {
     enum DrawableType

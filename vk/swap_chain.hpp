@@ -18,6 +18,11 @@
 
 #include "vk_data.hpp"
 
+#ifdef _WIN32
+#undef min
+#undef max
+#endif
+
 namespace vk
 {
     struct SwapChainSupportDetails

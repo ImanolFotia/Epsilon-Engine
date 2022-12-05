@@ -90,7 +90,7 @@ namespace ExampleApp
 
                     //uniformBuffer0 =
                     
-                    SphereId.material = m_pContext.ResourceManager()->createMaterial(material, renderPassRef);
+                    //TODO: SphereId.material = m_pContext.ResourceManager()->createMaterial(material, renderPassRef);
 
                     framework::free_image_data(pixels);
 
