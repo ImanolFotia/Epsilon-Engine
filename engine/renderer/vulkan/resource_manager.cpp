@@ -125,12 +125,14 @@ namespace engine
                                        m_pVkDataPtr->defaultRenderPass,
                                        m_pVkDataPtr->defaultRenderPass.renderPipelines[i],
                                        m_pVkDataPtr->defaultRenderPass.vertexInfo,
-                                       m_pRenderPassInfo[m_pVkDataPtr->defaultRenderPass.id]);
+                                       m_pDefaultRenderPassInfo);
 
         vk::createFramebuffers(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, m_pVkDataPtr->defaultRenderPass.renderPassChain);
 
         for (auto &pass : renderPassPool)
+
         {
+            if(pass.id == std::numeric_limits<uint32_t>::max()) continue;
             vk::createRenderPass(*m_pVkDataPtr, pass, m_pRenderPassInfo[pass.id]);
 
             for (auto i = 0; i < pass.renderPipelines.size(); i++)
@@ -144,7 +146,7 @@ namespace engine
 
 
         m_pVkDataPtr->defaultRenderPass.renderPipelines.emplace_back();
-        m_pVkDataPtr->defaultRenderPass.id = m_pRenderPassCount;
+        m_pVkDataPtr->defaultRenderPass.id = std::numeric_limits<uint32_t>::max();
         m_pDefaultRenderPassInfo = renderPassInfo;
 
         vk::createRenderPass(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, renderPassInfo);
@@ -169,9 +171,9 @@ namespace engine
         m_pVkDataPtr->defaultRenderPass.vertexInfo = vertexInfo;
         auto uniformRef = createUniformData(renderPassInfo.bindingInfo);
         m_pVkDataPtr->defaultRenderPass.uniformBuffer = *uniformBufferPool.get(uniformRef);
-        auto ref = renderPassPool.insert(m_pVkDataPtr->defaultRenderPass);
+        m_pDefaultRenderPassRef = renderPassPool.insert(m_pVkDataPtr->defaultRenderPass);
 
-        return ref;
+        return m_pDefaultRenderPassRef;
     }
 
     Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPassInfo)

@@ -152,6 +152,7 @@ namespace vk
             clearValues[1].depthStencil = depthStencilClearColor;
         }
         
+        
         VkRenderPass renderPass;
         VkRenderPassBeginInfo renderPassInfo{};
         std::vector<VulkanRenderPipeline> renderPipelines;

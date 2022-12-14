@@ -137,5 +137,6 @@ namespace engine
         CommandPools m_pCommandPools;
         uint32_t m_pNumCommandPools = 0;
         CommandBuffers m_pCommandBuffers;
+        Ref<RenderPass> m_pDefaultRenderPassRef;
     };
 }
