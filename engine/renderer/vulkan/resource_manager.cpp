@@ -63,26 +63,34 @@ namespace engine
         return ref;
     }
 
-    Ref<Material> VulkanResourceManager::createMaterial(MaterialInfo material, Ref<Buffer> uniformBuffer, Ref<RenderPass> renderPass)
+    Ref<Material> VulkanResourceManager::createMaterial(MaterialInfo material, Ref<RenderPass> renderPassRef)
     {
 
         try{
         vk::VulkanMaterial vkMaterial;
-        vkMaterial.descriptorSetLayout = renderPassPool.get(renderPass)->renderPipelines.back().descriptorSetLayout;
+        auto renderPass = renderPassPool.get(renderPassRef);
+        vkMaterial.descriptorSetLayout = renderPass->renderPipelines.back().descriptorSetLayout;
         //auto &materialdata = m_pMaterials.emplace_back();
 
         for (auto &texture : material.textures)
         {
-
             auto tex = createTexture(texture.pixels, texture);
             vkMaterial.textures.push_back(*texPool.get(tex)); 
         }
 
+        //auto uniformBufferRef = createUniformData(material.bindingInfo);
 
+        auto buffers = renderPass->uniformBuffer.buffers;
 
-        vkMaterial.bufferInfo.offset = 0;
-        vkMaterial.bufferInfo.buffer = uniformBufferPool.get(uniformBuffer)->buffer;
+        for(int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
+            vkMaterial.bufferInfo[i].offset = buffers[i].offset;
+            vkMaterial.bufferInfo[i].buffer = buffers[i].buffer;
+        }
+        vkMaterial.bufferSize = renderPass->uniformBuffer.size;
 
+        m_pNumCommandPools++;
+        pCreateDescriptorPool();
+        pRecreateDescriptorSets();
         pCreateDescriptorSets(vkMaterial);
 
         
@@ -109,15 +117,61 @@ namespace engine
 
         vk::createImageViews(*m_pVkDataPtr);
 
+        // Recreate the default renderpass
+        vk::createRenderPass(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, m_pDefaultRenderPassInfo);
+
+        for (auto i = 0; i < m_pVkDataPtr->defaultRenderPass.renderPipelines.size(); i++)
+            vk::createGraphicsPipeline(*m_pVkDataPtr,
+                                       m_pVkDataPtr->defaultRenderPass,
+                                       m_pVkDataPtr->defaultRenderPass.renderPipelines[i],
+                                       m_pVkDataPtr->defaultRenderPass.vertexInfo,
+                                       m_pRenderPassInfo[m_pVkDataPtr->defaultRenderPass.id]);
+
+        vk::createFramebuffers(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, m_pVkDataPtr->defaultRenderPass.renderPassChain);
+
         for (auto &pass : renderPassPool)
         {
             vk::createRenderPass(*m_pVkDataPtr, pass, m_pRenderPassInfo[pass.id]);
 
             for (auto i = 0; i < pass.renderPipelines.size(); i++)
-                vk::createGraphicsPipeline<MeshPushConstant>(*m_pVkDataPtr, pass, pass.renderPipelines[i], pass.vertexInfo, m_pRenderPassInfo[pass.id].shaderInfo);
+                vk::createGraphicsPipeline(*m_pVkDataPtr, pass, pass.renderPipelines[i], pass.vertexInfo, m_pRenderPassInfo[pass.id]);
 
-            vk::createFramebuffers(*m_pVkDataPtr, pass);
+            vk::createFramebuffers(*m_pVkDataPtr, pass, pass.renderPassChain);
         }
+    }
+
+    Ref<RenderPass> VulkanResourceManager::createDefaultRenderPass(RenderPassInfo renderPassInfo) {
+
+
+        m_pVkDataPtr->defaultRenderPass.renderPipelines.emplace_back();
+        m_pVkDataPtr->defaultRenderPass.id = m_pRenderPassCount;
+        m_pDefaultRenderPassInfo = renderPassInfo;
+
+        vk::createRenderPass(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, renderPassInfo);
+
+        vk::VulkanVertexInfo vertexInfo;
+
+        vertexInfo.attributeDescriptions =
+                vk::getAttributeDescriptions(0, renderPassInfo.vertexLayout);
+
+        vertexInfo.bindingDescription = vk::getBindingDescription(renderPassInfo.size);
+
+        vk::createDescriptorSetLayout(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayout);
+
+        vk::createGraphicsPipeline(*m_pVkDataPtr,
+                                   m_pVkDataPtr->defaultRenderPass,
+                                   m_pVkDataPtr->defaultRenderPass.renderPipelines.back(),
+                                   vertexInfo,
+                                   renderPassInfo);
+
+        vk::createFramebuffers(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, m_pVkDataPtr->defaultRenderPass.renderPassChain);
+
+        m_pVkDataPtr->defaultRenderPass.vertexInfo = vertexInfo;
+        auto uniformRef = createUniformData(renderPassInfo.bindingInfo);
+        m_pVkDataPtr->defaultRenderPass.uniformBuffer = *uniformBufferPool.get(uniformRef);
+        auto ref = renderPassPool.insert(m_pVkDataPtr->defaultRenderPass);
+
+        return ref;
     }
 
     Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPassInfo)
@@ -139,15 +193,17 @@ namespace engine
 
         vk::createDescriptorSetLayout(*m_pVkDataPtr, renderPass.renderPipelines.back().descriptorSetLayout);
 
-        vk::createGraphicsPipeline<MeshPushConstant>(*m_pVkDataPtr,
+        vk::createGraphicsPipeline(*m_pVkDataPtr,
                                                      renderPass,
                                                      renderPass.renderPipelines.back(),
                                                      vertexInfo,
-                                                     renderPassInfo.shaderInfo);
+                                                     renderPassInfo);
 
-        vk::createFramebuffers(*m_pVkDataPtr, renderPass);
+        vk::createFramebuffers(*m_pVkDataPtr, renderPass, renderPass.renderPassChain);
 
         renderPass.vertexInfo = vertexInfo;
+        auto uniformRef = createUniformData(renderPassInfo.bindingInfo);
+        renderPass.uniformBuffer = *uniformBufferPool.get(uniformRef);
         auto ref = renderPassPool.insert(renderPass);
 
         m_pRenderPassCount++;
@@ -206,11 +262,8 @@ namespace engine
     }
     Ref<UniformBindings> VulkanResourceManager::createUniformData(UniformBindingInfo bindingInfo)
     {
-        for (size_t i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
-        {
-            pCreateUniformBuffer(bindingInfo);
-        }
-        
+        auto buffer = pCreateUniformBuffer(bindingInfo);
+        return uniformBufferPool.insert(buffer);
         throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
     Ref<Mesh> VulkanResourceManager::createMesh(MeshInfo meshInfo)

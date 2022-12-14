@@ -8,17 +8,17 @@
 namespace vk
 {
     
-    static void createViewport(VulkanData& vk_data, VulkanRenderPipeline& renderPipeline)
+    static void createViewport(VulkanData& vk_data, VulkanRenderPipeline& renderPipeline, const RenderPassChain& chain)
     {
         renderPipeline.viewport.x = 0.0f;
         renderPipeline.viewport.y = 0.0f;
-        renderPipeline.viewport.width = (float)vk_data.swapChainExtent.width;
-        renderPipeline.viewport.height = (float)vk_data.swapChainExtent.height;
+        renderPipeline.viewport.width = (float)chain.Extent.width;
+        renderPipeline.viewport.height = (float)chain.Extent.height;
         renderPipeline.viewport.minDepth = 0.0f;
         renderPipeline.viewport.maxDepth = 1.0f;
 
         renderPipeline.scissor.offset = {0, 0};
-        renderPipeline.scissor.extent = vk_data.swapChainExtent;
+        renderPipeline.scissor.extent = chain.Extent;
 
         renderPipeline.viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
         renderPipeline.viewportState.viewportCount = 1;

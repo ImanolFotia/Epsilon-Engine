@@ -89,12 +89,10 @@ namespace engine
         drawCommand.vertexOffset = mesh->vertexOffset;
 
         drawCommand.material = object.material;
+        auto pushConstant = m_pResourceManagerRef->pushConstantPool.get(object.pushConstant);
+        drawCommand.objectData = pushConstant->data;
+        drawCommand.object_data_size = pushConstant->size;
         m_pCurrentCommandQueue.push_back(drawCommand);
-    }
-
-    void VulkanRenderer::PushCameraData(const ShaderData &camData)
-    {
-        m_pCameraData = camData;
     }
 
     void VulkanRenderer::Begin(Ref<RenderPass> renderPassRef)
@@ -117,9 +115,10 @@ namespace engine
 
         // std::cout << "m_pImageIndex " << m_pImageIndex << std::endl;
 
-        pUpdateUniforms();
         vkResetCommandBuffer(m_pFrame.CommandBuffer(), 0);
         auto renderPass = m_pResourceManagerRef->getRenderPass(renderPassRef);
+
+        pUpdateUniforms(renderPass->uniformBuffer.buffers[m_pCurrentFrame]);
         m_pFrame.setRenderPass(renderPassRef);
         vk::recordCommandBuffer(m_pFrame.CommandBuffer(), m_pImageIndex);
         vk::createRenderPassInfo(m_pImageIndex, m_pVkData, *renderPass);
@@ -185,9 +184,9 @@ namespace engine
 
             vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass->renderPipelines.back().pipelineLayout, 0, 1, &material->descriptorSets[m_pCurrentFrame], 0, nullptr);
             /** TODO:
-             *  Find a way to cleanly implement push constants
-                vkCmdPushConstants(m_pFrame.CommandBuffer(), renderPass->renderPipelines.back().pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(MeshPushConstant), &command.objectId->push_constant);
-            */
+             *  Find a way to cleanly implement push constants*/
+            vkCmdPushConstants(m_pFrame.CommandBuffer(), renderPass->renderPipelines.back().pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT, 0, command.object_data_size, command.objectData);
+
             vk::drawIndexed(m_pFrame.CommandBuffer(), command.numIndices, 1, command.indexOffset, 0, 0);
         }
 
@@ -218,17 +217,24 @@ namespace engine
         return imageIndex;
     }
 
-    void VulkanRenderer::pUpdateUniforms()
-    { /*
+    void VulkanRenderer::pUpdateUniforms(const vk::VulkanBuffer& buffer)
+    {
          void *data;
-         vmaMapMemory(m_pAllocator, m_pFrame.UniformBuffer().allocation, &data);
-         memcpy(data, &m_pCameraData, sizeof(m_pCameraData));
-         vmaUnmapMemory(m_pAllocator, m_pFrame.UniformBuffer().allocation);*/
+         vmaMapMemory( m_pResourceManagerRef->m_pAllocator, buffer.allocation, &data);
+         memcpy(data, perPassData, buffer.size);
+         vmaUnmapMemory(m_pResourceManagerRef->m_pAllocator, buffer.allocation);
     }
 
-    void VulkanRenderer::Cleanup()
-    {
-        
+    void VulkanRenderer::Cleanup() {
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
+    }
+
+    void VulkanRenderer::pUpdateMaterial(vk::VulkanMaterial &) {
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
+
+    }
+
+    void VulkanRenderer::pRecreateSwapChain() {
         throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
 

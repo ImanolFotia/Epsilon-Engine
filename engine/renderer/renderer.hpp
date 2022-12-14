@@ -46,12 +46,12 @@ namespace engine
 
         Ref<Mesh> mesh;
         Ref<Material> material;
+        Ref<PushConstant> pushConstant;
         glm::mat4 modelMatrix;
         glm::vec3 position;
         glm::vec3 scale;
         glm::quat rotation;
 
-        MeshPushConstant push_constant;
     };
 
     struct TextureData {
@@ -64,7 +64,6 @@ namespace engine
     struct RenderObject {
         std::list<ObjectData>::iterator objectId;
         uint32_t materialId;
-        ShaderData uniformData;
     };
 
     /**
@@ -94,7 +93,6 @@ namespace engine
 
         virtual void Push(ObjectData) = 0;
 
-        virtual void PushCameraData(const ShaderData& camData) = 0;
         
         virtual void Begin(Ref<RenderPass>) = 0;
 

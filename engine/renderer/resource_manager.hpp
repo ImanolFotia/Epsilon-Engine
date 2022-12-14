@@ -20,9 +20,11 @@ namespace engine
         virtual Ref<Buffer> destroyBuffer(BufferInfo) = 0;
         virtual Ref<Shader> createShader(ShaderInfo) = 0;
         virtual Ref<UniformBindings> createUniformData(UniformBindingInfo) = 0;
-        virtual Ref<Material> createMaterial(MaterialInfo, Ref<Buffer>, Ref<RenderPass>) = 0;
+        virtual Ref<Material> createMaterial(MaterialInfo, Ref<RenderPass>) = 0;
         virtual Ref<Mesh> createMesh(MeshInfo) = 0;
         virtual Ref<RenderPass> createRenderPass(RenderPassInfo) = 0;
+        virtual Ref<RenderPass> createDefaultRenderPass(RenderPassInfo) = 0;
+        virtual Ref<PushConstant> createPushConstant(PushConstantData) = 0;
 
         virtual void destroyTexture(Ref<Texture>) = 0;
         virtual void destroyBuffer(Ref<Buffer>) = 0;
@@ -37,7 +39,7 @@ namespace engine
         template <typename T>
         std::shared_ptr<T> to()
         {
-            return static_cast<T>(*this);
+            return std::static_pointer_cast<T>(*this);
         }
 
     protected:

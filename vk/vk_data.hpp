@@ -5,6 +5,7 @@
 
 namespace vk
 {
+    static const uint32_t MAX_FRAMES_IN_FLIGHT = 2;
     const size_t ALLOCATION_SIZE_MB = 0xFFFFFFF;
 
     struct VulkanVertexInfo
@@ -25,6 +26,7 @@ namespace vk
         VkBufferCreateInfo bufferInfo;
         uint32_t allocatedVertices = 0;
         size_t offset = 0;
+        size_t size = 0;
         std::vector<SubBuffer> subBuffers;
         std::unordered_map<uint32_t, uint32_t> subBufferIndex;
         VkDescriptorBufferInfo descriptorInfo;
@@ -59,6 +61,11 @@ namespace vk
         size_t offset = 0;
     };
 
+    struct VulkanUniformBuffer {
+        VulkanBuffer buffers[MAX_FRAMES_IN_FLIGHT];
+        size_t size;
+    };
+
     struct VulkanAllocation
     {
         VkDeviceMemory deviceMemory;
@@ -73,8 +80,9 @@ namespace vk
         std::vector<VkDescriptorSet> descriptorSets;
         VkPipelineLayout *pipelineLayout = nullptr;
         std::vector<VulkanTexture> textures;
-        VkDescriptorBufferInfo bufferInfo;
+        VkDescriptorBufferInfo bufferInfo[MAX_FRAMES_IN_FLIGHT];
         size_t bufferOffset = 0;
+        size_t bufferSize = 0;
     };
 
     struct VulkanRenderPipeline
@@ -118,6 +126,24 @@ namespace vk
         VkImageLayout initialLayout;
         VkImageLayout finalLayout;
     };
+    struct RenderPassChain
+    {
+        const std::vector<const char *> deviceExtensions = {
+                VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+
+        std::vector<VkImage> Images;
+
+        VkImage DepthImage;
+        VulkanTexture DepthTexture;
+        VulkanTextureInfo DepthTextureInfo;
+        VulkanTextureBuffer DepthTextureBuffer;
+
+        VkFormat ImageFormat;
+        VkExtent2D Extent;
+        std::vector<VkImageView> ImageViews;
+
+        std::vector<VkFramebuffer> Framebuffers;
+    };
 
     struct VulkanRenderPass
     {
@@ -131,10 +157,13 @@ namespace vk
         std::vector<VulkanRenderPipeline> renderPipelines;
         VulkanRenderPassData renderPassData;
         VulkanVertexInfo vertexInfo;
+        RenderPassChain renderPassChain;
         VkClearColorValue clearColor = {0.0f, 0.0f, 0.0f, 1.0f};
         VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
         VkClearValue clearValues[2] = {};
         uint32_t id;
+
+        VulkanUniformBuffer uniformBuffer;
     };
 
     struct VulkanSyncObject
@@ -144,21 +173,7 @@ namespace vk
         VkFence inFlightFences;
     };
 
-    struct VulkanSwapChain
-    {
 
-        const std::vector<const char *> deviceExtensions = {
-            VK_KHR_SWAPCHAIN_EXTENSION_NAME};
-
-        VkSwapchainKHR swapChain;
-        std::vector<VkImage> swapChainImages;
-        VkImage swapChainDepthImage;
-        VkFormat swapChainImageFormat;
-        VkExtent2D swapChainExtent;
-        std::vector<VkImageView> swapChainImageViews;
-
-        std::vector<VkFramebuffer> swapChainFramebuffers;
-    };
 
     struct VulkanData
     {
@@ -179,6 +194,9 @@ namespace vk
             VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
         VkSwapchainKHR swapChain;
+        //RenderPassChain swapChainData;
+        VulkanRenderPass defaultRenderPass;
+        /*
         std::vector<VkImage> swapChainImages;
         VulkanTexture swapChainDepthTexture;
         VulkanTextureInfo swapChainDepthTextureInfo;
@@ -188,7 +206,7 @@ namespace vk
         std::vector<VkImageView> swapChainImageViews;
 
         std::vector<VkFramebuffer> swapChainFramebuffers;
-
+*/
         std::vector<VulkanSyncObject> syncObjects;
 
 

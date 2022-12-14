@@ -14,6 +14,7 @@ namespace engine
     struct Material;
     struct RenderPass;
     struct Mesh;
+    struct PushConstant;
     
     enum renderer_type
     {
@@ -31,18 +32,6 @@ namespace engine
         VERTEX = 0x10,
         COMPUTE = 0x100,
         ALL = FRAGMENT | VERTEX | COMPUTE
-    };
-
-    struct MeshPushConstant {
-        alignas(16) glm::mat4 model;
-    };
-
-    struct ShaderData
-    {
-        alignas(4) float iTime = 0.0f;
-        alignas(8) glm::vec2 iResolution;
-        alignas(16) glm::mat4 view;
-        alignas(16) glm::mat4 proj;
     };
 
     struct ShaderStageInfo
@@ -222,6 +211,56 @@ namespace engine
         bool isSwapChainAttachment = false;
     };
 
+    struct PushConstantData {
+        size_t size;
+        void* data;
+    };
+
+
+
+    struct BufferInfo {
+        size_t size;
+        size_t offset;
+    };
+
+    struct BufferInfoFactory {
+
+        BufferInfoFactory size(size_t s) {
+            info.size = s;
+            return *this;
+        }
+
+        BufferInfoFactory offset(size_t o) {
+            info.offset = o;
+            return *this;
+        }
+
+        operator BufferInfo() {
+            return info;
+        }
+        BufferInfo info;
+    };
+
+    struct UniformBindingInfo {
+        size_t size;
+        size_t offset;
+    };
+
+    struct UniformBindingFactory {
+        operator UniformBindingInfo() { return info; }
+
+        UniformBindingInfo size(size_t s) {
+            info.size = s;
+            return *this;
+        }
+        UniformBindingInfo offset(size_t o) {
+            info.offset = o;
+            return *this;
+        }
+
+        UniformBindingInfo info;
+    };
+
     struct RenderPassInfo
     {
         uint32_t numDescriptors;
@@ -232,6 +271,8 @@ namespace engine
         std::vector<VertexDescriptorInfo> vertexLayout;
         std::vector<RenderPassAttachment> attachments;
         ShaderInfo shaderInfo;
+        PushConstantData pushConstant;
+        UniformBindingInfo bindingInfo;
     };
 
     struct RenderPassFactory
@@ -274,56 +315,25 @@ namespace engine
             return *this;
         }
 
+        RenderPassFactory pushConstant(size_t size)
+        {
+            info.pushConstant.size = size;
+            return *this;
+        }
+
+        RenderPassFactory bufferInfo(UniformBindingInfo bi) {
+            info.bindingInfo = bi;
+            return *this;
+        }
+
         operator RenderPassInfo() { return info; }
 
     private:
         RenderPassInfo info;
     };
 
-    struct BufferInfo {
-        size_t size;
-        size_t offset;
-    };
 
-    struct BufferInfoFactory {
 
-        BufferInfoFactory size(size_t s) {
-            info.size = s;
-            return *this;
-        }
-
-        BufferInfoFactory offset(size_t o) {
-            info.offset = o;
-            return *this;
-        }
-
-        operator BufferInfo() {
-            return info;
-        }
-        BufferInfo info;
-    };
-
-    struct UniformBindingInfo {
-        //...
-
-        size_t size;
-        size_t offset;
-    };
-
-    struct UniformBindingFactory {
-        operator UniformBindingInfo() { return info; }
-
-        UniformBindingInfo size(size_t s) {
-            info.size = s;
-            return *this;
-        }
-        UniformBindingInfo offset(size_t o) {
-            info.offset = o;
-            return *this;
-        }
-
-        UniformBindingInfo info;
-    };
 
     struct MaterialInfo {
         std::vector<TextureInfo> textures;

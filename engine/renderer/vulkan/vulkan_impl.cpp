@@ -34,11 +34,18 @@ namespace engine
         return buffer;
     }
 
-    vk::VulkanBuffer VulkanResourceManager::pCreateUniformBuffer(UniformBindingInfo bindingInfo)
+    vk::VulkanUniformBuffer VulkanResourceManager::pCreateUniformBuffer(UniformBindingInfo bindingInfo)
     {
-        vk::VulkanBuffer buffer;
-        pCreateBuffer(buffer, bindingInfo.size, UNIFORM_BUFFER_USAGE, UNIFORM_BUFFER_PROP, UNIFORM_BUFFER_MEM_USAGE);
-        IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", size, " bytes in local uniform buffer");
+        //uniformBufferPool
+        vk::VulkanUniformBuffer buffer;
+        buffer.size = bindingInfo.size;
+        for(auto & i : buffer.buffers) {
+            i.size = buffer.size;
+            pCreateBuffer(i, bindingInfo.size, UNIFORM_BUFFER_USAGE, UNIFORM_BUFFER_PROP,
+                          UNIFORM_BUFFER_MEM_USAGE);
+            IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", size,
+                     " bytes in local uniform buffer");
+        }
         return buffer;
     }
 
@@ -159,16 +166,16 @@ namespace engine
     {
         std::array<VkDescriptorPoolSize, 2> poolSizes{};
         poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        poolSizes[0].descriptorCount = static_cast<uint32_t>(vk::MAX_FRAMES_IN_FLIGHT * 2);
+        poolSizes[0].descriptorCount = static_cast<uint32_t>(vk::MAX_FRAMES_IN_FLIGHT * m_pNumCommandPools);
         poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        poolSizes[1].descriptorCount = static_cast<uint32_t>(vk::MAX_FRAMES_IN_FLIGHT * 2);
+        poolSizes[1].descriptorCount = static_cast<uint32_t>(vk::MAX_FRAMES_IN_FLIGHT * m_pNumCommandPools);
 
         VkDescriptorPoolCreateInfo poolInfo{};
         poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
         poolInfo.pPoolSizes = poolSizes.data();
 
-        poolInfo.maxSets = static_cast<uint32_t>(vk::MAX_FRAMES_IN_FLIGHT * 2);
+        poolInfo.maxSets = static_cast<uint32_t>(vk::MAX_FRAMES_IN_FLIGHT * m_pNumCommandPools);
         if (vkCreateDescriptorPool(m_pVkDataPtr->logicalDevice, &poolInfo, nullptr, &m_pDescriptorPool) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to create descriptor pool!");
@@ -233,9 +240,9 @@ namespace engine
         for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
         {
             VkDescriptorBufferInfo bufferInfo{};
-            bufferInfo.buffer = material.bufferInfo.buffer;//m_pUniformBuffers[i].buffer;
+            bufferInfo.buffer = material.bufferInfo[i].buffer;//m_pUniformBuffers[i].buffer;
             bufferInfo.offset = material.bufferOffset;
-            bufferInfo.range = sizeof(ShaderData);
+            bufferInfo.range = material.bufferSize;
             
 
             VkDescriptorImageInfo imageInfo{};
@@ -271,6 +278,10 @@ namespace engine
             vkUpdateDescriptorSets(m_pVkDataPtr->logicalDevice, 2, descriptorWrites.data(), 0, nullptr);
             // vk::updateDescriptorSet(m_pVkData, material);
         }
+    }
+
+    Ref<PushConstant> VulkanResourceManager::createPushConstant(PushConstantData push_constant) {
+        return pushConstantPool.insert(push_constant);
     }
 
 }

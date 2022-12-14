@@ -40,9 +40,11 @@ namespace engine
         Ref<Buffer> destroyBuffer(BufferInfo) override;
         Ref<Shader> createShader(ShaderInfo) override;
         Ref<UniformBindings> createUniformData(UniformBindingInfo) override;
-        Ref<Material> createMaterial(MaterialInfo, Ref<Buffer>, Ref<RenderPass> ) override;
+        Ref<Material> createMaterial(MaterialInfo, Ref<RenderPass> ) override;
         Ref<Mesh> createMesh(MeshInfo) override;
         Ref<RenderPass> createRenderPass(RenderPassInfo) override;
+        Ref<RenderPass> createDefaultRenderPass(RenderPassInfo) override;
+        Ref<PushConstant> createPushConstant(PushConstantData) override;
 
         void destroyTexture(Ref<Texture>) override;
         void destroyBuffer(Ref<Buffer>) override;
@@ -68,7 +70,7 @@ namespace engine
     private:
         vk::VulkanBuffer pCreateVertexBuffer();
         vk::VulkanBuffer pCreateIndexBuffer();
-        vk::VulkanBuffer pCreateUniformBuffer(UniformBindingInfo);
+        vk::VulkanUniformBuffer pCreateUniformBuffer(UniformBindingInfo);
         vk::VulkanTexture pCreateTextureBuffer(vk::VulkanTextureInfo);
 
         Ref<Buffer> pFetchVertexBuffer(uint32_t numVertices);
@@ -114,11 +116,12 @@ namespace engine
         Pool<Shader, ShaderStageInfo> shaderPool;
         Pool<Buffer, vk::VulkanBuffer> vertexBufferPool;
         Pool<Buffer, vk::VulkanBuffer> indexBufferPool;
-        Pool<Buffer, vk::VulkanBuffer> uniformBufferPool;
-        Pool<UniformBindings, VkDescriptorSetLayoutBinding> uniformBindingPool;
+        Pool<UniformBindings, vk::VulkanUniformBuffer> uniformBufferPool;
+        //Pool<UniformBindings, VkDescriptorSetLayoutBinding> uniformBindingPool;
         Pool<Material, vk::VulkanMaterial> materialPool;
         Pool<RenderPass, vk::VulkanRenderPass> renderPassPool;
         Pool<Mesh, MeshResource> meshPool;
+        Pool<PushConstant, PushConstantData> pushConstantPool;
 
         std::vector<Ref<Buffer>> indexBufferReferences;
         std::vector<Ref<Buffer>> vertexBufferReferences;
@@ -127,9 +130,12 @@ namespace engine
         std::vector<VkDescriptorSet> m_pDescriptorSets;
 
         std::vector<RenderPassInfo> m_pRenderPassInfo;
+
+        RenderPassInfo m_pDefaultRenderPassInfo;
         uint32_t m_pRenderPassCount = 0;
 
         CommandPools m_pCommandPools;
+        uint32_t m_pNumCommandPools = 0;
         CommandBuffers m_pCommandBuffers;
     };
 }

@@ -18,6 +18,8 @@ namespace engine
         Ref<Buffer> indexBuffer;
         Ref<UniformBindings> uniformBindings;
         Ref<engine::Material> material;
+        void* objectData = nullptr;
+        size_t object_data_size = 0;
     };
 
 }

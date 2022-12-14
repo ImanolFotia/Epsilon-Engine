@@ -74,12 +74,11 @@ namespace vk
         return shaderStageInfo;
     }
 
-    template <class PushConstantType>
-    static VkPushConstantRange setupPushConstant()
+    static VkPushConstantRange setupPushConstant(size_t size)
     {
         VkPushConstantRange push_constant;
         push_constant.offset = 0;
-        push_constant.size = sizeof(PushConstantType);
+        push_constant.size = size;
         push_constant.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
         return push_constant;
     }
@@ -105,24 +104,23 @@ namespace vk
         }
     }
 
-    template <typename PushConstantType>
     static VkPipeline createGraphicsPipeline(
         VulkanData &vk_data,
         VulkanRenderPass &renderPass,
         VulkanRenderPipeline &renderPipeline,
         VulkanVertexInfo VertexInfo,
-        engine::ShaderInfo shaderInfo)
+        engine::RenderPassInfo& renderPassInfoInfo)
     {
 
         // VkShaderModule vertShaderModule;
         // VkShaderModule fragShaderModule;
         std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
-        shaderStages.resize(shaderInfo.stages.size());
+        shaderStages.resize(renderPassInfoInfo.shaderInfo.stages.size());
 
-        for (unsigned i = 0; i < shaderInfo.stages.size(); i++)
+        for (unsigned i = 0; i < renderPassInfoInfo.shaderInfo.stages.size(); i++)
         {
-            std::cout << shaderInfo.stages[i].shaderCode.data() << std::endl;
-            shaderStages[i] = createShaderStage(vk_data, shaderInfo.stages[i]);
+            std::cout << renderPassInfoInfo.shaderInfo.stages[i].shaderCode.data() << std::endl;
+            shaderStages[i] = createShaderStage(vk_data, renderPassInfoInfo.shaderInfo.stages[i]);
         }
 
         // auto shaderStages = createShaderStages<2>("../assets/shaders/vertex.spv", "../assets/shaders/fragment.spv", vertShaderModule, fragShaderModule, vk_data);
@@ -140,12 +138,12 @@ namespace vk
         inputAssembly.primitiveRestartEnable = VK_FALSE;
 
         // Viewport stage
-        createViewport(vk_data, renderPipeline);
+        createViewport(vk_data, renderPipeline, renderPass.renderPassChain);
 
         // Rasterizer stage
         setupRasterizer(renderPipeline);
 
-        auto push_constant = setupPushConstant<PushConstantType>();
+        auto push_constant = setupPushConstant(renderPassInfoInfo.pushConstant.size);
 
         std::vector<VkDynamicState> dynamicStates = {
             VK_DYNAMIC_STATE_VIEWPORT,

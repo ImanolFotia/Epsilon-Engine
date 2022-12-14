@@ -215,20 +215,20 @@ namespace vk
     {
         vkDestroySwapchainKHR(vk_data.logicalDevice, vk_data.swapChain, nullptr);
 
-        for (auto framebuffer : vk_data.swapChainFramebuffers)
+        for (auto framebuffer : vk_data.defaultRenderPass.renderPassChain.Framebuffers)
         {
             vkDestroyFramebuffer(vk_data.logicalDevice, framebuffer, nullptr);
         }
 
-        for (auto imageView : vk_data.swapChainImageViews)
+        for (auto imageView : vk_data.defaultRenderPass.renderPassChain.ImageViews)
         {
             vkDestroyImageView(vk_data.logicalDevice, imageView, nullptr);
         }
 
         
-        vkDestroyImageView(vk_data.logicalDevice, vk_data.swapChainDepthTexture.imageView, nullptr);
-        vkDestroyImage(vk_data.logicalDevice, vk_data.swapChainDepthTexture.image, nullptr);
-        vkFreeMemory(vk_data.logicalDevice, vk_data.swapChainDepthTextureBuffer.deviceMemory, nullptr);
+        vkDestroyImageView(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.DepthTexture.imageView, nullptr);
+        vkDestroyImage(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.DepthTexture.image, nullptr);
+        vkFreeMemory(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.DepthTextureBuffer.deviceMemory, nullptr);
 
 
         if (enableValidationLayers)

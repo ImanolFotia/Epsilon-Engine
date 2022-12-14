@@ -17,8 +17,6 @@ namespace engine
     class VulkanResourceManager;
     class VulkanRenderer : public Renderer
     {
-        
-
         using RenderPasses = std::unordered_map<uint32_t, vk::VulkanRenderPass>;
         using VertexBuffers = std::vector<vk::VulkanBuffer>;
         using IndexBuffers = std::vector<vk::VulkanBuffer>;
@@ -55,8 +53,6 @@ namespace engine
 
         void Push(ObjectData) override;
 
-        void PushCameraData(const ShaderData& camData) override;
-
         void Begin(Ref<RenderPass>) override;
 
         void End() override;
@@ -65,16 +61,19 @@ namespace engine
 
         void Cleanup() override;
 
-        void pUpdateUniforms();
+        void pUpdateUniforms(const vk::VulkanBuffer&);
+
         void pUpdateMaterial(vk::VulkanMaterial&);
 
         void pRecreateSwapChain();
+
         int32_t pPrepareSyncObjects();
 
         void setResourceManagerRef(engine::VulkanResourceManager* ref) {
             m_pResourceManagerRef = ref;
         }
-        
+
+        void* perPassData = nullptr;
     private:
         framework::Window *m_pWindow = nullptr;
 
@@ -91,8 +90,6 @@ namespace engine
         uint32_t attachedRenderPass = 0;
 
         std::list<DrawCommand> m_pCurrentCommandQueue;
-
-        ShaderData m_pCameraData{};
 
         VulkanResourceManager* m_pResourceManagerRef = nullptr;
 

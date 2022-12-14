@@ -20,12 +20,12 @@ layout(binding = 0) uniform UniformBufferObject {
     mat4 view;
     mat4 proj;
 } ubo;
-/*
+
 layout( push_constant ) uniform constants
 {
 	mat4 model;
 } PushConstants;
-*/
+
 void main() {
     color = inColor;
     position = inPosition;
@@ -34,5 +34,5 @@ void main() {
     //vec3 outVert = inPosition;
     //outVert.y *= (iResolution.x / iResolution.y);
 
-    gl_Position = ubo.proj * ubo.view /** PushConstants.model */  * vec4(inPosition, 1.0);
+    gl_Position = ubo.proj * ubo.view * PushConstants.model  * vec4(inPosition, 1.0);
 }

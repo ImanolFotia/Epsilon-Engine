@@ -160,46 +160,46 @@ namespace vk
             throw std::runtime_error("failed to create swap chain!");
         }
         //vkGetSwapchainImagesKHR(vk_data.logicalDevice, vk_data.swapChain, &imageCount, nullptr);
-        vk_data.swapChainImages.clear();
-        vk_data.swapChainImages.resize(imageCount);
-        vkGetSwapchainImagesKHR(vk_data.logicalDevice, vk_data.swapChain, &imageCount, vk_data.swapChainImages.data());
-        vk_data.swapChainImageFormat = surfaceFormat.format;
-        vk_data.swapChainExtent = extent;
+        vk_data.defaultRenderPass.renderPassChain.Images.clear();
+        vk_data.defaultRenderPass.renderPassChain.Images.resize(imageCount);
+        vkGetSwapchainImagesKHR(vk_data.logicalDevice, vk_data.swapChain, &imageCount, vk_data.defaultRenderPass.renderPassChain.Images.data());
+        vk_data.defaultRenderPass.renderPassChain.ImageFormat = surfaceFormat.format;
+        vk_data.defaultRenderPass.renderPassChain.Extent = extent;
     }
 
     static void createImageViews(VulkanData &vk_data)
     {
-        vk_data.swapChainImageViews.clear();
-        vk_data.swapChainImageViews.resize(vk_data.swapChainImages.size());
+        vk_data.defaultRenderPass.renderPassChain.ImageViews.clear();
+        vk_data.defaultRenderPass.renderPassChain.ImageViews.resize(vk_data.defaultRenderPass.renderPassChain.Images.size());
 
-        vk_data.swapChainDepthTextureInfo.format = findDepthFormat(vk_data);
-        vk_data.swapChainDepthTextureInfo.width = vk_data.swapChainExtent.width;
-        vk_data.swapChainDepthTextureInfo.height = vk_data.swapChainExtent.height;
-        vk_data.swapChainDepthTextureInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+        vk_data.defaultRenderPass.renderPassChain.DepthTextureInfo.format = findDepthFormat(vk_data);
+        vk_data.defaultRenderPass.renderPassChain.DepthTextureInfo.width = vk_data.defaultRenderPass.renderPassChain.Extent.width;
+        vk_data.defaultRenderPass.renderPassChain.DepthTextureInfo.height = vk_data.defaultRenderPass.renderPassChain.Extent.height;
+        vk_data.defaultRenderPass.renderPassChain.DepthTextureInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 
-        vk_data.swapChainDepthTexture = createImage(vk_data, vk_data.swapChainDepthTextureInfo);
-        vk_data.swapChainDepthTexture.format = findDepthFormat(vk_data);
-        vk_data.swapChainDepthTextureBuffer.deviceMemory = allocateTextureMemory(vk_data, vk_data.swapChainDepthTexture, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-        createImageView(vk_data, vk_data.swapChainDepthTexture, VK_IMAGE_ASPECT_DEPTH_BIT);
+        vk_data.defaultRenderPass.renderPassChain.DepthTexture = createImage(vk_data, vk_data.defaultRenderPass.renderPassChain.DepthTextureInfo);
+        vk_data.defaultRenderPass.renderPassChain.DepthTexture.format = findDepthFormat(vk_data);
+        vk_data.defaultRenderPass.renderPassChain.DepthTextureBuffer.deviceMemory = allocateTextureMemory(vk_data, vk_data.defaultRenderPass.renderPassChain.DepthTexture, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+        createImageView(vk_data, vk_data.defaultRenderPass.renderPassChain.DepthTexture, VK_IMAGE_ASPECT_DEPTH_BIT);
         
-        for (size_t i = 0; i < vk_data.swapChainImages.size(); i++)
+        for (size_t i = 0; i < vk_data.defaultRenderPass.renderPassChain.Images.size(); i++)
         {
 
             VulkanTexture texture;
-            texture.format = vk_data.swapChainImageFormat;
-            texture.image = vk_data.swapChainImages[i];
+            texture.format = vk_data.defaultRenderPass.renderPassChain.ImageFormat;
+            texture.image = vk_data.defaultRenderPass.renderPassChain.Images[i];
 
             createImageView(vk_data, texture, VK_IMAGE_ASPECT_COLOR_BIT);
 
-            vk_data.swapChainImageViews[i] = texture.imageView;
+            vk_data.defaultRenderPass.renderPassChain.ImageViews[i] = texture.imageView;
         }
     }
 
     static void cleanupSwapChain(const VulkanData &vk_data, VulkanRenderPass &renderPass)
     {
-        for (size_t i = 0; i < vk_data.swapChainFramebuffers.size(); i++)
+        for (size_t i = 0; i < vk_data.defaultRenderPass.renderPassChain.Framebuffers.size(); i++)
         {
-            vkDestroyFramebuffer(vk_data.logicalDevice, vk_data.swapChainFramebuffers[i], nullptr);
+            vkDestroyFramebuffer(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.Framebuffers[i], nullptr);
         }
 
         for (auto &pipeline : renderPass.renderPipelines)
@@ -209,14 +209,14 @@ namespace vk
         }
         vkDestroyRenderPass(vk_data.logicalDevice, renderPass.renderPass, nullptr);
 
-        for (size_t i = 0; i < vk_data.swapChainImageViews.size(); i++)
+        for (size_t i = 0; i < vk_data.defaultRenderPass.renderPassChain.ImageViews.size(); i++)
         {
-            vkDestroyImageView(vk_data.logicalDevice, vk_data.swapChainImageViews[i], nullptr);
+            vkDestroyImageView(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.ImageViews[i], nullptr);
         }
 
-        vkDestroyImageView(vk_data.logicalDevice, vk_data.swapChainDepthTexture.imageView, nullptr);
-        vkDestroyImage(vk_data.logicalDevice, vk_data.swapChainDepthTexture.image, nullptr);
-        vkFreeMemory(vk_data.logicalDevice, vk_data.swapChainDepthTextureBuffer.deviceMemory, nullptr);
+        vkDestroyImageView(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.DepthTexture.imageView, nullptr);
+        vkDestroyImage(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.DepthTexture.image, nullptr);
+        vkFreeMemory(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.DepthTextureBuffer.deviceMemory, nullptr);
 
         vkDestroySwapchainKHR(vk_data.logicalDevice, vk_data.swapChain, nullptr);
     }

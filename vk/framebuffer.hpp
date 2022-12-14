@@ -8,26 +8,26 @@
 namespace vk
 {
 
-    static void createFramebuffers(VulkanData& vk_data, VulkanRenderPass& renderPass)
+    static void createFramebuffers(VulkanData& vk_data, VulkanRenderPass& renderPass, RenderPassChain& chain)
     {
-        vk_data.swapChainFramebuffers.resize(vk_data.swapChainImageViews.size());
+        chain.Framebuffers.resize(chain.ImageViews.size());
 
-        for (size_t i = 0; i < vk_data.swapChainImageViews.size(); i++)
+        for (size_t i = 0; i < chain.ImageViews.size(); i++)
         {
             VkImageView attachments[] = {
-                vk_data.swapChainImageViews[i],
-                vk_data.swapChainDepthTexture.imageView};
+                    chain.ImageViews[i],
+                    chain.DepthTexture.imageView};
 
             VkFramebufferCreateInfo framebufferInfo{};
             framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
             framebufferInfo.renderPass = renderPass.renderPass;
             framebufferInfo.attachmentCount = 2;
             framebufferInfo.pAttachments = attachments;
-            framebufferInfo.width = vk_data.swapChainExtent.width;
-            framebufferInfo.height = vk_data.swapChainExtent.height;
+            framebufferInfo.width = chain.Extent.width;
+            framebufferInfo.height = chain.Extent.height;
             framebufferInfo.layers = 1;
 
-            if (vkCreateFramebuffer(vk_data.logicalDevice, &framebufferInfo, nullptr, &vk_data.swapChainFramebuffers[i]) != VK_SUCCESS)
+            if (vkCreateFramebuffer(vk_data.logicalDevice, &framebufferInfo, nullptr, &chain.Framebuffers[i]) != VK_SUCCESS)
             {
                 throw std::runtime_error("failed to create framebuffer!");
             }

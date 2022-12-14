@@ -48,7 +48,7 @@ namespace vk
             else
             {
                 VkAttachmentDescription attachmentDesc{};
-                attachmentDesc.format = vk_data.swapChainImageFormat;
+                attachmentDesc.format = renderPass.renderPassChain.ImageFormat;
                 attachmentDesc.samples = VK_SAMPLE_COUNT_1_BIT;
                 attachmentDesc.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
                 attachmentDesc.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -118,9 +118,9 @@ namespace vk
     {
         renderPass.renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderPass.renderPassInfo.renderPass = renderPass.renderPass;
-        renderPass.renderPassInfo.framebuffer = vk_data.swapChainFramebuffers[imageIndex];
+        renderPass.renderPassInfo.framebuffer = renderPass.renderPassChain.Framebuffers[imageIndex];
         renderPass.renderPassInfo.renderArea.offset = {0, 0};
-        renderPass.renderPassInfo.renderArea.extent = vk_data.swapChainExtent;
+        renderPass.renderPassInfo.renderArea.extent = renderPass.renderPassChain.Extent;
 
         renderPass.renderPassInfo.clearValueCount = 2;
         renderPass.renderPassInfo.pClearValues = renderPass.clearValues;
