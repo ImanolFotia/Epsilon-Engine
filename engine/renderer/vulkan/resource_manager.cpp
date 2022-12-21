@@ -48,9 +48,9 @@ namespace engine
 
         auto size = texInfo.width * texInfo.height * texInfo.numChannels;
 
-        transitionImageLayout(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+        transitionImageLayout(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, texture.info);
         copyBufferToImage(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), stagingBuffer.buffer, texture.image, static_cast<uint32_t>(texInfo.width), static_cast<uint32_t>(texInfo.height));
-        transitionImageLayout(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        transitionImageLayout(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), texture.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, texture.info);
 
         vmaDestroyBuffer(m_pAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
         // vmaFreeMemory(m_pAllocator, m_pStagingTextureBuffer.allocation);
@@ -145,7 +145,6 @@ namespace engine
     Ref<RenderPass> VulkanResourceManager::createDefaultRenderPass(RenderPassInfo renderPassInfo) {
 
 
-        m_pVkDataPtr->defaultRenderPass.renderPipelines.emplace_back();
         m_pVkDataPtr->defaultRenderPass.id = std::numeric_limits<uint32_t>::max();
         m_pDefaultRenderPassInfo = renderPassInfo;
 
@@ -158,13 +157,17 @@ namespace engine
 
         vertexInfo.bindingDescription = vk::getBindingDescription(renderPassInfo.size);
 
-        vk::createDescriptorSetLayout(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayout);
 
-        vk::createGraphicsPipeline(*m_pVkDataPtr,
-                                   m_pVkDataPtr->defaultRenderPass,
-                                   m_pVkDataPtr->defaultRenderPass.renderPipelines.back(),
-                                   vertexInfo,
-                                   renderPassInfo);
+        for(int i = 0; i < renderPassInfo.numLayouts; i++) {
+            m_pVkDataPtr->defaultRenderPass.renderPipelines.emplace_back();
+            vk::createDescriptorSetLayout(*m_pVkDataPtr,
+                                          m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayout);
+            vk::createGraphicsPipeline(*m_pVkDataPtr,
+                                       m_pVkDataPtr->defaultRenderPass,
+                                       m_pVkDataPtr->defaultRenderPass.renderPipelines.back(),
+                                       vertexInfo,
+                                       renderPassInfo);
+        }
 
         vk::createFramebuffers(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, m_pVkDataPtr->defaultRenderPass.renderPassChain);
 

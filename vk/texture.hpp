@@ -18,6 +18,9 @@ namespace vk
         imageInfo.extent.height = static_cast<uint32_t>(textureInfo.height);
         imageInfo.extent.depth = 1;
 
+
+        int mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(textureInfo.width, textureInfo.height)))) + 1;
+
         imageInfo.mipLevels = 1;
         imageInfo.arrayLayers = 1;
         imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
@@ -69,6 +72,8 @@ namespace vk
 
     static void createImageView(const VulkanData &vkData, VulkanTexture &texture, VkImageAspectFlags aspectMask)
     {
+        int mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texture.info.width, texture.info.height)))) + 1;
+
         VkImageViewCreateInfo viewInfo{};
         viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
         viewInfo.image = texture.image;
@@ -76,7 +81,7 @@ namespace vk
         viewInfo.format = texture.format;
         viewInfo.subresourceRange.aspectMask = aspectMask;
         viewInfo.subresourceRange.baseMipLevel = 0;
-        viewInfo.subresourceRange.levelCount = 1;
+        viewInfo.subresourceRange.levelCount = 1;//mipLevels;
         viewInfo.subresourceRange.baseArrayLayer = 0;
         viewInfo.subresourceRange.layerCount = 1;
 
@@ -92,8 +97,10 @@ namespace vk
         return true;
     }
 
-    static void transitionImageLayout(VulkanData &vkData, VkCommandPool &commandPool, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout)
+    static void transitionImageLayout(VulkanData &vkData, VkCommandPool &commandPool, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, VulkanTextureInfo info)
     {
+
+        //int mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(info.width, info.height)))) + 1;
         VkCommandBuffer commandBuffer = beginSingleTimeCommands(vkData, commandPool);
 
         VkImageMemoryBarrier barrier{};
@@ -108,6 +115,7 @@ namespace vk
         barrier.subresourceRange.levelCount = 1;
         barrier.subresourceRange.baseArrayLayer = 0;
         barrier.subresourceRange.layerCount = 1;
+        //barrier.subresourceRange.levelCount = mipLevels;
 
         VkPipelineStageFlags sourceStage;
         VkPipelineStageFlags destinationStage;

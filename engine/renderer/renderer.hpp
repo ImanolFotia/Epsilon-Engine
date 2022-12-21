@@ -33,16 +33,6 @@ namespace engine
 
 
     struct ObjectData {
-        /*size_t num_vertices;
-        size_t num_indices;
-
-        size_t vert_offset;
-        size_t index_offset;
-
-        size_t vertex_bucket;
-        size_t index_bucket;
-
-        bool group = false;*/
 
         Ref<Mesh> mesh;
         Ref<Material> material;
@@ -51,6 +41,7 @@ namespace engine
         glm::vec3 position;
         glm::vec3 scale;
         glm::quat rotation;
+        uint32_t layout_index = 0;
 
     };
 

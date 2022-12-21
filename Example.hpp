@@ -1,14 +1,15 @@
 #pragma once
 #define GLM_FORCE_RADIANS
 
-#include "LearningVulkanApplication.hpp"
+#include "Epsilon.hpp"
+#include "engine/renderer/drawables/primitives/quad.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <engine/renderer/drawables/primitives/cube.hpp>
 #include <engine/renderer/drawables/primitives/sphere.hpp>
 
 namespace ExampleApp {
-    class ExampleApp : public LearningVulkan::LearningVulkanApplication {
+    class ExampleApp : public Epsilon::Epsilon {
         struct Model {
             engine::Ref<engine::Mesh> mesh;
             engine::Ref<engine::Texture> texture;
@@ -19,43 +20,15 @@ namespace ExampleApp {
         };
 
     public:
-        explicit ExampleApp(const std::string &appName) : LearningVulkan::LearningVulkanApplication(appName) {}
+        explicit ExampleApp(const std::string &appName) : Epsilon::Epsilon(appName) {}
 
         void onCreate() override {
             try {
-                const std::vector<engine::Vertex> vertices = {
-                        {glm::vec3(-1.0f, -1.0f, 0.0f),
-                                glm::vec2(0.0f, 0.0f),
-                                glm::vec3(0.0f, 0.0f, 1.0f),
-                                glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
-                                glm::vec3(0.0f, 0.0f, 0.0f),
-                                glm::vec3(0.0f, 0.0f, 0.0f)},
-                        {glm::vec3(1.0f, -1.0f, 0.0f),
-                                glm::vec2(1.0f, 0.0f),
-                                glm::vec3(0.0f, .0f, 1.0f),
-                                glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
-                                glm::vec3(0.0f, 0.0f, 0.0f),
-                                glm::vec3(0.0f, 0.0f, 0.0f)},
-                        {glm::vec3(1.0f, 1.0f, 0.0f),
-                                glm::vec2(1.0f, 1.0f),
-                                glm::vec3(0.0f, 0.0f, 1.0f),
-                                glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
-                                glm::vec3(0.0f, 0.0f, 0.0f),
-                                glm::vec3(0.0f, 0.0f, 0.0f)},
-                        {glm::vec3(-1.0f, 1.0f, 0.0f),
-                                glm::vec2(0.0f, 1.0f),
-                                glm::vec3(0.0f, 0.0f, 1.0f),
-                                glm::vec4(0.0f, 1.0f, 0.0f, 1.0f),
-                                glm::vec3(0.0f, 0.0f, 0.0f),
-                                glm::vec3(0.0f, 0.0f, 0.0f)}};
-
-                std::vector<uint32_t> indices = {
-                        0, 1, 2, 2, 3, 0};
 
                 using namespace engine;
-
-                myObjectId.mesh = m_pContext.ResourceManager()->createMesh({.vertices = vertices,
-                                                                                   .indices = indices});
+                auto quad_data = m_pQuad.data();
+                myObjectId.mesh = m_pContext.ResourceManager()->createMesh({.vertices = quad_data.Vertices,
+                                                                                   .indices = quad_data.Indices});
 
                 auto cube_data = m_pCube.data();
                 CubeId.mesh = m_pContext.ResourceManager()->createMesh({.vertices = cube_data.Vertices,
@@ -110,7 +83,7 @@ namespace ExampleApp {
                     material.bindingInfo.offset = 0;
                     material.bindingInfo.size = sizeof(ShaderData);
                     int w, h, nc;
-                    unsigned char *pixels = framework::load_image_from_file("../assets/images/maxresdefault.png",
+                    unsigned char *pixels = framework::load_image_from_file("../assets/images/pieces.png",
                                                                             &w,
                                                                             &h,
                                                                             &nc);
@@ -139,7 +112,7 @@ namespace ExampleApp {
                     material.bindingInfo.offset = 0;
                     material.bindingInfo.size = sizeof(ShaderData);
                     int w, h, nc;
-                    unsigned char *pixels = framework::load_image_from_file("../assets/images/texture2.png", &w, &h,
+                    unsigned char *pixels = framework::load_image_from_file("../assets/images/pieces.png", &w, &h,
                                                                             &nc);
 
                     engine::TextureInfo texInfo = engine::TextureBuilder()
@@ -173,31 +146,23 @@ namespace ExampleApp {
             auto currentTime = std::chrono::high_resolution_clock::now();
             float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
-            camData.view = glm::lookAt(glm::vec3(0.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f),
-                                       glm::vec3(0.0f, 0.0f, 1.0f));
+            camData.view = glm::lookAt(glm::vec3(0.0f, 0.0f, 1.0f),
+                                       glm::vec3(0.0f, 0.0f, 0.0f),
+                                       glm::vec3(1.0f, 0.0f, 0.0f));
+            /*
             camData.proj = glm::perspective(glm::radians(45.0f), getWindowDimensions().first /
                                                                  ((float) getWindowDimensions().second +
                                                                   std::numeric_limits<float>::epsilon()), 0.1f, 100.0f);
+*/
+            camData.proj = glm::ortho(-(getWindowDimensions().first / 2.0f),
+                                      (getWindowDimensions().first / 2.0f),
+                                      -((getWindowDimensions().second / 2.0f)),
+                                      (getWindowDimensions().second / 2.0f), 0.1f, 1000.0f);
             camData.proj[1][1] *= -1;
             camData.iTime += time;
 
             PushShaderData(camData);
 
-            CubeId.pushConstant.model = glm::translate(glm::mat4(1.0f), glm::vec3(-0.75, 0.0, 0.5));
-            CubeId.pushConstant.model = glm::rotate(CubeId.pushConstant.model, (float) glfwGetTime(),
-                                                    glm::vec3(0.2f, -1.0f, 0.5f));
-            CubeId.pushConstant.model = glm::scale(CubeId.pushConstant.model, glm::vec3(0.25));
-            //CubeId.pushConstantRef;
-            engine::ObjectData objectData;
-            objectData.mesh = CubeId.mesh;
-            objectData.material = CubeId.material;
-            objectData.modelMatrix = CubeId.pushConstant.model;
-            objectData.position = glm::vec3(-0.75, 0.0, 0.5);
-            objectData.scale = glm::vec3(0.25);
-            objectData.rotation = glm::rotate(CubeId.pushConstant.model, (float) glfwGetTime(),
-                                              glm::vec3(0.2f, -1.0f, 0.5f));
-            objectData.pushConstant = CubeId.pushConstantRef;
-            m_pContext.Renderer()->Push(objectData);
             // engine::DrawCommand drawCommand;
 
             // drawCommand = CubeId.mesh;
@@ -208,10 +173,13 @@ namespace ExampleApp {
             //  Draw(renderObject);
 
             myObjectId.pushConstant.model = glm::mat4(1.0f);
+            myObjectId.pushConstant.model = glm::translate(myObjectId.pushConstant.model, glm::vec3(0.0, 0.0, -500.0));
             // myObjectId.pushConstant.model = glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(.0f, .0f, 1.0f));
-            //myObjectId.pushConstant.model = glm::scale(myObjectId.pushConstant.model, glm::vec3(0.5));
+            myObjectId.pushConstant.model = glm::scale(myObjectId.pushConstant.model, glm::vec3( getWindowDimensions().second/2, getWindowDimensions().second/2,0.0));
 
+            engine::ObjectData objectData;
             objectData;
+            objectData.layout_index = 0;
             objectData.mesh = myObjectId.mesh;
             objectData.material = myObjectId.material;
             objectData.modelMatrix = myObjectId.pushConstant.model;
@@ -221,17 +189,15 @@ namespace ExampleApp {
                                               glm::vec3(0.2f, -1.0f, 0.5f));
             objectData.pushConstant = myObjectId.pushConstantRef;
             m_pContext.Renderer()->Push(objectData);
-            // renderObject.objectId = myObjectId;
-            // renderObject.materialId = material2.id;
-            // renderObject.uniformData = camData;
-            // Draw(renderObject);
 
-            SphereId.pushConstant.model = glm::translate(glm::mat4(1.0f), glm::vec3(0.75, 0.0, 0.5));
+
+            SphereId.pushConstant.model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, -150));
             SphereId.pushConstant.model = glm::rotate(SphereId.pushConstant.model, (float) glfwGetTime(),
                                                       glm::vec3(-0.2f, 1.0f, 0.5f));
-            SphereId.pushConstant.model = glm::scale(SphereId.pushConstant.model, glm::vec3(0.25));
+            SphereId.pushConstant.model = glm::scale(SphereId.pushConstant.model, glm::vec3(100));
 
             objectData;
+            objectData.layout_index = 1;
             objectData.mesh = SphereId.mesh;
             objectData.material = SphereId.material;
             objectData.modelMatrix = SphereId.pushConstant.model;
@@ -245,6 +211,23 @@ namespace ExampleApp {
             //  renderObject.materialId = material.id;
             // renderObject.uniformData = camData;
             // Draw(renderObject);
+
+
+            CubeId.pushConstant.model = glm::translate(glm::mat4(1.0f), glm::vec3(-0.75, 0.0, 0.5));
+            CubeId.pushConstant.model = glm::rotate(CubeId.pushConstant.model, (float) glfwGetTime(),
+                                                    glm::vec3(0.2f, -1.0f, 0.5f));
+            CubeId.pushConstant.model = glm::scale(CubeId.pushConstant.model, glm::vec3(0.25));
+            //CubeId.pushConstantRef;
+            objectData.mesh = CubeId.mesh;
+            objectData.material = CubeId.material;
+            objectData.modelMatrix = CubeId.pushConstant.model;
+            objectData.position = glm::vec3(-0.75, 0.0, 0.5);
+            objectData.scale = glm::vec3(0.25);
+            objectData.rotation = glm::rotate(CubeId.pushConstant.model, (float) glfwGetTime(),
+                                              glm::vec3(0.2f, -1.0f, 0.5f));
+            objectData.pushConstant = CubeId.pushConstantRef;
+            objectData.layout_index = 1;
+            m_pContext.Renderer()->Push(objectData);
         }
 
         void onExit() override {
@@ -260,5 +243,6 @@ namespace ExampleApp {
 
         engine::Cube m_pCube = {};
         engine::Sphere m_pSphere = {};
+        engine::Quad m_pQuad = {};
     };
 }

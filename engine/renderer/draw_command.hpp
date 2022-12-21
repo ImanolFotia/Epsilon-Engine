@@ -14,6 +14,8 @@ namespace engine
         uint32_t numVertices = 0;
         uint32_t numIndices = 0;
 
+        uint32_t layoutIndex = 0;
+
         Ref<Buffer> vertexBuffer;
         Ref<Buffer> indexBuffer;
         Ref<UniformBindings> uniformBindings;

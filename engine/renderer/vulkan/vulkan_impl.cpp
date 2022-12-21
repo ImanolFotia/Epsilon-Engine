@@ -139,6 +139,8 @@ namespace engine
         }
 
         auto vertexBuffer = pCreateVertexBuffer();
+        vertexBuffer.id = vertexBufferCount;
+        vertexBufferCount++;
         vertexBuffer.allocatedVertices += numVertices;
         auto ref = vertexBufferPool.insert(vertexBuffer);
         vertexBufferReferences.push_back(ref);
@@ -155,6 +157,8 @@ namespace engine
         }
 
         auto indexBuffer = pCreateIndexBuffer();
+        indexBuffer.id = indexBufferCount;
+        indexBufferCount++;
         indexBuffer.allocatedVertices += numIndices;
         auto ref = indexBufferPool.insert(indexBuffer);
         indexBufferReferences.push_back(ref);
@@ -243,19 +247,32 @@ namespace engine
             bufferInfo.buffer = material.bufferInfo[i].buffer;//m_pUniformBuffers[i].buffer;
             bufferInfo.offset = material.bufferOffset;
             bufferInfo.range = material.bufferSize;
-            
 
             VkDescriptorImageInfo imageInfo{};
-            imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            auto &texture = material.textures.at(0);
-            // texture->format = VK_FORMAT_R8G8B8A8_SRGB;
-            // vk::createImageView(m_pVkData, *texture, VK_IMAGE_ASPECT_COLOR_BIT);
-            // vk::createTextureSampler(m_pVkData, *texture);
+            uint32_t numSlots = 1;
+            std::vector<VkWriteDescriptorSet> descriptorWrites{};
+            descriptorWrites.resize(1);
+            if(material.textures.size() > 0) {
+                descriptorWrites.resize(material.textures.size() + 1);
+                numSlots = material.textures.size() + 1;
+                imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+                int index = 1;
+                for(auto& texture: material.textures) {
 
-            imageInfo.imageView = texture.imageView;
-            imageInfo.sampler = texture.sampler;
+                    imageInfo.imageView = texture.imageView;
+                    imageInfo.sampler = texture.sampler;
 
-            std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
+
+                    descriptorWrites[index].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+                    descriptorWrites[index].dstSet = material.descriptorSets[i];
+                    descriptorWrites[index].dstBinding = index;
+                    descriptorWrites[index].dstArrayElement = 0;
+                    descriptorWrites[index].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+                    descriptorWrites[index].descriptorCount = 1;
+                    descriptorWrites[index].pImageInfo = &imageInfo;
+                    index++;
+                }
+            }
 
             descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             descriptorWrites[0].dstSet = material.descriptorSets[i];
@@ -267,15 +284,8 @@ namespace engine
             descriptorWrites[0].pImageInfo = nullptr;       // Optional
             descriptorWrites[0].pTexelBufferView = nullptr; // Optional
 
-            descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            descriptorWrites[1].dstSet = material.descriptorSets[i];
-            descriptorWrites[1].dstBinding = 1;
-            descriptorWrites[1].dstArrayElement = 0;
-            descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-            descriptorWrites[1].descriptorCount = 1;
-            descriptorWrites[1].pImageInfo = &imageInfo;
 
-            vkUpdateDescriptorSets(m_pVkDataPtr->logicalDevice, 2, descriptorWrites.data(), 0, nullptr);
+            vkUpdateDescriptorSets(m_pVkDataPtr->logicalDevice, numSlots, descriptorWrites.data(), 0, nullptr);
             // vk::updateDescriptorSet(m_pVkData, material);
         }
     }

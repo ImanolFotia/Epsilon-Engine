@@ -26,6 +26,7 @@ vec3 Degamma(in vec3 img) {
 }
 
 void main() {
+    /*
     vec3 lightPos = vec3(sin(4.0 * ubo.iTime), cos(4.0 * ubo.iTime), 3.0);
     float l = length(lightPos - position);
     float NoL = max(dot(lightPos, normal), 0.0);
@@ -33,7 +34,28 @@ void main() {
     
     vec3 texCol = texture(texSampler, texCoords).rgb;
     vec3 ambient = vec3(0.05) * texCol;
-    outColor = vec4(texCol * (vec3(NoL) * i) + ambient, 1.0) ;
+    outColor = vec4(texCol * (vec3(NoL) * i) + ambient, 1.0) ;*/
 
-    outColor.rgb = (Gamma(outColor.rgb));
+    ivec2 tiles = ivec2(texCoords.xy * 8);
+    outColor.a = 1.0;
+    bool x = (tiles.x % 8) % 2 == 0;
+    bool y = (tiles.y % 8) % 2 == 0;
+
+    if(x == false) {
+        outColor.rgb = vec3(0.1);
+    } else {
+        outColor.rgb = vec3(1.0);
+    }
+
+    if(y == true) {
+        if(x == false)
+            outColor.rgb = vec3(1.0);
+        else
+            outColor.rgb = vec3(0.1);
+
+        if(x == true)
+            outColor.rgb = vec3(0.1);
+        else
+            outColor.rgb = vec3(1.0);
+    }
 }

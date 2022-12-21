@@ -27,8 +27,8 @@
 #include "engine/renderer/resource_manager.hpp"
 #include "engine/renderer/vulkan/resource_manager.hpp"
 
-namespace LearningVulkan {
-    class LearningVulkanApplication {
+namespace Epsilon {
+    class Epsilon {
 
         uint32_t m_CurrentFrame = 0;
 
@@ -44,6 +44,7 @@ namespace LearningVulkan {
 
         struct MeshPushConstant {
             alignas(16) glm::mat4 model;
+            alignas(16) uint32_t piece;
         };
 
         struct ShaderData
@@ -54,9 +55,9 @@ namespace LearningVulkan {
             alignas(16) glm::mat4 proj;
         };
     public:
-        LearningVulkanApplication() = default;
+        Epsilon() = default;
 
-        explicit LearningVulkanApplication(const std::string &appName) : m_ApplicationName(appName) {
+        explicit Epsilon(const std::string &appName) : m_ApplicationName(appName) {
             m_pContext.Init(appName, engine::renderer_type::vulkan);
         }
 
@@ -90,12 +91,23 @@ namespace LearningVulkan {
             m_pContext.Renderer()->Init(m_ApplicationName.c_str(), m_pContext.Window());
             m_pContext.ResourceManager()->Init();
             using namespace engine;
-
+/*
             auto vertexCode = utils::readFile("../assets/shaders/vertex.spv");
             auto fragmentCode = utils::readFile("../assets/shaders/fragment.spv");
 
 
+
+            auto boardVertexCode = utils::readFile("../assets/shaders/board-vertex.spv");
+            auto boardFragmentCode = utils::readFile("../assets/shaders/board-fragment.spv");
+
             ShaderInfo shaderInfo = {
+                    .stages = {
+                            {.entryPoint = "main", .shaderCode = boardVertexCode, .stage = VERTEX},
+                            {.entryPoint = "main", .shaderCode = boardFragmentCode, .stage = FRAGMENT}},
+                    .usedStages = ShaderModuleStage(VERTEX | FRAGMENT)};
+
+
+            ShaderInfo boardShaderInfo = {
                     .stages = {
                             {.entryPoint = "main", .shaderCode = vertexCode, .stage = VERTEX},
                             {.entryPoint = "main", .shaderCode = fragmentCode, .stage = FRAGMENT}},
@@ -125,12 +137,13 @@ namespace LearningVulkan {
                                                     .isDepthAttachment = true
                                             }
                                     })
-                            .shaderInfo(shaderInfo)
+                            .pipelineLayout( {.shaderInfo = shaderInfo})
+                            .pipelineLayout( {.shaderInfo = boardShaderInfo})
                             .pushConstant(sizeof(MeshPushConstant))
                             .bufferInfo({.size = sizeof(ShaderData), .offset = 0});
 
             renderPassRef = m_pContext.ResourceManager()->createDefaultRenderPass(renderPassInfo);
-
+*/
         }
 
         void mainLoop() {
@@ -176,10 +189,6 @@ namespace LearningVulkan {
         }
 
     protected:
-        engine::Renderer::ObjectDataId
-        RegisterMesh(const std::vector<engine::Vertex> &vertices, std::vector<uint32_t> &indices, bool group) {
-            //return m_pContext.ResourceManager()->RegisterMesh(vertices, indices, group);
-        }
 
         engine::Renderer::TexturesDataId RegisterTexture(unsigned char *data, engine::TextureInfo info) {
             return m_pContext.Renderer()->RegisterTexture(data, info);

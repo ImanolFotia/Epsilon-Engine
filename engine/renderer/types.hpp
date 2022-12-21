@@ -261,16 +261,23 @@ namespace engine
         UniformBindingInfo info;
     };
 
+    struct PipelineLayout {
+
+        ShaderInfo shaderInfo;
+    };
+
+
     struct RenderPassInfo
     {
-        uint32_t numDescriptors;
-        uint32_t numAttributes;
+        uint32_t numDescriptors = 0;
+        uint32_t numAttributes = 0;
+        uint32_t numLayouts = 0;
         size_t size;
         bool depthAttachment;
         std::vector<SubPassInfo> subpasses;
         std::vector<VertexDescriptorInfo> vertexLayout;
         std::vector<RenderPassAttachment> attachments;
-        ShaderInfo shaderInfo;
+        std::vector<PipelineLayout> pipelineLayout;
         PushConstantData pushConstant;
         UniformBindingInfo bindingInfo;
     };
@@ -309,9 +316,9 @@ namespace engine
             return *this;
         }
 
-        RenderPassFactory shaderInfo(ShaderInfo s)
-        {
-            info.shaderInfo = s;
+        RenderPassFactory pipelineLayout(PipelineLayout pl) {
+            info.pipelineLayout.emplace_back(pl);
+            info.numLayouts++;
             return *this;
         }
 

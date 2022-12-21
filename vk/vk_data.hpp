@@ -2,6 +2,7 @@
 
 #include <vulkan/vulkan.hpp>
 #include <vk_mem_alloc.h>
+#include <unordered_map>
 
 namespace vk
 {
@@ -22,6 +23,7 @@ namespace vk
 
     struct VulkanBuffer
     {
+        uint32_t id;
         VkBuffer buffer;
         VkBufferCreateInfo bufferInfo;
         uint32_t allocatedVertices = 0;
@@ -88,8 +90,8 @@ namespace vk
     struct VulkanRenderPipeline
     {
         VkDescriptorSetLayout descriptorSetLayout{};
-        VkPipelineLayout pipelineLayout{};
-        VkPipeline graphicsPipeline;
+        std::vector<VkPipelineLayout> pipelineLayout{};
+        std::vector<VkPipeline> graphicsPipeline;
         VkPipelineViewportStateCreateInfo viewportState{};
         VkRect2D scissor{};
         VkViewport viewport{};
@@ -98,7 +100,7 @@ namespace vk
         VkPipelineColorBlendAttachmentState colorBlendAttachment{};
         VkPipelineColorBlendStateCreateInfo colorBlending{};
 
-        VkClearColorValue clearColor = {0.0f, 0.0f, 0.0f, 1.0f};
+        VkClearColorValue clearColor = {0.1f, 0.1f, 0.1f, 1.0f};
         VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
     };
 
@@ -151,15 +153,14 @@ namespace vk
             clearValues[0].color = clearColor;
             clearValues[1].depthStencil = depthStencilClearColor;
         }
-        
-        
+
         VkRenderPass renderPass;
         VkRenderPassBeginInfo renderPassInfo{};
         std::vector<VulkanRenderPipeline> renderPipelines;
         VulkanRenderPassData renderPassData;
         VulkanVertexInfo vertexInfo;
         RenderPassChain renderPassChain;
-        VkClearColorValue clearColor = {0.0f, 0.0f, 0.0f, 1.0f};
+        VkClearColorValue clearColor = {0.1f, 0.1f, 0.1f, 1.0f};
         VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
         VkClearValue clearValues[2] = {};
         uint32_t id;

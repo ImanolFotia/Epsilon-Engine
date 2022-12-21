@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(LearningVulkan VERSION 0.1.0)
+project(Epsilon VERSION 0.1.0)
 set (CMAKE_CXX_STANDARD 20)
 
 set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
@@ -16,7 +16,7 @@ set(DBUILD_SHARED_LIBS ON CACHE BOOL "Build as a shared library")
 #    message (STATUS "_Unwind_Backtrace() not found. Disabling Backtrace support.")
 #endif()
 
-option (BUILD_AS_LIBRARY "Build as a library" OFF)
+option (BUILD_AS_LIBRARY "Build as a library" ON)
 
 include(ExternalProject)
 
@@ -89,23 +89,26 @@ SET(HEADERS
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
 
-#add_library(${PROJECT_NAME} SHARED main_lib.cpp)
-#if(MSVC)
-#  target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
-#else()
-#  target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic -Werror)
-#endif()
-
 option(CREATE_STATIC_LIB "Build static library" OFF)
 
 if(BUILD_AS_LIBRARY)
+add_library(${PROJECT_NAME} SHARED main_lib.cpp)
+if(MSVC)
+  target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
+else()
+  target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
+endif()
+endif()
+
+if(BUILD_AS_LIBRARY)
+
     if(CREATE_STATIC_LIB)
-        add_library(${PROJECT_NAME} STATIC main_lib.cpp)
+        add_library(lib${PROJECT_NAME} STATIC main_lib.cpp)
     else()
-        add_library(${PROJECT_NAME} SHARED main_lib.cpp)
+        add_library(lib${PROJECT_NAME} SHARED main_lib.cpp)
     endif()
 else()
-    add_executable(${PROJECT_NAME} main.cpp)
+    add_executable(${PROJECT_NAME} main.cpp engine/renderer/drawables/primitives/quad.hpp framework/app.hpp)
 endif()
 
 target_sources(${PROJECT_NAME} PUBLIC
@@ -126,10 +129,6 @@ find_package(Threads REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
 target_link_libraries(${PROJECT_NAME} PUBLIC -rdynamic)
 
-add_dependencies(${PROJECT_NAME} glfw3_d)
-add_dependencies(${PROJECT_NAME} glm)
-add_dependencies(${PROJECT_NAME} stb)
-add_dependencies(${PROJECT_NAME} vma)
 #add_dependencies(${PROJECT_NAME} LearningVulkan)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
@@ -152,3 +151,4 @@ install(DIRECTORY "./assets/shaders/"
 
 
 #add_subdirectory(examples/basic)
+add_subdirectory(examples/chess)

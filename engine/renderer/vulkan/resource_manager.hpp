@@ -135,8 +135,11 @@ namespace engine
         uint32_t m_pRenderPassCount = 0;
 
         CommandPools m_pCommandPools;
-        uint32_t m_pNumCommandPools = 0;
+        uint32_t m_pNumCommandPools = 1;
         CommandBuffers m_pCommandBuffers;
         Ref<RenderPass> m_pDefaultRenderPassRef;
+
+        uint32_t vertexBufferCount = 0;
+        uint32_t indexBufferCount = 0;
     };
 }

@@ -202,11 +202,17 @@ namespace vk
             vkDestroyFramebuffer(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.Framebuffers[i], nullptr);
         }
 
-        for (auto &pipeline : renderPass.renderPipelines)
+        for (auto &renderPipeline : renderPass.renderPipelines)
         {
-            vkDestroyPipeline(vk_data.logicalDevice, pipeline.graphicsPipeline, nullptr);
-            vkDestroyPipelineLayout(vk_data.logicalDevice, pipeline.pipelineLayout, nullptr);
+            for(auto& pipeline: renderPipeline.graphicsPipeline)
+                vkDestroyPipeline(vk_data.logicalDevice, pipeline, nullptr);
+
+            for(auto& layout: renderPipeline.pipelineLayout)
+                vkDestroyPipelineLayout(vk_data.logicalDevice, layout, nullptr);
         }
+
+
+
         vkDestroyRenderPass(vk_data.logicalDevice, renderPass.renderPass, nullptr);
 
         for (size_t i = 0; i < vk_data.defaultRenderPass.renderPassChain.ImageViews.size(); i++)

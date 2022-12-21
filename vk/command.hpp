@@ -28,7 +28,6 @@ namespace vk
     {
 
         commandBuffers.resize(vk::MAX_FRAMES_IN_FLIGHT);
-        VkCommandBuffer commandBuffer;
         VkCommandBufferAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         allocInfo.commandPool = commandPool;

@@ -7,6 +7,8 @@
 #include "vk_data.hpp"
 #include "texture.hpp"
 
+#include "../engine/renderer/types.hpp"
+
 namespace vk
 {
 

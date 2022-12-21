@@ -20,6 +20,7 @@ namespace engine
         CUADRATIC_BEZIER,
         BEZIER,
         PATCH,
+        QUAD,
         UNDEFINED
     };
 
