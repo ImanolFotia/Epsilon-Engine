@@ -13,7 +13,7 @@ struct popen2_t {
     int   from_child, to_child;
 };
 
-int popen2(const char *cmdline, struct popen2_t *childinfo) {
+static int popen2(const char *cmdline, struct popen2_t *childinfo) {
     pid_t p;
     int pipe_stdin[2], pipe_stdout[2];
 

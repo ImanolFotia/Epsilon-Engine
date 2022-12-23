@@ -13,6 +13,9 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
+#include "framework/IO/KeyBoard.hpp"
+#include "framework/IO/Mouse.hpp"
+#include "framework/IO/Joystick/Joystick.hpp"
 
 namespace framework
 {
@@ -30,6 +33,16 @@ namespace framework
             glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
             mWindow = glfwCreateWindow(mWidth, mHeight, appName.c_str(), nullptr, nullptr);
+
+            //Set up IO callbacks
+            glfwSetKeyCallback(mWindow, Input::KeyBoard::KeyBoardCallBackGLFW);
+            glfwSetCursorPosCallback(mWindow, Input::Mouse::MouseCallBackGLFW);
+            glfwSetJoystickCallback(Input::Joystick::JoystickManager::JoystickCallbackGLFW);
+            glfwSetMouseButtonCallback(mWindow, Input::Mouse::MouseButtonCallbackGLFW);
+            glfwSetScrollCallback(mWindow, Input::Mouse::MouseWheelCallbackGLFW);
+
+            glfwSetInputMode(mWindow, GLFW_STICKY_KEYS, true);
+            glfwSetInputMode(mWindow, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
         }
 
         void mainLoop()

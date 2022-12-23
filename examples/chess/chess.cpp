@@ -3,12 +3,25 @@
 //
 
 #include "chess.hpp"
+#include <framework/IO/IO.hpp>
 
 namespace ChessApp {
 
     void ChessApp::onCreate() {
 
         using namespace engine;
+        using namespace framework;
+
+        Input::Mouse::MouseEventHandler += ([](auto *sender, beacon::args *args)
+        {
+            if (args == nullptr)
+                return;
+
+            auto obj = args->to<Input::MouseArgs>();
+            if (obj.Left().State == Input::PRESSED)
+            {
+                std::cout << "Left button pressed" << std::endl;
+            } });
 
         //Create a quad for the chess board
         auto quad_data = m_pQuad.data();
