@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vulkan/vulkan.hpp>
+#include <cmath>
 
 #include "vk_data.hpp"
 #include "command.hpp"

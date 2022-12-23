@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(Epsilon VERSION 0.1.0)
 set (CMAKE_CXX_STANDARD 20)
 
 set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 set(DBUILD_SHARED_LIBS ON CACHE BOOL "Build as a shared library")
+set(EPSILON_BUILD_LOCATION ${CMAKE_BINARY_DIR})
 #set (BACKTRACE_SUPPORTED 1)
 
 
@@ -63,6 +63,22 @@ message(${STB_BUILD_DIR})
 
 include_directories(${STB_BUILD_DIR})
 
+
+#Download and include Beacon
+ExternalProject_Add(beacon
+        GIT_REPOSITORY https://github.com/ImanolFotia/beacon.git
+        INSTALL_COMMAND cmake -E echo "Skipping install step for beacon."
+        BUILD_COMMAND ""
+        UPDATE_COMMAND ""
+        CONFIGURE_COMMAND ""
+        )
+
+ExternalProject_Get_property(beacon SOURCE_DIR)
+set(BEACON_BUILD_DIR ${SOURCE_DIR})
+message(${BEACON_BUILD_DIR})
+
+include_directories(${BEACON_BUILD_DIR})
+
 # download and include glfw3
 ExternalProject_Add(glfw3_d
     GIT_REPOSITORY https://github.com/glfw/glfw.git
@@ -91,21 +107,20 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
 
 option(CREATE_STATIC_LIB "Build static library" OFF)
 
-if(BUILD_AS_LIBRARY)
-add_library(${PROJECT_NAME} SHARED main_lib.cpp)
-if(MSVC)
-  target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
-else()
-  target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
-endif()
-endif()
+project(Epsilon VERSION 0.1.0)
 
 if(BUILD_AS_LIBRARY)
 
     if(CREATE_STATIC_LIB)
-        add_library(lib${PROJECT_NAME} STATIC main_lib.cpp)
+        add_library(${PROJECT_NAME} STATIC main_lib.cpp)
     else()
-        add_library(lib${PROJECT_NAME} SHARED main_lib.cpp)
+        add_library(${PROJECT_NAME} SHARED main_lib.cpp)
+    endif()
+
+    if(MSVC)
+        target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
+    else()
+        target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
     endif()
 else()
     add_executable(${PROJECT_NAME} main.cpp engine/renderer/drawables/primitives/quad.hpp framework/app.hpp)
@@ -122,6 +137,11 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${Vulkan_LIBRARIES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${Vulkan_INCLUDE_DIR})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw3)
+add_dependencies(${PROJECT_NAME} vma)
+add_dependencies(${PROJECT_NAME} glfw3_d)
+add_dependencies(${PROJECT_NAME} glm)
+add_dependencies(${PROJECT_NAME} beacon)
+add_dependencies(${PROJECT_NAME} stb)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_DL_LIBS}) 
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)

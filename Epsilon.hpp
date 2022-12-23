@@ -65,11 +65,14 @@ namespace Epsilon {
             initWindow();
             initVulkan();
             onCreate();
+            onReady();
             mainLoop();
             exit();
         }
 
         virtual void onCreate() = 0;
+
+        virtual void onReady() = 0;
 
         virtual void onRender() = 0;
 

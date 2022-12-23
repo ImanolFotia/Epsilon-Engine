@@ -5,14 +5,22 @@ set (CMAKE_CXX_STANDARD 20)
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR} ../../)
 
 
-add_executable(${PROJECT_NAME} chess.hpp main.cpp)
+add_executable(${PROJECT_NAME} chess.hpp main.cpp UCI.hpp chess.cpp)
 
 target_sources(${PROJECT_NAME} PRIVATE main.cpp )
-target_sources(${PROJECT_NAME} PUBLIC
-        ${CMAKE_SOURCE_DIR}/framework/env.cpp
-        ${CMAKE_SOURCE_DIR}/engine/renderer/vulkan/vulkan_impl.cpp
-        ${CMAKE_SOURCE_DIR}/engine/renderer/vulkan/vulkan.cpp
-        ${CMAKE_SOURCE_DIR}/engine/renderer/vulkan/resource_manager.cpp)
+
+message (STATUS "location of epsilon build: " ${EPSILON_BUILD_LOCATION})
+message (STATUS "location of vulkan libs: " ${Vulkan_LIBRARIES})
+
+#target_sources(${PROJECT_NAME} PUBLIC
+#        ${CMAKE_SOURCE_DIR}/framework/env.cpp
+#        ${CMAKE_SOURCE_DIR}/engine/renderer/vulkan/vulkan_impl.cpp
+#        ${CMAKE_SOURCE_DIR}/engine/renderer/vulkan/vulkan.cpp
+#        ${CMAKE_SOURCE_DIR}/engine/renderer/vulkan/resource_manager.cpp)
+
+add_dependencies(${PROJECT_NAME} Epsilon)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${EPSILON_BUILD_LOCATION}/libEpsilon.so)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC ${Vulkan_LIBRARIES})
 target_include_directories(${PROJECT_NAME} PUBLIC ${Vulkan_INCLUDE_DIR})
