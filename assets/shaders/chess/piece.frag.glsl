@@ -68,6 +68,8 @@ void main() {
     
     vec4 texCol = texture(texSampler, correctedCoords, 0.0);
     
+    if(texCol.a < 0.01) discard;
+    
 
     outColor.a = texCol.a;
     outColor.rgb = (Gamma(outColor.rgb));

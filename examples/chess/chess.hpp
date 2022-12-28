@@ -6,6 +6,8 @@
 #include <beacon/beacon.hpp>
 #include "engine/renderer/drawables/primitives/quad.hpp"
 #include "UCI.hpp"
+#include "game/common.hpp"
+#include "examples/chess/game/board.hpp"
 
 namespace ChessApp {
     class ChessApp : public Epsilon::Epsilon {
@@ -15,36 +17,10 @@ namespace ChessApp {
             alignas(16) uint32_t piece;
         };
 
-        enum PIECE {
-            WHITE_KING = 0,
-            WHITE_QUEEN,
-            WHITE_BISHOP,
-            WHITE_KNIGHT,
-            WHITE_ROOK,
-            WHITE_PAWN,
-            BLACK_KING,
-            BLACK_QUEEN,
-            BLACK_BISHOP,
-            BLACK_KNIGHT,
-            BLACK_ROOK,
-            BLACK_PAWN,
 
-        };
-
-        enum COLUMN {
-            A = 0, B, C, D, E, F, G, H
-        };
-
-        struct PieceInfo {
-            COLUMN column;
-            uint32_t row;
-            PIECE piece;
-        };
 
         struct Model {
             Model() {}
-
-            Model(PieceInfo i) : info(i) {}
 
             engine::Ref<engine::Mesh> mesh;
             engine::Ref<engine::Texture> texture;
@@ -52,19 +28,24 @@ namespace ChessApp {
             engine::Ref<engine::Material> material;
             engine::Ref<engine::PushConstant> pushConstantRef;
             PiecePushConstant pushConstant;
-            PieceInfo info;
         };
+
 
 
         engine::Quad m_pQuad = {};
 
-        std::list<Model> m_pPieces;
+        std::array<Model, 32> m_pPieces;
 
-        Model board;
+        Model m_pBoardModel;
+        Model* m_pSelectedModel = nullptr;
 
         std::thread m_pEngineThread;
 
         UCI m_pUCI;
+
+        Move move;
+
+        Board m_pBoard;
 
     public:
         explicit ChessApp(const std::string &appName) : Epsilon::Epsilon(appName) {}
@@ -80,6 +61,12 @@ namespace ChessApp {
 
     private:
         void setupCamera();
+
+        void setupGeometry();
+
+        void setupTextures();
+
+        void setupRenderPass();
 
         glm::mat4 transformBoard(glm::vec3 t, glm::vec3 s);
 

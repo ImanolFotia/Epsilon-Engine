@@ -100,6 +100,7 @@ namespace framework
                 prevyOffset = yoffset;
             }
 
+
             static void MouseButtonCallbackGLFW(GLFWwindow *window, int button, int action, int mods)
             {
                 MouseArgs mouseArgs;

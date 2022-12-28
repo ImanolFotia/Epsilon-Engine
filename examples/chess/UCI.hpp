@@ -14,10 +14,11 @@ class UCI {
 public:
     UCI() = default;
 
-    std::string output;
+    std::string last_move = "";
+    popen2_t child;
+    bool think = false;
 
     void init() {
-        popen2_t child;
         popen2("./stockfish/stockfish-ubuntu-20.04-x86-64-avx2", &child);
 
         std::cout << "Launched: ";
@@ -34,8 +35,28 @@ public:
 
         write_to_pipe(child.to_child, "ucinewgame\n");
 
-        std::cout << read_from_pipe(child.from_child) << std::endl;
+
+        while (1) {
+            if (think) {
+                std::string output;
+                output = read_from_pipe(child.from_child);
+                //std::cout << output << std::endl;
+                if (output.find("bestmove") != std::string::npos) {
+                    std::string best_move = output.substr(output.find("bestmove") + 9, 4);
+                    std::cout << "best move found: " << best_move << std::endl;
+                    last_move = best_move;
+                    think = false;
+                }
+            }
         }
-    };
+    }
+
+    void Move(std::string move) {
+        std::cout << move << std::endl;
+        write_to_pipe(child.to_child, move + "\n");
+        write_to_pipe(child.to_child, "go depth 20\n");
+        think = true;
+    }
+};
 
 #endif //EPSILON_UCI_HPP

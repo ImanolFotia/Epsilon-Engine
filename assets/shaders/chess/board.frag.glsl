@@ -25,8 +25,8 @@ vec3 Degamma(in vec3 img) {
     return pow(img, vec3(2.2));
 }
 
-const vec3 dark_color = vec3(181.0/255.0, 136.0/255.0, 99.0/255.0);
-const vec3 light_color = vec3(240.0/255.0, 217.0/255.0, 181.0/255.0);
+const vec3 dark_color = vec3(119.0/255.0, 149.0/255.0, 86.0/255.0);
+const vec3 light_color = vec3(235.0/255.0, 236.0/255.0, 208.0/255.0);
 
 void main() {
 
@@ -53,5 +53,6 @@ void main() {
             outColor.rgb = light_color;
     }
     
+    outColor.a = 1.0;
     outColor.rgb = outColor.rgb;
 }
