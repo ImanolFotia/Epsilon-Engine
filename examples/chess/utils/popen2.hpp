@@ -13,6 +13,11 @@
 
 #endif
 
+
+#ifdef _WIN32
+typedef int pid_t;
+#endif
+
 struct popen2_t {
     pid_t child_pid;
     int from_child, to_child;

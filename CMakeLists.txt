@@ -118,7 +118,7 @@ if (BUILD_AS_LIBRARY)
     endif ()
 
     if (MSVC)
-        target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
+        target_compile_options(${PROJECT_NAME} PRIVATE /W2)
     else ()
         target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
     endif ()
