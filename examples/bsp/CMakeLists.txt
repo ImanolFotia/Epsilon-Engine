@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(Model VERSION 0.1.0)
+project(BSP VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 20)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR} ../../)
 
 add_executable(${PROJECT_NAME} main.cpp)
 
-target_sources(${PROJECT_NAME} PRIVATE main.cpp)
+target_sources(${PROJECT_NAME} PRIVATE main.cpp SourceBSP.hpp)
 
 message(STATUS "location of epsilon build: " ${EPSILON_BUILD_LOCATION})
 message(STATUS "location of vulkan libs: " ${Vulkan_LIBRARIES})

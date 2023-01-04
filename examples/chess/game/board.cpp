@@ -66,27 +66,27 @@ namespace ChessApp {
     }
 
     Board::MoveList Board::getPawnMoves(const Player &, const std::string &) {
-        return ChessApp::Board::MoveList();
+        return {};
     }
 
     Board::MoveList Board::getRook(const Player &, const std::string &) {
-        return ChessApp::Board::MoveList();
+        return {};
     }
 
     Board::MoveList Board::getKnight(const Player &, const std::string &) {
-        return ChessApp::Board::MoveList();
+        return {};
     }
 
     Board::MoveList Board::getBishop(const Player &, const std::string &) {
-        return ChessApp::Board::MoveList();
+        return {};
     }
 
     Board::MoveList Board::getQueenMoves(const Player &, const std::string &) {
-        return ChessApp::Board::MoveList();
+        return {};
     }
 
     Board::MoveList Board::getKingMoves(const Player &, const std::string &) {
-        return ChessApp::Board::MoveList();
+        return {};
     }
 
     bool Board::canEnPassant() {

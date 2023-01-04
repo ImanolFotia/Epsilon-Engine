@@ -54,7 +54,7 @@ public:
     void Move(std::string move) {
         std::cout << move << std::endl;
         write_to_pipe(child.to_child, move + "\n");
-        write_to_pipe(child.to_child, "go depth 20\n");
+        write_to_pipe(child.to_child, "go depth 1\n");
         think = true;
     }
 };

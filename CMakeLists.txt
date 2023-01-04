@@ -79,6 +79,28 @@ message(${BEACON_BUILD_DIR})
 
 include_directories(${BEACON_BUILD_DIR})
 
+
+##
+#Download and include Assimp
+
+ExternalProject_Add(assimp_d
+        GIT_REPOSITORY https://github.com/assimp/assimp.git
+        INSTALL_COMMAND cmake -E echo "Skipping install step."
+        UPDATE_COMMAND ""
+        )
+
+ExternalProject_Get_property(assimp_d SOURCE_DIR)
+ExternalProject_Get_property(assimp_d BINARY_DIR)
+set(ASSIMP_BUILD_DIR ${BINARY_DIR})
+message(${SOURCE_DIR})
+message(${ASSIMP_BUILD_DIR})
+
+include_directories(${SOURCE_DIR}/include)
+link_directories(${ASSIMP_BUILD_DIR}/bin)
+
+
+##
+
 # download and include glfw3
 ExternalProject_Add(glfw3_d
         GIT_REPOSITORY https://github.com/glfw/glfw.git
@@ -157,9 +179,11 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${Vulkan_LIBRARIES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${Vulkan_INCLUDE_DIR})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw3)
+target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
 add_dependencies(${PROJECT_NAME} vma)
 add_dependencies(${PROJECT_NAME} glfw3_d)
 add_dependencies(${PROJECT_NAME} glm)
+add_dependencies(${PROJECT_NAME} assimp_d)
 add_dependencies(${PROJECT_NAME} beacon)
 add_dependencies(${PROJECT_NAME} stb)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_DL_LIBS})
@@ -192,3 +216,5 @@ install(DIRECTORY "./assets/shaders/"
 
 #add_subdirectory(examples/basic)
 add_subdirectory(examples/chess)
+add_subdirectory(examples/model)
+add_subdirectory(examples/bsp)
