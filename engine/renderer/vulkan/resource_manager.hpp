@@ -75,7 +75,7 @@ namespace engine
 
         Ref<Buffer> pFetchVertexBuffer(uint32_t numVertices);
 
-        Ref<Buffer> pFetchIndexBuffer(uint32_t numIndices);
+        Ref<Buffer> pFetchIndexBuffer(uint32_t numIndices, uint32_t maxOffset);
 
         void pRecreateSwapChain(GLFWwindow* window);
 

@@ -7,6 +7,7 @@
 #include "viewport.hpp"
 #include "rasterizer.hpp"
 #include "render_pass.hpp"
+#include "vertex_buffer.hpp"
 #include <engine/renderer/types.hpp>
 #include <functional>
 
@@ -96,8 +97,10 @@ namespace vk
         pipelineLayoutInfo.setLayoutCount = 1; // Optional
         // pipelineLayoutInfo.pSetLayouts = nullptr;         // Optional
         pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
-        pipelineLayoutInfo.pushConstantRangeCount = 1;           // Optional
-        pipelineLayoutInfo.pPushConstantRanges = &push_constant; // Optional
+        if(push_constant.size > 0) {
+            pipelineLayoutInfo.pushConstantRangeCount = 1;           // Optional
+            pipelineLayoutInfo.pPushConstantRanges = &push_constant; // Optional
+        }
 
         if (vkCreatePipelineLayout(vk_data.logicalDevice, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS)
         {
@@ -110,7 +113,6 @@ namespace vk
         VulkanData &vk_data,
         VulkanRenderPass &renderPass,
         VulkanRenderPipeline &renderPipeline,
-        VulkanVertexInfo VertexInfo,
         engine::RenderPassInfo& renderPassInfo)
     {
         std::vector<std::function<void(VulkanData&)>> destroyShaderStages;
@@ -118,6 +120,8 @@ namespace vk
         std::vector<VkGraphicsPipelineCreateInfo> pipelinesInfo;
         std::vector<std::vector<VkPipelineShaderStageCreateInfo>> shaderStages;
 
+
+        std::vector<vk::VulkanVertexInfo> vertexInfos;
         for(int layout_index = 0; layout_index < renderPassInfo.numLayouts; layout_index++) {
 
             auto& shaderInfo = renderPassInfo.pipelineLayout[layout_index].shaderInfo;
@@ -135,12 +139,33 @@ namespace vk
 
             // auto shaderStages = createShaderStages<2>("../assets/shaders/vertex.spv", "../assets/shaders/fragment.spv", vertShaderModule, fragShaderModule, vk_data);
             //   Vertex Stage
+
+
+            if(renderPassInfo.pipelineLayout[layout_index].cullMode == engine::CullMode::BACK)
+                renderPipeline.cullMode = VK_CULL_MODE_BACK_BIT;
+            else if(renderPassInfo.pipelineLayout[layout_index].cullMode == engine::CullMode::FRONT)
+                renderPipeline.cullMode = VK_CULL_MODE_FRONT_BIT;
+            else
+                renderPipeline.cullMode = VK_CULL_MODE_NONE;
+
+            if(renderPassInfo.pipelineLayout[layout_index].windingMode == engine::WindingMode::COUNTER_CLOCK_WISE)
+                renderPipeline.winding = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+            else
+                renderPipeline.winding = VK_FRONT_FACE_CLOCKWISE;
+
+            vk::VulkanVertexInfo& vertexInfo = vertexInfos.emplace_back();
+
+            vertexInfo.attributeDescriptions =
+                    getAttributeDescriptions(0, renderPassInfo.pipelineLayout[layout_index].vertexLayout);
+
+            vertexInfo.bindingDescription = getBindingDescription(renderPassInfo.size);
+
             VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
             vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
             vertexInputInfo.vertexBindingDescriptionCount = 1;
-            vertexInputInfo.pVertexBindingDescriptions = &VertexInfo.bindingDescription; // Optional
-            vertexInputInfo.vertexAttributeDescriptionCount = VertexInfo.attributeDescriptions.size();
-            vertexInputInfo.pVertexAttributeDescriptions = VertexInfo.attributeDescriptions.data();
+            vertexInputInfo.pVertexBindingDescriptions = &vertexInfo.bindingDescription; // Optional
+            vertexInputInfo.vertexAttributeDescriptionCount = vertexInfo.attributeDescriptions.size();
+            vertexInputInfo.pVertexAttributeDescriptions = vertexInfo.attributeDescriptions.data();
 
             VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
             inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
@@ -211,6 +236,9 @@ namespace vk
             std::cerr << "Result id: " << res << std::endl;
             throw std::runtime_error("failed to create graphics pipeline!");
         }
+
+
+        renderPass.vertexInfo = vertexInfos;
 
         for(auto& func: destroyShaderStages) {
             func(vk_data);

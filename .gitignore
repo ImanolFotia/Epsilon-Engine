@@ -4,7 +4,8 @@
 *.dll
 *.spv
 *.so
-
+*.bsp
+*.zip
 
 /.idea
 /thirdparty

@@ -3,6 +3,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 set(DBUILD_SHARED_LIBS ON CACHE BOOL "Build as a shared library")
+set(DGENERATE_RPM_PACKAGE OFF CACHE BOOL "Generate RPM deployment package")
 set(EPSILON_BUILD_LOCATION ${CMAKE_BINARY_DIR})
 #set (BACKTRACE_SUPPORTED 1)
 
@@ -15,6 +16,28 @@ set(EPSILON_BUILD_LOCATION ${CMAKE_BINARY_DIR})
 #else()
 #    message (STATUS "_Unwind_Backtrace() not found. Disabling Backtrace support.")
 #endif()
+
+# use, i.e. don't skip the full RPATH for the build tree
+set(SET_CUSTOM_RPATH TRUE)
+set(DESTDIR ~)
+set(CPACK_SET_DESTDIR ~/.local)
+if(SET_CUSTOM_RPATH)
+set(CMAKE_SKIP_BUILD_RPATH FALSE)
+
+# when building, don't use the install RPATH already
+# (but later on when installing)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib:../lib")
+
+# add the automatically determined parts of the RPATH
+# which point to directories outside the build tree to the install RPATH
+set(CMAKE_BUILD_RPATH "${CMAKE_INSTALL_PREFIX}/lib:../lib")
+
+set_target_properties( ${PROJECT_NAME} PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_RPATH}" )
+
+endif()
 
 option(BUILD_AS_LIBRARY "Build as a library" ON)
 
@@ -98,6 +121,15 @@ message(${ASSIMP_BUILD_DIR})
 include_directories(${SOURCE_DIR}/include)
 link_directories(${ASSIMP_BUILD_DIR}/bin)
 
+FILE(GLOB files "${ASSIMP_BUILD_DIR}/bin/*.so.*" "${ASSIMP_BUILD_DIR}/bin/*.so")
+
+install(FILES ${files}
+
+  DESTINATION lib
+  )
+
+
+#install( assimp_d LIBRARY DESTINATION lib)
 
 ##
 
@@ -126,6 +158,8 @@ SET(HEADERS
         )
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
+
+set(EPSILON_SOURCE_LOCATION ${CMAKE_SOURCE_DIR})
 
 option(CREATE_STATIC_LIB "Build static library" OFF)
 
@@ -156,7 +190,9 @@ else ()
             framework/IO/Joystick/Joystick.hpp
             framework/IO/Joystick/JoystickWrapper.hpp
             framework/IO/Joystick/Mappings.hpp
-            framework/IO/IO.cpp)
+            framework/IO/IO.cpp
+             ../../../../../../camera.h
+            ../../../../../../camera.cpp)
 endif ()
 
 target_sources(${PROJECT_NAME} PUBLIC
@@ -172,7 +208,9 @@ target_sources(${PROJECT_NAME} PUBLIC
         ${CMAKE_SOURCE_DIR}/framework/IO/Joystick/Joystick.hpp
         ${CMAKE_SOURCE_DIR}/framework/IO/Joystick/JoystickWrapper.hpp
         ${CMAKE_SOURCE_DIR}/framework/IO/Joystick/Mappings.hpp
-        ${CMAKE_SOURCE_DIR}/framework/IO/IO.cpp)
+        ${CMAKE_SOURCE_DIR}/framework/IO/IO.cpp
+        ${CMAKE_SOURCE_DIR}/framework/utils/helpers/camera.cpp
+        ${CMAKE_SOURCE_DIR}/framework/utils/helpers/camera.hpp)
 
 find_package(Vulkan REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${Vulkan_LIBRARIES})
@@ -194,9 +232,21 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
 target_link_libraries(${PROJECT_NAME} PUBLIC -rdynamic)
 
 #add_dependencies(${PROJECT_NAME} LearningVulkan)
-
+#
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE)
+set(CPACK_PROJECT_NAME "Epsilon Engine")
+
+if(DGENERATE_RPM_PACKAGE)
+        set(CPACK_GENERATOR RPM)
+        set(CPACK_RPM_COMPONENT_INSTALL ON)
+        set(CPACK_RPM_PACKAGE_GROUP "Epsilon")
+        set(CPACK_RPM_PACKAGE_LICENSE "MIT")
+        set(CPACK_RPM_MAIN_COMPONENT major)
+endif()
+
+install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib)
 include(CPack)
 
 execute_process(
@@ -205,13 +255,25 @@ execute_process(
         OUTPUT_VARIABLE outVar
 )
 
+
+#FILE(GLOB shaders "${CMAKE_SOURCE_DIR}/assets/shaders/chess/" )
+#install(DIRECTORY ${shaders} DESTINATION "${CMAKE_INSTALL_BINDIR}/bin/assets/shaders/chess" FILES_MATCHING PATTERN "*.spv")
+
+
+FILE(GLOB shaders "${CMAKE_SOURCE_DIR}/assets/shaders/chess/*.spv" )
+install(FILES ${shaders} DESTINATION "bin/assets/shaders/chess/")
+
+
+FILE(GLOB images "${CMAKE_SOURCE_DIR}/assets/images" )
+install(DIRECTORY ${images} DESTINATION "bin/assets/images")
+
 #execute_process(
 #    COMMAND mkdir -p ${PROJECT_BINARY_DIR}/examples/assets/shaders/
 #)
 
-install(DIRECTORY "./assets/shaders/"
-        DESTINATION ${PROJECT_BINARY_DIR}/examples/assets/shaders/
-        FILES_MATCHING PATTERN "*.spv")
+#install(DIRECTORY "./assets/shaders/"
+#        DESTINATION ${PROJECT_BINARY_DIR}/examples/assets/shaders/
+#        FILES_MATCHING PATTERN "*.spv")
 
 
 #add_subdirectory(examples/basic)

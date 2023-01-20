@@ -61,6 +61,18 @@ namespace framework
             glfwPollEvents();
         }
 
+        void ShowCursor()
+        {
+            glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
+        void HideCursor()
+        {
+            glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+        void setCursorPosition(int x, int y) {
+            glfwSetCursorPos(mWindow, x, y);
+        }
+
         void cleanup()
         {
             glfwDestroyWindow(mWindow);

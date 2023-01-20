@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-#include "SourceBSP.hpp"
+#include "BSP.hpp"
 
 
 #ifdef _WIN32
@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
 
     framework::env::setArgs(argc, argv);
 
-    SourceBSP::SourceBSP app("SourceBSP");
+    BSP::BSP app("SourceBSP");
 
     try
     {

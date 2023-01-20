@@ -32,26 +32,11 @@ void main() {
 
     ivec2 tiles = ivec2(texCoords.xy * 8);
     outColor.a = 1.0;
+    
     bool x = (tiles.x % 8) % 2 == 0;
     bool y = (tiles.y % 8) % 2 == 0;
 
-    if(x == false) {
-        outColor.rgb = dark_color;
-    } else {
-        outColor.rgb = light_color;
-    }
-
-    if(y == true) {
-        if(x == false)
-            outColor.rgb = light_color;
-        else
-            outColor.rgb = dark_color;
-
-        if(x == true)
-            outColor.rgb = dark_color;
-        else
-            outColor.rgb = light_color;
-    }
+    outColor.rgb = (x ^^ y) ? dark_color : light_color;
     
     outColor.a = 1.0;
     outColor.rgb = outColor.rgb;

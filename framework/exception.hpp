@@ -3,21 +3,21 @@
 #include <stdexcept>
 #include "stacktrace.hpp"
 
-namespace framework
-{
-    class NotImplemented : public std::logic_error
-    {
+namespace framework {
+    class NotImplemented : public std::logic_error {
     public:
-        NotImplemented(const std::string& file, const std::string& funcName)
-        : std::logic_error("On file: " + file + "\nFunction not yet implemented: " + funcName + "\n")
-        {
+        NotImplemented(const std::string &file, const std::string &funcName)
+                : std::logic_error("On file: " + file + "\nFunction not yet implemented: " + funcName + "\n") {
 
             int depth = 0;
             std::cout << "\033[1;31m------------begin stacktrace------------\033[0m\n";
             int i = 0;
             auto stacktrace = stacktrace::current();
-            for (auto &entry : stacktrace)
-            {
+            for (auto &entry: stacktrace) {
+                if (depth < 2) {
+                    depth++;
+                    continue;
+                }
                 std::string dashes = std::string(depth, '-');
 
                 std::cout << "\t"

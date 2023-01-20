@@ -19,6 +19,8 @@ namespace ExampleApp {
             MeshPushConstant pushConstant;
         };
 
+        engine::Ref<engine::RenderPass> m_pRenderPass;
+
     public:
         explicit ExampleApp(const std::string &appName) : Epsilon::Epsilon(appName) {}
 
@@ -31,22 +33,12 @@ namespace ExampleApp {
             auto fragmentCode = utils::readFile("../assets/shaders/fragment.spv");
 
 
-
-            auto boardVertexCode = utils::readFile("../assets/shaders/board-vertex.spv");
-            auto boardFragmentCode = utils::readFile("../assets/shaders/board-fragment.spv");
-
             ShaderInfo shaderInfo = {
-                    .stages = {
-                            {.entryPoint = "main", .shaderCode = boardVertexCode, .stage = VERTEX},
-                            {.entryPoint = "main", .shaderCode = boardFragmentCode, .stage = FRAGMENT}},
-                    .usedStages = ShaderModuleStage(VERTEX | FRAGMENT)};
-
-
-            ShaderInfo boardShaderInfo = {
                     .stages = {
                             {.entryPoint = "main", .shaderCode = vertexCode, .stage = VERTEX},
                             {.entryPoint = "main", .shaderCode = fragmentCode, .stage = FRAGMENT}},
                     .usedStages = ShaderModuleStage(VERTEX | FRAGMENT)};
+
 
             RenderPassInfo renderPassInfo =
                     RenderPassFactory()
@@ -73,11 +65,12 @@ namespace ExampleApp {
                                             }
                                     })
                             .pipelineLayout( {.shaderInfo = shaderInfo})
-                            .pipelineLayout( {.shaderInfo = boardShaderInfo})
                             .pushConstant(sizeof(MeshPushConstant))
                             .bufferInfo({.size = sizeof(ShaderData), .offset = 0});
 
-            renderPassRef = m_pContext.ResourceManager()->createDefaultRenderPass(renderPassInfo);
+                            
+
+            m_pRenderPass = m_pContext.ResourceManager()->createDefaultRenderPass(renderPassInfo);
 
             try {
 
@@ -126,7 +119,7 @@ namespace ExampleApp {
 
                     //uniformBuffer0 =
 
-                    SphereId.material = m_pContext.ResourceManager()->createMaterial(material, renderPassRef);
+                    SphereId.material = m_pContext.ResourceManager()->createMaterial(material, m_pRenderPass);
 
                     framework::free_image_data(pixels);
 
@@ -153,7 +146,7 @@ namespace ExampleApp {
 
                     //uniformBuffer0 =
 
-                    CubeId.material = m_pContext.ResourceManager()->createMaterial(material, renderPassRef);
+                    CubeId.material = m_pContext.ResourceManager()->createMaterial(material, m_pRenderPass);
 
                     framework::free_image_data(pixels);
 
@@ -181,7 +174,7 @@ namespace ExampleApp {
 
                     //uniformBuffer0 =
 
-                    myObjectId.material = m_pContext.ResourceManager()->createMaterial(material, renderPassRef);
+                    myObjectId.material = m_pContext.ResourceManager()->createMaterial(material, m_pRenderPass);
                     // auto texture = m_pRenderer->RegisterTexture(pixels, texInfo);
 
                     framework::free_image_data(pixels);
@@ -253,7 +246,7 @@ namespace ExampleApp {
             SphereId.pushConstant.model = glm::scale(SphereId.pushConstant.model, glm::vec3(100));
 
             objectData;
-            objectData.layout_index = 1;
+            objectData.layout_index = 0;
             objectData.mesh = SphereId.mesh;
             objectData.material = SphereId.material;
             objectData.modelMatrix = SphereId.pushConstant.model;
@@ -282,8 +275,10 @@ namespace ExampleApp {
             objectData.rotation = glm::rotate(CubeId.pushConstant.model, (float) glfwGetTime(),
                                               glm::vec3(0.2f, -1.0f, 0.5f));
             objectData.pushConstant = CubeId.pushConstantRef;
-            objectData.layout_index = 1;
+            objectData.layout_index = 0;
             m_pContext.Renderer()->Push(objectData);
+
+            drawFrame(m_pRenderPass);
         }
 
         void onExit() override {

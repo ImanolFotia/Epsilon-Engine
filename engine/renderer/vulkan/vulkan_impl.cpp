@@ -22,7 +22,7 @@ namespace engine
     {
         vk::VulkanBuffer buffer;
         pCreateBuffer(buffer, sizeof(Vertex) * MAX_VERTICES_PER_BUFFER, VERTEX_BUFFER_USAGE, VERTEX_BUFFER_PROP, VERTEX_BUFFER_MEM_USAGE);
-        IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", sizeof(Vertex) * MAX_VERTICES_PER_BUFFER, " bytes in local vertex buffer");
+        if(0) IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", sizeof(Vertex) * MAX_VERTICES_PER_BUFFER, " bytes in local vertex buffer");
         return buffer;
     }
 
@@ -30,7 +30,7 @@ namespace engine
     {
         vk::VulkanBuffer buffer;
         pCreateBuffer(buffer, sizeof(IndexType) * MAX_INDICES_PER_BUFFER, INDEX_BUFFER_USAGE, INDEX_BUFFER_PROP, INDEX_BUFFER_MEM_USAGE);
-        IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", sizeof(IndexType) * MAX_INDICES_PER_BUFFER, " bytes in local index buffer");
+        if(0) IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", sizeof(IndexType) * MAX_INDICES_PER_BUFFER, " bytes in local index buffer");
         return buffer;
     }
 
@@ -133,33 +133,35 @@ namespace engine
     Ref<Buffer> VulkanResourceManager::pFetchVertexBuffer(uint32_t numVertices) {
         for(auto& bufferRef: vertexBufferReferences) {
             auto buffer = vertexBufferPool.get(bufferRef);
-            if(MAX_VERTICES_PER_BUFFER - buffer->allocatedVertices <= numVertices) {
+            if(MAX_VERTICES_PER_BUFFER * sizeof(Vertex) >= buffer->allocatedVertices * sizeof(Vertex) + numVertices * sizeof(Vertex)) {
                 return bufferRef;
             }
         }
 
         auto vertexBuffer = pCreateVertexBuffer();
         vertexBuffer.id = vertexBufferCount;
+        vertexBuffer.allocatedVertices = 0;
         vertexBufferCount++;
-        vertexBuffer.allocatedVertices += numVertices;
         auto ref = vertexBufferPool.insert(vertexBuffer);
         vertexBufferReferences.push_back(ref);
 
         return ref;
     }
 
-    Ref<Buffer> VulkanResourceManager::pFetchIndexBuffer(uint32_t numIndices) {
+    Ref<Buffer> VulkanResourceManager::pFetchIndexBuffer(uint32_t numIndices, uint32_t maxOffset) {
         for(auto& bufferRef: indexBufferReferences) {
             auto buffer = indexBufferPool.get(bufferRef);
-            if(MAX_INDICES_PER_BUFFER - buffer->allocatedVertices <= numIndices) {
+
+            int maxAllocatingSize = sizeof(IndexType) * ( buffer->allocatedVertices + numIndices);
+            if(MAX_INDICES_PER_BUFFER * sizeof(IndexType) >= maxAllocatingSize) {
                 return bufferRef;
             }
         }
 
         auto indexBuffer = pCreateIndexBuffer();
         indexBuffer.id = indexBufferCount;
+        indexBuffer.allocatedVertices = 0;
         indexBufferCount++;
-        indexBuffer.allocatedVertices += numIndices;
         auto ref = indexBufferPool.insert(indexBuffer);
         indexBufferReferences.push_back(ref);
         
@@ -219,7 +221,7 @@ namespace engine
         vmaMapMemory(m_pAllocator, stagingBuffer.allocation, &data);
         memcpy(data, vertices.data(), vertices.size() * sizeof(Vertex));
         vmaUnmapMemory(m_pAllocator, stagingBuffer.allocation);
-
+        if(0)
         IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", vertices.size() * sizeof(Vertex), " bytes in hosted staging buffer");
         return stagingBuffer;
     }
@@ -234,6 +236,7 @@ namespace engine
         vmaMapMemory(m_pAllocator, stagingBuffer.allocation, &data);
         memcpy(data, indices.data(), indices.size() * sizeof(IndexType));
         vmaUnmapMemory(m_pAllocator, stagingBuffer.allocation);
+        if(0)
         IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", indices.size() * sizeof(IndexType), " bytes in hosted staging buffer");
         return stagingBuffer;
     }

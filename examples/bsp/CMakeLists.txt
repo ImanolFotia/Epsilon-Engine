@@ -4,9 +4,9 @@ set(CMAKE_CXX_STANDARD 20)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR} ../../)
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main.cpp bsp_definitions.hpp SourceBSP.hpp)
 
-target_sources(${PROJECT_NAME} PRIVATE main.cpp SourceBSP.hpp)
+target_sources(${PROJECT_NAME} PRIVATE main.cpp BSP.hpp)
 
 message(STATUS "location of epsilon build: " ${EPSILON_BUILD_LOCATION})
 message(STATUS "location of vulkan libs: " ${Vulkan_LIBRARIES})

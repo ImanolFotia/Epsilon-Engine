@@ -12,7 +12,7 @@ layout(location = 5) in vec3 inBitangent;
 layout (location = 0) out vec3 position;
 layout (location = 1) out vec2 texCoords;
 layout (location = 2) out vec3 normal;
-layout (location = 3) out vec4 color;
+layout (location = 3) out flat vec4 color;
 
 layout(binding = 0) uniform UniformBufferObject {
     float iTime;
@@ -26,8 +26,42 @@ layout( push_constant ) uniform constants
 	mat4 model;
 } PushConstants;
 
+vec3 colors[27] = {
+	vec3(1.0, 0.0, 0.0),
+	vec3(1.0, 0.0, 0.0),
+	vec3(1.0, 0.0, 0.0),
+	vec3(0.0, 1.0, 0.0),
+	vec3(0.0, 1.0, 0.0),
+	vec3(0.0, 1.0, 0.0),
+	vec3(0.0, 0.0, 1.0),
+	vec3(0.0, 0.0, 1.0),
+	vec3(0.0, 0.0, 1.0),
+	vec3(1.0, 1.0, 0.0),
+	vec3(1.0, 1.0, 0.0),
+	vec3(1.0, 1.0, 0.0),
+	vec3(0.0, 1.0, 1.0),
+	vec3(0.0, 1.0, 1.0),
+	vec3(0.0, 1.0, 1.0),
+	vec3(1.0, 0.0, 1.0),
+	vec3(1.0, 0.0, 1.0),
+	vec3(1.0, 0.0, 1.0),
+	vec3(1.0, 1.0, 1.0),
+	vec3(1.0, 1.0, 1.0),
+	vec3(1.0, 1.0, 1.0),
+	vec3(0.6, 0.4, 0.2),
+	vec3(0.6, 0.4, 0.2),
+	vec3(0.6, 0.4, 0.2),
+	vec3(0.2, 0.4, 0.5),
+	vec3(0.2, 0.4, 0.5),
+	vec3(0.2, 0.4, 0.5)
+};
+
 void main() {
-    color = inColor;
+	if(inColor.a > 0.9)
+    		color = vec4(colors[gl_VertexIndex % 27], inColor.a);
+    	else
+    		color = inColor;
+    		
     position = inPosition;
     texCoords = inTexCoord;
     normal = inNormal; //normalize(mat3(transpose(inverse(PushConstants.model))) * inNormal);

@@ -40,7 +40,6 @@ namespace Epsilon {
 
         uint32_t nbFrames = 0;
         uint32_t lastTime = 0;
-        engine::Ref<engine::RenderPass> renderPassRef;
 
         struct MeshPushConstant {
             alignas(16) glm::mat4 model;
@@ -83,6 +82,12 @@ namespace Epsilon {
 
         void ShouldClose() {
             mShouldClose = true;
+        }
+
+        void drawFrame(engine::Ref<engine::RenderPass> renderPassRef) {
+            m_pContext.Renderer()->Begin(renderPassRef);
+            m_pContext.Renderer()->Flush();
+            m_pContext.Renderer()->End();
         }
 
     private:
@@ -155,16 +160,10 @@ namespace Epsilon {
                 if (mShouldClose)
                     break;
                 onRender();
-                drawFrame();
                 m_pContext.Window().PollEvents();
             }
         }
 
-        void drawFrame() {
-            m_pContext.Renderer()->Begin(renderPassRef);
-            m_pContext.Renderer()->Flush();
-            m_pContext.Renderer()->End();
-        }
 
         void showFPS() {
             // Measure speed

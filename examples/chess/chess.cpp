@@ -48,23 +48,23 @@ namespace ChessApp {
                 std::string pos = printCharacter(position.first, position.second);
 
                 if (files[pos].piece == FREE) {
-                    move.selected = false;
+                    m_pMove.selected = false;
                     return;
                 }
 
-                move.selected = true;
-                move.first[0] = pos.at(0);
-                move.first[1] = pos.at(1);
-                move.row_from = position.first;
-                move.column_from = (COLUMN) position.second;
+                m_pMove.selected = true;
+                m_pMove.first[0] = pos.at(0);
+                m_pMove.first[1] = pos.at(1);
+                m_pMove.row_from = position.first;
+                m_pMove.column_from = (COLUMN) position.second;
 
-                if (files[pos].column == move.column_from && files[pos].row == move.row_from) {
+                if (files[pos].column == m_pMove.column_from && files[pos].row == m_pMove.row_from) {
                     if (m_pBoard.Turn() == WHITE && files[pos].piece > 5 ||
                         m_pBoard.Turn() == BLACK && files[pos].piece < 6) {
-                        move.selected = false;
+                        m_pMove.selected = false;
                         return;
                     }
-                    if (files[pos].index >= 0)
+                    if (files[pos].index >= 0 && files.contains(pos))
                         m_pSelectedModel = &m_pPieces[files[pos].index];
                 }
             }
@@ -87,33 +87,33 @@ namespace ChessApp {
             }
 
             if (obj.Left().State == Input::RELEASED) {
-                if (!move.selected) return;
+                if (!m_pMove.selected) return;
 
-                move.selected = false;
+                m_pMove.selected = false;
 
                 std::pair<int, int> position = calcRowCol(obj.X(), obj.Y());
                 std::string second = printCharacter(position.first, position.second);
 
-                if (move.first[0] == second[0] && move.first[1] == second[1]) {
+                if (m_pMove.first[0] == second[0] && m_pMove.first[1] == second[1]) {
                     if (m_pSelectedModel != nullptr) {
-                        m_pSelectedModel->pushConstant.model = transformPiece({move.column_from, move.row_from});
+                        m_pSelectedModel->pushConstant.model = transformPiece({m_pMove.column_from, m_pMove.row_from});
                         m_pSelectedModel = nullptr;
-                        move.selected = false;
+                        m_pMove.selected = false;
                         return;
                     }
                 }
 
-                move.second[0] = second.at(0);
-                move.second[1] = second.at(1);
-                move.row_to = position.first;
-                move.column_to = (COLUMN) position.second;
+                m_pMove.second[0] = second.at(0);
+                m_pMove.second[1] = second.at(1);
+                m_pMove.row_to = position.first;
+                m_pMove.column_to = (COLUMN) position.second;
 
-                std::string strFirst = std::string(move.first, 2);
-                std::string strSecond = std::string(move.second, 2);
+                std::string strFirst = std::string(m_pMove.first, 2);
+                std::string strSecond = std::string(m_pMove.second, 2);
 
-                if (move.column_to > H || move.row_to > 8 || move.column_to < 0 || move.row_to < 0) {
+                if (m_pMove.column_to > H || m_pMove.row_to > 8 || m_pMove.column_to < 0 || m_pMove.row_to < 0) {
                     if (m_pSelectedModel != nullptr) {
-                        m_pSelectedModel->pushConstant.model = transformPiece({move.column_from, move.row_from});
+                        m_pSelectedModel->pushConstant.model = transformPiece({m_pMove.column_from, m_pMove.row_from});
                         return;
                     }
                 }
@@ -123,37 +123,39 @@ namespace ChessApp {
                     PIECE this_piece = files[strFirst].piece;
                     PIECE taken_piece = files[strSecond].piece;
 
-                        if (taken_piece < 6 && this_piece < 6 || taken_piece > 5 && this_piece > 5) {
+                    if (taken_piece < 6 && this_piece < 6 || taken_piece > 5 && this_piece > 5) {
 
-                            m_pSelectedModel->pushConstant.model = transformPiece(
-                                    {move.column_from, move.row_from});
-                            return;
-                        }
+                        m_pSelectedModel->pushConstant.model = transformPiece(
+                                {m_pMove.column_from, m_pMove.row_from});
+                        return;
+                    }
 
                     std::cout << "piece taken\n";
                 }
 
-                files[strSecond].column = move.column_to;
-                files[strSecond].row = move.row_to;
+                files[strSecond].column = m_pMove.column_to;
+                files[strSecond].row = m_pMove.row_to;
                 files[strSecond].piece = files[strFirst].piece;
                 files[strSecond].index = files[strFirst].index;
                 files[strSecond].show = true;
 
-                files[strFirst].column = move.column_from;
-                files[strFirst].row = move.row_from;
+                files[strFirst].column = m_pMove.column_from;
+                files[strFirst].row = m_pMove.row_from;
                 files[strFirst].index = -1;
                 files[strFirst].show = false;
                 files[strFirst].piece = FREE;
 
-                m_pPieces.at(files[strSecond].index).pushConstant.model = transformPiece({files[strSecond].column, files[strSecond].row});
+                m_pPieces.at(files[strSecond].index).pushConstant.model = transformPiece(
+                        {files[strSecond].column, files[strSecond].row});
                 m_pSelectedModel = nullptr;
 
                 m_pBoard.Turn(m_pBoard.Turn() == WHITE ? BLACK : WHITE);
-                m_pBoard.addMove(std::string(move.first, 2) + std::string(move.second, 2));
-                std::cout << "from: " << move.first[0] << move.first[1] << " to: " << move.second[0] << move.second[1]
+                m_pBoard.addMove(std::string(m_pMove.first, 2) + std::string(m_pMove.second, 2));
+                std::cout << "from: " << m_pMove.first[0] << m_pMove.first[1] << " to: " << m_pMove.second[0]
+                          << m_pMove.second[1]
                           << std::endl;
                 std::string move_str = "position startpos moves ";
-                for(const auto& move: m_pBoard.getPlayedMoves())
+                for (const auto &move: m_pBoard.getPlayedMoves())
                     move_str += move + " ";
 
                 m_pUCI.Move(move_str);
@@ -198,29 +200,29 @@ namespace ChessApp {
         }
 
 
-        if(m_pUCI.last_move != "" && m_pBoard.Turn() == BLACK) {
+        if (m_pUCI.last_move != "" && m_pBoard.Turn() == BLACK) {
             auto getColumn = [](char col) -> COLUMN {
-                if(col == 'a') return A;
-                if(col == 'b') return B;
-                if(col == 'c') return C;
-                if(col == 'd') return D;
-                if(col == 'e') return E;
-                if(col == 'f') return F;
-                if(col == 'g') return G;
-                if(col == 'h') return H;
+                if (col == 'a') return A;
+                if (col == 'b') return B;
+                if (col == 'c') return C;
+                if (col == 'd') return D;
+                if (col == 'e') return E;
+                if (col == 'f') return F;
+                if (col == 'g') return G;
+                if (col == 'h') return H;
             };
 
             auto getRow = [](char row) -> char {
-                if(row == '1') return 1;
-                if(row == '2') return 2;
-                if(row == '3') return 3;
-                if(row == '4') return 4;
-                if(row == '5') return 5;
-                if(row == '6') return 6;
-                if(row == '7') return 7;
-                if(row == '8') return 8;
+                if (row == '1') return 1;
+                if (row == '2') return 2;
+                if (row == '3') return 3;
+                if (row == '4') return 4;
+                if (row == '5') return 5;
+                if (row == '6') return 6;
+                if (row == '7') return 7;
+                if (row == '8') return 8;
             };
-            auto& files = m_pBoard.getFiles();
+            auto &files = m_pBoard.getFiles();
             std::string strFirst = m_pUCI.last_move.substr(0, 2);
             std::string strSecond = m_pUCI.last_move.substr(2, 2);
 
@@ -232,43 +234,45 @@ namespace ChessApp {
                 if (taken_piece < 6 && this_piece < 6 || taken_piece > 5 && this_piece > 5) {
 
                     m_pSelectedModel->pushConstant.model = transformPiece(
-                            {move.column_from, move.row_from});
+                            {m_pMove.column_from, m_pMove.row_from});
                     return;
                 }
             }
 
-            move.selected = false;
-            move.first[0] = strFirst.at(0);
-            move.first[1] = strFirst.at(1);
-            move.row_from = getRow(strFirst.at(1));
-            move.column_from = (COLUMN) getColumn(strFirst.at(0));
+            m_pMove.selected = false;
+            m_pMove.first[0] = strFirst.at(0);
+            m_pMove.first[1] = strFirst.at(1);
+            m_pMove.row_from = getRow(strFirst.at(1));
+            m_pMove.column_from = (COLUMN) getColumn(strFirst.at(0));
 
-            move.selected = false;
-            move.second[0] = strSecond.at(0);
-            move.second[1] = strSecond.at(1);
-            move.row_to = getRow(strSecond.at(1));
-            move.column_to = (COLUMN) getColumn(strSecond.at(0));
+            m_pMove.selected = false;
+            m_pMove.second[0] = strSecond.at(0);
+            m_pMove.second[1] = strSecond.at(1);
+            m_pMove.row_to = getRow(strSecond.at(1));
+            m_pMove.column_to = (COLUMN) getColumn(strSecond.at(0));
 
-            files[strSecond].column = move.column_to;
-            files[strSecond].row = move.row_to;
+            files[strSecond].column = m_pMove.column_to;
+            files[strSecond].row = m_pMove.row_to;
             files[strSecond].piece = files[strFirst].piece;
             files[strSecond].index = files[strFirst].index;
 
-            files[strFirst].column = move.column_from;
-            files[strFirst].row = move.row_from;
+            files[strFirst].column = m_pMove.column_from;
+            files[strFirst].row = m_pMove.row_from;
             files[strFirst].index = -1;
             //files[strFirst].show = false;
             files[strFirst].piece = FREE;
 
             //if (files[strSecond].index != -1)
-            m_pPieces.at(files[strSecond].index).pushConstant.model = transformPiece({files[strSecond].column, files[strSecond].row});
+            m_pPieces.at(files[strSecond].index).pushConstant.model = transformPiece(
+                    {files[strSecond].column, files[strSecond].row});
             m_pSelectedModel = nullptr;
 
             m_pBoard.Turn(m_pBoard.Turn() == WHITE ? BLACK : WHITE);
-            m_pBoard.addMove(std::string(move.first, 2) + std::string(move.second, 2));
+            m_pBoard.addMove(std::string(m_pMove.first, 2) + std::string(m_pMove.second, 2));
             m_pUCI.last_move = "";
         }
 
+        drawFrame(m_pRenderPass);
     }
 
 //Private functions
@@ -370,7 +374,7 @@ namespace ChessApp {
                     }
             };
 
-            m_pBoardModel.material = m_pContext.ResourceManager()->createMaterial(material, renderPassRef);
+            m_pBoardModel.material = m_pContext.ResourceManager()->createMaterial(material, m_pRenderPass);
         }
 //create the material for the pieces
         engine::Ref<engine::Material> pieceMaterial;
@@ -393,7 +397,7 @@ namespace ChessApp {
                     .pixels(pixels);
 
             material.textures.push_back(texInfo);
-            pieceMaterial = m_pContext.ResourceManager()->createMaterial(material, renderPassRef);
+            pieceMaterial = m_pContext.ResourceManager()->createMaterial(material, m_pRenderPass);
             framework::free_image_data(pixels);
         }
         for (auto &ref: m_pPieces) {
@@ -407,7 +411,6 @@ namespace ChessApp {
         //Load the shader that draws the board
         auto boardVertexCode = utils::readFile("../../../assets/shaders/chess/board-vertex.spv");
         auto boardFragmentCode = utils::readFile("../../../assets/shaders/chess/board-fragment.spv");
-
 
         ShaderInfo boardShaderInfo = {
                 .stages = {
@@ -424,6 +427,26 @@ namespace ChessApp {
                         {.entryPoint = "main", .shaderCode = pieceFragmentCode, .stage = FRAGMENT}},
                 .usedStages = ShaderModuleStage(VERTEX | FRAGMENT)};
 
+        std::vector<VertexDescriptorInfo> vertexInfo = {{XYZ_FLOAT,  offsetof(Vertex, position)},
+                                                        {XY_FLOAT,   offsetof(Vertex, texCoords)},
+                                                        {XYZ_FLOAT,  offsetof(Vertex, normal)},
+                                                        {XYZW_FLOAT, offsetof(Vertex, color)},
+                                                        {XYZ_FLOAT,  offsetof(Vertex, tangent)},
+                                                        {XYZ_FLOAT,  offsetof(Vertex, bitangent)}};
+        PipelineLayout boardLayout = {
+                .shaderInfo = boardShaderInfo,
+                .vertexLayout = vertexInfo,
+                .cullMode = CullMode::BACK,
+                .windingMode = WindingMode::COUNTER_CLOCK_WISE
+        };
+
+        PipelineLayout pieceLayout = {
+                .shaderInfo = pieceShaderInfo,
+                .vertexLayout = vertexInfo,
+                .cullMode = CullMode::BACK,
+                .windingMode = WindingMode::COUNTER_CLOCK_WISE
+        };
+
         //Configure the default render pass object
         RenderPassInfo renderPassInfo =
                 RenderPassFactory()
@@ -431,12 +454,6 @@ namespace ChessApp {
                         .size(sizeof(Vertex))
                         .depthAttachment(true)
                         .subpasses({})
-                        .vertexLayout({{XYZ_FLOAT,  offsetof(Vertex, position)},
-                                       {XY_FLOAT,   offsetof(Vertex, texCoords)},
-                                       {XYZ_FLOAT,  offsetof(Vertex, normal)},
-                                       {XYZW_FLOAT, offsetof(Vertex, color)},
-                                       {XYZ_FLOAT,  offsetof(Vertex, tangent)},
-                                       {XYZ_FLOAT,  offsetof(Vertex, bitangent)}})
                         .attachments(
                                 {
                                         {
@@ -449,12 +466,12 @@ namespace ChessApp {
                                                 .isDepthAttachment = true
                                         }
                                 })
-                        .pipelineLayout({.shaderInfo = boardShaderInfo})
-                        .pipelineLayout({.shaderInfo = pieceShaderInfo})
+                        .pipelineLayout(boardLayout)
+                        .pipelineLayout(pieceLayout)
                         .pushConstant(sizeof(PiecePushConstant))
                         .bufferInfo({.size = sizeof(ShaderData), .offset = 0});
 
-        renderPassRef = m_pContext.ResourceManager()->createDefaultRenderPass(renderPassInfo);
+        m_pRenderPass = m_pContext.ResourceManager()->createDefaultRenderPass(renderPassInfo);
 
     }
 }

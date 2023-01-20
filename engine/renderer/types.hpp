@@ -261,9 +261,22 @@ namespace engine
         UniformBindingInfo info;
     };
 
-    struct PipelineLayout {
+    enum WindingMode {
+        CLOCKWISE = 0,
+        COUNTER_CLOCK_WISE
+    };
 
+    enum CullMode {
+        BACK = 0,
+        FRONT,
+        NONE
+    };
+
+    struct PipelineLayout {
         ShaderInfo shaderInfo;
+        std::vector<VertexDescriptorInfo> vertexLayout;
+        CullMode cullMode;
+        WindingMode windingMode;
     };
 
 
@@ -275,7 +288,6 @@ namespace engine
         size_t size;
         bool depthAttachment;
         std::vector<SubPassInfo> subpasses;
-        std::vector<VertexDescriptorInfo> vertexLayout;
         std::vector<RenderPassAttachment> attachments;
         std::vector<PipelineLayout> pipelineLayout;
         PushConstantData pushConstant;
@@ -304,11 +316,12 @@ namespace engine
             info.subpasses = sp;
             return *this;
         }
+        /*
         RenderPassFactory vertexLayout(std::vector<VertexDescriptorInfo> vl)
         {
             info.vertexLayout = vl;
             return *this;
-        }
+        }*/
         
         RenderPassFactory attachments(std::vector<RenderPassAttachment> a)
         {

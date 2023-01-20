@@ -124,7 +124,7 @@ namespace engine
             vk::createGraphicsPipeline(*m_pVkDataPtr,
                                        m_pVkDataPtr->defaultRenderPass,
                                        m_pVkDataPtr->defaultRenderPass.renderPipelines[i],
-                                       m_pVkDataPtr->defaultRenderPass.vertexInfo,
+                                       //m_pVkDataPtr->defaultRenderPass.vertexInfo[i],
                                        m_pDefaultRenderPassInfo);
 
         vk::createFramebuffers(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, m_pVkDataPtr->defaultRenderPass.renderPassChain);
@@ -136,7 +136,7 @@ namespace engine
             vk::createRenderPass(*m_pVkDataPtr, pass, m_pRenderPassInfo[pass.id]);
 
             for (auto i = 0; i < pass.renderPipelines.size(); i++)
-                vk::createGraphicsPipeline(*m_pVkDataPtr, pass, pass.renderPipelines[i], pass.vertexInfo, m_pRenderPassInfo[pass.id]);
+                vk::createGraphicsPipeline(*m_pVkDataPtr, pass, pass.renderPipelines[i], m_pRenderPassInfo[pass.id]);
 
             vk::createFramebuffers(*m_pVkDataPtr, pass, pass.renderPassChain);
         }
@@ -150,28 +150,22 @@ namespace engine
 
         vk::createRenderPass(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, renderPassInfo);
 
-        vk::VulkanVertexInfo vertexInfo;
-
-        vertexInfo.attributeDescriptions =
-                vk::getAttributeDescriptions(0, renderPassInfo.vertexLayout);
-
-        vertexInfo.bindingDescription = vk::getBindingDescription(renderPassInfo.size);
 
 
         for(int i = 0; i < renderPassInfo.numLayouts; i++) {
+
+
             m_pVkDataPtr->defaultRenderPass.renderPipelines.emplace_back();
             vk::createDescriptorSetLayout(*m_pVkDataPtr,
                                           m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayout);
             vk::createGraphicsPipeline(*m_pVkDataPtr,
                                        m_pVkDataPtr->defaultRenderPass,
                                        m_pVkDataPtr->defaultRenderPass.renderPipelines.back(),
-                                       vertexInfo,
                                        renderPassInfo);
         }
 
         vk::createFramebuffers(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, m_pVkDataPtr->defaultRenderPass.renderPassChain);
 
-        m_pVkDataPtr->defaultRenderPass.vertexInfo = vertexInfo;
         auto uniformRef = createUniformData(renderPassInfo.bindingInfo);
         m_pVkDataPtr->defaultRenderPass.uniformBuffer = *uniformBufferPool.get(uniformRef);
         m_pDefaultRenderPassRef = renderPassPool.insert(m_pVkDataPtr->defaultRenderPass);
@@ -189,24 +183,15 @@ namespace engine
 
         vk::createRenderPass(*m_pVkDataPtr, renderPass, renderPassInfo);
 
-        vk::VulkanVertexInfo vertexInfo;
-
-        vertexInfo.attributeDescriptions =
-            vk::getAttributeDescriptions(0, renderPassInfo.vertexLayout);
-
-        vertexInfo.bindingDescription = vk::getBindingDescription(renderPassInfo.size);
-
         vk::createDescriptorSetLayout(*m_pVkDataPtr, renderPass.renderPipelines.back().descriptorSetLayout);
 
         vk::createGraphicsPipeline(*m_pVkDataPtr,
                                                      renderPass,
                                                      renderPass.renderPipelines.back(),
-                                                     vertexInfo,
                                                      renderPassInfo);
 
         vk::createFramebuffers(*m_pVkDataPtr, renderPass, renderPass.renderPassChain);
 
-        renderPass.vertexInfo = vertexInfo;
         auto uniformRef = createUniformData(renderPassInfo.bindingInfo);
         renderPass.uniformBuffer = *uniformBufferPool.get(uniformRef);
         auto ref = renderPassPool.insert(renderPass);
@@ -276,36 +261,60 @@ namespace engine
         std::vector<Vertex> *vertices = &meshInfo.vertices;
         std::vector<uint32_t> *indices = &meshInfo.indices;
 
-        Ref<Buffer> vertexBufferRef = pFetchVertexBuffer(vertices->size());
-        Ref<Buffer> indexBufferRef = pFetchIndexBuffer(indices->size());
+        auto maxOffset = [](auto& indices) -> uint32_t {
+            uint32_t out = 0;
+            for(auto& i: indices) out = i > out ? i : out;
+            return out;
+        };
 
+        //uint32_t iOffset = vertexBuffer->allocatedVertices;//maxOffset(meshInfo.indices);
+
+        Ref<Buffer> vertexBufferRef = pFetchVertexBuffer(vertices->size());
         vk::VulkanBuffer *vertexBuffer = vertexBufferPool.get(vertexBufferRef);
+
+        Ref<Buffer> indexBufferRef = pFetchIndexBuffer(indices->size(), vertexBuffer->allocatedVertices);
         vk::VulkanBuffer *indexBuffer = indexBufferPool.get(indexBufferRef);
 
         auto vertexStagingBuffer = pCreateStagingBuffer(*vertices);
         auto indexStagingBuffer = pCreateStagingIndexBuffer(*indices);
 
-        vk::copyBuffer(*m_pVkDataPtr, m_pCommandPools.back(), vertexStagingBuffer.buffer, vertexBuffer->buffer, vertices->size() * sizeof(Vertex), (vertexBuffer->allocatedVertices - vertices->size()) * sizeof(Vertex));
-
-        IO::Info("From function ", __PRETTY_FUNCTION__, "\n\tin (", __FILE__, ":", __LINE__, ") \n\t", "copied ", vertices->size(), " vertices, of size ", vertices->size() * sizeof(Vertex), " bytes, at offset ", (vertexBuffer->allocatedVertices - vertices->size()) * sizeof(Vertex), " to local buffer");
+        vk::copyBuffer(*m_pVkDataPtr, m_pCommandPools.back(), vertexStagingBuffer.buffer, vertexBuffer->buffer, vertices->size() * sizeof(Vertex), vertexBuffer->allocatedVertices * sizeof(Vertex));
 
         vmaDestroyBuffer(m_pAllocator, vertexStagingBuffer.buffer, vertexStagingBuffer.allocation);
 
-        vk::copyBuffer(*m_pVkDataPtr, m_pCommandPools.back(), indexStagingBuffer.buffer, indexBuffer->buffer, indices->size() * sizeof(IndexType), (indexBuffer->allocatedVertices - indices->size()) * sizeof(IndexType));
+        vk::copyBuffer(*m_pVkDataPtr, m_pCommandPools.back(), indexStagingBuffer.buffer, indexBuffer->buffer, indices->size() * sizeof(IndexType), indexBuffer->allocatedVertices * sizeof(IndexType));
 
         vmaDestroyBuffer(m_pAllocator, indexStagingBuffer.buffer, indexStagingBuffer.allocation);
 
-        IO::Info("From function ", __PRETTY_FUNCTION__, "\n\tin (", __FILE__, ":", __LINE__, ") \n\t", "copied ", indices->size(), " indices, of size ", indices->size() * sizeof(IndexType), " bytes, at offset ", (indexBuffer->allocatedVertices - indices->size()) * sizeof(IndexType), " to local buffer");
+        if(0) {
+            IO::Info("From function ", __PRETTY_FUNCTION__, "\n\tin (", __FILE__, ":", __LINE__, ") \n\t", "copied ",
+                     vertices->size(), " vertices, of size ", vertices->size() * sizeof(Vertex), " bytes, at offset ",
+                     vertexBuffer->allocatedVertices * sizeof(Vertex), " to local buffer");
+
+            IO::Info("From function ", __PRETTY_FUNCTION__, "\n\tin (", __FILE__, ":", __LINE__, ") \n\t", "copied ",
+                     indices->size(), " indices, of size ", indices->size() * sizeof(IndexType), " bytes, at offset ",
+                     indexBuffer->allocatedVertices * sizeof(IndexType), " to local buffer");
+        }
 
         MeshResource meshResource = {
             .vertexBuffer = vertexBufferRef,
             .indexBuffer = indexBufferRef,
-            .vertexOffset = static_cast<uint32_t>((vertexBuffer->allocatedVertices - (uint32_t)vertices->size()) * sizeof(Vertex)),
-            .indexOffset = static_cast<uint32_t>((indexBuffer->allocatedVertices - (uint32_t)indices->size()) * sizeof(IndexType)),
+            .vertexOffset = vertexBuffer->allocatedVertices,
+            .indexOffset = indexBuffer->allocatedVertices,
             .numVertices = (uint32_t)vertices->size(),
             .numIndices = (uint32_t)indices->size()};
         auto ref = meshPool.insert(meshResource);
 
+
+        int maxAllocatingSize = sizeof(IndexType) * ( indexBuffer->allocatedVertices + indices->size());
+
+        if(maxAllocatingSize > MAX_INDICES_PER_BUFFER * sizeof(IndexType)) {
+            std::cout << "sdf" << std::endl;
+        }
+        vertexBuffer->allocatedVertices += vertices->size();
+        indexBuffer->allocatedVertices += indices->size();
+
+        if(0)
         IO::Warning("Function ready, testing required\n\t", __PRETTY_FUNCTION__,
                     "\n\tin ", __FILE__, ":", __LINE__);
 

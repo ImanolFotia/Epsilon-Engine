@@ -184,6 +184,7 @@ namespace engine {
                 vkCmdBindIndexBuffer(m_pFrame.CommandBuffer(), indexBuffer->buffer, 0, VK_INDEX_TYPE_UINT32);
                 prev_index_buffer = indexBuffer->id;
             }
+
             vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
                                     renderPass->renderPipelines.back().pipelineLayout.back(), 0, 1,
                                     &material->descriptorSets[m_pCurrentFrame], 0, nullptr);
@@ -193,7 +194,7 @@ namespace engine {
             vkCmdPushConstants(m_pFrame.CommandBuffer(), renderPass->renderPipelines.back().pipelineLayout.back(),
                                VK_SHADER_STAGE_VERTEX_BIT, 0, command.object_data_size, command.objectData);
 
-            vk::drawIndexed(m_pFrame.CommandBuffer(), command.numIndices, 1, command.indexOffset, 0, 0);
+            vk::drawIndexed(m_pFrame.CommandBuffer(), command.numIndices, 1, command.indexOffset, command.vertexOffset, 0);
         }
 
         m_pCurrentCommandQueue.clear();
@@ -253,7 +254,7 @@ namespace engine {
 
         for (auto i = 0; i < m_pVkData.defaultRenderPass.renderPipelines.size(); i++)
             vk::createGraphicsPipeline(m_pVkData, m_pVkData.defaultRenderPass,
-                                       m_pVkData.defaultRenderPass.renderPipelines[i], m_pVertexInfo,
+                                       m_pVkData.defaultRenderPass.renderPipelines[i],
                                        m_pResourceManagerRef->m_pDefaultRenderPassInfo);
 
         vk::createFramebuffers(m_pVkData, m_pVkData.defaultRenderPass, m_pVkData.defaultRenderPass.renderPassChain);
@@ -265,7 +266,7 @@ namespace engine {
             vk::createRenderPass(m_pVkData, pass, m_pResourceManagerRef->m_pRenderPassInfo[pass.id]);
 
             for (auto i = 0; i < pass.renderPipelines.size(); i++)
-                vk::createGraphicsPipeline(m_pVkData, pass, pass.renderPipelines[i], m_pVertexInfo,
+                vk::createGraphicsPipeline(m_pVkData, pass, pass.renderPipelines[i],
                                            m_pResourceManagerRef->m_pRenderPassInfo[pass.id]);
 
             vk::createFramebuffers(m_pVkData, pass, pass.renderPassChain);

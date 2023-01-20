@@ -35,6 +35,7 @@ namespace ChessApp {
         engine::Quad m_pQuad = {};
 
         std::array<Model, 32> m_pPieces;
+        engine::Ref<engine::RenderPass> m_pRenderPass;
 
         Model m_pBoardModel;
         Model* m_pSelectedModel = nullptr;
@@ -43,7 +44,7 @@ namespace ChessApp {
 
         UCI m_pUCI;
 
-        Move move;
+        Move m_pMove;
 
         Board m_pBoard;
 

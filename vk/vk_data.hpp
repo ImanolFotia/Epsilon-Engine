@@ -99,6 +99,8 @@ namespace vk
         VkPipelineMultisampleStateCreateInfo multisampling{};
         VkPipelineColorBlendAttachmentState colorBlendAttachment{};
         VkPipelineColorBlendStateCreateInfo colorBlending{};
+        VkFrontFace winding;
+        VkCullModeFlags cullMode;
 
         VkClearColorValue clearColor = {0.1f, 0.1f, 0.1f, 1.0f};
         VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
@@ -158,7 +160,7 @@ namespace vk
         VkRenderPassBeginInfo renderPassInfo{};
         std::vector<VulkanRenderPipeline> renderPipelines;
         VulkanRenderPassData renderPassData;
-        VulkanVertexInfo vertexInfo;
+        std::vector<VulkanVertexInfo> vertexInfo;
         RenderPassChain renderPassChain;
         VkClearColorValue clearColor = {0.1f, 0.1f, 0.1f, 1.0f};
         VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
