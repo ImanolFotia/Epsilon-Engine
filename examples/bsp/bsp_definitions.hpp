@@ -97,6 +97,10 @@ struct dnode_t
 	                                // this is the area index. If not, this is -1.
 	short           paddding;       // pad to 32 bytes length
 };
+
+struct CompressedLightCube{
+    char padding[24];
+};
 struct dleaf_t
 {
 	int             contents;             // OR of all brushes (not needed?)
@@ -112,10 +116,10 @@ struct dleaf_t
 	short           leafWaterDataID;      // -1 for not in water
 
 	//!!! NOTE: for maps of version 19 or lower uncomment this block
-	/*
+
 	CompressedLightCube   ambientLighting;      // Precaculated light info for entities.
 	short                 padding;              // padding to 4-byte boundary
-	*/
+
 };
 
 struct texinfo_t
