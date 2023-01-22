@@ -13,19 +13,19 @@
 
 #include <glm/glm.hpp>
 
-#include "framework/common.hpp"
-#include "framework/def.hpp"
-#include "framework/window.hpp"
-#include "framework/env.hpp"
-#include "framework/utils/image.hpp"
-#include "framework/utils/file.hpp"
+#include "core/framework/common.hpp"
+#include "core/framework/def.hpp"
+#include "core/framework/window.hpp"
+#include "core/framework/env.hpp"
+#include "core/framework/utils/image.hpp"
+#include "core/framework/utils/file.hpp"
 
-#include "engine/context.hpp"
+#include "core/engine/context.hpp"
 
-#include "engine/renderer/vulkan/vulkan.hpp"
+#include "core/engine/renderer/vulkan/vulkan.hpp"
 
-#include "engine/renderer/resource_manager.hpp"
-#include "engine/renderer/vulkan/resource_manager.hpp"
+#include "core/engine/renderer/resource_manager.hpp"
+#include "core/engine/renderer/vulkan/resource_manager.hpp"
 
 namespace Epsilon {
     class Epsilon {
@@ -57,7 +57,12 @@ namespace Epsilon {
         Epsilon() = default;
 
         explicit Epsilon(const std::string &appName) : m_ApplicationName(appName) {
-            m_pContext.Init(appName, engine::renderer_type::vulkan);
+            //try {
+                m_pContext.Init(appName, engine::renderer_type::vulkan);
+          /*  } catch(std::exception& e) {
+                std::cout << e.what() << std::endl;
+                std::exit(255);
+            }*/
         }
 
         void run() {

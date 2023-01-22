@@ -4,7 +4,7 @@
 
 #include "chess.hpp"
 #include "game/common.hpp"
-#include <framework/IO/IO.hpp>
+#include <core/framework/IO/IO.hpp>
 
 namespace ChessApp {
 
@@ -12,6 +12,27 @@ namespace ChessApp {
 
         using namespace engine;
         using namespace framework;
+
+        m_pMoveAudioObject.audioFile.Load("../../../assets/audio/move.wav");
+
+        m_pMoveAudioObject.buffer = al::createBuffer(m_pMoveAudioObject.audioFile.getNumberOfChannels(),
+                                                     m_pMoveAudioObject.audioFile.getFileSize(),
+                                                     m_pMoveAudioObject.audioFile.getBPS(),
+                                                     m_pMoveAudioObject.audioFile.getSampleRate(),
+                                                     m_pMoveAudioObject.audioFile.data().get());
+
+        m_pMoveAudioObject.source = al::createSource(m_pMoveAudioObject.buffer);
+
+
+        m_pTakeAudioObject.audioFile.Load("../../../assets/audio/take.wav");
+
+        m_pTakeAudioObject.buffer = al::createBuffer(m_pTakeAudioObject.audioFile.getNumberOfChannels(),
+                                                     m_pTakeAudioObject.audioFile.getFileSize(),
+                                                     m_pTakeAudioObject.audioFile.getBPS(),
+                                                     m_pTakeAudioObject.audioFile.getSampleRate(),
+                                                     m_pTakeAudioObject.audioFile.data().get());
+
+        m_pTakeAudioObject.source = al::createSource(m_pTakeAudioObject.buffer);
 
         auto files = m_pBoard.getFiles();
 
@@ -130,6 +151,7 @@ namespace ChessApp {
                         return;
                     }
 
+                    m_pTakeAudioObject.should_play = true;
                     std::cout << "piece taken\n";
                 }
 
@@ -159,6 +181,7 @@ namespace ChessApp {
                     move_str += move + " ";
 
                 m_pUCI.Move(move_str);
+                m_pMoveAudioObject.should_play = true;
 
             }
         });
@@ -167,10 +190,19 @@ namespace ChessApp {
 
     void ChessApp::onReady() {
         m_pEngineThread = std::thread([this]() { m_pUCI.init(); });
-        m_pEngineThread.detach();
+        //m_pEngineThread.detach();
     }
 
     void ChessApp::onRender() {
+
+        if(m_pTakeAudioObject.should_play) {
+            al::playSource(m_pTakeAudioObject.source);
+            m_pTakeAudioObject.should_play = false;
+            m_pMoveAudioObject.should_play = false;
+        } else if(m_pMoveAudioObject.should_play) {
+            al::playSource(m_pMoveAudioObject.source);
+            m_pMoveAudioObject.should_play = false;
+        }
         //Set up the camera data
         setupCamera();
         engine::ObjectData objectData;
@@ -199,8 +231,10 @@ namespace ChessApp {
             m_pContext.Renderer()->Push(objectData);
         }
 
+        if (!m_pUCI.last_move.empty() && m_pBoard.Turn() == BLACK) {
 
-        if (m_pUCI.last_move != "" && m_pBoard.Turn() == BLACK) {
+            std::cout << "black turn\n";
+
             auto getColumn = [](char col) -> COLUMN {
                 if (col == 'a') return A;
                 if (col == 'b') return B;
@@ -237,6 +271,8 @@ namespace ChessApp {
                             {m_pMove.column_from, m_pMove.row_from});
                     return;
                 }
+
+                m_pTakeAudioObject.should_play = true;
             }
 
             m_pMove.selected = false;
@@ -270,6 +306,8 @@ namespace ChessApp {
             m_pBoard.Turn(m_pBoard.Turn() == WHITE ? BLACK : WHITE);
             m_pBoard.addMove(std::string(m_pMove.first, 2) + std::string(m_pMove.second, 2));
             m_pUCI.last_move = "";
+
+            m_pMoveAudioObject.should_play = true;
         }
 
         drawFrame(m_pRenderPass);

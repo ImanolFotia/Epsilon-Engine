@@ -10,7 +10,7 @@
 #include <beacon/beacon.hpp>
 
 #include "SourceBSP.hpp"
-#include <framework/utils/helpers/camera.hpp>
+#include <core/framework/utils/helpers/camera.hpp>
 
 namespace BSP {
     class BSP : public Epsilon::Epsilon {
@@ -46,7 +46,6 @@ namespace BSP {
 
         explicit BSP(const std::string &appname) : Epsilon::Epsilon(appname) {
             m_pCamera = std::make_shared<utils::Camera>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-
         }
 
         void onCreate() override {
@@ -66,7 +65,7 @@ namespace BSP {
             m_pMap.pushConstantRef = m_pContext.ResourceManager()->createPushConstant(
                     {.size = sizeof(PushConstant), .data = &m_pMap.pushConstant});
 
-            const char *filename = "../../../assets/models/hl2/d3_citadel_05.bsp";
+            const char *filename = "../../../assets/models/hl2/background02.bsp";
 
             SourceBSP bspMap(filename);
 

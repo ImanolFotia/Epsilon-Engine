@@ -149,6 +149,26 @@ message(${GLFW3_BUILD_DIR})
 include_directories(${SOURCE_DIR}/include)
 link_directories(${GLFW3_BUILD_DIR}/src)
 
+
+# download and include openal
+#requires installation of pulse audio and pipewire developer libs in the OS
+ExternalProject_Add(openal_d
+        GIT_REPOSITORY https://github.com/kcat/openal-soft.git
+        CMAKE_ARGS "-DALSOFT_REQUIRE_PULSEAUDIO=ON -DALSOFT_REQUIRE_PIPEWIRE=ON"
+        INSTALL_COMMAND cmake -E echo "Skipping install step."
+        UPDATE_COMMAND ""
+        )
+
+ExternalProject_Get_property(openal_d SOURCE_DIR)
+ExternalProject_Get_property(openal_d BINARY_DIR)
+set(OPENAL_BUILD_DIR ${BINARY_DIR})
+message(${SOURCE_DIR})
+message(${OPENAL_BUILD_DIR})
+
+include_directories(${SOURCE_DIR}/include)
+link_directories(${OPENAL_BUILD_DIR})
+
+
 SET(HEADERS
         ${HEADERS}
         ${CMAKE_SOURCE_DIR}
@@ -180,37 +200,48 @@ if (BUILD_AS_LIBRARY)
     endif ()
 else ()
     add_executable(${PROJECT_NAME} main.cpp
-            engine/renderer/drawables/primitives/quad.hpp
-            framework/app.hpp
-            framework/IO/IO.hpp
-            framework/IO/KeyBoard.cpp
-            framework/IO/KeyBoard.hpp
-            framework/IO/KeyboardWrapper.hpp
-            framework/IO/Mouse.hpp
-            framework/IO/Joystick/Joystick.hpp
-            framework/IO/Joystick/JoystickWrapper.hpp
-            framework/IO/Joystick/Mappings.hpp
-            framework/IO/IO.cpp
+            core/engine/renderer/drawables/primitives/quad.hpp
+            core/framework/app.hpp
+            core/framework/IO/IO.hpp
+            core/framework/IO/KeyBoard.cpp
+            core/framework/IO/KeyBoard.hpp
+            core/framework/IO/KeyboardWrapper.hpp
+            core/framework/IO/Mouse.hpp
+            core/framework/IO/Joystick/Joystick.hpp
+            core/framework/IO/Joystick/JoystickWrapper.hpp
+            core/framework/IO/Joystick/Mappings.hpp
+            core/framework/IO/IO.cpp
              ../../../../../../camera.h
-            ../../../../../../camera.cpp)
+            ../../../../../../camera.cpp
+            apis/al/device.hpp
+            apis/al/listener.hpp
+            apis/al/source.hpp
+            apis/al/al_data.hpp
+            core/framework/audio/WAVFile.h)
 endif ()
 
 target_sources(${PROJECT_NAME} PUBLIC
-        ${CMAKE_SOURCE_DIR}/framework/env.cpp
-        ${CMAKE_SOURCE_DIR}/engine/renderer/vulkan/vulkan_impl.cpp
-        ${CMAKE_SOURCE_DIR}/engine/renderer/vulkan/vulkan.cpp
-        ${CMAKE_SOURCE_DIR}/engine/renderer/vulkan/resource_manager.cpp
-        ${CMAKE_SOURCE_DIR}/framework/IO/IO.hpp
-        ${CMAKE_SOURCE_DIR}/framework/IO/KeyBoard.cpp
-        ${CMAKE_SOURCE_DIR}/framework/IO/KeyBoard.hpp
-        ${CMAKE_SOURCE_DIR}/framework/IO/KeyboardWrapper.hpp
-        ${CMAKE_SOURCE_DIR}/framework/IO/Mouse.hpp
-        ${CMAKE_SOURCE_DIR}/framework/IO/Joystick/Joystick.hpp
-        ${CMAKE_SOURCE_DIR}/framework/IO/Joystick/JoystickWrapper.hpp
-        ${CMAKE_SOURCE_DIR}/framework/IO/Joystick/Mappings.hpp
-        ${CMAKE_SOURCE_DIR}/framework/IO/IO.cpp
-        ${CMAKE_SOURCE_DIR}/framework/utils/helpers/camera.cpp
-        ${CMAKE_SOURCE_DIR}/framework/utils/helpers/camera.hpp)
+        ${CMAKE_SOURCE_DIR}/core/framework/env.cpp
+        ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/vulkan_impl.cpp
+        ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/vulkan.cpp
+        ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/resource_manager.cpp
+        ${CMAKE_SOURCE_DIR}/core/framework/IO/IO.hpp
+        ${CMAKE_SOURCE_DIR}/core/framework/IO/KeyBoard.cpp
+        ${CMAKE_SOURCE_DIR}/core/framework/IO/KeyBoard.hpp
+        ${CMAKE_SOURCE_DIR}/core/framework/IO/KeyboardWrapper.hpp
+        ${CMAKE_SOURCE_DIR}/core/framework/IO/Mouse.hpp
+        ${CMAKE_SOURCE_DIR}/core/framework/IO/Joystick/Joystick.hpp
+        ${CMAKE_SOURCE_DIR}/core/framework/IO/Joystick/JoystickWrapper.hpp
+        ${CMAKE_SOURCE_DIR}/core/framework/IO/Joystick/Mappings.hpp
+        ${CMAKE_SOURCE_DIR}/core/framework/IO/IO.cpp
+        ${CMAKE_SOURCE_DIR}/core/framework/utils/helpers/camera.cpp
+        ${CMAKE_SOURCE_DIR}/core/framework/utils/helpers/camera.hpp
+        ${CMAKE_SOURCE_DIR}/apis/al/listener.hpp
+        ${CMAKE_SOURCE_DIR}/apis/al/source.hpp
+        ${CMAKE_SOURCE_DIR}/apis/al/al_data.hpp
+        ${CMAKE_SOURCE_DIR}/apis/al/device.hpp
+        ${CMAKE_SOURCE_DIR}/apis/al/listener.hpp
+        ${CMAKE_SOURCE_DIR}/core/framework/audio/WAVFile.h)
 
 find_package(Vulkan REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${Vulkan_LIBRARIES})
@@ -218,8 +249,10 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${Vulkan_INCLUDE_DIR})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw3)
 target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
+target_link_libraries(${PROJECT_NAME} PRIVATE openal)
 add_dependencies(${PROJECT_NAME} vma)
 add_dependencies(${PROJECT_NAME} glfw3_d)
+add_dependencies(${PROJECT_NAME} openal_d)
 add_dependencies(${PROJECT_NAME} glm)
 add_dependencies(${PROJECT_NAME} assimp_d)
 add_dependencies(${PROJECT_NAME} beacon)

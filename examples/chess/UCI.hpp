@@ -37,10 +37,11 @@ public:
 
 
         while (1) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
             if (think) {
                 std::string output;
                 output = read_from_pipe(child.from_child);
-                //std::cout << output << std::endl;
+                std::cout << output << std::endl;
                 if (output.find("bestmove") != std::string::npos) {
                     std::string best_move = output.substr(output.find("bestmove") + 9, 4);
                     std::cout << "best move found: " << best_move << std::endl;
@@ -54,7 +55,7 @@ public:
     void Move(std::string move) {
         std::cout << move << std::endl;
         write_to_pipe(child.to_child, move + "\n");
-        write_to_pipe(child.to_child, "go depth 1\n");
+        write_to_pipe(child.to_child, "go depth 20\n");
         think = true;
     }
 };

@@ -4,10 +4,11 @@
 
 #include <Epsilon.hpp>
 #include <beacon/beacon.hpp>
-#include "engine/renderer/drawables/primitives/quad.hpp"
+#include "core/engine/renderer/drawables/primitives/quad.hpp"
 #include "UCI.hpp"
 #include "game/common.hpp"
 #include "examples/chess/game/board.hpp"
+#include <core/framework/audio/WAVFile.h>
 
 namespace ChessApp {
     class ChessApp : public Epsilon::Epsilon {
@@ -16,7 +17,6 @@ namespace ChessApp {
             alignas(16) glm::mat4 model;
             alignas(16) uint32_t piece;
         };
-
 
 
         struct Model {
@@ -31,14 +31,13 @@ namespace ChessApp {
         };
 
 
-
         engine::Quad m_pQuad = {};
 
         std::array<Model, 32> m_pPieces;
         engine::Ref<engine::RenderPass> m_pRenderPass;
 
         Model m_pBoardModel;
-        Model* m_pSelectedModel = nullptr;
+        Model *m_pSelectedModel = nullptr;
 
         std::thread m_pEngineThread;
 
@@ -48,17 +47,32 @@ namespace ChessApp {
 
         Board m_pBoard;
 
+        struct AudioObject {
+            framework::WAVfile audioFile;
+            uint32_t source;
+            uint32_t buffer;
+            bool should_play = false;
+        };
+
+        AudioObject m_pMoveAudioObject;
+        AudioObject m_pTakeAudioObject;
+
     public:
         explicit ChessApp(const std::string &appName) : Epsilon::Epsilon(appName) {}
 
         void onCreate() override;
 
-
         void onReady() override;
 
         void onRender() override;
 
-        void onExit() override {}
+        void onExit() override {
+            al::deleteSource(m_pMoveAudioObject.source);
+            al::deleteBuffer(m_pMoveAudioObject.buffer);
+
+            al::deleteSource(m_pTakeAudioObject.source);
+            al::deleteBuffer(m_pTakeAudioObject.buffer);
+        }
 
     private:
         void setupCamera();

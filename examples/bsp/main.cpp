@@ -34,18 +34,16 @@ int AmdPowerXpressRequestHighPerformance = 1;
 }
 #endif
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
 
     framework::env::setArgs(argc, argv);
 
     BSP::BSP app("SourceBSP");
 
-    try
-    {
+    try {
         app.run();
     }
-    catch (const std::exception &e)
-    {
+    catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;
     }
