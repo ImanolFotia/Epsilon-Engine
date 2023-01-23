@@ -66,7 +66,7 @@ namespace BSP {
             m_pMap.pushConstantRef = m_pContext.ResourceManager()->createPushConstant(
                     {.size = sizeof(PushConstant), .data = &m_pMap.pushConstant});
 
-            const char *filename = "../../../assets/models/hl2/background02.bsp";
+            const char *filename = "../../../assets/models/hl2/background01.bsp";
 
             SourceBSP bspMap(filename);
 
