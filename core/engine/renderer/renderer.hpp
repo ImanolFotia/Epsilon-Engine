@@ -84,12 +84,13 @@ namespace engine
 
         virtual void Push(ObjectData) = 0;
 
+        virtual void Sync() = 0;
         
         virtual void Begin(Ref<RenderPass>) = 0;
 
         virtual void End() = 0;
 
-        virtual void Flush() = 0;
+        virtual void Flush(Ref<RenderPass>) = 0;
 
         virtual void Cleanup() = 0;
 

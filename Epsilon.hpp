@@ -90,9 +90,10 @@ namespace Epsilon {
         }
 
         void drawFrame(engine::Ref<engine::RenderPass> renderPassRef) {
-            m_pContext.Renderer()->Begin(renderPassRef);
-            m_pContext.Renderer()->Flush();
+            //m_pContext.Renderer()->Begin(renderPassRef);
+            m_pContext.Renderer()->Flush(renderPassRef);
             m_pContext.Renderer()->End();
+            m_pContext.Renderer()->Sync();
         }
 
     private:

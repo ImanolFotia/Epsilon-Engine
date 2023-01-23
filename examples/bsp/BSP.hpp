@@ -35,6 +35,7 @@ namespace BSP {
         std::vector<int> m_pVisibleFaces;
 
         engine::Ref<engine::RenderPass> m_pRenderPass;
+        engine::Ref<engine::RenderPass> m_pFirstRenderPass;
 
         BSPMap m_pMap;
 
@@ -103,9 +104,25 @@ namespace BSP {
 
         void onRender() override {
 
-            setupCamera();
 
             engine::ObjectData objectData;
+
+
+            setupCamera();
+
+
+            for (auto &face: m_pMap.m_pFaces) {
+                objectData.layout_index = 0;
+                objectData.mesh = face.mesh;
+                objectData.material = dummyMaterial;
+                objectData.modelMatrix = glm::mat4(1.0f);
+                objectData.pushConstant = m_pMap.pushConstantRef;
+                m_pContext.Renderer()->Push(objectData);
+            }
+
+            m_pContext.Renderer()->Begin(m_pFirstRenderPass);
+            m_pContext.Renderer()->Flush(m_pFirstRenderPass);
+
 
             for (auto &face: m_pMap.m_pFaces) {
                 objectData.layout_index = 0;
@@ -135,6 +152,8 @@ namespace BSP {
 
                 auto obj = args->to<framework::Input::KeyboardArgs>();
 
+                //std::cout << "pressed" << std::endl;
+
                 if (obj.key_up_index == framework::Input::GLFW::Key::M) {
                     updateCam = !updateCam;
                 }
@@ -148,11 +167,11 @@ namespace BSP {
             float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
             if (updateCam) {
-                m_pContext.Window().HideCursor();
+                //m_pContext.Window().HideCursor();
                 m_pCamera->Update(m_pContext.Window().getWindow());
                 m_pCamera->UpdateMatrices(0, getWindowDimensions().first, getWindowDimensions().second, false);
             } else {
-                m_pContext.Window().ShowCursor();
+                //m_pContext.Window().ShowCursor();
             }
 /*
             camData.view = glm::lookAt(glm::vec3(300.0f, 300.0f, 300.0f),
@@ -205,6 +224,7 @@ namespace BSP {
                             .size(sizeof(Vertex))
                             .depthAttachment(true)
                             .subpasses({})
+                            .dimensions({.width = 1280, .height = 720})
                             .attachments(
                                     {
                                             {
@@ -221,7 +241,32 @@ namespace BSP {
                             .pushConstant(sizeof(PushConstant))
                             .bufferInfo({.size = sizeof(ShaderData), .offset = 0});
 
+
+            RenderPassInfo secondRenderPassInfo =
+                    RenderPassFactory()
+                            .numDescriptors(6)
+                            .size(sizeof(Vertex))
+                            .depthAttachment(true)
+                            .subpasses({})
+                            .dimensions({.width = 1280, .height = 720})
+                            .attachments(
+                                    {
+                                            {
+                                                    .format = COLOR_RGBA,
+                                                    .isDepthAttachment = false,
+                                                    .isSwapChainAttachment = false
+                                            },
+                                            {
+                                                    .format = DEPTH_F32_STENCIL_8,
+                                                    .isDepthAttachment = true
+                                            }
+                                    })
+                            .pipelineLayout(layout)
+                            .pushConstant(sizeof(PushConstant))
+                            .bufferInfo({.size = sizeof(ShaderData), .offset = 0});
+
             m_pRenderPass = m_pContext.ResourceManager()->createDefaultRenderPass(renderPassInfo);
+            m_pFirstRenderPass = m_pContext.ResourceManager()->createRenderPass(secondRenderPassInfo);
 
         }
 

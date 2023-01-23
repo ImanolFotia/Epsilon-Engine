@@ -108,21 +108,12 @@ namespace engine {
         // std::cout << "m_pImageIndex " << m_pImageIndex << std::endl;
 
         vkResetCommandBuffer(m_pFrame.CommandBuffer(), 0);
-        auto renderPass = m_pResourceManagerRef->getRenderPass(renderPassRef);
+        //auto renderPass = m_pResourceManagerRef->getRenderPass(renderPassRef);
 
-        pUpdateUniforms(renderPass->uniformBuffer.buffers[m_pCurrentFrame]);
-        m_pFrame.setRenderPass(renderPassRef);
         vk::recordCommandBuffer(m_pFrame.CommandBuffer(), m_pImageIndex);
-        vk::createRenderPassInfo(m_pImageIndex, m_pVkData, *renderPass);
-        vk::beginRenderPass(m_pFrame.CommandBuffer(), *renderPass);
     }
 
-    void VulkanRenderer::End() {
-        if (m_pImageIndex == -1)
-            return;
-
-        vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
-        vk::endRecording(m_pFrame.CommandBuffer());
+    void VulkanRenderer::Sync() {
 
         VkSemaphore signalSemaphores[] = {m_pFrame.SyncObjects().renderFinishedSemaphores};
 
@@ -141,17 +132,30 @@ namespace engine {
             std::cout << "swap chain recreated\n";
 
         }
+
         m_pCurrentFrame = (m_pCurrentFrame + 1) % vk::MAX_FRAMES_IN_FLIGHT;
     }
 
-    void VulkanRenderer::Flush() {
+    void VulkanRenderer::End() {
+        if (m_pImageIndex == -1)
+            return;
+
+        vk::endRecording(m_pFrame.CommandBuffer());
+
+    }
+
+    void VulkanRenderer::Flush(engine::Ref<engine::RenderPass> renderPassRef) {
         if (m_pImageIndex == -1)
             return;
         /*
                 if (m_pRenderPasses.at(attachedRenderPass).renderPipelines.at(DefaultRenderPass).graphicsPipeline == NULL)
                     std::cout << "pipeline is null\n";
         */
-        auto renderPass = m_pResourceManagerRef->getRenderPass(m_pFrame.getRenderPass());
+        auto renderPass = m_pResourceManagerRef->getRenderPass(renderPassRef);
+        pUpdateUniforms(renderPass->uniformBuffer.buffers[m_pCurrentFrame]);
+
+        vk::createRenderPassInfo(m_pImageIndex, m_pVkData, *renderPass);
+        vk::beginRenderPass(m_pFrame.CommandBuffer(), *renderPass);
 
         int num_indices = 0;
         int curr_offset = 0;
@@ -197,6 +201,7 @@ namespace engine {
             vk::drawIndexed(m_pFrame.CommandBuffer(), command.numIndices, 1, command.indexOffset, command.vertexOffset, 0);
         }
 
+        vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
         m_pCurrentCommandQueue.clear();
     }
 

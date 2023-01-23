@@ -150,8 +150,6 @@ namespace engine
 
         vk::createRenderPass(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, renderPassInfo);
 
-
-
         for(int i = 0; i < renderPassInfo.numLayouts; i++) {
 
 
@@ -177,18 +175,50 @@ namespace engine
     {
         vk::VulkanRenderPass renderPass = {};
 
-        renderPass.renderPipelines.emplace_back();
         renderPass.id = m_pRenderPassCount;
         m_pRenderPassInfo.push_back(renderPassInfo);
-
+        renderPass.renderPassChain.ImageFormat = VK_FORMAT_R8G8B8A8_SRGB;
         vk::createRenderPass(*m_pVkDataPtr, renderPass, renderPassInfo);
 
-        vk::createDescriptorSetLayout(*m_pVkDataPtr, renderPass.renderPipelines.back().descriptorSetLayout);
+        for (size_t i = 0; i < renderPassInfo.attachments.size(); i++)
+        {
+            auto& attachment = renderPassInfo.attachments[i];
+            vk::VulkanTextureInfo texInfo;
+            texInfo.format = attachment.isDepthAttachment ? findDepthFormat(*m_pVkDataPtr) : VK_FORMAT_R8G8B8A8_SRGB;
+            texInfo.width = renderPassInfo.dimensions.width;
+            texInfo.height = renderPassInfo.dimensions.height;
+            texInfo.num_channels = attachment.isDepthAttachment ? 1 : 4;
+            texInfo.usage = attachment.isDepthAttachment ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-        vk::createGraphicsPipeline(*m_pVkDataPtr,
-                                                     renderPass,
-                                                     renderPass.renderPipelines.back(),
-                                                     renderPassInfo);
+
+            vk::VulkanTexture texture = pCreateTextureBuffer({.width = texInfo.width,
+                                                        .height = texInfo.height,
+                                                        .num_channels = texInfo.num_channels});
+
+
+            createImageView(*m_pVkDataPtr, texture, attachment.isDepthAttachment ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
+
+            if(attachment.isDepthAttachment)
+                renderPass.renderPassChain.DepthTexture.imageView = texture.imageView;
+            else
+                renderPass.renderPassChain.ImageViews.push_back(texture.imageView);
+
+        }
+
+        renderPass.renderPassChain.Extent.width = renderPassInfo.dimensions.width;
+        renderPass.renderPassChain.Extent.height = renderPassInfo.dimensions.height;
+
+
+        for(int i = 0; i < renderPassInfo.numLayouts; i++) {
+
+            renderPass.renderPipelines.emplace_back();
+            vk::createDescriptorSetLayout(*m_pVkDataPtr, renderPass.renderPipelines.back().descriptorSetLayout);
+
+            vk::createGraphicsPipeline(*m_pVkDataPtr,
+                                       renderPass,
+                                       renderPass.renderPipelines.back(),
+                                       renderPassInfo);
+        }
 
         vk::createFramebuffers(*m_pVkDataPtr, renderPass, renderPass.renderPassChain);
 

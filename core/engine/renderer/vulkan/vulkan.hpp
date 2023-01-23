@@ -53,11 +53,13 @@ namespace engine
 
         void Push(ObjectData) override;
 
+        void Sync() override;
+
         void Begin(Ref<RenderPass>) override;
 
         void End() override;
 
-        void Flush() override;
+        void Flush(engine::Ref<engine::RenderPass>) override;
 
         void Cleanup() override;
 
@@ -78,7 +80,7 @@ namespace engine
         framework::Window *m_pWindow = nullptr;
 
         uint32_t m_pCurrentFrame = 0;
-        uint32_t m_pImageIndex = 0;
+        int32_t m_pImageIndex = 0;
 
         vk::VulkanData m_pVkData;
 

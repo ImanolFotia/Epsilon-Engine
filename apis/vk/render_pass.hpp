@@ -61,7 +61,7 @@ namespace vk
                 renderPass.renderPassData.colorAttachments.push_back(attachmentDesc);
 
                 VkAttachmentReference attachmentRef{};
-                attachmentRef.attachment = 0;
+                attachmentRef.attachment = index;
                 attachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
                 renderPass.renderPassData.colorAttachmentRefs.push_back(attachmentRef);
             }
@@ -120,6 +120,7 @@ namespace vk
     {
         renderPass.renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderPass.renderPassInfo.renderPass = renderPass.renderPass;
+        if(imageIndex > renderPass.renderPassChain.Framebuffers.size() ) imageIndex = 0;
         renderPass.renderPassInfo.framebuffer = renderPass.renderPassChain.Framebuffers[imageIndex];
         renderPass.renderPassInfo.renderArea.offset = {0, 0};
         renderPass.renderPassInfo.renderArea.extent = renderPass.renderPassChain.Extent;

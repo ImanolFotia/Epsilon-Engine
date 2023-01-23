@@ -279,6 +279,11 @@ namespace engine
         WindingMode windingMode;
     };
 
+    struct ImageDimensions {
+        int width = 0;
+        int height = 0;
+    };
+
 
     struct RenderPassInfo
     {
@@ -292,6 +297,7 @@ namespace engine
         std::vector<PipelineLayout> pipelineLayout;
         PushConstantData pushConstant;
         UniformBindingInfo bindingInfo;
+        ImageDimensions dimensions;
     };
 
     struct RenderPassFactory
@@ -314,6 +320,12 @@ namespace engine
         RenderPassFactory subpasses(std::vector<SubPassInfo> sp)
         {
             info.subpasses = sp;
+            return *this;
+        }
+
+        RenderPassFactory dimensions(ImageDimensions d)
+        {
+            info.dimensions = d;
             return *this;
         }
         /*
