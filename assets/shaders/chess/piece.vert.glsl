@@ -18,8 +18,10 @@ layout (location = 4) out int piece;
 layout(binding = 0) uniform UniformBufferObject {
     float iTime;
     vec2 iResolution;
+    vec3 fgfg;
     mat4 view;
     mat4 proj;
+    mat4 matttt;
 } ubo;
 
 layout( push_constant ) uniform constants
