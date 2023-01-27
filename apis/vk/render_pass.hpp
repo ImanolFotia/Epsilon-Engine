@@ -12,7 +12,7 @@
 namespace vk
 {
 
-    static void createRenderPass(VulkanData &vk_data, VulkanRenderPass &renderPass, engine::RenderPassInfo &renderPassInfo)
+    static void createRenderPass(VulkanData &vk_data, VulkanRenderPass &renderPass, engine::RenderPassInfo &renderPassInfo, bool forPresent)
     {
         bool containsDepthAttachment = false;
         unsigned index = 0;
@@ -57,7 +57,7 @@ namespace vk
                 attachmentDesc.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
                 attachmentDesc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
                 attachmentDesc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-                attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+                attachmentDesc.finalLayout = forPresent ? VK_IMAGE_LAYOUT_PRESENT_SRC_KHR : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
                 renderPass.renderPassData.colorAttachments.push_back(attachmentDesc);
 
                 VkAttachmentReference attachmentRef{};
@@ -120,7 +120,9 @@ namespace vk
     {
         renderPass.renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderPass.renderPassInfo.renderPass = renderPass.renderPass;
-        if(imageIndex > renderPass.renderPassChain.Framebuffers.size() ) imageIndex = 0;
+
+        if(imageIndex >= renderPass.renderPassChain.Framebuffers.size() ) imageIndex = 0;
+
         renderPass.renderPassInfo.framebuffer = renderPass.renderPassChain.Framebuffers[imageIndex];
         renderPass.renderPassInfo.renderArea.offset = {0, 0};
         renderPass.renderPassInfo.renderArea.extent = renderPass.renderPassChain.Extent;

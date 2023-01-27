@@ -95,7 +95,6 @@ namespace engine
     vk::VulkanTexture VulkanResourceManager::pCreateTextureBuffer(vk::VulkanTextureInfo texInfo)
     {
         vk::VulkanTexture texture;
-        texInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 
         texture.info = texInfo;
 
@@ -117,6 +116,7 @@ namespace engine
         texture.imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
         texture.imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
         texture.imageInfo.flags = 0; // Optional
+        texture.imageInfo.usage = texInfo.usage;
 
         VmaAllocationCreateInfo allocInfo = {};
         allocInfo.usage = VMA_MEMORY_USAGE_AUTO;
@@ -255,17 +255,37 @@ namespace engine
             VkDescriptorImageInfo imageInfo{};
             uint32_t numSlots = 1;
             std::vector<VkWriteDescriptorSet> descriptorWrites{};
-            descriptorWrites.resize(1);
-            if(material.textures.size() > 0) {
-                descriptorWrites.resize(material.textures.size() + 1);
-                numSlots = material.textures.size() + 1;
+            descriptorWrites.resize(numSlots);
+            if(material.textures.size() > 0 || material.renderBufferBindings.size() > 0) {
+
+                if(material.renderBufferBindings.size() > 0) {
+                    numSlots += material.renderBufferBindings.size();
+                    descriptorWrites.resize(numSlots);
+                } if(material.textures.size() > 0) {
+                    numSlots += material.textures.size();
+                    descriptorWrites.resize(numSlots);
+                }
                 imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
                 int index = 1;
+
+                for(auto& bindings: material.renderBufferBindings) {
+
+                    imageInfo.imageView = bindings.imageView;
+                    imageInfo.sampler = bindings.sampler;
+
+                    descriptorWrites[index].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+                    descriptorWrites[index].dstSet = material.descriptorSets[i];
+                    descriptorWrites[index].dstBinding = index;
+                    descriptorWrites[index].dstArrayElement = 0;
+                    descriptorWrites[index].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+                    descriptorWrites[index].descriptorCount = 1;
+                    descriptorWrites[index].pImageInfo = &imageInfo;
+                    index++;
+                }
                 for(auto& texture: material.textures) {
 
                     imageInfo.imageView = texture.imageView;
                     imageInfo.sampler = texture.sampler;
-
 
                     descriptorWrites[index].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
                     descriptorWrites[index].dstSet = material.descriptorSets[i];
@@ -277,6 +297,7 @@ namespace engine
                     index++;
                 }
             }
+
 
             descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             descriptorWrites[0].dstSet = material.descriptorSets[i];

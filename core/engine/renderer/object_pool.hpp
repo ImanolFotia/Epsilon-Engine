@@ -96,6 +96,20 @@ namespace engine
             return nullptr;
         }
 
+        [[nodiscard]] uint32_t getId(Ref<T> ref)
+        {
+            if (m_pIndexArray.size() > ref.m_pIndex && ref.isValid())
+            {
+                if (m_pGeneration[ref.m_pIndex] == ref.m_pGeneration)
+                {
+                    return ref.m_pIndex;
+                }
+            }
+            std::cout << "object is invalid\n";
+
+            return -1;
+        }
+
         void destroy(Ref<T> &ref)
         {
             std::cout << "internal data size before: " << m_pInternalData.size()

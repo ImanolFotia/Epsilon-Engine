@@ -134,10 +134,12 @@ public:
                         &m_pBspFileData.stringData[m_pBspFileData.stringTable[m_pBspFileData.texData[m_pBspFileData.texInfo[face.texinfo].texdata].nameStringTableID]]);
 
                 if (material.find("TOOLS") != std::string::npos) {
+                    continue;
                     isTool = true;
                 }
 
                 if (material.find("TRIGGER") != std::string::npos) {
+                    continue;
                     isTool = false;
                     isTrigger = true;
                 }
@@ -184,6 +186,7 @@ public:
         m_pBspFile.seekg(lump.fileofs);
         m_pBspFile.read((char *) container.data(), lump.filelen);
     }
+
 
     std::vector<glm::vec3> createDisplacement(std::vector<glm::vec3> vecs, int tess, int size, glm::vec3 position) {
 

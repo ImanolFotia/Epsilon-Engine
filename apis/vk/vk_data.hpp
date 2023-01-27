@@ -81,6 +81,7 @@ namespace vk
         VkDescriptorSetLayout descriptorSetLayout{};
         std::vector<VkDescriptorSet> descriptorSets;
         VkPipelineLayout *pipelineLayout = nullptr;
+        std::vector<VulkanTexture> renderBufferBindings;
         std::vector<VulkanTexture> textures;
         VkDescriptorBufferInfo bufferInfo[MAX_FRAMES_IN_FLIGHT];
         size_t bufferOffset = 0;
@@ -102,7 +103,8 @@ namespace vk
         VkFrontFace winding;
         VkCullModeFlags cullMode;
 
-        VkClearColorValue clearColor = {0.1f, 0.1f, 0.1f, 1.0f};
+        //VkClearColorValue clearColor = {0.1f, 0.1f, 0.1f, 1.0f};
+        VkClearColorValue clearColor = {1.0f, 1.0f, 1.0f, 1.0f};
         VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
     };
 
@@ -145,6 +147,7 @@ namespace vk
         VkFormat ImageFormat;
         VkExtent2D Extent;
         std::vector<VkImageView> ImageViews;
+        std::vector<VulkanTexture> Textures;
 
         std::vector<VkFramebuffer> Framebuffers;
     };
@@ -162,7 +165,8 @@ namespace vk
         VulkanRenderPassData renderPassData;
         std::vector<VulkanVertexInfo> vertexInfo;
         RenderPassChain renderPassChain;
-        VkClearColorValue clearColor = {0.1f, 0.1f, 0.1f, 1.0f};
+        //VkClearColorValue clearColor = {0.1f, 0.1f, 0.1f, 1.0f};
+        VkClearColorValue clearColor = {1.0f, 1.0f, 1.0f, 1.0f};
         VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
         VkClearValue clearValues[2] = {};
         uint32_t id;

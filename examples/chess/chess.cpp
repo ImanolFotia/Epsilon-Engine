@@ -195,6 +195,7 @@ namespace ChessApp {
 
     void ChessApp::onRender() {
 
+        m_pContext.Renderer()->Begin(m_pRenderPass);
         if(m_pTakeAudioObject.should_play) {
             al::playSource(m_pTakeAudioObject.source);
             m_pTakeAudioObject.should_play = false;
@@ -230,6 +231,7 @@ namespace ChessApp {
             objectData.pushConstant = piece.pushConstantRef;
             m_pContext.Renderer()->Push(objectData);
         }
+        drawFrame(m_pRenderPass);
 
         if (!m_pUCI.last_move.empty() && m_pBoard.Turn() == BLACK) {
 
@@ -309,8 +311,6 @@ namespace ChessApp {
 
             m_pMoveAudioObject.should_play = true;
         }
-
-        drawFrame(m_pRenderPass);
     }
 
 //Private functions

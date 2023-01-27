@@ -15,6 +15,7 @@ namespace engine
         uint32_t numIndices;
     };
 
+
     struct VulkanResourceManager : ResourceManager
     {
         friend class VulkanRenderer;
@@ -40,7 +41,9 @@ namespace engine
         Ref<Buffer> destroyBuffer(BufferInfo) override;
         Ref<Shader> createShader(ShaderInfo) override;
         Ref<UniformBindings> createUniformData(UniformBindingInfo) override;
-        Ref<Material> createMaterial(MaterialInfo, Ref<RenderPass> ) override;
+
+        Ref<Material> createMaterial(MaterialInfo, Ref<RenderPass>) override;
+        Ref<Material> createMaterial(MaterialInfo, Ref<RenderPass>, std::initializer_list<RenderPassBinding> bindings) override;
         Ref<Mesh> createMesh(MeshInfo) override;
         Ref<RenderPass> createRenderPass(RenderPassInfo) override;
         Ref<RenderPass> createDefaultRenderPass(RenderPassInfo) override;
@@ -53,6 +56,8 @@ namespace engine
         void destroyMaterial(Ref<Material>) override;
         void destroyMesh(Ref<Mesh>) override;
         void destroyRenderPass(Ref<RenderPass>) override;
+
+        Ref<ID> getId(Ref<RenderPass>) override;
 
         void clean() override;
 
@@ -115,6 +120,7 @@ namespace engine
 
     protected:
         Pool<Texture, vk::VulkanTexture> texPool;
+        Pool<ID, uint32_t> resourceIdPool;
         Pool<Shader, ShaderStageInfo> shaderPool;
         Pool<Buffer, vk::VulkanBuffer> vertexBufferPool;
         Pool<Buffer, vk::VulkanBuffer> indexBufferPool;

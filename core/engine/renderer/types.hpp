@@ -7,6 +7,7 @@
 
 namespace engine
 {
+    struct ID;
     struct Texture;
     struct Buffer;
     struct Shader;
@@ -207,7 +208,8 @@ namespace engine
     struct RenderPassAttachment {
 
         TextureFormat format;
-        bool isDepthAttachment;
+        bool isSampler = false;
+        bool isDepthAttachment = false;
         bool isSwapChainAttachment = false;
     };
 

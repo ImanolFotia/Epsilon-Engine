@@ -152,10 +152,12 @@ namespace engine {
                     std::cout << "pipeline is null\n";
         */
         auto renderPass = m_pResourceManagerRef->getRenderPass(renderPassRef);
+
         pUpdateUniforms(renderPass->uniformBuffer.buffers[m_pCurrentFrame]);
 
         vk::createRenderPassInfo(m_pImageIndex, m_pVkData, *renderPass);
         vk::beginRenderPass(m_pFrame.CommandBuffer(), *renderPass);
+
 
         int num_indices = 0;
         int curr_offset = 0;
@@ -255,7 +257,7 @@ namespace engine {
 
         vk::createImageViews(m_pVkData);
 
-        vk::createRenderPass(m_pVkData, m_pVkData.defaultRenderPass, m_pResourceManagerRef->m_pDefaultRenderPassInfo);
+        vk::createRenderPass(m_pVkData, m_pVkData.defaultRenderPass, m_pResourceManagerRef->m_pDefaultRenderPassInfo, true);
 
         for (auto i = 0; i < m_pVkData.defaultRenderPass.renderPipelines.size(); i++)
             vk::createGraphicsPipeline(m_pVkData, m_pVkData.defaultRenderPass,
@@ -268,7 +270,7 @@ namespace engine {
         for (auto &pass: m_pResourceManagerRef->renderPassPool) {
             if (pass.id == std::numeric_limits<uint32_t>::max()) continue;
 
-            vk::createRenderPass(m_pVkData, pass, m_pResourceManagerRef->m_pRenderPassInfo[pass.id]);
+            vk::createRenderPass(m_pVkData, pass, m_pResourceManagerRef->m_pRenderPassInfo[pass.id], false);
 
             for (auto i = 0; i < pass.renderPipelines.size(); i++)
                 vk::createGraphicsPipeline(m_pVkData, pass, pass.renderPipelines[i],
