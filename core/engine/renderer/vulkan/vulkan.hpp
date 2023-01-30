@@ -1,5 +1,6 @@
 #pragma once
-
+#undef VMA_DEBUG_LOG
+#undef VMA_DEBUG_LOG_FORMAT
 #include "core/engine/renderer/renderer.hpp"
 #include "core/engine/renderer/frame.hpp"
 #include "core/engine/renderer/types.hpp"

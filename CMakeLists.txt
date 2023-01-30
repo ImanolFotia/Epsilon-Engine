@@ -169,6 +169,22 @@ include_directories(${SOURCE_DIR}/include)
 link_directories(${OPENAL_BUILD_DIR})
 
 
+# download and include imgui
+#requires installation of pulse audio and pipewire developer libs in the OS
+ExternalProject_Add(imgui
+        GIT_REPOSITORY https://github.com/ocornut/imgui.git
+        INSTALL_COMMAND cmake -E echo "Skipping install step for beacon."
+        BUILD_COMMAND ""
+        UPDATE_COMMAND ""
+        CONFIGURE_COMMAND ""
+        )
+
+ExternalProject_Get_property(imgui SOURCE_DIR)
+set(IMGUI_BUILD_DIR ${SOURCE_DIR})
+message(${IMGUI_BUILD_DIR})
+
+include_directories(${IMGUI_BUILD_DIR})
+
 SET(HEADERS
         ${HEADERS}
         ${CMAKE_SOURCE_DIR}
@@ -184,6 +200,7 @@ set(EPSILON_SOURCE_LOCATION ${CMAKE_SOURCE_DIR})
 option(CREATE_STATIC_LIB "Build static library" OFF)
 
 project(Epsilon VERSION 0.1.0)
+
 
 if (BUILD_AS_LIBRARY)
 
@@ -257,6 +274,7 @@ add_dependencies(${PROJECT_NAME} glm)
 add_dependencies(${PROJECT_NAME} assimp_d)
 add_dependencies(${PROJECT_NAME} beacon)
 add_dependencies(${PROJECT_NAME} stb)
+add_dependencies(${PROJECT_NAME} imgui)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_DL_LIBS})
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)

@@ -1,3 +1,5 @@
+#undef VMA_DEBUG_LOG
+#undef VMA_DEBUG_LOG_FORMAT
 #include "resource_manager.hpp"
 
 #include "vk_mem_alloc.h"
@@ -121,13 +123,12 @@ namespace engine
         VmaAllocationCreateInfo allocInfo = {};
         allocInfo.usage = VMA_MEMORY_USAGE_AUTO;
 
-        VmaAllocation allocation;
-        vmaCreateImage(m_pAllocator, &texture.imageInfo, &allocInfo, &texture.image, &allocation, nullptr);
+        vmaCreateImage(m_pAllocator, &texture.imageInfo, &allocInfo, &texture.image, &texture.allocation, nullptr);
         // vmaCreateBuffer(allocator, &bufferInfo, &allocInfo, &buffer, &allocation, nullptr);
 
         // auto texture = vk::createImage(m_pVkData, texInfo);
         // buffer.deviceMemory = vk::allocateTextureMemory(m_pVkData, texture, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-        IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", size, " bytes in local uniform buffer");
+        IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", size, " bytes in local texture buffer");
         return texture;
     }
 

@@ -49,10 +49,11 @@ namespace vk
     {
         VulkanTextureInfo info;
         VkImageCreateInfo imageInfo;
-        VkImage image;
-        VkImageView imageView;
+        VkImage image = VK_NULL_HANDLE;
+        VkImageView imageView = VK_NULL_HANDLE;
         VkFormat format;
-        VkSampler sampler;
+        VkSampler sampler = VK_NULL_HANDLE;
+        VmaAllocation allocation;
     };
 
     struct VulkanTextureBuffer

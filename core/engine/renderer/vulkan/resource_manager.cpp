@@ -1,3 +1,5 @@
+#undef VMA_DEBUG_LOG
+#undef VMA_DEBUG_LOG_FORMAT
 #include "resource_manager.hpp"
 
 #include "core/framework/exception.hpp"
@@ -217,8 +219,7 @@ namespace engine {
            }
 
             if (attachment.isDepthAttachment) {
-                renderPass.renderPassChain.DepthTexture.imageView = texture.imageView;
-                renderPass.renderPassChain.DepthTexture.sampler = texture.sampler;
+                renderPass.renderPassChain.DepthTexture = texture;
             } else {
                 renderPass.renderPassChain.ImageViews.push_back(texture.imageView);
                 renderPass.renderPassChain.Textures.push_back(texture);
@@ -259,26 +260,50 @@ namespace engine {
             vmaDestroyBuffer(m_pAllocator, buffer.buffer, buffer.allocation);
         }
 
+        for (auto &buffer: uniformBufferPool) {
+            for(auto&b: buffer.buffers) {
+                vmaDestroyBuffer(m_pAllocator, b.buffer, b.allocation);
+            }
+        }
+
+
         vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool, nullptr);
 
         vk::cleanupSyncObjects(*m_pVkDataPtr);
         vk::cleanCommandPool(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools[0]);
 
         for (auto &texture: texPool) {
-
             vkDestroySampler(m_pVkDataPtr->logicalDevice, texture.sampler, nullptr);
             vkDestroyImageView(m_pVkDataPtr->logicalDevice, texture.imageView, nullptr);
             vk::destroyImage(*m_pVkDataPtr, texture);
         }
 
-        vmaDestroyAllocator(m_pAllocator);
 
         for (auto &pass: renderPassPool) {
             vk::cleanupRenderPass(*m_pVkDataPtr, pass.renderPass);
             for (auto &pipeline: pass.renderPipelines)
                 vk::destroyGraphicsPipeline(*m_pVkDataPtr, pipeline);
+
+            if(pass.id == std::numeric_limits<uint32_t>::max()) continue;
+
+            for (int i = 0; i < pass.renderPassChain.Textures.size(); i++) {
+                vkDestroySampler(m_pVkDataPtr->logicalDevice, pass.renderPassChain.Textures[i].sampler, nullptr);
+                vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass.renderPassChain.Textures[i].imageView, nullptr);
+                vmaDestroyImage(m_pAllocator, pass.renderPassChain.Textures[i].image, pass.renderPassChain.Textures[i].allocation);
+            }
+
+            if(pass.renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE)
+            vkDestroySampler(m_pVkDataPtr->logicalDevice, pass.renderPassChain.DepthTexture.sampler, nullptr);
+
+            if(pass.renderPassChain.DepthTexture.imageView != VK_NULL_HANDLE)
+            vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass.renderPassChain.DepthTexture.imageView, nullptr);
+
+            vmaDestroyImage(m_pAllocator, pass.renderPassChain.DepthTexture.image, pass.renderPassChain.DepthTexture.allocation);
+
         }
 
+
+        vmaDestroyAllocator(m_pAllocator);
         vk::cleanup(*m_pVkDataPtr);
     }
 
