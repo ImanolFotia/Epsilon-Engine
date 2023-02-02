@@ -52,11 +52,11 @@ namespace vk {
     static void createTextureSampler(const VulkanData &vkData, VulkanTexture &texture) {
         VkSamplerCreateInfo samplerInfo{};
         samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-        samplerInfo.magFilter = VK_FILTER_LINEAR;
-        samplerInfo.minFilter = VK_FILTER_LINEAR;
-        samplerInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-        samplerInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-        samplerInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+        samplerInfo.magFilter = texture.filter;
+        samplerInfo.minFilter = texture.filter;
+        samplerInfo.addressModeU = texture.addressMode;
+        samplerInfo.addressModeV = texture.addressMode;
+        samplerInfo.addressModeW = texture.addressMode;
         samplerInfo.anisotropyEnable = VK_TRUE;
 
         VkPhysicalDeviceProperties properties{};
@@ -65,13 +65,12 @@ namespace vk {
         samplerInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
         samplerInfo.unnormalizedCoordinates = VK_FALSE;
 
-        if(texture.format == VK_FORMAT_R32_SFLOAT) {
+        if(texture.compareEnable) {
             samplerInfo.compareEnable = VK_TRUE;
-            samplerInfo.compareOp = VK_COMPARE_OP_LESS;
+            samplerInfo.compareOp = texture.compareOp;
         } else {
-
             samplerInfo.compareEnable = VK_FALSE;
-            samplerInfo.compareOp = VK_COMPARE_OP_ALWAYS;
+            samplerInfo.compareOp = texture.compareOp;
         }
         samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
         samplerInfo.mipLodBias = 0.0f;

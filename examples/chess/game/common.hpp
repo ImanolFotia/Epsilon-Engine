@@ -28,7 +28,7 @@ namespace ChessApp {
     };
 
     enum COLUMN {
-        A = 0, B, C, D, E, F, G, H
+        A = 0, B, C, D, E, F, G, H, ENUM_MAX
     };
 
     struct PieceInfo {

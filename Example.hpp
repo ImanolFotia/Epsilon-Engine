@@ -223,7 +223,6 @@ namespace ExampleApp {
 
             myObjectId.pushConstant.model = glm::mat4(1.0f);
             myObjectId.pushConstant.model = glm::translate(myObjectId.pushConstant.model, glm::vec3(0.0, 0.0, -500.0));
-            // myObjectId.pushConstant.model = glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(.0f, .0f, 1.0f));
             myObjectId.pushConstant.model = glm::scale(myObjectId.pushConstant.model, glm::vec3( getWindowDimensions().second/2, getWindowDimensions().second/2,0.0));
 
             engine::ObjectData objectData;

@@ -297,7 +297,7 @@ namespace BSP {
                                             {
                                                     .format = COLOR_RGBA,
                                                     .isDepthAttachment = false,
-                                                    .isSwapChainAttachment = true
+                                                    .isSwapChainAttachment = true,
                                             },
                                             {
                                                     .format = DEPTH_F32_STENCIL_8,
@@ -319,7 +319,11 @@ namespace BSP {
                             .attachments(
                                     {
                                             {
-                                                    .format = COLOR_RGBA,
+                                                    .format = COLOR_R_32F,
+                                                    .wrapMode = CLAMP_TO_BORDER,
+                                                    .filtering = LINEAR,
+                                                    .compareFunc = LESS_OR_EQUAL,
+                                                    .depthCompare = true,
                                                     .isSampler = true,
                                                     .isDepthAttachment = false,
                                                     .isSwapChainAttachment = false

@@ -35,8 +35,9 @@ int AmdPowerXpressRequestHighPerformance = 1;
 #endif
 
 int main(int argc, char **argv) {
-
+#ifndef _WIN32
     framework::env::setArgs(argc, argv);
+#endif
 
     BSP::BSP app("SourceBSP");
 
@@ -49,6 +50,4 @@ int main(int argc, char **argv) {
     }
 
     return EXIT_SUCCESS;
-
-    return 0;
 }

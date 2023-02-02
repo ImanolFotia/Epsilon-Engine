@@ -163,7 +163,8 @@ namespace vk
         vk_data.defaultRenderPass.renderPassChain.Images.clear();
         vk_data.defaultRenderPass.renderPassChain.Images.resize(imageCount);
         vkGetSwapchainImagesKHR(vk_data.logicalDevice, vk_data.swapChain, &imageCount, vk_data.defaultRenderPass.renderPassChain.Images.data());
-        vk_data.defaultRenderPass.renderPassChain.ImageFormat = surfaceFormat.format;
+
+        vk_data.defaultRenderPass.renderPassChain.ImageFormats.push_back(surfaceFormat.format);
         vk_data.defaultRenderPass.renderPassChain.Extent = extent;
     }
 
@@ -186,7 +187,7 @@ namespace vk
         {
 
             VulkanTexture texture;
-            texture.format = vk_data.defaultRenderPass.renderPassChain.ImageFormat;
+            texture.format = vk_data.defaultRenderPass.renderPassChain.ImageFormats[0];
             texture.image = vk_data.defaultRenderPass.renderPassChain.Images[i];
 
             createImageView(vk_data, texture, VK_IMAGE_ASPECT_COLOR_BIT);

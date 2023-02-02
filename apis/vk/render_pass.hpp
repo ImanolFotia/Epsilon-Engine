@@ -15,13 +15,13 @@ namespace vk
     static void createRenderPass(VulkanData &vk_data, VulkanRenderPass &renderPass, engine::RenderPassInfo &renderPassInfo, bool forPresent)
     {
         bool containsDepthAttachment = false;
-        unsigned index = 0;
         renderPass.renderPassData.colorAttachments.clear();
         renderPass.renderPassData.colorAttachments.resize(0);
 
         renderPass.renderPassData.colorAttachmentRefs.clear();
         renderPass.renderPassData.colorAttachmentRefs.resize(0);
 
+        unsigned index = 0;
         for (auto &attachment : renderPassInfo.attachments)
         {
             if (attachment.isDepthAttachment)
@@ -50,7 +50,7 @@ namespace vk
             else
             {
                 VkAttachmentDescription attachmentDesc{};
-                attachmentDesc.format = renderPass.renderPassChain.ImageFormat;
+                attachmentDesc.format = renderPass.renderPassChain.ImageFormats[index];
                 attachmentDesc.samples = VK_SAMPLE_COUNT_1_BIT;
                 attachmentDesc.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
                 attachmentDesc.storeOp = VK_ATTACHMENT_STORE_OP_STORE;

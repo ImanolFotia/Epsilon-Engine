@@ -106,7 +106,7 @@ namespace engine
         texture.imageInfo.extent.width = static_cast<uint32_t>(texInfo.width);
         texture.imageInfo.extent.height = static_cast<uint32_t>(texInfo.height);
         texture.imageInfo.extent.depth = 1;
-
+        texture.compareEnable = texInfo.compareEnable;
         texture.imageInfo.mipLevels = 1;
         texture.imageInfo.arrayLayers = 1;
         texture.imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
@@ -120,6 +120,10 @@ namespace engine
         texture.imageInfo.flags = 0; // Optional
         texture.imageInfo.usage = texInfo.usage;
 
+        texture.addressMode = texInfo.addressMode;
+        texture.compareOp = texInfo.compareOp;
+        texture.filter = texInfo.filter;
+
         VmaAllocationCreateInfo allocInfo = {};
         allocInfo.usage = VMA_MEMORY_USAGE_AUTO;
 
@@ -128,7 +132,7 @@ namespace engine
 
         // auto texture = vk::createImage(m_pVkData, texInfo);
         // buffer.deviceMemory = vk::allocateTextureMemory(m_pVkData, texture, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-        IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", size, " bytes in local texture buffer");
+        //IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", texture.image.size, " bytes in local texture buffer");
         return texture;
     }
 

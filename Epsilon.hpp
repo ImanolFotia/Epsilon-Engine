@@ -19,6 +19,7 @@
 #include "core/framework/env.hpp"
 #include "core/framework/utils/image.hpp"
 #include "core/framework/utils/file.hpp"
+#include "core/framework/clock.hpp"
 
 #include "core/engine/context.hpp"
 
@@ -106,64 +107,11 @@ namespace Epsilon {
         void initVulkan() {
             m_pContext.Renderer()->Init(m_ApplicationName.c_str(), m_pContext.Window());
             m_pContext.ResourceManager()->Init();
-            using namespace engine;
-/*
-            auto vertexCode = utils::readFile("../assets/shaders/vertex.spv");
-            auto fragmentCode = utils::readFile("../assets/shaders/fragment.spv");
-
-
-
-            auto boardVertexCode = utils::readFile("../assets/shaders/board-vertex.spv");
-            auto boardFragmentCode = utils::readFile("../assets/shaders/board-fragment.spv");
-
-            ShaderInfo shaderInfo = {
-                    .stages = {
-                            {.entryPoint = "main", .shaderCode = boardVertexCode, .stage = VERTEX},
-                            {.entryPoint = "main", .shaderCode = boardFragmentCode, .stage = FRAGMENT}},
-                    .usedStages = ShaderModuleStage(VERTEX | FRAGMENT)};
-
-
-            ShaderInfo boardShaderInfo = {
-                    .stages = {
-                            {.entryPoint = "main", .shaderCode = vertexCode, .stage = VERTEX},
-                            {.entryPoint = "main", .shaderCode = fragmentCode, .stage = FRAGMENT}},
-                    .usedStages = ShaderModuleStage(VERTEX | FRAGMENT)};
-
-            RenderPassInfo renderPassInfo =
-                    RenderPassFactory()
-                            .numDescriptors(6)
-                            .size(sizeof(Vertex))
-                            .depthAttachment(true)
-                            .subpasses({})
-                            .vertexLayout({{XYZ_FLOAT,  offsetof(Vertex, position)},
-                                           {XY_FLOAT,   offsetof(Vertex, texCoords)},
-                                           {XYZ_FLOAT,  offsetof(Vertex, normal)},
-                                           {XYZW_FLOAT, offsetof(Vertex, color)},
-                                           {XYZ_FLOAT,  offsetof(Vertex, tangent)},
-                                           {XYZ_FLOAT,  offsetof(Vertex, bitangent)}})
-                            .attachments(
-                                    {
-                                            {
-                                                    .format = COLOR_RGBA,
-                                                    .isDepthAttachment = false,
-                                                    .isSwapChainAttachment = true
-                                            },
-                                            {
-                                                    .format = DEPTH_F32_STENCIL_8,
-                                                    .isDepthAttachment = true
-                                            }
-                                    })
-                            .pipelineLayout( {.shaderInfo = shaderInfo})
-                            .pipelineLayout( {.shaderInfo = boardShaderInfo})
-                            .pushConstant(sizeof(MeshPushConstant))
-                            .bufferInfo({.size = sizeof(ShaderData), .offset = 0});
-
-            renderPassRef = m_pContext.ResourceManager()->createDefaultRenderPass(renderPassInfo);
-*/
         }
 
         void mainLoop() {
             while (!m_pContext.Window().ShouldClose()) {
+                framework::Clock::Tick();
                 showFPS();
                 if (mShouldClose)
                     break;
@@ -175,7 +123,7 @@ namespace Epsilon {
 
         void showFPS() {
             // Measure speed
-            double currentTime = glfwGetTime();
+            double currentTime = framework::Clock::TimeSeconds();
             double delta = currentTime - lastTime;
             nbFrames++;
             if (delta >= 1.0) {
@@ -215,8 +163,7 @@ namespace Epsilon {
 
         std::pair<int, int> getWindowDimensions() {
             int w, h;
-            glfwGetWindowSize(m_pContext.Window().getWindow(), &w, &h);
-            return {w, h};
+            return m_pContext.Window().getSize();
         }
 
         ShaderData shaderData;

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vulkan/vulkan.hpp>
-#include "GLFW/glfw3.h"
 
 #include <stdexcept>
 #include "vk_data.hpp"
@@ -32,7 +31,7 @@ namespace vk
     }
 
     template <typename T>
-    static int32_t prepareSyncObjects(VulkanData &vk_data, GLFWwindow *window, uint32_t currentFrame, VulkanRenderPass &renderPass, VulkanVertexInfo vertexInfo)
+    static int32_t prepareSyncObjects(VulkanData &vk_data, uint32_t currentFrame, VulkanRenderPass &renderPass, VulkanVertexInfo vertexInfo)
     {
 
         vkWaitForFences(vk_data.logicalDevice, 1, &vk_data.syncObjects[currentFrame].inFlightFences, VK_TRUE, UINT64_MAX);

@@ -137,7 +137,37 @@ namespace engine
         XYZ_FLOAT,
         XYZW_UINT,
         XYZW_FLOAT
-    }; 
+    };
+
+    enum CompareFunction {
+        ALWAYS = 0,
+        LESS,
+        LESS_OR_EQUAL,
+        EQUAL,
+    };
+
+    enum WrapMode {
+        REPEAT = 0,
+        CLAMP_TO_BORDER,
+        CLAMP_TO_EDGE
+    };
+
+    enum Filtering {
+        POINT = 0,
+        LINEAR,
+        ANISOTROPIC
+    };
+
+    enum WindingMode {
+        CLOCKWISE = 0,
+        COUNTER_CLOCK_WISE
+    };
+
+    enum CullMode {
+        BACK = 0,
+        FRONT,
+        NONE
+    };
 
     struct TextureInfo
     {
@@ -145,6 +175,8 @@ namespace engine
         uint32_t height;
         uint32_t numChannels;
         TextureFormat format;
+        WrapMode wrapMode;
+        Filtering filtering;
         unsigned char* pixels = nullptr;
     };
 
@@ -206,8 +238,11 @@ namespace engine
     };
 
     struct RenderPassAttachment {
-
         TextureFormat format;
+        WrapMode wrapMode;
+        Filtering filtering;
+        CompareFunction compareFunc;
+        bool depthCompare = false;
         bool isSampler = false;
         bool isDepthAttachment = false;
         bool isSwapChainAttachment = false;
@@ -217,8 +252,6 @@ namespace engine
         size_t size;
         void* data;
     };
-
-
 
     struct BufferInfo {
         size_t size;
@@ -263,16 +296,6 @@ namespace engine
         UniformBindingInfo info;
     };
 
-    enum WindingMode {
-        CLOCKWISE = 0,
-        COUNTER_CLOCK_WISE
-    };
-
-    enum CullMode {
-        BACK = 0,
-        FRONT,
-        NONE
-    };
 
     struct PipelineLayout {
         ShaderInfo shaderInfo;

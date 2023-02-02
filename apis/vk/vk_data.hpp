@@ -43,6 +43,11 @@ namespace vk
         uint32_t num_channels = 0;
         VkFormat format = VK_FORMAT_R8G8B8A8_SRGB;
         VkImageUsageFlags usage;
+
+        VkFilter filter;
+        VkSamplerAddressMode addressMode;
+        VkCompareOp compareOp;
+        bool compareEnable = false;
     };
 
     struct VulkanTexture
@@ -54,6 +59,11 @@ namespace vk
         VkFormat format;
         VkSampler sampler = VK_NULL_HANDLE;
         VmaAllocation allocation;
+
+        VkFilter filter;
+        VkSamplerAddressMode addressMode;
+        VkCompareOp compareOp;
+        bool compareEnable = false;
     };
 
     struct VulkanTextureBuffer
@@ -145,7 +155,7 @@ namespace vk
         VulkanTextureInfo DepthTextureInfo;
         VulkanTextureBuffer DepthTextureBuffer;
 
-        VkFormat ImageFormat;
+        std::vector<VkFormat> ImageFormats;
         VkExtent2D Extent;
         std::vector<VkImageView> ImageViews;
         std::vector<VulkanTexture> Textures;

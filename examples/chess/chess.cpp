@@ -257,6 +257,7 @@ namespace ChessApp {
                 if (row == '6') return 6;
                 if (row == '7') return 7;
                 if (row == '8') return 8;
+                return ENUM_MAX;
             };
             auto &files = m_pBoard.getFiles();
             std::string strFirst = m_pUCI.last_move.substr(0, 2);

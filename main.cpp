@@ -31,10 +31,21 @@ extern "C"
 #endif
 
 #include "Example.hpp"
-
+#ifdef _WIN32
+int CALLBACK WinMain(
+  HINSTANCE hInstance,
+  HINSTANCE hPrevInstance,
+  LPSTR     lpCmdLine,
+  int       nCmdShow
+)
+#else
 int main(int argc, char **argv)
+#endif
 {
+
+#ifndef _WIN32
     framework::env::setArgs(argc, argv);
+#endif
 
     ExampleApp::ExampleApp app("Vulkan Engine");
 

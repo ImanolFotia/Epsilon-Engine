@@ -1,5 +1,6 @@
 #undef VMA_DEBUG_LOG
 #undef VMA_DEBUG_LOG_FORMAT
+
 #include "resource_manager.hpp"
 
 #include "core/framework/exception.hpp"
@@ -164,7 +165,6 @@ namespace engine {
 
         m_pVkDataPtr->defaultRenderPass.id = std::numeric_limits<uint32_t>::max();
         m_pDefaultRenderPassInfo = renderPassInfo;
-
         vk::createRenderPass(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, renderPassInfo, true);
 
         for (int i = 0; i < renderPassInfo.numLayouts; i++) {
@@ -194,29 +194,38 @@ namespace engine {
 
         renderPass.id = m_pRenderPassCount;
         m_pRenderPassInfo.push_back(renderPassInfo);
-        renderPass.renderPassChain.ImageFormat = VK_FORMAT_R32_SFLOAT;
+
+        renderPass.renderPassChain.ImageFormats.resize(renderPassInfo.attachments.size());
+        for (int index = 0; index < renderPassInfo.attachments.size(); index++)
+            renderPass.renderPassChain.ImageFormats[index] = resolveFormat(renderPassInfo.attachments[index].format);
+
         vk::createRenderPass(*m_pVkDataPtr, renderPass, renderPassInfo, false);
 
         for (size_t i = 0; i < renderPassInfo.attachments.size(); i++) {
             auto &attachment = renderPassInfo.attachments[i];
             vk::VulkanTextureInfo texInfo;
-            texInfo.format = attachment.isDepthAttachment ? findDepthFormat(*m_pVkDataPtr) : VK_FORMAT_R32_SFLOAT;
+            texInfo.format = attachment.isDepthAttachment ? findDepthFormat(*m_pVkDataPtr) : resolveFormat(
+                    renderPassInfo.attachments[i].format);
+            texInfo.addressMode = resolveWrapping(attachment.wrapMode);
+            texInfo.compareOp = resolveCompareOp(attachment.compareFunc);
+            texInfo.filter = resolveFilter(attachment.filtering);
             texInfo.width = renderPassInfo.dimensions.width;
             texInfo.height = renderPassInfo.dimensions.height;
-            texInfo.num_channels = attachment.isDepthAttachment ? 1 : 1;
+            texInfo.num_channels = attachment.isDepthAttachment ? 1 : resolveNumChannels(attachment.format);
             texInfo.usage = attachment.isDepthAttachment ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT :
                             VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-            if(attachment.isSampler)
-                texInfo.usage |= VK_IMAGE_USAGE_SAMPLED_BIT ;
+            texInfo.compareEnable = attachment.depthCompare;
+            if (attachment.isSampler)
+                texInfo.usage |= VK_IMAGE_USAGE_SAMPLED_BIT;
 
             vk::VulkanTexture texture = pCreateTextureBuffer(texInfo);
 
             createImageView(*m_pVkDataPtr, texture,
                             attachment.isDepthAttachment ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
 
-            if(attachment.isSampler) {
+            if (attachment.isSampler) {
                 vk::createTextureSampler(*m_pVkDataPtr, texture);
-           }
+            }
 
             if (attachment.isDepthAttachment) {
                 renderPass.renderPassChain.DepthTexture = texture;
@@ -261,7 +270,7 @@ namespace engine {
         }
 
         for (auto &buffer: uniformBufferPool) {
-            for(auto&b: buffer.buffers) {
+            for (auto &b: buffer.buffers) {
                 vmaDestroyBuffer(m_pAllocator, b.buffer, b.allocation);
             }
         }
@@ -284,21 +293,23 @@ namespace engine {
             for (auto &pipeline: pass.renderPipelines)
                 vk::destroyGraphicsPipeline(*m_pVkDataPtr, pipeline);
 
-            if(pass.id == std::numeric_limits<uint32_t>::max()) continue;
+            if (pass.id == std::numeric_limits<uint32_t>::max()) continue;
 
             for (int i = 0; i < pass.renderPassChain.Textures.size(); i++) {
                 vkDestroySampler(m_pVkDataPtr->logicalDevice, pass.renderPassChain.Textures[i].sampler, nullptr);
                 vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass.renderPassChain.Textures[i].imageView, nullptr);
-                vmaDestroyImage(m_pAllocator, pass.renderPassChain.Textures[i].image, pass.renderPassChain.Textures[i].allocation);
+                vmaDestroyImage(m_pAllocator, pass.renderPassChain.Textures[i].image,
+                                pass.renderPassChain.Textures[i].allocation);
             }
 
-            if(pass.renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE)
-            vkDestroySampler(m_pVkDataPtr->logicalDevice, pass.renderPassChain.DepthTexture.sampler, nullptr);
+            if (pass.renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE)
+                vkDestroySampler(m_pVkDataPtr->logicalDevice, pass.renderPassChain.DepthTexture.sampler, nullptr);
 
-            if(pass.renderPassChain.DepthTexture.imageView != VK_NULL_HANDLE)
-            vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass.renderPassChain.DepthTexture.imageView, nullptr);
+            if (pass.renderPassChain.DepthTexture.imageView != VK_NULL_HANDLE)
+                vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass.renderPassChain.DepthTexture.imageView, nullptr);
 
-            vmaDestroyImage(m_pAllocator, pass.renderPassChain.DepthTexture.image, pass.renderPassChain.DepthTexture.allocation);
+            vmaDestroyImage(m_pAllocator, pass.renderPassChain.DepthTexture.image,
+                            pass.renderPassChain.DepthTexture.allocation);
 
         }
 
@@ -469,5 +480,84 @@ namespace engine {
     Ref<ID> VulkanResourceManager::getId(Ref<RenderPass> renderPass) {
         //renderPassPool.getId(renderPass);
         //resourceIdPool
+    }
+
+    VkFormat VulkanResourceManager::resolveFormat(engine::TextureFormat format) {
+        //Color formats
+        if (format == COLOR_R) return VK_FORMAT_R8_SRGB;
+        if (format == COLOR_RG) return VK_FORMAT_R8G8_SRGB;
+        if (format == COLOR_RGB) return VK_FORMAT_R8G8B8_SRGB;
+        if (format == COLOR_RGBA) return VK_FORMAT_R8G8B8A8_SRGB;
+        if (format == COLOR_R_16F) return VK_FORMAT_R16_SFLOAT;
+        if (format == COLOR_R_32F) return VK_FORMAT_R32_SFLOAT;
+        if (format == COLOR_RG_16F) return VK_FORMAT_R16G16_SFLOAT;
+        if (format == COLOR_RG_32F) return VK_FORMAT_R32G32_SFLOAT;
+        if (format == COLOR_RGB_16F) return VK_FORMAT_R16G16B16_SFLOAT;
+        if (format == COLOR_RGB_32F) return VK_FORMAT_R32G32B32_SFLOAT;
+        if (format == COLOR_RGBA_16F) return VK_FORMAT_R16G16B16A16_SFLOAT;
+        if (format == COLOR_RGBA_32F) return VK_FORMAT_R32G32B32A32_SFLOAT;
+
+        //Non color formats (i.e. Normal Maps)
+        if (format == NON_COLOR_R) return VK_FORMAT_R8_UNORM;
+        if (format == NON_COLOR_RG) return VK_FORMAT_R8G8_UNORM;
+        if (format == NON_COLOR_RGB) return VK_FORMAT_R8G8B8_UNORM;
+        if (format == NON_COLOR_RGBA) return VK_FORMAT_R8G8B8A8_UNORM;
+
+        if (format == DEPTH_F16) return VK_FORMAT_D16_UNORM;
+        if (format == DEPTH_F32) return VK_FORMAT_D32_SFLOAT;
+        if (format == DEPTH_F32_STENCIL_8) return VK_FORMAT_D32_SFLOAT_S8_UINT;
+
+    }
+
+    VkFilter VulkanResourceManager::resolveFilter(engine::Filtering filter) {
+        if (filter == POINT) return VK_FILTER_NEAREST;
+        if (filter == LINEAR) return VK_FILTER_LINEAR;
+    }
+
+    VkSamplerAddressMode VulkanResourceManager::resolveWrapping(engine::WrapMode wrapping) {
+        if (wrapping == REPEAT) return VK_SAMPLER_ADDRESS_MODE_REPEAT;
+        if (wrapping == CLAMP_TO_BORDER) return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+        if (wrapping == CLAMP_TO_EDGE) return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+    }
+
+    VkCompareOp VulkanResourceManager::resolveCompareOp(engine::CompareFunction compareOp) {
+        if (compareOp == ALWAYS) return VK_COMPARE_OP_ALWAYS;
+        if (compareOp == LESS) return VK_COMPARE_OP_LESS;
+        if (compareOp == LESS_OR_EQUAL) return VK_COMPARE_OP_LESS_OR_EQUAL;
+        if (compareOp == EQUAL) return VK_COMPARE_OP_EQUAL;
+        //TODO: Implement the rest
+    }
+
+
+    unsigned VulkanResourceManager::resolveNumChannels(engine::TextureFormat format) {
+        if (format == COLOR_R ||
+            format == NON_COLOR_R ||
+            format == DEPTH_F16 ||
+            format == DEPTH_F32 ||
+            format == DEPTH_F32_STENCIL_8 ||
+            format == COLOR_R_32F ||
+            format == COLOR_R_16F) {
+            return 1;
+        }
+
+        if (format == COLOR_RG ||
+            format == COLOR_RG_16F ||
+            format == COLOR_RG_32F ||
+            format == NON_COLOR_RG) {
+            return 2;
+        }
+
+        if (format == COLOR_RGB ||
+            format == COLOR_RGB_16F ||
+            format == COLOR_RGB_32F ||
+            format == NON_COLOR_RGB) {
+            return 3;
+        }
+        if (format == COLOR_RGBA ||
+            format == COLOR_RGBA_16F ||
+            format == COLOR_RGBA_32F ||
+            format == NON_COLOR_RGBA) {
+            return 4;
+        }
     }
 }

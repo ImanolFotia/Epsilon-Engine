@@ -40,10 +40,10 @@ vec3 shadowCoord = shadowCoords.xyz / shadowCoords.w;
 #define BLOCKER_SEARCH_NUM_SAMPLES 16
 #define PCF_NUM_SAMPLES 16
 #define NEAR_PLANE 0.1
-#define LIGHT_WORLD_SIZE 50
+#define LIGHT_WORLD_SIZE 1
 #define LIGHT_FRUSTUM_WIDTH 50
 // Assuming that LIGHT_FRUSTUM_WIDTH == LIGHT_FRUSTUM_HEIGHT
-#define LIGHT_SIZE_UV 0.0001//(LIGHT_WORLD_SIZE / LIGHT_FRUSTUM_WIDTH)
+#define LIGHT_SIZE_UV (LIGHT_WORLD_SIZE / LIGHT_FRUSTUM_WIDTH)
 
     vec2 poissonDisk[16] = {
         vec2(-0.94201624, -0.39906216),
@@ -75,14 +75,19 @@ void FindBlocker(out float avgBlockerDepth,
 {
     // This uses similar triangles to compute what
     // area of the shadow map we should search
-    float searchWidth = 0.003;//LIGHT_SIZE_UV * (shadowCoord.z - NEAR_PLANE) / shadowCoord.z;
+    float searchWidth = LIGHT_SIZE_UV * ((zReceiver - NEAR_PLANE) / zReceiver);
     float blockerSum = 0;
     numBlockers = 0;
+
+    
+    float current = shadowCoord.z;
+    float closest = texture(shadowMap, shadowCoord).r;
+
     for (int i = 0; i < BLOCKER_SEARCH_NUM_SAMPLES; ++i)
     {
-        float shadowMapDepth = textureGrad(shadowMap,
-            shadowCoord + vec3(poissonDisk[i] * searchWidth, 0.0), vec2(0.0),  vec2(0.0)).r;
-        if (shadowMapDepth < shadowCoord.z)
+        float shadowMapDepth = texture(shadowMap,
+            shadowCoord + vec3((poissonDisk[i]/700.0) * (abs(closest - current)*20), 0.0)).r;
+        if (shadowMapDepth < zReceiver)
         {
             blockerSum += shadowMapDepth;
             numBlockers++;
@@ -95,7 +100,7 @@ float PCF_Filter(vec2 uv, float zReceiver, float filterRadiusUV)
     float sum = 0.0;
     for (int i = 0; i < PCF_NUM_SAMPLES; ++i)
     {
-        vec2 offset = poissonDisk[i] * filterRadiusUV;
+        vec2 offset = (poissonDisk[i]/700.0) * filterRadiusUV;
         float z = texture(shadowMap, shadowCoord + vec3(offset, 0.0), 0).r;
         sum += z;// > shadowCoord.z + 0.01 ? 1.0 : 0.0;
     }
@@ -116,7 +121,7 @@ float PCSS(vec4 coords)
     float penumbraRatio = PenumbraSize(zReceiver, avgBlockerDepth);
     float filterRadiusUV = penumbraRatio * LIGHT_SIZE_UV * NEAR_PLANE / zReceiver;
     // STEP 3: filtering
-    return PCF_Filter(uv, zReceiver, filterRadiusUV );
+    return PCF_Filter(uv, zReceiver, 1.0-filterRadiusUV );
 }
 
 void main()
@@ -126,7 +131,7 @@ void main()
     vec4 FragPosLightSpace = ubo.lightMatrix * vec4(position.xyz, 1.0);
 
     float current = shadowCoord.z;
-    float closest = texture(shadowMap, shadowCoord).r;
+    float closest = texture(shadowMap, vec3(shadowCoord.xy, 0.501)).r;
     const float bias = 0.001;
     
     //float mult = clamp(abs(closest - current) * 10, 0.0, 5.0);
@@ -145,7 +150,7 @@ void main()
         shadow = 0.1;
     }
 
-    sum = PCF_Filter(shadowCoords.xy / shadowCoords.w, shadowCoord.z, 0.001);
+    sum = PCF_Filter(shadowCoords.xy / shadowCoords.w, shadowCoord.z, 1.0);
     
 
     //sum = PCSS(shadowCoords);

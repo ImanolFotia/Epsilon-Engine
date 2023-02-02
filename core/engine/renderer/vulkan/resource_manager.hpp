@@ -99,6 +99,12 @@ namespace engine
 
         void pUpdateMaterial(vk::VulkanMaterial&);
 
+        VkFormat resolveFormat(engine::TextureFormat format);
+        VkFilter resolveFilter(engine::Filtering filter);
+        VkSamplerAddressMode resolveWrapping(engine::WrapMode wrapping);
+        VkCompareOp resolveCompareOp(engine::CompareFunction compareOp);
+        unsigned resolveNumChannels(engine::TextureFormat format);
+
         const VkBufferUsageFlags UNIFORM_BUFFER_USAGE = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
         const VkBufferUsageFlags STORAGE_BUFFER_USAGE = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
         const VkBufferUsageFlags RAYTRACING_BUFFER_USAGE = VK_BUFFER_USAGE_RAY_TRACING_BIT_NV;

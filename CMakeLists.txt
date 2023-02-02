@@ -6,7 +6,7 @@ set(DBUILD_SHARED_LIBS ON CACHE BOOL "Build as a shared library")
 set(DGENERATE_RPM_PACKAGE OFF CACHE BOOL "Generate RPM deployment package")
 set(EPSILON_BUILD_LOCATION ${CMAKE_BINARY_DIR})
 #set (BACKTRACE_SUPPORTED 1)
-
+add_compile_definitions(USE_GLFW=1)
 
 #include (CheckSymbolExists)
 #check_symbol_exists (_Unwind_Backtrace unwind.h HAVE_BACKTRACE)
@@ -234,7 +234,8 @@ else ()
             apis/al/listener.hpp
             apis/al/source.hpp
             apis/al/al_data.hpp
-            core/framework/audio/WAVFile.h)
+            core/framework/audio/WAVFile.h
+            core/framework/window.cpp core/framework/clock.cpp)
 endif ()
 
 target_sources(${PROJECT_NAME} PUBLIC
@@ -258,7 +259,9 @@ target_sources(${PROJECT_NAME} PUBLIC
         ${CMAKE_SOURCE_DIR}/apis/al/al_data.hpp
         ${CMAKE_SOURCE_DIR}/apis/al/device.hpp
         ${CMAKE_SOURCE_DIR}/apis/al/listener.hpp
-        ${CMAKE_SOURCE_DIR}/core/framework/audio/WAVFile.h)
+        ${CMAKE_SOURCE_DIR}/core/framework/audio/WAVFile.h
+        ${CMAKE_SOURCE_DIR}/core/framework/window.cpp
+        ${CMAKE_SOURCE_DIR}/core/framework/window.cpp core/framework/clock.cpp)
 
 find_package(Vulkan REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${Vulkan_LIBRARIES})
@@ -306,26 +309,12 @@ execute_process(
         OUTPUT_VARIABLE outVar
 )
 
-
-#FILE(GLOB shaders "${CMAKE_SOURCE_DIR}/assets/shaders/chess/" )
-#install(DIRECTORY ${shaders} DESTINATION "${CMAKE_INSTALL_BINDIR}/bin/assets/shaders/chess" FILES_MATCHING PATTERN "*.spv")
-
-
 FILE(GLOB shaders "${CMAKE_SOURCE_DIR}/assets/shaders/chess/*.spv" )
 install(FILES ${shaders} DESTINATION "bin/assets/shaders/chess/")
 
 
 FILE(GLOB images "${CMAKE_SOURCE_DIR}/assets/images" )
 install(DIRECTORY ${images} DESTINATION "bin/assets/images")
-
-#execute_process(
-#    COMMAND mkdir -p ${PROJECT_BINARY_DIR}/examples/assets/shaders/
-#)
-
-#install(DIRECTORY "./assets/shaders/"
-#        DESTINATION ${PROJECT_BINARY_DIR}/examples/assets/shaders/
-#        FILES_MATCHING PATTERN "*.spv")
-
 
 #add_subdirectory(examples/basic)
 add_subdirectory(examples/chess)
