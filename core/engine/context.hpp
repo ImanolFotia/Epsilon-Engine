@@ -7,6 +7,7 @@
 #include "core/engine/renderer/vulkan/resource_manager.hpp"
 #include "../../apis/al/al.hpp"
 #include "apis/al/al.hpp"
+#include "core/framework/singleton.hpp"
 
 #ifdef WIN32
 #if !defined(__PRETTY_FUNCTION__) && !defined(__GNUC__)
@@ -16,25 +17,26 @@
 #endif
 
 namespace engine {
-    class Context {
+    class Context : public singleton<Context> {
     public:
         Context() {
         }
 
         void Init(const std::string &name, renderer_type rtype) {
-            m_pRendererType = rtype;
-
+            self.m_pRendererType = rtype;
+#if !defined(ANDROID) && !defined(__ANDROID__)
             bool res = al::initDevice(&alData);
 
             if(!res) std::cout << "Couldn't start audio device" << std::endl;
+#endif
 
-            switch (m_pRendererType) {
+            switch (self.m_pRendererType) {
                 case renderer_type::vulkan:
-                    m_pResourceManager = std::make_shared<engine::VulkanResourceManager>();
+                    self.m_pResourceManager = std::make_shared<engine::VulkanResourceManager>();
 
-                    m_pRenderer = std::make_shared<engine::VulkanRenderer>();
-                    std::static_pointer_cast<engine::VulkanRenderer>(m_pRenderer)->setResourceManagerRef(
-                            std::static_pointer_cast<engine::VulkanResourceManager>(m_pResourceManager).get());
+                    self.m_pRenderer = std::make_shared<engine::VulkanRenderer>();
+                    std::static_pointer_cast<engine::VulkanRenderer>(self.m_pRenderer)->setResourceManagerRef(
+                            std::static_pointer_cast<engine::VulkanResourceManager>(self.m_pResourceManager).get());
                     break;
                 default:
 
@@ -47,17 +49,20 @@ namespace engine {
             std::cout << "Initiated API context" << std::endl;
         }
 
-        const std::string &ApplicationName() { return m_pApplicationName; }
+        const std::string &ApplicationName() { return self.m_pApplicationName; }
 
-        framework::Window &Window() { return m_pWindow; }
+        framework::Window &Window() { return self.m_pWindow; }
 
-        auto ResourceManager() { return m_pResourceManager; }
+        auto ResourceManager() { return self.m_pResourceManager; }
 
-        auto Renderer() { return m_pRenderer; }
+        auto Renderer() { return self.m_pRenderer; }
 
     protected:
         std::string m_pApplicationName = "Default";
         renderer_type m_pRendererType;
+#if defined(ANDROID) && defined(__ANDROID__)
+        struct OpenALData{};
+#endif
         OpenALData alData;
 
         framework::Window m_pWindow = {};

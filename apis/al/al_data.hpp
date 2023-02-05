@@ -6,6 +6,7 @@
 #define EPSILON_AL_DATA_HPP
 
 
+#if (!defined(ANDROID) && !defined(__ANDROID__))
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <AL/alext.h>
@@ -17,5 +18,6 @@ struct OpenALData {
     ALCdevice *device;
     ALCcontext *context;
 };
+#endif
 
 #endif //EPSILON_AL_DATA_HPP

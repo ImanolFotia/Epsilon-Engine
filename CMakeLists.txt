@@ -5,17 +5,11 @@ set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 set(DBUILD_SHARED_LIBS ON CACHE BOOL "Build as a shared library")
 set(DGENERATE_RPM_PACKAGE OFF CACHE BOOL "Generate RPM deployment package")
 set(EPSILON_BUILD_LOCATION ${CMAKE_BINARY_DIR})
-#set (BACKTRACE_SUPPORTED 1)
-add_compile_definitions(USE_GLFW=1)
+set(DUSE_GLFW 1)
+set(DBUILD_ANDROID 0)
 
-#include (CheckSymbolExists)
-#check_symbol_exists (_Unwind_Backtrace unwind.h HAVE_BACKTRACE)
-
-#if(HAVE_BACKTRACE)
-#    message (STATUS "_Unwind_Backtrace() found. Enabling Backtrace support.")
-#else()
-#    message (STATUS "_Unwind_Backtrace() not found. Disabling Backtrace support.")
-#endif()
+add_compile_definitions(USE_GLFW=${DUSE_GLFW})
+add_compile_definitions(BUILD_ANDROID=${DBUILD_ANDROID})
 
 # use, i.e. don't skip the full RPATH for the build tree
 set(SET_CUSTOM_RPATH TRUE)
@@ -42,6 +36,7 @@ endif()
 option(BUILD_AS_LIBRARY "Build as a library" ON)
 
 include(ExternalProject)
+include(FindPkgConfig)
 
 #Download and include glm
 ExternalProject_Add(glm
@@ -201,45 +196,9 @@ option(CREATE_STATIC_LIB "Build static library" OFF)
 
 project(Epsilon VERSION 0.1.0)
 
-
-if (BUILD_AS_LIBRARY)
-
-    if (CREATE_STATIC_LIB)
-        add_library(${PROJECT_NAME} STATIC main_lib.cpp)
-    else ()
-        add_library(${PROJECT_NAME} SHARED main_lib.cpp)
-    endif ()
-
-    if (MSVC)
-        target_compile_options(${PROJECT_NAME} PRIVATE /W2)
-    else ()
-        target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
-    endif ()
-else ()
-    add_executable(${PROJECT_NAME} main.cpp
-            core/engine/renderer/drawables/primitives/quad.hpp
-            core/framework/app.hpp
-            core/framework/IO/IO.hpp
-            core/framework/IO/KeyBoard.cpp
-            core/framework/IO/KeyBoard.hpp
-            core/framework/IO/KeyboardWrapper.hpp
-            core/framework/IO/Mouse.hpp
-            core/framework/IO/Joystick/Joystick.hpp
-            core/framework/IO/Joystick/JoystickWrapper.hpp
-            core/framework/IO/Joystick/Mappings.hpp
-            core/framework/IO/IO.cpp
-             ../../../../../../camera.h
-            ../../../../../../camera.cpp
-            apis/al/device.hpp
-            apis/al/listener.hpp
-            apis/al/source.hpp
-            apis/al/al_data.hpp
-            core/framework/audio/WAVFile.h
-            core/framework/window.cpp core/framework/clock.cpp)
-endif ()
-
-target_sources(${PROJECT_NAME} PUBLIC
+set(PROJECT_FILES
         ${CMAKE_SOURCE_DIR}/core/framework/env.cpp
+        ${CMAKE_SOURCE_DIR}/main_lib.cpp
         ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/vulkan_impl.cpp
         ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/vulkan.cpp
         ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/resource_manager.cpp
@@ -261,20 +220,61 @@ target_sources(${PROJECT_NAME} PUBLIC
         ${CMAKE_SOURCE_DIR}/apis/al/listener.hpp
         ${CMAKE_SOURCE_DIR}/core/framework/audio/WAVFile.h
         ${CMAKE_SOURCE_DIR}/core/framework/window.cpp
-        ${CMAKE_SOURCE_DIR}/core/framework/window.cpp core/framework/clock.cpp)
+        ${CMAKE_SOURCE_DIR}/core/framework/window.cpp
+        ${CMAKE_SOURCE_DIR}/core/framework/clock.cpp
+        ${CMAKE_SOURCE_DIR}/modules/mono/mono-instance.hpp
+        ${CMAKE_SOURCE_DIR}/Epsilon.cpp
+        ${CMAKE_SOURCE_DIR}/core/framework/singleton.hpp)
+
+if (BUILD_AS_LIBRARY)
+
+    if (CREATE_STATIC_LIB)
+        add_library(${PROJECT_NAME} STATIC main_lib.cpp)
+    else ()
+        add_library(${PROJECT_NAME} SHARED main_lib.cpp)
+    endif ()
+
+    if (MSVC)
+        target_compile_options(${PROJECT_NAME} PRIVATE /W2)
+    else ()
+        target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
+    endif ()
+else ()
+    add_executable(${PROJECT_NAME} main.cpp
+            ${PROJECT_FILES})
+endif ()
+
+target_sources(${PROJECT_NAME} PUBLIC
+        ${PROJECT_FILES})
 
 find_package(Vulkan REQUIRED)
+pkg_check_modules(Mono mono-2 REQUIRED)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE ${Mono_LINK_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PRIVATE ${Mono_INCLUDE_DIRS})
+
 target_link_libraries(${PROJECT_NAME} PRIVATE ${Vulkan_LIBRARIES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${Vulkan_INCLUDE_DIR})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw3)
+
 target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
 target_link_libraries(${PROJECT_NAME} PRIVATE openal)
+if(BUILD_ANDROID EQUAL 0)
+target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
+target_link_libraries(${PROJECT_NAME} PRIVATE openal)
+endif()
+
 add_dependencies(${PROJECT_NAME} vma)
 add_dependencies(${PROJECT_NAME} glfw3_d)
+
+if(DBUILD_ANDROID EQUAL 0)
 add_dependencies(${PROJECT_NAME} openal_d)
-add_dependencies(${PROJECT_NAME} glm)
 add_dependencies(${PROJECT_NAME} assimp_d)
+else()
+
+endif()
+add_dependencies(${PROJECT_NAME} glm)
 add_dependencies(${PROJECT_NAME} beacon)
 add_dependencies(${PROJECT_NAME} stb)
 add_dependencies(${PROJECT_NAME} imgui)
@@ -289,7 +289,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC -rdynamic)
 #
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE)
+#set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE)
 set(CPACK_PROJECT_NAME "Epsilon Engine")
 
 if(DGENERATE_RPM_PACKAGE)
@@ -320,3 +320,8 @@ install(DIRECTORY ${images} DESTINATION "bin/assets/images")
 add_subdirectory(examples/chess)
 add_subdirectory(examples/model)
 add_subdirectory(examples/bsp)
+add_subdirectory(examples/mono-managed)
+
+if(BUILD_ANDROID EQUAL 1)
+    add_subdirectory(platform/android/app/src/main/cpp)
+endif()

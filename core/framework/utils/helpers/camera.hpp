@@ -10,13 +10,21 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 #include "glm/gtc/quaternion.hpp"
-#include "GLFW/glfw3.h"
 
+#if USE_GLFW
+#include "GLFW/glfw3.h"
+#endif
+
+#ifndef BUILD_ANDROID
 #include "core/framework/IO/KeyBoard.hpp"
 #include "core/framework/IO/Mouse.hpp"
 #include "core/framework/IO/Joystick/Joystick.hpp"
+#endif
+
+#include "../../window.hpp"
 
 #include "beacon/beacon.hpp"
+#include <iostream>
 
 namespace utils
 {
@@ -33,7 +41,7 @@ namespace utils
         }
 
     public:
-        void Update(GLFWwindow *);
+        void Update(framework::Window::windowType *);
 
         glm::vec2 UpdateMatrices(int, int, int, bool jitter = true);
 
@@ -81,7 +89,7 @@ namespace utils
     private:
         void LockCamera(void);
 
-        void HandleInputs(GLFWwindow *&);
+        void HandleInputs(framework::Window::windowType *&);
 
         void GetExternalInputs(void);
 

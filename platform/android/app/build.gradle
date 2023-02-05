@@ -18,6 +18,10 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags '-std=c++17'
+                // Sets a flag to enable format macro constants for the C compiler.
+                //cFlags += "-D__ANDROID__"
+                //cppFlags += "-D__ANDROID__"
+
             }
         }
     }
@@ -37,13 +41,16 @@ android {
     }
     externalNativeBuild {
         cmake {
-            path file('src/main/cpp/CMakeLists.txt')
+            //path file('src/main/cpp/CMakeLists.txt')
+            path file('../../../CMakeLists.txt')
             version '3.22.1'
         }
     }
     buildFeatures {
         viewBinding true
     }
+    ndkVersion '25.2.9519653'
+    buildToolsVersion '33.0.0'
 }
 
 dependencies {

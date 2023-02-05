@@ -7,8 +7,6 @@
 
 namespace engine
 {
-
-
     struct RenderPassBinding {
         Ref<RenderPass> renderPass;
         uint32_t index;

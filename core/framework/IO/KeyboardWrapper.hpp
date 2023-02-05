@@ -4,6 +4,8 @@ namespace framework
 {
     namespace Input
     {
+
+#if USE_GLFW
         namespace GLFW
         {
             namespace Key
@@ -61,5 +63,6 @@ namespace framework
                 static constexpr int LEFT_SHIFT = GLFW_KEY_LEFT_SHIFT;
             }
         }
+#endif
     }
 }

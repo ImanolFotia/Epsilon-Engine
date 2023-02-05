@@ -11,7 +11,9 @@ target_sources(${PROJECT_NAME} PRIVATE main.cpp)
 message(STATUS "location of epsilon build: " ${EPSILON_BUILD_LOCATION})
 message(STATUS "location of vulkan libs: " ${Vulkan_LIBRARIES})
 
+if(BUILD_ANDROID EQUAL 0)
 add_dependencies(${PROJECT_NAME} Epsilon)
+endif()
 
 if (MSVC)
     target_link_libraries(${PROJECT_NAME} LINK_PUBLIC Epsilon)
@@ -24,7 +26,10 @@ target_link_libraries(${PROJECT_NAME} PUBLIC ${Vulkan_LIBRARIES})
 target_include_directories(${PROJECT_NAME} PUBLIC ${Vulkan_INCLUDE_DIR})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw3)
+
+if(!BUILD_ANDROID)
 target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
+endif()
 target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_DL_LIBS})
 
 

@@ -3,7 +3,9 @@
 #include <vector>
 #include <stdexcept>
 
+#if !defined(ANDROID) || !defined(__ANDROID__)
 #include <vulkan/vulkan.hpp>
+#endif
 
 #include "core/framework/common.hpp"
 #include "queues.hpp"
@@ -15,7 +17,7 @@
 #include "sync_objects.hpp"
 #include "vk_data.hpp"
 
-#ifdef __linux__
+#if defined(__linux__) && (!defined(ANDROID) && !defined(__ANDROID__))
 #include <bits/stdc++.h>
 #endif
 

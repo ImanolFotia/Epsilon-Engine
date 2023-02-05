@@ -1,6 +1,8 @@
 #pragma once
 
+#if !defined(ANDROID) || !defined(__ANDROID__)
 #include <vulkan/vulkan.hpp>
+#endif
 
 #include "swap_chain.hpp"
 #include "vk_data.hpp"

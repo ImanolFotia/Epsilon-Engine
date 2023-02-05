@@ -6,8 +6,11 @@
 #include <cstdint>   // Necessary for UINT32_MAX
 #include <algorithm> // Necessary for std::clamp
 
+#if !defined(ANDROID) || !defined(__ANDROID__)
 #include <vulkan/vulkan.hpp>
 #include "GLFW/glfw3.h"
+#endif
+
 
 #include "surface.hpp"
 #include "render_pass.hpp"
@@ -87,7 +90,7 @@ namespace vk
         return VK_PRESENT_MODE_FIFO_KHR;
     }
 
-    static VkExtent2D chooseSwapExtent(GLFWwindow *window, const VkSurfaceCapabilitiesKHR &capabilities)
+    static VkExtent2D chooseSwapExtent(framework::Window::windowType *window, const VkSurfaceCapabilitiesKHR &capabilities)
     {
         if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max())
         {
@@ -98,7 +101,10 @@ namespace vk
         else
         {
             int width, height;
+
+#ifdef USE_GLFW
             glfwGetFramebufferSize(window, &width, &height);
+#endif
 
             VkExtent2D actualExtent = {
                 static_cast<uint32_t>(width),
@@ -112,7 +118,7 @@ namespace vk
         }
     }
 
-    static void createSwapChain(VulkanData &vk_data, GLFWwindow *window)
+    static void createSwapChain(VulkanData &vk_data, framework::Window::windowType *window)
     {
         SwapChainSupportDetails swapChainSupport = querySwapChainSupport(vk_data.physicalDevice, vk_data);
 

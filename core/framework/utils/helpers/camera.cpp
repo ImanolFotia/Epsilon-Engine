@@ -7,7 +7,9 @@
 
 #include "camera.hpp"
 #include <math.h>
+#include <core/framework/IO/IO.hpp>
 #include "core/framework/def.hpp"
+#include <core/framework/clock.hpp>
 
 namespace utils
 {
@@ -51,7 +53,7 @@ namespace utils
         }
     }
 
-    void Camera::Update(GLFWwindow *win)
+    void Camera::Update(framework::Window::windowType *win)
     {
         HandleInputs(win);
 
@@ -81,7 +83,7 @@ namespace utils
         horizontalAngle = clamp(horizontalAngle, -PI, PI, -k, -1.0);
     }
 
-    void Camera::HandleInputs(GLFWwindow *&window)
+    void Camera::HandleInputs(framework::Window::windowType *&window)
     {
 
         if (glm::isnan(this->Position.x))
@@ -91,15 +93,16 @@ namespace utils
         if (glm::isnan(this->Position.z))
             this->Position.z = 0;
 
-        static double LastTime = glfwGetTime();
+        static double LastTime = framework::Clock::TimeSeconds();
 
-        double currentTime = glfwGetTime();
+        double currentTime = framework::Clock::TimeSeconds();
 
         float DeltaTime = float(currentTime - LastTime);
 
         static double lastX = 0.0, lastY = 0.0;
+        //auto winSize =
 
-        glfwGetWindowSize(window, &winx, &winy);
+        //glfwGetWindowSize(window, &winx, &winy);
 
         auto _Joystick = framework::Input::Joystick::JoystickManager::PrimaryJoystick();
 
@@ -144,6 +147,7 @@ namespace utils
         Up = glm::cross(Rigth, Orientation);
 
         /** Keyboard Camera input**/
+#if USE_GLFW
         if (!_Joystick->getJoystickIsPresent())
         {
             if (framework::Input::KeyBoard::KEYS[framework::Input::GLFW::Key::W])
@@ -221,6 +225,8 @@ namespace utils
                 MovementSpeed = glm::mix(MovementSpeed, 0.0f, 2.0f * DeltaTime);
             }
         }
+
+#endif
         /** ------------------------------------------------------------------*/
 
         // MovementSpeed = glm::mix(MovementSpeed, 0.0f, 2.0f * DeltaTime);

@@ -7,7 +7,9 @@
 #include <cstring>
 #include <set>
 
+#if !defined(ANDROID) || !defined(__ANDROID__)
 #include <vulkan/vulkan.hpp>
+#endif
 
 #include "extensions.hpp"
 #include "vk_data.hpp"
@@ -36,8 +38,9 @@ namespace vk
         uint32_t glfwExtensionCount = 0;
         const char **glfwExtensions;
 
+#if USE_GLFW
         glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
-
+#endif
         auto extensions = getRequiredExtensions();
         createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
         createInfo.ppEnabledExtensionNames = extensions.data();

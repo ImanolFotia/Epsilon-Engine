@@ -1,7 +1,12 @@
 #pragma once
 
 #include <string>
+#if BUILD_ANDROID
+    #undef USE_GLFW
+#else
+
 #include <vulkan/vulkan.hpp>
+#endif
 
 #ifdef _WIN32
     #define VK_USE_PLATFORM_WIN32_KHR
@@ -9,18 +14,21 @@
     #if USE_GLFW
         #define GLFW_EXPOSE_NATIVE_WIN32
     #endif
-#elif __linux__
+#endif
+#ifdef __linux__
     #define VK_USE_PLATFORM_XLIB_KHR
-#else
-    #ifdef BUILD_ANDROID
+#endif
+#if defined(ANDROID) || defined(__ANDROID__)
+        #define VK_USE_PLATFORM_ANDROID_KHR
         #undef USE_GLFW
+        #include <jni.h>
         #include <android/native_window.h>
-    #endif
 #endif
 
-#ifdef USE_GLFW
+#if USE_GLFW
     #include <GLFW/glfw3.h>
 #endif
+
 
 namespace framework {
     class Window {
@@ -28,14 +36,10 @@ namespace framework {
     public:
 #if USE_GLFW
         using windowType = GLFWwindow;
-#elif
-    #ifdef _WIN32
+#elif _WIN32
             using windowType = HWND;
-    #endif
-#elif
-    #ifdef BUILD_ANDROID
+#elif defined(ANDROID) || defined(__ANDROID__)
             using windowType = ANativeWindow;
-    #endif
 #endif
     public:
         void init(std::string appName, int w = 1280, int h = 720);
@@ -92,11 +96,11 @@ namespace framework {
         }
 
         std::pair<int, int> getSize() {
-#if USE_GLFW
+/*#if USE_GLFW
             int w, h;
-            glfwGetWindowSize(mWindow, &w, &h);
-            return {w, h};
-#endif
+            glfwGetWindowSize(mWindow, &w, &h);*/
+            return {mWidth, mHeight};/*
+#endif*/
         }
 
         void cleanup() {
@@ -121,8 +125,8 @@ namespace framework {
         }
 
     private:
-        unsigned mWidth = 1280;
-        unsigned mHeight = 720;
+        unsigned mWidth = 0;
+        unsigned mHeight = 0;
 
         windowType *mWindow;
 #ifdef _WIN32

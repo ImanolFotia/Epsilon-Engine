@@ -1,5 +1,7 @@
 #pragma once
+#if USE_GLFW
 #include "GLFW/glfw3.h"
+#endif
 #include "glm/glm.hpp"
 
 #include <iostream>
@@ -158,6 +160,7 @@ namespace framework
                     return nullptr;
                 }
 
+#if USE_GLFW
                 static void JoystickCallbackGLFW(int joystick, int event)
                 {
                     try
@@ -179,7 +182,6 @@ namespace framework
                                   << "What(): " << e.what() << std::endl;
                     }
                 }
-
                 static void DetectJoysticks()
                 {
                     try
@@ -249,6 +251,7 @@ namespace framework
                     }
                 }
 
+
                 static void PollJoystick()
                 {
                     try
@@ -287,6 +290,7 @@ namespace framework
                     }
                 }
 
+#endif
             public:
                 static std::unordered_map<unsigned, Joystick_ptr> JoystickVector;
             };

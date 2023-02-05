@@ -6,10 +6,14 @@
 
 #pragma once
 
+#if USE_GLFW
+#define GLFW_INCLUDE_VULKAN
 #include "GLFW/glfw3.h"
+#endif
+
 #include "KeyboardWrapper.hpp"
 
-#include "beacon/beacon.hpp"
+#include <beacon/beacon.hpp>
 
 namespace framework
 {
@@ -47,8 +51,9 @@ namespace framework
 
             static bool KEYS[1024];
 
+#if USE_GLFW
             static void KeyBoardCallBackGLFW(GLFWwindow *window, int key, int scancode, int action, int mode);
-
+#endif
             static bool getKey(uint16_t);
 
             static bool getKey(const char *);

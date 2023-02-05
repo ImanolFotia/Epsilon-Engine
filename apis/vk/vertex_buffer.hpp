@@ -2,7 +2,9 @@
 
 #include <array>
 
+#if !defined(ANDROID) || !defined(__ANDROID__)
 #include <vulkan/vulkan.hpp>
+#endif
 #include "core/engine/types.hpp"
 
 namespace vk

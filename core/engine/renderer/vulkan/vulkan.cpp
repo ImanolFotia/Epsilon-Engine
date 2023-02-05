@@ -13,6 +13,10 @@
 
 #define VMA_IMPLEMENTATION
 
+#if defined(ANDROID) || defined(__ANDROID__)
+#define VMA_VULKAN_VERSION 1000000
+#endif
+
 #include "vk_mem_alloc.h"
 
 #ifdef WIN32

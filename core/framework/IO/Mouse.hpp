@@ -1,8 +1,11 @@
 #pragma once
 
 #include <iostream>
+
+#if USE_GLFW
 #include "GLFW/glfw3.h"
-#include "beacon/beacon.hpp"
+#endif
+#include <beacon/beacon.hpp>
 
 namespace framework
 {
@@ -68,7 +71,7 @@ namespace framework
 
             static double prevxOffset;
             static double prevyOffset;
-
+#if USE_GLFW
             static void MouseCallBackGLFW(GLFWwindow *window, double xpos, double ypos)
             {
                 MouseArgs mouseArgs;
@@ -80,6 +83,7 @@ namespace framework
 
                 MouseEventHandler.raise(nullptr, &mouseArgs);
             }
+
 
             static void MouseWheelCallbackGLFW(GLFWwindow *window, double xoffset, double yoffset)
             {
@@ -139,6 +143,7 @@ namespace framework
 
                 MouseEventHandler.raise(nullptr, &mouseArgs);
             }
+#endif
         };
     }
 }

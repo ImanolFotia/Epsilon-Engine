@@ -11,6 +11,7 @@
 
 #include "SourceBSP.hpp"
 #include <core/framework/utils/helpers/camera.hpp>
+#include <core/framework/IO/KeyBoard.hpp>
 
 namespace BSP {
     class BSP : public Epsilon::Epsilon {
@@ -49,9 +50,14 @@ namespace BSP {
 
         explicit BSP(const std::string &appname) : Epsilon::Epsilon(appname) {
             m_pCamera = std::make_shared<utils::Camera>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+
+            Epsilon::getSingleton().onCreate = [this] { onCreate(); };
+            Epsilon::getSingleton().onReady = [this] { onReady(); };
+            Epsilon::getSingleton().onRender = [this] { onRender(); };
+            Epsilon::getSingleton().onExit = [this] { onExit(); };
         }
 
-        void onCreate() override {
+        void onCreate() {
 
             setupRenderPass();
 
@@ -62,14 +68,14 @@ namespace BSP {
                     }
             };
 
-            shadowDummyMaterial = m_pContext.ResourceManager()->createMaterial(material, m_pShadowRenderPass);
+            shadowDummyMaterial = Epsilon::getContext().ResourceManager()->createMaterial(material, m_pShadowRenderPass);
 
-            dummyMaterial = m_pContext.ResourceManager()->createMaterial(material, m_pRenderPass,
+            dummyMaterial = Epsilon::getContext().ResourceManager()->createMaterial(material, m_pRenderPass,
                                                                          {{.renderPass = m_pShadowRenderPass, .index = 0}});
 
             m_pMap.pushConstant.model = glm::scale(glm::mat4(1.0f), glm::vec3(0.0125f));
 
-            m_pMap.pushConstantRef = m_pContext.ResourceManager()->createPushConstant(
+            m_pMap.pushConstantRef = Epsilon::getContext().ResourceManager()->createPushConstant(
                     {.size = sizeof(PushConstant), .data = &m_pMap.pushConstant});
 
             const char *filename = "../../../assets/models/hl2/background01.bsp";
@@ -113,7 +119,7 @@ namespace BSP {
 
                 calculateNormals(vertices, bspMap.Faces()[i].indices);
 
-                face.mesh = m_pContext.ResourceManager()->createMesh({
+                face.mesh = Epsilon::getContext().ResourceManager()->createMesh({
                                                                              .vertices = vertices,
                                                                              .indices = bspMap.Faces()[i].indices,
                                                                      });
@@ -122,12 +128,12 @@ namespace BSP {
 
         }
 
-        void onReady() override {
+        void onReady() {
 
             std::cout << m_pMap.m_pFaces.size() << " faces" << std::endl;
         }
 
-        void onRender() override {
+        void onRender() {
 
 
             engine::ObjectData objectData;
@@ -142,11 +148,11 @@ namespace BSP {
                 objectData.material = shadowDummyMaterial;
                 objectData.modelMatrix = glm::mat4(1.0f);
                 objectData.pushConstant = m_pMap.pushConstantRef;
-                m_pContext.Renderer()->Push(objectData);
+                Epsilon::getContext().Renderer()->Push(objectData);
             }
 
-            m_pContext.Renderer()->Begin(m_pShadowRenderPass);
-            m_pContext.Renderer()->Flush(m_pShadowRenderPass);
+            Epsilon::getContext().Renderer()->Begin(m_pShadowRenderPass);
+            Epsilon::getContext().Renderer()->Flush(m_pShadowRenderPass);
 
             setupCamera();
 
@@ -156,13 +162,13 @@ namespace BSP {
                 objectData.material = dummyMaterial;
                 objectData.modelMatrix = glm::mat4(1.0f);
                 objectData.pushConstant = m_pMap.pushConstantRef;
-                m_pContext.Renderer()->Push(objectData);
+                Epsilon::getContext().Renderer()->Push(objectData);
             }
 
             drawFrame(m_pRenderPass);
         }
 
-        void onExit() override {}
+        void onExit() {}
 
 
     private:
@@ -180,7 +186,7 @@ namespace BSP {
                 auto obj = args->to<framework::Input::KeyboardArgs>();
 
                 //std::cout << "pressed" << std::endl;
-
+#if USE_GLFW
                 if (obj.key_up_index == framework::Input::GLFW::Key::M) {
                     updateCam = !updateCam;
                 }
@@ -191,6 +197,7 @@ namespace BSP {
                     std::cout << pos.x << " " << pos.y << " " << pos.z << std::endl;
                     std::cout << dir.x << " " << dir.y << " " << dir.z << std::endl;
                 }
+#endif
             }));
 
             ShaderData camData;
@@ -201,11 +208,11 @@ namespace BSP {
             m_pTime = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
             if (updateCam) {
-                m_pContext.Window().HideCursor();
-                m_pCamera->Update(m_pContext.Window().getWindow());
+                Epsilon::getContext().Window().HideCursor();
+                m_pCamera->Update(Epsilon::getContext().Window().getWindow());
                 m_pCamera->UpdateMatrices(0, getWindowDimensions().first, getWindowDimensions().second, false);
             } else {
-                m_pContext.Window().ShowCursor();
+                Epsilon::getContext().Window().ShowCursor();
             }
             camData.view = m_pCamera->getViewMatrix();
             camData.proj = m_pCamera->getProjectionMatrix();
@@ -337,8 +344,8 @@ namespace BSP {
                             .pushConstant(sizeof(PushConstant))
                             .bufferInfo({.size = sizeof(ShaderData), .offset = 0});
 
-            m_pRenderPass = m_pContext.ResourceManager()->createDefaultRenderPass(renderPassInfo);
-            m_pShadowRenderPass = m_pContext.ResourceManager()->createRenderPass(shadowRenderPassInfo);
+            m_pRenderPass = Epsilon::getContext().ResourceManager()->createDefaultRenderPass(renderPassInfo);
+            m_pShadowRenderPass = Epsilon::getContext().ResourceManager()->createRenderPass(shadowRenderPassInfo);
 
         }
 

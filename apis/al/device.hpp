@@ -7,6 +7,8 @@
 
 //#include <AL/alBufferSOFT.h>
 
+
+#if !defined(ANDROID) && !defined(__ANDROID__)
 static LPALCLOOPBACKOPENDEVICESOFT alcLoopbackOpenDeviceSOFT;
 static LPALCISRENDERFORMATSUPPORTEDSOFT alcIsRenderFormatSupportedSOFT;
 static LPALCRENDERSAMPLESSOFT alcRenderSamplesSOFT;
@@ -39,11 +41,13 @@ static LPALGETAUXILIARYEFFECTSLOTF alGetAuxiliaryEffectSlotf;
 static LPALGETAUXILIARYEFFECTSLOTFV alGetAuxiliaryEffectSlotfv;
 
 static char g_szALC_EXT_EFX[256] = {'\0'};
-
+#endif
 namespace al {
 
-    static void list_audio_devices(const ALCchar *devices, const char *message)
+    static void list_audio_devices(const char *devices, const char *message)
     {
+
+#if !defined(ANDROID) && !defined(__ANDROID__)
         const ALCchar *device = devices, *next = devices + 1;
         size_t len = 0;
 
@@ -56,10 +60,15 @@ namespace al {
             next += (len + 2);
         }
         std::cout << "----------\n";
+#endif
     }
 
+#if defined(ANDROID) && defined(__ANDROID__)
+struct OpenALData;
+#endif
     static bool initDevice(OpenALData* al_data) {
 
+#if !defined(ANDROID) && !defined(__ANDROID__)
         al_data->device = alcOpenDevice(alcGetString(al_data->device, ALC_DEFAULT_DEVICE_SPECIFIER));
         if (al_data->device == NULL)
         {
@@ -141,5 +150,6 @@ namespace al {
         printf("Opened \"%s\"\n", name);
 
         return true;
+#endif
     }
 }

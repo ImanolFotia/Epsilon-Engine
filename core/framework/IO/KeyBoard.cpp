@@ -11,6 +11,8 @@ namespace framework
     namespace Input
     {
 
+
+#if USE_GLFW
         void KeyBoard::KeyBoardCallBackGLFW(GLFWwindow *window, int key, int scancode, int action, int mode)
         {
             if (key >= 0 && key < 1024)
@@ -30,7 +32,7 @@ namespace framework
                 KeyboardEventHandler.raise(nullptr, &args);
             }
         }
-
+#endif
         bool KeyBoard::getKey(uint16_t key)
         {
             return KEYS[key];

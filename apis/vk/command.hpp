@@ -1,6 +1,8 @@
 #pragma once
 
+#if !defined(ANDROID) || !defined(__ANDROID__)
 #include <vulkan/vulkan.hpp>
+#endif
 
 #include "render_pass.hpp"
 #include "sync_objects.hpp"

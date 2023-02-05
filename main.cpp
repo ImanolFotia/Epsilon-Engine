@@ -31,6 +31,8 @@ extern "C"
 #endif
 
 #include "Example.hpp"
+
+
 #ifdef _WIN32
 int CALLBACK WinMain(
   HINSTANCE hInstance,

@@ -3,7 +3,9 @@
 #include <optional>
 #include <vector>
 
+#if !defined(ANDROID) || !defined(__ANDROID__)
 #include <vulkan/vulkan.hpp>
+#endif
 
 #include "surface.hpp"
 #include "vk_data.hpp"

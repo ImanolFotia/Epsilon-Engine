@@ -27,17 +27,14 @@
 
 #include "core/engine/renderer/resource_manager.hpp"
 #include "core/engine/renderer/vulkan/resource_manager.hpp"
+#include "modules/mono/mono-instance.hpp"
 
 namespace Epsilon {
-    class Epsilon {
+    class __attribute__((visibility("default"))) Epsilon : public singleton<Epsilon> {
 
         uint32_t m_CurrentFrame = 0;
 
-
-
     protected:
-        engine::Context m_pContext;
-        std::string m_ApplicationName;
 
         uint32_t nbFrames = 0;
         uint32_t lastTime = 0;
@@ -57,34 +54,41 @@ namespace Epsilon {
             alignas(16) glm::mat4 lightMatrix{};
         };
     public:
+
+        engine::Context& getContext() {
+            return engine::Context::getSingleton();
+        }
+
         Epsilon() = default;
 
-        explicit Epsilon(const std::string &appName) : m_ApplicationName(appName) {
-            //try {
-                m_pContext.Init(appName, engine::renderer_type::vulkan);
-          /*  } catch(std::exception& e) {
-                std::cout << e.what() << std::endl;
-                std::exit(255);
-            }*/
+
+        explicit Epsilon(const std::string &appName);
+
+        static void CreateWindow(MonoString *name, int w, int h) {
+            engine::Context::getSingleton().Window().init(mono_string_to_utf8(name), w, h);
+            self.m_ApplicationName = mono_string_to_utf8(name);
         }
 
         void run() {
-            initWindow();
-            initVulkan();
-            onCreate();
-            onReady();
-            mainLoop();
-            exit();
+            if(engine::Context::getSingleton().Window().getSize().first == 0)
+                self.initWindow(1280, 720);
+
+            self.initVulkan();
+            if(self.onCreate)
+                self.onCreate();
+
+            if(self.onReady)
+            self.onReady();
+            self.mainLoop();
+            self.exit();
         }
 
-        virtual void onCreate() = 0;
+        std::function<void()> onCreate;
+        std::function<void()> onReady;
+        std::function<void()> onRender;
+        std::function<void()> onExit;
 
-        virtual void onReady() = 0;
-
-        virtual void onRender() = 0;
-
-        virtual void onExit() = 0;
-
+        std::string m_ApplicationName;
     protected:
         bool mShouldClose = false;
 
@@ -93,30 +97,30 @@ namespace Epsilon {
         }
 
         void drawFrame(engine::Ref<engine::RenderPass> renderPassRef) {
-            //m_pContext.Renderer()->Begin(renderPassRef);
-            m_pContext.Renderer()->Flush(renderPassRef);
-            m_pContext.Renderer()->End();
-            m_pContext.Renderer()->Sync();
+            engine::Context::getSingleton().Renderer()->Flush(renderPassRef);
+            engine::Context::getSingleton().Renderer()->End();
+            engine::Context::getSingleton().Renderer()->Sync();
         }
 
     private:
-        void initWindow() {
-            m_pContext.Window().init(m_ApplicationName, 1280, 720);
+        void initWindow(int w, int h) {
+            engine::Context::getSingleton().Window().init(m_ApplicationName, w, h);
         }
 
         void initVulkan() {
-            m_pContext.Renderer()->Init(m_ApplicationName.c_str(), m_pContext.Window());
-            m_pContext.ResourceManager()->Init();
+            engine::Context::getSingleton().Renderer()->Init(m_ApplicationName.c_str(), engine::Context::getSingleton().Window());
+            engine::Context::getSingleton().ResourceManager()->Init();
         }
 
         void mainLoop() {
-            while (!m_pContext.Window().ShouldClose()) {
+            while (!engine::Context::getSingleton().Window().ShouldClose()) {
                 framework::Clock::Tick();
                 showFPS();
                 if (mShouldClose)
                     break;
-                onRender();
-                m_pContext.Window().PollEvents();
+                if(self.onRender)
+                    self.onRender();
+                engine::Context::getSingleton().Window().PollEvents();
             }
         }
 
@@ -133,7 +137,7 @@ namespace Epsilon {
                 ss << m_ApplicationName << " | "
                    << " [" << (int) fps << " FPS] | [" << (1000.0 / double(nbFrames)) << " MS]";
 
-                m_pContext.Window().setWindowTitle(ss.str().c_str());
+                engine::Context::getSingleton().Window().setWindowTitle(ss.str().c_str());
 
                 nbFrames = 0;
                 lastTime = currentTime;
@@ -141,15 +145,16 @@ namespace Epsilon {
         }
 
         void exit() {
+            if(self.onExit)
             onExit();
-            m_pContext.Renderer()->Cleanup();
-            m_pContext.Window().cleanup();
+            engine::Context::getSingleton().Renderer()->Cleanup();
+            engine::Context::getSingleton().Window().cleanup();
         }
 
     protected:
 
         engine::Renderer::TexturesDataId RegisterTexture(unsigned char *data, engine::TextureInfo info) {
-            return m_pContext.Renderer()->RegisterTexture(data, info);
+            return engine::Context::getSingleton().Renderer()->RegisterTexture(data, info);
         }
 
         void Draw(engine::RenderObject object_id) {
@@ -158,12 +163,12 @@ namespace Epsilon {
 
         void PushShaderData(ShaderData data) {
             shaderData = data;
-            std::static_pointer_cast<engine::VulkanRenderer>(m_pContext.Renderer())->perPassData = &shaderData;
+            std::static_pointer_cast<engine::VulkanRenderer>(engine::Context::getSingleton().Renderer())->perPassData = &shaderData;
         }
 
         std::pair<int, int> getWindowDimensions() {
             int w, h;
-            return m_pContext.Window().getSize();
+            return engine::Context::getSingleton().Window().getSize();
         }
 
         ShaderData shaderData;

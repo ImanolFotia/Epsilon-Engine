@@ -1,6 +1,14 @@
 #pragma once
 
+#ifndef BUILD_ANDROID
 #include <vulkan/vulkan.hpp>
+#endif
+
+#if defined(ANDROID) || defined(__ANDROID__)
+#define VK_USE_PLATFORM_ANDROID_KHR
+#undef VK_USE_PLATFORM_XLIB_KHR
+#endif
+
 #include "vk_mem_alloc.h"
 #include <unordered_map>
 

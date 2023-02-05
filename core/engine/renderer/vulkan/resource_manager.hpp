@@ -84,7 +84,7 @@ namespace engine
 
         Ref<Buffer> pFetchIndexBuffer(uint32_t numIndices, uint32_t maxOffset);
 
-        void pRecreateSwapChain(GLFWwindow* window);
+        void pRecreateSwapChain(framework::Window::windowType* window);
 
         void pCreateBuffer(vk::VulkanBuffer &, size_t, VkBufferUsageFlags, VmaAllocationCreateFlags, VmaMemoryUsage);
 

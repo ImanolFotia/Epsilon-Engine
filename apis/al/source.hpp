@@ -3,8 +3,10 @@
 #include "al_data.hpp"
 
 namespace al {
-    [[nodiscard]] static ALuint
+    [[nodiscard]] static unsigned int
     createBuffer(int numChannels, std::size_t size, std::size_t bps, std::size_t bitrate, unsigned char* data) {
+
+#if !defined(ANDROID) && !defined(__ANDROID__)
         ALuint buffer = 0;
         ALenum format;
         alGenBuffers(1, &buffer);
@@ -21,9 +23,12 @@ namespace al {
         }
         alBufferData(buffer, format, data, size, bitrate);
         return buffer;
+#endif
     }
 
-    [[nodiscard]] static ALuint createSource(ALuint buffer) {
+    [[nodiscard]] static unsigned int createSource(unsigned int buffer) {
+
+#if !defined(ANDROID) && !defined(__ANDROID__)
         ALuint source;
         alGenSources(1, &source);
 
@@ -39,38 +44,54 @@ namespace al {
         alSourcei(source, AL_BUFFER, buffer);
 
         return source;
+#endif
     }
 
-    static void deleteSource(ALuint source) {
+    static void deleteSource(unsigned int source) {
 
+#if !defined(ANDROID) && !defined(__ANDROID__)
         alDeleteSources(1, &source);
+#endif
     }
 
-    static void deleteBuffer(ALuint buffer) {
+    static void deleteBuffer(unsigned int buffer) {
 
+#if !defined(ANDROID) && !defined(__ANDROID__)
         alDeleteBuffers(1, &buffer);
+#endif
     }
 
-    static ALint getSourceState(ALuint source) {
+    static int getSourceState(unsigned int source) {
 
+#if !defined(ANDROID) && !defined(__ANDROID__)
         ALint source_state;
         alGetSourcei(source, AL_SOURCE_STATE, &source_state);
 
         return source_state;
+#endif
     }
 
-    static void playSource(ALuint source) {
+    static void playSource(unsigned int source) {
+
+#if !defined(ANDROID) && !defined(__ANDROID__)
             alSourcei(source, AL_LOOPING, AL_FALSE);
             alSourcef(source, AL_GAIN, 1);
             alSourcePlay(source);
+#endif
     }
 
-    static void pauseSource(ALuint source) {
+    static void pauseSource(unsigned int source) {
+
+#if !defined(ANDROID) && !defined(__ANDROID__)
         alSourcePause(source);
+#endif
     }
 
-    static void stopSource(ALuint source) {
+    static void stopSource(unsigned int source) {
+
+#if !defined(ANDROID) && !defined(__ANDROID__)
         alSourceStop(source);
+#endif
     }
     /*
     class AudioSource : public Epsilon::Audio::AudioSource
@@ -78,8 +99,10 @@ namespace al {
     public:
         AudioSource(const char *fileName, AUDIO_TYPE type, glm::vec3 AudioPosition, glm::vec3 AudioDirection) : Audio::AudioSource(fileName, type, AudioPosition, AudioDirection)
         {
+
             try
             {
+
                 this->m_Type = type;
                 this->m_Position = AudioPosition;
                 this->m_Direction = AudioDirection;
@@ -153,12 +176,15 @@ namespace al {
 
         void Destroy() override
         {
+
+#if !defined(ANDROID) && !defined(__ANDROID__)
             std::cout << "Deleted AudioSource" << std::endl;
             //char* tmpData = data.reset();
             //delete tmpData;
             //tmpData = nullptr;
             alDeleteSources(1, &m_AudioID);
             alDeleteBuffers(1, &m_BufferID);
+#endif
         }
 
         ~AudioSource()
@@ -168,6 +194,8 @@ namespace al {
     public:
         void Play() override
         {
+
+#if !defined(ANDROID) && !defined(__ANDROID__)
             ALint source_state;
             alGetSourcei(m_AudioID, AL_SOURCE_STATE, &source_state);
 
@@ -215,6 +243,7 @@ namespace al {
 
         void Pause() override
         {
+#if !defined(ANDROID) && !defined(__ANDROID__)
             ALint source_state;
             alGetSourcei(m_AudioID, AL_SOURCE_STATE, &source_state);
 
@@ -226,6 +255,7 @@ namespace al {
 
         void Stop() override
         {
+#if !defined(ANDROID) && !defined(__ANDROID__)
             ALint source_state;
             alGetSourcei(m_AudioID, AL_SOURCE_STATE, &source_state);
 
@@ -242,6 +272,7 @@ namespace al {
 
         void setPosition(glm::vec3 position) override
         {
+#if !defined(ANDROID) && !defined(__ANDROID__)
             m_Position = position;
             alSource3f(m_AudioID, AL_POSITION, m_Position.x, m_Position.y, m_Position.z);
             //alSourcePlay(m_AudioID);

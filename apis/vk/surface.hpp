@@ -1,6 +1,8 @@
 #pragma once
 
+#if !defined(ANDROID) || !defined(__ANDROID__)
 #include <vulkan/vulkan.hpp>
+#endif
 
 #if USE_GLFW
 
@@ -14,7 +16,7 @@
 #define VK_USE_PLATFORM_WIN32_KHR
 #endif
 
-#ifdef BUILD_ANDROID
+#if defined(ANDROID) || defined(__ANDROID__)
     #undef USE_GLFW
     #include <jni.h>
 #endif
@@ -48,8 +50,8 @@ namespace vk {
         surface_info.sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR;
         surface_info.pNext = NULL;
         surface_info.flags = 0;
-        surface_info.window = mWindow;
-        if(vkCreateAndroidSurfaceKHR(instance, &surface_info, NULL, &surface) != VK_SUCCESS) {
+        surface_info.window = static_cast<ANativeWindow *>(window);
+        if(vkCreateAndroidSurfaceKHR(vk_data.instance, &surface_info, NULL, &vk_data.surface) != VK_SUCCESS) {
           throw std::runtime_error("failed to create window surface!");
         }
 #endif

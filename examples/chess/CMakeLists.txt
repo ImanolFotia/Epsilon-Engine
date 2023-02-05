@@ -49,12 +49,16 @@ message(STATUS "location of vulkan libs: " ${Vulkan_LIBRARIES})
 
 add_dependencies(${PROJECT_NAME} Epsilon)
 
-if (MSVC)
-    target_link_libraries(${PROJECT_NAME} LINK_PUBLIC Epsilon)
-else ()
-    target_link_libraries(${PROJECT_NAME} PUBLIC ${EPSILON_BUILD_LOCATION}/libEpsilon.so)
-  #  target_link_libraries(${PROJECT_NAME} PUBLIC Epsilon)
-endif ()
+if (BUILD_AS_LIBRARY)
+    if (MSVC)
+        target_link_libraries(${PROJECT_NAME} LINK_PUBLIC Epsilon)
+    else ()
+        target_link_libraries(${PROJECT_NAME} PUBLIC ${EPSILON_BUILD_LOCATION}/libEpsilon.so)
+    #  target_link_libraries(${PROJECT_NAME} PUBLIC Epsilon)
+    endif ()
+else()
+    target_sources(${PROJECT_NAME} PUBLIC ${PROJECT_FILES})
+endif()
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR})
 
@@ -62,8 +66,11 @@ target_link_libraries(${PROJECT_NAME} PUBLIC ${Vulkan_LIBRARIES})
 target_include_directories(${PROJECT_NAME} PUBLIC ${Vulkan_INCLUDE_DIR})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw3)
+
+if(DBUILD_ANDROID EQUAL 0)
 target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
 target_link_libraries(${PROJECT_NAME} PRIVATE openal)
+endif()
 target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_DL_LIBS})
 
 

@@ -7,7 +7,9 @@
 #include <cstring>
 #include <set>
 
+#if !defined(ANDROID) || !defined(__ANDROID__)
 #include <vulkan/vulkan.hpp>
+#endif
 
 namespace vk
 {
@@ -31,6 +33,7 @@ namespace vk
     static std::vector<const char *> getRequiredExtensions()
     {
         uint32_t glfwExtensionCount = 0;
+#if USE_GLFW
         const char **glfwExtensions;
         glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
@@ -42,5 +45,6 @@ namespace vk
         }
 
         return extensions;
+#endif
     }
 }

@@ -125,7 +125,7 @@ namespace engine {
         renderPass->renderPassChain.Textures.at(index);
     }*/
 
-    void VulkanResourceManager::pRecreateSwapChain(GLFWwindow *window) {
+    void VulkanResourceManager::pRecreateSwapChain(framework::Window::windowType *window) {
         vkDeviceWaitIdle(m_pVkDataPtr->logicalDevice);
 
         for (auto &pass: renderPassPool) {
