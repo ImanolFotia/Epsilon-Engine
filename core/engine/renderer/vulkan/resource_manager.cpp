@@ -5,6 +5,15 @@
 
 #include "core/framework/exception.hpp"
 
+#define VMA_DEBUG_LOG_FORMAT(format, ...)
+
+#define VMA_DEBUG_LOG_FORMAT(format, ...) do { \
+    printf((format), __VA_ARGS__); \
+    printf("\n"); \
+} while(false)
+
+
+#define VMA_DEBUG_LOG(str)   VMA_DEBUG_LOG_FORMAT("%s", (str))
 
 #ifdef WIN32
 #if !defined(__PRETTY_FUNCTION__) && !defined(__GNUC__)
@@ -284,7 +293,8 @@ namespace engine {
         for (auto &texture: texPool) {
             vkDestroySampler(m_pVkDataPtr->logicalDevice, texture.sampler, nullptr);
             vkDestroyImageView(m_pVkDataPtr->logicalDevice, texture.imageView, nullptr);
-            vk::destroyImage(*m_pVkDataPtr, texture);
+            vmaDestroyImage(m_pAllocator, texture.image, texture.allocation);
+            //vk::destroyImage(*m_pVkDataPtr, texture);
         }
 
 
@@ -442,9 +452,11 @@ namespace engine {
     /**
      * Destroy functions
      */
-    void VulkanResourceManager::destroyTexture(Ref<Texture>) {
-
-        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
+    void VulkanResourceManager::destroyTexture(Ref<Texture> textureRef) {
+        auto texture = texPool.get(textureRef);
+        vkDestroySampler(m_pVkDataPtr->logicalDevice, texture->sampler, nullptr);
+        vkDestroyImageView(m_pVkDataPtr->logicalDevice, texture->imageView, nullptr);
+        vk::destroyImage(*m_pVkDataPtr, *texture);
     }
 
     void VulkanResourceManager::destroyBuffer(Ref<Buffer>) {
@@ -472,9 +484,29 @@ namespace engine {
         throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
 
-    void VulkanResourceManager::destroyRenderPass(Ref<RenderPass>) {
+    void VulkanResourceManager::destroyRenderPass(Ref<RenderPass> renderPassRef) {
+        auto pass = renderPassPool.get(renderPassRef);
+        vk::cleanupRenderPass(*m_pVkDataPtr, pass->renderPass);
+        for (auto &pipeline: pass->renderPipelines)
+            vk::destroyGraphicsPipeline(*m_pVkDataPtr, pipeline);
 
-        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
+        if (pass->id == std::numeric_limits<uint32_t>::max()) return;
+
+        for (int i = 0; i < pass->renderPassChain.Textures.size(); i++) {
+            vkDestroySampler(m_pVkDataPtr->logicalDevice, pass->renderPassChain.Textures[i].sampler, nullptr);
+            vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass->renderPassChain.Textures[i].imageView, nullptr);
+            vmaDestroyImage(m_pAllocator, pass->renderPassChain.Textures[i].image,
+                            pass->renderPassChain.Textures[i].allocation);
+        }
+
+        if (pass->renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE)
+            vkDestroySampler(m_pVkDataPtr->logicalDevice, pass->renderPassChain.DepthTexture.sampler, nullptr);
+
+        if (pass->renderPassChain.DepthTexture.imageView != VK_NULL_HANDLE)
+            vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass->renderPassChain.DepthTexture.imageView, nullptr);
+
+        vmaDestroyImage(m_pAllocator, pass->renderPassChain.DepthTexture.image,
+                        pass->renderPassChain.DepthTexture.allocation);
     }
 
     Ref<ID> VulkanResourceManager::getId(Ref<RenderPass> renderPass) {

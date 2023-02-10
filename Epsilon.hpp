@@ -64,10 +64,6 @@ namespace Epsilon {
 
         explicit Epsilon(const std::string &appName);
 
-        static void CreateWindow(MonoString *name, int w, int h) {
-            engine::Context::getSingleton().Window().init(mono_string_to_utf8(name), w, h);
-            self.m_ApplicationName = mono_string_to_utf8(name);
-        }
 
         void run() {
             if(engine::Context::getSingleton().Window().getSize().first == 0)
@@ -146,7 +142,7 @@ namespace Epsilon {
 
         void exit() {
             if(self.onExit)
-            onExit();
+                self.onExit();
             engine::Context::getSingleton().Renderer()->Cleanup();
             engine::Context::getSingleton().Window().cleanup();
         }

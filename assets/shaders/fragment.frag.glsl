@@ -158,9 +158,18 @@ void main()
     //sum = textureGrad(shadowMap, shadowCoord, vec2(0.0),  vec2(0.0)).r;
 
     outColor.a = color.a; // texCol.a;
+    
+const vec3 dark_color = vec3(119.0/255.0, 149.0/255.0, 86.0/255.0);
+const vec3 light_color = vec3(235.0/255.0, 236.0/255.0, 208.0/255.0);
+    ivec2 tiles = ivec2(texCoords.xy/512.0);
+    
+    bool x = (tiles.x % 8) % 2 == 0;
+    bool y = (tiles.y % 8) % 2 == 0;
+
+    vec3 checkers = (x ^^ y) ? dark_color : light_color;
     // float shadow = poissonShadowMapping(FragPosLightSpace);
 
     // float shadow = texture(shadowMap, position.xyz).r;//textureProj(position / position.w, vec2(0.0));//clamp(1.0 - shadow, 0.0, 1.0);
 
-    outColor.rgb = vec3((NoL * sum) + 0.1) * color.rgb; //(Gamma(outColor.rgb));
+    outColor.rgb = vec3((NoL * sum) + 0.1) * checkers; //(Gamma(outColor.rgb));
 }

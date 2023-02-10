@@ -93,6 +93,10 @@ namespace BSP {
 
                 n = glm::normalize(n);
 
+                if(glm::isnan(n.x)){
+                    n = glm::vec3(0.0, 1.0, 0.0);
+                }
+
                 for (auto& v: vertices) {
                     v.normal = n;
                 }
@@ -115,6 +119,10 @@ namespace BSP {
                     } else {
                         v.color = glm::vec4(0.0, 0.0, 0.0, 1.0);
                     }
+                }
+
+                for(int j = 0; j < bspMap.Faces()[i].uvs.size();j++) {
+                    vertices[j].texCoords = bspMap.Faces()[i].uvs[j];
                 }
 
                 calculateNormals(vertices, bspMap.Faces()[i].indices);

@@ -1,6 +1,6 @@
 #pragma once
-#undef VMA_DEBUG_LOG
-#undef VMA_DEBUG_LOG_FORMAT
+//#undef VMA_DEBUG_LOG
+//#undef VMA_DEBUG_LOG_FORMAT
 #include "core/engine/renderer/renderer.hpp"
 #include "core/engine/renderer/frame.hpp"
 #include "core/engine/renderer/types.hpp"
@@ -10,6 +10,18 @@
 
 #include <vector>
 #include <list>
+
+
+#define VMA_DEBUG_LOG_FORMAT(format, ...)
+
+#define VMA_DEBUG_LOG_FORMAT(format, ...) do { \
+    printf((format), __VA_ARGS__); \
+    printf("\n"); \
+} while(false)
+
+
+#define VMA_DEBUG_LOG(str)   VMA_DEBUG_LOG_FORMAT("%s", (str))
+
 
 #include "vk_mem_alloc.h"
 

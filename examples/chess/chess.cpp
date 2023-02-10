@@ -190,12 +190,12 @@ namespace ChessApp {
 
     void ChessApp::onReady() {
         m_pEngineThread = std::thread([this]() { m_pUCI.init(); });
-        //m_pEngineThread.detach();
+        m_pEngineThread.detach();
     }
 
     void ChessApp::onRender() {
 
-        m_pContext.Renderer()->Begin(m_pRenderPass);
+        Epsilon::getContext().Renderer()->Begin(m_pRenderPass);
         if(m_pTakeAudioObject.should_play) {
             al::playSource(m_pTakeAudioObject.source);
             m_pTakeAudioObject.should_play = false;
@@ -216,7 +216,7 @@ namespace ChessApp {
         objectData.material = m_pBoardModel.material;
         objectData.modelMatrix = m_pBoardModel.pushConstant.model;
         objectData.pushConstant = m_pBoardModel.pushConstantRef;
-        m_pContext.Renderer()->Push(objectData);
+        Epsilon::getContext().Renderer()->Push(objectData);
 
         //set up the pieces draw data
 
@@ -229,7 +229,7 @@ namespace ChessApp {
             objectData.mesh = piece.mesh;
             objectData.material = piece.material;
             objectData.pushConstant = piece.pushConstantRef;
-            m_pContext.Renderer()->Push(objectData);
+            Epsilon::getContext().Renderer()->Push(objectData);
         }
         drawFrame(m_pRenderPass);
 
@@ -378,14 +378,14 @@ namespace ChessApp {
     void ChessApp::setupGeometry() {
         //Create a quad for the chess board
         auto quad_data = m_pQuad.data();
-        m_pBoardModel.mesh = m_pContext.ResourceManager()->createMesh({.vertices = quad_data.Vertices,
+        m_pBoardModel.mesh = Epsilon::getContext().ResourceManager()->createMesh({.vertices = quad_data.Vertices,
                                                                               .indices = quad_data.Indices});
 
-        engine::Ref<engine::Mesh> pieceMesh = m_pContext.ResourceManager()->createMesh(
+        engine::Ref<engine::Mesh> pieceMesh = Epsilon::getContext().ResourceManager()->createMesh(
                 {.vertices = quad_data.Vertices,
                         .indices = quad_data.Indices});
 
-        m_pBoardModel.pushConstantRef = m_pContext.ResourceManager()->createPushConstant(
+        m_pBoardModel.pushConstantRef = Epsilon::getContext().ResourceManager()->createPushConstant(
                 {.size = sizeof(PiecePushConstant), .data = &m_pBoardModel.pushConstant});
 
         unsigned index = 0;
@@ -394,7 +394,7 @@ namespace ChessApp {
 
             Model &ref = m_pPieces[index];
             info.index = index;
-            ref.pushConstantRef = m_pContext.ResourceManager()->createPushConstant(
+            ref.pushConstantRef = Epsilon::getContext().ResourceManager()->createPushConstant(
                     {.size = sizeof(PiecePushConstant), .data = &ref.pushConstant});
             ref.mesh = pieceMesh;
             ref.pushConstant.model = transformPiece({info.column, info.row});
@@ -413,7 +413,7 @@ namespace ChessApp {
                     }
             };
 
-            m_pBoardModel.material = m_pContext.ResourceManager()->createMaterial(material, m_pRenderPass);
+            m_pBoardModel.material = Epsilon::getContext().ResourceManager()->createMaterial(material, m_pRenderPass);
         }
 //create the material for the pieces
         engine::Ref<engine::Material> pieceMaterial;
@@ -436,7 +436,7 @@ namespace ChessApp {
                     .pixels(pixels);
 
             material.textures.push_back(texInfo);
-            pieceMaterial = m_pContext.ResourceManager()->createMaterial(material, m_pRenderPass);
+            pieceMaterial = Epsilon::getContext().ResourceManager()->createMaterial(material, m_pRenderPass);
             framework::free_image_data(pixels);
         }
         for (auto &ref: m_pPieces) {
@@ -510,7 +510,7 @@ namespace ChessApp {
                         .pushConstant(sizeof(PiecePushConstant))
                         .bufferInfo({.size = sizeof(ShaderData), .offset = 0});
 
-        m_pRenderPass = m_pContext.ResourceManager()->createDefaultRenderPass(renderPassInfo);
+        m_pRenderPass = Epsilon::getContext().ResourceManager()->createDefaultRenderPass(renderPassInfo);
 
     }
 }

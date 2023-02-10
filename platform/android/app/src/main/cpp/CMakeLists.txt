@@ -14,6 +14,22 @@ project("epsilon")
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
 
+include(ExternalProject)
+include(FindPkgConfig)
+
+#Download and include glm
+ExternalProject_Add(glm
+        GIT_REPOSITORY https://github.com/g-truc/glm.git
+        INSTALL_COMMAND cmake -E echo "Skipping install step."
+        UPDATE_COMMAND ""
+        )
+
+ExternalProject_Get_property(glm SOURCE_DIR)
+set(GLM_BUILD_DIR ${SOURCE_DIR})
+message(${GLM_BUILD_DIR})
+
+include_directories(${GLM_BUILD_DIR})
+
 add_library( # Sets the name of the library.
         epsilon
 
@@ -30,6 +46,9 @@ add_library( # Sets the name of the library.
 # you want to add. CMake verifies that the library exists before
 # completing its build.
 
+find_library("epsilon" Epsilon)
+
+add_dependencies(${PROJECT_NAME} glm)
 find_library( # Sets the name of the path variable.
         log-lib
 

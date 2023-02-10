@@ -1,6 +1,4 @@
 #pragma once
-#undef VMA_DEBUG_LOG
-#undef VMA_DEBUG_LOG_FORMAT
 #include "core/engine/renderer/types.hpp"
 #include "core/engine/renderer/resource_manager.hpp"
 #include "vulkan.hpp"

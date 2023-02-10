@@ -5,7 +5,9 @@
     #undef USE_GLFW
 #else
 
+#if BUILD_ANDROID == 0
 #include <vulkan/vulkan.hpp>
+#endif
 #endif
 
 #ifdef _WIN32

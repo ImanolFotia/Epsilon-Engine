@@ -14,6 +14,7 @@ class SourceBSP {
         bool m_pVisible;
         unsigned int m_pNumVertices;
         std::vector<glm::vec3> vertices;
+        std::vector<glm::vec2> uvs;
         std::vector<unsigned int> indices;
         std::string material;
         bool tool = false;
@@ -125,6 +126,7 @@ public:
             bool isTool = false;
             bool isTrigger = false;
             std::vector<glm::vec3> vtxs;
+            std::vector<glm::vec2> uv;
             std::vector<unsigned int> triangles;
 
             for (int i = 0; i < face.numedges; i++) {
@@ -153,6 +155,12 @@ public:
                 }
 
                 glm::vec3 vertex = m_pBspFileData.vertices.at(vertexIndex);
+                auto& tv = m_pBspFileData.texInfo[face.texinfo].textureVecs;
+
+                float u = (tv[0][0] * vertex.x) + (tv[0][1] * vertex.y) + (tv[0][2] * vertex.z) + tv[0][3];
+                float v = (tv[1][0] * vertex.x) + (tv[1][1]* vertex.y) + (tv[1][2]* vertex.z) + tv[1][3];
+
+                uv.emplace_back(u, v);
 
                 //Rearrange vector to match Vulkan coordinates
                 vtxs.emplace_back(-vertex.x, vertex.z, vertex.y);
@@ -169,6 +177,7 @@ public:
                                        .m_pVisible = true,
                                        .m_pNumVertices = (unsigned int) vtxs.size(),
                                        .vertices = vtxs,
+                                       .uvs = uv,
                                        .indices = indices,
                                        .material = material,
                                        .tool = isTool,

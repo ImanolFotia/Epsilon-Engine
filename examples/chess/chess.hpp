@@ -58,20 +58,35 @@ namespace ChessApp {
         AudioObject m_pTakeAudioObject;
 
     public:
-        explicit ChessApp(const std::string &appName) : Epsilon::Epsilon(appName) {}
+        explicit ChessApp(const std::string &appName) : Epsilon::Epsilon(appName) {
 
-        void onCreate() override;
+            Epsilon::getSingleton().onCreate = [this] { onCreate(); };
+            Epsilon::getSingleton().onReady = [this] { onReady(); };
+            //Epsilon::getSingleton().onRender = [this] { onRender(); };
+            Epsilon::getSingleton().onExit = [this] { onExit(); };
+        }
 
-        void onReady() override;
+        void onCreate();
 
-        void onRender() override;
+        void onReady();
 
-        void onExit() override {
+        void onRender();
+
+        void onExit() {
             al::deleteSource(m_pMoveAudioObject.source);
             al::deleteBuffer(m_pMoveAudioObject.buffer);
 
             al::deleteSource(m_pTakeAudioObject.source);
             al::deleteBuffer(m_pTakeAudioObject.buffer);
+            m_pUCI.Move("quit");
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            if(m_pEngineThread.joinable()) {
+                m_pEngineThread.join();
+            }
+
+            std::thread empty;
+            m_pEngineThread.swap(empty);
         }
 
     private:

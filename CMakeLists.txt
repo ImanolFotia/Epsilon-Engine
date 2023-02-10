@@ -248,18 +248,20 @@ target_sources(${PROJECT_NAME} PUBLIC
         ${PROJECT_FILES})
 
 find_package(Vulkan REQUIRED)
-pkg_check_modules(Mono mono-2 REQUIRED)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${Mono_LINK_LIBRARIES})
-target_include_directories(${PROJECT_NAME} PRIVATE ${Mono_INCLUDE_DIRS})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${Vulkan_LIBRARIES})
-target_include_directories(${PROJECT_NAME} PRIVATE ${Vulkan_INCLUDE_DIR})
+#if(BUILD_ANDROID EQUAL 0)
+        pkg_check_modules(Mono mono-2 REQUIRED)
+
+        target_link_libraries(${PROJECT_NAME} PRIVATE ${Mono_LINK_LIBRARIES})
+        target_include_directories(${PROJECT_NAME} PRIVATE ${Mono_INCLUDE_DIRS})
+
+        target_link_libraries(${PROJECT_NAME} PRIVATE ${Vulkan_LIBRARIES})
+        target_include_directories(${PROJECT_NAME} PRIVATE ${Vulkan_INCLUDE_DIR})
+#endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw3)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
-target_link_libraries(${PROJECT_NAME} PRIVATE openal)
 if(BUILD_ANDROID EQUAL 0)
 target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
 target_link_libraries(${PROJECT_NAME} PRIVATE openal)

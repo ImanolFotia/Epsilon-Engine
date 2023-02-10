@@ -4,7 +4,7 @@
 
 #ifndef EPSILON_ANDROIDAPP_HPP
 #define EPSILON_ANDROIDAPP_HPP
-
+/*
 #include <jni.h>
 #include <android/native_window.h>
 
@@ -16,12 +16,12 @@ public:
 
     explicit AndroidApp(const std::string &appName, ANativeWindow* window) : Epsilon::Epsilon(appName) {
         //try {
-        m_pContext.Window().setWindow(window);
-        m_pContext.Init(appName, engine::renderer_type::vulkan);
+        Epsilon::getContext().Window().setWindow(window);
+        Epsilon::getContext().Init(appName, engine::renderer_type::vulkan);
         /*  } catch(std::exception& e) {
               std::cout << e.what() << std::endl;
               std::exit(255);
-          }*/
+          }
     }
 
     void createSurface() {
@@ -52,6 +52,6 @@ public:
 
     virtual void onExit() = 0;
 };
-
+*/
 
 #endif //EPSILON_ANDROIDAPP_HPP

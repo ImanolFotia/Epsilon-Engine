@@ -4,8 +4,7 @@
 #include "vulkan.hpp"
 #include "core/framework/common.hpp"
 #include "resource_manager.hpp"
-#undef VMA_DEBUG_LOG
-#undef VMA_DEBUG_LOG_FORMAT
+
 /**
  * @brief Implementation of the Vulkan renderer public API
  *

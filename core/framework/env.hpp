@@ -20,12 +20,14 @@ namespace framework
     struct env
     {
         static std::string getArgument(const std::string& arg) {
-            if(args.contains(arg)) return args.at(arg);
+            //if(args.contains(arg)) return args.at(arg);
             return "";
         }
 
         static bool hasArgument(const std::string& arg) {
-            return args.contains(arg);
+            //return args.contains(arg);
+
+            return false;
         }
 
         static void setArgs(int argc, char **argv)
