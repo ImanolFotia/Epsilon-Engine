@@ -6,7 +6,7 @@
 #include <cstdint>   // Necessary for UINT32_MAX
 #include <algorithm> // Necessary for std::clamp
 
-#if !defined(ANDROID) || !defined(__ANDROID__)
+#if (BUILD_ANDROID == 0)
 #include <vulkan/vulkan.hpp>
 #include "GLFW/glfw3.h"
 #endif

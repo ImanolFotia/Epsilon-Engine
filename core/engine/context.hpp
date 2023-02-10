@@ -60,7 +60,7 @@ namespace engine {
     protected:
         std::string m_pApplicationName = "Default";
         renderer_type m_pRendererType;
-#if defined(ANDROID) && defined(__ANDROID__)
+#if defined(ANDROID) || defined(__ANDROID__)
         struct OpenALData{};
 #endif
         OpenALData alData;

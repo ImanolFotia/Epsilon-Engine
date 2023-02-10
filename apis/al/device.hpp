@@ -63,7 +63,7 @@ namespace al {
 #endif
     }
 
-#if defined(ANDROID) && defined(__ANDROID__)
+#if defined(ANDROID) || defined(__ANDROID__)
 struct OpenALData;
 #endif
     static bool initDevice(OpenALData* al_data) {

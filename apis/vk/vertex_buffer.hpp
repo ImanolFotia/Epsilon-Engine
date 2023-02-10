@@ -2,7 +2,7 @@
 
 #include <array>
 
-#if !defined(ANDROID) || !defined(__ANDROID__)
+#if (BUILD_ANDROID == 0)
 #include <vulkan/vulkan.hpp>
 #endif
 #include "core/engine/types.hpp"

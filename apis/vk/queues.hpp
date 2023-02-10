@@ -3,7 +3,7 @@
 #include <optional>
 #include <vector>
 
-#if !defined(ANDROID) || !defined(__ANDROID__)
+#if (BUILD_ANDROID == 0)
 #include <vulkan/vulkan.hpp>
 #endif
 

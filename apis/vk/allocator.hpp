@@ -14,7 +14,9 @@
 
 #pragma once
 
+#if (BUILD_ANDROID == 0)
 #include <vulkan/vulkan.hpp>
+#endif
 #include "vk_data.hpp"
 #include "vertex_buffer.hpp"
 #include "memory.hpp"

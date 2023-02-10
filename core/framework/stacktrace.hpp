@@ -93,7 +93,7 @@ public:
     {
         stacktrace current;
 
-#if defined(__linux__) && !defined(ANDROID) || !defined(__ANDROID__)
+#if defined(__linux__) && (!defined(ANDROID) && !defined(__ANDROID__))
         void *buffer[512];
         int numFrames = backtrace(buffer, 32);
         char **framesDescriptions = backtrace_symbols(buffer, numFrames);

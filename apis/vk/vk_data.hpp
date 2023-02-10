@@ -1,6 +1,6 @@
 #pragma once
 
-#ifndef BUILD_ANDROID
+#if (BUILD_ANDROID == 0)
 #include <vulkan/vulkan.hpp>
 #endif
 
