@@ -42,6 +42,13 @@ namespace dotnet {
         hostfxr_get_runtime_delegate_fn get_delegate_fptr;
         hostfxr_close_fn close_fptr;
     }
+    class DotnetDelegate {
+        component_entry_point_fn m_pFunctionPointer;
+    public:
+        DotnetDelegate(const char* name, component_entry_point_fn fnct_ptr) {
+
+        }
+    };
 
     class DotnetAssembly {
 
