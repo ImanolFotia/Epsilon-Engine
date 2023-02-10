@@ -1,4 +1,5 @@
 
+#if !defined(ANDROID) && !defined(__ANDROID__)
 #include <mono/jit/jit.h>
 #include <mono/metadata/environment.h>
 #include <mono/utils/mono-publib.h>
@@ -107,3 +108,4 @@ namespace modules::mono {
         }
     };
 }
+#endif

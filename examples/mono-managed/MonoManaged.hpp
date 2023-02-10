@@ -6,6 +6,9 @@
 #define EPSILON_MONOMANAGED_HPP
 
 #include <Epsilon.hpp>
+
+static void CreateWindow(MonoString *name, int w, int h);
+
 namespace MonoManaged {
     class MonoManaged : public Epsilon::Epsilon {
 
