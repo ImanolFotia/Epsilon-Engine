@@ -109,6 +109,7 @@ namespace Epsilon {
         }
 
         void mainLoop() {
+
             while (!engine::Context::getSingleton().Window().ShouldClose()) {
                 framework::Clock::Tick();
                 showFPS();

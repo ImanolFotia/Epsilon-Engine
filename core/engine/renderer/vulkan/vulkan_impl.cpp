@@ -176,6 +176,8 @@ namespace engine
 
     void VulkanResourceManager::pCreateDescriptorPool()
     {
+
+        vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool, nullptr);
         std::array<VkDescriptorPoolSize, 2> poolSizes{};
         poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
         poolSizes[0].descriptorCount = static_cast<uint32_t>(vk::MAX_FRAMES_IN_FLIGHT * m_pNumCommandPools);
@@ -257,9 +259,9 @@ namespace engine
             bufferInfo.offset = material.bufferOffset;
             bufferInfo.range = material.bufferSize;
 
-            VkDescriptorImageInfo imageInfo{};
             uint32_t numSlots = 1;
             std::vector<VkWriteDescriptorSet> descriptorWrites{};
+            std::list<VkDescriptorImageInfo> imageInfos;
             descriptorWrites.resize(numSlots);
             if(material.textures.size() > 0 || material.renderBufferBindings.size() > 0) {
 
@@ -270,11 +272,12 @@ namespace engine
                     numSlots += material.textures.size();
                     descriptorWrites.resize(numSlots);
                 }
-                imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
                 int index = 1;
 
                 for(auto& bindings: material.renderBufferBindings) {
 
+                    auto& imageInfo = imageInfos.emplace_back();
+                    imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
                     imageInfo.imageView = bindings.imageView;
                     imageInfo.sampler = bindings.sampler;
 
@@ -289,6 +292,9 @@ namespace engine
                 }
                 for(auto& texture: material.textures) {
 
+
+                    auto& imageInfo = imageInfos.emplace_back();
+                    imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
                     imageInfo.imageView = texture.imageView;
                     imageInfo.sampler = texture.sampler;
 

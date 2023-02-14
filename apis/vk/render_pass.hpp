@@ -130,8 +130,8 @@ namespace vk
         renderPass.renderPassInfo.renderArea.offset = {0, 0};
         renderPass.renderPassInfo.renderArea.extent = renderPass.renderPassChain.Extent;
 
-        renderPass.renderPassInfo.clearValueCount = 2;
-        renderPass.renderPassInfo.pClearValues = renderPass.clearValues;
+        renderPass.renderPassInfo.clearValueCount = renderPass.clearValues.size();
+        renderPass.renderPassInfo.pClearValues = renderPass.clearValues.data();
     }
 
     static void beginRenderPass(const VkCommandBuffer &commandBuffer, VulkanRenderPass &renderPass)
@@ -146,7 +146,6 @@ namespace vk
 
     static void cleanupRenderPass(const VulkanData &vk_data, VkRenderPass &renderPass)
     {
-
         vkDestroyRenderPass(vk_data.logicalDevice, renderPass, nullptr);
     }
 }

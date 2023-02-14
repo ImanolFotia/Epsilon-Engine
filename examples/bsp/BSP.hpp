@@ -5,7 +5,6 @@
 #ifndef EPSILON_BSP_HPP
 #define EPSILON_BSP_HPP
 
-
 #include <Epsilon.hpp>
 #include <beacon/beacon.hpp>
 
@@ -13,21 +12,25 @@
 #include <core/framework/utils/helpers/camera.hpp>
 #include <core/framework/IO/KeyBoard.hpp>
 
-namespace BSP {
-    class BSP : public Epsilon::Epsilon {
+namespace BSP
+{
+    class BSP : public Epsilon::Epsilon
+    {
 
-
-        struct PushConstant {
+        struct PushConstant
+        {
             alignas(16) glm::mat4 model;
         };
 
-        struct BSPFace {
+        struct BSPFace
+        {
             engine::Ref<engine::Mesh> mesh;
             engine::Ref<engine::Texture> texture;
             engine::Ref<engine::Material> material;
         };
 
-        struct BSPMap {
+        struct BSPMap
+        {
             std::list<BSPFace> m_pFaces;
             engine::Ref<engine::PushConstant> pushConstantRef;
             PushConstant pushConstant;
@@ -45,46 +48,48 @@ namespace BSP {
         engine::Ref<engine::Material> dummyMaterial;
         engine::Ref<engine::Material> shadowDummyMaterial;
 
-
     public:
+        explicit BSP(const std::string &appname) : Epsilon::Epsilon(appname)
+        {
+            m_pCamera = std::make_shared<utils::Camera>(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
-        explicit BSP(const std::string &appname) : Epsilon::Epsilon(appname) {
-            m_pCamera = std::make_shared<utils::Camera>(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-
-            Epsilon::getSingleton().onCreate = [this] { onCreate(); };
-            Epsilon::getSingleton().onReady = [this] { onReady(); };
-            Epsilon::getSingleton().onRender = [this] { onRender(); };
-            Epsilon::getSingleton().onExit = [this] { onExit(); };
+            Epsilon::getSingleton().onCreate = [this]
+            { onCreate(); };
+            Epsilon::getSingleton().onReady = [this]
+            { onReady(); };
+            Epsilon::getSingleton().onRender = [this]
+            { onRender(); };
+            Epsilon::getSingleton().onExit = [this]
+            { onExit(); };
         }
 
-        void onCreate() {
+        void onCreate()
+        {
 
             setupRenderPass();
 
             engine::MaterialInfo material = {
-                    .bindingInfo = {
-                            .size = sizeof(ShaderData),
-                            .offset = 0
-                    }
-            };
+                .bindingInfo = {
+                    .size = sizeof(ShaderData),
+                    .offset = 0}};
 
-            shadowDummyMaterial = Epsilon::getContext().ResourceManager()->createMaterial(material, m_pShadowRenderPass);
+            shadowDummyMaterial = Epsilon::getContext().ResourceManager()->createMaterial(material,
+                                                                                          m_pShadowRenderPass);
 
-            dummyMaterial = Epsilon::getContext().ResourceManager()->createMaterial(material, m_pRenderPass,
-                                                                         {{.renderPass = m_pShadowRenderPass, .index = 0}});
+            dummyMaterial = Epsilon::getContext().ResourceManager()->createMaterial(material, m_pRenderPass, {{.renderPass = m_pShadowRenderPass, .index = 0}, {.renderPass = m_pShadowRenderPass, .index = 1}});
 
             m_pMap.pushConstant.model = glm::scale(glm::mat4(1.0f), glm::vec3(0.0125f));
 
             m_pMap.pushConstantRef = Epsilon::getContext().ResourceManager()->createPushConstant(
-                    {.size = sizeof(PushConstant), .data = &m_pMap.pushConstant});
+                {.size = sizeof(PushConstant), .data = &m_pMap.pushConstant});
 
-            const char *filename = "../../../assets/models/hl2/background01.bsp";
+            const char *filename = "./assets/models/hl2/background01.bsp";
 
             SourceBSP bspMap(filename);
 
             auto calculateNormals = [](std::vector<engine::Vertex> &vertices,
-                                       const std::vector<unsigned int> &indices) -> void {
-
+                                       const std::vector<unsigned int> &indices) -> void
+            {
                 auto &v1 = vertices[indices[0]].position;
                 auto &v2 = vertices[indices[1]].position;
                 auto &v3 = vertices[indices[2]].position;
@@ -93,64 +98,72 @@ namespace BSP {
 
                 n = glm::normalize(n);
 
-                if(glm::isnan(n.x)){
+                if (glm::isnan(n.x))
+                {
                     n = glm::vec3(0.0, 1.0, 0.0);
                 }
 
-                for (auto& v: vertices) {
+                for (auto &v : vertices)
+                {
                     v.normal = n;
                 }
-
             };
 
-            for (unsigned i = 0; i < bspMap.Faces().size(); i++) {
-                if (bspMap.Faces()[i].vertices.size() <= 0) continue;
+            for (unsigned i = 0; i < bspMap.Faces().size(); i++)
+            {
+                if (bspMap.Faces()[i].vertices.size() <= 0)
+                    continue;
                 auto &face = m_pMap.m_pFaces.emplace_back();
 
                 std::vector<engine::Vertex> vertices;
 
-                for (auto &vtx: bspMap.Faces()[i].vertices) {
+                for (auto &vtx : bspMap.Faces()[i].vertices)
+                {
                     auto &v = vertices.emplace_back();
                     v.position = vtx;
-                    if (bspMap.Faces()[i].tool == true) {
+                    if (bspMap.Faces()[i].tool == true)
+                    {
                         v.color = glm::vec4(0.2, 0.5, 1.0, 0.5);
-                    } else if (bspMap.Faces()[i].trigger == true) {
+                    }
+                    else if (bspMap.Faces()[i].trigger == true)
+                    {
                         v.color = glm::vec4(0.5, 0.5, 0.0, 0.5);
-                    } else {
+                    }
+                    else
+                    {
                         v.color = glm::vec4(0.0, 0.0, 0.0, 1.0);
                     }
                 }
 
-                for(int j = 0; j < bspMap.Faces()[i].uvs.size();j++) {
+                for (int j = 0; j < bspMap.Faces()[i].uvs.size(); j++)
+                {
                     vertices[j].texCoords = bspMap.Faces()[i].uvs[j];
                 }
 
                 calculateNormals(vertices, bspMap.Faces()[i].indices);
 
                 face.mesh = Epsilon::getContext().ResourceManager()->createMesh({
-                                                                             .vertices = vertices,
-                                                                             .indices = bspMap.Faces()[i].indices,
-                                                                     });
-
+                    .vertices = vertices,
+                    .indices = bspMap.Faces()[i].indices,
+                });
             }
-
         }
 
-        void onReady() {
+        void onReady()
+        {
 
             std::cout << m_pMap.m_pFaces.size() << " faces" << std::endl;
         }
 
-        void onRender() {
-
+        void onRender()
+        {
 
             engine::ObjectData objectData;
 
-
             setupShadowCamera();
 
-
-            for (auto &face: m_pMap.m_pFaces) {
+            for (auto &face : m_pMap.m_pFaces)
+            {
                 objectData.layout_index = 0;
                 objectData.mesh = face.mesh;
                 objectData.material = shadowDummyMaterial;
@@ -164,7 +177,8 @@ namespace BSP {
 
             setupCamera();
 
-            for (auto &face: m_pMap.m_pFaces) {
+            for (auto &face : m_pMap.m_pFaces)
+            {
                 objectData.layout_index = 0;
                 objectData.mesh = face.mesh;
                 objectData.material = dummyMaterial;
@@ -178,35 +192,36 @@ namespace BSP {
 
         void onExit() {}
 
-
     private:
-
         bool updateCam = true;
         double m_pTime = 0.0;
 
-        void setupCamera() {
+        void setupCamera()
+        {
 
+            framework::Input::KeyBoard::KeyboardEventHandler.addListener(([this](auto *sender, beacon::args *args)
+                                                                          {
+                                                                              if (args == nullptr)
+                                                                                  return;
 
-            framework::Input::KeyBoard::KeyboardEventHandler.addListener(([this](auto *sender, beacon::args *args) {
-                if (args == nullptr)
-                    return;
+                                                                              auto obj = args->to<framework::Input::KeyboardArgs>();
 
-                auto obj = args->to<framework::Input::KeyboardArgs>();
-
-                //std::cout << "pressed" << std::endl;
+                // std::cout << "pressed" << std::endl;
 #if USE_GLFW
-                if (obj.key_up_index == framework::Input::GLFW::Key::M) {
-                    updateCam = !updateCam;
-                }
+                                                                              if (obj.key_up_index == framework::Input::GLFW::Key::M)
+                                                                              {
+                                                                                  updateCam = !updateCam;
+                                                                              }
 
-                if (obj.key_up_index == framework::Input::GLFW::Key::P) {
-                    auto pos = m_pCamera->getPosition();
-                    auto dir = m_pCamera->getDirection();
-                    std::cout << pos.x << " " << pos.y << " " << pos.z << std::endl;
-                    std::cout << dir.x << " " << dir.y << " " << dir.z << std::endl;
-                }
+                                                                              if (obj.key_up_index == framework::Input::GLFW::Key::P)
+                                                                              {
+                                                                                  auto pos = m_pCamera->getPosition();
+                                                                                  auto dir = m_pCamera->getDirection();
+                                                                                  std::cout << pos.x << " " << pos.y << " " << pos.z << std::endl;
+                                                                                  std::cout << dir.x << " " << dir.y << " " << dir.z << std::endl;
+                                                                              }
 #endif
-            }));
+                                                                          }));
 
             ShaderData camData;
             camData.iResolution = glm::vec2(getWindowDimensions().first, getWindowDimensions().second);
@@ -215,11 +230,14 @@ namespace BSP {
             auto currentTime = std::chrono::high_resolution_clock::now();
             m_pTime = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
-            if (updateCam) {
+            if (updateCam)
+            {
                 Epsilon::getContext().Window().HideCursor();
                 m_pCamera->Update(Epsilon::getContext().Window().getWindow());
                 m_pCamera->UpdateMatrices(0, getWindowDimensions().first, getWindowDimensions().second, false);
-            } else {
+            }
+            else
+            {
                 Epsilon::getContext().Window().ShowCursor();
             }
             camData.view = m_pCamera->getViewMatrix();
@@ -232,13 +250,14 @@ namespace BSP {
 
         glm::mat4 lightMatrix = glm::mat4(1.0);
 
-        void setupShadowCamera() {
+        void setupShadowCamera()
+        {
 
             ShaderData camData;
 
             camData.iResolution = glm::vec2(2000, 2000);
 
-            //30.6363, 13.117, -38.7729
+            // 30.6363, 13.117, -38.7729
 
             camData.view = glm::lookAt(glm::vec3(23.6365, 25.117, -45.7729),
                                        glm::vec3(23.6365, 0.897448, -22.8326),
@@ -252,112 +271,109 @@ namespace BSP {
             camData.lightPosition = m_pCamera->getPosition();
             camData.proj[1][1] *= -1;
             lightMatrix = camData.proj * camData.view * glm::mat4(1.0);
+            camData.lightMatrix = lightMatrix;
             camData.iTime += m_pTime;
             PushShaderData(camData);
         }
 
-
-        void setupRenderPass() {
+        void setupRenderPass()
+        {
 
             using namespace engine;
-            //Load the shader that draws the board
-            auto vertexCode = utils::readFile("../../../assets/shaders/vertex.spv");
-            auto fragmentCode = utils::readFile("../../../assets/shaders/fragment.spv");
+            // Load the shader that draws the board
+            auto vertexCode = utils::readFile("./assets/shaders/vertex.spv");
+            auto fragmentCode = utils::readFile("./assets/shaders/fragment.spv");
 
-            auto shadowVertexCode = utils::readFile("../../../assets/shaders/shadow-vertex.spv");
-            auto shadowFragmentCode = utils::readFile("../../../assets/shaders/shadow-fragment.spv");
+            auto shadowVertexCode = utils::readFile("./assets/shaders/shadow-vertex.spv");
+            auto shadowFragmentCode = utils::readFile("./assets/shaders/shadow-fragment.spv");
 
             ShaderInfo mainShaderInfo = {
-                    .stages = {
-                            {.entryPoint = "main", .shaderCode = vertexCode, .stage = VERTEX},
-                            {.entryPoint = "main", .shaderCode = fragmentCode, .stage = FRAGMENT}},
-                    .usedStages = ShaderModuleStage(VERTEX | FRAGMENT)};
+                .stages = {
+                    {.entryPoint = "main", .shaderCode = vertexCode, .stage = VERTEX},
+                    {.entryPoint = "main", .shaderCode = fragmentCode, .stage = FRAGMENT}},
+                .usedStages = ShaderModuleStage(VERTEX | FRAGMENT)};
 
             ShaderInfo shadowShaderInfo = {
-                    .stages = {
-                            {.entryPoint = "main", .shaderCode = shadowVertexCode, .stage = VERTEX},
-                            {.entryPoint = "main", .shaderCode = shadowFragmentCode, .stage = FRAGMENT}},
-                    .usedStages = ShaderModuleStage(VERTEX | FRAGMENT)};
+                .stages = {
+                    {.entryPoint = "main", .shaderCode = shadowVertexCode, .stage = VERTEX},
+                    {.entryPoint = "main", .shaderCode = shadowFragmentCode, .stage = FRAGMENT}},
+                .usedStages = ShaderModuleStage(VERTEX | FRAGMENT)};
 
-            std::vector<VertexDescriptorInfo> vertexInfo = {{XYZ_FLOAT,  offsetof(Vertex, position)},
-                                                            {XY_FLOAT,   offsetof(Vertex, texCoords)},
-                                                            {XYZ_FLOAT,  offsetof(Vertex, normal)},
-                                                            {XYZW_FLOAT, offsetof(Vertex, color)},
-                                                            {XYZ_FLOAT,  offsetof(Vertex, tangent)},
-                                                            {XYZ_FLOAT,  offsetof(Vertex, bitangent)}};
+            std::vector<VertexDescriptorInfo> vertexInfo = {{XYZ_FLOAT, offsetof(Vertex, position)},
+                                                            {XY_FLOAT,  offsetof(Vertex, texCoords)},
+                                                            {XYZ_FLOAT, offsetof(Vertex, normal)},
+                                                            {XYZW_FLOAT,offsetof(Vertex, color)},
+                                                            {XYZ_FLOAT, offsetof(Vertex, tangent)},
+                                                            {XYZ_FLOAT, offsetof(Vertex, bitangent)}};
             PipelineLayout mainLayout = {
-                    .shaderInfo = mainShaderInfo,
-                    .vertexLayout = vertexInfo,
-                    .cullMode = CullMode::BACK,
-                    .windingMode = WindingMode::CLOCKWISE
-            };
+                .shaderInfo = mainShaderInfo,
+                .vertexLayout = vertexInfo,
+                .cullMode = CullMode::BACK,
+                .windingMode = WindingMode::CLOCKWISE};
 
             PipelineLayout shadowLayout = {
-                    .shaderInfo = shadowShaderInfo,
-                    .vertexLayout = vertexInfo,
-                    .cullMode = CullMode::FRONT,
-                    .windingMode = WindingMode::CLOCKWISE
-            };
+                .shaderInfo = shadowShaderInfo,
+                .vertexLayout = vertexInfo,
+                .cullMode = CullMode::FRONT,
+                .windingMode = WindingMode::CLOCKWISE};
 
-            //Configure the default render pass object
+            // Configure the default render pass object
             RenderPassInfo renderPassInfo =
-                    RenderPassFactory()
-                            .numDescriptors(6)
-                            .size(sizeof(Vertex))
-                            .depthAttachment(true)
-                            .subpasses({})
-                            .dimensions({.width = 1280, .height = 720})
-                            .attachments(
-                                    {
-                                            {
-                                                    .format = COLOR_RGBA,
-                                                    .isDepthAttachment = false,
-                                                    .isSwapChainAttachment = true,
-                                            },
-                                            {
-                                                    .format = DEPTH_F32_STENCIL_8,
-                                                    .isDepthAttachment = true
-                                            }
-                                    })
-                            .pipelineLayout(mainLayout)
-                            .pushConstant(sizeof(PushConstant))
-                            .bufferInfo({.size = sizeof(ShaderData), .offset = 0});
-
+                RenderPassFactory()
+                    .numDescriptors(6)
+                    .size(sizeof(Vertex))
+                    .depthAttachment(true)
+                    .subpasses({})
+                    .dimensions({.width = 1280, .height = 720})
+                    .attachments({{
+                                      .format = COLOR_RGBA,
+                                      .isDepthAttachment = false,
+                                      .isSwapChainAttachment = true,
+                                  },
+                                  {.format = DEPTH_F32_STENCIL_8,
+                                   .isDepthAttachment = true}})
+                    .pipelineLayout(mainLayout)
+                    .pushConstant(sizeof(PushConstant))
+                    .uniformBindings({{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = UNIFORM_BUFFER},
+                                      {.size = 0, .offset = 0, .binding = 1, .type = TEXTURE_IMAGE_COMBINED_SAMPLER},
+                                      {.size = 0, .offset = 0, .binding = 2, .type = TEXTURE_IMAGE_COMBINED_SAMPLER}});
 
             RenderPassInfo shadowRenderPassInfo =
-                    RenderPassFactory()
-                            .numDescriptors(6)
-                            .size(sizeof(Vertex))
-                            .depthAttachment(true)
-                            .subpasses({})
-                            .dimensions({.width = 2000, .height = 2000})
-                            .attachments(
-                                    {
-                                            {
-                                                    .format = COLOR_R_32F,
-                                                    .wrapMode = CLAMP_TO_BORDER,
-                                                    .filtering = LINEAR,
-                                                    .compareFunc = LESS_OR_EQUAL,
-                                                    .depthCompare = true,
-                                                    .isSampler = true,
-                                                    .isDepthAttachment = false,
-                                                    .isSwapChainAttachment = false
-                                            },
-                                            {
-                                                    .format = DEPTH_F32_STENCIL_8,
-                                                    .isDepthAttachment = true
-                                            }
-                                    })
-                            .pipelineLayout(shadowLayout)
-                            .pushConstant(sizeof(PushConstant))
-                            .bufferInfo({.size = sizeof(ShaderData), .offset = 0});
+                RenderPassFactory()
+                    .numDescriptors(6)
+                    .size(sizeof(Vertex))
+                    .depthAttachment(true)
+                    .subpasses({})
+                    .dimensions({.width = 2000, .height = 2000})
+                    .attachments(
+                        {{.format = COLOR_R_32F,
+                          .wrapMode = CLAMP_TO_BORDER,
+                          .filtering = LINEAR,
+                          .compareFunc = LESS_OR_EQUAL,
+                          .depthCompare = true,
+                          .isSampler = true,
+                          .isDepthAttachment = false,
+                          .isSwapChainAttachment = false},
+                         {.format = COLOR_R_32F,
+                          .wrapMode = CLAMP_TO_BORDER,
+                          .filtering = POINT,
+                          .compareFunc = ALWAYS,
+                          .depthCompare = false,
+                          .isSampler = true,
+                          .isDepthAttachment = false,
+                          .isSwapChainAttachment = false},
+
+                         {.format = DEPTH_F32_STENCIL_8,
+                          .isDepthAttachment = true}})
+                    .pipelineLayout(shadowLayout)
+                    .pushConstant(sizeof(PushConstant))
+                    .uniformBindings({{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = UNIFORM_BUFFER},
+                                      {.size = 0,                  .offset = 0, .binding = 1, .type = TEXTURE_IMAGE_COMBINED_SAMPLER}});
 
             m_pRenderPass = Epsilon::getContext().ResourceManager()->createDefaultRenderPass(renderPassInfo);
             m_pShadowRenderPass = Epsilon::getContext().ResourceManager()->createRenderPass(shadowRenderPassInfo);
-
         }
-
     };
 
 }
-#endif //EPSILON_BSP_HPP
+#endif // EPSILON_BSP_HPP

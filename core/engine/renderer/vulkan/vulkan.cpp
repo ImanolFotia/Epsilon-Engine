@@ -157,7 +157,7 @@ namespace engine {
         */
         auto renderPass = m_pResourceManagerRef->getRenderPass(renderPassRef);
 
-        pUpdateUniforms(renderPass->uniformBuffer.buffers[m_pCurrentFrame]);
+        pUpdateUniforms(renderPass->uniformBuffer.front().buffers[m_pCurrentFrame]);
 
         vk::createRenderPassInfo(m_pImageIndex, m_pVkData, *renderPass);
         vk::beginRenderPass(m_pFrame.CommandBuffer(), *renderPass);

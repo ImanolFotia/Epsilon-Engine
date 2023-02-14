@@ -4,14 +4,14 @@
 #include "resource_manager.hpp"
 
 #include "core/framework/exception.hpp"
-
+/*
 #define VMA_DEBUG_LOG_FORMAT(format, ...)
 
 #define VMA_DEBUG_LOG_FORMAT(format, ...) do { \
     printf((format), __VA_ARGS__); \
     printf("\n"); \
 } while(false)
-
+*/
 
 #define VMA_DEBUG_LOG(str)   VMA_DEBUG_LOG_FORMAT("%s", (str))
 
@@ -101,13 +101,13 @@ namespace engine {
 
             //auto uniformBufferRef = createUniformData(material.bindingInfo);
 
-            auto buffers = renderPass->uniformBuffer.buffers;
+            auto buffers = renderPass->uniformBuffer.front().buffers;
 
             for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
                 vkMaterial.bufferInfo[i].offset = buffers[i].offset;
                 vkMaterial.bufferInfo[i].buffer = buffers[i].buffer;
             }
-            vkMaterial.bufferSize = renderPass->uniformBuffer.size;
+            vkMaterial.bufferSize = renderPass->uniformBuffer.front().size;
 
             m_pNumCommandPools++;
             pCreateDescriptorPool();
@@ -170,8 +170,6 @@ namespace engine {
     }
 
     Ref<RenderPass> VulkanResourceManager::createDefaultRenderPass(RenderPassInfo renderPassInfo) {
-
-
         m_pVkDataPtr->defaultRenderPass.id = std::numeric_limits<uint32_t>::max();
         m_pDefaultRenderPassInfo = renderPassInfo;
         vk::createRenderPass(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, renderPassInfo, true);
@@ -181,18 +179,25 @@ namespace engine {
 
             m_pVkDataPtr->defaultRenderPass.renderPipelines.emplace_back();
             vk::createDescriptorSetLayout(*m_pVkDataPtr,
-                                          m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayout);
+                                          m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayout, renderPassInfo.bindingInfo);
+
             vk::createGraphicsPipeline(*m_pVkDataPtr,
                                        m_pVkDataPtr->defaultRenderPass,
                                        m_pVkDataPtr->defaultRenderPass.renderPipelines.back(),
                                        renderPassInfo);
         }
 
-        vk::createFramebuffers(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass,
+        vk::createSwapChainFramebuffers(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass,
                                m_pVkDataPtr->defaultRenderPass.renderPassChain);
 
-        auto uniformRef = createUniformData(renderPassInfo.bindingInfo);
-        m_pVkDataPtr->defaultRenderPass.uniformBuffer = *uniformBufferPool.get(uniformRef);
+        for(auto& binding: renderPassInfo.bindingInfo) {
+            if(binding.type == UNIFORM_BUFFER) {
+                auto uniformRef = createUniformData(binding);
+                m_pVkDataPtr->defaultRenderPass.uniformBuffer.push_back(*uniformBufferPool.get(uniformRef));
+            }
+        }
+
+
         m_pDefaultRenderPassRef = renderPassPool.insert(m_pVkDataPtr->defaultRenderPass);
 
         return m_pDefaultRenderPassRef;
@@ -201,10 +206,16 @@ namespace engine {
     Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPassInfo) {
         vk::VulkanRenderPass renderPass = {};
 
+        renderPass.clearValues.resize(renderPassInfo.numAttachments);
+        for(int i = 0; i < renderPassInfo.numAttachments-1;i++) {
+            renderPass.clearValues[i].color = renderPass.clearColor;
+        }
+        renderPass.clearValues[renderPassInfo.numAttachments-1].depthStencil = renderPass.depthStencilClearColor;
+
         renderPass.id = m_pRenderPassCount;
         m_pRenderPassInfo.push_back(renderPassInfo);
-
         renderPass.renderPassChain.ImageFormats.resize(renderPassInfo.attachments.size());
+
         for (int index = 0; index < renderPassInfo.attachments.size(); index++)
             renderPass.renderPassChain.ImageFormats[index] = resolveFormat(renderPassInfo.attachments[index].format);
 
@@ -212,9 +223,12 @@ namespace engine {
 
         for (size_t i = 0; i < renderPassInfo.attachments.size(); i++) {
             auto &attachment = renderPassInfo.attachments[i];
+
             vk::VulkanTextureInfo texInfo;
-            texInfo.format = attachment.isDepthAttachment ? findDepthFormat(*m_pVkDataPtr) : resolveFormat(
-                    renderPassInfo.attachments[i].format);
+            texInfo.format = attachment.isDepthAttachment ? 
+                                        findDepthFormat(*m_pVkDataPtr) : 
+                                        resolveFormat(renderPassInfo.attachments[i].format);
+
             texInfo.addressMode = resolveWrapping(attachment.wrapMode);
             texInfo.compareOp = resolveCompareOp(attachment.compareFunc);
             texInfo.filter = resolveFilter(attachment.filtering);
@@ -224,6 +238,7 @@ namespace engine {
             texInfo.usage = attachment.isDepthAttachment ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT :
                             VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
             texInfo.compareEnable = attachment.depthCompare;
+
             if (attachment.isSampler)
                 texInfo.usage |= VK_IMAGE_USAGE_SAMPLED_BIT;
 
@@ -242,7 +257,6 @@ namespace engine {
                 renderPass.renderPassChain.ImageViews.push_back(texture.imageView);
                 renderPass.renderPassChain.Textures.push_back(texture);
             }
-
         }
 
         renderPass.renderPassChain.Extent.width = renderPassInfo.dimensions.width;
@@ -251,7 +265,9 @@ namespace engine {
         for (int i = 0; i < renderPassInfo.numLayouts; i++) {
 
             renderPass.renderPipelines.emplace_back();
-            vk::createDescriptorSetLayout(*m_pVkDataPtr, renderPass.renderPipelines.back().descriptorSetLayout);
+            vk::createDescriptorSetLayout(*m_pVkDataPtr, renderPass.renderPipelines.back().descriptorSetLayout, renderPassInfo.bindingInfo);
+
+            renderPass.renderPipelines.back().numAttachments = renderPass.renderPassChain.ImageViews.size();
 
             vk::createGraphicsPipeline(*m_pVkDataPtr,
                                        renderPass,
@@ -261,8 +277,12 @@ namespace engine {
 
         vk::createFramebuffers(*m_pVkDataPtr, renderPass, renderPass.renderPassChain);
 
-        auto uniformRef = createUniformData(renderPassInfo.bindingInfo);
-        renderPass.uniformBuffer = *uniformBufferPool.get(uniformRef);
+        for(auto& binding: renderPassInfo.bindingInfo) {
+            if(binding.type == UNIFORM_BUFFER) {
+                auto uniformRef = createUniformData(binding);
+                renderPass.uniformBuffer.push_back(*uniformBufferPool.get(uniformRef));
+            }
+        }
         auto ref = renderPassPool.insert(renderPass);
 
         m_pRenderPassCount++;
@@ -270,6 +290,8 @@ namespace engine {
     }
 
     void VulkanResourceManager::clean() {
+
+        vkDeviceWaitIdle(m_pVkDataPtr->logicalDevice);
         for (auto &buffer: vertexBufferPool) {
             vmaDestroyBuffer(m_pAllocator, buffer.buffer, buffer.allocation);
         }
@@ -285,10 +307,14 @@ namespace engine {
         }
 
 
-        vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool, nullptr);
-
         vk::cleanupSyncObjects(*m_pVkDataPtr);
-        vk::cleanCommandPool(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools[0]);
+
+        for(auto& commandPool: m_pVkDataPtr->m_pCommandPools)
+            vk::cleanCommandPool(*m_pVkDataPtr, commandPool);
+
+        for(auto& commandPool: m_pCommandPools)
+            vk::cleanCommandPool(*m_pVkDataPtr, commandPool);
+
 
         for (auto &texture: texPool) {
             vkDestroySampler(m_pVkDataPtr->logicalDevice, texture.sampler, nullptr);
@@ -300,10 +326,15 @@ namespace engine {
 
         for (auto &pass: renderPassPool) {
             vk::cleanupRenderPass(*m_pVkDataPtr, pass.renderPass);
+
+
             for (auto &pipeline: pass.renderPipelines)
                 vk::destroyGraphicsPipeline(*m_pVkDataPtr, pipeline);
 
             if (pass.id == std::numeric_limits<uint32_t>::max()) continue;
+
+            for(auto& framebuffer: pass.renderPassChain.Framebuffers)
+                vkDestroyFramebuffer(m_pVkDataPtr->logicalDevice, framebuffer, nullptr);
 
             for (int i = 0; i < pass.renderPassChain.Textures.size(); i++) {
                 vkDestroySampler(m_pVkDataPtr->logicalDevice, pass.renderPassChain.Textures[i].sampler, nullptr);
@@ -322,6 +353,7 @@ namespace engine {
                             pass.renderPassChain.DepthTexture.allocation);
 
         }
+        vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool, nullptr);
 
 
         vmaDestroyAllocator(m_pAllocator);

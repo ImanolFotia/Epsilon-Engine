@@ -4,26 +4,41 @@
 #include <vulkan/vulkan.hpp>
 #endif
 #include "vk_data.hpp"
+#include <core/engine/renderer/types.hpp>
 
 namespace vk
 {
-    static void createDescriptorSetLayout(const VulkanData &vkData, VkDescriptorSetLayout &descriptorSetLayout)
+    static VkDescriptorSetLayoutBinding createUboBinding(int bind)
     {
         VkDescriptorSetLayoutBinding uboLayoutBinding{};
-        uboLayoutBinding.binding = 0;
+        uboLayoutBinding.binding = bind;
         uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
         uboLayoutBinding.descriptorCount = 1;
         uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
         uboLayoutBinding.pImmutableSamplers = nullptr;
-
+        return uboLayoutBinding;
+    }
+    static VkDescriptorSetLayoutBinding createTextureBinding(int bind)
+    {
         VkDescriptorSetLayoutBinding samplerLayoutBinding{};
-        samplerLayoutBinding.binding = 1;
+        samplerLayoutBinding.binding = bind;
         samplerLayoutBinding.descriptorCount = 1;
         samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
         samplerLayoutBinding.pImmutableSamplers = nullptr;
         samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-
-        std::array<VkDescriptorSetLayoutBinding, 2> bindings = {uboLayoutBinding, samplerLayoutBinding};
+        return samplerLayoutBinding;
+    }
+    static void createDescriptorSetLayout(const VulkanData &vkData, VkDescriptorSetLayout &descriptorSetLayout, std::vector<engine::UniformBindingInfo> layoutBindings)
+    {
+        std::vector<VkDescriptorSetLayoutBinding> bindings;
+        for(auto& binding: layoutBindings) {
+            if(binding.type == engine::UNIFORM_BUFFER) {
+                bindings.push_back(createUboBinding(binding.binding));
+            } else if(binding.type == engine::TEXTURE_IMAGE_COMBINED_SAMPLER) {
+                bindings.push_back(createTextureBinding(binding.binding));
+            }
+        }
+        // std::array<VkDescriptorSetLayoutBinding, 2> bindings = {uboLayoutBinding, samplerLayoutBinding};
         VkDescriptorSetLayoutCreateInfo layoutInfo{};
         layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
         layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());
@@ -35,7 +50,8 @@ namespace vk
         }
     }
 
-    static void updateDescriptorSet(const VulkanData &vkData, VulkanMaterial& material) {
-        //vkUpdateDescriptorSets(vkData.logicalDevice, 2, material.descriptorWrites.data(), 0, nullptr);
+    static void updateDescriptorSet(const VulkanData &vkData, VulkanMaterial &material)
+    {
+        // vkUpdateDescriptorSets(vkData.logicalDevice, 2, material.descriptorWrites.data(), 0, nullptr);
     }
 }

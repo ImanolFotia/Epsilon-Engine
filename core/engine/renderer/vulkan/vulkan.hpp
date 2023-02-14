@@ -11,17 +11,17 @@
 #include <vector>
 #include <list>
 
-
+/*
 #define VMA_DEBUG_LOG_FORMAT(format, ...)
 
 #define VMA_DEBUG_LOG_FORMAT(format, ...) do { \
     printf((format), __VA_ARGS__); \
     printf("\n"); \
 } while(false)
-
-
+*/
+/*
 #define VMA_DEBUG_LOG(str)   VMA_DEBUG_LOG_FORMAT("%s", (str))
-
+*/
 
 #include "vk_mem_alloc.h"
 

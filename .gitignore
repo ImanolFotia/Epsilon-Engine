@@ -14,6 +14,10 @@
 /build
 /out
 /CMakeFiles
+/assets/models/hl2
+/assets/models/portal
+/modules/dotnet/lib/bin
+/modules/dotnet/lib/obj
 cmake-build-debug-coverage/
 cmake-build-release/
 

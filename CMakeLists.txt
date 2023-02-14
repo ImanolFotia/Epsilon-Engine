@@ -266,10 +266,12 @@ if(BUILD_ANDROID EQUAL 0)
 target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
 target_link_libraries(${PROJECT_NAME} PRIVATE openal)
 endif()
+target_link_libraries(${PROJECT_NAME} PRIVATE openal)
 
 add_dependencies(${PROJECT_NAME} vma)
 add_dependencies(${PROJECT_NAME} glfw3_d)
 
+add_dependencies(${PROJECT_NAME} openal_d)
 if(DBUILD_ANDROID EQUAL 0)
 add_dependencies(${PROJECT_NAME} openal_d)
 add_dependencies(${PROJECT_NAME} assimp_d)

@@ -276,9 +276,20 @@ namespace engine
         BufferInfo info;
     };
 
+    enum UniformBindingType {
+        UNIFORM_BUFFER = 0,
+        TEXTURE_SAMPLER,
+        TEXTURE_IMAGE_COMBINED_SAMPLER,
+        SHADER_STORAGE,
+        IMAGE,
+        BINDLESS_TEXTURE
+    };
+
     struct UniformBindingInfo {
         size_t size;
         size_t offset;
+        uint32_t binding = 0;
+        UniformBindingType type;
     };
 
     struct UniformBindingFactory {
@@ -290,6 +301,14 @@ namespace engine
         }
         UniformBindingInfo offset(size_t o) {
             info.offset = o;
+            return *this;
+        }
+        UniformBindingInfo binding(uint32_t b) {
+            info.binding = b;
+            return *this;
+        }
+        UniformBindingInfo type(UniformBindingType t) {
+            info.type = t;
             return *this;
         }
 
@@ -315,13 +334,14 @@ namespace engine
         uint32_t numDescriptors = 0;
         uint32_t numAttributes = 0;
         uint32_t numLayouts = 0;
+        uint32_t numAttachments = 0;
         size_t size;
         bool depthAttachment;
         std::vector<SubPassInfo> subpasses;
         std::vector<RenderPassAttachment> attachments;
         std::vector<PipelineLayout> pipelineLayout;
         PushConstantData pushConstant;
-        UniformBindingInfo bindingInfo;
+        std::vector<UniformBindingInfo> bindingInfo;
         ImageDimensions dimensions;
     };
 
@@ -363,6 +383,7 @@ namespace engine
         RenderPassFactory attachments(std::vector<RenderPassAttachment> a)
         {
             info.attachments = a;
+            info.numAttachments += a.size();
             return *this;
         }
 
@@ -378,7 +399,7 @@ namespace engine
             return *this;
         }
 
-        RenderPassFactory bufferInfo(UniformBindingInfo bi) {
+        RenderPassFactory uniformBindings(std::initializer_list<UniformBindingInfo> bi) {
             info.bindingInfo = bi;
             return *this;
         }

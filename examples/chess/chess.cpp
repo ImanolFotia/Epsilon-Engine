@@ -13,7 +13,7 @@ namespace ChessApp {
         using namespace engine;
         using namespace framework;
 
-        m_pMoveAudioObject.audioFile.Load("../../../assets/audio/move.wav");
+        m_pMoveAudioObject.audioFile.Load("./assets/audio/move.wav");
 
         m_pMoveAudioObject.buffer = al::createBuffer(m_pMoveAudioObject.audioFile.getNumberOfChannels(),
                                                      m_pMoveAudioObject.audioFile.getFileSize(),
@@ -24,7 +24,7 @@ namespace ChessApp {
         m_pMoveAudioObject.source = al::createSource(m_pMoveAudioObject.buffer);
 
 
-        m_pTakeAudioObject.audioFile.Load("../../../assets/audio/take.wav");
+        m_pTakeAudioObject.audioFile.Load("./assets/audio/take.wav");
 
         m_pTakeAudioObject.buffer = al::createBuffer(m_pTakeAudioObject.audioFile.getNumberOfChannels(),
                                                      m_pTakeAudioObject.audioFile.getFileSize(),
@@ -425,7 +425,7 @@ namespace ChessApp {
                     }
             };
             int w, h, nc;
-            unsigned char *pixels = framework::load_image_from_file("../../../assets/images/pieces.png",
+            unsigned char *pixels = framework::load_image_from_file("./assets/images/pieces.png",
                                                                     &w,
                                                                     &h,
                                                                     &nc);
@@ -448,8 +448,8 @@ namespace ChessApp {
 
         using namespace engine;
         //Load the shader that draws the board
-        auto boardVertexCode = utils::readFile("../../../assets/shaders/chess/board-vertex.spv");
-        auto boardFragmentCode = utils::readFile("../../../assets/shaders/chess/board-fragment.spv");
+        auto boardVertexCode = utils::readFile("./assets/shaders/chess/board-vertex.spv");
+        auto boardFragmentCode = utils::readFile("./assets/shaders/chess/board-fragment.spv");
 
         ShaderInfo boardShaderInfo = {
                 .stages = {
@@ -458,8 +458,8 @@ namespace ChessApp {
                 .usedStages = ShaderModuleStage(VERTEX | FRAGMENT)};
 
         //Load the shader that draws the pieces
-        auto pieceVertexCode = utils::readFile("../../../assets/shaders/chess/piece-vertex.spv");
-        auto pieceFragmentCode = utils::readFile("../../../assets/shaders/chess/piece-fragment.spv");
+        auto pieceVertexCode = utils::readFile("./assets/shaders/chess/piece-vertex.spv");
+        auto pieceFragmentCode = utils::readFile("./assets/shaders/chess/piece-fragment.spv");
         ShaderInfo pieceShaderInfo = {
                 .stages = {
                         {.entryPoint = "main", .shaderCode = pieceVertexCode, .stage = VERTEX},
@@ -508,7 +508,8 @@ namespace ChessApp {
                         .pipelineLayout(boardLayout)
                         .pipelineLayout(pieceLayout)
                         .pushConstant(sizeof(PiecePushConstant))
-                        .bufferInfo({.size = sizeof(ShaderData), .offset = 0});
+                        .uniformBindings({{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = UNIFORM_BUFFER},
+                                      {.size = 0, .offset = 0, .binding = 1, .type = TEXTURE_IMAGE_COMBINED_SAMPLER}});
 
         m_pRenderPass = Epsilon::getContext().ResourceManager()->createDefaultRenderPass(renderPassInfo);
 

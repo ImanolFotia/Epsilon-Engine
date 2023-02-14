@@ -19,7 +19,7 @@ public:
     bool think = false;
 
     void init() {
-        popen2("./stockfish/stockfish-ubuntu-20.04-x86-64-avx2", &child);
+        popen2("./build/examples/chess/stockfish/stockfish-ubuntu-20.04-x86-64-avx2", &child);
 
         std::cout << "Launched: ";
         std::cout << read_from_pipe(child.from_child) << std::endl;

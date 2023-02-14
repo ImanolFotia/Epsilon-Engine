@@ -62,7 +62,7 @@ namespace ChessApp {
 
             Epsilon::getSingleton().onCreate = [this] { onCreate(); };
             Epsilon::getSingleton().onReady = [this] { onReady(); };
-            //Epsilon::getSingleton().onRender = [this] { onRender(); };
+            Epsilon::getSingleton().onRender = [this] { onRender(); };
             Epsilon::getSingleton().onExit = [this] { onExit(); };
         }
 

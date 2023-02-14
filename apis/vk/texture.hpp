@@ -78,6 +78,7 @@ namespace vk {
         samplerInfo.mipLodBias = 0.0f;
         samplerInfo.minLod = 0.0f;
         samplerInfo.maxLod = 0.0f;
+
         if (vkCreateSampler(vkData.logicalDevice, &samplerInfo, nullptr, &texture.sampler) != VK_SUCCESS) {
             throw std::runtime_error("failed to create texture sampler!");
         }

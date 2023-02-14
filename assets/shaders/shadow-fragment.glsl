@@ -1,6 +1,7 @@
 #version 450
 
-layout(location = 0) out vec4 outColor;
+layout(location = 0) out float outColor;
+layout(location = 1) out float outColor2;
 
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec2 texCoords;
@@ -28,5 +29,6 @@ float LinearizeDepth(float depth)
 
 void main() {
     if(color.a < 1.0) discard;
-    outColor = vec4(vec3(gl_FragCoord.z), 1.0);
+    outColor = gl_FragCoord.z;
+    outColor2 = gl_FragCoord.z;
 }

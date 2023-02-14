@@ -176,7 +176,6 @@ namespace vk
 
             // Viewport stage
             createViewport(vk_data, renderPipeline, renderPass.renderPassChain);
-
             // Rasterizer stage
             setupRasterizer(renderPipeline);
 
@@ -222,6 +221,10 @@ namespace vk
             pipelineInfo.pViewportState = &renderPipeline.viewportState;
             pipelineInfo.pRasterizationState = &renderPipeline.rasterizer;
             pipelineInfo.pMultisampleState = &renderPipeline.multisampling; // Optional
+            /*
+            for(int i = 0; i < renderPipeline.colorBlending.attachmentCount;i++) {
+                renderPipeline.colorBlending.pAttachments[i].blendEnable = VK_FALSE;
+            }*/
             pipelineInfo.pColorBlendState = &renderPipeline.colorBlending;
 
             pipelineInfo.layout = renderPipeline.pipelineLayout.back();

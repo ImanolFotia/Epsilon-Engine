@@ -117,7 +117,7 @@ namespace vk
         VkViewport viewport{};
         VkPipelineRasterizationStateCreateInfo rasterizer{};
         VkPipelineMultisampleStateCreateInfo multisampling{};
-        VkPipelineColorBlendAttachmentState colorBlendAttachment{};
+        std::vector<VkPipelineColorBlendAttachmentState> colorBlendAttachments;
         VkPipelineColorBlendStateCreateInfo colorBlending{};
         VkFrontFace winding;
         VkCullModeFlags cullMode;
@@ -125,6 +125,7 @@ namespace vk
         //VkClearColorValue clearColor = {0.1f, 0.1f, 0.1f, 1.0f};
         VkClearColorValue clearColor = {1.0f, 1.0f, 1.0f, 1.0f};
         VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
+        uint32_t numAttachments = 1;
     };
 
     struct VulkanRenderPassData {
@@ -174,6 +175,7 @@ namespace vk
     struct VulkanRenderPass
     {
         VulkanRenderPass() {
+            clearValues.resize(2);
             clearValues[0].color = clearColor;
             clearValues[1].depthStencil = depthStencilClearColor;
         }
@@ -187,10 +189,10 @@ namespace vk
         //VkClearColorValue clearColor = {0.1f, 0.1f, 0.1f, 1.0f};
         VkClearColorValue clearColor = {1.0f, 1.0f, 1.0f, 1.0f};
         VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
-        VkClearValue clearValues[2] = {};
+        std::vector<VkClearValue> clearValues = {};
         uint32_t id;
 
-        VulkanUniformBuffer uniformBuffer;
+        std::list<VulkanUniformBuffer> uniformBuffer;
     };
 
     struct VulkanSyncObject
