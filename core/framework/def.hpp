@@ -1,5 +1,8 @@
 #pragma once 
 
+#include <numeric>
+#include <glm/glm.hpp>
+
 constexpr double PI = 3.14159265359;
 constexpr double HPI = 3.14159265359 * 0.5;
 constexpr double TAU = PI * 0.5;
@@ -32,7 +35,7 @@ inline static T getMaximum()
     return std::numeric_limits<T>::max();
 }
 
-static glm::vec2 halton(int index)
+[[maybe_unused]] static glm::vec2 halton(int index)
 {
     const glm::vec2 coprimes = glm::vec2(2.0f, 3.0f);
     glm::vec2 s = glm::vec2(index, index);

@@ -300,9 +300,9 @@ namespace BSP
                 .usedStages = ShaderModuleStage(VERTEX | FRAGMENT)};
 
             std::vector<VertexDescriptorInfo> vertexInfo = {{XYZ_FLOAT, offsetof(Vertex, position)},
-                                                            {XY_FLOAT,  offsetof(Vertex, texCoords)},
+                                                            {XY_FLOAT, offsetof(Vertex, texCoords)},
                                                             {XYZ_FLOAT, offsetof(Vertex, normal)},
-                                                            {XYZW_FLOAT,offsetof(Vertex, color)},
+                                                            {XYZW_FLOAT, offsetof(Vertex, color)},
                                                             {XYZ_FLOAT, offsetof(Vertex, tangent)},
                                                             {XYZ_FLOAT, offsetof(Vertex, bitangent)}};
             PipelineLayout mainLayout = {
@@ -368,7 +368,7 @@ namespace BSP
                     .pipelineLayout(shadowLayout)
                     .pushConstant(sizeof(PushConstant))
                     .uniformBindings({{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = UNIFORM_BUFFER},
-                                      {.size = 0,                  .offset = 0, .binding = 1, .type = TEXTURE_IMAGE_COMBINED_SAMPLER}});
+                                      {.size = 0, .offset = 0, .binding = 1, .type = TEXTURE_IMAGE_COMBINED_SAMPLER}});
 
             m_pRenderPass = Epsilon::getContext().ResourceManager()->createDefaultRenderPass(renderPassInfo);
             m_pShadowRenderPass = Epsilon::getContext().ResourceManager()->createRenderPass(shadowRenderPassInfo);

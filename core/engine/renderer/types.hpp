@@ -281,8 +281,9 @@ namespace engine
         TEXTURE_SAMPLER,
         TEXTURE_IMAGE_COMBINED_SAMPLER,
         SHADER_STORAGE,
-        IMAGE,
-        BINDLESS_TEXTURE
+        BINDLESS_TEXTURE,
+        ACCELERATION_STRUCTURE,
+        STORAGE_IMAGE
     };
 
     struct UniformBindingInfo {

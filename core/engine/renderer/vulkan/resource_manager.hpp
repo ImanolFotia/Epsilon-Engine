@@ -1,5 +1,5 @@
 #pragma once
-#include "core/engine/renderer/types.hpp"
+#include <core/engine/renderer/types.hpp>
 #include "core/engine/renderer/resource_manager.hpp"
 #include "vulkan.hpp"
 
@@ -16,8 +16,9 @@ namespace engine
     };
 
 
-    struct VulkanResourceManager : ResourceManager
+    class VulkanResourceManager : public ResourceManager
     {
+        public:
         friend class VulkanRenderer;
         
         using IndexType = uint32_t;

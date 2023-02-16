@@ -224,6 +224,7 @@ set(PROJECT_FILES
         ${CMAKE_SOURCE_DIR}/core/framework/clock.cpp
         ${CMAKE_SOURCE_DIR}/modules/mono/mono-instance.hpp
         ${CMAKE_SOURCE_DIR}/Epsilon.cpp
+        ${CMAKE_SOURCE_DIR}/Epsilon.hpp
         ${CMAKE_SOURCE_DIR}/core/framework/singleton.hpp)
 
 if (BUILD_AS_LIBRARY)

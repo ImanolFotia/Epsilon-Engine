@@ -239,11 +239,5 @@ void main()
     outColor.a = color.a; // texCol.a;
     vec3 checkers = drawCheckers(texCoords.xy, 512.0);
     
-    //sum = texture(shadowMap, shadowCoord).r;
-    //um = texture(shadowMap, shadowCoord).r;
-    // float shadow = poissonShadowMapping(FragPosLightSpace);
-
-    // float shadow = texture(shadowMap, position.xyz).r;//textureProj(position / position.w, vec2(0.0));//clamp(1.0 - shadow, 0.0, 1.0);
-    //sum = 1.0-texture(depthMap, shadowCoords.xy).r;
     outColor.rgb = vec3((NoL * sum) + 0.1) * checkers; //(Gamma(outColor.rgb));
 }

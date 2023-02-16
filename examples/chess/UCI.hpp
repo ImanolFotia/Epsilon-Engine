@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <string>
+#include <thread>
 
 #include "utils/popen2.hpp"
 

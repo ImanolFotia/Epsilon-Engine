@@ -35,9 +35,8 @@ void main() {
     piece = PushConstants.piece;
     position = inPosition;
     texCoords = inTexCoord;
-    normal = inNormal; //normalize(mat3(transpose(inverse(PushConstants.model))) * inNormal);
-    //vec3 outVert = inPosition;
-    //outVert.y *= (iResolution.x / iResolution.y);
+    normal = inNormal; 
+
 
     gl_Position = ubo.proj * ubo.view * PushConstants.model  * vec4(inPosition, 1.0);
 }

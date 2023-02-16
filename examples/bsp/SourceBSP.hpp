@@ -4,6 +4,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <unordered_map>
+#include <map>
 #include <glm/glm.hpp>
 
 #include "bsp_definitions.hpp"
@@ -219,6 +221,8 @@ public:
             Grid.push_back(row);
             row.clear();
         }
+
+        return {};
 
     }
 };
