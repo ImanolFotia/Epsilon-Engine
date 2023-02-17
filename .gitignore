@@ -18,6 +18,7 @@
 /assets/models/portal
 /modules/dotnet/lib/bin
 /modules/dotnet/lib/obj
+/modules/mono/test
 cmake-build-debug-coverage/
 cmake-build-release/
 
