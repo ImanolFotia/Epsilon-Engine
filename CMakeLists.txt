@@ -100,7 +100,7 @@ include_directories(${BEACON_BUILD_DIR})
 
 ##
 #Download and include Assimp
-
+set(ASSIMP_WARNINGS_AS_ERRORS FALSE)
 ExternalProject_Add(assimp_d
         GIT_REPOSITORY https://github.com/assimp/assimp.git
         INSTALL_COMMAND cmake -E echo "Skipping install step."
@@ -144,12 +144,17 @@ message(${GLFW3_BUILD_DIR})
 include_directories(${SOURCE_DIR}/include)
 link_directories(${GLFW3_BUILD_DIR}/src)
 
+if(WIN32)
+        set(CMAKE_OPENAL_ARGS "")
+else()
+        set(CMAKE_OPENAL_ARGS "-DALSOFT_REQUIRE_PULSEAUDIO=ON -DALSOFT_REQUIRE_PIPEWIRE=ON")
+endif()
 
 # download and include openal
 #requires installation of pulse audio and pipewire developer libs in the OS
 ExternalProject_Add(openal_d
         GIT_REPOSITORY https://github.com/kcat/openal-soft.git
-        CMAKE_ARGS "-DALSOFT_REQUIRE_PULSEAUDIO=ON -DALSOFT_REQUIRE_PIPEWIRE=ON"
+        CMAKE_ARGS ${CMAKE_OPENAL_ARGS}
         INSTALL_COMMAND cmake -E echo "Skipping install step."
         UPDATE_COMMAND ""
         )
@@ -238,7 +243,7 @@ if (BUILD_AS_LIBRARY)
     if (MSVC)
         target_compile_options(${PROJECT_NAME} PRIVATE /W2)
     else ()
-        target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
+        #target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
     endif ()
 else ()
     add_executable(${PROJECT_NAME} main.cpp
@@ -252,10 +257,13 @@ find_package(Vulkan REQUIRED)
 
 
 #if(BUILD_ANDROID EQUAL 0)
-        pkg_check_modules(Mono mono-2 REQUIRED)
+        pkg_check_modules(Mono mono-2)
 
+if(${Mono_FOUND})
+        set(DMONO_ENABLED true)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${Mono_LINK_LIBRARIES})
         target_include_directories(${PROJECT_NAME} PRIVATE ${Mono_INCLUDE_DIRS})
+endif()
 
         target_link_libraries(${PROJECT_NAME} PRIVATE ${Vulkan_LIBRARIES})
         target_include_directories(${PROJECT_NAME} PRIVATE ${Vulkan_INCLUDE_DIR})
@@ -265,9 +273,12 @@ target_link_libraries(${PROJECT_NAME} PRIVATE glfw3)
 
 if(BUILD_ANDROID EQUAL 0)
 target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
+endif()
+if(WIN32)
+target_link_libraries(${PROJECT_NAME} PRIVATE openal32)
+else()
 target_link_libraries(${PROJECT_NAME} PRIVATE openal)
 endif()
-target_link_libraries(${PROJECT_NAME} PRIVATE openal)
 
 add_dependencies(${PROJECT_NAME} vma)
 add_dependencies(${PROJECT_NAME} glfw3_d)
@@ -325,7 +336,10 @@ install(DIRECTORY ${images} DESTINATION "bin/assets/images")
 add_subdirectory(examples/chess)
 add_subdirectory(examples/model)
 add_subdirectory(examples/bsp)
+
+if(${Mono_FOUND})
 add_subdirectory(examples/mono-managed)
+endif()
 
 if(BUILD_ANDROID EQUAL 1)
     add_subdirectory(platform/android/app/src/main/cpp)

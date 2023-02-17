@@ -4,7 +4,6 @@
 ///
 ///=============================================================================
 
-
 #include "camera.hpp"
 #include <math.h>
 #include <core/framework/IO/IO.hpp>
@@ -32,7 +31,6 @@ namespace utils
         this->verticalAngle = 0.0;
         near_plane = 0.1;
         far_plane = 3000.0;
-
     }
 
     void Camera::onMouseWheelCallback(beacon::sender *sender, beacon::args *args)
@@ -100,9 +98,9 @@ namespace utils
         float DeltaTime = float(currentTime - LastTime);
 
         static double lastX = 0.0, lastY = 0.0;
-        //auto winSize =
+        // auto winSize =
 
-        //glfwGetWindowSize(window, &winx, &winy);
+        // glfwGetWindowSize(window, &winx, &winy);
 
         auto _Joystick = framework::Input::Joystick::JoystickManager::PrimaryJoystick();
 
@@ -363,9 +361,9 @@ namespace utils
         return this->FieldOfView;
     }
 
-    void Camera::setProjection(float FOV, float AR, float NEAR, float FAR)
+    void Camera::setProjection(float FOV, float AR, float near_plane, float far_plane)
     {
-        this->ProjectionMatrix = glm::perspective(glm::radians(FOV), AR, NEAR, FAR);
+        this->ProjectionMatrix = glm::perspective(glm::radians(FOV), AR, near_plane, far_plane);
     }
 
     void Camera::setProjection(glm::mat4 newProj)

@@ -356,7 +356,7 @@ namespace BSP
                           .isSwapChainAttachment = false},
                          {.format = COLOR_R_32F,
                           .wrapMode = CLAMP_TO_BORDER,
-                          .filtering = POINT,
+                          .filtering = engine::POINT,
                           .compareFunc = ALWAYS,
                           .depthCompare = false,
                           .isSampler = true,
