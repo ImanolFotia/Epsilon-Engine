@@ -1,5 +1,5 @@
 
-#if !defined(ANDROID) && !defined(__ANDROID__) && DMONO_ENABLED == true
+#if !defined(ANDROID) && !defined(__ANDROID__) && MONO_ENABLED == true
 #include <mono/jit/jit.h>
 #include <mono/metadata/environment.h>
 #include <mono/utils/mono-publib.h>

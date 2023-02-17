@@ -1,6 +1,6 @@
 #pragma once
-//#undef VMA_DEBUG_LOG
-//#undef VMA_DEBUG_LOG_FORMAT
+// #undef VMA_DEBUG_LOG
+// #undef VMA_DEBUG_LOG_FORMAT
 #include "core/engine/renderer/renderer.hpp"
 #include "core/engine/renderer/frame.hpp"
 #include "core/engine/renderer/types.hpp"
@@ -46,8 +46,8 @@ namespace engine
 
         const uint32_t DefaultRenderPass = 0;
 
-
-        struct VulkanRenderPass : public RenderPass {
+        struct VulkanRenderPass : public RenderPass
+        {
             vk::VulkanRenderPass renderPass;
         };
 
@@ -58,9 +58,9 @@ namespace engine
 
         void Init(const char *appName, framework::Window &) override;
 
-        ObjectDataId RegisterMesh(const std::vector<Vertex> &, std::vector<IndexType>& indices, bool) override;
+        ObjectDataId RegisterMesh(const std::vector<Vertex> &, std::vector<IndexType> &indices, bool) override;
 
-        TexturesDataId RegisterTexture(unsigned char*, TextureInfo) override;
+        TexturesDataId RegisterTexture(unsigned char *, TextureInfo) override;
 
         Material CreateMaterial(Ref<Material>) override;
 
@@ -76,19 +76,25 @@ namespace engine
 
         void Cleanup() override;
 
-        void pUpdateUniforms(const vk::VulkanBuffer&);
+        void UpdateRenderPassUniforms(Ref<RenderPass>, uint32_t, const void *);
 
-        void pUpdateMaterial(vk::VulkanMaterial&);
+        void pUpdateUniformBuffer(const vk::VulkanBuffer &, const void *);
+
+        void pUpdateUniforms(const vk::VulkanBuffer &);
+
+        void pUpdateMaterial(vk::VulkanMaterial &);
 
         void pRecreateSwapChain();
 
         int32_t pPrepareSyncObjects();
 
-        void setResourceManagerRef(engine::VulkanResourceManager* ref) {
+        void setResourceManagerRef(engine::VulkanResourceManager *ref)
+        {
             m_pResourceManagerRef = ref;
         }
 
-        void* perPassData = nullptr;
+        void *perPassData = nullptr;
+
     private:
         framework::Window *m_pWindow = nullptr;
 
@@ -106,8 +112,6 @@ namespace engine
 
         std::list<DrawCommand> m_pCurrentCommandQueue;
 
-        VulkanResourceManager* m_pResourceManagerRef = nullptr;
-
-
+        VulkanResourceManager *m_pResourceManagerRef = nullptr;
     };
 }

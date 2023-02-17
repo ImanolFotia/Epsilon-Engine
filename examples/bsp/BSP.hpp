@@ -245,7 +245,9 @@ namespace BSP
             camData.lightMatrix = lightMatrix;
             camData.proj[1][1] *= -1;
             camData.iTime += m_pTime;
-            PushShaderData(camData);
+
+            Epsilon::getContext().Renderer()->UpdateRenderPassUniforms(m_pRenderPass, 0, (const void *)&camData);
+            // PushShaderData(camData);
         }
 
         glm::mat4 lightMatrix = glm::mat4(1.0);
@@ -273,7 +275,8 @@ namespace BSP
             lightMatrix = camData.proj * camData.view * glm::mat4(1.0);
             camData.lightMatrix = lightMatrix;
             camData.iTime += m_pTime;
-            PushShaderData(camData);
+            Epsilon::getContext().Renderer()->UpdateRenderPassUniforms(m_pShadowRenderPass, 0, (const void *)&camData);
+            // PushShaderData(camData);
         }
 
         void setupRenderPass()

@@ -25,16 +25,19 @@
 
 #endif
 
+namespace engine
+{
 
-namespace engine {
-
-    VulkanRenderer::VulkanRenderer() {
+    VulkanRenderer::VulkanRenderer()
+    {
     }
 
-    VulkanRenderer::~VulkanRenderer() {
+    VulkanRenderer::~VulkanRenderer()
+    {
     }
 
-    void VulkanRenderer::Init(const char *appName, framework::Window &window) {
+    void VulkanRenderer::Init(const char *appName, framework::Window &window)
+    {
         m_pWindow = &window;
         m_pResourceManagerRef->m_pVkDataPtr = &m_pVkData;
 
@@ -58,23 +61,25 @@ namespace engine {
     }
 
     engine::Renderer::ObjectDataId
-    VulkanRenderer::RegisterMesh(const std::vector<Vertex> &, std::vector<IndexType> &indices, bool) {
+    VulkanRenderer::RegisterMesh(const std::vector<Vertex> &, std::vector<IndexType> &indices, bool)
+    {
         throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
 
-    engine::Renderer::TexturesDataId VulkanRenderer::RegisterTexture(unsigned char *, TextureInfo) {
-
-
-        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
-    }
-
-    Material VulkanRenderer::CreateMaterial(Ref<Material>) {
-
+    engine::Renderer::TexturesDataId VulkanRenderer::RegisterTexture(unsigned char *, TextureInfo)
+    {
 
         throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
 
-    void VulkanRenderer::Push(ObjectData object) {
+    Material VulkanRenderer::CreateMaterial(Ref<Material>)
+    {
+
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
+    }
+
+    void VulkanRenderer::Push(ObjectData object)
+    {
         DrawCommand drawCommand;
         auto mesh = m_pResourceManagerRef->meshPool.get(object.mesh);
         drawCommand.indexBuffer = mesh->indexBuffer;
@@ -92,7 +97,8 @@ namespace engine {
         m_pCurrentCommandQueue.push_back(drawCommand);
     }
 
-    void VulkanRenderer::Begin(Ref<RenderPass> renderPassRef) {
+    void VulkanRenderer::Begin(Ref<RenderPass> renderPassRef)
+    {
 
         m_pImageIndex = pPrepareSyncObjects();
 
@@ -112,12 +118,13 @@ namespace engine {
         // std::cout << "m_pImageIndex " << m_pImageIndex << std::endl;
 
         vkResetCommandBuffer(m_pFrame.CommandBuffer(), 0);
-        //auto renderPass = m_pResourceManagerRef->getRenderPass(renderPassRef);
+        // auto renderPass = m_pResourceManagerRef->getRenderPass(renderPassRef);
 
         vk::recordCommandBuffer(m_pFrame.CommandBuffer(), m_pImageIndex);
     }
 
-    void VulkanRenderer::Sync() {
+    void VulkanRenderer::Sync()
+    {
 
         VkSemaphore signalSemaphores[] = {m_pFrame.SyncObjects().renderFinishedSemaphores};
 
@@ -125,7 +132,8 @@ namespace engine {
 
         bool should_recreate_swapchain = vk::Present(m_pVkData, signalSemaphores, m_pImageIndex);
 
-        if (should_recreate_swapchain) {
+        if (should_recreate_swapchain)
+        {
             pRecreateSwapChain();
             vkDestroyDescriptorPool(m_pVkData.logicalDevice, m_pResourceManagerRef->m_pDescriptorPool, nullptr);
             m_pResourceManagerRef->pCreateDescriptorPool();
@@ -134,21 +142,21 @@ namespace engine {
 
             m_pResourceManagerRef->pRecreateDescriptorSets();
             std::cout << "swap chain recreated\n";
-
         }
 
         m_pCurrentFrame = (m_pCurrentFrame + 1) % vk::MAX_FRAMES_IN_FLIGHT;
     }
 
-    void VulkanRenderer::End() {
+    void VulkanRenderer::End()
+    {
         if (m_pImageIndex == -1)
             return;
 
         vk::endRecording(m_pFrame.CommandBuffer());
-
     }
 
-    void VulkanRenderer::Flush(engine::Ref<engine::RenderPass> renderPassRef) {
+    void VulkanRenderer::Flush(engine::Ref<engine::RenderPass> renderPassRef)
+    {
         if (m_pImageIndex == -1)
             return;
         /*
@@ -157,11 +165,10 @@ namespace engine {
         */
         auto renderPass = m_pResourceManagerRef->getRenderPass(renderPassRef);
 
-        pUpdateUniforms(renderPass->uniformBuffer.front().buffers[m_pCurrentFrame]);
+        // pUpdateUniforms(renderPass->uniformBuffer.front().buffers[m_pCurrentFrame]);
 
         vk::createRenderPassInfo(m_pImageIndex, m_pVkData, *renderPass);
         vk::beginRenderPass(m_pFrame.CommandBuffer(), *renderPass);
-
 
         int num_indices = 0;
         int curr_offset = 0;
@@ -172,8 +179,10 @@ namespace engine {
         int32_t prev_vertex_buffer = -1;
         int32_t prev_index_buffer = -1;
         int changed = 0;
-        for (auto &command: m_pCurrentCommandQueue) {
-            if (prev_layout != command.layoutIndex) {
+        for (auto &command : m_pCurrentCommandQueue)
+        {
+            if (prev_layout != command.layoutIndex)
+            {
                 vk::bindPipeline(renderPass->renderPipelines[command.layoutIndex].graphicsPipeline[command.layoutIndex],
                                  m_pFrame.CommandBuffer());
                 prev_layout = command.layoutIndex;
@@ -181,16 +190,18 @@ namespace engine {
 
             auto material = m_pResourceManagerRef->materialPool.get(command.material);
             auto vertexBuffer = m_pResourceManagerRef->vertexBufferPool.get(
-                    command.vertexBuffer);//m_pResourceManagerRef->getBuffer(command.vertexBuffer);
+                command.vertexBuffer); // m_pResourceManagerRef->getBuffer(command.vertexBuffer);
             auto indexBuffer = m_pResourceManagerRef->indexBufferPool.get(
-                    command.indexBuffer);//m_pResourceManagerRef->getBuffer(command.indexBuffer);
-            //auto material = m_pResourceManagerRef->getMaterial(command.material);
-            if (prev_vertex_buffer != vertexBuffer->id) {
+                command.indexBuffer); // m_pResourceManagerRef->getBuffer(command.indexBuffer);
+            // auto material = m_pResourceManagerRef->getMaterial(command.material);
+            if (prev_vertex_buffer != vertexBuffer->id)
+            {
                 vk::bindVertexBuffer(m_pVkData, m_pFrame.CommandBuffer(), vertexBuffer->buffer);
                 prev_vertex_buffer = vertexBuffer->id;
             }
 
-            if (prev_index_buffer != indexBuffer->id) {
+            if (prev_index_buffer != indexBuffer->id)
+            {
                 vkCmdBindIndexBuffer(m_pFrame.CommandBuffer(), indexBuffer->buffer, 0, VK_INDEX_TYPE_UINT32);
                 prev_index_buffer = indexBuffer->id;
             }
@@ -211,7 +222,8 @@ namespace engine {
         m_pCurrentCommandQueue.clear();
     }
 
-    int32_t VulkanRenderer::pPrepareSyncObjects() {
+    int32_t VulkanRenderer::pPrepareSyncObjects()
+    {
 
         vkWaitForFences(m_pVkData.logicalDevice, 1, &m_pVkData.syncObjects[m_pCurrentFrame].inFlightFences, VK_TRUE,
                         UINT64_MAX);
@@ -222,10 +234,13 @@ namespace engine {
                                                 VK_NULL_HANDLE, &imageIndex);
         // m_pFrame.CurrentImage(imageIndex);
 
-        if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+        if (result == VK_ERROR_OUT_OF_DATE_KHR)
+        {
             m_pResourceManagerRef->pRecreateSwapChain(m_pWindow->getWindow());
             return -1;
-        } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+        }
+        else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+        {
             throw std::runtime_error("failed to acquire swap chain image!");
         }
 
@@ -234,26 +249,48 @@ namespace engine {
         return imageIndex;
     }
 
-    void VulkanRenderer::pUpdateUniforms(const vk::VulkanBuffer &buffer) {
+    void VulkanRenderer::pUpdateUniforms(const vk::VulkanBuffer &buffer)
+    {
         void *data;
         vmaMapMemory(m_pResourceManagerRef->m_pAllocator, buffer.allocation, &data);
         memcpy(data, perPassData, buffer.size);
         vmaUnmapMemory(m_pResourceManagerRef->m_pAllocator, buffer.allocation);
     }
 
-    void VulkanRenderer::Cleanup() {
+    void VulkanRenderer::pUpdateUniformBuffer(const vk::VulkanBuffer &buffer, const void *newData)
+    {
+        void *data;
+        vmaMapMemory(m_pResourceManagerRef->m_pAllocator, buffer.allocation, &data);
+        memcpy(data, newData, buffer.size);
+        vmaUnmapMemory(m_pResourceManagerRef->m_pAllocator, buffer.allocation);
+    }
+
+    void VulkanRenderer::Cleanup()
+    {
         m_pResourceManagerRef->clean();
     }
 
-    void VulkanRenderer::pUpdateMaterial(vk::VulkanMaterial &) {
-        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
+    void VulkanRenderer::UpdateRenderPassUniforms(Ref<RenderPass> renderPassRef, uint32_t index, const void *data)
+    {
+        auto renderPass = m_pResourceManagerRef->renderPassPool.get(renderPassRef);
+        auto front = renderPass->uniformBuffer.begin();
 
+        std::advance(front, index);
+        auto &buffer = (*front).buffers[m_pCurrentFrame];
+        pUpdateUniformBuffer(buffer, data);
     }
 
-    void VulkanRenderer::pRecreateSwapChain() {
+    void VulkanRenderer::pUpdateMaterial(vk::VulkanMaterial &)
+    {
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
+    }
+
+    void VulkanRenderer::pRecreateSwapChain()
+    {
         vkDeviceWaitIdle(m_pVkData.logicalDevice);
 
-        for (auto &pass: m_pResourceManagerRef->renderPassPool) {
+        for (auto &pass : m_pResourceManagerRef->renderPassPool)
+        {
             cleanupSwapChain(m_pVkData, pass);
         }
 
@@ -270,9 +307,10 @@ namespace engine {
 
         vk::createFramebuffers(m_pVkData, m_pVkData.defaultRenderPass, m_pVkData.defaultRenderPass.renderPassChain);
 
-
-        for (auto &pass: m_pResourceManagerRef->renderPassPool) {
-            if (pass.id == std::numeric_limits<uint32_t>::max()) continue;
+        for (auto &pass : m_pResourceManagerRef->renderPassPool)
+        {
+            if (pass.id == std::numeric_limits<uint32_t>::max())
+                continue;
 
             vk::createRenderPass(m_pVkData, pass, m_pResourceManagerRef->m_pRenderPassInfo[pass.id], false);
 
@@ -282,7 +320,7 @@ namespace engine {
 
             vk::createFramebuffers(m_pVkData, pass, pass.renderPassChain);
         }
-        //throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
+        // throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
 
 }

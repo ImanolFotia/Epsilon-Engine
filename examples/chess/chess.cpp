@@ -6,9 +6,11 @@
 #include "game/common.hpp"
 #include <core/framework/IO/IO.hpp>
 
-namespace ChessApp {
+namespace ChessApp
+{
 
-    void ChessApp::onCreate() {
+    void ChessApp::onCreate()
+    {
 
         using namespace engine;
         using namespace framework;
@@ -22,7 +24,6 @@ namespace ChessApp {
                                                      m_pMoveAudioObject.audioFile.data().get());
 
         m_pMoveAudioObject.source = al::createSource(m_pMoveAudioObject.buffer);
-
 
         m_pTakeAudioObject.audioFile.Load("./assets/audio/take.wav");
 
@@ -40,7 +41,8 @@ namespace ChessApp {
         setupGeometry();
         setupTextures();
 
-        Input::Mouse::MouseEventHandler += ([this](auto *sender, beacon::args *args) {
+        Input::Mouse::MouseEventHandler += ([this](auto *sender, beacon::args *args)
+                                            {
             if (args == nullptr)
                 return;
 
@@ -183,31 +185,35 @@ namespace ChessApp {
                 m_pUCI.Move(move_str);
                 m_pMoveAudioObject.should_play = true;
 
-            }
-        });
-
+            } });
     }
 
-    void ChessApp::onReady() {
-        m_pEngineThread = std::thread([this]() { m_pUCI.init(); });
+    void ChessApp::onReady()
+    {
+        m_pEngineThread = std::thread([this]()
+                                      { m_pUCI.init(); });
         m_pEngineThread.detach();
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 
-    void ChessApp::onRender() {
+    void ChessApp::onRender()
+    {
 
         Epsilon::getContext().Renderer()->Begin(m_pRenderPass);
-        if(m_pTakeAudioObject.should_play) {
+        if (m_pTakeAudioObject.should_play)
+        {
             al::playSource(m_pTakeAudioObject.source);
             m_pTakeAudioObject.should_play = false;
             m_pMoveAudioObject.should_play = false;
-        } else if(m_pMoveAudioObject.should_play) {
+        }
+        else if (m_pMoveAudioObject.should_play)
+        {
             al::playSource(m_pMoveAudioObject.source);
             m_pMoveAudioObject.should_play = false;
         }
-        //Set up the camera data
+        // Set up the camera data
         setupCamera();
         engine::ObjectData objectData;
-
 
         m_pBoardModel.pushConstant.model = transformBoard(glm::vec3(0.0, 0.0, -500.0),
                                                           glm::vec3(board_size(), board_size(), 0.0));
@@ -218,10 +224,12 @@ namespace ChessApp {
         objectData.pushConstant = m_pBoardModel.pushConstantRef;
         Epsilon::getContext().Renderer()->Push(objectData);
 
-        //set up the pieces draw data
+        // set up the pieces draw data
 
-        for (auto &[position, info]: m_pBoard.getFiles()) {
-            if (!info.show || info.index == -1) continue;
+        for (auto &[position, info] : m_pBoard.getFiles())
+        {
+            if (!info.show || info.index == -1)
+                continue;
             auto &piece = m_pPieces.at(info.index);
             piece.pushConstant.piece = info.piece;
 
@@ -233,45 +241,66 @@ namespace ChessApp {
         }
         drawFrame(m_pRenderPass);
 
-        if (!m_pUCI.last_move.empty() && m_pBoard.Turn() == BLACK) {
+        if (!m_pUCI.last_move.empty() && m_pBoard.Turn() == BLACK)
+        {
 
             std::cout << "black turn\n";
 
-            auto getColumn = [](char col) -> COLUMN {
-                if (col == 'a') return A;
-                if (col == 'b') return B;
-                if (col == 'c') return C;
-                if (col == 'd') return D;
-                if (col == 'e') return E;
-                if (col == 'f') return F;
-                if (col == 'g') return G;
-                if (col == 'h') return H;
+            auto getColumn = [](char col) -> COLUMN
+            {
+                if (col == 'a')
+                    return A;
+                if (col == 'b')
+                    return B;
+                if (col == 'c')
+                    return C;
+                if (col == 'd')
+                    return D;
+                if (col == 'e')
+                    return E;
+                if (col == 'f')
+                    return F;
+                if (col == 'g')
+                    return G;
+                if (col == 'h')
+                    return H;
             };
 
-            auto getRow = [](char row) -> char {
-                if (row == '1') return 1;
-                if (row == '2') return 2;
-                if (row == '3') return 3;
-                if (row == '4') return 4;
-                if (row == '5') return 5;
-                if (row == '6') return 6;
-                if (row == '7') return 7;
-                if (row == '8') return 8;
+            auto getRow = [](char row) -> char
+            {
+                if (row == '1')
+                    return 1;
+                if (row == '2')
+                    return 2;
+                if (row == '3')
+                    return 3;
+                if (row == '4')
+                    return 4;
+                if (row == '5')
+                    return 5;
+                if (row == '6')
+                    return 6;
+                if (row == '7')
+                    return 7;
+                if (row == '8')
+                    return 8;
                 return ENUM_MAX;
             };
             auto &files = m_pBoard.getFiles();
             std::string strFirst = m_pUCI.last_move.substr(0, 2);
             std::string strSecond = m_pUCI.last_move.substr(2, 2);
 
-            if (files[strSecond].piece != FREE) {
+            if (files[strSecond].piece != FREE)
+            {
 
                 PIECE this_piece = files[strFirst].piece;
                 PIECE taken_piece = files[strSecond].piece;
 
-                if (taken_piece < 6 && this_piece < 6 || taken_piece > 5 && this_piece > 5) {
+                if (taken_piece < 6 && this_piece < 6 || taken_piece > 5 && this_piece > 5)
+                {
 
                     m_pSelectedModel->pushConstant.model = transformPiece(
-                            {m_pMove.column_from, m_pMove.row_from});
+                        {m_pMove.column_from, m_pMove.row_from});
                     return;
                 }
 
@@ -282,13 +311,13 @@ namespace ChessApp {
             m_pMove.first[0] = strFirst.at(0);
             m_pMove.first[1] = strFirst.at(1);
             m_pMove.row_from = getRow(strFirst.at(1));
-            m_pMove.column_from = (COLUMN) getColumn(strFirst.at(0));
+            m_pMove.column_from = (COLUMN)getColumn(strFirst.at(0));
 
             m_pMove.selected = false;
             m_pMove.second[0] = strSecond.at(0);
             m_pMove.second[1] = strSecond.at(1);
             m_pMove.row_to = getRow(strSecond.at(1));
-            m_pMove.column_to = (COLUMN) getColumn(strSecond.at(0));
+            m_pMove.column_to = (COLUMN)getColumn(strSecond.at(0));
 
             files[strSecond].column = m_pMove.column_to;
             files[strSecond].row = m_pMove.row_to;
@@ -298,12 +327,12 @@ namespace ChessApp {
             files[strFirst].column = m_pMove.column_from;
             files[strFirst].row = m_pMove.row_from;
             files[strFirst].index = -1;
-            //files[strFirst].show = false;
+            // files[strFirst].show = false;
             files[strFirst].piece = FREE;
 
-            //if (files[strSecond].index != -1)
+            // if (files[strSecond].index != -1)
             m_pPieces.at(files[strSecond].index).pushConstant.model = transformPiece(
-                    {files[strSecond].column, files[strSecond].row});
+                {files[strSecond].column, files[strSecond].row});
             m_pSelectedModel = nullptr;
 
             m_pBoard.Turn(m_pBoard.Turn() == WHITE ? BLACK : WHITE);
@@ -314,11 +343,13 @@ namespace ChessApp {
         }
     }
 
-//Private functions
+    // Private functions
 
-    void ChessApp::setupCamera() {
+    void ChessApp::setupCamera()
+    {
+        glm::vec2 iResolution = glm::vec2(getWindowDimensions().first, getWindowDimensions().second);
         ShaderData camData;
-        camData.iResolution = glm::vec2(getWindowDimensions().first, getWindowDimensions().second);
+        camData.iResolution = iResolution;
 
         static auto startTime = std::chrono::high_resolution_clock::now();
         auto currentTime = std::chrono::high_resolution_clock::now();
@@ -328,16 +359,18 @@ namespace ChessApp {
                                    glm::vec3(0.0f, 0.0f, 0.0f),
                                    glm::vec3(1.0f, 0.0f, 0.0f));
 
-        camData.proj = glm::ortho(-(getWindowDimensions().first / 2.0f),
-                                  (getWindowDimensions().first / 2.0f),
-                                  -((getWindowDimensions().second / 2.0f)),
-                                  (getWindowDimensions().second / 2.0f), 0.1f, 1000.0f);
+        camData.proj = glm::ortho(-(iResolution.x / 2.0f),
+                                  (iResolution.x / 2.0f),
+                                  -((iResolution.y / 2.0f)),
+                                  (iResolution.y / 2.0f), 0.1f, 1000.0f);
         camData.proj[1][1] *= -1;
         camData.iTime += time;
-        PushShaderData(camData);
+
+        Epsilon::getContext().Renderer()->UpdateRenderPassUniforms(m_pRenderPass, 0, (const void *)&camData);
     }
 
-    glm::mat4 ChessApp::transformBoard(glm::vec3 t, glm::vec3 s) {
+    glm::mat4 ChessApp::transformBoard(glm::vec3 t, glm::vec3 s)
+    {
         glm::mat4 output = glm::mat4(1.0f);
 
         output = glm::translate(output, t);
@@ -346,15 +379,18 @@ namespace ChessApp {
         return output;
     }
 
-    const glm::mat4 ChessApp::transformPiece(PieceInfo position) {
+    const glm::mat4 ChessApp::transformPiece(PieceInfo position)
+    {
         glm::mat4 output = glm::mat4(1.0f);
 
         position.row--;
-        if (position.row < 0) position.row = 0;
-        if (position.row > 8) position.row = 8;
+        if (position.row < 0)
+            position.row = 0;
+        if (position.row > 8)
+            position.row = 8;
 
         glm::vec2 modPiece = glm::vec2(bottom_left_file_pos().x + ((piece_size() * 2) * position.row),
-                                       bottom_left_file_pos().y - ((piece_size() * 2) * (float) position.column));
+                                       bottom_left_file_pos().y - ((piece_size() * 2) * (float)position.column));
 
         output = glm::translate(output, glm::vec3(modPiece, -499.0));
         output = glm::scale(output, glm::vec3(piece_size(), piece_size(), 0.0));
@@ -362,156 +398,151 @@ namespace ChessApp {
         return output;
     }
 
-    glm::vec2 ChessApp::bottom_left_file_pos() {
+    glm::vec2 ChessApp::bottom_left_file_pos()
+    {
         return glm::vec2(-(board_size() - piece_size()),
                          board_size() - piece_size());
     };
 
-    float ChessApp::piece_size() {
+    float ChessApp::piece_size()
+    {
         return (getWindowDimensions().second * 0.5f) * .125f;
     }
 
-    float ChessApp::board_size() {
+    float ChessApp::board_size()
+    {
         return (getWindowDimensions().second * 0.5f);
     }
 
-    void ChessApp::setupGeometry() {
-        //Create a quad for the chess board
+    void ChessApp::setupGeometry()
+    {
+        // Create a quad for the chess board
         auto quad_data = m_pQuad.data();
         m_pBoardModel.mesh = Epsilon::getContext().ResourceManager()->createMesh({.vertices = quad_data.Vertices,
-                                                                              .indices = quad_data.Indices});
+                                                                                  .indices = quad_data.Indices});
 
         engine::Ref<engine::Mesh> pieceMesh = Epsilon::getContext().ResourceManager()->createMesh(
-                {.vertices = quad_data.Vertices,
-                        .indices = quad_data.Indices});
+            {.vertices = quad_data.Vertices,
+             .indices = quad_data.Indices});
 
         m_pBoardModel.pushConstantRef = Epsilon::getContext().ResourceManager()->createPushConstant(
-                {.size = sizeof(PiecePushConstant), .data = &m_pBoardModel.pushConstant});
+            {.size = sizeof(PiecePushConstant), .data = &m_pBoardModel.pushConstant});
 
         unsigned index = 0;
-        for (auto &[position, info]: m_pBoard.getFiles()) {
-            if (info.piece == FREE) continue;
+        for (auto &[position, info] : m_pBoard.getFiles())
+        {
+            if (info.piece == FREE)
+                continue;
 
             Model &ref = m_pPieces[index];
             info.index = index;
             ref.pushConstantRef = Epsilon::getContext().ResourceManager()->createPushConstant(
-                    {.size = sizeof(PiecePushConstant), .data = &ref.pushConstant});
+                {.size = sizeof(PiecePushConstant), .data = &ref.pushConstant});
             ref.mesh = pieceMesh;
             ref.pushConstant.model = transformPiece({info.column, info.row});
             index++;
         }
-
     }
 
-    void ChessApp::setupTextures() {
-        //create the material for the board
+    void ChessApp::setupTextures()
+    {
+        // create the material for the board
         {
             engine::MaterialInfo material = {
-                    .bindingInfo = {
-                            .size = sizeof(ShaderData),
-                            .offset = 0
-                    }
-            };
+                .bindingInfo = {
+                    .size = sizeof(ShaderData),
+                    .offset = 0}};
 
             m_pBoardModel.material = Epsilon::getContext().ResourceManager()->createMaterial(material, m_pRenderPass);
         }
-//create the material for the pieces
+        // create the material for the pieces
         engine::Ref<engine::Material> pieceMaterial;
         {
             engine::MaterialInfo material = {
-                    .bindingInfo = {
-                            .size = sizeof(ShaderData),
-                            .offset = 0
-                    }
-            };
+                .bindingInfo = {
+                    .size = sizeof(ShaderData),
+                    .offset = 0}};
             int w, h, nc;
             unsigned char *pixels = framework::load_image_from_file("./assets/images/pieces.png",
                                                                     &w,
                                                                     &h,
                                                                     &nc);
             engine::TextureInfo texInfo = engine::TextureBuilder()
-                    .width(w)
-                    .height(h)
-                    .numChannels(nc)
-                    .pixels(pixels);
+                                              .width(w)
+                                              .height(h)
+                                              .numChannels(nc)
+                                              .pixels(pixels);
 
             material.textures.push_back(texInfo);
             pieceMaterial = Epsilon::getContext().ResourceManager()->createMaterial(material, m_pRenderPass);
             framework::free_image_data(pixels);
         }
-        for (auto &ref: m_pPieces) {
+        for (auto &ref : m_pPieces)
+        {
             ref.material = pieceMaterial;
         }
     }
 
-    void ChessApp::setupRenderPass() {
+    void ChessApp::setupRenderPass()
+    {
 
         using namespace engine;
-        //Load the shader that draws the board
+        // Load the shader that draws the board
         auto boardVertexCode = utils::readFile("./assets/shaders/chess/board-vertex.spv");
         auto boardFragmentCode = utils::readFile("./assets/shaders/chess/board-fragment.spv");
 
         ShaderInfo boardShaderInfo = {
-                .stages = {
-                        {.entryPoint = "main", .shaderCode = boardVertexCode, .stage = VERTEX},
-                        {.entryPoint = "main", .shaderCode = boardFragmentCode, .stage = FRAGMENT}},
-                .usedStages = ShaderModuleStage(VERTEX | FRAGMENT)};
+            .stages = {
+                {.entryPoint = "main", .shaderCode = boardVertexCode, .stage = VERTEX},
+                {.entryPoint = "main", .shaderCode = boardFragmentCode, .stage = FRAGMENT}},
+            .usedStages = ShaderModuleStage(VERTEX | FRAGMENT)};
 
-        //Load the shader that draws the pieces
+        // Load the shader that draws the pieces
         auto pieceVertexCode = utils::readFile("./assets/shaders/chess/piece-vertex.spv");
         auto pieceFragmentCode = utils::readFile("./assets/shaders/chess/piece-fragment.spv");
         ShaderInfo pieceShaderInfo = {
-                .stages = {
-                        {.entryPoint = "main", .shaderCode = pieceVertexCode, .stage = VERTEX},
-                        {.entryPoint = "main", .shaderCode = pieceFragmentCode, .stage = FRAGMENT}},
-                .usedStages = ShaderModuleStage(VERTEX | FRAGMENT)};
+            .stages = {
+                {.entryPoint = "main", .shaderCode = pieceVertexCode, .stage = VERTEX},
+                {.entryPoint = "main", .shaderCode = pieceFragmentCode, .stage = FRAGMENT}},
+            .usedStages = ShaderModuleStage(VERTEX | FRAGMENT)};
 
-        std::vector<VertexDescriptorInfo> vertexInfo = {{XYZ_FLOAT,  offsetof(Vertex, position)},
-                                                        {XY_FLOAT,   offsetof(Vertex, texCoords)},
-                                                        {XYZ_FLOAT,  offsetof(Vertex, normal)},
+        std::vector<VertexDescriptorInfo> vertexInfo = {{XYZ_FLOAT, offsetof(Vertex, position)},
+                                                        {XY_FLOAT, offsetof(Vertex, texCoords)},
+                                                        {XYZ_FLOAT, offsetof(Vertex, normal)},
                                                         {XYZW_FLOAT, offsetof(Vertex, color)},
-                                                        {XYZ_FLOAT,  offsetof(Vertex, tangent)},
-                                                        {XYZ_FLOAT,  offsetof(Vertex, bitangent)}};
+                                                        {XYZ_FLOAT, offsetof(Vertex, tangent)},
+                                                        {XYZ_FLOAT, offsetof(Vertex, bitangent)}};
         PipelineLayout boardLayout = {
-                .shaderInfo = boardShaderInfo,
-                .vertexLayout = vertexInfo,
-                .cullMode = CullMode::BACK,
-                .windingMode = WindingMode::COUNTER_CLOCK_WISE
-        };
+            .shaderInfo = boardShaderInfo,
+            .vertexLayout = vertexInfo,
+            .cullMode = CullMode::BACK,
+            .windingMode = WindingMode::COUNTER_CLOCK_WISE};
 
         PipelineLayout pieceLayout = {
-                .shaderInfo = pieceShaderInfo,
-                .vertexLayout = vertexInfo,
-                .cullMode = CullMode::BACK,
-                .windingMode = WindingMode::COUNTER_CLOCK_WISE
-        };
+            .shaderInfo = pieceShaderInfo,
+            .vertexLayout = vertexInfo,
+            .cullMode = CullMode::BACK,
+            .windingMode = WindingMode::COUNTER_CLOCK_WISE};
 
-        //Configure the default render pass object
+        // Configure the default render pass object
         RenderPassInfo renderPassInfo =
-                RenderPassFactory()
-                        .numDescriptors(6)
-                        .size(sizeof(Vertex))
-                        .depthAttachment(true)
-                        .subpasses({})
-                        .attachments(
-                                {
-                                        {
-                                                .format = COLOR_RGBA,
-                                                .isDepthAttachment = false,
-                                                .isSwapChainAttachment = true
-                                        },
-                                        {
-                                                .format = DEPTH_F32_STENCIL_8,
-                                                .isDepthAttachment = true
-                                        }
-                                })
-                        .pipelineLayout(boardLayout)
-                        .pipelineLayout(pieceLayout)
-                        .pushConstant(sizeof(PiecePushConstant))
-                        .uniformBindings({{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = UNIFORM_BUFFER},
-                                      {.size = 0, .offset = 0, .binding = 1, .type = TEXTURE_IMAGE_COMBINED_SAMPLER}});
+            RenderPassFactory()
+                .numDescriptors(6)
+                .size(sizeof(Vertex))
+                .depthAttachment(true)
+                .subpasses({})
+                .attachments(
+                    {{.format = COLOR_RGBA,
+                      .isDepthAttachment = false,
+                      .isSwapChainAttachment = true},
+                     {.format = DEPTH_F32_STENCIL_8,
+                      .isDepthAttachment = true}})
+                .pipelineLayout(boardLayout)
+                .pipelineLayout(pieceLayout)
+                .pushConstant(sizeof(PiecePushConstant))
+                .uniformBindings({{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = UNIFORM_BUFFER},
+                                  {.size = 0, .offset = 0, .binding = 1, .type = TEXTURE_IMAGE_COMBINED_SAMPLER}});
 
         m_pRenderPass = Epsilon::getContext().ResourceManager()->createDefaultRenderPass(renderPassInfo);
-
     }
 }

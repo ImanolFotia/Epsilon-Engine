@@ -100,7 +100,7 @@ include_directories(${BEACON_BUILD_DIR})
 
 ##
 #Download and include Assimp
-set(ASSIMP_WARNINGS_AS_ERRORS FALSE)
+set(ASSIMP_WARNINGS_AS_ERRORS 0)
 ExternalProject_Add(assimp_d
         GIT_REPOSITORY https://github.com/assimp/assimp.git
         INSTALL_COMMAND cmake -E echo "Skipping install step."
@@ -144,6 +144,7 @@ message(${GLFW3_BUILD_DIR})
 include_directories(${SOURCE_DIR}/include)
 link_directories(${GLFW3_BUILD_DIR}/src)
 
+set(CMAKE_OPENAL_ARGS "")
 if(WIN32)
         set(CMAKE_OPENAL_ARGS "")
 else()
@@ -261,6 +262,7 @@ find_package(Vulkan REQUIRED)
 
 if(${Mono_FOUND})
         set(DMONO_ENABLED true)
+        add_compile_definitions(MONO_ENABLED=${DMONO_ENABLED})
         target_link_libraries(${PROJECT_NAME} PRIVATE ${Mono_LINK_LIBRARIES})
         target_include_directories(${PROJECT_NAME} PRIVATE ${Mono_INCLUDE_DIRS})
 endif()

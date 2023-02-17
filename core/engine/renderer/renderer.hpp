@@ -16,23 +16,24 @@ namespace engine
     const uint32_t MAX_VERTICES_PER_BUFFER = 10000;
     const uint32_t MAX_INDICES_PER_BUFFER = 10000;
 
-
-    struct ShaderModuleInfo {
+    struct ShaderModuleInfo
+    {
         uint16_t stage_flags;
         std::string vertex_path;
         std::string fragment_path;
         std::string compute_path;
     };
 
-    struct RenderPass {
+    struct RenderPass
+    {
         ShaderModuleInfo shaderModuleInfo;
 
-        protected:
-            RenderPass() = default;
+    protected:
+        RenderPass() = default;
     };
 
-
-    struct ObjectData {
+    struct ObjectData
+    {
 
         Ref<Mesh> mesh;
         Ref<Material> material;
@@ -42,17 +43,18 @@ namespace engine
         glm::vec3 scale;
         glm::quat rotation;
         uint32_t layout_index = 0;
-
     };
 
-    struct TextureData {
+    struct TextureData
+    {
         size_t id;
         size_t size;
         size_t offset;
         size_t texture_bucket;
     };
 
-    struct RenderObject {
+    struct RenderObject
+    {
         std::list<ObjectData>::iterator objectId;
         uint32_t materialId;
     };
@@ -63,8 +65,7 @@ namespace engine
      */
     class Renderer
     {
-        public:
-
+    public:
         using ObjectsData = std::list<ObjectData>;
         using ObjectDataId = std::list<ObjectData>::iterator;
 
@@ -74,23 +75,25 @@ namespace engine
         using IndexType = uint32_t;
 
     public:
-        virtual void Init(const char*, framework::Window&) = 0;
+        virtual void Init(const char *, framework::Window &) = 0;
 
-        virtual ObjectDataId RegisterMesh(const std::vector<Vertex>&, std::vector<IndexType>& indices, bool) = 0;
+        virtual ObjectDataId RegisterMesh(const std::vector<Vertex> &, std::vector<IndexType> &indices, bool) = 0;
 
-        virtual TexturesDataId RegisterTexture(unsigned char*, TextureInfo) = 0;
+        virtual TexturesDataId RegisterTexture(unsigned char *, TextureInfo) = 0;
 
         virtual Material CreateMaterial(Ref<Material>) = 0;
 
         virtual void Push(ObjectData) = 0;
 
         virtual void Sync() = 0;
-        
+
         virtual void Begin(Ref<RenderPass>) = 0;
 
         virtual void End() = 0;
 
         virtual void Flush(Ref<RenderPass>) = 0;
+
+        virtual void UpdateRenderPassUniforms(Ref<RenderPass> renderPassRef, uint32_t index, const void *data) = 0;
 
         virtual void Cleanup() = 0;
 
@@ -103,8 +106,8 @@ namespace engine
         Renderer(renderer_type type) : m_pType{type} {};
         Renderer() = default;
 
-        Renderer(Renderer&&) = delete;
-        Renderer(const Renderer&) = delete;
+        Renderer(Renderer &&) = delete;
+        Renderer(const Renderer &) = delete;
 
         virtual ~Renderer() {}
 
