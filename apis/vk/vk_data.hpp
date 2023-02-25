@@ -43,7 +43,6 @@ namespace vk
         VmaAllocation allocation;
     };
 
-
     struct VulkanTextureInfo
     {
         uint32_t width = 0;
@@ -58,9 +57,16 @@ namespace vk
         bool compareEnable = false;
     };
 
+    enum VulkanTextureBindingType
+    {
+        RENDER_BUFFER_SAMPLER = 0,
+        MATERIAL_SAMPLER
+    };
+
     struct VulkanTexture
     {
         VulkanTextureInfo info;
+        VulkanTextureBindingType bindingType = MATERIAL_SAMPLER;
         VkImageCreateInfo imageInfo;
         VkImage image = VK_NULL_HANDLE;
         VkImageView imageView = VK_NULL_HANDLE;
@@ -82,7 +88,8 @@ namespace vk
         size_t offset = 0;
     };
 
-    struct VulkanUniformBuffer {
+    struct VulkanUniformBuffer
+    {
         VulkanBuffer buffers[MAX_FRAMES_IN_FLIGHT];
         size_t size;
     };
@@ -95,13 +102,20 @@ namespace vk
         size_t allocatedBytes;
     };
 
+    struct VulkanShaderBinding
+    {
+        VulkanTexture texture;
+        VkDescriptorType descriptorBinding;
+        uint32_t bindingPoint;
+    };
+
     struct VulkanMaterial
     {
         VkDescriptorSetLayout descriptorSetLayout{};
         std::vector<VkDescriptorSet> descriptorSets;
         VkPipelineLayout *pipelineLayout = nullptr;
-        std::vector<VulkanTexture> renderBufferBindings;
-        std::vector<VulkanTexture> textures;
+        // std::vector<VulkanTexture> renderBufferBindings;
+        std::vector<VulkanShaderBinding> shaderBindings;
         VkDescriptorBufferInfo bufferInfo[MAX_FRAMES_IN_FLIGHT];
         size_t bufferOffset = 0;
         size_t bufferSize = 0;
@@ -122,13 +136,14 @@ namespace vk
         VkFrontFace winding;
         VkCullModeFlags cullMode;
 
-        //VkClearColorValue clearColor = {0.1f, 0.1f, 0.1f, 1.0f};
+        // VkClearColorValue clearColor = {0.1f, 0.1f, 0.1f, 1.0f};
         VkClearColorValue clearColor = {1.0f, 1.0f, 1.0f, 1.0f};
         VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
         uint32_t numAttachments = 1;
     };
 
-    struct VulkanRenderPassData {
+    struct VulkanRenderPassData
+    {
         std::vector<VkAttachmentDescription> colorAttachments{};
         std::vector<VkAttachmentReference> colorAttachmentRefs{};
 
@@ -155,7 +170,7 @@ namespace vk
     struct RenderPassChain
     {
         const std::vector<const char *> deviceExtensions = {
-                VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+            VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
         std::vector<VkImage> Images;
 
@@ -172,9 +187,15 @@ namespace vk
         std::vector<VkFramebuffer> Framebuffers;
     };
 
+    struct VulkanGPUMappedBuffer
+    {
+        VulkanBuffer buffer;
+    };
+
     struct VulkanRenderPass
     {
-        VulkanRenderPass() {
+        VulkanRenderPass()
+        {
             clearValues.resize(2);
             clearValues[0].color = clearColor;
             clearValues[1].depthStencil = depthStencilClearColor;
@@ -186,7 +207,7 @@ namespace vk
         VulkanRenderPassData renderPassData;
         std::vector<VulkanVertexInfo> vertexInfo;
         RenderPassChain renderPassChain;
-        //VkClearColorValue clearColor = {0.1f, 0.1f, 0.1f, 1.0f};
+        // VkClearColorValue clearColor = {0.1f, 0.1f, 0.1f, 1.0f};
         VkClearColorValue clearColor = {1.0f, 1.0f, 1.0f, 1.0f};
         VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
         std::vector<VkClearValue> clearValues = {};
@@ -202,14 +223,12 @@ namespace vk
         VkFence inFlightFences;
     };
 
-
-
     struct VulkanData
     {
 
         using CommandPools = std::vector<VkCommandPool>;
         using CommandBuffers = std::vector<VkCommandBuffer>;
-        
+
         VkInstance instance;
         VkSampleCountFlagBits msaaSamples = VK_SAMPLE_COUNT_1_BIT;
         VkSurfaceKHR surface;
@@ -223,7 +242,7 @@ namespace vk
             VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
         VkSwapchainKHR swapChain;
-        //RenderPassChain swapChainData;
+        // RenderPassChain swapChainData;
         VulkanRenderPass defaultRenderPass;
         /*
         std::vector<VkImage> swapChainImages;
@@ -237,7 +256,6 @@ namespace vk
         std::vector<VkFramebuffer> swapChainFramebuffers;
 */
         std::vector<VulkanSyncObject> syncObjects;
-
 
         CommandPools m_pCommandPools;
         CommandBuffers m_pCommandBuffers;

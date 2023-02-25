@@ -41,8 +41,27 @@ namespace vk
             queueCreateInfos.push_back(queueCreateInfo);
         }
 
+        //!!! TODO: Should ask where these extensions are avaliable
         VkPhysicalDeviceFeatures deviceFeatures{};
         deviceFeatures.samplerAnisotropy = VK_TRUE;
+        deviceFeatures.multiDrawIndirect = VK_TRUE;
+        VkPhysicalDeviceDescriptorIndexingFeatures indexing_features{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT, nullptr};
+        VkPhysicalDeviceFeatures2 device_features{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2, &indexing_features};
+
+        vkGetPhysicalDeviceFeatures2(vk_data.physicalDevice, &device_features);
+
+        bool bindless_supported = indexing_features.descriptorBindingPartiallyBound && indexing_features.runtimeDescriptorArray;
+
+        VkPhysicalDeviceFeatures2 physical_features2 = {VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2};
+        vkGetPhysicalDeviceFeatures2(vk_data.physicalDevice, &physical_features2);
+
+        if (bindless_supported)
+        {
+            indexing_features.descriptorBindingPartiallyBound = VK_TRUE;
+            indexing_features.runtimeDescriptorArray = VK_TRUE;
+
+            physical_features2.pNext = &indexing_features;
+        }
 
         VkDeviceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -51,9 +70,9 @@ namespace vk
 
         createInfo.enabledExtensionCount = static_cast<uint32_t>(vk_data.deviceExtensions.size());
         createInfo.ppEnabledExtensionNames = vk_data.deviceExtensions.data();
-
-        createInfo.pEnabledFeatures = &deviceFeatures;
-        // createInfo.enabledExtensionCount = 0;
+        createInfo.pNext = &physical_features2;
+        // createInfo.pEnabledFeatures = &deviceFeatures;
+        //  createInfo.enabledExtensionCount = 0;
 
         if (enableValidationLayers)
         {
@@ -227,11 +246,9 @@ namespace vk
             vkDestroyImageView(vk_data.logicalDevice, imageView, nullptr);
         }
 
-        
         vkDestroyImageView(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.DepthTexture.imageView, nullptr);
         vkDestroyImage(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.DepthTexture.image, nullptr);
         vkFreeMemory(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.DepthTextureBuffer.deviceMemory, nullptr);
-
 
         if (enableValidationLayers)
         {

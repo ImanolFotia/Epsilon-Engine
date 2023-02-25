@@ -47,6 +47,7 @@ namespace BSP
 
         engine::Ref<engine::Material> dummyMaterial;
         engine::Ref<engine::Material> shadowDummyMaterial;
+        engine::Ref<engine::Buffer> gpuBuffer;
 
     public:
         explicit BSP(const std::string &appname) : Epsilon::Epsilon(appname)
@@ -68,22 +69,29 @@ namespace BSP
 
             setupRenderPass();
 
+            using en = engine::UniformBindingType;
+
             engine::MaterialInfo material = {
-                .bindingInfo = {
-                    .size = sizeof(ShaderData),
-                    .offset = 0}};
+                .bindingInfo = {{.size = sizeof(ShaderData), .type = en::UNIFORM_BUFFER, .binding = 0},
+                                /*{.size = sizeof(PushConstant), .type = en::SHADER_STORAGE, .binding = 3}*/}};
 
             shadowDummyMaterial = Epsilon::getContext().ResourceManager()->createMaterial(material,
                                                                                           m_pShadowRenderPass);
 
-            dummyMaterial = Epsilon::getContext().ResourceManager()->createMaterial(material, m_pRenderPass, {{.renderPass = m_pShadowRenderPass, .index = 0}, {.renderPass = m_pShadowRenderPass, .index = 1}});
+            dummyMaterial = Epsilon::getContext().ResourceManager()->createMaterial(
+                material,
+                m_pRenderPass,
+                {{.renderPass = m_pShadowRenderPass, .index = 0, .bindingPoint = 1},
+                 {.renderPass = m_pShadowRenderPass, .index = 1, .bindingPoint = 2}});
 
             m_pMap.pushConstant.model = glm::scale(glm::mat4(1.0f), glm::vec3(0.0125f));
 
             m_pMap.pushConstantRef = Epsilon::getContext().ResourceManager()->createPushConstant(
                 {.size = sizeof(PushConstant), .data = &m_pMap.pushConstant});
 
-            const char *filename = "./assets/models/hl2/background01.bsp";
+            // gpuBuffer = Epsilon::getContext().ResourceManager()->createGPUBuffer(sizeof(PushConstant), engine::BufferStorageType::STORAGE_BUFFER);
+
+            const char *filename = "./assets/models/hl2/d2_prison_02.bsp";
 
             SourceBSP bspMap(filename);
 
@@ -172,8 +180,8 @@ namespace BSP
                 Epsilon::getContext().Renderer()->Push(objectData);
             }
 
-            Epsilon::getContext().Renderer()->Begin(m_pShadowRenderPass);
-            Epsilon::getContext().Renderer()->Flush(m_pShadowRenderPass);
+            Epsilon::getContext().Renderer()->Begin();
+            Epsilon::getContext().Renderer()->Flush(m_pShadowRenderPass, engine::DrawType::INDEXED_INDIRECT);
 
             setupCamera();
 
@@ -187,7 +195,11 @@ namespace BSP
                 Epsilon::getContext().Renderer()->Push(objectData);
             }
 
-            drawFrame(m_pRenderPass);
+            // drawFrame(m_pRenderPass);
+
+            engine::Context::getSingleton().Renderer()->Flush(m_pRenderPass, engine::DrawType::INDEXED_INDIRECT);
+            engine::Context::getSingleton().Renderer()->End();
+            engine::Context::getSingleton().Renderer()->Sync();
         }
 
         void onExit() {}
@@ -212,7 +224,6 @@ namespace BSP
                                                                               {
                                                                                   updateCam = !updateCam;
                                                                               }
-
                                                                               if (obj.key_up_index == framework::Input::GLFW::Key::P)
                                                                               {
                                                                                   auto pos = m_pCamera->getPosition();
@@ -246,7 +257,7 @@ namespace BSP
             camData.proj[1][1] *= -1;
             camData.iTime += m_pTime;
 
-            Epsilon::getContext().Renderer()->UpdateRenderPassUniforms(m_pRenderPass, 0, (const void *)&camData);
+            Epsilon::getContext().Renderer()->UpdateRenderPassUniforms(m_pRenderPass, engine::RENDERPASS_SET, &camData);
             // PushShaderData(camData);
         }
 
@@ -257,7 +268,7 @@ namespace BSP
 
             ShaderData camData;
 
-            camData.iResolution = glm::vec2(2000, 2000);
+            camData.iResolution = glm::vec2(3000, 3000);
 
             // 30.6363, 13.117, -38.7729
 
@@ -275,7 +286,7 @@ namespace BSP
             lightMatrix = camData.proj * camData.view * glm::mat4(1.0);
             camData.lightMatrix = lightMatrix;
             camData.iTime += m_pTime;
-            Epsilon::getContext().Renderer()->UpdateRenderPassUniforms(m_pShadowRenderPass, 0, (const void *)&camData);
+            Epsilon::getContext().Renderer()->UpdateRenderPassUniforms(m_pShadowRenderPass, engine::RENDERPASS_SET, &camData);
             // PushShaderData(camData);
         }
 
@@ -327,7 +338,7 @@ namespace BSP
                     .size(sizeof(Vertex))
                     .depthAttachment(true)
                     .subpasses({})
-                    .dimensions({.width = 1280, .height = 720})
+                    .dimensions({.width = 1920, .height = 1080})
                     .attachments({{
                                       .format = COLOR_RGBA,
                                       .isDepthAttachment = false,
@@ -337,9 +348,10 @@ namespace BSP
                                    .isDepthAttachment = true}})
                     .pipelineLayout(mainLayout)
                     .pushConstant(sizeof(PushConstant))
-                    .uniformBindings({{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = UNIFORM_BUFFER},
-                                      {.size = 0, .offset = 0, .binding = 1, .type = TEXTURE_IMAGE_COMBINED_SAMPLER},
-                                      {.size = 0, .offset = 0, .binding = 2, .type = TEXTURE_IMAGE_COMBINED_SAMPLER}});
+                    .uniformBindings({{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = UniformBindingType::UNIFORM_BUFFER},
+                                      {.size = 0, .offset = 0, .binding = 1, .type = UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER},
+                                      {.size = 0, .offset = 0, .binding = 2, .type = UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER},
+                                      /*{.size = 0, .offset = 0, .binding = 3, .type = UniformBindingType::SHADER_STORAGE}*/});
 
             RenderPassInfo shadowRenderPassInfo =
                 RenderPassFactory()
@@ -347,7 +359,7 @@ namespace BSP
                     .size(sizeof(Vertex))
                     .depthAttachment(true)
                     .subpasses({})
-                    .dimensions({.width = 2000, .height = 2000})
+                    .dimensions({.width = 3000, .height = 3000})
                     .attachments(
                         {{.format = COLOR_R_32F,
                           .wrapMode = CLAMP_TO_BORDER,
@@ -370,8 +382,9 @@ namespace BSP
                           .isDepthAttachment = true}})
                     .pipelineLayout(shadowLayout)
                     .pushConstant(sizeof(PushConstant))
-                    .uniformBindings({{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = UNIFORM_BUFFER},
-                                      {.size = 0, .offset = 0, .binding = 1, .type = TEXTURE_IMAGE_COMBINED_SAMPLER}});
+                    .uniformBindings({{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = UniformBindingType::UNIFORM_BUFFER},
+                                      {.size = 0, .offset = 0, .binding = 1, .type = UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER},
+                                      /*{.size = 0, .offset = 0, .binding = 3, .type = UniformBindingType::SHADER_STORAGE}*/});
 
             m_pRenderPass = Epsilon::getContext().ResourceManager()->createDefaultRenderPass(renderPassInfo);
             m_pShadowRenderPass = Epsilon::getContext().ResourceManager()->createRenderPass(shadowRenderPassInfo);

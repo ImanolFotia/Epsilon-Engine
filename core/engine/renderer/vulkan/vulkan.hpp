@@ -5,6 +5,7 @@
 #include "core/engine/renderer/frame.hpp"
 #include "core/engine/renderer/types.hpp"
 #include "core/engine/renderer/drawables/vertex.hpp"
+#include "../draw_command.hpp"
 
 #include "apis/vk/vk.hpp"
 
@@ -60,7 +61,7 @@ namespace engine
 
         ObjectDataId RegisterMesh(const std::vector<Vertex> &, std::vector<IndexType> &indices, bool) override;
 
-        TexturesDataId RegisterTexture(unsigned char *, TextureInfo) override;
+        TexturesDataId RegisterTexture(TextureCreationInfo) override;
 
         Material CreateMaterial(Ref<Material>) override;
 
@@ -68,15 +69,15 @@ namespace engine
 
         void Sync() override;
 
-        void Begin(Ref<RenderPass>) override;
+        void Begin() override;
 
         void End() override;
 
-        void Flush(engine::Ref<engine::RenderPass>) override;
+        void Flush(engine::Ref<engine::RenderPass>, engine::DrawType) override;
 
         void Cleanup() override;
 
-        void UpdateRenderPassUniforms(Ref<RenderPass>, uint32_t, const void *);
+        void UpdateRenderPassUniforms(Ref<RenderPass>, BindingIndex, const void *);
 
         void pUpdateUniformBuffer(const vk::VulkanBuffer &, const void *);
 
@@ -94,6 +95,12 @@ namespace engine
         }
 
         void *perPassData = nullptr;
+
+    private:
+        void FlushNonIndexed(vk::VulkanRenderPass *renderPass);
+        void FlushIndexed(vk::VulkanRenderPass *renderPass);
+        void FlushIndirect(vk::VulkanRenderPass *renderPass);
+        void FlushIndexedIndirect(vk::VulkanRenderPass *renderPass);
 
     private:
         framework::Window *m_pWindow = nullptr;

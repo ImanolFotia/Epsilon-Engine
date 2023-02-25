@@ -23,6 +23,11 @@ layout(binding = 0) uniform UniformBufferObject {
     mat4 proj;
     mat4 lightMatrix;
 } ubo;
+/*
+layout(binding = 3) readonly buffer MapMatrix 
+{
+	mat4 model;
+} ssbo;*/
 
 layout( push_constant ) uniform constants
 {
@@ -72,13 +77,19 @@ void main() {
     		color = vec4(colors[gl_VertexIndex % 27], inColor.a);
     	else
     		color = inColor;
+
+			mat4 model = mat4(
+				0.0125, 0.0, 0.0, 0.0,
+				0.0, 0.0125, 0.0, 0.0, 
+				0.0, 0.0, 0.0125, 0.0,
+				0.0, 0.0, 0.0, 1.0);
     		
-    position = (PushConstants.model) * vec4(inPosition, 1.0);
-	shadowCoords = (biasMat * ubo.lightMatrix * PushConstants.model) * vec4(inPosition, 1.0);
+    position = /*(PushConstants.model)*/model * vec4(inPosition, 1.0);
+	shadowCoords = (biasMat * ubo.lightMatrix * /*(PushConstants.model)*/model) * vec4(inPosition, 1.0);
     texCoords = inTexCoord;
     normal = inNormal; //normalize(mat3(transpose(inverse(PushConstants.model))) * inNormal);
     //vec3 outVert = inPosition;
     //outVert.y *= (iResolution.x / iResolution.y);
 
-    gl_Position = ubo.proj * ubo.view * PushConstants.model * vec4(inPosition, 1.0);
+    gl_Position = ubo.proj * ubo.view * /*(PushConstants.model)*/model * vec4(inPosition, 1.0);
 }

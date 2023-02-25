@@ -46,7 +46,9 @@ namespace ChessApp
             if (args == nullptr)
                 return;
 
-            auto obj = args->to<Input::MouseArgs>();
+            if (m_pUCI.mate) return;
+
+                auto obj = args->to<Input::MouseArgs>();
 
             auto &files = m_pBoard.getFiles();
 
@@ -169,6 +171,67 @@ namespace ChessApp
                 files[strFirst].show = false;
                 files[strFirst].piece = FREE;
 
+                if (files[strSecond].piece == BLACK_KING || files[strSecond].piece == WHITE_KING)
+                {
+                    if (m_pBoard.Turn() == WHITE)
+                    {
+                        if (!m_pBoard.WhiteCastled())
+                            if (files[strSecond].column == COLUMN::G)
+                            {
+
+                                files["f1"].piece = WHITE_ROOK;
+                                files["f1"].index = files["h1"].index;
+                                files["f1"].column = F;
+                                files["f1"].show = true;
+                                files["f1"].row = 1;
+
+                                files["h1"].piece = FREE;
+                                files["h1"].index = -1;
+                                files["h1"].column = H;
+                                files["h1"].row = 1;
+                                files["h1"].show = false;
+
+                                m_pPieces.at(files["f1"].index).pushConstant.model = transformPiece(
+                                    {files["f1"].column, files["f1"].row});
+
+                                std::cout << "Short white castle" << std::endl;
+                            }
+                            else if (files[strSecond].column == COLUMN::C)
+                            {
+
+                                files["d1"].piece = WHITE_ROOK;
+                                files["d1"].index = files["a1"].index;
+                                files["d1"].column = D;
+                                files["d1"].show = true;
+                                files["d1"].row = 1;
+
+                                files["a1"].piece = FREE;
+                                files["a1"].index = -1;
+                                files["a1"].column = H;
+                                files["a1"].row = 1;
+                                files["a1"].show = false;
+
+                                m_pPieces.at(files["d1"].index).pushConstant.model = transformPiece(
+                                    {files["d1"].column, files["d1"].row});
+
+                                std::cout << "Long white castle" << std::endl;
+                            }
+                    }
+                    else
+                    {
+
+                        if (!m_pBoard.BlackCastled())
+                            if (files[strSecond].column == COLUMN::G)
+                            {
+                                std::cout << "Short black castle" << std::endl;
+                            }
+                            else
+                            {
+                                std::cout << "Long black castle" << std::endl;
+                            }
+                    }
+                }
+
                 m_pPieces.at(files[strSecond].index).pushConstant.model = transformPiece(
                         {files[strSecond].column, files[strSecond].row});
                 m_pSelectedModel = nullptr;
@@ -191,15 +254,17 @@ namespace ChessApp
     void ChessApp::onReady()
     {
         m_pEngineThread = std::thread([this]()
-                                      { m_pUCI.init(); });
+                                      {
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+            m_pUCI.init(); });
+
         m_pEngineThread.detach();
-        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 
     void ChessApp::onRender()
     {
 
-        Epsilon::getContext().Renderer()->Begin(m_pRenderPass);
+        Epsilon::getContext().Renderer()->Begin();
         if (m_pTakeAudioObject.should_play)
         {
             al::playSource(m_pTakeAudioObject.source);
@@ -239,7 +304,11 @@ namespace ChessApp
             objectData.pushConstant = piece.pushConstantRef;
             Epsilon::getContext().Renderer()->Push(objectData);
         }
-        drawFrame(m_pRenderPass);
+
+        engine::Context::getSingleton().Renderer()->Flush(m_pRenderPass, engine::DrawType::INDEXED);
+        engine::Context::getSingleton().Renderer()->End();
+        engine::Context::getSingleton().Renderer()->Sync();
+        // drawFrame(m_pRenderPass);
 
         if (!m_pUCI.last_move.empty() && m_pBoard.Turn() == BLACK)
         {
@@ -324,6 +393,99 @@ namespace ChessApp
             files[strSecond].piece = files[strFirst].piece;
             files[strSecond].index = files[strFirst].index;
 
+            if (files[strSecond].piece == BLACK_KING || files[strSecond].piece == WHITE_KING)
+            {
+                if (m_pBoard.Turn() == WHITE)
+                {
+                    if (!m_pBoard.WhiteCastled())
+                        if (files[strSecond].column == COLUMN::G)
+                        {
+
+                            files["f1"].piece = WHITE_ROOK;
+                            files["f1"].index = files["h1"].index;
+                            files["f1"].column = F;
+                            files["f1"].show = true;
+                            files["f1"].row = 1;
+
+                            files["h1"].piece = FREE;
+                            files["h1"].index = -1;
+                            files["h1"].column = H;
+                            files["h1"].row = 1;
+                            files["h1"].show = false;
+
+                            m_pPieces.at(files["f1"].index).pushConstant.model = transformPiece(
+                                {files["f1"].column, files["f1"].row});
+
+                            std::cout << "Short white castle" << std::endl;
+                        }
+                        else if (files[strSecond].column == COLUMN::C)
+                        {
+
+                            files["d1"].piece = WHITE_ROOK;
+                            files["d1"].index = files["a1"].index;
+                            files["d1"].column = D;
+                            files["d1"].show = true;
+                            files["d1"].row = 1;
+
+                            files["a1"].piece = FREE;
+                            files["a1"].index = -1;
+                            files["a1"].column = H;
+                            files["a1"].row = 1;
+                            files["a1"].show = false;
+
+                            m_pPieces.at(files["d1"].index).pushConstant.model = transformPiece(
+                                {files["d1"].column, files["d1"].row});
+
+                            std::cout << "Long white castle" << std::endl;
+                        }
+                }
+                else
+                {
+
+                    if (!m_pBoard.BlackCastled())
+                        if (files[strSecond].column == COLUMN::G)
+                        {
+
+                            files["f8"].piece = BLACK_ROOK;
+                            files["f8"].index = files["h8"].index;
+                            files["f8"].column = F;
+                            files["f8"].show = true;
+                            files["f8"].row = 8;
+
+                            files["h8"].piece = FREE;
+                            files["h8"].index = -1;
+                            files["h8"].column = H;
+                            files["h8"].row = 8;
+                            files["h8"].show = false;
+
+                            m_pPieces.at(files["f8"].index).pushConstant.model = transformPiece(
+                                {files["f8"].column, files["f8"].row});
+
+                            std::cout << "Short black castle" << std::endl;
+                        }
+                        else if (files[strSecond].column == COLUMN::C)
+                        {
+
+                            files["d8"].piece = BLACK_ROOK;
+                            files["d8"].index = files["a8"].index;
+                            files["d8"].column = D;
+                            files["d8"].show = true;
+                            files["d8"].row = 8;
+
+                            files["a8"].piece = FREE;
+                            files["a8"].index = -1;
+                            files["a8"].column = A;
+                            files["a8"].row = 8;
+                            files["a8"].show = false;
+
+                            m_pPieces.at(files["d8"].index).pushConstant.model = transformPiece(
+                                {files["d8"].column, files["d8"].row});
+
+                            std::cout << "Long black castle" << std::endl;
+                        }
+                }
+            }
+
             files[strFirst].column = m_pMove.column_from;
             files[strFirst].row = m_pMove.row_from;
             files[strFirst].index = -1;
@@ -348,7 +510,7 @@ namespace ChessApp
     void ChessApp::setupCamera()
     {
         glm::vec2 iResolution = glm::vec2(getWindowDimensions().first, getWindowDimensions().second);
-        ShaderData camData;
+        ChessShaderData camData;
         camData.iResolution = iResolution;
 
         static auto startTime = std::chrono::high_resolution_clock::now();
@@ -365,8 +527,13 @@ namespace ChessApp
                                   (iResolution.y / 2.0f), 0.1f, 1000.0f);
         camData.proj[1][1] *= -1;
         camData.iTime += time;
+        camData.lastMove = glm::vec4(
+            m_pMove.column_from,
+            m_pMove.column_to,
+            m_pMove.row_from,
+            m_pMove.row_to);
 
-        Epsilon::getContext().Renderer()->UpdateRenderPassUniforms(m_pRenderPass, 0, (const void *)&camData);
+        Epsilon::getContext().Renderer()->UpdateRenderPassUniforms(m_pRenderPass, engine::RENDERPASS_SET, &camData);
     }
 
     glm::mat4 ChessApp::transformBoard(glm::vec3 t, glm::vec3 s)
@@ -447,33 +614,32 @@ namespace ChessApp
     void ChessApp::setupTextures()
     {
         // create the material for the board
+
+        using en = engine::UniformBindingType;
         {
             engine::MaterialInfo material = {
-                .bindingInfo = {
-                    .size = sizeof(ShaderData),
-                    .offset = 0}};
+                .bindingInfo = {{.size = sizeof(ChessShaderData), .type = en::UNIFORM_BUFFER, .binding = 0}}};
 
             m_pBoardModel.material = Epsilon::getContext().ResourceManager()->createMaterial(material, m_pRenderPass);
         }
         // create the material for the pieces
         engine::Ref<engine::Material> pieceMaterial;
         {
-            engine::MaterialInfo material = {
-                .bindingInfo = {
-                    .size = sizeof(ShaderData),
-                    .offset = 0}};
             int w, h, nc;
             unsigned char *pixels = framework::load_image_from_file("./assets/images/pieces.png",
                                                                     &w,
                                                                     &h,
                                                                     &nc);
-            engine::TextureInfo texInfo = engine::TextureBuilder()
-                                              .width(w)
-                                              .height(h)
-                                              .numChannels(nc)
-                                              .pixels(pixels);
+            engine::TextureCreationInfo texInfo = engine::TextureBuilder()
+                                                      .width(w)
+                                                      .height(h)
+                                                      .numChannels(nc)
+                                                      .pixels(pixels);
 
-            material.textures.push_back(texInfo);
+            engine::MaterialInfo material = {
+                .bindingInfo = {{.size = sizeof(ChessShaderData), .type = en::UNIFORM_BUFFER, .binding = 0},
+                                {.size = 0, .type = en::TEXTURE_IMAGE_COMBINED_SAMPLER, .offset = 0, .binding = 1, .textureInfo = texInfo}}};
+
             pieceMaterial = Epsilon::getContext().ResourceManager()->createMaterial(material, m_pRenderPass);
             framework::free_image_data(pixels);
         }
@@ -531,17 +697,19 @@ namespace ChessApp
                 .size(sizeof(Vertex))
                 .depthAttachment(true)
                 .subpasses({})
-                .attachments(
-                    {{.format = COLOR_RGBA,
-                      .isDepthAttachment = false,
-                      .isSwapChainAttachment = true},
-                     {.format = DEPTH_F32_STENCIL_8,
-                      .isDepthAttachment = true}})
+                .dimensions({.width = 1920, .height = 1080})
+                .attachments({{
+                                  .format = COLOR_RGBA,
+                                  .isDepthAttachment = false,
+                                  .isSwapChainAttachment = true,
+                              },
+                              {.format = DEPTH_F32_STENCIL_8,
+                               .isDepthAttachment = true}})
                 .pipelineLayout(boardLayout)
                 .pipelineLayout(pieceLayout)
                 .pushConstant(sizeof(PiecePushConstant))
-                .uniformBindings({{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = UNIFORM_BUFFER},
-                                  {.size = 0, .offset = 0, .binding = 1, .type = TEXTURE_IMAGE_COMBINED_SAMPLER}});
+                .uniformBindings({{.size = sizeof(ChessShaderData), .offset = 0, .binding = 0, .type = UniformBindingType::UNIFORM_BUFFER},
+                                  {.size = 0, .offset = 0, .binding = 1, .type = UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER}});
 
         m_pRenderPass = Epsilon::getContext().ResourceManager()->createDefaultRenderPass(renderPassInfo);
     }

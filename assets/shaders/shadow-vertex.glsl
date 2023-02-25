@@ -30,10 +30,16 @@ void main() {
     color = inColor;
     position = inPosition;
     texCoords = inTexCoord;
-    normal = normalize(mat3(transpose(inverse(PushConstants.model))) * inNormal);
+    
+			mat4 model = mat4(
+				0.0125, 0.0, 0.0, 0.0,
+				0.0, 0.0125, 0.0, 0.0, 
+				0.0, 0.0, 0.0125, 0.0,
+				0.0, 0.0, 0.0, 1.0);
+    normal = normalize(mat3(transpose(inverse(/*PushConstants.model*/model))) * inNormal);
 
     vec3 outVert = inPosition;
     //outVert.y *= (iResolution.x / iResolution.y);
 
-    gl_Position = ubo.proj * ubo.view * PushConstants.model * vec4(outVert, 1.0);
+    gl_Position = ubo.proj * ubo.view * /*PushConstants.model*/model * vec4(outVert, 1.0);
 }

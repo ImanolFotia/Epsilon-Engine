@@ -6,7 +6,6 @@
 
 #include "BSP.hpp"
 
-
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
@@ -29,25 +28,28 @@ extern "C"
 #ifdef __linux__
 extern "C"
 {
-int NvOptimusEnablement = 1;
-int AmdPowerXpressRequestHighPerformance = 1;
+    int NvOptimusEnablement = 1;
+    int AmdPowerXpressRequestHighPerformance = 1;
 }
 #endif
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
 #ifndef _WIN32
     framework::env::setArgs(argc, argv);
 #endif
 
     BSP::BSP app("SourceBSP");
 
-    //try {
+    try
+    {
         app.run();
-    //}
-   // catch (const std::exception &e) {
-    //    std::cerr << e.what() << std::endl;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;
-   // }
+    }
 
     return EXIT_SUCCESS;
 }

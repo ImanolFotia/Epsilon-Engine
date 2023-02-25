@@ -8,20 +8,40 @@ namespace engine
     {
     public:
         DrawCommand() = default;
-
-        uint32_t vertexOffset = 0;
-        uint32_t indexOffset = 0;
-        uint32_t numVertices = 0;
-        uint32_t numIndices = 0;
+        MeshResource meshResource;
 
         uint32_t layoutIndex = 0;
 
-        Ref<Buffer> vertexBuffer;
-        Ref<Buffer> indexBuffer;
-        Ref<UniformBindings> uniformBindings;
         Ref<engine::Material> material;
-        void* objectData = nullptr;
+        void *objectData = nullptr;
         size_t object_data_size = 0;
+        uint32_t uniformIndex = 0;
     };
 
+    struct IndirectCommand
+    {
+        uint32_t vertexCount;
+        uint32_t instanceCount;
+        uint32_t firstVertex;
+        uint32_t firstInstance;
+    };
+
+    struct IndexedIndirectCommand
+    {
+        uint32_t indexCount;
+        uint32_t instanceCount;
+        uint32_t firstIndex;
+        int32_t vertexOffset;
+        uint32_t firstInstance;
+    };
+
+    struct IndirectBatch
+    {
+        MeshResource meshResource;
+        Ref<Material> material;
+        uint32_t uniformIndex = 0;
+        uint32_t layoutIndex = 0;
+        uint32_t count = 0;
+        uint32_t first = 0;
+    };
 }

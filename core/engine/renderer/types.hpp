@@ -16,7 +16,7 @@ namespace engine
     struct RenderPass;
     struct Mesh;
     struct PushConstant;
-    
+
     enum renderer_type
     {
         vulkan = 0,
@@ -37,14 +37,14 @@ namespace engine
 
     struct ShaderStageInfo
     {
-        const char* entryPoint;
+        const char *entryPoint;
         std::vector<char> shaderCode;
         ShaderModuleStage stage;
     };
 
     struct ShaderStageFactory
     {
-        ShaderStageFactory entryPoint(const char* e)
+        ShaderStageFactory entryPoint(const char *e)
         {
             info.entryPoint = e;
             return *this;
@@ -119,7 +119,7 @@ namespace engine
         NON_COLOR_RGBA_16F,
         NON_COLOR_RGBA_32F,
 
-        //DEPTH IMAGES
+        // DEPTH IMAGES
         DEPTH_F32,
         DEPTH_F32_STENCIL_8,
         DEPTH_F16,
@@ -139,37 +139,58 @@ namespace engine
         XYZW_FLOAT
     };
 
-    enum CompareFunction {
+    enum CompareFunction
+    {
         ALWAYS = 0,
         LESS,
         LESS_OR_EQUAL,
         EQUAL,
     };
 
-    enum WrapMode {
+    enum WrapMode
+    {
         REPEAT = 0,
         CLAMP_TO_BORDER,
         CLAMP_TO_EDGE
     };
 
-    enum Filtering {
+    enum Filtering
+    {
         POINT = 0,
         LINEAR,
         ANISOTROPIC
     };
 
-    enum WindingMode {
+    enum WindingMode
+    {
         CLOCKWISE = 0,
         COUNTER_CLOCK_WISE
     };
 
-    enum CullMode {
+    enum CullMode
+    {
         BACK = 0,
         FRONT,
         NONE
     };
 
-    struct TextureInfo
+    enum BindingIndex
+    {
+        RENDERPASS_SET = 0,
+        MATERIAL_SET,
+        OBJECT_SET // I don't plan to use these one as push constants might be faster, but just in case
+    };
+
+    enum class DrawType
+    {
+        NON_INDEXED = 0,
+        INDIRECT,
+        INDEXED,
+        INDEXED_INDIRECT,
+        INSTANCED
+    };
+
+    struct TextureCreationInfo
     {
         uint32_t width;
         uint32_t height;
@@ -177,9 +198,8 @@ namespace engine
         TextureFormat format;
         WrapMode wrapMode;
         Filtering filtering;
-        unsigned char* pixels = nullptr;
+        unsigned char *pixels = nullptr;
     };
-
 
     struct TextureBuilder
     {
@@ -204,20 +224,19 @@ namespace engine
             return *this;
         }
 
-        TextureBuilder pixels(unsigned char* p)
+        TextureBuilder pixels(unsigned char *p)
         {
             self.pixels = p;
             return *this;
         }
-        operator TextureInfo() { return self; }
-        TextureInfo self;
+        operator TextureCreationInfo() { return self; }
+        TextureCreationInfo self;
     };
 
     struct Material
     {
         size_t id;
     };
-
 
     struct IndirectPack
     {
@@ -237,7 +256,8 @@ namespace engine
         size_t size;
     };
 
-    struct RenderPassAttachment {
+    struct RenderPassAttachment
+    {
         TextureFormat format;
         WrapMode wrapMode;
         Filtering filtering;
@@ -248,35 +268,42 @@ namespace engine
         bool isSwapChainAttachment = false;
     };
 
-    struct PushConstantData {
+    struct PushConstantData
+    {
         size_t size;
-        void* data;
+        void *data;
     };
 
-    struct BufferInfo {
+    struct BufferInfo
+    {
         size_t size;
         size_t offset;
     };
 
-    struct BufferInfoFactory {
+    struct BufferInfoFactory
+    {
 
-        BufferInfoFactory size(size_t s) {
+        BufferInfoFactory size(size_t s)
+        {
             info.size = s;
             return *this;
         }
 
-        BufferInfoFactory offset(size_t o) {
+        BufferInfoFactory offset(size_t o)
+        {
             info.offset = o;
             return *this;
         }
 
-        operator BufferInfo() {
+        operator BufferInfo()
+        {
             return info;
         }
         BufferInfo info;
     };
 
-    enum UniformBindingType {
+    enum class UniformBindingType
+    {
         UNIFORM_BUFFER = 0,
         TEXTURE_SAMPLER,
         TEXTURE_IMAGE_COMBINED_SAMPLER,
@@ -286,29 +313,42 @@ namespace engine
         STORAGE_IMAGE
     };
 
-    struct UniformBindingInfo {
+    enum class BufferStorageType
+    {
+        UNIFORM_BUFFER = 0,
+        STORAGE_BUFFER
+    };
+
+    struct UniformBindingInfo
+    {
         size_t size;
         size_t offset;
         uint32_t binding = 0;
         UniformBindingType type;
+        TextureCreationInfo textureInfo;
     };
 
-    struct UniformBindingFactory {
+    struct UniformBindingFactory
+    {
         operator UniformBindingInfo() { return info; }
 
-        UniformBindingInfo size(size_t s) {
+        UniformBindingInfo size(size_t s)
+        {
             info.size = s;
             return *this;
         }
-        UniformBindingInfo offset(size_t o) {
+        UniformBindingInfo offset(size_t o)
+        {
             info.offset = o;
             return *this;
         }
-        UniformBindingInfo binding(uint32_t b) {
+        UniformBindingInfo binding(uint32_t b)
+        {
             info.binding = b;
             return *this;
         }
-        UniformBindingInfo type(UniformBindingType t) {
+        UniformBindingInfo type(UniformBindingType t)
+        {
             info.type = t;
             return *this;
         }
@@ -316,19 +356,19 @@ namespace engine
         UniformBindingInfo info;
     };
 
-
-    struct PipelineLayout {
+    struct PipelineLayout
+    {
         ShaderInfo shaderInfo;
         std::vector<VertexDescriptorInfo> vertexLayout;
         CullMode cullMode;
         WindingMode windingMode;
     };
 
-    struct ImageDimensions {
+    struct ImageDimensions
+    {
         int width = 0;
         int height = 0;
     };
-
 
     struct RenderPassInfo
     {
@@ -380,7 +420,7 @@ namespace engine
             info.vertexLayout = vl;
             return *this;
         }*/
-        
+
         RenderPassFactory attachments(std::vector<RenderPassAttachment> a)
         {
             info.attachments = a;
@@ -388,7 +428,8 @@ namespace engine
             return *this;
         }
 
-        RenderPassFactory pipelineLayout(PipelineLayout pl) {
+        RenderPassFactory pipelineLayout(PipelineLayout pl)
+        {
             info.pipelineLayout.emplace_back(pl);
             info.numLayouts++;
             return *this;
@@ -400,7 +441,8 @@ namespace engine
             return *this;
         }
 
-        RenderPassFactory uniformBindings(std::initializer_list<UniformBindingInfo> bi) {
+        RenderPassFactory uniformBindings(std::initializer_list<UniformBindingInfo> bi)
+        {
             info.bindingInfo = bi;
             return *this;
         }
@@ -411,26 +453,27 @@ namespace engine
         RenderPassInfo info;
     };
 
-
-
-
-    struct MaterialInfo {
-        std::vector<TextureInfo> textures;
-        UniformBindingInfo bindingInfo;
+    struct MaterialInfo
+    {
+        std::vector<UniformBindingInfo> bindingInfo;
     };
 
-    struct MeshInfo {
+    struct MeshInfo
+    {
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
     };
 
-    struct MeshInfoFactory {
-        MeshInfoFactory vertices(std::vector<Vertex> v) {
+    struct MeshInfoFactory
+    {
+        MeshInfoFactory vertices(std::vector<Vertex> v)
+        {
             info.vertices = v;
             return *this;
         }
 
-        MeshInfoFactory indices(std::vector<uint32_t> i) {
+        MeshInfoFactory indices(std::vector<uint32_t> i)
+        {
             info.indices = i;
             return *this;
         }

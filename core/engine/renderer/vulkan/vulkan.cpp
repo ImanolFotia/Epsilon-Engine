@@ -1,9 +1,12 @@
 #include "core/framework/window.hpp"
 #include "core/framework/exception.hpp"
+#include <core/framework/clock.hpp>
+#include "core/framework/common.hpp"
 
 #include "vulkan.hpp"
-#include "core/framework/common.hpp"
 #include "resource_manager.hpp"
+
+#include "helpers.hpp"
 
 /**
  * @brief Implementation of the Vulkan renderer public API
@@ -66,7 +69,7 @@ namespace engine
         throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
 
-    engine::Renderer::TexturesDataId VulkanRenderer::RegisterTexture(unsigned char *, TextureInfo)
+    engine::Renderer::TexturesDataId VulkanRenderer::RegisterTexture(TextureCreationInfo)
     {
 
         throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
@@ -82,12 +85,12 @@ namespace engine
     {
         DrawCommand drawCommand;
         auto mesh = m_pResourceManagerRef->meshPool.get(object.mesh);
-        drawCommand.indexBuffer = mesh->indexBuffer;
-        drawCommand.indexOffset = mesh->indexOffset;
-        drawCommand.numIndices = mesh->numIndices;
-        drawCommand.numVertices = mesh->numVertices;
-        drawCommand.vertexBuffer = mesh->vertexBuffer;
-        drawCommand.vertexOffset = mesh->vertexOffset;
+        drawCommand.meshResource.indexBuffer = mesh->indexBuffer;
+        drawCommand.meshResource.indexOffset = mesh->indexOffset;
+        drawCommand.meshResource.numIndices = mesh->numIndices;
+        drawCommand.meshResource.numVertices = mesh->numVertices;
+        drawCommand.meshResource.vertexBuffer = mesh->vertexBuffer;
+        drawCommand.meshResource.vertexOffset = mesh->vertexOffset;
         drawCommand.layoutIndex = object.layout_index;
 
         drawCommand.material = object.material;
@@ -97,7 +100,7 @@ namespace engine
         m_pCurrentCommandQueue.push_back(drawCommand);
     }
 
-    void VulkanRenderer::Begin(Ref<RenderPass> renderPassRef)
+    void VulkanRenderer::Begin()
     {
 
         m_pImageIndex = pPrepareSyncObjects();
@@ -155,30 +158,52 @@ namespace engine
         vk::endRecording(m_pFrame.CommandBuffer());
     }
 
-    void VulkanRenderer::Flush(engine::Ref<engine::RenderPass> renderPassRef)
+    void VulkanRenderer::Flush(engine::Ref<engine::RenderPass> renderPassRef, engine::DrawType type)
     {
         if (m_pImageIndex == -1)
             return;
-        /*
-                if (m_pRenderPasses.at(attachedRenderPass).renderPipelines.at(DefaultRenderPass).graphicsPipeline == NULL)
-                    std::cout << "pipeline is null\n";
-        */
-        auto renderPass = m_pResourceManagerRef->getRenderPass(renderPassRef);
 
-        // pUpdateUniforms(renderPass->uniformBuffer.front().buffers[m_pCurrentFrame]);
+        auto renderPass = m_pResourceManagerRef->getRenderPass(renderPassRef);
 
         vk::createRenderPassInfo(m_pImageIndex, m_pVkData, *renderPass);
         vk::beginRenderPass(m_pFrame.CommandBuffer(), *renderPass);
 
-        int num_indices = 0;
-        int curr_offset = 0;
-        int curr_indices = 0;
+        switch (type)
+        {
+        case DrawType::NON_INDEXED:
+            FlushNonIndexed(renderPass);
+            break;
 
-        bool prev_group = false;
+        case DrawType::INDEXED:
+            FlushIndexed(renderPass);
+            break;
+
+        case DrawType::INDIRECT:
+            FlushIndirect(renderPass);
+            break;
+
+        case DrawType::INDEXED_INDIRECT:
+            FlushIndexedIndirect(renderPass);
+            break;
+        default:
+            std::cout << "Error: Draw command type not supported!" << std::endl;
+            exit(99);
+            break;
+        }
+
+        vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
+        m_pCurrentCommandQueue.clear();
+    }
+
+    void VulkanRenderer::FlushIndexed(vk::VulkanRenderPass *renderPass)
+    {
+
         int32_t prev_layout = -1;
         int32_t prev_vertex_buffer = -1;
         int32_t prev_index_buffer = -1;
+
         int changed = 0;
+
         for (auto &command : m_pCurrentCommandQueue)
         {
             if (prev_layout != command.layoutIndex)
@@ -190,10 +215,9 @@ namespace engine
 
             auto material = m_pResourceManagerRef->materialPool.get(command.material);
             auto vertexBuffer = m_pResourceManagerRef->vertexBufferPool.get(
-                command.vertexBuffer); // m_pResourceManagerRef->getBuffer(command.vertexBuffer);
+                command.meshResource.vertexBuffer);
             auto indexBuffer = m_pResourceManagerRef->indexBufferPool.get(
-                command.indexBuffer); // m_pResourceManagerRef->getBuffer(command.indexBuffer);
-            // auto material = m_pResourceManagerRef->getMaterial(command.material);
+                command.meshResource.indexBuffer);
             if (prev_vertex_buffer != vertexBuffer->id)
             {
                 vk::bindVertexBuffer(m_pVkData, m_pFrame.CommandBuffer(), vertexBuffer->buffer);
@@ -207,19 +231,83 @@ namespace engine
             }
 
             vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
-                                    renderPass->renderPipelines.back().pipelineLayout.back(), 0, 1,
+                                    renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(), 0, 1,
                                     &material->descriptorSets[m_pCurrentFrame], 0, nullptr);
 
             /** TODO:
              *  Find a way to cleanly implement push constants*/
-            vkCmdPushConstants(m_pFrame.CommandBuffer(), renderPass->renderPipelines.back().pipelineLayout.back(),
+            vkCmdPushConstants(m_pFrame.CommandBuffer(), renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(),
                                VK_SHADER_STAGE_VERTEX_BIT, 0, command.object_data_size, command.objectData);
 
-            vk::drawIndexed(m_pFrame.CommandBuffer(), command.numIndices, 1, command.indexOffset, command.vertexOffset, 0);
+            vkCmdDrawIndexed(m_pFrame.CommandBuffer(), command.meshResource.numIndices, 1, command.meshResource.indexOffset, command.meshResource.vertexOffset, 0);
+        }
+    }
+
+    void VulkanRenderer::FlushNonIndexed(vk::VulkanRenderPass *renderPass)
+    {
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
+    }
+
+    void VulkanRenderer::FlushIndirect(vk::VulkanRenderPass *renderPass)
+    {
+        throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
+    }
+
+    void VulkanRenderer::FlushIndexedIndirect(vk::VulkanRenderPass *renderPass)
+    {
+
+        auto predicate = [](DrawCommand &a, DrawCommand &b) -> bool
+        { auto a_mat = a.material.Index();
+            auto b_mat = b.material.Index();
+            auto a_vtx = a.meshResource.vertexBuffer.Index();
+            auto b_vtx = b.meshResource.vertexBuffer.Index();
+            auto a_i = a.meshResource.indexBuffer.Index();
+            auto b_i = b.meshResource.indexBuffer.Index();
+            return std::tie(a_mat, a.layoutIndex, a_vtx, a_i) <
+                   std::tie(b_mat, b.layoutIndex, b_vtx, b_i); };
+
+        // m_pCurrentCommandQueue.sort(predicate);
+
+        auto batches = generateIndirectBatch(m_pCurrentCommandQueue);
+
+        void *data;
+        vmaMapMemory(m_pResourceManagerRef->m_pAllocator, m_pResourceManagerRef->m_pIndirectBuffer.allocation, &data);
+        VkDrawIndexedIndirectCommand *indirect_commands = reinterpret_cast<VkDrawIndexedIndirectCommand *>(data);
+        int i = 0;
+        for (auto &command : m_pCurrentCommandQueue)
+        {
+            indirect_commands[i].firstIndex = command.meshResource.indexOffset;
+            indirect_commands[i].firstInstance = command.uniformIndex;
+            indirect_commands[i].indexCount = command.meshResource.numIndices;
+            indirect_commands[i].instanceCount = 1;
+            indirect_commands[i].vertexOffset = command.meshResource.vertexOffset;
+            i++;
         }
 
-        vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
-        m_pCurrentCommandQueue.clear();
+        for (auto &batch : batches)
+        {
+            auto material = m_pResourceManagerRef->materialPool.get(batch.material);
+            auto vertexBuffer = m_pResourceManagerRef->vertexBufferPool.get(batch.meshResource.vertexBuffer);
+            auto indexBuffer = m_pResourceManagerRef->indexBufferPool.get(batch.meshResource.indexBuffer);
+
+            vk::bindPipeline(renderPass->renderPipelines[batch.layoutIndex].graphicsPipeline[batch.layoutIndex],
+                             m_pFrame.CommandBuffer());
+
+            vk::bindVertexBuffer(m_pVkData, m_pFrame.CommandBuffer(), vertexBuffer->buffer);
+            vkCmdBindIndexBuffer(m_pFrame.CommandBuffer(), indexBuffer->buffer, 0, VK_INDEX_TYPE_UINT32);
+
+            vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
+                                    renderPass->renderPipelines[batch.layoutIndex].pipelineLayout.back(), 0, 1,
+                                    &material->descriptorSets[m_pCurrentFrame], 0, nullptr);
+
+            VkDeviceSize indirect_offset = batch.first * sizeof(VkDrawIndexedIndirectCommand);
+            uint32_t draw_stride = sizeof(VkDrawIndexedIndirectCommand);
+            vkCmdDrawIndexedIndirect(m_pFrame.CommandBuffer(), m_pResourceManagerRef->m_pIndirectBuffer.buffer, indirect_offset, batch.count, draw_stride);
+        }
+
+        vmaUnmapMemory(m_pResourceManagerRef->m_pAllocator, m_pResourceManagerRef->m_pIndirectBuffer.allocation);
+
+        // throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
     }
 
     int32_t VulkanRenderer::pPrepareSyncObjects()
@@ -270,7 +358,7 @@ namespace engine
         m_pResourceManagerRef->clean();
     }
 
-    void VulkanRenderer::UpdateRenderPassUniforms(Ref<RenderPass> renderPassRef, uint32_t index, const void *data)
+    void VulkanRenderer::UpdateRenderPassUniforms(Ref<RenderPass> renderPassRef, BindingIndex index, const void *data)
     {
         auto renderPass = m_pResourceManagerRef->renderPassPool.get(renderPassRef);
         auto front = renderPass->uniformBuffer.begin();

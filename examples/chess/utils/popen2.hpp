@@ -41,15 +41,17 @@ static int popen2(const char *cmdline, struct popen2_t *childinfo)
     p = fork();
     if (p < 0)
         return p; /* Fork failed */
+
     if (p == 0)
     { /* child */
+
         close(pipe_stdin[1]);
         dup2(pipe_stdin[0], 0);
         close(pipe_stdout[0]);
         dup2(pipe_stdout[1], 1);
         execl(cmdline, NULL);
         perror("execl");
-        exit(99);
+        exit(0);
     }
     childinfo->child_pid = p;
     childinfo->to_child = pipe_stdin[1];

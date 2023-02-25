@@ -2,7 +2,6 @@
 
 #include "types.hpp"
 #include "object_pool.hpp"
-#include "draw_command.hpp"
 #include "core/framework/window.hpp"
 #include "core/engine/renderer/drawables/vertex.hpp"
 
@@ -41,7 +40,7 @@ namespace engine
         glm::mat4 modelMatrix;
         glm::vec3 position;
         glm::vec3 scale;
-        glm::quat rotation;
+        glm::quat rotation = glm::quat(1.0, 0.0, 0.0, 0.0);
         uint32_t layout_index = 0;
     };
 
@@ -79,7 +78,7 @@ namespace engine
 
         virtual ObjectDataId RegisterMesh(const std::vector<Vertex> &, std::vector<IndexType> &indices, bool) = 0;
 
-        virtual TexturesDataId RegisterTexture(unsigned char *, TextureInfo) = 0;
+        virtual TexturesDataId RegisterTexture(TextureCreationInfo) = 0;
 
         virtual Material CreateMaterial(Ref<Material>) = 0;
 
@@ -87,13 +86,13 @@ namespace engine
 
         virtual void Sync() = 0;
 
-        virtual void Begin(Ref<RenderPass>) = 0;
+        virtual void Begin() = 0;
 
         virtual void End() = 0;
 
-        virtual void Flush(Ref<RenderPass>) = 0;
+        virtual void Flush(Ref<RenderPass>, engine::DrawType) = 0;
 
-        virtual void UpdateRenderPassUniforms(Ref<RenderPass> renderPassRef, uint32_t index, const void *data) = 0;
+        virtual void UpdateRenderPassUniforms(Ref<RenderPass> renderPassRef, BindingIndex index, const void *data) = 0;
 
         virtual void Cleanup() = 0;
 

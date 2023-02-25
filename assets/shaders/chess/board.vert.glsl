@@ -14,13 +14,13 @@ layout (location = 1) out vec2 texCoords;
 layout (location = 2) out vec3 normal;
 layout (location = 3) out vec4 color;
 
+
 layout(binding = 0) uniform UniformBufferObject {
     float iTime;
     vec2 iResolution;
-    vec3 fgfg;
     mat4 view;
     mat4 proj;
-    mat4 matttt;
+    vec4 lastMove;
 } ubo;
 
 layout( push_constant ) uniform constants

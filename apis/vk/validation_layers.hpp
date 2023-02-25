@@ -12,7 +12,7 @@ namespace vk
     static const std::vector<const char *> validationLayers = {
         "VK_LAYER_KHRONOS_validation"};
 
-#if 1
+#if 0
     const bool enableValidationLayers = false;
 #else
     constexpr bool enableValidationLayers = true;
@@ -20,10 +20,10 @@ namespace vk
 
     static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData, void *pUserData)
     {
-        if(messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT)
-            IO::Log("validation layer: ",  pCallbackData->pMessage);
+        if (messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT)
+            IO::Log("validation layer: ", pCallbackData->pMessage);
         else if (messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT)
-            IO::Error("validation layer: ",  pCallbackData->pMessage);
+            IO::Error("validation layer: ", pCallbackData->pMessage);
 
         return VK_FALSE;
     }
@@ -88,7 +88,7 @@ namespace vk
         createInfo.pfnUserCallback = debugCallback;
     }
 
-    static void setupDebugMessenger(const VkInstance& instance)
+    static void setupDebugMessenger(const VkInstance &instance)
     {
         if (!enableValidationLayers)
             return;

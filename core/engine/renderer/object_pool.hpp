@@ -9,11 +9,20 @@ namespace engine
     template <typename T>
     struct Ref
     {
+        static bool isSame(Ref<T> a, Ref<T> b)
+        {
+            return a.m_pIndex == b.m_pIndex && a.m_pGeneration == b.m_pGeneration;
+        }
+
         Ref() = default;
 
-        static Ref<T> makeEmpty() {
+        static Ref<T> makeEmpty()
+        {
             return Ref(0, 0);
         }
+
+        uint32_t Index() { return m_pIndex; }
+
     private:
         Ref(uint32_t i, uint32_t b) : m_pIndex(i), m_pGeneration(b) {}
 
@@ -135,8 +144,9 @@ namespace engine
             return m_pInternalData.begin();
         }
 
-        auto end() {
-            return m_pInternalData.end(); 
+        auto end()
+        {
+            return m_pInternalData.end();
         }
 
     private:

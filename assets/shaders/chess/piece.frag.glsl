@@ -9,13 +9,13 @@ layout (location = 3) in vec4 color;
 layout (location = 4) flat in int piece;
 
 
+
 layout(binding = 0) uniform UniformBufferObject {
     float iTime;
     vec2 iResolution;
-    vec3 fgfg;
     mat4 view;
     mat4 proj;
-    mat4 matttt;
+    vec4 lastMove;
 } ubo;
 
 layout(binding = 1) uniform sampler2D texSampler;

@@ -31,10 +31,14 @@ namespace vk
     static void createDescriptorSetLayout(const VulkanData &vkData, VkDescriptorSetLayout &descriptorSetLayout, std::vector<engine::UniformBindingInfo> layoutBindings)
     {
         std::vector<VkDescriptorSetLayoutBinding> bindings;
-        for(auto& binding: layoutBindings) {
-            if(binding.type == engine::UNIFORM_BUFFER) {
+        for (auto &binding : layoutBindings)
+        {
+            if (binding.type == engine::UniformBindingType::UNIFORM_BUFFER)
+            {
                 bindings.push_back(createUboBinding(binding.binding));
-            } else if(binding.type == engine::TEXTURE_IMAGE_COMBINED_SAMPLER) {
+            }
+            else if (binding.type == engine::UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER)
+            {
                 bindings.push_back(createTextureBinding(binding.binding));
             }
         }

@@ -10,16 +10,19 @@
 #include "examples/chess/game/board.hpp"
 #include <core/framework/audio/WAVFile.h>
 
-namespace ChessApp {
-    class ChessApp : public Epsilon::Epsilon {
+namespace ChessApp
+{
+    class ChessApp : public Epsilon::Epsilon
+    {
 
-        struct PiecePushConstant {
+        struct PiecePushConstant
+        {
             alignas(16) glm::mat4 model;
             alignas(16) uint32_t piece;
         };
 
-
-        struct Model {
+        struct Model
+        {
             Model() {}
 
             engine::Ref<engine::Mesh> mesh;
@@ -30,6 +33,14 @@ namespace ChessApp {
             PiecePushConstant pushConstant;
         };
 
+        struct ChessShaderData
+        {
+            alignas(4) float iTime = 0.0f;
+            alignas(8) glm::vec2 iResolution{};
+            alignas(16) glm::mat4 view{};
+            alignas(16) glm::mat4 proj{};
+            alignas(8) glm::vec4 lastMove{};
+        };
 
         engine::Quad m_pQuad = {};
 
@@ -47,7 +58,8 @@ namespace ChessApp {
 
         Board m_pBoard;
 
-        struct AudioObject {
+        struct AudioObject
+        {
             framework::WAVfile audioFile;
             uint32_t source;
             uint32_t buffer;
@@ -58,12 +70,17 @@ namespace ChessApp {
         AudioObject m_pTakeAudioObject;
 
     public:
-        explicit ChessApp(const std::string &appName) : Epsilon::Epsilon(appName) {
+        explicit ChessApp(const std::string &appName) : Epsilon::Epsilon(appName)
+        {
 
-            Epsilon::getSingleton().onCreate = [this] { onCreate(); };
-            Epsilon::getSingleton().onReady = [this] { onReady(); };
-            Epsilon::getSingleton().onRender = [this] { onRender(); };
-            Epsilon::getSingleton().onExit = [this] { onExit(); };
+            Epsilon::getSingleton().onCreate = [this]
+            { onCreate(); };
+            Epsilon::getSingleton().onReady = [this]
+            { onReady(); };
+            Epsilon::getSingleton().onRender = [this]
+            { onRender(); };
+            Epsilon::getSingleton().onExit = [this]
+            { onExit(); };
         }
 
         void onCreate();
@@ -72,7 +89,8 @@ namespace ChessApp {
 
         void onRender();
 
-        void onExit() {
+        void onExit()
+        {
             al::deleteSource(m_pMoveAudioObject.source);
             al::deleteBuffer(m_pMoveAudioObject.buffer);
 
@@ -81,7 +99,8 @@ namespace ChessApp {
             m_pUCI.Move("quit");
 
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            if(m_pEngineThread.joinable()) {
+            if (m_pEngineThread.joinable())
+            {
                 m_pEngineThread.join();
             }
 
@@ -101,6 +120,7 @@ namespace ChessApp {
         glm::mat4 transformBoard(glm::vec3 t, glm::vec3 s);
 
         const glm::mat4 transformPiece(PieceInfo position);
+        const glm::mat4 updatePiecePosition(PieceInfo position);
 
         glm::vec2 bottom_left_file_pos();
 
