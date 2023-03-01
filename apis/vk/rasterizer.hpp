@@ -31,6 +31,7 @@ namespace vk
         renderPipeline.multisampling.pSampleMask = nullptr;            // Optional
         renderPipeline.multisampling.alphaToCoverageEnable = VK_FALSE; // Optional
         renderPipeline.multisampling.alphaToOneEnable = VK_FALSE;      // Optional
+<<<<<<< HEAD:apis/vk/rasterizer.hpp
         renderPipeline.colorBlendAttachments.resize(renderPipeline.numAttachments);
         for (int i = 0; i < renderPipeline.numAttachments; i++)
         {
@@ -43,6 +44,17 @@ namespace vk
             renderPipeline.colorBlendAttachments[i].dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
             renderPipeline.colorBlendAttachments[i].alphaBlendOp = VK_BLEND_OP_ADD;
         }
+=======
+
+        renderPipeline.colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+        renderPipeline.colorBlendAttachment.blendEnable = VK_FALSE;
+        renderPipeline.colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+        renderPipeline.colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+        renderPipeline.colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
+        renderPipeline.colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+        renderPipeline.colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
+        renderPipeline.colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
+>>>>>>> master:vk/rasterizer.hpp
 
         renderPipeline.colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
         renderPipeline.colorBlending.logicOpEnable = VK_FALSE;
