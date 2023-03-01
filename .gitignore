@@ -4,12 +4,31 @@
 *.dll
 *.spv
 *.so
+*.bsp
+*.zip
+*.bin
+*.properties
+*.probe
+*.lock
 
+Epsilon
 
+/.idea
 /thirdparty
 /.vscode
 /.vs
 /build
 /out
+/CMakeFiles
+/assets/models/hl2
+/assets/models/portal
+/modules/dotnet/lib
+/docs
+/modules/mono/test
+cmake-build-debug-coverage/
+cmake-build-release/
+
 CMakeSettings.json
 assets/shaders/fragment.spv
+modules/dotnet/lib/EpsilonNET.csproj
+modules/dotnet/lib/Program.cs
