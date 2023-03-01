@@ -5,7 +5,7 @@
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
-#define NOMINMAX 
+#define NOMINMAX
 #undef min
 #undef max
 #include <windows.h>
@@ -32,9 +32,20 @@ extern "C"
 
 #include "Example.hpp"
 
+#ifdef _WIN32
+int CALLBACK WinMain(
+    HINSTANCE hInstance,
+    HINSTANCE hPrevInstance,
+    LPSTR lpCmdLine,
+    int nCmdShow)
+#else
 int main(int argc, char **argv)
+#endif
 {
+
+#ifndef _WIN32
     framework::env::setArgs(argc, argv);
+#endif
 
     ExampleApp::ExampleApp app("Vulkan Engine");
 
@@ -49,4 +60,3 @@ int main(int argc, char **argv)
     }
 
     return EXIT_SUCCESS;
-}
