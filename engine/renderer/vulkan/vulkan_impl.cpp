@@ -2,6 +2,13 @@
 
 #include <vk_mem_alloc.h>
 
+#ifdef WIN32
+#if !defined(__PRETTY_FUNCTION__) && !defined(__GNUC__)
+#define __PRETTY_FUNCTION__ __FUNCSIG__
+#endif
+
+#endif
+
 /**
  * @brief Implementation of the Vulkan renderer private methods
  *
