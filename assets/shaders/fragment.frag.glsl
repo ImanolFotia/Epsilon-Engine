@@ -158,7 +158,7 @@ void FindBlocker(out float avgBlockerDepth,
 float PCF_Filter(vec2 uv, float zReceiver, float filterRadiusUV)
 {
     float sum = 0.0;
-    float theta = rand(vec4(uv, gl_FragCoord.xy));
+    float theta = rand(vec4(uv, texCoords.xy));
     mat2 rotation = mat2(vec2(cos(theta), sin(theta)), vec2(-sin(theta), cos(theta)));
     for (int i = 0; i < PCF_NUM_SAMPLES; ++i)
     {

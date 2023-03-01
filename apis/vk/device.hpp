@@ -72,8 +72,8 @@ namespace vk
         createInfo.enabledExtensionCount = static_cast<uint32_t>(vk_data.deviceExtensions.size());
         createInfo.ppEnabledExtensionNames = vk_data.deviceExtensions.data();
         createInfo.pNext = &physical_features2;
-        createInfo.pEnabledFeatures = &deviceFeatures;
-        //  createInfo.enabledExtensionCount = 0;
+        // createInfo.pEnabledFeatures = &deviceFeatures;
+        //   createInfo.enabledExtensionCount = 0;
 
         if (enableValidationLayers)
         {
