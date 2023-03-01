@@ -9,7 +9,7 @@
 namespace vk
 {
 
-    static void setupRasterizer(VulkanRenderPipeline& renderPipeline)
+    static void setupRasterizer(VulkanRenderPipeline &renderPipeline)
     {
 
         renderPipeline.rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
@@ -32,7 +32,8 @@ namespace vk
         renderPipeline.multisampling.alphaToCoverageEnable = VK_FALSE; // Optional
         renderPipeline.multisampling.alphaToOneEnable = VK_FALSE;      // Optional
         renderPipeline.colorBlendAttachments.resize(renderPipeline.numAttachments);
-        for(int i = 0; i < renderPipeline.numAttachments;i++) {
+        for (int i = 0; i < renderPipeline.numAttachments; i++)
+        {
             renderPipeline.colorBlendAttachments[i].colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
             renderPipeline.colorBlendAttachments[i].blendEnable = VK_FALSE;
             renderPipeline.colorBlendAttachments[i].srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;

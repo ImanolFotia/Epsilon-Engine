@@ -45,6 +45,7 @@ namespace vk
         VkPhysicalDeviceFeatures deviceFeatures{};
         deviceFeatures.samplerAnisotropy = VK_TRUE;
         deviceFeatures.multiDrawIndirect = VK_TRUE;
+
         VkPhysicalDeviceDescriptorIndexingFeatures indexing_features{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT, nullptr};
         VkPhysicalDeviceFeatures2 device_features{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2, &indexing_features};
 
@@ -71,7 +72,7 @@ namespace vk
         createInfo.enabledExtensionCount = static_cast<uint32_t>(vk_data.deviceExtensions.size());
         createInfo.ppEnabledExtensionNames = vk_data.deviceExtensions.data();
         createInfo.pNext = &physical_features2;
-        // createInfo.pEnabledFeatures = &deviceFeatures;
+        createInfo.pEnabledFeatures = &deviceFeatures;
         //  createInfo.enabledExtensionCount = 0;
 
         if (enableValidationLayers)

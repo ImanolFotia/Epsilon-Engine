@@ -75,31 +75,12 @@ namespace vk
 
         renderPass.renderPassData.subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
         renderPass.renderPassData.subpass.colorAttachmentCount = renderPass.renderPassData.colorAttachments.size();
+
+        renderPass.numAttachments = renderPass.renderPassData.subpass.colorAttachmentCount;
         renderPass.renderPassData.subpass.pColorAttachments = renderPass.renderPassData.colorAttachmentRefs.data();
 
         if (containsDepthAttachment)
             renderPass.renderPassData.subpass.pDepthStencilAttachment = &renderPass.renderPassData.depthAttachmentRef;
-
-        /*
-                renderPass.renderPassData.dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-                renderPass.renderPassData.dependency.dstSubpass = 0;
-                renderPass.renderPassData.dependency.srcAccessMask = 0;
-
-                renderPass.renderPassData.dependency.srcAccessMask = 0;
-
-                if (containsDepthAttachment)
-                {
-                    renderPass.renderPassData.dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-                    renderPass.renderPassData.dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-                    renderPass.renderPassData.dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-                }
-                else
-                {
-                    renderPass.renderPassData.dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-                    renderPass.renderPassData.dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-                    renderPass.renderPassData.dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-                }
-        */
 
         std::array<VkSubpassDependency, 2> dependencies;
 
@@ -125,7 +106,7 @@ namespace vk
 
         VkRenderPassCreateInfo renderPassCreateInfo{};
         renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-        renderPassCreateInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
+        renderPassCreateInfo.attachmentCount = attachments.size();
         renderPassCreateInfo.pAttachments = attachments.data();
         renderPassCreateInfo.subpassCount = 1;
         renderPassCreateInfo.pSubpasses = &renderPass.renderPassData.subpass;

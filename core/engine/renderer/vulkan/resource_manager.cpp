@@ -175,7 +175,6 @@ namespace engine
         for (auto i = 0; i < m_pVkDataPtr->defaultRenderPass.renderPipelines.size(); i++)
             vk::createGraphicsPipeline(*m_pVkDataPtr,
                                        m_pVkDataPtr->defaultRenderPass,
-                                       m_pVkDataPtr->defaultRenderPass.renderPipelines[i],
                                        m_pDefaultRenderPassInfo);
 
         vk::createFramebuffers(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass,
@@ -188,7 +187,7 @@ namespace engine
             vk::createRenderPass(*m_pVkDataPtr, pass, m_pRenderPassInfo[pass.id], false);
 
             for (auto i = 0; i < pass.renderPipelines.size(); i++)
-                vk::createGraphicsPipeline(*m_pVkDataPtr, pass, pass.renderPipelines[i], m_pRenderPassInfo[pass.id]);
+                vk::createGraphicsPipeline(*m_pVkDataPtr, pass, m_pRenderPassInfo[pass.id]);
 
             vk::createFramebuffers(*m_pVkDataPtr, pass, pass.renderPassChain);
         }
@@ -200,16 +199,17 @@ namespace engine
         m_pDefaultRenderPassInfo = renderPassInfo;
         vk::createRenderPass(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, renderPassInfo, true);
 
-        for (int i = 0; i < renderPassInfo.numLayouts; i++)
+        // for (int i = 0; i < renderPassInfo.numLayouts; i++)
         {
 
-            m_pVkDataPtr->defaultRenderPass.renderPipelines.emplace_back();
+            m_pVkDataPtr->defaultRenderPass.renderPipelines.resize(renderPassInfo.numLayouts);
+            // m_pVkDataPtr->defaultRenderPass.renderPipelines.emplace_back();
             vk::createDescriptorSetLayout(*m_pVkDataPtr,
                                           m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayout, renderPassInfo.bindingInfo);
 
+            m_pVkDataPtr->defaultRenderPass.numAttachments = renderPassInfo.numAttachments;
             vk::createGraphicsPipeline(*m_pVkDataPtr,
                                        m_pVkDataPtr->defaultRenderPass,
-                                       m_pVkDataPtr->defaultRenderPass.renderPipelines.back(),
                                        renderPassInfo);
         }
 
@@ -250,6 +250,8 @@ namespace engine
 
         vk::createRenderPass(*m_pVkDataPtr, renderPass, renderPassInfo, false);
 
+        renderPass.clearValues.resize(renderPassInfo.attachments.size());
+
         for (size_t i = 0; i < renderPassInfo.attachments.size(); i++)
         {
             auto &attachment = renderPassInfo.attachments[i];
@@ -283,10 +285,12 @@ namespace engine
 
             if (attachment.isDepthAttachment)
             {
+                renderPass.clearValues[i].depthStencil = renderPass.depthStencilClearColor;
                 renderPass.renderPassChain.DepthTexture = texture;
             }
             else
             {
+                renderPass.clearValues[i].color = renderPass.clearColor;
                 renderPass.renderPassChain.ImageViews.push_back(texture.imageView);
                 renderPass.renderPassChain.Textures.push_back(texture);
             }
@@ -295,19 +299,11 @@ namespace engine
         renderPass.renderPassChain.Extent.width = renderPassInfo.dimensions.width;
         renderPass.renderPassChain.Extent.height = renderPassInfo.dimensions.height;
 
-        for (int i = 0; i < renderPassInfo.numLayouts; i++)
-        {
+        renderPass.renderPipelines.resize(renderPassInfo.numLayouts); //.emplace_back();
 
-            renderPass.renderPipelines.emplace_back();
-            vk::createDescriptorSetLayout(*m_pVkDataPtr, renderPass.renderPipelines.back().descriptorSetLayout, renderPassInfo.bindingInfo);
-
-            renderPass.renderPipelines.back().numAttachments = renderPass.renderPassChain.ImageViews.size();
-
-            vk::createGraphicsPipeline(*m_pVkDataPtr,
-                                       renderPass,
-                                       renderPass.renderPipelines.back(),
-                                       renderPassInfo);
-        }
+        vk::createGraphicsPipeline(*m_pVkDataPtr,
+                                   renderPass,
+                                   renderPassInfo);
 
         vk::createFramebuffers(*m_pVkDataPtr, renderPass, renderPass.renderPassChain);
 

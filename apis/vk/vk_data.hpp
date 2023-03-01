@@ -41,6 +41,7 @@ namespace vk
         std::unordered_map<uint32_t, uint32_t> subBufferIndex;
         VkDescriptorBufferInfo descriptorInfo;
         VmaAllocation allocation;
+        std::string name;
     };
 
     struct VulkanTextureInfo
@@ -107,6 +108,7 @@ namespace vk
         VulkanTexture texture;
         VkDescriptorType descriptorBinding;
         uint32_t bindingPoint;
+        std::string name;
     };
 
     struct VulkanMaterial
@@ -119,13 +121,14 @@ namespace vk
         VkDescriptorBufferInfo bufferInfo[MAX_FRAMES_IN_FLIGHT];
         size_t bufferOffset = 0;
         size_t bufferSize = 0;
+        std::string name;
     };
 
     struct VulkanRenderPipeline
     {
         VkDescriptorSetLayout descriptorSetLayout{};
         std::vector<VkPipelineLayout> pipelineLayout{};
-        std::vector<VkPipeline> graphicsPipeline;
+        VkPipeline graphicsPipeline;
         VkPipelineViewportStateCreateInfo viewportState{};
         VkRect2D scissor{};
         VkViewport viewport{};
@@ -214,6 +217,15 @@ namespace vk
         uint32_t id;
 
         std::list<VulkanUniformBuffer> uniformBuffer;
+        uint32_t numAttachments = 1;
+        std::string name;
+    };
+
+    struct VulkanTechnique
+    {
+        std::vector<VulkanRenderPass> passes;
+        std::vector<VulkanBuffer> buffers;
+        std::vector<VulkanBuffer> textures;
     };
 
     struct VulkanSyncObject

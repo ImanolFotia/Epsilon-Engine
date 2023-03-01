@@ -69,6 +69,7 @@ namespace engine
     {
         std::vector<ShaderStageInfo> stages;
         ShaderModuleStage usedStages;
+        std::string name;
     };
 
     struct ShaderFactory
@@ -171,7 +172,7 @@ namespace engine
     {
         BACK = 0,
         FRONT,
-        NONE
+        NONEShaderStageInfo
     };
 
     enum BindingIndex
@@ -236,6 +237,7 @@ namespace engine
     struct Material
     {
         size_t id;
+        std::string name;
     };
 
     struct IndirectPack
@@ -266,6 +268,7 @@ namespace engine
         bool isSampler = false;
         bool isDepthAttachment = false;
         bool isSwapChainAttachment = false;
+        std::string name;
     };
 
     struct PushConstantData
@@ -362,6 +365,7 @@ namespace engine
         std::vector<VertexDescriptorInfo> vertexLayout;
         CullMode cullMode;
         WindingMode windingMode;
+        std::string name;
     };
 
     struct ImageDimensions
@@ -384,6 +388,7 @@ namespace engine
         PushConstantData pushConstant;
         std::vector<UniformBindingInfo> bindingInfo;
         ImageDimensions dimensions;
+        std::string name;
     };
 
     struct RenderPassFactory
@@ -424,7 +429,7 @@ namespace engine
         RenderPassFactory attachments(std::vector<RenderPassAttachment> a)
         {
             info.attachments = a;
-            info.numAttachments += a.size();
+            info.numAttachments = info.attachments.size() - 1;
             return *this;
         }
 

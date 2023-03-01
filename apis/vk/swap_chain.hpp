@@ -11,7 +11,6 @@
 #include "GLFW/glfw3.h"
 #endif
 
-
 #include "surface.hpp"
 #include "render_pass.hpp"
 #include "pipeline.hpp"
@@ -68,7 +67,7 @@ namespace vk
             VkFormatProperties props;
             vkGetPhysicalDeviceFormatProperties(vk_data.physicalDevice, availableFormat.format, &props);
             VkFormatFeatureFlags features = VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
-            //if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
+            // if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
             if ((props.optimalTilingFeatures & features) == features)
             {
                 return availableFormat;
@@ -165,7 +164,7 @@ namespace vk
         {
             throw std::runtime_error("failed to create swap chain!");
         }
-        //vkGetSwapchainImagesKHR(vk_data.logicalDevice, vk_data.swapChain, &imageCount, nullptr);
+        // vkGetSwapchainImagesKHR(vk_data.logicalDevice, vk_data.swapChain, &imageCount, nullptr);
         vk_data.defaultRenderPass.renderPassChain.Images.clear();
         vk_data.defaultRenderPass.renderPassChain.Images.resize(imageCount);
         vkGetSwapchainImagesKHR(vk_data.logicalDevice, vk_data.swapChain, &imageCount, vk_data.defaultRenderPass.renderPassChain.Images.data());
@@ -188,7 +187,7 @@ namespace vk
         vk_data.defaultRenderPass.renderPassChain.DepthTexture.format = findDepthFormat(vk_data);
         vk_data.defaultRenderPass.renderPassChain.DepthTextureBuffer.deviceMemory = allocateTextureMemory(vk_data, vk_data.defaultRenderPass.renderPassChain.DepthTexture, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
         createImageView(vk_data, vk_data.defaultRenderPass.renderPassChain.DepthTexture, VK_IMAGE_ASPECT_DEPTH_BIT);
-        
+
         for (size_t i = 0; i < vk_data.defaultRenderPass.renderPassChain.Images.size(); i++)
         {
 
@@ -211,14 +210,11 @@ namespace vk
 
         for (auto &renderPipeline : renderPass.renderPipelines)
         {
-            for(auto& pipeline: renderPipeline.graphicsPipeline)
-                vkDestroyPipeline(vk_data.logicalDevice, pipeline, nullptr);
+            vkDestroyPipeline(vk_data.logicalDevice, renderPipeline.graphicsPipeline, nullptr);
 
-            for(auto& layout: renderPipeline.pipelineLayout)
+            for (auto &layout : renderPipeline.pipelineLayout)
                 vkDestroyPipelineLayout(vk_data.logicalDevice, layout, nullptr);
         }
-
-
 
         vkDestroyRenderPass(vk_data.logicalDevice, renderPass.renderPass, nullptr);
 

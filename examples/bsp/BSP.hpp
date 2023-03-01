@@ -91,7 +91,7 @@ namespace BSP
 
             // gpuBuffer = Epsilon::getContext().ResourceManager()->createGPUBuffer(sizeof(PushConstant), engine::BufferStorageType::STORAGE_BUFFER);
 
-            const char *filename = "./assets/models/hl2/d2_prison_02.bsp";
+            const char *filename = "./assets/models/hl2/background01.bsp";
 
             SourceBSP bspMap(filename);
 

@@ -682,13 +682,15 @@ namespace ChessApp
             .shaderInfo = boardShaderInfo,
             .vertexLayout = vertexInfo,
             .cullMode = CullMode::BACK,
-            .windingMode = WindingMode::COUNTER_CLOCK_WISE};
+            .windingMode = WindingMode::COUNTER_CLOCK_WISE,
+            .name = "BoardLayout"};
 
         PipelineLayout pieceLayout = {
             .shaderInfo = pieceShaderInfo,
             .vertexLayout = vertexInfo,
             .cullMode = CullMode::BACK,
-            .windingMode = WindingMode::COUNTER_CLOCK_WISE};
+            .windingMode = WindingMode::COUNTER_CLOCK_WISE,
+            .name = "PieceLayout"};
 
         // Configure the default render pass object
         RenderPassInfo renderPassInfo =

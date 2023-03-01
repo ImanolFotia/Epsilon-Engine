@@ -208,7 +208,7 @@ namespace engine
         {
             if (prev_layout != command.layoutIndex)
             {
-                vk::bindPipeline(renderPass->renderPipelines[command.layoutIndex].graphicsPipeline[command.layoutIndex],
+                vk::bindPipeline(renderPass->renderPipelines[command.layoutIndex].graphicsPipeline,
                                  m_pFrame.CommandBuffer());
                 prev_layout = command.layoutIndex;
             }
@@ -290,7 +290,7 @@ namespace engine
             auto vertexBuffer = m_pResourceManagerRef->vertexBufferPool.get(batch.meshResource.vertexBuffer);
             auto indexBuffer = m_pResourceManagerRef->indexBufferPool.get(batch.meshResource.indexBuffer);
 
-            vk::bindPipeline(renderPass->renderPipelines[batch.layoutIndex].graphicsPipeline[batch.layoutIndex],
+            vk::bindPipeline(renderPass->renderPipelines[batch.layoutIndex].graphicsPipeline,
                              m_pFrame.CommandBuffer());
 
             vk::bindVertexBuffer(m_pVkData, m_pFrame.CommandBuffer(), vertexBuffer->buffer);
@@ -390,7 +390,6 @@ namespace engine
 
         for (auto i = 0; i < m_pVkData.defaultRenderPass.renderPipelines.size(); i++)
             vk::createGraphicsPipeline(m_pVkData, m_pVkData.defaultRenderPass,
-                                       m_pVkData.defaultRenderPass.renderPipelines[i],
                                        m_pResourceManagerRef->m_pDefaultRenderPassInfo);
 
         vk::createFramebuffers(m_pVkData, m_pVkData.defaultRenderPass, m_pVkData.defaultRenderPass.renderPassChain);
@@ -403,7 +402,7 @@ namespace engine
             vk::createRenderPass(m_pVkData, pass, m_pResourceManagerRef->m_pRenderPassInfo[pass.id], false);
 
             for (auto i = 0; i < pass.renderPipelines.size(); i++)
-                vk::createGraphicsPipeline(m_pVkData, pass, pass.renderPipelines[i],
+                vk::createGraphicsPipeline(m_pVkData, pass,
                                            m_pResourceManagerRef->m_pRenderPassInfo[pass.id]);
 
             vk::createFramebuffers(m_pVkData, pass, pass.renderPassChain);
