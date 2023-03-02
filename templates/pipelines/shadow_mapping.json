@@ -1,0 +1,64 @@
+{
+    "name": "ShadowMappingPipeline",
+    "subpasses": [
+        {
+            "name": "depthPass",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "shadow",
+                    "type": "attachment",
+                    "format": "COLOR_R_32F",
+                    "wrapMode": "CLAMP_TO_BORDER",
+                    "filtering": "LINEAR",
+                    "compareFunc": "LESS_OR_EQUAL",
+                    "depthCompare": true,
+                    "isSampler": true,
+                    "isDepthAttachment ": false,
+                    "isSwapChainAttachment": false
+                },
+                {
+                    "name": "depth",
+                    "type": "attachment",
+                    "format": "COLOR_R_32F",
+                    "wrapMode": "CLAMP_TO_BORDER",
+                    "filtering": "POINT",
+                    "compareFunc": "ALWAYS",
+                    "depthCompare": false,
+                    "isSampler": true,
+                    "isDepthAttachment": false,
+                    "isSwapChainAttachment": false
+                },
+                {
+                    "format": "DEPTH_F32_STENCIL_8",
+                    "isDepthAttachment": true
+                }
+            ]
+        },
+        {
+            "name": "DefaultRenderPass",
+            "hasDepthattachment": true,
+            "inputs": [
+                {
+                    "name": "shadow",
+                    "type": "sampler"
+                },
+                {
+                    "name": "depth",
+                    "type": "sampler"
+                }
+            ],
+            "outputs": [
+                {
+                    "format": "COLOR_RGBA",
+                    "isDepthAttachment": false,
+                    "isSwapChainAttachment": true
+                },
+                {
+                    "format": "DEPTH_F32_STENCIL_8",
+                    "isDepthAttachment": true
+                }
+            ]
+        }
+    ]
+}

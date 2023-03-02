@@ -1,0 +1,21 @@
+{
+    "name": "single_forward_pass",
+    "passes": [
+        {
+            "name": "DefaultRenderPass",
+            "hasDepthattachment": true,
+            "inputs": [],
+            "outputs": [
+                {
+                    "format": "COLOR_RGBA",
+                    "isDepthAttachment": false,
+                    "isSwapChainAttachment": true
+                },
+                {
+                    "format": "DEPTH_F32_STENCIL_8",
+                    "isDepthAttachment": true
+                }
+            ]
+        }
+    ]
+}
