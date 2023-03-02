@@ -14,6 +14,5 @@ namespace Epsilon
         public override void onUpdate(){}
         
         public override void onDestroy(){}
-
     }
 }
