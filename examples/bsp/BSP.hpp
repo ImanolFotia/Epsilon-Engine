@@ -72,21 +72,26 @@ namespace BSP
             using en = engine::UniformBindingType;
 
             engine::MaterialInfo material = {
-                .bindingInfo = {{.size = sizeof(ShaderData), .type = en::UNIFORM_BUFFER, .binding = 0},
-                                /*{.size = sizeof(PushConstant), .type = en::SHADER_STORAGE, .binding = 3}*/}};
+                .name = "DefaultMaterial",
+                .bindingInfo = {{.size = sizeof(ShaderData), .type = en::UNIFORM_BUFFER, .binding = 0}}};
 
-            shadowDummyMaterial = Epsilon::getContext().ResourceManager()->createMaterial(material,
+            engine::MaterialInfo shadowMaterial = {
+                .name = "ShadowMaterial",
+                .bindingInfo = {{.size = sizeof(ShaderData), .type = en::UNIFORM_BUFFER, .binding = 0}}};
+
+            shadowDummyMaterial = Epsilon::getContext().ResourceManager()->createMaterial(shadowMaterial,
                                                                                           m_pShadowRenderPass);
 
             dummyMaterial = Epsilon::getContext().ResourceManager()->createMaterial(
                 material,
                 m_pRenderPass,
-                {{.renderPass = m_pShadowRenderPass, .index = 0, .bindingPoint = 1},
-                 {.renderPass = m_pShadowRenderPass, .index = 1, .bindingPoint = 2}});
+                {{.renderPass = "Shadow", .index = 0, .bindingPoint = 1},
+                 {.renderPass = "Shadow", .index = 1, .bindingPoint = 2}});
 
             m_pMap.pushConstant.model = glm::scale(glm::mat4(1.0f), glm::vec3(0.0125f));
 
             m_pMap.pushConstantRef = Epsilon::getContext().ResourceManager()->createPushConstant(
+                "ModelMatrix",
                 {.size = sizeof(PushConstant), .data = &m_pMap.pushConstant});
 
             // gpuBuffer = Epsilon::getContext().ResourceManager()->createGPUBuffer(sizeof(PushConstant), engine::BufferStorageType::STORAGE_BUFFER);
@@ -151,6 +156,7 @@ namespace BSP
                 calculateNormals(vertices, bspMap.Faces()[i].indices);
 
                 face.mesh = Epsilon::getContext().ResourceManager()->createMesh({
+                    .name = "BSPFace" + std::to_string(i),
                     .vertices = vertices,
                     .indices = bspMap.Faces()[i].indices,
                 });
@@ -334,6 +340,7 @@ namespace BSP
             // Configure the default render pass object
             RenderPassInfo renderPassInfo =
                 RenderPassFactory()
+                    .name("Default")
                     .numDescriptors(6)
                     .size(sizeof(Vertex))
                     .depthAttachment(true)
@@ -355,6 +362,7 @@ namespace BSP
 
             RenderPassInfo shadowRenderPassInfo =
                 RenderPassFactory()
+                    .name("Shadow")
                     .numDescriptors(6)
                     .size(sizeof(Vertex))
                     .depthAttachment(true)

@@ -199,6 +199,7 @@ namespace engine
         TextureFormat format;
         WrapMode wrapMode;
         Filtering filtering;
+        std::string name;
         unsigned char *pixels = nullptr;
     };
 
@@ -228,6 +229,12 @@ namespace engine
         TextureBuilder pixels(unsigned char *p)
         {
             self.pixels = p;
+            return *this;
+        }
+
+        TextureBuilder name(const std::string &n)
+        {
+            self.name = n;
             return *this;
         }
         operator TextureCreationInfo() { return self; }
@@ -329,6 +336,7 @@ namespace engine
         uint32_t binding = 0;
         UniformBindingType type;
         TextureCreationInfo textureInfo;
+        std::string name;
     };
 
     struct UniformBindingFactory
@@ -452,6 +460,12 @@ namespace engine
             return *this;
         }
 
+        RenderPassFactory name(const std::string &n)
+        {
+            info.name = n;
+            return *this;
+        }
+
         operator RenderPassInfo() { return info; }
 
     private:
@@ -461,12 +475,14 @@ namespace engine
     struct MaterialInfo
     {
         std::vector<UniformBindingInfo> bindingInfo;
+        std::string name;
     };
 
     struct MeshInfo
     {
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
+        std::string name;
     };
 
     struct MeshInfoFactory

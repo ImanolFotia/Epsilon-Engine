@@ -586,13 +586,16 @@ namespace ChessApp
         // Create a quad for the chess board
         auto quad_data = m_pQuad.data();
         m_pBoardModel.mesh = Epsilon::getContext().ResourceManager()->createMesh({.vertices = quad_data.Vertices,
-                                                                                  .indices = quad_data.Indices});
+                                                                                  .indices = quad_data.Indices,
+                                                                                  .name = "board"});
 
         engine::Ref<engine::Mesh> pieceMesh = Epsilon::getContext().ResourceManager()->createMesh(
             {.vertices = quad_data.Vertices,
-             .indices = quad_data.Indices});
+             .indices = quad_data.Indices,
+             .name = "piece"});
 
         m_pBoardModel.pushConstantRef = Epsilon::getContext().ResourceManager()->createPushConstant(
+            "board",
             {.size = sizeof(PiecePushConstant), .data = &m_pBoardModel.pushConstant});
 
         unsigned index = 0;
@@ -604,6 +607,7 @@ namespace ChessApp
             Model &ref = m_pPieces[index];
             info.index = index;
             ref.pushConstantRef = Epsilon::getContext().ResourceManager()->createPushConstant(
+                "Piece" + std::to_string(index),
                 {.size = sizeof(PiecePushConstant), .data = &ref.pushConstant});
             ref.mesh = pieceMesh;
             ref.pushConstant.model = transformPiece({info.column, info.row});
@@ -618,6 +622,7 @@ namespace ChessApp
         using en = engine::UniformBindingType;
         {
             engine::MaterialInfo material = {
+                .name = "board",
                 .bindingInfo = {{.size = sizeof(ChessShaderData), .type = en::UNIFORM_BUFFER, .binding = 0}}};
 
             m_pBoardModel.material = Epsilon::getContext().ResourceManager()->createMaterial(material, m_pRenderPass);
@@ -634,9 +639,11 @@ namespace ChessApp
                                                       .width(w)
                                                       .height(h)
                                                       .numChannels(nc)
-                                                      .pixels(pixels);
+                                                      .pixels(pixels)
+                                                      .name("pieces");
 
             engine::MaterialInfo material = {
+                .name = "pieces",
                 .bindingInfo = {{.size = sizeof(ChessShaderData), .type = en::UNIFORM_BUFFER, .binding = 0},
                                 {.size = 0, .type = en::TEXTURE_IMAGE_COMBINED_SAMPLER, .offset = 0, .binding = 1, .textureInfo = texInfo}}};
 
@@ -695,6 +702,7 @@ namespace ChessApp
         // Configure the default render pass object
         RenderPassInfo renderPassInfo =
             RenderPassFactory()
+                .name("DefaultRenderPass")
                 .numDescriptors(6)
                 .size(sizeof(Vertex))
                 .depthAttachment(true)

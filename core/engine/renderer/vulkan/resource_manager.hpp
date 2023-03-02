@@ -35,10 +35,10 @@ namespace engine
         Ref<Material> createMaterial(MaterialInfo, Ref<RenderPass>) override;
         Ref<Material> createMaterial(MaterialInfo, Ref<RenderPass>, std::initializer_list<RenderPassBinding> bindings) override;
         Ref<Mesh> createMesh(MeshInfo) override;
-        Ref<Buffer> createGPUBuffer(uint32_t size, BufferStorageType type) override;
+        Ref<Buffer> createGPUBuffer(const std::string &, uint32_t size, BufferStorageType type) override;
         Ref<RenderPass> createRenderPass(RenderPassInfo) override;
         Ref<RenderPass> createDefaultRenderPass(RenderPassInfo) override;
-        Ref<PushConstant> createPushConstant(PushConstantData) override;
+        Ref<PushConstant> createPushConstant(const std::string &, PushConstantData) override;
 
         void destroyTexture(Ref<Texture>) override;
         void destroyBuffer(Ref<Buffer>) override;

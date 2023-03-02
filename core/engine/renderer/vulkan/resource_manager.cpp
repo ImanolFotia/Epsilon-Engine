@@ -86,7 +86,7 @@ namespace engine
 
         texture.bindingType = vk::MATERIAL_SAMPLER;
 
-        auto ref = texPool.insert(texture);
+        auto ref = texPool.insert(texInfo.name, texture);
         return ref;
     }
 
@@ -107,7 +107,7 @@ namespace engine
 
             for (auto &binding : bindings)
             {
-                auto pass = renderPassPool.get(binding.renderPass);
+                auto pass = renderPassPool.get(std::hash<std::string>{}(binding.renderPass));
 
                 vk::VulkanShaderBinding shaderBinding = {
                     .texture = pass->renderPassChain.Textures.at(binding.index),
@@ -146,7 +146,7 @@ namespace engine
             pRecreateDescriptorSets();
             pCreateDescriptorSets(vkMaterial);
 
-            Ref<Material> materialRef = materialPool.insert(vkMaterial);
+            Ref<Material> materialRef = materialPool.insert(material.name, vkMaterial);
             return materialRef;
         }
         catch (std::exception &e)
@@ -225,7 +225,7 @@ namespace engine
             }
         }
 
-        m_pDefaultRenderPassRef = renderPassPool.insert(m_pVkDataPtr->defaultRenderPass);
+        m_pDefaultRenderPassRef = renderPassPool.insert(renderPassInfo.name, m_pVkDataPtr->defaultRenderPass);
 
         return m_pDefaultRenderPassRef;
     }
@@ -315,7 +315,7 @@ namespace engine
                 renderPass.uniformBuffer.push_back(*uniformBufferPool.get(uniformRef));
             }
         }
-        auto ref = renderPassPool.insert(renderPass);
+        auto ref = renderPassPool.insert(renderPassInfo.name, renderPass);
 
         m_pRenderPassCount++;
         return ref;
@@ -409,7 +409,7 @@ namespace engine
     Ref<UniformBindings> VulkanResourceManager::createUniformData(UniformBindingInfo bindingInfo)
     {
         auto buffer = pCreateUniformBuffer(bindingInfo);
-        return uniformBufferPool.insert(buffer);
+        return uniformBufferPool.insert(bindingInfo.name, buffer);
     }
 
     Ref<Mesh> VulkanResourceManager::createMesh(MeshInfo meshInfo)
@@ -464,7 +464,7 @@ namespace engine
             .indexOffset = indexBuffer->allocatedVertices,
             .numVertices = (uint32_t)vertices->size(),
             .numIndices = (uint32_t)indices->size()};
-        auto ref = meshPool.insert(meshResource);
+        auto ref = meshPool.insert(meshInfo.name, meshResource);
 
         int maxAllocatingSize = sizeof(IndexType) * (indexBuffer->allocatedVertices + indices->size());
 
@@ -483,7 +483,7 @@ namespace engine
         return ref;
     }
 
-    Ref<Buffer> VulkanResourceManager::createGPUBuffer(uint32_t size, BufferStorageType type)
+    Ref<Buffer> VulkanResourceManager::createGPUBuffer(const std::string &name, uint32_t size, BufferStorageType type)
     {
 
         vk::VulkanGPUMappedBuffer buffer;
@@ -500,7 +500,7 @@ namespace engine
             }
         }
 
-        return gpuBufferPool.insert(buffer);
+        return gpuBufferPool.insert(name, buffer);
     }
 
     /**

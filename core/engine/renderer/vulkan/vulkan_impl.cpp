@@ -152,7 +152,7 @@ namespace engine
         vertexBuffer.id = vertexBufferCount;
         vertexBuffer.allocatedVertices = 0;
         vertexBufferCount++;
-        auto ref = vertexBufferPool.insert(vertexBuffer);
+        auto ref = vertexBufferPool.insert(("VertexBuffer_" + std::to_string(vertexBufferCount)), vertexBuffer);
         vertexBufferReferences.push_back(ref);
 
         return ref;
@@ -175,7 +175,7 @@ namespace engine
         indexBuffer.id = indexBufferCount;
         indexBuffer.allocatedVertices = 0;
         indexBufferCount++;
-        auto ref = indexBufferPool.insert(indexBuffer);
+        auto ref = indexBufferPool.insert(("IndexBuffer_" + std::to_string(indexBufferCount)), indexBuffer);
         indexBufferReferences.push_back(ref);
 
         return ref;
@@ -327,9 +327,9 @@ namespace engine
         }
     }
 
-    Ref<PushConstant> VulkanResourceManager::createPushConstant(PushConstantData push_constant)
+    Ref<PushConstant> VulkanResourceManager::createPushConstant(const std::string &name, PushConstantData push_constant)
     {
-        return pushConstantPool.insert(push_constant);
+        return pushConstantPool.insert(name, push_constant);
     }
 
 }

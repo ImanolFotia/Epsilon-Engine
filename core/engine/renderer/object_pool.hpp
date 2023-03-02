@@ -3,6 +3,7 @@
 #include <list>
 #include <vector>
 #include <unordered_map>
+#include <functional>
 
 namespace engine
 {
@@ -18,17 +19,19 @@ namespace engine
 
         static Ref<T> makeEmpty()
         {
-            return Ref(0, 0);
+            return Ref(0, 0, -1);
         }
 
         uint32_t Index() { return m_pIndex; }
+        uint32_t Id() { return m_pID; }
 
     private:
-        Ref(uint32_t i, uint32_t b) : m_pIndex(i), m_pGeneration(b) {}
+        Ref(uint32_t i, uint32_t b, uint32_t id) : m_pIndex(i), m_pGeneration(b), m_pID(id) {}
 
         bool isValid() { return m_pGeneration != 0; }
 
         uint32_t m_pIndex = 0;
+        uint32_t m_pID;
         uint32_t m_pGeneration = 0;
 
         template <typename A, typename B>
@@ -41,10 +44,11 @@ namespace engine
         using InternalDataArray = std::list<R>;
         using FreeRefArray = std::list<Ref<T>>;
         using GenerationArray = std::unordered_map<unsigned int, uint32_t>;
+        using IdArray = std::unordered_map<uint32_t, uint32_t>;
         using IndexArray = std::vector<typename std::list<R>::iterator>;
 
         template <typename... Args>
-        Ref<T> emplace(Args... args)
+        Ref<T> emplace(std::string name, Args... args)
         {
             if (m_pFreeRefs.size() > 0)
             {
@@ -63,13 +67,15 @@ namespace engine
             m_pIndexArray.push_back(std::prev(m_pInternalData.end()));
 
             uint32_t index = m_pIndexArray.size() - 1;
+            uint32_t id = std::hash<std::string>{}(name);
 
-            Ref<T> ref(index, 1);
+            Ref<T> ref(index, 1, id);
             m_pGeneration[index] = 1;
+            m_pIdArray[id] = index;
 
             return ref;
         }
-        Ref<T> insert(R element)
+        Ref<T> insert(std::string name, R element)
         {
             if (m_pFreeRefs.size() > 0)
             {
@@ -85,8 +91,11 @@ namespace engine
             m_pInternalData.push_back(element);
             m_pIndexArray.push_back(std::prev(m_pInternalData.end()));
             uint32_t index = m_pIndexArray.size() - 1;
-            Ref<T> ref(index, 1);
+            uint32_t id = std::hash<std::string>{}(name);
+
+            Ref<T> ref(index, 1, id);
             m_pGeneration[index] = 1;
+            m_pIdArray[id] = index;
 
             return ref;
         }
@@ -98,6 +107,22 @@ namespace engine
                 if (m_pGeneration[ref.m_pIndex] == ref.m_pGeneration)
                 {
                     return &(*m_pIndexArray.at(ref.m_pIndex));
+                }
+            }
+            std::cout << "object is invalid\n";
+
+            return nullptr;
+        }
+
+        [[nodiscard]] R *get(uint32_t id)
+        {
+            if (m_pIdArray.contains(id))
+            {
+                auto index = m_pIdArray.at(id);
+
+                if (m_pIndexArray.size() > index)
+                {
+                    return &(*m_pIndexArray.at(index));
                 }
             }
             std::cout << "object is invalid\n";
@@ -131,6 +156,7 @@ namespace engine
                   // reference twice
                     m_pFreeRefs.insert(m_pFreeRefs.end(), ref);
                     m_pInternalData.erase(m_pIndexArray.at(ref.m_pIndex));
+                    m_pIdArray.erase(ref.Id);
                     ref.m_pGeneration = 0; // invalidate reference
                 }
             }
@@ -154,6 +180,7 @@ namespace engine
         IndexArray m_pIndexArray;
         InternalDataArray m_pInternalData;
         FreeRefArray m_pFreeRefs;
+        IdArray m_pIdArray;
     };
 
 }

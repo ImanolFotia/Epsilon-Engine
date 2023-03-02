@@ -98,6 +98,22 @@ message(${BEACON_BUILD_DIR})
 include_directories(${BEACON_BUILD_DIR})
 
 
+#Download and include nlohmann/json
+ExternalProject_Add(json
+        GIT_REPOSITORY https://www.github.com/nlohmann/json.git
+        INSTALL_COMMAND cmake -E echo "Skipping install step for json."
+        BUILD_COMMAND ""
+        UPDATE_COMMAND ""
+        CONFIGURE_COMMAND ""
+        )
+
+ExternalProject_Get_property(json SOURCE_DIR)
+set(JSON_BUILD_DIR ${SOURCE_DIR})
+message(${JSON_BUILD_DIR})
+
+include_directories(${JSON_BUILD_DIR}/include/nlohmann)
+
+
 ##
 #Download and include Assimp
 set(ASSIMP_WARNINGS_AS_ERRORS 0)
