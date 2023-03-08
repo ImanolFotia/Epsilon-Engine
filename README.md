@@ -12,7 +12,7 @@ Screenshots and more detailed information is available on [my Webpage](http://im
 
 Installers and binaries will be available soon
 
-![](http://imanolfotia.com/media/gallery/img3.jpg)
+![](https://raw.githubusercontent.com/ImanolFotia/Epsilon-Engine/master/media/Epsilon%20LOGO3.png)
 
 ## Table of Contents
 
