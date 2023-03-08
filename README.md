@@ -1,4 +1,7 @@
 # Epsilon Engine
+
+## THIS REPO IS ONLY KEPT FOR HISTORIC PURPOSES
+
 [![LICENSE.md](https://img.shields.io/badge/License-EULA-blue.svg)](LICENSE.md)
 [![Build Status](https://travis-ci.com/ImanolFotia/Epsilon-Engine.svg?token=eqNdpsuxZdxtFxRycvU4&branch=master)](https://travis-ci.com/ImanolFotia/Epsilon-Engine)
 ![](https://img.shields.io/badge/platforms-Windows%20%7C%20Linux-orange)
