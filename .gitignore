@@ -1,45 +1,34 @@
-# Compiled files
-*.o
-*.so
-*.obj
 *.exe
-*.jar
-*.suo
 *.lib
-*.log
-*.pdb
-*.idb
-*.exe.metagen
-*.vcxproj.filters
-*.vcxproj.user
-*.db
-*.db-shm
-*.db-wal
-*.opendb
 *.a
-*.tlog
 *.dll
+*.spv
+*.so
+*.bsp
+*.zip
+*.bin
+*.properties
+*.probe
+*.lock
 
-# Directories
-/bin/Debug
-/bin/Release/materials
-/bin/Release/models
-/bin/Release/maps
-/bin/Release/sound
-/bin/Release/resources
-/bin/Release/ambient
-/bin/Release/*.exe
-/bin/Release/*.dll
-/bin/Release/*.log
-/creator
-/lib
+Epsilon
 
+/.idea
+/thirdparty
+/.vscode
 /.vs
+/build
+/out
+/CMakeFiles
+/assets/models/hl2
+/assets/models/portal
+/modules/dotnet/lib
+/docs
+/modules/mono/test
+cmake-build-debug-coverage/
+cmake-build-release/
 
-/obj
-
-/deppend
-/thirdparty/openal-soft/buildvs
-
-# Specific Files
-Epsilon.code-workspace
+CMakeSettings.json
+assets/shaders/fragment.spv
+modules/dotnet/lib/EpsilonNET.csproj
+modules/dotnet/lib/Program.cs
