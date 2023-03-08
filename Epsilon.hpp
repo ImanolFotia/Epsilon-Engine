@@ -103,6 +103,26 @@ namespace Epsilon
             engine::Context::getSingleton().Renderer()->Sync();
         }
 
+        void setOnCreate(std::function<void(void)> fun)
+        {
+            Epsilon::getSingleton().onCreate = fun;
+        }
+
+        void setOnReady(std::function<void(void)> fun)
+        {
+            Epsilon::getSingleton().onReady = fun;
+        }
+
+        void setOnRender(std::function<void(void)> fun)
+        {
+            Epsilon::getSingleton().onRender = fun;
+        }
+
+        void setOnExit(std::function<void(void)> fun)
+        {
+            Epsilon::getSingleton().onExit = fun;
+        }
+
     private:
         void initWindow(int w, int h)
         {
@@ -160,7 +180,7 @@ namespace Epsilon
         }
 
     protected:
-               std::pair<int, int> getWindowDimensions()
+        std::pair<int, int> getWindowDimensions()
         {
             int w, h;
             return engine::Context::getSingleton().Window().getSize();

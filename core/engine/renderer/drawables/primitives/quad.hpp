@@ -6,10 +6,13 @@
 #define LEARNINGVULKAN_QUAD_HPP
 
 #include "primitive.hpp"
-namespace engine {
-    class Quad : public PrimitiveBase {
+namespace engine
+{
+    class Quad : public Primitive
+    {
     public:
-        Quad() {
+        Quad()
+        {
 
             m_pType = DrawableType::QUAD;
             using vtx = Vertex;
@@ -33,4 +36,4 @@ namespace engine {
     };
 }
 
-#endif //LEARNINGVULKAN_QUAD_HPP
+#endif // LEARNINGVULKAN_QUAD_HPP

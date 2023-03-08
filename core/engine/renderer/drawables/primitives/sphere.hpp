@@ -4,7 +4,7 @@
 
 namespace engine
 {
-    class Sphere : public PrimitiveBase
+    class Sphere : public Primitive
     {
     public:
         Sphere(uint32_t subdivisions) : mNumSubdivisions(subdivisions)
@@ -146,19 +146,19 @@ namespace engine
                 m_pMesh.Vertices[m_pMesh.Indices[i + 1]].bitangent = bitangent1;
                 m_pMesh.Vertices[m_pMesh.Indices[i + 2]].bitangent = bitangent1;
             }
-/*
-            for (unsigned int i = 0; i < Mesh.Vertices.size(); ++i)
-            {
-                Vertex &vert = Mesh.Vertices[i];
-                // re-orthogonalize T with respect to N
-                vert.tangent = glm::normalize(vert.tangent - glm::dot(vert.tangent, vert.normal) * vert.normal);
-                // then retrieve perpendicular vector B with the cross product of T and N
-                vert.bitangent = glm::cross(vert.tangent, vert.normal);
-                if (glm::dot(glm::cross(vert.normal, vert.tangent), vert.bitangent) < 0.0f)
-                {
-                    vert.tangent = vert.tangent * -1.0f;
-                }
-            }*/
+            /*
+                        for (unsigned int i = 0; i < Mesh.Vertices.size(); ++i)
+                        {
+                            Vertex &vert = Mesh.Vertices[i];
+                            // re-orthogonalize T with respect to N
+                            vert.tangent = glm::normalize(vert.tangent - glm::dot(vert.tangent, vert.normal) * vert.normal);
+                            // then retrieve perpendicular vector B with the cross product of T and N
+                            vert.bitangent = glm::cross(vert.tangent, vert.normal);
+                            if (glm::dot(glm::cross(vert.normal, vert.tangent), vert.bitangent) < 0.0f)
+                            {
+                                vert.tangent = vert.tangent * -1.0f;
+                            }
+                        }*/
         }
 
         uint32_t mNumSubdivisions = 4;

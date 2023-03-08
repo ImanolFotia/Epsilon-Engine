@@ -4,7 +4,8 @@
 
 #include "vertex.hpp"
 
-namespace engine {
+namespace engine
+{
 
     struct Mesh
     {

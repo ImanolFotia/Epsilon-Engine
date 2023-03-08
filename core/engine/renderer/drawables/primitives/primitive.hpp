@@ -4,12 +4,12 @@
 
 #include <vector>
 
-#include "core/engine/renderer/drawables/drawable.hpp"
+#include "../drawable.hpp"
 
 namespace engine
 {
 
-    class PrimitiveBase : public Drawable
+    class Primitive : public Drawable
     {
     public:
         void generateTangentSpaceVectors()

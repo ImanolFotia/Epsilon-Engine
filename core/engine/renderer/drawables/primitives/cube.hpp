@@ -5,7 +5,7 @@
 namespace engine
 {
 
-    class Cube : public PrimitiveBase
+    class Cube : public Primitive
     {
         float mUVMultiplier = 1.0f;
     public:

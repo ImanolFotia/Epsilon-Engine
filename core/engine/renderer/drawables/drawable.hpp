@@ -3,7 +3,7 @@
 #include "glm/glm.hpp"
 #include "mesh.hpp"
 
-#include "core/engine/renderer/types.hpp"
+#include "../types.hpp"
 
 namespace engine
 {
@@ -27,9 +27,10 @@ namespace engine
     class Drawable
     {
     public:
-        virtual const Mesh& data() { return m_pMesh; }
+        virtual const Mesh &data() { return m_pMesh; }
 
         DrawableType getType() { return m_pType; }
+
     protected:
         Mesh m_pMesh;
         DrawableType m_pType = UNDEFINED;
