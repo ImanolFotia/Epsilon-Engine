@@ -1,4 +1,6 @@
-#version 450
+#version 460
+#extension GL_EXT_nonuniform_qualifier : enable
+#extension VK_EXT_descriptor_indexing : enable
 
 layout(location = 0) out float outColor;
 layout(location = 1) out float outColor2;
@@ -9,7 +11,7 @@ layout (location = 2) in vec3 normal;
 layout (location = 3) in vec4 color;
 
 
-layout(binding = 0) uniform UniformBufferObject {
+layout(set = 0, binding = 0) uniform UniformBufferObject {
     float iTime;
     vec2 iResolution;
     vec3 lightPosition;
@@ -17,6 +19,8 @@ layout(binding = 0) uniform UniformBufferObject {
     mat4 proj;
     mat4 lightMatrix;
 } ubo;
+
+layout (set = 1, binding = 0) uniform sampler2D textures[];
 
 float NEAR = 0.1;
 float FAR  = 1000.0;

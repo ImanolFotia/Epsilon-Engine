@@ -1,4 +1,6 @@
-#version 450
+#version 460
+#extension GL_EXT_nonuniform_qualifier : enable
+#extension VK_EXT_descriptor_indexing : enable
 
 layout(location = 0) out vec4 outColor;
 
@@ -22,6 +24,8 @@ ubo;
 // layout(binding = 1) uniform sampler2D texSampler;
 layout(binding = 1) uniform sampler2DShadow shadowMap;
 layout(binding = 2) uniform sampler2D depthMap;
+
+layout (set = 1, binding = 0) uniform sampler2D textures[];
 
 vec3 Gamma(in vec3 img)
 {

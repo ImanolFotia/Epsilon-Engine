@@ -1,4 +1,6 @@
-#version 450
+#version 460
+#extension GL_EXT_nonuniform_qualifier : enable
+#extension VK_EXT_descriptor_indexing : enable
 
 layout(location = 0) out vec4 outColor;
 

@@ -1,4 +1,6 @@
-#version 450
+#version 460
+#extension GL_EXT_nonuniform_qualifier : enable
+#extension VK_EXT_descriptor_indexing : enable
 
 layout(location = 0) in vec3 inPosition;
 layout(location = 1) in vec2 inTexCoord;
@@ -20,6 +22,8 @@ layout(binding = 0) uniform UniformBufferObject {
     mat4 proj;
     mat4 lightMatrix;
 } ubo;
+
+layout (set = 1, binding = 0) uniform sampler2D textures[];
 
 layout( push_constant ) uniform constants
 {

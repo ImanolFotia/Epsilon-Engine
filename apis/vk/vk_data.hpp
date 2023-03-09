@@ -126,7 +126,7 @@ namespace vk
 
     struct VulkanRenderPipeline
     {
-        VkDescriptorSetLayout descriptorSetLayout{};
+        std::vector<VkDescriptorSetLayout> descriptorSetLayouts;
         std::vector<VkPipelineLayout> pipelineLayout{};
         VkPipeline graphicsPipeline;
         VkPipelineViewportStateCreateInfo viewportState{};
@@ -256,6 +256,7 @@ namespace vk
         VkSwapchainKHR swapChain;
         // RenderPassChain swapChainData;
         VulkanRenderPass defaultRenderPass;
+        bool bindless_supported = false;
         /*
         std::vector<VkImage> swapChainImages;
         VulkanTexture swapChainDepthTexture;

@@ -334,8 +334,11 @@ namespace engine
         size_t size;
         size_t offset;
         uint32_t binding = 0;
+        uint32_t set = 0;
         UniformBindingType type;
         TextureCreationInfo textureInfo;
+        bool bindless = false;
+        uint32_t descriptorCount = 1;
         std::string name;
     };
 

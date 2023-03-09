@@ -83,10 +83,16 @@ namespace engine
 
         void pCreateUniformBuffers();
         void pCreateDescriptorPool();
-        void pCreateDescriptorSets(vk::VulkanMaterial &);
+        void pCreateGlobalDescriptorPool();
+        void pCreateGlobalDescriptorSets(VkDescriptorSetLayout layout, VkDescriptorPool &pool, std::vector<VkDescriptorSet> &descriptorSets, uint32_t count);
+        void pCreateDescriptorSets(VkDescriptorSetLayout layout, VkDescriptorPool &pool, std::vector<VkDescriptorSet> &descriptorSets, uint32_t count);
         void pRecreateDescriptorSets();
 
         void pUpdateMaterial(vk::VulkanMaterial &);
+
+        const uint32_t MAX_BINDLESS_RESOURCES = 16536;
+        const uint32_t RENDERPASS_LAYOUT = 0;
+        const uint32_t GLOBAL_LAYOUT = 1;
 
         const VkBufferUsageFlags UNIFORM_BUFFER_USAGE = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
         const VkBufferUsageFlags STORAGE_BUFFER_USAGE = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
@@ -130,6 +136,10 @@ namespace engine
 
         std::vector<Ref<Buffer>> indexBufferReferences;
         std::vector<Ref<Buffer>> vertexBufferReferences;
+
+        VkDescriptorPool m_pGlobalDescriptorPool;
+        std::vector<VkDescriptorSet> m_pGlobalDescriptorSets;
+        VkDescriptorSetLayout m_pGlobalDescriptorSetLayout;
 
         VkDescriptorPool m_pDescriptorPool;
         std::vector<VkDescriptorSet> m_pDescriptorSets;

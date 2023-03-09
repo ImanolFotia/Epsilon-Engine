@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(Model VERSION 0.1.0)
+project(Text VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 20)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR} ../../)

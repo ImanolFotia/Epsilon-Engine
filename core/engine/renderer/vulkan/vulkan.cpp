@@ -233,7 +233,13 @@ namespace engine
             vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
                                     renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(), 0, 1,
                                     &material->descriptorSets[m_pCurrentFrame], 0, nullptr);
+            if (m_pVkData.bindless_supported)
+            {
 
+                vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
+                                        renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(), 1, 1,
+                                        m_pResourceManagerRef->m_pGlobalDescriptorSets.data(), 0, nullptr);
+            }
             /** TODO:
              *  Find a way to cleanly implement push constants*/
             vkCmdPushConstants(m_pFrame.CommandBuffer(), renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(),
@@ -299,7 +305,13 @@ namespace engine
             vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
                                     renderPass->renderPipelines[batch.layoutIndex].pipelineLayout.back(), 0, 1,
                                     &material->descriptorSets[m_pCurrentFrame], 0, nullptr);
+            if (m_pVkData.bindless_supported)
+            {
 
+                vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
+                                        renderPass->renderPipelines[batch.layoutIndex].pipelineLayout.back(), 1, 1,
+                                        m_pResourceManagerRef->m_pGlobalDescriptorSets.data(), 0, nullptr);
+            }
             VkDeviceSize indirect_offset = batch.first * sizeof(VkDrawIndexedIndirectCommand);
             uint32_t draw_stride = sizeof(VkDrawIndexedIndirectCommand);
             vkCmdDrawIndexedIndirect(m_pFrame.CommandBuffer(), m_pResourceManagerRef->m_pIndirectBuffer.buffer, indirect_offset, batch.count, draw_stride);

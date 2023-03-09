@@ -1,4 +1,7 @@
-#version 450
+#version 460
+
+#extension GL_EXT_nonuniform_qualifier : enable
+#extension VK_EXT_descriptor_indexing : enable
 
 const vec2 iResolution = vec2(1280.0, 720.0);
 
@@ -28,6 +31,8 @@ layout(binding = 3) readonly buffer MapMatrix
 {
 	mat4 model;
 } ssbo;*/
+
+layout (set = 1, binding = 0) uniform sampler2D textures[];
 
 layout( push_constant ) uniform constants
 {

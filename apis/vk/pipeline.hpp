@@ -92,14 +92,14 @@ namespace vk
         VulkanData &vk_data,
         VkPushConstantRange push_constant,
         VkPipelineLayout &pipelineLayout,
-        VkDescriptorSetLayout &descriptorSetLayout)
+        std::vector<VkDescriptorSetLayout> &descriptorSetLayouts)
     {
         // Pipeline layout
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        pipelineLayoutInfo.setLayoutCount = 1; // Optional
+        pipelineLayoutInfo.setLayoutCount = descriptorSetLayouts.size(); // Optional
         // pipelineLayoutInfo.pSetLayouts = nullptr;         // Optional
-        pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
+        pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data();
         if (push_constant.size > 0)
         {
             pipelineLayoutInfo.pushConstantRangeCount = 1;           // Optional
@@ -128,7 +128,7 @@ namespace vk
         {
             auto &renderPipeline = renderPass.renderPipelines.at(layout_index);
             renderPipeline.numAttachments = renderPass.numAttachments;
-            vk::createDescriptorSetLayout(vk_data, renderPass.renderPipelines.at(layout_index).descriptorSetLayout, renderPassInfo.bindingInfo);
+            vk::createDescriptorSetLayout(vk_data, renderPipeline.descriptorSetLayouts.at(0), renderPassInfo.bindingInfo);
             // renderPass.renderPipelines.at(layout_index).numAttachments = renderPass.renderPassChain.ImageViews.size();
             auto &shaderInfo = renderPassInfo.pipelineLayout[layout_index].shaderInfo;
             shaderStages.emplace_back();
@@ -194,7 +194,7 @@ namespace vk
             dynamicState.pDynamicStates = dynamicStates.data();
 
             auto &pipelineLayout = renderPipeline.pipelineLayout.emplace_back();
-            createPipelineLayout(vk_data, push_constant, pipelineLayout, renderPipeline.descriptorSetLayout);
+            createPipelineLayout(vk_data, push_constant, pipelineLayout, renderPipeline.descriptorSetLayouts);
 
             // Creating the graphics pipeline
             VkGraphicsPipelineCreateInfo &pipelineInfo = pipelinesInfo.emplace_back();
@@ -283,7 +283,9 @@ namespace vk
         for (auto &layout : renderPipeline.pipelineLayout)
             vkDestroyPipelineLayout(vk_data.logicalDevice, layout, nullptr);
 
-        vkDestroyDescriptorSetLayout(vk_data.logicalDevice, renderPipeline.descriptorSetLayout, nullptr);
+        //!!! DESTROYING ALL OF THEM MAY CAUSE PROBLEMS
+        for (auto &descLayout : renderPipeline.descriptorSetLayouts)
+            vkDestroyDescriptorSetLayout(vk_data.logicalDevice, descLayout, nullptr);
 
         vkDestroyPipeline(vk_data.logicalDevice, renderPipeline.graphicsPipeline, nullptr);
     }

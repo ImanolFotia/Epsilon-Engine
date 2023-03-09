@@ -18,11 +18,11 @@ namespace vk
         uboLayoutBinding.pImmutableSamplers = nullptr;
         return uboLayoutBinding;
     }
-    static VkDescriptorSetLayoutBinding createTextureBinding(int bind)
+    static VkDescriptorSetLayoutBinding createTextureBinding(int bind, int descriptorCount = 1)
     {
         VkDescriptorSetLayoutBinding samplerLayoutBinding{};
         samplerLayoutBinding.binding = bind;
-        samplerLayoutBinding.descriptorCount = 1;
+        samplerLayoutBinding.descriptorCount = descriptorCount;
         samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
         samplerLayoutBinding.pImmutableSamplers = nullptr;
         samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
@@ -31,15 +31,17 @@ namespace vk
     static void createDescriptorSetLayout(const VulkanData &vkData, VkDescriptorSetLayout &descriptorSetLayout, std::vector<engine::UniformBindingInfo> layoutBindings)
     {
         std::vector<VkDescriptorSetLayoutBinding> bindings;
+        bool any_bindless = false;
         for (auto &binding : layoutBindings)
         {
+            any_bindless |= binding.bindless;
             if (binding.type == engine::UniformBindingType::UNIFORM_BUFFER)
             {
                 bindings.push_back(createUboBinding(binding.binding));
             }
             else if (binding.type == engine::UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER)
             {
-                bindings.push_back(createTextureBinding(binding.binding));
+                bindings.push_back(createTextureBinding(binding.binding, binding.descriptorCount));
             }
         }
         // std::array<VkDescriptorSetLayoutBinding, 2> bindings = {uboLayoutBinding, samplerLayoutBinding};
@@ -47,6 +49,18 @@ namespace vk
         layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
         layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());
         layoutInfo.pBindings = bindings.data();
+
+        VkDescriptorBindingFlags bindless_flags = VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT | VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT | VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT;
+        VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extended_info{VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT, nullptr};
+        extended_info.bindingCount = 1;
+        if (any_bindless)
+        {
+            layoutInfo.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT;
+
+            extended_info.pBindingFlags = &bindless_flags;
+
+            layoutInfo.pNext = &extended_info;
+        }
 
         if (vkCreateDescriptorSetLayout(vkData.logicalDevice, &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS)
         {

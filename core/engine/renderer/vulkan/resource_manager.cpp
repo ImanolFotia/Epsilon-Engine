@@ -47,6 +47,18 @@ namespace engine
 
         vk::createCommandPool(*m_pVkDataPtr, m_pCommandPools.back());
 
+        pCreateGlobalDescriptorPool();
+
+        vk::createDescriptorSetLayout(
+            *m_pVkDataPtr,
+            m_pGlobalDescriptorSetLayout,
+            {{0, 0, 0, 1, UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER, {}, true, MAX_BINDLESS_RESOURCES, "GlobalBindlessTextures"}});
+
+        pCreateGlobalDescriptorSets(m_pGlobalDescriptorSetLayout,
+                                    m_pGlobalDescriptorPool,
+                                    m_pGlobalDescriptorSets,
+                                    MAX_BINDLESS_RESOURCES);
+
         pCreateBuffer(m_pIndirectBuffer,
                       sizeof(VkDrawIndexedIndirectCommand) * 100000,
                       VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT,
@@ -102,7 +114,7 @@ namespace engine
         {
             vk::VulkanMaterial vkMaterial;
             auto renderPass = renderPassPool.get(renderPassRef);
-            vkMaterial.descriptorSetLayout = renderPass->renderPipelines.back().descriptorSetLayout;
+            vkMaterial.descriptorSetLayout = renderPass->renderPipelines.back().descriptorSetLayouts.at(RENDERPASS_LAYOUT);
             // auto &materialdata = m_pMaterials.emplace_back();
 
             for (auto &binding : bindings)
@@ -144,7 +156,11 @@ namespace engine
             m_pNumCommandPools++;
             pCreateDescriptorPool();
             pRecreateDescriptorSets();
-            pCreateDescriptorSets(vkMaterial);
+            pCreateDescriptorSets(vkMaterial.descriptorSetLayout,
+                                  m_pDescriptorPool,
+                                  vkMaterial.descriptorSets,
+                                  vk::MAX_FRAMES_IN_FLIGHT);
+            pUpdateMaterial(vkMaterial);
 
             Ref<Material> materialRef = materialPool.insert(material.name, vkMaterial);
             return materialRef;
@@ -204,10 +220,21 @@ namespace engine
 
             m_pVkDataPtr->defaultRenderPass.renderPipelines.resize(renderPassInfo.numLayouts);
             // m_pVkDataPtr->defaultRenderPass.renderPipelines.emplace_back();
+            m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayouts.resize(2);
             vk::createDescriptorSetLayout(*m_pVkDataPtr,
-                                          m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayout, renderPassInfo.bindingInfo);
+                                          m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayouts.at(RENDERPASS_LAYOUT), renderPassInfo.bindingInfo);
 
             m_pVkDataPtr->defaultRenderPass.numAttachments = renderPassInfo.numAttachments;
+
+            for (auto &pipeline : m_pVkDataPtr->defaultRenderPass.renderPipelines)
+            {
+                pipeline.descriptorSetLayouts.resize(1);
+                if (m_pVkDataPtr->bindless_supported)
+                {
+                    pipeline.descriptorSetLayouts.resize(2);
+                    pipeline.descriptorSetLayouts.at(GLOBAL_LAYOUT) = m_pGlobalDescriptorSetLayout;
+                }
+            }
             vk::createGraphicsPipeline(*m_pVkDataPtr,
                                        m_pVkDataPtr->defaultRenderPass,
                                        renderPassInfo);
@@ -300,6 +327,16 @@ namespace engine
         renderPass.renderPassChain.Extent.height = renderPassInfo.dimensions.height;
 
         renderPass.renderPipelines.resize(renderPassInfo.numLayouts); //.emplace_back();
+
+        for (auto &pipeline : renderPass.renderPipelines)
+        {
+            pipeline.descriptorSetLayouts.resize(1);
+            if (m_pVkDataPtr->bindless_supported)
+            {
+                pipeline.descriptorSetLayouts.resize(2);
+                pipeline.descriptorSetLayouts.at(GLOBAL_LAYOUT) = m_pGlobalDescriptorSetLayout;
+            }
+        }
 
         vk::createGraphicsPipeline(*m_pVkDataPtr,
                                    renderPass,

@@ -45,6 +45,7 @@ namespace vk
         VkPhysicalDeviceFeatures deviceFeatures{};
         deviceFeatures.samplerAnisotropy = VK_TRUE;
         deviceFeatures.multiDrawIndirect = VK_TRUE;
+        deviceFeatures.shaderSampledImageArrayDynamicIndexing = VK_TRUE;
 
         VkPhysicalDeviceDescriptorIndexingFeatures indexing_features{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT, nullptr};
         VkPhysicalDeviceFeatures2 device_features{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2, &indexing_features};
@@ -59,9 +60,11 @@ namespace vk
         if (bindless_supported)
         {
             indexing_features.descriptorBindingPartiallyBound = VK_TRUE;
+            indexing_features.descriptorBindingSampledImageUpdateAfterBind = VK_TRUE;
             indexing_features.runtimeDescriptorArray = VK_TRUE;
 
             physical_features2.pNext = &indexing_features;
+            vk_data.bindless_supported = true;
         }
 
         VkDeviceCreateInfo createInfo{};

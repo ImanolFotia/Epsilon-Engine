@@ -183,7 +183,7 @@ namespace engine
 
     void VulkanResourceManager::pCreateDescriptorPool()
     {
-
+        // Create default descriptor pool
         vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool, nullptr);
         std::array<VkDescriptorPoolSize, 2> poolSizes{};
         poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -192,7 +192,6 @@ namespace engine
         poolSizes[1].descriptorCount = static_cast<uint32_t>(vk::MAX_FRAMES_IN_FLIGHT * m_pNumCommandPools);
 
         VkDescriptorPoolCreateInfo poolInfo{};
-        poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT;
         poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
         poolInfo.pPoolSizes = poolSizes.data();
@@ -204,28 +203,73 @@ namespace engine
         }
     }
 
-    void VulkanResourceManager::pCreateDescriptorSets(vk::VulkanMaterial &material)
+    void VulkanResourceManager::pCreateGlobalDescriptorPool()
     {
-        std::vector<VkDescriptorSetLayout> layouts(vk::MAX_FRAMES_IN_FLIGHT, material.descriptorSetLayout);
+
+        // Create Global bindless descriptor pool
+        // vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pGlobalDescriptorPool, nullptr);
+        std::array<VkDescriptorPoolSize, 1> globalPoolSizes{};
+        globalPoolSizes[0].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+        globalPoolSizes[0].descriptorCount = MAX_BINDLESS_RESOURCES;
+
+        VkDescriptorPoolCreateInfo globalPoolInfo{};
+        globalPoolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT;
+        globalPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+        globalPoolInfo.poolSizeCount = static_cast<uint32_t>(globalPoolSizes.size());
+        globalPoolInfo.pPoolSizes = globalPoolSizes.data();
+
+        globalPoolInfo.maxSets = static_cast<uint32_t>(MAX_BINDLESS_RESOURCES * globalPoolSizes.size());
+        if (vkCreateDescriptorPool(m_pVkDataPtr->logicalDevice, &globalPoolInfo, nullptr, &m_pGlobalDescriptorPool) != VK_SUCCESS)
+        {
+            throw std::runtime_error("failed to create global descriptor pool!");
+        }
+    }
+    void VulkanResourceManager::pCreateGlobalDescriptorSets(VkDescriptorSetLayout layout, VkDescriptorPool &pool, std::vector<VkDescriptorSet> &descriptorSets, uint32_t count)
+    {
+        std::vector<VkDescriptorSetLayout> layouts(count, layout);
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-        allocInfo.descriptorPool = m_pDescriptorPool;
-        allocInfo.descriptorSetCount = static_cast<uint32_t>(vk::MAX_FRAMES_IN_FLIGHT);
+        allocInfo.descriptorPool = pool;
+        allocInfo.descriptorSetCount = 1;
         allocInfo.pSetLayouts = layouts.data();
-        material.descriptorSets.resize(vk::MAX_FRAMES_IN_FLIGHT);
-        if (vkAllocateDescriptorSets(m_pVkDataPtr->logicalDevice, &allocInfo, material.descriptorSets.data()) != VK_SUCCESS)
+
+        {
+            VkDescriptorSetVariableDescriptorCountAllocateInfoEXT count_info{VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT};
+            uint32_t max_binding = MAX_BINDLESS_RESOURCES - 1;
+            count_info.descriptorSetCount = 1;
+            // This number is the max allocatable count
+            count_info.pDescriptorCounts = &max_binding;
+            allocInfo.pNext = &count_info;
+        }
+        descriptorSets.resize(1);
+        if (vkAllocateDescriptorSets(m_pVkDataPtr->logicalDevice, &allocInfo, descriptorSets.data()) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to allocate descriptor sets!");
         }
+    }
 
-        pUpdateMaterial(material);
+    void VulkanResourceManager::pCreateDescriptorSets(/*vk::VulkanMaterial &material*/ VkDescriptorSetLayout layout, VkDescriptorPool &pool, std::vector<VkDescriptorSet> &descriptorSets, uint32_t count)
+    {
+        std::vector<VkDescriptorSetLayout> layouts(count, layout);
+        VkDescriptorSetAllocateInfo allocInfo{};
+        allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+        allocInfo.descriptorPool = m_pDescriptorPool;
+        allocInfo.descriptorSetCount = static_cast<uint32_t>(count);
+        allocInfo.pSetLayouts = layouts.data();
+
+        descriptorSets.resize(count);
+        if (vkAllocateDescriptorSets(m_pVkDataPtr->logicalDevice, &allocInfo, descriptorSets.data()) != VK_SUCCESS)
+        {
+            throw std::runtime_error("failed to allocate descriptor sets!");
+        }
     }
 
     void VulkanResourceManager::pRecreateDescriptorSets()
     {
         for (auto &material : materialPool)
         {
-            pCreateDescriptorSets(material);
+            pCreateDescriptorSets(material.descriptorSetLayout, m_pDescriptorPool, material.descriptorSets, vk::MAX_FRAMES_IN_FLIGHT);
+            pUpdateMaterial(material);
         }
     }
 
