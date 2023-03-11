@@ -43,212 +43,214 @@ namespace ChessApp
 
         Input::Mouse::MouseEventHandler += ([this](auto *sender, beacon::args *args)
                                             {
-            if (args == nullptr)
-                return;
+        if (args == nullptr)
+            return;
 
-            if (m_pUCI.mate) return;
+        if (m_pUCI.mate)
+            return;
 
-                auto obj = args->to<Input::MouseArgs>();
+        auto obj = args->to<Input::MouseArgs>();
 
-            auto &files = m_pBoard.getFiles();
+        auto &files = m_pBoard.getFiles();
 
-            auto calcRowCol = [this](int x, int y) -> std::pair<int, int> {
-                glm::vec2 init_position;
-                init_position.x = x - ((getWindowDimensions().first / 2) - board_size());
-                init_position.y = (getWindowDimensions().second - y);
+        auto calcRowCol = [this](int x, int y) -> std::pair<int, int>
+        {
+            glm::vec2 init_position;
+            init_position.x = x - ((getWindowDimensions().first / 2) - board_size());
+            init_position.y = (getWindowDimensions().second - y);
 
-                int row = (init_position.y / (piece_size() * 2)) + 1;
-                int col = (int) glm::floor(init_position.x / (piece_size() * 2));
+            int row = (init_position.y / (piece_size() * 2)) + 1;
+            int col = (int)glm::floor(init_position.x / (piece_size() * 2));
 
-                return {row, col};
-            };
+            return {row, col};
+        };
 
-            auto printCharacter = [this](int x, int y) -> std::string {
-                return "abcdefgh"[y] + std::to_string(x);
-            };
+        auto printCharacter = [this](int x, int y) -> std::string
+        {
+            return "abcdefgh"[y] + std::to_string(x);
+        };
 
+                    if (obj.Left().State == Input::PRESSED) {
+                        std::pair<int, int> position = calcRowCol(obj.X(), obj.Y());
+                        std::string pos = printCharacter(position.first, position.second);
 
-            if (obj.Left().State == Input::PRESSED) {
-                std::pair<int, int> position = calcRowCol(obj.X(), obj.Y());
-                std::string pos = printCharacter(position.first, position.second);
+                        if (files[pos].piece == FREE) {
+                            m_pMove.selected = false;
+                            return;
+                        }
 
-                if (files[pos].piece == FREE) {
-                    m_pMove.selected = false;
-                    return;
-                }
+                        m_pMove.selected = true;
+                        m_pMove.first[0] = pos.at(0);
+                        m_pMove.first[1] = pos.at(1);
+                        m_pMove.row_from = position.first;
+                        m_pMove.column_from = (COLUMN) position.second;
 
-                m_pMove.selected = true;
-                m_pMove.first[0] = pos.at(0);
-                m_pMove.first[1] = pos.at(1);
-                m_pMove.row_from = position.first;
-                m_pMove.column_from = (COLUMN) position.second;
-
-                if (files[pos].column == m_pMove.column_from && files[pos].row == m_pMove.row_from) {
-                    if (m_pBoard.Turn() == WHITE && files[pos].piece > 5 ||
-                        m_pBoard.Turn() == BLACK && files[pos].piece < 6) {
-                        m_pMove.selected = false;
-                        return;
-                    }
-                    if (files[pos].index >= 0 && files.contains(pos))
-                        m_pSelectedModel = &m_pPieces[files[pos].index];
-                }
-            }
-
-            if (framework::Input::Mouse::LEFT == framework::Input::STATE::PRESSED) {
-                if (m_pSelectedModel != nullptr) {
-                    m_pSelectedModel->pushConstant.model = glm::translate(glm::mat4(1.0),
-                                                                          glm::vec3(-(obj.Y() -
-                                                                                      getWindowDimensions().second *
-                                                                                      0.5),
-                                                                                    -(obj.X() -
-                                                                                      getWindowDimensions().first *
-                                                                                      0.5),
-                                                                                    -498.0));
-
-                    m_pSelectedModel->pushConstant.model = glm::scale(m_pSelectedModel->pushConstant.model,
-                                                                      glm::vec3(piece_size(), piece_size(), 0.0));
-                }
-
-            }
-
-            if (obj.Left().State == Input::RELEASED) {
-                if (!m_pMove.selected) return;
-
-                m_pMove.selected = false;
-
-                std::pair<int, int> position = calcRowCol(obj.X(), obj.Y());
-                std::string second = printCharacter(position.first, position.second);
-
-                if (m_pMove.first[0] == second[0] && m_pMove.first[1] == second[1]) {
-                    if (m_pSelectedModel != nullptr) {
-                        m_pSelectedModel->pushConstant.model = transformPiece({m_pMove.column_from, m_pMove.row_from});
-                        m_pSelectedModel = nullptr;
-                        m_pMove.selected = false;
-                        return;
-                    }
-                }
-
-                m_pMove.second[0] = second.at(0);
-                m_pMove.second[1] = second.at(1);
-                m_pMove.row_to = position.first;
-                m_pMove.column_to = (COLUMN) position.second;
-
-                std::string strFirst = std::string(m_pMove.first, 2);
-                std::string strSecond = std::string(m_pMove.second, 2);
-
-                if (m_pMove.column_to > H || m_pMove.row_to > 8 || m_pMove.column_to < 0 || m_pMove.row_to < 0) {
-                    if (m_pSelectedModel != nullptr) {
-                        m_pSelectedModel->pushConstant.model = transformPiece({m_pMove.column_from, m_pMove.row_from});
-                        return;
-                    }
-                }
-
-                if (files[strSecond].piece != FREE) {
-
-                    PIECE this_piece = files[strFirst].piece;
-                    PIECE taken_piece = files[strSecond].piece;
-
-                    if (taken_piece < 6 && this_piece < 6 || taken_piece > 5 && this_piece > 5) {
-
-                        m_pSelectedModel->pushConstant.model = transformPiece(
-                                {m_pMove.column_from, m_pMove.row_from});
-                        return;
-                    }
-
-                    m_pTakeAudioObject.should_play = true;
-                    std::cout << "piece taken\n";
-                }
-
-                files[strSecond].column = m_pMove.column_to;
-                files[strSecond].row = m_pMove.row_to;
-                files[strSecond].piece = files[strFirst].piece;
-                files[strSecond].index = files[strFirst].index;
-                files[strSecond].show = true;
-
-                files[strFirst].column = m_pMove.column_from;
-                files[strFirst].row = m_pMove.row_from;
-                files[strFirst].index = -1;
-                files[strFirst].show = false;
-                files[strFirst].piece = FREE;
-
-                if (files[strSecond].piece == BLACK_KING || files[strSecond].piece == WHITE_KING)
-                {
-                    if (m_pBoard.Turn() == WHITE)
-                    {
-                        if (!m_pBoard.WhiteCastled())
-                            if (files[strSecond].column == COLUMN::G)
-                            {
-
-                                files["f1"].piece = WHITE_ROOK;
-                                files["f1"].index = files["h1"].index;
-                                files["f1"].column = F;
-                                files["f1"].show = true;
-                                files["f1"].row = 1;
-
-                                files["h1"].piece = FREE;
-                                files["h1"].index = -1;
-                                files["h1"].column = H;
-                                files["h1"].row = 1;
-                                files["h1"].show = false;
-
-                                m_pPieces.at(files["f1"].index).pushConstant.model = transformPiece(
-                                    {files["f1"].column, files["f1"].row});
-
-                                std::cout << "Short white castle" << std::endl;
+                        if (files[pos].column == m_pMove.column_from && files[pos].row == m_pMove.row_from) {
+                            if (m_pBoard.Turn() == WHITE && files[pos].piece > 5 ||
+                                m_pBoard.Turn() == BLACK && files[pos].piece < 6) {
+                                m_pMove.selected = false;
+                                return;
                             }
-                            else if (files[strSecond].column == COLUMN::C)
-                            {
-
-                                files["d1"].piece = WHITE_ROOK;
-                                files["d1"].index = files["a1"].index;
-                                files["d1"].column = D;
-                                files["d1"].show = true;
-                                files["d1"].row = 1;
-
-                                files["a1"].piece = FREE;
-                                files["a1"].index = -1;
-                                files["a1"].column = H;
-                                files["a1"].row = 1;
-                                files["a1"].show = false;
-
-                                m_pPieces.at(files["d1"].index).pushConstant.model = transformPiece(
-                                    {files["d1"].column, files["d1"].row});
-
-                                std::cout << "Long white castle" << std::endl;
-                            }
+                            if (files[pos].index >= 0 && files.contains(pos))
+                                m_pSelectedModel = &m_pPieces[files[pos].index];
+                        }
                     }
-                    else
-                    {
 
-                        if (!m_pBoard.BlackCastled())
-                            if (files[strSecond].column == COLUMN::G)
+                    if (framework::Input::Mouse::LEFT == framework::Input::STATE::PRESSED) {
+                        if (m_pSelectedModel != nullptr) {
+                            m_pSelectedModel->pushConstant.model = glm::translate(glm::mat4(1.0),
+                                                                                  glm::vec3(-(obj.Y() -
+                                                                                              getWindowDimensions().second *
+                                                                                              0.5),
+                                                                                            -(obj.X() -
+                                                                                              getWindowDimensions().first *
+                                                                                              0.5),
+                                                                                            -498.0));
+
+                            m_pSelectedModel->pushConstant.model = glm::scale(m_pSelectedModel->pushConstant.model,
+                                                                              glm::vec3(piece_size(), piece_size(), 0.0));
+                        }
+
+                    }
+
+                    if (obj.Left().State == Input::RELEASED) {
+                        if (!m_pMove.selected) return;
+
+                        m_pMove.selected = false;
+
+                        std::pair<int, int> position = calcRowCol(obj.X(), obj.Y());
+                        std::string second = printCharacter(position.first, position.second);
+
+                        if (m_pMove.first[0] == second[0] && m_pMove.first[1] == second[1]) {
+                            if (m_pSelectedModel != nullptr) {
+                                m_pSelectedModel->pushConstant.model = transformPiece({m_pMove.column_from, m_pMove.row_from});
+                                m_pSelectedModel = nullptr;
+                                m_pMove.selected = false;
+                                return;
+                            }
+                        }
+
+                        m_pMove.second[0] = second.at(0);
+                        m_pMove.second[1] = second.at(1);
+                        m_pMove.row_to = position.first;
+                        m_pMove.column_to = (COLUMN) position.second;
+
+                        std::string strFirst = std::string(m_pMove.first, 2);
+                        std::string strSecond = std::string(m_pMove.second, 2);
+
+                        if (m_pMove.column_to > H || m_pMove.row_to > 8 || m_pMove.column_to < 0 || m_pMove.row_to < 0) {
+                            if (m_pSelectedModel != nullptr) {
+                                m_pSelectedModel->pushConstant.model = transformPiece({m_pMove.column_from, m_pMove.row_from});
+                                return;
+                            }
+                        }
+
+                        if (files[strSecond].piece != FREE) {
+
+                            PIECE this_piece = files[strFirst].piece;
+                            PIECE taken_piece = files[strSecond].piece;
+
+                            if (taken_piece < 6 && this_piece < 6 || taken_piece > 5 && this_piece > 5) {
+
+                                m_pSelectedModel->pushConstant.model = transformPiece(
+                                        {m_pMove.column_from, m_pMove.row_from});
+                                return;
+                            }
+
+                            m_pTakeAudioObject.should_play = true;
+                            std::cout << "piece taken\n";
+                        }
+
+                        files[strSecond].column = m_pMove.column_to;
+                        files[strSecond].row = m_pMove.row_to;
+                        files[strSecond].piece = files[strFirst].piece;
+                        files[strSecond].index = files[strFirst].index;
+                        files[strSecond].show = true;
+
+                        files[strFirst].column = m_pMove.column_from;
+                        files[strFirst].row = m_pMove.row_from;
+                        files[strFirst].index = -1;
+                        files[strFirst].show = false;
+                        files[strFirst].piece = FREE;
+
+                        if (files[strSecond].piece == BLACK_KING || files[strSecond].piece == WHITE_KING)
+                        {
+                            if (m_pBoard.Turn() == WHITE)
                             {
-                                std::cout << "Short black castle" << std::endl;
+                                if (!m_pBoard.WhiteCastled())
+                                    if (files[strSecond].column == COLUMN::G)
+                                    {
+
+                                        files["f1"].piece = WHITE_ROOK;
+                                        files["f1"].index = files["h1"].index;
+                                        files["f1"].column = F;
+                                        files["f1"].show = true;
+                                        files["f1"].row = 1;
+
+                                        files["h1"].piece = FREE;
+                                        files["h1"].index = -1;
+                                        files["h1"].column = H;
+                                        files["h1"].row = 1;
+                                        files["h1"].show = false;
+
+                                        m_pPieces.at(files["f1"].index).pushConstant.model = transformPiece(
+                                            {files["f1"].column, files["f1"].row});
+
+                                        std::cout << "Short white castle" << std::endl;
+                                    }
+                                    else if (files[strSecond].column == COLUMN::C)
+                                    {
+
+                                        files["d1"].piece = WHITE_ROOK;
+                                        files["d1"].index = files["a1"].index;
+                                        files["d1"].column = D;
+                                        files["d1"].show = true;
+                                        files["d1"].row = 1;
+
+                                        files["a1"].piece = FREE;
+                                        files["a1"].index = -1;
+                                        files["a1"].column = H;
+                                        files["a1"].row = 1;
+                                        files["a1"].show = false;
+
+                                        m_pPieces.at(files["d1"].index).pushConstant.model = transformPiece(
+                                            {files["d1"].column, files["d1"].row});
+
+                                        std::cout << "Long white castle" << std::endl;
+                                    }
                             }
                             else
                             {
-                                std::cout << "Long black castle" << std::endl;
+
+                                if (!m_pBoard.BlackCastled())
+                                    if (files[strSecond].column == COLUMN::G)
+                                    {
+                                        std::cout << "Short black castle" << std::endl;
+                                    }
+                                    else
+                                    {
+                                        std::cout << "Long black castle" << std::endl;
+                                    }
                             }
-                    }
-                }
+                        }
 
-                m_pPieces.at(files[strSecond].index).pushConstant.model = transformPiece(
-                        {files[strSecond].column, files[strSecond].row});
-                m_pSelectedModel = nullptr;
+                        m_pPieces.at(files[strSecond].index).pushConstant.model = transformPiece(
+                                {files[strSecond].column, files[strSecond].row});
+                        m_pSelectedModel = nullptr;
 
-                m_pBoard.Turn(m_pBoard.Turn() == WHITE ? BLACK : WHITE);
-                m_pBoard.addMove(std::string(m_pMove.first, 2) + std::string(m_pMove.second, 2));
-                std::cout << "from: " << m_pMove.first[0] << m_pMove.first[1] << " to: " << m_pMove.second[0]
-                          << m_pMove.second[1]
-                          << std::endl;
-                std::string move_str = "position startpos moves ";
-                for (const auto &move: m_pBoard.getPlayedMoves())
-                    move_str += move + " ";
+                        m_pBoard.Turn(m_pBoard.Turn() == WHITE ? BLACK : WHITE);
+                        m_pBoard.addMove(std::string(m_pMove.first, 2) + std::string(m_pMove.second, 2));
+                        std::cout << "from: " << m_pMove.first[0] << m_pMove.first[1] << " to: " << m_pMove.second[0]
+                                  << m_pMove.second[1]
+                                  << std::endl;
+                        std::string move_str = "position startpos moves ";
+                        for (const auto &move: m_pBoard.getPlayedMoves())
+                            move_str += move + " ";
 
-                m_pUCI.Move(move_str);
-                m_pMoveAudioObject.should_play = true;
+                        m_pUCI.Move(move_str);
+                        m_pMoveAudioObject.should_play = true;
 
-            } });
+                    } });
     }
 
     void ChessApp::onReady()
@@ -264,7 +266,9 @@ namespace ChessApp
     void ChessApp::onRender()
     {
 
+        Epsilon::getContext().Renderer()->BeginFrame();
         Epsilon::getContext().Renderer()->Begin();
+
         if (m_pTakeAudioObject.should_play)
         {
             al::playSource(m_pTakeAudioObject.source);
@@ -306,8 +310,16 @@ namespace ChessApp
         }
 
         engine::Context::getSingleton().Renderer()->Flush(m_pRenderPass, engine::DrawType::INDEXED);
+        // engine::Context::getSingleton().Renderer()->End();
+
+        // engine::Context::getSingleton().Renderer()->Submit();
+
+        // Epsilon::getContext().Renderer()->Begin();
+        // imgui_render();
         engine::Context::getSingleton().Renderer()->End();
-        engine::Context::getSingleton().Renderer()->Sync();
+
+        engine::Context::getSingleton().Renderer()->Submit();
+        engine::Context::getSingleton().Renderer()->EndFrame();
         // drawFrame(m_pRenderPass);
 
         if (!m_pUCI.last_move.empty() && m_pBoard.Turn() == BLACK)
@@ -658,7 +670,6 @@ namespace ChessApp
 
     void ChessApp::setupRenderPass()
     {
-
         using namespace engine;
         // Load the shader that draws the board
         auto boardVertexCode = utils::readFile("./assets/shaders/chess/board-vertex.spv");

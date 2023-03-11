@@ -8,7 +8,7 @@
 #define VK_USE_PLATFORM_ANDROID_KHR
 #undef VK_USE_PLATFORM_XLIB_KHR
 #endif
-
+#include <set>
 #include "vk_mem_alloc.h"
 #include <unordered_map>
 
@@ -66,6 +66,7 @@ namespace vk
 
     struct VulkanTexture
     {
+        uint32_t index;
         VulkanTextureInfo info;
         VulkanTextureBindingType bindingType = MATERIAL_SAMPLER;
         VkImageCreateInfo imageInfo;
@@ -195,8 +196,9 @@ namespace vk
         VulkanBuffer buffer;
     };
 
-    struct VulkanRenderPass
+    class VulkanRenderPass
     {
+    public:
         VulkanRenderPass()
         {
             clearValues.resize(2);
@@ -246,6 +248,7 @@ namespace vk
         VkSurfaceKHR surface;
         VkDevice logicalDevice;
         VkPhysicalDevice physicalDevice;
+        std::set<uint32_t> uniqueQueueFamilies;
 
         VkQueue presentQueue;
         VkQueue graphicsQueue;
@@ -257,6 +260,9 @@ namespace vk
         // RenderPassChain swapChainData;
         VulkanRenderPass defaultRenderPass;
         bool bindless_supported = false;
+        uint32_t swapChainWidth = 0;
+        uint32_t swapChainHeight = 0;
+
         /*
         std::vector<VkImage> swapChainImages;
         VulkanTexture swapChainDepthTexture;

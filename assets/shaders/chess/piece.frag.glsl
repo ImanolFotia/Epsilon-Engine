@@ -1,5 +1,5 @@
-#version 450
-
+#version 460
+#extension GL_EXT_nonuniform_qualifier : enable
 layout(location = 0) out vec4 outColor;
 
 layout (location = 0) in vec3 position;
@@ -19,6 +19,8 @@ layout(binding = 0) uniform UniformBufferObject {
 } ubo;
 
 layout(binding = 1) uniform sampler2D texSampler;
+
+layout (set = 1, binding = 0) uniform sampler2D textures[];
 
 vec3 Gamma(in vec3 img) {
     return pow(img, vec3(1.0/2.2));
@@ -68,7 +70,7 @@ void main() {
     correctedCoords += pieces[piece];
     
     
-    vec4 texCol = texture(texSampler, correctedCoords, 0.0);
+    vec4 texCol = texture(textures[0], correctedCoords, 0.0);
     
     if(texCol.a < 0.01) discard;
     

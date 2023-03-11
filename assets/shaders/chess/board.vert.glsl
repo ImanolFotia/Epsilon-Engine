@@ -1,5 +1,5 @@
-#version 450
-
+#version 460
+#extension GL_EXT_nonuniform_qualifier : enable
 const vec2 iResolution = vec2(1280.0, 720.0);
 
 layout(location = 0) in vec3 inPosition;

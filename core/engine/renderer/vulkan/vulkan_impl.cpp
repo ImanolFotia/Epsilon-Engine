@@ -185,18 +185,25 @@ namespace engine
     {
         // Create default descriptor pool
         vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool, nullptr);
-        std::array<VkDescriptorPoolSize, 2> poolSizes{};
-        poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        poolSizes[0].descriptorCount = static_cast<uint32_t>(vk::MAX_FRAMES_IN_FLIGHT * m_pNumCommandPools);
-        poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        poolSizes[1].descriptorCount = static_cast<uint32_t>(vk::MAX_FRAMES_IN_FLIGHT * m_pNumCommandPools);
+        std::array<VkDescriptorPoolSize, 11> poolSizes =
+            {{{VK_DESCRIPTOR_TYPE_SAMPLER, 1000},
+              {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000},
+              {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000},
+              {VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000},
+              {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000},
+              {VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000},
+              {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000},
+              {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000},
+              {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000},
+              {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000},
+              {VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000}}};
 
         VkDescriptorPoolCreateInfo poolInfo{};
         poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
         poolInfo.pPoolSizes = poolSizes.data();
 
-        poolInfo.maxSets = static_cast<uint32_t>(vk::MAX_FRAMES_IN_FLIGHT * m_pNumCommandPools);
+        poolInfo.maxSets = poolSizes.size() * 1000;
         if (vkCreateDescriptorPool(m_pVkDataPtr->logicalDevice, &poolInfo, nullptr, &m_pDescriptorPool) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to create descriptor pool!");
@@ -224,7 +231,7 @@ namespace engine
             throw std::runtime_error("failed to create global descriptor pool!");
         }
     }
-    void VulkanResourceManager::pCreateGlobalDescriptorSets(VkDescriptorSetLayout layout, VkDescriptorPool &pool, std::vector<VkDescriptorSet> &descriptorSets, uint32_t count)
+    void VulkanResourceManager::pCreateGlobalDescriptorSets(VkDescriptorSetLayout layout, VkDescriptorPool &pool, VkDescriptorSet &descriptorSets, uint32_t count)
     {
         std::vector<VkDescriptorSetLayout> layouts(count, layout);
         VkDescriptorSetAllocateInfo allocInfo{};
@@ -241,8 +248,7 @@ namespace engine
             count_info.pDescriptorCounts = &max_binding;
             allocInfo.pNext = &count_info;
         }
-        descriptorSets.resize(1);
-        if (vkAllocateDescriptorSets(m_pVkDataPtr->logicalDevice, &allocInfo, descriptorSets.data()) != VK_SUCCESS)
+        if (vkAllocateDescriptorSets(m_pVkDataPtr->logicalDevice, &allocInfo, &descriptorSets) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to allocate descriptor sets!");
         }

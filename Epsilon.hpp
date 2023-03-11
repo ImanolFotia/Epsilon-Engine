@@ -100,7 +100,8 @@ namespace Epsilon
         {
             engine::Context::getSingleton().Renderer()->Flush(renderPassRef, engine::DrawType::INDEXED);
             engine::Context::getSingleton().Renderer()->End();
-            engine::Context::getSingleton().Renderer()->Sync();
+            engine::Context::getSingleton().Renderer()->Submit();
+            engine::Context::getSingleton().Renderer()->EndFrame();
         }
 
         void setOnCreate(std::function<void(void)> fun)

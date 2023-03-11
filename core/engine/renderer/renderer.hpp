@@ -84,7 +84,11 @@ namespace engine
 
         virtual void Push(ObjectData) = 0;
 
-        virtual void Sync() = 0;
+        virtual void Submit() = 0;
+
+        virtual void EndFrame() = 0;
+
+        virtual void BeginFrame() = 0;
 
         virtual void Begin() = 0;
 

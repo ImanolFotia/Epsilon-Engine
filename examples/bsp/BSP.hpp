@@ -205,7 +205,8 @@ namespace BSP
 
             engine::Context::getSingleton().Renderer()->Flush(m_pRenderPass, engine::DrawType::INDEXED_INDIRECT);
             engine::Context::getSingleton().Renderer()->End();
-            engine::Context::getSingleton().Renderer()->Sync();
+            engine::Context::getSingleton().Renderer()->Submit();
+            engine::Context::getSingleton().Renderer()->EndFrame();
         }
 
         void onExit() {}

@@ -84,7 +84,7 @@ namespace engine
         void pCreateUniformBuffers();
         void pCreateDescriptorPool();
         void pCreateGlobalDescriptorPool();
-        void pCreateGlobalDescriptorSets(VkDescriptorSetLayout layout, VkDescriptorPool &pool, std::vector<VkDescriptorSet> &descriptorSets, uint32_t count);
+        void pCreateGlobalDescriptorSets(VkDescriptorSetLayout layout, VkDescriptorPool &pool, VkDescriptorSet &descriptorSets, uint32_t count);
         void pCreateDescriptorSets(VkDescriptorSetLayout layout, VkDescriptorPool &pool, std::vector<VkDescriptorSet> &descriptorSets, uint32_t count);
         void pRecreateDescriptorSets();
 
@@ -93,6 +93,8 @@ namespace engine
         const uint32_t MAX_BINDLESS_RESOURCES = 16536;
         const uint32_t RENDERPASS_LAYOUT = 0;
         const uint32_t GLOBAL_LAYOUT = 1;
+
+        uint32_t texture_index = 0; //!!! ONLY FOR TESTING, SHOULD FIX THIS ASAP
 
         const VkBufferUsageFlags UNIFORM_BUFFER_USAGE = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
         const VkBufferUsageFlags STORAGE_BUFFER_USAGE = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
@@ -138,7 +140,7 @@ namespace engine
         std::vector<Ref<Buffer>> vertexBufferReferences;
 
         VkDescriptorPool m_pGlobalDescriptorPool;
-        std::vector<VkDescriptorSet> m_pGlobalDescriptorSets;
+        VkDescriptorSet m_pGlobalDescriptorSets;
         VkDescriptorSetLayout m_pGlobalDescriptorSetLayout;
 
         VkDescriptorPool m_pDescriptorPool;

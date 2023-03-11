@@ -188,7 +188,7 @@ link_directories(${OPENAL_BUILD_DIR})
 
 # download and include imgui
 #requires installation of pulse audio and pipewire developer libs in the OS
-ExternalProject_Add(imgui
+ExternalProject_Add(imgui_d
         GIT_REPOSITORY https://github.com/ocornut/imgui.git
         INSTALL_COMMAND cmake -E echo "Skipping install step for beacon."
         BUILD_COMMAND ""
@@ -196,11 +196,13 @@ ExternalProject_Add(imgui
         CONFIGURE_COMMAND ""
         )
 
-ExternalProject_Get_property(imgui SOURCE_DIR)
+ExternalProject_Get_property(imgui_d SOURCE_DIR)
+ExternalProject_Get_property(imgui_d BINARY_DIR)
 set(IMGUI_BUILD_DIR ${SOURCE_DIR})
 message(${IMGUI_BUILD_DIR})
 
-include_directories(${IMGUI_BUILD_DIR})
+include_directories(${SOURCE_DIR})
+link_directories(${IMGUI_BUILD_DIR})
 
 SET(HEADERS
         ${HEADERS}
@@ -247,7 +249,14 @@ set(PROJECT_FILES
         ${CMAKE_SOURCE_DIR}/modules/mono/mono-instance.hpp
         ${CMAKE_SOURCE_DIR}/Epsilon.cpp
         ${CMAKE_SOURCE_DIR}/Epsilon.hpp
-        ${CMAKE_SOURCE_DIR}/core/framework/singleton.hpp)
+        ${CMAKE_SOURCE_DIR}/core/framework/singleton.hpp
+        ${CMAKE_SOURCE_DIR}/modules/imgui/imgui_impl_glfw.cpp
+        ${CMAKE_SOURCE_DIR}/modules/imgui/imgui_impl_vulkan.cpp
+        ${IMGUI_BUILD_DIR}/imgui.cpp
+        ${IMGUI_BUILD_DIR}/imgui_demo.cpp
+        ${IMGUI_BUILD_DIR}/imgui_draw.cpp
+        ${IMGUI_BUILD_DIR}/imgui_tables.cpp
+        ${IMGUI_BUILD_DIR}/imgui_widgets.cpp)
 
 if (BUILD_AS_LIBRARY)
 
@@ -311,7 +320,7 @@ endif()
 add_dependencies(${PROJECT_NAME} glm)
 add_dependencies(${PROJECT_NAME} beacon)
 add_dependencies(${PROJECT_NAME} stb)
-add_dependencies(${PROJECT_NAME} imgui)
+add_dependencies(${PROJECT_NAME} imgui_d)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_DL_LIBS})
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)

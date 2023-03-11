@@ -128,8 +128,6 @@ namespace vk
             imageIndex = 0;
 
         renderPass.renderPassInfo.framebuffer = renderPass.renderPassChain.Framebuffers[imageIndex];
-        renderPass.renderPassInfo.renderArea.offset = {0, 0};
-        renderPass.renderPassInfo.renderArea.extent = renderPass.renderPassChain.Extent;
 
         renderPass.renderPassInfo.clearValueCount = renderPass.clearValues.size();
         renderPass.renderPassInfo.pClearValues = renderPass.clearValues.data();
@@ -137,6 +135,11 @@ namespace vk
 
     static void beginRenderPass(const VkCommandBuffer &commandBuffer, VulkanRenderPass &renderPass)
     {
+        if (renderPass.renderPassInfo.renderPass == 0x0)
+        {
+            std::cout << "renderPass is invalid" << std::endl;
+            return;
+        }
         vkCmdBeginRenderPass(commandBuffer, &renderPass.renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
     }
 

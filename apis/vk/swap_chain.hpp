@@ -172,6 +172,8 @@ namespace vk
 
         vk_data.defaultRenderPass.renderPassChain.ImageFormats.push_back(surfaceFormat.format);
         vk_data.defaultRenderPass.renderPassChain.Extent = extent;
+        vk_data.swapChainWidth = extent.width;
+        vk_data.swapChainHeight = extent.height;
     }
 
     static void createImageViews(VulkanData &vk_data)
@@ -202,33 +204,38 @@ namespace vk
         }
     }
 
-    static void cleanupSwapChain(const VulkanData &vk_data, VulkanRenderPass &renderPass)
+    static void cleanupSwapChain(const VulkanData &vk_data)
     {
         for (size_t i = 0; i < vk_data.defaultRenderPass.renderPassChain.Framebuffers.size(); i++)
         {
             vkDestroyFramebuffer(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.Framebuffers[i], nullptr);
         }
 
-        for (auto &renderPipeline : renderPass.renderPipelines)
-        {
-            vkDestroyPipeline(vk_data.logicalDevice, renderPipeline.graphicsPipeline, nullptr);
-
-            for (auto &layout : renderPipeline.pipelineLayout)
-                vkDestroyPipelineLayout(vk_data.logicalDevice, layout, nullptr);
-        }
-
-        vkDestroyRenderPass(vk_data.logicalDevice, renderPass.renderPass, nullptr);
-
         for (size_t i = 0; i < vk_data.defaultRenderPass.renderPassChain.ImageViews.size(); i++)
         {
             vkDestroyImageView(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.ImageViews[i], nullptr);
         }
 
-        vkDestroyImageView(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.DepthTexture.imageView, nullptr);
-        vkDestroyImage(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.DepthTexture.image, nullptr);
-        vkFreeMemory(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.DepthTextureBuffer.deviceMemory, nullptr);
-
         vkDestroySwapchainKHR(vk_data.logicalDevice, vk_data.swapChain, nullptr);
     }
+    /*
+        static void cleanup(const VulkanData &vk_data, VulkanRenderPass &renderPass)
+        {
+            cleanupSwapChain(vk_data);
+
+            for (auto &renderPipeline : renderPass.renderPipelines)
+            {
+                vkDestroyPipeline(vk_data.logicalDevice, renderPipeline.graphicsPipeline, nullptr);
+
+                for (auto &layout : renderPipeline.pipelineLayout)
+                    vkDestroyPipelineLayout(vk_data.logicalDevice, layout, nullptr);
+            }
+
+            vkDestroyRenderPass(vk_data.logicalDevice, renderPass.renderPass, nullptr);
+
+            vkDestroyImageView(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.DepthTexture.imageView, nullptr);
+            vkDestroyImage(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.DepthTexture.image, nullptr);
+            vkFreeMemory(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.DepthTextureBuffer.deviceMemory, nullptr);
+        }*/
 
 }

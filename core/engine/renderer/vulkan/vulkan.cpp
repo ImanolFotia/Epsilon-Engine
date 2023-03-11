@@ -2,11 +2,13 @@
 #include "core/framework/exception.hpp"
 #include <core/framework/clock.hpp>
 #include "core/framework/common.hpp"
+#include <core/engine/context.hpp>
 
 #include "vulkan.hpp"
 #include "resource_manager.hpp"
 
 #include "helpers.hpp"
+#include "imgui/imgui_setup.hpp"
 
 /**
  * @brief Implementation of the Vulkan renderer public API
@@ -100,8 +102,20 @@ namespace engine
         m_pCurrentCommandQueue.push_back(drawCommand);
     }
 
-    void VulkanRenderer::Begin()
+    void VulkanRenderer::BeginFrame()
     {
+        /*
+                if (!imguiInit)
+                {
+
+                    auto window = engine::Context::getSingleton().Window();
+                    init_imgui(m_pVkData, window.getWindow(),
+                               m_pResourceManagerRef->m_pDescriptorPool,
+                               m_pVkData.defaultRenderPass.renderPass,
+                               m_pResourceManagerRef->m_pCommandPools.front(),
+                               m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
+                    imguiInit = true;
+                }*/
 
         m_pImageIndex = pPrepareSyncObjects();
 
@@ -114,6 +128,7 @@ namespace engine
         m_pFrame.FrameIndex(m_pCurrentFrame);
 
         m_pFrame.CommandBuffer(&m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
+
         // m_pFrame.UniformBuffer(&m_pUniformBuffers.at(m_pCurrentFrame));
 
         m_pFrame.SyncObjects(&m_pVkData.syncObjects.at(m_pCurrentFrame));
@@ -121,29 +136,45 @@ namespace engine
         // std::cout << "m_pImageIndex " << m_pImageIndex << std::endl;
 
         vkResetCommandBuffer(m_pFrame.CommandBuffer(), 0);
+    }
+
+    void
+    VulkanRenderer::Begin()
+    {
+
         // auto renderPass = m_pResourceManagerRef->getRenderPass(renderPassRef);
 
         vk::recordCommandBuffer(m_pFrame.CommandBuffer(), m_pImageIndex);
     }
 
-    void VulkanRenderer::Sync()
+    void VulkanRenderer::Submit()
+    {
+
+        vk::Sync(m_pVkData, m_pFrame.CommandBuffer(), m_pCurrentFrame);
+        /*
+                g_Framebuffer = m_pVkData.defaultRenderPass.renderPassChain.Framebuffers[m_pImageIndex];
+                g_CommandBuffer = m_pFrame.CommandBuffer();
+                g_ImageSemaphore = m_pFrame.SyncObjects().imageAvailableSemaphores;
+                g_RenderSemaphore = m_pFrame.SyncObjects().renderFinishedSemaphores;
+                g_Fence = m_pFrame.SyncObjects().inFlightFences;*/
+    }
+
+    void VulkanRenderer::EndFrame()
     {
 
         VkSemaphore signalSemaphores[] = {m_pFrame.SyncObjects().renderFinishedSemaphores};
-
-        vk::Sync(m_pVkData, m_pFrame.CommandBuffer(), m_pCurrentFrame);
 
         bool should_recreate_swapchain = vk::Present(m_pVkData, signalSemaphores, m_pImageIndex);
 
         if (should_recreate_swapchain)
         {
             pRecreateSwapChain();
-            vkDestroyDescriptorPool(m_pVkData.logicalDevice, m_pResourceManagerRef->m_pDescriptorPool, nullptr);
-            m_pResourceManagerRef->pCreateDescriptorPool();
+            // vkDestroyDescriptorPool(m_pVkData.logicalDevice, m_pResourceManagerRef->m_pDescriptorPool, nullptr);
+            // m_pResourceManagerRef->pCreateDescriptorPool();
 
-            std::cout << "recreating descriptor sets\n";
+            // std::cout << "recreating descriptor sets\n";
 
-            m_pResourceManagerRef->pRecreateDescriptorSets();
+            // m_pResourceManagerRef->pRecreateDescriptorSets();
             std::cout << "swap chain recreated\n";
         }
 
@@ -165,8 +196,24 @@ namespace engine
 
         auto renderPass = m_pResourceManagerRef->getRenderPass(renderPassRef);
 
-        vk::createRenderPassInfo(m_pImageIndex, m_pVkData, *renderPass);
-        vk::beginRenderPass(m_pFrame.CommandBuffer(), *renderPass);
+        if (renderPass->id == std::numeric_limits<uint32_t>::max())
+        {
+
+            vk::createRenderPassInfo(m_pImageIndex, m_pVkData, m_pVkData.defaultRenderPass);
+
+            m_pVkData.defaultRenderPass.renderPassInfo.renderArea.offset = {0, 0};
+            m_pVkData.defaultRenderPass.renderPassInfo.renderArea.extent = m_pVkData.defaultRenderPass.renderPassChain.Extent;
+            renderPass->renderPassChain.Extent = m_pVkData.defaultRenderPass.renderPassChain.Extent;
+
+            vk::beginRenderPass(m_pFrame.CommandBuffer(), m_pVkData.defaultRenderPass);
+        }
+        else
+        {
+            vk::createRenderPassInfo(m_pImageIndex, m_pVkData, *renderPass);
+            renderPass->renderPassInfo.renderArea.offset = {0, 0};
+            renderPass->renderPassInfo.renderArea.extent = renderPass->renderPassChain.Extent;
+            vk::beginRenderPass(m_pFrame.CommandBuffer(), *renderPass);
+        }
 
         switch (type)
         {
@@ -238,7 +285,7 @@ namespace engine
 
                 vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
                                         renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(), 1, 1,
-                                        m_pResourceManagerRef->m_pGlobalDescriptorSets.data(), 0, nullptr);
+                                        &m_pResourceManagerRef->m_pGlobalDescriptorSets, 0, nullptr);
             }
             /** TODO:
              *  Find a way to cleanly implement push constants*/
@@ -299,6 +346,21 @@ namespace engine
             vk::bindPipeline(renderPass->renderPipelines[batch.layoutIndex].graphicsPipeline,
                              m_pFrame.CommandBuffer());
 
+            VkExtent2D extent = renderPass->renderPassChain.Extent;
+            VkViewport viewport{};
+            viewport.x = 0.0f;
+            viewport.y = 0.0f;
+            viewport.width = (float)extent.width;
+            viewport.height = (float)extent.height;
+            viewport.minDepth = 0.0f;
+            viewport.maxDepth = 1.0f;
+            vkCmdSetViewport(m_pFrame.CommandBuffer(), 0, 1, &viewport);
+
+            VkRect2D scissor{};
+            scissor.offset = {0, 0};
+            scissor.extent = extent;
+            vkCmdSetScissor(m_pFrame.CommandBuffer(), 0, 1, &scissor);
+
             vk::bindVertexBuffer(m_pVkData, m_pFrame.CommandBuffer(), vertexBuffer->buffer);
             vkCmdBindIndexBuffer(m_pFrame.CommandBuffer(), indexBuffer->buffer, 0, VK_INDEX_TYPE_UINT32);
 
@@ -310,7 +372,7 @@ namespace engine
 
                 vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
                                         renderPass->renderPipelines[batch.layoutIndex].pipelineLayout.back(), 1, 1,
-                                        m_pResourceManagerRef->m_pGlobalDescriptorSets.data(), 0, nullptr);
+                                        &m_pResourceManagerRef->m_pGlobalDescriptorSets, 0, nullptr);
             }
             VkDeviceSize indirect_offset = batch.first * sizeof(VkDrawIndexedIndirectCommand);
             uint32_t draw_stride = sizeof(VkDrawIndexedIndirectCommand);
@@ -336,7 +398,7 @@ namespace engine
 
         if (result == VK_ERROR_OUT_OF_DATE_KHR)
         {
-            m_pResourceManagerRef->pRecreateSwapChain(m_pWindow->getWindow());
+            pRecreateSwapChain();
             return -1;
         }
         else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
@@ -346,6 +408,7 @@ namespace engine
 
         // Only reset the fence if we are submitting work
         vkResetFences(m_pVkData.logicalDevice, 1, &m_pVkData.syncObjects[m_pCurrentFrame].inFlightFences);
+
         return imageIndex;
     }
 
@@ -389,37 +452,15 @@ namespace engine
     {
         vkDeviceWaitIdle(m_pVkData.logicalDevice);
 
-        for (auto &pass : m_pResourceManagerRef->renderPassPool)
         {
-            cleanupSwapChain(m_pVkData, pass);
+            cleanupSwapChain(m_pVkData);
         }
 
         vk::createSwapChain(m_pVkData, m_pWindow->getWindow());
 
         vk::createImageViews(m_pVkData);
 
-        vk::createRenderPass(m_pVkData, m_pVkData.defaultRenderPass, m_pResourceManagerRef->m_pDefaultRenderPassInfo, true);
-
-        for (auto i = 0; i < m_pVkData.defaultRenderPass.renderPipelines.size(); i++)
-            vk::createGraphicsPipeline(m_pVkData, m_pVkData.defaultRenderPass,
-                                       m_pResourceManagerRef->m_pDefaultRenderPassInfo);
-
-        vk::createFramebuffers(m_pVkData, m_pVkData.defaultRenderPass, m_pVkData.defaultRenderPass.renderPassChain);
-
-        for (auto &pass : m_pResourceManagerRef->renderPassPool)
-        {
-            if (pass.id == std::numeric_limits<uint32_t>::max())
-                continue;
-
-            vk::createRenderPass(m_pVkData, pass, m_pResourceManagerRef->m_pRenderPassInfo[pass.id], false);
-
-            for (auto i = 0; i < pass.renderPipelines.size(); i++)
-                vk::createGraphicsPipeline(m_pVkData, pass,
-                                           m_pResourceManagerRef->m_pRenderPassInfo[pass.id]);
-
-            vk::createFramebuffers(m_pVkData, pass, pass.renderPassChain);
-        }
-        // throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
+        vk::createSwapChainFramebuffers(m_pVkData, m_pVkData.defaultRenderPass, m_pVkData.defaultRenderPass.renderPassChain);
     }
 
 }

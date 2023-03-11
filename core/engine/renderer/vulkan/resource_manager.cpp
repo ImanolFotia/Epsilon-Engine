@@ -99,6 +99,7 @@ namespace engine
         texture.bindingType = vk::MATERIAL_SAMPLER;
 
         auto ref = texPool.insert(texInfo.name, texture);
+        texture.index = ref.Index();
         return ref;
     }
 
@@ -162,6 +163,39 @@ namespace engine
                                   vk::MAX_FRAMES_IN_FLIGHT);
             pUpdateMaterial(vkMaterial);
 
+            if (m_pVkDataPtr->bindless_supported)
+            {
+                int count = 0;
+                std::vector<VkWriteDescriptorSet> bindless_descriptor_writes;
+                std::vector<VkDescriptorImageInfo> bindless_image_info;
+                for (auto &binding : vkMaterial.shaderBindings)
+                {
+                    if (binding.descriptorBinding == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+                    {
+                        bindless_descriptor_writes.emplace_back();
+                        bindless_image_info.emplace_back();
+                        auto texture = binding.texture; // access_texture({texture_to_update.handle});
+                        VkWriteDescriptorSet &descriptor_write = bindless_descriptor_writes[0];
+                        descriptor_write = {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET};
+                        descriptor_write.descriptorCount = 1;
+                        descriptor_write.dstArrayElement = texture.index;
+                        descriptor_write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+                        descriptor_write.dstSet = m_pGlobalDescriptorSets;
+                        descriptor_write.dstBinding = 0;
+
+                        VkDescriptorImageInfo &descriptor_image_info = bindless_image_info.back();
+                        descriptor_image_info.sampler = texture.sampler;
+                        descriptor_image_info.imageView = texture.imageView;
+                        descriptor_image_info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+                        descriptor_write.pImageInfo = &descriptor_image_info;
+                        texture_index++;
+                        count++;
+                    }
+                }
+
+                vkUpdateDescriptorSets(m_pVkDataPtr->logicalDevice, count, bindless_descriptor_writes.data(), 0, nullptr);
+            }
+
             Ref<Material> materialRef = materialPool.insert(material.name, vkMaterial);
             return materialRef;
         }
@@ -174,11 +208,11 @@ namespace engine
 
     void VulkanResourceManager::pRecreateSwapChain(framework::Window::windowType *window)
     {
-        vkDeviceWaitIdle(m_pVkDataPtr->logicalDevice);
+        /*vkDeviceWaitIdle(m_pVkDataPtr->logicalDevice);
 
         for (auto &pass : renderPassPool)
         {
-            cleanupSwapChain(*m_pVkDataPtr, pass);
+            cleanupSwapChain(*m_pVkDataPtr);
         }
 
         vk::createSwapChain(*m_pVkDataPtr, window);
@@ -206,7 +240,7 @@ namespace engine
                 vk::createGraphicsPipeline(*m_pVkDataPtr, pass, m_pRenderPassInfo[pass.id]);
 
             vk::createFramebuffers(*m_pVkDataPtr, pass, pass.renderPassChain);
-        }
+        }*/
     }
 
     Ref<RenderPass> VulkanResourceManager::createDefaultRenderPass(RenderPassInfo renderPassInfo)
@@ -253,6 +287,7 @@ namespace engine
         }
 
         m_pDefaultRenderPassRef = renderPassPool.insert(renderPassInfo.name, m_pVkDataPtr->defaultRenderPass);
+        // init_imgui(*m_pVkDataPtr, window.getWindow(), m_pDescriptorPool, m_pVkDataPtr->defaultRenderPass.renderPass, m_pCommandPools.front(), m_pCommandBuffers.front());
 
         return m_pDefaultRenderPassRef;
     }

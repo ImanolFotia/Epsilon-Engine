@@ -67,9 +67,13 @@ namespace engine
 
         void Push(ObjectData) override;
 
-        void Sync() override;
+        void Submit() override;
+
+        void EndFrame() override;
 
         void Begin() override;
+
+        void BeginFrame() override;
 
         void End() override;
 
@@ -113,7 +117,7 @@ namespace engine
         Frame m_pFrame;
 
         vk::VulkanVertexInfo m_pVertexInfo;
-
+        bool imguiInit = false;
         uint32_t renderpass_id = 0;
         uint32_t attachedRenderPass = 0;
 
