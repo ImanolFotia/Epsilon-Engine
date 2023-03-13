@@ -73,6 +73,10 @@ namespace vk
             physical_features2.pNext = &indexing_features;
             vk_data.bindless_supported = true;
         }
+        else
+        {
+            std::cout << "bindless is not supported" << std::endl;
+        }
 
         VkDeviceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -220,10 +224,12 @@ namespace vk
                 vkGetPhysicalDeviceProperties(device, &deviceProperties);
                 std::string deviceName = deviceProperties.deviceName;
                 std::transform(deviceName.begin(), deviceName.end(), deviceName.begin(), ::toupper);
-                if (deviceName.find("NVIDIA") != std::string::npos)
+                // if (deviceName.find("NVIDIA") != std::string::npos)
+
+                if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
                 {
                     physicalDevice = device;
-                    std::cout << "found nvidia" << std::endl;
+                    std::cout << "found discrete gpu" << std::endl;
                     found = true;
                     break;
                 }

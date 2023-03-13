@@ -109,6 +109,7 @@ namespace vk
         VulkanTexture texture;
         VkDescriptorType descriptorBinding;
         uint32_t bindingPoint = 0;
+        bool isRenderPassAttachment = false;
         std::string name = "";
     };
 

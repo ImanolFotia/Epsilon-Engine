@@ -125,7 +125,8 @@ namespace engine
                 vk::VulkanShaderBinding shaderBinding = {
                     .texture = pass->renderPassChain.Textures.at(binding.index),
                     .descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-                    .bindingPoint = binding.bindingPoint};
+                    .bindingPoint = binding.bindingPoint,
+                    .isRenderPassAttachment = true};
 
                 vkMaterial.shaderBindings.push_back(shaderBinding);
             }
@@ -138,7 +139,8 @@ namespace engine
                     vk::VulkanShaderBinding shaderBinding = {
                         .texture = *texPool.get(tex),
                         .descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-                        .bindingPoint = binding.binding};
+                        .bindingPoint = binding.binding,
+                        .isRenderPassAttachment = false};
 
                     vkMaterial.shaderBindings.push_back(shaderBinding);
                 }
@@ -170,7 +172,7 @@ namespace engine
                 std::vector<VkDescriptorImageInfo> bindless_image_info;
                 for (auto &binding : vkMaterial.shaderBindings)
                 {
-                    if (binding.descriptorBinding == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+                    if (binding.descriptorBinding == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER && !binding.isRenderPassAttachment)
                     {
                         bindless_descriptor_writes.emplace_back();
                         bindless_image_info.emplace_back();

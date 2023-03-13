@@ -93,6 +93,7 @@ namespace engine
         drawCommand.meshResource.numVertices = mesh->numVertices;
         drawCommand.meshResource.vertexBuffer = mesh->vertexBuffer;
         drawCommand.meshResource.vertexOffset = mesh->vertexOffset;
+        drawCommand.uniformIndex = object.uniformIndex;
         drawCommand.layoutIndex = object.layout_index;
 
         drawCommand.material = object.material;
@@ -104,18 +105,20 @@ namespace engine
 
     void VulkanRenderer::BeginFrame()
     {
-        /*
-                if (!imguiInit)
-                {
 
-                    auto window = engine::Context::getSingleton().Window();
-                    init_imgui(m_pVkData, window.getWindow(),
-                               m_pResourceManagerRef->m_pDescriptorPool,
-                               m_pVkData.defaultRenderPass.renderPass,
-                               m_pResourceManagerRef->m_pCommandPools.front(),
-                               m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
-                    imguiInit = true;
-                }*/
+        if (!imguiInit)
+        {
+
+            auto window = engine::Context::getSingleton().Window();
+            m_pImguiRenderer.Init(m_pVkData, window.getWindow(),
+                                  m_pResourceManagerRef->m_pDescriptorPool,
+                                  m_pVkData.defaultRenderPass.renderPass,
+                                  m_pResourceManagerRef->m_pCommandPools.front(),
+                                  m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
+            imguiInit = true;
+        }
+
+        m_pImguiRenderer.newFrame(m_pCurrentFrame, m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
 
         m_pImageIndex = pPrepareSyncObjects();
 
@@ -176,6 +179,9 @@ namespace engine
 
     void VulkanRenderer::End()
     {
+
+        m_pImguiRenderer.pDemo();
+
         if (m_pImageIndex == -1)
             return;
 

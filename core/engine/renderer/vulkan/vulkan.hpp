@@ -8,6 +8,7 @@
 #include "../draw_command.hpp"
 
 #include "apis/vk/vk.hpp"
+#include "imgui/imgui_setup.hpp"
 
 #include <vector>
 #include <list>
@@ -124,5 +125,7 @@ namespace engine
         std::list<DrawCommand> m_pCurrentCommandQueue;
 
         VulkanResourceManager *m_pResourceManagerRef = nullptr;
+
+        ImGuiRenderer m_pImguiRenderer{}; //!! TODO: find a better place for this
     };
 }

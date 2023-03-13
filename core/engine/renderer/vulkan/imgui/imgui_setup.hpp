@@ -1,3 +1,4 @@
+#pragma once
 // Dear ImGui: standalone example application for Glfw + Vulkan
 // If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of imgui.cpp.
 // Read online: https://github.com/ocornut/imgui/tree/master/docs
@@ -39,13 +40,22 @@ class ImGuiRenderer
     VkCommandBuffer m_pCommandBuffer = VK_NULL_HANDLE;
     VkRenderPass m_pRenderPass = VK_NULL_HANDLE;
 
+    vk::VulkanData *m_pVkDataPtr = nullptr;
+    uint32_t m_pCurrentIndex{};
+
 public:
-    void Init(vk::VulkanData &vk_data,
-              GLFWwindow *window,
-              VkDescriptorPool &descriptorPool,
-              VkRenderPass &renderPass,
-              VkCommandPool &commandPool,
-              VkCommandBuffer commandBuffer)
+    void newFrame(uint32_t currentIndex, VkCommandBuffer &currentCommandBuffer)
+    {
+        m_pCurrentIndex = currentIndex;
+        m_pCommandBuffer = currentCommandBuffer;
+    }
+    void
+    Init(vk::VulkanData &vk_data,
+         GLFWwindow *window,
+         VkDescriptorPool &descriptorPool,
+         VkRenderPass &renderPass,
+         VkCommandPool &commandPool,
+         VkCommandBuffer commandBuffer)
     {
         // Setup Dear ImGui context
         IMGUI_CHECKVERSION();
@@ -62,6 +72,8 @@ public:
         m_pDevice = vk_data.logicalDevice;
         m_pMainWindowData.ClearValue.color = {0.0, 0.0, 0.0, 0.0f};
 
+        m_pRenderPass = vk_data.defaultRenderPass.renderPass;
+
         m_pMainWindowData.RenderPass = vk_data.defaultRenderPass.renderPass;
         m_pMainWindowData.Pipeline = vk_data.defaultRenderPass.renderPipelines.front().graphicsPipeline;
         m_pFramebuffer = vk_data.defaultRenderPass.renderPassChain.Framebuffers.front();
@@ -74,7 +86,7 @@ public:
         // ImGui_ImplVulkanH_Frame *Frames;
         // ImGui_ImplVulkanH_FrameSemaphores *FrameSemaphores;
 
-        // io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
         // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
         // Setup Dear ImGui style
@@ -132,7 +144,23 @@ public:
         Create render pass info
         Record command buffer
         */
+        // vk::recordCommandBuffer(m_pCommandBuffer, 0);
+        VkRenderPassBeginInfo renderPassInfo{};
+        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+        renderPassInfo.renderPass = m_pRenderPass;
+
+        renderPassInfo.framebuffer = m_pVkDataPtr->defaultRenderPass.renderPassChain.Framebuffers[m_pCurrentIndex];
+
+        renderPassInfo.clearValueCount = m_pVkDataPtr->defaultRenderPass.clearValues.size();
+        renderPassInfo.pClearValues = m_pVkDataPtr->defaultRenderPass.clearValues.data();
+
+        vkCmdBeginRenderPass(m_pCommandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+        /**/
         ImGui_ImplVulkan_RenderDrawData(draw_data, m_pCommandBuffer);
+
+        vk::endRenderPass(m_pCommandBuffer, *m_pVkDataPtr);
+        // vk::endRecording(m_pCommandBuffer);
         /*
         end render pass
         stop cmd recording
@@ -141,7 +169,7 @@ public:
     void End() {}
     void Destroy() {}
 
-private:
+public:
     void pDemo()
     {
 

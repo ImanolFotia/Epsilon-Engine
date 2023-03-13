@@ -37,25 +37,26 @@ namespace engine
         Ref<Mesh> mesh;
         Ref<Material> material;
         Ref<PushConstant> pushConstant;
-        glm::mat4 modelMatrix;
-        glm::vec3 position;
-        glm::vec3 scale;
+        glm::mat4 modelMatrix{};
+        glm::vec3 position{};
+        glm::vec3 scale{};
         glm::quat rotation = glm::quat(1.0, 0.0, 0.0, 0.0);
         uint32_t layout_index = 0;
+        uint32_t uniformIndex = 0;
     };
 
     struct TextureData
     {
-        size_t id;
-        size_t size;
-        size_t offset;
-        size_t texture_bucket;
+        size_t id{};
+        size_t size{};
+        size_t offset{};
+        size_t texture_bucket{};
     };
 
     struct RenderObject
     {
         std::list<ObjectData>::iterator objectId;
-        uint32_t materialId;
+        uint32_t materialId{};
     };
 
     /**
@@ -115,6 +116,6 @@ namespace engine
         virtual ~Renderer() {}
 
     protected:
-        renderer_type m_pType;
+        renderer_type m_pType{};
     };
 }
