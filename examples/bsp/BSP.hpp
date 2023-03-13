@@ -72,12 +72,19 @@ namespace BSP
             using en = engine::UniformBindingType;
 
             engine::MaterialInfo material = {
+                .bindingInfo = {{.size = sizeof(ShaderData), .binding = 0, .type = en::UNIFORM_BUFFER}},
+
                 .name = "DefaultMaterial",
-                .bindingInfo = {{.size = sizeof(ShaderData), .type = en::UNIFORM_BUFFER, .binding = 0}}};
+            };
 
             engine::MaterialInfo shadowMaterial = {
+                .bindingInfo = {{
+                    .size = sizeof(ShaderData),
+                    .binding = 0,
+                    .type = en::UNIFORM_BUFFER,
+                }},
                 .name = "ShadowMaterial",
-                .bindingInfo = {{.size = sizeof(ShaderData), .type = en::UNIFORM_BUFFER, .binding = 0}}};
+            };
 
             shadowDummyMaterial = Epsilon::getContext().ResourceManager()->createMaterial(shadowMaterial,
                                                                                           m_pShadowRenderPass);
@@ -156,9 +163,9 @@ namespace BSP
                 calculateNormals(vertices, bspMap.Faces()[i].indices);
 
                 face.mesh = Epsilon::getContext().ResourceManager()->createMesh({
-                    .name = "BSPFace" + std::to_string(i),
                     .vertices = vertices,
                     .indices = bspMap.Faces()[i].indices,
+                    .name = "BSPFace" + std::to_string(i),
                 });
             }
         }
@@ -186,6 +193,7 @@ namespace BSP
                 Epsilon::getContext().Renderer()->Push(objectData);
             }
 
+            Epsilon::getContext().Renderer()->BeginFrame();
             Epsilon::getContext().Renderer()->Begin();
             Epsilon::getContext().Renderer()->Flush(m_pShadowRenderPass, engine::DrawType::INDEXED_INDIRECT);
 
@@ -202,9 +210,9 @@ namespace BSP
             }
 
             // drawFrame(m_pRenderPass);
-
             engine::Context::getSingleton().Renderer()->Flush(m_pRenderPass, engine::DrawType::INDEXED_INDIRECT);
             engine::Context::getSingleton().Renderer()->End();
+
             engine::Context::getSingleton().Renderer()->Submit();
             engine::Context::getSingleton().Renderer()->EndFrame();
         }
@@ -370,7 +378,7 @@ namespace BSP
                     .subpasses({})
                     .dimensions({.width = 3000, .height = 3000})
                     .attachments(
-                        {{.format = COLOR_R_32F,
+                        {{.format = DEPTH_F32,
                           .wrapMode = CLAMP_TO_BORDER,
                           .filtering = LINEAR,
                           .compareFunc = LESS_OR_EQUAL,
@@ -378,7 +386,7 @@ namespace BSP
                           .isSampler = true,
                           .isDepthAttachment = false,
                           .isSwapChainAttachment = false},
-                         {.format = COLOR_R_32F,
+                         {.format = DEPTH_F32,
                           .wrapMode = CLAMP_TO_BORDER,
                           .filtering = engine::POINT,
                           .compareFunc = ALWAYS,

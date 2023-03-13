@@ -46,17 +46,24 @@ namespace vk
         deviceFeatures.samplerAnisotropy = VK_TRUE;
         deviceFeatures.multiDrawIndirect = VK_TRUE;
         deviceFeatures.shaderSampledImageArrayDynamicIndexing = VK_TRUE;
-
+        VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures layoutFeatures{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES};
         VkPhysicalDeviceDescriptorIndexingFeatures indexing_features{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT, nullptr};
         VkPhysicalDeviceFeatures2 device_features{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2, &indexing_features};
+        VkPhysicalDeviceFeatures2 device_features2{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2, &layoutFeatures};
 
         vkGetPhysicalDeviceFeatures2(vk_data.physicalDevice, &device_features);
+        vkGetPhysicalDeviceFeatures2(vk_data.physicalDevice, &device_features2);
 
         bool bindless_supported = indexing_features.descriptorBindingPartiallyBound && indexing_features.runtimeDescriptorArray;
+        bool separateStencilSupported = layoutFeatures.separateDepthStencilLayouts;
 
         VkPhysicalDeviceFeatures2 physical_features2 = {VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2};
         vkGetPhysicalDeviceFeatures2(vk_data.physicalDevice, &physical_features2);
 
+        if (separateStencilSupported)
+        {
+            indexing_features.pNext = &layoutFeatures;
+        }
         if (bindless_supported)
         {
             indexing_features.descriptorBindingPartiallyBound = VK_TRUE;

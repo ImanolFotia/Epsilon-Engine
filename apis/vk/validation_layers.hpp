@@ -10,7 +10,11 @@ namespace vk
     static VkDebugUtilsMessengerEXT debugMessenger;
 
     static const std::vector<const char *> validationLayers = {
-        "VK_LAYER_KHRONOS_validation"};
+        "VK_LAYER_KHRONOS_validation",
+        //"VK_LAYER_LUNARG_parameter_validation",
+        //"VK_LAYER_LUNARG_object_tracker",
+        //"VK_LAYER_LUNARG_core_validation"
+    };
 
 #if 0
     const bool enableValidationLayers = false;

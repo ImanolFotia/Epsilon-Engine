@@ -150,6 +150,7 @@ namespace engine
     void VulkanRenderer::Submit()
     {
 
+        VkSemaphore signalSemaphores[] = {m_pFrame.SyncObjects().renderFinishedSemaphores};
         vk::Sync(m_pVkData, m_pFrame.CommandBuffer(), m_pCurrentFrame);
         /*
                 g_Framebuffer = m_pVkData.defaultRenderPass.renderPassChain.Framebuffers[m_pImageIndex];
@@ -157,28 +158,20 @@ namespace engine
                 g_ImageSemaphore = m_pFrame.SyncObjects().imageAvailableSemaphores;
                 g_RenderSemaphore = m_pFrame.SyncObjects().renderFinishedSemaphores;
                 g_Fence = m_pFrame.SyncObjects().inFlightFences;*/
-    }
-
-    void VulkanRenderer::EndFrame()
-    {
-
-        VkSemaphore signalSemaphores[] = {m_pFrame.SyncObjects().renderFinishedSemaphores};
 
         bool should_recreate_swapchain = vk::Present(m_pVkData, signalSemaphores, m_pImageIndex);
 
         if (should_recreate_swapchain)
         {
             pRecreateSwapChain();
-            // vkDestroyDescriptorPool(m_pVkData.logicalDevice, m_pResourceManagerRef->m_pDescriptorPool, nullptr);
-            // m_pResourceManagerRef->pCreateDescriptorPool();
-
-            // std::cout << "recreating descriptor sets\n";
-
-            // m_pResourceManagerRef->pRecreateDescriptorSets();
             std::cout << "swap chain recreated\n";
         }
 
         m_pCurrentFrame = (m_pCurrentFrame + 1) % vk::MAX_FRAMES_IN_FLIGHT;
+    }
+
+    void VulkanRenderer::EndFrame()
+    {
     }
 
     void VulkanRenderer::End()
@@ -259,6 +252,21 @@ namespace engine
                                  m_pFrame.CommandBuffer());
                 prev_layout = command.layoutIndex;
             }
+
+            VkExtent2D extent = renderPass->renderPassChain.Extent;
+            VkViewport viewport{};
+            viewport.x = 0.0f;
+            viewport.y = 0.0f;
+            viewport.width = (float)extent.width;
+            viewport.height = (float)extent.height;
+            viewport.minDepth = 0.0f;
+            viewport.maxDepth = 1.0f;
+            vkCmdSetViewport(m_pFrame.CommandBuffer(), 0, 1, &viewport);
+
+            VkRect2D scissor{};
+            scissor.offset = {0, 0};
+            scissor.extent = extent;
+            vkCmdSetScissor(m_pFrame.CommandBuffer(), 0, 1, &scissor);
 
             auto material = m_pResourceManagerRef->materialPool.get(command.material);
             auto vertexBuffer = m_pResourceManagerRef->vertexBufferPool.get(

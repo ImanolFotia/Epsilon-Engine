@@ -124,6 +124,8 @@ namespace vk
         std::vector<std::vector<VkPipelineShaderStageCreateInfo>> shaderStages;
 
         std::vector<vk::VulkanVertexInfo> vertexInfos;
+
+        VkPipelineDepthStencilStateCreateInfo depthStencil;
         for (int layout_index = 0; layout_index < renderPassInfo.numLayouts; layout_index++)
         {
             auto &renderPipeline = renderPass.renderPipelines.at(layout_index);
@@ -184,14 +186,15 @@ namespace vk
 
             auto push_constant = setupPushConstant(renderPassInfo.pushConstant.size);
 
-            std::vector<VkDynamicState> dynamicStates = {
+            VkDynamicState dynamicStates[] = {
                 VK_DYNAMIC_STATE_VIEWPORT,
+                VK_DYNAMIC_STATE_SCISSOR,
                 VK_DYNAMIC_STATE_LINE_WIDTH};
 
             VkPipelineDynamicStateCreateInfo dynamicState{};
             dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-            dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
-            dynamicState.pDynamicStates = dynamicStates.data();
+            dynamicState.dynamicStateCount = 3;
+            dynamicState.pDynamicStates = dynamicStates;
 
             auto &pipelineLayout = renderPipeline.pipelineLayout.emplace_back();
             createPipelineLayout(vk_data, push_constant, pipelineLayout, renderPipeline.descriptorSetLayouts);
@@ -203,7 +206,6 @@ namespace vk
             pipelineInfo.stageCount = shaderStages[layout_index].size();
             pipelineInfo.pStages = shaderStages[layout_index].data();
 
-            VkPipelineDepthStencilStateCreateInfo depthStencil{};
             if (renderPass.renderPassData.hasDepthAttachment)
             {
                 depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
@@ -216,6 +218,8 @@ namespace vk
                 depthStencil.stencilTestEnable = VK_FALSE;
                 depthStencil.pNext = NULL;
                 depthStencil.flags = 0;
+                depthStencil.front = {}; // Optional
+                depthStencil.back = {};  // Optional
                 pipelineInfo.pDepthStencilState = &depthStencil;
             }
 
@@ -235,8 +239,8 @@ namespace vk
             pipelineInfo.renderPass = renderPass.renderPass;
             pipelineInfo.subpass = 0;
             pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
+            pipelineInfo.pDynamicState = &dynamicState;
         }
-        // pipelineInfo.pDynamicState = &dynamicState;
 
         // renderPipeline.graphicsPipeline.resize(pipelinesInfo.size());
         std::vector<VkPipeline> pipelines;

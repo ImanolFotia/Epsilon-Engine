@@ -14,7 +14,7 @@
 
 namespace vk
 {
-    static const uint32_t MAX_FRAMES_IN_FLIGHT = 2;
+    static const uint32_t MAX_FRAMES_IN_FLIGHT = 3;
     const size_t ALLOCATION_SIZE_MB = 0xFFFFFFF;
 
     struct VulkanVertexInfo
@@ -31,7 +31,7 @@ namespace vk
 
     struct VulkanBuffer
     {
-        uint32_t id;
+        uint32_t id = 0;
         VkBuffer buffer;
         VkBufferCreateInfo bufferInfo;
         uint32_t allocatedVertices = 0;
@@ -41,7 +41,7 @@ namespace vk
         std::unordered_map<uint32_t, uint32_t> subBufferIndex;
         VkDescriptorBufferInfo descriptorInfo;
         VmaAllocation allocation;
-        std::string name;
+        std::string name = "";
     };
 
     struct VulkanTextureInfo
@@ -66,7 +66,7 @@ namespace vk
 
     struct VulkanTexture
     {
-        uint32_t index;
+        uint32_t index = 0;
         VulkanTextureInfo info;
         VulkanTextureBindingType bindingType = MATERIAL_SAMPLER;
         VkImageCreateInfo imageInfo;
@@ -93,7 +93,7 @@ namespace vk
     struct VulkanUniformBuffer
     {
         VulkanBuffer buffers[MAX_FRAMES_IN_FLIGHT];
-        size_t size;
+        size_t size = 0;
     };
 
     struct VulkanAllocation
@@ -101,15 +101,15 @@ namespace vk
         VkDeviceMemory deviceMemory;
         VkMemoryPropertyFlags properties;
         std::vector<VulkanBuffer> ownedBuffers;
-        size_t allocatedBytes;
+        size_t allocatedBytes = 0;
     };
 
     struct VulkanShaderBinding
     {
         VulkanTexture texture;
         VkDescriptorType descriptorBinding;
-        uint32_t bindingPoint;
-        std::string name;
+        uint32_t bindingPoint = 0;
+        std::string name = "";
     };
 
     struct VulkanMaterial
@@ -122,7 +122,7 @@ namespace vk
         VkDescriptorBufferInfo bufferInfo[MAX_FRAMES_IN_FLIGHT];
         size_t bufferOffset = 0;
         size_t bufferSize = 0;
-        std::string name;
+        std::string name = "";
     };
 
     struct VulkanRenderPipeline
@@ -216,11 +216,11 @@ namespace vk
         VkClearColorValue clearColor = {1.0f, 1.0f, 1.0f, 1.0f};
         VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
         std::vector<VkClearValue> clearValues = {};
-        uint32_t id;
+        uint32_t id = 0;
 
         std::list<VulkanUniformBuffer> uniformBuffer;
         uint32_t numAttachments = 1;
-        std::string name;
+        std::string name = "";
     };
 
     struct VulkanTechnique

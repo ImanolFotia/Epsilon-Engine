@@ -192,8 +192,8 @@ namespace engine
                         count++;
                     }
                 }
-
-                vkUpdateDescriptorSets(m_pVkDataPtr->logicalDevice, count, bindless_descriptor_writes.data(), 0, nullptr);
+                if (count > 0)
+                    vkUpdateDescriptorSets(m_pVkDataPtr->logicalDevice, count, bindless_descriptor_writes.data(), 0, nullptr);
             }
 
             Ref<Material> materialRef = materialPool.insert(material.name, vkMaterial);
@@ -327,8 +327,12 @@ namespace engine
             texInfo.width = renderPassInfo.dimensions.width;
             texInfo.height = renderPassInfo.dimensions.height;
             texInfo.num_channels = attachment.isDepthAttachment ? 1 : resolveNumChannels(attachment.format);
-            texInfo.usage = attachment.isDepthAttachment ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+            texInfo.usage = attachment.isDepthAttachment ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+
             texInfo.compareEnable = attachment.depthCompare;
+
+            if (texInfo.format == VK_FORMAT_D32_SFLOAT)
+                texInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 
             if (attachment.isSampler)
                 texInfo.usage |= VK_IMAGE_USAGE_SAMPLED_BIT;
@@ -338,7 +342,7 @@ namespace engine
             texture.bindingType = vk::RENDER_BUFFER_SAMPLER;
 
             createImageView(*m_pVkDataPtr, texture,
-                            attachment.isDepthAttachment ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
+                            (attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
 
             if (attachment.isSampler)
             {

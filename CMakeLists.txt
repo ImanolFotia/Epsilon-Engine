@@ -256,7 +256,8 @@ set(PROJECT_FILES
         ${IMGUI_BUILD_DIR}/imgui_demo.cpp
         ${IMGUI_BUILD_DIR}/imgui_draw.cpp
         ${IMGUI_BUILD_DIR}/imgui_tables.cpp
-        ${IMGUI_BUILD_DIR}/imgui_widgets.cpp)
+        ${IMGUI_BUILD_DIR}/imgui_widgets.cpp
+        )
 
 if (BUILD_AS_LIBRARY)
 

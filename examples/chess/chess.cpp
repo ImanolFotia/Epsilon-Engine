@@ -634,11 +634,12 @@ namespace ChessApp
         using en = engine::UniformBindingType;
         {
             engine::MaterialInfo material = {
-                .name = "board",
-                .bindingInfo = {{.size = sizeof(ChessShaderData), .type = en::UNIFORM_BUFFER, .binding = 0}}};
+                .bindingInfo = {{.size = sizeof(ChessShaderData), .offset = 0, .binding = 0, .type = en::UNIFORM_BUFFER}},
+                .name = "board"};
 
             m_pBoardModel.material = Epsilon::getContext().ResourceManager()->createMaterial(material, m_pRenderPass);
         }
+
         // create the material for the pieces
         engine::Ref<engine::Material> pieceMaterial;
         {
@@ -655,9 +656,11 @@ namespace ChessApp
                                                       .name("pieces");
 
             engine::MaterialInfo material = {
+                .bindingInfo = {{.size = sizeof(ChessShaderData), .binding = 0, .type = en::UNIFORM_BUFFER},
+                                {.size = 0, .offset = 0, .binding = 1, .type = en::TEXTURE_IMAGE_COMBINED_SAMPLER, .textureInfo = texInfo}},
+
                 .name = "pieces",
-                .bindingInfo = {{.size = sizeof(ChessShaderData), .type = en::UNIFORM_BUFFER, .binding = 0},
-                                {.size = 0, .type = en::TEXTURE_IMAGE_COMBINED_SAMPLER, .offset = 0, .binding = 1, .textureInfo = texInfo}}};
+            };
 
             pieceMaterial = Epsilon::getContext().ResourceManager()->createMaterial(material, m_pRenderPass);
             framework::free_image_data(pixels);

@@ -64,7 +64,7 @@ namespace vk
 
                 VkAttachmentReference attachmentRef{};
                 attachmentRef.attachment = index;
-                attachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+                attachmentRef.layout = attachment.format == engine::DEPTH_F32 ? VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
                 renderPass.renderPassData.colorAttachmentRefs.push_back(attachmentRef);
             }
 
@@ -81,8 +81,8 @@ namespace vk
 
         if (containsDepthAttachment)
             renderPass.renderPassData.subpass.pDepthStencilAttachment = &renderPass.renderPassData.depthAttachmentRef;
-
-        std::array<VkSubpassDependency, 2> dependencies;
+        std::array<VkSubpassDependency, 2>
+            dependencies;
 
         dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
         dependencies[0].dstSubpass = 0;

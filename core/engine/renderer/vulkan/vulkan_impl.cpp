@@ -240,14 +240,14 @@ namespace engine
         allocInfo.descriptorSetCount = 1;
         allocInfo.pSetLayouts = layouts.data();
 
-        {
-            VkDescriptorSetVariableDescriptorCountAllocateInfoEXT count_info{VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT};
-            uint32_t max_binding = MAX_BINDLESS_RESOURCES - 1;
-            count_info.descriptorSetCount = 1;
-            // This number is the max allocatable count
-            count_info.pDescriptorCounts = &max_binding;
-            allocInfo.pNext = &count_info;
-        }
+        VkDescriptorSetVariableDescriptorCountAllocateInfo count_info{VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO};
+        uint32_t max_binding = MAX_BINDLESS_RESOURCES - 1;
+        count_info.descriptorSetCount = 1;
+        count_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO;
+        // This number is the max allocatable count
+        count_info.pDescriptorCounts = &max_binding;
+        allocInfo.pNext = &count_info;
+
         if (vkAllocateDescriptorSets(m_pVkDataPtr->logicalDevice, &allocInfo, &descriptorSets) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to allocate descriptor sets!");
