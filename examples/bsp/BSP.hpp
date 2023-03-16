@@ -174,6 +174,7 @@ namespace BSP
         {
 
             std::cout << m_pMap.m_pFaces.size() << " faces" << std::endl;
+            camData.lightPosition = glm::vec3(1.0, 50.0, 0.0);
         }
 
         void onRender()
@@ -211,7 +212,7 @@ namespace BSP
 
             // drawFrame(m_pRenderPass);
             engine::Context::getSingleton().Renderer()->Flush(m_pRenderPass, engine::DrawType::INDEXED_INDIRECT);
-            engine::Context::getSingleton().Renderer()->End();
+            engine::Context::getSingleton().Renderer()->End(camData.lightPosition);
 
             engine::Context::getSingleton().Renderer()->Submit();
             engine::Context::getSingleton().Renderer()->EndFrame();
@@ -222,34 +223,35 @@ namespace BSP
     private:
         bool updateCam = true;
         double m_pTime = 0.0;
+        ShaderData camData;
 
         void setupCamera()
         {
 
-            framework::Input::KeyBoard::KeyboardEventHandler.addListener(([this](auto *sender, beacon::args *args)
-                                                                          {
-                                                                              if (args == nullptr)
-                                                                                  return;
+            framework::Input::KeyBoard::KeyboardEventHandler.addListener(
+                ([this](auto *sender, beacon::args *args)
+                 {
+                     if (args == nullptr)
+                         return;
 
-                                                                              auto obj = args->to<framework::Input::KeyboardArgs>();
+                     auto obj = args->to<framework::Input::KeyboardArgs>();
 
                 // std::cout << "pressed" << std::endl;
 #if USE_GLFW
-                                                                              if (obj.key_up_index == framework::Input::GLFW::Key::M)
-                                                                              {
-                                                                                  updateCam = !updateCam;
-                                                                              }
-                                                                              if (obj.key_up_index == framework::Input::GLFW::Key::P)
-                                                                              {
-                                                                                  auto pos = m_pCamera->getPosition();
-                                                                                  auto dir = m_pCamera->getDirection();
-                                                                                  std::cout << pos.x << " " << pos.y << " " << pos.z << std::endl;
-                                                                                  std::cout << dir.x << " " << dir.y << " " << dir.z << std::endl;
-                                                                              }
+                     if (obj.key_up_index == framework::Input::GLFW::Key::M)
+                     {
+                         updateCam = !updateCam;
+                     }
+                     if (obj.key_up_index == framework::Input::GLFW::Key::P)
+                     {
+                         auto pos = m_pCamera->getPosition();
+                         auto dir = m_pCamera->getDirection();
+                         std::cout << pos.x << " " << pos.y << " " << pos.z << std::endl;
+                         std::cout << dir.x << " " << dir.y << " " << dir.z << std::endl;
+                     }
 #endif
-                                                                          }));
+                 }));
 
-            ShaderData camData;
             camData.iResolution = glm::vec2(getWindowDimensions().first, getWindowDimensions().second);
 
             static auto startTime = std::chrono::high_resolution_clock::now();
@@ -281,8 +283,6 @@ namespace BSP
         void setupShadowCamera()
         {
 
-            ShaderData camData;
-
             camData.iResolution = glm::vec2(3000, 3000);
 
             // 30.6363, 13.117, -38.7729
@@ -296,7 +296,7 @@ namespace BSP
                                       -25.0f,
                                       25.0f, -20.f, 100.0f);
 
-            camData.lightPosition = m_pCamera->getPosition();
+            // camData.lightPosition = m_pCamera->getPosition();
             camData.proj[1][1] *= -1;
             lightMatrix = camData.proj * camData.view * glm::mat4(1.0);
             camData.lightMatrix = lightMatrix;
@@ -359,6 +359,7 @@ namespace BSP
                                       .format = COLOR_RGBA,
                                       .isDepthAttachment = false,
                                       .isSwapChainAttachment = true,
+                                      .clearAttachment = true,
                                   },
                                   {.format = DEPTH_F32_STENCIL_8,
                                    .isDepthAttachment = true}})
@@ -393,7 +394,8 @@ namespace BSP
                           .depthCompare = false,
                           .isSampler = true,
                           .isDepthAttachment = false,
-                          .isSwapChainAttachment = false},
+                          .isSwapChainAttachment = false,
+                          .clearAttachment = true},
 
                          {.format = DEPTH_F32_STENCIL_8,
                           .isDepthAttachment = true}})

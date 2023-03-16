@@ -1,6 +1,5 @@
 #version 460
 #extension GL_EXT_nonuniform_qualifier : enable
-#extension VK_EXT_descriptor_indexing : enable
 
 layout(location = 0) out vec4 outColor;
 
@@ -45,10 +44,10 @@ vec3 shadowCoord = shadowCoords.xyz / shadowCoords.w;
 #define BLOCKER_SEARCH_NUM_SAMPLES 16
 #define PCF_NUM_SAMPLES 64
 #define NEAR_PLANE 0.1
-#define LIGHT_WORLD_SIZE 1
-#define LIGHT_FRUSTUM_WIDTH 50
+float LIGHT_WORLD_SIZE = ubo.lightPosition.x; // 1.0
+float LIGHT_FRUSTUM_WIDTH = ubo.lightPosition.y; // 50.0
 // Assuming that LIGHT_FRUSTUM_WIDTH == LIGHT_FRUSTUM_HEIGHT
-#define LIGHT_SIZE_UV (LIGHT_WORLD_SIZE / LIGHT_FRUSTUM_WIDTH)
+float LIGHT_SIZE_UV = (LIGHT_WORLD_SIZE / LIGHT_FRUSTUM_WIDTH);
 
 vec2 poissonDisk[64] = {
     vec2(-0.613392, 0.617481),
@@ -137,7 +136,7 @@ void FindBlocker(out float avgBlockerDepth,
 {
     // This uses similar triangles to compute what
     // area of the shadow map we should search
-    float searchWidth =  20.0;//*((zReceiver - NEAR_PLANE) / zReceiver);
+    float searchWidth =  LIGHT_SIZE_UV;//*((zReceiver - NEAR_PLANE) / zReceiver);
     float blockerSum = 0;
     numBlockers = 0;
 
@@ -190,7 +189,7 @@ float PCSS(vec4 coords)
         return 1.0;
     // STEP 2: penumbra size
     float penumbraRatio = PenumbraSize(zReceiver, avgBlockerDepth);
-    float filterRadiusUV = penumbraRatio * 10.0 /** NEAR_PLANE / zReceiver*/;
+    float filterRadiusUV = penumbraRatio * ubo.lightPosition.z /** NEAR_PLANE / zReceiver*/;
     // STEP 3: filtering
     return PCF_Filter(uv, zReceiver, filterRadiusUV);
 }

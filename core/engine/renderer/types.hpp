@@ -275,6 +275,7 @@ namespace engine
         bool isSampler = false;
         bool isDepthAttachment = false;
         bool isSwapChainAttachment = false;
+        bool clearAttachment = true;
         std::string name;
     };
 

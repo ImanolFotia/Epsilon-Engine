@@ -54,7 +54,7 @@ namespace vk
                 VkAttachmentDescription attachmentDesc{};
                 attachmentDesc.format = renderPass.renderPassChain.ImageFormats[index];
                 attachmentDesc.samples = VK_SAMPLE_COUNT_1_BIT;
-                attachmentDesc.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+                attachmentDesc.loadOp = attachment.clearAttachment ? VK_ATTACHMENT_LOAD_OP_CLEAR : VK_ATTACHMENT_LOAD_OP_LOAD;
                 attachmentDesc.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
                 attachmentDesc.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
                 attachmentDesc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;

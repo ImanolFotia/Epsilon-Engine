@@ -106,20 +106,6 @@ namespace engine
     void VulkanRenderer::BeginFrame()
     {
 
-        if (!imguiInit)
-        {
-
-            auto window = engine::Context::getSingleton().Window();
-            m_pImguiRenderer.Init(m_pVkData, window.getWindow(),
-                                  m_pResourceManagerRef->m_pDescriptorPool,
-                                  m_pVkData.defaultRenderPass.renderPass,
-                                  m_pResourceManagerRef->m_pCommandPools.front(),
-                                  m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
-            imguiInit = true;
-        }
-
-        m_pImguiRenderer.newFrame(m_pCurrentFrame, m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
-
         m_pImageIndex = pPrepareSyncObjects();
 
         if (m_pImageIndex == -1)
@@ -139,6 +125,19 @@ namespace engine
         // std::cout << "m_pImageIndex " << m_pImageIndex << std::endl;
 
         vkResetCommandBuffer(m_pFrame.CommandBuffer(), 0);
+
+        if (!imguiInit)
+        {
+
+            auto window = engine::Context::getSingleton().Window();
+            m_pImguiRenderer.Init(m_pVkData, window.getWindow(),
+                                  m_pResourceManagerRef->m_pDescriptorPool,
+                                  m_pVkData.defaultRenderPass.renderPass,
+                                  m_pResourceManagerRef->m_pCommandPools.front(),
+                                  m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
+            imguiInit = true;
+        }
+        m_pImguiRenderer.newFrame(m_pCurrentFrame, m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
     }
 
     void
@@ -177,10 +176,10 @@ namespace engine
     {
     }
 
-    void VulkanRenderer::End()
+    void VulkanRenderer::End(glm::vec3 &v)
     {
 
-        m_pImguiRenderer.pDemo();
+        m_pImguiRenderer.DrawUI(std::forward<glm::vec3 &>(v));
 
         if (m_pImageIndex == -1)
             return;
@@ -237,7 +236,7 @@ namespace engine
             break;
         }
 
-        vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
+        // vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
         m_pCurrentCommandQueue.clear();
     }
 

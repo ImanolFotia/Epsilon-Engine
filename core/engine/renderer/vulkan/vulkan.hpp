@@ -76,7 +76,7 @@ namespace engine
 
         void BeginFrame() override;
 
-        void End() override;
+        void End(glm::vec3 &v) override;
 
         void Flush(engine::Ref<engine::RenderPass>, engine::DrawType) override;
 

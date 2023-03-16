@@ -93,7 +93,7 @@ namespace engine
 
         virtual void Begin() = 0;
 
-        virtual void End() = 0;
+        virtual void End(glm::vec3 &v) = 0;
 
         virtual void Flush(Ref<RenderPass>, engine::DrawType) = 0;
 

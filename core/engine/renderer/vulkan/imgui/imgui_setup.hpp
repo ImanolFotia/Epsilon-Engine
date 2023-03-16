@@ -57,6 +57,7 @@ public:
          VkCommandPool &commandPool,
          VkCommandBuffer commandBuffer)
     {
+        m_pVkDataPtr = &vk_data;
         // Setup Dear ImGui context
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -75,7 +76,7 @@ public:
         m_pRenderPass = vk_data.defaultRenderPass.renderPass;
 
         m_pMainWindowData.RenderPass = vk_data.defaultRenderPass.renderPass;
-        m_pMainWindowData.Pipeline = vk_data.defaultRenderPass.renderPipelines.front().graphicsPipeline;
+        // m_pMainWindowData.Pipeline = vk_data.defaultRenderPass.renderPipelines.front().graphicsPipeline;
         m_pFramebuffer = vk_data.defaultRenderPass.renderPassChain.Framebuffers.front();
         m_pQueue = vk_data.graphicsQueue;
         m_pCommandBuffer = commandBuffer; // The window pipeline may uses a different VkRenderPass than the one passed in ImGui_ImplVulkan_InitInfo
@@ -109,7 +110,7 @@ public:
         init_info.ImageCount = vk::MAX_FRAMES_IN_FLIGHT;
         init_info.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
         init_info.Allocator = VK_NULL_HANDLE;
-        ImGui_ImplVulkan_Init(&init_info, renderPass);
+        ImGui_ImplVulkan_Init(&init_info, m_pVkDataPtr->defaultRenderPass.renderPass);
 
         {
             // Use any command queue
@@ -147,20 +148,24 @@ public:
         // vk::recordCommandBuffer(m_pCommandBuffer, 0);
         VkRenderPassBeginInfo renderPassInfo{};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-        renderPassInfo.renderPass = m_pRenderPass;
+        renderPassInfo.renderPass = m_pVkDataPtr->defaultRenderPass.renderPass;
 
         renderPassInfo.framebuffer = m_pVkDataPtr->defaultRenderPass.renderPassChain.Framebuffers[m_pCurrentIndex];
 
         renderPassInfo.clearValueCount = m_pVkDataPtr->defaultRenderPass.clearValues.size();
         renderPassInfo.pClearValues = m_pVkDataPtr->defaultRenderPass.clearValues.data();
 
-        vkCmdBeginRenderPass(m_pCommandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+        renderPassInfo.renderArea.offset = {0, 0};
+        renderPassInfo.renderArea.extent = m_pVkDataPtr->defaultRenderPass.renderPassChain.Extent;
+        m_pVkDataPtr->defaultRenderPass.renderPassChain.Extent = m_pVkDataPtr->defaultRenderPass.renderPassChain.Extent;
+
+        // vkCmdBeginRenderPass(m_pCommandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
         /**/
-        ImGui_ImplVulkan_RenderDrawData(draw_data, m_pCommandBuffer);
+        ImGui_ImplVulkan_RenderDrawData(draw_data, m_pCommandBuffer, VK_NULL_HANDLE);
 
         vk::endRenderPass(m_pCommandBuffer, *m_pVkDataPtr);
-        // vk::endRecording(m_pCommandBuffer);
+        //  vk::endRecording(m_pCommandBuffer);
         /*
         end render pass
         stop cmd recording
@@ -168,6 +173,67 @@ public:
     }
     void End() {}
     void Destroy() {}
+
+    void DrawUI(glm::vec3 &data)
+    {
+        ImGui_ImplVulkan_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui_ImplVulkanH_Window *wd = &m_pMainWindowData;
+
+        // Our state
+        static bool show_demo_window = true;
+        static bool show_another_window = false;
+        ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+        ImGui::NewFrame();
+        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
+        {
+            static float f = 0.0f;
+            static int counter = 0;
+
+            ImGui::Begin("Hello, world!"); // Create a window called "Hello, world!" and append into it.
+
+            ImGui::Text("This is some useful text.");          // Display some text (you can use a format strings too)
+            ImGui::Checkbox("Demo Window", &show_demo_window); // Edit bools storing our window open/close state
+            ImGui::Checkbox("Another Window", &show_another_window);
+
+            ImGui::SliderFloat("LIGHT WORLD SIZE", &data.x, 0.0f, 100.0f);    // Edit 1 float using a slider from 0.0f to 1.0f
+            ImGui::SliderFloat("LIGHT FRUSTUM WIDTH", &data.y, 1.0f, 100.0f); // Edit 1 float using a slider from 0.0f to 1.0f // Edit 1 float using a slider from 0.0f to 1.0f
+            ImGui::SliderFloat("PENUMBRA SIZE", &data.z, 0.1f, 100.0f);
+            ImGui::ColorEdit3("clear color", (float *)&clear_color); // Edit 3 floats representing a color
+
+            if (ImGui::Button("Button")) // Buttons return true when clicked (most widgets return true when edited/activated)
+                counter++;
+            ImGui::SameLine();
+            ImGui::Text("counter = %d", counter);
+
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+            ImGui::End();
+        }
+
+        // 3. Show another simple window.
+        if (show_another_window)
+        {
+            ImGui::Begin("Another Window", &show_another_window); // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+            ImGui::Text("Hello from another window!");
+            if (ImGui::Button("Close Me"))
+                show_another_window = false;
+            ImGui::End();
+        }
+
+        // Rendering
+        ImGui::Render();
+        ImDrawData *draw_data = ImGui::GetDrawData();
+        const bool is_minimized = (draw_data->DisplaySize.x <= 0.0f || draw_data->DisplaySize.y <= 0.0f);
+        if (!is_minimized)
+        {
+            wd->ClearValue.color.float32[0] = clear_color.x * clear_color.w;
+            wd->ClearValue.color.float32[1] = clear_color.y * clear_color.w;
+            wd->ClearValue.color.float32[2] = clear_color.z * clear_color.w;
+            wd->ClearValue.color.float32[3] = clear_color.w;
+            Render(draw_data);
+            // FramePresent(wd);
+        }
+    }
 
 public:
     void pDemo()

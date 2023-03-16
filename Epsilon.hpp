@@ -98,8 +98,9 @@ namespace Epsilon
 
         void drawFrame(engine::Ref<engine::RenderPass> renderPassRef)
         {
+            glm::vec3 vec;
             engine::Context::getSingleton().Renderer()->Flush(renderPassRef, engine::DrawType::INDEXED);
-            engine::Context::getSingleton().Renderer()->End();
+            engine::Context::getSingleton().Renderer()->End(vec);
             engine::Context::getSingleton().Renderer()->Submit();
             engine::Context::getSingleton().Renderer()->EndFrame();
         }
