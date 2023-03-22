@@ -1,5 +1,8 @@
 #version 460
 #extension GL_EXT_nonuniform_qualifier : enable
+#extension GL_GOOGLE_include_directive : enable
+
+#include "PBRFunctions.glsl"
 
 layout(location = 0) out vec4 outColor;
 
@@ -8,12 +11,14 @@ layout(location = 1) in vec2 texCoords;
 layout(location = 2) in flat vec3 normal;
 layout(location = 3) in flat vec4 color;
 layout(location = 4) in vec4 shadowCoords;
+layout(location = 5) in mat3 TBN;
 
 layout(binding = 0) uniform UniformBufferObject
 {
     float iTime;
     vec2 iResolution;
     vec3 lightPosition;
+	vec3 viewPosition;
     mat4 view;
     mat4 proj;
     mat4 lightMatrix;
@@ -208,7 +213,16 @@ vec3 drawCheckers(vec2 coords, float size) {
 
 void main()
 {
-    float NoL = max(dot(lightDir, normal), 0.0);
+    const float texDivisor = 1024.0;
+    
+    vec3 diffuse = texture(textures[0], texCoords/texDivisor).rgb;
+    float metallic = texture(textures[1], texCoords/texDivisor).r;
+    vec3 normal_tex = texture(textures[2], texCoords/texDivisor).rgb;
+    float roughness = texture(textures[3], texCoords/texDivisor).r;
+
+    vec3 mNormal = normalize(normalize(normal_tex * 2.0 - 1.0) * TBN);
+    vec3 skyLight = vec3(max(dot(vec3(0.0, 1.0, 0.0), mNormal), 0.0));
+    skyLight = pow(skyLight * 0.5 + 0.5,vec3(2.0)) * normalize(vec3(111, 159, 199));
     
     vec4 FragPosLightSpace = ubo.lightMatrix * vec4(position.xyz, 1.0);
 
@@ -232,15 +246,20 @@ void main()
         shadow = 0.1;
     }
 
-    sum = PCF_Filter(shadowCoords.xy / shadowCoords.w, shadowCoord.z, 10.0);
+    //sum = PCF_Filter(shadowCoords.xy / shadowCoords.w, shadowCoord.z, 10.0);
     
 
     sum = PCSS(shadowCoords);
 
+    //sum = texture(shadowMap, shadowCoord);
+
+    vec3 F0 = vec3(0.04);
+    F0 = mix(F0, diffuse, vec3(0.0));
     //sum = textureGrad(shadowMap, shadowCoord, vec2(0.0),  vec2(0.0)).r;
+    vec3 light = CalculateDirectionalPBR(lightDir, vec3(1.0), 1.0, ubo.viewPosition, position.xyz, F0, mNormal, roughness, diffuse);
 
     outColor.a = color.a; // texCol.a;
-    vec3 checkers = drawCheckers(texCoords.xy, 512.0);
+    vec3 checkers = color.rgb;//drawCheckers(texCoords.xy, 512.0);
     
-    outColor.rgb = vec3((NoL * sum) + 0.1) * checkers; //(Gamma(outColor.rgb));
+    outColor.rgb = (sum * ((light * 5.0))) + (skyLight*diffuse * 0.5); //(Gamma(outColor.rgb));
 }

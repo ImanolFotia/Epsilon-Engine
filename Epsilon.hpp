@@ -51,6 +51,7 @@ namespace Epsilon
             alignas(4) float iTime = 0.0f;
             alignas(8) glm::vec2 iResolution{};
             alignas(8) glm::vec3 lightPosition{};
+            alignas(8) glm::vec3 viewPosition{};
             alignas(16) glm::mat4 view{};
             alignas(16) glm::mat4 proj{};
             alignas(16) glm::mat4 lightMatrix{};

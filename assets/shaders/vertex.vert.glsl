@@ -1,7 +1,6 @@
 #version 460
 
 #extension GL_EXT_nonuniform_qualifier : enable
-#extension VK_EXT_descriptor_indexing : enable
 
 const vec2 iResolution = vec2(1280.0, 720.0);
 
@@ -17,11 +16,13 @@ layout (location = 1) out vec2 texCoords;
 layout (location = 2) out flat vec3 normal;
 layout (location = 3) out flat vec4 color;
 layout (location = 4) out vec4 shadowCoords;
+layout (location = 5) out mat3 TBN;
 
 layout(binding = 0) uniform UniformBufferObject {
     float iTime;
     vec2 iResolution;
     vec3 lightPosition;
+	vec3 viewPosition;
     mat4 view;
     mat4 proj;
     mat4 lightMatrix;
@@ -77,9 +78,19 @@ const mat4 biasMat = mat4(
 	0.0, 0.0, 1.0, 0.0,
 	kEpsilon, kEpsilon, 0.0, 1.0 );
 
+	
+mat3 CreateTBNMatrix(mat3 normalMatrix)
+{
+     vec3 T = normalize(normalMatrix * inTangent);
+     vec3 B = normalize(normalMatrix * inBitangent);
+     vec3 N = normalize(normalMatrix * inNormal);
+
+    return transpose(mat3(T, B, N));
+}
+
 void main() {
 	if(inColor.a > 0.9)
-    		color = vec4(colors[gl_VertexIndex % 27], inColor.a);
+    		color = vec4(colors[gl_InstanceIndex % 27], inColor.a);
     	else
     		color = inColor;
 
@@ -88,7 +99,12 @@ void main() {
 				0.0, 0.0125, 0.0, 0.0, 
 				0.0, 0.0, 0.0125, 0.0,
 				0.0, 0.0, 0.0, 1.0);
+
+				
     		
+  	mat3 normalMatrix = mat3(inverse(model));//transpose(inverse(mat3(model)));
+  	TBN = CreateTBNMatrix(normalMatrix);
+
     position = /*(PushConstants.model)*/model * vec4(inPosition, 1.0);
 	shadowCoords = (biasMat * ubo.lightMatrix * /*(PushConstants.model)*/model) * vec4(inPosition, 1.0);
     texCoords = inTexCoord;

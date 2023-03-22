@@ -49,7 +49,8 @@ namespace vk
         uint32_t width = 0;
         uint32_t height = 0;
         uint32_t num_channels = 0;
-        VkFormat format = VK_FORMAT_R8G8B8A8_SRGB;
+        uint32_t mipLevels = 1;
+        VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
         VkImageUsageFlags usage;
 
         VkFilter filter;
@@ -123,6 +124,7 @@ namespace vk
         VkDescriptorBufferInfo bufferInfo[MAX_FRAMES_IN_FLIGHT];
         size_t bufferOffset = 0;
         size_t bufferSize = 0;
+        int slots = 0;
         std::string name = "";
     };
 
@@ -202,9 +204,9 @@ namespace vk
     public:
         VulkanRenderPass()
         {
-            clearValues.resize(2);
-            clearValues[0].color = clearColor;
-            clearValues[1].depthStencil = depthStencilClearColor;
+            // clearValues.resize(2);
+            // clearValues[0].color = clearColor;
+            // clearValues[1].depthStencil = depthStencilClearColor;
         }
 
         VkRenderPass renderPass;

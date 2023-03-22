@@ -1,9 +1,7 @@
 #version 460
 #extension GL_EXT_nonuniform_qualifier : enable
-#extension VK_EXT_descriptor_indexing : enable
 
 layout(location = 0) out float outColor;
-layout(location = 1) out float outColor2;
 
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec2 texCoords;
@@ -12,9 +10,11 @@ layout (location = 3) in vec4 color;
 
 
 layout(set = 0, binding = 0) uniform UniformBufferObject {
+
     float iTime;
     vec2 iResolution;
     vec3 lightPosition;
+	vec3 viewPosition;
     mat4 view;
     mat4 proj;
     mat4 lightMatrix;
@@ -34,5 +34,4 @@ float LinearizeDepth(float depth)
 void main() {
     if(color.a < 1.0) discard;
     outColor = gl_FragCoord.z;
-    outColor2 = gl_FragCoord.z;
 }

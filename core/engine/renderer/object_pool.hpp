@@ -22,17 +22,18 @@ namespace engine
             return Ref(0, 0, -1);
         }
 
-        uint32_t Index() { return m_pIndex; }
+        inline uint32_t Index() { return m_pIndex; }
         uint32_t Id() { return m_pID; }
+
+        uint32_t m_pIndex{};
 
     private:
         Ref(uint32_t i, uint32_t b, uint32_t id) : m_pIndex(i), m_pGeneration(b), m_pID(id) {}
 
         bool isValid() { return m_pGeneration != 0; }
 
-        uint32_t m_pIndex = 0;
-        uint32_t m_pID;
-        uint32_t m_pGeneration = 0;
+        uint32_t m_pID{};
+        uint32_t m_pGeneration{};
 
         template <typename A, typename B>
         friend class Pool;
@@ -70,6 +71,7 @@ namespace engine
             uint32_t id = std::hash<std::string>{}(name);
 
             Ref<T> ref(index, 1, id);
+            ref.m_pIndex = index;
             m_pGeneration[index] = 1;
             m_pIdArray[id] = index;
 
@@ -97,7 +99,7 @@ namespace engine
             m_pGeneration[index] = 1;
             m_pIdArray[id] = index;
 
-            return ref;
+            return std::move(ref);
         }
 
         [[nodiscard]] R *get(Ref<T> ref)

@@ -91,6 +91,16 @@ namespace engine
         ShaderInfo info;
     };
 
+    struct ResourcesMemory_t
+    {
+        uint32_t m_pDescriptorSetsAllocationSize = 0;
+        uint32_t m_pTextureBufferAllocationSize = 0;
+        uint32_t m_pVertexBufferAllocationSize = 0;
+        uint32_t m_pIndexBufferAllocationSize = 0;
+        uint32_t m_pUniformBufferAllocationSize = 0;
+        uint32_t m_pStorageBufferAllocationSize = 0;
+    };
+
     enum TextureFormat
     {
         // INTEGER IMAGE
@@ -196,9 +206,9 @@ namespace engine
         uint32_t width;
         uint32_t height;
         uint32_t numChannels;
-        TextureFormat format;
-        WrapMode wrapMode;
-        Filtering filtering;
+        TextureFormat format{};
+        WrapMode wrapMode{};
+        Filtering filtering{};
         std::string name;
         unsigned char *pixels = nullptr;
     };
@@ -272,6 +282,8 @@ namespace engine
         Filtering filtering;
         CompareFunction compareFunc;
         bool depthCompare = false;
+        float clearColor[4]{};
+        float depthStencilValue[2]{};
         bool isSampler = false;
         bool isDepthAttachment = false;
         bool isSwapChainAttachment = false;

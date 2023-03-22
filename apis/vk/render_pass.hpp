@@ -41,6 +41,10 @@ namespace vk
                 renderPass.renderPassData.depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
                 renderPass.renderPassData.depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
                 renderPass.renderPassData.depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+
+                if (attachment.isSampler)
+                    renderPass.renderPassData.depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+
                 renderPass.renderPassData.depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
                 renderPass.renderPassData.depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
                 renderPass.renderPassData.depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
@@ -59,12 +63,38 @@ namespace vk
                 attachmentDesc.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
                 attachmentDesc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
                 attachmentDesc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-                attachmentDesc.finalLayout = forPresent ? VK_IMAGE_LAYOUT_PRESENT_SRC_KHR : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+                if (forPresent)
+                {
+                    attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+                }
+                else if (attachment.format == engine::DEPTH_F32 || attachment.format == engine::DEPTH_F32_STENCIL_8)
+                {
+                    if (attachment.clearAttachment)
+                    {
+                        attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+                    }
+                    else
+                    {
+                        attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+                    }
+                }
+                else
+                {
+                    attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+                }
                 renderPass.renderPassData.colorAttachments.push_back(attachmentDesc);
 
                 VkAttachmentReference attachmentRef{};
                 attachmentRef.attachment = index;
-                attachmentRef.layout = attachment.format == engine::DEPTH_F32 ? VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+                if (attachment.format == engine::DEPTH_F32 || attachment.format == engine::DEPTH_F32_STENCIL_8)
+                {
+                    attachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+                }
+                else
+                {
+                    attachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+                }
+                // attachmentRef.layout = attachment.format == engine::DEPTH_F32 ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
                 renderPass.renderPassData.colorAttachmentRefs.push_back(attachmentRef);
             }
 

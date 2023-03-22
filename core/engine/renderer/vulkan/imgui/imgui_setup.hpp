@@ -21,6 +21,7 @@
 #include <vulkan/vulkan.h>
 
 #include <apis/vk/vk_data.hpp>
+#include "../../types.hpp"
 
 class ImGuiRenderer
 {
@@ -146,6 +147,7 @@ public:
         Record command buffer
         */
         // vk::recordCommandBuffer(m_pCommandBuffer, 0);
+        /*
         VkRenderPassBeginInfo renderPassInfo{};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderPassInfo.renderPass = m_pVkDataPtr->defaultRenderPass.renderPass;
@@ -157,7 +159,7 @@ public:
 
         renderPassInfo.renderArea.offset = {0, 0};
         renderPassInfo.renderArea.extent = m_pVkDataPtr->defaultRenderPass.renderPassChain.Extent;
-        m_pVkDataPtr->defaultRenderPass.renderPassChain.Extent = m_pVkDataPtr->defaultRenderPass.renderPassChain.Extent;
+        m_pVkDataPtr->defaultRenderPass.renderPassChain.Extent = m_pVkDataPtr->defaultRenderPass.renderPassChain.Extent;*/
 
         // vkCmdBeginRenderPass(m_pCommandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
@@ -174,7 +176,7 @@ public:
     void End() {}
     void Destroy() {}
 
-    void DrawUI(glm::vec3 &data)
+    void DrawUI(glm::vec3 &data, engine::ResourcesMemory_t resources)
     {
         ImGui_ImplVulkan_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -192,19 +194,19 @@ public:
 
             ImGui::Begin("Hello, world!"); // Create a window called "Hello, world!" and append into it.
 
-            ImGui::Text("This is some useful text.");          // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &show_demo_window); // Edit bools storing our window open/close state
-            ImGui::Checkbox("Another Window", &show_another_window);
+            ImGui::Text("PCSS");
 
             ImGui::SliderFloat("LIGHT WORLD SIZE", &data.x, 0.0f, 100.0f);    // Edit 1 float using a slider from 0.0f to 1.0f
             ImGui::SliderFloat("LIGHT FRUSTUM WIDTH", &data.y, 1.0f, 100.0f); // Edit 1 float using a slider from 0.0f to 1.0f // Edit 1 float using a slider from 0.0f to 1.0f
             ImGui::SliderFloat("PENUMBRA SIZE", &data.z, 0.1f, 100.0f);
             ImGui::ColorEdit3("clear color", (float *)&clear_color); // Edit 3 floats representing a color
+            ImGui::Separator();
 
-            if (ImGui::Button("Button")) // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
+            ImGui::Text("Texture Allocation Size = %.3f MB", resources.m_pTextureBufferAllocationSize / 1000000.0f);
+            ImGui::Text("Index Buffer Usage = %.3f MB", resources.m_pIndexBufferAllocationSize / 1000000.0f);
+            ImGui::Text("Vertex Allocation Size = %.3f MB", resources.m_pVertexBufferAllocationSize / 1000000.0f);
+            ImGui::Text("Uniforms Allocation Size = %.3f MB", resources.m_pUniformBufferAllocationSize / 1000000.0f);
+            ImGui::Text("Storage Allocation Size = %.3f MB", resources.m_pStorageBufferAllocationSize / 1000000.0f);
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
             ImGui::End();

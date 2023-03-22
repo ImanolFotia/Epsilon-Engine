@@ -12,8 +12,8 @@
 namespace engine
 {
 
-    const uint32_t MAX_VERTICES_PER_BUFFER = 10000;
-    const uint32_t MAX_INDICES_PER_BUFFER = 10000;
+    const uint32_t MAX_VERTICES_PER_BUFFER = 50000;
+    const uint32_t MAX_INDICES_PER_BUFFER = 50000;
 
     struct ShaderModuleInfo
     {

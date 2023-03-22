@@ -5,10 +5,10 @@
 #include <core/engine/context.hpp>
 
 #include "vulkan.hpp"
+#include "imgui/imgui_setup.hpp"
 #include "resource_manager.hpp"
 
 #include "helpers.hpp"
-#include "imgui/imgui_setup.hpp"
 
 /**
  * @brief Implementation of the Vulkan renderer public API
@@ -179,7 +179,7 @@ namespace engine
     void VulkanRenderer::End(glm::vec3 &v)
     {
 
-        m_pImguiRenderer.DrawUI(std::forward<glm::vec3 &>(v));
+        m_pImguiRenderer.DrawUI(std::forward<glm::vec3 &>(v), m_pResourceManagerRef->ResourcesMemory);
 
         if (m_pImageIndex == -1)
             return;
@@ -197,6 +197,7 @@ namespace engine
         if (renderPass->id == std::numeric_limits<uint32_t>::max())
         {
 
+            vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
             vk::createRenderPassInfo(m_pImageIndex, m_pVkData, m_pVkData.defaultRenderPass);
 
             m_pVkData.defaultRenderPass.renderPassInfo.renderArea.offset = {0, 0};

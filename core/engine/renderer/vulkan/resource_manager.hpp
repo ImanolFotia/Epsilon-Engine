@@ -1,5 +1,5 @@
 #pragma once
-#include <core/engine/renderer/types.hpp>
+#include "../types.hpp"
 #include "core/engine/renderer/resource_manager.hpp"
 #include "vulkan.hpp"
 
@@ -8,6 +8,9 @@ namespace engine
 
     class VulkanResourceManager : public ResourceManager
     {
+    public:
+        ResourcesMemory_t ResourcesMemory{};
+
     public:
         friend class VulkanRenderer;
 
@@ -93,6 +96,7 @@ namespace engine
         const uint32_t MAX_BINDLESS_RESOURCES = 16536;
         const uint32_t RENDERPASS_LAYOUT = 0;
         const uint32_t GLOBAL_LAYOUT = 1;
+        const uint32_t MATERIAL_LAYOUT = 2;
 
         uint32_t texture_index = 0; //!!! ONLY FOR TESTING, SHOULD FIX THIS ASAP
 
@@ -159,5 +163,6 @@ namespace engine
         uint32_t vertexBufferCount = 0;
         uint32_t indexBufferCount = 0;
         vk::VulkanBuffer m_pIndirectBuffer;
+        vk::VulkanBuffer m_pMaterialBuffer;
     };
 }

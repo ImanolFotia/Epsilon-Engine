@@ -70,36 +70,130 @@ namespace engine
     {
         Ref<Texture> refTexture;
 
+        auto format = resolveFormat(texInfo.format);
+
         auto stagingBuffer = pCreateStagingTextureBuffer(texInfo.pixels, texInfo);
+        int mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texInfo.width, texInfo.height)))) + 1;
 
         auto texture = pCreateTextureBuffer({.width = texInfo.width,
                                              .height = texInfo.height,
                                              .num_channels = texInfo.numChannels,
+                                             .mipLevels = mipLevels,
+                                             .format = format,
                                              .usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT |
+                                                      VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
                                                       VK_IMAGE_USAGE_SAMPLED_BIT});
+
+        texture.format = format;
 
         auto size = texInfo.width * texInfo.height * texInfo.numChannels;
 
         transitionImageLayout(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), texture.image,
-                              VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                              format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                               texture.info);
         copyBufferToImage(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), stagingBuffer.buffer, texture.image,
                           static_cast<uint32_t>(texInfo.width), static_cast<uint32_t>(texInfo.height));
         transitionImageLayout(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), texture.image,
-                              VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                              VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, texture.info);
+                              format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                              VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, texture.info);
 
         vmaDestroyBuffer(m_pAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
         // vmaFreeMemory(m_pAllocator, m_pStagingTextureBuffer.allocation);
 
-        texture.format = VK_FORMAT_R8G8B8A8_SRGB;
+        texture.filter = resolveFilter(texInfo.filtering);
+
+        texture.info.mipLevels = mipLevels;
         vk::createImageView(*m_pVkDataPtr, texture, VK_IMAGE_ASPECT_COLOR_BIT);
+
+        VkCommandBuffer blitCommandBuffer = vk::beginSingleTimeCommands(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back());
+
+        /* Begin generate mips*/
+        // Copy down mips from n-1 to n
+        if (mipLevels > 1)
+            for (int32_t i = 1; i < mipLevels; i++)
+            {
+                VkImageBlit imageBlit{};
+
+                // Source
+                imageBlit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+                imageBlit.srcSubresource.layerCount = 1;
+                imageBlit.srcSubresource.mipLevel = i - 1;
+                imageBlit.srcOffsets[1].x = int32_t(texture.info.width >> (i - 1));
+                imageBlit.srcOffsets[1].y = int32_t(texture.info.height >> (i - 1));
+                imageBlit.srcOffsets[1].z = 1;
+
+                // Destination
+                imageBlit.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+                imageBlit.dstSubresource.layerCount = 1;
+                imageBlit.dstSubresource.mipLevel = i;
+                imageBlit.dstOffsets[1].x = int32_t(texture.info.width >> i);
+                imageBlit.dstOffsets[1].y = int32_t(texture.info.height >> i);
+                imageBlit.dstOffsets[1].z = 1;
+
+                VkImageSubresourceRange mipSubRange = {};
+                mipSubRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+                mipSubRange.baseMipLevel = i;
+                mipSubRange.levelCount = 1;
+                mipSubRange.layerCount = 1;
+
+                vk::imageMemoryBarrier(*m_pVkDataPtr,
+                                       m_pCommandPools.back(),
+                                       texture.image,
+                                       texture.format,
+                                       VK_IMAGE_LAYOUT_UNDEFINED,
+                                       VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                                       texture.info,
+                                       blitCommandBuffer,
+                                       mipSubRange);
+
+                // Blit from previous level
+                vkCmdBlitImage(
+                    blitCommandBuffer,
+                    texture.image,
+                    VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                    texture.image,
+                    VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                    1,
+                    &imageBlit,
+                    VK_FILTER_LINEAR);
+
+                vk::imageMemoryBarrier(*m_pVkDataPtr,
+                                       m_pCommandPools.back(),
+                                       texture.image,
+                                       texture.format,
+                                       VK_IMAGE_LAYOUT_UNDEFINED,
+                                       VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                                       texture.info,
+                                       blitCommandBuffer,
+                                       mipSubRange);
+            }
+
+        // After the loop, all mip layers are in TRANSFER_SRC layout, so transition all to SHADER_READ
+
+        VkImageSubresourceRange subresourceRange = {};
+        subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        subresourceRange.layerCount = 1;
+        subresourceRange.levelCount = mipLevels;
+
+        vk::imageMemoryBarrier(*m_pVkDataPtr,
+                               m_pCommandPools.back(),
+                               texture.image,
+                               texture.format,
+                               VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                               VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+                               texture.info,
+                               blitCommandBuffer,
+                               subresourceRange);
+
+        vk::endSingleTimeCommands(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), blitCommandBuffer);
+        /* End generate mips*/
         vk::createTextureSampler(*m_pVkDataPtr, texture);
 
         texture.bindingType = vk::MATERIAL_SAMPLER;
 
         auto ref = texPool.insert(texInfo.name, texture);
-        texture.index = ref.Index();
+        texture.index = ref.m_pIndex;
+        texPool.get(ref)->index = ref.m_pIndex;
         return ref;
     }
 
@@ -121,15 +215,28 @@ namespace engine
             for (auto &binding : bindings)
             {
                 auto pass = renderPassPool.get(std::hash<std::string>{}(binding.renderPass));
+                vkMaterial.slots++;
+                if (binding.index == pass->renderPassChain.Textures.size())
+                {
+                    vk::VulkanShaderBinding shaderBinding = {
+                        .texture = pass->renderPassChain.DepthTexture,
+                        .descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+                        .bindingPoint = binding.bindingPoint,
+                        .isRenderPassAttachment = true};
 
-                vk::VulkanShaderBinding shaderBinding = {
-                    .texture = pass->renderPassChain.Textures.at(binding.index),
-                    .descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-                    .bindingPoint = binding.bindingPoint,
-                    .isRenderPassAttachment = true};
+                    vkMaterial.shaderBindings.push_back(shaderBinding);
+                }
+                else
+                {
+                    vk::VulkanShaderBinding shaderBinding = {
+                        .texture = pass->renderPassChain.Textures.at(binding.index),
+                        .descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+                        .bindingPoint = binding.bindingPoint,
+                        .isRenderPassAttachment = true};
 
-                vkMaterial.shaderBindings.push_back(shaderBinding);
-            }
+                    vkMaterial.shaderBindings.push_back(shaderBinding);
+                }
+            } /**/
 
             for (auto &binding : material.bindingInfo)
             {
@@ -157,6 +264,7 @@ namespace engine
             vkMaterial.bufferSize = renderPass->uniformBuffer.front().size;
 
             m_pNumCommandPools++;
+
             pCreateDescriptorPool();
             pRecreateDescriptorSets();
             pCreateDescriptorSets(vkMaterial.descriptorSetLayout,
@@ -168,34 +276,31 @@ namespace engine
             if (m_pVkDataPtr->bindless_supported)
             {
                 int count = 0;
-                std::vector<VkWriteDescriptorSet> bindless_descriptor_writes;
-                std::vector<VkDescriptorImageInfo> bindless_image_info;
-                for (auto &binding : vkMaterial.shaderBindings)
+                VkWriteDescriptorSet bindless_descriptor_writes[4];
+                VkDescriptorImageInfo bindless_image_info[4];
+                for (int i = 0; i < vkMaterial.shaderBindings.size(); i++) //(auto binding : vkMaterial.shaderBindings)
                 {
+                    auto binding = vkMaterial.shaderBindings.at(i);
                     if (binding.descriptorBinding == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER && !binding.isRenderPassAttachment)
                     {
-                        bindless_descriptor_writes.emplace_back();
-                        bindless_image_info.emplace_back();
-                        auto texture = binding.texture; // access_texture({texture_to_update.handle});
-                        VkWriteDescriptorSet &descriptor_write = bindless_descriptor_writes[0];
-                        descriptor_write = {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET};
-                        descriptor_write.descriptorCount = 1;
-                        descriptor_write.dstArrayElement = texture.index;
-                        descriptor_write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-                        descriptor_write.dstSet = m_pGlobalDescriptorSets;
-                        descriptor_write.dstBinding = 0;
 
-                        VkDescriptorImageInfo &descriptor_image_info = bindless_image_info.back();
-                        descriptor_image_info.sampler = texture.sampler;
-                        descriptor_image_info.imageView = texture.imageView;
-                        descriptor_image_info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-                        descriptor_write.pImageInfo = &descriptor_image_info;
-                        texture_index++;
+                        auto texture = binding.texture; // access_texture({texture_to_update.handle});
+                        bindless_descriptor_writes[count] = {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET};
+                        bindless_descriptor_writes[count].descriptorCount = 1;
+                        bindless_descriptor_writes[count].dstArrayElement = texture.index;
+                        bindless_descriptor_writes[count].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+                        bindless_descriptor_writes[count].dstSet = m_pGlobalDescriptorSets;
+                        bindless_descriptor_writes[count].dstBinding = 0;
+
+                        bindless_image_info[count].sampler = texture.sampler;
+                        bindless_image_info[count].imageView = texture.imageView;
+                        bindless_image_info[count].imageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+                        bindless_descriptor_writes[count].pImageInfo = &bindless_image_info[count];
                         count++;
                     }
                 }
                 if (count > 0)
-                    vkUpdateDescriptorSets(m_pVkDataPtr->logicalDevice, count, bindless_descriptor_writes.data(), 0, nullptr);
+                    vkUpdateDescriptorSets(m_pVkDataPtr->logicalDevice, count, bindless_descriptor_writes, 0, nullptr);
             }
 
             Ref<Material> materialRef = materialPool.insert(material.name, vkMaterial);
@@ -210,45 +315,30 @@ namespace engine
 
     void VulkanResourceManager::pRecreateSwapChain(framework::Window::windowType *window)
     {
-        /*vkDeviceWaitIdle(m_pVkDataPtr->logicalDevice);
-
-        for (auto &pass : renderPassPool)
-        {
-            cleanupSwapChain(*m_pVkDataPtr);
-        }
-
-        vk::createSwapChain(*m_pVkDataPtr, window);
-
-        vk::createImageViews(*m_pVkDataPtr);
-
-        // Recreate the default renderpass
-        vk::createRenderPass(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, m_pDefaultRenderPassInfo, true);
-
-        for (auto i = 0; i < m_pVkDataPtr->defaultRenderPass.renderPipelines.size(); i++)
-            vk::createGraphicsPipeline(*m_pVkDataPtr,
-                                       m_pVkDataPtr->defaultRenderPass,
-                                       m_pDefaultRenderPassInfo);
-
-        vk::createFramebuffers(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass,
-                               m_pVkDataPtr->defaultRenderPass.renderPassChain);
-
-        for (auto &pass : renderPassPool)
-        {
-            if (pass.id == std::numeric_limits<uint32_t>::max())
-                continue;
-            vk::createRenderPass(*m_pVkDataPtr, pass, m_pRenderPassInfo[pass.id], false);
-
-            for (auto i = 0; i < pass.renderPipelines.size(); i++)
-                vk::createGraphicsPipeline(*m_pVkDataPtr, pass, m_pRenderPassInfo[pass.id]);
-
-            vk::createFramebuffers(*m_pVkDataPtr, pass, pass.renderPassChain);
-        }*/
     }
 
     Ref<RenderPass> VulkanResourceManager::createDefaultRenderPass(RenderPassInfo renderPassInfo)
     {
         m_pVkDataPtr->defaultRenderPass.id = std::numeric_limits<uint32_t>::max();
         m_pDefaultRenderPassInfo = renderPassInfo;
+
+        m_pVkDataPtr->defaultRenderPass.clearValues.resize(renderPassInfo.numAttachments + (renderPassInfo.depthAttachment ? 1 : 0));
+        for (int i = 0; i < renderPassInfo.numAttachments; i++)
+        {
+            m_pVkDataPtr->defaultRenderPass.clearValues[i].color.float32[0] = renderPassInfo.attachments[i].clearColor[0];
+            m_pVkDataPtr->defaultRenderPass.clearValues[i].color.float32[1] = renderPassInfo.attachments[i].clearColor[1];
+            m_pVkDataPtr->defaultRenderPass.clearValues[i].color.float32[2] = renderPassInfo.attachments[i].clearColor[2];
+            m_pVkDataPtr->defaultRenderPass.clearValues[i].color.float32[3] = renderPassInfo.attachments[i].clearColor[3];
+        }
+        if (renderPassInfo.depthAttachment)
+        {
+            ResourcesMemory.m_pTextureBufferAllocationSize += renderPassInfo.dimensions.width * renderPassInfo.dimensions.height * 4;
+            m_pVkDataPtr->defaultRenderPass.clearValues.back()
+                .depthStencil = {
+                renderPassInfo.attachments.back().depthStencilValue[0],
+                renderPassInfo.attachments.back().depthStencilValue[1]};
+        }
+
         vk::createRenderPass(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, renderPassInfo, true);
 
         // for (int i = 0; i < renderPassInfo.numLayouts; i++)
@@ -298,12 +388,18 @@ namespace engine
     {
         vk::VulkanRenderPass renderPass = {};
 
-        renderPass.clearValues.resize(renderPassInfo.numAttachments);
-        for (int i = 0; i < renderPassInfo.numAttachments - 1; i++)
+        renderPass.clearValues.resize(renderPassInfo.numAttachments + (renderPassInfo.depthAttachment ? 1 : 0));
+        for (int i = 0; i < renderPassInfo.numAttachments; i++)
         {
-            renderPass.clearValues[i].color = renderPass.clearColor;
+            renderPass.clearValues[i].color = {renderPassInfo.attachments[i].clearColor[0],
+                                               renderPassInfo.attachments[i].clearColor[1],
+                                               renderPassInfo.attachments[i].clearColor[2],
+                                               renderPassInfo.attachments[i].clearColor[3]};
         }
-        renderPass.clearValues[renderPassInfo.numAttachments - 1].depthStencil = renderPass.depthStencilClearColor;
+        if (renderPassInfo.depthAttachment)
+            renderPass.clearValues.back().depthStencil = {
+                renderPassInfo.attachments.back().depthStencilValue[0],
+                renderPassInfo.attachments.back().depthStencilValue[1]};
 
         renderPass.id = m_pRenderPassCount;
         m_pRenderPassInfo.push_back(renderPassInfo);
@@ -314,7 +410,7 @@ namespace engine
 
         vk::createRenderPass(*m_pVkDataPtr, renderPass, renderPassInfo, false);
 
-        renderPass.clearValues.resize(renderPassInfo.attachments.size());
+        // renderPass.clearValues.resize(renderPassInfo.attachments.size());
 
         for (size_t i = 0; i < renderPassInfo.attachments.size(); i++)
         {
@@ -329,20 +425,14 @@ namespace engine
             texInfo.width = renderPassInfo.dimensions.width;
             texInfo.height = renderPassInfo.dimensions.height;
             texInfo.num_channels = attachment.isDepthAttachment ? 1 : resolveNumChannels(attachment.format);
-            texInfo.usage = attachment.isDepthAttachment ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+            texInfo.usage = (attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 
             texInfo.compareEnable = attachment.depthCompare;
-
-            if (texInfo.format == VK_FORMAT_D32_SFLOAT)
-                texInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
-
-            if (attachment.isSampler)
-                texInfo.usage |= VK_IMAGE_USAGE_SAMPLED_BIT;
 
             vk::VulkanTexture texture = pCreateTextureBuffer(texInfo);
 
             texture.bindingType = vk::RENDER_BUFFER_SAMPLER;
-
+            texture.info.mipLevels = 1;
             createImageView(*m_pVkDataPtr, texture,
                             (attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
 
@@ -353,12 +443,10 @@ namespace engine
 
             if (attachment.isDepthAttachment)
             {
-                renderPass.clearValues[i].depthStencil = renderPass.depthStencilClearColor;
                 renderPass.renderPassChain.DepthTexture = texture;
             }
             else
             {
-                renderPass.clearValues[i].color = renderPass.clearColor;
                 renderPass.renderPassChain.ImageViews.push_back(texture.imageView);
                 renderPass.renderPassChain.Textures.push_back(texture);
             }

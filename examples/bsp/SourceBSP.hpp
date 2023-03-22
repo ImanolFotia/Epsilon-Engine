@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <list>
 #include <unordered_map>
 #include <map>
 #include <glm/glm.hpp>
@@ -15,7 +16,7 @@ struct Face
     unsigned int m_pIndex;
     bool m_pVisible;
     unsigned int m_pNumVertices;
-    std::vector<glm::vec3> vertices;
+    std::list<glm::vec3> vertices;
     std::vector<glm::vec2> uvs;
     std::vector<unsigned int> indices;
     std::string material;
@@ -130,18 +131,18 @@ public:
             // if(face.numPrims > 0) continue;
             bool isTool = false;
             bool isTrigger = false;
-            std::vector<glm::vec3> vtxs;
+            std::list<glm::vec3> vtxs;
             std::vector<glm::vec2> uv;
             std::vector<unsigned int> triangles;
+
+            material = std::string_view(
+                &m_pBspFileData.stringData[m_pBspFileData.stringTable[m_pBspFileData.texData[m_pBspFileData.texInfo[face.texinfo].texdata].nameStringTableID]]);
 
             for (int i = 0; i < face.numedges; i++)
             {
                 if (face.dispinfo != -1)
                     continue;
                 // if(face.firstedge+i >= edges.size() ) continue;
-                material = std::string(
-                    &m_pBspFileData.stringData[m_pBspFileData.stringTable[m_pBspFileData.texData[m_pBspFileData.texInfo[face.texinfo].texdata].nameStringTableID]]);
-
                 if (material.find("TOOLS") != std::string::npos)
                 {
                     continue;

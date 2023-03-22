@@ -1,6 +1,5 @@
 #version 460
 #extension GL_EXT_nonuniform_qualifier : enable
-#extension VK_EXT_descriptor_indexing : enable
 
 layout(location = 0) in vec3 inPosition;
 layout(location = 1) in vec2 inTexCoord;
@@ -15,9 +14,11 @@ layout (location = 2) out vec3 normal;
 layout (location = 3) out vec4 color;
 
 layout(binding = 0) uniform UniformBufferObject {
+
     float iTime;
     vec2 iResolution;
     vec3 lightPosition;
+	vec3 viewPosition;
     mat4 view;
     mat4 proj;
     mat4 lightMatrix;

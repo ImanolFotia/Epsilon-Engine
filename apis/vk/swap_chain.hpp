@@ -189,6 +189,7 @@ namespace vk
         vk_data.defaultRenderPass.renderPassChain.DepthTexture = createImage(vk_data, vk_data.defaultRenderPass.renderPassChain.DepthTextureInfo);
         vk_data.defaultRenderPass.renderPassChain.DepthTexture.format = findDepthFormat(vk_data);
         vk_data.defaultRenderPass.renderPassChain.DepthTextureBuffer.deviceMemory = allocateTextureMemory(vk_data, vk_data.defaultRenderPass.renderPassChain.DepthTexture, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
         createImageView(vk_data, vk_data.defaultRenderPass.renderPassChain.DepthTexture, VK_IMAGE_ASPECT_DEPTH_BIT);
 
         for (size_t i = 0; i < vk_data.defaultRenderPass.renderPassChain.Images.size(); i++)

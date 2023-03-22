@@ -55,7 +55,7 @@ namespace engine
     vk::VulkanBuffer VulkanResourceManager::pCreateStagingTextureBuffer(unsigned char *pixels, TextureCreationInfo textureInfo)
     {
         vk::VulkanBuffer stagingBuffer;
-        auto imageSize = textureInfo.width * textureInfo.height * textureInfo.numChannels;
+        auto imageSize = textureInfo.width * textureInfo.height * /*textureInfo.numChannels*/ 4;
         pCreateBuffer(stagingBuffer, imageSize, TEXTURE_BUFFER_USAGE, TEXTURE_BUFFER_PROP, TEXTURE_BUFFER_MEM_USAGE);
 
         void *data;
@@ -80,6 +80,15 @@ namespace engine
 
         VmaAllocation allocation;
 
+        if (usage == VERTEX_BUFFER_USAGE)
+            ResourcesMemory.m_pVertexBufferAllocationSize += size;
+        if (usage == INDEX_BUFFER_USAGE)
+            ResourcesMemory.m_pIndexBufferAllocationSize += size;
+        if (usage == UNIFORM_BUFFER_USAGE)
+            ResourcesMemory.m_pUniformBufferAllocationSize += size;
+        if (usage == STORAGE_BUFFER_USAGE)
+            ResourcesMemory.m_pStorageBufferAllocationSize += size;
+
         vmaCreateBuffer(m_pAllocator, &bufferInfo, &allocInfo, &buffer.buffer, &buffer.allocation, nullptr);
     }
 
@@ -102,13 +111,13 @@ namespace engine
         texture.info = texInfo;
 
         texture.imageInfo = {VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO};
-        texture.imageInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+        texture.imageInfo.usage = texInfo.usage; // VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 
         texture.imageInfo.extent.width = static_cast<uint32_t>(texInfo.width);
         texture.imageInfo.extent.height = static_cast<uint32_t>(texInfo.height);
         texture.imageInfo.extent.depth = 1;
         texture.compareEnable = texInfo.compareEnable;
-        texture.imageInfo.mipLevels = 1;
+        texture.imageInfo.mipLevels = texInfo.mipLevels;
         texture.imageInfo.arrayLayers = 1;
         texture.imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
         texture.imageInfo.imageType = VK_IMAGE_TYPE_2D;
@@ -128,12 +137,23 @@ namespace engine
         VmaAllocationCreateInfo allocInfo = {};
         allocInfo.usage = VMA_MEMORY_USAGE_AUTO;
 
-        vmaCreateImage(m_pAllocator, &texture.imageInfo, &allocInfo, &texture.image, &texture.allocation, nullptr);
-        // vmaCreateBuffer(allocator, &bufferInfo, &allocInfo, &buffer, &allocation, nullptr);
+        int num_channels = 0;
+        int size = 0;
+        if (texInfo.format == VK_FORMAT_R8G8B8A8_UNORM || texInfo.format == VK_FORMAT_R8G8B8A8_SRGB)
+        {
+            num_channels = 4;
+            size = 1;
+        }
+        if (texInfo.format == VK_FORMAT_D32_SFLOAT || texInfo.format == VK_FORMAT_D32_SFLOAT_S8_UINT || texInfo.format == VK_FORMAT_R32_SFLOAT)
+        {
+            num_channels = 1;
+            size = 4;
+        }
 
-        // auto texture = vk::createImage(m_pVkData, texInfo);
-        // buffer.deviceMemory = vk::allocateTextureMemory(m_pVkData, texture, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-        // IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", texture.image.size, " bytes in local texture buffer");
+        vmaCreateImage(m_pAllocator, &texture.imageInfo, &allocInfo, &texture.image, &texture.allocation, nullptr);
+        ResourcesMemory.m_pTextureBufferAllocationSize += texInfo.width * texInfo.height * num_channels * size;
+
+        std::cout << texInfo.width * texInfo.height * num_channels * size << std::endl;
         return texture;
     }
 
@@ -313,20 +333,20 @@ namespace engine
         for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
         {
 
-            uint32_t numSlots = 1;
+            uint32_t numSlots = material.slots + 1;
             std::vector<VkWriteDescriptorSet> descriptorWrites{};
             std::list<VkDescriptorImageInfo> imageInfos;
-            numSlots += material.shaderBindings.size();
+            // numSlots += material.shaderBindings.size();
             descriptorWrites.resize(numSlots);
 
             for (int index = 1; index < descriptorWrites.size(); index++)
             {
                 for (auto &binding : material.shaderBindings)
                 {
-                    if (binding.descriptorBinding == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+                    if (binding.descriptorBinding == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER && binding.isRenderPassAttachment)
                     {
                         auto &imageInfo = imageInfos.emplace_back();
-                        imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+                        imageInfo.imageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
                         imageInfo.imageView = binding.texture.imageView;
                         imageInfo.sampler = binding.texture.sampler;
 

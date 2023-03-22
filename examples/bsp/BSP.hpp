@@ -36,6 +36,14 @@ namespace BSP
             PushConstant pushConstant;
         };
 
+        struct Material
+        {
+            uint16_t diffuse;
+            uint16_t normal;
+            uint16_t roughness;
+            uint16_t metallic;
+        };
+
         std::vector<int> m_pVisibleFaces;
 
         engine::Ref<engine::RenderPass> m_pRenderPass;
@@ -71,11 +79,55 @@ namespace BSP
 
             using en = engine::UniformBindingType;
 
+            std::array<std::string, 4> pbrTextures = {
+                "./assets/images/textures/Pavement.png",
+                "./assets/images/textures/Pavement_m.png",
+                "./assets/images/textures/Pavement_n.png",
+                "./assets/images/textures/Pavement_s.png"};
+            std::array<engine::TextureCreationInfo, 4> textureInfos;
+            //{
+            int index = 0;
+            for (auto &texture : pbrTextures)
+            {
+                int w, h, nc;
+                unsigned char *pixels = framework::load_image_from_file(texture.c_str(),
+                                                                        &w,
+                                                                        &h,
+                                                                        &nc);
+                engine::TextureCreationInfo texInfo = engine::TextureBuilder()
+                                                          .width(w)
+                                                          .height(h)
+                                                          .numChannels(nc)
+                                                          .pixels(pixels)
+                                                          .name(texture);
+                texInfo.filtering = engine::LINEAR;
+                texInfo.wrapMode = engine::REPEAT;
+                texInfo.format = (index == 0 ? engine::COLOR_RGBA : engine::NON_COLOR_RGBA);
+                textureInfos[index] = (texInfo);
+                index++;
+            }
             engine::MaterialInfo material = {
-                .bindingInfo = {{.size = sizeof(ShaderData), .binding = 0, .type = en::UNIFORM_BUFFER}},
+                .bindingInfo = {{.size = sizeof(ShaderData), .binding = 0, .type = en::UNIFORM_BUFFER},
+                                {.size = 0, .offset = 0, .binding = 3, .type = en::TEXTURE_IMAGE_COMBINED_SAMPLER, .textureInfo = textureInfos[0]},
+                                {.size = 0, .offset = 0, .binding = 4, .type = en::TEXTURE_IMAGE_COMBINED_SAMPLER, .textureInfo = textureInfos[1]},
+                                {.size = 0, .offset = 0, .binding = 5, .type = en::TEXTURE_IMAGE_COMBINED_SAMPLER, .textureInfo = textureInfos[2]},
+                                {.size = 0, .offset = 0, .binding = 6, .type = en::TEXTURE_IMAGE_COMBINED_SAMPLER, .textureInfo = textureInfos[3]}},
 
                 .name = "DefaultMaterial",
             };
+
+            dummyMaterial = Epsilon::getContext().ResourceManager()->createMaterial(
+                material,
+                m_pRenderPass,
+                {
+                    {.renderPass = "Shadow", .index = 1, .bindingPoint = 1},
+                    {.renderPass = "Shadow", .index = 0, .bindingPoint = 2},
+                });
+
+            for (auto &texture : textureInfos)
+            {
+                framework::free_image_data(texture.pixels);
+            }
 
             engine::MaterialInfo shadowMaterial = {
                 .bindingInfo = {{
@@ -89,19 +141,13 @@ namespace BSP
             shadowDummyMaterial = Epsilon::getContext().ResourceManager()->createMaterial(shadowMaterial,
                                                                                           m_pShadowRenderPass);
 
-            dummyMaterial = Epsilon::getContext().ResourceManager()->createMaterial(
-                material,
-                m_pRenderPass,
-                {{.renderPass = "Shadow", .index = 0, .bindingPoint = 1},
-                 {.renderPass = "Shadow", .index = 1, .bindingPoint = 2}});
-
             m_pMap.pushConstant.model = glm::scale(glm::mat4(1.0f), glm::vec3(0.0125f));
 
             m_pMap.pushConstantRef = Epsilon::getContext().ResourceManager()->createPushConstant(
                 "ModelMatrix",
                 {.size = sizeof(PushConstant), .data = &m_pMap.pushConstant});
 
-            // gpuBuffer = Epsilon::getContext().ResourceManager()->createGPUBuffer(sizeof(PushConstant), engine::BufferStorageType::STORAGE_BUFFER);
+            gpuBuffer = Epsilon::getContext().ResourceManager()->createGPUBuffer("material_buffer", sizeof(Material) * 100, engine::BufferStorageType::STORAGE_BUFFER);
 
             const char *filename = "./assets/models/hl2/background01.bsp";
 
@@ -129,6 +175,51 @@ namespace BSP
                 }
             };
 
+            auto generateTangentSpaceVectors = [](std::vector<engine::Vertex> &vertices, const std::vector<uint32_t> &indices)
+            {
+                uint32_t num_triangles = indices.size() / 3;
+                // calculate tangent/bitangent vectors of both triangles
+                glm::vec3 tangent1, bitangent1;
+                // std::cout << m_pMesh.m_Tris.size() <<  std::endl;
+                for (int i = 0; i < indices.size(); i += 3)
+                {
+                    glm::vec3 v0 = vertices[indices[i]].position;
+                    glm::vec3 v1 = vertices[indices[i + 1]].position;
+                    glm::vec3 v2 = vertices[indices[i + 2]].position;
+
+                    glm::vec3 edge1 = v1 - v0;
+                    glm::vec3 edge2 = v2 - v0;
+
+                    glm::vec2 t0 = vertices[indices[i]].texCoords / 512.0f;
+                    glm::vec2 t1 = vertices[indices[i + 1]].texCoords / 512.0f;
+                    glm::vec2 t2 = vertices[indices[i + 2]].texCoords / 512.0f;
+
+                    glm::vec2 deltaUV1 = t1 - t0;
+                    glm::vec2 deltaUV2 = t2 - t0;
+
+                    float f = (deltaUV2.x * deltaUV1.x - deltaUV2.y * deltaUV1.y) == 0.0f ? -1.0f : 1.0f;
+
+                    tangent1.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+                    tangent1.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+                    tangent1.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+                    // tangent1 = glm::normalize(tangent1);
+
+                    vertices[indices[i]].tangent = glm::normalize(tangent1);
+                    vertices[indices[i + 1]].tangent = glm::normalize(tangent1);
+                    vertices[indices[i + 2]].tangent = glm::normalize(tangent1);
+
+                    bitangent1.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+                    bitangent1.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+                    bitangent1.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+                    // bitangent1 = glm::normalize(bitangent1);
+
+                    vertices[indices[i]].bitangent = glm::normalize(bitangent1);
+                    vertices[indices[i + 1]].bitangent = glm::normalize(bitangent1);
+                    vertices[indices[i + 2]].bitangent = glm::normalize(bitangent1);
+                }
+            };
+
+            // m_pMap.m_pFaces.resize(bspMap.Faces().size());
             for (unsigned i = 0; i < bspMap.Faces().size(); i++)
             {
                 if (bspMap.Faces()[i].vertices.size() <= 0)
@@ -136,10 +227,11 @@ namespace BSP
                 auto &face = m_pMap.m_pFaces.emplace_back();
 
                 std::vector<engine::Vertex> vertices;
-
+                vertices.resize(bspMap.Faces()[i].vertices.size());
+                int index{};
                 for (auto &vtx : bspMap.Faces()[i].vertices)
                 {
-                    auto &v = vertices.emplace_back();
+                    auto &v = vertices.at(index);
                     v.position = vtx;
                     if (bspMap.Faces()[i].tool == true)
                     {
@@ -153,6 +245,7 @@ namespace BSP
                     {
                         v.color = glm::vec4(0.0, 0.0, 0.0, 1.0);
                     }
+                    index++;
                 }
 
                 for (int j = 0; j < bspMap.Faces()[i].uvs.size(); j++)
@@ -161,6 +254,7 @@ namespace BSP
                 }
 
                 calculateNormals(vertices, bspMap.Faces()[i].indices);
+                generateTangentSpaceVectors(vertices, bspMap.Faces()[i].indices);
 
                 face.mesh = Epsilon::getContext().ResourceManager()->createMesh({
                     .vertices = vertices,
@@ -191,6 +285,7 @@ namespace BSP
                 objectData.material = shadowDummyMaterial;
                 objectData.modelMatrix = glm::mat4(1.0f);
                 objectData.pushConstant = m_pMap.pushConstantRef;
+                objectData.uniformIndex = 0; // ;
                 Epsilon::getContext().Renderer()->Push(objectData);
             }
 
@@ -207,6 +302,7 @@ namespace BSP
                 objectData.material = dummyMaterial;
                 objectData.modelMatrix = glm::mat4(1.0f);
                 objectData.pushConstant = m_pMap.pushConstantRef;
+                objectData.uniformIndex = 0;
                 Epsilon::getContext().Renderer()->Push(objectData);
             }
 
@@ -273,6 +369,7 @@ namespace BSP
             camData.lightMatrix = lightMatrix;
             camData.proj[1][1] *= -1;
             camData.iTime += m_pTime;
+            camData.viewPosition = m_pCamera->getPosition();
 
             Epsilon::getContext().Renderer()->UpdateRenderPassUniforms(m_pRenderPass, engine::RENDERPASS_SET, &camData);
             // PushShaderData(camData);
@@ -300,6 +397,7 @@ namespace BSP
             camData.proj[1][1] *= -1;
             lightMatrix = camData.proj * camData.view * glm::mat4(1.0);
             camData.lightMatrix = lightMatrix;
+            camData.viewPosition = m_pCamera->getPosition();
             camData.iTime += m_pTime;
             Epsilon::getContext().Renderer()->UpdateRenderPassUniforms(m_pShadowRenderPass, engine::RENDERPASS_SET, &camData);
             // PushShaderData(camData);
@@ -357,17 +455,19 @@ namespace BSP
                     .dimensions({.width = 1920, .height = 1080})
                     .attachments({{
                                       .format = COLOR_RGBA,
+                                      .clearColor = {0.1f, 0.1f, 0.1f, 1.0001f},
                                       .isDepthAttachment = false,
                                       .isSwapChainAttachment = true,
                                       .clearAttachment = true,
                                   },
                                   {.format = DEPTH_F32_STENCIL_8,
+                                   .depthStencilValue = {1.0, 0.0},
                                    .isDepthAttachment = true}})
                     .pipelineLayout(mainLayout)
                     .pushConstant(sizeof(PushConstant))
                     .uniformBindings({{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = UniformBindingType::UNIFORM_BUFFER},
                                       {.size = 0, .offset = 0, .binding = 1, .type = UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER},
-                                      {.size = 0, .offset = 0, .binding = 2, .type = UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER},
+                                      {.size = 0, .offset = 0, .binding = 2, .type = UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER}
                                       /*{.size = 0, .offset = 0, .binding = 3, .type = UniformBindingType::SHADER_STORAGE}*/});
 
             RenderPassInfo shadowRenderPassInfo =
@@ -379,25 +479,24 @@ namespace BSP
                     .subpasses({})
                     .dimensions({.width = 3000, .height = 3000})
                     .attachments(
-                        {{.format = DEPTH_F32,
-                          .wrapMode = CLAMP_TO_BORDER,
-                          .filtering = LINEAR,
-                          .compareFunc = LESS_OR_EQUAL,
-                          .depthCompare = true,
-                          .isSampler = true,
-                          .isDepthAttachment = false,
-                          .isSwapChainAttachment = false},
-                         {.format = DEPTH_F32,
+                        {{.format = COLOR_R_32F,
                           .wrapMode = CLAMP_TO_BORDER,
                           .filtering = engine::POINT,
                           .compareFunc = ALWAYS,
                           .depthCompare = false,
+                          .clearColor = {1.0, 1.0, 1.0, 1.0},
                           .isSampler = true,
                           .isDepthAttachment = false,
                           .isSwapChainAttachment = false,
                           .clearAttachment = true},
 
                          {.format = DEPTH_F32_STENCIL_8,
+                          .filtering = engine::LINEAR,
+                          .compareFunc = LESS_OR_EQUAL,
+                          .depthCompare = true,
+                          .depthStencilValue = {1.0, 0.0},
+
+                          .isSampler = true,
                           .isDepthAttachment = true}})
                     .pipelineLayout(shadowLayout)
                     .pushConstant(sizeof(PushConstant))
@@ -409,6 +508,5 @@ namespace BSP
             m_pShadowRenderPass = Epsilon::getContext().ResourceManager()->createRenderPass(shadowRenderPassInfo);
         }
     };
-
 }
 #endif // EPSILON_BSP_HPP
