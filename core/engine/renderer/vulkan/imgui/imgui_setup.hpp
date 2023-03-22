@@ -187,6 +187,14 @@ public:
         static bool show_another_window = false;
         ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
         ImGui::NewFrame();
+
+        ImGui::SetNextWindowSize(ImVec2(wd->Width, wd->Height));
+        ImGui::SetNextWindowPos(ImVec2(0, 0));
+        ImGui::Begin("##transparentWindow", nullptr, ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
+        ImGui::Text("framerate %.1f FPS", ImGui::GetIO().Framerate);
+        ImGui::Text("frametime %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
+        ImGui::End();
+
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
             static float f = 0.0f;
@@ -254,6 +262,11 @@ public:
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
         if (show_demo_window)
             ImGui::ShowDemoWindow(&show_demo_window);
+
+        ImGui::SetNextWindowSize(ImVec2(wd->Width, wd->Height));
+        ImGui::Begin("##transparentWindow", nullptr, ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoTitleBar);
+        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        ImGui::End();
 
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {

@@ -29,6 +29,11 @@ ubo;
 layout(binding = 1) uniform sampler2DShadow shadowMap;
 layout(binding = 2) uniform sampler2D depthMap;
 
+layout(binding = 3) uniform sampler2D rt;
+layout(binding = 4) uniform sampler2D trt;
+layout(binding = 5) uniform sampler2D rttt;
+layout(binding = 6) uniform sampler2D drtrtepthMap;
+
 layout (set = 1, binding = 0) uniform sampler2D textures[];
 
 vec3 Gamma(in vec3 img)

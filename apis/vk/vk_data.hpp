@@ -80,6 +80,7 @@ namespace vk
         VkFilter filter;
         VkSamplerAddressMode addressMode;
         VkCompareOp compareOp;
+        bool isDepthAttachment = false;
         bool compareEnable = false;
     };
 

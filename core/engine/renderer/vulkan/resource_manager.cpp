@@ -224,6 +224,8 @@ namespace engine
                         .bindingPoint = binding.bindingPoint,
                         .isRenderPassAttachment = true};
 
+                    shaderBinding.texture.isDepthAttachment = true;
+
                     vkMaterial.shaderBindings.push_back(shaderBinding);
                 }
                 else
@@ -294,7 +296,7 @@ namespace engine
 
                         bindless_image_info[count].sampler = texture.sampler;
                         bindless_image_info[count].imageView = texture.imageView;
-                        bindless_image_info[count].imageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+                        bindless_image_info[count].imageLayout = texture.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
                         bindless_descriptor_writes[count].pImageInfo = &bindless_image_info[count];
                         count++;
                     }
@@ -443,6 +445,7 @@ namespace engine
 
             if (attachment.isDepthAttachment)
             {
+                texture.isDepthAttachment = true;
                 renderPass.renderPassChain.DepthTexture = texture;
             }
             else
