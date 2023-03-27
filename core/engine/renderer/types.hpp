@@ -283,7 +283,7 @@ namespace engine
         CompareFunction compareFunc;
         bool depthCompare = false;
         float clearColor[4]{};
-        float depthStencilValue[2]{};
+        uint32_t depthStencilValue[2]{};
         bool isSampler = false;
         bool isDepthAttachment = false;
         bool isSwapChainAttachment = false;

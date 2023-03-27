@@ -75,7 +75,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE glfw3)
 
 if(DBUILD_ANDROID EQUAL 0)
 if(WIN32)
-target_link_libraries(${PROJECT_NAME} PRIVATE openal32)
+target_link_libraries(${PROJECT_NAME} PRIVATE openal32.dll)
 target_link_libraries(${PROJECT_NAME} PRIVATE assimp-5.dll)
 else()
 target_link_libraries(${PROJECT_NAME} PRIVATE openal)

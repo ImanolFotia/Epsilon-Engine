@@ -222,12 +222,12 @@ namespace ChessApp
 
     void ChessApp::onReady()
     {
-        m_pEngineThread = std::thread([this]()
+        /*m_pEngineThread = std::thread([this]()
                                       {
             std::this_thread::sleep_for(std::chrono::seconds(1));
             m_pUCI.init(); });
 
-        m_pEngineThread.detach();
+        m_pEngineThread.detach();*/
     }
 
     void ChessApp::onRender()
@@ -288,6 +288,7 @@ namespace ChessApp
 
         engine::Context::getSingleton().Renderer()->Submit();
         engine::Context::getSingleton().Renderer()->EndFrame();
+
         // drawFrame(m_pRenderPass);
 
         if (!m_pUCI.last_move.empty() && m_pBoard.Turn() == BLACK)
@@ -622,7 +623,9 @@ namespace ChessApp
                                                       .numChannels(nc)
                                                       .pixels(pixels)
                                                       .name("pieces");
-
+            texInfo.filtering = engine::LINEAR;
+            texInfo.wrapMode = engine::REPEAT;
+            texInfo.format = engine::COLOR_RGBA;
             engine::MaterialInfo material = {
                 .bindingInfo = {{.size = sizeof(ChessShaderData), .binding = 0, .type = en::UNIFORM_BUFFER},
                                 {.size = 0, .offset = 0, .binding = 1, .type = en::TEXTURE_IMAGE_COMBINED_SAMPLER, .textureInfo = texInfo}},
@@ -692,10 +695,13 @@ namespace ChessApp
                 .dimensions({.width = 1920, .height = 1080})
                 .attachments({{
                                   .format = COLOR_RGBA,
+                                  .clearColor = {0.1f, 0.1f, 0.1f, 1.0001f},
                                   .isDepthAttachment = false,
                                   .isSwapChainAttachment = true,
+                                  .clearAttachment = true,
                               },
                               {.format = DEPTH_F32_STENCIL_8,
+                               .depthStencilValue = {1, 0},
                                .isDepthAttachment = true}})
                 .pipelineLayout(boardLayout)
                 .pipelineLayout(pieceLayout)

@@ -70,7 +70,7 @@ void main() {
     correctedCoords += pieces[piece];
     
     
-    vec4 texCol = texture(textures[0], correctedCoords, 0.0);
+    vec4 texCol = textureLod(textures[0], correctedCoords, 0.0);
     
     if(texCol.a < 0.01) discard;
     

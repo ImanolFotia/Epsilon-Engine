@@ -125,19 +125,19 @@ namespace engine
         // std::cout << "m_pImageIndex " << m_pImageIndex << std::endl;
 
         vkResetCommandBuffer(m_pFrame.CommandBuffer(), 0);
+        /*
+                if (!imguiInit)
+                {
 
-        if (!imguiInit)
-        {
-
-            auto window = engine::Context::getSingleton().Window();
-            m_pImguiRenderer.Init(m_pVkData, window.getWindow(),
-                                  m_pResourceManagerRef->m_pDescriptorPool,
-                                  m_pVkData.defaultRenderPass.renderPass,
-                                  m_pResourceManagerRef->m_pCommandPools.front(),
-                                  m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
-            imguiInit = true;
-        }
-        m_pImguiRenderer.newFrame(m_pCurrentFrame, m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
+                    auto window = engine::Context::getSingleton().Window();
+                    m_pImguiRenderer.Init(m_pVkData, window.getWindow(),
+                                          m_pResourceManagerRef->m_pDescriptorPool,
+                                          m_pVkData.defaultRenderPass.renderPass,
+                                          m_pResourceManagerRef->m_pCommandPools.front(),
+                                          m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
+                    imguiInit = true;
+                }
+                m_pImguiRenderer.newFrame(m_pCurrentFrame, m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));*/
     }
 
     void
@@ -179,8 +179,9 @@ namespace engine
     void VulkanRenderer::End(glm::vec3 &v)
     {
 
-        m_pImguiRenderer.DrawUI(std::forward<glm::vec3 &>(v), m_pResourceManagerRef->ResourcesMemory);
+        // m_pImguiRenderer.DrawUI(std::forward<glm::vec3 &>(v), m_pResourceManagerRef->ResourcesMemory);
 
+        // vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
         if (m_pImageIndex == -1)
             return;
 
@@ -197,7 +198,7 @@ namespace engine
         if (renderPass->id == std::numeric_limits<uint32_t>::max())
         {
 
-            vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
+            // vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
             vk::createRenderPassInfo(m_pImageIndex, m_pVkData, m_pVkData.defaultRenderPass);
 
             m_pVkData.defaultRenderPass.renderPassInfo.renderArea.offset = {0, 0};
@@ -238,6 +239,7 @@ namespace engine
         }
 
         // vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
+        vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
         m_pCurrentCommandQueue.clear();
     }
 

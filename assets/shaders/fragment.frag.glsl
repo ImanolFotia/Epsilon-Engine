@@ -52,7 +52,7 @@ const vec3 lightDir = normalize(lightPos - vec3(26.4674, 1.16102, 22.1613));
 vec3 shadowCoord = shadowCoords.xyz / shadowCoords.w;
 #define FAR 100
 #define BLOCKER_SEARCH_NUM_SAMPLES 16
-#define PCF_NUM_SAMPLES 64
+#define PCF_NUM_SAMPLES 32
 #define NEAR_PLANE 0.1
 float LIGHT_WORLD_SIZE = ubo.lightPosition.x; // 1.0
 float LIGHT_FRUSTUM_WIDTH = ubo.lightPosition.y; // 50.0

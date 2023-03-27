@@ -461,7 +461,7 @@ namespace BSP
                                       .clearAttachment = true,
                                   },
                                   {.format = DEPTH_F32_STENCIL_8,
-                                   .depthStencilValue = {1.0, 0.0},
+                                   .depthStencilValue = {1, 0},
                                    .isDepthAttachment = true}})
                     .pipelineLayout(mainLayout)
                     .pushConstant(sizeof(PushConstant))
@@ -477,7 +477,7 @@ namespace BSP
                     .size(sizeof(Vertex))
                     .depthAttachment(true)
                     .subpasses({})
-                    .dimensions({.width = 3000, .height = 3000})
+                    .dimensions({.width = 1500, .height = 1500})
                     .attachments(
                         {{.format = COLOR_R_32F,
                           .wrapMode = CLAMP_TO_BORDER,
@@ -494,7 +494,7 @@ namespace BSP
                           .filtering = engine::LINEAR,
                           .compareFunc = LESS_OR_EQUAL,
                           .depthCompare = true,
-                          .depthStencilValue = {1.0, 0.0},
+                          .depthStencilValue = {1, 0},
 
                           .isSampler = true,
                           .isDepthAttachment = true}})

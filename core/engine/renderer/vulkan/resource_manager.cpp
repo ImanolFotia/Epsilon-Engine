@@ -73,7 +73,7 @@ namespace engine
         auto format = resolveFormat(texInfo.format);
 
         auto stagingBuffer = pCreateStagingTextureBuffer(texInfo.pixels, texInfo);
-        int mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texInfo.width, texInfo.height)))) + 1;
+        uint32_t mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texInfo.width, texInfo.height)))) + 1;
 
         auto texture = pCreateTextureBuffer({.width = texInfo.width,
                                              .height = texInfo.height,
@@ -97,6 +97,8 @@ namespace engine
                               format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                               VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, texture.info);
 
+        std::cout << "llega" << std::endl;
+
         vmaDestroyBuffer(m_pAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
         // vmaFreeMemory(m_pAllocator, m_pStagingTextureBuffer.allocation);
 
@@ -109,6 +111,7 @@ namespace engine
 
         /* Begin generate mips*/
         // Copy down mips from n-1 to n
+
         if (mipLevels > 1)
             for (int32_t i = 1; i < mipLevels; i++)
             {
@@ -337,7 +340,7 @@ namespace engine
             ResourcesMemory.m_pTextureBufferAllocationSize += renderPassInfo.dimensions.width * renderPassInfo.dimensions.height * 4;
             m_pVkDataPtr->defaultRenderPass.clearValues.back()
                 .depthStencil = {
-                renderPassInfo.attachments.back().depthStencilValue[0],
+                (float)renderPassInfo.attachments.back().depthStencilValue[0],
                 renderPassInfo.attachments.back().depthStencilValue[1]};
         }
 
@@ -400,7 +403,7 @@ namespace engine
         }
         if (renderPassInfo.depthAttachment)
             renderPass.clearValues.back().depthStencil = {
-                renderPassInfo.attachments.back().depthStencilValue[0],
+                (float)renderPassInfo.attachments.back().depthStencilValue[0],
                 renderPassInfo.attachments.back().depthStencilValue[1]};
 
         renderPass.id = m_pRenderPassCount;

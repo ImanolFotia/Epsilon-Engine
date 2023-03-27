@@ -1,7 +1,14 @@
-#pragma once 
+#pragma once
 
 #include <numeric>
 #include <glm/glm.hpp>
+
+#ifdef MIN
+#undef MIN
+#undef MAX
+#undef min
+#undef max
+#endif
 
 constexpr double PI = 3.14159265359;
 constexpr double HPI = 3.14159265359 * 0.5;
@@ -20,15 +27,14 @@ auto static inRange(T x, T a, T b) -> bool
     return (x > a) && (x < b);
 };
 
-
-//Minimum value for any given type
+// Minimum value for any given type
 template <typename T>
 inline static T getMinimum()
 {
     return std::numeric_limits<T>::min();
 }
 
-//Maximum value for any given type
+// Maximum value for any given type
 template <typename T>
 inline static T getMaximum()
 {
@@ -52,13 +58,11 @@ inline static T getMaximum()
         a.z += ar1.x;
         a.w += ar1.y;
         s = glm::floor(s / coprimes);
-
     }
     return glm::vec2(a.z, a.w);
 }
 
-
-//Test device's endianess
+// Test device's endianess
 static bool isBigEndian()
 {
     int a = 1;
