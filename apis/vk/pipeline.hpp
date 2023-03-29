@@ -287,9 +287,7 @@ namespace vk
         for (auto &layout : renderPipeline.pipelineLayout)
             vkDestroyPipelineLayout(vk_data.logicalDevice, layout, nullptr);
 
-        //!!! DESTROYING ALL OF THEM MAY CAUSE PROBLEMS
-        for (auto &descLayout : renderPipeline.descriptorSetLayouts)
-            vkDestroyDescriptorSetLayout(vk_data.logicalDevice, descLayout, nullptr);
+        vkDestroyDescriptorSetLayout(vk_data.logicalDevice, renderPipeline.descriptorSetLayouts.at(0), nullptr);
 
         vkDestroyPipeline(vk_data.logicalDevice, renderPipeline.graphicsPipeline, nullptr);
     }

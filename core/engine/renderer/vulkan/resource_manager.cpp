@@ -5,14 +5,15 @@
 #include "helpers.hpp"
 
 #include "core/framework/exception.hpp"
-/*
+
 #define VMA_DEBUG_LOG_FORMAT(format, ...)
 
-#define VMA_DEBUG_LOG_FORMAT(format, ...) do { \
-    printf((format), __VA_ARGS__); \
-    printf("\n"); \
-} while(false)
-*/
+#define VMA_DEBUG_LOG_FORMAT(format, ...) \
+    do                                    \
+    {                                     \
+        printf((format), __VA_ARGS__);    \
+        printf("\n");                     \
+    } while (false)
 
 #define VMA_DEBUG_LOG(str) VMA_DEBUG_LOG_FORMAT("%s", (str))
 
@@ -96,7 +97,6 @@ namespace engine
         transitionImageLayout(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), texture.image,
                               format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                               VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, texture.info);
-
         std::cout << "llega" << std::endl;
 
         vmaDestroyBuffer(m_pAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
@@ -147,7 +147,7 @@ namespace engine
                                        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                                        texture.info,
                                        blitCommandBuffer,
-                                       mipSubRange);
+                                       mipSubRange, i, 1);
 
                 // Blit from previous level
                 vkCmdBlitImage(
@@ -164,11 +164,11 @@ namespace engine
                                        m_pCommandPools.back(),
                                        texture.image,
                                        texture.format,
-                                       VK_IMAGE_LAYOUT_UNDEFINED,
                                        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                                       VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
                                        texture.info,
                                        blitCommandBuffer,
-                                       mipSubRange);
+                                       mipSubRange, i, 1);
             }
 
         // After the loop, all mip layers are in TRANSFER_SRC layout, so transition all to SHADER_READ
@@ -182,7 +182,7 @@ namespace engine
                                m_pCommandPools.back(),
                                texture.image,
                                texture.format,
-                               VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                               VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
                                VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
                                texture.info,
                                blitCommandBuffer,
@@ -514,6 +514,10 @@ namespace engine
                 vmaDestroyBuffer(m_pAllocator, b.buffer, b.allocation);
             }
         }
+        for (auto &buffer : gpuBufferPool)
+        {
+            vmaDestroyBuffer(m_pAllocator, buffer.buffer.buffer, buffer.buffer.allocation);
+        }
 
         vk::cleanupSyncObjects(*m_pVkDataPtr);
 
@@ -563,7 +567,12 @@ namespace engine
         }
         vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool, nullptr);
 
+        vkDestroyDescriptorSetLayout(m_pVkDataPtr->logicalDevice, m_pGlobalDescriptorSetLayout, nullptr);
+        vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pGlobalDescriptorPool, nullptr);
+
         vmaDestroyBuffer(m_pAllocator, m_pIndirectBuffer.buffer, m_pIndirectBuffer.allocation);
+
+        // vmaDestroyBuffer(m_pAllocator, m_pMaterialBuffer.buffer, m_pMaterialBuffer.allocation)
 
         vmaDestroyAllocator(m_pAllocator);
         vk::cleanup(*m_pVkDataPtr);
