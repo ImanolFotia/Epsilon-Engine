@@ -152,4 +152,12 @@ struct OpenALData;
         return true;
 #endif
     }
+
+    static void destroyDevice(OpenALData* al_data) {
+        //destroying context
+        alcDestroyContext(al_data->context);
+
+        //closing device
+        alcCloseDevice(al_data->device);
+    }
 }

@@ -10,6 +10,8 @@
 #include "apis/vk/vk.hpp"
 #include "imgui/imgui_setup.hpp"
 
+#include <core/framework/singleton.hpp>
+
 #include <vector>
 #include <list>
 /*

@@ -31,7 +31,7 @@
 
 namespace Epsilon
 {
-    class __attribute__((visibility("default"))) Epsilon : public singleton<Epsilon>
+    class EPSILON_API Epsilon : public singleton<Epsilon>
     {
 
         uint32_t m_CurrentFrame = 0;
@@ -58,29 +58,13 @@ namespace Epsilon
         };
 
     public:
-        engine::Context &getContext()
-        {
-            return engine::Context::getSingleton();
-        }
+        engine::Context &getContext();
 
         Epsilon() = default;
 
         explicit Epsilon(const std::string &appName);
 
-        void run()
-        {
-            if (engine::Context::getSingleton().Window().getSize().first == 0)
-                self.initWindow(1280, 720);
-
-            self.initVulkan();
-            if (self.onCreate)
-                self.onCreate();
-
-            if (self.onReady)
-                self.onReady();
-            self.mainLoop();
-            self.exit();
-        }
+        void run();
 
         std::function<void()> onCreate;
         std::function<void()> onReady;
@@ -92,102 +76,25 @@ namespace Epsilon
     protected:
         bool mShouldClose = false;
 
-        void ShouldClose()
-        {
-            mShouldClose = true;
-        }
+        void ShouldClose();
+        void drawFrame(engine::Ref<engine::RenderPass> renderPassRef);
+        void setOnCreate(std::function<void(void)> fun);
+        void setOnReady(std::function<void(void)> fun);
+        void setOnRender(std::function<void(void)> fun);
 
-        void drawFrame(engine::Ref<engine::RenderPass> renderPassRef)
-        {
-            glm::vec3 vec;
-            engine::Context::getSingleton().Renderer()->Flush(renderPassRef, engine::DrawType::INDEXED);
-            engine::Context::getSingleton().Renderer()->End(vec);
-            engine::Context::getSingleton().Renderer()->Submit();
-            engine::Context::getSingleton().Renderer()->EndFrame();
-        }
-
-        void setOnCreate(std::function<void(void)> fun)
-        {
-            Epsilon::getSingleton().onCreate = fun;
-        }
-
-        void setOnReady(std::function<void(void)> fun)
-        {
-            Epsilon::getSingleton().onReady = fun;
-        }
-
-        void setOnRender(std::function<void(void)> fun)
-        {
-            Epsilon::getSingleton().onRender = fun;
-        }
-
-        void setOnExit(std::function<void(void)> fun)
-        {
-            Epsilon::getSingleton().onExit = fun;
-        }
+        void setOnExit(std::function<void(void)> fun);
 
     private:
-        void initWindow(int w, int h)
-        {
-            engine::Context::getSingleton().Window().init(m_ApplicationName, w, h);
-        }
+        void initWindow(int w, int h);
+        void initVulkan();
 
-        void initVulkan()
-        {
-            engine::Context::getSingleton().Renderer()->Init(m_ApplicationName.c_str(), engine::Context::getSingleton().Window());
-            engine::Context::getSingleton().ResourceManager()->Init();
-        }
+        void mainLoop();
+        void showFPS();
 
-        void mainLoop()
-        {
-
-            while (!engine::Context::getSingleton().Window().ShouldClose())
-            {
-                framework::Clock::Tick();
-                showFPS();
-                if (mShouldClose)
-                    break;
-                if (self.onRender)
-                    self.onRender();
-                engine::Context::getSingleton().Window().PollEvents();
-            }
-        }
-
-        void showFPS()
-        {
-            // Measure speed
-            double currentTime = framework::Clock::TimeSeconds();
-            double delta = currentTime - lastTime;
-            nbFrames++;
-            if (delta >= 1.0)
-            {
-                double fps = double(nbFrames) / delta;
-
-                std::stringstream ss;
-                ss << m_ApplicationName << " | "
-                   << " [" << (int)fps << " FPS] | [" << (1000.0 / double(nbFrames)) << " MS]";
-
-                engine::Context::getSingleton().Window().setWindowTitle(ss.str().c_str());
-
-                nbFrames = 0;
-                lastTime = currentTime;
-            }
-        }
-
-        void exit()
-        {
-            if (self.onExit)
-                self.onExit();
-            engine::Context::getSingleton().Renderer()->Cleanup();
-            engine::Context::getSingleton().Window().cleanup();
-        }
+        void exit();
 
     protected:
-        std::pair<int, int> getWindowDimensions()
-        {
-            int w, h;
-            return engine::Context::getSingleton().Window().getSize();
-        }
+        std::pair<int, int> getWindowDimensions();
 
         ShaderData shaderData;
     };

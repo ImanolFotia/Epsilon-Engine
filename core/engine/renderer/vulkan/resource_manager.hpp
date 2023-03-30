@@ -147,7 +147,7 @@ namespace engine
         VkDescriptorSet m_pGlobalDescriptorSets;
         VkDescriptorSetLayout m_pGlobalDescriptorSetLayout;
 
-        VkDescriptorPool m_pDescriptorPool;
+        VkDescriptorPool m_pDescriptorPool = VK_NULL_HANDLE;
         std::vector<VkDescriptorSet> m_pDescriptorSets;
 
         std::vector<RenderPassInfo> m_pRenderPassInfo;

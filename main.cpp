@@ -32,6 +32,9 @@ extern "C"
 
 #include "Example.hpp"
 
+template <>
+engine::VulkanRenderer singleton<engine::VulkanRenderer>::self{};
+
 #ifdef _WIN32
 int CALLBACK WinMain(
     HINSTANCE hInstance,

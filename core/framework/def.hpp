@@ -1,14 +1,13 @@
 #pragma once
 
 #include <numeric>
+#include <limits>
 #include <glm/glm.hpp>
 
-#ifdef MIN
 #undef MIN
 #undef MAX
 #undef min
 #undef max
-#endif
 
 constexpr double PI = 3.14159265359;
 constexpr double HPI = 3.14159265359 * 0.5;

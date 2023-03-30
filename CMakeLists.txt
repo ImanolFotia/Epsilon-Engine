@@ -8,6 +8,9 @@ set(EPSILON_BUILD_LOCATION ${CMAKE_BINARY_DIR})
 set(DUSE_GLFW 1)
 set(DBUILD_ANDROID 0)
 
+set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}")
+include(InstallRequiredSystemLibraries)
+
 add_compile_definitions(USE_GLFW=${DUSE_GLFW})
 add_compile_definitions(BUILD_ANDROID=${DBUILD_ANDROID})
 
@@ -30,6 +33,7 @@ set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib:../lib")
 set(CMAKE_BUILD_RPATH "${CMAKE_INSTALL_PREFIX}/lib:../lib")
 
 set_target_properties( ${PROJECT_NAME} PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_RPATH}" )
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
 
 endif()
 
@@ -221,6 +225,7 @@ option(CREATE_STATIC_LIB "Build static library" OFF)
 project(Epsilon VERSION 0.1.0)
 
 set(PROJECT_FILES
+        ${CMAKE_SOURCE_DIR}/core/engine/context.cpp
         ${CMAKE_SOURCE_DIR}/core/framework/env.cpp
         ${CMAKE_SOURCE_DIR}/main_lib.cpp
         ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/vulkan_impl.cpp
@@ -304,7 +309,7 @@ endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw3)
 
 if(BUILD_ANDROID EQUAL 0)
-target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
+#target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
 endif()
 if(WIN32)
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenAL32.dll)
@@ -364,9 +369,15 @@ execute_process(
 FILE(GLOB shaders "${CMAKE_SOURCE_DIR}/assets/shaders/chess/*.spv" )
 install(FILES ${shaders} DESTINATION "bin/assets/shaders/chess/")
 
+FILE(GLOB shaders "${CMAKE_SOURCE_DIR}/assets/shaders/*.spv" )
+install(FILES ${shaders} DESTINATION "bin/assets/shaders/")
+
+FILE(GLOB shaders "${CMAKE_SOURCE_DIR}/assets/images/*.*" )
+install(FILES ${shaders} DESTINATION "bin/assets/images/")
+
 
 FILE(GLOB images "${CMAKE_SOURCE_DIR}/assets/images" )
-install(DIRECTORY ${images} DESTINATION "bin/assets/images")
+install(DIRECTORY ${images} DESTINATION "bin/assets")
 
 #add_subdirectory(examples/basic)
 add_subdirectory(examples/chess)

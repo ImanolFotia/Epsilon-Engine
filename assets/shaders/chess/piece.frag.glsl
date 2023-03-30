@@ -1,5 +1,6 @@
 #version 460
 #extension GL_EXT_nonuniform_qualifier : enable
+
 layout(location = 0) out vec4 outColor;
 
 layout (location = 0) in vec3 position;
@@ -76,5 +77,5 @@ void main() {
     
 
     outColor.a = texCol.a;
-    outColor.rgb = (Gamma(outColor.rgb));
+    outColor.rgb = (Gamma(texCol.rgb));
 }

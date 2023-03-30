@@ -42,13 +42,20 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${Mono_INCLUDE_DIRS})
 if(DBUILD_ANDROID EQUAL 0)
 if(WIN32)
 target_link_libraries(${PROJECT_NAME} PRIVATE openal32)
-target_link_libraries(${PROJECT_NAME} PRIVATE assimp-5.dll)
+#target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
 else()
 target_link_libraries(${PROJECT_NAME} PRIVATE openal)
-target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
+#target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
 endif()
 endif()
 target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_DL_LIBS})
+
+set(CMAKE_INSTALL_DEBUG_LIBRARIES ON)
+
+
+set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}")
+include(InstallRequiredSystemLibraries)
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 
 
 

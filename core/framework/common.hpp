@@ -4,6 +4,12 @@
 #include <ctime>   
 #include <chrono>
 
+#ifdef _MSC_VER
+#define EPSILON_API  __declspec(dllexport)
+#else
+#define EPSILON_API __attribute__((visibility("default")))
+#endif
+
 class IO
 {
 public:

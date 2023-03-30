@@ -179,7 +179,7 @@ namespace engine
     void VulkanRenderer::End(glm::vec3 &v)
     {
 
-        m_pImguiRenderer.DrawUI(std::forward<glm::vec3 &>(v), m_pResourceManagerRef->ResourcesMemory);
+        // m_pImguiRenderer.DrawUI(std::forward<glm::vec3 &>(v), m_pResourceManagerRef->ResourcesMemory);
 
         // vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
         if (m_pImageIndex == -1)
@@ -198,7 +198,7 @@ namespace engine
         if (renderPass->id == std::numeric_limits<uint32_t>::max())
         {
 
-            vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
+            // vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
             vk::createRenderPassInfo(m_pImageIndex, m_pVkData, m_pVkData.defaultRenderPass);
 
             m_pVkData.defaultRenderPass.renderPassInfo.renderArea.offset = {0, 0};
@@ -238,7 +238,7 @@ namespace engine
             break;
         }
 
-        // vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
+        vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
         m_pCurrentCommandQueue.clear();
     }
 
@@ -453,7 +453,7 @@ namespace engine
         auto renderPass = m_pResourceManagerRef->renderPassPool.get(renderPassRef);
         auto front = renderPass->uniformBuffer.begin();
 
-        std::advance(front, index);
+        std::advance(front, (uint32_t)index);
         auto &buffer = (*front).buffers[m_pCurrentFrame];
         pUpdateUniformBuffer(buffer, data);
     }
