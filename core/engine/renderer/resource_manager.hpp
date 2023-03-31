@@ -24,10 +24,10 @@ namespace engine
     {
         Ref<Buffer> vertexBuffer;
         Ref<Buffer> indexBuffer;
-        uint32_t vertexOffset;
-        uint32_t indexOffset;
-        uint32_t numVertices;
-        uint32_t numIndices;
+        uint32_t vertexOffset{};
+        uint32_t indexOffset{};
+        uint32_t numVertices{};
+        uint32_t numIndices{};
     };
 
     struct ResourceManager

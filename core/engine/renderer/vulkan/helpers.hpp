@@ -140,7 +140,7 @@ namespace engine
 
     static std::vector<IndirectBatch> generateIndirectBatch(std::list<DrawCommand> &commandLists)
     {
-        std::vector<IndirectBatch> batches;
+        std::vector<IndirectBatch> batches{};
         batches.resize(commandLists.size());
         unsigned index = 0;
         unsigned current = 0;
@@ -151,6 +151,8 @@ namespace engine
             {
                 batches[current] = {.meshResource = command.meshResource,
                                     .material = command.material,
+                                    .uniformIndex = command.uniformIndex,
+                                    .layoutIndex = command.layoutIndex,
                                     .count = 1,
                                     .first = 0};
                 index++;
@@ -159,7 +161,8 @@ namespace engine
             bool isSameMaterial = Ref<Material>::isSame(command.material, batches[current].material);
             bool isSameVertexBuffer = Ref<Buffer>::isSame(command.meshResource.vertexBuffer, batches[current].meshResource.vertexBuffer);
             bool isSameIndexBuffer = Ref<Buffer>::isSame(command.meshResource.indexBuffer, batches[current].meshResource.indexBuffer);
-            if (isSameMaterial && isSameVertexBuffer && isSameIndexBuffer)
+            bool isSameLayout = command.layoutIndex == batches[current].layoutIndex;
+            if (isSameMaterial && isSameVertexBuffer && isSameIndexBuffer && isSameLayout)
             {
                 batches[current].count++;
             }
@@ -173,6 +176,7 @@ namespace engine
                                     .count = 1,
                                     .first = index};
             }
+
             index++;
         }
         batches.resize(current + 1);

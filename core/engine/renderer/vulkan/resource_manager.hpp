@@ -143,9 +143,9 @@ namespace engine
         std::vector<Ref<Buffer>> indexBufferReferences;
         std::vector<Ref<Buffer>> vertexBufferReferences;
 
-        VkDescriptorPool m_pGlobalDescriptorPool;
-        VkDescriptorSet m_pGlobalDescriptorSets;
-        VkDescriptorSetLayout m_pGlobalDescriptorSetLayout;
+        VkDescriptorPool m_pGlobalDescriptorPool = VK_NULL_HANDLE;
+        VkDescriptorSet m_pGlobalDescriptorSets = VK_NULL_HANDLE;
+        VkDescriptorSetLayout m_pGlobalDescriptorSetLayout = VK_NULL_HANDLE;
 
         VkDescriptorPool m_pDescriptorPool = VK_NULL_HANDLE;
         std::vector<VkDescriptorSet> m_pDescriptorSets;

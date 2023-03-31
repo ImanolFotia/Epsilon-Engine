@@ -37,7 +37,7 @@ namespace engine
 
     struct IndirectBatch
     {
-        MeshResource meshResource;
+        MeshResource meshResource{};
         Ref<Material> material;
         uint32_t uniformIndex = 0;
         uint32_t layoutIndex = 0;

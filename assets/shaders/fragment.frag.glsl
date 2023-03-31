@@ -146,7 +146,7 @@ void FindBlocker(out float avgBlockerDepth,
 {
     // This uses similar triangles to compute what
     // area of the shadow map we should search
-    float searchWidth =  LIGHT_SIZE_UV;//*((zReceiver - NEAR_PLANE) / zReceiver);
+    float searchWidth =  LIGHT_SIZE_UV; //*((zReceiver - NEAR_PLANE) / zReceiver);
     float blockerSum = 0;
     numBlockers = 0;
 
@@ -216,6 +216,8 @@ vec3 drawCheckers(vec2 coords, float size) {
     return (x ^^ y) ? dark_color : light_color;
 }
 
+const vec3 sunColor = normalize(vec3(255, 212, 148));
+
 void main()
 {
     const float texDivisor = 1024.0;
@@ -226,8 +228,12 @@ void main()
     float roughness = texture(textures[3], texCoords/texDivisor).r;
 
     vec3 mNormal = normalize(normalize(normal_tex * 2.0 - 1.0) * TBN);
-    vec3 skyLight = vec3(max(dot(vec3(0.0, 1.0, 0.0), mNormal), 0.0));
-    skyLight = pow(skyLight * 0.5 + 0.5,vec3(2.0)) * normalize(vec3(111, 159, 199));
+    float SdotN = dot(vec3(0.0, 1.0, 0.0), mNormal);
+    
+        vec3 backcol = mix(vec3( 0.92, 0.95, 0.99 ), vec3( 0.45, 0.68, 0.88 ), clamp(vec3(SdotN) +0.5, 0.0, 1.));
+    vec3 skyLight = vec3(max(SdotN, 0.0)) + backcol;
+
+    //skyLight = pow(skyLight * 0.5 + 0.5,vec3(2.0)) * normalize(vec3(111, 159, 199));
     
     vec4 FragPosLightSpace = ubo.lightMatrix * vec4(position.xyz, 1.0);
 
@@ -255,16 +261,22 @@ void main()
     
 
     sum = PCSS(shadowCoords);
+    
+    vec3 V = normalize(ubo.viewPosition - position.xyz);
 
+    vec3 reflv = reflect( V, mNormal);
+    vec3 reflc = mix(vec3( 0.45, 0.68, 0.88 ), vec3( 0.92, 0.95, 0.99 ), reflv.y);
     //sum = texture(shadowMap, shadowCoord);
 
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, diffuse, vec3(0.0));
     //sum = textureGrad(shadowMap, shadowCoord, vec2(0.0),  vec2(0.0)).r;
-    vec3 light = CalculateDirectionalPBR(lightDir, vec3(1.0), 1.0, ubo.viewPosition, position.xyz, F0, mNormal, roughness, diffuse);
+    vec3 light = sunColor*CalculateDirectionalPBR(lightDir, vec3(1.0), 1.0, ubo.viewPosition, position.xyz, F0, mNormal, roughness, diffuse);
 
     outColor.a = color.a; // texCol.a;
     vec3 checkers = color.rgb;//drawCheckers(texCoords.xy, 512.0);
     
-    outColor.rgb = (sum * ((light * 5.0))) + (skyLight*diffuse * 0.5); //(Gamma(outColor.rgb));
+    outColor.rgb = pow(sum, 3.0) *  light * 5.0 + (skyLight*diffuse*0.5) + reflc*0.1; //(Gamma(outColor.rgb));
+
+    //cross[{{1472, 768, -3584}}-{{1856, 768, -3584}}, {{1728, 768, -3584}}-{{1856, 768, -3584}}]
 }

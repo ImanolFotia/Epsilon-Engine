@@ -179,9 +179,9 @@ namespace engine
     void VulkanRenderer::End(glm::vec3 &v)
     {
 
-        // m_pImguiRenderer.DrawUI(std::forward<glm::vec3 &>(v), m_pResourceManagerRef->ResourcesMemory);
+        m_pImguiRenderer.DrawUI(std::forward<glm::vec3 &>(v), m_pResourceManagerRef->ResourcesMemory);
 
-        // vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
+        //vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
         if (m_pImageIndex == -1)
             return;
 
@@ -198,7 +198,7 @@ namespace engine
         if (renderPass->id == std::numeric_limits<uint32_t>::max())
         {
 
-            // vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
+            vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
             vk::createRenderPassInfo(m_pImageIndex, m_pVkData, m_pVkData.defaultRenderPass);
 
             m_pVkData.defaultRenderPass.renderPassInfo.renderArea.offset = {0, 0};
@@ -238,7 +238,7 @@ namespace engine
             break;
         }
 
-        vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
+        // vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
         m_pCurrentCommandQueue.clear();
     }
 
@@ -251,6 +251,33 @@ namespace engine
 
         int changed = 0;
 
+        auto predicate = [](DrawCommand &a, DrawCommand &b) -> bool
+        { auto a_mat = a.material.Index();
+        auto b_mat = b.material.Index();
+        auto a_vtx = a.meshResource.vertexBuffer.Index();
+        auto b_vtx = b.meshResource.vertexBuffer.Index();
+        auto a_i = a.meshResource.indexBuffer.Index();
+        auto b_i = b.meshResource.indexBuffer.Index();
+        return std::tie(a_mat, a.layoutIndex, a_vtx, a_i) <
+            std::tie(b_mat, b.layoutIndex, b_vtx, b_i); };
+
+        m_pCurrentCommandQueue.sort(predicate);
+
+        VkExtent2D extent = renderPass->renderPassChain.Extent;
+        VkViewport viewport{};
+        viewport.x = 0.0f;
+        viewport.y = 0.0f;
+        viewport.width = (float)extent.width;
+        viewport.height = (float)extent.height;
+        viewport.minDepth = 0.0f;
+        viewport.maxDepth = 1.0f;
+        vkCmdSetViewport(m_pFrame.CommandBuffer(), 0, 1, &viewport);
+
+        VkRect2D scissor{};
+        scissor.offset = {0, 0};
+        scissor.extent = extent;
+        vkCmdSetScissor(m_pFrame.CommandBuffer(), 0, 1, &scissor);
+
         for (auto &command : m_pCurrentCommandQueue)
         {
             if (prev_layout != command.layoutIndex)
@@ -259,21 +286,6 @@ namespace engine
                                  m_pFrame.CommandBuffer());
                 prev_layout = command.layoutIndex;
             }
-
-            VkExtent2D extent = renderPass->renderPassChain.Extent;
-            VkViewport viewport{};
-            viewport.x = 0.0f;
-            viewport.y = 0.0f;
-            viewport.width = (float)extent.width;
-            viewport.height = (float)extent.height;
-            viewport.minDepth = 0.0f;
-            viewport.maxDepth = 1.0f;
-            vkCmdSetViewport(m_pFrame.CommandBuffer(), 0, 1, &viewport);
-
-            VkRect2D scissor{};
-            scissor.offset = {0, 0};
-            scissor.extent = extent;
-            vkCmdSetScissor(m_pFrame.CommandBuffer(), 0, 1, &scissor);
 
             auto material = m_pResourceManagerRef->materialPool.get(command.material);
             auto vertexBuffer = m_pResourceManagerRef->vertexBufferPool.get(
@@ -304,8 +316,8 @@ namespace engine
             }
             /** TODO:
              *  Find a way to cleanly implement push constants*/
-            vkCmdPushConstants(m_pFrame.CommandBuffer(), renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(),
-                               VK_SHADER_STAGE_VERTEX_BIT, 0, command.object_data_size, command.objectData);
+            // vkCmdPushConstants(m_pFrame.CommandBuffer(), renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(),
+            //                    VK_SHADER_STAGE_VERTEX_BIT, 0, command.object_data_size, command.objectData);
 
             vkCmdDrawIndexed(m_pFrame.CommandBuffer(), command.meshResource.numIndices, 1, command.meshResource.indexOffset, command.meshResource.vertexOffset, 0);
         }
@@ -334,7 +346,7 @@ namespace engine
             return std::tie(a_mat, a.layoutIndex, a_vtx, a_i) <
                    std::tie(b_mat, b.layoutIndex, b_vtx, b_i); };
 
-        // m_pCurrentCommandQueue.sort(predicate);
+        m_pCurrentCommandQueue.sort(predicate);
 
         auto batches = generateIndirectBatch(m_pCurrentCommandQueue);
 
@@ -351,6 +363,24 @@ namespace engine
             indirect_commands[i].vertexOffset = command.meshResource.vertexOffset;
             i++;
         }
+        uint32_t prev_layout = -1;
+        uint32_t prev_vertexBuffer = -1;
+        uint32_t prev_indexBuffer = -1;
+
+        VkExtent2D extent = renderPass->renderPassChain.Extent;
+        VkViewport viewport{};
+        viewport.x = 0.0f;
+        viewport.y = 0.0f;
+        viewport.width = (float)extent.width;
+        viewport.height = (float)extent.height;
+        viewport.minDepth = 0.0f;
+        viewport.maxDepth = 1.0f;
+        vkCmdSetViewport(m_pFrame.CommandBuffer(), 0, 1, &viewport);
+
+        VkRect2D scissor{};
+        scissor.offset = {0, 0};
+        scissor.extent = extent;
+        vkCmdSetScissor(m_pFrame.CommandBuffer(), 0, 1, &scissor);
 
         for (auto &batch : batches)
         {
@@ -358,26 +388,23 @@ namespace engine
             auto vertexBuffer = m_pResourceManagerRef->vertexBufferPool.get(batch.meshResource.vertexBuffer);
             auto indexBuffer = m_pResourceManagerRef->indexBufferPool.get(batch.meshResource.indexBuffer);
 
-            vk::bindPipeline(renderPass->renderPipelines[batch.layoutIndex].graphicsPipeline,
-                             m_pFrame.CommandBuffer());
+            if (prev_layout != batch.layoutIndex)
+            {
+                vk::bindPipeline(renderPass->renderPipelines[batch.layoutIndex].graphicsPipeline,
+                                 m_pFrame.CommandBuffer());
+                prev_layout = batch.layoutIndex;
+            }
 
-            VkExtent2D extent = renderPass->renderPassChain.Extent;
-            VkViewport viewport{};
-            viewport.x = 0.0f;
-            viewport.y = 0.0f;
-            viewport.width = (float)extent.width;
-            viewport.height = (float)extent.height;
-            viewport.minDepth = 0.0f;
-            viewport.maxDepth = 1.0f;
-            vkCmdSetViewport(m_pFrame.CommandBuffer(), 0, 1, &viewport);
-
-            VkRect2D scissor{};
-            scissor.offset = {0, 0};
-            scissor.extent = extent;
-            vkCmdSetScissor(m_pFrame.CommandBuffer(), 0, 1, &scissor);
-
-            vk::bindVertexBuffer(m_pVkData, m_pFrame.CommandBuffer(), vertexBuffer->buffer);
-            vkCmdBindIndexBuffer(m_pFrame.CommandBuffer(), indexBuffer->buffer, 0, VK_INDEX_TYPE_UINT32);
+            if (prev_vertexBuffer != vertexBuffer->id)
+            {
+                vk::bindVertexBuffer(m_pVkData, m_pFrame.CommandBuffer(), vertexBuffer->buffer);
+                prev_vertexBuffer = vertexBuffer->id;
+            }
+            if (prev_indexBuffer != indexBuffer->id)
+            {
+                vkCmdBindIndexBuffer(m_pFrame.CommandBuffer(), indexBuffer->buffer, 0, VK_INDEX_TYPE_UINT32);
+                prev_indexBuffer = indexBuffer->id;
+            }
 
             vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
                                     renderPass->renderPipelines[batch.layoutIndex].pipelineLayout.back(), 0, 1,
@@ -389,8 +416,8 @@ namespace engine
                                         renderPass->renderPipelines[batch.layoutIndex].pipelineLayout.back(), 1, 1,
                                         &m_pResourceManagerRef->m_pGlobalDescriptorSets, 0, nullptr);
             }
-            VkDeviceSize indirect_offset = batch.first * sizeof(VkDrawIndexedIndirectCommand);
-            uint32_t draw_stride = sizeof(VkDrawIndexedIndirectCommand);
+            constexpr uint32_t draw_stride = sizeof(VkDrawIndexedIndirectCommand);
+            VkDeviceSize indirect_offset = batch.first * draw_stride;
             vkCmdDrawIndexedIndirect(m_pFrame.CommandBuffer(), m_pResourceManagerRef->m_pIndirectBuffer.buffer, indirect_offset, batch.count, draw_stride);
         }
 

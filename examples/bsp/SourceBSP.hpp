@@ -145,7 +145,7 @@ public:
                 // if(face.firstedge+i >= edges.size() ) continue;
                 if (material.find("TOOLS") != std::string::npos)
                 {
-                    continue;
+                    //continue;
                     isTool = true;
                 }
 

@@ -63,7 +63,7 @@ namespace engine
         pCreateBuffer(m_pIndirectBuffer,
                       sizeof(VkDrawIndexedIndirectCommand) * 100000,
                       VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT,
-                      VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT,
+            VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT | VMA_ALLOCATION_CREATE_HOST_ACCESS_ALLOW_TRANSFER_INSTEAD_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT,
                       VMA_MEMORY_USAGE_AUTO);
     }
 
