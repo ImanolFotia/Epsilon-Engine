@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR} ../../)
 
 
-add_executable(${PROJECT_NAME} chess.hpp main.cpp UCI.hpp chess.cpp game/player.cpp game/player.hpp game/common.hpp game/board.cpp game/board.hpp)
+add_executable(${PROJECT_NAME} chess.hpp main.cpp UCI.hpp chess.cpp game/player.cpp game/player.hpp game/common.hpp game/board.cpp game/board.hpp  ${PROJECT_ICON})
 
 target_sources(${PROJECT_NAME} PRIVATE main.cpp)
 

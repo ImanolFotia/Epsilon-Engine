@@ -9,6 +9,7 @@ set(DUSE_GLFW 1)
 set(DBUILD_ANDROID 0)
 
 set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}")
+set(PROJECT_ICON "${CMAKE_SOURCE_DIR}/media/icon.rc")
 include(InstallRequiredSystemLibraries)
 
 add_compile_definitions(USE_GLFW=${DUSE_GLFW})
@@ -283,7 +284,7 @@ if (BUILD_AS_LIBRARY)
     endif ()
 else ()
     add_executable(${PROJECT_NAME} main.cpp
-            ${PROJECT_FILES})
+            ${PROJECT_FILES} ${PROJECT_ICON})
 endif ()
 
 target_sources(${PROJECT_NAME} PUBLIC

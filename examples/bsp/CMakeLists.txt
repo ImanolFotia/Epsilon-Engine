@@ -4,7 +4,8 @@ set(CMAKE_CXX_STANDARD 20)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR} ../../)
 
-add_executable(${PROJECT_NAME} main.cpp bsp_definitions.hpp SourceBSP.hpp)
+set_source_files_properties( ${PROJECT_ICON} PROPERTIES RESOU Resources )
+add_executable(${PROJECT_NAME} main.cpp bsp_definitions.hpp SourceBSP.hpp  ${PROJECT_ICON})
 
 target_sources(${PROJECT_NAME} PRIVATE main.cpp BSP.hpp)
 
