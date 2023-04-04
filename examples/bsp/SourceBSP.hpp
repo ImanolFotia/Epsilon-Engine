@@ -144,7 +144,7 @@ public:
 
                 if (material.find("TRIGGER") != std::string::npos)
                 {
-                    continue;
+                    // continue;
                     isTool = false;
                     isTrigger = true;
                 }
