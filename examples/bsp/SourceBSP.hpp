@@ -46,7 +46,7 @@ class SourceBSP
 
     BSPFileData m_pBspFileData;
     std::ifstream m_pBspFile;
-    std::vector<Face> m_pFaces;
+    std::unordered_map<std::string, std::vector<Face>> m_pFaces;
 
 public:
     SourceBSP(std::string filename)
@@ -79,14 +79,7 @@ public:
 
         parseGeometry();
 
-        std::unordered_map<std::string, int> materialTable;
-
-        for (auto &face : m_pFaces)
-        {
-            materialTable[face.material]++;
-        }
-
-        std::cout << "there are " << materialTable.size() << " materials\n";
+        std::cout << "there are " << m_pFaces.size() << " materials\n";
 
         m_pBspFile.close();
     }
@@ -96,7 +89,7 @@ public:
         return m_pBspFileData.vertices;
     }
 
-    const std::vector<Face> &Faces()
+    const std::unordered_map<std::string, std::vector<Face>> &Faces()
     {
         return m_pFaces;
     }
@@ -143,9 +136,9 @@ public:
                 if (face.dispinfo != -1)
                     continue;
                 // if(face.firstedge+i >= edges.size() ) continue;
-                if (material.find("TOOLS") != std::string::npos)
+                if (material.find("TOOL") != std::string::npos)
                 {
-                    //continue;
+                    // continue;
                     isTool = true;
                 }
 
@@ -183,15 +176,15 @@ public:
 
             std::vector<unsigned int> indices = generateIndices(triangles);
 
-            m_pFaces.push_back({.m_pIndex = index,
-                                .m_pVisible = true,
-                                .m_pNumVertices = (unsigned int)vtxs.size(),
-                                .vertices = vtxs,
-                                .uvs = uv,
-                                .indices = indices,
-                                .material = material,
-                                .tool = isTool,
-                                .trigger = isTrigger});
+            m_pFaces[material].push_back({.m_pIndex = index,
+                                          .m_pVisible = true,
+                                          .m_pNumVertices = (unsigned int)vtxs.size(),
+                                          .vertices = vtxs,
+                                          .uvs = uv,
+                                          .indices = indices,
+                                          .material = material,
+                                          .tool = isTool,
+                                          .trigger = isTrigger});
             index++;
         }
     }

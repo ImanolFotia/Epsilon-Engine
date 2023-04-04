@@ -220,6 +220,11 @@ const vec3 sunColor = normalize(vec3(255, 212, 148));
 
 void main()
 {
+    if(color.a < 0.9)
+    {
+        outColor = vec4(1.0, 1.0, 0.0, 0.5);
+        return;
+    }
     const float texDivisor = 1024.0;
     
     vec3 diffuse = texture(textures[0], texCoords/texDivisor).rgb;

@@ -261,7 +261,7 @@ namespace engine
         return std::tie(a_mat, a.layoutIndex, a_vtx, a_i) <
             std::tie(b_mat, b.layoutIndex, b_vtx, b_i); };
 
-        m_pCurrentCommandQueue.sort(predicate);
+        //m_pCurrentCommandQueue.sort(predicate);
 
         VkExtent2D extent = renderPass->renderPassChain.Extent;
         VkViewport viewport{};
@@ -346,7 +346,7 @@ namespace engine
             return std::tie(a_mat, a.layoutIndex, a_vtx, a_i) <
                    std::tie(b_mat, b.layoutIndex, b_vtx, b_i); };
 
-        m_pCurrentCommandQueue.sort(predicate);
+        //m_pCurrentCommandQueue.sort(predicate);
 
         auto batches = generateIndirectBatch(m_pCurrentCommandQueue);
 
