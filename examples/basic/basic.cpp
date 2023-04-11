@@ -52,19 +52,19 @@ namespace ExampleApp
 
         void onRender() override
         {
-            engine::ShaderData camData;
-            camData.iResolution = glm::vec2(getWindowDimensions().first, getWindowDimensions().second);
+            engine::ShaderData m_pCameraData;
+            m_pCameraData.iResolution = glm::vec2(getWindowDimensions().first, getWindowDimensions().second);
             static auto startTime = std::chrono::high_resolution_clock::now();
 
             auto currentTime = std::chrono::high_resolution_clock::now();
             float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
-            camData.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-            camData.proj = glm::perspective(glm::radians(45.0f), getWindowDimensions().first / (float) getWindowDimensions().second, 0.1f, 10.0f);
-            camData.proj[1][1] *= -1;
-            camData.iTime = (float)glfwGetTime();
+            m_pCameraData.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+            m_pCameraData.proj = glm::perspective(glm::radians(45.0f), getWindowDimensions().first / (float) getWindowDimensions().second, 0.1f, 10.0f);
+            m_pCameraData.proj[1][1] *= -1;
+            m_pCameraData.iTime = (float)glfwGetTime();
 
-            PushCameraData(camData);
+            PushCameraData(m_pCameraData);
 
             myObjectId.objectId->push_constant.model = glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f)); 
             Draw(myObjectId);

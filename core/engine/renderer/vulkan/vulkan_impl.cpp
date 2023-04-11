@@ -333,14 +333,16 @@ namespace engine
         for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
         {
 
-            uint32_t numSlots = material.slots + 1;
+            uint32_t numSlots = material.slots+1;
             std::vector<VkWriteDescriptorSet> descriptorWrites{};
             std::list<VkDescriptorImageInfo> imageInfos;
+            std::list<VkDescriptorBufferInfo> bufferInfos;
             // numSlots += material.shaderBindings.size();
             descriptorWrites.resize(numSlots);
 
             for (int index = 1; index < descriptorWrites.size(); index++)
             {
+                int j = 0;
                 for (auto &binding : material.shaderBindings)
                 {
                     if (binding.descriptorBinding == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER && binding.isRenderPassAttachment)
@@ -361,10 +363,10 @@ namespace engine
                     }
                     else if (binding.descriptorBinding == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER)
                     {
-                        VkDescriptorBufferInfo bufferInfo{};
-                        bufferInfo.buffer = material.bufferInfo[i].buffer; // m_pUniformBuffers[i].buffer;
-                        bufferInfo.offset = material.bufferOffset;
-                        bufferInfo.range = material.bufferSize;
+                        VkDescriptorBufferInfo& bufferInfo = bufferInfos.emplace_back();
+                        bufferInfo.buffer = binding.buffer.buffer; // m_pUniformBuffers[i].buffer;
+                        bufferInfo.offset = binding.buffer.offset;
+                        bufferInfo.range = binding.buffer.size;
                         descriptorWrites[binding.bindingPoint].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
                         descriptorWrites[binding.bindingPoint].dstSet = material.descriptorSets[i];
                         descriptorWrites[binding.bindingPoint].dstBinding = binding.bindingPoint;
@@ -375,9 +377,8 @@ namespace engine
                         descriptorWrites[binding.bindingPoint].pImageInfo = nullptr;       // Optional
                         descriptorWrites[binding.bindingPoint].pTexelBufferView = nullptr; // Optional
                     }
-                    {
-                    }
                 }
+                j++;
             }
 
             VkDescriptorBufferInfo bufferInfo{};

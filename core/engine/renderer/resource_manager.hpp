@@ -7,13 +7,6 @@
 
 namespace engine
 {
-    struct RenderPassBinding
-    {
-        // Ref<RenderPass> renderPass;
-        std::string renderPass;
-        uint32_t index;
-        uint32_t bindingPoint;
-    };
 
     struct RenderPassBindings
     {
@@ -39,8 +32,7 @@ namespace engine
 
         virtual Ref<Texture> createTexture(TextureCreationInfo) = 0;
         virtual Ref<UniformBindings> createUniformData(UniformBindingInfo) = 0;
-        virtual Ref<Material> createMaterial(MaterialInfo, Ref<RenderPass>) = 0;
-        virtual Ref<Material> createMaterial(MaterialInfo, Ref<RenderPass>, std::initializer_list<RenderPassBinding> bindings) = 0;
+        virtual Ref<Material> createMaterial(MaterialInfo) = 0;
         virtual Ref<Mesh> createMesh(MeshInfo) = 0;
         virtual Ref<Buffer> createGPUBuffer(const std::string &, uint32_t, BufferStorageType) = 0;
         virtual Ref<RenderPass> createRenderPass(RenderPassInfo) = 0;
@@ -54,6 +46,11 @@ namespace engine
         virtual void destroyMesh(Ref<Mesh>) = 0;
         virtual void destroyRenderPass(Ref<RenderPass>) = 0;
         virtual Ref<Buffer> destroyBuffer(BufferInfo) = 0;
+
+
+        virtual void* mapBuffer(Ref<Buffer> buffer) = 0;
+
+        virtual void unmapBuffer(Ref<Buffer> buffer) = 0;
 
         virtual void clean() = 0;
 

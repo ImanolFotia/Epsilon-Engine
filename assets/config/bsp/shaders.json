@@ -1,0 +1,61 @@
+{
+    "ShaderCreationInfos": [
+        {
+            "name": "mainShaderInfo",
+            "stages": [
+                {
+                    "entryPoint": "main",
+                    "shaderCode": "./assets/shaders/vertex.spv",
+                    "stage": "VERTEX"
+                },
+                {
+                    "entryPoint": "main",
+                    "shaderCode": "./assets/shaders/fragment.spv",
+                    "stage": "FRAGMENT"
+                }
+            ],
+            "usedStages": [
+                "VERTEX",
+                "FRAGMENT"
+            ]
+        },
+        {
+            "name": "shadowShaderInfo",
+            "stages": [
+                {
+                    "entryPoint": "main",
+                    "shaderCode": "./assets/shaders/shadow-vertex.spv",
+                    "stage": "VERTEX"
+                },
+                {
+                    "entryPoint": "main",
+                    "shaderCode": "./assets/shaders/shadow-fragment.spv",
+                    "stage": "FRAGMENT"
+                }
+            ],
+            "usedStages": [
+                "VERTEX",
+                "FRAGMENT"
+            ]
+        },
+        {
+            "name": "skyShaderInfo",
+            "stages": [
+                {
+                    "entryPoint": "main",
+                    "shaderCode": "./assets/shaders/sky-vertex.spv",
+                    "stage": "VERTEX"
+                },
+                {
+                    "entryPoint": "main",
+                    "shaderCode": "./assets/shaders/sky-fragment.spv",
+                    "stage": "FRAGMENT"
+                }
+            ],
+            "usedStages": [
+                "VERTEX",
+                "FRAGMENT"
+            ]
+        }
+    ]
+}

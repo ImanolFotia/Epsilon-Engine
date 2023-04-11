@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <map>
 #include <glm/glm.hpp>
+#include <regex>
 
 #include "bsp_definitions.hpp"
 
@@ -43,13 +44,14 @@ struct BSPFileData
 };
 class SourceBSP
 {
-
+    std::string m_pFilename{};
     BSPFileData m_pBspFileData;
     std::ifstream m_pBspFile;
     std::unordered_map<std::string, std::vector<Face>> m_pFaces;
+    uint32_t m_pNumMaterials = 0;
 
 public:
-    SourceBSP(std::string filename)
+    SourceBSP(std::string filename) : m_pFilename(filename)
     {
         m_pBspFile = std::ifstream(filename, std::ios::binary);
 
@@ -79,7 +81,9 @@ public:
 
         parseGeometry();
 
-        std::cout << "there are " << m_pFaces.size() << " materials\n";
+        m_pNumMaterials = m_pFaces.size();
+
+        std::cout << "there are " << m_pNumMaterials << " materials\n";
 
         m_pBspFile.close();
     }
@@ -92,6 +96,10 @@ public:
     const std::unordered_map<std::string, std::vector<Face>> &Faces()
     {
         return m_pFaces;
+    }
+
+    auto numMaterials() -> uint32_t {
+        return m_pNumMaterials;
     }
 
     std::vector<unsigned int> generateIndices(std::vector<unsigned int> inIndices)
@@ -131,6 +139,20 @@ public:
             material = std::string_view(
                 &m_pBspFileData.stringData[m_pBspFileData.stringTable[m_pBspFileData.texData[m_pBspFileData.texInfo[face.texinfo].texdata].nameStringTableID]]);
 
+            try {
+                material = std::regex_replace(material, std::regex("\\maps/background03/"), "");
+                material = std::regex_replace(material, std::regex("(_-?\\d+)+"), "");
+                auto pos0 = material.find_last_of('/');
+                pos0 = pos0 == std::string::npos ? 0 : pos0;
+                auto tmp_str = material.substr(pos0);
+                auto pos1 = tmp_str.find_first_of('_');
+                pos1 = pos1 == std::string::npos ? 0 : pos1;
+               // if(pos1 != 0)
+                //material = material.substr(0, pos0 + pos1);
+            }
+            catch (std::exception& e) {
+                std::cout << e.what() << "\n";
+            }
             for (int i = 0; i < face.numedges; i++)
             {
                 if (face.dispinfo != -1)
@@ -148,6 +170,8 @@ public:
                     isTool = false;
                     isTrigger = true;
                 }
+                //auto str1 = 
+
 
                 auto edgeIndex = m_pBspFileData.surfEdges.at(face.firstedge + i);
                 auto vertexIndex = m_pBspFileData.edges.at(abs(edgeIndex)).v[edgeIndex >= 0 ? 0 : 1];

@@ -140,8 +140,8 @@ namespace engine
             m_pRenderer->Push(object_id);
         }
 
-        void PushCameraData(const ShaderData& camData) {
-            m_pRenderer->PushCameraData(camData);
+        void PushCameraData(const ShaderData& m_pCameraData) {
+            m_pRenderer->PushCameraData(m_pCameraData);
         }
 
         std::pair<int, int> getWindowDimensions() {

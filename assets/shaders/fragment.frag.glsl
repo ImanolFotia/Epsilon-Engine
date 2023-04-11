@@ -1,4 +1,4 @@
-#version 460
+#version 460 core
 #extension GL_EXT_nonuniform_qualifier : enable
 #extension GL_GOOGLE_include_directive : enable
 
@@ -12,6 +12,7 @@ layout(location = 2) in flat vec3 normal;
 layout(location = 3) in flat vec4 color;
 layout(location = 4) in vec4 shadowCoords;
 layout(location = 5) in mat3 TBN;
+layout(location = 8) in flat int InstanceIndex;
 
 layout(binding = 0) uniform UniformBufferObject
 {
@@ -25,14 +26,19 @@ layout(binding = 0) uniform UniformBufferObject
 }
 ubo;
 
+struct Material
+{
+	int diffuse;
+};
+
+
 // layout(binding = 1) uniform sampler2D texSampler;
 layout(binding = 1) uniform sampler2DShadow shadowMap;
 layout(binding = 2) uniform sampler2D depthMap;
 
-layout(binding = 3) uniform sampler2D rt;
-layout(binding = 4) uniform sampler2D trt;
-layout(binding = 5) uniform sampler2D rttt;
-layout(binding = 6) uniform sampler2D drtrtepthMap;
+layout(std430, set = 0,  binding = 3) buffer MaterialsIn {
+   Material materials[];
+} ssbo;
 
 layout (set = 1, binding = 0) uniform sampler2D textures[];
 
@@ -220,17 +226,31 @@ const vec3 sunColor = normalize(vec3(255, 212, 148));
 
 void main()
 {
-    if(color.a < 0.9)
+    if(color.a < 0.5)
     {
-        outColor = vec4(1.0, 1.0, 0.0, 0.5);
-        return;
+        outColor.a = 0.3;
     }
-    const float texDivisor = 1024.0;
+
+    int diffuse_index = ssbo.materials[InstanceIndex].diffuse;
+
+    const vec2 texDivisor = textureSize(textures[diffuse_index],0);
+
     
-    vec3 diffuse = texture(textures[0], texCoords/texDivisor).rgb;
-    float metallic = texture(textures[1], texCoords/texDivisor).r;
-    vec3 normal_tex = texture(textures[2], texCoords/texDivisor).rgb;
-    float roughness = texture(textures[3], texCoords/texDivisor).r;
+    vec4 diffuse = texture(textures[diffuse_index], texCoords/texDivisor).rgba;
+
+    const float fAlphaMultiplier = 1.5;
+    const float fAlphaTest = 0.25;
+    float fNewAlpha = diffuse.a * fAlphaMultiplier;
+    
+    if(fNewAlpha < fAlphaTest)
+      discard;
+        
+    if(fNewAlpha > 1.0)
+      fNewAlpha = 1.0; 
+
+    float metallic = 0.0;//texture(textures[1], texCoords/texDivisor).r;
+    vec3 normal_tex = vec3(0.5, 0.5, 1.0);//texture(textures[2], texCoords/texDivisor).rgb;
+    float roughness = 0.5;//texture(textures[3], texCoords/texDivisor).r;
 
     vec3 mNormal = normalize(normalize(normal_tex * 2.0 - 1.0) * TBN);
     float SdotN = dot(vec3(0.0, 1.0, 0.0), mNormal);
@@ -274,14 +294,14 @@ void main()
     //sum = texture(shadowMap, shadowCoord);
 
     vec3 F0 = vec3(0.04);
-    F0 = mix(F0, diffuse, vec3(0.0));
+    F0 = mix(F0, diffuse.rgb, vec3(0.0));
     //sum = textureGrad(shadowMap, shadowCoord, vec2(0.0),  vec2(0.0)).r;
-    vec3 light = sunColor*CalculateDirectionalPBR(lightDir, vec3(1.0), 1.0, ubo.viewPosition, position.xyz, F0, mNormal, roughness, diffuse);
+    vec3 light = sunColor*CalculateDirectionalPBR(lightDir, vec3(1.0), 1.0, ubo.viewPosition, position.xyz, F0, mNormal, roughness, diffuse.rgb);
 
     outColor.a = color.a; // texCol.a;
     vec3 checkers = color.rgb;//drawCheckers(texCoords.xy, 512.0);
     
-    outColor.rgb = pow(sum, 3.0) *  light * 5.0 + (skyLight*diffuse*0.5) + reflc*0.1; //(Gamma(outColor.rgb));
-
+    outColor.rgb = pow(sum, 3.0) *  light * 5.0 + (skyLight*diffuse.rgb*0.5) + reflc*0.1; //(Gamma(outColor.rgb));
+    outColor.a = diffuse.a;
     //cross[{{1472, 768, -3584}}-{{1856, 768, -3584}}, {{1728, 768, -3584}}-{{1856, 768, -3584}}]
 }

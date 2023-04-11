@@ -282,6 +282,7 @@ namespace engine
         Filtering filtering;
         CompareFunction compareFunc;
         bool depthCompare = false;
+        bool blendEnable = false;
         float clearColor[4]{};
         uint32_t depthStencilValue[2]{};
         bool isSampler = false;
@@ -350,6 +351,8 @@ namespace engine
         uint32_t set = 0;
         UniformBindingType type;
         TextureCreationInfo textureInfo;
+        std::string texture;
+        std::string buffer;
         bool bindless = false;
         uint32_t descriptorCount = 1;
         std::string name;
@@ -417,14 +420,10 @@ namespace engine
 
     struct RenderPassFactory
     {
-        RenderPassFactory numDescriptors(uint32_t n)
-        {
-            info.numDescriptors = n;
-            return *this;
-        }
-        RenderPassFactory size(size_t s)
-        {
-            info.size = s;
+
+        template<typename VertexLayout>
+        RenderPassFactory vertexInfo() {
+            info.size = sizeof(VertexLayout);
             return *this;
         }
         RenderPassFactory depthAttachment(bool d)
@@ -443,14 +442,13 @@ namespace engine
             info.dimensions = d;
             return *this;
         }
-        /*
-        RenderPassFactory vertexLayout(std::vector<VertexDescriptorInfo> vl)
-        {
-            info.vertexLayout = vl;
-            return *this;
-        }*/
 
-        RenderPassFactory attachments(std::vector<RenderPassAttachment> a)
+        RenderPassFactory inputs(std::initializer_list<UniformBindingInfo> bi)
+        {
+            info.bindingInfo = bi;
+            return *this;
+        }
+        RenderPassFactory outputs(std::vector<RenderPassAttachment> a)
         {
             info.attachments = a;
             info.numAttachments = info.attachments.size() - 1;
@@ -459,6 +457,8 @@ namespace engine
 
         RenderPassFactory pipelineLayout(PipelineLayout pl)
         {
+            //assert(info.numDescriptors == pl.vertexLayout.size(), "All vertex layouts must have the same number of component in every pipeline layout");
+            info.numDescriptors = pl.vertexLayout.size();
             info.pipelineLayout.emplace_back(pl);
             info.numLayouts++;
             return *this;
@@ -470,11 +470,6 @@ namespace engine
             return *this;
         }
 
-        RenderPassFactory uniformBindings(std::initializer_list<UniformBindingInfo> bi)
-        {
-            info.bindingInfo = bi;
-            return *this;
-        }
 
         RenderPassFactory name(const std::string &n)
         {
@@ -488,10 +483,20 @@ namespace engine
         RenderPassInfo info;
     };
 
+
+    struct RenderPassBinding
+    {
+        // Ref<RenderPass> renderPass;
+        std::string renderPass;
+        uint32_t index;
+        uint32_t bindingPoint;
+    };
     struct MaterialInfo
     {
-        std::vector<UniformBindingInfo> bindingInfo;
-        std::string name;
+        std::vector<UniformBindingInfo> bindingInfo{};
+        std::vector<RenderPassBinding> inputs;
+        std::string renderPass{};
+        std::string name{};
     };
 
     struct MeshInfo

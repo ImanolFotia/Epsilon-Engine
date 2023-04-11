@@ -1,4 +1,4 @@
-#version 460
+#version 460 core
 
 #extension GL_EXT_nonuniform_qualifier : enable
 
@@ -17,6 +17,7 @@ layout (location = 2) out flat vec3 normal;
 layout (location = 3) out flat vec4 color;
 layout (location = 4) out vec4 shadowCoords;
 layout (location = 5) out mat3 TBN;
+layout (location = 8) out flat int InstanceIndex;
 
 layout(binding = 0) uniform UniformBufferObject {
     float iTime;
@@ -39,6 +40,14 @@ layout( push_constant ) uniform constants
 {
 	mat4 model;
 } PushConstants;
+struct Material
+{
+	int diffuse;
+};
+
+layout(std430, binding = 3) buffer MaterialsIn {
+   Material materials[];
+} ssbo;
 
 vec3 colors[27] = {
 	vec3(1.0, 0.0, 0.0),
@@ -101,7 +110,7 @@ void main() {
 				0.0, 0.0, 0.0, 1.0);
 
 				
-    		
+    InstanceIndex = gl_InstanceIndex;
   	mat3 normalMatrix = mat3(inverse(model));//transpose(inverse(mat3(model)));
   	TBN = CreateTBNMatrix(normalMatrix);
 

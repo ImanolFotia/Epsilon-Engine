@@ -182,7 +182,7 @@ namespace vk
             // Viewport stage
             createViewport(vk_data, renderPipeline, renderPass.renderPassChain);
             // Rasterizer stage
-            setupRasterizer(renderPipeline);
+            setupRasterizer(renderPipeline, renderPassInfo);
 
             auto push_constant = setupPushConstant(renderPassInfo.pushConstant.size);
 

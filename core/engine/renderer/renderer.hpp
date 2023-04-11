@@ -101,6 +101,7 @@ namespace engine
 
         virtual void Cleanup() = 0;
 
+
     public:
         /**
          * @brief Construct a new Renderer object

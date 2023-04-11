@@ -1,0 +1,144 @@
+{
+    "VertexDescriptors": [
+        {
+            "name": "DefaultVertexInfo",
+            "size": 6,
+            "layout": [
+                "XYZ_FLOAT",
+                "XY_FLOAT",
+                "XYZ_FLOAT",
+                "XYZW_FLOAT",
+                "XYZ_FLOAT",
+                "XYZ_FLOAT"
+            ]
+        }
+    ],
+    "PipelineLayouts": [
+        {
+            "name": "mainLayout",
+            "shaderInfo": "mainShaderInfo",
+            "vertexLayout": "vertexInfo",
+            "cullMode": "BACK",
+            "windingMode": "CLOCKWISE"
+        },
+        {
+            "name": "shadowLayout",
+            "shaderInfo": "shadowShaderInfo",
+            "vertexLayout": "vertexInfo",
+            "cullMode": "BACK",
+            "windingMode": "CLOCKWISE"
+        },
+        {
+            "name": "skyLayout",
+            "shaderInfo": "skyShaderInfo",
+            "vertexLayout": "vertexInfo",
+            "cullMode": "BACK",
+            "windingMode": "CLOCKWISE"
+        }
+    ],
+    "RenderPasses": [
+        {
+            "name": "Default",
+            "vertexInfo": "DefaultVertexInfo",
+            "depthAttachment": true,
+            "dimensions": {
+                "width": 1920,
+                "height": 1080
+            },
+            "inputs": [
+                {
+                    "name": "defaultUniformBuffer",
+                    "binding": 0,
+                    "type": "UNIFORM_BUFFER"
+                },
+                {
+                    "name": "shadowAttachment",
+                    "binding": 1,
+                    "type": "TEXTURE_IMAGE_COMBINED_SAMPLER"
+                },
+                {
+                    "name": "shadowDepthAttachment",
+                    "binding": 2,
+                    "type": "TEXTURE_IMAGE_COMBINED_SAMPLER"
+                }
+            ],
+            "outputs": [
+                {
+                    "format": "COLOR_RGBA",
+                    "blendEnable": "true",
+                    "clearColor": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        1.0
+                    ],
+                    "isDepthAttachment": false,
+                    "isSwapChainAttachment": true,
+                    "clearAttachment": true
+                },
+                {
+                    "format": "DEPTH_F32_STENCIL_8",
+                    "depthStencilValue": [
+                        1,
+                        0
+                    ],
+                    "isDepthAttachment": true
+                }
+            ],
+            "pipelineLayouts": [
+                "mainLayout",
+                "skyLayout"
+            ]
+        },
+        {
+            "name": "Shadow",
+            "vertexInfo": "DefaultVertexInfo",
+            "depthAttachment": true,
+            "dimensions": {
+                "width": 1500,
+                "height": 1500
+            },
+            "inputs": [
+                {
+                    "name": "defaultUniformBuffer",
+                    "binding": 0,
+                    "type": "UNIFORM_BUFFER"
+                }
+            ],
+            "outputs": [
+                {
+                    "format": "COLOR_R_32F",
+                    "wrapMode": "CLAMP_TO_BORDER",
+                    "filtering": "POINT",
+                    "compareFunc": "ALWAYS",
+                    "depthCompare": false,
+                    "clearColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "isSampler": true,
+                    "isDepthAttachment": false,
+                    "isSwapChainAttachment": false,
+                    "clearAttachment": true
+                },
+                {
+                    "format": "DEPTH_F32_STENCIL_8",
+                    "filtering": "LINEAR",
+                    "compareFunc": "LESS_OR_EQUAL",
+                    "depthCompare": true,
+                    "depthStencilValue": [
+                        1,
+                        0
+                    ],
+                    "isSampler": true,
+                    "isDepthAttachment": true
+                }
+            ],
+            "pipelineLayouts": [
+                "shadowLayout"
+            ]
+        }
+    ]
+}

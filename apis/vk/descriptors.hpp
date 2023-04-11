@@ -8,6 +8,17 @@
 
 namespace vk
 {
+
+    static VkDescriptorSetLayoutBinding createSSBOBinding(int bind)
+    {
+        VkDescriptorSetLayoutBinding ssboLayoutBinding{};
+        ssboLayoutBinding.binding = bind;
+        ssboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+        ssboLayoutBinding.descriptorCount = 1;
+        ssboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+        ssboLayoutBinding.pImmutableSamplers = nullptr;
+        return ssboLayoutBinding;
+    }
     static VkDescriptorSetLayoutBinding createUboBinding(int bind)
     {
         VkDescriptorSetLayoutBinding uboLayoutBinding{};
@@ -42,6 +53,10 @@ namespace vk
             else if (binding.type == engine::UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER)
             {
                 bindings.push_back(createTextureBinding(binding.binding, binding.descriptorCount));
+            }
+            else if (binding.type == engine::UniformBindingType::SHADER_STORAGE) {
+                bindings.push_back(createSSBOBinding(binding.binding));
+                
             }
         }
         // std::array<VkDescriptorSetLayoutBinding, 2> bindings = {uboLayoutBinding, samplerLayoutBinding};

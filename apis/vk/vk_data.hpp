@@ -106,9 +106,15 @@ namespace vk
         size_t allocatedBytes = 0;
     };
 
+    struct VulkanGPUMappedBuffer
+    {
+        VulkanBuffer buffer;
+    };
+
     struct VulkanShaderBinding
     {
         VulkanTexture texture;
+        VulkanBuffer buffer;
         VkDescriptorType descriptorBinding;
         uint32_t bindingPoint = 0;
         bool isRenderPassAttachment = false;
@@ -195,10 +201,6 @@ namespace vk
         std::vector<VkFramebuffer> Framebuffers;
     };
 
-    struct VulkanGPUMappedBuffer
-    {
-        VulkanBuffer buffer;
-    };
 
     class VulkanRenderPass
     {
