@@ -32,3 +32,4 @@ CMakeSettings.json
 assets/shaders/fragment.spv
 modules/dotnet/lib/EpsilonNET.csproj
 modules/dotnet/lib/Program.cs
+/assets

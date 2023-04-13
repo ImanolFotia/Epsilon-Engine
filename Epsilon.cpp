@@ -21,7 +21,7 @@ namespace Epsilon
     void Epsilon::run()
     {
         if (engine::Context::getSingleton().Window().getSize().first == 0)
-            self.initWindow(1920, 1080);
+            self.initWindow(1280, 720);
 
         self.initVulkan();
         if (self.onCreate)

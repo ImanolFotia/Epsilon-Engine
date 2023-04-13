@@ -29,6 +29,7 @@ ubo;
 struct Material
 {
 	int diffuse;
+	int normal;
 };
 
 
@@ -224,6 +225,16 @@ vec3 drawCheckers(vec2 coords, float size) {
 
 const vec3 sunColor = normalize(vec3(255, 212, 148));
 
+//Narkowicz 2015, "ACES Filmic Tone Mapping Curve"
+vec3 tonemapACES(vec3 x) {
+    const float a = 2.51;
+    const float b = 0.03;
+    const float c = 2.43;
+    const float d = 0.59;
+    const float e = 0.14;
+    return (x * (a * x + b)) / (x * (c*x+d) + e);
+}
+
 void main()
 {
     if(color.a < 0.5)
@@ -232,6 +243,8 @@ void main()
     }
 
     int diffuse_index = ssbo.materials[InstanceIndex].diffuse;
+    int normal_index = ssbo.materials[InstanceIndex].normal;
+    
 
     const vec2 texDivisor = textureSize(textures[diffuse_index],0);
 
@@ -248,11 +261,17 @@ void main()
     if(fNewAlpha > 1.0)
       fNewAlpha = 1.0; 
 
-    float metallic = 0.0;//texture(textures[1], texCoords/texDivisor).r;
-    vec3 normal_tex = vec3(0.5, 0.5, 1.0);//texture(textures[2], texCoords/texDivisor).rgb;
-    float roughness = 0.5;//texture(textures[3], texCoords/texDivisor).r;
+    //texture(textures[1], texCoords/texDivisor).r;
+    vec3 normal_tex = vec3(0.5, 0.5, 1.0);
+    float roughness = diffuse.r*0.35+ diffuse.g*0.71+ diffuse.r*0.12;
+    roughness = sqrt(roughness*4.0);
+    if(normal_index != -1) {
+        normal_tex = texture(textures[normal_index], abs(texCoords/texDivisor)).rgb;
+        roughness = roughness * 0.5;//texture(textures[3], texCoords/texDivisor).r;
+    }
+    float metallic = 0.0;
 
-    vec3 mNormal = normalize(normalize(normal_tex * 2.0 - 1.0) * TBN);
+    vec3 mNormal = normalize(normalize(normal_tex* 2.0-1.0)  * TBN);
     float SdotN = dot(vec3(0.0, 1.0, 0.0), mNormal);
     
         vec3 backcol = mix(vec3( 0.92, 0.95, 0.99 ), vec3( 0.45, 0.68, 0.88 ), clamp(vec3(SdotN) +0.5, 0.0, 1.));
@@ -302,6 +321,8 @@ void main()
     vec3 checkers = color.rgb;//drawCheckers(texCoords.xy, 512.0);
     
     outColor.rgb = pow(sum, 3.0) *  light * 5.0 + (skyLight*diffuse.rgb*0.5) + reflc*0.1; //(Gamma(outColor.rgb));
+
+    outColor.rgb = tonemapACES(outColor.rgb);
     outColor.a = diffuse.a;
     //cross[{{1472, 768, -3584}}-{{1856, 768, -3584}}, {{1728, 768, -3584}}-{{1856, 768, -3584}}]
 }

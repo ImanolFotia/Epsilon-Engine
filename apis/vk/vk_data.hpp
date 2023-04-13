@@ -14,7 +14,7 @@
 
 namespace vk
 {
-    static const uint32_t MAX_FRAMES_IN_FLIGHT = 3;
+    static const uint32_t MAX_FRAMES_IN_FLIGHT = 2;
     const size_t ALLOCATION_SIZE_MB = 0xFFFFFFF;
 
     struct VulkanVertexInfo

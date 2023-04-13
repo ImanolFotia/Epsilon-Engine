@@ -43,6 +43,7 @@ layout( push_constant ) uniform constants
 struct Material
 {
 	int diffuse;
+	int normal;
 };
 
 layout(std430, binding = 3) buffer MaterialsIn {
@@ -114,12 +115,12 @@ void main() {
   	mat3 normalMatrix = mat3(inverse(model));//transpose(inverse(mat3(model)));
   	TBN = CreateTBNMatrix(normalMatrix);
 
-    position = /*(PushConstants.model)*/model * vec4(inPosition, 1.0);
-	shadowCoords = (biasMat * ubo.lightMatrix * /*(PushConstants.model)*/model) * vec4(inPosition, 1.0);
+    position = /*(PushConstants.model)*/model * vec4(-inPosition.x, inPosition.z, inPosition.y, 1.0);
+	shadowCoords = (biasMat * ubo.lightMatrix * /*(PushConstants.model)*/model) * vec4(-inPosition.x, inPosition.z, inPosition.y, 1.0);
     texCoords = inTexCoord;
     normal = inNormal; //normalize(mat3(transpose(inverse(PushConstants.model))) * inNormal);
     //vec3 outVert = inPosition;
     //outVert.y *= (iResolution.x / iResolution.y);
 
-    gl_Position = ubo.proj * ubo.view * /*(PushConstants.model)*/model * vec4(inPosition, 1.0);
+    gl_Position = ubo.proj * ubo.view * /*(PushConstants.model)*/model * vec4(-inPosition.x, inPosition.z, inPosition.y, 1.0);
 }

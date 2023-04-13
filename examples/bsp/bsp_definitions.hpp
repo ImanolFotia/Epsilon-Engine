@@ -26,6 +26,8 @@ const unsigned LUMP_DISPVERTS = 33;
 const unsigned LUMP_STRINGDATA = 43;
 const unsigned LUMP_STRINGTABLE = 44;
 
+#define MAX_DISP_CORNER_NEIGHBORS	4
+
 #define MAX_DISPVERTS 289
 #define MAX_DISPTRIS 512
 
@@ -162,19 +164,74 @@ struct TexdataStringData
 {
 	char data[TEXTURE_NAME_LENGTH];
 };
+
+
+
+
+// Corner indices. Used to index m_CornerNeighbors.
+enum
+{
+	CORNER_LOWER_LEFT = 0,
+	CORNER_UPPER_LEFT = 1,
+	CORNER_UPPER_RIGHT = 2,
+	CORNER_LOWER_RIGHT = 3
+};
+
+// These edge indices must match the edge indices of the CCoreDispSurface.
+enum
+{
+	NEIGHBOREDGE_LEFT = 0,
+	NEIGHBOREDGE_TOP = 1,
+	NEIGHBOREDGE_RIGHT = 2,
+	NEIGHBOREDGE_BOTTOM = 3
+};
+
+
+// These denote where one dispinfo fits on another.
+// Note: tables are generated based on these indices so make sure to update
+//       them if these indices are changed.
+typedef enum
+{
+	CORNER_TO_CORNER = 0,
+	CORNER_TO_MIDPOINT = 1,
+	MIDPOINT_TO_CORNER = 2
+} NeighborSpan;
+
+
+// These define relative orientations of displacement neighbors.
+typedef enum
+{
+	ORIENTATION_CCW_0 = 0,
+	ORIENTATION_CCW_90 = 1,
+	ORIENTATION_CCW_180 = 2,
+	ORIENTATION_CCW_270 = 3
+} NeighborOrientation;
+
+struct CDispSubNeighbor
+{
+	unsigned short		m_iNeighbor;		// This indexes into ddispinfos.
+	// 0xFFFF if there is no neighbor here.
+
+	unsigned char		m_NeighborOrientation;		// (CCW) rotation of the neighbor wrt this displacement.
+
+	// These use the NeighborSpan type.
+	unsigned char		m_Span;						// Where the neighbor fits onto this side of our displacement.
+	unsigned char		m_NeighborSpan;				// Where we fit onto our neighbor.
+};
 struct CDispNeighbor
 {
-	uint8_t x[12];
+	CDispSubNeighbor	m_SubNeighbors[2];
 };
 
 struct CDispCornerNeighbors
 {
 
-	uint8_t x[10];
+	unsigned short	m_Neighbors[MAX_DISP_CORNER_NEIGHBORS];	// indices of neighbors.
+	unsigned char	m_nNeighbors;
 };
 struct ddispinfo_t
 {
-	Vector startPosition;					 // start position used for orientation
+	glm::vec3 startPosition;					 // start position used for orientation
 	int DispVertStart;						 // Index into LUMP_DISP_VERTS.
 	int DispTriStart;						 // Index into LUMP_DISP_TRIS.
 	int power;								 // power - indicates size of surface (2^power 1)
@@ -191,7 +248,7 @@ struct ddispinfo_t
 
 struct dDispVert
 {
-	Vector vec;	 // Vector field defining displacement volume.
+	glm::vec3 vec;	 // Vector field defining displacement volume.
 	float dist;	 // Displacement distances.
 	float alpha; // "per vertex" alpha values.
 };

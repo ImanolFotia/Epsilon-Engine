@@ -34,7 +34,7 @@ layout( push_constant ) uniform constants
 
 void main() {
     color = inColor;
-    position = inPosition;
+    position = vec3(-inPosition.x, inPosition.z, inPosition.y);
     texCoords = inTexCoord;
     
 			mat4 model = mat4(
@@ -45,7 +45,7 @@ void main() {
                 invView = inverse(mat3(ubo.view));
     normal = normalize(mat3(transpose(inverse(/*PushConstants.model*/model))) * inNormal);
 
-    vec3 outVert = inPosition;
+    vec3 outVert = position;
     //outVert.y *= (iResolution.x / iResolution.y);
 
     gl_Position = ubo.proj * ubo.view * /*PushConstants.model*/model * vec4(outVert, 1.0);

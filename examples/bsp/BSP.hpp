@@ -5,6 +5,8 @@
 #ifndef EPSILON_BSP_HPP
 #define EPSILON_BSP_HPP
 
+#include <filesystem>
+
 #include <Epsilon.hpp>
 #include <beacon/beacon.hpp>
 
@@ -39,7 +41,8 @@ namespace BSP
 
 		struct Material
 		{
-			int32_t diffuse = - 1;
+			int32_t diffuse = -1;
+			int32_t normal = -1;
 		};
 
 		std::vector<int> m_pVisibleFaces;
@@ -84,7 +87,7 @@ namespace BSP
 
 			auto resourceManager = Epsilon::getContext().ResourceManager();
 
-			
+
 			engine::MaterialInfo skyInfo = {
 				.bindingInfo = {
 					{.size = sizeof(ShaderData), .binding = 0, .type = en::UNIFORM_BUFFER}
@@ -114,7 +117,7 @@ namespace BSP
 				{ .size = sizeof(PushConstant), .data = &m_pMap.pushConstant });
 
 
-			const char* filename = "./assets/models/hl2/background03.bsp";
+			const char* filename = "./assets/models/hl2/d2_prison_01.bsp";
 
 			SourceBSP bspMap(filename);
 
@@ -137,7 +140,7 @@ namespace BSP
 
 			dummyMaterial = resourceManager->createMaterial(materialInfo);
 
-			
+
 			int32_t index = 0;
 			int32_t id = 0;
 			for (auto& [materialName, FaceList] : bspMap.Faces())
@@ -180,9 +183,16 @@ namespace BSP
 						tmpVertices[j].texCoords = face.uvs[j];
 					}
 
-					calculateNormals(tmpVertices, face.indices);
+					if (face.isDisplacement) {
 
-					generateTangentSpaceVectors(tmpVertices, face.indices);
+						calculateNormalsDisplacement(tmpVertices, face.indices);
+						generateTangentSpaceVectorsDisplacement(tmpVertices, face.indices);
+					}
+					else {
+						calculateNormals(tmpVertices, face.indices);
+						generateTangentSpaceVectors(tmpVertices, face.indices);
+					}
+
 
 					for (auto& v : tmpVertices)
 						vertices.push_back(v);
@@ -210,6 +220,7 @@ namespace BSP
 
 					if (width == 0 || height == 0 || pixels == nullptr) {
 						materialBufferPtr[index].diffuse = 0;
+						materialBufferPtr[index].normal = -1;
 					}
 					else {
 
@@ -226,8 +237,33 @@ namespace BSP
 
 						resourceManager->createTexture(texInfo);
 						materialBufferPtr[index].diffuse = id;
+						materialBufferPtr[index].normal = -1;
 						framework::free_image_data(pixels);
 						id++;
+
+
+						{
+
+							std::string normal_path = "./assets/textures/" + materialName + "_normal.tga";
+							unsigned char* pixels = framework::load_image_from_file(normal_path.c_str(), &width, &height, &num_channels);
+							if (pixels != nullptr) {
+								engine::TextureCreationInfo texInfo = {
+															.width = (uint32_t)width,
+															.height = (uint32_t)height,
+															.numChannels = (uint32_t)num_channels,
+															.format = engine::NON_COLOR_RGBA,//(index == 0 ? engine::COLOR_RGBA : engine::NON_COLOR_RGBA),
+															.wrapMode = engine::REPEAT,
+															.filtering = engine::LINEAR,
+															.name = materialName,
+															.pixels = pixels,
+								};
+
+								resourceManager->createTexture(texInfo);
+								materialBufferPtr[index].normal = id;
+								framework::free_image_data(pixels);
+								id++;
+							}
+						}
 					}
 					index++;
 
@@ -440,7 +476,7 @@ namespace BSP
 				.vertexInfo<Vertex>()
 				.depthAttachment(true)
 				.subpasses({})
-				.dimensions({ .width = 1920, .height = 1080 })
+				.dimensions({ .width = 1280, .height = 720 })
 				.inputs({ {.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = UniformBindingType::UNIFORM_BUFFER},
 						 {.size = 0, .offset = 0, .binding = 1, .type = UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER},
 						 {.size = 0, .offset = 0, .binding = 2, .type = UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER},
@@ -497,6 +533,7 @@ namespace BSP
 		auto calculateNormals(std::vector<engine::Vertex>& vertices,
 			const std::vector<unsigned int>& indices) -> void
 		{
+
 			uint32_t size = indices.size();
 			auto v1 = vertices[indices[0]].position;
 			auto v2 = vertices[indices[1]].position;
@@ -518,10 +555,99 @@ namespace BSP
 			}
 		}
 
+		auto calculateNormalsDisplacement(std::vector<engine::Vertex>& vertices,
+			const std::vector<unsigned int>& indices) -> void
+		{
+
+			uint32_t size = indices.size();
+
+			for (int i = 0; i < size; i += 3) {
+				auto v1 = vertices[indices[i]].position;
+				auto v2 = vertices[indices[i + 1]].position;
+				auto v3 = vertices[indices[i + 2]].position;
+
+				glm::vec3 n = glm::cross(v3 - v1, v2 - v1);
+
+				if (glm::isnan(n.x))
+				{
+					v1 = vertices[indices[size - 1]].position;
+					n = glm::cross(v3 - v1, v2 - v1);
+				}
+
+				n = glm::normalize(n);
+
+
+				vertices[indices[i]].normal = n;
+				vertices[indices[i + 1]].normal = n;
+				vertices[indices[i + 2]].normal = n;
+			}
+
+
+		}
+		auto generateTangentSpaceVectorsDisplacement(std::vector<engine::Vertex>& vertices, const std::vector<uint32_t>& indices) -> void
+		{
+			uint32_t size = indices.size();
+			// calculate tangent/bitangent vectors of both triangles
+			glm::vec3 tangent1, bitangent1;
+			// std::cout << m_pMesh.m_Tris.size() <<  std::endl;
+			for (int i = 0; i < indices.size(); i += 3)
+			{
+				glm::vec3 v0 = vertices[indices[i]].position;
+				glm::vec3 v1 = vertices[indices[i + 1]].position;
+				glm::vec3 v2 = vertices[indices[i + 2]].position;
+
+				glm::vec3 edge1 = v0 - v1;
+				glm::vec3 edge2 = v0 - v2;
+
+				glm::vec2 t0 = vertices[indices[i]].texCoords;
+				glm::vec2 t1 = vertices[indices[i + 1]].texCoords;
+				glm::vec2 t2 = vertices[indices[i + 2]].texCoords;
+
+				glm::vec2 deltaUV1 = t0 - t1;
+				glm::vec2 deltaUV2 = t0 - t2;
+
+				tangent1 = glm::cross(vertices[indices[i]].normal, edge1);
+				bitangent1 = glm::cross(vertices[indices[i]].normal, tangent1);
+
+
+				vertices[indices[i]].tangent = glm::normalize(tangent1);
+				vertices[indices[i + 1]].tangent = glm::normalize(tangent1);
+				vertices[indices[i + 2]].tangent = glm::normalize(tangent1);
+
+				// bitangent1 = glm::normalize(bitangent1);
+
+				vertices[indices[i]].bitangent = glm::normalize(bitangent1);
+				vertices[indices[i + 1]].bitangent = glm::normalize(bitangent1);
+				vertices[indices[i + 2]].bitangent = glm::normalize(bitangent1);
+			}
+
+
+			/*float f = (deltaUV2.x * deltaUV1.x - deltaUV2.y * deltaUV1.y) == 0.0f ? -1.0f : 1.0f;
+
+			tangent1.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+			tangent1.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+			tangent1.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+
+			bitangent1.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+			bitangent1.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+			bitangent1.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);*/
+			// tangent1 = glm::normalize(tangent1);
+			/*for (int i = 0; i < indices.size(); i += 3)
+			{
+				vertices[indices[i]].tangent = glm::normalize(tangent1);
+				vertices[indices[i + 1]].tangent = glm::normalize(tangent1);
+				vertices[indices[i + 2]].tangent = glm::normalize(tangent1);
+
+				// bitangent1 = glm::normalize(bitangent1);
+
+				vertices[indices[i]].bitangent = glm::normalize(bitangent1);
+				vertices[indices[i + 1]].bitangent = glm::normalize(bitangent1);
+				vertices[indices[i + 2]].bitangent = glm::normalize(bitangent1);
+			}*/
+		}
 		auto generateTangentSpaceVectors(std::vector<engine::Vertex>& vertices, const std::vector<uint32_t>& indices) -> void
 		{
 			uint32_t size = indices.size();
-			uint32_t num_triangles = indices.size() / 3;
 			// calculate tangent/bitangent vectors of both triangles
 			glm::vec3 tangent1, bitangent1;
 			// std::cout << m_pMesh.m_Tris.size() <<  std::endl;
@@ -531,17 +657,21 @@ namespace BSP
 			glm::vec3 v1 = vertices[indices[1]].position;
 			glm::vec3 v2 = vertices[indices[size - 1]].position;
 
-			glm::vec3 edge1 = v1 - v0;
-			glm::vec3 edge2 = v2 - v0;
+			glm::vec3 edge1 = v0 - v1;
+			glm::vec3 edge2 = v0 - v2;
 
-			glm::vec2 t0 = vertices[indices[0]].texCoords / 512.0f;
-			glm::vec2 t1 = vertices[indices[1]].texCoords / 512.0f;
-			glm::vec2 t2 = vertices[indices[size - 1]].texCoords / 512.0f;
+			glm::vec2 t0 = vertices[indices[0]].texCoords;
+			glm::vec2 t1 = vertices[indices[1]].texCoords;
+			glm::vec2 t2 = vertices[indices[size - 1]].texCoords;
 
-			glm::vec2 deltaUV1 = t1 - t0;
-			glm::vec2 deltaUV2 = t2 - t0;
+			glm::vec2 deltaUV1 = t0 - t1;
+			glm::vec2 deltaUV2 = t0 - t2;
 
-			float f = (deltaUV2.x * deltaUV1.x - deltaUV2.y * deltaUV1.y) == 0.0f ? -1.0f : 1.0f;
+			tangent1 = glm::cross(vertices[indices[0]].normal, edge1);
+			bitangent1 = glm::cross(vertices[indices[0]].normal, tangent1);
+
+
+			/*float f = (deltaUV2.x * deltaUV1.x - deltaUV2.y * deltaUV1.y) == 0.0f ? -1.0f : 1.0f;
 
 			tangent1.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
 			tangent1.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
@@ -549,7 +679,7 @@ namespace BSP
 
 			bitangent1.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
 			bitangent1.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
-			bitangent1.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+			bitangent1.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);*/
 			// tangent1 = glm::normalize(tangent1);
 			for (int i = 0; i < indices.size(); i += 3)
 			{
@@ -563,7 +693,8 @@ namespace BSP
 				vertices[indices[i + 1]].bitangent = glm::normalize(bitangent1);
 				vertices[indices[i + 2]].bitangent = glm::normalize(bitangent1);
 			}
-		};
+		}
 	};
 }
+
 #endif // EPSILON_BSP_HPP
