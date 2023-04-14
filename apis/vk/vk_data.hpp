@@ -14,7 +14,8 @@
 
 namespace vk
 {
-    static const uint32_t MAX_FRAMES_IN_FLIGHT = 2;
+    static uint32_t MAX_FRAMES_IN_FLIGHT = 3;
+    static uint32_t MIN_FRAMES_IN_FLIGHT = 0;
     const size_t ALLOCATION_SIZE_MB = 0xFFFFFFF;
 
     struct VulkanVertexInfo
@@ -94,7 +95,11 @@ namespace vk
 
     struct VulkanUniformBuffer
     {
-        VulkanBuffer buffers[MAX_FRAMES_IN_FLIGHT];
+        VulkanUniformBuffer()
+        {
+            buffers.resize(MAX_FRAMES_IN_FLIGHT);
+        }
+        std::vector<VulkanBuffer> buffers;
         size_t size = 0;
     };
 
@@ -123,12 +128,18 @@ namespace vk
 
     struct VulkanMaterial
     {
+
+        VulkanMaterial()
+        {
+            bufferInfo.resize(MAX_FRAMES_IN_FLIGHT);
+        }
+
         VkDescriptorSetLayout descriptorSetLayout{};
         std::vector<VkDescriptorSet> descriptorSets;
         VkPipelineLayout *pipelineLayout = nullptr;
         // std::vector<VulkanTexture> renderBufferBindings;
         std::vector<VulkanShaderBinding> shaderBindings;
-        VkDescriptorBufferInfo bufferInfo[MAX_FRAMES_IN_FLIGHT];
+        std::vector<VkDescriptorBufferInfo> bufferInfo;
         size_t bufferOffset = 0;
         size_t bufferSize = 0;
         int slots = 0;
@@ -200,7 +211,6 @@ namespace vk
 
         std::vector<VkFramebuffer> Framebuffers;
     };
-
 
     class VulkanRenderPass
     {

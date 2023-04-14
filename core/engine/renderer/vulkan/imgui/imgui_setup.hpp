@@ -166,8 +166,8 @@ public:
         /**/
         ImGui_ImplVulkan_RenderDrawData(draw_data, m_pCommandBuffer, VK_NULL_HANDLE);
 
-        vk::endRenderPass(m_pCommandBuffer, *m_pVkDataPtr);
-        //  vk::endRecording(m_pCommandBuffer);
+        // vk::endRenderPass(m_pCommandBuffer, *m_pVkDataPtr);
+        //   vk::endRecording(m_pCommandBuffer);
         /*
         end render pass
         stop cmd recording

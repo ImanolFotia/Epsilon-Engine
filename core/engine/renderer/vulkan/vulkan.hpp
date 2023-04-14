@@ -125,6 +125,7 @@ namespace engine
         std::list<DrawCommand> m_pCurrentCommandQueue;
 
         VulkanResourceManager *m_pResourceManagerRef = nullptr;
+        bool m_pRenderPassActive = false;
 
         ImGuiRenderer m_pImguiRenderer{}; //!! TODO: find a better place for this
     };

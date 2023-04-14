@@ -81,7 +81,7 @@ namespace vk
     {
         for (const auto &availablePresentMode : availablePresentModes)
         {
-            if (availablePresentMode == VK_PRESENT_MODE_FIFO_KHR) // VK_PRESENT_MODE_IMMEDIATE_KHR
+            if (availablePresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR) // VK_PRESENT_MODE_IMMEDIATE_KHR
             {
                 return availablePresentMode;
             }

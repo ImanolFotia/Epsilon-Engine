@@ -387,6 +387,9 @@ add_subdirectory(examples/chess)
 add_subdirectory(examples/model)
 add_subdirectory(examples/bsp)
 
+
+add_subdirectory(projects/td-game)
+
 if(${Mono_FOUND})
 add_subdirectory(examples/mono-managed)
 endif()

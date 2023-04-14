@@ -9,21 +9,27 @@
 
 static void CreateWindow(MonoString *name, int w, int h);
 
-namespace MonoManaged {
-    class MonoManaged : public Epsilon::Epsilon {
+namespace MonoManaged
+{
+    class MonoManaged : public Epsilon::Epsilon
+    {
 
         modules::mono::MonoInstance m_pMonoInstance;
 
     public:
-
-        MonoManaged() : Epsilon::Epsilon("MonoManaged") {
-            Epsilon::getSingleton().onReady = [this]{ onReady(); };
-            Epsilon::getSingleton().onCreate = [this]{ onCreate(); };
-            Epsilon::getSingleton().onRender = [this]{ onRender(); };
-            Epsilon::getSingleton().onExit = [this]{ onExit(); };
+        MonoManaged() : Epsilon::Epsilon("MonoManaged")
+        {
+            Epsilon::getSingleton().onReady = [this]
+            { onReady(); };
+            Epsilon::getSingleton().onCreate = [this]
+            { onCreate(); };
+            Epsilon::getSingleton().onRender = [this]
+            { onRender(); };
+            Epsilon::getSingleton().onExit = [this]
+            { onExit(); };
 
             auto domain = m_pMonoInstance.addDomain("Main", "assets/scripts/test.dll");
-            modules::mono::MonoInstance::getSingleton().mapInternalCall("Epsilon.EpsilonBehaviour::CreateWindow", (const void*) &CreateWindow);
+            m_pMonoInstance.mapInternalCall("Epsilon.EpsilonBehaviour::CreateWindow", (const void *)&CreateWindow);
             domain.Execute();
         }
 
@@ -33,5 +39,7 @@ namespace MonoManaged {
         void onExit() {}
     };
 }
+// template <>
+// engine::Context singleton<MonoManaged::MonoManaged>::self{};
 
-#endif //EPSILON_MONOMANAGED_HPP
+#endif // EPSILON_MONOMANAGED_HPP

@@ -77,6 +77,11 @@ namespace vk
         {
             std::cout << "bindless is not supported" << std::endl;
         }
+        VkSurfaceCapabilitiesKHR surfaceCapabilities;
+        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(vk_data.physicalDevice, vk_data.surface, &surfaceCapabilities);
+
+        MIN_FRAMES_IN_FLIGHT = surfaceCapabilities.minImageCount;
+        MAX_FRAMES_IN_FLIGHT = std::max(MIN_FRAMES_IN_FLIGHT, MAX_FRAMES_IN_FLIGHT);
 
         VkDeviceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;

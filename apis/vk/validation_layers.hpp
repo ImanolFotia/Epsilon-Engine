@@ -25,10 +25,16 @@ namespace vk
     static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData, void *pUserData)
     {
         if (messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT)
+        {
             IO::Log("validation layer: ", pCallbackData->pMessage);
-        else if (messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT)
-            IO::Error("validation layer: ", pCallbackData->pMessage);
 
+            return VK_FALSE;
+        }
+        else if (messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT)
+        {
+            IO::Error("validation layer: ", pCallbackData->pMessage);
+            return VK_FALSE;
+        }
         return VK_FALSE;
     }
 

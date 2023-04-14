@@ -17,22 +17,24 @@
 #endif
 
 #if defined(ANDROID) || defined(__ANDROID__)
-    #undef USE_GLFW
-    #include <jni.h>
+#undef USE_GLFW
+#include <jni.h>
 #endif
 
 #include "vk_data.hpp"
 
 #include <core/framework/window.hpp>
 
+namespace vk
+{
 
-namespace vk {
-
-    static void createSurface(VulkanData &vk_data, framework::Window::windowType *window) {
+    static void createSurface(VulkanData &vk_data, framework::Window::windowType *window)
+    {
 
 #if USE_GLFW
 
-        if (glfwCreateWindowSurface(vk_data.instance, window, nullptr, &vk_data.surface) != VK_SUCCESS) {
+        if (glfwCreateWindowSurface(vk_data.instance, window, nullptr, &vk_data.surface) != VK_SUCCESS)
+        {
             throw std::runtime_error("failed to create window surface!");
         }
 #elif _WIN32
@@ -43,7 +45,7 @@ namespace vk {
 
         if (vkCreateWin32SurfaceKHR(vk_data.instance, &vk_data.createInfo, nullptr, &vk_data.surface) != VK_SUCCESS)
         {
-                throw std::runtime_error("failed to create window surface!");
+            throw std::runtime_error("failed to create window surface!");
         }
 #elif BUILD_ANDROID
         VkAndroidSurfaceCreateInfoKHR surface_info;
@@ -51,13 +53,15 @@ namespace vk {
         surface_info.pNext = NULL;
         surface_info.flags = 0;
         surface_info.window = static_cast<ANativeWindow *>(window);
-        if(vkCreateAndroidSurfaceKHR(vk_data.instance, &surface_info, NULL, &vk_data.surface) != VK_SUCCESS) {
-          throw std::runtime_error("failed to create window surface!");
+        if (vkCreateAndroidSurfaceKHR(vk_data.instance, &surface_info, NULL, &vk_data.surface) != VK_SUCCESS)
+        {
+            throw std::runtime_error("failed to create window surface!");
         }
 #endif
     }
 
-    static void cleanupSurface(const VulkanData &vk_data) {
+    static void cleanupSurface(const VulkanData &vk_data)
+    {
         vkDestroySurfaceKHR(vk_data.instance, vk_data.surface, nullptr);
         vkDestroyInstance(vk_data.instance, nullptr);
     }
