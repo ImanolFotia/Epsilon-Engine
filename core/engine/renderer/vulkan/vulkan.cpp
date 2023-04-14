@@ -179,7 +179,7 @@ namespace engine
 	void VulkanRenderer::End(glm::vec3 &v)
 	{
 
-		// m_pImguiRenderer.DrawUI(std::forward<glm::vec3 &>(v), m_pResourceManagerRef->ResourcesMemory);
+		m_pImguiRenderer.DrawUI(std::forward<glm::vec3 &>(v), m_pResourceManagerRef->ResourcesMemory);
 
 		if (m_pRenderPassActive)
 		{

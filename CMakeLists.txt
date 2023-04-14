@@ -388,7 +388,7 @@ add_subdirectory(examples/model)
 add_subdirectory(examples/bsp)
 
 
-add_subdirectory(projects/td-game)
+add_subdirectory(projects/TowerDefense)
 
 if(${Mono_FOUND})
 add_subdirectory(examples/mono-managed)

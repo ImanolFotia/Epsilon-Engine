@@ -177,7 +177,7 @@ namespace engine
 		subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 		subresourceRange.layerCount = 1;
 		subresourceRange.levelCount = mipLevels;
-
+		
 		vk::imageMemoryBarrier(*m_pVkDataPtr,
 							   m_pCommandPools.back(),
 							   texture.image,
@@ -189,6 +189,10 @@ namespace engine
 							   subresourceRange);
 
 		vk::endSingleTimeCommands(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), blitCommandBuffer);
+
+		/*transitionImageLayout(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), texture.image,
+			format, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+			VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, texture.info);*/
 		/* End generate mips*/
 		vk::createTextureSampler(*m_pVkDataPtr, texture);
 
@@ -213,7 +217,7 @@ namespace engine
 
 			bindless_image_info.sampler = texture.sampler;
 			bindless_image_info.imageView = texture.imageView;
-			bindless_image_info.imageLayout = texture.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+			bindless_image_info.imageLayout = texture.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			bindless_descriptor_writes.pImageInfo = &bindless_image_info;
 
 			if (count > 0)
