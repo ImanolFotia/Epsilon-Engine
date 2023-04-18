@@ -152,7 +152,7 @@ public:
 				&m_pBspFileData.stringData[m_pBspFileData.stringTable[m_pBspFileData.texData[m_pBspFileData.texInfo[face.texinfo].texdata].nameStringTableID]]);
 
 			try {
-				material = std::regex_replace(material, std::regex("\\maps/d2_prison_01/"), "");
+				material = std::regex_replace(material, std::regex("\\maps/d1_trainstation_02/"), "");
 				material = std::regex_replace(material, std::regex("(_-?\\d+)+"), "");
 				auto pos0 = material.find_last_of('/');
 				pos0 = pos0 == std::string::npos ? 0 : pos0;
@@ -175,7 +175,7 @@ public:
 					// if(face.firstedge+i >= edges.size() ) continue;
 					if (material.find("TOOL") != std::string::npos)
 					{
-					//continue;
+						//continue;
 						isTool = true;
 					}
 
@@ -205,7 +205,7 @@ public:
 					uv.emplace_back(u, v);
 
 					// Rearrange vector to match Vulkan coordinates
-					vtxs.emplace_back(vertex.x, vertex.y, vertex.z);
+					vtxs.emplace_back(-vertex.x, vertex.z, vertex.y);
 					triangles.push_back(vertexIndex);
 				}
 
@@ -217,7 +217,7 @@ public:
 
 
 				if (face.dispinfo != -1) {
-					
+
 					isDisp = true;
 					std::vector<glm::vec3> newVertices{};
 					std::vector<glm::vec2> newUvs{};
@@ -245,7 +245,7 @@ public:
 										  .material = material,
 										  .tool = isTool,
 										  .trigger = isTrigger,
-									      .isDisplacement = isDisp});
+										  .isDisplacement = isDisp });
 			index++;
 		}
 	}
@@ -277,7 +277,12 @@ public:
 
 		faceBoundingBox(m_pBspFileData.faces[dispInfo.MapFace], min, max);
 
-		std::vector<glm::vec3> v = { inVertices[0], inVertices[1], inVertices[2], inVertices[3] };
+		std::vector<glm::vec3> v = {
+			glm::vec3(-inVertices[0].x, inVertices[0].z, inVertices[0].y),
+			glm::vec3(-inVertices[1].x, inVertices[1].z, inVertices[1].y),
+			glm::vec3(-inVertices[2].x, inVertices[2].z, inVertices[2].y),
+			glm::vec3(-inVertices[3].x, inVertices[3].z, inVertices[3].y)
+		};
 
 		//check which corner has the minimum value, to use it as starting point
 		float startDist = 10000000000000;
@@ -334,7 +339,7 @@ public:
 				//displace
 				vtx += dispVertex.vec * dispVertex.dist;
 
-				outVertices[i * length + j] = vtx;
+				outVertices[i * length + j] = glm::vec3(-vtx.x, vtx.z, vtx.y);
 			}
 		}
 

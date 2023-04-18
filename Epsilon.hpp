@@ -39,6 +39,7 @@ namespace Epsilon
     protected:
         uint32_t nbFrames = 0;
         uint32_t lastTime = 0;
+        int32_t m_pFrame = 0;
 
         struct MeshPushConstant
         {
@@ -55,6 +56,7 @@ namespace Epsilon
             alignas(16) glm::mat4 view{};
             alignas(16) glm::mat4 proj{};
             alignas(16) glm::mat4 lightMatrix{};
+            alignas(16) int iFrame;
         };
 
     public:
@@ -81,6 +83,7 @@ namespace Epsilon
         void setOnCreate(std::function<void(void)> fun);
         void setOnReady(std::function<void(void)> fun);
         void setOnRender(std::function<void(void)> fun);
+        int32_t Frame();
 
         void setOnExit(std::function<void(void)> fun);
 

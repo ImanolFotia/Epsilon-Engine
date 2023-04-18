@@ -90,6 +90,7 @@ namespace Epsilon
             if (self.onRender)
                 self.onRender();
             engine::Context::getSingleton().Window().PollEvents();
+            self.m_pFrame++;
         }
     }
 
@@ -112,6 +113,10 @@ namespace Epsilon
             nbFrames = 0;
             lastTime = currentTime;
         }
+    }
+
+    int32_t Epsilon::Frame() {
+        return self.m_pFrame;
     }
 
     void Epsilon::exit()
