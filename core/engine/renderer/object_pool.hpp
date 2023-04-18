@@ -111,7 +111,7 @@ namespace engine
                     return &(*m_pIndexArray.at(ref.m_pIndex));
                 }
             }
-            std::cout << "object is invalid\n";
+            //std::cout << "object is invalid\n";
 
             return nullptr;
         }

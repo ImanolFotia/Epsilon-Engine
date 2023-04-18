@@ -98,8 +98,10 @@ namespace engine
 
 		drawCommand.material = object.material;
 		auto pushConstant = m_pResourceManagerRef->pushConstantPool.get(object.pushConstant);
-		drawCommand.objectData = pushConstant->data;
-		drawCommand.object_data_size = pushConstant->size;
+		if (pushConstant != nullptr) {
+			drawCommand.objectData = pushConstant->data;
+			drawCommand.object_data_size = pushConstant->size;
+		}
 		m_pCurrentCommandQueue.push_back(drawCommand);
 	}
 
@@ -325,8 +327,8 @@ namespace engine
 			}
 			/** TODO:
 			 *  Find a way to cleanly implement push constants*/
-			// vkCmdPushConstants(m_pFrame.CommandBuffer(), renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(),
-			//                    VK_SHADER_STAGE_VERTEX_BIT, 0, command.object_data_size, command.objectData);
+			vkCmdPushConstants(m_pFrame.CommandBuffer(), renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(),
+			                    VK_SHADER_STAGE_VERTEX_BIT, 0, command.object_data_size, command.objectData);
 
 			vkCmdDrawIndexed(m_pFrame.CommandBuffer(), command.meshResource.numIndices, 1, command.meshResource.indexOffset, command.meshResource.vertexOffset, 0);
 		}

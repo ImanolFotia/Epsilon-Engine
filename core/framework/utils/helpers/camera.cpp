@@ -30,7 +30,7 @@ namespace utils
         this->horizontalAngle = 0.0;
         this->verticalAngle = 0.0;
         near_plane = 0.1;
-        far_plane = 3000.0;
+        far_plane = 300;
     }
 
     void Camera::onMouseWheelCallback(beacon::sender *sender, beacon::args *args)

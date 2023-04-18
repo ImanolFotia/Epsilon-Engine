@@ -27,7 +27,7 @@ namespace engine
     class Drawable
     {
     public:
-        virtual const Mesh &data() { return m_pMesh; }
+        virtual Mesh &data() { return m_pMesh; }
 
         DrawableType getType() { return m_pType; }
 
