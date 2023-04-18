@@ -19,7 +19,9 @@ layout (location = 4) out vec4 shadowCoords;
 layout (location = 5) out mat3 TBN;
 layout (location = 8) out flat int InstanceIndex;
 
-layout(binding = 0) uniform UniformBufferObject {
+
+layout(binding = 0) uniform UniformBufferObject
+{
     float iTime;
     vec2 iResolution;
     vec3 lightPosition;
@@ -27,7 +29,9 @@ layout(binding = 0) uniform UniformBufferObject {
     mat4 view;
     mat4 proj;
     mat4 lightMatrix;
-} ubo;
+    int iFrame;
+}
+ubo;
 /*
 layout(binding = 3) readonly buffer MapMatrix 
 {
@@ -115,12 +119,12 @@ void main() {
   	mat3 normalMatrix = mat3(inverse(model));//transpose(inverse(mat3(model)));
   	TBN = CreateTBNMatrix(normalMatrix);
 
-    position = /*(PushConstants.model)*/model * vec4(-inPosition.x, inPosition.z, inPosition.y, 1.0);
-	shadowCoords = (biasMat * ubo.lightMatrix * /*(PushConstants.model)*/model) * vec4(-inPosition.x, inPosition.z, inPosition.y, 1.0);
+    position = /*(PushConstants.model)*/model * vec4(inPosition, 1.0);
+	shadowCoords = (biasMat * ubo.lightMatrix * /*(PushConstants.model)*/model) * vec4(inPosition, 1.0);
     texCoords = inTexCoord;
     normal = inNormal; //normalize(mat3(transpose(inverse(PushConstants.model))) * inNormal);
     //vec3 outVert = inPosition;
     //outVert.y *= (iResolution.x / iResolution.y);
 
-    gl_Position = ubo.proj * ubo.view * /*(PushConstants.model)*/model * vec4(-inPosition.x, inPosition.z, inPosition.y, 1.0);
+    gl_Position = ubo.proj * ubo.view * /*(PushConstants.model)*/model * vec4(inPosition, 1.0);
 }

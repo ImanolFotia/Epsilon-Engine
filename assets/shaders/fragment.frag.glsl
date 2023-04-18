@@ -14,6 +14,7 @@ layout(location = 4) in vec4 shadowCoords;
 layout(location = 5) in mat3 TBN;
 layout(location = 8) in flat int InstanceIndex;
 
+
 layout(binding = 0) uniform UniformBufferObject
 {
     float iTime;
@@ -23,6 +24,7 @@ layout(binding = 0) uniform UniformBufferObject
     mat4 view;
     mat4 proj;
     mat4 lightMatrix;
+    int iFrame;
 }
 ubo;
 
@@ -31,6 +33,11 @@ struct Material
 	int diffuse;
 	int normal;
 };
+
+
+const float NEAR_PLANE = 0.1;
+
+const float FAR_PLANE = 3000.0;
 
 
 // layout(binding = 1) uniform sampler2D texSampler;
@@ -54,10 +61,17 @@ vec3 Degamma(in vec3 img)
 }
 
 const vec3 lightPos = vec3(25.6363, 25.117, -25.7729);
-const vec3 lightDir = normalize(lightPos - vec3(26.4674, 1.16102, 22.1613));
+const vec3 lightDir = normalize(vec3(23.6365, 25.117, -45.772));//normalize(lightPos - vec3(26.4674, 1.16102, 22.1613));
 
 vec3 shadowCoord = shadowCoords.xyz / shadowCoords.w;
-#define FAR 100
+
+float LinearizeDepth(float depth, float near, float far)
+{
+    float z = depth * 2.0 - 1.0; // Back to NDC
+    return ((2.0 * near * far) / (far + near - z * (far - near)));
+}
+
+
 #define BLOCKER_SEARCH_NUM_SAMPLES 16
 #define PCF_NUM_SAMPLES 32
 #define NEAR_PLANE 0.1
@@ -206,7 +220,8 @@ float PCSS(vec4 coords)
         return 1.0;
     // STEP 2: penumbra size
     float penumbraRatio = PenumbraSize(zReceiver, avgBlockerDepth);
-    float filterRadiusUV = penumbraRatio * ubo.lightPosition.z /** NEAR_PLANE / zReceiver*/;
+    
+    float filterRadiusUV = min(penumbraRatio * ubo.lightPosition.z, 9.0); /** NEAR_PLANE / zReceiver*/;
     // STEP 3: filtering
     return PCF_Filter(uv, zReceiver, filterRadiusUV);
 }
@@ -235,6 +250,32 @@ vec3 tonemapACES(vec3 x) {
     return (x * (a * x + b)) / (x * (c*x+d) + e);
 }
 
+
+float IGN(int pixelX, int pixelY, int frame)
+{
+    //return mod(52.9829189 * mod(0.06711056*float(pixelX) + 0.00583715*float(pixelY), 1.0), 1.0);
+    frame = frame % 64; // need to periodically reset frame to avoid numerical issues
+    float x = float(pixelX) + 5.588238 * float(frame);
+    float y = float(pixelY) + 5.588238 * float(frame);
+    return mod(52.9829189 * mod(0.06711056*float(x) + 0.00583715*float(y), 1.0), 1.0);
+}
+
+float ResolveTransparency() {
+
+    ivec2 invFragCoord = ivec2(gl_FragCoord);
+    float lDepth = LinearizeDepth(gl_FragCoord.z, NEAR_PLANE, FAR_PLANE);
+
+    int mult = 40;
+    int cycle = 3;
+
+    int frame = ubo.iFrame % 64;
+
+    int indexX = invFragCoord.x+int(lDepth);
+    int indexY = invFragCoord.y+int(lDepth);
+
+    return IGN(indexX, indexY, ubo.iFrame);
+}
+
 void main()
 {
     if(color.a < 0.5)
@@ -254,9 +295,15 @@ void main()
     const float fAlphaMultiplier = 1.5;
     const float fAlphaTest = 0.25;
     float fNewAlpha = diffuse.a * fAlphaMultiplier;
-    
+    /*
     if(fNewAlpha < fAlphaTest)
-      discard;
+      discard;*/
+
+
+    //float fragDist = length(ubo.viewPosition - position.xyz) - 1.0;
+
+    //if(ResolveTransparency() < 1.0 - fragDist)
+    //  discard;  
         
     if(fNewAlpha > 1.0)
       fNewAlpha = 1.0; 
@@ -308,6 +355,8 @@ void main()
     
     vec3 V = normalize(ubo.viewPosition - position.xyz);
 
+    //fragDist = smoothstep(0.0, 2.0, fragDist);
+
     vec3 reflv = reflect( V, mNormal);
     vec3 reflc = mix(vec3( 0.45, 0.68, 0.88 ), vec3( 0.92, 0.95, 0.99 ), reflv.y);
     //sum = texture(shadowMap, shadowCoord);
@@ -317,10 +366,9 @@ void main()
     //sum = textureGrad(shadowMap, shadowCoord, vec2(0.0),  vec2(0.0)).r;
     vec3 light = sunColor*CalculateDirectionalPBR(lightDir, vec3(1.0), 1.0, ubo.viewPosition, position.xyz, F0, mNormal, roughness, diffuse.rgb);
 
-    outColor.a = color.a; // texCol.a;
-    vec3 checkers = color.rgb;//drawCheckers(texCoords.xy, 512.0);
-    
-    outColor.rgb = pow(sum, 3.0) *  light * 5.0 + (skyLight*diffuse.rgb*0.5) + reflc*0.1; //(Gamma(outColor.rgb));
+
+    outColor.rgb = pow(sum, 3.0) *  light * 5.0 + (skyLight*diffuse.rgb*0.4) + reflc*0.1; //(Gamma(outColor.rgb));
+
 
     outColor.rgb = tonemapACES(outColor.rgb);
     outColor.a = diffuse.a;

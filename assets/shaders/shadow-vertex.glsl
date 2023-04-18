@@ -13,8 +13,9 @@ layout (location = 1) out vec2 texCoords;
 layout (location = 2) out vec3 normal;
 layout (location = 3) out vec4 color;
 
-layout(binding = 0) uniform UniformBufferObject {
 
+layout(binding = 0) uniform UniformBufferObject
+{
     float iTime;
     vec2 iResolution;
     vec3 lightPosition;
@@ -22,8 +23,9 @@ layout(binding = 0) uniform UniformBufferObject {
     mat4 view;
     mat4 proj;
     mat4 lightMatrix;
-} ubo;
-
+    int iFrame;
+}
+ubo;
 layout (set = 1, binding = 0) uniform sampler2D textures[];
 
 layout( push_constant ) uniform constants
@@ -43,8 +45,13 @@ void main() {
 				0.0, 0.0, 0.0, 1.0);
     normal = normalize(mat3(transpose(inverse(/*PushConstants.model*/model))) * inNormal);
 
+    float quantStep = 1.0 / 1500.0;
     vec3 outVert = inPosition;
+
+
     //outVert.y *= (iResolution.x / iResolution.y);
 
     gl_Position = ubo.proj * ubo.view * /*PushConstants.model*/model * vec4(outVert, 1.0);
+
+
 }

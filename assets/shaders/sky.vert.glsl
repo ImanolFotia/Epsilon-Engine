@@ -14,8 +14,9 @@ layout (location = 2) out vec3 normal;
 layout (location = 3) out vec4 color;
 layout (location = 4) out mat3 invView;
 
-layout(binding = 0) uniform UniformBufferObject {
 
+layout(binding = 0) uniform UniformBufferObject
+{
     float iTime;
     vec2 iResolution;
     vec3 lightPosition;
@@ -23,8 +24,9 @@ layout(binding = 0) uniform UniformBufferObject {
     mat4 view;
     mat4 proj;
     mat4 lightMatrix;
-} ubo;
-
+    int iFrame;
+}
+ubo;
 layout (set = 1, binding = 0) uniform sampler2D textures[];
 
 layout( push_constant ) uniform constants
@@ -34,7 +36,7 @@ layout( push_constant ) uniform constants
 
 void main() {
     color = inColor;
-    position = vec3(-inPosition.x, inPosition.z, inPosition.y);
+    position = vec3(inPosition);
     texCoords = inTexCoord;
     
 			mat4 model = mat4(

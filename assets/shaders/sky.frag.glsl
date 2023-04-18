@@ -10,8 +10,9 @@ layout (location = 3) in vec4 color;
 layout (location = 4) in mat3 invView;
 
 
-layout(set = 0, binding = 0) uniform UniformBufferObject {
 
+layout(binding = 0) uniform UniformBufferObject
+{
     float iTime;
     vec2 iResolution;
     vec3 lightPosition;
@@ -19,8 +20,9 @@ layout(set = 0, binding = 0) uniform UniformBufferObject {
     mat4 view;
     mat4 proj;
     mat4 lightMatrix;
-} ubo;
-
+    int iFrame;
+}
+ubo;
 layout (set = 1, binding = 0) uniform sampler2D textures[];
 
 float NEAR = 0.1;
