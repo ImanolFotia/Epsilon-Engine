@@ -71,11 +71,15 @@ namespace al {
 #endif
     }
 
-    static void playSource(unsigned int source) {
+    static void playSource(unsigned int source, glm::vec3 position = glm::vec3(0.0, 0.0, 0.0)) {
 
 #if !defined(ANDROID) && !defined(__ANDROID__)
+            alSourcei(source, AL_SOURCE_RELATIVE, AL_FALSE);
             alSourcei(source, AL_LOOPING, AL_FALSE);
             alSourcef(source, AL_GAIN, 1);
+            //alEffecti(source, )
+            alSource3f(source, AL_POSITION, position.x, position.y, position.z);
+            alSource3f(source, AL_DIRECTION, 0, 1, 0);
             alSourcePlay(source);
 #endif
     }

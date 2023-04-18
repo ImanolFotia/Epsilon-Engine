@@ -27,7 +27,6 @@ Epsilon
 /modules/mono/test
 cmake-build-debug-coverage/
 cmake-build-release/
-/projects
 
 CMakeSettings.json
 assets/shaders/fragment.spv
