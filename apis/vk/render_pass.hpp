@@ -48,7 +48,7 @@ namespace vk
                 renderPass.renderPassData.depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
                 renderPass.renderPassData.depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
                 renderPass.renderPassData.depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-                renderPass.renderPassData.depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+                renderPass.renderPassData.depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
 
                 renderPass.renderPassData.depthAttachmentRef.attachment = index;
                 renderPass.renderPassData.depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
@@ -69,18 +69,18 @@ namespace vk
                 }
                 else if (attachment.format == engine::DEPTH_F32 || attachment.format == engine::DEPTH_F32_STENCIL_8)
                 {
-                    if (attachment.clearAttachment)
+                    //if (attachment.clearAttachment)
+                    //{
+                    //    attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+                    //}
+                    //else
                     {
-                        attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-                    }
-                    else
-                    {
-                        attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+                        attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
                     }
                 }
                 else
                 {
-                    attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+                    attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL;
                 }
                 renderPass.renderPassData.colorAttachments.push_back(attachmentDesc);
 
