@@ -87,10 +87,10 @@ vec3 colors[27] = {
 const float kEpsilon = 0.498;
 
 const mat4 biasMat = mat4( 
-	kEpsilon, 0.0, 0.0, 0.0,
-	0.0, kEpsilon, 0.0, 0.0,
+	0.5, 0.0, 0.0, 0.0,
+	0.0, 0.5, 0.0, 0.0,
 	0.0, 0.0, 1.0, 0.0,
-	kEpsilon, kEpsilon, 0.0, 1.0 );
+	0.5, 0.5, 0.0, 1.0 );
 
 	
 mat3 CreateTBNMatrix(mat3 normalMatrix)
@@ -120,7 +120,9 @@ void main() {
   	TBN = CreateTBNMatrix(normalMatrix);
 
     position = /*(PushConstants.model)*/model * vec4(inPosition, 1.0);
-	shadowCoords = (biasMat * ubo.lightMatrix * /*(PushConstants.model)*/model) * vec4(inPosition, 1.0);
+	//shadowCoords = (biasMat * ubo.lightMatrix * /*(PushConstants.model)*/model) * vec4(inPosition, 1.0);
+	shadowCoords = (biasMat * ubo.lightMatrix * model) * vec4(inPosition, 1.0);
+	//shadowCoords = shadowCoords * 0.5 + 0.5;
     texCoords = inTexCoord;
     normal = inNormal; //normalize(mat3(transpose(inverse(PushConstants.model))) * inNormal);
     //vec3 outVert = inPosition;

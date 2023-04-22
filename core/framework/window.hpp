@@ -111,6 +111,8 @@ namespace framework
             /*#if USE_GLFW
                         int w, h;
                         glfwGetWindowSize(mWindow, &w, &h);*/
+            if (mWindow == nullptr) return { 0,0 };
+            glfwGetFramebufferSize(mWindow, &mWidth, &mHeight);
             return {mWidth, mHeight}; /*
  #endif*/
         }
@@ -140,9 +142,10 @@ namespace framework
             mWindow = window;
         }
 
+
     private:
-        unsigned mWidth = 0;
-        unsigned mHeight = 0;
+        int mWidth = 0;
+        int mHeight = 0;
 
         windowType *mWindow;
 #if defined(_WIN32) && (USE_GLFW == false)

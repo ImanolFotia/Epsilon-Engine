@@ -599,7 +599,7 @@ namespace engine
 
 	Ref<Mesh> VulkanResourceManager::createMesh(MeshInfo meshInfo)
 	{
-		std::vector<Vertex> *vertices = &meshInfo.vertices;
+		std::vector<common::Vertex> *vertices = &meshInfo.vertices;
 		std::vector<uint32_t> *indices = &meshInfo.indices;
 
 		auto maxOffset = [](auto &indices) -> uint32_t
@@ -620,7 +620,7 @@ namespace engine
 		auto indexStagingBuffer = pCreateStagingIndexBuffer(*indices);
 
 		vk::copyBuffer(*m_pVkDataPtr, m_pCommandPools.back(), vertexStagingBuffer.buffer, vertexBuffer->buffer,
-					   vertices->size() * sizeof(Vertex), vertexBuffer->allocatedVertices * sizeof(Vertex));
+					   vertices->size() * sizeof(common::Vertex), vertexBuffer->allocatedVertices * sizeof(common::Vertex));
 
 		vmaDestroyBuffer(m_pAllocator, vertexStagingBuffer.buffer, vertexStagingBuffer.allocation);
 
@@ -632,8 +632,8 @@ namespace engine
 		if (0)
 		{
 			IO::Info("From function ", __PRETTY_FUNCTION__, "\n\tin (", __FILE__, ":", __LINE__, ") \n\t", "copied ",
-					 vertices->size(), " vertices, of size ", vertices->size() * sizeof(Vertex), " bytes, at offset ",
-					 vertexBuffer->allocatedVertices * sizeof(Vertex), " to local buffer");
+					 vertices->size(), " vertices, of size ", vertices->size() * sizeof(common::Vertex), " bytes, at offset ",
+					 vertexBuffer->allocatedVertices * sizeof(common::Vertex), " to local buffer");
 
 			IO::Info("From function ", __PRETTY_FUNCTION__, "\n\tin (", __FILE__, ":", __LINE__, ") \n\t", "copied ",
 					 indices->size(), " indices, of size ", indices->size() * sizeof(IndexType), " bytes, at offset ",

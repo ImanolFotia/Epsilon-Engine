@@ -79,7 +79,7 @@ namespace engine
 
 		void pCreateBuffer(vk::VulkanBuffer&, size_t, VkBufferUsageFlags, VmaAllocationCreateFlags, VmaMemoryUsage);
 
-		vk::VulkanBuffer pCreateStagingBuffer(const std::vector<Vertex>&);
+		vk::VulkanBuffer pCreateStagingBuffer(const std::vector<common::Vertex>&);
 		vk::VulkanBuffer pCreateStagingIndexBuffer(const std::vector<IndexType>&);
 		vk::VulkanBuffer pCreateStagingTextureBuffer(unsigned char*, TextureCreationInfo);
 

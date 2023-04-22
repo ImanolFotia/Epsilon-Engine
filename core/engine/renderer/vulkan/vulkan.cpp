@@ -66,7 +66,7 @@ namespace engine
 	}
 
 	engine::Renderer::ObjectDataId
-	VulkanRenderer::RegisterMesh(const std::vector<Vertex> &, std::vector<IndexType> &indices, bool)
+	VulkanRenderer::RegisterMesh(const std::vector<common::Vertex> &, std::vector<IndexType> &indices, bool)
 	{
 		throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
 	}

@@ -1,7 +1,7 @@
 #version 460
 #extension GL_EXT_nonuniform_qualifier : enable
 
-layout(location = 0) out float outColor;
+layout(location = 0) out vec2 outColor;
 
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec2 texCoords;
@@ -35,5 +35,13 @@ float LinearizeDepth(float depth)
 
 void main() {
     if(color.a < 1.0) discard;
-    outColor = gl_FragCoord.z;
+
+    float depth = gl_FragCoord.z;
+
+    float dx = dFdy(depth);
+    float dy = dFdy(depth);
+
+    float moment2 = depth * depth + 0.25 * (dx*dx + dy*dy);
+
+    outColor = vec2(gl_FragCoord.z, depth*depth);
 }

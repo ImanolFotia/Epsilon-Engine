@@ -58,6 +58,7 @@ namespace vk
         samplerInfo.addressModeV = texture.addressMode;
         samplerInfo.addressModeW = texture.addressMode;
         samplerInfo.anisotropyEnable = VK_TRUE;
+        
 
         VkPhysicalDeviceProperties properties{};
         vkGetPhysicalDeviceProperties(vkData.physicalDevice, &properties);
@@ -101,6 +102,7 @@ namespace vk
         viewInfo.subresourceRange.levelCount = texture.info.mipLevels;
         viewInfo.subresourceRange.baseArrayLayer = 0;
         viewInfo.subresourceRange.layerCount = 1;
+        
 
         if (vkCreateImageView(vkData.logicalDevice, &viewInfo, nullptr, &texture.imageView) != VK_SUCCESS)
         {

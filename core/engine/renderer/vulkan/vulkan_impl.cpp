@@ -21,9 +21,9 @@ namespace engine
     vk::VulkanBuffer VulkanResourceManager::pCreateVertexBuffer()
     {
         vk::VulkanBuffer buffer;
-        pCreateBuffer(buffer, sizeof(Vertex) * MAX_VERTICES_PER_BUFFER, VERTEX_BUFFER_USAGE, VERTEX_BUFFER_PROP, VERTEX_BUFFER_MEM_USAGE);
+        pCreateBuffer(buffer, sizeof(common::Vertex) * MAX_VERTICES_PER_BUFFER, VERTEX_BUFFER_USAGE, VERTEX_BUFFER_PROP, VERTEX_BUFFER_MEM_USAGE);
         if (0)
-            IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", sizeof(Vertex) * MAX_VERTICES_PER_BUFFER, " bytes in local vertex buffer");
+            IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", sizeof(common::Vertex) * MAX_VERTICES_PER_BUFFER, " bytes in local vertex buffer");
         return buffer;
     }
 
@@ -162,7 +162,7 @@ namespace engine
         for (auto &bufferRef : vertexBufferReferences)
         {
             auto buffer = vertexBufferPool.get(bufferRef);
-            if (MAX_VERTICES_PER_BUFFER * sizeof(Vertex) >= buffer->allocatedVertices * sizeof(Vertex) + numVertices * sizeof(Vertex))
+            if (MAX_VERTICES_PER_BUFFER * sizeof(common::Vertex) >= buffer->allocatedVertices * sizeof(common::Vertex) + numVertices * sizeof(common::Vertex))
             {
                 return bufferRef;
             }
@@ -299,17 +299,17 @@ namespace engine
         }
     }
 
-    vk::VulkanBuffer VulkanResourceManager::pCreateStagingBuffer(const std::vector<Vertex> &vertices)
+    vk::VulkanBuffer VulkanResourceManager::pCreateStagingBuffer(const std::vector<common::Vertex> &vertices)
     {
         vk::VulkanBuffer stagingBuffer;
-        pCreateBuffer(stagingBuffer, vertices.size() * sizeof(Vertex), STAGING_BUFFER_USAGE, STAGING_BUFFER_PROP, STAGING_BUFFER_MEM_USAGE);
+        pCreateBuffer(stagingBuffer, vertices.size() * sizeof(common::Vertex), STAGING_BUFFER_USAGE, STAGING_BUFFER_PROP, STAGING_BUFFER_MEM_USAGE);
 
         void *data;
         vmaMapMemory(m_pAllocator, stagingBuffer.allocation, &data);
-        memcpy(data, vertices.data(), vertices.size() * sizeof(Vertex));
+        memcpy(data, vertices.data(), vertices.size() * sizeof(common::Vertex));
         vmaUnmapMemory(m_pAllocator, stagingBuffer.allocation);
         if (0)
-            IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", vertices.size() * sizeof(Vertex), " bytes in hosted staging buffer");
+            IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", vertices.size() * sizeof(common::Vertex), " bytes in hosted staging buffer");
         return stagingBuffer;
     }
 

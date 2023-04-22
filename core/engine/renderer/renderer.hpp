@@ -3,7 +3,7 @@
 #include "types.hpp"
 #include "object_pool.hpp"
 #include "core/framework/window.hpp"
-#include "core/engine/renderer/drawables/vertex.hpp"
+#include <core/common/common.hpp>
 
 #include <string>
 #include <vector>
@@ -12,8 +12,8 @@
 namespace engine
 {
 
-    const uint32_t MAX_VERTICES_PER_BUFFER = 50000;
-    const uint32_t MAX_INDICES_PER_BUFFER = 50000;
+    const uint32_t MAX_VERTICES_PER_BUFFER = 1000000;
+    const uint32_t MAX_INDICES_PER_BUFFER =  1000000;
 
     struct ShaderModuleInfo
     {
@@ -77,7 +77,7 @@ namespace engine
     public:
         virtual void Init(const char *, framework::Window &) = 0;
 
-        virtual ObjectDataId RegisterMesh(const std::vector<Vertex> &, std::vector<IndexType> &indices, bool) = 0;
+        virtual ObjectDataId RegisterMesh(const std::vector<common::Vertex> &, std::vector<IndexType> &indices, bool) = 0;
 
         virtual TexturesDataId RegisterTexture(TextureCreationInfo) = 0;
 

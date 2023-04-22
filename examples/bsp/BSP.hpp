@@ -111,7 +111,7 @@ namespace BSP
 				"ModelMatrix",
 				{ .size = sizeof(PushConstant), .data = &m_pMap.pushConstant });
 
-			const char* filename = "./assets/models/hl2/d1_trainstation_02.bsp";
+			const char* filename = "./assets/models/hl2/background01.bsp";
 
 			SourceBSP bspMap(filename);
 
@@ -138,7 +138,7 @@ namespace BSP
 			for (auto& [materialName, FaceList] : bspMap.Faces())
 			{
 				BSPFace bspFace;
-				std::vector<engine::Vertex> vertices;
+				std::vector<common::Vertex> vertices;
 				std::vector<unsigned int> indices;
 
 				int highestIndex = 0;
@@ -147,7 +147,7 @@ namespace BSP
 					if (face.vertices.size() <= 0)
 						continue;
 
-					std::vector<engine::Vertex> tmpVertices{};
+					std::vector<common::Vertex> tmpVertices{};
 					for (auto& vtx : face.vertices)
 					{
 						auto& v = tmpVertices.emplace_back();
@@ -278,6 +278,7 @@ namespace BSP
 			m_pCameraData.iTime = 0;
 			m_pCameraData.iFrame = Frame();
 
+			Epsilon::getContext().Window().HideCursor();
 			framework::Input::KeyBoard::KeyboardEventHandler.addListener(
 				([this](auto* sender, beacon::args* args)
 					{
@@ -448,7 +449,7 @@ namespace BSP
 			float lastSplitDist = 0.0;
 			float splitDist = cascadeSplits;
 
-			float quantStep = 1.0 / 1500;
+			float quantStep = 1.0 / 3000;
 
 			glm::vec3 frustumCorners[8] = {
 				glm::vec3(-1.0f,  1.0f, 0.0f),
@@ -507,7 +508,7 @@ namespace BSP
 
 
 			glm::mat4 lightViewMatrix = glm::lookAt(frustumCenter - lightDir * -minExtents.z, frustumCenter, glm::vec3(0.0f, 1.0, 0.0f));
-			glm::mat4 lightOrthoMatrix = glm::ortho(minExtents.x, maxExtents.x, minExtents.y, maxExtents.y, 0.1f, 100.0f);
+			glm::mat4 lightOrthoMatrix = glm::ortho(minExtents.x, maxExtents.x, minExtents.y, maxExtents.y, -20.0f, 100.0f);
 
 
 			m_pCameraData.view = lightViewMatrix;
@@ -555,12 +556,12 @@ namespace BSP
 					{.entryPoint = "main", .shaderCode = skyFragmentCode, .stage = FRAGMENT}},
 				.usedStages = ShaderModuleStage(VERTEX | FRAGMENT) };
 
-			std::vector<VertexDescriptorInfo> vertexInfo = { {XYZ_FLOAT, offsetof(Vertex, position)},
-															{XY_FLOAT, offsetof(Vertex, texCoords)},
-															{XYZ_FLOAT, offsetof(Vertex, normal)},
-															{XYZW_FLOAT, offsetof(Vertex, color)},
-															{XYZ_FLOAT, offsetof(Vertex, tangent)},
-															{XYZ_FLOAT, offsetof(Vertex, bitangent)} };
+			std::vector<VertexDescriptorInfo> vertexInfo = { {XYZ_FLOAT, offsetof(common::Vertex, position)},
+															{XY_FLOAT, offsetof(common::Vertex, texCoords)},
+															{XYZ_FLOAT, offsetof(common::Vertex, normal)},
+															{XYZW_FLOAT, offsetof(common::Vertex, color)},
+															{XYZ_FLOAT, offsetof(common::Vertex, tangent)},
+															{XYZ_FLOAT, offsetof(common::Vertex, bitangent)} };
 			PipelineLayout mainLayout = {
 				.shaderInfo = mainShaderInfo,
 				.vertexLayout = vertexInfo,
@@ -583,7 +584,7 @@ namespace BSP
 			RenderPassInfo renderPassInfo =
 				RenderPassFactory()
 				.name("Default")
-				.vertexInfo<Vertex>()
+				.vertexInfo<common::Vertex>()
 				.depthAttachment(true)
 				.subpasses({})
 				.dimensions({ .width = 1280, .height = 720 })
@@ -609,15 +610,15 @@ namespace BSP
 			RenderPassInfo shadowRenderPassInfo =
 				RenderPassFactory()
 				.name("Shadow")
-				.vertexInfo<Vertex>()
+				.vertexInfo<common::Vertex>()
 				.depthAttachment(true)
 				.subpasses({})
 				.dimensions({ .width = 3000, .height = 3000 })
 				.inputs({ {.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = UniformBindingType::UNIFORM_BUFFER} })
 				.outputs(
-					{ {.format = COLOR_R_32F,
+					{ {.format = COLOR_RG_32F,
 					  .wrapMode = CLAMP_TO_BORDER,
-					  .filtering = engine::POINT,
+					  .filtering = engine::LINEAR,
 					  .compareFunc = ALWAYS,
 					  .depthCompare = false,
 					  .clearColor = {1.0, 1.0, 1.0, 1.0},
@@ -640,7 +641,7 @@ namespace BSP
 			m_pShadowRenderPass = Epsilon::getContext().ResourceManager()->createRenderPass(shadowRenderPassInfo);
 		}
 
-		auto calculateNormals(std::vector<engine::Vertex>& vertices,
+		auto calculateNormals(std::vector<common::Vertex>& vertices,
 			const std::vector<unsigned int>& indices) -> void
 		{
 
@@ -665,7 +666,7 @@ namespace BSP
 			}
 		}
 
-		auto calculateNormalsDisplacement(std::vector<engine::Vertex>& vertices,
+		auto calculateNormalsDisplacement(std::vector<common::Vertex>& vertices,
 			const std::vector<unsigned int>& indices) -> void
 		{
 
@@ -692,7 +693,7 @@ namespace BSP
 				vertices[indices[i + 2]].normal = n;
 			}
 		}
-		auto generateTangentSpaceVectorsDisplacement(std::vector<engine::Vertex>& vertices, const std::vector<uint32_t>& indices) -> void
+		auto generateTangentSpaceVectorsDisplacement(std::vector<common::Vertex>& vertices, const std::vector<uint32_t>& indices) -> void
 		{
 			uint32_t size = indices.size();
 			// calculate tangent/bitangent vectors of both triangles
@@ -751,7 +752,7 @@ namespace BSP
 				vertices[indices[i + 2]].bitangent = glm::normalize(bitangent1);
 			}*/
 		}
-		auto generateTangentSpaceVectors(std::vector<engine::Vertex>& vertices, const std::vector<uint32_t>& indices) -> void
+		auto generateTangentSpaceVectors(std::vector<common::Vertex>& vertices, const std::vector<uint32_t>& indices) -> void
 		{
 			uint32_t size = indices.size();
 			// calculate tangent/bitangent vectors of both triangles

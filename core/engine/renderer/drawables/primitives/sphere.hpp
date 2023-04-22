@@ -15,6 +15,7 @@ namespace engine
 
         Sphere() = default;
 
+
     private:
         void createGeometry(uint32_t subdivisions)
         {

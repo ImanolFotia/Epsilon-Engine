@@ -10,14 +10,14 @@ namespace engine
 {
 	class Quad : public Primitive
 	{
-		using vtx = Vertex;
+		using vtx = common::Vertex;
 		using v4 = glm::vec4;
 		using v3 = glm::vec3;
 		using v2 = glm::vec2;
 
 	public:
 
-		Quad(uint16_t tesselation = 2) {
+		Quad(uint16_t tesselation = 2, glm::vec2 uvMultiplier = glm::vec2(1.f)) : m_pTesselation(tesselation) {
 
 			m_pType = DrawableType::QUAD;
 
@@ -34,7 +34,7 @@ namespace engine
 					float x = (float)i;
 					float y = (float)j;
 					v3 position = v3(x * step, 0.0f, y * step);
-					v2 uv = v2(x, y);
+					v2 uv = v2(x, y) * uvMultiplier;
 					v3 normal = v3(0.0f, 1.0f, 0.0f);
 
 					position -= v3(0.5f, 0.0f, 0.5f);
@@ -57,6 +57,54 @@ namespace engine
 			generateTangentSpaceVectors();
 		}
 
+		void calculateNormals() {
+
+			std::vector<std::vector<float>> Grid;
+			std::vector<float> row;
+			for (int i = 0; i < m_pTesselation; i++)
+			{
+				for (int j = 0; j < m_pTesselation; j++)
+				{
+					row.push_back(m_pMesh.Vertices.at(i * m_pTesselation + j).position.y);
+				}
+				Grid.push_back(row);
+				row.clear();
+			}
+
+			std::vector<glm::vec3> Normals;
+			for (int i = 0; i < m_pTesselation; i++)
+			{
+				for (int j = 0; j < m_pTesselation; j++)
+				{
+					if (i > 0 && j > 0 && i < m_pTesselation - 1 && j < m_pTesselation - 1)
+					{
+						float HL = Grid.at(i - 1).at(j);
+						float HR = Grid.at(i + 1).at(j);
+						float HD = Grid.at(i).at(j - 1);
+						float HU = Grid.at(i).at(j + 1);
+
+
+						glm::vec3 norm = glm::normalize(glm::vec3(HL - HR, 0.1f, HD - HU));
+						Normals.push_back(norm);
+						//m_pMesh.Vertices.at(i * m_pTesselation + j).normal = norm;
+
+					}
+					else
+					{
+
+						Normals.push_back(glm::vec3(0, 1, 0));
+					}
+				}
+			}
+			int index = 0;
+			for (auto& vtx : m_pMesh.Vertices) {
+				vtx.normal = Normals[index];
+				index++;
+			}
+
+			generateTangentSpaceVectors();
+		}
+
 	private:
 		void pInit() {
 			m_pMesh.Vertices.emplace_back(vtx(v3(-1.0f, -1.0f, 1.0f), v2(0.0f, 0.0f), v3(0.0f, 0.0f, 1.0f), v4(0.0f, 1.0f, 0.0f, 1.0f), v3(0.0f), v3(0.0f))); // bottom-left
@@ -74,6 +122,8 @@ namespace engine
 
 			generateTangentSpaceVectors();
 		}
+
+		uint32_t m_pTesselation = 2;
 	};
 }
 

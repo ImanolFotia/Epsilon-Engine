@@ -4,7 +4,7 @@
 #include "core/engine/renderer/renderer.hpp"
 #include "core/engine/renderer/frame.hpp"
 #include "core/engine/renderer/types.hpp"
-#include "core/engine/renderer/drawables/vertex.hpp"
+#include <core/common/common.hpp>
 #include "../draw_command.hpp"
 
 #include "apis/vk/vk.hpp"
@@ -41,7 +41,7 @@ namespace engine
         using MemoryAllocations = std::unordered_map<VkMemoryPropertyFlags, vk::VulkanAllocation>;
         using IndexType = uint32_t;
 
-        using VertexContainer = std::vector<Vertex>;
+        using VertexContainer = std::vector<common::Vertex>;
         using IndexContainer = std::vector<IndexType>;
 
         using UniformBuffers = std::vector<vk::VulkanBuffer>;
@@ -60,7 +60,7 @@ namespace engine
 
         void Init(const char *appName, framework::Window &) override;
 
-        ObjectDataId RegisterMesh(const std::vector<Vertex> &, std::vector<IndexType> &indices, bool) override;
+        ObjectDataId RegisterMesh(const std::vector<common::Vertex> &, std::vector<IndexType> &indices, bool) override;
 
         TexturesDataId RegisterTexture(TextureCreationInfo) override;
 

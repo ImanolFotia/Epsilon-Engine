@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include "glm/glm.hpp"
-#include "core/engine/renderer/drawables/mesh.hpp"
+#include <core/common/common.hpp>
 
 namespace engine
 {
@@ -392,6 +392,8 @@ namespace engine
         std::vector<VertexDescriptorInfo> vertexLayout;
         CullMode cullMode;
         WindingMode windingMode;
+        bool depthWriteEnable = true;
+        bool depthTestEnable = true;
         std::string name;
     };
 
@@ -501,14 +503,14 @@ namespace engine
 
     struct MeshInfo
     {
-        std::vector<Vertex> vertices;
+        std::vector<common::Vertex> vertices;
         std::vector<uint32_t> indices;
         std::string name;
     };
 
     struct MeshInfoFactory
     {
-        MeshInfoFactory vertices(std::vector<Vertex> v)
+        MeshInfoFactory vertices(std::vector<common::Vertex> v)
         {
             info.vertices = v;
             return *this;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "glm/glm.hpp"
-#include "mesh.hpp"
+#include <core/common/common.hpp>
 
 #include "../types.hpp"
 
@@ -27,12 +27,12 @@ namespace engine
     class Drawable
     {
     public:
-        virtual Mesh &data() { return m_pMesh; }
+        virtual common::Mesh &data() { return m_pMesh; }
 
         DrawableType getType() { return m_pType; }
 
     protected:
-        Mesh m_pMesh;
+        common::Mesh m_pMesh;
         DrawableType m_pType = UNDEFINED;
     };
 } // namespace Renderer

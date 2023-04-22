@@ -59,15 +59,21 @@ public:
 	{
 		m_pBspFile = std::ifstream(filename, std::ios::binary);
 
+		if (!m_pBspFile.is_open()) {
+
+			std::cerr << "Couldn't open BSP file" << std::endl;
+			exit(9);
+		}
+
 		m_pBspFile.read((char*)&m_pBspFileData.header, sizeof(dheader_t));
 
-		/*if (m_pBspFileData.header.ident != IDBSPHEADER)
+		if (m_pBspFileData.header.ident != IDBSPHEADER)
 		{
 			std::cerr << "Not a valid Source BSP file" << std::endl;
 			exit(9);
-		}*/
+		}
 
-		parseLump(0, m_pBspFileData.entities);
+		//parseLump(0, m_pBspFileData.entities);
 		parseLump(LUMP_VERTEXES, m_pBspFileData.vertices);
 		parseLump(LUMP_EDGES, m_pBspFileData.edges);
 		parseLump(LUMP_SURFEDGES, m_pBspFileData.surfEdges);
@@ -152,7 +158,7 @@ public:
 				&m_pBspFileData.stringData[m_pBspFileData.stringTable[m_pBspFileData.texData[m_pBspFileData.texInfo[face.texinfo].texdata].nameStringTableID]]);
 
 			try {
-				material = std::regex_replace(material, std::regex("\\maps/d1_trainstation_02/"), "");
+				material = std::regex_replace(material, std::regex("\\maps/background01/"), "");
 				material = std::regex_replace(material, std::regex("(_-?\\d+)+"), "");
 				auto pos0 = material.find_last_of('/');
 				pos0 = pos0 == std::string::npos ? 0 : pos0;

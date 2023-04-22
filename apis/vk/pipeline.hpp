@@ -125,16 +125,19 @@ namespace vk
 
         std::vector<vk::VulkanVertexInfo> vertexInfos;
 
-        VkPipelineDepthStencilStateCreateInfo depthStencil;
+        std::vector<VkPipelineDepthStencilStateCreateInfo> depthStencil;
+        depthStencil.resize(renderPassInfo.numLayouts);
         for (int layout_index = 0; layout_index < renderPassInfo.numLayouts; layout_index++)
         {
             auto &renderPipeline = renderPass.renderPipelines.at(layout_index);
             renderPipeline.numAttachments = renderPass.numAttachments;
             vk::createDescriptorSetLayout(vk_data, renderPipeline.descriptorSetLayouts.at(0), renderPassInfo.bindingInfo);
+
+            auto& pipelineLayout = renderPassInfo.pipelineLayout[layout_index];
             // renderPass.renderPipelines.at(layout_index).numAttachments = renderPass.renderPassChain.ImageViews.size();
-            auto &shaderInfo = renderPassInfo.pipelineLayout[layout_index].shaderInfo;
+            auto &shaderInfo = pipelineLayout.shaderInfo;
             shaderStages.emplace_back();
-            shaderStages.back().resize(renderPassInfo.pipelineLayout[layout_index].shaderInfo.stages.size());
+            shaderStages.back().resize(pipelineLayout.shaderInfo.stages.size());
 
             for (unsigned i = 0; i < shaderInfo.stages.size(); i++)
             {
@@ -148,14 +151,14 @@ namespace vk
             // auto shaderStages = createShaderStages<2>("../assets/shaders/vertex.spv", "../assets/shaders/fragment.spv", vertShaderModule, fragShaderModule, vk_data);
             //   Vertex Stage
 
-            if (renderPassInfo.pipelineLayout[layout_index].cullMode == engine::CullMode::BACK)
+            if (pipelineLayout.cullMode == engine::CullMode::BACK)
                 renderPipeline.cullMode = VK_CULL_MODE_BACK_BIT;
-            else if (renderPassInfo.pipelineLayout[layout_index].cullMode == engine::CullMode::FRONT)
+            else if (pipelineLayout.cullMode == engine::CullMode::FRONT)
                 renderPipeline.cullMode = VK_CULL_MODE_FRONT_BIT;
             else
                 renderPipeline.cullMode = VK_CULL_MODE_NONE;
 
-            if (renderPassInfo.pipelineLayout[layout_index].windingMode == engine::WindingMode::COUNTER_CLOCK_WISE)
+            if (pipelineLayout.windingMode == engine::WindingMode::COUNTER_CLOCK_WISE)
                 renderPipeline.winding = VK_FRONT_FACE_COUNTER_CLOCKWISE;
             else
                 renderPipeline.winding = VK_FRONT_FACE_CLOCKWISE;
@@ -163,7 +166,7 @@ namespace vk
             vk::VulkanVertexInfo &vertexInfo = vertexInfos.emplace_back();
 
             vertexInfo.attributeDescriptions =
-                getAttributeDescriptions(0, renderPassInfo.pipelineLayout[layout_index].vertexLayout);
+                getAttributeDescriptions(0, pipelineLayout.vertexLayout);
 
             vertexInfo.bindingDescription = getBindingDescription(renderPassInfo.size);
 
@@ -196,8 +199,8 @@ namespace vk
             dynamicState.dynamicStateCount = 3;
             dynamicState.pDynamicStates = dynamicStates;
 
-            auto &pipelineLayout = renderPipeline.pipelineLayout.emplace_back();
-            createPipelineLayout(vk_data, push_constant, pipelineLayout, renderPipeline.descriptorSetLayouts);
+            auto &pipelineLayoutVK = renderPipeline.pipelineLayout.emplace_back();
+            createPipelineLayout(vk_data, push_constant, pipelineLayoutVK, renderPipeline.descriptorSetLayouts);
 
             // Creating the graphics pipeline
             VkGraphicsPipelineCreateInfo &pipelineInfo = pipelinesInfo.emplace_back();
@@ -208,19 +211,19 @@ namespace vk
 
             if (renderPass.renderPassData.hasDepthAttachment)
             {
-                depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-                depthStencil.depthTestEnable = VK_TRUE;
-                depthStencil.depthWriteEnable = VK_TRUE;
-                depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
-                depthStencil.depthBoundsTestEnable = VK_FALSE;
-                depthStencil.minDepthBounds = 0.0f; // Optional
-                depthStencil.maxDepthBounds = 1.0f; // Optional
-                depthStencil.stencilTestEnable = VK_FALSE;
-                depthStencil.pNext = NULL;
-                depthStencil.flags = 0;
-                depthStencil.front = {}; // Optional
-                depthStencil.back = {};  // Optional
-                pipelineInfo.pDepthStencilState = &depthStencil;
+                depthStencil.at(layout_index).sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+                depthStencil.at(layout_index).depthTestEnable = pipelineLayout.depthTestEnable ? VK_TRUE : VK_FALSE;
+                depthStencil.at(layout_index).depthWriteEnable = pipelineLayout.depthWriteEnable ? VK_TRUE : VK_FALSE;
+                depthStencil.at(layout_index).depthCompareOp = VK_COMPARE_OP_LESS;
+                depthStencil.at(layout_index).depthBoundsTestEnable = VK_FALSE;
+                depthStencil.at(layout_index).minDepthBounds = 0.0f; // Optional
+                depthStencil.at(layout_index).maxDepthBounds = 1.0f; // Optional
+                depthStencil.at(layout_index).stencilTestEnable = VK_FALSE;
+                depthStencil.at(layout_index).pNext = NULL;
+                depthStencil.at(layout_index).flags = 0;
+                depthStencil.at(layout_index).front = {}; // Optional
+                depthStencil.at(layout_index).back = {};  // Optional
+                pipelineInfo.pDepthStencilState = &depthStencil[layout_index];
             }
 
             pipelineInfo.pVertexInputState = &vertexInputInfo;

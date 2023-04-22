@@ -67,11 +67,14 @@ namespace vk
             VkFormatProperties props;
             vkGetPhysicalDeviceFormatProperties(vk_data.physicalDevice, availableFormat.format, &props);
             VkFormatFeatureFlags features = VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
-            // if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
-            if ((props.optimalTilingFeatures & features) == features)
-            {
+            if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
                 return availableFormat;
             }
+            // if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
+            //if ((props.optimalTilingFeatures & features) == features)
+            //{
+            //    return availableFormat;
+            //}
         }
 
         return availableFormats[0];
@@ -198,6 +201,7 @@ namespace vk
             VulkanTexture texture;
             texture.format = vk_data.defaultRenderPass.renderPassChain.ImageFormats[0];
             texture.image = vk_data.defaultRenderPass.renderPassChain.Images[i];
+            
 
             createImageView(vk_data, texture, VK_IMAGE_ASPECT_COLOR_BIT);
 
