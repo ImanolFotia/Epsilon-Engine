@@ -26,11 +26,12 @@ namespace al {
 #endif
     }
 
-    [[nodiscard]] static unsigned int createSource(unsigned int buffer) {
+    [[nodiscard]] static ALuint createSource(ALuint buffer) {
 
 #if !defined(ANDROID) && !defined(__ANDROID__)
         ALuint source;
         alGenSources(1, &source);
+        alSourcei(source, AL_BUFFER, (ALint)buffer);
 
         alSourcei(source, AL_SOURCE_RELATIVE, AL_TRUE);
         alSourcef(source, AL_GAIN, 1);
@@ -41,23 +42,29 @@ namespace al {
         alSourcef(source, AL_CONE_OUTER_ANGLE, 360);
         alSource3f(source, AL_VELOCITY, 0.0, 0.0, 0.0);
 
-        alSourcei(source, AL_BUFFER, buffer);
 
         return source;
 #endif
     }
 
-    static void deleteSource(unsigned int source) {
+    static void deleteSource(ALuint source) {
 
 #if !defined(ANDROID) && !defined(__ANDROID__)
-        alDeleteSources(1, &source);
+        ALuint s = source;
+        alSourceStop(source);
+        if (alIsSource(source)) {
+            alSourcei(source, AL_BUFFER, NULL);
+            alDeleteSources(1, &s);
+        }
 #endif
     }
 
-    static void deleteBuffer(unsigned int buffer) {
+    static void deleteBuffer(ALuint buffer) {
 
 #if !defined(ANDROID) && !defined(__ANDROID__)
-        alDeleteBuffers(1, &buffer);
+        ALuint b = buffer;
+        if(alIsBuffer(buffer))
+        alDeleteBuffers(1, &b);
 #endif
     }
 

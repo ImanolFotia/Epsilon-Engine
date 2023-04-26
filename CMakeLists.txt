@@ -10,6 +10,7 @@ set(DBUILD_ANDROID 0)
 
 set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}")
 set(PROJECT_ICON "${CMAKE_SOURCE_DIR}/media/icon.rc")
+set(THIRDPARTY_DIR "${CMAKE_SOURCE_DIR}/thirdparty")
 include(InstallRequiredSystemLibraries)
 
 add_compile_definitions(USE_GLFW=${DUSE_GLFW})
@@ -39,176 +40,221 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
 endif()
 
 option(BUILD_AS_LIBRARY "Build as a library" ON)
+option(DOWNLOAD_LIBRARIES "Download thirdparty libraries" OFF)
 
-include(ExternalProject)
 include(FindPkgConfig)
 
-#Download and include glm
-ExternalProject_Add(glm
-        GIT_REPOSITORY https://github.com/g-truc/glm.git
-        INSTALL_COMMAND cmake -E echo "Skipping install step."
-        UPDATE_COMMAND ""
-        )
+if(DOWNLOAD_LIBRARIES)
+    include(ExternalProject)
 
-ExternalProject_Get_property(glm SOURCE_DIR)
-set(GLM_BUILD_DIR ${SOURCE_DIR})
-message(${GLM_BUILD_DIR})
+    #Download and include glm
+    ExternalProject_Add(glm
+            GIT_REPOSITORY https://github.com/g-truc/glm.git
+            INSTALL_COMMAND cmake -E echo "Skipping install step."
+            UPDATE_COMMAND ""
+            )
 
-include_directories(${GLM_BUILD_DIR})
+    ExternalProject_Get_property(glm SOURCE_DIR)
+    set(GLM_BUILD_DIR ${SOURCE_DIR})
+    message(${GLM_BUILD_DIR})
 
-
-#Download and include vma
-ExternalProject_Add(vma
-        GIT_REPOSITORY https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
-        INSTALL_COMMAND cmake -E echo "Skipping install step."
-        UPDATE_COMMAND ""
-        )
-
-ExternalProject_Get_property(vma SOURCE_DIR)
-set(VMA_BUILD_DIR ${SOURCE_DIR})
-message(${VMA_BUILD_DIR})
-
-include_directories(${VMA_BUILD_DIR}/include)
+    include_directories(${GLM_BUILD_DIR})
 
 
-#Download and include stb-image
-ExternalProject_Add(stb
-        GIT_REPOSITORY https://github.com/nothings/stb.git
-        INSTALL_COMMAND cmake -E echo "Skipping install step for stb-image."
-        BUILD_COMMAND ""
-        UPDATE_COMMAND ""
-        CONFIGURE_COMMAND ""
-        )
+    #Download and include vma
+    ExternalProject_Add(vma
+            GIT_REPOSITORY https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
+            INSTALL_COMMAND cmake -E echo "Skipping install step."
+            UPDATE_COMMAND ""
+            )
 
-ExternalProject_Get_property(stb SOURCE_DIR)
-set(STB_BUILD_DIR ${SOURCE_DIR})
-message(${STB_BUILD_DIR})
+    ExternalProject_Get_property(vma SOURCE_DIR)
+    set(VMA_BUILD_DIR ${SOURCE_DIR})
+    message(${VMA_BUILD_DIR})
 
-include_directories(${STB_BUILD_DIR})
+    include_directories(${VMA_BUILD_DIR}/include)
 
 
-#Download and include Beacon
-ExternalProject_Add(beacon
-        GIT_REPOSITORY https://github.com/ImanolFotia/beacon.git
-        INSTALL_COMMAND cmake -E echo "Skipping install step for beacon."
-        BUILD_COMMAND ""
-        UPDATE_COMMAND ""
-        CONFIGURE_COMMAND ""
-        )
+    #Download and include stb-image
+    ExternalProject_Add(stb
+            GIT_REPOSITORY https://github.com/nothings/stb.git
+            INSTALL_COMMAND cmake -E echo "Skipping install step for stb-image."
+            BUILD_COMMAND ""
+            UPDATE_COMMAND ""
+            CONFIGURE_COMMAND ""
+            )
 
-ExternalProject_Get_property(beacon SOURCE_DIR)
-set(BEACON_BUILD_DIR ${SOURCE_DIR})
-message(${BEACON_BUILD_DIR})
+    ExternalProject_Get_property(stb SOURCE_DIR)
+    set(STB_BUILD_DIR ${SOURCE_DIR})
+    message(${STB_BUILD_DIR})
 
-include_directories(${BEACON_BUILD_DIR})
-
-
-#Download and include nlohmann/json
-ExternalProject_Add(json
-        GIT_REPOSITORY https://www.github.com/nlohmann/json.git
-        INSTALL_COMMAND cmake -E echo "Skipping install step for json."
-        BUILD_COMMAND ""
-        UPDATE_COMMAND ""
-        CONFIGURE_COMMAND ""
-        )
-
-ExternalProject_Get_property(json SOURCE_DIR)
-set(JSON_BUILD_DIR ${SOURCE_DIR})
-message(${JSON_BUILD_DIR})
-
-include_directories(${JSON_BUILD_DIR}/include/nlohmann)
+    include_directories(${STB_BUILD_DIR})
 
 
-##
-#Download and include Assimp
-set(ASSIMP_WARNINGS_AS_ERRORS 0)
-ExternalProject_Add(assimp_d
-        GIT_REPOSITORY https://github.com/assimp/assimp.git
-        INSTALL_COMMAND cmake -E echo "Skipping install step."
-        UPDATE_COMMAND ""
-        )
+    #Download and include Beacon
+    ExternalProject_Add(beacon
+            GIT_REPOSITORY https://github.com/ImanolFotia/beacon.git
+            INSTALL_COMMAND cmake -E echo "Skipping install step for beacon."
+            BUILD_COMMAND ""
+            UPDATE_COMMAND ""
+            CONFIGURE_COMMAND ""
+            )
 
-ExternalProject_Get_property(assimp_d SOURCE_DIR)
-ExternalProject_Get_property(assimp_d BINARY_DIR)
-set(ASSIMP_BUILD_DIR ${BINARY_DIR})
-message(${SOURCE_DIR})
-message(${ASSIMP_BUILD_DIR})
+    ExternalProject_Get_property(beacon SOURCE_DIR)
+    set(BEACON_BUILD_DIR ${SOURCE_DIR})
+    message(${BEACON_BUILD_DIR})
 
-include_directories(${SOURCE_DIR}/include)
-link_directories(${ASSIMP_BUILD_DIR}/bin)
-
-FILE(GLOB files "${ASSIMP_BUILD_DIR}/bin/*.so.*" "${ASSIMP_BUILD_DIR}/bin/*.so")
-
-install(FILES ${files}
-
-  DESTINATION lib
-  )
+    include_directories(${BEACON_BUILD_DIR})
 
 
-#install( assimp_d LIBRARY DESTINATION lib)
+    #Download and include nlohmann/json
+    ExternalProject_Add(json
+            GIT_REPOSITORY https://www.github.com/nlohmann/json.git
+            INSTALL_COMMAND cmake -E echo "Skipping install step for json."
+            BUILD_COMMAND ""
+            UPDATE_COMMAND ""
+            CONFIGURE_COMMAND ""
+            )
 
-##
+    ExternalProject_Get_property(json SOURCE_DIR)
+    set(JSON_BUILD_DIR ${SOURCE_DIR})
+    message(${JSON_BUILD_DIR})
 
-# download and include glfw3
-ExternalProject_Add(glfw3_d
-        GIT_REPOSITORY https://github.com/glfw/glfw.git
-        INSTALL_COMMAND cmake -E echo "Skipping install step."
-        UPDATE_COMMAND ""
-        )
+    include_directories(${JSON_BUILD_DIR}/include/nlohmann)
 
-ExternalProject_Get_property(glfw3_d SOURCE_DIR)
-ExternalProject_Get_property(glfw3_d BINARY_DIR)
-set(GLFW3_BUILD_DIR ${BINARY_DIR})
-message(${SOURCE_DIR})
-message(${GLFW3_BUILD_DIR})
 
-include_directories(${SOURCE_DIR}/include)
-link_directories(${GLFW3_BUILD_DIR}/src)
+    ##
+    #Download and include Assimp
+    set(ASSIMP_WARNINGS_AS_ERRORS 0)
+    ExternalProject_Add(assimp_d
+            GIT_REPOSITORY https://github.com/assimp/assimp.git
+            INSTALL_COMMAND cmake -E echo "Skipping install step."
+            UPDATE_COMMAND ""
+            )
 
-set(CMAKE_OPENAL_ARGS "")
-if(WIN32)
-        set(CMAKE_OPENAL_ARGS "")
+    ExternalProject_Get_property(assimp_d SOURCE_DIR)
+    ExternalProject_Get_property(assimp_d BINARY_DIR)
+    set(ASSIMP_BUILD_DIR ${BINARY_DIR})
+    message(${SOURCE_DIR})
+    message(${ASSIMP_BUILD_DIR})
+
+    include_directories(${SOURCE_DIR}/include)
+    link_directories(${ASSIMP_BUILD_DIR}/bin)
+    FILE(GLOB files "${ASSIMP_BUILD_DIR}/bin/*.so.*" "${ASSIMP_BUILD_DIR}/bin/*.so")
+
+    install(FILES ${files}
+
+      DESTINATION lib
+      )
+
+
+    #install( assimp_d LIBRARY DESTINATION lib)
+
+    ##
+
+    # download and include glfw3
+    ExternalProject_Add(glfw3_d
+            GIT_REPOSITORY https://github.com/glfw/glfw.git
+            INSTALL_COMMAND cmake -E echo "Skipping install step."
+            UPDATE_COMMAND ""
+            )
+
+    ExternalProject_Get_property(glfw3_d SOURCE_DIR)
+    ExternalProject_Get_property(glfw3_d BINARY_DIR)
+    set(GLFW3_BUILD_DIR ${BINARY_DIR})
+    message(${SOURCE_DIR})
+    message(${GLFW3_BUILD_DIR})
+
+    include_directories(${SOURCE_DIR}/include)
+    link_directories(${GLFW3_BUILD_DIR}/src)
+
+    set(CMAKE_OPENAL_ARGS "")
+    if(WIN32)
+            set(CMAKE_OPENAL_ARGS "")
+    else()
+            set(CMAKE_OPENAL_ARGS "-DALSOFT_REQUIRE_PULSEAUDIO=ON -DALSOFT_REQUIRE_PIPEWIRE=ON")
+    endif()
+
+    # download and include openal
+    #requires installation of pulse audio and pipewire developer libs in the OS
+    ExternalProject_Add(openal_d
+            GIT_REPOSITORY https://github.com/kcat/openal-soft.git
+            CMAKE_ARGS ${CMAKE_OPENAL_ARGS}
+            INSTALL_COMMAND cmake -E echo "Skipping install step."
+            UPDATE_COMMAND ""
+            )
+
+    ExternalProject_Get_property(openal_d SOURCE_DIR)
+    ExternalProject_Get_property(openal_d BINARY_DIR)
+    set(OPENAL_BUILD_DIR ${BINARY_DIR})
+    message(${SOURCE_DIR})
+    message(${OPENAL_BUILD_DIR})
+
+    include_directories(${SOURCE_DIR}/include)
+    link_directories(${OPENAL_BUILD_DIR})
+
+
+    # download and include imgui
+    #requires installation of pulse audio and pipewire developer libs in the OS
+    ExternalProject_Add(imgui_d
+            GIT_REPOSITORY https://github.com/ocornut/imgui.git
+            INSTALL_COMMAND cmake -E echo "Skipping install step for beacon."
+            BUILD_COMMAND ""
+            UPDATE_COMMAND ""
+            CONFIGURE_COMMAND ""
+            )
+
+    ExternalProject_Get_property(imgui_d SOURCE_DIR)
+    ExternalProject_Get_property(imgui_d BINARY_DIR)
+    set(IMGUI_BUILD_DIR ${SOURCE_DIR})
+    message(${IMGUI_BUILD_DIR})
+
+    include_directories(${SOURCE_DIR})
+    link_directories(${IMGUI_BUILD_DIR})
 else()
-        set(CMAKE_OPENAL_ARGS "-DALSOFT_REQUIRE_PULSEAUDIO=ON -DALSOFT_REQUIRE_PIPEWIRE=ON")
+
+    set(GLM_BUILD_DIR ${THIRDPARTY_DIR}/glm)
+    message(${GLM_BUILD_DIR})
+    include_directories(${GLM_BUILD_DIR})
+
+    set(VMA_BUILD_DIR ${THIRDPARTY_DIR}/vma)
+    message(${VMA_BUILD_DIR})
+    include_directories(${VMA_BUILD_DIR}/include)
+    link_directories(${VMA_BUILD_DIR}/src)
+
+    set(STB_BUILD_DIR ${THIRDPARTY_DIR}/stb)
+    message(${STB_BUILD_DIR})
+    include_directories(${STB_BUILD_DIR})
+
+    set(BEACON_BUILD_DIR ${THIRDPARTY_DIR}/beacon)
+    message(${BEACON_BUILD_DIR})
+    include_directories(${BEACON_BUILD_DIR})
+
+    set(JSON_BUILD_DIR ${THIRDPARTY_DIR})
+    message(${JSON_BUILD_DIR})
+    include_directories(${JSON_BUILD_DIR}/include/nlohmann)
+
+    set(ASSIMP_BUILD_DIR ${THIRDPARTY_DIR}/assimp)
+    include_directories(${ASSIMP_BUILD_DIR}/include)
+    link_directories(${ASSIMP_BUILD_DIR}/bin)
+
+    set(GLFW3_BUILD_DIR ${THIRDPARTY_DIR}/glfw3)
+    message(${GLFW3_BUILD_DIR})
+    include_directories(${GLFW3_BUILD_DIR}/include)
+    link_directories(${GLFW3_BUILD_DIR}/src)
+
+    set(OPENAL_BUILD_DIR ${THIRDPARTY_DIR}/openal)
+    message(${OPENAL_BUILD_DIR})
+    include_directories(${OPENAL_BUILD_DIR}/include)
+    link_directories(${OPENAL_BUILD_DIR})
+
+
+    set(IMGUI_BUILD_DIR ${THIRDPARTY_DIR}/imgui)
+    message(${IMGUI_BUILD_DIR})
+    include_directories(${IMGUI_BUILD_DIR})
+    link_directories(${IMGUI_BUILD_DIR})
+
 endif()
-
-# download and include openal
-#requires installation of pulse audio and pipewire developer libs in the OS
-ExternalProject_Add(openal_d
-        GIT_REPOSITORY https://github.com/kcat/openal-soft.git
-        CMAKE_ARGS ${CMAKE_OPENAL_ARGS}
-        INSTALL_COMMAND cmake -E echo "Skipping install step."
-        UPDATE_COMMAND ""
-        )
-
-ExternalProject_Get_property(openal_d SOURCE_DIR)
-ExternalProject_Get_property(openal_d BINARY_DIR)
-set(OPENAL_BUILD_DIR ${BINARY_DIR})
-message(${SOURCE_DIR})
-message(${OPENAL_BUILD_DIR})
-
-include_directories(${SOURCE_DIR}/include)
-link_directories(${OPENAL_BUILD_DIR})
-
-
-# download and include imgui
-#requires installation of pulse audio and pipewire developer libs in the OS
-ExternalProject_Add(imgui_d
-        GIT_REPOSITORY https://github.com/ocornut/imgui.git
-        INSTALL_COMMAND cmake -E echo "Skipping install step for beacon."
-        BUILD_COMMAND ""
-        UPDATE_COMMAND ""
-        CONFIGURE_COMMAND ""
-        )
-
-ExternalProject_Get_property(imgui_d SOURCE_DIR)
-ExternalProject_Get_property(imgui_d BINARY_DIR)
-set(IMGUI_BUILD_DIR ${SOURCE_DIR})
-message(${IMGUI_BUILD_DIR})
-
-include_directories(${SOURCE_DIR})
-link_directories(${IMGUI_BUILD_DIR})
-
 SET(HEADERS
         ${HEADERS}
         ${CMAKE_SOURCE_DIR}
@@ -275,7 +321,7 @@ if (BUILD_AS_LIBRARY)
     endif ()
 
     if (MSVC)
-        target_compile_options(${PROJECT_NAME} PRIVATE /W0)
+        target_compile_options(${PROJECT_NAME} PRIVATE /W3)
     else ()
     if(WIN32)
         #target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
@@ -321,20 +367,22 @@ else()
 target_link_libraries(${PROJECT_NAME} PRIVATE openal)
 endif()
 
-add_dependencies(${PROJECT_NAME} vma)
-add_dependencies(${PROJECT_NAME} glfw3_d)
+if(DOWNLOAD_LIBRARIES)
+    add_dependencies(${PROJECT_NAME} vma)
+    add_dependencies(${PROJECT_NAME} glfw3_d)
 
-add_dependencies(${PROJECT_NAME} openal_d)
-if(DBUILD_ANDROID EQUAL 0)
-add_dependencies(${PROJECT_NAME} openal_d)
-add_dependencies(${PROJECT_NAME} assimp_d)
-else()
+    add_dependencies(${PROJECT_NAME} openal_d)
+    if(DBUILD_ANDROID EQUAL 0)
+    add_dependencies(${PROJECT_NAME} openal_d)
+    add_dependencies(${PROJECT_NAME} assimp_d)
+    else()
 
+    endif()
+    add_dependencies(${PROJECT_NAME} glm)
+    add_dependencies(${PROJECT_NAME} beacon)
+    add_dependencies(${PROJECT_NAME} stb)
+    add_dependencies(${PROJECT_NAME} imgui_d)
 endif()
-add_dependencies(${PROJECT_NAME} glm)
-add_dependencies(${PROJECT_NAME} beacon)
-add_dependencies(${PROJECT_NAME} stb)
-add_dependencies(${PROJECT_NAME} imgui_d)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_DL_LIBS})
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)

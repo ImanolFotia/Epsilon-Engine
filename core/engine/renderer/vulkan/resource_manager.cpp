@@ -97,7 +97,6 @@ namespace engine
 		transitionImageLayout(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), texture.image,
 							  format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 							  VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, texture.info);
-		std::cout << "llega" << std::endl;
 
 		vmaDestroyBuffer(m_pAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
 		// vmaFreeMemory(m_pAllocator, m_pStagingTextureBuffer.allocation);

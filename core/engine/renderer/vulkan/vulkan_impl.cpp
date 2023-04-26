@@ -153,7 +153,7 @@ namespace engine
         vmaCreateImage(m_pAllocator, &texture.imageInfo, &allocInfo, &texture.image, &texture.allocation, nullptr);
         ResourcesMemory.m_pTextureBufferAllocationSize += texInfo.width * texInfo.height * num_channels * size;
 
-        std::cout << texInfo.width * texInfo.height * num_channels * size << std::endl;
+        //std::cout << texInfo.width * texInfo.height * num_channels * size << std::endl;
         return texture;
     }
 

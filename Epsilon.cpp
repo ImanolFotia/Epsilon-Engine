@@ -30,7 +30,7 @@ namespace Epsilon
         if (self.onReady)
             self.onReady();
         self.mainLoop();
-        self.exit();
+        exit();
     }
 
     void Epsilon::ShouldClose()
@@ -93,6 +93,7 @@ namespace Epsilon
             self.m_pFrame++;
         }
     }
+
 
     void Epsilon::showFPS()
     {

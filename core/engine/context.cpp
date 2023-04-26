@@ -10,7 +10,7 @@ namespace engine
     {
         self.m_pRendererType = rtype;
 #if !defined(ANDROID) && !defined(__ANDROID__)
-        bool res = al::initDevice(&alData);
+        bool res = al::initDevice(&self.alData);
 
         if (!res)
             std::cout << "Couldn't start audio device" << std::endl;
@@ -35,7 +35,7 @@ namespace engine
 
     Context::~Context()
     {
-        al::destroyDevice(&alData);
+        al::destroyDevice(&self.alData);
     }
 
     const std::string &Context::ApplicationName() { return self.m_pApplicationName; }

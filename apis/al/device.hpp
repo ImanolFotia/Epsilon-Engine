@@ -154,10 +154,17 @@ struct OpenALData;
     }
 
     static void destroyDevice(OpenALData* al_data) {
-        //destroying context
-        alcDestroyContext(al_data->context);
 
-        //closing device
-        alcCloseDevice(al_data->device);
+        ALCdevice* device;
+        ALCcontext* ctx;
+        ctx = alcGetCurrentContext();
+        if (ctx == NULL)
+            return;
+
+        device = alcGetContextsDevice(ctx);
+
+        alcMakeContextCurrent(NULL);
+        alcDestroyContext(ctx);
+        alcCloseDevice(device);
     }
 }

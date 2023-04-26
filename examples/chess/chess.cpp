@@ -646,6 +646,7 @@ namespace ChessApp
 	void ChessApp::setupRenderPass()
 	{
 		using namespace engine;
+		using namespace common;
 		// Load the shader that draws the board
 		auto boardVertexCode = utils::readFile("./assets/shaders/chess/board-vertex.spv");
 		auto boardFragmentCode = utils::readFile("./assets/shaders/chess/board-fragment.spv");

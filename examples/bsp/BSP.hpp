@@ -729,28 +729,6 @@ namespace BSP
 				vertices[indices[i + 2]].bitangent = glm::normalize(bitangent1);
 			}
 
-			/*float f = (deltaUV2.x * deltaUV1.x - deltaUV2.y * deltaUV1.y) == 0.0f ? -1.0f : 1.0f;
-
-			tangent1.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
-			tangent1.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
-			tangent1.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
-
-			bitangent1.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
-			bitangent1.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
-			bitangent1.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);*/
-			// tangent1 = glm::normalize(tangent1);
-			/*for (int i = 0; i < indices.size(); i += 3)
-			{
-				vertices[indices[i]].tangent = glm::normalize(tangent1);
-				vertices[indices[i + 1]].tangent = glm::normalize(tangent1);
-				vertices[indices[i + 2]].tangent = glm::normalize(tangent1);
-
-				// bitangent1 = glm::normalize(bitangent1);
-
-				vertices[indices[i]].bitangent = glm::normalize(bitangent1);
-				vertices[indices[i + 1]].bitangent = glm::normalize(bitangent1);
-				vertices[indices[i + 2]].bitangent = glm::normalize(bitangent1);
-			}*/
 		}
 		auto generateTangentSpaceVectors(std::vector<common::Vertex>& vertices, const std::vector<uint32_t>& indices) -> void
 		{
@@ -776,17 +754,6 @@ namespace BSP
 
 			tangent1 = glm::cross(vertices[indices[0]].normal, edge1);
 			bitangent1 = glm::cross(vertices[indices[0]].normal, tangent1);
-
-			/*float f = (deltaUV2.x * deltaUV1.x - deltaUV2.y * deltaUV1.y) == 0.0f ? -1.0f : 1.0f;
-
-			tangent1.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
-			tangent1.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
-			tangent1.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
-
-			bitangent1.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
-			bitangent1.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
-			bitangent1.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);*/
-			// tangent1 = glm::normalize(tangent1);
 			for (int i = 0; i < indices.size(); i += 3)
 			{
 				vertices[indices[i]].tangent = glm::normalize(tangent1);
