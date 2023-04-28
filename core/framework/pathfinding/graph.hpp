@@ -194,10 +194,12 @@ namespace framework {
 			return m_pNodes.size();
 		}
 
-		Nodes::iterator at(size_t index) {
-			auto it = m_pNodes.begin();
-			std::advance(it, index);
-			return  it;
+		Node<Key, DataType>& at(Key key) {
+			return m_pNodes.at(key);
+		}
+
+		bool contains(Key key) {
+			return m_pNodes.contains(key);
 		}
 	};
 

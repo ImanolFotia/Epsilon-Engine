@@ -107,13 +107,13 @@ namespace engine
 
 	private:
 		void pInit() {
-			m_pMesh.Vertices.emplace_back(vtx(v3(-1.0f, -1.0f, 1.0f), v2(-1.0f, 1.0f), v3(0.0f, 0.0f, 1.0f), v4(0.0f, 1.0f, 0.0f, 1.0f), v3(0.0f), v3(0.0f))); // bottom-left
-			m_pMesh.Vertices.emplace_back(vtx(v3(1.0f, -1.0f, 1.0f), v2(0.0f, 1.0f), v3(0.0f, 0.0f, 1.0f), v4(0.0f, 1.0f, 0.0f, 1.0f), v3(0.0f), v3(0.0f)));  // bottom-right
-			m_pMesh.Vertices.emplace_back(vtx(v3(1.0f, 1.0f, 1.0f), v2(0.0f, 0.0f), v3(0.0f, 0.0f, 1.0f), v4(0.0f, 1.0f, 0.0f, 1.0f), v3(0.0f), v3(0.0f)));   // top-right
+			m_pMesh.Vertices.emplace_back(vtx(v3(-1.0f, -1.0f, 1.0f), v2(-1.0f, 1.0f), v3(0.0f, 0.0f, 1.0f), v4(0.0f, 0.0f, 0.0f, 1.0f), v3(0.0f), v3(0.0f))); // bottom-left
+			m_pMesh.Vertices.emplace_back(vtx(v3(1.0f, -1.0f, 1.0f), v2(0.0f, 1.0f), v3(0.0f, 0.0f, 1.0f), v4(0.0f, 0.0f, 0.0f, 1.0f), v3(0.0f), v3(0.0f)));  // bottom-right
+			m_pMesh.Vertices.emplace_back(vtx(v3(1.0f, 1.0f, 1.0f), v2(0.0f, 0.0f), v3(0.0f, 0.0f, 1.0f), v4(0.0f, 0.0f, 0.0f, 1.0f), v3(0.0f), v3(0.0f)));   // top-right
 
-			m_pMesh.Vertices.emplace_back(vtx(v3(1.0f, 1.0f, 1.0f), v2(0.0f, 0.0f), v3(0.0f, 0.0f, 1.0f), v4(0.0f, 1.0f, 0.0f, 1.0f), v3(0.0f), v3(0.0f)));   // top-right
-			m_pMesh.Vertices.emplace_back(vtx(v3(-1.0f, 1.0f, 1.0f), v2(-1.0f, 0.0f), v3(0.0f, 0.0f, 1.0f), v4(0.0f, 1.0f, 0.0f, 1.0f), v3(0.0f), v3(0.0f)));  // top-left
-			m_pMesh.Vertices.emplace_back(vtx(v3(-1.0f, -1.0f, 1.0f), v2(-1.0f, 1.0f), v3(0.0f, 0.0f, 1.0f), v4(0.0f, 1.0f, 0.0f, 1.0f), v3(0.0f), v3(0.0f))); // bottom-left
+			m_pMesh.Vertices.emplace_back(vtx(v3(1.0f, 1.0f, 1.0f), v2(0.0f, 0.0f), v3(0.0f, 0.0f, 1.0f), v4(0.0f, 0.0f, 0.0f, 1.0f), v3(0.0f), v3(0.0f)));   // top-right
+			m_pMesh.Vertices.emplace_back(vtx(v3(-1.0f, 1.0f, 1.0f), v2(-1.0f, 0.0f), v3(0.0f, 0.0f, 1.0f), v4(0.0f, 0.0f, 0.0f, 1.0f), v3(0.0f), v3(0.0f)));  // top-left
+			m_pMesh.Vertices.emplace_back(vtx(v3(-1.0f, -1.0f, 1.0f), v2(-1.0f, 1.0f), v3(0.0f, 0.0f, 1.0f), v4(0.0f, 0.0f, 0.0f, 1.0f), v3(0.0f), v3(0.0f))); // bottom-left
 
 			for (int i = 0; i < m_pMesh.Vertices.size(); i += 3)
 			{

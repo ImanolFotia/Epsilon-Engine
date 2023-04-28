@@ -23,6 +23,27 @@ namespace framework {
 		};
 		*/
 
+		template<typename Key>
+		static std::unordered_map<int, Key> reconstruct_path(
+			Key start, Key goal,
+			std::unordered_map<Key, Key> came_from
+		) {
+			std::unordered_map<int, Key> path;
+			Key current = goal;
+			if (came_from.find(goal) == came_from.end()) {
+				return path; // no path can be found
+			}
+			int counter = 0;
+			while (current != start) {
+				path[counter] = current;
+				current = came_from[current];
+				counter++;
+			}
+			path[counter] = start; // optional
+			//std::reverse(path.begin(), path.end());
+			return path;
+		}
+
 		class CompareDist
 		{
 		public:
@@ -36,7 +57,7 @@ namespace framework {
 			return glm::distance(a, b);
 		}
 
-		static std::unordered_map<Key, Key> traverse(NodeGraph<Key, DataType> graf, Key start, Key end) {
+		static std::unordered_map<int, Key> traverse(NodeGraph<Key, DataType> graph, Key start, Key end) {
 			std::unordered_map<Key, Key> path;
 			using QElement = std::pair<float, Key>;
 
@@ -58,13 +79,13 @@ namespace framework {
 				Key currentKey = frontier.top().second;
 				frontier.pop();
 
-				auto& neighbors = graf.getNeightbors(currentKey);
+				auto& neighbors = graph.getNeightbors(currentKey);
 
 				for (auto& neighbor : neighbors) {
 					//float currentWeigth = Heuristic(neighbor, end);
 					//frontier.emplace(currentWeigth, neighbor);
 
-					float new_cost = cost_so_far[currentKey];
+					float new_cost = cost_so_far[currentKey] + graph.at(currentKey).data()->weight;
 					if (!cost_so_far.contains(neighbor) || new_cost < cost_so_far[neighbor]) {
 						cost_so_far[neighbor] = new_cost;
 						float priority = new_cost + Heuristic(neighbor, end);
@@ -80,7 +101,9 @@ namespace framework {
 				if (currentKey == end) goalReached = true;
 			}
 
-			return path;
+			auto finalPath = reconstruct_path(start, end, path);
+
+			return finalPath;
 		}
 	};
 
