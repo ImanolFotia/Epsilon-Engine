@@ -12,17 +12,7 @@ namespace framework {
 
 	template<typename Key, typename DataType>
 	class AStar {
-		/*
-		struct TmpKey {
-			Key key;
-
-			friend bool operator< (TmpKey const& x, TmpKey const& y) { 
-				return glm::distance()
-				return x.id < y.id; 
-			}
-		};
-		*/
-
+		
 		template<typename Key>
 		static std::unordered_map<int, Key> reconstruct_path(
 			Key start, Key goal,

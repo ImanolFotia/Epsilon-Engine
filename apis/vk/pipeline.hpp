@@ -55,7 +55,9 @@ namespace vk
 
         VkPipelineShaderStageCreateInfo shaderStageInfo{};
 
-        shaderStageInfo.pName = info.entryPoint;
+        std::string entry_point = info.entryPoint;
+
+        shaderStageInfo.pName = entry_point.c_str();
         shaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 
         if (info.stage == engine::ShaderModuleStage::FRAGMENT)
@@ -143,7 +145,7 @@ namespace vk
             {
                 std::cout << shaderInfo.stages[i].shaderCode.data() << std::endl;
                 shaderStages[layout_index][i] = createShaderStage(vk_data, shaderInfo.stages[i]);
-
+                shaderStages[layout_index][i].pName = shaderInfo.stages[i].entryPoint.c_str();
                 destroyShaderStages.emplace_back([stage = shaderStages[layout_index][i]](VulkanData &vk_data)
                                                  { vkDestroyShaderModule(vk_data.logicalDevice, stage.module, nullptr); });
             }
@@ -166,9 +168,9 @@ namespace vk
             vk::VulkanVertexInfo &vertexInfo = vertexInfos.emplace_back();
 
             vertexInfo.attributeDescriptions =
-                getAttributeDescriptions(0, pipelineLayout.vertexLayout);
+                getAttributeDescriptions(0, pipelineLayout.vertexLayout.descriptors);
 
-            vertexInfo.bindingDescription = getBindingDescription(renderPassInfo.size);
+            vertexInfo.bindingDescription = getBindingDescription(pipelineLayout.vertexLayout.size);
 
             VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
             vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;

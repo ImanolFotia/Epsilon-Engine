@@ -556,27 +556,32 @@ namespace BSP
 					{.entryPoint = "main", .shaderCode = skyFragmentCode, .stage = FRAGMENT}},
 				.usedStages = ShaderModuleStage(VERTEX | FRAGMENT) };
 
-			std::vector<VertexDescriptorInfo> vertexInfo = { {XYZ_FLOAT, offsetof(common::Vertex, position)},
-															{XY_FLOAT, offsetof(common::Vertex, texCoords)},
-															{XYZ_FLOAT, offsetof(common::Vertex, normal)},
-															{XYZW_FLOAT, offsetof(common::Vertex, color)},
-															{XYZ_FLOAT, offsetof(common::Vertex, tangent)},
-															{XYZ_FLOAT, offsetof(common::Vertex, bitangent)} };
+			VertexLayout vertexLayout = {
+				.descriptors = {
+					{XYZ_FLOAT, offsetof(common::Vertex, position)},
+					{XY_FLOAT, offsetof(common::Vertex, texCoords)},
+					{XYZ_FLOAT, offsetof(common::Vertex, normal)},
+					{XYZW_FLOAT, offsetof(common::Vertex, color)},
+					{XYZ_FLOAT, offsetof(common::Vertex, tangent)},
+					{XYZ_FLOAT, offsetof(common::Vertex, bitangent)}
+				},
+				.size = sizeof(common::Vertex)
+			};
 			PipelineLayout mainLayout = {
 				.shaderInfo = mainShaderInfo,
-				.vertexLayout = vertexInfo,
+				.vertexLayout = vertexLayout,
 				.cullMode = CullMode::BACK,
 				.windingMode = WindingMode::CLOCKWISE };
 
 			PipelineLayout shadowLayout = {
 				.shaderInfo = shadowShaderInfo,
-				.vertexLayout = vertexInfo,
+				.vertexLayout = vertexLayout,
 				.cullMode = CullMode::FRONT,
 				.windingMode = WindingMode::CLOCKWISE };
 
 			PipelineLayout skyLayout = {
 				.shaderInfo = skyShaderInfo,
-				.vertexLayout = vertexInfo,
+				.vertexLayout = vertexLayout,
 				.cullMode = CullMode::BACK,
 				.windingMode = WindingMode::CLOCKWISE };
 
@@ -584,7 +589,6 @@ namespace BSP
 			RenderPassInfo renderPassInfo =
 				RenderPassFactory()
 				.name("Default")
-				.vertexInfo<common::Vertex>()
 				.depthAttachment(true)
 				.subpasses({})
 				.dimensions({ .width = 1280, .height = 720 })
@@ -610,7 +614,6 @@ namespace BSP
 			RenderPassInfo shadowRenderPassInfo =
 				RenderPassFactory()
 				.name("Shadow")
-				.vertexInfo<common::Vertex>()
 				.depthAttachment(true)
 				.subpasses({})
 				.dimensions({ .width = 3000, .height = 3000 })

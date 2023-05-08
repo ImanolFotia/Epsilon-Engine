@@ -37,7 +37,7 @@ namespace engine
 
     struct ShaderStageInfo
     {
-        const char *entryPoint;
+        std::string entryPoint;
         std::vector<char> shaderCode;
         ShaderModuleStage stage;
     };
@@ -182,7 +182,7 @@ namespace engine
     {
         BACK = 0,
         FRONT,
-        NONEShaderStageInfo
+        NONE
     };
 
     enum BindingIndex
@@ -272,6 +272,11 @@ namespace engine
     struct VertexDescriptorInfo
     {
         VertexFormat format;
+        size_t offset;
+    };
+
+    struct VertexLayout {
+        std::vector<VertexDescriptorInfo> descriptors;
         size_t size;
     };
 
@@ -296,6 +301,14 @@ namespace engine
     {
         size_t size;
         void *data;
+    };
+
+    template<typename T>
+    struct PushConstantData2
+    {
+        using type = T;
+        size_t size;
+        T data;
     };
 
     struct BufferInfo
@@ -389,7 +402,7 @@ namespace engine
     struct PipelineLayout
     {
         ShaderInfo shaderInfo;
-        std::vector<VertexDescriptorInfo> vertexLayout;
+        VertexLayout vertexLayout;
         CullMode cullMode;
         WindingMode windingMode;
         bool depthWriteEnable = true;
@@ -409,7 +422,7 @@ namespace engine
         uint32_t numAttributes = 0;
         uint32_t numLayouts = 0;
         uint32_t numAttachments = 0;
-        size_t size;
+        //size_t size;
         bool depthAttachment;
         std::vector<SubPassInfo> subpasses;
         std::vector<RenderPassAttachment> attachments;
@@ -423,11 +436,11 @@ namespace engine
     struct RenderPassFactory
     {
 
-        template<typename VertexLayout>
+        /*template<typename VertexLayout>
         RenderPassFactory vertexInfo() {
             info.size = sizeof(VertexLayout);
             return *this;
-        }
+        }*/
         RenderPassFactory depthAttachment(bool d)
         {
             info.depthAttachment = d;
@@ -450,6 +463,12 @@ namespace engine
             info.bindingInfo = bi;
             return *this;
         }
+
+        RenderPassFactory inputs(std::vector<UniformBindingInfo> bi)
+        {
+            info.bindingInfo = bi;
+            return *this;
+        }
         RenderPassFactory outputs(std::vector<RenderPassAttachment> a)
         {
             info.attachments = a;
@@ -460,7 +479,7 @@ namespace engine
         RenderPassFactory pipelineLayout(PipelineLayout pl)
         {
             //assert(info.numDescriptors == pl.vertexLayout.size(), "All vertex layouts must have the same number of component in every pipeline layout");
-            info.numDescriptors = pl.vertexLayout.size();
+            info.numDescriptors = pl.vertexLayout.descriptors.size();
             info.pipelineLayout.emplace_back(pl);
             info.numLayouts++;
             return *this;

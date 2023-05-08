@@ -230,9 +230,9 @@ else()
     message(${BEACON_BUILD_DIR})
     include_directories(${BEACON_BUILD_DIR})
 
-    set(JSON_BUILD_DIR ${THIRDPARTY_DIR})
+    set(JSON_BUILD_DIR ${THIRDPARTY_DIR}/json)
     message(${JSON_BUILD_DIR})
-    include_directories(${JSON_BUILD_DIR}/include/nlohmann)
+    include_directories(${JSON_BUILD_DIR}/include)
 
     set(ASSIMP_BUILD_DIR ${THIRDPARTY_DIR}/assimp)
     include_directories(${ASSIMP_BUILD_DIR}/include)

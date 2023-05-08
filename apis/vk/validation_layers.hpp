@@ -16,7 +16,7 @@ namespace vk
         //"VK_LAYER_LUNARG_core_validation"
     };
 
-#if 1
+#if 0
     const bool enableValidationLayers = false;
 #else
     constexpr bool enableValidationLayers = true;

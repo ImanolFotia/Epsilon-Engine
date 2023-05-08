@@ -137,8 +137,11 @@ public:
             ImGui_ImplVulkan_DestroyFontUploadObjects();
         }
     }
-    void Begin()
+    void ImGuiBegin()
     {
+        ImGui_ImplVulkan_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+
     }
     void Render(ImDrawData *draw_data)
     {
@@ -173,19 +176,35 @@ public:
         stop cmd recording
         */
     }
-    void End() {}
+    void ImGuiEnd() {
+
+        ImGui_ImplVulkanH_Window* wd = &m_pMainWindowData;
+
+        // Rendering
+        ImGui::Render();
+        ImDrawData* draw_data = ImGui::GetDrawData();
+        const bool is_minimized = (draw_data->DisplaySize.x <= 0.0f || draw_data->DisplaySize.y <= 0.0f);
+        ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+        if (!is_minimized)
+        {
+            wd->ClearValue.color.float32[0] = clear_color.x * clear_color.w;
+            wd->ClearValue.color.float32[1] = clear_color.y * clear_color.w;
+            wd->ClearValue.color.float32[2] = clear_color.z * clear_color.w;
+            wd->ClearValue.color.float32[3] = clear_color.w;
+            Render(draw_data);
+            // FramePresent(wd);
+        }
+    }
     void Destroy() {}
 
     void DrawUI(glm::vec3 &data, engine::ResourcesMemory_t resources)
     {
-        ImGui_ImplVulkan_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui_ImplVulkanH_Window *wd = &m_pMainWindowData;
+        ImGuiBegin();
 
+        ImGui_ImplVulkanH_Window* wd = &m_pMainWindowData;
         // Our state
         static bool show_demo_window = true;
         static bool show_another_window = false;
-        ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
         ImGui::NewFrame();
 
         ImGui::SetNextWindowSize(ImVec2(wd->Width, wd->Height));
@@ -207,7 +226,7 @@ public:
             ImGui::SliderFloat("LIGHT WORLD SIZE", &data.x, 0.0f, 100.0f);    // Edit 1 float using a slider from 0.0f to 1.0f
             ImGui::SliderFloat("LIGHT FRUSTUM WIDTH", &data.y, 1.0f, 100.0f); // Edit 1 float using a slider from 0.0f to 1.0f // Edit 1 float using a slider from 0.0f to 1.0f
             ImGui::SliderFloat("PENUMBRA SIZE", &data.z, 0.1f, 100.0f);
-            ImGui::ColorEdit3("clear color", (float *)&clear_color); // Edit 3 floats representing a color
+            //ImGui::ColorEdit3("clear color", (float *)&clear_color); // Edit 3 floats representing a color
             ImGui::Separator();
 
             ImGui::Text("Texture Allocation Size = %.3f MB", resources.m_pTextureBufferAllocationSize / 1000000.0f);
@@ -230,19 +249,8 @@ public:
             ImGui::End();
         }
 
-        // Rendering
-        ImGui::Render();
-        ImDrawData *draw_data = ImGui::GetDrawData();
-        const bool is_minimized = (draw_data->DisplaySize.x <= 0.0f || draw_data->DisplaySize.y <= 0.0f);
-        if (!is_minimized)
-        {
-            wd->ClearValue.color.float32[0] = clear_color.x * clear_color.w;
-            wd->ClearValue.color.float32[1] = clear_color.y * clear_color.w;
-            wd->ClearValue.color.float32[2] = clear_color.z * clear_color.w;
-            wd->ClearValue.color.float32[3] = clear_color.w;
-            Render(draw_data);
-            // FramePresent(wd);
-        }
+        ImGuiEnd();
+
     }
 
 public:
