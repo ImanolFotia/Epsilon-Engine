@@ -29,7 +29,26 @@ namespace Epsilon
 
         if (self.onReady)
             self.onReady();
-        self.mainLoop();
+
+#ifdef __EMSCRIPTEN__
+
+        emscripten_set_main_loop_arg(
+            [](void *userData)
+            {
+                self.mainLoop();
+            },
+            nullptr,
+            0, true);
+
+#else // __EMSCRIPTEN__
+
+        while (!engine::Context::getSingleton().Window().ShouldClose())
+        {
+            self.mainLoop();
+            if (mShouldClose)
+                break;
+        }
+#endif
         exit();
     }
 
@@ -80,20 +99,13 @@ namespace Epsilon
 
     void Epsilon::mainLoop()
     {
-
-        while (!engine::Context::getSingleton().Window().ShouldClose())
-        {
-            framework::Clock::Tick();
-            showFPS();
-            if (mShouldClose)
-                break;
-            if (self.onRender)
-                self.onRender();
-            engine::Context::getSingleton().Window().PollEvents();
-            self.m_pFrame++;
-        }
+        framework::Clock::Tick();
+        showFPS();
+        if (self.onRender)
+            self.onRender();
+        engine::Context::getSingleton().Window().PollEvents();
+        self.m_pFrame++;
     }
-
 
     void Epsilon::showFPS()
     {
@@ -116,7 +128,8 @@ namespace Epsilon
         }
     }
 
-    int32_t Epsilon::Frame() {
+    int32_t Epsilon::Frame()
+    {
         return self.m_pFrame;
     }
 

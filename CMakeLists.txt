@@ -41,6 +41,8 @@ endif()
 
 option(BUILD_AS_LIBRARY "Build as a library" ON)
 option(DOWNLOAD_LIBRARIES "Download thirdparty libraries" OFF)
+option(GFX_BACKEND_VULKAN "Use Vulkan as graphics backend" ON)
+option(GFX_BACKEND_WEBGPU "Use WebGPU as graphics backend" OFF)
 
 include(FindPkgConfig)
 
@@ -253,6 +255,12 @@ else()
     message(${IMGUI_BUILD_DIR})
     include_directories(${IMGUI_BUILD_DIR})
     link_directories(${IMGUI_BUILD_DIR})
+
+    
+    set(DAWN_BUILD_DIR ${THIRDPARTY_DIR}/dawn)
+    message(${DAWN_BUILD_DIR})
+    include_directories(${DAWN_BUILD_DIR}/inc)
+    
 
 endif()
 SET(HEADERS
