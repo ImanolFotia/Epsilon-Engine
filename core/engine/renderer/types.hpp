@@ -27,6 +27,11 @@ namespace engine
         size // if we ever want to iterate over renderer types
     };
 
+    enum audio_type {
+        openal = 0,
+        size
+    };
+
     enum ShaderModuleStage
     {
         FRAGMENT = 0x1,

@@ -8,6 +8,8 @@
 #include "../../apis/al/al.hpp"
 #include "apis/al/al.hpp"
 #include "core/framework/singleton.hpp"
+#include "audio/audio_manager.hpp"
+#include "audio/al/audio_manager.hpp"
 
 #ifdef WIN32
 #if !defined(__PRETTY_FUNCTION__) && !defined(__GNUC__)
@@ -38,15 +40,11 @@ namespace engine
     protected:
         std::string m_pApplicationName = "Default";
         renderer_type m_pRendererType;
-#if defined(ANDROID) || defined(__ANDROID__)
-        struct OpenALData
-        {
-        };
-#endif
-        OpenALData alData;
+        audio_type m_pAudioType;
 
         framework::Window m_pWindow = {};
         std::shared_ptr<engine::ResourceManager> m_pResourceManager = nullptr;
         std::shared_ptr<engine::Renderer> m_pRenderer = nullptr;
+        std::shared_ptr<audio::AudioManager> m_pAudioManager = nullptr;
     };
 }

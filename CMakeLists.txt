@@ -122,7 +122,7 @@ if(DOWNLOAD_LIBRARIES)
     set(JSON_BUILD_DIR ${SOURCE_DIR})
     message(${JSON_BUILD_DIR})
 
-    include_directories(${JSON_BUILD_DIR}/include/nlohmann)
+    include_directories(${JSON_BUILD_DIR}/include)
 
 
     ##
@@ -286,6 +286,7 @@ set(PROJECT_FILES
         ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/vulkan_impl.cpp
         ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/vulkan.cpp
         ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/resource_manager.cpp
+        ${CMAKE_SOURCE_DIR}/core/engine/audio/al/audio_manager.cpp
         ${CMAKE_SOURCE_DIR}/core/framework/IO/IO.hpp
         ${CMAKE_SOURCE_DIR}/core/framework/IO/KeyBoard.cpp
         ${CMAKE_SOURCE_DIR}/core/framework/IO/KeyBoard.hpp
@@ -390,6 +391,7 @@ if(DOWNLOAD_LIBRARIES)
     add_dependencies(${PROJECT_NAME} beacon)
     add_dependencies(${PROJECT_NAME} stb)
     add_dependencies(${PROJECT_NAME} imgui_d)
+    add_dependencies(${PROJECT_NAME} json)
 endif()
 target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_DL_LIBS})
 

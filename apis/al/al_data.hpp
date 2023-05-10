@@ -14,11 +14,40 @@
 #include <AL/efx-creative.h>
 #include <AL/efx-presets.h>
 
-struct OpenALData
-{
-    ALCdevice *device;
-    ALCcontext *context;
-};
+#include <glm/glm.hpp>
+
+namespace al {
+
+	struct OpenALBuffer {
+		ALuint id;
+	};
+
+	struct OpenALSource {
+		ALuint id;
+		OpenALBuffer buffer;
+		glm::vec3 position;
+		glm::vec3 direction;
+		glm::vec3 velocity;
+		float angle;
+		float pitch;
+		float gain;
+		bool looping;
+		bool playing;
+		bool relative;
+	};
+	struct OpenALListener {
+		glm::vec3 position;
+		glm::vec3 direction;
+		glm::vec3 up;
+		glm::vec3 velocity;
+		float gain;
+	};
+	struct OpenALData
+	{
+		ALCdevice* device;
+		ALCcontext* context;
+	};
+}
 #endif
 
 #endif // EPSILON_AL_DATA_HPP

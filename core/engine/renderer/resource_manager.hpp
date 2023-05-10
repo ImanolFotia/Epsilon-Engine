@@ -1,7 +1,7 @@
 #pragma once
 
 #include "renderer.hpp"
-#include "object_pool.hpp"
+#include "../object_pool.hpp"
 
 #include <memory>
 

@@ -3,13 +3,13 @@
 #include "al_data.hpp"
 
 namespace al {
-    [[nodiscard]] static unsigned int
+    [[nodiscard]] static OpenALBuffer
     createBuffer(int numChannels, std::size_t size, std::size_t bps, std::size_t bitrate, unsigned char* data) {
 
 #if !defined(ANDROID) && !defined(__ANDROID__)
-        ALuint buffer = 0;
+        OpenALBuffer buffer = {};
         ALenum format;
-        alGenBuffers(1, &buffer);
+        alGenBuffers(1, &buffer.id);
 
         switch(bps) {
             case 8:
@@ -21,73 +21,74 @@ namespace al {
             default:
                 throw std::runtime_error("Audio format could not be decoded. abort.");
         }
-        alBufferData(buffer, format, data, size, bitrate);
+        alBufferData(buffer.id, format, data, size, bitrate);
         return buffer;
 #endif
     }
 
-    [[nodiscard]] static ALuint createSource(ALuint buffer) {
+    [[nodiscard]] static OpenALSource createSource(OpenALBuffer buffer) {
 
 #if !defined(ANDROID) && !defined(__ANDROID__)
-        ALuint source;
-        alGenSources(1, &source);
-        alSourcei(source, AL_BUFFER, (ALint)buffer);
+        OpenALSource source;
+        alGenSources(1, &source.id);
+        alSourcei(source.id, AL_BUFFER, (ALint)buffer.id);
 
-        alSourcei(source, AL_SOURCE_RELATIVE, AL_TRUE);
-        alSourcef(source, AL_GAIN, 1);
-        alSourcef(source, AL_PITCH, 1);
-        alSource3f(source, AL_POSITION, 0, 0, 0);
-        alSource3f(source, AL_DIRECTION, 0, 0, 0);
-        alSourcef(source, AL_CONE_INNER_ANGLE, 360);
-        alSourcef(source, AL_CONE_OUTER_ANGLE, 360);
-        alSource3f(source, AL_VELOCITY, 0.0, 0.0, 0.0);
+        alSourcei(source.id, AL_SOURCE_RELATIVE, AL_TRUE);
+        alSourcef(source.id, AL_GAIN, 1);
+        alSourcef(source.id, AL_PITCH, 1);
+        alSource3f(source.id, AL_POSITION, 0, 0, 0);
+        alSource3f(source.id, AL_DIRECTION, 0, 0, 0);
+        alSourcef(source.id, AL_CONE_INNER_ANGLE, 360);
+        alSourcef(source.id, AL_CONE_OUTER_ANGLE, 360);
+        alSource3f(source.id, AL_VELOCITY, 0.0, 0.0, 0.0);
 
 
         return source;
 #endif
     }
 
-    static void deleteSource(ALuint source) {
+    static void deleteSource(OpenALSource source) {
 
 #if !defined(ANDROID) && !defined(__ANDROID__)
-        ALuint s = source;
-        alSourceStop(source);
-        if (alIsSource(source)) {
-            alSourcei(source, AL_BUFFER, NULL);
+        ALuint s = source.id;
+        alSourceStop(source.id);
+        if (alIsSource(source.id)) {
+            alSourcei(source.id, AL_BUFFER, NULL);
             alDeleteSources(1, &s);
         }
 #endif
     }
 
-    static void deleteBuffer(ALuint buffer) {
+    static void deleteBuffer(OpenALBuffer buffer) {
 
 #if !defined(ANDROID) && !defined(__ANDROID__)
-        ALuint b = buffer;
-        if(alIsBuffer(buffer))
+        ALuint b = buffer.id;
+        if(alIsBuffer(buffer.id))
         alDeleteBuffers(1, &b);
 #endif
     }
 
-    static int getSourceState(unsigned int source) {
+    static int getSourceState(OpenALSource source) {
 
 #if !defined(ANDROID) && !defined(__ANDROID__)
         ALint source_state;
-        alGetSourcei(source, AL_SOURCE_STATE, &source_state);
+        alGetSourcei(source.id, AL_SOURCE_STATE, &source_state);
 
         return source_state;
 #endif
     }
 
-    static void playSource(unsigned int source, glm::vec3 position = glm::vec3(0.0, 0.0, 0.0)) {
+    static void playSource(OpenALSource source) {
 
 #if !defined(ANDROID) && !defined(__ANDROID__)
-            alSourcei(source, AL_SOURCE_RELATIVE, AL_FALSE);
-            alSourcei(source, AL_LOOPING, AL_FALSE);
-            alSourcef(source, AL_GAIN, 1);
+            alSourcei(source.id, AL_SOURCE_RELATIVE, source.relative ? AL_TRUE : AL_FALSE);
+            alSourcei(source.id, AL_LOOPING, source.looping ? AL_TRUE : AL_FALSE);
+            alSourcef(source.id, AL_GAIN, source.gain);
+            alSourcef(source.id, AL_PITCH, source.pitch);
             //alEffecti(source, )
-            alSource3f(source, AL_POSITION, position.x, position.y, position.z);
-            alSource3f(source, AL_DIRECTION, 0, 1, 0);
-            alSourcePlay(source);
+            alSource3f(source.id, AL_POSITION, source.position.x, source.position.y, source.position.z);
+            alSource3f(source.id, AL_DIRECTION, source.direction.x, source.direction.y, source.direction.z);
+            alSourcePlay(source.id);
 #endif
     }
 
