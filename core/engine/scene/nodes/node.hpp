@@ -1,7 +1,11 @@
 #pragma once
 
-namespace engine::scene {
+#include <memory>
+#include <vector>
+#include <functional>
 
+namespace engine::scene
+{
 
     struct NodeBase
     {
