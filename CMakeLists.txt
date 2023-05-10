@@ -40,7 +40,7 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
 endif()
 
 option(BUILD_AS_LIBRARY "Build as a library" ON)
-option(DOWNLOAD_LIBRARIES "Download thirdparty libraries" OFF)
+option(DOWNLOAD_LIBRARIES "Download thirdparty libraries" ON)
 option(GFX_BACKEND_VULKAN "Use Vulkan as graphics backend" ON)
 option(GFX_BACKEND_WEBGPU "Use WebGPU as graphics backend" OFF)
 
