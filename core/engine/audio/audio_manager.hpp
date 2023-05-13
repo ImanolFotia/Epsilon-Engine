@@ -1,17 +1,43 @@
 #pragma once
 #include "../object_pool.hpp"
 
+#include <glm/glm.hpp>
+
 namespace engine::audio {
 	class AudioSource;
 	class AudioBuffer;
 	class AudioListener;
 
 	struct BufferInfo {
-		int numChannels{};
+		size_t numChannels{};
 		std::size_t size{};
 		std::size_t bps{};
 		std::size_t bitrate{};
 		unsigned char* data = nullptr;
+	};
+
+	struct SourceInfo {
+		Ref<AudioBuffer> buffer;
+		glm::vec3 position;
+		glm::vec3 direction;
+		glm::vec3 velocity;
+		float gain{};
+		float angle{};
+		float pitch{};
+	};
+
+	struct ListenerInfo {
+		glm::vec3 position;
+		glm::vec3 direction;
+		glm::vec3 velocity;
+		float gain{};
+	};
+
+	enum class AudioState {
+		PLAYING = 0,
+		PAUSED,
+		STOPPED,
+		SIZE
 	};
 
 	class AudioManager {
@@ -20,9 +46,24 @@ namespace engine::audio {
 		virtual void CleanUp() = 0;
 
 		virtual Ref<AudioBuffer> createBuffer(const std::string&, const BufferInfo&) = 0;
-		virtual Ref<AudioSource> createSource(const std::string&) = 0;
-		virtual Ref<AudioListener> createListener(const std::string&) = 0;
+		virtual Ref<AudioSource> createSource(const std::string&, const SourceInfo&) = 0;
+		virtual Ref<AudioListener> createListener(const std::string&, const ListenerInfo&) = 0;
 
+		virtual void setSourcePosition(Ref<AudioSource>, glm::vec3) = 0;
+		virtual void setSourceDirection(Ref<AudioSource>, glm::vec3) = 0;
+		virtual void setSourceVelocity(Ref<AudioSource>, glm::vec3) = 0;
+		virtual void setSourceGain(Ref<AudioSource>, float) = 0;
+		virtual void setSourceAngle(Ref<AudioSource>, float) = 0;
+		virtual void setSourcePitch(Ref<AudioSource>, float) = 0;
+		virtual void setSourceState(Ref<AudioSource>, AudioState) = 0;
+
+		virtual glm::vec3 getSourcePosition(Ref<AudioSource>) = 0;
+		virtual glm::vec3 getSourceDirection(Ref<AudioSource>) = 0;
+		virtual glm::vec3 getSourceVelocity(Ref<AudioSource>) = 0;
+		virtual float getSourceGain(Ref<AudioSource>) = 0;
+		virtual float getSourceAngle(Ref<AudioSource>) = 0;
+		virtual float getSourcePitch(Ref<AudioSource>) = 0;
+		virtual AudioState getSourceState(Ref<AudioSource>) = 0;
 
 		virtual void deleteBuffer(Ref<AudioBuffer>) = 0;
 		virtual void deleteSource(Ref<AudioSource>) = 0;

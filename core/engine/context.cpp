@@ -52,4 +52,6 @@ namespace engine
 	std::shared_ptr<engine::ResourceManager> Context::ResourceManager() { return self.m_pResourceManager; }
 
 	std::shared_ptr<engine::Renderer> Context::Renderer() { return self.m_pRenderer; }
+
+	std::shared_ptr<engine::audio::AudioManager> Context::AudioManager() { return self.m_pAudioManager; }
 }

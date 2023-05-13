@@ -27,7 +27,7 @@ namespace engine
         size // if we ever want to iterate over renderer types
     };
 
-    enum audio_type {
+    enum class audio_type {
         openal = 0,
         size
     };
@@ -432,6 +432,7 @@ namespace engine
         std::vector<SubPassInfo> subpasses;
         std::vector<RenderPassAttachment> attachments;
         std::vector<PipelineLayout> pipelineLayout;
+        std::unordered_map<std::string, uint32_t> pipelineIndices;
         PushConstantData pushConstant;
         std::vector<UniformBindingInfo> bindingInfo;
         ImageDimensions dimensions;

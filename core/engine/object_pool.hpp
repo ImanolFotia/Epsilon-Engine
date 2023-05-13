@@ -22,6 +22,10 @@ namespace engine
             return Ref(0, 0, -1);
         }
 
+        bool empty() {
+            return m_pID == -1;
+        }
+
         inline uint32_t Index() { return m_pIndex; }
         uint32_t Id() { return m_pID; }
 
@@ -32,7 +36,7 @@ namespace engine
 
         bool isValid() { return m_pGeneration != 0; }
 
-        uint32_t m_pID{};
+        uint32_t m_pID = -1;
         uint32_t m_pGeneration{};
 
         template <typename A, typename B>

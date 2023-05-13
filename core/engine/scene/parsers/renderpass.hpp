@@ -93,6 +93,7 @@ namespace engine::parsers {
 				.pushConstant(renderpass["pushConstant"]);
 
 			for (auto& pLayout : renderpass["pipelineLayouts"]) {
+				renderPassInfo.pipelineIndices[pLayout] = renderPassInfo.pipelineLayout.size();
 				renderPassInfo.pipelineLayout.push_back(pipelines[pLayout]);
 				renderPassInfo.numLayouts++;
 				renderPassInfo.numDescriptors = pipelines[pLayout].vertexLayout.descriptors.size();

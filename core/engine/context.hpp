@@ -37,6 +37,8 @@ namespace engine
 
         std::shared_ptr<engine::Renderer> Renderer();
 
+        std::shared_ptr<engine::audio::AudioManager> AudioManager();
+
     protected:
         std::string m_pApplicationName = "Default";
         renderer_type m_pRendererType;

@@ -78,6 +78,7 @@ namespace al {
 #endif
     }
 
+
     static void playSource(OpenALSource source) {
 
 #if !defined(ANDROID) && !defined(__ANDROID__)
@@ -92,17 +93,17 @@ namespace al {
 #endif
     }
 
-    static void pauseSource(unsigned int source) {
+    static void pauseSource(OpenALSource source) {
 
 #if !defined(ANDROID) && !defined(__ANDROID__)
-        alSourcePause(source);
+        alSourcePause(source.id);
 #endif
     }
 
-    static void stopSource(unsigned int source) {
+    static void stopSource(OpenALSource source) {
 
 #if !defined(ANDROID) && !defined(__ANDROID__)
-        alSourceStop(source);
+        alSourceStop(source.id);
 #endif
     }
     /*

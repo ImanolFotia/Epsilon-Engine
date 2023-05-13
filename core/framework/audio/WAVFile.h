@@ -54,19 +54,19 @@ namespace framework {
             return mdata;
         }
 
-        int getNumberOfChannels() {
+        size_t getNumberOfChannels() {
             return chan;
         }
 
-        int getSampleRate() {
+        size_t getSampleRate() {
             return samplerate;
         }
 
-        int getBPS() {
+        size_t getBPS() {
             return bps;
         }
 
-        int getFileSize() {
+        size_t getFileSize() {
             return size;
         }
 
@@ -75,10 +75,10 @@ namespace framework {
         }
 
     private:
-        int chan;
-        int samplerate;
-        int bps;
-        int size;
+        size_t chan;
+        size_t samplerate;
+        size_t bps;
+        size_t size;
         std::shared_ptr<unsigned char> mdata;
     };
 }
