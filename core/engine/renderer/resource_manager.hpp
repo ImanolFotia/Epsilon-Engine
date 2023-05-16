@@ -32,7 +32,7 @@ namespace engine
 
         virtual Ref<Texture> createTexture(TextureCreationInfo) = 0;
         virtual Ref<UniformBindings> createUniformData(UniformBindingInfo) = 0;
-        virtual Ref<Material> createMaterial(MaterialInfo) = 0;
+        virtual Ref<BindGroup> createBindGroup(MaterialInfo) = 0;
         virtual Ref<Mesh> createMesh(MeshInfo) = 0;
         virtual Ref<Buffer> createGPUBuffer(const std::string &, uint32_t, BufferStorageType) = 0;
         virtual Ref<RenderPass> createRenderPass(RenderPassInfo) = 0;
@@ -42,7 +42,7 @@ namespace engine
         virtual void destroyTexture(Ref<Texture>) = 0;
         virtual void destroyBuffer(Ref<Buffer>) = 0;
         virtual void destroyUniformData(Ref<UniformBindings>) = 0;
-        virtual void destroyMaterial(Ref<Material>) = 0;
+        virtual void destroyMaterial(Ref<BindGroup>) = 0;
         virtual void destroyMesh(Ref<Mesh>) = 0;
         virtual void destroyRenderPass(Ref<RenderPass>) = 0;
         virtual Ref<Buffer> destroyBuffer(BufferInfo) = 0;

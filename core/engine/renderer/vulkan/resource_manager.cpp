@@ -226,7 +226,7 @@ namespace engine
 		return ref;
 	}
 
-	Ref<Material> VulkanResourceManager::createMaterial(MaterialInfo material)
+	Ref<BindGroup> VulkanResourceManager::createBindGroup(MaterialInfo material)
 	{
 		try
 		{
@@ -314,7 +314,7 @@ namespace engine
 								  vk::MAX_FRAMES_IN_FLIGHT);
 			pUpdateMaterial(vkMaterial);
 
-			Ref<Material> materialRef = materialPool.insert(material.name, vkMaterial);
+			Ref<BindGroup> materialRef = materialPool.insert(material.name, vkMaterial);
 			return materialRef;
 		}
 		catch (std::exception &e)
@@ -718,7 +718,7 @@ namespace engine
 		throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
 	}
 
-	void VulkanResourceManager::destroyMaterial(Ref<Material>)
+	void VulkanResourceManager::destroyMaterial(Ref<BindGroup>)
 	{
 
 		throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);

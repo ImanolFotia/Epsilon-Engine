@@ -98,7 +98,8 @@ namespace engine
 
 		drawCommand.material = object.material;
 		auto pushConstant = m_pResourceManagerRef->pushConstantPool.get(object.pushConstant);
-		if (pushConstant != nullptr) {
+		if (pushConstant != nullptr)
+		{
 			drawCommand.objectData = pushConstant->data;
 			drawCommand.object_data_size = pushConstant->size;
 		}
@@ -196,6 +197,8 @@ namespace engine
 
 	void VulkanRenderer::Flush(engine::Ref<engine::RenderPass> renderPassRef, engine::DrawType type)
 	{
+		if (m_pCurrentCommandQueue.empty())
+			return;
 		if (m_pImageIndex == -1)
 			return;
 
@@ -272,7 +275,7 @@ namespace engine
 		return std::tie(a_mat, a.layoutIndex, a_vtx, a_i) <
 			std::tie(b_mat, b.layoutIndex, b_vtx, b_i); };
 
-		//m_pCurrentCommandQueue.sort(predicate);
+		// m_pCurrentCommandQueue.sort(predicate);
 
 		VkExtent2D extent = renderPass->renderPassChain.Extent;
 		VkViewport viewport{};
@@ -328,7 +331,7 @@ namespace engine
 			/** TODO:
 			 *  Find a way to cleanly implement push constants*/
 			vkCmdPushConstants(m_pFrame.CommandBuffer(), renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(),
-			                    VK_SHADER_STAGE_VERTEX_BIT, 0, command.object_data_size, command.objectData);
+							   VK_SHADER_STAGE_VERTEX_BIT, 0, command.object_data_size, command.objectData);
 
 			vkCmdDrawIndexed(m_pFrame.CommandBuffer(), command.meshResource.numIndices, 1, command.meshResource.indexOffset, command.meshResource.vertexOffset, 0);
 		}

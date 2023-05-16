@@ -12,7 +12,7 @@ namespace engine
     struct Buffer;
     struct Shader;
     struct UniformBindings;
-    struct Material;
+    struct BindGroup;
     struct RenderPass;
     struct Mesh;
     struct PushConstant;
@@ -429,6 +429,7 @@ namespace engine
         uint32_t numAttachments = 0;
         //size_t size;
         bool depthAttachment;
+        bool isSwapChainAttachment = false;
         std::vector<SubPassInfo> subpasses;
         std::vector<RenderPassAttachment> attachments;
         std::vector<PipelineLayout> pipelineLayout;
@@ -452,6 +453,13 @@ namespace engine
             info.depthAttachment = d;
             return *this;
         }
+
+        RenderPassFactory isSwapChainAttachment(bool a) {
+
+            info.isSwapChainAttachment = a;
+            return *this;
+        }
+
         RenderPassFactory subpasses(std::vector<SubPassInfo> sp)
         {
             info.subpasses = sp;
@@ -518,7 +526,7 @@ namespace engine
         uint32_t index;
         uint32_t bindingPoint;
     };
-    struct MaterialInfo
+    struct BindGroupInfo
     {
         std::vector<UniformBindingInfo> bindingInfo{};
         std::vector<RenderPassBinding> inputs;

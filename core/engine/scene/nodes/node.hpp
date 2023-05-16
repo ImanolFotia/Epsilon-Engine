@@ -4,7 +4,7 @@
 #include <vector>
 #include <functional>
 
-namespace engine::scene
+namespace engine
 {
 
     struct NodeBase
@@ -23,10 +23,11 @@ namespace engine::scene
     template <typename T>
     struct Node : NodeBase
     {
+        template <class... Args>
+        Node(Args &&...args) : data(std::forward<Args>(args)...) {}
         using type = T;
         T data;
     };
-
     struct Root
     {
     };

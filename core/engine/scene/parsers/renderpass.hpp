@@ -86,6 +86,7 @@ namespace engine::parsers {
 				RenderPassFactory()
 				.name(name)
 				.depthAttachment(renderpass["depthAttachment"])
+				.isSwapChainAttachment(renderpass["isSwapChainAttachment"])
 				.subpasses({})
 				.dimensions({ .width = renderpass["dimensions"]["width"], .height = renderpass["dimensions"]["height"] })
 				.inputs(inputs)

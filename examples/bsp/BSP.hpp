@@ -28,7 +28,7 @@ namespace BSP
 		{
 			engine::Ref<engine::Mesh> mesh;
 			engine::Ref<engine::Texture> texture;
-			engine::Ref<engine::Material> material;
+			engine::Ref<engine::BindGroup> material;
 			uint32_t layoutIndex = 0;
 		};
 
@@ -54,9 +54,9 @@ namespace BSP
 
 		std::shared_ptr<utils::Camera> m_pCamera;
 
-		engine::Ref<engine::Material> dummyMaterial;
-		engine::Ref<engine::Material> skyMaterial;
-		engine::Ref<engine::Material> shadowDummyMaterial;
+		engine::Ref<engine::BindGroup> dummyMaterial;
+		engine::Ref<engine::BindGroup> skyMaterial;
+		engine::Ref<engine::BindGroup> shadowDummyMaterial;
 		engine::Ref<engine::Buffer> gpuBuffer;
 
 		bool m_pUpdateCamera = true;
@@ -87,15 +87,15 @@ namespace BSP
 
 			auto resourceManager = Epsilon::getContext().ResourceManager();
 
-			engine::MaterialInfo skyInfo = {
+			engine::BindGroupInfo skyInfo = {
 				.bindingInfo = {
 					{.size = sizeof(ShaderData), .binding = 0, .type = en::UNIFORM_BUFFER}},
 				.renderPass = "Default",
 				.name = "SkyMaterial" };
 
-			skyMaterial = resourceManager->createMaterial(skyInfo);
+			skyMaterial = resourceManager->createBindGroup(skyInfo);
 
-			engine::MaterialInfo shadowInfo = {
+			engine::BindGroupInfo shadowInfo = {
 				.bindingInfo = {{.size = sizeof(ShaderData),
 								 .binding = 0,
 								 .type = en::UNIFORM_BUFFER}},
@@ -103,7 +103,7 @@ namespace BSP
 				.name = "ShadowMaterial",
 			};
 
-			shadowDummyMaterial = resourceManager->createMaterial(shadowInfo);
+			shadowDummyMaterial = resourceManager->createBindGroup(shadowInfo);
 
 			m_pMap.pushConstant.model = glm::scale(glm::mat4(1.0f), glm::vec3(0.0125f));
 
@@ -119,7 +119,7 @@ namespace BSP
 
 			Material* materialBufferPtr = reinterpret_cast<Material*>(resourceManager->mapBuffer(gpuBuffer));
 
-			engine::MaterialInfo materialInfo = {
+			engine::BindGroupInfo bindGroupInfo = {
 				.bindingInfo = {
 					{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = en::UNIFORM_BUFFER},
 					{.size = sizeof(Material) * bspMap.numMaterials(), .offset = 0, .binding = 3, .type = en::SHADER_STORAGE, .buffer = "material_buffer"}},
@@ -131,7 +131,7 @@ namespace BSP
 				.name = "DefaultMaterial",
 			};
 
-			dummyMaterial = resourceManager->createMaterial(materialInfo);
+			dummyMaterial = resourceManager->createBindGroup(bindGroupInfo);
 
 			int32_t index = 0;
 			int32_t id = 0;
@@ -590,6 +590,7 @@ namespace BSP
 				RenderPassFactory()
 				.name("Default")
 				.depthAttachment(true)
+				.isSwapChainAttachment(true)
 				.subpasses({})
 				.dimensions({ .width = 1280, .height = 720 })
 				.inputs({ {.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = UniformBindingType::UNIFORM_BUFFER},

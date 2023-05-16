@@ -13,7 +13,8 @@
 
 #include "node.hpp"
 
-namespace engine::scene {
+namespace engine
+{
 
     struct SceneManager
     {
@@ -31,15 +32,15 @@ namespace engine::scene {
                 nodes.size() > 0)
             {
                 std::cerr << "Warning: Not all nodes were erased before deleting "
-                    "the scene manager\n";
+                             "the scene manager\n";
                 erase(root);
             }
 
             children_node_index.erase(root->index);
         }
 
-        template <typename T, typename P>
-        std::shared_ptr<Node<T>> add(std::shared_ptr<Node<P>> parent)
+        template <typename T, typename P, class... Args>
+        std::shared_ptr<Node<T>> emplace(std::shared_ptr<Node<P>> parent, Args &&...args)
         {
             if (parent == nullptr)
                 return nullptr;
@@ -59,14 +60,69 @@ namespace engine::scene {
                 node_count++;
             }
 
-            nodes.push_back(std::make_shared<Node<T>>());
+            nodes.push_back(std::make_shared<Node<T>>(std::forward<Args>(args)...));
 
             node_types[iType].push_back(std::prev(nodes.end()));
 
             node_index[index] = std::prev(node_types[iType].end());
 
             parent->destroy_children.push_back([this, index]()
-                {
+                                               {
+                    try {
+                        using child_type = T;
+                        if (node_index.contains(index)) {
+                            erase(std::static_pointer_cast<Node<child_type>>(
+                                **node_index.at(index)));
+
+                            children_node_index.erase(index);
+                        }
+
+                        free_indices.push(index);
+                    }
+                    catch (std::exception& e) {
+                        std::cout << "from " << __PRETTY_FUNCTION__
+                            << " ::: " << e.what() << std::endl;
+                    } });
+
+            auto new_node_ptr = std::static_pointer_cast<Node<T>>(nodes.back());
+
+            children_node_index[parent->index][iType].push_back(new_node_ptr);
+
+            new_node_ptr->parent = std::move(parent);
+            new_node_ptr->index = index;
+
+            return std::static_pointer_cast<Node<T>>(nodes.back());
+        }
+
+        template <typename T, typename P, class... Args>
+        std::shared_ptr<Node<T>> insert(std::shared_ptr<Node<P>> parent, T obj)
+        {
+            if (parent == nullptr)
+                return nullptr;
+
+            auto iType = std::type_index(typeid(T));
+
+            size_t index = -1;
+
+            if (free_indices.size() > 0)
+            {
+                index = free_indices.front();
+                free_indices.pop();
+            }
+            else
+            {
+                index = node_count;
+                node_count++;
+            }
+
+            nodes.push_back(std::make_shared<Node<T>>(std::move(obj)));
+
+            node_types[iType].push_back(std::prev(nodes.end()));
+
+            node_index[index] = std::prev(node_types[iType].end());
+
+            parent->destroy_children.push_back([this, index]()
+                                               {
                     try {
                         using child_type = T;
                         if (node_index.contains(index)) {
@@ -103,7 +159,7 @@ namespace engine::scene {
                 return;
             }
 
-            std::list<TypeIterator>& node_container = node_types.at(iType);
+            std::list<TypeIterator> &node_container = node_types.at(iType);
 
             nodes.erase(*node_index.at(node->index));
             node_container.erase(node_index.at(node->index));
@@ -117,7 +173,7 @@ namespace engine::scene {
                 node_types.erase(iType);
             }
 
-            for (auto& dst_func : node->destroy_children)
+            for (auto &dst_func : node->destroy_children)
             {
                 dst_func();
             }
@@ -128,7 +184,7 @@ namespace engine::scene {
         }
 
         template <typename T>
-        [[nodiscard]] std::list<TypeIterator>& get()
+        [[nodiscard]] std::list<TypeIterator> &get()
         {
             auto iType = std::type_index(typeid(T));
             if (node_types.contains(iType))
@@ -140,7 +196,7 @@ namespace engine::scene {
         }
 
         template <typename T>
-        std::list<std::shared_ptr<NodeBase>>& get(std::shared_ptr<NodeBase> node)
+        std::list<std::shared_ptr<NodeBase>> &get(std::shared_ptr<NodeBase> node)
         {
             auto iType = std::type_index(typeid(T));
 
@@ -160,8 +216,8 @@ namespace engine::scene {
         std::unordered_map<std::type_index, std::list<std::shared_ptr<NodeBase>>> node_child_index;
 
         std::unordered_map<size_t /*parent*/,
-            std::unordered_map<std::type_index,
-            std::list<std::shared_ptr<NodeBase>>>>
+                           std::unordered_map<std::type_index,
+                                              std::list<std::shared_ptr<NodeBase>>>>
             children_node_index;
 
         std::queue<size_t> free_indices;

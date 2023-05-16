@@ -37,7 +37,7 @@ namespace engine
     struct ObjectData
     {
         Ref<Mesh> mesh;
-        Ref<Material> material;
+        Ref<BindGroup> material;
         Ref<PushConstant> pushConstant;
         glm::mat4 modelMatrix{};
         glm::vec3 position{};
