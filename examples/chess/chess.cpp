@@ -602,7 +602,7 @@ namespace ChessApp
 
 		using en = engine::UniformBindingType;
 		{
-			engine::MaterialInfo material = {
+			engine::BindGroupInfo material = {
 				.bindingInfo = {{.size = sizeof(ChessShaderData), .offset = 0, .binding = 0, .type = en::UNIFORM_BUFFER}},
 				.renderPass = "DefaultRenderPass",
 				.name = "board" };
@@ -627,7 +627,7 @@ namespace ChessApp
 			texInfo.filtering = engine::LINEAR;
 			texInfo.wrapMode = engine::REPEAT;
 			texInfo.format = engine::COLOR_RGBA;
-			engine::MaterialInfo material = {
+			engine::BindGroupInfo material = {
 				.bindingInfo = {{.size = sizeof(ChessShaderData), .binding = 0, .type = en::UNIFORM_BUFFER},
 								{.size = 0, .offset = 0, .binding = 1, .type = en::TEXTURE_IMAGE_COMBINED_SAMPLER, .textureInfo = texInfo}},
 				.renderPass = "DefaultRenderPass",

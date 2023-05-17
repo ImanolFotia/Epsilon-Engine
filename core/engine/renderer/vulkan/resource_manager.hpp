@@ -32,7 +32,7 @@ namespace engine
 		void Init() override;
 
 
-		Ref<BindGroup> createBindGroup(MaterialInfo) override;
+		Ref<BindGroup> createBindGroup(BindGroupInfo) override;
 		Ref<Texture> createTexture(TextureCreationInfo) override;
 		Ref<Mesh> createMesh(MeshInfo) override;
 		Ref<Buffer> createGPUBuffer(const std::string&, uint32_t size, BufferStorageType type) override;

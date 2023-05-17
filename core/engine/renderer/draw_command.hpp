@@ -4,6 +4,8 @@
 
 namespace engine
 {
+
+
     class DrawCommand
     {
     public:
@@ -12,10 +14,11 @@ namespace engine
 
         uint32_t layoutIndex = 0;
 
-        Ref<engine::Material> material;
+        Ref<engine::BindGroup> material;
         void *objectData = nullptr;
         size_t object_data_size = 0;
         uint32_t uniformIndex = 0;
+        ObjectDataConstant pushConstantData;
     };
 
     struct IndirectCommand
@@ -38,7 +41,7 @@ namespace engine
     struct IndirectBatch
     {
         MeshResource meshResource{};
-        Ref<Material> material;
+        Ref<BindGroup> material;
         uint32_t uniformIndex = 0;
         uint32_t layoutIndex = 0;
         uint32_t count = 0;

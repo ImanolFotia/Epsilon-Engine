@@ -81,7 +81,7 @@ namespace engine {
 			return m_pMeshes.at(index);
 		}
 
-		Ref<Material> material(int32_t index) {
+		Ref<BindGroup> material(int32_t index) {
 			return m_pMaterials.at(index);
 		}
 

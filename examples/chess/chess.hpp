@@ -28,7 +28,7 @@ namespace ChessApp
             engine::Ref<engine::Mesh> mesh;
             engine::Ref<engine::Texture> texture;
             engine::Ref<engine::UniformBindings> bindings;
-            engine::Ref<engine::Material> material;
+            engine::Ref<engine::BindGroup> material;
             engine::Ref<engine::PushConstant> pushConstantRef;
             PiecePushConstant pushConstant;
         };

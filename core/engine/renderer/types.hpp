@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include "glm/glm.hpp"
 #include <core/common/common.hpp>
 
@@ -204,6 +205,12 @@ namespace engine
         INDEXED,
         INDEXED_INDIRECT,
         INSTANCED
+    };
+
+
+    struct ObjectDataConstant {
+        glm::mat4 transform;
+        uint32_t material_index;
     };
 
     struct TextureCreationInfo

@@ -226,7 +226,7 @@ namespace engine
 		return ref;
 	}
 
-	Ref<BindGroup> VulkanResourceManager::createBindGroup(MaterialInfo material)
+	Ref<BindGroup> VulkanResourceManager::createBindGroup(BindGroupInfo material)
 	{
 		try
 		{
@@ -682,6 +682,7 @@ namespace engine
 			}
 		}
 
+		buffer.size = size;
 		return gpuBufferPool.insert(name, buffer);
 	}
 

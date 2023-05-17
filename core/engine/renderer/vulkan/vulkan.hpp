@@ -122,7 +122,8 @@ namespace engine
         uint32_t renderpass_id = 0;
         uint32_t attachedRenderPass = 0;
 
-        std::list<DrawCommand> m_pCurrentCommandQueue;
+        std::vector<DrawCommand> m_pCurrentCommandQueue;
+        uint32_t currentCommandsInQueue = 0;
 
         VulkanResourceManager *m_pResourceManagerRef = nullptr;
         bool m_pRenderPassActive = false;

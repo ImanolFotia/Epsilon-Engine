@@ -27,6 +27,11 @@ namespace engine
 
         void Init(const std::string &name, renderer_type rtype);
 
+        void CleanUp() {
+
+            self.m_pAudioManager->CleanUp();
+        }
+
         ~Context();
 
         const std::string &ApplicationName();

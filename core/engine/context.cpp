@@ -41,6 +41,8 @@ namespace engine
 		std::cout << "Initiated API context" << std::endl;
 	}
 
+	
+
 	Context::~Context()
 	{
 	}

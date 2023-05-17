@@ -95,6 +95,7 @@ namespace engine
 		drawCommand.meshResource.vertexOffset = mesh->vertexOffset;
 		drawCommand.uniformIndex = object.uniformIndex;
 		drawCommand.layoutIndex = object.layout_index;
+		drawCommand.pushConstantData = object.objectConstant;
 
 		drawCommand.material = object.material;
 		auto pushConstant = m_pResourceManagerRef->pushConstantPool.get(object.pushConstant);
@@ -103,7 +104,11 @@ namespace engine
 			drawCommand.objectData = pushConstant->data;
 			drawCommand.object_data_size = pushConstant->size;
 		}
-		m_pCurrentCommandQueue.push_back(drawCommand);
+		if (m_pCurrentCommandQueue.size() <= currentCommandsInQueue)
+			m_pCurrentCommandQueue.push_back(drawCommand);
+		else
+			m_pCurrentCommandQueue[currentCommandsInQueue] = drawCommand;
+		currentCommandsInQueue++;
 	}
 
 	void VulkanRenderer::BeginFrame()
@@ -253,7 +258,9 @@ namespace engine
 		}
 
 		// vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
-		m_pCurrentCommandQueue.clear();
+		//m_pCurrentCommandQueue.clear();
+
+		currentCommandsInQueue = 0;
 	}
 
 	void VulkanRenderer::FlushIndexed(vk::VulkanRenderPass *renderPass)
@@ -275,7 +282,7 @@ namespace engine
 		return std::tie(a_mat, a.layoutIndex, a_vtx, a_i) <
 			std::tie(b_mat, b.layoutIndex, b_vtx, b_i); };
 
-		// m_pCurrentCommandQueue.sort(predicate);
+		//m_pCurrentCommandQueue.sort(predicate);
 
 		VkExtent2D extent = renderPass->renderPassChain.Extent;
 		VkViewport viewport{};
@@ -292,8 +299,10 @@ namespace engine
 		scissor.extent = extent;
 		vkCmdSetScissor(m_pFrame.CommandBuffer(), 0, 1, &scissor);
 
-		for (auto &command : m_pCurrentCommandQueue)
+		for(int i = 0; i < currentCommandsInQueue; i++)
+		//for (auto &command : m_pCurrentCommandQueue)
 		{
+			auto& command = m_pCurrentCommandQueue[i];
 			if (prev_layout != command.layoutIndex)
 			{
 				vk::bindPipeline(renderPass->renderPipelines[command.layoutIndex].graphicsPipeline,
@@ -331,7 +340,7 @@ namespace engine
 			/** TODO:
 			 *  Find a way to cleanly implement push constants*/
 			vkCmdPushConstants(m_pFrame.CommandBuffer(), renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(),
-							   VK_SHADER_STAGE_VERTEX_BIT, 0, command.object_data_size, command.objectData);
+							   VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(ObjectDataConstant), &command.pushConstantData);
 
 			vkCmdDrawIndexed(m_pFrame.CommandBuffer(), command.meshResource.numIndices, 1, command.meshResource.indexOffset, command.meshResource.vertexOffset, 0);
 		}
@@ -423,6 +432,7 @@ namespace engine
 			vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
 									renderPass->renderPipelines[batch.layoutIndex].pipelineLayout.back(), 0, 1,
 									&material->descriptorSets[m_pCurrentFrame], 0, nullptr);
+
 			if (m_pVkData.bindless_supported)
 			{
 

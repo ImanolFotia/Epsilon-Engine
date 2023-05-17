@@ -32,17 +32,12 @@ namespace engine
     };
 
 
-
-
     struct ObjectData
     {
         Ref<Mesh> mesh;
         Ref<BindGroup> material;
         Ref<PushConstant> pushConstant;
-        glm::mat4 modelMatrix{};
-        glm::vec3 position{};
-        glm::vec3 scale{};
-        glm::quat rotation = glm::quat(1.0, 0.0, 0.0, 0.0);
+        ObjectDataConstant objectConstant;
         uint32_t layout_index = 0;
         uint32_t uniformIndex = 0;
     };

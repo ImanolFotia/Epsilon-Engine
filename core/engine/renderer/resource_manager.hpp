@@ -13,6 +13,7 @@ namespace engine
         std::vector<RenderPassBinding> bindings;
     };
 
+
     struct MeshResource
     {
         Ref<Buffer> vertexBuffer;
@@ -32,7 +33,7 @@ namespace engine
 
         virtual Ref<Texture> createTexture(TextureCreationInfo) = 0;
         virtual Ref<UniformBindings> createUniformData(UniformBindingInfo) = 0;
-        virtual Ref<BindGroup> createBindGroup(MaterialInfo) = 0;
+        virtual Ref<BindGroup> createBindGroup(BindGroupInfo) = 0;
         virtual Ref<Mesh> createMesh(MeshInfo) = 0;
         virtual Ref<Buffer> createGPUBuffer(const std::string &, uint32_t, BufferStorageType) = 0;
         virtual Ref<RenderPass> createRenderPass(RenderPassInfo) = 0;

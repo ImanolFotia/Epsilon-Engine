@@ -139,6 +139,7 @@ namespace Epsilon
             self.onExit();
         engine::Context::getSingleton().Renderer()->Cleanup();
         engine::Context::getSingleton().Window().cleanup();
+        engine::Context::getSingleton().AudioManager()->CleanUp();
     }
 
     std::pair<int, int> Epsilon::getWindowDimensions()

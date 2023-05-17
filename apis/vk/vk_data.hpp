@@ -114,6 +114,7 @@ namespace vk
     struct VulkanGPUMappedBuffer
     {
         VulkanBuffer buffer;
+        size_t size{};
     };
 
     struct VulkanShaderBinding

@@ -4,6 +4,7 @@
 #include "glm/gtc/quaternion.hpp"
 
 #include <vector>
+#include <string>
 
 
 namespace common {
@@ -49,6 +50,17 @@ namespace common {
 
         std::vector<common::Vertex> Vertices;
         std::vector<uint32_t> Indices;
+    };
+
+    struct MeshMaterial {
+        std::string albedo_path{};
+        std::string metallic_path{};
+        std::string normal_path{};
+        std::string roughness_path{};
+
+        glm::vec4 color = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
+        float metallic = 0.0f;
+        float roughness = 0.5f;
     };
 
     struct MIN_MAX_POINTS {

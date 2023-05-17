@@ -138,7 +138,7 @@ namespace engine
             return VkDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     }
 
-    static std::vector<IndirectBatch> generateIndirectBatch(std::list<DrawCommand> &commandLists)
+    static std::vector<IndirectBatch> generateIndirectBatch(std::vector<DrawCommand> &commandLists)
     {
         std::vector<IndirectBatch> batches{};
         batches.resize(commandLists.size());
@@ -158,7 +158,7 @@ namespace engine
                 index++;
                 continue;
             }
-            bool isSameMaterial = Ref<Material>::isSame(command.material, batches[current].material);
+            bool isSameMaterial = Ref<BindGroup>::isSame(command.material, batches[current].material);
             bool isSameVertexBuffer = Ref<Buffer>::isSame(command.meshResource.vertexBuffer, batches[current].meshResource.vertexBuffer);
             bool isSameIndexBuffer = Ref<Buffer>::isSame(command.meshResource.indexBuffer, batches[current].meshResource.indexBuffer);
             bool isSameLayout = command.layoutIndex == batches[current].layoutIndex;

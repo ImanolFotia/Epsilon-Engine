@@ -5,14 +5,15 @@
 #include <queue>
 
 #include <core/engine/renderer/resource_manager.hpp>
-#include <core/framework/audio/WAVFile.h>
 #include <core/framework/loaders/model.h>
+
+#include "audio/audio_object.hpp"
 
 namespace engine
 {
 
 	struct ShaderObjectData {
-		glm::mat4 transform;
+		uint32_t transform_index;
 		uint32_t material_index;
 	};
 
@@ -23,7 +24,7 @@ namespace engine
 		uint32_t metallic_texture_index = -1;
 		uint32_t roughness_texture_index = -1;
 
-		glm::vec4 albedo_color{};
+		alignas(16) glm::vec4 albedo_color{};
 		float metallic_color{};
 		float roughness_color{};
 	};
@@ -37,23 +38,15 @@ namespace engine
 	{
 		Ref<Mesh> mesh;
 		Ref<BindGroup> bind_group;
-		PBRMaterial pbr_material;
-		uint32_t buffer_index;
-		glm::mat4 transform = glm::mat4(1.0f);
+		std::size_t material_key;
 	};
 
 	struct RenderModel
 	{
 		std::vector<RenderMesh> renderMeshes;
-		int32_t layout_index = -1;
-		glm::mat4 transform = glm::mat4(1.0f);
+		std::string name;
 	};
 
-	struct AudioBuffer
-	{
-		Ref<audio::AudioBuffer> buffer;
-		std::vector<Ref<audio::AudioSource>> sources;
-	};
 
 	struct TextureInfo
 	{
@@ -62,125 +55,143 @@ namespace engine
 		Filtering filtering;
 	};
 
-	class AudioObject
-	{
-
-		Ref<audio::AudioSource> source{};
-		AudioBuffer buffer{};
-		float angle{};
-		float gain{};
-		glm::vec3 position{};
-		glm::vec3 direction{};
-		glm::vec3 velocity{};
-
-		friend class AssetManager;
-
-	public:
-		// Setters
-		void Position(glm::vec3 p)
-		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			audioManager->setSourcePosition(source, p);
-		}
-
-		void Direction(glm::vec3 d)
-		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			audioManager->setSourceDirection(source, d);
-		}
-
-		void Velocity(glm::vec3 v)
-		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			audioManager->setSourceVelocity(source, v);
-		}
-
-		void Angle(float a)
-		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			audioManager->setSourceAngle(source, a);
-		}
-
-		void Gain(float g)
-		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			audioManager->setSourceGain(source, g);
-		}
-
-		void Pitch(float p)
-		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			audioManager->setSourcePitch(source, p);
-		}
-
-		// Getters
-		glm::vec3 Position()
-		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			return audioManager->getSourcePosition(source);
-		}
-
-		glm::vec3 Direction()
-		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			return audioManager->getSourceDirection(source);
-		}
-
-		glm::vec3 Velocity()
-		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			return audioManager->getSourceVelocity(source);
-		}
-
-		float Angle()
-		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			return audioManager->getSourceAngle(source);
-		}
-
-		float Gain()
-		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			return audioManager->getSourceGain(source);
-		}
-
-		float Pitch()
-		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			return audioManager->getSourcePitch(source);
-		}
-	};
+	
 
 	class AssetManager
 	{
-
-
 		std::unordered_map<std::string, Ref<Texture>> m_pImages;
 		std::unordered_map<std::string, RenderModel> m_pModels;
 		std::unordered_map<std::string, AudioBuffer> m_pAudioBuffers;
-		std::unordered_map<std::string, PBRMaterialIndex> m_pMaterials;
+		std::unordered_map<std::size_t, PBRMaterialIndex> m_pMaterials;
 
 		std::unordered_map<std::string, Ref<Buffer>> m_pGPUBuffers;
 
 		std::queue<uint32_t> m_pFreeMaterialIndexes;
 		uint32_t m_pMaterialCurrentIndex = 0;
 
+		std::queue<uint32_t> m_pFreeObjectIndexes;
+		uint32_t m_pObjectCurrentIndex = 0;
+
+		friend class Scene;
 
 	public:
 
 		static const size_t MAX_MATERIALS = 10000;
 		static const size_t MAX_OBJECTS = 10000;
+		static const size_t MAX_TRANSFORMS = 10000;
 		AssetManager()
 		{
+			
+		}
+
+		void Init() {
 			auto resourceManager = Context().ResourceManager();
 
 			m_pGPUBuffers["material_buffer"] = resourceManager->createGPUBuffer("material_buffer", sizeof(PBRMaterial) * MAX_MATERIALS, engine::BufferStorageType::STORAGE_BUFFER);
-			m_pGPUBuffers["object_buffer"] = resourceManager->createGPUBuffer("object_buffer", sizeof(ObjectData) * MAX_OBJECTS, engine::BufferStorageType::STORAGE_BUFFER);
+			//m_pGPUBuffers["object_buffer"] = resourceManager->createGPUBuffer("object_buffer", sizeof(ShaderObjectData) * MAX_OBJECTS, engine::BufferStorageType::STORAGE_BUFFER);
+			//m_pGPUBuffers["transform_buffer"] = resourceManager->createGPUBuffer("transform_buffer", sizeof(glm::mat4) * MAX_TRANSFORMS, engine::BufferStorageType::STORAGE_BUFFER);
+		}
+
+		const RenderModel& createModelFromMesh(const std::string name, const common::Mesh& mesh, const common::MeshMaterial& material) {
+
+			auto resourceManager = Context().ResourceManager();
+
+			if (m_pModels.contains(name)) {
+				return m_pModels.at(name);
+			}
+			RenderModel& model = m_pModels[name];
+			model.name = name;
+
+			std::string material_name = name + "_material";
+			size_t material_name_hash = std::hash<std::string>{}(material_name);
+
+			RenderMesh subRenderC;
+			subRenderC.material_key = material_name_hash;
+			subRenderC.mesh = addMesh(name, mesh);
+			model.renderMeshes.push_back(subRenderC);
+
+			PBRMaterial pbr_material;
+
+
+
+			if (m_pMaterials.contains(material_name_hash)) {
+				return model;
+			}
+
+
+			pbr_material.albedo_color = material.color;
+			pbr_material.metallic_color = material.metallic;
+			pbr_material.roughness_color = material.roughness;
+
+			if (!material.albedo_path.empty())
+			{
+				auto albedo = addTexture(material.albedo_path, { .format = COLOR_RGBA,
+																.wrapMode = REPEAT,
+																.filtering = LINEAR });
+				pbr_material.albedo_texture_index = albedo.Index();
+			}
+			if (!material.metallic_path.empty())
+			{
+				auto metallic = addTexture(material.metallic_path, { .format = NON_COLOR_RGBA,
+																	.wrapMode = REPEAT,
+																	.filtering = LINEAR });
+				pbr_material.metallic_texture_index = metallic.Index();
+			}
+			if (!material.roughness_path.empty())
+			{
+				auto roughness = addTexture(material.roughness_path, { .format = NON_COLOR_RGBA,
+																	  .wrapMode = REPEAT,
+																	  .filtering = LINEAR });
+				pbr_material.roughness_texture_index = roughness.Index();
+			}
+			if (!material.normal_path.empty())
+			{
+				auto normal = addTexture(material.normal_path, { .format = NON_COLOR_RGBA,
+																.wrapMode = REPEAT,
+																.filtering = LINEAR });
+				pbr_material.normal_texture_index = normal.Index();
+			}
+
+			uint32_t mat_index = 0;
+			if (!m_pFreeMaterialIndexes.empty()) {
+				mat_index = m_pFreeMaterialIndexes.front();
+				m_pFreeMaterialIndexes.pop();
+			}
+			else {
+				mat_index = m_pMaterialCurrentIndex;
+				m_pMaterialCurrentIndex++;
+			}
+
+
+			PBRMaterial* materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"]));
+
+			materialBufferPtr[mat_index] = pbr_material;
+
+			m_pMaterials[material_name_hash].index = mat_index;
+			m_pMaterials[material_name_hash].material = pbr_material;
+
+
+			resourceManager->unmapBuffer(m_pGPUBuffers["material_buffer"]);
+
+
+			return model;
+		}
+
+		ShaderObjectData createObjectData(const RenderModel& model) {
+
+			auto resourceManager = Context().ResourceManager();
+			ShaderObjectData* objectBufferPtr = reinterpret_cast<ShaderObjectData*>(resourceManager->mapBuffer(m_pGPUBuffers["object_buffer"]));
+
+			for (auto& mesh : model.renderMeshes) {
+				auto index = getShaderDataIndex(); 
+				objectBufferPtr[index].material_index = m_pMaterials.at(mesh.material_key).index;
+			}
+
+			resourceManager->unmapBuffer(m_pGPUBuffers["object_buffer"]);
 		}
 
 		const RenderModel &loadModel(const std::string &path)
 		{
-
 			auto resourceManager = Context().ResourceManager();
 
 			if (m_pModels.contains(path))
@@ -190,22 +201,28 @@ namespace engine
 
 			int index = 0;
 			RenderModel &model = m_pModels[path];
+
+
+			model.name = path;
 			for (auto &mesh : inModel.Meshes())
 			{
 				RenderMesh subRenderC;
 				subRenderC.mesh = addMesh(path + "_submesh_" + std::to_string(index), mesh.data().mesh);
-				// subRenderC.material = addMaterial(name + "_material", mesh.data().mesh);
+
+				std::string material_name = path + "_submesh_" + std::to_string(index) + "_material";
+
+				subRenderC.material_key = std::hash<std::string>{}(material_name);
+
 				model.renderMeshes.push_back(subRenderC);
 
 				auto mesh_material = mesh.Material();
 
 				PBRMaterial material;
 
-				std::string material_name = path + "_submesh_" + std::to_string(index) + "_material";
+				size_t material_name_hash = std::hash<std::string>{}(material_name);
 
-				if (m_pMaterials.contains(material_name)) {
-					subRenderC.pbr_material = m_pMaterials.at(material_name).material;
-					subRenderC.buffer_index = m_pMaterials.at(material_name).index;
+				if (m_pMaterials.contains(material_name_hash)) {
+					model.renderMeshes.push_back(subRenderC);
 					continue;
 				}
 
@@ -238,9 +255,8 @@ namespace engine
 					material.normal_texture_index = normal.Index();
 				}
 
-
-				m_pMaterials[material_name].material = material;
-				subRenderC.pbr_material = material;
+				m_pMaterials[material_name_hash].material = material;
+				subRenderC.material_key = material_name_hash;
 
 				PBRMaterial* materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"]));
 
@@ -254,7 +270,7 @@ namespace engine
 					m_pMaterialCurrentIndex++;
 				}
 
-				m_pMaterials[material_name].index = mat_index;
+				m_pMaterials[material_name_hash].index = mat_index;
 
 				materialBufferPtr[mat_index] = material;
 
@@ -306,7 +322,26 @@ namespace engine
 			return object;
 		}
 
+
+
 	private:
+
+		uint32_t getShaderDataIndex() {
+
+			uint32_t obj_index = 0;
+			if (!m_pFreeObjectIndexes.empty()) {
+				obj_index = m_pFreeObjectIndexes.front();
+				m_pFreeObjectIndexes.pop();
+			}
+			else {
+				obj_index = m_pObjectCurrentIndex;
+				m_pObjectCurrentIndex++;
+			}
+
+			return obj_index;
+
+		}
+
 		Ref<Texture> addTexture(const std::string &path, const TextureInfo &info)
 		{
 
