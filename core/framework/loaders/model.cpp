@@ -5,14 +5,14 @@
 
 namespace framework
 {
-	Model::Model(const std::string& path)
+	Model::Model(const std::string& path) : ModelBase(path)
 	{
-		this->loadModel(path);
+		Load(path);
 	}
 
-	bool Model::loadModel(std::string emlPath)
+	bool Model::Load(const std::string& emlPath)
 	{
-		this->path = emlPath;
+		filename = emlPath;
 
 		std::ifstream inFILE(emlPath, std::ios::binary);
 		if (!inFILE.is_open())

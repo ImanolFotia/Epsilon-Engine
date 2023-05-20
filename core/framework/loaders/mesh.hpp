@@ -46,7 +46,7 @@ namespace framework
 
     public:
 
-
+        Mesh() = default;
         /**  Functions  */
         /// Constructor
         Mesh(std::vector<EML::t_Vertex> inVertices, std::vector<uint32_t> indices, MeshMaterial material, size_t vOffset, size_t iOffset)

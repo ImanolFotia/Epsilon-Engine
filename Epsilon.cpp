@@ -81,6 +81,11 @@ namespace Epsilon
         Epsilon::getSingleton().onRender = fun;
     }
 
+    void Epsilon::setOnUpdate(std::function<void(void)> fun)
+    {
+        Epsilon::getSingleton().onUpdate = fun;
+    }
+
     void Epsilon::setOnExit(std::function<void(void)> fun)
     {
         Epsilon::getSingleton().onExit = fun;
@@ -101,6 +106,9 @@ namespace Epsilon
     {
         framework::Clock::Tick();
         showFPS();
+        if (self.onUpdate)
+            self.onUpdate();
+
         if (self.onRender)
             self.onRender();
         engine::Context::getSingleton().Window().PollEvents();

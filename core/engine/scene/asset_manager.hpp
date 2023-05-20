@@ -6,6 +6,7 @@
 
 #include <core/engine/renderer/resource_manager.hpp>
 #include <core/framework/loaders/model.h>
+#include <core/framework/loaders/gltf.hpp>
 
 #include "audio/audio_object.hpp"
 
@@ -99,6 +100,7 @@ namespace engine
 			if (m_pModels.contains(name)) {
 				return m_pModels.at(name);
 			}
+
 			RenderModel& model = m_pModels[name];
 			model.name = name;
 
@@ -197,14 +199,24 @@ namespace engine
 			if (m_pModels.contains(path))
 				return m_pModels.at(path);
 
-			framework::Model inModel("./assets/" + path);
+			//if()
+			const std::string ext = path.substr(path.find_last_of('.')+1, path.length());
+
+			std::unique_ptr<framework::ModelBase> inModel;
+
+			if (ext == "eml") {
+				inModel = std::make_unique<framework::Model>("./assets/" + path);
+			}
+			else {
+				inModel = std::make_unique<framework::gltfModel>("./assets/" + path);
+			}
 
 			int index = 0;
 			RenderModel &model = m_pModels[path];
 
 
 			model.name = path;
-			for (auto &mesh : inModel.Meshes())
+			for (auto &mesh : inModel->Meshes())
 			{
 				RenderMesh subRenderC;
 				subRenderC.mesh = addMesh(path + "_submesh_" + std::to_string(index), mesh.data().mesh);

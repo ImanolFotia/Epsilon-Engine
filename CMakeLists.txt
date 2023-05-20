@@ -261,6 +261,9 @@ else()
     message(${DAWN_BUILD_DIR})
     include_directories(${DAWN_BUILD_DIR}/inc)
     
+    set(TINYGLTF_BUILD_DIR ${THIRDPARTY_DIR}/tinygltf)
+    message(${TINYGLTF_BUILD_DIR})
+    include_directories(${TINYGLTF_BUILD_DIR})
 
 endif()
 SET(HEADERS
@@ -319,6 +322,7 @@ set(PROJECT_FILES
         ${IMGUI_BUILD_DIR}/imgui_draw.cpp
         ${IMGUI_BUILD_DIR}/imgui_tables.cpp
         ${IMGUI_BUILD_DIR}/imgui_widgets.cpp
+        ${TINYGLTF_BUILD_DIR}/tiny_gltf.cc
         )
 
 if (BUILD_AS_LIBRARY)

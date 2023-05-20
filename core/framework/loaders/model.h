@@ -18,18 +18,27 @@
 
 namespace framework
 {
-    class Model
+    class ModelBase {
+    protected:
+        std::string filename{};
+        std::vector<Mesh> mMeshes;
+    public:
+        ModelBase(const std::string& filename) : filename(filename){}
+
+        std::vector<Mesh>& Meshes()
+        {
+            return mMeshes;
+        }
+
+        virtual bool Load(const std::string& emlPath) = 0;
+    };
+    class Model : public ModelBase
     {
 
-        std::string path{};
-        std::vector<Mesh> mMeshes;
 
     public:
 
-
         Model(const std::string &path = "");
-
-
 
         common::BoundingBox getMeshBoundingBox(unsigned int index, glm::vec3 position, glm::vec3 scale, glm::quat rotation);
 
@@ -40,17 +49,10 @@ namespace framework
 
         long toHash()
         {
-            return std::hash<std::string>{}(path);
+            return std::hash<std::string>{}(filename);
         }
 
-        std::vector<Mesh> &Meshes()
-        {
-            return mMeshes;
-        }
-
-        std::vector<unsigned int> mVisibleMeshes;
-
-        bool loadModel(std::string emlPath);
+        bool Load(const std::string& emlPath) override;
 
 
 

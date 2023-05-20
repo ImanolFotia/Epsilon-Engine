@@ -70,6 +70,7 @@ namespace Epsilon
 
         std::function<void()> onCreate;
         std::function<void()> onReady;
+        std::function<void()> onUpdate;
         std::function<void()> onRender;
         std::function<void()> onExit;
 
@@ -81,6 +82,7 @@ namespace Epsilon
         void ShouldClose();
         void drawFrame(engine::Ref<engine::RenderPass> renderPassRef);
         void setOnCreate(std::function<void(void)> fun);
+        void setOnUpdate(std::function<void(void)> fun);
         void setOnReady(std::function<void(void)> fun);
         void setOnRender(std::function<void(void)> fun);
         int32_t Frame();
