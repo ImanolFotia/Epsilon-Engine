@@ -23,15 +23,25 @@ namespace engine::parsers {
 			std::vector<UniformBindingInfo> inputs;
 
 			for (auto& input_json : renderpass["inputs"]) {
-				UniformBindingInfo info;
-				info.name = input_json["name"];
-				info.binding = input_json["binding"];
-				info.type = resolveType(input_json["type"]);
-				info.size = input_json["size"];
-				info.offset = input_json["offset"];
-				info.set = input_json["set"];
-				info.descriptorCount = input_json["descriptorCount"];
-				inputs.push_back(info);
+				auto type = resolveType(input_json["type"]);
+					//if (type == UniformBindingType::TEXTURE_SAMPLER) {
+					//	RenderPassBinding binding;
+					//	binding.bindingPoint = input_json["binding"];
+					//	binding.index = input_json["index"];
+					//	binding.renderPass = input_json["renderpass"];
+					//}
+					//else {
+
+						UniformBindingInfo info;
+						info.type = resolveType(input_json["type"]);
+						info.name = input_json["name"];
+						info.binding = input_json["binding"];
+						info.size = input_json["size"];
+						info.offset = input_json["offset"];
+						info.set = input_json["set"];
+						info.descriptorCount = input_json["descriptorCount"];
+						inputs.push_back(info);
+					//}
 			}
 
 			std::vector<RenderPassAttachment> outputs;
@@ -70,13 +80,18 @@ namespace engine::parsers {
 				if (output_json.contains("isSampler")) {
 					info.isSampler = output_json["isSampler"];
 				}
-				
+
 				if (output_json.contains("isDepthAttachment")) {
 					info.isDepthAttachment = output_json["isDepthAttachment"];
 				}
 				if (output_json.contains("isSwapChainAttachment")) {
 					info.isSwapChainAttachment = output_json["isSwapChainAttachment"];
 				}
+
+				if (output_json.contains("blendEnable")) {
+					info.blendEnable = output_json["blendEnable"];
+				}
+
 
 				outputs.push_back(info);
 

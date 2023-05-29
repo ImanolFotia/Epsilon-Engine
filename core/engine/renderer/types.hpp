@@ -97,14 +97,32 @@ namespace engine
         ShaderInfo info;
     };
 
+    struct MemoryHeap {
+
+        uint64_t total_memory = 0;
+        uint64_t free_memory = 0;
+        uint64_t used_memory = 0;
+        std::string type;
+    };
     struct ResourcesMemory_t
     {
+        void reset() {
+            for (auto& heap : heaps) {
+                heap = MemoryHeap();
+            }
+        }
         uint32_t m_pDescriptorSetsAllocationSize = 0;
         uint32_t m_pTextureBufferAllocationSize = 0;
         uint32_t m_pVertexBufferAllocationSize = 0;
         uint32_t m_pIndexBufferAllocationSize = 0;
         uint32_t m_pUniformBufferAllocationSize = 0;
         uint32_t m_pStorageBufferAllocationSize = 0;
+
+        std::vector<MemoryHeap> heaps;
+
+        std::string GPUVendor;
+        std::string GPUName;
+        uint32_t numDrawCalls = 0;
     };
 
     enum TextureFormat

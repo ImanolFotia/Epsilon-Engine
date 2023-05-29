@@ -39,6 +39,7 @@ namespace vk
         imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
         imageInfo.flags = 0; // Optional
 
+
         if (vkCreateImage(vkData.logicalDevice, &imageInfo, nullptr, &texture.image) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to create image!");

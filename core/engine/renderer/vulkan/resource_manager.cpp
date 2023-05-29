@@ -41,6 +41,20 @@ namespace engine
 		allocatorInfo.physicalDevice = m_pVkDataPtr->physicalDevice;
 		allocatorInfo.device = m_pVkDataPtr->logicalDevice;
 		allocatorInfo.instance = m_pVkDataPtr->instance;
+		allocatorInfo.flags = VMA_ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT;
+
+		VkPhysicalDeviceProperties deviceProperties;
+		vkGetPhysicalDeviceProperties(m_pVkDataPtr->physicalDevice, &deviceProperties);
+		VkPhysicalDeviceFeatures deviceFeatures;
+		vkGetPhysicalDeviceFeatures(m_pVkDataPtr->physicalDevice, &deviceFeatures);
+
+		ResourcesMemory.GPUName = std::string(deviceProperties.deviceName);
+		/*IO::Log("Selected device: ", deviceProperties.deviceName);
+		IO::Log("\tApi version: ", deviceProperties.apiVersion);
+		IO::Log("\tID: ", deviceProperties.deviceID);
+		IO::Log("\tDriver version: ", deviceProperties.driverVersion);
+		IO::Log("\tVendor ID: ", deviceProperties.vendorID);
+		IO::Log("\tIs discrete device: ", (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU ? "yes" : "no"));*/
 
 		vmaCreateAllocator(&allocatorInfo, &m_pAllocator);
 
@@ -49,22 +63,23 @@ namespace engine
 		vk::createCommandPool(*m_pVkDataPtr, m_pCommandPools.back());
 
 		pCreateGlobalDescriptorPool();
+		pCreateDescriptorPool();
 
 		vk::createDescriptorSetLayout(
 			*m_pVkDataPtr,
 			m_pGlobalDescriptorSetLayout,
-			{{0, 0, 0, 1, UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER, {}, {}, "", true, MAX_BINDLESS_RESOURCES, "GlobalBindlessTextures"}});
+			{ {0, 0, 0, 1, UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER, {}, {}, "", true, MAX_BINDLESS_RESOURCES, "GlobalBindlessTextures"} });
 
 		pCreateGlobalDescriptorSets(m_pGlobalDescriptorSetLayout,
-									m_pGlobalDescriptorPool,
-									m_pGlobalDescriptorSets,
-									MAX_BINDLESS_RESOURCES);
+			m_pGlobalDescriptorPool,
+			m_pGlobalDescriptorSets,
+			MAX_BINDLESS_RESOURCES);
 
 		pCreateBuffer(m_pIndirectBuffer,
-					  sizeof(VkDrawIndexedIndirectCommand) * 100000,
-					  VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT,
-					  VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT | VMA_ALLOCATION_CREATE_HOST_ACCESS_ALLOW_TRANSFER_INSTEAD_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT,
-					  VMA_MEMORY_USAGE_AUTO);
+			sizeof(VkDrawIndexedIndirectCommand) * 100000,
+			VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT,
+			VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT | VMA_ALLOCATION_CREATE_HOST_ACCESS_ALLOW_TRANSFER_INSTEAD_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT,
+			VMA_MEMORY_USAGE_AUTO);
 	}
 
 	Ref<Texture> VulkanResourceManager::createTexture(TextureCreationInfo texInfo)
@@ -76,27 +91,27 @@ namespace engine
 		auto stagingBuffer = pCreateStagingTextureBuffer(texInfo.pixels, texInfo);
 		uint32_t mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texInfo.width, texInfo.height)))) + 1;
 
-		auto texture = pCreateTextureBuffer({.width = texInfo.width,
+		auto texture = pCreateTextureBuffer({ .width = texInfo.width,
 											 .height = texInfo.height,
 											 .num_channels = texInfo.numChannels,
 											 .mipLevels = mipLevels,
 											 .format = format,
 											 .usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT |
 													  VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
-													  VK_IMAGE_USAGE_SAMPLED_BIT});
+													  VK_IMAGE_USAGE_SAMPLED_BIT });
 
 		texture.format = format;
 
 		auto size = texInfo.width * texInfo.height * texInfo.numChannels;
 
 		transitionImageLayout(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), texture.image,
-							  format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-							  texture.info);
+			format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+			texture.info);
 		copyBufferToImage(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), stagingBuffer.buffer, texture.image,
-						  static_cast<uint32_t>(texInfo.width), static_cast<uint32_t>(texInfo.height));
+			static_cast<uint32_t>(texInfo.width), static_cast<uint32_t>(texInfo.height));
 		transitionImageLayout(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), texture.image,
-							  format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-							  VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, texture.info);
+			format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+			VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, texture.info);
 
 		vmaDestroyBuffer(m_pAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
 		// vmaFreeMemory(m_pAllocator, m_pStagingTextureBuffer.allocation);
@@ -139,14 +154,14 @@ namespace engine
 				mipSubRange.layerCount = 1;
 
 				vk::imageMemoryBarrier(*m_pVkDataPtr,
-									   m_pCommandPools.back(),
-									   texture.image,
-									   texture.format,
-									   VK_IMAGE_LAYOUT_UNDEFINED,
-									   VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-									   texture.info,
-									   blitCommandBuffer,
-									   mipSubRange, i, 1);
+					m_pCommandPools.back(),
+					texture.image,
+					texture.format,
+					VK_IMAGE_LAYOUT_UNDEFINED,
+					VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+					texture.info,
+					blitCommandBuffer,
+					mipSubRange, i, 1);
 
 				// Blit from previous level
 				vkCmdBlitImage(
@@ -160,14 +175,14 @@ namespace engine
 					VK_FILTER_LINEAR);
 
 				vk::imageMemoryBarrier(*m_pVkDataPtr,
-									   m_pCommandPools.back(),
-									   texture.image,
-									   texture.format,
-									   VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-									   VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-									   texture.info,
-									   blitCommandBuffer,
-									   mipSubRange, i, 1);
+					m_pCommandPools.back(),
+					texture.image,
+					texture.format,
+					VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+					VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+					texture.info,
+					blitCommandBuffer,
+					mipSubRange, i, 1);
 			}
 
 		// After the loop, all mip layers are in TRANSFER_SRC layout, so transition all to SHADER_READ
@@ -176,23 +191,23 @@ namespace engine
 		subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 		subresourceRange.layerCount = 1;
 		subresourceRange.levelCount = mipLevels;
-		
+
 		vk::imageMemoryBarrier(*m_pVkDataPtr,
-							   m_pCommandPools.back(),
-							   texture.image,
-							   texture.format,
-							   VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-							   VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-							   texture.info,
-							   blitCommandBuffer,
-							   subresourceRange);
+			m_pCommandPools.back(),
+			texture.image,
+			texture.format,
+			VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+			VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+			texture.info,
+			blitCommandBuffer,
+			subresourceRange);
 
 		vk::endSingleTimeCommands(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), blitCommandBuffer);
 
 		/*transitionImageLayout(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), texture.image,
 			format, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
 			VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, texture.info);*/
-		/* End generate mips*/
+			/* End generate mips*/
 		vk::createTextureSampler(*m_pVkDataPtr, texture);
 
 		texture.bindingType = vk::MATERIAL_SAMPLER;
@@ -207,7 +222,7 @@ namespace engine
 			VkWriteDescriptorSet bindless_descriptor_writes;
 			VkDescriptorImageInfo bindless_image_info;
 
-			bindless_descriptor_writes = {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET};
+			bindless_descriptor_writes = { VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET };
 			bindless_descriptor_writes.descriptorCount = 1;
 			bindless_descriptor_writes.dstArrayElement = texture.index;
 			bindless_descriptor_writes.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
@@ -237,7 +252,7 @@ namespace engine
 			vkMaterial.descriptorSetLayout = renderPass->renderPipelines.back().descriptorSetLayouts.at(RENDERPASS_LAYOUT);
 			// auto &materialdata = m_pMaterials.emplace_back();
 
-			for (auto &binding : material.inputs)
+			for (auto& binding : material.inputs)
 			{
 				auto pass = renderPassPool.get(std::hash<std::string>{}(binding.renderPass));
 				vkMaterial.slots++;
@@ -247,7 +262,9 @@ namespace engine
 						.texture = pass->renderPassChain.DepthTexture,
 						.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 						.bindingPoint = binding.bindingPoint,
-						.isRenderPassAttachment = true};
+						.isRenderPassAttachment = true,
+						.renderpass = binding.renderPass,
+					.attachment_index = (int32_t)binding.index };
 
 					shaderBinding.texture.isDepthAttachment = true;
 
@@ -259,13 +276,15 @@ namespace engine
 						.texture = pass->renderPassChain.Textures.at(binding.index),
 						.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 						.bindingPoint = binding.bindingPoint,
-						.isRenderPassAttachment = true};
+						.isRenderPassAttachment = true,
+						.renderpass = binding.renderPass,
+					.attachment_index = (int32_t)binding.index };
 
 					vkMaterial.shaderBindings.push_back(shaderBinding);
 				}
 			}
 
-			for (auto &binding : material.bindingInfo)
+			for (auto& binding : material.bindingInfo)
 			{
 				if (binding.type == UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER)
 				{
@@ -275,7 +294,7 @@ namespace engine
 						.texture = *texPool.get(tex),
 						.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 						.bindingPoint = binding.binding,
-						.isRenderPassAttachment = false};
+						.isRenderPassAttachment = false };
 
 					vkMaterial.shaderBindings.push_back(shaderBinding);
 				}
@@ -288,7 +307,7 @@ namespace engine
 						.buffer = buff,
 						.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
 						.bindingPoint = binding.binding,
-						.isRenderPassAttachment = false};
+						.isRenderPassAttachment = false };
 
 					vkMaterial.shaderBindings.push_back(shaderBinding);
 				}
@@ -306,25 +325,26 @@ namespace engine
 
 			m_pNumCommandPools++;
 
-			pCreateDescriptorPool();
-			pRecreateDescriptorSets();
+			//pCreateDescriptorPool();
+			//pRecreateDescriptorSets();
 			pCreateDescriptorSets(vkMaterial.descriptorSetLayout,
-								  m_pDescriptorPool,
-								  vkMaterial.descriptorSets,
-								  vk::MAX_FRAMES_IN_FLIGHT);
+				m_pDescriptorPool,
+				vkMaterial.descriptorSets,
+				vk::MAX_FRAMES_IN_FLIGHT);
 			pUpdateMaterial(vkMaterial);
+
 
 			Ref<BindGroup> materialRef = materialPool.insert(material.name, vkMaterial);
 			return materialRef;
 		}
-		catch (std::exception &e)
+		catch (std::exception& e)
 		{
 
 			throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
 		}
 	}
 
-	void VulkanResourceManager::pRecreateSwapChain(framework::Window::windowType *window)
+	void VulkanResourceManager::pRecreateSwapChain(framework::Window::windowType* window)
 	{
 	}
 
@@ -347,7 +367,9 @@ namespace engine
 			m_pVkDataPtr->defaultRenderPass.clearValues.back()
 				.depthStencil = {
 				(float)renderPassInfo.attachments.back().depthStencilValue[0],
-				renderPassInfo.attachments.back().depthStencilValue[1]};
+				renderPassInfo.attachments.back().depthStencilValue[1] };
+
+
 		}
 
 		vk::createRenderPass(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, renderPassInfo, true);
@@ -359,11 +381,11 @@ namespace engine
 			// m_pVkDataPtr->defaultRenderPass.renderPipelines.emplace_back();
 			m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayouts.resize(2);
 			vk::createDescriptorSetLayout(*m_pVkDataPtr,
-										  m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayouts.at(RENDERPASS_LAYOUT), renderPassInfo.bindingInfo);
+				m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayouts.at(RENDERPASS_LAYOUT), renderPassInfo.bindingInfo);
 
 			m_pVkDataPtr->defaultRenderPass.numAttachments = renderPassInfo.numAttachments;
 
-			for (auto &pipeline : m_pVkDataPtr->defaultRenderPass.renderPipelines)
+			for (auto& pipeline : m_pVkDataPtr->defaultRenderPass.renderPipelines)
 			{
 				pipeline.descriptorSetLayouts.resize(1);
 				if (m_pVkDataPtr->bindless_supported)
@@ -373,14 +395,14 @@ namespace engine
 				}
 			}
 			vk::createGraphicsPipeline(*m_pVkDataPtr,
-									   m_pVkDataPtr->defaultRenderPass,
-									   renderPassInfo);
+				m_pVkDataPtr->defaultRenderPass,
+				renderPassInfo);
 		}
 
 		vk::createSwapChainFramebuffers(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass,
-										m_pVkDataPtr->defaultRenderPass.renderPassChain);
+			m_pVkDataPtr->defaultRenderPass.renderPassChain);
 
-		for (auto &binding : renderPassInfo.bindingInfo)
+		for (auto& binding : renderPassInfo.bindingInfo)
 		{
 			if (binding.type == UniformBindingType::UNIFORM_BUFFER)
 			{
@@ -401,15 +423,15 @@ namespace engine
 		renderPass.clearValues.resize(renderPassInfo.numAttachments + (renderPassInfo.depthAttachment ? 1 : 0));
 		for (int i = 0; i < renderPassInfo.numAttachments; i++)
 		{
-			renderPass.clearValues[i].color = {renderPassInfo.attachments[i].clearColor[0],
+			renderPass.clearValues[i].color = { renderPassInfo.attachments[i].clearColor[0],
 											   renderPassInfo.attachments[i].clearColor[1],
 											   renderPassInfo.attachments[i].clearColor[2],
-											   renderPassInfo.attachments[i].clearColor[3]};
+											   renderPassInfo.attachments[i].clearColor[3] };
 		}
 		if (renderPassInfo.depthAttachment)
 			renderPass.clearValues.back().depthStencil = {
 				(float)renderPassInfo.attachments.back().depthStencilValue[0],
-				renderPassInfo.attachments.back().depthStencilValue[1]};
+				renderPassInfo.attachments.back().depthStencilValue[1] };
 
 		renderPass.id = m_pRenderPassCount;
 		m_pRenderPassInfo.push_back(renderPassInfo);
@@ -422,7 +444,7 @@ namespace engine
 
 		for (size_t i = 0; i < renderPassInfo.attachments.size(); i++)
 		{
-			auto &attachment = renderPassInfo.attachments[i];
+			auto& attachment = renderPassInfo.attachments[i];
 
 			vk::VulkanTextureInfo texInfo;
 			texInfo.format = attachment.isDepthAttachment ? findDepthFormat(*m_pVkDataPtr) : resolveFormat(renderPassInfo.attachments[i].format);
@@ -442,7 +464,7 @@ namespace engine
 			texture.bindingType = vk::RENDER_BUFFER_SAMPLER;
 			texture.info.mipLevels = 1;
 			createImageView(*m_pVkDataPtr, texture,
-							(attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
+				(attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
 
 			if (attachment.isSampler)
 			{
@@ -466,7 +488,7 @@ namespace engine
 
 		renderPass.renderPipelines.resize(renderPassInfo.numLayouts); //.emplace_back();
 
-		for (auto &pipeline : renderPass.renderPipelines)
+		for (auto& pipeline : renderPass.renderPipelines)
 		{
 			pipeline.descriptorSetLayouts.resize(1);
 			if (m_pVkDataPtr->bindless_supported)
@@ -477,12 +499,12 @@ namespace engine
 		}
 
 		vk::createGraphicsPipeline(*m_pVkDataPtr,
-								   renderPass,
-								   renderPassInfo);
+			renderPass,
+			renderPassInfo);
 
 		vk::createFramebuffers(*m_pVkDataPtr, renderPass, renderPass.renderPassChain);
 
-		for (auto &binding : renderPassInfo.bindingInfo)
+		for (auto& binding : renderPassInfo.bindingInfo)
 		{
 			if (binding.type == UniformBindingType::UNIFORM_BUFFER)
 			{
@@ -503,54 +525,54 @@ namespace engine
 	{
 
 		vkDeviceWaitIdle(m_pVkDataPtr->logicalDevice);
-		for (auto &buffer : vertexBufferPool)
+		for (auto& buffer : vertexBufferPool)
 		{
 			vmaDestroyBuffer(m_pAllocator, buffer.buffer, buffer.allocation);
 		}
 
-		for (auto &buffer : indexBufferPool)
+		for (auto& buffer : indexBufferPool)
 		{
 			vmaDestroyBuffer(m_pAllocator, buffer.buffer, buffer.allocation);
 		}
 
-		for (auto &buffer : uniformBufferPool)
+		for (auto& buffer : uniformBufferPool)
 		{
-			for (auto &b : buffer.buffers)
+			for (auto& b : buffer.buffers)
 			{
 				vmaDestroyBuffer(m_pAllocator, b.buffer, b.allocation);
 			}
 		}
-		for (auto &buffer : gpuBufferPool)
+		for (auto& buffer : gpuBufferPool)
 		{
 			vmaDestroyBuffer(m_pAllocator, buffer.buffer.buffer, buffer.buffer.allocation);
 		}
 
 		vk::cleanupSyncObjects(*m_pVkDataPtr);
 
-		for (auto &commandPool : m_pVkDataPtr->m_pCommandPools)
+		for (auto& commandPool : m_pVkDataPtr->m_pCommandPools)
 			vk::cleanCommandPool(*m_pVkDataPtr, commandPool);
 
-		for (auto &commandPool : m_pCommandPools)
+		for (auto& commandPool : m_pCommandPools)
 			vk::cleanCommandPool(*m_pVkDataPtr, commandPool);
 
-		for (auto &texture : texPool)
+		for (auto& texture : texPool)
 		{
 			vkDestroySampler(m_pVkDataPtr->logicalDevice, texture.sampler, nullptr);
 			vkDestroyImageView(m_pVkDataPtr->logicalDevice, texture.imageView, nullptr);
 			vmaDestroyImage(m_pAllocator, texture.image, texture.allocation);
 		}
 
-		for (auto &pass : renderPassPool)
+		for (auto& pass : renderPassPool)
 		{
 			vk::cleanupRenderPass(*m_pVkDataPtr, pass.renderPass);
 
-			for (auto &pipeline : pass.renderPipelines)
+			for (auto& pipeline : pass.renderPipelines)
 				vk::destroyGraphicsPipeline(*m_pVkDataPtr, pipeline);
 
 			if (pass.id == std::numeric_limits<uint32_t>::max())
 				continue;
 
-			for (auto &framebuffer : pass.renderPassChain.Framebuffers)
+			for (auto& framebuffer : pass.renderPassChain.Framebuffers)
 				vkDestroyFramebuffer(m_pVkDataPtr->logicalDevice, framebuffer, nullptr);
 
 			for (int i = 0; i < pass.renderPassChain.Textures.size(); i++)
@@ -558,7 +580,7 @@ namespace engine
 				vkDestroySampler(m_pVkDataPtr->logicalDevice, pass.renderPassChain.Textures[i].sampler, nullptr);
 				vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass.renderPassChain.Textures[i].imageView, nullptr);
 				vmaDestroyImage(m_pAllocator, pass.renderPassChain.Textures[i].image,
-								pass.renderPassChain.Textures[i].allocation);
+					pass.renderPassChain.Textures[i].allocation);
 			}
 
 			if (pass.renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE)
@@ -568,7 +590,7 @@ namespace engine
 				vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass.renderPassChain.DepthTexture.imageView, nullptr);
 
 			vmaDestroyImage(m_pAllocator, pass.renderPassChain.DepthTexture.image,
-							pass.renderPassChain.DepthTexture.allocation);
+				pass.renderPassChain.DepthTexture.allocation);
 		}
 		vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool, nullptr);
 
@@ -576,6 +598,8 @@ namespace engine
 		vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pGlobalDescriptorPool, nullptr);
 
 		vmaDestroyBuffer(m_pAllocator, m_pIndirectBuffer.buffer, m_pIndirectBuffer.allocation);
+
+		
 
 		vmaDestroyAllocator(m_pAllocator);
 		vk::cleanup(*m_pVkDataPtr);
@@ -598,45 +622,45 @@ namespace engine
 
 	Ref<Mesh> VulkanResourceManager::createMesh(MeshInfo meshInfo)
 	{
-		std::vector<common::Vertex> *vertices = &meshInfo.vertices;
-		std::vector<uint32_t> *indices = &meshInfo.indices;
+		std::vector<common::Vertex>* vertices = &meshInfo.vertices;
+		std::vector<uint32_t>* indices = &meshInfo.indices;
 
-		auto maxOffset = [](auto &indices) -> uint32_t
+		auto maxOffset = [](auto& indices) -> uint32_t
 		{
 			uint32_t out = 0;
-			for (auto &i : indices)
+			for (auto& i : indices)
 				out = i > out ? i : out;
 			return out;
 		};
 
 		Ref<Buffer> vertexBufferRef = pFetchVertexBuffer(vertices->size());
-		vk::VulkanBuffer *vertexBuffer = vertexBufferPool.get(vertexBufferRef);
+		vk::VulkanBuffer* vertexBuffer = vertexBufferPool.get(vertexBufferRef);
 
 		Ref<Buffer> indexBufferRef = pFetchIndexBuffer(indices->size(), vertexBuffer->allocatedVertices);
-		vk::VulkanBuffer *indexBuffer = indexBufferPool.get(indexBufferRef);
+		vk::VulkanBuffer* indexBuffer = indexBufferPool.get(indexBufferRef);
 
 		auto vertexStagingBuffer = pCreateStagingBuffer(*vertices);
 		auto indexStagingBuffer = pCreateStagingIndexBuffer(*indices);
 
 		vk::copyBuffer(*m_pVkDataPtr, m_pCommandPools.back(), vertexStagingBuffer.buffer, vertexBuffer->buffer,
-					   vertices->size() * sizeof(common::Vertex), vertexBuffer->allocatedVertices * sizeof(common::Vertex));
+			vertices->size() * sizeof(common::Vertex), vertexBuffer->allocatedVertices * sizeof(common::Vertex));
 
 		vmaDestroyBuffer(m_pAllocator, vertexStagingBuffer.buffer, vertexStagingBuffer.allocation);
 
 		vk::copyBuffer(*m_pVkDataPtr, m_pCommandPools.back(), indexStagingBuffer.buffer, indexBuffer->buffer,
-					   indices->size() * sizeof(IndexType), indexBuffer->allocatedVertices * sizeof(IndexType));
+			indices->size() * sizeof(IndexType), indexBuffer->allocatedVertices * sizeof(IndexType));
 
 		vmaDestroyBuffer(m_pAllocator, indexStagingBuffer.buffer, indexStagingBuffer.allocation);
 
 		if (0)
 		{
 			IO::Info("From function ", __PRETTY_FUNCTION__, "\n\tin (", __FILE__, ":", __LINE__, ") \n\t", "copied ",
-					 vertices->size(), " vertices, of size ", vertices->size() * sizeof(common::Vertex), " bytes, at offset ",
-					 vertexBuffer->allocatedVertices * sizeof(common::Vertex), " to local buffer");
+				vertices->size(), " vertices, of size ", vertices->size() * sizeof(common::Vertex), " bytes, at offset ",
+				vertexBuffer->allocatedVertices * sizeof(common::Vertex), " to local buffer");
 
 			IO::Info("From function ", __PRETTY_FUNCTION__, "\n\tin (", __FILE__, ":", __LINE__, ") \n\t", "copied ",
-					 indices->size(), " indices, of size ", indices->size() * sizeof(IndexType), " bytes, at offset ",
-					 indexBuffer->allocatedVertices * sizeof(IndexType), " to local buffer");
+				indices->size(), " indices, of size ", indices->size() * sizeof(IndexType), " bytes, at offset ",
+				indexBuffer->allocatedVertices * sizeof(IndexType), " to local buffer");
 		}
 
 		MeshResource meshResource = {
@@ -645,7 +669,7 @@ namespace engine
 			.vertexOffset = vertexBuffer->allocatedVertices,
 			.indexOffset = indexBuffer->allocatedVertices,
 			.numVertices = (uint32_t)vertices->size(),
-			.numIndices = (uint32_t)indices->size()};
+			.numIndices = (uint32_t)indices->size() };
 		auto ref = meshPool.insert(meshInfo.name, meshResource);
 
 		int maxAllocatingSize = sizeof(IndexType) * (indexBuffer->allocatedVertices + indices->size());
@@ -659,13 +683,13 @@ namespace engine
 
 		if (0)
 			IO::Warning("Function ready, testing required\n\t", __PRETTY_FUNCTION__,
-						"\n\tin ", __FILE__, ":", __LINE__);
+				"\n\tin ", __FILE__, ":", __LINE__);
 
 		// throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
 		return ref;
 	}
 
-	Ref<Buffer> VulkanResourceManager::createGPUBuffer(const std::string &name, uint32_t size, BufferStorageType type)
+	Ref<Buffer> VulkanResourceManager::createGPUBuffer(const std::string& name, uint32_t size, BufferStorageType type)
 	{
 
 		vk::VulkanGPUMappedBuffer buffer;
@@ -691,7 +715,7 @@ namespace engine
 	 *
 	 */
 
-	vk::VulkanRenderPass *VulkanResourceManager::getRenderPass(Ref<RenderPass> ref)
+	vk::VulkanRenderPass* VulkanResourceManager::getRenderPass(Ref<RenderPass> ref)
 	{
 
 		return renderPassPool.get(ref);
@@ -735,7 +759,7 @@ namespace engine
 	{
 		auto pass = renderPassPool.get(renderPassRef);
 		vk::cleanupRenderPass(*m_pVkDataPtr, pass->renderPass);
-		for (auto &pipeline : pass->renderPipelines)
+		for (auto& pipeline : pass->renderPipelines)
 			vk::destroyGraphicsPipeline(*m_pVkDataPtr, pipeline);
 
 		if (pass->id == std::numeric_limits<uint32_t>::max())
@@ -746,7 +770,7 @@ namespace engine
 			vkDestroySampler(m_pVkDataPtr->logicalDevice, pass->renderPassChain.Textures[i].sampler, nullptr);
 			vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass->renderPassChain.Textures[i].imageView, nullptr);
 			vmaDestroyImage(m_pAllocator, pass->renderPassChain.Textures[i].image,
-							pass->renderPassChain.Textures[i].allocation);
+				pass->renderPassChain.Textures[i].allocation);
 		}
 
 		if (pass->renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE)
@@ -756,13 +780,13 @@ namespace engine
 			vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass->renderPassChain.DepthTexture.imageView, nullptr);
 
 		vmaDestroyImage(m_pAllocator, pass->renderPassChain.DepthTexture.image,
-						pass->renderPassChain.DepthTexture.allocation);
+			pass->renderPassChain.DepthTexture.allocation);
 	}
 
-	void *VulkanResourceManager::mapBuffer(Ref<Buffer> bufferRef)
+	void* VulkanResourceManager::mapBuffer(Ref<Buffer> bufferRef)
 	{
 		auto buffer = gpuBufferPool.get(bufferRef);
-		void *data;
+		void* data;
 		vmaMapMemory(m_pAllocator, buffer->buffer.allocation, &data);
 		return data;
 	}

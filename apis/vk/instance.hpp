@@ -43,6 +43,7 @@ namespace vk
         glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 #endif
         auto extensions = getRequiredExtensions();
+        extensions.push_back("VK_KHR_get_physical_device_properties2");
         createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
         createInfo.ppEnabledExtensionNames = extensions.data();
 

@@ -58,6 +58,7 @@ namespace vk
         VkSamplerAddressMode addressMode;
         VkCompareOp compareOp;
         bool compareEnable = false;
+        bool isSampler = false;
     };
 
     enum VulkanTextureBindingType
@@ -124,6 +125,8 @@ namespace vk
         VkDescriptorType descriptorBinding;
         uint32_t bindingPoint = 0;
         bool isRenderPassAttachment = false;
+        std::string renderpass = "";
+        int32_t attachment_index = -1;
         std::string name = "";
     };
 
@@ -271,7 +274,8 @@ namespace vk
         VkQueue graphicsQueue;
 
         const std::vector<const char *> deviceExtensions = {
-            VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+            VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+            VK_EXT_MEMORY_BUDGET_EXTENSION_NAME };
 
         VkSwapchainKHR swapChain;
         // RenderPassChain swapChainData;
@@ -279,6 +283,8 @@ namespace vk
         bool bindless_supported = false;
         uint32_t swapChainWidth = 0;
         uint32_t swapChainHeight = 0;
+
+        uint32_t max_memory_heaps = 0;
 
         /*
         std::vector<VkImage> swapChainImages;

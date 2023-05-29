@@ -138,7 +138,7 @@ namespace engine
             return VkDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     }
 
-    static std::vector<IndirectBatch> generateIndirectBatch(std::vector<DrawCommand> &commandLists)
+    static std::vector<IndirectBatch> generateIndirectBatch(std::array<DrawCommand, MAX_COMMAND_QUEUE_SIZE> &commandLists)
     {
         std::vector<IndirectBatch> batches{};
         batches.resize(commandLists.size());

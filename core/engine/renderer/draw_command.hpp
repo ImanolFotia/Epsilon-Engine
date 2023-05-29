@@ -1,22 +1,27 @@
 #pragma once
 
-#include "resource_manager.hpp"
-
+//#include "resource_manager.hpp"
+#include "types.hpp"
 namespace engine
 {
 
+    struct MeshResource
+    {
+        Ref<Buffer> vertexBuffer;
+        Ref<Buffer> indexBuffer;
+        uint32_t vertexOffset{};
+        uint32_t indexOffset{};
+        uint32_t numVertices{};
+        uint32_t numIndices{};
+    };
 
     class DrawCommand
     {
     public:
         DrawCommand() = default;
         MeshResource meshResource;
-
         uint32_t layoutIndex = 0;
-
         Ref<engine::BindGroup> material;
-        void *objectData = nullptr;
-        size_t object_data_size = 0;
         uint32_t uniformIndex = 0;
         ObjectDataConstant pushConstantData;
     };

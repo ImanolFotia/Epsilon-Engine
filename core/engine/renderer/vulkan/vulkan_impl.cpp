@@ -223,7 +223,7 @@ namespace engine
         poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
         poolInfo.pPoolSizes = poolSizes.data();
 
-        poolInfo.maxSets = poolSizes.size() * 1000;
+        poolInfo.maxSets = poolSizes.size() * 2;
         if (vkCreateDescriptorPool(m_pVkDataPtr->logicalDevice, &poolInfo, nullptr, &m_pDescriptorPool) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to create descriptor pool!");
@@ -348,9 +348,27 @@ namespace engine
                     if (binding.descriptorBinding == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER && binding.isRenderPassAttachment)
                     {
                         auto &imageInfo = imageInfos.emplace_back();
+
                         imageInfo.imageLayout = binding.texture.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
                         imageInfo.imageLayout = binding.texture.format == VK_FORMAT_D32_SFLOAT ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : imageInfo.imageLayout;
-                        ;
+                        
+                        if (!binding.renderpass.empty()) {
+                            auto pass = renderPassPool.get(std::hash<std::string>{}(binding.renderpass));
+
+                            if (binding.attachment_index == pass->renderPassChain.Textures.size()) {
+                                if (pass->id == std::numeric_limits<uint32_t>::max()) {
+                                    binding.texture = m_pVkDataPtr->defaultRenderPass.renderPassChain.DepthTexture;
+                                }
+                                else {
+                                    binding.texture = pass->renderPassChain.DepthTexture;
+
+                                }
+                            }
+                            else {
+                                binding.texture = pass->renderPassChain.Textures.at(binding.attachment_index);
+                            }
+                        }
+
                         imageInfo.imageView = binding.texture.imageView;
                         imageInfo.sampler = binding.texture.sampler;
 

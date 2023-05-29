@@ -22,6 +22,12 @@ namespace engine
 
 		Ref<RenderPass> m_pCurrentRenderPass;
 		Ref<BindGroup> m_pDefaultBindGroup;
+		Ref<BindGroup> m_pShadowBindGroup;
+		Ref<BindGroup> m_pDecalBindGroup;
+
+		std::size_t getHash(const std::string &s) {
+			return std::hash<std::string>{}(s);
+		}
 
 	public:
 		Scene()
@@ -29,6 +35,10 @@ namespace engine
 			m_pRenderLayouts["DefaultLayout"] = 0;
 			m_pRenderLayouts["SkyLayout"] = 1;
 			m_pRenderLayouts["TerrainLayout"] = 2;
+			m_pRenderLayouts["DecalLayout"] = 3;
+			m_pRenderLayouts["ShadowLayout"] = 0;
+
+			m_pCurrentRenderPass = m_RenderPassesRefs["DefaultRenderPass"];
 
 		}
 
@@ -56,12 +66,42 @@ namespace engine
 						//{.size = sizeof(ObjectData) * AssetManager::MAX_OBJECTS, .offset = 0, .binding = 2, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "object_buffer"},
 						//{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 3, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"}
 			},
-					.inputs = {},
+					.inputs = {
+					{.renderPass = "ShadowPass", .index = 1, .bindingPoint = 2},
+					{.renderPass = "ShadowPass", .index = 0, .bindingPoint = 3},
+				},
 					.renderPass = "DefaultRenderPass",
 					.name = "DefaultBindGroup",
 			};
 
+			engine::BindGroupInfo decalBindGroup = {
+					.bindingInfo = {
+						{.size = sizeof(ShaderObjectData), .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
+						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
+						//{.size = sizeof(ObjectData) * AssetManager::MAX_OBJECTS, .offset = 0, .binding = 2, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "object_buffer"},
+						//{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 3, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"}
+			},
+					.inputs = {
+					{.renderPass = "DefaultRenderPass", .index = 1, .bindingPoint = 2},
+				},
+					.renderPass = "DefaultRenderPass",
+					.name = "DecalBindGroup",
+			};
+
+			engine::BindGroupInfo shadowBindGroup = {
+					.bindingInfo = {
+						{.size = sizeof(ShaderObjectData), .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
+						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
+
+			},
+					.inputs = {},
+					.renderPass = "ShadowPass",
+					.name = "ShadowBindGroup",
+			};
+
 			m_pDefaultBindGroup = resourceManager->createBindGroup(defaultBindGroup);
+			m_pShadowBindGroup = resourceManager->createBindGroup(shadowBindGroup);
+			m_pDecalBindGroup = resourceManager->createBindGroup(decalBindGroup);
 
 		}
 
@@ -146,7 +186,7 @@ namespace engine
 		{
 			auto renderer = Context().Renderer();
 
-			renderer->Flush(m_RenderPassesRefs["DefaultRenderPass"], engine::DrawType::INDEXED);
+			renderer->Flush(m_pCurrentRenderPass, engine::DrawType::INDEXED);
 		}
 
 		void Push(std::shared_ptr<Node<RenderModel>> renderModel, glm::mat4 transform, const std::string& layout)
@@ -155,17 +195,44 @@ namespace engine
 
 			Ref<PushConstant> push_constant;
 
+			Ref<BindGroup> selectedBindGroup;
+
+			if (layout == "ShadowLayout") {
+				selectedBindGroup = m_pShadowBindGroup;
+			}
+			else if (layout == "DefaultLayout") {
+				selectedBindGroup = m_pDefaultBindGroup;
+			}
+			else if (layout == "TerrainLayout") {
+				selectedBindGroup = m_pDefaultBindGroup;
+			}
+			else if (layout == "DecalLayout") {
+				selectedBindGroup = m_pDecalBindGroup;
+			}
+			else if (layout == "SkyLayout") {
+				selectedBindGroup = m_pDefaultBindGroup;
+			}
+			else {
+				selectedBindGroup = m_pDefaultBindGroup;
+			}
+
 			for (auto& mesh : renderModel->data.renderMeshes)
 			{
+				if (renderer->numPushedCommands() >= engine::MAX_COMMAND_QUEUE_SIZE) {
+					Flush();
+				}
+
+				uint32_t uniform_index = m_pAssetManager.m_pMaterials.at(mesh.material_key).index;
 				renderer->Push({ .mesh = mesh.mesh,
-								.material = m_pDefaultBindGroup,
+								.material = selectedBindGroup,
 								.pushConstant = push_constant,
 								.objectConstant = {
-													.transform = transform, 
-													.material_index = m_pAssetManager.m_pMaterials.at(mesh.material_key).index
+													.transform = transform,
+													.material_index = uniform_index
 												  },
 								.layout_index = m_pRenderLayouts.at(layout),
-								.uniformIndex = m_pAssetManager.m_pMaterials.at(mesh.material_key).index });
+								.uniformIndex = uniform_index });
+
 			}
 		}
 

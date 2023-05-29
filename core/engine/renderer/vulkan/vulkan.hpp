@@ -5,10 +5,8 @@
 #include "core/engine/renderer/frame.hpp"
 #include "core/engine/renderer/types.hpp"
 #include <core/common/common.hpp>
-#include "../draw_command.hpp"
 
 #include "apis/vk/vk.hpp"
-#include "imgui/imgui_setup.hpp"
 
 #include <core/framework/singleton.hpp>
 
@@ -101,11 +99,15 @@ namespace engine
 
         void *perPassData = nullptr;
 
+        ImGuiRenderer& getDebugRenderer() override {
+            return m_pImguiRenderer;
+        }
     private:
         void FlushNonIndexed(vk::VulkanRenderPass *renderPass);
         void FlushIndexed(vk::VulkanRenderPass *renderPass);
         void FlushIndirect(vk::VulkanRenderPass *renderPass);
         void FlushIndexedIndirect(vk::VulkanRenderPass *renderPass);
+
 
     private:
         framework::Window *m_pWindow = nullptr;
@@ -121,9 +123,8 @@ namespace engine
         bool imguiInit = false;
         uint32_t renderpass_id = 0;
         uint32_t attachedRenderPass = 0;
-
-        std::vector<DrawCommand> m_pCurrentCommandQueue;
-        uint32_t currentCommandsInQueue = 0;
+        uint32_t m_pNumDrawCalls = 0;
+        engine::Ref<engine::RenderPass> m_pActiveRenderPass;
 
         VulkanResourceManager *m_pResourceManagerRef = nullptr;
         bool m_pRenderPassActive = false;

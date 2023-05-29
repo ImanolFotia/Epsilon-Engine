@@ -317,6 +317,8 @@ set(PROJECT_FILES
         ${CMAKE_SOURCE_DIR}/core/framework/singleton.hpp
         ${CMAKE_SOURCE_DIR}/modules/imgui/imgui_impl_glfw.cpp
         ${CMAKE_SOURCE_DIR}/modules/imgui/imgui_impl_vulkan.cpp
+        ${IMGUI_BUILD_DIR}/ImPlot/implot_items.cpp
+        ${IMGUI_BUILD_DIR}/ImPlot/implot.cpp
         ${IMGUI_BUILD_DIR}/imgui.cpp
         ${IMGUI_BUILD_DIR}/imgui_demo.cpp
         ${IMGUI_BUILD_DIR}/imgui_draw.cpp

@@ -336,7 +336,6 @@ namespace engine
 
 
 
-	private:
 
 		uint32_t getShaderDataIndex() {
 
@@ -402,5 +401,7 @@ namespace engine
 
 			return ref;
 		}
+
+	private:
 	};
 }

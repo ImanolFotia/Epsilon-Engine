@@ -49,11 +49,16 @@ namespace vk
         VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures layoutFeatures{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES};
         VkPhysicalDeviceDescriptorIndexingFeatures indexing_features{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT, nullptr};
         VkPhysicalDeviceSynchronization2Features sync_features{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES, nullptr, VK_TRUE};
+        VkPhysicalDeviceMemoryProperties memory_properties{};
         VkPhysicalDeviceFeatures2 device_features{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2, &indexing_features};
         VkPhysicalDeviceFeatures2 device_features2{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2, &layoutFeatures};
 
         vkGetPhysicalDeviceFeatures2(vk_data.physicalDevice, &device_features);
         vkGetPhysicalDeviceFeatures2(vk_data.physicalDevice, &device_features2);
+
+        vkGetPhysicalDeviceMemoryProperties(vk_data.physicalDevice, &memory_properties);
+
+        vk_data.max_memory_heaps = memory_properties.memoryHeapCount;
 
         bool bindless_supported = indexing_features.descriptorBindingPartiallyBound && indexing_features.runtimeDescriptorArray;
         bool separateStencilSupported = layoutFeatures.separateDepthStencilLayouts;
@@ -174,7 +179,9 @@ namespace vk
         std::vector<VkExtensionProperties> availableExtensions(extensionCount);
         vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
 
+
         std::set<std::string> requiredExtensions(vk_data.deviceExtensions.begin(), vk_data.deviceExtensions.end());
+
 
         for (const auto &extension : availableExtensions)
         {
