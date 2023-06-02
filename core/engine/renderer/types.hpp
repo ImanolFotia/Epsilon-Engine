@@ -231,6 +231,26 @@ namespace engine
         uint32_t material_index;
     };
 
+    struct Viewport {
+        float offset_x = 0.0f;
+        float offset_y = 0.0f;
+
+        float width = 0.0f;
+        float height = 0.0f;
+
+        float min_depth = 0.0f;
+        float max_depth = 0.0f;
+    };
+
+    struct Scissor {
+
+        int offset_x = 0.0f;
+        int offset_y = 0.0f;
+
+        float width = 0.0f;
+        float height = 0.0f;
+    };
+
     struct TextureCreationInfo
     {
         uint32_t width;

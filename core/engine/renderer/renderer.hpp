@@ -17,7 +17,7 @@ namespace engine
     const uint32_t MAX_VERTICES_PER_BUFFER = 1000000;
     const uint32_t MAX_INDICES_PER_BUFFER =  1000000;
 
-    const uint32_t MAX_COMMAND_QUEUE_SIZE = 500;
+    const uint32_t MAX_COMMAND_QUEUE_SIZE = 2000;
 
     struct ShaderModuleInfo
     {
@@ -122,6 +122,12 @@ namespace engine
         uint32_t numPushedCommands() {
             return currentCommandsInQueue;
         }
+
+        virtual void SetViewport(const Viewport&) = 0;
+
+        virtual void SetScissor(const Scissor&) = 0;
+
+        virtual void SetRenderPass(Ref<RenderPass>) = 0;
 
     protected:
         renderer_type m_pType{};

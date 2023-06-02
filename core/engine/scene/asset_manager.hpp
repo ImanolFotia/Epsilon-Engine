@@ -20,14 +20,14 @@ namespace engine
 
 	struct PBRMaterial
 	{
-		uint32_t albedo_texture_index = -1;
-		uint32_t normal_texture_index = -1;
-		uint32_t metallic_texture_index = -1;
-		uint32_t roughness_texture_index = -1;
+		int32_t albedo_texture_index = -1;
+		int32_t normal_texture_index = -1;
+		int32_t metallic_texture_index = -1;
+		int32_t roughness_texture_index = -1;
 
-		alignas(16) glm::vec4 albedo_color{};
-		float metallic_color{};
-		float roughness_color{};
+		alignas(16) glm::vec4 albedo_color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+		float metallic_color = 0.0;
+		float roughness_color = 1.0;
 	};
 
 	struct PBRMaterialIndex {
@@ -46,6 +46,7 @@ namespace engine
 	{
 		std::vector<RenderMesh> renderMeshes;
 		std::string name;
+		bool loaded = false;
 	};
 
 
@@ -56,7 +57,12 @@ namespace engine
 		Filtering filtering;
 	};
 
-	
+
+	struct Decal {
+		glm::mat4 transform;
+		uint32_t material_id;
+	};
+
 
 	class AssetManager
 	{
@@ -80,6 +86,7 @@ namespace engine
 		static const size_t MAX_MATERIALS = 10000;
 		static const size_t MAX_OBJECTS = 10000;
 		static const size_t MAX_TRANSFORMS = 10000;
+		static const size_t MAX_DECALS = 1000;
 		AssetManager()
 		{
 			
@@ -89,6 +96,9 @@ namespace engine
 			auto resourceManager = Context().ResourceManager();
 
 			m_pGPUBuffers["material_buffer"] = resourceManager->createGPUBuffer("material_buffer", sizeof(PBRMaterial) * MAX_MATERIALS, engine::BufferStorageType::STORAGE_BUFFER);
+
+			m_pGPUBuffers["decal_buffer"] = resourceManager->createGPUBuffer("decal_buffer", sizeof(Decal) * MAX_DECALS, engine::BufferStorageType::STORAGE_BUFFER);
+
 			//m_pGPUBuffers["object_buffer"] = resourceManager->createGPUBuffer("object_buffer", sizeof(ShaderObjectData) * MAX_OBJECTS, engine::BufferStorageType::STORAGE_BUFFER);
 			//m_pGPUBuffers["transform_buffer"] = resourceManager->createGPUBuffer("transform_buffer", sizeof(glm::mat4) * MAX_TRANSFORMS, engine::BufferStorageType::STORAGE_BUFFER);
 		}
@@ -194,8 +204,8 @@ namespace engine
 
 		const RenderModel &loadModel(const std::string &path)
 		{
-			auto resourceManager = Context().ResourceManager();
 
+			auto resourceManager = Context().ResourceManager();
 			if (m_pModels.contains(path))
 				return m_pModels.at(path);
 
@@ -218,6 +228,8 @@ namespace engine
 			model.name = path;
 			for (auto &mesh : inModel->Meshes())
 			{
+				if (mesh.data().mesh.Indices.size() <= 0) continue;
+
 				RenderMesh subRenderC;
 				subRenderC.mesh = addMesh(path + "_submesh_" + std::to_string(index), mesh.data().mesh);
 
@@ -225,11 +237,10 @@ namespace engine
 
 				subRenderC.material_key = std::hash<std::string>{}(material_name);
 
-				model.renderMeshes.push_back(subRenderC);
 
 				auto mesh_material = mesh.Material();
 
-				PBRMaterial material;
+				PBRMaterial material{};
 
 				size_t material_name_hash = std::hash<std::string>{}(material_name);
 
@@ -243,28 +254,48 @@ namespace engine
 					auto albedo = addTexture(mesh_material.albedo, {.format = COLOR_RGBA,
 																	.wrapMode = REPEAT,
 																	.filtering = LINEAR});
-					material.albedo_texture_index = albedo.Index();
+
+					if (albedo.empty()) material.albedo_texture_index = -1;
+					else material.albedo_texture_index = albedo.Index();
+				}
+				else {
+					material.albedo_texture_index = -1;
 				}
 				if (!mesh_material.metallic.empty())
 				{
 					auto metallic = addTexture(mesh_material.metallic, {.format = NON_COLOR_RGBA,
 																		.wrapMode = REPEAT,
 																		.filtering = LINEAR});
-					material.metallic_texture_index = metallic.Index();
+
+					if (metallic.empty()) material.metallic_texture_index = -1;
+					else material.metallic_texture_index = metallic.Index();
+				}
+				else {
+					material.metallic_texture_index = -1;
 				}
 				if (!mesh_material.roughness.empty())
 				{
 					auto roughness = addTexture(mesh_material.roughness, {.format = NON_COLOR_RGBA,
 																		  .wrapMode = REPEAT,
 																		  .filtering = LINEAR});
-					material.roughness_texture_index = roughness.Index();
+					
+					if (roughness.empty()) material.roughness_texture_index = -1;
+					else material.roughness_texture_index = roughness.Index();
+				}
+				else {
+					material.roughness_texture_index = -1;
 				}
 				if (!mesh_material.normal.empty())
 				{
 					auto normal = addTexture(mesh_material.normal, {.format = NON_COLOR_RGBA,
 																	.wrapMode = REPEAT,
 																	.filtering = LINEAR});
-					material.normal_texture_index = normal.Index();
+
+					if (normal.empty()) material.normal_texture_index = -1;
+					else material.normal_texture_index = normal.Index();
+				}
+				else {
+					material.normal_texture_index = -1;
 				}
 
 				m_pMaterials[material_name_hash].material = material;
@@ -292,6 +323,7 @@ namespace engine
 
 				index++;
 			}
+			model.loaded = true;
 			return model;
 		}
 
@@ -366,7 +398,7 @@ namespace engine
 			int width, height, num_channels;
 			std::string texture_path = "./assets/" + path;
 			unsigned char *pixels = framework::load_image_from_file(texture_path.c_str(), &width, &height, &num_channels);
-			Ref<Texture> ref;
+			Ref<Texture> ref = Ref<Texture>::makeEmpty();
 			if (pixels != nullptr)
 			{
 				engine::TextureCreationInfo texInfo = {

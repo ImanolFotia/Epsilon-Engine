@@ -6,6 +6,7 @@
 #include "trees/octree.hpp"
 #include "parsers/renderpass.hpp"
 
+
 namespace engine
 {
 
@@ -24,6 +25,7 @@ namespace engine
 		Ref<BindGroup> m_pDefaultBindGroup;
 		Ref<BindGroup> m_pShadowBindGroup;
 		Ref<BindGroup> m_pDecalBindGroup;
+		Ref<BindGroup> m_pPrePassBindGroup;
 
 		std::size_t getHash(const std::string &s) {
 			return std::hash<std::string>{}(s);
@@ -37,6 +39,7 @@ namespace engine
 			m_pRenderLayouts["TerrainLayout"] = 2;
 			m_pRenderLayouts["DecalLayout"] = 3;
 			m_pRenderLayouts["ShadowLayout"] = 0;
+			m_pRenderLayouts["prepassLayout"] = 0;
 
 			m_pCurrentRenderPass = m_RenderPassesRefs["DefaultRenderPass"];
 
@@ -63,7 +66,7 @@ namespace engine
 					.bindingInfo = {
 						{.size = sizeof(ShaderObjectData), .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
 						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
-						//{.size = sizeof(ObjectData) * AssetManager::MAX_OBJECTS, .offset = 0, .binding = 2, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "object_buffer"},
+						{.size = sizeof(Decal) * AssetManager::MAX_DECALS, .offset = 0, .binding = 4, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "decal_buffer"},
 						//{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 3, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"}
 			},
 					.inputs = {
@@ -99,14 +102,30 @@ namespace engine
 					.name = "ShadowBindGroup",
 			};
 
+
+			engine::BindGroupInfo prepassBindGroup = {
+					.bindingInfo = {
+						{.size = sizeof(ShaderObjectData), .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
+						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
+
+			},
+					.inputs = {},
+					.renderPass = "DepthPrePass",
+					.name = "PrePassBindGroup",
+			};
+
 			m_pDefaultBindGroup = resourceManager->createBindGroup(defaultBindGroup);
 			m_pShadowBindGroup = resourceManager->createBindGroup(shadowBindGroup);
 			m_pDecalBindGroup = resourceManager->createBindGroup(decalBindGroup);
+			m_pPrePassBindGroup = resourceManager->createBindGroup(prepassBindGroup);
 
 		}
 
 		void setCurrentRenderPass(const std::string& renderpass) {
 			m_pCurrentRenderPass = m_RenderPassesRefs[renderpass];
+
+			auto renderer = Context().Renderer();
+			renderer->SetRenderPass(m_pCurrentRenderPass);
 		}
 
 		Ref<RenderPass> getRenderPass(const std::string& name) {
@@ -116,6 +135,18 @@ namespace engine
 		AssetManager& getAssetManager()
 		{
 			return m_pAssetManager;
+		}
+
+		void SetViewport(const Viewport& viewport) {
+
+			auto renderer = Context().Renderer();
+			renderer->SetViewport(viewport);
+		}
+
+		void SetScissor(const Scissor& scissor) {
+
+			auto renderer = Context().Renderer();
+			renderer->SetScissor(scissor);
 		}
 
 		template <typename T>
@@ -158,6 +189,12 @@ namespace engine
 		auto getNodes()
 		{
 			return m_pSceneManager.get<T>();
+		}
+
+		template <typename T>
+		auto getNode(uint32_t index)
+		{
+			return m_pSceneManager.get(index);
 		}
 
 
@@ -212,6 +249,9 @@ namespace engine
 			else if (layout == "SkyLayout") {
 				selectedBindGroup = m_pDefaultBindGroup;
 			}
+			else if (layout == "prepassLayout") {
+				selectedBindGroup = m_pPrePassBindGroup;
+			}
 			else {
 				selectedBindGroup = m_pDefaultBindGroup;
 			}
@@ -246,5 +286,6 @@ namespace engine
 			renderer->Submit();
 			renderer->EndFrame();
 		}
+
 	};
 }

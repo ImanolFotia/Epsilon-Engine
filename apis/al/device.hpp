@@ -69,7 +69,8 @@ struct OpenALData;
     static bool initDevice(OpenALData* al_data) {
 
 #if !defined(ANDROID) && !defined(__ANDROID__)
-        al_data->device = alcOpenDevice(alcGetString(al_data->device, ALC_DEFAULT_DEVICE_SPECIFIER));
+        auto device_name = alcGetString(al_data->device, ALC_DEFAULT_DEVICE_SPECIFIER);
+        al_data->device = alcOpenDevice(device_name);
         if (al_data->device == NULL)
         {
             std::cout << "cannot open sound card" << std::endl;

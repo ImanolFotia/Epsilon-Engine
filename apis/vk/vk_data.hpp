@@ -14,7 +14,7 @@
 
 namespace vk
 {
-    static uint32_t MAX_FRAMES_IN_FLIGHT = 3;
+    static uint32_t MAX_FRAMES_IN_FLIGHT = 2;
     static uint32_t MIN_FRAMES_IN_FLIGHT = 0;
     const size_t ALLOCATION_SIZE_MB = 0xFFFFFFF;
 
@@ -210,10 +210,22 @@ namespace vk
 
         std::vector<VkFormat> ImageFormats;
         VkExtent2D Extent;
+        VkViewport Viewport;
+        VkRect2D Scissor;
+
         std::vector<VkImageView> ImageViews;
         std::vector<VulkanTexture> Textures;
 
         std::vector<VkFramebuffer> Framebuffers;
+
+
+        void setViewport(const VkViewport& v) {
+            Viewport = v;
+        }
+
+        void setScissor(const VkRect2D& s) {
+            Scissor = s;
+        }
     };
 
     class VulkanRenderPass

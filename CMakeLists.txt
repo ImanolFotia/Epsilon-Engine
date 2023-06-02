@@ -198,21 +198,28 @@ if(DOWNLOAD_LIBRARIES)
 
     # download and include imgui
     #requires installation of pulse audio and pipewire developer libs in the OS
-    ExternalProject_Add(imgui_d
-            GIT_REPOSITORY https://github.com/ocornut/imgui.git
-            INSTALL_COMMAND cmake -E echo "Skipping install step for beacon."
-            BUILD_COMMAND ""
-            UPDATE_COMMAND ""
-            CONFIGURE_COMMAND ""
-            )
+    #ExternalProject_Add(imgui_d
+    ##        GIT_REPOSITORY https://github.com/ocornut/imgui.git
+    #        INSTALL_COMMAND cmake -E echo "Skipping install step for beacon."
+    #        BUILD_COMMAND ""
+    #        UPDATE_COMMAND ""
+    #        CONFIGURE_COMMAND ""
+    #        )
 
-    ExternalProject_Get_property(imgui_d SOURCE_DIR)
-    ExternalProject_Get_property(imgui_d BINARY_DIR)
-    set(IMGUI_BUILD_DIR ${SOURCE_DIR})
+    #ExternalProject_Get_property(imgui_d SOURCE_DIR)
+    #ExternalProject_Get_property(imgui_d BINARY_DIR)
+    #set(IMGUI_BUILD_DIR ${SOURCE_DIR})
+    
+    set(IMGUI_BUILD_DIR ${THIRDPARTY_DIR}/imgui)
     message(${IMGUI_BUILD_DIR})
-
-    include_directories(${SOURCE_DIR})
+    
+    include_directories(${IMGUI_BUILD_DIR})
     link_directories(${IMGUI_BUILD_DIR})
+
+    
+    set(TINYGLTF_BUILD_DIR ${THIRDPARTY_DIR}/tinygltf)
+    message(${TINYGLTF_BUILD_DIR})
+    include_directories(${TINYGLTF_BUILD_DIR})
 else()
 
     set(GLM_BUILD_DIR ${THIRDPARTY_DIR}/glm)
@@ -396,7 +403,6 @@ if(DOWNLOAD_LIBRARIES)
     add_dependencies(${PROJECT_NAME} glm)
     add_dependencies(${PROJECT_NAME} beacon)
     add_dependencies(${PROJECT_NAME} stb)
-    add_dependencies(${PROJECT_NAME} imgui_d)
     add_dependencies(${PROJECT_NAME} json)
 endif()
 target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_DL_LIBS})
@@ -448,9 +454,9 @@ FILE(GLOB images "${CMAKE_SOURCE_DIR}/assets/images" )
 install(DIRECTORY ${images} DESTINATION "bin/assets")
 
 #add_subdirectory(examples/basic)
-add_subdirectory(examples/chess)
-add_subdirectory(examples/model)
-add_subdirectory(examples/bsp)
+#add_subdirectory(examples/chess)
+#add_subdirectory(examples/model)
+#add_subdirectory(examples/bsp)
 
 
 add_subdirectory(projects/TowerDefense)

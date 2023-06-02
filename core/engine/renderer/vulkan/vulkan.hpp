@@ -102,6 +102,13 @@ namespace engine
         ImGuiRenderer& getDebugRenderer() override {
             return m_pImguiRenderer;
         }
+
+        void SetViewport(const Viewport&) override;
+
+        void SetScissor(const Scissor&) override;
+
+        void SetRenderPass(Ref<RenderPass>) override;
+
     private:
         void FlushNonIndexed(vk::VulkanRenderPass *renderPass);
         void FlushIndexed(vk::VulkanRenderPass *renderPass);

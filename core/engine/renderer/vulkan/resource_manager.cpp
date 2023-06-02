@@ -89,7 +89,7 @@ namespace engine
 		auto format = resolveFormat(texInfo.format);
 
 		auto stagingBuffer = pCreateStagingTextureBuffer(texInfo.pixels, texInfo);
-		uint32_t mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texInfo.width, texInfo.height)))) + 1;
+		uint32_t mipLevels = glm::min(4u, static_cast<uint32_t>(std::floor(std::log2(std::max(texInfo.width, texInfo.height)))) + 1);
 
 		auto texture = pCreateTextureBuffer({ .width = texInfo.width,
 											 .height = texInfo.height,
@@ -121,6 +121,7 @@ namespace engine
 		texture.info.mipLevels = mipLevels;
 		vk::createImageView(*m_pVkDataPtr, texture, VK_IMAGE_ASPECT_COLOR_BIT);
 
+		ResourcesMemory.m_pTextureBufferAllocationSize += texInfo.width * texInfo.height * 4;
 		VkCommandBuffer blitCommandBuffer = vk::beginSingleTimeCommands(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back());
 
 		/* Begin generate mips*/
@@ -402,6 +403,31 @@ namespace engine
 		vk::createSwapChainFramebuffers(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass,
 			m_pVkDataPtr->defaultRenderPass.renderPassChain);
 
+		m_pVkDataPtr->defaultRenderPass.name = renderPassInfo.name;
+
+		uint32_t id = std::hash<std::string>{}(renderPassInfo.name);
+		auto pass = renderPassPool.get(id);
+
+		VkViewport viewport = {
+			.x = 0,
+			.y = 0,
+			.width = (float)m_pVkDataPtr->defaultRenderPass.renderPassChain.Extent.width,
+			.height = (float)m_pVkDataPtr->defaultRenderPass.renderPassChain.Extent.height,
+			.minDepth = 0.0f,
+			.maxDepth = 1.0f
+		};
+
+		VkRect2D rect;
+		rect.extent.width = m_pVkDataPtr->defaultRenderPass.renderPassChain.Extent.width;
+		rect.extent.height = m_pVkDataPtr->defaultRenderPass.renderPassChain.Extent.height;
+
+		rect.offset.x = 0;
+		rect.offset.y = 0;
+
+		m_pVkDataPtr->defaultRenderPass.renderPassChain.setViewport(viewport);
+		m_pVkDataPtr->defaultRenderPass.renderPassChain.setScissor(rect);
+		
+
 		for (auto& binding : renderPassInfo.bindingInfo)
 		{
 			if (binding.type == UniformBindingType::UNIFORM_BUFFER)
@@ -485,6 +511,7 @@ namespace engine
 
 		renderPass.renderPassChain.Extent.width = renderPassInfo.dimensions.width;
 		renderPass.renderPassChain.Extent.height = renderPassInfo.dimensions.height;
+		renderPass.name = renderPassInfo.name;
 
 		renderPass.renderPipelines.resize(renderPassInfo.numLayouts); //.emplace_back();
 
@@ -504,6 +531,26 @@ namespace engine
 
 		vk::createFramebuffers(*m_pVkDataPtr, renderPass, renderPass.renderPassChain);
 
+		VkViewport viewport = {
+			.x = 0,
+			.y = 0,
+			.width = (float)renderPass.renderPassChain.Extent.width,
+			.height = (float)renderPass.renderPassChain.Extent.height,
+			.minDepth = 0.0f,
+			.maxDepth = 1.0f
+		};
+
+		VkRect2D rect;
+		rect.extent.width = renderPass.renderPassChain.Extent.width;
+		rect.extent.height = renderPass.renderPassChain.Extent.height;
+
+		rect.offset.x = 0;
+		rect.offset.y = 0;
+
+		renderPass.renderPassChain.setViewport(viewport);
+		renderPass.renderPassChain.setScissor(rect);
+
+
 		for (auto& binding : renderPassInfo.bindingInfo)
 		{
 			if (binding.type == UniformBindingType::UNIFORM_BUFFER)
@@ -516,6 +563,7 @@ namespace engine
 			}
 		}
 		auto ref = renderPassPool.insert(renderPassInfo.name, renderPass);
+
 
 		m_pRenderPassCount++;
 		return ref;

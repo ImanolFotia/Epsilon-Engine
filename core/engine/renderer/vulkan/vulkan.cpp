@@ -221,7 +221,7 @@ namespace engine
 
 		auto renderPass = m_pResourceManagerRef->getRenderPass(renderPassRef);
 
-		if (!Ref<RenderPass>::isSame(m_pActiveRenderPass, renderPassRef)) {
+		if (!Ref<RenderPass>::isSame(m_pActiveRenderPass, renderPassRef) || !m_pRenderPassActive) {
 
 			if (renderPass->id == std::numeric_limits<uint32_t>::max())
 			{
@@ -242,6 +242,11 @@ namespace engine
 			}
 			else
 			{
+				if (m_pRenderPassActive)
+				{
+					vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
+					m_pRenderPassActive = false;
+				}
 				vk::createRenderPassInfo(m_pImageIndex, m_pVkData, *renderPass);
 				renderPass->renderPassInfo.renderArea.offset = { 0, 0 };
 				renderPass->renderPassInfo.renderArea.extent = renderPass->renderPassChain.Extent;
@@ -285,8 +290,13 @@ namespace engine
 	{
 
 		int32_t prev_layout = -1;
-		int32_t prev_vertex_buffer = -1;
-		int32_t prev_index_buffer = -1;
+		vk::VulkanBuffer* prev_vertex_buffer = nullptr;
+		vk::VulkanBuffer* prev_index_buffer = nullptr;
+		int32_t prev_vertex_buffer_id = -1;
+		int32_t prev_index_buffer_id = -1;
+
+		vk::VulkanMaterial* prev_material = nullptr;
+		int32_t prev_material_id = -1;
 
 		int changed = 0;
 
@@ -310,12 +320,14 @@ namespace engine
 		viewport.height = (float)extent.height;
 		viewport.minDepth = 0.0f;
 		viewport.maxDepth = 1.0f;
-		vkCmdSetViewport(m_pFrame.CommandBuffer(), 0, 1, &viewport);
+		vkCmdSetViewport(m_pFrame.CommandBuffer(), 0, 1, &renderPass->renderPassChain.Viewport);
 
 		VkRect2D scissor{};
 		scissor.offset = { 0, 0 };
 		scissor.extent = extent;
-		vkCmdSetScissor(m_pFrame.CommandBuffer(), 0, 1, &scissor);
+
+
+		vkCmdSetScissor(m_pFrame.CommandBuffer(), 0, 1, &renderPass->renderPassChain.Scissor);
 
 		for (int i = 0; i < currentCommandsInQueue; i++)
 			//for (auto &command : m_pCurrentCommandQueue)
@@ -328,26 +340,35 @@ namespace engine
 				prev_layout = command.layoutIndex;
 			}
 
-			auto material = m_pResourceManagerRef->materialPool.get(command.material);
-			auto vertexBuffer = m_pResourceManagerRef->vertexBufferPool.get(
-				command.meshResource.vertexBuffer);
-			auto indexBuffer = m_pResourceManagerRef->indexBufferPool.get(
-				command.meshResource.indexBuffer);
-			if (prev_vertex_buffer != vertexBuffer->id)
-			{
+			//auto material = m_pResourceManagerRef->materialPool.get(command.material);
+
+			if (prev_vertex_buffer_id != command.meshResource.vertexBuffer.Id()) {
+				auto vertexBuffer = m_pResourceManagerRef->vertexBufferPool.get(command.meshResource.vertexBuffer);
+				prev_vertex_buffer_id = command.meshResource.vertexBuffer.Id();
+				prev_vertex_buffer = vertexBuffer;
 				vk::bindVertexBuffer(m_pVkData, m_pFrame.CommandBuffer(), vertexBuffer->buffer);
-				prev_vertex_buffer = vertexBuffer->id;
 			}
 
-			if (prev_index_buffer != indexBuffer->id)
+
+			if (prev_material_id != command.material.Id()) {
+				auto material = m_pResourceManagerRef->materialPool.get(command.material);
+				prev_material_id = command.material.Id();
+				prev_material = material;
+				vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
+					renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(), 0, 1,
+					&material->descriptorSets[m_pCurrentFrame], 0, nullptr);
+			}
+
+
+
+			if (prev_index_buffer_id != command.meshResource.indexBuffer.Id())
 			{
+				auto indexBuffer = m_pResourceManagerRef->indexBufferPool.get(command.meshResource.indexBuffer);
 				vkCmdBindIndexBuffer(m_pFrame.CommandBuffer(), indexBuffer->buffer, 0, VK_INDEX_TYPE_UINT32);
-				prev_index_buffer = indexBuffer->id;
+				prev_index_buffer_id = command.meshResource.indexBuffer.Id();
+				prev_index_buffer = indexBuffer;
 			}
 
-			vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
-				renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(), 0, 1,
-				&material->descriptorSets[m_pCurrentFrame], 0, nullptr);
 			if (m_pVkData.bindless_supported)
 			{
 
@@ -549,11 +570,70 @@ namespace engine
 
 		vk::createSwapChainFramebuffers(m_pVkData, m_pVkData.defaultRenderPass, m_pVkData.defaultRenderPass.renderPassChain);
 
+		uint32_t id = std::hash<std::string>{}(m_pVkData.defaultRenderPass.name);
+		auto pass = m_pResourceManagerRef->renderPassPool.get(id);
+
+		VkViewport viewport = {
+			.x = 0,
+			.y = 0,
+			.width = (float)m_pVkData.defaultRenderPass.renderPassChain.Extent.width,
+			.height = (float)m_pVkData.defaultRenderPass.renderPassChain.Extent.height,
+			.minDepth = 0.0f,
+			.maxDepth = 1.0f
+		};
+
+		VkRect2D rect;
+		rect.extent.width = m_pVkData.defaultRenderPass.renderPassChain.Extent.width;
+		rect.extent.height = m_pVkData.defaultRenderPass.renderPassChain.Extent.height;
+
+		rect.offset.x = 0;
+		rect.offset.y = 0;
+
+		m_pVkData.defaultRenderPass.renderPassChain.setViewport(viewport);
+		m_pVkData.defaultRenderPass.renderPassChain.setScissor(rect);
+
+		pass->renderPassChain.setViewport(viewport);
+		pass->renderPassChain.setScissor(rect);
+
 		//m_pResourceManagerRef->pCreateDescriptorPool();
 		m_pResourceManagerRef->pCreateDescriptorPool();
 		m_pResourceManagerRef->pRecreateDescriptorSets();
 
 
+	}
+
+
+	void VulkanRenderer::SetViewport(const Viewport& viewport) {
+		auto renderpass = m_pResourceManagerRef->renderPassPool.get(m_pActiveRenderPass);
+		if (renderpass == nullptr) return;
+
+		renderpass->renderPassChain.setViewport(
+			{
+				.x = viewport.offset_x,
+				.y = viewport.offset_y,
+				.width = viewport.width,
+				.height = viewport.height,
+				.minDepth = viewport.min_depth,
+				.maxDepth = viewport.max_depth
+			});
+	}
+
+	void VulkanRenderer::SetScissor(const Scissor& scissor) {
+		auto renderpass = m_pResourceManagerRef->renderPassPool.get(m_pActiveRenderPass);
+		if (renderpass == nullptr) return;
+
+		VkRect2D rect;
+		rect.extent.width = scissor.width;
+		rect.extent.height = scissor.height;
+
+		rect.offset.x = scissor.offset_x;
+		rect.offset.y = scissor.offset_y;
+
+		renderpass->renderPassChain.setScissor(rect);
+	}
+
+	void VulkanRenderer::SetRenderPass(Ref<RenderPass> renderpass) {
+		//m_pActiveRenderPass = renderpass;
 	}
 
 }

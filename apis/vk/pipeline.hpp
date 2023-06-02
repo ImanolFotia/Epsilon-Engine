@@ -50,6 +50,32 @@ namespace vk
         return {vertShaderStageInfo, fragShaderStageInfo};
     }
 
+    static void appendShaderStageMacro(engine::ShaderStageInfo& info) {
+        auto versionPosition = [](const std::vector<char>& vec) {
+            const char* version_string = "#version";
+            int version_length = 8;
+            int search_pos = 0;
+            int position = -1;
+            for (int i = 0; i < vec.size(); i++) {
+                if (version_string[search_pos] == vec[i]) {
+                    if (search_pos == version_length - 1) {
+                        position = search_pos - version_length - 1;
+                    }
+                    else {
+                        search_pos++;
+                    }
+                }
+                else {
+                    search_pos = 0;
+                }
+            }
+
+            return position;
+        };
+
+        auto result = versionPosition(info.shaderCode);
+    }
+
     static VkPipelineShaderStageCreateInfo createShaderStage(VulkanData &vk_data, engine::ShaderStageInfo info)
     {
 
@@ -75,6 +101,8 @@ namespace vk
         else
         {
         }
+
+        //appendShaderStageMacro(info);
 
         shaderStageInfo.module = shader::createShaderModule(info.shaderCode, vk_data);
 

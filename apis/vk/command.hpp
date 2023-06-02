@@ -92,13 +92,14 @@ namespace vk
 
     static void endSingleTimeCommands(const VulkanData &vk_data, VkCommandPool &commandPool, VkCommandBuffer commandBuffer)
     {
+        std::mutex mtx{};
+        std::lock_guard lock{ mtx };
         vkEndCommandBuffer(commandBuffer);
 
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
         submitInfo.commandBufferCount = 1;
         submitInfo.pCommandBuffers = &commandBuffer;
-
         vkQueueSubmit(vk_data.graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
         vkQueueWaitIdle(vk_data.graphicsQueue);
 

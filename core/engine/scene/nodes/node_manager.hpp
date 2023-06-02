@@ -213,6 +213,12 @@ namespace engine
 			return children_node_index.at(node->index).at(std::type_index(typeid(T))).front();
 		}
 
+		std::shared_ptr<NodeBase> get(uint32_t index)
+		{
+
+			return (**node_index.at(index));//children_node_index.at(node->index).at(std::type_index(typeid(T)));
+		}
+
 		template <typename T>
 		std::shared_ptr<Node<T>> to(std::shared_ptr<NodeBase> node)
 		{

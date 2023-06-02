@@ -112,7 +112,7 @@ namespace engine
             {
                 if (m_pGeneration[ref.m_pIndex] == ref.m_pGeneration)
                 {
-                    return &(*m_pIndexArray.at(ref.m_pIndex));
+                    return &(*m_pIndexArray[ref.m_pIndex]);
                 }
             }
             //std::cout << "object is invalid\n";

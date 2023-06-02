@@ -13,6 +13,8 @@ namespace common {
     {
         Vertex() = default;
 
+        Vertex(glm::vec3 p) : position(p){}
+
         Vertex(glm::vec3 p, glm::vec2 uv, glm::vec3 n) : position(p), texCoords(uv), normal(n) {}
 
         Vertex(glm::vec3 p, glm::vec2 uv, glm::vec3 n, glm::vec4 c, glm::vec3 t, glm::vec3 bt) : position(p), texCoords(uv), normal(n), color(c), tangent(t), bitangent(bt)
