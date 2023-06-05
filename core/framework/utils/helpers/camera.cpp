@@ -29,8 +29,8 @@ namespace utils
         this->MaxMovementSpeed = 5.3;
         this->horizontalAngle = 0.0;
         this->verticalAngle = 0.0;
-        near_plane = 0.1;
-        far_plane = 300;
+        near_plane = 0.01;
+        far_plane = 3000;
     }
 
     void Camera::onMouseWheelCallback(beacon::sender *sender, beacon::args *args)

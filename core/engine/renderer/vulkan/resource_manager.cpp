@@ -89,7 +89,7 @@ namespace engine
 		auto format = resolveFormat(texInfo.format);
 
 		auto stagingBuffer = pCreateStagingTextureBuffer(texInfo.pixels, texInfo);
-		uint32_t mipLevels = glm::min(4u, static_cast<uint32_t>(std::floor(std::log2(std::max(texInfo.width, texInfo.height)))) + 1);
+		uint32_t mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texInfo.width, texInfo.height)))) + 1;
 
 		auto texture = pCreateTextureBuffer({ .width = texInfo.width,
 											 .height = texInfo.height,

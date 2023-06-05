@@ -494,9 +494,10 @@ namespace framework {
 												n2 = (*normals)[f2];
 
 												// Put them in the array in the correct order
-												currentMesh.data().mesh.Vertices[f0 + currentvOffset].normal = glm::vec3(n0);
-												currentMesh.data().mesh.Vertices[f1 + currentvOffset].normal = glm::vec3(n1);
-												currentMesh.data().mesh.Vertices[f2 + currentvOffset].normal = glm::vec3(n2);
+
+												currentMesh.data().mesh.Vertices[f0 + currentvOffset].normal = glm::vec3(glm::mat3(meshTransform) * glm::vec4(n0, 1.0f));
+												currentMesh.data().mesh.Vertices[f1 + currentvOffset].normal = glm::vec3(glm::mat3(meshTransform) * glm::vec4(n1, 1.0f));
+												currentMesh.data().mesh.Vertices[f2 + currentvOffset].normal = glm::vec3(glm::mat3(meshTransform) * glm::vec4(n2, 1.0f));
 											}
 										} break;
 										default:

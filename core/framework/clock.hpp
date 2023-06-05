@@ -36,6 +36,12 @@ class Clock {
             return instance.delta() / 1000.0;
         }
 
+        static long double Now() {
+
+            auto n = std::chrono::steady_clock::now();
+            return duration_cast<std::chrono::milliseconds>(n - instance.start()).count();
+        }
+
         static void Tick() {
             using namespace std::chrono; 
 

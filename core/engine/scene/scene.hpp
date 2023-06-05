@@ -6,6 +6,10 @@
 #include "trees/octree.hpp"
 #include "parsers/renderpass.hpp"
 
+#ifdef _WIN32
+#include <Windows.h>
+#endif
+
 
 namespace engine
 {
@@ -48,6 +52,8 @@ namespace engine
 		void Init() {
 
 			auto resourceManager = Context().ResourceManager();
+
+			system("./assets/shaders/build_shaders.sh");
 
 			m_RenderPassesInfo = engine::parsers::parse_renderpasses();
 

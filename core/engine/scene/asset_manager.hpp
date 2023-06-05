@@ -28,6 +28,7 @@ namespace engine
 		alignas(16) glm::vec4 albedo_color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 		float metallic_color = 0.0;
 		float roughness_color = 1.0;
+		float transmision = -1.0;
 	};
 
 	struct PBRMaterialIndex {
@@ -92,6 +93,8 @@ namespace engine
 			
 		}
 
+		PBRMaterial* materialBufferPtr;
+
 		void Init() {
 			auto resourceManager = Context().ResourceManager();
 
@@ -101,6 +104,9 @@ namespace engine
 
 			//m_pGPUBuffers["object_buffer"] = resourceManager->createGPUBuffer("object_buffer", sizeof(ShaderObjectData) * MAX_OBJECTS, engine::BufferStorageType::STORAGE_BUFFER);
 			//m_pGPUBuffers["transform_buffer"] = resourceManager->createGPUBuffer("transform_buffer", sizeof(glm::mat4) * MAX_TRANSFORMS, engine::BufferStorageType::STORAGE_BUFFER);
+		
+
+			materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"]));
 		}
 
 		const RenderModel& createModelFromMesh(const std::string name, const common::Mesh& mesh, const common::MeshMaterial& material) {
@@ -175,7 +181,7 @@ namespace engine
 			}
 
 
-			PBRMaterial* materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"]));
+			//PBRMaterial* materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"]));
 
 			materialBufferPtr[mat_index] = pbr_material;
 
@@ -183,7 +189,7 @@ namespace engine
 			m_pMaterials[material_name_hash].material = pbr_material;
 
 
-			resourceManager->unmapBuffer(m_pGPUBuffers["material_buffer"]);
+			//resourceManager->unmapBuffer(m_pGPUBuffers["material_buffer"]);
 
 
 			return model;
@@ -301,7 +307,7 @@ namespace engine
 				m_pMaterials[material_name_hash].material = material;
 				subRenderC.material_key = material_name_hash;
 
-				PBRMaterial* materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"]));
+				//PBRMaterial* materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"]));
 
 				uint32_t mat_index = 0;
 				if (!m_pFreeMaterialIndexes.empty()) {
@@ -317,7 +323,7 @@ namespace engine
 
 				materialBufferPtr[mat_index] = material;
 
-				resourceManager->unmapBuffer(m_pGPUBuffers["material_buffer"]);
+				//resourceManager->unmapBuffer(m_pGPUBuffers["material_buffer"]);
 
 				model.renderMeshes.push_back(subRenderC);
 
@@ -432,6 +438,42 @@ namespace engine
 													.name = name});
 
 			return ref;
+		}
+
+		PBRMaterialIndex& getMaterial(size_t key) {
+
+			return m_pMaterials[key];
+		}
+
+
+		size_t createMaterial(const std::string& name, PBRMaterial material) {
+
+			uint32_t mat_index = 0;
+			if (!m_pFreeMaterialIndexes.empty()) {
+				mat_index = m_pFreeMaterialIndexes.front();
+				m_pFreeMaterialIndexes.pop();
+			}
+			else {
+				mat_index = m_pMaterialCurrentIndex;
+				m_pMaterialCurrentIndex++;
+			}
+
+			size_t material_name_hash = std::hash<std::string>{}(name);
+			m_pMaterials[material_name_hash].index = mat_index;
+
+			materialBufferPtr[mat_index] = material;
+
+			return material_name_hash;
+		}
+
+		void setMaterial(PBRMaterialIndex material) {
+
+			auto resourceManager = Context::getSingleton().ResourceManager();
+			PBRMaterial* materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"]));
+
+			materialBufferPtr[material.index] = material.material;
+
+			//resourceManager->unmapBuffer(m_pGPUBuffers["material_buffer"]);
 		}
 
 	private:

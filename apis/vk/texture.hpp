@@ -78,7 +78,7 @@ namespace vk
             samplerInfo.compareOp = texture.compareOp;
         }
 
-        uint32_t mipLevels = glm::min(4u, static_cast<uint32_t>(std::floor(std::log2(std::max(texture.info.width, texture.info.height)))) + 1);
+        uint32_t mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texture.info.width, texture.info.height)))) + 1;
         samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
         samplerInfo.mipLodBias = 0.0f;
         samplerInfo.minLod = 0.0f;

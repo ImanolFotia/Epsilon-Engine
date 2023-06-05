@@ -146,6 +146,10 @@ namespace engine
                 m_pMesh.Vertices[m_pMesh.Indices[i]].bitangent = bitangent1;
                 m_pMesh.Vertices[m_pMesh.Indices[i + 1]].bitangent = bitangent1;
                 m_pMesh.Vertices[m_pMesh.Indices[i + 2]].bitangent = bitangent1;
+
+                m_pMesh.Vertices[m_pMesh.Indices[i]].color = glm::vec4(1.0);
+                m_pMesh.Vertices[m_pMesh.Indices[i + 1]].color = glm::vec4(1.0);
+                m_pMesh.Vertices[m_pMesh.Indices[i + 2]].color = glm::vec4(1.0);
             }
             /*
                         for (unsigned int i = 0; i < Mesh.Vertices.size(); ++i)
