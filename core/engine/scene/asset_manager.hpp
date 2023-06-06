@@ -109,6 +109,13 @@ namespace engine
 			materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"]));
 		}
 
+		void Destroy() {
+
+			auto resourceManager = Context().ResourceManager();
+			resourceManager->unmapBuffer(m_pGPUBuffers["material_buffer"]);
+			//resourceManager->unmapBuffer(m_pGPUBuffers["decal_buffer"]);
+		}
+
 		const RenderModel& createModelFromMesh(const std::string name, const common::Mesh& mesh, const common::MeshMaterial& material) {
 
 			auto resourceManager = Context().ResourceManager();
@@ -469,7 +476,7 @@ namespace engine
 		void setMaterial(PBRMaterialIndex material) {
 
 			auto resourceManager = Context::getSingleton().ResourceManager();
-			PBRMaterial* materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"]));
+			//PBRMaterial* materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"]));
 
 			materialBufferPtr[material.index] = material.material;
 

@@ -53,8 +53,9 @@ namespace engine
 
 			auto resourceManager = Context().ResourceManager();
 
-			system("./assets/shaders/build_shaders.sh");
-
+#ifdef _WIN32
+			system("cd .\\assets\\shaders && .\\build_shaders.sh");
+#endif
 			m_RenderPassesInfo = engine::parsers::parse_renderpasses();
 
 			for (auto& [name, renderpass] : m_RenderPassesInfo) {
@@ -291,6 +292,10 @@ namespace engine
 
 			renderer->Submit();
 			renderer->EndFrame();
+		}
+
+		void Destroy() {
+			m_pAssetManager.Destroy();
 		}
 
 	};

@@ -113,19 +113,19 @@ namespace Epsilon
             self.onRender();
         engine::Context::getSingleton().Window().PollEvents();
         self.m_pFrame++;
-
-        constexpr double max_fps = 400.0;
+        /*
+        constexpr double max_fps = 4000.0;
         constexpr double min_frametime = 1000.0 / max_fps;
         double currentTime = framework::Clock::Now();
         double llastTime = framework::Clock::Time();
         double accum = 0.0;
-        while (accum < 2.5) {
+        while (accum < min_frametime) {
 
             currentTime = framework::Clock::Now();
             const double delta = currentTime - llastTime;
             accum += delta;
             llastTime = currentTime;
-        }
+        }*/
     }
 
     void Epsilon::showFPS()
