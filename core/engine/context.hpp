@@ -17,19 +17,18 @@
 #endif
 
 #endif
-
 namespace engine
 {
-    class Context : public singleton<Context>
+    class Context
     {
     public:
         Context() = default;
 
         void Init(const std::string &name, renderer_type rtype);
 
-        void CleanUp() {
-
-            self.m_pAudioManager->CleanUp();
+        void CleanUp()
+        {
+            m_pAudioManager->CleanUp();
         }
 
         ~Context();

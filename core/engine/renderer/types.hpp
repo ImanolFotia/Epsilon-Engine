@@ -482,6 +482,7 @@ namespace engine
         PushConstantData pushConstant;
         std::vector<UniformBindingInfo> bindingInfo;
         ImageDimensions dimensions;
+        bool resizeWithSwapChain = false;
         std::string name;
     };
 

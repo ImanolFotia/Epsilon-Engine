@@ -21,6 +21,7 @@ namespace engine {
 		glm::vec3 position{};
 		glm::vec3 direction{};
 		glm::vec3 velocity{};
+		float pitch{};
 
 		friend class AssetManager;
 
@@ -28,75 +29,87 @@ namespace engine {
 		// Setters
 		void Position(glm::vec3 p)
 		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			audioManager->setSourcePosition(source, p);
+			position = p;
+			//auto audioManager = Context::getSingleton().AudioManager();
+			//audioManager->setSourcePosition(source, p);
 		}
 
 		void Direction(glm::vec3 d)
 		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			audioManager->setSourceDirection(source, d);
+			direction = d;
+			//auto audioManager = Context::getSingleton().AudioManager();
+			//audioManager->setSourceDirection(source, d);
 		}
 
 		void Velocity(glm::vec3 v)
 		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			audioManager->setSourceVelocity(source, v);
+			velocity = v;
+			//auto audioManager = Context::getSingleton().AudioManager();
+			//audioManager->setSourceVelocity(source, v);
 		}
 
 		void Angle(float a)
 		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			audioManager->setSourceAngle(source, a);
+			angle = a;
+			//auto audioManager = Context::getSingleton().AudioManager();
+			//audioManager->setSourceAngle(source, a);
 		}
 
 		void Gain(float g)
 		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			audioManager->setSourceGain(source, g);
+			gain = g;
+			//auto audioManager = Context::getSingleton().AudioManager();
+			//audioManager->setSourceGain(source, g);
 		}
 
 		void Pitch(float p)
 		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			audioManager->setSourcePitch(source, p);
+			pitch = p;
+			//auto audioManager = Context::getSingleton().AudioManager();
+			//audioManager->setSourcePitch(source, p);
 		}
 
 		// Getters
 		glm::vec3 Position()
 		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			return audioManager->getSourcePosition(source);
+			return position;
+			//auto audioManager = Context::getSingleton().AudioManager();
+			//return audioManager->getSourcePosition(source);
 		}
 
 		glm::vec3 Direction()
 		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			return audioManager->getSourceDirection(source);
+			return direction;
+			//auto audioManager = Context::getSingleton().AudioManager();
+			//return audioManager->getSourceDirection(source);
 		}
 
 		glm::vec3 Velocity()
 		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			return audioManager->getSourceVelocity(source);
+			return velocity;
+			//auto audioManager = Context::getSingleton().AudioManager();
+			//return audioManager->getSourceVelocity(source);
 		}
 
 		float Angle()
 		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			return audioManager->getSourceAngle(source);
+			return angle;
+			//auto audioManager = Context::getSingleton().AudioManager();
+			//return audioManager->getSourceAngle(source);
 		}
 
 		float Gain()
 		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			return audioManager->getSourceGain(source);
+			return gain;
+			//auto audioManager = Context::getSingleton().AudioManager();
+			//return audioManager->getSourceGain(source);
 		}
 
 		float Pitch()
 		{
-			auto audioManager = Context::getSingleton().AudioManager();
-			return audioManager->getSourcePitch(source);
+			return pitch;
+			//auto audioManager = Context::getSingleton().AudioManager();
+			//return audioManager->getSourcePitch(source);
 		}
 	};
 }

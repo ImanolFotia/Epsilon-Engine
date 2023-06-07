@@ -28,7 +28,28 @@ namespace framework
         glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
         glfwWindowHint(GLFW_DECORATED, GL_TRUE);*/
 
+        int count = 0;
+        const GLFWvidmode* modes = glfwGetVideoModes(glfwGetPrimaryMonitor(), &count);
+
+
         mWindow = glfwCreateWindow(mWidth, mHeight, appName.c_str(), nullptr, nullptr);
+        auto currentMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        for (int i = 0; i < count; i++) {
+            WindowSizeDescription size_desc{};
+            auto& mode = modes[i];
+            size_desc.id = i;
+            size_desc.width = mode.width;
+            size_desc.height = mode.height;
+            size_desc.refreshRate = (float)mode.refreshRate;
+
+            char buffer[256] = {0};
+            std::sprintf(buffer, "%dx%d@%.2f", mode.width, mode.height, size_desc.refreshRate);
+            size_desc.size_string = std::string(buffer);
+            if (currentMode->width == size_desc.width && currentMode->height == size_desc.height && (float)currentMode->refreshRate == size_desc.refreshRate) {
+                size_desc.isCurrent = true;
+            }
+            m_pAvailableSizes.push_back(size_desc);
+        }
 
         // Set up IO callbacks
         glfwSetKeyCallback(mWindow, Input::KeyBoard::KeyBoardCallBackGLFW);

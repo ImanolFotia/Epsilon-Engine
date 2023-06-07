@@ -138,8 +138,7 @@ namespace engine
 		if (!imguiInit)
 		{
 
-			auto window = engine::Context::getSingleton().Window();
-			m_pImguiRenderer.Init(m_pVkData, window.getWindow(),
+			m_pImguiRenderer.Init(m_pVkData, m_pWindow->getWindow(),
 				m_pResourceManagerRef->m_pDescriptorPool,
 				m_pVkData.defaultRenderPass.renderPass,
 				m_pResourceManagerRef->m_pCommandPools.front(),
@@ -596,6 +595,8 @@ namespace engine
 		pass->renderPassChain.setScissor(rect);
 
 		//m_pResourceManagerRef->pCreateDescriptorPool();
+		m_pResourceManagerRef->pRecreateFrameBuffers(rect.extent);
+
 		m_pResourceManagerRef->pCreateDescriptorPool();
 		m_pResourceManagerRef->pRecreateDescriptorSets();
 

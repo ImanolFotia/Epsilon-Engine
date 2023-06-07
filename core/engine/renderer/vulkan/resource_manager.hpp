@@ -90,6 +90,8 @@ namespace engine
 		void pCreateDescriptorSets(VkDescriptorSetLayout layout, VkDescriptorPool& pool, std::vector<VkDescriptorSet>& descriptorSets, uint32_t count);
 		void pRecreateDescriptorSets();
 
+		void pRecreateFrameBuffers(VkExtent2D);
+
 		void pUpdateMaterial(vk::VulkanMaterial&);
 
 		const uint32_t MAX_BINDLESS_RESOURCES = 16536;
@@ -142,6 +144,8 @@ namespace engine
 		std::vector<Ref<Buffer>> indexBufferReferences;
 		std::vector<Ref<Buffer>> vertexBufferReferences;
 
+		std::vector<Ref<RenderPass>> resizableRenderPasses;
+
 		VkDescriptorPool m_pGlobalDescriptorPool = VK_NULL_HANDLE;
 		VkDescriptorSet m_pGlobalDescriptorSets = VK_NULL_HANDLE;
 		VkDescriptorSetLayout m_pGlobalDescriptorSetLayout = VK_NULL_HANDLE;
@@ -149,7 +153,7 @@ namespace engine
 		VkDescriptorPool m_pDescriptorPool = VK_NULL_HANDLE;
 		std::vector<VkDescriptorSet> m_pDescriptorSets;
 
-		std::vector<RenderPassInfo> m_pRenderPassInfo;
+		std::unordered_map<uint32_t, RenderPassInfo> m_pRenderPassInfo;
 
 		RenderPassInfo m_pDefaultRenderPassInfo;
 		uint32_t m_pRenderPassCount = 0;

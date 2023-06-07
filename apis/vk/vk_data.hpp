@@ -249,10 +249,11 @@ namespace vk
         VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
         std::vector<VkClearValue> clearValues = {};
         uint32_t id = 0;
-
+        bool resizeWithSwapChain = false;
         std::list<VulkanUniformBuffer> uniformBuffer;
         uint32_t numAttachments = 1;
         std::string name = "";
+
     };
 
     struct VulkanTechnique

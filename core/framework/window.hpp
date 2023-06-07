@@ -33,6 +33,14 @@
 
 namespace framework
 {
+    struct WindowSizeDescription {
+        int id{};
+        int width{};
+        int height{};
+        float refreshRate{};
+        bool isCurrent = false;
+        std::string size_string{};
+    };
     class Window
     {
 
@@ -117,6 +125,11 @@ namespace framework
  #endif*/
         }
 
+        void resize(int w, int h) {
+
+            glfwSetWindowSize(mWindow, w, h);
+        }
+
         void cleanup()
         {
 #if USE_GLFW
@@ -142,10 +155,13 @@ namespace framework
             mWindow = window;
         }
 
-
+        const std::vector<WindowSizeDescription>& getAvailableSizes() {
+            return m_pAvailableSizes;
+        }
     private:
         int mWidth = 0;
         int mHeight = 0;
+        std::vector<WindowSizeDescription> m_pAvailableSizes;
 
         windowType *mWindow;
 #if defined(_WIN32) && (USE_GLFW == false)

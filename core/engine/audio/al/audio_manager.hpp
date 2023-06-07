@@ -18,6 +18,11 @@ namespace engine::audio {
 		virtual Ref<AudioSource> createSource(const std::string& name, const SourceInfo&) override;
 		virtual Ref<AudioListener> createListener(const std::string& name, const ListenerInfo&) override;
 
+
+		virtual void Play(Ref<AudioSource>) override;
+		virtual void Pause(Ref<AudioSource>) override;
+		virtual void Stop(Ref<AudioSource>) override;
+
 		al::OpenALSource* getSource(Ref<AudioSource>);
 		al::OpenALBuffer* getBuffer(Ref<AudioBuffer>);
 		al::OpenALListener* getListener(Ref<AudioListener>);

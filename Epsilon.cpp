@@ -3,48 +3,48 @@
 //
 #include "Epsilon.hpp"
 
-template <>
-Epsilon::Epsilon singleton<Epsilon::Epsilon>::self{};
 namespace Epsilon
 {
     Epsilon::Epsilon(const std::string &appName)
     {
-        self.m_ApplicationName = appName;
-        engine::Context::getSingleton().Init(appName, engine::renderer_type::vulkan);
+        m_ApplicationName = appName;
+        //engine::Context::getSingleton().Init(appName, engine::renderer_type::vulkan);
+        m_pContext = std::make_shared<engine::Context>();
+        m_pContext->Init(appName, engine::renderer_type::vulkan);
     }
 
-    engine::Context &Epsilon::getContext()
+    std::shared_ptr<engine::Context> Epsilon::getContext()
     {
-        return engine::Context::getSingleton();
+        return m_pContext;
     }
 
     void Epsilon::run()
     {
-        if (engine::Context::getSingleton().Window().getSize().first == 0)
-            self.initWindow(1280, 720);
+        if (m_pContext->Window().getSize().first == 0)
+            initWindow(1280, 720);
 
-        self.initVulkan();
-        if (self.onCreate)
-            self.onCreate();
+        initVulkan();
+        if (onCreate)
+            onCreate();
 
-        if (self.onReady)
-            self.onReady();
+        if (onReady)
+            onReady();
 
 #ifdef __EMSCRIPTEN__
 
         emscripten_set_main_loop_arg(
             [](void *userData)
             {
-                self.mainLoop();
+                mainLoop();
             },
             nullptr,
             0, true);
 
 #else // __EMSCRIPTEN__
 
-        while (!engine::Context::getSingleton().Window().ShouldClose())
+        while (!m_pContext->Window().ShouldClose())
         {
-            self.mainLoop();
+            mainLoop();
             if (mShouldClose)
                 break;
         }
@@ -60,72 +60,71 @@ namespace Epsilon
     void Epsilon::drawFrame(engine::Ref<engine::RenderPass> renderPassRef)
     {
         glm::vec3 vec;
-        engine::Context::getSingleton().Renderer()->Flush(renderPassRef, engine::DrawType::INDEXED);
-        engine::Context::getSingleton().Renderer()->End(vec);
-        engine::Context::getSingleton().Renderer()->Submit();
-        engine::Context::getSingleton().Renderer()->EndFrame();
+         m_pContext->Renderer()->Flush(renderPassRef, engine::DrawType::INDEXED);
+         m_pContext->Renderer()->End(vec);
+         m_pContext->Renderer()->Submit();
+         m_pContext->Renderer()->EndFrame();
     }
 
     void Epsilon::setOnCreate(std::function<void(void)> fun)
     {
-        Epsilon::getSingleton().onCreate = fun;
+        onCreate = fun;
     }
 
     void Epsilon::setOnReady(std::function<void(void)> fun)
     {
-        Epsilon::getSingleton().onReady = fun;
+        onReady = fun;
     }
 
     void Epsilon::setOnRender(std::function<void(void)> fun)
     {
-        Epsilon::getSingleton().onRender = fun;
+        onRender = fun;
     }
 
     void Epsilon::setOnUpdate(std::function<void(void)> fun)
     {
-        Epsilon::getSingleton().onUpdate = fun;
+        onUpdate = fun;
     }
 
     void Epsilon::setOnExit(std::function<void(void)> fun)
     {
-        Epsilon::getSingleton().onExit = fun;
+        onExit = fun;
     }
 
     void Epsilon::initWindow(int w, int h)
     {
-        engine::Context::getSingleton().Window().init(m_ApplicationName, w, h);
+        m_pContext->Window().init(m_ApplicationName, w, h);
     }
 
     void Epsilon::initVulkan()
     {
-        engine::Context::getSingleton().Renderer()->Init(m_ApplicationName.c_str(), engine::Context::getSingleton().Window());
-        engine::Context::getSingleton().ResourceManager()->Init();
+        m_pContext->Renderer()->Init(m_ApplicationName.c_str(), m_pContext->Window());
+        m_pContext->ResourceManager()->Init();
     }
 
     void Epsilon::mainLoop()
     {
+        double llastTime = framework::Clock::Now();
         framework::Clock::Tick();
         showFPS();
-        if (self.onUpdate)
-            self.onUpdate();
+        if (onUpdate)
+            onUpdate();
 
-        if (self.onRender)
-            self.onRender();
-        engine::Context::getSingleton().Window().PollEvents();
-        self.m_pFrame++;
-        /*
-        constexpr double max_fps = 4000.0;
-        constexpr double min_frametime = 1000.0 / max_fps;
-        double currentTime = framework::Clock::Now();
-        double llastTime = framework::Clock::Time();
-        double accum = 0.0;
+        if (onRender)
+            onRender();
+        m_pContext->Window().PollEvents();
+        m_pFrame++;
+        
+        double max_fps = (double)m_pMaxFPS;
+        double min_frametime = 1000000.0 / max_fps;
+
+        double accum =0;
+
         while (accum < min_frametime) {
-
-            currentTime = framework::Clock::Now();
-            const double delta = currentTime - llastTime;
-            accum += delta;
+            double currentTime = framework::Clock::Now();
+            accum += currentTime - llastTime;
             llastTime = currentTime;
-        }*/
+        }
     }
 
     void Epsilon::showFPS()
@@ -142,7 +141,7 @@ namespace Epsilon
             ss << m_ApplicationName << " | "
                << " [" << (int)fps << " FPS] | [" << (1000.0 / double(nbFrames)) << " MS]";
 
-            engine::Context::getSingleton().Window().setWindowTitle(ss.str().c_str());
+            m_pContext->Window().setWindowTitle(ss.str().c_str());
 
             nbFrames = 0;
             lastTime = currentTime;
@@ -151,21 +150,23 @@ namespace Epsilon
 
     int32_t Epsilon::Frame()
     {
-        return self.m_pFrame;
+        return m_pFrame;
     }
 
     void Epsilon::exit()
     {
-        if (self.onExit)
-            self.onExit();
-        engine::Context::getSingleton().Renderer()->Cleanup();
-        engine::Context::getSingleton().Window().cleanup();
-        engine::Context::getSingleton().AudioManager()->CleanUp();
+        if (onExit)
+            onExit();
+         m_pContext->Renderer()->Cleanup();
+         m_pContext->Window().cleanup();
+         m_pContext->AudioManager()->CleanUp();
     }
+
+    
 
     std::pair<int, int> Epsilon::getWindowDimensions()
     {
         int w, h;
-        return engine::Context::getSingleton().Window().getSize();
+        return  m_pContext->Window().getSize();
     }
 }

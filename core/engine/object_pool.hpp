@@ -4,6 +4,7 @@
 #include <vector>
 #include <unordered_map>
 #include <functional>
+#include <cstdint>
 
 namespace engine
 {
@@ -22,7 +23,8 @@ namespace engine
             return Ref(0, 0, -1);
         }
 
-        bool empty() {
+        bool empty()
+        {
             return m_pID == -1;
         }
 
@@ -115,7 +117,7 @@ namespace engine
                     return &(*m_pIndexArray[ref.m_pIndex]);
                 }
             }
-            //std::cout << "object is invalid\n";
+            // std::cout << "object is invalid\n";
 
             return nullptr;
         }

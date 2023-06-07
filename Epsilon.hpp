@@ -29,9 +29,11 @@
 #include "core/engine/renderer/vulkan/resource_manager.hpp"
 #include "modules/mono/mono-instance.hpp"
 
+#include <core/engine/scene/scene.hpp>
+
 namespace Epsilon
 {
-    class EPSILON_API Epsilon : public singleton<Epsilon>
+    class EPSILON_API Epsilon
     {
 
         uint32_t m_CurrentFrame = 0;
@@ -60,7 +62,7 @@ namespace Epsilon
         };
 
     public:
-        engine::Context &getContext();
+        std::shared_ptr<engine::Context> getContext();
 
         Epsilon() = default;
 
@@ -76,6 +78,9 @@ namespace Epsilon
 
         std::string m_ApplicationName;
 
+        int getMaxFPS() { return m_pMaxFPS; }
+        void setMaxFPS(int fps) { m_pMaxFPS = fps; }
+
     protected:
         bool mShouldClose = false;
 
@@ -89,6 +94,7 @@ namespace Epsilon
 
         void setOnExit(std::function<void(void)> fun);
 
+
     private:
         void initWindow(int w, int h);
         void initVulkan();
@@ -101,6 +107,10 @@ namespace Epsilon
     protected:
         std::pair<int, int> getWindowDimensions();
 
+        std::shared_ptr<engine::Context> m_pContext = nullptr;
+        engine::Scene m_pScene;
+
         ShaderData shaderData;
+        int m_pMaxFPS = 5000;
     };
 }

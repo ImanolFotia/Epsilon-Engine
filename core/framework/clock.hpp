@@ -36,10 +36,11 @@ class Clock {
             return instance.delta() / 1000.0;
         }
 
-        static long double Now() {
+        static auto Now() {
+            using namespace std::chrono_literals;
+            auto n = std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::steady_clock::now());
 
-            auto n = std::chrono::steady_clock::now();
-            return duration_cast<std::chrono::milliseconds>(n - instance.start()).count();
+            return (n - std::chrono::time_point<std::chrono::steady_clock, std::chrono::microseconds>(0us)).count();
         }
 
         static void Tick() {
@@ -66,11 +67,12 @@ class Clock {
         void last(long double x) { mLastTime = x; }
         void delta(long double x) { mDeltaTime = x; }
 
-        long double mCurrentTime;
-        long double mLastTime;
-        long double mDeltaTime;
+        long double mCurrentTime = 0;
+        long double mLastTime = 0;
+        long double mDeltaTime = 0;
 
-        std::chrono::steady_clock::time_point mStart;
+        std::chrono::steady_clock::time_point mStart{};
+        long double mdStart = 0.0;
 
         Clock() {
             std::cout << "created" << std::endl;
@@ -80,6 +82,7 @@ class Clock {
             mDeltaTime = 0;
             std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
             mStart = time_point_cast<milliseconds>(steady_clock::now());
+
         }
 
         static Clock instance;

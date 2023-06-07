@@ -80,6 +80,8 @@ namespace engine
 		std::queue<uint32_t> m_pFreeObjectIndexes;
 		uint32_t m_pObjectCurrentIndex = 0;
 
+		std::shared_ptr<Context> m_pContext;
+
 		friend class Scene;
 
 	public:
@@ -96,7 +98,7 @@ namespace engine
 		PBRMaterial* materialBufferPtr;
 
 		void Init() {
-			auto resourceManager = Context().ResourceManager();
+			auto resourceManager = m_pContext->ResourceManager();
 
 			m_pGPUBuffers["material_buffer"] = resourceManager->createGPUBuffer("material_buffer", sizeof(PBRMaterial) * MAX_MATERIALS, engine::BufferStorageType::STORAGE_BUFFER);
 
@@ -111,14 +113,14 @@ namespace engine
 
 		void Destroy() {
 
-			auto resourceManager = Context().ResourceManager();
+			auto resourceManager = m_pContext->ResourceManager();
 			resourceManager->unmapBuffer(m_pGPUBuffers["material_buffer"]);
 			//resourceManager->unmapBuffer(m_pGPUBuffers["decal_buffer"]);
 		}
 
 		const RenderModel& createModelFromMesh(const std::string name, const common::Mesh& mesh, const common::MeshMaterial& material) {
 
-			auto resourceManager = Context().ResourceManager();
+			auto resourceManager = m_pContext->ResourceManager();
 
 			if (m_pModels.contains(name)) {
 				return m_pModels.at(name);
@@ -204,7 +206,7 @@ namespace engine
 
 		ShaderObjectData createObjectData(const RenderModel& model) {
 
-			auto resourceManager = Context().ResourceManager();
+			auto resourceManager = m_pContext->ResourceManager();
 			ShaderObjectData* objectBufferPtr = reinterpret_cast<ShaderObjectData*>(resourceManager->mapBuffer(m_pGPUBuffers["object_buffer"]));
 
 			for (auto& mesh : model.renderMeshes) {
@@ -218,7 +220,7 @@ namespace engine
 		const RenderModel &loadModel(const std::string &path)
 		{
 
-			auto resourceManager = Context().ResourceManager();
+			auto resourceManager = m_pContext->ResourceManager();
 			if (m_pModels.contains(path))
 				return m_pModels.at(path);
 
@@ -343,7 +345,7 @@ namespace engine
 		const AudioObject &loadAudio(const std::string &path)
 		{
 
-			auto audioManager = Context::getSingleton().AudioManager();
+			auto audioManager = m_pContext->AudioManager();
 
 			if (m_pAudioBuffers.contains(path))
 			{
@@ -401,7 +403,7 @@ namespace engine
 		Ref<Texture> addTexture(const std::string &path, const TextureInfo &info)
 		{
 
-			auto resourceManager = Context::getSingleton().ResourceManager();
+			auto resourceManager = m_pContext->ResourceManager();
 
 			if (m_pImages.contains(path))
 			{
@@ -438,7 +440,7 @@ namespace engine
 		Ref<Mesh> addMesh(const std::string &name, common::Mesh mesh)
 		{
 
-			auto resourceManager = Context::getSingleton().ResourceManager();
+			auto resourceManager = m_pContext->ResourceManager();
 
 			auto ref = resourceManager->createMesh({.vertices = mesh.Vertices,
 													.indices = mesh.Indices,
@@ -475,7 +477,7 @@ namespace engine
 
 		void setMaterial(PBRMaterialIndex material) {
 
-			auto resourceManager = Context::getSingleton().ResourceManager();
+			auto resourceManager = m_pContext->ResourceManager();
 			//PBRMaterial* materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"]));
 
 			materialBufferPtr[material.index] = material.material;

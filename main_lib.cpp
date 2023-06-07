@@ -32,10 +32,12 @@ extern "C"
 {
 #endif
 
+    static Epsilon::Epsilon instance;
+
     EXPORT void EpsilonInit(const char *name)
     {
         std::cout << "Creating epsilon instance: " << name << std::endl;
-        auto &instance = Epsilon::Epsilon::getSingleton();
+        //auto &instance = Epsilon::Epsilon::getSingleton();
         instance.m_ApplicationName = name;
     }
 
@@ -45,18 +47,18 @@ extern "C"
 
     [[maybe_unused]] EXPORT void CreateWindow(const char *name, int w, int h)
     {
-        engine::Context::getSingleton().Window().init(name, w, h);
-        Epsilon::Epsilon::getSingleton().m_ApplicationName = name;
+        instance.getContext()->Window().init(name, w, h);
+        instance.m_ApplicationName = name;
     }
 
     EXPORT void CreateContext(const char *name, engine::renderer_type api)
     {
-        engine::Context::getSingleton().Init(name, api);
+        instance.getContext()->Init(name, api);
     }
 
     EXPORT void EpsilonRun()
     {
-        Epsilon::Epsilon::getSingleton().run();
+        instance.run();
     }
 #ifdef __cplusplus
 };

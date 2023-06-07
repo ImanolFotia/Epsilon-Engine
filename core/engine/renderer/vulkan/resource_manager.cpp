@@ -460,7 +460,7 @@ namespace engine
 				renderPassInfo.attachments.back().depthStencilValue[1] };
 
 		renderPass.id = m_pRenderPassCount;
-		m_pRenderPassInfo.push_back(renderPassInfo);
+		m_pRenderPassInfo[renderPass.id] = renderPassInfo;
 		renderPass.renderPassChain.ImageFormats.resize(renderPassInfo.attachments.size());
 
 		for (int index = 0; index < renderPassInfo.attachments.size(); index++)
@@ -564,6 +564,9 @@ namespace engine
 		}
 		auto ref = renderPassPool.insert(renderPassInfo.name, renderPass);
 
+		if (renderPassInfo.resizeWithSwapChain) {
+			resizableRenderPasses.push_back(ref);
+		}
 
 		m_pRenderPassCount++;
 		return ref;

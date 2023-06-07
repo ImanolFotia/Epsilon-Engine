@@ -24,24 +24,24 @@ namespace engine::parsers {
 
 			for (auto& input_json : renderpass["inputs"]) {
 				auto type = resolveType(input_json["type"]);
-					//if (type == UniformBindingType::TEXTURE_SAMPLER) {
-					//	RenderPassBinding binding;
-					//	binding.bindingPoint = input_json["binding"];
-					//	binding.index = input_json["index"];
-					//	binding.renderPass = input_json["renderpass"];
-					//}
-					//else {
+				//if (type == UniformBindingType::TEXTURE_SAMPLER) {
+				//	RenderPassBinding binding;
+				//	binding.bindingPoint = input_json["binding"];
+				//	binding.index = input_json["index"];
+				//	binding.renderPass = input_json["renderpass"];
+				//}
+				//else {
 
-						UniformBindingInfo info;
-						info.type = resolveType(input_json["type"]);
-						info.name = input_json["name"];
-						info.binding = input_json["binding"];
-						info.size = input_json["size"];
-						info.offset = input_json["offset"];
-						info.set = input_json["set"];
-						info.descriptorCount = input_json["descriptorCount"];
-						inputs.push_back(info);
-					//}
+				UniformBindingInfo info;
+				info.type = resolveType(input_json["type"]);
+				info.name = input_json["name"];
+				info.binding = input_json["binding"];
+				info.size = input_json["size"];
+				info.offset = input_json["offset"];
+				info.set = input_json["set"];
+				info.descriptorCount = input_json["descriptorCount"];
+				inputs.push_back(info);
+				//}
 			}
 
 			std::vector<RenderPassAttachment> outputs;
@@ -97,6 +97,13 @@ namespace engine::parsers {
 
 			}
 
+			bool resizeWithSwapChain = false;
+
+			if (renderpass.contains("resizeWithSwapChain")) {
+
+				resizeWithSwapChain = renderpass["resizeWithSwapChain"];
+			}
+
 			RenderPassInfo renderPassInfo =
 				RenderPassFactory()
 				.name(name)
@@ -107,6 +114,8 @@ namespace engine::parsers {
 				.inputs(inputs)
 				.outputs(outputs)
 				.pushConstant(renderpass["pushConstant"]);
+
+			renderPassInfo.resizeWithSwapChain = resizeWithSwapChain;
 
 			for (auto& pLayout : renderpass["pipelineLayouts"]) {
 				renderPassInfo.pipelineIndices[pLayout] = renderPassInfo.pipelineLayout.size();

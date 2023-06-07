@@ -49,6 +49,10 @@ namespace engine::audio {
 		virtual Ref<AudioSource> createSource(const std::string&, const SourceInfo&) = 0;
 		virtual Ref<AudioListener> createListener(const std::string&, const ListenerInfo&) = 0;
 
+		virtual void Play(Ref<AudioSource>) = 0;
+		virtual void Pause(Ref<AudioSource>) = 0;
+		virtual void Stop(Ref<AudioSource>) = 0;
+
 		virtual void setSourcePosition(Ref<AudioSource>, glm::vec3) = 0;
 		virtual void setSourceDirection(Ref<AudioSource>, glm::vec3) = 0;
 		virtual void setSourceVelocity(Ref<AudioSource>, glm::vec3) = 0;

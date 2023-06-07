@@ -6,6 +6,8 @@
 #include "trees/octree.hpp"
 #include "parsers/renderpass.hpp"
 
+#include "../audio/audio_manager.hpp"
+
 #ifdef _WIN32
 #include <Windows.h>
 #endif
@@ -17,6 +19,7 @@ namespace engine
 	class Scene
 	{
 		AssetManager m_pAssetManager;
+		std::shared_ptr<audio::AudioManager> m_pAudioManager;
 		// OctreeContainer<std::shared_ptr<NodeBase>> m_pOctree;
 		SceneManager m_pSceneManager;
 
@@ -31,13 +34,19 @@ namespace engine
 		Ref<BindGroup> m_pDecalBindGroup;
 		Ref<BindGroup> m_pPrePassBindGroup;
 
+		std::shared_ptr<Context> m_pContext;
+
 		std::size_t getHash(const std::string &s) {
 			return std::hash<std::string>{}(s);
 		}
 
 	public:
-		Scene()
+		Scene() = default;
+
+		Scene(std::shared_ptr<Context> context) : m_pContext(context)
 		{
+			m_pAssetManager.m_pContext = m_pContext;
+
 			m_pRenderLayouts["DefaultLayout"] = 0;
 			m_pRenderLayouts["SkyLayout"] = 1;
 			m_pRenderLayouts["TerrainLayout"] = 2;
@@ -49,9 +58,11 @@ namespace engine
 
 		}
 
+		std::shared_ptr<Context> getContext() { return m_pContext; }
+
 		void Init() {
 
-			auto resourceManager = Context().ResourceManager();
+			auto resourceManager = m_pContext->ResourceManager();
 
 #ifdef _WIN32
 			system("cd .\\assets\\shaders && .\\build_shaders.sh");
@@ -60,10 +71,10 @@ namespace engine
 
 			for (auto& [name, renderpass] : m_RenderPassesInfo) {
 				if (renderpass.isSwapChainAttachment) {
-					m_RenderPassesRefs[name] = Context().ResourceManager()->createDefaultRenderPass(renderpass);
+					m_RenderPassesRefs[name] = m_pContext->ResourceManager()->createDefaultRenderPass(renderpass);
 				}
 				else {
-					m_RenderPassesRefs[name] = Context().ResourceManager()->createRenderPass(renderpass);
+					m_RenderPassesRefs[name] = m_pContext->ResourceManager()->createRenderPass(renderpass);
 				}
 			}
 
@@ -83,7 +94,7 @@ namespace engine
 					.renderPass = "DefaultRenderPass",
 					.name = "DefaultBindGroup",
 			};
-
+			/*
 			engine::BindGroupInfo decalBindGroup = {
 					.bindingInfo = {
 						{.size = sizeof(ShaderObjectData), .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
@@ -92,11 +103,10 @@ namespace engine
 						//{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 3, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"}
 			},
 					.inputs = {
-					{.renderPass = "DefaultRenderPass", .index = 1, .bindingPoint = 2},
 				},
 					.renderPass = "DefaultRenderPass",
 					.name = "DecalBindGroup",
-			};
+			};*/
 
 			engine::BindGroupInfo shadowBindGroup = {
 					.bindingInfo = {
@@ -123,7 +133,7 @@ namespace engine
 
 			m_pDefaultBindGroup = resourceManager->createBindGroup(defaultBindGroup);
 			m_pShadowBindGroup = resourceManager->createBindGroup(shadowBindGroup);
-			m_pDecalBindGroup = resourceManager->createBindGroup(decalBindGroup);
+			//m_pDecalBindGroup = resourceManager->createBindGroup(decalBindGroup);
 			m_pPrePassBindGroup = resourceManager->createBindGroup(prepassBindGroup);
 
 		}
@@ -131,7 +141,7 @@ namespace engine
 		void setCurrentRenderPass(const std::string& renderpass) {
 			m_pCurrentRenderPass = m_RenderPassesRefs[renderpass];
 
-			auto renderer = Context().Renderer();
+			auto renderer = m_pContext->Renderer();
 			renderer->SetRenderPass(m_pCurrentRenderPass);
 		}
 
@@ -146,13 +156,13 @@ namespace engine
 
 		void SetViewport(const Viewport& viewport) {
 
-			auto renderer = Context().Renderer();
+			auto renderer = m_pContext->Renderer();
 			renderer->SetViewport(viewport);
 		}
 
 		void SetScissor(const Scissor& scissor) {
 
-			auto renderer = Context().Renderer();
+			auto renderer = m_pContext->Renderer();
 			renderer->SetScissor(scissor);
 		}
 
@@ -221,21 +231,21 @@ namespace engine
 
 		void BeginScene()
 		{
-			auto renderer = Context().Renderer();
+			auto renderer = m_pContext->Renderer();
 			renderer->BeginFrame();
 			renderer->Begin();
 		}
 
 		void Flush()
 		{
-			auto renderer = Context().Renderer();
+			auto renderer = m_pContext->Renderer();
 
 			renderer->Flush(m_pCurrentRenderPass, engine::DrawType::INDEXED);
 		}
 
 		void Push(std::shared_ptr<Node<RenderModel>> renderModel, glm::mat4 transform, const std::string& layout)
 		{
-			auto renderer = Context().Renderer();
+			auto renderer = m_pContext->Renderer();
 
 			Ref<PushConstant> push_constant;
 
@@ -250,9 +260,9 @@ namespace engine
 			else if (layout == "TerrainLayout") {
 				selectedBindGroup = m_pDefaultBindGroup;
 			}
-			else if (layout == "DecalLayout") {
+			/*else if (layout == "DecalLayout") {
 				selectedBindGroup = m_pDecalBindGroup;
-			}
+			}*/
 			else if (layout == "SkyLayout") {
 				selectedBindGroup = m_pDefaultBindGroup;
 			}
@@ -286,7 +296,7 @@ namespace engine
 		void EndScene()
 		{
 
-			auto renderer = Context().Renderer();
+			auto renderer = m_pContext->Renderer();
 			glm::vec3 v;
 			renderer->End(v);
 
