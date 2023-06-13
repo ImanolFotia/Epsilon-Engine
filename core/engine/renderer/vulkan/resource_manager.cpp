@@ -61,6 +61,7 @@ namespace engine
 		m_pCommandPools.emplace_back();
 
 		vk::createCommandPool(*m_pVkDataPtr, m_pCommandPools.back());
+		vk::createTransferCommandPool(*m_pVkDataPtr, m_pTransferCommandPool);
 
 		pCreateGlobalDescriptorPool();
 		pCreateDescriptorPool();
@@ -104,12 +105,12 @@ namespace engine
 
 		auto size = texInfo.width * texInfo.height * texInfo.numChannels;
 
-		transitionImageLayout(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), texture.image,
+		transitionImageLayout(*m_pVkDataPtr, m_pTransferCommandPool, texture.image,
 			format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 			texture.info);
-		copyBufferToImage(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), stagingBuffer.buffer, texture.image,
+		copyBufferToImage(*m_pVkDataPtr, m_pTransferCommandPool, stagingBuffer.buffer, texture.image,
 			static_cast<uint32_t>(texInfo.width), static_cast<uint32_t>(texInfo.height));
-		transitionImageLayout(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), texture.image,
+		transitionImageLayout(*m_pVkDataPtr, m_pTransferCommandPool, texture.image,
 			format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 			VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, texture.info);
 
@@ -122,7 +123,7 @@ namespace engine
 		vk::createImageView(*m_pVkDataPtr, texture, VK_IMAGE_ASPECT_COLOR_BIT);
 
 		ResourcesMemory.m_pTextureBufferAllocationSize += texInfo.width * texInfo.height * 4;
-		VkCommandBuffer blitCommandBuffer = vk::beginSingleTimeCommands(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back());
+		VkCommandBuffer blitCommandBuffer = vk::beginSingleTimeCommands(*m_pVkDataPtr, m_pTransferCommandPool);
 
 		/* Begin generate mips*/
 		// Copy down mips from n-1 to n
@@ -155,7 +156,7 @@ namespace engine
 				mipSubRange.layerCount = 1;
 
 				vk::imageMemoryBarrier(*m_pVkDataPtr,
-					m_pCommandPools.back(),
+					m_pTransferCommandPool,
 					texture.image,
 					texture.format,
 					VK_IMAGE_LAYOUT_UNDEFINED,
@@ -176,7 +177,7 @@ namespace engine
 					VK_FILTER_LINEAR);
 
 				vk::imageMemoryBarrier(*m_pVkDataPtr,
-					m_pCommandPools.back(),
+					m_pTransferCommandPool,
 					texture.image,
 					texture.format,
 					VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
@@ -194,7 +195,7 @@ namespace engine
 		subresourceRange.levelCount = mipLevels;
 
 		vk::imageMemoryBarrier(*m_pVkDataPtr,
-			m_pCommandPools.back(),
+			m_pTransferCommandPool,
 			texture.image,
 			texture.format,
 			VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
@@ -203,7 +204,7 @@ namespace engine
 			blitCommandBuffer,
 			subresourceRange);
 
-		vk::endSingleTimeCommands(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), blitCommandBuffer);
+		vk::endSingleTimeCommands(*m_pVkDataPtr, m_pTransferCommandPool, blitCommandBuffer);
 
 		/*transitionImageLayout(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), texture.image,
 			format, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
@@ -693,12 +694,12 @@ namespace engine
 		auto vertexStagingBuffer = pCreateStagingBuffer(*vertices);
 		auto indexStagingBuffer = pCreateStagingIndexBuffer(*indices);
 
-		vk::copyBuffer(*m_pVkDataPtr, m_pCommandPools.back(), vertexStagingBuffer.buffer, vertexBuffer->buffer,
+		vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, vertexStagingBuffer.buffer, vertexBuffer->buffer,
 			vertices->size() * sizeof(common::Vertex), vertexBuffer->allocatedVertices * sizeof(common::Vertex));
 
 		vmaDestroyBuffer(m_pAllocator, vertexStagingBuffer.buffer, vertexStagingBuffer.allocation);
 
-		vk::copyBuffer(*m_pVkDataPtr, m_pCommandPools.back(), indexStagingBuffer.buffer, indexBuffer->buffer,
+		vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, indexStagingBuffer.buffer, indexBuffer->buffer,
 			indices->size() * sizeof(IndexType), indexBuffer->allocatedVertices * sizeof(IndexType));
 
 		vmaDestroyBuffer(m_pAllocator, indexStagingBuffer.buffer, indexStagingBuffer.allocation);
@@ -732,11 +733,6 @@ namespace engine
 		vertexBuffer->allocatedVertices += vertices->size();
 		indexBuffer->allocatedVertices += indices->size();
 
-		if (0)
-			IO::Warning("Function ready, testing required\n\t", __PRETTY_FUNCTION__,
-				"\n\tin ", __FILE__, ":", __LINE__);
-
-		// throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
 		return ref;
 	}
 

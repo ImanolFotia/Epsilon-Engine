@@ -4,6 +4,7 @@
 
 #include <queue>
 #include <list>
+#include <map>
 
 #include <glm/gtx/hash.hpp>
 
@@ -14,24 +15,32 @@ namespace framework
 	class AStar
 	{
 
-		static std::unordered_map<int, Key> reconstruct_path(
+		struct PathData {
+			int from = 0;
+			glm::vec3 position{};
+		};
+
+		static std::unordered_map<int, glm::vec3> reconstruct_path(
 			Key start, Key goal,
-			std::unordered_map<Key, Key> came_from)
+			std::map<Key, PathData> came_from)
 		{
-			std::unordered_map<int, Key> path;
-			Key current = goal;
+			std::unordered_map<int, glm::vec3> path;
+			glm::vec3 current = came_from[goal].position;
+
+			Key current_key = goal;
 			if (came_from.find(goal) == came_from.end())
 			{
 				return path; // no path can be found
 			}
 			int counter = 0;
-			while (current != start)
+			while (current_key != start)
 			{
 				path[counter] = current;
-				current = came_from[current];
+				current = came_from[current_key].position;
+				current_key = came_from[current_key].from;
 				counter++;
 			}
-			path[counter] = start; // optional
+			path[counter] = came_from[start].position; // optional
 			// std::reverse(path.begin(), path.end());
 			return path;
 		}
@@ -46,24 +55,25 @@ namespace framework
 		};
 
 	public:
-		static float Heuristic(Key a, Key b)
+		static float Heuristic(glm::vec3 a, glm::vec3 b)
 		{
 			return glm::distance(a, b);
 		}
 
-		static std::unordered_map<int, Key> traverse(NodeGraph<Key, DataType> graph, Key start, Key end)
+
+		static std::unordered_map<int, glm::vec3> traverse(NodeGraph<Key, DataType> graph, Key start, Key end)
 		{
-			std::unordered_map<Key, Key> path;
+			std::map<Key, PathData> path;
 			using QElement = std::pair<float, Key>;
 
 			std::priority_queue<QElement, std::vector<QElement>, CompareDist> frontier;
 			std::unordered_map<Key, float> cost_so_far;
 			cost_so_far.reserve(1500);
-			path.reserve(1500);
+			//path.reserve(1500);
 
 			bool goalReached = false;
 
-			path[start] = start;
+			path[start].position = graph.at(start).data()->position;
 
 			frontier.emplace(0.0f, start);
 			cost_so_far[start] = 0.0f;
@@ -85,10 +95,11 @@ namespace framework
 					if (!cost_so_far.contains(neighbor) || new_cost < cost_so_far[neighbor])
 					{
 						cost_so_far[neighbor] = new_cost;
-						float priority = new_cost + Heuristic(neighbor, end);
+						float priority = new_cost + Heuristic(graph.at(neighbor).data()->position, graph.at(end).data()->position);
 						frontier.emplace(priority, neighbor);
 						// came_from[neighbor] = currentKey;
-						path[neighbor] = currentKey;
+						path[neighbor].position = graph.at(currentKey).data()->position;
+						path[neighbor].from = currentKey;
 					}
 				}
 

@@ -64,7 +64,10 @@ namespace engine::parsers {
 				if (output_json.contains("compareFunc")) {
 					info.compareFunc = resolveCompareFunction(output_json["compareFunc"]);
 				}
-
+				if (output_json.contains("depthCompare")) {
+					info.depthCompare = output_json["depthCompare"];
+				}
+				
 				if (output_json.contains("clearColor")) {
 					for (int i = 0; i < 4; i++) {
 						info.clearColor[i] = output_json["clearColor"][i];

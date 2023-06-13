@@ -52,6 +52,7 @@ namespace engine
 			m_pRenderLayouts["TerrainLayout"] = 2;
 			m_pRenderLayouts["DecalLayout"] = 3;
 			m_pRenderLayouts["ShadowLayout"] = 0;
+			m_pRenderLayouts["treeShadowLayout"] = 1;
 			m_pRenderLayouts["prepassLayout"] = 0;
 
 			m_pCurrentRenderPass = m_RenderPassesRefs["DefaultRenderPass"];
@@ -82,14 +83,14 @@ namespace engine
 
 			engine::BindGroupInfo defaultBindGroup = {
 					.bindingInfo = {
-						{.size = sizeof(ShaderObjectData), .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
+						{.size = 256, .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
 						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
 						{.size = sizeof(Decal) * AssetManager::MAX_DECALS, .offset = 0, .binding = 4, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "decal_buffer"},
 						//{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 3, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"}
 			},
 					.inputs = {
-					{.renderPass = "ShadowPass", .index = 1, .bindingPoint = 2},
-					{.renderPass = "ShadowPass", .index = 0, .bindingPoint = 3},
+					{.renderPass = "ShadowPass", .index = 0, .bindingPoint = 2},
+					{.renderPass = "ShadowPass", .index = 1, .bindingPoint = 3},
 				},
 					.renderPass = "DefaultRenderPass",
 					.name = "DefaultBindGroup",
@@ -110,7 +111,7 @@ namespace engine
 
 			engine::BindGroupInfo shadowBindGroup = {
 					.bindingInfo = {
-						{.size = sizeof(ShaderObjectData), .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
+						{.size = 256, .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
 						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
 
 			},
@@ -122,7 +123,7 @@ namespace engine
 
 			engine::BindGroupInfo prepassBindGroup = {
 					.bindingInfo = {
-						{.size = sizeof(ShaderObjectData), .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
+						{.size = 256, .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
 						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
 
 			},
@@ -252,6 +253,9 @@ namespace engine
 			Ref<BindGroup> selectedBindGroup;
 
 			if (layout == "ShadowLayout") {
+				selectedBindGroup = m_pShadowBindGroup;
+			}
+			else if (layout == "treeShadowLayout") {
 				selectedBindGroup = m_pShadowBindGroup;
 			}
 			else if (layout == "DefaultLayout") {

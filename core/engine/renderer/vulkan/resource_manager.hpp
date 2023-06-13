@@ -159,6 +159,9 @@ namespace engine
 		uint32_t m_pRenderPassCount = 0;
 
 		CommandPools m_pCommandPools;
+
+		VkCommandPool m_pTransferCommandPool;
+
 		uint32_t m_pNumCommandPools = 1;
 		CommandBuffers m_pCommandBuffers;
 		Ref<RenderPass> m_pDefaultRenderPassRef;

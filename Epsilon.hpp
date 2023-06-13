@@ -58,7 +58,7 @@ namespace Epsilon
             alignas(16) glm::mat4 view{};
             alignas(16) glm::mat4 proj{};
             alignas(16) glm::mat4 lightMatrix{};
-            alignas(32) int iFrame;
+            alignas(4) uint32_t iFrame {};
         };
 
     public:

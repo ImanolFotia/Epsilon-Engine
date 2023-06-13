@@ -26,6 +26,21 @@ namespace vk
         }
     }
 
+    static void createTransferCommandPool(VulkanData& vk_data, VkCommandPool& commandPool)
+    {
+        QueueFamilyIndices queueFamilyIndices = findQueueFamilies(vk_data.physicalDevice, vk_data);
+
+        VkCommandPoolCreateInfo poolInfo{};
+        poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+        poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+        poolInfo.queueFamilyIndex = queueFamilyIndices.transferFamily.value();
+
+        if (vkCreateCommandPool(vk_data.logicalDevice, &poolInfo, nullptr, &commandPool) != VK_SUCCESS)
+        {
+            throw std::runtime_error("failed to create transfer command pool!");
+        }
+    }
+
     static void createCommandBuffers(const VulkanData &vk_data, VkCommandPool &commandPool, std::vector<VkCommandBuffer> &commandBuffers)
     {
 
@@ -100,8 +115,8 @@ namespace vk
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
         submitInfo.commandBufferCount = 1;
         submitInfo.pCommandBuffers = &commandBuffer;
-        vkQueueSubmit(vk_data.graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
-        vkQueueWaitIdle(vk_data.graphicsQueue);
+        vkQueueSubmit(vk_data.transferQueue, 1, &submitInfo, VK_NULL_HANDLE);
+        vkQueueWaitIdle(vk_data.transferQueue);
 
         vkFreeCommandBuffers(vk_data.logicalDevice, commandPool, 1, &commandBuffer);
     }

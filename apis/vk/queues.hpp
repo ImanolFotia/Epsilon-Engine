@@ -17,10 +17,12 @@ namespace vk
     {
         std::optional<uint32_t> graphicsFamily;
         std::optional<uint32_t> presentFamily;
+        std::optional<uint32_t> computeFamily;
+        std::optional<uint32_t> transferFamily;
 
         bool isComplete()
         {
-            return graphicsFamily.has_value() && presentFamily.has_value();
+            return graphicsFamily.has_value() && presentFamily.has_value() && computeFamily.has_value() && transferFamily.has_value();
         }
     };
 
@@ -40,6 +42,14 @@ namespace vk
             if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
             {
                 indices.graphicsFamily = i;
+            }
+
+            if (queueFamily.queueFlags & VK_QUEUE_COMPUTE_BIT) {
+                indices.computeFamily = i;
+            }
+
+            if (queueFamily.queueFlags & VK_QUEUE_TRANSFER_BIT && queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+                indices.transferFamily = i;
             }
 
             if (indices.isComplete())

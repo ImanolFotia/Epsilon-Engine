@@ -28,10 +28,10 @@ namespace vk
         QueueFamilyIndices indices = findQueueFamilies(vk_data.physicalDevice, vk_data);
 
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
-        vk_data.uniqueQueueFamilies = {indices.graphicsFamily.value(), indices.presentFamily.value()};
+        vk_data.uniqueQueueFamilies = {indices.graphicsFamily.value(), indices.presentFamily.value(), indices.computeFamily.value(), indices.transferFamily.value()};
 
-        float queuePriority = 1.0f;
-        for (uint32_t queueFamily : vk_data.uniqueQueueFamilies)
+        float queuePriority[2] = { 1.0f , 1.0f};
+        /*for (uint32_t queueFamily : vk_data.uniqueQueueFamilies)
         {
             VkDeviceQueueCreateInfo queueCreateInfo{};
             queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
@@ -39,7 +39,15 @@ namespace vk
             queueCreateInfo.queueCount = 1;
             queueCreateInfo.pQueuePriorities = &queuePriority;
             queueCreateInfos.push_back(queueCreateInfo);
-        }
+        }*/
+
+
+        VkDeviceQueueCreateInfo queueCreateInfo{};
+        queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+        queueCreateInfo.queueFamilyIndex = indices.transferFamily.value();
+        queueCreateInfo.queueCount = 2;
+        queueCreateInfo.pQueuePriorities = queuePriority;
+        queueCreateInfos.push_back(queueCreateInfo);
 
         //!!! TODO: Should ask where these extensions are avaliable
         VkPhysicalDeviceFeatures deviceFeatures{};
@@ -116,8 +124,9 @@ namespace vk
             throw std::runtime_error("failed to create logical device!");
         }
         vkGetDeviceQueue(vk_data.logicalDevice, indices.presentFamily.value(), 0, &vk_data.presentQueue);
-        //????????
         vkGetDeviceQueue(vk_data.logicalDevice, indices.graphicsFamily.value(), 0, &vk_data.graphicsQueue);
+        vkGetDeviceQueue(vk_data.logicalDevice, indices.transferFamily.value(), 1, &vk_data.transferQueue);
+        vkGetDeviceQueue(vk_data.logicalDevice, indices.computeFamily.value(), 0, &vk_data.computeQueue);
     }
 
     static VkSampleCountFlagBits getMaxUsableSampleCount(VkPhysicalDevice physicalDevice)
