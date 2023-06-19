@@ -95,10 +95,10 @@ namespace engine
 					.renderPass = "DefaultRenderPass",
 					.name = "DefaultBindGroup",
 			};
-			/*
+			
 			engine::BindGroupInfo decalBindGroup = {
 					.bindingInfo = {
-						{.size = sizeof(ShaderObjectData), .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
+						{.size = 256, .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
 						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
 						//{.size = sizeof(ObjectData) * AssetManager::MAX_OBJECTS, .offset = 0, .binding = 2, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "object_buffer"},
 						//{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 3, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"}
@@ -107,7 +107,7 @@ namespace engine
 				},
 					.renderPass = "DefaultRenderPass",
 					.name = "DecalBindGroup",
-			};*/
+			};
 
 			engine::BindGroupInfo shadowBindGroup = {
 					.bindingInfo = {
@@ -134,7 +134,7 @@ namespace engine
 
 			m_pDefaultBindGroup = resourceManager->createBindGroup(defaultBindGroup);
 			m_pShadowBindGroup = resourceManager->createBindGroup(shadowBindGroup);
-			//m_pDecalBindGroup = resourceManager->createBindGroup(decalBindGroup);
+			m_pDecalBindGroup = resourceManager->createBindGroup(decalBindGroup);
 			m_pPrePassBindGroup = resourceManager->createBindGroup(prepassBindGroup);
 
 		}
@@ -264,9 +264,9 @@ namespace engine
 			else if (layout == "TerrainLayout") {
 				selectedBindGroup = m_pDefaultBindGroup;
 			}
-			/*else if (layout == "DecalLayout") {
+			else if (layout == "DecalLayout") {
 				selectedBindGroup = m_pDecalBindGroup;
-			}*/
+			}
 			else if (layout == "SkyLayout") {
 				selectedBindGroup = m_pDefaultBindGroup;
 			}
