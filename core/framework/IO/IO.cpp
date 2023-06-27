@@ -4,6 +4,7 @@
 
 #include "Mouse.hpp"
 #include "KeyBoard.hpp"
+#include "DragDrop.hpp"
 #include "core/framework/IO/Joystick/Joystick.hpp"
 
 
@@ -22,6 +23,8 @@ framework::Input::STATE framework::Input::Mouse::RIGHT = Input::RELEASED;
 beacon::single_handler<framework::Input::MouseArgs> framework::Input::Mouse::MouseEventHandler;
 
 beacon::single_handler<framework::Input::KeyboardArgs> framework::Input::KeyBoard::KeyboardEventHandler;
+
+beacon::single_handler<framework::Input::DropArgs> framework::Input::DragDrop::DropEventHandler;
 
 namespace Joystick = framework::Input::Joystick;
 

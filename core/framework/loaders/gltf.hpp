@@ -184,7 +184,6 @@ namespace framework {
 			Load(path);
 		}
 
-
 		bool Load(const std::string& path) {
 
 			tinygltf::Model model;

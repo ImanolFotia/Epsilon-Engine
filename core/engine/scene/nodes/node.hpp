@@ -11,6 +11,8 @@ namespace engine
     {
         using type = void;
 
+        int Index() { return index; }
+
     private:
         int index = 0;
         std::shared_ptr<NodeBase> parent;

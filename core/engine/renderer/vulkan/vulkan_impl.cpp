@@ -353,6 +353,7 @@ namespace engine
 						imageInfo.imageLayout = binding.texture.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 						imageInfo.imageLayout = binding.texture.format == VK_FORMAT_D32_SFLOAT ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : imageInfo.imageLayout;
 
+						binding.texture.imageLayout = imageInfo.imageLayout;
 						if (!binding.renderpass.empty()) {
 							auto pass = renderPassPool.get(std::hash<std::string>{}(binding.renderpass));
 

@@ -13,9 +13,27 @@
 namespace engine
 {
 
+	struct ShaderData
+	{
+		alignas(4) float iTime = 0.0f;
+		alignas(8) glm::vec2 iResolution{};
+		alignas(8) glm::vec3 lightPosition{};
+		alignas(8) glm::vec3 viewPosition{};
+		alignas(16) glm::mat4 view{};
+		alignas(16) glm::mat4 proj{};
+		alignas(16) glm::mat4 lightMatrix{};
+		alignas(4) uint32_t iFrame {};
+		alignas(8) glm::vec2 iMouse{};
+	};
 	struct ShaderObjectData {
 		uint32_t transform_index;
 		uint32_t material_index;
+	};
+
+	struct CursorInfo {
+		glm::vec3 position;
+		glm::vec3 normal;
+		unsigned int id;
 	};
 
 	struct PBRMaterial
@@ -96,6 +114,7 @@ namespace engine
 		}
 
 		PBRMaterial* materialBufferPtr;
+		CursorInfo* infoBufferPtr;
 
 		void Init() {
 			auto resourceManager = m_pContext->ResourceManager();
@@ -104,11 +123,14 @@ namespace engine
 
 			m_pGPUBuffers["decal_buffer"] = resourceManager->createGPUBuffer("decal_buffer", sizeof(Decal) * MAX_DECALS, engine::BufferStorageType::STORAGE_BUFFER);
 
+			m_pGPUBuffers["info_buffer"] = resourceManager->createGPUBuffer("info_buffer", sizeof(CursorInfo), engine::BufferStorageType::STORAGE_BUFFER);
+
 			//m_pGPUBuffers["object_buffer"] = resourceManager->createGPUBuffer("object_buffer", sizeof(ShaderObjectData) * MAX_OBJECTS, engine::BufferStorageType::STORAGE_BUFFER);
 			//m_pGPUBuffers["transform_buffer"] = resourceManager->createGPUBuffer("transform_buffer", sizeof(glm::mat4) * MAX_TRANSFORMS, engine::BufferStorageType::STORAGE_BUFFER);
 		
 
 			materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"]));
+			infoBufferPtr = reinterpret_cast<CursorInfo*>(resourceManager->mapBuffer(m_pGPUBuffers["info_buffer"]));
 		}
 
 		void Destroy() {
@@ -219,10 +241,15 @@ namespace engine
 
 		const RenderModel &loadModel(const std::string &path)
 		{
+			std::string prefix = "./assets/";
 
 			auto resourceManager = m_pContext->ResourceManager();
 			if (m_pModels.contains(path))
 				return m_pModels.at(path);
+
+			if (path.find(":") != std::string::npos) {
+				prefix = "";
+			}
 
 			//if()
 			const std::string ext = path.substr(path.find_last_of('.')+1, path.length());
@@ -230,10 +257,10 @@ namespace engine
 			std::unique_ptr<framework::ModelBase> inModel;
 
 			if (ext == "eml") {
-				inModel = std::make_unique<framework::Model>("./assets/" + path);
+				inModel = std::make_unique<framework::Model>(prefix + path);
 			}
 			else {
-				inModel = std::make_unique<framework::gltfModel>("./assets/" + path);
+				inModel = std::make_unique<framework::gltfModel>(prefix + path);
 			}
 
 			int index = 0;
@@ -251,7 +278,6 @@ namespace engine
 				std::string material_name = path + "_submesh_" + std::to_string(index) + "_material";
 
 				subRenderC.material_key = std::hash<std::string>{}(material_name);
-
 
 				auto mesh_material = mesh.Material();
 
@@ -398,6 +424,10 @@ namespace engine
 
 			return obj_index;
 
+		}
+
+		CursorInfo* getBufferPointer() {
+			return infoBufferPtr;
 		}
 
 		Ref<Texture> addTexture(const std::string &path, const TextureInfo &info)

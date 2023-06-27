@@ -6,6 +6,7 @@
 
 #include "core/framework/IO/KeyBoard.hpp"
 #include "core/framework/IO/Mouse.hpp"
+#include "core/framework/IO/DragDrop.hpp"
 #include "core/framework/IO/Joystick/Joystick.hpp"
 
 namespace framework
@@ -57,6 +58,7 @@ namespace framework
         glfwSetJoystickCallback(Input::Joystick::JoystickManager::JoystickCallbackGLFW);
         glfwSetMouseButtonCallback(mWindow, Input::Mouse::MouseButtonCallbackGLFW);
         glfwSetScrollCallback(mWindow, Input::Mouse::MouseWheelCallbackGLFW);
+        glfwSetDropCallback(mWindow, Input::DragDrop::DropCallbackGLFW);
 
         glfwSetInputMode(mWindow, GLFW_STICKY_KEYS, true);
         glfwSetInputMode(mWindow, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);

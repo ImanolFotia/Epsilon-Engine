@@ -18,6 +18,7 @@
 #include <stdio.h>  // printf, fprintf
 #include <stdlib.h> // abort
 #include <functional>
+#include <unordered_map>
 #define GLFW_INCLUDE_NONE
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
@@ -44,10 +45,15 @@ class ImGuiRenderer
     VkCommandBuffer m_pCommandBuffer = VK_NULL_HANDLE;
     VkRenderPass m_pRenderPass = VK_NULL_HANDLE;
 
+    std::unordered_map<uint32_t, VkDescriptorSet> m_pImages;
+    uint32_t m_pImageCount = 0;;
+
     vk::VulkanData *m_pVkDataPtr = nullptr;
     uint32_t m_pCurrentIndex{};
 
     std::function<void()> m_pUserFunction;
+    //engine::VulkanResourceManager* m_pResourceManagerRef;
+
 
     void setStyle() {
 
@@ -419,40 +425,6 @@ public:
             m_pUserFunction();
 
         ImGui::End();
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
-        /* {
-            static float f = 0.0f;
-            static int counter = 0;
-
-            ImGui::Begin("Hello, world!"); // Create a window called "Hello, world!" and append into it.
-
-            ImGui::Text("PCSS");
-
-            ImGui::SliderFloat("LIGHT WORLD SIZE", &data.x, 0.0f, 100.0f);    // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::SliderFloat("LIGHT FRUSTUM WIDTH", &data.y, 1.0f, 100.0f); // Edit 1 float using a slider from 0.0f to 1.0f // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::SliderFloat("PENUMBRA SIZE", &data.z, 0.1f, 100.0f);
-            //ImGui::ColorEdit3("clear color", (float *)&clear_color); // Edit 3 floats representing a color
-            ImGui::Separator();
-
-            ImGui::Text("Texture Allocation Size = %.3f MB", resources.m_pTextureBufferAllocationSize / 1000000.0f);
-            ImGui::Text("Index Buffer Usage = %.3f MB", resources.m_pIndexBufferAllocationSize / 1000000.0f);
-            ImGui::Text("Vertex Allocation Size = %.3f MB", resources.m_pVertexBufferAllocationSize / 1000000.0f);
-            ImGui::Text("Uniforms Allocation Size = %.3f MB", resources.m_pUniformBufferAllocationSize / 1000000.0f);
-            ImGui::Text("Storage Allocation Size = %.3f MB", resources.m_pStorageBufferAllocationSize / 1000000.0f);
-
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            ImGui::End();
-        }
-
-        // 3. Show another simple window.
-        if (show_another_window)
-        {
-            ImGui::Begin("Another Window", &show_another_window); // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("Hello from another window!");
-            if (ImGui::Button("Close Me"))
-                show_another_window = false;
-            ImGui::End();
-        }*/
 
         ImGuiEnd();
 
@@ -477,6 +449,25 @@ public:
     }
 
 public:
+
+    /*void setResourceManager(engine::VulkanResourceManager* c) {
+        m_pResourceManagerRef = c;
+    }*/
+
+    uint32_t addTexture(const std::string& renderpass, int index) {
+
+       /* auto pass = m_pResourceManagerRef->renderPassPool.get(std::hash<std::string>{}(renderpass));
+        auto texture = pass->renderPassChain.Textures.at(index);
+        VkDescriptorSet DS =  ImGui_ImplVulkan_AddTexture(texture.sampler, texture.imageView, texture.imageLayout);
+        m_pImages[m_pImageCount] = DS;
+        m_pImageCount++;
+        return m_pImageCount - 1;*/
+        return 0;
+    }
+
+    VkDescriptorSet getImage(uint32_t index) {
+        return m_pImages[index];
+    }
 
     void MainWindow() {
         static ImGuiDockNodeFlags opt_flags = ImGuiDockNodeFlags_PassthruCentralNode;

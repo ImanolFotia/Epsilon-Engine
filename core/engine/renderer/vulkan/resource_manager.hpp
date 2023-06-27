@@ -170,5 +170,7 @@ namespace engine
 		uint32_t indexBufferCount = 0;
 		vk::VulkanBuffer m_pIndirectBuffer;
 		vk::VulkanBuffer m_pMaterialBuffer;
+
+		friend class ImGuiRenderer;
 	};
 }

@@ -143,6 +143,7 @@ namespace engine
 				m_pVkData.defaultRenderPass.renderPass,
 				m_pResourceManagerRef->m_pCommandPools.front(),
 				m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
+			//m_pImguiRenderer.setResourceManager(m_pResourceManagerRef);
 			imguiInit = true;
 		}
 		m_pImguiRenderer.newFrame(m_pCurrentFrame, m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));

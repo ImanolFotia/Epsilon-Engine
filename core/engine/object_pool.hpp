@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <functional>
 #include <cstdint>
+#include <mutex>
 
 namespace engine
 {
@@ -57,6 +58,7 @@ namespace engine
         template <typename... Args>
         Ref<T> emplace(std::string name, Args... args)
         {
+            const std::lock_guard<std::mutex> lock(m_pMutex);
             if (m_pFreeRefs.size() > 0)
             {
                 Ref<T> ref = m_pFreeRefs.back();
@@ -85,6 +87,7 @@ namespace engine
         }
         Ref<T> insert(std::string name, R element)
         {
+            const std::lock_guard<std::mutex> lock(m_pMutex);
             if (m_pFreeRefs.size() > 0)
             {
                 Ref<T> ref = m_pFreeRefs.back();
@@ -110,6 +113,7 @@ namespace engine
 
         [[nodiscard]] R *get(Ref<T> ref)
         {
+            //const std::lock_guard<std::mutex> lock(m_pMutex);
             if (m_pIndexArray.size() > ref.m_pIndex && ref.isValid())
             {
                 if (m_pGeneration[ref.m_pIndex] == ref.m_pGeneration)
@@ -124,6 +128,7 @@ namespace engine
 
         [[nodiscard]] R *get(uint32_t id)
         {
+            //const std::lock_guard<std::mutex> lock(m_pMutex);
             if (m_pIdArray.contains(id))
             {
                 auto index = m_pIdArray.at(id);
@@ -140,6 +145,7 @@ namespace engine
 
         [[nodiscard]] uint32_t getId(Ref<T> ref)
         {
+            const std::lock_guard<std::mutex> lock(m_pMutex);
             if (m_pIndexArray.size() > ref.m_pIndex && ref.isValid())
             {
                 if (m_pGeneration[ref.m_pIndex] == ref.m_pGeneration)
@@ -154,6 +160,7 @@ namespace engine
 
         void destroy(Ref<T> &ref)
         {
+            const std::lock_guard<std::mutex> lock(m_pMutex);
             std::cout << "internal data size before: " << m_pInternalData.size()
                       << std::endl;
             if (m_pIndexArray.size() > ref.m_pIndex)
@@ -189,6 +196,9 @@ namespace engine
         InternalDataArray m_pInternalData;
         FreeRefArray m_pFreeRefs;
         IdArray m_pIdArray;
+
+
+        std::mutex m_pMutex;
     };
 
 }

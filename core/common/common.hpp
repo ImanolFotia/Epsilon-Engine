@@ -29,10 +29,30 @@ namespace common {
         alignas(32) glm::vec3 bitangent = glm::vec3(0.0f);
     };
 
-
-    struct Mesh
+    struct AnimatedVertex
     {
+        AnimatedVertex() = default;
 
+        AnimatedVertex(glm::vec3 p) : position(p) {}
+
+        AnimatedVertex(glm::vec3 p, glm::vec2 uv, glm::vec3 n) : position(p), texCoords(uv), normal(n) {}
+
+        AnimatedVertex(glm::vec3 p, glm::vec2 uv, glm::vec3 n, glm::vec4 c, glm::vec3 t, glm::vec3 bt) : position(p), texCoords(uv), normal(n), color(c), tangent(t), bitangent(bt)
+        {
+        }
+
+        alignas(32) glm::vec3 position = glm::vec3(0.0f);
+        alignas(32) glm::vec2 texCoords = glm::vec2(0.0f);
+        alignas(32) glm::vec3 normal = glm::vec3(0.0f);
+        alignas(32) glm::vec4 color = glm::vec4(0.0f);
+        alignas(32) glm::vec3 tangent = glm::vec3(0.0f);
+        alignas(32) glm::vec3 bitangent = glm::vec3(0.0f);
+        alignas(32) glm::vec4 weights = glm::vec4(0.0f);
+        alignas(32) glm::ivec4 boneIDs = glm::vec4(0.0f);
+    };
+
+    template<typename VertexType>
+    struct BaseMesh {
         void addTriangle(uint32_t a, uint32_t b, uint32_t c)
         {
             Indices.push_back(a);
@@ -50,9 +70,13 @@ namespace common {
             Indices.push_back(d);
         }
 
-        std::vector<common::Vertex> Vertices;
+        std::vector<VertexType> Vertices;
         std::vector<uint32_t> Indices;
     };
+
+    using Mesh = BaseMesh<common::Vertex>;
+    using AnimatedMesh = BaseMesh<common::AnimatedVertex>;
+
 
     struct MeshMaterial {
         std::string albedo_path{};

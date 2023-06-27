@@ -83,9 +83,11 @@ namespace engine
 
 			engine::BindGroupInfo defaultBindGroup = {
 					.bindingInfo = {
-						{.size = 256, .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
+						{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
 						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
-						{.size = sizeof(Decal) * AssetManager::MAX_DECALS, .offset = 0, .binding = 4, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "decal_buffer"},
+						//{.size = sizeof(Decal) * AssetManager::MAX_DECALS, .offset = 0, .binding = 4, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "decal_buffer"},
+						{.size = sizeof(CursorInfo), .offset = 0, .binding = 4, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "info_buffer"},
+						
 						//{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 3, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"}
 			},
 					.inputs = {
@@ -98,7 +100,7 @@ namespace engine
 			
 			engine::BindGroupInfo decalBindGroup = {
 					.bindingInfo = {
-						{.size = 256, .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
+						{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
 						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
 						//{.size = sizeof(ObjectData) * AssetManager::MAX_OBJECTS, .offset = 0, .binding = 2, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "object_buffer"},
 						//{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 3, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"}
@@ -111,7 +113,7 @@ namespace engine
 
 			engine::BindGroupInfo shadowBindGroup = {
 					.bindingInfo = {
-						{.size = 256, .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
+						{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
 						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
 
 			},
@@ -123,7 +125,7 @@ namespace engine
 
 			engine::BindGroupInfo prepassBindGroup = {
 					.bindingInfo = {
-						{.size = 256, .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
+						{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
 						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
 
 			},
@@ -207,6 +209,11 @@ namespace engine
 		auto getNodes()
 		{
 			return m_pSceneManager.get<T>();
+		}
+
+		const auto& getNodes()
+		{
+			return m_pSceneManager.get<Node<Root>>();
 		}
 
 		template <typename T>

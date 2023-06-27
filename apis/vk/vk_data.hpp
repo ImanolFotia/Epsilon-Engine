@@ -77,6 +77,7 @@ namespace vk
         VkImageView imageView = VK_NULL_HANDLE;
         VkFormat format;
         VkSampler sampler = VK_NULL_HANDLE;
+        VkImageLayout imageLayout;
         VmaAllocation allocation;
 
         VkFilter filter;
