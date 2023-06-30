@@ -5,7 +5,7 @@
 #include <core/common/common.hpp>
 #include "model.h"
 namespace framework {
-	class gltfModel : public ModelBase {
+	class gltfModel : public ModelBase<framework::Mesh<common::Mesh>> {
 
 		template<typename T>
 		struct IndexArrayStorage {

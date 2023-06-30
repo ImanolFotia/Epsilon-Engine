@@ -13,6 +13,10 @@ namespace engine
 
         int Index() { return index; }
 
+        std::shared_ptr<NodeBase> Parent() {
+            return parent;
+        }
+
     private:
         int index = 0;
         std::shared_ptr<NodeBase> parent;

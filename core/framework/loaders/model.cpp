@@ -103,7 +103,7 @@ namespace framework
 
 				std::vector<EML::t_Vertex> tmpVertVector;
 				std::vector<unsigned int> tmpIndicesVector;
-				Mesh::MeshMaterial meshMaterial;
+				Mesh<InternalMeshType>::MeshMaterial meshMaterial;
 
 				common::MIN_MAX_POINTS tmp_MinMax;
 
@@ -183,7 +183,7 @@ namespace framework
 				}
 
 
-				Mesh currentMesh(tmpVertVector, tmpIndicesVector, meshMaterial, currentvOffset, currentiOffset);
+				framework::Mesh<common::Mesh> currentMesh(tmpVertVector, tmpIndicesVector, meshMaterial, currentvOffset, currentiOffset);
 				currentMesh.setMinMaxPoints(tmp_MinMax);
 				currentMesh.setRelativePosition(centerOfMass);
 

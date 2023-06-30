@@ -17,6 +17,7 @@
 namespace framework
 {
 
+    template<typename MeshType>
     class Mesh
     {
     public:
@@ -27,7 +28,7 @@ namespace framework
             size_t vertexOffset;
             size_t indexOffset;
 
-            common::Mesh mesh;
+            MeshType mesh;
 
         public:
             //MeshData() = default;

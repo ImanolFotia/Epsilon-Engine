@@ -138,7 +138,7 @@ namespace engine
             return VkDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     }
 
-    static std::vector<IndirectBatch> generateIndirectBatch(std::array<DrawCommand, MAX_COMMAND_QUEUE_SIZE> &commandLists)
+    static std::vector<IndirectBatch> generateIndirectBatch(std::vector<DrawCommand> &commandLists, unsigned int commandCount)
     {
         std::vector<IndirectBatch> batches{};
         batches.resize(commandLists.size());
@@ -147,6 +147,8 @@ namespace engine
 
         for (const auto &command : commandLists)
         {
+
+            if (index >= commandCount) break;
             if (index == 0)
             {
                 batches[current] = {.meshResource = command.meshResource,

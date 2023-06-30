@@ -123,6 +123,10 @@ namespace engine
             return currentCommandsInQueue;
         }
 
+        uint32_t CurrentFrameInFlight() {
+            return m_pCurrentFrame;
+        }
+
         virtual void SetViewport(const Viewport&) = 0;
 
         virtual void SetScissor(const Scissor&) = 0;
@@ -130,8 +134,10 @@ namespace engine
         virtual void SetRenderPass(Ref<RenderPass>) = 0;
 
     protected:
+
+        uint32_t m_pCurrentFrame = 0;
         renderer_type m_pType{};
         uint32_t currentCommandsInQueue = 0;
-        std::array<DrawCommand, MAX_COMMAND_QUEUE_SIZE> m_pCurrentCommandQueue;
+        std::vector<DrawCommand> m_pCurrentCommandQueue;
     };
 }

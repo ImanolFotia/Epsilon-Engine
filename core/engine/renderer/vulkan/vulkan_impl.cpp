@@ -385,9 +385,9 @@ namespace engine
 					else if (binding.descriptorBinding == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER)
 					{
 						VkDescriptorBufferInfo& bufferInfo = bufferInfos.emplace_back();
-						bufferInfo.buffer = binding.buffer.buffer; // m_pUniformBuffers[i].buffer;
-						bufferInfo.offset = binding.buffer.offset;
-						bufferInfo.range = binding.buffer.size;
+						bufferInfo.buffer = binding.buffers[i].buffer; // m_pUniformBuffers[i].buffer;
+						bufferInfo.offset = binding.buffers[i].offset;
+						bufferInfo.range = binding.buffers[i].size;
 						descriptorWrites[binding.bindingPoint].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 						descriptorWrites[binding.bindingPoint].dstSet = material.descriptorSets[i];
 						descriptorWrites[binding.bindingPoint].dstBinding = binding.bindingPoint;

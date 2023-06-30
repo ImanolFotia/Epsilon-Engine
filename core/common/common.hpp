@@ -53,6 +53,7 @@ namespace common {
 
     template<typename VertexType>
     struct BaseMesh {
+        using vertex_type = VertexType;
         void addTriangle(uint32_t a, uint32_t b, uint32_t c)
         {
             Indices.push_back(a);

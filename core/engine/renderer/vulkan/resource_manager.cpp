@@ -303,10 +303,11 @@ namespace engine
 				else if (binding.type == UniformBindingType::SHADER_STORAGE)
 				{
 					vkMaterial.slots++;
-					auto buff = gpuBufferPool.get(std::hash<std::string>{}(binding.buffer))->buffer;
-					buff.size = binding.size;
+					auto buff = gpuBufferPool.get(std::hash<std::string>{}(binding.buffer))->buffers;
+					for (auto& b : buff) b.size = binding.size;
+
 					vk::VulkanShaderBinding shaderBinding = {
-						.buffer = buff,
+						.buffers = buff,
 						.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
 						.bindingPoint = binding.binding,
 						.isRenderPassAttachment = false };
@@ -596,7 +597,9 @@ namespace engine
 		}
 		for (auto& buffer : gpuBufferPool)
 		{
-			vmaDestroyBuffer(m_pAllocator, buffer.buffer.buffer, buffer.buffer.allocation);
+			for (auto& b : buffer.buffers) {
+				vmaDestroyBuffer(m_pAllocator,b.buffer, b.allocation);
+			}
 		}
 
 		vk::cleanupSyncObjects(*m_pVkDataPtr);
@@ -740,16 +743,17 @@ namespace engine
 	{
 
 		vk::VulkanGPUMappedBuffer buffer;
+		buffer.buffers.resize(vk::MAX_FRAMES_IN_FLIGHT);
 
-		// for (unsigned i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
+		for (unsigned i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
 		{
 			if (type == BufferStorageType::UNIFORM_BUFFER)
 			{
-				pCreateBuffer(buffer.buffer, size, UNIFORM_BUFFER_USAGE, UNIFORM_BUFFER_PROP, UNIFORM_BUFFER_MEM_USAGE);
+				pCreateBuffer(buffer.buffers[i], size, UNIFORM_BUFFER_USAGE, UNIFORM_BUFFER_PROP, UNIFORM_BUFFER_MEM_USAGE);
 			}
 			else
 			{
-				pCreateBuffer(buffer.buffer, size, STORAGE_BUFFER_USAGE, STORAGE_BUFFER_PROP, STORAGE_BUFFER_MEM_USAGE);
+				pCreateBuffer(buffer.buffers[i], size, STORAGE_BUFFER_USAGE, STORAGE_BUFFER_PROP, STORAGE_BUFFER_MEM_USAGE);
 			}
 		}
 
@@ -830,16 +834,31 @@ namespace engine
 			pass->renderPassChain.DepthTexture.allocation);
 	}
 
-	void* VulkanResourceManager::mapBuffer(Ref<Buffer> bufferRef)
+	void* VulkanResourceManager::mapBuffer(Ref<Buffer> bufferRef, uint32_t currentFrame)
 	{
 		auto buffer = gpuBufferPool.get(bufferRef);
+		buffer->buffers[currentFrame].mapped = true;
 		void* data;
-		vmaMapMemory(m_pAllocator, buffer->buffer.allocation, &data);
+		vmaMapMemory(m_pAllocator, buffer->buffers[currentFrame].allocation, &data);
 		return data;
 	}
-	void VulkanResourceManager::unmapBuffer(Ref<Buffer> bufferRef)
+	void VulkanResourceManager::unmapBuffer(Ref<Buffer> bufferRef, uint32_t currentFrame)
 	{
 		auto buffer = gpuBufferPool.get(bufferRef);
-		vmaUnmapMemory(m_pAllocator, buffer->buffer.allocation);
+
+		if (!buffer->buffers[currentFrame].mapped) return;
+		buffer->buffers[currentFrame].mapped = false;
+		vmaUnmapMemory(m_pAllocator, buffer->buffers[currentFrame].allocation);
+	}
+
+	void* VulkanResourceManager::getMappedBuffer(Ref<Buffer> bufferRef, uint32_t currentFrame) {
+		auto buffer = gpuBufferPool.get(bufferRef);
+
+		buffer->buffers[currentFrame].mapped = true;
+
+		void* data;
+		vmaMapMemory(m_pAllocator, buffer->buffers[currentFrame].allocation, &data);
+
+		return data;
 	}
 }

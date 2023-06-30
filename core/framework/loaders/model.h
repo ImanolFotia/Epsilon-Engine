@@ -18,24 +18,26 @@
 
 namespace framework
 {
+    template<typename MeshType = framework::Mesh<common::Mesh>>
     class ModelBase {
     protected:
         std::string filename{};
-        std::vector<Mesh> mMeshes;
+        std::vector<MeshType> mMeshes;
     public:
         ModelBase(const std::string& filename) : filename(filename){}
 
-        std::vector<Mesh>& Meshes()
+        std::vector<MeshType>& Meshes()
         {
             return mMeshes;
         }
 
         virtual bool Load(const std::string& emlPath) = 0;
     };
-    class Model : public ModelBase
+
+    class Model : public ModelBase <framework::Mesh <common::Mesh>>
     {
-
-
+        using MeshType = framework::Mesh<common::Mesh>;
+        using InternalMeshType = common::Mesh;
     public:
 
         Model(const std::string &path = "");
@@ -53,8 +55,6 @@ namespace framework
         }
 
         bool Load(const std::string& emlPath) override;
-
-
 
     };
 

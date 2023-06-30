@@ -119,7 +119,6 @@ namespace engine
     private:
         framework::Window *m_pWindow = nullptr;
 
-        uint32_t m_pCurrentFrame = 0;
         int32_t m_pImageIndex = 0;
 
         vk::VulkanData m_pVkData;

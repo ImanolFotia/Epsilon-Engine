@@ -36,6 +36,8 @@ namespace engine
 
 		std::shared_ptr<Context> m_pContext;
 
+		uint32_t m_pMeshCount = 0;
+
 		std::size_t getHash(const std::string &s) {
 			return std::hash<std::string>{}(s);
 		}
@@ -51,6 +53,7 @@ namespace engine
 			m_pRenderLayouts["SkyLayout"] = 1;
 			m_pRenderLayouts["TerrainLayout"] = 2;
 			m_pRenderLayouts["DecalLayout"] = 3;
+			m_pRenderLayouts["TreeLayout"] = 4;
 			m_pRenderLayouts["ShadowLayout"] = 0;
 			m_pRenderLayouts["treeShadowLayout"] = 1;
 			m_pRenderLayouts["prepassLayout"] = 0;
@@ -64,10 +67,10 @@ namespace engine
 		void Init() {
 
 			auto resourceManager = m_pContext->ResourceManager();
-
+/*
 #ifdef _WIN32
 			system("cd .\\assets\\shaders && .\\build_shaders.sh");
-#endif
+#endif*/
 			m_RenderPassesInfo = engine::parsers::parse_renderpasses();
 
 			for (auto& [name, renderpass] : m_RenderPassesInfo) {
@@ -88,7 +91,8 @@ namespace engine
 						//{.size = sizeof(Decal) * AssetManager::MAX_DECALS, .offset = 0, .binding = 4, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "decal_buffer"},
 						{.size = sizeof(CursorInfo), .offset = 0, .binding = 4, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "info_buffer"},
 						
-						//{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 3, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"}
+						{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 5, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"},
+						{.size = sizeof(ShaderObjectData) * AssetManager::MAX_OBJECTS, .offset = 0, .binding = 6, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "object_buffer"}
 			},
 					.inputs = {
 					{.renderPass = "ShadowPass", .index = 0, .bindingPoint = 2},
@@ -242,16 +246,18 @@ namespace engine
 			auto renderer = m_pContext->Renderer();
 			renderer->BeginFrame();
 			renderer->Begin();
+
+			m_pMeshCount = 0;
 		}
 
-		void Flush()
+		void Flush(engine::DrawType drawType = engine::DrawType::INDEXED)
 		{
 			auto renderer = m_pContext->Renderer();
 
-			renderer->Flush(m_pCurrentRenderPass, engine::DrawType::INDEXED);
+			renderer->Flush(m_pCurrentRenderPass, drawType);
 		}
 
-		void Push(std::shared_ptr<Node<RenderModel>> renderModel, glm::mat4 transform, const std::string& layout)
+		void Push(std::shared_ptr<Node<RenderModel>> renderModel, glm::mat4 transform, const std::string& layout, unsigned int transform_id = 0)
 		{
 			auto renderer = m_pContext->Renderer();
 
@@ -269,6 +275,9 @@ namespace engine
 				selectedBindGroup = m_pDefaultBindGroup;
 			}
 			else if (layout == "TerrainLayout") {
+				selectedBindGroup = m_pDefaultBindGroup;
+			}
+			else if (layout == "TreeLayout") {
 				selectedBindGroup = m_pDefaultBindGroup;
 			}
 			else if (layout == "DecalLayout") {
@@ -291,6 +300,14 @@ namespace engine
 				}
 
 				uint32_t uniform_index = m_pAssetManager.m_pMaterials.at(mesh.material_key).index;
+				
+				m_pAssetManager.getTransformBuffer()[m_pMeshCount] = transform;
+				m_pAssetManager.getObjectBuffer()[m_pMeshCount] = {
+					.object_id = (unsigned int)renderModel->Index(),
+					.transform_index = m_pMeshCount,
+					.material_index = uniform_index
+				};
+
 				renderer->Push({ .mesh = mesh.mesh,
 								.material = selectedBindGroup,
 								.pushConstant = push_constant,
@@ -299,8 +316,8 @@ namespace engine
 													.material_index = uniform_index
 												  },
 								.layout_index = m_pRenderLayouts.at(layout),
-								.uniformIndex = uniform_index });
-
+								.uniformIndex = m_pMeshCount });
+				m_pMeshCount++;
 			}
 		}
 

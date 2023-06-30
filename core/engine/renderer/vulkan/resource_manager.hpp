@@ -49,8 +49,9 @@ namespace engine
 		void destroyRenderPass(Ref<RenderPass>) override;
 		Ref<Buffer> destroyBuffer(BufferInfo) override;
 
-		void* mapBuffer(Ref<Buffer> buffer)override;
-		void unmapBuffer(Ref<Buffer> buffer)override;
+		void* mapBuffer(Ref<Buffer> buffer, uint32_t currentFrame)override;
+		void unmapBuffer(Ref<Buffer> buffer, uint32_t currentFrame)override;
+		void* getMappedBuffer(Ref<Buffer> bufferRef, uint32_t currentFrame) override;
 
 		void clean() override;
 

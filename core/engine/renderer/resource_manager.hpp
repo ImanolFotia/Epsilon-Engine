@@ -45,9 +45,11 @@ namespace engine
 		virtual Ref<Buffer> destroyBuffer(BufferInfo) = 0;
 
 
-		virtual void* mapBuffer(Ref<Buffer> buffer) = 0;
+		virtual void* mapBuffer(Ref<Buffer> buffer, uint32_t currentFrame) = 0;
 
-		virtual void unmapBuffer(Ref<Buffer> buffer) = 0;
+		virtual void unmapBuffer(Ref<Buffer> buffer, uint32_t currentFrame) = 0;
+
+		virtual void* getMappedBuffer(Ref<Buffer> bufferRef, uint32_t currentFrame) = 0;
 
 		virtual void clean() = 0;
 

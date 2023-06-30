@@ -63,6 +63,8 @@ namespace engine
 
 		vk::createCommandBuffers(m_pVkData, m_pVkData.m_pCommandPools.back(), m_pVkData.m_pCommandBuffers);
 		vk::createSyncObjects(m_pVkData);
+
+		m_pCurrentCommandQueue.resize(MAX_COMMAND_QUEUE_SIZE);
 	}
 
 	engine::Renderer::ObjectDataId
@@ -409,9 +411,9 @@ namespace engine
 		return std::tie(a_mat, a.layoutIndex, a_vtx, a_i) <
 			std::tie(b_mat, b.layoutIndex, b_vtx, b_i); };
 
-		// m_pCurrentCommandQueue.sort(predicate);
+		std::sort(m_pCurrentCommandQueue.begin(), m_pCurrentCommandQueue.begin() + currentCommandsInQueue, predicate);
 
-		auto batches = generateIndirectBatch(m_pCurrentCommandQueue);
+		auto batches = generateIndirectBatch(m_pCurrentCommandQueue, currentCommandsInQueue);
 
 		void* data;
 		vmaMapMemory(m_pResourceManagerRef->m_pAllocator, m_pResourceManagerRef->m_pIndirectBuffer.allocation, &data);
@@ -419,6 +421,8 @@ namespace engine
 		int i = 0;
 		for (auto& command : m_pCurrentCommandQueue)
 		{
+			if (i >= currentCommandsInQueue) break;
+
 			indirect_commands[i].firstIndex = command.meshResource.indexOffset;
 			indirect_commands[i].firstInstance = command.uniformIndex;
 			indirect_commands[i].indexCount = command.meshResource.numIndices;

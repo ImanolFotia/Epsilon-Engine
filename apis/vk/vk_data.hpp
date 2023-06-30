@@ -11,6 +11,7 @@
 #include <set>
 #include "vk_mem_alloc.h"
 #include <unordered_map>
+#include <cstdint>
 
 namespace vk
 {
@@ -42,6 +43,7 @@ namespace vk
         std::unordered_map<uint32_t, uint32_t> subBufferIndex;
         VkDescriptorBufferInfo descriptorInfo;
         VmaAllocation allocation;
+        bool mapped = false;
         std::string name = "";
     };
 
@@ -115,14 +117,15 @@ namespace vk
 
     struct VulkanGPUMappedBuffer
     {
-        VulkanBuffer buffer;
+        std::vector<VulkanBuffer> buffers;
+        bool mapped = false;
         size_t size{};
     };
 
     struct VulkanShaderBinding
     {
         VulkanTexture texture;
-        VulkanBuffer buffer;
+        std::vector<VulkanBuffer> buffers;
         VkDescriptorType descriptorBinding;
         uint32_t bindingPoint = 0;
         bool isRenderPassAttachment = false;
@@ -238,7 +241,7 @@ namespace vk
             // clearValues[0].color = clearColor;
             // clearValues[1].depthStencil = depthStencilClearColor;
         }
-
+        std::vector<VkCommandBuffer> commandBuffers;
         VkRenderPass renderPass;
         VkRenderPassBeginInfo renderPassInfo{};
         std::vector<VulkanRenderPipeline> renderPipelines;
