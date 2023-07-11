@@ -38,7 +38,7 @@ namespace engine
 
 		uint32_t m_pMeshCount = 0;
 
-		std::size_t getHash(const std::string &s) {
+		std::size_t getHash(const std::string& s) {
 			return std::hash<std::string>{}(s);
 		}
 
@@ -67,10 +67,10 @@ namespace engine
 		void Init() {
 
 			auto resourceManager = m_pContext->ResourceManager();
-/*
-#ifdef _WIN32
-			system("cd .\\assets\\shaders && .\\build_shaders.sh");
-#endif*/
+			/*
+			#ifdef _WIN32
+						system("cd .\\assets\\shaders && .\\build_shaders.sh");
+			#endif*/
 			m_RenderPassesInfo = engine::parsers::parse_renderpasses();
 
 			for (auto& [name, renderpass] : m_RenderPassesInfo) {
@@ -90,7 +90,7 @@ namespace engine
 						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
 						//{.size = sizeof(Decal) * AssetManager::MAX_DECALS, .offset = 0, .binding = 4, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "decal_buffer"},
 						{.size = sizeof(CursorInfo), .offset = 0, .binding = 4, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "info_buffer"},
-						
+
 						{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 5, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"},
 						{.size = sizeof(ShaderObjectData) * AssetManager::MAX_OBJECTS, .offset = 0, .binding = 6, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "object_buffer"}
 			},
@@ -101,7 +101,7 @@ namespace engine
 					.renderPass = "DefaultRenderPass",
 					.name = "DefaultBindGroup",
 			};
-			
+
 			engine::BindGroupInfo decalBindGroup = {
 					.bindingInfo = {
 						{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
@@ -257,7 +257,7 @@ namespace engine
 			renderer->Flush(m_pCurrentRenderPass, drawType);
 		}
 
-		void Push(std::shared_ptr<Node<RenderModel>> renderModel, glm::mat4 transform, const std::string& layout, unsigned int transform_id = 0)
+		void Push(std::shared_ptr<Node<RenderModel>> renderModel, glm::mat4 transform, const std::string& layout)
 		{
 			auto renderer = m_pContext->Renderer();
 
@@ -293,19 +293,28 @@ namespace engine
 				selectedBindGroup = m_pDefaultBindGroup;
 			}
 
+
 			for (auto& mesh : renderModel->data.renderMeshes)
 			{
 				if (renderer->numPushedCommands() >= engine::MAX_COMMAND_QUEUE_SIZE) {
 					Flush();
 				}
 
-				uint32_t uniform_index = m_pAssetManager.m_pMaterials.at(mesh.material_key).index;
-				
+				uint32_t material_indices[4] = { 0 };
+
+				for (int i = 0; i < mesh.numMaterials; i++) {
+					uint32_t uniform_index = m_pAssetManager.m_pMaterials.at(mesh.material_keys[i]).index;
+					material_indices[i] = uniform_index;
+				}
+
+
 				m_pAssetManager.getTransformBuffer()[m_pMeshCount] = transform;
+
 				m_pAssetManager.getObjectBuffer()[m_pMeshCount] = {
 					.object_id = (unsigned int)renderModel->Index(),
 					.transform_index = m_pMeshCount,
-					.material_index = uniform_index
+					.material_index = {material_indices[0], material_indices[1], material_indices[2], material_indices[3]},
+					.numMaterials = (uint32_t)mesh.numMaterials
 				};
 
 				renderer->Push({ .mesh = mesh.mesh,
@@ -313,12 +322,94 @@ namespace engine
 								.pushConstant = push_constant,
 								.objectConstant = {
 													.transform = transform,
-													.material_index = uniform_index
+													.material_index = material_indices[0]
 												  },
 								.layout_index = m_pRenderLayouts.at(layout),
 								.uniformIndex = m_pMeshCount });
 				m_pMeshCount++;
 			}
+		}
+
+		void Push(std::shared_ptr<Node<RenderModel>> renderModel, std::vector<glm::mat4> transforms, const std::string& layout, unsigned int count = 1)
+		{
+			auto renderer = m_pContext->Renderer();
+
+			Ref<PushConstant> push_constant;
+
+			Ref<BindGroup> selectedBindGroup;
+
+			if (layout == "ShadowLayout") {
+				selectedBindGroup = m_pShadowBindGroup;
+			}
+			else if (layout == "treeShadowLayout") {
+				selectedBindGroup = m_pShadowBindGroup;
+			}
+			else if (layout == "DefaultLayout") {
+				selectedBindGroup = m_pDefaultBindGroup;
+			}
+			else if (layout == "TerrainLayout") {
+				selectedBindGroup = m_pDefaultBindGroup;
+			}
+			else if (layout == "TreeLayout") {
+				selectedBindGroup = m_pDefaultBindGroup;
+			}
+			else if (layout == "DecalLayout") {
+				selectedBindGroup = m_pDecalBindGroup;
+			}
+			else if (layout == "SkyLayout") {
+				selectedBindGroup = m_pDefaultBindGroup;
+			}
+			else if (layout == "prepassLayout") {
+				selectedBindGroup = m_pPrePassBindGroup;
+			}
+			else {
+				selectedBindGroup = m_pDefaultBindGroup;
+			}
+
+			if (count > 1) {
+
+			}
+
+			for (auto& mesh : renderModel->data.renderMeshes)
+			{
+				uint32_t material_indices[4] = { 0 };
+				uint32_t firstInstance = m_pMeshCount;
+				for (int i = 0; i < count; i++) {
+					if (renderer->numPushedCommands() >= engine::MAX_COMMAND_QUEUE_SIZE) {
+						Flush();
+					}
+
+
+					for (int j = 0; j < mesh.numMaterials; j++) {
+						uint32_t uniform_index = m_pAssetManager.m_pMaterials.at(mesh.material_keys[j]).index;
+						material_indices[j] = uniform_index;
+					}
+
+
+					m_pAssetManager.getTransformBuffer()[m_pMeshCount] = transforms[i];
+
+					m_pAssetManager.getObjectBuffer()[m_pMeshCount] = {
+						.object_id = (unsigned int)renderModel->Index() + i,
+						.transform_index = m_pMeshCount,
+						.material_index = {material_indices[0], material_indices[1], material_indices[2], material_indices[3]},
+						.numMaterials = (uint32_t)mesh.numMaterials
+					};
+
+					m_pMeshCount++;
+				}
+
+				renderer->Push({ .mesh = mesh.mesh,
+								.material = selectedBindGroup,
+								.pushConstant = push_constant,
+								.objectConstant = {
+													.transform = transforms[0],
+													.material_index = material_indices[0]
+												  },
+								.layout_index = m_pRenderLayouts.at(layout),
+								.uniformIndex = firstInstance,
+								.count = count });
+			}
+
 		}
 
 		void EndScene()

@@ -112,6 +112,21 @@ namespace engine::audio
 			al::stopSource(*source);
 	}
 
+
+	void ALAudioManager::setListenerPosition(Ref<AudioListener> listener_ref, glm::vec3 position) {
+
+		auto listener = listenersPool.get(listener_ref);
+		listener->position = position;
+		al::setListenerPosition(*listener);
+	}
+
+	void ALAudioManager::setListenerDirection(Ref<AudioListener> listener_ref, glm::vec3 direction) {
+
+		auto listener = listenersPool.get(listener_ref);
+		listener->direction = direction;
+		al::setListenerOrientation(*listener);
+	}
+
 	AudioState ALAudioManager::getSourceState(Ref<AudioSource> source_ref)
 	{
 		auto source = *sourcesPool.get(source_ref);

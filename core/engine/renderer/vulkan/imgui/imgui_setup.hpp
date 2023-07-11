@@ -52,7 +52,10 @@ class ImGuiRenderer
     uint32_t m_pCurrentIndex{};
 
     std::function<void()> m_pUserFunction;
+
+    bool m_pEnabled = true;
     //engine::VulkanResourceManager* m_pResourceManagerRef;
+
 
 
     void setStyle() {
@@ -168,6 +171,17 @@ class ImGuiRenderer
     }
 public:
 
+    void Enable() {
+        m_pEnabled = true;
+    }
+
+    void Disable() {
+        m_pEnabled = false;
+    }
+
+    void Toggle() {
+        m_pEnabled = !m_pEnabled;
+    }
     void setUserFunction(std::function<void()>&& func) {
         m_pUserFunction = func;
     }
@@ -352,7 +366,10 @@ public:
         ImGui_ImplVulkanH_Window* wd = &m_pMainWindowData;
 
         // Rendering
-        ImGui::Render();
+
+            ImGui::Render();
+        //}
+
         ImDrawData* draw_data = ImGui::GetDrawData();
         const bool is_minimized = (draw_data->DisplaySize.x <= 0.0f || draw_data->DisplaySize.y <= 0.0f);
         ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -379,52 +396,54 @@ public:
 
         MainWindow();
 
-        //ImGui::SetNextWindowSize(ImVec2(wd->Width, wd->Height));
+        if (m_pEnabled) {
+            //ImGui::SetNextWindowSize(ImVec2(wd->Width, wd->Height));
 
-        ///////// USER INPUT BEGINS HERE
-        ImGui::SetNextWindowPos(ImVec2(10, 10));
-        ImGui::Begin("Info", nullptr, ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse);
-        ImGui::Text("Timings:");
-        ImGui::BulletText("Framerate %.1f FPS", ImGui::GetIO().Framerate);
-        ImGui::BulletText("frametime %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
-        ImGui::BulletText("Draw calls: %i", resources.numDrawCalls);
-        static float frametime_values[1000] = {};
-        static int frametime_values_offset = 0;
+            ///////// USER INPUT BEGINS HERE
+            ImGui::SetNextWindowPos(ImVec2(10, 10));
+            ImGui::Begin("Info", nullptr, ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse);
+            ImGui::Text("Timings:");
+            ImGui::BulletText("Framerate %.1f FPS", ImGui::GetIO().Framerate);
+            ImGui::BulletText("frametime %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
+            ImGui::BulletText("Draw calls: %i", resources.numDrawCalls);
+            static float frametime_values[1000] = {};
+            static int frametime_values_offset = 0;
 
-        frametime_values_offset = (frametime_values_offset + 1) % IM_ARRAYSIZE(frametime_values);
-        frametime_values[frametime_values_offset] = 1000.0 / ImGui::GetIO().Framerate;
+            frametime_values_offset = (frametime_values_offset + 1) % IM_ARRAYSIZE(frametime_values);
+            frametime_values[frametime_values_offset] = 1000.0 / ImGui::GetIO().Framerate;
 
-        /* {
-            float average = 0.0f;
-            for (int n = 0; n < IM_ARRAYSIZE(frametime_values); n++)
-                average += frametime_values[n];
-            average /= (float)IM_ARRAYSIZE(frametime_values);
-            char overlay[32];
+            /* {
+                float average = 0.0f;
+                for (int n = 0; n < IM_ARRAYSIZE(frametime_values); n++)
+                    average += frametime_values[n];
+                average /= (float)IM_ARRAYSIZE(frametime_values);
+                char overlay[32];
 
 
-            //sprintf(overlay, "Frametime: %.4fms", average);
+                //sprintf(overlay, "Frametime: %.4fms", average);
 
-            //ImGui::BulletText("%s", overlay);
-            //SparkLine("Frametime", overlay, frametime_values, 1000, 0.0, average * 3.0f, frametime_values_offset, ImVec4(0.39, 0.19, 0.05, 1.0), ImVec2(-1, 60));
-            // ImGui::PlotLines("Frametime", frametime_values, IM_ARRAYSIZE(frametime_values), frametime_values_offset, overlay, 0.0f, 1.0f, ImVec2(0, 60.0f));
-        }*/
-        ImGui::Separator();
-        ImGui::Text(resources.GPUName.c_str());
-        ImGui::Text("GPU Memory:");
-        int i = 0;
-        for (auto& heap : resources.heaps) {
-            ImGui::Text("Heap %i", i);
-            ImGui::BulletText("Total %i MB", heap.total_memory / 1024 / 1024);
-            ImGui::BulletText("Used %i MB", heap.used_memory / 1024 / 1024);
-            ImGui::BulletText("Free %i MB", heap.free_memory / 1024 / 1024);
-            i++;
+                //ImGui::BulletText("%s", overlay);
+                //SparkLine("Frametime", overlay, frametime_values, 1000, 0.0, average * 3.0f, frametime_values_offset, ImVec4(0.39, 0.19, 0.05, 1.0), ImVec2(-1, 60));
+                // ImGui::PlotLines("Frametime", frametime_values, IM_ARRAYSIZE(frametime_values), frametime_values_offset, overlay, 0.0f, 1.0f, ImVec2(0, 60.0f));
+            }*/
+            ImGui::Separator();
+            ImGui::Text(resources.GPUName.c_str());
+            ImGui::Text("GPU Memory:");
+            int i = 0;
+            for (auto& heap : resources.heaps) {
+                ImGui::Text("Heap %i", i);
+                ImGui::BulletText("Total %i MB", heap.total_memory / 1024 / 1024);
+                ImGui::BulletText("Used %i MB", heap.used_memory / 1024 / 1024);
+                ImGui::BulletText("Free %i MB", heap.free_memory / 1024 / 1024);
+                i++;
+            }
+            ImGui::End();
+
+            if (m_pUserFunction)
+                m_pUserFunction();
+
+            ImGui::End();
         }
-        ImGui::End();
-
-        if(m_pUserFunction)
-            m_pUserFunction();
-
-        ImGui::End();
 
         ImGuiEnd();
 

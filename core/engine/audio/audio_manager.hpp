@@ -18,19 +18,19 @@ namespace engine::audio {
 
 	struct SourceInfo {
 		Ref<AudioBuffer> buffer;
-		glm::vec3 position;
-		glm::vec3 direction;
-		glm::vec3 velocity;
+		glm::vec3 position{};
+		glm::vec3 direction{};
+		glm::vec3 velocity{};
 		float gain{};
 		float angle{};
 		float pitch{};
 	};
 
 	struct ListenerInfo {
-		glm::vec3 position;
-		glm::vec3 direction;
-		glm::vec3 velocity;
-		float gain{};
+		glm::vec3 position{};
+		glm::vec3 direction{};
+		glm::vec3 velocity{};
+		float gain = 1.0;
 	};
 
 	enum class AudioState {
@@ -60,6 +60,9 @@ namespace engine::audio {
 		virtual void setSourceAngle(Ref<AudioSource>, float) = 0;
 		virtual void setSourcePitch(Ref<AudioSource>, float) = 0;
 		virtual void setSourceState(Ref<AudioSource>, AudioState) = 0;
+
+		virtual void setListenerPosition(Ref<AudioListener>, glm::vec3)  = 0;
+		virtual void setListenerDirection(Ref<AudioListener>, glm::vec3)  = 0;
 
 		virtual glm::vec3 getSourcePosition(Ref<AudioSource>) = 0;
 		virtual glm::vec3 getSourceDirection(Ref<AudioSource>) = 0;

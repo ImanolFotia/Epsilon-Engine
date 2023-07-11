@@ -112,25 +112,36 @@ namespace framework
                 {
                     RIGHT = PRESSED;
                 }
-                if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
+                else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
                 {
                     RIGHT = RELEASED;
                 }
+                else {
+                    RIGHT = NONE;
+                }
+
                 if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS)
                 {
                     MIDDLE = PRESSED;
                 }
-                if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_RELEASE)
+                else if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_RELEASE)
                 {
                     MIDDLE = RELEASED;
                 }
+                else {
+                    MIDDLE = NONE;
+                }
+
                 if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
                 {
                     LEFT = PRESSED;
                 }
-                if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+                else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
                 {
                     LEFT = RELEASED;
+                }
+                else {
+                    LEFT = NONE;
                 }
 
                 mouseArgs.right.State = RIGHT;

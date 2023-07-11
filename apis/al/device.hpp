@@ -141,6 +141,7 @@ struct OpenALData;
             list_audio_devices(alcGetString(NULL, ALC_CAPTURE_DEVICE_SPECIFIER), "Available capture devices: ");
             list_audio_devices(alcGetString(al_data->device, ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER), "Default capture device: ");
         }
+        alDistanceModel(AL_EXPONENT_DISTANCE_CLAMPED);
 
         const char *name = NULL;
         if (alcIsExtensionPresent(al_data->device, "ALC_ENUMERATE_ALL_EXT"))

@@ -158,12 +158,12 @@ namespace engine
 		return texture;
 	}
 
-	Ref<Buffer> VulkanResourceManager::pFetchVertexBuffer(uint32_t numVertices)
+	Ref<Buffer> VulkanResourceManager::pFetchVertexBuffer(uint32_t numVertices, size_t vertexSize)
 	{
 		for (auto& bufferRef : vertexBufferReferences)
 		{
 			auto buffer = vertexBufferPool.get(bufferRef);
-			if (MAX_VERTICES_PER_BUFFER * sizeof(common::Vertex) >= buffer->allocatedVertices * sizeof(common::Vertex) + numVertices * sizeof(common::Vertex))
+			if (MAX_VERTICES_PER_BUFFER * vertexSize >= buffer->allocatedVertices * vertexSize + numVertices * vertexSize)
 			{
 				return bufferRef;
 			}
@@ -308,6 +308,20 @@ namespace engine
 		void* data;
 		vmaMapMemory(m_pAllocator, stagingBuffer.allocation, &data);
 		memcpy(data, vertices.data(), vertices.size() * sizeof(common::Vertex));
+		vmaUnmapMemory(m_pAllocator, stagingBuffer.allocation);
+		if (0)
+			IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", vertices.size() * sizeof(common::Vertex), " bytes in hosted staging buffer");
+		return stagingBuffer;
+	}
+
+	vk::VulkanBuffer VulkanResourceManager::pCreateStagingBuffer(const std::vector<common::AnimatedVertex>& vertices)
+	{
+		vk::VulkanBuffer stagingBuffer;
+		pCreateBuffer(stagingBuffer, vertices.size() * sizeof(common::AnimatedVertex), STAGING_BUFFER_USAGE, STAGING_BUFFER_PROP, STAGING_BUFFER_MEM_USAGE);
+
+		void* data;
+		vmaMapMemory(m_pAllocator, stagingBuffer.allocation, &data);
+		memcpy(data, vertices.data(), vertices.size() * sizeof(common::AnimatedVertex));
 		vmaUnmapMemory(m_pAllocator, stagingBuffer.allocation);
 		if (0)
 			IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", vertices.size() * sizeof(common::Vertex), " bytes in hosted staging buffer");

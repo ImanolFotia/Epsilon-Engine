@@ -31,6 +31,7 @@ namespace engine
 		virtual Ref<UniformBindings> createUniformData(UniformBindingInfo) = 0;
 		virtual Ref<BindGroup> createBindGroup(BindGroupInfo) = 0;
 		virtual Ref<Mesh> createMesh(MeshInfo) = 0;
+		virtual Ref<Mesh> createMesh(AnimatedMeshInfo) = 0;
 		virtual Ref<Buffer> createGPUBuffer(const std::string&, uint32_t, BufferStorageType) = 0;
 		virtual Ref<RenderPass> createRenderPass(RenderPassInfo) = 0;
 		virtual Ref<RenderPass> createDefaultRenderPass(RenderPassInfo) = 0;

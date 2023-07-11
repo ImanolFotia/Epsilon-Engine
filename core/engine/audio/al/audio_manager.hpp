@@ -36,6 +36,9 @@ namespace engine::audio {
 		virtual void setSourcePitch(Ref<AudioSource>, float) override;
 		virtual void setSourceState(Ref<AudioSource>, AudioState) override;
 
+		virtual void setListenerPosition(Ref<AudioListener>, glm::vec3) override;
+		virtual void setListenerDirection(Ref<AudioListener>, glm::vec3) override;
+
 
 		virtual glm::vec3 getSourcePosition(Ref<AudioSource>) override;
 		virtual glm::vec3 getSourceDirection(Ref<AudioSource>)override;

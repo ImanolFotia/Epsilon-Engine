@@ -68,13 +68,14 @@ namespace BSP
 		{
 			m_pCamera = std::make_shared<utils::Camera>(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
-			Epsilon::getSingleton().onCreate = [this]
+
+			Epsilon::onCreate = [this]
 			{ onCreate(); };
-			Epsilon::getSingleton().onReady = [this]
+			Epsilon::onReady = [this]
 			{ onReady(); };
-			Epsilon::getSingleton().onRender = [this]
+			Epsilon::onRender = [this]
 			{ onRender(); };
-			Epsilon::getSingleton().onExit = [this]
+			Epsilon::onExit = [this]
 			{ onExit(); };
 		}
 
@@ -85,7 +86,7 @@ namespace BSP
 
 			using en = engine::UniformBindingType;
 
-			auto resourceManager = Epsilon::getContext().ResourceManager();
+			auto resourceManager = Epsilon::getContext()->ResourceManager();
 
 			engine::BindGroupInfo skyInfo = {
 				.bindingInfo = {
@@ -111,13 +112,17 @@ namespace BSP
 				"ModelMatrix",
 				{ .size = sizeof(PushConstant), .data = &m_pMap.pushConstant });
 
-			const char* filename = "./assets/models/hl2/background01.bsp";
+			const char* filename = "./assets/models/jw/01.bsp";
 
 			SourceBSP bspMap(filename);
 
 			gpuBuffer = resourceManager->createGPUBuffer("material_buffer", sizeof(Material) * bspMap.numMaterials(), engine::BufferStorageType::STORAGE_BUFFER);
 
-			Material* materialBufferPtr = reinterpret_cast<Material*>(resourceManager->mapBuffer(gpuBuffer));
+
+			Material* materialBufferPtr[3];
+			materialBufferPtr [0] = reinterpret_cast<Material*>(resourceManager->mapBuffer(gpuBuffer, 0));
+			materialBufferPtr[1] = reinterpret_cast<Material*>(resourceManager->mapBuffer(gpuBuffer, 1));
+			materialBufferPtr[2] = reinterpret_cast<Material*>(resourceManager->mapBuffer(gpuBuffer, 2));
 
 			engine::BindGroupInfo bindGroupInfo = {
 				.bindingInfo = {
@@ -213,8 +218,14 @@ namespace BSP
 
 					if (width == 0 || height == 0 || pixels == nullptr)
 					{
-						materialBufferPtr[index].diffuse = 0;
-						materialBufferPtr[index].normal = -1;
+						materialBufferPtr[0][index].diffuse = 0;
+						materialBufferPtr[0][index].normal = -1;
+
+						materialBufferPtr[1][index].diffuse = 0;
+						materialBufferPtr[1][index].normal = -1;
+
+						materialBufferPtr[2][index].diffuse = 0;
+						materialBufferPtr[2][index].normal = -1;
 					}
 					else
 					{
@@ -232,8 +243,14 @@ namespace BSP
 						};
 
 						resourceManager->createTexture(texInfo);
-						materialBufferPtr[index].diffuse = id;
-						materialBufferPtr[index].normal = -1;
+						materialBufferPtr[0][index].diffuse = id;
+						materialBufferPtr[0][index].normal = -1;
+
+						materialBufferPtr[1][index].diffuse = id;
+						materialBufferPtr[1][index].normal = -1;
+
+						materialBufferPtr[2][index].diffuse = id;
+						materialBufferPtr[2][index].normal = -1;
 						framework::free_image_data(pixels);
 						id++;
 
@@ -255,7 +272,12 @@ namespace BSP
 								};
 
 								resourceManager->createTexture(texInfo);
-								materialBufferPtr[index].normal = id;
+
+								materialBufferPtr[0][index].normal = -1;
+
+								materialBufferPtr[1][index].normal = -1;
+
+								materialBufferPtr[2][index].normal = -1;
 								framework::free_image_data(pixels);
 								id++;
 							}
@@ -266,7 +288,7 @@ namespace BSP
 
 				m_pMap.m_pFaces.push_back(bspFace);
 			}
-			resourceManager->unmapBuffer(gpuBuffer);
+			// resourceManager->unmapBuffer(gpuBuffer);
 		}
 
 		double timeSinceCursorChange = 0.0;
@@ -278,7 +300,7 @@ namespace BSP
 			m_pCameraData.iTime = 0;
 			m_pCameraData.iFrame = Frame();
 
-			Epsilon::getContext().Window().HideCursor();
+			Epsilon::getContext()->Window().HideCursor();
 			framework::Input::KeyBoard::KeyboardEventHandler.addListener(
 				([this](auto* sender, beacon::args* args)
 					{
@@ -296,12 +318,12 @@ namespace BSP
 							if (m_pUpdateCamera)
 							{
 
-								Epsilon::getContext().Window().HideCursor();
+								Epsilon::getContext()->Window().HideCursor();
 							}
 							else
 							{
 
-								Epsilon::getContext().Window().ShowCursor();
+								Epsilon::getContext()->Window().ShowCursor();
 							}
 							timeSinceCursorChange = 0;
 						}
@@ -329,15 +351,15 @@ namespace BSP
 				objectData.layout_index = 0;
 				objectData.mesh = face.mesh;
 				objectData.material = shadowDummyMaterial;
-				objectData.modelMatrix = glm::mat4(1.0f);
+				//objectData.modelMatrix = glm::mat4(1.0f);
 				objectData.pushConstant = m_pMap.pushConstantRef;
 				objectData.uniformIndex = 0; // ;
-				Epsilon::getContext().Renderer()->Push(objectData);
+				Epsilon::getContext()->Renderer()->Push(objectData);
 			}
 
-			Epsilon::getContext().Renderer()->BeginFrame();
-			Epsilon::getContext().Renderer()->Begin();
-			Epsilon::getContext().Renderer()->Flush(m_pShadowRenderPass, engine::DrawType::INDEXED);
+			Epsilon::getContext()->Renderer()->BeginFrame();
+			Epsilon::getContext()->Renderer()->Begin();
+			Epsilon::getContext()->Renderer()->Flush(m_pShadowRenderPass, engine::DrawType::INDEXED);
 
 			setupCamera();
 
@@ -348,19 +370,19 @@ namespace BSP
 				objectData.layout_index = face.layoutIndex;
 				objectData.mesh = face.mesh;
 				objectData.material = face.material;
-				objectData.modelMatrix = glm::mat4(1.0f);
+				//objectData.modelMatrix = glm::mat4(1.0f);
 				objectData.pushConstant = m_pMap.pushConstantRef;
 				objectData.uniformIndex = index;
-				Epsilon::getContext().Renderer()->Push(objectData);
+				Epsilon::getContext()->Renderer()->Push(objectData);
 				index++;
 			}
 
 			// drawFrame(m_pRenderPass);
-			engine::Context::getSingleton().Renderer()->Flush(m_pRenderPass, engine::DrawType::INDEXED_INDIRECT);
-			engine::Context::getSingleton().Renderer()->End(m_pCameraData.lightPosition);
+			getContext()->Renderer()->Flush(m_pRenderPass, engine::DrawType::INDEXED_INDIRECT);
+			getContext()->Renderer()->End(m_pCameraData.lightPosition);
 
-			engine::Context::getSingleton().Renderer()->Submit();
-			engine::Context::getSingleton().Renderer()->EndFrame();
+			getContext()->Renderer()->Submit();
+			getContext()->Renderer()->EndFrame();
 		}
 
 		void onExit()
@@ -379,7 +401,7 @@ namespace BSP
 
 			if (m_pUpdateCamera)
 			{
-				m_pCamera->Update(Epsilon::getContext().Window().getWindow());
+				m_pCamera->Update(Epsilon::getContext()->Window().getWindow());
 				m_pCamera->UpdateMatrices(0, screenX, screenY, false);
 			}
 
@@ -390,7 +412,7 @@ namespace BSP
 			m_pCameraData.iTime += m_pTime;
 			m_pCameraData.viewPosition = m_pCamera->getPosition();
 
-			Epsilon::getContext().Renderer()->UpdateRenderPassUniforms(m_pRenderPass, engine::RENDERPASS_SET, &m_pCameraData);
+			getContext()->Renderer()->UpdateRenderPassUniforms(m_pRenderPass, engine::RENDERPASS_SET, &m_pCameraData);
 			// PushShaderData(m_pCameraData);
 		}
 
@@ -520,7 +542,7 @@ namespace BSP
 			lightMatrix = m_pCameraData.proj * m_pCameraData.view * glm::mat4(1.0);
 			m_pCameraData.lightMatrix = lightMatrix;
 			m_pCameraData.viewPosition = m_pCamera->getPosition();
-			Epsilon::getContext().Renderer()->UpdateRenderPassUniforms(m_pShadowRenderPass, engine::RENDERPASS_SET, &m_pCameraData);
+			Epsilon::getContext()->Renderer()->UpdateRenderPassUniforms(m_pShadowRenderPass, engine::RENDERPASS_SET, &m_pCameraData);
 
 		}
 
@@ -641,8 +663,8 @@ namespace BSP
 				.pipelineLayout(shadowLayout)
 				.pushConstant(sizeof(PushConstant));
 
-			m_pRenderPass = Epsilon::getContext().ResourceManager()->createDefaultRenderPass(renderPassInfo);
-			m_pShadowRenderPass = Epsilon::getContext().ResourceManager()->createRenderPass(shadowRenderPassInfo);
+			m_pRenderPass = Epsilon::getContext()->ResourceManager()->createDefaultRenderPass(renderPassInfo);
+			m_pShadowRenderPass = Epsilon::getContext()->ResourceManager()->createRenderPass(shadowRenderPassInfo);
 		}
 
 		auto calculateNormals(std::vector<common::Vertex>& vertices,

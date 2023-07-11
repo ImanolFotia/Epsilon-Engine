@@ -23,6 +23,7 @@ namespace engine
         uint32_t layoutIndex = 0;
         Ref<engine::BindGroup> material;
         uint32_t uniformIndex = 0;
+        uint32_t count = 1;
         ObjectDataConstant pushConstantData;
     };
 

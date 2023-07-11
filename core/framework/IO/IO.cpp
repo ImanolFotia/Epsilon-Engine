@@ -14,9 +14,9 @@ double framework::Input::Mouse::YPOS = 500;
 double framework::Input::Mouse::prevxOffset = 0.0;
 double framework::Input::Mouse::prevyOffset = 0.0;
 
-framework::Input::STATE framework::Input::Mouse::LEFT = Input::RELEASED;
-framework::Input::STATE framework::Input::Mouse::MIDDLE = Input::RELEASED;
-framework::Input::STATE framework::Input::Mouse::RIGHT = Input::RELEASED;
+framework::Input::STATE framework::Input::Mouse::LEFT = Input::NONE;
+framework::Input::STATE framework::Input::Mouse::MIDDLE = Input::NONE;
+framework::Input::STATE framework::Input::Mouse::RIGHT = Input::NONE;
 
 //Epsilon::Input::MouseArgs Epsilon::Input::Mouse::mouseArgs;
 

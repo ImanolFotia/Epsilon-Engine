@@ -16,12 +16,12 @@ namespace engine {
 
 		Ref<audio::AudioSource> source{};
 		AudioBuffer buffer{};
-		float angle{};
-		float gain{};
+		float angle = 360.0;
+		float gain = 1.0;
 		glm::vec3 position{};
 		glm::vec3 direction{};
 		glm::vec3 velocity{};
-		float pitch{};
+		float pitch = 1.0;
 
 		friend class AssetManager;
 
@@ -110,6 +110,10 @@ namespace engine {
 			return pitch;
 			//auto audioManager = Context::getSingleton().AudioManager();
 			//return audioManager->getSourcePitch(source);
+		}
+
+		Ref<audio::AudioSource> Source() {
+			return source;
 		}
 	};
 }

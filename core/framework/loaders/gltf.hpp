@@ -4,7 +4,10 @@
 #include <tiny_gltf.h>
 #include <core/common/common.hpp>
 #include "model.h"
+#include "gltf_animation.hpp"
 namespace framework {
+
+
 	class gltfModel : public ModelBase<framework::Mesh<common::Mesh>> {
 
 		template<typename T>
@@ -179,6 +182,17 @@ namespace framework {
 			}
 		};
 
+		void parse_animation(tinygltf::Model& model, tinygltf::Node node, gltfAnimationNode& anim_node) {
+
+			for (const auto& child : node.children) {
+				anim_node.children.emplace_back(model.nodes[child].name, child);
+				parse_animation(model, model.nodes[child], anim_node.children.back());
+			}
+		}
+
+		gltfSkeleton m_pSkeleton;
+		std::vector<framework::Mesh<common::AnimatedMesh>> mAnimatedMeshes;
+
 	public:
 		gltfModel(const std::string& path = "") : ModelBase(path) {
 			Load(path);
@@ -233,6 +247,27 @@ namespace framework {
 			unsigned index = 0;
 
 			parse_nodes(model, model.nodes[model.scenes[model.defaultScene].nodes.front()], glm::mat4(1.0f));
+
+			if (model.skins.size() > 0) {
+				auto skin = model.skins[0];
+				auto matricesAccesor = model.accessors[skin.inverseBindMatrices];
+				const auto& bufferView = model.bufferViews[matricesAccesor.bufferView];
+				const auto& buffer = model.buffers[bufferView.buffer];
+				const auto dataAddress = buffer.data.data() + bufferView.byteOffset + matricesAccesor.byteOffset;
+				const auto byteStride = matricesAccesor.ByteStride(bufferView);
+				m_pSkeleton.inverse_matrices.resize(matricesAccesor.count);
+				int j = 0;
+				for (auto joint : skin.joints) {
+					m_pSkeleton.joint_indices[joint] = j;
+					j++;
+				}
+				for (int mat_index = 0; mat_index < matricesAccesor.count; mat_index++) {
+					m_pSkeleton.inverse_matrices.at(mat_index) = *(reinterpret_cast<const glm::mat4*>(dataAddress + mat_index * byteStride));
+				}
+				m_pSkeleton.root = { .name = model.nodes[model.skins[0].skeleton].name, .index = model.skins[0].skeleton };
+
+				parse_animation(model, model.nodes[model.skins[0].skeleton], m_pSkeleton.root);
+			}
 
 
 			for (const auto& tmpMesh : meshes) {

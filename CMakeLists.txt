@@ -456,7 +456,7 @@ install(DIRECTORY ${images} DESTINATION "bin/assets")
 #add_subdirectory(examples/basic)
 #add_subdirectory(examples/chess)
 #add_subdirectory(examples/model)
-#add_subdirectory(examples/bsp)
+add_subdirectory(examples/bsp)
 
 
 add_subdirectory(projects/TowerDefense)

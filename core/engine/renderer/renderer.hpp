@@ -44,6 +44,7 @@ namespace engine
         ObjectDataConstant objectConstant;
         uint32_t layout_index = 0;
         uint32_t uniformIndex = 0;
+        uint32_t count = 1;
     };
 
     struct TextureData

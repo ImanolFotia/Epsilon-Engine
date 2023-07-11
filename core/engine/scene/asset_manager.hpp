@@ -28,7 +28,8 @@ namespace engine
 	struct ShaderObjectData {
 		uint32_t object_id{};
 		uint32_t transform_index{};
-		uint32_t material_index{};
+		uint32_t material_index[4] = {};
+		uint32_t numMaterials = 1;
 	};
 
 	struct CursorInfo {
@@ -60,7 +61,8 @@ namespace engine
 		unsigned int id;
 		Ref<Mesh> mesh;
 		Ref<BindGroup> bind_group;
-		std::size_t material_key;
+		std::size_t material_keys[4];
+		std::size_t numMaterials;
 	};
 
 	struct RenderModel
@@ -165,6 +167,103 @@ namespace engine
 			//resourceManager->unmapBuffer(m_pGPUBuffers["decal_buffer"]);
 		}
 
+		RenderModel createModelFromMesh(const std::string& name, const common::Mesh& mesh, std::initializer_list<common::MeshMaterial> materials) {
+
+			auto resourceManager = m_pContext->ResourceManager();
+
+			if (m_pModels.contains(name)) {
+				for (auto& mesh : m_pModels.at(name).renderMeshes) {
+					mesh.id = mesh_counter;
+					mesh_counter++;
+				}
+				return m_pModels.at(name);
+			}
+
+			RenderModel& model = m_pModels[name];
+			model.name = name;
+			RenderMesh subRenderC;
+			subRenderC.numMaterials = materials.size();
+			subRenderC.mesh = addMesh(name, mesh);
+			subRenderC.id = mesh_counter;
+			mesh_counter++;
+			unsigned int material_index = 0;
+			for (auto& material : materials) {
+				std::string material_name = name + "_material" + std::to_string(material_index);
+				size_t material_name_hash = std::hash<std::string>{}(material_name);
+
+
+				subRenderC.material_keys[material_index] = material_name_hash;
+
+				PBRMaterial pbr_material;
+
+
+
+
+				pbr_material.albedo_color = material.color;
+				pbr_material.metallic_color = material.metallic;
+				pbr_material.roughness_color = material.roughness;
+
+				if (!material.albedo_path.empty())
+				{
+					auto albedo = addTexture(material.albedo_path, { .format = COLOR_RGBA,
+																	.wrapMode = REPEAT,
+																	.filtering = LINEAR });
+					pbr_material.albedo_texture_index = albedo.Index();
+				}
+				if (!material.metallic_path.empty())
+				{
+					auto metallic = addTexture(material.metallic_path, { .format = NON_COLOR_RGBA,
+																		.wrapMode = REPEAT,
+																		.filtering = LINEAR });
+					pbr_material.metallic_texture_index = metallic.Index();
+				}
+				if (!material.roughness_path.empty())
+				{
+					auto roughness = addTexture(material.roughness_path, { .format = NON_COLOR_RGBA,
+																		  .wrapMode = REPEAT,
+																		  .filtering = LINEAR });
+					pbr_material.roughness_texture_index = roughness.Index();
+				}
+				if (!material.normal_path.empty())
+				{
+					auto normal = addTexture(material.normal_path, { .format = NON_COLOR_RGBA,
+																	.wrapMode = REPEAT,
+																	.filtering = LINEAR });
+					pbr_material.normal_texture_index = normal.Index();
+				}
+
+				uint32_t mat_index = 0;
+				if (!m_pFreeMaterialIndexes.empty()) {
+					mat_index = m_pFreeMaterialIndexes.front();
+					m_pFreeMaterialIndexes.pop();
+				}
+				else {
+					mat_index = m_pMaterialCurrentIndex;
+					m_pMaterialCurrentIndex++;
+				}
+
+
+				//PBRMaterial* materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"]));
+				for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
+					PBRMaterial* materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"], i));
+					materialBufferPtr[mat_index] = pbr_material;
+				}
+
+				m_pMaterials[material_name_hash].index = mat_index;
+				m_pMaterials[material_name_hash].material = pbr_material;
+				material_index++;
+			}
+
+			model.renderMeshes.push_back(subRenderC);
+
+
+			//resourceManager->unmapBuffer(m_pGPUBuffers["material_buffer"]);
+
+
+			return model;
+		}
+
+
 		RenderModel createModelFromMesh(const std::string& name, const common::Mesh& mesh, const common::MeshMaterial& material) {
 
 			auto resourceManager = m_pContext->ResourceManager();
@@ -184,7 +283,8 @@ namespace engine
 			size_t material_name_hash = std::hash<std::string>{}(material_name);
 
 			RenderMesh subRenderC;
-			subRenderC.material_key = material_name_hash;
+			subRenderC.material_keys[0] = material_name_hash;
+			subRenderC.numMaterials = 1;
 			subRenderC.mesh = addMesh(name, mesh);
 			subRenderC.id = mesh_counter;
 			mesh_counter++;
@@ -314,8 +414,8 @@ namespace engine
 				subRenderC.mesh = addMesh(path + "_submesh_" + std::to_string(index), mesh.data().mesh);
 
 				std::string material_name = path + "_submesh_" + std::to_string(index) + "_material";
-
-				subRenderC.material_key = std::hash<std::string>{}(material_name);
+				subRenderC.numMaterials = 1;
+				subRenderC.material_keys[0] = std::hash<std::string>{}(material_name);
 				subRenderC.id = mesh_counter;
 				mesh_counter++;
 
@@ -380,7 +480,8 @@ namespace engine
 				}
 
 				m_pMaterials[material_name_hash].material = material;
-				subRenderC.material_key = material_name_hash;
+				subRenderC.material_keys[0] = material_name_hash;
+				subRenderC.numMaterials = 1;
 
 				//PBRMaterial* materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"]));
 
@@ -412,7 +513,7 @@ namespace engine
 			return model;
 		}
 
-		const AudioObject& loadAudio(const std::string& path)
+		AudioObject loadAudio(const std::string& path)
 		{
 
 			auto audioManager = m_pContext->AudioManager();
@@ -515,6 +616,18 @@ namespace engine
 		}
 
 		Ref<Mesh> addMesh(const std::string& name, common::Mesh mesh)
+		{
+
+			auto resourceManager = m_pContext->ResourceManager();
+
+			auto ref = resourceManager->createMesh({ .vertices = mesh.Vertices,
+													.indices = mesh.Indices,
+													.name = name });
+
+			return ref;
+		}
+
+		Ref<Mesh> addMesh(const std::string& name, common::AnimatedMesh mesh)
 		{
 
 			auto resourceManager = m_pContext->ResourceManager();

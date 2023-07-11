@@ -587,6 +587,13 @@ namespace engine
         std::string name;
     };
 
+    struct AnimatedMeshInfo
+    {
+        std::vector<common::AnimatedVertex> vertices;
+        std::vector<uint32_t> indices;
+        std::string name;
+    };
+
     struct MeshInfoFactory
     {
         MeshInfoFactory vertices(std::vector<common::Vertex> v)
@@ -602,6 +609,24 @@ namespace engine
         }
         operator MeshInfo() { return info; }
         MeshInfo info;
+    };
+
+
+    struct AnimatedMeshInfoFactory
+    {
+        AnimatedMeshInfoFactory vertices(std::vector<common::AnimatedVertex> v)
+        {
+            info.vertices = v;
+            return *this;
+        }
+
+        AnimatedMeshInfoFactory indices(std::vector<uint32_t> i)
+        {
+            info.indices = i;
+            return *this;
+        }
+        operator AnimatedMeshInfo() { return info; }
+        AnimatedMeshInfo info;
     };
 
 }

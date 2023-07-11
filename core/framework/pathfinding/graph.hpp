@@ -41,18 +41,18 @@ namespace framework {
 		}
 
 
-		void data(std::list<T>::iterator t) {
+		void data(typename std::list<T>::iterator t) {
 			m_pData = t;
 		}
 
-		std::list<T>::iterator data() {
+		typename std::list<T>::iterator data() {
 			return m_pData;
 		}
 
 	private:
 
 		std::list<Key> m_pNeighbors;
-		std::list<T>::iterator m_pData;
+		typename std::list<T>::iterator m_pData;
 	};
 
 
@@ -174,19 +174,19 @@ namespace framework {
 			}
 		}
 
-		Nodes::iterator begin() {
+		typename Nodes::iterator begin() {
 			return m_pNodes.begin();
 		}
 
-		Nodes::iterator end() {
+		typename Nodes::iterator end() {
 			return m_pNodes.end();
 		}
 
-		Nodes::const_iterator cbegin() {
+		typename Nodes::const_iterator cbegin() {
 			return m_pNodes.cbegin();
 		}
 
-		Nodes::const_iterator cend() {
+		typename Nodes::const_iterator cend() {
 			return m_pNodes.cend();
 		}
 

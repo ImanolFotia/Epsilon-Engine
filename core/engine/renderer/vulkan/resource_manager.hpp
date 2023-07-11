@@ -35,6 +35,7 @@ namespace engine
 		Ref<BindGroup> createBindGroup(BindGroupInfo) override;
 		Ref<Texture> createTexture(TextureCreationInfo) override;
 		Ref<Mesh> createMesh(MeshInfo) override;
+		Ref<Mesh> createMesh(AnimatedMeshInfo) override;
 		Ref<Buffer> createGPUBuffer(const std::string&, uint32_t size, BufferStorageType type) override;
 		Ref<RenderPass> createRenderPass(RenderPassInfo) override;
 		Ref<RenderPass> createDefaultRenderPass(RenderPassInfo) override;
@@ -72,7 +73,7 @@ namespace engine
 		vk::VulkanUniformBuffer pCreateUniformBuffer(UniformBindingInfo);
 		vk::VulkanTexture pCreateTextureBuffer(vk::VulkanTextureInfo);
 
-		Ref<Buffer> pFetchVertexBuffer(uint32_t numVertices);
+		Ref<Buffer> pFetchVertexBuffer(uint32_t numVertices, size_t vertexSize = sizeof(common::Vertex));
 
 		Ref<Buffer> pFetchIndexBuffer(uint32_t numIndices, uint32_t maxOffset);
 
@@ -81,6 +82,7 @@ namespace engine
 		void pCreateBuffer(vk::VulkanBuffer&, size_t, VkBufferUsageFlags, VmaAllocationCreateFlags, VmaMemoryUsage);
 
 		vk::VulkanBuffer pCreateStagingBuffer(const std::vector<common::Vertex>&);
+		vk::VulkanBuffer pCreateStagingBuffer(const std::vector<common::AnimatedVertex>&);
 		vk::VulkanBuffer pCreateStagingIndexBuffer(const std::vector<IndexType>&);
 		vk::VulkanBuffer pCreateStagingTextureBuffer(unsigned char*, TextureCreationInfo);
 

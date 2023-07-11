@@ -107,6 +107,22 @@ namespace framework
 #endif
         }
 
+        void setDragCursor() {
+            if (current_cursor == GLFW_RESIZE_NESW_CURSOR) return;
+            GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_RESIZE_NESW_CURSOR);
+            glfwSetCursor(mWindow, cursor);
+            current_cursor = GLFW_RESIZE_NESW_CURSOR;
+            
+        } 
+
+        void setNormalCursor() {
+            if (current_cursor == GLFW_ARROW_CURSOR) return;
+            glfwSetCursor(mWindow, NULL);
+            current_cursor = GLFW_ARROW_CURSOR;
+        }
+
+        int current_cursor = GLFW_ARROW_CURSOR;
+
         void setCursorPosition(int x, int y)
         {
 #if USE_GLFW

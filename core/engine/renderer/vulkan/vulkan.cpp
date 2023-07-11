@@ -98,6 +98,7 @@ namespace engine
 		drawCommand.uniformIndex = object.uniformIndex;
 		drawCommand.layoutIndex = object.layout_index;
 		drawCommand.pushConstantData = object.objectConstant;
+		drawCommand.count = object.count;
 
 		drawCommand.material = object.material;
 		auto pushConstant = m_pResourceManagerRef->pushConstantPool.get(object.pushConstant);
@@ -383,7 +384,7 @@ namespace engine
 			vkCmdPushConstants(m_pFrame.CommandBuffer(), renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(),
 				VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(ObjectDataConstant), &command.pushConstantData);
 
-			vkCmdDrawIndexed(m_pFrame.CommandBuffer(), command.meshResource.numIndices, 1, command.meshResource.indexOffset, command.meshResource.vertexOffset, command.uniformIndex);
+			vkCmdDrawIndexed(m_pFrame.CommandBuffer(), command.meshResource.numIndices, command.count, command.meshResource.indexOffset, command.meshResource.vertexOffset, command.uniformIndex);
 			m_pNumDrawCalls++;
 		}
 	}
@@ -426,8 +427,8 @@ namespace engine
 			indirect_commands[i].firstIndex = command.meshResource.indexOffset;
 			indirect_commands[i].firstInstance = command.uniformIndex;
 			indirect_commands[i].indexCount = command.meshResource.numIndices;
-			indirect_commands[i].instanceCount = 1;
 			indirect_commands[i].vertexOffset = command.meshResource.vertexOffset;
+			indirect_commands[i].instanceCount = command.count;
 			i++;
 		}
 		uint32_t prev_layout = -1;

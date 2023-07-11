@@ -707,16 +707,6 @@ namespace engine
 
 		vmaDestroyBuffer(m_pAllocator, indexStagingBuffer.buffer, indexStagingBuffer.allocation);
 
-		if (0)
-		{
-			IO::Info("From function ", __PRETTY_FUNCTION__, "\n\tin (", __FILE__, ":", __LINE__, ") \n\t", "copied ",
-				vertices->size(), " vertices, of size ", vertices->size() * sizeof(common::Vertex), " bytes, at offset ",
-				vertexBuffer->allocatedVertices * sizeof(common::Vertex), " to local buffer");
-
-			IO::Info("From function ", __PRETTY_FUNCTION__, "\n\tin (", __FILE__, ":", __LINE__, ") \n\t", "copied ",
-				indices->size(), " indices, of size ", indices->size() * sizeof(IndexType), " bytes, at offset ",
-				indexBuffer->allocatedVertices * sizeof(IndexType), " to local buffer");
-		}
 
 		MeshResource meshResource = {
 			.vertexBuffer = vertexBufferRef,
@@ -729,10 +719,55 @@ namespace engine
 
 		int maxAllocatingSize = sizeof(IndexType) * (indexBuffer->allocatedVertices + indices->size());
 
-		if (maxAllocatingSize > MAX_INDICES_PER_BUFFER * sizeof(IndexType))
+		vertexBuffer->allocatedVertices += vertices->size();
+		indexBuffer->allocatedVertices += indices->size();
+
+		return ref;
+	}
+
+	Ref<Mesh> VulkanResourceManager::createMesh(AnimatedMeshInfo meshInfo)
+	{
+		std::vector<common::AnimatedVertex>* vertices = &meshInfo.vertices;
+		std::vector<uint32_t>* indices = &meshInfo.indices;
+
+		auto maxOffset = [](auto& indices) -> uint32_t
 		{
-			std::cout << "sdf" << std::endl;
-		}
+			uint32_t out = 0;
+			for (auto& i : indices)
+				out = i > out ? i : out;
+			return out;
+		};
+
+		Ref<Buffer> vertexBufferRef = pFetchVertexBuffer(vertices->size(), sizeof(common::AnimatedVertex));
+		vk::VulkanBuffer* vertexBuffer = vertexBufferPool.get(vertexBufferRef);
+
+		Ref<Buffer> indexBufferRef = pFetchIndexBuffer(indices->size(), vertexBuffer->allocatedVertices);
+		vk::VulkanBuffer* indexBuffer = indexBufferPool.get(indexBufferRef);
+
+		auto vertexStagingBuffer = pCreateStagingBuffer(*vertices);
+		auto indexStagingBuffer = pCreateStagingIndexBuffer(*indices);
+
+		vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, vertexStagingBuffer.buffer, vertexBuffer->buffer,
+			vertices->size() * sizeof(common::AnimatedVertex), vertexBuffer->allocatedVertices * sizeof(common::AnimatedVertex));
+
+		vmaDestroyBuffer(m_pAllocator, vertexStagingBuffer.buffer, vertexStagingBuffer.allocation);
+
+		vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, indexStagingBuffer.buffer, indexBuffer->buffer,
+			indices->size() * sizeof(IndexType), indexBuffer->allocatedVertices * sizeof(IndexType));
+
+		vmaDestroyBuffer(m_pAllocator, indexStagingBuffer.buffer, indexStagingBuffer.allocation);
+
+		MeshResource meshResource = {
+			.vertexBuffer = vertexBufferRef,
+			.indexBuffer = indexBufferRef,
+			.vertexOffset = vertexBuffer->allocatedVertices,
+			.indexOffset = indexBuffer->allocatedVertices,
+			.numVertices = (uint32_t)vertices->size(),
+			.numIndices = (uint32_t)indices->size() };
+		auto ref = meshPool.insert(meshInfo.name, meshResource);
+
+		int maxAllocatingSize = sizeof(IndexType) * (indexBuffer->allocatedVertices + indices->size());
+
 		vertexBuffer->allocatedVertices += vertices->size();
 		indexBuffer->allocatedVertices += indices->size();
 
