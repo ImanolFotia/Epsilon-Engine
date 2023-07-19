@@ -30,6 +30,7 @@ namespace engine
 
 		Ref<RenderPass> m_pCurrentRenderPass;
 		Ref<BindGroup> m_pDefaultBindGroup;
+		Ref<BindGroup> m_pAnimatedBindGroup;
 		Ref<BindGroup> m_pShadowBindGroup;
 		Ref<BindGroup> m_pDecalBindGroup;
 		Ref<BindGroup> m_pPrePassBindGroup;
@@ -54,8 +55,12 @@ namespace engine
 			m_pRenderLayouts["TerrainLayout"] = 2;
 			m_pRenderLayouts["DecalLayout"] = 3;
 			m_pRenderLayouts["TreeLayout"] = 4;
+			m_pRenderLayouts["defaultAnimatedLayout"] = 5;
+
 			m_pRenderLayouts["ShadowLayout"] = 0;
 			m_pRenderLayouts["treeShadowLayout"] = 1;
+			m_pRenderLayouts["animatedShadowLayout"] = 2;
+
 			m_pRenderLayouts["prepassLayout"] = 0;
 
 			m_pCurrentRenderPass = m_RenderPassesRefs["DefaultRenderPass"];
@@ -102,6 +107,26 @@ namespace engine
 					.name = "DefaultBindGroup",
 			};
 
+			engine::BindGroupInfo animatedBindGroup = {
+					.bindingInfo = {
+						{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
+						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
+						//{.size = sizeof(Decal) * AssetManager::MAX_DECALS, .offset = 0, .binding = 4, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "decal_buffer"},
+						{.size = sizeof(CursorInfo), .offset = 0, .binding = 4, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "info_buffer"},
+
+						{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 5, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"},
+						{.size = sizeof(ShaderObjectData) * AssetManager::MAX_OBJECTS, .offset = 0, .binding = 6, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "object_buffer"},
+						{.size = sizeof(GPUAnimationData), .offset = 0, .binding = 7, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "animation_transform_buffer"}
+
+			},
+					.inputs = {
+					{.renderPass = "ShadowPass", .index = 0, .bindingPoint = 2},
+					{.renderPass = "ShadowPass", .index = 1, .bindingPoint = 3},
+				},
+					.renderPass = "DefaultRenderPass",
+					.name = "AnimatedBindGroup",
+			};
+
 			engine::BindGroupInfo decalBindGroup = {
 					.bindingInfo = {
 						{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
@@ -139,6 +164,7 @@ namespace engine
 			};
 
 			m_pDefaultBindGroup = resourceManager->createBindGroup(defaultBindGroup);
+			m_pAnimatedBindGroup = resourceManager->createBindGroup(animatedBindGroup);
 			m_pShadowBindGroup = resourceManager->createBindGroup(shadowBindGroup);
 			m_pDecalBindGroup = resourceManager->createBindGroup(decalBindGroup);
 			m_pPrePassBindGroup = resourceManager->createBindGroup(prepassBindGroup);
@@ -265,7 +291,7 @@ namespace engine
 
 			Ref<BindGroup> selectedBindGroup;
 
-			if (layout == "ShadowLayout") {
+			if (layout == "ShadowLayout" || layout == "animatedShadowLayout") {
 				selectedBindGroup = m_pShadowBindGroup;
 			}
 			else if (layout == "treeShadowLayout") {
@@ -273,6 +299,9 @@ namespace engine
 			}
 			else if (layout == "DefaultLayout") {
 				selectedBindGroup = m_pDefaultBindGroup;
+			}
+			else if (layout == "defaultAnimatedLayout") {
+				selectedBindGroup = m_pAnimatedBindGroup;
 			}
 			else if (layout == "TerrainLayout") {
 				selectedBindGroup = m_pDefaultBindGroup;

@@ -47,8 +47,8 @@ namespace common {
         alignas(32) glm::vec4 color = glm::vec4(0.0f);
         alignas(32) glm::vec3 tangent = glm::vec3(0.0f);
         alignas(32) glm::vec3 bitangent = glm::vec3(0.0f);
+        alignas(32) glm::ivec4 boneIDs = glm::ivec4(0);
         alignas(32) glm::vec4 weights = glm::vec4(0.0f);
-        alignas(32) glm::ivec4 boneIDs = glm::vec4(0.0f);
     };
 
     template<typename VertexType>

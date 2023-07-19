@@ -15,29 +15,51 @@
 #include "eml1_0.hpp"
 
 #include <core/common/common.hpp>
+#include "gltf_animation.hpp"
 
 namespace framework
 {
-    template<typename MeshType = framework::Mesh<common::Mesh>>
     class ModelBase {
     protected:
         std::string filename{};
-        std::vector<MeshType> mMeshes;
+        std::vector<framework::Mesh> mMeshes;
+        std::vector<common::AnimatedMesh> mAnimatedMeshes;
+
+        Skeleton m_pSkeleton;
+        std::vector<Animation> m_pAnimations;
+
+        bool m_pHasAnimation = false;
+
     public:
         ModelBase(const std::string& filename) : filename(filename){}
 
-        std::vector<MeshType>& Meshes()
+        std::vector<framework::Mesh>& Meshes()
         {
             return mMeshes;
         }
 
+        const std::vector<common::AnimatedMesh>& AnimatedMeshes() {
+            return mAnimatedMeshes;
+        }
+
         virtual bool Load(const std::string& emlPath) = 0;
+
+        Skeleton Skeleton() {
+            return m_pSkeleton;
+        }
+
+        std::vector<Animation> Animations() {
+            return m_pAnimations;
+        }
+
+        bool HasAnimation() {
+            return m_pHasAnimation;
+        }
     };
 
-    class Model : public ModelBase <framework::Mesh <common::Mesh>>
+    class Model : public ModelBase
     {
-        using MeshType = framework::Mesh<common::Mesh>;
-        using InternalMeshType = common::Mesh;
+        using MeshType = framework::Mesh;
     public:
 
         Model(const std::string &path = "");

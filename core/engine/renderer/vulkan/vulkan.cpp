@@ -341,6 +341,14 @@ namespace engine
 				vk::bindPipeline(renderPass->renderPipelines[command.layoutIndex].graphicsPipeline,
 					m_pFrame.CommandBuffer());
 				prev_layout = command.layoutIndex;
+
+
+				if (m_pVkData.bindless_supported)
+				{
+					vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
+						renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(), 1, 1,
+						&m_pResourceManagerRef->m_pGlobalDescriptorSets, 0, nullptr);
+				}
 			}
 
 			//auto material = m_pResourceManagerRef->materialPool.get(command.material);
@@ -352,6 +360,13 @@ namespace engine
 				vk::bindVertexBuffer(m_pVkData, m_pFrame.CommandBuffer(), vertexBuffer->buffer);
 			}
 
+			if (prev_index_buffer_id != command.meshResource.indexBuffer.Id())
+			{
+				auto indexBuffer = m_pResourceManagerRef->indexBufferPool.get(command.meshResource.indexBuffer);
+				vkCmdBindIndexBuffer(m_pFrame.CommandBuffer(), indexBuffer->buffer, 0, VK_INDEX_TYPE_UINT32);
+				prev_index_buffer_id = command.meshResource.indexBuffer.Id();
+				prev_index_buffer = indexBuffer;
+			}
 
 			if (prev_material_id != command.material.Id()) {
 				auto material = m_pResourceManagerRef->materialPool.get(command.material);
@@ -362,23 +377,6 @@ namespace engine
 					&material->descriptorSets[m_pCurrentFrame], 0, nullptr);
 			}
 
-
-
-			if (prev_index_buffer_id != command.meshResource.indexBuffer.Id())
-			{
-				auto indexBuffer = m_pResourceManagerRef->indexBufferPool.get(command.meshResource.indexBuffer);
-				vkCmdBindIndexBuffer(m_pFrame.CommandBuffer(), indexBuffer->buffer, 0, VK_INDEX_TYPE_UINT32);
-				prev_index_buffer_id = command.meshResource.indexBuffer.Id();
-				prev_index_buffer = indexBuffer;
-			}
-
-			if (m_pVkData.bindless_supported)
-			{
-
-				vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
-					renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(), 1, 1,
-					&m_pResourceManagerRef->m_pGlobalDescriptorSets, 0, nullptr);
-			}
 			/** TODO:
 			 *  Find a way to cleanly implement push constants*/
 			vkCmdPushConstants(m_pFrame.CommandBuffer(), renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(),

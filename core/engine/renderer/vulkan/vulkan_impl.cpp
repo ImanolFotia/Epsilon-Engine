@@ -163,6 +163,8 @@ namespace engine
 		for (auto& bufferRef : vertexBufferReferences)
 		{
 			auto buffer = vertexBufferPool.get(bufferRef);
+
+			if (buffer->dataSize != vertexSize) continue;
 			if (MAX_VERTICES_PER_BUFFER * vertexSize >= buffer->allocatedVertices * vertexSize + numVertices * vertexSize)
 			{
 				return bufferRef;
@@ -172,6 +174,7 @@ namespace engine
 		auto vertexBuffer = pCreateVertexBuffer();
 		vertexBuffer.id = vertexBufferCount;
 		vertexBuffer.allocatedVertices = 0;
+		vertexBuffer.dataSize = vertexSize;
 		vertexBufferCount++;
 		auto ref = vertexBufferPool.insert(("VertexBuffer_" + std::to_string(vertexBufferCount)), vertexBuffer);
 		vertexBufferReferences.push_back(ref);

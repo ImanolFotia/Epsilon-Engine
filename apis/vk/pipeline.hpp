@@ -154,9 +154,15 @@ namespace vk
         std::vector<std::vector<VkPipelineShaderStageCreateInfo>> shaderStages;
 
         std::vector<vk::VulkanVertexInfo> vertexInfos;
+        std::vector<VkPipelineVertexInputStateCreateInfo> vertexInputCreateInfo;
 
         std::vector<VkPipelineDepthStencilStateCreateInfo> depthStencil;
+
+        pipelinesInfo.resize(renderPassInfo.numLayouts);
+        vertexInfos.resize(renderPassInfo.numLayouts);
+        vertexInputCreateInfo.resize(renderPassInfo.numLayouts);
         depthStencil.resize(renderPassInfo.numLayouts);
+
         for (int layout_index = 0; layout_index < renderPassInfo.numLayouts; layout_index++)
         {
             auto &renderPipeline = renderPass.renderPipelines.at(layout_index);
@@ -193,14 +199,14 @@ namespace vk
             else
                 renderPipeline.winding = VK_FRONT_FACE_CLOCKWISE;
 
-            vk::VulkanVertexInfo &vertexInfo = vertexInfos.emplace_back();
+            vk::VulkanVertexInfo &vertexInfo = vertexInfos.at(layout_index);
 
             vertexInfo.attributeDescriptions =
                 getAttributeDescriptions(0, pipelineLayout.vertexLayout.descriptors);
 
             vertexInfo.bindingDescription = getBindingDescription(pipelineLayout.vertexLayout.size);
 
-            VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
+            VkPipelineVertexInputStateCreateInfo& vertexInputInfo = vertexInputCreateInfo.at(layout_index);
             vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
             vertexInputInfo.vertexBindingDescriptionCount = 1;
             vertexInputInfo.pVertexBindingDescriptions = &vertexInfo.bindingDescription; // Optional
@@ -233,7 +239,7 @@ namespace vk
             createPipelineLayout(vk_data, push_constant, pipelineLayoutVK, renderPipeline.descriptorSetLayouts);
 
             // Creating the graphics pipeline
-            VkGraphicsPipelineCreateInfo &pipelineInfo = pipelinesInfo.emplace_back();
+            VkGraphicsPipelineCreateInfo &pipelineInfo = pipelinesInfo.at(layout_index);
 
             pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
             pipelineInfo.stageCount = shaderStages[layout_index].size();

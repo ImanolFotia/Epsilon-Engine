@@ -68,10 +68,16 @@ namespace engine
 	struct RenderModel
 	{
 		std::vector<RenderMesh> renderMeshes;
+		std::vector<framework::Animation> animations;
+		framework::Skeleton skeleton;
 		std::string name{};
+		bool hasAnimation = false;
 		bool loaded = false;
 	};
 
+	struct GPUAnimationData {
+		glm::mat4 transforms[300];
+	};
 
 	struct TextureInfo
 	{
@@ -105,6 +111,8 @@ namespace engine
 
 		std::shared_ptr<Context> m_pContext;
 
+
+
 		friend class Scene;
 
 		uint32_t mesh_counter = 0;
@@ -123,6 +131,7 @@ namespace engine
 		std::vector<glm::mat4*> transformBuffer;
 		std::vector<ShaderObjectData*> objectBuffer;
 		std::vector<CursorInfo*> infoBufferPtr;
+		std::vector<GPUAnimationData*> animationTransformBufferPtr;
 
 		void Init() {
 			auto resourceManager = m_pContext->ResourceManager();
@@ -137,14 +146,18 @@ namespace engine
 
 			m_pGPUBuffers["transform_buffer"] = resourceManager->createGPUBuffer("transform_buffer", sizeof(glm::mat4) * MAX_TRANSFORMS, engine::BufferStorageType::STORAGE_BUFFER);
 
+			m_pGPUBuffers["animation_transform_buffer"] = resourceManager->createGPUBuffer("animation_transform_buffer", sizeof(GPUAnimationData), engine::BufferStorageType::STORAGE_BUFFER);
+			
 			transformBuffer.resize(vk::MAX_FRAMES_IN_FLIGHT);
 			objectBuffer.resize(vk::MAX_FRAMES_IN_FLIGHT);
 			infoBufferPtr.resize(vk::MAX_FRAMES_IN_FLIGHT);
+			animationTransformBufferPtr.resize(vk::MAX_FRAMES_IN_FLIGHT);
 
 			for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
 				transformBuffer[i] = reinterpret_cast<glm::mat4*>(resourceManager->mapBuffer(m_pGPUBuffers["transform_buffer"], i));
 				objectBuffer[i] = reinterpret_cast<ShaderObjectData*>(resourceManager->mapBuffer(m_pGPUBuffers["object_buffer"], i));
 				infoBufferPtr[i] = reinterpret_cast<CursorInfo*>(resourceManager->mapBuffer(m_pGPUBuffers["info_buffer"], i));
+				animationTransformBufferPtr[i] = reinterpret_cast<GPUAnimationData*>(resourceManager->mapBuffer(m_pGPUBuffers["animation_transform_buffer"], i));
 			}
 
 		}
@@ -159,12 +172,16 @@ namespace engine
 			return objectBuffer[currFrame];
 		}
 
+		GPUAnimationData* getAnimationBuffer() {
+			uint32_t currFrame = m_pContext->Renderer()->CurrentFrameInFlight();
+			return animationTransformBufferPtr[currFrame];
+		}
+
 		void Destroy() {
 
 			auto resourceManager = m_pContext->ResourceManager();
 			for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
 				resourceManager->unmapBuffer(m_pGPUBuffers["material_buffer"], i);
-			//resourceManager->unmapBuffer(m_pGPUBuffers["decal_buffer"]);
 		}
 
 		RenderModel createModelFromMesh(const std::string& name, const common::Mesh& mesh, std::initializer_list<common::MeshMaterial> materials) {
@@ -195,8 +212,6 @@ namespace engine
 				subRenderC.material_keys[material_index] = material_name_hash;
 
 				PBRMaterial pbr_material;
-
-
 
 
 				pbr_material.albedo_color = material.color;
@@ -243,7 +258,6 @@ namespace engine
 				}
 
 
-				//PBRMaterial* materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"]));
 				for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
 					PBRMaterial* materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"], i));
 					materialBufferPtr[mat_index] = pbr_material;
@@ -255,10 +269,6 @@ namespace engine
 			}
 
 			model.renderMeshes.push_back(subRenderC);
-
-
-			//resourceManager->unmapBuffer(m_pGPUBuffers["material_buffer"]);
-
 
 			return model;
 		}
@@ -290,13 +300,11 @@ namespace engine
 			mesh_counter++;
 			model.renderMeshes.push_back(subRenderC);
 
-			PBRMaterial pbr_material;
-
-
-
 			if (m_pMaterials.contains(material_name_hash)) {
 				return model;
 			}
+			PBRMaterial pbr_material;
+
 
 
 			pbr_material.albedo_color = material.color;
@@ -343,7 +351,6 @@ namespace engine
 			}
 
 
-			//PBRMaterial* materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"]));
 			for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
 				PBRMaterial* materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"], i));
 				materialBufferPtr[mat_index] = pbr_material;
@@ -352,25 +359,8 @@ namespace engine
 			m_pMaterials[material_name_hash].index = mat_index;
 			m_pMaterials[material_name_hash].material = pbr_material;
 
-
-			//resourceManager->unmapBuffer(m_pGPUBuffers["material_buffer"]);
-
-
 			return model;
 		}
-		/*
-		ShaderObjectData createObjectData(const RenderModel& model) {
-
-			auto resourceManager = m_pContext->ResourceManager();
-			ShaderObjectData* objectBufferPtr = reinterpret_cast<ShaderObjectData*>(resourceManager->mapBuffer(m_pGPUBuffers["object_buffer"]));
-
-			for (auto& mesh : model.renderMeshes) {
-				auto index = getShaderDataIndex();
-				objectBufferPtr[index].material_index = m_pMaterials.at(mesh.material_key).index;
-			}
-
-			resourceManager->unmapBuffer(m_pGPUBuffers["object_buffer"]);
-		}*/
 
 		RenderModel loadModel(const std::string& path)
 		{
@@ -392,7 +382,7 @@ namespace engine
 			//if()
 			const std::string ext = path.substr(path.find_last_of('.') + 1, path.length());
 
-			std::unique_ptr<framework::ModelBase<framework::Mesh<common::Mesh>>> inModel;
+			std::unique_ptr<framework::ModelBase> inModel;
 
 			if (ext == "eml") {
 				inModel = std::make_unique<framework::Model>(prefix + path);
@@ -401,17 +391,27 @@ namespace engine
 				inModel = std::make_unique<framework::gltfModel>(prefix + path);
 			}
 
+
 			int index = 0;
 			RenderModel& model = m_pModels[path];
 
+			model.hasAnimation = inModel->HasAnimation();
+
 
 			model.name = path;
+			model.animations = inModel->Animations();
+			model.skeleton = inModel->Skeleton();
 			for (auto& mesh : inModel->Meshes())
 			{
 				if (mesh.data().mesh.Indices.size() <= 0) continue;
 
 				RenderMesh subRenderC;
-				subRenderC.mesh = addMesh(path + "_submesh_" + std::to_string(index), mesh.data().mesh);
+				if (inModel->HasAnimation()) {
+					subRenderC.mesh = addMesh(path + "_submesh_" + std::to_string(index), inModel->AnimatedMeshes().at(index));
+				}
+				else {
+					subRenderC.mesh = addMesh(path + "_submesh_" + std::to_string(index), mesh.data().mesh);
+				}
 
 				std::string material_name = path + "_submesh_" + std::to_string(index) + "_material";
 				subRenderC.numMaterials = 1;
@@ -419,71 +419,20 @@ namespace engine
 				subRenderC.id = mesh_counter;
 				mesh_counter++;
 
-				auto mesh_material = mesh.Material();
-
-				PBRMaterial material{};
-
 				size_t material_name_hash = std::hash<std::string>{}(material_name);
 
 				if (m_pMaterials.contains(material_name_hash)) {
 					model.renderMeshes.push_back(subRenderC);
 					continue;
 				}
+				auto mesh_material = mesh.Material();
 
-				if (!mesh_material.albedo.empty())
-				{
-					auto albedo = addTexture(mesh_material.albedo, { .format = COLOR_RGBA,
-																	.wrapMode = REPEAT,
-																	.filtering = LINEAR });
+				PBRMaterial material = loadModelMaterials(mesh_material);
 
-					if (albedo.empty()) material.albedo_texture_index = -1;
-					else material.albedo_texture_index = albedo.Index();
-				}
-				else {
-					material.albedo_texture_index = -1;
-				}
-				if (!mesh_material.metallic.empty())
-				{
-					auto metallic = addTexture(mesh_material.metallic, { .format = NON_COLOR_RGBA,
-																		.wrapMode = REPEAT,
-																		.filtering = LINEAR });
-
-					if (metallic.empty()) material.metallic_texture_index = -1;
-					else material.metallic_texture_index = metallic.Index();
-				}
-				else {
-					material.metallic_texture_index = -1;
-				}
-				if (!mesh_material.roughness.empty())
-				{
-					auto roughness = addTexture(mesh_material.roughness, { .format = NON_COLOR_RGBA,
-																		  .wrapMode = REPEAT,
-																		  .filtering = LINEAR });
-
-					if (roughness.empty()) material.roughness_texture_index = -1;
-					else material.roughness_texture_index = roughness.Index();
-				}
-				else {
-					material.roughness_texture_index = -1;
-				}
-				if (!mesh_material.normal.empty())
-				{
-					auto normal = addTexture(mesh_material.normal, { .format = NON_COLOR_RGBA,
-																	.wrapMode = REPEAT,
-																	.filtering = LINEAR });
-
-					if (normal.empty()) material.normal_texture_index = -1;
-					else material.normal_texture_index = normal.Index();
-				}
-				else {
-					material.normal_texture_index = -1;
-				}
 
 				m_pMaterials[material_name_hash].material = material;
 				subRenderC.material_keys[0] = material_name_hash;
 				subRenderC.numMaterials = 1;
-
-				//PBRMaterial* materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"]));
 
 				uint32_t mat_index = 0;
 				if (!m_pFreeMaterialIndexes.empty()) {
@@ -502,15 +451,69 @@ namespace engine
 					materialBufferPtr[mat_index] = material;
 				}
 
-
-				//resourceManager->unmapBuffer(m_pGPUBuffers["material_buffer"]);
-
 				model.renderMeshes.push_back(subRenderC);
 
 				index++;
 			}
 			model.loaded = true;
+
+			//
 			return model;
+		}
+
+		PBRMaterial loadModelMaterials(framework::Mesh::MeshMaterial& mesh_material) {
+			PBRMaterial material;
+
+			if (!mesh_material.albedo.empty())
+			{
+				auto albedo = addTexture(mesh_material.albedo, { .format = COLOR_RGBA,
+																.wrapMode = REPEAT,
+																.filtering = LINEAR });
+
+				if (albedo.empty()) material.albedo_texture_index = -1;
+				else material.albedo_texture_index = albedo.Index();
+			}
+			else {
+				material.albedo_texture_index = -1;
+			}
+			if (!mesh_material.metallic.empty())
+			{
+				auto metallic = addTexture(mesh_material.metallic, { .format = NON_COLOR_RGBA,
+																	.wrapMode = REPEAT,
+																	.filtering = LINEAR });
+
+				if (metallic.empty()) material.metallic_texture_index = -1;
+				else material.metallic_texture_index = metallic.Index();
+			}
+			else {
+				material.metallic_texture_index = -1;
+			}
+			if (!mesh_material.roughness.empty())
+			{
+				auto roughness = addTexture(mesh_material.roughness, { .format = NON_COLOR_RGBA,
+																	  .wrapMode = REPEAT,
+																	  .filtering = LINEAR });
+
+				if (roughness.empty()) material.roughness_texture_index = -1;
+				else material.roughness_texture_index = roughness.Index();
+			}
+			else {
+				material.roughness_texture_index = -1;
+			}
+			if (!mesh_material.normal.empty())
+			{
+				auto normal = addTexture(mesh_material.normal, { .format = NON_COLOR_RGBA,
+																.wrapMode = REPEAT,
+																.filtering = LINEAR });
+
+				if (normal.empty()) material.normal_texture_index = -1;
+				else material.normal_texture_index = normal.Index();
+			}
+			else {
+				material.normal_texture_index = -1;
+			}
+
+			return material;
 		}
 
 		AudioObject loadAudio(const std::string& path)
@@ -551,9 +554,6 @@ namespace engine
 
 			return object;
 		}
-
-
-
 
 		uint32_t getShaderDataIndex() {
 
@@ -674,15 +674,12 @@ namespace engine
 		void setMaterial(PBRMaterialIndex material) {
 
 			auto resourceManager = m_pContext->ResourceManager();
-			//PBRMaterial* materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"]));
 
 			for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
 				PBRMaterial* materialBufferPtr = reinterpret_cast<PBRMaterial*>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"], i));
 				materialBufferPtr[material.index] = material.material;
 				resourceManager->unmapBuffer(m_pGPUBuffers["material_buffer"], i);
 			}
-
-			//resourceManager->unmapBuffer(m_pGPUBuffers["material_buffer"]);
 		}
 
 	private:

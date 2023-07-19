@@ -102,9 +102,19 @@ namespace engine::parsers {
 		if (x == "XYZ_UINT") return XYZ_UINT;
 		if (x == "XYZW_UINT") return XYZW_UINT;
 
+		if (x == "XY_INT") return XY_INT;
+		if (x == "XYZ_INT") return XYZ_INT;
+		if (x == "XYZW_INT") return XYZW_INT;
+
 		if (x == "XY_FLOAT") return XY_FLOAT;
 		if (x == "XYZ_FLOAT") return XYZ_FLOAT;
 		if (x == "XYZW_FLOAT") return XYZW_FLOAT;
+
+
+		if (x == "XYZW_FLOAT16") return XYZW_FLOAT16;
+		if (x == "XYZW_INT16") return XYZW_INT16;
+		if (x == "XYZW_UINT16") return XYZW_UINT16;
+
 	}
 
 

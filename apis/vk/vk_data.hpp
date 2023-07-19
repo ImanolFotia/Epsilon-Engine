@@ -44,6 +44,7 @@ namespace vk
         VkDescriptorBufferInfo descriptorInfo;
         VmaAllocation allocation;
         bool mapped = false;
+        size_t dataSize = 0;
         std::string name = "";
     };
 

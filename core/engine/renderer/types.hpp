@@ -167,11 +167,17 @@ namespace engine
     enum VertexFormat
     {
         XY_UINT,
+        XY_INT,
         XY_FLOAT,
         XYZ_UINT,
+        XYZ_INT,
         XYZ_FLOAT,
         XYZW_UINT,
-        XYZW_FLOAT
+        XYZW_INT,
+        XYZW_FLOAT,
+        XYZW_UINT16,
+        XYZW_INT16,
+        XYZW_FLOAT16
     };
 
     enum CompareFunction

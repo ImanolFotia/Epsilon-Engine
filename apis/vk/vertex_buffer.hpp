@@ -22,12 +22,20 @@ namespace vk
 
         if(format == engine::XY_UINT) return VK_FORMAT_R32G32_UINT;
         if(format == engine::XY_FLOAT) return VK_FORMAT_R32G32_SFLOAT;
+        if (format == engine::XY_INT) return VK_FORMAT_R32G32_SINT;
 
         if(format == engine::XYZ_UINT) return VK_FORMAT_R32G32B32_UINT;
+        if (format == engine::XYZ_INT) return VK_FORMAT_R32G32B32_SINT;
         if(format == engine::XYZ_FLOAT) return VK_FORMAT_R32G32B32_SFLOAT;
 
         if(format == engine::XYZW_UINT) return VK_FORMAT_R32G32B32A32_UINT;
+        if (format == engine::XYZW_INT) return VK_FORMAT_R32G32B32A32_SINT;
         if(format == engine::XYZW_FLOAT) return VK_FORMAT_R32G32B32A32_SFLOAT;
+
+        if (format == engine::XYZW_UINT16) return VK_FORMAT_R16G16B16A16_UINT;
+        if (format == engine::XYZW_INT16) return VK_FORMAT_R16G16B16A16_SINT;
+        if (format == engine::XYZW_FLOAT16) return VK_FORMAT_R16G16B16A16_SFLOAT;
+
 
         return VK_FORMAT_R32_SFLOAT;
     }

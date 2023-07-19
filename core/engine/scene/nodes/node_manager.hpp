@@ -210,7 +210,7 @@ namespace engine
 		{
 			auto iType = std::type_index(typeid(T));
 
-			return children_node_index.at(node->index).at(std::type_index(typeid(T))).front();
+			return children_node_index.at(node->index).at(iType).back();
 		}
 
 		std::shared_ptr<NodeBase> get(uint32_t index)
