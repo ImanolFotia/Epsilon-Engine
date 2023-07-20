@@ -2,9 +2,7 @@
 
 #include <array>
 
-#if (BUILD_ANDROID == 0)
-#include <vulkan/vulkan.hpp>
-#endif
+#include <vulkan/vulkan.h>
 #include "core/engine/types.hpp"
 
 namespace vk

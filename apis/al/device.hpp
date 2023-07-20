@@ -157,6 +157,7 @@ struct OpenALData;
 
     static void destroyDevice(OpenALData* al_data) {
 
+#if !defined(ANDROID) && !defined(__ANDROID__)
         ALCdevice* device;
         ALCcontext* ctx;
         ctx = alcGetCurrentContext();
@@ -168,5 +169,6 @@ struct OpenALData;
         alcMakeContextCurrent(NULL);
         alcDestroyContext(ctx);
         alcCloseDevice(device);
+#endif
     }
 }

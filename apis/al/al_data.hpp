@@ -5,7 +5,6 @@
 #ifndef EPSILON_AL_DATA_HPP
 #define EPSILON_AL_DATA_HPP
 
-#if (!defined(ANDROID) && !defined(__ANDROID__))
 
 #include <AL/al.h>
 #include <AL/alc.h>
@@ -52,6 +51,5 @@ namespace al {
 		ALCcontext* context;
 	};
 }
-#endif
 
 #endif // EPSILON_AL_DATA_HPP

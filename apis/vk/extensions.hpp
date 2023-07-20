@@ -7,9 +7,7 @@
 #include <cstring>
 #include <set>
 
-#if (BUILD_ANDROID == 0)
-#include <vulkan/vulkan.hpp>
-#endif
+#include <vulkan/vulkan.h>
 
 namespace vk
 {

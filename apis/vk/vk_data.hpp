@@ -1,6 +1,6 @@
 #pragma once
 
-#if (BUILD_ANDROID == 0)
+#if !defined(__ANDROID__)
 #include <vulkan/vulkan.hpp>
 #endif
 
@@ -15,7 +15,7 @@
 
 namespace vk
 {
-    static uint32_t MAX_FRAMES_IN_FLIGHT = 3;
+    static uint32_t MAX_FRAMES_IN_FLIGHT = 2;
     static uint32_t MIN_FRAMES_IN_FLIGHT = 0;
     const size_t ALLOCATION_SIZE_MB = 0xFFFFFFF;
 

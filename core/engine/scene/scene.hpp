@@ -34,6 +34,7 @@ namespace engine
 		Ref<BindGroup> m_pShadowBindGroup;
 		Ref<BindGroup> m_pDecalBindGroup;
 		Ref<BindGroup> m_pPrePassBindGroup;
+		Ref<BindGroup> m_pAnimatedShadowBindGroup;
 
 		std::shared_ptr<Context> m_pContext;
 
@@ -151,6 +152,18 @@ namespace engine
 					.name = "ShadowBindGroup",
 			};
 
+			engine::BindGroupInfo animateShadowBindGroup = {
+					.bindingInfo = {
+						{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = engine::UniformBindingType::UNIFORM_BUFFER},
+						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
+						{.size = sizeof(GPUAnimationData), .offset = 0, .binding = 2, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "animation_transform_buffer"}
+
+			},
+					.inputs = {},
+					.renderPass = "ShadowPass",
+					.name = "AnimatedShadowBindGroup",
+			};
+
 
 			engine::BindGroupInfo prepassBindGroup = {
 					.bindingInfo = {
@@ -165,6 +178,7 @@ namespace engine
 
 			m_pDefaultBindGroup = resourceManager->createBindGroup(defaultBindGroup);
 			m_pAnimatedBindGroup = resourceManager->createBindGroup(animatedBindGroup);
+			m_pAnimatedShadowBindGroup = resourceManager->createBindGroup(animateShadowBindGroup);
 			m_pShadowBindGroup = resourceManager->createBindGroup(shadowBindGroup);
 			m_pDecalBindGroup = resourceManager->createBindGroup(decalBindGroup);
 			m_pPrePassBindGroup = resourceManager->createBindGroup(prepassBindGroup);
@@ -291,8 +305,11 @@ namespace engine
 
 			Ref<BindGroup> selectedBindGroup;
 
-			if (layout == "ShadowLayout" || layout == "animatedShadowLayout") {
+			if (layout == "ShadowLayout") {
 				selectedBindGroup = m_pShadowBindGroup;
+			}
+			else if (layout == "animatedShadowLayout") {
+				selectedBindGroup = m_pAnimatedShadowBindGroup;
 			}
 			else if (layout == "treeShadowLayout") {
 				selectedBindGroup = m_pShadowBindGroup;

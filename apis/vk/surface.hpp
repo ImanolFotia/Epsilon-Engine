@@ -1,6 +1,6 @@
 #pragma once
 
-#if (BUILD_ANDROID == 0)
+#if !defined(__ANDROID__)
 #include <vulkan/vulkan.hpp>
 #endif
 
@@ -47,14 +47,13 @@ namespace vk
         {
             throw std::runtime_error("failed to create window surface!");
         }
-#elif BUILD_ANDROID
+#elif defined(__ANDROID__)
         VkAndroidSurfaceCreateInfoKHR surface_info;
         surface_info.sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR;
         surface_info.pNext = NULL;
         surface_info.flags = 0;
-        surface_info.window = static_cast<ANativeWindow *>(window);
-        if (vkCreateAndroidSurfaceKHR(vk_data.instance, &surface_info, NULL, &vk_data.surface) != VK_SUCCESS)
-        {
+        surface_info.window = window;
+        if (vkCreateAndroidSurfaceKHR(vk_data.instance, &surface_info, NULL, &vk_data.surface) != VK_SUCCESS) {
             throw std::runtime_error("failed to create window surface!");
         }
 #endif

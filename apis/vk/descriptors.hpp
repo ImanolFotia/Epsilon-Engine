@@ -1,6 +1,6 @@
 #pragma once
 
-#if (BUILD_ANDROID == 0)
+#if !defined(__ANDROID__)
 #include <vulkan/vulkan.hpp>
 #endif
 #include "vk_data.hpp"

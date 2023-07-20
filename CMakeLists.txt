@@ -287,6 +287,11 @@ set(EPSILON_SOURCE_LOCATION ${CMAKE_SOURCE_DIR})
 
 option(CREATE_STATIC_LIB "Build static library" OFF)
 
+if(D__ANDROID__) 
+    set(CREATE_STATIC_LIB ON)
+    set(BUILD_AS_LIBRARY ON)
+endif()
+
 project(Epsilon VERSION 0.1.0)
 
 set(PROJECT_FILES
@@ -380,7 +385,7 @@ endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw3)
 
-if(BUILD_ANDROID EQUAL 0)
+if(D__ANDROID__)
 #target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
 endif()
 if(WIN32)
@@ -394,7 +399,7 @@ if(DOWNLOAD_LIBRARIES)
     add_dependencies(${PROJECT_NAME} glfw3_d)
 
     add_dependencies(${PROJECT_NAME} openal_d)
-    if(DBUILD_ANDROID EQUAL 0)
+    if(D__ANDROID__)
     add_dependencies(${PROJECT_NAME} openal_d)
     add_dependencies(${PROJECT_NAME} assimp_d)
     else()
@@ -465,6 +470,6 @@ if(${Mono_FOUND})
 add_subdirectory(examples/mono-managed)
 endif()
 
-if(BUILD_ANDROID EQUAL 1)
-    add_subdirectory(platform/android/app/src/main/cpp)
-endif()
+#if(D__ANDROID__)
+#    add_subdirectory(platform/android/app/src/main/cpp)
+#endif()

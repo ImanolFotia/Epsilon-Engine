@@ -40,6 +40,8 @@ namespace framework {
 		float end = 0.0f;
 		std::vector<AnimationSampler> samplers;
 		std::vector<AnimationChannel> channels;
+		bool isActive = false;
+		int index = 0;
 		float current_time = 0.0f;
 	};
 
@@ -49,10 +51,12 @@ namespace framework {
 		glm::mat4 transform = glm::mat4(1.0f);
 		glm::mat4 inverseMatrix{};
 		std::vector<std::string> children;
+		std::string parent{};
 		glm::mat4 node_matrix = glm::mat4(1.0f);
 		glm::mat4 translation = glm::mat4(1.0f);
 		glm::mat4 rotation = glm::mat4(1.0f);
 		glm::mat4 scale = glm::mat4(1.0f);
+
 
 		bool hasPosition = false;
 		bool hasScale = false;
@@ -70,5 +74,6 @@ namespace framework {
 		std::string root;
 		std::unordered_map<std::string, SkeletonNode> Joints;
 		std::unordered_map<std::string, SkeletonNode> Nodes;
+		int activeAnimation = 0;
 	};
 }

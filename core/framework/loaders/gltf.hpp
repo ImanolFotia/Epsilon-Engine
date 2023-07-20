@@ -261,8 +261,10 @@ namespace framework {
 			}
 		}
 
-		void parse_samplers(tinygltf::Model& model, tinygltf::Animation& animation, const framework::Skeleton& skeleton) {
+		void parse_samplers(tinygltf::Model& model, tinygltf::Animation& animation, const framework::Skeleton& skeleton, int anim_index) {
 			Animation& current_animation = m_pAnimations.emplace_back();
+			current_animation.name = animation.name;
+			current_animation.index = anim_index;
 			current_animation.samplers.resize(animation.samplers.size());
 			for (int i = 0; i < animation.samplers.size(); i++) {
 				AnimationSampler& sampler = current_animation.samplers[i];
@@ -290,18 +292,20 @@ namespace framework {
 					sampler.inputs.resize(inputAccesor.count);
 					for (int i = 0; i < inputAccesor.count; i++)
 						sampler.inputs[i] = *(reinterpret_cast<const float*>(dataAddress + i * byteStride));
-
+					float max_t = 0.0f, min_t = 9999999.0f;
 					for (auto input : sampler.inputs)
 					{
-						if (input < current_animation.start)
+						if (input < min_t)
 						{
-							current_animation.start = input;
+							min_t = input;
 						};
-						if (input > current_animation.end)
+						if (input > max_t)
 						{
-							current_animation.end = input;
+							max_t = input;
 						}
 					}
+					current_animation.start = min_t;
+					current_animation.end = max_t;
 					current_animation.duration = current_animation.end - current_animation.start;
 				}
 
@@ -684,10 +688,10 @@ namespace framework {
 
 				parse_skeleton(model, RootNode, m_pSkeleton.Joints[local_nodes[skin.joints[0]].name], glm::mat4(1.0f));
 
-				//for (int anim_index = 0; anim_index < model.animations.size(); anim_index++) {
+				for (int anim_index = 0; anim_index < model.animations.size(); anim_index++) {
 					//parse_animation(model, model.animations[anim_index], m_pSkeleton);
-					parse_samplers(model, model.animations[0], m_pSkeleton);
-				//}
+					parse_samplers(model, model.animations[anim_index], m_pSkeleton, anim_index);
+				}
 			}
 
 			parse_nodes(model, RootNode, glm::mat4(1.0f));

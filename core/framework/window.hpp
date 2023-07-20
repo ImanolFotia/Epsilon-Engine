@@ -1,13 +1,12 @@
 #pragma once
 
 #include <string>
-#if BUILD_ANDROID
+
+#if defined(ANDROID) || defined(__ANDROID__)
 #undef USE_GLFW
 #else
 
-#if BUILD_ANDROID == 0
 #include <vulkan/vulkan.hpp>
-#endif
 #endif
 
 #ifdef _WIN32
@@ -17,15 +16,18 @@
 #define GLFW_EXPOSE_NATIVE_WIN32
 #endif
 #endif
+
 #ifdef __linux__
 #define VK_USE_PLATFORM_XLIB_KHR
 #endif
+
 #if defined(ANDROID) || defined(__ANDROID__)
-#define VK_USE_PLATFORM_ANDROID_KHR
+#undef VK_USE_PLATFORM_XLIB_KHR
 #undef USE_GLFW
 #include <jni.h>
 #include <android/native_window.h>
 #endif
+
 
 #if USE_GLFW
 #include <GLFW/glfw3.h>
@@ -49,7 +51,7 @@ namespace framework
         using windowType = GLFWwindow;
 #elif _WIN32
         using windowType = HWND;
-#elif defined(ANDROID) || defined(__ANDROID__)
+#elif defined(__ANDROID__)
         using windowType = ANativeWindow;
 #endif
     public:
@@ -108,20 +110,24 @@ namespace framework
         }
 
         void setDragCursor() {
+#if USE_GLFW
             if (current_cursor == GLFW_RESIZE_NESW_CURSOR) return;
             GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_RESIZE_NESW_CURSOR);
             glfwSetCursor(mWindow, cursor);
             current_cursor = GLFW_RESIZE_NESW_CURSOR;
+#endif
             
         } 
 
         void setNormalCursor() {
+#if USE_GLFW
             if (current_cursor == GLFW_ARROW_CURSOR) return;
             glfwSetCursor(mWindow, NULL);
             current_cursor = GLFW_ARROW_CURSOR;
+#endif
         }
 
-        int current_cursor = GLFW_ARROW_CURSOR;
+        int current_cursor = 0;
 
         void setCursorPosition(int x, int y)
         {
@@ -132,18 +138,19 @@ namespace framework
 
         std::pair<int, int> getSize()
         {
-            /*#if USE_GLFW
-                        int w, h;
-                        glfwGetWindowSize(mWindow, &w, &h);*/
+            #if USE_GLFW
+                        
             if (mWindow == nullptr) return { 0,0 };
             glfwGetFramebufferSize(mWindow, &mWidth, &mHeight);
-            return {mWidth, mHeight}; /*
- #endif*/
+            return {mWidth, mHeight};
+ #endif
         }
 
         void resize(int w, int h) {
 
+#if USE_GLFW
             glfwSetWindowSize(mWindow, w, h);
+#endif
         }
 
         void cleanup()
