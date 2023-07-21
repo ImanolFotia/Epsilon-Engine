@@ -270,15 +270,13 @@ namespace engine
 		template <typename T, typename P>
 		auto getChild(std::shared_ptr<Node<P>> parent)
 		{
-			auto single_child = m_pSceneManager.getChild<T>(parent);
-			return m_pSceneManager.to<T>(single_child);
+			return m_pSceneManager.to<T>(m_pSceneManager.getChild<T>(parent));
 		}
 
 		template <typename T>
 		auto getChild()
 		{
-			auto single_child = m_pSceneManager.getChild<T>(m_pSceneManager.root);
-			return m_pSceneManager.to<T>(single_child);
+			return m_pSceneManager.to<T>(m_pSceneManager.getChild<T>(m_pSceneManager.root));
 		}
 
 		void BeginScene()
