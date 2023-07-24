@@ -55,11 +55,11 @@ namespace vk
         uint32_t num_channels = 0;
         uint32_t mipLevels = 1;
         VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
-        VkImageUsageFlags usage;
+        VkImageUsageFlags usage{};
 
-        VkFilter filter;
-        VkSamplerAddressMode addressMode;
-        VkCompareOp compareOp;
+        VkFilter filter{};
+        VkSamplerAddressMode addressMode{};
+        VkCompareOp compareOp{};
         bool compareEnable = false;
         bool isSampler = false;
     };
@@ -73,15 +73,15 @@ namespace vk
     struct VulkanTexture
     {
         uint32_t index = 0;
-        VulkanTextureInfo info;
+        VulkanTextureInfo info{};
         VulkanTextureBindingType bindingType = MATERIAL_SAMPLER;
-        VkImageCreateInfo imageInfo;
+        VkImageCreateInfo imageInfo{};
         VkImage image = VK_NULL_HANDLE;
         VkImageView imageView = VK_NULL_HANDLE;
-        VkFormat format;
+        VkFormat format{};
         VkSampler sampler = VK_NULL_HANDLE;
-        VkImageLayout imageLayout;
-        VmaAllocation allocation;
+        VkImageLayout imageLayout{};
+        VmaAllocation allocation{};
 
         VkFilter filter;
         VkSamplerAddressMode addressMode;

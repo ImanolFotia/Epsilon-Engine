@@ -6,6 +6,10 @@
 #include <stdexcept>
 #include <algorithm>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 namespace framework
 {
     enum GRAPHICAL_API
@@ -30,17 +34,28 @@ namespace framework
             return false;
         }
 
-        static void setArgs(int argc, char **argv)
-        {
+#ifdef _WIN32
+#include <windows.h>
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#undef min
+#undef max
+        static void setArgs(int argc_, LPSTR commandLine) {
+            int argc = 0;
+            LPWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+#else
+        static void setArgs(int argc, char** argv) { 
+#endif
+        
             for (int i = 1; i < argc; i++)
             {
-                std::string arg = std::string(argv[i]);
+                std::string arg = std::string((char*)argv[i]);
                 if (arg == "--gapi")
                 {
                     if (i + 1 >= argc)
                         throw std::runtime_error("argument --gapi needs an argument");
 
-                    std::string next = std::string(argv[++i]);
+                    std::string next = std::string((char*)argv[++i]);
                     if (!checkArgs(next, "vulkan", "opengl", "dx12", "dx11", "metal") ||
                         next.length() <= 0)
                     {
@@ -57,7 +72,7 @@ namespace framework
 
                     if (i + 1 >= argc)
                         throw std::runtime_error("argument --scene needs an argument");
-                    std::string next = std::string(argv[++i]);
+                    std::string next = std::string((char*)argv[++i]);
                     if (next.length() <= 0)
                     {
                         throw std::runtime_error(std::string("argument ") + next + " not recognized");
