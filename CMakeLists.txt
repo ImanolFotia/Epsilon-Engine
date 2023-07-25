@@ -5,16 +5,16 @@ set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 set(DBUILD_SHARED_LIBS ON CACHE BOOL "Build as a shared library")
 set(DGENERATE_RPM_PACKAGE OFF CACHE BOOL "Generate RPM deployment package")
 set(EPSILON_BUILD_LOCATION ${CMAKE_BINARY_DIR})
-set(DUSE_GLFW 1)
-set(DBUILD_ANDROID 0)
+
+set(BUILD_ANDROID FALSE CACHE BOOL "Build for Android")
+
 
 set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}")
 set(PROJECT_ICON "${CMAKE_SOURCE_DIR}/media/icon.rc")
 set(THIRDPARTY_DIR "${CMAKE_SOURCE_DIR}/thirdparty")
 include(InstallRequiredSystemLibraries)
 
-add_compile_definitions(USE_GLFW=${DUSE_GLFW})
-add_compile_definitions(BUILD_ANDROID=${DBUILD_ANDROID})
+add_compile_definitions(BUILD_ANDROID=${BUILD_ANDROID})
 
 # use, i.e. don't skip the full RPATH for the build tree
 set(SET_CUSTOM_RPATH TRUE)
@@ -46,6 +46,26 @@ option(GFX_BACKEND_WEBGPU "Use WebGPU as graphics backend" OFF)
 
 include(FindPkgConfig)
 
+
+if(BUILD_ANDROID)
+
+    set(DUSE_GLFW 0)
+    add_compile_definitions(USE_GLFW=${DUSE_GLFW})
+    set(CMAKE_INSTALL_PREFIX "install/arm64-v8a" CACHE STRING "Install prefix")
+    set(CMAKE_TOOLCHAIN_FILE "/j/AndroidSDK/ndk/26.0.10404224-beta1/build/cmake/android.toolchain.cmake" CACHE STRING "Android toolchain file")
+    set(ANDROID_PLATFORM "34" CACHE STRING "Target Platform")
+    set(ANDROID_STL "c++_shared" CACHE STRING "Android STL")
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type")
+    set(ANDROID_CPP_FEATURES "rtti exceptions" CACHE STRING "CPP Features")
+    set(ANDROID_ABI arm64-v8a CACHE STRING "Android ABI")
+    set(ANDROID_USE_LEGACY_TOOLCHAIN_FILE ON CACHE BOOL "Use legacy toolchain")
+    set(CMAKE_MAKE_PROGRAM "C:\\msys64\\clang64\\bin\\ninja.exe" CACHE STRING GENERATOR)
+else()
+
+    set(DUSE_GLFW 1)
+    add_compile_definitions(USE_GLFW=${DUSE_GLFW})
+endif()
+
 if(DOWNLOAD_LIBRARIES)
     include(ExternalProject)
 
@@ -53,6 +73,7 @@ if(DOWNLOAD_LIBRARIES)
     ExternalProject_Add(glm
             GIT_REPOSITORY https://github.com/g-truc/glm.git
             INSTALL_COMMAND cmake -E echo "Skipping install step."
+            BUILD_COMMAND ""
             UPDATE_COMMAND ""
             )
 
@@ -125,25 +146,6 @@ if(DOWNLOAD_LIBRARIES)
     include_directories(${JSON_BUILD_DIR}/include)
 
 
-    ##
-    #Download and include Assimp
-    set(ASSIMP_WARNINGS_AS_ERRORS 0)
-    ExternalProject_Add(assimp_d
-            GIT_REPOSITORY https://github.com/assimp/assimp.git
-            INSTALL_COMMAND cmake -E echo "Skipping install step."
-            UPDATE_COMMAND ""
-            )
-
-    ExternalProject_Get_property(assimp_d SOURCE_DIR)
-    ExternalProject_Get_property(assimp_d BINARY_DIR)
-    set(ASSIMP_BUILD_DIR ${BINARY_DIR})
-    message(${SOURCE_DIR})
-    message(${ASSIMP_BUILD_DIR})
-
-    include_directories(${SOURCE_DIR}/include)
-    link_directories(${ASSIMP_BUILD_DIR}/bin)
-    FILE(GLOB files "${ASSIMP_BUILD_DIR}/bin/*.so.*" "${ASSIMP_BUILD_DIR}/bin/*.so")
-
     install(FILES ${files}
 
       DESTINATION lib
@@ -155,6 +157,7 @@ if(DOWNLOAD_LIBRARIES)
     ##
 
     # download and include glfw3
+    if(DUSE_GLFW)
     ExternalProject_Add(glfw3_d
             GIT_REPOSITORY https://github.com/glfw/glfw.git
             INSTALL_COMMAND cmake -E echo "Skipping install step."
@@ -169,6 +172,7 @@ if(DOWNLOAD_LIBRARIES)
 
     include_directories(${SOURCE_DIR}/include)
     link_directories(${GLFW3_BUILD_DIR}/src)
+    endif()
 
     set(CMAKE_OPENAL_ARGS "")
     if(WIN32)
@@ -243,14 +247,12 @@ else()
     message(${JSON_BUILD_DIR})
     include_directories(${JSON_BUILD_DIR}/include)
 
-    set(ASSIMP_BUILD_DIR ${THIRDPARTY_DIR}/assimp)
-    include_directories(${ASSIMP_BUILD_DIR}/include)
-    link_directories(${ASSIMP_BUILD_DIR}/bin)
-
+    if(DUSE_GLFW)
     set(GLFW3_BUILD_DIR ${THIRDPARTY_DIR}/glfw3)
     message(${GLFW3_BUILD_DIR})
     include_directories(${GLFW3_BUILD_DIR}/include)
     link_directories(${GLFW3_BUILD_DIR}/src)
+    endif()
 
     set(OPENAL_BUILD_DIR ${THIRDPARTY_DIR}/openal)
     message(${OPENAL_BUILD_DIR})
@@ -271,6 +273,11 @@ else()
     set(TINYGLTF_BUILD_DIR ${THIRDPARTY_DIR}/tinygltf)
     message(${TINYGLTF_BUILD_DIR})
     include_directories(${TINYGLTF_BUILD_DIR})
+
+    
+    set(KTX_BUILD_DIR ${KTX_DIR}/ktx)
+    message(${KTX_BUILD_DIR})
+    include_directories(${KTX_BUILD_DIR})
 
 endif()
 SET(HEADERS
@@ -305,6 +312,7 @@ set(PROJECT_FILES
         ${CMAKE_SOURCE_DIR}/core/framework/IO/IO.hpp
         ${CMAKE_SOURCE_DIR}/core/framework/IO/KeyBoard.cpp
         ${CMAKE_SOURCE_DIR}/core/framework/IO/KeyBoard.hpp
+        ${CMAKE_SOURCE_DIR}/core/framework/IO/DragDrop.hpp
         ${CMAKE_SOURCE_DIR}/core/framework/IO/KeyboardWrapper.hpp
         ${CMAKE_SOURCE_DIR}/core/framework/IO/Mouse.hpp
         ${CMAKE_SOURCE_DIR}/core/framework/IO/Joystick/Joystick.hpp
@@ -387,11 +395,10 @@ endif()
         target_include_directories(${PROJECT_NAME} PRIVATE ${Vulkan_INCLUDE_DIR})
 #endif()
 
+if(DUSE_GLFW)
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw3)
-
-if(D__ANDROID__)
-#target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
 endif()
+
 if(WIN32)
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenAL32.dll)
 else()
@@ -400,15 +407,12 @@ endif()
 
 if(DOWNLOAD_LIBRARIES)
     add_dependencies(${PROJECT_NAME} vma)
+    
+    if(DUSE_GLFW)
     add_dependencies(${PROJECT_NAME} glfw3_d)
-
-    add_dependencies(${PROJECT_NAME} openal_d)
-    if(D__ANDROID__)
-    add_dependencies(${PROJECT_NAME} openal_d)
-    add_dependencies(${PROJECT_NAME} assimp_d)
-    else()
-
     endif()
+
+    add_dependencies(${PROJECT_NAME} openal_d)
     add_dependencies(${PROJECT_NAME} glm)
     add_dependencies(${PROJECT_NAME} beacon)
     add_dependencies(${PROJECT_NAME} stb)

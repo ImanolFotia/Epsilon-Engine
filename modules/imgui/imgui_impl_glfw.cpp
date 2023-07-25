@@ -68,6 +68,7 @@
 #pragma clang diagnostic ignored "-Wsign-conversion"    // warning: implicit conversion changes signedness
 #endif
 
+#if USE_GLFW
 // GLFW
 #include <GLFW/glfw3.h>
 
@@ -742,4 +743,6 @@ void ImGui_ImplGlfw_NewFrame()
 
 #if defined(__clang__)
 #pragma clang diagnostic pop
+#endif
+
 #endif

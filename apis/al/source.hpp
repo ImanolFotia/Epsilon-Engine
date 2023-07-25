@@ -1,12 +1,12 @@
 #pragma once
 
 #include "al_data.hpp"
+#include <exception>
 
 namespace al {
 	[[nodiscard]] static OpenALBuffer
 		createBuffer(int numChannels, std::size_t size, std::size_t bps, std::size_t bitrate, unsigned char* data) {
 
-#if !defined(ANDROID) && !defined(__ANDROID__)
 		OpenALBuffer buffer = {};
 		ALenum format;
 		alGenBuffers(1, &buffer.id);
@@ -23,12 +23,10 @@ namespace al {
 		}
 		alBufferData(buffer.id, format, data, size, bitrate);
 		return buffer;
-#endif
 	}
 
 	[[nodiscard]] static OpenALSource createSource(OpenALBuffer buffer) {
 
-#if !defined(ANDROID) && !defined(__ANDROID__)
 		OpenALSource source;
 		alGenSources(1, &source.id);
 		alSourcei(source.id, AL_BUFFER, (ALint)buffer.id);
@@ -44,44 +42,36 @@ namespace al {
 
 
 		return source;
-#endif
 	}
 
 	static void deleteSource(OpenALSource source) {
 
-#if !defined(ANDROID) && !defined(__ANDROID__)
 		ALuint s = source.id;
 		alSourceStop(source.id);
 		if (alIsSource(source.id)) {
 			alSourcei(source.id, AL_BUFFER, NULL);
 			alDeleteSources(1, &s);
 		}
-#endif
 	}
 
 	static void deleteBuffer(OpenALBuffer buffer) {
 
-#if !defined(ANDROID) && !defined(__ANDROID__)
 		ALuint b = buffer.id;
 		if (alIsBuffer(buffer.id))
 			alDeleteBuffers(1, &b);
-#endif
 	}
 
 	static int getSourceState(OpenALSource source) {
 
-#if !defined(ANDROID) && !defined(__ANDROID__)
 		ALint source_state;
 		alGetSourcei(source.id, AL_SOURCE_STATE, &source_state);
 
 		return source_state;
-#endif
 	}
 
 
 	static void playSource(OpenALSource source) {
 
-#if !defined(ANDROID) && !defined(__ANDROID__)
 		alSourcei(source.id, AL_SOURCE_RELATIVE, source.relative ? AL_TRUE : AL_FALSE);
 		alSourcei(source.id, AL_LOOPING, source.looping ? AL_TRUE : AL_FALSE);
 		alSourcef(source.id, AL_GAIN, source.gain);
@@ -95,21 +85,16 @@ namespace al {
 		alSource3f(source.id, AL_POSITION, source.position.x, source.position.y, source.position.z);
 		alSource3f(source.id, AL_DIRECTION, source.direction.x, source.direction.y, source.direction.z);
 		alSourcePlay(source.id);
-#endif
 	}
 
 	static void pauseSource(OpenALSource source) {
 
-#if !defined(ANDROID) && !defined(__ANDROID__)
 		alSourcePause(source.id);
-#endif
 	}
 
 	static void stopSource(OpenALSource source) {
 
-#if !defined(ANDROID) && !defined(__ANDROID__)
 		alSourceStop(source.id);
-#endif
 	}
 	/*
 	class AudioSource : public Epsilon::Audio::AudioSource
