@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic "CMakeFiles/test-perf_vector_mul_matrix.dir/perf_vector_mul_matrix.cpp.o" -o test-perf_vector_mul_matrix 

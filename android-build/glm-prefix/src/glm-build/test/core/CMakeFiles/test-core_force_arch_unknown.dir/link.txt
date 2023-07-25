@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic "CMakeFiles/test-core_force_arch_unknown.dir/core_force_arch_unknown.cpp.o" -o test-core_force_arch_unknown 

@@ -1,0 +1,13 @@
+# Target labels
+ glm
+# Source files and their labels
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/glm
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/glm.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/glm-complete.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/glm-build.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/glm-configure.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/glm-download.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/glm-install.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/glm-mkdir.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/glm-patch.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/glm-update.rule

@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic "CMakeFiles/test-gtx_color_encoding.dir/gtx_color_encoding.cpp.o" -o test-gtx_color_encoding 

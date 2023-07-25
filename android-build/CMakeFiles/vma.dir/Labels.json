@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/vma"
+		},
+		{
+			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/vma.rule"
+		},
+		{
+			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/vma-complete.rule"
+		},
+		{
+			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-stamp/vma-build.rule"
+		},
+		{
+			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-stamp/vma-configure.rule"
+		},
+		{
+			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-stamp/vma-download.rule"
+		},
+		{
+			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-stamp/vma-install.rule"
+		},
+		{
+			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-stamp/vma-mkdir.rule"
+		},
+		{
+			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-stamp/vma-patch.rule"
+		},
+		{
+			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-stamp/vma-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"vma"
+		],
+		"name" : "vma"
+	}
+}

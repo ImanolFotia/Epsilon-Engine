@@ -45,7 +45,8 @@ class ImGuiRenderer
     VkRenderPass m_pRenderPass = VK_NULL_HANDLE;
 
     std::unordered_map<uint32_t, VkDescriptorSet> m_pImages;
-    uint32_t m_pImageCount = 0;;
+    uint32_t m_pImageCount = 0;
+    ;
 
     vk::VulkanData *m_pVkDataPtr = nullptr;
     uint32_t m_pCurrentIndex{};
@@ -53,13 +54,12 @@ class ImGuiRenderer
     std::function<void()> m_pUserFunction;
 
     bool m_pEnabled = true;
-    //engine::VulkanResourceManager* m_pResourceManagerRef;
+    // engine::VulkanResourceManager* m_pResourceManagerRef;
 
+    void setStyle()
+    {
 
-
-    void setStyle() {
-
-        ImGuiStyle* style = &ImGui::GetStyle();
+        ImGuiStyle *style = &ImGui::GetStyle();
 
         ImVec4 BackgroundDark = ImVec4(48 / 255.0, 56 / 255.0, 65 / 255.0, 0.7f);
         ImVec4 BackgroundLight = ImVec4(58 / 255.0, 71 / 255.0, 80 / 255.0, 1.00f);
@@ -70,14 +70,14 @@ class ImGuiRenderer
 
         ImVec4 SecondaryActiveColor = ImVec4(0, 130 / 255.0, 150 / 255.0, 1.00f);
 
-        //style->WindowPadding = ImVec2(15, 15);
-        //style->WindowRounding = 0.0f;
-        //style->FramePadding = ImVec2(5, 5);
-        //style->FrameRounding = 0.0f;
-        //style->ItemSpacing = ImVec2(12, 8);
-        //style->ItemInnerSpacing = ImVec2(8, 6);
-        //style->IndentSpacing = 25.0f;
-        //style->ScrollbarSize = 15.0f;
+        // style->WindowPadding = ImVec2(15, 15);
+        // style->WindowRounding = 0.0f;
+        // style->FramePadding = ImVec2(5, 5);
+        // style->FrameRounding = 0.0f;
+        // style->ItemSpacing = ImVec2(12, 8);
+        // style->ItemInnerSpacing = ImVec2(8, 6);
+        // style->IndentSpacing = 25.0f;
+        // style->ScrollbarSize = 15.0f;
         style->GrabMinSize = 5.0f;
 
         style->ScrollbarRounding = 5.0f;
@@ -91,7 +91,7 @@ class ImGuiRenderer
         style->Colors[ImGuiCol_Text] = TextColor;
         style->Colors[ImGuiCol_TextDisabled] = DisabledTextColor;
         style->Colors[ImGuiCol_WindowBg] = BackgroundDark;
-        //style->Colors[ImGuiCol_ChildWindowBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
+        // style->Colors[ImGuiCol_ChildWindowBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
         style->Colors[ImGuiCol_PopupBg] = BackgroundLight;
         style->Colors[ImGuiCol_Border] = BackgroundDark;
         style->Colors[ImGuiCol_BorderShadow] = BackgroundLight;
@@ -106,7 +106,7 @@ class ImGuiRenderer
         style->Colors[ImGuiCol_ScrollbarGrab] = BackgroundLight;
         style->Colors[ImGuiCol_ScrollbarGrabHovered] = SecondaryActiveColor;
         style->Colors[ImGuiCol_ScrollbarGrabActive] = ActiveColor;
-        //style->Colors[ImGuiCol_ComboBg] = ImVec4(0.19f, 0.18f, 0.21f, 1.00f);
+        // style->Colors[ImGuiCol_ComboBg] = ImVec4(0.19f, 0.18f, 0.21f, 1.00f);
         style->Colors[ImGuiCol_CheckMark] = ActiveColor;
         style->Colors[ImGuiCol_SliderGrab] = SecondaryActiveColor;
         style->Colors[ImGuiCol_SliderGrabActive] = ActiveColor;
@@ -116,22 +116,21 @@ class ImGuiRenderer
         style->Colors[ImGuiCol_Header] = BackgroundDark;
         style->Colors[ImGuiCol_HeaderHovered] = SecondaryActiveColor;
         style->Colors[ImGuiCol_HeaderActive] = ActiveColor;
-        //style->Colors[ImGuiCol_Column] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-        //style->Colors[ImGuiCol_ColumnHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-        //style->Colors[ImGuiCol_ColumnActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+        // style->Colors[ImGuiCol_Column] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+        // style->Colors[ImGuiCol_ColumnHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
+        // style->Colors[ImGuiCol_ColumnActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
         style->Colors[ImGuiCol_ResizeGrip] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
         style->Colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
         style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
-        //style->Colors[ImGuiCol_CloseButton] = ImVec4(0.40f, 0.39f, 0.38f, 0.16f);
-        //style->Colors[ImGuiCol_CloseButtonHovered] = ImVec4(0.40f, 0.39f, 0.38f, 0.39f);
-        //style->Colors[ImGuiCol_CloseButtonActive] = ImVec4(0.40f, 0.39f, 0.38f, 1.00f);
+        // style->Colors[ImGuiCol_CloseButton] = ImVec4(0.40f, 0.39f, 0.38f, 0.16f);
+        // style->Colors[ImGuiCol_CloseButtonHovered] = ImVec4(0.40f, 0.39f, 0.38f, 0.39f);
+        // style->Colors[ImGuiCol_CloseButtonActive] = ImVec4(0.40f, 0.39f, 0.38f, 1.00f);
         style->Colors[ImGuiCol_PlotLines] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
         style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
         style->Colors[ImGuiCol_PlotHistogram] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
         style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
         style->Colors[ImGuiCol_TextSelectedBg] = TextColorSelected;
         style->Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(1.00f, 0.98f, 0.95f, 0.73f);
-
 
         style->Colors[ImGuiCol_Tab] = BackgroundDark;
         style->Colors[ImGuiCol_TabHovered] = SecondaryActiveColor;
@@ -143,14 +142,14 @@ class ImGuiRenderer
         style->FrameBorderSize = 1.0;
         style->PopupBorderSize = 1.0;
 
-        ImGuiIO& io = ImGui::GetIO();
+        ImGuiIO &io = ImGui::GetIO();
 
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
         (void)io;
-        //io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 12);
-        //io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 10);
-        //io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 15); 
+        // io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 12);
+        // io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 10);
+        // io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 15);
         ImFontConfig config;
         config.OversampleH = 2;
         /*
@@ -161,27 +160,31 @@ class ImGuiRenderer
         io.Fonts->AddFontFromFileTTF("./resources/FiraMono-Regular.ttf", 16, &config);
 #endif
 */
-       /* static const ImWchar icons_ranges[] = {ICON_MIN_FA, ICON_MAX_FA, 0};
-        ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
-        icons_config.GlyphOffset.y = 0.5;
-        io.Fonts->AddFontFromFileTTF("./resources/fa-regular-400.ttf", 15.0f, &icons_config, icons_ranges);
-        io.Fonts->AddFontFromFileTTF("./resources/fa-brands-400.ttf", 15.0f, &icons_config, icons_ranges);
-        io.Fonts->AddFontFromFileTTF("./resources/fa-solid-900.ttf", 15.0f, &icons_config, icons_ranges);*/
+        /* static const ImWchar icons_ranges[] = {ICON_MIN_FA, ICON_MAX_FA, 0};
+         ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
+         icons_config.GlyphOffset.y = 0.5;
+         io.Fonts->AddFontFromFileTTF("./resources/fa-regular-400.ttf", 15.0f, &icons_config, icons_ranges);
+         io.Fonts->AddFontFromFileTTF("./resources/fa-brands-400.ttf", 15.0f, &icons_config, icons_ranges);
+         io.Fonts->AddFontFromFileTTF("./resources/fa-solid-900.ttf", 15.0f, &icons_config, icons_ranges);*/
     }
-public:
 
-    void Enable() {
+public:
+    void Enable()
+    {
         m_pEnabled = true;
     }
 
-    void Disable() {
+    void Disable()
+    {
         m_pEnabled = false;
     }
 
-    void Toggle() {
+    void Toggle()
+    {
         m_pEnabled = !m_pEnabled;
     }
-    void setUserFunction(std::function<void()>&& func) {
+    void setUserFunction(std::function<void()> &&func)
+    {
         m_pUserFunction = func;
     }
     void newFrame(uint32_t currentIndex, VkCommandBuffer &currentCommandBuffer)
@@ -190,21 +193,22 @@ public:
         m_pCommandBuffer = currentCommandBuffer;
     }
 
-    void CreateDescriptorPool() {
+    void CreateDescriptorPool()
+    {
         // Create default descriptor pool
         vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool, nullptr);
         std::array<VkDescriptorPoolSize, 11> poolSizes =
-        { {{VK_DESCRIPTOR_TYPE_SAMPLER, 1000},
-          {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000},
-          {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000},
-          {VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000},
-          {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000},
-          {VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000},
-          {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000},
-          {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000},
-          {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000},
-          {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000},
-          {VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000}} };
+            {{{VK_DESCRIPTOR_TYPE_SAMPLER, 1000},
+              {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000},
+              {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000},
+              {VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000},
+              {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000},
+              {VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000},
+              {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000},
+              {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000},
+              {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000},
+              {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000},
+              {VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000}}};
 
         VkDescriptorPoolCreateInfo poolInfo{};
         poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -218,12 +222,13 @@ public:
         }
     }
 
-    void Destroy() {
+    void Destroy()
+    {
         vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool, nullptr);
     }
     void
     Init(vk::VulkanData &vk_data,
-         GLFWwindow *window,
+         framework::Window::windowType *window,
          VkDescriptorPool &descriptorPool,
          VkRenderPass &renderPass,
          VkCommandPool &commandPool,
@@ -269,7 +274,7 @@ public:
         ImGui::StyleColorsDark();
         setStyle();
         // ImGui::StyleColorsLight();
-        ImGuiStyle* style = &ImGui::GetStyle();
+        ImGuiStyle *style = &ImGui::GetStyle();
         style->ScrollbarRounding = 5.0f;
         style->GrabRounding = 5.0f;
         style->FrameRounding = 5.0f;
@@ -279,8 +284,10 @@ public:
         style->TabRounding = 5.0f;
 
         ImGui_ImplVulkanH_Window *wd = &m_pMainWindowData;
-        // Setup Platform/Renderer backends
+// Setup Platform/Renderer backends
+#if USE_GLFW
         ImGui_ImplGlfw_InitForVulkan(window, true);
+#endif
         ImGui_ImplVulkan_InitInfo init_info = {};
         init_info.Instance = vk_data.instance;
         init_info.PhysicalDevice = vk_data.physicalDevice;
@@ -319,13 +326,14 @@ public:
             vkDeviceWaitIdle(vk_data.logicalDevice);
             ImGui_ImplVulkan_DestroyFontUploadObjects();
         }
-
     }
     void ImGuiBegin()
     {
         ImGui_ImplVulkan_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
 
+#if USE_GLFW
+        ImGui_ImplGlfw_NewFrame();
+#endif
     }
     void Render(ImDrawData *draw_data)
     {
@@ -360,16 +368,17 @@ public:
         stop cmd recording
         */
     }
-    void ImGuiEnd() {
+    void ImGuiEnd()
+    {
 
-        ImGui_ImplVulkanH_Window* wd = &m_pMainWindowData;
+        ImGui_ImplVulkanH_Window *wd = &m_pMainWindowData;
 
         // Rendering
 
-            ImGui::Render();
+        ImGui::Render();
         //}
 
-        ImDrawData* draw_data = ImGui::GetDrawData();
+        ImDrawData *draw_data = ImGui::GetDrawData();
         const bool is_minimized = (draw_data->DisplaySize.x <= 0.0f || draw_data->DisplaySize.y <= 0.0f);
         ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
         if (!is_minimized)
@@ -387,7 +396,7 @@ public:
     {
         ImGuiBegin();
 
-        ImGui_ImplVulkanH_Window* wd = &m_pMainWindowData;
+        ImGui_ImplVulkanH_Window *wd = &m_pMainWindowData;
         // Our state
         static bool show_demo_window = true;
         static bool show_another_window = false;
@@ -395,8 +404,9 @@ public:
 
         MainWindow();
 
-        if (m_pEnabled) {
-            //ImGui::SetNextWindowSize(ImVec2(wd->Width, wd->Height));
+        if (m_pEnabled)
+        {
+            // ImGui::SetNextWindowSize(ImVec2(wd->Width, wd->Height));
 
             ///////// USER INPUT BEGINS HERE
             ImGui::SetNextWindowPos(ImVec2(10, 10));
@@ -426,10 +436,12 @@ public:
                 // ImGui::PlotLines("Frametime", frametime_values, IM_ARRAYSIZE(frametime_values), frametime_values_offset, overlay, 0.0f, 1.0f, ImVec2(0, 60.0f));
             }*/
             ImGui::Separator();
-            ImGui::Text(resources.GPUName.c_str());
+            const char *gpu_name = resources.GPUName.c_str();
+            ImGui::Text("%s", gpu_name);
             ImGui::Text("GPU Memory:");
             int i = 0;
-            for (auto& heap : resources.heaps) {
+            for (auto &heap : resources.heaps)
+            {
                 ImGui::Text("Heap %i", i);
                 ImGui::BulletText("Total %i MB", heap.total_memory / 1024 / 1024);
                 ImGui::BulletText("Used %i MB", heap.used_memory / 1024 / 1024);
@@ -445,10 +457,9 @@ public:
         }
 
         ImGuiEnd();
-
     }
 
-    void SparkLine(const char* id, const char* overlay, const float* values, int count, float min_v, float max_v, int offset, const ImVec4& col, const ImVec2& size)
+    void SparkLine(const char *id, const char *overlay, const float *values, int count, float min_v, float max_v, int offset, const ImVec4 &col, const ImVec2 &size)
     {
         ImPlot::PushStyleVar(ImPlotStyleVar_PlotPadding, ImVec2(0, 0));
         ImPlot::SetNextPlotLimits(0, count - 1, min_v, max_v, ImGuiCond_Always);
@@ -467,27 +478,29 @@ public:
     }
 
 public:
-
     /*void setResourceManager(engine::VulkanResourceManager* c) {
         m_pResourceManagerRef = c;
     }*/
 
-    uint32_t addTexture(const std::string& renderpass, int index) {
+    uint32_t addTexture(const std::string &renderpass, int index)
+    {
 
-       /* auto pass = m_pResourceManagerRef->renderPassPool.get(std::hash<std::string>{}(renderpass));
-        auto texture = pass->renderPassChain.Textures.at(index);
-        VkDescriptorSet DS =  ImGui_ImplVulkan_AddTexture(texture.sampler, texture.imageView, texture.imageLayout);
-        m_pImages[m_pImageCount] = DS;
-        m_pImageCount++;
-        return m_pImageCount - 1;*/
+        /* auto pass = m_pResourceManagerRef->renderPassPool.get(std::hash<std::string>{}(renderpass));
+         auto texture = pass->renderPassChain.Textures.at(index);
+         VkDescriptorSet DS =  ImGui_ImplVulkan_AddTexture(texture.sampler, texture.imageView, texture.imageLayout);
+         m_pImages[m_pImageCount] = DS;
+         m_pImageCount++;
+         return m_pImageCount - 1;*/
         return 0;
     }
 
-    VkDescriptorSet getImage(uint32_t index) {
+    VkDescriptorSet getImage(uint32_t index)
+    {
         return m_pImages[index];
     }
 
-    void MainWindow() {
+    void MainWindow()
+    {
         static ImGuiDockNodeFlags opt_flags = ImGuiDockNodeFlags_PassthruCentralNode;
 
         ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
@@ -495,7 +508,7 @@ public:
         bool opt_fullscreen = true;
         if (opt_fullscreen)
         {
-            ImGuiViewport* viewport = ImGui::GetMainViewport();
+            ImGuiViewport *viewport = ImGui::GetMainViewport();
             ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y));
             ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, viewport->Size.y));
             ImGui::SetNextWindowViewport(viewport->ID);
@@ -516,7 +529,7 @@ public:
         if (opt_fullscreen)
             ImGui::PopStyleVar(2);
 
-        ImGuiIO& io = ImGui::GetIO();
+        ImGuiIO &io = ImGui::GetIO();
         if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
         {
             ImGuiID dockspace_id = ImGui::GetID("RootDockspace");
@@ -526,6 +539,5 @@ public:
         {
             // ShowDockingDisabledMessage();
         }
-
     }
 };

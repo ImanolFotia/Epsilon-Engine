@@ -14,44 +14,53 @@ namespace framework
 		class DropArgs : public beacon::args
 		{
 		public:
-			const std::string& front() {
+			const std::string &front()
+			{
 				if (!paths.empty())
 					return paths[0];
 			}
 
-			const std::string& at(unsigned index) {
+			const std::string &at(unsigned index)
+			{
 				return paths.at(index);
 			}
 
-			auto size() {
+			auto size()
+			{
 				return paths.size();
 			}
 
-			auto push_back(const std::string& str) {
+			auto push_back(const std::string &str)
+			{
 				paths.push_back(str);
 			}
 
-			const std::vector<std::string>& data() {
+			const std::vector<std::string> &data()
+			{
 				return paths;
 			}
+
 		private:
 			std::vector<std::string> paths;
 		};
 
-		class DragDrop {
+		class DragDrop
+		{
 		public:
 			static beacon::single_handler<DropArgs> DropEventHandler;
 
-			static void DropCallbackGLFW(GLFWwindow* window, int count, const char** paths)
+#if USE_GLFW
+			static void DropCallbackGLFW(Window::windowType *window, int count, const char **paths)
 			{
 				DropArgs dropArgs;
-				for (unsigned i = 0; i < count; i++) {
+				for (unsigned i = 0; i < count; i++)
+				{
 					dropArgs.push_back(paths[i]);
 				}
 
 				DropEventHandler.raise(nullptr, &dropArgs);
 			}
-
+#endif
 		};
 	}
 }

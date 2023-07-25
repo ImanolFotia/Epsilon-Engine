@@ -1,0 +1,13 @@
+# Target labels
+ vma
+# Source files and their labels
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/vma
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/vma.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/vma-complete.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-stamp/vma-build.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-stamp/vma-configure.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-stamp/vma-download.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-stamp/vma-install.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-stamp/vma-mkdir.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-stamp/vma-patch.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-stamp/vma-update.rule

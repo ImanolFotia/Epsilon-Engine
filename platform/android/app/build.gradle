@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'com.imanolfotia.epsilon'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.imanolfotia.epsilon"
         minSdk 24
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -54,7 +54,7 @@ android {
         prefab true
 
     }
-    ndkVersion '25.2.9519653'
+    ndkVersion '26.0.10404224'
     buildToolsVersion '34.0.0'
 }
 

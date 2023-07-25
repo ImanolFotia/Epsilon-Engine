@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic "CMakeFiles/test-gtx_normal.dir/gtx_normal.cpp.o" -o test-gtx_normal 

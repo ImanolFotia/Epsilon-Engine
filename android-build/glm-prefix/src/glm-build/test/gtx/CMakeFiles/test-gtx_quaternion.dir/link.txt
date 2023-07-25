@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic "CMakeFiles/test-gtx_quaternion.dir/gtx_quaternion.cpp.o" -o test-gtx_quaternion 

@@ -10,56 +10,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="323baf32-a806-4047-a82a-dd8d6dc27be0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/kotlinc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/al/al_data.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/al/al_data.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/al/device.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/al/device.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/vk/command.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/vk/command.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/vk/descriptors.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/vk/descriptors.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/vk/device.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/vk/device.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/vk/extensions.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/vk/extensions.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/vk/framebuffer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/vk/framebuffer.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/vk/instance.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/vk/instance.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/vk/memory.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/vk/memory.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/vk/pipeline.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/vk/pipeline.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/vk/queues.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/vk/queues.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/vk/rasterizer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/vk/rasterizer.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/vk/render_pass.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/vk/render_pass.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/vk/shader.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/vk/shader.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/vk/surface.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/vk/surface.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/vk/swap_chain.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/vk/swap_chain.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/vk/sync_objects.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/vk/sync_objects.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/vk/texture.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/vk/texture.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/vk/validation_layers.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/vk/validation_layers.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/vk/vertex_buffer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/vk/vertex_buffer.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/vk/viewport.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/vk/viewport.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../apis/vk/vk_data.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../apis/vk/vk_data.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../core/engine/renderer/renderer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../core/engine/renderer/renderer.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../core/engine/scene/scene.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../core/engine/scene/scene.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../core/framework/loaders/gltf.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../core/framework/loaders/gltf.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../core/framework/loaders/gltf_animation.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../core/framework/loaders/gltf_animation.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../core/framework/window.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../core/framework/window.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../modules/imgui/imgui_impl_vulkan.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../modules/imgui/imgui_impl_vulkan.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../core/engine/renderer/vulkan/helpers.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../core/engine/renderer/vulkan/helpers.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../core/engine/renderer/vulkan/imgui/imgui_setup.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../core/engine/renderer/vulkan/imgui/imgui_setup.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../core/framework/IO/DragDrop.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../core/framework/IO/DragDrop.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/AndroidApp.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/AndroidApp.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/native-lib.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/native-lib.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/imanolfotia/epsilon/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/imanolfotia/epsilon/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\Solaire\.android\avd\Pixel_6_API_34.avd]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/home/solaire/.android/avd/Pixel_3a_API_33_x86_64.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -125,7 +89,8 @@
     "RunOnceActivity.cidr.known.project.marker": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "cidr.known.project.marker": "true",
-    "last_opened_file_path": "J:/Code/Epsilon-Engine/platform/android",
+    "com.google.services.firebase.aqiPopupShown": "true",
+    "last_opened_file_path": "/home/solaire/Documents/Code/C++/Epsilon-Engine/platform/android",
     "project.structure.last.edited": "SDK Location",
     "project.structure.proportion": "0.17",
     "project.structure.side.proportion": "0.2",

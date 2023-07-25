@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic "CMakeFiles/test-ext_quaternion_trigonometric.dir/ext_quaternion_trigonometric.cpp.o" -o test-ext_quaternion_trigonometric 

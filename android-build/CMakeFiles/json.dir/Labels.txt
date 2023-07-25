@@ -1,0 +1,13 @@
+# Target labels
+ json
+# Source files and their labels
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/json
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/json.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/json-complete.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/json-prefix/src/json-stamp/json-build.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/json-prefix/src/json-stamp/json-configure.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/json-prefix/src/json-stamp/json-download.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/json-prefix/src/json-stamp/json-install.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/json-prefix/src/json-stamp/json-mkdir.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/json-prefix/src/json-stamp/json-patch.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/json-prefix/src/json-stamp/json-update.rule

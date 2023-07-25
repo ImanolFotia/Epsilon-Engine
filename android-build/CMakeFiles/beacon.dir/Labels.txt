@@ -1,0 +1,13 @@
+# Target labels
+ beacon
+# Source files and their labels
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/beacon
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/beacon.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/beacon-complete.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/beacon-prefix/src/beacon-stamp/beacon-build.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/beacon-prefix/src/beacon-stamp/beacon-configure.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/beacon-prefix/src/beacon-stamp/beacon-download.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/beacon-prefix/src/beacon-stamp/beacon-install.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/beacon-prefix/src/beacon-stamp/beacon-mkdir.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/beacon-prefix/src/beacon-stamp/beacon-patch.rule
+/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/beacon-prefix/src/beacon-stamp/beacon-update.rule

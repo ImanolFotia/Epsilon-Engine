@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vulkan/vulkan.hpp>
+#include <vulkan/vulkan.h>
 #include "../draw_command.hpp"
 
 namespace engine
@@ -148,7 +148,8 @@ namespace engine
         for (const auto &command : commandLists)
         {
 
-            if (index >= commandCount) break;
+            if (index >= commandCount)
+                break;
             if (index == 0)
             {
                 batches[current] = {.meshResource = command.meshResource,

@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic "CMakeFiles/test-core_setup_platform_unknown.dir/core_setup_platform_unknown.cpp.o" -o test-core_setup_platform_unknown 
