@@ -4,19 +4,16 @@
 cmake_minimum_required(VERSION 3.5)
 
 file(MAKE_DIRECTORY
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/beacon-prefix/src/beacon"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/beacon-prefix/src/beacon-build"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/beacon-prefix"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/beacon-prefix/tmp"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/beacon-prefix/src/beacon-stamp"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/beacon-prefix/src"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/beacon-prefix/src/beacon-stamp"
+  "J:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon"
+  "J:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon-build"
+  "J:/Code/Epsilon-Engine/android-build/beacon-prefix"
+  "J:/Code/Epsilon-Engine/android-build/beacon-prefix/tmp"
+  "J:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon-stamp"
+  "J:/Code/Epsilon-Engine/android-build/beacon-prefix/src"
+  "J:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon-stamp"
 )
 
 set(configSubDirs )
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/beacon-prefix/src/beacon-stamp/${subDir}")
+    file(MAKE_DIRECTORY "J:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon-stamp/${subDir}")
 endforeach()
-if(cfgdir)
-  file(MAKE_DIRECTORY "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/beacon-prefix/src/beacon-stamp${cfgdir}") # cfgdir has leading slash
-endif()

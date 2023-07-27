@@ -2,34 +2,34 @@
 	"sources" : 
 	[
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/openal_d"
+			"file" : "J:/Code/Epsilon-Engine/android-build/CMakeFiles/openal_d"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/openal_d.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/CMakeFiles/openal_d.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/openal_d-complete.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/CMakeFiles/openal_d-complete.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-stamp/openal_d-build.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-stamp/openal_d-build.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-stamp/openal_d-configure.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-stamp/openal_d-configure.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-stamp/openal_d-download.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-stamp/openal_d-download.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-stamp/openal_d-install.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-stamp/openal_d-install.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-stamp/openal_d-mkdir.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-stamp/openal_d-mkdir.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-stamp/openal_d-patch.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-stamp/openal_d-patch.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-stamp/openal_d-update.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-stamp/openal_d-update.rule"
 		}
 	],
 	"target" : 

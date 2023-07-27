@@ -3,18 +3,26 @@
 #include <vulkan/vulkan.h>
 #include "core/framework/common.hpp"
 
+
+#if defined(ANDROID) || defined(__ANDROID__)
+
+#include <android/log.h>
+
+#define LOG_TAG "Epsilon"
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
+#endif
+
+
 namespace vk
 {
     static VkDebugUtilsMessengerEXT debugMessenger;
 
     static const std::vector<const char *> validationLayers = {
         "VK_LAYER_KHRONOS_validation",
-        //"VK_LAYER_LUNARG_parameter_validation",
-        //"VK_LAYER_LUNARG_object_tracker",
-        //"VK_LAYER_LUNARG_core_validation"
     };
 
-#if 0
+#if 1
     const bool enableValidationLayers = false;
 #else
     constexpr bool enableValidationLayers = true;

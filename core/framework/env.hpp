@@ -33,7 +33,7 @@ namespace framework
 
             return false;
         }
-
+        /*
 #ifdef _WIN32
 #include <windows.h>
 #define WIN32_LEAN_AND_MEAN
@@ -43,9 +43,9 @@ namespace framework
         static void setArgs(int argc_, LPSTR commandLine) {
             int argc = 0;
             LPWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &argc);
-#else
+#else*/
         static void setArgs(int argc, char** argv) { 
-#endif
+//#endif
         
             for (int i = 1; i < argc; i++)
             {

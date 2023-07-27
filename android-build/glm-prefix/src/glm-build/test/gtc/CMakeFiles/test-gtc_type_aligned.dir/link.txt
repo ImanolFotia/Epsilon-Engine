@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic "CMakeFiles/test-gtc_type_aligned.dir/gtc_type_aligned.cpp.o" -o test-gtc_type_aligned 

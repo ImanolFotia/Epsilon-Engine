@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic "CMakeFiles/test-gtx_fast_square_root.dir/gtx_fast_square_root.cpp.o" -o test-gtx_fast_square_root 

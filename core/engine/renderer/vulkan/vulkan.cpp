@@ -16,9 +16,16 @@
  */
 
 #define VMA_IMPLEMENTATION
+#define VMA_STATIC_VULKAN_FUNCTIONS 1
 
+//#define VMA_VULKAN_VERSION 1001000
 #if defined(ANDROID) || defined(__ANDROID__)
-#define VMA_VULKAN_VERSION 1000000
+
+#include <android/log.h>
+
+#define LOG_TAG "Epsilon"
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 #endif
 
 #include "vk_mem_alloc.h"
@@ -46,12 +53,28 @@ namespace engine
 		m_pWindow = &window;
 		m_pResourceManagerRef->m_pVkDataPtr = &m_pVkData;
 
+		std::cout << "Initiating Vulkan Context\n";
+
+#if defined(ANDROID) || defined(__ANDROID__)
+		LOGI("Initiating Vulkan Instance\n");
+#endif
 		vk::createInstance(appName, m_pVkData);
+
+#if defined(ANDROID) || defined(__ANDROID__)
+		LOGI("Initiating Vulkan Debug Messenger\n");
+#endif
 		vk::setupDebugMessenger(m_pVkData.instance);
+
+#if defined(ANDROID) || defined(__ANDROID__)
+		LOGI("Initiating Vulkan Surface\n");
+#endif
 		vk::createSurface(m_pVkData, window.getWindow());
 		vk::pickPhysicalDevice(m_pVkData);
 		vk::createLogicalDevice(m_pVkData);
 
+#if defined(ANDROID) || defined(__ANDROID__)
+		LOGI("Initiating Vulkan swapchain\n");
+#endif
 		vk::createSwapChain(m_pVkData, window.getWindow());
 		vk::createImageViews(m_pVkData);
 
@@ -59,6 +82,9 @@ namespace engine
 
 		vk::createCommandPool(m_pVkData, m_pVkData.m_pCommandPools.back());
 
+#if defined(ANDROID) || defined(__ANDROID__)
+		LOGI("Initiating Vulkan Descriptor Pool\n");
+#endif
 		m_pResourceManagerRef->pCreateDescriptorPool();
 
 		vk::createCommandBuffers(m_pVkData, m_pVkData.m_pCommandPools.back(), m_pVkData.m_pCommandBuffers);
@@ -123,8 +149,8 @@ namespace engine
 		if (m_pImageIndex == -1)
 			return;
 
-		if (m_pImageIndex >= vk::MAX_FRAMES_IN_FLIGHT)
-			m_pImageIndex = 0;
+		//if (m_pImageIndex >= vk::MAX_FRAMES_IN_FLIGHT)
+		//	m_pImageIndex = 0;
 
 		m_pFrame.FrameIndex(m_pCurrentFrame);
 
@@ -138,6 +164,7 @@ namespace engine
 
 		vkResetCommandBuffer(m_pFrame.CommandBuffer(), 0);
 
+#if !defined(__ANDROID__)
 		if (!imguiInit)
 		{
 
@@ -150,6 +177,7 @@ namespace engine
 			imguiInit = true;
 		}
 		m_pImguiRenderer.newFrame(m_pCurrentFrame, m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
+#endif
 	}
 
 	void
@@ -191,6 +219,7 @@ namespace engine
 
 	void VulkanRenderer::End(glm::vec3& v)
 	{
+#if !defined(__ANDROID__)
 		std::vector<VmaBudget> budgets;
 		budgets.resize(m_pVkData.max_memory_heaps);
 		vmaGetHeapBudgets(m_pResourceManagerRef->m_pAllocator, budgets.data());
@@ -203,7 +232,7 @@ namespace engine
 		}
 		m_pResourceManagerRef->ResourcesMemory.numDrawCalls = m_pNumDrawCalls;
 		m_pImguiRenderer.DrawUI(std::forward<glm::vec3&>(v), m_pResourceManagerRef->ResourcesMemory);
-
+#endif
 		if (m_pRenderPassActive)
 		{
 			vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);

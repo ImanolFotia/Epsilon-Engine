@@ -2,34 +2,34 @@
 	"sources" : 
 	[
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/glm"
+			"file" : "J:/Code/Epsilon-Engine/android-build/CMakeFiles/glm"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/glm.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/CMakeFiles/glm.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/glm-complete.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/CMakeFiles/glm-complete.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/glm-build.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/glm-build.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/glm-configure.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/glm-configure.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/glm-download.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/glm-download.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/glm-install.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/glm-install.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/glm-mkdir.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/glm-mkdir.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/glm-patch.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/glm-patch.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/glm-update.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/glm-update.rule"
 		}
 	],
 	"target" : 

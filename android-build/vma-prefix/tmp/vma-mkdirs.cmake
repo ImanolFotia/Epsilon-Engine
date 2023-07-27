@@ -4,19 +4,16 @@
 cmake_minimum_required(VERSION 3.5)
 
 file(MAKE_DIRECTORY
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-build"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/tmp"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-stamp"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-stamp"
+  "J:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma"
+  "J:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma-build"
+  "J:/Code/Epsilon-Engine/android-build/vma-prefix"
+  "J:/Code/Epsilon-Engine/android-build/vma-prefix/tmp"
+  "J:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma-stamp"
+  "J:/Code/Epsilon-Engine/android-build/vma-prefix/src"
+  "J:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma-stamp"
 )
 
 set(configSubDirs )
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-stamp/${subDir}")
+    file(MAKE_DIRECTORY "J:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma-stamp/${subDir}")
 endforeach()
-if(cfgdir)
-  file(MAKE_DIRECTORY "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-stamp${cfgdir}") # cfgdir has leading slash
-endif()

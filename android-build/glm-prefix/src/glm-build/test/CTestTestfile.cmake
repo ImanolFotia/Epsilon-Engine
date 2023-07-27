@@ -1,6 +1,6 @@
 # CMake generated Testfile for 
-# Source directory: /home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm/test
-# Build directory: /home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-build/test
+# Source directory: J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm/test
+# Build directory: J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm-build/test
 # 
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.

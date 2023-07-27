@@ -3,21 +3,21 @@
 
 cmake_minimum_required(VERSION 3.5)
 
-if(EXISTS "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-gitclone-lastrun.txt" AND EXISTS "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-gitinfo.txt" AND
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-gitclone-lastrun.txt" IS_NEWER_THAN "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-gitinfo.txt")
+if(EXISTS "J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-gitclone-lastrun.txt" AND EXISTS "J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-gitinfo.txt" AND
+  "J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-gitclone-lastrun.txt" IS_NEWER_THAN "J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-gitinfo.txt")
   message(STATUS
     "Avoiding repeated git clone, stamp file is up to date: "
-    "'/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-gitclone-lastrun.txt'"
+    "'J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-gitclone-lastrun.txt'"
   )
   return()
 endif()
 
 execute_process(
-  COMMAND ${CMAKE_COMMAND} -E rm -rf "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb"
+  COMMAND ${CMAKE_COMMAND} -E rm -rf "J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb"
   RESULT_VARIABLE error_code
 )
 if(error_code)
-  message(FATAL_ERROR "Failed to remove directory: '/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb'")
+  message(FATAL_ERROR "Failed to remove directory: 'J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb'")
 endif()
 
 # try the clone 3 times in case there is an odd git clone issue
@@ -25,9 +25,9 @@ set(error_code 1)
 set(number_of_tries 0)
 while(error_code AND number_of_tries LESS 3)
   execute_process(
-    COMMAND "/usr/bin/git" 
+    COMMAND "C:/Program Files/Git/cmd/git.exe" 
             clone --no-checkout --config "advice.detachedHead=false" "https://github.com/nothings/stb.git" "stb"
-    WORKING_DIRECTORY "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src"
+    WORKING_DIRECTORY "J:/Code/Epsilon-Engine/android-build/stb-prefix/src"
     RESULT_VARIABLE error_code
   )
   math(EXPR number_of_tries "${number_of_tries} + 1")
@@ -40,9 +40,9 @@ if(error_code)
 endif()
 
 execute_process(
-  COMMAND "/usr/bin/git" 
+  COMMAND "C:/Program Files/Git/cmd/git.exe" 
           checkout "master" --
-  WORKING_DIRECTORY "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb"
+  WORKING_DIRECTORY "J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb"
   RESULT_VARIABLE error_code
 )
 if(error_code)
@@ -52,22 +52,22 @@ endif()
 set(init_submodules TRUE)
 if(init_submodules)
   execute_process(
-    COMMAND "/usr/bin/git" 
+    COMMAND "C:/Program Files/Git/cmd/git.exe" 
             submodule update --recursive --init 
-    WORKING_DIRECTORY "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb"
+    WORKING_DIRECTORY "J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb"
     RESULT_VARIABLE error_code
   )
 endif()
 if(error_code)
-  message(FATAL_ERROR "Failed to update submodules in: '/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb'")
+  message(FATAL_ERROR "Failed to update submodules in: 'J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb'")
 endif()
 
 # Complete success, update the script-last-run stamp file:
 #
 execute_process(
-  COMMAND ${CMAKE_COMMAND} -E copy "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-gitinfo.txt" "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-gitclone-lastrun.txt"
+  COMMAND ${CMAKE_COMMAND} -E copy "J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-gitinfo.txt" "J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-gitclone-lastrun.txt"
   RESULT_VARIABLE error_code
 )
 if(error_code)
-  message(FATAL_ERROR "Failed to copy script-last-run stamp file: '/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-gitclone-lastrun.txt'")
+  message(FATAL_ERROR "Failed to copy script-last-run stamp file: 'J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-gitclone-lastrun.txt'")
 endif()

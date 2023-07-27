@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'com.imanolfotia.epsilon'
-    compileSdk 34
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.imanolfotia.epsilon"
         minSdk 24
-        targetSdk 34
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -22,7 +22,8 @@ android {
                 //cFlags += "-D__ANDROID__"
                 //cppFlags += "-D__ANDROID__"
                 cFlags += "-Wno-error=format-security"
-                cppFlags += "-Wno-error=format-security unsafe-buffer-usage"
+                cppFlags += "-Wno-error=format-security"
+                arguments '-DANDROID_STL=c++_static'
 
             }
         }
@@ -54,7 +55,9 @@ android {
         prefab true
 
     }
-    ndkVersion '26.0.10404224'
+
+
+    ndkVersion '26.0.10404224-beta1'
     buildToolsVersion '34.0.0'
 }
 

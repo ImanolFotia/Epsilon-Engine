@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic "CMakeFiles/test-gtc_type_ptr.dir/gtc_type_ptr.cpp.o" -o test-gtc_type_ptr 

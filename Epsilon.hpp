@@ -96,7 +96,7 @@ namespace Epsilon
         void setOnExit(std::function<void(void)> fun);
 
 
-    private:
+    public:
         void initWindow(int w, int h);
         void initVulkan();
 

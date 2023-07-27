@@ -293,9 +293,16 @@ namespace vk
         VkQueue transferQueue;
         VkQueue computeQueue;
 
+#if !defined(__ANDROID__)
         const std::vector<const char *> deviceExtensions = {
             VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-            VK_EXT_MEMORY_BUDGET_EXTENSION_NAME };
+            VK_EXT_MEMORY_BUDGET_EXTENSION_NAME 
+        };
+#else 
+        const std::vector<const char *> deviceExtensions = {
+        VK_KHR_SWAPCHAIN_EXTENSION_NAME
+        };
+#endif
 
         VkSwapchainKHR swapChain;
         // RenderPassChain swapChainData;

@@ -1,8 +1,8 @@
-# Install script for directory: /home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm
+# Install script for directory: J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/usr/local")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/glm")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -27,11 +27,6 @@ if(NOT CMAKE_INSTALL_COMPONENT)
   endif()
 endif()
 
-# Install shared libraries without execute permission?
-if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
-  set(CMAKE_INSTALL_SO_NO_EXE "0")
-endif()
-
 # Is this installation the result of a crosscompile?
 if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
@@ -39,41 +34,37 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/usr/bin/objdump")
+  set(CMAKE_OBJDUMP "C:/msys64/clang64/bin/llvm-objdump.exe")
 endif()
 
-if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm/glm" REGEX "/CMakeLists\\.txt$" EXCLUDE)
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm/glm" REGEX "/cmakelists\\.txt$" EXCLUDE)
 endif()
 
-if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/cmake/glm/glmConfig.cmake")
-    file(DIFFERENT _cmake_export_file_changed FILES
-         "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/cmake/glm/glmConfig.cmake"
-         "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-build/CMakeFiles/Export/64e5c395e8af58ef6f6374c61a7a4d32/glmConfig.cmake")
-    if(_cmake_export_file_changed)
-      file(GLOB _cmake_old_config_files "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/cmake/glm/glmConfig-*.cmake")
-      if(_cmake_old_config_files)
-        string(REPLACE ";" ", " _cmake_old_config_files_text "${_cmake_old_config_files}")
-        message(STATUS "Old export file \"$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib64/cmake/glm/glmConfig.cmake\" will be replaced.  Removing files [${_cmake_old_config_files_text}].")
-        unset(_cmake_old_config_files_text)
-        file(REMOVE ${_cmake_old_config_files})
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/glm/glmConfig.cmake")
+    file(DIFFERENT EXPORT_FILE_CHANGED FILES
+         "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/glm/glmConfig.cmake"
+         "J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm-build/CMakeFiles/Export/lib/cmake/glm/glmConfig.cmake")
+    if(EXPORT_FILE_CHANGED)
+      file(GLOB OLD_CONFIG_FILES "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/glm/glmConfig-*.cmake")
+      if(OLD_CONFIG_FILES)
+        message(STATUS "Old export file \"$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/glm/glmConfig.cmake\" will be replaced.  Removing files [${OLD_CONFIG_FILES}].")
+        file(REMOVE ${OLD_CONFIG_FILES})
       endif()
-      unset(_cmake_old_config_files)
     endif()
-    unset(_cmake_export_file_changed)
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64/cmake/glm" TYPE FILE FILES "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-build/CMakeFiles/Export/64e5c395e8af58ef6f6374c61a7a4d32/glmConfig.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/glm" TYPE FILE FILES "J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm-build/CMakeFiles/Export/lib/cmake/glm/glmConfig.cmake")
 endif()
 
-if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib64/cmake/glm" TYPE FILE FILES "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-build/glmConfigVersion.cmake")
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/glm" TYPE FILE FILES "J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm-build/glmConfigVersion.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-build/glm/cmake_install.cmake")
-  include("/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-build/test/cmake_install.cmake")
+  include("J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm-build/glm/cmake_install.cmake")
+  include("J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm-build/test/cmake_install.cmake")
 
 endif()
 
@@ -85,5 +76,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm-build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

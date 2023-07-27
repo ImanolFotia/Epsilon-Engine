@@ -2,34 +2,34 @@
 	"sources" : 
 	[
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/stb"
+			"file" : "J:/Code/Epsilon-Engine/android-build/CMakeFiles/stb"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/stb.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/CMakeFiles/stb.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/CMakeFiles/stb-complete.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/CMakeFiles/stb-complete.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-build.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-build.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-configure.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-configure.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-download.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-download.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-install.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-install.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-mkdir.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-mkdir.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-patch.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-patch.rule"
 		},
 		{
-			"file" : "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-update.rule"
+			"file" : "J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/stb-update.rule"
 		}
 	],
 	"target" : 

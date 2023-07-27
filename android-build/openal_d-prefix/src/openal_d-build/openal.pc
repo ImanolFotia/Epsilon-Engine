@@ -1,7 +1,7 @@
-prefix=/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/build/install/arm64-v8a
+prefix=J:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/install/arm64-v8a
 exec_prefix=${prefix}
-libdir=/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/build/install/arm64-v8a/lib
-includedir=/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/build/install/arm64-v8a/include
+libdir=J:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/install/arm64-v8a/lib
+includedir=J:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/install/arm64-v8a/include
 
 Name: OpenAL
 Description: OpenAL is a cross-platform 3D audio API

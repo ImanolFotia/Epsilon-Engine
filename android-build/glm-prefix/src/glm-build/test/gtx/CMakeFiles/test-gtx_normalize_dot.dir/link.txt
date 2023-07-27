@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic "CMakeFiles/test-gtx_normalize_dot.dir/gtx_normalize_dot.cpp.o" -o test-gtx_normalize_dot 

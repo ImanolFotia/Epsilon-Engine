@@ -4,6 +4,8 @@
 
 #if defined(ANDROID) || defined(__ANDROID__)
 #undef USE_GLFW
+#include <android/native_window.h>
+#include <android/native_window_jni.h>
 #else
 
 #include <vulkan/vulkan.hpp>
@@ -76,6 +78,7 @@ namespace framework
 #if USE_GLFW
             return glfwWindowShouldClose(mWindow);
 #endif
+            return false;
         }
 
         void PollEvents()
@@ -138,12 +141,16 @@ namespace framework
 
         std::pair<int, int> getSize()
         {
-            #if USE_GLFW
-                        
+#if USE_GLFW
             if (mWindow == nullptr) return { 0,0 };
+                        
             glfwGetFramebufferSize(mWindow, &mWidth, &mHeight);
             return {mWidth, mHeight};
  #endif
+#if defined(__ANDROID__)
+
+            return { 640, 480 };
+#endif
         }
 
         void resize(int w, int h) {
@@ -182,8 +189,8 @@ namespace framework
             return m_pAvailableSizes;
         }
     private:
-        int mWidth = 0;
-        int mHeight = 0;
+        int mWidth = 640;
+        int mHeight = 480;
         std::vector<WindowSizeDescription> m_pAvailableSizes;
 
         windowType *mWindow;

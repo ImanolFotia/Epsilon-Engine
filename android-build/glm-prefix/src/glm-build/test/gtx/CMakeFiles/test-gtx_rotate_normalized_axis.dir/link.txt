@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic "CMakeFiles/test-gtx_rotate_normalized_axis.dir/gtx_rotate_normalized_axis.cpp.o" -o test-gtx_rotate_normalized_axis 

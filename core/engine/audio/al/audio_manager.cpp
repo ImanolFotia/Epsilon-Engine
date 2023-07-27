@@ -1,4 +1,15 @@
 #include "audio_manager.hpp"
+#include <core/framework/common.hpp>
+
+
+#if defined(ANDROID) || defined(__ANDROID__)
+
+#include <android/log.h>
+
+#define LOG_TAG "Epsilon"
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
+#endif
 
 namespace engine::audio
 {
@@ -6,8 +17,11 @@ namespace engine::audio
 	{
 		bool res = al::initDevice(&m_pAlData);
 
-		if (!res)
+		if (!res) {
+
+			IO::Log("Couldn't start audio device");
 			std::cout << "Couldn't start audio device" << std::endl;
+		}
 	}
 
 	void ALAudioManager::CleanUp()

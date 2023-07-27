@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic "CMakeFiles/test-gtc_matrix_access.dir/gtc_matrix_access.cpp.o" -o test-gtc_matrix_access 

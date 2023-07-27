@@ -1,2 +1,0 @@
-# CMAKE generated file: DO NOT EDIT!
-# Timestamp file for compiler generated dependencies management for test-ext_vector_uint4_sized.

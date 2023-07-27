@@ -4,19 +4,16 @@
 cmake_minimum_required(VERSION 3.5)
 
 file(MAKE_DIRECTORY
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-build"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/tmp"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-stamp"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/src"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-stamp"
+  "J:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d"
+  "J:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-build"
+  "J:/Code/Epsilon-Engine/android-build/openal_d-prefix"
+  "J:/Code/Epsilon-Engine/android-build/openal_d-prefix/tmp"
+  "J:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-stamp"
+  "J:/Code/Epsilon-Engine/android-build/openal_d-prefix/src"
+  "J:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-stamp"
 )
 
 set(configSubDirs )
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-stamp/${subDir}")
+    file(MAKE_DIRECTORY "J:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-stamp/${subDir}")
 endforeach()
-if(cfgdir)
-  file(MAKE_DIRECTORY "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-stamp${cfgdir}") # cfgdir has leading slash
-endif()

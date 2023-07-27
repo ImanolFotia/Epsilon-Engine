@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic "CMakeFiles/test-gtx_vec_swizzle.dir/gtx_vec_swizzle.cpp.o" -o test-gtx_vec_swizzle 

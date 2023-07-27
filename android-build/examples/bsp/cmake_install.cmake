@@ -1,8 +1,8 @@
-# Install script for directory: /home/solaire/Documents/Code/C++/Epsilon-Engine/examples/bsp
+# Install script for directory: J:/Code/Epsilon-Engine/examples/bsp
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/examples/bsp")
+  set(CMAKE_INSTALL_PREFIX "J:/Code/Epsilon-Engine/android-build/examples/bsp")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -12,7 +12,7 @@ if(NOT DEFINED CMAKE_INSTALL_CONFIG_NAME)
     string(REGEX REPLACE "^[^A-Za-z0-9_]+" ""
            CMAKE_INSTALL_CONFIG_NAME "${BUILD_TYPE}")
   else()
-    set(CMAKE_INSTALL_CONFIG_NAME "Release")
+    set(CMAKE_INSTALL_CONFIG_NAME "Debug")
   endif()
   message(STATUS "Install configuration: \"${CMAKE_INSTALL_CONFIG_NAME}\"")
 endif()
@@ -39,21 +39,21 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/home/solaire/Android/Sdk/ndk/26.0.10404224/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-objdump")
+  set(CMAKE_OBJDUMP "J:/AndroidSDK/ndk/26.0.10404224-beta1/toolchains/llvm/prebuilt/windows-x86_64/bin/llvm-objdump.exe")
 endif()
 
-if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/BSP" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/BSP")
     file(RPATH_CHECK
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/BSP"
          RPATH "")
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/examples/bsp/BSP")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "J:/Code/Epsilon-Engine/android-build/examples/bsp/BSP")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/BSP" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/BSP")
     if(CMAKE_INSTALL_DO_STRIP)
-      execute_process(COMMAND "/home/solaire/Android/Sdk/ndk/26.0.10404224/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/BSP")
+      execute_process(COMMAND "J:/AndroidSDK/ndk/26.0.10404224-beta1/toolchains/llvm/prebuilt/windows-x86_64/bin/llvm-strip.exe" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/BSP")
     endif()
   endif()
 endif()

@@ -1,9 +1,9 @@
-set(CMAKE_HOST_SYSTEM "Linux-6.3.12-200.fc38.x86_64")
-set(CMAKE_HOST_SYSTEM_NAME "Linux")
-set(CMAKE_HOST_SYSTEM_VERSION "6.3.12-200.fc38.x86_64")
-set(CMAKE_HOST_SYSTEM_PROCESSOR "x86_64")
+set(CMAKE_HOST_SYSTEM "Windows-6.2.9200")
+set(CMAKE_HOST_SYSTEM_NAME "Windows")
+set(CMAKE_HOST_SYSTEM_VERSION "6.2.9200")
+set(CMAKE_HOST_SYSTEM_PROCESSOR "AMD64")
 
-include("/home/solaire/Android/Sdk/ndk/26.0.10404224/build/cmake/android.toolchain.cmake")
+include("J:/AndroidSDK/ndk/26.0.10404224-beta1/build/cmake/android.toolchain.cmake")
 
 set(CMAKE_SYSTEM "Android-1")
 set(CMAKE_SYSTEM_NAME "Android")

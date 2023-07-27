@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic "CMakeFiles/test-perf_matrix_inverse.dir/perf_matrix_inverse.cpp.o" -o test-perf_matrix_inverse 

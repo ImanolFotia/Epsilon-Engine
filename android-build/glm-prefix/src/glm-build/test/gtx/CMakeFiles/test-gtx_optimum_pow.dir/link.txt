@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic "CMakeFiles/test-gtx_optimum_pow.dir/gtx_optimum_pow.cpp.o" -o test-gtx_optimum_pow 

@@ -4,19 +4,16 @@
 cmake_minimum_required(VERSION 3.5)
 
 file(MAKE_DIRECTORY
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-build"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/tmp"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp"
+  "J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm"
+  "J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm-build"
+  "J:/Code/Epsilon-Engine/android-build/glm-prefix"
+  "J:/Code/Epsilon-Engine/android-build/glm-prefix/tmp"
+  "J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp"
+  "J:/Code/Epsilon-Engine/android-build/glm-prefix/src"
+  "J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp"
 )
 
 set(configSubDirs )
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/${subDir}")
+    file(MAKE_DIRECTORY "J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp/${subDir}")
 endforeach()
-if(cfgdir)
-  file(MAKE_DIRECTORY "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-stamp${cfgdir}") # cfgdir has leading slash
-endif()

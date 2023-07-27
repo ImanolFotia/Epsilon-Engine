@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic "CMakeFiles/test-ext_quaternion_relational.dir/ext_quaternion_relational.cpp.o" -o test-ext_quaternion_relational 

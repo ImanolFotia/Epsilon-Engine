@@ -1,8 +1,8 @@
-# Install script for directory: /home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma
+# Install script for directory: J:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/usr/local")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/VMA")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -27,11 +27,6 @@ if(NOT CMAKE_INSTALL_COMPONENT)
   endif()
 endif()
 
-# Install shared libraries without execute permission?
-if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
-  set(CMAKE_INSTALL_SO_NO_EXE "0")
-endif()
-
 # Is this installation the result of a crosscompile?
 if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
@@ -39,31 +34,27 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/usr/bin/objdump")
+  set(CMAKE_OBJDUMP "C:/msys64/clang64/bin/llvm-objdump.exe")
 endif()
 
-if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma/include/")
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "J:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include/")
 endif()
 
-if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/cmake/VulkanMemoryAllocator/VulkanMemoryAllocatorConfig.cmake")
-    file(DIFFERENT _cmake_export_file_changed FILES
+    file(DIFFERENT EXPORT_FILE_CHANGED FILES
          "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/cmake/VulkanMemoryAllocator/VulkanMemoryAllocatorConfig.cmake"
-         "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-build/CMakeFiles/Export/8915d94c8ba9e0889cdde66125f3870b/VulkanMemoryAllocatorConfig.cmake")
-    if(_cmake_export_file_changed)
-      file(GLOB _cmake_old_config_files "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/cmake/VulkanMemoryAllocator/VulkanMemoryAllocatorConfig-*.cmake")
-      if(_cmake_old_config_files)
-        string(REPLACE ";" ", " _cmake_old_config_files_text "${_cmake_old_config_files}")
-        message(STATUS "Old export file \"$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/cmake/VulkanMemoryAllocator/VulkanMemoryAllocatorConfig.cmake\" will be replaced.  Removing files [${_cmake_old_config_files_text}].")
-        unset(_cmake_old_config_files_text)
-        file(REMOVE ${_cmake_old_config_files})
+         "J:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma-build/CMakeFiles/Export/share/cmake/VulkanMemoryAllocator/VulkanMemoryAllocatorConfig.cmake")
+    if(EXPORT_FILE_CHANGED)
+      file(GLOB OLD_CONFIG_FILES "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/cmake/VulkanMemoryAllocator/VulkanMemoryAllocatorConfig-*.cmake")
+      if(OLD_CONFIG_FILES)
+        message(STATUS "Old export file \"$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/cmake/VulkanMemoryAllocator/VulkanMemoryAllocatorConfig.cmake\" will be replaced.  Removing files [${OLD_CONFIG_FILES}].")
+        file(REMOVE ${OLD_CONFIG_FILES})
       endif()
-      unset(_cmake_old_config_files)
     endif()
-    unset(_cmake_export_file_changed)
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/cmake/VulkanMemoryAllocator" TYPE FILE FILES "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-build/CMakeFiles/Export/8915d94c8ba9e0889cdde66125f3870b/VulkanMemoryAllocatorConfig.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/cmake/VulkanMemoryAllocator" TYPE FILE FILES "J:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma-build/CMakeFiles/Export/share/cmake/VulkanMemoryAllocator/VulkanMemoryAllocatorConfig.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -74,5 +65,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/vma-prefix/src/vma-build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "J:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma-build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

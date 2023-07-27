@@ -38,7 +38,7 @@
 /* #undef HAVE_OSS */
 
 /* Define if we have the PipeWire backend */
-#define HAVE_PIPEWIRE
+/* #undef HAVE_PIPEWIRE */
 
 /* Define if we have the Solaris backend */
 /* #undef HAVE_SOLARIS */

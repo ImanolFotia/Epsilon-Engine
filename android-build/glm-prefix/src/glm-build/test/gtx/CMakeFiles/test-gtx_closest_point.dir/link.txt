@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic "CMakeFiles/test-gtx_closest_point.dir/gtx_closest_point.cpp.o" -o test-gtx_closest_point 

@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic "CMakeFiles/test-gtx_easing.dir/gtx_easing.cpp.o" -o test-gtx_easing 

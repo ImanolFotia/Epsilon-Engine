@@ -1,4 +1,4 @@
-/*
+package com.imanolfotia.epsilon/*
  * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-package com.android.hellovk
 
 import android.annotation.SuppressLint
 import android.os.Build.VERSION
@@ -28,7 +27,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import com.google.androidgamesdk.GameActivity
 
 
-class VulkanActivity : GameActivity() {
+class MainActivity : GameActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         hideSystemUI()
@@ -76,7 +75,7 @@ class VulkanActivity : GameActivity() {
 
     companion object {
         init {
-            System.loadLibrary("hellovkjni")
+            System.loadLibrary("epsilon-android")
         }
     }
 }

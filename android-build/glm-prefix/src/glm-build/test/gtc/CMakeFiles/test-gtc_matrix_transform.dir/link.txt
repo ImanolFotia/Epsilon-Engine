@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic "CMakeFiles/test-gtc_matrix_transform.dir/gtc_matrix_transform.cpp.o" -o test-gtc_matrix_transform 

@@ -25,28 +25,25 @@ include_directories(${CMAKE_SOURCE_DIR}/../../../../../..)
 # Gradle automatically packages shared libraries with your APK.
 
 set(THIRDPARTY_DIR "${CMAKE_SOURCE_DIR}/../../../../../../thirdparty")
+set(ANDROID_OPENAL "${CMAKE_SOURCE_DIR}/../../../../../../android-build/openal_d-prefix/src/")
 
 
 include(ExternalProject)
 
-#Download and include glm
-ExternalProject_Add(glm
-        GIT_REPOSITORY https://github.com/g-truc/glm.git
-        INSTALL_COMMAND cmake -E echo "Skipping install step."
-        UPDATE_COMMAND ""
-        )
+include_directories(${ANDROID_OPENAL}/openal_d/include)
+link_directories(${ANDROID_OPENAL}/openal_d-build/)
 
-ExternalProject_Get_property(glm SOURCE_DIR)
-set(GLM_BUILD_DIR ${SOURCE_DIR})
-message(${GLM_BUILD_DIR})
 
-include_directories(${GLM_BUILD_DIR})
+link_directories(${CMAKE_SOURCE_DIR}/../../../../../../android-build)
+
+include_directories(${THIRDPARTY_DIR/glm})
 
 
 #Download and include vma
 ExternalProject_Add(vma
         GIT_REPOSITORY https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
         INSTALL_COMMAND cmake -E echo "Skipping install step."
+        BUILD_COMMAND ""
         UPDATE_COMMAND ""
         )
 
@@ -56,131 +53,16 @@ message(${VMA_BUILD_DIR})
 
 include_directories(${VMA_BUILD_DIR}/include)
 
+include_directories(${THIRDPARTY_DIR}/stb)
+include_directories(${THIRDPARTY_DIR}/beacon)
+include_directories(${THIRDPARTY_DIR}/json/include)
+include_directories(${THIRDPARTY_DIR}/tinygltf)
+include_directories(${THIRDPARTY_DIR}/imgui)
+include_directories(${THIRDPARTY_DIR}/glm)
 
-#Download and include stb-image
-ExternalProject_Add(stb
-        GIT_REPOSITORY https://github.com/nothings/stb.git
-        INSTALL_COMMAND cmake -E echo "Skipping install step for stb-image."
-        BUILD_COMMAND ""
-        UPDATE_COMMAND ""
-        CONFIGURE_COMMAND ""
-        )
-
-ExternalProject_Get_property(stb SOURCE_DIR)
-set(STB_BUILD_DIR ${SOURCE_DIR})
-message(${STB_BUILD_DIR})
-
-include_directories(${STB_BUILD_DIR})
-
-
-#Download and include Beacon
-ExternalProject_Add(beacon
-        GIT_REPOSITORY https://github.com/ImanolFotia/beacon.git
-        INSTALL_COMMAND cmake -E echo "Skipping install step for beacon."
-        BUILD_COMMAND ""
-        UPDATE_COMMAND ""
-        CONFIGURE_COMMAND ""
-        )
-
-ExternalProject_Get_property(beacon SOURCE_DIR)
-set(BEACON_BUILD_DIR ${SOURCE_DIR})
-message(${BEACON_BUILD_DIR})
-
-include_directories(${BEACON_BUILD_DIR})
-
-
-#Download and include nlohmann/json
-ExternalProject_Add(json
-        GIT_REPOSITORY https://www.github.com/nlohmann/json.git
-        INSTALL_COMMAND cmake -E echo "Skipping install step for json."
-        BUILD_COMMAND ""
-        UPDATE_COMMAND ""
-        CONFIGURE_COMMAND ""
-        )
-
-ExternalProject_Get_property(json SOURCE_DIR)
-set(JSON_BUILD_DIR ${SOURCE_DIR})
-message(${JSON_BUILD_DIR})
-
-include_directories(${JSON_BUILD_DIR}/include)
-
-
-include(ExternalProject)
-
-
-set(IMGUI_BUILD_DIR ${THIRDPARTY_DIR}/imgui)
-message(${IMGUI_BUILD_DIR})
-
-include_directories(${IMGUI_BUILD_DIR})
-link_directories(${IMGUI_BUILD_DIR})
-
-
-set(TINYGLTF_BUILD_DIR ${THIRDPARTY_DIR}/tinygltf)
-message(${TINYGLTF_BUILD_DIR})
-include_directories(${TINYGLTF_BUILD_DIR})
-
-
-set(CMAKE_OPENAL_ARGS "")
-if(WIN32)
-    set(CMAKE_OPENAL_ARGS "")
-else()
-    set(CMAKE_OPENAL_ARGS "-DALSOFT_REQUIRE_PULSEAUDIO=ON -DALSOFT_REQUIRE_PIPEWIRE=ON")
-endif()
-
-# download and include openal
-#requires installation of pulse audio and pipewire developer libs in the OS
-ExternalProject_Add(openal_d
-        GIT_REPOSITORY https://github.com/kcat/openal-soft.git
-        CMAKE_ARGS ${CMAKE_OPENAL_ARGS}
-        INSTALL_COMMAND cmake -E echo "Skipping install step."
-        UPDATE_COMMAND ""
-        )
-
-ExternalProject_Get_property(openal_d SOURCE_DIR)
-ExternalProject_Get_property(openal_d BINARY_DIR)
-set(OPENAL_BUILD_DIR ${BINARY_DIR})
-message(${SOURCE_DIR})
-message(${OPENAL_BUILD_DIR})
-
-include_directories(${SOURCE_DIR}/include)
-link_directories(${OPENAL_BUILD_DIR})
 
 
 set(PROJECT_FILES
-        ${CMAKE_SOURCE_DIR}/core/engine/context.cpp
-        ${CMAKE_SOURCE_DIR}/core/framework/env.cpp
-        ${CMAKE_SOURCE_DIR}/main_lib.cpp
-        ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/vulkan_impl.cpp
-        ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/vulkan.cpp
-        ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/resource_manager.cpp
-        ${CMAKE_SOURCE_DIR}/core/engine/audio/al/audio_manager.cpp
-        ${CMAKE_SOURCE_DIR}/core/framework/IO/IO.hpp
-        ${CMAKE_SOURCE_DIR}/core/framework/IO/KeyBoard.cpp
-        ${CMAKE_SOURCE_DIR}/core/framework/IO/KeyBoard.hpp
-        ${CMAKE_SOURCE_DIR}/core/framework/IO/KeyboardWrapper.hpp
-        ${CMAKE_SOURCE_DIR}/core/framework/IO/Mouse.hpp
-        ${CMAKE_SOURCE_DIR}/core/framework/IO/Joystick/Joystick.hpp
-        ${CMAKE_SOURCE_DIR}/core/framework/IO/Joystick/JoystickWrapper.hpp
-        ${CMAKE_SOURCE_DIR}/core/framework/IO/Joystick/Mappings.hpp
-        ${CMAKE_SOURCE_DIR}/core/framework/IO/IO.cpp
-        ${CMAKE_SOURCE_DIR}/core/framework/utils/helpers/camera.cpp
-        ${CMAKE_SOURCE_DIR}/core/framework/utils/helpers/camera.hpp
-        ${CMAKE_SOURCE_DIR}/apis/al/listener.hpp
-        ${CMAKE_SOURCE_DIR}/apis/al/source.hpp
-        ${CMAKE_SOURCE_DIR}/apis/al/al_data.hpp
-        ${CMAKE_SOURCE_DIR}/apis/al/device.hpp
-        ${CMAKE_SOURCE_DIR}/apis/al/listener.hpp
-        ${CMAKE_SOURCE_DIR}/core/framework/audio/WAVFile.h
-        ${CMAKE_SOURCE_DIR}/core/framework/window.cpp
-        ${CMAKE_SOURCE_DIR}/core/framework/window.cpp
-        ${CMAKE_SOURCE_DIR}/core/framework/clock.cpp
-        ${CMAKE_SOURCE_DIR}/core/framework/loaders/model.cpp
-        ${CMAKE_SOURCE_DIR}/modules/mono/mono-instance.hpp
-        ${CMAKE_SOURCE_DIR}/Epsilon.cpp
-        ${CMAKE_SOURCE_DIR}/Epsilon.hpp
-        ${CMAKE_SOURCE_DIR}/core/framework/singleton.hpp
-        ${CMAKE_SOURCE_DIR}/modules/imgui/imgui_impl_glfw.cpp
-        ${CMAKE_SOURCE_DIR}/modules/imgui/imgui_impl_vulkan.cpp
         ${IMGUI_BUILD_DIR}/ImPlot/implot_items.cpp
         ${IMGUI_BUILD_DIR}/ImPlot/implot.cpp
         ${IMGUI_BUILD_DIR}/imgui.cpp
@@ -225,6 +107,8 @@ add_library( # Sets the name of the library.
 # build script, prebuilt third-party libraries, or system libraries.
 #add_subdirectory(../../../../../../ ../../../../../../build EXCLUDE_FROM_ALL)
 
+target_link_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/../../../../../../android-build)
+
 target_link_libraries(
         ${PROJECT_NAME}
         # Specifies the target library.
@@ -233,20 +117,9 @@ target_link_libraries(
         game-activity::game-activity_static
         # Links the target library to the log library
         # included in the NDK.
+        openal
         log
         android)
 
 
 add_dependencies(${PROJECT_NAME} vma)
-
-add_dependencies(${PROJECT_NAME} openal_d)
-if(D__ANDROID__)
-    add_dependencies(${PROJECT_NAME} openal_d)
-    add_dependencies(${PROJECT_NAME} assimp_d)
-else()
-
-endif()
-add_dependencies(${PROJECT_NAME} glm)
-add_dependencies(${PROJECT_NAME} beacon)
-add_dependencies(${PROJECT_NAME} stb)
-add_dependencies(${PROJECT_NAME} json)

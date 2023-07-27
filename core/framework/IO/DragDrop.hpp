@@ -6,6 +6,7 @@
 #include "GLFW/glfw3.h"
 #endif
 #include <beacon/beacon.hpp>
+#include <core/framework/window.hpp>
 
 namespace framework
 {
@@ -50,7 +51,7 @@ namespace framework
 			static beacon::single_handler<DropArgs> DropEventHandler;
 
 #if USE_GLFW
-			static void DropCallbackGLFW(Window::windowType *window, int count, const char **paths)
+			static void DropCallbackGLFW(framework::Window::windowType *window, int count, const char **paths)
 			{
 				DropArgs dropArgs;
 				for (unsigned i = 0; i < count; i++)

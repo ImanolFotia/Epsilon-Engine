@@ -15,33 +15,11 @@
 
 class AndroidApp : public Epsilon::Epsilon {
 public:
-    AndroidApp() = default;
 
-    ANativeWindow* mWindow;
     bool allSet = false;
+    bool canRender = false;
 
-    explicit AndroidApp(const std::string &appName, ANativeWindow* window) : Epsilon::Epsilon(appName) {
-       /* try {
-            mWindow = window;
-            m_pContext->Window().setWindow(window);
-            m_pContext->Init(appName, engine::renderer_type::vulkan);
-          } catch(std::exception& e) {
-              std::cout << e.what() << std::endl;
-              std::exit(255);
-          }*/
-
-
-        Epsilon::onCreate = [this]
-        { onCreate(); };
-        Epsilon::onReady = [this]
-        { onReady(); };
-        Epsilon::onUpdate = [this]
-        { onUpdate(); };
-        Epsilon::onRender = [this]
-        { onRender(); };
-        Epsilon::onExit = [this]
-        { onExit(); };
-    }
+    AndroidApp() = default;
 
     ANativeWindow* getWindow() {
         return  m_pContext->Window().getWindow();
@@ -53,25 +31,27 @@ public:
 
     void Init() {
 
+        m_pContext = std::make_shared<engine::Context>();
         m_pContext->Init("Android Epsilon", engine::renderer_type::vulkan);
-        allSet = true;
+        allSet = false;
     }
 
-/*
-    void run() {
-        initWindow();
-        initVulkan();
-        onCreate();
-        onReady();
-        mainLoop();
-        exit();
-    }*/
 
     virtual void onCreate(){}
 
     virtual void onReady(){}
 
-    virtual void onRender(){}
+    virtual void onRender(){
+
+        auto renderer = m_pContext->Renderer();
+        renderer->BeginFrame();
+        renderer->Begin();
+        glm::vec3 v;
+        renderer->End(v);
+
+        renderer->Submit();
+        renderer->EndFrame();
+    }
 
     virtual void onExit() {}
 };

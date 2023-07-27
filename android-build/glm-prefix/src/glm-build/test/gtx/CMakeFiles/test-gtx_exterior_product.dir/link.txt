@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic "CMakeFiles/test-gtx_exterior_product.dir/gtx_exterior_product.cpp.o" -o test-gtx_exterior_product 

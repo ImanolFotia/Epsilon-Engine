@@ -4,19 +4,16 @@
 cmake_minimum_required(VERSION 3.5)
 
 file(MAKE_DIRECTORY
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb-build"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/tmp"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src"
-  "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp"
+  "J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb"
+  "J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb-build"
+  "J:/Code/Epsilon-Engine/android-build/stb-prefix"
+  "J:/Code/Epsilon-Engine/android-build/stb-prefix/tmp"
+  "J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp"
+  "J:/Code/Epsilon-Engine/android-build/stb-prefix/src"
+  "J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp"
 )
 
 set(configSubDirs )
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/${subDir}")
+    file(MAKE_DIRECTORY "J:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp/${subDir}")
 endforeach()
-if(cfgdir)
-  file(MAKE_DIRECTORY "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/stb-prefix/src/stb-stamp${cfgdir}") # cfgdir has leading slash
-endif()

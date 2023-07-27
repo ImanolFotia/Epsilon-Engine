@@ -18,14 +18,13 @@ namespace vk
         vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
         std::vector<VkExtensionProperties> extensions(extensionCount);
         vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
-        std::cout << "available extensions:\n";
+        IO::Log("available extensions:\n");
 
         for (const auto &extension : extensions)
         {
-            std::cout << '\t' << extension.extensionName << '\n';
+            IO::Log('\t', extension.extensionName, '\n');
         }
 
-        std::cout << std::endl;
     }
 
     static std::vector<const char *> getRequiredExtensions()
@@ -44,6 +43,17 @@ namespace vk
 
 
         return extensions;
+#endif
+
+#if defined(__ANDROID__)
+        std::vector<const char*> extensions;
+            extensions.push_back("VK_KHR_surface");
+            extensions.push_back("VK_KHR_android_surface");
+            if (enableValidationLayers) {
+                extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+            }
+            return extensions;
+
 #endif
     }
 }

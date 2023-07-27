@@ -21,6 +21,16 @@
 #include <bits/stdc++.h>
 #endif
 
+
+#if defined(ANDROID) || defined(__ANDROID__)
+
+#include <android/log.h>
+
+#define LOG_TAG "Epsilon"
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
+#endif
+
 namespace vk
 {
     static void createLogicalDevice(VulkanData &vk_data)
@@ -51,6 +61,8 @@ namespace vk
 
         //!!! TODO: Should ask where these extensions are avaliable
         VkPhysicalDeviceFeatures deviceFeatures{};
+
+#if !defined(__ANDROID__)
         deviceFeatures.samplerAnisotropy = VK_TRUE;
         deviceFeatures.multiDrawIndirect = VK_TRUE;
         deviceFeatures.shaderSampledImageArrayDynamicIndexing = VK_TRUE;
@@ -71,15 +83,18 @@ namespace vk
         bool bindless_supported = indexing_features.descriptorBindingPartiallyBound && indexing_features.runtimeDescriptorArray;
         bool separateStencilSupported = layoutFeatures.separateDepthStencilLayouts;
 
+
         VkPhysicalDeviceFeatures2 physical_features2 = {VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2};
         vkGetPhysicalDeviceFeatures2(vk_data.physicalDevice, &physical_features2);
 
         if (separateStencilSupported)
         {
             indexing_features.pNext = &layoutFeatures;
+            IO::Log("Separate Stencil is supported");
         }
         if (bindless_supported)
         {
+            IO::Log("bindless is supported");
             indexing_features.descriptorBindingPartiallyBound = VK_TRUE;
             indexing_features.descriptorBindingSampledImageUpdateAfterBind = VK_TRUE;
             indexing_features.runtimeDescriptorArray = VK_TRUE;
@@ -90,13 +105,17 @@ namespace vk
         }
         else
         {
-            std::cout << "bindless is not supported" << std::endl;
+            IO::Log("bindless is not supported");
         }
+
+#endif
         VkSurfaceCapabilitiesKHR surfaceCapabilities;
         vkGetPhysicalDeviceSurfaceCapabilitiesKHR(vk_data.physicalDevice, vk_data.surface, &surfaceCapabilities);
 
         MIN_FRAMES_IN_FLIGHT = surfaceCapabilities.minImageCount;
         MAX_FRAMES_IN_FLIGHT = std::max(MIN_FRAMES_IN_FLIGHT, MAX_FRAMES_IN_FLIGHT);
+
+        IO::Log("Min frames in flight", MIN_FRAMES_IN_FLIGHT);
 
         VkDeviceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -105,8 +124,19 @@ namespace vk
 
         createInfo.enabledExtensionCount = static_cast<uint32_t>(vk_data.deviceExtensions.size());
         createInfo.ppEnabledExtensionNames = vk_data.deviceExtensions.data();
+
+        IO::Log("Required extensions\n");
+        for (const auto& extension : vk_data.deviceExtensions)
+        {
+            IO::Log(extension);
+        }
+        IO::Log("\n");
+
+#if !defined(__ANDROID__)
         createInfo.pNext = &physical_features2;
-        // createInfo.pEnabledFeatures = &deviceFeatures;
+#else
+        createInfo.pEnabledFeatures = &deviceFeatures;
+#endif
         //   createInfo.enabledExtensionCount = 0;
 
         if (enableValidationLayers)
@@ -119,8 +149,11 @@ namespace vk
             createInfo.enabledLayerCount = 0;
         }
 
-        if (vkCreateDevice(vk_data.physicalDevice, &createInfo, nullptr, &vk_data.logicalDevice) != VK_SUCCESS)
+
+
+        if (auto deviceResult = vkCreateDevice(vk_data.physicalDevice, &createInfo, nullptr, &vk_data.logicalDevice); deviceResult != VK_SUCCESS)
         {
+            IO::Error("Error creating the device: ", deviceResult);
             throw std::runtime_error("failed to create logical device!");
         }
         vkGetDeviceQueue(vk_data.logicalDevice, indices.presentFamily.value(), 0, &vk_data.presentQueue);
@@ -257,8 +290,8 @@ namespace vk
                     found = true;
                     break;
                 }
-                candidate = device;
             }
+            candidate = device;
         }
 
         if (!found)

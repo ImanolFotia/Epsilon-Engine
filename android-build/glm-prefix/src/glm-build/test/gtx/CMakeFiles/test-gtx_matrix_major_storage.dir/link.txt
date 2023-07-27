@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic "CMakeFiles/test-gtx_matrix_major_storage.dir/gtx_matrix_major_storage.cpp.o" -o test-gtx_matrix_major_storage 

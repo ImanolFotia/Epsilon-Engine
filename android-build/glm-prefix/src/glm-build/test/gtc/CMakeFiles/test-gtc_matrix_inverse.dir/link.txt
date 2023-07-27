@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic "CMakeFiles/test-gtc_matrix_inverse.dir/gtc_matrix_inverse.cpp.o" -o test-gtc_matrix_inverse 

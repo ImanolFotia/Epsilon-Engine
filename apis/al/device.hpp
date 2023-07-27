@@ -68,7 +68,6 @@ struct OpenALData;
 #endif
     static bool initDevice(OpenALData* al_data) {
 
-#if !defined(ANDROID) && !defined(__ANDROID__)
         auto device_name = alcGetString(al_data->device, ALC_DEFAULT_DEVICE_SPECIFIER);
         al_data->device = alcOpenDevice(device_name);
         if (al_data->device == NULL)
@@ -84,6 +83,7 @@ struct OpenALData;
         }
         alcMakeContextCurrent(al_data->context);
 
+#if !defined(ANDROID) && !defined(__ANDROID__)
         if (!alcIsExtensionPresent(alcGetContextsDevice(alcGetCurrentContext()), "ALC_EXT_EFX"))
         {
             std::cout << g_szALC_EXT_EFX << "`xff0000Error: EFX not supported" << std::endl;
@@ -126,6 +126,7 @@ struct OpenALData;
             LOAD_PROC(alIsBufferFormatSupportedSOFT, LPALISBUFFERFORMATSUPPORTEDSOFT);
         }
 #undef LOAD_PROC
+#endif
 
         ALboolean enumeration;
 
@@ -152,7 +153,6 @@ struct OpenALData;
         printf("Opened \"%s\"\n", name);
 
         return true;
-#endif
     }
 
     static void destroyDevice(OpenALData* al_data) {

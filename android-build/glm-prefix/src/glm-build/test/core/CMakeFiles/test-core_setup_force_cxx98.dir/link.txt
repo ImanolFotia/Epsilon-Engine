@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic "CMakeFiles/test-core_setup_force_cxx98.dir/core_setup_force_cxx98.cpp.o" -o test-core_setup_force_cxx98 

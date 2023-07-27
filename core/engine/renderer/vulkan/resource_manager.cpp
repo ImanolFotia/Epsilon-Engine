@@ -37,11 +37,14 @@ namespace engine
 	void VulkanResourceManager::Init()
 	{
 
+		std::cout << "Initiating Resource Manager\n";
 		VmaAllocatorCreateInfo allocatorInfo = {};
 		allocatorInfo.physicalDevice = m_pVkDataPtr->physicalDevice;
 		allocatorInfo.device = m_pVkDataPtr->logicalDevice;
 		allocatorInfo.instance = m_pVkDataPtr->instance;
+#if !defined(__ANDROID__)
 		allocatorInfo.flags = VMA_ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT;
+#endif
 
 		VkPhysicalDeviceProperties deviceProperties;
 		vkGetPhysicalDeviceProperties(m_pVkDataPtr->physicalDevice, &deviceProperties);

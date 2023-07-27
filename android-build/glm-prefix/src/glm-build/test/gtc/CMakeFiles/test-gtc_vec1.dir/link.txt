@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic "CMakeFiles/test-gtc_vec1.dir/gtc_vec1.cpp.o" -o test-gtc_vec1 

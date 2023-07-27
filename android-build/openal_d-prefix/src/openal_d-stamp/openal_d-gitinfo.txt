@@ -3,9 +3,9 @@
 # No other meaning or use of this file is supported.
 
 method=git
-command=/usr/bin/cmake;-P;/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/tmp/openal_d-gitclone.cmake
-source_dir=/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d
-work_dir=/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/src
+command=C:/Program Files/CMake/bin/cmake.exe;-P;J:/Code/Epsilon-Engine/android-build/openal_d-prefix/tmp/openal_d-gitclone.cmake
+source_dir=J:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d
+work_dir=J:/Code/Epsilon-Engine/android-build/openal_d-prefix/src
 repository=https://github.com/kcat/openal-soft.git
 remote=origin
 init_submodules=TRUE

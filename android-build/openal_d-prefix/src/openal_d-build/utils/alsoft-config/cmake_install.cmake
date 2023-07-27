@@ -1,8 +1,8 @@
-# Install script for directory: /home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/utils/alsoft-config
+# Install script for directory: J:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/utils/alsoft-config
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/build/install/arm64-v8a")
+  set(CMAKE_INSTALL_PREFIX "J:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/install/arm64-v8a")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -39,6 +39,6 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/home/solaire/Android/Sdk/ndk/26.0.10404224/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-objdump")
+  set(CMAKE_OBJDUMP "J:/AndroidSDK/ndk/26.0.10404224-beta1/toolchains/llvm/prebuilt/windows-x86_64/bin/llvm-objdump.exe")
 endif()
 

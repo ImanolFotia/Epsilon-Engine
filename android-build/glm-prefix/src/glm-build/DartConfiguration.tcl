@@ -4,17 +4,17 @@
 
 
 # Configuration directories and files
-SourceDirectory: /home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm
-BuildDirectory: /home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm-build
+SourceDirectory: J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm
+BuildDirectory: J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm-build
 
 # Where to place the cost data store
 CostDataFile: 
 
 # Site is something like machine.domain, i.e. pragmatic.crd
-Site: solaire
+Site: DESKTOP-4KTGQSJ
 
 # Build name is osname-revision-compiler, i.e. Linux-2.4.2-2smp-c++
-BuildName: Linux-c++
+BuildName: Win32-ninja
 
 # Subprojects
 LabelsForSubprojects: 
@@ -27,8 +27,8 @@ SubmitInactivityTimeout:
 NightlyStartTime: 00:00:00 EDT
 
 # Commands for the build/test/submit cycle
-ConfigureCommand: "/usr/bin/cmake" "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/glm-prefix/src/glm"
-MakeCommand: /usr/bin/cmake --build . --config "${CTEST_CONFIGURATION_TYPE}" -- -i
+ConfigureCommand: "C:/Program Files/CMake/bin/cmake.exe" "J:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm"
+MakeCommand: "C:\Program Files\CMake\bin\cmake.exe" --build . --config "${CTEST_CONFIGURATION_TYPE}"
 DefaultCTestConfigurationType: Release
 
 # version control
@@ -45,7 +45,7 @@ SVNOptions:
 SVNUpdateOptions: 
 
 # Git options
-GITCommand: /usr/bin/git
+GITCommand: C:/Program Files/Git/cmd/git.exe
 GITInitSubmodules: 
 GITUpdateOptions: 
 GITUpdateCustom: 
@@ -58,13 +58,13 @@ P4UpdateOptions:
 P4UpdateCustom: 
 
 # Generic update command
-UpdateCommand: /usr/bin/git
+UpdateCommand: C:/Program Files/Git/cmd/git.exe
 UpdateOptions: 
 UpdateType: git
 
 # Compiler info
-Compiler: /usr/bin/c++
-CompilerVersion: 13.1.1
+Compiler: C:/msys64/clang64/bin/c++.exe
+CompilerVersion: 16.0.4
 
 # Dynamic analysis (MemCheck)
 PurifyCommand: 
@@ -76,12 +76,12 @@ CudaSanitizerCommand:
 CudaSanitizerCommandOptions: 
 MemoryCheckType: 
 MemoryCheckSanitizerOptions: 
-MemoryCheckCommand: /usr/bin/valgrind
+MemoryCheckCommand: MEMORYCHECK_COMMAND-NOTFOUND
 MemoryCheckCommandOptions: 
 MemoryCheckSuppressionFile: 
 
 # Coverage
-CoverageCommand: /usr/bin/gcov
+CoverageCommand: C:/msys64/clang64/bin/gcov.exe
 CoverageExtraFlags: -l
 
 # Testing options

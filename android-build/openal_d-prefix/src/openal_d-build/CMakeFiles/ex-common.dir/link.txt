@@ -1,2 +1,0 @@
-/home/solaire/Android/Sdk/ndk/26.0.10404224/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar qc libex-common.a "CMakeFiles/ex-common.dir/examples/common/alhelpers.c.o"
-/home/solaire/Android/Sdk/ndk/26.0.10404224/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ranlib libex-common.a

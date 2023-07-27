@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic "CMakeFiles/test-gtx_projection.dir/gtx_projection.cpp.o" -o test-gtx_projection 

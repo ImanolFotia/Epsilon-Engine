@@ -82,6 +82,9 @@ namespace vk
 
 	static VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes)
 	{
+#if defined(__ANDROID__)
+		return VK_PRESENT_MODE_FIFO_KHR;
+#endif
 		for (const auto& availablePresentMode : availablePresentModes)
 		{
 			if (availablePresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR) // VK_PRESENT_MODE_IMMEDIATE_KHR
@@ -162,6 +165,9 @@ namespace vk
 		}
 		createInfo.preTransform = swapChainSupport.capabilities.currentTransform;
 		createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+#if defined(__ANDROID__)
+		createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR;
+#endif
 		createInfo.presentMode = presentMode;
 		createInfo.clipped = VK_TRUE;
 		createInfo.oldSwapchain = VK_NULL_HANDLE;
@@ -170,7 +176,7 @@ namespace vk
 		{
 			throw std::runtime_error("failed to create swap chain!");
 		}
-		// vkGetSwapchainImagesKHR(vk_data.logicalDevice, vk_data.swapChain, &imageCount, nullptr);
+		vkGetSwapchainImagesKHR(vk_data.logicalDevice, vk_data.swapChain, &imageCount, nullptr);
 		vk_data.defaultRenderPass.renderPassChain.Images.clear();
 		vk_data.defaultRenderPass.renderPassChain.Images.resize(imageCount);
 		vkGetSwapchainImagesKHR(vk_data.logicalDevice, vk_data.swapChain, &imageCount, vk_data.defaultRenderPass.renderPassChain.Images.data());

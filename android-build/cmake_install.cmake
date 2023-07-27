@@ -1,8 +1,8 @@
-# Install script for directory: /home/solaire/Documents/Code/C++/Epsilon-Engine
+# Install script for directory: J:/Code/Epsilon-Engine
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build")
+  set(CMAKE_INSTALL_PREFIX "J:/Code/Epsilon-Engine/android-build")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -12,7 +12,7 @@ if(NOT DEFINED CMAKE_INSTALL_CONFIG_NAME)
     string(REGEX REPLACE "^[^A-Za-z0-9_]+" ""
            CMAKE_INSTALL_CONFIG_NAME "${BUILD_TYPE}")
   else()
-    set(CMAKE_INSTALL_CONFIG_NAME "Release")
+    set(CMAKE_INSTALL_CONFIG_NAME "Debug")
   endif()
   message(STATUS "Install configuration: \"${CMAKE_INSTALL_CONFIG_NAME}\"")
 endif()
@@ -39,50 +39,68 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/home/solaire/Android/Sdk/ndk/26.0.10404224/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-objdump")
+  set(CMAKE_OBJDUMP "J:/AndroidSDK/ndk/26.0.10404224-beta1/toolchains/llvm/prebuilt/windows-x86_64/bin/llvm-objdump.exe")
 endif()
 
-if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libEpsilon.so" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libEpsilon.so")
     file(RPATH_CHECK
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libEpsilon.so"
          RPATH "")
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/libEpsilon.so")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "J:/Code/Epsilon-Engine/android-build/libEpsilon.so")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libEpsilon.so" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libEpsilon.so")
     if(CMAKE_INSTALL_DO_STRIP)
-      execute_process(COMMAND "/home/solaire/Android/Sdk/ndk/26.0.10404224/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libEpsilon.so")
+      execute_process(COMMAND "J:/AndroidSDK/ndk/26.0.10404224-beta1/toolchains/llvm/prebuilt/windows-x86_64/bin/llvm-strip.exe" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libEpsilon.so")
     endif()
   endif()
 endif()
 
-if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
 endif()
 
-if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin/assets/shaders" TYPE FILE FILES "/home/solaire/Documents/Code/C++/Epsilon-Engine/assets/shaders/vertex.spv")
-endif()
-
-if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin/assets/images" TYPE FILE FILES
-    "/home/solaire/Documents/Code/C++/Epsilon-Engine/assets/images/diff.png"
-    "/home/solaire/Documents/Code/C++/Epsilon-Engine/assets/images/maxresdefault.png"
-    "/home/solaire/Documents/Code/C++/Epsilon-Engine/assets/images/pieces.png"
-    "/home/solaire/Documents/Code/C++/Epsilon-Engine/assets/images/texture.png"
-    "/home/solaire/Documents/Code/C++/Epsilon-Engine/assets/images/texture2.png"
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin/assets/shaders/chess" TYPE FILE FILES
+    "J:/Code/Epsilon-Engine/assets/shaders/chess/board-fragment.spv"
+    "J:/Code/Epsilon-Engine/assets/shaders/chess/board-vertex.spv"
+    "J:/Code/Epsilon-Engine/assets/shaders/chess/piece-fragment.spv"
+    "J:/Code/Epsilon-Engine/assets/shaders/chess/piece-vertex.spv"
     )
 endif()
 
-if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin/assets" TYPE DIRECTORY FILES "/home/solaire/Documents/Code/C++/Epsilon-Engine/assets/images")
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin/assets/shaders" TYPE FILE FILES
+    "J:/Code/Epsilon-Engine/assets/shaders/board-fragment.spv"
+    "J:/Code/Epsilon-Engine/assets/shaders/board-vertex.spv"
+    "J:/Code/Epsilon-Engine/assets/shaders/fragment.spv"
+    "J:/Code/Epsilon-Engine/assets/shaders/shadow-fragment.spv"
+    "J:/Code/Epsilon-Engine/assets/shaders/shadow-vertex.spv"
+    "J:/Code/Epsilon-Engine/assets/shaders/sky-fragment.spv"
+    "J:/Code/Epsilon-Engine/assets/shaders/sky-vertex.spv"
+    "J:/Code/Epsilon-Engine/assets/shaders/vertex.spv"
+    )
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin/assets/images" TYPE FILE FILES
+    "J:/Code/Epsilon-Engine/assets/images/diff.png"
+    "J:/Code/Epsilon-Engine/assets/images/maxresdefault.png"
+    "J:/Code/Epsilon-Engine/assets/images/pieces.png"
+    "J:/Code/Epsilon-Engine/assets/images/texture.png"
+    "J:/Code/Epsilon-Engine/assets/images/texture2.png"
+    )
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin/assets" TYPE DIRECTORY FILES "J:/Code/Epsilon-Engine/assets/images")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/examples/bsp/cmake_install.cmake")
-  include("/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/examples/mono-managed/cmake_install.cmake")
+  include("J:/Code/Epsilon-Engine/android-build/examples/bsp/cmake_install.cmake")
+  include("J:/Code/Epsilon-Engine/android-build/projects/TowerDefense/cmake_install.cmake")
 
 endif()
 
@@ -94,5 +112,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/solaire/Documents/Code/C++/Epsilon-Engine/android-build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "J:/Code/Epsilon-Engine/android-build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
