@@ -11,6 +11,29 @@
 
 #include "JoystickWrapper.hpp"
 #include "Mappings.hpp"
+
+
+#if defined(_WIN32)
+//  Microsoft
+#if defined(EPSILON_BUILD_DLL)
+#define EPSILON_DLL __declspec(dllexport)
+#else
+#define EPSILON_DLL __declspec(dllimport)
+#endif
+#elif defined(__linux__)
+//  GCC
+#if defined(EPSILON_BUILD_DLL)
+#define EPSILON_DLL __attribute__((visibility("default")))
+#else
+#define EPSILON_DLL
+#endif
+#else
+//  do nothing and hope for the best?
+#define EPSILON_DLL
+#pragma warning Unknown dynamic link import / export semantics.
+#endif
+
+
 namespace framework
 {
     namespace Input
@@ -21,7 +44,7 @@ namespace framework
 
             static const int MAX_JOYSTICKS = 4;
 
-            class Joystick
+            class  Joystick
             {
                 using Mapping_ptr = std::shared_ptr<Input::Joystick::Mappings::Mapping>;
 
@@ -118,7 +141,7 @@ namespace framework
                 Type mType;
             };
 
-            class JoystickManager
+            class EPSILON_DLL JoystickManager
             {
                 using Joystick_ptr = std::shared_ptr<Joystick>;
 

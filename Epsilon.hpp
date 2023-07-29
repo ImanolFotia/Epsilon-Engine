@@ -21,6 +21,7 @@
 #include "core/framework/utils/file.hpp"
 #include "core/framework/clock.hpp"
 
+
 #include "core/engine/context.hpp"
 
 #include "core/engine/renderer/vulkan/vulkan.hpp"
@@ -30,6 +31,29 @@
 #include "modules/mono/mono-instance.hpp"
 
 #include <core/engine/scene/scene.hpp>
+
+
+#if defined(_WIN32)
+//  Microsoft
+#if defined(EPSILON_BUILD_DLL)
+#define EXPORT __declspec(dllexport)
+#else
+#define IMPORT __declspec(dllimport)
+#endif
+#elif defined(__linux__)
+//  GCC
+#if defined(EPSILON_BUILD_DLL)
+#define EXPORT __attribute__((visibility("default")))
+#else
+#define IMPORT
+#endif
+#else
+//  do nothing and hope for the best?
+#define EXPORT
+#define IMPORT
+#pragma warning Unknown dynamic link import / export semantics.
+#endif
+
 
 namespace Epsilon
 {

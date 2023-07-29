@@ -90,10 +90,20 @@ namespace engine
 	{
 		Ref<Texture> refTexture;
 
-		auto format = resolveFormat(texInfo.format);
+		auto format = resolveFormat(texInfo.format, texInfo.isCompressed);
+		uint32_t mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texInfo.width, texInfo.height)))) + 1;
+
+		auto size = texInfo.width * texInfo.height * texInfo.numChannels;
+		if (texInfo.isKTX) {
+			size = texInfo.size;
+			mipLevels = texInfo.mipLevels;
+		}
+		else {
+			texInfo.mipLevels = mipLevels;
+		}
 
 		auto stagingBuffer = pCreateStagingTextureBuffer(texInfo.pixels, texInfo);
-		uint32_t mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texInfo.width, texInfo.height)))) + 1;
+		
 
 		auto texture = pCreateTextureBuffer({ .width = texInfo.width,
 											 .height = texInfo.height,
@@ -106,13 +116,11 @@ namespace engine
 
 		texture.format = format;
 
-		auto size = texInfo.width * texInfo.height * texInfo.numChannels;
-
 		transitionImageLayout(*m_pVkDataPtr, m_pTransferCommandPool, texture.image,
 			format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 			texture.info);
 		copyBufferToImage(*m_pVkDataPtr, m_pTransferCommandPool, stagingBuffer.buffer, texture.image,
-			static_cast<uint32_t>(texInfo.width), static_cast<uint32_t>(texInfo.height));
+			static_cast<uint32_t>(texInfo.width), static_cast<uint32_t>(texInfo.height), texInfo.offsets, texInfo.mipLevels);
 		transitionImageLayout(*m_pVkDataPtr, m_pTransferCommandPool, texture.image,
 			format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 			VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, texture.info);
@@ -125,94 +133,14 @@ namespace engine
 		texture.info.mipLevels = mipLevels;
 		vk::createImageView(*m_pVkDataPtr, texture, VK_IMAGE_ASPECT_COLOR_BIT);
 
-		ResourcesMemory.m_pTextureBufferAllocationSize += texInfo.width * texInfo.height * 4;
-		VkCommandBuffer blitCommandBuffer = vk::beginSingleTimeCommands(*m_pVkDataPtr, m_pTransferCommandPool);
+		ResourcesMemory.m_pTextureBufferAllocationSize += size;
 
-		/* Begin generate mips*/
-		// Copy down mips from n-1 to n
+		//Call gen mips
+		if (texInfo.offsets.size() <= 0) {
+			pGenerateMipMaps(texInfo, texture);
+		}
 
-		if (mipLevels > 1)
-			for (int32_t i = 1; i < mipLevels; i++)
-			{
-				VkImageBlit imageBlit{};
 
-				// Source
-				imageBlit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-				imageBlit.srcSubresource.layerCount = 1;
-				imageBlit.srcSubresource.mipLevel = i - 1;
-				imageBlit.srcOffsets[1].x = int32_t(texture.info.width >> (i - 1));
-				imageBlit.srcOffsets[1].y = int32_t(texture.info.height >> (i - 1));
-				imageBlit.srcOffsets[1].z = 1;
-
-				// Destination
-				imageBlit.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-				imageBlit.dstSubresource.layerCount = 1;
-				imageBlit.dstSubresource.mipLevel = i;
-				imageBlit.dstOffsets[1].x = int32_t(texture.info.width >> i);
-				imageBlit.dstOffsets[1].y = int32_t(texture.info.height >> i);
-				imageBlit.dstOffsets[1].z = 1;
-
-				VkImageSubresourceRange mipSubRange = {};
-				mipSubRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-				mipSubRange.baseMipLevel = i;
-				mipSubRange.levelCount = 1;
-				mipSubRange.layerCount = 1;
-
-				vk::imageMemoryBarrier(*m_pVkDataPtr,
-					m_pTransferCommandPool,
-					texture.image,
-					texture.format,
-					VK_IMAGE_LAYOUT_UNDEFINED,
-					VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-					texture.info,
-					blitCommandBuffer,
-					mipSubRange, i, 1);
-
-				// Blit from previous level
-				vkCmdBlitImage(
-					blitCommandBuffer,
-					texture.image,
-					VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-					texture.image,
-					VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-					1,
-					&imageBlit,
-					VK_FILTER_LINEAR);
-
-				vk::imageMemoryBarrier(*m_pVkDataPtr,
-					m_pTransferCommandPool,
-					texture.image,
-					texture.format,
-					VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-					VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-					texture.info,
-					blitCommandBuffer,
-					mipSubRange, i, 1);
-			}
-
-		// After the loop, all mip layers are in TRANSFER_SRC layout, so transition all to SHADER_READ
-
-		VkImageSubresourceRange subresourceRange = {};
-		subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-		subresourceRange.layerCount = 1;
-		subresourceRange.levelCount = mipLevels;
-
-		vk::imageMemoryBarrier(*m_pVkDataPtr,
-			m_pTransferCommandPool,
-			texture.image,
-			texture.format,
-			VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-			VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-			texture.info,
-			blitCommandBuffer,
-			subresourceRange);
-
-		vk::endSingleTimeCommands(*m_pVkDataPtr, m_pTransferCommandPool, blitCommandBuffer);
-
-		/*transitionImageLayout(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), texture.image,
-			format, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-			VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, texture.info);*/
-			/* End generate mips*/
 		vk::createTextureSampler(*m_pVkDataPtr, texture);
 
 		texture.bindingType = vk::MATERIAL_SAMPLER;

@@ -20,6 +20,8 @@ framework::Input::STATE framework::Input::Mouse::RIGHT = Input::NONE;
 
 //Epsilon::Input::MouseArgs Epsilon::Input::Mouse::mouseArgs;
 
+
+
 beacon::single_handler<framework::Input::MouseArgs> framework::Input::Mouse::MouseEventHandler;
 
 beacon::single_handler<framework::Input::KeyboardArgs> framework::Input::KeyBoard::KeyboardEventHandler;
@@ -28,5 +30,6 @@ beacon::single_handler<framework::Input::DropArgs> framework::Input::DragDrop::D
 
 namespace Joystick = framework::Input::Joystick;
 
+std::shared_ptr<framework::Input::Joystick::Joystick> framework::Input::Joystick::JoystickManager::dummyJoystick = std::make_shared<framework::Input::Joystick::Joystick>();
+
 std::unordered_map<unsigned, Joystick::JoystickManager::Joystick_ptr> Joystick::JoystickManager::JoystickVector;
-Joystick::JoystickManager::Joystick_ptr Joystick::JoystickManager::dummyJoystick = std::make_shared<Input::Joystick::Joystick>();

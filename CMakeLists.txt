@@ -8,6 +8,8 @@ set(EPSILON_BUILD_LOCATION ${CMAKE_BINARY_DIR})
 
 set(BUILD_ANDROID FALSE CACHE BOOL "Build for Android")
 
+add_compile_definitions(BUILD_SHARED_LIBS=${DBUILD_SHARED_LIBS})
+
 
 set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}")
 set(PROJECT_ICON "${CMAKE_SOURCE_DIR}/media/icon.rc")
@@ -278,9 +280,20 @@ else()
     include_directories(${TINYGLTF_BUILD_DIR})
 
     
-    set(KTX_BUILD_DIR ${KTX_DIR}/ktx)
-    message(${KTX_BUILD_DIR})
-    include_directories(${KTX_BUILD_DIR})
+    set(KTX_DIR ${THIRDPARTY_DIR}/ktx)
+    message(${KTX_DIR})
+    include_directories(${KTX_DIR}/include)
+    include_directories(${KTX_DIR}/other_include)
+    link_directories(${KTX_DIR}/build/Release)
+
+    set (KTX_INCLUDES "${KTX_DIR}/include" "${KTX_DIR}/other_include" "${KTX_DIR}/lib")
+
+    add_library(KTX SHARED IMPORTED)
+set_target_properties(KTX PROPERTIES
+    IMPORTED_LOCATION "${KTX_DIR}/build/Release/ktx.dll"
+    IMPORTED_IMPLIB "${KTX_DIR}/build/Release/ktx.lib"
+    INTERFACE_INCLUDE_DIRECTORIES ${KTX_INCLUDES}
+)
 
 endif()
 SET(HEADERS
@@ -324,6 +337,7 @@ set(PROJECT_FILES
         ${CMAKE_SOURCE_DIR}/core/framework/IO/IO.cpp
         ${CMAKE_SOURCE_DIR}/core/framework/utils/helpers/camera.cpp
         ${CMAKE_SOURCE_DIR}/core/framework/utils/helpers/camera.hpp
+        ${CMAKE_SOURCE_DIR}/core/framework/loaders/DDS.cpp
         ${CMAKE_SOURCE_DIR}/apis/al/listener.hpp
         ${CMAKE_SOURCE_DIR}/apis/al/source.hpp
         ${CMAKE_SOURCE_DIR}/apis/al/al_data.hpp
@@ -349,16 +363,21 @@ set(PROJECT_FILES
         ${IMGUI_BUILD_DIR}/imgui_widgets.cpp
         ${TINYGLTF_BUILD_DIR}/tiny_gltf.cc
         )
-
+        
 if (BUILD_AS_LIBRARY)
-
+    
+    add_compile_definitions(EPSILON_BUILD_DLL=1)
+    if (MSVC)
+        set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    endif ()
     if (CREATE_STATIC_LIB)
         add_library(${PROJECT_NAME} STATIC main_lib.cpp)
     else ()
-        add_library(${PROJECT_NAME} SHARED main_lib.cpp)
+        add_library(${PROJECT_NAME} SHARED main_lib.cpp ${PROJECT_FILES})
     endif ()
 
     if (MSVC)
+        set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
         target_compile_options(${PROJECT_NAME} PRIVATE /W3)
     else ()
     if(WIN32)
@@ -415,6 +434,7 @@ else()
 target_link_libraries(${PROJECT_NAME} PRIVATE openal)
 endif()
 
+
 if(DOWNLOAD_LIBRARIES)
     add_dependencies(${PROJECT_NAME} vma)
     
@@ -439,6 +459,8 @@ endif()
 if(!WIN32) 
         target_link_libraries(${PROJECT_NAME} PUBLIC -rdynamic)
 endif()
+
+target_link_libraries(${PROJECT_NAME} PUBLIC ktx)
 
 
 #add_dependencies(${PROJECT_NAME} LearningVulkan)
@@ -481,13 +503,12 @@ install(DIRECTORY ${images} DESTINATION "bin/assets")
 #add_subdirectory(examples/basic)
 #add_subdirectory(examples/chess)
 #add_subdirectory(examples/model)
-add_subdirectory(examples/bsp)
-
-
-add_subdirectory(projects/TowerDefense)
-
-if(${Mono_FOUND})
-add_subdirectory(examples/mono-managed)
+if(!BUILD_AS_LIBRARY)
+    add_subdirectory(examples/bsp)
+    add_subdirectory(projects/TowerDefense)
+    if(${Mono_FOUND})
+    add_subdirectory(examples/mono-managed)
+    endif()
 endif()
 
 #if(D__ANDROID__)

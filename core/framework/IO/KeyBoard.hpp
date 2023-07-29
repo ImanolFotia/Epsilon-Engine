@@ -14,6 +14,27 @@
 
 #include <beacon/beacon.hpp>
 
+
+#if defined(_WIN32)
+//  Microsoft
+#if defined(EPSILON_BUILD_DLL)
+#define EPSILON_DLL __declspec(dllexport)
+#else
+#define EPSILON_DLL __declspec(dllimport)
+#endif
+#elif defined(__linux__)
+//  GCC
+#if defined(EPSILON_BUILD_DLL)
+#define EPSILON_DLL __attribute__((visibility("default")))
+#else
+#define EPSILON_DLL
+#endif
+#else
+//  do nothing and hope for the best?
+#define EPSILON_DLL
+#pragma warning Unknown dynamic link import / export semantics.
+#endif
+
 namespace framework
 {
     namespace Input
@@ -42,7 +63,7 @@ namespace framework
                 int key_down_index = -1;
         };
 
-        class KeyBoard
+        class EPSILON_DLL KeyBoard
         {
         private:
         public:

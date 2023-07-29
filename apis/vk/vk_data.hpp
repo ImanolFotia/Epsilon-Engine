@@ -82,6 +82,7 @@ namespace vk
         VkSampler sampler = VK_NULL_HANDLE;
         VkImageLayout imageLayout{};
         VmaAllocation allocation{};
+        VkDeviceMemory deviceMemory{};
 
         VkFilter filter;
         VkSamplerAddressMode addressMode;

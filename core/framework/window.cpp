@@ -52,6 +52,8 @@ namespace framework
             m_pAvailableSizes.push_back(size_desc);
         }
 
+        glfwSetWindowPos(mWindow, mWidth/4, mHeight/4);
+
         // Set up IO callbacks
         glfwSetKeyCallback(mWindow, Input::KeyBoard::KeyBoardCallBackGLFW);
         glfwSetCursorPosCallback(mWindow, Input::Mouse::MouseCallBackGLFW);

@@ -6,6 +6,7 @@
 #include <cmath>
 
 #include "vk_data.hpp"
+#include <ktx.h>
 #include "command.hpp"
 
 #ifdef _WIN32
@@ -206,26 +207,46 @@ namespace vk
     }
 
     static void
-    copyBufferToImage(VulkanData &vkData, VkCommandPool &commandPool, VkBuffer buffer, VkImage image, uint32_t width,
-                      uint32_t height)
+    copyBufferToImage(VulkanData &vkData, VkCommandPool &commandPool, VkBuffer& buffer, VkImage& image, uint32_t width,
+                      uint32_t height, std::vector<size_t> offsets, uint32_t mipLevels)
     {
         VkCommandBuffer commandBuffer = beginSingleTimeCommands(vkData, commandPool);
 
-        VkBufferImageCopy region{};
-        region.bufferOffset = 0;
-        region.bufferRowLength = 0;
-        region.bufferImageHeight = 0;
-        region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        region.imageSubresource.mipLevel = 0;
-        region.imageSubresource.baseArrayLayer = 0;
-        region.imageSubresource.layerCount = 1;
-        region.imageOffset = {0, 0, 0};
-        region.imageExtent = {
-            width,
-            height,
-            1};
+        std::vector<VkBufferImageCopy> bufferCopyRegions;
+        if (offsets.size()  <= 0) {
+            VkBufferImageCopy& region = bufferCopyRegions.emplace_back();
+            region.bufferOffset = 0;
+            region.bufferRowLength = 0;
+            region.bufferImageHeight = 0;
+            region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+            region.imageSubresource.mipLevel = 0;
+            region.imageSubresource.baseArrayLayer = 0;
+            region.imageSubresource.layerCount = 1;
+            region.imageOffset = { 0, 0, 0 };
+            region.imageExtent = {
+                width,
+                height,
+                1 };
+        }
+        else {
+            for (uint32_t i = 0; i < mipLevels; i++)
+            {
 
-        vkCmdCopyBufferToImage(commandBuffer, buffer, image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
+                VkBufferImageCopy bufferCopyRegion = {};
+                bufferCopyRegion.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+                bufferCopyRegion.imageSubresource.mipLevel = i;
+                bufferCopyRegion.imageSubresource.baseArrayLayer = 0;
+                bufferCopyRegion.imageSubresource.layerCount = 1;
+                bufferCopyRegion.imageExtent.width = std::max(1u, width >> i);
+                bufferCopyRegion.imageExtent.height = std::max(1u,  height >> i);
+                bufferCopyRegion.imageExtent.depth = 1;
+                bufferCopyRegion.bufferOffset = offsets.at(i);
+
+                bufferCopyRegions.push_back(bufferCopyRegion);
+            }
+        }
+
+        vkCmdCopyBufferToImage(commandBuffer, buffer, image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, bufferCopyRegions.size(), bufferCopyRegions.data());
 
         endSingleTimeCommands(vkData, commandPool, commandBuffer);
     }

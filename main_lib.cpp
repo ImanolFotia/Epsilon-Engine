@@ -3,21 +3,6 @@
 #include <Epsilon.hpp>
 #include "core/framework/singleton.hpp"
 
-#if defined(_WIN32)
-//  Microsoft
-#define EXPORT __declspec(dllexport)
-#define IMPORT __declspec(dllimport)
-#elif defined(__linux__)
-//  GCC
-#define EXPORT __attribute__((visibility("default")))
-#define IMPORT
-#else
-//  do nothing and hope for the best?
-#define EXPORT
-#define IMPORT
-#pragma warning Unknown dynamic link import / export semantics.
-#endif
-
 #ifndef BUILD_ANDROID
 #include <apis/vk/vk.hpp>
 

@@ -3,7 +3,10 @@
 
 namespace framework
 {
-    bool Input::KeyBoard::KEYS[1024] = {false};
+
+    //std::unordered_map<const char *, uint16_t> Input::KeyWraps::kw;
+
+    bool Input::KeyBoard::KEYS[1024] = { false };
 
     //std::unordered_map<const char *, uint16_t> Input::KeyWraps::kw;
 

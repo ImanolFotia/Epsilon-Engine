@@ -56,7 +56,13 @@ namespace engine
 	vk::VulkanBuffer VulkanResourceManager::pCreateStagingTextureBuffer(unsigned char* pixels, TextureCreationInfo textureInfo)
 	{
 		vk::VulkanBuffer stagingBuffer;
-		auto imageSize = textureInfo.width * textureInfo.height * /*textureInfo.numChannels*/ 4;
+		size_t imageSize = 0;
+		if (textureInfo.offsets.size() > 0) {
+			imageSize = textureInfo.size;
+		}
+		else {
+			imageSize = textureInfo.width * textureInfo.height * /*textureInfo.numChannels*/ 4;
+		}
 		pCreateBuffer(stagingBuffer, imageSize, TEXTURE_BUFFER_USAGE, TEXTURE_BUFFER_PROP, TEXTURE_BUFFER_MEM_USAGE);
 
 		void* data;
@@ -152,8 +158,6 @@ namespace engine
 		}
 
 		vmaCreateImage(m_pAllocator, &texture.imageInfo, &allocInfo, &texture.image, &texture.allocation, nullptr);
-		ResourcesMemory.m_pTextureBufferAllocationSize += texInfo.width * texInfo.height * num_channels * size;
-
 		//std::cout << texInfo.width * texInfo.height * num_channels * size << std::endl;
 		return texture;
 	}
@@ -535,6 +539,96 @@ namespace engine
 			renderPass->renderPassChain.setScissor(rect);
 
 		}
+	}
+
+	void VulkanResourceManager::pGenerateMipMaps(TextureCreationInfo texInfo, vk::VulkanTexture& texture) {
+
+		/* Begin generate mips*/
+		// Copy down mips from n-1 to n
+
+		VkCommandBuffer blitCommandBuffer = vk::beginSingleTimeCommands(*m_pVkDataPtr, m_pTransferCommandPool);
+		if (texInfo.mipLevels > 1)
+			for (int32_t i = 1; i < texInfo.mipLevels; i++)
+			{
+				VkImageBlit imageBlit{};
+
+				// Source
+				imageBlit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+				imageBlit.srcSubresource.layerCount = 1;
+				imageBlit.srcSubresource.mipLevel = i - 1;
+				imageBlit.srcOffsets[1].x = int32_t(texInfo.width >> (i - 1));
+				imageBlit.srcOffsets[1].y = int32_t(texInfo.height >> (i - 1));
+				imageBlit.srcOffsets[1].z = 1;
+
+				// Destination
+				imageBlit.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+				imageBlit.dstSubresource.layerCount = 1;
+				imageBlit.dstSubresource.mipLevel = i;
+				imageBlit.dstOffsets[1].x = int32_t(texInfo.width >> i);
+				imageBlit.dstOffsets[1].y = int32_t(texInfo.height >> i);
+				imageBlit.dstOffsets[1].z = 1;
+
+				VkImageSubresourceRange mipSubRange = {};
+				mipSubRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+				mipSubRange.baseMipLevel = i;
+				mipSubRange.levelCount = 1;
+				mipSubRange.layerCount = 1;
+
+				vk::imageMemoryBarrier(*m_pVkDataPtr,
+					m_pTransferCommandPool,
+					texture.image,
+					texture.format,
+					VK_IMAGE_LAYOUT_UNDEFINED,
+					VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+					texture.info,
+					blitCommandBuffer,
+					mipSubRange, i, 1);
+
+				// Blit from previous level
+				vkCmdBlitImage(
+					blitCommandBuffer,
+					texture.image,
+					VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+					texture.image,
+					VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+					1,
+					&imageBlit,
+					VK_FILTER_LINEAR);
+
+				vk::imageMemoryBarrier(*m_pVkDataPtr,
+					m_pTransferCommandPool,
+					texture.image,
+					texture.format,
+					VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+					VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+					texture.info,
+					blitCommandBuffer,
+					mipSubRange, i, 1);
+			}
+
+		// After the loop, all mip layers are in TRANSFER_SRC layout, so transition all to SHADER_READ
+
+		VkImageSubresourceRange subresourceRange = {};
+		subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		subresourceRange.layerCount = 1;
+		subresourceRange.levelCount = texInfo.mipLevels;
+
+		vk::imageMemoryBarrier(*m_pVkDataPtr,
+			m_pTransferCommandPool,
+			texture.image,
+			texture.format,
+			VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+			VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+			texture.info,
+			blitCommandBuffer,
+			subresourceRange);
+
+		vk::endSingleTimeCommands(*m_pVkDataPtr, m_pTransferCommandPool, blitCommandBuffer);
+
+		/*transitionImageLayout(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), texture.image,
+			format, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+			VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, texture.info);*/
+			/* End generate mips*/
 	}
 
 

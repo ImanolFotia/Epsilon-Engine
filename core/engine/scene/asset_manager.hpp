@@ -8,6 +8,9 @@
 #include <core/framework/loaders/model.h>
 #include <core/framework/loaders/gltf.hpp>
 
+#include <ktx.h>
+#include <core/framework/loaders/DDS.h>
+
 #include "audio/audio_object.hpp"
 
 namespace engine
@@ -588,9 +591,114 @@ namespace engine
 				return m_pImages.at(path);
 			}
 
-			int width, height, num_channels;
+			int width, height, num_channels, mipLevels = 1;
+			size_t size = 0;
+			bool isCompressed = false;
 			std::string texture_path = "./assets/" + path;
-			unsigned char* pixels = framework::load_image_from_file(texture_path.c_str(), &width, &height, &num_channels);
+
+			const std::string ext = path.substr(path.find_last_of('.') + 1, path.length());
+			unsigned char* pixels;
+			ktxTexture* ktxTex;
+			ktxTexture2* ktxTex2;
+			std::vector<size_t> offsets; 
+			unsigned int format = info.format;
+			bool isKTX = false;
+			bool isDDS = false;
+			if (ext == "ktx") {
+				ktxResult result = KTX_SUCCESS;
+
+				result = ktxTexture_CreateFromNamedFile(texture_path.c_str(), KTX_TEXTURE_CREATE_LOAD_IMAGE_DATA_BIT, &ktxTex);
+
+				if (result != KTX_SUCCESS) {
+					throw std::runtime_error("Error loading texture: " + texture_path);
+				}
+				if (ktxTex->isCompressed)
+				{
+					isCompressed = true;
+				}
+				pixels = ktxTexture_GetData(ktxTex);
+				pixels = ktxTexture_GetData(ktxTex);
+				ktx_size_t ktxTextureSize = ktxTexture_GetDataSize(ktxTex);
+
+				width = ktxTex->baseWidth;
+				height = ktxTex->baseHeight;
+				mipLevels = ktxTex->numLevels;
+				isKTX = true;
+				size = ktxTextureSize;
+				num_channels = 4;
+
+				for (int i = 0; i < mipLevels; i++) {
+					ktx_size_t offset;
+					KTX_error_code result = ktxTexture_GetImageOffset(ktxTex, i, 0, 0, &offset);
+					offsets.push_back(offset);
+				}
+			}
+			else if (ext == "ktx2") {
+				ktxResult result = KTX_SUCCESS;
+
+				result = ktxTexture2_CreateFromNamedFile(texture_path.c_str(), KTX_TEXTURE_CREATE_LOAD_IMAGE_DATA_BIT, &ktxTex2);
+
+				if (result != KTX_SUCCESS) {
+					throw std::runtime_error("Error loading texture: " + texture_path);
+				}
+				if (ktxTex2->isCompressed)
+				{
+					isCompressed = true;
+				}
+				pixels = ktxTex2->pData;
+				ktx_size_t ktxTextureSize = ktxTex2->dataSize;
+
+				width = ktxTex2->baseWidth;
+				height = ktxTex2->baseHeight;
+				mipLevels = ktxTex2->numLevels;
+				isKTX = true;
+				size = ktxTextureSize;
+				num_channels = 4;
+
+				for (int i = 0; i < mipLevels; i++) {
+					ktx_size_t offset;
+
+					KTX_error_code result = ktxTexture_GetImageOffset(ktxTexture(ktxTex2), i, 0, 0, &offset);
+					offsets.push_back(offset);
+				}
+			}
+			else if(ext == "dds") {
+				DDS ddsfile(texture_path);
+				isDDS = true;
+				width = ddsfile.width();
+				height = ddsfile.height();
+				mipLevels = ddsfile.mipLevels();
+				size = ddsfile.size();
+				num_channels = 4;
+				if(format == NON_COLOR_RGBA) {
+					format = TextureFormat::NON_COLOR_RGBA_BC3;
+				}
+				else {
+					format = ddsfile.format();
+				}
+				pixels = ddsfile.data();
+				size_t offset = 0;
+
+				int w = width, h = height;
+				unsigned int s = 0;
+				for (unsigned int level = 0; level < mipLevels; ++level)
+				{
+
+					s = ((w + 3) / 4) * ((h + 3) / 4) * ddsfile.blockSize();
+					offsets.push_back(offset);
+					offset += s;
+					w /= 2;
+					h /= 2;
+
+					if (w < 1) w = 1;
+					if (h < 1) h = 1;
+
+				}
+
+
+			} else {
+				pixels = framework::load_image_from_file(texture_path.c_str(), &width, &height, &num_channels);
+			}
 			Ref<Texture> ref = Ref<Texture>::makeEmpty();
 			if (pixels != nullptr)
 			{
@@ -598,16 +706,31 @@ namespace engine
 					.width = (uint32_t)width,
 					.height = (uint32_t)height,
 					.numChannels = (uint32_t)num_channels,
-					.format = info.format,
+					.format = (engine::TextureFormat)format,
 					.wrapMode = info.wrapMode,
 					.filtering = info.filtering,
 					.name = path,
+					.isCompressed = isCompressed,
+					.isKTX = isKTX,
+					.mipLevels = (uint32_t)mipLevels,
+					.offsets = offsets,
+					.size = size,
 					.pixels = pixels,
 				};
 
 				ref = resourceManager->createTexture(texInfo);
 
-				framework::free_image_data(pixels);
+				if (!isCompressed && !isDDS) {
+					framework::free_image_data(pixels);
+				}/*
+				else {
+					ktxTexture_Destroy(ktxTex);
+					ktxTexture_Destroy(ktxTexture(ktxTex2));
+				}*/
+
+				if (isDDS) {
+					DDS::free_data(pixels);
+				}
 
 				m_pImages[path] = ref;
 			}

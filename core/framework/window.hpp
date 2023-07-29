@@ -35,6 +35,32 @@
 #include <GLFW/glfw3.h>
 #endif
 
+
+#if defined(_WIN32)
+//  Microsoft
+#if BUILD_SHARED_LIBS
+#if defined(EPSILON_BUILD_DLL)
+#define EPSILON_DLL __declspec(dllexport)
+#else
+#define EPSILON_DLL __declspec(dllimport)
+#endif
+#elif defined(__linux__)
+//  GCC
+#if defined(EPSILON_BUILD_DLL)
+#define EPSILON_DLL __attribute__((visibility("default")))
+#else
+#define EPSILON_DLL
+#endif
+#else
+//  do nothing and hope for the best?
+#define EPSILON_DLL
+#define EPSILON_DLL
+#pragma warning Unknown dynamic link import / export semantics.
+#endif
+#else
+#define EPSILON_DLL
+#endif
+
 namespace framework
 {
     struct WindowSizeDescription {
@@ -45,7 +71,7 @@ namespace framework
         bool isCurrent = false;
         std::string size_string{};
     };
-    class Window
+    class EPSILON_DLL Window
     {
 
     public:

@@ -97,6 +97,9 @@ namespace engine
 
 		void pUpdateMaterial(vk::VulkanMaterial&);
 
+		void pGenerateMipMaps(TextureCreationInfo, vk::VulkanTexture&);
+		void UploadMipmaps();
+
 		const uint32_t MAX_BINDLESS_RESOURCES = 16536;
 		const uint32_t RENDERPASS_LAYOUT = 0;
 		const uint32_t GLOBAL_LAYOUT = 1;

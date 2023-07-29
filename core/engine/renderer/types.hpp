@@ -136,6 +136,23 @@ namespace engine
         NON_COLOR_RG,
         NON_COLOR_RGB,
         NON_COLOR_RGBA,
+
+        COLOR_RGB_BC1,
+        COLOR_RGB_BC2,
+        COLOR_RGB_BC3,
+
+        COLOR_RGBA_BC1,
+        COLOR_RGBA_BC2,
+        COLOR_RGBA_BC3,
+
+        NON_COLOR_RGB_BC1,
+        NON_COLOR_RGB_BC2,
+        NON_COLOR_RGB_BC3,
+
+        NON_COLOR_RGBA_BC1,
+        NON_COLOR_RGBA_BC2,
+        NON_COLOR_RGBA_BC3,
+        
         // FLOATING POINT IMAGE
         COLOR_R_16F,
         COLOR_R_32F,
@@ -153,6 +170,7 @@ namespace engine
         NON_COLOR_RGB_32F,
         NON_COLOR_RGBA_16F,
         NON_COLOR_RGBA_32F,
+
 
         // DEPTH IMAGES
         DEPTH_F32,
@@ -266,6 +284,12 @@ namespace engine
         WrapMode wrapMode{};
         Filtering filtering{};
         std::string name;
+        bool isCompressed = false;
+        bool isKTX = false;
+        bool generateMipMaps = true;
+        uint32_t mipLevels = 1;
+        std::vector<size_t> offsets;
+        size_t size{};
         unsigned char *pixels = nullptr;
     };
 

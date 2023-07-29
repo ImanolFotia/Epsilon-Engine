@@ -3,6 +3,7 @@
 //
 #include "Epsilon.hpp"
 
+
 namespace Epsilon
 {
     Epsilon::Epsilon(const std::string &appName)

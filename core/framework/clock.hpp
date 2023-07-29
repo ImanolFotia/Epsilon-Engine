@@ -3,37 +3,58 @@
 #include <chrono>
 #include <iostream>
 
+#if defined(_WIN32)
+//  Microsoft
+#if defined(EPSILON_BUILD_DLL)
+#define EPSILON_DLL __declspec(dllexport)
+#else
+#define EPSILON_DLL __declspec(dllimport)
+#endif
+#elif defined(__linux__)
+//  GCC
+#if defined(EPSILON_BUILD_DLL)
+#define EPSILON_DLL __attribute__((visibility("default")))
+#else
+#define EPSILON_DLL
+#endif
+#else
+//  do nothing and hope for the best?
+#define EPSILON_DLL
+#define EPSILON_DLL
+#pragma warning Unknown dynamic link import / export semantics.
+#endif
+
 namespace framework {
 
 
-class Clock {
+    class EPSILON_DLL Clock {
     public:
 
-        Clock(const Clock &) = delete;
-        Clock(Clock &&) = delete;
+        Clock(const Clock&) = delete;
+        Clock(Clock&&) = delete;
 
         static long double Time() {
-            return instance.curr();
+            return curr();
         }
-        
+
         static long double TimeSeconds() {
-            return instance.curr() / 1000.0;
+            return curr() / 1000.0;
         }
 
         static long double Last() {
-            return instance.last();
+            return last();
         }
-        
+
         static long double LastSeconds() {
-            return instance.last() / 1000.0;
+            return last() / 1000.0;
         }
 
         static long double Delta() {
-            return instance.delta();
+            return delta();
         }
-        
+
         static long double DeltaSeconds() {
-            return instance.delta() / 1000.0;
+            return delta() / 1000.0;
         }
 
         static auto Now() {
@@ -44,39 +65,39 @@ class Clock {
         }
 
         static void Tick() {
-            using namespace std::chrono; 
+            using namespace std::chrono;
 
             auto now = steady_clock::now();
             auto now_ms = time_point_cast<milliseconds>(now);
 
-            instance.last(instance.curr());
-            instance.curr(duration_cast<milliseconds>(now_ms - instance.start()).count());
-            instance.delta(instance.curr() - instance.last());
+            last(curr());
+            curr(duration_cast<milliseconds>(now_ms - start()).count());
+            delta(curr() - last());
 
         }
 
     private:
 
-        long double curr() { return mCurrentTime; }
-        long double last() { return mLastTime; }
-        long double delta() { return mDeltaTime; }
-        
-        std::chrono::steady_clock::time_point start() { return mStart; }
-        
-        void curr(long double x) { mCurrentTime = x; }
-        void last(long double x) { mLastTime = x; }
-        void delta(long double x) { mDeltaTime = x; }
+        static long double curr() { return mCurrentTime; }
+        static long double last() { return mLastTime; }
+        static long double delta() { return mDeltaTime; }
 
-        long double mCurrentTime = 0;
-        long double mLastTime = 0;
-        long double mDeltaTime = 0;
+        static std::chrono::steady_clock::time_point start() { return mStart; }
 
-        std::chrono::steady_clock::time_point mStart{};
-        long double mdStart = 0.0;
+        static void curr(long double x) { mCurrentTime = x; }
+        static void last(long double x) { mLastTime = x; }
+        static void delta(long double x) { mDeltaTime = x; }
+
+        static long double mCurrentTime;
+        static long double mLastTime;
+        static long double mDeltaTime;
+
+        static std::chrono::steady_clock::time_point mStart;
+        static long double mdStart;
 
         Clock() {
             std::cout << "created" << std::endl;
-            using namespace std::chrono; 
+            using namespace std::chrono;
             mCurrentTime = 1;
             mLastTime = 0;
             mDeltaTime = 0;
@@ -85,7 +106,6 @@ class Clock {
 
         }
 
-        static Clock instance;
     };
 
 }

@@ -104,6 +104,6 @@ namespace framework
             return false;
         }
 
-        static std::unordered_map<std::string, std::string> args;
+        inline static std::unordered_map<std::string, std::string> args;
     };
 }

@@ -8,6 +8,26 @@
 #include <beacon/beacon.hpp>
 #include <core/framework/window.hpp>
 
+#if defined(_WIN32)
+//  Microsoft
+#if defined(EPSILON_BUILD_DLL)
+#define EPSILON_DLL __declspec(dllexport)
+#else
+#define EPSILON_DLL __declspec(dllimport)
+#endif
+#elif defined(__linux__)
+//  GCC
+#if defined(EPSILON_BUILD_DLL)
+#define EPSILON_DLL __attribute__((visibility("default")))
+#else
+#define EPSILON_DLL
+#endif
+#else
+//  do nothing and hope for the best?
+#define EPSILON_DLL
+#pragma warning Unknown dynamic link import / export semantics.
+#endif
+
 namespace framework
 {
 	namespace Input
@@ -45,7 +65,7 @@ namespace framework
 			std::vector<std::string> paths;
 		};
 
-		class DragDrop
+		class EPSILON_DLL DragDrop
 		{
 		public:
 			static beacon::single_handler<DropArgs> DropEventHandler;
