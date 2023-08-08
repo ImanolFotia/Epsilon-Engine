@@ -80,20 +80,23 @@ namespace vk
 		return availableFormats[0];
 	}
 
-	static VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes)
+	static VkPresentModeKHR chooseSwapPresentMode(const VulkanData& vk_data,  const std::vector<VkPresentModeKHR>& availablePresentModes)
 	{
 #if defined(__ANDROID__)
 		return VK_PRESENT_MODE_FIFO_KHR;
 #endif
 		for (const auto& availablePresentMode : availablePresentModes)
 		{
-			if (availablePresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR) // VK_PRESENT_MODE_IMMEDIATE_KHR
+			if (availablePresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR && vk_data.vsync == false) // VK_PRESENT_MODE_IMMEDIATE_KHR
 			{
 				return availablePresentMode;
 			}
 		}
 
-		return VK_PRESENT_MODE_FIFO_KHR;
+		if (vk_data.vsync == true)
+			return VK_PRESENT_MODE_FIFO_KHR;
+		else
+			return VK_PRESENT_MODE_MAILBOX_KHR;
 	}
 
 	static VkExtent2D chooseSwapExtent(framework::Window::windowType* window, const VkSurfaceCapabilitiesKHR& capabilities)
@@ -129,7 +132,7 @@ namespace vk
 		SwapChainSupportDetails swapChainSupport = querySwapChainSupport(vk_data.physicalDevice, vk_data);
 
 		VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(vk_data, swapChainSupport.formats);
-		VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
+		VkPresentModeKHR presentMode = chooseSwapPresentMode(vk_data, swapChainSupport.presentModes);
 		VkExtent2D extent = chooseSwapExtent(window, swapChainSupport.capabilities);
 
 		uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;

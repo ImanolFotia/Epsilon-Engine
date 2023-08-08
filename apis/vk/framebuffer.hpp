@@ -43,7 +43,9 @@ namespace vk
         int numLayers = renderPass.renderPassChain.ImageViews.size();
 
         std::vector<VkImageView> attachments = renderPass.renderPassChain.ImageViews;
-        attachments.push_back(renderPass.renderPassChain.DepthTexture.imageView);
+
+        if(!renderPass.renderPassChain.hasDepthSampler)
+            attachments.push_back(renderPass.renderPassChain.DepthTexture.imageView);
 
         VkFramebufferCreateInfo framebufferInfo{};
         framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;

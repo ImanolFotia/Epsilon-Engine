@@ -15,7 +15,7 @@
 
 namespace vk
 {
-    static uint32_t MAX_FRAMES_IN_FLIGHT = 2;
+    static uint32_t MAX_FRAMES_IN_FLIGHT = 3;
     static uint32_t MIN_FRAMES_IN_FLIGHT = 0;
     const size_t ALLOCATION_SIZE_MB = 0xFFFFFFF;
 
@@ -34,7 +34,7 @@ namespace vk
     struct VulkanBuffer
     {
         uint32_t id = 0;
-        VkBuffer buffer;
+        VkBuffer buffer = VK_NULL_HANDLE;
         VkBufferCreateInfo bufferInfo;
         uint32_t allocatedVertices = 0;
         size_t offset = 0;
@@ -224,6 +224,8 @@ namespace vk
 
         std::vector<VkFramebuffer> Framebuffers;
 
+        bool hasDepthSampler = false;
+
 
         void setViewport(const VkViewport& v) {
             Viewport = v;
@@ -293,6 +295,8 @@ namespace vk
         VkQueue graphicsQueue;
         VkQueue transferQueue;
         VkQueue computeQueue;
+
+        bool vsync = false;
 
 #if !defined(__ANDROID__)
         const std::vector<const char *> deviceExtensions = {

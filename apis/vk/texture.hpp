@@ -190,7 +190,7 @@ namespace vk
     }
 
     static void transitionImageLayout(VulkanData &vkData, VkCommandPool &commandPool, VkImage image, VkFormat format,
-                                      VkImageLayout oldLayout, VkImageLayout newLayout, VulkanTextureInfo info)
+                                      VkImageLayout oldLayout, VkImageLayout newLayout, VulkanTextureInfo info, unsigned mipLevel = 0, unsigned mipCount = 1)
     {
 
         // int mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(info.width, info.height)))) + 1;
@@ -198,10 +198,10 @@ namespace vk
 
         VkImageSubresourceRange subresourceRange = {};
         subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        subresourceRange.levelCount = 1;
+        subresourceRange.levelCount = mipCount;
         subresourceRange.layerCount = 1;
 
-        imageMemoryBarrier(vkData, commandPool, image, format, oldLayout, newLayout, info, commandBuffer, subresourceRange);
+        imageMemoryBarrier(vkData, commandPool, image, format, oldLayout, newLayout, info, commandBuffer, subresourceRange, mipLevel, mipCount);
 
         endSingleTimeCommands(vkData, commandPool, commandBuffer);
     }
@@ -213,7 +213,7 @@ namespace vk
         VkCommandBuffer commandBuffer = beginSingleTimeCommands(vkData, commandPool);
 
         std::vector<VkBufferImageCopy> bufferCopyRegions;
-        if (offsets.size()  <= 0) {
+        if (offsets.size()  <= 1) {
             VkBufferImageCopy& region = bufferCopyRegions.emplace_back();
             region.bufferOffset = 0;
             region.bufferRowLength = 0;
