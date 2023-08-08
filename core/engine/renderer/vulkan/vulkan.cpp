@@ -53,6 +53,7 @@ namespace engine
 		m_pWindow = &window;
 		m_pResourceManagerRef->m_pVkDataPtr = &m_pVkData;
 
+
 		std::cout << "Initiating Vulkan Context\n";
 
 #if defined(ANDROID) || defined(__ANDROID__)
@@ -91,6 +92,10 @@ namespace engine
 		vk::createSyncObjects(m_pVkData);
 
 		m_pCurrentCommandQueue.resize(MAX_COMMAND_QUEUE_SIZE);
+
+
+		m_pImguiRenderer = std::make_shared<ImGuiRenderer>();
+		m_pImguiRenderer->setResourceManager(m_pResourceManagerRef);
 	}
 
 	engine::Renderer::ObjectDataId
@@ -165,23 +170,33 @@ namespace engine
 		vkResetCommandBuffer(m_pFrame.CommandBuffer(), 0);
 
 #if !defined(__ANDROID__)
+		
+		m_pImguiRenderer->newFrame(m_pCurrentFrame, m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
+#endif
+	}
+
+	void VulkanRenderer::InitDebugRenderer() {
 		if (!imguiInit)
 		{
-
-			m_pImguiRenderer.Init(m_pVkData, m_pWindow->getWindow(),
+			m_pImguiRenderer->Init(m_pVkData, m_pWindow->getWindow(),
 				m_pResourceManagerRef->m_pDescriptorPool,
 				m_pVkData.defaultRenderPass.renderPass,
 				m_pResourceManagerRef->m_pCommandPools.front(),
 				m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
-			//m_pImguiRenderer.setResourceManager(m_pResourceManagerRef);
+			for (auto& renderPass : m_pResourceManagerRef->renderPassPool) {
+				int image_index = 0;
+				for (auto& texture : renderPass.renderPassChain.Textures) {
+					if (texture.info.isSampler) {
+						m_pImguiRenderer->addTexture(renderPass.name, image_index);
+					}
+					image_index++;
+				}
+			}
 			imguiInit = true;
 		}
-		m_pImguiRenderer.newFrame(m_pCurrentFrame, m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
-#endif
 	}
 
-	void
-		VulkanRenderer::Begin()
+	void VulkanRenderer::Begin()
 	{
 
 		// auto renderPass = m_pResourceManagerRef->getRenderPass(renderPassRef);
@@ -201,11 +216,12 @@ namespace engine
 				g_RenderSemaphore = m_pFrame.SyncObjects().renderFinishedSemaphores;
 				g_Fence = m_pFrame.SyncObjects().inFlightFences;*/
 
-		bool should_recreate_swapchain = vk::Present(m_pVkData, signalSemaphores, m_pImageIndex);
+		m_pShouldRecreateSwapchain |= vk::Present(m_pVkData, signalSemaphores, m_pImageIndex);
 
-		if (should_recreate_swapchain)
+		if (m_pShouldRecreateSwapchain)
 		{
 			pRecreateSwapChain();
+			m_pShouldRecreateSwapchain = false;
 			std::cout << "swap chain recreated\n";
 		}
 
@@ -231,7 +247,7 @@ namespace engine
 			m_pResourceManagerRef->ResourcesMemory.heaps.at(i).free_memory = budgets.at(i).budget - budgets.at(i).usage;
 		}
 		m_pResourceManagerRef->ResourcesMemory.numDrawCalls = m_pNumDrawCalls;
-		m_pImguiRenderer.DrawUI(std::forward<glm::vec3&>(v), m_pResourceManagerRef->ResourcesMemory);
+		m_pImguiRenderer->DrawUI(std::forward<glm::vec3&>(v), m_pResourceManagerRef->ResourcesMemory);
 #endif
 		if (m_pRenderPassActive)
 		{
@@ -331,17 +347,20 @@ namespace engine
 		int32_t prev_material_id = -1;
 
 		int changed = 0;
-
+		/*
 		auto predicate = [](DrawCommand& a, DrawCommand& b) -> bool
 		{ auto a_mat = a.material.Index();
 		auto b_mat = b.material.Index();
-		auto a_vtx = a.meshResource.vertexBuffer.Index();
-		auto b_vtx = b.meshResource.vertexBuffer.Index();
-		auto a_i = a.meshResource.indexBuffer.Index();
-		auto b_i = b.meshResource.indexBuffer.Index();
+		//auto a_vtx = a.meshResource.vertexBuffer.Index();
+		//auto b_vtx = b.meshResource.vertexBuffer.Index();
+		//auto a_i = a.meshResource.indexBuffer.Index();
+		//auto b_i = b.meshResource.indexBuffer.Index();
 		return std::tie(a_mat, a.layoutIndex, a_vtx, a_i) <
-			std::tie(b_mat, b.layoutIndex, b_vtx, b_i); };
+			std::tie(b_mat, b.layoutIndex, b_vtx, b_i); };*/
 
+		std::sort(m_pCurrentCommandQueue.begin(), m_pCurrentCommandQueue.begin() + currentCommandsInQueue, [](DrawCommand& a, DrawCommand& b) -> bool {
+			return a.pushConstantData.material_index < b.pushConstantData.material_index;
+			});
 		//m_pCurrentCommandQueue.sort(predicate);
 
 		VkExtent2D extent = renderPass->renderPassChain.Extent;
@@ -568,9 +587,16 @@ namespace engine
 
 	void VulkanRenderer::Cleanup()
 	{
-		m_pImguiRenderer.Destroy();
+		vkDeviceWaitIdle(m_pVkData.logicalDevice);
+		m_pImguiRenderer->Destroy();
 		m_pResourceManagerRef->clean();
 
+	}
+
+	void VulkanRenderer::SetVSync(bool state) {
+		if(state != m_pVkData.vsync)
+			m_pShouldRecreateSwapchain = true;
+		m_pVkData.vsync = state;
 	}
 
 	void VulkanRenderer::UpdateRenderPassUniforms(Ref<RenderPass> renderPassRef, BindingIndex index, const void* data)
@@ -632,6 +658,7 @@ namespace engine
 
 		m_pResourceManagerRef->pCreateDescriptorPool();
 		m_pResourceManagerRef->pRecreateDescriptorSets();
+		m_pImguiRenderer->recreateDescriptorSets();
 
 
 	}
@@ -668,6 +695,10 @@ namespace engine
 
 	void VulkanRenderer::SetRenderPass(Ref<RenderPass> renderpass) {
 		//m_pActiveRenderPass = renderpass;
+	}
+
+	std::shared_ptr<ImGuiRenderer> VulkanRenderer::getDebugRenderer() {
+		return m_pImguiRenderer;
 	}
 
 }

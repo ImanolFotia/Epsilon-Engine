@@ -144,6 +144,7 @@ namespace engine
         COLOR_RGBA_BC1,
         COLOR_RGBA_BC2,
         COLOR_RGBA_BC3,
+        COLOR_RGBA_BC7,
 
         NON_COLOR_RGB_BC1,
         NON_COLOR_RGB_BC2,
@@ -152,6 +153,7 @@ namespace engine
         NON_COLOR_RGBA_BC1,
         NON_COLOR_RGBA_BC2,
         NON_COLOR_RGBA_BC3,
+        NON_COLOR_RGBA_BC7,
         
         // FLOATING POINT IMAGE
         COLOR_R_16F,

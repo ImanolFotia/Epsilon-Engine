@@ -160,7 +160,7 @@ namespace Epsilon
             onExit();
          m_pContext->Renderer()->Cleanup();
          m_pContext->Window().cleanup();
-         m_pContext->AudioManager()->CleanUp();
+         m_pContext->CleanUp();
     }
 
     

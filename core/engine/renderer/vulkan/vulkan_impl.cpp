@@ -136,6 +136,10 @@ namespace engine
 		texture.imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 		texture.imageInfo.flags = 0; // Optional
 		texture.imageInfo.usage = texInfo.usage;
+		if (!(texture.imageInfo.usage & VK_IMAGE_USAGE_TRANSFER_DST_BIT))
+		{
+			texture.imageInfo.usage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+		}
 
 		texture.addressMode = texInfo.addressMode;
 		texture.compareOp = texInfo.compareOp;
@@ -230,6 +234,7 @@ namespace engine
 		poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 		poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
 		poolInfo.pPoolSizes = poolSizes.data();
+		poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
 
 		poolInfo.maxSets = poolSizes.size() * 2;
 		if (vkCreateDescriptorPool(m_pVkDataPtr->logicalDevice, &poolInfo, nullptr, &m_pDescriptorPool) != VK_SUCCESS)
@@ -248,7 +253,7 @@ namespace engine
 		globalPoolSizes[0].descriptorCount = MAX_BINDLESS_RESOURCES;
 
 		VkDescriptorPoolCreateInfo globalPoolInfo{};
-		globalPoolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT;
+		globalPoolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT | VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
 		globalPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 		globalPoolInfo.poolSizeCount = static_cast<uint32_t>(globalPoolSizes.size());
 		globalPoolInfo.pPoolSizes = globalPoolSizes.data();
@@ -362,11 +367,11 @@ namespace engine
 			// numSlots += material.shaderBindings.size();
 			descriptorWrites.resize(numSlots);
 
-			for (int index = 1; index < descriptorWrites.size(); index++)
+			int j = 0;
+			for (int index = 1; index < numSlots; index++)
 			{
-				int j = 0;
-				for (auto& binding : material.shaderBindings)
-				{
+				auto& binding = material.shaderBindings[j];
+				
 					if (binding.descriptorBinding == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER && binding.isRenderPassAttachment)
 					{
 						auto& imageInfo = imageInfos.emplace_back();
@@ -395,13 +400,13 @@ namespace engine
 						imageInfo.imageView = binding.texture.imageView;
 						imageInfo.sampler = binding.texture.sampler;
 
-						descriptorWrites[binding.bindingPoint].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-						descriptorWrites[binding.bindingPoint].dstSet = material.descriptorSets[i];
-						descriptorWrites[binding.bindingPoint].dstBinding = binding.bindingPoint;
-						descriptorWrites[binding.bindingPoint].dstArrayElement = 0;
-						descriptorWrites[binding.bindingPoint].descriptorType = binding.descriptorBinding;
-						descriptorWrites[binding.bindingPoint].descriptorCount = 1;
-						descriptorWrites[binding.bindingPoint].pImageInfo = &imageInfo;
+						descriptorWrites[index].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+						descriptorWrites[index].dstSet = material.descriptorSets[i];
+						descriptorWrites[index].dstBinding = binding.bindingPoint;
+						descriptorWrites[index].dstArrayElement = 0;
+						descriptorWrites[index].descriptorType = binding.descriptorBinding;
+						descriptorWrites[index].descriptorCount = 1;
+						descriptorWrites[index].pImageInfo = &imageInfo;
 					}
 					else if (binding.descriptorBinding == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER)
 					{
@@ -409,17 +414,17 @@ namespace engine
 						bufferInfo.buffer = binding.buffers[i].buffer; // m_pUniformBuffers[i].buffer;
 						bufferInfo.offset = binding.buffers[i].offset;
 						bufferInfo.range = binding.buffers[i].size;
-						descriptorWrites[binding.bindingPoint].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-						descriptorWrites[binding.bindingPoint].dstSet = material.descriptorSets[i];
-						descriptorWrites[binding.bindingPoint].dstBinding = binding.bindingPoint;
-						descriptorWrites[binding.bindingPoint].dstArrayElement = 0;
-						descriptorWrites[binding.bindingPoint].descriptorType = binding.descriptorBinding;
-						descriptorWrites[binding.bindingPoint].descriptorCount = 1;
-						descriptorWrites[binding.bindingPoint].pBufferInfo = &bufferInfo;
-						descriptorWrites[binding.bindingPoint].pImageInfo = nullptr;       // Optional
-						descriptorWrites[binding.bindingPoint].pTexelBufferView = nullptr; // Optional
+						descriptorWrites[index].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+						descriptorWrites[index].dstSet = material.descriptorSets[i];
+						descriptorWrites[index].dstBinding = binding.bindingPoint;
+						descriptorWrites[index].dstArrayElement = 0;
+						descriptorWrites[index].descriptorType = binding.descriptorBinding;
+						descriptorWrites[index].descriptorCount = 1;
+						descriptorWrites[index].pBufferInfo = &bufferInfo;
+						descriptorWrites[index].pImageInfo = nullptr;       // Optional
+						descriptorWrites[index].pTexelBufferView = nullptr; // Optional
 					}
-				}
+				
 				j++;
 			}
 
@@ -461,12 +466,11 @@ namespace engine
 				vmaDestroyImage(m_pAllocator, renderPass->renderPassChain.Textures[i].image,
 					renderPass->renderPassChain.Textures[i].allocation);
 			}
+			if (renderPass->renderPassChain.hasDepthSampler == true) {
+				/*if (renderPass->renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE)
+					vkDestroySampler(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.DepthTexture.sampler, nullptr);*/
 
-			if (renderPass->renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE)
-				vkDestroySampler(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.DepthTexture.sampler, nullptr);
-
-			if (renderPass->renderPassChain.DepthTexture.imageView != VK_NULL_HANDLE)
-				vkDestroyImageView(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.DepthTexture.imageView, nullptr);
+			}
 
 			auto& renderPassInfo = m_pRenderPassInfo[renderPass->id];
 			renderPassInfo.dimensions.width = extent.width;
@@ -498,6 +502,7 @@ namespace engine
 				createImageView(*m_pVkDataPtr, texture,
 					(attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
 
+				texture.imageLayout = attachment.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 				if (attachment.isSampler)
 				{
 					vk::createTextureSampler(*m_pVkDataPtr, texture);
@@ -507,11 +512,18 @@ namespace engine
 				{
 					texture.isDepthAttachment = true;
 					renderPass->renderPassChain.DepthTexture = texture;
+
+					if (attachment.isSampler) {
+						renderPass->renderPassChain.hasDepthSampler = false;
+						renderPass->renderPassChain.ImageViews.at(i) = texture.imageView;
+						renderPass->renderPassChain.Textures.at(i) = texture;
+
+					}
 				}
 				else
 				{
-					renderPass->renderPassChain.ImageViews.push_back(texture.imageView);
-					renderPass->renderPassChain.Textures.push_back(texture);
+					renderPass->renderPassChain.ImageViews.at(i) = texture.imageView;
+					renderPass->renderPassChain.Textures.at(i) = texture;
 				}
 			}
 
@@ -547,7 +559,7 @@ namespace engine
 		// Copy down mips from n-1 to n
 
 		VkCommandBuffer blitCommandBuffer = vk::beginSingleTimeCommands(*m_pVkDataPtr, m_pTransferCommandPool);
-		if (texInfo.mipLevels > 1)
+		if (!texInfo.isCompressed && texInfo.mipLevels > 1) {
 			for (int32_t i = 1; i < texInfo.mipLevels; i++)
 			{
 				VkImageBlit imageBlit{};
@@ -585,15 +597,16 @@ namespace engine
 					mipSubRange, i, 1);
 
 				// Blit from previous level
-				vkCmdBlitImage(
-					blitCommandBuffer,
-					texture.image,
-					VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-					texture.image,
-					VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-					1,
-					&imageBlit,
-					VK_FILTER_LINEAR);
+				if (!texInfo.isCompressed)
+					vkCmdBlitImage(
+						blitCommandBuffer,
+						texture.image,
+						VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+						texture.image,
+						VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+						1,
+						&imageBlit,
+						VK_FILTER_LINEAR);
 
 				vk::imageMemoryBarrier(*m_pVkDataPtr,
 					m_pTransferCommandPool,
@@ -605,6 +618,7 @@ namespace engine
 					blitCommandBuffer,
 					mipSubRange, i, 1);
 			}
+		}
 
 		// After the loop, all mip layers are in TRANSFER_SRC layout, so transition all to SHADER_READ
 
@@ -621,7 +635,8 @@ namespace engine
 			VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 			texture.info,
 			blitCommandBuffer,
-			subresourceRange);
+			subresourceRange,
+			0, texInfo.mipLevels);
 
 		vk::endSingleTimeCommands(*m_pVkDataPtr, m_pTransferCommandPool, blitCommandBuffer);
 

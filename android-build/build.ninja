@@ -86,7 +86,7 @@ build openal_d: phony CMakeFiles/openal_d CMakeFiles/openal_d-complete openal_d-
 build cmake_object_order_depends_target_Epsilon: phony || beacon glm json openal_d stb vma
 
 build CMakeFiles/Epsilon.dir/main_lib.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/main_lib.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\main_lib.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -94,7 +94,7 @@ build CMakeFiles/Epsilon.dir/main_lib.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Cod
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir
 
 build CMakeFiles/Epsilon.dir/core/engine/context.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/core/engine/context.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\core\engine\context.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -102,7 +102,7 @@ build CMakeFiles/Epsilon.dir/core/engine/context.cpp.o: CXX_COMPILER__Epsilon_De
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir\core\engine
 
 build CMakeFiles/Epsilon.dir/core/framework/env.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/core/framework/env.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\core\framework\env.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -110,7 +110,7 @@ build CMakeFiles/Epsilon.dir/core/framework/env.cpp.o: CXX_COMPILER__Epsilon_Deb
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir\core\framework
 
 build CMakeFiles/Epsilon.dir/core/engine/renderer/vulkan/vulkan_impl.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/core/engine/renderer/vulkan/vulkan_impl.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\core\engine\renderer\vulkan\vulkan_impl.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -118,7 +118,7 @@ build CMakeFiles/Epsilon.dir/core/engine/renderer/vulkan/vulkan_impl.cpp.o: CXX_
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir\core\engine\renderer\vulkan
 
 build CMakeFiles/Epsilon.dir/core/engine/renderer/vulkan/vulkan.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/core/engine/renderer/vulkan/vulkan.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\core\engine\renderer\vulkan\vulkan.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -126,7 +126,7 @@ build CMakeFiles/Epsilon.dir/core/engine/renderer/vulkan/vulkan.cpp.o: CXX_COMPI
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir\core\engine\renderer\vulkan
 
 build CMakeFiles/Epsilon.dir/core/engine/renderer/vulkan/resource_manager.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/core/engine/renderer/vulkan/resource_manager.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\core\engine\renderer\vulkan\resource_manager.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -134,7 +134,7 @@ build CMakeFiles/Epsilon.dir/core/engine/renderer/vulkan/resource_manager.cpp.o:
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir\core\engine\renderer\vulkan
 
 build CMakeFiles/Epsilon.dir/core/engine/audio/al/audio_manager.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/core/engine/audio/al/audio_manager.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\core\engine\audio\al\audio_manager.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -142,7 +142,7 @@ build CMakeFiles/Epsilon.dir/core/engine/audio/al/audio_manager.cpp.o: CXX_COMPI
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir\core\engine\audio\al
 
 build CMakeFiles/Epsilon.dir/core/framework/IO/KeyBoard.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/core/framework/IO/KeyBoard.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\core\framework\IO\KeyBoard.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -150,7 +150,7 @@ build CMakeFiles/Epsilon.dir/core/framework/IO/KeyBoard.cpp.o: CXX_COMPILER__Eps
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir\core\framework\IO
 
 build CMakeFiles/Epsilon.dir/core/framework/IO/IO.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/core/framework/IO/IO.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\core\framework\IO\IO.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -158,7 +158,7 @@ build CMakeFiles/Epsilon.dir/core/framework/IO/IO.cpp.o: CXX_COMPILER__Epsilon_D
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir\core\framework\IO
 
 build CMakeFiles/Epsilon.dir/core/framework/utils/helpers/camera.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/core/framework/utils/helpers/camera.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\core\framework\utils\helpers\camera.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -166,7 +166,7 @@ build CMakeFiles/Epsilon.dir/core/framework/utils/helpers/camera.cpp.o: CXX_COMP
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir\core\framework\utils\helpers
 
 build CMakeFiles/Epsilon.dir/core/framework/window.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/core/framework/window.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\core\framework\window.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -174,7 +174,7 @@ build CMakeFiles/Epsilon.dir/core/framework/window.cpp.o: CXX_COMPILER__Epsilon_
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir\core\framework
 
 build CMakeFiles/Epsilon.dir/core/framework/clock.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/core/framework/clock.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\core\framework\clock.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -182,7 +182,7 @@ build CMakeFiles/Epsilon.dir/core/framework/clock.cpp.o: CXX_COMPILER__Epsilon_D
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir\core\framework
 
 build CMakeFiles/Epsilon.dir/core/framework/loaders/model.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/core/framework/loaders/model.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\core\framework\loaders\model.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -190,7 +190,7 @@ build CMakeFiles/Epsilon.dir/core/framework/loaders/model.cpp.o: CXX_COMPILER__E
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir\core\framework\loaders
 
 build CMakeFiles/Epsilon.dir/Epsilon.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/Epsilon.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\Epsilon.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -198,7 +198,7 @@ build CMakeFiles/Epsilon.dir/Epsilon.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir
 
 build CMakeFiles/Epsilon.dir/modules/imgui/imgui_impl_glfw.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/modules/imgui/imgui_impl_glfw.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\modules\imgui\imgui_impl_glfw.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -206,7 +206,7 @@ build CMakeFiles/Epsilon.dir/modules/imgui/imgui_impl_glfw.cpp.o: CXX_COMPILER__
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir\modules\imgui
 
 build CMakeFiles/Epsilon.dir/modules/imgui/imgui_impl_vulkan.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/modules/imgui/imgui_impl_vulkan.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\modules\imgui\imgui_impl_vulkan.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -214,7 +214,7 @@ build CMakeFiles/Epsilon.dir/modules/imgui/imgui_impl_vulkan.cpp.o: CXX_COMPILER
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir\modules\imgui
 
 build CMakeFiles/Epsilon.dir/thirdparty/imgui/ImPlot/implot_items.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/thirdparty/imgui/ImPlot/implot_items.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\thirdparty\imgui\ImPlot\implot_items.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -222,7 +222,7 @@ build CMakeFiles/Epsilon.dir/thirdparty/imgui/ImPlot/implot_items.cpp.o: CXX_COM
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir\thirdparty\imgui\ImPlot
 
 build CMakeFiles/Epsilon.dir/thirdparty/imgui/ImPlot/implot.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/thirdparty/imgui/ImPlot/implot.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\thirdparty\imgui\ImPlot\implot.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -230,7 +230,7 @@ build CMakeFiles/Epsilon.dir/thirdparty/imgui/ImPlot/implot.cpp.o: CXX_COMPILER_
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir\thirdparty\imgui\ImPlot
 
 build CMakeFiles/Epsilon.dir/thirdparty/imgui/imgui.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/thirdparty/imgui/imgui.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\thirdparty\imgui\imgui.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -238,7 +238,7 @@ build CMakeFiles/Epsilon.dir/thirdparty/imgui/imgui.cpp.o: CXX_COMPILER__Epsilon
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir\thirdparty\imgui
 
 build CMakeFiles/Epsilon.dir/thirdparty/imgui/imgui_demo.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/thirdparty/imgui/imgui_demo.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\thirdparty\imgui\imgui_demo.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -246,7 +246,7 @@ build CMakeFiles/Epsilon.dir/thirdparty/imgui/imgui_demo.cpp.o: CXX_COMPILER__Ep
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir\thirdparty\imgui
 
 build CMakeFiles/Epsilon.dir/thirdparty/imgui/imgui_draw.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/thirdparty/imgui/imgui_draw.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\thirdparty\imgui\imgui_draw.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -254,7 +254,7 @@ build CMakeFiles/Epsilon.dir/thirdparty/imgui/imgui_draw.cpp.o: CXX_COMPILER__Ep
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir\thirdparty\imgui
 
 build CMakeFiles/Epsilon.dir/thirdparty/imgui/imgui_tables.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/thirdparty/imgui/imgui_tables.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\thirdparty\imgui\imgui_tables.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -262,7 +262,7 @@ build CMakeFiles/Epsilon.dir/thirdparty/imgui/imgui_tables.cpp.o: CXX_COMPILER__
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir\thirdparty\imgui
 
 build CMakeFiles/Epsilon.dir/thirdparty/imgui/imgui_widgets.cpp.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/thirdparty/imgui/imgui_widgets.cpp || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\thirdparty\imgui\imgui_widgets.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -270,7 +270,7 @@ build CMakeFiles/Epsilon.dir/thirdparty/imgui/imgui_widgets.cpp.o: CXX_COMPILER_
   OBJECT_FILE_DIR = CMakeFiles\Epsilon.dir\thirdparty\imgui
 
 build CMakeFiles/Epsilon.dir/thirdparty/tinygltf/tiny_gltf.cc.o: CXX_COMPILER__Epsilon_Debug J$:/Code/Epsilon-Engine/thirdparty/tinygltf/tiny_gltf.cc || cmake_object_order_depends_target_Epsilon
-  DEFINES = -DBUILD_ANDROID=ON -DEpsilon_EXPORTS -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DEpsilon_EXPORTS -DUSE_GLFW=0
   DEP_FILE = CMakeFiles\Epsilon.dir\thirdparty\tinygltf\tiny_gltf.cc.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIC -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine
@@ -871,7 +871,7 @@ build openal_d-prefix/src/openal_d-stamp/openal_d-update | ${cmake_ninja_workdir
 build cmake_object_order_depends_target_BSP: phony || cmake_object_order_depends_target_Epsilon
 
 build examples/bsp/CMakeFiles/BSP.dir/main.cpp.o: CXX_COMPILER__BSP_Debug J$:/Code/Epsilon-Engine/examples/bsp/main.cpp || cmake_object_order_depends_target_BSP
-  DEFINES = -DBUILD_ANDROID=ON -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DUSE_GLFW=0
   DEP_FILE = examples\bsp\CMakeFiles\BSP.dir\main.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIE -std=gnu++20
   INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine -IJ:/Code/Epsilon-Engine/examples/bsp/../..
@@ -889,7 +889,7 @@ build examples/bsp/CMakeFiles/BSP.dir/main.cpp.o: CXX_COMPILER__BSP_Debug J$:/Co
 build examples/bsp/BSP: CXX_EXECUTABLE_LINKER__BSP_Debug examples/bsp/CMakeFiles/BSP.dir/main.cpp.o | libEpsilon.so J$:/AndroidSDK/ndk/26.0.10404224-beta1/toolchains/llvm/prebuilt/windows-x86_64/sysroot/usr/lib/aarch64-linux-android/34/libvulkan.so || libEpsilon.so
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info
   LINK_FLAGS = -Wl,--build-id=sha1 -Wl,--no-undefined-version -Wl,--fatal-warnings -Wl,--no-undefined -Qunused-arguments
-  LINK_LIBRARIES = libEpsilon.so  -lvulkan  -lglfw3  -ldl  -latomic -lm
+  LINK_LIBRARIES = libEpsilon.so  -lvulkan  -lglfw3  -lopenal  -ldl  -latomic -lm
   LINK_PATH = -LJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-build   -LJ:/Code/Epsilon-Engine/thirdparty/imgui
   OBJECT_DIR = examples\bsp\CMakeFiles\BSP.dir
   POST_BUILD = cd .
@@ -999,21 +999,21 @@ build examples/bsp/install/strip: phony examples/bsp/CMakeFiles/install/strip.ut
 #############################################
 # Order-only phony target for TowerDefense
 
-build cmake_object_order_depends_target_TowerDefense: phony || cmake_object_order_depends_target_Epsilon
+build cmake_object_order_depends_target_TowerDefense: phony || projects/TowerDefense/CMakeFiles/TowerDefense.dir
 
 build projects/TowerDefense/CMakeFiles/TowerDefense.dir/src/main.cpp.o: CXX_COMPILER__TowerDefense_Debug J$:/Code/Epsilon-Engine/projects/TowerDefense/src/main.cpp || cmake_object_order_depends_target_TowerDefense
-  DEFINES = -DBUILD_ANDROID=ON -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DUSE_GLFW=0 -DUSE_GLFW=1
   DEP_FILE = projects\TowerDefense\CMakeFiles\TowerDefense.dir\src\main.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIE -std=gnu++20
-  INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine -IJ:/Code/Epsilon-Engine/projects/TowerDefense/./src
+  INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine -IJ:/Code/Epsilon-Engine/projects/TowerDefense/../../thirdparty/stb -IJ:/Code/Epsilon-Engine/projects/TowerDefense/../../thirdparty/beacon -IJ:/Code/Epsilon-Engine/projects/TowerDefense/../../thirdparty/json/include -IJ:/Code/Epsilon-Engine/projects/TowerDefense/../../thirdparty/tinygltf -IJ:/Code/Epsilon-Engine/projects/TowerDefense/../../thirdparty/imgui -IJ:/Code/Epsilon-Engine/projects/TowerDefense/../../thirdparty/glm -IJ:/Code/Epsilon-Engine/projects/TowerDefense/../../thirdparty/vma/include -IJ:/Code/Epsilon-Engine/projects/TowerDefense/../../thirdparty/glfw3/include -IJ:/Code/Epsilon-Engine/projects/TowerDefense/../../thirdparty/openal/include -IJ:/Code/Epsilon-Engine/projects/TowerDefense/../.. -IJ:/Code/Epsilon-Engine/projects/TowerDefense/./src
   OBJECT_DIR = projects\TowerDefense\CMakeFiles\TowerDefense.dir
   OBJECT_FILE_DIR = projects\TowerDefense\CMakeFiles\TowerDefense.dir\src
 
 build projects/TowerDefense/CMakeFiles/TowerDefense.dir/src/TowerDefense.cpp.o: CXX_COMPILER__TowerDefense_Debug J$:/Code/Epsilon-Engine/projects/TowerDefense/src/TowerDefense.cpp || cmake_object_order_depends_target_TowerDefense
-  DEFINES = -DBUILD_ANDROID=ON -DUSE_GLFW=0
+  DEFINES = -DBUILD_ANDROID=ON -DEPSILON_BUILD_DLL=1 -DUSE_GLFW=0 -DUSE_GLFW=1
   DEP_FILE = projects\TowerDefense\CMakeFiles\TowerDefense.dir\src\TowerDefense.cpp.o.d
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info  -fPIE -std=gnu++20
-  INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine -IJ:/Code/Epsilon-Engine/projects/TowerDefense/./src
+  INCLUDES = -IJ:/Code/Epsilon-Engine/android-build/glm-prefix/src/glm -IJ:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma/include -IJ:/Code/Epsilon-Engine/android-build/stb-prefix/src/stb -IJ:/Code/Epsilon-Engine/android-build/beacon-prefix/src/beacon -IJ:/Code/Epsilon-Engine/android-build/json-prefix/src/json/include -IJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d/include -IJ:/Code/Epsilon-Engine/thirdparty/imgui -IJ:/Code/Epsilon-Engine/thirdparty/tinygltf -IJ:/Code/Epsilon-Engine -IJ:/Code/Epsilon-Engine/projects/TowerDefense/../../thirdparty/stb -IJ:/Code/Epsilon-Engine/projects/TowerDefense/../../thirdparty/beacon -IJ:/Code/Epsilon-Engine/projects/TowerDefense/../../thirdparty/json/include -IJ:/Code/Epsilon-Engine/projects/TowerDefense/../../thirdparty/tinygltf -IJ:/Code/Epsilon-Engine/projects/TowerDefense/../../thirdparty/imgui -IJ:/Code/Epsilon-Engine/projects/TowerDefense/../../thirdparty/glm -IJ:/Code/Epsilon-Engine/projects/TowerDefense/../../thirdparty/vma/include -IJ:/Code/Epsilon-Engine/projects/TowerDefense/../../thirdparty/glfw3/include -IJ:/Code/Epsilon-Engine/projects/TowerDefense/../../thirdparty/openal/include -IJ:/Code/Epsilon-Engine/projects/TowerDefense/../.. -IJ:/Code/Epsilon-Engine/projects/TowerDefense/./src
   OBJECT_DIR = projects\TowerDefense\CMakeFiles\TowerDefense.dir
   OBJECT_FILE_DIR = projects\TowerDefense\CMakeFiles\TowerDefense.dir\src
 
@@ -1025,11 +1025,11 @@ build projects/TowerDefense/CMakeFiles/TowerDefense.dir/src/TowerDefense.cpp.o: 
 #############################################
 # Link the executable projects\TowerDefense\TowerDefense
 
-build projects/TowerDefense/TowerDefense: CXX_EXECUTABLE_LINKER__TowerDefense_Debug projects/TowerDefense/CMakeFiles/TowerDefense.dir/src/main.cpp.o projects/TowerDefense/CMakeFiles/TowerDefense.dir/src/TowerDefense.cpp.o | libEpsilon.so J$:/AndroidSDK/ndk/26.0.10404224-beta1/toolchains/llvm/prebuilt/windows-x86_64/sysroot/usr/lib/aarch64-linux-android/34/libvulkan.so || libEpsilon.so
+build projects/TowerDefense/TowerDefense: CXX_EXECUTABLE_LINKER__TowerDefense_Debug projects/TowerDefense/CMakeFiles/TowerDefense.dir/src/main.cpp.o projects/TowerDefense/CMakeFiles/TowerDefense.dir/src/TowerDefense.cpp.o | libEpsilon.so J$:/AndroidSDK/ndk/26.0.10404224-beta1/toolchains/llvm/prebuilt/windows-x86_64/sysroot/usr/lib/aarch64-linux-android/34/libvulkan.so
   FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -frtti -fexceptions  -fno-limit-debug-info
   LINK_FLAGS = -Wl,--build-id=sha1 -Wl,--no-undefined-version -Wl,--fatal-warnings -Wl,--no-undefined -Qunused-arguments
-  LINK_LIBRARIES = libEpsilon.so  -lvulkan  -lglfw3  -lopenal  -ldl  -latomic -lm
-  LINK_PATH = -LJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-build   -LJ:/Code/Epsilon-Engine/thirdparty/imgui
+  LINK_LIBRARIES = libEpsilon.so  -lopenal  -lglfw3  -lepsilon  -ldl  -lvulkan  -latomic -lm
+  LINK_PATH = -LJ:/Code/Epsilon-Engine/android-build/openal_d-prefix/src/openal_d-build   -LJ:/Code/Epsilon-Engine/thirdparty/imgui   -LJ:/Code/Epsilon-Engine/projects/TowerDefense/../../thirdparty/glfw3/src   -LJ:/Code/Epsilon-Engine/projects/TowerDefense/../../thirdparty/openal   -LJ:/Code/Epsilon-Engine/projects/TowerDefense/../../out/build/x64-Release
   OBJECT_DIR = projects\TowerDefense\CMakeFiles\TowerDefense.dir
   POST_BUILD = cd .
   PRE_LINK = cd .

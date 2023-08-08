@@ -25,6 +25,8 @@
 
 #include "vk_mem_alloc.h"
 
+class ImGuiRenderer;
+
 namespace engine
 {
     class VulkanResourceManager;
@@ -99,15 +101,18 @@ namespace engine
 
         void *perPassData = nullptr;
 
-        ImGuiRenderer& getDebugRenderer() override {
-            return m_pImguiRenderer;
-        }
+        std::shared_ptr<ImGuiRenderer> getDebugRenderer() override;
 
         void SetViewport(const Viewport&) override;
 
         void SetScissor(const Scissor&) override;
 
+        void SetVSync(bool) override;
+
         void SetRenderPass(Ref<RenderPass>) override;
+
+
+        void InitDebugRenderer() override;
 
     private:
         void FlushNonIndexed(vk::VulkanRenderPass *renderPass);
@@ -134,7 +139,8 @@ namespace engine
 
         VulkanResourceManager *m_pResourceManagerRef = nullptr;
         bool m_pRenderPassActive = false;
+        bool m_pShouldRecreateSwapchain = false;
 
-        ImGuiRenderer m_pImguiRenderer{}; //!! TODO: find a better place for this
+        std::shared_ptr<ImGuiRenderer> m_pImguiRenderer; //!! TODO: find a better place for this
     };
 }

@@ -33,7 +33,7 @@ namespace EpsilonUI {
             static const ImU32 color_y = IM_COL32(112, 162, 22, 255);
             static const ImU32 color_z = IM_COL32(51, 122, 210, 255);
             static const glm::vec2 size = glm::vec2(4.0f, 16.0f);
-            static const glm::vec2 offset = glm::vec2(5.0f, 1.0);
+            static const glm::vec2 offset = glm::vec2(0.0f, 1.0);
             pos_post_label += offset;
             ImVec2 min, max;
             min = ImVec2(pos_post_label.x, pos_post_label.y);

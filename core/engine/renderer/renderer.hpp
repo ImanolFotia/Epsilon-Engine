@@ -5,19 +5,19 @@
 #include <core/framework/window.hpp>
 #include <core/common/common.hpp>
 
-#include "vulkan/imgui/imgui_setup.hpp"
+
 #include "draw_command.hpp"
 #include <string>
 #include <vector>
 #include <list>
-
+class ImGuiRenderer;
 namespace engine
 {
 
-    const uint32_t MAX_VERTICES_PER_BUFFER = 1000000;
-    const uint32_t MAX_INDICES_PER_BUFFER =  1000000;
+    const uint32_t MAX_VERTICES_PER_BUFFER = 500000;
+    const uint32_t MAX_INDICES_PER_BUFFER =  500000;
 
-    const uint32_t MAX_COMMAND_QUEUE_SIZE = 1000;
+    const uint32_t MAX_COMMAND_QUEUE_SIZE = 2000;
 
     struct ShaderModuleInfo
     {
@@ -103,6 +103,10 @@ namespace engine
 
         virtual void Cleanup() = 0;
 
+        virtual void InitDebugRenderer() = 0;
+
+        virtual void SetVSync(bool) = 0;
+
 
     public:
         /**
@@ -116,7 +120,7 @@ namespace engine
         Renderer(Renderer &&) = delete;
         Renderer(const Renderer &) = delete;
 
-        virtual ImGuiRenderer& getDebugRenderer() = 0;
+        virtual  std::shared_ptr<ImGuiRenderer> getDebugRenderer() = 0;
 
         virtual ~Renderer() {}
 

@@ -39,10 +39,16 @@ namespace engine
 		if (format == COLOR_RGBA_BC1) return VK_FORMAT_BC1_RGBA_SRGB_BLOCK;
 		if (format == COLOR_RGBA_BC3) return VK_FORMAT_BC3_SRGB_BLOCK;
 
+		if (format == COLOR_RGBA_BC7) 
+			return VK_FORMAT_BC7_SRGB_BLOCK;
+
 		if (format == NON_COLOR_RGB_BC1) return VK_FORMAT_BC1_RGB_UNORM_BLOCK;
 		if (format == NON_COLOR_RGB_BC2) return VK_FORMAT_BC2_UNORM_BLOCK;
 		if (format == NON_COLOR_RGB_BC3) return VK_FORMAT_BC3_UNORM_BLOCK;
 		if (format == NON_COLOR_RGBA_BC3) return VK_FORMAT_BC3_UNORM_BLOCK;
+
+		if (format == NON_COLOR_RGBA_BC7)
+			return VK_FORMAT_BC7_UNORM_BLOCK;
 
 
 		// Non color formats (i.e. Normal Maps)

@@ -2,6 +2,9 @@
 #include "../types.hpp"
 #include "core/engine/renderer/resource_manager.hpp"
 #include "vulkan.hpp"
+#include "apis/vk/vk.hpp"
+
+#include "imgui/imgui_setup.hpp"
 
 namespace engine
 {

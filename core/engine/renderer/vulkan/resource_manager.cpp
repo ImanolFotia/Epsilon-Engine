@@ -94,16 +94,17 @@ namespace engine
 		uint32_t mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texInfo.width, texInfo.height)))) + 1;
 
 		auto size = texInfo.width * texInfo.height * texInfo.numChannels;
-		if (texInfo.isKTX) {
+		if (texInfo.mipLevels > 1) {
 			size = texInfo.size;
 			mipLevels = texInfo.mipLevels;
 		}
 		else {
-			texInfo.mipLevels = mipLevels;
+			if (!texInfo.isCompressed)
+				texInfo.mipLevels = mipLevels;
 		}
 
 		auto stagingBuffer = pCreateStagingTextureBuffer(texInfo.pixels, texInfo);
-		
+
 
 		auto texture = pCreateTextureBuffer({ .width = texInfo.width,
 											 .height = texInfo.height,
@@ -118,12 +119,14 @@ namespace engine
 
 		transitionImageLayout(*m_pVkDataPtr, m_pTransferCommandPool, texture.image,
 			format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-			texture.info);
+			texture.info, 0, texInfo.mipLevels);
 		copyBufferToImage(*m_pVkDataPtr, m_pTransferCommandPool, stagingBuffer.buffer, texture.image,
 			static_cast<uint32_t>(texInfo.width), static_cast<uint32_t>(texInfo.height), texInfo.offsets, texInfo.mipLevels);
+
 		transitionImageLayout(*m_pVkDataPtr, m_pTransferCommandPool, texture.image,
 			format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-			VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, texture.info);
+			VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, texture.info, 0, texInfo.mipLevels);
+
 
 		vmaDestroyBuffer(m_pAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
 		// vmaFreeMemory(m_pAllocator, m_pStagingTextureBuffer.allocation);
@@ -131,14 +134,14 @@ namespace engine
 		texture.filter = resolveFilter(texInfo.filtering);
 
 		texture.info.mipLevels = mipLevels;
+		texture.info.width = texInfo.width;
+		texture.info.height = texInfo.height;
 		vk::createImageView(*m_pVkDataPtr, texture, VK_IMAGE_ASPECT_COLOR_BIT);
 
 		ResourcesMemory.m_pTextureBufferAllocationSize += size;
 
 		//Call gen mips
-		if (texInfo.offsets.size() <= 0) {
 			pGenerateMipMaps(texInfo, texture);
-		}
 
 
 		vk::createTextureSampler(*m_pVkDataPtr, texture);
@@ -240,6 +243,20 @@ namespace engine
 					vk::VulkanShaderBinding shaderBinding = {
 						.buffers = buff,
 						.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+						.bindingPoint = binding.binding,
+						.isRenderPassAttachment = false };
+
+					vkMaterial.shaderBindings.push_back(shaderBinding);
+				}
+				else if (binding.type == UniformBindingType::UNIFORM_BUFFER)
+				{
+					vkMaterial.slots++;
+					auto buff = uniformBufferPool.get(std::hash<std::string>{}(binding.buffer))->buffers;
+					for (auto& b : buff) b.size = binding.size;
+
+					vk::VulkanShaderBinding shaderBinding = {
+						.buffers = buff,
+						.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
 						.bindingPoint = binding.binding,
 						.isRenderPassAttachment = false };
 
@@ -359,7 +376,7 @@ namespace engine
 
 		m_pVkDataPtr->defaultRenderPass.renderPassChain.setViewport(viewport);
 		m_pVkDataPtr->defaultRenderPass.renderPassChain.setScissor(rect);
-		
+
 
 		for (auto& binding : renderPassInfo.bindingInfo)
 		{
@@ -371,6 +388,8 @@ namespace engine
 		}
 
 		m_pDefaultRenderPassRef = renderPassPool.insert(renderPassInfo.name, m_pVkDataPtr->defaultRenderPass);
+
+
 
 		return m_pDefaultRenderPassRef;
 	}
@@ -420,6 +439,7 @@ namespace engine
 
 			vk::VulkanTexture texture = pCreateTextureBuffer(texInfo);
 
+			texture.imageLayout = attachment.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			texture.bindingType = vk::RENDER_BUFFER_SAMPLER;
 			texture.info.mipLevels = 1;
 			createImageView(*m_pVkDataPtr, texture,
@@ -427,13 +447,22 @@ namespace engine
 
 			if (attachment.isSampler)
 			{
+				texture.info.isSampler = true;
 				vk::createTextureSampler(*m_pVkDataPtr, texture);
 			}
+
 
 			if (attachment.isDepthAttachment)
 			{
 				texture.isDepthAttachment = true;
 				renderPass.renderPassChain.DepthTexture = texture;
+
+				if (attachment.isSampler) {
+					renderPass.renderPassChain.hasDepthSampler = true;
+					renderPass.renderPassChain.ImageViews.push_back(texture.imageView);
+					renderPass.renderPassChain.Textures.push_back(texture);
+
+				}
 			}
 			else
 			{
@@ -518,7 +547,7 @@ namespace engine
 		{
 			vmaDestroyBuffer(m_pAllocator, buffer.buffer, buffer.allocation);
 		}
-
+		/*
 		for (auto& buffer : uniformBufferPool)
 		{
 			for (auto& b : buffer.buffers)
@@ -526,10 +555,25 @@ namespace engine
 				vmaDestroyBuffer(m_pAllocator, b.buffer, b.allocation);
 			}
 		}
+		*/
+
+
+
 		for (auto& buffer : gpuBufferPool)
 		{
 			for (auto& b : buffer.buffers) {
-				vmaDestroyBuffer(m_pAllocator,b.buffer, b.allocation);
+				if (b.mapped) {
+					vmaUnmapMemory(m_pAllocator, b.allocation);
+					b.mapped = false;
+				}
+			}
+		}
+
+		for (auto& buffer : gpuBufferPool)
+		{
+			for (auto& b : buffer.buffers) {
+				if(b.size > 0)
+				vmaDestroyBuffer(m_pAllocator, b.buffer, b.allocation);
 			}
 		}
 
@@ -555,6 +599,12 @@ namespace engine
 			for (auto& pipeline : pass.renderPipelines)
 				vk::destroyGraphicsPipeline(*m_pVkDataPtr, pipeline);
 
+			for (auto& uniformBuffer : pass.uniformBuffer)
+				for (auto& b : uniformBuffer.buffers) {
+					if(b.buffer != VK_NULL_HANDLE)
+						vmaDestroyBuffer(m_pAllocator, b.buffer, b.allocation);
+				}
+
 			if (pass.id == std::numeric_limits<uint32_t>::max())
 				continue;
 
@@ -568,15 +618,6 @@ namespace engine
 				vmaDestroyImage(m_pAllocator, pass.renderPassChain.Textures[i].image,
 					pass.renderPassChain.Textures[i].allocation);
 			}
-
-			if (pass.renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE)
-				vkDestroySampler(m_pVkDataPtr->logicalDevice, pass.renderPassChain.DepthTexture.sampler, nullptr);
-
-			if (pass.renderPassChain.DepthTexture.imageView != VK_NULL_HANDLE)
-				vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass.renderPassChain.DepthTexture.imageView, nullptr);
-
-			vmaDestroyImage(m_pAllocator, pass.renderPassChain.DepthTexture.image,
-				pass.renderPassChain.DepthTexture.allocation);
 		}
 		vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool, nullptr);
 
@@ -584,8 +625,6 @@ namespace engine
 		vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pGlobalDescriptorPool, nullptr);
 
 		vmaDestroyBuffer(m_pAllocator, m_pIndirectBuffer.buffer, m_pIndirectBuffer.allocation);
-
-		
 
 		vmaDestroyAllocator(m_pAllocator);
 		vk::cleanup(*m_pVkDataPtr);
@@ -789,12 +828,12 @@ namespace engine
 			vmaDestroyImage(m_pAllocator, pass->renderPassChain.Textures[i].image,
 				pass->renderPassChain.Textures[i].allocation);
 		}
-
+		/*
 		if (pass->renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE)
 			vkDestroySampler(m_pVkDataPtr->logicalDevice, pass->renderPassChain.DepthTexture.sampler, nullptr);
 
 		if (pass->renderPassChain.DepthTexture.imageView != VK_NULL_HANDLE)
-			vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass->renderPassChain.DepthTexture.imageView, nullptr);
+			vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass->renderPassChain.DepthTexture.imageView, nullptr);*/
 
 		vmaDestroyImage(m_pAllocator, pass->renderPassChain.DepthTexture.image,
 			pass->renderPassChain.DepthTexture.allocation);

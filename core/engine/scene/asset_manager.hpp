@@ -670,11 +670,23 @@ namespace engine
 				mipLevels = ddsfile.mipLevels();
 				size = ddsfile.size();
 				num_channels = 4;
-				if(format == NON_COLOR_RGBA) {
+				isCompressed = true;
+				unsigned int desired_format = format;
+				if(desired_format == NON_COLOR_RGBA) {
 					format = TextureFormat::NON_COLOR_RGBA_BC3;
 				}
 				else {
 					format = ddsfile.format();
+				}
+
+				if (desired_format == NON_COLOR_RGBA && ddsfile.format() == COLOR_RGBA_BC7) {
+					format = NON_COLOR_RGBA_BC7;
+				}
+				else if (desired_format == COLOR_RGBA && ddsfile.format() == NON_COLOR_RGBA_BC7) {
+					format = COLOR_RGBA_BC7;
+				}
+				else if (desired_format == NON_COLOR_RGBA && ddsfile.format() == NON_COLOR_RGBA_BC7) {
+					format = NON_COLOR_RGBA_BC7;
 				}
 				pixels = ddsfile.data();
 				size_t offset = 0;
@@ -684,7 +696,7 @@ namespace engine
 				for (unsigned int level = 0; level < mipLevels; ++level)
 				{
 
-					s = ((w + 3) / 4) * ((h + 3) / 4) * ddsfile.blockSize();
+					s = ((w + 3) / 4) * (((h + 3) / 4) * ddsfile.blockSize());
 					offsets.push_back(offset);
 					offset += s;
 					w /= 2;
@@ -719,6 +731,8 @@ namespace engine
 				};
 
 				ref = resourceManager->createTexture(texInfo);
+
+				m_pContext->Renderer()->getDebugRenderer()->addTexture(ref);
 
 				if (!isCompressed && !isDDS) {
 					framework::free_image_data(pixels);

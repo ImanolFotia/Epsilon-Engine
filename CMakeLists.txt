@@ -308,7 +308,7 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
 
 set(EPSILON_SOURCE_LOCATION ${CMAKE_SOURCE_DIR})
 
-option(CREATE_STATIC_LIB "Build static library" OFF)
+option(CREATE_STATIC_LIB "Build static library" ON)
 
 if(D__ANDROID__) 
     set(CREATE_STATIC_LIB ON)
@@ -323,6 +323,7 @@ set(PROJECT_FILES
         ${CMAKE_SOURCE_DIR}/main_lib.cpp
         ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/vulkan_impl.cpp
         ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/vulkan.cpp
+        ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/imgui/imgui_setup.cpp
         ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/resource_manager.cpp
         ${CMAKE_SOURCE_DIR}/core/engine/audio/al/audio_manager.cpp
         ${CMAKE_SOURCE_DIR}/core/framework/IO/IO.hpp
@@ -503,13 +504,13 @@ install(DIRECTORY ${images} DESTINATION "bin/assets")
 #add_subdirectory(examples/basic)
 #add_subdirectory(examples/chess)
 #add_subdirectory(examples/model)
-if(!BUILD_AS_LIBRARY)
+#if(!BUILD_AS_LIBRARY)
     add_subdirectory(examples/bsp)
     add_subdirectory(projects/TowerDefense)
     if(${Mono_FOUND})
     add_subdirectory(examples/mono-managed)
     endif()
-endif()
+#endif()
 
 #if(D__ANDROID__)
 #    add_subdirectory(platform/android/app/src/main/cpp)
