@@ -9,38 +9,97 @@
 #define FOURCC_ATI2 0x32495441
 #define FOURCC_DX10 0x30315844
 
+
 #define MAGICNUMBER 0x44445320
+
+#define DDS_FOURCC      0x00000004  // DDPF_FOURCC
+#define DDS_RGB         0x00000040  // DDPF_RGB
+#define DDS_RGBA        0x00000041  // DDPF_RGB | DDPF_ALPHAPIXELS
+#define DDS_LUMINANCE   0x00020000  // DDPF_LUMINANCE
+#define DDS_LUMINANCEA  0x00020001  // DDPF_LUMINANCE | DDPF_ALPHAPIXELS
+#define DDS_ALPHA       0x00000002  // DDPF_ALPHA
+#define DDS_PAL8        0x00000020  // DDPF_PALETTEINDEXED8
+
+#define DDS_HEADER_FLAGS_TEXTURE        0x00001007  // DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT
+#define DDS_HEADER_FLAGS_MIPMAP         0x00020000  // DDSD_MIPMAPCOUNT
+#define DDS_HEADER_FLAGS_VOLUME         0x00800000  // DDSD_DEPTH
+#define DDS_HEADER_FLAGS_PITCH          0x00000008  // DDSD_PITCH
+#define DDS_HEADER_FLAGS_LINEARSIZE     0x00080000  // DDSD_LINEARSIZE
+
+#define DDS_HEIGHT 0x00000002 // DDSD_HEIGHT
+#define DDS_WIDTH  0x00000004 // DDSD_WIDTH
+
+
+#define DXGI_FORMAT_BC1_TYPELESS 70
+#define DXGI_FORMAT_BC1_UNORM 71
+#define DXGI_FORMAT_BC1_UNORM_SRGB 72
+#define DXGI_FORMAT_BC2_TYPELESS 73
+#define DXGI_FORMAT_BC2_UNORM 74
+#define DXGI_FORMAT_BC2_UNORM_SRGB 75
+#define DXGI_FORMAT_BC3_TYPELESS 76
+#define DXGI_FORMAT_BC3_UNORM 77
+#define DXGI_FORMAT_BC3_UNORM_SRGB 78
+#define DXGI_FORMAT_BC4_TYPELESS 79
+#define DXGI_FORMAT_BC4_UNORM 80
+#define DXGI_FORMAT_BC4_SNORM 81
+#define DXGI_FORMAT_BC5_TYPELESS 82
+#define DXGI_FORMAT_BC5_UNORM 83
+#define DXGI_FORMAT_BC5_SNORM 84
+#define DXGI_FORMAT_B5G6R5_UNORM 85
+#define DXGI_FORMAT_B5G5R5A1_UNORM 86
+#define DXGI_FORMAT_B8G8R8A8_UNORM 87
+#define DXGI_FORMAT_B8G8R8X8_UNORM 88
+#define DXGI_FORMAT_R10G10B10_XR_BIAS_A2_UNORM 89
+#define DXGI_FORMAT_B8G8R8A8_TYPELESS 90
+#define DXGI_FORMAT_B8G8R8A8_UNORM_SRGB 91
+#define DXGI_FORMAT_B8G8R8X8_TYPELESS 92
+#define DXGI_FORMAT_B8G8R8X8_UNORM_SRGB 93
+#define DXGI_FORMAT_BC6H_TYPELESS 94
+#define DXGI_FORMAT_BC6H_UF16 95
+#define DXGI_FORMAT_BC6H_SF16 96
+#define DXGI_FORMAT_BC7_TYPELESS 97
+#define DXGI_FORMAT_BC7_UNORM 98
+#define DXGI_FORMAT_BC7_UNORM_SRGB 99
 
 constexpr int MAGICNUMBEROFFSET = 4;
 
 struct DDS_PIXELFORMAT {
-  int dwSize;
-  int dwFlags;
-  int dwFourCC;
-  int dwRGBBitCount;
-  int dwRBitMask;
-  int dwGBitMask;
-  int dwBBitMask;
-  int dwABitMask;
+	int dwSize;
+	int dwFlags;
+	int dwFourCC;
+	int dwRGBBitCount;
+	int dwRBitMask;
+	int dwGBitMask;
+	int dwBBitMask;
+	int dwABitMask;
 };
 
 struct DDS_HEADER
 {
-    int           dwSize;
-    int           dwFlags;
-    int           dwHeight;
-    int           dwWidth;
-    int           dwPitchOrLinearSize;
-    int           dwDepth;
-    int           dwMipMapCount;
-    int           dwReserved1[11];
-    DDS_PIXELFORMAT ddspf;
-    int           dwCaps;
-    int           dwCaps2;
-    int           dwCaps3;
-    int           dwCaps4;
-    int           dwReserved2;
+	int           dwSize;
+	int           dwFlags;
+	int           dwHeight;
+	int           dwWidth;
+	int           dwPitchOrLinearSize;
+	int           dwDepth;
+	int           dwMipMapCount;
+	int           dwReserved1[11];
+	DDS_PIXELFORMAT ddspf;
+	int           dwCaps;
+	int           dwCaps2;
+	int           dwCaps3;
+	int           dwCaps4;
+	int           dwReserved2;
 
 };
+
+struct DX10_HEADER {
+	int	dxgiFormat;
+	int32_t	resourceDimension;
+	int32_t	miscFlag;
+	int32_t	arraySize;
+	int32_t	miscFlags2;
+};
+
 
 

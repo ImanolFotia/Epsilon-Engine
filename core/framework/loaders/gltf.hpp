@@ -377,93 +377,6 @@ namespace framework {
 
 			}
 		}
-		/*
-		void parse_animation(tinygltf::Model& model, tinygltf::Animation& animation, const framework::Skeleton& skeleton) {
-			auto& current_animation = m_pAnimations.emplace_back();
-
-			current_animation.name = animation.name;
-
-			current_animation.animation_nodes.resize(m_pSkeleton.Joints.size());
-
-			for (int channel_index = 0; channel_index < animation.channels.size(); channel_index++) {
-				if (!m_pSkeleton.Joints.contains(model.nodes[animation.channels[channel_index].target_node].name)) continue;
-				auto& current_anim_node = current_animation.animation_nodes[m_pSkeleton.Joints.at(model.nodes[animation.channels[channel_index].target_node].name).index];
-				current_anim_node.target_node = animation.channels[channel_index].target_node;
-				current_anim_node.target_node_name = model.nodes[animation.channels[channel_index].target_node].name;
-				current_anim_node.sampler_index = animation.channels[channel_index].sampler;
-
-				auto& curr_output = current_anim_node.sampler.outputs.emplace_back();
-				int sampler_index = animation.channels[channel_index].sampler;
-
-				{
-					auto inputAccesor = model.accessors[animation.samplers[sampler_index].input];
-					const auto& bufferView = model.bufferViews[inputAccesor.bufferView];
-					const auto& buffer = model.buffers[bufferView.buffer];
-					const auto dataAddress = buffer.data.data() + bufferView.byteOffset + inputAccesor.byteOffset;
-					const auto byteStride = inputAccesor.ByteStride(bufferView);
-
-					current_anim_node.sampler.inputs.resize(inputAccesor.count);
-					for (int i = 0; i < inputAccesor.count; i++)
-						current_anim_node.sampler.inputs[i] = *(reinterpret_cast<const float*>(dataAddress + i * byteStride));
-
-					current_animation.duration = current_anim_node.sampler.inputs.back();
-				}
-
-				{
-					auto outputAccesor = model.accessors[animation.samplers[sampler_index].output];
-					const auto& bufferView = model.bufferViews[outputAccesor.bufferView];
-					const auto& buffer = model.buffers[bufferView.buffer];
-					const void* dataAddress = &buffer.data[bufferView.byteOffset + outputAccesor.byteOffset];
-					const auto byteStride = outputAccesor.ByteStride(bufferView);
-
-
-					current_anim_node.sampler.outputs.resize(outputAccesor.count);
-					for (int i = 0; i < outputAccesor.count; i++) {
-						switch (outputAccesor.type) {
-						case TINYGLTF_TYPE_VEC3: {
-
-							//if(outputAccesor.componentType == )
-							if (animation.channels[channel_index].target_path == "translation") {
-								current_anim_node.sampler.outputs[i].components |= (int)ANIMATION_PROPERTY::TRANSLATION;
-								const glm::vec3* buf = static_cast<const glm::vec3*>(dataAddress);
-								current_anim_node.sampler.outputs[i].position = buf[i];
-							}
-
-							else if (animation.channels[channel_index].target_path == "scale") {
-								current_anim_node.sampler.outputs[i].components |= (int)ANIMATION_PROPERTY::SCALE;
-
-								const glm::vec3* buf = static_cast<const glm::vec3*>(dataAddress);
-								current_anim_node.sampler.outputs[i].scale = buf[i];
-							}
-							break;
-						}
-						case TINYGLTF_TYPE_VEC4:
-							//if(outputAccesor.componentType == )
-							current_anim_node.sampler.outputs[i].components |= (int)ANIMATION_PROPERTY::ROTATION;
-							const glm::vec4* buf = static_cast<const glm::vec4*>(dataAddress);
-							current_anim_node.sampler.outputs[i].rotation = glm::quat(buf[i].w, buf[i].x, buf[i].y, buf[i].z);
-							break;
-						}
-					}
-				}
-
-				if (animation.samplers[sampler_index].interpolation == "LINEAR") {
-					current_anim_node.sampler.interpolation = ANIMATION_INTERPOLATION::LINEAR;
-				}
-				else if (animation.samplers[sampler_index].interpolation == "STEP") {
-					current_anim_node.sampler.interpolation = ANIMATION_INTERPOLATION::STEP;
-				}
-				else if (animation.samplers[sampler_index].interpolation == "CATMULLROMSPLINE") {
-					current_anim_node.sampler.interpolation = ANIMATION_INTERPOLATION::CATMULLROMSPLINE;
-				}
-				else if (animation.samplers[sampler_index].interpolation == "CUBICSPLINE") {
-					current_anim_node.sampler.interpolation = ANIMATION_INTERPOLATION::CUBICSPLINE;
-				}
-
-			}
-
-		}*/
-
 
 		auto findNodeChildren(const std::string& name) -> std::vector<std::string> {
 			std::vector<std::string> output;
@@ -694,6 +607,9 @@ namespace framework {
 				}
 			}
 
+			if(model.skins.size() == 0)
+			parse_nodes(model, model.nodes[model.scenes[model.defaultScene].nodes[0]], glm::mat4(1.0f));
+			else
 			parse_nodes(model, RootNode, glm::mat4(1.0f));
 
 
@@ -944,14 +860,14 @@ namespace framework {
 												n2 = (*normals)[f2];
 
 												// Put them in the array in the correct order
-												currentMesh.data().mesh.Vertices[f0 + currentvOffset].normal = glm::vec3(glm::mat3(meshTransform) * glm::vec4(n0, 1.0f));
-												currentMesh.data().mesh.Vertices[f1 + currentvOffset].normal = glm::vec3(glm::mat3(meshTransform) * glm::vec4(n1, 1.0f));
-												currentMesh.data().mesh.Vertices[f2 + currentvOffset].normal = glm::vec3(glm::mat3(meshTransform) * glm::vec4(n2, 1.0f));
+												currentMesh.data().mesh.Vertices[f0 + currentvOffset].normal = glm::vec3(glm::vec4(n0, 1.0f));
+												currentMesh.data().mesh.Vertices[f1 + currentvOffset].normal = glm::vec3(glm::vec4(n1, 1.0f));
+												currentMesh.data().mesh.Vertices[f2 + currentvOffset].normal = glm::vec3(glm::vec4(n2, 1.0f));
 												if (HasAnimation()) {
 
-													mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].normal = glm::vec3(glm::mat3(meshTransform) * glm::vec4(n0, 1.0f));
-													mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].normal = glm::vec3(glm::mat3(meshTransform) * glm::vec4(n1, 1.0f));
-													mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].normal = glm::vec3(glm::mat3(meshTransform) * glm::vec4(n2, 1.0f));
+													mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].normal = glm::vec3(glm::vec4(n0, 1.0f));
+													mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].normal = glm::vec3(glm::vec4(n1, 1.0f));
+													mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].normal = glm::vec3(glm::vec4(n2, 1.0f));
 												}
 
 											}
@@ -979,15 +895,15 @@ namespace framework {
 
 												// Put them in the array in the correct order
 
-												currentMesh.data().mesh.Vertices[f0 + currentvOffset].normal = glm::vec3(glm::mat3(meshTransform) * glm::vec4(n0, 1.0f));
-												currentMesh.data().mesh.Vertices[f1 + currentvOffset].normal = glm::vec3(glm::mat3(meshTransform) * glm::vec4(n1, 1.0f));
-												currentMesh.data().mesh.Vertices[f2 + currentvOffset].normal = glm::vec3(glm::mat3(meshTransform) * glm::vec4(n2, 1.0f));
+												currentMesh.data().mesh.Vertices[f0 + currentvOffset].normal = glm::vec3(glm::vec4(n0, 1.0f));
+												currentMesh.data().mesh.Vertices[f1 + currentvOffset].normal = glm::vec3(glm::vec4(n1, 1.0f));
+												currentMesh.data().mesh.Vertices[f2 + currentvOffset].normal = glm::vec3(glm::vec4(n2, 1.0f));
 
 												if (HasAnimation()) {
 
-													mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].normal = glm::vec3(glm::mat3(meshTransform) * glm::vec4(n0, 1.0f));
-													mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].normal = glm::vec3(glm::mat3(meshTransform) * glm::vec4(n1, 1.0f));
-													mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].normal = glm::vec3(glm::mat3(meshTransform) * glm::vec4(n2, 1.0f));
+													mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].normal = glm::vec3(glm::vec4(n0, 1.0f));
+													mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].normal = glm::vec3(glm::vec4(n1, 1.0f));
+													mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].normal = glm::vec3(glm::vec4(n2, 1.0f));
 												}
 											}
 										} break;
@@ -1308,8 +1224,6 @@ namespace framework {
 
 					}
 
-					//currentMesh.data().mesh.Indices = indices;
-					//currentMesh.data().mesh.Vertices = indices;
 
 					currentiOffset = thisIOffset;
 					currentvOffset = thisVOffset;

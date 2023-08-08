@@ -45,8 +45,20 @@ public:
 			delete iData;
 	}
 
+
 private:
+	int calculateSizeBC(int blockSize, int width, int height)
+	{
+		return std::max(1, ((height + 3) / 4)) * calculatePitchBC(blockSize, width);
+	}
+
+	int calculatePitchBC(int blockSize, int width)
+	{
+		return std::max(1, ((width + 3) / 4)) * blockSize;
+	}
+
 	DDS_HEADER* header = nullptr;
+	DX10_HEADER* dx10_header = nullptr;
 	unsigned char* m_pData = nullptr;
 	size_t m_pSize{};
 	unsigned int m_InternalFormat{};
