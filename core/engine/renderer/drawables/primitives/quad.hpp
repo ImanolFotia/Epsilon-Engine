@@ -84,7 +84,7 @@ namespace engine
 						float HU = Grid.at(i).at(j + 1);
 
 
-						glm::vec3 norm = glm::vec3(HL - HR, 0.1f, HD - HU);
+						glm::vec3 norm = glm::normalize(glm::vec3(HL - HR, 0.1, HD - HU));
 						Normals.push_back(norm);
 						//m_pMesh.Vertices.at(i * m_pTesselation + j).normal = norm;
 
