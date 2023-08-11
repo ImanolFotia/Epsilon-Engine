@@ -30,6 +30,12 @@ namespace framework
 
         bool m_pHasAnimation = false;
 
+        common::BoundingBox BoundingBox;
+        common::MIN_MAX_POINTS MinMaxPoints;
+
+        glm::vec3 m_pMin;
+        glm::vec3 m_pMax;
+
     public:
         ModelBase(const std::string& filename) : filename(filename){}
 
@@ -55,6 +61,7 @@ namespace framework
         bool HasAnimation() {
             return m_pHasAnimation;
         }
+
     };
 
     class Model : public ModelBase
@@ -68,8 +75,6 @@ namespace framework
 
         /// Structure to store the models bounding box for visibility and collision computation
 
-        common::BoundingBox BoundingBox;
-        common::MIN_MAX_POINTS MinMaxPoints;
 
         long toHash()
         {

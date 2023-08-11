@@ -13,6 +13,8 @@
 
 #include "audio/audio_object.hpp"
 
+#include "structs/box.hpp"
+
 namespace engine
 {
 
@@ -95,8 +97,6 @@ namespace engine
 		uint32_t material_id;
 	};
 
-
-
 	class AssetManager
 	{
 		std::unordered_map<std::string, Ref<Texture>> m_pImages;
@@ -113,8 +113,6 @@ namespace engine
 		uint32_t m_pObjectCurrentIndex = 0;
 
 		std::shared_ptr<Context> m_pContext;
-
-
 
 		friend class Scene;
 

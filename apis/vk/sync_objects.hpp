@@ -79,7 +79,7 @@ namespace vk
 
         std::mutex mtx{};
         std::lock_guard lock{ mtx };
-        if (vkQueueSubmit(vk_data.graphicsQueue, 1, &submitInfo, vk_data.syncObjects[currentFrame].inFlightFences) != VK_SUCCESS)
+        if (vkQueueSubmit(vk_data.graphicsQueue[currentFrame], 1, &submitInfo, vk_data.syncObjects[currentFrame].inFlightFences) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to submit draw command buffer!");
         }
@@ -103,7 +103,7 @@ namespace vk
 
         std::mutex mtx{};
         std::lock_guard lock{ mtx };
-        auto result = vkQueuePresentKHR(vk_data.presentQueue, &presentInfo);
+        auto result = vkQueuePresentKHR(vk_data.presentQueue[imageIndex], &presentInfo);
 
         if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
         {

@@ -90,10 +90,6 @@ namespace engine
 
         void pUpdateMaterial(vk::VulkanMaterial &);
 
-        void pRecreateSwapChain();
-
-        int32_t pPrepareSyncObjects();
-
         void setResourceManagerRef(engine::VulkanResourceManager *ref)
         {
             m_pResourceManagerRef = ref;
@@ -111,10 +107,12 @@ namespace engine
 
         void SetRenderPass(Ref<RenderPass>) override;
 
-
         void InitDebugRenderer() override;
 
     private:
+        void pRecreateSwapChain();
+        int32_t pPrepareSyncObjects();
+
         void FlushNonIndexed(vk::VulkanRenderPass *renderPass);
         void FlushIndexed(vk::VulkanRenderPass *renderPass);
         void FlushIndirect(vk::VulkanRenderPass *renderPass);
@@ -142,5 +140,7 @@ namespace engine
         bool m_pShouldRecreateSwapchain = false;
 
         std::shared_ptr<ImGuiRenderer> m_pImguiRenderer; //!! TODO: find a better place for this
+
+        std::vector<VkCommandBuffer> m_pSecondaryCommandBuffers;
     };
 }

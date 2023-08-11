@@ -325,6 +325,7 @@ set(PROJECT_FILES
         ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/vulkan.cpp
         ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/imgui/imgui_setup.cpp
         ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/resource_manager.cpp
+        ${CMAKE_SOURCE_DIR}/core/engine/scene/structs/frustum.cpp
         ${CMAKE_SOURCE_DIR}/core/engine/audio/al/audio_manager.cpp
         ${CMAKE_SOURCE_DIR}/core/framework/IO/IO.hpp
         ${CMAKE_SOURCE_DIR}/core/framework/IO/KeyBoard.cpp

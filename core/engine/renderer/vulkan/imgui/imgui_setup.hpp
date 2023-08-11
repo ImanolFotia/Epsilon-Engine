@@ -48,7 +48,7 @@ class ImGuiRenderer
 
 
 	uint32_t m_pImageCount = 0;
-	;
+	
 
 	vk::VulkanData* m_pVkDataPtr = nullptr;
 	uint32_t m_pCurrentIndex{};
@@ -269,7 +269,7 @@ public:
 		m_pMainWindowData.RenderPass = vk_data.defaultRenderPass.renderPass;
 		// m_pMainWindowData.Pipeline = vk_data.defaultRenderPass.renderPipelines.front().graphicsPipeline;
 		m_pFramebuffer = vk_data.defaultRenderPass.renderPassChain.Framebuffers.front();
-		m_pQueue = vk_data.graphicsQueue;
+		//m_pQueue = vk_data.graphicsQueue;
 		m_pCommandBuffer = commandBuffer; // The window pipeline may uses a different VkRenderPass than the one passed in ImGui_ImplVulkan_InitInfo
 
 		// uint32_t FrameIndex;     // Current frame being rendered to (0 <= FrameIndex < FrameInFlightCount)
@@ -304,7 +304,7 @@ public:
 		init_info.PhysicalDevice = vk_data.physicalDevice;
 		init_info.Device = vk_data.logicalDevice;
 		init_info.QueueFamily = 0;
-		init_info.Queue = vk_data.graphicsQueue;
+		init_info.Queue = vk_data.graphicsQueue[0];
 		init_info.PipelineCache = VK_NULL_HANDLE;
 		init_info.DescriptorPool = m_pDescriptorPool;
 		init_info.Subpass = 0;
@@ -332,7 +332,7 @@ public:
 			end_info.commandBufferCount = 1;
 			end_info.pCommandBuffers = &command_buffer;
 			vkEndCommandBuffer(command_buffer);
-			vkQueueSubmit(vk_data.graphicsQueue, 1, &end_info, VK_NULL_HANDLE);
+			vkQueueSubmit(vk_data.graphicsQueue[0], 1, &end_info, VK_NULL_HANDLE);
 
 			vkDeviceWaitIdle(vk_data.logicalDevice);
 			ImGui_ImplVulkan_DestroyFontUploadObjects();
@@ -481,7 +481,7 @@ public:
 
 	uint32_t addTexture(engine::Ref<engine::Texture> texture);
 
-	std::shared_ptr<ImageInfo> getImage(uint32_t index)
+	std::shared_ptr<ImageInfo> getImage(const std::string& index)
 	{
 		return m_pImages[index];
 	}
@@ -535,5 +535,5 @@ public:
 		}
 	}
 
-	std::unordered_map<uint32_t, std::shared_ptr<ImageInfo>> m_pImages;
+	std::unordered_map<std::string, std::shared_ptr<ImageInfo>> m_pImages;
 };

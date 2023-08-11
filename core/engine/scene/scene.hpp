@@ -8,6 +8,9 @@
 
 #include "../audio/audio_manager.hpp"
 
+#include "trees/octree.hpp"
+#include "structs/frustum.hpp"
+
 #ifdef _WIN32
 #include <Windows.h>
 #endif
@@ -18,6 +21,7 @@ namespace engine
 
 	class Scene
 	{
+		using OctreeDataType = std::shared_ptr<Node<RenderModel>>;
 		AssetManager m_pAssetManager;
 		std::shared_ptr<audio::AudioManager> m_pAudioManager;
 		// OctreeContainer<std::shared_ptr<NodeBase>> m_pOctree;
@@ -36,6 +40,10 @@ namespace engine
 		Ref<BindGroup> m_pPrePassBindGroup;
 		Ref<BindGroup> m_pAnimatedShadowBindGroup;
 		Ref<BindGroup> m_pTreeShadowBindGroup;
+
+		std::shared_ptr<OctreeContainer<OctreeDataType>> m_pOctree;
+
+		Frustum m_pFrustum;
 
 		std::shared_ptr<Context> m_pContext;
 
@@ -67,6 +75,7 @@ namespace engine
 
 			m_pCurrentRenderPass = m_RenderPassesRefs["DefaultRenderPass"];
 
+			m_pOctree = std::make_shared<OctreeContainer<OctreeDataType>>(Box { glm::vec3(100, 25, 100), glm::vec3(0.0, 12.5, 0.0) }, 8);
 		}
 
 		std::shared_ptr<Context> getContext() { return m_pContext; }
@@ -94,9 +103,7 @@ namespace engine
 			engine::BindGroupInfo defaultBindGroup = {
 					.bindingInfo = {
 						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
-						//{.size = sizeof(Decal) * AssetManager::MAX_DECALS, .offset = 0, .binding = 4, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "decal_buffer"},
 						{.size = sizeof(CursorInfo), .offset = 0, .binding = 4, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "info_buffer"},
-
 						{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 5, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"},
 						{.size = sizeof(ShaderObjectData) * AssetManager::MAX_OBJECTS, .offset = 0, .binding = 6, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "object_buffer"}
 			},
@@ -111,9 +118,7 @@ namespace engine
 			engine::BindGroupInfo animatedBindGroup = {
 					.bindingInfo = {
 						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
-						//{.size = sizeof(Decal) * AssetManager::MAX_DECALS, .offset = 0, .binding = 4, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "decal_buffer"},
 						{.size = sizeof(CursorInfo), .offset = 0, .binding = 4, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "info_buffer"},
-
 						{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 5, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"},
 						{.size = sizeof(ShaderObjectData) * AssetManager::MAX_OBJECTS, .offset = 0, .binding = 6, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "object_buffer"},
 						{.size = sizeof(GPUAnimationData), .offset = 0, .binding = 7, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "animation_transform_buffer"}
@@ -130,8 +135,7 @@ namespace engine
 			engine::BindGroupInfo decalBindGroup = {
 					.bindingInfo = {
 						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
-						//{.size = sizeof(ObjectData) * AssetManager::MAX_OBJECTS, .offset = 0, .binding = 2, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "object_buffer"},
-						//{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 3, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"}
+
 			},
 					.inputs = {
 				},
@@ -226,6 +230,14 @@ namespace engine
 
 			auto renderer = m_pContext->Renderer();
 			renderer->SetScissor(scissor);
+		}
+
+		void UpdateFrustum(glm::mat4 proj, glm::mat4 view) {
+			m_pFrustum.CalculateFrustum(proj * view, glm::mat4(1.0));
+		}
+
+		void insertIntoOctree(Box boundingBox, OctreeDataType octreeItem) {
+			m_pOctree->insert(boundingBox, octreeItem);
 		}
 
 		template <typename T>

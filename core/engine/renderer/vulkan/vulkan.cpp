@@ -209,12 +209,7 @@ namespace engine
 
 		VkSemaphore signalSemaphores[] = { m_pFrame.SyncObjects().renderFinishedSemaphores };
 		vk::Sync(m_pVkData, m_pFrame.CommandBuffer(), m_pCurrentFrame);
-		/*
-				g_Framebuffer = m_pVkData.defaultRenderPass.renderPassChain.Framebuffers[m_pImageIndex];
-				g_CommandBuffer = m_pFrame.CommandBuffer();
-				g_ImageSemaphore = m_pFrame.SyncObjects().imageAvailableSemaphores;
-				g_RenderSemaphore = m_pFrame.SyncObjects().renderFinishedSemaphores;
-				g_Fence = m_pFrame.SyncObjects().inFlightFences;*/
+		
 
 		m_pShouldRecreateSwapchain |= vk::Present(m_pVkData, signalSemaphores, m_pImageIndex);
 
@@ -225,7 +220,7 @@ namespace engine
 			std::cout << "swap chain recreated\n";
 		}
 
-		m_pCurrentFrame = (m_pCurrentFrame + 1) % vk::MAX_FRAMES_IN_FLIGHT;
+		m_pCurrentFrame = m_pImageIndex;// (m_pCurrentFrame + 1) % vk::MAX_FRAMES_IN_FLIGHT;
 		m_pNumDrawCalls = 0;
 	}
 
@@ -347,21 +342,10 @@ namespace engine
 		int32_t prev_material_id = -1;
 
 		int changed = 0;
-		/*
-		auto predicate = [](DrawCommand& a, DrawCommand& b) -> bool
-		{ auto a_mat = a.material.Index();
-		auto b_mat = b.material.Index();
-		//auto a_vtx = a.meshResource.vertexBuffer.Index();
-		//auto b_vtx = b.meshResource.vertexBuffer.Index();
-		//auto a_i = a.meshResource.indexBuffer.Index();
-		//auto b_i = b.meshResource.indexBuffer.Index();
-		return std::tie(a_mat, a.layoutIndex, a_vtx, a_i) <
-			std::tie(b_mat, b.layoutIndex, b_vtx, b_i); };*/
 
-		std::sort(m_pCurrentCommandQueue.begin(), m_pCurrentCommandQueue.begin() + currentCommandsInQueue, [](DrawCommand& a, DrawCommand& b) -> bool {
+		std::sort(m_pCurrentCommandQueue.begin(), m_pCurrentCommandQueue.begin() + currentCommandsInQueue, [](auto& a, auto& b) {
 			return a.pushConstantData.material_index < b.pushConstantData.material_index;
 			});
-		//m_pCurrentCommandQueue.sort(predicate);
 
 		VkExtent2D extent = renderPass->renderPassChain.Extent;
 		VkViewport viewport{};
@@ -381,8 +365,8 @@ namespace engine
 		vkCmdSetScissor(m_pFrame.CommandBuffer(), 0, 1, &renderPass->renderPassChain.Scissor);
 
 		for (int i = 0; i < currentCommandsInQueue; i++)
-			//for (auto &command : m_pCurrentCommandQueue)
 		{
+
 			auto& command = m_pCurrentCommandQueue[i];
 			if (prev_layout != command.layoutIndex)
 			{

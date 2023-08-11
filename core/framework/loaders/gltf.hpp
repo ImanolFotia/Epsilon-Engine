@@ -613,6 +613,7 @@ namespace framework {
 			parse_nodes(model, RootNode, glm::mat4(1.0f));
 
 
+
 			for (const auto& tmpMesh : meshes) {
 				if (!tmpMesh.hasMesh) continue;
 				const auto& gltfMesh = tmpMesh.mesh;
@@ -789,10 +790,17 @@ namespace framework {
 												//	<< v.y << ", " << v.z << ")\n";
 
 												currentMesh.data().mesh.Vertices[i + currentvOffset].position = (glm::vec4(v.x, v.y, v.z, 1.0f));
-												currentMesh.data().mesh.Vertices[i + currentvOffset].color = glm::vec4(1.0f);
+												if (v.x < m_pMin.x) m_pMin.x = v.x;
+												if (v.y < m_pMin.y) m_pMin.y = v.y;
+												if (v.z < m_pMin.z) m_pMin.z = v.z;
+
+												if (v.x > m_pMax.x) m_pMax.x = v.x;
+												if (v.y > m_pMax.y) m_pMax.y = v.y;
+												if (v.z > m_pMax.z) m_pMax.z = v.z;
+												//currentMesh.data().mesh.Vertices[i + currentvOffset].color = glm::vec4(1.0f);
 												if (HasAnimation()) {
 													mAnimatedMeshes.at(index).Vertices[i + currentvOffset].position = (glm::vec4(v.x, v.y, v.z, 1.0f));
-													mAnimatedMeshes.at(index).Vertices[i + currentvOffset].color = glm::vec4(1.0f);
+													//mAnimatedMeshes.at(index).Vertices[i + currentvOffset].color = glm::vec4(1.0f);
 												}
 											}
 
@@ -1051,7 +1059,7 @@ namespace framework {
 										case TINYGLTF_COMPONENT_TYPE_DOUBLE: {
 											std::cout << "COLOR_0 is DOUBLE\n";
 
-											auto color = std::unique_ptr<UnsignedVertex4DArrayPtr<glm::dvec4> >(new UnsignedVertex4DArrayPtr<glm::dvec4>(VertexArrayStorage< glm::dvec4>(dataPtr, count, byte_stride)));
+											auto color = std::unique_ptr<Vertex4DArrayPtr<glm::dvec4> >(new Vertex4DArrayPtr<glm::dvec4>(VertexArrayStorage< glm::dvec4>(dataPtr, count, byte_stride)));
 
 
 											for (size_t i{ 0 }; i < indices.size() / 3; ++i) {
@@ -1076,6 +1084,37 @@ namespace framework {
 													mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].color = glm::dvec4(color0);
 													mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].color = glm::dvec4(color1);
 													mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].color = glm::dvec4(color2);
+												}
+											}
+										} break;
+										case TINYGLTF_COMPONENT_TYPE_FLOAT: {
+											std::cout << "COLOR_0 is FLOAT\n";
+
+											auto color = std::unique_ptr<Vertex4DArrayPtr<glm::vec4> >(new Vertex4DArrayPtr<glm::vec4>(VertexArrayStorage< glm::vec4>(dataPtr, count, byte_stride)));
+
+
+											for (size_t i{ 0 }; i < indices.size() / 3; ++i) {
+												// get the i'th triange's indexes
+												auto f0 = indices[3 * i + 0];
+												auto f1 = indices[3 * i + 1];
+												auto f2 = indices[3 * i + 2];
+
+												glm::vec4 color0, color1, color2;
+												color0 = (*color)[f0];
+												color1 = (*color)[f1];
+												color2 = (*color)[f2];
+												color0.a = 1.0;
+												color1.a = 1.0;
+												color2.a = 1.0;
+												currentMesh.data().mesh.Vertices[f0 + currentvOffset].color = glm::vec4(color0);
+												currentMesh.data().mesh.Vertices[f1 + currentvOffset].color = glm::vec4(color1);
+												currentMesh.data().mesh.Vertices[f2 + currentvOffset].color = glm::vec4(color2);
+
+												if (HasAnimation()) {
+
+													mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].color = glm::vec4(color0);
+													mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].color = glm::vec4(color1);
+													mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].color = glm::vec4(color2);
 												}
 											}
 										} break;

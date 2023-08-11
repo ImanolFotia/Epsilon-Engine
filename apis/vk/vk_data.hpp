@@ -89,6 +89,7 @@ namespace vk
         VkCompareOp compareOp;
         bool isDepthAttachment = false;
         bool compareEnable = false;
+        std::string name{};
     };
 
     struct VulkanTextureBuffer
@@ -291,10 +292,10 @@ namespace vk
         VkPhysicalDevice physicalDevice;
         std::set<uint32_t> uniqueQueueFamilies;
 
-        VkQueue presentQueue;
-        VkQueue graphicsQueue;
+        std::vector<VkQueue> presentQueue;
+        std::vector<VkQueue> graphicsQueue;
         VkQueue transferQueue;
-        VkQueue computeQueue;
+        std::vector<VkQueue> computeQueue;
 
         bool vsync = false;
 

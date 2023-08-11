@@ -37,10 +37,9 @@ namespace vk
     {
         QueueFamilyIndices indices = findQueueFamilies(vk_data.physicalDevice, vk_data);
 
-        std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
         vk_data.uniqueQueueFamilies = {indices.graphicsFamily.value(), indices.presentFamily.value(), indices.computeFamily.value(), indices.transferFamily.value()};
 
-        float queuePriority[2] = { 1.0f , 1.0f};
+        float queuePriority[3] = { 1.0f , 1.0f, 1.0f};
         /*for (uint32_t queueFamily : vk_data.uniqueQueueFamilies)
         {
             VkDeviceQueueCreateInfo queueCreateInfo{};
@@ -52,12 +51,6 @@ namespace vk
         }*/
 
 
-        VkDeviceQueueCreateInfo queueCreateInfo{};
-        queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-        queueCreateInfo.queueFamilyIndex = indices.transferFamily.value();
-        queueCreateInfo.queueCount = 2;
-        queueCreateInfo.pQueuePriorities = queuePriority;
-        queueCreateInfos.push_back(queueCreateInfo);
 
         //!!! TODO: Should ask where these extensions are avaliable
         VkPhysicalDeviceFeatures deviceFeatures{};
@@ -117,10 +110,17 @@ namespace vk
 
         IO::Log("Min frames in flight", MIN_FRAMES_IN_FLIGHT);
 
+
+        VkDeviceQueueCreateInfo queueCreateInfo{};
+        queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+        queueCreateInfo.queueFamilyIndex = indices.transferFamily.value();
+        queueCreateInfo.queueCount = MAX_FRAMES_IN_FLIGHT;
+        queueCreateInfo.pQueuePriorities = queuePriority;
+
         VkDeviceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-        createInfo.pQueueCreateInfos = queueCreateInfos.data();
-        createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
+        createInfo.pQueueCreateInfos = &queueCreateInfo;
+        createInfo.queueCreateInfoCount = 1;
 
         createInfo.enabledExtensionCount = static_cast<uint32_t>(vk_data.deviceExtensions.size());
         createInfo.ppEnabledExtensionNames = vk_data.deviceExtensions.data();
@@ -156,10 +156,19 @@ namespace vk
             IO::Error("Error creating the device: ", deviceResult);
             throw std::runtime_error("failed to create logical device!");
         }
-        vkGetDeviceQueue(vk_data.logicalDevice, indices.presentFamily.value(), 0, &vk_data.presentQueue);
-        vkGetDeviceQueue(vk_data.logicalDevice, indices.graphicsFamily.value(), 0, &vk_data.graphicsQueue);
+
+        vk_data.presentQueue.resize(MAX_FRAMES_IN_FLIGHT);
+        vk_data.graphicsQueue.resize(MAX_FRAMES_IN_FLIGHT);
+        vk_data.computeQueue.resize(MAX_FRAMES_IN_FLIGHT);
+
+        for (int i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+
+            vkGetDeviceQueue(vk_data.logicalDevice, indices.presentFamily.value(), 0, &vk_data.presentQueue[i]);
+            vkGetDeviceQueue(vk_data.logicalDevice, indices.graphicsFamily.value(), 0, &vk_data.graphicsQueue[i]);
+            vkGetDeviceQueue(vk_data.logicalDevice, indices.computeFamily.value(), 0, &vk_data.computeQueue[i]);
+        }
         vkGetDeviceQueue(vk_data.logicalDevice, indices.transferFamily.value(), 1, &vk_data.transferQueue);
-        vkGetDeviceQueue(vk_data.logicalDevice, indices.computeFamily.value(), 0, &vk_data.computeQueue);
+
     }
 
     static VkSampleCountFlagBits getMaxUsableSampleCount(VkPhysicalDevice physicalDevice)

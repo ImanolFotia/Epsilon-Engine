@@ -2,7 +2,11 @@
 
 #include "box.hpp"
 
+#include <list>
+
 #include <glm/glm.hpp>
+
+#include <core/common/common.hpp>
 
 namespace engine
 {
@@ -22,14 +26,15 @@ namespace engine
         /**
          * @brief  This takes the center and half the length of the cube.
          */
+        bool CubeInFrustum(float x, float y, float z, glm::vec3 size);
         bool CubeInFrustum(float x, float y, float z, float size);
+        bool BoxInFrustum(float x, float y, float z, float x2, float y2, float z2) const;
 
         /////// * /////////// * /////////// * NEW * /////// * /////////// *
         ////////////// *
 
         // This checks if a box is in the frustum
-        bool BoxInFrustum(float x, float y, float z, float sizeX, float sizeY,
-                          float sizeZ) const;
+        bool BoxInFrustum(common::MIN_MAX_POINTS points) const;
 
         bool contains(Box box) const
         {

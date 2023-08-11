@@ -136,6 +136,7 @@ namespace engine
 		texture.info.mipLevels = mipLevels;
 		texture.info.width = texInfo.width;
 		texture.info.height = texInfo.height;
+		texture.name = texInfo.name;
 		vk::createImageView(*m_pVkDataPtr, texture, VK_IMAGE_ASPECT_COLOR_BIT);
 
 		ResourcesMemory.m_pTextureBufferAllocationSize += size;

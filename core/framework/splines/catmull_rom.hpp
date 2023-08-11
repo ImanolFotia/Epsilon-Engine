@@ -4,17 +4,83 @@
 
 namespace framework::splines {
 	class CatmullRom : public Spline {
-    public:
-        glm::vec3 Integrate(glm::vec3 A, glm::vec3 B, glm::vec3 C, glm::vec3 D, float t)
-        {
-            float t2 = t * t;
-            float t3 = t * t * t;
-            glm::vec3 a = -A / 2.0 + (3.0 * B) / 2.0 - (3.0 * C) / 2.0 + D / 2.0;
-            glm::vec3 b = A - (5.0 * B) / 2.0 + 2.0 * C - D / 2.0;
-            glm::vec3 c = -A / 2.0 + C / 2.0;
-            glm::vec3 d = B;
+	public:
 
-            return a * t3 + b * t2 + c * t + d;
-        }
+		glm::vec3 getPoint(float t) {
+
+			if (m_pControlPoints.size() < 4) return {};
+			glm::vec3 p0, p1, p2, p3;
+
+
+			if (m_pLoop) {
+				p0 = m_pControlPoints.at((int)t >= 1 ? (int)t - 1 : m_pControlPoints.size() - 1);
+				p1 = m_pControlPoints.at((int)t);
+				p2 = m_pControlPoints.at(((int)t + 1) % m_pControlPoints.size());
+				p3 = m_pControlPoints.at(((int)t + 2) % m_pControlPoints.size());
+			}
+			else {
+				p0 = m_pControlPoints.at((int)t);
+				p1 = m_pControlPoints.at((int)t + 1);
+				p2 = m_pControlPoints.at((int)t + 2);
+				p3 = m_pControlPoints.at((int)t + 3);
+			}
+			t = glm::fract(t);
+
+			float t2 = t * t;
+			float t3 = t * t * t;
+
+			float q0 = -t3 + 2.0f * t2 - t;
+			float q1 = 3.0f * t3 - 5.0f * t2 + 2.0f;
+			float q2 = -3.0f * t3 + 4.0f * t2 + t;
+			float q3 = t3 - t2;
+
+			return (p0 * q0 + p1 * q1 + p2 * q2 + p3 * q3) * 0.5f;
+		}
+
+		//derive the first function
+		glm::vec3 getGradient(float t) {
+
+			if (m_pControlPoints.size() < 4) return {};
+
+			glm::vec3 p0, p1, p2, p3;
+
+			if (m_pLoop) {
+				p0 = m_pControlPoints.at((int)t >= 1 ? (int)t - 1 : m_pControlPoints.size() - 1);
+				p1 = m_pControlPoints.at((int)t);
+				p2 = m_pControlPoints.at(((int)t + 1) % m_pControlPoints.size());
+				p3 = m_pControlPoints.at(((int)t + 2) % m_pControlPoints.size());
+			}
+			else {
+				p0 = m_pControlPoints.at((int)t);
+				p1 = m_pControlPoints.at((int)t + 1);
+				p2 = m_pControlPoints.at((int)t + 2);
+				p3 = m_pControlPoints.at((int)t + 3);
+			}
+
+			t = glm::fract(t);
+
+			float t2 = t * t;
+			float t3 = t * t * t;
+
+			float q0 = -3.0f * t2 + 4.0f * t - 1;
+			float q1 = 9.0f * t2 - 10.0f * t;
+			float q2 = -9.0f * t2 + 8.0 * t + 1;
+			float q3 = 3.0 * t2 - 2.0 * t;
+
+			return (p0 * q0 + p1 * q1 + p2 * q2 + p3 * q3) * 0.5f;
+		}
+
+		void CalculateLength(int point) {
+			float length = 0.0f;
+			glm::vec3 p1{}, p0 = getPoint(float(point));
+			for (float x = 0.0f; x < 1.0f; x += 1.0f / 15.0f) {
+				p1 = getPoint(float(point) + x);
+				length += glm::distance(p1, p0);
+				p0 = p1;
+			}
+
+
+		}
+
 	};
 }

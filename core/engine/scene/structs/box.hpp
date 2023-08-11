@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
+#include <iostream>
 /** @brief Box structure with some helper functions
  * This box structure is the building block of the octree container
  * The box consists of a size and a position, the later representinf the bottom left corner
