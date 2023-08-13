@@ -3,10 +3,16 @@
 #include <glm/glm.hpp>
 
 namespace framework::splines {
+
+	struct ControlPoint {
+		glm::vec3 position{};
+		float length{};
+	};
+
 	class Spline {
 	public:
 		void addPoint(glm::vec3 point) {
-			m_pControlPoints.push_back(point);
+			m_pControlPoints.push_back({ .position = point, .length = 0 });
 		}
 
 		size_t numPoints() {
@@ -14,7 +20,7 @@ namespace framework::splines {
 		}
 
 	protected:
-		std::vector<glm::vec3> m_pControlPoints{};
+		std::vector<ControlPoint> m_pControlPoints{};
 		bool m_pLoop = true;
 	};
 }

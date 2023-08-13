@@ -13,16 +13,16 @@ namespace framework::splines {
 
 
 			if (m_pLoop) {
-				p0 = m_pControlPoints.at((int)t >= 1 ? (int)t - 1 : m_pControlPoints.size() - 1);
-				p1 = m_pControlPoints.at((int)t);
-				p2 = m_pControlPoints.at(((int)t + 1) % m_pControlPoints.size());
-				p3 = m_pControlPoints.at(((int)t + 2) % m_pControlPoints.size());
+				p0 = m_pControlPoints.at((int)t >= 1 ? (int)t - 1 : m_pControlPoints.size() - 1).position;
+				p1 = m_pControlPoints.at((int)t).position;
+				p2 = m_pControlPoints.at(((int)t + 1) % m_pControlPoints.size()).position;
+				p3 = m_pControlPoints.at(((int)t + 2) % m_pControlPoints.size()).position;
 			}
 			else {
-				p0 = m_pControlPoints.at((int)t);
-				p1 = m_pControlPoints.at((int)t + 1);
-				p2 = m_pControlPoints.at((int)t + 2);
-				p3 = m_pControlPoints.at((int)t + 3);
+				p0 = m_pControlPoints.at((int)t).position;
+				p1 = m_pControlPoints.at((int)t + 1).position;
+				p2 = m_pControlPoints.at((int)t + 2).position;
+				p3 = m_pControlPoints.at((int)t + 3).position;
 			}
 			t = glm::fract(t);
 
@@ -45,16 +45,16 @@ namespace framework::splines {
 			glm::vec3 p0, p1, p2, p3;
 
 			if (m_pLoop) {
-				p0 = m_pControlPoints.at((int)t >= 1 ? (int)t - 1 : m_pControlPoints.size() - 1);
-				p1 = m_pControlPoints.at((int)t);
-				p2 = m_pControlPoints.at(((int)t + 1) % m_pControlPoints.size());
-				p3 = m_pControlPoints.at(((int)t + 2) % m_pControlPoints.size());
+				p0 = m_pControlPoints.at((int)t >= 1 ? (int)t - 1 : m_pControlPoints.size() - 1).position;
+				p1 = m_pControlPoints.at((int)t).position;
+				p2 = m_pControlPoints.at(((int)t + 1) % m_pControlPoints.size()).position;
+				p3 = m_pControlPoints.at(((int)t + 2) % m_pControlPoints.size()).position;
 			}
 			else {
-				p0 = m_pControlPoints.at((int)t);
-				p1 = m_pControlPoints.at((int)t + 1);
-				p2 = m_pControlPoints.at((int)t + 2);
-				p3 = m_pControlPoints.at((int)t + 3);
+				p0 = m_pControlPoints.at((int)t).position;
+				p1 = m_pControlPoints.at((int)t + 1).position;
+				p2 = m_pControlPoints.at((int)t + 2).position;
+				p3 = m_pControlPoints.at((int)t + 3).position;
 			}
 
 			t = glm::fract(t);
