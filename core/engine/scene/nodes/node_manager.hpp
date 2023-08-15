@@ -9,7 +9,6 @@
 #include <typeindex>
 #include <typeinfo>
 #include <unordered_map>
-#include <vector>
 
 #include "node.hpp"
 
@@ -63,13 +62,13 @@ namespace engine
 				node_count++;
 			}
 
-			nodes.push_back(std::make_shared<Node<T>>(std::forward<Args>(args)...));
+			nodes.emplace_back(std::make_shared<Node<T>>(std::forward<Args>(args)...));
 
 			node_types[iType].push_back(std::prev(nodes.end()));
 
 			node_index[index] = std::prev(node_types[iType].end());
 
-			parent->destroy_children.push_back([this, index]()
+			parent->destroy_children.push_back([=]()
 				{
 					try {
 						using child_type = T;
@@ -77,10 +76,10 @@ namespace engine
 							erase(std::static_pointer_cast<Node<child_type>>(
 								**node_index.at(index)));
 
-							children_node_index.erase(index);
+							if(children_node_index.contains(index))
+								children_node_index.erase(index);
 						}
 
-						free_indices.push(index);
 					}
 					catch (std::exception& e) {
 						std::cout << "from " << __PRETTY_FUNCTION__
@@ -124,7 +123,7 @@ namespace engine
 
 			node_index[index] = std::prev(node_types[iType].end());
 
-			parent->destroy_children.push_back([this, index]()
+			parent->destroy_children.push_back([=]()
 				{
 					try {
 						using child_type = T;
@@ -132,10 +131,10 @@ namespace engine
 							erase(std::static_pointer_cast<Node<child_type>>(
 								**node_index.at(index)));
 
-							children_node_index.erase(index);
+							if (children_node_index.contains(index))
+								children_node_index.erase(index);
 						}
 
-						free_indices.push(index);
 					}
 					catch (std::exception& e) {
 						std::cout << "from " << __PRETTY_FUNCTION__
@@ -152,6 +151,10 @@ namespace engine
 			return std::static_pointer_cast<Node<T>>(nodes.back());
 		}
 
+		void erase(int i) {
+
+		}
+
 		template <typename T>
 		void erase(std::shared_ptr<Node<T>> node)
 		{
@@ -165,6 +168,7 @@ namespace engine
 			std::list<TypeIterator>& node_container = node_types.at(iType);
 
 			nodes.erase(*node_index.at(node->index));
+
 			node_container.erase(node_index.at(node->index));
 
 			free_indices.push(node->index);

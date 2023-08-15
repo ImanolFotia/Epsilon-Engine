@@ -236,6 +236,12 @@ namespace engine
 			m_pFrustum.CalculateFrustum(proj * view, glm::mat4(1.0));
 		}
 
+		template<typename T>
+		void removeFromScene(uint32_t index) {
+			std::shared_ptr<Node<T>> node = std::static_pointer_cast<Node<T>>(m_pSceneManager.get(index));
+			m_pSceneManager.erase<T>(node);
+		}
+
 		void insertIntoOctree(Box boundingBox, OctreeDataType octreeItem) {
 			m_pOctree->insert(boundingBox, octreeItem);
 		}
