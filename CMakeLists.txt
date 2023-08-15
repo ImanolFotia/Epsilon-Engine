@@ -46,6 +46,14 @@ option(DOWNLOAD_LIBRARIES "Download thirdparty libraries" OFF)
 option(GFX_BACKEND_VULKAN "Use Vulkan as graphics backend" ON)
 option(GFX_BACKEND_WEBGPU "Use WebGPU as graphics backend" OFF)
 
+if(BUILD_AS_LIBRARY EQUAL ON) 
+    set(DBUILD_AS_LIBRARY 1)
+    add_compile_definitions(DBUILD_AS_LIBRARY=TRUE)
+endif()
+
+    set(DBUILD_AS_LIBRARY TRUE)
+    add_compile_definitions(BUILD_AS_LIBRARY=TRUE)
+
 include(FindPkgConfig)
 
 
@@ -312,6 +320,7 @@ option(CREATE_STATIC_LIB "Build static library" ON)
 
 if(D__ANDROID__) 
     set(CREATE_STATIC_LIB ON)
+    add_compile_definitions(BUILD_AS_LIBRARY=1)
     set(BUILD_AS_LIBRARY ON)
 endif()
 
@@ -320,7 +329,7 @@ project(Epsilon VERSION 0.1.0)
 set(PROJECT_FILES
         ${CMAKE_SOURCE_DIR}/core/engine/context.cpp
         ${CMAKE_SOURCE_DIR}/core/framework/env.cpp
-        ${CMAKE_SOURCE_DIR}/main_lib.cpp
+        #${CMAKE_SOURCE_DIR}/main_lib.cpp
         ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/vulkan_impl.cpp
         ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/vulkan.cpp
         ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/imgui/imgui_setup.cpp
@@ -351,8 +360,8 @@ set(PROJECT_FILES
         ${CMAKE_SOURCE_DIR}/core/framework/clock.cpp
         ${CMAKE_SOURCE_DIR}/core/framework/loaders/model.cpp
         ${CMAKE_SOURCE_DIR}/modules/mono/mono-instance.hpp
-        ${CMAKE_SOURCE_DIR}/Epsilon.cpp
         ${CMAKE_SOURCE_DIR}/Epsilon.hpp
+        ${CMAKE_SOURCE_DIR}/Epsilon.cpp
         ${CMAKE_SOURCE_DIR}/core/framework/singleton.hpp
         ${CMAKE_SOURCE_DIR}/modules/imgui/imgui_impl_glfw.cpp
         ${CMAKE_SOURCE_DIR}/modules/imgui/imgui_impl_vulkan.cpp
@@ -373,9 +382,9 @@ if (BUILD_AS_LIBRARY)
         set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
     endif ()
     if (CREATE_STATIC_LIB)
-        add_library(${PROJECT_NAME} STATIC main_lib.cpp)
+        add_library(${PROJECT_NAME} STATIC Epsilon.cpp)
     else ()
-        add_library(${PROJECT_NAME} SHARED main_lib.cpp ${PROJECT_FILES})
+        add_library(${PROJECT_NAME} SHARED Epsilon.cpp ${PROJECT_FILES})
     endif ()
 
     if (MSVC)

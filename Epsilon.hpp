@@ -1,5 +1,5 @@
-#pragma once
-
+#ifndef EPSILON_HPP
+#define EPSILON_HPP
 #include <iostream>
 #include <vector>
 #include <memory>
@@ -33,6 +33,7 @@
 #include <core/engine/scene/scene.hpp>
 
 
+
 #if defined(_WIN32)
 //  Microsoft
 #if defined(EPSILON_BUILD_DLL)
@@ -53,6 +54,8 @@
 #define IMPORT
 #pragma warning Unknown dynamic link import / export semantics.
 #endif
+
+
 
 
 namespace Epsilon
@@ -139,3 +142,55 @@ namespace Epsilon
         int m_pMaxFPS = 5000;
     };
 }
+
+#endif //EPSILON_HPP
+
+#ifdef IMPL_EPSILON_MAIN && BUILD_AS_LIBRARY == FALSE
+
+int EpsilonMain(int argc, char** argv);
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#undef min
+#undef max
+#include <windows.h>
+#include <fcntl.h>
+#include <io.h>
+#include <ShellScalingAPI.h>
+extern "C"
+{
+    __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+    __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001;
+}
+#endif
+
+// Should force the OS to use the dedicated GPU, however, it doesn't work while using hybrid graphics on Pop!_OS, so the command must be run using:
+// For OpenGL:
+//__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia <application>
+// For Vulkan:
+//__NV_PRIME_RENDER_OFFLOAD=1 <application>
+
+#ifdef __linux__
+extern "C"
+{
+    int NvOptimusEnablement = 1;
+    int AmdPowerXpressRequestHighPerformance = 1;
+}
+#endif
+
+
+//#if defined(_WIN32)																
+//int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR argv, int argc)	
+//#else
+int main(int argc, char** argv)
+//#endif
+{
+
+    framework::env::setArgs(argc, argv);
+
+
+    return EpsilonMain(argc, argv);
+
+}
+
+#endif

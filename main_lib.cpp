@@ -48,3 +48,8 @@ extern "C"
 #ifdef __cplusplus
 };
 #endif
+
+
+int EpsilonMain(int, char**) {
+    return 0;
+}
