@@ -1,9 +1,5 @@
-#undef VMA_DEBUG_LOG
-#undef VMA_DEBUG_LOG_FORMAT
 #include "resource_manager.hpp"
 #include "helpers.hpp"
-
-#include "vk_mem_alloc.h"
 
 #ifdef WIN32
 #if !defined(__PRETTY_FUNCTION__) && !defined(__GNUC__)
@@ -19,86 +15,86 @@
 namespace engine
 {
 
-	wgpu::VulkanBuffer VulkanResourceManager::pCreateVertexBuffer()
+	wgpu::WGPUBuffer WGPUResourceManager::pCreateVertexBuffer()
 	{
 	}
 
-	vk::VulkanBuffer VulkanResourceManager::pCreateIndexBuffer()
+	wgpu::WGPUBuffer WGPUResourceManager::pCreateIndexBuffer()
 	{
 	}
 
-	vk::VulkanUniformBuffer VulkanResourceManager::pCreateUniformBuffer(UniformBindingInfo bindingInfo)
+	wgpu::WGPUUniformBuffer WGPUResourceManager::pCreateUniformBuffer(UniformBindingInfo bindingInfo)
 	{
 	}
 
-	vk::VulkanBuffer VulkanResourceManager::pCreateStagingTextureBuffer(unsigned char *pixels, TextureCreationInfo textureInfo)
+	wgpu::WGPUBuffer WGPUResourceManager::pCreateStagingTextureBuffer(unsigned char *pixels, TextureCreationInfo textureInfo)
 	{
 	}
 
-	void VulkanResourceManager::pCreateBuffer(vk::VulkanBuffer &buffer, size_t size, VkBufferUsageFlags usage, VmaAllocationCreateFlags properties, VmaMemoryUsage mem_usage)
+	void WGPUResourceManager::pCreateBuffer(wgpu::WGPUBuffer &buffer, size_t size, VkBufferUsageFlags usage, VmaAllocationCreateFlags properties, VmaMemoryUsage mem_usage)
 	{
 	}
 
-	void VulkanResourceManager::pCreateUniformBuffers()
+	void WGPUResourceManager::pCreateUniformBuffers()
 	{
 	}
 
-	vk::VulkanTexture VulkanResourceManager::pCreateTextureBuffer(vk::VulkanTextureInfo texInfo)
+	wgpu::WGPUTexture WGPUResourceManager::pCreateTextureBuffer(wgpu::WGPUTextureInfo texInfo)
 	{
 	}
 
-	Ref<Buffer> VulkanResourceManager::pFetchVertexBuffer(uint32_t numVertices, size_t vertexSize)
+	Ref<Buffer> WGPUResourceManager::pFetchVertexBuffer(uint32_t numVertices, size_t vertexSize)
 	{
 	}
 
-	Ref<Buffer> VulkanResourceManager::pFetchIndexBuffer(uint32_t numIndices, uint32_t maxOffset)
+	Ref<Buffer> WGPUResourceManager::pFetchIndexBuffer(uint32_t numIndices, uint32_t maxOffset)
 	{
 	}
 
-	void VulkanResourceManager::pCreateDescriptorPool()
+	void WGPUResourceManager::pCreateDescriptorPool()
 	{
 	}
 
-	void VulkanResourceManager::pCreateGlobalDescriptorPool()
+	void WGPUResourceManager::pCreateGlobalDescriptorPool()
 	{
 	}
-	void VulkanResourceManager::pCreateGlobalDescriptorSets(VkDescriptorSetLayout layout, VkDescriptorPool &pool, VkDescriptorSet &descriptorSets, uint32_t count)
-	{
-	}
-
-	void VulkanResourceManager::pCreateDescriptorSets(/*vk::VulkanMaterial &material*/ VkDescriptorSetLayout layout, VkDescriptorPool &pool, std::vector<VkDescriptorSet> &descriptorSets, uint32_t count)
+	void WGPUResourceManager::pCreateGlobalDescriptorSets(VkDescriptorSetLayout layout, VkDescriptorPool &pool, VkDescriptorSet &descriptorSets, uint32_t count)
 	{
 	}
 
-	void VulkanResourceManager::pRecreateDescriptorSets()
+	void WGPUResourceManager::pCreateDescriptorSets(/*vk::VulkanMaterial &material*/ VkDescriptorSetLayout layout, VkDescriptorPool &pool, std::vector<VkDescriptorSet> &descriptorSets, uint32_t count)
 	{
 	}
 
-	vk::VulkanBuffer VulkanResourceManager::pCreateStagingBuffer(const std::vector<common::Vertex> &vertices)
+	void WGPUResourceManager::pRecreateDescriptorSets()
 	{
 	}
 
-	vk::VulkanBuffer VulkanResourceManager::pCreateStagingBuffer(const std::vector<common::AnimatedVertex> &vertices)
+	wgpu::WGPUBuffer WGPUResourceManager::pCreateStagingBuffer(const std::vector<common::Vertex> &vertices)
 	{
 	}
 
-	vk::VulkanBuffer VulkanResourceManager::pCreateStagingIndexBuffer(const std::vector<IndexType> &indices)
+	wgpu::WGPUBuffer WGPUResourceManager::pCreateStagingBuffer(const std::vector<common::AnimatedVertex> &vertices)
 	{
 	}
 
-	void VulkanResourceManager::pUpdateMaterial(vk::VulkanMaterial &material)
+	wgpu::WGPUBuffer WGPUResourceManager::pCreateStagingIndexBuffer(const std::vector<IndexType> &indices)
 	{
 	}
 
-	Ref<PushConstant> VulkanResourceManager::createPushConstant(const std::string &name, PushConstantData push_constant)
+	void WGPUResourceManager::pUpdateMaterial(wgpu::WGPUMaterial &material)
 	{
 	}
 
-	void VulkanResourceManager::pRecreateFrameBuffers(VkExtent2D extent)
+	Ref<PushConstant> WGPUResourceManager::createPushConstant(const std::string &name, PushConstantData push_constant)
 	{
 	}
 
-	void VulkanResourceManager::pGenerateMipMaps(TextureCreationInfo texInfo, vk::VulkanTexture &texture)
+	void WGPUResourceManager::pRecreateFrameBuffers(VkExtent2D extent)
+	{
+	}
+
+	void WGPUResourceManager::pGenerateMipMaps(TextureCreationInfo texInfo, wgpu::WGPUTexture &texture)
 	{
 	}
 
