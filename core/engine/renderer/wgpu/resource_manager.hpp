@@ -1,0 +1,184 @@
+#pragma once
+#include "../types.hpp"
+#include "core/engine/renderer/resource_manager.hpp"
+#include "vulkan.hpp"
+#include "apis/vk/vk.hpp"
+
+#include "imgui/imgui_setup.hpp"
+
+namespace engine
+{
+
+	class WGPUResourceManager : public ResourceManager
+	{
+	public:
+		ResourcesMemory_t ResourcesMemory{};
+
+	public:
+		friend class VulkanRenderer;
+
+		using IndexType = uint32_t;
+
+		using CommandPools = std::vector<VkCommandPool>;
+		using CommandBuffers = std::vector<VkCommandBuffer>;
+
+		WGPUResourceManager();
+		~WGPUResourceManager();
+
+		ResourceManager *get() override
+		{
+			if (m_pSelf == nullptr)
+				m_pSelf = new WGPUResourceManager();
+			return m_pSelf;
+		}
+
+		void Init() override;
+
+		Ref<BindGroup> createBindGroup(BindGroupInfo) override;
+		Ref<Texture> createTexture(TextureCreationInfo) override;
+		Ref<Mesh> createMesh(MeshInfo) override;
+		Ref<Mesh> createMesh(AnimatedMeshInfo) override;
+		Ref<Buffer> createGPUBuffer(const std::string &, uint32_t size, BufferStorageType type) override;
+		Ref<RenderPass> createRenderPass(RenderPassInfo) override;
+		Ref<RenderPass> createDefaultRenderPass(RenderPassInfo) override;
+		Ref<PushConstant> createPushConstant(const std::string &, PushConstantData) override;
+		Ref<UniformBindings> createUniformData(UniformBindingInfo) override;
+
+		void destroyTexture(Ref<Texture>) override;
+		void destroyBuffer(Ref<Buffer>) override;
+		void destroyUniformData(Ref<UniformBindings>) override;
+		void destroyMaterial(Ref<BindGroup>) override;
+		void destroyMesh(Ref<Mesh>) override;
+		void destroyRenderPass(Ref<RenderPass>) override;
+		Ref<Buffer> destroyBuffer(BufferInfo) override;
+
+		void *mapBuffer(Ref<Buffer> buffer, uint32_t currentFrame) override;
+		void unmapBuffer(Ref<Buffer> buffer, uint32_t currentFrame) override;
+		void *getMappedBuffer(Ref<Buffer> bufferRef, uint32_t currentFrame) override;
+
+		void clean() override;
+
+		wgpu::WGPUTexture *getTexture(Ref<Texture>);
+		wgpu::WGPUBuffer *getBuffer(Ref<Buffer>);
+		ShaderStageInfo *getShader(Ref<Shader>);
+		VkDescriptorSetLayoutBinding *getUniformData(Ref<UniformBindings>);
+		wgpu::WGPUMaterial *getMaterial(Ref<BindGroup>);
+		wgpu::WGPURenderPass *getRenderPass(Ref<RenderPass>);
+
+		Pool<RenderPass, wgpu::WGPURenderPass> renderPassPool;
+		Pool<Texture, wgpu::WGPUTexture> texPool;
+
+	private:
+		wgpu::WGPUData *m_pWGPUDataPtr = nullptr;
+
+	private:
+		wgpu::WGPUBuffer pCreateVertexBuffer();
+		wgpu::WGPUBuffer pCreateIndexBuffer();
+		wgpu::WGPUUniformBuffer pCreateUniformBuffer(UniformBindingInfo);
+		wgpu::WGPUTexture pCreateTextureBuffer(wgpu::WGPUTextureInfo);
+
+		Ref<Buffer> pFetchVertexBuffer(uint32_t numVertices, size_t vertexSize = sizeof(common::Vertex));
+
+		Ref<Buffer> pFetchIndexBuffer(uint32_t numIndices, uint32_t maxOffset);
+
+		void pRecreateSwapChain(framework::Window::windowType *window);
+
+		void pCreateBuffer(wgpu::WGPUBuffer &, size_t, VkBufferUsageFlags, VmaAllocationCreateFlags, VmaMemoryUsage);
+
+		wgpu::WGPUBuffer pCreateStagingBuffer(const std::vector<common::Vertex> &);
+		wgpu::WGPUBuffer pCreateStagingBuffer(const std::vector<common::AnimatedVertex> &);
+		wgpu::WGPUBuffer pCreateStagingIndexBuffer(const std::vector<IndexType> &);
+		wgpu::WGPUBuffer pCreateStagingTextureBuffer(unsigned char *, TextureCreationInfo);
+
+		void pCreateUniformBuffers();
+		void pCreateDescriptorPool();
+		void pCreateGlobalDescriptorPool();
+		void pCreateGlobalDescriptorSets(VkDescriptorSetLayout layout, VkDescriptorPool &pool, VkDescriptorSet &descriptorSets, uint32_t count);
+		void pCreateDescriptorSets(VkDescriptorSetLayout layout, VkDescriptorPool &pool, std::vector<VkDescriptorSet> &descriptorSets, uint32_t count);
+		void pRecreateDescriptorSets();
+
+		void pRecreateFrameBuffers(VkExtent2D);
+
+		void pUpdateMaterial(wgpu::WGPUMaterial &);
+
+		void pGenerateMipMaps(TextureCreationInfo, wgpu::WGPUTexture &);
+		void UploadMipmaps();
+
+		const uint32_t MAX_BINDLESS_RESOURCES = 16536;
+		const uint32_t RENDERPASS_LAYOUT = 0;
+		const uint32_t GLOBAL_LAYOUT = 1;
+		const uint32_t MATERIAL_LAYOUT = 2;
+
+		uint32_t texture_index = 0; //!!! ONLY FOR TESTING, SHOULD FIX THIS ASAP
+
+		const VkBufferUsageFlags UNIFORM_BUFFER_USAGE = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+		const VkBufferUsageFlags STORAGE_BUFFER_USAGE = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+		const VkBufferUsageFlags RAYTRACING_BUFFER_USAGE = VK_BUFFER_USAGE_RAY_TRACING_BIT_NV;
+		const VkBufferUsageFlags VERTEX_BUFFER_USAGE = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+		const VkBufferUsageFlags INDEX_BUFFER_USAGE = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
+		const VkBufferUsageFlags STAGING_BUFFER_USAGE = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+		const VkBufferUsageFlags TEXTURE_BUFFER_USAGE = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+		const VkBufferUsageFlags INDIRECT_BUFFER_USAGE = VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT;
+
+		const VmaAllocationCreateFlags STAGING_BUFFER_PROP = VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT;
+
+		const VmaAllocationCreateFlags VERTEX_BUFFER_PROP = VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT;
+		const VmaAllocationCreateFlags INDEX_BUFFER_PROP = VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT;
+		const VmaAllocationCreateFlags UNIFORM_BUFFER_PROP = VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT;
+		const VmaAllocationCreateFlags STORAGE_BUFFER_PROP = VMA_ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT;
+		const VmaAllocationCreateFlags TEXTURE_BUFFER_PROP = VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT;
+		const VmaAllocationCreateFlags INDIRECT_BUFFER_PROP = VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT;
+
+		const VmaMemoryUsage STAGING_BUFFER_MEM_USAGE = VMA_MEMORY_USAGE_CPU_ONLY;
+		const VmaMemoryUsage VERTEX_BUFFER_MEM_USAGE = VMA_MEMORY_USAGE_GPU_ONLY;
+		const VmaMemoryUsage INDEX_BUFFER_MEM_USAGE = VMA_MEMORY_USAGE_GPU_ONLY;
+		const VmaMemoryUsage TEXTURE_BUFFER_MEM_USAGE = VMA_MEMORY_USAGE_AUTO;
+		const VmaMemoryUsage UNIFORM_BUFFER_MEM_USAGE = VMA_MEMORY_USAGE_AUTO;
+		const VmaMemoryUsage STORAGE_BUFFER_MEM_USAGE = VMA_MEMORY_USAGE_AUTO;
+		const VmaMemoryUsage INDIRECT_BUFFER_MEM_USAGE = VMA_MEMORY_USAGE_AUTO;
+
+	protected:
+		Pool<ID, uint32_t> resourceIdPool;
+		Pool<Shader, ShaderStageInfo> shaderPool;
+		Pool<Buffer, wgpu::WGPUBuffer> vertexBufferPool;
+		Pool<Buffer, wgpu::WGPUBuffer> indexBufferPool;
+		Pool<Buffer, wgpu::WGPUGPUMappedBuffer> gpuBufferPool;
+		Pool<UniformBindings, wgpu::WGPUUniformBuffer> uniformBufferPool;
+		// Pool<UniformBindings, VkDescriptorSetLayoutBinding> uniformBindingPool;
+		Pool<BindGroup, wgpu::WGPUMaterial> materialPool;
+		Pool<Mesh, MeshResource> meshPool;
+		Pool<PushConstant, PushConstantData> pushConstantPool;
+
+		std::vector<Ref<Buffer>> indexBufferReferences;
+		std::vector<Ref<Buffer>> vertexBufferReferences;
+
+		std::vector<Ref<RenderPass>> resizableRenderPasses;
+
+		VkDescriptorPool m_pGlobalDescriptorPool = VK_NULL_HANDLE;
+		VkDescriptorSet m_pGlobalDescriptorSets = VK_NULL_HANDLE;
+		VkDescriptorSetLayout m_pGlobalDescriptorSetLayout = VK_NULL_HANDLE;
+
+		VkDescriptorPool m_pDescriptorPool = VK_NULL_HANDLE;
+		std::vector<VkDescriptorSet> m_pDescriptorSets;
+
+		std::unordered_map<uint32_t, RenderPassInfo> m_pRenderPassInfo;
+
+		RenderPassInfo m_pDefaultRenderPassInfo;
+		uint32_t m_pRenderPassCount = 0;
+
+		CommandPools m_pCommandPools;
+
+		VkCommandPool m_pTransferCommandPool;
+
+		uint32_t m_pNumCommandPools = 1;
+		CommandBuffers m_pCommandBuffers;
+		Ref<RenderPass> m_pDefaultRenderPassRef;
+
+		uint32_t vertexBufferCount = 0;
+		uint32_t indexBufferCount = 0;
+		wgpu::WGPUBuffer m_pIndirectBuffer;
+		wgpu::WGPUBuffer m_pMaterialBuffer;
+
+		friend class ImGuiRenderer;
+	};
+}
