@@ -41,14 +41,14 @@ int main(int argc, char **argv)
 
     BSP::BSP app("SourceBSP");
 
-    try
+    // try
     {
         app.run();
     }
-    catch (const std::exception &e)
+    // catch (const std::exception &e)
     {
-        std::cerr << e.what() << std::endl;
-        return EXIT_FAILURE;
+        //  std::cerr << e.what() << std::endl;
+        //  return EXIT_FAILURE;
     }
 
     return EXIT_SUCCESS;

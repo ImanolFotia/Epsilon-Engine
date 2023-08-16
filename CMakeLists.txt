@@ -42,7 +42,7 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
 endif()
 
 option(BUILD_AS_LIBRARY "Build as a library" ON)
-option(DOWNLOAD_LIBRARIES "Download thirdparty libraries" OFF)
+option(DOWNLOAD_LIBRARIES "Download thirdparty libraries" ON)
 option(GFX_BACKEND_VULKAN "Use Vulkan as graphics backend" ON)
 option(GFX_BACKEND_WEBGPU "Use WebGPU as graphics backend" OFF)
 
@@ -229,6 +229,32 @@ if(DOWNLOAD_LIBRARIES)
     set(TINYGLTF_BUILD_DIR ${THIRDPARTY_DIR}/tinygltf)
     message(${TINYGLTF_BUILD_DIR})
     include_directories(${TINYGLTF_BUILD_DIR})
+
+    
+    set(KTX_DIR ${THIRDPARTY_DIR}/ktx)
+    message(${KTX_DIR})
+    include_directories(${KTX_DIR}/include)
+    include_directories(${KTX_DIR}/other_include)
+    link_directories(${KTX_DIR}/build)
+
+    set (KTX_INCLUDES "${KTX_DIR}/include" "${KTX_DIR}/other_include" "${KTX_DIR}/lib")
+
+    add_library(KTX SHARED IMPORTED)
+    if(WIN32)
+set_target_properties(KTX PROPERTIES
+    IMPORTED_LOCATION "${KTX_DIR}/build/Release/ktx.dll"
+    IMPORTED_IMPLIB "${KTX_DIR}/build/Release/ktx.lib"
+    INTERFACE_INCLUDE_DIRECTORIES ${KTX_INCLUDES}
+    
+)
+    else()
+    set_target_properties(KTX PROPERTIES
+    IMPORTED_LOCATION "${KTX_DIR}/build/libktx.so"
+    IMPORTED_IMPLIB "${KTX_DIR}/build/libktx.a"
+    INTERFACE_INCLUDE_DIRECTORIES ${KTX_INCLUDES}
+    
+)
+endif()
 else()
 
     set(GLM_BUILD_DIR ${THIRDPARTY_DIR}/glm)
@@ -507,7 +533,7 @@ install(DIRECTORY ${images} DESTINATION "bin/assets")
 #add_subdirectory(examples/model)
 #if(!BUILD_AS_LIBRARY)
     add_subdirectory(examples/bsp)
-    add_subdirectory(projects/TowerDefense)
+    #add_subdirectory(projects/TowerDefense)
     if(${Mono_FOUND})
     add_subdirectory(examples/mono-managed)
     endif()

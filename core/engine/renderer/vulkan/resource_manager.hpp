@@ -25,7 +25,7 @@ namespace engine
 		VulkanResourceManager();
 		~VulkanResourceManager();
 
-		ResourceManager* get() override
+		ResourceManager *get() override
 		{
 			if (m_pSelf == nullptr)
 				m_pSelf = new VulkanResourceManager();
@@ -34,15 +34,14 @@ namespace engine
 
 		void Init() override;
 
-
 		Ref<BindGroup> createBindGroup(BindGroupInfo) override;
 		Ref<Texture> createTexture(TextureCreationInfo) override;
 		Ref<Mesh> createMesh(MeshInfo) override;
 		Ref<Mesh> createMesh(AnimatedMeshInfo) override;
-		Ref<Buffer> createGPUBuffer(const std::string&, uint32_t size, BufferStorageType type) override;
+		Ref<Buffer> createGPUBuffer(const std::string &, uint32_t size, BufferStorageType type) override;
 		Ref<RenderPass> createRenderPass(RenderPassInfo) override;
 		Ref<RenderPass> createDefaultRenderPass(RenderPassInfo) override;
-		Ref<PushConstant> createPushConstant(const std::string&, PushConstantData) override;
+		Ref<PushConstant> createPushConstant(const std::string &, PushConstantData) override;
 		Ref<UniformBindings> createUniformData(UniformBindingInfo) override;
 
 		void destroyTexture(Ref<Texture>) override;
@@ -53,22 +52,25 @@ namespace engine
 		void destroyRenderPass(Ref<RenderPass>) override;
 		Ref<Buffer> destroyBuffer(BufferInfo) override;
 
-		void* mapBuffer(Ref<Buffer> buffer, uint32_t currentFrame)override;
-		void unmapBuffer(Ref<Buffer> buffer, uint32_t currentFrame)override;
-		void* getMappedBuffer(Ref<Buffer> bufferRef, uint32_t currentFrame) override;
+		void *mapBuffer(Ref<Buffer> buffer, uint32_t currentFrame) override;
+		void unmapBuffer(Ref<Buffer> buffer, uint32_t currentFrame) override;
+		void *getMappedBuffer(Ref<Buffer> bufferRef, uint32_t currentFrame) override;
 
 		void clean() override;
 
-		vk::VulkanTexture* getTexture(Ref<Texture>);
-		vk::VulkanBuffer* getBuffer(Ref<Buffer>);
-		ShaderStageInfo* getShader(Ref<Shader>);
-		VkDescriptorSetLayoutBinding* getUniformData(Ref<UniformBindings>);
-		vk::VulkanMaterial* getMaterial(Ref<BindGroup>);
-		vk::VulkanRenderPass* getRenderPass(Ref<RenderPass>);
+		vk::VulkanTexture *getTexture(Ref<Texture>);
+		vk::VulkanBuffer *getBuffer(Ref<Buffer>);
+		ShaderStageInfo *getShader(Ref<Shader>);
+		VkDescriptorSetLayoutBinding *getUniformData(Ref<UniformBindings>);
+		vk::VulkanMaterial *getMaterial(Ref<BindGroup>);
+		vk::VulkanRenderPass *getRenderPass(Ref<RenderPass>);
+
+		Pool<RenderPass, vk::VulkanRenderPass> renderPassPool;
+		Pool<Texture, vk::VulkanTexture> texPool;
 
 	private:
 		VmaAllocator m_pAllocator;
-		vk::VulkanData* m_pVkDataPtr = nullptr;
+		vk::VulkanData *m_pVkDataPtr = nullptr;
 
 	private:
 		vk::VulkanBuffer pCreateVertexBuffer();
@@ -80,27 +82,27 @@ namespace engine
 
 		Ref<Buffer> pFetchIndexBuffer(uint32_t numIndices, uint32_t maxOffset);
 
-		void pRecreateSwapChain(framework::Window::windowType* window);
+		void pRecreateSwapChain(framework::Window::windowType *window);
 
-		void pCreateBuffer(vk::VulkanBuffer&, size_t, VkBufferUsageFlags, VmaAllocationCreateFlags, VmaMemoryUsage);
+		void pCreateBuffer(vk::VulkanBuffer &, size_t, VkBufferUsageFlags, VmaAllocationCreateFlags, VmaMemoryUsage);
 
-		vk::VulkanBuffer pCreateStagingBuffer(const std::vector<common::Vertex>&);
-		vk::VulkanBuffer pCreateStagingBuffer(const std::vector<common::AnimatedVertex>&);
-		vk::VulkanBuffer pCreateStagingIndexBuffer(const std::vector<IndexType>&);
-		vk::VulkanBuffer pCreateStagingTextureBuffer(unsigned char*, TextureCreationInfo);
+		vk::VulkanBuffer pCreateStagingBuffer(const std::vector<common::Vertex> &);
+		vk::VulkanBuffer pCreateStagingBuffer(const std::vector<common::AnimatedVertex> &);
+		vk::VulkanBuffer pCreateStagingIndexBuffer(const std::vector<IndexType> &);
+		vk::VulkanBuffer pCreateStagingTextureBuffer(unsigned char *, TextureCreationInfo);
 
 		void pCreateUniformBuffers();
 		void pCreateDescriptorPool();
 		void pCreateGlobalDescriptorPool();
-		void pCreateGlobalDescriptorSets(VkDescriptorSetLayout layout, VkDescriptorPool& pool, VkDescriptorSet& descriptorSets, uint32_t count);
-		void pCreateDescriptorSets(VkDescriptorSetLayout layout, VkDescriptorPool& pool, std::vector<VkDescriptorSet>& descriptorSets, uint32_t count);
+		void pCreateGlobalDescriptorSets(VkDescriptorSetLayout layout, VkDescriptorPool &pool, VkDescriptorSet &descriptorSets, uint32_t count);
+		void pCreateDescriptorSets(VkDescriptorSetLayout layout, VkDescriptorPool &pool, std::vector<VkDescriptorSet> &descriptorSets, uint32_t count);
 		void pRecreateDescriptorSets();
 
 		void pRecreateFrameBuffers(VkExtent2D);
 
-		void pUpdateMaterial(vk::VulkanMaterial&);
+		void pUpdateMaterial(vk::VulkanMaterial &);
 
-		void pGenerateMipMaps(TextureCreationInfo, vk::VulkanTexture&);
+		void pGenerateMipMaps(TextureCreationInfo, vk::VulkanTexture &);
 		void UploadMipmaps();
 
 		const uint32_t MAX_BINDLESS_RESOURCES = 16536;
@@ -137,7 +139,6 @@ namespace engine
 		const VmaMemoryUsage INDIRECT_BUFFER_MEM_USAGE = VMA_MEMORY_USAGE_AUTO;
 
 	protected:
-		Pool<Texture, vk::VulkanTexture> texPool;
 		Pool<ID, uint32_t> resourceIdPool;
 		Pool<Shader, ShaderStageInfo> shaderPool;
 		Pool<Buffer, vk::VulkanBuffer> vertexBufferPool;
@@ -146,7 +147,6 @@ namespace engine
 		Pool<UniformBindings, vk::VulkanUniformBuffer> uniformBufferPool;
 		// Pool<UniformBindings, VkDescriptorSetLayoutBinding> uniformBindingPool;
 		Pool<BindGroup, vk::VulkanMaterial> materialPool;
-		Pool<RenderPass, vk::VulkanRenderPass> renderPassPool;
 		Pool<Mesh, MeshResource> meshPool;
 		Pool<PushConstant, PushConstantData> pushConstantPool;
 

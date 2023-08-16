@@ -15,7 +15,8 @@ namespace engine
 		std::vector<RenderPassBinding> bindings;
 	};
 
-	struct ThreadData {
+	struct ThreadData
+	{
 		VkCommandPool commandPool;
 		std::vector<VkCommandBuffer> commandBuffer;
 	};
@@ -23,7 +24,7 @@ namespace engine
 	struct ResourceManager
 	{
 
-		virtual ResourceManager* get() = 0;
+		virtual ResourceManager *get() = 0;
 
 		virtual void Init() = 0;
 
@@ -32,10 +33,10 @@ namespace engine
 		virtual Ref<BindGroup> createBindGroup(BindGroupInfo) = 0;
 		virtual Ref<Mesh> createMesh(MeshInfo) = 0;
 		virtual Ref<Mesh> createMesh(AnimatedMeshInfo) = 0;
-		virtual Ref<Buffer> createGPUBuffer(const std::string&, uint32_t, BufferStorageType) = 0;
+		virtual Ref<Buffer> createGPUBuffer(const std::string &, uint32_t, BufferStorageType) = 0;
 		virtual Ref<RenderPass> createRenderPass(RenderPassInfo) = 0;
 		virtual Ref<RenderPass> createDefaultRenderPass(RenderPassInfo) = 0;
-		virtual Ref<PushConstant> createPushConstant(const std::string&, PushConstantData) = 0;
+		virtual Ref<PushConstant> createPushConstant(const std::string &, PushConstantData) = 0;
 
 		virtual void destroyTexture(Ref<Texture>) = 0;
 		virtual void destroyBuffer(Ref<Buffer>) = 0;
@@ -45,12 +46,11 @@ namespace engine
 		virtual void destroyRenderPass(Ref<RenderPass>) = 0;
 		virtual Ref<Buffer> destroyBuffer(BufferInfo) = 0;
 
-
-		virtual void* mapBuffer(Ref<Buffer> buffer, uint32_t currentFrame) = 0;
+		virtual void *mapBuffer(Ref<Buffer> buffer, uint32_t currentFrame) = 0;
 
 		virtual void unmapBuffer(Ref<Buffer> buffer, uint32_t currentFrame) = 0;
 
-		virtual void* getMappedBuffer(Ref<Buffer> bufferRef, uint32_t currentFrame) = 0;
+		virtual void *getMappedBuffer(Ref<Buffer> bufferRef, uint32_t currentFrame) = 0;
 
 		virtual void clean() = 0;
 
@@ -60,10 +60,12 @@ namespace engine
 			return std::static_pointer_cast<T>(*this);
 		}
 
+		friend class ImGuiRenderer;
+
 	protected:
 		std::vector<ThreadData> m_pThreadData;
 		framework::ThreadPool m_pThreadPool;
 
-		ResourceManager* m_pSelf;
+		ResourceManager *m_pSelf;
 	};
 }
