@@ -103,7 +103,7 @@ namespace engine
 			engine::BindGroupInfo defaultBindGroup = {
 					.bindingInfo = {
 						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
-						{.size = sizeof(CursorInfo), .offset = 0, .binding = 4, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "info_buffer"},
+						{.size = 64, .offset = 0, .binding = 4, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "info_buffer"},
 						{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 5, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"},
 						{.size = sizeof(ShaderObjectData) * AssetManager::MAX_OBJECTS, .offset = 0, .binding = 6, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "object_buffer"}
 			},
@@ -118,7 +118,7 @@ namespace engine
 			engine::BindGroupInfo animatedBindGroup = {
 					.bindingInfo = {
 						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
-						{.size = sizeof(CursorInfo), .offset = 0, .binding = 4, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "info_buffer"},
+						{.size = 64, .offset = 0, .binding = 4, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "info_buffer"},
 						{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 5, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"},
 						{.size = sizeof(ShaderObjectData) * AssetManager::MAX_OBJECTS, .offset = 0, .binding = 6, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "object_buffer"},
 						{.size = sizeof(GPUAnimationData), .offset = 0, .binding = 7, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "animation_transform_buffer"}
@@ -388,7 +388,7 @@ namespace engine
 				m_pAssetManager.getTransformBuffer()[m_pMeshCount] = transform;
 
 				m_pAssetManager.getObjectBuffer()[m_pMeshCount] = {
-					.object_id = (unsigned int)renderModel->Index(),
+					.object_id = (unsigned int)renderModel->Parent()->Index(),
 					.transform_index = m_pMeshCount,
 					.material_index = {material_indices[0], material_indices[1], material_indices[2], material_indices[3]},
 					.numMaterials = (uint32_t)mesh.numMaterials

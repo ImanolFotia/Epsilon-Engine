@@ -38,9 +38,11 @@ namespace engine
 	};
 
 	struct CursorInfo {
-		glm::vec3 position{};
-		glm::vec3 normal{};
-		unsigned int id{};
+		alignas(16) glm::vec3 position{}; ;
+		alignas(16) glm::vec3 normal{};
+		alignas(16) glm::vec3 selected_item_position;
+		alignas(4) int id{};
+		int selected{};
 	};
 
 	struct PBRMaterial
@@ -141,7 +143,7 @@ namespace engine
 
 			m_pGPUBuffers["decal_buffer"] = resourceManager->createGPUBuffer("decal_buffer", sizeof(Decal) * MAX_DECALS, engine::BufferStorageType::STORAGE_BUFFER);
 
-			m_pGPUBuffers["info_buffer"] = resourceManager->createGPUBuffer("info_buffer", sizeof(CursorInfo), engine::BufferStorageType::STORAGE_BUFFER);
+			m_pGPUBuffers["info_buffer"] = resourceManager->createGPUBuffer("info_buffer", 64, engine::BufferStorageType::STORAGE_BUFFER);
 
 			m_pGPUBuffers["object_buffer"] = resourceManager->createGPUBuffer("object_buffer", sizeof(ShaderObjectData) * MAX_OBJECTS, engine::BufferStorageType::STORAGE_BUFFER);
 
@@ -176,6 +178,18 @@ namespace engine
 		GPUAnimationData* getAnimationBuffer() {
 			uint32_t currFrame = m_pContext->Renderer()->CurrentFrameInFlight();
 			return animationTransformBufferPtr[currFrame];
+		}
+
+
+		CursorInfo* getBufferPointer() {
+
+			uint32_t currFrame = m_pContext->Renderer()->CurrentFrameInFlight();
+			return infoBufferPtr[currFrame];
+		}
+
+		CursorInfo* getBufferPointer(int frame) {
+
+			return infoBufferPtr[frame];
 		}
 
 		void Destroy() {
@@ -572,12 +586,6 @@ namespace engine
 
 		}
 
-		CursorInfo* getBufferPointer() {
-
-			auto resourceManager = m_pContext->ResourceManager();
-			uint32_t currFrame = m_pContext->Renderer()->CurrentFrameInFlight();
-			return infoBufferPtr[currFrame];
-		}
 
 		Ref<Texture> addTexture(const std::string& path, const TextureInfo& info)
 		{
