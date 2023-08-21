@@ -43,6 +43,7 @@ namespace engine
 		alignas(16) glm::vec3 selected_item_position;
 		alignas(4) int id{};
 		int selected{};
+		int mask{};
 	};
 
 	struct PBRMaterial

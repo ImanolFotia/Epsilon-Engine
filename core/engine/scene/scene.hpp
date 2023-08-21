@@ -293,7 +293,6 @@ namespace engine
 			return m_pSceneManager.get<Node<Root>>();
 		}
 
-		template <typename T>
 		auto getNode(uint32_t index)
 		{
 			return m_pSceneManager.get(index);

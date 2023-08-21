@@ -34,6 +34,8 @@ namespace framework::splines {
 			float q2 = -3.0f * t3 + 4.0f * t2 + t;
 			float q3 = t3 - t2;
 
+			//return 0.5f * (glm::vec4(1.0f, t, t2, t3) * glm::mat4(glm::vec4(0.0f, 2.0f, 0.0f, 0.0f), glm::vec4(-1.0, 0.0, 1.0, 0.0), glm::vec4(2.0, -5.0, 4.0, -1.0), glm::vec4(-1.0, 3.0, -3.0, 1.0)) * glm::mat4(glm::vec4(p0, 0.0f), glm::vec4(p1, 0.0f), glm::vec4(p2, 0.0f), glm::vec4(p3, 0.0f)));
+
 			return (p0 * q0 + p1 * q1 + p2 * q2 + p3 * q3) * 0.5f;
 		}
 
