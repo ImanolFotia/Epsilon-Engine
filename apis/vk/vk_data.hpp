@@ -176,6 +176,7 @@ namespace vk
         VkClearColorValue clearColor = {1.0f, 1.0f, 1.0f, 1.0f};
         VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
         uint32_t numAttachments = 1;
+        bool recreatePipeline = false;
     };
 
     struct VulkanRenderPassData

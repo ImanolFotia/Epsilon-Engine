@@ -9,34 +9,63 @@
 namespace vk
 {
 
-    static VkDescriptorSetLayoutBinding createSSBOBinding(int bind)
+    VkShaderStageFlags getStageFlag(engine::ShaderStage stage) {
+        VkShaderStageFlags outputStage{};
+        if (static_cast<bool>(stage & engine::ShaderStage::VERTEX)) {
+            outputStage = outputStage | VK_SHADER_STAGE_VERTEX_BIT;
+        }
+        if (static_cast<bool>(stage & engine::ShaderStage::FRAGMENT)) {
+            outputStage = outputStage | VK_SHADER_STAGE_FRAGMENT_BIT;
+        }
+        if (static_cast<bool>(stage & engine::ShaderStage::COMPUTE)) {
+            outputStage = outputStage | VK_SHADER_STAGE_COMPUTE_BIT;
+        }
+        if (static_cast<bool>(stage & engine::ShaderStage::TESSELLATION_EVALUATION)) {
+            outputStage = outputStage | VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
+        }
+        if (static_cast<bool>(stage & engine::ShaderStage::TESSELLATION_CONTROL)) {
+            outputStage = outputStage | VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+        }
+        if (static_cast<bool>(stage & engine::ShaderStage::GEOMETRY)) {
+            outputStage = outputStage | VK_SHADER_STAGE_GEOMETRY_BIT;
+        }
+        if (static_cast<bool>(stage & engine::ShaderStage::MESH)) {
+            outputStage = outputStage | VK_SHADER_STAGE_MESH_BIT_EXT;
+        }
+        if (static_cast<bool>(stage & engine::ShaderStage::TASK)) {
+            outputStage = outputStage | VK_SHADER_STAGE_TASK_BIT_EXT;
+        }
+        return outputStage;
+    }
+
+    static VkDescriptorSetLayoutBinding createSSBOBinding(int bind, VkShaderStageFlagBits stage = VkShaderStageFlagBits(VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT))
     {
         VkDescriptorSetLayoutBinding ssboLayoutBinding{};
         ssboLayoutBinding.binding = bind;
         ssboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
         ssboLayoutBinding.descriptorCount = 1;
-        ssboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+        ssboLayoutBinding.stageFlags = stage;
         ssboLayoutBinding.pImmutableSamplers = nullptr;
         return ssboLayoutBinding;
     }
-    static VkDescriptorSetLayoutBinding createUboBinding(int bind)
+    static VkDescriptorSetLayoutBinding createUboBinding(int bind, VkShaderStageFlagBits stage = VkShaderStageFlagBits(VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT))
     {
         VkDescriptorSetLayoutBinding uboLayoutBinding{};
         uboLayoutBinding.binding = bind;
         uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
         uboLayoutBinding.descriptorCount = 1;
-        uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+        uboLayoutBinding.stageFlags = stage;
         uboLayoutBinding.pImmutableSamplers = nullptr;
         return uboLayoutBinding;
     }
-    static VkDescriptorSetLayoutBinding createTextureBinding(int bind, int descriptorCount = 1)
+    static VkDescriptorSetLayoutBinding createTextureBinding(int bind, int descriptorCount = 1, VkShaderStageFlagBits stage = VK_SHADER_STAGE_FRAGMENT_BIT)
     {
         VkDescriptorSetLayoutBinding samplerLayoutBinding{};
         samplerLayoutBinding.binding = bind;
         samplerLayoutBinding.descriptorCount = descriptorCount;
         samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
         samplerLayoutBinding.pImmutableSamplers = nullptr;
-        samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+        samplerLayoutBinding.stageFlags = stage;
         return samplerLayoutBinding;
     }
     static void createDescriptorSetLayout(const VulkanData &vkData, VkDescriptorSetLayout &descriptorSetLayout, std::vector<engine::UniformBindingInfo> layoutBindings)

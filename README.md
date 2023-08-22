@@ -29,12 +29,13 @@ Installers and binaries will be available soon
 <a name="dependencies"> </a>
 ## Dependencies 
 
-* Bullet Physics 2.83
-* Zlib
-* GLM 0.9.7.1 
-* GLFW 3.2
-* libinih
-* Soft OpenAL 1.18.2
+* GLM 
+* GLFW 
+* Soft OpenAL
+* VMA
+* Beacon
+* nlohmann/json
+* libktx
 
 <a name="features"></a>
 ## Features 

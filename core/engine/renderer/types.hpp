@@ -17,6 +17,7 @@ namespace engine
     struct RenderPass;
     struct Mesh;
     struct PushConstant;
+    struct ComputeShader;
 
     enum renderer_type
     {
@@ -454,6 +455,26 @@ namespace engine
         STORAGE_BUFFER
     };
 
+    enum class ShaderStage : std::uint32_t {
+        VERTEX = 1,
+        FRAGMENT = 2,
+        COMPUTE = 4,
+        TESSELLATION_EVALUATION = 8,
+        TESSELLATION_CONTROL = 16,
+        GEOMETRY = 32,
+        MESH = 64,
+        TASK = 128,
+        SIZE = 7
+    };
+
+    inline ShaderStage operator|(ShaderStage first, ShaderStage second) {
+            return static_cast<ShaderStage>(static_cast<std::uint32_t>(first) | static_cast<std::uint32_t>(second));
+    }
+
+    inline ShaderStage operator&(ShaderStage first, ShaderStage second) {
+        return static_cast<ShaderStage>(static_cast<std::uint32_t>(first) & static_cast<std::uint32_t>(second));
+    }
+
     struct UniformBindingInfo
     {
         size_t size;
@@ -466,6 +487,7 @@ namespace engine
         std::string buffer;
         bool bindless = false;
         uint32_t descriptorCount = 1;
+        ShaderStage stage;
         std::string name;
     };
 
@@ -675,6 +697,13 @@ namespace engine
         }
         operator AnimatedMeshInfo() { return info; }
         AnimatedMeshInfo info;
+    };
+
+
+
+    struct ComputeShaderInfo {
+        std::string name;
+        MemoryBarrierHint memoryBarrierHint;
     };
 
 }

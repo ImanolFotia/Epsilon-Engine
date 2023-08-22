@@ -26,7 +26,7 @@
 #include "coreclr_delegates.hpp"
 #include "hostfxr.hpp"
 
-#ifdef WINDOWS
+#ifdef _WIN32
 #include <Windows.h>
 #else
 
