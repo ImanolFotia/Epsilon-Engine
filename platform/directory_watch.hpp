@@ -11,6 +11,10 @@ namespace os {
 	};
 
 	class DirectoryWatchBase {
-		virtual void addFileWatch(std::string filename, FileNotification notification) = 0;
+		virtual void addFileWatch(const std::string& filename, FileNotification notification, std::function<void(void)> callback) = 0;
+
+		virtual void removeFileWatch(const std::string& filename) = 0;
+
+		virtual void Notify() = 0;
 	};
 }

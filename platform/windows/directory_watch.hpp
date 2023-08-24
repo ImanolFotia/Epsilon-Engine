@@ -35,7 +35,7 @@ namespace os {
 
 		}
 
-		void addFileWatch(std::string filename, FileNotification notification, std::function<void(void)>&& callback) override {
+		void addFileWatch(const std::string& filename, FileNotification notification, std::function<void(void)>&& callback) override {
 
 			DWORD dwWaitStatus;
 			HANDLE dwChangeHandle;
@@ -63,7 +63,24 @@ namespace os {
 			m_pDirectories.emplace_back(callback, filename, m_pChangeHandles.size() - 1);
 		}
 
-		void Notify() {
+		void removeFileWatch(const std::string& filename) override {
+			
+			int32_t dir_index = -1;
+			for (auto& directory : m_pDirectories) {
+				if (dir_index != -1) {
+					directory.handle_index--;
+				}
+				if (directory.path == filename) {
+					dir_index = directory.handle_index;
+					m_pChangeHandles.erase(m_pChangeHandles.begin() + dir_index);
+					m_pChangeHandles.shrink_to_fit();
+					m_pDirectories.erase(m_pDirectories.begin() + dir_index);
+				}
+
+			}
+		}
+
+		void Notify() override {
 			dwWaitStatus = WaitForMultipleObjects(m_pChangeHandles.size(), m_pChangeHandles.data(), FALSE, 0);
 
 			if (dwWaitStatus == WAIT_TIMEOUT || dwWaitStatus == WAIT_FAILED) {
