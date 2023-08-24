@@ -157,6 +157,17 @@ namespace vk
         std::string name = "";
     };
 
+    struct VulkanComputePipeline{
+        VkDescriptorSetLayout descriptorSetLayout;
+        VkPipelineLayout pipelineLayout{};
+        VkPipeline computePipeline;
+        bool recreatePipeline = false;
+    };
+
+    struct VulkanComputeShader {
+        VulkanComputePipeline pipeline;
+    };
+
     struct VulkanRenderPipeline
     {
         std::vector<VkDescriptorSetLayout> descriptorSetLayouts;

@@ -3,7 +3,6 @@
 #include <array>
 
 #include <vulkan/vulkan.h>
-#include "core/engine/types.hpp"
 
 namespace vk
 {

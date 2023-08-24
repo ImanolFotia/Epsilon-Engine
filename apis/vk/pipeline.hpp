@@ -76,38 +76,6 @@ namespace vk
         auto result = versionPosition(info.shaderCode);
     }
 
-    static VkPipelineShaderStageCreateInfo createShaderStage(VulkanData &vk_data, engine::ShaderStageInfo info)
-    {
-
-        VkPipelineShaderStageCreateInfo shaderStageInfo{};
-
-        std::string entry_point = info.entryPoint;
-
-        shaderStageInfo.pName = entry_point.c_str();
-        shaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-
-        if (info.stage == engine::ShaderModuleStage::FRAGMENT)
-        {
-            shaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-        }
-        else if (info.stage == engine::ShaderModuleStage::VERTEX)
-        {
-            shaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
-        }
-        else if (info.stage == engine::ShaderModuleStage::COMPUTE)
-        {
-            shaderStageInfo.stage = VK_SHADER_STAGE_COMPUTE_BIT;
-        }
-        else
-        {
-        }
-
-        //appendShaderStageMacro(info);
-
-        shaderStageInfo.module = shader::createShaderModule(info.shaderCode, vk_data);
-
-        return shaderStageInfo;
-    }
 
     static VkPushConstantRange setupPushConstant(size_t size)
     {
@@ -177,8 +145,7 @@ namespace vk
 
             for (unsigned i = 0; i < shaderInfo.stages.size(); i++)
             {
-                std::cout << shaderInfo.stages[i].shaderCode.data() << std::endl;
-                shaderStages[layout_index][i] = createShaderStage(vk_data, shaderInfo.stages[i]);
+                shaderStages[layout_index][i] = shader::createShaderStage(vk_data, shaderInfo.stages[i]);
                 shaderStages[layout_index][i].pName = shaderInfo.stages[i].entryPoint.c_str();
                 destroyShaderStages.emplace_back([stage = shaderStages[layout_index][i]](VulkanData &vk_data)
                                                  { vkDestroyShaderModule(vk_data.logicalDevice, stage.module, nullptr); });

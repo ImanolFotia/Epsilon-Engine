@@ -9,7 +9,7 @@
 namespace vk
 {
 
-    VkShaderStageFlags getStageFlag(engine::ShaderStage stage) {
+    static VkShaderStageFlags getStageFlag(engine::ShaderStage stage) {
         VkShaderStageFlags outputStage{};
         if (static_cast<bool>(stage & engine::ShaderStage::VERTEX)) {
             outputStage = outputStage | VK_SHADER_STAGE_VERTEX_BIT;
@@ -85,7 +85,6 @@ namespace vk
             }
             else if (binding.type == engine::UniformBindingType::SHADER_STORAGE) {
                 bindings.push_back(createSSBOBinding(binding.binding));
-                
             }
         }
         // std::array<VkDescriptorSetLayoutBinding, 2> bindings = {uboLayoutBinding, samplerLayoutBinding};
