@@ -209,6 +209,20 @@ namespace engine
 			return children_node_index.at(node->index).at(std::type_index(typeid(T)));
 		}
 
+		template<typename T>
+		bool isOfType(std::shared_ptr<NodeBase> node) {
+
+			auto iType = std::type_index(typeid(T));
+			if (node_types.contains(iType))
+			{
+				for (auto& n : node_types.at(std::type_index(typeid(T)))) {
+					if (n->get()->Index() == node->Index()) return true;
+				}
+				 
+			}
+			return false;
+		}
+
 		template <typename T>
 		std::shared_ptr<NodeBase> getChild(std::shared_ptr<NodeBase> node)
 		{
