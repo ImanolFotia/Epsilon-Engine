@@ -72,7 +72,7 @@ namespace engine
 		vk::createDescriptorSetLayout(
 			*m_pVkDataPtr,
 			m_pGlobalDescriptorSetLayout,
-			{ {0, 0, 0, 1, UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER, {}, {}, "", true, MAX_BINDLESS_RESOURCES, "GlobalBindlessTextures"} });
+			{ {0, 0, 0, 1, UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER, {}, {}, "", true, MAX_BINDLESS_RESOURCES, ShaderStage::FRAGMENT, "GlobalBindlessTextures"} });
 
 		pCreateGlobalDescriptorSets(m_pGlobalDescriptorSetLayout,
 			m_pGlobalDescriptorPool,
@@ -439,7 +439,7 @@ namespace engine
 			texInfo.compareEnable = attachment.depthCompare;
 
 			vk::VulkanTexture texture = pCreateTextureBuffer(texInfo);
-
+			texture.name = attachment.name;
 			texture.imageLayout = attachment.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			texture.bindingType = vk::RENDER_BUFFER_SAMPLER;
 			texture.info.mipLevels = 1;
@@ -745,13 +745,15 @@ namespace engine
 		return ref;
 	}
 
-	Ref<Buffer> VulkanResourceManager::createGPUBuffer(const std::string& name, uint32_t size, BufferStorageType type)
+	Ref<Buffer> VulkanResourceManager::createGPUBuffer(const std::string& name, uint32_t size, BufferStorageType type, int count = -1)
 	{
 
+		int numBuffers = count < 0 ? vk::MAX_FRAMES_IN_FLIGHT : count;
 		vk::VulkanGPUMappedBuffer buffer;
-		buffer.buffers.resize(vk::MAX_FRAMES_IN_FLIGHT);
+		buffer.buffers.resize(numBuffers);
 
-		for (unsigned i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
+
+		for (unsigned i = 0; i < numBuffers; i++)
 		{
 			if (type == BufferStorageType::UNIFORM_BUFFER)
 			{
@@ -867,4 +869,9 @@ namespace engine
 
 		return data;
 	}
+
+	Ref<ComputeShader> VulkanResourceManager::createComputeShader(ComputeShaderInfo) {
+		return Ref<ComputeShader>().makeEmpty();
+	}
+	void VulkanResourceManager::destroyComputeShader(Ref<ComputeShader>) {}
 }

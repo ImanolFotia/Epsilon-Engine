@@ -24,13 +24,6 @@ namespace engine::parsers {
 
 			for (auto& input_json : renderpass["inputs"]) {
 				auto type = resolveType(input_json["type"]);
-				//if (type == UniformBindingType::TEXTURE_SAMPLER) {
-				//	RenderPassBinding binding;
-				//	binding.bindingPoint = input_json["binding"];
-				//	binding.index = input_json["index"];
-				//	binding.renderPass = input_json["renderpass"];
-				//}
-				//else {
 
 				UniformBindingInfo info;
 				info.type = resolveType(input_json["type"]);

@@ -39,11 +39,12 @@ namespace engine
 		Ref<Texture> createTexture(TextureCreationInfo) override;
 		Ref<Mesh> createMesh(MeshInfo) override;
 		Ref<Mesh> createMesh(AnimatedMeshInfo) override;
-		Ref<Buffer> createGPUBuffer(const std::string&, uint32_t size, BufferStorageType type) override;
+		Ref<Buffer> createGPUBuffer(const std::string&, uint32_t size, BufferStorageType type, int count) override;
 		Ref<RenderPass> createRenderPass(RenderPassInfo) override;
 		Ref<RenderPass> createDefaultRenderPass(RenderPassInfo) override;
 		Ref<PushConstant> createPushConstant(const std::string&, PushConstantData) override;
 		Ref<UniformBindings> createUniformData(UniformBindingInfo) override;
+		Ref<ComputeShader> createComputeShader(ComputeShaderInfo) override;
 
 		void destroyTexture(Ref<Texture>) override;
 		void destroyBuffer(Ref<Buffer>) override;
@@ -51,6 +52,7 @@ namespace engine
 		void destroyMaterial(Ref<BindGroup>) override;
 		void destroyMesh(Ref<Mesh>) override;
 		void destroyRenderPass(Ref<RenderPass>) override;
+		void destroyComputeShader(Ref<ComputeShader>) override;
 		Ref<Buffer> destroyBuffer(BufferInfo) override;
 
 		void* mapBuffer(Ref<Buffer> buffer, uint32_t currentFrame)override;
@@ -143,6 +145,7 @@ namespace engine
 		Pool<Buffer, vk::VulkanBuffer> vertexBufferPool;
 		Pool<Buffer, vk::VulkanBuffer> indexBufferPool;
 		Pool<Buffer, vk::VulkanGPUMappedBuffer> gpuBufferPool;
+		Pool<ComputeShader, vk::VulkanComputeShader> computeBuffer;
 		Pool<UniformBindings, vk::VulkanUniformBuffer> uniformBufferPool;
 		// Pool<UniformBindings, VkDescriptorSetLayoutBinding> uniformBindingPool;
 		Pool<BindGroup, vk::VulkanMaterial> materialPool;

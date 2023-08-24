@@ -38,12 +38,13 @@ namespace engine
 	};
 
 	struct CursorInfo {
-		alignas(16) glm::vec3 position{}; ;
+		alignas(16) glm::vec3 position{}; float padding;
 		alignas(16) glm::vec3 normal{};
 		alignas(16) glm::vec3 selected_item_position;
 		alignas(4) int id{};
 		int selected{};
 		int mask{};
+		float circle_radius = 5.0;
 	};
 
 	struct PBRMaterial
@@ -133,8 +134,8 @@ namespace engine
 		}
 
 		std::vector<glm::mat4*> transformBuffer;
-		std::vector<ShaderObjectData*> objectBuffer;
-		std::vector<CursorInfo*> infoBufferPtr;
+		std::vector < ShaderObjectData*> objectBuffer;
+		CursorInfo* infoBufferPtr;
 		std::vector<GPUAnimationData*> animationTransformBufferPtr;
 
 		void Init() {
@@ -144,7 +145,7 @@ namespace engine
 
 			m_pGPUBuffers["decal_buffer"] = resourceManager->createGPUBuffer("decal_buffer", sizeof(Decal) * MAX_DECALS, engine::BufferStorageType::STORAGE_BUFFER);
 
-			m_pGPUBuffers["info_buffer"] = resourceManager->createGPUBuffer("info_buffer", 64, engine::BufferStorageType::STORAGE_BUFFER);
+			m_pGPUBuffers["info_buffer"] = resourceManager->createGPUBuffer("info_buffer", 64, engine::BufferStorageType::STORAGE_BUFFER, 1);
 
 			m_pGPUBuffers["object_buffer"] = resourceManager->createGPUBuffer("object_buffer", sizeof(ShaderObjectData) * MAX_OBJECTS, engine::BufferStorageType::STORAGE_BUFFER);
 
@@ -154,15 +155,15 @@ namespace engine
 			
 			transformBuffer.resize(vk::MAX_FRAMES_IN_FLIGHT);
 			objectBuffer.resize(vk::MAX_FRAMES_IN_FLIGHT);
-			infoBufferPtr.resize(vk::MAX_FRAMES_IN_FLIGHT);
+			//infoBufferPtr.resize(vk::MAX_FRAMES_IN_FLIGHT);
 			animationTransformBufferPtr.resize(vk::MAX_FRAMES_IN_FLIGHT);
 
 			for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
 				transformBuffer[i] = reinterpret_cast<glm::mat4*>(resourceManager->mapBuffer(m_pGPUBuffers["transform_buffer"], i));
 				objectBuffer[i] = reinterpret_cast<ShaderObjectData*>(resourceManager->mapBuffer(m_pGPUBuffers["object_buffer"], i));
-				infoBufferPtr[i] = reinterpret_cast<CursorInfo*>(resourceManager->mapBuffer(m_pGPUBuffers["info_buffer"], i));
 				animationTransformBufferPtr[i] = reinterpret_cast<GPUAnimationData*>(resourceManager->mapBuffer(m_pGPUBuffers["animation_transform_buffer"], i));
 			}
+			infoBufferPtr = reinterpret_cast<CursorInfo*>(resourceManager->mapBuffer(m_pGPUBuffers["info_buffer"], 0));
 
 		}
 
@@ -173,7 +174,7 @@ namespace engine
 
 		ShaderObjectData* getObjectBuffer() {
 			uint32_t currFrame = m_pContext->Renderer()->CurrentFrameInFlight();
-			return objectBuffer[currFrame];
+			return objectBuffer[currFrame] ;
 		}
 
 		GPUAnimationData* getAnimationBuffer() {
@@ -185,12 +186,12 @@ namespace engine
 		CursorInfo* getBufferPointer() {
 
 			uint32_t currFrame = m_pContext->Renderer()->CurrentFrameInFlight();
-			return infoBufferPtr[currFrame];
+			return infoBufferPtr;// [currFrame] ;
 		}
 
 		CursorInfo* getBufferPointer(int frame) {
 
-			return infoBufferPtr[frame];
+			return infoBufferPtr;// [frame] ;
 		}
 
 		void Destroy() {

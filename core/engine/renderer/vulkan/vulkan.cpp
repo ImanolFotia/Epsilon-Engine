@@ -119,13 +119,20 @@ namespace engine
 	void VulkanRenderer::Push(ObjectData object)
 	{
 		DrawCommand drawCommand;
-		auto mesh = m_pResourceManagerRef->meshPool.get(object.mesh);
-		drawCommand.meshResource.indexBuffer = mesh->indexBuffer;
-		drawCommand.meshResource.indexOffset = mesh->indexOffset;
-		drawCommand.meshResource.numIndices = mesh->numIndices;
-		drawCommand.meshResource.numVertices = mesh->numVertices;
-		drawCommand.meshResource.vertexBuffer = mesh->vertexBuffer;
-		drawCommand.meshResource.vertexOffset = mesh->vertexOffset;
+		if (!object.mesh.empty()) {
+			auto mesh = m_pResourceManagerRef->meshPool.get(object.mesh);
+			drawCommand.meshResource.indexBuffer = mesh->indexBuffer;
+			drawCommand.meshResource.indexOffset = mesh->indexOffset;
+			drawCommand.meshResource.numIndices = mesh->numIndices;
+			drawCommand.meshResource.numVertices = mesh->numVertices;
+			drawCommand.meshResource.vertexBuffer = mesh->vertexBuffer;
+			drawCommand.meshResource.vertexOffset = mesh->vertexOffset;
+		}
+		else {
+			drawCommand.meshResource.numIndices = 6;
+			drawCommand.meshResource.numVertices = 4;
+
+		}
 		drawCommand.uniformIndex = object.uniformIndex;
 		drawCommand.layoutIndex = object.layout_index;
 		drawCommand.pushConstantData = object.objectConstant;
@@ -342,11 +349,11 @@ namespace engine
 		int32_t prev_material_id = -1;
 
 		int changed = 0;
-
+		/*
 		std::sort(m_pCurrentCommandQueue.begin(), m_pCurrentCommandQueue.begin() + currentCommandsInQueue, [](auto& a, auto& b) {
 			return a.pushConstantData.material_index < b.pushConstantData.material_index;
 			});
-
+			*/
 		VkExtent2D extent = renderPass->renderPassChain.Extent;
 		VkViewport viewport{};
 		viewport.x = 0.0f;

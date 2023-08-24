@@ -30,9 +30,10 @@ namespace engine
 		virtual Ref<Texture> createTexture(TextureCreationInfo) = 0;
 		virtual Ref<UniformBindings> createUniformData(UniformBindingInfo) = 0;
 		virtual Ref<BindGroup> createBindGroup(BindGroupInfo) = 0;
+		virtual Ref<ComputeShader> createComputeShader(ComputeShaderInfo) = 0;
 		virtual Ref<Mesh> createMesh(MeshInfo) = 0;
 		virtual Ref<Mesh> createMesh(AnimatedMeshInfo) = 0;
-		virtual Ref<Buffer> createGPUBuffer(const std::string&, uint32_t, BufferStorageType) = 0;
+		virtual Ref<Buffer> createGPUBuffer(const std::string&, uint32_t, BufferStorageType, int count = -1) = 0;
 		virtual Ref<RenderPass> createRenderPass(RenderPassInfo) = 0;
 		virtual Ref<RenderPass> createDefaultRenderPass(RenderPassInfo) = 0;
 		virtual Ref<PushConstant> createPushConstant(const std::string&, PushConstantData) = 0;
@@ -43,6 +44,7 @@ namespace engine
 		virtual void destroyMaterial(Ref<BindGroup>) = 0;
 		virtual void destroyMesh(Ref<Mesh>) = 0;
 		virtual void destroyRenderPass(Ref<RenderPass>) = 0;
+		virtual void destroyComputeShader(Ref<ComputeShader>) = 0;
 		virtual Ref<Buffer> destroyBuffer(BufferInfo) = 0;
 
 

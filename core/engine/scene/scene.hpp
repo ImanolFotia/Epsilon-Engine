@@ -232,6 +232,7 @@ namespace engine
 			renderer->SetScissor(scissor);
 		}
 
+
 		void UpdateFrustum(glm::mat4 proj, glm::mat4 view) {
 			m_pFrustum.CalculateFrustum(proj * view, glm::mat4(1.0));
 		}
@@ -240,6 +241,12 @@ namespace engine
 		void removeFromScene(uint32_t index) {
 			std::shared_ptr<Node<T>> node = std::static_pointer_cast<Node<T>>(m_pSceneManager.get(index));
 			m_pSceneManager.erase<T>(node);
+		}
+
+
+		template<typename T>
+		bool isOfType(std::shared_ptr<NodeBase> node) {
+			return m_pSceneManager.isOfType<T>(node);
 		}
 
 		void insertIntoOctree(Box boundingBox, OctreeDataType octreeItem) {
@@ -404,6 +411,82 @@ namespace engine
 								.uniformIndex = m_pMeshCount });
 				m_pMeshCount++;
 			}
+		}
+
+		void Push(std::vector<glm::mat4> transforms, const std::string& layout, const std::string material, unsigned int count = 1) {
+
+			auto renderer = m_pContext->Renderer();
+
+			Ref<PushConstant> push_constant;
+
+			Ref<BindGroup> selectedBindGroup;
+
+			if (layout == "ShadowLayout") {
+				selectedBindGroup = m_pShadowBindGroup;
+			}
+			else if (layout == "treeShadowLayout") {
+				selectedBindGroup = m_pTreeShadowBindGroup;
+			}
+			else if (layout == "DefaultLayout") {
+				selectedBindGroup = m_pDefaultBindGroup;
+			}
+			else if (layout == "TerrainLayout") {
+				selectedBindGroup = m_pDefaultBindGroup;
+			}
+			else if (layout == "TreeLayout") {
+				selectedBindGroup = m_pDefaultBindGroup;
+			}
+			else if (layout == "DecalLayout") {
+				selectedBindGroup = m_pDecalBindGroup;
+			}
+			else if (layout == "SkyLayout") {
+				selectedBindGroup = m_pDefaultBindGroup;
+			}
+			else if (layout == "prepassLayout") {
+				selectedBindGroup = m_pPrePassBindGroup;
+			}
+			else {
+				selectedBindGroup = m_pDefaultBindGroup;
+			}
+
+			uint32_t material_indices[4] = { 0 };
+			uint32_t firstInstance = m_pMeshCount;
+			for (int i = 0; i < count; i++) {
+				if (renderer->numPushedCommands() >= engine::MAX_COMMAND_QUEUE_SIZE) {
+					Flush();
+				}
+
+
+				for (int j = 0; j < 1; j++) {
+					uint32_t uniform_index = m_pAssetManager.m_pMaterials.at(std::hash<std::string>{}(material)).index;
+					material_indices[j] = uniform_index;
+				}
+
+
+				m_pAssetManager.getTransformBuffer()[m_pMeshCount] = transforms[i];
+
+				m_pAssetManager.getObjectBuffer()[m_pMeshCount] = {
+					.object_id = (unsigned int)i,
+					.transform_index = m_pMeshCount,
+					.material_index = {material_indices[0], material_indices[1], material_indices[2], material_indices[3]},
+					.numMaterials = (uint32_t)1
+				};
+
+				m_pMeshCount++;
+			}
+
+			renderer->Push({ .mesh = engine::Ref<Mesh>().makeEmpty(),
+							.material = selectedBindGroup,
+							.pushConstant = push_constant,
+							.objectConstant = {
+												.transform = transforms[0],
+												.material_index = material_indices[0]
+											  },
+							.layout_index = m_pRenderLayouts.at(layout),
+							.uniformIndex = firstInstance,
+							.count = count });
+		
+
 		}
 
 		void Push(std::shared_ptr<Node<RenderModel>> renderModel, std::vector<glm::mat4> transforms, const std::string& layout, unsigned int count = 1)

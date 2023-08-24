@@ -410,10 +410,12 @@ namespace engine
 					}
 					else if (binding.descriptorBinding == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER)
 					{
+						int l_index = i;
+						if (binding.buffers.size() - 1 < i) l_index = binding.buffers.size() - 1;
 						VkDescriptorBufferInfo& bufferInfo = bufferInfos.emplace_back();
-						bufferInfo.buffer = binding.buffers[i].buffer; // m_pUniformBuffers[i].buffer;
-						bufferInfo.offset = binding.buffers[i].offset;
-						bufferInfo.range = binding.buffers[i].size;
+						bufferInfo.buffer = binding.buffers[l_index].buffer; // m_pUniformBuffers[i].buffer;
+						bufferInfo.offset = binding.buffers[l_index].offset;
+						bufferInfo.range = binding.buffers[l_index].size;
 						descriptorWrites[index].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 						descriptorWrites[index].dstSet = material.descriptorSets[i];
 						descriptorWrites[index].dstBinding = binding.bindingPoint;

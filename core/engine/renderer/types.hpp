@@ -704,6 +704,8 @@ namespace engine
     struct ComputeShaderInfo {
         std::string name;
         MemoryBarrierHint memoryBarrierHint;
+        PipelineLayout pipelineLayout;
+        std::vector<UniformBindingInfo> bindingInfo;
     };
 
 }
