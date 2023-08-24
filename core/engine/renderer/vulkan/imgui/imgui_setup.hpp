@@ -405,6 +405,8 @@ public:
 
 	void DrawUI(glm::vec3& data, engine::ResourcesMemory_t resources)
 	{
+		if (m_pEnabled)
+		{
 		ImGuiBegin();
 
 		ImGui_ImplVulkanH_Window* wd = &m_pMainWindowData;
@@ -415,8 +417,6 @@ public:
 
 		MainWindow();
 
-		if (m_pEnabled)
-		{
 			// ImGui::SetNextWindowSize(ImVec2(wd->Width, wd->Height));
 
 			///////// USER INPUT BEGINS HERE
@@ -451,9 +451,9 @@ public:
 				m_pUserFunction();
 
 			ImGui::End();
-		}
 
 		ImGuiEnd();
+		}
 	}
 
 	void SparkLine(const char* id, const char* overlay, const float* values, int count, float min_v, float max_v, int offset, const ImVec4& col, const ImVec2& size)
