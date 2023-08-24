@@ -14,6 +14,12 @@ namespace engine
 		using v4 = glm::vec4;
 		using v3 = glm::vec3;
 		using v2 = glm::vec2;
+		
+		struct {
+			glm::vec3 min;
+			glm::vec3 max;
+			glm::vec3 center;
+		} bounds;
 
 	public:
 
@@ -28,6 +34,8 @@ namespace engine
 
 			float step = 1.0f / ((float)tesselation - 1.0f);
 			int numVertices = tesselation * tesselation;
+			bounds.min = glm::vec3(100000.0f);
+			bounds.max = glm::vec3(-100000.0f);
 
 			for (int i = 0; i < tesselation; i++) {
 				for (int j = 0; j < tesselation; j++) {
@@ -39,9 +47,19 @@ namespace engine
 
 					position -= v3(0.5f, 0.0f, 0.5f);
 
+					if (position.x < bounds.min.x) bounds.min.x = position.x;
+					if (position.x > bounds.max.x) bounds.max.x = position.x;
+
+					if (position.z < bounds.min.z) bounds.min.z = position.z;
+					if (position.z > bounds.max.z) bounds.max.z = position.z;
+
 					m_pMesh.Vertices.emplace_back(vtx(position, uv, normal, v4(0.0f), v3(0.0f), v3(0.0f)));
 				}
 			}
+			bounds.min.y = 0.0f;
+			bounds.max.y = 1.0f;
+
+			bounds.center = bounds.max - bounds.min;
 
 			int edge = 0;
 			for (int i = 0; i < numVertices - tesselation; i++) {
@@ -55,6 +73,58 @@ namespace engine
 			}
 
 			generateTangentSpaceVectors();
+		}
+
+		float getHeight(glm::vec3 position, glm::vec3 scale) {
+			glm::ivec3 pos = glm::floor(position-1.0f);
+
+			int x_a = pos.x + m_pTesselation / 2;
+			int x_b = 0;
+
+			int y_a = pos.z + m_pTesselation / 2;
+			int y_b = 0;
+
+			if (x_a >= m_pTesselation) {
+				x_b = x_a;
+				x_a = x_a - 1;
+			}
+			else {
+				x_b = x_a + 1;
+			}
+
+			if (y_a >= m_pTesselation) {
+				y_b = y_a;
+				y_a = y_a - 1;
+			}
+			else {
+				y_b = y_a + 1;
+			}
+
+			if (y_a <= 0) {
+				y_a = 0;
+				y_b = 1;
+			}
+
+			if (x_a <= 0) {
+				x_a = 0;
+				x_b = 1;
+			}
+
+			glm::vec3 a, b, c, d;
+			a = m_pMesh.Vertices.at(x_a * m_pTesselation + y_a).position * scale;// a.x = a.x * scale.x; a.z = a.z * scale.z;
+			b = m_pMesh.Vertices.at(x_b * m_pTesselation + y_a).position * scale;// b.x = b.x * scale.x; b.z = b.z * scale.z;
+			c = m_pMesh.Vertices.at(x_a * m_pTesselation + y_b).position * scale;// c.x = c.x * scale.x; c.z = c.z * scale.z;
+			d = m_pMesh.Vertices.at(x_b * m_pTesselation + y_b).position * scale;// d.x = d.x * scale.x; d.z = d.z * scale.z;
+
+			float la = glm::distance(position, a);
+			float lb = glm::distance(position, b);
+			float lc = glm::distance(position, c);
+			float ld = glm::distance(position, d);
+
+			float tx = lb - la;
+			float ty = ld - lc;
+
+			return ((a.y * tx + b.y * (1.0 - tx) + c.y * ty + d.y * (1.0- ty)) * 0.5f)-0.15;
 		}
 
 		void calculateNormals() {
