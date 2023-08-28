@@ -5,7 +5,7 @@
 #include <core/engine/renderer/types.hpp>
 #include <glm/glm.hpp>
 
-DDS::DDS(const std::string& filename)
+DDS::DDS(const std::string& filename, unsigned int baseLevel = 0) : m_pBaseLevel{baseLevel}
 {
 	header = new DDS_HEADER();
 
@@ -69,17 +69,20 @@ DDS::DDS(const std::string& filename)
 	int levels = std::max(1, header->dwMipMapCount);
 
 	if (dx10_header != nullptr) {
-		for (int j = 0; j < levels; j++)
+		for (int j = m_pBaseLevel; j < levels; j++)
 		{
 			bufsize += calculateSizeBC(m_pBlockSize, header->dwWidth >> j, header->dwHeight >> j);
 		}
 	}
 
+	for(int i = 0; i < m_pBaseLevel;i++)
+		FILE.seekg(calculateSizeBC(m_pBlockSize, header->dwWidth >> i, header->dwHeight >> i), FILE.cur);
+
 	m_pSize = bufsize;
 
 	m_pData = new unsigned char[bufsize * sizeof(unsigned char)];
 	//FILE.seekg(dataOffset, FILE.beg);
-	FILE.read((char*)m_pData, bufsize);
+	FILE.read((char*)m_pData , bufsize);
 
 	FILE.close();
 

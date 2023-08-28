@@ -5,7 +5,7 @@ class DDS
 {
 public:
 
-	DDS(const std::string&);
+	DDS(const std::string&, unsigned int);
 
 	~DDS() {
 		delete header;
@@ -13,15 +13,15 @@ public:
 
 
 	uint32_t mipLevels() {
-		return header->dwMipMapCount;
+		return header->dwMipMapCount- m_pBaseLevel;
 	}
 
 	uint32_t width() {
-		return header->dwWidth;
+		return header->dwWidth >> m_pBaseLevel;
 	}
 
 	uint32_t height() {
-		return header->dwHeight;
+		return header->dwHeight >> m_pBaseLevel;
 	}
 
 	size_t size() {
@@ -63,6 +63,7 @@ private:
 	size_t m_pSize{};
 	unsigned int m_InternalFormat{};
 	unsigned int m_pBlockSize{};
+	unsigned int m_pBaseLevel = 0;
 
 };
 

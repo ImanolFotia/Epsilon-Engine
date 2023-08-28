@@ -28,13 +28,13 @@ namespace vk
         }
         if (static_cast<bool>(stage & engine::ShaderStage::GEOMETRY)) {
             outputStage = outputStage | VK_SHADER_STAGE_GEOMETRY_BIT;
-        }
+        }/*
         if (static_cast<bool>(stage & engine::ShaderStage::MESH)) {
             outputStage = outputStage | VK_SHADER_STAGE_MESH_BIT_EXT;
         }
         if (static_cast<bool>(stage & engine::ShaderStage::TASK)) {
             outputStage = outputStage | VK_SHADER_STAGE_TASK_BIT_EXT;
-        }
+        }*/
         return outputStage;
     }
 

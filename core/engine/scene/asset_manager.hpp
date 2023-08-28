@@ -671,7 +671,8 @@ namespace engine
 				}
 			}
 			else if(ext == "dds") {
-				DDS ddsfile(texture_path);
+				int baseLevel = 0;
+				DDS ddsfile(texture_path, 0);
 				isDDS = true;
 				width = ddsfile.width();
 				height = ddsfile.height();

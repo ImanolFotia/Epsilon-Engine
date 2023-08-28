@@ -320,217 +320,143 @@ namespace engine
 
 		void BeginScene()
 		{
-			auto renderer = m_pContext->Renderer();
-			renderer->BeginFrame();
-			renderer->Begin();
+			if (m_pContext->Window().getSize().first > 0) {
+				auto renderer = m_pContext->Renderer();
+				renderer->BeginFrame();
+				renderer->Begin();
 
-			m_pMeshCount = 0;
+				m_pMeshCount = 0;
+			}
 		}
 
 		void Flush(engine::DrawType drawType = engine::DrawType::INDEXED)
 		{
-			auto renderer = m_pContext->Renderer();
 
-			renderer->Flush(m_pCurrentRenderPass, drawType);
+			if (m_pContext->Window().getSize().first > 0) {
+				auto renderer = m_pContext->Renderer();
+
+				renderer->Flush(m_pCurrentRenderPass, drawType);
+			}
 		}
 
 		void Push(std::shared_ptr<Node<RenderModel>> renderModel, glm::mat4 transform, const std::string& layout)
 		{
-			auto renderer = m_pContext->Renderer();
+			if (m_pContext->Window().getSize().first > 0) {
+				auto renderer = m_pContext->Renderer();
 
-			Ref<PushConstant> push_constant;
+				Ref<PushConstant> push_constant;
 
-			Ref<BindGroup> selectedBindGroup;
+				Ref<BindGroup> selectedBindGroup;
 
-			if (layout == "ShadowLayout") {
-				selectedBindGroup = m_pShadowBindGroup;
-			}
-			else if (layout == "animatedShadowLayout") {
-				selectedBindGroup = m_pAnimatedShadowBindGroup;
-			}
-			else if (layout == "treeShadowLayout") {
-				selectedBindGroup = m_pTreeShadowBindGroup;
-			}
-			else if (layout == "DefaultLayout") {
-				selectedBindGroup = m_pDefaultBindGroup;
-			}
-			else if (layout == "defaultAnimatedLayout") {
-				selectedBindGroup = m_pAnimatedBindGroup;
-			}
-			else if (layout == "TerrainLayout") {
-				selectedBindGroup = m_pDefaultBindGroup;
-			}
-			else if (layout == "TreeLayout") {
-				selectedBindGroup = m_pDefaultBindGroup;
-			}
-			else if (layout == "DecalLayout") {
-				selectedBindGroup = m_pDecalBindGroup;
-			}
-			else if (layout == "SkyLayout") {
-				selectedBindGroup = m_pDefaultBindGroup;
-			}
-			else if (layout == "prepassLayout") {
-				selectedBindGroup = m_pPrePassBindGroup;
-			}
-			else {
-				selectedBindGroup = m_pDefaultBindGroup;
-			}
-
-
-			for (auto& mesh : renderModel->data.renderMeshes)
-			{
-				if (renderer->numPushedCommands() >= engine::MAX_COMMAND_QUEUE_SIZE) {
-					Flush();
+				if (layout == "ShadowLayout") {
+					selectedBindGroup = m_pShadowBindGroup;
 				}
-
-				uint32_t material_indices[4] = { 0 };
-
-				for (int i = 0; i < mesh.numMaterials; i++) {
-					uint32_t uniform_index = m_pAssetManager.m_pMaterials.at(mesh.material_keys[i]).index;
-					material_indices[i] = uniform_index;
+				else if (layout == "animatedShadowLayout") {
+					selectedBindGroup = m_pAnimatedShadowBindGroup;
+				}
+				else if (layout == "treeShadowLayout") {
+					selectedBindGroup = m_pTreeShadowBindGroup;
+				}
+				else if (layout == "DefaultLayout") {
+					selectedBindGroup = m_pDefaultBindGroup;
+				}
+				else if (layout == "defaultAnimatedLayout") {
+					selectedBindGroup = m_pAnimatedBindGroup;
+				}
+				else if (layout == "TerrainLayout") {
+					selectedBindGroup = m_pDefaultBindGroup;
+				}
+				else if (layout == "TreeLayout") {
+					selectedBindGroup = m_pDefaultBindGroup;
+				}
+				else if (layout == "DecalLayout") {
+					selectedBindGroup = m_pDecalBindGroup;
+				}
+				else if (layout == "SkyLayout") {
+					selectedBindGroup = m_pDefaultBindGroup;
+				}
+				else if (layout == "prepassLayout") {
+					selectedBindGroup = m_pPrePassBindGroup;
+				}
+				else {
+					selectedBindGroup = m_pDefaultBindGroup;
 				}
 
 
-				m_pAssetManager.getTransformBuffer()[m_pMeshCount] = transform;
+				for (auto& mesh : renderModel->data.renderMeshes)
+				{
+					if (renderer->numPushedCommands() >= engine::MAX_COMMAND_QUEUE_SIZE) {
+						Flush();
+					}
 
-				m_pAssetManager.getObjectBuffer()[m_pMeshCount] = {
-					.object_id = (unsigned int)renderModel->Parent()->Index(),
-					.transform_index = m_pMeshCount,
-					.material_index = {material_indices[0], material_indices[1], material_indices[2], material_indices[3]},
-					.numMaterials = (uint32_t)mesh.numMaterials
-				};
+					uint32_t material_indices[4] = { 0 };
 
-				renderer->Push({ .mesh = mesh.mesh,
-								.material = selectedBindGroup,
-								.pushConstant = push_constant,
-								.objectConstant = {
-													.transform = transform,
-													.material_index = material_indices[0]
-												  },
-								.layout_index = m_pRenderLayouts.at(layout),
-								.uniformIndex = m_pMeshCount });
-				m_pMeshCount++;
+					for (int i = 0; i < mesh.numMaterials; i++) {
+						uint32_t uniform_index = m_pAssetManager.m_pMaterials.at(mesh.material_keys[i]).index;
+						material_indices[i] = uniform_index;
+					}
+
+
+					m_pAssetManager.getTransformBuffer()[m_pMeshCount] = transform;
+
+					m_pAssetManager.getObjectBuffer()[m_pMeshCount] = {
+						.object_id = (unsigned int)renderModel->Parent()->Index(),
+						.transform_index = m_pMeshCount,
+						.material_index = {material_indices[0], material_indices[1], material_indices[2], material_indices[3]},
+						.numMaterials = (uint32_t)mesh.numMaterials
+					};
+
+					renderer->Push({ .mesh = mesh.mesh,
+									.material = selectedBindGroup,
+									.pushConstant = push_constant,
+									.objectConstant = {
+														.transform = transform,
+														.material_index = material_indices[0]
+													  },
+									.layout_index = m_pRenderLayouts.at(layout),
+									.uniformIndex = m_pMeshCount });
+					m_pMeshCount++;
+				}
 			}
 		}
 
 		void Push(const std::vector<glm::mat4>& transforms, const std::string& layout, const std::string material, unsigned int count = 1) {
 
-			auto renderer = m_pContext->Renderer();
+			if (m_pContext->Window().getSize().first > 0) {
+				auto renderer = m_pContext->Renderer();
 
-			Ref<PushConstant> push_constant;
+				Ref<PushConstant> push_constant;
 
-			Ref<BindGroup> selectedBindGroup;
+				Ref<BindGroup> selectedBindGroup;
 
-			if (layout == "ShadowLayout") {
-				selectedBindGroup = m_pShadowBindGroup;
-			}
-			else if (layout == "treeShadowLayout") {
-				selectedBindGroup = m_pTreeShadowBindGroup;
-			}
-			else if (layout == "DefaultLayout") {
-				selectedBindGroup = m_pDefaultBindGroup;
-			}
-			else if (layout == "TerrainLayout") {
-				selectedBindGroup = m_pDefaultBindGroup;
-			}
-			else if (layout == "TreeLayout") {
-				selectedBindGroup = m_pDefaultBindGroup;
-			}
-			else if (layout == "DecalLayout") {
-				selectedBindGroup = m_pDecalBindGroup;
-			}
-			else if (layout == "SkyLayout") {
-				selectedBindGroup = m_pDefaultBindGroup;
-			}
-			else if (layout == "prepassLayout") {
-				selectedBindGroup = m_pPrePassBindGroup;
-			}
-			else {
-				selectedBindGroup = m_pDefaultBindGroup;
-			}
-
-			uint32_t material_indices[4] = { 0 };
-			uint32_t firstInstance = m_pMeshCount;
-			for (int i = 0; i < count; i++) {
-				if (renderer->numPushedCommands() >= engine::MAX_COMMAND_QUEUE_SIZE) {
-					Flush();
+				if (layout == "ShadowLayout") {
+					selectedBindGroup = m_pShadowBindGroup;
+				}
+				else if (layout == "treeShadowLayout") {
+					selectedBindGroup = m_pTreeShadowBindGroup;
+				}
+				else if (layout == "DefaultLayout") {
+					selectedBindGroup = m_pDefaultBindGroup;
+				}
+				else if (layout == "TerrainLayout") {
+					selectedBindGroup = m_pDefaultBindGroup;
+				}
+				else if (layout == "TreeLayout") {
+					selectedBindGroup = m_pDefaultBindGroup;
+				}
+				else if (layout == "DecalLayout") {
+					selectedBindGroup = m_pDecalBindGroup;
+				}
+				else if (layout == "SkyLayout") {
+					selectedBindGroup = m_pDefaultBindGroup;
+				}
+				else if (layout == "prepassLayout") {
+					selectedBindGroup = m_pPrePassBindGroup;
+				}
+				else {
+					selectedBindGroup = m_pDefaultBindGroup;
 				}
 
-
-				for (int j = 0; j < 1; j++) {
-					uint32_t uniform_index = m_pAssetManager.m_pMaterials.at(std::hash<std::string>{}(material)).index;
-					material_indices[j] = uniform_index;
-				}
-
-
-				m_pAssetManager.getTransformBuffer()[m_pMeshCount] = transforms[i];
-
-				m_pAssetManager.getObjectBuffer()[m_pMeshCount] = {
-					.object_id = (unsigned int)i,
-					.transform_index = m_pMeshCount,
-					.material_index = {material_indices[0], material_indices[1], material_indices[2], material_indices[3]},
-					.numMaterials = (uint32_t)1
-				};
-
-				m_pMeshCount++;
-			}
-
-			renderer->Push({ .mesh = engine::Ref<Mesh>().makeEmpty(),
-							.material = selectedBindGroup,
-							.pushConstant = push_constant,
-							.objectConstant = {
-												.transform = transforms[0],
-												.material_index = material_indices[0]
-											  },
-							.layout_index = m_pRenderLayouts.at(layout),
-							.uniformIndex = firstInstance,
-							.count = count });
-		
-
-		}
-
-		void Push(std::shared_ptr<Node<RenderModel>> renderModel, const std::vector<glm::mat4>& transforms, const std::string& layout, unsigned int count = 1)
-		{
-			auto renderer = m_pContext->Renderer();
-
-			Ref<PushConstant> push_constant;
-
-			Ref<BindGroup> selectedBindGroup;
-
-			if (layout == "ShadowLayout") {
-				selectedBindGroup = m_pShadowBindGroup;
-			}
-			else if (layout == "treeShadowLayout") {
-				selectedBindGroup = m_pTreeShadowBindGroup;
-			}
-			else if (layout == "DefaultLayout") {
-				selectedBindGroup = m_pDefaultBindGroup;
-			}
-			else if (layout == "TerrainLayout") {
-				selectedBindGroup = m_pDefaultBindGroup;
-			}
-			else if (layout == "TreeLayout") {
-				selectedBindGroup = m_pDefaultBindGroup;
-			}
-			else if (layout == "DecalLayout") {
-				selectedBindGroup = m_pDecalBindGroup;
-			}
-			else if (layout == "SkyLayout") {
-				selectedBindGroup = m_pDefaultBindGroup;
-			}
-			else if (layout == "prepassLayout") {
-				selectedBindGroup = m_pPrePassBindGroup;
-			}
-			else {
-				selectedBindGroup = m_pDefaultBindGroup;
-			}
-
-			if (count > 1) {
-
-			}
-
-			for (auto& mesh : renderModel->data.renderMeshes)
-			{
 				uint32_t material_indices[4] = { 0 };
 				uint32_t firstInstance = m_pMeshCount;
 				for (int i = 0; i < count; i++) {
@@ -539,8 +465,8 @@ namespace engine
 					}
 
 
-					for (int j = 0; j < mesh.numMaterials; j++) {
-						uint32_t uniform_index = m_pAssetManager.m_pMaterials.at(mesh.material_keys[j]).index;
+					for (int j = 0; j < 1; j++) {
+						uint32_t uniform_index = m_pAssetManager.m_pMaterials.at(std::hash<std::string>{}(material)).index;
 						material_indices[j] = uniform_index;
 					}
 
@@ -548,16 +474,16 @@ namespace engine
 					m_pAssetManager.getTransformBuffer()[m_pMeshCount] = transforms[i];
 
 					m_pAssetManager.getObjectBuffer()[m_pMeshCount] = {
-						.object_id = (unsigned int)renderModel->Index() + i,
+						.object_id = (unsigned int)i,
 						.transform_index = m_pMeshCount,
 						.material_index = {material_indices[0], material_indices[1], material_indices[2], material_indices[3]},
-						.numMaterials = (uint32_t)mesh.numMaterials
+						.numMaterials = (uint32_t)1
 					};
 
 					m_pMeshCount++;
 				}
 
-				renderer->Push({ .mesh = mesh.mesh,
+				renderer->Push({ .mesh = engine::Ref<Mesh>().makeEmpty(),
 								.material = selectedBindGroup,
 								.pushConstant = push_constant,
 								.objectConstant = {
@@ -567,19 +493,104 @@ namespace engine
 								.layout_index = m_pRenderLayouts.at(layout),
 								.uniformIndex = firstInstance,
 								.count = count });
+
+			}
+		}
+
+		void Push(std::shared_ptr<Node<RenderModel>> renderModel, const std::vector<glm::mat4>& transforms, const std::string& layout, unsigned int count = 1)
+		{
+			if (m_pContext->Window().getSize().first > 0) {
+				auto renderer = m_pContext->Renderer();
+
+				Ref<PushConstant> push_constant;
+
+				Ref<BindGroup> selectedBindGroup;
+
+				if (layout == "ShadowLayout") {
+					selectedBindGroup = m_pShadowBindGroup;
+				}
+				else if (layout == "treeShadowLayout") {
+					selectedBindGroup = m_pTreeShadowBindGroup;
+				}
+				else if (layout == "DefaultLayout") {
+					selectedBindGroup = m_pDefaultBindGroup;
+				}
+				else if (layout == "TerrainLayout") {
+					selectedBindGroup = m_pDefaultBindGroup;
+				}
+				else if (layout == "TreeLayout") {
+					selectedBindGroup = m_pDefaultBindGroup;
+				}
+				else if (layout == "DecalLayout") {
+					selectedBindGroup = m_pDecalBindGroup;
+				}
+				else if (layout == "SkyLayout") {
+					selectedBindGroup = m_pDefaultBindGroup;
+				}
+				else if (layout == "prepassLayout") {
+					selectedBindGroup = m_pPrePassBindGroup;
+				}
+				else {
+					selectedBindGroup = m_pDefaultBindGroup;
+				}
+
+				if (count > 1) {
+
+				}
+
+				for (auto& mesh : renderModel->data.renderMeshes)
+				{
+					uint32_t material_indices[4] = { 0 };
+					uint32_t firstInstance = m_pMeshCount;
+					for (int i = 0; i < count; i++) {
+						if (renderer->numPushedCommands() >= engine::MAX_COMMAND_QUEUE_SIZE) {
+							Flush();
+						}
+
+
+						for (int j = 0; j < mesh.numMaterials; j++) {
+							uint32_t uniform_index = m_pAssetManager.m_pMaterials.at(mesh.material_keys[j]).index;
+							material_indices[j] = uniform_index;
+						}
+
+
+						m_pAssetManager.getTransformBuffer()[m_pMeshCount] = transforms[i];
+
+						m_pAssetManager.getObjectBuffer()[m_pMeshCount] = {
+							.object_id = (unsigned int)renderModel->Index() + i,
+							.transform_index = m_pMeshCount,
+							.material_index = {material_indices[0], material_indices[1], material_indices[2], material_indices[3]},
+							.numMaterials = (uint32_t)mesh.numMaterials
+						};
+
+						m_pMeshCount++;
+					}
+
+					renderer->Push({ .mesh = mesh.mesh,
+									.material = selectedBindGroup,
+									.pushConstant = push_constant,
+									.objectConstant = {
+														.transform = transforms[0],
+														.material_index = material_indices[0]
+													  },
+									.layout_index = m_pRenderLayouts.at(layout),
+									.uniformIndex = firstInstance,
+									.count = count });
+				}
 			}
 
 		}
 
 		void EndScene()
 		{
+			if (m_pContext->Window().getSize().first > 0) {
+				auto renderer = m_pContext->Renderer();
+				glm::vec3 v;
+				renderer->End(v);
 
-			auto renderer = m_pContext->Renderer();
-			glm::vec3 v;
-			renderer->End(v);
-
-			renderer->Submit();
-			renderer->EndFrame();
+				renderer->Submit();
+				renderer->EndFrame();
+			}
 		}
 
 		void Destroy() {
