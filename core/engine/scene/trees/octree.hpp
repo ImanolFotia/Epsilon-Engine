@@ -290,8 +290,6 @@ namespace engine
             return m_Data;
         }
 
-        void erase() {}
-
         void clean() {}
 
         const std::list<T> &data() { return m_Data; }
