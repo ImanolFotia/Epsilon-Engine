@@ -413,7 +413,7 @@ namespace engine
 			}
 		}
 
-		void Push(std::vector<glm::mat4> transforms, const std::string& layout, const std::string material, unsigned int count = 1) {
+		void Push(const std::vector<glm::mat4>& transforms, const std::string& layout, const std::string material, unsigned int count = 1) {
 
 			auto renderer = m_pContext->Renderer();
 
@@ -489,7 +489,7 @@ namespace engine
 
 		}
 
-		void Push(std::shared_ptr<Node<RenderModel>> renderModel, std::vector<glm::mat4> transforms, const std::string& layout, unsigned int count = 1)
+		void Push(std::shared_ptr<Node<RenderModel>> renderModel, const std::vector<glm::mat4>& transforms, const std::string& layout, unsigned int count = 1)
 		{
 			auto renderer = m_pContext->Renderer();
 

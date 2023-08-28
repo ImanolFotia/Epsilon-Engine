@@ -194,7 +194,7 @@ namespace vk
 	{
 		vk_data.defaultRenderPass.renderPassChain.ImageViews.clear();
 		vk_data.defaultRenderPass.renderPassChain.ImageViews.resize(vk_data.defaultRenderPass.renderPassChain.Images.size());
-		vk_data.defaultRenderPass.renderPassChain.Textures.resize(1);
+		vk_data.defaultRenderPass.renderPassChain.Textures.resize(vk_data.defaultRenderPass.renderPassChain.Images.size());
 
 		vk_data.defaultRenderPass.renderPassChain.DepthTextureInfo.format = findDepthFormat(vk_data);
 		vk_data.defaultRenderPass.renderPassChain.DepthTextureInfo.width = vk_data.swapChainWidth;
@@ -221,6 +221,7 @@ namespace vk
 
 
 			createImageView(vk_data, texture, VK_IMAGE_ASPECT_COLOR_BIT);
+
 
 			vk_data.defaultRenderPass.renderPassChain.ImageViews[i] = texture.imageView;
 			vk_data.defaultRenderPass.renderPassChain.Textures.back() = texture;

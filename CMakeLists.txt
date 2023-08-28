@@ -316,7 +316,7 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
 
 set(EPSILON_SOURCE_LOCATION ${CMAKE_SOURCE_DIR})
 
-option(CREATE_STATIC_LIB "Build static library" ON)
+option(CREATE_STATIC_LIB "Build static library" OFF)
 
 if(D__ANDROID__) 
     set(CREATE_STATIC_LIB ON)
@@ -372,6 +372,7 @@ set(PROJECT_FILES
         ${IMGUI_BUILD_DIR}/imgui_draw.cpp
         ${IMGUI_BUILD_DIR}/imgui_tables.cpp
         ${IMGUI_BUILD_DIR}/imgui_widgets.cpp
+        ${IMGUI_BUILD_DIR}/ImGuizmo/ImGuizmo.cpp
         ${TINYGLTF_BUILD_DIR}/tiny_gltf.cc
         )
         

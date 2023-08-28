@@ -326,6 +326,7 @@ namespace engine
 
 		vk::createRenderPass(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, renderPassInfo, true);
 
+
 		// for (int i = 0; i < renderPassInfo.numLayouts; i++)
 		{
 
@@ -353,6 +354,7 @@ namespace engine
 
 		vk::createSwapChainFramebuffers(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass,
 			m_pVkDataPtr->defaultRenderPass.renderPassChain);
+
 
 		m_pVkDataPtr->defaultRenderPass.name = renderPassInfo.name;
 

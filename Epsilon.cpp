@@ -15,6 +15,11 @@ namespace Epsilon
 
     std::shared_ptr<engine::Context> Epsilon::getContext()
     {
+        if (m_pContext == nullptr) {
+
+            m_pContext = std::make_shared<engine::Context>();
+        }
+
         return m_pContext;
     }
 
@@ -217,6 +222,20 @@ extern "C"
     {
         instance.run();
     }
+
+    EXPORT std::shared_ptr<engine::Context> getContext() {
+        return instance.getContext();
+    }
+
+    EXPORT void beginScene() {
+        instance.getScene().BeginScene();
+    }
+
+    EXPORT void endScene() {
+        instance.getScene().EndScene();
+    }
+
+
 #ifdef __cplusplus
 };
 #endif

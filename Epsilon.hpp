@@ -132,6 +132,11 @@ namespace Epsilon
 
         void exit();
 
+    public:
+        engine::Scene& getScene() {
+            return m_pScene;
+        }
+
     protected:
         std::pair<int, int> getWindowDimensions();
 
