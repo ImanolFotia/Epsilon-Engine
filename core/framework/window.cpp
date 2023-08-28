@@ -29,6 +29,9 @@ namespace framework
         glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
         glfwWindowHint(GLFW_DECORATED, GL_TRUE);*/
 
+        mDefaultWidth = glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
+        mDefaultHeight = glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
+
         int count = 0;
         const GLFWvidmode* modes = glfwGetVideoModes(glfwGetPrimaryMonitor(), &count);
 
@@ -48,6 +51,10 @@ namespace framework
             size_desc.size_string = std::string(buffer);
             if (currentMode->width == size_desc.width && currentMode->height == size_desc.height && (float)currentMode->refreshRate == size_desc.refreshRate) {
                 size_desc.isCurrent = true;
+            }
+
+            if (mDefaultWidth == currentMode->width && mDefaultHeight == currentMode->height) {
+                defaultSizeIndex = m_pAvailableSizes.size();
             }
             m_pAvailableSizes.push_back(size_desc);
         }

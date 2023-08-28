@@ -74,7 +74,15 @@ namespace framework
     class EPSILON_DLL Window
     {
 
+
+
     public:
+
+        enum class WindowMode {
+            WINDOWED = 0,
+            FULLSCREEN,
+            BORDERLESS
+        };
 #if USE_GLFW
         using windowType = GLFWwindow;
 #elif _WIN32
@@ -156,7 +164,40 @@ namespace framework
 #endif
         }
 
+        void setFullScreen() {
+            auto mainMonitorMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+            glfwSetWindowMonitor(mWindow, glfwGetPrimaryMonitor(), 0, 0, mWidth, mHeight, mainMonitorMode->refreshRate);
+
+            mWindowMode = WindowMode::FULLSCREEN;
+        }
+
+        void setBorderlessFullscreen() {
+            auto mainMonitorMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+            glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_FALSE);
+            glfwSetWindowSize(mWindow, mDefaultWidth, mDefaultHeight);
+            glfwSetWindowPos(mWindow, 0, 0);
+
+            glfwSetWindowMonitor(mWindow, NULL, 0, 0, mDefaultWidth, mDefaultHeight, mainMonitorMode->refreshRate);
+            mWindowMode = WindowMode::BORDERLESS;
+        }
+
+        void setWindowed() {
+            auto mainMonitorMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+            glfwSetWindowMonitor(mWindow, NULL, 0, 30, mainMonitorMode->width, mainMonitorMode->height-30, mainMonitorMode->refreshRate);
+            glfwSetWindowPos(mWindow, 0, 30);
+            glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_TRUE);
+            mWindowMode = WindowMode::WINDOWED;
+        }
+
+        WindowMode getWindowMode() {
+            return mWindowMode;
+        }
+
         int current_cursor = 0;
+
+        int defaultSizeIndex = 0;
 
         void setCursorPosition(int x, int y)
         {
@@ -184,6 +225,10 @@ namespace framework
 #if USE_GLFW
             glfwSetWindowSize(mWindow, w, h);
 #endif
+        }
+
+        int getDefaultSizeIndex() {
+            return defaultSizeIndex;
         }
 
         void cleanup()
@@ -217,6 +262,11 @@ namespace framework
     private:
         int mWidth = 640;
         int mHeight = 480;
+
+        WindowMode mWindowMode = WindowMode::WINDOWED;
+
+        int mDefaultWidth = 1;
+        int mDefaultHeight = 1;
         std::vector<WindowSizeDescription> m_pAvailableSizes;
 
         windowType *mWindow;

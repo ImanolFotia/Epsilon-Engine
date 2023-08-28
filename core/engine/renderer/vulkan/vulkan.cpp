@@ -222,9 +222,11 @@ namespace engine
 
 		if (m_pShouldRecreateSwapchain)
 		{
-			pRecreateSwapChain();
-			m_pShouldRecreateSwapchain = false;
-			std::cout << "swap chain recreated\n";
+			if (m_pWindow->getSize().first > 0) {
+				pRecreateSwapChain();
+				m_pShouldRecreateSwapchain = false;
+				std::cout << "swap chain recreated\n";
+			}
 		}
 
 		m_pCurrentFrame = m_pImageIndex;// (m_pCurrentFrame + 1) % vk::MAX_FRAMES_IN_FLIGHT;
@@ -546,7 +548,8 @@ namespace engine
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR)
 		{
-			pRecreateSwapChain();
+			if(m_pWindow->getSize().first > 0)
+				pRecreateSwapChain();
 			return -1;
 		}
 		else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)

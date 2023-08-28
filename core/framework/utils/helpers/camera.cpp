@@ -263,6 +263,9 @@ namespace utils
 
     glm::vec2 Camera::UpdateMatrices(int FrameNumber, int frame_w, int frame_h, bool jitter)
     {
+        if (frame_w == 0 or frame_h == 0) {
+            return glm::vec2(0.0f);
+        }
         LastPosition = Position;
         LastOrientation = Orientation;
 
@@ -276,7 +279,7 @@ namespace utils
 
         ProjectionMatrix = glm::perspective(glm::radians(FieldOfView), glm::clamp(Aspectratio, -10.0f, 10.0f), near_plane, far_plane);
 
-        glm::vec2 Jitter;
+        glm::vec2 Jitter = glm::vec2(0.0f);;
         if (jitter)
         {
             glm::vec2 Sample = halton(FrameNumber % 16 + 1);
