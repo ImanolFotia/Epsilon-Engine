@@ -20,6 +20,8 @@ namespace vk
         std::optional<uint32_t> computeFamily;
         std::optional<uint32_t> transferFamily;
 
+        int queueCount = 0;
+
         bool isComplete()
         {
             return graphicsFamily.has_value() && presentFamily.has_value() && computeFamily.has_value() && transferFamily.has_value();
@@ -52,16 +54,18 @@ namespace vk
                 indices.transferFamily = i;
             }
 
-            if (indices.isComplete())
-            {
-                break;
-            }
 
             VkBool32 presentSupport = false;
             vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, i, vk_data.surface, &presentSupport);
             if (presentSupport)
             {
                 indices.presentFamily = i;
+            }
+
+            if (indices.isComplete())
+            {
+                indices.queueCount = queueFamily.queueCount;
+                break;
             }
 
             i++;

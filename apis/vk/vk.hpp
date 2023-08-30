@@ -7,7 +7,6 @@
 #include "queues.hpp"
 #include "surface.hpp"
 #include "swap_chain.hpp"
-#include "validation_layers.hpp"
 #include "pipeline.hpp"
 #include "framebuffer.hpp"
 #include "sync_objects.hpp"

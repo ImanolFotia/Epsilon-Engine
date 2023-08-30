@@ -10,7 +10,7 @@
 #include "core/framework/common.hpp"
 #include "queues.hpp"
 #include "swap_chain.hpp"
-#include "validation_layers.hpp"
+//#include "validation_layers.hpp"
 #include "pipeline.hpp"
 #include "instance.hpp"
 #include "command.hpp"
@@ -39,7 +39,9 @@ namespace vk
 
         vk_data.uniqueQueueFamilies = {indices.graphicsFamily.value(), indices.presentFamily.value(), indices.computeFamily.value(), indices.transferFamily.value()};
 
-        float queuePriority[3] = { 1.0f , 1.0f, 1.0f};
+        std::vector<float> queuePriority;
+        queuePriority.resize(indices.queueCount);
+        std::fill(queuePriority.begin(), queuePriority.end(), 1.0f);// [3] = { 1.0f , 1.0f, 1.0f };
         /*for (uint32_t queueFamily : vk_data.uniqueQueueFamilies)
         {
             VkDeviceQueueCreateInfo queueCreateInfo{};
@@ -108,18 +110,22 @@ namespace vk
         MIN_FRAMES_IN_FLIGHT = surfaceCapabilities.minImageCount;
         MAX_FRAMES_IN_FLIGHT = std::max(MIN_FRAMES_IN_FLIGHT, MAX_FRAMES_IN_FLIGHT);
 
-        IO::Log("Min frames in flight", MIN_FRAMES_IN_FLIGHT);
+        IO::Log("Min frames in flight: ", MIN_FRAMES_IN_FLIGHT);
 
 
-        VkDeviceQueueCreateInfo queueCreateInfo{};
-        queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-        queueCreateInfo.queueFamilyIndex = indices.transferFamily.value();
-        queueCreateInfo.queueCount = MAX_FRAMES_IN_FLIGHT;
-        queueCreateInfo.pQueuePriorities = queuePriority;
+        std::vector<VkDeviceQueueCreateInfo> queueCreateInfo{};
+        queueCreateInfo.resize(indices.queueCount);
+        for (int i = 0; i < indices.queueCount; i++) {
+            queueCreateInfo[i].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+            queueCreateInfo[i].queueFamilyIndex = indices.transferFamily.value();
+            queueCreateInfo[i].queueCount = indices.queueCount;//MAX_FRAMES_IN_FLIGHT;
+            queueCreateInfo[i].pQueuePriorities = queuePriority.data();
+        }
+
 
         VkDeviceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-        createInfo.pQueueCreateInfos = &queueCreateInfo;
+        createInfo.pQueueCreateInfos = queueCreateInfo.data();
         createInfo.queueCreateInfoCount = 1;
 
         createInfo.enabledExtensionCount = static_cast<uint32_t>(vk_data.deviceExtensions.size());
@@ -167,7 +173,7 @@ namespace vk
             vkGetDeviceQueue(vk_data.logicalDevice, indices.graphicsFamily.value(), 0, &vk_data.graphicsQueue[i]);
             vkGetDeviceQueue(vk_data.logicalDevice, indices.computeFamily.value(), 0, &vk_data.computeQueue[i]);
         }
-        vkGetDeviceQueue(vk_data.logicalDevice, indices.transferFamily.value(), 1, &vk_data.transferQueue);
+        vkGetDeviceQueue(vk_data.logicalDevice, indices.transferFamily.value(), indices.queueCount > 1 ? 1 : 0, &vk_data.transferQueue);
 
     }
 

@@ -36,7 +36,7 @@ namespace vk
 
         std::vector<const char *> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 
-        if (enableValidationLayers)
+        //if (enableValidationLayers)
         {
             extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
         }

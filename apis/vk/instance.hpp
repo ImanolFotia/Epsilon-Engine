@@ -12,6 +12,8 @@
 #include "extensions.hpp"
 #include "vk_data.hpp"
 
+#include "validation_layers.hpp"
+
 namespace vk
 {
 
