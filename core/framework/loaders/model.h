@@ -33,8 +33,8 @@ namespace framework
         common::BoundingBox BoundingBox;
         common::MIN_MAX_POINTS MinMaxPoints;
 
-        glm::vec3 m_pMin;
-        glm::vec3 m_pMax;
+        glm::vec3 m_pMin = glm::vec3(1000000.0);
+        glm::vec3 m_pMax = glm::vec3(-1000000.0);
 
     public:
         ModelBase(const std::string& filename) : filename(filename){}

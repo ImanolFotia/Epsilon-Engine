@@ -21,7 +21,6 @@ namespace engine
 
 	class Scene
 	{
-		using OctreeDataType = std::shared_ptr<Node<RenderModel>>;
 		AssetManager m_pAssetManager;
 		std::shared_ptr<audio::AudioManager> m_pAudioManager;
 		// OctreeContainer<std::shared_ptr<NodeBase>> m_pOctree;
@@ -30,18 +29,23 @@ namespace engine
 		std::unordered_map<std::string, RenderPassInfo> m_RenderPassesInfo;
 		std::unordered_map<std::string, Ref<RenderPass>> m_RenderPassesRefs;
 
-		std::unordered_map<std::string, unsigned int> m_pRenderLayouts;
+		struct RenderLayout {
+			unsigned int pipelineLayoutIndex = 0;
+			Ref<BindGroup> bindGroup;
+		};
+
+		struct OctreeSceneItem {
+			OctreeSceneItem() = default;
+			int index;
+			int instance_index;
+			bool visible;
+		};
+
+		std::unordered_map<std::string, RenderLayout> m_pRenderLayouts;
 
 		Ref<RenderPass> m_pCurrentRenderPass;
-		Ref<BindGroup> m_pDefaultBindGroup;
-		Ref<BindGroup> m_pAnimatedBindGroup;
-		Ref<BindGroup> m_pShadowBindGroup;
-		Ref<BindGroup> m_pDecalBindGroup;
-		Ref<BindGroup> m_pPrePassBindGroup;
-		Ref<BindGroup> m_pAnimatedShadowBindGroup;
-		Ref<BindGroup> m_pTreeShadowBindGroup;
 
-		std::shared_ptr<OctreeContainer<OctreeDataType>> m_pOctree;
+		std::shared_ptr<OctreeContainer<OctreeSceneItem>> m_pOctree;
 
 		Frustum m_pFrustum;
 
@@ -60,22 +64,10 @@ namespace engine
 		{
 			m_pAssetManager.m_pContext = m_pContext;
 
-			m_pRenderLayouts["DefaultLayout"] = 0;
-			m_pRenderLayouts["SkyLayout"] = 1;
-			m_pRenderLayouts["TerrainLayout"] = 2;
-			m_pRenderLayouts["DecalLayout"] = 3;
-			m_pRenderLayouts["TreeLayout"] = 4;
-			m_pRenderLayouts["defaultAnimatedLayout"] = 5;
-
-			m_pRenderLayouts["ShadowLayout"] = 0;
-			m_pRenderLayouts["treeShadowLayout"] = 1;
-			m_pRenderLayouts["animatedShadowLayout"] = 2;
-
-			m_pRenderLayouts["prepassLayout"] = 0;
 
 			m_pCurrentRenderPass = m_RenderPassesRefs["DefaultRenderPass"];
 
-			m_pOctree = std::make_shared<OctreeContainer<OctreeDataType>>(Box { glm::vec3(100, 25, 100), glm::vec3(0.0, 12.5, 0.0) }, 8);
+			m_pOctree = std::make_shared<OctreeContainer<OctreeSceneItem>>(Box { glm::vec3(100, 25, 100), glm::vec3(0.0, 12.5, 0.0) }, 8);
 		}
 
 		std::shared_ptr<Context> getContext() { return m_pContext; }
@@ -158,7 +150,6 @@ namespace engine
 					.bindingInfo = {
 						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
 
-						{.size = sizeof(GPUAnimationData), .offset = 0, .binding = 2, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "animation_transform_buffer"},
 						{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 5, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"},
 						{.size = sizeof(ShaderObjectData) * AssetManager::MAX_OBJECTS, .offset = 0, .binding = 6, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "object_buffer"}
 
@@ -192,13 +183,20 @@ namespace engine
 					.name = "PrePassBindGroup",
 			};
 
-			m_pDefaultBindGroup = resourceManager->createBindGroup(defaultBindGroup);
-			m_pAnimatedBindGroup = resourceManager->createBindGroup(animatedBindGroup);
-			m_pAnimatedShadowBindGroup = resourceManager->createBindGroup(animateShadowBindGroup);
-			m_pShadowBindGroup = resourceManager->createBindGroup(shadowBindGroup);
-			m_pDecalBindGroup = resourceManager->createBindGroup(decalBindGroup);
-			m_pPrePassBindGroup = resourceManager->createBindGroup(prepassBindGroup);
-			m_pTreeShadowBindGroup = resourceManager->createBindGroup(treeShadowBindGroup);
+
+			m_pRenderLayouts["DefaultLayout"] = { 0, resourceManager->createBindGroup(defaultBindGroup) };
+			m_pRenderLayouts["SkyLayout"] = { 1, m_pRenderLayouts["DefaultLayout"].bindGroup};
+			m_pRenderLayouts["TerrainLayout"] = {2, m_pRenderLayouts["DefaultLayout"].bindGroup };
+			m_pRenderLayouts["DecalLayout"] = {3, resourceManager->createBindGroup(decalBindGroup) };
+			m_pRenderLayouts["TreeLayout"] = {4, m_pRenderLayouts["DefaultLayout"].bindGroup };
+			m_pRenderLayouts["defaultAnimatedLayout"] = {5, resourceManager->createBindGroup(animatedBindGroup) };
+
+			m_pRenderLayouts["ShadowLayout"] = {0, resourceManager->createBindGroup(shadowBindGroup) };
+			m_pRenderLayouts["treeShadowLayout"] = { 1, resourceManager->createBindGroup(treeShadowBindGroup) };
+			m_pRenderLayouts["animatedShadowLayout"] = {2,  resourceManager->createBindGroup(animateShadowBindGroup) };
+
+			m_pRenderLayouts["prepassLayout"] = {0, resourceManager->createBindGroup(prepassBindGroup) };
+
 
 			m_pContext->Renderer()->InitDebugRenderer();
 
@@ -249,20 +247,34 @@ namespace engine
 			return m_pSceneManager.isOfType<T>(node);
 		}
 
-		void insertIntoOctree(Box boundingBox, OctreeDataType octreeItem) {
-			m_pOctree->insert(boundingBox, octreeItem);
-		}
-
 		template <typename T>
-		auto insertIntoScene(T object)
+		auto insertIntoScene(Box boundingBox, T object)
 		{
-			return m_pSceneManager.insert(m_pSceneManager.root, object);
+			auto scene_node = m_pSceneManager.insert(m_pSceneManager.root, object);
+
+			OctreeSceneItem octreeItem;
+			octreeItem.index = scene_node->Index();
+			octreeItem.instance_index= - 1;
+			octreeItem.visible = true;
+
+			m_pOctree->insert(boundingBox, octreeItem);
+			
+			return scene_node;
 		}
 
 		template <typename T, class... Args>
-		auto emplaceIntoScene(Args &&...args)
+		auto emplaceIntoScene(Box boundingBox, Args &&...args)
 		{
-			return m_pSceneManager.emplace<T>(m_pSceneManager.root, std::forward<Args>(args)...);
+			auto scene_node = m_pSceneManager.emplace<T>(m_pSceneManager.root, std::forward<Args>(args)...);
+
+			OctreeSceneItem octreeItem;
+			octreeItem.index = scene_node->Index();
+			octreeItem.instance_index = -1;
+			octreeItem.visible = true;
+
+			m_pOctree->insert(boundingBox, octreeItem);
+
+			return scene_node;
 		}
 
 		template <typename T>
@@ -346,41 +358,8 @@ namespace engine
 
 				Ref<PushConstant> push_constant;
 
-				Ref<BindGroup> selectedBindGroup;
-
-				if (layout == "ShadowLayout") {
-					selectedBindGroup = m_pShadowBindGroup;
-				}
-				else if (layout == "animatedShadowLayout") {
-					selectedBindGroup = m_pAnimatedShadowBindGroup;
-				}
-				else if (layout == "treeShadowLayout") {
-					selectedBindGroup = m_pTreeShadowBindGroup;
-				}
-				else if (layout == "DefaultLayout") {
-					selectedBindGroup = m_pDefaultBindGroup;
-				}
-				else if (layout == "defaultAnimatedLayout") {
-					selectedBindGroup = m_pAnimatedBindGroup;
-				}
-				else if (layout == "TerrainLayout") {
-					selectedBindGroup = m_pDefaultBindGroup;
-				}
-				else if (layout == "TreeLayout") {
-					selectedBindGroup = m_pDefaultBindGroup;
-				}
-				else if (layout == "DecalLayout") {
-					selectedBindGroup = m_pDecalBindGroup;
-				}
-				else if (layout == "SkyLayout") {
-					selectedBindGroup = m_pDefaultBindGroup;
-				}
-				else if (layout == "prepassLayout") {
-					selectedBindGroup = m_pPrePassBindGroup;
-				}
-				else {
-					selectedBindGroup = m_pDefaultBindGroup;
-				}
+				Ref<BindGroup> selectedBindGroup = m_pRenderLayouts[layout].bindGroup;
+;
 
 
 				for (auto& mesh : renderModel->data.renderMeshes)
@@ -413,7 +392,7 @@ namespace engine
 														.transform = transform,
 														.material_index = material_indices[0]
 													  },
-									.layout_index = m_pRenderLayouts.at(layout),
+									.layout_index = m_pRenderLayouts[layout].pipelineLayoutIndex,
 									.uniformIndex = m_pMeshCount });
 					m_pMeshCount++;
 				}
@@ -427,36 +406,8 @@ namespace engine
 
 				Ref<PushConstant> push_constant;
 
-				Ref<BindGroup> selectedBindGroup;
-
-				if (layout == "ShadowLayout") {
-					selectedBindGroup = m_pShadowBindGroup;
-				}
-				else if (layout == "treeShadowLayout") {
-					selectedBindGroup = m_pTreeShadowBindGroup;
-				}
-				else if (layout == "DefaultLayout") {
-					selectedBindGroup = m_pDefaultBindGroup;
-				}
-				else if (layout == "TerrainLayout") {
-					selectedBindGroup = m_pDefaultBindGroup;
-				}
-				else if (layout == "TreeLayout") {
-					selectedBindGroup = m_pDefaultBindGroup;
-				}
-				else if (layout == "DecalLayout") {
-					selectedBindGroup = m_pDecalBindGroup;
-				}
-				else if (layout == "SkyLayout") {
-					selectedBindGroup = m_pDefaultBindGroup;
-				}
-				else if (layout == "prepassLayout") {
-					selectedBindGroup = m_pPrePassBindGroup;
-				}
-				else {
-					selectedBindGroup = m_pDefaultBindGroup;
-				}
-
+				Ref<BindGroup> selectedBindGroup = m_pRenderLayouts[layout].bindGroup;
+				
 				uint32_t material_indices[4] = { 0 };
 				uint32_t firstInstance = m_pMeshCount;
 				for (int i = 0; i < count; i++) {
@@ -490,7 +441,7 @@ namespace engine
 													.transform = transforms[0],
 													.material_index = material_indices[0]
 												  },
-								.layout_index = m_pRenderLayouts.at(layout),
+								.layout_index = m_pRenderLayouts.at(layout).pipelineLayoutIndex,
 								.uniformIndex = firstInstance,
 								.count = count });
 
@@ -504,35 +455,8 @@ namespace engine
 
 				Ref<PushConstant> push_constant;
 
-				Ref<BindGroup> selectedBindGroup;
-
-				if (layout == "ShadowLayout") {
-					selectedBindGroup = m_pShadowBindGroup;
-				}
-				else if (layout == "treeShadowLayout") {
-					selectedBindGroup = m_pTreeShadowBindGroup;
-				}
-				else if (layout == "DefaultLayout") {
-					selectedBindGroup = m_pDefaultBindGroup;
-				}
-				else if (layout == "TerrainLayout") {
-					selectedBindGroup = m_pDefaultBindGroup;
-				}
-				else if (layout == "TreeLayout") {
-					selectedBindGroup = m_pDefaultBindGroup;
-				}
-				else if (layout == "DecalLayout") {
-					selectedBindGroup = m_pDecalBindGroup;
-				}
-				else if (layout == "SkyLayout") {
-					selectedBindGroup = m_pDefaultBindGroup;
-				}
-				else if (layout == "prepassLayout") {
-					selectedBindGroup = m_pPrePassBindGroup;
-				}
-				else {
-					selectedBindGroup = m_pDefaultBindGroup;
-				}
+				Ref<BindGroup> selectedBindGroup = m_pRenderLayouts[layout].bindGroup;
+				
 
 				if (count > 1) {
 
@@ -573,7 +497,7 @@ namespace engine
 														.transform = transforms[0],
 														.material_index = material_indices[0]
 													  },
-									.layout_index = m_pRenderLayouts.at(layout),
+									.layout_index = m_pRenderLayouts.at(layout).pipelineLayoutIndex,
 									.uniformIndex = firstInstance,
 									.count = count });
 				}

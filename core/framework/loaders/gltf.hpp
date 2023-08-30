@@ -819,6 +819,13 @@ namespace framework {
 												//	<< ", " << v.y << ", " << v.z << ")\n";
 
 												currentMesh.data().mesh.Vertices[i + currentvOffset].position = (glm::vec4(v.x, v.y, v.z, 1.0f));
+												if (v.x < m_pMin.x) m_pMin.x = v.x;
+												if (v.y < m_pMin.y) m_pMin.y = v.y;
+												if (v.z < m_pMin.z) m_pMin.z = v.z;
+
+												if (v.x > m_pMax.x) m_pMax.x = v.x;
+												if (v.y > m_pMax.y) m_pMax.y = v.y;
+												if (v.z > m_pMax.z) m_pMax.z = v.z;
 												if (HasAnimation()) {
 
 													mAnimatedMeshes.at(index).Vertices[i + currentvOffset].position = (glm::vec4(v.x, v.y, v.z, 1.0f));
@@ -1289,6 +1296,14 @@ namespace framework {
 
 				index++;
 			}
+
+			MinMaxPoints.MAX_X = m_pMax.x;
+			MinMaxPoints.MAX_Y = m_pMax.y;
+			MinMaxPoints.MAX_Z = m_pMax.z;
+
+			MinMaxPoints.MIN_X = m_pMin.x;
+			MinMaxPoints.MIN_Y = m_pMin.y;
+			MinMaxPoints.MIN_Z = m_pMin.z;
 
 
 			/*

@@ -78,9 +78,11 @@ namespace engine
 	{
 		std::vector<RenderMesh> renderMeshes;
 		std::vector<framework::Animation> animations;
+		std::vector<glm::mat4> transforms{};
 		framework::Skeleton skeleton;
 		std::string name{};
 		bool hasAnimation = false;
+		bool isInstanced = false;
 		bool loaded = false;
 	};
 
@@ -197,8 +199,6 @@ namespace engine
 		void Destroy() {
 
 			auto resourceManager = m_pContext->ResourceManager();
-			for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
-				resourceManager->unmapBuffer(m_pGPUBuffers["material_buffer"], i);
 		}
 
 		RenderModel createModelFromMesh(const std::string& name, const common::Mesh& mesh, std::initializer_list<common::MeshMaterial> materials) {
