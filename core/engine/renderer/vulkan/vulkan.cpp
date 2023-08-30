@@ -18,6 +18,23 @@
 #define VMA_IMPLEMENTATION
 #define VMA_STATIC_VULKAN_FUNCTIONS 1
 
+
+#if 0
+
+#define VMA_DEBUG_LOG_FORMAT(format, ...)
+
+#define VMA_DEBUG_LOG_FORMAT(format, ...) \
+	do                                    \
+	{                                     \
+		printf((format), __VA_ARGS__);    \
+		printf("\n");                     \
+	} while (false)
+
+#define VMA_DEBUG_LOG(str) VMA_DEBUG_LOG_FORMAT("%s", (str))
+
+#endif
+
+
 //#define VMA_VULKAN_VERSION 1001000
 #if defined(ANDROID) || defined(__ANDROID__)
 

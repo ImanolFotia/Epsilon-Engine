@@ -6,17 +6,6 @@
 
 #include "core/framework/exception.hpp"
 
-#define VMA_DEBUG_LOG_FORMAT(format, ...)
-
-#define VMA_DEBUG_LOG_FORMAT(format, ...) \
-	do                                    \
-	{                                     \
-		printf((format), __VA_ARGS__);    \
-		printf("\n");                     \
-	} while (false)
-
-#define VMA_DEBUG_LOG(str) VMA_DEBUG_LOG_FORMAT("%s", (str))
-
 #ifdef WIN32
 #if !defined(__PRETTY_FUNCTION__) && !defined(__GNUC__)
 #define __PRETTY_FUNCTION__ __FUNCSIG__
@@ -572,10 +561,10 @@ namespace engine
 			}
 		}
 
+
 		for (auto& buffer : gpuBufferPool)
 		{
 			for (auto& b : buffer.buffers) {
-				if(b.size > 0)
 				vmaDestroyBuffer(m_pAllocator, b.buffer, b.allocation);
 			}
 		}
@@ -622,7 +611,14 @@ namespace engine
 					pass.renderPassChain.Textures[i].allocation);
 			}
 		}
+
+
+		if (m_pVkDataPtr->defaultRenderPass.renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE) {
+			vkDestroySampler(m_pVkDataPtr->logicalDevice, m_pVkDataPtr->defaultRenderPass.renderPassChain.DepthTexture.sampler, nullptr);
+		}
+
 		vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool, nullptr);
+		vkDestroyCommandPool(m_pVkDataPtr->logicalDevice, m_pTransferCommandPool, nullptr);
 
 		vkDestroyDescriptorSetLayout(m_pVkDataPtr->logicalDevice, m_pGlobalDescriptorSetLayout, nullptr);
 		vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pGlobalDescriptorPool, nullptr);
@@ -723,12 +719,12 @@ namespace engine
 		vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, vertexStagingBuffer.buffer, vertexBuffer->buffer,
 			vertices->size() * sizeof(common::AnimatedVertex), vertexBuffer->allocatedVertices * sizeof(common::AnimatedVertex));
 
-		vmaDestroyBuffer(m_pAllocator, vertexStagingBuffer.buffer, vertexStagingBuffer.allocation);
 
 		vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, indexStagingBuffer.buffer, indexBuffer->buffer,
 			indices->size() * sizeof(IndexType), indexBuffer->allocatedVertices * sizeof(IndexType));
 
 		vmaDestroyBuffer(m_pAllocator, indexStagingBuffer.buffer, indexStagingBuffer.allocation);
+		vmaDestroyBuffer(m_pAllocator, vertexStagingBuffer.buffer, vertexStagingBuffer.allocation);
 
 		MeshResource meshResource = {
 			.vertexBuffer = vertexBufferRef,
@@ -847,9 +843,13 @@ namespace engine
 	void* VulkanResourceManager::mapBuffer(Ref<Buffer> bufferRef, uint32_t currentFrame)
 	{
 		auto buffer = gpuBufferPool.get(bufferRef);
-		buffer->buffers[currentFrame].mapped = true;
 		void* data;
+		if (buffer->buffers[currentFrame].mapped) {
+
+			vmaUnmapMemory(m_pAllocator, buffer->buffers[currentFrame].allocation);
+		}
 		vmaMapMemory(m_pAllocator, buffer->buffers[currentFrame].allocation, &data);
+		buffer->buffers[currentFrame].mapped = true;
 		return data;
 	}
 	void VulkanResourceManager::unmapBuffer(Ref<Buffer> bufferRef, uint32_t currentFrame)
@@ -867,6 +867,10 @@ namespace engine
 		buffer->buffers[currentFrame].mapped = true;
 
 		void* data;
+		if (buffer->mapped) {
+
+			vmaUnmapMemory(m_pAllocator, buffer->buffers[currentFrame].allocation);
+		}
 		vmaMapMemory(m_pAllocator, buffer->buffers[currentFrame].allocation, &data);
 
 		return data;

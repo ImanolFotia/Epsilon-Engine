@@ -336,7 +336,7 @@ namespace engine
 		memcpy(data, vertices.data(), vertices.size() * sizeof(common::AnimatedVertex));
 		vmaUnmapMemory(m_pAllocator, stagingBuffer.allocation);
 		if (0)
-			IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", vertices.size() * sizeof(common::Vertex), " bytes in hosted staging buffer");
+			IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", vertices.size() * sizeof(common::AnimatedVertex), " bytes in hosted staging buffer");
 		return stagingBuffer;
 	}
 
