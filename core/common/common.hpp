@@ -98,6 +98,36 @@ namespace common {
         float MAX_X = 0.0f;
         float MAX_Y = 0.0f;
         float MAX_Z = 0.0f;
+
+        MIN_MAX_POINTS() = default;
+
+        MIN_MAX_POINTS(glm::vec3 min, glm::vec3 max) {
+            MIN_X = min.x;
+            MIN_Y = min.y;
+            MIN_Z = min.z;
+
+            MAX_X = max.x;
+            MAX_Y = max.y;
+            MAX_Z = max.z;
+        }
+
+        glm::vec3 getCenterOfMass() {
+            return  glm::vec3(MAX_X + MIN_X, MAX_Y + MIN_Y, MAX_Z + MIN_Z);
+        }
+
+        glm::vec3 getSize() {
+            return glm::vec3(glm::abs(MAX_X - MIN_X),
+                glm::abs(MAX_Y - MIN_Y),
+                glm::abs(MAX_Z - MIN_Z));
+        }
+
+        glm::vec3 Min() {
+            return glm::vec3(MIN_X, MIN_Y, MIN_Z);
+        }
+
+        glm::vec3 Max() {
+            return glm::vec3(MAX_X, MAX_Y, MAX_Z);
+        }
     };
 
     struct BoundingBox
