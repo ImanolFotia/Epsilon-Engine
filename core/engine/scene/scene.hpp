@@ -19,8 +19,15 @@
 namespace engine
 {
 
+	struct EntityBehaviour {
+		std::function<void(void)> callback;
+		bool once = false;
+	};
 	class Scene
 	{
+		using OctreeRenderType = std::shared_ptr<Node<RenderModel>>;
+		using OctreeRenderItem = typename std::list<OctreeItem<OctreeRenderType>>::iterator;
+		using OctreeNodeType = std::shared_ptr<NodeBase>;
 		AssetManager m_pAssetManager;
 		std::shared_ptr<audio::AudioManager> m_pAudioManager;
 		// OctreeContainer<std::shared_ptr<NodeBase>> m_pOctree;
@@ -34,6 +41,7 @@ namespace engine
 			Ref<BindGroup> bindGroup;
 		};
 
+
 		struct OctreeSceneItem {
 			OctreeSceneItem() = default;
 			int index;
@@ -45,7 +53,8 @@ namespace engine
 
 		Ref<RenderPass> m_pCurrentRenderPass;
 
-		std::shared_ptr<OctreeContainer<OctreeSceneItem>> m_pOctree;
+		std::shared_ptr<OctreeContainer<OctreeRenderType>> m_pRenderOctree;
+		std::shared_ptr<OctreeContainer<OctreeNodeType>> m_pNodeOctree;
 
 		Frustum m_pFrustum;
 
@@ -67,7 +76,8 @@ namespace engine
 
 			m_pCurrentRenderPass = m_RenderPassesRefs["DefaultRenderPass"];
 
-			m_pOctree = std::make_shared<OctreeContainer<OctreeSceneItem>>(Box { glm::vec3(100, 25, 100), glm::vec3(0.0, 12.5, 0.0) }, 8);
+			m_pNodeOctree = std::make_shared<OctreeContainer<OctreeNodeType>>(Box { glm::vec3(100, 25, 100), glm::vec3(0.0, 12.5, 0.0) }, 8);
+			m_pRenderOctree = std::make_shared<OctreeContainer<OctreeRenderType>>(Box{ glm::vec3(100, 25, 100), glm::vec3(0.0, 12.5, 0.0) }, 8);
 		}
 
 		std::shared_ptr<Context> getContext() { return m_pContext; }
@@ -235,9 +245,26 @@ namespace engine
 			m_pFrustum.CalculateFrustum(proj * view, glm::mat4(1.0));
 		}
 
+		auto Cull() {
+			return m_pRenderOctree->search(m_pFrustum);
+		}
+
+		void RelocateObject(Box boundingBox, int index) {
+
+			std::shared_ptr<Node<RenderModel>> node = std::static_pointer_cast<Node<RenderModel>>(m_pSceneManager.get(index));
+			auto octree_render_node = getChild<typename std::list<OctreeItem<OctreeRenderType>>::iterator>(node->Parent());
+			if (octree_render_node != nullptr) {
+				auto new_item = m_pRenderOctree->relocate(octree_render_node->data, boundingBox);
+			}
+		}
+
 		template<typename T>
 		void removeFromScene(uint32_t index) {
 			std::shared_ptr<Node<T>> node = std::static_pointer_cast<Node<T>>(m_pSceneManager.get(index));
+				auto octree_render_node = getChild<typename std::list<OctreeItem<OctreeRenderType>>::iterator>(node);
+				if(octree_render_node != nullptr)
+					m_pRenderOctree->erase(octree_render_node->data);
+
 			m_pSceneManager.erase<T>(node);
 		}
 
@@ -252,12 +279,7 @@ namespace engine
 		{
 			auto scene_node = m_pSceneManager.insert(m_pSceneManager.root, object);
 
-			OctreeSceneItem octreeItem;
-			octreeItem.index = scene_node->Index();
-			octreeItem.instance_index= - 1;
-			octreeItem.visible = true;
-
-			m_pOctree->insert(boundingBox, octreeItem);
+			m_pNodeOctree->insert(boundingBox, scene_node);
 			
 			return scene_node;
 		}
@@ -267,38 +289,93 @@ namespace engine
 		{
 			auto scene_node = m_pSceneManager.emplace<T>(m_pSceneManager.root, std::forward<Args>(args)...);
 
-			OctreeSceneItem octreeItem;
-			octreeItem.index = scene_node->Index();
-			octreeItem.instance_index = -1;
-			octreeItem.visible = true;
-
-			m_pOctree->insert(boundingBox, octreeItem);
+			m_pNodeOctree->insert(boundingBox, scene_node);
 
 			return scene_node;
 		}
 
 		template <typename T>
-		auto emplaceIntoScene()
+		auto emplaceIntoScene(Box boundingBox)
 		{
-			return m_pSceneManager.emplace<T>(m_pSceneManager.root);
+			auto scene_node = m_pSceneManager.emplace<T>(m_pSceneManager.root);
+			m_pNodeOctree->insert(boundingBox, scene_node);
+
+			return scene_node;
 		}
 
 		template <typename P, typename T>
 		auto insertIntoNode(std::shared_ptr<Node<P>> parent, T object)
 		{
-			return m_pSceneManager.insert(parent, object);
+			auto node = m_pSceneManager.insert(parent, object);
+
+			return node;
+		}
+
+		template <typename P, typename T>
+		auto insertIntoNode(Box boundingBox, std::shared_ptr<Node<P>> parent, T object)
+		{
+			auto node = m_pSceneManager.insert(parent, object);
+
+			if (typeid(T) == typeid(RenderModel)) {
+				std::list<OctreeItem<OctreeRenderType>>::iterator octree_node = m_pRenderOctree->insert(boundingBox, node);
+				insertIntoNode(parent, octree_node);
+			}
+			return node;
+		}
+
+		template<typename T, typename P>
+		void insertIntoOctree(Box boundingBox, std::shared_ptr<Node<P>> parent, T object) {
+
+			auto node = m_pSceneManager.insert(parent, object);
+
+			if (typeid(T) == typeid(RenderModel)) {
+				std::list<OctreeItem<OctreeRenderType>>::iterator octree_node = m_pRenderOctree->insert(boundingBox, node);
+				insertIntoNode(parent, octree_node);
+			}
+			return node;
 		}
 
 		template <typename T, typename P, class... Args>
 		auto emplaceIntoNode(std::shared_ptr<Node<P>> parent, Args &&...args)
 		{
-			return m_pSceneManager.emplace<T>(parent, std::forward<Args>(args)...);
+			auto node = m_pSceneManager.emplace<T>(parent, std::forward<Args>(args)...);
+			return node;
+		}
+
+
+		template <typename T, typename P, class... Args>
+		auto emplaceIntoNode(Box boundingBox, std::shared_ptr<Node<P>> parent, Args &&...args)
+		{
+
+			auto node = m_pSceneManager.emplace<T>(parent, std::forward<Args>(args)...);
+			if (typeid(T) == typeid(RenderModel)) {
+
+				std::list<OctreeItem<OctreeRenderType>>::iterator octree_node = m_pRenderOctree->insert(boundingBox, node);
+				insertIntoNode(parent, octree_node);
+			}
+
+			return node;
 		}
 
 		template <typename T, typename P>
 		auto emplaceIntoNode(std::shared_ptr<Node<P>> parent)
 		{
-			return m_pSceneManager.emplace<T>(parent);
+			auto node = m_pSceneManager.emplace<T>(parent);
+			return node;
+
+		}
+
+		template <typename T, typename P>
+		auto emplaceIntoNode(Box boundingBox, std::shared_ptr<Node<P>> parent)
+		{
+			auto node = m_pSceneManager.emplace<T>(parent);
+			if (typeid(T) == typeid(RenderModel)) {
+				std::list<OctreeItem<OctreeRenderType>>::iterator octree_node = m_pRenderOctree->insert(boundingBox, node);
+				insertIntoNode(parent, octree_node);
+			}
+
+			return node;
+
 		}
 
 		template <typename T>
@@ -320,6 +397,12 @@ namespace engine
 
 		template <typename T, typename P>
 		auto getChild(std::shared_ptr<Node<P>> parent)
+		{
+			return m_pSceneManager.to<T>(m_pSceneManager.getChild<T>(parent));
+		}
+
+		template <typename T>
+		auto getChild(std::shared_ptr<NodeBase> parent)
 		{
 			return m_pSceneManager.to<T>(m_pSceneManager.getChild<T>(parent));
 		}
@@ -360,8 +443,6 @@ namespace engine
 
 				Ref<BindGroup> selectedBindGroup = m_pRenderLayouts[layout].bindGroup;
 ;
-
-
 				for (auto& mesh : renderModel->data.renderMeshes)
 				{
 					if (renderer->numPushedCommands() >= engine::MAX_COMMAND_QUEUE_SIZE) {

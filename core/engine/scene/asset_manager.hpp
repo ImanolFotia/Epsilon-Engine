@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <string>
 #include <queue>
+#include <any>
 
 #include <core/engine/renderer/resource_manager.hpp>
 #include <core/framework/loaders/model.h>
@@ -79,10 +80,13 @@ namespace engine
 		std::vector<RenderMesh> renderMeshes;
 		std::vector<framework::Animation> animations;
 		std::vector<glm::mat4> transforms{};
+		std::vector<std::any> instance_data;
+		common::MIN_MAX_POINTS min_max_points;
 		framework::Skeleton skeleton;
 		std::string name{};
 		bool hasAnimation = false;
 		bool isInstanced = false;
+		bool visible = false;
 		bool loaded = false;
 	};
 
@@ -379,58 +383,68 @@ namespace engine
 			return model;
 		}
 
-		RenderModel loadModel(const std::string& path)
+		RenderModel getModel(const std::string name) {
+			return m_pModels.at(name);
+		}
+
+		RenderModel loadModel(const std::string& path, const std::string& name = "")
 		{
 			std::string prefix = "./assets/";
+			std::string model_name = name;
+			if (name == "")
+				model_name = path;
 
 			auto resourceManager = m_pContext->ResourceManager();
-			if (m_pModels.contains(path)) {
-				for (auto& mesh : m_pModels.at(path).renderMeshes) {
+			if (m_pModels.contains(model_name)) {
+				for (auto& mesh : m_pModels.at(model_name).renderMeshes) {
 					mesh.id = mesh_counter;
 					mesh_counter++;
 				}
-				return m_pModels.at(path);
+				return m_pModels.at(model_name);
 			}
 
-			if (path.find(":") != std::string::npos) {
+			if (model_name.find(":") != std::string::npos) {
 				prefix = "";
 			}
 
 			//if()
-			const std::string ext = path.substr(path.find_last_of('.') + 1, path.length());
+			const std::string ext = model_name.substr(model_name.find_last_of('.') + 1, model_name.length());
 
 			std::unique_ptr<framework::ModelBase> inModel;
 
 			if (ext == "eml") {
-				inModel = std::make_unique<framework::Model>(prefix + path);
+				inModel = std::make_unique<framework::Model>(prefix + model_name);
 			}
 			else {
-				inModel = std::make_unique<framework::gltfModel>(prefix + path);
+				inModel = std::make_unique<framework::gltfModel>(prefix + model_name);
 			}
 
 
 			int index = 0;
-			RenderModel& model = m_pModels[path];
+			RenderModel& model = m_pModels[model_name];
+
+
 
 			model.hasAnimation = inModel->HasAnimation();
 
 
-			model.name = path;
+			model.name = model_name;
 			model.animations = inModel->Animations();
 			model.skeleton = inModel->Skeleton();
+			model.min_max_points = inModel->getMinMax();
 			for (auto& mesh : inModel->Meshes())
 			{
 				if (mesh.data().mesh.Indices.size() <= 0) continue;
 
 				RenderMesh subRenderC;
 				if (inModel->HasAnimation()) {
-					subRenderC.mesh = addMesh(path + "_submesh_" + std::to_string(index), inModel->AnimatedMeshes().at(index));
+					subRenderC.mesh = addMesh(model_name + "_submesh_" + std::to_string(index), inModel->AnimatedMeshes().at(index));
 				}
 				else {
-					subRenderC.mesh = addMesh(path + "_submesh_" + std::to_string(index), mesh.data().mesh);
+					subRenderC.mesh = addMesh(model_name + "_submesh_" + std::to_string(index), mesh.data().mesh);
 				}
 
-				std::string material_name = path + "_submesh_" + std::to_string(index) + "_material";
+				std::string material_name = model_name + "_submesh_" + std::to_string(index) + "_material";
 				subRenderC.numMaterials = 1;
 				subRenderC.material_keys[0] = std::hash<std::string>{}(material_name);
 				subRenderC.id = mesh_counter;
