@@ -62,6 +62,10 @@ namespace framework
             return m_pHasAnimation;
         }
 
+        common::MIN_MAX_POINTS getMinMax() {
+            return MinMaxPoints;
+        }
+
     };
 
     class Model : public ModelBase
