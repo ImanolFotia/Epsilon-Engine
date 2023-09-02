@@ -421,7 +421,7 @@ public:
 
 			///////// USER INPUT BEGINS HERE
 			ImGui::SetNextWindowPos(ImVec2(10, 10));
-			ImGui::Begin("Info", nullptr, ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoCollapse);
+			ImGui::Begin("Info", nullptr, ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize);
 			ImGui::Text("Timings:");
 			ImGui::BulletText("Framerate %.1f FPS", ImGui::GetIO().Framerate);
 			ImGui::BulletText("frametime %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
