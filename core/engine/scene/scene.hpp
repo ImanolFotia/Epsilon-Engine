@@ -23,9 +23,17 @@ namespace engine
 		std::function<void(void)> callback;
 		bool once = false;
 	};
+
+	struct OctreeSceneItem {
+		OctreeSceneItem() = default;
+		std::shared_ptr<Node<RenderModel>> renderModel;
+		int index;
+		int instance_index;
+		bool visible;
+	};
 	class Scene
 	{
-		using OctreeRenderType = std::shared_ptr<Node<RenderModel>>;
+		using OctreeRenderType = OctreeSceneItem;
 		using OctreeRenderItem = typename std::list<OctreeItem<OctreeRenderType>>::iterator;
 		using OctreeNodeType = std::shared_ptr<NodeBase>;
 		AssetManager m_pAssetManager;
@@ -42,12 +50,6 @@ namespace engine
 		};
 
 
-		struct OctreeSceneItem {
-			OctreeSceneItem() = default;
-			int index;
-			int instance_index;
-			bool visible;
-		};
 
 		std::unordered_map<std::string, RenderLayout> m_pRenderLayouts;
 
@@ -279,7 +281,7 @@ namespace engine
 		{
 			auto scene_node = m_pSceneManager.insert(m_pSceneManager.root, object);
 
-			m_pNodeOctree->insert(boundingBox, scene_node);
+			m_pNodeOctree->insert(boundingBox, { scene_node, scene_node->Index() });
 			
 			return scene_node;
 		}
@@ -317,22 +319,17 @@ namespace engine
 			auto node = m_pSceneManager.insert(parent, object);
 
 			if (typeid(T) == typeid(RenderModel)) {
-				std::list<OctreeItem<OctreeRenderType>>::iterator octree_node = m_pRenderOctree->insert(boundingBox, node);
+				OctreeSceneItem item;
+				item.renderModel = node;
+				item.index = node->Index();
+				std::list<OctreeItem<OctreeRenderType>>::iterator octree_node = m_pRenderOctree->insert(boundingBox, item);
 				insertIntoNode(parent, octree_node);
 			}
 			return node;
 		}
 
-		template<typename T, typename P>
-		void insertIntoOctree(Box boundingBox, std::shared_ptr<Node<P>> parent, T object) {
-
-			auto node = m_pSceneManager.insert(parent, object);
-
-			if (typeid(T) == typeid(RenderModel)) {
-				std::list<OctreeItem<OctreeRenderType>>::iterator octree_node = m_pRenderOctree->insert(boundingBox, node);
-				insertIntoNode(parent, octree_node);
-			}
-			return node;
+		void insertIntoOctree(Box boundingBox, OctreeSceneItem item) {
+			std::list<OctreeItem<OctreeRenderType>>::iterator octree_node = m_pRenderOctree->insert(boundingBox, item);
 		}
 
 		template <typename T, typename P, class... Args>
@@ -350,7 +347,10 @@ namespace engine
 			auto node = m_pSceneManager.emplace<T>(parent, std::forward<Args>(args)...);
 			if (typeid(T) == typeid(RenderModel)) {
 
-				std::list<OctreeItem<OctreeRenderType>>::iterator octree_node = m_pRenderOctree->insert(boundingBox, node);
+				OctreeSceneItem item;
+				item.renderModel = node;
+				item.index = node->Index();
+				std::list<OctreeItem<OctreeRenderType>>::iterator octree_node = m_pRenderOctree->insert(boundingBox, item);
 				insertIntoNode(parent, octree_node);
 			}
 
@@ -370,7 +370,10 @@ namespace engine
 		{
 			auto node = m_pSceneManager.emplace<T>(parent);
 			if (typeid(T) == typeid(RenderModel)) {
-				std::list<OctreeItem<OctreeRenderType>>::iterator octree_node = m_pRenderOctree->insert(boundingBox, node);
+				OctreeSceneItem item;
+				item.renderModel = node;
+				item.index = node->Index();
+				std::list<OctreeItem<OctreeRenderType>>::iterator octree_node = m_pRenderOctree->insert(boundingBox, item);
 				insertIntoNode(parent, octree_node);
 			}
 
