@@ -88,18 +88,17 @@ namespace BSP
 
 			auto resourceManager = Epsilon::getContext()->ResourceManager();
 
+			Epsilon::getContext()->Renderer()->InitDebugRenderer();
+
 			engine::BindGroupInfo skyInfo = {
-				.bindingInfo = {
-					{.size = sizeof(ShaderData), .binding = 0, .type = en::UNIFORM_BUFFER}},
+				.bindingInfo = {},
 				.renderPass = "Default",
 				.name = "SkyMaterial" };
 
 			skyMaterial = resourceManager->createBindGroup(skyInfo);
 
 			engine::BindGroupInfo shadowInfo = {
-				.bindingInfo = {{.size = sizeof(ShaderData),
-								 .binding = 0,
-								 .type = en::UNIFORM_BUFFER}},
+				.bindingInfo = {},
 				.renderPass = "Shadow",
 				.name = "ShadowMaterial",
 			};
@@ -112,7 +111,7 @@ namespace BSP
 				"ModelMatrix",
 				{ .size = sizeof(PushConstant), .data = &m_pMap.pushConstant });
 
-			const char* filename = "./assets/models/jw/01.bsp";
+			const char* filename = "./assets/models/hl2/background01.bsp";
 
 			SourceBSP bspMap(filename);
 
@@ -126,7 +125,6 @@ namespace BSP
 
 			engine::BindGroupInfo bindGroupInfo = {
 				.bindingInfo = {
-					{.size = sizeof(ShaderData), .offset = 0, .binding = 0, .type = en::UNIFORM_BUFFER},
 					{.size = sizeof(Material) * bspMap.numMaterials(), .offset = 0, .binding = 3, .type = en::SHADER_STORAGE, .buffer = "material_buffer"}},
 				.inputs = {
 					{.renderPass = "Shadow", .index = 1, .bindingPoint = 1},
