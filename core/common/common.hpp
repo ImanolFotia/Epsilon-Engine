@@ -116,9 +116,18 @@ namespace common {
         }
 
         glm::vec3 getSize() {
-            return glm::vec3(glm::abs(MAX_X - MIN_X),
-                glm::abs(MAX_Y - MIN_Y),
-                glm::abs(MAX_Z - MIN_Z));
+
+            float mx = MIN_X < MAX_X ? MIN_X : MAX_X;
+            float my = MIN_Y < MAX_Y ? MIN_Y : MAX_Y;
+            float mz = MIN_Z < MAX_Z ? MIN_Z : MAX_Z;
+
+            float Mx = MIN_X > MAX_X ? MIN_X : MAX_X;
+            float My = MIN_Y > MAX_Y ? MIN_Y : MAX_Y;
+            float Mz = MIN_Z > MAX_Z ? MIN_Z : MAX_Z;
+
+            return glm::vec3(glm::abs(Mx - mx),
+                glm::abs(My - my),
+                glm::abs(Mz - mz));
         }
 
         glm::vec3 Min() {
