@@ -263,9 +263,9 @@ namespace engine
 		template<typename T>
 		void removeFromScene(uint32_t index) {
 			std::shared_ptr<Node<T>> node = std::static_pointer_cast<Node<T>>(m_pSceneManager.get(index));
-				auto octree_render_node = getChild<typename std::list<OctreeItem<OctreeRenderType>>::iterator>(node);
-				if(octree_render_node != nullptr)
-					m_pRenderOctree->erase(octree_render_node->data);
+				//auto octree_render_node = getChild<typename std::list<OctreeItem<OctreeRenderType>>::iterator>(node);
+				//if(octree_render_node != nullptr)
+				//	m_pRenderOctree->erase(octree_render_node->data);
 
 			m_pSceneManager.erase<T>(node);
 		}
