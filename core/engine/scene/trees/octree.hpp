@@ -126,7 +126,7 @@ namespace engine
 					check_child(i, box, items);
 				}
 			}
-
+			/*
 			for (auto& worker : m_Workers)
 			{
 				if (worker.joinable())
@@ -134,7 +134,7 @@ namespace engine
 					std::cout << "Thread " << worker.get_id() << " has finished." << std::endl;
 					worker.join();
 				}
-			}
+			}*/
 		}
 
 		void check_child(int index, const Box& box, std::list<T>& items) 

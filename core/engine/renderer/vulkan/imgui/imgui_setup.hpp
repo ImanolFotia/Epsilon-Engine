@@ -11,6 +11,7 @@
 // Read comments in imgui_impl_vulkan.h.
 
 #include <imgui.h>
+#include <ImGuizmo/ImGuizmo.h>
 #include <ImPlot/implot.h>
 #include <IconsFontAwesome5.h>
 #include <modules/imgui/imgui_impl_glfw.h>
@@ -426,11 +427,12 @@ public:
 			ImGui::BulletText("Framerate %.1f FPS", ImGui::GetIO().Framerate);
 			ImGui::BulletText("frametime %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
 			ImGui::BulletText("Draw calls: %i", resources.numDrawCalls);
-			static float frametime_values[1000] = {};
-			static int frametime_values_offset = 0;
+			//static float frametime_values[1000] = {};
+			//static int frametime_values_offset = 0;
 
-			frametime_values_offset = (frametime_values_offset + 1) % IM_ARRAYSIZE(frametime_values);
-			frametime_values[frametime_values_offset] = 1000.0 / ImGui::GetIO().Framerate;
+			//frametime_values_offset = (frametime_values_offset + 1) % IM_ARRAYSIZE(frametime_values);
+			//frametime_values[frametime_values_offset] = 1000.0 / ImGui::GetIO().Framerate;
+			//SparkLine("Frametime", "Frametime", frametime_values, 1000, 0.5, 16.0, frametime_values_offset, ImVec4(1.0, 1.0, 1.0, 1.0), ImVec2(200, 50));
 
 			ImGui::Separator();
 			const char* gpu_name = resources.GPUName.c_str();
