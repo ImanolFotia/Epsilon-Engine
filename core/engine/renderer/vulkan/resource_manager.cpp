@@ -102,9 +102,12 @@ namespace engine
 											 .format = format,
 											 .usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT |
 													  VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
-													  VK_IMAGE_USAGE_SAMPLED_BIT });
+													  VK_IMAGE_USAGE_SAMPLED_BIT,
+			 }
+		);
 
 		texture.format = format;
+		texture.name = texInfo.name;
 
 		transitionImageLayout(*m_pVkDataPtr, m_pTransferCommandPool, texture.image,
 			format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
@@ -131,7 +134,7 @@ namespace engine
 		ResourcesMemory.m_pTextureBufferAllocationSize += size;
 
 		//Call gen mips
-			pGenerateMipMaps(texInfo, texture);
+		pGenerateMipMaps(texInfo, texture);
 
 
 		vk::createTextureSampler(*m_pVkDataPtr, texture);
@@ -593,7 +596,7 @@ namespace engine
 
 			for (auto& uniformBuffer : pass.uniformBuffer)
 				for (auto& b : uniformBuffer.buffers) {
-					if(b.buffer != VK_NULL_HANDLE)
+					if (b.buffer != VK_NULL_HANDLE)
 						vmaDestroyBuffer(m_pAllocator, b.buffer, b.allocation);
 				}
 
@@ -650,12 +653,12 @@ namespace engine
 		std::vector<uint32_t>* indices = &meshInfo.indices;
 
 		auto maxOffset = [](auto& indices) -> uint32_t
-		{
-			uint32_t out = 0;
-			for (auto& i : indices)
-				out = i > out ? i : out;
-			return out;
-		};
+			{
+				uint32_t out = 0;
+				for (auto& i : indices)
+					out = i > out ? i : out;
+				return out;
+			};
 
 		Ref<Buffer> vertexBufferRef = pFetchVertexBuffer(vertices->size());
 		vk::VulkanBuffer* vertexBuffer = vertexBufferPool.get(vertexBufferRef);
@@ -700,12 +703,12 @@ namespace engine
 		std::vector<uint32_t>* indices = &meshInfo.indices;
 
 		auto maxOffset = [](auto& indices) -> uint32_t
-		{
-			uint32_t out = 0;
-			for (auto& i : indices)
-				out = i > out ? i : out;
-			return out;
-		};
+			{
+				uint32_t out = 0;
+				for (auto& i : indices)
+					out = i > out ? i : out;
+				return out;
+			};
 
 		Ref<Buffer> vertexBufferRef = pFetchVertexBuffer(vertices->size(), sizeof(common::AnimatedVertex));
 		vk::VulkanBuffer* vertexBuffer = vertexBufferPool.get(vertexBufferRef);

@@ -139,6 +139,19 @@ namespace engine
 
 		}
 
+		const std::unordered_map<std::string, Ref<Texture>>& getImages() {
+			return m_pImages;
+		}
+
+		const std::unordered_map<std::string, RenderModel>& getModels() {
+			return m_pModels;
+		}
+
+		const std::unordered_map<std::string, AudioBuffer>& getAudios() {
+			return m_pAudioBuffers;
+		}
+
+
 		std::vector<glm::mat4*> transformBuffer;
 		std::vector < ShaderObjectData*> objectBuffer;
 		CursorInfo* infoBufferPtr;
@@ -383,7 +396,7 @@ namespace engine
 			return model;
 		}
 
-		RenderModel getModel(const std::string name) {
+		RenderModel& getModel(const std::string& name) {
 			return m_pModels.at(name);
 		}
 

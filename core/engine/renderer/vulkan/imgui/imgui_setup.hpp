@@ -178,6 +178,7 @@ public:
 		std::string render_pass{};
 		uint32_t index;
 		glm::ivec2 size;
+		std::string name;
 	};
 
 	void Enable()

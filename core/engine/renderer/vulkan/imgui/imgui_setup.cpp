@@ -18,6 +18,7 @@ uint32_t ImGuiRenderer::addTexture(const std::string& renderpass, int index)
 	m_pImages[texture.name]->index = index;
 	m_pImages[texture.name]->render_pass = renderpass;
 	m_pImages[texture.name]->size = { texture.info.width, texture.info.height };
+	m_pImages[texture.name]->name = texture.name;
 	m_pImageCount++;
 	return m_pImageCount-1;
 }
@@ -32,6 +33,7 @@ uint32_t ImGuiRenderer::addTexture(engine::Ref<engine::Texture> texture_ref) {
 	m_pImages[texture->name]->index = texture->index;
 	m_pImages[texture->name]->size = { texture->info.width, texture->info.height };
 	m_pImages[texture->name]->render_pass = "GlobalRenderPass";
+	m_pImages[texture->name]->name = texture->name;
 	m_pImageCount++;
 	return m_pImageCount - 1;
 }
