@@ -1,0 +1,30 @@
+cmake_minimum_required(VERSION 3.0.0)
+project(Editor VERSION 0.1.0)
+set(CMAKE_CXX_STANDARD 20)
+
+include_directories(${CMAKE_SOURCE_DIR} ../)
+
+set_source_files_properties( ${PROJECT_ICON} PROPERTIES RESOURCES Resources )
+
+add_executable(${PROJECT_NAME} main.cpp ${PROJECT_ICON})
+
+target_sources(${PROJECT_NAME} PRIVATE main.cpp)
+
+add_dependencies(${PROJECT_NAME} Epsilon)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_DL_LIBS})
+
+if (MSVC)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
+    target_link_libraries(${PROJECT_NAME} PUBLIC Epsilon)
+else ()
+    target_link_libraries(${PROJECT_NAME} PUBLIC Epsilon)
+endif()
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR})
+
+target_link_libraries(${PROJECT_NAME} PUBLIC ${Vulkan_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PUBLIC ${Vulkan_INCLUDE_DIR})
+
+set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}")
+include(InstallRequiredSystemLibraries)
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
