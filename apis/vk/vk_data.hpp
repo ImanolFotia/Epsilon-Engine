@@ -72,7 +72,7 @@ namespace vk
 
     struct VulkanTexture
     {
-        uint32_t index = 0;
+        int32_t index = -1;
         VulkanTextureInfo info{};
         VulkanTextureBindingType bindingType = MATERIAL_SAMPLER;
         VkImageCreateInfo imageInfo{};
