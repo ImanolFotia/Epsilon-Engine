@@ -97,7 +97,6 @@ namespace utils
 
         float DeltaTime = float(currentTime - LastTime);
 
-        static double lastX = 0.0, lastY = 0.0;
         // auto winSize =
 
         // glfwGetWindowSize(window, &winx, &winy);
@@ -105,6 +104,12 @@ namespace utils
         auto _Joystick = framework::Input::Joystick::JoystickManager::PrimaryJoystick();
 
         float horizontal = 0.0f, vertical = 0.0f;
+
+        if (resetDeltas) {
+            lastX = framework::Input::Mouse::XPOS;
+            lastY = framework::Input::Mouse::YPOS;
+            resetDeltas = false;
+        }
 
         if (!_Joystick->getJoystickIsPresent())
         {

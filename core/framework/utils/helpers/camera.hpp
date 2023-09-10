@@ -86,12 +86,16 @@ namespace utils
         float getNearPlane() { return near_plane; }
         float getFarPlane() { return far_plane; }
 
+        void ResetDeltas() {
+            resetDeltas = true;
+        }
     private:
         void LockCamera(void);
 
         void HandleInputs(framework::Window::windowType *&);
 
         void GetExternalInputs(void);
+
 
 
     public:
@@ -109,25 +113,29 @@ namespace utils
         float jitter_multiplier = 1.0;
 
     private:
-        glm::vec3 Rigth;
-        glm::vec3 Up;
-        glm::vec3 Frustrum;
-        glm::vec3 newOrientation;
-        glm::vec3 newPosition;
-        glm::mat4 PrevView;
+        glm::vec3 Rigth{};
+        glm::vec3 Up{};
+        glm::vec3 Frustrum{};
+        glm::vec3 newOrientation{};
+        glm::vec3 newPosition{};
+        glm::mat4 PrevView{};
         bool OrientationhasChanged;
         bool PositionhasChanged;
         double verticalAngle;
         double horizontalAngle;
         float near_plane;
         float far_plane;
-        glm::mat4 ViewMatrix;
-        glm::mat4 ProjectionMatrix;
-        glm::vec3 Position;
-        glm::vec3 Orientation;
-        glm::vec3 LastOrientation;
-        glm::vec3 LastPosition;
-        glm::vec3 DeltaVector, MovementVector;
+        glm::mat4 ViewMatrix = glm::mat4(1.0f);
+        glm::mat4 ProjectionMatrix = glm::mat4(1.0f);
+        glm::vec3 Position{};
+        glm::vec3 Orientation{};
+        glm::vec3 LastOrientation{};
+        glm::vec3 LastPosition{};
+        glm::vec3 DeltaVector{}, MovementVector{};
+
+        double lastX = 0.0, lastY = 0.0;
+
+        bool resetDeltas;
     };
 } // namespace Epsilon
 #endif // CAMERA_H_INCLUDED
