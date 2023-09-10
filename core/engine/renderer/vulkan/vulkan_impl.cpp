@@ -467,12 +467,15 @@ namespace engine
 				vkDestroyImageView(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.Textures[i].imageView, nullptr);
 				vmaDestroyImage(m_pAllocator, renderPass->renderPassChain.Textures[i].image,
 					renderPass->renderPassChain.Textures[i].allocation);
-			}
-			if (renderPass->renderPassChain.hasDepthSampler == true) {
-				/*if (renderPass->renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE)
-					vkDestroySampler(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.DepthTexture.sampler, nullptr);*/
-
-			}
+			}/*
+			 {
+				if (renderPass->renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE)
+					vkDestroySampler(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.DepthTexture.sampler, nullptr);
+				
+				vkDestroyImageView(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.DepthTexture.imageView, nullptr);
+				vmaDestroyImage(m_pAllocator, renderPass->renderPassChain.DepthTexture.image,
+					renderPass->renderPassChain.DepthTexture.allocation);
+			}*/
 
 			auto& renderPassInfo = m_pRenderPassInfo[renderPass->id];
 			renderPassInfo.dimensions.width = extent.width;

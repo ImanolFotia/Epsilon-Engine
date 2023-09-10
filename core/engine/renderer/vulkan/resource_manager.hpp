@@ -68,6 +68,9 @@ namespace engine
 		vk::VulkanMaterial* getMaterial(Ref<BindGroup>);
 		vk::VulkanRenderPass* getRenderPass(Ref<RenderPass>);
 
+
+		void ResizeFramebuffer(Ref<RenderPass>, glm::ivec2) override;
+
 	private:
 		VmaAllocator m_pAllocator;
 		vk::VulkanData* m_pVkDataPtr = nullptr;

@@ -268,6 +268,30 @@ namespace engine
 			m_pResourceManagerRef->ResourcesMemory.heaps.at(i).free_memory = budgets.at(i).budget - budgets.at(i).usage;
 		}
 		m_pResourceManagerRef->ResourcesMemory.numDrawCalls = m_pNumDrawCalls;
+
+		auto renderPass = m_pResourceManagerRef->getRenderPass(m_pActiveRenderPass);
+
+		if (renderPass->id != std::numeric_limits<uint32_t>::max() || !m_pRenderPassActive)
+		{
+
+			if (m_pActiveRenderPass.Id() != std::numeric_limits<uint32_t>::max())
+			{
+				vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
+				m_pRenderPassActive = false;
+			}
+
+			vk::createRenderPassInfo(m_pImageIndex, m_pVkData, m_pVkData.defaultRenderPass);
+
+			auto renderPass = m_pVkData.defaultRenderPass;
+			m_pVkData.defaultRenderPass.renderPassInfo.renderArea.offset = { 0, 0 };
+			m_pVkData.defaultRenderPass.renderPassInfo.renderArea.extent = m_pVkData.defaultRenderPass.renderPassChain.Extent;
+			m_pVkData.defaultRenderPass.renderPassChain.Extent = m_pVkData.defaultRenderPass.renderPassChain.Extent;
+
+			vk::beginRenderPass(m_pFrame.CommandBuffer(), m_pVkData.defaultRenderPass);
+			m_pRenderPassActive = true;
+			//m_pActiveRenderPass = renderPassRef;
+
+		}
 		m_pImguiRenderer->DrawUI(std::forward<glm::vec3&>(v), m_pResourceManagerRef->ResourcesMemory);
 #endif
 		if (m_pRenderPassActive)

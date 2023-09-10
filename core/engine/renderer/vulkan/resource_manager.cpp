@@ -257,15 +257,20 @@ namespace engine
 				}
 			}
 
-			auto buffers = renderPass->uniformBuffer.front().buffers;
+			vkMaterial.bufferSize = 0;
 
-			for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
-			{
-				vkMaterial.bufferInfo[i].offset = buffers[i].offset;
-				vkMaterial.bufferInfo[i].buffer = buffers[i].buffer;
+			if (renderPass->uniformBuffer.size() > 0) {
+
+				auto buffers = renderPass->uniformBuffer.front().buffers;
+
+				for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
+				{
+					vkMaterial.bufferInfo[i].offset = buffers[i].offset;
+					vkMaterial.bufferInfo[i].buffer = buffers[i].buffer;
+				}
+
+				vkMaterial.bufferSize = renderPass->uniformBuffer.front().size;
 			}
-
-			vkMaterial.bufferSize = renderPass->uniformBuffer.front().size;
 
 			m_pNumCommandPools++;
 
@@ -450,12 +455,14 @@ namespace engine
 			if (attachment.isDepthAttachment)
 			{
 				texture.isDepthAttachment = true;
+
 				renderPass.renderPassChain.DepthTexture = texture;
 
 				if (attachment.isSampler) {
 					renderPass.renderPassChain.hasDepthSampler = true;
 					renderPass.renderPassChain.ImageViews.push_back(texture.imageView);
 					renderPass.renderPassChain.Textures.push_back(texture);
+					renderPass.renderPassChain.DepthTexture.index = i;
 
 				}
 			}
@@ -608,10 +615,44 @@ namespace engine
 
 			for (int i = 0; i < pass.renderPassChain.Textures.size(); i++)
 			{
-				vkDestroySampler(m_pVkDataPtr->logicalDevice, pass.renderPassChain.Textures[i].sampler, nullptr);
-				vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass.renderPassChain.Textures[i].imageView, nullptr);
-				vmaDestroyImage(m_pAllocator, pass.renderPassChain.Textures[i].image,
-					pass.renderPassChain.Textures[i].allocation);
+				if (pass.renderPassChain.Textures[i].sampler != VK_NULL_HANDLE) {
+					vkDestroySampler(m_pVkDataPtr->logicalDevice, pass.renderPassChain.Textures[i].sampler, nullptr);
+					pass.renderPassChain.Textures[i].sampler = VK_NULL_HANDLE;
+				}
+
+				if (pass.renderPassChain.Textures[i].imageView != VK_NULL_HANDLE) {
+					vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass.renderPassChain.Textures[i].imageView, nullptr);
+					pass.renderPassChain.Textures[i].imageView = VK_NULL_HANDLE;
+				}
+
+				if (pass.renderPassChain.Textures[i].image != VK_NULL_HANDLE) {
+					vmaDestroyImage(m_pAllocator, pass.renderPassChain.Textures[i].image,
+						pass.renderPassChain.Textures[i].allocation);
+					pass.renderPassChain.Textures[i].image = VK_NULL_HANDLE;
+				}
+			}
+
+			if (pass.renderPassChain.DepthTexture.isDepthAttachment) {
+
+				if (pass.renderPassChain.DepthTexture.isDepthAttachment && !pass.renderPassChain.hasDepthSampler) {
+					if (pass.renderPassChain.DepthTexture.imageView != VK_NULL_HANDLE)
+					vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass.renderPassChain.DepthTexture.imageView, nullptr);
+					if (pass.renderPassChain.DepthTexture.image != VK_NULL_HANDLE)
+					vmaDestroyImage(m_pAllocator, pass.renderPassChain.DepthTexture.image, pass.renderPassChain.DepthTexture.allocation);
+					
+					continue; }
+				if (pass.renderPassChain.hasDepthSampler && pass.renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE && pass.renderPassChain.Textures[pass.renderPassChain.DepthTexture.index].sampler != VK_NULL_HANDLE)
+					vkDestroySampler(m_pVkDataPtr->logicalDevice, pass.renderPassChain.DepthTexture.sampler, nullptr);
+
+				if (pass.renderPassChain.DepthTexture.imageView != VK_NULL_HANDLE && pass.renderPassChain.Textures[pass.renderPassChain.DepthTexture.index].imageView != VK_NULL_HANDLE)
+					vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass.renderPassChain.DepthTexture.imageView, nullptr);
+
+				if (pass.renderPassChain.DepthTexture.image != VK_NULL_HANDLE && pass.renderPassChain.Textures[pass.renderPassChain.DepthTexture.index].imageView != VK_NULL_HANDLE) {
+					vmaDestroyImage(m_pAllocator, pass.renderPassChain.DepthTexture.image,
+						pass.renderPassChain.DepthTexture.allocation);
+					pass.renderPassChain.DepthTexture.image = VK_NULL_HANDLE;
+				}
+					
 			}
 		}
 
@@ -883,4 +924,116 @@ namespace engine
 		return Ref<ComputeShader>().makeEmpty();
 	}
 	void VulkanResourceManager::destroyComputeShader(Ref<ComputeShader>) {}
+
+	void VulkanResourceManager::ResizeFramebuffer(Ref<RenderPass> renderpass_ref, glm::ivec2 size) {
+		vkDeviceWaitIdle(m_pVkDataPtr->logicalDevice);
+		auto renderPass = renderPassPool.get(renderpass_ref);
+		VkExtent2D extent;
+		extent.width = size.x;
+		extent.height = size.y;
+
+		for(auto& framebuffer: renderPass->renderPassChain.Framebuffers)
+			vkDestroyFramebuffer(m_pVkDataPtr->logicalDevice, framebuffer, nullptr);
+
+		for (int i = 0; i < renderPass->renderPassChain.Textures.size(); i++)
+		{
+			vkDestroySampler(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.Textures[i].sampler, nullptr);
+			vkDestroyImageView(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.Textures[i].imageView, nullptr);
+			vmaDestroyImage(m_pAllocator, renderPass->renderPassChain.Textures[i].image,
+				renderPass->renderPassChain.Textures[i].allocation);
+		}
+		{
+			if (renderPass->renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE)
+				vkDestroySampler(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.DepthTexture.sampler, nullptr);
+
+			vkDestroyImageView(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.DepthTexture.imageView, nullptr);
+			vmaDestroyImage(m_pAllocator, renderPass->renderPassChain.DepthTexture.image,
+				renderPass->renderPassChain.DepthTexture.allocation);
+		}
+
+		auto& renderPassInfo = m_pRenderPassInfo[renderPass->id];
+		renderPassInfo.dimensions.width = extent.width;
+		renderPassInfo.dimensions.height = extent.height;
+
+		renderPass->renderPassChain.Extent = extent;
+
+		for (size_t i = 0; i < renderPassInfo.attachments.size(); i++)
+		{
+			auto& attachment = renderPassInfo.attachments[i];
+
+			
+
+			vk::VulkanTextureInfo texInfo;
+			texInfo.format = attachment.isDepthAttachment ? findDepthFormat(*m_pVkDataPtr) : resolveFormat(renderPassInfo.attachments[i].format);
+
+			texInfo.addressMode = resolveWrapping(attachment.wrapMode);
+			texInfo.compareOp = resolveCompareOp(attachment.compareFunc);
+			texInfo.filter = resolveFilter(attachment.filtering);
+			texInfo.width = renderPassInfo.dimensions.width;
+			texInfo.height = renderPassInfo.dimensions.height;
+			texInfo.num_channels = attachment.isDepthAttachment ? 1 : resolveNumChannels(attachment.format);
+			texInfo.usage = (attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+
+			texInfo.compareEnable = attachment.depthCompare;
+
+			vk::VulkanTexture texture = pCreateTextureBuffer(texInfo);
+
+			texture.bindingType = vk::RENDER_BUFFER_SAMPLER;
+			texture.info.mipLevels = 1;
+			createImageView(*m_pVkDataPtr, texture,
+				(attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
+
+			texture.imageLayout = attachment.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			if (attachment.isSampler)
+			{
+				vk::createTextureSampler(*m_pVkDataPtr, texture);
+			}
+
+			texture.name = attachment.name;
+
+			if (attachment.isDepthAttachment)
+			{
+				texture.isDepthAttachment = true;
+				if (attachment.isSampler) {
+					renderPass->renderPassChain.DepthTexture.index = i;
+				}
+				renderPass->renderPassChain.DepthTexture = texture;
+
+				if (attachment.isSampler) {
+					renderPass->renderPassChain.hasDepthSampler = false;
+					renderPass->renderPassChain.ImageViews.at(i) = texture.imageView;
+					renderPass->renderPassChain.Textures.at(i) = texture;
+
+				}
+			}
+			else
+			{
+				renderPass->renderPassChain.ImageViews.at(i) = texture.imageView;
+				renderPass->renderPassChain.Textures.at(i) = texture;
+			}
+		}
+
+		vk::createFramebuffers(*m_pVkDataPtr, *renderPass, renderPass->renderPassChain);
+		//createRenderPass(m_pRenderPassInfo[renderPass->id]);
+
+
+		VkViewport viewport = {
+			.x = 0,
+			.y = 0,
+			.width = (float)renderPass->renderPassChain.Extent.width,
+			.height = (float)renderPass->renderPassChain.Extent.height,
+			.minDepth = 0.0f,
+			.maxDepth = 1.0f
+		};
+
+		VkRect2D rect;
+		rect.extent.width = renderPass->renderPassChain.Extent.width;
+		rect.extent.height = renderPass->renderPassChain.Extent.height;
+
+		rect.offset.x = 0;
+		rect.offset.y = 0;
+
+		renderPass->renderPassChain.setViewport(viewport);
+		renderPass->renderPassChain.setScissor(rect);
+	}
 }
