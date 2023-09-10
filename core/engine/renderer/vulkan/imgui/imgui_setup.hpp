@@ -49,7 +49,7 @@ class ImGuiRenderer
 
 
 	uint32_t m_pImageCount = 0;
-	
+
 
 	vk::VulkanData* m_pVkDataPtr = nullptr;
 	uint32_t m_pCurrentIndex{};
@@ -155,21 +155,23 @@ class ImGuiRenderer
 		// io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 15);
 		ImFontConfig config;
 		config.OversampleH = 2;
-		/*
+		
 #ifdef _WIN32
-		io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 16, &config);
+		io.Fonts->AddFontFromFileTTF("./assets/fonts/Roboto-Regular.ttf", 15, &config);
 #endif
 #ifdef __linux__
-		io.Fonts->AddFontFromFileTTF("./resources/FiraMono-Regular.ttf", 16, &config);
+		io.Fonts->AddFontFromFileTTF("./assets/fonts/FiraMono-Regular.ttf", 16, &config);
 #endif
-*/
-/* static const ImWchar icons_ranges[] = {ICON_MIN_FA, ICON_MAX_FA, 0};
+
+static const ImWchar icons_ranges[] = {ICON_MIN_FA, ICON_MAX_FA, 0};
  ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
  icons_config.GlyphOffset.y = 0.5;
- io.Fonts->AddFontFromFileTTF("./resources/fa-regular-400.ttf", 15.0f, &icons_config, icons_ranges);
- io.Fonts->AddFontFromFileTTF("./resources/fa-brands-400.ttf", 15.0f, &icons_config, icons_ranges);
- io.Fonts->AddFontFromFileTTF("./resources/fa-solid-900.ttf", 15.0f, &icons_config, icons_ranges);*/
+ io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-regular-400.ttf", 15.0f, &icons_config, icons_ranges);
+ io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-brands-400.ttf", 15.0f, &icons_config, icons_ranges);
+ io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-solid-900.ttf", 15.0f, &icons_config, icons_ranges);
 	}
+
+	bool m_pShowDebugPerformance = true;
 
 public:
 
@@ -180,6 +182,10 @@ public:
 		glm::ivec2 size;
 		std::string name;
 	};
+
+	void ShowDebugPerformance(bool val) {
+		m_pShowDebugPerformance = val;
+	}
 
 	void Enable()
 	{
@@ -409,25 +415,26 @@ public:
 	{
 		if (m_pEnabled)
 		{
-		ImGuiBegin();
+			ImGuiBegin();
 
-		ImGui_ImplVulkanH_Window* wd = &m_pMainWindowData;
-		// Our state
-		static bool show_demo_window = true;
-		static bool show_another_window = false;
-		ImGui::NewFrame();
+			ImGui_ImplVulkanH_Window* wd = &m_pMainWindowData;
+			// Our state
+			static bool show_demo_window = true;
+			static bool show_another_window = false;
+			ImGui::NewFrame();
 
-		MainWindow();
+			MainWindow();
 
 			// ImGui::SetNextWindowSize(ImVec2(wd->Width, wd->Height));
 
 			///////// USER INPUT BEGINS HERE
-			ImGui::SetNextWindowPos(ImVec2(10, 10));
-			ImGui::Begin("Info", nullptr, ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize);
-			ImGui::Text("Timings:");
-			ImGui::BulletText("Framerate %.1f FPS", ImGui::GetIO().Framerate);
-			ImGui::BulletText("frametime %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
-			ImGui::BulletText("Draw calls: %i", resources.numDrawCalls);
+			if (m_pShowDebugPerformance) {
+				ImGui::SetNextWindowPos(ImVec2(10, 10));
+				ImGui::Begin("Info", nullptr, ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize);
+				ImGui::Text("Timings:");
+				ImGui::BulletText("Framerate %.1f FPS", ImGui::GetIO().Framerate);
+				ImGui::BulletText("frametime %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
+				ImGui::BulletText("Draw calls: %i", resources.numDrawCalls);
 			//static float frametime_values[1000] = {};
 			//static int frametime_values_offset = 0;
 
@@ -449,13 +456,14 @@ public:
 				i++;
 			}
 			ImGui::End();
+			}
 
 			if (m_pUserFunction)
 				m_pUserFunction();
 
 			ImGui::End();
 
-		ImGuiEnd();
+			ImGuiEnd();
 		}
 	}
 
@@ -502,12 +510,18 @@ public:
 
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
 
+		int toolbarHeight = 20;
+
+		if (this->m_pShowDebugPerformance) {
+			toolbarHeight = 0;
+		}
+
 		bool opt_fullscreen = true;
 		if (opt_fullscreen)
 		{
 			ImGuiViewport* viewport = ImGui::GetMainViewport();
-			ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y));
-			ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, viewport->Size.y));
+			ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y + toolbarHeight));
+			ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, viewport->Size.y - toolbarHeight));
 			ImGui::SetNextWindowViewport(viewport->ID);
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
