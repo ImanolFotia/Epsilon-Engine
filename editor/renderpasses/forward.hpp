@@ -10,6 +10,7 @@ namespace Editor::Renderpasses {
 
 	struct ForwardPassPushConstant {
 		glm::mat4 transform;
+		uint32_t material_index;
 	};
 
 	static engine::Ref<engine::RenderPass> createForwardRenderPass(std::shared_ptr<engine::Context> context) {
@@ -58,7 +59,7 @@ namespace Editor::Renderpasses {
 			.shaderInfo = mainShaderInfo,
 			.vertexLayout = vertexLayout,
 			.cullMode = CullMode::BACK,
-			.windingMode = WindingMode::CLOCKWISE };
+			.windingMode = WindingMode::COUNTER_CLOCK_WISE };
 
 
 		RenderPassInfo renderPassInfo =
@@ -68,6 +69,7 @@ namespace Editor::Renderpasses {
 			.isSwapChainAttachment(false)
 			.subpasses({})
 			.dimensions({ .width = 1280, .height = 720 })
+			
 			.inputs({ {
 					.size = 256,
 					.offset = 0,

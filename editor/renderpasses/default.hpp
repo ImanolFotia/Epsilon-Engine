@@ -8,7 +8,7 @@ namespace Editor::Renderpasses {
 	static engine::Ref<engine::RenderPass> createDefaultRenderPass (std::shared_ptr<engine::Context> context){
 
 		using namespace engine;
-
+		/*
 		std::vector<char> vertexCode;
 
 		for (int i = 0; i < (sizeof(Shaders::vertex) / sizeof(uint32_t)); i++) {
@@ -24,7 +24,9 @@ namespace Editor::Renderpasses {
 				fragmentCode.push_back((char)(((char*)&Shaders::fragment[i])[j]));
 			}
 		}
-
+		*/
+		auto vertexCode = utils::readFile("./assets/shaders/editor/vertex.spv");
+		auto fragmentCode = utils::readFile("./assets/shaders/editor/frag.spv");
 		ShaderInfo mainShaderInfo = {
 			.stages = {
 				{.entryPoint = "main", .shaderCode = vertexCode, .stage = VERTEX},
@@ -68,7 +70,7 @@ namespace Editor::Renderpasses {
 					   .depthStencilValue = {1, 0},
 					   .isDepthAttachment = true} })
 					   .pipelineLayout(mainLayout)
-			.pushConstant(0);
+			.pushConstant(256);
 
 		return context->ResourceManager()->createDefaultRenderPass(renderPassInfo);
 	}

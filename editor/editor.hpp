@@ -11,7 +11,9 @@
 #include <core/engine/scene/scene.hpp>
 
 #include <core/engine/renderer/drawables/primitives/sphere.hpp>
+#include <core/engine/renderer/drawables/primitives/cube.hpp>
 #include <core/framework/utils/helpers/camera.hpp>
+#include <core/framework/IO/IO.hpp>
 
 namespace Editor {
 	class Editor : public Epsilon::Epsilon {
@@ -29,6 +31,11 @@ namespace Editor {
 		std::shared_ptr<utils::Camera> m_pCamera;
 		ShaderData shaderData;
 
+		engine::Scene m_pScene;
+
+		bool m_pCameraWasInactive = true;
+
+
 
 	public:
 		Editor(const std::string name) : Epsilon::Epsilon(name) {
@@ -45,24 +52,19 @@ namespace Editor {
 
 		void OnRender() {
 
-			getContext()->Renderer()->BeginFrame();
-			getContext()->Renderer()->Begin();
-			auto v = glm::vec3(0.0);
+			m_pScene.BeginScene();
 
+			m_pScene.setCurrentRenderPass("ForwardRenderPass");
+			auto models = m_pScene.getNodes <engine::RenderModel>();
 
-			getContext()->Renderer()->Push({
-				.mesh = m_pDefaultCube,
-				.material = m_pForwardBindGroup,
-				.objectConstant = {glm::mat4(1.0), 0},
-				.layout_index = 0,
-				.uniformIndex = 0,
-				.count = 1
-				});
+			for (auto& model : models) {
+				m_pScene.Push(std::static_pointer_cast<engine::Node<engine::RenderModel>>(*model), glm::mat4(1.0f), "DefaultBindGroup");
+			}
 
-			getContext()->Renderer()->Flush(m_pForwardRenderPass, engine::DrawType::INDEXED);
+			m_pScene.Flush();
 
-			getContext()->Renderer()->End(v);
-			getContext()->Renderer()->Submit();
+			m_pScene.EndScene();
+
 		}
 
 		void OnExit() {
@@ -70,11 +72,29 @@ namespace Editor {
 		}
 
 		void OnUpdate() {
-			const auto& [screenX, screenY] = getWindowDimensions();
-			m_pCamera->Update(Epsilon::getContext()->Window().getWindow());
-			m_pCamera->UpdateMatrices(0, screenX, screenY, false);
+			int screenX, screenY; //getWindowDimensions();
+			screenX = m_pMainViewport.getSize().x;
+			screenY = m_pMainViewport.getSize().y;
 			shaderData.iResolution = glm::vec2(screenX, screenY);
 
+			if (framework::Input::Mouse::LEFT == framework::Input::PRESSED && m_pMainViewport.isHovered()) {
+
+				if (m_pCameraWasInactive) {
+					m_pCamera->ResetDeltas();
+					m_pCameraWasInactive = false;
+				}
+				getContext()->Window().HideCursor();
+				m_pCamera->Update(Epsilon::getContext()->Window().getWindow());
+
+
+			}
+			else {
+				getContext()->Window().ShowCursor();
+				m_pCameraWasInactive = true;
+			}
+
+
+			m_pCamera->UpdateMatrices(0, screenX, screenY, false);
 
 			static auto startTime = std::chrono::high_resolution_clock::now();
 			auto currentTime = std::chrono::high_resolution_clock::now();
@@ -86,45 +106,48 @@ namespace Editor {
 			shaderData.iTime += time;
 			shaderData.viewPosition = m_pCamera->getPosition();
 
+			if (m_pMainViewport.ShouldResize()) {
+				getContext()->ResourceManager()->ResizeFramebuffer(m_pForwardRenderPass, m_pMainViewport.getSize());
+				Epsilon::getContext()->Renderer()->getDebugRenderer()->recreateDescriptorSets();
+				m_pMainViewport.ResetFlags();
+			}
+
 			getContext()->Renderer()->UpdateRenderPassUniforms(m_pForwardRenderPass, engine::RENDERPASS_SET, &shaderData);
 
 		}
 
 		void OnCreate() {
-
-			m_pDefaultRenderPass = Renderpasses::createDefaultRenderPass(Epsilon::getContext());
+			m_pScene = engine::Scene(getContext());
 
 			m_pForwardRenderPass = Renderpasses::createForwardRenderPass(Epsilon::getContext());
 
+			m_pScene.addRenderPass("DefaultRenderPass", Renderpasses::createDefaultRenderPass(Epsilon::getContext()));
+			m_pScene.addRenderPass("ForwardRenderPass", m_pForwardRenderPass);
 
-			engine::BindGroupInfo defaultBindGroup = {
+			m_pScene.addBindGroup("DefaultBindGroup", 0, {
 					.bindingInfo = {},
 					.inputs = {},
 					.renderPass = "Forward",
 					.name = "DefaultBindGroup",
-			};
-
-			m_pForwardBindGroup = getContext()->ResourceManager()->createBindGroup(defaultBindGroup);
-
-			engine::Sphere sphere(10);
-
-			m_pDefaultCube = getContext()->ResourceManager()->createMesh({
-				.vertices = sphere.data().Vertices,
-				.indices = sphere.data().Indices,
-				.name = "DefaultCube"
 			});
 
-			Epsilon::getContext()->Renderer()->InitDebugRenderer();
+			auto cubeNode = m_pScene.emplaceIntoScene<engine::Scene::SceneEntity>(engine::Box{ glm::vec3(0.0), glm::vec3(1.0) });
 
-			Epsilon::getContext()->Renderer()->getDebugRenderer()->ShowDebugPerformance(false);
+			engine::Cube cube;
+			auto m_pDefaultCube = m_pScene.getAssetManager().createModelFromMesh("DefaultCube", cube.data(), {});
 
-			Epsilon::getContext()->Renderer()->getDebugRenderer()->setUserFunction([this]() {
+			m_pScene.insertIntoNode(engine::Box{ glm::vec3(0.0), glm::vec3(1.0) }, cubeNode, m_pDefaultCube);
+
+			auto renderer = getContext()->Renderer();
+
+			renderer->InitDebugRenderer();
+			renderer->getDebugRenderer()->ShowDebugPerformance(false);
+
+			renderer->getDebugRenderer()->setUserFunction([this]() {
 				m_pMenuBar.draw();
 				m_pMainViewport.setImage(getContext()->Renderer()->getDebugRenderer()->getImages().at("Forward0"));
 				m_pMainViewport.draw();
-			});
-
-
+				});
 		}
 	};
 }
