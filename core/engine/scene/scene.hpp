@@ -49,8 +49,6 @@ namespace engine
 			Ref<BindGroup> bindGroup;
 		};
 
-
-
 		std::unordered_map<std::string, RenderLayout> m_pRenderLayouts;
 
 		Ref<RenderPass> m_pCurrentRenderPass;
@@ -68,7 +66,11 @@ namespace engine
 			return std::hash<std::string>{}(s);
 		}
 
+
 	public:
+
+		struct SceneEntity {};
+
 		Scene() = default;
 
 		Scene(std::shared_ptr<Context> context) : m_pContext(context)
@@ -80,6 +82,9 @@ namespace engine
 
 			m_pNodeOctree = std::make_shared<OctreeContainer<OctreeNodeType>>(Box { glm::vec3(100, 25, 100), glm::vec3(0.0, 12.5, 0.0) }, 8);
 			m_pRenderOctree = std::make_shared<OctreeContainer<OctreeRenderType>>(Box{ glm::vec3(100, 25, 100), glm::vec3(0.0, 12.5, 0.0) }, 8);
+		
+
+			m_pAssetManager.Init();
 		}
 
 		std::shared_ptr<Context> getContext() { return m_pContext; }
@@ -102,116 +107,26 @@ namespace engine
 				}
 			}
 
-			m_pAssetManager.Init();
-
-			engine::BindGroupInfo defaultBindGroup = {
-					.bindingInfo = {
-						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
-						{.size = 64, .offset = 0, .binding = 4, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "info_buffer"},
-						{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 5, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"},
-						{.size = sizeof(ShaderObjectData) * AssetManager::MAX_OBJECTS, .offset = 0, .binding = 6, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "object_buffer"}
-			},
-					.inputs = {
-					{.renderPass = "ShadowPass", .index = 0, .bindingPoint = 2},
-					{.renderPass = "ShadowPass", .index = 1, .bindingPoint = 3},
-				},
-					.renderPass = "DefaultRenderPass",
-					.name = "DefaultBindGroup",
-			};
-
-			engine::BindGroupInfo animatedBindGroup = {
-					.bindingInfo = {
-						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
-						{.size = 64, .offset = 0, .binding = 4, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "info_buffer"},
-						{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 5, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"},
-						{.size = sizeof(ShaderObjectData) * AssetManager::MAX_OBJECTS, .offset = 0, .binding = 6, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "object_buffer"},
-						{.size = sizeof(GPUAnimationData), .offset = 0, .binding = 7, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "animation_transform_buffer"}
-
-			},
-					.inputs = {
-					{.renderPass = "ShadowPass", .index = 0, .bindingPoint = 2},
-					{.renderPass = "ShadowPass", .index = 1, .bindingPoint = 3},
-				},
-					.renderPass = "DefaultRenderPass",
-					.name = "AnimatedBindGroup",
-			};
-
-			engine::BindGroupInfo decalBindGroup = {
-					.bindingInfo = {
-						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
-
-			},
-					.inputs = {
-				},
-					.renderPass = "DefaultRenderPass",
-					.name = "DecalBindGroup",
-			};
-
-			engine::BindGroupInfo shadowBindGroup = {
-					.bindingInfo = {
-						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
-
-			},
-					.inputs = {},
-					.renderPass = "ShadowPass",
-					.name = "ShadowBindGroup",
-			};
-
-
-			engine::BindGroupInfo treeShadowBindGroup = {
-					.bindingInfo = {
-						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
-
-						{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 5, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"},
-						{.size = sizeof(ShaderObjectData) * AssetManager::MAX_OBJECTS, .offset = 0, .binding = 6, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "object_buffer"}
-
-			},
-					.inputs = {},
-					.renderPass = "ShadowPass",
-					.name = "TreeShadowBindGroup",
-			};
-
-			engine::BindGroupInfo animateShadowBindGroup = {
-					.bindingInfo = {
-						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
-						{.size = sizeof(GPUAnimationData), .offset = 0, .binding = 2, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "animation_transform_buffer"}
-
-			},
-					.inputs = {},
-					.renderPass = "ShadowPass",
-					.name = "AnimatedShadowBindGroup",
-			};
-
-
-			engine::BindGroupInfo prepassBindGroup = {
-					.bindingInfo = {
-						{.size = sizeof(PBRMaterial) * AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
-						{.size = sizeof(glm::mat4) * AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 5, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"},
-						{.size = sizeof(ShaderObjectData) * AssetManager::MAX_OBJECTS, .offset = 0, .binding = 6, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "object_buffer"}
-
-			},
-					.inputs = {},
-					.renderPass = "DepthPrePass",
-					.name = "PrePassBindGroup",
-			};
-
-
-			m_pRenderLayouts["DefaultLayout"] = { 0, resourceManager->createBindGroup(defaultBindGroup) };
-			m_pRenderLayouts["SkyLayout"] = { 1, m_pRenderLayouts["DefaultLayout"].bindGroup};
-			m_pRenderLayouts["TerrainLayout"] = {2, m_pRenderLayouts["DefaultLayout"].bindGroup };
-			m_pRenderLayouts["DecalLayout"] = {3, resourceManager->createBindGroup(decalBindGroup) };
-			m_pRenderLayouts["TreeLayout"] = {4, m_pRenderLayouts["DefaultLayout"].bindGroup };
-			m_pRenderLayouts["defaultAnimatedLayout"] = {5, resourceManager->createBindGroup(animatedBindGroup) };
-
-			m_pRenderLayouts["ShadowLayout"] = {0, resourceManager->createBindGroup(shadowBindGroup) };
-			m_pRenderLayouts["treeShadowLayout"] = { 1, resourceManager->createBindGroup(treeShadowBindGroup) };
-			m_pRenderLayouts["animatedShadowLayout"] = {2,  resourceManager->createBindGroup(animateShadowBindGroup) };
-
-			m_pRenderLayouts["prepassLayout"] = {0, resourceManager->createBindGroup(prepassBindGroup) };
-
 
 			m_pContext->Renderer()->InitDebugRenderer();
 
+		}
+
+		Ref<BindGroup> addBindGroup(const std::string& name, uint32_t layoutIndex, engine::BindGroupInfo info) {
+			auto resourceManager = m_pContext->ResourceManager();
+			m_pRenderLayouts[name] = { layoutIndex, resourceManager->createBindGroup(info) };
+
+			return m_pRenderLayouts[name].bindGroup;
+		}
+
+		Ref<BindGroup> addBindGroup(const std::string& name, uint32_t layoutIndex, Ref<BindGroup> bindGroup) {
+			auto resourceManager = m_pContext->ResourceManager();
+			m_pRenderLayouts[name] = { layoutIndex, bindGroup };
+			return bindGroup;
+		}
+
+		void addRenderPass(const std::string& name, Ref<RenderPass> renderPass) {
+			m_RenderPassesRefs[name] = renderPass;
 		}
 
 		void setCurrentRenderPass(const std::string& renderpass) {

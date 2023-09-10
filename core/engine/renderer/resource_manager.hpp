@@ -56,6 +56,8 @@ namespace engine
 
 		virtual void clean() = 0;
 
+		virtual void ResizeFramebuffer(Ref<RenderPass>, glm::ivec2) = 0;
+
 		template <typename T>
 		std::shared_ptr<T> to()
 		{
