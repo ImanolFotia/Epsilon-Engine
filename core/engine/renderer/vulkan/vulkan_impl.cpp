@@ -460,6 +460,8 @@ namespace engine
 
 			//destroyRenderPass(renderpass_ref);
 
+			for(auto& framebuffer: renderPass->renderPassChain.Framebuffers)
+			vkDestroyFramebuffer(m_pVkDataPtr->logicalDevice, framebuffer, nullptr);
 
 			for (int i = 0; i < renderPass->renderPassChain.Textures.size(); i++)
 			{
@@ -467,15 +469,29 @@ namespace engine
 				vkDestroyImageView(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.Textures[i].imageView, nullptr);
 				vmaDestroyImage(m_pAllocator, renderPass->renderPassChain.Textures[i].image,
 					renderPass->renderPassChain.Textures[i].allocation);
-			}/*
-			 {
+				renderPass->renderPassChain.Textures[i].sampler = VK_NULL_HANDLE;
+				renderPass->renderPassChain.Textures[i].imageView = VK_NULL_HANDLE;
+				renderPass->renderPassChain.Textures[i].image = VK_NULL_HANDLE;
+			}
+			 {/*
 				if (renderPass->renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE)
 					vkDestroySampler(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.DepthTexture.sampler, nullptr);
 				
 				vkDestroyImageView(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.DepthTexture.imageView, nullptr);
 				vmaDestroyImage(m_pAllocator, renderPass->renderPassChain.DepthTexture.image,
 					renderPass->renderPassChain.DepthTexture.allocation);
-			}*/
+*/
+
+				if (renderPass->renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE && renderPass->renderPassChain.DepthTexture.index < 0)
+					vkDestroySampler(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.DepthTexture.sampler, nullptr);
+
+				if (renderPass->renderPassChain.DepthTexture.imageView != VK_NULL_HANDLE && renderPass->renderPassChain.DepthTexture.index < 0)
+					vkDestroyImageView(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.DepthTexture.imageView, nullptr);
+
+				if (renderPass->renderPassChain.DepthTexture.image != VK_NULL_HANDLE && renderPass->renderPassChain.DepthTexture.index < 0)
+					vmaDestroyImage(m_pAllocator, renderPass->renderPassChain.DepthTexture.image, renderPass->renderPassChain.DepthTexture.allocation);
+
+			}
 
 			auto& renderPassInfo = m_pRenderPassInfo[renderPass->id];
 			renderPassInfo.dimensions.width = extent.width;
@@ -522,6 +538,7 @@ namespace engine
 						renderPass->renderPassChain.hasDepthSampler = false;
 						renderPass->renderPassChain.ImageViews.at(i) = texture.imageView;
 						renderPass->renderPassChain.Textures.at(i) = texture;
+						renderPass->renderPassChain.DepthTexture.index = i;
 
 					}
 				}

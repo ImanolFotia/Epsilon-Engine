@@ -635,10 +635,10 @@ namespace engine
 			if (pass.renderPassChain.DepthTexture.isDepthAttachment) {
 
 				if (pass.renderPassChain.DepthTexture.isDepthAttachment && !pass.renderPassChain.hasDepthSampler) {
-					if (pass.renderPassChain.DepthTexture.imageView != VK_NULL_HANDLE)
-					vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass.renderPassChain.DepthTexture.imageView, nullptr);
-					if (pass.renderPassChain.DepthTexture.image != VK_NULL_HANDLE)
-					vmaDestroyImage(m_pAllocator, pass.renderPassChain.DepthTexture.image, pass.renderPassChain.DepthTexture.allocation);
+					if (pass.renderPassChain.DepthTexture.imageView != VK_NULL_HANDLE && pass.renderPassChain.DepthTexture.index < 0)
+						vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass.renderPassChain.DepthTexture.imageView, nullptr);
+					if (pass.renderPassChain.DepthTexture.image != VK_NULL_HANDLE && pass.renderPassChain.DepthTexture.index < 0)
+						vmaDestroyImage(m_pAllocator, pass.renderPassChain.DepthTexture.image, pass.renderPassChain.DepthTexture.allocation);
 					
 					continue; }
 				if (pass.renderPassChain.hasDepthSampler && pass.renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE && pass.renderPassChain.Textures[pass.renderPassChain.DepthTexture.index].sampler != VK_NULL_HANDLE)
@@ -943,12 +943,20 @@ namespace engine
 				renderPass->renderPassChain.Textures[i].allocation);
 		}
 		{
-			if (renderPass->renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE)
-				vkDestroySampler(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.DepthTexture.sampler, nullptr);
+			/*
 
 			vkDestroyImageView(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.DepthTexture.imageView, nullptr);
 			vmaDestroyImage(m_pAllocator, renderPass->renderPassChain.DepthTexture.image,
 				renderPass->renderPassChain.DepthTexture.allocation);
+			*/
+
+			if (renderPass->renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE && renderPass->renderPassChain.DepthTexture.index < 0)
+				vkDestroySampler(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.DepthTexture.sampler, nullptr);
+
+			if (renderPass->renderPassChain.DepthTexture.imageView != VK_NULL_HANDLE && renderPass->renderPassChain.DepthTexture.index < 0)
+				vkDestroyImageView(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.DepthTexture.imageView, nullptr);
+			if (renderPass->renderPassChain.DepthTexture.image != VK_NULL_HANDLE && renderPass->renderPassChain.DepthTexture.index < 0)
+				vmaDestroyImage(m_pAllocator, renderPass->renderPassChain.DepthTexture.image, renderPass->renderPassChain.DepthTexture.allocation);
 		}
 
 		auto& renderPassInfo = m_pRenderPassInfo[renderPass->id];
