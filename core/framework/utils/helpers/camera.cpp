@@ -14,7 +14,7 @@ namespace utils
 {
     Camera::Camera(glm::vec3 cPosition, glm::vec3 cOrientation)
     {
-        this->Orientation = glm::vec3(cOrientation);
+        this->Orientation = glm::normalize(glm::vec3(cOrientation));
         this->Position = glm::vec3(cPosition);
         LastPosition = glm::vec3(cPosition);
         DeltaVector = glm::vec3(0.0f);
@@ -27,8 +27,9 @@ namespace utils
         this->PositionhasChanged = false;
         this->OrientationhasChanged = false;
         this->MaxMovementSpeed = 5.3;
-        this->horizontalAngle = 0.0;
-        this->verticalAngle = 0.0;
+
+        this->horizontalAngle = glm::atan(this->Orientation.x, this->Orientation.z) ;
+        this->verticalAngle = glm::asin(this->Orientation.y);
         near_plane = 0.01;
         far_plane = 3000;
     }
@@ -109,6 +110,10 @@ namespace utils
             lastX = framework::Input::Mouse::XPOS;
             lastY = framework::Input::Mouse::YPOS;
             resetDeltas = false;
+
+            this->horizontalAngle = glm::atan(this->Orientation.x, this->Orientation.z);
+            this->verticalAngle = glm::asin(this->Orientation.y);
+            return;
         }
 
         if (!_Joystick->getJoystickIsPresent())
