@@ -25,6 +25,14 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${Vulkan_LIBRARIES})
 target_include_directories(${PROJECT_NAME} PUBLIC ${Vulkan_INCLUDE_DIR})
 
+target_link_libraries(${PROJECT_NAME} PUBLIC glfw3 Epsilon ${CMAKE_DL_LIBS} ${Mono_LINK_LIBRARIES} ${Vulkan_LIBRARIES})
+
+if(WIN32)
+    target_link_libraries(${PROJECT_NAME} PRIVATE OpenAL32.dll)
+else()
+    target_link_libraries(${PROJECT_NAME} PRIVATE openal)
+endif()
+
 set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}")
 include(InstallRequiredSystemLibraries)
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)

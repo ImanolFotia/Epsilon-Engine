@@ -1,5 +1,7 @@
 #pragma once
 
+#define IMGUI_DEFINE_MATH_OPERATORS
+#include "imgui_internal.h"
 #include <Epsilon.hpp>
 
 #include "renderpasses/default.hpp"
@@ -7,6 +9,8 @@
 
 #include "ui/menu_bar.hpp"
 #include "ui/main_viewport.hpp"
+#include "ui/inspector.hpp"
+#include "ui/gizmo.hpp"
 
 #include <core/engine/scene/scene.hpp>
 
@@ -27,6 +31,8 @@ namespace Editor {
 
 		UI::MenuBar m_pMenuBar;
 		UI::MainViewport m_pMainViewport;
+		UI::Inspector m_pInspector;
+		UI::Gizmo m_pGuizmo;
 
 		std::shared_ptr<utils::Camera> m_pCamera;
 		ShaderData shaderData;
@@ -34,6 +40,9 @@ namespace Editor {
 		engine::Scene m_pScene;
 
 		bool m_pCameraWasInactive = true;
+		bool m_pNavigation = false;
+		glm::mat4 selected_matrix = glm::mat4(1.0);
+		bool manipulate = false;
 
 
 
@@ -46,8 +55,10 @@ namespace Editor {
 
 			m_pMenuBar.addCallback("OnExit", [this]() { mShouldClose = true; });
 
-			m_pCamera = std::make_shared<utils::Camera>(glm::vec3(5.0), glm::vec3(0.0));
+			m_pCamera = std::make_shared<utils::Camera>(glm::vec3(5.0, 5.0, 4.5), glm::vec3(0.0) - glm::vec3(5.0, 5.0, 4.5));
 
+			m_pInspector.setTransform(selected_matrix);
+			m_pInspector.setName("Cube");
 		}
 
 		void OnRender() {
@@ -55,13 +66,20 @@ namespace Editor {
 			m_pScene.BeginScene();
 
 			m_pScene.setCurrentRenderPass("ForwardRenderPass");
+
+
 			auto models = m_pScene.getNodes <engine::RenderModel>();
 
-			for (auto& model : models) {
-				m_pScene.Push(std::static_pointer_cast<engine::Node<engine::RenderModel>>(*model), glm::mat4(1.0f), "DefaultBindGroup");
+			for (auto& model_node : models) {
+				auto model = std::static_pointer_cast<engine::Node<engine::RenderModel>>(*model_node);
+				auto transform = std::static_pointer_cast<engine::Node<engine::Scene::SceneEntity>>(model->Parent());
+				glm::mat4 model_transform = glm::mat4(1.0f);
+				selected_matrix = m_pInspector.getTransform();
+				m_pScene.Push(model, selected_matrix, "DefaultBindGroup");
 			}
-
 			m_pScene.Flush();
+
+
 
 			m_pScene.EndScene();
 
@@ -77,24 +95,22 @@ namespace Editor {
 			screenY = m_pMainViewport.getSize().y;
 			shaderData.iResolution = glm::vec2(screenX, screenY);
 
-			if (framework::Input::Mouse::LEFT == framework::Input::PRESSED && m_pMainViewport.isHovered()) {
-
+			m_pCamera->UpdateMatrices(0, screenX, screenY, false);
+			
+			if (framework::Input::Mouse::MIDDLE == framework::Input::PRESSED && m_pMainViewport.isHovered()) {
 				if (m_pCameraWasInactive) {
 					m_pCamera->ResetDeltas();
 					m_pCameraWasInactive = false;
 				}
 				getContext()->Window().HideCursor();
 				m_pCamera->Update(Epsilon::getContext()->Window().getWindow());
-
-
+				m_pNavigation = true;
 			}
 			else {
 				getContext()->Window().ShowCursor();
 				m_pCameraWasInactive = true;
+				m_pNavigation = false;
 			}
-
-
-			m_pCamera->UpdateMatrices(0, screenX, screenY, false);
 
 			static auto startTime = std::chrono::high_resolution_clock::now();
 			auto currentTime = std::chrono::high_resolution_clock::now();
@@ -144,9 +160,24 @@ namespace Editor {
 			renderer->getDebugRenderer()->ShowDebugPerformance(false);
 
 			renderer->getDebugRenderer()->setUserFunction([this]() {
+
 				m_pMenuBar.draw();
+				m_pInspector.draw();
+
 				m_pMainViewport.setImage(getContext()->Renderer()->getDebugRenderer()->getImages().at("Forward0"));
 				m_pMainViewport.draw();
+
+				glm::mat4 original_transform = selected_matrix;
+				m_pGuizmo.prepare(&selected_matrix, m_pInspector.getMode(), m_pCamera->getViewMatrix(), m_pCamera->getProjectionMatrix());
+
+				if (m_pInspector.getMode() != UI::NONE && !m_pNavigation) {
+					m_pGuizmo.draw();
+				}
+
+				if (original_transform != selected_matrix) {
+					m_pInspector.setTransform(selected_matrix);
+				}
+
 				});
 		}
 	};
