@@ -69,7 +69,11 @@ namespace engine
 
 	public:
 
-		struct SceneEntity {};
+		struct SceneEntity {
+			glm::vec3 position;
+			glm::vec3 scale;
+			glm::quat rotation;
+		};
 
 		Scene() = default;
 
