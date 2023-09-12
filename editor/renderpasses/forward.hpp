@@ -59,7 +59,11 @@ namespace Editor::Renderpasses {
 			.shaderInfo = mainShaderInfo,
 			.vertexLayout = vertexLayout,
 			.cullMode = CullMode::BACK,
-			.windingMode = WindingMode::COUNTER_CLOCK_WISE };
+			.windingMode = WindingMode::COUNTER_CLOCK_WISE,
+
+			.depthWriteEnable = true,
+			.depthTestEnable = true 
+		};
 
 
 		RenderPassInfo renderPassInfo =
