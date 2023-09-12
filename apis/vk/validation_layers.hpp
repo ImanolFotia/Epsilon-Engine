@@ -32,14 +32,14 @@ namespace vk
     {
         if (messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT)
         {
-            IO::Log("validation layer: ", pCallbackData->pMessage);
+            IO::Log("validation layer: ", pCallbackData->pMessage, "\n");
 
             return VK_FALSE;
         }
 
         else if (messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT)
         {
-            IO::Error("validation layer: ", pCallbackData->pMessage);
+            IO::Error("validation layer: ", pCallbackData->pMessage, "\n");
 
             return VK_FALSE;
         }

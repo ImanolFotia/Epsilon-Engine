@@ -207,7 +207,7 @@ namespace vk
 
 		createImageView(vk_data, vk_data.defaultRenderPass.renderPassChain.DepthTexture, VK_IMAGE_ASPECT_DEPTH_BIT);
 
-		if (true) {
+		if (false) {
 
 			vk::createTextureSampler(vk_data, vk_data.defaultRenderPass.renderPassChain.DepthTexture);
 		}
