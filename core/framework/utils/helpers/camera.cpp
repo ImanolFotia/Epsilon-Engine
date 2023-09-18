@@ -193,7 +193,7 @@ namespace utils
             {
                 MovementSpeed = glm::mix(MovementSpeed, 0.0f, 2.0f * DeltaTime);
             }
-        }
+        } else
         /**---------------------------------------------------------------**/
 
         /** Joystick Camera input**/
