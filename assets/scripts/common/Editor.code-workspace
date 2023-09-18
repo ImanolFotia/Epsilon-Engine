@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../editor"
+		},
+		{
+			"path": "../Game"
+		}
+	],
+	"settings": {}
+}
