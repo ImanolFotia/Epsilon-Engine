@@ -10,6 +10,12 @@
 *.properties
 *.probe
 *.lock
+*.vmt
+*.jpg
+*.png
+*.psd
+*.fbx
+*.vmx
 
 Epsilon
 
@@ -22,6 +28,8 @@ Epsilon
 /CMakeFiles
 /assets/models/hl2
 /assets/models/portal
+/assets/textures
+/assets/sound
 /modules/dotnet/lib
 /docs
 /modules/mono/test
@@ -32,4 +40,3 @@ CMakeSettings.json
 assets/shaders/fragment.spv
 modules/dotnet/lib/EpsilonNET.csproj
 modules/dotnet/lib/Program.cs
-/assets
