@@ -16,6 +16,8 @@
 *.psd
 *.fbx
 *.vmx
+*.pdb
+*.cache
 
 Epsilon
 
@@ -35,6 +37,17 @@ Epsilon
 /modules/mono/test
 cmake-build-debug-coverage/
 cmake-build-release/
+/assets/scripts/Game
+/assets/scripts/editor/bin
+/assets/scripts/editor/obj
+/assets/scripts/editor/assemblies
+/assets/scripts/editor/Properties
+/assets/scripts/editor/.vs
+/assets/scripts/common/bin
+/assets/scripts/common/obj
+/assets/scripts/common/assemblies
+/assets/scripts/common/Properties
+/assets/scripts/common/.vs
 
 CMakeSettings.json
 assets/shaders/fragment.spv
