@@ -71,8 +71,8 @@ namespace engine
 
 		struct SceneEntity {
 			glm::vec3 position;
-			glm::vec3 scale;
 			glm::quat rotation;
+			glm::vec3 scale;
 		};
 
 		Scene() = default;
