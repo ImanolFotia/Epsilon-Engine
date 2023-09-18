@@ -144,7 +144,7 @@ class ImGuiRenderer
 		style->WindowBorderSize = 1.0;
 		style->FrameBorderSize = 1.0;
 		style->PopupBorderSize = 1.0;
-
+		
 		{
 
 			ImGuiStyle* style = &ImGui::GetStyle();
@@ -153,7 +153,7 @@ class ImGuiRenderer
 			style->Colors[ImGuiCol_WindowBg] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
 			style->Colors[ImGuiCol_ChildBg] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
 			style->Colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
-			style->Colors[ImGuiCol_Border] = ImVec4(0.43f, 0.43f, 0.50f, 0.50f);
+			style->Colors[ImGuiCol_Border] = ImVec4(0.43f, 0.43f, 0.50f, 0.25f);
 			style->Colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
 			style->Colors[ImGuiCol_FrameBg] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
 			style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.28f, 0.28f, 0.28f, 1.00f);
@@ -164,13 +164,13 @@ class ImGuiRenderer
 			style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
 			style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.53f);
 			style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
-			style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(1.00f, 0.81f, 0.32f, 1.00f);
+			//style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(1.00f, 0.81f, 0.32f, 1.00f);
 			style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.51f, 0.51f, 0.51f, 1.00f);
-			style->Colors[ImGuiCol_CheckMark] = ImVec4(1.00f, 0.81f, 0.32f, 1.00f);
+			//style->Colors[ImGuiCol_CheckMark] = ImVec4(1.00f, 0.81f, 0.32f, 1.00f);
 			style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.28f, 0.73f, 0.78f, 1.00f);
 			style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
 			style->Colors[ImGuiCol_Button] = ImVec4(0.02f, 0.60f, 0.60f, 0.00f);
-			style->Colors[ImGuiCol_ButtonHovered] = ImVec4(1.00f, 0.81f, 0.32f, 1.00f);
+			//style->Colors[ImGuiCol_ButtonHovered] = ImVec4(1.00f, 0.81f, 0.32f, 1.00f);
 			style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.06f, 0.53f, 0.98f, 1.00f);
 			style->Colors[ImGuiCol_Header] = ImVec4(0.12f, 0.12f, 0.12f, 1.00f);
 			style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.26f, 0.59f, 0.98f, 0.80f);
@@ -178,7 +178,7 @@ class ImGuiRenderer
 			style->Colors[ImGuiCol_Separator] = ImVec4(0.43f, 0.43f, 0.50f, 0.50f);
 			style->Colors[ImGuiCol_SeparatorHovered] = ImVec4(0.10f, 0.40f, 0.75f, 0.78f);
 			style->Colors[ImGuiCol_SeparatorActive] = ImVec4(0.10f, 0.40f, 0.75f, 1.00f);
-			style->Colors[ImGuiCol_ResizeGrip] = ImVec4(1.00f, 0.81f, 0.32f, 1.00f);
+			//style->Colors[ImGuiCol_ResizeGrip] = ImVec4(1.00f, 0.81f, 0.32f, 1.00f);
 			style->Colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.26f, 0.59f, 0.98f, 0.67f);
 			style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.26f, 0.59f, 0.98f, 0.95f);
 			style->Colors[ImGuiCol_Tab] = ImVec4(0.13f, 0.13f, 0.13f, 1.00f);
@@ -189,9 +189,9 @@ class ImGuiRenderer
 			style->Colors[ImGuiCol_DockingPreview] = ImVec4(0.26f, 0.59f, 0.98f, 0.70f);
 			style->Colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
 			style->Colors[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
-			style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.81f, 0.32f, 1.00f);
+			//style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.81f, 0.32f, 1.00f);
 			style->Colors[ImGuiCol_PlotHistogram] = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
-			style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 0.81f, 0.32f, 1.00f);
+			//style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 0.81f, 0.32f, 1.00f);
 			style->Colors[ImGuiCol_TableHeaderBg] = ImVec4(0.19f, 0.19f, 0.20f, 1.00f);
 			style->Colors[ImGuiCol_TableBorderStrong] = ImVec4(0.31f, 0.31f, 0.35f, 1.00f);
 			style->Colors[ImGuiCol_TableBorderLight] = ImVec4(0.23f, 0.23f, 0.25f, 1.00f);
@@ -214,9 +214,6 @@ class ImGuiRenderer
 
 		ImGuiIO& io = ImGui::GetIO();
 
-		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-		(void)io;
 		// io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 12);
 		// io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 10);
 		// io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 15);
@@ -230,12 +227,15 @@ class ImGuiRenderer
 		io.Fonts->AddFontFromFileTTF("./assets/fonts/FiraMono-Regular.ttf", 16, &config);
 #endif
 
-static const ImWchar icons_ranges[] = {ICON_MIN_FA, ICON_MAX_FA, 0};
- ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
- icons_config.GlyphOffset.y = 0.5;
- io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-regular-400.ttf", 15.0f, &icons_config, icons_ranges);
- io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-brands-400.ttf", 15.0f, &icons_config, icons_ranges);
- io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-solid-900.ttf", 15.0f, &icons_config, icons_ranges);
+		static const ImWchar icons_ranges[] = {ICON_MIN_FA, ICON_MAX_FA, 0};
+		ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
+		icons_config.GlyphOffset.y = 0.5;
+		io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-regular-400.ttf", 15.0f, &icons_config, icons_ranges);
+		io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-brands-400.ttf", 15.0f, &icons_config, icons_ranges);
+		io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-solid-900.ttf", 15.0f, &icons_config, icons_ranges);
+
+		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+		//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	}
 
 	bool m_pShowDebugPerformance = true;
@@ -330,7 +330,8 @@ public:
 		ImGui::CreateContext();
 		ImPlot::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
-		(void)io;
+
+		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 		m_pMainWindowData.Width = vk_data.swapChainWidth;
 		m_pMainWindowData.Height = vk_data.swapChainHeight;
@@ -414,6 +415,8 @@ public:
 			vkDeviceWaitIdle(vk_data.logicalDevice);
 			ImGui_ImplVulkan_DestroyFontUploadObjects();
 		}
+
+		//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	}
 	void ImGuiBegin()
 	{
@@ -448,6 +451,13 @@ public:
 
 		/**/
 		ImGui_ImplVulkan_RenderDrawData(draw_data, m_pCommandBuffer, VK_NULL_HANDLE);
+		if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			GLFWwindow* backup_current_context = glfwGetCurrentContext();
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			glfwMakeContextCurrent(backup_current_context);
+		}
 
 		// vk::endRenderPass(m_pCommandBuffer, *m_pVkDataPtr);
 		//   vk::endRecording(m_pCommandBuffer);
@@ -533,6 +543,7 @@ public:
 
 		}
 		ImGuiEnd();
+
 	}
 
 	void SparkLine(const char* id, const char* overlay, const float* values, int count, float min_v, float max_v, int offset, const ImVec4& col, const ImVec2& size)
@@ -578,7 +589,7 @@ public:
 
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
 
-		int toolbarHeight = 20;
+		int toolbarHeight = 70;
 
 		if (this->m_pShowDebugPerformance) {
 			toolbarHeight = 0;

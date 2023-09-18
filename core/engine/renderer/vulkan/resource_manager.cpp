@@ -401,7 +401,7 @@ namespace engine
 		renderPass.clearValues.resize(renderPassInfo.numAttachments + (renderPassInfo.depthAttachment ? 1 : 0));
 		for (int i = 0; i < renderPassInfo.numAttachments; i++)
 		{
-			renderPass.clearValues[i].color = { renderPassInfo.attachments[i].clearColor[0],
+			renderPass.clearValues[i].color = {renderPassInfo.attachments[i].clearColor[0],
 											   renderPassInfo.attachments[i].clearColor[1],
 											   renderPassInfo.attachments[i].clearColor[2],
 											   renderPassInfo.attachments[i].clearColor[3] };
@@ -678,7 +678,6 @@ namespace engine
 	 */
 	Ref<Buffer> VulkanResourceManager::destroyBuffer(BufferInfo)
 	{
-
 		throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
 	}
 

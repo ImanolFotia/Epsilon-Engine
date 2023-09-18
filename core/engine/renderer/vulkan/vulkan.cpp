@@ -178,18 +178,11 @@ namespace engine
 		if (m_pImageIndex == -1)
 			return;
 
-		//if (m_pImageIndex >= vk::MAX_FRAMES_IN_FLIGHT)
-		//	m_pImageIndex = 0;
-
 		m_pFrame.FrameIndex(m_pCurrentFrame);
 
 		m_pFrame.CommandBuffer(&m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
 
-		// m_pFrame.UniformBuffer(&m_pUniformBuffers.at(m_pCurrentFrame));
-
 		m_pFrame.SyncObjects(&m_pVkData.syncObjects.at(m_pCurrentFrame));
-
-		// std::cout << "m_pImageIndex " << m_pImageIndex << std::endl;
 
 		vkResetCommandBuffer(m_pFrame.CommandBuffer(), 0);
 
@@ -222,9 +215,6 @@ namespace engine
 
 	void VulkanRenderer::Begin()
 	{
-
-		// auto renderPass = m_pResourceManagerRef->getRenderPass(renderPassRef);
-
 		vk::recordCommandBuffer(m_pFrame.CommandBuffer(), m_pImageIndex);
 	}
 
@@ -246,7 +236,7 @@ namespace engine
 			}
 		}
 
-		m_pCurrentFrame = m_pImageIndex;// (m_pCurrentFrame + 1) % vk::MAX_FRAMES_IN_FLIGHT;
+		m_pCurrentFrame = m_pImageIndex;
 		m_pNumDrawCalls = 0;
 	}
 
@@ -289,8 +279,6 @@ namespace engine
 
 			vk::beginRenderPass(m_pFrame.CommandBuffer(), m_pVkData.defaultRenderPass);
 			m_pRenderPassActive = true;
-			//m_pActiveRenderPass = renderPassRef;
-
 		}
 		m_pImguiRenderer->DrawUI(std::forward<glm::vec3&>(v), m_pResourceManagerRef->ResourcesMemory);
 #endif
@@ -373,9 +361,6 @@ namespace engine
 			break;
 		}
 
-		// vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
-		//m_pCurrentCommandQueue.clear();
-
 		currentCommandsInQueue = 0;
 	}
 
@@ -392,11 +377,7 @@ namespace engine
 		int32_t prev_material_id = -1;
 
 		int changed = 0;
-		/*
-		std::sort(m_pCurrentCommandQueue.begin(), m_pCurrentCommandQueue.begin() + currentCommandsInQueue, [](auto& a, auto& b) {
-			return a.pushConstantData.material_index < b.pushConstantData.material_index;
-			});
-			*/
+
 		VkExtent2D extent = renderPass->renderPassChain.Extent;
 		VkViewport viewport{};
 		viewport.x = 0.0f;
@@ -433,7 +414,6 @@ namespace engine
 				}
 			}
 
-			//auto material = m_pResourceManagerRef->materialPool.get(command.material);
 
 			if (prev_vertex_buffer_id != command.meshResource.vertexBuffer.Id()) {
 				auto vertexBuffer = m_pResourceManagerRef->vertexBufferPool.get(command.meshResource.vertexBuffer);
@@ -571,8 +551,6 @@ namespace engine
 		}
 
 		vmaUnmapMemory(m_pResourceManagerRef->m_pAllocator, m_pResourceManagerRef->m_pIndirectBuffer.allocation);
-
-		// throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
 	}
 
 	int32_t VulkanRenderer::pPrepareSyncObjects()
@@ -585,7 +563,6 @@ namespace engine
 		VkResult result = vkAcquireNextImageKHR(m_pVkData.logicalDevice, m_pVkData.swapChain, UINT64_MAX,
 			m_pVkData.syncObjects[m_pCurrentFrame].imageAvailableSemaphores,
 			VK_NULL_HANDLE, &imageIndex);
-		// m_pFrame.CurrentImage(imageIndex);
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR)
 		{
@@ -688,7 +665,6 @@ namespace engine
 		pass->renderPassChain.setViewport(viewport);
 		pass->renderPassChain.setScissor(rect);
 
-		//m_pResourceManagerRef->pCreateDescriptorPool();
 		m_pResourceManagerRef->pRecreateFrameBuffers(rect.extent);
 
 		m_pResourceManagerRef->pCreateDescriptorPool();
