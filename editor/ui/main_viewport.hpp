@@ -14,8 +14,13 @@ namespace Editor::UI {
 		bool m_pShouldResize = false;
 		bool m_pFirstTime = true;
 		bool m_pIsHovered = false;
+		TransformationMode m_pTransformMode = TransformationMode::NONE;
 	public:
 		MainViewport() = default;
+
+		TransformationMode getMode() {
+			return m_pTransformMode;
+		}
 
 		void draw() override {
 			ImGui::Begin("Main Viewport");
@@ -24,6 +29,8 @@ namespace Editor::UI {
 			windowSize.y = glm::min(ImGui::GetWindowSize().y, ImGui::GetContentRegionAvail().y);
 
 			m_pSize = glm::ivec2(windowSize.x, windowSize.y);
+
+			auto cursor_pos = ImGui::GetCursorPos();
 
 
 			ImGuiIO& io = ImGui::GetIO();
@@ -47,12 +54,96 @@ namespace Editor::UI {
 
 			ImGui::Image(m_pImageInfo->id, ImGui::GetContentRegionAvail());
 
+
+			cursor_pos = ImVec2(cursor_pos.x + 20.0f, cursor_pos.y + 20.0f);
+			ImGui::SetCursorPos(cursor_pos);
+
+			bool colorSet = false;
+
+			if (m_pTransformMode == TransformationMode::NONE) {
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 130 / 255.0, 150 / 255.0, 1.00f));
+				colorSet = true;
+			}	
+
+			if (ImGui::Button(ICON_FA_MOUSE_POINTER, ImVec2(35, 35))) {
+				m_pTransformMode = TransformationMode::NONE;
+				std::cout << "selection\n";
+			} 
+			if (colorSet) {
+				ImGui::PopStyleColor();
+				colorSet = false;
+			}
+			ImGui::SameLine();
+
+			if (m_pTransformMode == TransformationMode::TRANSLATE) {
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 130 / 255.0, 150 / 255.0, 1.00f));
+				colorSet = true;
+			}
+			if (ImGui::Button(ICON_FA_ARROWS_ALT, ImVec2(35, 35))) {
+				m_pTransformMode = TransformationMode::TRANSLATE;
+				std::cout << "move\n";
+
+			} 
+
+			if (colorSet) {
+				ImGui::PopStyleColor();
+				colorSet = false;
+			}
+
+			ImGui::SameLine();
+
+			if (m_pTransformMode == TransformationMode::ROTATE) {
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 130 / 255.0, 150 / 255.0, 1.00f));
+				colorSet = true;
+			}
+
+			if (ImGui::Button(ICON_FA_SYNC, ImVec2(35, 35))) {
+				m_pTransformMode = TransformationMode::ROTATE;
+				std::cout << "rotate\n";
+
+			} 
+
+			if (colorSet) {
+				ImGui::PopStyleColor();
+				colorSet = false;
+			}
+
+			ImGui::SameLine();
+			if (m_pTransformMode == TransformationMode::SCALE) {
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 130 / 255.0, 150 / 255.0, 1.00f));
+				colorSet = true;
+			}
+			if (ImGui::Button(ICON_FA_EXPAND_ARROWS_ALT, ImVec2(35, 35))) {
+				m_pTransformMode = TransformationMode::SCALE;
+				std::cout << "scale\n";
+
+			}
+			if (colorSet) {
+				ImGui::PopStyleColor();
+				colorSet = false;
+			}
+			ImGui::SameLine();
+
+			if (m_pTransformMode == TransformationMode::BOUND) {
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 130 / 255.0, 150 / 255.0, 1.00f));
+				colorSet = true;
+			}
+			if (ImGui::Button(ICON_FA_VECTOR_SQUARE, ImVec2(35, 35))) {
+				m_pTransformMode = TransformationMode::BOUND;
+				std::cout << "bounds\n";
+			}
+			if (colorSet) {
+				ImGui::PopStyleColor();
+				colorSet = false;
+			}
+
+
 			auto mousePos = ImGui::GetMousePos();
 			auto windowPos = ImGui::GetWindowPos();
-			m_pPosition = glm::vec2(windowPos.x+7, windowPos.y+29);
+			m_pPosition = glm::vec2(windowPos.x + 7, windowPos.y + 29);
 			if (mousePos.x > windowPos.x + 7 && mousePos.y > windowPos.y + 29 &&
-				mousePos.x < windowPos.x + 7 + windowSize.x && mousePos.y < windowPos.y+29 + windowSize.y) {
-				if(!any_hovered)
+				mousePos.x < windowPos.x + 7 + windowSize.x && mousePos.y < windowPos.y + 29 + windowSize.y) {
+				if (!any_hovered)
 					m_pIsHovered = true;
 			}
 			else {

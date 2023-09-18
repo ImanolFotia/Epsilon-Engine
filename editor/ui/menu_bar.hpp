@@ -49,7 +49,7 @@ namespace Editor::UI {
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Help")) {
-				ImGui::MenuItem("Web site");
+				ImGui::MenuItem("Website");
 				ImGui::MenuItem("About");
 				ImGui::EndMenu();
 			}

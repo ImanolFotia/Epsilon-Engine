@@ -34,28 +34,7 @@ namespace Editor::UI {
 			ImGui::InputText("Name", m_pName.data(), m_pName.size()+1);
 			ImGui::Separator();
 			ImGui::Text("Transform");
-			ImGui::Text("Mode");
-
-				if (ImGui::RadioButton("None", m_pMode == NONE)) {
-					m_pMode = NONE;
-				}
-				if(ImGui::RadioButton("Translate", m_pMode == TRANSLATE)){
-					m_pMode = TRANSLATE;
-				}
-				if(ImGui::RadioButton("Rotate", m_pMode == ROTATE)){
-					m_pMode = ROTATE;
-				}
-				if(ImGui::RadioButton("Scale", m_pMode == SCALE)){
-					m_pMode = SCALE;
-				}
-				if (ImGui::RadioButton("Bound Scaling", m_pMode == BOUND)) {
-					m_pMode = BOUND;
-				}
-				if(ImGui::RadioButton("All", m_pMode == ALL)){
-					m_pMode = ALL;
-				}
-
-				ImGui::Checkbox("Bound scaling", &m_pBoundScaling);
+			
 			EpsilonUI::vector3("Position", m_pSelectedTransform.position);
 
 			ImGui::Checkbox("Lock Scale Axis", &m_pLockScaleAxis);
