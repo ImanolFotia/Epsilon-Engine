@@ -9,9 +9,9 @@ include_directories(${CMAKE_SOURCE_DIR} ../)
 
 set_source_files_properties( ${PROJECT_ICON} PROPERTIES RESOURCES Resources )
 
-add_executable(${PROJECT_NAME} main.cpp ${PROJECT_ICON})
+add_executable(${PROJECT_NAME} main.cpp editor.cpp ${PROJECT_ICON})
 
-target_sources(${PROJECT_NAME} PRIVATE main.cpp)
+target_sources(${PROJECT_NAME} PRIVATE main.cpp editor.cpp)
 
 add_dependencies(${PROJECT_NAME} Epsilon)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_DL_LIBS})
@@ -35,6 +35,8 @@ if(WIN32)
 else()
     target_link_libraries(${PROJECT_NAME} PRIVATE openal)
 endif()
+
+    target_link_libraries(${PROJECT_NAME} PRIVATE zlibstatic)
 
 set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}")
 include(InstallRequiredSystemLibraries)

@@ -87,6 +87,58 @@ namespace Editor::UI {
 		}
 
 	};
+
+	enum class SceneNodeType : int {
+		Root,
+		Node,
+		Render,
+		Script,
+		Transform
+	};
+
+	struct NodeProperties {
+
+		bool valid() {
+			return node_ref != nullptr;
+		}
+
+		size_t num_children() {
+			return children.size();
+		}
+
+		void DestroyChildren() {
+			for (auto& child : children) {
+				child.DestroyChildren();
+			}
+
+			children.clear();
+		}
+
+		const char* type() {
+			switch ((int)mType) {
+			case (int)SceneNodeType::Render: return "Render";
+			case (int)SceneNodeType::Transform: return "Transform";
+			case (int)SceneNodeType::Script: return "Script";
+			default: return "Node"; break;
+			}
+		}
+
+		void* node_ref = nullptr;
+		void* scene_node_ref = nullptr;
+		std::string name{};
+		std::string model_path{};
+
+		std::vector<NodeProperties> children;
+
+		SceneNodeType mType{};
+
+		uint32_t index = 0;
+
+		uint32_t Index() {
+			return index;
+		}
+
+	};
 }
 
 namespace Editor {
