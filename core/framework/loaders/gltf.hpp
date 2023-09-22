@@ -8,6 +8,8 @@
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 #include "model.h"
+//#include <core/framework/vfs/filesystem.hpp>
+
 namespace framework {
 
 
@@ -487,7 +489,17 @@ namespace framework {
 				// assume binary glTF.
 				ret = loader.LoadBinaryFromFile(&model, &err, &warn, path.c_str());
 			}
-			else {
+			else {/*
+				std::string name = filename;
+				if (filename.starts_with("./")) {
+					name = filename.substr(2, filename.size());
+				}
+				if (filename.starts_with("/")) {
+					name = filename.substr(1, filename.size());
+				}
+				if (bool isPresent = engine::Filesystem::is_present(name); isPresent) {
+					std::cout << "found in zip\n";
+				}*/
 				// assume ascii glTF.
 				ret = loader.LoadASCIIFromFile(&model, &err, &warn, path.c_str());
 			}

@@ -11,6 +11,9 @@ public:
 		delete header;
 	}
 
+	bool LoadCompressed(const std::string&, unsigned int);
+	void Load(const std::string&, unsigned int);
+
 
 	uint32_t mipLevels() {
 		return header->dwMipMapCount- m_pBaseLevel;
@@ -41,8 +44,10 @@ public:
 	}
 
 	static void free_data(unsigned char* iData) {
-		if(iData != nullptr)
-			delete iData;
+		if (iData != nullptr) {
+			delete[] iData;
+			iData = nullptr;
+		}
 	}
 
 
