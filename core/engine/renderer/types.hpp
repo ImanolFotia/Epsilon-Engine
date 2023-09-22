@@ -521,8 +521,8 @@ namespace engine
 
     struct PipelineLayout
     {
-        ShaderInfo shaderInfo;
-        VertexLayout vertexLayout;
+        ShaderInfo shaderInfo{};
+        VertexLayout vertexLayout{};
         CullMode cullMode;
         WindingMode windingMode;
         bool depthWriteEnable = true;

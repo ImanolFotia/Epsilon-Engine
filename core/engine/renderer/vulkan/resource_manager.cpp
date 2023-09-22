@@ -41,12 +41,6 @@ namespace engine
 		vkGetPhysicalDeviceFeatures(m_pVkDataPtr->physicalDevice, &deviceFeatures);
 
 		ResourcesMemory.GPUName = std::string(deviceProperties.deviceName);
-		/*IO::Log("Selected device: ", deviceProperties.deviceName);
-		IO::Log("\tApi version: ", deviceProperties.apiVersion);
-		IO::Log("\tID: ", deviceProperties.deviceID);
-		IO::Log("\tDriver version: ", deviceProperties.driverVersion);
-		IO::Log("\tVendor ID: ", deviceProperties.vendorID);
-		IO::Log("\tIs discrete device: ", (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU ? "yes" : "no"));*/
 
 		vmaCreateAllocator(&allocatorInfo, &m_pAllocator);
 
@@ -103,7 +97,7 @@ namespace engine
 											 .usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT |
 													  VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
 													  VK_IMAGE_USAGE_SAMPLED_BIT,
-			 }
+			}
 		);
 
 		texture.format = format;
@@ -274,8 +268,6 @@ namespace engine
 
 			m_pNumCommandPools++;
 
-			//pCreateDescriptorPool();
-			//pRecreateDescriptorSets();
 			pCreateDescriptorSets(vkMaterial.descriptorSetLayout,
 				m_pDescriptorPool,
 				vkMaterial.descriptorSets,
@@ -317,18 +309,14 @@ namespace engine
 				.depthStencil = {
 				(float)renderPassInfo.attachments.back().depthStencilValue[0],
 				renderPassInfo.attachments.back().depthStencilValue[1] };
-
-
 		}
 
 		vk::createRenderPass(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, renderPassInfo, true);
 
 
-		// for (int i = 0; i < renderPassInfo.numLayouts; i++)
 		{
 
 			m_pVkDataPtr->defaultRenderPass.renderPipelines.resize(renderPassInfo.numLayouts);
-			// m_pVkDataPtr->defaultRenderPass.renderPipelines.emplace_back();
 			m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayouts.resize(2);
 			vk::createDescriptorSetLayout(*m_pVkDataPtr,
 				m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayouts.at(RENDERPASS_LAYOUT), renderPassInfo.bindingInfo);
@@ -401,7 +389,7 @@ namespace engine
 		renderPass.clearValues.resize(renderPassInfo.numAttachments + (renderPassInfo.depthAttachment ? 1 : 0));
 		for (int i = 0; i < renderPassInfo.numAttachments; i++)
 		{
-			renderPass.clearValues[i].color = {renderPassInfo.attachments[i].clearColor[0],
+			renderPass.clearValues[i].color = { renderPassInfo.attachments[i].clearColor[0],
 											   renderPassInfo.attachments[i].clearColor[1],
 											   renderPassInfo.attachments[i].clearColor[2],
 											   renderPassInfo.attachments[i].clearColor[3] };
@@ -463,7 +451,6 @@ namespace engine
 					renderPass.renderPassChain.ImageViews.push_back(texture.imageView);
 					renderPass.renderPassChain.Textures.push_back(texture);
 					renderPass.renderPassChain.DepthTexture.index = i;
-
 				}
 			}
 			else
@@ -549,17 +536,6 @@ namespace engine
 		{
 			vmaDestroyBuffer(m_pAllocator, buffer.buffer, buffer.allocation);
 		}
-		/*
-		for (auto& buffer : uniformBufferPool)
-		{
-			for (auto& b : buffer.buffers)
-			{
-				vmaDestroyBuffer(m_pAllocator, b.buffer, b.allocation);
-			}
-		}
-		*/
-
-
 
 		for (auto& buffer : gpuBufferPool)
 		{
@@ -570,7 +546,6 @@ namespace engine
 				}
 			}
 		}
-
 
 		for (auto& buffer : gpuBufferPool)
 		{
@@ -639,8 +614,9 @@ namespace engine
 						vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass.renderPassChain.DepthTexture.imageView, nullptr);
 					if (pass.renderPassChain.DepthTexture.image != VK_NULL_HANDLE && pass.renderPassChain.DepthTexture.index < 0)
 						vmaDestroyImage(m_pAllocator, pass.renderPassChain.DepthTexture.image, pass.renderPassChain.DepthTexture.allocation);
-					
-					continue; }
+
+					continue;
+				}
 				if (pass.renderPassChain.hasDepthSampler && pass.renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE && pass.renderPassChain.Textures[pass.renderPassChain.DepthTexture.index].sampler != VK_NULL_HANDLE)
 					vkDestroySampler(m_pVkDataPtr->logicalDevice, pass.renderPassChain.DepthTexture.sampler, nullptr);
 
@@ -652,7 +628,7 @@ namespace engine
 						pass.renderPassChain.DepthTexture.allocation);
 					pass.renderPassChain.DepthTexture.image = VK_NULL_HANDLE;
 				}
-					
+
 			}
 		}
 
@@ -872,12 +848,6 @@ namespace engine
 			vmaDestroyImage(m_pAllocator, pass->renderPassChain.Textures[i].image,
 				pass->renderPassChain.Textures[i].allocation);
 		}
-		/*
-		if (pass->renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE)
-			vkDestroySampler(m_pVkDataPtr->logicalDevice, pass->renderPassChain.DepthTexture.sampler, nullptr);
-
-		if (pass->renderPassChain.DepthTexture.imageView != VK_NULL_HANDLE)
-			vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass->renderPassChain.DepthTexture.imageView, nullptr);*/
 
 		vmaDestroyImage(m_pAllocator, pass->renderPassChain.DepthTexture.image,
 			pass->renderPassChain.DepthTexture.allocation);
@@ -931,7 +901,7 @@ namespace engine
 		extent.width = size.x;
 		extent.height = size.y;
 
-		for(auto& framebuffer: renderPass->renderPassChain.Framebuffers)
+		for (auto& framebuffer : renderPass->renderPassChain.Framebuffers)
 			vkDestroyFramebuffer(m_pVkDataPtr->logicalDevice, framebuffer, nullptr);
 
 		for (int i = 0; i < renderPass->renderPassChain.Textures.size(); i++)
@@ -942,12 +912,6 @@ namespace engine
 				renderPass->renderPassChain.Textures[i].allocation);
 		}
 		{
-			/*
-
-			vkDestroyImageView(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.DepthTexture.imageView, nullptr);
-			vmaDestroyImage(m_pAllocator, renderPass->renderPassChain.DepthTexture.image,
-				renderPass->renderPassChain.DepthTexture.allocation);
-			*/
 
 			if (renderPass->renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE && renderPass->renderPassChain.DepthTexture.index < 0)
 				vkDestroySampler(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.DepthTexture.sampler, nullptr);
@@ -967,8 +931,6 @@ namespace engine
 		for (size_t i = 0; i < renderPassInfo.attachments.size(); i++)
 		{
 			auto& attachment = renderPassInfo.attachments[i];
-
-			
 
 			vk::VulkanTextureInfo texInfo;
 			texInfo.format = attachment.isDepthAttachment ? findDepthFormat(*m_pVkDataPtr) : resolveFormat(renderPassInfo.attachments[i].format);
@@ -1010,7 +972,6 @@ namespace engine
 					renderPass->renderPassChain.hasDepthSampler = false;
 					renderPass->renderPassChain.ImageViews.at(i) = texture.imageView;
 					renderPass->renderPassChain.Textures.at(i) = texture;
-
 				}
 			}
 			else
@@ -1021,8 +982,6 @@ namespace engine
 		}
 
 		vk::createFramebuffers(*m_pVkDataPtr, *renderPass, renderPass->renderPassChain);
-		//createRenderPass(m_pRenderPassInfo[renderPass->id]);
-
 
 		VkViewport viewport = {
 			.x = 0,

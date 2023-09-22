@@ -17,21 +17,42 @@
 #include <linux/limits.h>
 #endif
 
+#ifdef _WIN32
+
+#include <process.h>
+#include <iostream>
+#include <Windows.h>
+#include "dbghelp.h"
+
+#define PATH_MAX 256 //per spec
+#endif
+
 namespace framework {
 
-#ifdef __linux__
 static std::string get_path()
 {
+#ifdef __linux__
     char result[PATH_MAX];
     ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
 
     auto str = std::string(result, (count > 0) ? count : 0);
     std::cout << str;
     return "";
+#endif
+
+#ifdef _WIN32
+    char result[PATH_MAX];
+    size_t count = GetModuleFileName(NULL, result, PATH_MAX);//readlink("/proc/self/exe", result, PATH_MAX);
+
+    auto str = std::string(result, (count > 0) ? count : 0);
+    std::cout << str;
+    return "";
+#endif
 }
 
 static std::string sh(const std::string& cmd)
 {
+#ifdef __linux__
     std::array<char, 128> buffer = {0};
     std::string result;
     std::shared_ptr<FILE> pipe(popen(cmd.c_str(), "r"), pclose);
@@ -46,9 +67,26 @@ static std::string sh(const std::string& cmd)
     }
 
     return result;
+#endif
+
+#ifdef _WIN32
+    std::array<char, 128> buffer = { 0 };
+    std::string result;
+    std::shared_ptr<FILE> pipe(_popen(cmd.c_str(), "r"), _pclose);
+    if (!pipe)
+        throw std::runtime_error("popen() failed!");
+    while (!feof(pipe.get()))
+    {
+        if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
+        {
+            result += buffer.data();
+        }
+    }
+
+    return result;
+#endif
 }
 
-#endif
 
 static std::vector<std::string> split(const std::string &s, char seperator)
 {
@@ -132,6 +170,102 @@ public:
         free(framesDescriptions);
 #endif
 
+
+#if false && (!defined(ANDROID) && !defined(__ANDROID__))
+
+        BOOL    result;
+        HANDLE  process;
+        HANDLE  thread;
+        HMODULE hModule;
+
+        STACKFRAME64        stack;
+        ULONG               frame;
+        DWORD64             displacement;
+
+        DWORD disp;
+        IMAGEHLP_LINE64* line;
+
+        char buffer[sizeof(SYMBOL_INFO) + MAX_SYM_NAME * sizeof(TCHAR)];
+        char name[PATH_MAX];
+        char module[PATH_MAX];
+        PSYMBOL_INFO pSymbol = (PSYMBOL_INFO)buffer;
+
+        // On x64, StackWalk64 modifies the context record, that could
+        // cause crashes, so we create a copy to prevent it
+        CONTEXT ctxCopy;
+        memcpy(&ctxCopy, ctx, sizeof(CONTEXT));
+
+        memset(&stack, 0, sizeof(STACKFRAME64));
+
+        process = GetCurrentProcess();
+        thread = GetCurrentThread();
+        displacement = 0;
+#if !defined(_M_AMD64)
+        stack.AddrPC.Offset = (*ctx).Eip;
+        stack.AddrPC.Mode = AddrModeFlat;
+        stack.AddrStack.Offset = (*ctx).Esp;
+        stack.AddrStack.Mode = AddrModeFlat;
+        stack.AddrFrame.Offset = (*ctx).Ebp;
+        stack.AddrFrame.Mode = AddrModeFlat;
+#endif
+
+        SymInitialize(process, NULL, TRUE); //load symbols
+
+        for (frame = 0; ; frame++)
+        {
+            //get next call from stack
+            result = StackWalk64
+            (
+#if defined(_M_AMD64)
+                IMAGE_FILE_MACHINE_AMD64
+#else
+                IMAGE_FILE_MACHINE_I386
+#endif
+                ,
+                process,
+                thread,
+                &stack,
+                &ctxCopy,
+                NULL,
+                SymFunctionTableAccess64,
+                SymGetModuleBase64,
+                NULL
+            );
+
+            if (!result) break;
+
+            //get symbol name for address
+            pSymbol->SizeOfStruct = sizeof(SYMBOL_INFO);
+            pSymbol->MaxNameLen = MAX_SYM_NAME;
+            SymFromAddr(process, (ULONG64)stack.AddrPC.Offset, &displacement, pSymbol);
+
+            line = (IMAGEHLP_LINE64*)malloc(sizeof(IMAGEHLP_LINE64));
+            line->SizeOfStruct = sizeof(IMAGEHLP_LINE64);
+
+            //try to get line
+            if (SymGetLineFromAddr64(process, stack.AddrPC.Offset, &disp, line))
+            {
+                printf("\tat %s in %s: line: %lu: address: 0x%0X\n", pSymbol->Name, line->FileName, line->LineNumber, pSymbol->Address);
+            }
+            else
+            {
+                //failed to get line
+                printf("\tat %s, address 0x%0X.\n", pSymbol->Name, pSymbol->Address);
+                hModule = NULL;
+                lstrcpyA(module, "");
+                GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                    (LPCTSTR)(stack.AddrPC.Offset), &hModule);
+
+                //at least print module name
+                if (hModule != NULL)GetModuleFileNameA(hModule, module, PATH_MAX);
+
+                printf("in %s\n", module);
+            }
+
+            free(line);
+            line = NULL;
+        }
+#endif
         return current;
     }
 

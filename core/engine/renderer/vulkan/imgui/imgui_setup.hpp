@@ -59,6 +59,7 @@ class ImGuiRenderer
 	bool m_pEnabled = true;
 	engine::VulkanResourceManager* m_pResourceManagerRef;
 
+
 	void setStyle()
 	{
 
@@ -144,7 +145,7 @@ class ImGuiRenderer
 		style->WindowBorderSize = 1.0;
 		style->FrameBorderSize = 1.0;
 		style->PopupBorderSize = 1.0;
-		
+		/*
 		{
 
 			ImGuiStyle* style = &ImGui::GetStyle();
@@ -210,7 +211,8 @@ class ImGuiRenderer
 			style->WindowRounding = 0.0;
 			style->WindowTitleAlign = ImVec2(0.5, 0.5);
 			style->WindowBorderSize = 0.0;
-		}
+		}*/
+		style->WindowTitleAlign = ImVec2(0.5, 0.5);
 
 		ImGuiIO& io = ImGui::GetIO();
 
@@ -219,20 +221,33 @@ class ImGuiRenderer
 		// io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 15);
 		ImFontConfig config;
 		config.OversampleH = 2;
+
+		static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+		ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
 		
 #ifdef _WIN32
-		io.Fonts->AddFontFromFileTTF("./assets/fonts/Roboto-Regular.ttf", 15, &config);
+
+
+		icons_config.GlyphOffset.y = 0.8;
+		icons_config.GlyphOffset.x = 0.8;
+		NormalFont = io.Fonts->AddFontFromFileTTF("./assets/fonts/Roboto-Regular.ttf", 16.0, &config);
+		io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-regular-400.ttf", 16.0f, &icons_config, icons_ranges);
+		io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-brands-400.ttf", 16.0f, &icons_config, icons_ranges);
+		io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-solid-900.ttf", 16.0f, &icons_config, icons_ranges);
+		icons_config.GlyphOffset.y = 0.8;
+		icons_config.GlyphOffset.x = 0.8;
+
+		BigFont = io.Fonts->AddFontFromFileTTF("./assets/fonts/Roboto-Regular-Big.ttf", 19, &config);
+		io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-regular-400.ttf", 19.0f, &icons_config, icons_ranges);
+		io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-brands-400.ttf", 19.0f, &icons_config, icons_ranges);
+		io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-solid-900.ttf", 19.0f, &icons_config, icons_ranges);
+
 #endif
 #ifdef __linux__
-		io.Fonts->AddFontFromFileTTF("./assets/fonts/FiraMono-Regular.ttf", 16, &config);
+		NormalFont = io.Fonts->AddFontFromFileTTF("./assets/fonts/FiraMono-Regular.ttf", 15, &config);
+		BigFont = io.Fonts->AddFontFromFileTTF("./assets/fonts/FiraMono-Regular.ttf", 19, &config);
 #endif
 
-		static const ImWchar icons_ranges[] = {ICON_MIN_FA, ICON_MAX_FA, 0};
-		ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
-		icons_config.GlyphOffset.y = 0.5;
-		io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-regular-400.ttf", 15.0f, &icons_config, icons_ranges);
-		io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-brands-400.ttf", 15.0f, &icons_config, icons_ranges);
-		io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-solid-900.ttf", 15.0f, &icons_config, icons_ranges);
 
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
@@ -241,6 +256,9 @@ class ImGuiRenderer
 	bool m_pShowDebugPerformance = true;
 
 public:
+
+	ImFont* NormalFont = nullptr;
+	ImFont* BigFont = nullptr;
 
 	struct ImageInfo {
 		VkDescriptorSet id;
@@ -506,7 +524,7 @@ public:
 			// ImGui::SetNextWindowSize(ImVec2(wd->Width, wd->Height));
 
 			///////// USER INPUT BEGINS HERE
-			if (m_pShowDebugPerformance) {
+			if (/*m_pShowDebugPerformance*/ false) {
 				ImGui::SetNextWindowPos(ImVec2(10, 10));
 				ImGui::Begin("Info", nullptr, ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize);
 				ImGui::Text("Timings:");

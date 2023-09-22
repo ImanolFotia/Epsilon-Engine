@@ -246,11 +246,10 @@ namespace engine
 		NodeTypes node_types;
 		NodeIndexType node_index;
 
-		std::unordered_map<std::type_index, std::list<std::shared_ptr<NodeBase>>> node_child_index;
 
 		std::unordered_map<size_t /*parent*/,
 			std::unordered_map<std::type_index,
-			std::list<std::shared_ptr<NodeBase>>>>
+			std::vector<std::shared_ptr<NodeBase>>>>
 			children_node_index;
 
 		std::queue<size_t> free_indices;

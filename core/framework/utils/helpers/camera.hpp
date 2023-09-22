@@ -83,7 +83,9 @@ namespace utils
 
         void onMouseWheelCallback(beacon::sender *sender, beacon::args *args);
         
-        float getNearPlane() { return near_plane; }
+        float getNearPlane() { 
+            return near_plane;
+        }
         float getFarPlane() { return far_plane; }
 
         void ResetDeltas() {
@@ -99,15 +101,15 @@ namespace utils
 
 
     public:
-        glm::mat4 MVP;
+        glm::mat4 MVP = glm::mat4(1.0);
 
-        float MovementSpeed;
-        float MouseSpeed;
-        float JoystickSensibility;
-        float FieldOfView;
-        int winx;
-        int winy;
-        float MaxMovementSpeed;
+        float MovementSpeed{};
+        float MouseSpeed{};
+        float JoystickSensibility{};
+        float FieldOfView{};
+        int winx{};
+        int winy{};
+        float MaxMovementSpeed{};
         bool mIsMoving = false;
         bool externallymodified = true;
         float jitter_multiplier = 1.0;
@@ -119,12 +121,12 @@ namespace utils
         glm::vec3 newOrientation{};
         glm::vec3 newPosition{};
         glm::mat4 PrevView{};
-        bool OrientationhasChanged;
-        bool PositionhasChanged;
-        double verticalAngle;
-        double horizontalAngle;
-        float near_plane;
-        float far_plane;
+        bool OrientationhasChanged = false;
+        bool PositionhasChanged = false;
+        double verticalAngle = 0.0;
+        double horizontalAngle = 0.0;
+        float near_plane = 0.001;
+        float far_plane = 3000.0;
         glm::mat4 ViewMatrix = glm::mat4(1.0f);
         glm::mat4 ProjectionMatrix = glm::mat4(1.0f);
         glm::vec3 Position{};
@@ -135,7 +137,7 @@ namespace utils
 
         double lastX = 0.0, lastY = 0.0;
 
-        bool resetDeltas;
+        bool resetDeltas = false;
     };
 } // namespace Epsilon
 #endif // CAMERA_H_INCLUDED

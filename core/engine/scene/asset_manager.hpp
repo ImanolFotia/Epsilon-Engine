@@ -16,6 +16,8 @@
 
 #include "structs/box.hpp"
 
+#include <core/framework/vfs/filesystem.hpp>
+
 namespace engine
 {
 
@@ -158,6 +160,9 @@ namespace engine
 		std::vector<GPUAnimationData*> animationTransformBufferPtr;
 
 		void Init() {
+
+			Filesystem::Mount("./assets/buttons.zip");
+
 			auto resourceManager = m_pContext->ResourceManager();
 
 			m_pGPUBuffers["material_buffer"] = resourceManager->createGPUBuffer("material_buffer", sizeof(PBRMaterial) * MAX_MATERIALS, engine::BufferStorageType::STORAGE_BUFFER);
