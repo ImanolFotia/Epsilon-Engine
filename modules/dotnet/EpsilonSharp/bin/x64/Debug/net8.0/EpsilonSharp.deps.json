@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "EpsilonSharp/1.0.0": {
+        "dependencies": {
+          "common": "1.0.0"
+        },
+        "runtime": {
+          "EpsilonSharp.dll": {}
+        }
+      },
+      "common/1.0.0": {
+        "runtime": {
+          "common.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "EpsilonSharp/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "common/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

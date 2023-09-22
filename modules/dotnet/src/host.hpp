@@ -18,7 +18,7 @@ namespace dotnet
         void Load(std::wstring argv)
         {
 
-            assembly = DotnetAssembly(argv.c_str(), L"Editor");
+            assembly = DotnetAssembly(argv.c_str(), L"EpsilonSharp");
         }
 
         static void errorFunc(const char_t* msg) {

@@ -1,0 +1,17 @@
+J:\Code\Epsilon-Engine\assets\scripts\editor\bin\x64\Release\net7.0\Editor.deps.json
+J:\Code\Epsilon-Engine\assets\scripts\editor\bin\x64\Release\net7.0\Editor.runtimeconfig.json
+J:\Code\Epsilon-Engine\assets\scripts\editor\bin\x64\Release\net7.0\Editor.dll
+J:\Code\Epsilon-Engine\assets\scripts\editor\bin\x64\Release\net7.0\Editor.pdb
+J:\Code\Epsilon-Engine\assets\scripts\editor\bin\x64\Release\net7.0\common.dll
+J:\Code\Epsilon-Engine\assets\scripts\editor\bin\x64\Release\net7.0\common.pdb
+J:\Code\Epsilon-Engine\assets\scripts\editor\obj\x64\Release\net7.0\Editor.csproj.AssemblyReference.cache
+J:\Code\Epsilon-Engine\assets\scripts\editor\obj\x64\Release\net7.0\Editor.GeneratedMSBuildEditorConfig.editorconfig
+J:\Code\Epsilon-Engine\assets\scripts\editor\obj\x64\Release\net7.0\Editor.AssemblyInfoInputs.cache
+J:\Code\Epsilon-Engine\assets\scripts\editor\obj\x64\Release\net7.0\Editor.AssemblyInfo.cs
+J:\Code\Epsilon-Engine\assets\scripts\editor\obj\x64\Release\net7.0\Editor.csproj.CoreCompileInputs.cache
+J:\Code\Epsilon-Engine\assets\scripts\editor\obj\x64\Release\net7.0\Editor.csproj.CopyComplete
+J:\Code\Epsilon-Engine\assets\scripts\editor\obj\x64\Release\net7.0\Editor.dll
+J:\Code\Epsilon-Engine\assets\scripts\editor\obj\x64\Release\net7.0\refint\Editor.dll
+J:\Code\Epsilon-Engine\assets\scripts\editor\obj\x64\Release\net7.0\Editor.pdb
+J:\Code\Epsilon-Engine\assets\scripts\editor\obj\x64\Release\net7.0\Editor.genruntimeconfig.cache
+J:\Code\Epsilon-Engine\assets\scripts\editor\obj\x64\Release\net7.0\ref\Editor.dll
