@@ -22,6 +22,13 @@ namespace EpsilonSharp
             ObjectToPtr[Obj] = Ptr;
         }
 
+        public void Update(IntPtr Ptr, object Obj)
+        {
+
+            PtrToObject[Ptr] = Obj;
+            ObjectToPtr[Obj] = Ptr;
+        }
+
         public void Remove(IntPtr Ptr)
         {
             object obj = PtrToObject[Ptr];
@@ -55,6 +62,10 @@ namespace EpsilonSharp
         public IntPtr GetUnmanaged(object Obj)
         {
             return ObjectToPtr[Obj];
+        }
+
+        public Dictionary<IntPtr, object> ToDictionary() {
+            return PtrToObject;
         }
     }
 }

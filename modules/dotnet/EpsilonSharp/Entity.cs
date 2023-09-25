@@ -21,11 +21,11 @@ namespace EpsilonSharp
 
         ~GameEntity()
         {
-            Console.WriteLine("Entity destroyed");
+            Console.WriteLine($"{Name} Entity destroyed");
         }
         public GameEntity(Transform transform)
         {
-            transform = transform;
+            this.transform = transform;
         }
         public GameEntity()
         {
@@ -57,7 +57,6 @@ namespace EpsilonSharp
                 transformCallback(NativePtr, CppEntity, t);
         }
 
-
         public void setCallback(IntPtr c)
         {
             transformCallback = (setTransformCallBackDelegate)
@@ -74,7 +73,8 @@ namespace EpsilonSharp
         [MarshalAs(UnmanagedType.BStr)]
         public string m_pFieldsStr;
         public IntPtr _NodeManagerPtr;
-        public string name;
+        public IntPtr ManagedPtr;
+        public string Name { get; set; }
 
         public T GetNode<T>(string name)
         {

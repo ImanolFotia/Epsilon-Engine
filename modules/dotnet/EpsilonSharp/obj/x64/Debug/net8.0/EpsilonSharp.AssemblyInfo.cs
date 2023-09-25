@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EpsilonSharp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ece20a8a23e49cfa681a854c63192d19cd5e0924")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+82e181394cdc90da30529bcc898e5d298b7f7e71")]
 [assembly: System.Reflection.AssemblyProductAttribute("EpsilonSharp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EpsilonSharp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

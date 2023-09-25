@@ -59,5 +59,10 @@ namespace EpsilonSharp
 
             m_pNodeRegistry[typeof(T).FullName][name] = node;
         }
+
+        public void Clear()
+        {
+            m_pNodeRegistry = null;
+        }
     }
 }

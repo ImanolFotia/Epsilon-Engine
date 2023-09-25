@@ -27,7 +27,6 @@ namespace EpsilonSharp
 
         public delegate void setEntityTransformDelegate(IntPtr obj, EntityArgs args);
 
-        public delegate void ReloadAssembliesDelegate();
 
         public delegate string getEntityFieldsDelegate(IntPtr obj);
 
@@ -35,11 +34,16 @@ namespace EpsilonSharp
 
         public delegate void CallBackDelegate(IntPtr scene_hnd, int entity_id, Transform transform);
 
+        public delegate void registerUpdateReferenceCallbackDelegate(IntPtr func_ptr);
+        public delegate void UpdateReferenceCallbackDelegate(IntPtr scene, IntPtr unmanaged, IntPtr managed);
+
         public delegate IntPtr CreateEntityDelegate(IntPtr unmanagedObject, IntPtr o_name);
 
         public delegate void SetPropertyDelegate(IntPtr obj, IntPtr prop_name, float value);
 
         public delegate void SetPropertyBoolDelegate(IntPtr obj, IntPtr prop_name, bool value);
+
+        public delegate void ReloadAssembliesDelegate();
 
     }
 }

@@ -10,7 +10,7 @@ namespace Types
 {
 
     [StructLayout(LayoutKind.Sequential)]
-    public class Transform
+    public class Transform 
     {
         public Transform() { }
         public Math.Vec3 Position = new Math.Vec3(0.0f);

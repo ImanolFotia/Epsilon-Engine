@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Loader;
 using System.Runtime.Serialization;
@@ -24,14 +25,17 @@ namespace EpsilonSharp
 
         static List<Assembly> m_pAssemblies = new List<Assembly>();
 
-        private static CallBackDelegate? callback;
-        public static setTransformCallBackDelegate? transformCallback;
-        static DomainManager domainMgr;
+        private static CallBackDelegate callback;
+        private static UpdateReferenceCallbackDelegate UpdateReferenceCallback;
+        public static setTransformCallBackDelegate transformCallback;
+        static AssemblyLoader domainMgr;
 
         static bool isInstance = false;
 
         static BridgeDictionary m_pBridgeDictionary;
 
+        static FileSystemWatcher watcher;
+        static WeakReference weakReference;
 
         static Epsilon()
         {
@@ -48,11 +52,26 @@ namespace EpsilonSharp
 
             Console.WriteLine("statically instantiating Epsilon");
 
-            string pluginPath = Directory.GetCurrentDirectory() + "/assets/scripts/Game/bin/x64/Debug/net8.0/Game.dll";
+            string pluginPath = Directory.GetCurrentDirectory() + "\\assets\\scripts\\Game\\bin\\x64\\Debug\\net8.0\\Game.dll";
 
-            domainMgr = new DomainManager(pluginPath);
+            watcher = new FileSystemWatcher(Directory.GetCurrentDirectory() + "\\assets\\scripts\\Game\\bin\\x64\\Debug\\net8.0");
+            watcher.NotifyFilter = NotifyFilters.Attributes
+                                 | NotifyFilters.CreationTime
+                                 | NotifyFilters.DirectoryName
+                                 | NotifyFilters.FileName
+                                 | NotifyFilters.LastAccess
+                                 | NotifyFilters.LastWrite
+                                 | NotifyFilters.Security
+                                 | NotifyFilters.Size;
 
-            m_pBridgeDictionary  =new BridgeDictionary();
+            //watcher.Changed += OnChanged;
+            watcher.Filter = "";
+            watcher.IncludeSubdirectories = true;
+            watcher.EnableRaisingEvents = true;
+
+            domainMgr = new AssemblyLoader(pluginPath, AssemblyLoadContext.Default, true);
+            weakReference = new WeakReference(domainMgr, trackResurrection: true);
+            m_pBridgeDictionary = new BridgeDictionary();
 
             var assembly = domainMgr.LoadFromAssemblyName(AssemblyName.GetAssemblyName(pluginPath));
 #if DEBUG
@@ -62,6 +81,15 @@ namespace EpsilonSharp
 
             Console.WriteLine(Directory.GetCurrentDirectory());
             m_pAssemblies.Add(assembly);
+        }
+
+        private static void OnChanged(object sender, FileSystemEventArgs e)
+        {
+            if (e.ChangeType != WatcherChangeTypes.Changed)
+            {
+                return;
+            }
+            ReloadAssemblies();
         }
 
         public static void registerCallback(IntPtr func_ptr)
@@ -107,7 +135,7 @@ namespace EpsilonSharp
                         BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance,
                         null, Type.EmptyTypes, null) ?? throw new Exception("ctor is null");
 
-                dynamic obj = FormatterServices.GetUninitializedObject(objectType);
+                dynamic obj = RuntimeHelpers.GetUninitializedObject(objectType);
 
                 _ = ctor!.Invoke(obj, null);
 
@@ -118,13 +146,13 @@ namespace EpsilonSharp
                 obj.setCallback(callbackPtr);
                 obj.NativePtr = unmanagedObject;
                 obj.setPropertiesStr(jsonObj);
-                obj.name = nodeName;
+                obj.Name = nodeName;
 
                 NodeManager.GetInstance().AddNode(obj, nodeName);
                 obj._NodeManagerPtr = GCHandle.ToIntPtr(GCHandle.Alloc(NodeManager.GetInstance(), GCHandleType.Normal));
 
-
-                return GCHandle.ToIntPtr(GCHandle.Alloc(obj, GCHandleType.Normal));
+                obj.ManagedPtr = GCHandle.ToIntPtr(GCHandle.Alloc(obj, GCHandleType.Normal));
+                return obj.ManagedPtr;
             }
             catch (Exception e)
             {
@@ -234,7 +262,7 @@ namespace EpsilonSharp
         {
             try
             {
-                dynamic? ent = GCHandle.FromIntPtr(obj).Target;
+                dynamic ent = GCHandle.FromIntPtr(obj).Target;
                 Type entType = ent!.GetType();
                 dynamic t = entType!.GetProperty("transform")!.PropertyType.GetConstructors()[0].Invoke(null);
                 t.Position.x = args.transform.Position.x;
@@ -261,27 +289,123 @@ namespace EpsilonSharp
 
         public static void ReloadAssemblies()
         {
-            domainMgr.Unload();
+            List<BridgeType> oldObjectList = new List<BridgeType>(); ;
+            foreach(var obj in m_pBridgeDictionary.ToDictionary())
+            {
+                dynamic managedObject = obj.Value;
 
-            List<Assembly> tmpAssemblies = new List<Assembly>();
+                dynamic t = managedObject.GetType().GetProperty("transform")!.PropertyType.GetConstructors()[0].Invoke(null);
+                t.Position.x = managedObject.transform.Position.x;
+                t.Position.y = managedObject.transform.Position.y;
+                t.Position.z = managedObject.transform.Position.z;
+
+                t.Scale.x = managedObject.transform.Scale.x;
+                t.Scale.y = managedObject.transform.Scale.y;
+                t.Scale.z = managedObject.transform.Scale.z;
+
+
+                t.Rotation.i = managedObject.transform.Rotation.i;
+                t.Rotation.j = managedObject.transform.Rotation.j;
+                t.Rotation.k = managedObject.transform.Rotation.k;
+                t.Rotation.w = managedObject.transform.Rotation.w;
+
+                oldObjectList.Add(item: new BridgeType { name = managedObject.Name, type = managedObject.GetType(), UnmanagedPtr = obj.Key, transform = t } );
+                GCHandle.FromIntPtr(managedObject._NodeManagerPtr).Free();
+                GCHandle.FromIntPtr(managedObject.ManagedPtr).Free();
+            }
+            m_pAssemblies.Clear();
+
+            NodeManager.GetInstance().Clear();
+            m_pBridgeDictionary.Clear();
+            m_pBridgeDictionary = new BridgeDictionary();
+
+            domainMgr.Unload();
+           // while(weakReference.IsAlive)
+            {
+                GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
+                GC.WaitForPendingFinalizers();
+
+            }
+
 
             string pluginPath = Directory.GetCurrentDirectory() + "/assets/scripts/Game/bin/x64/Debug/net8.0/Game.dll";
-            m_pAssemblies.Clear();
+
+            domainMgr = new AssemblyLoader(pluginPath, AssemblyLoadContext.Default, true);
+            weakReference = new WeakReference(domainMgr, trackResurrection: true);
+
             var assembly = domainMgr.LoadFromAssemblyName(AssemblyName.GetAssemblyName(pluginPath));
+            m_pAssemblies.Add(assembly);
+
+
+            foreach (var oldObject in oldObjectList)
+            {
+
+
+                Type objectType = null;
+                    objectType = Utils.SearchTypeInAssembly(assembly, oldObject.type.FullName);
+
+                var ctor = objectType.GetConstructor(
+                        BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance,
+                        null, Type.EmptyTypes, null) ?? throw new Exception("ctor is null");
+
+                dynamic obj = RuntimeHelpers.GetUninitializedObject(objectType);
+
+                _ = ctor!.Invoke(obj, null); 
+               // m_pBridgeDictionary.
+                m_pBridgeDictionary.Insert(oldObject.UnmanagedPtr, obj);
+
+                string jsonObj = JsonSerializer.Serialize(objectType.ToPropertyDictionary((object)obj));
+
+                obj.setCallback(callbackPtr);
+                obj.NativePtr = oldObject.UnmanagedPtr;
+                obj.setPropertiesStr(jsonObj);
+                obj.Name = oldObject.name;
+
+
+                dynamic t = objectType.GetProperty("transform")!.PropertyType.GetConstructors()[0].Invoke(null);
+                t.Position.x = oldObject.transform.Position.x;
+                t.Position.y = oldObject.transform.Position.y;
+                t.Position.z = oldObject.transform.Position.z;
+
+                t.Scale.x = oldObject.transform.Scale.x;
+                t.Scale.y = oldObject.transform.Scale.y;
+                t.Scale.z = oldObject.transform.Scale.z;
+
+                t.Rotation.i = oldObject.transform.Rotation.i;
+                t.Rotation.j = oldObject.transform.Rotation.j;
+                t.Rotation.k = oldObject.transform.Rotation.k;
+                t.Rotation.w = oldObject.transform.Rotation.w;
+
+                obj.transform = t;
+
+                NodeManager.GetInstance().AddNode(obj, oldObject.name);
+                obj._NodeManagerPtr = GCHandle.ToIntPtr(GCHandle.Alloc(NodeManager.GetInstance(), GCHandleType.Normal));
+                obj.ManagedPtr = GCHandle.ToIntPtr(GCHandle.Alloc(obj, GCHandleType.Normal));
+                UpdateReferenceCallback(SceneHandle, oldObject.UnmanagedPtr, obj.ManagedPtr);
+            }
+
+            //List<Assembly> tmpAssemblies = new List<Assembly>();
+
 
             Console.WriteLine(Directory.GetCurrentDirectory());
-            m_pAssemblies.Add(assembly);
             foreach (var type in assembly.GetTypes())
             {
                 Console.WriteLine($"{type.FullName}");
             }
         }
 
+
+        public static void registerUpdateReferenceCallback(IntPtr func_ptr)
+        {
+            UpdateReferenceCallback = (UpdateReferenceCallbackDelegate)
+            Marshal.GetDelegateForFunctionPointer(func_ptr, typeof(UpdateReferenceCallbackDelegate));
+        }
+
         public static string getEntityFields(IntPtr obj)
         {
             try
             {
-                dynamic? ent = GCHandle.FromIntPtr(obj).Target;
+                dynamic ent = GCHandle.FromIntPtr(obj).Target;
                 //string fieldsStr = ent!.GetType().GetMethod("ToString").Invoke(ent, null);
                 string fieldsStr = ent.ToString();//Caller.GetFields(ent);
                 return fieldsStr.Length == 0 ? "{}" : fieldsStr;
