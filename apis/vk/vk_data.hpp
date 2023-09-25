@@ -309,7 +309,7 @@ namespace vk
         VkQueue transferQueue;
         std::vector<VkQueue> computeQueue;
 
-        bool vsync = true;
+        bool vsync = false;
 
 #if !defined(__ANDROID__)
         const std::vector<const char *> deviceExtensions = {
