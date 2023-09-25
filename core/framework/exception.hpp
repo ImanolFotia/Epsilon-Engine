@@ -33,8 +33,9 @@ namespace framework {
     };
     class GeneralException {
     public:
-        GeneralException(const std::string& file, const std::string& funcName) {
+        GeneralException(const std::string& file, const std::string& funcName, const std::string& what = "") {
 
+            std::cerr << "An Exception has ocurred: " << what << std::endl;
             int depth = 0;
             std::cout << "\033[1;31m------------begin stacktrace------------\033[0m\n";
             int i = 0;

@@ -72,11 +72,19 @@ namespace Editor {
 
 		std::shared_ptr<engine::NodeBase> m_pSelectedNode = nullptr;
 
+		void UpdateReferenceCallback(engine::Scene* scene, engine::Node<engine::Scene::SceneEntity>* scene_ptr, void* managed_ref) {
+			auto node = scene->getNode(scene_ptr->Index());
+			auto script = scene->getChild<EntityScript>(node);
+			script->data.ManagedPtr = managed_ref;
+		}
+
 		void pLoadDotnet() {
 
 			host.Load(L"modules\\dotnet\\EpsilonSharp\\bin\\x64\\Debug\\net8.0\\");//"assets\\scripts\\EpsilonSharp\\bin\\x64\\Debug\\net7.0\\");
+			//host.Load(L"assets\\scripts\\Game\\bin\\x64\\Debug\\net8.0\\");//"assets\\scripts\\EpsilonSharp\\bin\\x64\\Debug\\net7.0\\");
 
 			typedef void (*func_ptr)(engine::Node<engine::Scene::SceneEntity>*, int, Transform);
+			typedef void (*func_ptr_2)(engine::Scene*, engine::Node<engine::Scene::SceneEntity>*, void*);
 
 			host.assembly.LoadDelegate<void, void*, engine::Node<engine::Scene::SceneEntity>*>(L"setEntityTransform", L"setEntityTransformDelegate", L"Epsilon");
 			host.assembly.LoadDelegate<void*, void*, void*, const char*>(L"CreateEntity", L"", L"Epsilon", true);
@@ -86,12 +94,26 @@ namespace Editor {
 			host.assembly.LoadDelegate<void, engine::Scene*>(L"setScenePtr", L"setScenePtrDelegate", L"Epsilon");
 			host.assembly.LoadDelegate<void, const char*, float>(L"SetProperty", L"SetPropertyDelegate", L"Epsilon", true);
 			host.assembly.LoadDelegate<void, const char*, bool>(L"SetPropertyBool", L"SetPropertyBoolDelegate", L"Epsilon", true);
+			host.assembly.LoadDelegate<void>(L"ReloadAssemblies", L"ReloadAssembliesDelegate", L"Epsilon");
+			host.assembly.LoadDelegate<void, func_ptr_2>(L"registerUpdateReferenceCallback", L"registerUpdateReferenceCallbackDelegate", L"Epsilon");
 
 			host.assembly.Invoke<void>(L"registerSetTransform", (func_ptr)[](engine::Node<engine::Scene::SceneEntity>* scene_ptr, int entity_id, Transform transform) {
 				if (scene_ptr != nullptr) {
 					scene_ptr->data.transform = transform.toMat4();
 				}
 				});
+
+			host.assembly.Invoke<void>(L"registerUpdateReferenceCallback", (func_ptr_2)[](engine::Scene* scene, engine::Node<engine::Scene::SceneEntity>* scene_ptr, void* managed_ref) {
+				auto node = scene->getNode(scene_ptr->Index());
+				auto script = scene->getChild<EntityScript>(node);
+				script->data.ManagedPtr = managed_ref;
+
+
+				//const char* str = host.assembly.Invoke<const char*>(L"getEntityFields", script->data.ManagedPtr);
+				//std::cout << str << std::endl;
+				//auto props = UI::Property::DeserializeProperties(std::string(str));// m_pObjectProperty.setProperties(std::string(str));
+				//script->data.properties = props;
+			});
 
 			m_pSceneNodes.addEntityCallback = [this]() {
 				pAddDefaultCube(glm::vec3(0.0f));

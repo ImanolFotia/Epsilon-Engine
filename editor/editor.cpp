@@ -31,7 +31,7 @@ namespace Editor {
 
 		auto planeNode = m_pScene.emplaceIntoScene<engine::Scene::SceneEntity>(engine::Box{ glm::vec3(0.0f), glm::vec3(1.0) });
 
-		planeNode->data.transform = glm::translate(glm::mat4(1.0), glm::vec3(0.0f, -1.0f, 0.0));
+		planeNode->data.transform = glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 0.0f, 0.0));
 		planeNode->data.transform = glm::scale(planeNode->data.transform, glm::vec3(10.0, 1.0, 10.0));
 		planeNode->data.transform = glm::rotate(planeNode->data.transform, glm::radians(270.f), glm::vec3(1.0, 0.0, 0.0));
 
@@ -43,7 +43,7 @@ namespace Editor {
 
 
 		auto script = m_pScene.emplaceIntoNode<EntityScript>(planeNode);
-		script->data.ManagedPtr = host.assembly.Invoke<void*>(L"CreateEntity", planeNode.get(), L"Game.Ground", ("Node_" + std::to_string(planeNode->Index())).c_str());
+		script->data.ManagedPtr = host.assembly.Invoke<void*>(L"CreateEntity", planeNode.get(), L"Game.Ground", "Ground");
 
 		if (script->data.ManagedPtr == nullptr) {
 			std::cerr << "ManagedPtr is null" << std::endl;
@@ -64,7 +64,7 @@ namespace Editor {
 		/////
 
 		UI::NodeProperties node_props;
-		node_props.name = "Node_" + std::to_string(planeNode->Index());
+		node_props.name = "Ground";
 		node_props.mType = UI::SceneNodeType::Node;
 
 		UI::NodeProperties render_props;
@@ -145,6 +145,15 @@ namespace Editor {
 				}
 				script->data.properties = m_pObjectProperty.getProperties();
 			}
+
+			ImGui::Begin("Reload Assembly");
+
+			if (ImGui::Button(ICON_FA_REDO, ImVec2(37, 37)))
+			{
+				host.assembly.Invoke<void>(L"ReloadAssemblies");
+			}
+			ImGui::SameLine();
+			ImGui::End();
 
 			});
 	}

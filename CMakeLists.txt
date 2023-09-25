@@ -286,15 +286,31 @@ else()
     set(TINYGLTF_BUILD_DIR ${THIRDPARTY_DIR}/tinygltf)
     message(${TINYGLTF_BUILD_DIR})
     include_directories(${TINYGLTF_BUILD_DIR})
-
     
+    set(ZLIB_DIR "${THIRDPARTY_DIR}/zlib")
+    message(${ZLIB_DIR})
+    include_directories(${ZLIB_DIR})
+    include_directories(${ZLIB_DIR}/build)
+    link_directories(${ZLIB_DIR}/build/Release)
+    
+    set(ZLIB_INCLUDES "${ZLIB_DIR}/build") 
+    message(${ZLIB_INCLUDES})
+
+    add_library(ZLIB SHARED IMPORTED)
+set_target_properties(ZLIB PROPERTIES
+    IMPORTED_LOCATION "${ZLIB_DIR}/build/Release/zlib.dll"
+    IMPORTED_IMPLIB "${ZLIB_DIR}/build/Release/zlibstatic.lib"
+    INTERFACE_INCLUDE_DIRECTORIES ${ZLIB_INCLUDES}
+)
+
     set(KTX_DIR ${THIRDPARTY_DIR}/ktx)
     message(${KTX_DIR})
     include_directories(${KTX_DIR}/include)
     include_directories(${KTX_DIR}/other_include)
     link_directories(${KTX_DIR}/build/Release)
 
-    set (KTX_INCLUDES "${KTX_DIR}/include" "${KTX_DIR}/other_include" "${KTX_DIR}/lib")
+    set(KTX_INCLUDES "${KTX_DIR}/include" "${KTX_DIR}/other_include" "${KTX_DIR}/lib")
+    message(${KTX_INCLUDES})
 
     add_library(KTX SHARED IMPORTED)
 set_target_properties(KTX PROPERTIES
@@ -349,6 +365,8 @@ set(PROJECT_FILES
         ${CMAKE_SOURCE_DIR}/core/framework/utils/helpers/camera.cpp
         ${CMAKE_SOURCE_DIR}/core/framework/utils/helpers/camera.hpp
         ${CMAKE_SOURCE_DIR}/core/framework/loaders/DDS.cpp
+        ${CMAKE_SOURCE_DIR}/core/framework/vfs/cifstream.cpp
+        ${CMAKE_SOURCE_DIR}/core/framework/vfs/zip.cpp
         ${CMAKE_SOURCE_DIR}/apis/al/listener.hpp
         ${CMAKE_SOURCE_DIR}/apis/al/source.hpp
         ${CMAKE_SOURCE_DIR}/apis/al/al_data.hpp
@@ -459,6 +477,7 @@ if(DOWNLOAD_LIBRARIES)
     add_dependencies(${PROJECT_NAME} beacon)
     add_dependencies(${PROJECT_NAME} stb)
     add_dependencies(${PROJECT_NAME} json)
+ #   add_dependencies(${PROJECT_NAME} zlib)
 endif()
 target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_DL_LIBS})
 
@@ -473,6 +492,8 @@ if(!WIN32)
 endif()
 
 target_link_libraries(${PROJECT_NAME} PUBLIC ktx)
+target_link_libraries(${PROJECT_NAME} PUBLIC zlibstatic)
+target_link_libraries(${PROJECT_NAME} PUBLIC zlib)
 
 
 #add_dependencies(${PROJECT_NAME} LearningVulkan)
