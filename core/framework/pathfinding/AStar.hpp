@@ -41,7 +41,6 @@ namespace framework
 				counter++;
 			}
 			path[counter] = came_from[start].position; // optional
-			// std::reverse(path.begin(), path.end());
 			return path;
 		}
 
@@ -69,7 +68,6 @@ namespace framework
 			std::priority_queue<QElement, std::vector<QElement>, CompareDist> frontier;
 			std::unordered_map<Key, float> cost_so_far;
 			cost_so_far.reserve(1500);
-			//path.reserve(1500);
 
 			bool goalReached = false;
 
@@ -88,16 +86,12 @@ namespace framework
 
 				for (auto &neighbor : neighbors)
 				{
-					// float currentWeigth = Heuristic(neighbor, end);
-					// frontier.emplace(currentWeigth, neighbor);
-
 					float new_cost = cost_so_far[currentKey] + graph.at(currentKey).data()->weight;
 					if (!cost_so_far.contains(neighbor) || new_cost < cost_so_far[neighbor])
 					{
 						cost_so_far[neighbor] = new_cost;
 						float priority = new_cost + Heuristic(graph.at(neighbor).data()->position, graph.at(end).data()->position);
 						frontier.emplace(priority, neighbor);
-						// came_from[neighbor] = currentKey;
 						path[neighbor].position = graph.at(currentKey).data()->position;
 						path[neighbor].from = currentKey;
 					}

@@ -42,6 +42,11 @@ namespace framework
             std::string metallic;
             std::string normal;
             std::string ao;
+
+            glm::vec4 color{};
+            float roughness_color{};
+            float metallic_color{};
+            float transmission = -1.0f;
         };
 
     public:

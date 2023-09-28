@@ -651,6 +651,11 @@ namespace framework {
 
 
 							thisIOffset += indicesAccessor.count;
+							auto baseColor = primitiveMaterial.pbrMetallicRoughness.baseColorFactor;
+							currentMesh.Material().color = glm::vec4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
+							currentMesh.Material().roughness_color = primitiveMaterial.pbrMetallicRoughness.roughnessFactor;
+							currentMesh.Material().metallic_color = primitiveMaterial.pbrMetallicRoughness.metallicFactor;
+							currentMesh.Material().transmission = currentMesh.Material().color.w;
 
 							if (primitiveMaterial.pbrMetallicRoughness.baseColorTexture.index != -1)
 								currentMesh.Material().albedo = "textures/" + model.images[model.textures[primitiveMaterial.pbrMetallicRoughness.baseColorTexture.index].source].uri;

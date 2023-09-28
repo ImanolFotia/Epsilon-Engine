@@ -72,6 +72,7 @@ namespace framework {
 			return std::hash<Key>{}(key);
 		}
 
+
 		void pBuild() {
 
 
@@ -137,6 +138,10 @@ namespace framework {
 
 		NodeGraph() = default;
 
+		void clear() {
+			m_pNodeData.clear();
+			m_pNodes.clear();
+		}
 
 		Node<Key, DataType>& insert(Key key, const DataType& data) {
 			NodeItem<DataType> item;
