@@ -52,9 +52,9 @@ namespace EpsilonSharp
 
             Console.WriteLine("statically instantiating Epsilon");
 
-            string pluginPath = Directory.GetCurrentDirectory() + "\\assets\\scripts\\Game\\bin\\x64\\Debug\\net8.0\\Game.dll";
+            string pluginPath = Directory.GetCurrentDirectory() + "\\assets\\scripts\\Game\\bin\\x64\\Release\\net8.0\\Game.dll";
 
-            watcher = new FileSystemWatcher(Directory.GetCurrentDirectory() + "\\assets\\scripts\\Game\\bin\\x64\\Debug\\net8.0");
+            watcher = new FileSystemWatcher(Directory.GetCurrentDirectory() + "\\assets\\scripts\\Game\\bin\\x64\\Release\\net8.0");
             watcher.NotifyFilter = NotifyFilters.Attributes
                                  | NotifyFilters.CreationTime
                                  | NotifyFilters.DirectoryName
@@ -75,8 +75,8 @@ namespace EpsilonSharp
 
             var assembly = domainMgr.LoadFromAssemblyName(AssemblyName.GetAssemblyName(pluginPath));
 #if DEBUG
-            if (!Debugger.IsAttached)
-                Debugger.Launch();
+            //if (!Debugger.IsAttached)
+                //Debugger.Launch();
 #endif
 
             Console.WriteLine(Directory.GetCurrentDirectory());
@@ -328,7 +328,7 @@ namespace EpsilonSharp
             }
 
 
-            string pluginPath = Directory.GetCurrentDirectory() + "/assets/scripts/Game/bin/x64/Debug/net8.0/Game.dll";
+            string pluginPath = Directory.GetCurrentDirectory() + "/assets/scripts/Game/bin/x64/Release/net8.0/Game.dll";
 
             domainMgr = new AssemblyLoader(pluginPath, AssemblyLoadContext.Default, true);
             weakReference = new WeakReference(domainMgr, trackResurrection: true);
