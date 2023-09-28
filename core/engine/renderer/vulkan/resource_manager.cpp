@@ -76,6 +76,7 @@ namespace engine
 		auto format = resolveFormat(texInfo.format, texInfo.isCompressed);
 		uint32_t mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texInfo.width, texInfo.height)))) + 1;
 
+
 		auto size = texInfo.width * texInfo.height * texInfo.numChannels;
 		if (texInfo.mipLevels > 1) {
 			size = texInfo.size;
@@ -93,6 +94,7 @@ namespace engine
 											 .height = texInfo.height,
 											 .num_channels = texInfo.numChannels,
 											 .mipLevels = mipLevels,
+											 .arrayLayers = texInfo.numLayers,
 											 .format = format,
 											 .usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT |
 													  VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
@@ -128,7 +130,7 @@ namespace engine
 		ResourcesMemory.m_pTextureBufferAllocationSize += size;
 
 		//Call gen mips
-		pGenerateMipMaps(texInfo, texture);
+			pGenerateMipMaps(texInfo, texture);
 
 
 		vk::createTextureSampler(*m_pVkDataPtr, texture);

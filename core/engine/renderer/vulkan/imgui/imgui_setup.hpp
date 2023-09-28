@@ -238,9 +238,9 @@ class ImGuiRenderer
 		icons_config.GlyphOffset.x = 0.8;
 
 		BigFont = io.Fonts->AddFontFromFileTTF("./assets/fonts/Roboto-Regular-Big.ttf", 19, &config);
-		io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-regular-400.ttf", 19.0f, &icons_config, icons_ranges);
-		io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-brands-400.ttf", 19.0f, &icons_config, icons_ranges);
-		io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-solid-900.ttf", 19.0f, &icons_config, icons_ranges);
+		io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-regular-400 - Big.ttf", 19.0f, &icons_config, icons_ranges);
+		io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-brands-400 - Big.ttf", 19.0f, &icons_config, icons_ranges);
+		io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-solid-900 - Big.ttf", 19.0f, &icons_config, icons_ranges);
 
 #endif
 #ifdef __linux__

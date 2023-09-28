@@ -57,9 +57,9 @@ namespace engine
 		int32_t metallic_texture_index = -1;
 		int32_t roughness_texture_index = -1;
 
-		alignas(16) glm::vec4 albedo_color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-		float metallic_color = 0.0;
-		float roughness_color = 1.0;
+		alignas(16) glm::vec4 albedo_color = glm::vec4(0.75f, 0.75f, 0.75f, 1.0f);
+		float metallic_color = 1.0;
+		float roughness_color = 0.038;
 		float transmision = -1.0;
 	};
 
@@ -513,6 +513,11 @@ namespace engine
 		PBRMaterial loadModelMaterials(framework::Mesh::MeshMaterial& mesh_material) {
 			PBRMaterial material;
 
+			material.albedo_color = mesh_material.color;
+			material.roughness_color = mesh_material.roughness_color;
+			material.metallic_color = mesh_material.metallic_color;
+			material.transmision = mesh_material.transmission;
+
 			if (!mesh_material.albedo.empty())
 			{
 				auto albedo = addTexture(mesh_material.albedo, { .format = COLOR_RGBA,
@@ -620,6 +625,42 @@ namespace engine
 
 		}
 
+		Ref<Texture> addTextureFromBytes(const std::string& name, unsigned char* bytes, size_t size, int w, int h, int c, const TextureInfo& info) {
+
+			std::vector<size_t> offsets;
+			unsigned int format = info.format;
+			bool isKTX = false;
+			bool isDDS = false;
+			int mipLevels = 0;
+			Ref<Texture> ref = Ref<Texture>::makeEmpty();
+			if (bytes != nullptr)
+			{
+				engine::TextureCreationInfo texInfo = {
+					.width = (uint32_t)w,
+					.height = (uint32_t)h,
+					.numChannels = (uint32_t)c,
+					.format = (engine::TextureFormat)format,
+					.wrapMode = info.wrapMode,
+					.filtering = info.filtering,
+					.name = name,
+					.isCompressed = false,
+					.isKTX = isKTX,
+					.mipLevels = (uint32_t)mipLevels,
+					.offsets = offsets,
+					.size = size,
+					.pixels = bytes,
+				};
+
+				auto resourceManager = m_pContext->ResourceManager();
+				ref = resourceManager->createTexture(texInfo);
+
+				m_pContext->Renderer()->getDebugRenderer()->addTexture(ref);
+			}
+
+			m_pImages[name] = ref;
+
+			return ref;
+		}
 
 		Ref<Texture> addTexture(const std::string& path, const TextureInfo& info)
 		{

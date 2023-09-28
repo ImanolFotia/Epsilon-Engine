@@ -54,6 +54,7 @@ namespace vk
         uint32_t height = 0;
         uint32_t num_channels = 0;
         uint32_t mipLevels = 1;
+        uint32_t arrayLayers = 1;
         VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
         VkImageUsageFlags usage{};
 

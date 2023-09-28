@@ -62,6 +62,11 @@ namespace engine
 		}
 		else {
 			imageSize = textureInfo.width * textureInfo.height * /*textureInfo.numChannels*/ 4;
+			if (textureInfo.format == COLOR_RGBA_16F || textureInfo.format == COLOR_RGBA_32F || textureInfo.format == COLOR_RGB_32F || textureInfo.format == COLOR_RGB_16F)
+				imageSize *= sizeof(float);
+			if (textureInfo.format == COLOR_RG_16F || textureInfo.format == COLOR_RG_32F) {
+				imageSize = textureInfo.width* textureInfo.height * 2 * sizeof(float);
+			}
 		}
 		pCreateBuffer(stagingBuffer, imageSize, TEXTURE_BUFFER_USAGE, TEXTURE_BUFFER_PROP, TEXTURE_BUFFER_MEM_USAGE);
 
@@ -125,7 +130,7 @@ namespace engine
 		texture.imageInfo.extent.depth = 1;
 		texture.compareEnable = texInfo.compareEnable;
 		texture.imageInfo.mipLevels = texInfo.mipLevels;
-		texture.imageInfo.arrayLayers = 1;
+		texture.imageInfo.arrayLayers = texInfo.arrayLayers;
 		texture.imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
 		texture.imageInfo.imageType = VK_IMAGE_TYPE_2D;
 
@@ -148,7 +153,7 @@ namespace engine
 		VmaAllocationCreateInfo allocInfo = {};
 		allocInfo.usage = VMA_MEMORY_USAGE_AUTO;
 
-		int num_channels = 0;
+		int num_channels = 4;
 		int size = 0;
 		if (texInfo.format == VK_FORMAT_R8G8B8A8_UNORM || texInfo.format == VK_FORMAT_R8G8B8A8_SRGB)
 		{

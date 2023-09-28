@@ -91,6 +91,9 @@ bool DDS::LoadCompressed(const std::string& filename, unsigned int baseLevel = 0
 		else if (dx10_header->dxgiFormat == DXGI_FORMAT_BC7_UNORM_SRGB) {
 			this->m_InternalFormat = engine::TextureFormat::COLOR_RGBA_BC7;
 		}
+		else if (dx10_header->dxgiFormat == DXGI_FORMAT_BC6H_SF16) {
+			this->m_InternalFormat = engine::TextureFormat::COLOR_RGBA_BC6HS;
+		}
 	}
 	}
 
@@ -176,6 +179,12 @@ void DDS::Load(const std::string& filename, unsigned int baseLevel = 0) {
 		}
 		else if (dx10_header->dxgiFormat == DXGI_FORMAT_BC7_UNORM_SRGB) {
 			this->m_InternalFormat = engine::TextureFormat::COLOR_RGBA_BC7;
+		}
+		else if (dx10_header->dxgiFormat == DXGI_FORMAT_BC6H_SF16) {
+			this->m_InternalFormat = engine::TextureFormat::COLOR_RGBA_BC6HS;
+		}
+		else if (dx10_header->dxgiFormat == DXGI_FORMAT_BC6H_UF16) {
+			this->m_InternalFormat = engine::TextureFormat::COLOR_RGBA_BC6HU;
 		}
 	}
 	}
