@@ -39,6 +39,11 @@ namespace engine
 		if (format == COLOR_RGBA_BC1) return VK_FORMAT_BC1_RGBA_SRGB_BLOCK;
 		if (format == COLOR_RGBA_BC3) return VK_FORMAT_BC3_SRGB_BLOCK;
 
+		if (format == COLOR_RGBA_BC6HS) return VK_FORMAT_BC6H_SFLOAT_BLOCK;
+		if (format == COLOR_RGBA_BC6HU) return VK_FORMAT_BC6H_UFLOAT_BLOCK;
+
+		
+
 		if (format == COLOR_RGBA_BC7) 
 			return VK_FORMAT_BC7_SRGB_BLOCK;
 

@@ -21,9 +21,10 @@ namespace engine
 			glm::vec3 center;
 		} bounds;
 
-	public:
+		glm::vec2 m_pUvMultiplier = glm::vec2(1.0f);
 
-		Quad(uint16_t tesselation = 2, glm::vec2 uvMultiplier = glm::vec2(1.f)) : m_pTesselation(tesselation) {
+	public:
+		Quad(uint16_t tesselation = 2, glm::vec2 uvMultiplier = glm::vec2(1.0f)) : m_pTesselation(tesselation), m_pUvMultiplier(uvMultiplier){
 
 			m_pType = DrawableType::QUAD;
 
@@ -177,20 +178,20 @@ namespace engine
 
 	private:
 		void pInit() {
-			m_pMesh.Vertices.emplace_back(vtx(v3(-1.0f, -1.0f, 1.0f), v2(-1.0f, 1.0f), v3(0.0f, 0.0f, 1.0f), v4(0.0f, 0.0f, 0.0f, 1.0f), v3(0.0f), v3(0.0f))); // bottom-left
-			m_pMesh.Vertices.emplace_back(vtx(v3(1.0f, -1.0f, 1.0f), v2(0.0f, 1.0f), v3(0.0f, 0.0f, 1.0f), v4(0.0f, 0.0f, 0.0f, 1.0f), v3(0.0f), v3(0.0f)));  // bottom-right
-			m_pMesh.Vertices.emplace_back(vtx(v3(1.0f, 1.0f, 1.0f), v2(0.0f, 0.0f), v3(0.0f, 0.0f, 1.0f), v4(0.0f, 0.0f, 0.0f, 1.0f), v3(0.0f), v3(0.0f)));   // top-right
+			m_pMesh.Vertices.emplace_back(vtx(v3(-1.0f, -1.0f, 0.0f) * 0.5f, v2(1.0f, 1.0f) * m_pUvMultiplier, v3(0.0f, 0.0f, 1.0f), v4(0.0f, 0.0f, 0.0f, 1.0f), v3(0.0f, 1.0f, 0.0f), v3(1.0f, 0.0f, 0.0f))); // bottom-left
+			m_pMesh.Vertices.emplace_back(vtx(v3(1.0f, -1.0f, 0.0f) * 0.5f, v2(0.0f,1.0f) * m_pUvMultiplier, v3(0.0f, 0.0f, 1.0f), v4(0.0f, 0.0f, 0.0f, 1.0f), v3(0.0f, 1.0f, 0.0f), v3(1.0f, 0.0f, 0.0f)));  // bottom-right
+			m_pMesh.Vertices.emplace_back(vtx(v3(1.0f, 1.0f, 0.0f) * 0.5f, v2(0.0f, 0.0f) * m_pUvMultiplier, v3(0.0f, 0.0f, 1.0f), v4(0.0f, 0.0f, 0.0f, 1.0f), v3(0.0f, 1.0f, 0.0f), v3(1.0f, 0.0f, 0.0f)));   // top-right
 
-			m_pMesh.Vertices.emplace_back(vtx(v3(1.0f, 1.0f, 1.0f), v2(0.0f, 0.0f), v3(0.0f, 0.0f, 1.0f), v4(0.0f, 0.0f, 0.0f, 1.0f), v3(0.0f), v3(0.0f)));   // top-right
-			m_pMesh.Vertices.emplace_back(vtx(v3(-1.0f, 1.0f, 1.0f), v2(-1.0f, 0.0f), v3(0.0f, 0.0f, 1.0f), v4(0.0f, 0.0f, 0.0f, 1.0f), v3(0.0f), v3(0.0f)));  // top-left
-			m_pMesh.Vertices.emplace_back(vtx(v3(-1.0f, -1.0f, 1.0f), v2(-1.0f, 1.0f), v3(0.0f, 0.0f, 1.0f), v4(0.0f, 0.0f, 0.0f, 1.0f), v3(0.0f), v3(0.0f))); // bottom-left
+			m_pMesh.Vertices.emplace_back(vtx(v3(1.0f, 1.0f, 0.0f) * 0.5f, v2(0.0f, 0.0f) * m_pUvMultiplier, v3(0.0f, 0.0f, 1.0f), v4(0.0f, 0.0f, 0.0f, 1.0f), v3(0.0f, 1.0f, 0.0f), v3(1.0f, 0.0f, 0.0f)));   // top-right
+			m_pMesh.Vertices.emplace_back(vtx(v3(-1.0f, 1.0f, 0.0f) * 0.5f, v2(1.0f, 0.0f) * m_pUvMultiplier, v3(0.0f, 0.0f, 1.0f), v4(0.0f, 0.0f, 0.0f, 1.0f), v3(0.0f, 1.0f, 0.0f), v3(1.0f, 0.0f, 0.0f)));  // top-left
+			m_pMesh.Vertices.emplace_back(vtx(v3(-1.0f, -1.0f, 0.0f) * 0.5f, v2(1.0f, 1.0f) * m_pUvMultiplier, v3(0.0f, 0.0f, 1.0f), v4(0.0f, 0.0f, 0.0f, 1.0f), v3(0.0f, 1.0f, 0.0f), v3(1.0f, 0.0f, 0.0f))); // bottom-left
 
 			for (int i = 0; i < m_pMesh.Vertices.size(); i += 3)
 			{
 				m_pMesh.addTriangle(i, i + 1, i + 2);
 			}
 
-			generateTangentSpaceVectors();
+			//generateTangentSpaceVectors();
 		}
 
 

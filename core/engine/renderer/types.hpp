@@ -146,6 +146,8 @@ namespace engine
         COLOR_RGBA_BC2,
         COLOR_RGBA_BC3,
         COLOR_RGBA_BC7,
+        COLOR_RGBA_BC6HS,
+        COLOR_RGBA_BC6HU,
 
         NON_COLOR_RGB_BC1,
         NON_COLOR_RGB_BC2,
@@ -283,6 +285,7 @@ namespace engine
         uint32_t width;
         uint32_t height;
         uint32_t numChannels;
+        uint32_t numLayers = 1;
         TextureFormat format{};
         WrapMode wrapMode{};
         Filtering filtering{};

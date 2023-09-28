@@ -19,7 +19,7 @@ namespace engine
     private:
         void createGeometry(uint32_t subdivisions)
         {
-            const double PI = 3.14; //:)
+            const double PI = 3.14159; //:)
             // Generate vertices
             m_pMesh.Vertices.emplace_back(glm::vec3(0.0, 1.0, 0.0), glm::vec2(1.0), glm::vec3(0.0, 1.0, 0.0));
 
@@ -41,13 +41,15 @@ namespace engine
                     double z = sin_polar * sin_az;
 
                     glm::vec3 p = glm::vec3(x, y, z);
-                    glm::vec3 n = glm::normalize(glm::vec3(0) - p);
-                    glm::vec2 uv = glm::vec2((1.0f / float(meridian_count)) * float(i), n.y * 0.5 + 0.5);
+                    glm::vec3 n = glm::normalize(glm::vec3(0.0f) - p);
+                    glm::vec2 uv = glm::vec2( float(i) / float(meridian_count-1), n.y * 0.5 + 0.5);
 
                     m_pMesh.Vertices.emplace_back(p, uv, n);
                 }
             }
 
+            //0.2
+            //0.0, 0.2, 0.4, 0.6, 0.8
             m_pMesh.Vertices.emplace_back(glm::vec3(0.0, -1.0, 0.0), glm::vec2(0.0), glm::vec3(0.0, -1.0, 0.0));
 
             // Generate triangles from vertices
@@ -167,6 +169,5 @@ namespace engine
         }
 
         uint32_t mNumSubdivisions = 4;
-        int32_t CubemapId = -1;
     };
 }
