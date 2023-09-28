@@ -88,5 +88,9 @@ namespace framework::splines {
 			return m_pControlPoints.back().position;
 		}
 
+		void Clear() {
+			m_pControlPoints.clear();
+		}
+
 	};
 }

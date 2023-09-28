@@ -56,7 +56,7 @@ namespace Editor::UI {
 			ImGui::SameLine();
 			ImGui::Button(ICON_FA_MINUS, ImVec2(25, 25));
 			ImGui::PopStyleColor();
-			if (ImGui::TreeNode("Hierarchy"))
+			if (ImGui::TreeNode(ICON_FA_SITEMAP " Hierarchy"))
 			{
 				static ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_Resizable | ImGuiTableFlags_ScrollY;
 

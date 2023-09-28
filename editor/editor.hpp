@@ -16,12 +16,14 @@
 #include "ui/object_property.hpp"
 #include "ui/node_hierarchy.hpp"
 
+
 #include "types/transform.hpp"
 #include "utils/transform.hpp"
 
 #include <core/engine/scene/scene.hpp>
 
 #include <core/engine/renderer/drawables/primitives/sphere.hpp>
+#include <core/engine/renderer/drawables/primitives/sphere2.hpp>
 #include <core/engine/renderer/drawables/primitives/cube.hpp>
 #include <core/engine/renderer/drawables/primitives/quad.hpp>
 #include <core/framework/utils/helpers/camera.hpp>
@@ -34,11 +36,12 @@ namespace Editor {
 	class Editor : public Epsilon::Epsilon {
 
 		engine::Ref<engine::RenderPass> m_pDefaultRenderPass;
-		engine::Ref<engine::RenderPass> m_pForwardRenderPass;
+		engine::Ref<engine::RenderPass> m_pForwardRenderPass; 
 
 
 		engine::Ref<engine::BindGroup> m_pForwardBindGroup;
 		engine::Ref<engine::Mesh> m_pDefaultCube;
+		std::shared_ptr<engine::Node<engine::RenderModel>> m_pSkybox;
 
 		UI::MenuBar m_pMenuBar;
 		UI::MainViewport m_pMainViewport;
@@ -47,6 +50,7 @@ namespace Editor {
 		UI::Toolbar m_pTooldbar;
 		UI::UIObjectProperty m_pObjectProperty;
 		UI::SceneNodes m_pSceneNodes;
+
 
 		std::shared_ptr<utils::Camera> m_pCamera;
 		ShaderData shaderData;
@@ -80,7 +84,7 @@ namespace Editor {
 
 		void pLoadDotnet() {
 
-			host.Load(L"modules\\dotnet\\EpsilonSharp\\bin\\x64\\Debug\\net8.0\\");//"assets\\scripts\\EpsilonSharp\\bin\\x64\\Debug\\net7.0\\");
+			host.Load(L"modules\\dotnet\\EpsilonSharp\\bin\\x64\\Release\\net8.0\\");//"assets\\scripts\\EpsilonSharp\\bin\\x64\\Debug\\net7.0\\");
 			//host.Load(L"assets\\scripts\\Game\\bin\\x64\\Debug\\net8.0\\");//"assets\\scripts\\EpsilonSharp\\bin\\x64\\Debug\\net7.0\\");
 
 			typedef void (*func_ptr)(engine::Node<engine::Scene::SceneEntity>*, int, Transform);

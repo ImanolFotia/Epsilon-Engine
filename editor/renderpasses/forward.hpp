@@ -44,6 +44,18 @@ namespace Editor::Renderpasses {
 			.usedStages = ShaderModuleStage(VERTEX | FRAGMENT) 
 		};
 
+		auto SkyVertexCode = utils::readFile("./assets/shaders/editor/sky-vertex.spv");
+		auto SkyFragmentCode = utils::readFile("./assets/shaders/editor/sky-fragment.spv");
+
+		ShaderInfo skyShaderInfo = {
+			.stages = {
+				{.entryPoint = "main", .shaderCode = SkyVertexCode, .stage = VERTEX},
+				{.entryPoint = "main", .shaderCode = SkyFragmentCode, .stage = FRAGMENT}
+			},
+			.usedStages = ShaderModuleStage(VERTEX | FRAGMENT)
+		};
+
+
 		VertexLayout vertexLayout = {
 			.descriptors = {
 				{XYZ_FLOAT, offsetof(common::Vertex, position)},
@@ -65,6 +77,16 @@ namespace Editor::Renderpasses {
 			.depthTestEnable = true 
 		};
 
+		PipelineLayout skyLayout = {
+			.shaderInfo = skyShaderInfo,
+			.vertexLayout = vertexLayout,
+			.cullMode = CullMode::FRONT,
+			.windingMode = WindingMode::COUNTER_CLOCK_WISE,
+
+			.depthWriteEnable = true,
+			.depthTestEnable = false
+		};
+
 
 		RenderPassInfo renderPassInfo =
 			RenderPassFactory()
@@ -81,7 +103,16 @@ namespace Editor::Renderpasses {
 					.set = 0,
 					.type = engine::UniformBindingType::UNIFORM_BUFFER,
 					.descriptorCount = 1,
-					.name = "ForwardUniformBuffer" } })
+					.name = "ForwardUniformBuffer" },
+				{
+					 .size = 4800000,
+					 .offset = 0,
+					 .binding= 1,
+					 .set= 0,
+					 .type= engine::UniformBindingType::SHADER_STORAGE,
+					 .descriptorCount= 1,
+					 .name = "material_buffer"
+				} })
 			.outputs({
 					{
 						  .format = COLOR_RGBA,
@@ -100,6 +131,7 @@ namespace Editor::Renderpasses {
 					}
 				})
 			.pipelineLayout(mainLayout)
+			.pipelineLayout(skyLayout)
 			.pushConstant(sizeof(ForwardPassPushConstant));
 
 		return context->ResourceManager()->createRenderPass(renderPassInfo);

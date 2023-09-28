@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ui_element.hpp"
+#include "native/file_dialog.hpp"
 
 #include <unordered_map>
 #include <functional>
@@ -10,7 +11,13 @@ namespace Editor::UI {
 	class MenuBar : public UIElement {
 
 		std::unordered_map<std::string, std::function<void(void)>> m_pCallbacks;
+
+		UI::NativeFileDialog m_pFileDialog;
 	public:
+
+		MenuBar() {
+			m_pFileDialog.Setup(".");
+		}
 
 		void addCallback(std::string name, std::function<void(void)> func) {
 			if (name.size() > 0) {
@@ -23,7 +30,9 @@ namespace Editor::UI {
 
 			if (ImGui::BeginMenu("File")) {
 				ImGui::MenuItem("New");
-				ImGui::MenuItem("Open");
+				if(ImGui::MenuItem("Open")) {
+					m_pFileDialog.Show();
+				}
 				ImGui::MenuItem("Open recent");
 				if (ImGui::MenuItem("Exit")) {
 					if (m_pCallbacks.contains("OnExit")) {
