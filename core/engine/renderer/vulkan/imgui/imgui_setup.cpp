@@ -50,3 +50,8 @@ void ImGuiRenderer::recreateDescriptorSets() {
 		m_pImages[index]->render_pass = image->render_pass;
 	}
 }
+
+
+std::shared_ptr<ImGuiRenderer::ImageInfo> ImGuiRenderer::getImageByIndex(engine::Ref<engine::Texture> tex) {
+	return m_pImages[m_pResourceManagerRef->getTexture(tex)->name];
+}

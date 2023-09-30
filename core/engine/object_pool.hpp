@@ -31,13 +31,13 @@ namespace engine
 
         inline uint32_t Index() { return m_pIndex; }
         uint32_t Id() { return m_pID; }
+        const bool isValid() const { return m_pGeneration != 0; }
 
         uint32_t m_pIndex{};
 
     private:
         Ref(uint32_t i, uint32_t b, uint32_t id) : m_pIndex(i), m_pGeneration(b), m_pID(id) {}
 
-        bool isValid() { return m_pGeneration != 0; }
 
         uint32_t m_pID = -1;
         uint32_t m_pGeneration{};
@@ -142,6 +142,7 @@ namespace engine
 
             return nullptr;
         }
+
 
         [[nodiscard]] uint32_t getId(Ref<T> ref)
         {

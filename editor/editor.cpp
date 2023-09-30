@@ -17,6 +17,7 @@ namespace Editor {
 
 		m_pScene = engine::Scene(getContext());
 
+		m_pMaterialEditor.m_pSceneRef = &m_pScene;
 
 		host.assembly.Invoke<void>(L"setScenePtr", &m_pScene);
 
@@ -155,7 +156,7 @@ namespace Editor {
 			script->data.properties = props;
 			script->data.className = "Game.GameObject";
 
-			auto model = m_pScene.getAssetManager().loadModel("models/pot.gltf");
+			auto model = m_pScene.getAssetManager().loadModel("models/porsche911.gltf");
 			//engine::Sphere2 sphere(20);
 			//auto m_pDefaultCube = m_pScene.getAssetManager().createModelFromMesh("DefaultCube", sphere.data(), defaultMaterial);
 			auto renderNode = m_pScene.insertIntoNode(engine::Box{ glm::vec3(modelNode->data.transform[3]), glm::vec3(0.5) }, modelNode, model);
@@ -201,8 +202,12 @@ namespace Editor {
 			m_pMainViewport.setImage(getContext()->Renderer()->getDebugRenderer()->getImages().at("Forward0"));
 			m_pMainViewport.draw();
 			m_pSceneNodes.draw();
+
 			selected_entity = (engine::Scene::SceneEntity*)m_pSceneNodes.scene_node_ref;// reinterpret_cast<std::shared_ptr<engine::Scene::SceneEntity>> (m_pSceneNodes.scene_node_ref);
 			selected_index = m_pSceneNodes.selected_index;
+			m_pMaterialEditor.selected_entity = selected_index;
+			m_pMaterialEditor.draw();
+
 			glm::mat4 original_transform = m_pInspector.getTransform();
 			selected_matrix = m_pInspector.getTransform();
 			if (selected_entity != nullptr)

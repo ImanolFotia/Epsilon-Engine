@@ -114,9 +114,9 @@ void main() {
     vec3 kD = 1.0 - kS;
     kD *= 1.0 - metallic;	
 
-    vec3 radiance = (textureLod(textures[0], SampleSphericalMap(-normalize(ref)), roughness * 4).rgb);
+    vec3 radiance = textureLod(textures[0], SampleSphericalMap(-normalize(ref)), mix(0.0001, 3.999, roughness)).rgb;
     vec3 irradiance = (texture(textures[1], SampleSphericalMap(-Normal)).rgb);
-    vec2 lut = texture(textures[2], vec2(max(dot(Normal, V), 0.0), roughness)).rg;
+    vec2 lut = texture(textures[2], vec2(max(dot(Normal, V), 0.0), mix(0.0001, 0.9999, roughness))).rg;
 
     vec3 reflec = radiance * (F * lut.x + lut.y);
     vec3 diffuse = irradiance * Albedo.rgb;

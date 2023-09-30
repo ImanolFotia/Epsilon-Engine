@@ -224,10 +224,10 @@ Surface InitSurface() {
 
     surface.material.internal_material = MaterialBuffer.entry[fs_in.material_index];
 
-    surface.material.hasAlbedoTexture = surface.material.internal_material.albedo_texture_index != -1 ? true : false; 
-    surface.material.hasMetallicTexture = surface.material.internal_material.metallic_texture_index != -1 ? true : false;
-    surface.material.hasRoughnessTexture = surface.material.internal_material.metallic_texture_index != -1 ? true : false;
-    surface.material.hasNormalTexture = surface.material.internal_material.normal_texture_index != -1 ? true : false;
+    surface.material.hasAlbedoTexture = surface.material.internal_material.albedo_texture_index > -1 ? true : false; 
+    surface.material.hasMetallicTexture = surface.material.internal_material.metallic_texture_index > -1 ? true : false;
+    surface.material.hasRoughnessTexture = surface.material.internal_material.metallic_texture_index  > -1 ? true : false;
+    surface.material.hasNormalTexture = surface.material.internal_material.normal_texture_index  > -1 ? true : false;
 
     if(surface.material.hasAlbedoTexture) {
         surface.material.albedoTexture = texture(textures[surface.material.internal_material.albedo_texture_index], surface.texCoords);

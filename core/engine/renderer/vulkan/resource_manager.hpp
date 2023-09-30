@@ -16,6 +16,7 @@ namespace engine
 
 	public:
 		friend class VulkanRenderer;
+		friend class ImGuiRenderer;
 
 		using IndexType = uint32_t;
 
@@ -61,7 +62,12 @@ namespace engine
 
 		void clean() override;
 
-		vk::VulkanTexture* getTexture(Ref<Texture>);
+		vk::VulkanTexture* getTexture(Ref<Texture> tex) {
+			return texPool.get(tex);
+		}
+		vk::VulkanTexture* getTexture(uint32_t index) {
+			return texPool.get(index);
+		}
 		vk::VulkanBuffer* getBuffer(Ref<Buffer>);
 		ShaderStageInfo* getShader(Ref<Shader>);
 		VkDescriptorSetLayoutBinding* getUniformData(Ref<UniformBindings>);
@@ -186,6 +192,5 @@ namespace engine
 		vk::VulkanBuffer m_pIndirectBuffer;
 		vk::VulkanBuffer m_pMaterialBuffer;
 
-		friend class ImGuiRenderer;
 	};
 }

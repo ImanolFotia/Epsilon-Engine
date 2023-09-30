@@ -50,6 +50,13 @@ namespace engine
 		float circle_radius = 5.0;
 	};
 
+	enum class TextureSlot : unsigned short {
+		Albedo = 0,
+		Normal,
+		Metallic,
+		Roughness
+	};
+
 	struct PBRMaterial
 	{
 		int32_t albedo_texture_index = -1;
@@ -65,7 +72,8 @@ namespace engine
 
 	struct PBRMaterialIndex {
 		PBRMaterial material;
-		uint32_t index;
+		uint32_t index{};
+		size_t Slot[4] = {0};
 	};
 
 	struct RenderMesh
@@ -111,7 +119,7 @@ namespace engine
 
 	class AssetManager
 	{
-		std::unordered_map<std::string, Ref<Texture>> m_pImages;
+		std::unordered_map<size_t, Ref<Texture>> m_pImages;
 		std::unordered_map<std::string, RenderModel> m_pModels;
 		std::unordered_map<std::string, AudioBuffer> m_pAudioBuffers;
 		std::unordered_map<std::size_t, PBRMaterialIndex> m_pMaterials;
@@ -141,8 +149,19 @@ namespace engine
 
 		}
 
-		const std::unordered_map<std::string, Ref<Texture>>& getImages() {
+		const std::unordered_map<size_t, Ref<Texture>>& getImages() {
 			return m_pImages;
+		}
+
+		const Ref<Texture> getImage(const std::string& name) {
+			if(m_pImages.contains(std::hash<std::string>{}(name)))
+			return m_pImages[std::hash<std::string>{}(name)];
+		}
+
+		const Ref<Texture> getImage(size_t hash) {
+			if (m_pImages.contains(hash))
+				return m_pImages[hash];
+			return Ref<Texture>::makeEmpty();
 		}
 
 		const std::unordered_map<std::string, RenderModel>& getModels() {
@@ -304,6 +323,20 @@ namespace engine
 
 				m_pMaterials[material_name_hash].index = mat_index;
 				m_pMaterials[material_name_hash].material = pbr_material;
+
+				if (!material.albedo_path.empty()) {
+					m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Albedo] = std::hash<std::string>{}(material.albedo_path);
+				}
+				if (!material.metallic_path.empty()) {
+					m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Metallic] = std::hash<std::string>{}(material.metallic_path);
+				}
+				if (!material.roughness_path.empty()) {
+					m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Roughness] = std::hash<std::string>{}(material.roughness_path);
+				}
+				if (!material.normal_path.empty()) {
+					m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Normal] = std::hash<std::string>{}(material.normal_path);
+				}
+
 				material_index++;
 			}
 
@@ -398,6 +431,19 @@ namespace engine
 			m_pMaterials[material_name_hash].index = mat_index;
 			m_pMaterials[material_name_hash].material = pbr_material;
 
+			if (!material.albedo_path.empty()) {
+				m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Albedo] = std::hash<std::string>{}(material.albedo_path);
+			}
+			if (!material.metallic_path.empty()) {
+				m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Metallic] = std::hash<std::string>{}(material.metallic_path);
+			}
+			if (!material.roughness_path.empty()) {
+				m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Roughness] = std::hash<std::string>{}(material.roughness_path);
+			}
+			if (!material.normal_path.empty()) {
+				m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Normal] = std::hash<std::string>{}(material.normal_path);
+			}
+
 			return model;
 		}
 
@@ -477,9 +523,21 @@ namespace engine
 				auto mesh_material = mesh.Material();
 
 				PBRMaterial material = loadModelMaterials(mesh_material);
-
-
 				m_pMaterials[material_name_hash].material = material;
+
+				if (!mesh_material.albedo.empty()) {
+					m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Albedo] = std::hash<std::string>{}(mesh_material.albedo);
+				}
+				if (!mesh_material.metallic.empty()) {
+					m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Metallic] = std::hash<std::string>{}(mesh_material.metallic);
+				}
+				if (!mesh_material.roughness.empty()) {
+					m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Roughness] = std::hash<std::string>{}(mesh_material.roughness);
+				}
+				if (!mesh_material.normal.empty()) {
+					m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Normal] = std::hash<std::string>{}(mesh_material.normal);
+				}
+
 				subRenderC.material_keys[0] = material_name_hash;
 				subRenderC.numMaterials = 1;
 
@@ -657,7 +715,7 @@ namespace engine
 				m_pContext->Renderer()->getDebugRenderer()->addTexture(ref);
 			}
 
-			m_pImages[name] = ref;
+			m_pImages[std::hash<std::string>{}(name)] = ref;
 
 			return ref;
 		}
@@ -667,9 +725,9 @@ namespace engine
 
 			auto resourceManager = m_pContext->ResourceManager();
 
-			if (m_pImages.contains(path))
+			if (m_pImages.contains(std::hash<std::string>{}(path)))
 			{
-				return m_pImages.at(path);
+				return m_pImages.at(std::hash<std::string>{}(path));
 			}
 
 			int width, height, num_channels, mipLevels = 1;
@@ -828,7 +886,7 @@ namespace engine
 					DDS::free_data(pixels);
 				}
 
-				m_pImages[path] = ref;
+				m_pImages[std::hash<std::string>{}(path)] = ref;
 			}
 
 			return ref;
@@ -859,8 +917,11 @@ namespace engine
 		}
 
 		PBRMaterialIndex& getMaterial(size_t key) {
+			return m_pMaterials.at(key);
+		}
 
-			return m_pMaterials[key];
+		void setMaterial(size_t key, PBRMaterialIndex material) {
+			m_pMaterials.at(key) = material;
 		}
 
 

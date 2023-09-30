@@ -15,6 +15,7 @@
 #include "ui/toolbar.hpp"
 #include "ui/object_property.hpp"
 #include "ui/node_hierarchy.hpp"
+#include "ui/material_editor.hpp"
 
 
 #include "types/transform.hpp"
@@ -50,6 +51,7 @@ namespace Editor {
 		UI::Toolbar m_pTooldbar;
 		UI::UIObjectProperty m_pObjectProperty;
 		UI::SceneNodes m_pSceneNodes;
+		UI::MaterialEditor m_pMaterialEditor;
 
 
 		std::shared_ptr<utils::Camera> m_pCamera;

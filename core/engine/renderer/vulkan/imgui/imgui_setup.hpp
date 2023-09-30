@@ -598,6 +598,8 @@ public:
 		return m_pImages;
 	}
 
+	std::shared_ptr<ImageInfo> getImageByIndex(engine::Ref<engine::Texture> index);
+
 
 	void recreateDescriptorSets();
 
