@@ -16,7 +16,7 @@
 namespace vk
 {
     static uint32_t MAX_FRAMES_IN_FLIGHT = 3;
-    static uint32_t MIN_FRAMES_IN_FLIGHT = 0;
+    static uint32_t MIN_FRAMES_IN_FLIGHT = 2;
     const size_t ALLOCATION_SIZE_MB = 0xFFFFFFF;
 
     struct VulkanVertexInfo
@@ -107,7 +107,7 @@ namespace vk
         {
             buffers.resize(MAX_FRAMES_IN_FLIGHT);
         }
-        std::vector<VulkanBuffer> buffers;
+        std::vector<VulkanBuffer> buffers{};
         size_t size = 0;
     };
 

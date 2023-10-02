@@ -65,9 +65,9 @@ namespace engine
 
     void Frustum::CalculateFrustum(glm::mat4 ProjectionMatrix, glm::mat4 ModelMatrix)
     {
-        float proj[16]; // This will hold our projection matrix
-        float modl[16]; // This will hold our modelview matrix
-        float clip[16]; // This will hold the clipping planes
+        float proj[16] = {0.0f}; // This will hold our projection matrix
+        float modl[16] = { 0.0f }; // This will hold our modelview matrix
+        float clip[16] = { 0.0f }; // This will hold the clipping planes
 
         // glGetFloatv() is used to extract information about our OpenGL world.
         // Below, we pass in GL_PROJECTION_MATRIX to abstract our projection matrix.

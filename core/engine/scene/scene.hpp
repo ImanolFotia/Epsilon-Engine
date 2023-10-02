@@ -36,7 +36,7 @@ namespace engine
 		using OctreeRenderType = OctreeSceneItem;
 		using OctreeRenderItem = typename std::list<OctreeItem<OctreeRenderType>>::iterator;
 		using OctreeNodeType = std::shared_ptr<NodeBase>;
-		AssetManager m_pAssetManager;
+		AssetManager m_pAssetManager{};
 		std::shared_ptr<audio::AudioManager> m_pAudioManager;
 		// OctreeContainer<std::shared_ptr<NodeBase>> m_pOctree;
 		SceneManager m_pSceneManager;
@@ -49,16 +49,16 @@ namespace engine
 			Ref<BindGroup> bindGroup;
 		};
 
-		std::unordered_map<std::string, RenderLayout> m_pRenderLayouts;
+		std::unordered_map<std::string, RenderLayout> m_pRenderLayouts{};
 
 		Ref<RenderPass> m_pCurrentRenderPass;
 
-		std::shared_ptr<OctreeContainer<OctreeRenderType>> m_pRenderOctree;
-		std::shared_ptr<OctreeContainer<OctreeNodeType>> m_pNodeOctree;
+		std::shared_ptr<OctreeContainer<OctreeRenderType>> m_pRenderOctree = nullptr;
+		std::shared_ptr<OctreeContainer<OctreeNodeType>> m_pNodeOctree = nullptr;
 
-		Frustum m_pFrustum;
+		Frustum m_pFrustum{};
 
-		std::shared_ptr<Context> m_pContext;
+		std::shared_ptr<Context> m_pContext = nullptr;
 
 		uint32_t m_pMeshCount = 0;
 

@@ -24,7 +24,7 @@ namespace engine
 	template <typename T>
 	struct OctreeItem
 	{
-		T data;
+		T data{};
 		OctreeItemLocation<typename std::list<OctreeItem<T>>::iterator> data_position;
 	};
 
@@ -33,7 +33,7 @@ namespace engine
 	{
 		using Octree_ptr = std::shared_ptr<Octree<T>>;
 
-		Box m_Box;
+		Box m_Box{};
 
 		bool m_IsBuilt = false;
 		bool m_IsLeaf = false;
@@ -42,12 +42,12 @@ namespace engine
 
 		int m_Depth = 0;
 
-		std::array<Octree_ptr, 8> m_Children;
-		std::array<Box, 8> m_bChildren;
+		std::array<Octree_ptr, 8> m_Children{};
+		std::array<Box, 8> m_bChildren{};
 
-		std::array<std::thread, 8> m_Workers;
+		std::array<std::thread, 8> m_Workers{};
 
-		std::list<std::pair<Box, T>> m_Data;
+		std::list<std::pair<Box, T>> m_Data{};
 
 		std::mutex m_ItemsMutex;
 
@@ -116,15 +116,7 @@ namespace engine
 
 			for (size_t i = 0; i < 8; i++)
 			{
-				if (m_Depth == 55)
-				{
-					m_Workers[i] = std::thread([this, &i, &box, &items]
-						{ check_child(i, box, items); });
-				}
-				else
-				{
-					check_child(i, box, items);
-				}
+				check_child(i, box, items);
 			}
 			/*
 			for (auto& worker : m_Workers)
@@ -150,7 +142,7 @@ namespace engine
 
 		auto search(Frustum& frustum) -> std::list<T>
 		{
-			std::list<T> items;
+			std::list<T> items{};
 			search(frustum, items);
 			return items;
 		}
@@ -175,14 +167,8 @@ namespace engine
 			}
 		}
 
-		std::list<T*>& items()
-		{
-			std::list<T*> listItems;
-			items(listItems);
-			return listItems;
-		}
 
-		void items(std::list<T> items) const
+		void items(std::list<T>& items) const
 		{
 			for (auto& i : m_Data)
 				items.push_back(i.second);
@@ -255,7 +241,7 @@ namespace engine
 
 		auto insert(Box pos, const T& data)
 		{
-			OctreeItem<T> item;
+			OctreeItem<T> item{};
 			item.data = data;
 
 			m_Data.push_back(item);
@@ -270,7 +256,7 @@ namespace engine
 			return m_Root.search(frustum);
 		}
 
-		std::list<typename OctreeData::iterator> search(Box& box)
+		std::list<typename OctreeData::iterator> search(const Box& box)
 		{
 			return m_Root.search(box);
 		}

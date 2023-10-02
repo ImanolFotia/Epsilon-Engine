@@ -136,7 +136,6 @@ namespace utils
             lastY = framework::Input::Mouse::YPOS;
         }
 
-        // horizontalAngle += ()
 
         LockCamera();
 
@@ -161,28 +160,24 @@ namespace utils
             if (framework::Input::KeyBoard::KEYS[framework::Input::GLFW::Key::W])
             {
                 MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-                // MovementVector += Orientation * MovementSpeed * DeltaTime;
                 Position += Orientation * MovementSpeed * DeltaTime;
             }
 
             if (framework::Input::KeyBoard::KEYS[framework::Input::GLFW::Key::S])
             {
                 MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-                // MovementVector -= Orientation * MovementSpeed * DeltaTime;
                 Position -= Orientation * MovementSpeed * DeltaTime;
             }
 
             if (framework::Input::KeyBoard::KEYS[framework::Input::GLFW::Key::D])
             {
                 MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-                // MovementVector += Rigth * MovementSpeed * DeltaTime;
                 Position += Rigth * MovementSpeed * DeltaTime;
             }
 
             if (framework::Input::KeyBoard::KEYS[framework::Input::GLFW::Key::A])
             {
                 MovementSpeed = glm::mix(MovementSpeed, this->MaxMovementSpeed, 2.0f * DeltaTime);
-                // MovementVector -= Rigth * MovementSpeed * DeltaTime;
                 Position -= Rigth * MovementSpeed * DeltaTime;
             }
 
@@ -229,7 +224,6 @@ namespace utils
                 (!framework::Input::KeyBoard::KEYS[framework::Input::GLFW::Key::D] && _Joystick->L3().y > -0.1) &&
                 (!framework::Input::KeyBoard::KEYS[framework::Input::GLFW::Key::A] && _Joystick->L3().y < 0.1))
             {
-                // MovementSpeed = 0.0f; //glm::mix(MovementSpeed, 0.0f, 2.0f * DeltaTime);
                 MovementSpeed = glm::mix(MovementSpeed, 0.0f, 2.0f * DeltaTime);
             }
         }
@@ -237,7 +231,6 @@ namespace utils
 #endif
         /** ------------------------------------------------------------------*/
 
-        // MovementSpeed = glm::mix(MovementSpeed, 0.0f, 2.0f * DeltaTime);
         if (MovementSpeed < 0.01f)
             MovementSpeed = 0.0f;
         if (LastPosition != Position)
@@ -250,16 +243,12 @@ namespace utils
 
         LastTime = currentTime;
 
-        // Position += (MovementVector * MovementSpeed * DeltaTime);
-        // Position += MovementVector;
         if (!externallymodified)
         {
             mIsMoving = false;
-            // DeltaVector = (Position - LastPosition);
+
             if (LastPosition != Position)
             {
-                // DeltaVector = (Position - LastPosition);
-                // MovementVector = glm::normalize(DeltaVector / glm::vec3(glm::sqrt(glm::pow(DeltaVector.x, 2.0) + glm::pow(DeltaVector.y, 2.0) + glm::pow(DeltaVector.z, 2.0))));
                 mIsMoving = true;
             }
             if (LastOrientation != Orientation)
@@ -282,7 +271,7 @@ namespace utils
         Frustrum = Position + Orientation;
         winx = frame_w;
         winy = frame_h;
-        float Aspectratio;
+        float Aspectratio = 16.0f/9.0f;
         Aspectratio = (float)winx / (float)winy;
         static const glm::vec2 Res = glm::vec2((float)winx, (float)winy);
         static const glm::vec2 iRes = 1.0f / glm::vec2((float)winx, (float)winy);

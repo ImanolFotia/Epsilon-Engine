@@ -40,6 +40,7 @@ namespace engine
 		Ref<Texture> createTexture(TextureCreationInfo) override;
 		Ref<Mesh> createMesh(MeshInfo) override;
 		Ref<Mesh> createMesh(AnimatedMeshInfo) override;
+		Ref<Mesh> insertMesh(const std::string&, MeshResource) override;
 		Ref<Buffer> createGPUBuffer(const std::string&, uint32_t size, BufferStorageType type, int count) override;
 		Ref<RenderPass> createRenderPass(RenderPassInfo) override;
 		Ref<RenderPass> createDefaultRenderPass(RenderPassInfo) override;

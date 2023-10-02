@@ -241,7 +241,7 @@ namespace engine
 		poolInfo.pPoolSizes = poolSizes.data();
 		poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
 
-		poolInfo.maxSets = poolSizes.size() * 2;
+		poolInfo.maxSets = poolSizes.size() * vk::MAX_FRAMES_IN_FLIGHT;
 		if (vkCreateDescriptorPool(m_pVkDataPtr->logicalDevice, &poolInfo, nullptr, &m_pDescriptorPool) != VK_SUCCESS)
 		{
 			throw std::runtime_error("failed to create descriptor pool!");

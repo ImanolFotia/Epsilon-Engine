@@ -168,7 +168,7 @@ namespace engine
 
 	Ref<BindGroup> VulkanResourceManager::createBindGroup(BindGroupInfo material)
 	{
-		try
+		//try
 		{
 			vk::VulkanMaterial vkMaterial;
 			// auto renderPass = renderPassPool.get(renderPassRef);
@@ -258,7 +258,7 @@ namespace engine
 			if (renderPass->uniformBuffer.size() > 0) {
 
 				auto buffers = renderPass->uniformBuffer.front().buffers;
-
+				//vkMaterial.bufferInfo.resize(vk::MAX_FRAMES_IN_FLIGHT);
 				for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
 				{
 					vkMaterial.bufferInfo[i].offset = buffers[i].offset;
@@ -280,10 +280,10 @@ namespace engine
 			Ref<BindGroup> materialRef = materialPool.insert(material.name, vkMaterial);
 			return materialRef;
 		}
-		catch (std::exception& e)
+		//catch (std::exception& e)
 		{
 
-			throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
+		//	throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
 		}
 	}
 
@@ -665,6 +665,15 @@ namespace engine
 		return uniformBufferPool.insert(bindingInfo.name, buffer);
 	}
 
+
+	Ref<Mesh> VulkanResourceManager::insertMesh(const std::string& name, MeshResource meshResource) {
+
+		auto ref = meshPool.insert(name, meshResource);
+
+		return ref;
+
+	}
+
 	Ref<Mesh> VulkanResourceManager::createMesh(MeshInfo meshInfo)
 	{
 		std::vector<common::Vertex>* vertices = &meshInfo.vertices;
@@ -705,6 +714,7 @@ namespace engine
 			.indexOffset = indexBuffer->allocatedVertices,
 			.numVertices = (uint32_t)vertices->size(),
 			.numIndices = (uint32_t)indices->size() };
+
 		auto ref = meshPool.insert(meshInfo.name, meshResource);
 
 		int maxAllocatingSize = sizeof(IndexType) * (indexBuffer->allocatedVertices + indices->size());

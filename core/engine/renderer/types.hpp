@@ -256,8 +256,8 @@ namespace engine
 
 
     struct ObjectDataConstant {
-        glm::mat4 transform;
-        uint32_t material_index;
+        glm::mat4 transform = glm::mat4(1.0f);
+        uint32_t material_index = 0;
     };
 
     struct Viewport {
