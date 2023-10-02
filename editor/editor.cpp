@@ -1,6 +1,7 @@
 #include "editor.hpp"
 
 #include <core/common/common.hpp>
+#include "utils/node_factory.hpp"
 
 namespace Editor {
 	void Editor::OnCreate() {
@@ -136,63 +137,21 @@ namespace Editor {
 				pAddDefaultCube(glm::vec3(i * 2.05f - 5.0f, 10.0, j * 2.5f - 5.0f));
 
 			}
+		
+		auto node = Utils::CreateNode(glm::mat4(1.0f), &m_pScene);
 
-		{
-			auto modelNode = m_pScene.emplaceIntoScene<engine::Scene::SceneEntity>(engine::Box{ glm::vec3(0.0), glm::vec3(1.0) });
+		Utils::AddModelNode("models/adamHead.gltf", &m_pScene, node);
 
-			modelNode->data.transform = glm::translate(glm::mat4(1.0), glm::vec3(0.0));
-			modelNode->data.transform = glm::scale(modelNode->data.transform, glm::vec3(1.0f));
+		Utils::AddScriptNode({
+			.language = C_SHARP,
+			.fileName = "GameObject.cs",
+			.assemblyName = "Game.dll",
+			.className = "Game.GameObject",
+			.nodeName = "Adam Head"
+			}, &m_pScene, node, host);
 
-			auto script = m_pScene.emplaceIntoNode<EntityScript>(modelNode);
-			script->data.ManagedPtr = host.assembly.Invoke<void*>(L"CreateEntity", modelNode.get(), L"Game.GameObject", "Damaged Helmet");
+		Utils::RegisterIntoEditor("Adam Head", & m_pSceneNodes, &m_pScene, node);
 
-			if (script->data.ManagedPtr == nullptr) {
-				std::cerr << "ManagedPtr is null" << std::endl;
-				exit();
-			}
-
-			const char* str = host.assembly.Invoke<const char*>(L"getEntityFields", script->data.ManagedPtr);
-			std::cout << str << std::endl;
-			auto props = UI::Property::DeserializeProperties(std::string(str));// m_pObjectProperty.setProperties(std::string(str));
-			script->data.properties = props;
-			script->data.className = "Game.GameObject";
-
-			auto model = m_pScene.getAssetManager().loadModel("models/porsche911.gltf");
-			//engine::Sphere2 sphere(20);
-			//auto m_pDefaultCube = m_pScene.getAssetManager().createModelFromMesh("DefaultCube", sphere.data(), defaultMaterial);
-			auto renderNode = m_pScene.insertIntoNode(engine::Box{ glm::vec3(modelNode->data.transform[3]), glm::vec3(0.5) }, modelNode, model);
-
-			EntityArgs args;
-			args.transform = toTransform(modelNode->data.transform);
-			args.id = 0;
-			host.assembly.Invoke<void>(L"setEntityTransform", script->data.ManagedPtr, args);
-
-			UI::NodeProperties node_props;
-			node_props.name = "Damaged Helmet";
-			node_props.mType = UI::SceneNodeType::Node;
-
-			UI::NodeProperties render_props;
-			render_props.name = "Render Model" + std::to_string(renderNode->Index());
-			render_props.mType = UI::SceneNodeType::Render;
-			render_props.node_ref = (void*)&renderNode.get()->data;
-			render_props.scene_node_ref = &modelNode.get()->data;
-			render_props.index = modelNode->Index();
-
-			UI::NodeProperties script_props;
-			script_props.name = "Script";
-			script_props.mType = UI::SceneNodeType::Script;
-			script_props.node_ref = (void*)&script.get()->data;
-			script_props.scene_node_ref = &modelNode.get()->data;
-			script_props.index = modelNode->Index();
-
-			node_props.children.push_back(render_props);
-			node_props.children.push_back(script_props);
-			node_props.node_ref = (void*)&modelNode.get()->data;
-			node_props.model_path = "DefaultCube";
-			node_props.scene_node_ref = &modelNode.get()->data;
-			node_props.index = modelNode->Index();
-			m_pSceneNodes.PushInRoot(node_props);
-		}
 		renderer->getDebugRenderer()->ShowDebugPerformance(false);
 
 		renderer->getDebugRenderer()->setUserFunction([this]() {
@@ -387,7 +346,7 @@ namespace Editor {
 		script->data.className = "Game.GameObject";
 
 		//auto model = m_pScene.getAssetManager().loadModel("models/pot.gltf");
-		engine::Sphere2 sphere(20);
+		engine::Cube sphere;
 		auto m_pDefaultCube = m_pScene.getAssetManager().createModelFromMesh("DefaultCube", sphere.data(), defaultMaterial);
 		auto renderNode = m_pScene.insertIntoNode(engine::Box{ glm::vec3(cubeNode->data.transform[3]), glm::vec3(0.5) }, cubeNode, m_pDefaultCube);
 

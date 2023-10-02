@@ -337,6 +337,13 @@ namespace engine
 			return m_pSceneManager.to<T>(m_pSceneManager.getChild<T>(m_pSceneManager.root));
 		}
 
+		template<typename T>
+		SceneManager::ChildNodes getChildren(std::shared_ptr<NodeBase> parent)
+		{
+			//return m_pSceneManager.to<T>(m_pSceneManager.getChild<T>(m_pSceneManager.root));
+			return m_pSceneManager.getChildren<T>(parent);
+		}
+
 		void BeginScene()
 		{
 			if (m_pContext->Window().getSize().first > 0) {

@@ -32,6 +32,7 @@
 
 
 #include <modules/dotnet/src/host.hpp>
+#include "types/script.hpp"
 
 namespace Editor {
 	class Editor : public Epsilon::Epsilon {
@@ -67,12 +68,6 @@ namespace Editor {
 		dotnet::DotnetHost host;
 		int selected_index = -1;
 
-		struct EntityArgs
-		{
-			const char_t* objectType = L"Game.GameObject";
-			Transform transform;
-			int id;
-		};
 
 		engine::Scene::SceneEntity* selected_entity = nullptr;
 

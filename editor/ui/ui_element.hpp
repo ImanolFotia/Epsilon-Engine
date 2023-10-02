@@ -140,11 +140,3 @@ namespace Editor::UI {
 
 	};
 }
-
-namespace Editor {
-	struct EntityScript {
-		std::string className{};
-		void* ManagedPtr;
-		std::vector<UI::Property> properties;
-	};
-};
