@@ -37,6 +37,7 @@ namespace Editor::UI {
                 }
                 pfd->Release();
 
+                if(m_pLastOpenPath.size() > 0)
                 std::cout << m_pLastOpenPath.back() << std::endl;
             }
 

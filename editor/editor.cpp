@@ -69,6 +69,7 @@ namespace Editor {
 			.wrapMode = engine::CLAMP_TO_EDGE,
 			.filtering = engine::LINEAR
 			});
+		delete[] lut;
 
 		defaultMaterial.albedo_path = "textures/epsilon/wood_0014_color_2k.jpg";
 		defaultMaterial.normal_path = "textures/epsilon/wood_0014_normal_opengl_2k.png";
