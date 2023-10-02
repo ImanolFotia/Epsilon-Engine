@@ -22,6 +22,7 @@ namespace engine
 		using NodeTypes = std::unordered_map<std::type_index, std::list<TypeIterator>>;
 		using NodeIndexType = std::unordered_map<int, typename std::list<TypeIterator>::iterator>;
 		using RootType = std::shared_ptr<Node<Root>>;
+		using ChildNodes = std::unordered_map<std::type_index, std::list<std::shared_ptr<NodeBase>>>;
 
 		SceneManager() {
 			root = std::make_shared<Node<Root>>();
@@ -206,7 +207,13 @@ namespace engine
 		{
 			auto iType = std::type_index(typeid(T));
 
-			return children_node_index.at(node->index).at(std::type_index(typeid(T)));
+			return children_node_index.at(node->index).at(iType);
+		}
+
+		template <typename T>
+		ChildNodes& getChildren(std::shared_ptr<NodeBase> node)
+		{
+			return children_node_index.at(node->index);
 		}
 
 		template<typename T>
@@ -247,10 +254,7 @@ namespace engine
 		NodeIndexType node_index;
 
 
-		std::unordered_map<size_t /*parent*/,
-			std::unordered_map<std::type_index,
-			std::vector<std::shared_ptr<NodeBase>>>>
-			children_node_index;
+		std::unordered_map<size_t /*parent*/, ChildNodes> children_node_index;
 
 		std::queue<size_t> free_indices;
 

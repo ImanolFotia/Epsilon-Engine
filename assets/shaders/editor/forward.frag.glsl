@@ -100,6 +100,7 @@ void main() {
         Normal *= -1.0;
     }
     float roughness = getRoughness(surface);
+    roughness *= roughness;
     float metallic = getMetallic(surface);
 
     vec3 V = normalize(RenderPassUBO.data.viewPosition  - fs_in.position);
@@ -115,7 +116,7 @@ void main() {
     kD *= 1.0 - metallic;	
 
     vec3 radiance = textureLod(textures[0], SampleSphericalMap(-normalize(ref)), 4.0*roughness).rgb;
-    vec3 irradiance = (texture(textures[1], SampleSphericalMap(-Normal)).rgb);
+    vec3 irradiance = (texture(textures[1], SampleSphericalMap(-Normal*0.1)).rgb);
     vec2 lut = texture(textures[2], vec2(max(dot(Normal, V), 0.0), roughness)).rg;
 
     vec3 reflec = radiance * (F * lut.x + lut.y);
@@ -125,7 +126,7 @@ void main() {
 
     vec3 light = CalculateDirectionalPBR(lightDir, vec3(1.0), 1.0, RenderPassUBO.data.viewPosition, fs_in.position, F0, Normal, roughness, Albedo.rgb);
     
-    fragColor = vec4(tonemapACES(ambient+light), 1.0);
+    fragColor = vec4(tonemapACES(light + ambient), 1.0);
 
     fragColor.a = Albedo.a;
 }

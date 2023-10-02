@@ -66,7 +66,7 @@ namespace engine
 
 			for (auto& vtx : m_pMesh.Vertices) {
 				float l = glm::length(vtx.position);
-				vtx.position = glm::normalize(vtx.position);
+				vtx.position = glm::normalize(vtx.position) * 0.5f;
 				vtx.normal = glm::normalize(vtx.position - glm::vec3(0.0));
 				//vtx.texCoords *= 0.5f;
 			}
@@ -111,7 +111,7 @@ namespace engine
 					}
 
 					glm::vec2 uv = glm::vec2((float(x) / float(mNumSubdivisions - 1)), float(y) / float(mNumSubdivisions - 1));
-					m_pMesh.Vertices.push_back({ vtx, uv, glm::vec3(0.0, 1.0, 0.0) });
+					m_pMesh.Vertices.push_back({ vtx * 0.5f, uv, glm::vec3(0.0, 1.0, 0.0) });
 					vertexCount++;
 				}
 			}
