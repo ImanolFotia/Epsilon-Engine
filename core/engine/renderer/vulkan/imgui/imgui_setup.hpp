@@ -145,7 +145,7 @@ class ImGuiRenderer
 		style->WindowBorderSize = 1.0;
 		style->FrameBorderSize = 1.0;
 		style->PopupBorderSize = 1.0;
-		
+		/*
 		{
 
 			ImGuiStyle* style = &ImGui::GetStyle();
@@ -211,7 +211,7 @@ class ImGuiRenderer
 			style->WindowRounding = 0.0;
 			style->WindowTitleAlign = ImVec2(0.5, 0.5);
 			style->WindowBorderSize = 0.0;
-		}
+		}*/
 		style->WindowTitleAlign = ImVec2(0.5, 0.5);
 
 		ImGuiIO& io = ImGui::GetIO();
