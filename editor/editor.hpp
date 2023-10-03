@@ -30,6 +30,7 @@
 #include <core/framework/utils/helpers/camera.hpp>
 #include <core/framework/IO/IO.hpp>
 
+#include "brushes/brush_manager.hpp"
 
 #include <modules/dotnet/src/host.hpp>
 #include "types/script.hpp"
@@ -39,6 +40,8 @@ namespace Editor {
 
 		engine::Ref<engine::RenderPass> m_pDefaultRenderPass;
 		engine::Ref<engine::RenderPass> m_pForwardRenderPass; 
+
+		std::shared_ptr<BrushManager> m_pBrushManager;
 
 
 		engine::Ref<engine::BindGroup> m_pForwardBindGroup;
@@ -81,7 +84,7 @@ namespace Editor {
 
 		void pLoadDotnet() {
 
-			host.Load(L"modules\\dotnet\\EpsilonSharp\\bin\\x64\\Release\\net8.0\\");//"assets\\scripts\\EpsilonSharp\\bin\\x64\\Debug\\net7.0\\");
+			host.Load(L"modules\\dotnet\\EpsilonSharp\\bin\\x64\\Debug\\net8.0\\");//"assets\\scripts\\EpsilonSharp\\bin\\x64\\Debug\\net7.0\\");
 			//host.Load(L"assets\\scripts\\Game\\bin\\x64\\Debug\\net8.0\\");//"assets\\scripts\\EpsilonSharp\\bin\\x64\\Debug\\net7.0\\");
 
 			typedef void (*func_ptr)(engine::Node<engine::Scene::SceneEntity>*, int, Transform);
@@ -97,7 +100,7 @@ namespace Editor {
 			host.assembly.LoadDelegate<void, const char*, bool>(L"SetPropertyBool", L"SetPropertyBoolDelegate", L"Epsilon", true);
 			host.assembly.LoadDelegate<void>(L"ReloadAssemblies", L"ReloadAssembliesDelegate", L"Epsilon");
 			host.assembly.LoadDelegate<void, func_ptr_2>(L"registerUpdateReferenceCallback", L"registerUpdateReferenceCallbackDelegate", L"Epsilon");
-
+			
 			host.assembly.Invoke<void>(L"registerSetTransform", (func_ptr)[](engine::Node<engine::Scene::SceneEntity>* scene_ptr, int entity_id, Transform transform) {
 				if (scene_ptr != nullptr) {
 					scene_ptr->data.transform = transform.toMat4();

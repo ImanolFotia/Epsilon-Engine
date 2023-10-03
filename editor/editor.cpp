@@ -2,6 +2,7 @@
 
 #include <core/common/common.hpp>
 #include "utils/node_factory.hpp"
+#include "utils/mesh_utils.hpp"
 
 namespace Editor {
 	void Editor::OnCreate() {
@@ -14,11 +15,15 @@ namespace Editor {
 		m_pInspector.setTransform(selected_matrix);
 		m_pInspector.setName("Cube");
 
-		//pLoadDotnet();
-
 		m_pScene = engine::Scene(getContext());
 
+		m_pBrushManager = std::make_shared<BrushManager>(getContext());
+
+		engine::Cube cube;
+		m_pBrushManager->addBrush(toTriangleStrip(cube.data().Vertices, cube.data().Indices), 0);
+
 		m_pMaterialEditor.m_pSceneRef = &m_pScene;
+
 
 		host.assembly.Invoke<void>(L"setScenePtr", &m_pScene);
 
@@ -134,13 +139,13 @@ namespace Editor {
 
 		for (int i = 0; i < 5; i++)
 			for (int j = 0; j < 5; j++) {
-				pAddDefaultCube(glm::vec3(i * 2.05f - 5.0f, 10.0, j * 2.5f - 5.0f));
+				pAddDefaultCube(glm::vec3(i * 2.05f - 5.0f, 2.0, j * 2.5f - 5.0f));
 
 			}
 		
 		auto node = Utils::CreateNode(glm::mat4(1.0f), &m_pScene);
 
-		Utils::AddModelNode("models/adamHead.gltf", &m_pScene, node);
+		Utils::AddModelNode("models/pot.gltf", &m_pScene, node);
 
 		Utils::AddScriptNode({
 			.language = C_SHARP,
@@ -211,7 +216,17 @@ namespace Editor {
 			if (ImGui::Button(ICON_FA_REDO, ImVec2(37, 37)))
 			{
 				host.assembly.Invoke<void>(L"ReloadAssemblies");
+
+				auto scripts = m_pScene.getNodes<EntityScript>();
+				for (auto s : scripts) {
+					auto script = std::static_pointer_cast<engine::Node<EntityScript>>(*s);
+					const char* str = host.assembly.Invoke<const char*>(L"getEntityFields", script->data.ManagedPtr);
+					auto props = UI::Property::DeserializeProperties(std::string(str));
+					script->data.properties = props;
+				}
 			}
+
+
 			ImGui::SameLine();
 			ImGui::End();
 
@@ -346,7 +361,7 @@ namespace Editor {
 		script->data.className = "Game.GameObject";
 
 		//auto model = m_pScene.getAssetManager().loadModel("models/pot.gltf");
-		engine::Cube sphere;
+		engine::Sphere2 sphere(10);
 		auto m_pDefaultCube = m_pScene.getAssetManager().createModelFromMesh("DefaultCube", sphere.data(), defaultMaterial);
 		auto renderNode = m_pScene.insertIntoNode(engine::Box{ glm::vec3(cubeNode->data.transform[3]), glm::vec3(0.5) }, cubeNode, m_pDefaultCube);
 
