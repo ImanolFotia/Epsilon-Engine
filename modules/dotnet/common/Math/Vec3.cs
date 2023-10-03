@@ -20,6 +20,54 @@ namespace Math
         {
             return new Vec3(b.x - a.x, b.y - a.y, b.z - a.z);
         }
+
+        public static Vec3 operator -(Vec3 a, float b)
+        {
+            return new Vec3(b - a.x, b - a.y, b - a.z);
+        }
+
+        public static Vec3 operator -(float a, Vec3 b)
+        {
+            return new Vec3(b.x - a, b.y - a, b.z - a);
+        }
+
+        public static Vec3 operator -(Vec3 v)
+        {
+            return new Vec3(-v.x,  -v.y, -v.z);
+        }
+
+
+        public static Vec3 operator *(Vec3 a, Vec3 b)
+        {
+            return new Vec3(b.x * a.x, b.y * a.y, b.z * a.z);
+        }
+
+        public static Vec3 operator *(Vec3 a, float b)
+        {
+            return new Vec3(b * a.x, b * a.y, b * a.z);
+        }
+
+        public static Vec3 operator *(float a, Vec3 b)
+        {
+            return new Vec3(b.x * a, b.y * a, b.z * a);
+        }
+
+
+
+        public static Vec3 operator /(Vec3 a, Vec3 b)
+        {
+            return new Vec3(b.x / a.x, b.y / a.y, b.z / a.z);
+        }
+
+        public static Vec3 operator /(Vec3 a, float b)
+        {
+            return new Vec3(a.x /b , a.x / b, a.z / b);
+        }
+
+        public static Vec3 operator /(float a, Vec3 b)
+        {
+            return new Vec3(b.x / a, b.y / a, b.z / a);
+        }
         public Vec3(float a)
         {
             x = a;
