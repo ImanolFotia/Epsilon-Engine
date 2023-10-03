@@ -98,6 +98,8 @@ namespace utils
 
         float DeltaTime = float(currentTime - LastTime);
 
+        DeltaTime = glm::clamp(DeltaTime, 0.0f, 0.1f);
+
         // auto winSize =
 
         // glfwGetWindowSize(window, &winx, &winy);
