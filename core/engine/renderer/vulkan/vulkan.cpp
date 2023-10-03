@@ -451,7 +451,80 @@ namespace engine
 
 	void VulkanRenderer::FlushNonIndexed(vk::VulkanRenderPass* renderPass)
 	{
-		throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
+
+		int32_t prev_layout = -1;
+		vk::VulkanBuffer* prev_vertex_buffer = nullptr;
+		vk::VulkanBuffer* prev_index_buffer = nullptr;
+		int32_t prev_vertex_buffer_id = -1;
+		int32_t prev_index_buffer_id = -1;
+
+		vk::VulkanMaterial* prev_material = nullptr;
+		int32_t prev_material_id = -1;
+
+		int changed = 0;
+
+		VkExtent2D extent = renderPass->renderPassChain.Extent;
+		VkViewport viewport{};
+		viewport.x = 0.0f;
+		viewport.y = 0.0f;
+		viewport.width = (float)extent.width;
+		viewport.height = (float)extent.height;
+		viewport.minDepth = 0.0f;
+		viewport.maxDepth = 1.0f;
+		vkCmdSetViewport(m_pFrame.CommandBuffer(), 0, 1, &renderPass->renderPassChain.Viewport);
+
+		VkRect2D scissor{};
+		scissor.offset = { 0, 0 };
+		scissor.extent = extent;
+
+
+		vkCmdSetScissor(m_pFrame.CommandBuffer(), 0, 1, &renderPass->renderPassChain.Scissor);
+
+		for (int i = 0; i < currentCommandsInQueue; i++)
+		{
+
+			auto& command = m_pCurrentCommandQueue[i];
+			if (prev_layout != command.layoutIndex)
+			{
+				vk::bindPipeline(renderPass->renderPipelines[command.layoutIndex].graphicsPipeline,
+					m_pFrame.CommandBuffer());
+				prev_layout = command.layoutIndex;
+
+
+				if (m_pVkData.bindless_supported)
+				{
+					vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
+						renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(), 1, 1,
+						&m_pResourceManagerRef->m_pGlobalDescriptorSets, 0, nullptr);
+				}
+			}
+
+
+			if (prev_vertex_buffer_id != command.meshResource.vertexBuffer.Id() && command.meshResource.vertexBuffer.Id() != -1) {
+				auto vertexBuffer = m_pResourceManagerRef->vertexBufferPool.get(command.meshResource.vertexBuffer);
+				prev_vertex_buffer_id = command.meshResource.vertexBuffer.Id();
+				prev_vertex_buffer = vertexBuffer;
+				vk::bindVertexBuffer(m_pVkData, m_pFrame.CommandBuffer(), vertexBuffer->buffer);
+			}
+
+
+			if (prev_material_id != command.material.Id()) {
+				auto material = m_pResourceManagerRef->materialPool.get(command.material);
+				prev_material_id = command.material.Id();
+				prev_material = material;
+				vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
+					renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(), 0, 1,
+					&material->descriptorSets[m_pCurrentFrame], 0, nullptr);
+			}
+
+			/** TODO:
+			 *  Find a way to cleanly implement push constants*/
+			vkCmdPushConstants(m_pFrame.CommandBuffer(), renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(),
+				VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(ObjectDataConstant), &command.pushConstantData);
+
+			vkCmdDraw(m_pFrame.CommandBuffer(), command.meshResource.numVertices, command.count, command.meshResource.vertexOffset, command.uniformIndex);
+			m_pNumDrawCalls++;
+		}
 	}
 
 	void VulkanRenderer::FlushIndirect(vk::VulkanRenderPass* renderPass)
