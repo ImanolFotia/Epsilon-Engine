@@ -803,7 +803,7 @@ namespace engine
 			}
 			else if(ext == "dds") {
 				int baseLevel = 0;
-				DDS ddsfile(texture_path, 0);
+				DDS ddsfile(texture_path, baseLevel);
 				isDDS = true;
 				width = ddsfile.width();
 				height = ddsfile.height();
