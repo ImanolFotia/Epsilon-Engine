@@ -19,6 +19,8 @@ namespace Editor {
 
 		m_pBrushManager = std::make_shared<BrushManager>(getContext());
 
+		m_pAssets = UI::Assets(&m_pScene);
+
 		engine::Cube cube;
 		m_pBrushManager->addBrush(toTriangleStrip(cube.data().Vertices, cube.data().Indices), 0);
 
@@ -167,6 +169,7 @@ namespace Editor {
 			m_pMainViewport.setImage(getContext()->Renderer()->getDebugRenderer()->getImages().at("Forward0"));
 			m_pMainViewport.draw();
 			m_pSceneNodes.draw();
+			m_pAssets.draw();
 
 			selected_entity = (engine::Scene::SceneEntity*)m_pSceneNodes.scene_node_ref;// reinterpret_cast<std::shared_ptr<engine::Scene::SceneEntity>> (m_pSceneNodes.scene_node_ref);
 			selected_index = m_pSceneNodes.selected_index;

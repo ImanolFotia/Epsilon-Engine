@@ -124,6 +124,8 @@ namespace engine
 		std::unordered_map<std::string, AudioBuffer> m_pAudioBuffers;
 		std::unordered_map<std::size_t, PBRMaterialIndex> m_pMaterials;
 
+		std::unordered_map<size_t, std::string> m_pImageName;
+
 		std::unordered_map<std::string, Ref<Buffer>> m_pGPUBuffers;
 
 		std::queue<uint32_t> m_pFreeMaterialIndexes;
@@ -151,6 +153,10 @@ namespace engine
 
 		const std::unordered_map<size_t, Ref<Texture>>& getImages() {
 			return m_pImages;
+		}
+
+		const std::string& getImageName(size_t hash) {
+			return m_pImageName.at(hash);
 		}
 
 		const Ref<Texture> getImage(const std::string& name) {
@@ -716,6 +722,7 @@ namespace engine
 			}
 
 			m_pImages[std::hash<std::string>{}(name)] = ref;
+			m_pImageName[std::hash<std::string>{}(name)] = name;
 
 			return ref;
 		}
@@ -887,6 +894,7 @@ namespace engine
 				}
 
 				m_pImages[std::hash<std::string>{}(path)] = ref;
+				m_pImageName[std::hash<std::string>{}(path)] = path;
 			}
 
 			return ref;
