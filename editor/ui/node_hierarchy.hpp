@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ui_element.hpp"
+#include "../types/editor_node.hpp"
 
 namespace Editor::UI {
 
@@ -12,6 +13,9 @@ namespace Editor::UI {
 		int selected_index = -1;
 
 		std::function<void(void)> addEntityCallback;
+		std::list<NodeProperties> m_pNodeProperties;
+
+		engine::Scene* m_pScenePtr = nullptr;
 
 		SceneNodes() {
 			m_pNodeProperties.push_back({ nullptr, nullptr, "Root", "", {}, SceneNodeType::Root });
@@ -42,7 +46,6 @@ namespace Editor::UI {
 			}
 		}
 
-		std::list<NodeProperties> m_pNodeProperties;
 
 		void draw() {
 			const float TEXT_BASE_WIDTH = ImGui::CalcTextSize("A").x;
@@ -50,9 +53,12 @@ namespace Editor::UI {
 			ImGui::Begin("Scene Nodes");
 			ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.0, 0.0, 0.0, 0.0));
 			if (ImGui::Button(ICON_FA_PLUS, ImVec2(25, 25))) {
-				addEntityCallback();
+
+				ImGui::OpenPopup("New Node");
+				//addEntityCallback();
 				selected_node = nullptr;
-			} 
+			}
+			ModelPopUp();
 			ImGui::SameLine();
 			ImGui::Button(ICON_FA_MINUS, ImVec2(25, 25));
 			ImGui::PopStyleColor();
@@ -91,7 +97,7 @@ namespace Editor::UI {
 			bool is_folder = (node.num_children() > 0);
 			if (is_folder)
 			{
-				bool open = ImGui::TreeNodeEx(node.name.c_str(), ImGuiTreeNodeFlags_SpanFullWidth);
+				bool open = ImGui::TreeNodeEx(node.name.c_str(), ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick);
 				if (ImGui::IsItemClicked()) {
 					selected_node = &node;
 					std::cout << node.name << " clicked" << std::endl;
@@ -119,6 +125,63 @@ namespace Editor::UI {
 				ImGui::TableNextColumn();
 				ImGui::TextUnformatted(node.type());
 
+			}
+		}
+
+		void ModelPopUp() {
+
+
+			ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+			ImVec2 size = ImGui::GetMainViewport()->Size;
+			ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+			ImGui::SetNextWindowSize(ImVec2((size.x / 4) * 3, (size.y / 4) * 3));
+			bool unused_open = true;
+			if (ImGui::BeginPopupModal("New Node", &unused_open)) {
+				ImGui::SeparatorText("Node Type");
+				if (m_pScenePtr != nullptr) {
+					auto& models = m_pScenePtr->getAssetManager().getModels();
+					static int selected = 0;
+					if (ImGui::BeginListBox("##nodes_listbox", ImVec2(ImGui::GetContentRegionAvail().x * 0.25, ImGui::GetContentRegionAvail().y-35)))
+					{
+						for (int i = 0; i < NodeType::Size; i++) {
+
+							const bool is_selected = (selected == i);
+							if (ImGui::Selectable(NodeType::NodeTypesNames[i], is_selected)) {
+								selected = i;
+							}
+							if (is_selected)
+								ImGui::SetItemDefaultFocus();
+						}
+						ImGui::EndListBox();
+					}
+					ImGui::SameLine();
+					ImGui::BeginChild("Description", ImVec2(0, ImGui::GetContentRegionAvail().y - 35), true);
+					ImGui::SeparatorText("Description");
+					ImGui::TextWrapped("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
+
+					ImGui::BeginChild("Properties", ImVec2(0, 0), true);
+					ImGui::SeparatorText("Properties");
+					bool dummyBool = true;
+					ImGui::Checkbox("Dummy check", &dummyBool);
+					ImGui::Button("Dummy button");
+					ImGui::EndChild();
+
+
+					ImGui::EndChild();
+				}
+
+				if (ImGui::Button("Accept", ImVec2(0, 30))) {
+
+					/*auto parent_node = m_pScenePtr->getNode(selected_node->Index());
+					auto child = m_pScenePtr->getChild<engine::RenderModel>(parent_node);
+					auto bindGroup = renderModel->bindGroup;
+					child->data = m_pScenePtr->getAssetManager().getModel(selected);
+					child->data.bindGroup = bindGroup;
+					ImGui::CloseCurrentPopup();*/
+				} ImGui::SameLine();
+				if (ImGui::Button("Cancel", ImVec2(0, 30))) ImGui::CloseCurrentPopup();
+
+				ImGui::EndPopup();
 			}
 		}
 	};

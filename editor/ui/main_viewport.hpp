@@ -16,7 +16,9 @@ namespace Editor::UI {
 		bool m_pIsHovered = false;
 		TransformationMode m_pTransformMode = TransformationMode::NONE;
 	public:
-		MainViewport() = default;
+		MainViewport() {
+			
+		}
 
 		TransformationMode getMode() {
 			return m_pTransformMode;

@@ -9,6 +9,7 @@ namespace Editor::UI {
 
 		std::vector<Property> m_pProperties;
 		std::string m_pScriptName;
+		engine::Scene* m_pScenePtr = nullptr;
 
 		const std::vector<Property>& getProperties() {
 			return m_pProperties;
@@ -72,7 +73,7 @@ namespace Editor::UI {
 
 				ImGui::SeparatorText("Object Script Properties");
 				ImGui::InputText("Class Name", m_pScriptName.data(), m_pScriptName.size(), ImGuiInputTextFlags_ReadOnly);
-				
+
 				for (auto& prop : m_pProperties) {
 					if (prop.type == PropertyType::NUMBER) {
 						bool hasRange = false;
@@ -106,7 +107,7 @@ namespace Editor::UI {
 					else {}
 				}
 
-				
+
 
 				//ImGui::Begin("Inspector");
 				if (selected_node != nullptr) {
@@ -116,12 +117,15 @@ namespace Editor::UI {
 					//Gui::InputText("Name", name_vec, selected_node->name.size(), ImGuiInputTextFlags_ReadOnly);
 
 					if (selected_node->mType == SceneNodeType::Render) {
-						ImGui::SeparatorText("Node Properties");
+						ImGui::SeparatorText("Render Properties");
 
 						engine::RenderModel* renderModel = reinterpret_cast<engine::RenderModel*>(selected_node->node_ref);
 
 						char* model_name_vec = renderModel->name.data();
 						ImGui::InputText("Model Name", model_name_vec, renderModel->name.size(), ImGuiInputTextFlags_ReadOnly);
+						//if (ImGui::Button("Model", buttonsize)) {
+						ModelPopUp();
+						//}
 						ImGui::Checkbox("Instanced", &renderModel->isInstanced);
 						if (renderModel->isInstanced) {
 							ImGui::BeginChild("Instancing");
@@ -178,6 +182,48 @@ namespace Editor::UI {
 				}
 			}
 			ImGui::End();
+		}
+
+		void ModelPopUp() {
+
+			engine::RenderModel* renderModel = reinterpret_cast<engine::RenderModel*>(selected_node->node_ref);
+			ImVec2 buttonsize = ImVec2(ImGui::GetContentRegionAvail().x, 0);
+			if (ImGui::Button("Model", buttonsize))
+				ImGui::OpenPopup("Model Popup");
+
+			static std::string selected = renderModel->name;
+			if (ImGui::BeginPopupModal("Model Popup", NULL)) {
+				if (m_pScenePtr != nullptr) {
+					auto& models = m_pScenePtr->getAssetManager().getModels();
+
+					if (ImGui::BeginListBox("##models_listbox", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+					{
+						for (auto& model : models) {
+
+							const bool is_selected = (selected == model.first);
+							if (ImGui::Selectable(model.first.c_str(), is_selected)) {
+								selected = model.first;
+							}
+							if (is_selected)
+								ImGui::SetItemDefaultFocus();
+						}
+						ImGui::EndListBox();
+					}
+				}
+
+				if (ImGui::Button("Accept")) {
+
+					auto parent_node = m_pScenePtr->getNode(selected_node->Index());
+					auto child = m_pScenePtr->getChild<engine::RenderModel>(parent_node);
+					auto bindGroup = renderModel->bindGroup;
+					child->data = m_pScenePtr->getAssetManager().getModel(selected);
+					child->data.bindGroup = bindGroup;
+					ImGui::CloseCurrentPopup();
+				} ImGui::SameLine();
+				if (ImGui::Button("Cancel")) ImGui::CloseCurrentPopup();
+
+				ImGui::EndPopup();
+			}
 		}
 	};
 }

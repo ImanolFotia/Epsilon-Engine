@@ -14,6 +14,10 @@ namespace Editor::UI {
 			m_pDirectory = directory;
 		}
 
+        std::vector<std::string> GetLastPath() {
+            return m_pLastOpenPath;
+        }
+
         void Show() {
 #ifdef _WIN32
             IFileDialog* pfd;

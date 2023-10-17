@@ -3,8 +3,10 @@
 #include "ui_element.hpp"
 #include "native/file_dialog.hpp"
 #include "../types/asset_type.hpp"
+#include "../utils/path_utils.hpp"
 
 #include <unordered_map>
+#include <algorithm>
 #include <string>
 
 namespace Editor::UI {
@@ -16,12 +18,15 @@ namespace Editor::UI {
 		std::shared_ptr<engine::ResourceManager> m_pResourceManagerRef;
 
 		AssetProperties selected_asset;
+		UI::NativeFileDialog m_pFileDialog;
 
 		engine::Scene* m_pScene = nullptr;
 	public:
 		Assets() = default;
 
-		Assets(engine::Scene* scene) : m_pScene{ scene } { }
+		Assets(engine::Scene* scene) : m_pScene{ scene } {
+			m_pFileDialog.Setup(".");
+		}
 
 		void draw() override {
 
@@ -29,6 +34,23 @@ namespace Editor::UI {
 			const float TEXT_BASE_WIDTH = ImGui::CalcTextSize("A").x;
 			const float TEXT_BASE_HEIGHT = ImGui::GetTextLineHeightWithSpacing();
 			ImGui::Begin("Assets");
+			ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.0, 0.0, 0.0, 0.0));
+			if (ImGui::Button(ICON_FA_PLUS, ImVec2(25, 25))) {
+
+				std::thread th([this, &assetManager]() {
+					m_pFileDialog.Show();
+					auto result = m_pFileDialog.GetLastPath();
+					if (result.size() > 0) {
+						auto ext = getExtension(result.back());
+						if (ext == "gltf" || ext == "glb")
+							assetManager.loadModel(result.back());
+					}
+					});
+				th.detach();
+				//addEntityCallback();
+				//selected_node = nullptr;
+			}
+			ImGui::PopStyleColor();
 			if (ImGui::TreeNode("Assets"))
 			{
 				static ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_Resizable | ImGuiTableFlags_ScrollY;
@@ -48,8 +70,12 @@ namespace Editor::UI {
 						DisplayNode({ .name = name, .mType = AssetType::Audio, .index = 0 });
 					}
 
+					for (auto& [name, audio] : assetManager.getShaders()) {
+						DisplayNode({ .name = name, .mType = AssetType::Shader, .index = 0 });
+					}
+
 					for (auto [hash, texture] : assetManager.getImages()) {
-						DisplayNode({ .name = assetManager.getImageName(hash), .mType = AssetType::Texture, .index = texture.Index(),});
+						DisplayNode({ .name = assetManager.getImageName(hash), .mType = AssetType::Texture, .index = texture.Index(), });
 					}
 
 					ImGui::EndTable();
@@ -99,6 +125,43 @@ namespace Editor::UI {
 				}
 			}
 
+			if (selected_asset.mType == AssetType::Shader) {
+				auto shader = assetManager.getShader(selected_asset.name);
+				ImGui::Text("Name: %s", shader.name.c_str());
+				ImGui::Text("Source:");
+				
+				if (ImGui::Button(ICON_FA_PENCIL_ALT"##fragment_btn")) {
+					std::string tmpStr = shader.filePaths[0];
+					std::replace(tmpStr.begin(), tmpStr.end(), '/', '\\');
+					auto result = ShellExecute(NULL, "open", tmpStr.c_str(), NULL, NULL, SW_SHOW);
+				} ImGui::SameLine();
+				ImGui::TextWrapped("Fragment: %s", shader.filePaths[0].c_str());
+				
+				if (ImGui::Button(ICON_FA_PENCIL_ALT"##vertex_btn")) {
+					std::string tmpStr = shader.filePaths[1];
+					std::replace(tmpStr.begin(), tmpStr.end(), '/', '\\');
+					auto result = ShellExecute(NULL, "open", tmpStr.c_str(), NULL, NULL, SW_SHOW);
+				} ImGui::SameLine();
+				ImGui::TextWrapped("Vertex: %s", shader.filePaths[1].c_str());
+				
+				ImGui::Text("Binaries:"); 
+				
+				if (ImGui::Button(ICON_FA_PENCIL_ALT"##fragment_spirv_btn")) {
+					std::string tmpStr = shader.spirvFilePaths[0];
+					std::replace(tmpStr.begin(), tmpStr.end(), '/', '\\');
+					auto result = ShellExecute(NULL, "open", tmpStr.c_str(), NULL, NULL, SW_SHOW);
+				} ImGui::SameLine();
+				ImGui::TextWrapped("Fragment: %s", shader.spirvFilePaths[0].c_str()); 
+				
+				if (ImGui::Button(ICON_FA_PENCIL_ALT"##vertex_spirv_btn")) {
+					std::string tmpStr = shader.spirvFilePaths[1];
+					std::replace(tmpStr.begin(), tmpStr.end(), '/', '\\');
+					auto result = ShellExecute(NULL, "open", tmpStr.c_str(), NULL, NULL, SW_SHOW);
+				}  ImGui::SameLine();
+				ImGui::TextWrapped("Vertex: %s", shader.spirvFilePaths[1].c_str());
+
+			}
+
 			ImGui::EndChild();
 
 			ImGui::End();
@@ -119,8 +182,9 @@ namespace Editor::UI {
 			if (asset.mType == AssetType::Audio) icon = ICON_FA_FILE_AUDIO;
 			if (asset.mType == AssetType::Script) icon = ICON_FA_FILE_CODE;
 			if (asset.mType == AssetType::Texture) icon = ICON_FA_IMAGES;
+			if (asset.mType == AssetType::Shader) icon = ICON_FA_GLOBE_EUROPE;
 			{
-				
+
 				ImGui::TreeNodeEx(std::string(icon + std::string(" ") + asset.name).c_str(), ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_Bullet | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_SpanFullWidth);
 				if (ImGui::IsItemClicked()) {
 					selected_asset = asset;

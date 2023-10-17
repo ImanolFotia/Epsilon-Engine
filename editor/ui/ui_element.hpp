@@ -51,7 +51,7 @@ namespace Editor::UI {
 			std::vector<Property> properties;
 
 			for (auto& [key, property] : data.items()) {
-				std::cout << "key: " << key << " property: " << property << std::endl;
+				//std::cout << "key: " << key << " property: " << property << std::endl;
 
 				Property prop;
 				if (property["Value"].is_string()) {
@@ -78,7 +78,7 @@ namespace Editor::UI {
 						attr_ptr->max = attribute["Max"].get<float>();
 						prop.attributes.push_back(attr_ptr);
 					}
-					std::cout << attribute << std::endl;
+					//std::cout << attribute << std::endl;
 				}
 				properties.push_back(prop);
 			}
