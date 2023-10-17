@@ -138,6 +138,15 @@ namespace dotnet
         }
 
         template <typename ReturnType, class... Args>
+        decltype(auto) getFunction(const std::wstring& name) {
+
+            typedef ReturnType(CORECLR_DELEGATE_CALLTYPE* custom_entry_point_fn)(Args... args);
+            custom_entry_point_fn func_ptr = reinterpret_cast<custom_entry_point_fn>(CustomFunctionPointers.at(name));
+
+            return func_ptr;
+        }
+
+        template <typename ReturnType, class... Args>
         ReturnType Invoke(std::wstring name, Args... args)
         {
             typedef ReturnType(CORECLR_DELEGATE_CALLTYPE * custom_entry_point_fn)(Args... args);
