@@ -1,13 +1,16 @@
 #pragma once
 
 #include <core/engine/renderer/resource_manager.hpp>
+#include <core/engine/scene/scene.hpp>
 
 #include "shaders/default.hpp"
 
 namespace Editor::Renderpasses {
-	static engine::Ref<engine::RenderPass> createDefaultRenderPass (std::shared_ptr<engine::Context> context){
+	static engine::Ref<engine::RenderPass> createDefaultRenderPass (engine::Scene& scene){
 
 		using namespace engine;
+		auto context = scene.getContext();
+		auto& assetManager = scene.getAssetManager();
 		/*
 		std::vector<char> vertexCode;
 
@@ -31,7 +34,15 @@ namespace Editor::Renderpasses {
 			.stages = {
 				{.entryPoint = "main", .shaderCode = vertexCode, .stage = VERTEX},
 				{.entryPoint = "main", .shaderCode = fragmentCode, .stage = FRAGMENT}},
-			.usedStages = ShaderModuleStage(VERTEX | FRAGMENT) };
+			.usedStages = ShaderModuleStage(VERTEX | FRAGMENT),
+			.name = "SwapChainShader" };
+
+		engine::ShaderAsset shapChainShaderAsset;
+		shapChainShaderAsset.name = "SwapChainShader";
+		shapChainShaderAsset.filePaths = { "./assets/shaders/editor/fragment.frag.glsl", "./assets/shaders/editor/vertex.vert.glsl" };
+		shapChainShaderAsset.spirvFilePaths = { "./assets/shaders/editor/frag.spv", "./assets/shaders/editor/vertex.spv" };
+
+		assetManager.RegisterShader(shapChainShaderAsset);
 
 		VertexLayout vertexLayout = {
 			.descriptors = {

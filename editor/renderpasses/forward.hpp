@@ -1,6 +1,7 @@
 #pragma once
 
 #include <core/engine/renderer/resource_manager.hpp>
+#include <core/engine/scene/scene.hpp>
 
 #include "shaders/forward.hpp"
 
@@ -13,9 +14,11 @@ namespace Editor::Renderpasses {
 		uint32_t material_index;
 	};
 
-	static engine::Ref<engine::RenderPass> createForwardRenderPass(std::shared_ptr<engine::Context> context) {
+	static engine::Ref<engine::RenderPass> createForwardRenderPass(engine::Scene& scene) {
 
 		using namespace engine;
+		auto context = scene.getContext();
+		auto& assetManager = scene.getAssetManager();
 		/*
 		std::vector<char> vertexCode;
 
@@ -41,8 +44,15 @@ namespace Editor::Renderpasses {
 				{.entryPoint = "main", .shaderCode = vertexCode, .stage = VERTEX},
 				{.entryPoint = "main", .shaderCode = fragmentCode, .stage = FRAGMENT}
 			},
-			.usedStages = ShaderModuleStage(VERTEX | FRAGMENT) 
+			.usedStages = ShaderModuleStage(VERTEX | FRAGMENT),
+			.name = "ForwardShader"
 		};
+
+		engine::ShaderAsset forwardShaderAsset;
+		forwardShaderAsset.name = "ForwardShader";
+		forwardShaderAsset.filePaths = { "./assets/shaders/editor/forward.frag.glsl", "./assets/shaders/editor/forward.vert.glsl" };
+		forwardShaderAsset.spirvFilePaths = { "./assets/shaders/editor/forward_frag.spv", "./assets/shaders/editor/forward_vertex.spv" };
+
 
 		auto SkyVertexCode = utils::readFile("./assets/shaders/editor/sky-vertex.spv");
 		auto SkyFragmentCode = utils::readFile("./assets/shaders/editor/sky-fragment.spv");
@@ -52,8 +62,13 @@ namespace Editor::Renderpasses {
 				{.entryPoint = "main", .shaderCode = SkyVertexCode, .stage = VERTEX},
 				{.entryPoint = "main", .shaderCode = SkyFragmentCode, .stage = FRAGMENT}
 			},
-			.usedStages = ShaderModuleStage(VERTEX | FRAGMENT)
+			.usedStages = ShaderModuleStage(VERTEX | FRAGMENT),
+			.name = "SkyShader"
 		};
+		engine::ShaderAsset skyShaderAsset;
+		skyShaderAsset.name = "SkyShader";
+		skyShaderAsset.filePaths = { "./assets/shaders/editor/sky.frag.glsl", "./assets/shaders/editor/sky.vert.glsl" };
+		skyShaderAsset.spirvFilePaths = { "./assets/shaders/editor/sky-fragment.spv", "./assets/shaders/editor/sky-vertex.spv" };
 
 
 		VertexLayout vertexLayout = {
@@ -72,21 +87,35 @@ namespace Editor::Renderpasses {
 			.vertexLayout = vertexLayout,
 			.cullMode = CullMode::BACK,
 			.windingMode = WindingMode::COUNTER_CLOCK_WISE,
-
 			.depthWriteEnable = true,
 			.depthTestEnable = true 
 		};
+
 
 		PipelineLayout skyLayout = {
 			.shaderInfo = skyShaderInfo,
 			.vertexLayout = vertexLayout,
 			.cullMode = CullMode::FRONT,
 			.windingMode = WindingMode::COUNTER_CLOCK_WISE,
-
 			.depthWriteEnable = true,
 			.depthTestEnable = false
 		};
 
+		auto gridFragmentCode = utils::readFile("./assets/shaders/editor/grid-fragment.spv");
+		ShaderInfo gridShaderInfo = mainShaderInfo;
+		gridShaderInfo.stages[1].shaderCode = gridFragmentCode;
+		gridShaderInfo.name = "GridShader";
+		PipelineLayout gridLayout = mainLayout;
+		gridLayout.shaderInfo = gridShaderInfo;
+
+		engine::ShaderAsset gridShaderAsset;
+		gridShaderAsset.name = "GridShader";
+		gridShaderAsset.filePaths = { "./assets/shaders/editor/grid.frag.glsl", "./assets/shaders/editor/forward.vert.glsl" };
+		gridShaderAsset.spirvFilePaths = { "./assets/shaders/editor/grid-fragment.spv", "./assets/shaders/editor/forward_vertex.spv" };
+
+		assetManager.RegisterShader(forwardShaderAsset);
+		assetManager.RegisterShader(skyShaderAsset);
+		assetManager.RegisterShader(gridShaderAsset);
 
 		RenderPassInfo renderPassInfo =
 			RenderPassFactory()
@@ -132,6 +161,7 @@ namespace Editor::Renderpasses {
 				})
 			.pipelineLayout(mainLayout)
 			.pipelineLayout(skyLayout)
+			.pipelineLayout(gridLayout)
 			.pushConstant(sizeof(ForwardPassPushConstant));
 
 		return context->ResourceManager()->createRenderPass(renderPassInfo);
