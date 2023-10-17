@@ -24,7 +24,7 @@ namespace engine
 		glm::vec2 m_pUvMultiplier = glm::vec2(1.0f);
 
 	public:
-		Quad(uint16_t tesselation = 2, glm::vec2 uvMultiplier = glm::vec2(1.0f)) : m_pTesselation(tesselation), m_pUvMultiplier(uvMultiplier){
+		Quad(uint16_t tesselation = 2, glm::vec2 uvMultiplier = glm::vec2(1.0f), glm::vec3 size = glm::vec3(1.0f)) : m_pTesselation(tesselation), m_pUvMultiplier(uvMultiplier) {
 
 			m_pType = DrawableType::QUAD;
 
@@ -38,6 +38,8 @@ namespace engine
 			bounds.min = glm::vec3(100000.0f);
 			bounds.max = glm::vec3(-100000.0f);
 
+			glm::vec3 halfSize = size * 0.5f;
+
 			for (int i = 0; i < tesselation; i++) {
 				for (int j = 0; j < tesselation; j++) {
 					float x = (float)i;
@@ -47,6 +49,7 @@ namespace engine
 					v3 normal = v3(0.0f, 1.0f, 0.0f);
 
 					position -= v3(0.5f, 0.0f, 0.5f);
+					position *= size;
 
 					if (position.x < bounds.min.x) bounds.min.x = position.x;
 					if (position.x > bounds.max.x) bounds.max.x = position.x;
@@ -74,6 +77,51 @@ namespace engine
 			}
 
 			generateTangentSpaceVectors();
+		}
+
+		glm::vec3 getNormal(glm::vec3 position) {
+
+			glm::ivec3 pos = glm::floor(position - 1.0f);
+
+			int x_a = pos.x + m_pTesselation / 2;
+			int x_b = 0;
+
+			int y_a = pos.z + m_pTesselation / 2;
+			int y_b = 0;
+
+			if (x_a >= m_pTesselation) {
+				x_b = x_a;
+				x_a = x_a - 1;
+			}
+			else {
+				x_b = x_a + 1;
+			}
+
+			if (y_a >= m_pTesselation) {
+				y_b = y_a;
+				y_a = y_a - 1;
+			}
+			else {
+				y_b = y_a + 1;
+			}
+
+			if (y_a <= 0) {
+				y_a = 0;
+				y_b = 1;
+			}
+
+			if (x_a <= 0) {
+				x_a = 0;
+				x_b = 1;
+			}
+
+			glm::vec3 a, b, c, d;
+			a = m_pMesh.Vertices.at(x_a * m_pTesselation + y_a).normal;
+			b = m_pMesh.Vertices.at(x_b * m_pTesselation + y_a).normal;
+			c = m_pMesh.Vertices.at(x_a * m_pTesselation + y_b).normal;
+			d = m_pMesh.Vertices.at(x_b * m_pTesselation + y_b).normal;
+
+			return glm::normalize(a);
 		}
 
 		float getHeight(glm::vec3 position, glm::vec3 scale) {
@@ -125,7 +173,7 @@ namespace engine
 			float tx = lb - la;
 			float ty = ld - lc;
 
-			return ((a.y * tx + b.y * (1.0 - tx) + c.y * ty + d.y * (1.0- ty)) * 0.5f)-0.15;
+			return ((a.y * tx + b.y * (1.0 - tx) + c.y * ty + d.y * (1.0- ty)) * 0.5f);
 		}
 
 		void calculateNormals() {
