@@ -94,13 +94,14 @@ void main() {
     if(fAlphaTest < 1.0 - newAlpha)
         discard; 
 
-    vec3 Normal = getNormal(surface);
+    vec3 Normal = normalize(getNormal(surface));
 
     if(gl_FrontFacing == false) {
         Normal *= -1.0;
     }
     float roughness = getRoughness(surface);
     roughness *= roughness;
+    roughness = clamp(roughness, 0.001, 1.0);
     float metallic = getMetallic(surface);
 
     vec3 V = normalize(RenderPassUBO.data.viewPosition  - fs_in.position);
@@ -116,8 +117,8 @@ void main() {
     kD *= 1.0 - metallic;	
 
     vec3 radiance = textureLod(textures[0], SampleSphericalMap(-normalize(ref)), 4.0*roughness).rgb;
-    vec3 irradiance = (texture(textures[1], SampleSphericalMap(-Normal*0.1)).rgb);
-    vec2 lut = texture(textures[2], vec2(max(dot(Normal, V), 0.0), roughness)).rg;
+    vec3 irradiance = (texture(textures[1], SampleSphericalMap(-Normal)).rgb);
+    vec2 lut = textureLod(textures[2], vec2(max(dot(Normal, V), 0.0), 1.0-roughness), 0).rg;
 
     vec3 reflec = radiance * (F * lut.x + lut.y);
     vec3 diffuse = irradiance * Albedo.rgb;
