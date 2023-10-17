@@ -47,6 +47,7 @@ namespace engine
 		Ref<PushConstant> createPushConstant(const std::string&, PushConstantData) override;
 		Ref<UniformBindings> createUniformData(UniformBindingInfo) override;
 		Ref<ComputeShader> createComputeShader(ComputeShaderInfo) override;
+		void UpdateMesh(Ref<Mesh>, UpdateMeshInfo) override;
 
 		void destroyTexture(Ref<Texture>) override;
 		void destroyBuffer(Ref<Buffer>) override;
@@ -87,6 +88,8 @@ namespace engine
 		vk::VulkanBuffer pCreateIndexBuffer();
 		vk::VulkanUniformBuffer pCreateUniformBuffer(UniformBindingInfo);
 		vk::VulkanTexture pCreateTextureBuffer(vk::VulkanTextureInfo);
+
+		void ReloadShaders(const std::string&) override;
 
 		Ref<Buffer> pFetchVertexBuffer(uint32_t numVertices, size_t vertexSize = sizeof(common::Vertex));
 
@@ -151,7 +154,7 @@ namespace engine
 	protected:
 		Pool<Texture, vk::VulkanTexture> texPool;
 		Pool<ID, uint32_t> resourceIdPool;
-		Pool<Shader, ShaderStageInfo> shaderPool;
+		Pool<Shader, ShaderInfo> shaderPool;
 		Pool<Buffer, vk::VulkanBuffer> vertexBufferPool;
 		Pool<Buffer, vk::VulkanBuffer> indexBufferPool;
 		Pool<Buffer, vk::VulkanGPUMappedBuffer> gpuBufferPool;

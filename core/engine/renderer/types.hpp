@@ -47,6 +47,8 @@ namespace engine
         std::string entryPoint;
         std::vector<char> shaderCode;
         ShaderModuleStage stage;
+        std::vector<size_t> renderPassIds;
+        std::unordered_map<size_t/*renderpassid*/, std::vector<size_t>/*render pipelines*/> pipelines;
     };
 
     struct ShaderStageFactory
@@ -653,11 +655,20 @@ namespace engine
         std::string name{};
     };
 
+    struct UpdateMeshInfo {
+        size_t vertex_size{};
+        size_t vertex_offset{}; //offset relative to current mesh
+        size_t index_size{};
+        size_t index_offset{}; //offset relative to current mesh
+        std::vector<common::Vertex> vertices{};
+        std::vector<uint32_t> indices{};
+    };
+
     struct MeshInfo
     {
-        std::vector<common::Vertex> vertices;
-        std::vector<uint32_t> indices;
-        std::string name;
+        std::vector<common::Vertex> vertices{};
+        std::vector<uint32_t> indices{};
+        std::string name{};
     };
 
     struct AnimatedMeshInfo

@@ -124,13 +124,15 @@ namespace engine
 		texture.info.mipLevels = mipLevels;
 		texture.info.width = texInfo.width;
 		texture.info.height = texInfo.height;
+		texture.info.addressMode = resolveWrapping(texInfo.wrapMode);
+		texture.addressMode = resolveWrapping(texInfo.wrapMode);
 		texture.name = texInfo.name;
 		vk::createImageView(*m_pVkDataPtr, texture, VK_IMAGE_ASPECT_COLOR_BIT);
 
 		ResourcesMemory.m_pTextureBufferAllocationSize += size;
 
 		//Call gen mips
-			pGenerateMipMaps(texInfo, texture);
+		pGenerateMipMaps(texInfo, texture);
 
 
 		vk::createTextureSampler(*m_pVkDataPtr, texture);
@@ -283,7 +285,7 @@ namespace engine
 		//catch (std::exception& e)
 		{
 
-		//	throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
+			//	throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
 		}
 	}
 
@@ -403,6 +405,7 @@ namespace engine
 
 		renderPass.id = m_pRenderPassCount;
 		m_pRenderPassInfo[renderPass.id] = renderPassInfo;
+
 		renderPass.renderPassChain.ImageFormats.resize(renderPassInfo.attachments.size());
 
 		for (int index = 0; index < renderPassInfo.attachments.size(); index++)
@@ -516,6 +519,9 @@ namespace engine
 			}
 		}
 		auto ref = renderPassPool.insert(renderPassInfo.name, renderPass);
+		for (auto& pipeline : renderPassInfo.pipelineLayout) {
+			shaderPool.insert(pipeline.shaderInfo.name, pipeline.shaderInfo);
+		}
 
 		if (renderPassInfo.resizeWithSwapChain) {
 			resizableRenderPasses.push_back(ref);
@@ -523,6 +529,20 @@ namespace engine
 
 		m_pRenderPassCount++;
 		return ref;
+	}
+
+	void VulkanResourceManager::ReloadShaders(const std::string& shaderName) {
+		uint32_t id = std::hash<std::string>{}(shaderName);
+		auto shaderInfo = shaderPool.get(id);
+
+		for (auto& stage : shaderInfo->stages) {
+			for (auto& renderPassId : stage.renderPassIds) {
+				auto renderPass = renderPassPool.get(renderPassId);
+				for (auto& pipelineId : stage.pipelines[renderPassId])
+					renderPass->renderPipelines[pipelineId];
+			}
+
+		}
 	}
 
 	void VulkanResourceManager::clean()
@@ -1013,5 +1033,51 @@ namespace engine
 
 		renderPass->renderPassChain.setViewport(viewport);
 		renderPass->renderPassChain.setScissor(rect);
+	}
+
+	void VulkanResourceManager::UpdateMesh(Ref<Mesh> meshRef, UpdateMeshInfo updateInfo)
+	{
+		auto mesh = meshPool.get(meshRef);
+
+		if (updateInfo.index_offset >= mesh->numIndices) {
+			IO::Error("Mesh index offset is bigger than buffer's index capacity\n\t", "buffer size: ", mesh->numIndices);
+			throw std::out_of_range(__PRETTY_FUNCTION__ ": index offset out of range");
+		}
+
+		if (updateInfo.vertex_offset >= mesh->numVertices) {
+			IO::Error("Mesh vertex offset is bigger than buffer's vertex capacity\n\t", "buffer size: ", mesh->numVertices);
+			throw std::out_of_range(__PRETTY_FUNCTION__ ": vertex offset out of range");
+		}
+
+		if (updateInfo.vertex_offset + updateInfo.vertex_size >= mesh->numVertices) {
+			IO::Error("Trying to allocate beyond vertex buffer's capacity\n\t", "buffer size: ", mesh->numVertices);
+			throw std::out_of_range(__PRETTY_FUNCTION__ ": vertex allocation out of range");
+		}
+
+		if (updateInfo.index_offset + updateInfo.index_size >= mesh->numIndices) {
+			IO::Error("Trying to allocate beyond index buffer's capacity\n\t", "buffer size: ", mesh->numVertices);
+			throw std::out_of_range(__PRETTY_FUNCTION__ ": index allocation out of range");
+		}
+
+		auto& vertices = updateInfo.vertices;
+		auto& indices = updateInfo.indices;
+
+		auto vertexBuffer = vertexBufferPool.get(mesh->vertexBuffer);
+		auto indexBuffer = indexBufferPool.get(mesh->indexBuffer);
+
+		size_t vertexOffset = vertexBuffer->offset + updateInfo.vertex_offset;
+		size_t indexOffset = indexBuffer->offset + updateInfo.index_offset;
+
+		auto vertexStagingBuffer = pCreateStagingBuffer(vertices);
+		auto indexStagingBuffer = pCreateStagingIndexBuffer(indices);
+
+		vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, vertexStagingBuffer.buffer, vertexBuffer->buffer,
+			updateInfo.vertex_offset * sizeof(common::Vertex), vertexOffset);
+
+		vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, indexStagingBuffer.buffer, indexBuffer->buffer,
+			updateInfo.index_size * sizeof(IndexType), indexOffset);
+
+		vmaDestroyBuffer(m_pAllocator, vertexStagingBuffer.buffer, vertexStagingBuffer.allocation);
+		vmaDestroyBuffer(m_pAllocator, indexStagingBuffer.buffer, indexStagingBuffer.allocation);
 	}
 }

@@ -148,7 +148,6 @@ namespace engine
 		else {
 			drawCommand.meshResource.numIndices = 6;
 			drawCommand.meshResource.numVertices = 4;
-
 		}
 		drawCommand.uniformIndex = object.uniformIndex;
 		drawCommand.layoutIndex = object.layout_index;
