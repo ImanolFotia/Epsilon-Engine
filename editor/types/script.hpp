@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "../ui/ui_element.hpp"
+#include "transform.hpp"
 
 namespace Editor {
 
@@ -24,6 +25,12 @@ namespace Editor {
 		std::string className{};
 		void* ManagedPtr;
 		std::vector<UI::Property> properties;
+
+		std::function<void(void*, float)> updateClbk;
+
+		void Update(float delta) {
+			updateClbk(ManagedPtr, delta);
+		}
 	};
 
 	struct EntityArgs
