@@ -32,10 +32,12 @@ namespace Editor::Utils {
 
 	}
 
-	static void AddModelNode(const std::string& path, engine::Scene* scene, std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> parent) {
+	static void AddModelNode(const std::string& path, engine::Scene* scene, std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> parent, const std::string bindGroup = "DefaultBindGroup") {
 
-		auto model = scene->getAssetManager().loadModel(path);
+		auto& model = scene->getAssetManager().loadModel(path);
+		model.bindGroup = bindGroup;
 		auto renderNode = scene->insertIntoNode(engine::Box{ glm::vec3(parent->data.transform[3]), glm::vec3(0.5) }, parent, model);
+		renderNode->data.bindGroup = bindGroup;
 
 	}
 
@@ -54,8 +56,9 @@ namespace Editor::Utils {
 			throw;
 		}
 
+		script->data.updateClbk = host.assembly.getFunction<void, void*, float>(L"UpdateEntity");
 		const char* str = host.assembly.Invoke<const char*>(L"getEntityFields", script->data.ManagedPtr);
-		std::cout << str << std::endl;
+		//std::cout << str << std::endl;
 		auto props = UI::Property::DeserializeProperties(std::string(str));// m_pObjectProperty.setProperties(std::string(str));
 		script->data.properties = props;
 		script->data.className = creationInfo.className;

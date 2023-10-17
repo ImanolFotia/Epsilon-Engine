@@ -1,8 +1,7 @@
 #include "editor.hpp"
 
-#include <core/common/common.hpp>
-#include "utils/node_factory.hpp"
 #include "utils/mesh_utils.hpp"
+#include "ui/style.hpp"
 
 namespace Editor {
 	void Editor::OnCreate() {
@@ -17,6 +16,9 @@ namespace Editor {
 
 		m_pScene = engine::Scene(getContext());
 
+		m_pObjectProperty.m_pScenePtr = &m_pScene;
+		m_pSceneNodes.m_pScenePtr = &m_pScene;
+
 		m_pBrushManager = std::make_shared<BrushManager>(getContext());
 
 		m_pAssets = UI::Assets(&m_pScene);
@@ -29,9 +31,9 @@ namespace Editor {
 
 		host.assembly.Invoke<void>(L"setScenePtr", &m_pScene);
 
-		m_pForwardRenderPass = Renderpasses::createForwardRenderPass(Epsilon::getContext());
+		m_pForwardRenderPass = Renderpasses::createForwardRenderPass(m_pScene);
 
-		m_pScene.addRenderPass("DefaultRenderPass", Renderpasses::createDefaultRenderPass(Epsilon::getContext()));
+		m_pScene.addRenderPass("DefaultRenderPass", Renderpasses::createDefaultRenderPass(m_pScene));
 		m_pScene.addRenderPass("ForwardRenderPass", m_pForwardRenderPass);
 
 		m_pScene.addBindGroup("DefaultBindGroup", 0, {
@@ -48,24 +50,34 @@ namespace Editor {
 				.name = "SkyBindGroup",
 			});
 
+		m_pScene.addBindGroup("GridBindGroup", 2, {
+				.bindingInfo = {},
+				.inputs = {},
+				.renderPass = "Forward",
+				.name = "GridBindGroup",
+			});
+
 		auto renderer = getContext()->Renderer();
 
 		renderer->InitDebugRenderer();
+		setup_style();
 
 		auto skyNode = m_pScene.emplaceIntoScene<engine::Scene::SceneEntity>(engine::Box{ glm::vec3(0.0f), glm::vec3(1.0) });
+		skyNode->data.transform = glm::scale(glm::mat4(1.0), glm::vec3(3.0f));
 		engine::Sphere sphere(5);
 		auto SkyDomeNode = m_pScene.getAssetManager().createModelFromMesh("Skybox", sphere.data(), {});
 		m_pSkybox = m_pScene.insertIntoNode(skyNode, SkyDomeNode);
+		m_pSkybox->data.bindGroup = "SkyBindGroup";
 
 		common::MeshMaterial defaultMaterial;
 		m_pScene.getAssetManager().addTexture("textures/radiance.dds", {
 			.format = engine::TextureFormat::COLOR_RGBA,
-			.wrapMode = engine::CLAMP_TO_BORDER,
+			.wrapMode = engine::CLAMP_TO_EDGE,
 			.filtering = engine::LINEAR
 			});
 		m_pScene.getAssetManager().addTexture("textures/irradiance.dds", {
 			.format = engine::TextureFormat::COLOR_RGBA,
-			.wrapMode = engine::CLAMP_TO_BORDER,
+			.wrapMode = engine::CLAMP_TO_EDGE,
 			.filtering = engine::LINEAR
 			});
 		std::ifstream file("./assets/lut.bin", std::ios::binary);
@@ -79,65 +91,6 @@ namespace Editor {
 			});
 		delete[] lut;
 
-		defaultMaterial.albedo_path = "textures/epsilon/wood_0014_color_2k.jpg";
-		defaultMaterial.normal_path = "textures/epsilon/wood_0014_normal_opengl_2k.png";
-		defaultMaterial.metallic_path = "textures/epsilon/wood_0014_roughness_2k.png";
-
-		auto planeNode = m_pScene.emplaceIntoScene<engine::Scene::SceneEntity>(engine::Box{ glm::vec3(0.0f), glm::vec3(1.0) });
-
-		planeNode->data.transform = glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 0.0f, 0.0));
-		planeNode->data.transform = glm::scale(planeNode->data.transform, glm::vec3(30.0, 1.0, 30.0));
-		planeNode->data.transform = glm::rotate(planeNode->data.transform, glm::radians(270.f), glm::vec3(1.0, 0.0, 0.0));
-
-		engine::Quad quad(2, glm::vec2(5.0f));
-		auto m_pDefaultCube = m_pScene.getAssetManager().createModelFromMesh("DefaultPlane", quad.data(), defaultMaterial);
-		auto renderNode = m_pScene.insertIntoNode(engine::Box{ glm::vec3(planeNode->data.transform[3]), glm::vec3(10.0) }, planeNode, m_pDefaultCube);
-
-		auto script = m_pScene.emplaceIntoNode<EntityScript>(planeNode);
-		script->data.ManagedPtr = host.assembly.Invoke<void*>(L"CreateEntity", planeNode.get(), L"Game.Ground", "Ground");
-
-		if (script->data.ManagedPtr == nullptr) {
-			std::cerr << "ManagedPtr is null" << std::endl;
-			exit();
-		}
-
-		const char* str = host.assembly.Invoke<const char*>(L"getEntityFields", script->data.ManagedPtr);
-		std::cout << str << std::endl;
-		auto props = UI::Property::DeserializeProperties(std::string(str));// m_pObjectProperty.setProperties(std::string(str));
-		script->data.properties = props;
-		script->data.className = "Game.Ground";
-
-		EntityArgs args;
-		args.transform = toTransform(planeNode->data.transform);
-		args.id = 0;
-		host.assembly.Invoke<void>(L"setEntityTransform", script->data.ManagedPtr, args);
-
-		/////
-
-		UI::NodeProperties node_props;
-		node_props.name = "Ground";
-		node_props.mType = UI::SceneNodeType::Node;
-
-		UI::NodeProperties render_props;
-		render_props.name = "Render Model" + std::to_string(renderNode->Index());
-		render_props.mType = UI::SceneNodeType::Render;
-		render_props.node_ref = (void*)&renderNode.get()->data;
-		render_props.scene_node_ref = &planeNode.get()->data;
-		render_props.index = planeNode->Index();
-
-		UI::NodeProperties script_props;
-		script_props.name = "Script";
-		script_props.mType = UI::SceneNodeType::Script;
-		script_props.node_ref = (void*)&script.get()->data;
-		script_props.scene_node_ref = &planeNode.get()->data;
-		script_props.index = planeNode->Index();
-
-		node_props.children.push_back(render_props);
-		node_props.node_ref = (void*)&planeNode.get()->data;
-		node_props.model_path = "DefaultPlane";
-		node_props.scene_node_ref = &planeNode.get()->data;
-		node_props.index = planeNode->Index();
-		m_pSceneNodes.PushInRoot(node_props);
 
 		for (int i = 0; i < 5; i++)
 			for (int j = 0; j < 5; j++) {
@@ -158,6 +111,68 @@ namespace Editor {
 			}, &m_pScene, node, host);
 
 		Utils::RegisterIntoEditor("Adam Head", & m_pSceneNodes, &m_pScene, node);
+
+		////////////////
+
+
+		auto planeNode = m_pScene.emplaceIntoScene<engine::Scene::SceneEntity>(engine::Box{ glm::vec3(0.0f), glm::vec3(1.0) });
+
+		planeNode->data.transform = glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 0.0f, 0.0));
+		planeNode->data.transform = glm::scale(planeNode->data.transform, glm::vec3(30.0, 1.0, 30.0));
+		planeNode->data.transform = glm::rotate(planeNode->data.transform, glm::radians(270.f), glm::vec3(1.0, 0.0, 0.0));
+
+		engine::Quad quad(2, glm::vec2(5.0f));
+		auto m_pDefaultCube = m_pScene.getAssetManager().createModelFromMesh("DefaultPlane", quad.data(), {});
+		m_pGridPlane = m_pScene.insertIntoNode(engine::Box{ glm::vec3(planeNode->data.transform[3]), glm::vec3(10.0) }, planeNode, m_pDefaultCube);
+		m_pGridPlane->data.bindGroup = "GridBindGroup";
+
+		auto script = m_pScene.emplaceIntoNode<EntityScript>(planeNode);
+		script->data.ManagedPtr = host.assembly.Invoke<void*>(L"CreateEntity", planeNode.get(), L"Game.Ground", "Ground");
+
+		script->data.updateClbk = host.assembly.getFunction<void, void*, float>(L"UpdateEntity");
+
+		if (script->data.ManagedPtr == nullptr) {
+			std::cerr << "ManagedPtr is null" << std::endl;
+			exit();
+		}
+
+		const char* str = host.assembly.Invoke<const char*>(L"getEntityFields", script->data.ManagedPtr);
+		//std::cout << str << std::endl;
+		auto props = UI::Property::DeserializeProperties(std::string(str));// m_pObjectProperty.setProperties(std::string(str));
+		script->data.properties = props;
+		script->data.className = "Game.Ground";
+
+		EntityArgs args;
+		args.transform = toTransform(planeNode->data.transform);
+		args.id = 0;
+		host.assembly.Invoke<void>(L"setEntityTransform", script->data.ManagedPtr, args);
+
+		/////
+
+		UI::NodeProperties node_props;
+		node_props.name = "Ground";
+		node_props.mType = UI::SceneNodeType::Node;
+
+		UI::NodeProperties render_props;
+		render_props.name = "Render Model" + std::to_string(m_pGridPlane->Index());
+		render_props.mType = UI::SceneNodeType::Render;
+		render_props.node_ref = (void*)&m_pGridPlane.get()->data;
+		render_props.scene_node_ref = &planeNode.get()->data;
+		render_props.index = planeNode->Index();
+
+		UI::NodeProperties script_props;
+		script_props.name = "Script";
+		script_props.mType = UI::SceneNodeType::Script;
+		script_props.node_ref = (void*)&script.get()->data;
+		script_props.scene_node_ref = &planeNode.get()->data;
+		script_props.index = planeNode->Index();
+
+		node_props.children.push_back(render_props);
+		node_props.node_ref = (void*)&planeNode.get()->data;
+		node_props.model_path = "DefaultPlane";
+		node_props.scene_node_ref = &planeNode.get()->data;
+		node_props.index = planeNode->Index();
+		m_pSceneNodes.PushInRoot(node_props);
 
 		renderer->getDebugRenderer()->ShowDebugPerformance(false);
 
@@ -195,23 +210,27 @@ namespace Editor {
 
 			if (selected_index > 0) {
 				auto e = m_pScene.getNode(selected_index);
-				auto s = m_pScene.getChild<EntityScript>(e);
-				auto script = std::static_pointer_cast<engine::Node<EntityScript>>(s);
-				m_pObjectProperty.setProperties(s->data.className, script->data.properties);
-				m_pObjectProperty.SetNode(m_pSceneNodes.selected_node);
-				m_pObjectProperty.draw();
+				auto children = m_pScene.getChildren<engine::Scene::SceneEntity>(e);
+					m_pObjectProperty.SetNode(m_pSceneNodes.selected_node);
+					m_pObjectProperty.draw();
+					if (children.size() > 0) {
 
-				for (auto& property : m_pObjectProperty.getProperties()) {
-					std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+					auto s = m_pScene.getChild<EntityScript>(e);
+					auto script = std::static_pointer_cast<engine::Node<EntityScript>>(s);
+					m_pObjectProperty.setProperties(s->data.className, script->data.properties);
 
-					std::wstring name = converter.from_bytes(property.name);
-					if (property.type == UI::PropertyType::NUMBER) {
-						host.assembly.Invoke<void>(L"SetProperty", script->data.ManagedPtr, property.name.c_str(), std::any_cast<float>(property.value));
-					}if (property.type == UI::PropertyType::BOOL) {
-						host.assembly.Invoke<void>(L"SetPropertyBool", script->data.ManagedPtr, property.name.c_str(), std::any_cast<bool>(property.value));
+					for (auto& property : m_pObjectProperty.getProperties()) {
+						std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+
+						std::wstring name = converter.from_bytes(property.name);
+						if (property.type == UI::PropertyType::NUMBER) {
+							host.assembly.Invoke<void>(L"SetProperty", script->data.ManagedPtr, property.name.c_str(), std::any_cast<float>(property.value));
+						}if (property.type == UI::PropertyType::BOOL) {
+							host.assembly.Invoke<void>(L"SetPropertyBool", script->data.ManagedPtr, property.name.c_str(), std::any_cast<bool>(property.value));
+						}
 					}
+					script->data.properties = m_pObjectProperty.getProperties();
 				}
-				script->data.properties = m_pObjectProperty.getProperties();
 			}
 
 			ImGui::Begin("Reload Assembly");
@@ -243,17 +262,25 @@ namespace Editor {
 
 
 		for (auto s : scripts) {
-			auto script = std::static_pointer_cast<engine::Node<EntityScript>>(*s);
-			auto transform = std::static_pointer_cast<engine::Node<engine::Scene::SceneEntity>>(script->Parent());
+			auto script_node = std::static_pointer_cast<engine::Node<EntityScript>>(*s);
+			auto& script = script_node->data;
+			auto transform = std::static_pointer_cast<engine::Node<engine::Scene::SceneEntity>>(script_node->Parent());
 
 			if (m_pTooldbar.getStatus() == UI::Toolbar::STATUS::Playing)
-				host.assembly.Invoke<void>(L"UpdateEntity", script->data.ManagedPtr, (float)framework::Clock::DeltaSeconds());
+			{
+				EntityArgs args;
+				args.transform = toTransform(transform->data.transform);
+				args.id = 0;
+				host.assembly.Invoke<void>(L"setEntityTransform", script.ManagedPtr, args);
+
+				script.Update((float)framework::Clock::DeltaSeconds());
+			}
 			else {
 
 				EntityArgs args;
 				args.transform = toTransform(transform->data.transform);
 				args.id = 0;
-				host.assembly.Invoke<void>(L"setEntityTransform", script->data.ManagedPtr, args);
+				host.assembly.Invoke<void>(L"setEntityTransform", script.ManagedPtr, args);
 			}
 
 		}
@@ -317,18 +344,14 @@ namespace Editor {
 
 		m_pScene.setCurrentRenderPass("ForwardRenderPass");
 
-
-		glm::mat4 skyMatrix = glm::scale(glm::mat4(1.0), glm::vec3(3.0f));
-		skyMatrix = glm::mat4(glm::mat3(m_pCamera->getViewMatrix())) * skyMatrix;
-		m_pScene.Push(m_pSkybox, skyMatrix, "SkyBindGroup");
-
 		auto models = m_pScene.getNodes <engine::RenderModel>();
 
 		for (auto& model_node : models) {
 			auto model = std::static_pointer_cast<engine::Node<engine::RenderModel>>(*model_node);
 			auto transform = std::static_pointer_cast<engine::Node<engine::Scene::SceneEntity>>(model->Parent());
-			m_pScene.Push(model, transform->data.transform, "DefaultBindGroup");
+			m_pScene.Push(model, transform->data.transform, model->data.bindGroup);
 		}
+
 		m_pScene.Flush();
 
 		m_pScene.EndScene();
@@ -357,8 +380,9 @@ namespace Editor {
 			exit();
 		}
 
+		script->data.updateClbk = host.assembly.getFunction<void, void*, float>(L"UpdateEntity");
 		const char* str = host.assembly.Invoke<const char*>(L"getEntityFields", script->data.ManagedPtr);
-		std::cout << str << std::endl;
+		//std::cout << str << std::endl;
 		auto props = UI::Property::DeserializeProperties(std::string(str));// m_pObjectProperty.setProperties(std::string(str));
 		script->data.properties = props;
 		script->data.className = "Game.GameObject";
@@ -367,6 +391,7 @@ namespace Editor {
 		engine::Sphere2 sphere(10);
 		auto m_pDefaultCube = m_pScene.getAssetManager().createModelFromMesh("DefaultCube", sphere.data(), defaultMaterial);
 		auto renderNode = m_pScene.insertIntoNode(engine::Box{ glm::vec3(cubeNode->data.transform[3]), glm::vec3(0.5) }, cubeNode, m_pDefaultCube);
+		renderNode->data.bindGroup = "DefaultBindGroup";
 
 		EntityArgs args;
 		args.transform = toTransform(cubeNode->data.transform);

@@ -35,6 +35,7 @@
 
 #include <modules/dotnet/src/host.hpp>
 #include "types/script.hpp"
+#include "utils/node_factory.hpp"
 
 namespace Editor {
 	class Editor : public Epsilon::Epsilon {
@@ -48,6 +49,7 @@ namespace Editor {
 		engine::Ref<engine::BindGroup> m_pForwardBindGroup;
 		engine::Ref<engine::Mesh> m_pDefaultCube;
 		std::shared_ptr<engine::Node<engine::RenderModel>> m_pSkybox;
+		std::shared_ptr<engine::Node<engine::RenderModel>> m_pGridPlane;
 
 		UI::MenuBar m_pMenuBar;
 		UI::MainViewport m_pMainViewport;
@@ -122,8 +124,10 @@ namespace Editor {
 			});
 
 			m_pSceneNodes.addEntityCallback = [this]() {
-				pAddDefaultCube(glm::vec3(0.0f));
-				};
+				//pAddDefaultCube(glm::vec3(0.0f));
+				auto node = Utils::CreateNode(glm::mat4(1.0f), &m_pScene);
+				Utils::RegisterIntoEditor("Node_" + std::to_string(node->Index()), &m_pSceneNodes, &m_pScene, node);
+			};
 		}
 	public:
 		Editor(const std::string name) : Epsilon::Epsilon(name) {
