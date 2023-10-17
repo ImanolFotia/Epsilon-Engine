@@ -18,7 +18,7 @@
 
 namespace engine
 {
-
+	using RenderModelNodePtr = std::shared_ptr<Node<RenderModel>>;
 	struct EntityBehaviour {
 		std::function<void(void)> callback;
 		bool once = false;
@@ -82,9 +82,9 @@ namespace engine
 
 			m_pCurrentRenderPass = m_RenderPassesRefs["DefaultRenderPass"];
 
-			m_pNodeOctree = std::make_shared<OctreeContainer<OctreeNodeType>>(Box { glm::vec3(100, 25, 100), glm::vec3(0.0, 12.5, 0.0) }, 8);
+			m_pNodeOctree = std::make_shared<OctreeContainer<OctreeNodeType>>(Box{ glm::vec3(100, 25, 100), glm::vec3(0.0, 12.5, 0.0) }, 8);
 			m_pRenderOctree = std::make_shared<OctreeContainer<OctreeRenderType>>(Box{ glm::vec3(100, 25, 100), glm::vec3(0.0, 12.5, 0.0) }, 8);
-		
+
 
 			m_pAssetManager.Init();
 		}
@@ -184,9 +184,9 @@ namespace engine
 		template<typename T>
 		void removeFromScene(uint32_t index) {
 			std::shared_ptr<Node<T>> node = std::static_pointer_cast<Node<T>>(m_pSceneManager.get(index));
-				auto octree_render_node = getChild<typename std::list<OctreeItem<OctreeRenderType>>::iterator>(node);
-				if(octree_render_node != nullptr)
-					m_pRenderOctree->erase(octree_render_node->data);
+			auto octree_render_node = getChild<typename std::list<OctreeItem<OctreeRenderType>>::iterator>(node);
+			if (octree_render_node != nullptr)
+				m_pRenderOctree->erase(octree_render_node->data);
 
 			m_pSceneManager.erase<T>(node);
 		}
@@ -203,7 +203,7 @@ namespace engine
 			auto scene_node = m_pSceneManager.insert(m_pSceneManager.root, object);
 
 			m_pNodeOctree->insert(boundingBox, { scene_node, scene_node->Index() });
-			
+
 			return scene_node;
 		}
 
@@ -373,7 +373,7 @@ namespace engine
 				Ref<PushConstant> push_constant;
 
 				Ref<BindGroup> selectedBindGroup = m_pRenderLayouts[layout].bindGroup;
-;
+				;
 				for (auto& mesh : renderModel->data.renderMeshes)
 				{
 					if (renderer->numPushedCommands() >= engine::MAX_COMMAND_QUEUE_SIZE) {
@@ -419,7 +419,7 @@ namespace engine
 				Ref<PushConstant> push_constant;
 
 				Ref<BindGroup> selectedBindGroup = m_pRenderLayouts[layout].bindGroup;
-				
+
 				uint32_t material_indices[4] = { 0 };
 				uint32_t firstInstance = m_pMeshCount;
 				for (int i = 0; i < count; i++) {
@@ -468,7 +468,7 @@ namespace engine
 				Ref<PushConstant> push_constant;
 
 				Ref<BindGroup> selectedBindGroup = m_pRenderLayouts[layout].bindGroup;
-				
+
 
 				if (count > 1) {
 

@@ -213,7 +213,7 @@ namespace engine
 		template <typename T>
 		ChildNodes& getChildren(std::shared_ptr<NodeBase> node)
 		{
-			return children_node_index.at(node->index);
+			return children_node_index[node->index];
 		}
 
 		template<typename T>

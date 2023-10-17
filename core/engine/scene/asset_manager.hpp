@@ -94,10 +94,17 @@ namespace engine
 		common::MIN_MAX_POINTS min_max_points;
 		framework::Skeleton skeleton;
 		std::string name{};
+		std::string bindGroup;
 		bool hasAnimation = false;
 		bool isInstanced = false;
 		bool visible = false;
 		bool loaded = false;
+	};
+
+	struct ShaderAsset {
+		std::string name;
+		std::vector<std::string> filePaths;
+		std::vector<std::string> spirvFilePaths;
 	};
 
 	struct GPUAnimationData {
@@ -122,6 +129,7 @@ namespace engine
 		std::unordered_map<size_t, Ref<Texture>> m_pImages;
 		std::unordered_map<std::string, RenderModel> m_pModels;
 		std::unordered_map<std::string, AudioBuffer> m_pAudioBuffers;
+		std::unordered_map<std::string, ShaderAsset> m_pShaders;
 		std::unordered_map<std::size_t, PBRMaterialIndex> m_pMaterials;
 
 		std::unordered_map<size_t, std::string> m_pImageName;
@@ -214,6 +222,14 @@ namespace engine
 			}
 			infoBufferPtr = reinterpret_cast<CursorInfo*>(resourceManager->mapBuffer(m_pGPUBuffers["info_buffer"], 0));
 
+		}
+
+		void RegisterShader(ShaderAsset shader) {
+			m_pShaders[shader.name] = shader;
+		}
+
+		ShaderAsset& getShader(const std::string& name) {
+			return m_pShaders[name];
 		}
 
 		glm::mat4* getTransformBuffer() {
@@ -346,6 +362,26 @@ namespace engine
 				material_index++;
 			}
 
+			if (subRenderC.numMaterials == 0) {
+				subRenderC.numMaterials = 1;
+				std::string material_name = name + "_material" + std::to_string(material_index);
+				size_t material_name_hash = std::hash<std::string>{}(material_name);
+				subRenderC.material_keys[material_index] = material_name_hash;
+
+				uint32_t mat_index = 0;
+				if (!m_pFreeMaterialIndexes.empty()) {
+					mat_index = m_pFreeMaterialIndexes.front();
+					m_pFreeMaterialIndexes.pop();
+				}
+				else {
+					mat_index = m_pMaterialCurrentIndex;
+					m_pMaterialCurrentIndex++;
+				}
+				PBRMaterial pbr_material;
+				m_pMaterials[material_name_hash].index = mat_index;
+				m_pMaterials[material_name_hash].material = pbr_material;
+			}
+
 			model.renderMeshes.push_back(subRenderC);
 
 			return model;
@@ -457,7 +493,7 @@ namespace engine
 			return m_pModels.at(name);
 		}
 
-		RenderModel loadModel(const std::string& path, const std::string& name = "")
+		RenderModel& loadModel(const std::string& path, const std::string& name = "")
 		{
 			std::string prefix = "./assets/";
 			std::string model_name = name;
@@ -930,6 +966,11 @@ namespace engine
 
 		void setMaterial(size_t key, PBRMaterialIndex material) {
 			m_pMaterials.at(key) = material;
+		}
+
+
+		std::unordered_map<std::string, ShaderAsset>  getShaders() {
+			return m_pShaders;
 		}
 
 
