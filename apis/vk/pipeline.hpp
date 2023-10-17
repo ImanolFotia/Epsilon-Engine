@@ -110,6 +110,7 @@ namespace vk
         }
     }
 
+
     static void createGraphicsPipeline(
         VulkanData &vk_data,
         VulkanRenderPass &renderPass,
@@ -147,6 +148,8 @@ namespace vk
             {
                 shaderStages[layout_index][i] = shader::createShaderStage(vk_data, shaderInfo.stages[i]);
                 shaderStages[layout_index][i].pName = shaderInfo.stages[i].entryPoint.c_str();
+                shaderInfo.stages[i].renderPassIds.push_back(renderPass.id);
+                shaderInfo.stages[i].pipelines[renderPass.id].push_back(layout_index);
                 destroyShaderStages.emplace_back([stage = shaderStages[layout_index][i]](VulkanData &vk_data)
                                                  { vkDestroyShaderModule(vk_data.logicalDevice, stage.module, nullptr); });
             }

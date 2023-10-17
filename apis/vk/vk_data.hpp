@@ -183,7 +183,7 @@ namespace vk
         VkPipelineColorBlendStateCreateInfo colorBlending{};
         VkFrontFace winding;
         VkCullModeFlags cullMode;
-
+        bool dirty = true;
         // VkClearColorValue clearColor = {0.1f, 0.1f, 0.1f, 1.0f};
         VkClearColorValue clearColor = {1.0f, 1.0f, 1.0f, 1.0f};
         VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
@@ -263,6 +263,7 @@ namespace vk
         VkRenderPass renderPass;
         VkRenderPassBeginInfo renderPassInfo{};
         std::vector<VulkanRenderPipeline> renderPipelines;
+        std::vector<VkGraphicsPipelineCreateInfo> renderPipelinesInfo;
         VulkanRenderPassData renderPassData;
         std::vector<VulkanVertexInfo> vertexInfo;
         RenderPassChain renderPassChain;
@@ -272,6 +273,7 @@ namespace vk
         std::vector<VkClearValue> clearValues = {};
         uint32_t id = 0;
         bool resizeWithSwapChain = false;
+        bool dirtyPipeline = true;
         std::list<VulkanUniformBuffer> uniformBuffer;
         uint32_t numAttachments = 1;
         std::string name = "";
