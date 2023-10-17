@@ -76,10 +76,12 @@ namespace al {
 		alSourcei(source.id, AL_LOOPING, source.looping ? AL_TRUE : AL_FALSE);
 		alSourcef(source.id, AL_GAIN, source.gain);
 		alSourcef(source.id, AL_PITCH, source.pitch);
-		alSourcef(source.id, AL_MIN_GAIN, 0.0);
-		alSourcef(source.id, AL_MAX_DISTANCE, 30.0);
+		alSourcef(source.id, AL_MIN_GAIN, 0.01);
+		alSourcef(source.id, AL_MAX_DISTANCE, 50.0);
+		
 		alSourcef(source.id, AL_REFERENCE_DISTANCE, 2.0);
 		alSourcef(source.id, AL_CONE_OUTER_GAIN, 0.0);
+		alSourcef(source.id, AL_ROLLOFF_FACTOR, 1.2);
 		
 		//alEffecti(source, )
 		alSource3f(source.id, AL_POSITION, source.position.x, source.position.y, source.position.z);
