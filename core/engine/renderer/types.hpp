@@ -382,6 +382,10 @@ namespace engine
         bool isDepthAttachment = false;
         bool isSwapChainAttachment = false;
         bool clearAttachment = true;
+        bool isExtern = false;
+        int texture_index = -1;
+        int imageview_index = -1;
+        std::string externRenderPass = "";
         std::string name;
     };
 
