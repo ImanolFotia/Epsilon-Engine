@@ -11,6 +11,12 @@ namespace engine
 
     class Primitive : public Drawable
     {
+    protected:
+
+        using vtx = common::Vertex;
+        using v4 = glm::vec4;
+        using v3 = glm::vec3;
+        using v2 = glm::vec2;
     public:
 
         void generateTangentSpaceVectors()
@@ -24,6 +30,8 @@ namespace engine
                 glm::vec3 v0 = m_pMesh.Vertices[m_pMesh.Indices[i]].position;
                 glm::vec3 v1 = m_pMesh.Vertices[m_pMesh.Indices[i + 1]].position;
                 glm::vec3 v2 = m_pMesh.Vertices[m_pMesh.Indices[i + 2]].position;
+
+                if (v0 == v1) v0 = m_pMesh.Vertices[m_pMesh.Indices[i + 3]].position;
 
                 glm::vec3 edge1 = v0 - v1;
                 glm::vec3 edge2 = v0 - v2;

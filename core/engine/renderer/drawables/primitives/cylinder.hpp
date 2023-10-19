@@ -4,26 +4,26 @@
 
 namespace engine
 {
-	class Sphere : public Primitive
+	class Cylinder : public Primitive
 	{
 	public:
-		Sphere(uint32_t subdivisions) : mNumSubdivisions(subdivisions)
+		Cylinder(uint32_t subdivisions) : mNumSubdivisions(subdivisions)
 		{
 			m_pType = DrawableType::SPHERE;
 			createGeometry(mNumSubdivisions);
 		}
 
-		Sphere() = default;
+		Cylinder() = default;
 
 
 	private:
 		void createGeometry(uint32_t subdivisions)
 		{
 
-			float step = 1.0f / ((float)subdivisions - 1.0f);
+			float step = 1.0f / ((float)subdivisions - 1.0);
 			int numVertices = subdivisions * subdivisions;
 
-
+			//sides
 			for (int i = 0; i < subdivisions; i++) {
 				for (int j = 0; j < subdivisions; j++) {
 					float x = (float)i;
@@ -34,9 +34,9 @@ namespace engine
 					float azimuth = y * step * glm::two_pi<float>();
 					float z = glm::cos(polar);
 
-					position = v3(glm::sin(azimuth) * glm::sin(polar), z, -glm::cos(azimuth) * glm::sin(polar)) * 0.5f;
+					position = v3(glm::sin(azimuth), (x * step * 2.0) - 1.0, glm::cos(azimuth)) * 0.5f;
 
-					v2 uv = v2(y * step, x * step);
+					v2 uv = v2(y * step * 2.0f, x * step) * 2.0f;
 
 					v3 normal = glm::normalize(position);
 
@@ -72,6 +72,45 @@ namespace engine
 				m_pMesh.Vertices[m_pMesh.Indices[i + 2]].normal = glm::normalize(-normal);
 			}
 
+			int cylinder_vertex_offset = m_pMesh.Vertices.size();
+			int cylinder_index_offset = m_pMesh.Indices.size();
+			//top & bottom
+			for (int i = 0; i <= subdivisions; i++) {
+				float x = float(i);
+				float azimuth = x * step * glm::two_pi<float>();
+				v3 position = v3(glm::sin(azimuth), 1.0, glm::cos(azimuth)) * 0.5f;
+				v3 normal = v3(0.0, 1.0, 0.0);
+				v2 uv = v2(position.x, position.z) + 0.5f;
+
+				m_pMesh.Vertices.emplace_back(vtx(position, uv, normal, v4(0.0f), v3(0.0f), v3(0.0f)));
+			}
+
+			int pivot = m_pMesh.Vertices.size()-1;
+
+			for (int i = cylinder_vertex_offset; i < pivot -1; i++) {
+
+				m_pMesh.addTriangle(i, i + 1, pivot);
+			}
+			
+			cylinder_vertex_offset = m_pMesh.Vertices.size();
+			cylinder_index_offset = m_pMesh.Indices.size();
+
+			for (int i = 0; i <= subdivisions; i++) {
+				float x = float(i);
+				float azimuth = x * step * glm::two_pi<float>();
+				v3 position = v3(glm::sin(azimuth), -1.0, glm::cos(azimuth)) * 0.5f;
+				v3 normal = v3(0.0, -1.0, 0.0);
+				v2 uv = v2(position.x, position.z) + 0.5f;
+
+				m_pMesh.Vertices.emplace_back(vtx(position, uv, normal, v4(0.0f), v3(0.0f), v3(0.0f)));
+			}
+
+			pivot = m_pMesh.Vertices.size()-1;
+
+			for (int i = cylinder_vertex_offset; i < pivot - 1; i++) {
+
+				m_pMesh.addTriangle(i, pivot, i + 1);
+			}
 			generateTangentSpaceVectors();
 
 			/*
