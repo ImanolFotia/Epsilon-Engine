@@ -129,5 +129,5 @@ void main() {
     
     fragColor = vec4(tonemapACES(light + ambient), 1.0);
 
-    fragColor.a = Albedo.a;
+    fragColor.a = 1.0;
 }

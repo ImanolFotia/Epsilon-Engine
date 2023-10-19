@@ -6,31 +6,46 @@
 
 layout(location = 0) out vec4 outColor;
 
+layout(location = 9) in vec3 nearPoint;
+layout(location = 10) in vec3 farPoint;
+
 
 float ddxy(float x) {
     return abs(dFdx(x)) + abs(dFdy(x));
 }
 
+vec4 grid(vec3 pos) {
+    vec2 coord = pos.xz;
+    vec2 derivative = fwidth(coord);
+    vec2 grid = abs(fract(coord - 0.5) - 0.5) / derivative;
+    float line = min(grid.x, grid.y);
+    float minimumz = min(derivative.y, 1);
+    float minimumx = min(derivative.x, 1);
+    vec4 color = vec4(0.5, 0.5, 0.5, 1.0 - min(line, 1.0));
+
+    if(abs(pos.x) < minimumx)
+        color.y = 1;
+    if(abs(pos.z) < minimumz)
+        color.x = 1;
+    return color;
+}
+
+float fadeFactor(vec3 pos) {
+    float z = (RenderPassUBO.data.proj * RenderPassUBO.data.view * vec4(pos.xyz, 1.0)).z;
+    // Empirical values are used to determine when to cut off the grid before moire patterns become visible.
+    return z * 1.0 - 0.5;
+}
+
+
 void main() {
-    
-    vec2 uv = vec2(fs_in.position.x,fs_in.position.z);
-    vec2 gradient = vec2(ddxy(uv.x), ddxy(uv.y));
-    
-    vec2 placer_grid = gradient;
+    float t = -nearPoint.y / (farPoint.y - nearPoint.y);
+    vec3 pos = nearPoint + t * (farPoint - nearPoint);
 
-    vec2 w = max(abs(dFdx(uv)), abs(dFdy(uv))) + 0.01;
-
-	// analytic (box) filtering
-    const float N = 15.0;
-    vec2 a = uv + 0.5*w;                        
-    vec2 b = uv - 0.5*w;           
-    vec2 i = (floor(a)+min(fract(a)*N,1.0)-
-              floor(b)-min(fract(b)*N,1.0))/(N*w);
-
-    float grid = (1.0-i.x)*(1.0-i.y);
-    grid = 1.0-grid;
-
-    if(grid < 0.5+dFdy(uv.y/uv.x)) discard;
-
-    outColor = vec4(grid);
+    // Display only the lower plane
+    if(t < 1) {
+        vec4 gridColor = grid(pos);
+        outColor = vec4(gridColor.xyz, gridColor.w * fadeFactor(pos) * smoothstep(0.1, 0.01, length(pos.xz - RenderPassUBO.data.viewPosition.xz) * 0.002));
+    }
+    else
+        outColor = vec4(0.0, 0.0, 0.0, 0.0);
 }
