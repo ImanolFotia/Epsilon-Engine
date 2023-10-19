@@ -37,9 +37,9 @@ namespace vk
             renderPipeline.colorBlendAttachments[i].srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
             renderPipeline.colorBlendAttachments[i].dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
             renderPipeline.colorBlendAttachments[i].colorBlendOp = VK_BLEND_OP_ADD;
-            renderPipeline.colorBlendAttachments[i].srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-            renderPipeline.colorBlendAttachments[i].dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
             renderPipeline.colorBlendAttachments[i].alphaBlendOp = VK_BLEND_OP_ADD;
+            renderPipeline.colorBlendAttachments[i].srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+            renderPipeline.colorBlendAttachments[i].dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
         }
 
         renderPipeline.colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
@@ -48,9 +48,9 @@ namespace vk
         renderPipeline.colorBlending.attachmentCount = renderPipeline.numAttachments;
 
         renderPipeline.colorBlending.pAttachments = renderPipeline.colorBlendAttachments.data();
-        renderPipeline.colorBlending.blendConstants[0] = 0.0f; // Optional
+       renderPipeline.colorBlending.blendConstants[0] = 0.0f; // Optional
         renderPipeline.colorBlending.blendConstants[1] = 0.0f; // Optional
         renderPipeline.colorBlending.blendConstants[2] = 0.0f; // Optional
-        renderPipeline.colorBlending.blendConstants[3] = 0.0f; // Optional
+        renderPipeline.colorBlending.blendConstants[3] = 1.0f; // Optional
     }
 }
