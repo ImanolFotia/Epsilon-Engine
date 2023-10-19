@@ -57,6 +57,7 @@ namespace engine
 		std::shared_ptr<OctreeContainer<OctreeNodeType>> m_pNodeOctree = nullptr;
 
 		Frustum m_pFrustum{};
+		Frustum m_pShadowFrustum{};
 
 		std::shared_ptr<Context> m_pContext = nullptr;
 
@@ -159,16 +160,27 @@ namespace engine
 			renderer->SetScissor(scissor);
 		}
 
+		void UpdateShadowFrustum(glm::mat4 proj, glm::mat4 view) {
+			m_pShadowFrustum.CalculateFrustum(proj * view, glm::mat4(1.0));
+		}
 
 		void UpdateFrustum(glm::mat4 proj, glm::mat4 view) {
 			m_pFrustum.CalculateFrustum(proj * view, glm::mat4(1.0));
 		}
 
-		auto Cull() {
+		auto Cull(float cutout_distance = 0) {
 			return m_pRenderOctree->search(m_pFrustum);
 		}
 
 		auto Cull(Box box) {
+			return m_pRenderOctree->search(box);
+		}
+
+		auto CullShadow(float cutout_distance = 0) {
+			return m_pRenderOctree->search(m_pShadowFrustum);
+		}
+
+		auto CullShadow(Box box) {
 			return m_pRenderOctree->search(box);
 		}
 
@@ -196,6 +208,7 @@ namespace engine
 		bool isOfType(std::shared_ptr<NodeBase> node) {
 			return m_pSceneManager.isOfType<T>(node);
 		}
+
 
 		template <typename T>
 		auto insertIntoScene(Box boundingBox, T object)

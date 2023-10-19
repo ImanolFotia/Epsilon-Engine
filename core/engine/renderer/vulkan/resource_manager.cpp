@@ -404,7 +404,6 @@ namespace engine
 				renderPassInfo.attachments.back().depthStencilValue[1] };
 
 		renderPass.id = m_pRenderPassCount;
-		m_pRenderPassInfo[renderPass.id] = renderPassInfo;
 
 		renderPass.renderPassChain.ImageFormats.resize(renderPassInfo.attachments.size());
 
@@ -416,6 +415,25 @@ namespace engine
 		for (size_t i = 0; i < renderPassInfo.attachments.size(); i++)
 		{
 			auto& attachment = renderPassInfo.attachments[i];
+
+			if (attachment.isExtern) {
+				bool externValid = false;
+				auto externRenderPass = renderPassPool.get(std::hash<std::string>{}(attachment.externRenderPass));
+
+				for (auto& externAttachment : m_pRenderPassInfo[externRenderPass->id].attachments) {
+					if (externAttachment.name == attachment.name) {
+						externValid = true;
+						renderPass.renderPassChain.Textures.push_back(externRenderPass->renderPassChain.Textures.at(externAttachment.texture_index));
+						renderPass.renderPassChain.ImageViews.push_back(externRenderPass->renderPassChain.ImageViews.at(externAttachment.imageview_index));
+
+						if (attachment.isDepthAttachment)
+							renderPass.renderPassChain.DepthTexture = externRenderPass->renderPassChain.Textures.at(externAttachment.texture_index);
+					}
+				}
+
+				if(externValid)
+					continue;
+			}
 
 			vk::VulkanTextureInfo texInfo;
 			texInfo.format = attachment.isDepthAttachment ? findDepthFormat(*m_pVkDataPtr) : resolveFormat(renderPassInfo.attachments[i].format);
@@ -455,6 +473,8 @@ namespace engine
 					renderPass.renderPassChain.hasDepthSampler = true;
 					renderPass.renderPassChain.ImageViews.push_back(texture.imageView);
 					renderPass.renderPassChain.Textures.push_back(texture);
+					attachment.imageview_index = renderPass.renderPassChain.ImageViews.size() - 1;
+					attachment.texture_index = renderPass.renderPassChain.Textures.size() - 1;
 					renderPass.renderPassChain.DepthTexture.index = i;
 				}
 			}
@@ -462,8 +482,12 @@ namespace engine
 			{
 				renderPass.renderPassChain.ImageViews.push_back(texture.imageView);
 				renderPass.renderPassChain.Textures.push_back(texture);
+				attachment.imageview_index = renderPass.renderPassChain.ImageViews.size() - 1;
+				attachment.texture_index = renderPass.renderPassChain.Textures.size() - 1;
 			}
 		}
+
+		m_pRenderPassInfo[renderPass.id] = renderPassInfo;
 
 		renderPass.renderPassChain.Extent.width = renderPassInfo.dimensions.width;
 		renderPass.renderPassChain.Extent.height = renderPassInfo.dimensions.height;

@@ -178,10 +178,25 @@ namespace engine
 			auto buffer = vertexBufferPool.get(bufferRef);
 
 			if (buffer->dataSize != vertexSize) continue;
-			if (MAX_VERTICES_PER_BUFFER * vertexSize >= buffer->allocatedVertices * vertexSize + numVertices * vertexSize)
+			//if (MAX_VERTICES_PER_BUFFER * vertexSize >= buffer->allocatedVertices * vertexSize + numVertices * vertexSize)
+			if(numVertices <= MAX_VERTICES_PER_BUFFER - buffer->allocatedVertices)
 			{
 				return bufferRef;
 			}
+		}
+
+		if (numVertices > MAX_VERTICES_PER_BUFFER) {
+
+			vk::VulkanBuffer buffer;
+			pCreateBuffer(buffer, sizeof(common::Vertex) * numVertices, VERTEX_BUFFER_USAGE, VERTEX_BUFFER_PROP, VERTEX_BUFFER_MEM_USAGE); 
+			buffer.id = vertexBufferCount;
+			buffer.allocatedVertices = 0;
+			buffer.dataSize = vertexSize;
+			vertexBufferCount++;
+			auto ref = vertexBufferPool.insert(("VertexBuffer_" + std::to_string(vertexBufferCount)), buffer);
+			vertexBufferReferences.push_back(ref);
+
+			return ref;
 		}
 
 		auto vertexBuffer = pCreateVertexBuffer();
@@ -201,13 +216,25 @@ namespace engine
 		{
 			auto buffer = indexBufferPool.get(bufferRef);
 
-			int maxAllocatingSize = sizeof(IndexType) * (buffer->allocatedVertices + numIndices);
-			if (MAX_INDICES_PER_BUFFER * sizeof(IndexType) >= maxAllocatingSize)
+			//int maxAllocatingSize = sizeof(IndexType) * (buffer->allocatedVertices + numIndices);
+			//if (MAX_INDICES_PER_BUFFER * sizeof(IndexType) >= maxAllocatingSize)
+			if(numIndices <= MAX_INDICES_PER_BUFFER - buffer->allocatedVertices)
 			{
 				return bufferRef;
 			}
 		}
 
+		if (numIndices > MAX_INDICES_PER_BUFFER) {
+			vk::VulkanBuffer buffer;
+			pCreateBuffer(buffer, sizeof(IndexType) * numIndices, INDEX_BUFFER_USAGE, INDEX_BUFFER_PROP, INDEX_BUFFER_MEM_USAGE);
+			buffer.id = indexBufferCount;
+			buffer.allocatedVertices = 0;
+			indexBufferCount++;
+			auto ref = indexBufferPool.insert(("IndexBuffer_" + std::to_string(indexBufferCount)), buffer);
+			indexBufferReferences.push_back(ref);
+
+			return ref;
+		}
 		auto indexBuffer = pCreateIndexBuffer();
 		indexBuffer.id = indexBufferCount;
 		indexBuffer.allocatedVertices = 0;
