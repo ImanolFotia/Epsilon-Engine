@@ -102,11 +102,16 @@ namespace Editor::Renderpasses {
 		};
 
 		auto gridFragmentCode = utils::readFile("./assets/shaders/editor/grid-fragment.spv");
+		auto gridVertexCode = utils::readFile("./assets/shaders/editor/grid-vertex.spv");
 		ShaderInfo gridShaderInfo = mainShaderInfo;
+		gridShaderInfo.stages[0].shaderCode = gridVertexCode;
 		gridShaderInfo.stages[1].shaderCode = gridFragmentCode;
 		gridShaderInfo.name = "GridShader";
 		PipelineLayout gridLayout = mainLayout;
 		gridLayout.shaderInfo = gridShaderInfo;
+		gridLayout.depthTestEnable = false;
+		gridLayout.depthWriteEnable = true;
+		gridLayout.cullMode = CullMode::FRONT;
 
 		engine::ShaderAsset gridShaderAsset;
 		gridShaderAsset.name = "GridShader";
@@ -146,17 +151,19 @@ namespace Editor::Renderpasses {
 					{
 						  .format = COLOR_RGBA,
 						  .blendEnable = true,
-						  .clearColor = {0.1f, 0.1f, 0.1f, 1.0001f},
+						  .clearColor = {0.1f, 0.1f, 0.1f, 1.0f},
 						  .isSampler = true,
 						  .isDepthAttachment = false,
-						  .isSwapChainAttachment = true,
+						  .isSwapChainAttachment = false,
 						  .clearAttachment = true,
+						  
 						  .name = "Forward0",
 					},
 					{
 						  .format = DEPTH_F32_STENCIL_8,
 						  .depthStencilValue = {1, 0},
-						  .isDepthAttachment = true
+						  .isDepthAttachment = true,
+						  .name = "ForwardDepth",
 					}
 				})
 			.pipelineLayout(mainLayout)

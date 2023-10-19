@@ -28,6 +28,7 @@
 #include <core/engine/renderer/drawables/primitives/sphere2.hpp>
 #include <core/engine/renderer/drawables/primitives/cube.hpp>
 #include <core/engine/renderer/drawables/primitives/quad.hpp>
+#include <core/engine/renderer/drawables/primitives/cylinder.hpp>
 #include <core/framework/utils/helpers/camera.hpp>
 #include <core/framework/IO/IO.hpp>
 

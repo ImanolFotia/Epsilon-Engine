@@ -96,7 +96,7 @@ namespace Editor::UI {
 					}
 					else if (prop.type == PropertyType::BOOL) {
 						bool x = std::any_cast<bool>(prop.value);
-						ImGui::Checkbox(prop.name.c_str(), &x);
+						if(ImGui::Checkbox(prop.name.c_str(), &x))
 						prop.value = x;
 					}
 					else if (prop.type == PropertyType::STRING) {

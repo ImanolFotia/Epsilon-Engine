@@ -62,55 +62,18 @@ namespace Editor {
 		renderer->InitDebugRenderer();
 		setup_style();
 
+
+		auto node = Utils::CreateNode(glm::mat4(1.0f), &m_pScene);
+		Utils::AddCameraNode("Camera", &m_pScene, node,  {});
+
+		Utils::RegisterIntoEditor("Camera", &m_pSceneNodes, &m_pScene, node);
+
 		auto skyNode = m_pScene.emplaceIntoScene<engine::Scene::SceneEntity>(engine::Box{ glm::vec3(0.0f), glm::vec3(1.0) });
 		skyNode->data.transform = glm::scale(glm::mat4(1.0), glm::vec3(3.0f));
 		engine::Sphere sphere(5);
 		auto SkyDomeNode = m_pScene.getAssetManager().createModelFromMesh("Skybox", sphere.data(), {});
 		m_pSkybox = m_pScene.insertIntoNode(skyNode, SkyDomeNode);
 		m_pSkybox->data.bindGroup = "SkyBindGroup";
-
-		common::MeshMaterial defaultMaterial;
-		m_pScene.getAssetManager().addTexture("textures/radiance.dds", {
-			.format = engine::TextureFormat::COLOR_RGBA,
-			.wrapMode = engine::CLAMP_TO_EDGE,
-			.filtering = engine::LINEAR
-			});
-		m_pScene.getAssetManager().addTexture("textures/irradiance.dds", {
-			.format = engine::TextureFormat::COLOR_RGBA,
-			.wrapMode = engine::CLAMP_TO_EDGE,
-			.filtering = engine::LINEAR
-			});
-		std::ifstream file("./assets/lut.bin", std::ios::binary);
-		size_t lut_size = 512 * 512 * sizeof(glm::vec2) * 2;
-		unsigned char* lut = new unsigned char[lut_size];
-		file.read((char*)lut, lut_size);
-		m_pScene.getAssetManager().addTextureFromBytes("BRDF_lut", lut, lut_size, 512, 512, 2, {
-			.format = engine::TextureFormat::COLOR_RG_32F,
-			.wrapMode = engine::CLAMP_TO_EDGE,
-			.filtering = engine::LINEAR
-			});
-		delete[] lut;
-
-
-		for (int i = 0; i < 5; i++)
-			for (int j = 0; j < 5; j++) {
-				pAddDefaultCube(glm::vec3(i * 2.05f - 5.0f, 2.0, j * 2.5f - 5.0f));
-
-			}
-		
-		auto node = Utils::CreateNode(glm::mat4(1.0f), &m_pScene);
-
-		Utils::AddModelNode("models/pot.gltf", &m_pScene, node);
-
-		Utils::AddScriptNode({
-			.language = C_SHARP,
-			.fileName = "GameObject.cs",
-			.assemblyName = "Game.dll",
-			.className = "Game.GameObject",
-			.nodeName = "Adam Head"
-			}, &m_pScene, node, host);
-
-		Utils::RegisterIntoEditor("Adam Head", & m_pSceneNodes, &m_pScene, node);
 
 		////////////////
 
@@ -121,7 +84,7 @@ namespace Editor {
 		planeNode->data.transform = glm::scale(planeNode->data.transform, glm::vec3(30.0, 1.0, 30.0));
 		planeNode->data.transform = glm::rotate(planeNode->data.transform, glm::radians(270.f), glm::vec3(1.0, 0.0, 0.0));
 
-		engine::Quad quad(2, glm::vec2(5.0f));
+		engine::Quad quad(2, glm::vec2(5.0f), glm::vec3(2.0f));
 		auto m_pDefaultCube = m_pScene.getAssetManager().createModelFromMesh("DefaultPlane", quad.data(), {});
 		m_pGridPlane = m_pScene.insertIntoNode(engine::Box{ glm::vec3(planeNode->data.transform[3]), glm::vec3(10.0) }, planeNode, m_pDefaultCube);
 		m_pGridPlane->data.bindGroup = "GridBindGroup";
@@ -174,6 +137,35 @@ namespace Editor {
 		node_props.index = planeNode->Index();
 		m_pSceneNodes.PushInRoot(node_props);
 
+		//////////////////
+
+
+
+		common::MeshMaterial defaultMaterial;
+		m_pScene.getAssetManager().addTexture("textures/radiance.dds", {
+			.format = engine::TextureFormat::COLOR_RGBA,
+			.wrapMode = engine::CLAMP_TO_EDGE,
+			.filtering = engine::LINEAR
+			});
+		m_pScene.getAssetManager().addTexture("textures/irradiance.dds", {
+			.format = engine::TextureFormat::COLOR_RGBA,
+			.wrapMode = engine::CLAMP_TO_EDGE,
+			.filtering = engine::LINEAR
+			});
+		std::ifstream file("./assets/lut.bin", std::ios::binary);
+		size_t lut_size = 512 * 512 * sizeof(glm::vec2) * 2;
+		unsigned char* lut = new unsigned char[lut_size];
+		file.read((char*)lut, lut_size);
+		m_pScene.getAssetManager().addTextureFromBytes("BRDF_lut", lut, lut_size, 512, 512, 2, {
+			.format = engine::TextureFormat::COLOR_RG_32F,
+			.wrapMode = engine::CLAMP_TO_EDGE,
+			.filtering = engine::LINEAR
+			});
+		delete[] lut;
+
+
+		pAddDefaultCube(glm::vec3(0.0));
+
 		renderer->getDebugRenderer()->ShowDebugPerformance(false);
 
 		renderer->getDebugRenderer()->setUserFunction([this]() {
@@ -212,12 +204,22 @@ namespace Editor {
 				auto e = m_pScene.getNode(selected_index);
 				auto children = m_pScene.getChildren<engine::Scene::SceneEntity>(e);
 					m_pObjectProperty.SetNode(m_pSceneNodes.selected_node);
-					m_pObjectProperty.draw();
-					if (children.size() > 0) {
+
+					bool containsScript = false;
+					for (auto& child : children) {
+
+						if (child.first == typeid(EntityScript)) {
+							containsScript = true;
+							break;
+						}
+					}
+
+					if (containsScript) {
 
 					auto s = m_pScene.getChild<EntityScript>(e);
 					auto script = std::static_pointer_cast<engine::Node<EntityScript>>(s);
 					m_pObjectProperty.setProperties(s->data.className, script->data.properties);
+					m_pObjectProperty.draw();
 
 					for (auto& property : m_pObjectProperty.getProperties()) {
 						std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
@@ -362,66 +364,25 @@ namespace Editor {
 	void Editor::pAddDefaultCube(glm::vec3 position) {
 
 		common::MeshMaterial defaultMaterial;
+		defaultMaterial.roughness = 0.8;
+		defaultMaterial.metallic = 0;
+		defaultMaterial.color = glm::vec4(0.5, 0.5, 0.5, 1.0);
 
-		defaultMaterial.albedo_path = "textures/epsilon/rounded-metal-cubes_albedo.png";
-		defaultMaterial.normal_path = "textures/epsilon/rounded-metal-cubes_normal-dx.png";
-		defaultMaterial.metallic_path = "textures/epsilon/rounded-metal-cubes_metallicRoughness.png";
+		engine::Cube cube;
+		auto m_pDefaultCube = m_pScene.getAssetManager().createModelFromMesh("DefaultCube", cube.data(), defaultMaterial);
 
-		auto cubeNode = m_pScene.emplaceIntoScene<engine::Scene::SceneEntity>(engine::Box{ position, glm::vec3(1.0) });
+		auto node = Utils::CreateNode(glm::mat4(1.0f), &m_pScene);
 
-		cubeNode->data.transform = glm::translate(glm::mat4(1.0), position);
-		cubeNode->data.transform = glm::scale(cubeNode->data.transform, glm::vec3(1.0f));
+		Utils::AddModelNode("Cube", &m_pScene, m_pDefaultCube, node);
 
-		auto script = m_pScene.emplaceIntoNode<EntityScript>(cubeNode);
-		script->data.ManagedPtr = host.assembly.Invoke<void*>(L"CreateEntity", cubeNode.get(), L"Game.GameObject", ("Node_" + std::to_string(cubeNode->Index())).c_str());
+		Utils::AddScriptNode({
+			.language = C_SHARP,
+			.fileName = "GameObject.cs",
+			.assemblyName = "Game.dll",
+			.className = "Game.GameObject",
+			.nodeName = "Cube"
+			}, &m_pScene, node, host);
 
-		if (script->data.ManagedPtr == nullptr) {
-			std::cerr << "ManagedPtr is null" << std::endl;
-			exit();
-		}
-
-		script->data.updateClbk = host.assembly.getFunction<void, void*, float>(L"UpdateEntity");
-		const char* str = host.assembly.Invoke<const char*>(L"getEntityFields", script->data.ManagedPtr);
-		//std::cout << str << std::endl;
-		auto props = UI::Property::DeserializeProperties(std::string(str));// m_pObjectProperty.setProperties(std::string(str));
-		script->data.properties = props;
-		script->data.className = "Game.GameObject";
-
-		//auto model = m_pScene.getAssetManager().loadModel("models/pot.gltf");
-		engine::Sphere2 sphere(10);
-		auto m_pDefaultCube = m_pScene.getAssetManager().createModelFromMesh("DefaultCube", sphere.data(), defaultMaterial);
-		auto renderNode = m_pScene.insertIntoNode(engine::Box{ glm::vec3(cubeNode->data.transform[3]), glm::vec3(0.5) }, cubeNode, m_pDefaultCube);
-		renderNode->data.bindGroup = "DefaultBindGroup";
-
-		EntityArgs args;
-		args.transform = toTransform(cubeNode->data.transform);
-		args.id = 0;
-		host.assembly.Invoke<void>(L"setEntityTransform", script->data.ManagedPtr, args);
-
-		UI::NodeProperties node_props;
-		node_props.name = "Node_" + std::to_string(cubeNode->Index());
-		node_props.mType = UI::SceneNodeType::Node;
-
-		UI::NodeProperties render_props;
-		render_props.name = "Render Model" + std::to_string(renderNode->Index());
-		render_props.mType = UI::SceneNodeType::Render;
-		render_props.node_ref = (void*)&renderNode.get()->data;
-		render_props.scene_node_ref = &cubeNode.get()->data;
-		render_props.index = cubeNode->Index();
-
-		UI::NodeProperties script_props;
-		script_props.name = "Script";
-		script_props.mType = UI::SceneNodeType::Script;
-		script_props.node_ref = (void*)&script.get()->data;
-		script_props.scene_node_ref = &cubeNode.get()->data;
-		script_props.index = cubeNode->Index();
-
-		node_props.children.push_back(render_props);
-		node_props.children.push_back(script_props);
-		node_props.node_ref = (void*)&cubeNode.get()->data;
-		node_props.model_path = "DefaultCube";
-		node_props.scene_node_ref = &cubeNode.get()->data;
-		node_props.index = cubeNode->Index();
-		m_pSceneNodes.PushInRoot(node_props);
+		Utils::RegisterIntoEditor("Cube", &m_pSceneNodes, &m_pScene, node);
 	}
 }

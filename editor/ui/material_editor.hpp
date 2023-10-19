@@ -17,7 +17,19 @@ namespace Editor::UI {
 				auto& assetManager = m_pSceneRef->getAssetManager();
 				std::shared_ptr<engine::NodeBase> entity = m_pSceneRef->getNode(selected_entity);
 				auto children = m_pSceneRef->getChildren<engine::Scene::SceneEntity>(entity);
-				if (children.size() > 0) {
+
+				bool containsRenderModel = false;
+				for (auto& child : children) {
+
+					if (child.first == typeid(engine::RenderModel)) {
+						containsRenderModel = true;
+						break;
+					}
+				}
+
+				if (containsRenderModel) {
+
+
 					auto r = m_pSceneRef->getChild<engine::RenderModel>(entity);
 					auto render_node = std::static_pointer_cast<engine::Node<engine::RenderModel>>(r);
 

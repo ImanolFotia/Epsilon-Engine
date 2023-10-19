@@ -4,6 +4,7 @@
 
 #include <core/engine/scene/scene.hpp>
 
+#include "../types/camera_info.hpp"
 #include "../types/script.hpp"
 #include <modules/dotnet/src/host.hpp>
 
@@ -40,6 +41,25 @@ namespace Editor::Utils {
 		renderNode->data.bindGroup = bindGroup;
 
 	}
+
+	static void AddModelNode(const std::string& name, engine::Scene* scene, engine::RenderModel& renderModel, std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> parent, const std::string bindGroup = "DefaultBindGroup") {
+
+		renderModel.bindGroup = bindGroup;
+		renderModel.name = name;
+		auto renderNode = scene->insertIntoNode(engine::Box{ glm::vec3(parent->data.transform[3]), glm::vec3(0.5) }, parent, renderModel);
+		renderNode->data.bindGroup = bindGroup;
+
+	}
+
+	static void AddCameraNode(const std::string& name, engine::Scene* scene, std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> parent, CameraCreationInfo cameraCreationInfo) {
+
+		utils::Camera camera(cameraCreationInfo.position, cameraCreationInfo.direction);
+		camera.setFoV(cameraCreationInfo.Fov);
+
+		scene->insertIntoNode(parent, camera);
+
+	}
+
 
 
 	static void AddScriptNode(ScriptCreationInfo creationInfo, engine::Scene* scene, std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> parent, dotnet::DotnetHost& host) {
