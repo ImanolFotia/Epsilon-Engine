@@ -108,7 +108,8 @@ struct Material {
 		vec4 albedo_color;
 		float metallic_color;
 		float roughness_color;
-		float transmision;
+		float transmission;
+        float specular;
 };
 
 layout(std430, set = RENDERPASS_SET,  binding = MATERIALS_BINDING) buffer readonly MaterialsIn {
@@ -155,6 +156,9 @@ struct Surface {
     mat3 TBN;
 };
 
+float getSpecular(Surface surface) {
+    return surface.material.internal_material.specular;
+}
 
 vec4 getAlbedo(Surface surface) {
     vec4 outcolor;
@@ -162,15 +166,15 @@ vec4 getAlbedo(Surface surface) {
     if(surface.material.hasAlbedoTexture) {
         outcolor = surface.material.albedoTexture;
         
-        if(surface.material.internal_material.transmision >= 0) {
-            outcolor.a = min(surface.material.internal_material.transmision, outcolor.a);
+        if(surface.material.internal_material.transmission >= 0) {
+            outcolor.a = min(surface.material.internal_material.transmission, outcolor.a);
         }
     }
     else {
         //outcolor = surface.color;
         outcolor = surface.material.internal_material.albedo_color;
-        if(surface.material.internal_material.transmision >= 0) {
-            outcolor.a = min(surface.material.internal_material.transmision, outcolor.a);
+        if(surface.material.internal_material.transmission >= 0) {
+            outcolor.a = min(surface.material.internal_material.transmission, outcolor.a);
         }
     }
     

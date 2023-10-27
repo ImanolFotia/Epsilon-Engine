@@ -144,29 +144,31 @@ vec3 calculatePointPBR(vec3 pos, vec3 color, float watts, vec3 viewPos, vec3 Fra
         return Lo * lightcolor;
 }
 
-vec3 CalculateDirectionalPBR(vec3 lightDir, vec3 color, float shadow, vec3 viewPos, vec3 FragPos, vec3 F0, vec3 Normal, float Specular, vec3 Diffuse)
+vec3 CalculateDirectionalPBR(vec3 lightDir, vec3 color, float shadow, vec3 viewPos, vec3 FragPos, vec3 F0, vec3 Normal, float Roughness, vec3 Diffuse, float Specular)
 {
     // calculate per-light radiance
         vec3 V = normalize(viewPos - FragPos);
         vec3 L = normalize(lightDir);
         vec3 H = normalize(V + L);  
 
-        vec3 F = fresnelSchlickRoughness(max(dot(H, V), 0.0), F0, Specular);
+        float NdotL = orenNayarDiffuse(L, V, Normal, clamp(Roughness, 0.03, 1.0), 1.0);
+        
+
+        vec3 F = fresnelSchlickRoughness(max(dot(H, V), 0.0), F0, Roughness);
         vec3 kS = F;
         vec3 kD = vec3(1.0) - kS;
         kD *= 1.0;///1.0 - ExtraComponents.x;
         kD = clamp(kD, vec3(0.2), vec3(1.0));
         
         // cook-torrance brdf
-        float NDF = DistributionGGX(Normal, H, clamp(Specular, 0.03, 1.0));        
-        float G   = GeometrySmith(Normal, V, L, Specular);      
+        float NDF = DistributionGGX(Normal, H, clamp(Roughness, 0.03, 1.0));        
+        float G   = GeometrySmith(Normal, V, L, Roughness);      
         
         vec3 nominator    = NDF * G * F;
         float denominator = (4 * max(dot(V, Normal), 0.0) * max(dot(L, Normal), 0.0)) + 0.001; 
         vec3 brdf = (nominator / denominator+0.0001);
             
-        // add to outgoing radiance Lo
-        float NdotL = orenNayarDiffuse(L, V, Normal, clamp(Specular, 0.03, 1.0), 1.0);//              
+        // add to outgoing radiance Lo//              
         vec3 Lo = (kD * Diffuse / PI + brdf) * NdotL; 
         return Lo;
 }
