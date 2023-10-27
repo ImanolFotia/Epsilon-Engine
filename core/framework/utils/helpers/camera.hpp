@@ -32,6 +32,11 @@ namespace utils
     {
     public:
 
+        enum ProyectionType {
+            Perspective,
+            Orthographic
+        };
+
     public:
         Camera(glm::vec3, glm::vec3);
 
@@ -91,6 +96,14 @@ namespace utils
         void ResetDeltas() {
             resetDeltas = true;
         }
+
+        ProyectionType ProjType() {
+            return m_pProjType;
+        }
+
+        void ProjType(ProyectionType proj_type) {
+            m_pProjType = proj_type;
+        }
     private:
         void LockCamera(void);
 
@@ -113,6 +126,7 @@ namespace utils
         bool mIsMoving = false;
         bool externallymodified = true;
         float jitter_multiplier = 1.0;
+        ProyectionType m_pProjType = Perspective;
 
     private:
         glm::vec3 Rigth{};

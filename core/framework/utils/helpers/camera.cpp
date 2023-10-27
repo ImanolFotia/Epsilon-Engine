@@ -278,7 +278,10 @@ namespace utils
         static const glm::vec2 Res = glm::vec2((float)winx, (float)winy);
         static const glm::vec2 iRes = 1.0f / glm::vec2((float)winx, (float)winy);
 
-        ProjectionMatrix = glm::perspective(glm::radians(FieldOfView), glm::clamp(Aspectratio, -10.0f, 10.0f), near_plane, far_plane);
+        if(m_pProjType == Perspective)
+            ProjectionMatrix = glm::perspective(glm::radians(FieldOfView), glm::clamp(Aspectratio, -10.0f, 10.0f), near_plane, far_plane);
+        else
+            ProjectionMatrix = glm::ortho(-(float)winx/60.0f, (float)winx / 60.0f, -(float)winy /60.0f, (float)winy / 60.0f, -500.0f, 500.0f);
 
         glm::vec2 Jitter = glm::vec2(0.0f);;
         if (jitter)
