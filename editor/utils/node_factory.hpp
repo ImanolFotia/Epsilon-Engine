@@ -92,7 +92,7 @@ namespace Editor::Utils {
 
 	static void RegisterIntoEditor(const std::string& name, UI::SceneNodes* scene_nodes, engine::Scene* scene, std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> parent) {
 
-		auto nodeChildren = scene->getChildren<engine::Scene::SceneEntity>(parent);
+		auto nodeChildren = scene->getChildren(parent);
 
 		UI::NodeProperties node_props;
 		node_props.name = name;

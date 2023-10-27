@@ -142,12 +142,12 @@ namespace Editor {
 
 
 		common::MeshMaterial defaultMaterial;
-		m_pScene.getAssetManager().addTexture("textures/radiance.dds", {
+		m_pScene.getAssetManager().addTexture("textures/radiance2.dds", {
 			.format = engine::TextureFormat::COLOR_RGBA,
 			.wrapMode = engine::CLAMP_TO_EDGE,
 			.filtering = engine::LINEAR
 			});
-		m_pScene.getAssetManager().addTexture("textures/irradiance.dds", {
+		m_pScene.getAssetManager().addTexture("textures/irradiance2.dds", {
 			.format = engine::TextureFormat::COLOR_RGBA,
 			.wrapMode = engine::CLAMP_TO_EDGE,
 			.filtering = engine::LINEAR
@@ -202,7 +202,7 @@ namespace Editor {
 
 			if (selected_index > 0) {
 				auto e = m_pScene.getNode(selected_index);
-				auto children = m_pScene.getChildren<engine::Scene::SceneEntity>(e);
+				auto children = m_pScene.getChildren(e);
 					m_pObjectProperty.SetNode(m_pSceneNodes.selected_node);
 
 					bool containsScript = false;
