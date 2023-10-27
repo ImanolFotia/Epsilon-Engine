@@ -16,7 +16,7 @@ namespace Editor::UI {
 				auto context = m_pSceneRef->getContext();
 				auto& assetManager = m_pSceneRef->getAssetManager();
 				std::shared_ptr<engine::NodeBase> entity = m_pSceneRef->getNode(selected_entity);
-				auto children = m_pSceneRef->getChildren<engine::Scene::SceneEntity>(entity);
+				auto children = m_pSceneRef->getChildren(entity);
 
 				bool containsRenderModel = false;
 				for (auto& child : children) {
@@ -63,7 +63,6 @@ namespace Editor::UI {
 						}
 						{
 							bool isRoughnessTexture = material.material.metallic_texture_index > 0;
-							ImGui::SeparatorText("Roughness");
 							if (ImGui::Checkbox("Use texture##material_roughness_check", &isRoughnessTexture)) {
 								material.material.metallic_texture_index *= -1; wasModified = true;
 							}
@@ -81,7 +80,6 @@ namespace Editor::UI {
 						}
 						{
 							bool isMetallicTexture = material.material.metallic_texture_index > 0;
-							ImGui::SeparatorText("Metallic");
 							if (ImGui::Checkbox("Use texture##material_metallic_check", &isMetallicTexture)) {
 								material.material.metallic_texture_index *= -1; wasModified = true;
 							}
@@ -94,6 +92,11 @@ namespace Editor::UI {
 								if (ImGui::DragFloat("Metallic##metallic_picker", &material.material.metallic_color, 0.01, 0.0, 1.0)) {
 									wasModified = true;
 								}
+							}
+						}
+						{
+							if (ImGui::DragFloat("Specular##specular_picker", &material.material.specular, 0.01, 0.0, 1.0)) {
+								wasModified = true;
 							}
 						}
 
