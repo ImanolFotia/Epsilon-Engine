@@ -31,6 +31,7 @@ namespace engine
 		int instance_index;
 		bool visible;
 	};
+
 	class Scene
 	{
 		using OctreeRenderType = OctreeSceneItem;
@@ -187,9 +188,12 @@ namespace engine
 		void RelocateObject(Box boundingBox, int index) {
 
 			std::shared_ptr<Node<RenderModel>> node = std::static_pointer_cast<Node<RenderModel>>(m_pSceneManager.get(index));
-			auto octree_render_node = getChild<typename std::list<OctreeItem<OctreeRenderType>>::iterator>(node->Parent());
-			if (octree_render_node != nullptr) {
-				auto new_item = m_pRenderOctree->relocate(octree_render_node->data, boundingBox);
+			if (getChildren(node->Parent())[typeid(typename std::list<OctreeItem<OctreeRenderType>>::iterator)].size() > 0)
+			{
+				auto octree_render_node = getChild<typename std::list<OctreeItem<OctreeRenderType>>::iterator>(node->Parent());
+				if (octree_render_node != nullptr) {
+					auto new_item = m_pRenderOctree->relocate(octree_render_node->data, boundingBox);
+				}
 			}
 		}
 
@@ -350,11 +354,10 @@ namespace engine
 			return m_pSceneManager.to<T>(m_pSceneManager.getChild<T>(m_pSceneManager.root));
 		}
 
-		template<typename T>
 		SceneManager::ChildNodes getChildren(std::shared_ptr<NodeBase> parent)
 		{
 			//return m_pSceneManager.to<T>(m_pSceneManager.getChild<T>(m_pSceneManager.root));
-			return m_pSceneManager.getChildren<T>(parent);
+			return m_pSceneManager.getChildren(parent);
 		}
 
 		void BeginScene()
@@ -407,7 +410,8 @@ namespace engine
 						.object_id = (unsigned int)renderModel->Parent()->Index(),
 						.transform_index = m_pMeshCount,
 						.material_index = {material_indices[0], material_indices[1], material_indices[2], material_indices[3]},
-						.numMaterials = (uint32_t)mesh.numMaterials
+						.numMaterials = (uint32_t)mesh.numMaterials,
+						.animationIndex = renderModel->data.animationIndex
 					};
 
 					renderer->Push({ .mesh = mesh.mesh,
@@ -415,7 +419,8 @@ namespace engine
 									.pushConstant = push_constant,
 									.objectConstant = {
 														.transform = transform,
-														.material_index = material_indices[0]
+														.material_index = material_indices[0],
+														.animation_offset = renderModel->data.animationIndex
 													  },
 									.layout_index = m_pRenderLayouts[layout].pipelineLayoutIndex,
 									.uniformIndex = m_pMeshCount });
@@ -453,7 +458,8 @@ namespace engine
 						.object_id = (unsigned int)i,
 						.transform_index = m_pMeshCount,
 						.material_index = {material_indices[0], material_indices[1], material_indices[2], material_indices[3]},
-						.numMaterials = (uint32_t)1
+						.numMaterials = (uint32_t)1,
+						.animationIndex = 0
 					};
 
 					m_pMeshCount++;
@@ -509,7 +515,8 @@ namespace engine
 							.object_id = (unsigned int)renderModel->Index() + i,
 							.transform_index = m_pMeshCount,
 							.material_index = {material_indices[0], material_indices[1], material_indices[2], material_indices[3]},
-							.numMaterials = (uint32_t)mesh.numMaterials
+							.numMaterials = (uint32_t)mesh.numMaterials,
+							.animationIndex = renderModel->data.animationIndex
 						};
 
 						m_pMeshCount++;
@@ -520,7 +527,8 @@ namespace engine
 									.pushConstant = push_constant,
 									.objectConstant = {
 														.transform = transforms[0],
-														.material_index = material_indices[0]
+														.material_index = material_indices[0],
+														.animation_offset = renderModel->data.animationIndex
 													  },
 									.layout_index = m_pRenderLayouts.at(layout).pipelineLayoutIndex,
 									.uniformIndex = firstInstance,

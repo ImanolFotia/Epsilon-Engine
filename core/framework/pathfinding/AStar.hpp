@@ -20,11 +20,11 @@ namespace framework
 			glm::vec3 position{};
 		};
 
-		static std::unordered_map<int, glm::vec3> reconstruct_path(
+		static std::map<int, glm::vec3> reconstruct_path(
 			Key start, Key goal,
 			std::map<Key, PathData> came_from)
 		{
-			std::unordered_map<int, glm::vec3> path;
+			std::map<int, glm::vec3> path;
 			glm::vec3 current = came_from[goal].position;
 
 			Key current_key = goal;
@@ -60,7 +60,7 @@ namespace framework
 		}
 
 
-		static std::unordered_map<int, glm::vec3> traverse(NodeGraph<Key, DataType> graph, Key start, Key end)
+		static std::map<int, glm::vec3> traverse(NodeGraph<Key, DataType> graph, Key start, Key end)
 		{
 			std::map<Key, PathData> path;
 			using QElement = std::pair<float, Key>;

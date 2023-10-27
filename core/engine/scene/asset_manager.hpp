@@ -17,6 +17,7 @@
 #include "structs/box.hpp"
 
 #include <core/framework/vfs/filesystem.hpp>
+#include <stack>
 
 namespace engine
 {
@@ -38,6 +39,7 @@ namespace engine
 		uint32_t transform_index{};
 		uint32_t material_index[4] = {};
 		uint32_t numMaterials = 1;
+		uint32_t animationIndex = 0;
 	};
 
 	struct CursorInfo {
@@ -67,7 +69,9 @@ namespace engine
 		alignas(16) glm::vec4 albedo_color = glm::vec4(0.75f, 0.75f, 0.75f, 1.0f);
 		float metallic_color = 1.0;
 		float roughness_color = 0.038;
-		float transmision = -1.0;
+		float transmission = -1.0f;
+
+		float specular = 1.0f;
 	};
 
 	struct PBRMaterialIndex {
@@ -78,11 +82,11 @@ namespace engine
 
 	struct RenderMesh
 	{
-		unsigned int id;
-		Ref<Mesh> mesh;
-		Ref<BindGroup> bind_group;
+		unsigned int id = 0;
+		Ref<Mesh> mesh{};
+		Ref<BindGroup> bind_group{};
 		std::size_t material_keys[4];
-		std::size_t numMaterials;
+		std::size_t numMaterials = 0;
 	};
 
 	struct RenderModel
@@ -94,7 +98,8 @@ namespace engine
 		common::MIN_MAX_POINTS min_max_points;
 		framework::Skeleton skeleton;
 		std::string name{};
-		std::string bindGroup;
+		std::string bindGroup{};
+		uint32_t animationIndex = 0;
 		bool hasAnimation = false;
 		bool isInstanced = false;
 		bool visible = false;
@@ -208,7 +213,7 @@ namespace engine
 
 			m_pGPUBuffers["transform_buffer"] = resourceManager->createGPUBuffer("transform_buffer", sizeof(glm::mat4) * MAX_TRANSFORMS, engine::BufferStorageType::STORAGE_BUFFER);
 
-			m_pGPUBuffers["animation_transform_buffer"] = resourceManager->createGPUBuffer("animation_transform_buffer", sizeof(GPUAnimationData), engine::BufferStorageType::STORAGE_BUFFER);
+			m_pGPUBuffers["animation_transform_buffer"] = resourceManager->createGPUBuffer("animation_transform_buffer", sizeof(GPUAnimationData)*100, engine::BufferStorageType::STORAGE_BUFFER);
 			
 			transformBuffer.resize(vk::MAX_FRAMES_IN_FLIGHT);
 			objectBuffer.resize(vk::MAX_FRAMES_IN_FLIGHT);
@@ -493,6 +498,8 @@ namespace engine
 			return m_pModels.at(name);
 		}
 
+		std::stack<int> m_pFreeAnimationIndices;
+		uint32_t m_pCurrentAnimationIndex = 0;
 		RenderModel& loadModel(const std::string& path, const std::string& name = "")
 		{
 			std::string prefix = "./assets/";
@@ -532,6 +539,17 @@ namespace engine
 
 
 			model.hasAnimation = inModel->HasAnimation();
+
+			if (model.hasAnimation) {
+				if (m_pFreeAnimationIndices.size() > 0) {
+					model.animationIndex = m_pFreeAnimationIndices.top();
+					m_pFreeAnimationIndices.pop();
+				}
+				else {
+					model.animationIndex = m_pCurrentAnimationIndex;
+					m_pCurrentAnimationIndex++;
+				}
+			}
 
 
 			model.name = model_name;
@@ -616,7 +634,7 @@ namespace engine
 			material.albedo_color = mesh_material.color;
 			material.roughness_color = mesh_material.roughness_color;
 			material.metallic_color = mesh_material.metallic_color;
-			material.transmision = mesh_material.transmission;
+			material.transmission = mesh_material.transmission;
 
 			if (!mesh_material.albedo.empty())
 			{
