@@ -43,7 +43,7 @@ namespace engine
 	};
 
 	struct CursorInfo {
-		alignas(16) glm::vec3 position{}; float padding;
+		glm::vec4 position{};
 		alignas(16) glm::vec3 normal{};
 		alignas(16) glm::vec3 selected_item_position;
 		alignas(4) int id{};
@@ -98,7 +98,8 @@ namespace engine
 		common::MIN_MAX_POINTS min_max_points;
 		framework::Skeleton skeleton;
 		std::string name{};
-		std::string bindGroup{};
+		std::string bindGroup = "DefaultLayout";
+		std::string shadowBindGroup = "ShadowLayout";
 		uint32_t animationIndex = 0;
 		bool hasAnimation = false;
 		bool isInstanced = false;

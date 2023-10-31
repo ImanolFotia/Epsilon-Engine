@@ -27,16 +27,43 @@ namespace engine
 	struct OctreeSceneItem {
 		OctreeSceneItem() = default;
 		std::shared_ptr<Node<RenderModel>> renderModel;
+		Box boundingBox{};
 		int index;
 		int instance_index;
 		bool visible;
 	};
 
+	struct Entity {
+		bool loaded = false;
+	};
+
+	struct EntityData {
+		alignas(32) glm::mat4 modelMatrix{};
+		glm::ivec4 texture_indices;
+	};
+
+
+	struct EntityTransform {
+		unsigned int id = 0;
+		glm::vec3 position = glm::vec3(0.0f);
+		glm::vec3 prev_position = glm::vec3(0.0f);
+		glm::vec3 scale = glm::vec3(1.0f);
+		glm::vec3 prev_scale = glm::vec3(1.0f);
+		glm::vec3 target_scale = glm::vec3(1.0f);
+		float angle = 0;
+		glm::quat orientation{};
+		glm::mat4 model_matrix = glm::mat4(1.0);
+		float lifetime = 0;
+		bool grows = false;
+	};
+
 	class Scene
 	{
+	public:
 		using OctreeRenderType = OctreeSceneItem;
 		using OctreeRenderItem = typename std::list<OctreeItem<OctreeRenderType>>::iterator;
 		using OctreeNodeType = std::shared_ptr<NodeBase>;
+	private:
 		AssetManager m_pAssetManager{};
 		std::shared_ptr<audio::AudioManager> m_pAudioManager;
 		// OctreeContainer<std::shared_ptr<NodeBase>> m_pOctree;
@@ -70,7 +97,6 @@ namespace engine
 
 
 	public:
-
 		struct SceneEntity {
 			glm::mat4 transform;
 		};
@@ -127,6 +153,10 @@ namespace engine
 			auto resourceManager = m_pContext->ResourceManager();
 			m_pRenderLayouts[name] = { layoutIndex, bindGroup };
 			return bindGroup;
+		}
+
+		std::unordered_map<std::string, RenderLayout> getBindGroups() {
+			return m_pRenderLayouts;
 		}
 
 		void addRenderPass(const std::string& name, Ref<RenderPass> renderPass) {

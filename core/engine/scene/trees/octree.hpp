@@ -247,9 +247,10 @@ namespace engine
 			m_Data.push_back(item);
 			// std::cout << "Inserting data: " << data
 			//           << " with address: " << &m_Data.back() << std::endl;
-			m_Data.back().data_position = m_Root.insert(pos, std::prev(m_Data.end()));
+			auto last = std::prev(m_Data.end());
+			m_Data.back().data_position = m_Root.insert(pos, last);
 
-			return std::prev(m_Data.end());
+			return last;
 		}
 
 		std::list<typename OctreeData::iterator> search(Frustum& frustum) {
