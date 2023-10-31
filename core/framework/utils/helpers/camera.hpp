@@ -140,7 +140,7 @@ namespace utils
         double verticalAngle = 0.0;
         double horizontalAngle = 0.0;
         float near_plane = 0.001;
-        float far_plane = 3000.0;
+        float far_plane = 500.0f;
         glm::mat4 ViewMatrix = glm::mat4(1.0f);
         glm::mat4 ProjectionMatrix = glm::mat4(1.0f);
         glm::vec3 Position{};
