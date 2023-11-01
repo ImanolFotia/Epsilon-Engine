@@ -480,6 +480,7 @@ namespace framework {
 		bool Load(const std::string& path) {
 
 			tinygltf::TinyGLTF loader;
+
 			std::string err;
 			std::string warn;
 			const std::string ext = path.substr(path.find_last_of('.') + 1, path.length());//GetFilePathExtension(path);
@@ -1338,6 +1339,7 @@ namespace framework {
 				// Store the name of the glTF mesh (if defined)
 				loadedMesh.name = gltfMesh.name;
 			}*/
+
 
 		}
 

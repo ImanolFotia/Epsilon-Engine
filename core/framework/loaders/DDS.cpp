@@ -11,8 +11,6 @@ DDS::DDS(const std::string& filename, unsigned int baseLevel = 0) : m_pBaseLevel
 	if (!LoadCompressed(filename, baseLevel)) {
 		Load(filename, baseLevel);
 	}
-
-	Load(filename, baseLevel);
 }
 
 bool DDS::LoadCompressed(const std::string& filename, unsigned int baseLevel = 0) {
