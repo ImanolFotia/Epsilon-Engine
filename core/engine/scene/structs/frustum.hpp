@@ -29,6 +29,7 @@ namespace engine
 		bool CubeInFrustum(float x, float y, float z, glm::vec3 size);
 		bool CubeInFrustum(float x, float y, float z, float size);
 		bool BoxInFrustum(float x, float y, float z, float x2, float y2, float z2) const;
+		bool FrustumContainsCube(float x, float y, float z, glm::vec3 size);
 
 		/////// * /////////// * /////////// * NEW * /////// * /////////// *
 		////////////// *
@@ -37,11 +38,13 @@ namespace engine
 		bool BoxInFrustum(common::MIN_MAX_POINTS points) const;
 
 		bool contains(Box box) {
-			return CubeInFrustum(box.position.x, box.position.y, box.position.z, box.halfSize());
+			auto center = box.center();
+			return FrustumContainsCube(center.x, center.y, center.z, box.halfSize());
 		}
 
 		bool overlaps(Box box) {
-			return CubeInFrustum(box.position.x, box.position.y, box.position.z, box.halfSize());
+			auto center = box.center();
+			return CubeInFrustum(center.x, center.y, center.z, box.halfSize());
 		}
 
 		/////// * /////////// * /////////// * NEW * /////// * /////////// *

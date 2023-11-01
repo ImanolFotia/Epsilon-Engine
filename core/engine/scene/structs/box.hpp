@@ -54,12 +54,9 @@ namespace engine
          */
         bool canContain(Box other) const
         {
-            return (other.position.x >= position.x &&
-                    other.position.x + other.size.x < position.x + size.x &&
-                    other.position.y >= position.y &&
-                    other.position.y + other.size.y < position.y + size.y &&
-                    other.position.z >= position.z &&
-                    other.position.z + other.size.z < position.z + size.z);
+            return ((other.position.x >= position.x) && (other.position.x + other.size.x < position.x + size.x) &&
+                    (other.position.y >= position.y) && (other.position.y + other.size.y < position.y + size.y) &&
+                    (other.position.z >= position.z) && (other.position.z + other.size.z < position.z + size.z));
         }
 
         /**
@@ -72,12 +69,9 @@ namespace engine
 
         bool overlaps(Box other) const
         {
-            return (position.x < other.position.x + other.size.x &&
-                    position.x + size.x >= other.position.x &&
-                    position.y < other.position.y + other.size.y &&
-                    position.y + size.y >= other.position.y &&
-                    position.z < other.position.z + other.size.z &&
-                    position.z + size.z >= other.position.z);
+            return (position.x < other.position.x + other.size.x && position.x + size.x >= other.position.x &&
+                    position.y < other.position.y + other.size.y && position.y + size.y >= other.position.y &&
+                    position.z < other.position.z + other.size.z && position.z + size.z >= other.position.z);
         }
 
         /**
@@ -85,7 +79,7 @@ namespace engine
          *
          * @return glm::vec3
          */
-        inline glm::vec3 center() { return ((position + size) - position) / 2.0f; }
+        inline glm::vec3 center() { return position + size*0.5f; }
 
         /**
          * @brief Returns the size from the center of the box, to thier sides

@@ -267,6 +267,41 @@ namespace engine
         return true;
     }
 
+
+    bool Frustum::FrustumContainsCube(float x, float y, float z, glm::vec3 size)
+    {
+        /// Basically, what is going on is, that we are given the center of the cube,
+        /// and half the length.  Think of it like a radius.  Then we checking each point
+        /// in the cube and seeing if it is inside the frustum.  If a point is found in front
+        /// of a side, then we skip to the next side.  If we get to a plane that does NOT have
+        /// a point in front of it, then it will return false.
+
+        /// *Note* - This will sometimes say that a cube is inside the frustum when it isn't.
+        /// This happens when all the corners of the bounding box are not behind any one plane.
+        /// This is rare and shouldn't effect the overall rendering speed.
+        /// 
+        for (int i = 0; i < 6; i++)
+        {
+            if (m_Frustum[i][A] * (x - size.x) + m_Frustum[i][B] * (y - size.y) + m_Frustum[i][C] * (z - size.z) + m_Frustum[i][D] < 0)
+                return false;
+            if (m_Frustum[i][A] * (x + size.x) + m_Frustum[i][B] * (y - size.y) + m_Frustum[i][C] * (z - size.z) + m_Frustum[i][D] < 0)
+                return false;
+            if (m_Frustum[i][A] * (x - size.x) + m_Frustum[i][B] * (y + size.y) + m_Frustum[i][C] * (z - size.z) + m_Frustum[i][D] < 0)
+                return false;
+            if (m_Frustum[i][A] * (x + size.x) + m_Frustum[i][B] * (y + size.y) + m_Frustum[i][C] * (z - size.z) + m_Frustum[i][D] < 0)
+                return false;
+            if (m_Frustum[i][A] * (x - size.x) + m_Frustum[i][B] * (y - size.y) + m_Frustum[i][C] * (z + size.z) + m_Frustum[i][D] < 0)
+                return false;
+            if (m_Frustum[i][A] * (x + size.x) + m_Frustum[i][B] * (y - size.y) + m_Frustum[i][C] * (z + size.z) + m_Frustum[i][D] < 0)
+                return false;
+            if (m_Frustum[i][A] * (x - size.x) + m_Frustum[i][B] * (y + size.y) + m_Frustum[i][C] * (z + size.z) + m_Frustum[i][D] < 0)
+                return false;
+            if (m_Frustum[i][A] * (x + size.x) + m_Frustum[i][B] * (y + size.y) + m_Frustum[i][C] * (z + size.z) + m_Frustum[i][D] < 0)
+                return false;
+
+        }
+        return true;
+    }
     
     bool Frustum::CubeInFrustum(float x, float y, float z, glm::vec3 size)
     {
