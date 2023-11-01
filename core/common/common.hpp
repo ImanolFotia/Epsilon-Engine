@@ -1,7 +1,8 @@
 #pragma once
 
-#include "glm/glm.hpp"
-#include "glm/gtc/quaternion.hpp"
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 
 #include <vector>
 #include <string>
@@ -109,10 +110,29 @@ namespace common {
             MAX_X = max.x;
             MAX_Y = max.y;
             MAX_Z = max.z;
+            
+            if (MIN_X > MAX_X) {
+                float x = MAX_X;
+                MAX_X = MIN_X;
+                MIN_X = x;
+            }
+
+            if (MIN_Y > MAX_Y) {
+                float y = MAX_Y;
+                MAX_Y = MIN_Y;
+                MIN_Y = y;
+            }
+
+            if (MIN_Z > MAX_Z) {
+                float z = MAX_Z;
+                MAX_Z = MIN_Z;
+                MIN_Z = z;
+            }
+
         }
 
         glm::vec3 getCenterOfMass() {
-            return  glm::vec3(MAX_X + MIN_X, MAX_Y + MIN_Y, MAX_Z + MIN_Z);
+            return  glm::vec3(MAX_X + MIN_X, MAX_Y + MIN_Y, MAX_Z + MIN_Z) * 0.5f;
         }
 
         glm::vec3 getSize() {
@@ -136,6 +156,32 @@ namespace common {
 
         glm::vec3 Max() {
             return glm::vec3(MAX_X, MAX_Y, MAX_Z);
+        }
+
+        void transform(glm::mat4 transform) {
+
+            glm::vec3 scale;
+            glm::quat rotation;
+            glm::vec3 translation;
+            glm::vec3 skew;
+            glm::vec4 perspective;
+            glm::decompose(transform, scale, rotation, translation, skew, perspective);
+
+            glm::mat4 s_m = glm::scale(glm::mat4(1.0), scale);
+            glm::mat4 r_m = glm::mat4(rotation);
+            glm::mat4 t_m = glm::translate(glm::mat4(1.0), translation);
+            glm::mat4 m_m = t_m * s_m;
+
+            glm::vec3 min = m_m * glm::vec4(Min(), 1.0);
+            glm::vec3 max = m_m * glm::vec4(Max(), 1.0);
+
+            MIN_X = min.x;
+            MIN_Y = min.y;
+            MIN_Z = min.z;
+
+            MAX_X = max.x;
+            MAX_X = max.y;
+            MAX_X = max.z;
         }
     };
 
