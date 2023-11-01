@@ -36,7 +36,7 @@ namespace engine
 		Box m_Box{};
 
 		bool m_IsBuilt = false;
-		bool m_IsLeaf = false;
+		bool m_IsLeaf = true;
 
 		bool m_IsEmpty = true;
 
@@ -45,11 +45,7 @@ namespace engine
 		std::array<Octree_ptr, 8> m_Children{};
 		std::array<Box, 8> m_bChildren{};
 
-		std::array<std::thread, 8> m_Workers{};
-
 		std::list<std::pair<Box, T>> m_Data{};
-
-		std::mutex m_ItemsMutex;
 
 		enum COLLISION
 		{
@@ -65,6 +61,7 @@ namespace engine
 		 * @param box Bounding box of the octree, this is the size of the root node
 		 * @param depth Depth of the current octree node within the root node
 		 */
+		Octree() = delete;
 		Octree(Box box, int depth = 0) : m_Box(box), m_Depth(depth)
 		{
 			if (m_Depth < MAX_DEPTH)
@@ -109,7 +106,6 @@ namespace engine
 			{
 				if (box.overlaps(p.first))
 				{
-					std::lock_guard<std::mutex> guard(m_ItemsMutex);
 					items.push_back(p.second);
 				}
 			}
@@ -157,7 +153,7 @@ namespace engine
 
 			for (size_t i = 0; i < 8; i++)
 			{
-				if (m_Children[i])
+				if (!m_Children[i]->m_IsEmpty)
 				{
 					if (frustum.contains(m_bChildren[i]))
 						m_Children[i]->items(items);
@@ -175,27 +171,30 @@ namespace engine
 
 			for (auto& c : m_Children)
 			{
-				if (c)
+				if (!c->m_IsEmpty)
 					c->items(items);
 			}
 		}
 
 		OctreeItemLocation<T> insert(const Box& box, T data)
 		{
-			m_IsEmpty = false;
 			if (m_IsBuilt)
 			{
 				for (int i = 0; i < 8; i++)
 				{
 					if (m_bChildren[i].canContain(box))
 					{
-						if (m_Depth < MAX_DEPTH)
+						if (m_Depth + 1 < MAX_DEPTH)
 						{
+							m_IsLeaf = false;
+							m_IsEmpty = false;
 							return m_Children[i]->insert(box, data);
 						}
 					}
 				}
+				m_IsEmpty = false;
 				m_Data.push_back({ box, data });
+				std::cout << "At depth: " << m_Depth << std::endl;
 			}
 
 			return { &m_Data, std::prev(m_Data.end()) };
