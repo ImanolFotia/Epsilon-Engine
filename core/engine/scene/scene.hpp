@@ -110,8 +110,8 @@ namespace engine
 
 			m_pCurrentRenderPass = m_RenderPassesRefs["DefaultRenderPass"];
 
-			m_pNodeOctree = std::make_shared<OctreeContainer<OctreeNodeType>>(Box{ glm::vec3(100, 25, 100), glm::vec3(0.0, 12.5, 0.0) }, 8);
-			m_pRenderOctree = std::make_shared<OctreeContainer<OctreeRenderType>>(Box{ glm::vec3(100, 25, 100), glm::vec3(0.0, 12.5, 0.0) }, 8);
+			m_pNodeOctree = std::make_shared<OctreeContainer<OctreeNodeType>>(Box{ glm::vec3(-50.0, 0.0, -50.0), glm::vec3(100, 100, 100) }, 0);
+			m_pRenderOctree = std::make_shared<OctreeContainer<OctreeRenderType>>(Box{ glm::vec3(-50.0, 0.0, -50.0), glm::vec3(100, 100, 100) }, 0);
 
 
 			m_pAssetManager.Init();
@@ -291,6 +291,9 @@ namespace engine
 				item.renderModel = node;
 				item.index = node->Index();
 				std::list<OctreeItem<OctreeRenderType>>::iterator octree_node = m_pRenderOctree->insert(boundingBox, item);
+				
+				std::cout << "Added " << octree_node->data.renderModel->data.name << std::endl;
+				//m_pRenderOctree->traverse();
 				insertIntoNode(parent, octree_node);
 			}
 			return node;
