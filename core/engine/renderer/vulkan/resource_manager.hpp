@@ -41,7 +41,7 @@ namespace engine
 		Ref<Mesh> createMesh(MeshInfo) override;
 		Ref<Mesh> createMesh(AnimatedMeshInfo) override;
 		Ref<Mesh> insertMesh(const std::string&, MeshResource) override;
-		Ref<Buffer> createGPUBuffer(const std::string&, uint32_t size, BufferStorageType type, int count) override;
+		Ref<Buffer> createGPUBuffer(const std::string&, uint32_t size, BufferStorageType type, int count, GPUBufferUsage usage) override;
 		Ref<RenderPass> createRenderPass(RenderPassInfo) override;
 		Ref<RenderPass> createDefaultRenderPass(RenderPassInfo) override;
 		Ref<PushConstant> createPushConstant(const std::string&, PushConstantData) override;
@@ -193,7 +193,7 @@ namespace engine
 
 		uint32_t vertexBufferCount = 0;
 		uint32_t indexBufferCount = 0;
-		vk::VulkanBuffer m_pIndirectBuffer;
+		std::vector<vk::VulkanBuffer> m_pIndirectBuffer;
 		vk::VulkanBuffer m_pMaterialBuffer;
 
 	};

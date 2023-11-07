@@ -546,10 +546,10 @@ namespace engine
 
 		std::sort(m_pCurrentCommandQueue.begin(), m_pCurrentCommandQueue.begin() + currentCommandsInQueue, predicate);
 
-		auto batches = generateIndirectBatch(m_pCurrentCommandQueue, currentCommandsInQueue);
+		batches = generateIndirectBatch(m_pCurrentCommandQueue, currentCommandsInQueue);
 
 		void* data;
-		vmaMapMemory(m_pResourceManagerRef->m_pAllocator, m_pResourceManagerRef->m_pIndirectBuffer.allocation, &data);
+		vmaMapMemory(m_pResourceManagerRef->m_pAllocator, m_pResourceManagerRef->m_pIndirectBuffer[m_pCurrentFrame].allocation, &data);
 		VkDrawIndexedIndirectCommand* indirect_commands = reinterpret_cast<VkDrawIndexedIndirectCommand*>(data);
 		int i = 0;
 		for (auto& command : m_pCurrentCommandQueue)
@@ -606,23 +606,25 @@ namespace engine
 				prev_indexBuffer = indexBuffer->id;
 			}
 
-			vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
-				renderPass->renderPipelines[batch.layoutIndex].pipelineLayout.back(), 0, 1,
-				&material->descriptorSets[m_pCurrentFrame], 0, nullptr);
+			if (-1 != batch.material.Id()) {
+				vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
+					renderPass->renderPipelines[batch.layoutIndex].pipelineLayout.back(), 0, 1,
+					&material->descriptorSets[m_pCurrentFrame], 0, nullptr);
+			}
 
 			if (m_pVkData.bindless_supported)
 			{
-
 				vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
 					renderPass->renderPipelines[batch.layoutIndex].pipelineLayout.back(), 1, 1,
 					&m_pResourceManagerRef->m_pGlobalDescriptorSets, 0, nullptr);
+
 			}
 			constexpr uint32_t draw_stride = sizeof(VkDrawIndexedIndirectCommand);
 			VkDeviceSize indirect_offset = batch.first * draw_stride;
-			vkCmdDrawIndexedIndirect(m_pFrame.CommandBuffer(), m_pResourceManagerRef->m_pIndirectBuffer.buffer, indirect_offset, batch.count, draw_stride);
+			vkCmdDrawIndexedIndirect(m_pFrame.CommandBuffer(), m_pResourceManagerRef->m_pIndirectBuffer[m_pCurrentFrame].buffer, indirect_offset, batch.count, draw_stride);
 		}
 
-		vmaUnmapMemory(m_pResourceManagerRef->m_pAllocator, m_pResourceManagerRef->m_pIndirectBuffer.allocation);
+		vmaUnmapMemory(m_pResourceManagerRef->m_pAllocator, m_pResourceManagerRef->m_pIndirectBuffer[m_pCurrentFrame].allocation);
 	}
 
 	int32_t VulkanRenderer::pPrepareSyncObjects()

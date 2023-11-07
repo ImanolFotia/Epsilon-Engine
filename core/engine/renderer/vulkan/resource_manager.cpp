@@ -62,11 +62,14 @@ namespace engine
 			m_pGlobalDescriptorSets,
 			MAX_BINDLESS_RESOURCES);
 
-		pCreateBuffer(m_pIndirectBuffer,
-			sizeof(VkDrawIndexedIndirectCommand) * 100000,
-			VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT,
-			VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT | VMA_ALLOCATION_CREATE_HOST_ACCESS_ALLOW_TRANSFER_INSTEAD_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT,
-			VMA_MEMORY_USAGE_AUTO);
+		for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
+			m_pIndirectBuffer.emplace_back();
+			pCreateBuffer(m_pIndirectBuffer.back(),
+				sizeof(VkDrawIndexedIndirectCommand) * 100000,
+				VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT,
+				VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT | VMA_ALLOCATION_CREATE_HOST_ACCESS_ALLOW_TRANSFER_INSTEAD_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT,
+				VMA_MEMORY_USAGE_AUTO);
+		}
 	}
 
 	Ref<Texture> VulkanResourceManager::createTexture(TextureCreationInfo texInfo)
@@ -689,7 +692,8 @@ namespace engine
 		vkDestroyDescriptorSetLayout(m_pVkDataPtr->logicalDevice, m_pGlobalDescriptorSetLayout, nullptr);
 		vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pGlobalDescriptorPool, nullptr);
 
-		vmaDestroyBuffer(m_pAllocator, m_pIndirectBuffer.buffer, m_pIndirectBuffer.allocation);
+		for(auto& buffer: m_pIndirectBuffer)
+			vmaDestroyBuffer(m_pAllocator, buffer.buffer, buffer.allocation);
 
 		vmaDestroyAllocator(m_pAllocator);
 		vk::cleanup(*m_pVkDataPtr);
@@ -818,7 +822,7 @@ namespace engine
 		return ref;
 	}
 
-	Ref<Buffer> VulkanResourceManager::createGPUBuffer(const std::string& name, uint32_t size, BufferStorageType type, int count = -1)
+	Ref<Buffer> VulkanResourceManager::createGPUBuffer(const std::string& name, uint32_t size, BufferStorageType type, int count = -1, GPUBufferUsage usage = GPUBufferUsage::SHARED)
 	{
 
 		int numBuffers = count < 0 ? vk::MAX_FRAMES_IN_FLIGHT : count;

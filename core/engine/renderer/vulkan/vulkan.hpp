@@ -52,7 +52,7 @@ namespace engine
         {
             vk::VulkanRenderPass renderPass;
         };
-
+        std::vector<IndirectBatch> batches;
     public:
         VulkanRenderer();
 
