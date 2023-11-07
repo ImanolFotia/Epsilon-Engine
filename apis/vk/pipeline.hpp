@@ -199,14 +199,14 @@ namespace vk
                 VK_DYNAMIC_STATE_VIEWPORT,
                 VK_DYNAMIC_STATE_SCISSOR,
                 VK_DYNAMIC_STATE_LINE_WIDTH,
-                VK_DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT,
+                /*VK_DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT,
                 VK_DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT,
                 VK_DYNAMIC_STATE_LINE_STIPPLE_EXT,
-                VK_DYNAMIC_STATE_LINE_WIDTH };
+                VK_DYNAMIC_STATE_LINE_WIDTH*/ };
 
             VkPipelineDynamicStateCreateInfo dynamicState{};
             dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-            dynamicState.dynamicStateCount = 7;
+            dynamicState.dynamicStateCount = 3;
             dynamicState.pDynamicStates = dynamicStates;
 
             auto &pipelineLayoutVK = renderPipeline.pipelineLayout.emplace_back();
