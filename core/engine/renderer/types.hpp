@@ -462,7 +462,13 @@ namespace engine
     enum class BufferStorageType
     {
         UNIFORM_BUFFER = 0,
-        STORAGE_BUFFER
+        STORAGE_BUFFER,
+        IMAGE_BUFFER
+    };
+
+    enum class GPUBufferUsage {
+        SHARED = 0,
+        DEVICE_ONLY
     };
 
     enum class ShaderStage : std::uint32_t {

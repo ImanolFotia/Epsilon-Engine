@@ -34,7 +34,7 @@ namespace engine
 		virtual Ref<Mesh> createMesh(MeshInfo) = 0;
 		virtual Ref<Mesh> createMesh(AnimatedMeshInfo) = 0;
 		virtual Ref<Mesh> insertMesh(const std::string&, MeshResource) = 0;
-		virtual Ref<Buffer> createGPUBuffer(const std::string&, uint32_t, BufferStorageType, int count = -1) = 0;
+		virtual Ref<Buffer> createGPUBuffer(const std::string&, uint32_t, BufferStorageType, int count = -1, GPUBufferUsage usage = GPUBufferUsage::SHARED) = 0;
 		virtual Ref<RenderPass> createRenderPass(RenderPassInfo) = 0;
 		virtual Ref<RenderPass> createDefaultRenderPass(RenderPassInfo) = 0;
 		virtual Ref<PushConstant> createPushConstant(const std::string&, PushConstantData) = 0;
