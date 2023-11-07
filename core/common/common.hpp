@@ -158,30 +158,49 @@ namespace common {
             return glm::vec3(MAX_X, MAX_Y, MAX_Z);
         }
 
+        std::vector<glm::vec3> createBox() {
+            std::vector<glm::vec3> points;
+            points.resize(8);
+            auto min = Min(), max = Max();
+            points[0] = min;
+            points[1] = glm::vec3(max.x, min.y, min.z);
+            points[2] = glm::vec3(min.x, max.y, min.z);
+            points[3] = glm::vec3(min.x, min.y, max.z);
+            points[4] = glm::vec3(min.x, max.y, max.z);
+            points[5] = glm::vec3(max.x, min.y, max.z);
+            points[6] = glm::vec3(max.x, max.y, min.z);
+            points[7] = max;
+
+            return points;
+        }
+
         void transform(glm::mat4 transform) {
 
-            glm::vec3 scale;
-            glm::quat rotation;
-            glm::vec3 translation;
-            glm::vec3 skew;
-            glm::vec4 perspective;
-            glm::decompose(transform, scale, rotation, translation, skew, perspective);
+            auto box = createBox();
 
-            glm::mat4 s_m = glm::scale(glm::mat4(1.0), scale);
-            glm::mat4 r_m = glm::mat4(rotation);
-            glm::mat4 t_m = glm::translate(glm::mat4(1.0), translation);
-            glm::mat4 m_m = t_m * s_m;
+            glm::vec3 min = glm::vec3(1000000.0f);
+            glm::vec3 max = glm::vec3(-1000000.0f);
+            
+            for (auto& point : box) {
+                point = glm::vec3(transform * glm::vec4(point,1.0f));
 
-            glm::vec3 min = m_m * glm::vec4(Min(), 1.0);
-            glm::vec3 max = m_m * glm::vec4(Max(), 1.0);
+                if (point.x < min.x) min.x = point.x;
+                if (point.y < min.y) min.y = point.y;
+                if (point.z < min.z) min.z = point.z;
+
+                if (point.x > max.x) max.x = point.x;
+                if (point.y > max.y) max.y = point.y;
+                if (point.z > max.z) max.z = point.z;
+            }
+
 
             MIN_X = min.x;
             MIN_Y = min.y;
             MIN_Z = min.z;
 
             MAX_X = max.x;
-            MAX_X = max.y;
-            MAX_X = max.z;
+            MAX_Y = max.y;
+            MAX_Z = max.z;
         }
     };
 
