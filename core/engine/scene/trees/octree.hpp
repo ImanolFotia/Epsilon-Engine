@@ -194,7 +194,6 @@ namespace engine
 				}
 				m_IsEmpty = false;
 				m_Data.push_back({ box, data });
-				std::cout << "At depth: " << m_Depth << std::endl;
 			}
 
 			return { &m_Data, std::prev(m_Data.end()) };

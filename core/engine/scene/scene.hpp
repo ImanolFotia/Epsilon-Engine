@@ -292,8 +292,6 @@ namespace engine
 				item.index = node->Index();
 				std::list<OctreeItem<OctreeRenderType>>::iterator octree_node = m_pRenderOctree->insert(boundingBox, item);
 				
-				std::cout << "Added " << octree_node->data.renderModel->data.name << std::endl;
-				//m_pRenderOctree->traverse();
 				insertIntoNode(parent, octree_node);
 			}
 			return node;

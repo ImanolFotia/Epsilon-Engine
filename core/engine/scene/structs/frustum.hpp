@@ -69,7 +69,7 @@ namespace engine
 	 * @brief Max number of children the Octree can have
 	 *
 	 */
-	const int MAX_DEPTH = 5;
+	const int MAX_DEPTH = 4;
 
 	/**
 	 * @brief struct to hold the location of an item in the octree, in the octree container
