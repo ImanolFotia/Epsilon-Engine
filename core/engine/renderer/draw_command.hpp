@@ -7,8 +7,8 @@ namespace engine
 
     struct MeshResource
     {
-        Ref<Buffer> vertexBuffer;
-        Ref<Buffer> indexBuffer;
+        Ref<Buffer> vertexBuffer{};
+        Ref<Buffer> indexBuffer{};
         uint32_t vertexOffset{};
         uint32_t indexOffset{};
         uint32_t numVertices{};
@@ -19,12 +19,12 @@ namespace engine
     {
     public:
         DrawCommand() = default;
-        MeshResource meshResource;
+        MeshResource meshResource{};
         uint32_t layoutIndex = 0;
         Ref<engine::BindGroup> material;
         uint32_t uniformIndex = 0;
         uint32_t count = 1;
-        ObjectDataConstant pushConstantData;
+        ObjectDataConstant pushConstantData{};
     };
 
     struct IndirectCommand
