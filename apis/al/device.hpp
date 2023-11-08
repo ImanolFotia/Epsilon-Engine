@@ -7,12 +7,15 @@
 
 //#include <AL/alBufferSOFT.h>
 
+//struct OpenALData;
 
 #if !defined(ANDROID) && !defined(__ANDROID__)
 static LPALCLOOPBACKOPENDEVICESOFT alcLoopbackOpenDeviceSOFT;
 static LPALCISRENDERFORMATSUPPORTEDSOFT alcIsRenderFormatSupportedSOFT;
 static LPALCRENDERSAMPLESSOFT alcRenderSamplesSOFT;
 static LPALCEVENTCALLBACKSOFT alcEventCallbackSOFT;
+static LPALCEVENTCONTROLSOFT alcEventControlSOFT;
+static LPALCREOPENDEVICESOFT alcReopenDeviceSOFT;
 //static LPALBUFFERSAMPLESSOFT alBufferSamplesSOFT = wrap_BufferSamples;
 static LPALISBUFFERFORMATSUPPORTEDSOFT alIsBufferFormatSupportedSOFT;
 /* Effect object functions */
@@ -47,6 +50,32 @@ static void callback(ALCenum eventType, ALCenum deviceType,
     std::cout << "deviceType: " << deviceType << std::endl;
     std::cout << "length: " << length << std::endl;
     std::cout << "message: " << message << std::endl;
+
+    al::OpenALData* al_data = (al::OpenALData*)userParam;
+
+    al_data->shouldReloadDevice = true;
+    /*
+    auto ctx = alcGetCurrentContext();
+    auto cdevice = alcGetContextsDevice(ctx);
+    const char* deviceName = alcGetString(cdevice, ALC_ALL_DEVICES_SPECIFIER);
+
+    std::cout << "device: " << deviceName << std::endl;
+
+    if (nullptr == cdevice)
+    {
+        std::cout << "device reopen failed: " << "device is null" << std::endl;
+        return;
+    }
+
+    if (ALC_EVENT_TYPE_DEFAULT_DEVICE_CHANGED_SOFT == eventType) {
+        bool res = alcReopenDeviceSOFT(cdevice, deviceName, NULL);
+
+        if (res == ALC_FALSE) {
+            auto error_code = alcGetError(cdevice);
+            std::cout << "device reopen failed: " << deviceName << " | error: " << error_code << std::endl;
+        }
+    }
+    */
 }
 
 static char g_szALC_EXT_EFX[256] = {'\0'};
@@ -72,9 +101,6 @@ namespace al {
 #endif
     }
 
-#if defined(ANDROID) || defined(__ANDROID__)
-struct OpenALData;
-#endif
 static bool initDevice(OpenALData* al_data) {
 
     auto device_name = alcGetString(al_data->device, ALC_DEFAULT_DEVICE_SPECIFIER);
@@ -130,10 +156,18 @@ static bool initDevice(OpenALData* al_data) {
     LOAD_PROC(alGetAuxiliaryEffectSlotf, LPALGETAUXILIARYEFFECTSLOTF);
     LOAD_PROC(alGetAuxiliaryEffectSlotfv, LPALGETAUXILIARYEFFECTSLOTFV);
     LOAD_PROC(alcEventCallbackSOFT, LPALCEVENTCALLBACKSOFT);
+    LOAD_PROC(alcEventControlSOFT, LPALCEVENTCONTROLSOFT);
+    LOAD_PROC(alcReopenDeviceSOFT, LPALCREOPENDEVICESOFT);
+    
     if (alIsExtensionPresent("AL_SOFT_buffer_samples"))
     {
         //LOAD_PROC(alBufferSamplesSOFT, LPALBUFFERSAMPLESSOFT);
         LOAD_PROC(alIsBufferFormatSupportedSOFT, LPALISBUFFERFORMATSUPPORTEDSOFT);
+    }
+
+    if (alcIsExtensionPresent(alcGetContextsDevice(alcGetCurrentContext()), "ALC_SOFT_reopen_device"))
+    {
+        alcReopenDeviceSOFT = reinterpret_cast<ALCboolean(ALC_APIENTRY*)(ALCdevice * device, const ALCchar * name, const ALCint * attribs)>(alcGetProcAddress(alcGetContextsDevice(alcGetCurrentContext()), "alcReopenDeviceSOFT"));
     }
 
 #undef LOAD_PROC
@@ -160,9 +194,13 @@ static bool initDevice(OpenALData* al_data) {
         name = alcGetString(al_data->device, ALC_ALL_DEVICES_SPECIFIER);
     if (!name || alcGetError(al_data->device) != AL_NO_ERROR)
         name = alcGetString(al_data->device, ALC_DEVICE_SPECIFIER);
-
-
-        alcEventCallbackSOFT(callback, nullptr);
+    ALCenum events[] = {
+        ALC_EVENT_TYPE_DEFAULT_DEVICE_CHANGED_SOFT,
+        ALC_EVENT_TYPE_DEVICE_ADDED_SOFT,
+        ALC_EVENT_TYPE_DEVICE_REMOVED_SOFT
+    };
+    alcEventControlSOFT(3, events, ALC_TRUE);
+    alcEventCallbackSOFT(callback, (void*)al_data);
 
         printf("Opened \"%s\"\n", name);
 

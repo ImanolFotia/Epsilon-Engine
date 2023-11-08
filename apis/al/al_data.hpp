@@ -49,6 +49,7 @@ namespace al {
 	{
 		ALCdevice* device;
 		ALCcontext* context;
+		bool shouldReloadDevice = false;
 	};
 }
 

@@ -13,6 +13,7 @@ namespace engine::audio {
 	public:
 		virtual void Init() override;
 		virtual void CleanUp() override;
+		virtual void Update() override;
 
 		virtual Ref<AudioBuffer> createBuffer(const std::string& name, const BufferInfo&) override;
 		virtual Ref<AudioSource> createSource(const std::string& name, const SourceInfo&) override;

@@ -29,6 +29,30 @@ namespace engine::audio
 		al::destroyDevice(&m_pAlData);
 	}
 
+	void ALAudioManager::Update() {
+		if (m_pAlData.shouldReloadDevice) {
+			m_pAlData.shouldReloadDevice = false;
+			const char* deviceName = alcGetString(m_pAlData.device, ALC_ALL_DEVICES_SPECIFIER);
+
+			std::cout << "device: " << deviceName << std::endl;
+
+			if (nullptr == m_pAlData.device)
+			{
+				std::cout << "device reopen failed: " << "device is null" << std::endl;
+				return;
+			}
+
+			//if (ALC_EVENT_TYPE_DEFAULT_DEVICE_CHANGED_SOFT == eventType) {
+				bool res = alcReopenDeviceSOFT(m_pAlData.device, NULL, NULL);
+
+				if (res == ALC_FALSE) {
+					auto error_code = alcGetError(m_pAlData.device);
+					std::cout << "device reopen failed: " << deviceName << " | error: " << error_code << std::endl;
+				}
+			//}
+		}
+	}
+
 	Ref<AudioBuffer> ALAudioManager::createBuffer(const std::string& name, const BufferInfo& buffer)
 	{
 		al::OpenALBuffer alBuffer;

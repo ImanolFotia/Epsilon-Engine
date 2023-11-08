@@ -45,6 +45,8 @@ namespace engine::audio {
 		virtual void Init() = 0;
 		virtual void CleanUp() = 0;
 
+		virtual void Update() = 0;
+
 		virtual Ref<AudioBuffer> createBuffer(const std::string&, const BufferInfo&) = 0;
 		virtual Ref<AudioSource> createSource(const std::string&, const SourceInfo&) = 0;
 		virtual Ref<AudioListener> createListener(const std::string&, const ListenerInfo&) = 0;
