@@ -622,6 +622,8 @@ namespace engine
 			constexpr uint32_t draw_stride = sizeof(VkDrawIndexedIndirectCommand);
 			VkDeviceSize indirect_offset = batch.first * draw_stride;
 			vkCmdDrawIndexedIndirect(m_pFrame.CommandBuffer(), m_pResourceManagerRef->m_pIndirectBuffer[m_pCurrentFrame].buffer, indirect_offset, batch.count, draw_stride);
+
+			m_pNumDrawCalls++;
 		}
 
 		vmaUnmapMemory(m_pResourceManagerRef->m_pAllocator, m_pResourceManagerRef->m_pIndirectBuffer[m_pCurrentFrame].allocation);
