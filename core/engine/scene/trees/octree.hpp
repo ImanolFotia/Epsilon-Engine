@@ -237,7 +237,7 @@ namespace engine
 		{
 		}
 
-		auto insert(Box pos, const T& data)
+		auto insert(Box pos, T data)
 		{
 			OctreeItem<T> item{};
 			item.data = data;

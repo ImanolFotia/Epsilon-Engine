@@ -34,6 +34,8 @@ namespace engine
 	};
 
 	struct Entity {
+		Entity() : loaded(false) {}
+		int id = 0;
 		bool loaded = false;
 	};
 
@@ -65,7 +67,6 @@ namespace engine
 		using OctreeNodeType = std::shared_ptr<NodeBase>;
 	private:
 		AssetManager m_pAssetManager{};
-		std::shared_ptr<audio::AudioManager> m_pAudioManager;
 		// OctreeContainer<std::shared_ptr<NodeBase>> m_pOctree;
 		SceneManager m_pSceneManager;
 
@@ -267,7 +268,7 @@ namespace engine
 		template <typename T>
 		auto emplaceIntoScene(Box boundingBox)
 		{
-			auto scene_node = m_pSceneManager.emplace<T>(m_pSceneManager.root);
+			std::shared_ptr<Node<T>> scene_node = m_pSceneManager.emplace<T>(m_pSceneManager.root);
 			m_pNodeOctree->insert(boundingBox, scene_node);
 
 			return scene_node;
@@ -400,6 +401,8 @@ namespace engine
 
 				m_pMeshCount = 0;
 			}
+
+			m_pContext->AudioManager()->Update();
 		}
 
 		void Flush(engine::DrawType drawType = engine::DrawType::INDEXED)
@@ -420,7 +423,7 @@ namespace engine
 				Ref<PushConstant> push_constant;
 
 				Ref<BindGroup> selectedBindGroup = m_pRenderLayouts[layout].bindGroup;
-				;
+				
 				for (auto& mesh : renderModel->data.renderMeshes)
 				{
 					if (renderer->numPushedCommands() >= engine::MAX_COMMAND_QUEUE_SIZE) {
@@ -509,7 +512,7 @@ namespace engine
 
 			}
 		}
-
+		uint32_t lastRenderModelId = -1;
 		void Push(std::shared_ptr<Node<RenderModel>> renderModel, const std::vector<glm::mat4>& transforms, const std::string& layout, unsigned int count = 1)
 		{
 			if (m_pContext->Window().getSize().first > 0) {

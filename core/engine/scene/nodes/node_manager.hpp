@@ -63,7 +63,7 @@ namespace engine
 				node_count++;
 			}
 
-			nodes.emplace_back(std::make_shared<Node<T>>(std::forward<Args>(args)...));
+			nodes.push_back(std::make_shared<Node<T>>(std::forward<Args>(args)...));
 
 			node_types[iType].push_back(std::prev(nodes.end()));
 
