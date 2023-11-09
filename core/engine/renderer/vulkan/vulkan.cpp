@@ -237,6 +237,8 @@ namespace engine
 
 		m_pCurrentFrame = m_pImageIndex;
 		m_pNumDrawCalls = 0;
+
+		m_pCurrentFrame = (m_pCurrentFrame + 1) % vk::MAX_FRAMES_IN_FLIGHT;
 	}
 
 	void VulkanRenderer::EndFrame()
