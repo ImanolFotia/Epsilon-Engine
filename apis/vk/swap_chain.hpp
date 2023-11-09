@@ -135,7 +135,7 @@ namespace vk
 		VkPresentModeKHR presentMode = chooseSwapPresentMode(vk_data, swapChainSupport.presentModes);
 		VkExtent2D extent = chooseSwapExtent(window, swapChainSupport.capabilities);
 
-		uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
+		uint32_t imageCount = std::max(swapChainSupport.capabilities.minImageCount, MAX_FRAMES_IN_FLIGHT);
 		if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount)
 		{
 			imageCount = swapChainSupport.capabilities.maxImageCount;
