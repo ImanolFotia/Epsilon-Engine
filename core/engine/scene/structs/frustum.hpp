@@ -5,8 +5,10 @@
 #include <list>
 
 #include <glm/glm.hpp>
+#include <array>
 
 #include <core/common/common.hpp>
+#include "sphere.hpp"
 
 namespace engine
 {
@@ -47,12 +49,75 @@ namespace engine
 			return CubeInFrustum(center.x, center.y, center.z, box.halfSize());
 		}
 
+		std::array<glm::vec4, 8> getFrustumPoints() {
+			corners;
+		}
+
+		BoundingSphere calculateSphere() {
+			glm::vec3 vmin{}, vmax{};
+
+			std::array<glm::vec3, 8> vertices;
+			int i = 0;
+			for (auto& vertex : vertices) { vertex = corners[i]; i++; }
+
+			vmin = vmax = vertices[0];  // assign first vertex as minimum and maximum
+			int num_vertices = vertices.size();
+
+			for (int i = 1; i < num_vertices;
+				i++)  // find min and max x, y, and z values
+			{
+				if (vertices[i].x < vmin.x) vmin.x = vertices[i].x;
+				if (vertices[i].y < vmin.y) vmin.y = vertices[i].y;
+				if (vertices[i].z < vmin.z) vmin.z = vertices[i].z;
+
+				if (vertices[i].x > vmax.x) vmax.x = vertices[i].x;
+				if (vertices[i].y > vmax.y) vmax.y = vertices[i].y;
+				if (vertices[i].z > vmax.z) vmax.z = vertices[i].z;
+			}
+			float xdiff = vmax.x - vmin.x;
+			float ydiff = vmax.y - vmin.y;
+			float zdiff = vmax.z - vmin.z;
+
+			float diameter =
+				glm::max(xdiff, glm::max(ydiff, zdiff));  // take max as diameter
+			glm::vec3 centre = (vmax + vmin) * (0.5f);
+			float radius = diameter / 2;
+			float sq_radius = radius * radius;
+
+			for (int i = 0; i < num_vertices; i++) {
+				glm::vec3 point = vertices[i];
+
+				glm::vec3 direction = glm::normalize(point - centre);
+				float sq_distance = glm::length(direction);
+				sq_distance = sq_distance * sq_distance;
+
+				if (sq_distance > sq_radius) {
+					float distance = sqrt(sq_distance);
+
+					float difference = distance - radius;
+
+					float new_diameter = 2 * radius + difference;
+					radius = new_diameter / 2;
+					sq_radius = radius * radius;
+
+					difference /= 2;
+
+					centre += difference * direction;
+				}
+			}
+
+			return BoundingSphere(radius, centre);
+		}
+
 		/////// * /////////// * /////////// * NEW * /////// * /////////// *
 		////////////// *
 
 	private:
 		// This holds the A B C and D values for each side of our frustum.
 		float m_Frustum[6][4] = { {1}, {1} };
+		glm::vec3 min{};
+		glm::vec3 max{};
+		std::array<glm::vec4, 8> corners;
 	};
 
 	/**

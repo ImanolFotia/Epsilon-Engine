@@ -12,6 +12,7 @@
 #include <mutex>
 
 #include "../structs/frustum.hpp"
+#include "../structs/sphere.hpp"
 
 namespace engine
 {
@@ -129,7 +130,7 @@ namespace engine
 		{
 			if (m_Children[index])
 			{
-				if (box.canContain(m_bChildren[index]))
+				if (box.contains(m_bChildren[index]))
 					m_Children[index]->items(items);
 				else if (box.overlaps(m_bChildren[index]))
 					m_Children[index]->search(box, items);
@@ -164,6 +165,34 @@ namespace engine
 		}
 
 
+		auto search(BoundingSphere& sphere) -> std::list<T>
+		{
+			std::list<T> items{};
+			search(sphere, items);
+			return items;
+		}
+
+		void search(BoundingSphere& sphere, std::list<T>& items)
+		{
+			for (auto& p : m_Data)
+			{
+				if (sphere.overlaps(p.first))
+					items.push_back(p.second);
+			}
+
+			for (size_t i = 0; i < 8; i++)
+			{
+				if (!m_Children[i]->m_IsEmpty)
+				{
+					if (sphere.contains(m_bChildren[i]))
+						m_Children[i]->items(items);
+					else if (sphere.overlaps(m_bChildren[i]))
+						m_Children[i]->search(sphere, items);
+				}
+			}
+		}
+
+
 		void items(std::list<T>& items) const
 		{
 			for (auto& i : m_Data)
@@ -182,7 +211,7 @@ namespace engine
 			{
 				for (int i = 0; i < 8; i++)
 				{
-					if (m_bChildren[i].canContain(box))
+					if (m_bChildren[i].contains(box))
 					{
 						if (m_Depth + 1 < MAX_DEPTH)
 						{
@@ -258,6 +287,11 @@ namespace engine
 		std::list<typename OctreeData::iterator> search(const Box& box)
 		{
 			return m_Root.search(box);
+		}
+
+		std::list<typename OctreeData::iterator> search(BoundingSphere& sphere)
+		{
+			return m_Root.search(sphere);
 		}
 
 		void erase(typename OctreeData::iterator& item)

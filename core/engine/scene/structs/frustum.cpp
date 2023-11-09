@@ -172,6 +172,31 @@ namespace engine
 
         /// Normalize the FRONT side
         NormalizePlane(m_Frustum, FRONT);
+
+        glm::vec4 corners2[8] = {glm::vec4(-1.0f, -1.0f, 1.0f, 1.0f), glm::vec4(-1.0f, -1.0f, -1.0f, 1.0f), glm::vec4(-1.0f, 1.0f, 1.0f, 1.0f), glm::vec4(-1.0f, 1.0f, -1.0f, 1.0f),
+                        glm::vec4(1.0f, -1.0f, 1.0f, 1.0f), glm::vec4(1.0f, -1.0f, -1.0f, 1.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec4(1.0f, 1.0f, -1.0f, 1.0f) };
+        const glm::mat4 inverseVPMatrix = glm::inverse(ProjectionMatrix);
+        for (uint32_t i = 0; i < 8; i++)
+        {
+            corners2[i] = inverseVPMatrix * corners2[i];
+            corners2[i] /= corners2[i].w;
+        }
+
+        for (uint32_t i = 0; i < 8; i++) corners[i] = corners2[i];
+
+        min = glm::vec3(50000000);
+        max = glm::vec3(-50000000);
+        for (int i = 0; i < 8; i++)
+        {
+            if (corners[i].x < min.x) min.x = corners[i].x;
+            if (corners[i].y < min.y) min.y = corners[i].y;
+            if (corners[i].z < min.z) min.z = corners[i].z;
+
+            if (corners[i].x > max.x) max.x = corners[i].x;
+            if (corners[i].y > max.y) max.y = corners[i].y;
+            if (corners[i].z > max.z) max.z = corners[i].z;
+        }
+
     }
 
     /// The code below will allow us to make checks within the frustum.  For example,

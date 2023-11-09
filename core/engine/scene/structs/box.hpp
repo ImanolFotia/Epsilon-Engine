@@ -38,7 +38,7 @@ namespace engine
          * @return true
          * @return false
          */
-        bool canContain(glm::vec3 p) const
+        bool contains(glm::vec3 p) const
         {
             return !(p.x < position.x || p.x > position.x + size.x ||
                      p.y < position.y || p.y > position.y + size.y ||
@@ -52,7 +52,7 @@ namespace engine
          * @return true
          * @return false
          */
-        bool canContain(Box other) const
+        bool contains(Box other) const
         {
             return ((other.position.x >= position.x) && (other.position.x + other.size.x < position.x + size.x) &&
                     (other.position.y >= position.y) && (other.position.y + other.size.y < position.y + size.y) &&
