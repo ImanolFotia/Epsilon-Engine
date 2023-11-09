@@ -522,7 +522,25 @@ namespace engine
 
 		std::stack<int> m_pFreeAnimationIndices;
 		uint32_t m_pCurrentAnimationIndex = 0;
-		RenderModel& loadModel(const std::string& path, const std::string& name = "")
+
+		uint32_t getAnimationIndex() {
+			uint32_t anim_index = 0;
+			if (m_pFreeAnimationIndices.size() > 0) {
+				anim_index = m_pFreeAnimationIndices.top();
+				m_pFreeAnimationIndices.pop();
+			}
+			else {
+				anim_index = m_pCurrentAnimationIndex;
+				m_pCurrentAnimationIndex++;
+			}
+
+			return anim_index;
+		}
+
+		void FreeAnimationIndex(uint32_t index) {
+			m_pFreeAnimationIndices.push(index);
+		}
+		RenderModel loadModel(const std::string& path, const std::string& name = "")
 		{
 			std::string prefix = "./assets/";
 			std::string model_name = name;
@@ -535,6 +553,12 @@ namespace engine
 					mesh.id = mesh_counter;
 					mesh_counter++;
 				}
+
+
+				if (m_pModels.at(model_name).hasAnimation) {
+					m_pModels.at(model_name).animationIndex = getAnimationIndex();
+				}
+
 				return m_pModels.at(model_name);
 			}
 
@@ -562,15 +586,9 @@ namespace engine
 
 			model.hasAnimation = inModel->HasAnimation();
 
+
 			if (model.hasAnimation) {
-				if (m_pFreeAnimationIndices.size() > 0) {
-					model.animationIndex = m_pFreeAnimationIndices.top();
-					m_pFreeAnimationIndices.pop();
-				}
-				else {
-					model.animationIndex = m_pCurrentAnimationIndex;
-					m_pCurrentAnimationIndex++;
-				}
+				model.animationIndex = getAnimationIndex();
 			}
 
 

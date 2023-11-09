@@ -200,12 +200,20 @@ namespace engine
 			m_pFrustum.CalculateFrustum(proj * view, glm::mat4(1.0));
 		}
 
+		Frustum& getFrustum() {
+			return m_pFrustum;
+		}
+
 		auto Cull(float cutout_distance = 0) {
 			return m_pRenderOctree->search(m_pFrustum);
 		}
 
-		auto Cull(Box box) {
+		auto Cull(Box& box) {
 			return m_pRenderOctree->search(box);
+		}
+
+		auto Cull(BoundingSphere& sphere) {
+			return m_pRenderOctree->search(sphere);
 		}
 
 		auto CullShadow(float cutout_distance = 0) {
