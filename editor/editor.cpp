@@ -243,7 +243,7 @@ namespace Editor {
 
 				auto scripts = m_pScene.getNodes<EntityScript>();
 				for (auto s : scripts) {
-					auto script = std::static_pointer_cast<engine::Node<EntityScript>>(*s);
+					auto script = std::static_pointer_cast<engine::Node<EntityScript>>(s);
 					const char* str = host.assembly.Invoke<const char*>(L"getEntityFields", script->data.ManagedPtr);
 					auto props = UI::Property::DeserializeProperties(std::string(str));
 					script->data.properties = props;
@@ -264,7 +264,7 @@ namespace Editor {
 
 
 		for (auto s : scripts) {
-			auto script_node = std::static_pointer_cast<engine::Node<EntityScript>>(*s);
+			auto script_node = std::static_pointer_cast<engine::Node<EntityScript>>(s);
 			auto& script = script_node->data;
 			auto transform = std::static_pointer_cast<engine::Node<engine::Scene::SceneEntity>>(script_node->Parent());
 
@@ -349,7 +349,7 @@ namespace Editor {
 		auto models = m_pScene.getNodes <engine::RenderModel>();
 
 		for (auto& model_node : models) {
-			auto model = std::static_pointer_cast<engine::Node<engine::RenderModel>>(*model_node);
+			auto model = std::static_pointer_cast<engine::Node<engine::RenderModel>>(model_node);
 			auto transform = std::static_pointer_cast<engine::Node<engine::Scene::SceneEntity>>(model->Parent());
 			m_pScene.Push(model, transform->data.transform, model->data.bindGroup);
 		}

@@ -35,7 +35,7 @@ namespace Editor::Utils {
 
 	static void AddModelNode(const std::string& path, engine::Scene* scene, std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> parent, const std::string bindGroup = "DefaultBindGroup") {
 
-		auto& model = scene->getAssetManager().loadModel(path);
+		auto model = scene->getAssetManager().loadModel(path);
 		model.bindGroup = bindGroup;
 		auto renderNode = scene->insertIntoNode(engine::Box{ glm::vec3(parent->data.transform[3]), glm::vec3(0.5) }, parent, model);
 		renderNode->data.bindGroup = bindGroup;
