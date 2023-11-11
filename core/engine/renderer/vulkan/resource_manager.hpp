@@ -49,6 +49,8 @@ namespace engine
 		Ref<ComputeShader> createComputeShader(ComputeShaderInfo) override;
 		void UpdateMesh(Ref<Mesh>, UpdateMeshInfo) override;
 
+		virtual void CopyTexture(Ref<Texture> src, Ref<Texture> dst) override;
+
 		void destroyTexture(Ref<Texture>) override;
 		void destroyBuffer(Ref<Buffer>) override;
 		void destroyUniformData(Ref<UniformBindings>) override;

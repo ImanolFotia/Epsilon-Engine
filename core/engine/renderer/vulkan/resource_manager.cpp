@@ -1108,4 +1108,8 @@ namespace engine
 		vmaDestroyBuffer(m_pAllocator, vertexStagingBuffer.buffer, vertexStagingBuffer.allocation);
 		vmaDestroyBuffer(m_pAllocator, indexStagingBuffer.buffer, indexStagingBuffer.allocation);
 	}
+
+	void VulkanResourceManager::CopyTexture(Ref<Texture> src, Ref<Texture> dst) {
+
+	}
 }

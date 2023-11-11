@@ -39,6 +39,8 @@ namespace engine
 		virtual Ref<RenderPass> createDefaultRenderPass(RenderPassInfo) = 0;
 		virtual Ref<PushConstant> createPushConstant(const std::string&, PushConstantData) = 0;
 
+		virtual void CopyTexture(Ref<Texture> src, Ref<Texture> dst) = 0;
+
 		virtual void UpdateMesh(Ref<Mesh>, UpdateMeshInfo) = 0;
 
 		virtual void destroyTexture(Ref<Texture>) = 0;
