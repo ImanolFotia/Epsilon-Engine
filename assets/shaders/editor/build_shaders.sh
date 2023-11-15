@@ -12,3 +12,5 @@ glslc -fshader-stage=frag sky.frag.glsl -DFRAGMENT_SHADER -o sky-fragment.spv
 glslc -fshader-stage=vert grid.vert.glsl -DVERTEX_SHADER -o grid-vertex.spv
 glslc -fshader-stage=frag grid.frag.glsl -DFRAGMENT_SHADER -o grid-fragment.spv
 
+glslc -fshader-stage=comp dummyCompute.glsl -DCOMPUTE_SHADER -o dummyCompute.spv
+
