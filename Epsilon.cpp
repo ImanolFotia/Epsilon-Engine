@@ -228,11 +228,11 @@ extern "C"
     }
 
     EXPORT void beginScene() {
-        instance.getScene().BeginScene();
+        instance.getScene()->BeginScene();
     }
 
     EXPORT void endScene() {
-        instance.getScene().EndScene();
+        instance.getScene()->EndScene();
     }
 
 

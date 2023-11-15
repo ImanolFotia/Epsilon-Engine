@@ -133,7 +133,7 @@ namespace Epsilon
         void exit();
 
     public:
-        engine::Scene& getScene() {
+        std::shared_ptr<engine::Scene> getScene() {
             return m_pScene;
         }
 
@@ -141,7 +141,7 @@ namespace Epsilon
         std::pair<int, int> getWindowDimensions();
 
         std::shared_ptr<engine::Context> m_pContext = nullptr;
-        engine::Scene m_pScene;
+        std::shared_ptr<engine::Scene> m_pScene;
 
         ShaderData shaderData;
         int m_pMaxFPS = 5000;
