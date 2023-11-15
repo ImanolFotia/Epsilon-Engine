@@ -14,11 +14,11 @@ namespace Editor::Renderpasses {
 		uint32_t material_index;
 	};
 
-	static engine::Ref<engine::RenderPass> createForwardRenderPass(engine::Scene& scene) {
+	static engine::Ref<engine::RenderPass> createForwardRenderPass(std::shared_ptr<engine::Scene> scene) {
 
 		using namespace engine;
-		auto context = scene.getContext();
-		auto& assetManager = scene.getAssetManager();
+		auto context = scene->getContext();
+		auto& assetManager = scene->getAssetManager();
 		/*
 		std::vector<char> vertexCode;
 

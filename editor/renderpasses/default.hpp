@@ -6,11 +6,11 @@
 #include "shaders/default.hpp"
 
 namespace Editor::Renderpasses {
-	static engine::Ref<engine::RenderPass> createDefaultRenderPass (engine::Scene& scene){
+	static engine::Ref<engine::RenderPass> createDefaultRenderPass (std::shared_ptr<engine::Scene> scene){
 
 		using namespace engine;
-		auto context = scene.getContext();
-		auto& assetManager = scene.getAssetManager();
+		auto context = scene->getContext();
+		auto& assetManager = scene->getAssetManager();
 		/*
 		std::vector<char> vertexCode;
 
