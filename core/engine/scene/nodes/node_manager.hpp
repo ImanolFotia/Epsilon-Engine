@@ -26,6 +26,8 @@ namespace engine
             std::unordered_map<std::type_index,
             std::vector<std::shared_ptr<NodeBase>>>;
 
+        std::mutex m_pMutex;
+
         SceneManager() {
             root = std::make_shared<Node<Root>>();
             empty.resize(0);
@@ -45,6 +47,7 @@ namespace engine
         template <typename T, typename P, class... Args>
         std::shared_ptr<Node<T>> emplace(std::shared_ptr<Node<P>> parent,
             Args&&... args) {
+            std::lock_guard<std::mutex> guard(m_pMutex);
             if (parent == nullptr) return nullptr;
 
             auto iType = std::type_index(typeid(T));
@@ -94,8 +97,11 @@ namespace engine
             return std::static_pointer_cast<Node<T>>(node_types[iType].back());
         }
 
+
         template <typename T, typename P, class... Args>
         std::shared_ptr<Node<T>> insert(std::shared_ptr<Node<P>> parent, T obj) {
+
+            std::lock_guard<std::mutex> guard(m_pMutex);
             if (parent == nullptr) return nullptr;
 
             auto iType = std::type_index(typeid(T));
@@ -183,6 +189,7 @@ namespace engine
 
         template <typename T>
         [[nodiscard]] std::vector<TypeIterator>& get() {
+            std::lock_guard<std::mutex> guard(m_pMutex);
             auto iType = std::type_index(typeid(T));
             if (node_types.contains(iType)) {
                 return node_types.at(std::type_index(typeid(T)));
@@ -204,6 +211,8 @@ namespace engine
 
         template <typename T>
         bool isOfType(std::shared_ptr<NodeBase> node) {
+            std::lock_guard<std::mutex> guard(m_pMutex);
+            if (node == nullptr) return false;
             auto iType = std::type_index(typeid(T));
             if (node_types.contains(iType)) {
                 for (auto& n : node_types.at(std::type_index(typeid(T)))) {
@@ -215,13 +224,21 @@ namespace engine
 
         template <typename T>
         std::shared_ptr<NodeBase> getChild(std::shared_ptr<NodeBase> node) {
+            std::lock_guard<std::mutex> guard(m_pMutex);
             auto iType = std::type_index(typeid(T));
+            if (node == nullptr) return nullptr;
+            if(children_node_index.contains(node->index))
+                if(children_node_index.at(node->index).contains(iType))
+                    return children_node_index.at(node->index).at(iType).back();
 
-            return children_node_index.at(node->index).at(iType).back();
+            return nullptr;
         }
 
         std::shared_ptr<NodeBase> get(uint32_t index) {
-            return (node_index.at(index));  // children_node_index.at(node->index).at(std::type_index(typeid(T)));
+            std::lock_guard<std::mutex> guard(m_pMutex);
+            if(node_index.contains(index))
+                return (node_index.at(index));  // children_node_index.at(node->index).at(std::type_index(typeid(T)));
+            return nullptr;
         }
 
         template <typename T>
