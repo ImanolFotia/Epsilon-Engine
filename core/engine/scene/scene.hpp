@@ -580,6 +580,12 @@ namespace engine
 
 		}
 
+		void ComputeDispatch(engine::Ref<ComputeShader> computeShader) {
+
+			auto renderer = m_pContext->Renderer();
+			renderer->ComputeDispatch(computeShader);
+		}
+
 		void EndScene()
 		{
 			if (m_pContext->Window().getSize().first > 0) {

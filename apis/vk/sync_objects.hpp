@@ -14,12 +14,20 @@ namespace vk
     {
 
         vk_data.syncObjects.resize(MAX_FRAMES_IN_FLIGHT);
+        vk_data.syncComputeObjects.resize(MAX_FRAMES_IN_FLIGHT);
 
         VkSemaphoreCreateInfo semaphoreInfo{};
+        VkSemaphoreCreateInfo computeSemaphoreInfo{};
         semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+        computeSemaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
         VkFenceCreateInfo fenceInfo{};
+        VkFenceCreateInfo fenceComputeInfo{};
         fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
         fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+        fenceComputeInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+        fenceComputeInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
         {
@@ -28,6 +36,12 @@ namespace vk
                 vkCreateFence(vk_data.logicalDevice, &fenceInfo, nullptr, &vk_data.syncObjects[i].inFlightFences) != VK_SUCCESS)
             {
                 throw std::runtime_error("failed to create synchronization objects for a frame!");
+            }
+
+            if (vkCreateSemaphore(vk_data.logicalDevice, &computeSemaphoreInfo, nullptr, &vk_data.syncObjects[i].computeFinishedSemaphores) != VK_SUCCESS ||
+                vkCreateFence(vk_data.logicalDevice, &fenceComputeInfo, nullptr, &vk_data.syncObjects[i].computeInFlightFences) != VK_SUCCESS)
+            {
+                throw std::runtime_error("failed to create compute synchronization objects for a frame!");
             }
         }
     }
@@ -77,8 +91,8 @@ namespace vk
         submitInfo.signalSemaphoreCount = 1;
         submitInfo.pSignalSemaphores = signalSemaphores;
 
-        std::mutex mtx{};
-        std::lock_guard lock{ mtx };
+        //std::mutex mtx{};
+        //std::lock_guard lock{ mtx };
         if (vkQueueSubmit(vk_data.graphicsQueue[currentFrame], 1, &submitInfo, vk_data.syncObjects[currentFrame].inFlightFences) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to submit draw command buffer!");
@@ -101,8 +115,6 @@ namespace vk
 
         presentInfo.pResults = nullptr; // Optional
 
-        std::mutex mtx{};
-        std::lock_guard lock{ mtx };
         auto result = vkQueuePresentKHR(vk_data.presentQueue[imageIndex], &presentInfo);
 
         if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)

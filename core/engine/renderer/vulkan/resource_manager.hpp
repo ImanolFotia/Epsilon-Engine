@@ -160,7 +160,7 @@ namespace engine
 		Pool<Buffer, vk::VulkanBuffer> vertexBufferPool;
 		Pool<Buffer, vk::VulkanBuffer> indexBufferPool;
 		Pool<Buffer, vk::VulkanGPUMappedBuffer> gpuBufferPool;
-		Pool<ComputeShader, vk::VulkanComputeShader> computeBuffer;
+		Pool<ComputeShader, vk::VulkanComputeShader> computeShaderPool;
 		Pool<UniformBindings, vk::VulkanUniformBuffer> uniformBufferPool;
 		// Pool<UniformBindings, VkDescriptorSetLayoutBinding> uniformBindingPool;
 		Pool<BindGroup, vk::VulkanMaterial> materialPool;

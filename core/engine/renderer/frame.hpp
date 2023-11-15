@@ -14,6 +14,7 @@ namespace engine
         
         vk::VulkanSyncObject* m_pSyncObjects = nullptr;
         VkCommandBuffer* m_pCommandBuffer = nullptr;
+        VkCommandBuffer* m_pComputeCommandBuffer = nullptr;
 
         uint32_t m_pFrameIndex = 0;
         uint32_t m_pCurrentImage = 0;
@@ -41,6 +42,11 @@ namespace engine
         VkCommandBuffer& CommandBuffer()
         {
             return *m_pCommandBuffer;
+        }
+
+        VkCommandBuffer& ComputeCommandBuffer()
+        {
+            return *m_pComputeCommandBuffer;
         }
 
         vk::VulkanSyncObject& SyncObjects() {
@@ -75,6 +81,11 @@ namespace engine
         void CommandBuffer(VkCommandBuffer* buffer)
         {
             m_pCommandBuffer = buffer;
+        }
+
+        void ComputeCommandBuffer(VkCommandBuffer* buffer)
+        {
+            m_pComputeCommandBuffer = buffer;
         }
 
         void SyncObjects(vk::VulkanSyncObject* objects) {

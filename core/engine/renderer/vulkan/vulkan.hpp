@@ -109,6 +109,8 @@ namespace engine
 
         void InitDebugRenderer() override;
 
+        void ComputeDispatch(Ref<ComputeShader>) override;
+
     private:
         void pRecreateSwapChain();
         int32_t pPrepareSyncObjects();

@@ -434,7 +434,7 @@ namespace engine
 					}
 				}
 
-				if(externValid)
+				if (externValid)
 					continue;
 			}
 
@@ -692,7 +692,7 @@ namespace engine
 		vkDestroyDescriptorSetLayout(m_pVkDataPtr->logicalDevice, m_pGlobalDescriptorSetLayout, nullptr);
 		vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pGlobalDescriptorPool, nullptr);
 
-		for(auto& buffer: m_pIndirectBuffer)
+		for (auto& buffer : m_pIndirectBuffer)
 			vmaDestroyBuffer(m_pAllocator, buffer.buffer, buffer.allocation);
 
 		vmaDestroyAllocator(m_pAllocator);
@@ -949,9 +949,46 @@ namespace engine
 		return data;
 	}
 
-	Ref<ComputeShader> VulkanResourceManager::createComputeShader(ComputeShaderInfo) {
-		return Ref<ComputeShader>().makeEmpty();
+	Ref<ComputeShader> VulkanResourceManager::createComputeShader(ComputeShaderInfo computeInfo) {
+		vk::VulkanComputeShader computeShader;
+
+		VkImageSubresourceRange imageSubRange = {};
+		imageSubRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		imageSubRange.baseMipLevel = 0;
+		imageSubRange.levelCount = 1;
+		imageSubRange.layerCount = 1;
+		computeShader.memoryBarrier.imageMemoryBarrier = {
+			.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
+			.pNext = nullptr,
+			.srcStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR,
+			.srcAccessMask = VK_ACCESS_2_SHADER_WRITE_BIT_KHR,
+			.dstStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR,
+			.dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT_KHR,
+			.oldLayout = VK_IMAGE_LAYOUT_GENERAL,
+			.newLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL,
+			.image = texPool.get(computeInfo.memoryBarrier.image)->image,
+			.subresourceRange = imageSubRange
+			/* .image and .subresourceRange should identify image subresource accessed */ 
+		};
+
+		computeShader.memoryBarrier.dependencyInfo = {
+			VK_STRUCTURE_TYPE_DEPENDENCY_INFO_KHR,
+			nullptr,
+			NULL,
+			0,
+			nullptr,
+			0,
+			nullptr,
+			1,                      // imageMemoryBarrierCount
+			&computeShader.memoryBarrier.imageMemoryBarrier,    // pImageMemoryBarriers
+		};
+
+
+		vk::createComputePipeline(*m_pVkDataPtr, computeInfo, computeShader);
+		auto ref = computeShaderPool.insert(computeInfo.name, computeShader);
+		return ref;
 	}
+
 	void VulkanResourceManager::destroyComputeShader(Ref<ComputeShader>) {}
 
 	void VulkanResourceManager::ResizeFramebuffer(Ref<RenderPass> renderpass_ref, glm::ivec2 size) {

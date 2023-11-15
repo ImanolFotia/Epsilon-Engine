@@ -204,7 +204,10 @@ namespace engine
 
 			index++;
 		}
-		batches.resize(current + 1);
+		if(commandCount > 0)
+			batches.resize(current + 1);
+		else
+			batches.resize(commandCount);
 
 		return batches;
 	}

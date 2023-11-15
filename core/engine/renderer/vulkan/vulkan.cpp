@@ -35,7 +35,7 @@
 #endif
 
 
-//#define VMA_VULKAN_VERSION 1001000
+ //#define VMA_VULKAN_VERSION 1001000
 #if defined(ANDROID) || defined(__ANDROID__)
 
 #include <android/log.h>
@@ -106,6 +106,7 @@ namespace engine
 		m_pResourceManagerRef->pCreateDescriptorPool();
 
 		vk::createCommandBuffers(m_pVkData, m_pVkData.m_pCommandPools.back(), m_pVkData.m_pCommandBuffers);
+		vk::createCommandBuffers(m_pVkData, m_pVkData.m_pCommandPools.back(), m_pVkData.m_pComputeCommandBuffers);
 		vk::createSyncObjects(m_pVkData);
 
 		m_pCurrentCommandQueue.resize(MAX_COMMAND_QUEUE_SIZE);
@@ -180,13 +181,14 @@ namespace engine
 		m_pFrame.FrameIndex(m_pCurrentFrame);
 
 		m_pFrame.CommandBuffer(&m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
+		m_pFrame.ComputeCommandBuffer(&m_pVkData.m_pComputeCommandBuffers.at(m_pCurrentFrame));
 
 		m_pFrame.SyncObjects(&m_pVkData.syncObjects.at(m_pCurrentFrame));
 
 		vkResetCommandBuffer(m_pFrame.CommandBuffer(), 0);
 
 #if !defined(__ANDROID__)
-		
+
 		m_pImguiRenderer->newFrame(m_pCurrentFrame, m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
 #endif
 	}
@@ -212,6 +214,31 @@ namespace engine
 		}
 	}
 
+	void VulkanRenderer::ComputeDispatch(Ref<ComputeShader> computeShaderRef)
+	{
+		auto computeShader = m_pResourceManagerRef->computeShaderPool.get(computeShaderRef);
+
+		VkCommandBufferBeginInfo beginInfo{};
+		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+
+		if (vkBeginCommandBuffer(m_pFrame.ComputeCommandBuffer(), &beginInfo) != VK_SUCCESS) {
+			throw std::runtime_error("failed to begin recording command buffer!");
+		}
+
+		vkCmdBindPipeline(m_pFrame.ComputeCommandBuffer(), VK_PIPELINE_BIND_POINT_COMPUTE, computeShader->pipeline.computePipeline);
+
+		vkCmdBindDescriptorSets(m_pFrame.ComputeCommandBuffer(), 
+			VK_PIPELINE_BIND_POINT_COMPUTE, 
+			computeShader->pipeline.pipelineLayout, 0, 1, 
+			&computeShader->pipeline.descriptorSets[m_pCurrentFrame], 0, 0);
+
+		vkCmdDispatch(m_pFrame.ComputeCommandBuffer(), computeShader->groupCountX, computeShader->groupCountY, computeShader->groupCountZ);
+
+		if (vkEndCommandBuffer(m_pFrame.ComputeCommandBuffer()) != VK_SUCCESS) {
+			throw std::runtime_error("failed to record command buffer!");
+		}
+	}
+
 	void VulkanRenderer::Begin()
 	{
 		vk::recordCommandBuffer(m_pFrame.CommandBuffer(), m_pImageIndex);
@@ -222,7 +249,7 @@ namespace engine
 
 		VkSemaphore signalSemaphores[] = { m_pFrame.SyncObjects().renderFinishedSemaphores };
 		vk::Sync(m_pVkData, m_pFrame.CommandBuffer(), m_pCurrentFrame);
-		
+
 
 		m_pShouldRecreateSwapchain |= vk::Present(m_pVkData, signalSemaphores, m_pImageIndex);
 
@@ -537,7 +564,7 @@ namespace engine
 	{
 
 		auto predicate = [](DrawCommand& a, DrawCommand& b) -> bool
-		{ auto a_mat = a.material.Index();
+			{ auto a_mat = a.material.Index();
 		auto b_mat = b.material.Index();
 		auto a_vtx = a.meshResource.vertexBuffer.Index();
 		auto b_vtx = b.meshResource.vertexBuffer.Index();
@@ -644,7 +671,7 @@ namespace engine
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR)
 		{
-			if(m_pWindow->getSize().first > 0)
+			if (m_pWindow->getSize().first > 0)
 				pRecreateSwapChain();
 			return -1;
 		}
@@ -684,7 +711,7 @@ namespace engine
 	}
 
 	void VulkanRenderer::SetVSync(bool state) {
-		if(state != m_pVkData.vsync)
+		if (state != m_pVkData.vsync)
 			m_pShouldRecreateSwapchain = true;
 		m_pVkData.vsync = state;
 	}

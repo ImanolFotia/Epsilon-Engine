@@ -456,7 +456,8 @@ namespace engine
         COMPUTE_WRITE_STORAGE_TEXEL_GRAPHICS_READ_INDIRECT,
         COMPUTE_WRITE_STORAGE_TEXEL_GRAPHICS_READ_UNIFORM,
         GRAPHICS_WRITE_COLOR_COMPUTE_SAMPLE_IMAGE,
-        GRAPHICS_WRITE_DEPTH_COMPUTE_SAMPLE_IMAGE
+        GRAPHICS_WRITE_DEPTH_COMPUTE_SAMPLE_IMAGE,
+        NONE
     };
 
     enum class BufferStorageType
@@ -724,13 +725,17 @@ namespace engine
         AnimatedMeshInfo info;
     };
 
+    struct MemoryBarrier {
 
+        MemoryBarrierHint memoryBarrierHint{};
+        engine::Ref<Texture> image{};
+    };
 
     struct ComputeShaderInfo {
         std::string name;
-        MemoryBarrierHint memoryBarrierHint;
         PipelineLayout pipelineLayout;
         std::vector<UniformBindingInfo> bindingInfo;
+        MemoryBarrier memoryBarrier{};
     };
 
 }
