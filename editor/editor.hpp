@@ -7,6 +7,7 @@
 #include <codecvt>
 #include "renderpasses/default.hpp"
 #include "renderpasses/forward.hpp"
+#include "renderpasses/compute.hpp"
 
 #include "ui/menu_bar.hpp"
 #include "ui/main_viewport.hpp"
@@ -46,6 +47,7 @@ namespace Editor {
 
 		std::shared_ptr<BrushManager> m_pBrushManager;
 
+		engine::Ref<engine::ComputeShader> m_pComputeShader;
 
 		engine::Ref<engine::BindGroup> m_pForwardBindGroup;
 		engine::Ref<engine::Mesh> m_pDefaultCube;
@@ -65,8 +67,6 @@ namespace Editor {
 
 		std::shared_ptr<utils::Camera> m_pCamera;
 		ShaderData shaderData;
-
-		engine::Scene m_pScene;
 
 		bool m_pCameraWasInactive = true;
 		bool m_pNavigation = false;
@@ -126,8 +126,8 @@ namespace Editor {
 
 			m_pSceneNodes.addEntityCallback = [this]() {
 				//pAddDefaultCube(glm::vec3(0.0f));
-				auto node = Utils::CreateNode(glm::mat4(1.0f), &m_pScene);
-				Utils::RegisterIntoEditor("Node_" + std::to_string(node->Index()), &m_pSceneNodes, &m_pScene, node);
+				auto node = Utils::CreateNode(glm::mat4(1.0f), m_pScene);
+				Utils::RegisterIntoEditor("Node_" + std::to_string(node->Index()), &m_pSceneNodes, m_pScene, node);
 			};
 		}
 	public:

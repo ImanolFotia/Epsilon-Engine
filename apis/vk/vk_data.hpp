@@ -170,7 +170,6 @@ namespace vk
 		VkImageMemoryBarrier2KHR imageMemoryBarrier{};
 		VkMemoryBarrier2KHR memoryBarrier{};
 		VkDependencyInfoKHR dependencyInfo{};
-		std::hash
 	};
 
 	struct VulkanComputeShader {

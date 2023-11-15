@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include "glm/glm.hpp"
 #include <core/common/common.hpp>
+#include "../object_pool.hpp"
 
 namespace engine
 {
@@ -728,7 +729,7 @@ namespace engine
     struct MemoryBarrier {
 
         MemoryBarrierHint memoryBarrierHint{};
-        engine::Ref<Texture> image{};
+        engine::Ref<Texture> image;
     };
 
     struct ComputeShaderInfo {

@@ -9,7 +9,7 @@ namespace Editor::UI {
 
 		std::vector<Property> m_pProperties;
 		std::string m_pScriptName;
-		engine::Scene* m_pScenePtr = nullptr;
+		std::shared_ptr<engine::Scene> m_pScenePtr = nullptr;
 
 		const std::vector<Property>& getProperties() {
 			return m_pProperties;

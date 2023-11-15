@@ -10,7 +10,7 @@
 
 namespace Editor::Utils {
 
-	static std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> CreateNode(glm::mat4 transform, engine::Scene* scene) {
+	static std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> CreateNode(glm::mat4 transform, std::shared_ptr<engine::Scene> scene) {
 
 		auto node = scene->emplaceIntoScene<engine::Scene::SceneEntity>(engine::Box{ glm::vec3(0.0), glm::vec3(1.0) });
 		node->data.transform = glm::translate(glm::mat4(1.0), glm::vec3(0.0));
@@ -22,7 +22,7 @@ namespace Editor::Utils {
 
 	}
 
-	static std::shared_ptr<engine::NodeBase> createNode(glm::vec3 position, glm::vec3 scale, glm::quat rotation, engine::Scene* scene) {
+	static std::shared_ptr<engine::NodeBase> createNode(glm::vec3 position, glm::vec3 scale, glm::quat rotation, std::shared_ptr<engine::Scene> scene) {
 
 		auto node = scene->emplaceIntoScene<engine::Scene::SceneEntity>(engine::Box{ glm::vec3(0.0), glm::vec3(1.0) });
 		node->data.transform = glm::translate(glm::mat4(1.0), position);
@@ -33,7 +33,7 @@ namespace Editor::Utils {
 
 	}
 
-	static void AddModelNode(const std::string& path, engine::Scene* scene, std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> parent, const std::string bindGroup = "DefaultBindGroup") {
+	static void AddModelNode(const std::string& path, std::shared_ptr<engine::Scene> scene, std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> parent, const std::string bindGroup = "DefaultBindGroup") {
 
 		auto model = scene->getAssetManager().loadModel(path);
 		model.bindGroup = bindGroup;
@@ -42,7 +42,7 @@ namespace Editor::Utils {
 
 	}
 
-	static void AddModelNode(const std::string& name, engine::Scene* scene, engine::RenderModel& renderModel, std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> parent, const std::string bindGroup = "DefaultBindGroup") {
+	static void AddModelNode(const std::string& name, std::shared_ptr<engine::Scene> scene, engine::RenderModel& renderModel, std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> parent, const std::string bindGroup = "DefaultBindGroup") {
 
 		renderModel.bindGroup = bindGroup;
 		renderModel.name = name;
@@ -51,7 +51,7 @@ namespace Editor::Utils {
 
 	}
 
-	static void AddCameraNode(const std::string& name, engine::Scene* scene, std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> parent, CameraCreationInfo cameraCreationInfo) {
+	static void AddCameraNode(const std::string& name, std::shared_ptr<engine::Scene> scene, std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> parent, CameraCreationInfo cameraCreationInfo) {
 
 		utils::Camera camera(cameraCreationInfo.position, cameraCreationInfo.direction);
 		camera.setFoV(cameraCreationInfo.Fov);
@@ -62,7 +62,7 @@ namespace Editor::Utils {
 
 
 
-	static void AddScriptNode(ScriptCreationInfo creationInfo, engine::Scene* scene, std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> parent, dotnet::DotnetHost& host) {
+	static void AddScriptNode(ScriptCreationInfo creationInfo, std::shared_ptr<engine::Scene> scene, std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> parent, dotnet::DotnetHost& host) {
 
 		auto script = scene->emplaceIntoNode<EntityScript>(parent);
 
@@ -90,7 +90,7 @@ namespace Editor::Utils {
 		host.assembly.Invoke<void>(L"setEntityTransform", script->data.ManagedPtr, args);
 	}
 
-	static void RegisterIntoEditor(const std::string& name, UI::SceneNodes* scene_nodes, engine::Scene* scene, std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> parent) {
+	static void RegisterIntoEditor(const std::string& name, UI::SceneNodes* scene_nodes, std::shared_ptr<engine::Scene> scene, std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> parent) {
 
 		auto nodeChildren = scene->getChildren(parent);
 

@@ -8,7 +8,7 @@ namespace Editor::UI {
 	class MaterialEditor : public UIElement {
 
 	public:
-		engine::Scene* m_pSceneRef = nullptr;
+		std::shared_ptr<engine::Scene> m_pSceneRef = nullptr;
 		int32_t selected_entity = -1;
 		void draw() override {
 			ImGui::Begin("Material");

@@ -15,7 +15,7 @@ namespace Editor::UI {
 		std::function<void(void)> addEntityCallback;
 		std::list<NodeProperties> m_pNodeProperties;
 
-		engine::Scene* m_pScenePtr = nullptr;
+		std::shared_ptr<engine::Scene> m_pScenePtr = nullptr;
 
 		SceneNodes() {
 			m_pNodeProperties.push_back({ nullptr, nullptr, "Root", "", {}, SceneNodeType::Root });

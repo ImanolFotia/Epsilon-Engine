@@ -20,11 +20,11 @@ namespace Editor::UI {
 		AssetProperties selected_asset;
 		UI::NativeFileDialog m_pFileDialog;
 
-		engine::Scene* m_pScene = nullptr;
+		std::shared_ptr<engine::Scene> m_pScene = nullptr;
 	public:
 		Assets() = default;
 
-		Assets(engine::Scene* scene) : m_pScene{ scene } {
+		Assets(std::shared_ptr<engine::Scene> scene) : m_pScene{ scene } {
 			m_pFileDialog.Setup(".");
 		}
 
