@@ -177,9 +177,19 @@ namespace engine
 		{
 			vk::VulkanMaterial vkMaterial;
 			// auto renderPass = renderPassPool.get(renderPassRef);
+
 			uint32_t id = std::hash<std::string>{}(material.renderPass);
 			auto renderPass = renderPassPool.get(id);
-			vkMaterial.descriptorSetLayout = renderPass->renderPipelines.back().descriptorSetLayouts.at(RENDERPASS_LAYOUT);
+			vk::VulkanComputeShader* computeShader;
+
+			if (renderPass) {
+				vkMaterial.descriptorSetLayout = renderPass->renderPipelines.back().descriptorSetLayouts.at(RENDERPASS_LAYOUT);
+			}
+			else {
+				uint32_t compute_id = std::hash<std::string>{}(material.computeShader);
+				computeShader = computeShaderPool.get(compute_id);
+				vkMaterial.descriptorSetLayout = computeShader->pipeline.descriptorSetLayout;
+			}
 			// auto &materialdata = m_pMaterials.emplace_back();
 
 			for (auto& binding : material.inputs)
@@ -260,17 +270,19 @@ namespace engine
 
 			vkMaterial.bufferSize = 0;
 
-			if (renderPass->uniformBuffer.size() > 0) {
+			if (renderPass) {
+				if (renderPass->uniformBuffer.size() > 0) {
 
-				auto buffers = renderPass->uniformBuffer.front().buffers;
-				//vkMaterial.bufferInfo.resize(vk::MAX_FRAMES_IN_FLIGHT);
-				for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
-				{
-					vkMaterial.bufferInfo[i].offset = buffers[i].offset;
-					vkMaterial.bufferInfo[i].buffer = buffers[i].buffer;
+					auto buffers = renderPass->uniformBuffer.front().buffers;
+					//vkMaterial.bufferInfo.resize(vk::MAX_FRAMES_IN_FLIGHT);
+					for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
+					{
+						vkMaterial.bufferInfo[i].offset = buffers[i].offset;
+						vkMaterial.bufferInfo[i].buffer = buffers[i].buffer;
+					}
+
+					vkMaterial.bufferSize = renderPass->uniformBuffer.front().size;
 				}
-
-				vkMaterial.bufferSize = renderPass->uniformBuffer.front().size;
 			}
 
 			m_pNumCommandPools++;
@@ -966,7 +978,7 @@ namespace engine
 			.dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT_KHR,
 			.oldLayout = VK_IMAGE_LAYOUT_GENERAL,
 			.newLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL,
-			.image = texPool.get(computeInfo.memoryBarrier.image)->image,
+			//.image = texPool.get(computeInfo.memoryBarrier.image)->image,
 			.subresourceRange = imageSubRange
 			/* .image and .subresourceRange should identify image subresource accessed */ 
 		};
@@ -983,7 +995,9 @@ namespace engine
 			&computeShader.memoryBarrier.imageMemoryBarrier,    // pImageMemoryBarriers
 		};
 
-
+		computeShader.groupCountX = computeInfo.groupCountX;
+		computeShader.groupCountY = computeInfo.groupCountY;
+		computeShader.groupCountZ = computeInfo.groupCountZ;
 		vk::createComputePipeline(*m_pVkDataPtr, computeInfo, computeShader);
 		auto ref = computeShaderPool.insert(computeInfo.name, computeShader);
 		return ref;

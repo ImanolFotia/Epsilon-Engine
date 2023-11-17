@@ -107,6 +107,7 @@ namespace engine
 
 		vk::createCommandBuffers(m_pVkData, m_pVkData.m_pCommandPools.back(), m_pVkData.m_pCommandBuffers);
 		vk::createCommandBuffers(m_pVkData, m_pVkData.m_pCommandPools.back(), m_pVkData.m_pComputeCommandBuffers);
+
 		vk::createSyncObjects(m_pVkData);
 
 		m_pCurrentCommandQueue.resize(MAX_COMMAND_QUEUE_SIZE);
@@ -186,6 +187,7 @@ namespace engine
 		m_pFrame.SyncObjects(&m_pVkData.syncObjects.at(m_pCurrentFrame));
 
 		vkResetCommandBuffer(m_pFrame.CommandBuffer(), 0);
+		vkResetCommandBuffer(m_pFrame.ComputeCommandBuffer(), 0);
 
 #if !defined(__ANDROID__)
 
@@ -226,12 +228,12 @@ namespace engine
 		}
 
 		vkCmdBindPipeline(m_pFrame.ComputeCommandBuffer(), VK_PIPELINE_BIND_POINT_COMPUTE, computeShader->pipeline.computePipeline);
-
+		/*
 		vkCmdBindDescriptorSets(m_pFrame.ComputeCommandBuffer(), 
 			VK_PIPELINE_BIND_POINT_COMPUTE, 
 			computeShader->pipeline.pipelineLayout, 0, 1, 
 			&computeShader->pipeline.descriptorSets[m_pCurrentFrame], 0, 0);
-
+		*/
 		vkCmdDispatch(m_pFrame.ComputeCommandBuffer(), computeShader->groupCountX, computeShader->groupCountY, computeShader->groupCountZ);
 
 		if (vkEndCommandBuffer(m_pFrame.ComputeCommandBuffer()) != VK_SUCCESS) {
@@ -246,10 +248,9 @@ namespace engine
 
 	void VulkanRenderer::Submit()
 	{
-
 		VkSemaphore signalSemaphores[] = { m_pFrame.SyncObjects().renderFinishedSemaphores };
+		vk::SyncCompute(m_pVkData, m_pFrame.ComputeCommandBuffer(), m_pCurrentFrame);
 		vk::Sync(m_pVkData, m_pFrame.CommandBuffer(), m_pCurrentFrame);
-
 
 		m_pShouldRecreateSwapchain |= vk::Present(m_pVkData, signalSemaphores, m_pImageIndex);
 
@@ -660,6 +661,8 @@ namespace engine
 
 	int32_t VulkanRenderer::pPrepareSyncObjects()
 	{
+
+		//graphics sync
 
 		vkWaitForFences(m_pVkData.logicalDevice, 1, &m_pVkData.syncObjects[m_pCurrentFrame].inFlightFences, VK_TRUE,
 			UINT64_MAX);
