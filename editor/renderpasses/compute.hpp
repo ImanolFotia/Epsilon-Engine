@@ -4,7 +4,7 @@
 #include <core/engine/scene/scene.hpp>
 
 namespace Editor::ComputeDispatch {
-	engine::Ref<engine::ComputeShader> createComputeShader() {
+	static engine::Ref<engine::ComputeShader> createComputeShader(std::shared_ptr<engine::Scene> scene) {
 
 		using namespace engine;
 		auto context = scene->getContext();
@@ -15,10 +15,10 @@ namespace Editor::ComputeDispatch {
 		ShaderInfo ComputeShaderInfo = {
 			.stages = {
 			{
-					.entryPoint = "main", .shaderCode = computeCode, .stage = COMPUTE},
+					.entryPoint = "main", .shaderCode = computeCode, .stage = COMPUTE
+			}},
 					.usedStages = ShaderModuleStage(COMPUTE),
 					.name = "dummyComputeShaderInfo"
-			}
 		};
 
 		engine::ShaderAsset computeShaderAsset;
@@ -38,6 +38,7 @@ namespace Editor::ComputeDispatch {
 		computeShaderInfo.name = "Dummy Shader";
 		computeShaderInfo.pipelineLayout = computeLayout;
 		computeShaderInfo.bindingInfo = {};
+		computeShaderInfo.groupCountX = 256;
 		return context->ResourceManager()->createComputeShader(computeShaderInfo);
 
 	}

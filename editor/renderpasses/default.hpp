@@ -35,7 +35,8 @@ namespace Editor::Renderpasses {
 				{.entryPoint = "main", .shaderCode = vertexCode, .stage = VERTEX},
 				{.entryPoint = "main", .shaderCode = fragmentCode, .stage = FRAGMENT}},
 			.usedStages = ShaderModuleStage(VERTEX | FRAGMENT),
-			.name = "SwapChainShader" };
+			.name = "SwapChainShader" 
+		};
 
 		engine::ShaderAsset shapChainShaderAsset;
 		shapChainShaderAsset.name = "SwapChainShader";

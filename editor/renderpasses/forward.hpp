@@ -169,7 +169,7 @@ namespace Editor::Renderpasses {
 			.pipelineLayout(mainLayout)
 			.pipelineLayout(skyLayout)
 			.pipelineLayout(gridLayout)
-			.pushConstant(sizeof(ForwardPassPushConstant));
+			.pushConstant(68);
 
 		return context->ResourceManager()->createRenderPass(renderPassInfo);
 	}
