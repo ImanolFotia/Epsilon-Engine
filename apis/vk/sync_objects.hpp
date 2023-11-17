@@ -14,7 +14,6 @@ namespace vk
     {
 
         vk_data.syncObjects.resize(MAX_FRAMES_IN_FLIGHT);
-        vk_data.syncComputeObjects.resize(MAX_FRAMES_IN_FLIGHT);
 
         VkSemaphoreCreateInfo semaphoreInfo{};
         VkSemaphoreCreateInfo computeSemaphoreInfo{};
@@ -49,7 +48,7 @@ namespace vk
     template <typename T>
     static int32_t prepareSyncObjects(VulkanData &vk_data, uint32_t currentFrame, VulkanRenderPass &renderPass, VulkanVertexInfo vertexInfo)
     {
-
+        //graphics sync
         vkWaitForFences(vk_data.logicalDevice, 1, &vk_data.syncObjects[currentFrame].inFlightFences, VK_TRUE, UINT64_MAX);
 
         uint32_t imageIndex = 0;
@@ -78,9 +77,9 @@ namespace vk
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-        VkSemaphore waitSemaphores[] = {vk_data.syncObjects[currentFrame].imageAvailableSemaphores};
-        VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
-        submitInfo.waitSemaphoreCount = 1;
+        VkSemaphore waitSemaphores[] = { vk_data.syncObjects[currentFrame].computeFinishedSemaphores, vk_data.syncObjects[currentFrame].imageAvailableSemaphores};
+        VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_VERTEX_INPUT_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+        submitInfo.waitSemaphoreCount = 2;
         submitInfo.pWaitSemaphores = waitSemaphores;
         submitInfo.pWaitDstStageMask = waitStages;
 
@@ -94,6 +93,36 @@ namespace vk
         //std::mutex mtx{};
         //std::lock_guard lock{ mtx };
         if (vkQueueSubmit(vk_data.graphicsQueue[currentFrame], 1, &submitInfo, vk_data.syncObjects[currentFrame].inFlightFences) != VK_SUCCESS)
+        {
+            throw std::runtime_error("failed to submit draw command buffer!");
+        }
+    }
+
+    static void SyncCompute(const VulkanData& vk_data, VkCommandBuffer& commandBuffer, uint32_t currentFrame)
+    {
+        vkWaitForFences(vk_data.logicalDevice, 1, &vk_data.syncObjects[currentFrame].computeInFlightFences, VK_TRUE, UINT64_MAX);
+
+        vkResetFences(vk_data.logicalDevice, 1, &vk_data.syncObjects[currentFrame].computeInFlightFences);
+
+        VkSubmitInfo submitInfo{};
+        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+
+        VkSemaphore waitSemaphores[] = { vk_data.syncObjects[currentFrame].computeAvailableSemaphores };
+        VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+        //submitInfo.waitSemaphoreCount = 1;
+        //submitInfo.pWaitSemaphores = waitSemaphores;
+        //submitInfo.pWaitDstStageMask = waitStages;
+
+        submitInfo.commandBufferCount = 1;
+        submitInfo.pCommandBuffers = &commandBuffer;
+
+        VkSemaphore signalSemaphores[] = { vk_data.syncObjects[currentFrame].computeFinishedSemaphores };
+        submitInfo.signalSemaphoreCount = 1;
+        submitInfo.pSignalSemaphores = signalSemaphores;
+
+        //std::mutex mtx{};
+        //std::lock_guard lock{ mtx };
+        if (vkQueueSubmit(vk_data.computeQueue[currentFrame], 1, &submitInfo, vk_data.syncObjects[currentFrame].computeInFlightFences) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to submit draw command buffer!");
         }

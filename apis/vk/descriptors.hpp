@@ -68,6 +68,17 @@ namespace vk
         samplerLayoutBinding.stageFlags = stage;
         return samplerLayoutBinding;
     }
+
+    static VkDescriptorSetLayoutBinding createImageStorageBinding(int bind, int descriptorCount = 1, VkShaderStageFlagBits stage = VK_SHADER_STAGE_FRAGMENT_BIT)
+    {
+        VkDescriptorSetLayoutBinding samplerLayoutBinding{};
+        samplerLayoutBinding.binding = bind;
+        samplerLayoutBinding.descriptorCount = descriptorCount;
+        samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+        samplerLayoutBinding.pImmutableSamplers = nullptr;
+        samplerLayoutBinding.stageFlags = stage;
+        return samplerLayoutBinding;
+    }
     static void createDescriptorSetLayout(const VulkanData &vkData, VkDescriptorSetLayout &descriptorSetLayout, std::vector<engine::UniformBindingInfo> layoutBindings)
     {
         std::vector<VkDescriptorSetLayoutBinding> bindings;
@@ -85,6 +96,9 @@ namespace vk
             }
             else if (binding.type == engine::UniformBindingType::SHADER_STORAGE) {
                 bindings.push_back(createSSBOBinding(binding.binding));
+            }
+            else if (binding.type == engine::UniformBindingType::STORAGE_IMAGE) {
+                bindings.push_back(createImageStorageBinding(binding.binding));
             }
         }
         // std::array<VkDescriptorSetLayoutBinding, 2> bindings = {uboLayoutBinding, samplerLayoutBinding};

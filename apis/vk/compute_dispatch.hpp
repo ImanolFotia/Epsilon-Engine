@@ -23,8 +23,9 @@ namespace vk {
 		VkComputePipelineCreateInfo pipelineInfo{};
 		pipelineInfo.sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
 		pipelineInfo.layout = computeShader.pipeline.pipelineLayout;
-		pipelineInfo.stage = shader::createShaderStage(vk_data, shaderInfo.pipelineLayout.shaderInfo.stages.back());
-		
+		auto shaderStage = shader::createShaderStage(vk_data, shaderInfo.pipelineLayout.shaderInfo.stages.back());
+		pipelineInfo.stage = shaderStage;
+		pipelineInfo.stage.pName = shaderInfo.pipelineLayout.shaderInfo.stages.back().entryPoint.c_str();
 
 		if (vkCreateComputePipelines(vk_data.logicalDevice, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &computeShader.pipeline.computePipeline) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create compute pipeline!");

@@ -361,7 +361,6 @@ namespace vk
 		std::vector<VkFramebuffer> swapChainFramebuffers;
 */
 		std::vector<VulkanSyncObject> syncObjects;
-		std::vector<VulkanSyncObject> syncComputeObjects;
 
 		CommandPools m_pCommandPools;
 		CommandBuffers m_pCommandBuffers;
