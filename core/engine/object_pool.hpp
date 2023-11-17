@@ -55,6 +55,7 @@ namespace engine
         using IdArray = std::unordered_map<uint32_t, uint32_t>;
         using IndexArray = std::vector<typename std::list<R>::iterator>;
 
+
         template <typename... Args>
         Ref<T> emplace(std::string name, Args... args)
         {
@@ -113,6 +114,7 @@ namespace engine
 
         [[nodiscard]] R *get(Ref<T> ref)
         {
+            const std::lock_guard<std::mutex> lock(m_pMutex);
             //const std::lock_guard<std::mutex> lock(m_pMutex);
             if (m_pIndexArray.size() > ref.m_pIndex && ref.isValid())
             {
@@ -128,6 +130,7 @@ namespace engine
 
         [[nodiscard]] R *get(uint32_t id)
         {
+            const std::lock_guard<std::mutex> lock(m_pMutex);
             //const std::lock_guard<std::mutex> lock(m_pMutex);
             if (m_pIdArray.contains(id))
             {

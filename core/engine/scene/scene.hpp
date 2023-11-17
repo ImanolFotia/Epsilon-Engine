@@ -22,6 +22,7 @@ namespace engine
 	struct EntityBehaviour {
 		std::function<void(void)> callback;
 		bool once = false;
+		bool done = false;
 	};
 
 	struct OctreeSceneItem {
@@ -110,9 +111,10 @@ namespace engine
 
 
 			m_pCurrentRenderPass = m_RenderPassesRefs["DefaultRenderPass"];
-
-			m_pNodeOctree = std::make_shared<OctreeContainer<OctreeNodeType>>(Box{ glm::vec3(-50.0, 0.0, -50.0), glm::vec3(100, 100, 100) }, 0);
-			m_pRenderOctree = std::make_shared<OctreeContainer<OctreeRenderType>>(Box{ glm::vec3(-50.0, 0.0, -50.0), glm::vec3(100, 100, 100) }, 0);
+			float octree_size = 256;
+			float octree_half_size = octree_size *0.5;
+			m_pNodeOctree = std::make_shared<OctreeContainer<OctreeNodeType>>(Box{ glm::vec3(-octree_half_size, -20.0, -octree_half_size), glm::vec3(octree_size, 50, octree_size) }, 0);
+			m_pRenderOctree = std::make_shared<OctreeContainer<OctreeRenderType>>(Box{ glm::vec3(-octree_half_size,-20.0, -octree_half_size), glm::vec3(octree_size, 50, octree_size) }, 0);
 
 
 			m_pAssetManager.Init();
@@ -360,7 +362,7 @@ namespace engine
 		}
 
 		template <typename T>
-		auto getNodes()
+		auto& getNodes()
 		{
 			return m_pSceneManager.get<T>();
 		}

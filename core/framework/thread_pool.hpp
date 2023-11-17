@@ -125,7 +125,7 @@ public:
     {
         for (auto& thread : m_pAsync_threads)
         {
-            thread->wait();
+            thread.wait();
         }
     }
 
