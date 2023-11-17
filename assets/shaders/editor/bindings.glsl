@@ -44,6 +44,7 @@ layout(location = 0) out VARYING {
 struct ObjectData {
     mat4 modelMatrix;
     uint material_index;
+    uint animation_index;
 };
 
 struct ObjectData2 {
