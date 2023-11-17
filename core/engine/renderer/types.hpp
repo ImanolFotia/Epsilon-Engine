@@ -665,6 +665,7 @@ namespace engine
         std::vector<UniformBindingInfo> bindingInfo{};
         std::vector<RenderPassBinding> inputs;
         std::string renderPass{};
+        std::string computeShader{};
         std::string name{};
     };
 
@@ -737,6 +738,10 @@ namespace engine
         PipelineLayout pipelineLayout;
         std::vector<UniformBindingInfo> bindingInfo;
         MemoryBarrier memoryBarrier{};
+
+        uint16_t groupCountX = 1;
+        uint16_t groupCountY = 1;
+        uint16_t groupCountZ = 1;
     };
 
 }

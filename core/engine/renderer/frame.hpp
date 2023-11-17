@@ -13,6 +13,7 @@ namespace engine
         Ref<RenderPass> m_pRenderPass;
         
         vk::VulkanSyncObject* m_pSyncObjects = nullptr;
+        
         VkCommandBuffer* m_pCommandBuffer = nullptr;
         VkCommandBuffer* m_pComputeCommandBuffer = nullptr;
 
@@ -91,6 +92,7 @@ namespace engine
         void SyncObjects(vk::VulkanSyncObject* objects) {
             m_pSyncObjects = objects;
         }
+
 
         void FrameIndex(uint32_t index)
         {
