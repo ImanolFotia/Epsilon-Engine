@@ -728,15 +728,19 @@ namespace engine
 			return material;
 		}
 
-		AudioObject loadAudio(const std::string& path)
+		AudioObject loadAudio(const std::string& path, int numSources = 1)
 		{
 
 			auto audioManager = m_pContext->AudioManager();
 
 			if (m_pAudioBuffers.contains(path))
 			{
-				AudioBuffer& buffer = m_pAudioBuffers.at(path);
-				buffer.sources.push_back(audioManager->createSource(path + "_source_" + std::to_string(buffer.sources.size()), { .buffer = buffer.buffer }));
+				AudioBuffer buffer = m_pAudioBuffers.at(path);
+
+				buffer.sources.resize(0);
+
+				for(int i = 0; i < numSources; i++)
+					buffer.sources.push_back(audioManager->createSource(path + "_source_" + std::to_string(i) + "_" + std::to_string(buffer.sources.size()), {.buffer = buffer.buffer}));
 
 				AudioObject object;
 				object.buffer = buffer;
@@ -758,7 +762,8 @@ namespace engine
 			AudioBuffer& audioBuffer = m_pAudioBuffers[path];
 			audioBuffer.buffer = buffer;
 
-			audioBuffer.sources.push_back(audioManager->createSource(path + "_source_" + std::to_string(audioBuffer.sources.size()), { .buffer = audioBuffer.buffer }));
+			for (int i = 0; i < numSources; i++)
+				audioBuffer.sources.push_back(audioManager->createSource(path + "_source_" + std::to_string(i) + "_" + std::to_string(audioBuffer.sources.size()), { .buffer = audioBuffer.buffer }));
 
 			AudioObject object;
 			object.buffer = audioBuffer;

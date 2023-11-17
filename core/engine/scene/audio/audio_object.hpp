@@ -91,5 +91,9 @@ namespace engine {
 		Ref<audio::AudioSource> Source() {
 			return source;
 		}
+
+		AudioBuffer Buffer() {
+			return buffer;
+		}
 	};
 }
