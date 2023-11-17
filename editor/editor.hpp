@@ -8,6 +8,7 @@
 #include "renderpasses/default.hpp"
 #include "renderpasses/forward.hpp"
 #include "renderpasses/compute.hpp"
+#include "renderpasses/taa.hpp"
 
 #include "ui/menu_bar.hpp"
 #include "ui/main_viewport.hpp"

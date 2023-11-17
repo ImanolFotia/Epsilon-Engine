@@ -31,11 +31,16 @@ namespace Editor {
 
 		host.assembly.Invoke<void>(L"setScenePtr", &m_pScene);
 
-		m_pComputeShader = ComputeDispatch::createComputeShader();
+		m_pComputeShader = ComputeDispatch::createComputeShader(m_pScene);
 
 		m_pForwardRenderPass = Renderpasses::createForwardRenderPass(m_pScene);
 
 		m_pScene->addRenderPass("DefaultRenderPass", Renderpasses::createDefaultRenderPass(m_pScene));
+
+		auto TAAPasses = Renderpasses::createTAARenderPass(m_pScene);
+		m_pScene->addRenderPass("TAARenderPass0", TAAPasses.renderpass[0]);
+		m_pScene->addRenderPass("TAARenderPass1", TAAPasses.renderpass[1]);
+
 		m_pScene->addRenderPass("ForwardRenderPass", m_pForwardRenderPass);
 
 		m_pScene->addBindGroup("DefaultBindGroup", 0, {
@@ -58,12 +63,33 @@ namespace Editor {
 				.renderPass = "Forward",
 				.name = "GridBindGroup",
 			});
+		/*
+		m_pScene->addBindGroup("TAABindGroup0", 3, {
+				.bindingInfo = {},
+				.inputs = {
+					{.renderPass = "Forward", .index = 0, .bindingPoint = 2},
+					{.renderPass = "TAA1", .index = 0, .bindingPoint = 3},
+					{.renderPass = "Forward", .index = 1, .bindingPoint = 4},
+					{.renderPass = "Forward", .index = 2, .bindingPoint = 5}},
+				.renderPass = "Forward",
+				.name = "GridBindGroup",
+			});
+
+		m_pScene->addBindGroup("TAABindGroup1", 4, {
+				.bindingInfo = {},
+				.inputs = {
+					{.renderPass = "Forward", .index = 0, .bindingPoint = 2},
+					{.renderPass = "TAA0", .index = 0, .bindingPoint = 3},
+					{.renderPass = "Forward", .index = 1, .bindingPoint = 4},
+					{.renderPass = "Forward", .index = 2, .bindingPoint = 5}},
+				.renderPass = "Forward",
+				.name = "GridBindGroup",
+			});*/
 
 		auto renderer = getContext()->Renderer();
 
 		renderer->InitDebugRenderer();
 		setup_style();
-
 
 		auto node = Utils::CreateNode(glm::mat4(1.0f), m_pScene);
 		Utils::AddCameraNode("Camera", m_pScene, node,  {});
@@ -346,6 +372,7 @@ namespace Editor {
 
 		m_pScene->BeginScene();
 
+
 		m_pScene->setCurrentRenderPass("ForwardRenderPass");
 
 		auto models = m_pScene->getNodes <engine::RenderModel>();
@@ -357,8 +384,11 @@ namespace Editor {
 		}
 
 		m_pScene->Flush();
+		m_pScene->getContext()->Renderer()->ComputeDispatch(m_pComputeShader);
+
 
 		m_pScene->EndScene();
+
 
 	}
 
