@@ -56,6 +56,7 @@ namespace vk
 		uint32_t mipLevels = 1;
 		uint32_t arrayLayers = 1;
 		VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
+		VkSampleCountFlagBits numSamples = VK_SAMPLE_COUNT_1_BIT;
 		VkImageUsageFlags usage{};
 
 		VkFilter filter{};
@@ -251,6 +252,8 @@ namespace vk
 
 		bool hasDepthSampler = false;
 
+		VulkanTexture ResolveTexture;
+
 
 		void setViewport(const VkViewport& v) {
 			Viewport = v;
@@ -285,6 +288,7 @@ namespace vk
 		uint32_t id = 0;
 		bool resizeWithSwapChain = false;
 		bool dirtyPipeline = true;
+		bool multisampled = false;
 		std::list<VulkanUniformBuffer> uniformBuffer;
 		uint32_t numAttachments = 1;
 		std::string name = "";

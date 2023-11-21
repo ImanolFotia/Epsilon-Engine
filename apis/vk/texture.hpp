@@ -31,7 +31,7 @@ namespace vk
 
         imageInfo.mipLevels = textureInfo.mipLevels;
         imageInfo.arrayLayers = 1;
-        imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+        imageInfo.samples = textureInfo.numSamples;//VK_SAMPLE_COUNT_1_BIT;
 
         imageInfo.format = textureInfo.format;
         imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;

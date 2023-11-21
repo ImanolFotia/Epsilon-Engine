@@ -292,6 +292,7 @@ namespace vk
             {
 
                 vk_data.msaaSamples = getMaxUsableSampleCount(device);
+                std::cout << "max samples: " << vk_data.msaaSamples << std::endl;
                 VkPhysicalDeviceProperties deviceProperties;
                 vkGetPhysicalDeviceProperties(device, &deviceProperties);
                 std::string deviceName = deviceProperties.deviceName;

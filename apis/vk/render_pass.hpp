@@ -13,6 +13,9 @@
 
 namespace vk
 {
+    static void GetNumSamplesFormat(uint8_t numSamples) {
+
+    }
 
     static void createRenderPass(VulkanData &vk_data, VulkanRenderPass &renderPass, engine::RenderPassInfo &renderPassInfo, bool forPresent)
     {
@@ -38,9 +41,17 @@ namespace vk
                 {
                     renderPass.renderPassData.depthAttachment.format = findDepthFormat(vk_data);
                 }
-                renderPass.renderPassData.depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-                renderPass.renderPassData.depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-                renderPass.renderPassData.depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+
+                if (renderPassInfo.numSamples == 1) {
+                    renderPass.renderPassData.depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+                    renderPass.renderPassData.depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+                    renderPass.renderPassData.depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+                }
+                else {
+                    renderPass.renderPassData.depthAttachment.samples = (VkSampleCountFlagBits)renderPassInfo.numSamples;
+                    renderPass.renderPassData.depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+                    renderPass.renderPassData.depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+                }
 
                 if (attachment.isSampler)
                     renderPass.renderPassData.depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -58,14 +69,28 @@ namespace vk
                 VkAttachmentDescription attachmentDesc{};
                 attachmentDesc.format = renderPass.renderPassChain.ImageFormats[index];
                 attachmentDesc.samples = VK_SAMPLE_COUNT_1_BIT;
-                attachmentDesc.loadOp = attachment.clearAttachment ? VK_ATTACHMENT_LOAD_OP_CLEAR : VK_ATTACHMENT_LOAD_OP_LOAD;
-                attachmentDesc.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+
+                if (renderPassInfo.numSamples == 1) {
+                    attachmentDesc.samples = VK_SAMPLE_COUNT_1_BIT;
+                    attachmentDesc.loadOp = attachment.clearAttachment ? VK_ATTACHMENT_LOAD_OP_CLEAR : VK_ATTACHMENT_LOAD_OP_LOAD;;
+                    attachmentDesc.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+                }
+                else {
+                    attachmentDesc.samples = (VkSampleCountFlagBits)renderPassInfo.numSamples;
+                    attachmentDesc.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+                    attachmentDesc.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+                }
+
                 attachmentDesc.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
                 attachmentDesc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
                 attachmentDesc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
                 if (forPresent)
                 {
-                    attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+                    if (renderPassInfo.numSamples == 1)
+                        attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+                    else
+                        attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
                 }
                 else if (attachment.format == engine::DEPTH_F32 || attachment.format == engine::DEPTH_F32_STENCIL_8)
                 {
@@ -101,6 +126,30 @@ namespace vk
             index++;
         }
 
+        VkAttachmentDescription colorAttachmentResolve{};
+        VkAttachmentReference colorAttachmentResolveRef{};
+
+        if (renderPassInfo.numSamples > 1) {
+            colorAttachmentResolve.format = renderPass.renderPassChain.ImageFormats[0];
+            colorAttachmentResolve.samples = VK_SAMPLE_COUNT_1_BIT;
+            colorAttachmentResolve.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+            colorAttachmentResolve.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+            colorAttachmentResolve.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+            colorAttachmentResolve.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+            colorAttachmentResolve.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+            if (forPresent)
+            {
+                colorAttachmentResolve.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+            }
+            else {
+                colorAttachmentResolve.finalLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL;
+            }
+            colorAttachmentResolveRef.attachment = 2;
+            colorAttachmentResolveRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+            renderPass.renderPassData.subpass.pResolveAttachments = &colorAttachmentResolveRef;
+        }
+
         renderPass.renderPassData.hasDepthAttachment = containsDepthAttachment;
 
         renderPass.renderPassData.subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
@@ -108,6 +157,7 @@ namespace vk
 
         renderPass.numAttachments = renderPass.renderPassData.subpass.colorAttachmentCount;
         renderPass.renderPassData.subpass.pColorAttachments = renderPass.renderPassData.colorAttachmentRefs.data();
+
 
         if (containsDepthAttachment)
             renderPass.renderPassData.subpass.pDepthStencilAttachment = &renderPass.renderPassData.depthAttachmentRef;
@@ -130,9 +180,16 @@ namespace vk
         dependencies[1].dstAccessMask = VK_ACCESS_SHADER_READ_BIT;                    // VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
         dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;                // 0;
 
+
+
         std::vector<VkAttachmentDescription> attachments = renderPass.renderPassData.colorAttachments;
         if (containsDepthAttachment)
             attachments.push_back(renderPass.renderPassData.depthAttachment);
+
+        if (renderPassInfo.numSamples > 1) {
+            renderPass.renderPassData.colorAttachments.push_back(colorAttachmentResolve);
+            renderPass.renderPassData.colorAttachmentRefs.push_back(colorAttachmentResolveRef);
+        }
 
         VkRenderPassCreateInfo renderPassCreateInfo{};
         renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;

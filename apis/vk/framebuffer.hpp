@@ -16,15 +16,19 @@ namespace vk
         {
             // std::vector<VkImageView> attachments;
 
-            VkImageView attachments[] = {
+            std::vector<VkImageView> attachments = {
                 renderPass.renderPassChain.ImageViews[i],
                 renderPass.renderPassChain.DepthTexture.imageView};
+
+            if (renderPass.multisampled) {
+                attachments.push_back(chain.ResolveTexture.imageView);
+            }
 
             VkFramebufferCreateInfo framebufferInfo{};
             framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
             framebufferInfo.renderPass = renderPass.renderPass;
             framebufferInfo.attachmentCount = 2;
-            framebufferInfo.pAttachments = attachments;
+            framebufferInfo.pAttachments = attachments.data();
             framebufferInfo.width = renderPass.renderPassChain.Extent.width;
             framebufferInfo.height = renderPass.renderPassChain.Extent.height;
             framebufferInfo.layers = 1;
