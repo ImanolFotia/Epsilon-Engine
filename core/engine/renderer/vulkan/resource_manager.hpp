@@ -37,6 +37,7 @@ namespace engine
 
 
 		Ref<BindGroup> createBindGroup(BindGroupInfo) override;
+		void updateBindGroup(Ref<BindGroup>) override;
 		Ref<Texture> createTexture(TextureCreationInfo) override;
 		Ref<Mesh> createMesh(MeshInfo) override;
 		Ref<Mesh> createMesh(AnimatedMeshInfo) override;

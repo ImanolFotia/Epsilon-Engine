@@ -171,6 +171,40 @@ namespace engine
 		return ref;
 	}
 
+
+	void VulkanResourceManager::updateBindGroup(Ref<BindGroup> bindGroupRef)
+	{
+		//try
+		{
+			 vk::VulkanMaterial *vkMaterial = materialPool.get(bindGroupRef);
+
+			
+			// auto &materialdata = m_pMaterials.emplace_back();
+			 /*
+			 for (auto& binding : vkMaterial->shaderBindings)
+			 {
+				 if (binding.descriptorBinding == VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER) {
+
+					 auto pass = renderPassPool.get(std::hash<std::string>{}(binding.renderpass));
+
+					 if (binding.attachment_index == pass->renderPassChain.Textures.size())
+					 {
+					 }
+					 else {
+
+					 }
+				 }
+			 }*/
+			 pUpdateMaterial(*vkMaterial);
+
+		}
+		//catch (std::exception& e)
+		{
+
+			//	throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
+		}
+	}
+
 	Ref<BindGroup> VulkanResourceManager::createBindGroup(BindGroupInfo material)
 	{
 		//try
@@ -256,7 +290,7 @@ namespace engine
 				{
 					vkMaterial.slots++;
 					auto buff = uniformBufferPool.get(std::hash<std::string>{}(binding.buffer))->buffers;
-					for (auto& b : buff) b.size = binding.size;
+					for (auto& b : buff) { b.size = binding.size; }
 
 					vk::VulkanShaderBinding shaderBinding = {
 						.buffers = buff,
@@ -1074,10 +1108,10 @@ namespace engine
 			if (attachment.isDepthAttachment)
 			{
 				texture.isDepthAttachment = true;
+				renderPass->renderPassChain.DepthTexture = texture;
 				if (attachment.isSampler) {
 					renderPass->renderPassChain.DepthTexture.index = i;
 				}
-				renderPass->renderPassChain.DepthTexture = texture;
 
 				if (attachment.isSampler) {
 					renderPass->renderPassChain.hasDepthSampler = false;

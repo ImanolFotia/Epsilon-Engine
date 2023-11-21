@@ -469,7 +469,7 @@ namespace engine
 						descriptorWrites[index].dstSet = material.descriptorSets[i];
 						descriptorWrites[index].dstBinding = binding.bindingPoint;
 						descriptorWrites[index].dstArrayElement = 0;
-						descriptorWrites[index].descriptorType = binding.descriptorBinding;
+						descriptorWrites[index].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 						descriptorWrites[index].descriptorCount = 1;
 						descriptorWrites[index].pBufferInfo = &bufferInfo;
 						descriptorWrites[index].pImageInfo = nullptr;       // Optional
