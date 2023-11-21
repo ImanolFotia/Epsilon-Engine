@@ -158,6 +158,12 @@ namespace engine
 			return bindGroup;
 		}
 
+		void UpdateBindGroup(const std::string& name) {
+			auto resourceManager = m_pContext->ResourceManager();
+			//resourceManager->updateBindGroup();
+			m_pRenderLayouts[name];
+		}
+
 		std::unordered_map<std::string, RenderLayout> getBindGroups() {
 			return m_pRenderLayouts;
 		}
@@ -434,7 +440,7 @@ namespace engine
 
 				Ref<BindGroup> selectedBindGroup = m_pRenderLayouts[layout].bindGroup;
 				
-				for (auto& mesh : renderModel->data.renderMeshes)
+				for (auto& mesh : renderModel->data.renderMeshes[0])
 				{
 					if (renderer->numPushedCommands() >= engine::MAX_COMMAND_QUEUE_SIZE) {
 						Flush();
@@ -537,7 +543,7 @@ namespace engine
 
 				}
 
-				for (auto& mesh : renderModel->data.renderMeshes)
+				for (auto& mesh : renderModel->data.renderMeshes[0])
 				{
 					uint32_t material_indices[4] = { 0 };
 					uint32_t firstInstance = m_pMeshCount;

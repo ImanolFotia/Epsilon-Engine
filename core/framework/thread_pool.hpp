@@ -123,9 +123,10 @@ public:
 
     void Wait()
     {
+        m_pMgr_condition.notify_all();
         for (auto& thread : m_pAsync_threads)
         {
-            thread.wait();
+            thread.get();
         }
     }
 

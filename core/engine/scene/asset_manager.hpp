@@ -91,7 +91,7 @@ namespace engine
 
 	struct RenderModel
 	{
-		std::vector<RenderMesh> renderMeshes;
+		std::array<std::vector<RenderMesh>, 4> renderMeshes;
 		std::vector<framework::Animation> animations;
 		std::vector<glm::mat4> transforms{};
 		std::vector<std::any> instance_data;
@@ -296,7 +296,7 @@ namespace engine
 			auto resourceManager = m_pContext->ResourceManager();
 
 			if (m_pModels.contains(name)) {
-				for (auto& mesh : m_pModels.at(name).renderMeshes) {
+				for (auto& mesh : m_pModels.at(name).renderMeshes[0]) {
 					mesh.id = mesh_counter;
 					mesh_counter++;
 				}
@@ -409,7 +409,7 @@ namespace engine
 				m_pMaterials[material_name_hash].material = pbr_material;
 			}
 
-			model.renderMeshes.push_back(subRenderC);
+			model.renderMeshes[0].push_back(subRenderC);
 
 			return model;
 		}
@@ -420,7 +420,7 @@ namespace engine
 			auto resourceManager = m_pContext->ResourceManager();
 
 			if (m_pModels.contains(name)) {
-				for (auto& mesh : m_pModels.at(name).renderMeshes) {
+				for (auto& mesh : m_pModels.at(name).renderMeshes[0]) {
 					mesh.id = mesh_counter;
 					mesh_counter++;
 				}
@@ -439,7 +439,7 @@ namespace engine
 			subRenderC.mesh = addMesh(name, mesh);
 			subRenderC.id = mesh_counter;
 			mesh_counter++;
-			model.renderMeshes.push_back(subRenderC);
+			model.renderMeshes[0].push_back(subRenderC);
 
 			if (m_pMaterials.contains(material_name_hash)) {
 				return model;
@@ -549,7 +549,7 @@ namespace engine
 
 			auto resourceManager = m_pContext->ResourceManager();
 			if (m_pModels.contains(model_name)) {
-				for (auto& mesh : m_pModels.at(model_name).renderMeshes) {
+				for (auto& mesh : m_pModels.at(model_name).renderMeshes[0]) {
 					mesh.id = mesh_counter;
 					mesh_counter++;
 				}
@@ -617,7 +617,7 @@ namespace engine
 				size_t material_name_hash = std::hash<std::string>{}(material_name);
 
 				if (m_pMaterials.contains(material_name_hash)) {
-					model.renderMeshes.push_back(subRenderC);
+					model.renderMeshes[0].push_back(subRenderC);
 					continue;
 				}
 				auto mesh_material = mesh.Material();
@@ -658,7 +658,7 @@ namespace engine
 					materialBufferPtr[mat_index] = material;
 				}
 
-				model.renderMeshes.push_back(subRenderC);
+				model.renderMeshes[0].push_back(subRenderC);
 
 				index++;
 			}
