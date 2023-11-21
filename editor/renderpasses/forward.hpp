@@ -131,7 +131,7 @@ namespace Editor::Renderpasses {
 			.dimensions({ .width = 1280, .height = 720 })
 			
 			.inputs({ {
-					.size = 256,
+					.size = 384,
 					.offset = 0,
 					.binding = 0,
 					.set = 0,
@@ -149,27 +149,43 @@ namespace Editor::Renderpasses {
 				} })
 			.outputs({
 					{
-						  .format = COLOR_RGBA,
+						  .format = COLOR_RGBA_16F,
+						  .wrapMode = engine::WrapMode::CLAMP_TO_EDGE,
 						  .blendEnable = true,
 						  .clearColor = {0.1f, 0.1f, 0.1f, 1.0f},
 						  .isSampler = true,
 						  .isDepthAttachment = false,
 						  .isSwapChainAttachment = false,
 						  .clearAttachment = true,
-						  
 						  .name = "Forward0",
 					},
 					{
+						  .format = COLOR_RG_32F,
+						  .wrapMode = engine::WrapMode::CLAMP_TO_EDGE,
+						  .blendEnable = false,
+						  .clearColor = {0.0f, 0.0f, 0.0f, 1.0f},
+						  .isSampler = true,
+						  .isDepthAttachment = false,
+						  .isSwapChainAttachment = false,
+						  .clearAttachment = true,
+						  .name = "VelocityBuffer",
+					},
+					{
 						  .format = DEPTH_F32_STENCIL_8,
+						  .wrapMode = engine::WrapMode::CLAMP_TO_EDGE,
+						  .depthCompare = false,
+						  .blendEnable = false,
 						  .depthStencilValue = {1, 0},
+						  .isSampler = true,
 						  .isDepthAttachment = true,
+						  .clearAttachment = true,
 						  .name = "ForwardDepth",
 					}
 				})
 			.pipelineLayout(mainLayout)
 			.pipelineLayout(skyLayout)
 			.pipelineLayout(gridLayout)
-			.pushConstant(68);
+			.pushConstant(72);
 
 		return context->ResourceManager()->createRenderPass(renderPassInfo);
 	}

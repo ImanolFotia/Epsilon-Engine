@@ -19,6 +19,7 @@
 #include "ui/node_hierarchy.hpp"
 #include "ui/material_editor.hpp"
 #include "ui/assets.hpp"
+#include "ui/postprocess.hpp"
 
 
 #include "types/transform.hpp"
@@ -64,6 +65,7 @@ namespace Editor {
 		UI::SceneNodes m_pSceneNodes;
 		UI::MaterialEditor m_pMaterialEditor;
 		UI::Assets m_pAssets;
+		UI::PostProcess m_pPostProcess;
 
 
 		std::shared_ptr<utils::Camera> m_pCamera;
@@ -76,6 +78,10 @@ namespace Editor {
 
 		dotnet::DotnetHost host;
 		int selected_index = -1;
+
+		bool m_pCurrentTAAPass = false;
+
+		Renderpasses::TAARenderPasses m_pTAAPasses;
 
 
 		engine::Scene::SceneEntity* selected_entity = nullptr;

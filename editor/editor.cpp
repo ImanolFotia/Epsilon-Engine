@@ -37,11 +37,14 @@ namespace Editor {
 
 		m_pScene->addRenderPass("DefaultRenderPass", Renderpasses::createDefaultRenderPass(m_pScene));
 
-		auto TAAPasses = Renderpasses::createTAARenderPass(m_pScene);
-		m_pScene->addRenderPass("TAARenderPass0", TAAPasses.renderpass[0]);
-		m_pScene->addRenderPass("TAARenderPass1", TAAPasses.renderpass[1]);
+		m_pTAAPasses = Renderpasses::createTAARenderPass(m_pScene);
 
-		m_pScene->addRenderPass("ForwardRenderPass", m_pForwardRenderPass);
+		//m_pScene->getAssetManager().CreateGPUBuffer("TAADataBuffer", sizeof(Renderpasses::TAAUniformData), engine::BufferStorageType::UNIFORM_BUFFER);
+
+		m_pScene->addRenderPass("Forward", m_pForwardRenderPass);
+
+		m_pScene->addRenderPass("TAARenderPass0", m_pTAAPasses.renderpass[0]);
+		m_pScene->addRenderPass("TAARenderPass1", m_pTAAPasses.renderpass[1]);
 
 		m_pScene->addBindGroup("DefaultBindGroup", 0, {
 				.bindingInfo = {{.size = sizeof(engine::PBRMaterial) * engine::AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"}},
@@ -63,29 +66,33 @@ namespace Editor {
 				.renderPass = "Forward",
 				.name = "GridBindGroup",
 			});
-		/*
-		m_pScene->addBindGroup("TAABindGroup0", 3, {
-				.bindingInfo = {},
+		
+		m_pScene->addBindGroup("TAABindGroup0", 0, {
+				.bindingInfo = {
+			{.size = sizeof(Renderpasses::TAAUniformData), .offset = 0, .binding = 1, .type = engine::UniformBindingType::UNIFORM_BUFFER, .buffer = "TAADataBuffer", .name = "TAADataBuffer"}},
 				.inputs = {
 					{.renderPass = "Forward", .index = 0, .bindingPoint = 2},
-					{.renderPass = "TAA1", .index = 0, .bindingPoint = 3},
+					{.renderPass = "TAARenderPass1", .index = 0, .bindingPoint = 3},
 					{.renderPass = "Forward", .index = 1, .bindingPoint = 4},
-					{.renderPass = "Forward", .index = 2, .bindingPoint = 5}},
-				.renderPass = "Forward",
-				.name = "GridBindGroup",
+					{.renderPass = "Forward", .index = 2, .bindingPoint = 5}
+					},
+				.renderPass = "TAARenderPass0",
+				.name = "TAABindGroup0",
 			});
 
-		m_pScene->addBindGroup("TAABindGroup1", 4, {
-				.bindingInfo = {},
+		m_pScene->addBindGroup("TAABindGroup1", 0, {
+				.bindingInfo = {
+			{.size = sizeof(Renderpasses::TAAUniformData), .offset = 0, .binding = 1, .type = engine::UniformBindingType::UNIFORM_BUFFER, .buffer = "TAADataBuffer", .name = "TAADataBuffer"}},
 				.inputs = {
 					{.renderPass = "Forward", .index = 0, .bindingPoint = 2},
-					{.renderPass = "TAA0", .index = 0, .bindingPoint = 3},
+					{.renderPass = "TAARenderPass0", .index = 0, .bindingPoint = 3},
 					{.renderPass = "Forward", .index = 1, .bindingPoint = 4},
-					{.renderPass = "Forward", .index = 2, .bindingPoint = 5}},
-				.renderPass = "Forward",
-				.name = "GridBindGroup",
-			});*/
-
+					{.renderPass = "Forward", .index = 2, .bindingPoint = 5}
+					},
+				.renderPass = "TAARenderPass1",
+				.name = "TAABindGroup1",
+			});
+			
 		auto renderer = getContext()->Renderer();
 
 		renderer->InitDebugRenderer();
@@ -105,6 +112,7 @@ namespace Editor {
 
 		////////////////
 
+		setMaxFPS(72);
 
 		auto planeNode = m_pScene->emplaceIntoScene<engine::Scene::SceneEntity>(engine::Box{ glm::vec3(0.0f), glm::vec3(1.0) });
 
@@ -115,7 +123,7 @@ namespace Editor {
 		engine::Quad quad(2, glm::vec2(5.0f), glm::vec3(2.0f));
 		auto m_pDefaultCube = m_pScene->getAssetManager().createModelFromMesh("DefaultPlane", quad.data(), {});
 		m_pGridPlane = m_pScene->insertIntoNode(engine::Box{ glm::vec3(planeNode->data.transform[3]), glm::vec3(10.0) }, planeNode, m_pDefaultCube);
-		m_pGridPlane->data.bindGroup = "GridBindGroup";
+		m_pGridPlane->data.bindGroup = "DefaultBindGroup";
 
 		auto script = m_pScene->emplaceIntoNode<EntityScript>(planeNode);
 		script->data.ManagedPtr = host.assembly.Invoke<void*>(L"CreateEntity", planeNode.get(), L"Game.Ground", "Ground");
@@ -201,10 +209,11 @@ namespace Editor {
 			m_pMenuBar.draw();
 			m_pTooldbar.draw();
 			m_pInspector.draw();
-			m_pMainViewport.setImage(getContext()->Renderer()->getDebugRenderer()->getImages().at("Forward0"));
+			m_pMainViewport.setImage(getContext()->Renderer()->getDebugRenderer()->getImages().at(m_pCurrentTAAPass ? "TAATarget0" : "TAATarget1"));
 			m_pMainViewport.draw();
 			m_pSceneNodes.draw();
 			m_pAssets.draw();
+			m_pPostProcess.draw();
 
 			selected_entity = (engine::Scene::SceneEntity*)m_pSceneNodes.scene_node_ref;// reinterpret_cast<std::shared_ptr<engine::Scene::SceneEntity>> (m_pSceneNodes.scene_node_ref);
 			selected_index = m_pSceneNodes.selected_index;
@@ -282,7 +291,7 @@ namespace Editor {
 			ImGui::SameLine();
 			ImGui::End();
 
-			});
+		});
 	}
 
 	void Editor::OnUpdate() {
@@ -330,7 +339,7 @@ namespace Editor {
 		range = glm::mod(range, 2.0f);
 
 
-		m_pCamera->UpdateMatrices(0, screenX, screenY, false);
+		m_pCamera->UpdateMatrices(Frame(), screenX, screenY, true);
 
 		if (framework::Input::Mouse::MIDDLE == framework::Input::PRESSED && m_pMainViewport.isHovered()) {
 			if (m_pCameraWasInactive) {
@@ -351,6 +360,8 @@ namespace Editor {
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		auto time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
+		shaderData.prev_view = m_pCamera->getPrevViewMatrix();
+		shaderData.prev_proj = shaderData.proj;
 		shaderData.view = m_pCamera->getViewMatrix();
 		shaderData.proj = m_pCamera->getProjectionMatrix();
 		shaderData.proj[1][1] *= -1;
@@ -358,13 +369,12 @@ namespace Editor {
 		shaderData.viewPosition = m_pCamera->getPosition();
 		shaderData.iFrame = Frame();
 
-		if (m_pMainViewport.ShouldResize()) {
-			getContext()->ResourceManager()->ResizeFramebuffer(m_pForwardRenderPass, m_pMainViewport.getSize());
-			Epsilon::getContext()->Renderer()->getDebugRenderer()->recreateDescriptorSets();
-			m_pMainViewport.ResetFlags();
-		}
-
 		getContext()->Renderer()->UpdateRenderPassUniforms(m_pForwardRenderPass, engine::RENDERPASS_SET, &shaderData);
+		getContext()->Renderer()->UpdateRenderPassUniforms(m_pTAAPasses.renderpass[0], engine::RENDERPASS_SET, &shaderData);
+		getContext()->Renderer()->UpdateRenderPassUniforms(m_pTAAPasses.renderpass[1], engine::RENDERPASS_SET, &shaderData);
+
+		getContext()->Renderer()->UpdateRenderPassUniforms(m_pTAAPasses.renderpass[0], (engine::BindingIndex)1, &m_pPostProcess.m_pTAAData);
+		getContext()->Renderer()->UpdateRenderPassUniforms(m_pTAAPasses.renderpass[1], (engine::BindingIndex)1, &m_pPostProcess.m_pTAAData);
 
 	}
 
@@ -372,8 +382,9 @@ namespace Editor {
 
 		m_pScene->BeginScene();
 
+		m_pScene->getContext()->Renderer()->ComputeDispatch(m_pComputeShader);
 
-		m_pScene->setCurrentRenderPass("ForwardRenderPass");
+		m_pScene->setCurrentRenderPass("Forward");
 
 		auto models = m_pScene->getNodes <engine::RenderModel>();
 
@@ -384,12 +395,28 @@ namespace Editor {
 		}
 
 		m_pScene->Flush();
-		m_pScene->getContext()->Renderer()->ComputeDispatch(m_pComputeShader);
 
+		m_pScene->setCurrentRenderPass(/**/m_pCurrentTAAPass ? "TAARenderPass0" : "TAARenderPass1");
+
+		//for (auto& model_node : models) {
+			m_pScene->Push(m_pGridPlane, glm::mat4(1.0), m_pCurrentTAAPass ? "TAABindGroup0" : "TAABindGroup1");
+		//}
+
+		m_pCurrentTAAPass = !m_pCurrentTAAPass;
+
+		m_pScene->Flush();
 
 		m_pScene->EndScene();
 
-
+		if (m_pMainViewport.ShouldResize()) {
+			getContext()->ResourceManager()->ResizeFramebuffer(m_pTAAPasses.renderpass[0], m_pMainViewport.getSize());
+			getContext()->ResourceManager()->ResizeFramebuffer(m_pTAAPasses.renderpass[1], m_pMainViewport.getSize());
+			getContext()->ResourceManager()->ResizeFramebuffer(m_pForwardRenderPass, m_pMainViewport.getSize());
+			getContext()->ResourceManager()->updateBindGroup(m_pScene->getBindGroups()["TAABindGroup1"].bindGroup);
+			getContext()->ResourceManager()->updateBindGroup(m_pScene->getBindGroups()["TAABindGroup0"].bindGroup);
+			Epsilon::getContext()->Renderer()->getDebugRenderer()->recreateDescriptorSets();
+			m_pMainViewport.ResetFlags();
+		}
 	}
 
 

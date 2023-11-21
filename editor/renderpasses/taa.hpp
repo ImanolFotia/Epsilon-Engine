@@ -15,11 +15,11 @@ namespace Editor::Renderpasses {
 	};
 
 	struct TAAUniformData {
-		float lerpAmount;
-		int clampingKernelSize;
-		int TotalFrames;
-		float _FeedbackMin;
-		float _FeedbackMax;
+		float lerpAmount = 1.0;
+		int clampingKernelSize = 1;
+		int TotalFrames = 0;
+		float _FeedbackMin = 0.250;
+		float _FeedbackMax = 0.475;
 	};
 
 	struct TAARenderPasses {
@@ -80,10 +80,10 @@ namespace Editor::Renderpasses {
 		PipelineLayout taaLayout = {
 			.shaderInfo = taaShaderInfo,
 			.vertexLayout = vertexLayout,
-			.cullMode = CullMode::BACK,
+			.cullMode = CullMode::NONE,
 			.windingMode = WindingMode::COUNTER_CLOCK_WISE,
 			.depthWriteEnable = true,
-			.depthTestEnable = true
+			.depthTestEnable = false
 		};
 
 
@@ -92,7 +92,7 @@ namespace Editor::Renderpasses {
 
 		RenderPassInfo renderPassInfo0 =
 			RenderPassFactory()
-			.name("TAA0")
+			.name("TAARenderPass0")
 			.depthAttachment(true)
 			.isSwapChainAttachment(false)
 			.subpasses({})
@@ -100,86 +100,69 @@ namespace Editor::Renderpasses {
 
 			.inputs({ 
 				{
-					.size = 256,
+					.size = 385,
 					.offset = 0,
 					.binding = 0,
-					.set = 0,
-					.type = engine::UniformBindingType::UNIFORM_BUFFER,
-					.descriptorCount = 1,
-					.name = "TAAUniformBuffer" },
+					.type = engine::UniformBindingType::UNIFORM_BUFFER},
 				{
 					.size = sizeof(TAAUniformData),
 					.offset = 0,
 					.binding = 1,
-					.set = 0,
-					.type = engine::UniformBindingType::UNIFORM_BUFFER,
-					.descriptorCount = 1,
-					.name = "TAADataBuffer" },
+					.type = engine::UniformBindingType::UNIFORM_BUFFER},
 				{
 
 					.size = 0,
 					.offset = 0,
 					.binding = 2,
-					.set = 0,
-					.type = engine::UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER,
-					.descriptorCount = 1,
-					.name = "CurrentFrame"
+					.type = engine::UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER
 				},
 				{
 
 					.size = 0,
 					.offset = 0,
 					.binding = 3,
-					.set = 0,
 					.type = engine::UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER,
-					.descriptorCount = 1,
-					.name = "LastFrame"
 				},
 				{
 
 					.size = 0,
 					.offset = 0,
 					.binding = 4,
-					.set = 0,
-					.type = engine::UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER,
-					.descriptorCount = 1,
-					.name = "VelocityBuffer"
+					.type = engine::UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER
 				},
 				{
 
 					.size = 0,
 					.offset = 0,
 					.binding = 5,
-					.set = 0,
 					.type = engine::UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER,
-					.descriptorCount = 1,
-					.name = "DepthBuffer"
 				}
 				})
 			.outputs({
 					{
-						  .format = COLOR_RGBA,
+						  .format = COLOR_RGBA_16F,
+						  .wrapMode = engine::WrapMode::CLAMP_TO_EDGE,
 						  .blendEnable = false,
-						  .clearColor = {0.1f, 0.1f, 0.1f, 1.0f},
+						  .clearColor = {1.0f, 1.0f, 1.0f, 1.0f},
 						  .isSampler = true,
 						  .isDepthAttachment = false,
 						  .isSwapChainAttachment = false,
 						  .clearAttachment = true,
-						  .name = "TAA0",
+						  .name = "TAATarget0",
 					},
 					{
 						  .format = DEPTH_F32_STENCIL_8,
 						  .depthStencilValue = {1, 0},
 						  .isDepthAttachment = true,
-						  .name = "TAADepth",
+						  .name = "TAADepth0",
 					}
 				})
 			.pipelineLayout(taaLayout)
-			.pushConstant(68);
+			.pushConstant(72);
 
 		RenderPassInfo renderPassInfo1 =
 			RenderPassFactory()
-			.name("TAA1")
+			.name("TAARenderPass1")
 			.depthAttachment(true)
 			.isSwapChainAttachment(false)
 			.subpasses({})
@@ -187,7 +170,7 @@ namespace Editor::Renderpasses {
 
 			.inputs({
 				{
-					.size = 256,
+					.size = 384,
 					.offset = 0,
 					.binding = 0,
 					.set = 0,
@@ -207,62 +190,51 @@ namespace Editor::Renderpasses {
 					.size = 0,
 					.offset = 0,
 					.binding = 2,
-					.set = 0,
 					.type = engine::UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER,
-					.descriptorCount = 1,
-					.name = "CurrentFrame"
 				},
 				{
 
 					.size = 0,
 					.offset = 0,
 					.binding = 3,
-					.set = 0,
 					.type = engine::UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER,
-					.descriptorCount = 1,
-					.name = "LastFrame"
 				},
 				{
 
 					.size = 0,
 					.offset = 0,
 					.binding = 4,
-					.set = 0,
 					.type = engine::UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER,
-					.descriptorCount = 1,
-					.name = "VelocityBuffer"
 				},
 				{
 
 					.size = 0,
 					.offset = 0,
 					.binding = 5,
-					.set = 0,
 					.type = engine::UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER,
-					.descriptorCount = 1,
-					.name = "DepthBuffer"
 				}
 				})
 			.outputs({
 					{
-						  .format = COLOR_RGBA,
+						  .format = COLOR_RGBA_16F,
+						  .wrapMode = engine::WrapMode::CLAMP_TO_EDGE,
 						  .blendEnable = false,
-						  .clearColor = {0.1f, 0.1f, 0.1f, 1.0f},
+						  .clearColor = {1.0f, 1.0f, 1.0f, 1.0f},
 						  .isSampler = true,
 						  .isDepthAttachment = false,
 						  .isSwapChainAttachment = false,
 						  .clearAttachment = true,
-						  .name = "TAA0",
+						  .name = "TAATarget1",
 					},
 					{
 						  .format = DEPTH_F32_STENCIL_8,
 						  .depthStencilValue = {1, 0},
 						  .isDepthAttachment = true,
-						  .name = "TAADepth",
+						  .name = "TAADepth1",
 					}
 				})
 			.pipelineLayout(taaLayout)
-			.pushConstant(68);
+			.pushConstant(72);
 
 		TAARenderPasses passes;
 		passes.renderpass[0] = context->ResourceManager()->createRenderPass(renderPassInfo0);
