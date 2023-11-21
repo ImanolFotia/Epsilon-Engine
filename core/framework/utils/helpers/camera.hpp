@@ -125,7 +125,7 @@ namespace utils
         float MaxMovementSpeed{};
         bool mIsMoving = false;
         bool externallymodified = true;
-        float jitter_multiplier = 1.0;
+        float jitter_multiplier = 1.0f;
         ProyectionType m_pProjType = Perspective;
 
     private:

@@ -273,10 +273,10 @@ namespace utils
         Frustrum = Position + Orientation;
         winx = frame_w;
         winy = frame_h;
-        float Aspectratio = 16.0f/9.0f;
+        float Aspectratio = (float)frame_w /(float)frame_h;
         Aspectratio = (float)winx / (float)winy;
-        static const glm::vec2 Res = glm::vec2((float)winx, (float)winy);
-        static const glm::vec2 iRes = 1.0f / glm::vec2((float)winx, (float)winy);
+        const glm::vec2 Res = glm::vec2((float)winx, (float)winy);
+        const glm::vec2 iRes = 1.0f / glm::vec2((float)winx, (float)winy);
 
         if(m_pProjType == Perspective)
             ProjectionMatrix = glm::perspective(glm::radians(FieldOfView), glm::clamp(Aspectratio, -10.0f, 10.0f), near_plane, far_plane);
