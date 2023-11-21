@@ -19,7 +19,7 @@ namespace engine
 			return VK_FORMAT_R8G8B8A8_SRGB;
 		if (format == COLOR_R_16F)
 			return VK_FORMAT_R16_SFLOAT;
-		if (format == COLOR_R_32F)
+		if (format == COLOR_R_32F || format == NON_COLOR_R_32F)
 			return VK_FORMAT_R32_SFLOAT;
 		if (format == COLOR_RG_16F)
 			return VK_FORMAT_R16G16_SFLOAT;
@@ -33,6 +33,7 @@ namespace engine
 			return VK_FORMAT_R16G16B16A16_SFLOAT;
 		if (format == COLOR_RGBA_32F)
 			return VK_FORMAT_R32G32B32A32_SFLOAT;
+
 
 		if (format == COLOR_RGB_BC1) return VK_FORMAT_BC1_RGB_SRGB_BLOCK;
 		if (format == COLOR_RGB_BC2) return VK_FORMAT_BC2_SRGB_BLOCK;
