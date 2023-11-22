@@ -84,6 +84,8 @@ namespace Epsilon
             alignas(8) glm::vec3 viewPosition{};
             alignas(16) glm::mat4 view = glm::mat4(1.0f);
             alignas(16) glm::mat4 proj = glm::mat4(1.0f);
+            alignas(16) glm::mat4 prev_view = glm::mat4(1.0f);
+            alignas(16) glm::mat4 prev_proj = glm::mat4(1.0f);
             alignas(16) glm::mat4 lightMatrix = glm::mat4(1.0f);
             alignas(4) uint32_t iFrame = 0;
             alignas(8) glm::ivec2 iMouse = glm::ivec2(0,0);

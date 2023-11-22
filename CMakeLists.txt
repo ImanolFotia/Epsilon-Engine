@@ -270,6 +270,7 @@ else()
     set(OPENAL_BUILD_DIR ${THIRDPARTY_DIR}/openal)
     message(${OPENAL_BUILD_DIR})
     include_directories(${OPENAL_BUILD_DIR}/include)
+    include_directories(${OPENAL_BUILD_DIR})
     link_directories(${OPENAL_BUILD_DIR})
 
 
