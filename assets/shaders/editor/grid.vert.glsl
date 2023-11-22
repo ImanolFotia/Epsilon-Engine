@@ -13,6 +13,9 @@ layout(location = 5) in vec3 inBitangent;
 layout(location = 9) out vec3 nearPoint;
 layout(location = 10) out vec3 farPoint;
 
+layout (location=11) out vec4 Position;
+layout (location=12) out vec4 PrevPosition;
+
 vec3 unprojectPoint(float x, float y, float z, mat4 viewProjectionInverse) {
     vec4 clipSpacePos = vec4(x, y, z, 1.0);
     vec4 eyeSpacePos = viewProjectionInverse * clipSpacePos;
@@ -30,5 +33,15 @@ void main() {
 
 
     gl_Position = vec4(pos, 1.0);
+    
+    vec4 worldPos = PushConstant.object.modelMatrix * vec4(inPosition, 1.0);
+    
+    mat4 ViewMatrix = RenderPassUBO.data.view;
+    mat4 Projection = RenderPassUBO.data.proj;
+
+    vec4 viewPos = ViewMatrix * worldPos;
+
+    Position = Projection * viewPos;
+    PrevPosition = Projection * RenderPassUBO.data.prev_view * /*PrevModel*/ PushConstant.object.modelMatrix * vec4(inPosition, 1.0);
 
 }

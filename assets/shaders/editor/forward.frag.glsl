@@ -8,7 +8,10 @@
 #include "PBRFunctions.glsl"
 
 layout (location = 0) out vec4 fragColor;
+layout (location = 1) out vec2 velocityBuffer;
 
+layout (location=10) in vec4 Position;
+layout (location=11) in vec4 PrevPosition;
 
 const vec2 invAtan = vec2(0.1591, 0.3183);
 vec2 SampleSphericalMap(vec3 v)
@@ -22,8 +25,8 @@ vec2 SampleSphericalMap(vec3 v)
 const vec3 lightDir = normalize(vec3(23.6365, 25.117, -45.772));
 
 
-    const float fAlphaMultiplier = 1.4;
-    const float fAlphaTest = 0.8;
+const float fAlphaMultiplier = 1.4;
+const float fAlphaTest = 0.8;
 
 //Parallax corrected cubemap limits, should be converted into uniforms
 const vec3 BoxMax = vec3(30.0, 15.0, 30.0);
@@ -62,7 +65,7 @@ float IGN(int pixelX, int pixelY, int frame)
 
 float ResolveTransparency() {
 
-    ivec2 invFragCoord = ivec2(gl_FragCoord);
+    ivec2 invFragCoord = ivec2(gl_FragCoord.xy);
     float lDepth = LinearizeDepth(gl_FragCoord.z);
 
     int mult = 40;
@@ -112,7 +115,7 @@ void main() {
     float alpha = Albedo.a;
     float newAlpha = alpha * fAlphaMultiplier;
 
-    if(fAlphaTest < 1.0 - newAlpha)
+    if(ResolveTransparency() < 1.0 - newAlpha)
         discard; 
 
     
@@ -169,4 +172,9 @@ void main() {
     vec3 light = CalculateDirectionalPBR(lightDir, vec3(1.0), 1.0, RenderPassUBO.data.viewPosition, fs_in.position, F0, Normal, roughness, Albedo.rgb, specular);
     
     fragColor = vec4(tonemapACES(light + ambient), 1.0);
+
+    vec2 a = (Position.xy / Position.w) * 0.5 + 0.5;
+    vec2 b = (PrevPosition.xy / PrevPosition.w) * 0.5 + 0.5;
+
+    velocityBuffer = vec2(a - b);
 }

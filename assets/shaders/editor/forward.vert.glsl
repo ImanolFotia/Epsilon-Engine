@@ -10,6 +10,9 @@ layout(location = 3) in vec4 inColor;
 layout(location = 4) in vec3 inTangent;
 layout(location = 5) in vec3 inBitangent;
 
+layout (location=10) out vec4 Position;
+layout (location=11) out vec4 PrevPosition;
+
 
 mat3 CreateTBNMatrix(mat3 normalMatrix)
 {
@@ -21,7 +24,9 @@ mat3 CreateTBNMatrix(mat3 normalMatrix)
 }
 
 void main() {
-    gl_Position = RenderPassUBO.data.proj * RenderPassUBO.data.view * PushConstant.object.modelMatrix * vec4(inPosition, 1.0);
+    vec4 worldPos = PushConstant.object.modelMatrix * vec4(inPosition, 1.0);
+
+    gl_Position = RenderPassUBO.data.proj * RenderPassUBO.data.view * worldPos;
     
   	mat3 normalMatrix = transpose(inverse(mat3(PushConstant.object.modelMatrix)));
     
@@ -31,4 +36,13 @@ void main() {
     vs_out.color = inColor;
     vs_out.texCoords = inTexCoord;
     vs_out.position = vec3(PushConstant.object.modelMatrix * vec4(inPosition, 1.0));
+
+    
+    mat4 ViewMatrix = RenderPassUBO.data.view;
+    mat4 Projection = RenderPassUBO.data.proj;
+
+    vec4 viewPos = ViewMatrix * worldPos;
+
+    Position = Projection * viewPos;
+    PrevPosition = Projection * RenderPassUBO.data.prev_view * /*PrevModel*/ PushConstant.object.modelMatrix * vec4(inPosition, 1.0);
 }

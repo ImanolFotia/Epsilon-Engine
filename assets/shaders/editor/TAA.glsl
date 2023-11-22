@@ -1,31 +1,15 @@
-#version 440 core
+#version 450 core
 
 #extension GL_EXT_nonuniform_qualifier : enable
 #extension GL_GOOGLE_include_directive : enable
+#include "bindings.glsl"
 
-
-struct RenderPass {
-    float iTime;
-    vec2 iResolution;
-    vec3 lightPosition;
-	vec3 viewPosition;
-    mat4 view;
-    mat4 proj;
-    mat4 lightMatrix;
-    int iFrame;
-    ivec2 iMouse;
-};
-
-layout(binding = 0) uniform UniformBufferObject
-{
-    RenderPass data;
-}
-RenderPassUBO;
 
 layout (binding = 2) uniform sampler2D sCurrentFrame;
 layout (binding = 3) uniform sampler2D sLastFrame;
 layout (binding = 4) uniform sampler2D sVelocityBuffer;
 layout (binding = 5) uniform sampler2D sDepthBuffer;
+
 
 #pragma optionNV (unroll all)
 #define USE_YCOCG
@@ -53,7 +37,7 @@ float Luminance(vec3 rgb)
     return dot(rgb, W);
 }
 
-#define ZCMP_GT(a, b) (a > b)
+#define ZCMP_GT(a, b) (a < b)
 
 vec3 find_closest_fragment_3x3(vec2 uv)
 {
@@ -89,8 +73,8 @@ vec3 find_closest_fragment_3x3(vec2 uv)
 	return vec3(uv + dd.xy * dmin.xy, dmin.z);
 }
 
-float NEAR = 0.1;
-float FAR = 3000.0;
+float NEAR = 0.01;
+float FAR = 256.0;
 
 float LinearizeDepth(float depth) {
   float z = depth * 2.0 - 1.0;  // Back to NDC
@@ -141,8 +125,8 @@ vec3 resolve(vec3 tex) {
 
 float weightLuminance(vec3 col0, vec3 col1) {
 
-    float lum0 = col0.r;
-	float lum1 = col1.r;
+    float lum0 = Luminance(col0);
+	float lum1 = Luminance(col1);
     float unbiased_diff = abs(lum0 - lum1) / max(lum0, max(lum1, 0.2));
 	float unbiased_weight = 1.0 - unbiased_diff;
 	float unbiased_weight_sqr = unbiased_weight * unbiased_weight;
@@ -151,19 +135,28 @@ float weightLuminance(vec3 col0, vec3 col1) {
     return k_feedback;
 }
 
+float saturate(in float x) {
+    return clamp(x, 0.0, 1.0);
+}
+
+
 void main()
 { 
-    vec2 fragCoord = gl_FragCoord.xy;
+    vec2 fragCoord = gl_FragCoord.xy / RenderPassUBO.data.iResolution.xy;//1.0 - (fs_in.texCoords.xy / 5.0);
+    //fragCoord = fragCoord*2.0-1.0;
+    //fragCoord.x *= RenderPassUBO.data.iResolution.x / RenderPassUBO.data.iResolution.y;
 
     
 	vec3 c_frag = find_closest_fragment_3x3(fragCoord);
-    vec2 velocity = texture(sVelocityBuffer, c_frag.xy).zw;
+    vec2 velocity = textureLod(sVelocityBuffer, c_frag.xy, 0.0).xy;
 	float vs_dist = LinearizeDepth(c_frag.z);
     
     // get the neighborhood min / max from this frame's render
-    vec3 center = sampleTex(sCurrentFrame, fragCoord);
+    vec3 center = (sampleTex(sCurrentFrame, fragCoord));
     vec3 minColor = center;
     vec3 maxColor = center;
+
+
 
     for (int iy = -TAAData.clampingKernelSize; iy <= TAAData.clampingKernelSize; ++iy)
     {
@@ -173,18 +166,26 @@ void main()
                 continue;
            
             vec2 offsetUV = ((fragCoord + vec2(ix, iy)) / RenderPassUBO.data.iResolution.xy);
-            vec3 color = sampleTex(sCurrentFrame, offsetUV);
+            vec3 color = (sampleTex(sCurrentFrame, offsetUV));
+            
             minColor = min(minColor, color);
             maxColor = max(maxColor, color);
         }
     }
+
+
+    vec2 newCoord = fragCoord - velocity;
+    
+    const float velocityConfidenceFactor = saturate(  1  - length( velocity.xy ) / 128 );
     
     // get last frame's pixel and clamp it to the neighborhood of this frame
-    vec3 old = sampleTex(sLastFrame, fragCoord - velocity);    
+    vec3 old = sampleTex(sLastFrame, newCoord);    
     old = max(minColor, old);
     old = min(maxColor, old);
     
     float weight = weightLuminance(center, old);
+
+    if(newCoord.x > 1.0 || newCoord.x < 0.0 || newCoord.y > 1.0 || newCoord.y < 0.0 || velocityConfidenceFactor <= 0.1) weight = 1.0;
 	// output
 	//return lerp(texel0, texel1, k_feedback);
     
@@ -192,6 +193,7 @@ void main()
     vec3 pixelColor = resolve(mix(old, center, weight));   
     
     FragColor = vec4(pixelColor, 1.0);
+
 
     FragColor.a = 1.0;
 }

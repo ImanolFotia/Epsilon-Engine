@@ -20,6 +20,8 @@ struct RenderPass {
 	vec3 viewPosition;
     mat4 view;
     mat4 proj;
+    mat4 prev_view;
+    mat4 prev_proj;
     mat4 lightMatrix;
     int iFrame;
     ivec2 iMouse;
@@ -80,6 +82,8 @@ struct RenderPass {
 	vec3 viewPosition;
     mat4 view;
     mat4 proj;
+    mat4 prev_view;
+    mat4 prev_proj;
     mat4 lightMatrix;
     int iFrame;
     ivec2 iMouse;

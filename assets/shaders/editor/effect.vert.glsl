@@ -13,4 +13,6 @@ layout(location = 5) in vec3 inBitangent;
 
 void main() {
     gl_Position = vec4(inPosition, 1.0);
+
+    vs_out.texCoords = inTexCoord;
 }

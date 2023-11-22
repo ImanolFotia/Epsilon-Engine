@@ -5,9 +5,14 @@
 #include "bindings.glsl"
 
 layout(location = 0) out vec4 outColor;
+layout (location = 1) out vec2 velocityBuffer;
 
 layout(location = 9) in vec3 nearPoint;
 layout(location = 10) in vec3 farPoint;
+
+
+layout (location=11) in vec4 Position;
+layout (location=12) in vec4 PrevPosition;
 
 
 float ddxy(float x) {
@@ -48,4 +53,9 @@ void main() {
     }
     else
         outColor = vec4(0.0, 0.0, 0.0, 0.0);
+
+    vec2 a = (Position.xy / Position.w) * 0.5 + 0.5;
+    vec2 b = (PrevPosition.xy / PrevPosition.w) * 0.5 + 0.5;
+
+    velocityBuffer = vec2(a-b);
 }
