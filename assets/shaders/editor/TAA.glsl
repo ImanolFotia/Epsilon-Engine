@@ -125,8 +125,13 @@ vec3 resolve(vec3 tex) {
 
 float weightLuminance(vec3 col0, vec3 col1) {
 
+#ifdef USE_YCOCG
+    float lum0 = col0.r;
+	float lum1 = col1.r;
+#else
     float lum0 = Luminance(col0);
 	float lum1 = Luminance(col1);
+#endif
     float unbiased_diff = abs(lum0 - lum1) / max(lum0, max(lum1, 0.2));
 	float unbiased_weight = 1.0 - unbiased_diff;
 	float unbiased_weight_sqr = unbiased_weight * unbiased_weight;
@@ -142,17 +147,18 @@ float saturate(in float x) {
 
 void main()
 { 
-    vec2 fragCoord = gl_FragCoord.xy / RenderPassUBO.data.iResolution.xy;//1.0 - (fs_in.texCoords.xy / 5.0);
+    vec2 fragCoord = gl_FragCoord.xy;//1.0 - (fs_in.texCoords.xy / 5.0);
+    vec2 TexCoords = fragCoord/ RenderPassUBO.data.iResolution.xy;
     //fragCoord = fragCoord*2.0-1.0;
     //fragCoord.x *= RenderPassUBO.data.iResolution.x / RenderPassUBO.data.iResolution.y;
 
     
-	vec3 c_frag = find_closest_fragment_3x3(fragCoord);
+	vec3 c_frag = find_closest_fragment_3x3(TexCoords);
     vec2 velocity = textureLod(sVelocityBuffer, c_frag.xy, 0.0).xy;
 	float vs_dist = LinearizeDepth(c_frag.z);
     
     // get the neighborhood min / max from this frame's render
-    vec3 center = (sampleTex(sCurrentFrame, fragCoord));
+    vec3 center = (sampleTex(sCurrentFrame, TexCoords));
     vec3 minColor = center;
     vec3 maxColor = center;
 
@@ -174,7 +180,7 @@ void main()
     }
 
 
-    vec2 newCoord = fragCoord - velocity;
+    vec2 newCoord = TexCoords - velocity;
     
     const float velocityConfidenceFactor = saturate(  1  - length( velocity.xy ) / 128 );
     
