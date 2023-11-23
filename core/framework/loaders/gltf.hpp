@@ -186,8 +186,8 @@ namespace framework {
 
 				if (node.rotation.size() > 0) {
 					glm::quat r;
-					for (int i = 0; i < 4; i++) r[i] = node.rotation[i];
-					rot_matrix = glm::mat4_cast(r);
+					for (int i = 0; i < 4; i++) r[3 - i] = node.rotation[i];
+					rot_matrix = glm::mat4(glm::normalize(r));
 				}
 
 				result = translation_matrix * rot_matrix * scale_matrix;
@@ -219,12 +219,11 @@ namespace framework {
 			glm::mat4 scale_matrix = glm::mat4(1.0f);
 			glm::mat4 translation_matrix = glm::mat4(1.0f);
 
-			m.transform = getTransformFromNode(node);
+			m.transform = parentTransform * getTransformFromNode(node);
 
-
-			m.transform = m.transform;
 			meshes.push_back(m);
 			for (const auto& gltfNode : node.children) {
+				seen_nodes.insert(gltfNode);
 				parse_nodes(model, model.nodes[gltfNode], m.transform);
 			}
 		};
@@ -366,7 +365,7 @@ namespace framework {
 					m_pSkeleton.Nodes[channel.target_node_name].hasRotation = true;
 				}
 
-				if(!m_pSkeleton.Nodes[channel.target_node_name].hasPosition)
+				if (!m_pSkeleton.Nodes[channel.target_node_name].hasPosition)
 					m_pSkeleton.Nodes[channel.target_node_name].translation = glm::translate(glm::mat4(1.0f), position);
 
 				if (!m_pSkeleton.Nodes[channel.target_node_name].hasScale)
@@ -470,6 +469,8 @@ namespace framework {
 
 		tinygltf::Node RootNode;
 		std::vector<tinygltf::Node> local_nodes;
+
+		std::set<int> seen_nodes;
 	public:
 		gltfModel(const std::string& path = "") : ModelBase(path) {
 			Load(path);
@@ -532,7 +533,7 @@ namespace framework {
 				<< model.cameras.size() << " cameras\n"
 				<< model.scenes.size() << " scenes\n"
 				<< model.lights.size() << " lights\n";
-			this->mMeshes.resize(model.meshes.size());
+			//this->mMeshes.resize(model.meshes.size());
 			unsigned index = 0;
 			unsigned numRootNodes = model.nodes.size();
 			std::string root_name;
@@ -548,7 +549,7 @@ namespace framework {
 			if (model.skins.size() > 0) {
 
 				m_pHasAnimation = true;
-				mAnimatedMeshes.resize(model.meshes.size());
+				//mAnimatedMeshes.resize(model.meshes.size());
 
 				auto skin = model.skins[0];
 				auto matricesAccesor = model.accessors[skin.inverseBindMatrices];
@@ -620,24 +621,38 @@ namespace framework {
 				}
 			}
 
-			if(model.skins.size() == 0)
-			parse_nodes(model, model.nodes[model.scenes[model.defaultScene].nodes[0]], glm::mat4(1.0f));
+			if (model.skins.size() == 0) {
+				for (int j = 0; j < model.scenes.size(); j++) {
+					auto& currentScene = model.scenes[j];
+					for (int i = 0; i < currentScene.nodes.size(); i++) {
+						int currentNode = currentScene.nodes[i];
+						if (!seen_nodes.contains(currentNode)) {
+							seen_nodes.insert(currentNode);
+							parse_nodes(model, model.nodes[currentNode], glm::mat4(1.0f));
+						}
+						//parse_nodes(model, model.nodes[model.scenes[model.defaultScene].nodes[0]], glm::mat4(1.0f));
+					}
+				}
+			}
 			else
-			parse_nodes(model, RootNode, glm::mat4(1.0f));
-
-
+			{
+				parse_nodes(model, RootNode, glm::mat4(1.0f));
+			}
+			glm::mat4 parent_transform = glm::mat4(1.0f);
 
 			for (const auto& tmpMesh : meshes) {
 				if (!tmpMesh.hasMesh) continue;
 				const auto& gltfMesh = tmpMesh.mesh;
-				const auto meshTransform = tmpMesh.transform;
-				auto& currentMesh = this->mMeshes.at(index);
-				unsigned currentvOffset = 0;
-				unsigned currentiOffset = 0;
-				int thisVOffset = 0;
-				int thisIOffset = 0;
-
 				for (const auto& meshPrimitive : gltfMesh.primitives) {
+					parent_transform = tmpMesh.transform;
+					const auto meshTransform = tmpMesh.transform;
+					auto& currentMesh = this->mMeshes.emplace_back();//at(index);
+					mAnimatedMeshes.emplace_back();
+					unsigned currentvOffset = 0;
+					unsigned currentiOffset = 0;
+					int thisVOffset = 0;
+					int thisIOffset = 0;
+
 					{
 						bool convertedToTriangleList = false;
 						const auto& indicesAccessor = model.accessors[meshPrimitive.indices];
@@ -807,7 +822,7 @@ namespace framework {
 												//std::cout << "positions[" << i << "]: (" << v.x << ", "
 												//	<< v.y << ", " << v.z << ")\n";
 
-												currentMesh.data().mesh.Vertices[i + currentvOffset].position = (glm::vec4(v.x, v.y, v.z, 1.0f));
+												currentMesh.data().mesh.Vertices[i + currentvOffset].position = parent_transform * (glm::vec4(v.x, v.y, v.z, 1.0f));
 												if (v.x < m_pMin.x) m_pMin.x = v.x;
 												if (v.y < m_pMin.y) m_pMin.y = v.y;
 												if (v.z < m_pMin.z) m_pMin.z = v.z;
@@ -836,7 +851,7 @@ namespace framework {
 												//std::cout << "positions[" << i << "]: (" << v.x
 												//	<< ", " << v.y << ", " << v.z << ")\n";
 
-												currentMesh.data().mesh.Vertices[i + currentvOffset].position = (glm::vec4(v.x, v.y, v.z, 1.0f));
+												currentMesh.data().mesh.Vertices[i + currentvOffset].position = parent_transform * (glm::vec4(v.x, v.y, v.z, 1.0f));
 												if (v.x < m_pMin.x) m_pMin.x = v.x;
 												if (v.y < m_pMin.y) m_pMin.y = v.y;
 												if (v.z < m_pMin.z) m_pMin.z = v.z;
@@ -1291,28 +1306,28 @@ namespace framework {
 
 					currentiOffset = thisIOffset;
 					currentvOffset = thisVOffset;
-				}
-				currentMesh.generateTangentSpaceVectors();
+					currentMesh.generateTangentSpaceVectors();
 
-				if (HasAnimation()) {
+					if (HasAnimation()) {
 
-					int tmp_index = 0;
-					for (auto& vertex : mAnimatedMeshes.at(index).Vertices) {
-						vertex.tangent = currentMesh.data().mesh.Vertices.at(tmp_index).tangent;
-						vertex.bitangent = currentMesh.data().mesh.Vertices.at(tmp_index).bitangent;
-						tmp_index++;
+						int tmp_index = 0;
+						for (auto& vertex : mAnimatedMeshes.at(index).Vertices) {
+							vertex.tangent = currentMesh.data().mesh.Vertices.at(tmp_index).tangent;
+							vertex.bitangent = currentMesh.data().mesh.Vertices.at(tmp_index).bitangent;
+							tmp_index++;
+						}
 					}
-				}
-				auto& meshData = currentMesh.data();
-				meshData = {
-					.numVertices = meshData.mesh.Vertices.size(),
-					.numIndices = meshData.mesh.Indices.size(),
-					.vertexOffset = currentvOffset,
-					.indexOffset = currentiOffset,
-					.mesh = { meshData.mesh.Vertices, meshData.mesh.Indices}
-				};
+					auto& meshData = currentMesh.data();
+					meshData = {
+						.numVertices = meshData.mesh.Vertices.size(),
+						.numIndices = meshData.mesh.Indices.size(),
+						.vertexOffset = currentvOffset,
+						.indexOffset = currentiOffset,
+						.mesh = { meshData.mesh.Vertices, meshData.mesh.Indices}
+					};
 
-				index++;
+					index++;
+				}
 			}
 
 			MinMaxPoints.MAX_X = m_pMax.x;
