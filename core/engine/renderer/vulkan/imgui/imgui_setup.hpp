@@ -524,7 +524,7 @@ public:
 			// ImGui::SetNextWindowSize(ImVec2(wd->Width, wd->Height));
 
 			///////// USER INPUT BEGINS HERE
-			if (/*m_pShowDebugPerformance*/ true) {
+			if (/*m_pShowDebugPerformance*/ false) {
 				ImGui::SetNextWindowPos(ImVec2(10, 30));
 				ImGui::Begin("Info", nullptr, ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize);
 				ImGui::Text("Timings:");

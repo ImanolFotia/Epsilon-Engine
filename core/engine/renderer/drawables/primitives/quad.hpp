@@ -29,7 +29,7 @@ namespace engine
 				return;
 			}
 
-			float step = 1.0f / ((float)tesselation - 1.0f);
+			float step = 1.0f / (float)tesselation;
 			int numVertices = tesselation * tesselation;
 			bounds.min = glm::vec3(100000.0f);
 			bounds.max = glm::vec3(-100000.0f);
