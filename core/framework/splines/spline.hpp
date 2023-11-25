@@ -19,6 +19,10 @@ namespace framework::splines {
 			return m_pControlPoints.size();
 		}
 
+		void Loops(bool val) {
+			m_pLoop = val;
+		}
+
 	protected:
 		std::vector<ControlPoint> m_pControlPoints{};
 		bool m_pLoop = true;
