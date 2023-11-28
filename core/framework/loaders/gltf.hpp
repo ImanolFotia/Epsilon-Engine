@@ -908,14 +908,14 @@ namespace framework {
 												n2 = (*normals)[f2];
 
 												// Put them in the array in the correct order
-												currentMesh.data().mesh.Vertices[f0 + currentvOffset].normal = glm::vec3(glm::vec4(n0, 1.0f));
-												currentMesh.data().mesh.Vertices[f1 + currentvOffset].normal = glm::vec3(glm::vec4(n1, 1.0f));
-												currentMesh.data().mesh.Vertices[f2 + currentvOffset].normal = glm::vec3(glm::vec4(n2, 1.0f));
+												currentMesh.data().mesh.Vertices[f0 + currentvOffset].normal = glm::vec3(glm::mat3(parent_transform) * glm::vec4(n0, 1.0f));
+												currentMesh.data().mesh.Vertices[f1 + currentvOffset].normal = glm::vec3(glm::mat3(parent_transform) * glm::vec4(n1, 1.0f));
+												currentMesh.data().mesh.Vertices[f2 + currentvOffset].normal = glm::vec3(glm::mat3(parent_transform) * glm::vec4(n2, 1.0f));
 												if (HasAnimation()) {
 
-													mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].normal = glm::vec3(glm::vec4(n0, 1.0f));
-													mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].normal = glm::vec3(glm::vec4(n1, 1.0f));
-													mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].normal = glm::vec3(glm::vec4(n2, 1.0f));
+													mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].normal = glm::vec3(glm::mat3(parent_transform) * glm::vec4(n0, 1.0f));
+													mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].normal = glm::vec3(glm::mat3(parent_transform) * glm::vec4(n1, 1.0f));
+													mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].normal = glm::vec3(glm::mat3(parent_transform) * glm::vec4(n2, 1.0f));
 												}
 
 											}
@@ -943,15 +943,15 @@ namespace framework {
 
 												// Put them in the array in the correct order
 
-												currentMesh.data().mesh.Vertices[f0 + currentvOffset].normal = glm::vec3(glm::vec4(n0, 1.0f));
-												currentMesh.data().mesh.Vertices[f1 + currentvOffset].normal = glm::vec3(glm::vec4(n1, 1.0f));
-												currentMesh.data().mesh.Vertices[f2 + currentvOffset].normal = glm::vec3(glm::vec4(n2, 1.0f));
+												currentMesh.data().mesh.Vertices[f0 + currentvOffset].normal = glm::vec3(glm::mat3(parent_transform) * glm::vec4(n0, 1.0f));
+												currentMesh.data().mesh.Vertices[f1 + currentvOffset].normal = glm::vec3(glm::mat3(parent_transform) * glm::vec4(n1, 1.0f));
+												currentMesh.data().mesh.Vertices[f2 + currentvOffset].normal = glm::vec3(glm::mat3(parent_transform) * glm::vec4(n2, 1.0f));
 
 												if (HasAnimation()) {
 
-													mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].normal = glm::vec3(glm::vec4(n0, 1.0f));
-													mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].normal = glm::vec3(glm::vec4(n1, 1.0f));
-													mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].normal = glm::vec3(glm::vec4(n2, 1.0f));
+													mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].normal = glm::vec3(glm::mat3(parent_transform) * glm::vec4(n0, 1.0f));
+													mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].normal = glm::vec3(glm::mat3(parent_transform) * glm::vec4(n1, 1.0f));
+													mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].normal = glm::vec3(glm::mat3(parent_transform) * glm::vec4(n2, 1.0f));
 												}
 											}
 										} break;
