@@ -18,8 +18,8 @@ namespace Editor::Renderpasses {
 		float lerpAmount = 1.0;
 		int clampingKernelSize = 1;
 		int TotalFrames = 0;
-		float _FeedbackMin = 0.250;
-		float _FeedbackMax = 0.475;
+		float _FeedbackMin = 0.1;
+		float _FeedbackMax = 0.125;
 	};
 
 	struct TAARenderPasses {
