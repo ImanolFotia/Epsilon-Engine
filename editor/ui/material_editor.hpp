@@ -33,12 +33,12 @@ namespace Editor::UI {
 					auto r = m_pSceneRef->getChild<engine::RenderModel>(entity);
 					auto render_node = std::static_pointer_cast<engine::Node<engine::RenderModel>>(r);
 
-					int max_mesh_id = render_node->data.renderMeshes.size();
+					int max_mesh_id = render_node->data.renderMeshes[0].size();
 					static int current_mesh = 0;
 					current_mesh = glm::min(max_mesh_id - 1, current_mesh);
 					ImGui::SliderInt("Mesh", &current_mesh, 0, max_mesh_id - 1);
-					if (render_node->data.renderMeshes[current_mesh].numMaterials > 0) {
-						auto mat_key = render_node->data.renderMeshes[current_mesh].material_keys[0];
+					if (render_node->data.renderMeshes[0][current_mesh].numMaterials > 0) {
+						auto mat_key = render_node->data.renderMeshes[0][current_mesh].material_keys[0];
 						bool wasModified = false;
 						auto& material = assetManager.getMaterial(mat_key);
 						{
