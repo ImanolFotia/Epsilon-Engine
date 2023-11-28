@@ -112,7 +112,7 @@ namespace Editor {
 
 		////////////////
 
-		setMaxFPS(72);
+		//setMaxFPS(72);
 
 		auto planeNode = m_pScene->emplaceIntoScene<engine::Scene::SceneEntity>(engine::Box{ glm::vec3(0.0f), glm::vec3(1.0) });
 
@@ -209,7 +209,14 @@ namespace Editor {
 			m_pMenuBar.draw();
 			m_pTooldbar.draw();
 			m_pInspector.draw();
-			m_pMainViewport.setImage(getContext()->Renderer()->getDebugRenderer()->getImages().at(m_pCurrentTAAPass ? "TAATarget0" : "TAATarget1"));
+			if (m_pPostProcess.TaaEnabled() && !just_resized) {
+				m_pMainViewport.setImage(getContext()->Renderer()->getDebugRenderer()->getImages().at(m_pCurrentTAAPass ? "TAATarget0" : "TAATarget1"));
+			}
+			else {
+				m_pMainViewport.setImage(getContext()->Renderer()->getDebugRenderer()->getImages().at("Forward0"));
+				just_resized = false;
+
+			}
 			m_pMainViewport.draw();
 			m_pSceneNodes.draw();
 			m_pAssets.draw();
@@ -339,7 +346,7 @@ namespace Editor {
 		range = glm::mod(range, 2.0f);
 
 
-		m_pCamera->UpdateMatrices(Frame(), screenX, screenY, true);
+		m_pCamera->UpdateMatrices(Frame(), screenX, screenY, m_pPostProcess.TaaEnabled());
 
 		if (framework::Input::Mouse::MIDDLE == framework::Input::PRESSED && m_pMainViewport.isHovered()) {
 			if (m_pCameraWasInactive) {
@@ -370,11 +377,28 @@ namespace Editor {
 		shaderData.iFrame = Frame();
 
 		getContext()->Renderer()->UpdateRenderPassUniforms(m_pForwardRenderPass, engine::RENDERPASS_SET, &shaderData);
-		getContext()->Renderer()->UpdateRenderPassUniforms(m_pTAAPasses.renderpass[0], engine::RENDERPASS_SET, &shaderData);
-		getContext()->Renderer()->UpdateRenderPassUniforms(m_pTAAPasses.renderpass[1], engine::RENDERPASS_SET, &shaderData);
 
-		getContext()->Renderer()->UpdateRenderPassUniforms(m_pTAAPasses.renderpass[0], (engine::BindingIndex)1, &m_pPostProcess.m_pTAAData);
-		getContext()->Renderer()->UpdateRenderPassUniforms(m_pTAAPasses.renderpass[1], (engine::BindingIndex)1, &m_pPostProcess.m_pTAAData);
+		if (m_pPostProcess.TaaEnabled()) {
+			getContext()->Renderer()->UpdateRenderPassUniforms(m_pTAAPasses.renderpass[0], engine::RENDERPASS_SET, &shaderData);
+			getContext()->Renderer()->UpdateRenderPassUniforms(m_pTAAPasses.renderpass[1], engine::RENDERPASS_SET, &shaderData);
+			getContext()->Renderer()->UpdateRenderPassUniforms(m_pTAAPasses.renderpass[0], (engine::BindingIndex)1, &m_pPostProcess.m_pTAAData);
+			getContext()->Renderer()->UpdateRenderPassUniforms(m_pTAAPasses.renderpass[1], (engine::BindingIndex)1, &m_pPostProcess.m_pTAAData);
+		}
+
+
+		if (m_pMainViewport.ShouldResize()) {
+
+			getContext()->ResourceManager()->ResizeFramebuffer(m_pForwardRenderPass, m_pMainViewport.getSize());
+			if (m_pPostProcess.TaaEnabled()) {
+				getContext()->ResourceManager()->ResizeFramebuffer(m_pTAAPasses.renderpass[0], m_pMainViewport.getSize());
+				getContext()->ResourceManager()->ResizeFramebuffer(m_pTAAPasses.renderpass[1], m_pMainViewport.getSize());
+				getContext()->ResourceManager()->updateBindGroup(m_pScene->getBindGroups()["TAABindGroup1"].bindGroup);
+				getContext()->ResourceManager()->updateBindGroup(m_pScene->getBindGroups()["TAABindGroup0"].bindGroup);
+				just_resized = true;
+			}
+			Epsilon::getContext()->Renderer()->getDebugRenderer()->recreateDescriptorSets();
+			m_pMainViewport.ResetFlags();
+		}
 
 	}
 
@@ -396,27 +420,20 @@ namespace Editor {
 
 		m_pScene->Flush();
 
-		m_pScene->setCurrentRenderPass(/**/m_pCurrentTAAPass ? "TAARenderPass0" : "TAARenderPass1");
+		if (m_pPostProcess.TaaEnabled()) {
+			m_pScene->setCurrentRenderPass(/**/m_pCurrentTAAPass ? "TAARenderPass0" : "TAARenderPass1");
 
-		//for (auto& model_node : models) {
+			//for (auto& model_node : models) {
 			m_pScene->Push(m_pGridPlane, glm::mat4(1.0), m_pCurrentTAAPass ? "TAABindGroup0" : "TAABindGroup1");
-		//}
+			//}
 
-		m_pCurrentTAAPass = !m_pCurrentTAAPass;
+			m_pCurrentTAAPass = !m_pCurrentTAAPass;
+			m_pScene->Flush();
+		}
 
-		m_pScene->Flush();
 
 		m_pScene->EndScene();
 
-		if (m_pMainViewport.ShouldResize()) {
-			getContext()->ResourceManager()->ResizeFramebuffer(m_pTAAPasses.renderpass[0], m_pMainViewport.getSize());
-			getContext()->ResourceManager()->ResizeFramebuffer(m_pTAAPasses.renderpass[1], m_pMainViewport.getSize());
-			getContext()->ResourceManager()->ResizeFramebuffer(m_pForwardRenderPass, m_pMainViewport.getSize());
-			getContext()->ResourceManager()->updateBindGroup(m_pScene->getBindGroups()["TAABindGroup1"].bindGroup);
-			getContext()->ResourceManager()->updateBindGroup(m_pScene->getBindGroups()["TAABindGroup0"].bindGroup);
-			Epsilon::getContext()->Renderer()->getDebugRenderer()->recreateDescriptorSets();
-			m_pMainViewport.ResetFlags();
-		}
 	}
 
 

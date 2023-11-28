@@ -67,6 +67,8 @@ namespace Editor {
 		UI::Assets m_pAssets;
 		UI::PostProcess m_pPostProcess;
 
+		bool just_resized = false;
+
 
 		std::shared_ptr<utils::Camera> m_pCamera;
 		ShaderData shaderData;
