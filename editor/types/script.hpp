@@ -5,6 +5,7 @@
 
 #include "../ui/ui_element.hpp"
 #include "transform.hpp"
+#include <modules/dotnet/headers/nethost.hpp>
 
 namespace Editor {
 
