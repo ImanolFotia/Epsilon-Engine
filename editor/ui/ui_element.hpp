@@ -124,7 +124,7 @@ namespace Editor::UI {
 		}
 
 		void* node_ref = nullptr;
-		void* scene_node_ref = nullptr;
+		std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> scene_node_ref = nullptr;
 		std::string name{};
 		std::string model_path{};
 

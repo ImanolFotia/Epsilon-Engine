@@ -2,6 +2,9 @@
 
 #include "ui_element.hpp"
 #include "../types/editor_node.hpp"
+#include "../types/script.hpp"
+#include "editor/utils/node_factory.hpp"
+#include <core/engine/renderer/drawables/primitives/cube.hpp>
 
 namespace Editor::UI {
 
@@ -27,6 +30,49 @@ namespace Editor::UI {
 
 		void PushInRoot(NodeProperties node) {
 			m_pNodeProperties.front().children.push_back(node);
+		}
+
+
+		void RegisterIntoEditor(const std::string& name, std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> parent) {
+
+			auto nodeChildren = m_pScenePtr->getChildren(parent);
+
+			UI::NodeProperties node_props;
+			node_props.name = name;
+			node_props.mType = UI::SceneNodeType::Node;
+			node_props.node_ref = (void*)&parent.get()->data;
+			node_props.scene_node_ref = parent;
+			node_props.index = parent->Index();
+
+			for (auto& [type, children] : nodeChildren) {
+				for (auto& child : children) {
+					if (m_pScenePtr->isOfType<EntityScript>(child))
+					{
+						auto script = std::static_pointer_cast<engine::Node<EntityScript>>(child);
+						UI::NodeProperties script_props;
+						script_props.name = "Script";
+						script_props.mType = UI::SceneNodeType::Script;
+						script_props.node_ref = (void*)&script.get()->data;
+						script_props.scene_node_ref = parent;
+						script_props.index = parent->Index();
+						node_props.children.push_back(script_props);
+
+					}
+					if (m_pScenePtr->isOfType<engine::RenderModel>(child))
+					{
+						auto renderNode = std::static_pointer_cast<engine::Node<engine::RenderModel>>(child);
+
+						UI::NodeProperties render_props;
+						render_props.name = "Render Model" + std::to_string(parent->Index());
+						render_props.mType = UI::SceneNodeType::Render;
+						render_props.node_ref = (void*)&renderNode.get()->data;
+						render_props.scene_node_ref = parent;
+						render_props.index = parent->Index();
+						node_props.children.push_back(render_props);
+					}
+				}
+			}
+			PushInRoot(node_props);
 		}
 
 		void erase(uint32_t index) {
@@ -56,7 +102,8 @@ namespace Editor::UI {
 
 				ImGui::OpenPopup("New Node");
 				//addEntityCallback();
-				selected_node = nullptr;
+
+
 			}
 			ModelPopUp();
 			ImGui::SameLine();
@@ -101,7 +148,7 @@ namespace Editor::UI {
 				if (ImGui::IsItemClicked()) {
 					selected_node = &node;
 					std::cout << node.name << " clicked" << std::endl;
-					scene_node_ref = node.scene_node_ref;
+					scene_node_ref = node.scene_node_ref.get();
 					selected_index = node.index;
 				}
 				ImGui::TableNextColumn();
@@ -119,7 +166,7 @@ namespace Editor::UI {
 				if (ImGui::IsItemClicked()) {
 					selected_node = &node;
 					std::cout << node.name << " clicked" << std::endl;
-					scene_node_ref = node.scene_node_ref;
+					scene_node_ref = node.scene_node_ref.get();
 					selected_index = node.index;
 				}
 				ImGui::TableNextColumn();
@@ -137,10 +184,10 @@ namespace Editor::UI {
 			ImGui::SetNextWindowSize(ImVec2((size.x / 4) * 3, (size.y / 4) * 3));
 			bool unused_open = true;
 			if (ImGui::BeginPopupModal("New Node", &unused_open)) {
+				static int selected = 0;
 				ImGui::SeparatorText("Node Type");
 				if (m_pScenePtr != nullptr) {
 					auto& models = m_pScenePtr->getAssetManager().getModels();
-					static int selected = 0;
 					if (ImGui::BeginListBox("##nodes_listbox", ImVec2(ImGui::GetContentRegionAvail().x * 0.25, ImGui::GetContentRegionAvail().y-35)))
 					{
 						for (int i = 0; i < NodeType::Size; i++) {
@@ -169,15 +216,46 @@ namespace Editor::UI {
 
 					ImGui::EndChild();
 				}
-
+				static char name_buffer[128] = {};
+				ImGui::InputText("Node Name", name_buffer, 128); ImGui::SameLine();
 				if (ImGui::Button("Accept", ImVec2(0, 30))) {
+					std::string node_name = std::string(name_buffer);
+					if (node_name.size() <= 0) return;
 
-					/*auto parent_node = m_pScenePtr->getNode(selected_node->Index());
-					auto child = m_pScenePtr->getChild<engine::RenderModel>(parent_node);
-					auto bindGroup = renderModel->bindGroup;
-					child->data = m_pScenePtr->getAssetManager().getModel(selected);
-					child->data.bindGroup = bindGroup;
-					ImGui::CloseCurrentPopup();*/
+					std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> parent_node;
+
+
+					if (selected_node != nullptr) {
+						//selected_node = (NodeProperties*)m_pNodeProperties.begin();
+						parent_node = selected_node->scene_node_ref;
+					}
+					else {
+
+						parent_node = Utils::CreateNode(glm::mat4(1.0f), m_pScenePtr);
+					}
+
+
+					switch (selected) {
+					case NodeType::RenderModel:
+
+						common::MeshMaterial defaultMaterial;
+						defaultMaterial.roughness = 0.8;
+						defaultMaterial.metallic = 0;
+						defaultMaterial.color = glm::vec4(0.5, 0.5, 0.5, 1.0);
+						engine::Cube cube;
+						auto m_pDefaultCube = m_pScenePtr->getAssetManager().createModelFromMesh("Model_" + node_name, cube.data(), defaultMaterial);
+						Utils::AddModelNode(node_name, m_pScenePtr, m_pDefaultCube, parent_node);
+						break;
+					}
+
+					if (selected_node == nullptr) {
+						RegisterIntoEditor(node_name, parent_node);
+					}
+
+					selected_node = nullptr;
+
+					std::memset(name_buffer, 0, 128);
+					ImGui::CloseCurrentPopup();
 				} ImGui::SameLine();
 				if (ImGui::Button("Cancel", ImVec2(0, 30))) ImGui::CloseCurrentPopup();
 

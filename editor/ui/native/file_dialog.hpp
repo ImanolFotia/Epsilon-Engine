@@ -33,7 +33,7 @@ namespace Editor::UI {
                         {
                             char result[500]; 
                             wcstombs(result, pszPath, 500);
-                            MessageBox(NULL, result, "Selected Item", MB_OK);
+                            //MessageBox(NULL, result, "Selected Item", MB_OK);
                             CoTaskMemFree(pszPath);
                         }
                         psi->Release();
