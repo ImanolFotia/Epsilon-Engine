@@ -36,8 +36,8 @@ namespace engine
 
 			glm::vec3 halfSize = size * 0.5f;
 
-			for (int i = 0; i < tesselation; i++) {
-				for (int j = 0; j < tesselation; j++) {
+			for (int i = 0; i <= tesselation; i++) {
+				for (int j = 0; j <= tesselation; j++) {
 					float x = (float)i;
 					float y = (float)j;
 					v3 position = v3(x * step, 0.0f, y * step);
@@ -62,13 +62,13 @@ namespace engine
 			bounds.center = bounds.max - bounds.min;
 
 			int edge = 0;
-			for (int i = 0; i < numVertices - tesselation; i++) {
-				if (edge >= tesselation - 1) {
+			for (int i = 0; i <= numVertices; i++) {
+				if (edge >= tesselation ) {
 					edge = 0;
 					continue;
 				}
-				m_pMesh.addTriangle(i, i + 1, i + tesselation);
-				m_pMesh.addTriangle(i + tesselation, i + 1, i + tesselation + 1);
+				m_pMesh.addTriangle(i, i + 1, i + tesselation+1);
+				m_pMesh.addTriangle(i + tesselation+1, i + 1, i + tesselation + 2);
 				edge++;
 			}
 
@@ -121,12 +121,12 @@ namespace engine
 		}
 
 		float getHeight(glm::vec3 position, glm::vec3 scale) {
-			glm::ivec3 pos = glm::floor(position-1.0f);
+			glm::ivec3 pos = glm::floor(position - 1.0f);
 
 			int x_a = pos.x + m_pTesselation / 2;
 			int x_b = 0;
 
-			int y_a = pos.z + m_pTesselation / 2;
+			int y_a = pos.z - m_pTesselation / 2;
 			int y_b = 0;
 
 			if (x_a >= m_pTesselation) {
@@ -169,7 +169,7 @@ namespace engine
 			float tx = lb - la;
 			float ty = ld - lc;
 
-			return ((a.y * tx + b.y * (1.0 - tx) + c.y * ty + d.y * (1.0- ty)) * 0.5f);
+			return ((a.y * tx + b.y * (1.0 - tx) + c.y * ty + d.y * (1.0 - ty)) * 0.5f);
 		}
 
 		void calculateNormals() {
@@ -187,34 +187,29 @@ namespace engine
 			}
 
 			std::vector<glm::vec3> Normals;
-			for (int i = 0; i < m_pTesselation; i++)
+			/*for (int i = 0; i <= m_pTesselation; i++)
 			{
-				for (int j = 0; j < m_pTesselation; j++)
-				{
-					if (i > 0 && j > 0 && i < m_pTesselation - 1 && j < m_pTesselation - 1)
+				for (int j = 0; j <= m_pTesselation; j++)
+				{*/
+			int numVertices = m_pTesselation * m_pTesselation;
+			for (int i = 0; i <= numVertices - m_pTesselation + 1; i++) {
+					if (i > m_pTesselation +1 && i < numVertices - m_pTesselation + 1)
 					{
-						float HL = Grid.at(i - 1).at(j);
-						float HR = Grid.at(i + 1).at(j);
-						float HD = Grid.at(i).at(j - 1);
-						float HU = Grid.at(i).at(j + 1);
+						//int index = i * m_pTesselation + j + 1;
+
+						float HL = m_pMesh.Vertices.at(i-1).position.y;
+						float HR = m_pMesh.Vertices.at(i+1).position.y;
+						float HD = m_pMesh.Vertices.at(i - m_pTesselation + 1).position.y;
+						float HU = m_pMesh.Vertices.at(i + m_pTesselation + 1).position.y;
 
 
 						glm::vec3 norm = glm::normalize(glm::vec3(HL - HR, 0.1, HD - HU));
-						Normals.push_back(norm);
+
+						m_pMesh.Vertices.at(i).normal = norm;
 						//m_pMesh.Vertices.at(i * m_pTesselation + j).normal = norm;
 
 					}
-					else
-					{
-
-						Normals.push_back(glm::vec3(0, 1, 0));
-					}
-				}
-			}
-			int index = 0;
-			for (auto& vtx : m_pMesh.Vertices) {
-				vtx.normal = glm::normalize(Normals[index]);
-				index++;
+				//}
 			}
 
 			generateTangentSpaceVectors();
