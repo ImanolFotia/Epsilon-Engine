@@ -89,6 +89,8 @@ namespace common {
         glm::vec4 color = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
         float metallic = 0.0f;
         float roughness = 0.5f;
+        float specular = 1.0f;
+        std::string name;
     };
 
     struct MIN_MAX_POINTS {

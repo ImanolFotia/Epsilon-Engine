@@ -71,6 +71,12 @@ namespace framework
         bool isCurrent = false;
         std::string size_string{};
     };
+
+    struct WindowSize {
+        uint16_t width;
+        uint16_t height;
+    };
+
     class EPSILON_DLL Window
     {
 
@@ -206,13 +212,13 @@ namespace framework
 #endif
         }
 
-        std::pair<int, int> getSize()
+        WindowSize getSize()
         {
 #if USE_GLFW
             if (mWindow == nullptr) return { 0,0 };
                         
             glfwGetFramebufferSize(mWindow, &mWidth, &mHeight);
-            return {mWidth, mHeight};
+            return {(uint16_t)mWidth, (uint16_t)mHeight};
  #endif
 #if defined(__ANDROID__)
 
