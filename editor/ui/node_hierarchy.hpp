@@ -16,7 +16,7 @@ namespace Editor::UI {
 		int selected_index = -1;
 
 		std::function<void(void)> addEntityCallback;
-		std::list<NodeProperties> m_pNodeProperties;
+		std::vector<NodeProperties> m_pNodeProperties;
 
 		std::shared_ptr<engine::Scene> m_pScenePtr = nullptr;
 
@@ -32,6 +32,43 @@ namespace Editor::UI {
 			m_pNodeProperties.front().children.push_back(node);
 		}
 
+		void UpdateNodeProp(std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> node) {
+
+			auto node_props = selected_node;//m_pNodeProperties.front().children.at(selected_index);
+			node_props->children.clear();
+
+			auto nodeChildren = m_pScenePtr->getChildren(node);
+
+			for (auto& [type, children] : nodeChildren) {
+				for (auto& child : children) {
+					if (m_pScenePtr->isOfType<EntityScript>(child))
+					{
+						auto script = std::static_pointer_cast<engine::Node<EntityScript>>(child);
+						UI::NodeProperties script_props;
+						script_props.name = "Script";
+						script_props.mType = UI::SceneNodeType::Script;
+						script_props.node_ref = (void*)&script.get()->data;
+						script_props.scene_node_ref = node;
+						script_props.index = node->Index();
+						node_props->children.push_back(script_props);
+
+					}
+					if (m_pScenePtr->isOfType<engine::RenderModel>(child))
+					{
+						auto renderNode = std::static_pointer_cast<engine::Node<engine::RenderModel>>(child);
+
+						UI::NodeProperties render_props;
+						render_props.name = "Render Model" + renderNode.get()->data.name;
+						render_props.mType = UI::SceneNodeType::Render;
+						render_props.node_ref = (void*)&renderNode.get()->data;
+						render_props.scene_node_ref = node;
+						render_props.index = node->Index();
+						node_props->children.push_back(render_props);
+					}
+				}
+			}
+
+		}
 
 		void RegisterIntoEditor(const std::string& name, std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> parent) {
 
@@ -225,8 +262,7 @@ namespace Editor::UI {
 					std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> parent_node;
 
 
-					if (selected_node != nullptr) {
-						//selected_node = (NodeProperties*)m_pNodeProperties.begin();
+					if (selected_node != nullptr && selected_node->Index() != 0) {
 						parent_node = selected_node->scene_node_ref;
 					}
 					else {
@@ -248,8 +284,11 @@ namespace Editor::UI {
 						break;
 					}
 
-					if (selected_node == nullptr) {
+					if (selected_node == nullptr || selected_node->Index() == 0) {
 						RegisterIntoEditor(node_name, parent_node);
+					}
+					else {
+						UpdateNodeProp(parent_node);
 					}
 
 					selected_node = nullptr;

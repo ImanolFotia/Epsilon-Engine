@@ -218,6 +218,7 @@ namespace Editor::UI {
 					auto bindGroup = renderModel->bindGroup;
 					child->data = m_pScenePtr->getAssetManager().getModel(selected);
 					child->data.bindGroup = bindGroup;
+					child->data.bindGroupId = std::hash<std::string>{}(bindGroup);
 					ImGui::CloseCurrentPopup();
 				} ImGui::SameLine();
 				if (ImGui::Button("Cancel")) ImGui::CloseCurrentPopup();

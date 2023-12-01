@@ -53,6 +53,8 @@ namespace Editor {
 				.name = "DefaultBindGroup",
 			});
 
+		m_pDefaultBindGroup = std::hash<std::string>{}("DefaultBindGroup");
+
 		m_pScene->addBindGroup("SkyBindGroup", 1, {
 				.bindingInfo = {},
 				.inputs = {},
@@ -60,12 +62,25 @@ namespace Editor {
 				.name = "SkyBindGroup",
 			});
 
+		m_pSkyBindGroup = std::hash<std::string>{}("SkyBindGroup");
+
 		m_pScene->addBindGroup("GridBindGroup", 2, {
 				.bindingInfo = {},
 				.inputs = {},
 				.renderPass = "Forward",
 				.name = "GridBindGroup",
 			});
+
+		m_pGridBindGroup = std::hash<std::string>{}("GridBindGroup");
+
+		m_pScene->addBindGroup("GrassBindGroup", 3, {
+				.bindingInfo = {{.size = sizeof(engine::PBRMaterial) * engine::AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"}},
+				.inputs = {},
+				.renderPass = "Forward",
+				.name = "GrassBindGroup",
+			});
+
+		m_pGrassBindGroup = std::hash<std::string>{}("GrassBindGroup");
 		
 		m_pScene->addBindGroup("TAABindGroup0", 0, {
 				.bindingInfo = {
@@ -92,6 +107,10 @@ namespace Editor {
 				.renderPass = "TAARenderPass1",
 				.name = "TAABindGroup1",
 			});
+
+
+		m_pTAABindGroup0 = std::hash<std::string>{}("TAABindGroup0");
+		m_pTAABindGroup1 = std::hash<std::string>{}("TAABindGroup1");
 			
 		auto renderer = getContext()->Renderer();
 
@@ -101,14 +120,14 @@ namespace Editor {
 		auto node = Utils::CreateNode(glm::mat4(1.0f), m_pScene);
 		Utils::AddCameraNode("Camera", m_pScene, node,  {});
 
-		Utils::RegisterIntoEditor("Camera", &m_pSceneNodes, m_pScene, node);
+		m_pSceneNodes.RegisterIntoEditor("Camera", node);
 
 		auto skyNode = m_pScene->emplaceIntoScene<engine::Scene::SceneEntity>(engine::Box{ glm::vec3(0.0f), glm::vec3(1.0) });
 		skyNode->data.transform = glm::scale(glm::mat4(1.0), glm::vec3(3.0f));
 		engine::Sphere sphere(5);
 		auto SkyDomeNode = m_pScene->getAssetManager().createModelFromMesh("Skybox", sphere.data(), {});
 		m_pSkybox = m_pScene->insertIntoNode(skyNode, SkyDomeNode);
-		m_pSkybox->data.bindGroup = "SkyBindGroup";
+		m_pSkybox->data.bindGroupId = m_pSkyBindGroup;
 
 		////////////////
 
@@ -120,10 +139,14 @@ namespace Editor {
 		planeNode->data.transform = glm::scale(planeNode->data.transform, glm::vec3(30.0, 1.0, 30.0));
 		planeNode->data.transform = glm::rotate(planeNode->data.transform, glm::radians(270.f), glm::vec3(1.0, 0.0, 0.0));
 
+		common::MeshMaterial defaultMaterial;
+		defaultMaterial.roughness = 1.0;
+		defaultMaterial.metallic = 0;
+		defaultMaterial.color = glm::vec4(0.5, 0.5, 0.5, 1.0);
 		engine::Quad quad(2, glm::vec2(5.0f), glm::vec3(2.0f));
-		auto m_pDefaultCube = m_pScene->getAssetManager().createModelFromMesh("DefaultPlane", quad.data(), {});
+		auto m_pDefaultCube = m_pScene->getAssetManager().createModelFromMesh("DefaultPlane", quad.data(), defaultMaterial);
 		m_pGridPlane = m_pScene->insertIntoNode(engine::Box{ glm::vec3(planeNode->data.transform[3]), glm::vec3(10.0) }, planeNode, m_pDefaultCube);
-		m_pGridPlane->data.bindGroup = "DefaultBindGroup";
+		m_pGridPlane->data.bindGroupId = m_pDefaultBindGroup;
 
 		auto script = m_pScene->emplaceIntoNode<EntityScript>(planeNode);
 		script->data.ManagedPtr = host.assembly.Invoke<void*>(L"CreateEntity", planeNode.get(), L"Game.Ground", "Ground");
@@ -156,20 +179,20 @@ namespace Editor {
 		render_props.name = "Render Model" + std::to_string(m_pGridPlane->Index());
 		render_props.mType = UI::SceneNodeType::Render;
 		render_props.node_ref = (void*)&m_pGridPlane.get()->data;
-		render_props.scene_node_ref = &planeNode.get()->data;
+		render_props.scene_node_ref = planeNode;
 		render_props.index = planeNode->Index();
 
 		UI::NodeProperties script_props;
 		script_props.name = "Script";
 		script_props.mType = UI::SceneNodeType::Script;
 		script_props.node_ref = (void*)&script.get()->data;
-		script_props.scene_node_ref = &planeNode.get()->data;
+		script_props.scene_node_ref = planeNode;
 		script_props.index = planeNode->Index();
 
 		node_props.children.push_back(render_props);
 		node_props.node_ref = (void*)&planeNode.get()->data;
 		node_props.model_path = "DefaultPlane";
-		node_props.scene_node_ref = &planeNode.get()->data;
+		node_props.scene_node_ref = planeNode;
 		node_props.index = planeNode->Index();
 		m_pSceneNodes.PushInRoot(node_props);
 
@@ -177,7 +200,6 @@ namespace Editor {
 
 
 
-		common::MeshMaterial defaultMaterial;
 		m_pScene->getAssetManager().addTexture("textures/radiance2.dds", {
 			.format = engine::TextureFormat::COLOR_RGBA,
 			.wrapMode = engine::CLAMP_TO_EDGE,
@@ -200,7 +222,12 @@ namespace Editor {
 		delete[] lut;
 
 
-		pAddDefaultCube(glm::vec3(0.0));
+		//pAddDefaultCube(glm::vec3(0.0));
+		
+		for(int i = 0; i < 200; i++) 
+			for (int j = 0; j < 200; j++) {
+				pAddDefaultPlane(glm::vec3((float)(i * 0.15)-15, 0.0f, (float)(j * 0.15)-15));
+			}
 
 		renderer->getDebugRenderer()->ShowDebugPerformance(false);
 
@@ -221,8 +248,12 @@ namespace Editor {
 			m_pSceneNodes.draw();
 			m_pAssets.draw();
 			m_pPostProcess.draw();
-
-			selected_entity = (engine::Scene::SceneEntity*)m_pSceneNodes.scene_node_ref;// reinterpret_cast<std::shared_ptr<engine::Scene::SceneEntity>> (m_pSceneNodes.scene_node_ref);
+			engine::Node<engine::Scene::SceneEntity>* sn;
+			if (m_pSceneNodes.scene_node_ref != nullptr)
+			{
+				sn = static_cast<engine::Node<engine::Scene::SceneEntity>*>(m_pSceneNodes.scene_node_ref);
+				selected_entity = &sn->data;// reinterpret_cast<std::shared_ptr<engine::Scene::SceneEntity>> (m_pSceneNodes.scene_node_ref);
+			}
 			selected_index = m_pSceneNodes.selected_index;
 			m_pMaterialEditor.selected_entity = selected_index;
 			m_pMaterialEditor.draw();
@@ -276,7 +307,11 @@ namespace Editor {
 						}
 					}
 					script->data.properties = m_pObjectProperty.getProperties();
-				}
+					}
+					else {
+
+						m_pObjectProperty.draw();
+					}
 			}
 
 			ImGui::Begin("Reload Assembly");
@@ -372,7 +407,7 @@ namespace Editor {
 		shaderData.view = m_pCamera->getViewMatrix();
 		shaderData.proj = m_pCamera->getProjectionMatrix();
 		shaderData.proj[1][1] *= -1;
-		shaderData.iTime += time;
+		shaderData.iTime = framework::Clock::TimeSeconds();
 		shaderData.viewPosition = m_pCamera->getPosition();
 		shaderData.iFrame = Frame();
 
@@ -392,8 +427,8 @@ namespace Editor {
 			if (m_pPostProcess.TaaEnabled()) {
 				getContext()->ResourceManager()->ResizeFramebuffer(m_pTAAPasses.renderpass[0], m_pMainViewport.getSize());
 				getContext()->ResourceManager()->ResizeFramebuffer(m_pTAAPasses.renderpass[1], m_pMainViewport.getSize());
-				getContext()->ResourceManager()->updateBindGroup(m_pScene->getBindGroups()["TAABindGroup1"].bindGroup);
-				getContext()->ResourceManager()->updateBindGroup(m_pScene->getBindGroups()["TAABindGroup0"].bindGroup);
+				getContext()->ResourceManager()->updateBindGroup(m_pScene->getBindGroups()[m_pTAABindGroup1].bindGroup);
+				getContext()->ResourceManager()->updateBindGroup(m_pScene->getBindGroups()[m_pTAABindGroup0].bindGroup);
 				just_resized = true;
 			}
 			Epsilon::getContext()->Renderer()->getDebugRenderer()->recreateDescriptorSets();
@@ -415,7 +450,7 @@ namespace Editor {
 		for (auto& model_node : models) {
 			auto model = std::static_pointer_cast<engine::Node<engine::RenderModel>>(model_node);
 			auto transform = std::static_pointer_cast<engine::Node<engine::Scene::SceneEntity>>(model->Parent());
-			m_pScene->Push(model, transform->data.transform, model->data.bindGroup);
+			m_pScene->Push(model, transform->data.transform, model->data.bindGroupId);
 		}
 
 		m_pScene->Flush();
@@ -424,7 +459,7 @@ namespace Editor {
 			m_pScene->setCurrentRenderPass(/**/m_pCurrentTAAPass ? "TAARenderPass0" : "TAARenderPass1");
 
 			//for (auto& model_node : models) {
-			m_pScene->Push(m_pGridPlane, glm::mat4(1.0), m_pCurrentTAAPass ? "TAABindGroup0" : "TAABindGroup1");
+			m_pScene->Push(m_pGridPlane, glm::mat4(1.0), m_pCurrentTAAPass ? m_pTAABindGroup0 : m_pTAABindGroup1);
 			//}
 
 			m_pCurrentTAAPass = !m_pCurrentTAAPass;
@@ -437,12 +472,76 @@ namespace Editor {
 	}
 
 
+	void Editor::pAddDefaultPlane(glm::vec3 position) {
+
+		common::MeshMaterial defaultMaterial;
+		defaultMaterial.roughness = 0.34;
+		defaultMaterial.metallic = 0;
+		defaultMaterial.specular = 0.5;
+		defaultMaterial.color = glm::vec4(0.15, 0.6, 0.15, 1.0);
+		defaultMaterial.normal_path = "textures/grass_normal.png";
+		defaultMaterial.name = "grass_material";
+
+		std::random_device rd;
+		std::mt19937 e2(rd());
+
+		std::uniform_real_distribution<float> dist(-0.2, 0.2);
+		std::uniform_real_distribution<float> dist2(-glm::pi<float>(), glm::pi<float>());
+
+		glm::mat4 transform_matrix = glm::translate(glm::mat4(1.0), position + glm::vec3(dist(e2), 0.0, dist(e2)) + glm::vec3(0.5, 0.0, 0.5));
+		glm::mat4 rotation_matrix = glm::rotate(glm::mat4(1.0), dist2(e2), glm::vec3(0.0, 1.0, 0.0));
+		glm::mat4 model_matrix = transform_matrix * rotation_matrix;
+		auto node = Utils::CreateNode(model_matrix, m_pScene);
+
+		engine::Quad cube(5, glm::vec2(0.2f,1.0));
+		
+		for (auto& vtx : cube.data().Vertices) {
+			float tmp = vtx.position.y;
+			vtx.position.y = -vtx.position.z;
+			vtx.position.z = tmp;
+
+			tmp = vtx.normal.y;
+			vtx.normal.y = vtx.normal.z;
+			vtx.normal.z = tmp;
+
+			vtx.position.x = vtx.position.x * 2.0f;
+
+			vtx.position.y += 0.5;
+		}
+
+		for (auto& vtx : cube.data().Vertices) {
+
+			vtx.position.x *= 0.05f;
+			vtx.position.x += 0.02f;
+			vtx.position.x *= (1.0 - vtx.position.y);
+		}
+
+		cube.generateTangentSpaceVectors();
+
+		auto m_pDefaultCube = m_pScene->getAssetManager().createModelFromMesh("Plane" , cube.data(), defaultMaterial);
+
+
+		Utils::AddModelNode("Plane" + std::to_string(node->Index()), m_pScene, m_pDefaultCube, node, "GrassBindGroup");
+
+		/*Utils::AddScriptNode({
+			.language = C_SHARP,
+			.fileName = "GameObject.cs",
+			.assemblyName = "Game.dll",
+			.className = "Game.GameObject",
+			.nodeName = "Plane." + node->Index()
+			}, m_pScene, node, host);*/
+
+		m_pSceneNodes.RegisterIntoEditor("Plane", node);
+	}
+
 	void Editor::pAddDefaultCube(glm::vec3 position) {
 
 		common::MeshMaterial defaultMaterial;
 		defaultMaterial.roughness = 0.8;
 		defaultMaterial.metallic = 0;
 		defaultMaterial.color = glm::vec4(0.5, 0.5, 0.5, 1.0);
+
+
 
 		engine::Cube cube;
 		auto m_pDefaultCube = m_pScene->getAssetManager().createModelFromMesh("DefaultCube", cube.data(), defaultMaterial);
@@ -459,6 +558,6 @@ namespace Editor {
 			.nodeName = "Cube"
 			}, m_pScene, node, host);
 
-		Utils::RegisterIntoEditor("Cube", &m_pSceneNodes, m_pScene, node);
+		m_pSceneNodes.RegisterIntoEditor("Cube", node);
 	}
 }

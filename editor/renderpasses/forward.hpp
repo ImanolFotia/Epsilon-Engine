@@ -71,6 +71,23 @@ namespace Editor::Renderpasses {
 		skyShaderAsset.spirvFilePaths = { "./assets/shaders/editor/sky-fragment.spv", "./assets/shaders/editor/sky-vertex.spv" };
 
 
+		auto GrassVertexCode = utils::readFile("./assets/shaders/editor/grass-vertex.spv");
+		auto GrassFragmentCode = utils::readFile("./assets/shaders/editor/grass-fragment.spv");
+
+		ShaderInfo grassShaderInfo = {
+			.stages = {
+				{.entryPoint = "main", .shaderCode = GrassVertexCode, .stage = VERTEX},
+				{.entryPoint = "main", .shaderCode = GrassFragmentCode, .stage = FRAGMENT}
+			},
+			.usedStages = ShaderModuleStage(VERTEX | FRAGMENT),
+			.name = "GrassShader"
+		};
+		engine::ShaderAsset grassShaderAsset;
+		grassShaderAsset.name = "GrassShader";
+		grassShaderAsset.filePaths = { "./assets/shaders/editor/grass.frag.glsl", "./assets/shaders/editor/grass.vert.glsl" };
+		grassShaderAsset.spirvFilePaths = { "./assets/shaders/editor/grass-fragment.spv", "./assets/shaders/editor/grass-vertex.spv" };
+
+
 		VertexLayout vertexLayout = {
 			.descriptors = {
 				{XYZ_FLOAT, offsetof(common::Vertex, position)},
@@ -101,6 +118,15 @@ namespace Editor::Renderpasses {
 			.depthTestEnable = false
 		};
 
+		PipelineLayout grassLayout = {
+			.shaderInfo = grassShaderInfo,
+			.vertexLayout = vertexLayout,
+			.cullMode = CullMode::NONE,
+			.windingMode = WindingMode::COUNTER_CLOCK_WISE,
+			.depthWriteEnable = true,
+			.depthTestEnable = true
+		};
+
 		auto gridFragmentCode = utils::readFile("./assets/shaders/editor/grid-fragment.spv");
 		auto gridVertexCode = utils::readFile("./assets/shaders/editor/grid-vertex.spv");
 		ShaderInfo gridShaderInfo = mainShaderInfo;
@@ -121,6 +147,7 @@ namespace Editor::Renderpasses {
 		assetManager.RegisterShader(forwardShaderAsset);
 		assetManager.RegisterShader(skyShaderAsset);
 		assetManager.RegisterShader(gridShaderAsset);
+		assetManager.RegisterShader(grassShaderAsset);
 
 		RenderPassInfo renderPassInfo =
 			RenderPassFactory()
@@ -185,6 +212,7 @@ namespace Editor::Renderpasses {
 			.pipelineLayout(mainLayout)
 			.pipelineLayout(skyLayout)
 			.pipelineLayout(gridLayout)
+			.pipelineLayout(grassLayout)
 			.pushConstant(72);
 
 		return context->ResourceManager()->createRenderPass(renderPassInfo);

@@ -69,6 +69,13 @@ namespace Editor {
 
 		bool just_resized = false;
 
+		size_t m_pTAABindGroup0;
+		size_t m_pTAABindGroup1;
+		size_t m_pDefaultBindGroup;
+		size_t m_pSkyBindGroup;
+		size_t m_pGrassBindGroup;
+		size_t m_pGridBindGroup;
+
 
 		std::shared_ptr<utils::Camera> m_pCamera;
 		ShaderData shaderData;
@@ -136,7 +143,7 @@ namespace Editor {
 			m_pSceneNodes.addEntityCallback = [this]() {
 				//pAddDefaultCube(glm::vec3(0.0f));
 				auto node = Utils::CreateNode(glm::mat4(1.0f), m_pScene);
-				Utils::RegisterIntoEditor("Node_" + std::to_string(node->Index()), &m_pSceneNodes, m_pScene, node);
+				m_pSceneNodes.RegisterIntoEditor("Node_" + std::to_string(node->Index()), node);
 			};
 		}
 	public:
@@ -162,5 +169,6 @@ namespace Editor {
 		void OnCreate();
 
 		void pAddDefaultCube(glm::vec3 position);
+		void pAddDefaultPlane(glm::vec3 position);
 	};
 }
