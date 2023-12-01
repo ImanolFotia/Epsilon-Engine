@@ -79,7 +79,7 @@ namespace engine
 			Ref<BindGroup> bindGroup;
 		};
 
-		std::unordered_map<std::string, RenderLayout> m_pRenderLayouts{};
+		std::unordered_map<size_t, RenderLayout> m_pRenderLayouts{};
 
 		Ref<RenderPass> m_pCurrentRenderPass;
 
@@ -147,24 +147,24 @@ namespace engine
 
 		Ref<BindGroup> addBindGroup(const std::string& name, uint32_t layoutIndex, engine::BindGroupInfo info) {
 			auto resourceManager = m_pContext->ResourceManager();
-			m_pRenderLayouts[name] = { layoutIndex, resourceManager->createBindGroup(info) };
+			m_pRenderLayouts[std::hash<std::string>{}(name)] = { layoutIndex, resourceManager->createBindGroup(info) };
 
-			return m_pRenderLayouts[name].bindGroup;
+			return m_pRenderLayouts[std::hash<std::string>{}(name)].bindGroup;
 		}
 
 		Ref<BindGroup> addBindGroup(const std::string& name, uint32_t layoutIndex, Ref<BindGroup> bindGroup) {
 			auto resourceManager = m_pContext->ResourceManager();
-			m_pRenderLayouts[name] = { layoutIndex, bindGroup };
+			m_pRenderLayouts[std::hash<std::string>{}(name)] = { layoutIndex, bindGroup };
 			return bindGroup;
 		}
 
 		void UpdateBindGroup(const std::string& name) {
 			auto resourceManager = m_pContext->ResourceManager();
 			//resourceManager->updateBindGroup();
-			m_pRenderLayouts[name];
+			m_pRenderLayouts[std::hash<std::string>{}(name)];
 		}
 
-		std::unordered_map<std::string, RenderLayout> getBindGroups() {
+		std::unordered_map<size_t, RenderLayout> getBindGroups() {
 			return m_pRenderLayouts;
 		}
 
@@ -402,7 +402,7 @@ namespace engine
 			return m_pSceneManager.to<T>(m_pSceneManager.getChild<T>(m_pSceneManager.root));
 		}
 
-		SceneManager::ChildNodes getChildren(std::shared_ptr<NodeBase> parent)
+		SceneManager::ChildNodes& getChildren(std::shared_ptr<NodeBase> parent)
 		{
 			//return m_pSceneManager.to<T>(m_pSceneManager.getChild<T>(m_pSceneManager.root));
 			return m_pSceneManager.getChildren(parent);
@@ -410,7 +410,7 @@ namespace engine
 
 		void BeginScene()
 		{
-			if (m_pContext->Window().getSize().first > 0) {
+			if (m_pContext->Window().getSize().width > 0) {
 				auto renderer = m_pContext->Renderer();
 				renderer->BeginFrame();
 				renderer->Begin();
@@ -424,21 +424,28 @@ namespace engine
 		void Flush(engine::DrawType drawType = engine::DrawType::INDEXED)
 		{
 
-			if (m_pContext->Window().getSize().first > 0) {
+			if (m_pContext->Window().getSize().width > 0) {
 				auto renderer = m_pContext->Renderer();
 
 				renderer->Flush(m_pCurrentRenderPass, drawType);
 			}
 		}
 
-		void Push(std::shared_ptr<Node<RenderModel>> renderModel, glm::mat4 transform, const std::string& layout)
+		void Push(std::shared_ptr<Node<RenderModel>> renderModel, const glm::mat4& transform, const std::string& layout)
 		{
-			if (m_pContext->Window().getSize().first > 0) {
+			Push(renderModel, std::forward<const glm::mat4&>(transform), std::hash<std::string>{}(layout));
+		}
+
+		void Push(std::shared_ptr<Node<RenderModel>> renderModel, const glm::mat4& transform, size_t layout)
+		{
+			if (m_pContext->Window().getSize().width > 0) {
 				auto renderer = m_pContext->Renderer();
 
 				Ref<PushConstant> push_constant;
 
-				Ref<BindGroup> selectedBindGroup = m_pRenderLayouts[layout].bindGroup;
+				auto& renderLayout = m_pRenderLayouts[layout];
+
+				Ref<BindGroup> selectedBindGroup = renderLayout.bindGroup;
 				
 				for (auto& mesh : renderModel->data.renderMeshes[0])
 				{
@@ -472,16 +479,22 @@ namespace engine
 														.material_index = material_indices[0],
 														.animation_offset = renderModel->data.animationIndex
 													  },
-									.layout_index = m_pRenderLayouts[layout].pipelineLayoutIndex,
+									.layout_index = renderLayout.pipelineLayoutIndex,
 									.uniformIndex = m_pMeshCount });
 					m_pMeshCount++;
 				}
 			}
 		}
 
-		void Push(const std::vector<glm::mat4>& transforms, const std::string& layout, const std::string material, unsigned int count = 1) {
 
-			if (m_pContext->Window().getSize().first > 0) {
+		void Push(const std::vector<glm::mat4>& transforms, const std::string& layout, const std::string& material, unsigned int count = 1) {
+			Push(transforms, std::hash<std::string>{}(layout), material, count);
+		}
+
+
+		void Push(const std::vector<glm::mat4>& transforms, size_t layout, const std::string& material, unsigned int count = 1) {
+
+			if (m_pContext->Window().getSize().width > 0) {
 				auto renderer = m_pContext->Renderer();
 
 				Ref<PushConstant> push_constant;
@@ -529,9 +542,15 @@ namespace engine
 			}
 		}
 		uint32_t lastRenderModelId = -1;
-		void Push(std::shared_ptr<Node<RenderModel>> renderModel, const std::vector<glm::mat4>& transforms, const std::string& layout, unsigned int count = 1)
+
+
+		void Push(std::shared_ptr<Node<RenderModel>> renderModel, const std::vector<glm::mat4>& transforms, const std::string& layout, unsigned int count = 1) {
+			Push(renderModel, transforms, std::hash<std::string>{}(layout), count);
+		}
+
+		void Push(std::shared_ptr<Node<RenderModel>> renderModel, const std::vector<glm::mat4>& transforms, size_t layout, unsigned int count = 1)
 		{
-			if (m_pContext->Window().getSize().first > 0) {
+			if (m_pContext->Window().getSize().width > 0) {
 				auto renderer = m_pContext->Renderer();
 
 				Ref<PushConstant> push_constant;
@@ -596,7 +615,7 @@ namespace engine
 
 		void EndScene()
 		{
-			if (m_pContext->Window().getSize().first > 0) {
+			if (m_pContext->Window().getSize().width > 0) {
 				auto renderer = m_pContext->Renderer();
 				glm::vec3 v;
 				renderer->End(v);

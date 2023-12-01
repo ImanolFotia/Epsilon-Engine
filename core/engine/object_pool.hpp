@@ -59,7 +59,7 @@ namespace engine
         template <typename... Args>
         Ref<T> emplace(std::string name, Args... args)
         {
-            const std::lock_guard<std::mutex> lock(m_pMutex);
+           // const std::lock_guard<std::mutex> lock(m_pMutex);
             if (m_pFreeRefs.size() > 0)
             {
                 Ref<T> ref = m_pFreeRefs.back();
@@ -88,7 +88,7 @@ namespace engine
         }
         Ref<T> insert(std::string name, R element)
         {
-            const std::lock_guard<std::mutex> lock(m_pMutex);
+            //const std::lock_guard<std::mutex> lock(m_pMutex);
             if (m_pFreeRefs.size() > 0)
             {
                 Ref<T> ref = m_pFreeRefs.back();
@@ -114,11 +114,11 @@ namespace engine
 
         [[nodiscard]] R *get(Ref<T> ref)
         {
-            const std::lock_guard<std::mutex> lock(m_pMutex);
+            //const std::lock_guard<std::mutex> lock(m_pMutex);
             //const std::lock_guard<std::mutex> lock(m_pMutex);
             if (m_pIndexArray.size() > ref.m_pIndex && ref.isValid())
             {
-                if (m_pGeneration[ref.m_pIndex] == ref.m_pGeneration)
+                //if (m_pGeneration[ref.m_pIndex] == ref.m_pGeneration)
                 {
                     return &(*m_pIndexArray[ref.m_pIndex]);
                 }
@@ -130,7 +130,7 @@ namespace engine
 
         [[nodiscard]] R *get(uint32_t id)
         {
-            const std::lock_guard<std::mutex> lock(m_pMutex);
+            //const std::lock_guard<std::mutex> lock(m_pMutex);
             //const std::lock_guard<std::mutex> lock(m_pMutex);
             if (m_pIdArray.contains(id))
             {
@@ -149,7 +149,7 @@ namespace engine
 
         [[nodiscard]] uint32_t getId(Ref<T> ref)
         {
-            const std::lock_guard<std::mutex> lock(m_pMutex);
+            //const std::lock_guard<std::mutex> lock(m_pMutex);
             if (m_pIndexArray.size() > ref.m_pIndex && ref.isValid())
             {
                 if (m_pGeneration[ref.m_pIndex] == ref.m_pGeneration)
@@ -164,7 +164,7 @@ namespace engine
 
         void destroy(Ref<T> &ref)
         {
-            const std::lock_guard<std::mutex> lock(m_pMutex);
+            //const std::lock_guard<std::mutex> lock(m_pMutex);
             std::cout << "internal data size before: " << m_pInternalData.size()
                       << std::endl;
             if (m_pIndexArray.size() > ref.m_pIndex)

@@ -100,6 +100,9 @@ namespace engine
 		std::string name{};
 		std::string bindGroup = "DefaultLayout";
 		std::string shadowBindGroup = "ShadowLayout";
+
+		size_t bindGroupId = std::hash<std::string>{}("DefaultLayout");
+		size_t shadowBindGroupId = std::hash<std::string>{}("ShadowLayout");
 		uint32_t animationIndex = 0;
 		bool hasAnimation = false;
 		bool isInstanced = false;
@@ -429,9 +432,16 @@ namespace engine
 
 			RenderModel& model = m_pModels[name];
 			model.name = name;
+			std::string material_name;
+			size_t material_name_hash;
 
-			std::string material_name = name + "_material";
-			size_t material_name_hash = std::hash<std::string>{}(material_name);
+			if(material.name.empty())
+				material_name = name + "_material";
+			else {
+				material_name = material.name;
+			}
+
+			material_name_hash = std::hash<std::string>{}(material_name);
 
 			RenderMesh subRenderC;
 			subRenderC.material_keys[0] = material_name_hash;
@@ -451,6 +461,7 @@ namespace engine
 			pbr_material.albedo_color = material.color;
 			pbr_material.metallic_color = material.metallic;
 			pbr_material.roughness_color = material.roughness;
+			pbr_material.specular = material.specular;
 
 			if (!material.albedo_path.empty())
 			{

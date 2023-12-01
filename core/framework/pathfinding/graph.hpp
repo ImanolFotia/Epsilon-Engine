@@ -65,8 +65,8 @@ namespace framework {
 		NodeData m_pNodeData;
 		Nodes m_pNodes;
 
-		uint32_t m_pSizeX;
-		uint32_t m_pSizeY;
+		uint32_t m_pSizeX = 100;
+		uint32_t m_pSizeY = 100;
 
 		std::hash<Key> getHash(Key key) {
 			return std::hash<Key>{}(key);
