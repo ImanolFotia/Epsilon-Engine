@@ -140,7 +140,7 @@ namespace Epsilon
         }
 
     protected:
-        std::pair<int, int> getWindowDimensions();
+        framework::WindowSize getWindowDimensions();
 
         std::shared_ptr<engine::Context> m_pContext = nullptr;
         std::shared_ptr<engine::Scene> m_pScene;

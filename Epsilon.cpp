@@ -25,7 +25,7 @@ namespace Epsilon
 
     void Epsilon::run()
     {
-        if (m_pContext->Window().getSize().first == 0)
+        if (m_pContext->Window().getSize().width == 0)
             initWindow(1280, 720);
 
         initVulkan();
@@ -169,7 +169,7 @@ namespace Epsilon
 
     
 
-    std::pair<int, int> Epsilon::getWindowDimensions()
+    inline framework::WindowSize Epsilon::getWindowDimensions()
     {
         int w, h;
         return  m_pContext->Window().getSize();
