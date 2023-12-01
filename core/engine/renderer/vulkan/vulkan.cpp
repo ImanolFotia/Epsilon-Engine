@@ -256,7 +256,7 @@ namespace engine
 
 		if (m_pShouldRecreateSwapchain)
 		{
-			if (m_pWindow->getSize().first > 0) {
+			if (m_pWindow->getSize().width > 0) {
 				pRecreateSwapChain();
 				m_pShouldRecreateSwapchain = false;
 				std::cout << "swap chain recreated\n";
@@ -674,7 +674,7 @@ namespace engine
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR)
 		{
-			if (m_pWindow->getSize().first > 0)
+			if (m_pWindow->getSize().width > 0)
 				pRecreateSwapChain();
 			return -1;
 		}
