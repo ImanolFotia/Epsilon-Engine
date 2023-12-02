@@ -29,8 +29,8 @@ namespace engine
 				return;
 			}
 
-			float step = 1.0f / (float)tesselation;
-			int numVertices = tesselation * tesselation;
+			float step = 1.0f / ((float)tesselation+1);
+			int numVertices = (tesselation) * (tesselation);
 			bounds.min = glm::vec3(100000.0f);
 			bounds.max = glm::vec3(-100000.0f);
 
@@ -62,8 +62,8 @@ namespace engine
 			bounds.center = bounds.max - bounds.min;
 
 			int edge = 0;
-			for (int i = 0; i <= numVertices; i++) {
-				if (edge >= tesselation ) {
+			for (int i = 0; i < numVertices + tesselation; i++) {
+				if (edge >= tesselation) {
 					edge = 0;
 					continue;
 				}
@@ -123,13 +123,13 @@ namespace engine
 		float getHeight(glm::vec3 position, glm::vec3 scale) {
 			glm::ivec3 pos = glm::floor(position - 1.0f);
 
-			int x_a = pos.x + m_pTesselation / 2;
+			int x_a = pos.x + (m_pTesselation) / 2;
 			int x_b = 0;
 
-			int y_a = pos.z - m_pTesselation / 2;
+			int y_a = pos.z - (m_pTesselation) / 2;
 			int y_b = 0;
 
-			if (x_a >= m_pTesselation) {
+			if (x_a >= m_pTesselation+1) {
 				x_b = x_a;
 				x_a = x_a - 1;
 			}
@@ -137,7 +137,7 @@ namespace engine
 				x_b = x_a + 1;
 			}
 
-			if (y_a >= m_pTesselation) {
+			if (y_a >= m_pTesselation+1) {
 				y_b = y_a;
 				y_a = y_a - 1;
 			}
@@ -145,26 +145,48 @@ namespace engine
 				y_b = y_a + 1;
 			}
 
-			if (y_a <= 0) {
+			if (y_a < 0) {
 				y_a = 0;
 				y_b = 1;
 			}
 
-			if (x_a <= 0) {
+			if (x_a < 0) {
 				x_a = 0;
 				x_b = 1;
 			}
 
-			glm::vec3 a, b, c, d;
-			a = m_pMesh.Vertices.at(x_a * m_pTesselation + y_a).position * scale;// a.x = a.x * scale.x; a.z = a.z * scale.z;
-			b = m_pMesh.Vertices.at(x_b * m_pTesselation + y_a).position * scale;// b.x = b.x * scale.x; b.z = b.z * scale.z;
-			c = m_pMesh.Vertices.at(x_a * m_pTesselation + y_b).position * scale;// c.x = c.x * scale.x; c.z = c.z * scale.z;
-			d = m_pMesh.Vertices.at(x_b * m_pTesselation + y_b).position * scale;// d.x = d.x * scale.x; d.z = d.z * scale.z;
 
-			float la = glm::distance(position, a);
-			float lb = glm::distance(position, b);
-			float lc = glm::distance(position, c);
-			float ld = glm::distance(position, d);
+			glm::vec2 m_pGridOrigin = glm::vec2(-50.0, -50.0);
+			glm::vec2 bounds = glm::vec2(m_pGridOrigin) + glm::vec2(m_pTesselation + 1, m_pTesselation + 1);
+
+			glm::ivec2 p = glm::vec2(glm::ceil(position.x-0.5), glm::ceil(position.z - 0.5));
+			glm::ivec2 g = glm::vec2(glm::ceil(m_pGridOrigin));
+
+			p = (p - g);
+
+			int index = p.y + p.x * (m_pTesselation + 1);
+
+			if (position.x < m_pGridOrigin.x || position.x >= bounds.x || position.z < m_pGridOrigin.y || position.z >= bounds.y)
+				index = 0;
+
+
+			glm::vec3 a, b, c, d;
+			a = m_pMesh.Vertices.at(index).position * scale;// a.x = a.x * scale.x; a.z = a.z * scale.z;
+			b = a;
+			c = a;
+			d = a;
+
+			if(index + (m_pTesselation + 1) < m_pMesh.Vertices.size())
+				b = m_pMesh.Vertices.at(index+ (m_pTesselation + 1)).position * scale;// b.x = b.x * scale.x; b.z = b.z * scale.z;
+			if (index + 1 < m_pMesh.Vertices.size())
+				c = m_pMesh.Vertices.at(index+1).position * scale;// c.x = c.x * scale.x; c.z = c.z * scale.z;
+			if (index + (m_pTesselation + 2) < m_pMesh.Vertices.size())
+				d = m_pMesh.Vertices.at(index + (m_pTesselation + 2)).position * scale;// d.x = d.x * scale.x; d.z = d.z * scale.z;
+			
+			float la = glm::distance(position, a) / 1.4142;
+			float lb = glm::distance(position, b) / 1.4142;
+			float lc = glm::distance(position, c) / 1.4142;
+			float ld = glm::distance(position, d) / 1.4142;
 
 			float tx = lb - la;
 			float ty = ld - lc;

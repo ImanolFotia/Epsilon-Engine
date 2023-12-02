@@ -493,7 +493,7 @@ namespace Editor {
 		glm::mat4 model_matrix = transform_matrix * rotation_matrix;
 		auto node = Utils::CreateNode(model_matrix, m_pScene);
 
-		engine::Quad cube(5, glm::vec2(0.2f,1.0));
+		engine::Quad cube(5, glm::vec2(0.3f,1.0));
 		
 		for (auto& vtx : cube.data().Vertices) {
 			float tmp = vtx.position.y;
