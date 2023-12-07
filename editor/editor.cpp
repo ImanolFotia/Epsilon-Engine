@@ -74,14 +74,16 @@ namespace Editor {
 		m_pGridBindGroup = std::hash<std::string>{}("GridBindGroup");
 
 		m_pScene->addBindGroup("GrassBindGroup", 3, {
-				.bindingInfo = {{.size = sizeof(engine::PBRMaterial) * engine::AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"}},
+				.bindingInfo = {{.size = sizeof(engine::PBRMaterial) * engine::AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
+								{.size = sizeof(glm::mat4) * engine::AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 5, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"},
+								{.size = sizeof(engine::ShaderObjectData) * engine::AssetManager::MAX_OBJECTS, .offset = 0, .binding = 6, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "object_buffer"}},
 				.inputs = {},
 				.renderPass = "Forward",
 				.name = "GrassBindGroup",
 			});
 
 		m_pGrassBindGroup = std::hash<std::string>{}("GrassBindGroup");
-		
+
 		m_pScene->addBindGroup("TAABindGroup0", 0, {
 				.bindingInfo = {
 			{.size = sizeof(Renderpasses::TAAUniformData), .offset = 0, .binding = 1, .type = engine::UniformBindingType::UNIFORM_BUFFER, .buffer = "TAADataBuffer", .name = "TAADataBuffer"}},
@@ -111,14 +113,14 @@ namespace Editor {
 
 		m_pTAABindGroup0 = std::hash<std::string>{}("TAABindGroup0");
 		m_pTAABindGroup1 = std::hash<std::string>{}("TAABindGroup1");
-			
+
 		auto renderer = getContext()->Renderer();
 
 		renderer->InitDebugRenderer();
 		setup_style();
 
 		auto node = Utils::CreateNode(glm::mat4(1.0f), m_pScene);
-		Utils::AddCameraNode("Camera", m_pScene, node,  {});
+		Utils::AddCameraNode("Camera", m_pScene, node, {});
 
 		m_pSceneNodes.RegisterIntoEditor("Camera", node);
 
@@ -223,11 +225,11 @@ namespace Editor {
 
 
 		//pAddDefaultCube(glm::vec3(0.0));
-		
-		for(int i = 0; i < 200; i++) 
-			for (int j = 0; j < 200; j++) {
-				pAddDefaultPlane(glm::vec3((float)(i * 0.15)-15, 0.0f, (float)(j * 0.15)-15));
-			}
+
+		//for (int i = 0; i < 200; i++)
+		//	for (int j = 0; j < 200; j++) {
+		pAddDefaultPlane(glm::vec3(0.0f));
+		//}
 
 		renderer->getDebugRenderer()->ShowDebugPerformance(false);
 
@@ -278,18 +280,18 @@ namespace Editor {
 			if (selected_index > 0) {
 				auto e = m_pScene->getNode(selected_index);
 				auto children = m_pScene->getChildren(e);
-					m_pObjectProperty.SetNode(m_pSceneNodes.selected_node);
+				m_pObjectProperty.SetNode(m_pSceneNodes.selected_node);
 
-					bool containsScript = false;
-					for (auto& child : children) {
+				bool containsScript = false;
+				for (auto& child : children) {
 
-						if (child.first == typeid(EntityScript)) {
-							containsScript = true;
-							break;
-						}
+					if (child.first == typeid(EntityScript)) {
+						containsScript = true;
+						break;
 					}
+				}
 
-					if (containsScript) {
+				if (containsScript) {
 
 					auto s = m_pScene->getChild<EntityScript>(e);
 					auto script = std::static_pointer_cast<engine::Node<EntityScript>>(s);
@@ -307,11 +309,11 @@ namespace Editor {
 						}
 					}
 					script->data.properties = m_pObjectProperty.getProperties();
-					}
-					else {
+				}
+				else {
 
-						m_pObjectProperty.draw();
-					}
+					m_pObjectProperty.draw();
+				}
 			}
 
 			ImGui::Begin("Reload Assembly");
@@ -333,7 +335,7 @@ namespace Editor {
 			ImGui::SameLine();
 			ImGui::End();
 
-		});
+			});
 	}
 
 	void Editor::OnUpdate() {
@@ -450,114 +452,129 @@ namespace Editor {
 		for (auto& model_node : models) {
 			auto model = std::static_pointer_cast<engine::Node<engine::RenderModel>>(model_node);
 			auto transform = std::static_pointer_cast<engine::Node<engine::Scene::SceneEntity>>(model->Parent());
-			m_pScene->Push(model, transform->data.transform, model->data.bindGroupId);
+			if (model->data.isInstanced) {
+
+				m_pScene->Push(model, model->data.transforms, model->data.bindGroupId, model->data.transforms.size());
+			}
+			else {
+				m_pScene->Push(model, transform->data.transform, model->data.bindGroupId);
+			}
 		}
-
-		m_pScene->Flush();
-
-		if (m_pPostProcess.TaaEnabled()) {
-			m_pScene->setCurrentRenderPass(/**/m_pCurrentTAAPass ? "TAARenderPass0" : "TAARenderPass1");
-
-			//for (auto& model_node : models) {
-			m_pScene->Push(m_pGridPlane, glm::mat4(1.0), m_pCurrentTAAPass ? m_pTAABindGroup0 : m_pTAABindGroup1);
-			//}
-
-			m_pCurrentTAAPass = !m_pCurrentTAAPass;
 			m_pScene->Flush();
+
+			if (m_pPostProcess.TaaEnabled()) {
+				m_pScene->setCurrentRenderPass(/**/m_pCurrentTAAPass ? "TAARenderPass0" : "TAARenderPass1");
+
+				//for (auto& model_node : models) {
+				m_pScene->Push(m_pGridPlane, glm::mat4(1.0), m_pCurrentTAAPass ? m_pTAABindGroup0 : m_pTAABindGroup1);
+				//}
+
+				m_pCurrentTAAPass = !m_pCurrentTAAPass;
+				m_pScene->Flush();
+			}
+
+
+			m_pScene->EndScene();
+
 		}
 
 
-		m_pScene->EndScene();
+		void Editor::pAddDefaultPlane(glm::vec3 position) {
 
-	}
+			common::MeshMaterial defaultMaterial;
+			defaultMaterial.roughness = 0.34;
+			defaultMaterial.metallic = 0;
+			defaultMaterial.specular = 0.5;
+			defaultMaterial.color = glm::vec4(0.15, 0.6, 0.15, 1.0);
+			defaultMaterial.normal_path = "textures/grass_normal.png";
+			defaultMaterial.name = "grass_material";
+
+			engine::Quad cube(5, glm::vec2(0.2f, 1.0));
+
+			for (auto& vtx : cube.data().Vertices) {
+				float tmp = vtx.position.y;
+				vtx.position.y = -vtx.position.z;
+				vtx.position.z = tmp;
+
+				tmp = vtx.normal.y;
+				vtx.normal.y = vtx.normal.z;
+				vtx.normal.z = tmp;
+
+				vtx.position.x = vtx.position.x * 2.0f;
+
+				vtx.position.y += 0.5;
+			}
+
+			for (auto& vtx : cube.data().Vertices) {
+
+				vtx.position.x *= 0.025f;
+				vtx.position.x += 0.01f;
+				vtx.position.x *= (1.0 - vtx.position.y);
+			}
+
+			cube.generateTangentSpaceVectors();
+
+			auto m_pDefaultCube = m_pScene->getAssetManager().createModelFromMesh("Grass Blade", cube.data(), defaultMaterial);
+
+			m_pDefaultCube.isInstanced = true;
+			for (int i = 0; i < 300; i++) {
+				for (int j = 0; j < 300; j++) {
+					//pAddDefaultPlane(glm::vec3((float)(i * 0.15) - 15, 0.0f, (float)(j * 0.15) - 15));
+					glm::vec3 position = glm::vec3((float)(i * 0.05) - 15, 0.0f, (float)(j * 0.05) - 15);
+					std::random_device rd;
+					std::mt19937 e2(rd());
+
+					std::uniform_real_distribution<float> dist(-0.2, 0.2);
+					std::uniform_real_distribution<float> dist2(-glm::pi<float>(), glm::pi<float>());
+
+					glm::mat4 transform_matrix = glm::translate(glm::mat4(1.0), position + glm::vec3(dist(e2), 0.0, dist(e2)) + glm::vec3(0.5, 0.0, 0.5));
+					glm::mat4 rotation_matrix = glm::rotate(glm::mat4(1.0), dist2(e2), glm::vec3(0.0, 1.0, 0.0));
+					glm::mat4 model_matrix = transform_matrix * rotation_matrix;
+					m_pDefaultCube.transforms.push_back(model_matrix);
+
+				}
+			}
+
+			auto node = Utils::CreateNode(glm::mat4(1.0), m_pScene);
 
 
-	void Editor::pAddDefaultPlane(glm::vec3 position) {
+			Utils::AddModelNode("Grass Blades" + std::to_string(node->Index()), m_pScene, m_pDefaultCube, node, "GrassBindGroup");
 
-		common::MeshMaterial defaultMaterial;
-		defaultMaterial.roughness = 0.34;
-		defaultMaterial.metallic = 0;
-		defaultMaterial.specular = 0.5;
-		defaultMaterial.color = glm::vec4(0.15, 0.6, 0.15, 1.0);
-		defaultMaterial.normal_path = "textures/grass_normal.png";
-		defaultMaterial.name = "grass_material";
+			/*Utils::AddScriptNode({
+				.language = C_SHARP,
+				.fileName = "GameObject.cs",
+				.assemblyName = "Game.dll",
+				.className = "Game.GameObject",
+				.nodeName = "Plane." + node->Index()
+				}, m_pScene, node, host);*/
 
-		std::random_device rd;
-		std::mt19937 e2(rd());
-
-		std::uniform_real_distribution<float> dist(-0.2, 0.2);
-		std::uniform_real_distribution<float> dist2(-glm::pi<float>(), glm::pi<float>());
-
-		glm::mat4 transform_matrix = glm::translate(glm::mat4(1.0), position + glm::vec3(dist(e2), 0.0, dist(e2)) + glm::vec3(0.5, 0.0, 0.5));
-		glm::mat4 rotation_matrix = glm::rotate(glm::mat4(1.0), dist2(e2), glm::vec3(0.0, 1.0, 0.0));
-		glm::mat4 model_matrix = transform_matrix * rotation_matrix;
-		auto node = Utils::CreateNode(model_matrix, m_pScene);
-
-		engine::Quad cube(5, glm::vec2(0.3f,1.0));
-		
-		for (auto& vtx : cube.data().Vertices) {
-			float tmp = vtx.position.y;
-			vtx.position.y = -vtx.position.z;
-			vtx.position.z = tmp;
-
-			tmp = vtx.normal.y;
-			vtx.normal.y = vtx.normal.z;
-			vtx.normal.z = tmp;
-
-			vtx.position.x = vtx.position.x * 2.0f;
-
-			vtx.position.y += 0.5;
+			m_pSceneNodes.RegisterIntoEditor("Grass", node);
 		}
 
-		for (auto& vtx : cube.data().Vertices) {
+		void Editor::pAddDefaultCube(glm::vec3 position) {
 
-			vtx.position.x *= 0.05f;
-			vtx.position.x += 0.02f;
-			vtx.position.x *= (1.0 - vtx.position.y);
+			common::MeshMaterial defaultMaterial;
+			defaultMaterial.roughness = 0.8;
+			defaultMaterial.metallic = 0;
+			defaultMaterial.color = glm::vec4(0.5, 0.5, 0.5, 1.0);
+
+
+
+			engine::Cube cube;
+			auto m_pDefaultCube = m_pScene->getAssetManager().createModelFromMesh("DefaultCube", cube.data(), defaultMaterial);
+
+			auto node = Utils::CreateNode(glm::mat4(1.0f), m_pScene);
+
+			Utils::AddModelNode("Cube", m_pScene, m_pDefaultCube, node);
+
+			Utils::AddScriptNode({
+				.language = C_SHARP,
+				.fileName = "GameObject.cs",
+				.assemblyName = "Game.dll",
+				.className = "Game.GameObject",
+				.nodeName = "Cube"
+				}, m_pScene, node, host);
+
+			m_pSceneNodes.RegisterIntoEditor("Cube", node);
 		}
-
-		cube.generateTangentSpaceVectors();
-
-		auto m_pDefaultCube = m_pScene->getAssetManager().createModelFromMesh("Plane" , cube.data(), defaultMaterial);
-
-
-		Utils::AddModelNode("Plane" + std::to_string(node->Index()), m_pScene, m_pDefaultCube, node, "GrassBindGroup");
-
-		/*Utils::AddScriptNode({
-			.language = C_SHARP,
-			.fileName = "GameObject.cs",
-			.assemblyName = "Game.dll",
-			.className = "Game.GameObject",
-			.nodeName = "Plane." + node->Index()
-			}, m_pScene, node, host);*/
-
-		m_pSceneNodes.RegisterIntoEditor("Plane", node);
 	}
-
-	void Editor::pAddDefaultCube(glm::vec3 position) {
-
-		common::MeshMaterial defaultMaterial;
-		defaultMaterial.roughness = 0.8;
-		defaultMaterial.metallic = 0;
-		defaultMaterial.color = glm::vec4(0.5, 0.5, 0.5, 1.0);
-
-
-
-		engine::Cube cube;
-		auto m_pDefaultCube = m_pScene->getAssetManager().createModelFromMesh("DefaultCube", cube.data(), defaultMaterial);
-
-		auto node = Utils::CreateNode(glm::mat4(1.0f), m_pScene);
-
-		Utils::AddModelNode("Cube", m_pScene, m_pDefaultCube, node);
-
-		Utils::AddScriptNode({
-			.language = C_SHARP,
-			.fileName = "GameObject.cs",
-			.assemblyName = "Game.dll",
-			.className = "Game.GameObject",
-			.nodeName = "Cube"
-			}, m_pScene, node, host);
-
-		m_pSceneNodes.RegisterIntoEditor("Cube", node);
-	}
-}
