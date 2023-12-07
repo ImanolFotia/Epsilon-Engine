@@ -10,6 +10,7 @@
 #include <chrono>
 #include <thread>
 #include <mutex>
+#include <core/framework/containers/static_array.hpp>
 
 #include "../structs/frustum.hpp"
 #include "../structs/sphere.hpp"
@@ -43,8 +44,8 @@ namespace engine
 
 		int m_Depth = 0;
 
-		std::array<Octree_ptr, 8> m_Children{};
-		std::array<Box, 8> m_bChildren{};
+		framework::StaticArray<Octree_ptr, 8> m_Children{};
+		framework::StaticArray<Box, 8> m_bChildren{};
 
 		std::list<std::pair<Box, T>> m_Data{};
 
@@ -78,10 +79,10 @@ namespace engine
 		 */
 		void traverse()
 		{
-			for (auto& d : m_Data)
+			for (auto &d : m_Data)
 				std::cout << "found data: " //<< *d.second.data
-				<< " with address: " << &d.second
-				<< "\nat depth: " << m_Depth << std::endl;
+						  << " with address: " << &d.second
+						  << "\nat depth: " << m_Depth << std::endl;
 
 			if (m_IsBuilt && !m_IsLeaf)
 			{
@@ -101,9 +102,9 @@ namespace engine
 			return items;
 		}
 
-		void search(const Box& box, std::list<T>& items)
+		void search(const Box &box, std::list<T> &items)
 		{
-			for (const auto& p : m_Data)
+			for (const auto &p : m_Data)
 			{
 				if (box.overlaps(p.first))
 				{
@@ -126,7 +127,7 @@ namespace engine
 			}*/
 		}
 
-		void check_child(int index, const Box& box, std::list<T>& items) 
+		void check_child(int index, const Box &box, std::list<T> &items)
 		{
 			if (m_Children[index])
 			{
@@ -137,16 +138,16 @@ namespace engine
 			}
 		}
 
-		auto search(Frustum& frustum) -> std::list<T>
+		auto search(Frustum &frustum) -> std::list<T>
 		{
 			std::list<T> items{};
 			search(frustum, items);
 			return items;
 		}
 
-		void search(Frustum& frustum, std::list<T>& items)
+		void search(Frustum &frustum, std::list<T> &items)
 		{
-			for (auto& p : m_Data)
+			for (auto &p : m_Data)
 			{
 				if (frustum.overlaps(p.first))
 					items.push_back(p.second);
@@ -164,17 +165,16 @@ namespace engine
 			}
 		}
 
-
-		auto search(BoundingSphere& sphere) -> std::list<T>
+		auto search(BoundingSphere &sphere) -> std::list<T>
 		{
 			std::list<T> items{};
 			search(sphere, items);
 			return items;
 		}
 
-		void search(BoundingSphere& sphere, std::list<T>& items)
+		void search(BoundingSphere &sphere, std::list<T> &items)
 		{
-			for (auto& p : m_Data)
+			for (auto &p : m_Data)
 			{
 				if (sphere.overlaps(p.first))
 					items.push_back(p.second);
@@ -192,20 +192,19 @@ namespace engine
 			}
 		}
 
-
-		void items(std::list<T>& items) const
+		void items(std::list<T> &items) const
 		{
-			for (auto& i : m_Data)
+			for (auto &i : m_Data)
 				items.push_back(i.second);
 
-			for (auto& c : m_Children)
+			for (auto &c : m_Children)
 			{
 				if (!c->m_IsEmpty)
 					c->items(items);
 			}
 		}
 
-		OctreeItemLocation<T> insert(const Box& box, T data)
+		OctreeItemLocation<T> insert(const Box &box, T data)
 		{
 			if (m_IsBuilt)
 			{
@@ -222,10 +221,10 @@ namespace engine
 					}
 				}
 				m_IsEmpty = false;
-				m_Data.push_back({ box, data });
+				m_Data.push_back({box, data});
 			}
 
-			return { &m_Data, std::prev(m_Data.end()) };
+			return {&m_Data, std::prev(m_Data.end())};
 		}
 
 	private:
@@ -280,45 +279,45 @@ namespace engine
 			return last;
 		}
 
-		std::list<typename OctreeData::iterator> search(Frustum& frustum) {
+		std::list<typename OctreeData::iterator> search(Frustum &frustum)
+		{
 			return m_Root.search(frustum);
 		}
 
-		std::list<typename OctreeData::iterator> search(const Box& box)
+		std::list<typename OctreeData::iterator> search(const Box &box)
 		{
 			return m_Root.search(box);
 		}
 
-		std::list<typename OctreeData::iterator> search(BoundingSphere& sphere)
+		std::list<typename OctreeData::iterator> search(BoundingSphere &sphere)
 		{
 			return m_Root.search(sphere);
 		}
 
-		void erase(typename OctreeData::iterator& item)
+		void erase(typename OctreeData::iterator &item)
 		{
 			item->data_position.container->erase(item->data_position.iterator);
 
 			m_Data.erase(item);
 		}
 
-		std::list<OctreeItem<T>>::iterator relocate(typename OctreeData::iterator& item, const Box& box)
+		std::list<OctreeItem<T>>::iterator relocate(typename OctreeData::iterator &item, const Box &box)
 		{
 			item->data_position.container->erase(item->data_position.iterator);
 
 			item->data_position = m_Root.insert(box, item);
 
 			return std::prev(m_Data.end());
-
 		}
 
-		OctreeData& items()
+		OctreeData &items()
 		{
 			return m_Data;
 		}
 
 		void clean() {}
 
-		const std::list<T>& data() { return m_Data; }
+		const std::list<T> &data() { return m_Data; }
 
 		void traverse() { m_Root.traverse(); }
 

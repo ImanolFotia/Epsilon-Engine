@@ -324,8 +324,8 @@ namespace engine
 
 	void VulkanRenderer::Flush(engine::Ref<engine::RenderPass> renderPassRef, engine::DrawType type)
 	{
-		if (m_pCurrentCommandQueue.empty())
-			return;
+		//if (m_pCurrentCommandQueue.empty())
+		//	return;
 		if (m_pImageIndex == -1)
 			return;
 
@@ -574,7 +574,7 @@ namespace engine
 		return std::tie(a_mat, a.layoutIndex, a_vtx, a_i) <
 			std::tie(b_mat, b.layoutIndex, b_vtx, b_i); };
 
-		std::sort(m_pCurrentCommandQueue.begin(), m_pCurrentCommandQueue.begin() + currentCommandsInQueue, predicate);
+		//std::sort(m_pCurrentCommandQueue.begin(), m_pCurrentCommandQueue.begin() + currentCommandsInQueue, predicate);
 
 		batches = generateIndirectBatch(m_pCurrentCommandQueue, currentCommandsInQueue);
 

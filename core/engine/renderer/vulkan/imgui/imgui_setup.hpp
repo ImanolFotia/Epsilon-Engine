@@ -16,7 +16,7 @@
 #include <IconsFontAwesome5.h>
 #include <modules/imgui/imgui_impl_glfw.h>
 #include <modules/imgui/imgui_impl_vulkan.h>
-#include <stdio.h>  // printf, fprintf
+#include <stdio.h>	// printf, fprintf
 #include <stdlib.h> // abort
 #include <functional>
 #include <unordered_map>
@@ -33,7 +33,7 @@ class ImGuiRenderer
 
 	ImGui_ImplVulkanH_Window m_pMainWindowData;
 
-	VkAllocationCallbacks* m_pAllocator = NULL;
+	VkAllocationCallbacks *m_pAllocator = NULL;
 	VkInstance m_pInstance = VK_NULL_HANDLE;
 	VkPhysicalDevice m_pPhysicalDevice = VK_NULL_HANDLE;
 	VkDevice m_pDevice = VK_NULL_HANDLE;
@@ -46,24 +46,20 @@ class ImGuiRenderer
 	VkCommandBuffer m_pCommandBuffer = VK_NULL_HANDLE;
 	VkRenderPass m_pRenderPass = VK_NULL_HANDLE;
 
-
-
 	uint32_t m_pImageCount = 0;
 
-
-	vk::VulkanData* m_pVkDataPtr = nullptr;
+	vk::VulkanData *m_pVkDataPtr = nullptr;
 	uint32_t m_pCurrentIndex{};
 
 	std::function<void()> m_pUserFunction;
 
 	bool m_pEnabled = true;
-	engine::VulkanResourceManager* m_pResourceManagerRef;
-
+	engine::VulkanResourceManager *m_pResourceManagerRef;
 
 	void setStyle()
 	{
 
-		ImGuiStyle* style = &ImGui::GetStyle();
+		ImGuiStyle *style = &ImGui::GetStyle();
 
 		ImVec4 BackgroundDark = ImVec4(48 / 255.0, 56 / 255.0, 65 / 255.0, 0.7f);
 		ImVec4 BackgroundLight = ImVec4(58 / 255.0, 71 / 255.0, 80 / 255.0, 1.00f);
@@ -214,7 +210,7 @@ class ImGuiRenderer
 		}*/
 		style->WindowTitleAlign = ImVec2(0.5, 0.5);
 
-		ImGuiIO& io = ImGui::GetIO();
+		ImGuiIO &io = ImGui::GetIO();
 
 		// io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 12);
 		// io.Fonts->AddFontFromFileTTF("./resources/Roboto-Regular.ttf", 10);
@@ -222,11 +218,12 @@ class ImGuiRenderer
 		ImFontConfig config;
 		config.OversampleH = 2;
 
-		static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
-		ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
-		
-#ifdef _WIN32
+		static const ImWchar icons_ranges[] = {ICON_MIN_FA, ICON_MAX_FA, 0};
+		ImFontConfig icons_config;
+		icons_config.MergeMode = true;
+		icons_config.PixelSnapH = true;
 
+#ifdef _WIN32
 
 		icons_config.GlyphOffset.y = 0.8;
 		icons_config.GlyphOffset.x = 0.8;
@@ -248,19 +245,18 @@ class ImGuiRenderer
 		BigFont = io.Fonts->AddFontFromFileTTF("./assets/fonts/FiraMono-Regular.ttf", 19, &config);
 #endif
 
-
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-		//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		// ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	}
 
 	bool m_pShowDebugPerformance = true;
 
 public:
+	ImFont *NormalFont = nullptr;
+	ImFont *BigFont = nullptr;
 
-	ImFont* NormalFont = nullptr;
-	ImFont* BigFont = nullptr;
-
-	struct ImageInfo {
+	struct ImageInfo
+	{
 		VkDescriptorSet id;
 		std::string render_pass{};
 		uint32_t index;
@@ -268,7 +264,8 @@ public:
 		std::string name;
 	};
 
-	void ShowDebugPerformance(bool val) {
+	void ShowDebugPerformance(bool val)
+	{
 		m_pShowDebugPerformance = val;
 	}
 
@@ -286,14 +283,14 @@ public:
 	{
 		m_pEnabled = !m_pEnabled;
 	}
-	void setUserFunction(std::function<void()>&& func)
+	void setUserFunction(std::function<void()> &&func)
 	{
 		m_pUserFunction = func;
 	}
-	void newFrame(uint32_t currentIndex, VkCommandBuffer& currentCommandBuffer)
+	void newFrame(uint32_t currentIndex, VkCommandBuffer &currentCommandBuffer)
 	{
 		m_pCurrentIndex = currentIndex;
-		m_pCommandBuffer = currentCommandBuffer; 
+		m_pCommandBuffer = currentCommandBuffer;
 		ImGuiBegin();
 		ImGui::NewFrame();
 	}
@@ -302,18 +299,18 @@ public:
 	{
 		// Create default descriptor pool
 		vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool, nullptr);
-		std::array<VkDescriptorPoolSize, 11> poolSizes =
-		{ {{VK_DESCRIPTOR_TYPE_SAMPLER, 1000},
-		  {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000},
-		  {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000},
-		  {VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000},
-		  {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000},
-		  {VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000},
-		  {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000},
-		  {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000},
-		  {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000},
-		  {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000},
-		  {VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000}} };
+		framework::StaticArray<VkDescriptorPoolSize, 11> poolSizes =
+			{{{VK_DESCRIPTOR_TYPE_SAMPLER, 1000},
+			  {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000},
+			  {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000},
+			  {VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000},
+			  {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000},
+			  {VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000},
+			  {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000},
+			  {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000},
+			  {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000},
+			  {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000},
+			  {VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000}}};
 
 		VkDescriptorPoolCreateInfo poolInfo{};
 		poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -333,12 +330,12 @@ public:
 		ImGui_ImplVulkan_Shutdown();
 	}
 	void
-		Init(vk::VulkanData& vk_data,
-			framework::Window::windowType* window,
-			VkDescriptorPool& descriptorPool,
-			VkRenderPass& renderPass,
-			VkCommandPool& commandPool,
-			VkCommandBuffer commandBuffer)
+	Init(vk::VulkanData &vk_data,
+		 framework::Window::windowType *window,
+		 VkDescriptorPool &descriptorPool,
+		 VkRenderPass &renderPass,
+		 VkCommandPool &commandPool,
+		 VkCommandBuffer commandBuffer)
 	{
 		m_pVkDataPtr = &vk_data;
 
@@ -347,7 +344,7 @@ public:
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImPlot::CreateContext();
-		ImGuiIO& io = ImGui::GetIO();
+		ImGuiIO &io = ImGui::GetIO();
 
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
@@ -358,14 +355,14 @@ public:
 		m_pMainWindowData.Surface = vk_data.surface;
 		m_pMainWindowData.ClearEnable = true;
 		m_pDevice = vk_data.logicalDevice;
-		m_pMainWindowData.ClearValue.color = { 0.0, 0.0, 0.0, 0.0f };
+		m_pMainWindowData.ClearValue.color = {0.0, 0.0, 0.0, 0.0f};
 
 		m_pRenderPass = vk_data.defaultRenderPass.renderPass;
 
 		m_pMainWindowData.RenderPass = vk_data.defaultRenderPass.renderPass;
 		// m_pMainWindowData.Pipeline = vk_data.defaultRenderPass.renderPipelines.front().graphicsPipeline;
 		m_pFramebuffer = vk_data.defaultRenderPass.renderPassChain.Framebuffers.front();
-		//m_pQueue = vk_data.graphicsQueue;
+		// m_pQueue = vk_data.graphicsQueue;
 		m_pCommandBuffer = commandBuffer; // The window pipeline may uses a different VkRenderPass than the one passed in ImGui_ImplVulkan_InitInfo
 
 		// uint32_t FrameIndex;     // Current frame being rendered to (0 <= FrameIndex < FrameInFlightCount)
@@ -381,7 +378,7 @@ public:
 		ImGui::StyleColorsDark();
 		setStyle();
 		// ImGui::StyleColorsLight();
-		ImGuiStyle* style = &ImGui::GetStyle();
+		ImGuiStyle *style = &ImGui::GetStyle();
 		style->ScrollbarRounding = 5.0f;
 		style->GrabRounding = 5.0f;
 		style->FrameRounding = 5.0f;
@@ -390,7 +387,7 @@ public:
 		style->PopupRounding = 5.0f;
 		style->TabRounding = 5.0f;
 
-		ImGui_ImplVulkanH_Window* wd = &m_pMainWindowData;
+		ImGui_ImplVulkanH_Window *wd = &m_pMainWindowData;
 		// Setup Platform/Renderer backends
 #if USE_GLFW
 		ImGui_ImplGlfw_InitForVulkan(window, true);
@@ -434,7 +431,7 @@ public:
 			ImGui_ImplVulkan_DestroyFontUploadObjects();
 		}
 
-		//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		// ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	}
 	void ImGuiBegin()
 	{
@@ -444,7 +441,7 @@ public:
 		ImGui_ImplGlfw_NewFrame();
 #endif
 	}
-	void Render(ImDrawData* draw_data)
+	void Render(ImDrawData *draw_data)
 	{
 		/*
 		Create render pass info
@@ -471,7 +468,7 @@ public:
 		ImGui_ImplVulkan_RenderDrawData(draw_data, m_pCommandBuffer, VK_NULL_HANDLE);
 		if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
-			GLFWwindow* backup_current_context = glfwGetCurrentContext();
+			GLFWwindow *backup_current_context = glfwGetCurrentContext();
 			ImGui::UpdatePlatformWindows();
 			ImGui::RenderPlatformWindowsDefault();
 			glfwMakeContextCurrent(backup_current_context);
@@ -487,14 +484,14 @@ public:
 	void ImGuiEnd()
 	{
 
-		ImGui_ImplVulkanH_Window* wd = &m_pMainWindowData;
+		ImGui_ImplVulkanH_Window *wd = &m_pMainWindowData;
 
 		// Rendering
 
 		ImGui::Render();
 		//}
 
-		ImDrawData* draw_data = ImGui::GetDrawData();
+		ImDrawData *draw_data = ImGui::GetDrawData();
 		const bool is_minimized = (draw_data->DisplaySize.x <= 0.0f || draw_data->DisplaySize.y <= 0.0f);
 		ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 		if (!is_minimized)
@@ -508,13 +505,13 @@ public:
 		}
 	}
 
-	void DrawUI(glm::vec3& data, engine::ResourcesMemory_t resources)
+	void DrawUI(glm::vec3 &data, engine::ResourcesMemory_t resources)
 	{
 		if (m_pEnabled)
 		{
-			//ImGuiBegin();
+			// ImGuiBegin();
 
-			ImGui_ImplVulkanH_Window* wd = &m_pMainWindowData;
+			ImGui_ImplVulkanH_Window *wd = &m_pMainWindowData;
 			// Our state
 			static bool show_demo_window = true;
 			static bool show_another_window = false;
@@ -524,47 +521,46 @@ public:
 			// ImGui::SetNextWindowSize(ImVec2(wd->Width, wd->Height));
 
 			///////// USER INPUT BEGINS HERE
-			if (/*m_pShowDebugPerformance*/ false) {
+			if (/*m_pShowDebugPerformance*/ false)
+			{
 				ImGui::SetNextWindowPos(ImVec2(10, 30));
 				ImGui::Begin("Info", nullptr, ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize);
 				ImGui::Text("Timings:");
 				ImGui::BulletText("Framerate %.1f FPS", ImGui::GetIO().Framerate);
 				ImGui::BulletText("frametime %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
 				ImGui::BulletText("Draw calls: %i", resources.numDrawCalls);
-			//static float frametime_values[1000] = {};
-			//static int frametime_values_offset = 0;
+				// static float frametime_values[1000] = {};
+				// static int frametime_values_offset = 0;
 
-			//frametime_values_offset = (frametime_values_offset + 1) % IM_ARRAYSIZE(frametime_values);
-			//frametime_values[frametime_values_offset] = 1000.0 / ImGui::GetIO().Framerate;
-			//SparkLine("Frametime", "Frametime", frametime_values, 1000, 0.5, 16.0, frametime_values_offset, ImVec4(1.0, 1.0, 1.0, 1.0), ImVec2(200, 50));
+				// frametime_values_offset = (frametime_values_offset + 1) % IM_ARRAYSIZE(frametime_values);
+				// frametime_values[frametime_values_offset] = 1000.0 / ImGui::GetIO().Framerate;
+				// SparkLine("Frametime", "Frametime", frametime_values, 1000, 0.5, 16.0, frametime_values_offset, ImVec4(1.0, 1.0, 1.0, 1.0), ImVec2(200, 50));
 
-			ImGui::Separator();
-			const char* gpu_name = resources.GPUName.c_str();
-			ImGui::Text("%s", gpu_name);
-			ImGui::Text("GPU Memory:");
-			int i = 0;
-			for (auto& heap : resources.heaps)
-			{
-				ImGui::Text("Heap %i", i);
-				ImGui::BulletText("Total %i MB", heap.total_memory / 1024 / 1024);
-				ImGui::BulletText("Used %i MB", heap.used_memory / 1024 / 1024);
-				ImGui::BulletText("Free %i MB", heap.free_memory / 1024 / 1024);
-				i++;
-			}
-			ImGui::End();
+				ImGui::Separator();
+				const char *gpu_name = resources.GPUName.c_str();
+				ImGui::Text("%s", gpu_name);
+				ImGui::Text("GPU Memory:");
+				int i = 0;
+				for (auto &heap : resources.heaps)
+				{
+					ImGui::Text("Heap %i", i);
+					ImGui::BulletText("Total %i MB", heap.total_memory / 1024 / 1024);
+					ImGui::BulletText("Used %i MB", heap.used_memory / 1024 / 1024);
+					ImGui::BulletText("Free %i MB", heap.free_memory / 1024 / 1024);
+					i++;
+				}
+				ImGui::End();
 			}
 
 			if (m_pUserFunction)
 				m_pUserFunction();
 
 			ImGui::End();
-
 		}
 		ImGuiEnd();
-
 	}
 
-	void SparkLine(const char* id, const char* overlay, const float* values, int count, float min_v, float max_v, int offset, const ImVec4& col, const ImVec2& size)
+	void SparkLine(const char *id, const char *overlay, const float *values, int count, float min_v, float max_v, int offset, const ImVec4 &col, const ImVec2 &size)
 	{
 		ImPlot::PushStyleVar(ImPlotStyleVar_PlotPadding, ImVec2(0, 0));
 		ImPlot::SetNextPlotLimits(0, count - 1, min_v, max_v, ImGuiCond_Always);
@@ -583,23 +579,23 @@ public:
 	}
 
 public:
-	void setResourceManager(engine::VulkanResourceManager* c);
+	void setResourceManager(engine::VulkanResourceManager *c);
 
-	uint32_t addTexture(const std::string& renderpass, int index);
+	uint32_t addTexture(const std::string &renderpass, int index);
 
 	uint32_t addTexture(engine::Ref<engine::Texture> texture);
 
-	std::shared_ptr<ImageInfo> getImage(const std::string& index)
+	std::shared_ptr<ImageInfo> getImage(const std::string &index)
 	{
 		return m_pImages[index];
 	}
 
-	auto getImages() {
+	auto getImages()
+	{
 		return m_pImages;
 	}
 
 	std::shared_ptr<ImageInfo> getImageByIndex(engine::Ref<engine::Texture> index);
-
 
 	void recreateDescriptorSets();
 
@@ -611,14 +607,15 @@ public:
 
 		int toolbarHeight = 70;
 
-		if (this->m_pShowDebugPerformance) {
+		if (this->m_pShowDebugPerformance)
+		{
 			toolbarHeight = 0;
 		}
 
 		bool opt_fullscreen = true;
 		if (opt_fullscreen)
 		{
-			ImGuiViewport* viewport = ImGui::GetMainViewport();
+			ImGuiViewport *viewport = ImGui::GetMainViewport();
 			ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y + toolbarHeight));
 			ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, viewport->Size.y - toolbarHeight));
 			ImGui::SetNextWindowViewport(viewport->ID);
@@ -639,7 +636,7 @@ public:
 		if (opt_fullscreen)
 			ImGui::PopStyleVar(2);
 
-		ImGuiIO& io = ImGui::GetIO();
+		ImGuiIO &io = ImGui::GetIO();
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
 			ImGuiID dockspace_id = ImGui::GetID("RootDockspace");

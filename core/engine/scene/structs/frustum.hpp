@@ -10,6 +10,8 @@
 #include <core/common/common.hpp>
 #include "sphere.hpp"
 
+#include <core/framework/containers/static_array.hpp>
+
 namespace engine
 {
 	class Frustum

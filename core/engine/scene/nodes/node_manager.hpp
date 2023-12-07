@@ -119,7 +119,7 @@ namespace engine
 
             //nodes.push_back(std::make_shared<Node<T>>(std::move(obj)));
 
-            node_types[iType].push_back(std::make_shared<Node<T>>(std::move(obj)));
+            node_types[iType].push_back(std::make_shared<Node<T>>(obj));
             node_types[iType].back()->container_index = node_types[iType].size() - 1;
 
             node_index[index] = node_types[iType].back();
@@ -146,7 +146,7 @@ namespace engine
 
             children_node_index[parent->index][iType].push_back(new_node_ptr);
 
-            new_node_ptr->parent = std::move(parent);
+            new_node_ptr->parent = parent;
             new_node_ptr->index = index;
 
             return std::static_pointer_cast<Node<T>>(node_types[iType].back());
