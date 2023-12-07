@@ -48,28 +48,31 @@ mat2 rot(float angle) {
 
 void main() {
 
+    mat4 modelMatrix = TransformBuffer.entry[ObjectBuffer.entry[gl_InstanceIndex].transform_index];
 
     vec3 newPos = inPosition;
     position_coord = inPosition;
-    vec3 instance_pos = vec3(PushConstant.object.modelMatrix[3][0], PushConstant.object.modelMatrix[3][1], PushConstant.object.modelMatrix[3][2]);
+    vec3 instance_pos = vec3(modelMatrix[3][0], modelMatrix[3][1], modelMatrix[3][2]);
     
     vec3 clouds = fbm(instance_pos.xz + RenderPassUBO.data.iTime * 0.1, 2) * vec3(1.0) * 2.0 - 1.0;
     vec3 clouds2 = fbm(instance_pos.xz*0.1 - RenderPassUBO.data.iTime*0.5, 2) * vec3(1.0) * 2.0 - 1.0;
 
-    vec4 pos = RenderPassUBO.data.proj * RenderPassUBO.data.view * PushConstant.object.modelMatrix * vec4(inPosition, 1.0);
+    clouds2 = clamp(clouds2, -1.5, 1.5);
+
+    vec4 pos = RenderPassUBO.data.proj * RenderPassUBO.data.view * modelMatrix * vec4(inPosition, 1.0);
     vec3 vPos = vec3(RenderPassUBO.data.view[3][0], RenderPassUBO.data.view[3][1], RenderPassUBO.data.view[3][2]);
     vec3 viewDir = normalize(pos.xyz - vPos);//vec3(RenderPassUBO.data.view[2][0], RenderPassUBO.data.view[2][1], RenderPassUBO.data.view[2][2]);
 
-    vec3 normal = normalize(mat3(PushConstant.object.modelMatrix) * inNormal);
+    vec3 normal = normalize(mat3(modelMatrix) * inNormal);
 
-    float invCosTheta = 1.0-max(0.0, dot(normal.xz, viewDir.xz));
+    float invCosTheta = 1.0-abs(dot(normal.xz, viewDir.xz));
 
     normal = inNormal;
-    normal.yz = rot(clouds.x+hash13(instance_pos)* inPosition.y) * inNormal.yz;
+    normal.yz = rot(clouds.x+hash13(instance_pos)* inPosition.y) * normal.yz;
     normal.yz = (rot(clouds2.x) ) * normal.yz;
     
     vec3 tangent = inTangent;
-    tangent.yz = rot(clouds.x+hash13(instance_pos)* inPosition.y) * inTangent.yz;
+    tangent.yz = rot(clouds.x+hash13(instance_pos)* inPosition.y) * tangent.yz;
     tangent.yz = (rot(clouds2.x) ) * tangent.yz;
 
     vec3 bitangent = normalize(cross(normal, tangent)); 
@@ -82,19 +85,19 @@ void main() {
     newPos.yz = (rot(clouds2.x) ) * newPos.yz;
     //newPos.xz += clouds2.xz;
 
-    vec4 worldPos = PushConstant.object.modelMatrix * vec4(newPos, 1.0);
+    vec4 worldPos = modelMatrix * vec4(newPos, 1.0);
     
 
     gl_Position = RenderPassUBO.data.proj * RenderPassUBO.data.view * worldPos;
     
-  	mat3 normalMatrix = transpose(inverse(mat3(PushConstant.object.modelMatrix)));
+  	mat3 normalMatrix = transpose(inverse(mat3(modelMatrix)));
     
     vs_out.TBN = CreateTBNMatrix(normalMatrix, normal, tangent, bitangent);
     vs_out.material_index = PushConstant.object.material_index;
     vs_out.color = inColor;
     vs_out.texCoords = inTexCoord;
-    vs_out.position = vec3(PushConstant.object.modelMatrix * vec4(newPos, 1.0));
-    vs_out.normal = normalize(mat3(PushConstant.object.modelMatrix) * normal);
+    vs_out.position = vec3(modelMatrix * vec4(newPos, 1.0));
+    vs_out.normal = normalize(mat3(modelMatrix) * normal);
 
     
     mat4 ViewMatrix = RenderPassUBO.data.view;
@@ -103,5 +106,5 @@ void main() {
     vec4 viewPos = ViewMatrix * worldPos;
 
     Position = Projection * viewPos;
-    PrevPosition = Projection * RenderPassUBO.data.prev_view * /*PrevModel*/ PushConstant.object.modelMatrix * vec4(newPos, 1.0);
+    PrevPosition = Projection * RenderPassUBO.data.prev_view * /*PrevModel*/ modelMatrix * vec4(newPos, 1.0);
 }

@@ -173,7 +173,25 @@ namespace Editor::Renderpasses {
 					 .type= engine::UniformBindingType::SHADER_STORAGE,
 					 .descriptorCount= 1,
 					 .name = "material_buffer"
-				} })
+				},
+				{
+					.size = 6400000,
+					.offset = 0,
+					.binding = 5,
+					.set = 0,
+					.type = engine::UniformBindingType::SHADER_STORAGE,
+					.descriptorCount = 1,
+					.name = "transform_buffer",
+				},
+				{
+					.size = 1200000,
+					.offset = 0,
+					.binding = 6,
+					.set = 0,
+					.type = engine::UniformBindingType::SHADER_STORAGE,
+					.descriptorCount = 1,
+					.name = "object_buffer",
+				}, })
 			.outputs({
 					{
 						  .format = COLOR_RGBA_16F,

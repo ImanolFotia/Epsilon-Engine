@@ -54,6 +54,7 @@ struct ObjectData2 {
     uint transform_index;
     uint material_index[4];
     uint numMaterials;
+	uint animationIndex;
 };
 
 layout( push_constant ) uniform constants
