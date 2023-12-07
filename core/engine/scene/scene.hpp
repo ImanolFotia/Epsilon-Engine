@@ -500,6 +500,8 @@ namespace engine
 				Ref<PushConstant> push_constant;
 
 				Ref<BindGroup> selectedBindGroup = m_pRenderLayouts[layout].bindGroup;
+				auto transform_buffer = m_pAssetManager.getTransformBuffer();
+				auto object_buffer = m_pAssetManager.getObjectBuffer();
 
 				uint32_t material_indices[4] = { 0 };
 				uint32_t firstInstance = m_pMeshCount;
@@ -515,9 +517,9 @@ namespace engine
 					}
 
 
-					m_pAssetManager.getTransformBuffer()[m_pMeshCount] = transforms[i];
+					transform_buffer[m_pMeshCount] = transforms[i];
 
-					m_pAssetManager.getObjectBuffer()[m_pMeshCount] = {
+					object_buffer[m_pMeshCount] = {
 						.object_id = (unsigned int)i,
 						.transform_index = m_pMeshCount,
 						.material_index = {material_indices[0], material_indices[1], material_indices[2], material_indices[3]},
@@ -562,6 +564,9 @@ namespace engine
 
 				}
 
+				auto transform_buffer = m_pAssetManager.getTransformBuffer();
+				auto object_buffer = m_pAssetManager.getObjectBuffer();
+
 				for (auto& mesh : renderModel->data.renderMeshes[0])
 				{
 					uint32_t material_indices[4] = { 0 };
@@ -578,9 +583,9 @@ namespace engine
 						}
 
 
-						m_pAssetManager.getTransformBuffer()[m_pMeshCount] = transforms[i];
+						transform_buffer[m_pMeshCount] = transforms[i];
 
-						m_pAssetManager.getObjectBuffer()[m_pMeshCount] = {
+						object_buffer[m_pMeshCount] = {
 							.object_id = (unsigned int)renderModel->Index() + i,
 							.transform_index = m_pMeshCount,
 							.material_index = {material_indices[0], material_indices[1], material_indices[2], material_indices[3]},

@@ -10,6 +10,7 @@
 #include "texture.hpp"
 
 #include "core/engine/renderer/types.hpp"
+#include <core/framework/containers/static_array.hpp>
 
 namespace vk
 {
@@ -161,7 +162,7 @@ namespace vk
 
         if (containsDepthAttachment)
             renderPass.renderPassData.subpass.pDepthStencilAttachment = &renderPass.renderPassData.depthAttachmentRef;
-        std::array<VkSubpassDependency, 2>
+        framework::StaticArray<VkSubpassDependency, 2>
             dependencies;
 
         dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;

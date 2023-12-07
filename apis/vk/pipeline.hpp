@@ -12,6 +12,7 @@
 #include "render_pass.hpp"
 #include "vertex_buffer.hpp"
 #include "core/engine/renderer/types.hpp"
+#include <core/framework/containers/static_array.hpp>
 #include <functional>
 
 #include "vk_data.hpp"
@@ -22,11 +23,11 @@ namespace vk
     // std::pair<>
 
     template <uint32_t num_stages>
-    static std::array<VkPipelineShaderStageCreateInfo, num_stages> createShaderStages(const char *vertexPath,
-                                                                                      const char *fragmentPath,
-                                                                                      VkShaderModule &vertShaderModule,
-                                                                                      VkShaderModule &fragShaderModule,
-                                                                                      VulkanData &vk_data)
+    static framework::StaticArray<VkPipelineShaderStageCreateInfo, num_stages> createShaderStages(const char *vertexPath,
+                                                                                                  const char *fragmentPath,
+                                                                                                  VkShaderModule &vertShaderModule,
+                                                                                                  VkShaderModule &fragShaderModule,
+                                                                                                  VulkanData &vk_data)
     {
 
         auto vertShaderCode = shader::readFile(vertexPath /*"../assets/shaders/vertex.spv"*/, vk_data);
@@ -50,22 +51,29 @@ namespace vk
         return {vertShaderStageInfo, fragShaderStageInfo};
     }
 
-    static void appendShaderStageMacro(engine::ShaderStageInfo& info) {
-        auto versionPosition = [](const std::vector<char>& vec) {
-            const char* version_string = "#version";
+    static void appendShaderStageMacro(engine::ShaderStageInfo &info)
+    {
+        auto versionPosition = [](const std::vector<char> &vec)
+        {
+            const char *version_string = "#version";
             int version_length = 8;
             int search_pos = 0;
             int position = -1;
-            for (int i = 0; i < vec.size(); i++) {
-                if (version_string[search_pos] == vec[i]) {
-                    if (search_pos == version_length - 1) {
+            for (int i = 0; i < vec.size(); i++)
+            {
+                if (version_string[search_pos] == vec[i])
+                {
+                    if (search_pos == version_length - 1)
+                    {
                         position = search_pos - version_length - 1;
                     }
-                    else {
+                    else
+                    {
                         search_pos++;
                     }
                 }
-                else {
+                else
+                {
                     search_pos = 0;
                 }
             }
@@ -75,7 +83,6 @@ namespace vk
 
         auto result = versionPosition(info.shaderCode);
     }
-
 
     static VkPushConstantRange setupPushConstant(size_t size)
     {
@@ -110,7 +117,6 @@ namespace vk
         }
     }
 
-
     static void createGraphicsPipeline(
         VulkanData &vk_data,
         VulkanRenderPass &renderPass,
@@ -138,7 +144,7 @@ namespace vk
             renderPipeline.numAttachments = renderPass.numAttachments;
             vk::createDescriptorSetLayout(vk_data, renderPipeline.descriptorSetLayouts.at(0), renderPassInfo.bindingInfo);
 
-            auto& pipelineLayout = renderPassInfo.pipelineLayout[layout_index];
+            auto &pipelineLayout = renderPassInfo.pipelineLayout[layout_index];
             // renderPass.renderPipelines.at(layout_index).numAttachments = renderPass.renderPassChain.ImageViews.size();
             auto &shaderInfo = pipelineLayout.shaderInfo;
             shaderStages.emplace_back();
@@ -176,7 +182,7 @@ namespace vk
 
             vertexInfo.bindingDescription = getBindingDescription(pipelineLayout.vertexLayout.size);
 
-            VkPipelineVertexInputStateCreateInfo& vertexInputInfo = vertexInputCreateInfo.at(layout_index);
+            VkPipelineVertexInputStateCreateInfo &vertexInputInfo = vertexInputCreateInfo.at(layout_index);
             vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
             vertexInputInfo.vertexBindingDescriptionCount = 1;
             vertexInputInfo.pVertexBindingDescriptions = &vertexInfo.bindingDescription; // Optional
@@ -202,7 +208,8 @@ namespace vk
                 /*VK_DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT,
                 VK_DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT,
                 VK_DYNAMIC_STATE_LINE_STIPPLE_EXT,
-                VK_DYNAMIC_STATE_LINE_WIDTH*/ };
+                VK_DYNAMIC_STATE_LINE_WIDTH*/
+            };
 
             VkPipelineDynamicStateCreateInfo dynamicState{};
             dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;

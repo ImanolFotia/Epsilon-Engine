@@ -17,6 +17,8 @@
 #include <core/common/common.hpp>
 #include "gltf_animation.hpp"
 
+#include <core/framework/containers/dynamic_array.hpp>
+
 namespace framework
 {
     class ModelBase {
@@ -54,7 +56,7 @@ namespace framework
             return m_pSkeleton;
         }
 
-        std::vector<Animation> Animations() {
+        std::vector<Animation>& Animations() {
             return m_pAnimations;
         }
 

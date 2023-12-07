@@ -19,6 +19,9 @@
 #include <core/framework/vfs/filesystem.hpp>
 #include <stack>
 
+#include <core/framework/containers/dynamic_array.hpp>
+#include <core/framework/containers/static_array.hpp>
+
 namespace engine
 {
 
@@ -160,8 +163,8 @@ namespace engine
 	public:
 
 		static const size_t MAX_MATERIALS = 10000;
-		static const size_t MAX_OBJECTS = 100000;
-		static const size_t MAX_TRANSFORMS = 100000;
+		static const size_t MAX_OBJECTS = 1100000;
+		static const size_t MAX_TRANSFORMS = 1100000;
 		static const size_t MAX_DECALS = 1000;
 		AssetManager()
 		{

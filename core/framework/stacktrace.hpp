@@ -2,12 +2,13 @@
 
 #include <iostream>
 #include <list>
-#include <array>
 #include <memory>
 #include <string>
 #include <vector>
 #include <thread>
 #include <chrono>
+
+#include <core/framework/containers/static_array.hpp>
 
 #ifdef __linux__
 #include <zconf.h>
@@ -53,7 +54,7 @@ static std::string get_path()
 static std::string sh(const std::string& cmd)
 {
 #ifdef __linux__
-    std::array<char, 128> buffer = {0};
+    framework::StaticArray<char, 128> buffer = {0};
     std::string result;
     std::shared_ptr<FILE> pipe(popen(cmd.c_str(), "r"), pclose);
     if (!pipe)
@@ -70,7 +71,7 @@ static std::string sh(const std::string& cmd)
 #endif
 
 #ifdef _WIN32
-    std::array<char, 128> buffer = { 0 };
+    framework::StaticArray<char, 128> buffer = { 0 };
     std::string result;
     std::shared_ptr<FILE> pipe(_popen(cmd.c_str(), "r"), _pclose);
     if (!pipe)

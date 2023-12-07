@@ -43,6 +43,7 @@ namespace framework {
 		bool isActive = false;
 		int index = 0;
 		float current_time = 0.0f;
+		float offset_time = 0.0f;
 	};
 
 	struct SkeletonNode {
