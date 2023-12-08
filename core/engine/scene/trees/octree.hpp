@@ -17,6 +17,29 @@
 
 namespace engine
 {
+
+	template<typename T>
+	struct CullResult {
+		size_t count = 0;
+		size_t capacity = 0;
+		std::vector<T> items{};
+
+		void reset() {
+			count = 0;
+		}
+
+		void push(const T& val) {
+			if (count >= capacity) {
+				items.push_back(val);
+				capacity++;
+			}
+			else {
+				items[count] = val;
+			}
+			count++;
+		}
+
+	};
 	/**
 	 * @brief Wrapper for the items that are stored in the container
 	 * Along with their position in the container's main object list
@@ -95,26 +118,19 @@ namespace engine
 			}
 		}
 
-		auto search(Box minmax) -> std::list<T>
-		{
-			std::list<T> items;
-			search(minmax, items);
-			return items;
-		}
-
-		void search(const Box &box, std::list<T> &items)
+		void search(const Box &box, CullResult<T>& cullResult)
 		{
 			for (const auto &p : m_Data)
 			{
 				if (box.overlaps(p.first))
 				{
-					items.push_back(p.second);
+					cullResult.push(p.second);
 				}
 			}
 
 			for (size_t i = 0; i < 8; i++)
 			{
-				check_child(i, box, items);
+				check_child(i, box, cullResult);
 			}
 			/*
 			for (auto& worker : m_Workers)
@@ -127,30 +143,25 @@ namespace engine
 			}*/
 		}
 
-		void check_child(int index, const Box &box, std::list<T> &items)
+		void check_child(int index, const Box &box, CullResult<T>& cullResult)
 		{
 			if (m_Children[index])
 			{
 				if (box.contains(m_bChildren[index]))
-					m_Children[index]->items(items);
+					m_Children[index]->items(cullResult);
 				else if (box.overlaps(m_bChildren[index]))
-					m_Children[index]->search(box, items);
+					m_Children[index]->search(box, cullResult);
 			}
 		}
 
-		auto search(Frustum &frustum) -> std::list<T>
-		{
-			std::list<T> items{};
-			search(frustum, items);
-			return items;
-		}
 
-		void search(Frustum &frustum, std::list<T> &items)
+		void search(Frustum &frustum, CullResult<T>& cullResult)
 		{
 			for (auto &p : m_Data)
 			{
-				if (frustum.overlaps(p.first))
-					items.push_back(p.second);
+				if (frustum.overlaps(p.first)) 
+					cullResult.push(p.second);
+				
 			}
 
 			for (size_t i = 0; i < 8; i++)
@@ -158,26 +169,20 @@ namespace engine
 				if (!m_Children[i]->m_IsEmpty)
 				{
 					if (frustum.contains(m_bChildren[i]))
-						m_Children[i]->items(items);
+						m_Children[i]->items(cullResult);
 					else if (frustum.overlaps(m_bChildren[i]))
-						m_Children[i]->search(frustum, items);
+						m_Children[i]->search(frustum, cullResult);
 				}
 			}
 		}
 
-		auto search(BoundingSphere &sphere) -> std::list<T>
-		{
-			std::list<T> items{};
-			search(sphere, items);
-			return items;
-		}
 
-		void search(BoundingSphere &sphere, std::list<T> &items)
+		void search(BoundingSphere &sphere, CullResult<T>& cullResult)
 		{
 			for (auto &p : m_Data)
 			{
 				if (sphere.overlaps(p.first))
-					items.push_back(p.second);
+					cullResult.push(p.second);
 			}
 
 			for (size_t i = 0; i < 8; i++)
@@ -185,22 +190,22 @@ namespace engine
 				if (!m_Children[i]->m_IsEmpty)
 				{
 					if (sphere.contains(m_bChildren[i]))
-						m_Children[i]->items(items);
+						m_Children[i]->items(cullResult);
 					else if (sphere.overlaps(m_bChildren[i]))
-						m_Children[i]->search(sphere, items);
+						m_Children[i]->search(sphere, cullResult);
 				}
 			}
 		}
 
-		void items(std::list<T> &items) const
+		void items(CullResult<T>& cullResult) const
 		{
 			for (auto &i : m_Data)
-				items.push_back(i.second);
+				cullResult.push(i.second);
 
 			for (auto &c : m_Children)
 			{
 				if (!c->m_IsEmpty)
-					c->items(items);
+					c->items(cullResult);
 			}
 		}
 
@@ -259,8 +264,17 @@ namespace engine
 
 		OctreeData m_Data;
 		Octree<typename OctreeData::iterator> m_Root;
+	public:
+		enum CullPass {
+			VISIBILITY = 0,
+			SHADOW,
+			SIZE
+		};
+	private:
+		std::array<CullResult<typename OctreeData::iterator>, CullPass::SIZE> m_pCullPasses;
 
 	public:
+
 		OctreeContainer(Box minmax, int depth = 0) : m_Root(minmax, depth)
 		{
 		}
@@ -279,19 +293,25 @@ namespace engine
 			return last;
 		}
 
-		std::list<typename OctreeData::iterator> search(Frustum &frustum)
+		CullResult<typename OctreeData::iterator>& search(Frustum &frustum, CullPass pass)
 		{
-			return m_Root.search(frustum);
+			m_pCullPasses[pass].reset();
+			m_Root.search(frustum, m_pCullPasses[pass]);
+			return m_pCullPasses[pass];
 		}
 
-		std::list<typename OctreeData::iterator> search(const Box &box)
+		CullResult<typename OctreeData::iterator>& search(const Box &box, CullPass pass)
 		{
-			return m_Root.search(box);
+			m_pCullPasses[pass].reset();
+			m_Root.search(box, m_pCullPasses[pass]);
+			return m_pCullPasses[pass];
 		}
 
-		std::list<typename OctreeData::iterator> search(BoundingSphere &sphere)
+		CullResult<typename OctreeData::iterator>& search(BoundingSphere &sphere, CullPass pass)
 		{
-			return m_Root.search(sphere);
+			m_pCullPasses[pass].reset();
+			m_Root.search(sphere, m_pCullPasses[pass]);
+			return m_pCullPasses[pass];
 		}
 
 		void erase(typename OctreeData::iterator &item)

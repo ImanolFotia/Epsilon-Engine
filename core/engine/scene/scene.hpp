@@ -212,24 +212,24 @@ namespace engine
 			return m_pFrustum;
 		}
 
-		auto Cull(float cutout_distance = 0) {
-			return m_pRenderOctree->search(m_pFrustum);
+		auto& Cull(float cutout_distance = 0, int pass = 0) {
+			return m_pRenderOctree->search(m_pFrustum, (OctreeContainer<OctreeRenderType>::CullPass)pass);
 		}
 
-		auto Cull(Box& box) {
-			return m_pRenderOctree->search(box);
+		auto& Cull(Box& box, int pass = 0) {
+			return m_pRenderOctree->search(box, (OctreeContainer<OctreeRenderType>::CullPass)pass);
 		}
 
-		auto Cull(BoundingSphere& sphere) {
-			return m_pRenderOctree->search(sphere);
+		auto& Cull(BoundingSphere& sphere, int pass = 0) {
+			return m_pRenderOctree->search(sphere, (OctreeContainer<OctreeRenderType>::CullPass)pass);
 		}
 
-		auto CullShadow(float cutout_distance = 0) {
-			return m_pRenderOctree->search(m_pShadowFrustum);
+		auto& CullShadow(float cutout_distance = 0, int pass = 1) {
+			return m_pRenderOctree->search(m_pShadowFrustum, (OctreeContainer<OctreeRenderType>::CullPass)pass);
 		}
 
-		auto CullShadow(Box box) {
-			return m_pRenderOctree->search(box);
+		auto& CullShadow(Box box, int pass = 1) {
+			return m_pRenderOctree->search(box, (OctreeContainer<OctreeRenderType>::CullPass)pass);
 		}
 
 		void RelocateObject(Box boundingBox, int index) {
@@ -404,7 +404,6 @@ namespace engine
 
 		SceneManager::ChildNodes& getChildren(std::shared_ptr<NodeBase> parent)
 		{
-			//return m_pSceneManager.to<T>(m_pSceneManager.getChild<T>(m_pSceneManager.root));
 			return m_pSceneManager.getChildren(parent);
 		}
 
@@ -446,6 +445,9 @@ namespace engine
 				auto& renderLayout = m_pRenderLayouts[layout];
 
 				Ref<BindGroup> selectedBindGroup = renderLayout.bindGroup;
+
+				auto transform_buffer = m_pAssetManager.getTransformBuffer();
+				auto object_buffer = m_pAssetManager.getObjectBuffer();
 				
 				for (auto& mesh : renderModel->data.renderMeshes[0])
 				{
@@ -461,9 +463,9 @@ namespace engine
 					}
 
 
-					m_pAssetManager.getTransformBuffer()[m_pMeshCount] = transform;
+					transform_buffer[m_pMeshCount] = transform;
 
-					m_pAssetManager.getObjectBuffer()[m_pMeshCount] = {
+					object_buffer[m_pMeshCount] = {
 						.object_id = (unsigned int)renderModel->Parent()->Index(),
 						.transform_index = m_pMeshCount,
 						.material_index = {material_indices[0], material_indices[1], material_indices[2], material_indices[3]},
