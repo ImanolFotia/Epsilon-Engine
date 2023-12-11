@@ -114,24 +114,18 @@ namespace engine
 
         [[nodiscard]] R *get(Ref<T> ref)
         {
-            //const std::lock_guard<std::mutex> lock(m_pMutex);
-            //const std::lock_guard<std::mutex> lock(m_pMutex);
             if (m_pIndexArray.size() > ref.m_pIndex && ref.isValid())
             {
-                //if (m_pGeneration[ref.m_pIndex] == ref.m_pGeneration)
                 {
                     return &(*m_pIndexArray[ref.m_pIndex]);
                 }
             }
-            // std::cout << "object is invalid\n";
 
             return nullptr;
         }
 
         [[nodiscard]] R *get(uint32_t id)
         {
-            //const std::lock_guard<std::mutex> lock(m_pMutex);
-            //const std::lock_guard<std::mutex> lock(m_pMutex);
             if (m_pIdArray.contains(id))
             {
                 auto index = m_pIdArray.at(id);
@@ -141,7 +135,6 @@ namespace engine
                     return &(*m_pIndexArray.at(index));
                 }
             }
-            std::cout << "object is invalid\n";
 
             return nullptr;
         }
@@ -149,7 +142,6 @@ namespace engine
 
         [[nodiscard]] uint32_t getId(Ref<T> ref)
         {
-            //const std::lock_guard<std::mutex> lock(m_pMutex);
             if (m_pIndexArray.size() > ref.m_pIndex && ref.isValid())
             {
                 if (m_pGeneration[ref.m_pIndex] == ref.m_pGeneration)

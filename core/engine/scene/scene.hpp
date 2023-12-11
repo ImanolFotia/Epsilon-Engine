@@ -430,13 +430,14 @@ namespace engine
 			}
 		}
 
-		void Push(std::shared_ptr<Node<RenderModel>> renderModel, const glm::mat4& transform, const std::string& layout)
+		uint32_t Push(std::shared_ptr<Node<RenderModel>> renderModel, const glm::mat4& transform, const std::string& layout)
 		{
-			Push(renderModel, std::forward<const glm::mat4&>(transform), std::hash<std::string>{}(layout));
+			return Push(renderModel, std::forward<const glm::mat4&>(transform), std::hash<std::string>{}(layout));
 		}
 
-		void Push(std::shared_ptr<Node<RenderModel>> renderModel, const glm::mat4& transform, size_t layout)
+		uint32_t Push(std::shared_ptr<Node<RenderModel>> renderModel, const glm::mat4& transform, size_t layout)
 		{
+			uint32_t push_index = m_pMeshCount;
 			if (m_pContext->Window().getSize().width > 0) {
 				auto renderer = m_pContext->Renderer();
 
@@ -448,6 +449,7 @@ namespace engine
 
 				auto transform_buffer = m_pAssetManager.getTransformBuffer();
 				auto object_buffer = m_pAssetManager.getObjectBuffer();
+
 				
 				for (auto& mesh : renderModel->data.renderMeshes[0])
 				{
@@ -486,16 +488,19 @@ namespace engine
 					m_pMeshCount++;
 				}
 			}
+
+			return push_index;
 		}
 
 
-		void Push(const std::vector<glm::mat4>& transforms, const std::string& layout, const std::string& material, unsigned int count = 1) {
-			Push(transforms, std::hash<std::string>{}(layout), material, count);
+		uint32_t Push(const std::vector<glm::mat4>& transforms, const std::string& layout, const std::string& material, unsigned int count = 1) {
+			return Push(transforms, std::hash<std::string>{}(layout), material, count);
 		}
 
 
-		void Push(const std::vector<glm::mat4>& transforms, size_t layout, const std::string& material, unsigned int count = 1) {
+		uint32_t Push(const std::vector<glm::mat4>& transforms, size_t layout, const std::string& material, unsigned int count = 1) {
 
+			uint32_t push_index = m_pMeshCount;
 			if (m_pContext->Window().getSize().width > 0) {
 				auto renderer = m_pContext->Renderer();
 
@@ -544,16 +549,19 @@ namespace engine
 								.count = count });
 
 			}
+
+			return push_index;
 		}
 		uint32_t lastRenderModelId = -1;
 
 
-		void Push(std::shared_ptr<Node<RenderModel>> renderModel, const std::vector<glm::mat4>& transforms, const std::string& layout, unsigned int count = 1) {
-			Push(renderModel, transforms, std::hash<std::string>{}(layout), count);
+		uint32_t Push(std::shared_ptr<Node<RenderModel>> renderModel, const std::vector<glm::mat4>& transforms, const std::string& layout, unsigned int count = 1) {
+			return Push(renderModel, transforms, std::hash<std::string>{}(layout), count);
 		}
 
-		void Push(std::shared_ptr<Node<RenderModel>> renderModel, const std::vector<glm::mat4>& transforms, size_t layout, unsigned int count = 1)
+		uint32_t Push(std::shared_ptr<Node<RenderModel>> renderModel, const std::vector<glm::mat4>& transforms, size_t layout, unsigned int count = 1)
 		{
+			uint32_t push_index = m_pMeshCount;
 			if (m_pContext->Window().getSize().width > 0) {
 				auto renderer = m_pContext->Renderer();
 
@@ -611,7 +619,7 @@ namespace engine
 									.count = count });
 				}
 			}
-
+			return push_index;
 		}
 
 		void ComputeDispatch(engine::Ref<ComputeShader> computeShader) {
