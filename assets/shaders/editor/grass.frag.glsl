@@ -98,13 +98,20 @@ float ior_from_F0(float F0)
   return (-f - 1.0) / (f - 1.0);
 }
 
+float hash13(float p3)
+{
+	p3  = fract(p3 * .1031);
+    p3 += dot(vec3(p3), vec3(p3) + 31.32);
+    return fract((p3 + p3) * p3);
+}
+
 void main() {
     Surface surface = InitSurface();
     
     vec4 Albedo = getAlbedo(surface);
 
-    vec3 color0 = vec3(0.2, .75, .2);
-    vec3 color1 = vec3(0.4, 0.6, 0.2);
+    vec3 color0 = Albedo.rgb*vec3(0.2, .75, .2)*(hash13(float(fs_in.object_id)) * 0.2);
+    vec3 color1 = Albedo.rgb;//vec3(0.4, 0.6, 0.2);
 
     Albedo.rgb = mix(color1, color0, position_coord.y);
 
@@ -174,7 +181,7 @@ void main() {
 
     vec3 diffuse = irradiance * Albedo.rgb;
 
-    vec3 ambient = (kD * diffuse);
+    vec3 ambient = (kD * diffuse+reflec);
 
     float ao = max(0.1, position_coord.y);
 

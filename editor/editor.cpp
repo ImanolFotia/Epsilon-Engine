@@ -507,8 +507,8 @@ namespace Editor {
 
 			for (auto& vtx : cube.data().Vertices) {
 
-				vtx.position.x *= 0.025f;
-				vtx.position.x += 0.01f;
+				vtx.position.x *= 0.05f;
+				vtx.position.x += 0.02f;
 				vtx.position.x *= (1.0 - vtx.position.y);
 			}
 
@@ -517,10 +517,10 @@ namespace Editor {
 			auto m_pDefaultCube = m_pScene->getAssetManager().createModelFromMesh("Grass Blade", cube.data(), defaultMaterial);
 
 			m_pDefaultCube.isInstanced = true;
-			for (int i = 0; i < 300; i++) {
-				for (int j = 0; j < 300; j++) {
+			for (int i = 0; i < 200; i++) {
+				for (int j = 0; j < 200; j++) {
 					//pAddDefaultPlane(glm::vec3((float)(i * 0.15) - 15, 0.0f, (float)(j * 0.15) - 15));
-					glm::vec3 position = glm::vec3((float)(i * 0.05) - 15, 0.0f, (float)(j * 0.05) - 15);
+					glm::vec3 position = glm::vec3((float)(i * 0.15) - 15, 0.0f, (float)(j * 0.15) - 15);
 					std::random_device rd;
 					std::mt19937 e2(rd());
 
