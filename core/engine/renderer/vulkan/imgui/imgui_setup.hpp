@@ -223,7 +223,7 @@ class ImGuiRenderer
 		icons_config.MergeMode = true;
 		icons_config.PixelSnapH = true;
 
-#ifdef _WIN32
+		// #ifdef _WIN32
 
 		icons_config.GlyphOffset.y = 0.8;
 		icons_config.GlyphOffset.x = 0.8;
@@ -239,11 +239,11 @@ class ImGuiRenderer
 		io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-brands-400 - Big.ttf", 19.0f, &icons_config, icons_ranges);
 		io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-solid-900 - Big.ttf", 19.0f, &icons_config, icons_ranges);
 
-#endif
-#ifdef __linux__
-		NormalFont = io.Fonts->AddFontFromFileTTF("./assets/fonts/FiraMono-Regular.ttf", 15, &config);
-		BigFont = io.Fonts->AddFontFromFileTTF("./assets/fonts/FiraMono-Regular.ttf", 19, &config);
-#endif
+		// #endif
+		// #ifdef __linux__
+		//		NormalFont = io.Fonts->AddFontFromFileTTF("./assets/fonts/FiraMono-Regular.ttf", 15, &config);
+		//		BigFont = io.Fonts->AddFontFromFileTTF("./assets/fonts/FiraMono-Regular.ttf", 19, &config);
+		// #endif
 
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		// ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
@@ -521,7 +521,7 @@ public:
 			// ImGui::SetNextWindowSize(ImVec2(wd->Width, wd->Height));
 
 			///////// USER INPUT BEGINS HERE
-			if (/*m_pShowDebugPerformance*/ false)
+			if (/*m_pShowDebugPerformance*/ true)
 			{
 				ImGui::SetNextWindowPos(ImVec2(10, 30));
 				ImGui::Begin("Info", nullptr, ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize);
@@ -563,8 +563,9 @@ public:
 	void SparkLine(const char *id, const char *overlay, const float *values, int count, float min_v, float max_v, int offset, const ImVec4 &col, const ImVec2 &size)
 	{
 		ImPlot::PushStyleVar(ImPlotStyleVar_PlotPadding, ImVec2(0, 0));
-		ImPlot::SetNextPlotLimits(0, count - 1, min_v, max_v, ImGuiCond_Always);
-		if (ImPlot::BeginPlot(id, 0, 0, size, ImPlotFlags_CanvasOnly | ImPlotFlags_NoChild, ImPlotAxisFlags_NoDecorations, ImPlotAxisFlags_NoDecorations))
+		// ImPlot::SetNextPlotLimits(0, count - 1, min_v, max_v, ImGuiCond_Always);
+		ImPlot::SetNextAxesLimits(0, count - 1, min_v, max_v, ImGuiCond_Always);
+		if (ImPlot::BeginPlot(id, 0, 0, size, ImPlotFlags_CanvasOnly | ImPlotAxisFlags_NoDecorations, ImPlotAxisFlags_NoDecorations))
 		{
 			// ImPlot::PlotText(overlay, 10.0, 6.0, );
 			ImPlot::PushStyleColor(ImPlotCol_Line, col);

@@ -17,12 +17,13 @@
 #include <cassert>
 #include "cifstream.hpp"
 
-namespace engine {
+namespace engine
+{
     constexpr uint32_t LOCAL_FILE_HEADER_SIGNATURE = 0x04034b50;
     constexpr uint32_t DATA_DESCRIPTOR_HEADER_SIGNATURE = 0x08074b50;
     constexpr uint32_t CENTRAL_DIRECTORY_HEADER_SIGNATURE = 0x02014b50;
     constexpr uint32_t END_OF_CENTRAL_DIRECTORY_HEADER_SIGNATURE = 0x06054b50;
-#pragma pack(push,1) 
+#pragma pack(push, 1)
     template <typename U16, typename U32>
     struct LocalFileHeader
     {
@@ -44,7 +45,7 @@ namespace engine {
         /** offset 30*/ U16 extrafieldlength;
     };
 #pragma pack(pop)
-#pragma pack(push,1) 
+#pragma pack(push, 1)
     template <typename U32>
     struct DataDescriptor
     {
@@ -54,7 +55,7 @@ namespace engine {
         /** offset 12*/ U32 uncompsize;
     };
 #pragma pack(pop)
-#pragma pack(push,1) 
+#pragma pack(push, 1)
     template <typename U16, typename U32>
     struct CentralDirectoryHeader
     {
@@ -88,7 +89,7 @@ namespace engine {
         /** offset 42*/ U32 offsettolocalheader;
     };
 #pragma pack(pop)
-#pragma pack(push,1) 
+#pragma pack(push, 1)
     template <typename U16, typename U32>
     struct EndOfCentralDirectory
     {
@@ -110,14 +111,14 @@ namespace engine {
         Zip() = default;
         Zip(std::string path);
 
-        std::ifstream& getFileHandle()
+        std::ifstream &getFileHandle()
         {
             return m_Infile;
         }
 
-        std::shared_ptr<cifstream> getFileByName(const std::string& FileName);
+        std::shared_ptr<cifstream> getFileByName(const std::string &FileName);
 
-        size_t InflateFile(unsigned char* inputFileStream, uInt inputStreamSize, unsigned char* outputFileStream, uInt outputstreamSize, size_t windowBits);
+        int InflateFile(unsigned char *inputFileStream, uInt inputStreamSize, unsigned char *outputFileStream, uInt outputstreamSize, size_t windowBits);
 
     private:
         size_t getLocalHeader(size_t curroffset);
@@ -159,7 +160,7 @@ namespace engine {
             "PKWARE",
             "PKWARE",
             "IBM TERSE (new)",
-            "IBM LZ77" };
+            "IBM LZ77"};
     };
 }
 #endif // ZIP_H_INCLUDED

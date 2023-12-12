@@ -6,7 +6,6 @@
 #include <cmath>
 
 #include "vk_data.hpp"
-#include <ktx.h>
 #include "command.hpp"
 
 #ifdef _WIN32
@@ -31,7 +30,7 @@ namespace vk
 
         imageInfo.mipLevels = textureInfo.mipLevels;
         imageInfo.arrayLayers = 1;
-        imageInfo.samples = textureInfo.numSamples;//VK_SAMPLE_COUNT_1_BIT;
+        imageInfo.samples = textureInfo.numSamples; // VK_SAMPLE_COUNT_1_BIT;
 
         imageInfo.format = textureInfo.format;
         imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
@@ -39,7 +38,6 @@ namespace vk
         imageInfo.usage = textureInfo.usage;
         imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
         imageInfo.flags = 0; // Optional
-
 
         if (vkCreateImage(vkData.logicalDevice, &imageInfo, nullptr, &texture.image) != VK_SUCCESS)
         {
@@ -60,7 +58,6 @@ namespace vk
         samplerInfo.addressModeV = texture.addressMode;
         samplerInfo.addressModeW = texture.addressMode;
         samplerInfo.anisotropyEnable = VK_TRUE;
-        
 
         VkPhysicalDeviceProperties properties{};
         vkGetPhysicalDeviceProperties(vkData.physicalDevice, &properties);
@@ -104,7 +101,6 @@ namespace vk
         viewInfo.subresourceRange.levelCount = texture.info.mipLevels;
         viewInfo.subresourceRange.baseArrayLayer = 0;
         viewInfo.subresourceRange.layerCount = 1;
-        
 
         if (vkCreateImageView(vkData.logicalDevice, &viewInfo, nullptr, &texture.imageView) != VK_SUCCESS)
         {
@@ -207,14 +203,15 @@ namespace vk
     }
 
     static void
-    copyBufferToImage(VulkanData &vkData, VkCommandPool &commandPool, VkBuffer& buffer, VkImage& image, uint32_t width,
+    copyBufferToImage(VulkanData &vkData, VkCommandPool &commandPool, VkBuffer &buffer, VkImage &image, uint32_t width,
                       uint32_t height, std::vector<size_t> offsets, uint32_t mipLevels)
     {
         VkCommandBuffer commandBuffer = beginSingleTimeCommands(vkData, commandPool);
 
         std::vector<VkBufferImageCopy> bufferCopyRegions;
-        if (offsets.size()  <= 1) {
-            VkBufferImageCopy& region = bufferCopyRegions.emplace_back();
+        if (offsets.size() <= 1)
+        {
+            VkBufferImageCopy &region = bufferCopyRegions.emplace_back();
             region.bufferOffset = 0;
             region.bufferRowLength = 0;
             region.bufferImageHeight = 0;
@@ -222,13 +219,14 @@ namespace vk
             region.imageSubresource.mipLevel = 0;
             region.imageSubresource.baseArrayLayer = 0;
             region.imageSubresource.layerCount = 1;
-            region.imageOffset = { 0, 0, 0 };
+            region.imageOffset = {0, 0, 0};
             region.imageExtent = {
                 width,
                 height,
-                1 };
+                1};
         }
-        else {
+        else
+        {
             for (uint32_t i = 0; i < mipLevels; i++)
             {
 
@@ -238,7 +236,7 @@ namespace vk
                 bufferCopyRegion.imageSubresource.baseArrayLayer = 0;
                 bufferCopyRegion.imageSubresource.layerCount = 1;
                 bufferCopyRegion.imageExtent.width = std::max(1u, width >> i);
-                bufferCopyRegion.imageExtent.height = std::max(1u,  height >> i);
+                bufferCopyRegion.imageExtent.height = std::max(1u, height >> i);
                 bufferCopyRegion.imageExtent.depth = 1;
                 bufferCopyRegion.bufferOffset = offsets.at(i);
 

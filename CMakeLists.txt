@@ -42,7 +42,7 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
 endif()
 
 option(BUILD_AS_LIBRARY "Build as a library" ON)
-option(DOWNLOAD_LIBRARIES "Download thirdparty libraries" OFF)
+option(DOWNLOAD_LIBRARIES "Download thirdparty libraries" ON)
 option(GFX_BACKEND_VULKAN "Use Vulkan as graphics backend" ON)
 option(GFX_BACKEND_WEBGPU "Use WebGPU as graphics backend" OFF)
 
@@ -121,6 +121,36 @@ if(DOWNLOAD_LIBRARIES)
     message(${STB_BUILD_DIR})
 
     include_directories(${STB_BUILD_DIR})
+
+        #Download and include stb-image
+    ExternalProject_Add(ktx_d
+            GIT_REPOSITORY https://github.com/KhronosGroup/KTX-Software.git
+            GIT_TAG main
+            INSTALL_COMMAND cmake -E echo "Skipping install step for stb-image."
+            BUILD_COMMAND ""
+            UPDATE_COMMAND ""
+            CONFIGURE_COMMAND ""
+            )
+
+    ExternalProject_Get_property(ktx_d SOURCE_DIR)
+    set(KTX_DIR ${SOURCE_DIR})
+    message(${KTX_DIR})
+
+    #include_directories(${KTX_BUILD_DIR}/include)
+    #include_directories(${KTX_BUILD_DIR}/other_include)
+
+    
+    link_directories(${KTX_DIR}/build/Release)
+
+    set(KTX_INCLUDES "${KTX_DIR}/include" "${KTX_DIR}/other_include" "${KTX_DIR}/lib")
+    message(${KTX_INCLUDES})
+
+    add_library(KTX SHARED IMPORTED)
+set_target_properties(KTX PROPERTIES
+    #IMPORTED_LOCATION "${KTX_DIR}/build/Release/ktx.dll"
+    #IMPORTED_IMPLIB "${KTX_DIR}/build/Release/ktx.lib"
+    INTERFACE_INCLUDE_DIRECTORIES ${KTX_INCLUDES}
+)
 
 
     #Download and include Beacon
@@ -226,7 +256,24 @@ if(DOWNLOAD_LIBRARIES)
     #ExternalProject_Get_property(imgui_d SOURCE_DIR)
     #ExternalProject_Get_property(imgui_d BINARY_DIR)
     #set(IMGUI_BUILD_DIR ${SOURCE_DIR})
-    
+
+    ExternalProject_Add(zlib_d
+            GIT_REPOSITORY https://github.com/madler/zlib.git
+            CMAKE_ARGS ${CMAKE_OPENAL_ARGS}
+            INSTALL_COMMAND cmake -E echo "Skipping install step."
+            UPDATE_COMMAND ""
+            )
+
+    ExternalProject_Get_property(zlib_d SOURCE_DIR)
+    ExternalProject_Get_property(zlib_d BINARY_DIR)
+    set(ZLIB_DIR ${SOURCE_DIR})
+    set(ZLIB_BIN_DIR ${BINARY_DIR})
+    message(${ZLIB_BIN_DIR})
+    message(${ZLIB_DIR})
+
+    include_directories(${ZLIB_DIR})
+    link_directories(${ZLIB_BIN_DIR})
+
     set(IMGUI_BUILD_DIR ${THIRDPARTY_DIR}/imgui)
     message(${IMGUI_BUILD_DIR})
     
@@ -477,8 +524,9 @@ if(DOWNLOAD_LIBRARIES)
     add_dependencies(${PROJECT_NAME} glm)
     add_dependencies(${PROJECT_NAME} beacon)
     add_dependencies(${PROJECT_NAME} stb)
+    #add_dependencies(${PROJECT_NAME} ktx_d)
     add_dependencies(${PROJECT_NAME} json)
- #   add_dependencies(${PROJECT_NAME} zlib)
+    add_dependencies(${PROJECT_NAME} zlib_d)
 endif()
 target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_DL_LIBS})
 
@@ -492,9 +540,9 @@ if(!WIN32)
         target_link_libraries(${PROJECT_NAME} PUBLIC -rdynamic)
 endif()
 
-target_link_libraries(${PROJECT_NAME} PUBLIC ktx)
-target_link_libraries(${PROJECT_NAME} PUBLIC zlibstatic)
-target_link_libraries(${PROJECT_NAME} PUBLIC zlib)
+#target_link_libraries(${PROJECT_NAME} PUBLIC ktx)
+#target_link_libraries(${PROJECT_NAME} PUBLIC zlibstatic)
+target_link_libraries(${PROJECT_NAME} PUBLIC libz.so)
 
 
 #add_dependencies(${PROJECT_NAME} LearningVulkan)
@@ -541,9 +589,9 @@ install(DIRECTORY ${images} DESTINATION "bin/assets")
     add_subdirectory(editor)
     add_subdirectory(examples/bsp)
     add_subdirectory(projects/TowerDefense)
-    if(${Mono_FOUND})
-    add_subdirectory(examples/mono-managed)
-    endif()
+    #if(${Mono_FOUND})
+    #add_subdirectory(examples/mono-managed)
+    #endif()
 #endif()
 
 #if(D__ANDROID__)

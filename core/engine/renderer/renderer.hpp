@@ -5,7 +5,6 @@
 #include <core/framework/window.hpp>
 #include <core/common/common.hpp>
 
-
 #include "draw_command.hpp"
 #include <string>
 #include <vector>
@@ -15,7 +14,7 @@ namespace engine
 {
 
     const uint32_t MAX_VERTICES_PER_BUFFER = 1600000;
-    const uint32_t MAX_INDICES_PER_BUFFER =  1600000;
+    const uint32_t MAX_INDICES_PER_BUFFER = 1600000;
 
     const uint32_t MAX_COMMAND_QUEUE_SIZE = 2000;
 
@@ -34,7 +33,6 @@ namespace engine
     protected:
         RenderPass() = default;
     };
-
 
     struct ObjectData
     {
@@ -109,7 +107,6 @@ namespace engine
 
         virtual void ComputeDispatch(Ref<ComputeShader>) = 0;
 
-
     public:
         /**
          * @brief Construct a new Renderer object
@@ -122,26 +119,27 @@ namespace engine
         Renderer(Renderer &&) = delete;
         Renderer(const Renderer &) = delete;
 
-        virtual  std::shared_ptr<ImGuiRenderer> getDebugRenderer() = 0;
+        virtual std::shared_ptr<ImGuiRenderer> getDebugRenderer() = 0;
 
         virtual ~Renderer() {}
 
-        uint32_t numPushedCommands() {
+        uint32_t numPushedCommands()
+        {
             return currentCommandsInQueue;
         }
 
-        uint32_t CurrentFrameInFlight() {
+        uint32_t CurrentFrameInFlight()
+        {
             return m_pCurrentFrame;
         }
 
-        virtual void SetViewport(const Viewport&) = 0;
+        virtual void SetViewport(const Viewport &) = 0;
 
-        virtual void SetScissor(const Scissor&) = 0;
+        virtual void SetScissor(const Scissor &) = 0;
 
         virtual void SetRenderPass(Ref<RenderPass>) = 0;
 
     protected:
-
         uint32_t m_pCurrentFrame = 0;
         renderer_type m_pType{};
         uint32_t currentCommandsInQueue = 0;
