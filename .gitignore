@@ -18,6 +18,12 @@
 *.vmx
 *.pdb
 *.cache
+*.suo
+*.v2
+.suo
+*.gltf
+*.ini
+*.dtbcache.v2
 
 Epsilon
 
@@ -56,3 +62,4 @@ modules/dotnet/lib/Program.cs
 modules/dotnet/common/obj/x64/Debug/net8.0/common.sourcelink.json
 modules/dotnet/common/obj/x64/Debug/net8.0/common.AssemblyInfo.cs
 modules/dotnet/EpsilonSharp/obj/x64/Debug/net8.0/EpsilonSharp.sourcelink.json
+modules/dotnet/EpsilonSharp/.vs
