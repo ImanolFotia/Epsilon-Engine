@@ -7,14 +7,17 @@
 #include "transform.hpp"
 #include <modules/dotnet/headers/nethost.hpp>
 
-namespace Editor {
+namespace Editor
+{
 
-	enum SCRIPT_LANGUAGE {
+	enum SCRIPT_LANGUAGE
+	{
 		C_SHARP,
 		LUA
 	};
 
-	struct ScriptCreationInfo {
+	struct ScriptCreationInfo
+	{
 		SCRIPT_LANGUAGE language{};
 		std::string fileName{};
 		std::string assemblyName{};
@@ -22,21 +25,23 @@ namespace Editor {
 		std::string nodeName{};
 	};
 
-	struct EntityScript {
+	struct EntityScript
+	{
 		std::string className{};
-		void* ManagedPtr;
+		void *ManagedPtr;
 		std::vector<UI::Property> properties;
 
-		std::function<void(void*, float)> updateClbk;
+		std::function<void(void *, float)> updateClbk;
 
-		void Update(float delta) {
+		void Update(float delta)
+		{
 			updateClbk(ManagedPtr, delta);
 		}
 	};
 
 	struct EntityArgs
 	{
-		const char_t* objectType = L"Game.GameObject";
+		const char_t *objectType = L"Game.GameObject";
 		Transform transform;
 		int id;
 	};

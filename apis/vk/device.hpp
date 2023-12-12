@@ -10,7 +10,7 @@
 #include "core/framework/common.hpp"
 #include "queues.hpp"
 #include "swap_chain.hpp"
-//#include "validation_layers.hpp"
+// #include "validation_layers.hpp"
 #include "pipeline.hpp"
 #include "instance.hpp"
 #include "command.hpp"
@@ -20,7 +20,6 @@
 #if defined(__linux__) && (!defined(ANDROID) && !defined(__ANDROID__))
 #include <bits/stdc++.h>
 #endif
-
 
 #if defined(ANDROID) || defined(__ANDROID__)
 
@@ -41,7 +40,7 @@ namespace vk
 
         std::vector<float> queuePriority;
         queuePriority.resize(indices.queueCount);
-        std::fill(queuePriority.begin(), queuePriority.end(), 1.0f);// [3] = { 1.0f , 1.0f, 1.0f };
+        std::fill(queuePriority.begin(), queuePriority.end(), 1.0f); // [3] = { 1.0f , 1.0f, 1.0f };
         /*for (uint32_t queueFamily : vk_data.uniqueQueueFamilies)
         {
             VkDeviceQueueCreateInfo queueCreateInfo{};
@@ -51,8 +50,6 @@ namespace vk
             queueCreateInfo.pQueuePriorities = &queuePriority;
             queueCreateInfos.push_back(queueCreateInfo);
         }*/
-
-
 
         //!!! TODO: Should ask where these extensions are avaliable
         VkPhysicalDeviceFeatures deviceFeatures{};
@@ -77,7 +74,6 @@ namespace vk
 
         bool bindless_supported = indexing_features.descriptorBindingPartiallyBound && indexing_features.runtimeDescriptorArray;
         bool separateStencilSupported = layoutFeatures.separateDepthStencilLayouts;
-
 
         VkPhysicalDeviceFeatures2 physical_features2 = {VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2};
         vkGetPhysicalDeviceFeatures2(vk_data.physicalDevice, &physical_features2);
@@ -112,16 +108,15 @@ namespace vk
 
         IO::Log("Min frames in flight: ", MIN_FRAMES_IN_FLIGHT);
 
-
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfo{};
         queueCreateInfo.resize(indices.queueCount);
-        for (int i = 0; i < indices.queueCount; i++) {
+        for (int i = 0; i < indices.queueCount; i++)
+        {
             queueCreateInfo[i].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
             queueCreateInfo[i].queueFamilyIndex = indices.transferFamily.value();
-            queueCreateInfo[i].queueCount = indices.queueCount;//MAX_FRAMES_IN_FLIGHT;
+            queueCreateInfo[i].queueCount = indices.queueCount; // MAX_FRAMES_IN_FLIGHT;
             queueCreateInfo[i].pQueuePriorities = queuePriority.data();
         }
-
 
         VkDeviceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -132,7 +127,7 @@ namespace vk
         createInfo.ppEnabledExtensionNames = vk_data.deviceExtensions.data();
 
         IO::Log("Required extensions\n");
-        for (const auto& extension : vk_data.deviceExtensions)
+        for (const auto &extension : vk_data.deviceExtensions)
         {
             IO::Log(extension);
         }
@@ -155,8 +150,6 @@ namespace vk
             createInfo.enabledLayerCount = 0;
         }
 
-
-
         if (auto deviceResult = vkCreateDevice(vk_data.physicalDevice, &createInfo, nullptr, &vk_data.logicalDevice); deviceResult != VK_SUCCESS)
         {
             IO::Error("Error creating the device: ", deviceResult);
@@ -167,14 +160,14 @@ namespace vk
         vk_data.graphicsQueue.resize(MAX_FRAMES_IN_FLIGHT);
         vk_data.computeQueue.resize(MAX_FRAMES_IN_FLIGHT);
 
-        for (int i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+        for (int i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+        {
 
             vkGetDeviceQueue(vk_data.logicalDevice, indices.presentFamily.value(), 0, &vk_data.presentQueue[i]);
             vkGetDeviceQueue(vk_data.logicalDevice, indices.graphicsFamily.value(), 0, &vk_data.graphicsQueue[i]);
             vkGetDeviceQueue(vk_data.logicalDevice, indices.computeFamily.value(), 0, &vk_data.computeQueue[i]);
         }
         vkGetDeviceQueue(vk_data.logicalDevice, indices.transferFamily.value(), indices.queueCount > 1 ? 1 : 0, &vk_data.transferQueue);
-
     }
 
     static VkSampleCountFlagBits getMaxUsableSampleCount(VkPhysicalDevice physicalDevice)
@@ -236,9 +229,7 @@ namespace vk
         std::vector<VkExtensionProperties> availableExtensions(extensionCount);
         vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
 
-
         std::set<std::string> requiredExtensions(vk_data.deviceExtensions.begin(), vk_data.deviceExtensions.end());
-
 
         for (const auto &extension : availableExtensions)
         {
@@ -297,7 +288,7 @@ namespace vk
                 vkGetPhysicalDeviceProperties(device, &deviceProperties);
                 std::string deviceName = deviceProperties.deviceName;
                 std::transform(deviceName.begin(), deviceName.end(), deviceName.begin(), ::toupper);
-                // if (deviceName.find("NVIDIA") != std::string::npos)
+                // if (deviceName.find("INTEL") != std::string::npos)
 
                 if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
                 {

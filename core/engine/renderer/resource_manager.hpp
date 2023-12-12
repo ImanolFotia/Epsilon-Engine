@@ -15,7 +15,8 @@ namespace engine
 		std::vector<RenderPassBinding> bindings;
 	};
 
-	struct ThreadData {
+	struct ThreadData
+	{
 		VkCommandPool commandPool;
 		std::vector<VkCommandBuffer> commandBuffer;
 	};
@@ -23,7 +24,7 @@ namespace engine
 	struct ResourceManager
 	{
 
-		virtual ResourceManager* get() = 0;
+		virtual ResourceManager *get() = 0;
 
 		virtual void Init() = 0;
 
@@ -34,11 +35,11 @@ namespace engine
 		virtual Ref<ComputeShader> createComputeShader(ComputeShaderInfo) = 0;
 		virtual Ref<Mesh> createMesh(MeshInfo) = 0;
 		virtual Ref<Mesh> createMesh(AnimatedMeshInfo) = 0;
-		virtual Ref<Mesh> insertMesh(const std::string&, MeshResource) = 0;
-		virtual Ref<Buffer> createGPUBuffer(const std::string&, uint32_t, BufferStorageType, int count = -1, GPUBufferUsage usage = GPUBufferUsage::SHARED) = 0;
+		virtual Ref<Mesh> insertMesh(const std::string &, MeshResource) = 0;
+		virtual Ref<Buffer> createGPUBuffer(const std::string &, uint32_t, BufferStorageType, int count = -1, GPUBufferUsage usage = GPUBufferUsage::SHARED) = 0;
 		virtual Ref<RenderPass> createRenderPass(RenderPassInfo) = 0;
 		virtual Ref<RenderPass> createDefaultRenderPass(RenderPassInfo) = 0;
-		virtual Ref<PushConstant> createPushConstant(const std::string&, PushConstantData) = 0;
+		virtual Ref<PushConstant> createPushConstant(const std::string &, PushConstantData) = 0;
 
 		virtual void CopyTexture(Ref<Texture> src, Ref<Texture> dst) = 0;
 
@@ -53,14 +54,13 @@ namespace engine
 		virtual void destroyComputeShader(Ref<ComputeShader>) = 0;
 		virtual Ref<Buffer> destroyBuffer(BufferInfo) = 0;
 
-		virtual void ReloadShaders(const std::string&) = 0;
+		virtual void ReloadShaders(const std::string &) = 0;
 
-
-		virtual void* mapBuffer(Ref<Buffer> buffer, uint32_t currentFrame) = 0;
+		virtual void *mapBuffer(Ref<Buffer> buffer, uint32_t currentFrame) = 0;
 
 		virtual void unmapBuffer(Ref<Buffer> buffer, uint32_t currentFrame) = 0;
 
-		virtual void* getMappedBuffer(Ref<Buffer> bufferRef, uint32_t currentFrame) = 0;
+		virtual void *getMappedBuffer(Ref<Buffer> bufferRef, uint32_t currentFrame) = 0;
 
 		virtual void clean() = 0;
 
@@ -76,6 +76,6 @@ namespace engine
 		std::vector<ThreadData> m_pThreadData;
 		framework::ThreadPool m_pThreadPool;
 
-		ResourceManager* m_pSelf;
+		ResourceManager *m_pSelf;
 	};
 }

@@ -6,7 +6,7 @@
 
 #include "core/framework/exception.hpp"
 
-#ifdef WIN32
+#ifdef _WIN32
 #if !defined(__PRETTY_FUNCTION__) && !defined(__GNUC__)
 #define __PRETTY_FUNCTION__ __FUNCSIG__
 #endif
@@ -55,20 +55,21 @@ namespace engine
 		vk::createDescriptorSetLayout(
 			*m_pVkDataPtr,
 			m_pGlobalDescriptorSetLayout,
-			{ {0, 0, 0, 1, UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER, {}, {}, "", true, MAX_BINDLESS_RESOURCES, ShaderStage::FRAGMENT, "GlobalBindlessTextures"} });
+			{{0, 0, 0, 1, UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER, {}, {}, "", true, MAX_BINDLESS_RESOURCES, ShaderStage::FRAGMENT, "GlobalBindlessTextures"}});
 
 		pCreateGlobalDescriptorSets(m_pGlobalDescriptorSetLayout,
-			m_pGlobalDescriptorPool,
-			m_pGlobalDescriptorSets,
-			MAX_BINDLESS_RESOURCES);
+									m_pGlobalDescriptorPool,
+									m_pGlobalDescriptorSets,
+									MAX_BINDLESS_RESOURCES);
 
-		for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
+		for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
+		{
 			m_pIndirectBuffer.emplace_back();
 			pCreateBuffer(m_pIndirectBuffer.back(),
-				sizeof(VkDrawIndexedIndirectCommand) * 100000,
-				VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT,
-				VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT | VMA_ALLOCATION_CREATE_HOST_ACCESS_ALLOW_TRANSFER_INSTEAD_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT,
-				VMA_MEMORY_USAGE_AUTO);
+						  sizeof(VkDrawIndexedIndirectCommand) * 100000,
+						  VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT,
+						  VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT | VMA_ALLOCATION_CREATE_HOST_ACCESS_ALLOW_TRANSFER_INSTEAD_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT,
+						  VMA_MEMORY_USAGE_AUTO);
 		}
 	}
 
@@ -79,45 +80,44 @@ namespace engine
 		auto format = resolveFormat(texInfo.format, texInfo.isCompressed);
 		uint32_t mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texInfo.width, texInfo.height)))) + 1;
 
-
 		auto size = texInfo.width * texInfo.height * texInfo.numChannels;
-		if (texInfo.mipLevels > 1) {
+		if (texInfo.mipLevels > 1)
+		{
 			size = texInfo.size;
 			mipLevels = texInfo.mipLevels;
 		}
-		else {
+		else
+		{
 			if (!texInfo.isCompressed)
 				texInfo.mipLevels = mipLevels;
 		}
 
 		auto stagingBuffer = pCreateStagingTextureBuffer(texInfo.pixels, texInfo);
 
-
-		auto texture = pCreateTextureBuffer({ .width = texInfo.width,
-											 .height = texInfo.height,
-											 .num_channels = texInfo.numChannels,
-											 .mipLevels = mipLevels,
-											 .arrayLayers = texInfo.numLayers,
-											 .format = format,
-											 .usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT |
-													  VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
-													  VK_IMAGE_USAGE_SAMPLED_BIT,
-			}
-		);
+		auto texture = pCreateTextureBuffer({
+			.width = texInfo.width,
+			.height = texInfo.height,
+			.num_channels = texInfo.numChannels,
+			.mipLevels = mipLevels,
+			.arrayLayers = texInfo.numLayers,
+			.format = format,
+			.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT |
+					 VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
+					 VK_IMAGE_USAGE_SAMPLED_BIT,
+		});
 
 		texture.format = format;
 		texture.name = texInfo.name;
 
 		transitionImageLayout(*m_pVkDataPtr, m_pTransferCommandPool, texture.image,
-			format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-			texture.info, 0, texInfo.mipLevels);
+							  format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+							  texture.info, 0, texInfo.mipLevels);
 		copyBufferToImage(*m_pVkDataPtr, m_pTransferCommandPool, stagingBuffer.buffer, texture.image,
-			static_cast<uint32_t>(texInfo.width), static_cast<uint32_t>(texInfo.height), texInfo.offsets, texInfo.mipLevels);
+						  static_cast<uint32_t>(texInfo.width), static_cast<uint32_t>(texInfo.height), texInfo.offsets, texInfo.mipLevels);
 
 		transitionImageLayout(*m_pVkDataPtr, m_pTransferCommandPool, texture.image,
-			format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-			VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, texture.info, 0, texInfo.mipLevels);
-
+							  format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+							  VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, texture.info, 0, texInfo.mipLevels);
 
 		vmaDestroyBuffer(m_pAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
 		// vmaFreeMemory(m_pAllocator, m_pStagingTextureBuffer.allocation);
@@ -134,9 +134,8 @@ namespace engine
 
 		ResourcesMemory.m_pTextureBufferAllocationSize += size;
 
-		//Call gen mips
+		// Call gen mips
 		pGenerateMipMaps(texInfo, texture);
-
 
 		vk::createTextureSampler(*m_pVkDataPtr, texture);
 
@@ -152,7 +151,7 @@ namespace engine
 			VkWriteDescriptorSet bindless_descriptor_writes;
 			VkDescriptorImageInfo bindless_image_info;
 
-			bindless_descriptor_writes = { VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET };
+			bindless_descriptor_writes = {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET};
 			bindless_descriptor_writes.descriptorCount = 1;
 			bindless_descriptor_writes.dstArrayElement = texture.index;
 			bindless_descriptor_writes.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
@@ -171,34 +170,31 @@ namespace engine
 		return ref;
 	}
 
-
 	void VulkanResourceManager::updateBindGroup(Ref<BindGroup> bindGroupRef)
 	{
-		//try
+		// try
 		{
-			 vk::VulkanMaterial *vkMaterial = materialPool.get(bindGroupRef);
+			vk::VulkanMaterial *vkMaterial = materialPool.get(bindGroupRef);
 
-			
 			// auto &materialdata = m_pMaterials.emplace_back();
-			 /*
-			 for (auto& binding : vkMaterial->shaderBindings)
-			 {
-				 if (binding.descriptorBinding == VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER) {
+			/*
+			for (auto& binding : vkMaterial->shaderBindings)
+			{
+				if (binding.descriptorBinding == VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER) {
 
-					 auto pass = renderPassPool.get(std::hash<std::string>{}(binding.renderpass));
+					auto pass = renderPassPool.get(std::hash<std::string>{}(binding.renderpass));
 
-					 if (binding.attachment_index == pass->renderPassChain.Textures.size())
-					 {
-					 }
-					 else {
+					if (binding.attachment_index == pass->renderPassChain.Textures.size())
+					{
+					}
+					else {
 
-					 }
-				 }
-			 }*/
-			 pUpdateMaterial(*vkMaterial);
-
+					}
+				}
+			}*/
+			pUpdateMaterial(*vkMaterial);
 		}
-		//catch (std::exception& e)
+		// catch (std::exception& e)
 		{
 
 			//	throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
@@ -207,26 +203,28 @@ namespace engine
 
 	Ref<BindGroup> VulkanResourceManager::createBindGroup(BindGroupInfo material)
 	{
-		//try
+		// try
 		{
 			vk::VulkanMaterial vkMaterial;
 			// auto renderPass = renderPassPool.get(renderPassRef);
 
 			uint32_t id = std::hash<std::string>{}(material.renderPass);
 			auto renderPass = renderPassPool.get(id);
-			vk::VulkanComputeShader* computeShader;
+			vk::VulkanComputeShader *computeShader;
 
-			if (renderPass) {
+			if (renderPass)
+			{
 				vkMaterial.descriptorSetLayout = renderPass->renderPipelines.back().descriptorSetLayouts.at(RENDERPASS_LAYOUT);
 			}
-			else {
+			else
+			{
 				uint32_t compute_id = std::hash<std::string>{}(material.computeShader);
 				computeShader = computeShaderPool.get(compute_id);
 				vkMaterial.descriptorSetLayout = computeShader->pipeline.descriptorSetLayout;
 			}
 			// auto &materialdata = m_pMaterials.emplace_back();
 
-			for (auto& binding : material.inputs)
+			for (auto &binding : material.inputs)
 			{
 				auto pass = renderPassPool.get(std::hash<std::string>{}(binding.renderPass));
 				vkMaterial.slots++;
@@ -238,7 +236,7 @@ namespace engine
 						.bindingPoint = binding.bindingPoint,
 						.isRenderPassAttachment = true,
 						.renderpass = binding.renderPass,
-					.attachment_index = (int32_t)binding.index };
+						.attachment_index = (int32_t)binding.index};
 
 					shaderBinding.texture.isDepthAttachment = true;
 
@@ -252,13 +250,13 @@ namespace engine
 						.bindingPoint = binding.bindingPoint,
 						.isRenderPassAttachment = true,
 						.renderpass = binding.renderPass,
-					.attachment_index = (int32_t)binding.index };
+						.attachment_index = (int32_t)binding.index};
 
 					vkMaterial.shaderBindings.push_back(shaderBinding);
 				}
 			}
 
-			for (auto& binding : material.bindingInfo)
+			for (auto &binding : material.bindingInfo)
 			{
 				if (binding.type == UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER)
 				{
@@ -268,7 +266,7 @@ namespace engine
 						.texture = *texPool.get(tex),
 						.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 						.bindingPoint = binding.binding,
-						.isRenderPassAttachment = false };
+						.isRenderPassAttachment = false};
 
 					vkMaterial.shaderBindings.push_back(shaderBinding);
 				}
@@ -276,13 +274,14 @@ namespace engine
 				{
 					vkMaterial.slots++;
 					auto buff = gpuBufferPool.get(std::hash<std::string>{}(binding.buffer))->buffers;
-					for (auto& b : buff) b.size = binding.size;
+					for (auto &b : buff)
+						b.size = binding.size;
 
 					vk::VulkanShaderBinding shaderBinding = {
 						.buffers = buff,
 						.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
 						.bindingPoint = binding.binding,
-						.isRenderPassAttachment = false };
+						.isRenderPassAttachment = false};
 
 					vkMaterial.shaderBindings.push_back(shaderBinding);
 				}
@@ -290,13 +289,16 @@ namespace engine
 				{
 					vkMaterial.slots++;
 					auto buff = uniformBufferPool.get(std::hash<std::string>{}(binding.buffer))->buffers;
-					for (auto& b : buff) { b.size = binding.size; }
+					for (auto &b : buff)
+					{
+						b.size = binding.size;
+					}
 
 					vk::VulkanShaderBinding shaderBinding = {
 						.buffers = buff,
 						.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
 						.bindingPoint = binding.binding,
-						.isRenderPassAttachment = false };
+						.isRenderPassAttachment = false};
 
 					vkMaterial.shaderBindings.push_back(shaderBinding);
 				}
@@ -304,11 +306,13 @@ namespace engine
 
 			vkMaterial.bufferSize = 0;
 
-			if (renderPass) {
-				if (renderPass->uniformBuffer.size() > 0) {
+			if (renderPass)
+			{
+				if (renderPass->uniformBuffer.size() > 0)
+				{
 
 					auto buffers = renderPass->uniformBuffer.front().buffers;
-					//vkMaterial.bufferInfo.resize(vk::MAX_FRAMES_IN_FLIGHT);
+					// vkMaterial.bufferInfo.resize(vk::MAX_FRAMES_IN_FLIGHT);
 					for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
 					{
 						vkMaterial.bufferInfo[i].offset = buffers[i].offset;
@@ -322,23 +326,22 @@ namespace engine
 			m_pNumCommandPools++;
 
 			pCreateDescriptorSets(vkMaterial.descriptorSetLayout,
-				m_pDescriptorPool,
-				vkMaterial.descriptorSets,
-				vk::MAX_FRAMES_IN_FLIGHT);
+								  m_pDescriptorPool,
+								  vkMaterial.descriptorSets,
+								  vk::MAX_FRAMES_IN_FLIGHT);
 			pUpdateMaterial(vkMaterial);
-
 
 			Ref<BindGroup> materialRef = materialPool.insert(material.name, vkMaterial);
 			return materialRef;
 		}
-		//catch (std::exception& e)
+		// catch (std::exception& e)
 		{
 
 			//	throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
 		}
 	}
 
-	void VulkanResourceManager::pRecreateSwapChain(framework::Window::windowType* window)
+	void VulkanResourceManager::pRecreateSwapChain(framework::Window::windowType *window)
 	{
 	}
 
@@ -361,22 +364,21 @@ namespace engine
 			m_pVkDataPtr->defaultRenderPass.clearValues.back()
 				.depthStencil = {
 				(float)renderPassInfo.attachments.back().depthStencilValue[0],
-				renderPassInfo.attachments.back().depthStencilValue[1] };
+				renderPassInfo.attachments.back().depthStencilValue[1]};
 		}
 
 		vk::createRenderPass(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, renderPassInfo, true);
-
 
 		{
 
 			m_pVkDataPtr->defaultRenderPass.renderPipelines.resize(renderPassInfo.numLayouts);
 			m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayouts.resize(2);
 			vk::createDescriptorSetLayout(*m_pVkDataPtr,
-				m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayouts.at(RENDERPASS_LAYOUT), renderPassInfo.bindingInfo);
+										  m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayouts.at(RENDERPASS_LAYOUT), renderPassInfo.bindingInfo);
 
 			m_pVkDataPtr->defaultRenderPass.numAttachments = renderPassInfo.numAttachments;
 
-			for (auto& pipeline : m_pVkDataPtr->defaultRenderPass.renderPipelines)
+			for (auto &pipeline : m_pVkDataPtr->defaultRenderPass.renderPipelines)
 			{
 				pipeline.descriptorSetLayouts.resize(1);
 				if (m_pVkDataPtr->bindless_supported)
@@ -386,13 +388,12 @@ namespace engine
 				}
 			}
 			vk::createGraphicsPipeline(*m_pVkDataPtr,
-				m_pVkDataPtr->defaultRenderPass,
-				renderPassInfo);
+									   m_pVkDataPtr->defaultRenderPass,
+									   renderPassInfo);
 		}
 
 		vk::createSwapChainFramebuffers(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass,
-			m_pVkDataPtr->defaultRenderPass.renderPassChain);
-
+										m_pVkDataPtr->defaultRenderPass.renderPassChain);
 
 		m_pVkDataPtr->defaultRenderPass.name = renderPassInfo.name;
 
@@ -405,8 +406,7 @@ namespace engine
 			.width = (float)m_pVkDataPtr->defaultRenderPass.renderPassChain.Extent.width,
 			.height = (float)m_pVkDataPtr->defaultRenderPass.renderPassChain.Extent.height,
 			.minDepth = 0.0f,
-			.maxDepth = 1.0f
-		};
+			.maxDepth = 1.0f};
 
 		VkRect2D rect;
 		rect.extent.width = m_pVkDataPtr->defaultRenderPass.renderPassChain.Extent.width;
@@ -418,8 +418,7 @@ namespace engine
 		m_pVkDataPtr->defaultRenderPass.renderPassChain.setViewport(viewport);
 		m_pVkDataPtr->defaultRenderPass.renderPassChain.setScissor(rect);
 
-
-		for (auto& binding : renderPassInfo.bindingInfo)
+		for (auto &binding : renderPassInfo.bindingInfo)
 		{
 			if (binding.type == UniformBindingType::UNIFORM_BUFFER)
 			{
@@ -429,8 +428,6 @@ namespace engine
 		}
 
 		m_pDefaultRenderPassRef = renderPassPool.insert(renderPassInfo.name, m_pVkDataPtr->defaultRenderPass);
-
-
 
 		return m_pDefaultRenderPassRef;
 	}
@@ -442,15 +439,15 @@ namespace engine
 		renderPass.clearValues.resize(renderPassInfo.numAttachments + (renderPassInfo.depthAttachment ? 1 : 0));
 		for (int i = 0; i < renderPassInfo.numAttachments; i++)
 		{
-			renderPass.clearValues[i].color = { renderPassInfo.attachments[i].clearColor[0],
+			renderPass.clearValues[i].color = {renderPassInfo.attachments[i].clearColor[0],
 											   renderPassInfo.attachments[i].clearColor[1],
 											   renderPassInfo.attachments[i].clearColor[2],
-											   renderPassInfo.attachments[i].clearColor[3] };
+											   renderPassInfo.attachments[i].clearColor[3]};
 		}
 		if (renderPassInfo.depthAttachment)
 			renderPass.clearValues.back().depthStencil = {
 				(float)renderPassInfo.attachments.back().depthStencilValue[0],
-				renderPassInfo.attachments.back().depthStencilValue[1] };
+				renderPassInfo.attachments.back().depthStencilValue[1]};
 
 		renderPass.id = m_pRenderPassCount;
 
@@ -463,14 +460,17 @@ namespace engine
 
 		for (size_t i = 0; i < renderPassInfo.attachments.size(); i++)
 		{
-			auto& attachment = renderPassInfo.attachments[i];
+			auto &attachment = renderPassInfo.attachments[i];
 
-			if (attachment.isExtern) {
+			if (attachment.isExtern)
+			{
 				bool externValid = false;
 				auto externRenderPass = renderPassPool.get(std::hash<std::string>{}(attachment.externRenderPass));
 
-				for (auto& externAttachment : m_pRenderPassInfo[externRenderPass->id].attachments) {
-					if (externAttachment.name == attachment.name) {
+				for (auto &externAttachment : m_pRenderPassInfo[externRenderPass->id].attachments)
+				{
+					if (externAttachment.name == attachment.name)
+					{
 						externValid = true;
 						renderPass.renderPassChain.Textures.push_back(externRenderPass->renderPassChain.Textures.at(externAttachment.texture_index));
 						renderPass.renderPassChain.ImageViews.push_back(externRenderPass->renderPassChain.ImageViews.at(externAttachment.imageview_index));
@@ -503,7 +503,7 @@ namespace engine
 			texture.bindingType = vk::RENDER_BUFFER_SAMPLER;
 			texture.info.mipLevels = 1;
 			createImageView(*m_pVkDataPtr, texture,
-				(attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
+							(attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
 
 			if (attachment.isSampler)
 			{
@@ -511,14 +511,14 @@ namespace engine
 				vk::createTextureSampler(*m_pVkDataPtr, texture);
 			}
 
-
 			if (attachment.isDepthAttachment)
 			{
 				texture.isDepthAttachment = true;
 
 				renderPass.renderPassChain.DepthTexture = texture;
 
-				if (attachment.isSampler) {
+				if (attachment.isSampler)
+				{
 					renderPass.renderPassChain.hasDepthSampler = true;
 					renderPass.renderPassChain.ImageViews.push_back(texture.imageView);
 					renderPass.renderPassChain.Textures.push_back(texture);
@@ -544,7 +544,7 @@ namespace engine
 
 		renderPass.renderPipelines.resize(renderPassInfo.numLayouts); //.emplace_back();
 
-		for (auto& pipeline : renderPass.renderPipelines)
+		for (auto &pipeline : renderPass.renderPipelines)
 		{
 			pipeline.descriptorSetLayouts.resize(1);
 			if (m_pVkDataPtr->bindless_supported)
@@ -555,8 +555,8 @@ namespace engine
 		}
 
 		vk::createGraphicsPipeline(*m_pVkDataPtr,
-			renderPass,
-			renderPassInfo);
+								   renderPass,
+								   renderPassInfo);
 
 		vk::createFramebuffers(*m_pVkDataPtr, renderPass, renderPass.renderPassChain);
 
@@ -566,8 +566,7 @@ namespace engine
 			.width = (float)renderPass.renderPassChain.Extent.width,
 			.height = (float)renderPass.renderPassChain.Extent.height,
 			.minDepth = 0.0f,
-			.maxDepth = 1.0f
-		};
+			.maxDepth = 1.0f};
 
 		VkRect2D rect;
 		rect.extent.width = renderPass.renderPassChain.Extent.width;
@@ -579,8 +578,7 @@ namespace engine
 		renderPass.renderPassChain.setViewport(viewport);
 		renderPass.renderPassChain.setScissor(rect);
 
-
-		for (auto& binding : renderPassInfo.bindingInfo)
+		for (auto &binding : renderPassInfo.bindingInfo)
 		{
 			if (binding.type == UniformBindingType::UNIFORM_BUFFER)
 			{
@@ -592,11 +590,13 @@ namespace engine
 			}
 		}
 		auto ref = renderPassPool.insert(renderPassInfo.name, renderPass);
-		for (auto& pipeline : renderPassInfo.pipelineLayout) {
+		for (auto &pipeline : renderPassInfo.pipelineLayout)
+		{
 			shaderPool.insert(pipeline.shaderInfo.name, pipeline.shaderInfo);
 		}
 
-		if (renderPassInfo.resizeWithSwapChain) {
+		if (renderPassInfo.resizeWithSwapChain)
+		{
 			resizableRenderPasses.push_back(ref);
 		}
 
@@ -604,17 +604,19 @@ namespace engine
 		return ref;
 	}
 
-	void VulkanResourceManager::ReloadShaders(const std::string& shaderName) {
+	void VulkanResourceManager::ReloadShaders(const std::string &shaderName)
+	{
 		uint32_t id = std::hash<std::string>{}(shaderName);
 		auto shaderInfo = shaderPool.get(id);
 
-		for (auto& stage : shaderInfo->stages) {
-			for (auto& renderPassId : stage.renderPassIds) {
+		for (auto &stage : shaderInfo->stages)
+		{
+			for (auto &renderPassId : stage.renderPassIds)
+			{
 				auto renderPass = renderPassPool.get(renderPassId);
-				for (auto& pipelineId : stage.pipelines[renderPassId])
+				for (auto &pipelineId : stage.pipelines[renderPassId])
 					renderPass->renderPipelines[pipelineId];
 			}
-
 		}
 	}
 
@@ -622,57 +624,61 @@ namespace engine
 	{
 
 		vkDeviceWaitIdle(m_pVkDataPtr->logicalDevice);
-		for (auto& buffer : vertexBufferPool)
+		for (auto &buffer : vertexBufferPool)
 		{
 			vmaDestroyBuffer(m_pAllocator, buffer.buffer, buffer.allocation);
 		}
 
-		for (auto& buffer : indexBufferPool)
+		for (auto &buffer : indexBufferPool)
 		{
 			vmaDestroyBuffer(m_pAllocator, buffer.buffer, buffer.allocation);
 		}
 
-		for (auto& buffer : gpuBufferPool)
+		for (auto &buffer : gpuBufferPool)
 		{
-			for (auto& b : buffer.buffers) {
-				if (b.mapped) {
+			for (auto &b : buffer.buffers)
+			{
+				if (b.mapped)
+				{
 					vmaUnmapMemory(m_pAllocator, b.allocation);
 					b.mapped = false;
 				}
 			}
 		}
 
-		for (auto& buffer : gpuBufferPool)
+		for (auto &buffer : gpuBufferPool)
 		{
-			for (auto& b : buffer.buffers) {
+			for (auto &b : buffer.buffers)
+			{
 				vmaDestroyBuffer(m_pAllocator, b.buffer, b.allocation);
 			}
 		}
 
 		vk::cleanupSyncObjects(*m_pVkDataPtr);
 
-		for (auto& commandPool : m_pVkDataPtr->m_pCommandPools)
+		for (auto &commandPool : m_pVkDataPtr->m_pCommandPools)
 			vk::cleanCommandPool(*m_pVkDataPtr, commandPool);
 
-		for (auto& commandPool : m_pCommandPools)
+		for (auto &commandPool : m_pCommandPools)
 			vk::cleanCommandPool(*m_pVkDataPtr, commandPool);
 
-		for (auto& texture : texPool)
+		for (auto &texture : texPool)
 		{
 			vkDestroySampler(m_pVkDataPtr->logicalDevice, texture.sampler, nullptr);
 			vkDestroyImageView(m_pVkDataPtr->logicalDevice, texture.imageView, nullptr);
 			vmaDestroyImage(m_pAllocator, texture.image, texture.allocation);
 		}
 
-		for (auto& pass : renderPassPool)
+		for (auto &pass : renderPassPool)
 		{
 			vk::cleanupRenderPass(*m_pVkDataPtr, pass.renderPass);
 
-			for (auto& pipeline : pass.renderPipelines)
+			for (auto &pipeline : pass.renderPipelines)
 				vk::destroyGraphicsPipeline(*m_pVkDataPtr, pipeline);
 
-			for (auto& uniformBuffer : pass.uniformBuffer)
-				for (auto& b : uniformBuffer.buffers) {
+			for (auto &uniformBuffer : pass.uniformBuffer)
+				for (auto &b : uniformBuffer.buffers)
+				{
 					if (b.buffer != VK_NULL_HANDLE)
 						vmaDestroyBuffer(m_pAllocator, b.buffer, b.allocation);
 				}
@@ -680,31 +686,36 @@ namespace engine
 			if (pass.id == std::numeric_limits<uint32_t>::max())
 				continue;
 
-			for (auto& framebuffer : pass.renderPassChain.Framebuffers)
+			for (auto &framebuffer : pass.renderPassChain.Framebuffers)
 				vkDestroyFramebuffer(m_pVkDataPtr->logicalDevice, framebuffer, nullptr);
 
 			for (int i = 0; i < pass.renderPassChain.Textures.size(); i++)
 			{
-				if (pass.renderPassChain.Textures[i].sampler != VK_NULL_HANDLE) {
+				if (pass.renderPassChain.Textures[i].sampler != VK_NULL_HANDLE)
+				{
 					vkDestroySampler(m_pVkDataPtr->logicalDevice, pass.renderPassChain.Textures[i].sampler, nullptr);
 					pass.renderPassChain.Textures[i].sampler = VK_NULL_HANDLE;
 				}
 
-				if (pass.renderPassChain.Textures[i].imageView != VK_NULL_HANDLE) {
+				if (pass.renderPassChain.Textures[i].imageView != VK_NULL_HANDLE)
+				{
 					vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass.renderPassChain.Textures[i].imageView, nullptr);
 					pass.renderPassChain.Textures[i].imageView = VK_NULL_HANDLE;
 				}
 
-				if (pass.renderPassChain.Textures[i].image != VK_NULL_HANDLE) {
+				if (pass.renderPassChain.Textures[i].image != VK_NULL_HANDLE)
+				{
 					vmaDestroyImage(m_pAllocator, pass.renderPassChain.Textures[i].image,
-						pass.renderPassChain.Textures[i].allocation);
+									pass.renderPassChain.Textures[i].allocation);
 					pass.renderPassChain.Textures[i].image = VK_NULL_HANDLE;
 				}
 			}
 
-			if (pass.renderPassChain.DepthTexture.isDepthAttachment) {
+			if (pass.renderPassChain.DepthTexture.isDepthAttachment)
+			{
 
-				if (pass.renderPassChain.DepthTexture.isDepthAttachment && !pass.renderPassChain.hasDepthSampler) {
+				if (pass.renderPassChain.DepthTexture.isDepthAttachment && !pass.renderPassChain.hasDepthSampler)
+				{
 					if (pass.renderPassChain.DepthTexture.imageView != VK_NULL_HANDLE && pass.renderPassChain.DepthTexture.index < 0)
 						vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass.renderPassChain.DepthTexture.imageView, nullptr);
 					if (pass.renderPassChain.DepthTexture.image != VK_NULL_HANDLE && pass.renderPassChain.DepthTexture.index < 0)
@@ -718,17 +729,17 @@ namespace engine
 				if (pass.renderPassChain.DepthTexture.imageView != VK_NULL_HANDLE && pass.renderPassChain.Textures[pass.renderPassChain.DepthTexture.index].imageView != VK_NULL_HANDLE)
 					vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass.renderPassChain.DepthTexture.imageView, nullptr);
 
-				if (pass.renderPassChain.DepthTexture.image != VK_NULL_HANDLE && pass.renderPassChain.Textures[pass.renderPassChain.DepthTexture.index].imageView != VK_NULL_HANDLE) {
+				if (pass.renderPassChain.DepthTexture.image != VK_NULL_HANDLE && pass.renderPassChain.Textures[pass.renderPassChain.DepthTexture.index].imageView != VK_NULL_HANDLE)
+				{
 					vmaDestroyImage(m_pAllocator, pass.renderPassChain.DepthTexture.image,
-						pass.renderPassChain.DepthTexture.allocation);
+									pass.renderPassChain.DepthTexture.allocation);
 					pass.renderPassChain.DepthTexture.image = VK_NULL_HANDLE;
 				}
-
 			}
 		}
 
-
-		if (m_pVkDataPtr->defaultRenderPass.renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE) {
+		if (m_pVkDataPtr->defaultRenderPass.renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE)
+		{
 			vkDestroySampler(m_pVkDataPtr->logicalDevice, m_pVkDataPtr->defaultRenderPass.renderPassChain.DepthTexture.sampler, nullptr);
 		}
 
@@ -738,7 +749,7 @@ namespace engine
 		vkDestroyDescriptorSetLayout(m_pVkDataPtr->logicalDevice, m_pGlobalDescriptorSetLayout, nullptr);
 		vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pGlobalDescriptorPool, nullptr);
 
-		for (auto& buffer : m_pIndirectBuffer)
+		for (auto &buffer : m_pIndirectBuffer)
 			vmaDestroyBuffer(m_pAllocator, buffer.buffer, buffer.allocation);
 
 		vmaDestroyAllocator(m_pAllocator);
@@ -759,47 +770,45 @@ namespace engine
 		return uniformBufferPool.insert(bindingInfo.name, buffer);
 	}
 
-
-	Ref<Mesh> VulkanResourceManager::insertMesh(const std::string& name, MeshResource meshResource) {
+	Ref<Mesh> VulkanResourceManager::insertMesh(const std::string &name, MeshResource meshResource)
+	{
 
 		auto ref = meshPool.insert(name, meshResource);
 
 		return ref;
-
 	}
 
 	Ref<Mesh> VulkanResourceManager::createMesh(MeshInfo meshInfo)
 	{
-		std::vector<common::Vertex>* vertices = &meshInfo.vertices;
-		std::vector<uint32_t>* indices = &meshInfo.indices;
+		std::vector<common::Vertex> *vertices = &meshInfo.vertices;
+		std::vector<uint32_t> *indices = &meshInfo.indices;
 
-		auto maxOffset = [](auto& indices) -> uint32_t
-			{
-				uint32_t out = 0;
-				for (auto& i : indices)
-					out = i > out ? i : out;
-				return out;
-			};
+		auto maxOffset = [](auto &indices) -> uint32_t
+		{
+			uint32_t out = 0;
+			for (auto &i : indices)
+				out = i > out ? i : out;
+			return out;
+		};
 
 		Ref<Buffer> vertexBufferRef = pFetchVertexBuffer(vertices->size());
-		vk::VulkanBuffer* vertexBuffer = vertexBufferPool.get(vertexBufferRef);
+		vk::VulkanBuffer *vertexBuffer = vertexBufferPool.get(vertexBufferRef);
 
 		Ref<Buffer> indexBufferRef = pFetchIndexBuffer(indices->size(), vertexBuffer->allocatedVertices);
-		vk::VulkanBuffer* indexBuffer = indexBufferPool.get(indexBufferRef);
+		vk::VulkanBuffer *indexBuffer = indexBufferPool.get(indexBufferRef);
 
 		auto vertexStagingBuffer = pCreateStagingBuffer(*vertices);
 		auto indexStagingBuffer = pCreateStagingIndexBuffer(*indices);
 
 		vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, vertexStagingBuffer.buffer, vertexBuffer->buffer,
-			vertices->size() * sizeof(common::Vertex), vertexBuffer->allocatedVertices * sizeof(common::Vertex));
+					   vertices->size() * sizeof(common::Vertex), vertexBuffer->allocatedVertices * sizeof(common::Vertex));
 
 		vmaDestroyBuffer(m_pAllocator, vertexStagingBuffer.buffer, vertexStagingBuffer.allocation);
 
 		vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, indexStagingBuffer.buffer, indexBuffer->buffer,
-			indices->size() * sizeof(IndexType), indexBuffer->allocatedVertices * sizeof(IndexType));
+					   indices->size() * sizeof(IndexType), indexBuffer->allocatedVertices * sizeof(IndexType));
 
 		vmaDestroyBuffer(m_pAllocator, indexStagingBuffer.buffer, indexStagingBuffer.allocation);
-
 
 		MeshResource meshResource = {
 			.vertexBuffer = vertexBufferRef,
@@ -807,7 +816,7 @@ namespace engine
 			.vertexOffset = vertexBuffer->allocatedVertices,
 			.indexOffset = indexBuffer->allocatedVertices,
 			.numVertices = (uint32_t)vertices->size(),
-			.numIndices = (uint32_t)indices->size() };
+			.numIndices = (uint32_t)indices->size()};
 
 		auto ref = meshPool.insert(meshInfo.name, meshResource);
 
@@ -821,32 +830,31 @@ namespace engine
 
 	Ref<Mesh> VulkanResourceManager::createMesh(AnimatedMeshInfo meshInfo)
 	{
-		std::vector<common::AnimatedVertex>* vertices = &meshInfo.vertices;
-		std::vector<uint32_t>* indices = &meshInfo.indices;
+		std::vector<common::AnimatedVertex> *vertices = &meshInfo.vertices;
+		std::vector<uint32_t> *indices = &meshInfo.indices;
 
-		auto maxOffset = [](auto& indices) -> uint32_t
-			{
-				uint32_t out = 0;
-				for (auto& i : indices)
-					out = i > out ? i : out;
-				return out;
-			};
+		auto maxOffset = [](auto &indices) -> uint32_t
+		{
+			uint32_t out = 0;
+			for (auto &i : indices)
+				out = i > out ? i : out;
+			return out;
+		};
 
 		Ref<Buffer> vertexBufferRef = pFetchVertexBuffer(vertices->size(), sizeof(common::AnimatedVertex));
-		vk::VulkanBuffer* vertexBuffer = vertexBufferPool.get(vertexBufferRef);
+		vk::VulkanBuffer *vertexBuffer = vertexBufferPool.get(vertexBufferRef);
 
 		Ref<Buffer> indexBufferRef = pFetchIndexBuffer(indices->size(), vertexBuffer->allocatedVertices);
-		vk::VulkanBuffer* indexBuffer = indexBufferPool.get(indexBufferRef);
+		vk::VulkanBuffer *indexBuffer = indexBufferPool.get(indexBufferRef);
 
 		auto vertexStagingBuffer = pCreateStagingBuffer(*vertices);
 		auto indexStagingBuffer = pCreateStagingIndexBuffer(*indices);
 
 		vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, vertexStagingBuffer.buffer, vertexBuffer->buffer,
-			vertices->size() * sizeof(common::AnimatedVertex), vertexBuffer->allocatedVertices * sizeof(common::AnimatedVertex));
-
+					   vertices->size() * sizeof(common::AnimatedVertex), vertexBuffer->allocatedVertices * sizeof(common::AnimatedVertex));
 
 		vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, indexStagingBuffer.buffer, indexBuffer->buffer,
-			indices->size() * sizeof(IndexType), indexBuffer->allocatedVertices * sizeof(IndexType));
+					   indices->size() * sizeof(IndexType), indexBuffer->allocatedVertices * sizeof(IndexType));
 
 		vmaDestroyBuffer(m_pAllocator, indexStagingBuffer.buffer, indexStagingBuffer.allocation);
 		vmaDestroyBuffer(m_pAllocator, vertexStagingBuffer.buffer, vertexStagingBuffer.allocation);
@@ -857,7 +865,7 @@ namespace engine
 			.vertexOffset = vertexBuffer->allocatedVertices,
 			.indexOffset = indexBuffer->allocatedVertices,
 			.numVertices = (uint32_t)vertices->size(),
-			.numIndices = (uint32_t)indices->size() };
+			.numIndices = (uint32_t)indices->size()};
 		auto ref = meshPool.insert(meshInfo.name, meshResource);
 
 		int maxAllocatingSize = sizeof(IndexType) * (indexBuffer->allocatedVertices + indices->size());
@@ -868,13 +876,12 @@ namespace engine
 		return ref;
 	}
 
-	Ref<Buffer> VulkanResourceManager::createGPUBuffer(const std::string& name, uint32_t size, BufferStorageType type, int count = -1, GPUBufferUsage usage = GPUBufferUsage::SHARED)
+	Ref<Buffer> VulkanResourceManager::createGPUBuffer(const std::string &name, uint32_t size, BufferStorageType type, int count = -1, GPUBufferUsage usage = GPUBufferUsage::SHARED)
 	{
 
 		int numBuffers = count < 0 ? vk::MAX_FRAMES_IN_FLIGHT : count;
 		vk::VulkanGPUMappedBuffer buffer;
 		buffer.buffers.resize(numBuffers);
-
 
 		for (unsigned i = 0; i < numBuffers; i++)
 		{
@@ -897,7 +904,7 @@ namespace engine
 	 *
 	 */
 
-	vk::VulkanRenderPass* VulkanResourceManager::getRenderPass(Ref<RenderPass> ref)
+	vk::VulkanRenderPass *VulkanResourceManager::getRenderPass(Ref<RenderPass> ref)
 	{
 
 		return renderPassPool.get(ref);
@@ -941,7 +948,7 @@ namespace engine
 	{
 		auto pass = renderPassPool.get(renderPassRef);
 		vk::cleanupRenderPass(*m_pVkDataPtr, pass->renderPass);
-		for (auto& pipeline : pass->renderPipelines)
+		for (auto &pipeline : pass->renderPipelines)
 			vk::destroyGraphicsPipeline(*m_pVkDataPtr, pipeline);
 
 		if (pass->id == std::numeric_limits<uint32_t>::max())
@@ -952,18 +959,19 @@ namespace engine
 			vkDestroySampler(m_pVkDataPtr->logicalDevice, pass->renderPassChain.Textures[i].sampler, nullptr);
 			vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass->renderPassChain.Textures[i].imageView, nullptr);
 			vmaDestroyImage(m_pAllocator, pass->renderPassChain.Textures[i].image,
-				pass->renderPassChain.Textures[i].allocation);
+							pass->renderPassChain.Textures[i].allocation);
 		}
 
 		vmaDestroyImage(m_pAllocator, pass->renderPassChain.DepthTexture.image,
-			pass->renderPassChain.DepthTexture.allocation);
+						pass->renderPassChain.DepthTexture.allocation);
 	}
 
-	void* VulkanResourceManager::mapBuffer(Ref<Buffer> bufferRef, uint32_t currentFrame)
+	void *VulkanResourceManager::mapBuffer(Ref<Buffer> bufferRef, uint32_t currentFrame)
 	{
 		auto buffer = gpuBufferPool.get(bufferRef);
-		void* data;
-		if (buffer->buffers[currentFrame].mapped) {
+		void *data;
+		if (buffer->buffers[currentFrame].mapped)
+		{
 
 			vmaUnmapMemory(m_pAllocator, buffer->buffers[currentFrame].allocation);
 		}
@@ -975,18 +983,21 @@ namespace engine
 	{
 		auto buffer = gpuBufferPool.get(bufferRef);
 
-		if (!buffer->buffers[currentFrame].mapped) return;
+		if (!buffer->buffers[currentFrame].mapped)
+			return;
 		buffer->buffers[currentFrame].mapped = false;
 		vmaUnmapMemory(m_pAllocator, buffer->buffers[currentFrame].allocation);
 	}
 
-	void* VulkanResourceManager::getMappedBuffer(Ref<Buffer> bufferRef, uint32_t currentFrame) {
+	void *VulkanResourceManager::getMappedBuffer(Ref<Buffer> bufferRef, uint32_t currentFrame)
+	{
 		auto buffer = gpuBufferPool.get(bufferRef);
 
 		buffer->buffers[currentFrame].mapped = true;
 
-		void* data;
-		if (buffer->mapped) {
+		void *data;
+		if (buffer->mapped)
+		{
 
 			vmaUnmapMemory(m_pAllocator, buffer->buffers[currentFrame].allocation);
 		}
@@ -995,7 +1006,8 @@ namespace engine
 		return data;
 	}
 
-	Ref<ComputeShader> VulkanResourceManager::createComputeShader(ComputeShaderInfo computeInfo) {
+	Ref<ComputeShader> VulkanResourceManager::createComputeShader(ComputeShaderInfo computeInfo)
+	{
 		vk::VulkanComputeShader computeShader;
 
 		VkImageSubresourceRange imageSubRange = {};
@@ -1014,7 +1026,7 @@ namespace engine
 			.newLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL,
 			//.image = texPool.get(computeInfo.memoryBarrier.image)->image,
 			.subresourceRange = imageSubRange
-			/* .image and .subresourceRange should identify image subresource accessed */ 
+			/* .image and .subresourceRange should identify image subresource accessed */
 		};
 
 		computeShader.memoryBarrier.dependencyInfo = {
@@ -1025,8 +1037,8 @@ namespace engine
 			nullptr,
 			0,
 			nullptr,
-			1,                      // imageMemoryBarrierCount
-			&computeShader.memoryBarrier.imageMemoryBarrier,    // pImageMemoryBarriers
+			1,												 // imageMemoryBarrierCount
+			&computeShader.memoryBarrier.imageMemoryBarrier, // pImageMemoryBarriers
 		};
 
 		computeShader.groupCountX = computeInfo.groupCountX;
@@ -1039,14 +1051,15 @@ namespace engine
 
 	void VulkanResourceManager::destroyComputeShader(Ref<ComputeShader>) {}
 
-	void VulkanResourceManager::ResizeFramebuffer(Ref<RenderPass> renderpass_ref, glm::ivec2 size) {
+	void VulkanResourceManager::ResizeFramebuffer(Ref<RenderPass> renderpass_ref, glm::ivec2 size)
+	{
 		vkDeviceWaitIdle(m_pVkDataPtr->logicalDevice);
 		auto renderPass = renderPassPool.get(renderpass_ref);
 		VkExtent2D extent;
 		extent.width = size.x;
 		extent.height = size.y;
 
-		for (auto& framebuffer : renderPass->renderPassChain.Framebuffers)
+		for (auto &framebuffer : renderPass->renderPassChain.Framebuffers)
 			vkDestroyFramebuffer(m_pVkDataPtr->logicalDevice, framebuffer, nullptr);
 
 		for (int i = 0; i < renderPass->renderPassChain.Textures.size(); i++)
@@ -1054,7 +1067,7 @@ namespace engine
 			vkDestroySampler(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.Textures[i].sampler, nullptr);
 			vkDestroyImageView(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.Textures[i].imageView, nullptr);
 			vmaDestroyImage(m_pAllocator, renderPass->renderPassChain.Textures[i].image,
-				renderPass->renderPassChain.Textures[i].allocation);
+							renderPass->renderPassChain.Textures[i].allocation);
 		}
 		{
 
@@ -1067,7 +1080,7 @@ namespace engine
 				vmaDestroyImage(m_pAllocator, renderPass->renderPassChain.DepthTexture.image, renderPass->renderPassChain.DepthTexture.allocation);
 		}
 
-		auto& renderPassInfo = m_pRenderPassInfo[renderPass->id];
+		auto &renderPassInfo = m_pRenderPassInfo[renderPass->id];
 		renderPassInfo.dimensions.width = extent.width;
 		renderPassInfo.dimensions.height = extent.height;
 
@@ -1075,7 +1088,7 @@ namespace engine
 
 		for (size_t i = 0; i < renderPassInfo.attachments.size(); i++)
 		{
-			auto& attachment = renderPassInfo.attachments[i];
+			auto &attachment = renderPassInfo.attachments[i];
 
 			vk::VulkanTextureInfo texInfo;
 			texInfo.format = attachment.isDepthAttachment ? findDepthFormat(*m_pVkDataPtr) : resolveFormat(renderPassInfo.attachments[i].format);
@@ -1095,7 +1108,7 @@ namespace engine
 			texture.bindingType = vk::RENDER_BUFFER_SAMPLER;
 			texture.info.mipLevels = 1;
 			createImageView(*m_pVkDataPtr, texture,
-				(attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
+							(attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
 
 			texture.imageLayout = attachment.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			if (attachment.isSampler)
@@ -1109,11 +1122,13 @@ namespace engine
 			{
 				texture.isDepthAttachment = true;
 				renderPass->renderPassChain.DepthTexture = texture;
-				if (attachment.isSampler) {
+				if (attachment.isSampler)
+				{
 					renderPass->renderPassChain.DepthTexture.index = i;
 				}
 
-				if (attachment.isSampler) {
+				if (attachment.isSampler)
+				{
 					renderPass->renderPassChain.hasDepthSampler = false;
 					renderPass->renderPassChain.ImageViews.at(i) = texture.imageView;
 					renderPass->renderPassChain.Textures.at(i) = texture;
@@ -1134,8 +1149,7 @@ namespace engine
 			.width = (float)renderPass->renderPassChain.Extent.width,
 			.height = (float)renderPass->renderPassChain.Extent.height,
 			.minDepth = 0.0f,
-			.maxDepth = 1.0f
-		};
+			.maxDepth = 1.0f};
 
 		VkRect2D rect;
 		rect.extent.width = renderPass->renderPassChain.Extent.width;
@@ -1152,28 +1166,32 @@ namespace engine
 	{
 		auto mesh = meshPool.get(meshRef);
 
-		if (updateInfo.index_offset >= mesh->numIndices) {
+		if (updateInfo.index_offset >= mesh->numIndices)
+		{
 			IO::Error("Mesh index offset is bigger than buffer's index capacity\n\t", "buffer size: ", mesh->numIndices);
-			throw std::out_of_range(__PRETTY_FUNCTION__ ": index offset out of range");
+			// throw std::out_of_range(std::string(__PRETTY_FUNCTION__ ": index offset out of range"));
 		}
 
-		if (updateInfo.vertex_offset >= mesh->numVertices) {
+		if (updateInfo.vertex_offset >= mesh->numVertices)
+		{
 			IO::Error("Mesh vertex offset is bigger than buffer's vertex capacity\n\t", "buffer size: ", mesh->numVertices);
-			throw std::out_of_range(__PRETTY_FUNCTION__ ": vertex offset out of range");
+			// throw std::out_of_range(std::string(__PRETTY_FUNCTION__ ": vertex offset out of range"));
 		}
 
-		if (updateInfo.vertex_offset + updateInfo.vertex_size >= mesh->numVertices) {
+		if (updateInfo.vertex_offset + updateInfo.vertex_size >= mesh->numVertices)
+		{
 			IO::Error("Trying to allocate beyond vertex buffer's capacity\n\t", "buffer size: ", mesh->numVertices);
-			throw std::out_of_range(__PRETTY_FUNCTION__ ": vertex allocation out of range");
+			// throw std::out_of_range(std::string(__PRETTY_FUNCTION__ ": vertex allocation out of range"));
 		}
 
-		if (updateInfo.index_offset + updateInfo.index_size >= mesh->numIndices) {
+		if (updateInfo.index_offset + updateInfo.index_size >= mesh->numIndices)
+		{
 			IO::Error("Trying to allocate beyond index buffer's capacity\n\t", "buffer size: ", mesh->numVertices);
-			throw std::out_of_range(__PRETTY_FUNCTION__ ": index allocation out of range");
+			// throw std::out_of_range(std::string(__PRETTY_FUNCTION__ ": index allocation out of range"));
 		}
 
-		auto& vertices = updateInfo.vertices;
-		auto& indices = updateInfo.indices;
+		auto &vertices = updateInfo.vertices;
+		auto &indices = updateInfo.indices;
 
 		auto vertexBuffer = vertexBufferPool.get(mesh->vertexBuffer);
 		auto indexBuffer = indexBufferPool.get(mesh->indexBuffer);
@@ -1185,16 +1203,16 @@ namespace engine
 		auto indexStagingBuffer = pCreateStagingIndexBuffer(indices);
 
 		vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, vertexStagingBuffer.buffer, vertexBuffer->buffer,
-			updateInfo.vertex_offset * sizeof(common::Vertex), vertexOffset);
+					   updateInfo.vertex_offset * sizeof(common::Vertex), vertexOffset);
 
 		vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, indexStagingBuffer.buffer, indexBuffer->buffer,
-			updateInfo.index_size * sizeof(IndexType), indexOffset);
+					   updateInfo.index_size * sizeof(IndexType), indexOffset);
 
 		vmaDestroyBuffer(m_pAllocator, vertexStagingBuffer.buffer, vertexStagingBuffer.allocation);
 		vmaDestroyBuffer(m_pAllocator, indexStagingBuffer.buffer, indexStagingBuffer.allocation);
 	}
 
-	void VulkanResourceManager::CopyTexture(Ref<Texture> src, Ref<Texture> dst) {
-
+	void VulkanResourceManager::CopyTexture(Ref<Texture> src, Ref<Texture> dst)
+	{
 	}
 }

@@ -21,7 +21,8 @@
 
 namespace framework
 {
-    class ModelBase {
+    class ModelBase
+    {
     protected:
         std::string filename{};
         std::vector<framework::Mesh> mMeshes;
@@ -39,56 +40,58 @@ namespace framework
         glm::vec3 m_pMax = glm::vec3(-1000000.0);
 
     public:
-        ModelBase(const std::string& filename) : filename(filename){}
+        ModelBase(const std::string &filename) : filename(filename) {}
 
-        std::vector<framework::Mesh>& Meshes()
+        std::vector<framework::Mesh> &Meshes()
         {
             return mMeshes;
         }
 
-        const std::vector<common::AnimatedMesh>& AnimatedMeshes() {
+        const std::vector<common::AnimatedMesh> &AnimatedMeshes()
+        {
             return mAnimatedMeshes;
         }
 
-        virtual bool Load(const std::string& emlPath) = 0;
+        virtual bool Load(const std::string &emlPath) = 0;
 
-        Skeleton Skeleton() {
+        Skeleton getSkeleton()
+        {
             return m_pSkeleton;
         }
 
-        std::vector<Animation>& Animations() {
+        std::vector<Animation> &Animations()
+        {
             return m_pAnimations;
         }
 
-        bool HasAnimation() {
+        bool HasAnimation()
+        {
             return m_pHasAnimation;
         }
 
-        common::MIN_MAX_POINTS getMinMax() {
+        common::MIN_MAX_POINTS getMinMax()
+        {
             return MinMaxPoints;
         }
-
     };
 
     class Model : public ModelBase
     {
         using MeshType = framework::Mesh;
-    public:
 
+    public:
         Model(const std::string &path = "");
 
         common::BoundingBox getMeshBoundingBox(unsigned int index, glm::vec3 position, glm::vec3 scale, glm::quat rotation);
 
         /// Structure to store the models bounding box for visibility and collision computation
 
-
         long toHash()
         {
             return std::hash<std::string>{}(filename);
         }
 
-        bool Load(const std::string& emlPath) override;
-
+        bool Load(const std::string &emlPath) override;
     };
 
 } // namespace Epsilon

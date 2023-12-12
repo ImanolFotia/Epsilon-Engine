@@ -8,14 +8,15 @@ namespace Epsilon
     Epsilon::Epsilon(const std::string &appName)
     {
         m_ApplicationName = appName;
-        //engine::Context::getSingleton().Init(appName, engine::renderer_type::vulkan);
+        // engine::Context::getSingleton().Init(appName, engine::renderer_type::vulkan);
         m_pContext = std::make_shared<engine::Context>();
         m_pContext->Init(appName, engine::renderer_type::vulkan);
     }
 
     std::shared_ptr<engine::Context> Epsilon::getContext()
     {
-        if (m_pContext == nullptr) {
+        if (m_pContext == nullptr)
+        {
 
             m_pContext = std::make_shared<engine::Context>();
         }
@@ -65,10 +66,10 @@ namespace Epsilon
     void Epsilon::drawFrame(engine::Ref<engine::RenderPass> renderPassRef)
     {
         glm::vec3 vec;
-         m_pContext->Renderer()->Flush(renderPassRef, engine::DrawType::INDEXED);
-         m_pContext->Renderer()->End(vec);
-         m_pContext->Renderer()->Submit();
-         m_pContext->Renderer()->EndFrame();
+        m_pContext->Renderer()->Flush(renderPassRef, engine::DrawType::INDEXED);
+        m_pContext->Renderer()->End(vec);
+        m_pContext->Renderer()->Submit();
+        m_pContext->Renderer()->EndFrame();
     }
 
     void Epsilon::setOnCreate(std::function<void(void)> fun)
@@ -119,13 +120,14 @@ namespace Epsilon
             onRender();
         m_pContext->Window().PollEvents();
         m_pFrame++;
-        
+
         double max_fps = (double)m_pMaxFPS;
         double min_frametime = 1000000.0 / max_fps;
 
-        double accum =0;
+        double accum = 0;
 
-        while (accum < min_frametime) {
+        while (accum < min_frametime)
+        {
             double currentTime = framework::Clock::Now();
             accum += currentTime - llastTime;
             llastTime = currentTime;
@@ -162,23 +164,19 @@ namespace Epsilon
     {
         if (onExit)
             onExit();
-         m_pContext->Renderer()->Cleanup();
-         m_pContext->Window().cleanup();
-         m_pContext->CleanUp();
+        m_pContext->Renderer()->Cleanup();
+        m_pContext->Window().cleanup();
+        m_pContext->CleanUp();
     }
 
-    
-
-    inline framework::WindowSize Epsilon::getWindowDimensions()
+    framework::WindowSize Epsilon::getWindowDimensions()
     {
         int w, h;
-        return  m_pContext->Window().getSize();
+        return m_pContext->Window().getSize();
     }
 }
 
 #if BUILD_AS_LIBRARY == TRUE
-
-
 
 #ifndef BUILD_ANDROID
 #include <apis/vk/vk.hpp>
@@ -196,10 +194,10 @@ extern "C"
 
     static Epsilon::Epsilon instance;
 
-    EXPORT void EpsilonInit(const char* name)
+    EXPORT void EpsilonInit(const char *name)
     {
         std::cout << "Creating epsilon instance: " << name << std::endl;
-        //auto &instance = Epsilon::Epsilon::getSingleton();
+        // auto &instance = Epsilon::Epsilon::getSingleton();
         instance.m_ApplicationName = name;
     }
 
@@ -207,13 +205,13 @@ extern "C"
 #undef CreateWindow
 #endif
 
-    [[maybe_unused]] EXPORT void CreateWindow(const char* name, int w, int h)
+    [[maybe_unused]] EXPORT void CreateWindow(const char *name, int w, int h)
     {
         instance.getContext()->Window().init(name, w, h);
         instance.m_ApplicationName = name;
     }
 
-    EXPORT void CreateContext(const char* name, engine::renderer_type api)
+    EXPORT void CreateContext(const char *name, engine::renderer_type api)
     {
         instance.getContext()->Init(name, api);
     }
@@ -223,23 +221,23 @@ extern "C"
         instance.run();
     }
 
-    EXPORT std::shared_ptr<engine::Context> getContext() {
+    EXPORT std::shared_ptr<engine::Context> getContext()
+    {
         return instance.getContext();
     }
 
-    EXPORT void beginScene() {
+    EXPORT void beginScene()
+    {
         instance.getScene()->BeginScene();
     }
 
-    EXPORT void endScene() {
+    EXPORT void endScene()
+    {
         instance.getScene()->EndScene();
     }
-
 
 #ifdef __cplusplus
 };
 #endif
-
-
 
 #endif
