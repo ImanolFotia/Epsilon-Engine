@@ -19,24 +19,14 @@ namespace framework::splines {
 		glm::vec3 getPoint(float t) {
 
 			if (m_pControlPoints.size() < 4) return {};
-			glm::vec3 p0, p1, p2, p3;
 
 			if (!m_pLoop && t >= (float)m_pControlPoints.size() - 2.75) {
 				m_pEndOfPath = true;
 				return m_pControlPoints.at(m_pControlPoints.size()-1).position;
 			}
-			if (m_pLoop) {
-				p0 = m_pControlPoints.at((int)t >= 1 ? (int)t - 1 : m_pControlPoints.size() - 1).position;
-				p1 = m_pControlPoints.at((int)t).position;
-				p2 = m_pControlPoints.at(((int)t + 1) % m_pControlPoints.size()).position;
-				p3 = m_pControlPoints.at(((int)t + 2) % m_pControlPoints.size()).position;
-			}
-			else {
-				p0 = m_pControlPoints.at((int)t).position;
-				p1 = m_pControlPoints.at(((int)t + 1) % m_pControlPoints.size()).position;
-				p2 = m_pControlPoints.at(((int)t + 2) % m_pControlPoints.size()).position;
-				p3 = m_pControlPoints.at(((int)t + 3) % m_pControlPoints.size()).position;
-			}
+
+			CurrentSegment s = CalculateCurrentSegment(t);
+
 			t = glm::fract(t);
 
 			float t2 = t * t;
@@ -49,7 +39,7 @@ namespace framework::splines {
 
 			//return 0.5f * (glm::vec4(1.0f, t, t2, t3) * glm::mat4(glm::vec4(0.0f, 2.0f, 0.0f, 0.0f), glm::vec4(-1.0, 0.0, 1.0, 0.0), glm::vec4(2.0, -5.0, 4.0, -1.0), glm::vec4(-1.0, 3.0, -3.0, 1.0)) * glm::mat4(glm::vec4(p0, 0.0f), glm::vec4(p1, 0.0f), glm::vec4(p2, 0.0f), glm::vec4(p3, 0.0f)));
 
-			return (p0 * q0 + p1 * q1 + p2 * q2 + p3 * q3) * 0.5f;
+			return (s.p0 * q0 + s.p1 * q1 + s.p2 * q2 + s.p3 * q3) * 0.5f;
 		}
 
 		//derive the first function
@@ -102,13 +92,6 @@ namespace framework::splines {
 
 		}
 
-		glm::vec3 getLastPoint() {
-			return m_pControlPoints.back().position;
-		}
-
-		void Clear() {
-			m_pControlPoints.clear();
-		}
 
 	};
 }

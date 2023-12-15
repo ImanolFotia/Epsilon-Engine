@@ -4,24 +4,24 @@
 
 namespace framework::splines
 {
-    class CuadraticBezier : public Bezier<3>
+    class CuadraticBezier : public Spline
     {
     public:
-        CuadraticBezier() : Bezier<3>() {
-            type = DrawableType::CUADRATIC_BEZIER;
+        glm::vec3 getPoint(float t) {
+                vec3 a_b = lerp(P0, P1, t);
+                vec3 b_c = lerp(P1, P2, t);
+
+                return lerp(a_b, b_c, t);
         }
 
-        virtual void Update() override {}
+		glm::vec3 getGradient(float t) {
 
-        virtual void Render() override {}
+		}
 
-        virtual void Draw(std::shared_ptr<Shader> shader, bool force_draw = false, std::initializer_list<unsigned int> mesh_index_list = {}) override {}
-
-    private:
-        glm::vec3 P_lerp(ControlPoint P0, ControlPoint P1, ControlPoint P2, float t)
+        glm::vec3 lerp(glm::vec3 P0, glm::vec3 P1, glm::vec3 P2, float t)
         {
-            glm::vec3 a_b = interpolate(P0.position, P1.position, t);
-            glm::vec3 b_c = interpolate(P1.position, P2.position, t);
+            glm::vec3 a_b = interpolate(P0, P1, t);
+            glm::vec3 b_c = interpolate(P1, P2, t);
 
             return interpolate(a_b, b_c, t);
         }
@@ -30,5 +30,6 @@ namespace framework::splines
         {
             return (1.0f - t) * a + t * b;
         }
+
     };
 }

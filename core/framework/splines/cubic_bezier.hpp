@@ -4,54 +4,35 @@
 
 namespace framework::splines
 {
-    class CubicBezier : public Spline
-    {
-        using BezierSegment = CurveSegment<4>;
+	class CubicBezier : public Spline
+	{
+	public:
+		glm::vec3 getPoint(float t) {
+			if (m_pControlPoints.size() < 4) return {};
 
-    public:
-        CubicBezier() : Bezier<4>()
-        {
-            type = DrawableType::CUBIC_BEZIER;
-            mPoints.reserve(12);
-            addInitialSegment();
-            createSamplePoints(mNumSamplesPerSegment);
-            createGeometry();
-        }
+			CurrentSegment s = CalculateCurrentSegment(t);
 
-        virtual void Update() override {}
+			t = glm::fract(t);
 
-        std::vector<ControlPoint> getSamples();
+			float t2 = t * t;
 
-        glm::vec3 p_fderivative(ControlPoint P0, ControlPoint P1, ControlPoint P2, ControlPoint P3, float t);
-        
-        glm::vec3 p_sderivative(ControlPoint P0, ControlPoint P1, ControlPoint P2, ControlPoint P3, float t);
-        
-        uint32_t numSamples();
+			glm::vec3 q0 = (s.p1 - s.p0) * (3.0f * t2);
+			glm::vec3 q1 = (s.p2 - s.p1) * (6.0f * t * (1.0f - t));
+			glm::vec3 q2 = (s.p3 - s.p2) * (3.0f * t2);
 
-        uint32_t numSamplesPerSegment();
-    private:
-        void addInitialSegment();
+			return q0 + q1 + q2;
+		}
 
-        void createGeometry();
-        
-        void updateGeometry();
+		glm::vec3 getGradient() {
 
-        void createSamplePoints(int numSamples);
+			if (m_pControlPoints.size() < 4) return {};
 
-        glm::vec3 P_lerp(ControlPoint P0, ControlPoint P1, ControlPoint P2, ControlPoint P3, float t);
+			CurrentSegment s = CalculateCurrentSegment(t);
 
-        glm::vec3 p_polinomial(ControlPoint P0, ControlPoint P1, ControlPoint P2, ControlPoint P3, float t);
+			t = glm::fract(t);
 
-        glm::vec3 interpolate(glm::vec3 a, glm::vec3 b, float t);
-        
-        void addSegment(ControlPoint p0, ControlPoint p1, ControlPoint p2, ControlPoint p3);
-
-        void concatenateSegment(ControlPoint p2, ControlPoint p3);
-
-
-    private:
-        std::vector<ControlPoint> mSamples;
-        uint32_t mNumSamples = 0;
-        const uint32_t mNumSamplesPerSegment = 30;
-    };
+			return (s.p2 - 2.0f * s.p1 + s.p0) * (6.0f * (1.0f - t)) +
+				   (s.p3 - 2.0f * s.p2 + s.p1) * (6.0f * t);
+		}
+	};
 };
