@@ -176,6 +176,7 @@ namespace engine
 
 	Ref<Buffer> VulkanResourceManager::pFetchVertexBuffer(uint32_t numVertices, size_t vertexSize)
 	{
+		
 		for (auto &bufferRef : vertexBufferReferences)
 		{
 			auto buffer = vertexBufferPool.get(bufferRef);

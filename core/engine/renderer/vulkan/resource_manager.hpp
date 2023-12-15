@@ -4,6 +4,8 @@
 #include "core/engine/renderer/resource_manager.hpp"
 #include "apis/vk/vk.hpp"
 
+#include "../resource_cache.hpp"
+
 namespace engine
 {
 
@@ -196,5 +198,9 @@ namespace engine
 		uint32_t indexBufferCount = 0;
 		std::vector<vk::VulkanBuffer> m_pIndirectBuffer;
 		vk::VulkanBuffer m_pMaterialBuffer;
+
+		ResourceCache m_pVertexCache;
+		ResourceCache m_pIndexCache;
+		ResourceCache m_pTextureCache;
 	};
 }
