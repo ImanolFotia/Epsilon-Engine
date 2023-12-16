@@ -116,6 +116,19 @@ namespace engine
 		bool isInstanced = false;
 		bool visible = false;
 		bool loaded = false;
+
+		Box getBox(glm::mat4 transform) {
+
+			Box box;
+
+			common::MIN_MAX_POINTS minmax(min_max_points.Min(), min_max_points.Max());
+			minmax.transform(transform);
+
+			box.size = minmax.getSize();
+			box.position = minmax.Min();
+
+			return box;
+		}
 	};
 
 	struct ShaderAsset

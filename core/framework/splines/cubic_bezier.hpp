@@ -30,9 +30,10 @@ namespace framework::splines
 			CurrentSegment s = CalculateCurrentSegment(t);
 
 			t = glm::fract(t);
+			glm::vec3 q0 = (s.p2 - 2.0f * s.p1 + s.p0) * (6.0f * (1.0f - t));
+			glm::vec3 q1 = (s.p3 - 2.0f * s.p2 + s.p1) * (6.0f * t);
 
-			return (s.p2 - 2.0f * s.p1 + s.p0) * (6.0f * (1.0f - t)) +
-				   (s.p3 - 2.0f * s.p2 + s.p1) * (6.0f * t);
+			return q0 + q1;
 		}
 	};
 };
