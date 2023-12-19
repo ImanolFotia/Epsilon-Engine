@@ -34,9 +34,9 @@ namespace framework
     namespace Input
     {
 
-        enum STATE
+        enum STATE : uint32_t
         {
-            PRESSED,
+            PRESSED = 1,
             RELEASED,
             UP,
             DOWN,

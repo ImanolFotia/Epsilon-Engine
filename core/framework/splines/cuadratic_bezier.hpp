@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Bezier.hpp"
+#include "spline.hpp"
 
 namespace framework::splines
 {
@@ -8,14 +8,25 @@ namespace framework::splines
     {
     public:
         glm::vec3 getPoint(float t) {
-                vec3 a_b = lerp(P0, P1, t);
-                vec3 b_c = lerp(P1, P2, t);
 
-                return lerp(a_b, b_c, t);
+            CurrentSegment s = CalculateCurrentSegment(t);
+            /*
+                glm::vec3 a_b = interpolate(s.p0, s.p1, t);
+                glm::vec3 b_c = interpolate(s.p1, s.p2, t);
+
+                return interpolate(a_b, b_c, t);
+        */
+
+            float t2 = t * t;
+
+            return -t2 * s.p0 + 2.0f * -t * t * s.p1 + t2 * s.p2;
         }
 
 		glm::vec3 getGradient(float t) {
 
+            CurrentSegment s = CalculateCurrentSegment(t);
+
+            return  -2.0f * t * s.p0 + -2.0f * s.p1 + 2.0f * t * s.p2;
 		}
 
         glm::vec3 lerp(glm::vec3 P0, glm::vec3 P1, glm::vec3 P2, float t)
