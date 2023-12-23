@@ -9,25 +9,25 @@
 namespace vk
 {
 
-    static VkShaderStageFlags getStageFlag(engine::ShaderStage stage) {
-        VkShaderStageFlags outputStage{};
+    static VkShaderStageFlagBits getStageFlag(engine::ShaderStage stage) {
+        VkShaderStageFlagBits outputStage{};
         if (static_cast<bool>(stage & engine::ShaderStage::VERTEX)) {
-            outputStage = outputStage | VK_SHADER_STAGE_VERTEX_BIT;
+            outputStage = VkShaderStageFlagBits(outputStage | VK_SHADER_STAGE_VERTEX_BIT);
         }
         if (static_cast<bool>(stage & engine::ShaderStage::FRAGMENT)) {
-            outputStage = outputStage | VK_SHADER_STAGE_FRAGMENT_BIT;
+            outputStage = VkShaderStageFlagBits(outputStage | VK_SHADER_STAGE_FRAGMENT_BIT);
         }
         if (static_cast<bool>(stage & engine::ShaderStage::COMPUTE)) {
-            outputStage = outputStage | VK_SHADER_STAGE_COMPUTE_BIT;
+            outputStage = VkShaderStageFlagBits(outputStage | VK_SHADER_STAGE_COMPUTE_BIT);
         }
         if (static_cast<bool>(stage & engine::ShaderStage::TESSELLATION_EVALUATION)) {
-            outputStage = outputStage | VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
+            outputStage = VkShaderStageFlagBits(outputStage | VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT);
         }
         if (static_cast<bool>(stage & engine::ShaderStage::TESSELLATION_CONTROL)) {
-            outputStage = outputStage | VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+            outputStage = VkShaderStageFlagBits(outputStage | VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT);
         }
         if (static_cast<bool>(stage & engine::ShaderStage::GEOMETRY)) {
-            outputStage = outputStage | VK_SHADER_STAGE_GEOMETRY_BIT;
+            outputStage = VkShaderStageFlagBits(outputStage | VK_SHADER_STAGE_GEOMETRY_BIT);
         }/*
         if (static_cast<bool>(stage & engine::ShaderStage::MESH)) {
             outputStage = outputStage | VK_SHADER_STAGE_MESH_BIT_EXT;
@@ -69,14 +69,14 @@ namespace vk
         return samplerLayoutBinding;
     }
 
-    static VkDescriptorSetLayoutBinding createImageStorageBinding(int bind, int descriptorCount = 1, VkShaderStageFlagBits stage = VK_SHADER_STAGE_FRAGMENT_BIT)
+    static VkDescriptorSetLayoutBinding createImageStorageBinding(int bind, int descriptorCount = 1, VkShaderStageFlagBits stage = VkShaderStageFlagBits(VK_SHADER_STAGE_FRAGMENT_BIT | VK_SHADER_STAGE_COMPUTE_BIT))
     {
         VkDescriptorSetLayoutBinding samplerLayoutBinding{};
         samplerLayoutBinding.binding = bind;
         samplerLayoutBinding.descriptorCount = descriptorCount;
         samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
         samplerLayoutBinding.pImmutableSamplers = nullptr;
-        samplerLayoutBinding.stageFlags = stage;
+        samplerLayoutBinding.stageFlags = VkShaderStageFlagBits(VK_SHADER_STAGE_FRAGMENT_BIT | VK_SHADER_STAGE_COMPUTE_BIT);
         return samplerLayoutBinding;
     }
     static void createDescriptorSetLayout(const VulkanData &vkData, VkDescriptorSetLayout &descriptorSetLayout, std::vector<engine::UniformBindingInfo> layoutBindings)
@@ -88,17 +88,17 @@ namespace vk
             any_bindless |= binding.bindless;
             if (binding.type == engine::UniformBindingType::UNIFORM_BUFFER)
             {
-                bindings.push_back(createUboBinding(binding.binding));
+                bindings.push_back(createUboBinding(binding.binding, getStageFlag(binding.stage)));
             }
             else if (binding.type == engine::UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER)
             {
-                bindings.push_back(createTextureBinding(binding.binding, binding.descriptorCount));
+                bindings.push_back(createTextureBinding(binding.binding, binding.descriptorCount, getStageFlag(binding.stage)));
             }
             else if (binding.type == engine::UniformBindingType::SHADER_STORAGE) {
-                bindings.push_back(createSSBOBinding(binding.binding));
+                bindings.push_back(createSSBOBinding(binding.binding, getStageFlag(binding.stage)));
             }
             else if (binding.type == engine::UniformBindingType::STORAGE_IMAGE) {
-                bindings.push_back(createImageStorageBinding(binding.binding));
+                bindings.push_back(createImageStorageBinding(binding.binding, getStageFlag(binding.stage)));
             }
         }
         // std::array<VkDescriptorSetLayoutBinding, 2> bindings = {uboLayoutBinding, samplerLayoutBinding};

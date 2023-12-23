@@ -171,6 +171,15 @@ namespace vk
             sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
             destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
         }
+        else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED &&
+            newLayout == VK_IMAGE_LAYOUT_GENERAL)
+        {
+            barrier.srcAccessMask = 0;
+            barrier.dstAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
+
+            sourceStage = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
+            destinationStage = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
+        }
         else
         {
             throw std::invalid_argument("unsupported layout transition!");
