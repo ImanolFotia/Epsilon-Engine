@@ -103,12 +103,14 @@ namespace Editor::Renderpasses {
 					.size = 385,
 					.offset = 0,
 					.binding = 0,
-					.type = engine::UniformBindingType::UNIFORM_BUFFER},
+					.type = engine::UniformBindingType::UNIFORM_BUFFER
+				},
 				{
 					.size = sizeof(TAAUniformData),
 					.offset = 0,
 					.binding = 1,
-					.type = engine::UniformBindingType::UNIFORM_BUFFER},
+					.type = engine::UniformBindingType::UNIFORM_BUFFER
+				},
 				{
 
 					.size = 0,

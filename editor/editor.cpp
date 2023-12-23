@@ -202,12 +202,12 @@ namespace Editor {
 
 
 
-		m_pScene->getAssetManager().addTexture("textures/radiance2.dds", {
+		m_pScene->getAssetManager().addTexture("textures/radiance.dds", {
 			.format = engine::TextureFormat::COLOR_RGBA,
 			.wrapMode = engine::CLAMP_TO_EDGE,
 			.filtering = engine::LINEAR
 			});
-		m_pScene->getAssetManager().addTexture("textures/irradiance2.dds", {
+		m_pScene->getAssetManager().addTexture("textures/irradiance.dds", {
 			.format = engine::TextureFormat::COLOR_RGBA,
 			.wrapMode = engine::CLAMP_TO_EDGE,
 			.filtering = engine::LINEAR
@@ -443,7 +443,7 @@ namespace Editor {
 
 		m_pScene->BeginScene();
 
-		m_pScene->getContext()->Renderer()->ComputeDispatch(m_pComputeShader);
+		//m_pScene->getContext()->Renderer()->ComputeDispatch(m_pComputeShader);
 
 		m_pScene->setCurrentRenderPass("Forward");
 
