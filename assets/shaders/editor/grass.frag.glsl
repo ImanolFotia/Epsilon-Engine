@@ -156,7 +156,7 @@ void main() {
 
     float lod = perceptualRoughnessToLod(perceptualRoughness);
 
-    lod =  clamp(lod, 0, 5.999);
+    lod =  clamp(lod, 0, 4.999);
 
     vec3 radiance0 = textureLod(textures[0], SampleSphericalMap(-normalize(ref)), floor(lod)).rgb;
     vec3 radiance1 = textureLod(textures[0], SampleSphericalMap(-normalize(ref)), ceil(lod)).rgb;

@@ -84,7 +84,7 @@ float perceptualRoughnessToLod(float perceptualRoughness) {
     // The mapping below is a quadratic fit for log2(perceptualRoughness)+iblRoughnessOneLevel when
     // iblRoughnessOneLevel is 4. We found empirically that this mapping works very well for
     // a 256 cubemap with 5 levels used. But also scales well for other iblRoughnessOneLevel values.
-    return 6 * perceptualRoughness * (2.0 - perceptualRoughness);
+    return 5 * perceptualRoughness * (2.0 - perceptualRoughness);
 }
 float F0_from_ior(float eta)
 {
@@ -142,7 +142,7 @@ void main() {
 
     float lod = perceptualRoughnessToLod(perceptualRoughness);
 
-    lod =  clamp(lod, 0, 5.999);
+    lod =  clamp(lod, 0, 4.999);
 
     vec3 radiance0 = textureLod(textures[0], SampleSphericalMap(-normalize(ref)), floor(lod)).rgb;
     vec3 radiance1 = textureLod(textures[0], SampleSphericalMap(-normalize(ref)), ceil(lod)).rgb;
