@@ -647,11 +647,11 @@ namespace engine
 			return push_index;
 		}
 
-		void ComputeDispatch(engine::Ref<ComputeShader> computeShader)
+		void ComputeDispatch(engine::Ref<ComputeShader> computeShader, Ref<BindGroup> bindGroup)
 		{
 
 			auto renderer = m_pContext->Renderer();
-			renderer->ComputeDispatch(computeShader);
+			renderer->ComputeDispatch(computeShader, bindGroup);
 		}
 
 		void EndScene()
