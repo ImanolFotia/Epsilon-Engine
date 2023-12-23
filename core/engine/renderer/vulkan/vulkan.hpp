@@ -109,7 +109,7 @@ namespace engine
 
         void InitDebugRenderer() override;
 
-        void ComputeDispatch(Ref<ComputeShader>) override;
+        void ComputeDispatch(Ref<ComputeShader>, Ref<BindGroup>) override;
 
     private:
         void pRecreateSwapChain();

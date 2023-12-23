@@ -217,7 +217,7 @@ namespace engine
 		}
 	}
 
-	void VulkanRenderer::ComputeDispatch(Ref<ComputeShader> computeShaderRef)
+	void VulkanRenderer::ComputeDispatch(Ref<ComputeShader> computeShaderRef, Ref<BindGroup> bindGroup)
 	{
 		auto computeShader = m_pResourceManagerRef->computeShaderPool.get(computeShaderRef);
 
@@ -230,12 +230,14 @@ namespace engine
 		}
 
 		vkCmdBindPipeline(m_pFrame.ComputeCommandBuffer(), VK_PIPELINE_BIND_POINT_COMPUTE, computeShader->pipeline.computePipeline);
-		/*
+		
+		auto bg = m_pResourceManagerRef->materialPool.get(bindGroup);
+
 		vkCmdBindDescriptorSets(m_pFrame.ComputeCommandBuffer(),
 			VK_PIPELINE_BIND_POINT_COMPUTE,
 			computeShader->pipeline.pipelineLayout, 0, 1,
-			&computeShader->pipeline.descriptorSets[m_pCurrentFrame], 0, 0);
-		*/
+			&bg->descriptorSets[m_pCurrentFrame], 0, 0);
+
 		vkCmdDispatch(m_pFrame.ComputeCommandBuffer(), computeShader->groupCountX, computeShader->groupCountY, computeShader->groupCountZ);
 
 		if (vkEndCommandBuffer(m_pFrame.ComputeCommandBuffer()) != VK_SUCCESS)

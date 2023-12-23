@@ -90,9 +90,12 @@ namespace engine
 		{
 			if (!texInfo.isCompressed)
 				texInfo.mipLevels = mipLevels;
-		}
 
-		auto stagingBuffer = pCreateStagingTextureBuffer(texInfo.pixels, texInfo);
+			if (texInfo.generateMipMaps == false) {
+				texInfo.mipLevels = 1;
+				mipLevels = 1;
+			}
+		}
 
 		auto texture = pCreateTextureBuffer({
 			.width = texInfo.width,
@@ -101,27 +104,37 @@ namespace engine
 			.mipLevels = mipLevels,
 			.arrayLayers = texInfo.numLayers,
 			.format = format,
-			.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT |
-					 VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
-					 VK_IMAGE_USAGE_SAMPLED_BIT,
+			.usage = (texInfo.storage_image ? VK_IMAGE_USAGE_TRANSFER_DST_BIT : 0u) |
+					 (texInfo.storage_image ? VK_IMAGE_USAGE_TRANSFER_SRC_BIT : 0u) |
+					 VK_IMAGE_USAGE_SAMPLED_BIT | 
+					 (texInfo.storage_image ? VK_IMAGE_USAGE_STORAGE_BIT : 0u),
 			});
 
 		texture.format = format;
 		texture.name = texInfo.name;
 
-		transitionImageLayout(*m_pVkDataPtr, m_pTransferCommandPool, texture.image,
-			format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-			texture.info, 0, texInfo.mipLevels);
-		copyBufferToImage(*m_pVkDataPtr, m_pTransferCommandPool, stagingBuffer.buffer, texture.image,
-			static_cast<uint32_t>(texInfo.width), static_cast<uint32_t>(texInfo.height), texInfo.offsets, texInfo.mipLevels);
+		if (texInfo.pixels != nullptr) {
+			auto stagingBuffer = pCreateStagingTextureBuffer(texInfo.pixels, texInfo);
 
-		transitionImageLayout(*m_pVkDataPtr, m_pTransferCommandPool, texture.image,
-			format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-			VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, texture.info, 0, texInfo.mipLevels);
+			transitionImageLayout(*m_pVkDataPtr, m_pTransferCommandPool, texture.image,
+				format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+				texture.info, 0, texInfo.mipLevels);
+			copyBufferToImage(*m_pVkDataPtr, m_pTransferCommandPool, stagingBuffer.buffer, texture.image,
+				static_cast<uint32_t>(texInfo.width), static_cast<uint32_t>(texInfo.height), texInfo.offsets, texInfo.mipLevels);
 
-		vmaDestroyBuffer(m_pAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
-		// vmaFreeMemory(m_pAllocator, m_pStagingTextureBuffer.allocation);
+			transitionImageLayout(*m_pVkDataPtr, m_pTransferCommandPool, texture.image,
+				format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+				VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, texture.info, 0, texInfo.mipLevels);
 
+			vmaDestroyBuffer(m_pAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
+			// vmaFreeMemory(m_pAllocator, m_pStagingTextureBuffer.allocation);
+		}
+		else {
+
+			transitionImageLayout(*m_pVkDataPtr, m_pTransferCommandPool, texture.image,
+				format, VK_IMAGE_LAYOUT_UNDEFINED,
+				VK_IMAGE_LAYOUT_GENERAL, texture.info, 0, texInfo.mipLevels);
+		}
 		texture.filter = resolveFilter(texInfo.filtering);
 
 		texture.info.mipLevels = mipLevels;
@@ -145,7 +158,7 @@ namespace engine
 		texture.index = ref.m_pIndex;
 		texPool.get(ref)->index = ref.m_pIndex;
 
-		if (m_pVkDataPtr->bindless_supported)
+		if (m_pVkDataPtr->bindless_supported && !texInfo.storage_image)
 		{
 			int count = 1;
 			VkWriteDescriptorSet bindless_descriptor_writes;
@@ -224,14 +237,15 @@ namespace engine
 			}
 			// auto &materialdata = m_pMaterials.emplace_back();
 
-			for (auto& binding : material.inputs)
+			if (renderPass)
 			{
-				auto pass = renderPassPool.get(std::hash<std::string>{}(binding.renderPass));
-				vkMaterial.slots++;
-				if (binding.index == pass->renderPassChain.Textures.size())
+				for (auto& binding : material.inputs)
 				{
+					auto pass = renderPassPool.get(std::hash<std::string>{}(binding.renderPass));
+					vkMaterial.slots++;
+
 					vk::VulkanShaderBinding shaderBinding = {
-						.texture = pass->renderPassChain.DepthTexture,
+						.texture = binding.index == pass->renderPassChain.Textures.size() ? pass->renderPassChain.DepthTexture : pass->renderPassChain.Textures.at(binding.index),
 						.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 						.bindingPoint = binding.bindingPoint,
 						.isRenderPassAttachment = true,
@@ -241,16 +255,24 @@ namespace engine
 					shaderBinding.texture.isDepthAttachment = true;
 
 					vkMaterial.shaderBindings.push_back(shaderBinding);
+
 				}
-				else
+			}
+			else {
+				for (auto& binding : material.inputs)
 				{
+					auto pass = renderPassPool.get(std::hash<std::string>{}(binding.renderPass));
+					vkMaterial.slots++;
+
 					vk::VulkanShaderBinding shaderBinding = {
-						.texture = pass->renderPassChain.Textures.at(binding.index),
+						.texture = binding.index == pass->renderPassChain.Textures.size() ? pass->renderPassChain.DepthTexture : pass->renderPassChain.Textures.at(binding.index),
 						.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 						.bindingPoint = binding.bindingPoint,
 						.isRenderPassAttachment = true,
 						.renderpass = binding.renderPass,
 						.attachment_index = (int32_t)binding.index };
+
+					shaderBinding.texture.isDepthAttachment = true;
 
 					vkMaterial.shaderBindings.push_back(shaderBinding);
 				}
@@ -265,6 +287,18 @@ namespace engine
 					vk::VulkanShaderBinding shaderBinding = {
 						.texture = *texPool.get(tex),
 						.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+						.bindingPoint = binding.binding,
+						.isRenderPassAttachment = false };
+
+					vkMaterial.shaderBindings.push_back(shaderBinding);
+				}
+				else if (binding.type == UniformBindingType::STORAGE_IMAGE)
+				{
+					vkMaterial.slots++;
+					auto tex = texPool.get(std::hash<std::string>{}(binding.texture)); //createTexture(binding.textureInfo);
+					vk::VulkanShaderBinding shaderBinding = {
+						.texture = *tex, //*texPool.get(tex),
+						.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_STORAGE_IMAGE,
 						.bindingPoint = binding.binding,
 						.isRenderPassAttachment = false };
 
@@ -1105,6 +1139,8 @@ namespace engine
 		computeShader.groupCountY = computeInfo.groupCountY;
 		computeShader.groupCountZ = computeInfo.groupCountZ;
 		vk::createComputePipeline(*m_pVkDataPtr, computeInfo, computeShader);
+
+
 		auto ref = computeShaderPool.insert(computeInfo.name, computeShader);
 		return ref;
 	}
