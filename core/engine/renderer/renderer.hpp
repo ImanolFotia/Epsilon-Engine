@@ -105,7 +105,7 @@ namespace engine
 
         virtual void SetVSync(bool) = 0;
 
-        virtual void ComputeDispatch(Ref<ComputeShader>) = 0;
+        virtual void ComputeDispatch(Ref<ComputeShader>, Ref<BindGroup>) = 0;
 
     public:
         /**

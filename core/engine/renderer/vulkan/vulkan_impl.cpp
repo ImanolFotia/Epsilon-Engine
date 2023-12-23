@@ -489,6 +489,47 @@ namespace engine
 					descriptorWrites[index].pImageInfo = nullptr;		// Optional
 					descriptorWrites[index].pTexelBufferView = nullptr; // Optional
 				}
+				else if (binding.descriptorBinding == VK_DESCRIPTOR_TYPE_STORAGE_IMAGE)
+				{
+
+					auto& imageInfo = imageInfos.emplace_back();
+
+					imageInfo.imageLayout = VK_IMAGE_LAYOUT_GENERAL;//binding.texture.isDepthAttachment ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+					//imageInfo.imageLayout = binding.texture.format == VK_FORMAT_D32_SFLOAT ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : imageInfo.imageLayout;
+
+					binding.texture.imageLayout = imageInfo.imageLayout;
+					if (!binding.renderpass.empty())
+					{
+						auto pass = renderPassPool.get(std::hash<std::string>{}(binding.renderpass));
+
+						if (binding.attachment_index == pass->renderPassChain.Textures.size())
+						{
+							if (pass->id == std::numeric_limits<uint32_t>::max())
+							{
+								binding.texture = m_pVkDataPtr->defaultRenderPass.renderPassChain.DepthTexture;
+							}
+							else
+							{
+								binding.texture = pass->renderPassChain.DepthTexture;
+							}
+						}
+						else
+						{
+							binding.texture = pass->renderPassChain.Textures.at(binding.attachment_index);
+						}
+					}
+
+					imageInfo.imageView = binding.texture.imageView;
+					imageInfo.sampler = binding.texture.sampler;
+
+					descriptorWrites[index].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+					descriptorWrites[index].dstSet = material.descriptorSets[i];
+					descriptorWrites[index].dstBinding = binding.bindingPoint;
+					descriptorWrites[index].dstArrayElement = 0;
+					descriptorWrites[index].descriptorType = binding.descriptorBinding;
+					descriptorWrites[index].descriptorCount = 1;
+					descriptorWrites[index].pImageInfo = &imageInfo;
+				}
 
 				j++;
 			}
@@ -702,6 +743,9 @@ namespace engine
 									   blitCommandBuffer,
 									   mipSubRange, i, 1);
 			}
+		}
+		else {
+			return;
 		}
 
 		// After the loop, all mip layers are in TRANSFER_SRC layout, so transition all to SHADER_READ

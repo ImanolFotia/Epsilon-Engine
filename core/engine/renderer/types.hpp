@@ -300,6 +300,7 @@ namespace engine
         uint32_t mipLevels = 1;
         std::vector<size_t> offsets;
         size_t size{};
+        bool storage_image = false;
         unsigned char *pixels = nullptr;
     };
 
@@ -505,7 +506,7 @@ namespace engine
         std::string buffer;
         bool bindless = false;
         uint32_t descriptorCount = 1;
-        ShaderStage stage;
+        ShaderStage stage = ShaderStage::FRAGMENT | ShaderStage::VERTEX;
         std::string name;
     };
 
