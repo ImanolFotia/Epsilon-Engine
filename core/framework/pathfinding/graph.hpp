@@ -79,56 +79,6 @@ namespace framework {
 			auto inRange = [this](uint32_t x, uint32_t y) {
 				return x >= 0 && x < m_pSizeX && y >= 0 && y < m_pSizeY;
 			};
-			/*
-			for (int x = 0; x < m_pSizeX; x++) {
-				for (int y = 0; y < m_pSizeY; y++) {
-					DataType data = {x, y};
-					m_pNodeData.push_back(data);
-
-					//auto hash = getHash(key);
-					//m_pNodes[x * m_pSizeX + y] = {};
-
-					auto& current = m_pNodes.at(x * m_pSizeX + y);
-					current.data(std::prev(m_pNodeData.end()));
-
-					if (inRange(x - 1, y)) {
-						auto key = (x - 1) * m_pSizeX + y;
-						auto it = m_pNodes.find(key);
-						if (it == m_pNodes.end()) {
-							m_pNodes[key] = {};
-							it = m_pNodes.find(key);
-						}
-						current.push_back(it);
-					}
-					if (inRange(x + 1, y)) {
-						auto key = (x + 1) * m_pSizeX + y;
-						auto it = m_pNodes.find(key);
-						if (it == m_pNodes.end()) {
-							m_pNodes[key] = {};
-							it = m_pNodes.find(key);
-						}
-						current.push_back(it);
-					}
-					if (inRange(x, y - 1)) {
-						auto key = x * m_pSizeX + y - 1;
-						auto it = m_pNodes.find(key);
-						if (it == m_pNodes.end()) {
-							m_pNodes[key] = {};
-							it = m_pNodes.find(key);
-						}
-						current.push_back(it);
-					}
-					if (inRange(x, y + 1)) {
-						auto key = x * m_pSizeX + y + 1;
-						auto it = m_pNodes.find(key);
-						if (it == m_pNodes.end()) {
-							m_pNodes[key] = {};
-							it = m_pNodes.find(key);
-						}
-						current.push_back(it);
-					}
-				}
-			}*/
 		}
 	public:
 
