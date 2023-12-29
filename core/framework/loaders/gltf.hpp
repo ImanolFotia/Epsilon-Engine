@@ -747,6 +747,7 @@ namespace framework
 					parent_transform = tmpMesh.transform;
 					const auto meshTransform = tmpMesh.transform;
 					auto &currentMesh = this->mMeshes.emplace_back(); // at(index);
+					currentMesh.setName(tmpMesh.mesh.name);
 					mAnimatedMeshes.emplace_back();
 					unsigned currentvOffset = 0;
 					unsigned currentiOffset = 0;

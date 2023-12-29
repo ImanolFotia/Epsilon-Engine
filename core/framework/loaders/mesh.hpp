@@ -174,6 +174,10 @@ namespace framework
             }
         }
 
+        void setName(std::string name) {
+            m_pName = name;
+        }
+
     private:
         std::string m_pName{};
         glm::mat4 m_pLocalTransform{};

@@ -91,6 +91,7 @@ namespace engine
 	struct RenderMesh
 	{
 		unsigned int id = 0;
+		std::string name{};
 		Ref<Mesh> mesh{};
 		Ref<BindGroup> bind_group{};
 		std::size_t material_keys[4];
@@ -149,6 +150,7 @@ namespace engine
 		float outerRadius{};
 		float padding;
 	};
+
 
 	struct ShaderAsset
 	{
