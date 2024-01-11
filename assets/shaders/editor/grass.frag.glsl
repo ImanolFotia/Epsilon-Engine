@@ -122,9 +122,9 @@ void main() {
 
     //vec3 diffuseColor = (1.0 - metallic) * Albedo.rgb;
 
-    if(gl_FrontFacing == false) {
-        Normal *= -1.0;
-    }
+    //if(gl_FrontFacing == false) {
+    //    Normal *= -1.0;
+    //}
 
     float alpha = Albedo.a;
     float newAlpha = alpha * fAlphaMultiplier;

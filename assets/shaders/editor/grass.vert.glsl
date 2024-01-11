@@ -79,14 +79,18 @@ void main() {
     
     vec3 clouds = fbm(instance_pos.xz*0.8 + iTime * 0.5, 2) * vec3(1.0) * 2.0 - 1.0;
     vec3 clouds2 = fbm(instance_pos.xz*0.1 - iTime*3.0, 2) * vec3(fract(gl_InstanceIndex/1000)) * 2.0 - 1.0;
+    
+    vec3 height = fbm(instance_pos.xz*0.1 - 3.0, 2);
 
     clouds2 = clamp(clouds2, -1.5, 1.5);
+
 
     vec4 pos = RenderPassUBO.data.proj * RenderPassUBO.data.view * modelMatrix * vec4(inPosition, 1.0);
     vec3 vPos = vec3(RenderPassUBO.data.view[3][0], RenderPassUBO.data.view[3][1], RenderPassUBO.data.view[3][2]);
     vec3 viewDir = normalize(pos.xyz - vPos);//vec3(RenderPassUBO.data.view[2][0], RenderPassUBO.data.view[2][1], RenderPassUBO.data.view[2][2]);
 
     vec3 normal = normalize(mat3(modelMatrix) * inNormal);
+    vec3 tangent = inTangent;
 
     float invCosTheta = 1.0-abs(dot(normal.xz, viewDir.xz));
     
@@ -97,22 +101,19 @@ void main() {
 
     vec3 curve = cuadratic_bezier(P0, P1, P2, newPos.y);//bezier(P0, P1, P2, P3, 1.0-newPos.y);
 
+
     normal = inNormal;
-    normal.yz = rot((sin(clouds.x+0.15)*1.5) + clouds2.x * 0.05)* normal.yz;//rot(clouds.x+hash13(instance_pos)* inPosition.y) * normal.yz;
-    //normal.yz = curve.yz* normal.yz; //(rot(clouds2.x) ) * normal.yz;
-    
-    vec3 tangent = inTangent;
-    tangent.yz = rot(clouds.x+hash13(instance_pos)* inPosition.y) * tangent.yz;
-    tangent.yz = rot((sin(clouds.x+0.15)*1.5) + clouds2.x * 0.05)* tangent.yz;//curve.yz * tangent.yz;//(rot(clouds2.x) ) * tangent.yz;
-
-    vec3 bitangent = normalize(cross(normal, tangent)); 
-
-
     newPos.yz = curve.yz;//(rot(/*clouds.x+hash13(instance_pos)* inPosition.y*/curve.y) ) * newPos.yz;
     //newPos.yz = (rot(clouds2.x) ) * newPos.yz;
     //newPos.xz += clouds2.xz;
 
+    newPos.y *= clamp(height.x*3.0, 1.0, 1.3);
     newPos.z += clamp((invCosTheta*newPos.x), 0.0, .5);
+
+    normal.yz =  curve.yz;
+    tangent.yz =  curve.yz;
+    
+    vec3 bitangent = normalize(cross(normal, tangent)); 
 
     vec4 worldPos = modelMatrix * vec4(newPos, 1.0);
     
