@@ -299,7 +299,7 @@ public:
 	{
 		// Create default descriptor pool
 		vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool, nullptr);
-		framework::StaticArray<VkDescriptorPoolSize, 11> poolSizes =
+		std::array<VkDescriptorPoolSize, 11> poolSizes =
 			{{{VK_DESCRIPTOR_TYPE_SAMPLER, 1000},
 			  {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000},
 			  {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000},
@@ -523,19 +523,22 @@ public:
 			///////// USER INPUT BEGINS HERE
 			if (/*m_pShowDebugPerformance*/ true)
 			{
-				ImGui::SetNextWindowPos(ImVec2(10, 30));
-				ImGui::Begin("Info", nullptr, ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize);
+				static bool show_graph = false;
+				ImGui::SetNextWindowPos(ImVec2(10, 120));
+				ImGui::Begin("Info", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize);
 				ImGui::Text("Timings:");
 				ImGui::BulletText("Framerate %.1f FPS", ImGui::GetIO().Framerate);
 				ImGui::BulletText("frametime %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
 				ImGui::BulletText("Draw calls: %i", resources.numDrawCalls);
-				// static float frametime_values[1000] = {};
-				// static int frametime_values_offset = 0;
-
-				// frametime_values_offset = (frametime_values_offset + 1) % IM_ARRAYSIZE(frametime_values);
-				// frametime_values[frametime_values_offset] = 1000.0 / ImGui::GetIO().Framerate;
-				// SparkLine("Frametime", "Frametime", frametime_values, 1000, 0.5, 16.0, frametime_values_offset, ImVec4(1.0, 1.0, 1.0, 1.0), ImVec2(200, 50));
-
+				ImGui::BulletText("Num Vertices: %i", resources.numVertices);
+				ImGui::Checkbox("Show graph", &show_graph);
+				static float frametime_values[100] = {};
+				static int frametime_values_offset = 0;
+				if (show_graph) {
+					frametime_values_offset = (frametime_values_offset + 1) % IM_ARRAYSIZE(frametime_values);
+					frametime_values[frametime_values_offset] = 1000.0 / ImGui::GetIO().Framerate;
+					SparkLine("Frametime", "Frametime", frametime_values, 100, 0.5, 18.0, frametime_values_offset, ImVec4(1.0, 1.0, 1.0, 1.0), ImVec2(200, 100));
+				}
 				ImGui::Separator();
 				const char *gpu_name = resources.GPUName.c_str();
 				ImGui::Text("%s", gpu_name);
@@ -543,11 +546,23 @@ public:
 				int i = 0;
 				for (auto &heap : resources.heaps)
 				{
-					ImGui::Text("Heap %i", i);
-					ImGui::BulletText("Total %i MB", heap.total_memory / 1024 / 1024);
-					ImGui::BulletText("Used %i MB", heap.used_memory / 1024 / 1024);
-					ImGui::BulletText("Free %i MB", heap.free_memory / 1024 / 1024);
+					//ImGui::Text("Heap %i", i);
+					char header_name[128];
+					sprintf(header_name, "Heap %i", i);
+					if (ImGui::CollapsingHeader(header_name)) {
+						ImGui::BulletText("Total %i MB", heap.total_memory / 1024 / 1024);
+						ImGui::BulletText("Used %i MB", heap.used_memory / 1024 / 1024);
+						ImGui::BulletText("Free %i MB", heap.free_memory / 1024 / 1024);
+					}
 					i++;
+				}
+
+				ImGui::Separator();
+				if (ImGui::CollapsingHeader("Resources")) {
+					ImGui::BulletText("Vertex buffers %i", m_pResourceManagerRef->vertexBufferPool.size());
+					ImGui::BulletText("Index buffers %i", m_pResourceManagerRef->indexBufferPool.size());
+					ImGui::BulletText("Textures %i", m_pResourceManagerRef->texPool.size());
+					ImGui::BulletText("Meshes %i", m_pResourceManagerRef->meshPool.size());
 				}
 				ImGui::End();
 			}

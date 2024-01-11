@@ -33,7 +33,7 @@
 
 #endif
 
-// #define VMA_VULKAN_VERSION 1001000
+ // #define VMA_VULKAN_VERSION 1001000
 #if defined(ANDROID) || defined(__ANDROID__)
 
 #include <android/log.h>
@@ -63,7 +63,7 @@ namespace engine
 	{
 	}
 
-	void VulkanRenderer::Init(const char *appName, framework::Window &window)
+	void VulkanRenderer::Init(const char* appName, framework::Window& window)
 	{
 		m_pWindow = &window;
 		m_pResourceManagerRef->m_pVkDataPtr = &m_pVkData;
@@ -114,7 +114,7 @@ namespace engine
 	}
 
 	engine::Renderer::ObjectDataId
-	VulkanRenderer::RegisterMesh(const std::vector<common::Vertex> &, std::vector<IndexType> &indices, bool)
+		VulkanRenderer::RegisterMesh(const std::vector<common::Vertex>&, std::vector<IndexType>& indices, bool)
 	{
 		throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
 	}
@@ -197,14 +197,14 @@ namespace engine
 		if (!imguiInit)
 		{
 			m_pImguiRenderer->Init(m_pVkData, m_pWindow->getWindow(),
-								   m_pResourceManagerRef->m_pDescriptorPool,
-								   m_pVkData.defaultRenderPass.renderPass,
-								   m_pResourceManagerRef->m_pCommandPools.front(),
-								   m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
-			for (auto &renderPass : m_pResourceManagerRef->renderPassPool)
+				m_pResourceManagerRef->m_pDescriptorPool,
+				m_pVkData.defaultRenderPass.renderPass,
+				m_pResourceManagerRef->m_pCommandPools.front(),
+				m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
+			for (auto& renderPass : m_pResourceManagerRef->renderPassPool)
 			{
 				int image_index = 0;
-				for (auto &texture : renderPass.renderPassChain.Textures)
+				for (auto& texture : renderPass.renderPassChain.Textures)
 				{
 					if (texture.info.isSampler)
 					{
@@ -219,7 +219,7 @@ namespace engine
 
 	void VulkanRenderer::ComputeDispatch(Ref<ComputeShader> computeShaderRef, Ref<BindGroup> bindGroup)
 	{
-		auto computeShader = m_pResourceManagerRef->computeShaderPool.get(computeShaderRef);
+		vk::VulkanComputeShader* computeShader = m_pResourceManagerRef->computeShaderPool.get(computeShaderRef);
 
 		VkCommandBufferBeginInfo beginInfo{};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -228,9 +228,44 @@ namespace engine
 		{
 			throw std::runtime_error("failed to begin recording command buffer!");
 		}
+		
+		{
+			auto pass = m_pResourceManagerRef->renderPassPool.get(std::hash<std::string>{}("DepthPrePass"));
+			auto texture = pass->renderPassChain.Textures.at(0);
+
+			VkImageSubresourceRange subresourceRange;
+			subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+			subresourceRange.baseMipLevel = 0;
+			subresourceRange.levelCount = 1;
+			subresourceRange.baseArrayLayer = 0;
+			subresourceRange.layerCount = 1;
+
+
+			VkImageMemoryBarrier imageMemoryBarrier = {};
+			imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+			imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+			imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			imageMemoryBarrier.image = texture.image;
+			imageMemoryBarrier.subresourceRange = { VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT, 0, 1, 0, 1 };
+			imageMemoryBarrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+			imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+			imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+			imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+
+			vkCmdPipelineBarrier(
+				m_pFrame.ComputeCommandBuffer(),
+				VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT |
+				VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
+				VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+				0,
+				0, nullptr,
+				0, nullptr,
+				1, &imageMemoryBarrier);
+		}
+
 
 		vkCmdBindPipeline(m_pFrame.ComputeCommandBuffer(), VK_PIPELINE_BIND_POINT_COMPUTE, computeShader->pipeline.computePipeline);
-		
+
 		auto bg = m_pResourceManagerRef->materialPool.get(bindGroup);
 
 		vkCmdBindDescriptorSets(m_pFrame.ComputeCommandBuffer(),
@@ -238,7 +273,9 @@ namespace engine
 			computeShader->pipeline.pipelineLayout, 0, 1,
 			&bg->descriptorSets[m_pCurrentFrame], 0, 0);
 
+
 		vkCmdDispatch(m_pFrame.ComputeCommandBuffer(), computeShader->groupCountX, computeShader->groupCountY, computeShader->groupCountZ);
+
 
 		if (vkEndCommandBuffer(m_pFrame.ComputeCommandBuffer()) != VK_SUCCESS)
 		{
@@ -253,7 +290,7 @@ namespace engine
 
 	void VulkanRenderer::Submit()
 	{
-		VkSemaphore signalSemaphores[] = {m_pFrame.SyncObjects().renderFinishedSemaphores};
+		VkSemaphore signalSemaphores[] = { m_pFrame.SyncObjects().renderFinishedSemaphores };
 		vk::SyncCompute(m_pVkData, m_pFrame.ComputeCommandBuffer(), m_pCurrentFrame);
 		vk::Sync(m_pVkData, m_pFrame.CommandBuffer(), m_pCurrentFrame);
 
@@ -271,6 +308,7 @@ namespace engine
 
 		m_pCurrentFrame = m_pImageIndex;
 		m_pNumDrawCalls = 0;
+		m_pNumVertices = 0;
 
 		m_pCurrentFrame = (m_pCurrentFrame + 1) % vk::MAX_FRAMES_IN_FLIGHT;
 	}
@@ -279,7 +317,7 @@ namespace engine
 	{
 	}
 
-	void VulkanRenderer::End(glm::vec3 &v)
+	void VulkanRenderer::End(glm::vec3& v)
 	{
 #if !defined(__ANDROID__)
 		std::vector<VmaBudget> budgets;
@@ -294,6 +332,7 @@ namespace engine
 			m_pResourceManagerRef->ResourcesMemory.heaps.at(i).free_memory = budgets.at(i).budget - budgets.at(i).usage;
 		}
 		m_pResourceManagerRef->ResourcesMemory.numDrawCalls = m_pNumDrawCalls;
+		m_pResourceManagerRef->ResourcesMemory.numVertices = m_pNumVertices;
 
 		auto renderPass = m_pResourceManagerRef->getRenderPass(m_pActiveRenderPass);
 
@@ -309,14 +348,14 @@ namespace engine
 			vk::createRenderPassInfo(m_pImageIndex, m_pVkData, m_pVkData.defaultRenderPass);
 
 			auto renderPass = m_pVkData.defaultRenderPass;
-			m_pVkData.defaultRenderPass.renderPassInfo.renderArea.offset = {0, 0};
+			m_pVkData.defaultRenderPass.renderPassInfo.renderArea.offset = { 0, 0 };
 			m_pVkData.defaultRenderPass.renderPassInfo.renderArea.extent = m_pVkData.defaultRenderPass.renderPassChain.Extent;
 			m_pVkData.defaultRenderPass.renderPassChain.Extent = m_pVkData.defaultRenderPass.renderPassChain.Extent;
 
 			vk::beginRenderPass(m_pFrame.CommandBuffer(), m_pVkData.defaultRenderPass);
 			m_pRenderPassActive = true;
 		}
-		m_pImguiRenderer->DrawUI(std::forward<glm::vec3 &>(v), m_pResourceManagerRef->ResourcesMemory);
+		m_pImguiRenderer->DrawUI(std::forward<glm::vec3&>(v), m_pResourceManagerRef->ResourcesMemory);
 #endif
 		if (m_pRenderPassActive)
 		{
@@ -350,7 +389,7 @@ namespace engine
 				}
 				vk::createRenderPassInfo(m_pImageIndex, m_pVkData, m_pVkData.defaultRenderPass);
 
-				m_pVkData.defaultRenderPass.renderPassInfo.renderArea.offset = {0, 0};
+				m_pVkData.defaultRenderPass.renderPassInfo.renderArea.offset = { 0, 0 };
 				m_pVkData.defaultRenderPass.renderPassInfo.renderArea.extent = m_pVkData.defaultRenderPass.renderPassChain.Extent;
 				renderPass->renderPassChain.Extent = m_pVkData.defaultRenderPass.renderPassChain.Extent;
 
@@ -366,7 +405,7 @@ namespace engine
 					m_pRenderPassActive = false;
 				}
 				vk::createRenderPassInfo(m_pImageIndex, m_pVkData, *renderPass);
-				renderPass->renderPassInfo.renderArea.offset = {0, 0};
+				renderPass->renderPassInfo.renderArea.offset = { 0, 0 };
 				renderPass->renderPassInfo.renderArea.extent = renderPass->renderPassChain.Extent;
 				vk::beginRenderPass(m_pFrame.CommandBuffer(), *renderPass);
 				m_pRenderPassActive = true;
@@ -400,16 +439,16 @@ namespace engine
 		currentCommandsInQueue = 0;
 	}
 
-	void VulkanRenderer::FlushIndexed(vk::VulkanRenderPass *renderPass)
+	void VulkanRenderer::FlushIndexed(vk::VulkanRenderPass* renderPass)
 	{
 
 		int32_t prev_layout = -1;
-		vk::VulkanBuffer *prev_vertex_buffer = nullptr;
-		vk::VulkanBuffer *prev_index_buffer = nullptr;
+		vk::VulkanBuffer* prev_vertex_buffer = nullptr;
+		vk::VulkanBuffer* prev_index_buffer = nullptr;
 		int32_t prev_vertex_buffer_id = -1;
 		int32_t prev_index_buffer_id = -1;
 
-		vk::VulkanMaterial *prev_material = nullptr;
+		vk::VulkanMaterial* prev_material = nullptr;
 		int32_t prev_material_id = -1;
 
 		int changed = 0;
@@ -425,7 +464,7 @@ namespace engine
 		vkCmdSetViewport(m_pFrame.CommandBuffer(), 0, 1, &renderPass->renderPassChain.Viewport);
 
 		VkRect2D scissor{};
-		scissor.offset = {0, 0};
+		scissor.offset = { 0, 0 };
 		scissor.extent = extent;
 
 		vkCmdSetScissor(m_pFrame.CommandBuffer(), 0, 1, &renderPass->renderPassChain.Scissor);
@@ -433,22 +472,22 @@ namespace engine
 		for (int i = 0; i < currentCommandsInQueue; i++)
 		{
 
-			auto &command = m_pCurrentCommandQueue[i];
+			auto& command = m_pCurrentCommandQueue[i];
 			if (prev_layout != command.layoutIndex)
 			{
 				vk::bindPipeline(renderPass->renderPipelines[command.layoutIndex].graphicsPipeline,
-								 m_pFrame.CommandBuffer());
+					m_pFrame.CommandBuffer());
 				prev_layout = command.layoutIndex;
 
 				if (m_pVkData.bindless_supported)
 				{
 					vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
-											renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(), 1, 1,
-											&m_pResourceManagerRef->m_pGlobalDescriptorSets, 0, nullptr);
+						renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(), 1, 1,
+						&m_pResourceManagerRef->m_pGlobalDescriptorSets, 0, nullptr);
 				}
 			}
 
-			if (prev_vertex_buffer_id != command.meshResource.vertexBuffer.Id())
+			if (prev_vertex_buffer_id != command.meshResource.vertexBuffer.Id() && command.meshResource.vertexBuffer.Id() != -1)
 			{
 				auto vertexBuffer = m_pResourceManagerRef->vertexBufferPool.get(command.meshResource.vertexBuffer);
 				prev_vertex_buffer_id = command.meshResource.vertexBuffer.Id();
@@ -456,7 +495,7 @@ namespace engine
 				vk::bindVertexBuffer(m_pVkData, m_pFrame.CommandBuffer(), vertexBuffer->buffer);
 			}
 
-			if (prev_index_buffer_id != command.meshResource.indexBuffer.Id())
+			if (prev_index_buffer_id != command.meshResource.indexBuffer.Id() && command.meshResource.indexBuffer.Id() != -1)
 			{
 				auto indexBuffer = m_pResourceManagerRef->indexBufferPool.get(command.meshResource.indexBuffer);
 				vkCmdBindIndexBuffer(m_pFrame.CommandBuffer(), indexBuffer->buffer, 0, VK_INDEX_TYPE_UINT32);
@@ -470,30 +509,31 @@ namespace engine
 				prev_material_id = command.material.Id();
 				prev_material = material;
 				vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
-										renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(), 0, 1,
-										&material->descriptorSets[m_pCurrentFrame], 0, nullptr);
+					renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(), 0, 1,
+					&material->descriptorSets[m_pCurrentFrame], 0, nullptr);
 			}
 
 			/** TODO:
 			 *  Find a way to cleanly implement push constants*/
 			vkCmdPushConstants(m_pFrame.CommandBuffer(), renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(),
-							   VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(ObjectDataConstant), &command.pushConstantData);
+				VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(ObjectDataConstant), &command.pushConstantData);
 
 			vkCmdDrawIndexed(m_pFrame.CommandBuffer(), command.meshResource.numIndices, command.count, command.meshResource.indexOffset, command.meshResource.vertexOffset, command.uniformIndex);
 			m_pNumDrawCalls++;
+			m_pNumVertices += command.meshResource.numVertices * command.count;
 		}
 	}
 
-	void VulkanRenderer::FlushNonIndexed(vk::VulkanRenderPass *renderPass)
+	void VulkanRenderer::FlushNonIndexed(vk::VulkanRenderPass* renderPass)
 	{
 
 		int32_t prev_layout = -1;
-		vk::VulkanBuffer *prev_vertex_buffer = nullptr;
-		vk::VulkanBuffer *prev_index_buffer = nullptr;
+		vk::VulkanBuffer* prev_vertex_buffer = nullptr;
+		vk::VulkanBuffer* prev_index_buffer = nullptr;
 		int32_t prev_vertex_buffer_id = -1;
 		int32_t prev_index_buffer_id = -1;
 
-		vk::VulkanMaterial *prev_material = nullptr;
+		vk::VulkanMaterial* prev_material = nullptr;
 		int32_t prev_material_id = -1;
 
 		int changed = 0;
@@ -509,7 +549,7 @@ namespace engine
 		vkCmdSetViewport(m_pFrame.CommandBuffer(), 0, 1, &renderPass->renderPassChain.Viewport);
 
 		VkRect2D scissor{};
-		scissor.offset = {0, 0};
+		scissor.offset = { 0, 0 };
 		scissor.extent = extent;
 
 		vkCmdSetScissor(m_pFrame.CommandBuffer(), 0, 1, &renderPass->renderPassChain.Scissor);
@@ -517,18 +557,18 @@ namespace engine
 		for (int i = 0; i < currentCommandsInQueue; i++)
 		{
 
-			auto &command = m_pCurrentCommandQueue[i];
+			auto& command = m_pCurrentCommandQueue[i];
 			if (prev_layout != command.layoutIndex)
 			{
 				vk::bindPipeline(renderPass->renderPipelines[command.layoutIndex].graphicsPipeline,
-								 m_pFrame.CommandBuffer());
+					m_pFrame.CommandBuffer());
 				prev_layout = command.layoutIndex;
 
 				if (m_pVkData.bindless_supported)
 				{
 					vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
-											renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(), 1, 1,
-											&m_pResourceManagerRef->m_pGlobalDescriptorSets, 0, nullptr);
+						renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(), 1, 1,
+						&m_pResourceManagerRef->m_pGlobalDescriptorSets, 0, nullptr);
 				}
 			}
 
@@ -546,30 +586,31 @@ namespace engine
 				prev_material_id = command.material.Id();
 				prev_material = material;
 				vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
-										renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(), 0, 1,
-										&material->descriptorSets[m_pCurrentFrame], 0, nullptr);
+					renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(), 0, 1,
+					&material->descriptorSets[m_pCurrentFrame], 0, nullptr);
 			}
 
 			/** TODO:
 			 *  Find a way to cleanly implement push constants*/
 			vkCmdPushConstants(m_pFrame.CommandBuffer(), renderPass->renderPipelines[command.layoutIndex].pipelineLayout.back(),
-							   VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(ObjectDataConstant), &command.pushConstantData);
+				VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(ObjectDataConstant), &command.pushConstantData);
 
 			vkCmdDraw(m_pFrame.CommandBuffer(), command.meshResource.numVertices, command.count, command.meshResource.vertexOffset, command.uniformIndex);
 			m_pNumDrawCalls++;
+			m_pNumVertices += command.meshResource.numVertices * command.count;
 		}
 	}
 
-	void VulkanRenderer::FlushIndirect(vk::VulkanRenderPass *renderPass)
+	void VulkanRenderer::FlushIndirect(vk::VulkanRenderPass* renderPass)
 	{
 		throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
 	}
 
-	void VulkanRenderer::FlushIndexedIndirect(vk::VulkanRenderPass *renderPass)
+	void VulkanRenderer::FlushIndexedIndirect(vk::VulkanRenderPass* renderPass)
 	{
 
-		auto predicate = [](DrawCommand &a, DrawCommand &b) -> bool
-		{ auto a_mat = a.material.Index();
+		auto predicate = [](DrawCommand& a, DrawCommand& b) -> bool
+			{ auto a_mat = a.material.Index();
 		auto b_mat = b.material.Index();
 		auto a_vtx = a.meshResource.vertexBuffer.Index();
 		auto b_vtx = b.meshResource.vertexBuffer.Index();
@@ -582,11 +623,11 @@ namespace engine
 
 		batches = generateIndirectBatch(m_pCurrentCommandQueue, currentCommandsInQueue);
 
-		void *data;
+		void* data;
 		vmaMapMemory(m_pResourceManagerRef->m_pAllocator, m_pResourceManagerRef->m_pIndirectBuffer[m_pCurrentFrame].allocation, &data);
-		VkDrawIndexedIndirectCommand *indirect_commands = reinterpret_cast<VkDrawIndexedIndirectCommand *>(data);
+		VkDrawIndexedIndirectCommand* indirect_commands = reinterpret_cast<VkDrawIndexedIndirectCommand*>(data);
 		int i = 0;
-		for (auto &command : m_pCurrentCommandQueue)
+		for (auto& command : m_pCurrentCommandQueue)
 		{
 			if (i >= currentCommandsInQueue)
 				break;
@@ -613,11 +654,11 @@ namespace engine
 		vkCmdSetViewport(m_pFrame.CommandBuffer(), 0, 1, &viewport);
 
 		VkRect2D scissor{};
-		scissor.offset = {0, 0};
+		scissor.offset = { 0, 0 };
 		scissor.extent = extent;
 		vkCmdSetScissor(m_pFrame.CommandBuffer(), 0, 1, &scissor);
 
-		for (auto &batch : batches)
+		for (auto& batch : batches)
 		{
 			auto material = m_pResourceManagerRef->materialPool.get(batch.material);
 			auto vertexBuffer = m_pResourceManagerRef->vertexBufferPool.get(batch.meshResource.vertexBuffer);
@@ -626,7 +667,7 @@ namespace engine
 			if (prev_layout != batch.layoutIndex)
 			{
 				vk::bindPipeline(renderPass->renderPipelines[batch.layoutIndex].graphicsPipeline,
-								 m_pFrame.CommandBuffer());
+					m_pFrame.CommandBuffer());
 				prev_layout = batch.layoutIndex;
 			}
 
@@ -644,21 +685,22 @@ namespace engine
 			if (-1 != batch.material.Id())
 			{
 				vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
-										renderPass->renderPipelines[batch.layoutIndex].pipelineLayout.back(), 0, 1,
-										&material->descriptorSets[m_pCurrentFrame], 0, nullptr);
+					renderPass->renderPipelines[batch.layoutIndex].pipelineLayout.back(), 0, 1,
+					&material->descriptorSets[m_pCurrentFrame], 0, nullptr);
 			}
 
 			if (m_pVkData.bindless_supported)
 			{
 				vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS,
-										renderPass->renderPipelines[batch.layoutIndex].pipelineLayout.back(), 1, 1,
-										&m_pResourceManagerRef->m_pGlobalDescriptorSets, 0, nullptr);
+					renderPass->renderPipelines[batch.layoutIndex].pipelineLayout.back(), 1, 1,
+					&m_pResourceManagerRef->m_pGlobalDescriptorSets, 0, nullptr);
 			}
 			constexpr uint32_t draw_stride = sizeof(VkDrawIndexedIndirectCommand);
 			VkDeviceSize indirect_offset = batch.first * draw_stride;
 			vkCmdDrawIndexedIndirect(m_pFrame.CommandBuffer(), m_pResourceManagerRef->m_pIndirectBuffer[m_pCurrentFrame].buffer, indirect_offset, batch.count, draw_stride);
 
 			m_pNumDrawCalls++;
+			m_pNumVertices += batch.meshResource.numVertices * batch.count;
 		}
 
 		vmaUnmapMemory(m_pResourceManagerRef->m_pAllocator, m_pResourceManagerRef->m_pIndirectBuffer[m_pCurrentFrame].allocation);
@@ -670,12 +712,12 @@ namespace engine
 		// graphics sync
 
 		vkWaitForFences(m_pVkData.logicalDevice, 1, &m_pVkData.syncObjects[m_pCurrentFrame].inFlightFences, VK_TRUE,
-						UINT64_MAX);
+			UINT64_MAX);
 
 		uint32_t imageIndex = 0;
 		VkResult result = vkAcquireNextImageKHR(m_pVkData.logicalDevice, m_pVkData.swapChain, UINT64_MAX,
-												m_pVkData.syncObjects[m_pCurrentFrame].imageAvailableSemaphores,
-												VK_NULL_HANDLE, &imageIndex);
+			m_pVkData.syncObjects[m_pCurrentFrame].imageAvailableSemaphores,
+			VK_NULL_HANDLE, &imageIndex);
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR)
 		{
@@ -694,17 +736,17 @@ namespace engine
 		return imageIndex;
 	}
 
-	void VulkanRenderer::pUpdateUniforms(const vk::VulkanBuffer &buffer)
+	void VulkanRenderer::pUpdateUniforms(const vk::VulkanBuffer& buffer)
 	{
-		void *data;
+		void* data;
 		vmaMapMemory(m_pResourceManagerRef->m_pAllocator, buffer.allocation, &data);
 		memcpy(data, perPassData, buffer.size);
 		vmaUnmapMemory(m_pResourceManagerRef->m_pAllocator, buffer.allocation);
 	}
 
-	void VulkanRenderer::pUpdateUniformBuffer(const vk::VulkanBuffer &buffer, const void *newData)
+	void VulkanRenderer::pUpdateUniformBuffer(const vk::VulkanBuffer& buffer, const void* newData)
 	{
-		void *data;
+		void* data;
 		vmaMapMemory(m_pResourceManagerRef->m_pAllocator, buffer.allocation, &data);
 		memcpy(data, newData, buffer.size);
 		vmaUnmapMemory(m_pResourceManagerRef->m_pAllocator, buffer.allocation);
@@ -724,17 +766,17 @@ namespace engine
 		m_pVkData.vsync = state;
 	}
 
-	void VulkanRenderer::UpdateRenderPassUniforms(Ref<RenderPass> renderPassRef, BindingIndex index, const void *data)
+	void VulkanRenderer::UpdateRenderPassUniforms(Ref<RenderPass> renderPassRef, BindingIndex index, const void* data)
 	{
 		auto renderPass = m_pResourceManagerRef->renderPassPool.get(renderPassRef);
 		auto front = renderPass->uniformBuffer.begin();
 
 		std::advance(front, (uint32_t)index);
-		auto &buffer = (*front).buffers[m_pCurrentFrame];
+		auto& buffer = (*front).buffers[m_pCurrentFrame];
 		pUpdateUniformBuffer(buffer, data);
 	}
 
-	void VulkanRenderer::pUpdateMaterial(vk::VulkanMaterial &)
+	void VulkanRenderer::pUpdateMaterial(vk::VulkanMaterial&)
 	{
 		throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
 	}
@@ -762,7 +804,7 @@ namespace engine
 			.width = (float)m_pVkData.defaultRenderPass.renderPassChain.Extent.width,
 			.height = (float)m_pVkData.defaultRenderPass.renderPassChain.Extent.height,
 			.minDepth = 0.0f,
-			.maxDepth = 1.0f};
+			.maxDepth = 1.0f };
 
 		VkRect2D rect;
 		rect.extent.width = m_pVkData.defaultRenderPass.renderPassChain.Extent.width;
@@ -784,22 +826,22 @@ namespace engine
 		m_pImguiRenderer->recreateDescriptorSets();
 	}
 
-	void VulkanRenderer::SetViewport(const Viewport &viewport)
+	void VulkanRenderer::SetViewport(const Viewport& viewport)
 	{
 		auto renderpass = m_pResourceManagerRef->renderPassPool.get(m_pActiveRenderPass);
 		if (renderpass == nullptr)
 			return;
 
 		renderpass->renderPassChain.setViewport(
-			{.x = viewport.offset_x,
+			{ .x = viewport.offset_x,
 			 .y = viewport.offset_y,
 			 .width = viewport.width,
 			 .height = viewport.height,
 			 .minDepth = viewport.min_depth,
-			 .maxDepth = viewport.max_depth});
+			 .maxDepth = viewport.max_depth });
 	}
 
-	void VulkanRenderer::SetScissor(const Scissor &scissor)
+	void VulkanRenderer::SetScissor(const Scissor& scissor)
 	{
 		auto renderpass = m_pResourceManagerRef->renderPassPool.get(m_pActiveRenderPass);
 		if (renderpass == nullptr)

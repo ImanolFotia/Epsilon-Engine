@@ -104,8 +104,8 @@ namespace engine
 			.mipLevels = mipLevels,
 			.arrayLayers = texInfo.numLayers,
 			.format = format,
-			.usage = (texInfo.storage_image ? VK_IMAGE_USAGE_TRANSFER_DST_BIT : 0u) |
-					 (texInfo.storage_image ? VK_IMAGE_USAGE_TRANSFER_SRC_BIT : 0u) |
+			.usage = (!texInfo.storage_image ? VK_IMAGE_USAGE_TRANSFER_DST_BIT : 0u) |
+					 (!texInfo.storage_image ? VK_IMAGE_USAGE_TRANSFER_SRC_BIT : 0u) |
 					 VK_IMAGE_USAGE_SAMPLED_BIT | 
 					 (texInfo.storage_image ? VK_IMAGE_USAGE_STORAGE_BIT : 0u),
 			});
@@ -244,15 +244,17 @@ namespace engine
 					auto pass = renderPassPool.get(std::hash<std::string>{}(binding.renderPass));
 					vkMaterial.slots++;
 
+					auto texture = binding.index == pass->renderPassChain.Textures.size() ? pass->renderPassChain.DepthTexture : pass->renderPassChain.Textures.at(binding.index);
+
 					vk::VulkanShaderBinding shaderBinding = {
-						.texture = binding.index == pass->renderPassChain.Textures.size() ? pass->renderPassChain.DepthTexture : pass->renderPassChain.Textures.at(binding.index),
+						.texture = texture,
 						.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 						.bindingPoint = binding.bindingPoint,
 						.isRenderPassAttachment = true,
 						.renderpass = binding.renderPass,
 						.attachment_index = (int32_t)binding.index };
 
-					shaderBinding.texture.isDepthAttachment = true;
+					shaderBinding.texture.isDepthAttachment = texture.isDepthAttachment;
 
 					vkMaterial.shaderBindings.push_back(shaderBinding);
 
@@ -264,15 +266,17 @@ namespace engine
 					auto pass = renderPassPool.get(std::hash<std::string>{}(binding.renderPass));
 					vkMaterial.slots++;
 
+					auto texture = binding.index == pass->renderPassChain.Textures.size() ? pass->renderPassChain.DepthTexture : pass->renderPassChain.Textures.at(binding.index);
+
 					vk::VulkanShaderBinding shaderBinding = {
-						.texture = binding.index == pass->renderPassChain.Textures.size() ? pass->renderPassChain.DepthTexture : pass->renderPassChain.Textures.at(binding.index),
+						.texture = texture,
 						.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 						.bindingPoint = binding.bindingPoint,
 						.isRenderPassAttachment = true,
 						.renderpass = binding.renderPass,
 						.attachment_index = (int32_t)binding.index };
 
-					shaderBinding.texture.isDepthAttachment = true;
+					shaderBinding.texture.isDepthAttachment = texture.isDepthAttachment;
 
 					vkMaterial.shaderBindings.push_back(shaderBinding);
 				}
@@ -335,10 +339,19 @@ namespace engine
 						.isRenderPassAttachment = false };
 
 					vkMaterial.shaderBindings.push_back(shaderBinding);
+
+					if (binding.binding == 0) {
+						for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
+						{
+							vkMaterial.bufferInfo[i].offset = buff[i].offset;
+							vkMaterial.bufferInfo[i].buffer = buff[i].buffer;
+							vkMaterial.bufferSize = buff[i].size;
+						}
+
+					}
 				}
 			}
 
-			vkMaterial.bufferSize = 0;
 
 			if (renderPass)
 			{
@@ -1109,31 +1122,6 @@ namespace engine
 		imageSubRange.baseMipLevel = 0;
 		imageSubRange.levelCount = 1;
 		imageSubRange.layerCount = 1;
-		computeShader.memoryBarrier.imageMemoryBarrier = {
-			.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2,
-			.pNext = nullptr,
-			.srcStageMask = VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT_KHR,
-			.srcAccessMask = VK_ACCESS_2_SHADER_WRITE_BIT_KHR,
-			.dstStageMask = VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT_KHR,
-			.dstAccessMask = VK_ACCESS_2_SHADER_READ_BIT_KHR,
-			.oldLayout = VK_IMAGE_LAYOUT_GENERAL,
-			.newLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL,
-			//.image = texPool.get(computeInfo.memoryBarrier.image)->image,
-			.subresourceRange = imageSubRange
-			/* .image and .subresourceRange should identify image subresource accessed */
-		};
-
-		computeShader.memoryBarrier.dependencyInfo = {
-			VK_STRUCTURE_TYPE_DEPENDENCY_INFO_KHR,
-			nullptr,
-			NULL,
-			0,
-			nullptr,
-			0,
-			nullptr,
-			1,												 // imageMemoryBarrierCount
-			&computeShader.memoryBarrier.imageMemoryBarrier, // pImageMemoryBarriers
-		};
 
 		computeShader.groupCountX = computeInfo.groupCountX;
 		computeShader.groupCountY = computeInfo.groupCountY;

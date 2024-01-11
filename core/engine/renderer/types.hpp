@@ -127,6 +127,7 @@ namespace engine
         std::string GPUVendor;
         std::string GPUName;
         uint32_t numDrawCalls = 0;
+        uint64_t numVertices = 0;
     };
 
     enum TextureFormat
@@ -462,6 +463,7 @@ namespace engine
         NONE
     };
 
+
     enum class BufferStorageType
     {
         UNIFORM_BUFFER = 0,
@@ -562,7 +564,7 @@ namespace engine
         uint32_t numLayouts = 0;
         uint32_t numAttachments = 0;
         //size_t size;
-        bool depthAttachment;
+        bool depthAttachment = false;
         bool isSwapChainAttachment = false;
         std::vector<SubPassInfo> subpasses;
         std::vector<RenderPassAttachment> attachments;

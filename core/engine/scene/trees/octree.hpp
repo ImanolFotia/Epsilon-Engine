@@ -67,8 +67,8 @@ namespace engine
 
 		int m_Depth = 0;
 
-		framework::StaticArray<Octree_ptr, 8> m_Children{};
-		framework::StaticArray<Box, 8> m_bChildren{};
+		std::array<Octree_ptr, 8> m_Children{};
+		std::array<Box, 8> m_bChildren{};
 
 		std::list<std::pair<Box, T>> m_Data{};
 

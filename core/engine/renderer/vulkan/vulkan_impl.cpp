@@ -256,7 +256,7 @@ namespace engine
 	{
 		// Create default descriptor pool
 		vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool, nullptr);
-		framework::StaticArray<VkDescriptorPoolSize, 11> poolSizes =
+		std::array<VkDescriptorPoolSize, 11> poolSizes =
 			{{{VK_DESCRIPTOR_TYPE_SAMPLER, 1000},
 			  {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000},
 			  {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000},
@@ -287,7 +287,7 @@ namespace engine
 
 		// Create Global bindless descriptor pool
 		// vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pGlobalDescriptorPool, nullptr);
-		framework::StaticArray<VkDescriptorPoolSize, 1> globalPoolSizes{};
+		std::array<VkDescriptorPoolSize, 1> globalPoolSizes{};
 		globalPoolSizes[0].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 		globalPoolSizes[0].descriptorCount = MAX_BINDLESS_RESOURCES;
 
@@ -745,7 +745,6 @@ namespace engine
 			}
 		}
 		else {
-			return;
 		}
 
 		// After the loop, all mip layers are in TRANSFER_SRC layout, so transition all to SHADER_READ

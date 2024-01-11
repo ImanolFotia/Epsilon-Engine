@@ -132,19 +132,20 @@ namespace engine
 		}
 	};
 
-	enum class LightType {
+	enum class EntityType {
 		OMNI = 0,
 		SUN,
 		SPOT,
 		TUBE,
 		SPHERE,
+		DECAL,
 		SIZE
 	};
 
-	struct Light {
+	struct ShaderEntity {
 		glm::vec4 color = glm::vec4(1.0);
 		glm::vec3 position{};
-		LightType type = LightType::SIZE;
+		EntityType type = EntityType::SIZE;
 		float radius{};
 		float innerRadius{};
 		float outerRadius{};
@@ -247,7 +248,7 @@ namespace engine
 		std::vector<ShaderObjectData *> objectBuffer;
 		CursorInfo *infoBufferPtr;
 		std::vector<GPUAnimationData *> animationTransformBufferPtr;
-		Light* lightBufferPtr;
+		ShaderEntity* lightBufferPtr;
 		
 
 		void Init()
@@ -269,7 +270,7 @@ namespace engine
 
 			m_pGPUBuffers["animation_transform_buffer"] = resourceManager->createGPUBuffer("animation_transform_buffer", sizeof(GPUAnimationData) * 100, engine::BufferStorageType::STORAGE_BUFFER);
 
-			m_pGPUBuffers["light_buffer"] = resourceManager->createGPUBuffer("light_buffer", sizeof(Light) * 1024, engine::BufferStorageType::STORAGE_BUFFER, 1);
+			m_pGPUBuffers["entity_buffer"] = resourceManager->createGPUBuffer("entity_buffer", sizeof(ShaderEntity) * 1024, engine::BufferStorageType::STORAGE_BUFFER, 1);
 
 			transformBuffer.resize(vk::MAX_FRAMES_IN_FLIGHT);
 			objectBuffer.resize(vk::MAX_FRAMES_IN_FLIGHT);
@@ -282,7 +283,7 @@ namespace engine
 				objectBuffer[i] = reinterpret_cast<ShaderObjectData *>(resourceManager->mapBuffer(m_pGPUBuffers["object_buffer"], i));
 				animationTransformBufferPtr[i] = reinterpret_cast<GPUAnimationData *>(resourceManager->mapBuffer(m_pGPUBuffers["animation_transform_buffer"], i));
 			}
-			lightBufferPtr = reinterpret_cast<Light*>(resourceManager->mapBuffer(m_pGPUBuffers["light_buffer"], 0));
+			lightBufferPtr = reinterpret_cast<ShaderEntity*>(resourceManager->mapBuffer(m_pGPUBuffers["entity_buffer"], 0));
 			infoBufferPtr = reinterpret_cast<CursorInfo *>(resourceManager->mapBuffer(m_pGPUBuffers["info_buffer"], 0));
 		}
 

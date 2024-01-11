@@ -135,6 +135,7 @@ namespace engine
         uint32_t renderpass_id = 0;
         uint32_t attachedRenderPass = 0;
         uint32_t m_pNumDrawCalls = 0;
+        uint64_t m_pNumVertices = 0;
         engine::Ref<engine::RenderPass> m_pActiveRenderPass;
 
         VulkanResourceManager *m_pResourceManagerRef = nullptr;

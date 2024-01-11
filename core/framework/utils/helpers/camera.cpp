@@ -31,7 +31,7 @@ namespace utils
         this->horizontalAngle = glm::atan(this->Orientation.x, this->Orientation.z) ;
         this->verticalAngle = glm::asin(this->Orientation.y);
         near_plane = 0.01;
-        far_plane = 256.0f;
+        far_plane = 512.0f;
     }
 
     void Camera::onMouseWheelCallback(beacon::sender *sender, beacon::args *args)
