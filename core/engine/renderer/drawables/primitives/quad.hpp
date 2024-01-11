@@ -156,7 +156,7 @@ namespace engine
 			}
 
 
-			glm::vec2 m_pGridOrigin = glm::vec2(-50.0, -50.0);
+			glm::vec2 m_pGridOrigin = glm::vec2(-128.0, -128.0);
 			glm::vec2 bounds = glm::vec2(m_pGridOrigin) + glm::vec2(m_pTesselation + 1, m_pTesselation + 1);
 
 			glm::ivec2 p = glm::vec2(glm::ceil(position.x-0.5), glm::ceil(position.z - 0.5));
