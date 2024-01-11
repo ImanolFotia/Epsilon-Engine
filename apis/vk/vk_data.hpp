@@ -173,12 +173,23 @@ namespace vk
 		VkDependencyInfoKHR dependencyInfo{};
 	};
 
+
+	struct VulkanMemoryBarrierInfo {
+		engine::MemoryBarrierHint hint;
+		VkImage image;
+		VkBuffer buffer;
+		VkImageSubresourceRange subresourceRange;
+	};
+
 	struct VulkanComputeShader {
-		VulkanMemoryBarrier memoryBarrier;
 		VulkanComputePipeline pipeline{};
 		uint16_t groupCountX = 1;
 		uint16_t groupCountY = 1;
 		uint16_t groupCountZ = 1;
+		std::vector<VulkanMemoryBarrier> memoryBarrier;
+		std::vector<VkImageMemoryBarrier> imageMemoryBarrier;
+		bool hasMemoryBarrier = false;
+		bool hasImageBarrier = false;
 	};
 
 	struct VulkanRenderPipeline

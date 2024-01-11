@@ -23,7 +23,7 @@ namespace vk
     // std::pair<>
 
     template <uint32_t num_stages>
-    static framework::StaticArray<VkPipelineShaderStageCreateInfo, num_stages> createShaderStages(const char *vertexPath,
+    static std::array<VkPipelineShaderStageCreateInfo, num_stages> createShaderStages(const char *vertexPath,
                                                                                                   const char *fragmentPath,
                                                                                                   VkShaderModule &vertShaderModule,
                                                                                                   VkShaderModule &fragShaderModule,
