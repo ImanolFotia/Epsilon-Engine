@@ -40,7 +40,7 @@ namespace engine
 
 
         uint32_t m_pID = -1;
-        uint32_t m_pGeneration{};
+        uint8_t m_pGeneration{};
 
         template <typename A, typename B>
         friend class Pool;
@@ -55,6 +55,10 @@ namespace engine
         using IdArray = std::unordered_map<uint32_t, uint32_t>;
         using IndexArray = std::vector<typename std::list<R>::iterator>;
 
+
+        std::size_t size() {
+            return m_pInternalData.size();
+        }
 
         template <typename... Args>
         Ref<T> emplace(std::string name, Args... args)
