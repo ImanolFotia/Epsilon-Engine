@@ -3,7 +3,7 @@
 namespace framework {
 
     template <typename T, std::size_t N>
-    class StaticArray {
+    class StatiArray {
     private:
 
         using value_type = T;
@@ -15,8 +15,8 @@ namespace framework {
         value_type m_pData[N];
 
     public:
-        StaticArray() = default;
-        StaticArray(std::initializer_list<value_type>&& in_data) {
+        StatiArray() = default;
+        StatiArray(std::initializer_list<value_type>&& in_data) {
             if (in_data.size() != N) {
                 throw std::runtime_error(
                     "Initializer list size() differs from array size");
@@ -94,7 +94,7 @@ namespace framework {
             }
         }
 
-        constexpr void swap(StaticArray<value_type, N>& other) noexcept {
+        constexpr void swap(StatiArray<value_type, N>& other) noexcept {
             for (size_t i = 0; i < N; i++) {
                 value_type other_value = other[i];
                 other[i] = m_pData[i];

@@ -71,7 +71,7 @@ static std::string sh(const std::string& cmd)
 #endif
 
 #ifdef _WIN32
-    framework::StaticArray<char, 128> buffer = { 0 };
+    std::array<char, 128> buffer = { 0 };
     std::string result;
     std::shared_ptr<FILE> pipe(_popen(cmd.c_str(), "r"), _pclose);
     if (!pipe)
