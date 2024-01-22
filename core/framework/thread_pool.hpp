@@ -50,7 +50,10 @@ public:
                             }
                         }
                         try {
-                            task();
+                            if (task) {
+                                task();
+                                m_pCurrentTasks--;
+                            }
                         }
                         catch (std::exception& e)
                         {
@@ -90,6 +93,7 @@ public:
     {
         if (!m_pStopped)
         {
+            m_pCurrentTasks++;
             using ret_type = typename std::invoke_result<T, Args...>::type;
             auto task = std::make_shared<std::packaged_task<ret_type()>>(
                 std::bind(std::forward<T>(t), std::forward<Args>(args)...));
@@ -124,9 +128,10 @@ public:
     void Wait()
     {
         m_pMgr_condition.notify_all();
-        for (auto& thread : m_pAsync_threads)
+
+        while (true)
         {
-            thread.get();
+            if (m_pCurrentTasks <= 0) break;
         }
     }
 
@@ -139,5 +144,6 @@ private:
     std::queue<std::function<void()> > m_pActive_task_queue;
     std::queue<std::function<void()> > m_pWaiting_task_queue;
     std::atomic<unsigned> m_pActive_threads;
+    std::atomic<unsigned> m_pCurrentTasks = 0;
     std::vector<std::shared_future<void>> m_pAsync_threads;
 };

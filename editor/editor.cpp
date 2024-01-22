@@ -2,6 +2,7 @@
 
 #include "utils/mesh_utils.hpp"
 #include "ui/style.hpp"
+#include "core/framework/IO/KeyBoard.hpp"
 
 namespace Editor {
 	void Editor::OnCreate() {
@@ -29,7 +30,7 @@ namespace Editor {
 		m_pMaterialEditor.m_pSceneRef = m_pScene;
 
 
-		host.assembly.Invoke<void>(L"setScenePtr", &m_pScene);
+		host.assembly.Invoke<void>(L"setScenePtr", m_pScene.get());
 
 		m_pComputeShader = ComputeDispatch::createComputeShader(m_pScene);
 
@@ -340,6 +341,13 @@ namespace Editor {
 
 	void Editor::OnUpdate() {
 
+		tiny_keyboard kb{};
+
+		//std::memcpy(kb.keys, framework::Input::KeyBoard::KEYS, sizeof(int) * 1024);
+		kb.convert();
+
+		host.assembly.Invoke<void>(L"setKeyboardState", kb);
+
 		auto models = m_pScene->getNodes <engine::RenderModel>();
 		auto scripts = m_pScene->getNodes <EntityScript>();
 
@@ -553,13 +561,13 @@ namespace Editor {
 
 		Utils::AddModelNode("Grass Blades" + std::to_string(node->Index()), m_pScene, GrassBlade_Lod0, node, "GrassBindGroup");
 
-		/*Utils::AddScriptNode({
+		Utils::AddScriptNode({
 			.language = C_SHARP,
 			.fileName = "GameObject.cs",
 			.assemblyName = "Game.dll",
 			.className = "Game.GameObject",
 			.nodeName = "Plane." + node->Index()
-			}, m_pScene, node, host);*/
+			}, m_pScene, node, host);
 
 		m_pSceneNodes.RegisterIntoEditor("Grass", node);
 	}

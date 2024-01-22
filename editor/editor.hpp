@@ -97,6 +97,19 @@ namespace Editor {
 
 		std::shared_ptr<engine::NodeBase> m_pSelectedNode = nullptr;
 
+		struct tiny_keyboard {
+			tiny_keyboard() {
+				std::memset(keys, 0, 1024 * sizeof(int));
+			}
+
+			void convert() {
+				for (int i = 0; i < 1024; i++) {
+					keys[i] = (int)framework::Input::KeyBoard::KEYS[i];
+				}
+			}
+			int keys[1024];
+		};
+
 		void UpdateReferenceCallback(engine::Scene* scene, engine::Node<engine::Scene::SceneEntity>* scene_ptr, void* managed_ref) {
 			auto node = scene->getNode(scene_ptr->Index());
 			auto script = scene->getChild<EntityScript>(node);
@@ -121,7 +134,9 @@ namespace Editor {
 			host.assembly.LoadDelegate<void, const char*, bool>(L"SetPropertyBool", L"SetPropertyBoolDelegate", L"Epsilon", true);
 			host.assembly.LoadDelegate<void>(L"ReloadAssemblies", L"ReloadAssembliesDelegate", L"Epsilon");
 			host.assembly.LoadDelegate<void, func_ptr_2>(L"registerUpdateReferenceCallback", L"registerUpdateReferenceCallbackDelegate", L"Epsilon");
-			
+
+			host.assembly.LoadDelegate<void, tiny_keyboard>(L"setKeyboardState", L"setKeyboardStateDelegate", L"Epsilon");
+
 			host.assembly.Invoke<void>(L"registerSetTransform", (func_ptr)[](engine::Node<engine::Scene::SceneEntity>* scene_ptr, int entity_id, Transform transform) {
 				if (scene_ptr != nullptr) {
 					scene_ptr->data.transform = transform.toMat4();
@@ -129,15 +144,13 @@ namespace Editor {
 				});
 
 			host.assembly.Invoke<void>(L"registerUpdateReferenceCallback", (func_ptr_2)[](engine::Scene* scene, engine::Node<engine::Scene::SceneEntity>* scene_ptr, void* managed_ref) {
+				
+				if (scene == nullptr || scene_ptr == nullptr || managed_ref == nullptr) return;
+				
 				auto node = scene->getNode(scene_ptr->Index());
 				auto script = scene->getChild<EntityScript>(node);
 				script->data.ManagedPtr = managed_ref;
 
-
-				//const char* str = host.assembly.Invoke<const char*>(L"getEntityFields", script->data.ManagedPtr);
-				//std::cout << str << std::endl;
-				//auto props = UI::Property::DeserializeProperties(std::string(str));// m_pObjectProperty.setProperties(std::string(str));
-				//script->data.properties = props;
 			});
 
 			m_pSceneNodes.addEntityCallback = [this]() {
