@@ -216,6 +216,11 @@ namespace engine
 			return m_pImages;
 		}
 
+		void setContext(std::shared_ptr<Context> context)
+		{
+			m_pContext = context;
+		}
+
 		const std::string &getImageName(size_t hash)
 		{
 			return m_pImageName.at(hash);
@@ -270,7 +275,7 @@ namespace engine
 
 			m_pGPUBuffers["animation_transform_buffer"] = resourceManager->createGPUBuffer("animation_transform_buffer", sizeof(GPUAnimationData) * 100, engine::BufferStorageType::STORAGE_BUFFER);
 
-			m_pGPUBuffers["entity_buffer"] = resourceManager->createGPUBuffer("entity_buffer", sizeof(ShaderEntity) * 1024, engine::BufferStorageType::STORAGE_BUFFER, 1);
+			m_pGPUBuffers["entity_buffer"] = resourceManager->createGPUBuffer("entity_buffer", sizeof(ShaderEntity) * 2048, engine::BufferStorageType::STORAGE_BUFFER, 1);
 
 			transformBuffer.resize(vk::MAX_FRAMES_IN_FLIGHT);
 			objectBuffer.resize(vk::MAX_FRAMES_IN_FLIGHT);

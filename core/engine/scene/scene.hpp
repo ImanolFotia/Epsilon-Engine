@@ -71,20 +71,12 @@ namespace engine
 		using OctreeNodeType = std::shared_ptr<NodeBase>;
 
 	private:
-		AssetManager m_pAssetManager{};
 		// OctreeContainer<std::shared_ptr<NodeBase>> m_pOctree;
+		std::shared_ptr<AssetManager> m_pAssetManager;
 		SceneManager m_pSceneManager;
 
-		std::unordered_map<std::string, RenderPassInfo> m_RenderPassesInfo;
-		std::unordered_map<std::string, Ref<RenderPass>> m_RenderPassesRefs;
 
-		struct RenderLayout
-		{
-			unsigned int pipelineLayoutIndex = 0;
-			Ref<BindGroup> bindGroup;
-		};
 
-		std::unordered_map<size_t, RenderLayout> m_pRenderLayouts{};
 
 		Ref<RenderPass> m_pCurrentRenderPass;
 
@@ -113,18 +105,21 @@ namespace engine
 
 		Scene(std::shared_ptr<Context> context) : m_pContext(context)
 		{
-			m_pAssetManager.m_pContext = m_pContext;
+			//m_pAssetManager.m_pContext = m_pContext;
 
-			m_pCurrentRenderPass = m_RenderPassesRefs["DefaultRenderPass"];
 			float octree_size = 256;
 			float octree_half_size = octree_size * 0.5;
 			m_pNodeOctree = std::make_shared<OctreeContainer<OctreeNodeType>>(Box{glm::vec3(-octree_half_size, -20.0, -octree_half_size), glm::vec3(octree_size, 50, octree_size)}, 0);
 			m_pRenderOctree = std::make_shared<OctreeContainer<OctreeRenderType>>(Box{glm::vec3(-octree_half_size, -20.0, -octree_half_size), glm::vec3(octree_size, 50, octree_size)}, 0);
 
-			m_pAssetManager.Init();
+			//m_pAssetManager.Init();
 		}
 
 		std::shared_ptr<Context> getContext() { return m_pContext; }
+
+		void setAssetManager(std::shared_ptr<engine::AssetManager> assetManager) {
+			m_pAssetManager = assetManager;
+		}
 
 		void Init()
 		{
@@ -134,69 +129,21 @@ namespace engine
 			#ifdef _WIN32
 						system("cd .\\assets\\shaders && .\\build_shaders.sh");
 			#endif*/
-			m_RenderPassesInfo = engine::parsers::parse_renderpasses();
-
-			for (auto &[name, renderpass] : m_RenderPassesInfo)
-			{
-				if (renderpass.isSwapChainAttachment)
-				{
-					m_RenderPassesRefs[name] = m_pContext->ResourceManager()->createDefaultRenderPass(renderpass);
-				}
-				else
-				{
-					m_RenderPassesRefs[name] = m_pContext->ResourceManager()->createRenderPass(renderpass);
-				}
-			}
 
 			m_pContext->Renderer()->InitDebugRenderer();
 		}
 
-		Ref<BindGroup> addBindGroup(const std::string &name, uint32_t layoutIndex, engine::BindGroupInfo info)
+
+
+		void setCurrentRenderPass(engine::Ref<engine::RenderPass> renderPassRef)
 		{
-			auto resourceManager = m_pContext->ResourceManager();
-			m_pRenderLayouts[std::hash<std::string>{}(name)] = {layoutIndex, resourceManager->createBindGroup(info)};
-
-			return m_pRenderLayouts[std::hash<std::string>{}(name)].bindGroup;
-		}
-
-		Ref<BindGroup> addBindGroup(const std::string &name, uint32_t layoutIndex, Ref<BindGroup> bindGroup)
-		{
-			auto resourceManager = m_pContext->ResourceManager();
-			m_pRenderLayouts[std::hash<std::string>{}(name)] = {layoutIndex, bindGroup};
-			return bindGroup;
-		}
-
-		void UpdateBindGroup(const std::string &name)
-		{
-			auto resourceManager = m_pContext->ResourceManager();
-			// resourceManager->updateBindGroup();
-			m_pRenderLayouts[std::hash<std::string>{}(name)];
-		}
-
-		std::unordered_map<size_t, RenderLayout> getBindGroups()
-		{
-			return m_pRenderLayouts;
-		}
-
-		void addRenderPass(const std::string &name, Ref<RenderPass> renderPass)
-		{
-			m_RenderPassesRefs[name] = renderPass;
-		}
-
-		void setCurrentRenderPass(const std::string &renderpass)
-		{
-			m_pCurrentRenderPass = m_RenderPassesRefs[renderpass];
-
 			auto renderer = m_pContext->Renderer();
-			renderer->SetRenderPass(m_pCurrentRenderPass);
+			renderer->SetRenderPass(renderPassRef);
+			m_pCurrentRenderPass = renderPassRef;
 		}
 
-		Ref<RenderPass> getRenderPass(const std::string &name)
-		{
-			return m_RenderPassesRefs.at(name);
-		}
 
-		AssetManager &getAssetManager()
+		std::shared_ptr<AssetManager> &getAssetManager()
 		{
 			return m_pAssetManager;
 		}
@@ -458,12 +405,8 @@ namespace engine
 			}
 		}
 
-		uint32_t Push(std::shared_ptr<Node<RenderModel>> renderModel, const glm::mat4 &transform, const std::string &layout)
-		{
-			return Push(renderModel, std::forward<const glm::mat4 &>(transform), std::hash<std::string>{}(layout));
-		}
 
-		uint32_t Push(std::shared_ptr<Node<RenderModel>> renderModel, const glm::mat4 &transform, size_t layout)
+		uint32_t Push(std::shared_ptr<Node<RenderModel>> renderModel, glm::mat4 &transform, engine::parsers::RenderLayout layout)
 		{
 			uint32_t push_index = m_pMeshCount;
 			if (m_pContext->Window().getSize().width > 0)
@@ -472,12 +415,12 @@ namespace engine
 
 				Ref<PushConstant> push_constant;
 
-				auto &renderLayout = m_pRenderLayouts[layout];
+				auto &renderLayout = layout;
 
 				Ref<BindGroup> selectedBindGroup = renderLayout.bindGroup;
 
-				auto transform_buffer = m_pAssetManager.getTransformBuffer();
-				auto object_buffer = m_pAssetManager.getObjectBuffer();
+				auto transform_buffer = m_pAssetManager->getTransformBuffer();
+				auto object_buffer = m_pAssetManager->getObjectBuffer();
 
 				for (auto &mesh : renderModel->data.renderMeshes[0])
 				{
@@ -490,7 +433,7 @@ namespace engine
 
 					for (int i = 0; i < mesh.numMaterials; i++)
 					{
-						uint32_t uniform_index = m_pAssetManager.m_pMaterials.at(mesh.material_keys[i]).index;
+						uint32_t uniform_index = m_pAssetManager->m_pMaterials.at(mesh.material_keys[i]).index;
 						material_indices[i] = uniform_index;
 					}
 
@@ -519,12 +462,8 @@ namespace engine
 			return push_index;
 		}
 
-		uint32_t Push(const std::vector<glm::mat4> &transforms, const std::string &layout, const std::string &material, unsigned int count = 1)
-		{
-			return Push(transforms, std::hash<std::string>{}(layout), material, count);
-		}
 
-		uint32_t Push(const std::vector<glm::mat4> &transforms, size_t layout, const std::string &material, unsigned int count = 1)
+		uint32_t Push(const std::vector<glm::mat4> &transforms, engine::parsers::RenderLayout layout, const std::string &material, unsigned int count = 1)
 		{
 
 			uint32_t push_index = m_pMeshCount;
@@ -534,9 +473,9 @@ namespace engine
 
 				Ref<PushConstant> push_constant;
 
-				Ref<BindGroup> selectedBindGroup = m_pRenderLayouts[layout].bindGroup;
-				auto transform_buffer = m_pAssetManager.getTransformBuffer();
-				auto object_buffer = m_pAssetManager.getObjectBuffer();
+				Ref<BindGroup> selectedBindGroup = layout.bindGroup;
+				auto transform_buffer = m_pAssetManager->getTransformBuffer();
+				auto object_buffer = m_pAssetManager->getObjectBuffer();
 
 				uint32_t material_indices[4] = {0};
 				uint32_t firstInstance = m_pMeshCount;
@@ -549,7 +488,7 @@ namespace engine
 
 					for (int j = 0; j < 1; j++)
 					{
-						uint32_t uniform_index = m_pAssetManager.m_pMaterials.at(std::hash<std::string>{}(material)).index;
+						uint32_t uniform_index = m_pAssetManager->m_pMaterials.at(std::hash<std::string>{}(material)).index;
 						material_indices[j] = uniform_index;
 					}
 
@@ -571,7 +510,7 @@ namespace engine
 								.objectConstant = {
 									.transform = transforms[0],
 									.material_index = material_indices[0]},
-								.layout_index = m_pRenderLayouts.at(layout).pipelineLayoutIndex,
+								.layout_index = layout.pipelineLayoutIndex,
 								.uniformIndex = firstInstance,
 								.count = count});
 			}
@@ -580,12 +519,8 @@ namespace engine
 		}
 		uint32_t lastRenderModelId = -1;
 
-		uint32_t Push(std::shared_ptr<Node<RenderModel>> renderModel, const std::vector<glm::mat4> &transforms, const std::string &layout, unsigned int count = 1)
-		{
-			return Push(renderModel, transforms, std::hash<std::string>{}(layout), count);
-		}
 
-		uint32_t Push(std::shared_ptr<Node<RenderModel>> renderModel, const std::vector<glm::mat4> &transforms, size_t layout, unsigned int count = 1)
+		uint32_t Push(std::shared_ptr<Node<RenderModel>> renderModel, const std::vector<glm::mat4> &transforms, unsigned int count, engine::parsers::RenderLayout layout)
 		{
 			uint32_t push_index = m_pMeshCount;
 			if (m_pContext->Window().getSize().width > 0)
@@ -594,14 +529,14 @@ namespace engine
 
 				Ref<PushConstant> push_constant;
 
-				Ref<BindGroup> selectedBindGroup = m_pRenderLayouts[layout].bindGroup;
+				Ref<BindGroup> selectedBindGroup = layout.bindGroup;
 
 				if (count > 1)
 				{
 				}
 
-				auto transform_buffer = m_pAssetManager.getTransformBuffer();
-				auto object_buffer = m_pAssetManager.getObjectBuffer();
+				auto transform_buffer = m_pAssetManager->getTransformBuffer();
+				auto object_buffer = m_pAssetManager->getObjectBuffer();
 
 				for (auto &mesh : renderModel->data.renderMeshes[0])
 				{
@@ -616,7 +551,7 @@ namespace engine
 
 						for (int j = 0; j < mesh.numMaterials; j++)
 						{
-							uint32_t uniform_index = m_pAssetManager.m_pMaterials.at(mesh.material_keys[j]).index;
+							uint32_t uniform_index = m_pAssetManager->m_pMaterials.at(mesh.material_keys[j]).index;
 							material_indices[j] = uniform_index;
 						}
 
@@ -639,7 +574,7 @@ namespace engine
 										.transform = transforms[0],
 										.material_index = material_indices[0],
 										.animation_offset = renderModel->data.animationIndex},
-									.layout_index = m_pRenderLayouts.at(layout).pipelineLayoutIndex,
+									.layout_index = layout.pipelineLayoutIndex,
 									.uniformIndex = firstInstance,
 									.count = count});
 				}
@@ -669,7 +604,7 @@ namespace engine
 
 		void Destroy()
 		{
-			m_pAssetManager.Destroy();
+			m_pAssetManager->Destroy();
 		}
 	};
 }
