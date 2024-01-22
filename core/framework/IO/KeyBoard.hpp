@@ -67,7 +67,7 @@ namespace framework
         {
         private:
         public:
-            static KeyWraps KeyWrap;
+            //static KeyWraps KeyWrap;
 
             static bool KEYS[1024];
 

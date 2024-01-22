@@ -10,7 +10,7 @@ namespace framework
 
     //std::unordered_map<const char *, uint16_t> Input::KeyWraps::kw;
 
-    Input::KeyWraps Input::KeyBoard::KeyWrap;
+    //Input::KeyWraps Input::KeyBoard::KeyWrap;
     namespace Input
     {
 
@@ -41,7 +41,7 @@ namespace framework
             return KEYS[key];
         }
 
-        bool KeyBoard::getKey(const char *alias)
+       /* bool KeyBoard::getKey(const char* alias)
         {
             return KEYS[KeyWrap.getKey(alias)];
         }
@@ -49,7 +49,7 @@ namespace framework
         void KeyBoard::wrapKey(const char *alias, uint16_t key)
         {
             KeyWrap.addKey(alias, key);
-        }
+        }*/
 
     }
 }
