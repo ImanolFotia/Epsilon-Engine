@@ -31,6 +31,7 @@
 #include "modules/mono/mono-instance.hpp"
 
 #include <core/engine/scene/scene.hpp>
+#include <core/engine/scene/asset_manager.hpp>
 
 
 
@@ -144,6 +145,8 @@ namespace Epsilon
 
         std::shared_ptr<engine::Context> m_pContext = nullptr;
         std::shared_ptr<engine::Scene> m_pScene;
+
+        std::shared_ptr<engine::AssetManager> m_pAssetManager{};
 
         ShaderData shaderData;
         int m_pMaxFPS = 5000;
