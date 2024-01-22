@@ -1,4 +1,5 @@
 ﻿using common;
+using EpsilonSharp.Input;
 using System;
 using System.ComponentModel;
 using System.Data;
@@ -36,6 +37,8 @@ namespace EpsilonSharp
 
         static FileSystemWatcher watcher;
         static WeakReference weakReference;
+
+        static Keyboard keyboard;
 
         static Epsilon()
         {
@@ -75,8 +78,8 @@ namespace EpsilonSharp
 
             var assembly = domainMgr.LoadFromAssemblyName(AssemblyName.GetAssemblyName(pluginPath));
 #if DEBUG
-            //if (!Debugger.IsAttached)
-                //Debugger.Launch();
+            if (!Debugger.IsAttached)
+                Debugger.Launch();
 #endif
 
             Console.WriteLine(Directory.GetCurrentDirectory());
@@ -96,6 +99,17 @@ namespace EpsilonSharp
         {
             callback = (CallBackDelegate)
             Marshal.GetDelegateForFunctionPointer(func_ptr, typeof(CallBackDelegate));
+        }
+
+
+        public unsafe static void setKeyboardState(Keyboard inKeyboard)
+        {
+            keyboard = inKeyboard;
+            for(int i = 0; i < 1024; i++)
+            {
+                if(keyboard.KEYS[i] == 1)
+                    Console.WriteLine(i);
+            }
         }
 
         public static void registerSetTransform(IntPtr func_ptr)

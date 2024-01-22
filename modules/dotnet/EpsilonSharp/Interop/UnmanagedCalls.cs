@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EpsilonSharp.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,8 @@ namespace EpsilonSharp
     public static partial class Epsilon
     {
         public delegate void setTransformCallBackDelegate(IntPtr scene_hnd, int entity_id, Transform transform);
+
+        public delegate void setKeyboardStateDelegate(Keyboard keyboard);
 
         public delegate void registerCallbackDelegate(IntPtr func_ptr);
 
