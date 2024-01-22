@@ -726,8 +726,9 @@ namespace engine
 			for (auto& uniformBuffer : pass.uniformBuffer)
 				for (auto& b : uniformBuffer.buffers)
 				{
-					if (b.buffer != VK_NULL_HANDLE)
+					if (b.buffer != VK_NULL_HANDLE) {
 						vmaDestroyBuffer(m_pAllocator, b.buffer, b.allocation);
+					}
 				}
 
 			if (pass.id == std::numeric_limits<uint32_t>::max())
