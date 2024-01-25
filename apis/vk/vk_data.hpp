@@ -347,7 +347,9 @@ namespace vk
 #if !defined(__ANDROID__)
 		const std::vector<const char*> deviceExtensions = {
 			VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-			VK_EXT_MEMORY_BUDGET_EXTENSION_NAME
+			VK_EXT_MEMORY_BUDGET_EXTENSION_NAME,
+			VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME,
+			VK_KHR_MAINTENANCE3_EXTENSION_NAME
 		};
 #else 
 		const std::vector<const char*> deviceExtensions = {

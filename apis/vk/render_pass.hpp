@@ -106,7 +106,7 @@ namespace vk
                 }
                 else
                 {
-                    attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL;
+                    attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
                 }
                 renderPass.renderPassData.colorAttachments.push_back(attachmentDesc);
 
@@ -143,7 +143,7 @@ namespace vk
                 colorAttachmentResolve.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
             }
             else {
-                colorAttachmentResolve.finalLayout = VK_IMAGE_LAYOUT_READ_ONLY_OPTIMAL;
+                colorAttachmentResolve.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
             }
             colorAttachmentResolveRef.attachment = 2;
             colorAttachmentResolveRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
