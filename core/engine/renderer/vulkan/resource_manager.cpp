@@ -90,6 +90,8 @@ namespace engine
 		{
 			if (!texInfo.isCompressed)
 				texInfo.mipLevels = mipLevels;
+			else
+				mipLevels = texInfo.mipLevels;
 
 			if (texInfo.generateMipMaps == false) {
 				texInfo.mipLevels = 1;

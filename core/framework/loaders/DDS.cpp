@@ -6,14 +6,14 @@
 #include <core/engine/renderer/types.hpp>
 #include <glm/glm.hpp>
 
-DDS::DDS(const std::string& filename, unsigned int baseLevel = 0) : m_pBaseLevel{baseLevel}
+DDS::DDS(const std::string& filename, int baseLevel = 0) : m_pBaseLevel{baseLevel}
 {
 	if (!LoadCompressed(filename, baseLevel)) {
 		Load(filename, baseLevel);
 	}
 }
 
-bool DDS::LoadCompressed(const std::string& filename, unsigned int baseLevel = 0) {
+bool DDS::LoadCompressed(const std::string& filename, int baseLevel = 0) {
 
 	header = new DDS_HEADER();
 
@@ -97,6 +97,8 @@ bool DDS::LoadCompressed(const std::string& filename, unsigned int baseLevel = 0
 
 	int levels = std::max(1, header->dwMipMapCount);
 
+	m_pBaseLevel = std::min(m_pBaseLevel, levels - 1);
+
 	if (dx10_header != nullptr) {
 		for (int j = m_pBaseLevel; j < levels; j++)
 		{
@@ -121,7 +123,7 @@ bool DDS::LoadCompressed(const std::string& filename, unsigned int baseLevel = 0
 }
 
 
-void DDS::Load(const std::string& filename, unsigned int baseLevel = 0) {
+void DDS::Load(const std::string& filename, int baseLevel = 0) {
 
 	header = new DDS_HEADER();
 
@@ -188,6 +190,7 @@ void DDS::Load(const std::string& filename, unsigned int baseLevel = 0) {
 	}
 
 	int levels = std::max(1, header->dwMipMapCount);
+	m_pBaseLevel = std::min(m_pBaseLevel, levels - 1);
 
 	if (dx10_header != nullptr) {
 		for (int j = m_pBaseLevel; j < levels; j++)

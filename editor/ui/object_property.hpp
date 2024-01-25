@@ -194,7 +194,7 @@ namespace Editor::UI {
 			static std::string selected = renderModel->name;
 			if (ImGui::BeginPopupModal("Model Popup", NULL)) {
 				if (m_pScenePtr != nullptr) {
-					auto& models = m_pScenePtr->getAssetManager().getModels();
+					auto& models = m_pScenePtr->getAssetManager()->getModels();
 
 					if (ImGui::BeginListBox("##models_listbox", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
 					{
@@ -216,7 +216,7 @@ namespace Editor::UI {
 					auto parent_node = m_pScenePtr->getNode(selected_node->Index());
 					auto child = m_pScenePtr->getChild<engine::RenderModel>(parent_node);
 					auto bindGroup = renderModel->bindGroup;
-					child->data = m_pScenePtr->getAssetManager().getModel(selected);
+					child->data = m_pScenePtr->getAssetManager()->getModel(selected);
 					child->data.bindGroup = bindGroup;
 					child->data.bindGroupId = std::hash<std::string>{}(bindGroup);
 					ImGui::CloseCurrentPopup();

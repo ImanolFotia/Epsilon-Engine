@@ -71,12 +71,9 @@ namespace engine
 		using OctreeNodeType = std::shared_ptr<NodeBase>;
 
 	private:
-		// OctreeContainer<std::shared_ptr<NodeBase>> m_pOctree;
+
 		std::shared_ptr<AssetManager> m_pAssetManager;
 		SceneManager m_pSceneManager;
-
-
-
 
 		Ref<RenderPass> m_pCurrentRenderPass;
 

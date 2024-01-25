@@ -5,18 +5,18 @@ class DDS
 {
 public:
 
-	DDS(const std::string&, unsigned int);
+	DDS(const std::string&, int);
 
 	~DDS() {
 		delete header;
 	}
 
-	bool LoadCompressed(const std::string&, unsigned int);
-	void Load(const std::string&, unsigned int);
+	bool LoadCompressed(const std::string&, int);
+	void Load(const std::string&, int);
 
 
-	uint32_t mipLevels() {
-		return header->dwMipMapCount- m_pBaseLevel;
+	int32_t mipLevels() {
+		return std::max(header->dwMipMapCount - m_pBaseLevel, 1);
 	}
 
 	uint32_t width() {
@@ -68,7 +68,7 @@ private:
 	size_t m_pSize{};
 	unsigned int m_InternalFormat{};
 	unsigned int m_pBlockSize{};
-	unsigned int m_pBaseLevel = 0;
+	int m_pBaseLevel = 0;
 
 };
 

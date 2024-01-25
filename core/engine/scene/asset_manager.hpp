@@ -275,7 +275,7 @@ namespace engine
 
 			m_pGPUBuffers["animation_transform_buffer"] = resourceManager->createGPUBuffer("animation_transform_buffer", sizeof(GPUAnimationData) * 100, engine::BufferStorageType::STORAGE_BUFFER);
 
-			m_pGPUBuffers["entity_buffer"] = resourceManager->createGPUBuffer("entity_buffer", sizeof(ShaderEntity) * 2048, engine::BufferStorageType::STORAGE_BUFFER, 1);
+			m_pGPUBuffers["entity_buffer"] = resourceManager->createGPUBuffer("entity_buffer", sizeof(ShaderEntity) * 1024, engine::BufferStorageType::STORAGE_BUFFER, 1);
 
 			transformBuffer.resize(vk::MAX_FRAMES_IN_FLIGHT);
 			objectBuffer.resize(vk::MAX_FRAMES_IN_FLIGHT);
@@ -1050,12 +1050,14 @@ namespace engine
 			else */
 			if (ext == "dds")
 			{
-				int baseLevel = 0;
+				int baseLevel = 2;
 				DDS ddsfile(texture_path, baseLevel);
 				isDDS = true;
 				width = ddsfile.width();
 				height = ddsfile.height();
-				mipLevels = ddsfile.mipLevels();
+				
+				baseLevel = std::min(ddsfile.mipLevels() - 1u, (uint32_t)baseLevel);
+				mipLevels = std::max(ddsfile.mipLevels(), 1);
 				size = ddsfile.size();
 				num_channels = 4;
 				isCompressed = true;
@@ -1088,7 +1090,6 @@ namespace engine
 				unsigned int s = 0;
 				for (unsigned int level = 0; level < mipLevels; ++level)
 				{
-
 					s = ((w + 3) / 4) * (((h + 3) / 4) * ddsfile.blockSize());
 					offsets.push_back(offset);
 					offset += s;
