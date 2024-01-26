@@ -11,7 +11,7 @@ layout (location = 4) flat in int piece;
 
 
 
-layout(binding = 0) uniform UniformBufferObject {
+layout(binding = 1) uniform UniformBufferObject {
     float iTime;
     vec2 iResolution;
     mat4 view;
@@ -19,7 +19,7 @@ layout(binding = 0) uniform UniformBufferObject {
     vec4 lastMove;
 } ubo;
 
-layout(binding = 1) uniform sampler2D texSampler;
+layout(binding = 2) uniform sampler2D texSampler;
 
 layout (set = 1, binding = 0) uniform sampler2D textures[];
 

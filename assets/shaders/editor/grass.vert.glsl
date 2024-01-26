@@ -78,7 +78,7 @@ void main() {
     vec3 instance_pos = vec3(modelMatrix[3][0], modelMatrix[3][1], modelMatrix[3][2]);
     
     vec3 clouds = fbm(instance_pos.xz*0.8 + iTime * 0.5, 2) * vec3(1.0) * 2.0 - 1.0;
-    vec3 clouds2 = fbm(instance_pos.xz*0.1 - iTime*3.0, 2) * vec3(fract(gl_InstanceIndex/1000)) * 2.0 - 1.0;
+    vec3 clouds2 = fbm(instance_pos.xz*0.1 + iTime*0.75, 2) * vec3(fract(gl_InstanceIndex/1000)) * 2.0 - 1.0;
     
     vec3 height = fbm(instance_pos.xz*0.1 - 3.0, 2);
 

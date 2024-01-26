@@ -15,7 +15,7 @@ layout (location = 2) out vec3 normal;
 layout (location = 3) out vec4 color;
 
 
-layout(binding = 0) uniform UniformBufferObject {
+layout(binding = 1) uniform UniformBufferObject {
     float iTime;
     vec2 iResolution;
     mat4 view;
