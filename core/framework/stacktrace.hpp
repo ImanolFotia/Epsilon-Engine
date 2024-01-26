@@ -25,152 +25,151 @@
 #include <Windows.h>
 #include "dbghelp.h"
 
-#define PATH_MAX 256 //per spec
+#define PATH_MAX 256 // per spec
 #endif
 
-namespace framework {
-
-static std::string get_path()
+namespace framework
 {
-#ifdef __linux__
-    char result[PATH_MAX];
-    ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
 
-    auto str = std::string(result, (count > 0) ? count : 0);
-    std::cout << str;
-    return "";
+    static std::string get_path()
+    {
+#ifdef __linux__
+        char result[PATH_MAX];
+        ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
+
+        auto str = std::string(result, (count > 0) ? count : 0);
+        std::cout << str;
+        return "";
 #endif
 
 #ifdef _WIN32
-    char result[PATH_MAX];
-    size_t count = GetModuleFileName(NULL, result, PATH_MAX);//readlink("/proc/self/exe", result, PATH_MAX);
+        char result[PATH_MAX];
+        size_t count = GetModuleFileName(NULL, result, PATH_MAX); // readlink("/proc/self/exe", result, PATH_MAX);
 
-    auto str = std::string(result, (count > 0) ? count : 0);
-    std::cout << str;
-    return "";
+        auto str = std::string(result, (count > 0) ? count : 0);
+        std::cout << str;
+        return "";
 #endif
-}
-
-static std::string sh(const std::string& cmd)
-{
-#ifdef __linux__
-    framework::StaticArray<char, 128> buffer = {0};
-    std::string result;
-    std::shared_ptr<FILE> pipe(popen(cmd.c_str(), "r"), pclose);
-    if (!pipe)
-        throw std::runtime_error("popen() failed!");
-    while (!feof(pipe.get()))
-    {
-        if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
-        {
-            result += buffer.data();
-        }
     }
 
-    return result;
+    static std::string sh(const std::string &cmd)
+    {
+#ifdef __linux__
+        std::array<char, 128> buffer = {0};
+        std::string result;
+        std::shared_ptr<FILE> pipe(popen(cmd.c_str(), "r"), pclose);
+        if (!pipe)
+            throw std::runtime_error("popen() failed!");
+        while (!feof(pipe.get()))
+        {
+            if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
+            {
+                result += buffer.data();
+            }
+        }
+
+        return result;
 #endif
 
 #ifdef _WIN32
-    std::array<char, 128> buffer = { 0 };
-    std::string result;
-    std::shared_ptr<FILE> pipe(_popen(cmd.c_str(), "r"), _pclose);
-    if (!pipe)
-        throw std::runtime_error("popen() failed!");
-    while (!feof(pipe.get()))
-    {
-        if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
+        std::array<char, 128> buffer = {0};
+        std::string result;
+        std::shared_ptr<FILE> pipe(_popen(cmd.c_str(), "r"), _pclose);
+        if (!pipe)
+            throw std::runtime_error("popen() failed!");
+        while (!feof(pipe.get()))
         {
-            result += buffer.data();
+            if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
+            {
+                result += buffer.data();
+            }
         }
-    }
 
-    return result;
+        return result;
 #endif
-}
-
-
-static std::vector<std::string> split(const std::string &s, char seperator)
-{
-    std::vector<std::string> output;
-
-    std::string::size_type prev_pos = 0, pos = 0;
-
-    while ((pos = s.find(seperator, pos)) != std::string::npos)
-    {
-        std::string substring(s.substr(prev_pos, pos - prev_pos));
-
-        output.push_back(substring);
-
-        prev_pos = ++pos;
     }
 
-    output.push_back(s.substr(prev_pos, pos - prev_pos)); // Last word
-
-    return output;
-}
-
-class entry
-{
-    void *m_pAddress = nullptr;
-    std::string m_pDescription;
-    std::string m_pSourceFile;
-    std::string m_pSourceLine;
-
-public:
-    const std::string &description() { return m_pDescription; }
-    const std::string &source_file() { return m_pSourceFile; }
-    const std::string &source_line() { return m_pSourceLine; }
-    void *address() { return m_pAddress; }
-
-    friend class stacktrace;
-};
-
-class stacktrace
-{
-public:
-    static stacktrace current()
+    static std::vector<std::string> split(const std::string &s, char seperator)
     {
-        stacktrace current;
+        std::vector<std::string> output;
+
+        std::string::size_type prev_pos = 0, pos = 0;
+
+        while ((pos = s.find(seperator, pos)) != std::string::npos)
+        {
+            std::string substring(s.substr(prev_pos, pos - prev_pos));
+
+            output.push_back(substring);
+
+            prev_pos = ++pos;
+        }
+
+        output.push_back(s.substr(prev_pos, pos - prev_pos)); // Last word
+
+        return output;
+    }
+
+    class entry
+    {
+        void *m_pAddress = nullptr;
+        std::string m_pDescription;
+        std::string m_pSourceFile;
+        std::string m_pSourceLine;
+
+    public:
+        const std::string &description() { return m_pDescription; }
+        const std::string &source_file() { return m_pSourceFile; }
+        const std::string &source_line() { return m_pSourceLine; }
+        void *address() { return m_pAddress; }
+
+        friend class stacktrace;
+    };
+
+    class stacktrace
+    {
+    public:
+        static stacktrace current()
+        {
+            stacktrace current;
 
 #if defined(__linux__) && (!defined(ANDROID) && !defined(__ANDROID__))
-        void *buffer[512];
-        int numFrames = backtrace(buffer, 32);
-        char **framesDescriptions = backtrace_symbols(buffer, numFrames);
-            
-        for (int i = 0; i < numFrames; i++)
-        {
+            void *buffer[512];
+            int numFrames = backtrace(buffer, 32);
+            char **framesDescriptions = backtrace_symbols(buffer, numFrames);
 
-            void *frameAddress = buffer[i];
-            size_t p = 0;
+            for (int i = 0; i < numFrames; i++)
+            {
 
-            while (framesDescriptions[i][p] != '(' &&
-                   framesDescriptions[i][p] != ' ' &&
-                   framesDescriptions[i][p] != 0)
-                ++p;
+                void *frameAddress = buffer[i];
+                size_t p = 0;
 
-            char cmd[256];
-            sprintf(cmd, "addr2line -i -C -e %.*s -f %p ", p, framesDescriptions[i], buffer[i]);
+                while (framesDescriptions[i][p] != '(' &&
+                       framesDescriptions[i][p] != ' ' &&
+                       framesDescriptions[i][p] != 0)
+                    ++p;
 
-            auto message = sh(cmd);
+                char cmd[256];
+                sprintf(cmd, "addr2line -i -C -e %.*s -f %p ", p, framesDescriptions[i], buffer[i]);
 
-            auto lines = split(message, '\n');
-            auto data = split(lines[1], ':');
+                auto message = sh(cmd);
 
-            if (std::string(lines[0]).find("??") != std::string::npos)
-                continue;
+                auto lines = split(message, '\n');
+                auto data = split(lines[1], ':');
 
-            entry e;
-            e.m_pDescription = std::string(lines[0]);
-            e.m_pSourceFile = data.at(0);
-            e.m_pSourceLine = data.at(1);
-            e.m_pAddress = buffer[i];
+                if (std::string(lines[0]).find("??") != std::string::npos)
+                    continue;
 
-            current.m_pEntries.push_back(e);
-        }
+                entry e;
+                e.m_pDescription = std::string(lines[0]);
+                e.m_pSourceFile = data.at(0);
+                e.m_pSourceLine = data.at(1);
+                e.m_pAddress = buffer[i];
 
-        free(framesDescriptions);
+                current.m_pEntries.push_back(e);
+            }
+
+            free(framesDescriptions);
 #endif
-
 
 #if false && (!defined(ANDROID) && !defined(__ANDROID__))
 
@@ -267,15 +266,15 @@ public:
             line = NULL;
         }
 #endif
-        return current;
-    }
+            return current;
+        }
 
-    [[nodiscard]] auto begin() { return m_pEntries.begin(); }
+        [[nodiscard]] auto begin() { return m_pEntries.begin(); }
 
-    [[nodiscard]] auto end() { return m_pEntries.end(); }
+        [[nodiscard]] auto end() { return m_pEntries.end(); }
 
-private:
-    std::list<entry> m_pEntries;
-};
+    private:
+        std::list<entry> m_pEntries;
+    };
 
 }

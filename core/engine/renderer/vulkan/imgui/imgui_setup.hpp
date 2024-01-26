@@ -10,6 +10,8 @@
 //   the backend itself (imgui_impl_vulkan.cpp), but should PROBABLY NOT be used by your own engine/app code.
 // Read comments in imgui_impl_vulkan.h.
 
+#define GLM_ENABLE_EXPERIMENTAL
+
 #include <imgui.h>
 #include <ImGuizmo/ImGuizmo.h>
 #include <ImPlot/implot.h>
@@ -534,7 +536,8 @@ public:
 				ImGui::Checkbox("Show graph", &show_graph);
 				static float frametime_values[100] = {};
 				static int frametime_values_offset = 0;
-				if (show_graph) {
+				if (show_graph)
+				{
 					frametime_values_offset = (frametime_values_offset + 1) % IM_ARRAYSIZE(frametime_values);
 					frametime_values[frametime_values_offset] = 1000.0 / ImGui::GetIO().Framerate;
 					SparkLine("Frametime", "Frametime", frametime_values, 100, 0.5, 18.0, frametime_values_offset, ImVec4(1.0, 1.0, 1.0, 1.0), ImVec2(200, 100));
@@ -546,10 +549,11 @@ public:
 				int i = 0;
 				for (auto &heap : resources.heaps)
 				{
-					//ImGui::Text("Heap %i", i);
+					// ImGui::Text("Heap %i", i);
 					char header_name[128];
 					sprintf(header_name, "Heap %i", i);
-					if (ImGui::CollapsingHeader(header_name)) {
+					if (ImGui::CollapsingHeader(header_name))
+					{
 						ImGui::BulletText("Total %i MB", heap.total_memory / 1024 / 1024);
 						ImGui::BulletText("Used %i MB", heap.used_memory / 1024 / 1024);
 						ImGui::BulletText("Free %i MB", heap.free_memory / 1024 / 1024);
@@ -558,7 +562,8 @@ public:
 				}
 
 				ImGui::Separator();
-				if (ImGui::CollapsingHeader("Resources")) {
+				if (ImGui::CollapsingHeader("Resources"))
+				{
 					ImGui::BulletText("Vertex buffers %i", m_pResourceManagerRef->vertexBufferPool.size());
 					ImGui::BulletText("Index buffers %i", m_pResourceManagerRef->indexBufferPool.size());
 					ImGui::BulletText("Textures %i", m_pResourceManagerRef->texPool.size());

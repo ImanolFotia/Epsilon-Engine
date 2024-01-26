@@ -12,7 +12,7 @@
 #include <AL/efx.h>
 #include <AL/efx-creative.h>
 #include <AL/efx-presets.h>
-
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 
 namespace al {

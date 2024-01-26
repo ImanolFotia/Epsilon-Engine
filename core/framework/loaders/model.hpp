@@ -6,6 +6,7 @@
 #pragma once
 
 /// GL Includes
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -19,9 +20,7 @@ namespace framework
     class Model
     {
 
-
     public:
-
         std::string path{};
 
         Model(const std::string &path = "");
@@ -32,7 +31,6 @@ namespace framework
         {
             return this->path;
         }
-
 
         common::MIN_MAX_POINTS getMeshBoundingBox(unsigned int index, glm::vec3 position, glm::vec3 scale, glm::quat rotation);
 
@@ -59,7 +57,6 @@ namespace framework
         std::vector<glm::vec3> mMeshesPositions;
         std::vector<glm::vec3> mMeshesPositionsRelative;
 
-
         long toHash()
         {
             return std::hash<std::string>{}(path);
@@ -69,8 +66,6 @@ namespace framework
         {
             return mMeshes;
         }
-
-
 
         std::unordered_map<int, std::string> mMeshesNames;
 

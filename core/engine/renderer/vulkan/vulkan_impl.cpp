@@ -1,5 +1,6 @@
 #undef VMA_DEBUG_LOG
 #undef VMA_DEBUG_LOG_FORMAT
+#define GLM_ENABLE_EXPERIMENTAL
 #include "resource_manager.hpp"
 #include "helpers.hpp"
 
@@ -176,7 +177,7 @@ namespace engine
 
 	Ref<Buffer> VulkanResourceManager::pFetchVertexBuffer(uint32_t numVertices, size_t vertexSize)
 	{
-		
+
 		for (auto &bufferRef : vertexBufferReferences)
 		{
 			auto buffer = vertexBufferPool.get(bufferRef);
@@ -492,10 +493,10 @@ namespace engine
 				else if (binding.descriptorBinding == VK_DESCRIPTOR_TYPE_STORAGE_IMAGE)
 				{
 
-					auto& imageInfo = imageInfos.emplace_back();
+					auto &imageInfo = imageInfos.emplace_back();
 
-					imageInfo.imageLayout = VK_IMAGE_LAYOUT_GENERAL;//binding.texture.isDepthAttachment ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-					//imageInfo.imageLayout = binding.texture.format == VK_FORMAT_D32_SFLOAT ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : imageInfo.imageLayout;
+					imageInfo.imageLayout = VK_IMAGE_LAYOUT_GENERAL; // binding.texture.isDepthAttachment ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+					// imageInfo.imageLayout = binding.texture.format == VK_FORMAT_D32_SFLOAT ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : imageInfo.imageLayout;
 
 					binding.texture.imageLayout = imageInfo.imageLayout;
 					if (!binding.renderpass.empty())
@@ -744,7 +745,8 @@ namespace engine
 									   mipSubRange, i, 1);
 			}
 		}
-		else {
+		else
+		{
 		}
 
 		// After the loop, all mip layers are in TRANSFER_SRC layout, so transition all to SHADER_READ

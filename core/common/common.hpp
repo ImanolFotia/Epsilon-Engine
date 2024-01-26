@@ -1,5 +1,6 @@
 #pragma once
 
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
@@ -7,8 +8,8 @@
 #include <vector>
 #include <string>
 
-
-namespace common {
+namespace common
+{
 
 	struct Vertex
 	{
@@ -52,9 +53,11 @@ namespace common {
 		alignas(32) glm::vec4 weights = glm::vec4(0.0f);
 	};
 
-	struct Triangle {
+	struct Triangle
+	{
 		Triangle() = default;
-		Triangle(uint32_t a, uint32_t b, uint32_t c) {
+		Triangle(uint32_t a, uint32_t b, uint32_t c)
+		{
 			vertices[0] = a;
 			vertices[1] = b;
 			vertices[2] = c;
@@ -63,8 +66,9 @@ namespace common {
 		uint32_t id = 0;
 	};
 
-	template<typename VertexType>
-	struct BaseMesh {
+	template <typename VertexType>
+	struct BaseMesh
+	{
 		using vertex_type = VertexType;
 		void addTriangle(uint32_t a, uint32_t b, uint32_t c)
 		{
@@ -83,7 +87,8 @@ namespace common {
 			Indices.push_back(d);
 		}
 
-		Triangle getTriangle(uint32_t index) const {
+		Triangle getTriangle(uint32_t index) const
+		{
 			uint32_t a = Indices.at((index * 3));
 			uint32_t b = Indices.at((index * 3) + 1);
 			uint32_t c = Indices.at((index * 3) + 2);
@@ -93,7 +98,8 @@ namespace common {
 			return tr;
 		}
 
-		uint32_t numTriangles() const {
+		uint32_t numTriangles() const
+		{
 			return Indices.size() / 3;
 		}
 
@@ -104,8 +110,8 @@ namespace common {
 	using Mesh = BaseMesh<common::Vertex>;
 	using AnimatedMesh = BaseMesh<common::AnimatedVertex>;
 
-
-	struct MeshMaterial {
+	struct MeshMaterial
+	{
 		std::string albedo_path{};
 		std::string metallic_path{};
 		std::string normal_path{};
@@ -118,7 +124,8 @@ namespace common {
 		std::string name;
 	};
 
-	struct MIN_MAX_POINTS {
+	struct MIN_MAX_POINTS
+	{
 		float MIN_X = 0.0f;
 		float MIN_Y = 0.0f;
 		float MIN_Z = 0.0f;
@@ -129,7 +136,8 @@ namespace common {
 
 		MIN_MAX_POINTS() = default;
 
-		MIN_MAX_POINTS(glm::vec3 min, glm::vec3 max) {
+		MIN_MAX_POINTS(glm::vec3 min, glm::vec3 max)
+		{
 			MIN_X = min.x;
 			MIN_Y = min.y;
 			MIN_Z = min.z;
@@ -138,31 +146,35 @@ namespace common {
 			MAX_Y = max.y;
 			MAX_Z = max.z;
 
-			if (MIN_X > MAX_X) {
+			if (MIN_X > MAX_X)
+			{
 				float x = MAX_X;
 				MAX_X = MIN_X;
 				MIN_X = x;
 			}
 
-			if (MIN_Y > MAX_Y) {
+			if (MIN_Y > MAX_Y)
+			{
 				float y = MAX_Y;
 				MAX_Y = MIN_Y;
 				MIN_Y = y;
 			}
 
-			if (MIN_Z > MAX_Z) {
+			if (MIN_Z > MAX_Z)
+			{
 				float z = MAX_Z;
 				MAX_Z = MIN_Z;
 				MIN_Z = z;
 			}
-
 		}
 
-		glm::vec3 getCenterOfMass() {
-			return  glm::vec3(MAX_X + MIN_X, MAX_Y + MIN_Y, MAX_Z + MIN_Z) * 0.5f;
+		glm::vec3 getCenterOfMass()
+		{
+			return glm::vec3(MAX_X + MIN_X, MAX_Y + MIN_Y, MAX_Z + MIN_Z) * 0.5f;
 		}
 
-		glm::vec3 getSize() {
+		glm::vec3 getSize()
+		{
 
 			float mx = MIN_X < MAX_X ? MIN_X : MAX_X;
 			float my = MIN_Y < MAX_Y ? MIN_Y : MAX_Y;
@@ -173,19 +185,22 @@ namespace common {
 			float Mz = MIN_Z > MAX_Z ? MIN_Z : MAX_Z;
 
 			return glm::vec3(glm::abs(Mx - mx),
-				glm::abs(My - my),
-				glm::abs(Mz - mz));
+							 glm::abs(My - my),
+							 glm::abs(Mz - mz));
 		}
 
-		glm::vec3 Min() {
+		glm::vec3 Min()
+		{
 			return glm::vec3(MIN_X, MIN_Y, MIN_Z);
 		}
 
-		glm::vec3 Max() {
+		glm::vec3 Max()
+		{
 			return glm::vec3(MAX_X, MAX_Y, MAX_Z);
 		}
 
-		std::vector<glm::vec3> createBox() {
+		std::vector<glm::vec3> createBox()
+		{
 			std::vector<glm::vec3> points;
 			points.resize(8);
 			auto min = Min(), max = Max();
@@ -201,25 +216,32 @@ namespace common {
 			return points;
 		}
 
-		void transform(glm::mat4 transform) {
+		void transform(glm::mat4 transform)
+		{
 
 			auto box = createBox();
 
 			glm::vec3 min = glm::vec3(1000000.0f);
 			glm::vec3 max = glm::vec3(-1000000.0f);
 
-			for (auto& point : box) {
+			for (auto &point : box)
+			{
 				point = glm::vec3(transform * glm::vec4(point, 1.0f));
 
-				if (point.x < min.x) min.x = point.x;
-				if (point.y < min.y) min.y = point.y;
-				if (point.z < min.z) min.z = point.z;
+				if (point.x < min.x)
+					min.x = point.x;
+				if (point.y < min.y)
+					min.y = point.y;
+				if (point.z < min.z)
+					min.z = point.z;
 
-				if (point.x > max.x) max.x = point.x;
-				if (point.y > max.y) max.y = point.y;
-				if (point.z > max.z) max.z = point.z;
+				if (point.x > max.x)
+					max.x = point.x;
+				if (point.y > max.y)
+					max.y = point.y;
+				if (point.z > max.z)
+					max.z = point.z;
 			}
-
 
 			MIN_X = min.x;
 			MIN_Y = min.y;

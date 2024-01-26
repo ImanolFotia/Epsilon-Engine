@@ -3,7 +3,6 @@
 #include <vulkan/vulkan.h>
 #include "core/framework/common.hpp"
 
-
 #if defined(ANDROID) || defined(__ANDROID__)
 
 #include <android/log.h>
@@ -13,7 +12,6 @@
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 #endif
 
-
 namespace vk
 {
     static VkDebugUtilsMessengerEXT debugMessenger;
@@ -22,7 +20,7 @@ namespace vk
         "VK_LAYER_KHRONOS_validation",
     };
 
-#if 0
+#if 1
     const bool enableValidationLayers = false;
 #else
     constexpr bool enableValidationLayers = true;

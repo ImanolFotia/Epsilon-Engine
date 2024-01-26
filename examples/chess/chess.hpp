@@ -44,7 +44,7 @@ namespace ChessApp
 
         engine::Quad m_pQuad = {};
 
-        framework::StaticArray<Model, 32> m_pPieces;
+        std::array<Model, 32> m_pPieces;
         engine::Ref<engine::RenderPass> m_pRenderPass;
 
         Model m_pBoardModel;
