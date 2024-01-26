@@ -258,6 +258,13 @@ namespace engine
         INSTANCED
     };
 
+    enum class MemoryUsage {
+        DEVICE_ONLY = 0,
+        HOST_VISIBLE,
+        TRANSFER_SRC,
+        TRANSFER_DST
+    };
+
 
     struct ObjectDataConstant {
         glm::mat4 transform = glm::mat4(1.0f);
@@ -409,8 +416,9 @@ namespace engine
 
     struct BufferInfo
     {
-        size_t size;
-        size_t offset;
+        size_t size{};
+        size_t offset{};
+        MemoryUsage usage{};
     };
 
     struct BufferInfoFactory
@@ -671,6 +679,12 @@ namespace engine
         std::string renderPass{};
         std::string computeShader{};
         std::string name{};
+    };
+
+    struct UpdateVertexBufferInfo {
+        size_t size{};
+        size_t offset{}; 
+        void* vertices = nullptr;
     };
 
     struct UpdateMeshInfo {

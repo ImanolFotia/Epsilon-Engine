@@ -291,10 +291,12 @@ public:
 	}
 	void newFrame(uint32_t currentIndex, VkCommandBuffer &currentCommandBuffer)
 	{
-		m_pCurrentIndex = currentIndex;
-		m_pCommandBuffer = currentCommandBuffer;
-		ImGuiBegin();
-		ImGui::NewFrame();
+		if (m_pEnabled) {
+			m_pCurrentIndex = currentIndex;
+			m_pCommandBuffer = currentCommandBuffer;
+			ImGuiBegin();
+			ImGui::NewFrame();
+		}
 	}
 
 	void CreateDescriptorPool()
@@ -328,8 +330,10 @@ public:
 
 	void Destroy()
 	{
-		vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool, nullptr);
-		ImGui_ImplVulkan_Shutdown();
+		if (m_pVkDataPtr) {
+			vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool, nullptr);
+			ImGui_ImplVulkan_Shutdown();
+		}
 	}
 	void
 	Init(vk::VulkanData &vk_data,
@@ -485,25 +489,26 @@ public:
 	}
 	void ImGuiEnd()
 	{
+		if (m_pEnabled) {
+			ImGui_ImplVulkanH_Window* wd = &m_pMainWindowData;
 
-		ImGui_ImplVulkanH_Window *wd = &m_pMainWindowData;
+			// Rendering
 
-		// Rendering
+			ImGui::Render();
+			//}
 
-		ImGui::Render();
-		//}
-
-		ImDrawData *draw_data = ImGui::GetDrawData();
-		const bool is_minimized = (draw_data->DisplaySize.x <= 0.0f || draw_data->DisplaySize.y <= 0.0f);
-		ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-		if (!is_minimized)
-		{
-			wd->ClearValue.color.float32[0] = clear_color.x * clear_color.w;
-			wd->ClearValue.color.float32[1] = clear_color.y * clear_color.w;
-			wd->ClearValue.color.float32[2] = clear_color.z * clear_color.w;
-			wd->ClearValue.color.float32[3] = clear_color.w;
-			Render(draw_data);
-			// FramePresent(wd);
+			ImDrawData* draw_data = ImGui::GetDrawData();
+			const bool is_minimized = (draw_data->DisplaySize.x <= 0.0f || draw_data->DisplaySize.y <= 0.0f);
+			ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+			if (!is_minimized)
+			{
+				wd->ClearValue.color.float32[0] = clear_color.x * clear_color.w;
+				wd->ClearValue.color.float32[1] = clear_color.y * clear_color.w;
+				wd->ClearValue.color.float32[2] = clear_color.z * clear_color.w;
+				wd->ClearValue.color.float32[3] = clear_color.w;
+				Render(draw_data);
+				// FramePresent(wd);
+			}
 		}
 	}
 

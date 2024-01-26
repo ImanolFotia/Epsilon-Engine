@@ -47,6 +47,8 @@ namespace engine
 		Ref<PushConstant> createPushConstant(const std::string &, PushConstantData) override;
 		Ref<UniformBindings> createUniformData(UniformBindingInfo) override;
 		Ref<ComputeShader> createComputeShader(ComputeShaderInfo) override;
+		Ref<Buffer> createMappedVertexBuffer(const std::string& , const BufferInfo&) override;
+		void UpdateMappedBuffer(Ref<Buffer>, const UpdateVertexBufferInfo&) override;
 		void UpdateMesh(Ref<Mesh>, UpdateMeshInfo) override;
 
 		virtual void CopyTexture(Ref<Texture> src, Ref<Texture> dst) override;
@@ -58,7 +60,7 @@ namespace engine
 		void destroyMesh(Ref<Mesh>) override;
 		void destroyRenderPass(Ref<RenderPass>) override;
 		void destroyComputeShader(Ref<ComputeShader>) override;
-		Ref<Buffer> destroyBuffer(BufferInfo) override;
+		Ref<Buffer> destroyBuffer(const BufferInfo&) override;
 
 		void *mapBuffer(Ref<Buffer> buffer, uint32_t currentFrame) override;
 		void unmapBuffer(Ref<Buffer> buffer, uint32_t currentFrame) override;

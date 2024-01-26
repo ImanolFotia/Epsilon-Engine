@@ -89,6 +89,7 @@ namespace engine
 		bufferInfo.size = size;
 		bufferInfo.usage = usage;
 		bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+		buffer.dataSize = size;
 
 		VmaAllocationCreateInfo allocInfo = {};
 		allocInfo.usage = mem_usage;
@@ -412,7 +413,7 @@ namespace engine
 			{
 				auto &binding = material.shaderBindings[j];
 
-				if (binding.descriptorBinding == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER && binding.isRenderPassAttachment)
+				if (binding.descriptorBinding == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
 				{
 					auto &imageInfo = imageInfos.emplace_back();
 

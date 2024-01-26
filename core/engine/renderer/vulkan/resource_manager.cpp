@@ -812,7 +812,7 @@ namespace engine
 	/**
 	 * Create functions
 	 */
-	Ref<Buffer> VulkanResourceManager::destroyBuffer(BufferInfo)
+	Ref<Buffer> VulkanResourceManager::destroyBuffer(const BufferInfo&)
 	{
 		throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
 	}
@@ -1142,6 +1142,27 @@ namespace engine
 
 		auto ref = computeShaderPool.insert(computeInfo.name, computeShader);
 		return ref;
+	}
+
+	Ref<Buffer> VulkanResourceManager::createMappedVertexBuffer(const std::string &name, const BufferInfo& buffer_info) {
+
+		vk::VulkanBuffer buffer;
+		
+		pCreateBuffer(buffer, buffer_info.size, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VMA_ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT, VMA_MEMORY_USAGE_AUTO);
+
+		return vertexBufferPool.insert(name, buffer);
+	}
+
+	void VulkanResourceManager::UpdateMappedBuffer(Ref<Buffer> buff, const UpdateVertexBufferInfo& info) {
+		vk::VulkanBuffer* buffer = vertexBufferPool.get(buff);
+		if (info.size + info.offset <= buffer->dataSize) {
+
+			void* data;
+			vmaMapMemory(m_pAllocator, buffer->allocation, &data);
+			std::memcpy((void*)(&data + info.offset), info.vertices, info.size);
+
+			vmaUnmapMemory(m_pAllocator, buffer->allocation);
+		}
 	}
 
 	void VulkanResourceManager::destroyComputeShader(Ref<ComputeShader>) {}

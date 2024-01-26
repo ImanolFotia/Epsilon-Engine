@@ -40,6 +40,8 @@ namespace engine
 		virtual Ref<RenderPass> createRenderPass(RenderPassInfo) = 0;
 		virtual Ref<RenderPass> createDefaultRenderPass(RenderPassInfo) = 0;
 		virtual Ref<PushConstant> createPushConstant(const std::string &, PushConstantData) = 0;
+		virtual Ref<Buffer> createMappedVertexBuffer(const std::string& , const BufferInfo&) = 0;
+		virtual void UpdateMappedBuffer(Ref<Buffer>, const UpdateVertexBufferInfo&) = 0;
 
 		virtual void CopyTexture(Ref<Texture> src, Ref<Texture> dst) = 0;
 
@@ -52,7 +54,7 @@ namespace engine
 		virtual void destroyMesh(Ref<Mesh>) = 0;
 		virtual void destroyRenderPass(Ref<RenderPass>) = 0;
 		virtual void destroyComputeShader(Ref<ComputeShader>) = 0;
-		virtual Ref<Buffer> destroyBuffer(BufferInfo) = 0;
+		virtual Ref<Buffer> destroyBuffer(const BufferInfo&) = 0;
 
 		virtual void ReloadShaders(const std::string &) = 0;
 
