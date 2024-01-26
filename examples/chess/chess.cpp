@@ -56,8 +56,8 @@ namespace ChessApp
 				auto calcRowCol = [this](int x, int y) -> std::pair<int, int>
 				{
 					glm::vec2 init_position;
-					init_position.x = x - ((getWindowDimensions().first / 2) - board_size());
-					init_position.y = (getWindowDimensions().second - y);
+					init_position.x = x - ((getWindowDimensions().width / 2) - board_size());
+					init_position.y = (getWindowDimensions().height - y);
 
 					int row = (init_position.y / (piece_size() * 2)) + 1;
 					int col = (int)glm::floor(init_position.x / (piece_size() * 2));
@@ -97,10 +97,10 @@ namespace ChessApp
 					if (m_pSelectedModel != nullptr) {
 						m_pSelectedModel->pushConstant.model = glm::translate(glm::mat4(1.0),
 							glm::vec3(-(obj.Y() -
-								getWindowDimensions().second *
+								getWindowDimensions().width *
 								0.5),
 								-(obj.X() -
-									getWindowDimensions().first *
+									getWindowDimensions().height *
 									0.5),
 								-498.0));
 						m_pSelectedModel->pushConstant.model = glm::scale(m_pSelectedModel->pushConstant.model,
@@ -232,9 +232,9 @@ namespace ChessApp
 
 	void ChessApp::onRender()
 	{
-
-		Epsilon::getContext().Renderer()->BeginFrame();
-		Epsilon::getContext().Renderer()->Begin();
+		Epsilon::getContext()->Renderer()->getDebugRenderer()->Disable();
+		Epsilon::getContext()->Renderer()->BeginFrame();
+		Epsilon::getContext()->Renderer()->Begin();
 
 		if (m_pTakeAudioObject.should_play)
 		{
@@ -256,9 +256,9 @@ namespace ChessApp
 		objectData.layout_index = 0;
 		objectData.mesh = m_pBoardModel.mesh;
 		objectData.material = m_pBoardModel.material;
-		objectData.modelMatrix = m_pBoardModel.pushConstant.model;
+		//objectData.modelMatrix = m_pBoardModel.pushConstant.model;
 		objectData.pushConstant = m_pBoardModel.pushConstantRef;
-		Epsilon::getContext().Renderer()->Push(objectData);
+		Epsilon::getContext()->Renderer()->Push(objectData);
 
 		// set up the pieces draw data
 
@@ -273,10 +273,10 @@ namespace ChessApp
 			objectData.mesh = piece.mesh;
 			objectData.material = piece.material;
 			objectData.pushConstant = piece.pushConstantRef;
-			Epsilon::getContext().Renderer()->Push(objectData);
+			getContext()->Renderer()->Push(objectData);
 		}
 
-		engine::Context::getSingleton().Renderer()->Flush(m_pRenderPass, engine::DrawType::INDEXED);
+		getContext()->Renderer()->Flush(m_pRenderPass, engine::DrawType::INDEXED);
 		//  engine::Context::getSingleton().Renderer()->End();
 
 		// engine::Context::getSingleton().Renderer()->Submit();
@@ -284,10 +284,10 @@ namespace ChessApp
 		// Epsilon::getContext().Renderer()->Begin();
 		// imgui_render();
 		glm::vec3 vec;
-		engine::Context::getSingleton().Renderer()->End(vec);
+		getContext()->Renderer()->End(vec);
 
-		engine::Context::getSingleton().Renderer()->Submit();
-		engine::Context::getSingleton().Renderer()->EndFrame();
+		getContext()->Renderer()->Submit();
+		getContext()->Renderer()->EndFrame();
 
 		// drawFrame(m_pRenderPass);
 
@@ -490,7 +490,7 @@ namespace ChessApp
 
 	void ChessApp::setupCamera()
 	{
-		glm::vec2 iResolution = glm::vec2(getWindowDimensions().first, getWindowDimensions().second);
+		glm::vec2 iResolution = glm::vec2(getWindowDimensions().width, getWindowDimensions().height);
 		ChessShaderData m_pCameraData;
 		m_pCameraData.iResolution = iResolution;
 
@@ -514,7 +514,7 @@ namespace ChessApp
 			m_pMove.row_from,
 			m_pMove.row_to);
 
-		Epsilon::getContext().Renderer()->UpdateRenderPassUniforms(m_pRenderPass, engine::RENDERPASS_SET, &m_pCameraData);
+		getContext()->Renderer()->UpdateRenderPassUniforms(m_pRenderPass, engine::RENDERPASS_SET, &m_pCameraData);
 	}
 
 	glm::mat4 ChessApp::transformBoard(glm::vec3 t, glm::vec3 s)
@@ -554,28 +554,28 @@ namespace ChessApp
 
 	float ChessApp::piece_size()
 	{
-		return (getWindowDimensions().second * 0.5f) * .125f;
+		return (getWindowDimensions().height * 0.5f) * .125f;
 	}
 
 	float ChessApp::board_size()
 	{
-		return (getWindowDimensions().second * 0.5f);
+		return (getWindowDimensions().height * 0.5f);
 	}
 
 	void ChessApp::setupGeometry()
 	{
 		// Create a quad for the chess board
 		auto quad_data = m_pQuad.data();
-		m_pBoardModel.mesh = Epsilon::getContext().ResourceManager()->createMesh({ .vertices = quad_data.Vertices,
+		m_pBoardModel.mesh = getContext()->ResourceManager()->createMesh({ .vertices = quad_data.Vertices,
 																				  .indices = quad_data.Indices,
 																				  .name = "board" });
 
-		engine::Ref<engine::Mesh> pieceMesh = Epsilon::getContext().ResourceManager()->createMesh(
+		engine::Ref<engine::Mesh> pieceMesh = getContext()->ResourceManager()->createMesh(
 			{ .vertices = quad_data.Vertices,
 			 .indices = quad_data.Indices,
 			 .name = "piece" });
 
-		m_pBoardModel.pushConstantRef = Epsilon::getContext().ResourceManager()->createPushConstant(
+		m_pBoardModel.pushConstantRef = getContext()->ResourceManager()->createPushConstant(
 			"board",
 			{ .size = sizeof(PiecePushConstant), .data = &m_pBoardModel.pushConstant });
 
@@ -587,7 +587,7 @@ namespace ChessApp
 
 			Model& ref = m_pPieces[index];
 			info.index = index;
-			ref.pushConstantRef = Epsilon::getContext().ResourceManager()->createPushConstant(
+			ref.pushConstantRef = getContext()->ResourceManager()->createPushConstant(
 				"Piece" + std::to_string(index),
 				{ .size = sizeof(PiecePushConstant), .data = &ref.pushConstant });
 			ref.mesh = pieceMesh;
@@ -603,15 +603,15 @@ namespace ChessApp
 		using en = engine::UniformBindingType;
 		{
 			engine::BindGroupInfo material = {
-				.bindingInfo = {{.size = sizeof(ChessShaderData), .offset = 0, .binding = 0, .type = en::UNIFORM_BUFFER}},
+				.bindingInfo = {{.size = sizeof(ChessShaderData), .offset = 0, .binding = 1, .type = en::UNIFORM_BUFFER}},
 				.renderPass = "DefaultRenderPass",
 				.name = "board" };
 
-			m_pBoardModel.material = Epsilon::getContext().ResourceManager()->createMaterial(material);
+			m_pBoardModel.material = getContext()->ResourceManager()->createBindGroup(material);
 		}
 
 		// create the material for the pieces
-		engine::Ref<engine::Material> pieceMaterial;
+		engine::Ref<engine::BindGroup> pieceMaterial;
 		{
 			int w, h, nc;
 			unsigned char* pixels = framework::load_image_from_file("./assets/images/pieces.png",
@@ -628,13 +628,13 @@ namespace ChessApp
 			texInfo.wrapMode = engine::REPEAT;
 			texInfo.format = engine::COLOR_RGBA;
 			engine::BindGroupInfo material = {
-				.bindingInfo = {{.size = sizeof(ChessShaderData), .binding = 0, .type = en::UNIFORM_BUFFER},
-								{.size = 0, .offset = 0, .binding = 1, .type = en::TEXTURE_IMAGE_COMBINED_SAMPLER, .textureInfo = texInfo}},
+				.bindingInfo = {{.size = sizeof(ChessShaderData), .binding = 1, .type = en::UNIFORM_BUFFER},
+								{.size = 0, .offset = 0, .binding = 2, .type = en::TEXTURE_IMAGE_COMBINED_SAMPLER, .textureInfo = texInfo}},
 				.renderPass = "DefaultRenderPass",
 				.name = "pieces",
 			};
 
-			pieceMaterial = Epsilon::getContext().ResourceManager()->createMaterial(material);
+			pieceMaterial = getContext()->ResourceManager()->createBindGroup(material);
 			framework::free_image_data(pixels);
 		}
 		for (auto& ref : m_pPieces)
@@ -691,13 +691,13 @@ namespace ChessApp
 			RenderPassFactory()
 			.name("DefaultRenderPass")
 
-			.vertexInfo<Vertex>()
+			//.vertexInfo<Vertex>()
 			.depthAttachment(true)
 			.subpasses({})
 			.dimensions({ .width = 1920, .height = 1080 })
 
-			.inputs({ {.size = sizeof(ChessShaderData), .offset = 0, .binding = 0, .type = UniformBindingType::UNIFORM_BUFFER},
-							  {.size = 0, .offset = 0, .binding = 1, .type = UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER} 
+			.inputs({ {.size = sizeof(ChessShaderData), .offset = 0, .binding = 1, .type = UniformBindingType::UNIFORM_BUFFER},
+							  {.size = 0, .offset = 0, .binding = 2, .type = UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER} 
 			})
 			.outputs({ {
 							  .format = COLOR_RGBA,
@@ -713,6 +713,6 @@ namespace ChessApp
 			.pipelineLayout(pieceLayout)
 			.pushConstant(sizeof(PiecePushConstant));
 
-		m_pRenderPass = Epsilon::getContext().ResourceManager()->createDefaultRenderPass(renderPassInfo);
+		m_pRenderPass = getContext()->ResourceManager()->createDefaultRenderPass(renderPassInfo);
 	}
 }

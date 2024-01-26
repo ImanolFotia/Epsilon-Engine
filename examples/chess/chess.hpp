@@ -61,8 +61,8 @@ namespace ChessApp
         struct AudioObject
         {
             framework::WAVfile audioFile;
-            uint32_t source;
-            uint32_t buffer;
+            al::OpenALSource source;
+            al::OpenALBuffer buffer;
             bool should_play = false;
         };
 
@@ -73,13 +73,13 @@ namespace ChessApp
         explicit ChessApp(const std::string &appName) : Epsilon::Epsilon(appName)
         {
 
-            Epsilon::getSingleton().onCreate = [this]
+            Epsilon::onCreate = [this]
             { onCreate(); };
-            Epsilon::getSingleton().onReady = [this]
+            Epsilon::onReady = [this]
             { onReady(); };
-            Epsilon::getSingleton().onRender = [this]
+            Epsilon::onRender = [this]
             { onRender(); };
-            Epsilon::getSingleton().onExit = [this]
+            Epsilon::onExit = [this]
             { onExit(); };
         }
 

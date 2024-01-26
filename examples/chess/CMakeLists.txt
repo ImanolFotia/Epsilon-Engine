@@ -4,6 +4,15 @@ set(CMAKE_CXX_STANDARD 20)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR} ../../)
 
+set(EPSILON_DIR ../..)
+set(THIRDPARTY_DIR ${EPSILON_DIR}/thirdparty)
+
+
+link_directories(${THIRDPARTY_DIR}/openal)
+
+include_directories(${THIRDPARTY_DIR}/openal/include)
+include_directories(${THIRDPARTY_DIR}/openal)
+include_directories(${THIRDPARTY_DIR}/openal/alc)
 
 add_executable(${PROJECT_NAME} chess.hpp main.cpp UCI.hpp chess.cpp game/player.cpp game/player.hpp game/common.hpp game/board.cpp game/board.hpp  ${PROJECT_ICON})
 
@@ -46,6 +55,8 @@ endif()
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 
 
+
+
 message(STATUS "location of epsilon build: " ${EPSILON_BUILD_LOCATION})
 message(STATUS "location of vulkan libs: " ${Vulkan_LIBRARIES})
 
@@ -75,7 +86,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE glfw3)
 
 if(DBUILD_ANDROID EQUAL 0)
 if(WIN32)
-target_link_libraries(${PROJECT_NAME} PRIVATE openal32.dll)
+target_link_libraries(${PROJECT_NAME} PRIVATE Openal32.dll)
 #target_link_libraries(${PROJECT_NAME} PRIVATE assimp-5.dll)
 else()
 target_link_libraries(${PROJECT_NAME} PRIVATE openal)
@@ -83,6 +94,16 @@ target_link_libraries(${PROJECT_NAME} PRIVATE openal)
 endif()
 endif()
 target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_DL_LIBS})
+
+if(WIN32)
+target_link_libraries(${PROJECT_NAME} PRIVATE Openal32.dll)
+#target_link_libraries(${PROJECT_NAME} PRIVATE assimp-5.dll)
+else()
+target_link_libraries(${PROJECT_NAME} PRIVATE openal)
+#target_link_libraries(${PROJECT_NAME} PRIVATE assimp)
+endif()
+
+
 
 
 set(CMAKE_INSTALL_DEBUG_LIBRARIES ON)

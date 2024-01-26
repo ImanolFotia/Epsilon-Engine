@@ -403,7 +403,7 @@ namespace engine
 		}
 
 
-		uint32_t Push(std::shared_ptr<Node<RenderModel>> renderModel, glm::mat4 &transform, engine::parsers::RenderLayout layout)
+		uint32_t Push(std::shared_ptr<Node<RenderModel>> renderModel, const glm::mat4 &transform, engine::parsers::RenderLayout layout)
 		{
 			uint32_t push_index = m_pMeshCount;
 			if (m_pContext->Window().getSize().width > 0)
