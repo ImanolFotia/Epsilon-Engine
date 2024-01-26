@@ -30,20 +30,20 @@ namespace Editor::UI {
 
 		void draw() override {
 
-			auto& assetManager = m_pScene->getAssetManager();
+			auto assetManager = m_pScene->getAssetManager();
 			const float TEXT_BASE_WIDTH = ImGui::CalcTextSize("A").x;
 			const float TEXT_BASE_HEIGHT = ImGui::GetTextLineHeightWithSpacing();
 			ImGui::Begin("Assets");
 			ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.0, 0.0, 0.0, 0.0));
 			if (ImGui::Button(ICON_FA_PLUS, ImVec2(25, 25))) {
 
-				std::thread th([this, &assetManager]() {
+				std::thread th([this, assetManager]() {
 					m_pFileDialog.Show();
 					auto result = m_pFileDialog.GetLastPath();
 					if (result.size() > 0) {
 						auto ext = getExtension(result.back());
 						if (ext == "gltf" || ext == "glb")
-							assetManager.loadModel(result.back());
+							assetManager->loadModel(result.back());
 					}
 					});
 				th.detach();
@@ -62,20 +62,20 @@ namespace Editor::UI {
 					ImGui::TableHeadersRow();
 
 
-					for (auto& [name, model] : assetManager.getModels()) {
+					for (auto& [name, model] : assetManager->getModels()) {
 						DisplayNode({ .name = name, .mType = AssetType::Model, .index = 0 });
 					}
 
-					for (auto& [name, audio] : assetManager.getAudios()) {
+					for (auto& [name, audio] : assetManager->getAudios()) {
 						DisplayNode({ .name = name, .mType = AssetType::Audio, .index = 0 });
 					}
 
-					for (auto& [name, audio] : assetManager.getShaders()) {
+					for (auto& [name, audio] : assetManager->getShaders()) {
 						DisplayNode({ .name = name, .mType = AssetType::Shader, .index = 0 });
 					}
 
-					for (auto [hash, texture] : assetManager.getImages()) {
-						DisplayNode({ .name = assetManager.getImageName(hash), .mType = AssetType::Texture, .index = texture.Index(), });
+					for (auto [hash, texture] : assetManager->getImages()) {
+						DisplayNode({ .name = assetManager->getImageName(hash), .mType = AssetType::Texture, .index = texture.Index(), });
 					}
 
 					ImGui::EndTable();
@@ -89,7 +89,7 @@ namespace Editor::UI {
 
 			if (selected_asset.mType == AssetType::Model) {
 
-				auto& model = assetManager.getModel(selected_asset.name);
+				auto& model = assetManager->getModel(selected_asset.name);
 
 				ImGui::Text("Name:"); ImGui::SameLine();
 				ImGui::InputText("##model_name_hidden_input", selected_asset.name.data(), selected_asset.name.size(), ImGuiInputTextFlags_ReadOnly);
@@ -126,7 +126,7 @@ namespace Editor::UI {
 			}
 
 			if (selected_asset.mType == AssetType::Shader) {
-				auto shader = assetManager.getShader(selected_asset.name);
+				auto shader = assetManager->getShader(selected_asset.name);
 				ImGui::Text("Name: %s", shader.name.c_str());
 				ImGui::Text("Source:");
 				

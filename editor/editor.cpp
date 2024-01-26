@@ -20,6 +20,15 @@ namespace Editor {
 		m_pObjectProperty.m_pScenePtr = m_pScene;
 		m_pSceneNodes.m_pScenePtr = m_pScene;
 
+
+		m_pAssetManager = std::make_shared<engine::AssetManager>();
+		m_pAssetManager->setContext(getContext());
+		m_pAssetManager->Init();
+
+		m_pScene->setAssetManager(m_pAssetManager);
+
+		m_pGraphicsHelper = std::make_shared<GraphicsHelper>(getContext(), m_pAssetManager);
+
 		m_pBrushManager = std::make_shared<BrushManager>(getContext());
 
 		m_pAssets = UI::Assets(m_pScene);
@@ -36,18 +45,18 @@ namespace Editor {
 
 		m_pForwardRenderPass = Renderpasses::createForwardRenderPass(m_pScene);
 
-		m_pScene->addRenderPass("DefaultRenderPass", Renderpasses::createDefaultRenderPass(m_pScene));
+		m_pGraphicsHelper->addRenderPass("DefaultRenderPass", Renderpasses::createDefaultRenderPass(m_pScene));
 
 		m_pTAAPasses = Renderpasses::createTAARenderPass(m_pScene);
 
 		//m_pScene->getAssetManager().CreateGPUBuffer("TAADataBuffer", sizeof(Renderpasses::TAAUniformData), engine::BufferStorageType::UNIFORM_BUFFER);
 
-		m_pScene->addRenderPass("Forward", m_pForwardRenderPass);
+		m_pGraphicsHelper->addRenderPass("Forward", m_pForwardRenderPass);
 
-		m_pScene->addRenderPass("TAARenderPass0", m_pTAAPasses.renderpass[0]);
-		m_pScene->addRenderPass("TAARenderPass1", m_pTAAPasses.renderpass[1]);
+		m_pGraphicsHelper->addRenderPass("TAARenderPass0", m_pTAAPasses.renderpass[0]);
+		m_pGraphicsHelper->addRenderPass("TAARenderPass1", m_pTAAPasses.renderpass[1]);
 
-		m_pScene->addBindGroup("DefaultBindGroup", 0, {
+		m_pGraphicsHelper->addBindGroup("DefaultBindGroup", 0, {
 				.bindingInfo = {{.size = sizeof(engine::PBRMaterial) * engine::AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"}},
 				.inputs = {},
 				.renderPass = "Forward",
@@ -56,7 +65,7 @@ namespace Editor {
 
 		m_pDefaultBindGroup = std::hash<std::string>{}("DefaultBindGroup");
 
-		m_pScene->addBindGroup("SkyBindGroup", 1, {
+		m_pGraphicsHelper->addBindGroup("SkyBindGroup", 1, {
 				.bindingInfo = {},
 				.inputs = {},
 				.renderPass = "Forward",
@@ -65,7 +74,7 @@ namespace Editor {
 
 		m_pSkyBindGroup = std::hash<std::string>{}("SkyBindGroup");
 
-		m_pScene->addBindGroup("GridBindGroup", 2, {
+		m_pGraphicsHelper->addBindGroup("GridBindGroup", 2, {
 				.bindingInfo = {},
 				.inputs = {},
 				.renderPass = "Forward",
@@ -74,7 +83,7 @@ namespace Editor {
 
 		m_pGridBindGroup = std::hash<std::string>{}("GridBindGroup");
 
-		m_pScene->addBindGroup("GrassBindGroup", 3, {
+		m_pGraphicsHelper->addBindGroup("GrassBindGroup", 3, {
 				.bindingInfo = {{.size = sizeof(engine::PBRMaterial) * engine::AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
 								{.size = sizeof(glm::mat4) * engine::AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 5, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"},
 								{.size = sizeof(engine::ShaderObjectData) * engine::AssetManager::MAX_OBJECTS, .offset = 0, .binding = 6, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "object_buffer"}},
@@ -85,7 +94,7 @@ namespace Editor {
 
 		m_pGrassBindGroup = std::hash<std::string>{}("GrassBindGroup");
 
-		m_pScene->addBindGroup("TAABindGroup0", 0, {
+		m_pGraphicsHelper->addBindGroup("TAABindGroup0", 0, {
 				.bindingInfo = {
 			{.size = sizeof(Renderpasses::TAAUniformData), .offset = 0, .binding = 1, .type = engine::UniformBindingType::UNIFORM_BUFFER, .buffer = "TAADataBuffer", .name = "TAADataBuffer"}},
 				.inputs = {
@@ -98,7 +107,7 @@ namespace Editor {
 				.name = "TAABindGroup0",
 			});
 
-		m_pScene->addBindGroup("TAABindGroup1", 0, {
+		m_pGraphicsHelper->addBindGroup("TAABindGroup1", 0, {
 				.bindingInfo = {
 			{.size = sizeof(Renderpasses::TAAUniformData), .offset = 0, .binding = 1, .type = engine::UniformBindingType::UNIFORM_BUFFER, .buffer = "TAADataBuffer", .name = "TAADataBuffer"}},
 				.inputs = {
@@ -128,7 +137,7 @@ namespace Editor {
 		auto skyNode = m_pScene->emplaceIntoScene<engine::Scene::SceneEntity>(engine::Box{ glm::vec3(0.0f), glm::vec3(1.0) });
 		skyNode->data.transform = glm::scale(glm::mat4(1.0), glm::vec3(3.0f));
 		engine::Sphere sphere(5);
-		auto SkyDomeNode = m_pScene->getAssetManager().createModelFromMesh("Skybox", sphere.data(), {});
+		auto SkyDomeNode = m_pAssetManager->createModelFromMesh("Skybox", sphere.data(), {});
 		m_pSkybox = m_pScene->insertIntoNode(skyNode, SkyDomeNode);
 		m_pSkybox->data.bindGroupId = m_pSkyBindGroup;
 
@@ -147,7 +156,7 @@ namespace Editor {
 		defaultMaterial.metallic = 0;
 		defaultMaterial.color = glm::vec4(0.5, 0.5, 0.5, 1.0);
 		engine::Quad quad(2, glm::vec2(5.0f), glm::vec3(2.0f));
-		auto m_pDefaultCube = m_pScene->getAssetManager().createModelFromMesh("DefaultPlane", quad.data(), defaultMaterial);
+		auto m_pDefaultCube = m_pAssetManager->createModelFromMesh("DefaultPlane", quad.data(), defaultMaterial);
 		m_pGridPlane = m_pScene->insertIntoNode(engine::Box{ glm::vec3(planeNode->data.transform[3]), glm::vec3(10.0) }, planeNode, m_pDefaultCube);
 		m_pGridPlane->data.bindGroupId = m_pDefaultBindGroup;
 
@@ -203,12 +212,12 @@ namespace Editor {
 
 
 
-		m_pScene->getAssetManager().addTexture("textures/radiance.dds", {
+		m_pAssetManager->addTexture("textures/radiance.dds", {
 			.format = engine::TextureFormat::COLOR_RGBA,
 			.wrapMode = engine::CLAMP_TO_EDGE,
 			.filtering = engine::LINEAR
 			});
-		m_pScene->getAssetManager().addTexture("textures/irradiance.dds", {
+		m_pAssetManager->addTexture("textures/irradiance.dds", {
 			.format = engine::TextureFormat::COLOR_RGBA,
 			.wrapMode = engine::CLAMP_TO_EDGE,
 			.filtering = engine::LINEAR
@@ -217,7 +226,7 @@ namespace Editor {
 		size_t lut_size = 512 * 512 * sizeof(glm::vec2) * 2;
 		unsigned char* lut = new unsigned char[lut_size];
 		file.read((char*)lut, lut_size);
-		m_pScene->getAssetManager().addTextureFromBytes("BRDF_lut", lut, lut_size, 512, 512, 2, {
+		m_pAssetManager->addTextureFromBytes("BRDF_lut", lut, lut_size, 512, 512, 2, {
 			.format = engine::TextureFormat::COLOR_RG_32F,
 			.wrapMode = engine::CLAMP_TO_EDGE,
 			.filtering = engine::LINEAR
@@ -437,8 +446,8 @@ namespace Editor {
 			if (m_pPostProcess.TaaEnabled()) {
 				getContext()->ResourceManager()->ResizeFramebuffer(m_pTAAPasses.renderpass[0], m_pMainViewport.getSize());
 				getContext()->ResourceManager()->ResizeFramebuffer(m_pTAAPasses.renderpass[1], m_pMainViewport.getSize());
-				getContext()->ResourceManager()->updateBindGroup(m_pScene->getBindGroups()[m_pTAABindGroup1].bindGroup);
-				getContext()->ResourceManager()->updateBindGroup(m_pScene->getBindGroups()[m_pTAABindGroup0].bindGroup);
+				getContext()->ResourceManager()->updateBindGroup(m_pGraphicsHelper->getBindGroups()[m_pTAABindGroup1].bindGroup);
+				getContext()->ResourceManager()->updateBindGroup(m_pGraphicsHelper->getBindGroups()[m_pTAABindGroup0].bindGroup);
 				just_resized = true;
 			}
 			Epsilon::getContext()->Renderer()->getDebugRenderer()->recreateDescriptorSets();
@@ -453,7 +462,7 @@ namespace Editor {
 
 		//m_pScene->getContext()->Renderer()->ComputeDispatch(m_pComputeShader);
 
-		m_pScene->setCurrentRenderPass("Forward");
+		m_pScene->setCurrentRenderPass(m_pGraphicsHelper->getRenderPass("Forward"));
 
 		auto models = m_pScene->getNodes <engine::RenderModel>();
 
@@ -461,19 +470,19 @@ namespace Editor {
 			auto model = std::static_pointer_cast<engine::Node<engine::RenderModel>>(model_node);
 			auto transform = std::static_pointer_cast<engine::Node<engine::Scene::SceneEntity>>(model->Parent());
 			if (model->data.isInstanced) {
-				m_pScene->Push(model, model->data.transforms, model->data.bindGroupId, model->data.transforms.size());
+				m_pScene->Push(model, model->data.transforms, model->data.transforms.size(), m_pGraphicsHelper->getBindGroup(model->data.bindGroupId));
 			}
 			else {
-				m_pScene->Push(model, transform->data.transform, model->data.bindGroupId);
+				m_pScene->Push(model, transform->data.transform, m_pGraphicsHelper->getBindGroup(model->data.bindGroupId));
 			}
 		}
 
 		m_pScene->Flush();
 
 		if (m_pPostProcess.TaaEnabled()) {
-			m_pScene->setCurrentRenderPass(/**/m_pCurrentTAAPass ? "TAARenderPass0" : "TAARenderPass1");
+			m_pScene->setCurrentRenderPass(/**/m_pGraphicsHelper->getRenderPass(m_pCurrentTAAPass ? "TAARenderPass0" : "TAARenderPass1"));
 
-			m_pScene->Push(m_pGridPlane, glm::mat4(1.0), m_pCurrentTAAPass ? m_pTAABindGroup0 : m_pTAABindGroup1);
+			m_pScene->Push(m_pGridPlane, glm::mat4(1.0), m_pGraphicsHelper->getBindGroup(m_pCurrentTAAPass ? m_pTAABindGroup0 : m_pTAABindGroup1));
 
 			m_pCurrentTAAPass = !m_pCurrentTAAPass;
 			m_pScene->Flush();
@@ -528,9 +537,9 @@ namespace Editor {
 			grass_lod[lod].generateTangentSpaceVectors();
 		}
 
-		auto GrassBlade_Lod0 = m_pScene->getAssetManager().createModelFromMesh("Grass Blade Lod0", grass_lod[0].data(), defaultMaterial);
-		auto GrassBlade_Lod1 = m_pScene->getAssetManager().createModelFromMesh("Grass Blade Lod1", grass_lod[1].data(), defaultMaterial);
-		auto GrassBlade_Lod2 = m_pScene->getAssetManager().createModelFromMesh("Grass Blade Lod2", grass_lod[2].data(), defaultMaterial);
+		auto GrassBlade_Lod0 = m_pAssetManager->createModelFromMesh("Grass Blade Lod0", grass_lod[0].data(), defaultMaterial);
+		auto GrassBlade_Lod1 = m_pAssetManager->createModelFromMesh("Grass Blade Lod1", grass_lod[1].data(), defaultMaterial);
+		auto GrassBlade_Lod2 = m_pAssetManager->createModelFromMesh("Grass Blade Lod2", grass_lod[2].data(), defaultMaterial);
 
 		GrassBlade_Lod0.renderMeshes[1] = GrassBlade_Lod1.renderMeshes[0];
 		GrassBlade_Lod0.renderMeshes[2] = GrassBlade_Lod2.renderMeshes[0];
@@ -582,7 +591,7 @@ namespace Editor {
 
 
 		engine::Cube cube;
-		auto m_pDefaultCube = m_pScene->getAssetManager().createModelFromMesh("DefaultCube", cube.data(), defaultMaterial);
+		auto m_pDefaultCube = m_pAssetManager->createModelFromMesh("DefaultCube", cube.data(), defaultMaterial);
 
 		auto node = Utils::CreateNode(glm::mat4(1.0f), m_pScene);
 

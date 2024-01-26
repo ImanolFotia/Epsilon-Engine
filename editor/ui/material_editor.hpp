@@ -14,7 +14,7 @@ namespace Editor::UI {
 			ImGui::Begin("Material");
 			if (selected_entity > 0 && m_pSceneRef != nullptr) {
 				auto context = m_pSceneRef->getContext();
-				auto& assetManager = m_pSceneRef->getAssetManager();
+				auto assetManager = m_pSceneRef->getAssetManager();
 				std::shared_ptr<engine::NodeBase> entity = m_pSceneRef->getNode(selected_entity);
 				auto children = m_pSceneRef->getChildren(entity);
 
@@ -40,7 +40,7 @@ namespace Editor::UI {
 					if (render_node->data.renderMeshes[0][current_mesh].numMaterials > 0) {
 						auto mat_key = render_node->data.renderMeshes[0][current_mesh].material_keys[0];
 						bool wasModified = false;
-						auto& material = assetManager.getMaterial(mat_key);
+						auto& material = assetManager->getMaterial(mat_key);
 						{
 							bool isColorTexture = material.material.albedo_texture_index > 0;
 							ImGui::SeparatorText("Albedo");
@@ -48,7 +48,7 @@ namespace Editor::UI {
 								material.material.albedo_texture_index *= -1; wasModified = true;
 							}
 							if (isColorTexture && material.material.albedo_texture_index > 0) {
-								auto& albedo = assetManager.getImage(material.Slot[(int)engine::TextureSlot::Albedo]);
+								auto& albedo = assetManager->getImage(material.Slot[(int)engine::TextureSlot::Albedo]);
 								if (albedo.isValid()) {
 									auto imageId = context->Renderer()->getDebugRenderer()->getImageByIndex(albedo)->id;
 									ImGui::Image(imageId, ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().x));
@@ -67,7 +67,7 @@ namespace Editor::UI {
 								material.material.metallic_texture_index *= -1; wasModified = true;
 							}
 							if (isRoughnessTexture && material.material.metallic_texture_index > 0) {
-								auto& roughness = assetManager.getImage(material.Slot[(int)engine::TextureSlot::Metallic]);
+								auto& roughness = assetManager->getImage(material.Slot[(int)engine::TextureSlot::Metallic]);
 								auto imageId = context->Renderer()->getDebugRenderer()->getImageByIndex(roughness)->id;
 								ImGui::Image(imageId, ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().x));
 							}
@@ -84,7 +84,7 @@ namespace Editor::UI {
 								material.material.metallic_texture_index *= -1; wasModified = true;
 							}
 							if (isMetallicTexture && material.material.metallic_texture_index > 0) {
-								auto& metallic = assetManager.getImage(material.Slot[(int)engine::TextureSlot::Metallic]);
+								auto& metallic = assetManager->getImage(material.Slot[(int)engine::TextureSlot::Metallic]);
 								auto imageId = context->Renderer()->getDebugRenderer()->getImageByIndex(metallic)->id;
 								ImGui::Image(imageId, ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().x));
 							}
@@ -101,8 +101,8 @@ namespace Editor::UI {
 						}
 
 						if (wasModified) {
-							assetManager.setMaterial(mat_key, material);
-							assetManager.setMaterial(material);
+							assetManager->setMaterial(mat_key, material);
+							assetManager->setMaterial(material);
 						}
 					}
 				}

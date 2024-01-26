@@ -19,7 +19,7 @@ namespace Editor::Renderpasses {
 
 		using namespace engine;
 		auto context = scene->getContext();
-		auto& assetManager = scene->getAssetManager();
+		auto assetManager = scene->getAssetManager();
 		/*
 		std::vector<char> vertexCode;
 
@@ -145,10 +145,10 @@ namespace Editor::Renderpasses {
 		gridShaderAsset.filePaths = { "./assets/shaders/editor/grid.frag.glsl", "./assets/shaders/editor/forward.vert.glsl" };
 		gridShaderAsset.spirvFilePaths = { "./assets/shaders/editor/grid-fragment.spv", "./assets/shaders/editor/forward_vertex.spv" };
 
-		assetManager.RegisterShader(forwardShaderAsset);
-		assetManager.RegisterShader(skyShaderAsset);
-		assetManager.RegisterShader(gridShaderAsset);
-		assetManager.RegisterShader(grassShaderAsset);
+		assetManager->RegisterShader(forwardShaderAsset);
+		assetManager->RegisterShader(skyShaderAsset);
+		assetManager->RegisterShader(gridShaderAsset);
+		assetManager->RegisterShader(grassShaderAsset);
 
 		RenderPassInfo renderPassInfo =
 			RenderPassFactory()

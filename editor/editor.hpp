@@ -41,6 +41,8 @@
 #include "types/script.hpp"
 #include "utils/node_factory.hpp"
 
+#include "renderpasses/setup_graphics.hpp"
+
 namespace Editor {
 	class Editor : public Epsilon::Epsilon {
 
@@ -96,6 +98,8 @@ namespace Editor {
 		engine::Scene::SceneEntity* selected_entity = nullptr;
 
 		std::shared_ptr<engine::NodeBase> m_pSelectedNode = nullptr;
+		std::shared_ptr<GraphicsHelper> m_pGraphicsHelper;
+		std::shared_ptr<engine::AssetManager> m_pAssetManager;
 
 		struct tiny_keyboard {
 			tiny_keyboard() {
@@ -172,6 +176,8 @@ namespace Editor {
 		void OnRender();
 
 		void OnExit() {
+
+			m_pAssetManager->Destroy();
 			getContext()->CleanUp();
 		}
 

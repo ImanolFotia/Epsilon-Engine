@@ -224,7 +224,7 @@ namespace Editor::UI {
 				static int selected = 0;
 				ImGui::SeparatorText("Node Type");
 				if (m_pScenePtr != nullptr) {
-					auto& models = m_pScenePtr->getAssetManager().getModels();
+					auto& models = m_pScenePtr->getAssetManager()->getModels();
 					if (ImGui::BeginListBox("##nodes_listbox", ImVec2(ImGui::GetContentRegionAvail().x * 0.25, ImGui::GetContentRegionAvail().y-35)))
 					{
 						for (int i = 0; i < NodeType::Size; i++) {
@@ -279,7 +279,7 @@ namespace Editor::UI {
 						defaultMaterial.metallic = 0;
 						defaultMaterial.color = glm::vec4(0.5, 0.5, 0.5, 1.0);
 						engine::Cube cube;
-						auto m_pDefaultCube = m_pScenePtr->getAssetManager().createModelFromMesh("Model_" + node_name, cube.data(), defaultMaterial);
+						auto m_pDefaultCube = m_pScenePtr->getAssetManager()->createModelFromMesh("Model_" + node_name, cube.data(), defaultMaterial);
 						Utils::AddModelNode(node_name, m_pScenePtr, m_pDefaultCube, parent_node);
 						break;
 					}

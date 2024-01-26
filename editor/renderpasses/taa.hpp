@@ -30,7 +30,7 @@ namespace Editor::Renderpasses {
 
 		using namespace engine;
 		auto context = scene->getContext();
-		auto& assetManager = scene->getAssetManager();
+		auto assetManager = scene->getAssetManager();
 		/*
 		std::vector<char> vertexCode;
 
@@ -88,7 +88,7 @@ namespace Editor::Renderpasses {
 
 
 
-		assetManager.RegisterShader(taaShaderAsset);
+		assetManager->RegisterShader(taaShaderAsset);
 
 		RenderPassInfo renderPassInfo0 =
 			RenderPassFactory()

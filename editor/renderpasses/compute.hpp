@@ -8,7 +8,7 @@ namespace Editor::ComputeDispatch {
 
 		using namespace engine;
 		auto context = scene->getContext();
-		auto& assetManager = scene->getAssetManager();
+		auto assetManager = scene->getAssetManager();
 
 		auto computeCode = utils::readFile("./assets/shaders/editor/dummyCompute.spv");
 
@@ -26,7 +26,7 @@ namespace Editor::ComputeDispatch {
 		computeShaderAsset.filePaths = { "./assets/shaders/editor/dummyCompute.glsl" };
 		computeShaderAsset.spirvFilePaths = { "./assets/shaders/editor/dummyCompute.spv" };
 
-		assetManager.RegisterShader(computeShaderAsset);
+		assetManager->RegisterShader(computeShaderAsset);
 
 
 		PipelineLayout computeLayout = {

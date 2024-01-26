@@ -10,7 +10,7 @@ namespace Editor::Renderpasses {
 
 		using namespace engine;
 		auto context = scene->getContext();
-		auto& assetManager = scene->getAssetManager();
+		auto assetManager = scene->getAssetManager();
 		/*
 		std::vector<char> vertexCode;
 
@@ -43,7 +43,7 @@ namespace Editor::Renderpasses {
 		shapChainShaderAsset.filePaths = { "./assets/shaders/editor/fragment.frag.glsl", "./assets/shaders/editor/vertex.vert.glsl" };
 		shapChainShaderAsset.spirvFilePaths = { "./assets/shaders/editor/frag.spv", "./assets/shaders/editor/vertex.spv" };
 
-		assetManager.RegisterShader(shapChainShaderAsset);
+		assetManager->RegisterShader(shapChainShaderAsset);
 
 		VertexLayout vertexLayout = {
 			.descriptors = {
