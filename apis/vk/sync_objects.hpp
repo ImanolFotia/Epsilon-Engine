@@ -48,15 +48,15 @@ namespace vk
     template <typename T>
     static int32_t prepareSyncObjects(VulkanData &vk_data, uint32_t currentFrame, VulkanRenderPass &renderPass, VulkanVertexInfo vertexInfo)
     {
-        //graphics sync
+        // graphics sync
         vkWaitForFences(vk_data.logicalDevice, 1, &vk_data.syncObjects[currentFrame].inFlightFences, VK_TRUE, UINT64_MAX);
 
         uint32_t imageIndex = 0;
         VkResult result = vkAcquireNextImageKHR(vk_data.logicalDevice, vk_data.swapChain, UINT64_MAX, vk_data.syncObjects[currentFrame].imageAvailableSemaphores, VK_NULL_HANDLE, &imageIndex);
 
         if (result == VK_ERROR_OUT_OF_DATE_KHR)
-        {   
-            //recreateSwapChain<T>(vk_data, window, renderPass, vertexInfo);
+        {
+            // recreateSwapChain<T>(vk_data, window, renderPass, vertexInfo);
             return -1;
             // return imageIndex;
         }
@@ -71,15 +71,22 @@ namespace vk
         return imageIndex;
     }
 
-    static void Sync(const VulkanData &vk_data, VkCommandBuffer &commandBuffer, uint32_t currentFrame)
+    static void Sync(const VulkanData &vk_data, VkCommandBuffer &commandBuffer, uint32_t currentFrame, bool computeActive = false)
     {
 
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        VkSemaphore waitSemaphores[2];
+        if (computeActive)
+        {
+            waitSemaphores[0] = {vk_data.syncObjects[currentFrame].imageAvailableSemaphores};
+            waitSemaphores[1] = {vk_data.syncObjects[currentFrame].computeFinishedSemaphores};
+        }
+        else
+            waitSemaphores[0] = {vk_data.syncObjects[currentFrame].imageAvailableSemaphores};
 
-        VkSemaphore waitSemaphores[] = { vk_data.syncObjects[currentFrame].computeFinishedSemaphores, vk_data.syncObjects[currentFrame].imageAvailableSemaphores};
-        VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_VERTEX_INPUT_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-        submitInfo.waitSemaphoreCount = 2;
+        VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_VERTEX_INPUT_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+        submitInfo.waitSemaphoreCount = computeActive ? 2 : 1;
         submitInfo.pWaitSemaphores = waitSemaphores;
         submitInfo.pWaitDstStageMask = waitStages;
 
@@ -90,15 +97,15 @@ namespace vk
         submitInfo.signalSemaphoreCount = 1;
         submitInfo.pSignalSemaphores = signalSemaphores;
 
-        //std::mutex mtx{};
-        //std::lock_guard lock{ mtx };
+        // std::mutex mtx{};
+        // std::lock_guard lock{ mtx };
         if (vkQueueSubmit(vk_data.graphicsQueue[currentFrame], 1, &submitInfo, vk_data.syncObjects[currentFrame].inFlightFences) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to submit draw command buffer!");
         }
     }
 
-    static void SyncCompute(const VulkanData& vk_data, VkCommandBuffer& commandBuffer, uint32_t currentFrame)
+    static void SyncCompute(const VulkanData &vk_data, VkCommandBuffer &commandBuffer, uint32_t currentFrame)
     {
         vkWaitForFences(vk_data.logicalDevice, 1, &vk_data.syncObjects[currentFrame].computeInFlightFences, VK_TRUE, UINT64_MAX);
 
@@ -107,21 +114,21 @@ namespace vk
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-        VkSemaphore waitSemaphores[] = { vk_data.syncObjects[currentFrame].computeAvailableSemaphores };
-        VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-        //submitInfo.waitSemaphoreCount = 1;
-        //submitInfo.pWaitSemaphores = waitSemaphores;
-        //submitInfo.pWaitDstStageMask = waitStages;
+        VkSemaphore waitSemaphores[] = {vk_data.syncObjects[currentFrame].computeAvailableSemaphores};
+        VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+        // submitInfo.waitSemaphoreCount = 1;
+        // submitInfo.pWaitSemaphores = waitSemaphores;
+        // submitInfo.pWaitDstStageMask = waitStages;
 
         submitInfo.commandBufferCount = 1;
         submitInfo.pCommandBuffers = &commandBuffer;
 
-        VkSemaphore signalSemaphores[] = { vk_data.syncObjects[currentFrame].computeFinishedSemaphores };
+        VkSemaphore signalSemaphores[] = {vk_data.syncObjects[currentFrame].computeFinishedSemaphores};
         submitInfo.signalSemaphoreCount = 1;
         submitInfo.pSignalSemaphores = signalSemaphores;
 
-        //std::mutex mtx{};
-        //std::lock_guard lock{ mtx };
+        // std::mutex mtx{};
+        // std::lock_guard lock{ mtx };
         if (vkQueueSubmit(vk_data.computeQueue[currentFrame], 1, &submitInfo, vk_data.syncObjects[currentFrame].computeInFlightFences) != VK_SUCCESS)
         {
             throw std::runtime_error("failed to submit draw command buffer!");

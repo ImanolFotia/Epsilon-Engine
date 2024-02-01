@@ -71,6 +71,10 @@ namespace engine
 			{
 				imageSize = textureInfo.width * textureInfo.height * 2 * sizeof(float);
 			}
+			if (textureInfo.format == COLOR_R)
+			{
+				imageSize = textureInfo.width * textureInfo.height * sizeof(char);
+			}
 		}
 		pCreateBuffer(stagingBuffer, imageSize, TEXTURE_BUFFER_USAGE, TEXTURE_BUFFER_PROP, TEXTURE_BUFFER_MEM_USAGE);
 

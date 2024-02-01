@@ -11,14 +11,16 @@ namespace engine
         Ref<Buffer> m_pUniformBuffer = Ref<Buffer>::makeEmpty();
         Ref<Buffer> m_pIndirectBuffer = Ref<Buffer>::makeEmpty();
         Ref<RenderPass> m_pRenderPass;
-        
-        vk::VulkanSyncObject* m_pSyncObjects = nullptr;
-        
-        VkCommandBuffer* m_pCommandBuffer = nullptr;
-        VkCommandBuffer* m_pComputeCommandBuffer = nullptr;
+
+        vk::VulkanSyncObject *m_pSyncObjects = nullptr;
+
+        VkCommandBuffer *m_pCommandBuffer = nullptr;
+        VkCommandBuffer *m_pComputeCommandBuffer = nullptr;
 
         uint32_t m_pFrameIndex = 0;
         uint32_t m_pCurrentImage = 0;
+
+        uint32_t m_pComputeDispatches = 0;
 
     public:
         Frame() = default;
@@ -29,7 +31,22 @@ namespace engine
         {
             return m_pRenderPass;
         }
-        
+
+        uint32_t ComputeDispatches()
+        {
+            return m_pComputeDispatches;
+        }
+
+        void ResetComputeDispatches()
+        {
+            m_pComputeDispatches = 0;
+        }
+
+        void AddComputeDispatch()
+        {
+            m_pComputeDispatches++;
+        }
+
         Ref<Buffer> UniformBuffer()
         {
             return m_pUniformBuffer;
@@ -40,17 +57,18 @@ namespace engine
             return m_pIndirectBuffer;
         }
 
-        VkCommandBuffer& CommandBuffer()
+        VkCommandBuffer &CommandBuffer()
         {
             return *m_pCommandBuffer;
         }
 
-        VkCommandBuffer& ComputeCommandBuffer()
+        VkCommandBuffer &ComputeCommandBuffer()
         {
             return *m_pComputeCommandBuffer;
         }
 
-        vk::VulkanSyncObject& SyncObjects() {
+        vk::VulkanSyncObject &SyncObjects()
+        {
             return *m_pSyncObjects;
         }
 
@@ -79,20 +97,20 @@ namespace engine
         {
             m_pIndirectBuffer = buffer;
         }
-        void CommandBuffer(VkCommandBuffer* buffer)
+        void CommandBuffer(VkCommandBuffer *buffer)
         {
             m_pCommandBuffer = buffer;
         }
 
-        void ComputeCommandBuffer(VkCommandBuffer* buffer)
+        void ComputeCommandBuffer(VkCommandBuffer *buffer)
         {
             m_pComputeCommandBuffer = buffer;
         }
 
-        void SyncObjects(vk::VulkanSyncObject* objects) {
+        void SyncObjects(vk::VulkanSyncObject *objects)
+        {
             m_pSyncObjects = objects;
         }
-
 
         void FrameIndex(uint32_t index)
         {

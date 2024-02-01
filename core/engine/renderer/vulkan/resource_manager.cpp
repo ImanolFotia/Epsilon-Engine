@@ -812,7 +812,7 @@ namespace engine
 	/**
 	 * Create functions
 	 */
-	Ref<Buffer> VulkanResourceManager::destroyBuffer(const BufferInfo&)
+	Ref<Buffer> VulkanResourceManager::destroyBuffer(const BufferInfo &)
 	{
 		throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
 	}
@@ -1144,22 +1144,26 @@ namespace engine
 		return ref;
 	}
 
-	Ref<Buffer> VulkanResourceManager::createMappedVertexBuffer(const std::string &name, const BufferInfo& buffer_info) {
+	Ref<Buffer> VulkanResourceManager::createMappedVertexBuffer(const std::string &name, const BufferInfo &buffer_info)
+	{
 
 		vk::VulkanBuffer buffer;
-		
+
 		pCreateBuffer(buffer, buffer_info.size, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VMA_ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT, VMA_MEMORY_USAGE_AUTO);
 
 		return vertexBufferPool.insert(name, buffer);
 	}
 
-	void VulkanResourceManager::UpdateMappedBuffer(Ref<Buffer> buff, const UpdateVertexBufferInfo& info) {
-		vk::VulkanBuffer* buffer = vertexBufferPool.get(buff);
-		if (info.size + info.offset <= buffer->dataSize) {
+	void VulkanResourceManager::UpdateMappedBuffer(Ref<Buffer> buff, const UpdateVertexBufferInfo &info)
+	{
+		vk::VulkanBuffer *buffer = vertexBufferPool.get(buff);
+		if (info.size + info.offset <= buffer->dataSize)
+		{
 
-			void* data;
+			void *data;
 			vmaMapMemory(m_pAllocator, buffer->allocation, &data);
-			std::memcpy((void*)(&data + info.offset), info.vertices, info.size);
+
+			std::memcpy(data, info.vertices, info.size);
 
 			vmaUnmapMemory(m_pAllocator, buffer->allocation);
 		}
@@ -1281,51 +1285,53 @@ namespace engine
 	void VulkanResourceManager::UpdateMesh(Ref<Mesh> meshRef, UpdateMeshInfo updateInfo)
 	{
 		auto mesh = meshPool.get(meshRef);
+		mesh->numVertices = updateInfo.vertex_size;
+		/*
+				if (updateInfo.index_offset >= mesh->numIndices)
+				{
+					IO::Error("Mesh index offset is bigger than buffer's index capacity\n\t", "buffer size: ", mesh->numIndices);
+					// throw std::out_of_range(std::string(__PRETTY_FUNCTION__ ": index offset out of range"));
+				}
 
-		if (updateInfo.index_offset >= mesh->numIndices)
-		{
-			IO::Error("Mesh index offset is bigger than buffer's index capacity\n\t", "buffer size: ", mesh->numIndices);
-			// throw std::out_of_range(std::string(__PRETTY_FUNCTION__ ": index offset out of range"));
-		}
+				if (updateInfo.vertex_offset >= mesh->numVertices)
+				{
+					IO::Error("Mesh vertex offset is bigger than buffer's vertex capacity\n\t", "buffer size: ", mesh->numVertices);
+					// throw std::out_of_range(std::string(__PRETTY_FUNCTION__ ": vertex offset out of range"));
+				}
 
-		if (updateInfo.vertex_offset >= mesh->numVertices)
-		{
-			IO::Error("Mesh vertex offset is bigger than buffer's vertex capacity\n\t", "buffer size: ", mesh->numVertices);
-			// throw std::out_of_range(std::string(__PRETTY_FUNCTION__ ": vertex offset out of range"));
-		}
+				if (updateInfo.vertex_offset + updateInfo.vertex_size >= mesh->numVertices)
+				{
+					IO::Error("Trying to allocate beyond vertex buffer's capacity\n\t", "buffer size: ", mesh->numVertices);
+					// throw std::out_of_range(std::string(__PRETTY_FUNCTION__ ": vertex allocation out of range"));
+				}
 
-		if (updateInfo.vertex_offset + updateInfo.vertex_size >= mesh->numVertices)
-		{
-			IO::Error("Trying to allocate beyond vertex buffer's capacity\n\t", "buffer size: ", mesh->numVertices);
-			// throw std::out_of_range(std::string(__PRETTY_FUNCTION__ ": vertex allocation out of range"));
-		}
+				if (updateInfo.index_offset + updateInfo.index_size >= mesh->numIndices)
+				{
+					IO::Error("Trying to allocate beyond index buffer's capacity\n\t", "buffer size: ", mesh->numVertices);
+					// throw std::out_of_range(std::string(__PRETTY_FUNCTION__ ": index allocation out of range"));
+				}
 
-		if (updateInfo.index_offset + updateInfo.index_size >= mesh->numIndices)
-		{
-			IO::Error("Trying to allocate beyond index buffer's capacity\n\t", "buffer size: ", mesh->numVertices);
-			// throw std::out_of_range(std::string(__PRETTY_FUNCTION__ ": index allocation out of range"));
-		}
+				auto &vertices = updateInfo.vertices;
+				auto &indices = updateInfo.indices;
 
-		auto &vertices = updateInfo.vertices;
-		auto &indices = updateInfo.indices;
+				auto vertexBuffer = vertexBufferPool.get(mesh->vertexBuffer);
+				auto indexBuffer = indexBufferPool.get(mesh->indexBuffer);
 
-		auto vertexBuffer = vertexBufferPool.get(mesh->vertexBuffer);
-		auto indexBuffer = indexBufferPool.get(mesh->indexBuffer);
+				size_t vertexOffset = vertexBuffer->offset + updateInfo.vertex_offset;
+				size_t indexOffset = indexBuffer->offset + updateInfo.index_offset;
 
-		size_t vertexOffset = vertexBuffer->offset + updateInfo.vertex_offset;
-		size_t indexOffset = indexBuffer->offset + updateInfo.index_offset;
+				auto vertexStagingBuffer = pCreateStagingBuffer(vertices);
+				auto indexStagingBuffer = pCreateStagingIndexBuffer(indices);
 
-		auto vertexStagingBuffer = pCreateStagingBuffer(vertices);
-		auto indexStagingBuffer = pCreateStagingIndexBuffer(indices);
+				vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, vertexStagingBuffer.buffer, vertexBuffer->buffer,
+							   updateInfo.vertex_offset * sizeof(common::Vertex), vertexOffset);
 
-		vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, vertexStagingBuffer.buffer, vertexBuffer->buffer,
-					   updateInfo.vertex_offset * sizeof(common::Vertex), vertexOffset);
+				vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, indexStagingBuffer.buffer, indexBuffer->buffer,
+							   updateInfo.index_size * sizeof(IndexType), indexOffset);
 
-		vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, indexStagingBuffer.buffer, indexBuffer->buffer,
-					   updateInfo.index_size * sizeof(IndexType), indexOffset);
-
-		vmaDestroyBuffer(m_pAllocator, vertexStagingBuffer.buffer, vertexStagingBuffer.allocation);
-		vmaDestroyBuffer(m_pAllocator, indexStagingBuffer.buffer, indexStagingBuffer.allocation);
+				vmaDestroyBuffer(m_pAllocator, vertexStagingBuffer.buffer, vertexStagingBuffer.allocation);
+				vmaDestroyBuffer(m_pAllocator, indexStagingBuffer.buffer, indexStagingBuffer.allocation);
+				*/
 	}
 
 	void VulkanResourceManager::CopyTexture(Ref<Texture> src, Ref<Texture> dst)

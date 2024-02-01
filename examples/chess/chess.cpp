@@ -18,20 +18,20 @@ namespace ChessApp
 		m_pMoveAudioObject.audioFile.Load("./assets/audio/move.wav");
 
 		m_pMoveAudioObject.buffer = al::createBuffer(m_pMoveAudioObject.audioFile.getNumberOfChannels(),
-			m_pMoveAudioObject.audioFile.getFileSize(),
-			m_pMoveAudioObject.audioFile.getBPS(),
-			m_pMoveAudioObject.audioFile.getSampleRate(),
-			m_pMoveAudioObject.audioFile.data().get());
+													 m_pMoveAudioObject.audioFile.getFileSize(),
+													 m_pMoveAudioObject.audioFile.getBPS(),
+													 m_pMoveAudioObject.audioFile.getSampleRate(),
+													 m_pMoveAudioObject.audioFile.data().get());
 
 		m_pMoveAudioObject.source = al::createSource(m_pMoveAudioObject.buffer);
 
 		m_pTakeAudioObject.audioFile.Load("./assets/audio/take.wav");
 
 		m_pTakeAudioObject.buffer = al::createBuffer(m_pTakeAudioObject.audioFile.getNumberOfChannels(),
-			m_pTakeAudioObject.audioFile.getFileSize(),
-			m_pTakeAudioObject.audioFile.getBPS(),
-			m_pTakeAudioObject.audioFile.getSampleRate(),
-			m_pTakeAudioObject.audioFile.data().get());
+													 m_pTakeAudioObject.audioFile.getFileSize(),
+													 m_pTakeAudioObject.audioFile.getBPS(),
+													 m_pTakeAudioObject.audioFile.getSampleRate(),
+													 m_pTakeAudioObject.audioFile.data().get());
 
 		m_pTakeAudioObject.source = al::createSource(m_pTakeAudioObject.buffer);
 
@@ -41,8 +41,8 @@ namespace ChessApp
 		setupGeometry();
 		setupTextures();
 
-		Input::Mouse::MouseEventHandler += ([this](auto* sender, beacon::args* args)
-			{
+		Input::Mouse::MouseEventHandler += ([this](auto *sender, beacon::args *args)
+											{
 				if (args == nullptr)
 					return;
 
@@ -252,21 +252,21 @@ namespace ChessApp
 		engine::ObjectData objectData;
 
 		m_pBoardModel.pushConstant.model = transformBoard(glm::vec3(0.0, 0.0, -500.0),
-			glm::vec3(board_size(), board_size(), 0.0));
+														  glm::vec3(board_size(), board_size(), 0.0));
 		objectData.layout_index = 0;
 		objectData.mesh = m_pBoardModel.mesh;
 		objectData.material = m_pBoardModel.material;
-		//objectData.modelMatrix = m_pBoardModel.pushConstant.model;
+		// objectData.modelMatrix = m_pBoardModel.pushConstant.model;
 		objectData.pushConstant = m_pBoardModel.pushConstantRef;
 		Epsilon::getContext()->Renderer()->Push(objectData);
 
 		// set up the pieces draw data
 
-		for (auto& [position, info] : m_pBoard.getFiles())
+		for (auto &[position, info] : m_pBoard.getFiles())
 		{
 			if (!info.show || info.index == -1)
 				continue;
-			auto& piece = m_pPieces.at(info.index);
+			auto &piece = m_pPieces.at(info.index);
 			piece.pushConstant.piece = info.piece;
 
 			objectData.layout_index = 1;
@@ -336,7 +336,7 @@ namespace ChessApp
 					return 8;
 				return ENUM_MAX;
 			};
-			auto& files = m_pBoard.getFiles();
+			auto &files = m_pBoard.getFiles();
 			std::string strFirst = m_pUCI.last_move.substr(0, 2);
 			std::string strSecond = m_pUCI.last_move.substr(2, 2);
 
@@ -350,7 +350,7 @@ namespace ChessApp
 				{
 
 					m_pSelectedModel->pushConstant.model = transformPiece(
-						{ m_pMove.column_from, m_pMove.row_from });
+						{m_pMove.column_from, m_pMove.row_from});
 					return;
 				}
 
@@ -395,7 +395,7 @@ namespace ChessApp
 							files["h1"].show = false;
 
 							m_pPieces.at(files["f1"].index).pushConstant.model = transformPiece(
-								{ files["f1"].column, files["f1"].row });
+								{files["f1"].column, files["f1"].row});
 
 							std::cout << "Short white castle" << std::endl;
 						}
@@ -415,7 +415,7 @@ namespace ChessApp
 							files["a1"].show = false;
 
 							m_pPieces.at(files["d1"].index).pushConstant.model = transformPiece(
-								{ files["d1"].column, files["d1"].row });
+								{files["d1"].column, files["d1"].row});
 
 							std::cout << "Long white castle" << std::endl;
 						}
@@ -440,7 +440,7 @@ namespace ChessApp
 							files["h8"].show = false;
 
 							m_pPieces.at(files["f8"].index).pushConstant.model = transformPiece(
-								{ files["f8"].column, files["f8"].row });
+								{files["f8"].column, files["f8"].row});
 
 							std::cout << "Short black castle" << std::endl;
 						}
@@ -460,7 +460,7 @@ namespace ChessApp
 							files["a8"].show = false;
 
 							m_pPieces.at(files["d8"].index).pushConstant.model = transformPiece(
-								{ files["d8"].column, files["d8"].row });
+								{files["d8"].column, files["d8"].row});
 
 							std::cout << "Long black castle" << std::endl;
 						}
@@ -475,7 +475,7 @@ namespace ChessApp
 
 			// if (files[strSecond].index != -1)
 			m_pPieces.at(files[strSecond].index).pushConstant.model = transformPiece(
-				{ files[strSecond].column, files[strSecond].row });
+				{files[strSecond].column, files[strSecond].row});
 			m_pSelectedModel = nullptr;
 
 			m_pBoard.Turn(m_pBoard.Turn() == WHITE ? BLACK : WHITE);
@@ -499,13 +499,13 @@ namespace ChessApp
 		float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
 		m_pCameraData.view = glm::lookAt(glm::vec3(0.0f, 0.0f, 1.0f),
-			glm::vec3(0.0f, 0.0f, 0.0f),
-			glm::vec3(1.0f, 0.0f, 0.0f));
+										 glm::vec3(0.0f, 0.0f, 0.0f),
+										 glm::vec3(1.0f, 0.0f, 0.0f));
 
 		m_pCameraData.proj = glm::ortho(-(iResolution.x / 2.0f),
-			(iResolution.x / 2.0f),
-			-((iResolution.y / 2.0f)),
-			(iResolution.y / 2.0f), 0.1f, 1000.0f);
+										(iResolution.x / 2.0f),
+										-((iResolution.y / 2.0f)),
+										(iResolution.y / 2.0f), 0.1f, 1000.0f);
 		m_pCameraData.proj[1][1] *= -1;
 		m_pCameraData.iTime += time;
 		m_pCameraData.lastMove = glm::vec4(
@@ -538,7 +538,7 @@ namespace ChessApp
 			position.row = 8;
 
 		glm::vec2 modPiece = glm::vec2(bottom_left_file_pos().x + ((piece_size() * 2) * position.row),
-			bottom_left_file_pos().y - ((piece_size() * 2) * (float)position.column));
+									   bottom_left_file_pos().y - ((piece_size() * 2) * (float)position.column));
 
 		output = glm::translate(output, glm::vec3(modPiece, -499.0));
 		output = glm::scale(output, glm::vec3(piece_size(), piece_size(), 0.0));
@@ -549,7 +549,7 @@ namespace ChessApp
 	glm::vec2 ChessApp::bottom_left_file_pos()
 	{
 		return glm::vec2(-(board_size() - piece_size()),
-			board_size() - piece_size());
+						 board_size() - piece_size());
 	};
 
 	float ChessApp::piece_size()
@@ -566,32 +566,32 @@ namespace ChessApp
 	{
 		// Create a quad for the chess board
 		auto quad_data = m_pQuad.data();
-		m_pBoardModel.mesh = getContext()->ResourceManager()->createMesh({ .vertices = quad_data.Vertices,
-																				  .indices = quad_data.Indices,
-																				  .name = "board" });
+		m_pBoardModel.mesh = getContext()->ResourceManager()->createMesh({.vertices = m_pQuad.data().Vertices,
+																		  .indices = m_pQuad.data().Indices,
+																		  .name = "board"});
 
 		engine::Ref<engine::Mesh> pieceMesh = getContext()->ResourceManager()->createMesh(
-			{ .vertices = quad_data.Vertices,
-			 .indices = quad_data.Indices,
-			 .name = "piece" });
+			{.vertices = m_pQuad.data().Vertices,
+			 .indices = m_pQuad.data().Indices,
+			 .name = "piece"});
 
 		m_pBoardModel.pushConstantRef = getContext()->ResourceManager()->createPushConstant(
 			"board",
-			{ .size = sizeof(PiecePushConstant), .data = &m_pBoardModel.pushConstant });
+			{.size = sizeof(PiecePushConstant), .data = &m_pBoardModel.pushConstant});
 
 		unsigned index = 0;
-		for (auto& [position, info] : m_pBoard.getFiles())
+		for (auto &[position, info] : m_pBoard.getFiles())
 		{
 			if (info.piece == FREE)
 				continue;
 
-			Model& ref = m_pPieces[index];
+			Model &ref = m_pPieces[index];
 			info.index = index;
 			ref.pushConstantRef = getContext()->ResourceManager()->createPushConstant(
 				"Piece" + std::to_string(index),
-				{ .size = sizeof(PiecePushConstant), .data = &ref.pushConstant });
+				{.size = sizeof(PiecePushConstant), .data = &ref.pushConstant});
 			ref.mesh = pieceMesh;
-			ref.pushConstant.model = transformPiece({ info.column, info.row });
+			ref.pushConstant.model = transformPiece({info.column, info.row});
 			index++;
 		}
 	}
@@ -603,9 +603,10 @@ namespace ChessApp
 		using en = engine::UniformBindingType;
 		{
 			engine::BindGroupInfo material = {
-				.bindingInfo = {{.size = sizeof(ChessShaderData), .offset = 0, .binding = 1, .type = en::UNIFORM_BUFFER}},
+				.bindingInfo = {
+					{.size = sizeof(ChessShaderData), .offset = 0, .binding = 1, .type = en::UNIFORM_BUFFER}},
 				.renderPass = "DefaultRenderPass",
-				.name = "board" };
+				.name = "board"};
 
 			m_pBoardModel.material = getContext()->ResourceManager()->createBindGroup(material);
 		}
@@ -614,22 +615,23 @@ namespace ChessApp
 		engine::Ref<engine::BindGroup> pieceMaterial;
 		{
 			int w, h, nc;
-			unsigned char* pixels = framework::load_image_from_file("./assets/images/pieces.png",
-				&w,
-				&h,
-				&nc);
+			unsigned char *pixels = framework::load_image_from_file("./assets/images/pieces.png",
+																	&w,
+																	&h,
+																	&nc);
 			engine::TextureCreationInfo texInfo = engine::TextureBuilder()
-				.width(w)
-				.height(h)
-				.numChannels(nc)
-				.pixels(pixels)
-				.name("pieces");
+													  .width(w)
+													  .height(h)
+													  .numChannels(nc)
+													  .pixels(pixels)
+													  .name("pieces");
 			texInfo.filtering = engine::LINEAR;
 			texInfo.wrapMode = engine::REPEAT;
 			texInfo.format = engine::COLOR_RGBA;
 			engine::BindGroupInfo material = {
-				.bindingInfo = {{.size = sizeof(ChessShaderData), .binding = 1, .type = en::UNIFORM_BUFFER},
-								{.size = 0, .offset = 0, .binding = 2, .type = en::TEXTURE_IMAGE_COMBINED_SAMPLER, .textureInfo = texInfo}},
+				.bindingInfo = {
+					{.size = sizeof(ChessShaderData), .binding = 1, .type = en::UNIFORM_BUFFER},
+					{.size = 0, .offset = 0, .binding = 2, .type = en::TEXTURE_IMAGE_COMBINED_SAMPLER, .textureInfo = texInfo}},
 				.renderPass = "DefaultRenderPass",
 				.name = "pieces",
 			};
@@ -637,7 +639,7 @@ namespace ChessApp
 			pieceMaterial = getContext()->ResourceManager()->createBindGroup(material);
 			framework::free_image_data(pixels);
 		}
-		for (auto& ref : m_pPieces)
+		for (auto &ref : m_pPieces)
 		{
 			ref.material = pieceMaterial;
 		}
@@ -655,7 +657,7 @@ namespace ChessApp
 			.stages = {
 				{.entryPoint = "main", .shaderCode = boardVertexCode, .stage = VERTEX},
 				{.entryPoint = "main", .shaderCode = boardFragmentCode, .stage = FRAGMENT}},
-			.usedStages = ShaderModuleStage(VERTEX | FRAGMENT) };
+			.usedStages = ShaderModuleStage(VERTEX | FRAGMENT)};
 
 		// Load the shader that draws the pieces
 		auto pieceVertexCode = utils::readFile("./assets/shaders/chess/piece-vertex.spv");
@@ -664,42 +666,49 @@ namespace ChessApp
 			.stages = {
 				{.entryPoint = "main", .shaderCode = pieceVertexCode, .stage = VERTEX},
 				{.entryPoint = "main", .shaderCode = pieceFragmentCode, .stage = FRAGMENT}},
-			.usedStages = ShaderModuleStage(VERTEX | FRAGMENT) };
+			.usedStages = ShaderModuleStage(VERTEX | FRAGMENT)};
 
-		std::vector<VertexDescriptorInfo> vertexInfo = { {XYZ_FLOAT, offsetof(Vertex, position)},
-														{XY_FLOAT, offsetof(Vertex, texCoords)},
-														{XYZ_FLOAT, offsetof(Vertex, normal)},
-														{XYZW_FLOAT, offsetof(Vertex, color)},
-														{XYZ_FLOAT, offsetof(Vertex, tangent)},
-														{XYZ_FLOAT, offsetof(Vertex, bitangent)} };
+		VertexLayout vertexInfo = {.descriptors = {{XYZ_FLOAT, offsetof(Vertex, position)},
+												   {XY_FLOAT, offsetof(Vertex, texCoords)},
+												   {XYZ_FLOAT, offsetof(Vertex, normal)},
+												   {XYZW_FLOAT, offsetof(Vertex, color)},
+												   {XYZ_FLOAT, offsetof(Vertex, tangent)},
+												   {XYZ_FLOAT, offsetof(Vertex, bitangent)}},
+								   .size = sizeof(Vertex)};
 		PipelineLayout boardLayout = {
 			.shaderInfo = boardShaderInfo,
 			.vertexLayout = vertexInfo,
 			.cullMode = CullMode::BACK,
 			.windingMode = WindingMode::COUNTER_CLOCK_WISE,
-			.name = "BoardLayout" };
+			.name = "BoardLayout"};
 
 		PipelineLayout pieceLayout = {
 			.shaderInfo = pieceShaderInfo,
 			.vertexLayout = vertexInfo,
 			.cullMode = CullMode::BACK,
 			.windingMode = WindingMode::COUNTER_CLOCK_WISE,
-			.name = "PieceLayout" };
+			.name = "PieceLayout"};
 
 		// Configure the default render pass object
 		RenderPassInfo renderPassInfo =
 			RenderPassFactory()
-			.name("DefaultRenderPass")
+				.name("DefaultRenderPass")
 
-			//.vertexInfo<Vertex>()
-			.depthAttachment(true)
-			.subpasses({})
-			.dimensions({ .width = 1920, .height = 1080 })
+				//.vertexInfo<Vertex>()
+				.depthAttachment(true)
+				.subpasses({})
+				.dimensions({.width = 1920, .height = 1080})
 
-			.inputs({ {.size = sizeof(ChessShaderData), .offset = 0, .binding = 1, .type = UniformBindingType::UNIFORM_BUFFER},
-							  {.size = 0, .offset = 0, .binding = 2, .type = UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER} 
-			})
-			.outputs({ {
+				.inputs({{.size = 384,
+						  .offset = 0,
+						  .binding = 0,
+						  .set = 0,
+						  .type = engine::UniformBindingType::UNIFORM_BUFFER,
+						  .descriptorCount = 1,
+						  .name = "UIUniformBuffer"},
+						 {.size = sizeof(ChessShaderData), .offset = 0, .binding = 1, .type = UniformBindingType::UNIFORM_BUFFER},
+						 {.size = 0, .offset = 0, .binding = 2, .type = UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER}})
+				.outputs({{
 							  .format = COLOR_RGBA,
 							  .clearColor = {0.1f, 0.1f, 0.1f, 1.0001f},
 							  .isDepthAttachment = false,
@@ -708,10 +717,10 @@ namespace ChessApp
 						  },
 						  {.format = DEPTH_F32_STENCIL_8,
 						   .depthStencilValue = {1, 0},
-						   .isDepthAttachment = true} })
-						   .pipelineLayout(boardLayout)
-			.pipelineLayout(pieceLayout)
-			.pushConstant(sizeof(PiecePushConstant));
+						   .isDepthAttachment = true}})
+				.pipelineLayout(boardLayout)
+				.pipelineLayout(pieceLayout)
+				.pushConstant(sizeof(PiecePushConstant));
 
 		m_pRenderPass = getContext()->ResourceManager()->createDefaultRenderPass(renderPassInfo);
 	}

@@ -30,7 +30,8 @@ namespace engine
         size // if we ever want to iterate over renderer types
     };
 
-    enum class audio_type {
+    enum class audio_type
+    {
         openal = 0,
         size
     };
@@ -49,7 +50,7 @@ namespace engine
         std::vector<char> shaderCode;
         ShaderModuleStage stage;
         std::vector<size_t> renderPassIds;
-        std::unordered_map<size_t/*renderpassid*/, std::vector<size_t>/*render pipelines*/> pipelines;
+        std::unordered_map<size_t /*renderpassid*/, std::vector<size_t> /*render pipelines*/> pipelines;
     };
 
     struct ShaderStageFactory
@@ -101,7 +102,8 @@ namespace engine
         ShaderInfo info;
     };
 
-    struct MemoryHeap {
+    struct MemoryHeap
+    {
 
         uint64_t total_memory = 0;
         uint64_t free_memory = 0;
@@ -110,8 +112,10 @@ namespace engine
     };
     struct ResourcesMemory_t
     {
-        void reset() {
-            for (auto& heap : heaps) {
+        void reset()
+        {
+            for (auto &heap : heaps)
+            {
                 heap = MemoryHeap();
             }
         }
@@ -161,7 +165,7 @@ namespace engine
         NON_COLOR_RGBA_BC2,
         NON_COLOR_RGBA_BC3,
         NON_COLOR_RGBA_BC7,
-        
+
         // FLOATING POINT IMAGE
         COLOR_R_16F,
         COLOR_R_32F,
@@ -179,7 +183,6 @@ namespace engine
         NON_COLOR_RGB_32F,
         NON_COLOR_RGBA_16F,
         NON_COLOR_RGBA_32F,
-
 
         // DEPTH IMAGES
         DEPTH_F32,
@@ -258,21 +261,23 @@ namespace engine
         INSTANCED
     };
 
-    enum class MemoryUsage {
+    enum class MemoryUsage
+    {
         DEVICE_ONLY = 0,
         HOST_VISIBLE,
         TRANSFER_SRC,
         TRANSFER_DST
     };
 
-
-    struct ObjectDataConstant {
+    struct ObjectDataConstant
+    {
         glm::mat4 transform = glm::mat4(1.0f);
         uint32_t material_index = 0;
         uint32_t animation_offset = 0;
     };
 
-    struct Viewport {
+    struct Viewport
+    {
         float offset_x = 0.0f;
         float offset_y = 0.0f;
 
@@ -283,7 +288,8 @@ namespace engine
         float max_depth = 0.0f;
     };
 
-    struct Scissor {
+    struct Scissor
+    {
 
         int offset_x = 0.0f;
         int offset_y = 0.0f;
@@ -374,7 +380,8 @@ namespace engine
         size_t offset;
     };
 
-    struct VertexLayout {
+    struct VertexLayout
+    {
         std::vector<VertexDescriptorInfo> descriptors;
         size_t size;
     };
@@ -406,7 +413,7 @@ namespace engine
         void *data;
     };
 
-    template<typename T>
+    template <typename T>
     struct PushConstantData2
     {
         using type = T;
@@ -454,7 +461,8 @@ namespace engine
         STORAGE_IMAGE
     };
 
-    enum class MemoryBarrierHint {
+    enum class MemoryBarrierHint
+    {
         COMPUTE_WRITE_BUFFER_COMPUTE_READ_BUFFER,
         COMPUTE_READ_BUFFER_COMPUTE_WRITE_BUFFER,
         COMPUTE_WRITE_STORAGE_IMAGE_COMPUTE_READ_STORAGE_IMAGE,
@@ -471,7 +479,6 @@ namespace engine
         NONE
     };
 
-
     enum class BufferStorageType
     {
         UNIFORM_BUFFER = 0,
@@ -479,12 +486,14 @@ namespace engine
         IMAGE_BUFFER
     };
 
-    enum class GPUBufferUsage {
+    enum class GPUBufferUsage
+    {
         SHARED = 0,
         DEVICE_ONLY
     };
 
-    enum class ShaderStage : std::uint32_t {
+    enum class ShaderStage : std::uint32_t
+    {
         VERTEX = 1,
         FRAGMENT = 2,
         COMPUTE = 4,
@@ -496,11 +505,13 @@ namespace engine
         SIZE = 7
     };
 
-    inline ShaderStage operator|(ShaderStage first, ShaderStage second) {
-            return static_cast<ShaderStage>(static_cast<std::uint32_t>(first) | static_cast<std::uint32_t>(second));
+    inline ShaderStage operator|(ShaderStage first, ShaderStage second)
+    {
+        return static_cast<ShaderStage>(static_cast<std::uint32_t>(first) | static_cast<std::uint32_t>(second));
     }
 
-    inline ShaderStage operator&(ShaderStage first, ShaderStage second) {
+    inline ShaderStage operator&(ShaderStage first, ShaderStage second)
+    {
         return static_cast<ShaderStage>(static_cast<std::uint32_t>(first) & static_cast<std::uint32_t>(second));
     }
 
@@ -572,7 +583,7 @@ namespace engine
         uint32_t numAttributes = 0;
         uint32_t numLayouts = 0;
         uint32_t numAttachments = 0;
-        //size_t size;
+        // size_t size;
         bool depthAttachment = false;
         bool isSwapChainAttachment = false;
         std::vector<SubPassInfo> subpasses;
@@ -607,7 +618,8 @@ namespace engine
             return *this;
         }
 
-        RenderPassFactory isSwapChainAttachment(bool a) {
+        RenderPassFactory isSwapChainAttachment(bool a)
+        {
 
             info.isSwapChainAttachment = a;
             return *this;
@@ -645,7 +657,7 @@ namespace engine
 
         RenderPassFactory pipelineLayout(PipelineLayout pl)
         {
-            //assert(info.numDescriptors == pl.vertexLayout.size(), "All vertex layouts must have the same number of component in every pipeline layout");
+            // assert(info.numDescriptors == pl.vertexLayout.size(), "All vertex layouts must have the same number of component in every pipeline layout");
             info.numDescriptors = pl.vertexLayout.descriptors.size();
             info.pipelineLayout.emplace_back(pl);
             info.numLayouts++;
@@ -658,7 +670,6 @@ namespace engine
             return *this;
         }
 
-
         RenderPassFactory name(const std::string &n)
         {
             info.name = n;
@@ -670,7 +681,6 @@ namespace engine
     private:
         RenderPassInfo info;
     };
-
 
     struct RenderPassBinding
     {
@@ -688,19 +698,22 @@ namespace engine
         std::string name{};
     };
 
-    struct UpdateVertexBufferInfo {
+    struct UpdateVertexBufferInfo
+    {
         size_t size{};
-        size_t offset{}; 
-        void* vertices = nullptr;
+        size_t offset{};
+        void *vertices = nullptr;
     };
 
-    struct UpdateMeshInfo {
+    struct UpdateMeshInfo
+    {
         size_t vertex_size{};
-        size_t vertex_offset{}; //offset relative to current mesh
+        size_t vertex_offset{}; // offset relative to current mesh
         size_t index_size{};
-        size_t index_offset{}; //offset relative to current mesh
+        size_t index_offset{}; // offset relative to current mesh
         std::vector<common::Vertex> vertices{};
         std::vector<uint32_t> indices{};
+        Ref<Buffer> vertexBuffer = Ref<Buffer>::makeEmpty();
     };
 
     struct MeshInfo
@@ -734,7 +747,6 @@ namespace engine
         MeshInfo info;
     };
 
-
     struct AnimatedMeshInfoFactory
     {
         AnimatedMeshInfoFactory vertices(std::vector<common::AnimatedVertex> v)
@@ -752,13 +764,15 @@ namespace engine
         AnimatedMeshInfo info;
     };
 
-    struct MemoryBarrier {
+    struct MemoryBarrier
+    {
 
         MemoryBarrierHint memoryBarrierHint{};
         engine::Ref<Texture> image;
     };
 
-    struct ComputeShaderInfo {
+    struct ComputeShaderInfo
+    {
         std::string name;
         PipelineLayout pipelineLayout;
         std::vector<UniformBindingInfo> bindingInfo;

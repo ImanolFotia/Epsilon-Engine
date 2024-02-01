@@ -1,4 +1,4 @@
-#version 460
+#version 460 core
 #extension GL_EXT_nonuniform_qualifier : enable
 
 layout(location = 0) out vec4 outColor;
@@ -71,7 +71,7 @@ void main() {
     correctedCoords += pieces[piece];
     
     
-    vec4 texCol = textureLod(textures[0], correctedCoords, 0.0);
+    vec4 texCol = textureLod(texSampler, correctedCoords, 0.0);
     
     if(texCol.a < 0.01) discard;
     
