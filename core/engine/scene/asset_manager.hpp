@@ -76,7 +76,7 @@ namespace engine
 		alignas(16) glm::vec4 albedo_color = glm::vec4(0.75f, 0.75f, 0.75f, 1.0f);
 		float metallic_color = 1.0;
 		float roughness_color = 0.038;
-		float transmission = -1.0f;
+		float transmission = 1.0f;
 
 		float specular = 1.0f;
 	};
@@ -1050,7 +1050,7 @@ namespace engine
 			else */
 			if (ext == "dds")
 			{
-				int baseLevel = 2;
+				int baseLevel = 0;
 				DDS ddsfile(texture_path, baseLevel);
 				isDDS = true;
 				width = ddsfile.width();

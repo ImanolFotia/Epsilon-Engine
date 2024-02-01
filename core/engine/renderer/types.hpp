@@ -567,6 +567,7 @@ namespace engine
 
     struct RenderPassInfo
     {
+        uint32_t index = 0;
         uint32_t numDescriptors = 0;
         uint32_t numAttributes = 0;
         uint32_t numLayouts = 0;
@@ -594,6 +595,12 @@ namespace engine
             info.size = sizeof(VertexLayout);
             return *this;
         }*/
+
+        RenderPassFactory index(size_t index) {
+            info.index = index;
+            return *this;
+        }
+
         RenderPassFactory depthAttachment(bool d)
         {
             info.depthAttachment = d;

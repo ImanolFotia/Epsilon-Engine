@@ -31,6 +31,7 @@ namespace engine::parsers {
 				auto type = resolveType(input_json["type"]);
 
 				UniformBindingInfo info;
+
 				info.type = resolveType(input_json["type"]);
 				info.name = input_json["name"];
 				info.binding = input_json["binding"];
@@ -105,8 +106,15 @@ namespace engine::parsers {
 				resizeWithSwapChain = renderpass["resizeWithSwapChain"];
 			}
 
+			size_t renderpass_index = 0;
+
+			if (renderpass.contains("index")) {
+				renderpass_index = renderpass["index"];
+			}
+
 			RenderPassInfo renderPassInfo =
 				RenderPassFactory()
+				.index(renderpass_index)
 				.name(name)
 				.depthAttachment(renderpass["depthAttachment"])
 				.isSwapChainAttachment(renderpass["isSwapChainAttachment"])
