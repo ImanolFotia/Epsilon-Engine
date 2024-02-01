@@ -42,7 +42,7 @@ namespace ChessApp
             alignas(8) glm::vec4 lastMove{};
         };
 
-        engine::Quad m_pQuad = {};
+        engine::Quad m_pQuad = engine::Quad(2, glm::vec2(1.0f), glm::vec3(2.0f));
 
         std::array<Model, 32> m_pPieces;
         engine::Ref<engine::RenderPass> m_pRenderPass;
