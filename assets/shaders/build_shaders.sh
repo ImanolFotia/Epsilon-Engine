@@ -13,3 +13,7 @@ glslc -fshader-stage=frag sky.frag.glsl -o sky-fragment.spv
 
 glslc -fshader-stage=vert grass.vert.glsl -o grass-vertex.spv
 glslc -fshader-stage=frag grass.frag.glsl -o grass-fragment.spv
+
+
+glslc -fshader-stage=vert UI.vert.glsl -o UI-vert.spv
+glslc -fshader-stage=frag UI.frag.glsl -o UI-frag.spv
