@@ -190,33 +190,11 @@ namespace engine
 
 	void VulkanResourceManager::updateBindGroup(Ref<BindGroup> bindGroupRef)
 	{
-		// try
-		{
+		
 			vk::VulkanMaterial *vkMaterial = materialPool.get(bindGroupRef);
 
-			// auto &materialdata = m_pMaterials.emplace_back();
-			/*
-			for (auto& binding : vkMaterial->shaderBindings)
-			{
-				if (binding.descriptorBinding == VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER) {
-
-					auto pass = renderPassPool.get(std::hash<std::string>{}(binding.renderpass));
-
-					if (binding.attachment_index == pass->renderPassChain.Textures.size())
-					{
-					}
-					else {
-
-					}
-				}
-			}*/
 			pUpdateMaterial(*vkMaterial);
-		}
-		// catch (std::exception& e)
-		{
-
-			//	throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
-		}
+		
 	}
 
 	Ref<BindGroup> VulkanResourceManager::createBindGroup(BindGroupInfo material)
@@ -1040,9 +1018,15 @@ namespace engine
 		vmaDestroyImage(m_pAllocator, texture->image, texture->allocation);
 	}
 
-	void VulkanResourceManager::destroyBuffer(Ref<Buffer>)
+	void VulkanResourceManager::destroyBuffer(Ref<Buffer> buffer_ref)
 	{
-		throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
+		auto buffer = gpuBufferPool.get(buffer_ref);
+
+		for (int i = 0; i < buffer->buffers.size(); i++) {
+			if (buffer->mapped) vmaUnmapMemory(m_pAllocator, buffer->buffers[i].allocation);
+			vmaDestroyBuffer(m_pAllocator, buffer->buffers[i].buffer, buffer->buffers[i].allocation);
+		}
+
 	}
 
 	void VulkanResourceManager::destroyUniformData(Ref<UniformBindings>)
