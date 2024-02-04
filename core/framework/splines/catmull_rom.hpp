@@ -112,5 +112,39 @@ namespace framework::splines {
 			return { p0, p1, p2, p3 };
 		}
 
+
+		float CalculateLength() {
+			size_t numPoints = m_pControlPoints.size();
+
+			m_pIntervalDistances.resize(numPoints-1);
+
+			float dist = 0.0f;
+
+			for (int i = 0; i < numPoints - 1; i++) {
+				m_pIntervalDistances[i] = glm::distance(m_pControlPoints[i].position, m_pControlPoints[i + 1].position);
+			}
+
+			for (int i = 0; i < numPoints-1; i++) {
+				int divisions = (int)m_pIntervalDistances[i] * 10;
+				float step = 1.0 / divisions;
+				float t = 0.0f;
+
+				for (int j = 0; j < divisions; j++) {
+					auto a = getPoint(t);
+					auto b = getPoint(t+step);
+					dist += glm::distance(a, b);
+					t += step;
+				}
+			}
+
+			return dist;
+		}
+
+		float getIntervalDistance(int index) {
+			return m_pIntervalDistances[index];
+		}
+
+		std::vector<float> m_pIntervalDistances;
+
 	};
 }

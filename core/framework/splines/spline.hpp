@@ -37,6 +37,7 @@ namespace framework::splines {
 		void Clear() {
 			m_pControlPoints.clear();
 		}
+
 	protected:
 
 
