@@ -184,6 +184,11 @@ namespace framework
             glfwSetWindowSize(mWindow, mDefaultWidth, mDefaultHeight);
             glfwSetWindowPos(mWindow, 0, 0);
 
+            mLastWidth = mWidth;
+            mLastHeight = mHeight;
+            mWidth = mDefaultWidth;
+            mHeight = mDefaultHeight;
+
             glfwSetWindowMonitor(mWindow, NULL, 0, 0, mDefaultWidth, mDefaultHeight, mainMonitorMode->refreshRate);
             mWindowMode = WindowMode::BORDERLESS;
         }
@@ -230,6 +235,10 @@ namespace framework
 
 #if USE_GLFW
             glfwSetWindowSize(mWindow, w, h);
+            mLastWidth = mWidth;
+            mLastHeight = mHeight;
+            mWidth = w;
+            mHeight = h;
 #endif
         }
 
@@ -265,9 +274,20 @@ namespace framework
         const std::vector<WindowSizeDescription>& getAvailableSizes() {
             return m_pAvailableSizes;
         }
+
+        bool SizeChanged() {
+            bool changed = mWidth != mLastWidth || mHeight != mLastHeight;
+            mLastWidth = mWidth;
+            mLastHeight = mHeight;
+            return changed;
+        }
     private:
         int mWidth = 640;
         int mHeight = 480;
+
+
+        int mLastWidth = 640;
+        int mLastHeight = 480;
 
         WindowMode mWindowMode = WindowMode::WINDOWED;
 
