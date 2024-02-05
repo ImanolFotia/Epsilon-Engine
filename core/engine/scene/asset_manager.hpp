@@ -317,6 +317,13 @@ namespace engine
 			return m_pGPUBuffers[name];
 		}
 
+		void FreeGPUBuffer(const std::string& name) {
+			auto resourceManager = m_pContext->ResourceManager();
+			auto buffer = m_pGPUBuffers[name]; 
+			resourceManager->destroyBuffer(buffer);
+			m_pGPUBuffers.erase(name);
+		}
+
 		void RegisterShader(ShaderAsset shader)
 		{
 			m_pShaders[shader.name] = shader;

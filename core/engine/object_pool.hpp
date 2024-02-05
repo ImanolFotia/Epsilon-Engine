@@ -64,6 +64,8 @@ namespace engine
         Ref<T> emplace(std::string name, Args... args)
         {
            // const std::lock_guard<std::mutex> lock(m_pMutex);
+            uint32_t id = std::hash<std::string>{}(name);
+
             if (m_pFreeRefs.size() > 0)
             {
                 Ref<T> ref = m_pFreeRefs.back();
@@ -73,6 +75,7 @@ namespace engine
                 auto it = m_pInternalData.emplace(m_pIndexArray.at(ref.m_pIndex),
                                                   args...);
                 m_pIndexArray.at(ref.m_pIndex) = it;
+                m_pIdArray[id] = ref.m_pIndex;
                 std::cout << "reused reference\n";
                 return ref;
             }
@@ -81,7 +84,6 @@ namespace engine
             m_pIndexArray.push_back(std::prev(m_pInternalData.end()));
 
             uint32_t index = m_pIndexArray.size() - 1;
-            uint32_t id = std::hash<std::string>{}(name);
 
             Ref<T> ref(index, 1, id);
             ref.m_pIndex = index;
@@ -92,6 +94,7 @@ namespace engine
         }
         Ref<T> insert(std::string name, R element)
         {
+            uint32_t id = std::hash<std::string>{}(name);
             //const std::lock_guard<std::mutex> lock(m_pMutex);
             if (m_pFreeRefs.size() > 0)
             {
@@ -99,15 +102,17 @@ namespace engine
                 m_pFreeRefs.pop_back();
 
                 ref.m_pGeneration = ++m_pGeneration[ref.m_pIndex];
+                auto it = m_pIndexArray.at(ref.m_pIndex);
 
-                m_pInternalData.insert(m_pIndexArray.at(ref.m_pIndex), element);
+                *it = element;
+
+                m_pIdArray[id] = ref.m_pIndex;
                 return ref;
             }
 
             m_pInternalData.push_back(element);
             m_pIndexArray.push_back(std::prev(m_pInternalData.end()));
             uint32_t index = m_pIndexArray.size() - 1;
-            uint32_t id = std::hash<std::string>{}(name);
 
             Ref<T> ref(index, 1, id);
             m_pGeneration[index] = 1;
@@ -170,8 +175,8 @@ namespace engine
                 { // we dont want to add this free
                   // reference twice
                     m_pFreeRefs.insert(m_pFreeRefs.end(), ref);
-                    m_pInternalData.erase(m_pIndexArray.at(ref.m_pIndex));
-                    m_pIdArray.erase(ref.Id);
+                    //m_pInternalData.erase(m_pIndexArray.at(ref.m_pIndex));
+                    m_pIdArray.erase(ref.Id());
                     ref.m_pGeneration = 0; // invalidate reference
                 }
             }

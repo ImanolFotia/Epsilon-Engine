@@ -36,7 +36,7 @@ namespace engine
 		void Init() override;
 
 		Ref<BindGroup> createBindGroup(BindGroupInfo) override;
-		void updateBindGroup(Ref<BindGroup>) override;
+		void updateBindGroup(Ref<BindGroup>, std::initializer_list<UniformBindingInfo>) override;
 		Ref<Texture> createTexture(TextureCreationInfo) override;
 		Ref<Mesh> createMesh(MeshInfo) override;
 		Ref<Mesh> createMesh(AnimatedMeshInfo) override;
@@ -47,6 +47,7 @@ namespace engine
 		Ref<PushConstant> createPushConstant(const std::string &, PushConstantData) override;
 		Ref<UniformBindings> createUniformData(UniformBindingInfo) override;
 		Ref<ComputeShader> createComputeShader(ComputeShaderInfo) override;
+		Ref<ComputeShader> UpdateComputeShader(Ref<ComputeShader>, ComputeShaderInfo computeInfo) override;
 		Ref<Buffer> createMappedVertexBuffer(const std::string& , const BufferInfo&) override;
 		void UpdateMappedBuffer(Ref<Buffer>, const UpdateVertexBufferInfo&) override;
 		void UpdateMesh(Ref<Mesh>, UpdateMeshInfo) override;

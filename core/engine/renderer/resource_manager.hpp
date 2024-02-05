@@ -31,8 +31,9 @@ namespace engine
 		virtual Ref<Texture> createTexture(TextureCreationInfo) = 0;
 		virtual Ref<UniformBindings> createUniformData(UniformBindingInfo) = 0;
 		virtual Ref<BindGroup> createBindGroup(BindGroupInfo) = 0;
-		virtual void updateBindGroup(Ref<BindGroup>) = 0;
+		virtual void updateBindGroup(Ref<BindGroup>, std::initializer_list<UniformBindingInfo>) = 0;
 		virtual Ref<ComputeShader> createComputeShader(ComputeShaderInfo ) = 0;
+		virtual Ref<ComputeShader> UpdateComputeShader(Ref<ComputeShader>, ComputeShaderInfo computeInfo) = 0;
 		virtual Ref<Mesh> createMesh(MeshInfo) = 0;
 		virtual Ref<Mesh> createMesh(AnimatedMeshInfo) = 0;
 		virtual Ref<Mesh> insertMesh(const std::string &, MeshResource) = 0;
