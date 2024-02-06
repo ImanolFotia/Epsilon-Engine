@@ -241,35 +241,35 @@ namespace vk
 	};
 	struct RenderPassChain
 	{
-		const std::vector<const char*> deviceExtensions = {
+		std::vector<const char*> deviceExtensions = {
 			VK_KHR_SWAPCHAIN_EXTENSION_NAME };
-
+		//
 		std::vector<VkImage> Images;
-
+		//
 		VkImage DepthImage;
 		VulkanTexture DepthTexture;
 		VulkanTextureInfo DepthTextureInfo;
 		VulkanTextureBuffer DepthTextureBuffer;
-
+		//
 		std::vector<VkFormat> ImageFormats;
 		VkExtent2D Extent;
 		VkViewport Viewport;
 		VkRect2D Scissor;
-
+		//
 		std::vector<VkImageView> ImageViews;
 		std::vector<VulkanTexture> Textures;
-
+		//
 		std::vector<VkFramebuffer> Framebuffers;
-
+		//
 		bool hasDepthSampler = false;
-
+		//
 		VulkanTexture ResolveTexture;
 
 
 		void setViewport(const VkViewport& v) {
 			Viewport = v;
 		}
-
+		
 		void setScissor(const VkRect2D& s) {
 			Scissor = s;
 		}
@@ -278,12 +278,9 @@ namespace vk
 	class VulkanRenderPass
 	{
 	public:
-		VulkanRenderPass()
-		{
-			// clearValues.resize(2);
-			// clearValues[0].color = clearColor;
-			// clearValues[1].depthStencil = depthStencilClearColor;
-		}
+
+		VulkanRenderPass() = default;
+
 		std::vector<VkCommandBuffer> commandBuffers;
 		VkRenderPass renderPass;
 		VkRenderPassBeginInfo renderPassInfo{};
