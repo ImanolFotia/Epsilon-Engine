@@ -70,6 +70,7 @@ namespace Epsilon
         uint32_t nbFrames = 0;
         uint32_t lastTime = 0;
         int32_t m_pFrame = 0;
+        int m_pFPS = 0;
 
         struct MeshPushConstant
         {

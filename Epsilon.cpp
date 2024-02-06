@@ -148,6 +148,8 @@ namespace Epsilon
             ss << m_ApplicationName << " | "
                << " [" << (int)fps << " FPS] | [" << (1000.0 / double(nbFrames)) << " MS]";
 
+            m_pFPS = (int)fps;
+
             m_pContext->Window().setWindowTitle(ss.str().c_str());
 
             nbFrames = 0;
