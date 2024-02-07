@@ -113,7 +113,7 @@ namespace framework
 
 				for (auto nodeNeighbour : currentNode->neighbors)
 				{
-					if (!nodeNeighbour->visited && nodeNeighbour->obstacle == 0) {
+					if (!nodeNeighbour->visited && nodeNeighbour->obstacle == 0 && listNotTestedNodes.size() < 500) {
 						listNotTestedNodes.push_back(nodeNeighbour);
 					}
 
