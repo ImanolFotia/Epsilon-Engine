@@ -141,7 +141,9 @@ namespace framework::splines {
 		}
 
 		float getIntervalDistance(int index) {
-			return m_pIntervalDistances[index];
+			if(index < m_pIntervalDistances.size())
+				return m_pIntervalDistances[index];
+			return 0.0f;
 		}
 
 		std::vector<float> m_pIntervalDistances;
