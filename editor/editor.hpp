@@ -46,60 +46,60 @@
 namespace Editor {
 	class Editor : public Epsilon::Epsilon {
 
-		engine::Ref<engine::RenderPass> m_pDefaultRenderPass;
-		engine::Ref<engine::RenderPass> m_pForwardRenderPass; 
+		engine::Ref<engine::RenderPass> m_DefaultRenderPass;
+		engine::Ref<engine::RenderPass> m_ForwardRenderPass; 
 
-		std::shared_ptr<BrushManager> m_pBrushManager;
+		std::shared_ptr<BrushManager> m_BrushManager;
 
-		engine::Ref<engine::ComputeShader> m_pComputeShader;
+		engine::Ref<engine::ComputeShader> m_ComputeShader;
 
-		engine::Ref<engine::BindGroup> m_pForwardBindGroup;
-		engine::Ref<engine::Mesh> m_pDefaultCube;
-		std::shared_ptr<engine::Node<engine::RenderModel>> m_pSkybox;
-		std::shared_ptr<engine::Node<engine::RenderModel>> m_pGridPlane;
+		engine::Ref<engine::BindGroup> m_ForwardBindGroup;
+		engine::Ref<engine::Mesh> m_DefaultCube;
+		std::shared_ptr<engine::Node<engine::RenderModel>> m_Skybox;
+		std::shared_ptr<engine::Node<engine::RenderModel>> m_GridPlane;
 
-		UI::MenuBar m_pMenuBar;
-		UI::MainViewport m_pMainViewport;
-		UI::Inspector m_pInspector;
-		UI::Gizmo m_pGuizmo;
-		UI::Toolbar m_pTooldbar;
-		UI::UIObjectProperty m_pObjectProperty;
-		UI::SceneNodes m_pSceneNodes;
-		UI::MaterialEditor m_pMaterialEditor;
-		UI::Assets m_pAssets;
-		UI::PostProcess m_pPostProcess;
+		UI::MenuBar m_MenuBar;
+		UI::MainViewport m_MainViewport;
+		UI::Inspector m_Inspector;
+		UI::Gizmo m_Guizmo;
+		UI::Toolbar m_Tooldbar;
+		UI::UIObjectProperty m_ObjectProperty;
+		UI::SceneNodes m_SceneNodes;
+		UI::MaterialEditor m_MaterialEditor;
+		UI::Assets m_Assets;
+		UI::PostProcess m_PostProcess;
 
 		bool just_resized = false;
 
-		size_t m_pTAABindGroup0;
-		size_t m_pTAABindGroup1;
-		size_t m_pDefaultBindGroup;
-		size_t m_pSkyBindGroup;
-		size_t m_pGrassBindGroup;
-		size_t m_pGridBindGroup;
+		size_t m_TAABindGroup0;
+		size_t m_TAABindGroup1;
+		size_t m_DefaultBindGroup;
+		size_t m_SkyBindGroup;
+		size_t m_GrassBindGroup;
+		size_t m_GridBindGroup;
 
 
-		std::shared_ptr<utils::Camera> m_pCamera;
+		std::shared_ptr<utils::Camera> m_Camera;
 		ShaderData shaderData;
 
-		bool m_pCameraWasInactive = true;
-		bool m_pNavigation = false;
+		bool m_CameraWasInactive = true;
+		bool m_Navigation = false;
 		glm::mat4 selected_matrix = glm::mat4(1.0);
 		bool manipulate = false;
 
 		dotnet::DotnetHost host;
 		int selected_index = -1;
 
-		bool m_pCurrentTAAPass = false;
+		bool m_CurrentTAAPass = false;
 
-		Renderpasses::TAARenderPasses m_pTAAPasses;
+		Renderpasses::TAARenderPasses m_TAAPasses;
 
 
 		engine::Scene::SceneEntity* selected_entity = nullptr;
 
-		std::shared_ptr<engine::NodeBase> m_pSelectedNode = nullptr;
-		std::shared_ptr<GraphicsHelper> m_pGraphicsHelper;
-		std::shared_ptr<engine::AssetManager> m_pAssetManager;
+		std::shared_ptr<engine::NodeBase> m_SelectedNode = nullptr;
+		std::shared_ptr<GraphicsHelper> m_GraphicsHelper;
+		std::shared_ptr<engine::AssetManager> m_AssetManager;
 
 		struct tiny_keyboard {
 			tiny_keyboard() {
@@ -157,10 +157,10 @@ namespace Editor {
 
 			});
 
-			m_pSceneNodes.addEntityCallback = [this]() {
+			m_SceneNodes.addEntityCallback = [this]() {
 				//pAddDefaultCube(glm::vec3(0.0f));
-				auto node = Utils::CreateNode(glm::mat4(1.0f), m_pScene);
-				m_pSceneNodes.RegisterIntoEditor("Node_" + std::to_string(node->Index()), node);
+				auto node = Utils::CreateNode(glm::mat4(1.0f), m_Scene);
+				m_SceneNodes.RegisterIntoEditor("Node_" + std::to_string(node->Index()), node);
 			};
 		}
 	public:
@@ -177,7 +177,7 @@ namespace Editor {
 
 		void OnExit() {
 
-			m_pAssetManager->Destroy();
+			m_AssetManager->Destroy();
 			getContext()->CleanUp();
 		}
 

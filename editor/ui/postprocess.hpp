@@ -9,24 +9,24 @@
 namespace Editor::UI {
 	class PostProcess : public UIElement {
 
-		bool m_pTAAEnable = true;
+		bool m_TAAEnable = true;
 
 	public:
 
-		Renderpasses::TAAUniformData m_pTAAData;
+		Renderpasses::TAAUniformData m_TAAData;
 
 		bool TaaEnabled() {
-			return m_pTAAEnable;
+			return m_TAAEnable;
 		}
 
 		void draw() override {
 			ImGui::Begin("Post-Process");
 			if (ImGui::CollapsingHeader("TAA")) {
-				ImGui::Checkbox("Enable", &m_pTAAEnable);
-				ImGui::DragFloat("Lerp", &m_pTAAData.lerpAmount, 0.05);
-				ImGui::DragInt("Clamping Kernel Size", &m_pTAAData.clampingKernelSize);
-				ImGui::DragFloat("_FeedbackMin", &m_pTAAData._FeedbackMin, 0.05);
-				ImGui::DragFloat("_FeedbackMax", &m_pTAAData._FeedbackMax, 0.05);
+				ImGui::Checkbox("Enable", &m_TAAEnable);
+				ImGui::DragFloat("Lerp", &m_TAAData.lerpAmount, 0.05);
+				ImGui::DragInt("Clamping Kernel Size", &m_TAAData.clampingKernelSize);
+				ImGui::DragFloat("_FeedbackMin", &m_TAAData._FeedbackMin, 0.05);
+				ImGui::DragFloat("_FeedbackMax", &m_TAAData._FeedbackMax, 0.05);
 			}
 			ImGui::End();
 		}

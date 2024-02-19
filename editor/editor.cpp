@@ -8,82 +8,82 @@ namespace Editor {
 	void Editor::OnCreate() {
 
 
-		m_pMenuBar.addCallback("OnExit", [this]() { mShouldClose = true; });
+		m_MenuBar.addCallback("OnExit", [this]() { mShouldClose = true; });
 
-		m_pCamera = std::make_shared<utils::Camera>(glm::vec3(5.0, 5.0, 4.5), glm::vec3(0.0) - glm::vec3(5.0, 5.0, 4.5));
+		m_Camera = std::make_shared<utils::Camera>(glm::vec3(5.0, 5.0, 4.5), glm::vec3(0.0) - glm::vec3(5.0, 5.0, 4.5));
 
-		m_pInspector.setTransform(selected_matrix);
-		m_pInspector.setName("Cube");
+		m_Inspector.setTransform(selected_matrix);
+		m_Inspector.setName("Cube");
 
-		m_pScene = std::make_shared<engine::Scene>(getContext());
+		m_Scene = std::make_shared<engine::Scene>(getContext());
 
-		m_pObjectProperty.m_pScenePtr = m_pScene;
-		m_pSceneNodes.m_pScenePtr = m_pScene;
+		m_ObjectProperty.m_pScenePtr = m_Scene;
+		m_SceneNodes.m_pScenePtr = m_Scene;
 
 
-		m_pAssetManager = std::make_shared<engine::AssetManager>();
-		m_pAssetManager->setContext(getContext());
-		m_pAssetManager->Init();
+		m_AssetManager = std::make_shared<engine::AssetManager>();
+		m_AssetManager->setContext(getContext());
+		m_AssetManager->Init();
 
-		m_pScene->setAssetManager(m_pAssetManager);
+		m_Scene->setAssetManager(m_AssetManager);
 
-		m_pGraphicsHelper = std::make_shared<GraphicsHelper>(getContext(), m_pAssetManager);
+		m_GraphicsHelper = std::make_shared<GraphicsHelper>(getContext(), m_AssetManager);
 
-		m_pBrushManager = std::make_shared<BrushManager>(getContext());
+		m_BrushManager = std::make_shared<BrushManager>(getContext());
 
-		m_pAssets = UI::Assets(m_pScene);
+		m_Assets = UI::Assets(m_Scene);
 
 		engine::Cube cube;
-		m_pBrushManager->addBrush(toTriangleStrip(cube.data().Vertices, cube.data().Indices), 0);
+		m_BrushManager->addBrush(toTriangleStrip(cube.data().Vertices, cube.data().Indices), 0);
 
-		m_pMaterialEditor.m_pSceneRef = m_pScene;
+		m_MaterialEditor.m_pSceneRef = m_Scene;
 
 
-		host.assembly.Invoke<void>(L"setScenePtr", m_pScene.get());
+		host.assembly.Invoke<void>(L"setScenePtr", m_Scene.get());
 
-		m_pComputeShader = ComputeDispatch::createComputeShader(m_pScene);
+		m_ComputeShader = ComputeDispatch::createComputeShader(m_Scene);
 
-		m_pForwardRenderPass = Renderpasses::createForwardRenderPass(m_pScene);
+		m_ForwardRenderPass = Renderpasses::createForwardRenderPass(m_Scene);
 
-		m_pGraphicsHelper->addRenderPass("DefaultRenderPass", Renderpasses::createDefaultRenderPass(m_pScene));
+		m_GraphicsHelper->addRenderPass("DefaultRenderPass", Renderpasses::createDefaultRenderPass(m_Scene));
 
-		m_pTAAPasses = Renderpasses::createTAARenderPass(m_pScene);
+		m_TAAPasses = Renderpasses::createTAARenderPass(m_Scene);
 
-		//m_pScene->getAssetManager().CreateGPUBuffer("TAADataBuffer", sizeof(Renderpasses::TAAUniformData), engine::BufferStorageType::UNIFORM_BUFFER);
+		//m_Scene->getAssetManager().CreateGPUBuffer("TAADataBuffer", sizeof(Renderpasses::TAAUniformData), engine::BufferStorageType::UNIFORM_BUFFER);
 
-		m_pGraphicsHelper->addRenderPass("Forward", m_pForwardRenderPass);
+		m_GraphicsHelper->addRenderPass("Forward", m_ForwardRenderPass);
 
-		m_pGraphicsHelper->addRenderPass("TAARenderPass0", m_pTAAPasses.renderpass[0]);
-		m_pGraphicsHelper->addRenderPass("TAARenderPass1", m_pTAAPasses.renderpass[1]);
+		m_GraphicsHelper->addRenderPass("TAARenderPass0", m_TAAPasses.renderpass[0]);
+		m_GraphicsHelper->addRenderPass("TAARenderPass1", m_TAAPasses.renderpass[1]);
 
-		m_pGraphicsHelper->addBindGroup("DefaultBindGroup", 0, {
+		m_GraphicsHelper->addBindGroup("DefaultBindGroup", 0, {
 				.bindingInfo = {{.size = sizeof(engine::PBRMaterial) * engine::AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"}},
 				.inputs = {},
 				.renderPass = "Forward",
 				.name = "DefaultBindGroup",
 			});
 
-		m_pDefaultBindGroup = std::hash<std::string>{}("DefaultBindGroup");
+		m_DefaultBindGroup = std::hash<std::string>{}("DefaultBindGroup");
 
-		m_pGraphicsHelper->addBindGroup("SkyBindGroup", 1, {
+		m_GraphicsHelper->addBindGroup("SkyBindGroup", 1, {
 				.bindingInfo = {},
 				.inputs = {},
 				.renderPass = "Forward",
 				.name = "SkyBindGroup",
 			});
 
-		m_pSkyBindGroup = std::hash<std::string>{}("SkyBindGroup");
+		m_SkyBindGroup = std::hash<std::string>{}("SkyBindGroup");
 
-		m_pGraphicsHelper->addBindGroup("GridBindGroup", 2, {
+		m_GraphicsHelper->addBindGroup("GridBindGroup", 2, {
 				.bindingInfo = {},
 				.inputs = {},
 				.renderPass = "Forward",
 				.name = "GridBindGroup",
 			});
 
-		m_pGridBindGroup = std::hash<std::string>{}("GridBindGroup");
+		m_GridBindGroup = std::hash<std::string>{}("GridBindGroup");
 
-		m_pGraphicsHelper->addBindGroup("GrassBindGroup", 3, {
+		m_GraphicsHelper->addBindGroup("GrassBindGroup", 3, {
 				.bindingInfo = {{.size = sizeof(engine::PBRMaterial) * engine::AssetManager::MAX_MATERIALS, .offset = 0, .binding = 1, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "material_buffer"},
 								{.size = sizeof(glm::mat4) * engine::AssetManager::MAX_TRANSFORMS, .offset = 0, .binding = 5, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "transform_buffer"},
 								{.size = sizeof(engine::ShaderObjectData) * engine::AssetManager::MAX_OBJECTS, .offset = 0, .binding = 6, .type = engine::UniformBindingType::SHADER_STORAGE, .buffer = "object_buffer"}},
@@ -92,9 +92,9 @@ namespace Editor {
 				.name = "GrassBindGroup",
 			});
 
-		m_pGrassBindGroup = std::hash<std::string>{}("GrassBindGroup");
+		m_GrassBindGroup = std::hash<std::string>{}("GrassBindGroup");
 
-		m_pGraphicsHelper->addBindGroup("TAABindGroup0", 0, {
+		m_GraphicsHelper->addBindGroup("TAABindGroup0", 0, {
 				.bindingInfo = {
 			{.size = sizeof(Renderpasses::TAAUniformData), .offset = 0, .binding = 1, .type = engine::UniformBindingType::UNIFORM_BUFFER, .buffer = "TAADataBuffer", .name = "TAADataBuffer"}},
 				.inputs = {
@@ -107,7 +107,7 @@ namespace Editor {
 				.name = "TAABindGroup0",
 			});
 
-		m_pGraphicsHelper->addBindGroup("TAABindGroup1", 0, {
+		m_GraphicsHelper->addBindGroup("TAABindGroup1", 0, {
 				.bindingInfo = {
 			{.size = sizeof(Renderpasses::TAAUniformData), .offset = 0, .binding = 1, .type = engine::UniformBindingType::UNIFORM_BUFFER, .buffer = "TAADataBuffer", .name = "TAADataBuffer"}},
 				.inputs = {
@@ -121,31 +121,31 @@ namespace Editor {
 			});
 
 
-		m_pTAABindGroup0 = std::hash<std::string>{}("TAABindGroup0");
-		m_pTAABindGroup1 = std::hash<std::string>{}("TAABindGroup1");
+		m_TAABindGroup0 = std::hash<std::string>{}("TAABindGroup0");
+		m_TAABindGroup1 = std::hash<std::string>{}("TAABindGroup1");
 
 		auto renderer = getContext()->Renderer();
 
 		renderer->InitDebugRenderer();
 		setup_style();
 
-		auto node = Utils::CreateNode(glm::mat4(1.0f), m_pScene);
-		Utils::AddCameraNode("Camera", m_pScene, node, {});
+		auto node = Utils::CreateNode(glm::mat4(1.0f), m_Scene);
+		Utils::AddCameraNode("Camera", m_Scene, node, {});
 
-		m_pSceneNodes.RegisterIntoEditor("Camera", node);
+		m_SceneNodes.RegisterIntoEditor("Camera", node);
 
-		auto skyNode = m_pScene->emplaceIntoScene<engine::Scene::SceneEntity>(engine::Box{ glm::vec3(0.0f), glm::vec3(1.0) });
+		auto skyNode = m_Scene->emplaceIntoScene<engine::Scene::SceneEntity>(engine::Box{ glm::vec3(0.0f), glm::vec3(1.0) });
 		skyNode->data.transform = glm::scale(glm::mat4(1.0), glm::vec3(3.0f));
 		engine::Sphere sphere(5);
-		auto SkyDomeNode = m_pAssetManager->createModelFromMesh("Skybox", sphere.data(), {});
-		m_pSkybox = m_pScene->insertIntoNode(skyNode, SkyDomeNode);
-		m_pSkybox->data.bindGroupId = m_pSkyBindGroup;
+		auto SkyDomeNode = m_AssetManager->createModelFromMesh("Skybox", sphere.data(), {});
+		m_Skybox = m_Scene->insertIntoNode(skyNode, SkyDomeNode);
+		m_Skybox->data.bindGroupId = m_SkyBindGroup;
 
 		////////////////
 
 		//setMaxFPS(72);
 
-		auto planeNode = m_pScene->emplaceIntoScene<engine::Scene::SceneEntity>(engine::Box{ glm::vec3(0.0f), glm::vec3(1.0) });
+		auto planeNode = m_Scene->emplaceIntoScene<engine::Scene::SceneEntity>(engine::Box{ glm::vec3(0.0f), glm::vec3(1.0) });
 
 		planeNode->data.transform = glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 0.0f, 0.0));
 		planeNode->data.transform = glm::scale(planeNode->data.transform, glm::vec3(30.0, 1.0, 30.0));
@@ -156,11 +156,11 @@ namespace Editor {
 		defaultMaterial.metallic = 0;
 		defaultMaterial.color = glm::vec4(0.5, 0.5, 0.5, 1.0);
 		engine::Quad quad(2, glm::vec2(5.0f), glm::vec3(2.0f));
-		auto m_pDefaultCube = m_pAssetManager->createModelFromMesh("DefaultPlane", quad.data(), defaultMaterial);
-		m_pGridPlane = m_pScene->insertIntoNode(engine::Box{ glm::vec3(planeNode->data.transform[3]), glm::vec3(10.0) }, planeNode, m_pDefaultCube);
-		m_pGridPlane->data.bindGroupId = m_pDefaultBindGroup;
+		auto m_DefaultCube = m_AssetManager->createModelFromMesh("DefaultPlane", quad.data(), defaultMaterial);
+		m_GridPlane = m_Scene->insertIntoNode(engine::Box{ glm::vec3(planeNode->data.transform[3]), glm::vec3(10.0) }, planeNode, m_DefaultCube);
+		m_GridPlane->data.bindGroupId = m_DefaultBindGroup;
 
-		auto script = m_pScene->emplaceIntoNode<EntityScript>(planeNode);
+		auto script = m_Scene->emplaceIntoNode<EntityScript>(planeNode);
 		script->data.ManagedPtr = host.assembly.Invoke<void*>(L"CreateEntity", planeNode.get(), L"Game.Ground", "Ground");
 
 		script->data.updateClbk = host.assembly.getFunction<void, void*, float>(L"UpdateEntity");
@@ -172,7 +172,7 @@ namespace Editor {
 
 		const char* str = host.assembly.Invoke<const char*>(L"getEntityFields", script->data.ManagedPtr);
 		//std::cout << str << std::endl;
-		auto props = UI::Property::DeserializeProperties(std::string(str));// m_pObjectProperty.setProperties(std::string(str));
+		auto props = UI::Property::DeserializeProperties(std::string(str));// m_ObjectProperty.setProperties(std::string(str));
 		script->data.properties = props;
 		script->data.className = "Game.Ground";
 
@@ -188,9 +188,9 @@ namespace Editor {
 		node_props.mType = UI::SceneNodeType::Node;
 
 		UI::NodeProperties render_props;
-		render_props.name = "Render Model" + std::to_string(m_pGridPlane->Index());
+		render_props.name = "Render Model" + std::to_string(m_GridPlane->Index());
 		render_props.mType = UI::SceneNodeType::Render;
-		render_props.node_ref = (void*)&m_pGridPlane.get()->data;
+		render_props.node_ref = (void*)&m_GridPlane.get()->data;
 		render_props.scene_node_ref = planeNode;
 		render_props.index = planeNode->Index();
 
@@ -206,18 +206,18 @@ namespace Editor {
 		node_props.model_path = "DefaultPlane";
 		node_props.scene_node_ref = planeNode;
 		node_props.index = planeNode->Index();
-		m_pSceneNodes.PushInRoot(node_props);
+		m_SceneNodes.PushInRoot(node_props);
 
 		//////////////////
 
 
 
-		m_pAssetManager->addTexture("textures/radiance.dds", {
+		m_AssetManager->addTexture("textures/radiance.dds", {
 			.format = engine::TextureFormat::COLOR_RGBA,
 			.wrapMode = engine::CLAMP_TO_EDGE,
 			.filtering = engine::LINEAR
 			});
-		m_pAssetManager->addTexture("textures/irradiance.dds", {
+		m_AssetManager->addTexture("textures/irradiance.dds", {
 			.format = engine::TextureFormat::COLOR_RGBA,
 			.wrapMode = engine::CLAMP_TO_EDGE,
 			.filtering = engine::LINEAR
@@ -226,7 +226,7 @@ namespace Editor {
 		size_t lut_size = 512 * 512 * sizeof(glm::vec2) * 2;
 		unsigned char* lut = new unsigned char[lut_size];
 		file.read((char*)lut, lut_size);
-		m_pAssetManager->addTextureFromBytes("BRDF_lut", lut, lut_size, 512, 512, 2, {
+		m_AssetManager->addTextureFromBytes("BRDF_lut", lut, lut_size, 512, 512, 2, {
 			.format = engine::TextureFormat::COLOR_RG_32F,
 			.wrapMode = engine::CLAMP_TO_EDGE,
 			.filtering = engine::LINEAR
@@ -245,42 +245,42 @@ namespace Editor {
 
 		renderer->getDebugRenderer()->setUserFunction([this]() {
 
-			m_pMenuBar.draw();
-			m_pTooldbar.draw();
-			m_pInspector.draw();
-			if (m_pPostProcess.TaaEnabled() && !just_resized) {
-				m_pMainViewport.setImage(getContext()->Renderer()->getDebugRenderer()->getImages().at(m_pCurrentTAAPass ? "TAATarget0" : "TAATarget1"));
+			m_MenuBar.draw();
+			m_Tooldbar.draw();
+			m_Inspector.draw();
+			if (m_PostProcess.TaaEnabled() && !just_resized) {
+				m_MainViewport.setImage(getContext()->Renderer()->getDebugRenderer()->getImages().at(m_CurrentTAAPass ? "TAATarget0" : "TAATarget1"));
 			}
 			else {
-				m_pMainViewport.setImage(getContext()->Renderer()->getDebugRenderer()->getImages().at("Forward0"));
+				m_MainViewport.setImage(getContext()->Renderer()->getDebugRenderer()->getImages().at("Forward0"));
 				just_resized = false;
 
 			}
-			m_pMainViewport.draw();
-			m_pSceneNodes.draw();
-			m_pAssets.draw();
-			m_pPostProcess.draw();
+			m_MainViewport.draw();
+			m_SceneNodes.draw();
+			m_Assets.draw();
+			m_PostProcess.draw();
 			engine::Node<engine::Scene::SceneEntity>* sn;
-			if (m_pSceneNodes.scene_node_ref != nullptr)
+			if (m_SceneNodes.scene_node_ref != nullptr)
 			{
-				sn = static_cast<engine::Node<engine::Scene::SceneEntity>*>(m_pSceneNodes.scene_node_ref);
-				selected_entity = &sn->data;// reinterpret_cast<std::shared_ptr<engine::Scene::SceneEntity>> (m_pSceneNodes.scene_node_ref);
+				sn = static_cast<engine::Node<engine::Scene::SceneEntity>*>(m_SceneNodes.scene_node_ref);
+				selected_entity = &sn->data;// reinterpret_cast<std::shared_ptr<engine::Scene::SceneEntity>> (m_SceneNodes.scene_node_ref);
 			}
-			selected_index = m_pSceneNodes.selected_index;
-			m_pMaterialEditor.selected_entity = selected_index;
-			m_pMaterialEditor.draw();
+			selected_index = m_SceneNodes.selected_index;
+			m_MaterialEditor.selected_entity = selected_index;
+			m_MaterialEditor.draw();
 
-			glm::mat4 original_transform = m_pInspector.getTransform();
-			selected_matrix = m_pInspector.getTransform();
+			glm::mat4 original_transform = m_Inspector.getTransform();
+			selected_matrix = m_Inspector.getTransform();
 			if (selected_entity != nullptr)
-				m_pGuizmo.prepare(&selected_matrix, m_pMainViewport.getMode(), m_pCamera->getViewMatrix(), m_pCamera->getProjectionMatrix());
+				m_Guizmo.prepare(&selected_matrix, m_MainViewport.getMode(), m_Camera->getViewMatrix(), m_Camera->getProjectionMatrix());
 
-			if (m_pMainViewport.getMode() != UI::NONE && !m_pNavigation && selected_entity != nullptr) {
-				m_pGuizmo.draw();
+			if (m_MainViewport.getMode() != UI::NONE && !m_Navigation && selected_entity != nullptr) {
+				m_Guizmo.draw();
 			}
 
 			if (original_transform != selected_matrix && selected_entity != nullptr) {
-				auto e = std::static_pointer_cast<engine::Node<engine::Scene::SceneEntity>>(m_pScene->getNode(selected_index));
+				auto e = std::static_pointer_cast<engine::Node<engine::Scene::SceneEntity>>(m_Scene->getNode(selected_index));
 				EntityArgs args;
 				args.transform = toTransform(selected_matrix);
 				e->data.transform = selected_matrix;
@@ -288,9 +288,9 @@ namespace Editor {
 			}
 
 			if (selected_index > 0) {
-				auto e = m_pScene->getNode(selected_index);
-				auto children = m_pScene->getChildren(e);
-				m_pObjectProperty.SetNode(m_pSceneNodes.selected_node);
+				auto e = m_Scene->getNode(selected_index);
+				auto children = m_Scene->getChildren(e);
+				m_ObjectProperty.SetNode(m_SceneNodes.selected_node);
 
 				bool containsScript = false;
 				for (auto& child : children) {
@@ -303,12 +303,12 @@ namespace Editor {
 
 				if (containsScript) {
 
-					auto s = m_pScene->getChild<EntityScript>(e);
+					auto s = m_Scene->getChild<EntityScript>(e);
 					auto script = std::static_pointer_cast<engine::Node<EntityScript>>(s);
-					m_pObjectProperty.setProperties(s->data.className, script->data.properties);
-					m_pObjectProperty.draw();
+					m_ObjectProperty.setProperties(s->data.className, script->data.properties);
+					m_ObjectProperty.draw();
 
-					for (auto& property : m_pObjectProperty.getProperties()) {
+					for (auto& property : m_ObjectProperty.getProperties()) {
 						std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 
 						std::wstring name = converter.from_bytes(property.name);
@@ -318,11 +318,11 @@ namespace Editor {
 							host.assembly.Invoke<void>(L"SetPropertyBool", script->data.ManagedPtr, property.name.c_str(), std::any_cast<bool>(property.value));
 						}
 					}
-					script->data.properties = m_pObjectProperty.getProperties();
+					script->data.properties = m_ObjectProperty.getProperties();
 				}
 				else {
 
-					m_pObjectProperty.draw();
+					m_ObjectProperty.draw();
 				}
 			}
 
@@ -332,7 +332,7 @@ namespace Editor {
 			{
 				host.assembly.Invoke<void>(L"ReloadAssemblies");
 
-				auto scripts = m_pScene->getNodes<EntityScript>();
+				auto scripts = m_Scene->getNodes<EntityScript>();
 				for (auto s : scripts) {
 					auto script = std::static_pointer_cast<engine::Node<EntityScript>>(s);
 					const char* str = host.assembly.Invoke<const char*>(L"getEntityFields", script->data.ManagedPtr);
@@ -350,146 +350,155 @@ namespace Editor {
 
 	void Editor::OnUpdate() {
 
-		tiny_keyboard kb{};
 
-		//std::memcpy(kb.keys, framework::Input::KeyBoard::KEYS, sizeof(int) * 1024);
-		kb.convert();
+		if (m_Tooldbar.getStatus() != UI::Toolbar::STATUS::Paused || m_Tooldbar.GetStepStatus() == UI::Toolbar::StepStatus::Next) {
 
-		host.assembly.Invoke<void>(L"setKeyboardState", kb);
+			tiny_keyboard kb{};
 
-		auto models = m_pScene->getNodes <engine::RenderModel>();
-		auto scripts = m_pScene->getNodes <EntityScript>();
+			//std::memcpy(kb.keys, framework::Input::KeyBoard::KEYS, sizeof(int) * 1024);
+			kb.convert();
+
+			host.assembly.Invoke<void>(L"setKeyboardState", kb);
+
+			auto models = m_Scene->getNodes <engine::RenderModel>();
+			auto scripts = m_Scene->getNodes <EntityScript>();
 
 
-		for (auto s : scripts) {
-			auto script_node = std::static_pointer_cast<engine::Node<EntityScript>>(s);
-			auto& script = script_node->data;
-			auto transform = std::static_pointer_cast<engine::Node<engine::Scene::SceneEntity>>(script_node->Parent());
 
-			if (m_pTooldbar.getStatus() == UI::Toolbar::STATUS::Playing)
-			{
-				EntityArgs args;
-				args.transform = toTransform(transform->data.transform);
-				args.id = 0;
-				host.assembly.Invoke<void>(L"setEntityTransform", script.ManagedPtr, args);
+			for (auto s : scripts) {
+				auto script_node = std::static_pointer_cast<engine::Node<EntityScript>>(s);
+				auto& script = script_node->data;
+				auto transform = std::static_pointer_cast<engine::Node<engine::Scene::SceneEntity>>(script_node->Parent());
 
-				script.Update((float)framework::Clock::DeltaSeconds());
+				if (m_Tooldbar.getStatus() == UI::Toolbar::STATUS::Playing)
+				{
+					EntityArgs args;
+					args.transform = toTransform(transform->data.transform);
+					args.id = 0;
+					host.assembly.Invoke<void>(L"setEntityTransform", script.ManagedPtr, args);
+
+					script.Update((float)framework::Clock::DeltaSeconds());
+				}
+				else {
+
+					EntityArgs args;
+					args.transform = toTransform(transform->data.transform);
+					args.id = 0;
+					host.assembly.Invoke<void>(L"setEntityTransform", script.ManagedPtr, args);
+				}
+
 			}
-			else {
 
-				EntityArgs args;
-				args.transform = toTransform(transform->data.transform);
-				args.id = 0;
-				host.assembly.Invoke<void>(L"setEntityTransform", script.ManagedPtr, args);
+			if (selected_entity != nullptr) {
+				selected_matrix = selected_entity->transform;
+				m_Inspector.setTransform(selected_entity->transform);
+
 			}
 
-		}
-
-		if (selected_entity != nullptr) {
-			selected_matrix = selected_entity->transform;
-			m_pInspector.setTransform(selected_entity->transform);
+			m_Tooldbar.SetStepStatus(UI::Toolbar::StepStatus::Current);
 
 		}
 
 		int screenX, screenY; //getWindowDimensions();
-		screenX = m_pMainViewport.getSize().x;
-		screenY = m_pMainViewport.getSize().y;
+		screenX = m_MainViewport.getSize().x;
+		screenY = m_MainViewport.getSize().y;
 		shaderData.iResolution = glm::vec2(screenX, screenY);
 
 		range += 0.001f;
 		range = glm::mod(range, 2.0f);
 
 
-		m_pCamera->UpdateMatrices(Frame(), screenX, screenY, m_pPostProcess.TaaEnabled());
+		m_Camera->UpdateMatrices(Frame(), screenX, screenY, m_PostProcess.TaaEnabled());
 
-		if (framework::Input::Mouse::MIDDLE == framework::Input::PRESSED && m_pMainViewport.isHovered()) {
-			if (m_pCameraWasInactive) {
-				m_pCamera->ResetDeltas();
-				m_pCameraWasInactive = false;
+		if (framework::Input::Mouse::MIDDLE == framework::Input::PRESSED && m_MainViewport.isHovered()) {
+			if (m_CameraWasInactive) {
+				m_Camera->ResetDeltas();
+				m_CameraWasInactive = false;
 			}
 			getContext()->Window().HideCursor();
-			m_pCamera->Update(Epsilon::getContext()->Window().getWindow());
-			m_pNavigation = true;
+			m_Camera->Update(Epsilon::getContext()->Window().getWindow());
+			m_Navigation = true;
 		}
 		else {
 			getContext()->Window().ShowCursor();
-			m_pCameraWasInactive = true;
-			m_pNavigation = false;
+			m_CameraWasInactive = true;
+			m_Navigation = false;
 		}
 
 		static auto startTime = std::chrono::high_resolution_clock::now();
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		auto time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
-		shaderData.prev_view = m_pCamera->getPrevViewMatrix();
+		shaderData.prev_view = m_Camera->getPrevViewMatrix();
 		shaderData.prev_proj = shaderData.proj;
-		shaderData.view = m_pCamera->getViewMatrix();
-		shaderData.proj = m_pCamera->getProjectionMatrix();
+		shaderData.view = m_Camera->getViewMatrix();
+		shaderData.proj = m_Camera->getProjectionMatrix();
 		shaderData.proj[1][1] *= -1;
 		shaderData.iTime = framework::Clock::TimeSeconds();
-		shaderData.viewPosition = m_pCamera->getPosition();
+		shaderData.viewPosition = m_Camera->getPosition();
 		shaderData.iFrame = Frame();
 
-		getContext()->Renderer()->UpdateRenderPassUniforms(m_pForwardRenderPass, engine::RENDERPASS_SET, &shaderData);
+		getContext()->Renderer()->UpdateRenderPassUniforms(m_ForwardRenderPass, engine::RENDERPASS_SET, &shaderData);
 
-		if (m_pPostProcess.TaaEnabled()) {
-			getContext()->Renderer()->UpdateRenderPassUniforms(m_pTAAPasses.renderpass[0], engine::RENDERPASS_SET, &shaderData);
-			getContext()->Renderer()->UpdateRenderPassUniforms(m_pTAAPasses.renderpass[1], engine::RENDERPASS_SET, &shaderData);
-			getContext()->Renderer()->UpdateRenderPassUniforms(m_pTAAPasses.renderpass[0], (engine::BindingIndex)1, &m_pPostProcess.m_pTAAData);
-			getContext()->Renderer()->UpdateRenderPassUniforms(m_pTAAPasses.renderpass[1], (engine::BindingIndex)1, &m_pPostProcess.m_pTAAData);
+		if (m_PostProcess.TaaEnabled()) {
+			getContext()->Renderer()->UpdateRenderPassUniforms(m_TAAPasses.renderpass[0], engine::RENDERPASS_SET, &shaderData);
+			getContext()->Renderer()->UpdateRenderPassUniforms(m_TAAPasses.renderpass[1], engine::RENDERPASS_SET, &shaderData);
+			getContext()->Renderer()->UpdateRenderPassUniforms(m_TAAPasses.renderpass[0], (engine::BindingIndex)1, &m_PostProcess.m_TAAData);
+			getContext()->Renderer()->UpdateRenderPassUniforms(m_TAAPasses.renderpass[1], (engine::BindingIndex)1, &m_PostProcess.m_TAAData);
 		}
 
 
-		if (m_pMainViewport.ShouldResize()) {
+		if (m_MainViewport.ShouldResize()) {
 
-			getContext()->ResourceManager()->ResizeFramebuffer(m_pForwardRenderPass, m_pMainViewport.getSize());
-			if (m_pPostProcess.TaaEnabled()) {
-				getContext()->ResourceManager()->ResizeFramebuffer(m_pTAAPasses.renderpass[0], m_pMainViewport.getSize());
-				getContext()->ResourceManager()->ResizeFramebuffer(m_pTAAPasses.renderpass[1], m_pMainViewport.getSize());
-				getContext()->ResourceManager()->updateBindGroup(m_pGraphicsHelper->getBindGroups()[m_pTAABindGroup1].bindGroup);
-				getContext()->ResourceManager()->updateBindGroup(m_pGraphicsHelper->getBindGroups()[m_pTAABindGroup0].bindGroup);
+			getContext()->ResourceManager()->ResizeFramebuffer(m_ForwardRenderPass, m_MainViewport.getSize());
+			if (m_PostProcess.TaaEnabled()) {
+				getContext()->ResourceManager()->ResizeFramebuffer(m_TAAPasses.renderpass[0], m_MainViewport.getSize());
+				getContext()->ResourceManager()->ResizeFramebuffer(m_TAAPasses.renderpass[1], m_MainViewport.getSize());
+				getContext()->ResourceManager()->updateBindGroup(m_GraphicsHelper->getBindGroups()[m_TAABindGroup1].bindGroup, {});
+				getContext()->ResourceManager()->updateBindGroup(m_GraphicsHelper->getBindGroups()[m_TAABindGroup0].bindGroup, {});
 				just_resized = true;
 			}
 			Epsilon::getContext()->Renderer()->getDebugRenderer()->recreateDescriptorSets();
-			m_pMainViewport.ResetFlags();
+			m_MainViewport.ResetFlags();
 		}
+
 
 	}
 
 	void Editor::OnRender() {
 
-		m_pScene->BeginScene();
+		m_Scene->BeginScene();
 
-		//m_pScene->getContext()->Renderer()->ComputeDispatch(m_pComputeShader);
+		//m_Scene->getContext()->Renderer()->ComputeDispatch(m_ComputeShader);
 
-		m_pScene->setCurrentRenderPass(m_pGraphicsHelper->getRenderPass("Forward"));
+		m_Scene->setCurrentRenderPass(m_GraphicsHelper->getRenderPass("Forward"));
 
-		auto models = m_pScene->getNodes <engine::RenderModel>();
+		auto models = m_Scene->getNodes <engine::RenderModel>();
 
 		for (auto& model_node : models) {
 			auto model = std::static_pointer_cast<engine::Node<engine::RenderModel>>(model_node);
 			auto transform = std::static_pointer_cast<engine::Node<engine::Scene::SceneEntity>>(model->Parent());
 			if (model->data.isInstanced) {
-				m_pScene->Push(model, model->data.transforms, model->data.transforms.size(), m_pGraphicsHelper->getBindGroup(model->data.bindGroupId));
+				m_Scene->Push(model, model->data.transforms, model->data.transforms.size(), m_GraphicsHelper->getBindGroup(model->data.bindGroupId));
 			}
 			else {
-				m_pScene->Push(model, transform->data.transform, m_pGraphicsHelper->getBindGroup(model->data.bindGroupId));
+				m_Scene->Push(model, transform->data.transform, m_GraphicsHelper->getBindGroup(model->data.bindGroupId));
 			}
 		}
 
-		m_pScene->Flush();
+		m_Scene->Flush();
 
-		if (m_pPostProcess.TaaEnabled()) {
-			m_pScene->setCurrentRenderPass(/**/m_pGraphicsHelper->getRenderPass(m_pCurrentTAAPass ? "TAARenderPass0" : "TAARenderPass1"));
+		if (m_PostProcess.TaaEnabled()) {
+			m_Scene->setCurrentRenderPass(/**/m_GraphicsHelper->getRenderPass(m_CurrentTAAPass ? "TAARenderPass0" : "TAARenderPass1"));
 
-			m_pScene->Push(m_pGridPlane, glm::mat4(1.0), m_pGraphicsHelper->getBindGroup(m_pCurrentTAAPass ? m_pTAABindGroup0 : m_pTAABindGroup1));
+			m_Scene->Push(m_GridPlane, glm::mat4(1.0), m_GraphicsHelper->getBindGroup(m_CurrentTAAPass ? m_TAABindGroup0 : m_TAABindGroup1));
 
-			m_pCurrentTAAPass = !m_pCurrentTAAPass;
-			m_pScene->Flush();
+			m_CurrentTAAPass = !m_CurrentTAAPass;
+			m_Scene->Flush();
 		}
 
 
-		m_pScene->EndScene();
+		m_Scene->EndScene();
 
 	}
 
@@ -505,9 +514,9 @@ namespace Editor {
 		defaultMaterial.name = "grass_material";
 
 		engine::Quad grass_lod[3] = {
-			engine::Quad(8, glm::vec2(1.0 / 8.0, 1.0)),
-			engine::Quad(5, glm::vec2(0.2f, 1.0)),
-			engine::Quad(3, glm::vec2(0.3f, 1.0))
+			engine::Quad(4, glm::vec2(1.0 / 4.0, 1.0)),
+			engine::Quad(3, glm::vec2(0.3f, 1.0)),
+			engine::Quad(2, glm::vec2(0.5f, 1.0))
 		};
 
 		for (int lod = 0; lod < 3; lod++) {
@@ -527,8 +536,8 @@ namespace Editor {
 
 			for (auto& vtx : grass_lod[lod].data().Vertices) {
 
-				vtx.position.x *= 0.05f;
-				vtx.position.x += 0.02f;
+				vtx.position.x *= 0.125f;
+				vtx.position.x += 0.05f;
 				float y = vtx.position.y;
 				vtx.position.x *= 1.0 - (y * y * y * y);
 				vtx.position.x *= 0.5f;
@@ -537,16 +546,15 @@ namespace Editor {
 			grass_lod[lod].generateTangentSpaceVectors();
 		}
 
-		auto GrassBlade_Lod0 = m_pAssetManager->createModelFromMesh("Grass Blade Lod0", grass_lod[0].data(), defaultMaterial);
-		auto GrassBlade_Lod1 = m_pAssetManager->createModelFromMesh("Grass Blade Lod1", grass_lod[1].data(), defaultMaterial);
-		auto GrassBlade_Lod2 = m_pAssetManager->createModelFromMesh("Grass Blade Lod2", grass_lod[2].data(), defaultMaterial);
+		auto GrassBlade_Lod0 = m_AssetManager->createModelFromMesh("Grass Blade Lod0", grass_lod[0].data(), defaultMaterial);
+		auto GrassBlade_Lod1 = m_AssetManager->createModelFromMesh("Grass Blade Lod1", grass_lod[1].data(), defaultMaterial);
+		auto GrassBlade_Lod2 = m_AssetManager->createModelFromMesh("Grass Blade Lod2", grass_lod[2].data(), defaultMaterial);
 
 		GrassBlade_Lod0.renderMeshes[1] = GrassBlade_Lod1.renderMeshes[0];
 		GrassBlade_Lod0.renderMeshes[2] = GrassBlade_Lod2.renderMeshes[0];
-
 		GrassBlade_Lod0.isInstanced = true;
 
-		
+
 		for (int i = 0; i < 200; i++) {
 			for (int j = 0; j < 200; j++) {
 				//pAddDefaultPlane(glm::vec3((float)(i * 0.15) - 15, 0.0f, (float)(j * 0.15) - 15));
@@ -565,10 +573,10 @@ namespace Editor {
 			}
 		}
 
-		auto node = Utils::CreateNode(glm::mat4(1.0), m_pScene);
+		auto node = Utils::CreateNode(glm::mat4(1.0), m_Scene);
 
 
-		Utils::AddModelNode("Grass Blades" + std::to_string(node->Index()), m_pScene, GrassBlade_Lod0, node, "GrassBindGroup");
+		Utils::AddModelNode("Grass Blades" + std::to_string(node->Index()), m_Scene, GrassBlade_Lod0, node, "GrassBindGroup");
 
 		Utils::AddScriptNode({
 			.language = C_SHARP,
@@ -576,9 +584,9 @@ namespace Editor {
 			.assemblyName = "Game.dll",
 			.className = "Game.GameObject",
 			.nodeName = "Plane." + node->Index()
-			}, m_pScene, node, host);
+			}, m_Scene, node, host);
 
-		m_pSceneNodes.RegisterIntoEditor("Grass", node);
+		m_SceneNodes.RegisterIntoEditor("Grass", node);
 	}
 
 	void Editor::pAddDefaultCube(glm::vec3 position) {
@@ -591,11 +599,11 @@ namespace Editor {
 
 
 		engine::Cube cube;
-		auto m_pDefaultCube = m_pAssetManager->createModelFromMesh("DefaultCube", cube.data(), defaultMaterial);
+		auto m_DefaultCube = m_AssetManager->createModelFromMesh("DefaultCube", cube.data(), defaultMaterial);
 
-		auto node = Utils::CreateNode(glm::mat4(1.0f), m_pScene);
+		auto node = Utils::CreateNode(glm::mat4(1.0f), m_Scene);
 
-		Utils::AddModelNode("Cube", m_pScene, m_pDefaultCube, node);
+		Utils::AddModelNode("Cube", m_Scene, m_DefaultCube, node);
 
 		Utils::AddScriptNode({
 			.language = C_SHARP,
@@ -603,8 +611,8 @@ namespace Editor {
 			.assemblyName = "Game.dll",
 			.className = "Game.GameObject",
 			.nodeName = "Cube"
-			}, m_pScene, node, host);
+			}, m_Scene, node, host);
 
-		m_pSceneNodes.RegisterIntoEditor("Cube", node);
+		m_SceneNodes.RegisterIntoEditor("Cube", node);
 	}
 }

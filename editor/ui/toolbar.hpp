@@ -12,6 +12,13 @@ namespace Editor::UI {
 			Playing,
 			Paused,
 			Stopped,
+			StepPlay,
+			StepWait
+		};
+
+		enum StepStatus {
+			Next,
+			Current
 		};
 
 		STATUS getStatus() {
@@ -45,7 +52,8 @@ namespace Editor::UI {
 			{
 				if (ImGui::Button(ICON_FA_PAUSE, ImVec2(37, 37)))
 				{
-					status =Paused;
+					status = Paused;
+					step_status = Current;
 				}
 			}
 			else if (status == Paused)
@@ -55,9 +63,20 @@ namespace Editor::UI {
 
 					status = Playing;
 				}
+				ImGui::SameLine();
+				if (ImGui::Button(ICON_FA_ARROW_RIGHT, ImVec2(37, 37)))
+				{
+
+					step_status = StepStatus::Next;
+				}
 			}
 			ImGui::SameLine();
 			if (ImGui::Button(ICON_FA_STOP, ImVec2(37, 37)))
+			{
+				status = Stopped;
+			}
+			ImGui::SameLine();
+			if (ImGui::Button(ICON_FA_REDO, ImVec2(37, 37)))
 			{
 				status = Stopped;
 			}
@@ -67,8 +86,18 @@ namespace Editor::UI {
 			ImGui::End();
 		}
 
+		void SetStepStatus(StepStatus st) {
+			step_status = st;
+		}
+
+		StepStatus GetStepStatus(){
+			return step_status;
+	}
+
 	private:
 
+
 		STATUS status = Stopped;
+		StepStatus step_status = StepStatus::Next;
 	};
 }
