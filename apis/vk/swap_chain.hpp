@@ -94,9 +94,9 @@ namespace vk
 		}
 
 		if (vk_data.vsync == true)
-			return VK_PRESENT_MODE_FIFO_KHR;
-		else
-			return VK_PRESENT_MODE_MAILBOX_KHR;
+			return VK_PRESENT_MODE_FIFO_RELAXED_KHR;
+
+		return VK_PRESENT_MODE_FIFO_KHR;
 	}
 
 	static VkExtent2D chooseSwapExtent(framework::Window::windowType* window, const VkSurfaceCapabilitiesKHR& capabilities)
