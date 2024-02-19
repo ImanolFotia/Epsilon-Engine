@@ -72,6 +72,8 @@ namespace al {
 
 	static void playSource(OpenALSource source) {
 
+		//if (getSourceState(source) == AL_PLAYING) return;
+
 		alSourcei(source.id, AL_SOURCE_RELATIVE, source.relative ? AL_TRUE : AL_FALSE);
 		alSourcei(source.id, AL_LOOPING, source.looping ? AL_TRUE : AL_FALSE);
 		alSourcef(source.id, AL_GAIN, source.gain);
