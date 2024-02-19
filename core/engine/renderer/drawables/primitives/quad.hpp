@@ -225,7 +225,7 @@ namespace engine
 						float HU = m_pMesh.Vertices.at(i + m_pTesselation + 1).position.y;
 
 
-						glm::vec3 norm = glm::normalize(glm::vec3(HL - HR, 0.1, HD - HU));
+						glm::vec3 norm = glm::normalize(glm::vec3((HL - HR), 1.0, (HD - HU)));
 
 						m_pMesh.Vertices.at(i).normal = norm;
 						//m_pMesh.Vertices.at(i * m_pTesselation + j).normal = norm;
