@@ -9,24 +9,24 @@ namespace Epsilon
     {
         m_ApplicationName = appName;
         // engine::Context::getSingleton().Init(appName, engine::renderer_type::vulkan);
-        m_pContext = std::make_shared<engine::Context>();
-        m_pContext->Init(appName, engine::renderer_type::vulkan);
+        m_Context = std::make_shared<engine::Context>();
+        m_Context->Init(appName, engine::renderer_type::vulkan);
     }
 
     std::shared_ptr<engine::Context> Epsilon::getContext()
     {
-        if (m_pContext == nullptr)
+        if (m_Context == nullptr)
         {
 
-            m_pContext = std::make_shared<engine::Context>();
+            m_Context = std::make_shared<engine::Context>();
         }
 
-        return m_pContext;
+        return m_Context;
     }
 
     void Epsilon::run()
     {
-        if (m_pContext->Window().getSize().width == 0)
+        if (m_Context->Window().getSize().width == 0)
             initWindow(1280, 720);
 
         initVulkan();
@@ -48,7 +48,7 @@ namespace Epsilon
 
 #else // __EMSCRIPTEN__
 
-        while (!m_pContext->Window().ShouldClose())
+        while (!m_Context->Window().ShouldClose())
         {
             mainLoop();
             if (mShouldClose)
@@ -66,10 +66,10 @@ namespace Epsilon
     void Epsilon::drawFrame(engine::Ref<engine::RenderPass> renderPassRef)
     {
         glm::vec3 vec;
-        m_pContext->Renderer()->Flush(renderPassRef, engine::DrawType::INDEXED);
-        m_pContext->Renderer()->End(vec);
-        m_pContext->Renderer()->Submit();
-        m_pContext->Renderer()->EndFrame();
+        m_Context->Renderer()->Flush(renderPassRef, engine::DrawType::INDEXED);
+        m_Context->Renderer()->End(vec);
+        m_Context->Renderer()->Submit();
+        m_Context->Renderer()->EndFrame();
     }
 
     void Epsilon::setOnCreate(std::function<void(void)> fun)
@@ -99,13 +99,13 @@ namespace Epsilon
 
     void Epsilon::initWindow(int w, int h)
     {
-        m_pContext->Window().init(m_ApplicationName, w, h);
+        m_Context->Window().init(m_ApplicationName, w, h);
     }
 
     void Epsilon::initVulkan()
     {
-        m_pContext->Renderer()->Init(m_ApplicationName.c_str(), m_pContext->Window());
-        m_pContext->ResourceManager()->Init();
+        m_Context->Renderer()->Init(m_ApplicationName.c_str(), m_Context->Window());
+        m_Context->ResourceManager()->Init();
     }
 
     void Epsilon::mainLoop()
@@ -118,10 +118,10 @@ namespace Epsilon
 
         if (onRender)
             onRender();
-        m_pContext->Window().PollEvents();
-        m_pFrame++;
+        m_Context->Window().PollEvents();
+        m_Frame++;
 
-        double max_fps = (double)m_pMaxFPS;
+        double max_fps = (double)m_MaxFPS;
         double min_frametime = 1000000.0 / max_fps;
 
         double accum = 0;
@@ -148,9 +148,9 @@ namespace Epsilon
             ss << m_ApplicationName << " | "
                << " [" << (int)fps << " FPS] | [" << (1000.0 / double(nbFrames)) << " MS]";
 
-            m_pFPS = (int)fps;
+            m_FPS = (int)fps;
 
-            m_pContext->Window().setWindowTitle(ss.str().c_str());
+            m_Context->Window().setWindowTitle(ss.str().c_str());
 
             nbFrames = 0;
             lastTime = currentTime;
@@ -159,22 +159,22 @@ namespace Epsilon
 
     int32_t Epsilon::Frame()
     {
-        return m_pFrame;
+        return m_Frame;
     }
 
     void Epsilon::exit()
     {
         if (onExit)
             onExit();
-        m_pContext->Renderer()->Cleanup();
-        m_pContext->Window().cleanup();
-        m_pContext->CleanUp();
+        m_Context->Renderer()->Cleanup();
+        m_Context->Window().cleanup();
+        m_Context->CleanUp();
     }
 
     framework::WindowSize Epsilon::getWindowDimensions()
     {
         int w, h;
-        return m_pContext->Window().getSize();
+        return m_Context->Window().getSize();
     }
 }
 

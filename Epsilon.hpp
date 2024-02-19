@@ -69,8 +69,8 @@ namespace Epsilon
     protected:
         uint32_t nbFrames = 0;
         uint32_t lastTime = 0;
-        int32_t m_pFrame = 0;
-        int m_pFPS = 0;
+        int32_t m_Frame = 0;
+        int m_FPS = 0;
 
         struct MeshPushConstant
         {
@@ -110,8 +110,8 @@ namespace Epsilon
 
         std::string m_ApplicationName;
 
-        int getMaxFPS() { return m_pMaxFPS; }
-        void setMaxFPS(int fps) { m_pMaxFPS = fps; }
+        int getMaxFPS() { return m_MaxFPS; }
+        void setMaxFPS(int fps) { m_MaxFPS = fps; }
 
     protected:
         bool mShouldClose = false;
@@ -138,19 +138,19 @@ namespace Epsilon
 
     public:
         std::shared_ptr<engine::Scene> getScene() {
-            return m_pScene;
+            return m_Scene;
         }
 
     protected:
         framework::WindowSize getWindowDimensions();
 
-        std::shared_ptr<engine::Context> m_pContext = nullptr;
-        std::shared_ptr<engine::Scene> m_pScene;
+        std::shared_ptr<engine::Context> m_Context = nullptr;
+        std::shared_ptr<engine::Scene> m_Scene;
 
-        std::shared_ptr<engine::AssetManager> m_pAssetManager{};
+        std::shared_ptr<engine::AssetManager> m_AssetManager{};
 
         ShaderData shaderData;
-        int m_pMaxFPS = 5000;
+        int m_MaxFPS = 500000;
     };
 }
 
