@@ -78,8 +78,8 @@ namespace EpsilonSharp
 
             var assembly = domainMgr.LoadFromAssemblyName(AssemblyName.GetAssemblyName(pluginPath));
 #if DEBUG
-            if (!Debugger.IsAttached)
-                Debugger.Launch();
+           // if (!Debugger.IsAttached)
+           //     Debugger.Launch();
 #endif
 
             Console.WriteLine(Directory.GetCurrentDirectory());
