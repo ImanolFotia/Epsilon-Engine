@@ -68,7 +68,7 @@ namespace engine
 			return VK_FORMAT_R8G8B8A8_UNORM;
 
 		if (format == DEPTH_F16)
-			return VK_FORMAT_D16_UNORM;
+			return VK_FORMAT_D16_UNORM_S8_UINT;
 		if (format == DEPTH_F32)
 			return VK_FORMAT_D32_SFLOAT;
 		if (format == DEPTH_F32_STENCIL_8)
