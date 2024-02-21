@@ -430,6 +430,7 @@ namespace engine
 				m_pDescriptorPool,
 				vkMaterial.descriptorSets,
 				vk::MAX_FRAMES_IN_FLIGHT);
+
 			pUpdateMaterial(vkMaterial);
 
 			Ref<BindGroup> materialRef = materialPool.insert(material.name, vkMaterial);
@@ -1299,7 +1300,7 @@ namespace engine
 			createImageView(*m_pVkDataPtr, texture,
 				(attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
 
-			texture.imageLayout = attachment.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			texture.imageLayout = attachment.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 			if (attachment.isSampler)
 			{
 				vk::createTextureSampler(*m_pVkDataPtr, texture);

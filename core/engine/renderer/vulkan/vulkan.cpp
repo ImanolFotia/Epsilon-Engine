@@ -698,6 +698,12 @@ namespace engine
 			}
 			constexpr uint32_t draw_stride = sizeof(VkDrawIndexedIndirectCommand);
 			VkDeviceSize indirect_offset = batch.first * draw_stride;
+
+			char push_constant[72] = {};
+
+			vkCmdPushConstants(m_pFrame.CommandBuffer(), renderPass->renderPipelines[batch.layoutIndex].pipelineLayout.back(),
+				VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(ObjectDataConstant), &push_constant);
+
 			vkCmdDrawIndexedIndirect(m_pFrame.CommandBuffer(), m_pResourceManagerRef->m_pIndirectBuffer[m_pCurrentFrame].buffer, indirect_offset, batch.count, draw_stride);
 
 			m_pNumDrawCalls++;
