@@ -115,10 +115,10 @@ namespace vk
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
         VkSemaphore waitSemaphores[] = {vk_data.syncObjects[currentFrame].computeAvailableSemaphores};
-        VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
-        // submitInfo.waitSemaphoreCount = 1;
-        // submitInfo.pWaitSemaphores = waitSemaphores;
-        // submitInfo.pWaitDstStageMask = waitStages;
+        VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT };
+        //submitInfo.waitSemaphoreCount = 1;
+        //submitInfo.pWaitSemaphores = waitSemaphores;
+        //submitInfo.pWaitDstStageMask = waitStages;
 
         submitInfo.commandBufferCount = 1;
         submitInfo.pCommandBuffers = &commandBuffer;
