@@ -82,7 +82,7 @@ namespace framework
 
 
 			auto heuristic = [](Node* a, Node* b) -> float // So we can experiment with heuristic
-				{ return glm::distance(a->position, b->position); };
+				{ return glm::distance(a->position, b->position) + a->weight; };
 
 			Node* currentNode = start;
 
@@ -117,34 +117,24 @@ namespace framework
 						listNotTestedNodes.push_back(nodeNeighbour);
 					}
 
-					float fPossiblyLowerGoal = currentNode->localDistance +
-						glm::distance(currentNode->position, nodeNeighbour->position) + nodeNeighbour->weight;
+					float fPossiblyLowerGoal = currentNode->localDistance + glm::distance(currentNode->position, nodeNeighbour->position);
 
 					if (fPossiblyLowerGoal < nodeNeighbour->localDistance)
 					{
 						nodeNeighbour->parent = currentNode;
 						nodeNeighbour->localDistance = fPossiblyLowerGoal;
-
-						float factor = heuristic(nodeNeighbour, end);
-
-						if (closest_so_far > factor && !currentNode->obstacle) {
-							last_index = currentNode->index;
-							closest_so_far = factor;
-						}
-
-						nodeNeighbour->globalDistance = nodeNeighbour->localDistance + factor;
+						nodeNeighbour->globalDistance = nodeNeighbour->localDistance + heuristic(nodeNeighbour, end);
 					}
 				}
 			}
 
-			if (end->parent != nullptr) {
-				last_index = end->index;
-			}
-			return ConstructPath(&nodeGraph.getNode(last_index));
+
+
+			return ConstructPath(&nodeGraph.getNode(end->index) , &nodeGraph.getNode(currentNode->index));
 
 		}
 
-		static std::vector<GridNodeGraph::Node> ConstructPath(GridNodeGraph::Node* endNode)
+		static std::vector<GridNodeGraph::Node> ConstructPath(GridNodeGraph::Node* startNode, GridNodeGraph::Node* endNode)
 		{
 			std::vector<GridNodeGraph::Node> path;
 
@@ -155,6 +145,9 @@ namespace framework
 				path.push_back(*currentNode);
 				currentNode = currentNode->parent;
 			}
+
+			if(endNode->index == startNode->index)
+				std::cout << "end found!\n";
 
 			//std::reverse(path.begin(), path.end());
 

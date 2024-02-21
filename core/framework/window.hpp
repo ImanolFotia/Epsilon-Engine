@@ -63,259 +63,259 @@
 
 namespace framework
 {
-    struct WindowSizeDescription {
-        int id{};
-        int width{};
-        int height{};
-        float refreshRate{};
-        bool isCurrent = false;
-        std::string size_string{};
-    };
+	struct WindowSizeDescription {
+		int id{};
+		int width{};
+		int height{};
+		float refreshRate{};
+		bool isCurrent = false;
+		std::string size_string{};
+	};
 
-    struct WindowSize {
-        uint16_t width;
-        uint16_t height;
-    };
+	struct WindowSize {
+		uint16_t width;
+		uint16_t height;
+	};
 
-    class EPSILON_DLL Window
-    {
+	class EPSILON_DLL Window
+	{
 
 
 
-    public:
+	public:
 
-        enum class WindowMode {
-            WINDOWED = 0,
-            FULLSCREEN,
-            BORDERLESS
-        };
+		enum class WindowMode {
+			WINDOWED = 0,
+			FULLSCREEN,
+			BORDERLESS
+		};
 #if USE_GLFW
-        using windowType = GLFWwindow;
+		using windowType = GLFWwindow;
 #elif _WIN32
-        using windowType = HWND;
+		using windowType = HWND;
 #elif defined(__ANDROID__)
-        using windowType = ANativeWindow;
+		using windowType = ANativeWindow;
 #endif
-    public:
-        void init(std::string appName, int w = 1280, int h = 720);
+	public:
+		void init(std::string appName, int w = 1280, int h = 720);
 
-        void mainLoop()
-        {
+		void mainLoop()
+		{
 #if USE_GLFW
-            while (!glfwWindowShouldClose(mWindow))
-            {
-                glfwPollEvents();
-            }
+			while (!glfwWindowShouldClose(mWindow))
+			{
+				glfwPollEvents();
+			}
 #else
 #ifdef _WIN32
 
 #endif
 #endif
-        }
+		}
 
-        bool ShouldClose()
-        {
+		bool ShouldClose()
+		{
 #if USE_GLFW
-            return glfwWindowShouldClose(mWindow);
+			return glfwWindowShouldClose(mWindow);
 #endif
-            return false;
-        }
+			return false;
+		}
 
-        void PollEvents()
-        {
+		void PollEvents()
+		{
 #if USE_GLFW
-            glfwPollEvents();
+			glfwPollEvents();
 #else
 #ifdef _WIN32
-            MSG message;
+			MSG message;
 
-            while (GetMessage(&message, NULL, 0, 0))
-            {
-                TranslateMessage(&message);
-                DispatchMessage(&message);
-            }
+			while (GetMessage(&message, NULL, 0, 0))
+			{
+				TranslateMessage(&message);
+				DispatchMessage(&message);
+			}
 #endif
 #endif
-        }
+		}
 
-        void ShowCursor()
-        {
+		void ShowCursor()
+		{
 #if USE_GLFW
-            glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 #endif
-        }
+		}
 
-        void HideCursor()
-        {
+		void HideCursor()
+		{
 #if USE_GLFW
-            glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 #endif
-        }
+		}
 
-        void setDragCursor() {
+		void setDragCursor() {
 #if USE_GLFW
-            if (current_cursor == GLFW_RESIZE_NESW_CURSOR) return;
-            GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_RESIZE_NESW_CURSOR);
-            glfwSetCursor(mWindow, cursor);
-            current_cursor = GLFW_RESIZE_NESW_CURSOR;
+			if (current_cursor == GLFW_RESIZE_NESW_CURSOR) return;
+			GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_RESIZE_NESW_CURSOR);
+			glfwSetCursor(mWindow, cursor);
+			current_cursor = GLFW_RESIZE_NESW_CURSOR;
 #endif
-            
-        } 
 
-        void setNormalCursor() {
+		}
+
+		void setNormalCursor() {
 #if USE_GLFW
-            if (current_cursor == GLFW_ARROW_CURSOR) return;
-            glfwSetCursor(mWindow, NULL);
-            current_cursor = GLFW_ARROW_CURSOR;
+			if (current_cursor == GLFW_ARROW_CURSOR) return;
+			glfwSetCursor(mWindow, NULL);
+			current_cursor = GLFW_ARROW_CURSOR;
 #endif
-        }
+		}
 
-        void setFullScreen() {
-            auto mainMonitorMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-            glfwSetWindowMonitor(mWindow, glfwGetPrimaryMonitor(), 0, 0, mWidth, mHeight, mainMonitorMode->refreshRate);
+		void setFullScreen() {
+			auto mainMonitorMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+			glfwSetWindowMonitor(mWindow, glfwGetPrimaryMonitor(), 0, 0, mWidth, mHeight, mainMonitorMode->refreshRate);
 
-            mWindowMode = WindowMode::FULLSCREEN;
-        }
+			mWindowMode = WindowMode::FULLSCREEN;
+		}
 
-        void setBorderlessFullscreen() {
-            auto mainMonitorMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		void setBorderlessFullscreen() {
+			auto mainMonitorMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-            glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_FALSE);
-            glfwSetWindowSize(mWindow, mDefaultWidth, mDefaultHeight);
-            glfwSetWindowPos(mWindow, 0, 0);
+			glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_FALSE);
+			glfwSetWindowSize(mWindow, mDefaultWidth, mDefaultHeight);
+			glfwSetWindowPos(mWindow, 0, 0);
 
-            mLastWidth = mWidth;
-            mLastHeight = mHeight;
-            mWidth = mDefaultWidth;
-            mHeight = mDefaultHeight;
+			mLastWidth = mWidth;
+			mLastHeight = mHeight;
+			mWidth = mDefaultWidth;
+			mHeight = mDefaultHeight;
 
-            glfwSetWindowMonitor(mWindow, NULL, 0, 0, mDefaultWidth, mDefaultHeight, mainMonitorMode->refreshRate);
-            mWindowMode = WindowMode::BORDERLESS;
-        }
+			glfwSetWindowMonitor(mWindow, NULL, 0, 0, mDefaultWidth, mDefaultHeight, mainMonitorMode->refreshRate);
+			mWindowMode = WindowMode::BORDERLESS;
+		}
 
-        void setWindowed() {
-            auto mainMonitorMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		void setWindowed() {
+			auto mainMonitorMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-            glfwSetWindowMonitor(mWindow, NULL, 0, 30, mainMonitorMode->width, mainMonitorMode->height-30, mainMonitorMode->refreshRate);
-            glfwSetWindowPos(mWindow, 0, 30);
-            glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_TRUE);
-            mWindowMode = WindowMode::WINDOWED;
-        }
+			glfwSetWindowMonitor(mWindow, NULL, 0, 30, mainMonitorMode->width, mainMonitorMode->height - 30, mainMonitorMode->refreshRate);
+			glfwSetWindowPos(mWindow, 0, 30);
+			glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_TRUE);
+			mWindowMode = WindowMode::WINDOWED;
+		}
 
-        WindowMode getWindowMode() {
-            return mWindowMode;
-        }
+		WindowMode getWindowMode() {
+			return mWindowMode;
+		}
 
-        int current_cursor = 0;
+		int current_cursor = 0;
 
-        int defaultSizeIndex = 0;
+		int defaultSizeIndex = 0;
 
-        void setCursorPosition(int x, int y)
-        {
+		void setCursorPosition(int x, int y)
+		{
 #if USE_GLFW
-            glfwSetCursorPos(mWindow, x, y);
+			glfwSetCursorPos(mWindow, x, y);
 #endif
-        }
+		}
 
-        WindowSize getSize()
-        {
+		WindowSize getSize()
+		{
 #if USE_GLFW
-            if (mWindow == nullptr) return { 0,0 };
-                        
-            glfwGetFramebufferSize(mWindow, &mWidth, &mHeight);
-            return {(uint16_t)mWidth, (uint16_t)mHeight};
- #endif
+			if (mWindow == nullptr) return { 0,0 };
+
+			glfwGetFramebufferSize(mWindow, &mWidth, &mHeight);
+			return { (uint16_t)mWidth, (uint16_t)mHeight };
+#endif
 #if defined(__ANDROID__)
 
-            return { 640, 480 };
+			return { 640, 480 };
 #endif
-        }
+		}
 
-        void resize(int w, int h) {
+		void resize(int w, int h) {
 
 #if USE_GLFW
-            glfwSetWindowSize(mWindow, w, h);
-            mLastWidth = mWidth;
-            mLastHeight = mHeight;
-            mWidth = w;
-            mHeight = h;
+			glfwSetWindowSize(mWindow, w, h);
+			mLastWidth = mWidth;
+			mLastHeight = mHeight;
+			mWidth = w;
+			mHeight = h;
 #endif
-        }
+		}
 
-        int getDefaultSizeIndex() {
-            return defaultSizeIndex;
-        }
+		int getDefaultSizeIndex() {
+			return defaultSizeIndex;
+		}
 
-        void cleanup()
-        {
+		void cleanup()
+		{
 #if USE_GLFW
-            glfwDestroyWindow(mWindow);
-            glfwTerminate();
+			glfwDestroyWindow(mWindow);
+			glfwTerminate();
 #endif
-        }
+		}
 
-        void setWindowTitle(const char *title)
-        {
+		void setWindowTitle(const char* title)
+		{
 #if USE_GLFW
-            glfwSetWindowTitle(mWindow, title);
+			glfwSetWindowTitle(mWindow, title);
 #endif
-        }
+		}
 
-        windowType *getWindow() const
-        {
-            return mWindow;
-        }
+		windowType* getWindow() const
+		{
+			return mWindow;
+		}
 
-        void setWindow(windowType *window)
-        {
-            mWindow = window;
-        }
+		void setWindow(windowType* window)
+		{
+			mWindow = window;
+		}
 
-        const std::vector<WindowSizeDescription>& getAvailableSizes() {
-            return m_pAvailableSizes;
-        }
+		const std::vector<WindowSizeDescription>& getAvailableSizes() {
+			return m_pAvailableSizes;
+		}
 
-        bool SizeChanged() {
-            bool changed = mWidth != mLastWidth || mHeight != mLastHeight;
-            mLastWidth = mWidth;
-            mLastHeight = mHeight;
-            return changed;
-        }
-    private:
-        int mWidth = 640;
-        int mHeight = 480;
+		bool SizeChanged() {
+			bool changed = mWidth != mLastWidth || mHeight != mLastHeight;
+			mLastWidth = mWidth;
+			mLastHeight = mHeight;
+			return changed;
+		}
+	private:
+		int mWidth = 640;
+		int mHeight = 480;
 
 
-        int mLastWidth = 640;
-        int mLastHeight = 480;
+		int mLastWidth = 640;
+		int mLastHeight = 480;
 
-        WindowMode mWindowMode = WindowMode::WINDOWED;
+		WindowMode mWindowMode = WindowMode::WINDOWED;
 
-        int mDefaultWidth = 1;
-        int mDefaultHeight = 1;
-        std::vector<WindowSizeDescription> m_pAvailableSizes;
+		int mDefaultWidth = 1;
+		int mDefaultHeight = 1;
+		std::vector<WindowSizeDescription> m_pAvailableSizes;
 
-        windowType *mWindow;
+		windowType* mWindow;
 #if defined(_WIN32) && (USE_GLFW == false)
-        ATOM WINAPI RegisterClassEx(
-            const WNDCLASSEX *lpwcx);
-        static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
-        {
-            switch (message)
-            {
-            case WM_DESTROY:
-                DestroyWindow(hWnd);
-                PostQuitMessage(0);
-                break;
-            case WM_PAINT:
-                ValidateRect(hWnd, NULL);
-                break;
-            default:
-                return DefWindowProc(hWnd, message, wParam, lParam);
-                break;
-            }
-        }
-        HINSTANCE windowInstance;
+		ATOM WINAPI RegisterClassEx(
+			const WNDCLASSEX* lpwcx);
+		static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+		{
+			switch (message)
+			{
+			case WM_DESTROY:
+				DestroyWindow(hWnd);
+				PostQuitMessage(0);
+				break;
+			case WM_PAINT:
+				ValidateRect(hWnd, NULL);
+				break;
+			default:
+				return DefWindowProc(hWnd, message, wParam, lParam);
+				break;
+			}
+		}
+		HINSTANCE windowInstance;
 #endif
-    };
-}
+	};
+		}
