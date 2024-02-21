@@ -35,12 +35,6 @@ namespace engine
 		bool visible;
 	};
 
-	struct Entity
-	{
-		Entity() : loaded(false) {}
-		int id = 0;
-		bool loaded = false;
-	};
 
 	struct EntityData
 	{
@@ -48,7 +42,7 @@ namespace engine
 		glm::ivec4 texture_indices;
 	};
 
-	struct EntityTransform
+	struct Transform
 	{
 		unsigned int id = 0;
 		glm::vec3 position = glm::vec3(0.0f);
@@ -61,6 +55,15 @@ namespace engine
 		glm::mat4 model_matrix = glm::mat4(1.0);
 		float lifetime = 0;
 		bool grows = false;
+	};
+
+	struct Entity
+	{
+		Entity() : loaded(false) {}
+		int id = 0;
+		bool loaded = false;
+
+		Transform transform;
 	};
 
 	class Scene
@@ -236,7 +239,7 @@ namespace engine
 		{
 			auto scene_node = m_pSceneManager.insert(m_pSceneManager.root, object);
 
-			m_pNodeOctree->insert(boundingBox, {scene_node, scene_node->Index()});
+			m_pNodeOctree->insert(boundingBox, scene_node);
 
 			return scene_node;
 		}
