@@ -38,7 +38,7 @@ public:
     template <class... Args>
     static void Log(Args &&...args)
     {
-        std::clog << "\033[1;37mlog: ";
+        std::clog << "\033[1;37m[LOG]: ";
         (std::clog << ... << args) << std::endl;
 #if defined(ANDROID) || defined(__ANDROID__)
         LOGI("%s", stringer(args...).c_str());
@@ -48,7 +48,7 @@ public:
     template <class... Args>
     static void Info(Args &&...args)
     {
-        std::clog << "\033[1;34minfo: ";
+        std::clog << "\033[1;34m[INFO]: ";
         (std::clog <<  ... << args) << "\033[0m" << std::endl;
 #if defined(ANDROID) || defined(__ANDROID__)
         LOGI("%s", stringer(args...).c_str());
@@ -58,7 +58,7 @@ public:
     template <class... Args>
     static void Warning(Args &&...args)
     {
-        std::clog << "\033[1;33mwarning: ";
+        std::clog << "\033[1;33m[WARNING]: ";
         (std::clog <<  ... << args) << "\033[0m" << std::endl;
 #if defined(ANDROID) || defined(__ANDROID__)
         LOGI("%s", stringer(args...).c_str());
@@ -68,7 +68,7 @@ public:
     template <class... Args>
     static void Error(Args &&...args)
     {
-        std::clog << "\033[1;31merror: ";
+        std::clog << "\033[1;31m[ERROR]: ";
         (std::clog <<  ... << args) << "\033[0m" << std::endl;
 #if defined(ANDROID) || defined(__ANDROID__)
         LOGE("%s", stringer(args...).c_str());
