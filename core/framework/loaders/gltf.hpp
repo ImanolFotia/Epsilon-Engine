@@ -548,7 +548,7 @@ namespace framework
 	public:
 		gltfModel(const std::string &path = "") : ModelBase(path)
 		{
-			std::cout << path << std::endl;
+			IO::Log("Loading", path);
 			Load(path);
 		}
 
@@ -583,22 +583,22 @@ namespace framework
 				// assume ascii glTF.
 				ret = loader.LoadASCIIFromFile(&model, &err, &warn, path.c_str());
 			}
-
+			/*
 			if (!warn.empty())
 			{
-				std::cout << "glTF parse warning: " << warn << std::endl;
+				IO::Warning("glTF parse warning: ", warn);
 			}
 
 			if (!err.empty())
 			{
-				std::cerr << "glTF parse error: " << err << std::endl;
-			}
+				IO::Error("glTF parse error: ",err);
+			}*/
 			if (!ret)
 			{
-				std::cerr << "Failed to load glTF: " << path << std::endl;
+				IO::Error("Failed to load glTF: ",path);
 				return false;
 			}
-
+			/*
 			std::cout << "loaded glTF file has:\n"
 					  << model.accessors.size() << " accessors\n"
 					  << model.animations.size() << " animations\n"
@@ -613,7 +613,7 @@ namespace framework
 					  << model.samplers.size() << " samplers\n"
 					  << model.cameras.size() << " cameras\n"
 					  << model.scenes.size() << " scenes\n"
-					  << model.lights.size() << " lights\n";
+					  << model.lights.size() << " lights\n";*/
 			// this->mMeshes.resize(model.meshes.size());
 			unsigned index = 0;
 			unsigned numRootNodes = model.nodes.size();
@@ -826,7 +826,6 @@ namespace framework
 							}
 						}
 
-						std::cout << "TRIANGLES\n";
 						auto pos_accesor = model.accessors[meshPrimitive.attributes.at("POSITION")];
 
 						currentMesh.data().mesh.Vertices.resize(pos_accesor.count + currentvOffset);
@@ -843,7 +842,6 @@ namespace framework
 						case TINYGLTF_MODE_TRIANGLE_FAN:
 							if (!convertedToTriangleList)
 							{
-								std::cout << "TRIANGLE_FAN\n";
 								// This only has to be done once per primitive
 								convertedToTriangleList = true;
 
@@ -866,7 +864,6 @@ namespace framework
 						case TINYGLTF_MODE_TRIANGLE_STRIP:
 							if (!convertedToTriangleList)
 							{
-								std::cout << "TRIANGLE_STRIP\n";
 								// This only has to be done once per primitive
 								convertedToTriangleList = true;
 
@@ -923,12 +920,9 @@ namespace framework
 										switch (attribAccessor.componentType)
 										{
 										case TINYGLTF_COMPONENT_TYPE_FLOAT:
-											std::cout << "Type is FLOAT\n";
 											// 3D vector of float
 											auto positions = std::unique_ptr<Vertex3DArrayPtr<glm::vec3>>(new Vertex3DArrayPtr<glm::vec3>(VertexArrayStorage<glm::vec3>(dataPtr, count, byte_stride)));
 
-											std::cout << "positions's size : " << positions->size()
-													  << '\n';
 
 											for (size_t i{0}; i < positions->size(); ++i)
 											{
@@ -963,7 +957,6 @@ namespace framework
 										break;
 									case TINYGLTF_COMPONENT_TYPE_DOUBLE:
 									{
-										std::cout << "Type is DOUBLE\n";
 										switch (attribAccessor.type)
 										{
 										case TINYGLTF_TYPE_VEC3:
@@ -1014,18 +1007,15 @@ namespace framework
 
 								if (attribute.first == "NORMAL")
 								{
-									std::cout << "found normal attribute\n";
 
 									switch (attribAccessor.type)
 									{
 									case TINYGLTF_TYPE_VEC3:
 									{
-										std::cout << "Normal is VEC3\n";
 										switch (attribAccessor.componentType)
 										{
 										case TINYGLTF_COMPONENT_TYPE_FLOAT:
 										{
-											std::cout << "Normal is FLOAT\n";
 											auto normals = std::unique_ptr<Vertex3DArrayPtr<glm::vec3>>(new Vertex3DArrayPtr<glm::vec3>(VertexArrayStorage<glm::vec3>(dataPtr, count, byte_stride)));
 
 											// IMPORTANT: We need to reorder normals (and texture
@@ -1062,7 +1052,6 @@ namespace framework
 										break;
 										case TINYGLTF_COMPONENT_TYPE_DOUBLE:
 										{
-											std::cout << "Normal is DOUBLE\n";
 											auto normals = std::unique_ptr<Vertex3DArrayPtr<glm::vec3>>(new Vertex3DArrayPtr<glm::vec3>(VertexArrayStorage<glm::vec3>(dataPtr, count, byte_stride)));
 
 											// IMPORTANT: We need to reorder normals (and texture
@@ -1099,30 +1088,27 @@ namespace framework
 										}
 										break;
 										default:
-											std::cerr << "Unhandeled componant type for normal\n";
+											IO::Error("Unhandled component type for normal");
 										}
 									}
 									break;
 									default:
-										std::cerr << "Unhandeled vector type for normal\n";
+										IO::Error("Unhandled vector type for normal");
 									}
 								}
 
 								// Face varying comment on the normals is also true for the UVs
 								if (attribute.first == "TEXCOORD_0")
 								{
-									std::cout << "Found texture coordinates\n";
 
 									switch (attribAccessor.type)
 									{
 									case TINYGLTF_TYPE_VEC2:
 									{
-										std::cout << "TEXTCOORD is VEC2\n";
 										switch (attribAccessor.componentType)
 										{
 										case TINYGLTF_COMPONENT_TYPE_FLOAT:
 										{
-											std::cout << "TEXTCOORD is FLOAT\n";
 
 											auto uvs = std::unique_ptr<Vertex2DArrayPtr<glm::vec2>>(new Vertex2DArrayPtr<glm::vec2>(VertexArrayStorage<glm::vec2>(dataPtr, count, byte_stride)));
 
@@ -1157,7 +1143,6 @@ namespace framework
 										break;
 										case TINYGLTF_COMPONENT_TYPE_DOUBLE:
 										{
-											std::cout << "TEXTCOORD is DOUBLE\n";
 
 											auto uvs = std::unique_ptr<Vertex2DArrayPtr<glm::dvec2>>(new Vertex2DArrayPtr<glm::dvec2>(VertexArrayStorage<glm::dvec2>(dataPtr, count, byte_stride)));
 
@@ -1187,30 +1172,27 @@ namespace framework
 										}
 										break;
 										default:
-											std::cerr << "unrecognized vector type for UV";
+											IO::Error("unrecognized vector type for UV");
 										}
 									}
 									break;
 									default:
-										std::cerr << "unreconized componant type for UV";
+										IO::Error("unreconized componant type for UV");
 									}
 								}
 
 								// Face varying comment on the normals is also true for the UVs
 								if (attribute.first == "COLOR_0")
 								{
-									std::cout << "Found color\n";
 
 									switch (attribAccessor.type)
 									{
 									case TINYGLTF_TYPE_VEC4:
 									{
-										std::cout << "COLOR_0 is VEC4\n";
 										switch (attribAccessor.componentType)
 										{
 										case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT:
 										{
-											std::cout << "COLOR_0 is TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT\n";
 
 											auto color = std::unique_ptr<UnsignedVertex4DArrayPtr<glm::lowp_u16vec4>>(new UnsignedVertex4DArrayPtr<glm::lowp_u16vec4>(VertexArrayStorage<glm::lowp_u16vec4>(dataPtr, count, byte_stride)));
 
@@ -1253,7 +1235,6 @@ namespace framework
 										break;
 										case TINYGLTF_COMPONENT_TYPE_DOUBLE:
 										{
-											std::cout << "COLOR_0 is DOUBLE\n";
 
 											auto color = std::unique_ptr<Vertex4DArrayPtr<glm::dvec4>>(new Vertex4DArrayPtr<glm::dvec4>(VertexArrayStorage<glm::dvec4>(dataPtr, count, byte_stride)));
 
@@ -1287,7 +1268,6 @@ namespace framework
 										break;
 										case TINYGLTF_COMPONENT_TYPE_FLOAT:
 										{
-											std::cout << "COLOR_0 is FLOAT\n";
 
 											auto color = std::unique_ptr<Vertex4DArrayPtr<glm::vec4>>(new Vertex4DArrayPtr<glm::vec4>(VertexArrayStorage<glm::vec4>(dataPtr, count, byte_stride)));
 
@@ -1320,28 +1300,25 @@ namespace framework
 										}
 										break;
 										default:
-											std::cerr << "unrecognized vector type for color\n";
+											IO::Error("unrecognized vector type for color");
 										}
 									}
 									break;
 									default:
-										std::cerr << "unreconized componant type for color\n";
+										IO::Error("unreconized componant type for color");
 									}
 								}
 								if (attribute.first == "JOINTS_0")
 								{
-									std::cout << "Found joints\n";
 
 									switch (attribAccessor.type)
 									{
 									case TINYGLTF_TYPE_VEC4:
 									{
-										std::cout << "JOINTS_0 is VEC4\n";
 										switch (attribAccessor.componentType)
 										{
 										case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT:
 										{
-											std::cout << "JOINTS_0 is TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT\n";
 
 											auto joint = std::unique_ptr<UnsignedVertex4DArrayPtr<glm::lowp_u16vec4>>(new UnsignedVertex4DArrayPtr<glm::lowp_u16vec4>(VertexArrayStorage<glm::lowp_u16vec4>(dataPtr, count, byte_stride)));
 
@@ -1370,7 +1347,6 @@ namespace framework
 
 										case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:
 										{
-											std::cout << "JOINTS_0 is TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE\n";
 
 											auto joint = std::unique_ptr<UnsignedVertex4DArrayPtr<glm::lowp_u8vec4>>(new UnsignedVertex4DArrayPtr<glm::lowp_u8vec4>(VertexArrayStorage<glm::lowp_u8vec4>(dataPtr, count, byte_stride)));
 
@@ -1397,29 +1373,26 @@ namespace framework
 										}
 										break;
 										default:
-											std::cerr << "unrecognized vector type for joint\n";
+											IO::Error("unrecognized vector type for joint");
 										}
 									}
 									break;
 									default:
-										std::cerr << "unreconized componant type for joint\n";
+										IO::Error("unreconized componant type for joint");
 									}
 								}
 
 								if (attribute.first == "WEIGHTS_0")
 								{
-									std::cout << "found weight attribute\n";
 
 									switch (attribAccessor.type)
 									{
 									case TINYGLTF_TYPE_VEC4:
 									{
-										std::cout << "weight is VEC4\n";
 										switch (attribAccessor.componentType)
 										{
 										case TINYGLTF_COMPONENT_TYPE_FLOAT:
 										{
-											std::cout << "weight is FLOAT\n";
 											auto weights = std::unique_ptr<Vertex4DArrayPtr<glm::vec4>>(new Vertex4DArrayPtr<glm::vec4>(VertexArrayStorage<glm::vec4>(dataPtr, count, byte_stride)));
 
 											// IMPORTANT: We need to reorder normals (and texture
@@ -1449,12 +1422,12 @@ namespace framework
 										break;
 
 										default:
-											std::cerr << "Unhandeled componant type for normal\n";
+											IO::Error("Unhandeled componant type for normal");
 										}
 									}
 									break;
 									default:
-										std::cerr << "Unhandeled vector type for normal\n";
+										IO::Error("Unhandeled vector type for normal");
 									}
 								}
 							}
@@ -1462,14 +1435,14 @@ namespace framework
 						break;
 
 						default:
-							std::cerr << "primitive mode not implemented";
+							IO::Error("Primitive mode not implemented");
 							break;
 
 							// These aren't triangles:
 						case TINYGLTF_MODE_POINTS:
 						case TINYGLTF_MODE_LINE:
 						case TINYGLTF_MODE_LINE_LOOP:
-							std::cerr << "primitive is not triangle based, ignoring";
+							IO::Error("Primitive is not triangle based, ignoring");
 						}
 					}
 

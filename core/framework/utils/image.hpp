@@ -14,7 +14,7 @@ namespace framework
         unsigned char *data = stbi_load(path, width, height, num_channels, 4);
         if (data == nullptr)
         {
-            std::cout << "Error loading texture from file: " << path << std::endl;
+            IO::Error("Error loading image from file: ", path);
             return nullptr;
         }
         return data;

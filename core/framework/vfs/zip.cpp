@@ -1,6 +1,8 @@
 #include "zip.hpp"
 #include "cifstream.hpp"
 
+#include <core/framework/common.hpp>
+
 namespace engine
 {
 	Zip::Zip(std::string path)
@@ -17,7 +19,7 @@ namespace engine
 
 		if (ZipIdentifier[0] != 'P' && ZipIdentifier[1] != 'K')
 		{
-			std::cout << "Attempted to mount a not zip file... aborting." << std::endl;
+			IO::Error("Attempted to mount a not zip file... aborting.");
 			return;
 		}
 
@@ -132,15 +134,15 @@ namespace engine
 			switch (error)
 			{
 			case Z_NEED_DICT:
-				std::cout << "Need Dictionary" << std::endl;
+				IO::Error("Need Dictionary");
 				return error;
 				break;
 			case Z_DATA_ERROR:
-				std::cout << "Data error" << std::endl;
+				IO::Error("Data error");
 				return error;
 				break;
 			case Z_MEM_ERROR:
-				std::cout << "Memory error" << std::endl;
+				IO::Error("Memory error");
 				return error;
 				break;
 			default:

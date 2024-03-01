@@ -5,6 +5,8 @@
 #include <iostream>
 #include <cstring>
 
+#include <core/framework/common.hpp>
+
 // #include <AL/alBufferSOFT.h>
 
 // struct OpenALData;
@@ -46,36 +48,14 @@ static LPALGETAUXILIARYEFFECTSLOTFV alGetAuxiliaryEffectSlotfv;
 static void callback(int eventType, int deviceType,
                      ALCdevice *device, int length, const char *message, void *userParam)
 {
-    std::cout << "eventType: " << eventType << std::endl;
-    std::cout << "deviceType: " << deviceType << std::endl;
-    std::cout << "length: " << length << std::endl;
-    std::cout << "message: " << message << std::endl;
+    IO::Log("Event Type: ", eventType);
+    IO::Log("Device Type: ", deviceType);
+    IO::Log("Length: ", length);
+    IO::Log("Message: ", message);
 
     al::OpenALData *al_data = (al::OpenALData *)userParam;
 
     al_data->shouldReloadDevice = true;
-    /*
-    auto ctx = alcGetCurrentContext();
-    auto cdevice = alcGetContextsDevice(ctx);
-    const char* deviceName = alcGetString(cdevice, ALC_ALL_DEVICES_SPECIFIER);
-
-    std::cout << "device: " << deviceName << std::endl;
-
-    if (nullptr == cdevice)
-    {
-        std::cout << "device reopen failed: " << "device is null" << std::endl;
-        return;
-    }
-
-    if (ALC_EVENT_TYPE_DEFAULT_DEVICE_CHANGED_SOFT == eventType) {
-        bool res = alcReopenDeviceSOFT(cdevice, deviceName, NULL);
-
-        if (res == ALC_FALSE) {
-            auto error_code = alcGetError(cdevice);
-            std::cout << "device reopen failed: " << deviceName << " | error: " << error_code << std::endl;
-        }
-    }
-    */
 }
 
 static char g_szALC_EXT_EFX[256] = {'\0'};
@@ -90,15 +70,15 @@ namespace al
         const ALCchar *device = devices, *next = devices + 1;
         size_t len = 0;
 
-        std::cout << message << "\n";
+        IO::Log(message);
         while (device && *device != '\0' && next && *next != '\0')
         {
-            std::cout << device << "\n";
+            IO::Log(device);
             len = std::strlen(device);
             device += (len + 1);
             next += (len + 2);
         }
-        std::cout << "----------\n";
+        IO::Log("----------");
 #endif
     }
 
@@ -109,13 +89,13 @@ namespace al
         al_data->device = alcOpenDevice(device_name);
         if (al_data->device == NULL)
         {
-            std::cout << "cannot open sound card" << std::endl;
+            IO::Error("Cannot open sound card");
             return false;
         }
         al_data->context = alcCreateContext(al_data->device, NULL);
         if (al_data->context == NULL)
         {
-            std::cout << "cannot open context" << std::endl;
+            IO::Error("Cannot open audio context");
             return false;
         }
         alcMakeContextCurrent(al_data->context);
@@ -123,7 +103,7 @@ namespace al
 #if !defined(ANDROID) && !defined(__ANDROID__)
         if (!alcIsExtensionPresent(alcGetContextsDevice(alcGetCurrentContext()), "ALC_EXT_EFX"))
         {
-            std::cout << g_szALC_EXT_EFX << "`xff0000Error: EFX not supported" << std::endl;
+            IO::Error(g_szALC_EXT_EFX,"`xff0000Error: EFX not supported");
             return false;
         }
 
@@ -206,8 +186,8 @@ namespace al
             ALC_EVENT_TYPE_DEVICE_REMOVED_SOFT};
         alcEventControlSOFT(3, events, ALC_TRUE);
         alcEventCallbackSOFT((ALCEVENTPROCTYPESOFT)callback, (void *)al_data);
-
-        printf("Opened \"%s\"\n", name);
+        IO::Info("Opened ", name);
+        //printf("Opened \"%s\"\n", name);
 
         return true;
     }

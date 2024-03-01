@@ -31,7 +31,7 @@ namespace framework::splines {
 		}
 
 		glm::vec3 getLastPoint() {
-			return m_pControlPoints.back().position;
+			return m_pControlPoints.at(m_pControlPoints.size() - 2).position;
 		}
 
 		void Clear() {

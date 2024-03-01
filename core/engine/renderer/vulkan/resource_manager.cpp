@@ -26,7 +26,7 @@ namespace engine
 	void VulkanResourceManager::Init()
 	{
 
-		std::cout << "Initiating Resource Manager\n";
+		IO::Log("Initiating Resource Manager");
 		VmaAllocatorCreateInfo allocatorInfo = {};
 		allocatorInfo.physicalDevice = m_pVkDataPtr->physicalDevice;
 		allocatorInfo.device = m_pVkDataPtr->logicalDevice;
@@ -952,8 +952,8 @@ namespace engine
 			.indexBuffer = indexBufferRef,
 			.vertexOffset = vertexBuffer->allocatedVertices,
 			.indexOffset = indexBuffer->allocatedVertices,
-			.numVertices = (uint32_t)vertices->size(),
-			.numIndices = (uint32_t)indices->size() };
+			.numVertices = (int32_t)vertices->size(),
+			.numIndices = (int32_t)indices->size() };
 
 		auto ref = meshPool.insert(meshInfo.name, meshResource);
 
@@ -1034,8 +1034,8 @@ namespace engine
 			.indexBuffer = indexBufferRef,
 			.vertexOffset = vertexBuffer->allocatedVertices,
 			.indexOffset = indexBuffer->allocatedVertices,
-			.numVertices = (uint32_t)vertices->size(),
-			.numIndices = (uint32_t)indices->size() };
+			.numVertices = (int32_t)vertices->size(),
+			.numIndices = (int32_t)indices->size() };
 		auto ref = meshPool.insert(meshInfo.name, meshResource);
 
 		int maxAllocatingSize = sizeof(IndexType) * (indexBuffer->allocatedVertices + indices->size());
@@ -1355,7 +1355,14 @@ namespace engine
 	void VulkanResourceManager::UpdateMesh(Ref<Mesh> meshRef, UpdateMeshInfo updateInfo)
 	{
 		auto mesh = meshPool.get(meshRef);
-		mesh->numVertices = updateInfo.vertex_size;
+		if(updateInfo.vertex_size >= 0)
+			mesh->numVertices = updateInfo.vertex_size;
+
+		if (updateInfo.vertex_size >= 0)
+			mesh->vertexOffset = updateInfo.vertex_offset;
+
+		if (!updateInfo.vertexBuffer.empty())
+			mesh->vertexBuffer = updateInfo.vertexBuffer;
 		/*
 				if (updateInfo.index_offset >= mesh->numIndices)
 				{

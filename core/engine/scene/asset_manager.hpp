@@ -26,6 +26,19 @@
 namespace engine
 {
 
+	enum AssetType {
+		TEXTURE = 0,
+		MODEL,
+		SIZE
+	};
+
+	struct AssetInfo {
+		std::string AssetPath{};
+		AssetType type;
+		size_t bindGroup = 0;
+		size_t shadowBindGroup = 0;
+	};
+
 	struct ShaderData
 	{
 		alignas(4) float iTime = 0.0f;

@@ -68,7 +68,7 @@ namespace engine
 		m_pWindow = &window;
 		m_pResourceManagerRef->m_pVkDataPtr = &m_pVkData;
 
-		std::cout << "Initiating Vulkan Context\n";
+		IO::Log("Initiating Vulkan Context");
 
 #if defined(ANDROID) || defined(__ANDROID__)
 		LOGI("Initiating Vulkan Instance\n");
@@ -301,7 +301,7 @@ namespace engine
 			{
 				pRecreateSwapChain();
 				m_pShouldRecreateSwapchain = false;
-				std::cout << "swap chain recreated\n";
+				IO::Log("swap chain recreated");
 			}
 		}
 
@@ -432,7 +432,7 @@ namespace engine
 			FlushIndexedIndirect(renderPass);
 			break;
 		default:
-			std::cout << "Error: Draw command type not supported!" << std::endl;
+			IO::Error("Error: Draw command type not supported!");
 			exit(99);
 			break;
 		}

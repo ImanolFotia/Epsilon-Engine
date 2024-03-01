@@ -7,6 +7,7 @@
 #include <iostream>
 #include <memory>
 #include "zip.hpp"
+#include <core/framework/common.hpp>
 
 namespace engine {
 
@@ -22,7 +23,7 @@ namespace engine {
 				}
 				else if (s.st_mode & S_IFREG) {
 					m_Container.insert({ name, Zip(name)});
-					std::cout << name << ": Virtual File System Mounted" << std::endl;
+					IO::Info(name, ": Virtual File System Mounted");
 				}
 				else {
 					//something else
@@ -57,7 +58,7 @@ namespace engine {
 			}
 
 			if (outFile->m_Exists == false) {
-				std::cout << name << ": No such file or directory" << std::endl;
+				IO::Error(name, ": No such file or directory");
 				return nullptr;
 			}
 

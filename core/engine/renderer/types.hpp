@@ -707,10 +707,10 @@ namespace engine
 
     struct UpdateMeshInfo
     {
-        size_t vertex_size{};
-        size_t vertex_offset{}; // offset relative to current mesh
-        size_t index_size{};
-        size_t index_offset{}; // offset relative to current mesh
+        int32_t vertex_size = -1;
+        int32_t vertex_offset = -1; // offset relative to current mesh
+        int32_t index_size = -1;
+        int32_t index_offset = -1; // offset relative to current mesh
         std::vector<common::Vertex> vertices{};
         std::vector<uint32_t> indices{};
         Ref<Buffer> vertexBuffer = Ref<Buffer>::makeEmpty();

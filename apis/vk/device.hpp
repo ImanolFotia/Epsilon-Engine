@@ -174,7 +174,7 @@ namespace vk
     {
         VkPhysicalDeviceProperties physicalDeviceProperties;
         vkGetPhysicalDeviceProperties(physicalDevice, &physicalDeviceProperties);
-        std::cout << "max indirected draws: " << physicalDeviceProperties.limits.maxDrawIndirectCount << "\n";
+        IO::Info("max indirected draws: ",physicalDeviceProperties.limits.maxDrawIndirectCount);
 
         VkSampleCountFlags counts = physicalDeviceProperties.limits.framebufferColorSampleCounts & physicalDeviceProperties.limits.framebufferDepthSampleCounts;
         if (counts & VK_SAMPLE_COUNT_64_BIT)
@@ -283,7 +283,7 @@ namespace vk
             {
 
                 vk_data.msaaSamples = getMaxUsableSampleCount(device);
-                std::cout << "max samples: " << vk_data.msaaSamples << std::endl;
+                IO::Log("Max MSAA Samples: ",vk_data.msaaSamples);
                 VkPhysicalDeviceProperties deviceProperties;
                 vkGetPhysicalDeviceProperties(device, &deviceProperties);
                 std::string deviceName = deviceProperties.deviceName;
@@ -293,7 +293,7 @@ namespace vk
                 if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
                 {
                     physicalDevice = device;
-                    std::cout << "found discrete gpu" << std::endl;
+                    IO::Info("found discrete GPU");
                     found = true;
                     break;
                 }

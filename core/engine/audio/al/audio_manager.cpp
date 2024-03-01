@@ -20,7 +20,6 @@ namespace engine::audio
 		if (!res) {
 
 			IO::Log("Couldn't start audio device");
-			std::cout << "Couldn't start audio device" << std::endl;
 		}
 	}
 
@@ -38,7 +37,7 @@ namespace engine::audio
 
 			if (nullptr == m_pAlData.device)
 			{
-				std::cout << "device reopen failed: " << "device is null" << std::endl;
+				IO::Error("device reopen failed: \ncause: device is null");
 				return;
 			}
 
@@ -47,7 +46,8 @@ namespace engine::audio
 
 				if (res == ALC_FALSE) {
 					auto error_code = alcGetError(m_pAlData.device);
-					std::cout << "device reopen failed: " << deviceName << " | error: " << error_code << std::endl;
+					IO::Error("device reopen failed: ", deviceName);
+					IO::Error(error_code);
 				}
 			//}
 		}

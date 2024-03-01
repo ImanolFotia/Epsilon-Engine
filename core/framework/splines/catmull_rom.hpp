@@ -20,9 +20,10 @@ namespace framework::splines {
 
 			if (m_pControlPoints.size() < 4) return {};
 
-			if (!m_pLoop && t >= (float)m_pControlPoints.size() - 2.75) {
+			if (!m_pLoop && t >= (float)m_pControlPoints.size() - 3) {
 				m_pEndOfPath = true;
-				return m_pControlPoints.at(m_pControlPoints.size()-1).position;
+				//return m_pControlPoints.at(m_pControlPoints.size()-2).position;
+				t = m_pControlPoints.size()-3;
 			}
 
 			CurrentSegment s = CalculateCurrentSegment(t);
@@ -49,9 +50,10 @@ namespace framework::splines {
 
 			glm::vec3 p0, p1, p2, p3;
 
-			if (!m_pLoop && t >= (float)m_pControlPoints.size() - 2.75) {
+			if (!m_pLoop && t >= (float)m_pControlPoints.size() - 3.0) {
 				m_pEndOfPath = true;
-				return m_pControlPoints.at(m_pControlPoints.size() - 1).position;
+				//return m_pControlPoints.at(m_pControlPoints.size()-2).position;
+				t = m_pControlPoints.size() - 3;
 			}
 
 			if (m_pLoop) {
@@ -114,20 +116,20 @@ namespace framework::splines {
 
 
 		float CalculateLength() {
-			size_t numPoints = m_pControlPoints.size();
+			size_t numPoints = m_pControlPoints.size() - 3;
 
-			m_pIntervalDistances.resize(numPoints-1);
+			m_pIntervalDistances.resize(numPoints);
 
 			float dist = 0.0f;
 
-			for (int i = 0; i < numPoints - 1; i++) {
-				m_pIntervalDistances[i] = glm::distance(m_pControlPoints[i].position, m_pControlPoints[i + 1].position);
+			for (int i = 0; i < numPoints; i++) {
+				m_pIntervalDistances[i] = glm::distance(m_pControlPoints[i+1].position, m_pControlPoints[i + 2].position);
 			}
 
-			for (int i = 0; i < numPoints-1; i++) {
+			for (int i = 0; i < numPoints; i++) {
 				int divisions = (int)m_pIntervalDistances[i] * 10;
 				float step = 1.0 / divisions;
-				float t = 0.0f;
+				float t = i;
 
 				for (int j = 0; j < divisions; j++) {
 					auto a = getPoint(t);
@@ -136,6 +138,8 @@ namespace framework::splines {
 					t += step;
 				}
 			}
+
+			m_pEndOfPath = false;
 
 			return dist;
 		}

@@ -124,6 +124,10 @@ namespace engine
 		void pGenerateMipMaps(TextureCreationInfo, vk::VulkanTexture &);
 		void UploadMipmaps();
 
+		int FramesInFlight() {
+			return vk::MAX_FRAMES_IN_FLIGHT;
+		}
+
 		const uint32_t MAX_BINDLESS_RESOURCES = 16536;
 		const uint32_t RENDERPASS_LAYOUT = 0;
 		const uint32_t GLOBAL_LAYOUT = 1;

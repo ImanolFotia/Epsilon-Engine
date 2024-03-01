@@ -69,6 +69,8 @@ namespace engine
 
 		virtual void ResizeFramebuffer(Ref<RenderPass>, glm::ivec2) = 0;
 
+		virtual int FramesInFlight() = 0;
+
 		template <typename T>
 		std::shared_ptr<T> to()
 		{

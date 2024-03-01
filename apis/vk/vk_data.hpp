@@ -36,7 +36,7 @@ namespace vk
 		uint32_t id = 0;
 		VkBuffer buffer = VK_NULL_HANDLE;
 		VkBufferCreateInfo bufferInfo;
-		uint32_t allocatedVertices = 0;
+		int32_t allocatedVertices = 0;
 		size_t offset = 0;
 		size_t size = 0;
 		std::vector<SubBuffer> subBuffers;

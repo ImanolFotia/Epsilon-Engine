@@ -33,6 +33,14 @@ namespace engine
         uint32_t Id() { return m_pID; }
         const bool isValid() const { return m_pGeneration != 0; }
 
+        inline friend bool operator==(const Ref<T>& a, const Ref<T>& b) {
+            return a.m_pID == b.m_pID && a.m_pIndex == b.m_pIndex && a.m_pGeneration == b.m_pGeneration;
+        }
+
+        inline friend bool operator!=(const Ref<T>& a, const Ref<T>& b) {
+            return a.m_pID != b.m_pID || a.m_pIndex != b.m_pIndex || a.m_pGeneration != b.m_pGeneration;
+        }
+
         uint32_t m_pIndex{};
 
     private:

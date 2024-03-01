@@ -5,6 +5,7 @@
 #include <fstream>
 #include <cstring>
 #include "core/framework/def.hpp"
+#include "core/framework/common.hpp"
 
 namespace framework {
     class WAVfile {
@@ -19,7 +20,7 @@ namespace framework {
             inFILE.read((char *) buffer, 4);
 
             if (std::strncmp((char *) buffer, "RIFF", 4) != 0) {
-                std::cout << " ::AUDIO ERROR:: ---> " << fn << " is not a valid WAVE file." << std::endl;
+                IO::Error(" ::AUDIO ERROR:: ---> ",fn, " is not a valid WAVE file.");
                 return NULL;
             }
             inFILE.read((char *) buffer, 4);
@@ -42,10 +43,6 @@ namespace framework {
             inFILE.read((char *) buffer, 4);
             size = ByteToInt((char *) buffer, 4);
 
-            std::cout << "chan" << chan << std::endl;
-            std::cout << "samplerate" << samplerate << std::endl;
-            std::cout << "bps" << bps << std::endl;
-            std::cout << "size" << size << std::endl;
 
             mdata = (std::shared_ptr<unsigned char>) new unsigned char[size];
 

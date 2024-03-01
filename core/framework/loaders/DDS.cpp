@@ -5,6 +5,7 @@
 #include "DDS.h"
 #include <core/engine/renderer/types.hpp>
 #include <glm/glm.hpp>
+#include <core/framework/common.hpp>
 
 DDS::DDS(const std::string& filename, int baseLevel = 0) : m_pBaseLevel{baseLevel}
 {
@@ -33,7 +34,7 @@ bool DDS::LoadCompressed(const std::string& filename, int baseLevel = 0) {
 
 	}
 	else {
-		std::cout << "Couldn't find " << name << " in virtual file system\nFalling back to disk..." << std::endl;
+		IO::Warning("Couldn't find ", name, " in virtual file system\nFalling back to disk...");
 		return false;
 	}
 
@@ -46,7 +47,7 @@ bool DDS::LoadCompressed(const std::string& filename, int baseLevel = 0) {
 	str.resize(3);
 
 	if (str.compare("DDS")) {
-		std::cout << "Not a DDS File." << std::endl;
+		IO::Error(filename, " is not a DDS File.");
 		FILE->close();
 		return false;
 	}
@@ -137,7 +138,7 @@ void DDS::Load(const std::string& filename, int baseLevel = 0) {
 	str.resize(3);
 
 	if (str.compare("DDS")) {
-		std::cout << "Not a DDS File." << std::endl;
+		IO::Error(filename, " is not a DDS File.");
 		FILE.close();
 		return;
 	}
