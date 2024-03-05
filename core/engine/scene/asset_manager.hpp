@@ -215,6 +215,10 @@ namespace engine
 
 		uint32_t mesh_counter = 0;
 
+
+
+		std::vector<ShaderEntity*> lightBufferPtr;
+
 	public:
 		static const size_t MAX_MATERIALS = 10000;
 		static const size_t MAX_OBJECTS = 1100000;
@@ -266,7 +270,6 @@ namespace engine
 		std::vector<ShaderObjectData *> objectBuffer;
 		CursorInfo *infoBufferPtr;
 		std::vector<GPUAnimationData *> animationTransformBufferPtr;
-		ShaderEntity* lightBufferPtr;
 		
 
 		void Init()
@@ -288,20 +291,21 @@ namespace engine
 
 			m_pGPUBuffers["animation_transform_buffer"] = resourceManager->createGPUBuffer("animation_transform_buffer", sizeof(GPUAnimationData) * 100, engine::BufferStorageType::STORAGE_BUFFER);
 
-			m_pGPUBuffers["entity_buffer"] = resourceManager->createGPUBuffer("entity_buffer", sizeof(ShaderEntity) * 1024, engine::BufferStorageType::STORAGE_BUFFER, 1);
+			m_pGPUBuffers["entity_buffer"] = resourceManager->createGPUBuffer("entity_buffer", sizeof(ShaderEntity) * 1024, engine::BufferStorageType::STORAGE_BUFFER);
 
 			transformBuffer.resize(vk::MAX_FRAMES_IN_FLIGHT);
 			objectBuffer.resize(vk::MAX_FRAMES_IN_FLIGHT);
 			// infoBufferPtr.resize(vk::MAX_FRAMES_IN_FLIGHT);
 			animationTransformBufferPtr.resize(vk::MAX_FRAMES_IN_FLIGHT);
+			lightBufferPtr.resize(vk::MAX_FRAMES_IN_FLIGHT);
 
 			for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
 			{
 				transformBuffer[i] = reinterpret_cast<glm::mat4 *>(resourceManager->mapBuffer(m_pGPUBuffers["transform_buffer"], i));
 				objectBuffer[i] = reinterpret_cast<ShaderObjectData *>(resourceManager->mapBuffer(m_pGPUBuffers["object_buffer"], i));
 				animationTransformBufferPtr[i] = reinterpret_cast<GPUAnimationData *>(resourceManager->mapBuffer(m_pGPUBuffers["animation_transform_buffer"], i));
+				lightBufferPtr[i] = reinterpret_cast<ShaderEntity*>(resourceManager->mapBuffer(m_pGPUBuffers["entity_buffer"], i));
 			}
-			lightBufferPtr = reinterpret_cast<ShaderEntity*>(resourceManager->mapBuffer(m_pGPUBuffers["entity_buffer"], 0));
 			infoBufferPtr = reinterpret_cast<CursorInfo *>(resourceManager->mapBuffer(m_pGPUBuffers["info_buffer"], 0));
 		}
 
@@ -328,6 +332,18 @@ namespace engine
 			m_pGPUBuffers[name] = resourceManager->createGPUBuffer(name, size, type, count);
 
 			return m_pGPUBuffers[name];
+		}
+
+		ShaderEntity* getEntityPointer(int32_t index = -1) {
+
+			uint32_t currFrame = m_pContext->Renderer()->CurrentFrameInFlight();
+			return lightBufferPtr[currFrame];
+		}
+
+		void AddEntity(int index, ShaderEntity entity) {
+			if (index >= 1024) return;
+			for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
+				lightBufferPtr[i][index] = entity;
 		}
 
 
