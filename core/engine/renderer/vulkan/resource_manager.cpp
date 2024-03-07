@@ -44,6 +44,19 @@ namespace engine
 
 		vmaCreateAllocator(&allocatorInfo, &m_pAllocator);
 
+		gpuBufferPool.Initialize();
+		computeShaderPool.Initialize();
+		indexBufferPool.Initialize();
+		materialPool.Initialize();
+		meshPool.Initialize();
+		renderPassPool.Initialize();
+		resourceIdPool.Initialize();
+		shaderPool.Initialize();
+		texPool.Initialize();
+		uniformBufferPool.Initialize();
+		vertexBufferPool.Initialize();
+		pushConstantPool.Initialize();
+
 		m_pCommandPools.emplace_back();
 
 		vk::createCommandPool(*m_pVkDataPtr, m_pCommandPools.back());
@@ -276,7 +289,7 @@ namespace engine
 			vk::VulkanMaterial vkMaterial;
 			// auto renderPass = renderPassPool.get(renderPassRef);
 
-			uint32_t id = std::hash<std::string>{}(material.renderPass);
+			size_t id = std::hash<std::string>{}(material.renderPass);
 			auto renderPass = renderPassPool.get(id);
 			vk::VulkanComputeShader* computeShader;
 
@@ -286,7 +299,7 @@ namespace engine
 			}
 			else
 			{
-				uint32_t compute_id = std::hash<std::string>{}(material.computeShader);
+				size_t compute_id = std::hash<std::string>{}(material.computeShader);
 				computeShader = computeShaderPool.get(compute_id);
 				vkMaterial.descriptorSetLayout = computeShader->pipeline.descriptorSetLayout;
 			}
@@ -499,8 +512,6 @@ namespace engine
 
 		m_pVkDataPtr->defaultRenderPass.name = renderPassInfo.name;
 
-		uint32_t id = std::hash<std::string>{}(renderPassInfo.name);
-		auto pass = renderPassPool.get(id);
 
 		VkViewport viewport = {
 			.x = 0,

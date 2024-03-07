@@ -33,11 +33,13 @@ namespace engine
         uint32_t Id() { return m_pID; }
         const bool isValid() const { return m_pGeneration != 0; }
 
-        inline friend bool operator==(const Ref<T>& a, const Ref<T>& b) {
+        inline friend bool operator==(const Ref<T> &a, const Ref<T> &b)
+        {
             return a.m_pID == b.m_pID && a.m_pIndex == b.m_pIndex && a.m_pGeneration == b.m_pGeneration;
         }
 
-        inline friend bool operator!=(const Ref<T>& a, const Ref<T>& b) {
+        inline friend bool operator!=(const Ref<T> &a, const Ref<T> &b)
+        {
             return a.m_pID != b.m_pID || a.m_pIndex != b.m_pIndex || a.m_pGeneration != b.m_pGeneration;
         }
 
@@ -45,7 +47,6 @@ namespace engine
 
     private:
         Ref(uint32_t i, uint32_t b, uint32_t id) : m_pIndex(i), m_pGeneration(b), m_pID(id) {}
-
 
         uint32_t m_pID = -1;
         uint8_t m_pGeneration{};
@@ -57,161 +58,108 @@ namespace engine
     template <typename T, typename R>
     struct Pool
     {
-        using InternalDataArray = std::list<R>;
-        using FreeRefArray = std::list<Ref<T>>;
-        using GenerationArray = std::unordered_map<unsigned int, uint32_t>;
-        using IdArray = std::unordered_map<uint32_t, uint32_t>;
-        using IndexArray = std::vector<typename std::list<R>::iterator>;
+        std::size_t size() { return m_Count; }
+        const size_t c_MaxObjects = 1000;
+        size_t m_Count = 0;
+        R *m_Data = nullptr;
+        std::unordered_map<size_t, size_t> m_IdMap;
+        std::vector<size_t> m_FreeRefs{};
 
-
-        std::size_t size() {
-            return m_pInternalData.size();
-        }
+        void Initialize() { m_Data = new R[c_MaxObjects]; }
 
         template <typename... Args>
         Ref<T> emplace(std::string name, Args... args)
         {
-           // const std::lock_guard<std::mutex> lock(m_pMutex);
-            uint32_t id = std::hash<std::string>{}(name);
-
-            if (m_pFreeRefs.size() > 0)
+            size_t current_index = 0;
+            if (m_FreeRefs.size() > 0)
             {
-                Ref<T> ref = m_pFreeRefs.back();
-                m_pFreeRefs.pop_back();
-
-                ref.m_pGeneration = ++m_pGeneration[ref.m_pIndex];
-                auto it = m_pInternalData.emplace(m_pIndexArray.at(ref.m_pIndex),
-                                                  args...);
-                m_pIndexArray.at(ref.m_pIndex) = it;
-                m_pIdArray[id] = ref.m_pIndex;
-                std::cout << "reused reference\n";
-                return ref;
+                current_index = m_FreeRefs.back();
+                m_FreeRefs.pop_back();
+            }
+            else
+            {
+                current_index = m_Count++;
             }
 
-            m_pInternalData.emplace_back(args...);
-            m_pIndexArray.push_back(std::prev(m_pInternalData.end()));
+            if (current_index >= c_MaxObjects)
+            {
+                throw std::runtime_error("Error: Too many allocated objects in Object Pool");
+                std::exit(255);
+            }
+            size_t id = std::hash<std::string>{}(name);
 
-            uint32_t index = m_pIndexArray.size() - 1;
+            m_IdMap[id] = current_index;
 
-            Ref<T> ref(index, 1, id);
-            ref.m_pIndex = index;
-            m_pGeneration[index] = 1;
-            m_pIdArray[id] = index;
+            m_Data[current_index] = R(std::forward<Args>(args)...);
+
+            Ref<T> ref(current_index, 1, id);
+            current_index++;
 
             return ref;
         }
+
         Ref<T> insert(std::string name, R element)
         {
-            uint32_t id = std::hash<std::string>{}(name);
-            //const std::lock_guard<std::mutex> lock(m_pMutex);
-            if (m_pFreeRefs.size() > 0)
+            size_t current_index = 0;
+            if (m_FreeRefs.size() > 0)
             {
-                Ref<T> ref = m_pFreeRefs.back();
-                m_pFreeRefs.pop_back();
-
-                ref.m_pGeneration = ++m_pGeneration[ref.m_pIndex];
-                auto it = m_pIndexArray.at(ref.m_pIndex);
-
-                *it = element;
-
-                m_pIdArray[id] = ref.m_pIndex;
-                return ref;
+                current_index = m_FreeRefs.back();
+                m_FreeRefs.pop_back();
+            }
+            else
+            {
+                current_index = m_Count++;
             }
 
-            m_pInternalData.push_back(element);
-            m_pIndexArray.push_back(std::prev(m_pInternalData.end()));
-            uint32_t index = m_pIndexArray.size() - 1;
+            if (current_index >= c_MaxObjects)
+            {
+                throw std::runtime_error("Error: Too many allocated objects in Object Pool");
+                std::exit(255);
+            }
+            size_t id = std::hash<std::string>{}(name);
 
-            Ref<T> ref(index, 1, id);
-            m_pGeneration[index] = 1;
-            m_pIdArray[id] = index;
+            m_IdMap[id] = current_index;
 
-            return std::move(ref);
+            m_Data[current_index] = element;
+
+            Ref<T> ref(current_index, 1, id);
+            current_index++;
+
+            return ref;
         }
 
         [[nodiscard]] R *get(Ref<T> ref)
         {
-            if (m_pIndexArray.size() > ref.m_pIndex && ref.isValid())
+            if (ref.isValid())
             {
-                {
-                    return &(*m_pIndexArray[ref.m_pIndex]);
-                }
+                return &m_Data[ref.m_pIndex];
             }
-
+            throw std::runtime_error("Reference to object is no longer valid");
+            std::exit(255);
             return nullptr;
         }
 
-        [[nodiscard]] R *get(uint32_t id)
+        [[nodiscard]] R *get(size_t id)
         {
-            if (m_pIdArray.contains(id))
-            {
-                auto index = m_pIdArray.at(id);
-
-                if (m_pIndexArray.size() > index)
-                {
-                    return &(*m_pIndexArray.at(index));
-                }
+            if (m_IdMap.contains(id)) {
+                return &m_Data[m_IdMap[id]];
             }
-
+            //throw std::runtime_error("Object not found");
+            //std::exit(255);
             return nullptr;
         }
 
-
-        [[nodiscard]] uint32_t getId(Ref<T> ref)
-        {
-            if (m_pIndexArray.size() > ref.m_pIndex && ref.isValid())
-            {
-                if (m_pGeneration[ref.m_pIndex] == ref.m_pGeneration)
-                {
-                    return ref.m_pIndex;
-                }
-            }
-            std::cout << "object is invalid\n";
-
-            return -1;
-        }
+        [[nodiscard]] uint32_t getId(Ref<T> ref) { return ref.m_pIndex; }
 
         void destroy(Ref<T> &ref)
         {
-            //const std::lock_guard<std::mutex> lock(m_pMutex);
-            std::cout << "internal data size before: " << m_pInternalData.size()
-                      << std::endl;
-            if (m_pIndexArray.size() > ref.m_pIndex)
-            {
-                if (ref.m_pGeneration ==
-                    m_pGeneration[ref.m_pIndex])
-                { // we dont want to add this free
-                  // reference twice
-                    m_pFreeRefs.insert(m_pFreeRefs.end(), ref);
-                    //m_pInternalData.erase(m_pIndexArray.at(ref.m_pIndex));
-                    m_pIdArray.erase(ref.Id());
-                    ref.m_pGeneration = 0; // invalidate reference
-                }
-            }
-
-            std::cout << "internal data size after: " << m_pInternalData.size()
-                      << std::endl;
+            m_IdMap.erase(ref.m_pID);
+            m_FreeRefs.push_back(ref.m_pIndex);
+            ref.m_pGeneration = 0;
         }
 
-        auto begin()
-        {
-            return m_pInternalData.begin();
-        }
+        auto begin() { return &m_Data[0]; }
 
-        auto end()
-        {
-            return m_pInternalData.end();
-        }
-
-    private:
-        GenerationArray m_pGeneration;
-        IndexArray m_pIndexArray;
-        InternalDataArray m_pInternalData;
-        FreeRefArray m_pFreeRefs;
-        IdArray m_pIdArray;
-
-
-        std::mutex m_pMutex;
+        auto end() { return &m_Data[m_Count]; }
     };
-
 }

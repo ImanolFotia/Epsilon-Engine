@@ -21,6 +21,10 @@ namespace engine::audio
 
 			IO::Log("Couldn't start audio device");
 		}
+
+		listenersPool.Initialize();
+		sourcesPool.Initialize();
+			buffersPool.Initialize();
 	}
 
 	void ALAudioManager::CleanUp()

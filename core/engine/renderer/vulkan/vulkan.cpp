@@ -155,7 +155,7 @@ namespace engine
 		drawCommand.count = object.count;
 
 		drawCommand.material = object.material;
-		auto pushConstant = m_pResourceManagerRef->pushConstantPool.get(object.pushConstant);
+		//auto pushConstant = m_pResourceManagerRef->pushConstantPool.get(object.pushConstant);
 		/*if (pushConstant != nullptr)
 		{
 			drawCommand.objectData = pushConstant->data;
@@ -802,7 +802,7 @@ namespace engine
 
 		vk::createSwapChainFramebuffers(m_pVkData, m_pVkData.defaultRenderPass, m_pVkData.defaultRenderPass.renderPassChain);
 
-		uint32_t id = std::hash<std::string>{}(m_pVkData.defaultRenderPass.name);
+		size_t id = std::hash<std::string>{}(m_pVkData.defaultRenderPass.name);
 		auto pass = m_pResourceManagerRef->renderPassPool.get(id);
 
 		VkViewport viewport = {
