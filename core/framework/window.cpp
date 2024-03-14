@@ -33,14 +33,14 @@ namespace framework
         mDefaultHeight = glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
 
         int count = 0;
-        const GLFWvidmode* modes = glfwGetVideoModes(glfwGetPrimaryMonitor(), &count);
-
+        const GLFWvidmode *modes = glfwGetVideoModes(glfwGetPrimaryMonitor(), &count);
 
         mWindow = glfwCreateWindow(mWidth, mHeight, appName.c_str(), nullptr, nullptr);
         auto currentMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++)
+        {
             WindowSizeDescription size_desc{};
-            auto& mode = modes[i];
+            auto &mode = modes[i];
             size_desc.id = i;
             size_desc.width = mode.width;
             size_desc.height = mode.height;
@@ -49,17 +49,19 @@ namespace framework
             char buffer[256] = {0};
             std::sprintf(buffer, "%dx%d@%.2f", mode.width, mode.height, size_desc.refreshRate);
             size_desc.size_string = std::string(buffer);
-            if (currentMode->width == size_desc.width && currentMode->height == size_desc.height && (float)currentMode->refreshRate == size_desc.refreshRate) {
+            if (currentMode->width == size_desc.width && currentMode->height == size_desc.height && (float)currentMode->refreshRate == size_desc.refreshRate)
+            {
                 size_desc.isCurrent = true;
             }
 
-            if (mDefaultWidth == currentMode->width && mDefaultHeight == currentMode->height) {
+            if (mDefaultWidth == currentMode->width && mDefaultHeight == currentMode->height)
+            {
                 defaultSizeIndex = m_pAvailableSizes.size();
             }
             m_pAvailableSizes.push_back(size_desc);
         }
 
-        glfwSetWindowPos(mWindow, mWidth/4, mHeight/4);
+        glfwSetWindowPos(mWindow, mWidth / 4, mHeight / 4);
 
         // Set up IO callbacks
         glfwSetKeyCallback(mWindow, Input::KeyBoard::KeyBoardCallBackGLFW);
