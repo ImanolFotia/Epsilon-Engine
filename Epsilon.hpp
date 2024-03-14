@@ -21,7 +21,6 @@
 #include "core/framework/utils/file.hpp"
 #include "core/framework/clock.hpp"
 
-
 #include "core/engine/context.hpp"
 
 #include "core/engine/renderer/vulkan/vulkan.hpp"
@@ -32,8 +31,6 @@
 
 #include <core/engine/scene/scene.hpp>
 #include <core/engine/scene/asset_manager.hpp>
-
-
 
 #if defined(_WIN32)
 //  Microsoft
@@ -55,9 +52,6 @@
 #define IMPORT
 #pragma warning Unknown dynamic link import / export semantics.
 #endif
-
-
-
 
 namespace Epsilon
 {
@@ -90,7 +84,7 @@ namespace Epsilon
             alignas(16) glm::mat4 prev_proj = glm::mat4(1.0f);
             alignas(16) glm::mat4 lightMatrix = glm::mat4(1.0f);
             alignas(4) uint32_t iFrame = 0;
-            alignas(8) glm::ivec2 iMouse = glm::ivec2(0,0);
+            alignas(8) glm::ivec2 iMouse = glm::ivec2(0, 0);
         };
 
     public:
@@ -126,7 +120,6 @@ namespace Epsilon
 
         void setOnExit(std::function<void(void)> fun);
 
-
     public:
         void initWindow(int w, int h);
         void initVulkan();
@@ -137,7 +130,8 @@ namespace Epsilon
         void exit();
 
     public:
-        std::shared_ptr<engine::Scene> getScene() {
+        std::shared_ptr<engine::Scene> getScene()
+        {
             return m_Scene;
         }
 
@@ -154,11 +148,11 @@ namespace Epsilon
     };
 }
 
-#endif //EPSILON_HPP
+#endif // EPSILON_HPP
 
-#ifdef IMPL_EPSILON_MAIN && BUILD_AS_LIBRARY == FALSE
+#ifdef IMPL_EPSILON_MAIN &&BUILD_AS_LIBRARY == FALSE
 
-int EpsilonMain(int argc, char** argv);
+int EpsilonMain(int argc, char **argv);
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
@@ -189,19 +183,16 @@ extern "C"
 }
 #endif
 
-
-//#if defined(_WIN32)																
-//int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR argv, int argc)	
-//#else
-int main(int argc, char** argv)
-//#endif
+// #if defined(_WIN32)
+// int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR argv, int argc)
+// #else
+int main(int argc, char **argv)
+// #endif
 {
 
     framework::env::setArgs(argc, argv);
 
-
     return EpsilonMain(argc, argv);
-
 }
 
 #endif
