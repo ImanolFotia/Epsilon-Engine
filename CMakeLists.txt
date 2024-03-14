@@ -42,7 +42,7 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
 endif()
 
 option(BUILD_AS_LIBRARY "Build as a library" ON)
-option(DOWNLOAD_LIBRARIES "Download thirdparty libraries" OFF)
+option(DOWNLOAD_LIBRARIES "Download thirdparty libraries" ON)
 option(GFX_BACKEND_VULKAN "Use Vulkan as graphics backend" ON)
 option(GFX_BACKEND_WEBGPU "Use WebGPU as graphics backend" OFF)
 option(GFX_BACKEND_WEBGL "Use WebGL as graphics backend" OFF)
@@ -426,7 +426,6 @@ set(PROJECT_FILES
         ${CMAKE_SOURCE_DIR}/core/framework/window.cpp
         ${CMAKE_SOURCE_DIR}/core/framework/clock.cpp
         ${CMAKE_SOURCE_DIR}/core/framework/loaders/model.cpp
-        ${CMAKE_SOURCE_DIR}/modules/mono/mono-instance.hpp
         ${CMAKE_SOURCE_DIR}/Epsilon.hpp
         ${CMAKE_SOURCE_DIR}/Epsilon.cpp
         ${CMAKE_SOURCE_DIR}/core/framework/singleton.hpp
@@ -482,16 +481,7 @@ target_sources(${PROJECT_NAME} PUBLIC
 find_package(Vulkan REQUIRED)
 
 
-#if(BUILD_ANDROID EQUAL 0)
-        pkg_check_modules(Mono mono-2)
-
 if(NOT BUILD_ANDROID)
-if(${Mono_FOUND})
-        set(DMONO_ENABLED true)
-        add_compile_definitions(MONO_ENABLED=${DMONO_ENABLED})
-        target_link_libraries(${PROJECT_NAME} PRIVATE ${Mono_LINK_LIBRARIES})
-        target_include_directories(${PROJECT_NAME} PRIVATE ${Mono_INCLUDE_DIRS})
-endif()
 endif()
 
         target_link_libraries(${PROJECT_NAME} PRIVATE ${Vulkan_LIBRARIES})
@@ -568,11 +558,11 @@ endif()
 install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib)
 include(CPack)
 
-execute_process(
-        COMMAND bash -c ${CMAKE_SOURCE_DIR}/build_shaders.sh
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        OUTPUT_VARIABLE outVar
-)
+#execute_process(
+#        COMMAND bash -c ${CMAKE_SOURCE_DIR}/build_shaders.sh
+#        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+#        OUTPUT_VARIABLE outVar
+#)
 
 FILE(GLOB shaders "${CMAKE_SOURCE_DIR}/assets/shaders/chess/*.spv" )
 install(FILES ${shaders} DESTINATION "bin/assets/shaders/chess/")
@@ -592,7 +582,7 @@ install(DIRECTORY ${images} DESTINATION "bin/assets")
 #add_subdirectory(examples/model)
 #if(!BUILD_AS_LIBRARY)
     add_subdirectory(editor)
-    #add_subdirectory(examples/bsp)
+    add_subdirectory(examples/bsp)
     add_subdirectory(projects/TowerDefense)
     add_subdirectory(projects/UIApp)
     add_subdirectory(examples/chess)
