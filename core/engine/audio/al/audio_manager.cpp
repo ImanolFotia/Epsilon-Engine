@@ -1,7 +1,6 @@
 #include "audio_manager.hpp"
 #include <core/framework/common.hpp>
 
-
 #if defined(ANDROID) || defined(__ANDROID__)
 
 #include <android/log.h>
@@ -17,14 +16,15 @@ namespace engine::audio
 	{
 		bool res = al::initDevice(&m_pAlData);
 
-		if (!res) {
+		if (!res)
+		{
 
 			IO::Log("Couldn't start audio device");
 		}
 
 		listenersPool.Initialize();
 		sourcesPool.Initialize();
-			buffersPool.Initialize();
+		buffersPool.Initialize();
 	}
 
 	void ALAudioManager::CleanUp()
@@ -32,10 +32,12 @@ namespace engine::audio
 		al::destroyDevice(&m_pAlData);
 	}
 
-	void ALAudioManager::Update() {
-		if (m_pAlData.shouldReloadDevice) {
+	void ALAudioManager::Update()
+	{
+		if (m_pAlData.shouldReloadDevice)
+		{
 			m_pAlData.shouldReloadDevice = false;
-			const char* deviceName = alcGetString(m_pAlData.device, ALC_ALL_DEVICES_SPECIFIER);
+			const char *deviceName = alcGetString(m_pAlData.device, ALC_ALL_DEVICES_SPECIFIER);
 
 			std::cout << "device: " << deviceName << std::endl;
 
@@ -45,19 +47,20 @@ namespace engine::audio
 				return;
 			}
 
-			//if (ALC_EVENT_TYPE_DEFAULT_DEVICE_CHANGED_SOFT == eventType) {
-				bool res = alcReopenDeviceSOFT(m_pAlData.device, NULL, NULL);
+			// if (ALC_EVENT_TYPE_DEFAULT_DEVICE_CHANGED_SOFT == eventType) {
+			bool res = alcReopenDeviceSOFT(m_pAlData.device, NULL, NULL);
 
-				if (res == ALC_FALSE) {
-					auto error_code = alcGetError(m_pAlData.device);
-					IO::Error("device reopen failed: ", deviceName);
-					IO::Error(error_code);
-				}
+			if (res == ALC_FALSE)
+			{
+				auto error_code = alcGetError(m_pAlData.device);
+				IO::Error("device reopen failed: ", deviceName);
+				IO::Error(error_code);
+			}
 			//}
 		}
 	}
 
-	Ref<AudioBuffer> ALAudioManager::createBuffer(const std::string& name, const BufferInfo& buffer)
+	Ref<AudioBuffer> ALAudioManager::createBuffer(const std::string &name, const BufferInfo &buffer)
 	{
 		al::OpenALBuffer alBuffer;
 		alBuffer = al::createBuffer(buffer.numChannels, buffer.size, buffer.bps, buffer.bitrate, buffer.data);
@@ -65,7 +68,7 @@ namespace engine::audio
 		return ref;
 	}
 
-	Ref<AudioSource> ALAudioManager::createSource(const std::string& name, const SourceInfo& sourceInfo)
+	Ref<AudioSource> ALAudioManager::createSource(const std::string &name, const SourceInfo &sourceInfo)
 	{
 
 		al::OpenALSource alSource;
@@ -73,7 +76,7 @@ namespace engine::audio
 		auto ref = sourcesPool.insert(name, alSource);
 		return ref;
 	}
-	Ref<AudioListener> ALAudioManager::createListener(const std::string& name, const ListenerInfo& listenerInfo)
+	Ref<AudioListener> ALAudioManager::createListener(const std::string &name, const ListenerInfo &listenerInfo)
 	{
 
 		auto ref = listenersPool.emplace(name);
@@ -85,28 +88,30 @@ namespace engine::audio
 		return ref;
 	}
 
-
-	void ALAudioManager::Play(Ref<AudioSource> source) {
+	void ALAudioManager::Play(Ref<AudioSource> source)
+	{
 		al::playSource(*getSource(source));
 	}
 
-	void ALAudioManager::Pause(Ref<AudioSource> source) {
+	void ALAudioManager::Pause(Ref<AudioSource> source)
+	{
 		al::pauseSource(*getSource(source));
 	}
 
-	void ALAudioManager::Stop(Ref<AudioSource> source) {
+	void ALAudioManager::Stop(Ref<AudioSource> source)
+	{
 		al::stopSource(*getSource(source));
 	}
 
-	al::OpenALSource* ALAudioManager::getSource(Ref<AudioSource> source)
+	al::OpenALSource *ALAudioManager::getSource(Ref<AudioSource> source)
 	{
 		return sourcesPool.get(source);
 	}
-	al::OpenALBuffer* ALAudioManager::getBuffer(Ref<AudioBuffer> buffer)
+	al::OpenALBuffer *ALAudioManager::getBuffer(Ref<AudioBuffer> buffer)
 	{
 		return buffersPool.get(buffer);
 	}
-	al::OpenALListener* ALAudioManager::getListener(Ref<AudioListener> listener)
+	al::OpenALListener *ALAudioManager::getListener(Ref<AudioListener> listener)
 	{
 		return listenersPool.get(listener);
 	}
@@ -154,15 +159,16 @@ namespace engine::audio
 			al::stopSource(*source);
 	}
 
-
-	void ALAudioManager::setListenerPosition(Ref<AudioListener> listener_ref, glm::vec3 position) {
+	void ALAudioManager::setListenerPosition(Ref<AudioListener> listener_ref, glm::vec3 position)
+	{
 
 		auto listener = listenersPool.get(listener_ref);
 		listener->position = position;
 		al::setListenerPosition(*listener);
 	}
 
-	void ALAudioManager::setListenerDirection(Ref<AudioListener> listener_ref, glm::vec3 direction) {
+	void ALAudioManager::setListenerDirection(Ref<AudioListener> listener_ref, glm::vec3 direction)
+	{
 
 		auto listener = listenersPool.get(listener_ref);
 		listener->direction = direction;
@@ -179,6 +185,8 @@ namespace engine::audio
 			return AudioState::STOPPED;
 		if (state == AL_PAUSED)
 			return AudioState::PAUSED;
+
+		return AudioState::STOPPED;
 	}
 
 	glm::vec3 ALAudioManager::getSourcePosition(Ref<AudioSource> source_ref)
@@ -212,7 +220,19 @@ namespace engine::audio
 		return source->pitch;
 	}
 
-	void ALAudioManager::deleteBuffer(Ref<AudioBuffer> buffer) {}
-	void ALAudioManager::deleteSource(Ref<AudioSource> source) {}
+	void ALAudioManager::deleteBuffer(Ref<AudioBuffer> buffer_ref)
+	{
+		auto buffer = *buffersPool.get(buffer_ref);
+		al::deleteBuffer(buffer);
+		buffersPool.destroy(buffer_ref);
+	}
+
+	void ALAudioManager::deleteSource(Ref<AudioSource> source_ref)
+	{
+
+		auto source = *sourcesPool.get(source_ref);
+		al::deleteSource(source);
+		sourcesPool.destroy(source_ref);
+	}
 	void ALAudioManager::deleteListener(Ref<AudioListener> listener) {}
 }

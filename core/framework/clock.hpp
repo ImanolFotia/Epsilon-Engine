@@ -24,69 +24,41 @@
 #pragma warning Unknown dynamic link import / export semantics.
 #endif
 
-namespace framework {
+namespace framework
+{
 
-
-    class EPSILON_DLL Clock {
+    class EPSILON_DLL Clock
+    {
     public:
+        Clock(const Clock &) = delete;
+        Clock(Clock &&) = delete;
 
-        Clock(const Clock&) = delete;
-        Clock(Clock&&) = delete;
+        static long double Time();
 
-        static long double Time() {
-            return curr();
-        }
+        static long double TimeSeconds();
 
-        static long double TimeSeconds() {
-            return curr() / 1000.0;
-        }
+        static long double Last();
 
-        static long double Last() {
-            return last();
-        }
+        static long double LastSeconds();
 
-        static long double LastSeconds() {
-            return last() / 1000.0;
-        }
+        static long double Delta();
 
-        static long double Delta() {
-            return delta();
-        }
+        static long double DeltaSeconds();
 
-        static long double DeltaSeconds() {
-            return delta() / 1000.0;
-        }
+        static int64_t Now();
 
-        static auto Now() {
-            using namespace std::chrono_literals;
-            auto n = std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::steady_clock::now());
-
-            return (n - std::chrono::time_point<std::chrono::steady_clock, std::chrono::microseconds>(0us)).count();
-        }
-
-        static void Tick() {
-            using namespace std::chrono;
-
-            auto now = steady_clock::now();
-            auto now_ms = time_point_cast<milliseconds>(now);
-
-            last(curr());
-            curr(duration_cast<milliseconds>(now_ms - start()).count());
-            delta(curr() - last());
-
-        }
+        static void Tick();
 
     private:
+        static long double curr();
+        static long double last();
+        static long double delta();
 
-        static long double curr() { return mCurrentTime; }
-        static long double last() { return mLastTime; }
-        static long double delta() { return mDeltaTime; }
+        static std::chrono::steady_clock::time_point start();
 
-        static std::chrono::steady_clock::time_point start() { return mStart; }
-
-        static void curr(long double x) { mCurrentTime = x; }
-        static void last(long double x) { mLastTime = x; }
-        static void delta(long double x) { mDeltaTime = x; }
+        static void curr(long double x);
+        static void last(long double x);
+        static void delta(long double x);
 
         static long double mCurrentTime;
         static long double mLastTime;
@@ -95,7 +67,8 @@ namespace framework {
         static std::chrono::steady_clock::time_point mStart;
         static long double mdStart;
 
-        Clock() {
+        Clock()
+        {
             std::cout << "created" << std::endl;
             using namespace std::chrono;
             mCurrentTime = 1;
@@ -103,9 +76,7 @@ namespace framework {
             mDeltaTime = 0;
             std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
             mStart = time_point_cast<milliseconds>(steady_clock::now());
-
         }
-
     };
 
 }

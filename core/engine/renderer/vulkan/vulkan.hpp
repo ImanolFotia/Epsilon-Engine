@@ -1,12 +1,12 @@
 #pragma once
 // #undef VMA_DEBUG_LOG
 // #undef VMA_DEBUG_LOG_FORMAT
-#include "core/engine/renderer/renderer.hpp"
-#include "core/engine/renderer/frame.hpp"
-#include "core/engine/renderer/types.hpp"
+#include <core/engine/renderer/renderer.hpp>
+#include <core/engine/renderer/frame.hpp>
+#include <core/engine/renderer/types.hpp>
 #include <core/common/common.hpp>
 
-#include "apis/vk/vk.hpp"
+#include <apis/vk/vk.hpp>
 
 #include <core/framework/singleton.hpp>
 
@@ -53,6 +53,7 @@ namespace engine
             vk::VulkanRenderPass renderPass;
         };
         std::vector<IndirectBatch> batches;
+
     public:
         VulkanRenderer();
 
@@ -99,9 +100,9 @@ namespace engine
 
         std::shared_ptr<ImGuiRenderer> getDebugRenderer() override;
 
-        void SetViewport(const Viewport&) override;
+        void SetViewport(const Viewport &) override;
 
-        void SetScissor(const Scissor&) override;
+        void SetScissor(const Scissor &) override;
 
         void SetVSync(bool) override;
 
@@ -119,7 +120,6 @@ namespace engine
         void FlushIndexed(vk::VulkanRenderPass *renderPass);
         void FlushIndirect(vk::VulkanRenderPass *renderPass);
         void FlushIndexedIndirect(vk::VulkanRenderPass *renderPass);
-
 
     private:
         framework::Window *m_pWindow = nullptr;

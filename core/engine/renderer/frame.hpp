@@ -22,6 +22,8 @@ namespace engine
 
         uint32_t m_pComputeDispatches = 0;
 
+        uint16_t m_SizeX{}, m_SizeY{};
+
     public:
         Frame() = default;
         /**
@@ -30,6 +32,21 @@ namespace engine
         Ref<RenderPass> getRenderPass()
         {
             return m_pRenderPass;
+        }
+
+        bool SizeChanged(int x, int y)
+        {
+            return m_SizeX != x || m_SizeY != y;
+        }
+
+        bool SetSize(int x, int y)
+        {
+            int old_x = m_SizeX;
+            int old_y = m_SizeY;
+            m_SizeX = x;
+            m_SizeY = y;
+
+            return m_SizeX != old_x || m_SizeY != old_y;
         }
 
         uint32_t ComputeDispatches()

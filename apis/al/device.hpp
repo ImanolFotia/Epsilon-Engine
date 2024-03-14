@@ -103,7 +103,7 @@ namespace al
 #if !defined(ANDROID) && !defined(__ANDROID__)
         if (!alcIsExtensionPresent(alcGetContextsDevice(alcGetCurrentContext()), "ALC_EXT_EFX"))
         {
-            IO::Error(g_szALC_EXT_EFX,"`xff0000Error: EFX not supported");
+            IO::Error(g_szALC_EXT_EFX, "`xff0000Error: EFX not supported");
             return false;
         }
 
@@ -165,14 +165,14 @@ namespace al
         eBufferFormat = alGetEnumValue("AL_FORMAT_51CHN16");
 
         enumeration = alcIsExtensionPresent(al_data->device, "ALC_ENUMERATION_EXT");
-
-        if (enumeration != AL_FALSE)
-        {
-            list_audio_devices(alcGetString(NULL, ALC_ALL_DEVICES_SPECIFIER), "Available playback devices: ");
-            list_audio_devices(alcGetString(al_data->device, ALC_DEFAULT_DEVICE_SPECIFIER), "Default playback device: ");
-            list_audio_devices(alcGetString(NULL, ALC_CAPTURE_DEVICE_SPECIFIER), "Available capture devices: ");
-            list_audio_devices(alcGetString(al_data->device, ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER), "Default capture device: ");
-        }
+        /*
+                if (enumeration != AL_FALSE)
+                {
+                    list_audio_devices(alcGetString(NULL, ALC_ALL_DEVICES_SPECIFIER), "Available playback devices: ");
+                    list_audio_devices(alcGetString(al_data->device, ALC_DEFAULT_DEVICE_SPECIFIER), "Default playback device: ");
+                    list_audio_devices(alcGetString(NULL, ALC_CAPTURE_DEVICE_SPECIFIER), "Available capture devices: ");
+                    list_audio_devices(alcGetString(al_data->device, ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER), "Default capture device: ");
+                }*/
         alDistanceModel(AL_LINEAR_DISTANCE);
 
         const char *name = NULL;
@@ -187,7 +187,7 @@ namespace al
         alcEventControlSOFT(3, events, ALC_TRUE);
         alcEventCallbackSOFT((ALCEVENTPROCTYPESOFT)callback, (void *)al_data);
         IO::Info("Opened ", name);
-        //printf("Opened \"%s\"\n", name);
+        // printf("Opened \"%s\"\n", name);
 
         return true;
     }

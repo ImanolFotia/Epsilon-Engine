@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <memory>
 class ImGuiRenderer;
 namespace engine
 {

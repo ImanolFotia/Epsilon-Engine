@@ -68,6 +68,8 @@ namespace engine
 		m_pWindow = &window;
 		m_pResourceManagerRef->m_pVkDataPtr = &m_pVkData;
 
+		m_pFrame.SetSize(m_pWindow->getSize().width, m_pWindow->getSize().height);
+
 		IO::Log("Initiating Vulkan Context");
 
 #if defined(ANDROID) || defined(__ANDROID__)
@@ -155,7 +157,7 @@ namespace engine
 		drawCommand.count = object.count;
 
 		drawCommand.material = object.material;
-		//auto pushConstant = m_pResourceManagerRef->pushConstantPool.get(object.pushConstant);
+		// auto pushConstant = m_pResourceManagerRef->pushConstantPool.get(object.pushConstant);
 		/*if (pushConstant != nullptr)
 		{
 			drawCommand.objectData = pushConstant->data;
@@ -295,8 +297,11 @@ namespace engine
 
 		m_pShouldRecreateSwapchain |= vk::Present(m_pVkData, signalSemaphores, m_pImageIndex);
 
+		m_pShouldRecreateSwapchain |= m_pFrame.SetSize(m_pWindow->getSize().width, m_pWindow->getSize().height);
+
 		if (m_pShouldRecreateSwapchain)
 		{
+
 			if (m_pWindow->getSize().width > 0)
 			{
 				pRecreateSwapChain();
@@ -371,8 +376,6 @@ namespace engine
 
 	void VulkanRenderer::Flush(engine::Ref<engine::RenderPass> renderPassRef, engine::DrawType type)
 	{
-		// if (m_pCurrentCommandQueue.empty())
-		//	return;
 		if (m_pImageIndex == -1)
 			return;
 
@@ -381,13 +384,13 @@ namespace engine
 		if (!Ref<RenderPass>::isSame(m_pActiveRenderPass, renderPassRef) || !m_pRenderPassActive)
 		{
 
+			if (m_pRenderPassActive)
+			{
+				vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
+				m_pRenderPassActive = false;
+			}
 			if (renderPass->id == std::numeric_limits<uint32_t>::max())
 			{
-				if (m_pRenderPassActive)
-				{
-					vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
-					m_pRenderPassActive = false;
-				}
 				vk::createRenderPassInfo(m_pImageIndex, m_pVkData, m_pVkData.defaultRenderPass);
 
 				m_pVkData.defaultRenderPass.renderPassInfo.renderArea.offset = {0, 0};
@@ -400,11 +403,6 @@ namespace engine
 			}
 			else
 			{
-				if (m_pRenderPassActive)
-				{
-					vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
-					m_pRenderPassActive = false;
-				}
 				vk::createRenderPassInfo(m_pImageIndex, m_pVkData, *renderPass);
 				renderPass->renderPassInfo.renderArea.offset = {0, 0};
 				renderPass->renderPassInfo.renderArea.extent = renderPass->renderPassChain.Extent;
@@ -702,7 +700,7 @@ namespace engine
 			char push_constant[72] = {};
 
 			vkCmdPushConstants(m_pFrame.CommandBuffer(), renderPass->renderPipelines[batch.layoutIndex].pipelineLayout.back(),
-				VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(ObjectDataConstant), &push_constant);
+							   VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(ObjectDataConstant), &push_constant);
 
 			vkCmdDrawIndexedIndirect(m_pFrame.CommandBuffer(), m_pResourceManagerRef->m_pIndirectBuffer[m_pCurrentFrame].buffer, indirect_offset, batch.count, draw_stride);
 

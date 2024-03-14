@@ -35,7 +35,6 @@ namespace engine
 		bool visible;
 	};
 
-
 	struct EntityData
 	{
 		alignas(32) glm::mat4 modelMatrix{};
@@ -74,7 +73,6 @@ namespace engine
 		using OctreeNodeType = std::shared_ptr<NodeBase>;
 
 	private:
-
 		std::shared_ptr<AssetManager> m_pAssetManager;
 		SceneManager m_pSceneManager;
 
@@ -105,19 +103,20 @@ namespace engine
 
 		Scene(std::shared_ptr<Context> context) : m_pContext(context)
 		{
-			//m_pAssetManager.m_pContext = m_pContext;
+			// m_pAssetManager.m_pContext = m_pContext;
 
 			float octree_size = 256;
 			float octree_half_size = octree_size * 0.5;
 			m_pNodeOctree = std::make_shared<OctreeContainer<OctreeNodeType>>(Box{glm::vec3(-octree_half_size, -20.0, -octree_half_size), glm::vec3(octree_size, 50, octree_size)}, 0);
 			m_pRenderOctree = std::make_shared<OctreeContainer<OctreeRenderType>>(Box{glm::vec3(-octree_half_size, -20.0, -octree_half_size), glm::vec3(octree_size, 50, octree_size)}, 0);
 
-			//m_pAssetManager.Init();
+			// m_pAssetManager.Init();
 		}
 
 		std::shared_ptr<Context> getContext() { return m_pContext; }
 
-		void setAssetManager(std::shared_ptr<engine::AssetManager> assetManager) {
+		void setAssetManager(std::shared_ptr<engine::AssetManager> assetManager)
+		{
 			m_pAssetManager = assetManager;
 		}
 
@@ -133,15 +132,12 @@ namespace engine
 			m_pContext->Renderer()->InitDebugRenderer();
 		}
 
-
-
 		void setCurrentRenderPass(engine::Ref<engine::RenderPass> renderPassRef)
 		{
 			auto renderer = m_pContext->Renderer();
 			renderer->SetRenderPass(renderPassRef);
 			m_pCurrentRenderPass = renderPassRef;
 		}
-
 
 		std::shared_ptr<AssetManager> &getAssetManager()
 		{
@@ -405,7 +401,6 @@ namespace engine
 			}
 		}
 
-
 		uint32_t Push(std::shared_ptr<Node<RenderModel>> renderModel, const glm::mat4 &transform, engine::parsers::RenderLayout layout)
 		{
 			uint32_t push_index = m_pMeshCount;
@@ -462,7 +457,6 @@ namespace engine
 			return push_index;
 		}
 
-
 		uint32_t Push(const std::vector<glm::mat4> &transforms, engine::parsers::RenderLayout layout, const std::string &material, unsigned int count = 1)
 		{
 
@@ -518,7 +512,6 @@ namespace engine
 			return push_index;
 		}
 		uint32_t lastRenderModelId = -1;
-
 
 		uint32_t Push(std::shared_ptr<Node<RenderModel>> renderModel, const std::vector<glm::mat4> &transforms, unsigned int count, engine::parsers::RenderLayout layout)
 		{
@@ -604,7 +597,6 @@ namespace engine
 
 		void Destroy()
 		{
-			m_pAssetManager->Destroy();
 		}
 	};
 }
