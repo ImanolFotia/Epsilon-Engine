@@ -89,7 +89,7 @@ namespace framework
             static STATE MIDDLE;
             static STATE LEFT;
 
-            static beacon::single_handler<MouseArgs> MouseEventHandler;
+            static inline beacon::single_handler<MouseArgs> MouseEventHandler;
 
             static double prevxOffset;
             static double prevyOffset;

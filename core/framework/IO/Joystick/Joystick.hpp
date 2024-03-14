@@ -12,7 +12,6 @@
 #include "JoystickWrapper.hpp"
 #include "Mappings.hpp"
 
-
 #if defined(_WIN32)
 //  Microsoft
 #if defined(EPSILON_BUILD_DLL)
@@ -33,7 +32,6 @@
 #pragma warning Unknown dynamic link import / export semantics.
 #endif
 
-
 namespace framework
 {
     namespace Input
@@ -44,7 +42,7 @@ namespace framework
 
             static const int MAX_JOYSTICKS = 4;
 
-            class  Joystick
+            class Joystick
             {
                 using Mapping_ptr = std::shared_ptr<Input::Joystick::Mappings::Mapping>;
 
@@ -78,8 +76,8 @@ namespace framework
                     return glm::vec2(0.0f);
                 }
 
-                //Check is button is pressed
-                //Returns false (not pressed) if button is out of range
+                // Check is button is pressed
+                // Returns false (not pressed) if button is out of range
                 bool isButtonPressed(int button)
                 {
                     if (button < mJoystickButtonsCount)
@@ -150,11 +148,11 @@ namespace framework
                 {
                 }
 
-                static Joystick_ptr dummyJoystick;
+                static inline Joystick_ptr dummyJoystick = std::make_shared<Joystick>();
 
                 /*
         Returns a pointer the primary joystick
-        If no joystick is connected, it returns a pointer to an empty Joystick object with 
+        If no joystick is connected, it returns a pointer to an empty Joystick object with
         the Joystick::JoystickIsPresent flag disabled
     */
                 static const Joystick_ptr PrimaryJoystick()
@@ -216,7 +214,7 @@ namespace framework
                                 std::string lName = glfwGetJoystickName(i);
                                 Joystick_ptr _joystick = std::make_shared<Joystick>();
                                 namespace _Mappings = Input::Joystick::Mappings;
-                                //Assign Controller specific mapping and type
+                                // Assign Controller specific mapping and type
                                 int buttonsCount;
                                 glfwGetJoystickButtons(i, &buttonsCount);
                                 if (lName.find(Input::Joystick_Name::XBOX360) != std::string::npos && buttonsCount == Input::XBOX360_BUTTONCOUNT)
@@ -274,7 +272,6 @@ namespace framework
                     }
                 }
 
-
                 static void PollJoystick()
                 {
                     try
@@ -315,7 +312,7 @@ namespace framework
 
 #endif
             public:
-                static std::unordered_map<unsigned, Joystick_ptr> JoystickVector;
+                static inline std::unordered_map<unsigned, Joystick_ptr> JoystickVector;
             };
 
         } // namespace Joystick

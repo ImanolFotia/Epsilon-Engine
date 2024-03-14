@@ -14,7 +14,6 @@
 
 #include <beacon/beacon.hpp>
 
-
 #if defined(_WIN32)
 //  Microsoft
 #if defined(EPSILON_BUILD_DLL)
@@ -57,17 +56,18 @@ namespace framework
             std::unordered_map<const char *, uint16_t> kw;
         };
 
-        class KeyboardArgs : public beacon::args {
-            public:
-                int key_up_index = -1;
-                int key_down_index = -1;
+        class KeyboardArgs : public beacon::args
+        {
+        public:
+            int key_up_index = -1;
+            int key_down_index = -1;
         };
 
         class EPSILON_DLL KeyBoard
         {
         private:
         public:
-            //static KeyWraps KeyWrap;
+            // static KeyWraps KeyWrap;
 
             static bool KEYS[1024];
 
@@ -79,8 +79,8 @@ namespace framework
             static bool getKey(const char *);
 
             static void wrapKey(const char *, uint16_t);
-            
-            static beacon::single_handler<KeyboardArgs> KeyboardEventHandler;
+
+            static inline beacon::single_handler<KeyboardArgs> KeyboardEventHandler;
         };
 
     } // namespace Input

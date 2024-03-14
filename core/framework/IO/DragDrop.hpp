@@ -68,7 +68,7 @@ namespace framework
 		class EPSILON_DLL DragDrop
 		{
 		public:
-			static beacon::single_handler<DropArgs> DropEventHandler;
+			static inline beacon::single_handler<DropArgs> DropEventHandler;
 
 #if USE_GLFW
 			static void DropCallbackGLFW(framework::Window::windowType *window, int count, const char **paths)

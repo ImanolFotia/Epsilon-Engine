@@ -7,7 +7,6 @@
 #include "DragDrop.hpp"
 #include "core/framework/IO/Joystick/Joystick.hpp"
 
-
 double framework::Input::Mouse::XPOS = 500;
 double framework::Input::Mouse::YPOS = 500;
 
@@ -18,18 +17,14 @@ framework::Input::STATE framework::Input::Mouse::LEFT = Input::NONE;
 framework::Input::STATE framework::Input::Mouse::MIDDLE = Input::NONE;
 framework::Input::STATE framework::Input::Mouse::RIGHT = Input::NONE;
 
-//Epsilon::Input::MouseArgs Epsilon::Input::Mouse::mouseArgs;
+// Epsilon::Input::MouseArgs Epsilon::Input::Mouse::mouseArgs;
 
+// beacon::single_handler<framework::Input::KeyboardArgs> framework::Input::KeyBoard::KeyboardEventHandler;
 
-
-beacon::single_handler<framework::Input::MouseArgs> framework::Input::Mouse::MouseEventHandler;
-
-beacon::single_handler<framework::Input::KeyboardArgs> framework::Input::KeyBoard::KeyboardEventHandler;
-
-beacon::single_handler<framework::Input::DropArgs> framework::Input::DragDrop::DropEventHandler;
+// beacon::single_handler<framework::Input::DropArgs> framework::Input::DragDrop::DropEventHandler;
 
 namespace Joystick = framework::Input::Joystick;
 
-std::shared_ptr<framework::Input::Joystick::Joystick> framework::Input::Joystick::JoystickManager::dummyJoystick = std::make_shared<framework::Input::Joystick::Joystick>();
+// std::shared_ptr<framework::Input::Joystick::Joystick> framework::Input::Joystick::JoystickManager::dummyJoystick = std::make_shared<framework::Input::Joystick::Joystick>();
 
-std::unordered_map<unsigned, Joystick::JoystickManager::Joystick_ptr> Joystick::JoystickManager::JoystickVector;
+// std::unordered_map<unsigned, Joystick::JoystickManager::Joystick_ptr> Joystick::JoystickManager::JoystickVector;
