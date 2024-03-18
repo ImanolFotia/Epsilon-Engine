@@ -7,7 +7,6 @@
 #endif
 #include <beacon/beacon.hpp>
 
-
 #if defined(_WIN32)
 //  Microsoft
 #if defined(EPSILON_BUILD_DLL)
@@ -27,7 +26,6 @@
 #define EPSILON_DLL
 #pragma warning Unknown dynamic link import / export semantics.
 #endif
-
 
 namespace framework
 {
@@ -49,7 +47,6 @@ namespace framework
 
             double xOffset = 0.0;
             double yOffset = 0.0;
-            
         };
 
         class MouseArgs : public beacon::args
@@ -79,7 +76,7 @@ namespace framework
         class EPSILON_DLL Mouse
         {
 
-            //static MouseArgs mouseArgs;
+            // static MouseArgs mouseArgs;
 
         public:
             static double XPOS;
@@ -106,7 +103,6 @@ namespace framework
                 MouseEventHandler.raise(nullptr, &mouseArgs);
             }
 
-
             static void MouseWheelCallbackGLFW(GLFWwindow *window, double xoffset, double yoffset)
             {
                 MouseArgs mouseArgs;
@@ -118,14 +114,12 @@ namespace framework
                 mouseArgs.wheel.xOffset = xoffset;
                 mouseArgs.wheel.yOffset = yoffset;
 
-                
                 mouseArgs.x = XPOS;
                 mouseArgs.y = YPOS;
 
                 MouseEventHandler.raise(nullptr, &mouseArgs);
                 prevyOffset = yoffset;
             }
-
 
             static void MouseButtonCallbackGLFW(GLFWwindow *window, int button, int action, int mods)
             {
@@ -138,7 +132,8 @@ namespace framework
                 {
                     RIGHT = RELEASED;
                 }
-                else {
+                else
+                {
                     RIGHT = NONE;
                 }
 
@@ -150,7 +145,8 @@ namespace framework
                 {
                     MIDDLE = RELEASED;
                 }
-                else {
+                else
+                {
                     MIDDLE = NONE;
                 }
 
@@ -162,7 +158,8 @@ namespace framework
                 {
                     LEFT = RELEASED;
                 }
-                else {
+                else
+                {
                     LEFT = NONE;
                 }
 
@@ -170,7 +167,6 @@ namespace framework
                 mouseArgs.left.State = LEFT;
                 mouseArgs.middle.State = MIDDLE;
 
-                
                 mouseArgs.x = XPOS;
                 mouseArgs.y = YPOS;
 

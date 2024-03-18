@@ -30,11 +30,9 @@
 #include <android/native_window.h>
 #endif
 
-
 #if USE_GLFW
 #include <GLFW/glfw3.h>
 #endif
-
 
 #if defined(_WIN32)
 //  Microsoft
@@ -63,7 +61,8 @@
 
 namespace framework
 {
-	struct WindowSizeDescription {
+	struct WindowSizeDescription
+	{
 		int id{};
 		int width{};
 		int height{};
@@ -72,7 +71,8 @@ namespace framework
 		std::string size_string{};
 	};
 
-	struct WindowSize {
+	struct WindowSize
+	{
 		uint16_t width;
 		uint16_t height;
 	};
@@ -80,11 +80,9 @@ namespace framework
 	class EPSILON_DLL Window
 	{
 
-
-
 	public:
-
-		enum class WindowMode {
+		enum class WindowMode
+		{
 			WINDOWED = 0,
 			FULLSCREEN,
 			BORDERLESS
@@ -152,32 +150,37 @@ namespace framework
 #endif
 		}
 
-		void setDragCursor() {
+		void setDragCursor()
+		{
 #if USE_GLFW
-			if (current_cursor == GLFW_RESIZE_NESW_CURSOR) return;
-			GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_RESIZE_NESW_CURSOR);
+			if (current_cursor == GLFW_IBEAM_CURSOR)
+				return;
+			GLFWcursor *cursor = glfwCreateStandardCursor(GLFW_IBEAM_CURSOR);
 			glfwSetCursor(mWindow, cursor);
-			current_cursor = GLFW_RESIZE_NESW_CURSOR;
+			current_cursor = GLFW_IBEAM_CURSOR;
 #endif
-
 		}
 
-		void setNormalCursor() {
+		void setNormalCursor()
+		{
 #if USE_GLFW
-			if (current_cursor == GLFW_ARROW_CURSOR) return;
+			if (current_cursor == GLFW_ARROW_CURSOR)
+				return;
 			glfwSetCursor(mWindow, NULL);
 			current_cursor = GLFW_ARROW_CURSOR;
 #endif
 		}
 
-		void setFullScreen() {
+		void setFullScreen()
+		{
 			auto mainMonitorMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 			glfwSetWindowMonitor(mWindow, glfwGetPrimaryMonitor(), 0, 0, mWidth, mHeight, mainMonitorMode->refreshRate);
 
 			mWindowMode = WindowMode::FULLSCREEN;
 		}
 
-		void setBorderlessFullscreen() {
+		void setBorderlessFullscreen()
+		{
 			auto mainMonitorMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
 			glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_FALSE);
@@ -193,7 +196,8 @@ namespace framework
 			mWindowMode = WindowMode::BORDERLESS;
 		}
 
-		void setWindowed() {
+		void setWindowed()
+		{
 			auto mainMonitorMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
 			glfwSetWindowMonitor(mWindow, NULL, 0, 30, mainMonitorMode->width, mainMonitorMode->height - 30, mainMonitorMode->refreshRate);
@@ -202,7 +206,8 @@ namespace framework
 			mWindowMode = WindowMode::WINDOWED;
 		}
 
-		WindowMode getWindowMode() {
+		WindowMode getWindowMode()
+		{
 			return mWindowMode;
 		}
 
@@ -220,18 +225,20 @@ namespace framework
 		WindowSize getSize()
 		{
 #if USE_GLFW
-			if (mWindow == nullptr) return { 0,0 };
+			if (mWindow == nullptr)
+				return {0, 0};
 
 			glfwGetFramebufferSize(mWindow, &mWidth, &mHeight);
-			return { (uint16_t)mWidth, (uint16_t)mHeight };
+			return {(uint16_t)mWidth, (uint16_t)mHeight};
 #endif
 #if defined(__ANDROID__)
 
-			return { 640, 480 };
+			return {640, 480};
 #endif
 		}
 
-		void resize(int w, int h) {
+		void resize(int w, int h)
+		{
 
 #if USE_GLFW
 			glfwSetWindowSize(mWindow, w, h);
@@ -242,7 +249,8 @@ namespace framework
 #endif
 		}
 
-		int getDefaultSizeIndex() {
+		int getDefaultSizeIndex()
+		{
 			return defaultSizeIndex;
 		}
 
@@ -254,37 +262,39 @@ namespace framework
 #endif
 		}
 
-		void setWindowTitle(const char* title)
+		void setWindowTitle(const char *title)
 		{
 #if USE_GLFW
 			glfwSetWindowTitle(mWindow, title);
 #endif
 		}
 
-		windowType* getWindow() const
+		windowType *getWindow() const
 		{
 			return mWindow;
 		}
 
-		void setWindow(windowType* window)
+		void setWindow(windowType *window)
 		{
 			mWindow = window;
 		}
 
-		const std::vector<WindowSizeDescription>& getAvailableSizes() {
+		const std::vector<WindowSizeDescription> &getAvailableSizes()
+		{
 			return m_pAvailableSizes;
 		}
 
-		bool SizeChanged() {
+		bool SizeChanged()
+		{
 			bool changed = mWidth != mLastWidth || mHeight != mLastHeight;
 			mLastWidth = mWidth;
 			mLastHeight = mHeight;
 			return changed;
 		}
+
 	private:
 		int mWidth = 640;
 		int mHeight = 480;
-
 
 		int mLastWidth = 640;
 		int mLastHeight = 480;
@@ -295,10 +305,10 @@ namespace framework
 		int mDefaultHeight = 1;
 		std::vector<WindowSizeDescription> m_pAvailableSizes;
 
-		windowType* mWindow;
+		windowType *mWindow;
 #if defined(_WIN32) && (USE_GLFW == false)
 		ATOM WINAPI RegisterClassEx(
-			const WNDCLASSEX* lpwcx);
+			const WNDCLASSEX *lpwcx);
 		static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		{
 			switch (message)
@@ -318,4 +328,4 @@ namespace framework
 		HINSTANCE windowInstance;
 #endif
 	};
-		}
+}
