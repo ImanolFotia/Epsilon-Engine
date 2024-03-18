@@ -16,14 +16,14 @@
 #endif
 
 #ifndef BUILD_ANDROID
-#include "core/framework/IO/KeyBoard.hpp"
-#include "core/framework/IO/Mouse.hpp"
-#include "core/framework/IO/Joystick/Joystick.hpp"
+#include <core/framework/IO/KeyBoard.hpp>
+#include <core/framework/IO/Mouse.hpp>
+#include <core/framework/IO/Joystick/Joystick.hpp>
 #endif
 
 #include "../../window.hpp"
 
-#include "beacon/beacon.hpp"
+#include <beacon/beacon.hpp>
 #include <iostream>
 
 namespace utils
@@ -31,14 +31,16 @@ namespace utils
     class Camera
     {
     public:
-
-        enum ProyectionType {
+        enum ProyectionType
+        {
             Perspective,
             Orthographic
         };
 
     public:
         Camera(glm::vec3, glm::vec3);
+
+        Camera() = default;
 
         ~Camera()
         {
@@ -87,31 +89,34 @@ namespace utils
         }
 
         void onMouseWheelCallback(beacon::sender *sender, beacon::args *args);
-        
-        float getNearPlane() { 
+
+        float getNearPlane()
+        {
             return near_plane;
         }
         float getFarPlane() { return far_plane; }
 
-        void ResetDeltas() {
+        void ResetDeltas()
+        {
             resetDeltas = true;
         }
 
-        ProyectionType ProjType() {
+        ProyectionType ProjType()
+        {
             return m_pProjType;
         }
 
-        void ProjType(ProyectionType proj_type) {
+        void ProjType(ProyectionType proj_type)
+        {
             m_pProjType = proj_type;
         }
+
     private:
         void LockCamera(void);
 
         void HandleInputs(framework::Window::windowType *&);
 
         void GetExternalInputs(void);
-
-
 
     public:
         glm::mat4 MVP = glm::mat4(1.0);
