@@ -48,8 +48,8 @@ namespace engine
 		Ref<UniformBindings> createUniformData(UniformBindingInfo) override;
 		Ref<ComputeShader> createComputeShader(ComputeShaderInfo) override;
 		Ref<ComputeShader> UpdateComputeShader(Ref<ComputeShader>, ComputeShaderInfo computeInfo) override;
-		Ref<Buffer> createMappedVertexBuffer(const std::string& , const BufferInfo&) override;
-		void UpdateMappedBuffer(Ref<Buffer>, const UpdateVertexBufferInfo&) override;
+		Ref<Buffer> createMappedVertexBuffer(const std::string &, const BufferInfo &) override;
+		void UpdateMappedBuffer(Ref<Buffer>, const UpdateVertexBufferInfo &) override;
 		void UpdateMesh(Ref<Mesh>, UpdateMeshInfo) override;
 
 		virtual void CopyTexture(Ref<Texture> src, Ref<Texture> dst) override;
@@ -61,7 +61,7 @@ namespace engine
 		void destroyMesh(Ref<Mesh>) override;
 		void destroyRenderPass(Ref<RenderPass>) override;
 		void destroyComputeShader(Ref<ComputeShader>) override;
-		Ref<Buffer> destroyBuffer(const BufferInfo&) override;
+		Ref<Buffer> destroyBuffer(const BufferInfo &) override;
 
 		void *mapBuffer(Ref<Buffer> buffer, uint32_t currentFrame) override;
 		void unmapBuffer(Ref<Buffer> buffer, uint32_t currentFrame) override;
@@ -124,7 +124,8 @@ namespace engine
 		void pGenerateMipMaps(TextureCreationInfo, vk::VulkanTexture &);
 		void UploadMipmaps();
 
-		int FramesInFlight() {
+		int FramesInFlight()
+		{
 			return vk::MAX_FRAMES_IN_FLIGHT;
 		}
 
@@ -134,6 +135,7 @@ namespace engine
 		const uint32_t MATERIAL_LAYOUT = 2;
 
 		uint32_t texture_index = 0; //!!! ONLY FOR TESTING, SHOULD FIX THIS ASAP
+		uint32_t descriptor_sets = 0;
 
 		const VkBufferUsageFlags UNIFORM_BUFFER_USAGE = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
 		const VkBufferUsageFlags STORAGE_BUFFER_USAGE = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;

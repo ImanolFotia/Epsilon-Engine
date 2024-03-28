@@ -281,7 +281,7 @@ namespace engine
 		poolInfo.pPoolSizes = poolSizes.data();
 		poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
 
-		poolInfo.maxSets = poolSizes.size() * vk::MAX_FRAMES_IN_FLIGHT;
+		poolInfo.maxSets = 1000 * vk::MAX_FRAMES_IN_FLIGHT; // poolSizes.size() * vk::MAX_FRAMES_IN_FLIGHT;
 		if (vkCreateDescriptorPool(m_pVkDataPtr->logicalDevice, &poolInfo, nullptr, &m_pDescriptorPool) != VK_SUCCESS)
 		{
 			throw std::runtime_error("failed to create descriptor pool!");
@@ -340,10 +340,11 @@ namespace engine
 		allocInfo.descriptorPool = m_pDescriptorPool;
 		allocInfo.descriptorSetCount = static_cast<uint32_t>(count);
 		allocInfo.pSetLayouts = layouts.data();
-
+		descriptor_sets += count;
 		descriptorSets.resize(count);
-		if (vkAllocateDescriptorSets(m_pVkDataPtr->logicalDevice, &allocInfo, descriptorSets.data()) != VK_SUCCESS)
+		if (auto result = vkAllocateDescriptorSets(m_pVkDataPtr->logicalDevice, &allocInfo, descriptorSets.data()); result != VK_SUCCESS)
 		{
+			IO::Error(result);
 			throw std::runtime_error("failed to allocate descriptor sets!");
 		}
 	}
