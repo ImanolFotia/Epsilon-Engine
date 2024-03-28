@@ -122,36 +122,36 @@ if(DOWNLOAD_LIBRARIES)
     message(${STB_BUILD_DIR})
 
     include_directories(${STB_BUILD_DIR})
-
-        #Download and include stb-image
-    ExternalProject_Add(ktx_d
-            GIT_REPOSITORY https://github.com/KhronosGroup/KTX-Software.git
-            GIT_TAG main
-            INSTALL_COMMAND cmake -E echo "Skipping install step for stb-image."
-            BUILD_COMMAND ""
-            UPDATE_COMMAND ""
-            CONFIGURE_COMMAND ""
-            )
-
-    ExternalProject_Get_property(ktx_d SOURCE_DIR)
-    set(KTX_DIR ${SOURCE_DIR})
-    message(${KTX_DIR})
-
+#
+    #    #Download and include stb-image
+    #ExternalProject_Add(ktx_d
+    #        GIT_REPOSITORY https://github.com/KhronosGroup/KTX-Software.git
+    #        GIT_TAG main
+    #        INSTALL_COMMAND cmake -E echo "Skipping install step for stb-image."
+    #        BUILD_COMMAND ""
+    #        UPDATE_COMMAND ""
+    #        CONFIGURE_COMMAND ""
+    #        )
+#
+    #ExternalProject_Get_property(ktx_d SOURCE_DIR)
+    #set(KTX_DIR ${SOURCE_DIR})
+    #message(${KTX_DIR})
+#
     #include_directories(${KTX_BUILD_DIR}/include)
     #include_directories(${KTX_BUILD_DIR}/other_include)
 
     
-    link_directories(${KTX_DIR}/build/Release)
+    #link_directories(${KTX_DIR}/build/Release)
 
-    set(KTX_INCLUDES "${KTX_DIR}/include" "${KTX_DIR}/other_include" "${KTX_DIR}/lib")
-    message(${KTX_INCLUDES})
+   # set(KTX_INCLUDES "${KTX_DIR}/include" "${KTX_DIR}/other_include" "${KTX_DIR}/lib")
+    #message(${KTX_INCLUDES})
 
-    add_library(KTX SHARED IMPORTED)
-set_target_properties(KTX PROPERTIES
+   # add_library(KTX SHARED IMPORTED)
+#set_target_properties(KTX PROPERTIES
     #IMPORTED_LOCATION "${KTX_DIR}/build/Release/ktx.dll"
     #IMPORTED_IMPLIB "${KTX_DIR}/build/Release/ktx.lib"
-    INTERFACE_INCLUDE_DIRECTORIES ${KTX_INCLUDES}
-)
+ #   INTERFACE_INCLUDE_DIRECTORIES ${KTX_INCLUDES}
+#)
 
 
     #Download and include Beacon
