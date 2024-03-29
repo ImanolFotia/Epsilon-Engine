@@ -148,7 +148,7 @@ namespace engine
 		}
 	};
 
-	enum class EntityType
+	enum class EntityType : uint32_t
 	{
 		OMNI = 0,
 		SUN,
@@ -163,11 +163,11 @@ namespace engine
 	{
 		glm::vec4 color = glm::vec4(1.0);
 		glm::vec3 position{};
-		EntityType type = EntityType::SIZE;
 		float radius{};
 		float innerRadius{};
 		float outerRadius{};
-		float padding;
+		EntityType type = EntityType::SIZE;
+		uint32_t flags{};
 	};
 
 	struct ShaderAsset
