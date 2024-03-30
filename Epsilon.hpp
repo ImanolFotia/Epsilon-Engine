@@ -144,7 +144,7 @@ namespace Epsilon
         std::shared_ptr<engine::AssetManager> m_AssetManager{};
 
         ShaderData shaderData;
-        int m_MaxFPS = 500000;
+        int m_MaxFPS = 5000;
     };
 }
 
