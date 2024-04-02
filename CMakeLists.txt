@@ -499,8 +499,11 @@ endif()
 
 if(WIN32)
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenAL32.dll)
+
 else()
 target_link_libraries(${PROJECT_NAME} PRIVATE openal)
+
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 endif()
 
 
