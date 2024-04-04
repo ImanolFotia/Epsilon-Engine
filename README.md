@@ -34,8 +34,7 @@ Installers and binaries will be available soon
 * Soft OpenAL
 * VMA
 * Beacon
-* nlohmann/json
-* libktx
+* nlohmann/json
 
 <a name="features"></a>
 ## Features 
@@ -49,7 +48,7 @@ Installers and binaries will be available soon
 * Octree space division for open areas
 * Binary Space Partition Trees(BSP Trees) are used for indoor areas
 * Bokeh Depth of Field(DoF) post-processing
-* Nvidia's FXAA post-processing
+* TAA
 * Point, Area and Ambient lights are supported
 * Physical Based Rendering(PBR) workflow
 * Skeletal Animation
