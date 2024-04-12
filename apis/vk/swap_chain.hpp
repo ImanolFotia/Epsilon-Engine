@@ -3,7 +3,7 @@
 #include <limits>
 #include <cstddef>
 #include <vector>
-#include <cstdint>   // Necessary for UINT32_MAX
+#include <cstdint>	 // Necessary for UINT32_MAX
 #include <algorithm> // Necessary for std::clamp
 
 #if !defined(__ANDROID__)
@@ -34,7 +34,7 @@ namespace vk
 		std::vector<VkPresentModeKHR> presentModes;
 	};
 
-	static SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice& physicalDevice, const VulkanData& vk_data)
+	static SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice &physicalDevice, const VulkanData &vk_data)
 	{
 		SwapChainSupportDetails details;
 		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, vk_data.surface, &details.capabilities);
@@ -60,18 +60,19 @@ namespace vk
 		return details;
 	}
 
-	static VkSurfaceFormatKHR chooseSwapSurfaceFormat(VulkanData& vk_data, const std::vector<VkSurfaceFormatKHR>& availableFormats)
+	static VkSurfaceFormatKHR chooseSwapSurfaceFormat(VulkanData &vk_data, const std::vector<VkSurfaceFormatKHR> &availableFormats)
 	{
-		for (const auto& availableFormat : availableFormats)
+		for (const auto &availableFormat : availableFormats)
 		{
 			VkFormatProperties props;
 			vkGetPhysicalDeviceFormatProperties(vk_data.physicalDevice, availableFormat.format, &props);
 			VkFormatFeatureFlags features = VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
-			if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
+			if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
+			{
 				return availableFormat;
 			}
 			// if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
-			//if ((props.optimalTilingFeatures & features) == features)
+			// if ((props.optimalTilingFeatures & features) == features)
 			//{
 			//    return availableFormat;
 			//}
@@ -80,12 +81,12 @@ namespace vk
 		return availableFormats[0];
 	}
 
-	static VkPresentModeKHR chooseSwapPresentMode(const VulkanData& vk_data,  const std::vector<VkPresentModeKHR>& availablePresentModes)
+	static VkPresentModeKHR chooseSwapPresentMode(const VulkanData &vk_data, const std::vector<VkPresentModeKHR> &availablePresentModes)
 	{
 #if defined(__ANDROID__)
 		return VK_PRESENT_MODE_FIFO_KHR;
 #endif
-		for (const auto& availablePresentMode : availablePresentModes)
+		for (const auto &availablePresentMode : availablePresentModes)
 		{
 			if (availablePresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR && vk_data.vsync == false) // VK_PRESENT_MODE_IMMEDIATE_KHR
 			{
@@ -99,7 +100,7 @@ namespace vk
 		return VK_PRESENT_MODE_FIFO_KHR;
 	}
 
-	static VkExtent2D chooseSwapExtent(framework::Window::windowType* window, const VkSurfaceCapabilitiesKHR& capabilities)
+	static VkExtent2D chooseSwapExtent(framework::Window::windowType *window, const VkSurfaceCapabilitiesKHR &capabilities)
 	{
 		if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max())
 		{
@@ -117,7 +118,7 @@ namespace vk
 
 			VkExtent2D actualExtent = {
 				static_cast<uint32_t>(width),
-				static_cast<uint32_t>(height) };
+				static_cast<uint32_t>(height)};
 
 			actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
 			actualExtent.height = std::clamp(actualExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
@@ -127,7 +128,7 @@ namespace vk
 		}
 	}
 
-	static void createSwapChain(VulkanData& vk_data, framework::Window::windowType* window)
+	static void createSwapChain(VulkanData &vk_data, framework::Window::windowType *window)
 	{
 		SwapChainSupportDetails swapChainSupport = querySwapChainSupport(vk_data.physicalDevice, vk_data);
 
@@ -152,7 +153,7 @@ namespace vk
 		createInfo.imageArrayLayers = 1;
 		createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 		QueueFamilyIndices indices = findQueueFamilies(vk_data.physicalDevice, vk_data);
-		uint32_t queueFamilyIndices[] = { indices.graphicsFamily.value(), indices.presentFamily.value() };
+		uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
 
 		if (indices.graphicsFamily != indices.presentFamily)
 		{
@@ -163,7 +164,7 @@ namespace vk
 		else
 		{
 			createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
-			createInfo.queueFamilyIndexCount = 0;     // Optional
+			createInfo.queueFamilyIndexCount = 0;	  // Optional
 			createInfo.pQueueFamilyIndices = nullptr; // Optional
 		}
 		createInfo.preTransform = swapChainSupport.capabilities.currentTransform;
@@ -190,7 +191,7 @@ namespace vk
 		vk_data.swapChainHeight = extent.height;
 	}
 
-	static void createImageViews(VulkanData& vk_data)
+	static void createImageViews(VulkanData &vk_data)
 	{
 		vk_data.defaultRenderPass.renderPassChain.ImageViews.clear();
 		vk_data.defaultRenderPass.renderPassChain.ImageViews.resize(vk_data.defaultRenderPass.renderPassChain.Images.size());
@@ -207,7 +208,8 @@ namespace vk
 
 		createImageView(vk_data, vk_data.defaultRenderPass.renderPassChain.DepthTexture, VK_IMAGE_ASPECT_DEPTH_BIT);
 
-		if (false) {
+		if (false)
+		{
 
 			vk::createTextureSampler(vk_data, vk_data.defaultRenderPass.renderPassChain.DepthTexture);
 		}
@@ -219,16 +221,14 @@ namespace vk
 			texture.format = vk_data.defaultRenderPass.renderPassChain.ImageFormats[0];
 			texture.image = vk_data.defaultRenderPass.renderPassChain.Images[i];
 
-
 			createImageView(vk_data, texture, VK_IMAGE_ASPECT_COLOR_BIT);
-
 
 			vk_data.defaultRenderPass.renderPassChain.ImageViews[i] = texture.imageView;
 			vk_data.defaultRenderPass.renderPassChain.Textures.back() = texture;
 		}
 	}
 
-	static void cleanupSwapChain(const VulkanData& vk_data)
+	static void cleanupSwapChain(const VulkanData &vk_data)
 	{
 		for (size_t i = 0; i < vk_data.defaultRenderPass.renderPassChain.Framebuffers.size(); i++)
 		{
@@ -243,7 +243,7 @@ namespace vk
 		vkDestroyImageView(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.DepthTexture.imageView, nullptr);
 		vkDestroyImage(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.DepthTexture.image, nullptr);
 		vkFreeMemory(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.DepthTextureBuffer.deviceMemory, nullptr);
-		//vkDestroySampler(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.DepthTexture.sampler, nullptr);
+		// vkDestroySampler(vk_data.logicalDevice, vk_data.defaultRenderPass.renderPassChain.DepthTexture.sampler, nullptr);
 
 		vkDestroySwapchainKHR(vk_data.logicalDevice, vk_data.swapChain, nullptr);
 	}

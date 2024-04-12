@@ -17,17 +17,21 @@ namespace framework
         mHeight = h;
 
 #if USE_GLFW
+
         glfwInit();
 
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+
+        glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
+        glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
+
         /*
         auto mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         glfwWindowHint(GLFW_RED_BITS, mode->redBits);
         glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
         glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
-        glfwWindowHint(GLFW_DECORATED, GL_TRUE);*/
+        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);*/
 
         mDefaultWidth = glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
         mDefaultHeight = glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
@@ -36,6 +40,8 @@ namespace framework
         const GLFWvidmode *modes = glfwGetVideoModes(glfwGetPrimaryMonitor(), &count);
 
         mWindow = glfwCreateWindow(mWidth, mHeight, appName.c_str(), nullptr, nullptr);
+
+        // glfwSetWindowOpacity(mWindow, 0.2f);
         auto currentMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         for (int i = 0; i < count; i++)
         {

@@ -17,7 +17,6 @@
 namespace vk
 {
 
-
     static void createInstance(const char *appName, VulkanData &vk_data)
     {
         if (enableValidationLayers && !checkValidationLayerSupport())
@@ -31,11 +30,10 @@ namespace vk
         appInfo.pEngineName = "Epsilon Engine";
         appInfo.engineVersion = VK_MAKE_VERSION(1, 1, 0);
 
-        appInfo.apiVersion = VK_API_VERSION_1_1;
+        appInfo.apiVersion = VK_API_VERSION_1_3;
 #if defined(__ANDROID__)
         appInfo.apiVersion = VK_API_VERSION_1_1;
 #endif
-
 
         VkInstanceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -51,7 +49,7 @@ namespace vk
         auto extensions = getRequiredExtensions();
 #if !defined(__ANDROID__)
         extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
-        //extensions.push_back(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME);
+        // extensions.push_back(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME);
 #endif
         createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
         createInfo.ppEnabledExtensionNames = extensions.data();
