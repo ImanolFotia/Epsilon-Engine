@@ -1,0 +1,33 @@
+[submodule "thirdparty/beacon"]
+	path = thirdparty/beacon
+	url = https://github.com/ImanolFotia/beacon.git
+[submodule "thirdparty/glm"]
+	path = thirdparty/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "thirdparty/vma"]
+	path = thirdparty/vma
+	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
+[submodule "thirdparty/stb"]
+	path = thirdparty/stb
+	url = https://github.com/nothings/stb.git
+[submodule "thirdparty/json"]
+	path = thirdparty/json
+	url = https://www.github.com/nlohmann/json.git
+[submodule "thirdparty/glfw3"]
+	path = thirdparty/glfw3
+	url = https://github.com/glfw/glfw.git
+[submodule "thirdparty/openal"]
+	path = thirdparty/openal
+	url = https://github.com/kcat/openal-soft.git
+[submodule "thirdparty/zlib"]
+	path = thirdparty/zlib
+	url = https://github.com/madler/zlib.git
+[submodule "thirdparty/implot"]
+	path = thirdparty/implot
+	url = https://github.com/epezent/implot
+[submodule "thirdparty/ImGuizmo"]
+	path = thirdparty/ImGuizmo
+	url = https://github.com/CedricGuillemet/ImGuizmo.git
+[submodule "thirdparty/tinygltf"]
+	path = thirdparty/tinygltf
+	url = https://github.com/syoyo/tinygltf.git

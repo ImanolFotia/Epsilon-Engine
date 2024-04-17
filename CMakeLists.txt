@@ -78,10 +78,10 @@ endif()
 
 if(DOWNLOAD_LIBRARIES)
     include(ExternalProject)
-
     #Download and include glm
     ExternalProject_Add(glm
-            GIT_REPOSITORY https://github.com/g-truc/glm.git
+            #GIT_REPOSITORY https://github.com/g-truc/glm.git
+            SOURCE_DIR ${THIRDPARTY_DIR}/glm
             INSTALL_COMMAND cmake -E echo "Skipping install step."
             BUILD_COMMAND ""
             UPDATE_COMMAND ""
@@ -96,7 +96,10 @@ if(DOWNLOAD_LIBRARIES)
 
     #Download and include vma
     ExternalProject_Add(vma
-            GIT_REPOSITORY https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
+            #GIT_REPOSITORY https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
+            SOURCE_DIR ${THIRDPARTY_DIR}/vma
+            BINARY_DIR ${THIRDPARTY_DIR}/vma/build
+            TMP_DIR ${THIRDPARTY_DIR}/vma/tmp
             INSTALL_COMMAND cmake -E echo "Skipping install step."
             UPDATE_COMMAND ""
             )
@@ -107,11 +110,17 @@ if(DOWNLOAD_LIBRARIES)
 
     include_directories(${VMA_BUILD_DIR}/include)
 
+    
+
 
     #Download and include stb-image
     ExternalProject_Add(stb
-            GIT_REPOSITORY https://github.com/nothings/stb.git
+            #GIT_REPOSITORY https://github.com/nothings/stb.git
             INSTALL_COMMAND cmake -E echo "Skipping install step for stb-image."
+            
+            SOURCE_DIR ${THIRDPARTY_DIR}/stb
+            BINARY_DIR ${THIRDPARTY_DIR}/stb/build
+            TMP_DIR ${THIRDPARTY_DIR}/stb/tmp
             BUILD_COMMAND ""
             UPDATE_COMMAND ""
             CONFIGURE_COMMAND ""
@@ -122,41 +131,14 @@ if(DOWNLOAD_LIBRARIES)
     message(${STB_BUILD_DIR})
 
     include_directories(${STB_BUILD_DIR})
-#
-    #    #Download and include stb-image
-    #ExternalProject_Add(ktx_d
-    #        GIT_REPOSITORY https://github.com/KhronosGroup/KTX-Software.git
-    #        GIT_TAG main
-    #        INSTALL_COMMAND cmake -E echo "Skipping install step for stb-image."
-    #        BUILD_COMMAND ""
-    #        UPDATE_COMMAND ""
-    #        CONFIGURE_COMMAND ""
-    #        )
-#
-    #ExternalProject_Get_property(ktx_d SOURCE_DIR)
-    #set(KTX_DIR ${SOURCE_DIR})
-    #message(${KTX_DIR})
-#
-    #include_directories(${KTX_BUILD_DIR}/include)
-    #include_directories(${KTX_BUILD_DIR}/other_include)
-
-    
-    #link_directories(${KTX_DIR}/build/Release)
-
-   # set(KTX_INCLUDES "${KTX_DIR}/include" "${KTX_DIR}/other_include" "${KTX_DIR}/lib")
-    #message(${KTX_INCLUDES})
-
-   # add_library(KTX SHARED IMPORTED)
-#set_target_properties(KTX PROPERTIES
-    #IMPORTED_LOCATION "${KTX_DIR}/build/Release/ktx.dll"
-    #IMPORTED_IMPLIB "${KTX_DIR}/build/Release/ktx.lib"
- #   INTERFACE_INCLUDE_DIRECTORIES ${KTX_INCLUDES}
-#)
-
 
     #Download and include Beacon
     ExternalProject_Add(beacon
-            GIT_REPOSITORY https://github.com/ImanolFotia/beacon.git
+            #GIT_REPOSITORY https://github.com/ImanolFotia/beacon.git
+            
+            SOURCE_DIR ${THIRDPARTY_DIR}/beacon
+            BINARY_DIR ${THIRDPARTY_DIR}/beacon/build
+            TMP_DIR ${THIRDPARTY_DIR}/beacon/tmp
             INSTALL_COMMAND cmake -E echo "Skipping install step for beacon."
             BUILD_COMMAND ""
             UPDATE_COMMAND ""
@@ -169,10 +151,32 @@ if(DOWNLOAD_LIBRARIES)
 
     include_directories(${BEACON_BUILD_DIR})
 
+    
+    
+    #Download and include nlohmann/tinygltf
+    ExternalProject_Add(tinygltf
+            SOURCE_DIR ${THIRDPARTY_DIR}/tinygltf
+            BINARY_DIR ${THIRDPARTY_DIR}/tinygltf/build
+            TMP_DIR ${THIRDPARTY_DIR}/tinygltf/tmp
+            #GIT_REPOSITORY https://www.github.com/nlohmann/json.git
+            INSTALL_COMMAND cmake -E echo "Skipping install step for json."
+            BUILD_COMMAND ""
+            UPDATE_COMMAND ""
+            CONFIGURE_COMMAND ""
+            )
+
+    ExternalProject_Get_property(tinygltf SOURCE_DIR)
+    set(TINYGLTF_BUILD_DIR ${SOURCE_DIR})
+    message(${TINYGLTF_BUILD_DIR})
+
+    include_directories(${TINYGLTF_BUILD_DIR})
 
     #Download and include nlohmann/json
     ExternalProject_Add(json
-            GIT_REPOSITORY https://www.github.com/nlohmann/json.git
+            SOURCE_DIR ${THIRDPARTY_DIR}/json
+            BINARY_DIR ${THIRDPARTY_DIR}/json/build
+            TMP_DIR ${THIRDPARTY_DIR}/json/tmp
+            #GIT_REPOSITORY https://www.github.com/nlohmann/json.git
             INSTALL_COMMAND cmake -E echo "Skipping install step for json."
             BUILD_COMMAND ""
             UPDATE_COMMAND ""
@@ -199,7 +203,10 @@ if(DOWNLOAD_LIBRARIES)
     # download and include glfw3
     if(DUSE_GLFW)
     ExternalProject_Add(glfw3_d
-            GIT_REPOSITORY https://github.com/glfw/glfw.git
+            SOURCE_DIR ${THIRDPARTY_DIR}/glfw3
+            BINARY_DIR ${THIRDPARTY_DIR}/glfw3/build
+            TMP_DIR ${THIRDPARTY_DIR}/glfw3/tmp
+            #GIT_REPOSITORY https://github.com/glfw/glfw.git
             INSTALL_COMMAND cmake -E echo "Skipping install step."
             UPDATE_COMMAND ""
             )
@@ -228,7 +235,11 @@ if(DOWNLOAD_LIBRARIES)
     # download and include openal
     #requires installation of pulse audio and pipewire developer libs in the OS
     ExternalProject_Add(openal_d
-            GIT_REPOSITORY https://github.com/kcat/openal-soft.git
+            #GIT_REPOSITORY https://github.com/kcat/openal-soft.git
+            
+            SOURCE_DIR ${THIRDPARTY_DIR}/openal
+            BINARY_DIR ${THIRDPARTY_DIR}/openal/build
+            TMP_DIR ${THIRDPARTY_DIR}/openal/tmp
             CMAKE_ARGS ${CMAKE_OPENAL_ARGS}
             INSTALL_COMMAND cmake -E echo "Skipping install step."
             UPDATE_COMMAND ""
@@ -259,7 +270,11 @@ if(DOWNLOAD_LIBRARIES)
     #set(IMGUI_BUILD_DIR ${SOURCE_DIR})
 
     ExternalProject_Add(zlib_d
-            GIT_REPOSITORY https://github.com/madler/zlib.git
+            #GIT_REPOSITORY https://github.com/madler/zlib.git
+            
+            SOURCE_DIR ${THIRDPARTY_DIR}/zlib
+            BINARY_DIR ${THIRDPARTY_DIR}/zlib/build
+            TMP_DIR ${THIRDPARTY_DIR}/zlib/tmp
             CMAKE_ARGS ${CMAKE_OPENAL_ARGS}
             INSTALL_COMMAND cmake -E echo "Skipping install step."
             UPDATE_COMMAND ""
@@ -282,9 +297,26 @@ if(DOWNLOAD_LIBRARIES)
     link_directories(${IMGUI_BUILD_DIR})
 
     
+    set(IMPLOT_BUILD_DIR ${THIRDPARTY_DIR}/implot)
+    message(${IMPLOT_BUILD_DIR})
+    
+    include_directories(${IMPLOT_BUILD_DIR})
+    link_directories(${IMPLOT_BUILD_DIR})
+
+    
+    set(IMGUIZMO_BUILD_DIR ${THIRDPARTY_DIR}/ImGuizmo)
+    message(${IMGUIZMO_BUILD_DIR})
+    
+    include_directories(${IMGUIZMO_BUILD_DIR})
+    link_directories(${IMGUIZMO_BUILD_DIR})
+
+    
     set(TINYGLTF_BUILD_DIR ${THIRDPARTY_DIR}/tinygltf)
     message(${TINYGLTF_BUILD_DIR})
     include_directories(${TINYGLTF_BUILD_DIR})
+
+    
+    include_directories(${THIRDPARTY_DIR}/FontAwesome)
 else()
 
     set(GLM_BUILD_DIR ${THIRDPARTY_DIR}/glm)
@@ -431,14 +463,14 @@ set(PROJECT_FILES
         ${CMAKE_SOURCE_DIR}/core/framework/singleton.hpp
         ${CMAKE_SOURCE_DIR}/modules/imgui/imgui_impl_glfw.cpp
         ${CMAKE_SOURCE_DIR}/modules/imgui/imgui_impl_vulkan.cpp
-        ${IMGUI_BUILD_DIR}/ImPlot/implot_items.cpp
-        ${IMGUI_BUILD_DIR}/ImPlot/implot.cpp
+        ${THIRDPARTY_DIR}/implot/implot_items.cpp
+        ${THIRDPARTY_DIR}/implot/implot.cpp
         ${IMGUI_BUILD_DIR}/imgui.cpp
         ${IMGUI_BUILD_DIR}/imgui_demo.cpp
         ${IMGUI_BUILD_DIR}/imgui_draw.cpp
         ${IMGUI_BUILD_DIR}/imgui_tables.cpp
         ${IMGUI_BUILD_DIR}/imgui_widgets.cpp
-        ${IMGUI_BUILD_DIR}/ImGuizmo/ImGuizmo.cpp
+        ${THIRDPARTY_DIR}/ImGuizmo/ImGuizmo.cpp
         ${TINYGLTF_BUILD_DIR}/tiny_gltf.cc
         )
         

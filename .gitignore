@@ -30,7 +30,6 @@ Epsilon
 /.idea
 /.vscode
 /.vs
-thirdparty
 /build
 /out
 /CMakeFiles
