@@ -28,9 +28,9 @@
 Epsilon
 
 /.idea
-/thirdparty
 /.vscode
 /.vs
+thirdparty
 /build
 /out
 /CMakeFiles
