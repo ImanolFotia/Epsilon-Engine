@@ -27,7 +27,7 @@ jobs:
       run: sudo apt-mark hold grub-efi-amd64-signed && sudo apt-get update --fix-missing && sudo apt-get upgrade -y
     
     - name: Install Dependencies
-      run: sudo apt install vulkan-tools libvulkan-dev vulkan-validationlayers-dev spirv-tools libxcb-keysyms1-dev xorg-dev libpulse-mainloop-glib0 libpipewire-dev
+      run: sudo apt install vulkan-tools libvulkan-dev vulkan-validationlayers-dev spirv-tools libxcb-keysyms1-dev xorg-dev libpulse-mainloop-glib0 libpipewire-0.3-dev
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
