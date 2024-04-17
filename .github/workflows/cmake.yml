@@ -21,13 +21,13 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Add Sources
-      run: sudo echo deb http://us.archive.ubuntu.com/ubuntu focal main restricted >> /etc/apt/sources.list | sudo echo deb http://security.ubuntu.com/ubuntu focal-security main restricted >> /etc/apt/sources.list | sudo echo deb http://us.archive.ubuntu.com/ubuntu focal-updates main restricted >> /etc/apt/sources.list
+      run: sudo add-apt-repository ppa:pipewire-debian/pipewire-upstream
 
     - name: Update System
       run: sudo apt-mark hold grub-efi-amd64-signed && sudo apt-get update --fix-missing && sudo apt-get upgrade -y
     
     - name: Install Dependencies
-      run: sudo apt install vulkan-tools libvulkan-dev vulkan-validationlayers-dev spirv-tools libxcb-keysyms1-dev xorg-dev libpulseaudio-dev libpipewire-dev
+      run: sudo apt install vulkan-tools libvulkan-dev vulkan-validationlayers-dev spirv-tools libxcb-keysyms1-dev xorg-dev libpulse-mainloop-glib0 libpipewire-dev
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
