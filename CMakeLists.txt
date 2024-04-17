@@ -305,6 +305,7 @@ if(DOWNLOAD_LIBRARIES)
 
     
     set(IMGUIZMO_BUILD_DIR ${THIRDPARTY_DIR}/ImGuizmo)
+    set(ImGuizmo_DIR ${THIRDPARTY_DIR}/ImGuizmo)
     message(${IMGUIZMO_BUILD_DIR})
     
     include_directories(${IMGUIZMO_BUILD_DIR})

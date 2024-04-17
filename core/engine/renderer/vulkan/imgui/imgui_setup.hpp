@@ -19,10 +19,10 @@
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include <IconsFontAwesome5.h>
-#include <ImGuizmo.h>
 #include <functional>
 #include <imgui.h>
 #include <implot.h>
+#include <ImGuizmo.h>
 #include <modules/imgui/imgui_impl_glfw.h>
 #include <modules/imgui/imgui_impl_vulkan.h>
 #include <stdio.h>  // printf, fprintf
