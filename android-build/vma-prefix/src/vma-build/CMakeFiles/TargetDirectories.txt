@@ -1,6 +1,0 @@
-J:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma-build/CMakeFiles/edit_cache.dir
-J:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma-build/CMakeFiles/rebuild_cache.dir
-J:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma-build/CMakeFiles/list_install_components.dir
-J:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma-build/CMakeFiles/install.dir
-J:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma-build/CMakeFiles/install/local.dir
-J:/Code/Epsilon-Engine/android-build/vma-prefix/src/vma-build/CMakeFiles/install/strip.dir

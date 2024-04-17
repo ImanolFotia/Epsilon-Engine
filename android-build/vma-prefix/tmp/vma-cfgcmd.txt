@@ -1,1 +1,0 @@
-cmd='C:/Program Files/CMake/bin/cmake.exe;-GNinja;<SOURCE_DIR><SOURCE_SUBDIR>'
