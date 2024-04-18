@@ -84,6 +84,7 @@ ExternalProject_Add(glm
     INSTALL_COMMAND cmake -E echo "Skipping install step."
     BUILD_COMMAND ""
     UPDATE_COMMAND ""
+    CMAKE_ARGS "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
 )
 
 ExternalProject_Get_property(glm SOURCE_DIR)
@@ -99,6 +100,7 @@ ExternalProject_Add(vma
     TMP_DIR ${THIRDPARTY_DIR}/vma/tmp
     INSTALL_COMMAND cmake -E echo "Skipping install step."
     UPDATE_COMMAND ""
+    CMAKE_ARGS "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
 )
 
 ExternalProject_Get_property(vma SOURCE_DIR)
@@ -117,6 +119,7 @@ ExternalProject_Add(stb
     BUILD_COMMAND ""
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND ""
+    CMAKE_ARGS "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
 )
 
 ExternalProject_Get_property(stb SOURCE_DIR)
@@ -134,6 +137,7 @@ ExternalProject_Add(beacon
     BUILD_COMMAND ""
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND ""
+    CMAKE_ARGS "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
 )
 
 ExternalProject_Get_property(beacon SOURCE_DIR)
@@ -150,6 +154,7 @@ ExternalProject_Add(tinygltf
     INSTALL_COMMAND cmake -E echo "Skipping install step for json."
     BUILD_COMMAND ""
     UPDATE_COMMAND ""
+    CMAKE_ARGS "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
     CONFIGURE_COMMAND ""
 )
 
@@ -167,6 +172,7 @@ ExternalProject_Add(json
     INSTALL_COMMAND cmake -E echo "Skipping install step for json."
     BUILD_COMMAND ""
     UPDATE_COMMAND ""
+    CMAKE_ARGS "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
     CONFIGURE_COMMAND ""
 )
 
@@ -194,6 +200,7 @@ if(DUSE_GLFW)
         BINARY_DIR ${THIRDPARTY_DIR}/glfw3/build
         TMP_DIR ${THIRDPARTY_DIR}/glfw3/tmp
         INSTALL_COMMAND cmake -E echo "Skipping install step."
+        CMAKE_ARGS "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
         UPDATE_COMMAND ""
     )
 
@@ -212,9 +219,10 @@ if(WIN32)
     set(CMAKE_OPENAL_ARGS "")
 else()
     if(BUILD_ANDROID)
-        set(CMAKE_OPENAL_ARGS "-DALSOFT_REQUIRE_PULSEAUDIO=ON -DALSOFT_REQUIRE_PIPEWIRE=ON -DCMAKE_INSTALL_PREFIX=install/arm64-v8a -DCMAKE_TOOLCHAIN_FILE=\"J:\\AndroidSDK\\ndk\\26.0.10404224-beta1\\build\\cmake\\android.toolchain.cmake\" -DANDROID_PLATFORM=34 -DANDROID_STL=c++_shared -DCMAKE_BUILD_TYPE=Release -DANDROID_CPP_FEATURES=\"rtti exceptions\" -DANDROID_ABI=arm64-v8a")
+        set(CMAKE_OPENAL_ARGS "-DALSOFT_REQUIRE_PULSEAUDIO=ON -DALSOFT_REQUIRE_PIPEWIRE=ON -DCMAKE_INSTALL_PREFIX=install/arm64-v8a -DCMAKE_TOOLCHAIN_FILE=\"J:\\AndroidSDK\\ndk\\26.0.10404224-beta1\\build\\cmake\\android.toolchain.cmake\" -DANDROID_PLATFORM=34 -DANDROID_STL=c++_shared -DANDROID_CPP_FEATURES=\"rtti exceptions\" -DANDROID_ABI=arm64-v8a 
+    -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}")
     else()
-        set(CMAKE_OPENAL_ARGS "-DALSOFT_REQUIRE_PULSEAUDIO=ON -DALSOFT_REQUIRE_PIPEWIRE=ON")
+        set(CMAKE_OPENAL_ARGS "-DALSOFT_REQUIRE_PULSEAUDIO=ON -DALSOFT_REQUIRE_PIPEWIRE=ON -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}")
     endif()
 endif()
 
@@ -242,7 +250,7 @@ ExternalProject_Add(zlib_d
     SOURCE_DIR ${THIRDPARTY_DIR}/zlib
     BINARY_DIR ${THIRDPARTY_DIR}/zlib/build
     TMP_DIR ${THIRDPARTY_DIR}/zlib/tmp
-    CMAKE_ARGS ${CMAKE_OPENAL_ARGS}
+    CMAKE_ARGS "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
     INSTALL_COMMAND cmake -E echo "Skipping install step."
     UPDATE_COMMAND ""
 )
@@ -520,8 +528,8 @@ install(DIRECTORY ${images} DESTINATION "bin/assets")
 if(NOT ${IS_CI_ENV})
     message("Adding sub projects")
     add_subdirectory(examples/bsp)
-    add_subdirectory(projects/TowerDefense)
-    add_subdirectory(projects/UIApp)
+ #   add_subdirectory(projects/TowerDefense)
+#    add_subdirectory(projects/UIApp)
     add_subdirectory(examples/chess)
 endif()
 #if(${Mono_FOUND})
