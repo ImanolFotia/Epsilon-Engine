@@ -20,6 +20,7 @@ image: ubuntu:22.04
 
 
 before_script:
+ - apt update
  - apt install software-properties-common
  - apt update
  - add-apt-repository ppa:pipewire-debian/pipewire-upstream
