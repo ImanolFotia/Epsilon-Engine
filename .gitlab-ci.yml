@@ -20,9 +20,11 @@ image: ubuntu:22.04
 
 
 before_script:
+ - apt install software-properties-common
+ - apt update
  - add-apt-repository ppa:pipewire-debian/pipewire-upstream
  - apt update
- - sudo apt-mark hold grub-efi-amd64-signed && sudo apt-get update --fix-missing && sudo apt-get upgrade -y
+ - sudo apt-mark hold grub-efi-amd64-signed && sudo apt update --fix-missing && sudo apt-get upgrade -y
  - apt install cmake vulkan-tools libxkbcommon-dev libwayland-dev libvulkan-dev vulkan-validationlayers-dev spirv-tools libxcb-keysyms1-dev xorg-dev libpulse-dev libpulse-mainloop-glib0 libpipewire-0.3-dev
 
 stages:          # List of stages for jobs, and their order of execution
