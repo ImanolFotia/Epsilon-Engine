@@ -18,6 +18,9 @@
 
 image: ubuntu:22.04
 
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  GIT_SUBMODULE_DEPTH: 1
 
 before_script:
  - apt update
