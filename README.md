@@ -38,25 +38,53 @@ Installers and binaries will be available soon
 * nlohmann/json
 
 
-<a name="installation"></a>
-## Installation
+<a name="building"></a>
+## Building
 
+### Windows
 
-Clone the repo:
+* You'll need a working **C++ compiler**, either **MSVC** (Visual Studio) or **MSYS2 MinGW/Clang** will work.
+* **LunarG's Vulkan SDK**, which you can download [here](https://vulkan.lunarg.com/sdk/home#windows) (be sure it's in the Path)
+* **CMake GUI** (optional)
+
+**Clone the repo**
 
 ```
-git clone --recursive-submodules https://github.com/ImanolFotia/Epsilon-Engine.git
+git clone https://github.com/ImanolFotia/Epsilon-Engine.git
+```
+```
+cd Epsilon-Engine
+```
+```
+git submodule init
+```
+```
+git submodule update --remote
+```
+#### Build
+Now you can either configure your project using CMake or CMake-GUI if you are using MinGW, or open Visual Studio IDE and open the project as "CMake Project"  
+
+`
+Be careful, Visual Studio might decide that the primary project is 'EpsilonSharp.sln', this incorrect, as this is an Editor module, choose Epsilon.dll instead.
+`
+
+### Linux
+
+**Clone the repo**
+
+```
+git clone --recursive https://github.com/ImanolFotia/Epsilon-Engine.git
 ```
 
 ```
 cd Epsilon-Engine
 ```
 
-### Setting up the environment
+#### Setting up the environment
 
 Install system and third party dependencies
 
-### Debian/Ubuntu based:  
+#### Debian/Ubuntu based:  
 
 Pipewire ppa (optional):  
 
@@ -66,18 +94,20 @@ sudo add-apt-repository ppa:pipewire-debian/pipewire-upstream
 ```
 sudo apt-get update
 ```
-Install the dependecies:  
 ```
 sudo apt install vulkan-tools libxkbcommon-dev libwayland-dev libvulkan-dev vulkan-validationlayers-dev spirv-tools libxcb-keysyms1-dev xorg-dev libpulse-dev libpulse-mainloop-glib0 libpipewire-0.3-dev xorg-x11-server-devel pipewire-devel
 ```
 
-### Fedora/RedHat (dnf)
+#### Fedora/RedHat (dnf)
 
 ```
 sudo dnf install vulkan-tools libxcb-devel wayland-devel vulkan-validation-layers-devel spirv-tools-devel xcb-util-keysyms-devel xorg-x11-server-Xwayland-devel pulseaudio-libs-devel
 ```
 
 ### Build
+```
+cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/gcc -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/g++ -S./ -B./build -G Ninja
+```
 ```
 cmake -B ./build -DCMAKE_BUILD_TYPE=Release -DIS_CI_ENV:BOOL=FALSE
 ```
