@@ -1,6 +1,6 @@
 # Epsilon Engine
 [![LICENSE.md](https://img.shields.io/badge/License-EULA-blue.svg)](LICENSE.md)
-[![Build Status](https://travis-ci.com/ImanolFotia/Epsilon-Engine.svg?token=eqNdpsuxZdxtFxRycvU4&branch=master)](https://travis-ci.com/ImanolFotia/Epsilon-Engine)
+[![CMake](https://github.com/ImanolFotia/Epsilon-Engine/actions/workflows/cmake.yml/badge.svg)](https://github.com/ImanolFotia/Epsilon-Engine/actions/workflows/cmake.yml)
 ![](https://img.shields.io/badge/platforms-Windows%20%7C%20Linux-orange)
 
 Official repository for Epsilon Engine.
@@ -34,7 +34,8 @@ Installers and binaries will be available soon
 * Soft OpenAL
 * VMA
 * Beacon
-* nlohmann/json
+* nlohmann/json
+
 
 <a name="features"></a>
 ## Features 
