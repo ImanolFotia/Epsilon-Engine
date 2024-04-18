@@ -41,6 +41,7 @@ Installers and binaries will be available soon
 <a name="installation"></a>
 ## Installation
 
+
 Clone the repo:
 
 ```
@@ -51,6 +52,8 @@ git clone --recursive-submodules https://github.com/ImanolFotia/Epsilon-Engine.g
 cd Epsilon-Engine
 ```
 
+### Setting up the environment
+
 Install system and third party dependencies
 
 ### Debian/Ubuntu based:  
@@ -60,14 +63,18 @@ Pipewire ppa (optional):
 ```
 sudo add-apt-repository ppa:pipewire-debian/pipewire-upstream
 ```
-
 ```
 sudo apt-get update
 ```
-
 Install the dependecies:  
 ```
-sudo apt install vulkan-tools libxkbcommon-dev libwayland-dev libvulkan-dev vulkan-validationlayers-dev spirv-tools libxcb-keysyms1-dev xorg-dev libpulse-dev libpulse-mainloop-glib0 libpipewire-0.3-dev
+sudo apt install vulkan-tools libxkbcommon-dev libwayland-dev libvulkan-dev vulkan-validationlayers-dev spirv-tools libxcb-keysyms1-dev xorg-dev libpulse-dev libpulse-mainloop-glib0 libpipewire-0.3-dev xorg-x11-server-devel pipewire-devel
+```
+
+### Fedora/RedHat (dnf)
+
+```
+sudo dnf install vulkan-tools libxcb-devel wayland-devel vulkan-validation-layers-devel spirv-tools-devel xcb-util-keysyms-devel xorg-x11-server-Xwayland-devel pulseaudio-libs-devel
 ```
 
 ### Build
