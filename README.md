@@ -1,10 +1,7 @@
 # Epsilon Engine
 [![LICENSE.md](https://img.shields.io/badge/License-EULA-blue.svg)](LICENSE.md)
-
 [![CMake](https://github.com/ImanolFotia/Epsilon-Engine/actions/workflows/cmake.yml/badge.svg)](https://github.com/ImanolFotia/Epsilon-Engine/actions/workflows/cmake.yml)
-
-[![pipeline status](https://gitlab.com/Difima/Epsilon-Engine/badges/master/pipeline.svg)](https://gitlab.com/Difima/Epsilon-Engine/-/commits/master) 
-
+[![pipeline status](https://gitlab.com/Difima/Epsilon-Engine/badges/master/pipeline.svg)](https://gitlab.com/Difima/Epsilon-Engine/-/commits/master)
 ![](https://img.shields.io/badge/platforms-Windows%20%7C%20Linux-orange)
 
 Official repository for Epsilon Engine.
