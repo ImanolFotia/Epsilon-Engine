@@ -955,7 +955,7 @@ namespace engine
 															   .size = audioFile.getFileSize(),
 															   .bps = audioFile.getBPS(),
 															   .bitrate = audioFile.getSampleRate(),
-															   .data = audioFile.data().get(),
+															   .data = audioFile.data()->data(),
 														   });
 
 			AudioBuffer &audioBuffer = m_pAudioBuffers[path];
