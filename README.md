@@ -41,6 +41,16 @@ Installers and binaries will be available soon
 <a name="installation"></a>
 ## Installation
 
+Clone the repo:
+
+```
+git clone --recursive-submodules https://github.com/ImanolFotia/Epsilon-Engine.git
+```
+
+```
+cd Epsilon-Engine
+```
+
 Install system and third party dependencies
 
 ### Debian/Ubuntu based:  
