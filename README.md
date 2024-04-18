@@ -38,6 +38,33 @@ Installers and binaries will be available soon
 * nlohmann/json
 
 
+<a name="installation"></a>
+## Installation
+
+Install system and third party dependencies
+
+### Debian/Ubuntu based:  
+
+Pipewire ppa (optional):  
+
+```
+sudo add-apt-repository ppa:pipewire-debian/pipewire-upstream
+```
+
+```
+sudo apt-get update
+```
+
+Install the dependecies:  
+```
+sudo apt install vulkan-tools libxkbcommon-dev libwayland-dev libvulkan-dev vulkan-validationlayers-dev spirv-tools libxcb-keysyms1-dev xorg-dev libpulse-dev libpulse-mainloop-glib0 libpipewire-0.3-dev
+```
+
+### Build
+```
+cmake -B ./build -DCMAKE_BUILD_TYPE=Release -DIS_CI_ENV:BOOL=FALSE
+```
+
 <a name="features"></a>
 ## Features 
 
