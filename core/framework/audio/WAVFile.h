@@ -14,7 +14,7 @@ namespace framework
     public:
         WAVfile() = default;
 
-        std::shared_ptr<std::vector<unsigned char>> Load(const char *fn)
+        unsigned char *Load(const char *fn)
         {
             unsigned char buffer[4];
             std::ifstream inFILE(fn, std::ios::binary);
@@ -45,10 +45,9 @@ namespace framework
             inFILE.read((char *)buffer, 4);
             size = ByteToInt((char *)buffer, 4);
 
-            mdata = std::make_shared<std::vector<unsigned char>>();
-            mdata->resize(size);
+            mdata = new unsigned char[size];
 
-            inFILE.read((char *)mdata.get(), size);
+            inFILE.read((char *)mdata, size);
 
             return mdata;
         }
@@ -73,7 +72,7 @@ namespace framework
             return size;
         }
 
-        std::shared_ptr<std::vector<unsigned char>> data()
+        unsigned char *data()
         {
             return mdata;
         }
@@ -83,6 +82,6 @@ namespace framework
         size_t samplerate;
         size_t bps;
         size_t size;
-        std::shared_ptr<std::vector<unsigned char>> mdata;
+        unsigned char *mdata;
     };
 }
