@@ -26,7 +26,7 @@ before_script:
  - add-apt-repository ppa:pipewire-debian/pipewire-upstream
  - apt update
  - sudo apt-mark hold grub-efi-amd64-signed && sudo apt update --fix-missing && sudo apt-get upgrade -y
- - apt install cmake vulkan-tools libxkbcommon-dev libwayland-dev libvulkan-dev vulkan-validationlayers-dev spirv-tools libxcb-keysyms1-dev xorg-dev libpulse-dev libpulse-mainloop-glib0 libpipewire-0.3-dev -y
+ - apt install build-essential cmake vulkan-tools libxkbcommon-dev libwayland-dev libvulkan-dev vulkan-validationlayers-dev spirv-tools libxcb-keysyms1-dev xorg-dev libpulse-dev libpulse-mainloop-glib0 libpipewire-0.3-dev -y
 
 stages:          # List of stages for jobs, and their order of execution
   - build
