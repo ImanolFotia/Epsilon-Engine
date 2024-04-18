@@ -22,6 +22,6 @@ stages:          # List of stages for jobs, and their order of execution
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
-    - cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DIS_CI_ENV=TRUE
+    - cmake -B $CI_PROJECT_PATH/build -DCMAKE_BUILD_TYPE=Relase -DIS_CI_ENV=TRUE
     - echo "Compile complete."
 
