@@ -527,6 +527,8 @@ install(DIRECTORY ${images} DESTINATION "bin/assets")
 
 if(NOT ${IS_CI_ENV})
     message("Adding sub projects")
+    add_subdirectory(projects/TowerDefense)
+    add_subdirectory(projects/UIApp)
     add_subdirectory(examples/bsp)
     add_subdirectory(examples/chess)
 endif()
