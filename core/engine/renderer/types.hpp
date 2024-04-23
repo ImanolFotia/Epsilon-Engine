@@ -607,7 +607,8 @@ namespace engine
             return *this;
         }*/
 
-        RenderPassFactory index(size_t index) {
+        RenderPassFactory index(size_t index)
+        {
             info.index = index;
             return *this;
         }
@@ -768,7 +769,8 @@ namespace engine
     {
 
         MemoryBarrierHint memoryBarrierHint{};
-        engine::Ref<Texture> image;
+        std::vector<std::string> image;
+        std::vector<engine::Ref<Buffer>> buffer;
     };
 
     struct ComputeShaderInfo

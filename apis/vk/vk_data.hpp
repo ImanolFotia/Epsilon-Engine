@@ -188,7 +188,8 @@ namespace vk
 		uint16_t groupCountZ = 1;
 		std::vector<VulkanMemoryBarrier> memoryBarrier;
 		std::vector<VkImageMemoryBarrier> imageMemoryBarrier;
-		bool hasMemoryBarrier = false;
+		std::vector<VkBufferMemoryBarrier> bufferMemoryBarrier;
+		bool hasBufferMemoryBarrier = false;
 		bool hasImageBarrier = false;
 	};
 
