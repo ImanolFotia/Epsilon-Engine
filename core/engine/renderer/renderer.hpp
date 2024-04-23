@@ -96,6 +96,10 @@ namespace engine
 
         virtual void End(glm::vec3 &v) = 0;
 
+        virtual void BeginCompute() = 0;
+
+        virtual void EndCompute() = 0;
+
         virtual void Flush(Ref<RenderPass>, engine::DrawType) = 0;
 
         virtual void UpdateRenderPassUniforms(Ref<RenderPass> renderPassRef, BindingIndex index, const void *data) = 0;

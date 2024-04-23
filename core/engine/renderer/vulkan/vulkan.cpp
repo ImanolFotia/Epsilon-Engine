@@ -224,35 +224,8 @@ namespace engine
 		m_pFrame.AddComputeDispatch();
 		vk::VulkanComputeShader *computeShader = m_pResourceManagerRef->computeShaderPool.get(computeShaderRef);
 
-		VkCommandBufferBeginInfo beginInfo{};
-		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-
-		if (vkBeginCommandBuffer(m_pFrame.ComputeCommandBuffer(), &beginInfo) != VK_SUCCESS)
+		if (computeShader->hasImageBarrier || computeShader->hasBufferMemoryBarrier)
 		{
-			throw std::runtime_error("failed to begin recording command buffer!");
-		}
-
-		{
-			auto pass = m_pResourceManagerRef->renderPassPool.get(std::hash<std::string>{}("DepthPrePass"));
-			auto texture = pass->renderPassChain.Textures.at(0);
-
-			VkImageSubresourceRange subresourceRange;
-			subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
-			subresourceRange.baseMipLevel = 0;
-			subresourceRange.levelCount = 1;
-			subresourceRange.baseArrayLayer = 0;
-			subresourceRange.layerCount = 1;
-
-			VkImageMemoryBarrier imageMemoryBarrier = {};
-			imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-			imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-			imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-			imageMemoryBarrier.image = texture.image;
-			imageMemoryBarrier.subresourceRange = {VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT, 0, 1, 0, 1};
-			imageMemoryBarrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-			imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-			imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-			imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 
 			vkCmdPipelineBarrier(
 				m_pFrame.ComputeCommandBuffer(),
@@ -261,8 +234,8 @@ namespace engine
 				VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
 				0,
 				0, nullptr,
-				0, nullptr,
-				1, &imageMemoryBarrier);
+				computeShader->bufferMemoryBarrier.size(), computeShader->bufferMemoryBarrier.data(),
+				computeShader->imageMemoryBarrier.size(), computeShader->imageMemoryBarrier.data());
 		}
 
 		vkCmdBindPipeline(m_pFrame.ComputeCommandBuffer(), VK_PIPELINE_BIND_POINT_COMPUTE, computeShader->pipeline.computePipeline);
@@ -275,7 +248,22 @@ namespace engine
 								&bg->descriptorSets[m_pCurrentFrame], 0, 0);
 
 		vkCmdDispatch(m_pFrame.ComputeCommandBuffer(), computeShader->groupCountX, computeShader->groupCountY, computeShader->groupCountZ);
+	}
 
+	void VulkanRenderer::BeginCompute()
+	{
+
+		VkCommandBufferBeginInfo beginInfo{};
+		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+
+		if (vkBeginCommandBuffer(m_pFrame.ComputeCommandBuffer(), &beginInfo) != VK_SUCCESS)
+		{
+			throw std::runtime_error("failed to begin recording command buffer!");
+		}
+	}
+
+	void VulkanRenderer::EndCompute()
+	{
 		if (vkEndCommandBuffer(m_pFrame.ComputeCommandBuffer()) != VK_SUCCESS)
 		{
 			throw std::runtime_error("failed to record command buffer!");

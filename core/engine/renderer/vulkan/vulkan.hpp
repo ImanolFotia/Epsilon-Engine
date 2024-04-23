@@ -79,6 +79,10 @@ namespace engine
 
         void End(glm::vec3 &v) override;
 
+        void BeginCompute() override;
+
+        void EndCompute() override;
+
         void Flush(engine::Ref<engine::RenderPass>, engine::DrawType) override;
 
         void Cleanup() override;
