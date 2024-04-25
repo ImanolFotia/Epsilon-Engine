@@ -87,7 +87,7 @@ namespace engine
 
         void Cleanup() override;
 
-        void UpdateRenderPassUniforms(Ref<RenderPass>, BindingIndex, const void *);
+        void UpdateRenderPassUniforms(Ref<RenderPass>, BindingIndex, const void *) override;
 
         void pUpdateUniformBuffer(const vk::VulkanBuffer &, const void *);
 
