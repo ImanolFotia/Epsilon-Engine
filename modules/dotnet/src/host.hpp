@@ -18,10 +18,11 @@ namespace dotnet
         void Load(std::wstring argv)
         {
 
-            assembly = DotnetAssembly(argv.c_str(), L"EpsilonSharp");
+            assembly = DotnetAssembly(convert_string(argv), STR("EpsilonSharp"));
         }
 
-        static void errorFunc(const char_t* msg) {
+        static void errorFunc(const char_t *msg)
+        {
             wprintf(L"%s", msg);
         }
 
@@ -79,7 +80,7 @@ namespace dotnet
             int rc = get_hostfxr_path(buffer, &buffer_size, nullptr);
             if (rc != 0)
                 return false;
-           
+
             // Load hostfxr and get desired exports
             void *lib = loadLibrary(buffer);
             init_fptr = (hostfxr_initialize_for_runtime_config_fn)getExport(lib, "hostfxr_initialize_for_runtime_config");
@@ -87,7 +88,7 @@ namespace dotnet
             get_runtime_properties = (hostfxr_get_runtime_properties_fn)getExport(lib, "hostfxr_get_runtime_properties");
             close_fptr = (hostfxr_close_fn)getExport(lib, "hostfxr_close");
             error_writer = (hostfxr_error_writer_fn)getExport(lib, "hostfxr_set_error_writer");
-            //FreeLibrary((HMODULE)lib);
+            // FreeLibrary((HMODULE)lib);
 
             return (init_fptr && get_delegate_fptr && close_fptr && get_runtime_properties && error_writer);
         }

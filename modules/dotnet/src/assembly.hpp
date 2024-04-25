@@ -25,7 +25,7 @@ namespace dotnet
             auto size = ::GetFullPathNameW(m_pPath.c_str(), sizeof(host_path) / sizeof(char_t), host_path, nullptr);
             assert(size != 0);
 #else
-            auto resolved = realpath(argv[0], host_path);
+            auto resolved = realpath((m_pPath + DIR_SEPARATOR + m_pName + STR(".runtimeconfig.json")).c_str(), host_path);
             assert(resolved != nullptr);
 #endif
 
@@ -40,7 +40,7 @@ namespace dotnet
 
         string_t resolveRuntimeConfig()
         {
-            return m_pPath + m_pName + L".runtimeconfig.json";
+            return m_pPath + DIR_SEPARATOR + m_pName + STR(".runtimeconfig.json");
         }
 
     public:
@@ -67,9 +67,16 @@ namespace dotnet
         {
             // std::cout << (char *)dotnetlib_path.c_str() << "\n";
             const string_t dotnet_type = m_pName + STR(".Editor, ") + m_pName;
-            wprintf(dotnet_type.c_str());
-            printf("\n");
-            const string_t dotnet_type_method = name.c_str();
+            // wprintf(dotnet_type.c_str());
+            // printf("\n");
+
+            // setup converter
+            using convert_type = std::codecvt_utf8<wchar_t>;
+            std::wstring_convert<convert_type, wchar_t> converter;
+
+            // use converter (.to_bytes: wstr->str, .from_bytes: str->wstr)
+            std::string converted_str = converter.to_bytes(name);
+            const string_t dotnet_type_method = converted_str.c_str();
 
             // Function pointer to managed delegate
             component_entry_point_fn hello = nullptr;
@@ -94,10 +101,10 @@ namespace dotnet
         }
 
         template <typename ReturnType, class... Args>
-        void LoadDelegate(string_t method_name, string_t delegate_type_name, std::wstring namespaces, bool unmanagedcallersonly = false)
+        void LoadDelegate(string_t method_name, string_t delegate_type_name, string_t namespaces, bool unmanagedcallersonly = false)
         {
 
-            const string_t dotnet_type = m_pName + L"." + namespaces + L", " + m_pName;
+            const string_t dotnet_type = m_pName + STR(".") + namespaces + STR(", ") + m_pName;
             // const char_t *dotnet_type_method = name.c_str();
 
 #ifdef NET5_0
@@ -120,16 +127,16 @@ namespace dotnet
             int rc = load_assembly_and_get_function_pointer(
                 dotnetlib_path.c_str(),
                 dotnet_type.c_str(),
-                method_name.c_str(),                                                                         // L"CustomEntryPoint" /*method_name*/
-                unmanagedcallersonly ? UNMANAGEDCALLERSONLY_METHOD : (m_pName + L"." + namespaces + STR("+") + delegate_type_name + STR(", ") + m_pName).c_str(), // L"DotNetLib.Lib+CustomEntryPointDelegate, DotNetLib" /*delegate_type_name*/
+                method_name.c_str(),                                                                                                                                  // L"CustomEntryPoint" /*method_name*/
+                unmanagedcallersonly ? UNMANAGEDCALLERSONLY_METHOD : (m_pName + STR(".") + namespaces + STR("+") + delegate_type_name + STR(", ") + m_pName).c_str(), // L"DotNetLib.Lib+CustomEntryPointDelegate, DotNetLib" /*delegate_type_name*/
                 nullptr,
                 (void **)&custom);
 
-            wprintf((m_pName + L"." + namespaces + STR("+") + delegate_type_name + STR(", ") + m_pName).c_str());
+            printf((m_pName + STR(".") + namespaces + STR("+") + delegate_type_name + STR(", ") + m_pName).c_str());
 
             assert(rc == 0 && custom != nullptr && "Failure: load_assembly_and_get_function_pointer()");
 #endif
-            CustomFunctionPointers.insert({method_name, (void *)custom});
+            CustomFunctionPointers.insert({convert_wstring(method_name), (void *)custom});
         }
         template <typename Args>
         void Invoke(std::wstring delegate, Args args)
@@ -138,9 +145,10 @@ namespace dotnet
         }
 
         template <typename ReturnType, class... Args>
-        decltype(auto) getFunction(const std::wstring& name) {
+        decltype(auto) getFunction(const std::wstring &name)
+        {
 
-            typedef ReturnType(CORECLR_DELEGATE_CALLTYPE* custom_entry_point_fn)(Args... args);
+            typedef ReturnType(CORECLR_DELEGATE_CALLTYPE * custom_entry_point_fn)(Args... args);
             custom_entry_point_fn func_ptr = reinterpret_cast<custom_entry_point_fn>(CustomFunctionPointers.at(name));
 
             return func_ptr;

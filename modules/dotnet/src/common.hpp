@@ -39,11 +39,50 @@
 
 #endif
 
+#ifdef WINDOWS
+#include <Windows.h>
+
 #define STR(s) L##s
 #define CH(c) L##c
+#define DIR_SEPARATOR L'\\'
+
+#define string_compare wcscmp
+
+#else
+#include <dlfcn.h>
+#include <limits.h>
+
+#define STR(s) s
+#define CH(c) c
+#define DIR_SEPARATOR '/'
+#define MAX_PATH PATH_MAX
+
+#define string_compare strcmp
+
+#endif
 
 namespace dotnet
 {
+
+    static std::string convert_string(const std::wstring &str)
+    {
+        // setup converter
+        using convert_type = std::codecvt_utf8<wchar_t>;
+        std::wstring_convert<convert_type, wchar_t> converter;
+
+        // use converter (.to_bytes: wstr->str, .from_bytes: str->wstr)
+        std::string converted_str = converter.to_bytes(str);
+        return converted_str;
+    }
+
+    static std::wstring convert_wstring(const std::string &str)
+    {
+
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        std::wstring wide = converter.from_bytes(str);
+
+        return wide;
+    }
 
     static void callback()
     {
