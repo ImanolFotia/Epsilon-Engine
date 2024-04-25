@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.6.0)
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 
 set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 set(DBUILD_SHARED_LIBS ON CACHE BOOL "Build as a shared library")
@@ -443,7 +443,7 @@ if(WIN32)
 else()
     target_link_libraries(${PROJECT_NAME} PRIVATE openal)
 
-    set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O2 -fsized-deallocation")
 endif()
 
 
@@ -531,6 +531,7 @@ if(NOT ${IS_CI_ENV})
     add_subdirectory(projects/UIApp)
     add_subdirectory(examples/bsp)
     add_subdirectory(examples/chess)
+    add_subdirectory(editor)
 endif()
 #if(${Mono_FOUND})
 #add_subdirectory(examples/mono-managed)
