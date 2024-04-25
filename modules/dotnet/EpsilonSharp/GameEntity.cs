@@ -42,7 +42,7 @@ namespace EpsilonSharp
 
         static Epsilon()
         {
-            if(isInstance == true)
+            if (isInstance == true)
             {
                 throw new Exception("Double Epsilon initialization!");
             }
@@ -55,9 +55,10 @@ namespace EpsilonSharp
 
             Console.WriteLine("statically instantiating Epsilon");
 
-            string pluginPath = Directory.GetCurrentDirectory() + "\\assets\\scripts\\Game\\bin\\x64\\Debug\\net8.0\\Game.dll";
+            string pluginPath = Directory.GetCurrentDirectory() + "/assets/scripts/Game/bin/x64/Debug/net8.0/Game.dll";
+            Console.WriteLine("Plugin path: {0}", pluginPath);
 
-            watcher = new FileSystemWatcher(Directory.GetCurrentDirectory() + "\\assets\\scripts\\Game\\bin\\x64\\Debug\\net8.0");
+            watcher = new FileSystemWatcher(Directory.GetCurrentDirectory() + "/assets/scripts/Game/bin/x64/Debug/net8.0");
             watcher.NotifyFilter = NotifyFilters.Attributes
                                  | NotifyFilters.CreationTime
                                  | NotifyFilters.DirectoryName
@@ -82,6 +83,8 @@ namespace EpsilonSharp
            //     Debugger.Launch();
 #endif
 
+            //console.WriteLine(assembly.);
+
             Console.WriteLine(Directory.GetCurrentDirectory());
             m_pAssemblies.Add(assembly);
         }
@@ -105,9 +108,9 @@ namespace EpsilonSharp
         public unsafe static void setKeyboardState(Keyboard inKeyboard)
         {
             keyboard = inKeyboard;
-            for(int i = 0; i < 1024; i++)
+            for (int i = 0; i < 1024; i++)
             {
-                if(keyboard.KEYS[i] == 1)
+                if (keyboard.KEYS[i] == 1)
                     Console.WriteLine(i);
             }
         }
@@ -126,15 +129,18 @@ namespace EpsilonSharp
         {
             try
             {
+
                 string objType = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ?
                 Marshal.PtrToStringUni(o_name) :
                 Marshal.PtrToStringUTF8(o_name);
 
                 string nodeName = Marshal.PtrToStringAnsi(node_name);
+                    Console.WriteLine(nodeName);
 
                 Type objectType = null;
                 foreach (var assembly in m_pAssemblies)
                 {
+                    Console.WriteLine(objType);
                     objectType = Utils.SearchTypeInAssembly(assembly, objType);
                     if (objectType != null) break;
                 }
@@ -304,7 +310,7 @@ namespace EpsilonSharp
         public static void ReloadAssemblies()
         {
             List<BridgeType> oldObjectList = new List<BridgeType>(); ;
-            foreach(var obj in m_pBridgeDictionary.ToDictionary())
+            foreach (var obj in m_pBridgeDictionary.ToDictionary())
             {
                 dynamic managedObject = obj.Value;
 
@@ -323,7 +329,7 @@ namespace EpsilonSharp
                 t.Rotation.k = managedObject.transform.Rotation.k;
                 t.Rotation.w = managedObject.transform.Rotation.w;
 
-                oldObjectList.Add(item: new BridgeType { name = managedObject.Name, type = managedObject.GetType(), UnmanagedPtr = obj.Key, transform = t } );
+                oldObjectList.Add(item: new BridgeType { name = managedObject.Name, type = managedObject.GetType(), UnmanagedPtr = obj.Key, transform = t });
                 GCHandle.FromIntPtr(managedObject._NodeManagerPtr).Free();
                 GCHandle.FromIntPtr(managedObject.ManagedPtr).Free();
             }
@@ -334,7 +340,7 @@ namespace EpsilonSharp
             m_pBridgeDictionary = new BridgeDictionary();
 
             domainMgr.Unload();
-           // while(weakReference.IsAlive)
+            // while(weakReference.IsAlive)
             {
                 GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
                 GC.WaitForPendingFinalizers();
@@ -356,7 +362,7 @@ namespace EpsilonSharp
 
 
                 Type objectType = null;
-                    objectType = Utils.SearchTypeInAssembly(assembly, oldObject.type.FullName);
+                objectType = Utils.SearchTypeInAssembly(assembly, oldObject.type.FullName);
 
                 var ctor = objectType.GetConstructor(
                         BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance,
@@ -364,8 +370,8 @@ namespace EpsilonSharp
 
                 dynamic obj = RuntimeHelpers.GetUninitializedObject(objectType);
 
-                _ = ctor!.Invoke(obj, null); 
-               // m_pBridgeDictionary.
+                _ = ctor!.Invoke(obj, null);
+                // m_pBridgeDictionary.
                 m_pBridgeDictionary.Insert(oldObject.UnmanagedPtr, obj);
 
                 string jsonObj = JsonSerializer.Serialize(objectType.ToPropertyDictionary((object)obj));

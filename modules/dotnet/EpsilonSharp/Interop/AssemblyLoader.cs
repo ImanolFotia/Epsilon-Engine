@@ -34,11 +34,11 @@ public class AssemblyLoader : AssemblyLoadContext
             using var dllFile = File.Open(assemblyPath, FileMode.Open, FileAccess.Read, FileShare.Read);
             string pdbPath = Path.ChangeExtension(assemblyPath, ".pdb");
 
-            if (File.Exists(pdbPath))
+            /*if (File.Exists(pdbPath))
             {
                 using var pdbFile = File.Open(pdbPath, FileMode.Open, FileAccess.Read, FileShare.Read);
                 return LoadFromStream(dllFile, pdbFile);
-            }
+            }*/
 
             return LoadFromStream(dllFile);
         }
