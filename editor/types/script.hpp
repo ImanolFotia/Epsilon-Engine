@@ -5,6 +5,7 @@
 
 #include "../ui/ui_element.hpp"
 #include "transform.hpp"
+#include <modules/dotnet/src/common.hpp>
 #include <modules/dotnet/headers/nethost.hpp>
 
 namespace Editor
@@ -41,7 +42,7 @@ namespace Editor
 
 	struct EntityArgs
 	{
-		const char_t *objectType = L"Game.GameObject";
+		const char_t *objectType = STR("Game.GameObject");
 		Transform transform;
 		int id;
 	};

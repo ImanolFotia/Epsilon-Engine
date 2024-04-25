@@ -21,7 +21,6 @@
 #include "ui/assets.hpp"
 #include "ui/postprocess.hpp"
 
-
 #include "types/transform.hpp"
 #include "utils/transform.hpp"
 
@@ -43,11 +42,13 @@
 
 #include "renderpasses/setup_graphics.hpp"
 
-namespace Editor {
-	class Editor : public Epsilon::Epsilon {
+namespace Editor
+{
+	class Editor : public Epsilon::Epsilon
+	{
 
 		engine::Ref<engine::RenderPass> m_DefaultRenderPass;
-		engine::Ref<engine::RenderPass> m_ForwardRenderPass; 
+		engine::Ref<engine::RenderPass> m_ForwardRenderPass;
 
 		std::shared_ptr<BrushManager> m_BrushManager;
 
@@ -78,7 +79,6 @@ namespace Editor {
 		size_t m_GrassBindGroup;
 		size_t m_GridBindGroup;
 
-
 		std::shared_ptr<utils::Camera> m_Camera;
 		ShaderData shaderData;
 
@@ -94,88 +94,100 @@ namespace Editor {
 
 		Renderpasses::TAARenderPasses m_TAAPasses;
 
-
-		engine::Scene::SceneEntity* selected_entity = nullptr;
+		engine::Scene::SceneEntity *selected_entity = nullptr;
 
 		std::shared_ptr<engine::NodeBase> m_SelectedNode = nullptr;
 		std::shared_ptr<GraphicsHelper> m_GraphicsHelper;
 		std::shared_ptr<engine::AssetManager> m_AssetManager;
 
-		struct tiny_keyboard {
-			tiny_keyboard() {
+		struct tiny_keyboard
+		{
+			tiny_keyboard()
+			{
 				std::memset(keys, 0, 1024 * sizeof(int));
 			}
 
-			void convert() {
-				for (int i = 0; i < 1024; i++) {
+			void convert()
+			{
+				for (int i = 0; i < 1024; i++)
+				{
 					keys[i] = (int)framework::Input::KeyBoard::KEYS[i];
 				}
 			}
 			int keys[1024];
 		};
 
-		void UpdateReferenceCallback(engine::Scene* scene, engine::Node<engine::Scene::SceneEntity>* scene_ptr, void* managed_ref) {
+		void UpdateReferenceCallback(engine::Scene *scene, engine::Node<engine::Scene::SceneEntity> *scene_ptr, void *managed_ref)
+		{
 			auto node = scene->getNode(scene_ptr->Index());
 			auto script = scene->getChild<EntityScript>(node);
 			script->data.ManagedPtr = managed_ref;
 		}
 
-		void pLoadDotnet() {
+		void pLoadDotnet()
+		{
 
-			host.Load(L"modules\\dotnet\\EpsilonSharp\\bin\\x64\\Debug\\net8.0\\");//"assets\\scripts\\EpsilonSharp\\bin\\x64\\Debug\\net7.0\\");
-			//host.Load(L"assets\\scripts\\Game\\bin\\x64\\Debug\\net8.0\\");//"assets\\scripts\\EpsilonSharp\\bin\\x64\\Debug\\net7.0\\");
+			host.Load(L"./modules/dotnet/EpsilonSharp/bin/x64/Debug/net8.0");
+			// host.Load(L"modules\\dotnet\\EpsilonSharp\\bin\\x64\\Debug\\net8.0\\"); //"assets\\scripts\\EpsilonSharp\\bin\\x64\\Debug\\net7.0\\");
+			//  host.Load(L"assets\\scripts\\Game\\bin\\x64\\Debug\\net8.0\\");//"assets\\scripts\\EpsilonSharp\\bin\\x64\\Debug\\net7.0\\");
 
-			typedef void (*func_ptr)(engine::Node<engine::Scene::SceneEntity>*, int, Transform);
-			typedef void (*func_ptr_2)(engine::Scene*, engine::Node<engine::Scene::SceneEntity>*, void*);
+			typedef void (*func_ptr)(engine::Node<engine::Scene::SceneEntity> *, int, Transform);
+			typedef void (*func_ptr_2)(engine::Scene *, engine::Node<engine::Scene::SceneEntity> *, void *);
 
-			host.assembly.LoadDelegate<void, void*, engine::Node<engine::Scene::SceneEntity>*>(L"setEntityTransform", L"setEntityTransformDelegate", L"Epsilon");
-			host.assembly.LoadDelegate<void*, void*, void*, const char*>(L"CreateEntity", L"", L"Epsilon", true);
-			host.assembly.LoadDelegate<void, void*, float>(L"UpdateEntity", L"", L"Epsilon", true);
-			host.assembly.LoadDelegate<void, func_ptr>(L"registerSetTransform", L"registerSetTransformDelegate", L"Epsilon");
-			host.assembly.LoadDelegate<const char*, void*>(L"getEntityFields", L"getEntityFieldsDelegate", L"Epsilon");
-			host.assembly.LoadDelegate<void, engine::Scene*>(L"setScenePtr", L"setScenePtrDelegate", L"Epsilon");
-			host.assembly.LoadDelegate<void, const char*, float>(L"SetProperty", L"SetPropertyDelegate", L"Epsilon", true);
-			host.assembly.LoadDelegate<void, const char*, bool>(L"SetPropertyBool", L"SetPropertyBoolDelegate", L"Epsilon", true);
-			host.assembly.LoadDelegate<void>(L"ReloadAssemblies", L"ReloadAssembliesDelegate", L"Epsilon");
-			host.assembly.LoadDelegate<void, func_ptr_2>(L"registerUpdateReferenceCallback", L"registerUpdateReferenceCallbackDelegate", L"Epsilon");
+			host.assembly.LoadDelegate<void, void *, engine::Node<engine::Scene::SceneEntity> *>(STR("setEntityTransform"), STR("setEntityTransformDelegate"), STR("Epsilon"));
+			host.assembly.LoadDelegate<void *, void *, void *, const char *>(STR("CreateEntity"), STR(""), STR("Epsilon"), true);
+			host.assembly.LoadDelegate<void, void *, float>(STR("UpdateEntity"), STR(""), STR("Epsilon"), true);
+			host.assembly.LoadDelegate<void, func_ptr>(STR("registerSetTransform"), STR("registerSetTransformDelegate"), STR("Epsilon"));
+			host.assembly.LoadDelegate<const char *, void *>(STR("getEntityFields"), STR("getEntityFieldsDelegate"), STR("Epsilon"));
+			host.assembly.LoadDelegate<void, engine::Scene *>(STR("setScenePtr"), STR("setScenePtrDelegate"), STR("Epsilon"));
+			host.assembly.LoadDelegate<void, const char *, float>(STR("SetProperty"), STR("SetPropertyDelegate"), STR("Epsilon"), true);
+			host.assembly.LoadDelegate<void, const char *, bool>(STR("SetPropertyBool"), STR("SetPropertyBoolDelegate"), STR("Epsilon"), true);
+			host.assembly.LoadDelegate<void>(STR("ReloadAssemblies"), STR("ReloadAssembliesDelegate"), STR("Epsilon"));
+			host.assembly.LoadDelegate<void, func_ptr_2>(STR("registerUpdateReferenceCallback"), STR("registerUpdateReferenceCallbackDelegate"), STR("Epsilon"));
 
-			host.assembly.LoadDelegate<void, tiny_keyboard>(L"setKeyboardState", L"setKeyboardStateDelegate", L"Epsilon");
+			host.assembly.LoadDelegate<void, tiny_keyboard>(STR("setKeyboardState"), STR("setKeyboardStateDelegate"), STR("Epsilon"));
 
-			host.assembly.Invoke<void>(L"registerSetTransform", (func_ptr)[](engine::Node<engine::Scene::SceneEntity>* scene_ptr, int entity_id, Transform transform) {
-				if (scene_ptr != nullptr) {
+			host.assembly.Invoke<void>(L"registerSetTransform", (func_ptr)[](engine::Node<engine::Scene::SceneEntity> * scene_ptr, int entity_id, Transform transform) {
+				if (scene_ptr != nullptr)
+				{
 					scene_ptr->data.transform = transform.toMat4();
-				}
-				});
+				} });
 
-			host.assembly.Invoke<void>(L"registerUpdateReferenceCallback", (func_ptr_2)[](engine::Scene* scene, engine::Node<engine::Scene::SceneEntity>* scene_ptr, void* managed_ref) {
-				
-				if (scene == nullptr || scene_ptr == nullptr || managed_ref == nullptr) return;
-				
+			host.assembly.Invoke<void>(L"registerUpdateReferenceCallback", (func_ptr_2)[](engine::Scene * scene, engine::Node<engine::Scene::SceneEntity> * scene_ptr, void *managed_ref) {
+				if (scene == nullptr || scene_ptr == nullptr || managed_ref == nullptr)
+					return;
+
 				auto node = scene->getNode(scene_ptr->Index());
 				auto script = scene->getChild<EntityScript>(node);
-				script->data.ManagedPtr = managed_ref;
+				script->data.ManagedPtr = managed_ref; });
 
-			});
-
-			m_SceneNodes.addEntityCallback = [this]() {
-				//pAddDefaultCube(glm::vec3(0.0f));
+			m_SceneNodes.addEntityCallback = [this]()
+			{
+				// pAddDefaultCube(glm::vec3(0.0f));
 				auto node = Utils::CreateNode(glm::mat4(1.0f), m_Scene);
 				m_SceneNodes.RegisterIntoEditor("Node_" + std::to_string(node->Index()), node);
 			};
 		}
+
 	public:
-		Editor(const std::string name) : Epsilon::Epsilon(name) {
-			this->setOnCreate([this] { OnCreate(); });
-			this->setOnRender([this] { OnRender(); });
-			this->setOnExit([this] { OnExit(); });
-			this->setOnUpdate([this] {OnUpdate(); });
+		Editor(const std::string name) : Epsilon::Epsilon(name)
+		{
+			this->setOnCreate([this]
+							  { OnCreate(); });
+			this->setOnRender([this]
+							  { OnRender(); });
+			this->setOnExit([this]
+							{ OnExit(); });
+			this->setOnUpdate([this]
+							  { OnUpdate(); });
 
 			pLoadDotnet();
 		}
 
 		void OnRender();
 
-		void OnExit() {
+		void OnExit()
+		{
 
 			m_AssetManager->Destroy();
 			getContext()->CleanUp();
