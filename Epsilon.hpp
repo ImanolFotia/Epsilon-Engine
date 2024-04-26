@@ -27,7 +27,6 @@
 
 #include "core/engine/renderer/resource_manager.hpp"
 #include "core/engine/renderer/vulkan/resource_manager.hpp"
-#include "modules/mono/mono-instance.hpp"
 
 #include <core/engine/scene/scene.hpp>
 #include <core/engine/scene/asset_manager.hpp>
