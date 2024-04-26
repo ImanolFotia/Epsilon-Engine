@@ -20,6 +20,7 @@ Installers and binaries will be available soon
 | Table of Contents | 
 | :--- |
 | [Dependencies](#dependencies) | 
+| [Building](#building) | 
 | [Features](#features)| 
 | [Software & Hardware Succesfully Tested](#software_and_hardware_succesfully_tested)| 
 | [Contributors](#contributors)|  
@@ -70,6 +71,8 @@ Be careful, Visual Studio might decide that the primary project is 'EpsilonSharp
 
 ### Linux
 
+* You'll need to install **LunarG's Vulkan SDK**, which you can download [here](https://vulkan.lunarg.com/sdk/home#windows) (be sure it's in the Path)
+
 **Clone the repo**
 
 ```
@@ -102,27 +105,6 @@ sudo apt install vulkan-tools libxkbcommon-dev libwayland-dev libvulkan-dev vulk
 
 ```
 sudo dnf install vulkan-tools libxcb-devel wayland-devel vulkan-validation-layers-devel spirv-tools-devel xcb-util-keysyms-devel xorg-x11-server-Xwayland-devel pulseaudio-libs-devel
-```
-
-Along with this, you may require to add Vulkan to your path so CMake can find it
-
-Add the following to your `.bashrc` file or create a bash file and use `source {filename}` in your `.bashrc` file (or whatever file your terminal loads)
-
-```
-PATH="/usr/lib64/libvulkan.so:$PATH" 
-ARCH="$(uname -m)"
-VULKAN_SDK="$(dirname "$(readlink -f "${BASH_SOURCE:-$_}" )" )/VulkanSDK/$ARCH"
-export VULKAN_SDK
-PATH="$VULKAN_SDK/bin:$PATH"
-export PATH
-LD_LIBRARY_PATH="$VULKAN_SDK/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-export LD_LIBRARY_PATH
-VK_ADD_LAYER_PATH="$VULKAN_SDK/etc/vulkan/explicit_layer.d${VK_ADD_LAYER_PATH:+:$VK_ADD_LAYER_PATH}"
-export VK_ADD_LAYER_PATH
-if [ -n "$VK_LAYER_PATH" ]; then
-    echo "Unsetting VK_LAYER_PATH environment variable for SDK usage"
-    unset VK_LAYER_PATH
-fi
 ```
 
 ### Build

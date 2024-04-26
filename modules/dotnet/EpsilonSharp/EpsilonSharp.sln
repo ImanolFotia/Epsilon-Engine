@@ -9,26 +9,26 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "common", "..\common\common.
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
-		Release|Any CPU = Release|Any CPU
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2E1DC098-5224-451F-8B42-3299BA6EF905}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2E1DC098-5224-451F-8B42-3299BA6EF905}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E1DC098-5224-451F-8B42-3299BA6EF905}.Debug|x64.ActiveCfg = Debug|x64
 		{2E1DC098-5224-451F-8B42-3299BA6EF905}.Debug|x64.Build.0 = Debug|x64
-		{2E1DC098-5224-451F-8B42-3299BA6EF905}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2E1DC098-5224-451F-8B42-3299BA6EF905}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E1DC098-5224-451F-8B42-3299BA6EF905}.Debug|x64.ActiveCfg = Debug|x64
+		{2E1DC098-5224-451F-8B42-3299BA6EF905}.Debug|x64.Build.0 = Debug|x64
 		{2E1DC098-5224-451F-8B42-3299BA6EF905}.Release|x64.ActiveCfg = Release|x64
 		{2E1DC098-5224-451F-8B42-3299BA6EF905}.Release|x64.Build.0 = Release|x64
-		{84E4A249-B4E7-4BD4-84D7-7BCAA4628E73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{84E4A249-B4E7-4BD4-84D7-7BCAA4628E73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E1DC098-5224-451F-8B42-3299BA6EF905}.Release|x64.ActiveCfg = Release|x64
+		{2E1DC098-5224-451F-8B42-3299BA6EF905}.Release|x64.Build.0 = Release|x64
 		{84E4A249-B4E7-4BD4-84D7-7BCAA4628E73}.Debug|x64.ActiveCfg = Debug|x64
 		{84E4A249-B4E7-4BD4-84D7-7BCAA4628E73}.Debug|x64.Build.0 = Debug|x64
-		{84E4A249-B4E7-4BD4-84D7-7BCAA4628E73}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{84E4A249-B4E7-4BD4-84D7-7BCAA4628E73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84E4A249-B4E7-4BD4-84D7-7BCAA4628E73}.Debug|x64.ActiveCfg = Debug|x64
+		{84E4A249-B4E7-4BD4-84D7-7BCAA4628E73}.Debug|x64.Build.0 = Debug|x64
+		{84E4A249-B4E7-4BD4-84D7-7BCAA4628E73}.Release|x64.ActiveCfg = Release|x64
+		{84E4A249-B4E7-4BD4-84D7-7BCAA4628E73}.Release|x64.Build.0 = Release|x64
 		{84E4A249-B4E7-4BD4-84D7-7BCAA4628E73}.Release|x64.ActiveCfg = Release|x64
 		{84E4A249-B4E7-4BD4-84D7-7BCAA4628E73}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
