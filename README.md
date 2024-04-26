@@ -104,7 +104,7 @@ sudo apt install vulkan-tools libxkbcommon-dev libwayland-dev libvulkan-dev vulk
 #### Fedora/RedHat (dnf)
 
 ```
-sudo dnf install vulkan-tools libxcb-devel wayland-devel vulkan-validation-layers-devel spirv-tools-devel xcb-util-keysyms-devel xorg-x11-server-Xwayland-devel pulseaudio-libs-devel
+sudo dnf install vulkan-tools libxcb-devel wayland-devel vulkan-validation-layers-devel spirv-tools-devel xcb-util-keysyms-devel xorg-x11-server-Xwayland-devel pulseaudio-libs-devel libXinerama-devel libXi-devel libXcursor-devel
 ```
 
 ### Build
