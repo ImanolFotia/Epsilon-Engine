@@ -21,9 +21,10 @@ namespace ChessApp
 													 m_pMoveAudioObject.audioFile.getFileSize(),
 													 m_pMoveAudioObject.audioFile.getBPS(),
 													 m_pMoveAudioObject.audioFile.getSampleRate(),
-													 m_pMoveAudioObject.audioFile.data().get());
+													 m_pMoveAudioObject.audioFile.data());
 
 		m_pMoveAudioObject.source = al::createSource(m_pMoveAudioObject.buffer);
+		delete[] m_pMoveAudioObject.audioFile.data();
 
 		m_pTakeAudioObject.audioFile.Load("./assets/audio/take.wav");
 
@@ -31,9 +32,10 @@ namespace ChessApp
 													 m_pTakeAudioObject.audioFile.getFileSize(),
 													 m_pTakeAudioObject.audioFile.getBPS(),
 													 m_pTakeAudioObject.audioFile.getSampleRate(),
-													 m_pTakeAudioObject.audioFile.data().get());
+													 m_pTakeAudioObject.audioFile.data());
 
 		m_pTakeAudioObject.source = al::createSource(m_pTakeAudioObject.buffer);
+		delete[] m_pTakeAudioObject.audioFile.data();
 
 		auto files = m_pBoard.getFiles();
 
