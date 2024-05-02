@@ -90,14 +90,14 @@ namespace vk
 		{
 			if (availablePresentMode == VK_PRESENT_MODE_IMMEDIATE_KHR && vk_data.vsync == false) // VK_PRESENT_MODE_IMMEDIATE_KHR
 			{
-				return availablePresentMode;
+				return VK_PRESENT_MODE_IMMEDIATE_KHR;
 			}
 		}
 
 		if (vk_data.vsync == true)
-			return VK_PRESENT_MODE_FIFO_RELAXED_KHR;
+			return VK_PRESENT_MODE_FIFO_KHR;//VK_PRESENT_MODE_FIFO_RELAXED_KHR;
 
-		return VK_PRESENT_MODE_FIFO_KHR;
+		return VK_PRESENT_MODE_FIFO_KHR;//VK_PRESENT_MODE_FIFO_KHR;
 	}
 
 	static VkExtent2D chooseSwapExtent(framework::Window::windowType *window, const VkSurfaceCapabilitiesKHR &capabilities)
