@@ -375,6 +375,7 @@ set(PROJECT_FILES
     ${CMAKE_SOURCE_DIR}/core/framework/singleton.hpp
     ${CMAKE_SOURCE_DIR}/modules/imgui/imgui_impl_glfw.cpp
     ${CMAKE_SOURCE_DIR}/modules/imgui/imgui_impl_vulkan.cpp
+    ${CMAKE_SOURCE_DIR}/core/ui/UI.cpp
     ${THIRDPARTY_DIR}/implot/implot_items.cpp
     ${THIRDPARTY_DIR}/implot/implot.cpp
     ${IMGUI_BUILD_DIR}/imgui.cpp
@@ -530,6 +531,8 @@ if(NOT ${IS_CI_ENV})
     add_subdirectory(examples/bsp)
     add_subdirectory(examples/chess)
     add_subdirectory(editor)
+    add_subdirectory(projects/towerdefense)
+    add_subdirectory(projects/uiapp)
 endif()
 #if(${Mono_FOUND})
 #add_subdirectory(examples/mono-managed)
