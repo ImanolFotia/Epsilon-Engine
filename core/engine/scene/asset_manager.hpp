@@ -292,7 +292,7 @@ namespace engine
 
 			m_pGPUBuffers["animation_transform_buffer"] = resourceManager->createGPUBuffer("animation_transform_buffer", sizeof(GPUAnimationData) * 100, engine::BufferStorageType::STORAGE_BUFFER);
 
-			m_pGPUBuffers["entity_buffer"] = resourceManager->createGPUBuffer("entity_buffer", sizeof(ShaderEntity) * 1024, engine::BufferStorageType::STORAGE_BUFFER);
+			m_pGPUBuffers["entity_buffer"] = resourceManager->createGPUBuffer("entity_buffer", sizeof(ShaderEntity) * 256, engine::BufferStorageType::STORAGE_BUFFER);
 
 			transformBuffer.resize(vk::MAX_FRAMES_IN_FLIGHT);
 			objectBuffer.resize(vk::MAX_FRAMES_IN_FLIGHT);
@@ -344,7 +344,7 @@ namespace engine
 
 		void AddEntity(int index, ShaderEntity entity)
 		{
-			if (index >= 1024)
+			if (index >= 256)
 				return;
 			for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
 				lightBufferPtr[i][index] = entity;
