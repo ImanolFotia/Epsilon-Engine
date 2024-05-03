@@ -95,6 +95,7 @@ namespace engine::parsers {
 		if (x == "VERTEX") return ShaderModuleStage::VERTEX;
 		if (x == "COMPUTE") return ShaderModuleStage::COMPUTE;
 		if (x == "ALL") return ShaderModuleStage::ALL;
+		return ShaderModuleStage::ALL;
 	}
 
 	static VertexFormat resolveVertexFormat(const std::string& x) {
