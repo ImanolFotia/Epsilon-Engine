@@ -353,9 +353,16 @@ namespace engine
 				if (binding.type == UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER)
 				{
 					vkMaterial.slots++;
-					auto tex = createTexture(binding.textureInfo);
+					vk::VulkanTexture texture;
+
+					if(binding.textureInfo.pixels != nullptr) {
+						texture = *texPool.get(createTexture(binding.textureInfo));
+					} else {
+						texture = *texPool.get(std::hash<std::string>{}(binding.texture));
+					}
+					
 					vk::VulkanShaderBinding shaderBinding = {
-						.texture = *texPool.get(tex),
+						.texture = texture,
 						.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 						.bindingPoint = binding.binding,
 						.isRenderPassAttachment = false};

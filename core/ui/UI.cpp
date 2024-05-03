@@ -114,7 +114,7 @@ namespace UI
                                        .transform = glm::mat4(1.0f),
                                        .material_index = 0,
                                        .animation_offset = 0},
-                                   .layout_index = 0,
+                                   .layout_index = 1,
                                    .uniformIndex = 0});
 
                 draw_command.bind_group = m_pBindGroup;
@@ -759,7 +759,7 @@ namespace UI
 
         glm::vec2 text_size = textSize(text);
 
-        size = glm::vec2(100, 20);
+        size = glm::vec2(100, 10);
 
         const int num_squares = glm::min(10, (int)((val / max) * 10) + 1);
 
