@@ -30,7 +30,7 @@ Epsilon
 /.idea
 /.vscode
 /.vs
-/build
+build
 /out
 /CMakeFiles
 /assets/models/hl2
