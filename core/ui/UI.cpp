@@ -778,11 +778,11 @@ namespace UI
 
         CreateRect(sqr_position, glm::vec2(last_sqr_width, sqr_size.y), m_WhitePixelPos, m_WhitePixelPos, glm::mix(glm::vec4(1.0, 0.0, 0.0, 1.0), glm::vec4(0.0, 1.0, 0.0, 1.0), (float)i / 10));
 
-        glm::vec2 half_point = position + (size * 0.25f);
+        //glm::vec2 half_point = position + (size * 0.25f);
 
-        CreateRect(position - glm::vec2(0.0, size.y + 2), size + glm::vec2(0.0, 2), m_WhitePixelPos, m_WhitePixelPos, glm::vec4(0.0, 0.0, 0.0, 0.5));
+       // CreateRect(position - glm::vec2(0.0, size.y + 2), size + glm::vec2(0.0, 2), m_WhitePixelPos, m_WhitePixelPos, glm::vec4(0.0, 0.0, 0.0, 0.5));
 
-        Text(text, glm::vec2(half_point.x, position.y - size.y - glm::ceil(highest_character * 0.2f)), glm::vec4(1.0f), false);
+        //Text(text, glm::vec2(half_point.x, position.y - size.y - glm::ceil(highest_character * 0.2f)), glm::vec4(1.0f), false);
     }
 
     void UI::Scale(const std::string &text, int &current, int min, int max, glm::vec2 fixed_size = glm::vec2(-1.0f))
