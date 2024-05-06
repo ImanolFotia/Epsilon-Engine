@@ -42,7 +42,8 @@ build
 /modules/mono/test
 cmake-build-debug-coverage/
 cmake-build-release/
-/assets/scripts/Game
+/assets/scripts/Game/.vs
+/assets/scripts/Game/.vscode
 /assets/scripts/editor/bin
 /assets/scripts/editor/obj
 /assets/scripts/editor/assemblies
