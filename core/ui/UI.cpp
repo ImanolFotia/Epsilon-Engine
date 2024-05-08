@@ -99,9 +99,9 @@ namespace UI
                                                 });
         if (m_pResolution.x > 0)
         {
-            //m_pRenderer->BeginFrame();
-           // m_pRenderer->Begin();
-            //m_pRenderer->SetRenderPass(m_pRenderPass);
+            // m_pRenderer->BeginFrame();
+            // m_pRenderer->Begin();
+            // m_pRenderer->SetRenderPass(m_pRenderPass);
             for (int i = 0; i < commands_pushed + 1; i++)
             {
                 auto &draw_command = m_DrawLists[i];
@@ -124,10 +124,10 @@ namespace UI
 
             m_pRenderer->Flush(renderPass, engine::DrawType::NON_INDEXED);
             glm::vec3 v = glm::vec3(1.0f);
-            //m_pRenderer->End(v);
+            // m_pRenderer->End(v);
 
-            //m_pRenderer->Submit();
-            //m_pRenderer->EndFrame();
+            // m_pRenderer->Submit();
+            // m_pRenderer->EndFrame();
         }
         m_DrawLists.resize(1);
         commands_pushed = 0;
@@ -778,11 +778,11 @@ namespace UI
 
         CreateRect(sqr_position, glm::vec2(last_sqr_width, sqr_size.y), m_WhitePixelPos, m_WhitePixelPos, glm::mix(glm::vec4(1.0, 0.0, 0.0, 1.0), glm::vec4(0.0, 1.0, 0.0, 1.0), (float)i / 10));
 
-        //glm::vec2 half_point = position + (size * 0.25f);
+        // glm::vec2 half_point = position + (size * 0.25f);
 
-       // CreateRect(position - glm::vec2(0.0, size.y + 2), size + glm::vec2(0.0, 2), m_WhitePixelPos, m_WhitePixelPos, glm::vec4(0.0, 0.0, 0.0, 0.5));
+        // CreateRect(position - glm::vec2(0.0, size.y + 2), size + glm::vec2(0.0, 2), m_WhitePixelPos, m_WhitePixelPos, glm::vec4(0.0, 0.0, 0.0, 0.5));
 
-        //Text(text, glm::vec2(half_point.x, position.y - size.y - glm::ceil(highest_character * 0.2f)), glm::vec4(1.0f), false);
+        // Text(text, glm::vec2(half_point.x, position.y - size.y - glm::ceil(highest_character * 0.2f)), glm::vec4(1.0f), false);
     }
 
     void UI::Scale(const std::string &text, int &current, int min, int max, glm::vec2 fixed_size = glm::vec2(-1.0f))
@@ -854,5 +854,17 @@ namespace UI
             currentWindow->size.x = glm::max(fixed_size.x, currentWindow->size.x);
 
         m_pCursorPosition.x = currentWindow->position.x;
+    }
+
+    glm::vec2 UI::ToScreenCoords(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj, const glm::vec2 &resolution)
+    {
+        glm::vec4 ndc = proj * view * model * glm::vec4(1.0f);
+
+        ndc /= ndc.w;
+        ndc.y = -1.0 * ndc.y;
+
+        glm::vec2 viewport_space = glm::vec2(ndc.x, ndc.y) * 0.5f + 0.5f;
+
+        return viewport_space * resolution;
     }
 }
