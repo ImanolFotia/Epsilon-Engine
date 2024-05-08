@@ -39,7 +39,7 @@ namespace Editor::UI
 			ImGui::Separator();
 			ImGui::Text("Transform");
 
-			EpsilonUI::vector3("Position", m_pSelectedTransform.position);
+			EpsilonUI::vector3("Position", &m_pSelectedTransform.position);
 
 			ImGui::Checkbox("Lock Scale Axis", &m_pLockScaleAxis);
 			if (m_pLockScaleAxis)
@@ -53,10 +53,10 @@ namespace Editor::UI
 			else
 			{
 
-				EpsilonUI::vector3("Scale", m_pSelectedTransform.scale);
+				EpsilonUI::vector3("Scale", &m_pSelectedTransform.scale);
 			}
 			glm::vec3 rotation = glm::eulerAngles(m_pSelectedTransform.rotation);
-			EpsilonUI::vector3("Rotation", rotation);
+			EpsilonUI::vector3("Rotation", &rotation);
 			m_pSelectedTransform.rotation = glm::tquat<float>(rotation);
 			ImGui::End();
 		}
