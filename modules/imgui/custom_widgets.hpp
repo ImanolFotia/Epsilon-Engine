@@ -6,7 +6,7 @@ namespace EpsilonUI {
 
     //Modified vector ui element from spartan engine
     //https://github.com/PanosK92/SpartanEngine/blob/343a5d88ea61c32a75afe7f1d1fd65e33a3b7b13/editor/ImGui/ImGuiExtension.h
-    static bool vector3(const char* label, glm::vec3& vector)
+    static bool vector3(const char* label, glm::vec3* vector)
     {
         const float label_indetation = 15.0f * ImGui::GetWindowDpiScale();
 
@@ -47,9 +47,9 @@ namespace EpsilonUI {
         ImGui::Indent(label_indetation);
         ImGui::TextUnformatted(label);
         ImGui::Unindent(label_indetation);
-        used |= show_float(glm::vec3(1.0f, 0.0f, 0.0f), &vector.x);
-        used |= show_float(glm::vec3(0.0f, 1.0f, 0.0f), &vector.y);
-        used |= show_float(glm::vec3(0.0f, 0.0f, 1.0f), &vector.z);
+        used |= show_float(glm::vec3(1.0f, 0.0f, 0.0f), &vector->x);
+        used |= show_float(glm::vec3(0.0f, 1.0f, 0.0f), &vector->y);
+        used |= show_float(glm::vec3(0.0f, 0.0f, 1.0f), &vector->z);
         ImGui::EndGroup();
 
         return used;
