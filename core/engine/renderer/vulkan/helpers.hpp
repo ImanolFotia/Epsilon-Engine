@@ -34,28 +34,34 @@ namespace engine
 		if (format == COLOR_RGBA_32F)
 			return VK_FORMAT_R32G32B32A32_SFLOAT;
 
+		if (format == COLOR_RGB_BC1)
+			return VK_FORMAT_BC1_RGB_SRGB_BLOCK;
+		if (format == COLOR_RGB_BC2)
+			return VK_FORMAT_BC2_SRGB_BLOCK;
+		if (format == COLOR_RGBA_BC1)
+			return VK_FORMAT_BC1_RGBA_SRGB_BLOCK;
+		if (format == COLOR_RGBA_BC3)
+			return VK_FORMAT_BC3_SRGB_BLOCK;
 
-		if (format == COLOR_RGB_BC1) return VK_FORMAT_BC1_RGB_SRGB_BLOCK;
-		if (format == COLOR_RGB_BC2) return VK_FORMAT_BC2_SRGB_BLOCK;
-		if (format == COLOR_RGBA_BC1) return VK_FORMAT_BC1_RGBA_SRGB_BLOCK;
-		if (format == COLOR_RGBA_BC3) return VK_FORMAT_BC3_SRGB_BLOCK;
+		if (format == COLOR_RGBA_BC6HS)
+			return VK_FORMAT_BC6H_SFLOAT_BLOCK;
+		if (format == COLOR_RGBA_BC6HU)
+			return VK_FORMAT_BC6H_UFLOAT_BLOCK;
 
-		if (format == COLOR_RGBA_BC6HS) return VK_FORMAT_BC6H_SFLOAT_BLOCK;
-		if (format == COLOR_RGBA_BC6HU) return VK_FORMAT_BC6H_UFLOAT_BLOCK;
-
-		
-
-		if (format == COLOR_RGBA_BC7) 
+		if (format == COLOR_RGBA_BC7)
 			return VK_FORMAT_BC7_SRGB_BLOCK;
 
-		if (format == NON_COLOR_RGB_BC1) return VK_FORMAT_BC1_RGB_UNORM_BLOCK;
-		if (format == NON_COLOR_RGB_BC2) return VK_FORMAT_BC2_UNORM_BLOCK;
-		if (format == NON_COLOR_RGB_BC3) return VK_FORMAT_BC3_UNORM_BLOCK;
-		if (format == NON_COLOR_RGBA_BC3) return VK_FORMAT_BC3_UNORM_BLOCK;
+		if (format == NON_COLOR_RGB_BC1)
+			return VK_FORMAT_BC1_RGB_UNORM_BLOCK;
+		if (format == NON_COLOR_RGB_BC2)
+			return VK_FORMAT_BC2_UNORM_BLOCK;
+		if (format == NON_COLOR_RGB_BC3)
+			return VK_FORMAT_BC3_UNORM_BLOCK;
+		if (format == NON_COLOR_RGBA_BC3)
+			return VK_FORMAT_BC3_UNORM_BLOCK;
 
 		if (format == NON_COLOR_RGBA_BC7)
 			return VK_FORMAT_BC7_UNORM_BLOCK;
-
 
 		// Non color formats (i.e. Normal Maps)
 		if (format == NON_COLOR_R)
@@ -103,7 +109,8 @@ namespace engine
 			return VK_COMPARE_OP_LESS_OR_EQUAL;
 		if (compareOp == EQUAL)
 			return VK_COMPARE_OP_EQUAL;
-		// TODO: Implement the rest
+
+		return VK_COMPARE_OP_ALWAYS;
 	}
 
 	static unsigned resolveNumChannels(engine::TextureFormat format)
@@ -161,26 +168,26 @@ namespace engine
 			return VkDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 	}
 
-	static std::vector<IndirectBatch> generateIndirectBatch(std::vector<DrawCommand>& commandLists, unsigned int commandCount)
+	static std::vector<IndirectBatch> generateIndirectBatch(std::vector<DrawCommand> &commandLists, unsigned int commandCount)
 	{
 		std::vector<IndirectBatch> batches{};
 		batches.resize(commandLists.size());
 		unsigned index = 0;
 		unsigned current = 0;
 
-		for (const auto& command : commandLists)
+		for (const auto &command : commandLists)
 		{
 
 			if (index >= commandCount)
 				break;
 			if (index == 0)
 			{
-				batches[current] = { .meshResource = command.meshResource,
+				batches[current] = {.meshResource = command.meshResource,
 									.material = command.material,
 									.uniformIndex = command.uniformIndex,
 									.layoutIndex = command.layoutIndex,
 									.count = 1,
-									.first = 0 };
+									.first = 0};
 				index++;
 				continue;
 			}
@@ -195,17 +202,17 @@ namespace engine
 			else
 			{
 				current++;
-				batches[current] = { .meshResource = command.meshResource,
+				batches[current] = {.meshResource = command.meshResource,
 									.material = command.material,
 									.uniformIndex = command.uniformIndex,
 									.layoutIndex = command.layoutIndex,
 									.count = 1,
-									.first = index };
+									.first = index};
 			}
 
 			index++;
 		}
-		if(commandCount > 0)
+		if (commandCount > 0)
 			batches.resize(current + 1);
 		else
 			batches.resize(commandCount);
