@@ -461,9 +461,9 @@ namespace engine
         STORAGE_IMAGE
     };
 
-    enum class MemoryBarrierHint
+    enum class MemoryBarrierHint : int
     {
-        COMPUTE_WRITE_BUFFER_COMPUTE_READ_BUFFER,
+        COMPUTE_WRITE_BUFFER_COMPUTE_READ_BUFFER = 0,
         COMPUTE_READ_BUFFER_COMPUTE_WRITE_BUFFER,
         COMPUTE_WRITE_STORAGE_IMAGE_COMPUTE_READ_STORAGE_IMAGE,
         COMPUTE_READ_STORAGE_IMAGE_COMPUTE_WRITE_STORAGE_IMAGE,
@@ -767,10 +767,9 @@ namespace engine
 
     struct MemoryBarrier
     {
-
         MemoryBarrierHint memoryBarrierHint{};
-        std::vector<std::string> image;
-        std::vector<engine::Ref<Buffer>> buffer;
+        std::string image{};
+        engine::Ref<Buffer> buffer = engine::Ref<Buffer>::makeEmpty();
     };
 
     struct ComputeShaderInfo
@@ -778,7 +777,7 @@ namespace engine
         std::string name;
         PipelineLayout pipelineLayout;
         std::vector<UniformBindingInfo> bindingInfo;
-        MemoryBarrier memoryBarrier{};
+        std::vector<MemoryBarrier> memoryBarrier{};
 
         uint16_t groupCountX = 1;
         uint16_t groupCountY = 1;
