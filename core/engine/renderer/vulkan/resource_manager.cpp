@@ -3,6 +3,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include "resource_manager.hpp"
 #include "helpers.hpp"
+#include <apis/vk/barriers.hpp>
 
 #include "core/framework/exception.hpp"
 
@@ -355,12 +356,15 @@ namespace engine
 					vkMaterial.slots++;
 					vk::VulkanTexture texture;
 
-					if(binding.textureInfo.pixels != nullptr) {
+					if (binding.textureInfo.pixels != nullptr)
+					{
 						texture = *texPool.get(createTexture(binding.textureInfo));
-					} else {
+					}
+					else
+					{
 						texture = *texPool.get(std::hash<std::string>{}(binding.texture));
 					}
-					
+
 					vk::VulkanShaderBinding shaderBinding = {
 						.texture = texture,
 						.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
@@ -1215,24 +1219,37 @@ namespace engine
 		computeShader.groupCountZ = computeInfo.groupCountZ;
 		vk::createComputePipeline(*m_pVkDataPtr, computeInfo, computeShader);
 
-		for (auto &imageBarrier : computeInfo.memoryBarrier.image)
+		for (auto &imageBarrier : computeInfo.memoryBarrier)
 		{
+			if (imageBarrier.image.size() > 0)
+			{
+				auto pass = renderPassPool.get(std::hash<std::string>{}(imageBarrier.image));
+				auto texture = pass->renderPassChain.Textures.at(0);
+				engine::MemoryBarrierHint hint;
 
-			auto pass = renderPassPool.get(std::hash<std::string>{}(imageBarrier));
-			auto texture = pass->renderPassChain.Textures.at(0);
+				VkAccessFlags srcAccessMask;
+				VkAccessFlags dstAccessMask;
+				VkPipelineStageFlags2 srcStageMask;
+				VkPipelineStageFlags2 dstStageMask;
 
-			VkImageMemoryBarrier imageMemoryBarrier = {};
-			imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-			imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-			imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-			imageMemoryBarrier.image = texture.image;
-			imageMemoryBarrier.subresourceRange = {VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT, 0, 1, 0, 1};
-			imageMemoryBarrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-			imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-			imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-			imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-			computeShader.hasImageBarrier = true;
-			computeShader.imageMemoryBarrier.push_back(imageMemoryBarrier);
+				vk::ResolveMasks(imageBarrier.memoryBarrierHint, srcAccessMask, dstAccessMask, srcStageMask, dstStageMask);
+
+				VkImageMemoryBarrier2 imageMemoryBarrier = {};
+				imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+				imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL;
+				imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+				imageMemoryBarrier.image = texture.image;
+				imageMemoryBarrier.subresourceRange = {VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT, 0, 1, 0, 1};
+				imageMemoryBarrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+				imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+				imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+				imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+				imageMemoryBarrier.srcStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+				imageMemoryBarrier.dstStageMask = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
+
+				computeShader.hasImageBarrier = true;
+				computeShader.imageMemoryBarrier.push_back(imageMemoryBarrier);
+			}
 		}
 
 		auto ref = computeShaderPool.insert(computeInfo.name, computeShader);

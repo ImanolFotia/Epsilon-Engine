@@ -227,15 +227,28 @@ namespace engine
 		if (computeShader->hasImageBarrier || computeShader->hasBufferMemoryBarrier)
 		{
 
-			vkCmdPipelineBarrier(
-				m_pFrame.ComputeCommandBuffer(),
-				VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT |
-					VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
-				VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
-				0,
-				0, nullptr,
-				computeShader->bufferMemoryBarrier.size(), computeShader->bufferMemoryBarrier.data(),
-				computeShader->imageMemoryBarrier.size(), computeShader->imageMemoryBarrier.data());
+			VkDependencyInfo dependencyInfo =
+				{
+					.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER_2,
+					.pNext = nullptr,
+					.memoryBarrierCount = 0,
+					.pMemoryBarriers = nullptr,
+					.bufferMemoryBarrierCount = (uint32_t)computeShader->bufferMemoryBarrier.size(),
+					.pBufferMemoryBarriers = computeShader->bufferMemoryBarrier.data(),
+					.imageMemoryBarrierCount = (uint32_t)computeShader->imageMemoryBarrier.size(),
+					.pImageMemoryBarriers = computeShader->imageMemoryBarrier.data()};
+
+			vkCmdPipelineBarrier2(m_pFrame.ComputeCommandBuffer(), &dependencyInfo);
+			/*
+					vkCmdPipelineBarrier(
+						m_pFrame.ComputeCommandBuffer(),
+						VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT |
+							VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
+						VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+						0,
+						0, nullptr,
+						computeShader->bufferMemoryBarrier.size(), computeShader->bufferMemoryBarrier.data(),
+						computeShader->imageMemoryBarrier.size(), computeShader->imageMemoryBarrier.data());*/
 		}
 
 		vkCmdBindPipeline(m_pFrame.ComputeCommandBuffer(), VK_PIPELINE_BIND_POINT_COMPUTE, computeShader->pipeline.computePipeline);
@@ -859,5 +872,4 @@ namespace engine
 	{
 		return m_pImguiRenderer;
 	}
-
 }
