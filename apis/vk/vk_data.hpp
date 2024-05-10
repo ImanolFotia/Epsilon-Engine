@@ -149,7 +149,7 @@ namespace vk
 
 		VkDescriptorSetLayout descriptorSetLayout{};
 		std::vector<VkDescriptorSet> descriptorSets;
-		VkPipelineLayout* pipelineLayout = nullptr;
+		VkPipelineLayout *pipelineLayout = nullptr;
 		// std::vector<VulkanTexture> renderBufferBindings;
 		std::vector<VulkanShaderBinding> shaderBindings;
 		std::vector<VkDescriptorBufferInfo> bufferInfo;
@@ -159,7 +159,8 @@ namespace vk
 		std::string name = "";
 	};
 
-	struct VulkanComputePipeline {
+	struct VulkanComputePipeline
+	{
 		VkDescriptorSetLayout descriptorSetLayout;
 		VkPipelineLayout pipelineLayout{};
 		VkPipeline computePipeline;
@@ -167,28 +168,30 @@ namespace vk
 		bool recreatePipeline = false;
 	};
 
-	struct VulkanMemoryBarrier {
+	struct VulkanMemoryBarrier
+	{
 		VkImageMemoryBarrier2KHR imageMemoryBarrier{};
 		VkMemoryBarrier2KHR memoryBarrier{};
 		VkDependencyInfoKHR dependencyInfo{};
 	};
 
-
-	struct VulkanMemoryBarrierInfo {
+	struct VulkanMemoryBarrierInfo
+	{
 		engine::MemoryBarrierHint hint;
 		VkImage image;
 		VkBuffer buffer;
 		VkImageSubresourceRange subresourceRange;
 	};
 
-	struct VulkanComputeShader {
+	struct VulkanComputeShader
+	{
 		VulkanComputePipeline pipeline{};
 		uint16_t groupCountX = 1;
 		uint16_t groupCountY = 1;
 		uint16_t groupCountZ = 1;
 		std::vector<VulkanMemoryBarrier> memoryBarrier;
-		std::vector<VkImageMemoryBarrier> imageMemoryBarrier;
-		std::vector<VkBufferMemoryBarrier> bufferMemoryBarrier;
+		std::vector<VkImageMemoryBarrier2> imageMemoryBarrier;
+		std::vector<VkBufferMemoryBarrier2> bufferMemoryBarrier;
 		bool hasBufferMemoryBarrier = false;
 		bool hasImageBarrier = false;
 	};
@@ -209,8 +212,8 @@ namespace vk
 		VkCullModeFlags cullMode;
 		bool dirty = true;
 		// VkClearColorValue clearColor = {0.1f, 0.1f, 0.1f, 1.0f};
-		VkClearColorValue clearColor = { 1.0f, 1.0f, 1.0f, 1.0f };
-		VkClearDepthStencilValue depthStencilClearColor = { 1.0f, 0 };
+		VkClearColorValue clearColor = {1.0f, 1.0f, 1.0f, 1.0f};
+		VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
 		uint32_t numAttachments = 1;
 		bool recreatePipeline = false;
 	};
@@ -242,8 +245,8 @@ namespace vk
 	};
 	struct RenderPassChain
 	{
-		std::vector<const char*> deviceExtensions = {
-			VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+		std::vector<const char *> deviceExtensions = {
+			VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 		//
 		std::vector<VkImage> Images;
 		//
@@ -266,12 +269,13 @@ namespace vk
 		//
 		VulkanTexture ResolveTexture;
 
-
-		void setViewport(const VkViewport& v) {
+		void setViewport(const VkViewport &v)
+		{
 			Viewport = v;
 		}
-		
-		void setScissor(const VkRect2D& s) {
+
+		void setScissor(const VkRect2D &s)
+		{
 			Scissor = s;
 		}
 	};
@@ -279,7 +283,6 @@ namespace vk
 	class VulkanRenderPass
 	{
 	public:
-
 		VulkanRenderPass() = default;
 
 		std::vector<VkCommandBuffer> commandBuffers;
@@ -291,8 +294,8 @@ namespace vk
 		std::vector<VulkanVertexInfo> vertexInfo;
 		RenderPassChain renderPassChain;
 		// VkClearColorValue clearColor = {0.1f, 0.1f, 0.1f, 1.0f};
-		VkClearColorValue clearColor = { 1.0f, 1.0f, 1.0f, 1.0f };
-		VkClearDepthStencilValue depthStencilClearColor = { 1.0f, 0 };
+		VkClearColorValue clearColor = {1.0f, 1.0f, 1.0f, 1.0f};
+		VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
 		std::vector<VkClearValue> clearValues = {};
 		uint32_t id = 0;
 		bool resizeWithSwapChain = false;
@@ -301,7 +304,6 @@ namespace vk
 		std::list<VulkanUniformBuffer> uniformBuffer;
 		uint32_t numAttachments = 1;
 		std::string name = "";
-
 	};
 
 	struct VulkanTechnique
@@ -343,16 +345,14 @@ namespace vk
 		bool vsync = false;
 
 #if !defined(__ANDROID__)
-		const std::vector<const char*> deviceExtensions = {
+		const std::vector<const char *> deviceExtensions = {
 			VK_KHR_SWAPCHAIN_EXTENSION_NAME,
 			VK_EXT_MEMORY_BUDGET_EXTENSION_NAME,
 			VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME,
-			VK_KHR_MAINTENANCE3_EXTENSION_NAME
-		};
-#else 
-		const std::vector<const char*> deviceExtensions = {
-		VK_KHR_SWAPCHAIN_EXTENSION_NAME
-		};
+			VK_KHR_MAINTENANCE3_EXTENSION_NAME};
+#else
+		const std::vector<const char *> deviceExtensions = {
+			VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 #endif
 
 		VkSwapchainKHR swapChain;
