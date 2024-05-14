@@ -10,7 +10,7 @@ namespace engine
 	{
 		// Color formats
 		if (format == COLOR_R)
-			return VK_FORMAT_R8_SRGB;
+			return VK_FORMAT_R8_UNORM;
 		if (format == COLOR_RG)
 			return VK_FORMAT_R8G8_SRGB;
 		if (format == COLOR_RGB)
