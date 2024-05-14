@@ -97,6 +97,10 @@ bool DDS::LoadCompressed(const std::string &filename, int baseLevel = 0)
 		{
 			this->m_InternalFormat = engine::TextureFormat::COLOR_RGBA_BC6HS;
 		}
+		else if (dx10_header->dxgiFormat == DXGI_FORMAT_BC6H_UF16)
+		{
+			this->m_InternalFormat = engine::TextureFormat::COLOR_RGBA_BC6HU;
+		}
 	}
 	}
 
