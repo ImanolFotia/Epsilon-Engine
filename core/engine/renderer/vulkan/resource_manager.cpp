@@ -281,6 +281,19 @@ namespace engine
 		pUpdateMaterial(*vkMaterial);
 	}
 
+	void VulkanResourceManager::UpdateUniform(const std::string &name, void *newData)
+	{
+		auto buffers = uniformBufferPool.get(std::hash<std::string>{}(name))->buffers;
+
+		for (auto &buffer : buffers)
+		{
+			void *data;
+			vmaMapMemory(m_pAllocator, buffer.allocation, &data);
+			memcpy(data, newData, buffer.size);
+			vmaUnmapMemory(m_pAllocator, buffer.allocation);
+		}
+	}
+
 	Ref<BindGroup> VulkanResourceManager::createBindGroup(BindGroupInfo material)
 	{
 		// try
@@ -1223,8 +1236,14 @@ namespace engine
 		{
 			if (imageBarrier.image.size() > 0)
 			{
+				vk::VulkanTexture texture;
+
 				auto pass = renderPassPool.get(std::hash<std::string>{}(imageBarrier.image));
-				auto texture = pass->renderPassChain.Textures.at(0);
+				if (pass)
+					texture = pass->renderPassChain.Textures.at(0);
+				else
+					texture = *texPool.get(std::hash<std::string>{}(imageBarrier.image));
+
 				engine::MemoryBarrierHint hint;
 
 				VkAccessFlags srcAccessMask;
@@ -1240,12 +1259,12 @@ namespace engine
 				imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 				imageMemoryBarrier.image = texture.image;
 				imageMemoryBarrier.subresourceRange = {VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT, 0, 1, 0, 1};
-				imageMemoryBarrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-				imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+				imageMemoryBarrier.srcAccessMask = srcAccessMask;
+				imageMemoryBarrier.dstAccessMask = dstAccessMask;
 				imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 				imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-				imageMemoryBarrier.srcStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-				imageMemoryBarrier.dstStageMask = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
+				imageMemoryBarrier.srcStageMask = srcStageMask;
+				imageMemoryBarrier.dstStageMask = dstStageMask;
 
 				computeShader.hasImageBarrier = true;
 				computeShader.imageMemoryBarrier.push_back(imageMemoryBarrier);

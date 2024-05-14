@@ -52,6 +52,8 @@ namespace engine
 		void UpdateMappedBuffer(Ref<Buffer>, const UpdateVertexBufferInfo &) override;
 		void UpdateMesh(Ref<Mesh>, UpdateMeshInfo) override;
 
+		void UpdateUniform(const std::string &name, void *newData);
+
 		virtual void CopyTexture(Ref<Texture> src, Ref<Texture> dst) override;
 
 		void destroyTexture(Ref<Texture>) override;
