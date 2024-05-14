@@ -412,9 +412,20 @@ namespace engine
 			std::list<VkDescriptorBufferInfo> bufferInfos;
 			// numSlots += material.shaderBindings.size();
 			descriptorWrites.resize(numSlots);
+			int index = 1;
+			bool bindingZeroSet = false;
+			for (auto &binding : material.shaderBindings)
+			{
+				if (binding.bindingPoint == 0)
+				{
+					index = 0;
+					bindingZeroSet = true;
+					numSlots = material.slots;
+				}
+			}
 
 			int j = 0;
-			for (int index = 1; index < numSlots; index++)
+			for (; index < numSlots; index++)
 			{
 				auto &binding = material.shaderBindings[j];
 
@@ -541,19 +552,22 @@ namespace engine
 				j++;
 			}
 
-			VkDescriptorBufferInfo bufferInfo{};
-			bufferInfo.buffer = material.bufferInfo[i].buffer; // m_pUniformBuffers[i].buffer;
-			bufferInfo.offset = material.bufferOffset;
-			bufferInfo.range = material.bufferSize;
-			descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			descriptorWrites[0].dstSet = material.descriptorSets[i];
-			descriptorWrites[0].dstBinding = 0;
-			descriptorWrites[0].dstArrayElement = 0;
-			descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-			descriptorWrites[0].descriptorCount = 1;
-			descriptorWrites[0].pBufferInfo = &bufferInfo;
-			descriptorWrites[0].pImageInfo = nullptr;		// Optional
-			descriptorWrites[0].pTexelBufferView = nullptr; // Optional
+			if (!bindingZeroSet)
+			{
+				VkDescriptorBufferInfo bufferInfo{};
+				bufferInfo.buffer = material.bufferInfo[i].buffer; // m_pUniformBuffers[i].buffer;
+				bufferInfo.offset = material.bufferOffset;
+				bufferInfo.range = material.bufferSize;
+				descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				descriptorWrites[0].dstSet = material.descriptorSets[i];
+				descriptorWrites[0].dstBinding = 0;
+				descriptorWrites[0].dstArrayElement = 0;
+				descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+				descriptorWrites[0].descriptorCount = 1;
+				descriptorWrites[0].pBufferInfo = &bufferInfo;
+				descriptorWrites[0].pImageInfo = nullptr;		// Optional
+				descriptorWrites[0].pTexelBufferView = nullptr; // Optional
+			}
 
 			vkUpdateDescriptorSets(m_pVkDataPtr->logicalDevice, numSlots, descriptorWrites.data(), 0, nullptr);
 		}
@@ -753,6 +767,7 @@ namespace engine
 		}
 		else
 		{
+			// return;
 		}
 
 		// After the loop, all mip layers are in TRANSFER_SRC layout, so transition all to SHADER_READ
