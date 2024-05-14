@@ -209,7 +209,7 @@ namespace Editor
 		m_AssetManager->addTextureFromBytes("BRDF_lut", lut, lut_size, 512, 512, 2, {.format = engine::TextureFormat::COLOR_RG_32F, .wrapMode = engine::CLAMP_TO_EDGE, .filtering = engine::LINEAR});
 		delete[] lut;
 
-		// pAddDefaultCube(glm::vec3(0.0));
+		pAddDefaultCube(glm::vec3(0.0));
 
 		// for (int i = 0; i < 200; i++)
 		//	for (int j = 0; j < 200; j++) {
@@ -330,8 +330,7 @@ namespace Editor
 														  }
 
 														  ImGui::SameLine();
-														  ImGui::End();
-													  });
+														  ImGui::End(); });
 	}
 
 	void Editor::OnUpdate()
@@ -588,7 +587,7 @@ namespace Editor
 		defaultMaterial.color = glm::vec4(0.5, 0.5, 0.5, 1.0);
 
 		engine::Cube cube;
-		auto m_DefaultCube = m_AssetManager->createModelFromMesh("DefaultCube", cube.data(), defaultMaterial);
+		auto m_DefaultCube = m_AssetManager->loadModel("models/drone.gltf"); // m_AssetManager->createModelFromMesh("DefaultCube", cube.data(), defaultMaterial);
 
 		auto node = Utils::CreateNode(glm::mat4(1.0f), m_Scene);
 

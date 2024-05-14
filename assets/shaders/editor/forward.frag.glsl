@@ -97,10 +97,13 @@ float ior_from_F0(float F0)
   return (-f - 1.0) / (f - 1.0);
 }
 
+
+
 void main() {
     Surface surface = InitSurface();
     
     vec4 Albedo = getAlbedo(surface);
+    Albedo.rgb = Gamma(Albedo.rgb);
     vec3 Normal = normalize(getNormal(surface));
     float specular = getSpecular(surface);
     float roughness = getRoughness(surface);
@@ -144,20 +147,20 @@ void main() {
 
     lod =  clamp(lod, 0, 4.999);
 
-    vec3 radiance0 = textureLod(textures[0], SampleSphericalMap(-normalize(ref)), floor(lod)).rgb;
-    vec3 radiance1 = textureLod(textures[0], SampleSphericalMap(-normalize(ref)), ceil(lod)).rgb;
+    vec3 radiance0 = Gamma(textureLod(textures[0], SampleSphericalMap(-normalize(ref)), floor(lod)).rgb);
+    vec3 radiance1 = Gamma(textureLod(textures[0], SampleSphericalMap(-normalize(ref)), ceil(lod)).rgb);
 
     vec3 radiance = mix(radiance0, radiance1, fract(lod));
     
-    vec3 irradiance = (textureLod(textures[1], SampleSphericalMap(-Normal), 0).rgb);
+    vec3 irradiance = (Gamma(textureLod(textures[1], SampleSphericalMap(-Normal), 0).rgb));
 
-    vec2 lut = textureLod(textures[2], vec2(max(dot(Normal, V), 0.0), perceptualRoughness), 0).rg;
+    vec2 lut = textureLod(textures[2], vec2(max(dot(-Normal, V), 0.0), perceptualRoughness), 0).rg;
 
     float att = 1.0;
     
     if(lod > 5.0) {
         att = 1.0-(fract(lod));
-        vec3 radiance2 = textureLod(textures[1], SampleSphericalMap(-normalize(ref)), clamp(lod, 0, 6)).rgb;
+        vec3 radiance2 = Gamma(textureLod(textures[1], SampleSphericalMap(-normalize(ref)), clamp(lod, 0, 6)).rgb);
         radiance = mix(radiance2, radiance, att);
     }
 
