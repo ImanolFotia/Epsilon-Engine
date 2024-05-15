@@ -390,13 +390,28 @@ namespace engine
 				{
 					vkMaterial.slots++;
 					auto tex = texPool.get(std::hash<std::string>{}(binding.texture)); // createTexture(binding.textureInfo);
-					vk::VulkanShaderBinding shaderBinding = {
-						.texture = *tex, //*texPool.get(tex),
-						.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_STORAGE_IMAGE,
-						.bindingPoint = binding.binding,
-						.isRenderPassAttachment = false};
+					if (tex != nullptr)
+					{
+						vk::VulkanShaderBinding shaderBinding = {
+							.texture = *tex, //*texPool.get(tex),
+							.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_STORAGE_IMAGE,
+							.bindingPoint = binding.binding,
+							.isRenderPassAttachment = false};
 
-					vkMaterial.shaderBindings.push_back(shaderBinding);
+						vkMaterial.shaderBindings.push_back(shaderBinding);
+					}
+					else
+					{
+						auto pass = renderPassPool.get(std::hash<std::string>{}(binding.texture));
+
+						vk::VulkanShaderBinding shaderBinding = {
+							.texture = pass->renderPassChain.Textures.at(0), //*texPool.get(tex),
+							.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_STORAGE_IMAGE,
+							.bindingPoint = binding.binding,
+							.isRenderPassAttachment = false};
+
+						vkMaterial.shaderBindings.push_back(shaderBinding);
+					}
 				}
 				else if (binding.type == UniformBindingType::SHADER_STORAGE)
 				{
@@ -643,6 +658,8 @@ namespace engine
 			{
 				texture.info.isSampler = true;
 				vk::createTextureSampler(*m_pVkDataPtr, texture);
+
+				// texPool.insert(attachment.name, texture);
 			}
 
 			if (attachment.isDepthAttachment)

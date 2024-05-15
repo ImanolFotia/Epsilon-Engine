@@ -291,6 +291,7 @@ namespace engine
 	void VulkanRenderer::Submit()
 	{
 		VkSemaphore signalSemaphores[] = {m_pFrame.SyncObjects().renderFinishedSemaphores};
+
 		if (m_pFrame.ComputeDispatches() > 0)
 			vk::SyncCompute(m_pVkData, m_pFrame.ComputeCommandBuffer(), m_pCurrentFrame);
 

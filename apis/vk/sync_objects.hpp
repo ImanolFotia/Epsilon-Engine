@@ -86,7 +86,7 @@ namespace vk
             waitSemaphores[0] = {vk_data.syncObjects[currentFrame].imageAvailableSemaphores};
 
         VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_VERTEX_INPUT_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
-        submitInfo.waitSemaphoreCount = computeActive ? 2 : 1;
+        submitInfo.waitSemaphoreCount = 1; // computeActive ? 2 : 1;
         submitInfo.pWaitSemaphores = waitSemaphores;
         submitInfo.pWaitDstStageMask = waitStages;
 
