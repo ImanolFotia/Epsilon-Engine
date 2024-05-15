@@ -426,7 +426,7 @@ namespace UI
 
     void CreateRect(glm::vec2 position, glm::vec2 size, glm::vec2 uv0,
                     glm::vec2 uv1,
-                    glm::vec4 color = glm::vec4(1.0, 1.0, 1.0, 0.5));
+                    glm::vec4 color = glm::vec4(0.11, 0.11, 0.11, 0.8));
 
     void CreatePolygon(std::vector<UIVertex> vertices);
 

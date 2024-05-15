@@ -124,9 +124,11 @@ namespace engine
 		std::string name{};
 		std::string bindGroup = "DefaultLayout";
 		std::string shadowBindGroup = "ShadowLayout";
+		std::string prepassBindGroup = "prepassLayout";
 
 		size_t bindGroupId = std::hash<std::string>{}("DefaultLayout");
 		size_t shadowBindGroupId = std::hash<std::string>{}("ShadowLayout");
+		size_t prepassBindGroupId = std::hash<std::string>{}("prepassLayout");
 		uint32_t animationIndex = 0;
 		bool hasAnimation = false;
 		bool isInstanced = false;

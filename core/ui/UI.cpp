@@ -211,7 +211,7 @@ namespace UI
         size_t temp_vtx = vertices_pushed;
         vertices_pushed = currentWindow->vtx_index;
 
-        CreateRect(currentWindow->position, size + m_pStyle.windowPadding, m_WhitePixelPos, m_WhitePixelPos);
+        CreateRect(currentWindow->position, size + glm::vec2(m_pStyle.windowPadding * 3.0f, m_pStyle.windowPadding * 3.0f), m_WhitePixelPos, m_WhitePixelPos);
 
         vertices_pushed = temp_vtx;
 
@@ -385,7 +385,7 @@ namespace UI
     void UI::Sameline()
     {
         m_pCursorPosition.x = m_pContext.prev_widget_position.x + m_pContext.prev_widget_size.x;
-        m_pCursorPosition.y -= m_pContext.prev_widget_size.y;
+        m_pCursorPosition.y = m_pContext.prev_widget_position.y; // m_pContext.prev_widget_size.y;
         if (currentWindow)
             currentWindow->size.y -= m_pContext.prev_widget_size.y;
     }
@@ -424,7 +424,6 @@ namespace UI
             new_command.num_vertices = 0;
             new_command.bind_group = m_pBindGroups[texture];
         }
-        m_pContext.prev_widget_position = m_pCursorPosition;
         const float padding = 5;
         // glm::vec2 text_size = m_pStyle.textSize; // glm::vec2(10, 20);
         glm::vec4 button_color = glm::vec4(0.2, 0.3, 0.8, 1.0);
@@ -441,7 +440,7 @@ namespace UI
             button_color = glm::vec4(0.2, 0.5, 0.5, 1.0);
         }
 
-        CreateRect(m_pCursorPosition, size, uv0, uv1, tint);
+        CreateRect(m_pCursorPosition + glm::vec2(m_pStyle.buttonPadding), size, uv0, uv1, tint);
 
         glm::vec2 cursor_pos = m_pCursorPosition;
         cursor_pos += padding;
@@ -452,25 +451,33 @@ namespace UI
 
         float old_y = m_pCursorPosition.y;
 
-        currentWindow->size.x = glm::max(m_pStyle.buttonPadding + size.x, currentWindow->size.x);
+        currentWindow->size.x = glm::max(m_pStyle.buttonPadding * (text.size() > 0 ? 3.0f : 2.0f) + size.x, currentWindow->size.x);
         currentWindow->size.y += (size.y + m_pStyle.buttonPadding * 2);
 
         m_pContext.prev_widget_size.x = size.x + m_pStyle.buttonPadding;
         m_pContext.prev_widget_size.y = (size.y + m_pStyle.buttonPadding * 2);
 
-        Sameline();
+        glm::vec2 text_position = glm::vec2(cursor_pos.x + size.x + m_pStyle.buttonPadding, cursor_pos.y - size.y * 0.25);
+
+        // Sameline();
         auto text_size = textSize(text);
-        Text(text, m_pCursorPosition + glm::vec2(0.0, glm::ceil(((int)text_size.y % 2 == 0 ? text_size.y + 1 : text_size.y) * 0.75)), glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+        Text(text, text_position + glm::vec2(0.0f, glm::ceil(((int)text_size.y % 2 == 0 ? text_size.y + 1 : text_size.y) * 0.75)), glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
         m_pCursorPosition.x -= m_pStyle.buttonPadding + text_size.x + m_pStyle.buttonPadding;
 
-        m_pCursorPosition.y += old_y; // size.y + glm::ceil(text_size.y * 0.75);
+        m_pCursorPosition.y += old_y - m_pStyle.buttonPadding; // size.y + glm::ceil(text_size.y * 0.75);
 
-        currentWindow->size.x = glm::max(m_pStyle.buttonPadding + size.x, currentWindow->size.x);
+        currentWindow->size.x = glm::max(m_pStyle.buttonPadding * (text.size() > 0 ? 3.0f : 2.0f) + size.x, currentWindow->size.x);
         currentWindow->size.y += (size.y + m_pStyle.buttonPadding * 2);
 
-        m_pContext.prev_widget_size.x = size.x + m_pStyle.buttonPadding;
-        m_pContext.prev_widget_size.y = (size.y + m_pStyle.buttonPadding * 2);
+        size.x += text_size.x + m_pStyle.buttonPadding * (text.size() > 0 ? 3.0f : 2.0f);
+        size.y += m_pStyle.buttonPadding * 2.0f;
+
+        // CreateRect(position, size, m_WhitePixelPos, m_WhitePixelPos, glm::vec4(1.0, 0.0, 0.0, 0.2));
+
+        m_pContext.prev_widget_size = size;
+
+        m_pContext.prev_widget_position = position + glm::vec2(0.0f, -m_pStyle.buttonPadding);
 
         if (mouse.x > position.x &&
             mouse.x < position.x + size.x &&
