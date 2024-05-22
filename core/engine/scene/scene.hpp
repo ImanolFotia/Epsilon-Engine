@@ -216,10 +216,22 @@ namespace engine
 		template <typename T>
 		void removeFromScene(uint32_t index)
 		{
+			// std::cout << "removed index: " << index << std::endl;
 			std::shared_ptr<Node<T>> node = std::static_pointer_cast<Node<T>>(m_pSceneManager.get(index));
-			auto octree_render_node = getChild<typename std::list<OctreeItem<OctreeRenderType>>::iterator>(node);
-			if (octree_render_node != nullptr)
-				m_pRenderOctree->erase(octree_render_node->data);
+
+			using render_node_type = engine::Node<std::list<OctreeItem<OctreeRenderType>>::iterator>;
+			using octree_node_type = engine::Node<std::list<OctreeItem<OctreeNodeType>>::iterator>;
+			auto &children = getChildren(node);
+			auto &octree_render_node = children[typeid(typename std::list<OctreeItem<OctreeRenderType>>::iterator)];
+			for (auto &render_node : octree_render_node)
+			{
+
+				if (render_node != nullptr)
+				{
+					auto r_node = std::static_pointer_cast<render_node_type>(render_node);
+					m_pRenderOctree->erase(r_node->data);
+				}
+			}
 
 			m_pSceneManager.erase<T>(node);
 		}
@@ -235,8 +247,10 @@ namespace engine
 		{
 			auto scene_node = m_pSceneManager.insert(m_pSceneManager.root, object);
 
-			m_pNodeOctree->insert(boundingBox, scene_node);
+			/*auto octree_node = m_pNodeOctree->insert(boundingBox, scene_node);
 
+			m_pSceneManager.insert(scene_node, octree_node);
+*/
 			return scene_node;
 		}
 
@@ -244,17 +258,22 @@ namespace engine
 		auto emplaceIntoScene(Box boundingBox, Args &&...args)
 		{
 			auto scene_node = m_pSceneManager.emplace<T>(m_pSceneManager.root, std::forward<Args>(args)...);
+			/*
+			auto octree_node = m_pNodeOctree->insert(boundingBox, scene_node);
 
-			m_pNodeOctree->insert(boundingBox, scene_node);
+			m_pSceneManager.insert(scene_node, octree_node);
+			* /
 
-			return scene_node;
+				return scene_node;
 		}
 
 		template <typename T>
 		auto emplaceIntoScene(Box boundingBox)
 		{
 			std::shared_ptr<Node<T>> scene_node = m_pSceneManager.emplace<T>(m_pSceneManager.root);
-			m_pNodeOctree->insert(boundingBox, scene_node);
+			/*auto octree_node = m_pNodeOctree->insert(boundingBox, scene_node);
+
+			m_pSceneManager.insert(scene_node, octree_node);*/
 
 			return scene_node;
 		}
@@ -284,9 +303,10 @@ namespace engine
 			return node;
 		}
 
-		void insertIntoOctree(Box boundingBox, OctreeSceneItem item)
+		auto insertIntoOctree(Box boundingBox, OctreeSceneItem item)
 		{
 			std::list<OctreeItem<OctreeRenderType>>::iterator octree_node = m_pRenderOctree->insert(boundingBox, item);
+			return octree_node;
 		}
 
 		template <typename T, typename P, class... Args>
@@ -429,6 +449,15 @@ namespace engine
 					for (int i = 0; i < mesh.numMaterials; i++)
 					{
 						uint32_t uniform_index = m_pAssetManager->m_pMaterials.at(mesh.material_keys[i]).index;
+						uint32_t albedo_index = m_pAssetManager->m_pMaterials.at(mesh.material_keys[i]).material.albedo_texture_index;
+						uint32_t metallic_index = m_pAssetManager->m_pMaterials.at(mesh.material_keys[i]).material.metallic_texture_index;
+						uint32_t normal_index = m_pAssetManager->m_pMaterials.at(mesh.material_keys[i]).material.normal_texture_index;
+						uint32_t roughness_index = m_pAssetManager->m_pMaterials.at(mesh.material_keys[i]).material.roughness_texture_index;
+
+						if (albedo_index == 150 || metallic_index == 150 || normal_index == 150 || roughness_index == 150)
+						{
+							std::cout << "here!" << std::endl;
+						}
 						material_indices[i] = uniform_index;
 					}
 
