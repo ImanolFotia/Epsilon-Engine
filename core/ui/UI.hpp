@@ -28,6 +28,7 @@ namespace UI
     size_t vtx_index = 0;
     bool fixed_size = false;
     glm::vec2 setted_size;
+    glm::vec4 color;
   };
 
   struct Mouse
@@ -70,7 +71,7 @@ namespace UI
   struct UIVertex
   {
     glm::vec4 pos_uv{};
-    glm::vec4 color = glm::vec4(1.0, 1.0, 1.0, 0.5);
+    glm::vec4 color = glm::vec4(0.2, 0.2, 0.2, 0.5);
   };
 
   struct Rect
@@ -166,6 +167,7 @@ namespace UI
     std::array<Roboto::AlignedQuad, 95> m_AlignedQuads;
 
     glm::vec2 m_WhitePixelPos{};
+    std::unordered_map<std::string, glm::vec2> m_WhitePixelPositions;
     engine::PipelineLayout uiLayout;
     void Init(std::shared_ptr<engine::ResourceManager> resource_manager,
               std::shared_ptr<engine::Renderer> renderer,
@@ -388,6 +390,17 @@ namespace UI
       int w, h, c = 4;
       unsigned char *pixels = framework::load_image_from_file(path, &w, &h, &c);
 
+      for (int i = 0; i < w * h; i++)
+      {
+        if (pixels[i] == 255 && pixels[i + 1] == 255 && pixels[i + 2] == 255 && pixels[i + 3] == 255)
+        {
+          m_WhitePixelPositions[name] = glm::vec2(i % h, i / w) / glm::vec2(w, h);
+          break;
+        }
+      }
+
+      m_WhitePixelPositions[name] = glm::vec2(0.4, 0.03);
+
       engine::TextureCreationInfo texInfo;
       texInfo.pixels = (unsigned char *)pixels;
       texInfo.width = w;
@@ -432,7 +445,7 @@ namespace UI
 
     void SetNextWindowPosition(glm::vec2 position);
 
-    void BeginWindow(const std::string &name, glm::vec2 size = glm::vec2(0.0f));
+    void BeginWindow(const std::string &name, glm::vec2 size = glm::vec2(0.0f), glm::vec4 color = glm::vec4(0.0, 0.0, 0.0, 0.5));
 
     void EndWindow();
 
@@ -441,14 +454,17 @@ namespace UI
     void Text(const std::string &text, glm::vec2 position,
               glm::vec4 color = glm::vec4(1.0f), bool standalone = true);
 
-    bool Button(const std::string &text);
+    bool Button(const std::string &text, bool fill_width = false);
     void Sameline();
 
     void Dock(DockLocation, float thickness);
 
+    void Spacer(glm::vec2 size);
+
     bool ImageButton(const std::string &, const std::string &texture,
                      glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1,
-                     glm::vec4 tint = glm::vec4(1.0f));
+                     glm::vec4 tint = glm::vec4(1.0f),
+                     bool fill_background = false);
 
     void AngularButtons(glm::vec2 position, float innerRadius, float outerRadius,
                         int count);
