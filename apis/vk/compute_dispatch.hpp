@@ -4,19 +4,21 @@
 #include "vk_data.hpp"
 #include "core/engine/renderer/types.hpp"
 
-namespace vk {
+namespace vk
+{
 
+	static void createComputePipeline(VulkanData &vk_data, engine::ComputeShaderInfo &shaderInfo, VulkanComputeShader &computeShader)
+	{
 
-	static void createComputePipeline(VulkanData& vk_data, engine::ComputeShaderInfo& shaderInfo, VulkanComputeShader& computeShader) {
-
-		createDescriptorSetLayout(vk_data, computeShader.pipeline.descriptorSetLayout, shaderInfo.bindingInfo);
+		createDescriptorSetLayout(vk_data, computeShader.pipeline.descriptorSetLayout, shaderInfo.bindingInfo, 0);
 
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		pipelineLayoutInfo.setLayoutCount = 1;
 		pipelineLayoutInfo.pSetLayouts = &computeShader.pipeline.descriptorSetLayout;
 
-		if (vkCreatePipelineLayout(vk_data.logicalDevice, &pipelineLayoutInfo, nullptr, &computeShader.pipeline.pipelineLayout) != VK_SUCCESS) {
+		if (vkCreatePipelineLayout(vk_data.logicalDevice, &pipelineLayoutInfo, nullptr, &computeShader.pipeline.pipelineLayout) != VK_SUCCESS)
+		{
 			throw std::runtime_error("failed to create compute pipeline layout!");
 		}
 
@@ -27,12 +29,13 @@ namespace vk {
 		pipelineInfo.stage = shaderStage;
 		pipelineInfo.stage.pName = shaderInfo.pipelineLayout.shaderInfo.stages.back().entryPoint.c_str();
 
-		if (vkCreateComputePipelines(vk_data.logicalDevice, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &computeShader.pipeline.computePipeline) != VK_SUCCESS) {
+		if (vkCreateComputePipelines(vk_data.logicalDevice, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &computeShader.pipeline.computePipeline) != VK_SUCCESS)
+		{
 			throw std::runtime_error("failed to create compute pipeline!");
 		}
-
 	}
-	static void createComputeShader(VulkanData& vk_data, engine::ComputeShaderInfo& shaderInfo, VulkanComputeShader& computeShader) {
+	static void createComputeShader(VulkanData &vk_data, engine::ComputeShaderInfo &shaderInfo, VulkanComputeShader &computeShader)
+	{
 		createComputePipeline(vk_data, shaderInfo, computeShader);
 	}
 }

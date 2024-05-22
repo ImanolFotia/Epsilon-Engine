@@ -24,10 +24,10 @@ namespace vk
 
     template <uint32_t num_stages>
     static std::array<VkPipelineShaderStageCreateInfo, num_stages> createShaderStages(const char *vertexPath,
-                                                                                                  const char *fragmentPath,
-                                                                                                  VkShaderModule &vertShaderModule,
-                                                                                                  VkShaderModule &fragShaderModule,
-                                                                                                  VulkanData &vk_data)
+                                                                                      const char *fragmentPath,
+                                                                                      VkShaderModule &vertShaderModule,
+                                                                                      VkShaderModule &fragShaderModule,
+                                                                                      VulkanData &vk_data)
     {
 
         auto vertShaderCode = shader::readFile(vertexPath /*"../assets/shaders/vertex.spv"*/, vk_data);
@@ -142,7 +142,8 @@ namespace vk
         {
             auto &renderPipeline = renderPass.renderPipelines.at(layout_index);
             renderPipeline.numAttachments = renderPass.numAttachments;
-            vk::createDescriptorSetLayout(vk_data, renderPipeline.descriptorSetLayouts.at(0), renderPassInfo.bindingInfo);
+            vk::createDescriptorSetLayout(vk_data, renderPipeline.descriptorSetLayouts.at(0), renderPassInfo.bindingInfo, 0);
+            // vk::createDescriptorSetLayout(vk_data, renderPipeline.descriptorSetLayouts.at(1), renderPassInfo.bindingInfo, 1);
 
             auto &pipelineLayout = renderPassInfo.pipelineLayout[layout_index];
             // renderPass.renderPipelines.at(layout_index).numAttachments = renderPass.renderPassChain.ImageViews.size();

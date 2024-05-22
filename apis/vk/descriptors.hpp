@@ -9,32 +9,39 @@
 namespace vk
 {
 
-    static VkShaderStageFlagBits getStageFlag(engine::ShaderStage stage) {
+    static VkShaderStageFlagBits getStageFlag(engine::ShaderStage stage)
+    {
         VkShaderStageFlagBits outputStage{};
-        if (static_cast<bool>(stage & engine::ShaderStage::VERTEX)) {
+        if (static_cast<bool>(stage & engine::ShaderStage::VERTEX))
+        {
             outputStage = VkShaderStageFlagBits(outputStage | VK_SHADER_STAGE_VERTEX_BIT);
         }
-        if (static_cast<bool>(stage & engine::ShaderStage::FRAGMENT)) {
+        if (static_cast<bool>(stage & engine::ShaderStage::FRAGMENT))
+        {
             outputStage = VkShaderStageFlagBits(outputStage | VK_SHADER_STAGE_FRAGMENT_BIT);
         }
-        if (static_cast<bool>(stage & engine::ShaderStage::COMPUTE)) {
+        if (static_cast<bool>(stage & engine::ShaderStage::COMPUTE))
+        {
             outputStage = VkShaderStageFlagBits(outputStage | VK_SHADER_STAGE_COMPUTE_BIT);
         }
-        if (static_cast<bool>(stage & engine::ShaderStage::TESSELLATION_EVALUATION)) {
+        if (static_cast<bool>(stage & engine::ShaderStage::TESSELLATION_EVALUATION))
+        {
             outputStage = VkShaderStageFlagBits(outputStage | VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT);
         }
-        if (static_cast<bool>(stage & engine::ShaderStage::TESSELLATION_CONTROL)) {
+        if (static_cast<bool>(stage & engine::ShaderStage::TESSELLATION_CONTROL))
+        {
             outputStage = VkShaderStageFlagBits(outputStage | VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT);
         }
-        if (static_cast<bool>(stage & engine::ShaderStage::GEOMETRY)) {
+        if (static_cast<bool>(stage & engine::ShaderStage::GEOMETRY))
+        {
             outputStage = VkShaderStageFlagBits(outputStage | VK_SHADER_STAGE_GEOMETRY_BIT);
-        }/*
-        if (static_cast<bool>(stage & engine::ShaderStage::MESH)) {
-            outputStage = outputStage | VK_SHADER_STAGE_MESH_BIT_EXT;
-        }
-        if (static_cast<bool>(stage & engine::ShaderStage::TASK)) {
-            outputStage = outputStage | VK_SHADER_STAGE_TASK_BIT_EXT;
-        }*/
+        } /*
+         if (static_cast<bool>(stage & engine::ShaderStage::MESH)) {
+             outputStage = outputStage | VK_SHADER_STAGE_MESH_BIT_EXT;
+         }
+         if (static_cast<bool>(stage & engine::ShaderStage::TASK)) {
+             outputStage = outputStage | VK_SHADER_STAGE_TASK_BIT_EXT;
+         }*/
         return outputStage;
     }
 
@@ -79,12 +86,14 @@ namespace vk
         samplerLayoutBinding.stageFlags = VkShaderStageFlagBits(VK_SHADER_STAGE_FRAGMENT_BIT | VK_SHADER_STAGE_COMPUTE_BIT);
         return samplerLayoutBinding;
     }
-    static void createDescriptorSetLayout(const VulkanData &vkData, VkDescriptorSetLayout &descriptorSetLayout, std::vector<engine::UniformBindingInfo> layoutBindings)
+    static void createDescriptorSetLayout(const VulkanData &vkData, VkDescriptorSetLayout &descriptorSetLayout, std::vector<engine::UniformBindingInfo> layoutBindings, int set)
     {
         std::vector<VkDescriptorSetLayoutBinding> bindings;
         bool any_bindless = false;
         for (auto &binding : layoutBindings)
         {
+            if (binding.set != set)
+                continue;
             any_bindless |= binding.bindless;
             if (binding.type == engine::UniformBindingType::UNIFORM_BUFFER)
             {
@@ -94,10 +103,12 @@ namespace vk
             {
                 bindings.push_back(createTextureBinding(binding.binding, binding.descriptorCount, getStageFlag(binding.stage)));
             }
-            else if (binding.type == engine::UniformBindingType::SHADER_STORAGE) {
+            else if (binding.type == engine::UniformBindingType::SHADER_STORAGE)
+            {
                 bindings.push_back(createSSBOBinding(binding.binding, getStageFlag(binding.stage)));
             }
-            else if (binding.type == engine::UniformBindingType::STORAGE_IMAGE) {
+            else if (binding.type == engine::UniformBindingType::STORAGE_IMAGE)
+            {
                 bindings.push_back(createImageStorageBinding(binding.binding, getStageFlag(binding.stage)));
             }
         }
@@ -109,14 +120,14 @@ namespace vk
 
         VkDescriptorBindingFlags bindless_flags = VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT | VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT | VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT;
         VkDescriptorSetLayoutBindingFlagsCreateInfoEXT extended_info{VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT, nullptr};
-        //extended_info.bindingCount = 1;
+        // extended_info.bindingCount = 1;
         if (any_bindless)
         {
             layoutInfo.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT;
 
             extended_info.pBindingFlags = &bindless_flags;
 
-            //layoutInfo.pNext = &extended_info;
+            // layoutInfo.pNext = &extended_info;
         }
 
         if (vkCreateDescriptorSetLayout(vkData.logicalDevice, &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS)
