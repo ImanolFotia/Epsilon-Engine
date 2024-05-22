@@ -337,7 +337,7 @@ namespace engine
 			return m_pGPUBuffers[name];
 		}
 
-		ShaderEntity *getEntityPointer(int32_t index = -1)
+		ShaderEntity *getEntityPointer(int32_t index = 0)
 		{
 
 			uint32_t currFrame = m_pContext->Renderer()->CurrentFrameInFlight();
@@ -352,7 +352,17 @@ namespace engine
 				lightBufferPtr[i][index] = entity;
 		}
 
-		void *getMappedBuffer(const std::string &name)
+		void RemoveEntity(int index)
+		{
+
+			if (index >= 256)
+				return;
+			for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
+				lightBufferPtr[i][index] = {.type = EntityType::SIZE};
+		}
+
+		void *
+		getMappedBuffer(const std::string &name)
 		{
 			auto resourceManager = m_pContext->ResourceManager();
 			return resourceManager->mapBuffer(m_pGPUBuffers[name], 0);
@@ -434,6 +444,8 @@ namespace engine
 					auto albedo = addTexture(material.albedo_path, {.format = COLOR_RGBA,
 																	.wrapMode = REPEAT,
 																	.filtering = LINEAR});
+					if (albedo.Index() == 150)
+						std::cout << "here" << std::endl;
 					pbr_material.albedo_texture_index = albedo.Index();
 				}
 				if (!material.metallic_path.empty())
@@ -441,6 +453,8 @@ namespace engine
 					auto metallic = addTexture(material.metallic_path, {.format = NON_COLOR_RGBA,
 																		.wrapMode = REPEAT,
 																		.filtering = LINEAR});
+					if (metallic.Index() == 150)
+						std::cout << "here" << std::endl;
 					pbr_material.metallic_texture_index = metallic.Index();
 				}
 				if (!material.roughness_path.empty())
@@ -448,6 +462,9 @@ namespace engine
 					auto roughness = addTexture(material.roughness_path, {.format = NON_COLOR_RGBA,
 																		  .wrapMode = REPEAT,
 																		  .filtering = LINEAR});
+
+					if (roughness.Index() == 150)
+						std::cout << "here" << std::endl;
 					pbr_material.roughness_texture_index = roughness.Index();
 				}
 				if (!material.normal_path.empty())
@@ -455,6 +472,9 @@ namespace engine
 					auto normal = addTexture(material.normal_path, {.format = NON_COLOR_RGBA,
 																	.wrapMode = REPEAT,
 																	.filtering = LINEAR});
+
+					if (normal.Index() == 150)
+						std::cout << "here" << std::endl;
 					pbr_material.normal_texture_index = normal.Index();
 				}
 
