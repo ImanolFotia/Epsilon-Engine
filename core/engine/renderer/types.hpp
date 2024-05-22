@@ -401,6 +401,7 @@ namespace engine
         bool isSwapChainAttachment = false;
         bool clearAttachment = true;
         bool isExtern = false;
+        bool storageImage = false;
         int texture_index = -1;
         int imageview_index = -1;
         std::string externRenderPass = "";
@@ -652,7 +653,7 @@ namespace engine
         RenderPassFactory outputs(std::vector<RenderPassAttachment> a)
         {
             info.attachments = a;
-            info.numAttachments = info.attachments.size() - 1;
+            info.numAttachments = info.attachments.size();
             return *this;
         }
 
@@ -689,6 +690,7 @@ namespace engine
         std::string renderPass;
         uint32_t index;
         uint32_t bindingPoint;
+        UniformBindingType type;
     };
     struct BindGroupInfo
     {

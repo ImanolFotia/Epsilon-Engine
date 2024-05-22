@@ -69,7 +69,7 @@ namespace engine
 		vk::createDescriptorSetLayout(
 			*m_pVkDataPtr,
 			m_pGlobalDescriptorSetLayout,
-			{{0, 0, 0, 1, UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER, {}, {}, "", true, MAX_BINDLESS_RESOURCES, ShaderStage::FRAGMENT, "GlobalBindlessTextures"}});
+			{{0, 0, 0, 1, UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER, {}, {}, "", true, MAX_BINDLESS_RESOURCES, ShaderStage::FRAGMENT | ShaderStage::VERTEX, "GlobalBindlessTextures"}}, 1);
 
 		pCreateGlobalDescriptorSets(m_pGlobalDescriptorSetLayout,
 									m_pGlobalDescriptorPool,
@@ -328,7 +328,7 @@ namespace engine
 
 					vk::VulkanShaderBinding shaderBinding = {
 						.texture = texture,
-						.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+						.descriptorBinding = binding.type == UniformBindingType::STORAGE_IMAGE ? VkDescriptorType::VK_DESCRIPTOR_TYPE_STORAGE_IMAGE : VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 						.bindingPoint = binding.bindingPoint,
 						.isRenderPassAttachment = true,
 						.renderpass = binding.renderPass,
@@ -350,7 +350,7 @@ namespace engine
 
 					vk::VulkanShaderBinding shaderBinding = {
 						.texture = texture,
-						.descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+						.descriptorBinding = binding.type == UniformBindingType::STORAGE_IMAGE ? VkDescriptorType::VK_DESCRIPTOR_TYPE_STORAGE_IMAGE : VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
 						.bindingPoint = binding.bindingPoint,
 						.isRenderPassAttachment = true,
 						.renderpass = binding.renderPass,
@@ -526,7 +526,7 @@ namespace engine
 			m_pVkDataPtr->defaultRenderPass.renderPipelines.resize(renderPassInfo.numLayouts);
 			m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayouts.resize(2);
 			vk::createDescriptorSetLayout(*m_pVkDataPtr,
-										  m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayouts.at(RENDERPASS_LAYOUT), renderPassInfo.bindingInfo);
+										  m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayouts.at(RENDERPASS_LAYOUT), renderPassInfo.bindingInfo, 0);
 
 			m_pVkDataPtr->defaultRenderPass.numAttachments = renderPassInfo.numAttachments;
 
@@ -585,7 +585,7 @@ namespace engine
 	{
 		vk::VulkanRenderPass renderPass = {};
 
-		renderPass.clearValues.resize(renderPassInfo.numAttachments + (renderPassInfo.depthAttachment ? 1 : 0));
+		renderPass.clearValues.resize(renderPassInfo.numAttachments /*+ (renderPassInfo.depthAttachment ? 1 : 0))*/);
 		for (int i = 0; i < renderPassInfo.numAttachments; i++)
 		{
 			renderPass.clearValues[i].color = {renderPassInfo.attachments[i].clearColor[0],
@@ -642,7 +642,8 @@ namespace engine
 			texInfo.width = renderPassInfo.dimensions.width;
 			texInfo.height = renderPassInfo.dimensions.height;
 			texInfo.num_channels = attachment.isDepthAttachment ? 1 : resolveNumChannels(attachment.format);
-			texInfo.usage = (attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+			texInfo.usage = ((attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT) |
+							(attachment.storageImage ? VK_IMAGE_USAGE_STORAGE_BIT : 0u);
 
 			texInfo.compareEnable = attachment.depthCompare;
 

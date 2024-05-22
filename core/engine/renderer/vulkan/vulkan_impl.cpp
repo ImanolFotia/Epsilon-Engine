@@ -703,6 +703,9 @@ namespace engine
 		/* Begin generate mips*/
 		// Copy down mips from n-1 to n
 
+		if (texInfo.storage_image)
+			return;
+
 		VkCommandBuffer blitCommandBuffer = vk::beginSingleTimeCommands(*m_pVkDataPtr, m_pTransferCommandPool);
 		if (!texInfo.isCompressed && texInfo.mipLevels > 1)
 		{
