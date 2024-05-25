@@ -12,11 +12,14 @@
 #include <core/framework/utils/file.hpp>
 #include <core/framework/utils/image.hpp>
 
+#include "font.hpp"
+
 // #define STBTT_STATIC
 // #define STB_TRUETYPE_IMPLEMENTATION
 // #include "../thirdparty/stb_truetype.h"
 
-#include "Roboto.hpp"
+// #include "Roboto.hpp"
+#include "Orbitron-Regular.hpp"
 
 namespace UI
 {
@@ -97,6 +100,14 @@ namespace UI
     engine::Ref<engine::BindGroup> bind_group;
   };
 
+  struct ButtonFlags
+  {
+    bool fill_width = false;
+    bool center_text = false;
+    bool is_tab = false;
+    bool is_selected_tab = false;
+  };
+
   enum class DockLocation : uint8_t
   {
     TOP = 0,
@@ -142,7 +153,6 @@ namespace UI
     {
       uint8_t r, g, b, a;
     };
-    std::vector<font_pixel> pixels;
     int highest_character = 0;
 
     engine::ShaderInfo loadShaders()
@@ -163,162 +173,40 @@ namespace UI
 
       return mainShaderInfo;
     }
+    const int DEFAULT_FONT = 0;
+    std::vector<std::shared_ptr<Font>> m_Fonts;
 
-    std::array<Roboto::AlignedQuad, 95> m_AlignedQuads;
+    // std::array<MaterialIcons_Regular::AlignedQuad, 2235> m_AlignedQuads;
 
     glm::vec2 m_WhitePixelPos{};
     std::unordered_map<std::string, glm::vec2> m_WhitePixelPositions;
     engine::PipelineLayout uiLayout;
-    void Init(std::shared_ptr<engine::ResourceManager> resource_manager,
-              std::shared_ptr<engine::Renderer> renderer,
-              framework::Window *window)
+
+    void InitDefaultFont()
     {
-      m_pResourceManager = resource_manager;
-      m_pRenderer = renderer;
-      m_pWindow = window;
 
-      m_pVertices.resize(10000);
-      pixels.resize(texture_size * texture_size);
-
-      engine::ShaderInfo mainShaderInfo = loadShaders();
-
-      engine::VertexLayout vertexLayout = {
-          .descriptors =
-              {
-                  {engine::XYZW_FLOAT, offsetof(UIVertex, pos_uv)},
-                  {engine::XYZW_FLOAT, offsetof(UIVertex, color)},
-              },
-          .size = sizeof(UIVertex)};
-
-      uiLayout = {
-          .shaderInfo = mainShaderInfo,
-          .vertexLayout = vertexLayout,
-          .cullMode = engine::CullMode::NONE,
-          .windingMode = engine::WindingMode::CLOCKWISE,
-          .depthWriteEnable = false,
-          .depthTestEnable = false,
-      };
-      /*
-                              engine::RenderPassInfo renderPassInfo =
-                                      engine::RenderPassFactory()
-                                              .name("Default")
-                                              .depthAttachment(true)
-                                              .isSwapChainAttachment(true)
-                                              .subpasses({})
-                                              .dimensions({.width = 1280, .height
-         = 720}) .inputs({{.size = 384, .offset = 0, .binding = 0, .set = 0, .type
-         = engine::UniformBindingType::UNIFORM_BUFFER, .descriptorCount = 1, .name
-         = "UIUniformBuffer"},
-                                                               {
-                                                                       .binding =
-         1, .type = engine::UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER,
-                                                                       .name =
-         "font_image",
-                                                               }})
-                                              .outputs({{
-                                                                        .format =
-         engine::COLOR_RGBA, .blendEnable = true,
-
-                                                                        .clearColor
-         = {0.1f, 0.1f, 0.1f, 0.0f}, .isDepthAttachment = false,
-                                                                        .isSwapChainAttachment
-         = true, .clearAttachment = true,
-                                                                },
-                                                                {.format =
-         engine::DEPTH_F32_STENCIL_8, .depthStencilValue = {1, 0},
-                                                                 .isDepthAttachment
-         = true}}) .pipelineLayout(uiLayout) .pushConstant(72);
-
-                              m_pRenderPass =
-         m_pResourceManager->createDefaultRenderPass(renderPassInfo);*/
-      // m_pVertices.resize(10000);
-
-      m_pVertexBuffer.resize(m_pResourceManager->FramesInFlight());
-
-      IO::Info("Allocating ", m_pResourceManager->FramesInFlight(),
-               " vertex buffers for UI.");
-
-      for (int i = 0; i < m_pResourceManager->FramesInFlight(); i++)
-      {
-
-        m_pVertexBuffer[i] = m_pResourceManager->createMappedVertexBuffer(
-            "UIVertexBuffer" + std::to_string(i),
-            {.size = 10000 * sizeof(UIVertex)});
-      }
-
-      // unsigned char* ttf_buffer = new unsigned char[1 << 20];
-      // unsigned char* temp_bitmap = new unsigned char[texture_size *
-      // texture_size]; fread(ttf_buffer, 1, 1 << 20,
-      // fopen("./assets/fonts/Roboto-Regular.ttf", "rb"));
-      // stbtt_BakeFontBitmap(ttf_buffer, 0, 18.0, temp_bitmap, texture_size,
-      // texture_size, 32, 95, cdata);
-      /*
-      for (int i = 0; i < 95; i++) {
-              char c = i;
-              float x = 0, y = 0;
-              stbtt_aligned_quad q;
-              stbtt_GetBakedQuad(cdata, texture_size, texture_size, c, &x, &y, &q,
-      1);
-
-              m_AlignedQuads[i] = { q.x0,q.y0,q.s0,q.t0,q.x1,q.y1,q.s1,q.t1 };
-      }
+      std::vector<font_pixel> pixels;
+      std::shared_ptr<Font> default_font = std::make_shared<Orbitron>();
+      pixels.resize(default_font->Dimensions() * default_font->Dimensions());
+      texture_size = default_font->Dimensions();
 
       for (int i = 0; i < texture_size * texture_size; i++)
       {
-              pixels[i] = { 255,
-                                       255,
-                                       255,
-                                       temp_bitmap[i] };
+        pixels[i] = {255, 255, 255, default_font->Pixels()[i]};
 
-              if (temp_bitmap[i] == 255) {
-                      m_WhitePixelPos = glm::vec2(i % 256, i / 256) / 255.0f;
-              }
-      }
-
-      delete[] temp_bitmap;
-      delete[] ttf_buffer;
-
-      std::ofstream outHeader("Roboto.hpp");
-      outHeader << "//Roboto font\n";
-      outHeader << "namespace Roboto {\n";
-      outHeader << "struct AlignedQuad\n{\n\tfloat x0, y0, s0, t0; //
-      top-left\n\tfloat x1, y1, s1, t1; // bottom-right\n};\n"; outHeader <<
-      "static const unsigned char pixels[] = {\n";
-
-      for (int i = 0; i < texture_size * texture_size; i++)
-      {
-              outHeader << (int)pixels[i].a << ",";
-              if (i % 40 == 0 && i != 0) outHeader << "\n";
-      }
-
-      outHeader << "};\n\n";
-      outHeader << "static const AlignedQuad glyphs[] = {\n";
-
-      for (int i = 0; i < 95; i++) {
-              outHeader << "{" << m_AlignedQuads[i].x0 << ", " <<
-      m_AlignedQuads[i].y0 << ", " << m_AlignedQuads[i].s0 << ", " <<
-      m_AlignedQuads[i].t0 << ","; outHeader << m_AlignedQuads[i].x1 << ", " <<
-      m_AlignedQuads[i].y1 << ", " << m_AlignedQuads[i].s1 << ", " <<
-      m_AlignedQuads[i].t1 << "},"; if (i % 2 == 0) outHeader << "\n";
-      }
-      outHeader << "};\n";
-      outHeader << "}\n";*/
-
-      for (int i = 0; i < texture_size * texture_size; i++)
-      {
-        pixels[i] = {255, 255, 255, Roboto::pixels[i]};
-
-        if (Roboto::pixels[i] == 255)
+        if (default_font->Pixels()[i] == 255)
         {
-          m_WhitePixelPos = glm::vec2(i % 256, i / 256) / 256.0f;
+          m_WhitePixelPos =
+              glm::vec2(i % texture_size, i / texture_size) / 256.0f;
+          // break;
         }
       }
 
       for (int i = 0; i < 95; i++)
       {
-        m_AlignedQuads[i] = Roboto::glyphs[i];
 
-        int glyph_size = abs(m_AlignedQuads[i].y0 - m_AlignedQuads[i].y1);
+        int glyph_size =
+            abs(default_font->Glyphs()[i].y0 - default_font->Glyphs()[i].y1);
 
         if (glyph_size > highest_character)
         {
@@ -346,6 +234,52 @@ namespace UI
           .renderPass = "SwapChainPass",
           .name = "UIBindGroup",
       });
+
+      m_Fonts.push_back(default_font);
+    }
+
+    void Init(std::shared_ptr<engine::ResourceManager> resource_manager,
+              std::shared_ptr<engine::Renderer> renderer,
+              framework::Window *window)
+    {
+      m_pResourceManager = resource_manager;
+      m_pRenderer = renderer;
+      m_pWindow = window;
+
+      m_pVertices.resize(10000);
+
+      engine::ShaderInfo mainShaderInfo = loadShaders();
+
+      engine::VertexLayout vertexLayout = {
+          .descriptors =
+              {
+                  {engine::XYZW_FLOAT, offsetof(UIVertex, pos_uv)},
+                  {engine::XYZW_FLOAT, offsetof(UIVertex, color)},
+              },
+          .size = sizeof(UIVertex)};
+
+      uiLayout = {
+          .shaderInfo = mainShaderInfo,
+          .vertexLayout = vertexLayout,
+          .cullMode = engine::CullMode::NONE,
+          .windingMode = engine::WindingMode::CLOCKWISE,
+          .depthWriteEnable = false,
+          .depthTestEnable = false,
+      };
+      m_pVertexBuffer.resize(m_pResourceManager->FramesInFlight());
+
+      IO::Info("Allocating ", m_pResourceManager->FramesInFlight(),
+               " vertex buffers for UI.");
+
+      for (int i = 0; i < m_pResourceManager->FramesInFlight(); i++)
+      {
+
+        m_pVertexBuffer[i] = m_pResourceManager->createMappedVertexBuffer(
+            "UIVertexBuffer" + std::to_string(i),
+            {.size = 10000 * sizeof(UIVertex)});
+      }
+
+      InitDefaultFont();
 
       m_pMesh = m_pResourceManager->insertMesh(
           "UIMesh", {.vertexBuffer = m_pVertexBuffer[0], .numVertices = 0});
@@ -392,7 +326,8 @@ namespace UI
 
       for (int i = 0; i < w * h; i++)
       {
-        if (pixels[i] == 255 && pixels[i + 1] == 255 && pixels[i + 2] == 255 && pixels[i + 3] == 255)
+        if (pixels[i] == 255 && pixels[i + 1] == 255 && pixels[i + 2] == 255 &&
+            pixels[i + 3] == 255)
         {
           m_WhitePixelPositions[name] = glm::vec2(i % h, i / w) / glm::vec2(w, h);
           break;
@@ -408,7 +343,7 @@ namespace UI
       texInfo.format = engine::TextureFormat::COLOR_RGBA;
       texInfo.generateMipMaps = false;
       texInfo.mipLevels = 1;
-      texInfo.size = texture_size * texture_size * 4;
+      texInfo.size = w * h * 4;
 
       m_pBindGroups[name] = m_pResourceManager->createBindGroup({
           .bindingInfo = {{
@@ -428,6 +363,7 @@ namespace UI
 
     glm::vec2 textSize(const std::string &text);
     glm::vec2 buttonSize(const std::string &text);
+    const glm::vec2 const &Resolution() { return m_pResolution; }
 
     void Update();
     void Draw(engine::Ref<engine::RenderPass>);
@@ -435,7 +371,8 @@ namespace UI
 
     glm::vec2 CursorPosition();
 
-    glm::vec2 ToScreenCoords(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj, const glm::vec2 &resolution);
+    glm::vec2 ToScreenCoords(const glm::mat4 &model, const glm::mat4 &view,
+                             const glm::mat4 &proj, const glm::vec2 &resolution);
 
     void CreateRect(glm::vec2 position, glm::vec2 size, glm::vec2 uv0,
                     glm::vec2 uv1,
@@ -445,7 +382,8 @@ namespace UI
 
     void SetNextWindowPosition(glm::vec2 position);
 
-    void BeginWindow(const std::string &name, glm::vec2 size = glm::vec2(0.0f), glm::vec4 color = glm::vec4(0.0, 0.0, 0.0, 0.5));
+    void BeginWindow(const std::string &name, glm::vec2 size = glm::vec2(0.0f),
+                     glm::vec4 color = glm::vec4(0.0, 0.0, 0.0, 0.5));
 
     void EndWindow();
 
@@ -454,7 +392,7 @@ namespace UI
     void Text(const std::string &text, glm::vec2 position,
               glm::vec4 color = glm::vec4(1.0f), bool standalone = true);
 
-    bool Button(const std::string &text, bool fill_width = false);
+    bool Button(const std::string &text, ButtonFlags flags = {});
     void Sameline();
 
     void Dock(DockLocation, float thickness);
