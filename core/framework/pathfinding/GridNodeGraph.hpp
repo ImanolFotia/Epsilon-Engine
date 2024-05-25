@@ -2,8 +2,10 @@
 
 #include <glm/glm.hpp>
 
-namespace framework {
-	class GridNodeGraph {
+namespace framework
+{
+	class GridNodeGraph
+	{
 	public:
 		struct Node
 		{
@@ -14,52 +16,65 @@ namespace framework {
 			float weight = 0.0;
 			float localDistance = 10000000000000000.0f;
 			float globalDistance = 10000000000000000.0f;
-			Node* parent = nullptr;
-			std::vector<Node*> neighbors;
+			Node *parent = nullptr;
+			std::vector<Node *> neighbors;
 
-			void AddNeighbor(Node* node) {
+			void AddNeighbor(Node *node)
+			{
 				neighbors.push_back(node);
 			}
 		};
 
 	public:
 		GridNodeGraph() = default;
-		GridNodeGraph(size_t w, size_t h) : m_pWidth{ w }, m_pHeight{ h } {
-			m_pNodes.resize(w*h);
+		GridNodeGraph(size_t w, size_t h) : m_pWidth{w}, m_pHeight{h}
+		{
+			m_pNodes.resize(w * h);
 
 			clear();
 		}
 
-		size_t Width() const {
+		size_t Width() const
+		{
 			return m_pWidth;
 		}
 
-		size_t Height() const {
+		size_t Height() const
+		{
 			return m_pHeight;
 		}
 
-		Node& getNode(size_t index) {
+		Node &getNode(size_t index)
+		{
 			return m_pNodes[index];
 		}
 
-		std::vector<Node>& getNodes() {
+		std::vector<Node> &getNodes()
+		{
 			return m_pNodes;
 		}
 
-		void clear() {
-			//m_pNodes.clear();
-			//m_pNodes.resize(m_pWidth * m_pHeight);
-			for (int x = 0; x < m_pWidth; x++) {
+		void clear()
+		{
+			// m_pNodes.clear();
+			// m_pNodes.resize(m_pWidth * m_pHeight);
+			for (int x = 0; x < m_pWidth; x++)
+			{
 				for (int y = 0; y < m_pHeight; y++)
 				{
-					//m_pNodes[y * m_pWidth + x].obstacle = false;
+					// m_pNodes[y * m_pWidth + x].obstacle = false;
 					m_pNodes[y * m_pWidth + x].parent = nullptr;
 					m_pNodes[y * m_pWidth + x].visited = false;
+					m_pNodes[y * m_pWidth + x].localDistance = 10000000000000000.0f;
+					m_pNodes[y * m_pWidth + x].globalDistance = 10000000000000000.0f;
+					m_pNodes[y * m_pWidth + x].obstacle = false;
+					m_pNodes[y * m_pWidth + x].weight = 0.0;
 				}
 			}
 		}
 
-		void AddNeighbor(size_t index, Node* node) {
+		void AddNeighbor(size_t index, Node *node)
+		{
 			m_pNodes[index].neighbors.push_back(node);
 		}
 
