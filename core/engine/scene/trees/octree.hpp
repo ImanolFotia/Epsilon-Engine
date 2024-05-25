@@ -271,6 +271,7 @@ namespace engine
 		{
 			VISIBILITY = 0,
 			SHADOW,
+			PROBE,
 			SIZE
 		};
 
@@ -321,7 +322,7 @@ namespace engine
 		{
 			item->data_position.container->erase(item->data_position.iterator);
 			m_Data.erase(item);
-				}
+		}
 
 		std::list<OctreeItem<T>>::iterator relocate(typename OctreeData::iterator &item, const Box &box)
 		{
