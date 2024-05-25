@@ -595,7 +595,7 @@ namespace framework
 			}*/
 			if (!ret)
 			{
-				IO::Error("Failed to load glTF: ",path);
+				IO::Error("Failed to load glTF: ", path);
 				return false;
 			}
 			/*
@@ -923,14 +923,14 @@ namespace framework
 											// 3D vector of float
 											auto positions = std::unique_ptr<Vertex3DArrayPtr<glm::vec3>>(new Vertex3DArrayPtr<glm::vec3>(VertexArrayStorage<glm::vec3>(dataPtr, count, byte_stride)));
 
-
 											for (size_t i{0}; i < positions->size(); ++i)
 											{
-												const auto v = (*positions)[i];
+												auto v = (*positions)[i];
 												// std::cout << "positions[" << i << "]: (" << v.x << ", "
 												//	<< v.y << ", " << v.z << ")\n";
 
 												currentMesh.data().mesh.Vertices[i + currentvOffset].position = parent_transform * (glm::vec4(v.x, v.y, v.z, 1.0f));
+												v = currentMesh.data().mesh.Vertices[i + currentvOffset].position;
 												if (v.x < m_pMin.x)
 													m_pMin.x = v.x;
 												if (v.y < m_pMin.y)
@@ -965,11 +965,12 @@ namespace framework
 
 											for (size_t i{0}; i < positions->size(); ++i)
 											{
-												const auto v = (*positions)[i];
+												auto v = (*positions)[i];
 												// std::cout << "positions[" << i << "]: (" << v.x
 												//	<< ", " << v.y << ", " << v.z << ")\n";
 
 												currentMesh.data().mesh.Vertices[i + currentvOffset].position = parent_transform * (glm::vec4(v.x, v.y, v.z, 1.0f));
+												v = currentMesh.data().mesh.Vertices[i + currentvOffset].position;
 												if (v.x < m_pMin.x)
 													m_pMin.x = v.x;
 												if (v.y < m_pMin.y)
