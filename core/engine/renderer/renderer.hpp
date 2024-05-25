@@ -112,6 +112,8 @@ namespace engine
 
         virtual void ComputeDispatch(Ref<ComputeShader>, Ref<BindGroup>) = 0;
 
+        virtual void ComputeDispatchAsync(Ref<ComputeShader>, Ref<BindGroup>) = 0;
+
     public:
         /**
          * @brief Construct a new Renderer object
