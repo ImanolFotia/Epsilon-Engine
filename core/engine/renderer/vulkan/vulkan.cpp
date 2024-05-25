@@ -219,7 +219,7 @@ namespace engine
 		}
 	}
 
-	void VulkanRenderer::ComputeDispatch(Ref<ComputeShader> computeShaderRef, Ref<BindGroup> bindGroup)
+	void VulkanRenderer::ComputeDispatchAsync(Ref<ComputeShader> computeShaderRef, Ref<BindGroup> bindGroup)
 	{
 		m_pFrame.AddComputeDispatch();
 		vk::VulkanComputeShader *computeShader = m_pResourceManagerRef->computeShaderPool.get(computeShaderRef);
@@ -239,16 +239,6 @@ namespace engine
 					.pImageMemoryBarriers = computeShader->imageMemoryBarrier.data()};
 
 			vkCmdPipelineBarrier2(m_pFrame.ComputeCommandBuffer(), &dependencyInfo);
-			/*
-					vkCmdPipelineBarrier(
-						m_pFrame.ComputeCommandBuffer(),
-						VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT |
-							VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
-						VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
-						0,
-						0, nullptr,
-						computeShader->bufferMemoryBarrier.size(), computeShader->bufferMemoryBarrier.data(),
-						computeShader->imageMemoryBarrier.size(), computeShader->imageMemoryBarrier.data());*/
 		}
 
 		vkCmdBindPipeline(m_pFrame.ComputeCommandBuffer(), VK_PIPELINE_BIND_POINT_COMPUTE, computeShader->pipeline.computePipeline);
@@ -261,6 +251,46 @@ namespace engine
 								&bg->descriptorSets[m_pCurrentFrame], 0, 0);
 
 		vkCmdDispatch(m_pFrame.ComputeCommandBuffer(), computeShader->groupCountX, computeShader->groupCountY, computeShader->groupCountZ);
+	}
+
+	void VulkanRenderer::ComputeDispatch(Ref<ComputeShader> computeShaderRef, Ref<BindGroup> bindGroup)
+	{
+
+		if (m_pRenderPassActive)
+		{
+			vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
+			m_pRenderPassActive = false;
+		}
+		m_pFrame.AddComputeDispatch();
+		vk::VulkanComputeShader *computeShader = m_pResourceManagerRef->computeShaderPool.get(computeShaderRef);
+
+		if (computeShader->hasImageBarrier || computeShader->hasBufferMemoryBarrier)
+		{
+
+			VkDependencyInfo dependencyInfo =
+				{
+					.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER_2,
+					.pNext = nullptr,
+					.memoryBarrierCount = 0,
+					.pMemoryBarriers = nullptr,
+					.bufferMemoryBarrierCount = (uint32_t)computeShader->bufferMemoryBarrier.size(),
+					.pBufferMemoryBarriers = computeShader->bufferMemoryBarrier.data(),
+					.imageMemoryBarrierCount = (uint32_t)computeShader->imageMemoryBarrier.size(),
+					.pImageMemoryBarriers = computeShader->imageMemoryBarrier.data()};
+
+			vkCmdPipelineBarrier2(m_pFrame.CommandBuffer(), &dependencyInfo);
+		}
+
+		vkCmdBindPipeline(m_pFrame.CommandBuffer(), VK_PIPELINE_BIND_POINT_COMPUTE, computeShader->pipeline.computePipeline);
+
+		auto bg = m_pResourceManagerRef->materialPool.get(bindGroup);
+
+		vkCmdBindDescriptorSets(m_pFrame.CommandBuffer(),
+								VK_PIPELINE_BIND_POINT_COMPUTE,
+								computeShader->pipeline.pipelineLayout, 0, 1,
+								&bg->descriptorSets[m_pCurrentFrame], 0, 0);
+
+		vkCmdDispatch(m_pFrame.CommandBuffer(), computeShader->groupCountX, computeShader->groupCountY, computeShader->groupCountZ);
 	}
 
 	void VulkanRenderer::BeginCompute()

@@ -115,6 +115,7 @@ namespace engine
         void InitDebugRenderer() override;
 
         void ComputeDispatch(Ref<ComputeShader>, Ref<BindGroup>) override;
+        void ComputeDispatchAsync(Ref<ComputeShader>, Ref<BindGroup>) override;
 
     private:
         void pRecreateSwapChain();
