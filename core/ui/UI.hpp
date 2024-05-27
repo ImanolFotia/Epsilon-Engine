@@ -373,7 +373,7 @@ namespace UI
 
     glm::vec2 textSize(const std::string &text);
     glm::vec2 buttonSize(const std::string &text);
-    const glm::vec2 const &Resolution() { return m_pResolution; }
+    const glm::vec2 &Resolution() { return m_pResolution; }
 
     void Update();
     void Draw(engine::Ref<engine::RenderPass>);
