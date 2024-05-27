@@ -116,44 +116,54 @@ namespace UI
     RIGHT
   };
 
+  struct font_pixel
+  {
+    uint8_t r, g, b, a;
+  };
+
   struct UI
   {
 
   private:
+    const int DEFAULT_FONT = 0;
+
+    Context m_pContext{};
+    framework::Window *m_pWindow;
+    Mouse m_pMouse{};
+    Style m_pStyle{};
+
     std::vector<DrawCommand> m_DrawLists;
+    std::vector<engine::Ref<engine::Buffer>> m_pVertexBuffer;
+    std::vector<UIVertex> m_pVertices;
+    std::vector<std::shared_ptr<Font>> m_Fonts;
+
+    std::unordered_map<std::string, glm::vec2> m_WhitePixelPositions;
+    std::unordered_map<std::string, engine::Ref<engine::BindGroup>> m_pBindGroups;
+
     std::shared_ptr<engine::ResourceManager> m_pResourceManager = nullptr;
     std::shared_ptr<engine::Renderer> m_pRenderer = nullptr;
-    Context m_pContext;
-    std::vector<engine::Ref<engine::Buffer>> m_pVertexBuffer;
-    engine::Ref<engine::Mesh> m_pMesh; // dummy mesh to pass the vertex buffer
-    engine::Ref<engine::BindGroup> m_pBindGroup;
-    engine::Ref<engine::RenderPass> m_pRenderPass;
-    uint32_t pending_actions = 0;
-    glm::vec2 m_pCursorPosition = glm::vec2(0.0f);
-    float m_pAspectRatio = 1280.0f / 720.0f;
-    glm::vec2 m_pResolution = glm::vec2(1280.0f, 720.0f);
-    framework::Window *m_pWindow;
-    Mouse m_pMouse;
-    Style m_pStyle;
 
-  public:
-    std::vector<UIVertex> m_pVertices;
+    engine::Ref<engine::Mesh> m_pMesh; // dummy mesh to pass the vertex buffer
+    engine::Ref<engine::BindGroup> m_CurrentBindGroup;
+    engine::Ref<engine::RenderPass> m_pRenderPass;
 
     size_t vertices_pushed = 0;
     size_t commands_pushed = 0;
 
+    // uint32_t texture_size = 128;
+    // uint32_t highest_character = 0;
+    uint32_t pending_actions = 0;
+    uint32_t current_font = 0;
+
+    glm::vec2 m_pCursorPosition{};
+    glm::vec2 m_pResolution = glm::vec2(1280.0f, 720.0f);
+    // glm::vec2 m_WhitePixelPos{};
+
+    float m_pAspectRatio = 1280.0f / 720.0f;
+
     Window *currentWindow = nullptr;
-    // std::unordered_map<std::string, engine::Ref<engine::BindGroup>>
 
-    // stbtt_bakedchar cdata[95]; // ASCII 32..126 is 95 glyphs
-
-    int texture_size = 128;
-
-    struct font_pixel
-    {
-      uint8_t r, g, b, a;
-    };
-    int highest_character = 0;
+    engine::PipelineLayout uiLayout;
 
     engine::ShaderInfo loadShaders()
     {
@@ -173,32 +183,32 @@ namespace UI
 
       return mainShaderInfo;
     }
-    const int DEFAULT_FONT = 0;
-    std::vector<std::shared_ptr<Font>> m_Fonts;
 
-    // std::array<MaterialIcons_Regular::AlignedQuad, 2235> m_AlignedQuads;
-
-    glm::vec2 m_WhitePixelPos{};
-    std::unordered_map<std::string, glm::vec2> m_WhitePixelPositions;
-    engine::PipelineLayout uiLayout;
-
+  public:
     void InitDefaultFont()
     {
+      std::shared_ptr<Font> default_font = std::make_shared<Orbitron>();
+      AddFont(default_font);
+      m_CurrentBindGroup = m_pBindGroups[default_font->Name()];
+    }
+
+    int32_t AddFont(std::shared_ptr<Font> font)
+    {
+      if (font == nullptr)
+        return -1;
 
       std::vector<font_pixel> pixels;
-      std::shared_ptr<Font> default_font = std::make_shared<Orbitron>();
-      pixels.resize(default_font->Dimensions() * default_font->Dimensions());
-      texture_size = default_font->Dimensions();
+      pixels.resize(font->Dimensions() * font->Dimensions());
+      font->texture_size = font->Dimensions();
 
-      for (int i = 0; i < texture_size * texture_size; i++)
+      for (int i = 0; i < font->texture_size * font->texture_size; i++)
       {
-        pixels[i] = {255, 255, 255, default_font->Pixels()[i]};
+        pixels[i] = {255, 255, 255, font->Pixels()[i]};
 
-        if (default_font->Pixels()[i] == 255)
+        if (font->Pixels()[i] == 255)
         {
-          m_WhitePixelPos =
-              glm::vec2(i % texture_size, i / texture_size) / 256.0f;
-          // break;
+          glm::vec2 tmp = glm::vec2(i % font->texture_size, i / font->texture_size) / 256.0f;
+          font->white_pixel = {tmp.x, tmp.y};
         }
       }
 
@@ -206,36 +216,38 @@ namespace UI
       {
 
         int glyph_size =
-            abs(default_font->Glyphs()[i].y0 - default_font->Glyphs()[i].y1);
+            abs(font->Glyphs()[i].y0 - font->Glyphs()[i].y1);
 
-        if (glyph_size > highest_character)
+        if (glyph_size > font->highest_character)
         {
-          highest_character = glyph_size;
+          font->highest_character = glyph_size;
         }
       }
 
       engine::TextureCreationInfo texInfo;
       texInfo.pixels = (unsigned char *)pixels.data();
-      texInfo.width = texture_size;
-      texInfo.height = texture_size;
+      texInfo.width = font->texture_size;
+      texInfo.height = font->texture_size;
       texInfo.format = engine::TextureFormat::COLOR_RGBA;
       texInfo.generateMipMaps = false;
       texInfo.mipLevels = 1;
-      texInfo.size = texture_size * texture_size * 4;
+      texInfo.size = font->texture_size * font->texture_size * 4;
 
-      m_pBindGroup = m_pResourceManager->createBindGroup({
+      m_pBindGroups[font->Name()] = m_pResourceManager->createBindGroup({
           .bindingInfo = {{
               .binding = 2,
               .type = engine::UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER,
               .textureInfo = texInfo,
-              .name = "font_image",
+              .name = font->Name(),
           }},
           .inputs = {},
           .renderPass = "SwapChainPass",
           .name = "UIBindGroup",
       });
 
-      m_Fonts.push_back(default_font);
+      m_Fonts.push_back(font);
+
+      return m_Fonts.size() - 1;
     }
 
     void Init(std::shared_ptr<engine::ResourceManager> resource_manager,
@@ -286,8 +298,6 @@ namespace UI
 
       m_DrawLists.resize(1);
     }
-
-    std::unordered_map<std::string, engine::Ref<engine::BindGroup>> m_pBindGroups;
 
     void AddRenderTarget(const char *name, uint32_t rto_index,
                          const std::string &renderPass)

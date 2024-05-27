@@ -6,19 +6,19 @@ namespace UI
   void UI::CheckShader()
   {
 
-    if (m_DrawLists[commands_pushed].bind_group != m_pBindGroup)
+    if (m_DrawLists[commands_pushed].bind_group != m_CurrentBindGroup)
     {
       auto &new_command = m_DrawLists.emplace_back();
       commands_pushed++;
       new_command.vertex_offset = vertices_pushed;
       new_command.num_vertices = 0;
-      new_command.bind_group = m_pBindGroup;
+      new_command.bind_group = m_CurrentBindGroup;
     }
   }
 
   glm::vec2 UI::textSize(const std::string &text)
   {
-
+    auto font = m_Fonts[current_font];
     float ox = 0, oy = 0;
     char *text_data;
     char *text_data_orig;
@@ -29,13 +29,13 @@ namespace UI
     std::memcpy(text_data, text.c_str(), text.size() + 1);
     while (*text_data)
     {
-      if (*text_data >= 32 && *text_data < 128)
+      if (*text_data >= font->first_char && *text_data < font->first_char + font->num_chars)
       {
         float x = 0, y = 0;
         // stbtt_aligned_quad q;
         // stbtt_GetBakedQuad(cdata, texture_size, texture_size, *text_data - 32,
         // &x, &y, &q, 1); // 1=opengl & d3d10+,0=d3d9
-        AlignedQuad q = m_Fonts[DEFAULT_FONT]->Glyphs()[(int)(*text_data) - 32];
+        AlignedQuad q = m_Fonts[DEFAULT_FONT]->Glyphs()[(int)(*text_data) - font->first_char];
 
         if (*text_data == ' ')
         {
@@ -129,7 +129,7 @@ namespace UI
              .layout_index = 1,
              .uniformIndex = 0});
 
-        draw_command.bind_group = m_pBindGroup;
+        draw_command.bind_group = m_CurrentBindGroup;
         draw_command.num_vertices = 0;
         draw_command.vertex_offset = 0;
       }
@@ -238,10 +238,12 @@ namespace UI
     size_t temp_vtx = vertices_pushed;
     vertices_pushed = currentWindow->vtx_index;
 
+    glm::vec2 white_pixel = glm::vec2(m_Fonts[current_font]->white_pixel.x, m_Fonts[current_font]->white_pixel.y);
+
     CreateRect(currentWindow->position,
                size + glm::vec2(m_pStyle.windowPadding * 3.0f,
                                 m_pStyle.windowPadding * 3.0f),
-               m_WhitePixelPos, m_WhitePixelPos, currentWindow->color);
+               white_pixel, white_pixel, currentWindow->color);
 
     vertices_pushed = temp_vtx;
 
@@ -269,6 +271,7 @@ namespace UI
   void UI::Text(const std::string &text, glm::vec2 position, glm::vec4 color,
                 bool standalone)
   {
+    auto font = m_Fonts[current_font];
     CheckShader();
 
     m_pContext.prev_widget_position = position;
@@ -289,7 +292,7 @@ namespace UI
 
     while (*text_data)
     {
-      if (*text_data >= 32 && *text_data < 128)
+      if (*text_data >= font->first_char && *text_data < font->first_char + font->num_chars)
       {
         float x = 0, y = 0;
         std::vector<UIVertex> vertices;
@@ -299,7 +302,7 @@ namespace UI
         // stbtt_GetBakedQuad(cdata, texture_size, texture_size, *text_data - 32,
         // &x, &y, &q, 1); // 1=opengl & d3d10+,0=d3d9
 
-        AlignedQuad q = m_Fonts[DEFAULT_FONT]->Glyphs()[(int)(*text_data) - 32];
+        AlignedQuad q = font->Glyphs()[(int)(*text_data) -  font->first_char];
 
         if (*text_data == ' ')
         {
@@ -309,19 +312,19 @@ namespace UI
         {
 
           glm::vec4 a = glm::vec4((position) / m_pResolution +
-                                      glm::vec2(q.x0, q.y0 + highest_character) /
+                                      glm::vec2(q.x0, q.y0 + font->highest_character) /
                                           m_pResolution,
                                   q.s0, q.t0);
           glm::vec4 b = glm::vec4((position) / m_pResolution +
-                                      glm::vec2(q.x1, q.y0 + highest_character) /
+                                      glm::vec2(q.x1, q.y0 + font->highest_character) /
                                           m_pResolution,
                                   q.s1, q.t0);
           glm::vec4 c = glm::vec4((position) / m_pResolution +
-                                      glm::vec2(q.x0, q.y1 + highest_character) /
+                                      glm::vec2(q.x0, q.y1 + font->highest_character) /
                                           m_pResolution,
                                   q.s0, q.t1);
           glm::vec4 d = glm::vec4((position) / m_pResolution +
-                                      glm::vec2(q.x1, q.y1 + highest_character) /
+                                      glm::vec2(q.x1, q.y1 + font->highest_character) /
                                           m_pResolution,
                                   q.s1, q.t1);
 
@@ -378,6 +381,7 @@ namespace UI
   bool UI::Button(const std::string &text, ButtonFlags flags)
   {
     CheckShader();
+    auto font = m_Fonts[current_font];
     glm::vec2 initial_position = m_pCursorPosition;
     const float padding = 5;
     glm::vec2 size = glm::vec2(m_pStyle.buttonPadding,
@@ -400,7 +404,7 @@ namespace UI
       size.x += m_pStyle.buttonPadding;
     }
     size.y += m_pStyle.buttonPadding;
-    size.y = highest_character + (m_pStyle.buttonPadding * 2.0f);
+    size.y = font->highest_character + (m_pStyle.buttonPadding * 2.0f);
     m_pCursorPosition += m_pStyle.buttonPadding;
     glm::vec2 position = m_pCursorPosition;
 
@@ -420,7 +424,9 @@ namespace UI
       result = true;
     }
 
-    CreateRect(m_pCursorPosition, size, m_WhitePixelPos, m_WhitePixelPos,
+    glm::vec2 white_pixel = glm::vec2(font->white_pixel.x, font->white_pixel.y);
+
+    CreateRect(m_pCursorPosition, size, white_pixel, white_pixel,
                button_color);
 
     glm::vec2 cursor_pos = m_pCursorPosition;
@@ -474,27 +480,29 @@ namespace UI
     CheckShader();
     m_pContext.prev_widget_position = m_pCursorPosition;
 
+    glm::vec2 white_pixel = glm::vec2(m_Fonts[current_font]->white_pixel.x, m_Fonts[current_font]->white_pixel.y);
+
     switch (location)
     {
     case DockLocation::TOP:
       CreateRect(glm::vec2(0.0f), glm::vec2(m_pResolution.x, thickness),
-                 m_WhitePixelPos, m_WhitePixelPos);
+                 white_pixel, white_pixel);
       m_pCursorPosition = glm::vec2(0.0f, thickness);
       break;
     case DockLocation::BOTTOM:
       CreateRect(glm::vec2(0.0f, m_pResolution.y - thickness),
-                 glm::vec2(m_pResolution.x, thickness), m_WhitePixelPos,
-                 m_WhitePixelPos);
+                 glm::vec2(m_pResolution.x, thickness), white_pixel,
+                 white_pixel);
       break;
     case DockLocation::LEFT:
       CreateRect(glm::vec2(0.0f), glm::vec2(thickness, m_pResolution.y),
-                 m_WhitePixelPos, m_WhitePixelPos);
+                 white_pixel, white_pixel);
       m_pCursorPosition = glm::vec2(thickness, 0.0f);
       break;
     case DockLocation::RIGHT:
       CreateRect(glm::vec2(m_pResolution.x - thickness, 0.0f),
-                 glm::vec2(thickness, m_pResolution.y), m_WhitePixelPos,
-                 m_WhitePixelPos);
+                 glm::vec2(thickness, m_pResolution.y), white_pixel,
+                 white_pixel);
       break;
     }
   }
@@ -722,6 +730,8 @@ namespace UI
       max_length);
       */
 
+      glm::vec2 white_pixel = glm::vec2(m_Fonts[current_font]->white_pixel.x, m_Fonts[current_font]->white_pixel.y);
+
       int step = 0;
       for (int j = 0; j < subdivisions * 6; j += 6)
       {
@@ -771,24 +781,24 @@ namespace UI
         }
 
         vertices[j].pos_uv =
-            glm::vec4(a / m_pResolution, m_WhitePixelPos.x, m_WhitePixelPos.y);
+            glm::vec4(a / m_pResolution, white_pixel.x, white_pixel.y);
         vertices[j].color = vertex_color * glm::vec4(0.25f, 0.25f, 0.25f, 1.0f);
         vertices[j + 1].pos_uv =
-            glm::vec4(b / m_pResolution, m_WhitePixelPos.x, m_WhitePixelPos.y);
+            glm::vec4(b / m_pResolution, white_pixel.x, white_pixel.y);
         vertices[j + 1].color = vertex_color;
         vertices[j + 2].pos_uv =
-            glm::vec4(c / m_pResolution, m_WhitePixelPos.x, m_WhitePixelPos.y);
+            glm::vec4(c / m_pResolution, white_pixel.x, white_pixel.y);
         vertices[j + 2].color = vertex_color;
         vertices[j + 3].pos_uv =
-            glm::vec4(a / m_pResolution, m_WhitePixelPos.x, m_WhitePixelPos.y);
+            glm::vec4(a / m_pResolution, white_pixel.x, white_pixel.y);
         vertices[j + 3].color =
             vertex_color * glm::vec4(0.25f, 0.25f, 0.25f, 1.0f);
         vertices[j + 4].pos_uv =
-            glm::vec4(d / m_pResolution, m_WhitePixelPos.x, m_WhitePixelPos.y);
+            glm::vec4(d / m_pResolution, white_pixel.x, white_pixel.y);
         vertices[j + 4].color =
             vertex_color * glm::vec4(0.25f, 0.25f, 0.25f, 1.0f);
         vertices[j + 5].pos_uv =
-            glm::vec4(b / m_pResolution, m_WhitePixelPos.x, m_WhitePixelPos.y);
+            glm::vec4(b / m_pResolution, white_pixel.x, white_pixel.y);
         vertices[j + 5].color = vertex_color;
         step++;
       }
@@ -821,6 +831,7 @@ namespace UI
   bool UI::CheckBox(const std::string &text, bool *state)
   {
     CheckShader();
+    auto font = m_Fonts[current_font];
 
     m_pContext.prev_widget_position = m_pCursorPosition;
     const float switch_width = 20;
@@ -857,15 +868,17 @@ namespace UI
       // button_color = glm::vec4(0.2, 0.5, 0.5, 1.0);
     }
 
+    glm::vec2 white_pixel = glm::vec2(m_Fonts[current_font]->white_pixel.x, m_Fonts[current_font]->white_pixel.y);
+
     glm::vec2 cursor_pos = m_pCursorPosition;
     cursor_pos += padding;
 
     glm::vec2 text_padding = glm::vec2(m_pStyle.buttonPadding, 0.0f);
 
-    CreateRect(position, glm::vec2(switch_width), m_WhitePixelPos,
-               m_WhitePixelPos, glm::vec4(0.0, 0.0, 0.0, 1.0));
+    CreateRect(position, glm::vec2(switch_width), white_pixel,
+               white_pixel, glm::vec4(0.0, 0.0, 0.0, 1.0));
     CreateRect(position + glm::vec2(switch_width * 0.1),
-               glm::vec2(switch_width) * 0.8f, m_WhitePixelPos, m_WhitePixelPos,
+               glm::vec2(switch_width) * 0.8f, white_pixel, white_pixel,
                button_color);
 
     int glyph_size = abs(m_Fonts[DEFAULT_FONT]->Glyphs()[(int)'x' - 32].y0 -
@@ -879,7 +892,7 @@ namespace UI
 
     Text(text,
          cursor_pos +
-             glm::vec2(switch_width, -glm::ceil(highest_character * 0.25)),
+             glm::vec2(switch_width, -glm::ceil(font->highest_character * 0.25)),
          glm::vec4(1.0f), false);
 
     m_pCursorPosition.x -= m_pStyle.buttonPadding;
@@ -921,7 +934,9 @@ namespace UI
 
     const int num_squares = glm::min(10, (int)((val / max) * 10) + 1);
 
-    CreateRect(position, size, m_WhitePixelPos, m_WhitePixelPos, button_color);
+    glm::vec2 white_pixel = glm::vec2(m_Fonts[current_font]->white_pixel.x, m_Fonts[current_font]->white_pixel.y);
+
+    CreateRect(position, size, white_pixel, white_pixel, button_color);
 
     glm::vec2 sqr_position = position + padding;
     glm::vec2 sqr_size = glm::vec2((size.x - (padding * (10 + 1))) / 10,
@@ -932,12 +947,12 @@ namespace UI
                                glm::vec4(0.0, 1.0, 0.0, 1.0), val / max);
     for (i = 0; i < num_squares - 1; i++)
     {
-      CreateRect(sqr_position, sqr_size, m_WhitePixelPos, m_WhitePixelPos, color);
+      CreateRect(sqr_position, sqr_size, white_pixel, white_pixel, color);
       sqr_position.x += sqr_size.x + padding;
     }
 
     CreateRect(sqr_position, glm::vec2(last_sqr_width, sqr_size.y),
-               m_WhitePixelPos, m_WhitePixelPos,
+               white_pixel, white_pixel,
                glm::mix(glm::vec4(1.0, 0.0, 0.0, 1.0),
                         glm::vec4(0.0, 1.0, 0.0, 1.0), (float)i / 10));
 
@@ -953,6 +968,7 @@ namespace UI
   void UI::Scale(const std::string &text, int &current, int min, int max,
                  glm::vec2 fixed_size = glm::vec2(-1.0f))
   {
+    auto font = m_Fonts[current_font];
     float widgetStart = m_pCursorPosition.x;
     CheckShader();
     if (Button("<"))
@@ -982,7 +998,7 @@ namespace UI
       Text(composite_text,
            glm::ceil(glm::vec2(widgetStart, position.y) +
                      glm::vec2(fixed_size.x * 0.5f - text_size.x * 0.5f,
-                               glm::ceil(highest_character * 0.1))),
+                               glm::ceil(font->highest_character * 0.1))),
            glm::vec4(1.0f), false);
     }
     else
@@ -1004,12 +1020,14 @@ namespace UI
       m_pCursorPosition.x = (position.x + fixed_size.x) - btnSize.x - 36;
     }
 
+    glm::vec2 white_pixel = glm::vec2(m_Fonts[current_font]->white_pixel.x, m_Fonts[current_font]->white_pixel.y);
+
     float span = (m_pCursorPosition.x - position.x) / (abs(max - min));
     for (int i = 0; i < glm::clamp(current, 0, max - min); i++)
     {
       CreateRect(position + glm::vec2((span * i), (btnSize.y)),
-                 glm::vec2(span - (span * 0.2), 5), m_WhitePixelPos,
-                 m_WhitePixelPos,
+                 glm::vec2(span - (span * 0.2), 5), white_pixel,
+                 white_pixel,
                  glm::mix(glm::vec4(1.0, 0.0, 0.0, 1.0),
                           glm::vec4(0.0, 1.0, 0.0, 1.0), (float)i / 10));
     }
