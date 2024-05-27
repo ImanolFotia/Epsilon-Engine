@@ -35,7 +35,7 @@ namespace UI
         // stbtt_aligned_quad q;
         // stbtt_GetBakedQuad(cdata, texture_size, texture_size, *text_data - 32,
         // &x, &y, &q, 1); // 1=opengl & d3d10+,0=d3d9
-        AlignedQuad q = m_Fonts[DEFAULT_FONT]->Glyphs()[(int)(*text_data) - font->first_char];
+        AlignedQuad q = font->Glyphs()[(int)(*text_data) - font->first_char];
 
         if (*text_data == ' ')
         {
