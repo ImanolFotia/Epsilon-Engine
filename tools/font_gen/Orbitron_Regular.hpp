@@ -9,6 +9,8 @@ struct Orbitron_Regular : UI::Font{
         font_name = "Orbitron-Regular.ttf";
         font_size = 20;
         dimensions = 256;
+        num_chars = 95;
+        first_char = 32;
         pixels.reserve(256*256);
         pixels = {
            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
