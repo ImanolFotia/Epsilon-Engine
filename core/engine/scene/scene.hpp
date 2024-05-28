@@ -1,5 +1,7 @@
 #pragma once
 
+#include <span>
+
 #include "asset_manager.hpp"
 #include "nodes/node_manager.hpp"
 
@@ -74,7 +76,7 @@ namespace engine
 		std::vector<int> subMeshes{};
 		std::string material{};
 		unsigned int count = 1;
-		std::vector<glm::mat4> transforms{};
+		std::span<glm::mat4> transforms;
 	};
 
 	class Scene
@@ -119,8 +121,8 @@ namespace engine
 
 			float octree_size = 256;
 			float octree_half_size = octree_size * 0.5;
-			m_pNodeOctree = std::make_shared<OctreeContainer<OctreeNodeType>>(Box{glm::vec3(-octree_half_size, -20.0, -octree_half_size), glm::vec3(octree_size, 50, octree_size)}, 0);
-			m_pRenderOctree = std::make_shared<OctreeContainer<OctreeRenderType>>(Box{glm::vec3(-octree_half_size, -20.0, -octree_half_size), glm::vec3(octree_size, 50, octree_size)}, 0);
+			m_pNodeOctree = std::make_shared<OctreeContainer<OctreeNodeType>>(Box{glm::vec3(-octree_half_size, -25.0, -octree_half_size), glm::vec3(octree_size, 100, octree_size)}, 0);
+			m_pRenderOctree = std::make_shared<OctreeContainer<OctreeRenderType>>(Box{glm::vec3(-octree_half_size, -25.0, -octree_half_size), glm::vec3(octree_size, 100, octree_size)}, 0);
 
 			// m_pAssetManager.Init();
 		}
@@ -466,10 +468,10 @@ namespace engine
 						uint32_t normal_index = m_pAssetManager->m_pMaterials.at(mesh.material_keys[i]).material.normal_texture_index;
 						uint32_t roughness_index = m_pAssetManager->m_pMaterials.at(mesh.material_keys[i]).material.roughness_texture_index;
 
-						if (albedo_index == 150 || metallic_index == 150 || normal_index == 150 || roughness_index == 150)
+						/*if (albedo_index == 150 || metallic_index == 150 || normal_index == 150 || roughness_index == 150)
 						{
 							std::cout << "here!" << std::endl;
-						}
+						}*/
 						material_indices[i] = uniform_index;
 					}
 
@@ -554,83 +556,67 @@ namespace engine
 		}
 		uint32_t lastRenderModelId = -1;
 
-		uint32_t Push(RenderArgs renderArgs)
+		uint32_t Push(const RenderArgs &renderArgs)
 		{
 
 			uint32_t push_index = m_pMeshCount;
-			if (m_pContext->Window().getSize().width > 0)
+
+			if (m_pContext->Window().getSize().width <= 0)
+				return push_index;
+
+			auto renderer = m_pContext->Renderer();
+			Ref<PushConstant> push_constant;
+			auto &renderLayout = renderArgs.layout;
+			Ref<BindGroup> selectedBindGroup = renderLayout.bindGroup;
+			auto transform_buffer = m_pAssetManager->getTransformBuffer();
+			auto object_buffer = m_pAssetManager->getObjectBuffer();
+			int submeshCount = renderArgs.submeshCount >= 1 ? renderArgs.submeshCount : renderArgs.renderModel->data.renderMeshes[0].size();
+			auto &meshCollection = renderArgs.renderModel->data.renderMeshes[0];
+
+			for (int i = 0; i < submeshCount; i++)
 			{
-				auto renderer = m_pContext->Renderer();
+				engine::RenderMesh *mesh = nullptr;
+				mesh = &meshCollection[i];
+				if (renderArgs.submeshCount >= 1)
+					mesh = &meshCollection[renderArgs.subMeshes[i]];
 
-				Ref<PushConstant> push_constant;
-
-				auto &renderLayout = renderArgs.layout;
-
-				Ref<BindGroup> selectedBindGroup = renderLayout.bindGroup;
-
-				auto transform_buffer = m_pAssetManager->getTransformBuffer();
-				auto object_buffer = m_pAssetManager->getObjectBuffer();
-				int submeshCount = renderArgs.submeshCount >= 1 ? renderArgs.submeshCount : renderArgs.renderModel->data.renderMeshes[0].size();
-
-				auto &meshCollection = renderArgs.renderModel->data.renderMeshes[0];
-				for (int i = 0; i < submeshCount; i++)
+				uint32_t material_indices[4] = {0};
+				uint32_t firstInstance = m_pMeshCount;
+				transform_buffer[m_pMeshCount] = renderArgs.transform;
+				for (int j = 0; j < renderArgs.count; j++)
 				{
-					engine::RenderMesh *mesh = nullptr;
-					if (renderArgs.submeshCount >= 1)
-					{
-						mesh = &meshCollection[renderArgs.subMeshes[i]];
-					}
-					else
-					{
-						mesh = &meshCollection[i];
-					}
 
 					if (renderer->numPushedCommands() >= engine::MAX_COMMAND_QUEUE_SIZE)
-					{
 						Flush();
-					}
 
 					uint32_t material_indices[4] = {0};
-
-					for (int i = 0; i < mesh->numMaterials; i++)
+					for (int k = 0; k < mesh->numMaterials; k++)
 					{
-						uint32_t uniform_index = m_pAssetManager->m_pMaterials.at(mesh->material_keys[i]).index;
-						uint32_t albedo_index = m_pAssetManager->m_pMaterials.at(mesh->material_keys[i]).material.albedo_texture_index;
-						uint32_t metallic_index = m_pAssetManager->m_pMaterials.at(mesh->material_keys[i]).material.metallic_texture_index;
-						uint32_t normal_index = m_pAssetManager->m_pMaterials.at(mesh->material_keys[i]).material.normal_texture_index;
-						uint32_t roughness_index = m_pAssetManager->m_pMaterials.at(mesh->material_keys[i]).material.roughness_texture_index;
-
-						material_indices[i] = uniform_index;
+						uint32_t uniform_index = m_pAssetManager->m_pMaterials.at(mesh->material_keys[k]).index;
+						material_indices[k] = uniform_index;
 					}
 
 					if (renderArgs.count > 1)
-					{
-
-						transform_buffer[m_pMeshCount] = renderArgs.transforms[i];
-					}
-					else
-					{
-						transform_buffer[m_pMeshCount] = renderArgs.transform;
-					}
+						transform_buffer[m_pMeshCount] = renderArgs.transforms[j];
 
 					object_buffer[m_pMeshCount] = {
-						.object_id = (unsigned int)renderArgs.renderModel->Parent()->Index(),
+						.object_id = (unsigned int)renderArgs.renderModel->Parent()->Index() + j,
 						.transform_index = m_pMeshCount,
 						.material_index = {material_indices[0], material_indices[1], material_indices[2], material_indices[3]},
 						.numMaterials = (uint32_t)mesh->numMaterials,
 						.animationIndex = renderArgs.renderModel->data.animationIndex};
-
-					renderer->Push({.mesh = mesh->mesh,
-									.material = selectedBindGroup,
-									.pushConstant = push_constant,
-									.objectConstant = {
-										.transform = renderArgs.transform,
-										.material_index = material_indices[0],
-										.animation_offset = renderArgs.renderModel->data.animationIndex},
-									.layout_index = renderLayout.pipelineLayoutIndex,
-									.uniformIndex = m_pMeshCount});
 					m_pMeshCount++;
 				}
+				renderer->Push({.mesh = mesh->mesh,
+								.material = selectedBindGroup,
+								.pushConstant = push_constant,
+								.objectConstant = {
+									.transform = renderArgs.transform,
+									.material_index = material_indices[0],
+									.animation_offset = renderArgs.renderModel->data.animationIndex},
+								.layout_index = renderLayout.pipelineLayoutIndex,
+								.uniformIndex = firstInstance,
+								.count = renderArgs.count});
 			}
 
 			return push_index;
