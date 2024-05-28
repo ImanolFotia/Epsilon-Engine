@@ -373,7 +373,7 @@ namespace UI
 
     glm::vec2 textSize(const std::string &text);
     glm::vec2 buttonSize(const std::string &text);
-    const glm::vec2 &Resolution() { return m_pResolution; }
+    glm::vec2 const &Resolution() { return m_pResolution; }
 
     void Update();
     void Draw(engine::Ref<engine::RenderPass>);
@@ -423,7 +423,7 @@ namespace UI
     void HealthBar(const std::string &text, glm::vec2 position, float val,
                    float min, float max);
 
-    void Scale(const std::string &text, int &current, int min, int max,
+    void Scale(const std::string &text, const std::string &setting_name, int &current, int min, int max,
                glm::vec2 size);
   };
 } // namespace UI

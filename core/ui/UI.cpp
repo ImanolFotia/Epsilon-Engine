@@ -302,7 +302,7 @@ namespace UI
         // stbtt_GetBakedQuad(cdata, texture_size, texture_size, *text_data - 32,
         // &x, &y, &q, 1); // 1=opengl & d3d10+,0=d3d9
 
-        AlignedQuad q = font->Glyphs()[(int)(*text_data) -  font->first_char];
+        AlignedQuad q = font->Glyphs()[(int)(*text_data) - font->first_char];
 
         if (*text_data == ' ')
         {
@@ -383,7 +383,7 @@ namespace UI
     CheckShader();
     auto font = m_Fonts[current_font];
     glm::vec2 initial_position = m_pCursorPosition;
-    const float padding = 5;
+    const float padding = 3;
     glm::vec2 size = glm::vec2(m_pStyle.buttonPadding,
                                m_pStyle.buttonHeight + m_pStyle.buttonPadding);
     // glm::vec2 text_size = m_pStyle.textSize; // glm::vec2(10, 20);
@@ -965,12 +965,17 @@ namespace UI
     // glm::ceil(highest_character * 0.2f)), glm::vec4(1.0f), false);
   }
 
-  void UI::Scale(const std::string &text, int &current, int min, int max,
+  void UI::Scale(const std::string &text, const std::string &setting_name, int &current, int min, int max,
                  glm::vec2 fixed_size = glm::vec2(-1.0f))
   {
     auto font = m_Fonts[current_font];
     float widgetStart = m_pCursorPosition.x;
     CheckShader();
+    float name_width = textSize(text).x;
+    float y_offset = glm::ceil(font->highest_character * 0.5);
+    Text(text, m_pCursorPosition);
+    Sameline();
+    m_pCursorPosition.y -= y_offset;
     if (Button("<"))
     {
       current--;
@@ -984,8 +989,9 @@ namespace UI
 
     Sameline();
     glm::vec2 position = m_pCursorPosition;
+    // position.y -= y_offset;
 
-    std::string composite_text = text;
+    std::string composite_text = setting_name;
 
     auto text_size = textSize(composite_text);
 
@@ -997,14 +1003,14 @@ namespace UI
     {
       Text(composite_text,
            glm::ceil(glm::vec2(widgetStart, position.y) +
-                     glm::vec2(fixed_size.x * 0.5f - text_size.x * 0.5f,
+                     glm::vec2(name_width + fixed_size.x * 0.5f - text_size.x * 0.5f,
                                glm::ceil(font->highest_character * 0.1))),
            glm::vec4(1.0f), false);
     }
     else
     {
       Text(composite_text,
-           position + glm::vec2(5.0, glm ::ceil(text_size.y * 0.75)),
+           position + glm::vec2(name_width + 5.0, glm ::ceil(text_size.y * 0.75)),
            glm::vec4(1.0f), false);
     }
 
@@ -1025,7 +1031,7 @@ namespace UI
     float span = (m_pCursorPosition.x - position.x) / (abs(max - min));
     for (int i = 0; i < glm::clamp(current, 0, max - min); i++)
     {
-      CreateRect(position + glm::vec2((span * i), (btnSize.y)),
+      CreateRect(position + glm::vec2((span * i) + m_pStyle.buttonPadding, (btnSize.y) - 9.0f),
                  glm::vec2(span - (span * 0.2), 5), white_pixel,
                  white_pixel,
                  glm::mix(glm::vec4(1.0, 0.0, 0.0, 1.0),
