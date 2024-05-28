@@ -178,7 +178,7 @@ namespace engine
 			}
 		}
 
-		void search(BoundingSphere &sphere, CullResult<T> &cullResult)
+		void search(const BoundingSphere &sphere, CullResult<T> &cullResult)
 		{
 			for (auto &p : m_Data)
 			{

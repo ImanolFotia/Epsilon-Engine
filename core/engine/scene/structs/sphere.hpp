@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
+#include <glm/ext.hpp>
 #include <iostream>
 #include "box.hpp"
 /** @brief Box structure with some helper functions
@@ -14,57 +15,71 @@ namespace engine
 		glm::vec3 position{};
 		BoundingSphere(float rad, glm::vec3 pos) : radius{rad}, position{pos} {}
 
-		bool contains(Box &box)
+		bool contains(const Box &box) const
 		{
-			if (box.halfSize().z > radius || box.halfSize().z > radius || box.halfSize().z > radius)
-				return false;
+			// if (box.halfSize().x > radius || box.halfSize().y > radius || box.halfSize().z > radius)
+			//	return false;
 
 			if (!containsPoint(box.position, position))
 				return false;
-			// if (!containsPoint(box.position + box.size, position))
-			//	return false;
-			if (!containsPoint(box.position + glm::vec3(box.position.x + box.size.x, box.position.y, box.position.z), position))
+			if (!containsPoint(box.position + box.size, position))
 				return false;
-			if (!containsPoint(box.position + glm::vec3(box.position.x, box.position.y + box.size.y, box.position.z), position))
+			if (!containsPoint(box.position + glm::vec3(box.size.x, 0.0f, 0.0f), position))
 				return false;
-			if (!containsPoint(box.position + glm::vec3(box.position.x, box.position.y, box.position.z + box.size.z), position))
+			if (!containsPoint(box.position + glm::vec3(0.0f, box.size.y, 0.0f), position))
 				return false;
-			if (!containsPoint(box.position + glm::vec3(box.position.x + box.size.x, box.position.y + box.size.y, box.position.z), position))
+			if (!containsPoint(box.position + glm::vec3(0.0f, 0.0f, box.size.z), position))
 				return false;
-			if (!containsPoint(box.position + glm::vec3(box.position.x + box.size.x, box.position.y, box.position.z + box.size.z), position))
+			if (!containsPoint(box.position + glm::vec3(box.size.x, box.size.y, 0.0f), position))
 				return false;
-			if (!containsPoint(box.position + glm::vec3(box.position.x, box.position.y + box.size.y, box.position.z + box.size.z), position))
+			if (!containsPoint(box.position + glm::vec3(box.size.x, 0.0f, box.size.z), position))
 				return false;
+			if (!containsPoint(box.position + glm::vec3(0.0f, box.size.y, box.size.z), position))
+				return false;
+
+			std::cout << "-------- contains --------" << std::endl;
+			std::cout << "box position: " << glm::to_string(box.position) << std::endl;
+			std::cout << "sphere position: " << glm::to_string(position) << std::endl;
 
 			return true;
 		}
 
-		bool containsPoint(glm::vec3 a, glm::vec3 b)
+		bool containsPoint(glm::vec3 a, glm::vec3 b) const
 		{
 			return glm::distance(a, b) <= radius;
 		}
 
-		bool overlaps(Box &box)
+		bool overlaps(const Box &box) const
 		{
+			/*
+						std::cout << "-------- overlaps --------" << std::endl;
+						std::cout << "box position: " << glm::to_string(box.position) << std::endl;
+						std::cout << "sphere position: " << glm::to_string(position) << std::endl;
 
-			if (containsPoint(box.position, position))
-				return true;
-			// if (containsPoint(box.position + box.size, position))
-			//	return true;
-			if (containsPoint(box.position + glm::vec3(box.position.x + box.size.x, box.position.y, box.position.z), position))
-				return true;
-			if (containsPoint(box.position + glm::vec3(box.position.x, box.position.y + box.size.y, box.position.z), position))
-				return true;
-			if (containsPoint(box.position + glm::vec3(box.position.x, box.position.y, box.position.z + box.size.z), position))
-				return true;
-			if (containsPoint(box.position + glm::vec3(box.position.x + box.size.x, box.position.y + box.size.y, box.position.z), position))
-				return true;
-			if (containsPoint(box.position + glm::vec3(box.position.x + box.size.x, box.position.y, box.position.z + box.size.z), position))
-				return true;
-			if (containsPoint(box.position + glm::vec3(box.position.x, box.position.y + box.size.y, box.position.z + box.size.z), position))
-				return true;
+						if (containsPoint(box.position, position))
+							return true;
+						if (containsPoint(box.position + box.size, position))
+							return true;
+						if (containsPoint(box.position + glm::vec3(box.size.x, 0.0f, 0.0f), position))
+							return true;
+						if (containsPoint(box.position + glm::vec3(0.0f, box.size.y, 0.0f), position))
+							return true;
+						if (containsPoint(box.position + glm::vec3(0.0f, 0.0f, box.size.z), position))
+							return true;
+						if (containsPoint(box.position + glm::vec3(box.size.x, box.size.y, 0.0f), position))
+							return true;
+						if (containsPoint(box.position + glm::vec3(box.size.x, 0.0f, box.size.z), position))
+							return true;
+						if (containsPoint(box.position + glm::vec3(0.0f, box.size.y, box.size.z), position))
+							return true;
 
-			return false;
+						return false;*/
+			glm::vec3 center = box.position + box.size * 0.5f;
+			glm::vec3 vDelta = glm::max(glm::vec3(0.0), abs(center - position) - box.size * 0.5f);
+
+			float fDistSq = glm::dot(vDelta, vDelta);
+
+			return fDistSq <= radius * radius;
 		}
 	};
 }
