@@ -930,6 +930,11 @@ namespace framework
 												//	<< v.y << ", " << v.z << ")\n";
 
 												currentMesh.data().mesh.Vertices[i + currentvOffset].position = parent_transform * (glm::vec4(v.x, v.y, v.z, 1.0f));
+												if (HasAnimation())
+												{
+													mAnimatedMeshes.at(index).Vertices[i + currentvOffset].position = (glm::vec4(v.x, v.y, v.z, 1.0f));
+													// mAnimatedMeshes.at(index).Vertices[i + currentvOffset].color = glm::vec4(1.0f);
+												}
 												v = currentMesh.data().mesh.Vertices[i + currentvOffset].position;
 												if (v.x < m_pMin.x)
 													m_pMin.x = v.x;
@@ -945,11 +950,6 @@ namespace framework
 												if (v.z > m_pMax.z)
 													m_pMax.z = v.z;
 												// currentMesh.data().mesh.Vertices[i + currentvOffset].color = glm::vec4(1.0f);
-												if (HasAnimation())
-												{
-													mAnimatedMeshes.at(index).Vertices[i + currentvOffset].position = (glm::vec4(v.x, v.y, v.z, 1.0f));
-													// mAnimatedMeshes.at(index).Vertices[i + currentvOffset].color = glm::vec4(1.0f);
-												}
 											}
 
 											thisVOffset += positions->size();
@@ -970,6 +970,11 @@ namespace framework
 												//	<< ", " << v.y << ", " << v.z << ")\n";
 
 												currentMesh.data().mesh.Vertices[i + currentvOffset].position = parent_transform * (glm::vec4(v.x, v.y, v.z, 1.0f));
+
+												if (HasAnimation())
+												{
+													mAnimatedMeshes.at(index).Vertices[i + currentvOffset].position = (glm::vec4(v.x, v.y, v.z, 1.0f));
+												}
 												v = currentMesh.data().mesh.Vertices[i + currentvOffset].position;
 												if (v.x < m_pMin.x)
 													m_pMin.x = v.x;
@@ -984,11 +989,6 @@ namespace framework
 													m_pMax.y = v.y;
 												if (v.z > m_pMax.z)
 													m_pMax.z = v.z;
-												if (HasAnimation())
-												{
-
-													mAnimatedMeshes.at(index).Vertices[i + currentvOffset].position = (glm::vec4(v.x, v.y, v.z, 1.0f));
-												}
 											}
 											thisVOffset += positions->size();
 										}
