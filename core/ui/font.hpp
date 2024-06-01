@@ -27,7 +27,7 @@ namespace UI
     int FontSize() { return font_size; }
     const std::string &Name() { return font_name; }
 
-    vec2 white_pixel{};
+    vec2 white_pixel = {0.0f, 0.0f};
     uint32_t num_chars = 95;
     uint32_t first_char = 32;
     uint32_t texture_size = 128;
