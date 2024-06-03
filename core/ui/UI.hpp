@@ -150,16 +150,7 @@ private:
 
     auto vertexCode = utils::readFile("./assets/shaders/ui-vertex.spv");
     auto fragmentCode = utils::readFile("./assets/shaders/ui-fragment.spv");
-    engine::ShaderInfo mainShaderInfo = {
-        .stages = {{.entryPoint = "main",
-                    .shaderCode = vertexCode,
-                    .stage = engine::VERTEX},
-                   {.entryPoint = "main",
-                    .shaderCode = fragmentCode,
-                    .stage = engine::FRAGMENT}},
-        .usedStages =
-            engine::ShaderModuleStage(engine::VERTEX | engine::FRAGMENT),
-        .name = "UIShader"};
+    engine::ShaderInfo mainShaderInfo = {.stages = {{.entryPoint = "main", .shaderCode = vertexCode, .stage = engine::VERTEX}, {.entryPoint = "main", .shaderCode = fragmentCode, .stage = engine::FRAGMENT}}, .usedStages = engine::ShaderModuleStage(engine::VERTEX | engine::FRAGMENT), .name = "UIShader"};
 
     return mainShaderInfo;
   }
@@ -189,15 +180,22 @@ public:
       pixels[i] = {255, 255, 255, font->Pixels()[i]};
 
       if (font->Pixels()[i] == 255 && font->white_pixel.x < 0.1) {
-        glm::vec2 tmp =
-            glm::vec2(i % font->texture_size, i / font->texture_size) / 256.0f;
+        glm::vec2 tmp = glm::vec2(i % font->texture_size, i / font->texture_size) / 256.0f;
         font->white_pixel = {tmp.x, tmp.y};
+      }
+    }
+
+    if (font->max_range > 0x7F) {
+      font->glyph_index.resize(font->max_range);
+
+      for (int i = 0; i < font->num_chars; i++) {
+        font->glyph_index[font->DecodeCodepoint(font->Glyphs()[i].code.c_str())] = i;
       }
     }
 
     for (int i = 0; i < font->num_chars; i++) {
 
-      int glyph_size = abs(font->Glyphs()[i].y0 - font->Glyphs()[i].y1);
+      int glyph_size = abs(font->Glyphs()[i].quad.y0 - font->Glyphs()[i].quad.y1);
 
       if (glyph_size > font->highest_character) {
         font->highest_character = glm::clamp(glyph_size, 0, font->FontSize());
@@ -230,9 +228,7 @@ public:
     return m_Fonts.size() - 1;
   }
 
-  void Init(std::shared_ptr<engine::ResourceManager> resource_manager,
-            std::shared_ptr<engine::Renderer> renderer,
-            framework::Window *window) {
+  void Init(std::shared_ptr<engine::ResourceManager> resource_manager, std::shared_ptr<engine::Renderer> renderer, framework::Window *window) {
     m_pResourceManager = resource_manager;
     m_pRenderer = renderer;
     m_pWindow = window;
@@ -241,13 +237,12 @@ public:
 
     engine::ShaderInfo mainShaderInfo = loadShaders();
 
-    engine::VertexLayout vertexLayout = {
-        .descriptors =
-            {
-                {engine::XYZW_FLOAT, offsetof(UIVertex, pos_uv)},
-                {engine::XYZW_FLOAT, offsetof(UIVertex, color)},
-            },
-        .size = sizeof(UIVertex)};
+    engine::VertexLayout vertexLayout = {.descriptors =
+                                             {
+                                                 {engine::XYZW_FLOAT, offsetof(UIVertex, pos_uv)},
+                                                 {engine::XYZW_FLOAT, offsetof(UIVertex, color)},
+                                             },
+                                         .size = sizeof(UIVertex)};
 
     uiLayout = {
         .shaderInfo = mainShaderInfo,
@@ -259,32 +254,25 @@ public:
     };
     m_pVertexBuffer.resize(m_pResourceManager->FramesInFlight());
 
-    IO::Info("Allocating ", m_pResourceManager->FramesInFlight(),
-             " vertex buffers for UI.");
+    IO::Info("Allocating ", m_pResourceManager->FramesInFlight(), " vertex buffers for UI.");
 
     for (int i = 0; i < m_pResourceManager->FramesInFlight(); i++) {
 
-      m_pVertexBuffer[i] = m_pResourceManager->createMappedVertexBuffer(
-          "UIVertexBuffer" + std::to_string(i),
-          {.size = 10000 * sizeof(UIVertex)});
+      m_pVertexBuffer[i] = m_pResourceManager->createMappedVertexBuffer("UIVertexBuffer" + std::to_string(i), {.size = 10000 * sizeof(UIVertex)});
     }
 
     InitDefaultFont();
 
-    m_pMesh = m_pResourceManager->insertMesh(
-        "UIMesh", {.vertexBuffer = m_pVertexBuffer[0], .numVertices = 0});
+    m_pMesh = m_pResourceManager->insertMesh("UIMesh", {.vertexBuffer = m_pVertexBuffer[0], .numVertices = 0});
 
     m_DrawLists.resize(1);
   }
 
-  void AddRenderTarget(const char *name, uint32_t rto_index,
-                       const std::string &renderPass) {
+  void AddRenderTarget(const char *name, uint32_t rto_index, const std::string &renderPass) {
 
     m_pBindGroups[name] = m_pResourceManager->createBindGroup({
         .bindingInfo = {},
-        .inputs = {{.renderPass = renderPass,
-                    .index = rto_index,
-                    .bindingPoint = 2}},
+        .inputs = {{.renderPass = renderPass, .index = rto_index, .bindingPoint = 2}},
         .renderPass = "SwapChainPass",
         .name = name,
     });
@@ -310,8 +298,7 @@ public:
     unsigned char *pixels = framework::load_image_from_file(path, &w, &h, &c);
 
     for (int i = 0; i < w * h; i++) {
-      if (pixels[i] == 255 && pixels[i + 1] == 255 && pixels[i + 2] == 255 &&
-          pixels[i + 3] == 255) {
+      if (pixels[i] == 255 && pixels[i + 1] == 255 && pixels[i + 2] == 255 && pixels[i + 3] == 255) {
         m_WhitePixelPositions[name] = glm::vec2(i % h, i / w) / glm::vec2(w, h);
         break;
       }
@@ -354,26 +341,20 @@ public:
 
   glm::vec2 CursorPosition();
 
-  glm::vec2 ToScreenCoords(const glm::mat4 &model, const glm::mat4 &view,
-                           const glm::mat4 &proj, const glm::vec2 &resolution);
+  glm::vec2 ToScreenCoords(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj, const glm::vec2 &resolution);
 
-  void CreateRect(glm::vec2 position, glm::vec2 size, glm::vec2 uv0,
-                  glm::vec2 uv1,
-                  glm::vec4 color = glm::vec4(0.11, 0.11, 0.11, 0.8));
+  void CreateRect(glm::vec2 position, glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1, glm::vec4 color = glm::vec4(0.11, 0.11, 0.11, 0.8));
 
   void CreatePolygon(std::vector<UIVertex> vertices);
 
   void SetNextWindowPosition(glm::vec2 position);
 
-  void BeginWindow(const std::string &name, glm::vec2 size = glm::vec2(0.0f),
-                   glm::vec4 color = glm::vec4(0.0, 0.0, 0.0, 0.5));
+  void BeginWindow(const std::string &name, glm::vec2 size = glm::vec2(0.0f), glm::vec4 color = glm::vec4(0.0, 0.0, 0.0, 0.5));
 
   void EndWindow();
 
-  void Text(const std::string &text, glm::vec4 color = glm::vec4(1.0f),
-            bool standalone = true);
-  void Text(const std::string &text, glm::vec2 position,
-            glm::vec4 color = glm::vec4(1.0f), bool standalone = true);
+  void Text(const std::string &text, glm::vec4 color = glm::vec4(1.0f), bool standalone = true);
+  void Text(const std::string &text, glm::vec2 position, glm::vec4 color = glm::vec4(1.0f), bool standalone = true);
 
   bool Button(const std::string &text, ButtonFlags flags = {});
   void Sameline();
@@ -382,23 +363,17 @@ public:
 
   void Spacer(glm::vec2 size);
 
-  bool ImageButton(const std::string &, const std::string &texture,
-                   glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1,
-                   glm::vec4 tint = glm::vec4(1.0f),
-                   bool fill_background = false);
+  bool ImageButton(const std::string &, const std::string &texture, glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1, glm::vec4 tint = glm::vec4(1.0f), bool fill_background = false);
 
-  void AngularButtons(glm::vec2 position, float innerRadius, float outerRadius,
-                      int count);
+  void AngularButtons(glm::vec2 position, float innerRadius, float outerRadius, int count);
   bool AngularButton(const std::string &text);
 
   bool CheckBox(const std::string &text, bool *state);
 
-  void HealthBar(const std::string &text, glm::vec2 position, float val,
-                 float min, float max);
+  void HealthBar(const std::string &text, glm::vec2 position, float val, float min, float max);
 
   void Switch(const std::string &text, bool &state) {}
 
-  void Scale(const std::string &text, const std::string &setting_name,
-             int &current, int min, int max, glm::vec2 size);
+  void Scale(const std::string &text, const std::string &setting_name, int &current, int min, int max, glm::vec2 size);
 };
 } // namespace UI
