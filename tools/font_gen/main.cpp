@@ -21,6 +21,11 @@ struct AlignedQuad {
   float x1, y1, s1, t1; // bottom-right
 };
 
+struct Glyph {
+  AlignedQuad quad;
+  std::string code = "\"\"";
+};
+
 struct Options {
   int texture_size = 256;
   int font_size = 20;
@@ -59,10 +64,8 @@ Options ParseArgs(int argc, char **argv) {
   }
 
   options.font_name = std::string(argv[1]);
-  options.font_name = options.font_name.substr(
-      options.font_name.find_last_of('/') + 1, options.font_name.size());
-  options.font_name_no_ext =
-      options.font_name.substr(0, options.font_name.find_last_of('.'));
+  options.font_name = options.font_name.substr(options.font_name.find_last_of('/') + 1, options.font_name.size());
+  options.font_name_no_ext = options.font_name.substr(0, options.font_name.find_last_of('.'));
 
   CleanUpName(options.font_name_no_ext);
 
@@ -119,13 +122,7 @@ std::string str_toupper(std::string s) {
 
 int ASCIIHexToInt[] = {
     // ASCII
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0,  1,  2,  3,  4,  5,  6,  7,  8,
-    9,  -1, -1, -1, -1, -1, -1, -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, -1, -1, -1, -1, -1, -1, -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 };
 
 std::string EncodeCodepoint(std::string codepoint) {
@@ -138,12 +135,9 @@ std::string EncodeCodepoint(std::string codepoint) {
     code_points[i] = ASCIIHexToInt[codepoint[codepoint.size() - 1 - i]];
   }
 
-  bytes[0] = ((0b00000011 & code_points[1]) << 4) |
-             ((0xff & code_points[0]) >> 0) | (1 << 7);
-  bytes[1] = ((0xff & code_points[2]) << 2) | ((0x0f & code_points[1]) >> 2) |
-             (1 << 7);
-  bytes[2] = ((0x0f & code_points[4]) << 4) | ((0xff & code_points[3]) >> 0) |
-             (1 << 7);
+  bytes[0] = ((0b00000011 & code_points[1]) << 4) | ((0xff & code_points[0]) >> 0) | (1 << 7);
+  bytes[1] = ((0xff & code_points[2]) << 2) | ((0x0f & code_points[1]) >> 2) | (1 << 7);
+  bytes[2] = ((0x0f & code_points[4]) << 4) | ((0xff & code_points[3]) >> 0) | (1 << 7);
   bytes[3] = ((0xff & code_points[4]) >> 2);
 
   if (hex_str > 0xFFFF) {
@@ -159,10 +153,11 @@ std::string EncodeCodepoint(std::string codepoint) {
     byte_count = 1;
     bytes[0] &= 0b01111111;
   }
-  std::string output{};
+  std::string output = "\"";
   for (int i = 0; i < byte_count; i++) {
     output += "\\x" + std::format("{:02x}", bytes[byte_count - i - 1]);
   }
+  output += "\"";
   return output;
 }
 
@@ -171,18 +166,10 @@ std::string DecodeCodepoint(const char *codepoint) {
   int byte_count = std::popcount((uint8_t)(codepoint[0] & 0xf0)) - 1;
 
   uint32_t value = 0b00001111 & codepoint[byte_count];
-  value |= (((0b00000011 & codepoint[byte_count - 1]) << 2) |
-            ((0b01110000 & codepoint[byte_count]) >> 4))
-           << 4;
-  value |= byte_count < 1
-               ? 0
-               : (((0b00111100 & codepoint[byte_count - 1]) >> 2)) << 8;
-  value |=
-      byte_count < 2 ? 0 : ((0b00001111 & codepoint[byte_count - 2])) << 12;
-  value |= byte_count < 3 ? 0
-                          : (((0b00000011 & codepoint[byte_count - 3]) << 2) |
-                             ((0b01110000 & codepoint[byte_count - 2]) >> 4))
-                                << 16;
+  value |= (((0b00000011 & codepoint[byte_count - 1]) << 2) | ((0b01110000 & codepoint[byte_count]) >> 4)) << 4;
+  value |= byte_count < 1 ? 0 : (((0b00111100 & codepoint[byte_count - 1]) >> 2)) << 8;
+  value |= byte_count < 2 ? 0 : ((0b00001111 & codepoint[byte_count - 2])) << 12;
+  value |= byte_count < 3 ? 0 : (((0b00000011 & codepoint[byte_count - 3]) << 2) | ((0b01110000 & codepoint[byte_count - 2]) >> 4)) << 16;
 
   return std::format("U+{:04x}", value);
 }
@@ -191,23 +178,29 @@ int main(int argc, char **argv) {
 
   Options options = ParseArgs(argc, argv);
 
-  std::string code_points_path =
-      options.font_name.substr(0, options.font_name.find_last_of('.')) +
-      ".codepoints";
+  std::string code_points_path = options.font_name.substr(0, options.font_name.find_last_of('.')) + ".codepoints";
   std::ifstream codepoints_file(code_points_path);
 
   std::cout << code_points_path << std::endl;
   std::string current, prev;
   int counted_chars = 0;
   int first_char_codepoint = 0;
+  std::vector<std::string> codepoints;
+  uint32_t min = std::numeric_limits<uint32_t>::max();
+  uint32_t max = 0;
   if (codepoints_file.is_open()) {
     std::string line;
     while (std::getline(codepoints_file, line)) {
+      auto first_space = line.find_first_of(' ');
       if (counted_chars == 0) {
-        auto first_space = line.find_first_of(' ');
-        first_char_codepoint =
-            std::strtol(line.substr(first_space + 1).c_str(), nullptr, 16);
+        first_char_codepoint = std::strtol(line.substr(first_space + 1).c_str(), nullptr, 16);
       }
+      codepoints.push_back(line.substr(first_space + 1));
+      uint32_t code = strtol(str_toupper(line.substr(first_space + 1)).c_str(), nullptr, 16);
+      if (code > max)
+        max = code;
+      if (code < min)
+        min = code;
       if (line == prev)
         continue;
       prev = line;
@@ -231,38 +224,47 @@ int main(int argc, char **argv) {
   }
 
   unsigned char *ttf_buffer = new unsigned char[1 << 20];
-  unsigned char *temp_bitmap =
-      new unsigned char[options.texture_size * options.texture_size];
+  unsigned char *temp_bitmap = new unsigned char[options.texture_size * options.texture_size];
 
   fread(ttf_buffer, 1, 1 << 20, fopen(argv[1], "rb"));
 
-  stbtt_BakeFontBitmap(ttf_buffer, 0, options.font_size, temp_bitmap,
-                       options.texture_size, options.texture_size,
-                       options.first_char, options.num_chars, cdata.data());
+  stbtt_BakeFontBitmap(ttf_buffer, 0, options.font_size, temp_bitmap, options.texture_size, options.texture_size, options.first_char, options.num_chars, cdata.data());
 
   if (codepoints_file.is_open()) {
     options.first_char = 0;
   }
 
-  std::vector<AlignedQuad> m_AlignedQuads;
+  std::vector<Glyph> m_AlignedQuads;
   m_AlignedQuads.resize(options.num_chars);
   for (int i = 0; i < options.num_chars; i++) {
     char c = i;
     float x = 0, y = 0;
     stbtt_aligned_quad q;
-    stbtt_GetBakedQuad(cdata.data(), options.texture_size, options.texture_size,
-                       c, &x, &y, &q, 1);
+    stbtt_GetBakedQuad(cdata.data(), options.texture_size, options.texture_size, c, &x, &y, &q, 1);
     if (q.s0 > 1.0f || q.s1 > 1.0f || q.t0 > 1.0f || q.t1 > 1.0f)
       continue;
-    m_AlignedQuads[i] = {q.x0, q.y0, q.s0, q.t0, q.x1, q.y1, q.s1, q.t1};
+
+    std::string code = "\" \"";
+    code[1] = (char)(i + options.first_char);
+    if (i + options.first_char == 34) {
+      code = "\"\\\"\"";
+    } else if (i + options.first_char == 92) {
+
+      code = "\"\\\\\"";
+    }
+    if (codepoints.size() > 0)
+      if (min > 0x7F || i + options.first_char > 0x7F) {
+        std::cout << "encoding" << std::endl;
+        code = EncodeCodepoint(codepoints.at(i));
+      }
+    m_AlignedQuads[i] = {q.x0, q.y0, q.s0, q.t0, q.x1, q.y1, q.s1, q.t1, code};
   }
 
   for (int i = 0; i < options.texture_size * options.texture_size; i++) {
     pixels[i] = {255, 255, 255, temp_bitmap[i]};
 
     if (temp_bitmap[i] == 255) {
-      m_WhitePixelPos =
-          vec2(i % options.texture_size, i / options.texture_size) / 255.0f;
+      m_WhitePixelPos = vec2(i % options.texture_size, i / options.texture_size) / 255.0f;
     }
   }
 
@@ -277,8 +279,6 @@ int main(int argc, char **argv) {
   outHeader << "struct " << options.font_name_no_ext << " : UI::Font{\n\n";
 
   int index = 0;
-  uint32_t min = std::numeric_limits<uint32_t>::max();
-  uint32_t max = 0;
   if (codepoints_file.is_open()) {
     std::string line;
     while (std::getline(codepoints_file, line)) {
@@ -286,15 +286,8 @@ int main(int argc, char **argv) {
                 << "static constexpr const char* ";
       auto first_space = line.find_first_of(' ');
       outHeader << "ICON_" << str_toupper(line.substr(0, first_space));
-      outHeader << " = \"" << EncodeCodepoint(line.substr(first_space + 1))
-                << "\"; // U+" << str_toupper(line.substr(first_space + 1))
-                << std::endl;
-      uint32_t code = strtol(str_toupper(line.substr(first_space + 1)).c_str(),
-                             nullptr, 16);
-      if (code > max)
-        max = code;
-      if (code < min)
-        min = code;
+      outHeader << " = " << EncodeCodepoint(line.substr(first_space + 1)) << "; // U+" << str_toupper(line.substr(first_space + 1)) << std::endl;
+
       index++;
     }
     outHeader << "\n";
@@ -313,14 +306,11 @@ int main(int argc, char **argv) {
   outHeader << "        "
             << "dimensions = " << options.texture_size << ";\n";
   outHeader << "        "
-            << "num_chars = "
-            << (codepoints_file.is_open() ? index : options.num_chars) << ";\n";
+            << "num_chars = " << (codepoints_file.is_open() ? index : options.num_chars) << ";\n";
   outHeader << "        "
-            << "first_char = "
-            << (codepoints_file.is_open() ? 0 : options.first_char) << ";\n";
+            << "first_char = " << (codepoints_file.is_open() ? 0 : options.first_char) << ";\n";
   outHeader << "        "
-            << "pixels.reserve(" << options.texture_size << "*"
-            << options.texture_size << ");\n";
+            << "pixels.reserve(" << options.texture_size << "*" << options.texture_size << ");\n";
   outHeader << "        "
             << "pixels = {\n";
 
@@ -346,11 +336,8 @@ int main(int argc, char **argv) {
   for (int i = 0; i < options.num_chars; i++) {
     if (i % 2 == 1 || i == 0)
       outHeader << "            ";
-    outHeader << "{" << m_AlignedQuads[i].x0 << ", " << m_AlignedQuads[i].y0
-              << ", " << m_AlignedQuads[i].s0 << ", " << m_AlignedQuads[i].t0
-              << ",";
-    outHeader << m_AlignedQuads[i].x1 << ", " << m_AlignedQuads[i].y1 << ", "
-              << m_AlignedQuads[i].s1 << ", " << m_AlignedQuads[i].t1 << "},";
+    outHeader << "{" << m_AlignedQuads[i].quad.x0 << ", " << m_AlignedQuads[i].quad.y0 << ", " << m_AlignedQuads[i].quad.s0 << ", " << m_AlignedQuads[i].quad.t0 << ",";
+    outHeader << m_AlignedQuads[i].quad.x1 << ", " << m_AlignedQuads[i].quad.y1 << ", " << m_AlignedQuads[i].quad.s1 << ", " << m_AlignedQuads[i].quad.t1 << ", " << m_AlignedQuads[i].code << "},";
     if (i % 2 == 0)
       outHeader << "\n";
   }
