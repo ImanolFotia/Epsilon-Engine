@@ -146,9 +146,6 @@ Ref<Texture> VulkanResourceManager::createTexture(TextureCreationInfo texInfo) {
     int count = 1;
     VkWriteDescriptorSet bindless_descriptor_writes;
     VkDescriptorImageInfo bindless_image_info;
-    if (texture.index == 154) {
-      std::cout << "here\n";
-    }
     bindless_descriptor_writes = {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET};
     bindless_descriptor_writes.descriptorCount = 1;
     bindless_descriptor_writes.dstArrayElement = texture.index;
@@ -252,9 +249,7 @@ Ref<BindGroup> VulkanResourceManager::createBindGroup(BindGroupInfo material) {
 
     if (renderPass) {
       for (auto &binding : material.inputs) {
-        if (binding.index == 154) {
-          std::cout << "here\n";
-        }
+
         auto pass = renderPassPool.get(std::hash<std::string>{}(binding.renderPass));
         vkMaterial.slots++;
 
@@ -282,9 +277,7 @@ Ref<BindGroup> VulkanResourceManager::createBindGroup(BindGroupInfo material) {
     }
 
     for (auto &binding : material.bindingInfo) {
-      if (binding.binding == 154) {
-        std::cout << "here\n";
-      }
+
       if (binding.type == UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER) {
         vkMaterial.slots++;
         vk::VulkanTexture texture;
