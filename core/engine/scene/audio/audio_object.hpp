@@ -1,99 +1,57 @@
 #pragma once
 
-#include <core/framework/audio/WAVFile.h>
 #include <core/engine/audio/audio_manager.hpp>
+#include <core/framework/audio/WAVFile.h>
 
 namespace engine {
 
-	struct AudioBuffer
-	{
-		Ref<audio::AudioBuffer> buffer;
-		std::vector<Ref<audio::AudioSource>> sources;
-	};
+struct AudioBuffer {
+  Ref<audio::AudioBuffer> buffer;
+  std::vector<Ref<audio::AudioSource>> sources;
+};
 
-	class AudioObject
-	{
+class AudioObject {
 
-		Ref<audio::AudioSource> source{};
-		AudioBuffer buffer{};
-		float angle = 360.0;
-		float gain = 1.0;
-		glm::vec3 position{};
-		glm::vec3 direction{};
-		glm::vec3 velocity{};
-		float pitch = 1.0;
+  std::vector<Ref<audio::AudioSource>> source{};
+  AudioBuffer buffer{};
+  float angle = 360.0;
+  float gain = 1.0;
+  glm::vec3 position{};
+  glm::vec3 direction{};
+  glm::vec3 velocity{};
+  float pitch = 1.0;
 
-		friend class AssetManager;
+  friend class AssetManager;
 
-	public:
-		// Setters
-		void Position(glm::vec3 p)
-		{
-			position = p;
-		}
+public:
+  // Setters
+  void Position(glm::vec3 p) { position = p; }
 
-		void Direction(glm::vec3 d)
-		{
-			direction = d;
-		}
+  void Direction(glm::vec3 d) { direction = d; }
 
-		void Velocity(glm::vec3 v)
-		{
-			velocity = v;
-		}
+  void Velocity(glm::vec3 v) { velocity = v; }
 
-		void Angle(float a)
-		{
-			angle = a;
-		}
+  void Angle(float a) { angle = a; }
 
-		void Gain(float g)
-		{
-			gain = g;
-		}
+  void Gain(float g) { gain = g; }
 
-		void Pitch(float p)
-		{
-			pitch = p;
-		}
+  void Pitch(float p) { pitch = p; }
 
-		// Getters
-		glm::vec3 Position()
-		{
-			return position;
-		}
+  // Getters
+  glm::vec3 Position() { return position; }
 
-		glm::vec3 Direction()
-		{
-			return direction;
-		}
+  glm::vec3 Direction() { return direction; }
 
-		glm::vec3 Velocity()
-		{
-			return velocity;
-		}
+  glm::vec3 Velocity() { return velocity; }
 
-		float Angle()
-		{
-			return angle;
-		}
+  float Angle() { return angle; }
 
-		float Gain()
-		{
-			return gain;
-		}
+  float Gain() { return gain; }
 
-		float Pitch()
-		{
-			return pitch;
-		}
+  float Pitch() { return pitch; }
 
-		Ref<audio::AudioSource> Source() {
-			return source;
-		}
+  Ref<audio::AudioSource> Source(int i) { return source[i]; }
 
-		AudioBuffer Buffer() {
-			return buffer;
-		}
-	};
-}
+  AudioBuffer Buffer() { return buffer; }
+};
+} // namespace engine
