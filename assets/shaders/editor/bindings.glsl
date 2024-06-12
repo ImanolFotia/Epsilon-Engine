@@ -114,7 +114,7 @@ struct Material {
 		vec4 albedo_color;
 		float metallic_color;
 		float roughness_color;
-		float transmission;
+		uint mask;
         float specular;
 };
 
@@ -172,16 +172,16 @@ vec4 getAlbedo(Surface surface) {
     if(surface.material.hasAlbedoTexture) {
         outcolor = surface.material.albedoTexture;
         
-        if(surface.material.internal_material.transmission >= 0) {
+       /* if(surface.material.internal_material.transmission >= 0) {
             outcolor.a = min(surface.material.internal_material.transmission, outcolor.a);
-        }
+        }*/
     }
     else {
         //outcolor = surface.color;
         outcolor = surface.material.internal_material.albedo_color;
-        if(surface.material.internal_material.transmission >= 0) {
+       /* if(surface.material.internal_material.transmission >= 0) {
             outcolor.a = min(surface.material.internal_material.transmission, outcolor.a);
-        }
+        }*/
     }
     
     return outcolor;
