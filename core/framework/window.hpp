@@ -59,6 +59,8 @@
 #define EPSILON_DLL
 #endif
 
+#include "common.hpp"
+
 namespace framework {
 struct WindowSizeDescription {
   int id{};
@@ -102,7 +104,10 @@ public:
 
   bool ShouldClose() {
 #if USE_GLFW
-    return glfwWindowShouldClose(mWindow);
+    if (glfwWindowShouldClose(mWindow)) {
+      IO::Log("The OS requested to close the window");
+      return true;
+    }
 #endif
     return false;
   }
@@ -155,8 +160,7 @@ public:
 
   void setFullScreen() {
     auto mainMonitorMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    glfwSetWindowMonitor(mWindow, glfwGetPrimaryMonitor(), 0, 0, mWidth,
-                         mHeight, mainMonitorMode->refreshRate);
+    glfwSetWindowMonitor(mWindow, glfwGetPrimaryMonitor(), 0, 0, mWidth, mHeight, mainMonitorMode->refreshRate);
 
     mWindowMode = WindowMode::FULLSCREEN;
   }
@@ -173,16 +177,14 @@ public:
     mWidth = mDefaultWidth;
     mHeight = mDefaultHeight;
 
-    glfwSetWindowMonitor(mWindow, NULL, 0, 0, mDefaultWidth, mDefaultHeight,
-                         mainMonitorMode->refreshRate);
+    glfwSetWindowMonitor(mWindow, NULL, 0, 0, mDefaultWidth, mDefaultHeight, mainMonitorMode->refreshRate);
     mWindowMode = WindowMode::BORDERLESS;
   }
 
   void setWindowed() {
     auto mainMonitorMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-    glfwSetWindowMonitor(mWindow, NULL, 0, 30, mainMonitorMode->width,
-                         mainMonitorMode->height - 30,
+    glfwSetWindowMonitor(mWindow, NULL, 0, 30, mainMonitorMode->width, mainMonitorMode->height - 30,
                          mainMonitorMode->refreshRate);
     glfwSetWindowPos(mWindow, 0, 30);
     glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_TRUE);
@@ -245,9 +247,7 @@ public:
 
   void setWindow(windowType *window) { mWindow = window; }
 
-  const std::vector<WindowSizeDescription> &getAvailableSizes() {
-    return m_pAvailableSizes;
-  }
+  const std::vector<WindowSizeDescription> &getAvailableSizes() { return m_pAvailableSizes; }
 
   bool SizeChanged() {
     bool changed = mWidth != mLastWidth || mHeight != mLastHeight;
@@ -276,8 +276,7 @@ private:
   windowType *mWindow;
 #if defined(_WIN32) && (USE_GLFW == false)
   ATOM WINAPI RegisterClassEx(const WNDCLASSEX *lpwcx);
-  static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam,
-                                  LPARAM lParam) {
+  static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch (message) {
     case WM_DESTROY:
       DestroyWindow(hWnd);
