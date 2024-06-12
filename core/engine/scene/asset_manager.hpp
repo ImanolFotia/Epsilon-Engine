@@ -68,6 +68,8 @@ struct CursorInfo {
 
 enum class TextureSlot : unsigned short { Albedo = 0, Normal, Metallic, Roughness };
 
+enum class MeshMask : uint32_t { NONE = 1 << 0, PROP = 1 << 1, TERRAIN = 1 << 2, ANIMATED = 1 << 3, ALL = 0xffffffff };
+
 struct PBRMaterial {
   int32_t albedo_texture_index = -1;
   int32_t normal_texture_index = -1;
@@ -77,7 +79,7 @@ struct PBRMaterial {
   alignas(16) glm::vec4 albedo_color = glm::vec4(0.75f, 0.75f, 0.75f, 1.0f);
   float metallic_color = 1.0;
   float roughness_color = 0.038;
-  float transmission = 1.0f;
+  MeshMask mask;
 
   float specular = 1.0f;
 };
@@ -141,7 +143,7 @@ struct ShaderEntity {
   float innerRadius{};
   float outerRadius{};
   EntityType type = EntityType::SIZE;
-  uint32_t flags{};
+  MeshMask flags = MeshMask::PROP;
 };
 
 struct ShaderAsset {
@@ -188,7 +190,7 @@ class AssetManager {
 
   uint32_t mesh_counter = 0;
 
-  std::vector<ShaderEntity *> lightBufferPtr;
+  ShaderEntity *lightBufferPtr;
 
 public:
   static const size_t MAX_MATERIALS = 10000;
@@ -218,12 +220,19 @@ public:
 
   const std::unordered_map<std::string, AudioBuffer> &getAudios() { return m_pAudioBuffers; }
 
+  std::set<uint16_t> m_FreeEntities{};
+  std::set<uint16_t> m_ReservedEntities{};
+
   std::vector<glm::mat4 *> transformBuffer;
   std::vector<ShaderObjectData *> objectBuffer;
   CursorInfo *infoBufferPtr;
   std::vector<GPUAnimationData *> animationTransformBufferPtr;
 
   void Init() {
+
+    for (int i = 0; i < 256; i++) {
+      m_FreeEntities.emplace(i);
+    }
 
     Filesystem::Mount("./assets/buttons.zip");
 
@@ -248,13 +257,13 @@ public:
         "animation_transform_buffer", sizeof(GPUAnimationData) * 100, engine::BufferStorageType::STORAGE_BUFFER);
 
     m_pGPUBuffers["entity_buffer"] = resourceManager->createGPUBuffer("entity_buffer", sizeof(ShaderEntity) * 256,
-                                                                      engine::BufferStorageType::STORAGE_BUFFER);
+                                                                      engine::BufferStorageType::STORAGE_BUFFER, 1);
 
     transformBuffer.resize(vk::MAX_FRAMES_IN_FLIGHT);
     objectBuffer.resize(vk::MAX_FRAMES_IN_FLIGHT);
     // infoBufferPtr.resize(vk::MAX_FRAMES_IN_FLIGHT);
     animationTransformBufferPtr.resize(vk::MAX_FRAMES_IN_FLIGHT);
-    lightBufferPtr.resize(vk::MAX_FRAMES_IN_FLIGHT);
+    lightBufferPtr = reinterpret_cast<ShaderEntity *>(resourceManager->mapBuffer(m_pGPUBuffers["entity_buffer"], 0));
 
     for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
       transformBuffer[i] =
@@ -263,8 +272,6 @@ public:
           reinterpret_cast<ShaderObjectData *>(resourceManager->mapBuffer(m_pGPUBuffers["object_buffer"], i));
       animationTransformBufferPtr[i] = reinterpret_cast<GPUAnimationData *>(
           resourceManager->mapBuffer(m_pGPUBuffers["animation_transform_buffer"], i));
-      lightBufferPtr[i] =
-          reinterpret_cast<ShaderEntity *>(resourceManager->mapBuffer(m_pGPUBuffers["entity_buffer"], i));
     }
     infoBufferPtr = reinterpret_cast<CursorInfo *>(resourceManager->mapBuffer(m_pGPUBuffers["info_buffer"], 0));
   }
@@ -295,22 +302,53 @@ public:
   ShaderEntity *getEntityPointer(int32_t index = 0) {
 
     uint32_t currFrame = m_pContext->Renderer()->CurrentFrameInFlight();
-    return lightBufferPtr[currFrame];
+    return lightBufferPtr;
+  }
+
+  int AddEntity(ShaderEntity entity, bool reserve = false) {
+    int index;
+    if (m_FreeEntities.size() > 0) {
+      index = *m_FreeEntities.begin();
+      int count = 1;
+      while (m_ReservedEntities.contains(index) || count > 255) {
+        index = *m_FreeEntities.begin() + count;
+      }
+      m_FreeEntities.erase(index);
+
+      if (reserve)
+        m_ReservedEntities.emplace(index);
+    } else {
+      std::cerr << "No free entities" << std::endl;
+      return -1;
+    }
+
+    lightBufferPtr[index] = entity;
+
+    return index;
   }
 
   void AddEntity(int index, ShaderEntity entity) {
     if (index >= 256)
       return;
-    for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
-      lightBufferPtr[i][index] = entity;
+
+    m_ReservedEntities.emplace(index);
+
+    if (m_FreeEntities.contains(index))
+      m_FreeEntities.erase(index);
+    lightBufferPtr[index] = entity;
   }
 
   void RemoveEntity(int index) {
 
     if (index >= 256)
       return;
-    for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++)
-      lightBufferPtr[i][index] = {.type = EntityType::SIZE};
+
+    if (m_ReservedEntities.contains(index)) {
+      m_ReservedEntities.erase(index);
+    }
+
+    m_FreeEntities.emplace(index);
+    lightBufferPtr[index] = {.type = EntityType::SIZE};
   }
 
   void *getMappedBuffer(const std::string &name) {
@@ -370,6 +408,21 @@ public:
     }
   }
 
+  void deleteAudioSource(Ref<audio::AudioSource> source) {
+    auto audioManager = m_pContext->AudioManager();
+    if (audioManager->getSourceState(source) == audio::AudioState::PLAYING)
+      audioManager->Stop(source);
+    audioManager->deleteSource(source);
+  }
+
+  void deleteAudioObject(AudioObject object) {
+    auto audioManager = m_pContext->AudioManager();
+    for (auto &source : object.source) {
+      deleteAudioSource(source);
+    }
+    audioManager->deleteBuffer(object.Buffer().buffer);
+  }
+
   void pLoadMaterials(std::string name, RenderMesh &subRenderC, std::vector<common::MeshMaterial> materials) {
 
     auto resourceManager = m_pContext->ResourceManager();
@@ -385,6 +438,7 @@ public:
       pbr_material.albedo_color = material.color;
       pbr_material.metallic_color = material.metallic;
       pbr_material.roughness_color = material.roughness;
+      pbr_material.mask = (MeshMask)material.mask;
 
       if (!material.albedo_path.empty()) {
         auto albedo = addTexture(material.albedo_path, {.format = COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
@@ -548,6 +602,7 @@ public:
     pbr_material.metallic_color = material.metallic;
     pbr_material.roughness_color = material.roughness;
     pbr_material.specular = material.specular;
+    pbr_material.mask = (MeshMask)material.mask;
 
     if (!material.albedo_path.empty()) {
       auto albedo = addTexture(material.albedo_path, {.format = COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
@@ -768,7 +823,8 @@ public:
     material.albedo_color = mesh_material.color;
     material.roughness_color = mesh_material.roughness_color;
     material.metallic_color = mesh_material.metallic_color;
-    material.transmission = mesh_material.transmission;
+    material.mask = MeshMask::PROP;
+    // material.transmission = mesh_material.transmission;
 
     if (!mesh_material.albedo.empty()) {
       auto albedo = addTexture(mesh_material.albedo, {.format = COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
