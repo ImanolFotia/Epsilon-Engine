@@ -1,5 +1,6 @@
 #pragma once
 
+#include "AL/al.h"
 #include "al_data.hpp"
 #include <exception>
 
@@ -46,6 +47,8 @@ namespace al {
 static void deleteSource(OpenALSource source) {
 
   ALuint s = source.id;
+  if (!alIsSource(s))
+    return;
   alSourceStop(source.id);
   // if (alIsSource(source.id)) {
   if (source.id != 0) {
@@ -58,8 +61,7 @@ static void deleteSource(OpenALSource source) {
 static void deleteBuffer(OpenALBuffer buffer) {
 
   ALuint b = buffer.id;
-  // if (alIsBuffer(buffer.id))
-  if (b != 0)
+  if (alIsBuffer(buffer.id) && b != 0)
     alDeleteBuffers(1, &b);
 }
 
@@ -74,8 +76,8 @@ static int getSourceState(OpenALSource source) {
 static void playSource(OpenALSource source) {
 
   // if (getSourceState(source) == AL_PLAYING) return;
-
-  alSourcei(source.id, AL_SOURCE_RELATIVE, source.relative ? AL_TRUE : AL_FALSE);
+  if (alIsSource(source.id))
+    alSourcei(source.id, AL_SOURCE_RELATIVE, source.relative ? AL_TRUE : AL_FALSE);
   alSourcei(source.id, AL_LOOPING, source.looping ? AL_TRUE : AL_FALSE);
   alSourcef(source.id, AL_GAIN, source.gain);
   alSourcef(source.id, AL_PITCH, source.pitch);
@@ -92,9 +94,15 @@ static void playSource(OpenALSource source) {
   alSourcePlay(source.id);
 }
 
-static void pauseSource(OpenALSource source) { alSourcePause(source.id); }
+static void pauseSource(OpenALSource source) {
+  if (alIsSource(source.id))
+    alSourcePause(source.id);
+}
 
-static void stopSource(OpenALSource source) { alSourceStop(source.id); }
+static void stopSource(OpenALSource source) {
+  if (alIsSource(source.id))
+    alSourceStop(source.id);
+}
 /*
 class AudioSource : public Epsilon::Audio::AudioSource
 {
