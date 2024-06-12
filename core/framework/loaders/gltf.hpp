@@ -22,8 +22,7 @@ class gltfModel : public ModelBase {
     const size_t count = 0;
     const size_t stride = 0;
     using type = T;
-    IndexArrayStorage(const unsigned char *b, const size_t c, const size_t s)
-        : bytes(b), count(c), stride(s) {}
+    IndexArrayStorage(const unsigned char *b, const size_t c, const size_t s) : bytes(b), count(c), stride(s) {}
 
     T operator[](size_t pos) {
       if (pos >= count)
@@ -42,17 +41,14 @@ class gltfModel : public ModelBase {
 
     IndexArrayPtr(const IndexArrayStorage<T> &s) : storage(s) {}
 
-    uint32_t operator[](size_t pos) override {
-      return static_cast<uint32_t>(storage[pos]);
-    }
+    uint32_t operator[](size_t pos) override { return static_cast<uint32_t>(storage[pos]); }
 
     size_t size() override { return storage.count; }
   };
 
   template <typename T> struct VertexArrayStorage {
     using type = T;
-    VertexArrayStorage(const unsigned char *b, const size_t c, const size_t s)
-        : bytes(b), count(c), stride(s) {}
+    VertexArrayStorage(const unsigned char *b, const size_t c, const size_t s) : bytes(b), count(c), stride(s) {}
     const unsigned char *bytes;
     const size_t count = 0;
     const size_t stride = 0;
@@ -84,8 +80,7 @@ class gltfModel : public ModelBase {
     virtual size_t size() = 0;
   };
 
-  template <typename T>
-  struct UnsignedVertex4DArrayPtr : public UnsignedVertex4DArrayPtrBase {
+  template <typename T> struct UnsignedVertex4DArrayPtr : public UnsignedVertex4DArrayPtrBase {
     VertexArrayStorage<T> storage;
 
     UnsignedVertex4DArrayPtr(const VertexArrayStorage<T> &s) : storage(s) {}
@@ -131,9 +126,7 @@ class gltfModel : public ModelBase {
 
     Vertex2DArrayPtr(const VertexArrayStorage<T> &s) : storage(s) {}
 
-    glm::vec2 operator[](size_t pos) override {
-      return static_cast<glm::vec2>(storage[pos]);
-    }
+    glm::vec2 operator[](size_t pos) override { return static_cast<glm::vec2>(storage[pos]); }
 
     virtual size_t size() override { return storage.count; }
   };
@@ -156,8 +149,7 @@ class gltfModel : public ModelBase {
         }
       }
     } else {
-      glm::mat4 translation_matrix = glm::mat4(1.0f),
-                scale_matrix = glm::mat4(1.0f), rot_matrix = glm::mat4(1.0f);
+      glm::mat4 translation_matrix = glm::mat4(1.0f), scale_matrix = glm::mat4(1.0f), rot_matrix = glm::mat4(1.0f);
       if (node.translation.size() > 0) {
         glm::vec3 p;
         for (int i = 0; i < 3; i++)
@@ -187,8 +179,7 @@ class gltfModel : public ModelBase {
 
   std::unordered_map<int, int> seen_meshes;
 
-  void parse_nodes(tinygltf::Model &model, tinygltf::Node node,
-                   glm::mat4 parentTransform) {
+  void parse_nodes(tinygltf::Model &model, tinygltf::Node node, glm::mat4 parentTransform) {
     temp_mesh m;
     if (node.mesh != -1) {
       if (seen_meshes.contains(node.mesh)) {
@@ -238,21 +229,18 @@ class gltfModel : public ModelBase {
     return output;
   }
 
-  void parse_skeleton(tinygltf::Model &model, tinygltf::Node node,
-                      SkeletonNode &anim_node, glm::mat4 parentTransform) {
+  void parse_skeleton(tinygltf::Model &model, tinygltf::Node node, SkeletonNode &anim_node, glm::mat4 parentTransform) {
     anim_node.transform = anim_node.transform * getTransformFromNode(node);
     for (const auto &child : node.children) {
       if (m_pSkeleton.Joints.contains(local_nodes[child].name)) {
         anim_node.children.push_back(local_nodes[child].name);
-        parse_skeleton(model, local_nodes[child],
-                       m_pSkeleton.Nodes[local_nodes[child].name],
-                       anim_node.transform);
+        parse_skeleton(model, local_nodes[child], m_pSkeleton.Nodes[local_nodes[child].name], anim_node.transform);
       }
     }
   }
 
-  void parse_samplers(tinygltf::Model &model, tinygltf::Animation &animation,
-                      const framework::Skeleton &skeleton, int anim_index) {
+  void parse_samplers(tinygltf::Model &model, tinygltf::Animation &animation, const framework::Skeleton &skeleton,
+                      int anim_index) {
     Animation &current_animation = m_pAnimations.emplace_back();
     current_animation.name = animation.name;
     current_animation.index = anim_index;
@@ -274,14 +262,12 @@ class gltfModel : public ModelBase {
         auto inputAccesor = model.accessors[animation.samplers[i].input];
         const auto &bufferView = model.bufferViews[inputAccesor.bufferView];
         const auto &buffer = model.buffers[bufferView.buffer];
-        const auto dataAddress = buffer.data.data() + bufferView.byteOffset +
-                                 inputAccesor.byteOffset;
+        const auto dataAddress = buffer.data.data() + bufferView.byteOffset + inputAccesor.byteOffset;
         const auto byteStride = inputAccesor.ByteStride(bufferView);
 
         sampler.inputs.resize(inputAccesor.count);
         for (int i = 0; i < inputAccesor.count; i++)
-          sampler.inputs[i] =
-              *(reinterpret_cast<const float *>(dataAddress + i * byteStride));
+          sampler.inputs[i] = *(reinterpret_cast<const float *>(dataAddress + i * byteStride));
         float max_t = 0.0f, min_t = 9999999.0f;
         for (auto input : sampler.inputs) {
           if (input < min_t) {
@@ -293,16 +279,14 @@ class gltfModel : public ModelBase {
         }
         current_animation.start = min_t;
         current_animation.end = max_t;
-        current_animation.duration =
-            current_animation.end - current_animation.start;
+        current_animation.duration = current_animation.end - current_animation.start;
       }
 
       {
         auto outputAccesor = model.accessors[animation.samplers[i].output];
         const auto &bufferView = model.bufferViews[outputAccesor.bufferView];
         const auto &buffer = model.buffers[bufferView.buffer];
-        const void *dataAddress =
-            &buffer.data[bufferView.byteOffset + outputAccesor.byteOffset];
+        const void *dataAddress = &buffer.data[bufferView.byteOffset + outputAccesor.byteOffset];
         const auto byteStride = outputAccesor.ByteStride(bufferView);
 
         sampler.outputs.resize(outputAccesor.count);
@@ -315,8 +299,7 @@ class gltfModel : public ModelBase {
           }
           case TINYGLTF_TYPE_VEC4:
             const glm::vec4 *buf = static_cast<const glm::vec4 *>(dataAddress);
-            sampler.outputs[j] =
-                glm::vec4(buf[j].w, buf[j].x, buf[j].y, buf[j].z);
+            sampler.outputs[j] = glm::vec4(buf[j].w, buf[j].x, buf[j].y, buf[j].z);
             break;
           }
         }
@@ -329,10 +312,8 @@ class gltfModel : public ModelBase {
 
       channel.sampler_index = animation.channels[j].sampler;
       channel.target_node = animation.channels[j].target_node;
-      channel.target_node_name =
-          model.nodes[animation.channels[j].target_node].name;
-      glm::mat4 t =
-          getTransformFromNode(model.nodes[animation.channels[j].target_node]);
+      channel.target_node_name = model.nodes[animation.channels[j].target_node].name;
+      glm::mat4 t = getTransformFromNode(model.nodes[animation.channels[j].target_node]);
       glm::vec3 scale{};
       glm::vec3 position{};
       glm::quat rotation{};
@@ -352,16 +333,13 @@ class gltfModel : public ModelBase {
       }
 
       if (!m_pSkeleton.Nodes[channel.target_node_name].hasPosition)
-        m_pSkeleton.Nodes[channel.target_node_name].translation =
-            glm::translate(glm::mat4(1.0f), position);
+        m_pSkeleton.Nodes[channel.target_node_name].translation = glm::translate(glm::mat4(1.0f), position);
 
       if (!m_pSkeleton.Nodes[channel.target_node_name].hasScale)
-        m_pSkeleton.Nodes[channel.target_node_name].scale =
-            glm::scale(glm::mat4(1.0f), scale);
+        m_pSkeleton.Nodes[channel.target_node_name].scale = glm::scale(glm::mat4(1.0f), scale);
 
       if (!m_pSkeleton.Nodes[channel.target_node_name].hasRotation)
-        m_pSkeleton.Nodes[channel.target_node_name].rotation =
-            glm::mat4_cast(glm::conjugate(glm::normalize(rotation)));
+        m_pSkeleton.Nodes[channel.target_node_name].rotation = glm::mat4_cast(glm::conjugate(glm::normalize(rotation)));
 
       m_pSkeleton.Nodes[channel.target_node_name].node_matrix = t;
     }
@@ -428,18 +406,15 @@ class gltfModel : public ModelBase {
       int index = containsNodeName(node.name);
       m_pSkeleton.Nodes[node.name].index = index;
 
-      m_pSkeleton.Nodes[node.name].transform =
-          getTransformFromNode(model.nodes[index]);
+      m_pSkeleton.Nodes[node.name].transform = getTransformFromNode(model.nodes[index]);
 
       for (int i = 0; i < lnode.children.size(); i++) {
         if (lnode.name == local_nodes[lnode.children[i]].name) {
           local_nodes[lnode.children[i]].name += std::to_string(i);
           model.nodes[lnode.children[i]].name += std::to_string(i);
         }
-        m_pSkeleton.Nodes[node.name].children.push_back(
-            local_nodes[lnode.children[i]].name);
-        CreateChild(local_nodes[lnode.children[i]],
-                    m_pSkeleton.Nodes[node.name].transform);
+        m_pSkeleton.Nodes[node.name].children.push_back(local_nodes[lnode.children[i]].name);
+        CreateChild(local_nodes[lnode.children[i]], m_pSkeleton.Nodes[node.name].transform);
       }
     }
   }
@@ -475,9 +450,8 @@ public:
 
     std::string err;
     std::string warn;
-    const std::string ext =
-        path.substr(path.find_last_of('.') + 1,
-                    path.length()); // GetFilePathExtension(path);
+    const std::string ext = path.substr(path.find_last_of('.') + 1,
+                                        path.length()); // GetFilePathExtension(path);
 
     bool ret = false;
     if (ext.compare("glb") == 0) {
@@ -548,8 +522,7 @@ public:
       auto matricesAccesor = model.accessors[skin.inverseBindMatrices];
       const auto &bufferView = model.bufferViews[matricesAccesor.bufferView];
       const auto &buffer = model.buffers[bufferView.buffer];
-      const auto dataAddress = buffer.data.data() + bufferView.byteOffset +
-                               matricesAccesor.byteOffset;
+      const auto dataAddress = buffer.data.data() + bufferView.byteOffset + matricesAccesor.byteOffset;
       const auto byteStride = matricesAccesor.ByteStride(bufferView);
 
       m_pSkeleton.inverse_matrices.resize(matricesAccesor.count);
@@ -560,8 +533,7 @@ public:
 
       for (int i = 0; i < local_nodes.size(); i++) {
         if (int index = containsNode(model.skins[0], i); index >= 0) {
-          m_pSkeleton.Joints[local_nodes[i].name] =
-              m_pSkeleton.Nodes[local_nodes[i].name];
+          m_pSkeleton.Joints[local_nodes[i].name] = m_pSkeleton.Nodes[local_nodes[i].name];
           m_pSkeleton.Joints[local_nodes[i].name].index = index;
           m_pSkeleton.Joints[local_nodes[i].name].children.clear();
         }
@@ -598,32 +570,23 @@ public:
 
       for (int mat_index = 0; mat_index < matricesAccesor.count; mat_index++) {
         m_pSkeleton.inverse_matrices.at(mat_index) =
-            *(reinterpret_cast<const glm::mat4 *>(dataAddress +
-                                                  mat_index * byteStride));
-        m_pSkeleton.Joints
-            .at(local_nodes[model.skins[0].joints[mat_index]].name)
-            .inverseMatrix = m_pSkeleton.inverse_matrices.at(mat_index);
-        m_pSkeleton.Joints
-            .at(local_nodes[model.skins[0].joints[mat_index]].name)
-            .index = mat_index;
+            *(reinterpret_cast<const glm::mat4 *>(dataAddress + mat_index * byteStride));
+        m_pSkeleton.Joints.at(local_nodes[model.skins[0].joints[mat_index]].name).inverseMatrix =
+            m_pSkeleton.inverse_matrices.at(mat_index);
+        m_pSkeleton.Joints.at(local_nodes[model.skins[0].joints[mat_index]].name).index = mat_index;
       }
       m_pSkeleton.globalTransform = getTransformFromNode(RootNode);
-      m_pSkeleton.globalInverseTransform =
-          glm::inverse(m_pSkeleton.globalTransform);
+      m_pSkeleton.globalInverseTransform = glm::inverse(m_pSkeleton.globalTransform);
 
       int skeleton_index = model.skins[0].skeleton;
       if (skeleton_index < 0)
         skeleton_index = 0;
 
-      parse_skeleton(model, RootNode,
-                     m_pSkeleton.Joints[local_nodes[skin.joints[0]].name],
-                     glm::mat4(1.0f));
+      parse_skeleton(model, RootNode, m_pSkeleton.Joints[local_nodes[skin.joints[0]].name], glm::mat4(1.0f));
 
-      for (int anim_index = 0; anim_index < model.animations.size();
-           anim_index++) {
+      for (int anim_index = 0; anim_index < model.animations.size(); anim_index++) {
         // parse_animation(model, model.animations[anim_index], m_pSkeleton);
-        parse_samplers(model, model.animations[anim_index], m_pSkeleton,
-                       anim_index);
+        parse_samplers(model, model.animations[anim_index], m_pSkeleton, anim_index);
       }
     }
 
@@ -664,128 +627,93 @@ public:
         {
           bool convertedToTriangleList = false;
           const auto &indicesAccessor = model.accessors[meshPrimitive.indices];
-          const auto &bufferView =
-              model.bufferViews[indicesAccessor.bufferView];
+          const auto &bufferView = model.bufferViews[indicesAccessor.bufferView];
           const auto &buffer = model.buffers[bufferView.buffer];
-          const auto dataAddress = buffer.data.data() + bufferView.byteOffset +
-                                   indicesAccessor.byteOffset;
+          const auto dataAddress = buffer.data.data() + bufferView.byteOffset + indicesAccessor.byteOffset;
           const auto byteStride = indicesAccessor.ByteStride(bufferView);
           const auto count = indicesAccessor.count;
 
           if (meshPrimitive.material != -1) {
-            const auto primitiveMaterial =
-                model.materials[meshPrimitive.material];
+            const auto primitiveMaterial = model.materials[meshPrimitive.material];
 
             thisIOffset += indicesAccessor.count;
-            auto baseColor =
-                primitiveMaterial.pbrMetallicRoughness.baseColorFactor;
-            currentMesh.Material().color = glm::vec4(
-                baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
-            currentMesh.Material().roughness_color =
-                primitiveMaterial.pbrMetallicRoughness.roughnessFactor;
-            currentMesh.Material().metallic_color =
-                primitiveMaterial.pbrMetallicRoughness.metallicFactor;
-            currentMesh.Material().transmission =
-                currentMesh.Material().color.w;
-
-            if (primitiveMaterial.pbrMetallicRoughness.baseColorTexture.index !=
-                -1)
+            auto baseColor = primitiveMaterial.pbrMetallicRoughness.baseColorFactor;
+            currentMesh.Material().color = glm::vec4(baseColor[0], baseColor[1], baseColor[2], baseColor[3]);
+            currentMesh.Material().roughness_color = primitiveMaterial.pbrMetallicRoughness.roughnessFactor;
+            currentMesh.Material().metallic_color = primitiveMaterial.pbrMetallicRoughness.metallicFactor;
+            // currentMesh.Material().transmission =
+            //     currentMesh.Material().color.w;
+            currentMesh.Material().mask = 2;
+            if (primitiveMaterial.pbrMetallicRoughness.baseColorTexture.index != -1)
               currentMesh.Material().albedo =
                   "textures/" +
-                  model
-                      .images
-                          [model
-                               .textures[primitiveMaterial.pbrMetallicRoughness
-                                             .baseColorTexture.index]
-                               .source]
+                  model.images[model.textures[primitiveMaterial.pbrMetallicRoughness.baseColorTexture.index].source]
                       .uri;
 
-            if (primitiveMaterial.pbrMetallicRoughness.metallicRoughnessTexture
-                    .index != -1)
+            if (primitiveMaterial.pbrMetallicRoughness.metallicRoughnessTexture.index != -1)
               currentMesh.Material().metallic =
                   "textures/" +
                   model
-                      .images
-                          [model
-                               .textures[primitiveMaterial.pbrMetallicRoughness
-                                             .metallicRoughnessTexture.index]
-                               .source]
+                      .images[model.textures[primitiveMaterial.pbrMetallicRoughness.metallicRoughnessTexture.index]
+                                  .source]
                       .uri;
 
             if (primitiveMaterial.normalTexture.index != -1)
               currentMesh.Material().normal =
-                  "textures/" +
-                  model
-                      .images
-                          [model.textures[primitiveMaterial.normalTexture.index]
-                               .source]
-                      .uri;
+                  "textures/" + model.images[model.textures[primitiveMaterial.normalTexture.index].source].uri;
           }
           std::unique_ptr<IndexArrayPtrBase> indexArrayPtr = nullptr;
 
           switch (indicesAccessor.componentType) {
           case TINYGLTF_COMPONENT_TYPE_BYTE:
-            indexArrayPtr =
-                std::unique_ptr<IndexArrayPtr<char>>(new IndexArrayPtr<char>(
-                    IndexArrayStorage<char>(dataAddress, count, byteStride)));
+            indexArrayPtr = std::unique_ptr<IndexArrayPtr<char>>(
+                new IndexArrayPtr<char>(IndexArrayStorage<char>(dataAddress, count, byteStride)));
             break;
 
           case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE:
             indexArrayPtr = std::unique_ptr<IndexArrayPtr<unsigned char>>(
-                new IndexArrayPtr<unsigned char>(
-                    IndexArrayStorage<unsigned char>(dataAddress, count,
-                                                     byteStride)));
+                new IndexArrayPtr<unsigned char>(IndexArrayStorage<unsigned char>(dataAddress, count, byteStride)));
             break;
 
           case TINYGLTF_COMPONENT_TYPE_SHORT:
-            indexArrayPtr =
-                std::unique_ptr<IndexArrayPtr<short>>(new IndexArrayPtr<short>(
-                    IndexArrayStorage<short>(dataAddress, count, byteStride)));
+            indexArrayPtr = std::unique_ptr<IndexArrayPtr<short>>(
+                new IndexArrayPtr<short>(IndexArrayStorage<short>(dataAddress, count, byteStride)));
             break;
 
           case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT:
             indexArrayPtr = std::unique_ptr<IndexArrayPtr<unsigned short>>(
-                new IndexArrayPtr<unsigned short>(
-                    IndexArrayStorage<unsigned short>(dataAddress, count,
-                                                      byteStride)));
+                new IndexArrayPtr<unsigned short>(IndexArrayStorage<unsigned short>(dataAddress, count, byteStride)));
             break;
 
           case TINYGLTF_COMPONENT_TYPE_INT:
-            indexArrayPtr =
-                std::unique_ptr<IndexArrayPtr<int>>(new IndexArrayPtr<int>(
-                    IndexArrayStorage<int>(dataAddress, count, byteStride)));
+            indexArrayPtr = std::unique_ptr<IndexArrayPtr<int>>(
+                new IndexArrayPtr<int>(IndexArrayStorage<int>(dataAddress, count, byteStride)));
             break;
 
           case TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT:
             indexArrayPtr = std::unique_ptr<IndexArrayPtr<unsigned int>>(
-                new IndexArrayPtr<unsigned int>(IndexArrayStorage<unsigned int>(
-                    dataAddress, count, byteStride)));
+                new IndexArrayPtr<unsigned int>(IndexArrayStorage<unsigned int>(dataAddress, count, byteStride)));
             break;
           default:
             break;
           }
           indices.clear();
           for (int i = 0; i < count; i++) {
-            currentMesh.data().mesh.Indices.push_back((*indexArrayPtr)[i] +
-                                                      currentvOffset);
+            currentMesh.data().mesh.Indices.push_back((*indexArrayPtr)[i] + currentvOffset);
             indices.push_back((*indexArrayPtr)[i]);
 
             if (HasAnimation()) {
-              mAnimatedMeshes.at(index).Indices.push_back((*indexArrayPtr)[i] +
-                                                          currentvOffset);
+              mAnimatedMeshes.at(index).Indices.push_back((*indexArrayPtr)[i] + currentvOffset);
             }
           }
 
-          auto pos_accesor =
-              model.accessors[meshPrimitive.attributes.at("POSITION")];
+          auto pos_accesor = model.accessors[meshPrimitive.attributes.at("POSITION")];
 
-          currentMesh.data().mesh.Vertices.resize(pos_accesor.count +
-                                                  currentvOffset);
+          currentMesh.data().mesh.Vertices.resize(pos_accesor.count + currentvOffset);
 
           if (HasAnimation()) {
 
-            mAnimatedMeshes.at(index).Vertices.resize(pos_accesor.count +
-                                                      currentvOffset);
+            mAnimatedMeshes.at(index).Vertices.resize(pos_accesor.count + currentvOffset);
           }
           switch (meshPrimitive.mode) {
             // We re-arrange the indices so that it describe a simple list of
@@ -801,14 +729,10 @@ public:
 
               // Push back the indices that describe just one triangle one by
               // one
-              for (size_t i{currentvOffset + 2};
-                   i < triangleFan.size() + currentvOffset; ++i) {
-                currentMesh.data().mesh.Indices[i] =
-                    triangleFan[0] + currentvOffset;
-                currentMesh.data().mesh.Indices[i + 1] =
-                    triangleFan[i - 1] + currentvOffset;
-                currentMesh.data().mesh.Indices[i + 2] =
-                    triangleFan[i] + currentvOffset;
+              for (size_t i{currentvOffset + 2}; i < triangleFan.size() + currentvOffset; ++i) {
+                currentMesh.data().mesh.Indices[i] = triangleFan[0] + currentvOffset;
+                currentMesh.data().mesh.Indices[i + 1] = triangleFan[i - 1] + currentvOffset;
+                currentMesh.data().mesh.Indices[i + 2] = triangleFan[i] + currentvOffset;
 
                 currentMesh.data().mesh.Vertices[i].color = glm::vec4(1.0f);
                 currentMesh.data().mesh.Vertices[i + 1].color = glm::vec4(1.0f);
@@ -823,15 +747,11 @@ public:
               auto triangleStrip = std::move(indices);
               // currentMesh.data().mesh.Indices.clear();
 
-              for (size_t i{currentvOffset + 2};
-                   i < triangleStrip.size() + currentvOffset; ++i) {
+              for (size_t i{currentvOffset + 2}; i < triangleStrip.size() + currentvOffset; ++i) {
 
-                currentMesh.data().mesh.Indices[i] =
-                    triangleStrip[i - 2] + currentvOffset;
-                currentMesh.data().mesh.Indices[i + 1] =
-                    triangleStrip[i - 1] + currentvOffset;
-                currentMesh.data().mesh.Indices[i + 2] =
-                    triangleStrip[i] + currentvOffset;
+                currentMesh.data().mesh.Indices[i] = triangleStrip[i - 2] + currentvOffset;
+                currentMesh.data().mesh.Indices[i + 1] = triangleStrip[i - 1] + currentvOffset;
+                currentMesh.data().mesh.Indices[i + 2] = triangleStrip[i] + currentvOffset;
 
                 currentMesh.data().mesh.Vertices[i].color = glm::vec4(1.0f);
                 currentMesh.data().mesh.Vertices[i + 1].color = glm::vec4(1.0f);
@@ -844,11 +764,9 @@ public:
 
             for (const auto &attribute : meshPrimitive.attributes) {
               const auto attribAccessor = model.accessors[attribute.second];
-              const auto &bufferView =
-                  model.bufferViews[attribAccessor.bufferView];
+              const auto &bufferView = model.bufferViews[attribAccessor.bufferView];
               const auto &buffer = model.buffers[bufferView.buffer];
-              const auto dataPtr = buffer.data.data() + bufferView.byteOffset +
-                                   attribAccessor.byteOffset;
+              const auto dataPtr = buffer.data.data() + bufferView.byteOffset + attribAccessor.byteOffset;
               const auto byte_stride = attribAccessor.ByteStride(bufferView);
               const auto count = attribAccessor.count;
 
@@ -873,31 +791,23 @@ public:
                   switch (attribAccessor.componentType) {
                   case TINYGLTF_COMPONENT_TYPE_FLOAT:
                     // 3D vector of float
-                    auto positions =
-                        std::unique_ptr<Vertex3DArrayPtr<glm::vec3>>(
-                            new Vertex3DArrayPtr<glm::vec3>(
-                                VertexArrayStorage<glm::vec3>(dataPtr, count,
-                                                              byte_stride)));
+                    auto positions = std::unique_ptr<Vertex3DArrayPtr<glm::vec3>>(
+                        new Vertex3DArrayPtr<glm::vec3>(VertexArrayStorage<glm::vec3>(dataPtr, count, byte_stride)));
 
                     for (size_t i{0}; i < positions->size(); ++i) {
                       auto v = (*positions)[i];
                       // std::cout << "positions[" << i << "]: (" << v.x << ", "
                       //	<< v.y << ", " << v.z << ")\n";
 
-                      currentMesh.data()
-                          .mesh.Vertices[i + currentvOffset]
-                          .position =
+                      currentMesh.data().mesh.Vertices[i + currentvOffset].position =
                           parent_transform * (glm::vec4(v.x, v.y, v.z, 1.0f));
                       if (HasAnimation()) {
-                        mAnimatedMeshes.at(index)
-                            .Vertices[i + currentvOffset]
-                            .position = (glm::vec4(v.x, v.y, v.z, 1.0f));
+                        mAnimatedMeshes.at(index).Vertices[i + currentvOffset].position =
+                            (glm::vec4(v.x, v.y, v.z, 1.0f));
                         // mAnimatedMeshes.at(index).Vertices[i +
                         // currentvOffset].color = glm::vec4(1.0f);
                       }
-                      v = currentMesh.data()
-                              .mesh.Vertices[i + currentvOffset]
-                              .position;
+                      v = currentMesh.data().mesh.Vertices[i + currentvOffset].position;
                       if (v.x < m_pMin.x)
                         m_pMin.x = v.x;
                       if (v.y < m_pMin.y)
@@ -921,30 +831,22 @@ public:
                 case TINYGLTF_COMPONENT_TYPE_DOUBLE: {
                   switch (attribAccessor.type) {
                   case TINYGLTF_TYPE_VEC3: {
-                    auto positions =
-                        std::unique_ptr<Vertex3DArrayPtr<glm::vec3>>(
-                            new Vertex3DArrayPtr<glm::vec3>(
-                                VertexArrayStorage<glm::vec3>(dataPtr, count,
-                                                              byte_stride)));
+                    auto positions = std::unique_ptr<Vertex3DArrayPtr<glm::vec3>>(
+                        new Vertex3DArrayPtr<glm::vec3>(VertexArrayStorage<glm::vec3>(dataPtr, count, byte_stride)));
 
                     for (size_t i{0}; i < positions->size(); ++i) {
                       auto v = (*positions)[i];
                       // std::cout << "positions[" << i << "]: (" << v.x
                       //	<< ", " << v.y << ", " << v.z << ")\n";
 
-                      currentMesh.data()
-                          .mesh.Vertices[i + currentvOffset]
-                          .position =
+                      currentMesh.data().mesh.Vertices[i + currentvOffset].position =
                           parent_transform * (glm::vec4(v.x, v.y, v.z, 1.0f));
 
                       if (HasAnimation()) {
-                        mAnimatedMeshes.at(index)
-                            .Vertices[i + currentvOffset]
-                            .position = (glm::vec4(v.x, v.y, v.z, 1.0f));
+                        mAnimatedMeshes.at(index).Vertices[i + currentvOffset].position =
+                            (glm::vec4(v.x, v.y, v.z, 1.0f));
                       }
-                      v = currentMesh.data()
-                              .mesh.Vertices[i + currentvOffset]
-                              .position;
+                      v = currentMesh.data().mesh.Vertices[i + currentvOffset].position;
                       if (v.x < m_pMin.x)
                         m_pMin.x = v.x;
                       if (v.y < m_pMin.y)
@@ -980,9 +882,7 @@ public:
                   switch (attribAccessor.componentType) {
                   case TINYGLTF_COMPONENT_TYPE_FLOAT: {
                     auto normals = std::unique_ptr<Vertex3DArrayPtr<glm::vec3>>(
-                        new Vertex3DArrayPtr<glm::vec3>(
-                            VertexArrayStorage<glm::vec3>(dataPtr, count,
-                                                          byte_stride)));
+                        new Vertex3DArrayPtr<glm::vec3>(VertexArrayStorage<glm::vec3>(dataPtr, count, byte_stride)));
 
                     // IMPORTANT: We need to reorder normals (and texture
                     // coordinates into "facevarying" order) for each face
@@ -1002,40 +902,26 @@ public:
                       n2 = (*normals)[f2];
 
                       // Put them in the array in the correct order
-                      currentMesh.data()
-                          .mesh.Vertices[f0 + currentvOffset]
-                          .normal = glm::vec3(glm::mat3(parent_transform) *
-                                              glm::vec4(n0, 1.0f));
-                      currentMesh.data()
-                          .mesh.Vertices[f1 + currentvOffset]
-                          .normal = glm::vec3(glm::mat3(parent_transform) *
-                                              glm::vec4(n1, 1.0f));
-                      currentMesh.data()
-                          .mesh.Vertices[f2 + currentvOffset]
-                          .normal = glm::vec3(glm::mat3(parent_transform) *
-                                              glm::vec4(n2, 1.0f));
+                      currentMesh.data().mesh.Vertices[f0 + currentvOffset].normal =
+                          glm::vec3(glm::mat3(parent_transform) * glm::vec4(n0, 1.0f));
+                      currentMesh.data().mesh.Vertices[f1 + currentvOffset].normal =
+                          glm::vec3(glm::mat3(parent_transform) * glm::vec4(n1, 1.0f));
+                      currentMesh.data().mesh.Vertices[f2 + currentvOffset].normal =
+                          glm::vec3(glm::mat3(parent_transform) * glm::vec4(n2, 1.0f));
                       if (HasAnimation()) {
 
-                        mAnimatedMeshes.at(index)
-                            .Vertices[f0 + currentvOffset]
-                            .normal = glm::vec3(glm::mat3(parent_transform) *
-                                                glm::vec4(n0, 1.0f));
-                        mAnimatedMeshes.at(index)
-                            .Vertices[f1 + currentvOffset]
-                            .normal = glm::vec3(glm::mat3(parent_transform) *
-                                                glm::vec4(n1, 1.0f));
-                        mAnimatedMeshes.at(index)
-                            .Vertices[f2 + currentvOffset]
-                            .normal = glm::vec3(glm::mat3(parent_transform) *
-                                                glm::vec4(n2, 1.0f));
+                        mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].normal =
+                            glm::vec3(glm::mat3(parent_transform) * glm::vec4(n0, 1.0f));
+                        mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].normal =
+                            glm::vec3(glm::mat3(parent_transform) * glm::vec4(n1, 1.0f));
+                        mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].normal =
+                            glm::vec3(glm::mat3(parent_transform) * glm::vec4(n2, 1.0f));
                       }
                     }
                   } break;
                   case TINYGLTF_COMPONENT_TYPE_DOUBLE: {
                     auto normals = std::unique_ptr<Vertex3DArrayPtr<glm::vec3>>(
-                        new Vertex3DArrayPtr<glm::vec3>(
-                            VertexArrayStorage<glm::vec3>(dataPtr, count,
-                                                          byte_stride)));
+                        new Vertex3DArrayPtr<glm::vec3>(VertexArrayStorage<glm::vec3>(dataPtr, count, byte_stride)));
 
                     // IMPORTANT: We need to reorder normals (and texture
                     // coordinates into "facevarying" order) for each face
@@ -1055,33 +941,21 @@ public:
 
                       // Put them in the array in the correct order
 
-                      currentMesh.data()
-                          .mesh.Vertices[f0 + currentvOffset]
-                          .normal = glm::vec3(glm::mat3(parent_transform) *
-                                              glm::vec4(n0, 1.0f));
-                      currentMesh.data()
-                          .mesh.Vertices[f1 + currentvOffset]
-                          .normal = glm::vec3(glm::mat3(parent_transform) *
-                                              glm::vec4(n1, 1.0f));
-                      currentMesh.data()
-                          .mesh.Vertices[f2 + currentvOffset]
-                          .normal = glm::vec3(glm::mat3(parent_transform) *
-                                              glm::vec4(n2, 1.0f));
+                      currentMesh.data().mesh.Vertices[f0 + currentvOffset].normal =
+                          glm::vec3(glm::mat3(parent_transform) * glm::vec4(n0, 1.0f));
+                      currentMesh.data().mesh.Vertices[f1 + currentvOffset].normal =
+                          glm::vec3(glm::mat3(parent_transform) * glm::vec4(n1, 1.0f));
+                      currentMesh.data().mesh.Vertices[f2 + currentvOffset].normal =
+                          glm::vec3(glm::mat3(parent_transform) * glm::vec4(n2, 1.0f));
 
                       if (HasAnimation()) {
 
-                        mAnimatedMeshes.at(index)
-                            .Vertices[f0 + currentvOffset]
-                            .normal = glm::vec3(glm::mat3(parent_transform) *
-                                                glm::vec4(n0, 1.0f));
-                        mAnimatedMeshes.at(index)
-                            .Vertices[f1 + currentvOffset]
-                            .normal = glm::vec3(glm::mat3(parent_transform) *
-                                                glm::vec4(n1, 1.0f));
-                        mAnimatedMeshes.at(index)
-                            .Vertices[f2 + currentvOffset]
-                            .normal = glm::vec3(glm::mat3(parent_transform) *
-                                                glm::vec4(n2, 1.0f));
+                        mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].normal =
+                            glm::vec3(glm::mat3(parent_transform) * glm::vec4(n0, 1.0f));
+                        mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].normal =
+                            glm::vec3(glm::mat3(parent_transform) * glm::vec4(n1, 1.0f));
+                        mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].normal =
+                            glm::vec3(glm::mat3(parent_transform) * glm::vec4(n2, 1.0f));
                       }
                     }
                   } break;
@@ -1103,9 +977,7 @@ public:
                   case TINYGLTF_COMPONENT_TYPE_FLOAT: {
 
                     auto uvs = std::unique_ptr<Vertex2DArrayPtr<glm::vec2>>(
-                        new Vertex2DArrayPtr<glm::vec2>(
-                            VertexArrayStorage<glm::vec2>(dataPtr, count,
-                                                          byte_stride)));
+                        new Vertex2DArrayPtr<glm::vec2>(VertexArrayStorage<glm::vec2>(dataPtr, count, byte_stride)));
 
                     for (size_t i{0}; i < indices.size() / 3; ++i) {
                       // get the i'th triange's indexes
@@ -1121,36 +993,22 @@ public:
                       uv2 = (*uvs)[f2];
 
                       // push them in order into the mesh data
-                      currentMesh.data()
-                          .mesh.Vertices[f0 + currentvOffset]
-                          .texCoords = glm::vec2(uv0);
-                      currentMesh.data()
-                          .mesh.Vertices[f1 + currentvOffset]
-                          .texCoords = glm::vec2(uv1);
-                      currentMesh.data()
-                          .mesh.Vertices[f2 + currentvOffset]
-                          .texCoords = glm::vec2(uv2);
+                      currentMesh.data().mesh.Vertices[f0 + currentvOffset].texCoords = glm::vec2(uv0);
+                      currentMesh.data().mesh.Vertices[f1 + currentvOffset].texCoords = glm::vec2(uv1);
+                      currentMesh.data().mesh.Vertices[f2 + currentvOffset].texCoords = glm::vec2(uv2);
 
                       if (HasAnimation()) {
 
-                        mAnimatedMeshes.at(index)
-                            .Vertices[f0 + currentvOffset]
-                            .texCoords = glm::vec2(uv0);
-                        mAnimatedMeshes.at(index)
-                            .Vertices[f1 + currentvOffset]
-                            .texCoords = glm::vec2(uv1);
-                        mAnimatedMeshes.at(index)
-                            .Vertices[f2 + currentvOffset]
-                            .texCoords = glm::vec2(uv2);
+                        mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].texCoords = glm::vec2(uv0);
+                        mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].texCoords = glm::vec2(uv1);
+                        mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].texCoords = glm::vec2(uv2);
                       }
                     }
                   } break;
                   case TINYGLTF_COMPONENT_TYPE_DOUBLE: {
 
                     auto uvs = std::unique_ptr<Vertex2DArrayPtr<glm::dvec2>>(
-                        new Vertex2DArrayPtr<glm::dvec2>(
-                            VertexArrayStorage<glm::dvec2>(dataPtr, count,
-                                                           byte_stride)));
+                        new Vertex2DArrayPtr<glm::dvec2>(VertexArrayStorage<glm::dvec2>(dataPtr, count, byte_stride)));
 
                     for (size_t i{0}; i < indices.size() / 3; ++i) {
                       // get the i'th triange's indexes
@@ -1162,27 +1020,15 @@ public:
                       uv0 = (*uvs)[f0];
                       uv1 = (*uvs)[f1];
                       uv2 = (*uvs)[f2];
-                      currentMesh.data()
-                          .mesh.Vertices[f0 + currentvOffset]
-                          .texCoords = glm::dvec2(uv0);
-                      currentMesh.data()
-                          .mesh.Vertices[f1 + currentvOffset]
-                          .texCoords = glm::dvec2(uv1);
-                      currentMesh.data()
-                          .mesh.Vertices[f2 + currentvOffset]
-                          .texCoords = glm::dvec2(uv2);
+                      currentMesh.data().mesh.Vertices[f0 + currentvOffset].texCoords = glm::dvec2(uv0);
+                      currentMesh.data().mesh.Vertices[f1 + currentvOffset].texCoords = glm::dvec2(uv1);
+                      currentMesh.data().mesh.Vertices[f2 + currentvOffset].texCoords = glm::dvec2(uv2);
 
                       if (HasAnimation()) {
 
-                        mAnimatedMeshes.at(index)
-                            .Vertices[f0 + currentvOffset]
-                            .texCoords = glm::dvec2(uv0);
-                        mAnimatedMeshes.at(index)
-                            .Vertices[f1 + currentvOffset]
-                            .texCoords = glm::dvec2(uv1);
-                        mAnimatedMeshes.at(index)
-                            .Vertices[f2 + currentvOffset]
-                            .texCoords = glm::dvec2(uv2);
+                        mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].texCoords = glm::dvec2(uv0);
+                        mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].texCoords = glm::dvec2(uv1);
+                        mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].texCoords = glm::dvec2(uv2);
                       }
                     }
                   } break;
@@ -1203,11 +1049,9 @@ public:
                   switch (attribAccessor.componentType) {
                   case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT: {
 
-                    auto color = std::unique_ptr<
-                        UnsignedVertex4DArrayPtr<glm::lowp_u16vec4>>(
+                    auto color = std::unique_ptr<UnsignedVertex4DArrayPtr<glm::lowp_u16vec4>>(
                         new UnsignedVertex4DArrayPtr<glm::lowp_u16vec4>(
-                            VertexArrayStorage<glm::lowp_u16vec4>(
-                                dataPtr, count, byte_stride)));
+                            VertexArrayStorage<glm::lowp_u16vec4>(dataPtr, count, byte_stride)));
 
                     for (size_t i{0}; i < indices.size() / 3; ++i) {
                       // get the i'th triange's indexes
@@ -1231,36 +1075,22 @@ public:
                       color2.a = 1.0;
 
                       // push them in order into the mesh data
-                      currentMesh.data()
-                          .mesh.Vertices[f0 + currentvOffset]
-                          .color = glm::vec4(color0);
-                      currentMesh.data()
-                          .mesh.Vertices[f1 + currentvOffset]
-                          .color = glm::vec4(color1);
-                      currentMesh.data()
-                          .mesh.Vertices[f2 + currentvOffset]
-                          .color = glm::vec4(color2);
+                      currentMesh.data().mesh.Vertices[f0 + currentvOffset].color = glm::vec4(color0);
+                      currentMesh.data().mesh.Vertices[f1 + currentvOffset].color = glm::vec4(color1);
+                      currentMesh.data().mesh.Vertices[f2 + currentvOffset].color = glm::vec4(color2);
 
                       if (HasAnimation()) {
 
-                        mAnimatedMeshes.at(index)
-                            .Vertices[f0 + currentvOffset]
-                            .color = glm::vec4(color0);
-                        mAnimatedMeshes.at(index)
-                            .Vertices[f1 + currentvOffset]
-                            .color = glm::vec4(color1);
-                        mAnimatedMeshes.at(index)
-                            .Vertices[f2 + currentvOffset]
-                            .color = glm::vec4(color2);
+                        mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].color = glm::vec4(color0);
+                        mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].color = glm::vec4(color1);
+                        mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].color = glm::vec4(color2);
                       }
                     }
                   } break;
                   case TINYGLTF_COMPONENT_TYPE_DOUBLE: {
 
                     auto color = std::unique_ptr<Vertex4DArrayPtr<glm::dvec4>>(
-                        new Vertex4DArrayPtr<glm::dvec4>(
-                            VertexArrayStorage<glm::dvec4>(dataPtr, count,
-                                                           byte_stride)));
+                        new Vertex4DArrayPtr<glm::dvec4>(VertexArrayStorage<glm::dvec4>(dataPtr, count, byte_stride)));
 
                     for (size_t i{0}; i < indices.size() / 3; ++i) {
                       // get the i'th triange's indexes
@@ -1275,36 +1105,22 @@ public:
                       color0.a = 1.0;
                       color1.a = 1.0;
                       color2.a = 1.0;
-                      currentMesh.data()
-                          .mesh.Vertices[f0 + currentvOffset]
-                          .color = glm::dvec4(color0);
-                      currentMesh.data()
-                          .mesh.Vertices[f1 + currentvOffset]
-                          .color = glm::dvec4(color1);
-                      currentMesh.data()
-                          .mesh.Vertices[f2 + currentvOffset]
-                          .color = glm::dvec4(color2);
+                      currentMesh.data().mesh.Vertices[f0 + currentvOffset].color = glm::dvec4(color0);
+                      currentMesh.data().mesh.Vertices[f1 + currentvOffset].color = glm::dvec4(color1);
+                      currentMesh.data().mesh.Vertices[f2 + currentvOffset].color = glm::dvec4(color2);
 
                       if (HasAnimation()) {
 
-                        mAnimatedMeshes.at(index)
-                            .Vertices[f0 + currentvOffset]
-                            .color = glm::dvec4(color0);
-                        mAnimatedMeshes.at(index)
-                            .Vertices[f1 + currentvOffset]
-                            .color = glm::dvec4(color1);
-                        mAnimatedMeshes.at(index)
-                            .Vertices[f2 + currentvOffset]
-                            .color = glm::dvec4(color2);
+                        mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].color = glm::dvec4(color0);
+                        mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].color = glm::dvec4(color1);
+                        mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].color = glm::dvec4(color2);
                       }
                     }
                   } break;
                   case TINYGLTF_COMPONENT_TYPE_FLOAT: {
 
                     auto color = std::unique_ptr<Vertex4DArrayPtr<glm::vec4>>(
-                        new Vertex4DArrayPtr<glm::vec4>(
-                            VertexArrayStorage<glm::vec4>(dataPtr, count,
-                                                          byte_stride)));
+                        new Vertex4DArrayPtr<glm::vec4>(VertexArrayStorage<glm::vec4>(dataPtr, count, byte_stride)));
 
                     for (size_t i{0}; i < indices.size() / 3; ++i) {
                       // get the i'th triange's indexes
@@ -1319,27 +1135,15 @@ public:
                       color0.a = 1.0;
                       color1.a = 1.0;
                       color2.a = 1.0;
-                      currentMesh.data()
-                          .mesh.Vertices[f0 + currentvOffset]
-                          .color = glm::vec4(color0);
-                      currentMesh.data()
-                          .mesh.Vertices[f1 + currentvOffset]
-                          .color = glm::vec4(color1);
-                      currentMesh.data()
-                          .mesh.Vertices[f2 + currentvOffset]
-                          .color = glm::vec4(color2);
+                      currentMesh.data().mesh.Vertices[f0 + currentvOffset].color = glm::vec4(color0);
+                      currentMesh.data().mesh.Vertices[f1 + currentvOffset].color = glm::vec4(color1);
+                      currentMesh.data().mesh.Vertices[f2 + currentvOffset].color = glm::vec4(color2);
 
                       if (HasAnimation()) {
 
-                        mAnimatedMeshes.at(index)
-                            .Vertices[f0 + currentvOffset]
-                            .color = glm::vec4(color0);
-                        mAnimatedMeshes.at(index)
-                            .Vertices[f1 + currentvOffset]
-                            .color = glm::vec4(color1);
-                        mAnimatedMeshes.at(index)
-                            .Vertices[f2 + currentvOffset]
-                            .color = glm::vec4(color2);
+                        mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].color = glm::vec4(color0);
+                        mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].color = glm::vec4(color1);
+                        mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].color = glm::vec4(color2);
                       }
                     }
                   } break;
@@ -1358,11 +1162,9 @@ public:
                   switch (attribAccessor.componentType) {
                   case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT: {
 
-                    auto joint = std::unique_ptr<
-                        UnsignedVertex4DArrayPtr<glm::lowp_u16vec4>>(
+                    auto joint = std::unique_ptr<UnsignedVertex4DArrayPtr<glm::lowp_u16vec4>>(
                         new UnsignedVertex4DArrayPtr<glm::lowp_u16vec4>(
-                            VertexArrayStorage<glm::lowp_u16vec4>(
-                                dataPtr, count, byte_stride)));
+                            VertexArrayStorage<glm::lowp_u16vec4>(dataPtr, count, byte_stride)));
 
                     for (size_t i{0}; i < indices.size() / 3; ++i) {
                       // get the i'th triange's indexes
@@ -1379,25 +1181,17 @@ public:
                       joint2 = (*joint)[f2];
 
                       // push them in order into the mesh data
-                      mAnimatedMeshes.at(index)
-                          .Vertices[f0 + currentvOffset]
-                          .boneIDs = (glm::ivec4)joint0;
-                      mAnimatedMeshes.at(index)
-                          .Vertices[f1 + currentvOffset]
-                          .boneIDs = (glm::ivec4)joint1;
-                      mAnimatedMeshes.at(index)
-                          .Vertices[f2 + currentvOffset]
-                          .boneIDs = (glm::ivec4)joint2;
+                      mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].boneIDs = (glm::ivec4)joint0;
+                      mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].boneIDs = (glm::ivec4)joint1;
+                      mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].boneIDs = (glm::ivec4)joint2;
                     }
                   } break;
 
                   case TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE: {
 
-                    auto joint = std::unique_ptr<
-                        UnsignedVertex4DArrayPtr<glm::lowp_u8vec4>>(
+                    auto joint = std::unique_ptr<UnsignedVertex4DArrayPtr<glm::lowp_u8vec4>>(
                         new UnsignedVertex4DArrayPtr<glm::lowp_u8vec4>(
-                            VertexArrayStorage<glm::lowp_u8vec4>(dataPtr, count,
-                                                                 byte_stride)));
+                            VertexArrayStorage<glm::lowp_u8vec4>(dataPtr, count, byte_stride)));
 
                     for (size_t i{0}; i < indices.size() / 3; ++i) {
                       // get the i'th triange's indexes
@@ -1414,15 +1208,9 @@ public:
                       joint2 = (*joint)[f2];
 
                       // push them in order into the mesh data
-                      mAnimatedMeshes.at(index)
-                          .Vertices[f0 + currentvOffset]
-                          .boneIDs = (glm::ivec4)joint0;
-                      mAnimatedMeshes.at(index)
-                          .Vertices[f1 + currentvOffset]
-                          .boneIDs = (glm::ivec4)joint1;
-                      mAnimatedMeshes.at(index)
-                          .Vertices[f2 + currentvOffset]
-                          .boneIDs = (glm::ivec4)joint2;
+                      mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].boneIDs = (glm::ivec4)joint0;
+                      mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].boneIDs = (glm::ivec4)joint1;
+                      mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].boneIDs = (glm::ivec4)joint2;
                     }
                   } break;
                   default:
@@ -1441,9 +1229,7 @@ public:
                   switch (attribAccessor.componentType) {
                   case TINYGLTF_COMPONENT_TYPE_FLOAT: {
                     auto weights = std::unique_ptr<Vertex4DArrayPtr<glm::vec4>>(
-                        new Vertex4DArrayPtr<glm::vec4>(
-                            VertexArrayStorage<glm::vec4>(dataPtr, count,
-                                                          byte_stride)));
+                        new Vertex4DArrayPtr<glm::vec4>(VertexArrayStorage<glm::vec4>(dataPtr, count, byte_stride)));
 
                     // IMPORTANT: We need to reorder normals (and texture
                     // coordinates into "facevarying" order) for each face
@@ -1463,15 +1249,9 @@ public:
                       w2 = (*weights)[f2];
 
                       // push them in order into the mesh data
-                      mAnimatedMeshes.at(index)
-                          .Vertices[f0 + currentvOffset]
-                          .weights = w0;
-                      mAnimatedMeshes.at(index)
-                          .Vertices[f1 + currentvOffset]
-                          .weights = w1;
-                      mAnimatedMeshes.at(index)
-                          .Vertices[f2 + currentvOffset]
-                          .weights = w2;
+                      mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].weights = w0;
+                      mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].weights = w1;
+                      mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].weights = w2;
                     }
                   } break;
 
@@ -1506,10 +1286,8 @@ public:
 
           int tmp_index = 0;
           for (auto &vertex : mAnimatedMeshes.at(index).Vertices) {
-            vertex.tangent =
-                currentMesh.data().mesh.Vertices.at(tmp_index).tangent;
-            vertex.bitangent =
-                currentMesh.data().mesh.Vertices.at(tmp_index).bitangent;
+            vertex.tangent = currentMesh.data().mesh.Vertices.at(tmp_index).tangent;
+            vertex.bitangent = currentMesh.data().mesh.Vertices.at(tmp_index).bitangent;
             tmp_index++;
           }
         }
