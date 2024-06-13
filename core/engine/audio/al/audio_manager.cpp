@@ -172,6 +172,7 @@ float ALAudioManager::getSourcePitch(Ref<AudioSource> source_ref) {
   auto source = sourcesPool.get(source_ref);
   return source->pitch;
 }
+uint32_t ALAudioManager::getId(Ref<AudioSource> source_ref) { return sourcesPool.get(source_ref)->id; }
 
 void ALAudioManager::deleteBuffer(Ref<AudioBuffer> buffer_ref) {
   auto buffer = *buffersPool.get(buffer_ref);
@@ -180,11 +181,13 @@ void ALAudioManager::deleteBuffer(Ref<AudioBuffer> buffer_ref) {
   buffersPool.destroy(buffer_ref);
 }
 
-void ALAudioManager::deleteSource(Ref<AudioSource> source_ref) {
+uint32_t ALAudioManager::deleteSource(Ref<AudioSource> source_ref) {
 
   auto source = *sourcesPool.get(source_ref);
   al::deleteSource(source);
   sourcesPool.destroy(source_ref);
+
+  return source.id;
 }
 void ALAudioManager::deleteListener(Ref<AudioListener> listener) {}
 } // namespace engine::audio

@@ -21,6 +21,7 @@ class AudioObject {
   glm::vec3 velocity{};
   float pitch = 1.0;
 
+  std::string name{};
   friend class AssetManager;
 
 public:

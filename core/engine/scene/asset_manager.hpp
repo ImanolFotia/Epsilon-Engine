@@ -14,6 +14,7 @@
 #include "audio/audio_object.hpp"
 
 #include "core/engine/audio/audio_manager.hpp"
+#include "core/framework/random.hpp"
 #include "structs/box.hpp"
 #include <core/engine/context.hpp>
 #include <core/framework/utils/image.hpp>
@@ -408,19 +409,27 @@ public:
     }
   }
 
-  void deleteAudioSource(Ref<audio::AudioSource> source) {
+  void deleteAudioSource(AudioObject object, Ref<audio::AudioSource> source) {
     auto audioManager = m_pContext->AudioManager();
     if (audioManager->getSourceState(source) == audio::AudioState::PLAYING)
       audioManager->Stop(source);
-    audioManager->deleteSource(source);
+    auto id = audioManager->deleteSource(source);
+
+    for (int i = 0; i < m_pAudioBuffers[object.name].sources.size(); i++) {
+      if (id == audioManager->getId(source)) {
+        m_pAudioBuffers[object.name].sources.erase(m_pAudioBuffers[object.name].sources.begin() + i);
+        break;
+      }
+    }
   }
 
   void deleteAudioObject(AudioObject object) {
     auto audioManager = m_pContext->AudioManager();
     for (auto &source : object.source) {
-      deleteAudioSource(source);
+      deleteAudioSource(object, source);
     }
     audioManager->deleteBuffer(object.Buffer().buffer);
+    m_pAudioBuffers.extract(object.name);
   }
 
   void pLoadMaterials(std::string name, RenderMesh &subRenderC, std::vector<common::MeshMaterial> materials) {
@@ -907,13 +916,15 @@ public:
     audioBuffer.buffer = buffer;
 
     for (int i = 0; i < numSources; i++)
-      audioBuffer.sources.push_back(audioManager->createSource(path + "_source_" + std::to_string(i) + "_" +
-                                                                   std::to_string(audioBuffer.sources.size()),
-                                                               {.buffer = audioBuffer.buffer}));
+      audioBuffer.sources.push_back(
+          audioManager->createSource(path + "_source_" + std::to_string(framework::QuickRandom<long>(0, 4123168431)) +
+                                         "_" + std::to_string(audioBuffer.sources.size()),
+                                     {.buffer = audioBuffer.buffer}));
 
     AudioObject object;
     object.buffer = audioBuffer;
     object.source = audioBuffer.sources;
+    object.name = path;
 
     delete[] audioFile.data();
 
