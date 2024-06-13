@@ -75,7 +75,9 @@ void UI::Update() {
 }
 void UI::Draw(engine::Ref<engine::RenderPass> renderPass) {
 
-  m_pResourceManager->UpdateMappedBuffer(m_pVertexBuffer[m_pRenderer->CurrentFrameInFlight()], {.size = vertices_pushed * sizeof(UIVertex), .offset = 0, .vertices = (void *)m_pVertices.data()});
+  m_pResourceManager->UpdateMappedBuffer(
+      m_pVertexBuffer[m_pRenderer->CurrentFrameInFlight()],
+      {.size = vertices_pushed * sizeof(UIVertex), .offset = 0, .vertices = (void *)m_pVertices.data()});
   m_pResourceManager->UpdateMesh(m_pMesh, {
                                               .vertexBuffer = m_pVertexBuffer[m_pRenderer->CurrentFrameInFlight()],
                                           });
@@ -85,9 +87,15 @@ void UI::Draw(engine::Ref<engine::RenderPass> renderPass) {
     // m_pRenderer->SetRenderPass(m_pRenderPass);
     for (int i = 0; i < commands_pushed + 1; i++) {
       auto &draw_command = m_DrawLists[i];
-      m_pResourceManager->UpdateMesh(m_pMesh, {.vertex_size = draw_command.num_vertices, .vertex_offset = draw_command.vertex_offset});
+      m_pResourceManager->UpdateMesh(
+          m_pMesh, {.vertex_size = draw_command.num_vertices, .vertex_offset = draw_command.vertex_offset});
 
-      m_pRenderer->Push({.mesh = m_pMesh, .material = draw_command.bind_group, .pushConstant = engine::Ref<engine::PushConstant>::makeEmpty(), .objectConstant = {.transform = glm::mat4(1.0f), .material_index = 0, .animation_offset = 0}, .layout_index = 1, .uniformIndex = 0});
+      m_pRenderer->Push({.mesh = m_pMesh,
+                         .material = draw_command.bind_group,
+                         .pushConstant = engine::Ref<engine::PushConstant>::makeEmpty(),
+                         .objectConstant = {.transform = glm::mat4(1.0f), .material_index = 0, .animation_offset = 0},
+                         .layout_index = 1,
+                         .uniformIndex = 0});
 
       draw_command.bind_group = m_CurrentBindGroup;
       draw_command.num_vertices = 0;
@@ -107,7 +115,8 @@ void UI::Draw(engine::Ref<engine::RenderPass> renderPass) {
 }
 void UI::Free() {}
 
-void UI::CreateRect(glm::vec2 position, glm::vec2 size, glm::vec2 uv0 = glm::vec2(0.0f), glm::vec2 uv1 = glm::vec2(1.0f), glm::vec4 color) {
+void UI::CreateRect(glm::vec2 position, glm::vec2 size, glm::vec2 uv0 = glm::vec2(0.0f),
+                    glm::vec2 uv1 = glm::vec2(1.0f), glm::vec4 color) {
   size /= m_pResolution;
   position /= m_pResolution;
   m_pVertices[vertices_pushed].color = color;
@@ -179,7 +188,8 @@ void UI::EndWindow() {
 
   glm::vec2 white_pixel = glm::vec2(m_Fonts[current_font]->white_pixel.x, m_Fonts[current_font]->white_pixel.y);
 
-  CreateRect(currentWindow->position, size + glm::vec2(m_pStyle.windowPadding * 3.0f, m_pStyle.windowPadding * 3.0f), white_pixel, white_pixel, currentWindow->color);
+  CreateRect(currentWindow->position, size + glm::vec2(m_pStyle.windowPadding * 3.0f, m_pStyle.windowPadding * 3.0f),
+             white_pixel, white_pixel, currentWindow->color);
 
   vertices_pushed = temp_vtx;
 
@@ -239,10 +249,14 @@ void UI::Text(const std::string &text, glm::vec2 position, glm::vec4 color, bool
         position.x += 5;
       } else {
 
-        glm::vec4 a = glm::vec4((position) / m_pResolution + glm::vec2(q.x0, q.y0 + font->highest_character) / m_pResolution, q.s0, q.t0);
-        glm::vec4 b = glm::vec4((position) / m_pResolution + glm::vec2(q.x1, q.y0 + font->highest_character) / m_pResolution, q.s1, q.t0);
-        glm::vec4 c = glm::vec4((position) / m_pResolution + glm::vec2(q.x0, q.y1 + font->highest_character) / m_pResolution, q.s0, q.t1);
-        glm::vec4 d = glm::vec4((position) / m_pResolution + glm::vec2(q.x1, q.y1 + font->highest_character) / m_pResolution, q.s1, q.t1);
+        glm::vec4 a = glm::vec4(
+            (position) / m_pResolution + glm::vec2(q.x0, q.y0 + font->highest_character) / m_pResolution, q.s0, q.t0);
+        glm::vec4 b = glm::vec4(
+            (position) / m_pResolution + glm::vec2(q.x1, q.y0 + font->highest_character) / m_pResolution, q.s1, q.t0);
+        glm::vec4 c = glm::vec4(
+            (position) / m_pResolution + glm::vec2(q.x0, q.y1 + font->highest_character) / m_pResolution, q.s0, q.t1);
+        glm::vec4 d = glm::vec4(
+            (position) / m_pResolution + glm::vec2(q.x1, q.y1 + font->highest_character) / m_pResolution, q.s1, q.t1);
 
         vertices[0] = {a, color};
         vertices[1] = {b, color};
@@ -295,7 +309,8 @@ bool UI::Button(const std::string &text, ButtonFlags flags) {
   const float padding = 3;
   glm::vec2 size = glm::vec2(m_pStyle.buttonPadding, m_pStyle.buttonHeight + m_pStyle.buttonPadding);
   // glm::vec2 text_size = m_pStyle.textSize; // glm::vec2(10, 20);
-  glm::vec4 button_color = (flags.is_tab && flags.is_selected_tab) ? glm::vec4(0.5, 0.5, 0.5, 1.0) : glm::vec4(0.2, 0.2, 0.2, 1.0);
+  glm::vec4 button_color =
+      (flags.is_tab && flags.is_selected_tab) ? glm::vec4(0.5, 0.5, 0.5, 1.0) : glm::vec4(0.2, 0.2, 0.2, 1.0);
 
   glm::vec2 text_size = textSize(text);
 
@@ -318,7 +333,8 @@ bool UI::Button(const std::string &text, ButtonFlags flags) {
     button_color = glm::normalize(glm::vec4(222.0f, 134.0f, 2.0f, 255.0f));
   }
 
-  if (mouse.x > position.x && mouse.x < position.x + size.x && mouse.y > position.y && mouse.y < position.y + size.y && m_pMouse.left_pressed) {
+  if (mouse.x > position.x && mouse.x < position.x + size.x && mouse.y > position.y && mouse.y < position.y + size.y &&
+      m_pMouse.left_pressed) {
     button_color = glm::normalize(glm::vec4(130.0f, 50.0f, 2.0f, 255.0f));
     result = true;
   }
@@ -378,19 +394,22 @@ void UI::Dock(DockLocation location, float thickness) {
     m_pCursorPosition = glm::vec2(0.0f, thickness);
     break;
   case DockLocation::BOTTOM:
-    CreateRect(glm::vec2(0.0f, m_pResolution.y - thickness), glm::vec2(m_pResolution.x, thickness), white_pixel, white_pixel);
+    CreateRect(glm::vec2(0.0f, m_pResolution.y - thickness), glm::vec2(m_pResolution.x, thickness), white_pixel,
+               white_pixel);
     break;
   case DockLocation::LEFT:
     CreateRect(glm::vec2(0.0f), glm::vec2(thickness, m_pResolution.y), white_pixel, white_pixel);
     m_pCursorPosition = glm::vec2(thickness, 0.0f);
     break;
   case DockLocation::RIGHT:
-    CreateRect(glm::vec2(m_pResolution.x - thickness, 0.0f), glm::vec2(thickness, m_pResolution.y), white_pixel, white_pixel);
+    CreateRect(glm::vec2(m_pResolution.x - thickness, 0.0f), glm::vec2(thickness, m_pResolution.y), white_pixel,
+               white_pixel);
     break;
   }
 }
 
-bool UI::ImageButton(const std::string &text, const std::string &texture, glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1, glm::vec4 tint, bool fill_background) {
+bool UI::ImageButton(const std::string &text, const std::string &texture, glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1,
+                     glm::vec4 tint, bool fill_background) {
   if (m_DrawLists[commands_pushed].bind_group != m_pBindGroups[texture]) {
     auto &new_command = m_DrawLists.emplace_back();
     commands_pushed++;
@@ -406,7 +425,8 @@ bool UI::ImageButton(const std::string &text, const std::string &texture, glm::v
   glm::vec2 position = m_pCursorPosition;
 
   glm::vec2 mouse = glm::vec2(framework::Input::Mouse::XPOS, framework::Input::Mouse::YPOS);
-  if (mouse.x > position.x && mouse.x < position.x + size.x + m_pStyle.buttonPadding * 2.0f && mouse.y > position.y && mouse.y < position.y + size.y + m_pStyle.buttonPadding * 2.0f) {
+  if (mouse.x > position.x && mouse.x < position.x + size.x + m_pStyle.buttonPadding * 2.0f && mouse.y > position.y &&
+      mouse.y < position.y + size.y + m_pStyle.buttonPadding * 2.0f) {
     button_color = glm::vec4(0.5, 0.5, 0.5, 1.0);
   }
 
@@ -429,7 +449,8 @@ bool UI::ImageButton(const std::string &text, const std::string &texture, glm::v
 
   // Sameline();
   auto text_size = textSize(text);
-  text_position = text_position + glm::vec2(0.0f, glm::ceil(((int)text_size.y % 2 == 0 ? text_size.y + 1 : text_size.y) * 0.75));
+  text_position =
+      text_position + glm::vec2(0.0f, glm::ceil(((int)text_size.y % 2 == 0 ? text_size.y + 1 : text_size.y) * 0.75));
 
   m_pCursorPosition.x -= m_pStyle.buttonPadding + text_size.x + m_pStyle.buttonPadding;
 
@@ -454,12 +475,15 @@ bool UI::ImageButton(const std::string &text, const std::string &texture, glm::v
 
   m_pContext.prev_widget_position = position + glm::vec2(0.0f, -m_pStyle.buttonPadding);
 
-  currentWindow->size.x = glm::max((position.x + size.x) - currentWindow->position.x - m_pStyle.buttonPadding * 2.0f, currentWindow->size.x);
-  currentWindow->size.y = glm::max((position.y + size.y) - currentWindow->position.y - m_pStyle.buttonPadding * 2.0f, currentWindow->size.y);
+  currentWindow->size.x = glm::max((position.x + size.x) - currentWindow->position.x - m_pStyle.buttonPadding * 2.0f,
+                                   currentWindow->size.x);
+  currentWindow->size.y = glm::max((position.y + size.y) - currentWindow->position.y - m_pStyle.buttonPadding * 2.0f,
+                                   currentWindow->size.y);
 
   m_pCursorPosition.x = currentWindow->position.x; // position.x - m_pStyle.buttonPadding;
   m_pCursorPosition.y = position.y + size.y;
-  if (mouse.x > position.x && mouse.x < position.x + size.x && mouse.y > position.y && mouse.y < position.y + size.y && m_pMouse.left_pressed) {
+  if (mouse.x > position.x && mouse.x < position.x + size.x && mouse.y > position.y && mouse.y < position.y + size.y &&
+      m_pMouse.left_pressed) {
     return true;
   }
   return false;
@@ -641,7 +665,8 @@ bool UI::AngularButton(const std::string &text) {
 
     CreatePolygon(vertices);
 
-    Text(text, polygon_center + ((glm::normalize(polygon_center - center) * 2.0f - 1.0f) - (text_size * 0.5f)), glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), false);
+    Text(text, polygon_center + ((glm::normalize(polygon_center - center) * 2.0f - 1.0f) - (text_size * 0.5f)),
+         glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), false);
   }
 
   angularWidget.currentButtonIndex++;
@@ -680,7 +705,8 @@ bool UI::CheckBox(const std::string &text, bool *state) {
   }
 
   glm::vec2 mouse = glm::vec2(framework::Input::Mouse::XPOS, framework::Input::Mouse::YPOS);
-  if (mouse.x > position.x && mouse.x < position.x + switch_width && mouse.y > position.y && mouse.y < position.y + switch_width) {
+  if (mouse.x > position.x && mouse.x < position.x + switch_width && mouse.y > position.y &&
+      mouse.y < position.y + switch_width) {
     // button_color = glm::vec4(0.2, 0.5, 0.5, 1.0);
   }
 
@@ -692,9 +718,11 @@ bool UI::CheckBox(const std::string &text, bool *state) {
   glm::vec2 text_padding = glm::vec2(m_pStyle.buttonPadding, 0.0f);
 
   CreateRect(position, glm::vec2(switch_width), white_pixel, white_pixel, glm::vec4(0.0, 0.0, 0.0, 1.0));
-  CreateRect(position + glm::vec2(switch_width * 0.1), glm::vec2(switch_width) * 0.8f, white_pixel, white_pixel, button_color);
+  CreateRect(position + glm::vec2(switch_width * 0.1), glm::vec2(switch_width) * 0.8f, white_pixel, white_pixel,
+             button_color);
 
-  int glyph_size = abs(m_Fonts[DEFAULT_FONT]->Glyphs()[(int)'x' - 32].quad.y0 - m_Fonts[DEFAULT_FONT]->Glyphs()[(int)'x' - 32].quad.y1);
+  int glyph_size = abs(m_Fonts[DEFAULT_FONT]->Glyphs()[(int)'x' - 32].quad.y0 -
+                       m_Fonts[DEFAULT_FONT]->Glyphs()[(int)'x' - 32].quad.y1);
   // std::string tick = '√';
   if (*state)
     Text("x", position + glm::vec2(switch_width * 0.3f, -glm::ceil(glyph_size * 0.25)), glm::vec4(1.0f), false);
@@ -711,53 +739,60 @@ bool UI::CheckBox(const std::string &text, bool *state) {
   m_pContext.prev_widget_size.x = switch_width + text_size.x + m_pStyle.buttonPadding;
   m_pContext.prev_widget_size.y = (size.y + m_pStyle.buttonPadding);
 
-  if (mouse.x > position.x && mouse.x < position.x + switch_width && mouse.y > position.y && mouse.y < position.y + switch_width && m_pMouse.left_pressed) {
+  if (mouse.x > position.x && mouse.x < position.x + switch_width && mouse.y > position.y &&
+      mouse.y < position.y + switch_width && m_pMouse.left_pressed) {
     *state = !*state;
     return true;
   }
   return false;
 }
 
-void UI::HealthBar(const std::string &text, glm::vec2 position, float val, float min, float max) {
+void UI::HealthBar(const std::string &text, glm::vec2 position, float val, float min, float max, glm::vec4 color,
+                   glm::vec4 backgroundColor) {
 
   CheckShader();
+  auto font = m_Fonts[current_font];
   m_pContext.prev_widget_position = m_pCursorPosition;
   const float padding = 1;
   glm::vec2 size = glm::vec2(m_pStyle.buttonPadding, m_pStyle.buttonHeight + m_pStyle.buttonPadding);
-  glm::vec4 button_color = glm::vec4(0.5, 0.5, 0.5, 1.0);
 
   glm::vec2 text_size = textSize(text);
 
-  size = glm::vec2(100, 10);
+  size = glm::vec2(100, 25);
 
   const int num_squares = glm::min(10, (int)((val / max) * 10) + 1);
 
   glm::vec2 white_pixel = glm::vec2(m_Fonts[current_font]->white_pixel.x, m_Fonts[current_font]->white_pixel.y);
 
-  CreateRect(position, size, white_pixel, white_pixel, button_color);
+  CreateRect(position, size + glm::vec2(25, 0), white_pixel, white_pixel, backgroundColor);
 
-  glm::vec2 sqr_position = position + padding;
-  glm::vec2 sqr_size = glm::vec2((size.x - (padding * (10 + 1))) / 10, size.y - (padding * 2.0f));
-  float last_sqr_width = 10.0f - ((max / 10.0f) - (fmod(val, 10.0f)));
+  glm::vec2 sqr_position = position + padding + glm::vec2(0.0f, size.y - 10 - padding);
+  glm::vec2 sqr_size = glm::vec2((size.x - (padding * (10 + 1))) / 10, 10 - (padding * 2.0f));
+  float last_sqr_width = 10.0f - ((max / 10.0f) - (fmod(val, 10.0f))) + padding;
   int i = 0;
-  glm::vec4 color = glm::mix(glm::vec4(1.0, 0.0, 0.0, 1.0), glm::vec4(0.0, 1.0, 0.0, 1.0), val / max);
   for (i = 0; i < num_squares - 1; i++) {
     CreateRect(sqr_position, sqr_size, white_pixel, white_pixel, color);
     sqr_position.x += sqr_size.x + padding;
   }
+  last_sqr_width = position.x + sqr_size.x * 10.0f + padding * 10.0f;
+  CreateRect(sqr_position, sqr_size, white_pixel, white_pixel, color);
+  sqr_position.x += sqr_size.x + padding;
 
-  CreateRect(sqr_position, glm::vec2(last_sqr_width, sqr_size.y), white_pixel, white_pixel, glm::mix(glm::vec4(1.0, 0.0, 0.0, 1.0), glm::vec4(0.0, 1.0, 0.0, 1.0), (float)i / 10));
+  CreateRect(glm::vec2(last_sqr_width + padding * 2.0f, position.y + padding), glm::vec2(25, 25) - padding * 2.0f,
+             white_pixel, white_pixel, backgroundColor + glm::vec4(0.1, 0.1, 0.1, 0.0));
 
-  // glm::vec2 half_point = position + (size * 0.25f);
+  glm::vec2 half_point = position + glm::vec2(size.x * 0.5, size.y * 0.25f) + glm::vec2(-text_size.x * 0.5, 0.0);
 
   // CreateRect(position - glm::vec2(0.0, size.y + 2), size + glm::vec2(0.0, 2),
   // m_WhitePixelPos, m_WhitePixelPos, glm::vec4(0.0, 0.0, 0.0, 0.5));
 
-  // Text(text, glm::vec2(half_point.x, position.y - size.y -
-  // glm::ceil(highest_character * 0.2f)), glm::vec4(1.0f), false);
+  Text(text, half_point - glm::vec2(0.0, font->highest_character * 0.5f), glm::vec4(1.0f), false);
+
+  Text("1", glm::vec2(last_sqr_width + 10, half_point.y - padding * 2.0f), glm::vec4(1.0f), false);
 }
 
-void UI::Scale(const std::string &text, const std::string &setting_name, int &current, int min, int max, glm::vec2 fixed_size = glm::vec2(-1.0f)) {
+void UI::Scale(const std::string &text, const std::string &setting_name, int &current, int min, int max,
+               glm::vec2 fixed_size = glm::vec2(-1.0f)) {
   auto font = m_Fonts[current_font];
   glm::vec2 widgetStart = m_pCursorPosition;
   m_pContext.prev_widget_position = widgetStart;
@@ -795,9 +830,14 @@ void UI::Scale(const std::string &text, const std::string &setting_name, int &cu
   auto btnSize = buttonSize(">");
 
   if (fixed_size.x > 0.0) {
-    Text(composite_text, glm::ceil(glm::vec2(widgetStart.x + free_space, position.y) + glm::vec2(name_width + fixed_size.x * 0.5f - text_size.x * 0.5f, glm::ceil(font->highest_character * 0.1))), glm::vec4(1.0f), false);
+    Text(composite_text,
+         glm::ceil(glm::vec2(widgetStart.x + free_space, position.y) +
+                   glm::vec2(name_width + fixed_size.x * 0.5f - text_size.x * 0.5f,
+                             glm::ceil(font->highest_character * 0.1))),
+         glm::vec4(1.0f), false);
   } else {
-    Text(composite_text, position + glm::vec2(name_width + 5.0, glm ::ceil(text_size.y * 0.75)), glm::vec4(1.0f), false);
+    Text(composite_text, position + glm::vec2(name_width + 5.0, glm ::ceil(text_size.y * 0.75)), glm::vec4(1.0f),
+         false);
   }
 
   // size += m_pContext.prev_widget_size.x;
@@ -815,7 +855,9 @@ void UI::Scale(const std::string &text, const std::string &setting_name, int &cu
 
   float span = (m_pCursorPosition.x - position.x) / (abs(max - min));
   for (int i = 0; i < glm::clamp(current, 0, max - min); i++) {
-    CreateRect(position + glm::vec2((span * i) + m_pStyle.buttonPadding, (btnSize.y) - 9.0f), glm::vec2(span - (span * 0.2), 5), white_pixel, white_pixel, glm::mix(glm::vec4(1.0, 0.0, 0.0, 1.0), glm::vec4(0.0, 1.0, 0.0, 1.0), (float)i / 10));
+    CreateRect(position + glm::vec2((span * i) + m_pStyle.buttonPadding, (btnSize.y) - 9.0f),
+               glm::vec2(span - (span * 0.2), 5), white_pixel, white_pixel,
+               glm::mix(glm::vec4(1.0, 0.0, 0.0, 1.0), glm::vec4(0.0, 1.0, 0.0, 1.0), (float)i / 10));
   }
 
   if (Button(">")) {
@@ -841,7 +883,8 @@ void UI::Scale(const std::string &text, const std::string &setting_name, int &cu
   // m_pCursorPosition.y += 8.0f;
 }
 
-glm::vec2 UI::ToScreenCoords(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj, const glm::vec2 &resolution) {
+glm::vec2 UI::ToScreenCoords(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj,
+                             const glm::vec2 &resolution) {
   glm::vec4 ndc = proj * view * model * glm::vec4(1.0f);
 
   ndc /= ndc.w;
