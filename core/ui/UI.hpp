@@ -151,11 +151,10 @@ private:
 
     auto vertexCode = utils::readFile("./assets/shaders/ui-vertex.spv");
     auto fragmentCode = utils::readFile("./assets/shaders/ui-fragment.spv");
-    engine::ShaderInfo mainShaderInfo = {
-        .stages = {{.entryPoint = "main", .shaderCode = vertexCode, .stage = engine::VERTEX},
-                   {.entryPoint = "main", .shaderCode = fragmentCode, .stage = engine::FRAGMENT}},
-        .usedStages = engine::ShaderModuleStage(engine::VERTEX | engine::FRAGMENT),
-        .name = "UIShader"};
+    engine::ShaderInfo mainShaderInfo = {.stages = {{.entryPoint = "main", .shaderCode = vertexCode, .stage = engine::VERTEX},
+                                                    {.entryPoint = "main", .shaderCode = fragmentCode, .stage = engine::FRAGMENT}},
+                                         .usedStages = engine::ShaderModuleStage(engine::VERTEX | engine::FRAGMENT),
+                                         .name = "UIShader"};
 
     return mainShaderInfo;
   }
@@ -198,7 +197,9 @@ public:
       font->glyph_index.resize(font->max_range);
 
       for (int i = 0; i < font->num_chars; i++) {
-        font->glyph_index[font->DecodeCodepoint(font->Glyphs()[i].code.c_str())] = i;
+        int byte_count = 1;
+        int index = font->DecodeCodepoint(font->Glyphs()[i].code.c_str(), &byte_count);
+        font->glyph_index[index] = i;
       }
     }
 
@@ -237,8 +238,7 @@ public:
     return m_Fonts.size() - 1;
   }
 
-  void Init(std::shared_ptr<engine::ResourceManager> resource_manager, std::shared_ptr<engine::Renderer> renderer,
-            framework::Window *window) {
+  void Init(std::shared_ptr<engine::ResourceManager> resource_manager, std::shared_ptr<engine::Renderer> renderer, framework::Window *window) {
     m_pResourceManager = resource_manager;
     m_pRenderer = renderer;
     m_pWindow = window;
@@ -268,8 +268,7 @@ public:
 
     for (int i = 0; i < m_pResourceManager->FramesInFlight(); i++) {
 
-      m_pVertexBuffer[i] = m_pResourceManager->createMappedVertexBuffer("UIVertexBuffer" + std::to_string(i),
-                                                                        {.size = 10000 * sizeof(UIVertex)});
+      m_pVertexBuffer[i] = m_pResourceManager->createMappedVertexBuffer("UIVertexBuffer" + std::to_string(i), {.size = 10000 * sizeof(UIVertex)});
     }
 
     InitDefaultFont();
@@ -352,18 +351,15 @@ public:
 
   glm::vec2 CursorPosition();
 
-  glm::vec2 ToScreenCoords(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj,
-                           const glm::vec2 &resolution);
+  glm::vec2 ToScreenCoords(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj, const glm::vec2 &resolution);
 
-  void CreateRect(glm::vec2 position, glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1,
-                  glm::vec4 color = glm::vec4(0.11, 0.11, 0.11, 0.8));
+  void CreateRect(glm::vec2 position, glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1, glm::vec4 color = glm::vec4(0.11, 0.11, 0.11, 0.8));
 
   void CreatePolygon(std::vector<UIVertex> vertices);
 
   void SetNextWindowPosition(glm::vec2 position);
 
-  void BeginWindow(const std::string &name, glm::vec2 size = glm::vec2(0.0f),
-                   glm::vec4 color = glm::vec4(0.0, 0.0, 0.0, 0.5));
+  void BeginWindow(const std::string &name, glm::vec2 size = glm::vec2(0.0f), glm::vec4 color = glm::vec4(0.0, 0.0, 0.0, 0.5));
 
   void EndWindow();
 
@@ -377,16 +373,15 @@ public:
 
   void Spacer(glm::vec2 size);
 
-  bool ImageButton(const std::string &, const std::string &texture, glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1,
-                   glm::vec4 tint = glm::vec4(1.0f), bool fill_background = false);
+  bool ImageButton(const std::string &, const std::string &texture, glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1, glm::vec4 tint = glm::vec4(1.0f),
+                   bool fill_background = false);
 
   void AngularButtons(glm::vec2 position, float innerRadius, float outerRadius, int count);
   bool AngularButton(const std::string &text);
 
   bool CheckBox(const std::string &text, bool *state);
 
-  void HealthBar(const std::string &text, glm::vec2 position, float val, float min, float max,
-                 glm::vec4 color = glm::vec4(0.0, 1.0, 0.0, 1.0),
+  void HealthBar(const std::string &text, glm::vec2 position, float val, float min, float max, glm::vec4 color = glm::vec4(0.0, 1.0, 0.0, 1.0),
                  glm::vec4 backgroundColor = glm::vec4(0.0, 0.0, 0.0, 1.0));
 
   void Switch(const std::string &text, bool &state) {}

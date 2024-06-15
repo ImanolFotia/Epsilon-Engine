@@ -50,7 +50,10 @@ public:
   std::vector<uint32_t> glyph_index{};
   static constexpr const int ASCIIHexToInt[] = {
       // ASCII
-      -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, -1, -1, -1, -1, -1, -1, -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+      -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+      -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  -1, -1, -1, -1, -1, -1,
+      -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+      -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
   };
 
   static std::string EncodeCodepoint(std::string codepoint) {
@@ -88,16 +91,16 @@ public:
     return output;
   }
 
-  static uint32_t DecodeCodepoint(const char *codepoint) {
+  static uint32_t DecodeCodepoint(const char *codepoint, int *byte_count) {
 
-    int byte_count = std::popcount((uint8_t)(codepoint[0] & 0xf0)) - 1;
+    *byte_count = std::popcount((uint8_t)(codepoint[0] & 0xf0)) - 1;
 
-    uint32_t value = 0b00001111 & codepoint[byte_count];
-    value |= (((0b00000011 & codepoint[byte_count - 1]) << 2) | ((0b01110000 & codepoint[byte_count]) >> 4)) << 4;
-    value |= byte_count < 1 ? 0 : (((0b00111100 & codepoint[byte_count - 1]) >> 2)) << 8;
-    value |= byte_count < 2 ? 0 : ((0b00001111 & codepoint[byte_count - 2])) << 12;
-    value |= byte_count < 3 ? 0 : (((0b00000011 & codepoint[byte_count - 3]) << 2) | ((0b01110000 & codepoint[byte_count - 2]) >> 4)) << 16;
-
+    uint32_t value = 0xf & codepoint[*byte_count];
+    value |= (((0x3 & codepoint[*byte_count - 1]) << 2) | ((0x70 & codepoint[*byte_count]) >> 4)) << 4;
+    value |= *byte_count < 1 ? 0 : (((0x3c & codepoint[*byte_count - 1]) >> 2)) << 8;
+    value |= *byte_count < 2 ? 0 : ((0xf & codepoint[*byte_count - 2])) << 12;
+    value |= *byte_count < 3 ? 0 : (((0x3 & codepoint[*byte_count - 3]) << 2) | ((0x70 & codepoint[*byte_count - 2]) >> 4)) << 16;
+    (*byte_count)++;
     return value;
   }
 };
