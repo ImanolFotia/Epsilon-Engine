@@ -239,26 +239,24 @@ public:
 
     auto resourceManager = m_pContext->ResourceManager();
 
-    m_pGPUBuffers["material_buffer"] = resourceManager->createGPUBuffer(
-        "material_buffer", sizeof(PBRMaterial) * MAX_MATERIALS, engine::BufferStorageType::STORAGE_BUFFER);
+    m_pGPUBuffers["material_buffer"] =
+        resourceManager->createGPUBuffer("material_buffer", sizeof(PBRMaterial) * MAX_MATERIALS, engine::BufferStorageType::STORAGE_BUFFER);
 
-    m_pGPUBuffers["decal_buffer"] = resourceManager->createGPUBuffer("decal_buffer", sizeof(Decal) * MAX_DECALS,
-                                                                     engine::BufferStorageType::STORAGE_BUFFER);
+    m_pGPUBuffers["decal_buffer"] = resourceManager->createGPUBuffer("decal_buffer", sizeof(Decal) * MAX_DECALS, engine::BufferStorageType::STORAGE_BUFFER);
 
-    m_pGPUBuffers["info_buffer"] =
-        resourceManager->createGPUBuffer("info_buffer", 64, engine::BufferStorageType::STORAGE_BUFFER, 1);
+    m_pGPUBuffers["info_buffer"] = resourceManager->createGPUBuffer("info_buffer", 64, engine::BufferStorageType::STORAGE_BUFFER, 1);
 
-    m_pGPUBuffers["object_buffer"] = resourceManager->createGPUBuffer(
-        "object_buffer", sizeof(ShaderObjectData) * MAX_OBJECTS, engine::BufferStorageType::STORAGE_BUFFER);
+    m_pGPUBuffers["object_buffer"] =
+        resourceManager->createGPUBuffer("object_buffer", sizeof(ShaderObjectData) * MAX_OBJECTS, engine::BufferStorageType::STORAGE_BUFFER);
 
-    m_pGPUBuffers["transform_buffer"] = resourceManager->createGPUBuffer(
-        "transform_buffer", sizeof(glm::mat4) * MAX_TRANSFORMS, engine::BufferStorageType::STORAGE_BUFFER);
+    m_pGPUBuffers["transform_buffer"] =
+        resourceManager->createGPUBuffer("transform_buffer", sizeof(glm::mat4) * MAX_TRANSFORMS, engine::BufferStorageType::STORAGE_BUFFER);
 
-    m_pGPUBuffers["animation_transform_buffer"] = resourceManager->createGPUBuffer(
-        "animation_transform_buffer", sizeof(GPUAnimationData) * 100, engine::BufferStorageType::STORAGE_BUFFER);
+    m_pGPUBuffers["animation_transform_buffer"] =
+        resourceManager->createGPUBuffer("animation_transform_buffer", sizeof(GPUAnimationData) * 100, engine::BufferStorageType::STORAGE_BUFFER);
 
-    m_pGPUBuffers["entity_buffer"] = resourceManager->createGPUBuffer("entity_buffer", sizeof(ShaderEntity) * 256,
-                                                                      engine::BufferStorageType::STORAGE_BUFFER, 1);
+    m_pGPUBuffers["entity_buffer"] =
+        resourceManager->createGPUBuffer("entity_buffer", sizeof(ShaderEntity) * 256, engine::BufferStorageType::STORAGE_BUFFER, 1);
 
     transformBuffer.resize(vk::MAX_FRAMES_IN_FLIGHT);
     objectBuffer.resize(vk::MAX_FRAMES_IN_FLIGHT);
@@ -267,18 +265,14 @@ public:
     lightBufferPtr = reinterpret_cast<ShaderEntity *>(resourceManager->mapBuffer(m_pGPUBuffers["entity_buffer"], 0));
 
     for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
-      transformBuffer[i] =
-          reinterpret_cast<glm::mat4 *>(resourceManager->mapBuffer(m_pGPUBuffers["transform_buffer"], i));
-      objectBuffer[i] =
-          reinterpret_cast<ShaderObjectData *>(resourceManager->mapBuffer(m_pGPUBuffers["object_buffer"], i));
-      animationTransformBufferPtr[i] = reinterpret_cast<GPUAnimationData *>(
-          resourceManager->mapBuffer(m_pGPUBuffers["animation_transform_buffer"], i));
+      transformBuffer[i] = reinterpret_cast<glm::mat4 *>(resourceManager->mapBuffer(m_pGPUBuffers["transform_buffer"], i));
+      objectBuffer[i] = reinterpret_cast<ShaderObjectData *>(resourceManager->mapBuffer(m_pGPUBuffers["object_buffer"], i));
+      animationTransformBufferPtr[i] = reinterpret_cast<GPUAnimationData *>(resourceManager->mapBuffer(m_pGPUBuffers["animation_transform_buffer"], i));
     }
     infoBufferPtr = reinterpret_cast<CursorInfo *>(resourceManager->mapBuffer(m_pGPUBuffers["info_buffer"], 0));
   }
 
-  Ref<Buffer> CreateGPUBuffer(const std::string &name, size_t size,
-                              engine::BufferStorageType type = engine::BufferStorageType::STORAGE_BUFFER,
+  Ref<Buffer> CreateGPUBuffer(const std::string &name, size_t size, engine::BufferStorageType type = engine::BufferStorageType::STORAGE_BUFFER,
                               int count = -1) {
     if (m_pGPUBuffers.contains(name)) {
       IO::Error("Trying to create a buffer that already exists");
@@ -456,23 +450,20 @@ public:
         pbr_material.albedo_texture_index = albedo.Index();
       }
       if (!material.metallic_path.empty()) {
-        auto metallic =
-            addTexture(material.metallic_path, {.format = NON_COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
+        auto metallic = addTexture(material.metallic_path, {.format = NON_COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
         if (metallic.Index() == 150)
           std::cout << "here" << std::endl;
         pbr_material.metallic_texture_index = metallic.Index();
       }
       if (!material.roughness_path.empty()) {
-        auto roughness =
-            addTexture(material.roughness_path, {.format = NON_COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
+        auto roughness = addTexture(material.roughness_path, {.format = NON_COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
 
         if (roughness.Index() == 150)
           std::cout << "here" << std::endl;
         pbr_material.roughness_texture_index = roughness.Index();
       }
       if (!material.normal_path.empty()) {
-        auto normal =
-            addTexture(material.normal_path, {.format = NON_COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
+        auto normal = addTexture(material.normal_path, {.format = NON_COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
 
         if (normal.Index() == 150)
           std::cout << "here" << std::endl;
@@ -489,8 +480,7 @@ public:
       }
 
       for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
-        PBRMaterial *materialBufferPtr =
-            reinterpret_cast<PBRMaterial *>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"], i));
+        PBRMaterial *materialBufferPtr = reinterpret_cast<PBRMaterial *>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"], i));
         materialBufferPtr[mat_index] = pbr_material;
       }
 
@@ -498,28 +488,25 @@ public:
       m_pMaterials[material_name_hash].material = pbr_material;
 
       if (!material.albedo_path.empty()) {
-        m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Albedo] =
-            std::hash<std::string>{}(material.albedo_path);
+        m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Albedo] = std::hash<std::string>{}(material.albedo_path);
       }
       if (!material.metallic_path.empty()) {
-        m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Metallic] =
-            std::hash<std::string>{}(material.metallic_path);
+        m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Metallic] = std::hash<std::string>{}(material.metallic_path);
       }
       if (!material.roughness_path.empty()) {
-        m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Roughness] =
-            std::hash<std::string>{}(material.roughness_path);
+        m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Roughness] = std::hash<std::string>{}(material.roughness_path);
       }
       if (!material.normal_path.empty()) {
-        m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Normal] =
-            std::hash<std::string>{}(material.normal_path);
+        m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Normal] = std::hash<std::string>{}(material.normal_path);
       }
 
       material_index++;
     }
   }
 
-  RenderModel createModelFromMesh(const std::string &name, const common::Mesh &mesh,
-                                  std::initializer_list<common::MeshMaterial> materials) {
+  void ModifyModel(RenderModel) {}
+
+  RenderModel createModelFromMesh(const std::string &name, const common::Mesh &mesh, std::initializer_list<common::MeshMaterial> materials) {
 
     auto resourceManager = m_pContext->ResourceManager();
 
@@ -568,8 +555,7 @@ public:
     return model;
   }
 
-  RenderModel createModelFromMesh(const std::string &name, const common::Mesh &mesh,
-                                  const common::MeshMaterial &material) {
+  RenderModel createModelFromMesh(const std::string &name, const common::Mesh &mesh, const common::MeshMaterial &material) {
 
     auto resourceManager = m_pContext->ResourceManager();
 
@@ -618,18 +604,15 @@ public:
       pbr_material.albedo_texture_index = albedo.Index();
     }
     if (!material.metallic_path.empty()) {
-      auto metallic =
-          addTexture(material.metallic_path, {.format = NON_COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
+      auto metallic = addTexture(material.metallic_path, {.format = NON_COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
       pbr_material.metallic_texture_index = metallic.Index();
     }
     if (!material.roughness_path.empty()) {
-      auto roughness =
-          addTexture(material.roughness_path, {.format = NON_COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
+      auto roughness = addTexture(material.roughness_path, {.format = NON_COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
       pbr_material.roughness_texture_index = roughness.Index();
     }
     if (!material.normal_path.empty()) {
-      auto normal =
-          addTexture(material.normal_path, {.format = NON_COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
+      auto normal = addTexture(material.normal_path, {.format = NON_COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
       pbr_material.normal_texture_index = normal.Index();
     }
 
@@ -643,8 +626,7 @@ public:
     }
 
     for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
-      PBRMaterial *materialBufferPtr =
-          reinterpret_cast<PBRMaterial *>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"], i));
+      PBRMaterial *materialBufferPtr = reinterpret_cast<PBRMaterial *>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"], i));
       materialBufferPtr[mat_index] = pbr_material;
     }
 
@@ -655,12 +637,10 @@ public:
       m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Albedo] = std::hash<std::string>{}(material.albedo_path);
     }
     if (!material.metallic_path.empty()) {
-      m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Metallic] =
-          std::hash<std::string>{}(material.metallic_path);
+      m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Metallic] = std::hash<std::string>{}(material.metallic_path);
     }
     if (!material.roughness_path.empty()) {
-      m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Roughness] =
-          std::hash<std::string>{}(material.roughness_path);
+      m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Roughness] = std::hash<std::string>{}(material.roughness_path);
     }
     if (!material.normal_path.empty()) {
       m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Normal] = std::hash<std::string>{}(material.normal_path);
@@ -688,8 +668,7 @@ public:
   }
 
   void FreeAnimationIndex(uint32_t index) { m_pFreeAnimationIndices.push(index); }
-  RenderModel &loadModel(const std::string &path, const std::string &name = "",
-                         std::initializer_list<common::MeshMaterial> materials = {}) {
+  RenderModel &loadModel(const std::string &path, const std::string &name = "", std::initializer_list<common::MeshMaterial> materials = {}) {
     std::string prefix = "./assets/";
     std::string model_name = name;
 
@@ -749,8 +728,7 @@ public:
 
       RenderMesh subRenderC;
       if (inModel->HasAnimation()) {
-        subRenderC.mesh =
-            addMesh(model_name + "_submesh_" + std::to_string(index), inModel->AnimatedMeshes().at(index));
+        subRenderC.mesh = addMesh(model_name + "_submesh_" + std::to_string(index), inModel->AnimatedMeshes().at(index));
       } else {
         subRenderC.mesh = addMesh(model_name + "_submesh_" + std::to_string(index), mesh.data().mesh);
       }
@@ -775,20 +753,16 @@ public:
         m_pMaterials[material_name_hash].material = material;
 
         if (!mesh_material.albedo.empty()) {
-          m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Albedo] =
-              std::hash<std::string>{}(mesh_material.albedo);
+          m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Albedo] = std::hash<std::string>{}(mesh_material.albedo);
         }
         if (!mesh_material.metallic.empty()) {
-          m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Metallic] =
-              std::hash<std::string>{}(mesh_material.metallic);
+          m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Metallic] = std::hash<std::string>{}(mesh_material.metallic);
         }
         if (!mesh_material.roughness.empty()) {
-          m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Roughness] =
-              std::hash<std::string>{}(mesh_material.roughness);
+          m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Roughness] = std::hash<std::string>{}(mesh_material.roughness);
         }
         if (!mesh_material.normal.empty()) {
-          m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Normal] =
-              std::hash<std::string>{}(mesh_material.normal);
+          m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Normal] = std::hash<std::string>{}(mesh_material.normal);
         }
 
         subRenderC.material_keys[0] = material_name_hash;
@@ -806,8 +780,7 @@ public:
         m_pMaterials[material_name_hash].index = mat_index;
 
         for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
-          PBRMaterial *materialBufferPtr =
-              reinterpret_cast<PBRMaterial *>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"], i));
+          PBRMaterial *materialBufferPtr = reinterpret_cast<PBRMaterial *>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"], i));
           materialBufferPtr[mat_index] = material;
         }
       } else {
@@ -846,8 +819,7 @@ public:
       material.albedo_texture_index = -1;
     }
     if (!mesh_material.metallic.empty()) {
-      auto metallic =
-          addTexture(mesh_material.metallic, {.format = NON_COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
+      auto metallic = addTexture(mesh_material.metallic, {.format = NON_COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
 
       if (metallic.empty())
         material.metallic_texture_index = -1;
@@ -857,8 +829,7 @@ public:
       material.metallic_texture_index = -1;
     }
     if (!mesh_material.roughness.empty()) {
-      auto roughness =
-          addTexture(mesh_material.roughness, {.format = NON_COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
+      auto roughness = addTexture(mesh_material.roughness, {.format = NON_COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
 
       if (roughness.empty())
         material.roughness_texture_index = -1;
@@ -868,8 +839,7 @@ public:
       material.roughness_texture_index = -1;
     }
     if (!mesh_material.normal.empty()) {
-      auto normal =
-          addTexture(mesh_material.normal, {.format = NON_COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
+      auto normal = addTexture(mesh_material.normal, {.format = NON_COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
 
       if (normal.empty())
         material.normal_texture_index = -1;
@@ -893,9 +863,8 @@ public:
       object.buffer = buffer;
 
       for (int i = 0; i < numSources; i++) {
-        buffer.sources.push_back(audioManager->createSource(path + "_source_" + std::to_string(i) + "_" +
-                                                                std::to_string(buffer.sources.size()),
-                                                            {.buffer = buffer.buffer}));
+        buffer.sources.push_back(
+            audioManager->createSource(path + "_source_" + std::to_string(i) + "_" + std::to_string(buffer.sources.size()), {.buffer = buffer.buffer}));
         object.source.push_back(buffer.sources.back());
       }
 
@@ -916,10 +885,9 @@ public:
     audioBuffer.buffer = buffer;
 
     for (int i = 0; i < numSources; i++)
-      audioBuffer.sources.push_back(
-          audioManager->createSource(path + "_source_" + std::to_string(framework::QuickRandom<long>(0, 4123168431)) +
-                                         "_" + std::to_string(audioBuffer.sources.size()),
-                                     {.buffer = audioBuffer.buffer}));
+      audioBuffer.sources.push_back(audioManager->createSource(path + "_source_" + std::to_string(framework::QuickRandom<long>(0, 4123168431)) + "_" +
+                                                                   std::to_string(audioBuffer.sources.size()),
+                                                               {.buffer = audioBuffer.buffer}));
 
     AudioObject object;
     object.buffer = audioBuffer;
@@ -945,8 +913,7 @@ public:
     return obj_index;
   }
 
-  Ref<Texture> addTextureFromBytes(const std::string &name, unsigned char *bytes, size_t size, int w, int h, int c,
-                                   const TextureInfo &info) {
+  Ref<Texture> addTextureFromBytes(const std::string &name, unsigned char *bytes, size_t size, int w, int h, int c, const TextureInfo &info) {
 
     std::vector<size_t> offsets;
     unsigned int format = info.format;
@@ -1202,8 +1169,7 @@ public:
     m_pMaterials[material_name_hash].index = mat_index;
 
     for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
-      PBRMaterial *materialBufferPtr =
-          reinterpret_cast<PBRMaterial *>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"], i));
+      PBRMaterial *materialBufferPtr = reinterpret_cast<PBRMaterial *>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"], i));
       materialBufferPtr[mat_index] = material;
       resourceManager->unmapBuffer(m_pGPUBuffers["material_buffer"], i);
     }
@@ -1216,8 +1182,7 @@ public:
     auto resourceManager = m_pContext->ResourceManager();
 
     for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
-      PBRMaterial *materialBufferPtr =
-          reinterpret_cast<PBRMaterial *>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"], i));
+      PBRMaterial *materialBufferPtr = reinterpret_cast<PBRMaterial *>(resourceManager->mapBuffer(m_pGPUBuffers["material_buffer"], i));
       materialBufferPtr[material.index] = material.material;
       resourceManager->unmapBuffer(m_pGPUBuffers["material_buffer"], i);
     }
