@@ -60,13 +60,29 @@ void VulkanResourceManager::Init() {
   pCreateGlobalDescriptorPool();
   pCreateDescriptorPool();
 
-  vk::createDescriptorSetLayout(*m_pVkDataPtr, m_pGlobalDescriptorSetLayout, {{0, 0, 0, 1, UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER, {}, {}, "", true, MAX_BINDLESS_RESOURCES, ShaderStage::FRAGMENT | ShaderStage::VERTEX, "GlobalBindlessTextures"}}, 1);
+  vk::createDescriptorSetLayout(*m_pVkDataPtr, m_pGlobalDescriptorSetLayout,
+                                {{0,
+                                  0,
+                                  0,
+                                  1,
+                                  UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER,
+                                  {},
+                                  {},
+                                  "",
+                                  true,
+                                  MAX_BINDLESS_RESOURCES,
+                                  ShaderStage::FRAGMENT | ShaderStage::VERTEX,
+                                  "GlobalBindlessTextures"}},
+                                1);
 
   pCreateGlobalDescriptorSets(m_pGlobalDescriptorSetLayout, m_pGlobalDescriptorPool, m_pGlobalDescriptorSets, MAX_BINDLESS_RESOURCES);
 
   for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
     m_pIndirectBuffer.emplace_back();
-    pCreateBuffer(m_pIndirectBuffer.back(), sizeof(VkDrawIndexedIndirectCommand) * 100000, VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT, VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT | VMA_ALLOCATION_CREATE_HOST_ACCESS_ALLOW_TRANSFER_INSTEAD_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT, VMA_MEMORY_USAGE_AUTO);
+    pCreateBuffer(m_pIndirectBuffer.back(), sizeof(VkDrawIndexedIndirectCommand) * 100000, VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT,
+                  VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT | VMA_ALLOCATION_CREATE_HOST_ACCESS_ALLOW_TRANSFER_INSTEAD_BIT |
+                      VMA_ALLOCATION_CREATE_MAPPED_BIT,
+                  VMA_MEMORY_USAGE_AUTO);
   }
 }
 
@@ -99,7 +115,8 @@ Ref<Texture> VulkanResourceManager::createTexture(TextureCreationInfo texInfo) {
       .mipLevels = mipLevels,
       .arrayLayers = texInfo.numLayers,
       .format = format,
-      .usage = (!texInfo.storage_image ? VK_IMAGE_USAGE_TRANSFER_DST_BIT : 0u) | (!texInfo.storage_image ? VK_IMAGE_USAGE_TRANSFER_SRC_BIT : 0u) | VK_IMAGE_USAGE_SAMPLED_BIT | (texInfo.storage_image ? VK_IMAGE_USAGE_STORAGE_BIT : 0u),
+      .usage = (!texInfo.storage_image ? VK_IMAGE_USAGE_TRANSFER_DST_BIT : 0u) | (!texInfo.storage_image ? VK_IMAGE_USAGE_TRANSFER_SRC_BIT : 0u) |
+               VK_IMAGE_USAGE_SAMPLED_BIT | (texInfo.storage_image ? VK_IMAGE_USAGE_STORAGE_BIT : 0u),
   });
 
   texture.format = format;
@@ -108,16 +125,20 @@ Ref<Texture> VulkanResourceManager::createTexture(TextureCreationInfo texInfo) {
   if (texInfo.pixels != nullptr) {
     auto stagingBuffer = pCreateStagingTextureBuffer(texInfo.pixels, texInfo);
 
-    transitionImageLayout(*m_pVkDataPtr, m_pTransferCommandPool, texture.image, format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, texture.info, 0, texInfo.mipLevels);
-    copyBufferToImage(*m_pVkDataPtr, m_pTransferCommandPool, stagingBuffer.buffer, texture.image, static_cast<uint32_t>(texInfo.width), static_cast<uint32_t>(texInfo.height), texInfo.offsets, texInfo.mipLevels);
+    transitionImageLayout(*m_pVkDataPtr, m_pTransferCommandPool, texture.image, format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                          texture.info, 0, texInfo.mipLevels);
+    copyBufferToImage(*m_pVkDataPtr, m_pTransferCommandPool, stagingBuffer.buffer, texture.image, static_cast<uint32_t>(texInfo.width),
+                      static_cast<uint32_t>(texInfo.height), texInfo.offsets, texInfo.mipLevels);
 
-    transitionImageLayout(*m_pVkDataPtr, m_pTransferCommandPool, texture.image, format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, texture.info, 0, texInfo.mipLevels);
+    transitionImageLayout(*m_pVkDataPtr, m_pTransferCommandPool, texture.image, format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                          VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, texture.info, 0, texInfo.mipLevels);
 
     vmaDestroyBuffer(m_pAllocator, stagingBuffer.buffer, stagingBuffer.allocation);
     // vmaFreeMemory(m_pAllocator, m_pStagingTextureBuffer.allocation);
   } else {
 
-    transitionImageLayout(*m_pVkDataPtr, m_pTransferCommandPool, texture.image, format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL, texture.info, 0, texInfo.mipLevels);
+    transitionImageLayout(*m_pVkDataPtr, m_pTransferCommandPool, texture.image, format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL, texture.info, 0,
+                          texInfo.mipLevels);
   }
   texture.filter = resolveFilter(texInfo.filtering);
 
@@ -176,7 +197,10 @@ void VulkanResourceManager::updateBindGroup(Ref<BindGroup> bindGroupRef, std::in
 
         if (binding.type == UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER) {
           auto tex = createTexture(binding.textureInfo);
-          vk::VulkanShaderBinding shaderBinding = {.texture = *texPool.get(tex), .descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, .bindingPoint = binding.binding, .isRenderPassAttachment = false};
+          vk::VulkanShaderBinding shaderBinding = {.texture = *texPool.get(tex),
+                                                   .descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+                                                   .bindingPoint = binding.binding,
+                                                   .isRenderPassAttachment = false};
           material_binding = shaderBinding;
         } else if (binding.type == UniformBindingType::STORAGE_IMAGE) {
           auto tex = texPool.get(std::hash<std::string>{}(binding.texture)); // createTexture(binding.textureInfo);
@@ -190,7 +214,10 @@ void VulkanResourceManager::updateBindGroup(Ref<BindGroup> bindGroupRef, std::in
           for (auto &b : buff)
             b.size = binding.size;
 
-          vk::VulkanShaderBinding shaderBinding = {.buffers = buff, .descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, .bindingPoint = binding.binding, .isRenderPassAttachment = false};
+          vk::VulkanShaderBinding shaderBinding = {.buffers = buff,
+                                                   .descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+                                                   .bindingPoint = binding.binding,
+                                                   .isRenderPassAttachment = false};
           material_binding = shaderBinding;
         } else if (binding.type == UniformBindingType::UNIFORM_BUFFER) {
           auto buff = uniformBufferPool.get(std::hash<std::string>{}(binding.buffer))->buffers;
@@ -198,7 +225,10 @@ void VulkanResourceManager::updateBindGroup(Ref<BindGroup> bindGroupRef, std::in
             b.size = binding.size;
           }
 
-          vk::VulkanShaderBinding shaderBinding = {.buffers = buff, .descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, .bindingPoint = binding.binding, .isRenderPassAttachment = false};
+          vk::VulkanShaderBinding shaderBinding = {.buffers = buff,
+                                                   .descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                                                   .bindingPoint = binding.binding,
+                                                   .isRenderPassAttachment = false};
 
           material_binding = shaderBinding;
 
@@ -253,9 +283,17 @@ Ref<BindGroup> VulkanResourceManager::createBindGroup(BindGroupInfo material) {
         auto pass = renderPassPool.get(std::hash<std::string>{}(binding.renderPass));
         vkMaterial.slots++;
 
-        auto texture = binding.index == pass->renderPassChain.Textures.size() ? pass->renderPassChain.DepthTexture : pass->renderPassChain.Textures.at(binding.index);
+        auto texture =
+            binding.index == pass->renderPassChain.Textures.size() ? pass->renderPassChain.DepthTexture : pass->renderPassChain.Textures.at(binding.index);
 
-        vk::VulkanShaderBinding shaderBinding = {.texture = texture, .descriptorBinding = binding.type == UniformBindingType::STORAGE_IMAGE ? VkDescriptorType::VK_DESCRIPTOR_TYPE_STORAGE_IMAGE : VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, .bindingPoint = binding.bindingPoint, .isRenderPassAttachment = true, .renderpass = binding.renderPass, .attachment_index = (int32_t)binding.index};
+        vk::VulkanShaderBinding shaderBinding = {.texture = texture,
+                                                 .descriptorBinding = binding.type == UniformBindingType::STORAGE_IMAGE
+                                                                          ? VkDescriptorType::VK_DESCRIPTOR_TYPE_STORAGE_IMAGE
+                                                                          : VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+                                                 .bindingPoint = binding.bindingPoint,
+                                                 .isRenderPassAttachment = true,
+                                                 .renderpass = binding.renderPass,
+                                                 .attachment_index = (int32_t)binding.index};
 
         shaderBinding.texture.isDepthAttachment = texture.isDepthAttachment;
 
@@ -266,9 +304,17 @@ Ref<BindGroup> VulkanResourceManager::createBindGroup(BindGroupInfo material) {
         auto pass = renderPassPool.get(std::hash<std::string>{}(binding.renderPass));
         vkMaterial.slots++;
 
-        auto texture = binding.index == pass->renderPassChain.Textures.size() ? pass->renderPassChain.DepthTexture : pass->renderPassChain.Textures.at(binding.index);
+        auto texture =
+            binding.index == pass->renderPassChain.Textures.size() ? pass->renderPassChain.DepthTexture : pass->renderPassChain.Textures.at(binding.index);
 
-        vk::VulkanShaderBinding shaderBinding = {.texture = texture, .descriptorBinding = binding.type == UniformBindingType::STORAGE_IMAGE ? VkDescriptorType::VK_DESCRIPTOR_TYPE_STORAGE_IMAGE : VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, .bindingPoint = binding.bindingPoint, .isRenderPassAttachment = true, .renderpass = binding.renderPass, .attachment_index = (int32_t)binding.index};
+        vk::VulkanShaderBinding shaderBinding = {.texture = texture,
+                                                 .descriptorBinding = binding.type == UniformBindingType::STORAGE_IMAGE
+                                                                          ? VkDescriptorType::VK_DESCRIPTOR_TYPE_STORAGE_IMAGE
+                                                                          : VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+                                                 .bindingPoint = binding.bindingPoint,
+                                                 .isRenderPassAttachment = true,
+                                                 .renderpass = binding.renderPass,
+                                                 .attachment_index = (int32_t)binding.index};
 
         shaderBinding.texture.isDepthAttachment = texture.isDepthAttachment;
 
@@ -288,7 +334,10 @@ Ref<BindGroup> VulkanResourceManager::createBindGroup(BindGroupInfo material) {
           texture = *texPool.get(std::hash<std::string>{}(binding.texture));
         }
 
-        vk::VulkanShaderBinding shaderBinding = {.texture = texture, .descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, .bindingPoint = binding.binding, .isRenderPassAttachment = false};
+        vk::VulkanShaderBinding shaderBinding = {.texture = texture,
+                                                 .descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+                                                 .bindingPoint = binding.binding,
+                                                 .isRenderPassAttachment = false};
 
         vkMaterial.shaderBindings.push_back(shaderBinding);
       } else if (binding.type == UniformBindingType::STORAGE_IMAGE) {
@@ -317,7 +366,10 @@ Ref<BindGroup> VulkanResourceManager::createBindGroup(BindGroupInfo material) {
         for (auto &b : buff)
           b.size = binding.size;
 
-        vk::VulkanShaderBinding shaderBinding = {.buffers = buff, .descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, .bindingPoint = binding.binding, .isRenderPassAttachment = false};
+        vk::VulkanShaderBinding shaderBinding = {.buffers = buff,
+                                                 .descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+                                                 .bindingPoint = binding.binding,
+                                                 .isRenderPassAttachment = false};
 
         vkMaterial.shaderBindings.push_back(shaderBinding);
       } else if (binding.type == UniformBindingType::UNIFORM_BUFFER) {
@@ -327,7 +379,10 @@ Ref<BindGroup> VulkanResourceManager::createBindGroup(BindGroupInfo material) {
           b.size = binding.size;
         }
 
-        vk::VulkanShaderBinding shaderBinding = {.buffers = buff, .descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, .bindingPoint = binding.binding, .isRenderPassAttachment = false};
+        vk::VulkanShaderBinding shaderBinding = {.buffers = buff,
+                                                 .descriptorBinding = VkDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                                                 .bindingPoint = binding.binding,
+                                                 .isRenderPassAttachment = false};
 
         vkMaterial.shaderBindings.push_back(shaderBinding);
 
@@ -386,7 +441,8 @@ Ref<RenderPass> VulkanResourceManager::createDefaultRenderPass(RenderPassInfo re
   }
   if (renderPassInfo.depthAttachment) {
     ResourcesMemory.m_pTextureBufferAllocationSize += renderPassInfo.dimensions.width * renderPassInfo.dimensions.height * 4;
-    m_pVkDataPtr->defaultRenderPass.clearValues.back().depthStencil = {(float)renderPassInfo.attachments.back().depthStencilValue[0], renderPassInfo.attachments.back().depthStencilValue[1]};
+    m_pVkDataPtr->defaultRenderPass.clearValues.back().depthStencil = {(float)renderPassInfo.attachments.back().depthStencilValue[0],
+                                                                       renderPassInfo.attachments.back().depthStencilValue[1]};
   }
 
   vk::createRenderPass(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, renderPassInfo, true);
@@ -395,7 +451,8 @@ Ref<RenderPass> VulkanResourceManager::createDefaultRenderPass(RenderPassInfo re
 
     m_pVkDataPtr->defaultRenderPass.renderPipelines.resize(renderPassInfo.numLayouts);
     m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayouts.resize(2);
-    vk::createDescriptorSetLayout(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayouts.at(RENDERPASS_LAYOUT), renderPassInfo.bindingInfo, 0);
+    vk::createDescriptorSetLayout(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayouts.at(RENDERPASS_LAYOUT),
+                                  renderPassInfo.bindingInfo, 0);
 
     m_pVkDataPtr->defaultRenderPass.numAttachments = renderPassInfo.depthAttachment ? renderPassInfo.numAttachments - 1 : renderPassInfo.numAttachments;
 
@@ -413,7 +470,12 @@ Ref<RenderPass> VulkanResourceManager::createDefaultRenderPass(RenderPassInfo re
 
   m_pVkDataPtr->defaultRenderPass.name = renderPassInfo.name;
 
-  VkViewport viewport = {.x = 0, .y = 0, .width = (float)m_pVkDataPtr->defaultRenderPass.renderPassChain.Extent.width, .height = (float)m_pVkDataPtr->defaultRenderPass.renderPassChain.Extent.height, .minDepth = 0.0f, .maxDepth = 1.0f};
+  VkViewport viewport = {.x = 0,
+                         .y = 0,
+                         .width = (float)m_pVkDataPtr->defaultRenderPass.renderPassChain.Extent.width,
+                         .height = (float)m_pVkDataPtr->defaultRenderPass.renderPassChain.Extent.height,
+                         .minDepth = 0.0f,
+                         .maxDepth = 1.0f};
 
   VkRect2D rect;
   rect.extent.width = m_pVkDataPtr->defaultRenderPass.renderPassChain.Extent.width;
@@ -442,10 +504,12 @@ Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPas
 
   renderPass.clearValues.resize(renderPassInfo.numAttachments /*+ (renderPassInfo.depthAttachment ? 1 : 0))*/);
   for (int i = 0; i < renderPassInfo.numAttachments; i++) {
-    renderPass.clearValues[i].color = {renderPassInfo.attachments[i].clearColor[0], renderPassInfo.attachments[i].clearColor[1], renderPassInfo.attachments[i].clearColor[2], renderPassInfo.attachments[i].clearColor[3]};
+    renderPass.clearValues[i].color = {renderPassInfo.attachments[i].clearColor[0], renderPassInfo.attachments[i].clearColor[1],
+                                       renderPassInfo.attachments[i].clearColor[2], renderPassInfo.attachments[i].clearColor[3]};
   }
   if (renderPassInfo.depthAttachment)
-    renderPass.clearValues.back().depthStencil = {(float)renderPassInfo.attachments.back().depthStencilValue[0], renderPassInfo.attachments.back().depthStencilValue[1]};
+    renderPass.clearValues.back().depthStencil = {(float)renderPassInfo.attachments.back().depthStencilValue[0],
+                                                  renderPassInfo.attachments.back().depthStencilValue[1]};
 
   renderPass.id = m_pRenderPassCount;
 
@@ -487,7 +551,10 @@ Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPas
     texInfo.width = renderPassInfo.dimensions.width;
     texInfo.height = renderPassInfo.dimensions.height;
     texInfo.num_channels = attachment.isDepthAttachment ? 1 : resolveNumChannels(attachment.format);
-    texInfo.usage = ((attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT) | (attachment.storageImage ? VK_IMAGE_USAGE_STORAGE_BIT : 0u);
+    texInfo.usage =
+        ((attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT
+                                                                                  : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT) |
+        (attachment.storageImage ? VK_IMAGE_USAGE_STORAGE_BIT : 0u);
 
     texInfo.compareEnable = attachment.depthCompare;
 
@@ -496,7 +563,8 @@ Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPas
     texture.imageLayout = attachment.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
     texture.bindingType = vk::RENDER_BUFFER_SAMPLER;
     texture.info.mipLevels = 1;
-    createImageView(*m_pVkDataPtr, texture, (attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
+    createImageView(*m_pVkDataPtr, texture,
+                    (attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
 
     if (attachment.isSampler) {
       texture.info.isSampler = true;
@@ -546,7 +614,12 @@ Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPas
 
   vk::createFramebuffers(*m_pVkDataPtr, renderPass, renderPass.renderPassChain);
 
-  VkViewport viewport = {.x = 0, .y = 0, .width = (float)renderPass.renderPassChain.Extent.width, .height = (float)renderPass.renderPassChain.Extent.height, .minDepth = 0.0f, .maxDepth = 1.0f};
+  VkViewport viewport = {.x = 0,
+                         .y = 0,
+                         .width = (float)renderPass.renderPassChain.Extent.width,
+                         .height = (float)renderPass.renderPassChain.Extent.height,
+                         .minDepth = 0.0f,
+                         .maxDepth = 1.0f};
 
   VkRect2D rect;
   rect.extent.width = renderPass.renderPassChain.Extent.width;
@@ -677,13 +750,16 @@ void VulkanResourceManager::clean() {
 
         continue;
       }
-      if (pass.renderPassChain.hasDepthSampler && pass.renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE && pass.renderPassChain.Textures[pass.renderPassChain.DepthTexture.index].sampler != VK_NULL_HANDLE)
+      if (pass.renderPassChain.hasDepthSampler && pass.renderPassChain.DepthTexture.sampler != VK_NULL_HANDLE &&
+          pass.renderPassChain.Textures[pass.renderPassChain.DepthTexture.index].sampler != VK_NULL_HANDLE)
         vkDestroySampler(m_pVkDataPtr->logicalDevice, pass.renderPassChain.DepthTexture.sampler, nullptr);
 
-      if (pass.renderPassChain.DepthTexture.imageView != VK_NULL_HANDLE && pass.renderPassChain.Textures[pass.renderPassChain.DepthTexture.index].imageView != VK_NULL_HANDLE)
+      if (pass.renderPassChain.DepthTexture.imageView != VK_NULL_HANDLE &&
+          pass.renderPassChain.Textures[pass.renderPassChain.DepthTexture.index].imageView != VK_NULL_HANDLE)
         vkDestroyImageView(m_pVkDataPtr->logicalDevice, pass.renderPassChain.DepthTexture.imageView, nullptr);
 
-      if (pass.renderPassChain.DepthTexture.image != VK_NULL_HANDLE && pass.renderPassChain.Textures[pass.renderPassChain.DepthTexture.index].imageView != VK_NULL_HANDLE) {
+      if (pass.renderPassChain.DepthTexture.image != VK_NULL_HANDLE &&
+          pass.renderPassChain.Textures[pass.renderPassChain.DepthTexture.index].imageView != VK_NULL_HANDLE) {
         vmaDestroyImage(m_pAllocator, pass.renderPassChain.DepthTexture.image, pass.renderPassChain.DepthTexture.allocation);
         pass.renderPassChain.DepthTexture.image = VK_NULL_HANDLE;
       }
@@ -779,7 +855,12 @@ Ref<Mesh> VulkanResourceManager::createMesh(MeshInfo meshInfo) {
 
   vmaDestroyBuffer(m_pAllocator, indexStagingBuffer.buffer, indexStagingBuffer.allocation);
 
-  MeshResource meshResource = {.vertexBuffer = vertexBufferRef, .indexBuffer = indexBufferRef, .vertexOffset = vertexBuffer->allocatedVertices, .indexOffset = indexBuffer->allocatedVertices, .numVertices = (int32_t)vertices->size(), .numIndices = (int32_t)indices->size()};
+  MeshResource meshResource = {.vertexBuffer = vertexBufferRef,
+                               .indexBuffer = indexBufferRef,
+                               .vertexOffset = vertexBuffer->allocatedVertices,
+                               .indexOffset = indexBuffer->allocatedVertices,
+                               .numVertices = (int32_t)vertices->size(),
+                               .numIndices = (int32_t)indices->size()};
 
   auto ref = meshPool.insert(meshInfo.name, meshResource);
 
@@ -838,14 +919,20 @@ Ref<Mesh> VulkanResourceManager::createMesh(AnimatedMeshInfo meshInfo) {
   auto vertexStagingBuffer = pCreateStagingBuffer(*vertices);
   auto indexStagingBuffer = pCreateStagingIndexBuffer(*indices);
 
-  vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, vertexStagingBuffer.buffer, vertexBuffer->buffer, vertices->size() * sizeof(common::AnimatedVertex), vOffset);
+  vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, vertexStagingBuffer.buffer, vertexBuffer->buffer, vertices->size() * sizeof(common::AnimatedVertex),
+                 vOffset);
 
   vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, indexStagingBuffer.buffer, indexBuffer->buffer, indices->size() * sizeof(IndexType), iOffset);
 
   vmaDestroyBuffer(m_pAllocator, indexStagingBuffer.buffer, indexStagingBuffer.allocation);
   vmaDestroyBuffer(m_pAllocator, vertexStagingBuffer.buffer, vertexStagingBuffer.allocation);
 
-  MeshResource meshResource = {.vertexBuffer = vertexBufferRef, .indexBuffer = indexBufferRef, .vertexOffset = vertexBuffer->allocatedVertices, .indexOffset = indexBuffer->allocatedVertices, .numVertices = (int32_t)vertices->size(), .numIndices = (int32_t)indices->size()};
+  MeshResource meshResource = {.vertexBuffer = vertexBufferRef,
+                               .indexBuffer = indexBufferRef,
+                               .vertexOffset = vertexBuffer->allocatedVertices,
+                               .indexOffset = indexBuffer->allocatedVertices,
+                               .numVertices = (int32_t)vertices->size(),
+                               .numIndices = (int32_t)indices->size()};
   auto ref = meshPool.insert(meshInfo.name, meshResource);
 
   int maxAllocatingSize = sizeof(IndexType) * (indexBuffer->allocatedVertices + indices->size());
@@ -856,7 +943,8 @@ Ref<Mesh> VulkanResourceManager::createMesh(AnimatedMeshInfo meshInfo) {
   return ref;
 }
 
-Ref<Buffer> VulkanResourceManager::createGPUBuffer(const std::string &name, uint32_t size, BufferStorageType type, int count = -1, GPUBufferUsage usage = GPUBufferUsage::SHARED) {
+Ref<Buffer> VulkanResourceManager::createGPUBuffer(const std::string &name, uint32_t size, BufferStorageType type, int count = -1,
+                                                   GPUBufferUsage usage = GPUBufferUsage::SHARED) {
 
   int numBuffers = count < 0 ? vk::MAX_FRAMES_IN_FLIGHT : count;
   vk::VulkanGPUMappedBuffer buffer;
@@ -1031,7 +1119,8 @@ Ref<Buffer> VulkanResourceManager::createMappedVertexBuffer(const std::string &n
 
   vk::VulkanBuffer buffer;
 
-  pCreateBuffer(buffer, buffer_info.size, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VMA_ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT, VMA_MEMORY_USAGE_AUTO);
+  pCreateBuffer(buffer, buffer_info.size, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VMA_ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT,
+                VMA_MEMORY_USAGE_AUTO);
 
   return vertexBufferPool.insert(name, buffer);
 }
@@ -1095,7 +1184,9 @@ void VulkanResourceManager::ResizeFramebuffer(Ref<RenderPass> renderpass_ref, gl
     texInfo.width = renderPassInfo.dimensions.width;
     texInfo.height = renderPassInfo.dimensions.height;
     texInfo.num_channels = attachment.isDepthAttachment ? 1 : resolveNumChannels(attachment.format);
-    texInfo.usage = (attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+    texInfo.usage = (attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT)
+                        ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT
+                        : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 
     texInfo.compareEnable = attachment.depthCompare;
 
@@ -1103,7 +1194,8 @@ void VulkanResourceManager::ResizeFramebuffer(Ref<RenderPass> renderpass_ref, gl
 
     texture.bindingType = vk::RENDER_BUFFER_SAMPLER;
     texture.info.mipLevels = 1;
-    createImageView(*m_pVkDataPtr, texture, (attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
+    createImageView(*m_pVkDataPtr, texture,
+                    (attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
 
     texture.imageLayout = attachment.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
     if (attachment.isSampler) {
@@ -1132,7 +1224,12 @@ void VulkanResourceManager::ResizeFramebuffer(Ref<RenderPass> renderpass_ref, gl
 
   vk::createFramebuffers(*m_pVkDataPtr, *renderPass, renderPass->renderPassChain);
 
-  VkViewport viewport = {.x = 0, .y = 0, .width = (float)renderPass->renderPassChain.Extent.width, .height = (float)renderPass->renderPassChain.Extent.height, .minDepth = 0.0f, .maxDepth = 1.0f};
+  VkViewport viewport = {.x = 0,
+                         .y = 0,
+                         .width = (float)renderPass->renderPassChain.Extent.width,
+                         .height = (float)renderPass->renderPassChain.Extent.height,
+                         .minDepth = 0.0f,
+                         .maxDepth = 1.0f};
 
   VkRect2D rect;
   rect.extent.width = renderPass->renderPassChain.Extent.width;
@@ -1145,16 +1242,30 @@ void VulkanResourceManager::ResizeFramebuffer(Ref<RenderPass> renderpass_ref, gl
   renderPass->renderPassChain.setScissor(rect);
 }
 
+void VulkanResourceManager::PatchMesh(Ref<Mesh> meshRef, UpdateMeshInfo updateInfo) {
+
+  auto mesh = meshPool.get(meshRef);
+  auto vertexBuffer = vertexBufferPool.get(mesh->vertexBuffer);
+  auto vertexStagingBuffer = pCreateStagingBuffer(updateInfo.vertices);
+
+  vk::copyBuffer(*m_pVkDataPtr, m_pTransferCommandPool, vertexStagingBuffer.buffer, vertexBuffer->buffer, updateInfo.vertices.size() * sizeof(common::Vertex),
+                 (mesh->vertexOffset + updateInfo.vertex_offset) * sizeof(common::Vertex));
+
+  vmaDestroyBuffer(m_pAllocator, vertexStagingBuffer.buffer, vertexStagingBuffer.allocation);
+}
+
 void VulkanResourceManager::UpdateMesh(Ref<Mesh> meshRef, UpdateMeshInfo updateInfo) {
   auto mesh = meshPool.get(meshRef);
-  if (updateInfo.vertex_size >= 0)
+
+  if (updateInfo.vertex_size > 0)
     mesh->numVertices = updateInfo.vertex_size;
 
-  if (updateInfo.vertex_size >= 0)
+  if (updateInfo.vertex_size > 0)
     mesh->vertexOffset = updateInfo.vertex_offset;
 
   if (!updateInfo.vertexBuffer.empty())
     mesh->vertexBuffer = updateInfo.vertexBuffer;
+
   /*
                   if (updateInfo.index_offset >= mesh->numIndices)
                   {
