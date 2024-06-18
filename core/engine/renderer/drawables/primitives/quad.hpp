@@ -125,36 +125,47 @@ public:
 
   void setHeight(float height, glm::vec3 position, float radius, BRUSH_TYPE brush) {
 
-    glm::ivec3 pos = glm::floor(position - 1.0f);
+    glm::vec3 pos = glm::floor(position - glm::vec3(radius, 0.0f, radius) - 1.0f);
 
-    glm::vec2 m_pGridOrigin = glm::vec2(-128.0, -128.0);
-    glm::vec2 bounds = glm::vec2(m_pGridOrigin) + glm::vec2(m_pTesselation + 1, m_pTesselation + 1);
+    glm::vec2 origin = glm::vec2(-128.0, -128.0);
+    glm::vec2 bounds = glm::vec2(origin) + glm::vec2(m_pTesselation + 1, m_pTesselation + 1);
 
-    glm::ivec2 p = glm::vec2(glm::ceil(position.x - 0.5), glm::ceil(position.z - 0.5));
-    glm::ivec2 g = glm::vec2(glm::ceil(m_pGridOrigin));
+    glm::ivec2 p = glm::vec2(glm::ceil(pos.x - 0.5), glm::ceil(pos.z - 0.5));
+    glm::ivec2 g = glm::vec2(glm::ceil(origin));
 
     p = (p - g);
 
     int index = p.y + p.x * (m_pTesselation + 1);
 
-    if (position.x < m_pGridOrigin.x || position.x >= bounds.x || position.z < m_pGridOrigin.y || position.z >= bounds.y)
+    if (position.x < origin.x || position.x >= bounds.x || position.z < origin.y || position.z >= bounds.y)
       index = 0;
+    p += 2;
+    for (int i = -1; i <= radius * 2; i++)
+      for (int j = -1; j <= radius * 2; j++) {
 
-    auto &a = m_pMesh.Vertices.at(index); // a.x = a.x * scale.x; a.z = a.z * scale.z;
-    a.position.y = height;
+        int index = (p.y + j) + (p.x + i) * (m_pTesselation + 1);
+        auto &a = m_pMesh.Vertices.at(index);
+        float t = glm::distance(position, a.position);
+        if (t <= radius) {
+          /*t = glm::clamp((1.5 - ((1.0 - t / radius) * 1.5)) * 2.0f, 0.0, 0.3);
+          if (a.position.y < height) {
+            a.position.y = glm::clamp(height - t, -10000.0f, height);
+            a.position.y = glm::min(a.position.y, height);
+          }*/
+          /*if ((i == 0 || j == 0 || j + 1 == radius * 2 || i + 1 == radius * 2) && a.position.y < height) {
+            a.position.y = height - 1.25f;
+          } else if ((i == 1 || j == 1 || j + 2 == radius * 2 || i + 2 == radius * 2) && a.position.y < height) {
+            a.position.y = height - 0.75f;
+          } else {
+          }*/
 
-    if (index + (m_pTesselation + 1) < m_pMesh.Vertices.size()) {
-      auto &b = m_pMesh.Vertices.at(index + (m_pTesselation + 1)); // b.x = b.x * scale.x; b.z = b.z * scale.z;
-      b.position.y = height;
-    }
-    if (index + 1 < m_pMesh.Vertices.size()) {
-      auto &c = m_pMesh.Vertices.at(index + 1); // c.x = c.x * scale.x; c.z = c.z * scale.z;
-      c.position.y = height;
-    }
-    if (index + (m_pTesselation + 2) < m_pMesh.Vertices.size()) {
-      auto &d = m_pMesh.Vertices.at(index + (m_pTesselation + 2)); // d.x = d.x * scale.x; d.z = d.z * scale.z;
-      d.position.y = height;
-    }
+          a.position.y = height;
+
+          // a.position.y += (height * (radius - t));
+
+          // a.position.y = glm::clamp(a.position.y, -50.0f, height);
+        }
+      }
   }
 
   bool InitialPosition(glm::vec3 position, float radius, glm::ivec2 *output) {
@@ -326,8 +337,8 @@ public:
 
         float HL = m_pMesh.Vertices.at(i - 1).position.y;
         float HR = m_pMesh.Vertices.at(i + 1).position.y;
-        float HD = m_pMesh.Vertices.at(i - m_pTesselation + 1).position.y;
-        float HU = m_pMesh.Vertices.at(i + m_pTesselation + 1).position.y;
+        float HD = m_pMesh.Vertices.at(i - m_pTesselation).position.y;
+        float HU = m_pMesh.Vertices.at(i + m_pTesselation).position.y;
 
         glm::vec3 norm = glm::normalize(glm::vec3((HL - HR), 1.0, (HD - HU)));
 
