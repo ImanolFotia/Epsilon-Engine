@@ -50,6 +50,7 @@ struct VulkanTextureInfo {
   uint32_t num_channels = 0;
   uint32_t mipLevels = 1;
   uint32_t arrayLayers = 1;
+  uint32_t imageViews = 1;
   VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
   VkSampleCountFlagBits numSamples = VK_SAMPLE_COUNT_1_BIT;
   VkImageUsageFlags usage{};
@@ -215,8 +216,7 @@ struct VulkanRenderPassAttachment {
   VkImageLayout finalLayout;
 };
 struct RenderPassChain {
-  std::vector<const char *> deviceExtensions = {
-      VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+  std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
   //
   std::vector<VkImage> Images;
   //
@@ -305,13 +305,10 @@ struct VulkanData {
   bool vsync = false;
 
 #if !defined(__ANDROID__)
-  const std::vector<const char *> deviceExtensions = {
-      VK_KHR_SWAPCHAIN_EXTENSION_NAME, VK_EXT_MEMORY_BUDGET_EXTENSION_NAME,
-      VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME,
-      VK_KHR_MAINTENANCE3_EXTENSION_NAME};
+  const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME, VK_EXT_MEMORY_BUDGET_EXTENSION_NAME,
+                                                      VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME, VK_KHR_MAINTENANCE3_EXTENSION_NAME};
 #else
-  const std::vector<const char *> deviceExtensions = {
-      VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+  const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 #endif
 
   VkSwapchainKHR swapChain;
