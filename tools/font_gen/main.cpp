@@ -122,7 +122,10 @@ std::string str_toupper(std::string s) {
 
 int ASCIIHexToInt[] = {
     // ASCII
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, -1, -1, -1, -1, -1, -1, -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  -1, -1, -1, -1, -1, -1,
+    -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, 10, 11, 12, 13, 14, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 };
 
 std::string EncodeCodepoint(std::string codepoint) {
@@ -201,8 +204,8 @@ int main(int argc, char **argv) {
         max = code;
       if (code < min)
         min = code;
-      if (line == prev)
-        continue;
+      // if (line == prev)
+      //   continue;
       prev = line;
       counted_chars++;
     }
@@ -228,7 +231,7 @@ int main(int argc, char **argv) {
 
   fread(ttf_buffer, 1, 1 << 20, fopen(argv[1], "rb"));
 
-  stbtt_BakeFontBitmap(ttf_buffer, 0, options.font_size, temp_bitmap, options.texture_size, options.texture_size, options.first_char, options.num_chars, cdata.data());
+  stbtt_BakeFontBitmap(ttf_buffer, 0, options.font_size, temp_bitmap, options.texture_size, options.texture_size, 0, options.num_chars, cdata.data());
 
   if (codepoints_file.is_open()) {
     options.first_char = 0;
@@ -240,7 +243,7 @@ int main(int argc, char **argv) {
     char c = i;
     float x = 0, y = 0;
     stbtt_aligned_quad q;
-    stbtt_GetBakedQuad(cdata.data(), options.texture_size, options.texture_size, c, &x, &y, &q, 1);
+    stbtt_GetBakedQuad(cdata.data(), options.texture_size, options.texture_size, i, &x, &y, &q, 1);
     if (q.s0 > 1.0f || q.s1 > 1.0f || q.t0 > 1.0f || q.t1 > 1.0f)
       continue;
 
@@ -254,7 +257,6 @@ int main(int argc, char **argv) {
     }
     if (codepoints.size() > 0)
       if (min > 0x7F || i + options.first_char > 0x7F) {
-        std::cout << "encoding" << std::endl;
         code = EncodeCodepoint(codepoints.at(i));
       }
     m_AlignedQuads[i] = {q.x0, q.y0, q.s0, q.t0, q.x1, q.y1, q.s1, q.t1, code};
@@ -336,8 +338,10 @@ int main(int argc, char **argv) {
   for (int i = 0; i < options.num_chars; i++) {
     if (i % 2 == 1 || i == 0)
       outHeader << "            ";
-    outHeader << "{" << m_AlignedQuads[i].quad.x0 << ", " << m_AlignedQuads[i].quad.y0 << ", " << m_AlignedQuads[i].quad.s0 << ", " << m_AlignedQuads[i].quad.t0 << ",";
-    outHeader << m_AlignedQuads[i].quad.x1 << ", " << m_AlignedQuads[i].quad.y1 << ", " << m_AlignedQuads[i].quad.s1 << ", " << m_AlignedQuads[i].quad.t1 << ", " << m_AlignedQuads[i].code << "},";
+    outHeader << "{" << m_AlignedQuads[i].quad.x0 << ", " << m_AlignedQuads[i].quad.y0 << ", " << m_AlignedQuads[i].quad.s0 << ", " << m_AlignedQuads[i].quad.t0
+              << ",";
+    outHeader << m_AlignedQuads[i].quad.x1 << ", " << m_AlignedQuads[i].quad.y1 << ", " << m_AlignedQuads[i].quad.s1 << ", " << m_AlignedQuads[i].quad.t1
+              << ", " << m_AlignedQuads[i].code << "},";
     if (i % 2 == 0)
       outHeader << "\n";
   }
