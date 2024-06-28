@@ -122,26 +122,43 @@ void UI::Draw(engine::Ref<engine::RenderPass> renderPass) {
 }
 void UI::Free() {}
 
-void UI::CreateRect(glm::vec2 position, glm::vec2 size, glm::vec2 uv0 = glm::vec2(0.0f), glm::vec2 uv1 = glm::vec2(1.0f), glm::vec4 color) {
+void UI::CreateRect(glm::vec2 position, glm::vec2 size, glm::vec2 uv0 = glm::vec2(0.0f), glm::vec2 uv1 = glm::vec2(1.0f), glm::vec4 color,
+                    float border_radius) {
+
+  glm::vec2 s = size;
   size /= m_pResolution;
   position /= m_pResolution;
+
+  float radius = border_radius / glm::min(m_pResolution.x, m_pResolution.y);
   m_pVertices[vertices_pushed].color = color;
-  m_pVertices[vertices_pushed++].pos_uv = glm::vec4(position.x, position.y, uv0.x, uv0.y);
+  m_pVertices[vertices_pushed].pos_uv = glm::vec4(position.x, position.y, uv0.x, uv0.y);
+  m_pVertices[vertices_pushed].padding = s;
+  m_pVertices[vertices_pushed++].vtx_pos = glm::vec2(0.0, radius);
 
   m_pVertices[vertices_pushed].color = color;
-  m_pVertices[vertices_pushed++].pos_uv = glm::vec4(position + glm::vec2(size.x, 0.0f), uv1.x, uv0.y);
+  m_pVertices[vertices_pushed].pos_uv = glm::vec4(position + glm::vec2(size.x, 0.0f), uv1.x, uv0.y);
+  m_pVertices[vertices_pushed].padding = s;
+  m_pVertices[vertices_pushed++].vtx_pos = glm::vec2(1.0, radius);
 
   m_pVertices[vertices_pushed].color = color;
-  m_pVertices[vertices_pushed++].pos_uv = glm::vec4(position + glm::vec2(0.0f, size.y), uv0.x, uv1.y);
+  m_pVertices[vertices_pushed].pos_uv = glm::vec4(position + glm::vec2(0.0f, size.y), uv0.x, uv1.y);
+  m_pVertices[vertices_pushed].padding = s;
+  m_pVertices[vertices_pushed++].vtx_pos = glm::vec2(2.0, radius);
 
   m_pVertices[vertices_pushed].color = color;
-  m_pVertices[vertices_pushed++].pos_uv = glm::vec4(position + glm::vec2(0.0f, size.y), uv0.x, uv1.y);
+  m_pVertices[vertices_pushed].pos_uv = glm::vec4(position + glm::vec2(0.0f, size.y), uv0.x, uv1.y);
+  m_pVertices[vertices_pushed].padding = s;
+  m_pVertices[vertices_pushed++].vtx_pos = glm::vec2(3.0, radius);
 
   m_pVertices[vertices_pushed].color = color;
-  m_pVertices[vertices_pushed++].pos_uv = glm::vec4(position + glm::vec2(size.x, 0.0f), uv1.x, uv0.y);
+  m_pVertices[vertices_pushed].pos_uv = glm::vec4(position + glm::vec2(size.x, 0.0f), uv1.x, uv0.y);
+  m_pVertices[vertices_pushed].padding = s;
+  m_pVertices[vertices_pushed++].vtx_pos = glm::vec2(4.0, radius);
 
   m_pVertices[vertices_pushed].color = color;
-  m_pVertices[vertices_pushed++].pos_uv = glm::vec4(position + size, uv1.x, uv1.y);
+  m_pVertices[vertices_pushed].pos_uv = glm::vec4(position + size, uv1.x, uv1.y);
+  m_pVertices[vertices_pushed].padding = s;
+  m_pVertices[vertices_pushed++].vtx_pos = glm::vec2(5.0, radius);
 
   auto &current_draw_command = m_DrawLists[commands_pushed];
   current_draw_command.num_vertices = vertices_pushed - current_draw_command.vertex_offset;
@@ -160,7 +177,7 @@ void UI::SetNextWindowPosition(glm::vec2 position) { m_pCursorPosition = positio
 
 void UI::Spacer(glm::vec2 size) { m_pCursorPosition += size; }
 
-void UI::BeginWindow(const std::string &name, glm::vec2 size, glm::vec4 color) {
+void UI::BeginWindow(const std::string &name, glm::vec2 size, glm::vec4 color, float border_radius) {
   CheckShader();
   size_t id = std::hash<std::string>{}(name);
   if (!m_pContext.windows.contains(id)) {
@@ -175,6 +192,7 @@ void UI::BeginWindow(const std::string &name, glm::vec2 size, glm::vec4 color) {
   currentWindow->color = color;
   // m_pCursorPosition.y += m_pStyle.windowPadding;
   currentWindow->position = m_pCursorPosition;
+  currentWindow->border_radius = border_radius;
 
   vertices_pushed += 6;
   auto &current_draw_command = m_DrawLists[commands_pushed];
@@ -195,7 +213,7 @@ void UI::EndWindow() {
   glm::vec2 white_pixel = glm::vec2(m_Fonts[current_font]->white_pixel.x, m_Fonts[current_font]->white_pixel.y);
 
   CreateRect(currentWindow->position, size + glm::vec2(m_pStyle.windowPadding * 3.0f, m_pStyle.windowPadding * 3.0f), white_pixel, white_pixel,
-             currentWindow->color);
+             currentWindow->color, currentWindow->border_radius);
 
   vertices_pushed = temp_vtx;
 
@@ -350,7 +368,7 @@ bool UI::Button(const std::string &text, ButtonFlags flags) {
 
   glm::vec2 white_pixel = glm::vec2(font->white_pixel.x, font->white_pixel.y);
 
-  CreateRect(m_pCursorPosition, size, white_pixel, white_pixel, button_color);
+  CreateRect(m_pCursorPosition, size, white_pixel, white_pixel, button_color, flags.border_radius);
 
   glm::vec2 cursor_pos = m_pCursorPosition;
   cursor_pos.x += padding;
@@ -391,7 +409,7 @@ void UI::Sameline() {
     currentWindow->size.y -= m_pContext.prev_widget_size.y;
 }
 
-void UI::Dock(DockLocation location, float thickness) {
+void UI::Dock(DockLocation location, float thickness, float border_radius) {
   CheckShader();
   m_pContext.prev_widget_position = m_pCursorPosition;
 
@@ -399,7 +417,7 @@ void UI::Dock(DockLocation location, float thickness) {
 
   switch (location) {
   case DockLocation::TOP:
-    CreateRect(glm::vec2(0.0f), glm::vec2(m_pResolution.x, thickness), white_pixel, white_pixel);
+    CreateRect(glm::vec2(0.0f), glm::vec2(m_pResolution.x, thickness), white_pixel, white_pixel, glm::vec4(0.11, 0.11, 0.11, 0.8), border_radius);
     m_pCursorPosition = glm::vec2(0.0f, thickness);
     break;
   case DockLocation::BOTTOM:
@@ -415,7 +433,8 @@ void UI::Dock(DockLocation location, float thickness) {
   }
 }
 
-bool UI::ImageButton(const std::string &text, const std::string &texture, glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1, glm::vec4 tint, bool fill_background) {
+bool UI::ImageButton(const std::string &text, const std::string &texture, glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1, glm::vec4 tint, bool fill_background,
+                     float border_radius) {
   if (m_DrawLists[commands_pushed].bind_group != m_pBindGroups[texture]) {
     auto &new_command = m_DrawLists.emplace_back();
     commands_pushed++;
@@ -469,7 +488,7 @@ bool UI::ImageButton(const std::string &text, const std::string &texture, glm::v
   size.y += m_pStyle.buttonPadding * 2.0f;
 
   if (fill_background && m_WhitePixelPositions.contains(texture))
-    CreateRect(position, size, m_WhitePixelPositions[texture], m_WhitePixelPositions[texture], button_color);
+    CreateRect(position, size, m_WhitePixelPositions[texture], m_WhitePixelPositions[texture], button_color, border_radius);
 
   CreateRect(image_position, image_size, uv0, uv1, glm::vec4(1.0));
 
@@ -744,7 +763,8 @@ bool UI::CheckBox(const std::string &text, bool *state) {
   return false;
 }
 
-void UI::HealthBar(const std::string &text, glm::vec2 position, float val, float min, float max, glm::vec4 color, glm::vec4 backgroundColor) {
+void UI::HealthBar(const std::string &text, glm::vec2 position, float val, float min, float max, glm::vec4 color, glm::vec4 backgroundColor,
+                   float border_radius) {
 
   CheckShader();
   auto font = m_Fonts[current_font];
@@ -760,22 +780,22 @@ void UI::HealthBar(const std::string &text, glm::vec2 position, float val, float
 
   glm::vec2 white_pixel = glm::vec2(m_Fonts[current_font]->white_pixel.x, m_Fonts[current_font]->white_pixel.y);
 
-  CreateRect(position, size + glm::vec2(25, 0), white_pixel, white_pixel, backgroundColor);
+  CreateRect(position, size + glm::vec2(25, 0), white_pixel, white_pixel, backgroundColor, border_radius);
 
   glm::vec2 sqr_position = position + padding + glm::vec2(0.0f, size.y - 10 - padding);
   glm::vec2 sqr_size = glm::vec2((size.x - (padding * (10 + 1))) / 10, 10 - (padding * 2.0f));
   float last_sqr_width = 10.0f - ((max / 10.0f) - (fmod(val, 10.0f))) + padding;
   int i = 0;
   for (i = 0; i < num_squares - 1; i++) {
-    CreateRect(sqr_position, sqr_size, white_pixel, white_pixel, color);
+    CreateRect(sqr_position, sqr_size, white_pixel, white_pixel, color, border_radius * 3.5);
     sqr_position.x += sqr_size.x + padding;
   }
   last_sqr_width = position.x + sqr_size.x * 10.0f + padding * 10.0f;
-  CreateRect(sqr_position, sqr_size, white_pixel, white_pixel, color);
+  CreateRect(sqr_position, sqr_size, white_pixel, white_pixel, color, border_radius * 3.5);
   sqr_position.x += sqr_size.x + padding;
 
   CreateRect(glm::vec2(last_sqr_width + padding * 2.0f, position.y + padding), glm::vec2(25, 25) - padding * 2.0f, white_pixel, white_pixel,
-             backgroundColor + glm::vec4(0.1, 0.1, 0.1, 0.0));
+             backgroundColor + glm::vec4(0.1, 0.1, 0.1, 0.0), border_radius * 1.5);
 
   glm::vec2 half_point = position + glm::vec2(size.x * 0.5, size.y * 0.25f) + glm::vec2(-text_size.x * 0.5, 0.0);
 

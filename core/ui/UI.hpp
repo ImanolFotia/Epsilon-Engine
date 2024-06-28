@@ -23,13 +23,14 @@
 
 namespace UI {
 struct Window {
-  size_t id;
+  size_t id = 0;
   glm::vec2 size = glm::vec2(0.0);
   glm::vec2 position{};
   size_t vtx_index = 0;
   bool fixed_size = false;
   glm::vec2 setted_size;
-  glm::vec4 color;
+  glm::vec4 color = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
+  float border_radius = -1.0f;
 };
 
 struct Mouse {
@@ -69,6 +70,8 @@ struct Context {
 struct UIVertex {
   glm::vec4 pos_uv{};
   glm::vec4 color = glm::vec4(0.2, 0.2, 0.2, 0.5);
+  glm::vec2 vtx_pos = glm::vec2(-1.0);
+  glm::vec2 padding = glm::vec2(-1.0);
 };
 
 struct Rect {
@@ -96,6 +99,7 @@ struct ButtonFlags {
   bool center_text = false;
   bool is_tab = false;
   bool is_selected_tab = false;
+  float border_radius = -1.0f;
 };
 
 enum class DockLocation : uint8_t { TOP = 0, BOTTOM, LEFT, RIGHT };
@@ -247,11 +251,10 @@ public:
 
     engine::ShaderInfo mainShaderInfo = loadShaders();
 
-    engine::VertexLayout vertexLayout = {.descriptors =
-                                             {
-                                                 {engine::XYZW_FLOAT, offsetof(UIVertex, pos_uv)},
-                                                 {engine::XYZW_FLOAT, offsetof(UIVertex, color)},
-                                             },
+    engine::VertexLayout vertexLayout = {.descriptors = {{engine::XYZW_FLOAT, offsetof(UIVertex, pos_uv)},
+                                                         {engine::XYZW_FLOAT, offsetof(UIVertex, color)},
+                                                         {engine::XY_FLOAT, offsetof(UIVertex, vtx_pos)},
+                                                         {engine::XY_FLOAT, offsetof(UIVertex, padding)}},
                                          .size = sizeof(UIVertex)};
 
     uiLayout = {
@@ -353,13 +356,14 @@ public:
 
   glm::vec2 ToScreenCoords(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj, const glm::vec2 &resolution);
 
-  void CreateRect(glm::vec2 position, glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1, glm::vec4 color = glm::vec4(0.11, 0.11, 0.11, 0.8));
+  void CreateRect(glm::vec2 position, glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1, glm::vec4 color = glm::vec4(0.11, 0.11, 0.11, 0.8),
+                  float border_radius = -1.0f);
 
   void CreatePolygon(std::vector<UIVertex> vertices);
 
   void SetNextWindowPosition(glm::vec2 position);
 
-  void BeginWindow(const std::string &name, glm::vec2 size = glm::vec2(0.0f), glm::vec4 color = glm::vec4(0.0, 0.0, 0.0, 0.5));
+  void BeginWindow(const std::string &name, glm::vec2 size = glm::vec2(0.0f), glm::vec4 color = glm::vec4(0.0, 0.0, 0.0, 0.5), float border_radius = -1.0f);
 
   void EndWindow();
 
@@ -369,12 +373,12 @@ public:
   bool Button(const std::string &text, ButtonFlags flags = {});
   void Sameline();
 
-  void Dock(DockLocation, float thickness);
+  void Dock(DockLocation, float thickness, float border_radius);
 
   void Spacer(glm::vec2 size);
 
   bool ImageButton(const std::string &, const std::string &texture, glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1, glm::vec4 tint = glm::vec4(1.0f),
-                   bool fill_background = false);
+                   bool fill_background = false, float border_radius = -1.0f);
 
   void AngularButtons(glm::vec2 position, float innerRadius, float outerRadius, int count);
   bool AngularButton(const std::string &text);
@@ -382,7 +386,7 @@ public:
   bool CheckBox(const std::string &text, bool *state);
 
   void HealthBar(const std::string &text, glm::vec2 position, float val, float min, float max, glm::vec4 color = glm::vec4(0.0, 1.0, 0.0, 1.0),
-                 glm::vec4 backgroundColor = glm::vec4(0.0, 0.0, 0.0, 1.0));
+                 glm::vec4 backgroundColor = glm::vec4(0.0, 0.0, 0.0, 1.0), float border_radius = -1.0f);
 
   void Switch(const std::string &text, bool &state) {}
 
