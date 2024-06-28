@@ -40,8 +40,7 @@ void Window::init(std::string appName, int w, int h) {
   int count = 0;
   const GLFWvidmode *modes = glfwGetVideoModes(glfwGetPrimaryMonitor(), &count);
 
-  mWindow =
-      glfwCreateWindow(mWidth, mHeight, appName.c_str(), nullptr, nullptr);
+  mWindow = glfwCreateWindow(mWidth, mHeight, appName.c_str(), nullptr, nullptr);
 
   // glfwSetWindowOpacity(mWindow, 0.2f);
   auto currentMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -54,17 +53,13 @@ void Window::init(std::string appName, int w, int h) {
     size_desc.refreshRate = (float)mode.refreshRate;
 
     char buffer[256] = {0};
-    std::sprintf(buffer, "%dx%d@%.2f", mode.width, mode.height,
-                 size_desc.refreshRate);
+    std::sprintf(buffer, "%dx%d@%.2f", mode.width, mode.height, size_desc.refreshRate);
     size_desc.size_string = std::string(buffer);
-    if (currentMode->width == size_desc.width &&
-        currentMode->height == size_desc.height &&
-        (float)currentMode->refreshRate == size_desc.refreshRate) {
+    if (currentMode->width == size_desc.width && currentMode->height == size_desc.height && (float)currentMode->refreshRate == size_desc.refreshRate) {
       size_desc.isCurrent = true;
     }
 
-    if (mDefaultWidth == currentMode->width &&
-        mDefaultHeight == currentMode->height) {
+    if (mDefaultWidth == currentMode->width && mDefaultHeight == currentMode->height) {
       defaultSizeIndex = m_pAvailableSizes.size();
     }
     m_pAvailableSizes.push_back(size_desc);
@@ -75,8 +70,7 @@ void Window::init(std::string appName, int w, int h) {
   // Set up IO callbacks
   glfwSetKeyCallback(mWindow, Input::KeyBoard::KeyBoardCallBackGLFW);
   glfwSetCursorPosCallback(mWindow, Input::Mouse::MouseCallBackGLFW);
-  glfwSetJoystickCallback(
-      Input::Joystick::JoystickManager::JoystickCallbackGLFW);
+  glfwSetJoystickCallback(Input::Joystick::JoystickManager::JoystickCallbackGLFW);
   glfwSetMouseButtonCallback(mWindow, Input::Mouse::MouseButtonCallbackGLFW);
   glfwSetScrollCallback(mWindow, Input::Mouse::MouseWheelCallbackGLFW);
   glfwSetDropCallback(mWindow, Input::DragDrop::DropCallbackGLFW);
@@ -84,6 +78,7 @@ void Window::init(std::string appName, int w, int h) {
   glfwSetInputMode(mWindow, GLFW_STICKY_KEYS, true);
   glfwSetInputMode(mWindow, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
 #endif
+
 #if defined(_WIN32) && (USE_GLFW == false)
   WNDCLASSEX wcex;
 
@@ -104,9 +99,7 @@ void Window::init(std::string appName, int w, int h) {
 
   windowInstance = hInstance;
 
-  window = CreateWindow(appName, appName,
-                        WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
-                        0, 0, mWidth, mWidth, NULL, NULL, windowInstance, NULL);
+  window = CreateWindow(appName, appName, WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, 0, 0, mWidth, mWidth, NULL, NULL, windowInstance, NULL);
 #endif
 #ifdef BUILD_ANDROID
 #endif

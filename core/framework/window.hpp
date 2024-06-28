@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/framework/utils/image.hpp"
 #include <string>
 
 #if defined(ANDROID) || defined(__ANDROID__)
@@ -184,8 +185,7 @@ public:
   void setWindowed() {
     auto mainMonitorMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-    glfwSetWindowMonitor(mWindow, NULL, 0, 30, mainMonitorMode->width, mainMonitorMode->height - 30,
-                         mainMonitorMode->refreshRate);
+    glfwSetWindowMonitor(mWindow, NULL, 0, 30, mainMonitorMode->width, mainMonitorMode->height - 30, mainMonitorMode->refreshRate);
     glfwSetWindowPos(mWindow, 0, 30);
     glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_TRUE);
     mWindowMode = WindowMode::WINDOWED;
@@ -241,6 +241,24 @@ public:
 #if USE_GLFW
     glfwSetWindowTitle(mWindow, title);
 #endif
+  }
+
+  void setWindowIcon(const char *icon_path) {
+    GLFWimage images[3] = {};
+    int channels = 4;
+    images[0].pixels = framework::load_image_from_file("./media/icon_48.png", &images[0].width, &images[0].height, &channels);
+    images[1].pixels = framework::load_image_from_file("./media/icon_32.png", &images[1].width, &images[1].height, &channels);
+    images[2].pixels = framework::load_image_from_file("./media/icon_16.png", &images[2].width, &images[2].height, &channels);
+    glfwSetWindowIcon(mWindow, 3, images);
+    framework::free_image_data(images[0].pixels);
+    framework::free_image_data(images[1].pixels);
+    framework::free_image_data(images[2].pixels);
+
+    const char *description;
+    int code = glfwGetError(&description);
+
+    if (description)
+      IO::Error("Setting window icon: \nCode: ", code, "\nDescription: ", description);
   }
 
   windowType *getWindow() const { return mWindow; }
