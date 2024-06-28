@@ -25,6 +25,7 @@
 #include <core/framework/containers/dynamic_array.hpp>
 #include <core/framework/containers/static_array.hpp>
 
+#include "transform.hpp"
 #include <core/engine/renderer/vulkan/imgui/imgui_setup.hpp>
 
 namespace engine {
@@ -104,7 +105,7 @@ struct RenderModel {
   std::array<std::vector<RenderMesh>, 4> renderMeshes;
   std::vector<framework::Animation> animations;
   std::vector<glm::mat4> transforms{};
-  std::vector<std::any> instance_data;
+  std::vector<Transform> instance_data;
   common::MIN_MAX_POINTS min_max_points;
   framework::Skeleton skeleton;
   std::string name{};
