@@ -15,10 +15,10 @@ static void setupRasterizer(VulkanRenderPipeline &renderPipeline, engine::Render
   renderPipeline.rasterizer.lineWidth = 1.0f;
   renderPipeline.rasterizer.cullMode = renderPipeline.cullMode;
   renderPipeline.rasterizer.frontFace = renderPipeline.winding;
-  renderPipeline.rasterizer.depthBiasEnable = VK_FALSE;
+  renderPipeline.rasterizer.depthBiasEnable = VK_TRUE;
   renderPipeline.rasterizer.depthBiasConstantFactor = 0.0f; // Optional
   renderPipeline.rasterizer.depthBiasClamp = 0.0f;          // Optional
-  renderPipeline.rasterizer.depthBiasSlopeFactor = 0.0f;    // Optional
+  renderPipeline.rasterizer.depthBiasSlopeFactor = 0.5f;    // Optional
 
   renderPipeline.multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
   renderPipeline.multisampling.sampleShadingEnable = VK_FALSE;
@@ -31,8 +31,7 @@ static void setupRasterizer(VulkanRenderPipeline &renderPipeline, engine::Render
   for (int i = 0; i < renderPipeline.numAttachments; i++) {
     renderPipeline.colorBlendAttachments[i].colorWriteMask =
         VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-    renderPipeline.colorBlendAttachments[i].blendEnable =
-        renderPassInfo.attachments[i].blendEnable ? VK_TRUE : VK_FALSE;
+    renderPipeline.colorBlendAttachments[i].blendEnable = renderPassInfo.attachments[i].blendEnable ? VK_TRUE : VK_FALSE;
     renderPipeline.colorBlendAttachments[i].srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
     renderPipeline.colorBlendAttachments[i].dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
     renderPipeline.colorBlendAttachments[i].colorBlendOp = VK_BLEND_OP_ADD;
