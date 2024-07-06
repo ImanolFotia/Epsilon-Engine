@@ -319,6 +319,7 @@ void UI::Text(const std::string &text, glm::vec2 position, glm::vec4 color, bool
 }
 
 glm::vec2 UI::CursorPosition() { return m_pCursorPosition; }
+void UI::CursorPosition(glm::vec2 position) { m_pCursorPosition = position; }
 
 glm::vec2 UI::buttonSize(const std::string &text) {
   glm::vec2 size = glm::vec2(m_pStyle.buttonPadding, m_pStyle.buttonHeight + m_pStyle.buttonPadding);

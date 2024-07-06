@@ -353,6 +353,7 @@ public:
   void Free();
 
   glm::vec2 CursorPosition();
+  void CursorPosition(glm::vec2 position);
 
   glm::vec2 ToScreenCoords(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj, const glm::vec2 &resolution);
 
