@@ -12,7 +12,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <core/common/common.hpp>
+#include <set>
 #include <string>
+
+#include <core/framework/common.hpp>
 
 namespace framework {
 
@@ -25,11 +28,6 @@ public:
     size_t indexOffset;
 
     common::Mesh mesh;
-
-  public:
-    // MeshData() = default;
-    // MeshData(auto a, auto b, auto c, auto d)
-    //     : numVertices(a), numIndices(b), vertexOffset(c), indexOffset(d) {}
   };
 
   struct MeshMaterial {
@@ -51,8 +49,7 @@ public:
   Mesh() = default;
   /**  Functions  */
   /// Constructor
-  Mesh(std::vector<EML::t_Vertex> inVertices, std::vector<uint32_t> indices, MeshMaterial material, size_t vOffset,
-       size_t iOffset) {
+  Mesh(std::vector<EML::t_Vertex> inVertices, std::vector<uint32_t> indices, MeshMaterial material, size_t vOffset, size_t iOffset) {
     std::vector<common::Vertex> vertices;
 
     auto Pos2Vec3 = [](EML::t_Position vtx) { return glm::vec3(vtx.x, vtx.y, vtx.z); };
@@ -66,8 +63,8 @@ public:
     auto Coord2Vec2 = [](EML::t_TexCoord vtx) { return glm::vec2(vtx.s, vtx.t); };
 
     for (auto &vtx : inVertices) {
-      m_pData.mesh.Vertices.emplace_back(Pos2Vec3(vtx.position), Coord2Vec2(vtx.texcoord), Nor2Vec3(vtx.normal),
-                                         glm::vec4(1.0), Tan2Vec3(vtx.tangent), Bi2Vec3(vtx.bitangent));
+      m_pData.mesh.Vertices.emplace_back(Pos2Vec3(vtx.position), Coord2Vec2(vtx.texcoord), Nor2Vec3(vtx.normal), glm::vec4(1.0), Tan2Vec3(vtx.tangent),
+                                         Bi2Vec3(vtx.bitangent));
     }
 
     m_pData.mesh.Indices = indices;
@@ -92,6 +89,55 @@ public:
   MeshData &data() { return m_pData; }
 
   MeshMaterial &Material() { return m_pMaterial; }
+
+  void MergeByDistance(float threshold = 0.001) {
+
+    auto &vertices = m_pData.mesh.Vertices;
+    auto &indices = m_pData.mesh.Indices;
+
+    std::vector<uint32_t> new_indices;
+    std::vector<common::Vertex> new_vertices;
+    std::unordered_map<int, int> repeated_indices;
+    std::unordered_map<int, int> remaped_index;
+    std::set<int> repeated_vertices;
+
+    int num_deletions = 0;
+    for (unsigned i = 0; i < vertices.size(); i++) {
+      auto &current_vertex = vertices[i];
+      for (unsigned j = i; j < vertices.size(); j++) {
+        if (glm::distance(current_vertex.position, vertices[j].position) < threshold && j != i) {
+          num_deletions++;
+          remaped_index[j] = i;
+          repeated_indices[j + 1] = (j + 1) - num_deletions;
+          repeated_vertices.emplace(j);
+          break;
+        }
+      }
+    }
+
+    for (unsigned i = 0; i < indices.size(); i++) {
+      if (remaped_index.contains(indices[i])) {
+        indices[i] = remaped_index[indices[i]];
+        new_indices.push_back(indices[i]);
+
+      } else {
+        new_indices.push_back(indices[i]);
+      }
+
+      if (repeated_indices.contains(new_indices[i])) {
+        new_indices[i] = repeated_indices[new_indices[i]];
+      }
+    }
+
+    for (unsigned i = 0; i < vertices.size(); i++) {
+      if (!repeated_vertices.contains(i))
+        new_vertices.push_back(vertices[i]);
+    }
+    vertices = new_vertices;
+    indices = new_indices;
+
+    IO::Log("Removed ", repeated_vertices.size(), " vertices");
+  }
 
   void generateTangentSpaceVectors() {
     uint32_t num_triangles = m_pData.mesh.Indices.size() / 3;
@@ -146,6 +192,8 @@ public:
   }
 
   void setName(std::string name) { m_pName = name; }
+
+  const std::string &Name() { return m_pName; }
 
 private:
   std::string m_pName{};
