@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #define FOURCC_DXT1 0x31545844
 #define FOURCC_DXT2 0x32545844
 #define FOURCC_DXT3 0x33545844
@@ -9,26 +11,24 @@
 #define FOURCC_ATI2 0x32495441
 #define FOURCC_DX10 0x30315844
 
-
 #define MAGICNUMBER 0x44445320
 
-#define DDS_FOURCC      0x00000004  // DDPF_FOURCC
-#define DDS_RGB         0x00000040  // DDPF_RGB
-#define DDS_RGBA        0x00000041  // DDPF_RGB | DDPF_ALPHAPIXELS
-#define DDS_LUMINANCE   0x00020000  // DDPF_LUMINANCE
-#define DDS_LUMINANCEA  0x00020001  // DDPF_LUMINANCE | DDPF_ALPHAPIXELS
-#define DDS_ALPHA       0x00000002  // DDPF_ALPHA
-#define DDS_PAL8        0x00000020  // DDPF_PALETTEINDEXED8
+#define DDS_FOURCC 0x00000004     // DDPF_FOURCC
+#define DDS_RGB 0x00000040        // DDPF_RGB
+#define DDS_RGBA 0x00000041       // DDPF_RGB | DDPF_ALPHAPIXELS
+#define DDS_LUMINANCE 0x00020000  // DDPF_LUMINANCE
+#define DDS_LUMINANCEA 0x00020001 // DDPF_LUMINANCE | DDPF_ALPHAPIXELS
+#define DDS_ALPHA 0x00000002      // DDPF_ALPHA
+#define DDS_PAL8 0x00000020       // DDPF_PALETTEINDEXED8
 
-#define DDS_HEADER_FLAGS_TEXTURE        0x00001007  // DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT
-#define DDS_HEADER_FLAGS_MIPMAP         0x00020000  // DDSD_MIPMAPCOUNT
-#define DDS_HEADER_FLAGS_VOLUME         0x00800000  // DDSD_DEPTH
-#define DDS_HEADER_FLAGS_PITCH          0x00000008  // DDSD_PITCH
-#define DDS_HEADER_FLAGS_LINEARSIZE     0x00080000  // DDSD_LINEARSIZE
+#define DDS_HEADER_FLAGS_TEXTURE 0x00001007    // DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT
+#define DDS_HEADER_FLAGS_MIPMAP 0x00020000     // DDSD_MIPMAPCOUNT
+#define DDS_HEADER_FLAGS_VOLUME 0x00800000     // DDSD_DEPTH
+#define DDS_HEADER_FLAGS_PITCH 0x00000008      // DDSD_PITCH
+#define DDS_HEADER_FLAGS_LINEARSIZE 0x00080000 // DDSD_LINEARSIZE
 
 #define DDS_HEIGHT 0x00000002 // DDSD_HEIGHT
-#define DDS_WIDTH  0x00000004 // DDSD_WIDTH
-
+#define DDS_WIDTH 0x00000004  // DDSD_WIDTH
 
 #define DXGI_FORMAT_BC1_TYPELESS 70
 #define DXGI_FORMAT_BC1_UNORM 71
@@ -64,42 +64,37 @@
 constexpr int MAGICNUMBEROFFSET = 4;
 
 struct DDS_PIXELFORMAT {
-	int dwSize;
-	int dwFlags;
-	int dwFourCC;
-	int dwRGBBitCount;
-	int dwRBitMask;
-	int dwGBitMask;
-	int dwBBitMask;
-	int dwABitMask;
+  int dwSize;
+  int dwFlags;
+  int dwFourCC;
+  int dwRGBBitCount;
+  int dwRBitMask;
+  int dwGBitMask;
+  int dwBBitMask;
+  int dwABitMask;
 };
 
-struct DDS_HEADER
-{
-	int           dwSize;
-	int           dwFlags;
-	int           dwHeight;
-	int           dwWidth;
-	int           dwPitchOrLinearSize;
-	int           dwDepth;
-	int           dwMipMapCount;
-	int           dwReserved1[11];
-	DDS_PIXELFORMAT ddspf;
-	int           dwCaps;
-	int           dwCaps2;
-	int           dwCaps3;
-	int           dwCaps4;
-	int           dwReserved2;
-
+struct DDS_HEADER {
+  int dwSize;
+  int dwFlags;
+  int dwHeight;
+  int dwWidth;
+  int dwPitchOrLinearSize;
+  int dwDepth;
+  int dwMipMapCount;
+  int dwReserved1[11];
+  DDS_PIXELFORMAT ddspf;
+  int dwCaps;
+  int dwCaps2;
+  int dwCaps3;
+  int dwCaps4;
+  int dwReserved2;
 };
 
 struct DX10_HEADER {
-	int	dxgiFormat;
-	int32_t	resourceDimension;
-	int32_t	miscFlag;
-	int32_t	arraySize;
-	int32_t	miscFlags2;
+  int dxgiFormat;
+  int32_t resourceDimension;
+  int32_t miscFlag;
+  int32_t arraySize;
+  int32_t miscFlags2;
 };
-
-
-
