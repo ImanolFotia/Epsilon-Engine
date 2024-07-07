@@ -1068,6 +1068,8 @@ public:
         format = COLOR_RGBA_BC7;
       } else if (desired_format == NON_COLOR_RGBA && ddsfile.format() == NON_COLOR_RGBA_BC7) {
         format = NON_COLOR_RGBA_BC7;
+      } else if (desired_format == NON_COLOR_RGBA && ddsfile.format() == NON_COLOR_RG_BC5U) {
+        format = NON_COLOR_RG_BC5U;
       }
       pixels = ddsfile.data();
       size_t offset = 0;

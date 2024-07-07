@@ -40,8 +40,7 @@ struct SceneManager {
     children_node_index.erase(root->index);
   }
 
-  template <typename T, typename P, class... Args>
-  std::shared_ptr<Node<T>> emplace(std::shared_ptr<Node<P>> parent, Args &&...args) {
+  template <typename T, typename P, class... Args> std::shared_ptr<Node<T>> emplace(std::shared_ptr<Node<P>> parent, Args &&...args) {
     std::lock_guard<std::mutex> guard(m_pMutex);
     if (parent == nullptr)
       return nullptr;
@@ -91,8 +90,7 @@ struct SceneManager {
     return std::static_pointer_cast<Node<T>>(node_types[iType].back());
   }
 
-  template <typename T, typename P, class... Args>
-  std::shared_ptr<Node<T>> insert(std::shared_ptr<Node<P>> parent, T obj) {
+  template <typename T, typename P, class... Args> std::shared_ptr<Node<T>> insert(std::shared_ptr<Node<P>> parent, T obj) {
 
     std::lock_guard<std::mutex> guard(m_pMutex);
     if (parent == nullptr)
@@ -159,7 +157,7 @@ struct SceneManager {
     for (int i = container_index; i < node_container.size(); i++) {
       node_container.at(i)->container_index--;
     }
-    node_container.shrink_to_fit();
+    // node_container.shrink_to_fit();
 
     free_indices.push_back(node->index);
 
@@ -230,9 +228,7 @@ struct SceneManager {
     return nullptr;
   }
 
-  template <typename T> std::shared_ptr<Node<T>> to(std::shared_ptr<NodeBase> node) {
-    return std::static_pointer_cast<Node<T>>(node);
-  }
+  template <typename T> std::shared_ptr<Node<T>> to(std::shared_ptr<NodeBase> node) { return std::static_pointer_cast<Node<T>>(node); }
 
   // TypeContainer nodes;
   NodeTypes node_types;
