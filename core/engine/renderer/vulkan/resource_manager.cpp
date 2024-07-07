@@ -1,8 +1,9 @@
+#include "core/common/common.hpp"
 #undef VMA_DEBUG_LOG
 #undef VMA_DEBUG_LOG_FORMAT
 #define GLM_ENABLE_EXPERIMENTAL
-#include "resource_manager.hpp"
 #include "helpers.hpp"
+#include "resource_manager.hpp"
 #include <apis/vk/barriers.hpp>
 
 #include "core/framework/exception.hpp"
@@ -820,11 +821,11 @@ Ref<Mesh> VulkanResourceManager::createMesh(MeshInfo meshInfo) {
   size_t vOffset = 0;
   size_t iOffset = 0;
 
-  size_t vkey = vertices->size() * sizeof(common::Vertex);
-  size_t ikey = indices->size();
+  size_t vsize = vertices->size() * sizeof(common::Vertex);
+  size_t isize = indices->size();
 
-  ResourceCache::Block cached_vertex_block = m_pVertexCache.GetBlock(vkey);
-  ResourceCache::Block cached_index_block = m_pIndexCache.GetBlock(ikey);
+  ResourceCache::Block cached_vertex_block = m_pVertexCache.GetBlock(vsize);
+  ResourceCache::Block cached_index_block = m_pIndexCache.GetBlock(isize);
 
   if (!cached_vertex_block.empty) {
     vertexBuffer = vertexBufferPool.get(cached_vertex_block.buffer);
@@ -860,7 +861,8 @@ Ref<Mesh> VulkanResourceManager::createMesh(MeshInfo meshInfo) {
                                .vertexOffset = vertexBuffer->allocatedVertices,
                                .indexOffset = indexBuffer->allocatedVertices,
                                .numVertices = (int32_t)vertices->size(),
-                               .numIndices = (int32_t)indices->size()};
+                               .numIndices = (int32_t)indices->size(),
+                               .element_size = sizeof(common::Vertex)};
 
   auto ref = meshPool.insert(meshInfo.name, meshResource);
 
@@ -932,7 +934,9 @@ Ref<Mesh> VulkanResourceManager::createMesh(AnimatedMeshInfo meshInfo) {
                                .vertexOffset = vertexBuffer->allocatedVertices,
                                .indexOffset = indexBuffer->allocatedVertices,
                                .numVertices = (int32_t)vertices->size(),
-                               .numIndices = (int32_t)indices->size()};
+                               .numIndices = (int32_t)indices->size(),
+                               .element_size = sizeof(common::AnimatedVertex)};
+
   auto ref = meshPool.insert(meshInfo.name, meshResource);
 
   int maxAllocatingSize = sizeof(IndexType) * (indexBuffer->allocatedVertices + indices->size());
@@ -995,7 +999,19 @@ void VulkanResourceManager::destroyUniformData(Ref<UniformBindings>) { throw fra
 
 void VulkanResourceManager::destroyMaterial(Ref<BindGroup>) { throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__); }
 
-void VulkanResourceManager::destroyMesh(Ref<Mesh>) { throw framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__); }
+void VulkanResourceManager::destroyMesh(Ref<Mesh> meshRef) {
+  auto mesh = meshPool.get(meshRef);
+
+  m_pVertexCache.Free((ResourceCache::Block){.empty = false,
+                                             .size = mesh->numVertices * (uint32_t)mesh->element_size,
+                                             .offset = (size_t)mesh->vertexOffset * (uint32_t)mesh->element_size,
+                                             .buffer = mesh->vertexBuffer});
+
+  m_pIndexCache.Free((ResourceCache::Block){
+      .empty = false, .size = mesh->numIndices * sizeof(uint32_t), .offset = (size_t)mesh->indexOffset * sizeof(uint32_t), .buffer = mesh->indexBuffer});
+
+  meshPool.destroy(meshRef);
+}
 
 void VulkanResourceManager::destroyRenderPass(Ref<RenderPass> renderPassRef) {
   auto pass = renderPassPool.get(renderPassRef);
