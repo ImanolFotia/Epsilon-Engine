@@ -178,7 +178,7 @@ public:
     using render_node_type = engine::Node<std::list<OctreeItem<OctreeRenderType>>::iterator>;
     auto &children = getChildren(node);
     auto &octree_render_node = children[typeid(typename std::list<OctreeItem<OctreeRenderType>>::iterator)];
-    for (auto &render_node : octree_render_node) {
+    for (auto render_node : octree_render_node) {
 
       if (render_node != nullptr) {
         auto r_node = std::static_pointer_cast<render_node_type>(render_node);
@@ -189,13 +189,29 @@ public:
     m_pSceneManager.erase<T>(node);
   }
 
+  template <typename T> void remove_selected(std::vector<T> &v, std::vector<size_t> selection) {
+
+    int offset = v.size();
+    for (size_t i = 0; i < selection.size(); i++) {
+      offset -= 1;
+      if (std::find(selection.begin(), selection.end(), offset) != selection.end()) {
+        i--;
+        continue;
+      }
+      v[selection[i]] = v[offset];
+    }
+
+    v.resize(v.size() - selection.size());
+  }
+
   template <typename T> void removeFromOctree(std::list<OctreeItem<OctreeRenderType>>::iterator item) {
     auto node = std::static_pointer_cast<Node<T>>(m_pSceneManager.get((item->data.renderModel->Parent()->Index())));
     using render_node_type = engine::Node<std::list<OctreeItem<OctreeRenderType>>::iterator>;
     auto &children = getChildren(node);
     auto &octree_render_node = children[typeid(typename std::list<OctreeItem<OctreeRenderType>>::iterator)];
     int i = 0;
-    for (auto &render_node : octree_render_node) {
+
+    for (auto render_node : octree_render_node) {
 
       if (render_node != nullptr) {
         auto r_node = std::static_pointer_cast<render_node_type>(render_node);
@@ -207,6 +223,11 @@ public:
       }
       i++;
     }
+    /*
+        for (auto index : deleting_indices) {
+
+          octree_render_node.erase(octree_render_node.begin() + index);
+        }*/
 
     m_pRenderOctree->erase(item);
   }
