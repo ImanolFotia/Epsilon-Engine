@@ -52,18 +52,14 @@ class AStar {
   };*/
 
 public:
-  static float Heuristic(glm::vec3 a, glm::vec3 b) {
-    return glm::distance(a, b);
-  }
+  static float Heuristic(glm::vec3 a, glm::vec3 b) { return glm::distance(a, b); }
 
-  static std::vector<GridNodeGraph::Node>
-  traverse(GridNodeGraph &nodeGraph, size_t start_index, size_t end_index) {
+  static std::vector<GridNodeGraph::Node> traverse(GridNodeGraph &nodeGraph, size_t start_index, size_t end_index, bool ignore_breakable = false) {
     using Node = GridNodeGraph::Node;
 
     // nodeGraph.clear();
 
-    Node *start = &nodeGraph.getNode(start_index),
-         *end = &nodeGraph.getNode(end_index);
+    Node *start = &nodeGraph.getNode(start_index), *end = &nodeGraph.getNode(end_index);
 
     for (int i = 0; i < nodeGraph.Width() * nodeGraph.Height(); i++) {
       Node *node = &nodeGraph.getNode(i);
@@ -89,9 +85,7 @@ public:
     float closest_so_far = 100000000000.0f;
 
     while (!listNotTestedNodes.empty() && currentNode != end) {
-      listNotTestedNodes.sort([](const Node *lhs, const Node *rhs) {
-        return lhs->globalDistance < rhs->globalDistance;
-      });
+      listNotTestedNodes.sort([](const Node *lhs, const Node *rhs) { return lhs->globalDistance < rhs->globalDistance; });
 
       while (!listNotTestedNodes.empty() && listNotTestedNodes.front()->visited)
         listNotTestedNodes.pop_front();
@@ -103,29 +97,24 @@ public:
       currentNode->visited = true;
 
       for (auto nodeNeighbour : currentNode->neighbors) {
-        if (!nodeNeighbour->visited && nodeNeighbour->obstacle == 0) {
+        if (!nodeNeighbour->visited && (!nodeNeighbour->obstacle || (nodeNeighbour->breakable && ignore_breakable))) {
           listNotTestedNodes.push_back(nodeNeighbour);
         }
 
-        float fPossiblyLowerGoal =
-            currentNode->localDistance +
-            glm::distance(currentNode->position, nodeNeighbour->position);
+        float fPossiblyLowerGoal = currentNode->localDistance + glm::distance(currentNode->position, nodeNeighbour->position);
 
         if (fPossiblyLowerGoal < nodeNeighbour->localDistance) {
           nodeNeighbour->parent = currentNode;
           nodeNeighbour->localDistance = fPossiblyLowerGoal;
-          nodeNeighbour->globalDistance =
-              nodeNeighbour->localDistance + heuristic(nodeNeighbour, end);
+          nodeNeighbour->globalDistance = nodeNeighbour->localDistance + heuristic(nodeNeighbour, end);
         }
       }
     }
 
-    return ConstructPath(&nodeGraph.getNode(end->index),
-                         &nodeGraph.getNode(currentNode->index));
+    return ConstructPath(&nodeGraph.getNode(end->index), &nodeGraph.getNode(currentNode->index));
   }
 
-  static std::vector<GridNodeGraph::Node>
-  ConstructPath(GridNodeGraph::Node *startNode, GridNodeGraph::Node *endNode) {
+  static std::vector<GridNodeGraph::Node> ConstructPath(GridNodeGraph::Node *startNode, GridNodeGraph::Node *endNode) {
     std::vector<GridNodeGraph::Node> path;
 
     GridNodeGraph::Node *currentNode = endNode;

@@ -10,11 +10,13 @@ public:
     glm::vec3 position;
     bool visited = false;
     bool obstacle = false;
+    bool breakable = false;
     float weight = 0.0;
     float localDistance = 10000000000000000.0f;
     float globalDistance = 10000000000000000.0f;
     Node *parent = nullptr;
     std::vector<Node *> neighbors;
+    uint8_t level = 0;
 
     void AddNeighbor(Node *node) { neighbors.push_back(node); }
   };
@@ -48,9 +50,7 @@ public:
     }
   }
 
-  void AddNeighbor(size_t index, Node *node) {
-    m_pNodes[index].neighbors.push_back(node);
-  }
+  void AddNeighbor(size_t index, Node *node) { m_pNodes[index].neighbors.push_back(node); }
 
 private:
   std::vector<Node> m_pNodes;
