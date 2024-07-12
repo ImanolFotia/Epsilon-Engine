@@ -1,3 +1,4 @@
+#include "apis/vk/vk_data.hpp"
 #include "core/common/common.hpp"
 #undef VMA_DEBUG_LOG
 #undef VMA_DEBUG_LOG_FORMAT
@@ -1009,6 +1010,14 @@ void VulkanResourceManager::destroyMesh(Ref<Mesh> meshRef) {
 
   m_pIndexCache.Free((ResourceCache::Block){
       .empty = false, .size = mesh->numIndices * sizeof(uint32_t), .offset = (size_t)mesh->indexOffset * sizeof(uint32_t), .buffer = mesh->indexBuffer});
+
+  /*auto vertexBuffer = vertexBufferPool.get(mesh->vertexBuffer);
+  auto indexBuffer = indexBufferPool.get(mesh->indexBuffer);
+  vmaDestroyBuffer(m_pAllocator, vertexBuffer->buffer, vertexBuffer->allocation);
+  vmaDestroyBuffer(m_pAllocator, indexBuffer->buffer, indexBuffer->allocation);
+*/
+  vertexBufferPool.destroy(mesh->vertexBuffer);
+  indexBufferPool.destroy(mesh->indexBuffer);
 
   meshPool.destroy(meshRef);
 }

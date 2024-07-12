@@ -16,6 +16,8 @@
 #include <string>
 
 #include <core/framework/common.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/hash.hpp>
 
 namespace framework {
 
@@ -100,43 +102,101 @@ public:
     std::unordered_map<int, int> repeated_indices;
     std::unordered_map<int, int> remaped_index;
     std::set<int> repeated_vertices;
+    std::unordered_map<unsigned, unsigned> offsetted_indices;
 
-    int num_deletions = 0;
+    struct repeated_vertex {
+      bool replaced = false;
+      bool repeated = false;
+      common::Vertex vtx;
+      unsigned first_instance = 1000000;
+      int count = 0;
+    };
+
+    std::unordered_map<glm::vec3, repeated_vertex> vv;
+
+    int deleted = 0;
+
     for (unsigned i = 0; i < vertices.size(); i++) {
       auto &current_vertex = vertices[i];
-      for (unsigned j = i; j < vertices.size(); j++) {
-        if (glm::distance(current_vertex.position, vertices[j].position) < threshold && j != i) {
-          num_deletions++;
-          remaped_index[j] = i;
-          repeated_indices[j + 1] = (j + 1) - num_deletions;
-          repeated_vertices.emplace(j);
-          break;
+
+      if (vv.contains(current_vertex.position)) {
+        if (i != vv[current_vertex.position].first_instance) {
+          if (vv[current_vertex.position].count == 0) {
+            deleted++;
+            vv[current_vertex.position].count = deleted;
+            offsetted_indices[i + 1] = deleted;
+          }
+          vv[current_vertex.position].repeated = true;
+          repeated_indices[i] = vv[current_vertex.position].first_instance;
+        }
+
+      } else {
+        vv[current_vertex.position] = {.repeated = false, .vtx = current_vertex, .first_instance = i};
+        new_vertices.push_back(current_vertex);
+        repeated_indices[i] = vv[current_vertex.position].first_instance;
+      }
+    }
+
+    for (auto &i : indices) {
+      new_indices.push_back(repeated_indices[i]);
+    }
+
+    for (int i = 0; i < new_indices.size(); i++) {
+      auto vtx = vertices[new_indices[i]];
+
+      for (int j = 0; j < new_vertices.size(); j++) {
+        if (new_vertices[j].position == vtx.position) {
+          new_indices[i] = j;
         }
       }
     }
+    IO::Log("Removed ", vertices.size() - new_vertices.size(), " vertices");
 
-    for (unsigned i = 0; i < indices.size(); i++) {
-      if (remaped_index.contains(indices[i])) {
-        indices[i] = remaped_index[indices[i]];
-        new_indices.push_back(indices[i]);
+    vertices.swap(new_vertices);
+    indices.swap(new_indices);
+    /*
+        auto &vertices = m_pData.mesh.Vertices;
+        auto &indices = m_pData.mesh.Indices;
 
-      } else {
-        new_indices.push_back(indices[i]);
-      }
+        std::vector<uint32_t> new_indices;
+        std::vector<common::Vertex> new_vertices;
+        std::unordered_map<int, int> repeated_indices;
+        std::unordered_map<int, int> remaped_index;
+        std::set<int> repeated_vertices;
 
-      if (repeated_indices.contains(new_indices[i])) {
-        new_indices[i] = repeated_indices[new_indices[i]];
-      }
-    }
+        int num_deletions = 0;
+        for (unsigned i = 0; i < vertices.size(); i++) {
+          auto &current_vertex = vertices[i];
+          for (unsigned j = i; j < vertices.size(); j++) {
+            if (glm::distance(current_vertex.position, vertices[j].position) < threshold && j != i) {
+              num_deletions++;
+              remaped_index[j] = i;
+              repeated_indices[j + 1] = (j + 1) - num_deletions;
+              repeated_vertices.emplace(j);
+              break;
+            }
+          }
+        }
 
-    for (unsigned i = 0; i < vertices.size(); i++) {
-      if (!repeated_vertices.contains(i))
-        new_vertices.push_back(vertices[i]);
-    }
-    vertices = new_vertices;
-    indices = new_indices;
+        for (unsigned i = 0; i < indices.size(); i++) {
+          if (remaped_index.contains(indices[i])) {
+            indices[i] = remaped_index[indices[i]];
+            new_indices.push_back(indices[i]);
 
-    IO::Log("Removed ", repeated_vertices.size(), " vertices");
+          } else {
+            new_indices.push_back(indices[i]);
+          }
+
+          if (repeated_indices.contains(new_indices[i])) {
+            new_indices[i] = repeated_indices[new_indices[i]];
+          }
+        }
+
+        for (unsigned i = 0; i < vertices.size(); i++) {
+          if (!repeated_vertices.contains(i))
+            new_vertices.push_back(vertices[i]);
+        }
+    */
   }
 
   void generateTangentSpaceVectors() {
