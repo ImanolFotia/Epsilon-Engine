@@ -189,6 +189,8 @@ public:
     m_pSceneManager.erase<T>(node);
   }
 
+  template <typename P, typename T> void removeFromNode(std::shared_ptr<Node<P>> parent, std::shared_ptr<Node<P>> node) { m_pSceneManager.erase(node); }
+
   template <typename T> void remove_selected(std::vector<T> &v, std::vector<size_t> selection) {
 
     int offset = v.size();
