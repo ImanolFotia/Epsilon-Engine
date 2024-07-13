@@ -435,6 +435,11 @@ public:
       std::string material_name = name + "_material" + std::to_string(material_index);
       size_t material_name_hash = std::hash<std::string>{}(material_name);
 
+      if (m_pMaterials.contains(material_name_hash)) {
+        subRenderC.material_keys[material_index] = material_name_hash;
+        material_index++;
+        continue;
+      }
       subRenderC.material_keys[material_index] = material_name_hash;
 
       PBRMaterial pbr_material;
@@ -446,28 +451,22 @@ public:
 
       if (!material.albedo_path.empty()) {
         auto albedo = addTexture(material.albedo_path, {.format = COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
-        if (albedo.Index() == 150)
-          std::cout << "here" << std::endl;
+
         pbr_material.albedo_texture_index = albedo.Index();
       }
       if (!material.metallic_path.empty()) {
         auto metallic = addTexture(material.metallic_path, {.format = NON_COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
-        if (metallic.Index() == 150)
-          std::cout << "here" << std::endl;
+
         pbr_material.metallic_texture_index = metallic.Index();
       }
       if (!material.roughness_path.empty()) {
         auto roughness = addTexture(material.roughness_path, {.format = NON_COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
 
-        if (roughness.Index() == 150)
-          std::cout << "here" << std::endl;
         pbr_material.roughness_texture_index = roughness.Index();
       }
       if (!material.normal_path.empty()) {
         auto normal = addTexture(material.normal_path, {.format = NON_COLOR_RGBA, .wrapMode = REPEAT, .filtering = LINEAR});
 
-        if (normal.Index() == 150)
-          std::cout << "here" << std::endl;
         pbr_material.normal_texture_index = normal.Index();
       }
 
@@ -506,6 +505,18 @@ public:
   }
 
   void ModifyModel(RenderModel) {}
+
+  void DeleteModel(RenderModel model) {
+
+    auto resourceManager = m_pContext->ResourceManager();
+
+    for (auto &mesh : model.renderMeshes[0]) {
+
+      resourceManager->destroyMesh(mesh.mesh);
+    }
+
+    m_pModels.erase(model.name);
+  }
 
   RenderModel createModelFromMesh(const std::string &name, const common::Mesh &mesh, std::initializer_list<common::MeshMaterial> materials) {
 

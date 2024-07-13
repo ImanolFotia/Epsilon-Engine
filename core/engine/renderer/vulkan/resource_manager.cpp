@@ -821,29 +821,40 @@ Ref<Mesh> VulkanResourceManager::createMesh(MeshInfo meshInfo) {
 
   size_t vOffset = 0;
   size_t iOffset = 0;
+  size_t prevOffset = 0;
+  size_t preiOffset = 0;
 
   size_t vsize = vertices->size() * sizeof(common::Vertex);
-  size_t isize = indices->size();
+  size_t isize = indices->size() * sizeof(IndexType);
 
   ResourceCache::Block cached_vertex_block = m_pVertexCache.GetBlock(vsize);
   ResourceCache::Block cached_index_block = m_pIndexCache.GetBlock(isize);
-
+  bool usedVertexCache = false;
+  bool usedIndexCache = false;
   if (!cached_vertex_block.empty) {
     vertexBuffer = vertexBufferPool.get(cached_vertex_block.buffer);
-    vOffset = cached_vertex_block.offset;
+    vertexBufferRef = cached_vertex_block.buffer;
+    vOffset = cached_vertex_block.offset * sizeof(common::Vertex);
+    prevOffset = cached_vertex_block.offset;
+    usedVertexCache = true;
   } else {
     vertexBufferRef = pFetchVertexBuffer(vertices->size(), sizeof(common::Vertex));
     vertexBuffer = vertexBufferPool.get(vertexBufferRef);
     vOffset = vertexBuffer->allocatedVertices * sizeof(common::Vertex);
+    prevOffset = vertexBuffer->allocatedVertices;
   }
 
   if (!cached_index_block.empty) {
     indexBuffer = indexBufferPool.get(cached_index_block.buffer);
-    iOffset = cached_index_block.offset;
+    iOffset = cached_index_block.offset * sizeof(IndexType);
+    indexBufferRef = cached_index_block.buffer;
+    preiOffset = cached_index_block.offset;
+    usedIndexCache = true;
   } else {
     indexBufferRef = pFetchIndexBuffer(indices->size(), vertexBuffer->allocatedVertices);
     indexBuffer = indexBufferPool.get(indexBufferRef);
     iOffset = indexBuffer->allocatedVertices * sizeof(IndexType);
+    preiOffset = indexBuffer->allocatedVertices;
   }
 
   auto vertexStagingBuffer = pCreateStagingBuffer(*vertices);
@@ -859,18 +870,23 @@ Ref<Mesh> VulkanResourceManager::createMesh(MeshInfo meshInfo) {
 
   MeshResource meshResource = {.vertexBuffer = vertexBufferRef,
                                .indexBuffer = indexBufferRef,
-                               .vertexOffset = vertexBuffer->allocatedVertices,
-                               .indexOffset = indexBuffer->allocatedVertices,
+                               .vertexOffset = static_cast<int32_t>(prevOffset),
+                               .indexOffset = static_cast<int32_t>(preiOffset),
                                .numVertices = (int32_t)vertices->size(),
                                .numIndices = (int32_t)indices->size(),
                                .element_size = sizeof(common::Vertex)};
 
   auto ref = meshPool.insert(meshInfo.name, meshResource);
 
-  int maxAllocatingSize = sizeof(IndexType) * (indexBuffer->allocatedVertices + indices->size());
+  if (!usedIndexCache)
+    int maxAllocatingSize = sizeof(IndexType) * (indexBuffer->allocatedVertices + indices->size());
 
-  vertexBuffer->allocatedVertices += vertices->size();
-  indexBuffer->allocatedVertices += indices->size();
+  if (!usedVertexCache) {
+    vertexBuffer->allocatedVertices += vertices->size();
+  }
+
+  if (!usedIndexCache)
+    indexBuffer->allocatedVertices += indices->size();
 
   return ref;
 }
@@ -1003,21 +1019,17 @@ void VulkanResourceManager::destroyMaterial(Ref<BindGroup>) { throw framework::N
 void VulkanResourceManager::destroyMesh(Ref<Mesh> meshRef) {
   auto mesh = meshPool.get(meshRef);
 
-  m_pVertexCache.Free((ResourceCache::Block){.empty = false,
-                                             .size = mesh->numVertices * (uint32_t)mesh->element_size,
-                                             .offset = (size_t)mesh->vertexOffset * (uint32_t)mesh->element_size,
-                                             .buffer = mesh->vertexBuffer});
+  m_pVertexCache.Free((ResourceCache::Block){
+      .empty = false, .size = mesh->numVertices * (uint32_t)mesh->element_size, .offset = (size_t)mesh->vertexOffset, .buffer = mesh->vertexBuffer});
 
-  m_pIndexCache.Free((ResourceCache::Block){
-      .empty = false, .size = mesh->numIndices * sizeof(uint32_t), .offset = (size_t)mesh->indexOffset * sizeof(uint32_t), .buffer = mesh->indexBuffer});
+  m_pIndexCache.Free(
+      (ResourceCache::Block){.empty = false, .size = mesh->numIndices * sizeof(uint32_t), .offset = (size_t)mesh->indexOffset, .buffer = mesh->indexBuffer});
 
   /*auto vertexBuffer = vertexBufferPool.get(mesh->vertexBuffer);
   auto indexBuffer = indexBufferPool.get(mesh->indexBuffer);
   vmaDestroyBuffer(m_pAllocator, vertexBuffer->buffer, vertexBuffer->allocation);
   vmaDestroyBuffer(m_pAllocator, indexBuffer->buffer, indexBuffer->allocation);
 */
-  vertexBufferPool.destroy(mesh->vertexBuffer);
-  indexBufferPool.destroy(mesh->indexBuffer);
 
   meshPool.destroy(meshRef);
 }
