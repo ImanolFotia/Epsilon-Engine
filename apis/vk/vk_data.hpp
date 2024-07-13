@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/engine/renderer/types.hpp"
 #if !defined(__ANDROID__)
 #include <vulkan/vulkan.hpp>
 #endif
