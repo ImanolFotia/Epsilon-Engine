@@ -158,6 +158,16 @@ struct SceneManager {
       node_container.at(i)->container_index--;
     }
     // node_container.shrink_to_fit();
+    /*
+        if (node->parent != nullptr) {
+          auto &parent_children = children_node_index[node->parent];
+          for (auto &[key, child] : parent_children) {
+            if (child->index == node->index) {
+              children_node_index.erase(key);
+              break;
+            }
+          }
+        }*/
 
     free_indices.push_back(node->index);
 
