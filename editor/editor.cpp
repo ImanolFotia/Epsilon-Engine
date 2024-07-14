@@ -54,18 +54,17 @@ void Editor::OnCreate() {
   m_GraphicsHelper->addRenderPass("TAARenderPass0", m_TAAPasses.renderpass[0]);
   m_GraphicsHelper->addRenderPass("TAARenderPass1", m_TAAPasses.renderpass[1]);
 
-  m_GraphicsHelper->addBindGroup(
-      "DefaultBindGroup", 0,
-      {
-          .bindingInfo = {{.size = sizeof(engine::PBRMaterial) * engine::AssetManager::MAX_MATERIALS,
-                           .offset = 0,
-                           .binding = 1,
-                           .type = engine::UniformBindingType::SHADER_STORAGE,
-                           .buffer = "material_buffer"}},
-          .inputs = {},
-          .renderPass = "Forward",
-          .name = "DefaultBindGroup",
-      });
+  m_GraphicsHelper->addBindGroup("DefaultBindGroup", 0,
+                                 {
+                                     .bindingInfo = {{.size = sizeof(engine::PBRMaterial) * engine::AssetManager::MAX_MATERIALS,
+                                                      .offset = 0,
+                                                      .binding = 1,
+                                                      .type = engine::UniformBindingType::SHADER_STORAGE,
+                                                      .buffer = "material_buffer"}},
+                                     .inputs = {},
+                                     .renderPass = "Forward",
+                                     .name = "DefaultBindGroup",
+                                 });
 
   m_DefaultBindGroup = std::hash<std::string>{}("DefaultBindGroup");
 
@@ -89,28 +88,27 @@ void Editor::OnCreate() {
 
   m_GridBindGroup = std::hash<std::string>{}("GridBindGroup");
 
-  m_GraphicsHelper->addBindGroup(
-      "GrassBindGroup", 3,
-      {
-          .bindingInfo = {{.size = sizeof(engine::PBRMaterial) * engine::AssetManager::MAX_MATERIALS,
-                           .offset = 0,
-                           .binding = 1,
-                           .type = engine::UniformBindingType::SHADER_STORAGE,
-                           .buffer = "material_buffer"},
-                          {.size = sizeof(glm::mat4) * engine::AssetManager::MAX_TRANSFORMS,
-                           .offset = 0,
-                           .binding = 5,
-                           .type = engine::UniformBindingType::SHADER_STORAGE,
-                           .buffer = "transform_buffer"},
-                          {.size = sizeof(engine::ShaderObjectData) * engine::AssetManager::MAX_OBJECTS,
-                           .offset = 0,
-                           .binding = 6,
-                           .type = engine::UniformBindingType::SHADER_STORAGE,
-                           .buffer = "object_buffer"}},
-          .inputs = {},
-          .renderPass = "Forward",
-          .name = "GrassBindGroup",
-      });
+  m_GraphicsHelper->addBindGroup("GrassBindGroup", 3,
+                                 {
+                                     .bindingInfo = {{.size = sizeof(engine::PBRMaterial) * engine::AssetManager::MAX_MATERIALS,
+                                                      .offset = 0,
+                                                      .binding = 1,
+                                                      .type = engine::UniformBindingType::SHADER_STORAGE,
+                                                      .buffer = "material_buffer"},
+                                                     {.size = sizeof(glm::mat4) * engine::AssetManager::MAX_TRANSFORMS,
+                                                      .offset = 0,
+                                                      .binding = 5,
+                                                      .type = engine::UniformBindingType::SHADER_STORAGE,
+                                                      .buffer = "transform_buffer"},
+                                                     {.size = sizeof(engine::ShaderObjectData) * engine::AssetManager::MAX_OBJECTS,
+                                                      .offset = 0,
+                                                      .binding = 6,
+                                                      .type = engine::UniformBindingType::SHADER_STORAGE,
+                                                      .buffer = "object_buffer"}},
+                                     .inputs = {},
+                                     .renderPass = "Forward",
+                                     .name = "GrassBindGroup",
+                                 });
 
   m_GrassBindGroup = std::hash<std::string>{}("GrassBindGroup");
 
@@ -182,8 +180,7 @@ void Editor::OnCreate() {
   defaultMaterial.color = glm::vec4(0.5, 0.5, 0.5, 1.0);
   engine::Quad quad(2, glm::vec2(5.0f), glm::vec3(2.0f));
   auto m_DefaultCube = m_AssetManager->createModelFromMesh("DefaultPlane", quad.data(), defaultMaterial);
-  m_GridPlane = m_Scene->insertIntoNode(engine::Box{glm::vec3(planeNode->data.transform[3]), glm::vec3(10.0)},
-                                        planeNode, m_DefaultCube);
+  m_GridPlane = m_Scene->insertIntoNode(engine::Box{glm::vec3(planeNode->data.transform[3]), glm::vec3(10.0)}, planeNode, m_DefaultCube);
   m_GridPlane->data.bindGroupId = m_DefaultBindGroup;
 
   auto script = m_Scene->emplaceIntoNode<EntityScript>(planeNode);
@@ -198,8 +195,7 @@ void Editor::OnCreate() {
 
   const char *str = host.assembly.Invoke<const char *>(L"getEntityFields", script->data.ManagedPtr);
   // std::cout << str << std::endl;
-  auto props =
-      UI::Property::DeserializeProperties(std::string(str)); // m_ObjectProperty.setProperties(std::string(str));
+  auto props = UI::Property::DeserializeProperties(std::string(str)); // m_ObjectProperty.setProperties(std::string(str));
   script->data.properties = props;
   script->data.className = "Game.Ground";
 
@@ -237,19 +233,16 @@ void Editor::OnCreate() {
 
   //////////////////
 
-  m_AssetManager->addTexture(
-      "textures/radiance.dds",
-      {.format = engine::TextureFormat::COLOR_RGBA, .wrapMode = engine::CLAMP_TO_EDGE, .filtering = engine::LINEAR});
-  m_AssetManager->addTexture(
-      "textures/irradiance.dds",
-      {.format = engine::TextureFormat::COLOR_RGBA, .wrapMode = engine::CLAMP_TO_EDGE, .filtering = engine::LINEAR});
+  m_AssetManager->addTexture("textures/radiance.dds",
+                             {.format = engine::TextureFormat::COLOR_RGBA, .wrapMode = engine::CLAMP_TO_EDGE, .filtering = engine::LINEAR});
+  m_AssetManager->addTexture("textures/irradiance.dds",
+                             {.format = engine::TextureFormat::COLOR_RGBA, .wrapMode = engine::CLAMP_TO_EDGE, .filtering = engine::LINEAR});
   std::ifstream file("./assets/lut.bin", std::ios::binary);
   size_t lut_size = 512 * 512 * sizeof(glm::vec2) * 2;
   unsigned char *lut = new unsigned char[lut_size];
   file.read((char *)lut, lut_size);
-  m_AssetManager->addTextureFromBytes(
-      "BRDF_lut", lut, lut_size, 512, 512, 2,
-      {.format = engine::TextureFormat::COLOR_RG_32F, .wrapMode = engine::CLAMP_TO_EDGE, .filtering = engine::LINEAR});
+  m_AssetManager->addTextureFromBytes("BRDF_lut", lut, lut_size, 512, 512, 2,
+                                      {.format = engine::TextureFormat::COLOR_RG_32F, .wrapMode = engine::CLAMP_TO_EDGE, .filtering = engine::LINEAR});
   delete[] lut;
 
   pAddDefaultCube(glm::vec3(0.0));
@@ -266,8 +259,7 @@ void Editor::OnCreate() {
     m_Tooldbar.draw();
     m_Inspector.draw();
     if (m_PostProcess.TaaEnabled() && !just_resized) {
-      m_MainViewport.setImage(
-          getContext()->Renderer()->getDebugRenderer()->getImages().at(m_CurrentTAAPass ? "TAATarget0" : "TAATarget1"));
+      m_MainViewport.setImage(getContext()->Renderer()->getDebugRenderer()->getImages().at(m_CurrentTAAPass ? "TAATarget0" : "TAATarget1"));
     } else {
       m_MainViewport.setImage(getContext()->Renderer()->getDebugRenderer()->getImages().at("Forward0"));
       just_resized = false;
@@ -279,8 +271,7 @@ void Editor::OnCreate() {
     engine::Node<engine::Scene::SceneEntity> *sn;
     if (m_SceneNodes.scene_node_ref != nullptr) {
       sn = static_cast<engine::Node<engine::Scene::SceneEntity> *>(m_SceneNodes.scene_node_ref);
-      selected_entity =
-          &sn->data; // reinterpret_cast<std::shared_ptr<engine::Scene::SceneEntity>> (m_SceneNodes.scene_node_ref);
+      selected_entity = &sn->data; // reinterpret_cast<std::shared_ptr<engine::Scene::SceneEntity>> (m_SceneNodes.scene_node_ref);
     }
     selected_index = m_SceneNodes.selected_index;
     m_MaterialEditor.selected_entity = selected_index;
@@ -289,8 +280,7 @@ void Editor::OnCreate() {
     glm::mat4 original_transform = m_Inspector.getTransform();
     selected_matrix = m_Inspector.getTransform();
     if (selected_entity != nullptr)
-      m_Guizmo.prepare(&selected_matrix, m_MainViewport.getMode(), m_Camera->getViewMatrix(),
-                       m_Camera->getProjectionMatrix());
+      m_Guizmo.prepare(&selected_matrix, m_MainViewport.getMode(), m_Camera->getViewMatrix(), m_Camera->getProjectionMatrix());
 
     if (m_MainViewport.getMode() != UI::NONE && !m_Navigation && selected_entity != nullptr) {
       m_Guizmo.draw();
@@ -330,12 +320,10 @@ void Editor::OnCreate() {
 
           std::wstring name = converter.from_bytes(property.name);
           if (property.type == UI::PropertyType::NUMBER) {
-            host.assembly.Invoke<void>(L"SetProperty", script->data.ManagedPtr, property.name.c_str(),
-                                       std::any_cast<float>(property.value));
+            host.assembly.Invoke<void>(L"SetProperty", script->data.ManagedPtr, property.name.c_str(), std::any_cast<float>(property.value));
           }
           if (property.type == UI::PropertyType::BOOL) {
-            host.assembly.Invoke<void>(L"SetPropertyBool", script->data.ManagedPtr, property.name.c_str(),
-                                       std::any_cast<bool>(property.value));
+            host.assembly.Invoke<void>(L"SetPropertyBool", script->data.ManagedPtr, property.name.c_str(), std::any_cast<bool>(property.value));
           }
         }
         script->data.properties = m_ObjectProperty.getProperties();
@@ -366,15 +354,14 @@ void Editor::OnCreate() {
 
 void Editor::OnUpdate() {
 
-  if (m_Tooldbar.getStatus() != UI::Toolbar::STATUS::Paused ||
-      m_Tooldbar.GetStepStatus() == UI::Toolbar::StepStatus::Next) {
+  if (m_Tooldbar.getStatus() != UI::Toolbar::STATUS::Paused || m_Tooldbar.GetStepStatus() == UI::Toolbar::StepStatus::Next) {
 
     tiny_keyboard kb{};
 
     // std::memcpy(kb.keys, framework::Input::KeyBoard::KEYS, sizeof(int) * 1024);
     kb.convert();
 
-    host.assembly.Invoke<void>(L"setKeyboardState", kb);
+    // host.assembly.Invoke<void>(L"setKeyboardState", kb);
 
     auto models = m_Scene->getNodes<engine::RenderModel>();
     auto scripts = m_Scene->getNodes<EntityScript>();
@@ -450,10 +437,8 @@ void Editor::OnUpdate() {
   if (m_PostProcess.TaaEnabled()) {
     getContext()->Renderer()->UpdateRenderPassUniforms(m_TAAPasses.renderpass[0], engine::RENDERPASS_SET, &shaderData);
     getContext()->Renderer()->UpdateRenderPassUniforms(m_TAAPasses.renderpass[1], engine::RENDERPASS_SET, &shaderData);
-    getContext()->Renderer()->UpdateRenderPassUniforms(m_TAAPasses.renderpass[0], (engine::BindingIndex)1,
-                                                       &m_PostProcess.m_TAAData);
-    getContext()->Renderer()->UpdateRenderPassUniforms(m_TAAPasses.renderpass[1], (engine::BindingIndex)1,
-                                                       &m_PostProcess.m_TAAData);
+    getContext()->Renderer()->UpdateRenderPassUniforms(m_TAAPasses.renderpass[0], (engine::BindingIndex)1, &m_PostProcess.m_TAAData);
+    getContext()->Renderer()->UpdateRenderPassUniforms(m_TAAPasses.renderpass[1], (engine::BindingIndex)1, &m_PostProcess.m_TAAData);
   }
 
   if (m_MainViewport.ShouldResize()) {
@@ -462,10 +447,8 @@ void Editor::OnUpdate() {
     if (m_PostProcess.TaaEnabled()) {
       getContext()->ResourceManager()->ResizeFramebuffer(m_TAAPasses.renderpass[0], m_MainViewport.getSize());
       getContext()->ResourceManager()->ResizeFramebuffer(m_TAAPasses.renderpass[1], m_MainViewport.getSize());
-      getContext()->ResourceManager()->updateBindGroup(m_GraphicsHelper->getBindGroups()[m_TAABindGroup1].bindGroup,
-                                                       {});
-      getContext()->ResourceManager()->updateBindGroup(m_GraphicsHelper->getBindGroups()[m_TAABindGroup0].bindGroup,
-                                                       {});
+      getContext()->ResourceManager()->updateBindGroup(m_GraphicsHelper->getBindGroups()[m_TAABindGroup1].bindGroup, {});
+      getContext()->ResourceManager()->updateBindGroup(m_GraphicsHelper->getBindGroups()[m_TAABindGroup0].bindGroup, {});
       just_resized = true;
     }
     Epsilon::getContext()->Renderer()->getDebugRenderer()->recreateDescriptorSets();
@@ -479,22 +462,30 @@ void Editor::OnUpdate() {
     const int tile_size = 30;
     const int num_tiles = 200 / 30;
 
-    glm::ivec4 current_coords = glm::ivec4(-15 + cam_coords.x, -15 + cam_coords.z, (200.0f * 0.15) - 15 + cam_coords.x,
-                                           (200.0f * 0.15) - 15 + cam_coords.z);
+    glm::ivec4 current_coords = glm::ivec4(-15 + cam_coords.x, -15 + cam_coords.z, (200.0f * 0.15) - 15 + cam_coords.x, (200.0f * 0.15) - 15 + cam_coords.z);
 
     float i = 0.0f;
     int j = 0;
-    std::mt19937 e2(555);
     for (auto &transform : grass_model_node->data.transforms) {
-      glm::vec3 position = glm::vec3((float)(glm::floor(i / 200.0f) * 0.15) - 15 + cam_coords.x, 0.0f,
-                                     (float)((j % 200) * 0.15) - 15 + cam_coords.z);
+      glm::vec3 position = glm::vec3((float)(glm::floor(i / 200.0f) * 0.15) - 15 + cam_coords.x, 0.0f, (float)((j % 200) * 0.15) - 15 + cam_coords.z);
+      auto index = glm::ivec3(glm::floor(position / 30) * 30);
+
+      int seed = index.x + index.z * 256;
+
+      if (!generators.contains(seed)) {
+        std::mt19937 &e2 = generators[seed];
+        e2.seed(seed);
+        std::cout << "new seed" << std::endl;
+      } /* else {
+         e2 = generators[seed];
+       }*/
 
       std::uniform_real_distribution<float> dist(-0.2, 0.2);
       std::uniform_real_distribution<float> dist2(-glm::pi<float>(), glm::pi<float>());
 
       glm::mat4 transform_matrix =
-          glm::translate(glm::mat4(1.0), position + glm::vec3(dist(e2), 0.0, dist(e2)) + glm::vec3(0.5, 0.0, 0.5));
-      glm::mat4 rotation_matrix = glm::rotate(glm::mat4(1.0), dist2(e2), glm::vec3(0.0, 1.0, 0.0));
+          glm::translate(glm::mat4(1.0), position + glm::vec3(dist(generators.at(seed)), 0.0, dist(generators.at(seed))) + glm::vec3(0.5, 0.0, 0.5));
+      glm::mat4 rotation_matrix = glm::rotate(glm::mat4(1.0), dist2(generators.at(seed)), glm::vec3(0.0, 1.0, 0.0));
       glm::mat4 model_matrix = transform_matrix * rotation_matrix;
       transform = model_matrix;
       i += 1;
@@ -517,8 +508,7 @@ void Editor::OnRender() {
     auto model = std::static_pointer_cast<engine::Node<engine::RenderModel>>(model_node);
     auto transform = std::static_pointer_cast<engine::Node<engine::Scene::SceneEntity>>(model->Parent());
     if (model->data.isInstanced) {
-      m_Scene->Push(model, model->data.transforms, model->data.transforms.size(),
-                    m_GraphicsHelper->getBindGroup(model->data.bindGroupId));
+      m_Scene->Push(model, model->data.transforms, model->data.transforms.size(), m_GraphicsHelper->getBindGroup(model->data.bindGroupId));
     } else {
       m_Scene->Push(model, transform->data.transform, m_GraphicsHelper->getBindGroup(model->data.bindGroupId));
     }
@@ -530,8 +520,7 @@ void Editor::OnRender() {
     m_Scene->setCurrentRenderPass(
         /**/ m_GraphicsHelper->getRenderPass(m_CurrentTAAPass ? "TAARenderPass0" : "TAARenderPass1"));
 
-    m_Scene->Push(m_GridPlane, glm::mat4(1.0),
-                  m_GraphicsHelper->getBindGroup(m_CurrentTAAPass ? m_TAABindGroup0 : m_TAABindGroup1));
+    m_Scene->Push(m_GridPlane, glm::mat4(1.0), m_GraphicsHelper->getBindGroup(m_CurrentTAAPass ? m_TAABindGroup0 : m_TAABindGroup1));
 
     m_CurrentTAAPass = !m_CurrentTAAPass;
     m_Scene->Flush();
@@ -550,8 +539,7 @@ void Editor::pAddDefaultPlane(glm::vec3 position) {
   defaultMaterial.normal_path = "textures/grass_normal.png";
   defaultMaterial.name = "grass_material";
 
-  engine::Quad grass_lod[3] = {engine::Quad(4, glm::vec2(1.0 / 4.0, 1.0)), engine::Quad(3, glm::vec2(0.3f, 1.0)),
-                               engine::Quad(2, glm::vec2(0.5f, 1.0))};
+  engine::Quad grass_lod[3] = {engine::Quad(4, glm::vec2(1.0 / 4.0, 1.0)), engine::Quad(3, glm::vec2(0.3f, 1.0)), engine::Quad(2, glm::vec2(0.5f, 1.0))};
 
   for (int lod = 0; lod < 3; lod++) {
     for (auto &vtx : grass_lod[lod].data().Vertices) {
@@ -598,8 +586,7 @@ void Editor::pAddDefaultPlane(glm::vec3 position) {
       std::uniform_real_distribution<float> dist(-0.2, 0.2);
       std::uniform_real_distribution<float> dist2(-glm::pi<float>(), glm::pi<float>());
 
-      glm::mat4 transform_matrix =
-          glm::translate(glm::mat4(1.0), position + glm::vec3(dist(e2), 0.0, dist(e2)) + glm::vec3(0.5, 0.0, 0.5));
+      glm::mat4 transform_matrix = glm::translate(glm::mat4(1.0), position + glm::vec3(dist(e2), 0.0, dist(e2)) + glm::vec3(0.5, 0.0, 0.5));
       glm::mat4 rotation_matrix = glm::rotate(glm::mat4(1.0), dist2(e2), glm::vec3(0.0, 1.0, 0.0));
       glm::mat4 model_matrix = transform_matrix * rotation_matrix;
       GrassBlade_Lod0.transforms.push_back(model_matrix);
@@ -611,12 +598,9 @@ void Editor::pAddDefaultPlane(glm::vec3 position) {
 
   Utils::AddModelNode("Grass Blades" + std::to_string(node->Index()), m_Scene, GrassBlade_Lod0, node, "GrassBindGroup");
 
-  Utils::AddScriptNode({.language = C_SHARP,
-                        .fileName = "GameObject.cs",
-                        .assemblyName = "Game.dll",
-                        .className = "Game.GameObject",
-                        .nodeName = "Plane." + node->Index()},
-                       m_Scene, node, host);
+  Utils::AddScriptNode(
+      {.language = C_SHARP, .fileName = "GameObject.cs", .assemblyName = "Game.dll", .className = "Game.GameObject", .nodeName = "Plane." + node->Index()},
+      m_Scene, node, host);
 
   m_SceneNodes.RegisterIntoEditor("Grass", node);
 }
@@ -629,18 +613,13 @@ void Editor::pAddDefaultCube(glm::vec3 position) {
   defaultMaterial.color = glm::vec4(0.5, 0.5, 0.5, 1.0);
 
   engine::Cube cube;
-  auto m_DefaultCube = m_AssetManager->loadModel(
-      "models/drone.gltf"); // m_AssetManager->createModelFromMesh("DefaultCube", cube.data(), defaultMaterial);
+  auto m_DefaultCube = m_AssetManager->loadModel("models/drone.gltf"); // m_AssetManager->createModelFromMesh("DefaultCube", cube.data(), defaultMaterial);
 
   auto node = Utils::CreateNode(glm::mat4(1.0f), m_Scene);
 
   Utils::AddModelNode("Cube", m_Scene, m_DefaultCube, node);
 
-  Utils::AddScriptNode({.language = C_SHARP,
-                        .fileName = "GameObject.cs",
-                        .assemblyName = "Game.dll",
-                        .className = "Game.GameObject",
-                        .nodeName = "Cube"},
+  Utils::AddScriptNode({.language = C_SHARP, .fileName = "GameObject.cs", .assemblyName = "Game.dll", .className = "Game.GameObject", .nodeName = "Cube"},
                        m_Scene, node, host);
 
   m_SceneNodes.RegisterIntoEditor("Cube", node);

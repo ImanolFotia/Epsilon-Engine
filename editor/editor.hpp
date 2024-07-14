@@ -112,13 +112,13 @@ class Editor : public Epsilon::Epsilon {
     int keys[1024];
   };
 
-  void UpdateReferenceCallback(engine::Scene *scene, engine::Node<engine::Scene::SceneEntity> *scene_ptr,
-                               void *managed_ref) {
+  void UpdateReferenceCallback(engine::Scene *scene, engine::Node<engine::Scene::SceneEntity> *scene_ptr, void *managed_ref) {
     auto node = scene->getNode(scene_ptr->Index());
     auto script = scene->getChild<EntityScript>(node);
     script->data.ManagedPtr = managed_ref;
   }
 
+  std::unordered_map<int, std::mt19937> generators;
   void pLoadDotnet() {
 
     host.Load(L"./modules/dotnet/EpsilonSharp/bin/x64/Debug/net8.0");
@@ -129,38 +129,30 @@ class Editor : public Epsilon::Epsilon {
     typedef void (*func_ptr)(engine::Node<engine::Scene::SceneEntity> *, int, Transform);
     typedef void (*func_ptr_2)(engine::Scene *, engine::Node<engine::Scene::SceneEntity> *, void *);
 
-    host.assembly.LoadDelegate<void, void *, engine::Node<engine::Scene::SceneEntity> *>(
-        STR("setEntityTransform"), STR("setEntityTransformDelegate"), STR("Epsilon"));
-    host.assembly.LoadDelegate<void *, void *, void *, const char *>(STR("CreateEntity"), STR(""), STR("Epsilon"),
-                                                                     true);
+    host.assembly.LoadDelegate<void, void *, engine::Node<engine::Scene::SceneEntity> *>(STR("setEntityTransform"), STR("setEntityTransformDelegate"),
+                                                                                         STR("Epsilon"));
+    host.assembly.LoadDelegate<void *, void *, void *, const char *>(STR("CreateEntity"), STR(""), STR("Epsilon"), true);
     host.assembly.LoadDelegate<void, void *, float>(STR("UpdateEntity"), STR(""), STR("Epsilon"), true);
-    host.assembly.LoadDelegate<void, func_ptr>(STR("registerSetTransform"), STR("registerSetTransformDelegate"),
-                                               STR("Epsilon"));
-    host.assembly.LoadDelegate<const char *, void *>(STR("getEntityFields"), STR("getEntityFieldsDelegate"),
-                                                     STR("Epsilon"));
+    host.assembly.LoadDelegate<void, func_ptr>(STR("registerSetTransform"), STR("registerSetTransformDelegate"), STR("Epsilon"));
+    host.assembly.LoadDelegate<const char *, void *>(STR("getEntityFields"), STR("getEntityFieldsDelegate"), STR("Epsilon"));
     host.assembly.LoadDelegate<void, engine::Scene *>(STR("setScenePtr"), STR("setScenePtrDelegate"), STR("Epsilon"));
-    host.assembly.LoadDelegate<void, const char *, float>(STR("SetProperty"), STR("SetPropertyDelegate"),
-                                                          STR("Epsilon"), true);
-    host.assembly.LoadDelegate<void, const char *, bool>(STR("SetPropertyBool"), STR("SetPropertyBoolDelegate"),
-                                                         STR("Epsilon"), true);
+    host.assembly.LoadDelegate<void, const char *, float>(STR("SetProperty"), STR("SetPropertyDelegate"), STR("Epsilon"), true);
+    host.assembly.LoadDelegate<void, const char *, bool>(STR("SetPropertyBool"), STR("SetPropertyBoolDelegate"), STR("Epsilon"), true);
     host.assembly.LoadDelegate<void>(STR("ReloadAssemblies"), STR("ReloadAssembliesDelegate"), STR("Epsilon"));
-    host.assembly.LoadDelegate<void, func_ptr_2>(STR("registerUpdateReferenceCallback"),
-                                                 STR("registerUpdateReferenceCallbackDelegate"), STR("Epsilon"));
+    host.assembly.LoadDelegate<void, func_ptr_2>(STR("registerUpdateReferenceCallback"), STR("registerUpdateReferenceCallbackDelegate"), STR("Epsilon"));
 
-    host.assembly.LoadDelegate<void, tiny_keyboard>(STR("setKeyboardState"), STR("setKeyboardStateDelegate"),
-                                                    STR("Epsilon"));
+    host.assembly.LoadDelegate<void, tiny_keyboard>(STR("setKeyboardState"), STR("setKeyboardStateDelegate"), STR("Epsilon"));
 
+    std::unordered_map<int, std::mt19937> generators;
     host.assembly.Invoke<void>(
-        L"registerSetTransform",
-        (func_ptr)[](engine::Node<engine::Scene::SceneEntity> * scene_ptr, int entity_id, Transform transform) {
+        L"registerSetTransform", (func_ptr)[](engine::Node<engine::Scene::SceneEntity> * scene_ptr, int entity_id, Transform transform) {
           if (scene_ptr != nullptr) {
             scene_ptr->data.transform = transform.toMat4();
           }
         });
 
     host.assembly.Invoke<void>(
-        L"registerUpdateReferenceCallback",
-        (func_ptr_2)[](engine::Scene * scene, engine::Node<engine::Scene::SceneEntity> * scene_ptr, void *managed_ref) {
+        L"registerUpdateReferenceCallback", (func_ptr_2)[](engine::Scene * scene, engine::Node<engine::Scene::SceneEntity> * scene_ptr, void *managed_ref) {
           if (scene == nullptr || scene_ptr == nullptr || managed_ref == nullptr)
             return;
 
