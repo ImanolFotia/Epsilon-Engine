@@ -39,8 +39,8 @@ public:
 
     for (int i = 0; i <= tesselation; i++) {
       for (int j = 0; j <= tesselation; j++) {
-        float x = (float)i;
-        float y = (float)j;
+        float x = (float)j;
+        float y = (float)i;
         v3 position = v3(x * step, 0.0f, y * step);
         v2 uv = v2(x, y) * uvMultiplier;
         v3 normal = v3(0.0f, 1.0f, 0.0f);
