@@ -16,8 +16,7 @@ class GrassSystem {
   glm::ivec4 m_PrevBounds{};
 
 public:
-  std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> Init(std::shared_ptr<engine::Scene> scene,
-                                                                 std::shared_ptr<engine::AssetManager> assetManager) {
+  std::shared_ptr<engine::Node<engine::Scene::SceneEntity>> Init(std::shared_ptr<engine::Scene> scene, std::shared_ptr<engine::AssetManager> assetManager) {
 
     common::MeshMaterial defaultMaterial;
     defaultMaterial.roughness = 0.34;
@@ -27,8 +26,7 @@ public:
     defaultMaterial.normal_path = "textures/grass_normal.png";
     defaultMaterial.name = "grass_material";
 
-    engine::Quad grass_lod[3] = {engine::Quad(4, glm::vec2(1.0 / 4.0, 1.0)), engine::Quad(3, glm::vec2(0.3f, 1.0)),
-                                 engine::Quad(2, glm::vec2(0.5f, 1.0))};
+    engine::Quad grass_lod[3] = {engine::Quad(4, glm::vec2(1.0 / 4.0, 1.0)), engine::Quad(3, glm::vec2(0.3f, 1.0)), engine::Quad(2, glm::vec2(0.5f, 1.0))};
 
     for (int lod = 0; lod < 3; lod++) {
       for (auto &vtx : grass_lod[lod].data().Vertices) {
@@ -75,8 +73,7 @@ public:
         std::uniform_real_distribution<float> dist(-0.2, 0.2);
         std::uniform_real_distribution<float> dist2(-glm::pi<float>(), glm::pi<float>());
 
-        glm::mat4 transform_matrix =
-            glm::translate(glm::mat4(1.0), position + glm::vec3(dist(e2), 0.0, dist(e2)) + glm::vec3(0.5, 0.0, 0.5));
+        glm::mat4 transform_matrix = glm::translate(glm::mat4(1.0), position + glm::vec3(dist(e2), 0.0, dist(e2)) + glm::vec3(0.5, 0.0, 0.5));
         glm::mat4 rotation_matrix = glm::rotate(glm::mat4(1.0), dist2(e2), glm::vec3(0.0, 1.0, 0.0));
         glm::mat4 model_matrix = transform_matrix * rotation_matrix;
         GrassBlade_Lod0.transforms.push_back(model_matrix);
@@ -99,22 +96,19 @@ public:
       const int num_tiles = 32;
       const int tile_size = 256 / 32;
 
-      glm::ivec4 current_coords = glm::ivec4(-15 + cam_coords.x, -15 + cam_coords.z,
-                                             (256.0f * 0.15) - 15 + cam_coords.x, (256.0f * 0.15) - 15 + cam_coords.z);
+      glm::ivec4 current_coords = glm::ivec4(-15 + cam_coords.x, -15 + cam_coords.z, (256.0f * 0.15) - 15 + cam_coords.x, (256.0f * 0.15) - 15 + cam_coords.z);
 
       float i = 0.0f;
       int j = 0;
       std::mt19937 e2(555);
       for (auto &transform : grass_model_node->data.transforms) {
-        glm::vec3 position = glm::vec3((float)(glm::floor(i / 256.0f) * 0.15) - 15 + cam_coords.x, 0.0f,
-                                       (float)((j % 256) * 0.15) - 15 + cam_coords.z);
+        glm::vec3 position = glm::vec3((float)(glm::floor(i / 256.0f) * 0.15) - 15 + cam_coords.x, 0.0f, (float)((j % 256) * 0.15) - 15 + cam_coords.z);
 
         std::uniform_real_distribution<float> dist(-0.2, 0.2);
         std::uniform_real_distribution<float> dist2(-glm::pi<float>(), glm::pi<float>());
 
-        glm::mat4 transform_matrix =
-            glm::translate(glm::mat4(1.0), position + glm::vec3(dist(e2), 0.0, dist(e2)) + glm::vec3(0.5, 0.0, 0.5));
-        glm::mat4 rotation_matrix = glm::rotate(glm::mat4(1.0), dist2(e2), glm::vec3(0.0, 1.0, 0.0));
+        glm::mat4 transform_matrix = glm::translate(glm::mat4(1.0), position /*+ glm::vec3(dist(e2), 0.0, dist(e2))*/ + glm::vec3(0.5, 0.0, 0.5));
+        glm::mat4 rotation_matrix = glm::rotate(glm::mat4(1.0), /*dist2(e2)*/ 0.0f, glm::vec3(0.0, 1.0, 0.0));
         glm::mat4 model_matrix = transform_matrix * rotation_matrix;
         transform = model_matrix;
         i += 1;
