@@ -17,13 +17,14 @@ public:
     Node *parent = nullptr;
     std::vector<Node *> neighbors;
     uint8_t level = 0;
+    bool terrain_node = false;
 
     void AddNeighbor(Node *node) { neighbors.push_back(node); }
   };
 
 public:
   GridNodeGraph() = default;
-  GridNodeGraph(size_t w, size_t h) : m_pWidth{w}, m_pHeight{h} { clear(); }
+  GridNodeGraph(size_t w, size_t h) : m_pWidth{w}, m_pHeight{h} { m_pNodes.resize(m_pWidth * m_pHeight); }
 
   size_t Width() const { return m_pWidth; }
 
@@ -34,14 +35,17 @@ public:
   std::vector<Node> &getNodes() { return m_pNodes; }
 
   void clear() {
-    m_pNodes.clear();
-    m_pNodes.resize(m_pWidth * m_pHeight);
+    //m_pNodes.clear();
+    //m_pNodes.resize(m_pWidth * m_pHeight);
     // m_pNodes.resize(m_pWidth * m_pHeight);
-    for (int x = 0; x < m_pWidth; x++) {
-      for (int y = 0; y < m_pHeight; y++) {
+    for (int y = 0; y < m_pHeight; y++) {
+      for (int x = 0; x < m_pWidth; x++) {
         // m_pNodes[y * m_pWidth + x].obstacle = false;
+        int level = m_pNodes[y * m_pWidth + x].level;
+        m_pNodes[y * m_pWidth + x] = {};
         m_pNodes[y * m_pWidth + x].parent = nullptr;
         m_pNodes[y * m_pWidth + x].visited = false;
+        m_pNodes[y * m_pWidth + x].level = level;
         /*m_pNodes[y * m_pWidth + x].localDistance = 10000000000000000.0f;
         m_pNodes[y * m_pWidth + x].globalDistance = 10000000000000000.0f;
         m_pNodes[y * m_pWidth + x].obstacle = false;
