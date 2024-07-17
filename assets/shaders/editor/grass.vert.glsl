@@ -101,6 +101,8 @@ void main() {
 
     vec3 curve = cuadratic_bezier(P0, P1, P2, newPos.y);//bezier(P0, P1, P2, P3, 1.0-newPos.y);
 
+    position_coord = vec3(modelMatrix * vec4(inPosition, 1.0));
+
 
     normal = inNormal;
     newPos.yz = curve.yz;//(rot(/*clouds.x+hash13(instance_pos)* inPosition.y*/curve.y) ) * newPos.yz;
@@ -118,7 +120,7 @@ void main() {
     vec4 worldPos = modelMatrix * vec4(newPos, 1.0);
     
 
-    gl_Position = RenderPassUBO.data.proj * RenderPassUBO.data.view * worldPos;
+    gl_Position = RenderPassUBO.data.proj * RenderPassUBO.data.view * modelMatrix * vec4(inPosition, 1.0);
     
   	mat3 normalMatrix = transpose(inverse(mat3(modelMatrix)));
     
