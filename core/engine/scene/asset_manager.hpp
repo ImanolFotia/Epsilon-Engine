@@ -90,6 +90,7 @@ struct PBRMaterialIndex {
   PBRMaterial material;
   uint32_t index{};
   size_t Slot[4] = {0};
+  std::string name;
 };
 
 struct RenderMesh {
@@ -486,6 +487,7 @@ public:
 
       m_pMaterials[material_name_hash].index = mat_index;
       m_pMaterials[material_name_hash].material = pbr_material;
+      m_pMaterials[material_name_hash].name = material_name;
 
       if (!material.albedo_path.empty()) {
         m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Albedo] = std::hash<std::string>{}(material.albedo_path);
@@ -560,6 +562,8 @@ public:
       PBRMaterial pbr_material;
       m_pMaterials[material_name_hash].index = mat_index;
       m_pMaterials[material_name_hash].material = pbr_material;
+
+      m_pMaterials[material_name_hash].name = material_name;
     }
 
     model.renderMeshes[0].push_back(subRenderC);
@@ -644,6 +648,8 @@ public:
 
     m_pMaterials[material_name_hash].index = mat_index;
     m_pMaterials[material_name_hash].material = pbr_material;
+
+    m_pMaterials[material_name_hash].name = material_name;
 
     if (!material.albedo_path.empty()) {
       m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Albedo] = std::hash<std::string>{}(material.albedo_path);
@@ -762,7 +768,9 @@ public:
         auto mesh_material = mesh.Material();
 
         PBRMaterial material = loadModelMaterials(mesh_material);
+
         m_pMaterials[material_name_hash].material = material;
+        m_pMaterials[material_name_hash].name = material_name;
 
         if (!mesh_material.albedo.empty()) {
           m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Albedo] = std::hash<std::string>{}(mesh_material.albedo);
@@ -1160,6 +1168,8 @@ public:
 
     return ref;
   }
+
+  std::unordered_map<size_t, PBRMaterialIndex> &getMaterials() { return m_pMaterials; }
 
   PBRMaterialIndex &getMaterial(size_t key) { return m_pMaterials.at(key); }
 

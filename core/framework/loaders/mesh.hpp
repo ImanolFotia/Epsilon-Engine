@@ -150,53 +150,10 @@ public:
         }
       }
     }
-    IO::Log("Removed ", vertices.size() - new_vertices.size(), " vertices");
+    // IO::Log("Removed ", vertices.size() - new_vertices.size(), " vertices");
 
     vertices.swap(new_vertices);
     indices.swap(new_indices);
-    /*
-        auto &vertices = m_pData.mesh.Vertices;
-        auto &indices = m_pData.mesh.Indices;
-
-        std::vector<uint32_t> new_indices;
-        std::vector<common::Vertex> new_vertices;
-        std::unordered_map<int, int> repeated_indices;
-        std::unordered_map<int, int> remaped_index;
-        std::set<int> repeated_vertices;
-
-        int num_deletions = 0;
-        for (unsigned i = 0; i < vertices.size(); i++) {
-          auto &current_vertex = vertices[i];
-          for (unsigned j = i; j < vertices.size(); j++) {
-            if (glm::distance(current_vertex.position, vertices[j].position) < threshold && j != i) {
-              num_deletions++;
-              remaped_index[j] = i;
-              repeated_indices[j + 1] = (j + 1) - num_deletions;
-              repeated_vertices.emplace(j);
-              break;
-            }
-          }
-        }
-
-        for (unsigned i = 0; i < indices.size(); i++) {
-          if (remaped_index.contains(indices[i])) {
-            indices[i] = remaped_index[indices[i]];
-            new_indices.push_back(indices[i]);
-
-          } else {
-            new_indices.push_back(indices[i]);
-          }
-
-          if (repeated_indices.contains(new_indices[i])) {
-            new_indices[i] = repeated_indices[new_indices[i]];
-          }
-        }
-
-        for (unsigned i = 0; i < vertices.size(); i++) {
-          if (!repeated_vertices.contains(i))
-            new_vertices.push_back(vertices[i]);
-        }
-    */
   }
 
   void generateTangentSpaceVectors() {

@@ -24,6 +24,8 @@ struct SceneManager {
 
   std::mutex m_pMutex;
 
+  ChildNodes null_return_child_node{};
+
   SceneManager() {
     root = std::make_shared<Node<Root>>();
     empty.resize(0);
@@ -203,7 +205,12 @@ struct SceneManager {
     return children_node_index.at(node->index).at(iType);
   }
 
-  ChildNodes &getChildren(std::shared_ptr<NodeBase> node) { return children_node_index[node->index]; }
+  ChildNodes &getChildren(std::shared_ptr<NodeBase> node) { 
+    if(children_node_index.contains(node->index))
+      return children_node_index[node->index];
+  
+    return null_return_child_node; 
+  }
 
   template <typename T> bool isOfType(std::shared_ptr<NodeBase> node) {
     std::lock_guard<std::mutex> guard(m_pMutex);
