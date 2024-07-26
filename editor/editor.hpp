@@ -13,6 +13,7 @@
 #include "ui/assets.hpp"
 #include "ui/gizmo.hpp"
 #include "ui/inspector.hpp"
+#include "ui/catppuccin.hpp"
 #include "ui/main_viewport.hpp"
 #include "ui/material_editor.hpp"
 #include "ui/menu_bar.hpp"
@@ -20,6 +21,7 @@
 #include "ui/object_property.hpp"
 #include "ui/postprocess.hpp"
 #include "ui/toolbar.hpp"
+#include "ui/theme_selector.hpp"
 
 #include "types/transform.hpp"
 #include "utils/transform.hpp"
@@ -67,6 +69,7 @@ class Editor : public Epsilon::Epsilon {
   UI::MaterialEditor m_MaterialEditor;
   UI::Assets m_Assets;
   UI::PostProcess m_PostProcess;
+  UI::ThemeSelector m_ThemeSelector;
 
   bool just_resized = false;
 

@@ -150,6 +150,9 @@ void Editor::OnCreate() {
   auto renderer = getContext()->Renderer();
 
   renderer->InitDebugRenderer();
+  auto imgui_renderer = renderer->getDebugRenderer();
+  imgui_renderer->SetStyle(Catppuccin::GetPalette<Catppuccin::Mocha>());
+
   setup_style();
 
   auto node = Utils::CreateNode(glm::mat4(1.0f), m_Scene);
@@ -268,6 +271,7 @@ void Editor::OnCreate() {
     m_SceneNodes.draw();
     m_Assets.draw();
     m_PostProcess.draw();
+    m_ThemeSelector.draw();
     engine::Node<engine::Scene::SceneEntity> *sn;
     if (m_SceneNodes.scene_node_ref != nullptr) {
       sn = static_cast<engine::Node<engine::Scene::SceneEntity> *>(m_SceneNodes.scene_node_ref);

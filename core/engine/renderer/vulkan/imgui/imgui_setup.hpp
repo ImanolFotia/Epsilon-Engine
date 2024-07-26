@@ -21,8 +21,8 @@
 #include <IconsFontAwesome5.h>
 #include <functional>
 #include <imgui.h>
-#include <implot.h>
 #include <ImGuizmo.h>
+#include <implot.h>
 #include <modules/imgui/imgui_impl_glfw.h>
 #include <modules/imgui/imgui_impl_vulkan.h>
 #include <stdio.h>  // printf, fprintf
@@ -71,10 +71,8 @@ class ImGuiRenderer {
     ImVec4 BackgroundLight = ImVec4(58 / 255.0, 71 / 255.0, 80 / 255.0, 1.00f);
     ImVec4 ActiveColor = ImVec4(0, 173 / 255.0, 181 / 255.0, 1.00f);
     ImVec4 TextColor = ImVec4(238.0 / 255.0, 238 / 255.0, 238 / 255.0, 1.00f);
-    ImVec4 TextColorSelected =
-        ImVec4(150.0 / 255.0, 150 / 255.0, 150 / 255.0, 1.00f);
-    ImVec4 DisabledTextColor =
-        ImVec4(200.0 / 255.0, 200 / 255.0, 200 / 255.0, 1.00f);
+    ImVec4 TextColorSelected = ImVec4(150.0 / 255.0, 150 / 255.0, 150 / 255.0, 1.00f);
+    ImVec4 DisabledTextColor = ImVec4(200.0 / 255.0, 200 / 255.0, 200 / 255.0, 1.00f);
 
     ImVec4 SecondaryActiveColor = ImVec4(0, 130 / 255.0, 150 / 255.0, 1.00f);
 
@@ -130,23 +128,18 @@ class ImGuiRenderer {
     // 0.29f, 1.00f); style->Colors[ImGuiCol_ColumnActive] = ImVec4(0.56f,
     // 0.56f, 0.58f, 1.00f);
     style->Colors[ImGuiCol_ResizeGrip] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-    style->Colors[ImGuiCol_ResizeGripHovered] =
-        ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-    style->Colors[ImGuiCol_ResizeGripActive] =
-        ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+    style->Colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
+    style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
     // style->Colors[ImGuiCol_CloseButton] = ImVec4(0.40f, 0.39f, 0.38f, 0.16f);
     // style->Colors[ImGuiCol_CloseButtonHovered] = ImVec4(0.40f, 0.39f, 0.38f,
     // 0.39f); style->Colors[ImGuiCol_CloseButtonActive] = ImVec4(0.40f, 0.39f,
     // 0.38f, 1.00f);
     style->Colors[ImGuiCol_PlotLines] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
-    style->Colors[ImGuiCol_PlotLinesHovered] =
-        ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
+    style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
     style->Colors[ImGuiCol_PlotHistogram] = ImVec4(0.40f, 0.39f, 0.38f, 0.63f);
-    style->Colors[ImGuiCol_PlotHistogramHovered] =
-        ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
+    style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
     style->Colors[ImGuiCol_TextSelectedBg] = TextColorSelected;
-    style->Colors[ImGuiCol_ModalWindowDimBg] =
-        ImVec4(1.00f, 0.98f, 0.95f, 0.73f);
+    style->Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(1.00f, 0.98f, 0.95f, 0.73f);
 
     style->Colors[ImGuiCol_Tab] = BackgroundDark;
     style->Colors[ImGuiCol_TabHovered] = SecondaryActiveColor;
@@ -254,25 +247,17 @@ class ImGuiRenderer {
 
     icons_config.GlyphOffset.y = 0.8;
     icons_config.GlyphOffset.x = 0.8;
-    NormalFont = io.Fonts->AddFontFromFileTTF(
-        "./assets/fonts/Roboto-Regular.ttf", 16.0, &config);
-    io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-regular-400.ttf", 16.0f,
-                                 &icons_config, icons_ranges);
-    io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-brands-400.ttf", 16.0f,
-                                 &icons_config, icons_ranges);
-    io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-solid-900.ttf", 16.0f,
-                                 &icons_config, icons_ranges);
+    NormalFont = io.Fonts->AddFontFromFileTTF("./assets/fonts/Roboto-Regular.ttf", 16.0, &config);
+    io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-regular-400.ttf", 16.0f, &icons_config, icons_ranges);
+    io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-brands-400.ttf", 16.0f, &icons_config, icons_ranges);
+    io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-solid-900.ttf", 16.0f, &icons_config, icons_ranges);
     icons_config.GlyphOffset.y = 0.8;
     icons_config.GlyphOffset.x = 0.8;
 
-    BigFont = io.Fonts->AddFontFromFileTTF(
-        "./assets/fonts/Roboto-Regular-Big.ttf", 19, &config);
-    io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-regular-400 - Big.ttf",
-                                 19.0f, &icons_config, icons_ranges);
-    io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-brands-400 - Big.ttf",
-                                 19.0f, &icons_config, icons_ranges);
-    io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-solid-900 - Big.ttf", 19.0f,
-                                 &icons_config, icons_ranges);
+    BigFont = io.Fonts->AddFontFromFileTTF("./assets/fonts/Roboto-Regular-Big.ttf", 19, &config);
+    io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-regular-400 - Big.ttf", 19.0f, &icons_config, icons_ranges);
+    io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-brands-400 - Big.ttf", 19.0f, &icons_config, icons_ranges);
+    io.Fonts->AddFontFromFileTTF("./assets/fonts/fa-solid-900 - Big.ttf", 19.0f, &icons_config, icons_ranges);
 
     // #endif
     // #ifdef __linux__
@@ -301,6 +286,13 @@ public:
     std::string name;
   };
 
+  void SetStyle(ImGuiStyle new_style) {
+
+    ImGuiStyle *style = &ImGui::GetStyle();
+
+    *style = new_style;
+  }
+
   void ShowDebugPerformance(bool val) { m_pShowDebugPerformance = val; }
 
   void Enable() { m_pEnabled = true; }
@@ -320,20 +312,18 @@ public:
 
   void CreateDescriptorPool() {
     // Create default descriptor pool
-    vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool,
-                            nullptr);
-    std::array<VkDescriptorPoolSize, 11> poolSizes = {
-        {{VK_DESCRIPTOR_TYPE_SAMPLER, 1000},
-         {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000},
-         {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000},
-         {VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000},
-         {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000},
-         {VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000},
-         {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000},
-         {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000},
-         {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000},
-         {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000},
-         {VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000}}};
+    vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool, nullptr);
+    std::array<VkDescriptorPoolSize, 11> poolSizes = {{{VK_DESCRIPTOR_TYPE_SAMPLER, 1000},
+                                                       {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000},
+                                                       {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000},
+                                                       {VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000},
+                                                       {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000},
+                                                       {VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000},
+                                                       {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000},
+                                                       {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000},
+                                                       {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000},
+                                                       {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000},
+                                                       {VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000}}};
 
     VkDescriptorPoolCreateInfo poolInfo{};
     poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -341,21 +331,18 @@ public:
     poolInfo.pPoolSizes = poolSizes.data();
     poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
     poolInfo.maxSets = poolSizes.size() * 1000;
-    if (vkCreateDescriptorPool(m_pVkDataPtr->logicalDevice, &poolInfo, nullptr,
-                               &m_pDescriptorPool) != VK_SUCCESS) {
+    if (vkCreateDescriptorPool(m_pVkDataPtr->logicalDevice, &poolInfo, nullptr, &m_pDescriptorPool) != VK_SUCCESS) {
       throw std::runtime_error("failed to create descriptor pool!");
     }
   }
 
   void Destroy() {
     if (m_pVkDataPtr) {
-      vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool,
-                              nullptr);
+      vkDestroyDescriptorPool(m_pVkDataPtr->logicalDevice, m_pDescriptorPool, nullptr);
       ImGui_ImplVulkan_Shutdown();
     }
   }
-  void Init(vk::VulkanData &vk_data, framework::Window::windowType *window,
-            VkDescriptorPool &descriptorPool, VkRenderPass &renderPass,
+  void Init(vk::VulkanData &vk_data, framework::Window::windowType *window, VkDescriptorPool &descriptorPool, VkRenderPass &renderPass,
             VkCommandPool &commandPool, VkCommandBuffer commandBuffer) {
     m_pVkDataPtr = &vk_data;
 
@@ -382,12 +369,10 @@ public:
     m_pMainWindowData.RenderPass = vk_data.defaultRenderPass.renderPass;
     // m_pMainWindowData.Pipeline =
     // vk_data.defaultRenderPass.renderPipelines.front().graphicsPipeline;
-    m_pFramebuffer =
-        vk_data.defaultRenderPass.renderPassChain.Framebuffers.front();
+    m_pFramebuffer = vk_data.defaultRenderPass.renderPassChain.Framebuffers.front();
     // m_pQueue = vk_data.graphicsQueue;
-    m_pCommandBuffer =
-        commandBuffer; // The window pipeline may uses a different VkRenderPass
-                       // than the one passed in ImGui_ImplVulkan_InitInfo
+    m_pCommandBuffer = commandBuffer; // The window pipeline may uses a different VkRenderPass
+                                      // than the one passed in ImGui_ImplVulkan_InitInfo
 
     // uint32_t FrameIndex;     // Current frame being rendered to (0 <=
     // FrameIndex < FrameInFlightCount) uint32_t ImageCount;     // Number of
@@ -397,8 +382,7 @@ public:
     // per frame data) ImGui_ImplVulkanH_Frame *Frames;
     // ImGui_ImplVulkanH_FrameSemaphores *FrameSemaphores;
 
-    io.ConfigFlags |=
-        ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
     // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable
     // Gamepad Controls
 
@@ -407,13 +391,13 @@ public:
     setStyle();
     // ImGui::StyleColorsLight();
     ImGuiStyle *style = &ImGui::GetStyle();
-    style->ScrollbarRounding = 5.0f;
+    /*style->ScrollbarRounding = 5.0f;
     style->GrabRounding = 5.0f;
     style->FrameRounding = 5.0f;
     style->WindowRounding = 5.0f;
     style->ChildRounding = 5.0f;
     style->PopupRounding = 5.0f;
-    style->TabRounding = 5.0f;
+    style->TabRounding = 5.0f;*/
 
     ImGui_ImplVulkanH_Window *wd = &m_pMainWindowData;
     // Setup Platform/Renderer backends
@@ -433,8 +417,7 @@ public:
     init_info.ImageCount = vk::MAX_FRAMES_IN_FLIGHT;
     init_info.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
     init_info.Allocator = VK_NULL_HANDLE;
-    ImGui_ImplVulkan_Init(&init_info,
-                          m_pVkDataPtr->defaultRenderPass.renderPass);
+    ImGui_ImplVulkan_Init(&init_info, m_pVkDataPtr->defaultRenderPass.renderPass);
 
     {
       // Use any command queue
@@ -498,8 +481,7 @@ public:
     // VK_SUBPASS_CONTENTS_INLINE);
 
     /**/
-    ImGui_ImplVulkan_RenderDrawData(draw_data, m_pCommandBuffer,
-                                    VK_NULL_HANDLE);
+    ImGui_ImplVulkan_RenderDrawData(draw_data, m_pCommandBuffer, VK_NULL_HANDLE);
     if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
       GLFWwindow *backup_current_context = glfwGetCurrentContext();
       ImGui::UpdatePlatformWindows();
@@ -524,8 +506,7 @@ public:
       //}
 
       ImDrawData *draw_data = ImGui::GetDrawData();
-      const bool is_minimized = (draw_data->DisplaySize.x <= 0.0f ||
-                                 draw_data->DisplaySize.y <= 0.0f);
+      const bool is_minimized = (draw_data->DisplaySize.x <= 0.0f || draw_data->DisplaySize.y <= 0.0f);
       ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
       if (!is_minimized) {
         wd->ClearValue.color.float32[0] = clear_color.x * clear_color.w;
@@ -555,26 +536,19 @@ public:
       if (/*m_pShowDebugPerformance*/ true) {
         static bool show_graph = false;
         ImGui::SetNextWindowPos(ImVec2(10, 120));
-        ImGui::Begin("Info", nullptr,
-                     ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
-                         ImGuiWindowFlags_AlwaysAutoResize);
+        ImGui::Begin("Info", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize);
         ImGui::Text("Timings:");
         ImGui::BulletText("Framerate %.1f FPS", ImGui::GetIO().Framerate);
-        ImGui::BulletText("frametime %.3f ms/frame",
-                          1000.0f / ImGui::GetIO().Framerate);
+        ImGui::BulletText("frametime %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
         ImGui::BulletText("Draw calls: %i", resources.numDrawCalls);
         ImGui::BulletText("Num Vertices: %i", resources.numVertices);
         ImGui::Checkbox("Show graph", &show_graph);
         static float frametime_values[100] = {};
         static int frametime_values_offset = 0;
         if (show_graph) {
-          frametime_values_offset =
-              (frametime_values_offset + 1) % IM_ARRAYSIZE(frametime_values);
-          frametime_values[frametime_values_offset] =
-              1000.0 / ImGui::GetIO().Framerate;
-          SparkLine("Frametime", "Frametime", frametime_values, 100, 0.5, 18.0,
-                    frametime_values_offset, ImVec4(1.0, 1.0, 1.0, 1.0),
-                    ImVec2(200, 100));
+          frametime_values_offset = (frametime_values_offset + 1) % IM_ARRAYSIZE(frametime_values);
+          frametime_values[frametime_values_offset] = 1000.0 / ImGui::GetIO().Framerate;
+          SparkLine("Frametime", "Frametime", frametime_values, 100, 0.5, 18.0, frametime_values_offset, ImVec4(1.0, 1.0, 1.0, 1.0), ImVec2(200, 100));
         }
         ImGui::Separator();
         const char *gpu_name = resources.GPUName.c_str();
@@ -595,14 +569,10 @@ public:
 
         ImGui::Separator();
         if (ImGui::CollapsingHeader("Resources")) {
-          ImGui::BulletText("Vertex buffers %i",
-                            m_pResourceManagerRef->vertexBufferPool.size());
-          ImGui::BulletText("Index buffers %i",
-                            m_pResourceManagerRef->indexBufferPool.size());
-          ImGui::BulletText("Textures %i",
-                            m_pResourceManagerRef->texPool.size());
-          ImGui::BulletText("Meshes %i",
-                            m_pResourceManagerRef->meshPool.size());
+          ImGui::BulletText("Vertex buffers %i", m_pResourceManagerRef->vertexBufferPool.size());
+          ImGui::BulletText("Index buffers %i", m_pResourceManagerRef->indexBufferPool.size());
+          ImGui::BulletText("Textures %i", m_pResourceManagerRef->texPool.size());
+          ImGui::BulletText("Meshes %i", m_pResourceManagerRef->meshPool.size());
         }
         ImGui::End();
       }
@@ -615,16 +585,12 @@ public:
     ImGuiEnd();
   }
 
-  void SparkLine(const char *id, const char *overlay, const float *values,
-                 int count, float min_v, float max_v, int offset,
-                 const ImVec4 &col, const ImVec2 &size) {
+  void SparkLine(const char *id, const char *overlay, const float *values, int count, float min_v, float max_v, int offset, const ImVec4 &col,
+                 const ImVec2 &size) {
     ImPlot::PushStyleVar(ImPlotStyleVar_PlotPadding, ImVec2(0, 0));
     // ImPlot::SetNextPlotLimits(0, count - 1, min_v, max_v, ImGuiCond_Always);
     ImPlot::SetNextAxesLimits(0, count - 1, min_v, max_v, ImGuiCond_Always);
-    if (ImPlot::BeginPlot(id, 0, 0, size,
-                          ImPlotFlags_CanvasOnly |
-                              ImPlotAxisFlags_NoDecorations,
-                          ImPlotAxisFlags_NoDecorations)) {
+    if (ImPlot::BeginPlot(id, 0, 0, size, ImPlotFlags_CanvasOnly | ImPlotAxisFlags_NoDecorations, ImPlotAxisFlags_NoDecorations)) {
       // ImPlot::PlotText(overlay, 10.0, 6.0, );
       ImPlot::PushStyleColor(ImPlotCol_Line, col);
       ImPlot::PlotLine(id, values, count, 1, 0, offset);
@@ -644,20 +610,16 @@ public:
 
   uint32_t addTexture(engine::Ref<engine::Texture> texture);
 
-  std::shared_ptr<ImageInfo> getImage(const std::string &index) {
-    return m_pImages[index];
-  }
+  std::shared_ptr<ImageInfo> getImage(const std::string &index) { return m_pImages[index]; }
 
   auto getImages() { return m_pImages; }
 
-  std::shared_ptr<ImageInfo>
-  getImageByIndex(engine::Ref<engine::Texture> index);
+  std::shared_ptr<ImageInfo> getImageByIndex(engine::Ref<engine::Texture> index);
 
   void recreateDescriptorSets();
 
   void MainWindow() {
-    static ImGuiDockNodeFlags opt_flags =
-        ImGuiDockNodeFlags_PassthruCentralNode;
+    static ImGuiDockNodeFlags opt_flags = ImGuiDockNodeFlags_PassthruCentralNode;
 
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
 
@@ -670,18 +632,13 @@ public:
     bool opt_fullscreen = true;
     if (opt_fullscreen) {
       ImGuiViewport *viewport = ImGui::GetMainViewport();
-      ImGui::SetNextWindowPos(
-          ImVec2(viewport->Pos.x, viewport->Pos.y + toolbarHeight));
-      ImGui::SetNextWindowSize(
-          ImVec2(viewport->Size.x, viewport->Size.y - toolbarHeight));
+      ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y + toolbarHeight));
+      ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, viewport->Size.y - toolbarHeight));
       ImGui::SetNextWindowViewport(viewport->ID);
       ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
       ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-      window_flags |= ImGuiWindowFlags_NoTitleBar |
-                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
-                      ImGuiWindowFlags_NoMove;
-      window_flags |=
-          ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+      window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+      window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
     }
 
     if (opt_flags & ImGuiDockNodeFlags_PassthruCentralNode)
