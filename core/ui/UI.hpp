@@ -65,6 +65,7 @@ struct Context {
   uint32_t pending_actions = 0;
   std::unordered_map<size_t, Window> windows;
   AngularButtonWidget currentAngularWidget;
+  bool lastItemHovered = false;
 };
 
 struct UIVertex {
@@ -351,6 +352,7 @@ public:
   void Update();
   void Draw(engine::Ref<engine::RenderPass>);
   void Free();
+  bool IsHovered();
 
   glm::vec2 CursorPosition();
   void CursorPosition(glm::vec2 position);
