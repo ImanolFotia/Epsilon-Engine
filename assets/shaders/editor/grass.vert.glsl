@@ -104,7 +104,7 @@ void main() {
     position_coord = vec3(modelMatrix * vec4(inPosition, 1.0));
 
 
-    normal = inNormal;
+    //normal = inNormal;
     newPos.yz = curve.yz;//(rot(/*clouds.x+hash13(instance_pos)* inPosition.y*/curve.y) ) * newPos.yz;
     //newPos.yz = (rot(clouds2.x) ) * newPos.yz;
     //newPos.xz += clouds2.xz;
@@ -120,7 +120,7 @@ void main() {
     vec4 worldPos = modelMatrix * vec4(newPos, 1.0);
     
 
-    gl_Position = RenderPassUBO.data.proj * RenderPassUBO.data.view * modelMatrix * vec4(inPosition, 1.0);
+    gl_Position = RenderPassUBO.data.proj * RenderPassUBO.data.view * modelMatrix * vec4(newPos, 1.0);
     
   	mat3 normalMatrix = transpose(inverse(mat3(modelMatrix)));
     
