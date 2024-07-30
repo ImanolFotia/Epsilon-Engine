@@ -711,6 +711,8 @@ public:
 
           currentMesh.data().mesh.Vertices.resize(pos_accesor.count + currentvOffset);
 
+          currentMesh.node_name = model.nodes.at(tmpMesh.node_index).name;
+
           if (HasAnimation()) {
 
             mAnimatedMeshes.at(index).Vertices.resize(pos_accesor.count + currentvOffset);

@@ -40,6 +40,7 @@ public:
     std::string normal;
     std::string ao;
 
+
     glm::vec4 color{};
     float roughness_color{};
     float metallic_color{};
@@ -48,6 +49,8 @@ public:
   };
 
 public:
+
+    std::string node_name;
   Mesh() = default;
   /**  Functions  */
   /// Constructor
