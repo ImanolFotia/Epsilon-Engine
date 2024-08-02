@@ -52,7 +52,8 @@ public:
 
   void UpdateUniform(const std::string &name, void *newData);
 
-  virtual void CopyTexture(Ref<Texture> src, Ref<Texture> dst) override;
+  Ref<Texture> GetRenderTarget(Ref<RenderPass>, uint32_t) override;
+  void CopyTexture(Ref<Texture> src, Ref<Texture> dst) override;
 
   void destroyTexture(Ref<Texture>) override;
   void destroyBuffer(Ref<Buffer>) override;

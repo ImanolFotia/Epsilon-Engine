@@ -1,5 +1,6 @@
 #include "apis/vk/vk_data.hpp"
 #include "core/common/common.hpp"
+#include "vulkan/vulkan_core.h"
 #undef VMA_DEBUG_LOG
 #undef VMA_DEBUG_LOG_FORMAT
 #define GLM_ENABLE_EXPERIMENTAL
@@ -449,26 +450,32 @@ Ref<RenderPass> VulkanResourceManager::createDefaultRenderPass(RenderPassInfo re
 
   vk::createRenderPass(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, renderPassInfo, true);
 
-  {
+  m_pVkDataPtr->defaultRenderPass.renderPipelines.resize(renderPassInfo.numLayouts);
+  m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayouts.resize(2);
+  vk::createDescriptorSetLayout(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayouts.at(RENDERPASS_LAYOUT),
+                                renderPassInfo.bindingInfo, 0);
 
-    m_pVkDataPtr->defaultRenderPass.renderPipelines.resize(renderPassInfo.numLayouts);
-    m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayouts.resize(2);
-    vk::createDescriptorSetLayout(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass.renderPipelines.back().descriptorSetLayouts.at(RENDERPASS_LAYOUT),
-                                  renderPassInfo.bindingInfo, 0);
+  m_pVkDataPtr->defaultRenderPass.numAttachments = renderPassInfo.depthAttachment ? renderPassInfo.numAttachments - 1 : renderPassInfo.numAttachments;
 
-    m_pVkDataPtr->defaultRenderPass.numAttachments = renderPassInfo.depthAttachment ? renderPassInfo.numAttachments - 1 : renderPassInfo.numAttachments;
-
-    for (auto &pipeline : m_pVkDataPtr->defaultRenderPass.renderPipelines) {
-      pipeline.descriptorSetLayouts.resize(1);
-      if (m_pVkDataPtr->bindless_supported) {
-        pipeline.descriptorSetLayouts.resize(2);
-        pipeline.descriptorSetLayouts.at(GLOBAL_LAYOUT) = m_pGlobalDescriptorSetLayout;
-      }
+  for (auto &pipeline : m_pVkDataPtr->defaultRenderPass.renderPipelines) {
+    pipeline.descriptorSetLayouts.resize(1);
+    if (m_pVkDataPtr->bindless_supported) {
+      pipeline.descriptorSetLayouts.resize(2);
+      pipeline.descriptorSetLayouts.at(GLOBAL_LAYOUT) = m_pGlobalDescriptorSetLayout;
     }
-    vk::createGraphicsPipeline(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, renderPassInfo);
   }
+  vk::createGraphicsPipeline(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, renderPassInfo);
 
   vk::createSwapChainFramebuffers(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, m_pVkDataPtr->defaultRenderPass.renderPassChain);
+
+  int index = 0;
+  for (auto &texture : m_pVkDataPtr->defaultRenderPass.renderPassChain.Textures) {
+    texture.name = "SwapChainRenderTarget" + std::to_string(index);
+    //texPool.insert(texture.name, texture);
+    index++;
+  }
+  m_pVkDataPtr->defaultRenderPass.renderPassChain.DepthTexture.name = "SwapChainDepthRenderTarget";
+  //texPool.insert("SwapChainDepthRenderTarget", m_pVkDataPtr->defaultRenderPass.renderPassChain.DepthTexture);
 
   m_pVkDataPtr->defaultRenderPass.name = renderPassInfo.name;
 
@@ -572,7 +579,6 @@ Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPas
       texture.info.isSampler = true;
       vk::createTextureSampler(*m_pVkDataPtr, texture);
 
-      // texPool.insert(attachment.name, texture);
     }
 
     if (attachment.isDepthAttachment) {
@@ -594,6 +600,8 @@ Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPas
       attachment.imageview_index = renderPass.renderPassChain.ImageViews.size() - 1;
       attachment.texture_index = renderPass.renderPassChain.Textures.size() - 1;
     }
+
+    //texPool.insert(attachment.name, texture);
   }
 
   m_pRenderPassInfo[renderPass.id] = renderPassInfo;
@@ -702,8 +710,11 @@ void VulkanResourceManager::clean() {
 
   for (auto &texture : texPool) {
     vkDestroySampler(m_pVkDataPtr->logicalDevice, texture.sampler, nullptr);
+    texture.sampler = VK_NULL_HANDLE;
     vkDestroyImageView(m_pVkDataPtr->logicalDevice, texture.imageView, nullptr);
+    texture.imageView = VK_NULL_HANDLE;
     vmaDestroyImage(m_pAllocator, texture.image, texture.allocation);
+    texture.image = VK_NULL_HANDLE;
   }
 
   for (auto &pass : renderPassPool) {
@@ -1025,12 +1036,6 @@ void VulkanResourceManager::destroyMesh(Ref<Mesh> meshRef) {
   m_pIndexCache.Free(
       (ResourceCache::Block){.empty = false, .size = mesh->numIndices * sizeof(uint32_t), .offset = (size_t)mesh->indexOffset, .buffer = mesh->indexBuffer});
 
-  /*auto vertexBuffer = vertexBufferPool.get(mesh->vertexBuffer);
-  auto indexBuffer = indexBufferPool.get(mesh->indexBuffer);
-  vmaDestroyBuffer(m_pAllocator, vertexBuffer->buffer, vertexBuffer->allocation);
-  vmaDestroyBuffer(m_pAllocator, indexBuffer->buffer, indexBuffer->allocation);
-*/
-
   meshPool.destroy(meshRef);
 }
 
@@ -1351,5 +1356,15 @@ void VulkanResourceManager::UpdateMesh(Ref<Mesh> meshRef, UpdateMeshInfo updateI
                   */
 }
 
-void VulkanResourceManager::CopyTexture(Ref<Texture> src, Ref<Texture> dst) {}
+Ref<Texture> VulkanResourceManager::GetRenderTarget(Ref<RenderPass> renderPassRef, uint32_t index) {
+  vk::VulkanRenderPass *renderPass = renderPassPool.get(renderPassRef);
+
+  if (index >= renderPass->numAttachments) {
+    return Ref<Texture>::makeEmpty();
+  }
+
+ // return renderPass->renderPassChain.Textures.at(index).;
+}
+
+void VulkanResourceManager::CopyTexture(Ref<Texture> srcRef, Ref<Texture> dstRef) {}
 } // namespace engine

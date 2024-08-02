@@ -753,6 +753,7 @@ void VulkanRenderer::pRecreateSwapChain() {
 
   vk::createSwapChainFramebuffers(m_pVkData, m_pVkData.defaultRenderPass, m_pVkData.defaultRenderPass.renderPassChain);
 
+
   size_t id = std::hash<std::string>{}(m_pVkData.defaultRenderPass.name);
   auto pass = m_pResourceManagerRef->renderPassPool.get(id);
 
