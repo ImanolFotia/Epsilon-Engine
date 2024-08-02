@@ -254,7 +254,7 @@ static void createImageViews(VulkanData &vk_data) {
     createImageView(vk_data, texture, VK_IMAGE_ASPECT_COLOR_BIT);
 
     vk_data.defaultRenderPass.renderPassChain.ImageViews[i] = texture.imageView;
-    vk_data.defaultRenderPass.renderPassChain.Textures.back() = texture;
+    vk_data.defaultRenderPass.renderPassChain.Textures[i] = texture;
   }
 }
 
