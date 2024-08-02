@@ -33,6 +33,8 @@ public:
 
   T Get() { return m_Distribution(m_RandomEngine); }
 
+  T Next() { return Get(); }
+
   T Seed() { return m_Seed; }
 
   void Seed(T seed) {
