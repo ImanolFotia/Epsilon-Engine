@@ -47,6 +47,7 @@ template <typename T, typename R> struct Pool {
   size_t m_Count = 0;
   R *m_Data = nullptr;
   std::unordered_map<size_t, size_t> m_IdMap;
+  std::unordered_map<size_t, size_t> m_GenerationCache;
   std::vector<Ref<T>> m_FreeRefs{};
 
   void Initialize() { m_Data = new R[c_MaxObjects]; }
@@ -70,6 +71,7 @@ template <typename T, typename R> struct Pool {
     size_t id = std::hash<std::string>{}(name);
 
     m_IdMap[id] = current_index;
+    m_GenerationCache[id] = generation;
 
     m_Data[current_index] = R(std::forward<Args>(args)...);
 
@@ -98,13 +100,22 @@ template <typename T, typename R> struct Pool {
     size_t id = std::hash<std::string>{}(name);
 
     m_IdMap[id] = current_index;
+    m_GenerationCache[id] = generation;
 
     m_Data[current_index] = element;
 
-    Ref<T> ref(current_index, 1, id);
+    Ref<T> ref(current_index, generation, id);
     current_index++;
 
     return ref;
+  }
+
+  Ref<T> getRef(size_t id) {
+    if(m_IdMap.contains(id)) {
+      Ref<T> ref(m_IdMap[id], m_GenerationCache[id], id);
+      return ref;
+    }
+    return Ref<T>::makeEmpty();
   }
 
   [[nodiscard]] R *get(Ref<T> ref) {
@@ -127,8 +138,9 @@ template <typename T, typename R> struct Pool {
 
   [[nodiscard]] uint32_t getId(Ref<T> ref) { return ref.m_pIndex; }
 
-  void destroy(Ref<T> &ref) {
+  void destroy(Ref<T> ref) {
     m_IdMap.erase(ref.m_pID);
+    m_GenerationCache.erase(ref.m_pID);
     m_FreeRefs.push_back(ref);
     ref.m_pGeneration++;
   }
