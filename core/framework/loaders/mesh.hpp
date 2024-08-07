@@ -8,6 +8,8 @@
 /// Std. Includes
 /// GL Includes
 #include "eml1_0.hpp"
+#include "glm/common.hpp"
+#include "glm/geometric.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -183,27 +185,28 @@ public:
 
       float f = (deltaUV2.x * deltaUV1.x - deltaUV2.y * deltaUV1.y) == 0.0f ? -1.0f : 1.0f;
       // when t1, t2, t3 in same position in UV space, just use default UV direction.
-      /*if (0 == deltaUV2.x && 0 == deltaUV2.y && 0 == deltaUV1.x && 0 == deltaUV1.y)
+      if (0 == deltaUV2.x && 0 == deltaUV2.y && 0 == deltaUV1.x && 0 == deltaUV1.y)
       {
           deltaUV1.x = 0.0;
           deltaUV1.y = 1.0;
           deltaUV2.y = 1.0;
           deltaUV2.y = 0.0;
-      }*/
+      }
 
       tangent1.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
       tangent1.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
       tangent1.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
-      // tangent1 = glm::normalize(tangent1);
+      auto nan = glm::isnan(tangent1);
+      if(tangent1.length() == 0.0f || nan.x || nan.y || nan.z) {
+        tangent1 = glm::vec3(1.0, 0.0, 0.0);
+      }
+      tangent1 = glm::normalize(tangent1);
 
       m_pData.mesh.Vertices[m_pData.mesh.Indices[i]].tangent = tangent1;
       m_pData.mesh.Vertices[m_pData.mesh.Indices[i + 1]].tangent = tangent1;
       m_pData.mesh.Vertices[m_pData.mesh.Indices[i + 2]].tangent = tangent1;
-
-      bitangent1.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
-      bitangent1.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
-      bitangent1.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
-      // bitangent1 = glm::normalize(bitangent1);
+      bitangent1 = glm::cross(tangent1,m_pData.mesh.Vertices[m_pData.mesh.Indices[i]].normal);
+       bitangent1 = glm::normalize(bitangent1);
 
       m_pData.mesh.Vertices[m_pData.mesh.Indices[i]].bitangent = bitangent1;
       m_pData.mesh.Vertices[m_pData.mesh.Indices[i + 1]].bitangent = bitangent1;
