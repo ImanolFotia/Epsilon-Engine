@@ -34,6 +34,11 @@ public:
 
   std::vector<Node> &getNodes() { return m_pNodes; }
 
+  void reset() {
+    m_pNodes.clear();
+    m_pNodes.resize(m_pWidth * m_pHeight);
+  }
+
   void clear() {
     // m_pNodes.clear();
     if (m_pNodes.size() == 0)
