@@ -93,6 +93,10 @@ public:
 
   Scene() = default;
 
+  std::shared_ptr<OctreeContainer<OctreeRenderType>> getRenderOctree() {
+    return m_pRenderOctree;
+  }
+
   Scene(std::shared_ptr<Context> context) : m_pContext(context) {
     // m_pAssetManager.m_pContext = m_pContext;
 
