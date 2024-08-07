@@ -17,6 +17,7 @@ struct Transform {
   glm::mat4 model_matrix = glm::mat4(1.0f);
   float lifetime = 0;
   bool grows = false;
+  int callback_index = 0;
 };
 
 } // namespace engine
