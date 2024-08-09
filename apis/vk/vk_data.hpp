@@ -17,7 +17,7 @@
 namespace vk {
 static uint32_t MAX_FRAMES_IN_FLIGHT = 4;
 static uint32_t MIN_FRAMES_IN_FLIGHT = 2;
-const size_t ALLOCATION_SIZE_MB = 0xFFFFFFF;
+const std::size_t ALLOCATION_SIZE_MB = 0xFFFFFFF;
 
 struct VulkanVertexInfo {
   std::vector<VkVertexInputAttributeDescription> attributeDescriptions{};
@@ -26,7 +26,7 @@ struct VulkanVertexInfo {
 
 struct SubBuffer {
   uint32_t num_vertices = 0;
-  size_t offset = 0;
+  std::size_t offset = 0;
 };
 
 struct VulkanBuffer {
@@ -34,14 +34,14 @@ struct VulkanBuffer {
   VkBuffer buffer = VK_NULL_HANDLE;
   VkBufferCreateInfo bufferInfo;
   int32_t allocatedVertices = 0;
-  size_t offset = 0;
-  size_t size = 0;
+  std::size_t offset = 0;
+  std::size_t size = 0;
   std::vector<SubBuffer> subBuffers;
   std::unordered_map<uint32_t, uint32_t> subBufferIndex;
   VkDescriptorBufferInfo descriptorInfo;
   VmaAllocation allocation;
   bool mapped = false;
-  size_t dataSize = 0;
+  std::size_t dataSize = 0;
   std::string name = "";
 };
 
@@ -88,28 +88,28 @@ struct VulkanTexture {
 
 struct VulkanTextureBuffer {
   VkImageCreateInfo imageInfo;
-  size_t allocatedSize = 0;
+  std::size_t allocatedSize = 0;
   VkDeviceMemory deviceMemory;
-  size_t offset = 0;
+  std::size_t offset = 0;
 };
 
 struct VulkanUniformBuffer {
   VulkanUniformBuffer() { buffers.resize(MAX_FRAMES_IN_FLIGHT); }
   std::vector<VulkanBuffer> buffers{};
-  size_t size = 0;
+  std::size_t size = 0;
 };
 
 struct VulkanAllocation {
   VkDeviceMemory deviceMemory;
   VkMemoryPropertyFlags properties;
   std::vector<VulkanBuffer> ownedBuffers;
-  size_t allocatedBytes = 0;
+  std::size_t allocatedBytes = 0;
 };
 
 struct VulkanGPUMappedBuffer {
   std::vector<VulkanBuffer> buffers;
   bool mapped = false;
-  size_t size{};
+  std::size_t size{};
 };
 
 struct VulkanShaderBinding {
@@ -133,8 +133,8 @@ struct VulkanMaterial {
   // std::vector<VulkanTexture> renderBufferBindings;
   std::vector<VulkanShaderBinding> shaderBindings;
   std::vector<VkDescriptorBufferInfo> bufferInfo;
-  size_t bufferOffset = 0;
-  size_t bufferSize = 0;
+  std::size_t bufferOffset = 0;
+  std::size_t bufferSize = 0;
   int slots = 0;
   std::string name = "";
 };
@@ -187,7 +187,7 @@ struct VulkanRenderPipeline {
   VkCullModeFlags cullMode;
   bool dirty = true;
   // VkClearColorValue clearColor = {0.1f, 0.1f, 0.1f, 1.0f};
-  VkClearColorValue clearColor = {1.0f, 1.0f, 1.0f, 1.0f};
+  VkClearColorValue clearColor = {{1.0f, 1.0f, 1.0f, 1.0f}};
   VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
   uint32_t numAttachments = 1;
   bool recreatePipeline = false;
@@ -258,7 +258,7 @@ public:
   std::vector<VulkanVertexInfo> vertexInfo;
   RenderPassChain renderPassChain;
   // VkClearColorValue clearColor = {0.1f, 0.1f, 0.1f, 1.0f};
-  VkClearColorValue clearColor = {1.0f, 1.0f, 1.0f, 1.0f};
+  VkClearColorValue clearColor = {{1.0f, 1.0f, 1.0f, 1.0f}};
   VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
   std::vector<VkClearValue> clearValues = {};
   uint32_t id = 0;

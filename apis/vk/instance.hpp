@@ -39,12 +39,14 @@ namespace vk
         createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
         createInfo.pApplicationInfo = &appInfo;
 
+#if USE_GLFW
         uint32_t glfwExtensionCount = 0;
         const char **glfwExtensions;
 
-#if USE_GLFW
 
         glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+
+        (void)glfwExtensions;
 #endif
         auto extensions = getRequiredExtensions();
 #if !defined(__ANDROID__)
@@ -67,8 +69,6 @@ namespace vk
         {
             createInfo.enabledLayerCount = 0;
         }
-
-        VkResult result = vkCreateInstance(&createInfo, nullptr, &vk_data.instance);
 
         if (vkCreateInstance(&createInfo, nullptr, &vk_data.instance) != VK_SUCCESS)
         {

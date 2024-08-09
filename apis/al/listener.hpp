@@ -6,7 +6,7 @@
 
 namespace al {
 	static const float* toOrientation(glm::vec3 dir, glm::vec3 up) {
-
+		return nullptr;
 	}
 
 	static void setListenerPosition(const OpenALListener& listener) {

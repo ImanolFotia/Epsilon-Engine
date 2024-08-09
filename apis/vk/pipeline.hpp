@@ -69,9 +69,11 @@ static void appendShaderStageMacro(engine::ShaderStageInfo &info) {
   };
 
   auto result = versionPosition(info.shaderCode);
+
+  (void)result;
 }
 
-static VkPushConstantRange setupPushConstant(size_t size) {
+static VkPushConstantRange setupPushConstant(std::size_t size) {
   VkPushConstantRange push_constant;
   push_constant.offset = 0;
   push_constant.size = size;

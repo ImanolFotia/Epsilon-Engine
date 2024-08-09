@@ -70,7 +70,7 @@ static VkSurfaceFormatKHR chooseSwapSurfaceFormat(
     VkFormatProperties props;
     vkGetPhysicalDeviceFormatProperties(vk_data.physicalDevice,
                                         availableFormat.format, &props);
-    VkFormatFeatureFlags features = VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
+    // VkFormatFeatureFlags features = VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
     if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB &&
         availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
       return availableFormat;
@@ -244,7 +244,7 @@ static void createImageViews(VulkanData &vk_data) {
         vk_data, vk_data.defaultRenderPass.renderPassChain.DepthTexture);
   }
 
-  for (size_t i = 0;
+  for (std::size_t i = 0;
        i < vk_data.defaultRenderPass.renderPassChain.Images.size(); i++) {
 
     VulkanTexture texture;
@@ -259,14 +259,14 @@ static void createImageViews(VulkanData &vk_data) {
 }
 
 static void cleanupSwapChain(const VulkanData &vk_data) {
-  for (size_t i = 0;
+  for (std::size_t i = 0;
        i < vk_data.defaultRenderPass.renderPassChain.Framebuffers.size(); i++) {
     vkDestroyFramebuffer(
         vk_data.logicalDevice,
         vk_data.defaultRenderPass.renderPassChain.Framebuffers[i], nullptr);
   }
 
-  for (size_t i = 0;
+  for (std::size_t i = 0;
        i < vk_data.defaultRenderPass.renderPassChain.ImageViews.size(); i++) {
     vkDestroyImageView(vk_data.logicalDevice,
                        vk_data.defaultRenderPass.renderPassChain.ImageViews[i],

@@ -114,8 +114,8 @@ namespace vk
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-        VkSemaphore waitSemaphores[] = {vk_data.syncObjects[currentFrame].computeAvailableSemaphores};
-        VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT};
+        //VkSemaphore waitSemaphores[] = {vk_data.syncObjects[currentFrame].computeAvailableSemaphores};
+        //VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT};
         // submitInfo.waitSemaphoreCount = 1;
         // submitInfo.pWaitSemaphores = waitSemaphores;
         // submitInfo.pWaitDstStageMask = waitStages;
@@ -168,7 +168,7 @@ namespace vk
     static void cleanupSyncObjects(const VulkanData &vk_data)
     {
 
-        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+        for (std::size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
         {
             vkDestroySemaphore(vk_data.logicalDevice, vk_data.syncObjects[i].renderFinishedSemaphores, nullptr);
             vkDestroySemaphore(vk_data.logicalDevice, vk_data.syncObjects[i].imageAvailableSemaphores, nullptr);

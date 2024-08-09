@@ -87,13 +87,13 @@ namespace al
 
         auto device_name = alcGetString(al_data->device, ALC_DEFAULT_DEVICE_SPECIFIER);
         al_data->device = alcOpenDevice(device_name);
-        if (al_data->device == NULL)
+        if (al_data->device == nullptr)
         {
             IO::Error("Cannot open sound card");
             return false;
         }
-        al_data->context = alcCreateContext(al_data->device, NULL);
-        if (al_data->context == NULL)
+        al_data->context = alcCreateContext(al_data->device, nullptr);
+        if (al_data->context == nullptr)
         {
             IO::Error("Cannot open audio context");
             return false;
@@ -107,7 +107,7 @@ namespace al
             return false;
         }
 
-#define LOAD_PROC(T, x) ((x) = (T)alcGetProcAddress(NULL, #x))
+#define LOAD_PROC(T, x) ((x) = (T)alcGetProcAddress(nullptr, #x))
         LOAD_PROC(LPALCLOOPBACKOPENDEVICESOFT, alcLoopbackOpenDeviceSOFT);
         LOAD_PROC(LPALCISRENDERFORMATSUPPORTEDSOFT, alcIsRenderFormatSupportedSOFT);
         LOAD_PROC(LPALCRENDERSAMPLESSOFT, alcRenderSamplesSOFT);
@@ -159,12 +159,11 @@ namespace al
 #undef LOAD_PROC
 #endif
 
-        ALboolean enumeration;
 
-        ALenum eBufferFormat = 0;
-        eBufferFormat = alGetEnumValue("AL_FORMAT_51CHN16");
+        //ALenum eBufferFormat = 0;
+        //eBufferFormat = alGetEnumValue("AL_FORMAT_51CHN16");
 
-        enumeration = alcIsExtensionPresent(al_data->device, "ALC_ENUMERATION_EXT");
+       // enumeration = alcIsExtensionPresent(al_data->device, "ALC_ENUMERATION_EXT");
         /*
                 if (enumeration != AL_FALSE)
                 {
@@ -175,7 +174,7 @@ namespace al
                 }*/
         alDistanceModel(AL_LINEAR_DISTANCE);
 
-        const char *name = NULL;
+        const char *name = nullptr;
         if (alcIsExtensionPresent(al_data->device, "ALC_ENUMERATE_ALL_EXT"))
             name = alcGetString(al_data->device, ALC_ALL_DEVICES_SPECIFIER);
         if (!name || alcGetError(al_data->device) != AL_NO_ERROR)
@@ -199,12 +198,12 @@ namespace al
         ALCdevice *device;
         ALCcontext *ctx;
         ctx = alcGetCurrentContext();
-        if (ctx == NULL)
+        if (ctx == nullptr)
             return;
 
         device = alcGetContextsDevice(ctx);
 
-        alcMakeContextCurrent(NULL);
+        alcMakeContextCurrent(nullptr);
         alcDestroyContext(ctx);
         alcCloseDevice(device);
 #endif

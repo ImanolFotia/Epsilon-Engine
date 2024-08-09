@@ -10,7 +10,7 @@ static void createSwapChainFramebuffers(VulkanData &vk_data, VulkanRenderPass &r
   renderPass.renderPassChain.Framebuffers.clear();
   renderPass.renderPassChain.Framebuffers.resize(renderPass.renderPassChain.ImageViews.size());
 
-  for (size_t i = 0; i < renderPass.renderPassChain.ImageViews.size(); i++) {
+  for (std::size_t i = 0; i < renderPass.renderPassChain.ImageViews.size(); i++) {
     // std::vector<VkImageView> attachments;
 
     std::vector<VkImageView> attachments = {renderPass.renderPassChain.ImageViews[i], renderPass.renderPassChain.DepthTexture.imageView};
@@ -38,6 +38,8 @@ static void createFramebuffers(VulkanData &vk_data, VulkanRenderPass &renderPass
 
   int numAttachments = renderPass.renderPassChain.ImageFormats.size();
   int numLayers = renderPass.renderPassChain.ImageViews.size();
+
+  (void)numLayers;
 
   std::vector<VkImageView> attachments = renderPass.renderPassChain.ImageViews;
 
