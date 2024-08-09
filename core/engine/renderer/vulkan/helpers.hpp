@@ -6,7 +6,8 @@
 
 namespace engine {
 
-static VkFormat resolveFormat(engine::TextureFormat format, bool isCompressed = false) {
+static VkFormat resolveFormat(engine::TextureFormat format,
+                              bool isCompressed = false) {
   // Color formats
   if (format == COLOR_R)
     return VK_FORMAT_R8_UNORM;
@@ -81,6 +82,7 @@ static VkFormat resolveFormat(engine::TextureFormat format, bool isCompressed = 
     return VK_FORMAT_D32_SFLOAT;
   if (format == DEPTH_F32_STENCIL_8)
     return VK_FORMAT_D32_SFLOAT_S8_UINT;
+  return VK_FORMAT_MAX_ENUM;
 }
 
 static VkFilter resolveFilter(engine::Filtering filter) {
@@ -88,6 +90,8 @@ static VkFilter resolveFilter(engine::Filtering filter) {
     return VK_FILTER_NEAREST;
   if (filter == LINEAR)
     return VK_FILTER_LINEAR;
+
+  return VK_FILTER_MAX_ENUM;
 }
 
 static VkSamplerAddressMode resolveWrapping(engine::WrapMode wrapping) {
@@ -97,6 +101,7 @@ static VkSamplerAddressMode resolveWrapping(engine::WrapMode wrapping) {
     return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
   if (wrapping == CLAMP_TO_EDGE)
     return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+  return VK_SAMPLER_ADDRESS_MODE_MAX_ENUM;
 }
 
 static VkCompareOp resolveCompareOp(engine::CompareFunction compareOp) {
@@ -113,21 +118,27 @@ static VkCompareOp resolveCompareOp(engine::CompareFunction compareOp) {
 }
 
 static unsigned resolveNumChannels(engine::TextureFormat format) {
-  if (format == COLOR_R || format == NON_COLOR_R || format == DEPTH_F16 || format == DEPTH_F32 || format == DEPTH_F32_STENCIL_8 || format == COLOR_R_32F ||
-      format == COLOR_R_16F) {
+  if (format == COLOR_R || format == NON_COLOR_R || format == DEPTH_F16 ||
+      format == DEPTH_F32 || format == DEPTH_F32_STENCIL_8 ||
+      format == COLOR_R_32F || format == COLOR_R_16F) {
     return 1;
   }
 
-  if (format == COLOR_RG || format == COLOR_RG_16F || format == COLOR_RG_32F || format == NON_COLOR_RG) {
+  if (format == COLOR_RG || format == COLOR_RG_16F || format == COLOR_RG_32F ||
+      format == NON_COLOR_RG) {
     return 2;
   }
 
-  if (format == COLOR_RGB || format == COLOR_RGB_16F || format == COLOR_RGB_32F || format == NON_COLOR_RGB) {
+  if (format == COLOR_RGB || format == COLOR_RGB_16F ||
+      format == COLOR_RGB_32F || format == NON_COLOR_RGB) {
     return 3;
   }
-  if (format == COLOR_RGBA || format == COLOR_RGBA_16F || format == COLOR_RGBA_32F || format == NON_COLOR_RGBA) {
+  if (format == COLOR_RGBA || format == COLOR_RGBA_16F ||
+      format == COLOR_RGBA_32F || format == NON_COLOR_RGBA) {
     return 4;
   }
+
+  return 0;
 }
 
 static VkDescriptorType resolveBindingType(engine::UniformBindingType type) {
@@ -145,9 +156,13 @@ static VkDescriptorType resolveBindingType(engine::UniformBindingType type) {
     return VkDescriptorType::VK_DESCRIPTOR_TYPE_SAMPLER;
   if (type == TYPE::UNIFORM_BUFFER)
     return VkDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+
+  return VkDescriptorType::VK_DESCRIPTOR_TYPE_MAX_ENUM;
 }
 
-static std::vector<IndirectBatch> generateIndirectBatch(std::vector<DrawCommand> &commandLists, unsigned int commandCount) {
+static std::vector<IndirectBatch>
+generateIndirectBatch(std::vector<DrawCommand> &commandLists,
+                      unsigned int commandCount) {
   std::vector<IndirectBatch> batches{};
   batches.resize(commandLists.size());
   unsigned index = 0;
@@ -167,11 +182,17 @@ static std::vector<IndirectBatch> generateIndirectBatch(std::vector<DrawCommand>
       index++;
       continue;
     }
-    bool isSameMaterial = Ref<BindGroup>::isSame(command.material, batches[current].material);
-    bool isSameVertexBuffer = Ref<Buffer>::isSame(command.meshResource.vertexBuffer, batches[current].meshResource.vertexBuffer);
-    bool isSameIndexBuffer = Ref<Buffer>::isSame(command.meshResource.indexBuffer, batches[current].meshResource.indexBuffer);
+    bool isSameMaterial =
+        Ref<BindGroup>::isSame(command.material, batches[current].material);
+    bool isSameVertexBuffer =
+        Ref<Buffer>::isSame(command.meshResource.vertexBuffer,
+                            batches[current].meshResource.vertexBuffer);
+    bool isSameIndexBuffer =
+        Ref<Buffer>::isSame(command.meshResource.indexBuffer,
+                            batches[current].meshResource.indexBuffer);
     bool isSameLayout = command.layoutIndex == batches[current].layoutIndex;
-    if (isSameMaterial && isSameVertexBuffer && isSameIndexBuffer && isSameLayout) {
+    if (isSameMaterial && isSameVertexBuffer && isSameIndexBuffer &&
+        isSameLayout) {
       batches[current].count++;
     } else {
       current++;

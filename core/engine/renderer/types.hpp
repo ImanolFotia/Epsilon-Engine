@@ -36,8 +36,8 @@ struct ShaderStageInfo {
   std::string entryPoint;
   std::vector<char> shaderCode;
   ShaderModuleStage stage;
-  std::vector<size_t> renderPassIds;
-  std::unordered_map<size_t /*renderpassid*/, std::vector<size_t> /*render pipelines*/> pipelines;
+  std::vector<std::size_t> renderPassIds;
+  std::unordered_map<std::size_t /*renderpassid*/, std::vector<std::size_t> /*render pipelines*/> pipelines;
 };
 
 struct ShaderStageFactory {
@@ -169,7 +169,7 @@ enum TextureFormat {
   DEPTH_UNORM_STENCIL_8,
 };
 
-enum VertexFormat { XY_UINT, XY_INT, XY_FLOAT, XYZ_UINT, XYZ_INT, XYZ_FLOAT, XYZW_UINT, XYZW_INT, XYZW_FLOAT, XYZW_UINT16, XYZW_INT16, XYZW_FLOAT16 };
+enum VertexFormat { XY_UINT, XY_INT, XY_FLOAT, XYZ_UINT, XYZ_INT, XYZ_FLOAT, XYZW_UINT, XYZW_INT, XYZW_FLOAT, XYZW_UINT16, XYZW_INT16, XYZW_FLOAT16, VERTEX_FORMAT_SIZE };
 
 enum CompareFunction {
   ALWAYS = 0,
@@ -235,8 +235,8 @@ struct TextureCreationInfo {
   bool isKTX = false;
   bool generateMipMaps = true;
   uint32_t mipLevels = 1;
-  std::vector<size_t> offsets;
-  size_t size{};
+  std::vector<std::size_t> offsets;
+  std::size_t size{};
   bool storage_image = false;
   unsigned char *pixels = nullptr;
 };
@@ -273,7 +273,7 @@ struct TextureBuilder {
 };
 
 struct Material {
-  size_t id;
+  std::size_t id;
   std::string name;
 };
 
@@ -288,12 +288,12 @@ struct SubPassInfo {};
 
 struct VertexDescriptorInfo {
   VertexFormat format;
-  size_t offset;
+  std::size_t offset;
 };
 
 struct VertexLayout {
   std::vector<VertexDescriptorInfo> descriptors;
-  size_t size;
+  std::size_t size;
 };
 
 struct RenderPassAttachment {
@@ -318,30 +318,30 @@ struct RenderPassAttachment {
 };
 
 struct PushConstantData {
-  size_t size;
+  std::size_t size;
   void *data;
 };
 
 template <typename T> struct PushConstantData2 {
   using type = T;
-  size_t size;
+  std::size_t size;
   T data;
 };
 
 struct BufferInfo {
-  size_t size{};
-  size_t offset{};
+  std::size_t size{};
+  std::size_t offset{};
   MemoryUsage usage{};
 };
 
 struct BufferInfoFactory {
 
-  BufferInfoFactory size(size_t s) {
+  BufferInfoFactory size(std::size_t s) {
     info.size = s;
     return *this;
   }
 
-  BufferInfoFactory offset(size_t o) {
+  BufferInfoFactory offset(std::size_t o) {
     info.offset = o;
     return *this;
   }
@@ -357,7 +357,8 @@ enum class UniformBindingType {
   SHADER_STORAGE,
   BINDLESS_TEXTURE,
   ACCELERATION_STRUCTURE,
-  STORAGE_IMAGE
+  STORAGE_IMAGE,
+  SIZE
 };
 
 enum class MemoryBarrierHint : int {
@@ -402,8 +403,8 @@ inline ShaderStage operator&(ShaderStage first, ShaderStage second) {
 }
 
 struct UniformBindingInfo {
-  size_t size;
-  size_t offset;
+  std::size_t size;
+  std::size_t offset;
   uint32_t binding = 0;
   uint32_t set = 0;
   UniformBindingType type;
@@ -419,11 +420,11 @@ struct UniformBindingInfo {
 struct UniformBindingFactory {
   operator UniformBindingInfo() { return info; }
 
-  UniformBindingInfo size(size_t s) {
+  UniformBindingInfo size(std::size_t s) {
     info.size = s;
     return *this;
   }
-  UniformBindingInfo offset(size_t o) {
+  UniformBindingInfo offset(std::size_t o) {
     info.offset = o;
     return *this;
   }
@@ -460,7 +461,7 @@ struct RenderPassInfo {
   uint32_t numAttributes = 0;
   uint32_t numLayouts = 0;
   uint32_t numAttachments = 0;
-  // size_t size;
+  // std::size_t size;
   bool depthAttachment = false;
   bool isSwapChainAttachment = false;
   std::vector<SubPassInfo> subpasses;
@@ -483,7 +484,7 @@ struct RenderPassFactory {
       return *this;
   }*/
 
-  RenderPassFactory index(size_t index) {
+  RenderPassFactory index(std::size_t index) {
     info.index = index;
     return *this;
   }
@@ -532,7 +533,7 @@ struct RenderPassFactory {
     return *this;
   }
 
-  RenderPassFactory pushConstant(size_t size) {
+  RenderPassFactory pushConstant(std::size_t size) {
     info.pushConstant.size = size;
     return *this;
   }
@@ -564,8 +565,8 @@ struct BindGroupInfo {
 };
 
 struct UpdateVertexBufferInfo {
-  size_t size{};
-  size_t offset{};
+  std::size_t size{};
+  std::size_t offset{};
   void *vertices = nullptr;
 };
 

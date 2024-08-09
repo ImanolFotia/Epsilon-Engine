@@ -11,7 +11,7 @@ namespace framework {
 
             int depth = 0;
             std::cout << "\033[1;31m------------begin stacktrace------------\033[0m\n";
-            int i = 0;
+            //int i = 0;
             auto stacktrace = stacktrace::current();
             for (auto &entry: stacktrace) {
                 if (depth < 2) {
@@ -38,7 +38,7 @@ namespace framework {
             std::cerr << "An Exception has ocurred: " << what << std::endl;
             int depth = 0;
             std::cout << "\033[1;31m------------begin stacktrace------------\033[0m\n";
-            int i = 0;
+           
             auto stacktrace = stacktrace::current();
             for (auto& entry : stacktrace) {
                 if (depth < 2) {

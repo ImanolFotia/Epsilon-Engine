@@ -17,7 +17,6 @@ protected:
 
 public:
   void generateTangentSpaceVectors() {
-    uint32_t num_triangles = m_pMesh.Indices.size() / 3;
     // calculate tangent/bitangent vectors of both triangles
     glm::vec3 tangent1, bitangent1;
     // std::cout << m_pMesh.m_Tris.size() <<  std::endl;
@@ -39,7 +38,6 @@ public:
       glm::vec2 deltaUV1 = t1 - t0;
       glm::vec2 deltaUV2 = t2 - t0;
 
-      float f = (deltaUV2.x * deltaUV1.x - deltaUV2.y * deltaUV1.y) == 0.0f ? -1.0f : 1.0f;
 
       // tangent vector and binormal vector
       glm::vec3 t = deltaUV2.y * edge1 - deltaUV1.y * edge2;

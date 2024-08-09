@@ -33,7 +33,7 @@ template <typename T> struct Ref {
   uint32_t m_pIndex{};
 
 private:
-  Ref(uint32_t i, uint32_t b, uint32_t id) : m_pIndex(i), m_pGeneration(b), m_pID(id) {}
+  Ref(uint32_t i, uint32_t b, uint32_t id) : m_pIndex(i), m_pID(id), m_pGeneration(b) {}
 
   uint32_t m_pID = -1;
   uint8_t m_pGeneration{};

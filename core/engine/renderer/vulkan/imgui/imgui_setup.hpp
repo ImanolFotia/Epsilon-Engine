@@ -40,7 +40,7 @@ class ImGuiRenderer {
 
   ImGui_ImplVulkanH_Window m_pMainWindowData;
 
-  VkAllocationCallbacks *m_pAllocator = NULL;
+  VkAllocationCallbacks *m_pAllocator = nullptr;
   VkInstance m_pInstance = VK_NULL_HANDLE;
   VkPhysicalDevice m_pPhysicalDevice = VK_NULL_HANDLE;
   VkDevice m_pDevice = VK_NULL_HANDLE;
@@ -362,7 +362,7 @@ public:
     m_pMainWindowData.Surface = vk_data.surface;
     m_pMainWindowData.ClearEnable = true;
     m_pDevice = vk_data.logicalDevice;
-    m_pMainWindowData.ClearValue.color = {0.0, 0.0, 0.0, 0.0f};
+    m_pMainWindowData.ClearValue.color = {{0.0, 0.0, 0.0, 0.0f}};
 
     m_pRenderPass = vk_data.defaultRenderPass.renderPass;
 
@@ -390,7 +390,7 @@ public:
     ImGui::StyleColorsDark();
     setStyle();
     // ImGui::StyleColorsLight();
-    ImGuiStyle *style = &ImGui::GetStyle();
+    //ImGuiStyle *style = &ImGui::GetStyle();
     /*style->ScrollbarRounding = 5.0f;
     style->GrabRounding = 5.0f;
     style->FrameRounding = 5.0f;
@@ -399,7 +399,7 @@ public:
     style->PopupRounding = 5.0f;
     style->TabRounding = 5.0f;*/
 
-    ImGui_ImplVulkanH_Window *wd = &m_pMainWindowData;
+    //ImGui_ImplVulkanH_Window *wd = &m_pMainWindowData;
     // Setup Platform/Renderer backends
 #if USE_GLFW
     ImGui_ImplGlfw_InitForVulkan(window, true);
@@ -523,11 +523,6 @@ public:
     if (m_pEnabled) {
       // ImGuiBegin();
 
-      ImGui_ImplVulkanH_Window *wd = &m_pMainWindowData;
-      // Our state
-      static bool show_demo_window = true;
-      static bool show_another_window = false;
-
       MainWindow();
 
       // ImGui::SetNextWindowSize(ImVec2(wd->Width, wd->Height));
@@ -541,7 +536,7 @@ public:
         ImGui::BulletText("Framerate %.1f FPS", ImGui::GetIO().Framerate);
         ImGui::BulletText("frametime %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
         ImGui::BulletText("Draw calls: %i", resources.numDrawCalls);
-        ImGui::BulletText("Num Vertices: %i", resources.numVertices);
+        ImGui::BulletText("Num Vertices: %lu", resources.numVertices);
         ImGui::Checkbox("Show graph", &show_graph);
         static float frametime_values[100] = {};
         static int frametime_values_offset = 0;
@@ -560,19 +555,19 @@ public:
           char header_name[128];
           sprintf(header_name, "Heap %i", i);
           if (ImGui::CollapsingHeader(header_name)) {
-            ImGui::BulletText("Total %i MB", heap.total_memory / 1024 / 1024);
-            ImGui::BulletText("Used %i MB", heap.used_memory / 1024 / 1024);
-            ImGui::BulletText("Free %i MB", heap.free_memory / 1024 / 1024);
+            ImGui::BulletText("Total %lu MB", heap.total_memory / 1024 / 1024);
+            ImGui::BulletText("Used %lu MB", heap.used_memory / 1024 / 1024);
+            ImGui::BulletText("Free %lu MB", heap.free_memory / 1024 / 1024);
           }
           i++;
         }
 
         ImGui::Separator();
         if (ImGui::CollapsingHeader("Resources")) {
-          ImGui::BulletText("Vertex buffers %i", m_pResourceManagerRef->vertexBufferPool.size());
-          ImGui::BulletText("Index buffers %i", m_pResourceManagerRef->indexBufferPool.size());
-          ImGui::BulletText("Textures %i", m_pResourceManagerRef->texPool.size());
-          ImGui::BulletText("Meshes %i", m_pResourceManagerRef->meshPool.size());
+          ImGui::BulletText("Vertex buffers %lu", m_pResourceManagerRef->vertexBufferPool.size());
+          ImGui::BulletText("Index buffers %lu", m_pResourceManagerRef->indexBufferPool.size());
+          ImGui::BulletText("Textures %lu", m_pResourceManagerRef->texPool.size());
+          ImGui::BulletText("Meshes %lu", m_pResourceManagerRef->meshPool.size());
         }
         ImGui::End();
       }
@@ -590,7 +585,7 @@ public:
     ImPlot::PushStyleVar(ImPlotStyleVar_PlotPadding, ImVec2(0, 0));
     // ImPlot::SetNextPlotLimits(0, count - 1, min_v, max_v, ImGuiCond_Always);
     ImPlot::SetNextAxesLimits(0, count - 1, min_v, max_v, ImGuiCond_Always);
-    if (ImPlot::BeginPlot(id, 0, 0, size, ImPlotFlags_CanvasOnly | ImPlotAxisFlags_NoDecorations, ImPlotAxisFlags_NoDecorations)) {
+    if (ImPlot::BeginPlot(id, size, ImPlotFlags_CanvasOnly | ImPlotFlags_CanvasOnly)) {
       // ImPlot::PlotText(overlay, 10.0, 6.0, );
       ImPlot::PushStyleColor(ImPlotCol_Line, col);
       ImPlot::PlotLine(id, values, count, 1, 0, offset);
@@ -645,7 +640,7 @@ public:
       window_flags |= ImGuiWindowFlags_NoBackground;
     // ImGui::PushStyleColor(ImGuiCol_DockingEmptyBg);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-    ImGui::Begin("Main Window", NULL,
+    ImGui::Begin("Main Window", nullptr,
                  window_flags); // Create a window called "Hello, world!" and
                                 // append into it.
     ImGui::PopStyleVar();

@@ -39,9 +39,6 @@ public:
     std::list<Node *> listNotTestedNodes;
     listNotTestedNodes.push_back(start);
 
-    size_t last_index = 0;
-    float closest_so_far = std::numeric_limits<float>::max();
-
     while (!listNotTestedNodes.empty() && currentNode != end) {
       listNotTestedNodes.sort([](const Node *lhs, const Node *rhs) { return lhs->globalDistance < rhs->globalDistance; });
 

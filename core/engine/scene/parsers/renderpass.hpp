@@ -31,7 +31,7 @@ namespace engine::parsers
 
 			for (auto &input_json : renderpass["inputs"])
 			{
-				auto type = resolveType(input_json["type"]);
+				//auto type = resolveType(input_json["type"]);
 
 				UniformBindingInfo info;
 

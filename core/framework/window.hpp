@@ -35,29 +35,27 @@
 #include <GLFW/glfw3.h>
 #endif
 
-#if defined(_WIN32)
+#if _WIN32
 //  Microsoft
 #if BUILD_SHARED_LIBS
-#if defined(EPSILON_BUILD_DLL)
+#if defined(EPSILON_BUILD_DLL) && !defined(EPSILON_DLL)
 #define EPSILON_DLL __declspec(dllexport)
-#else
-#define EPSILON_DLL __declspec(dllimport)
 #endif
 #elif defined(__linux__)
 //  GCC
 #if defined(EPSILON_BUILD_DLL)
 #define EPSILON_DLL __attribute__((visibility("default")))
 #else
+#if !defined(EPSILON_DLL)
 #define EPSILON_DLL
 #endif
+#endif
 #else
-//  do nothing and hope for the best?
-#define EPSILON_DLL
+#if !defined(EPSILON_DLL)
 #define EPSILON_DLL
 #pragma warning Unknown dynamic link import / export semantics.
 #endif
-#else
-#define EPSILON_DLL
+#endif
 #endif
 
 #include "common.hpp"
@@ -77,7 +75,7 @@ struct WindowSize {
   uint16_t height;
 };
 
-class EPSILON_DLL Window {
+class Window {
 
 public:
   enum class WindowMode { WINDOWED = 0, FULLSCREEN, BORDERLESS };
@@ -154,7 +152,7 @@ public:
 #if USE_GLFW
     if (current_cursor == GLFW_ARROW_CURSOR)
       return;
-    glfwSetCursor(mWindow, NULL);
+    glfwSetCursor(mWindow, nullptr);
     current_cursor = GLFW_ARROW_CURSOR;
 #endif
   }
@@ -178,14 +176,14 @@ public:
     mWidth = mDefaultWidth;
     mHeight = mDefaultHeight;
 
-    glfwSetWindowMonitor(mWindow, NULL, 0, 0, mDefaultWidth, mDefaultHeight, mainMonitorMode->refreshRate);
+    glfwSetWindowMonitor(mWindow, nullptr, 0, 0, mDefaultWidth, mDefaultHeight, mainMonitorMode->refreshRate);
     mWindowMode = WindowMode::BORDERLESS;
   }
 
   void setWindowed() {
     auto mainMonitorMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-    glfwSetWindowMonitor(mWindow, NULL, 0, 30, mainMonitorMode->width, mainMonitorMode->height - 30, mainMonitorMode->refreshRate);
+    glfwSetWindowMonitor(mWindow, nullptr, 0, 30, mainMonitorMode->width, mainMonitorMode->height - 30, mainMonitorMode->refreshRate);
     glfwSetWindowPos(mWindow, 0, 30);
     glfwSetWindowAttrib(mWindow, GLFW_DECORATED, GLFW_TRUE);
     mWindowMode = WindowMode::WINDOWED;

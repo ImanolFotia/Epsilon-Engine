@@ -172,7 +172,7 @@ namespace engine
 
 				float f = (deltaUV2.x * deltaUV1.x - deltaUV2.y * deltaUV1.y) == 0.0f ? -1.0f : 1.0f;
 				// when t1, t2, t3 in same position in UV space, just use default UV direction.
-				/* if (0 == deltaUV2.x && 0 == deltaUV2.y && 0 == deltaUV1.x && 0 == deltaUV1.y)
+				 if (0 == deltaUV2.x && 0 == deltaUV2.y && 0 == deltaUV1.x && 0 == deltaUV1.y)
 				 {
 					 deltaUV1.x = 0.0;
 					 deltaUV1.y = 1.0;
@@ -202,7 +202,7 @@ namespace engine
 				m_pMesh.Vertices[m_pMesh.Indices[i + 1]].color = glm::vec4(1.0);
 				m_pMesh.Vertices[m_pMesh.Indices[i + 2]].color = glm::vec4(1.0);
 			}
-			/*
+			
 						for (unsigned int i = 0; i < Mesh.Vertices.size(); ++i)
 						{
 							Vertex &vert = Mesh.Vertices[i];

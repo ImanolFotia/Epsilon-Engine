@@ -35,10 +35,12 @@ namespace framework
 		class DropArgs : public beacon::args
 		{
 		public:
-			const std::string &front()
+			std::string front()
 			{
 				if (!paths.empty())
 					return paths[0];
+
+				return "";
 			}
 
 			const std::string &at(unsigned index)
@@ -71,7 +73,7 @@ namespace framework
 			static inline beacon::single_handler<DropArgs> DropEventHandler;
 
 #if USE_GLFW
-			static void DropCallbackGLFW(framework::Window::windowType *window, int count, const char **paths)
+			static void DropCallbackGLFW(Window::windowType *window, int count, const char **paths)
 			{
 				DropArgs dropArgs;
 				for (unsigned i = 0; i < count; i++)

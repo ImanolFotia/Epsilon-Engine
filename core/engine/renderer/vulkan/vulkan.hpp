@@ -12,6 +12,7 @@
 
 #include <list>
 #include <vector>
+#include <unordered_map>
 /*
 #define VMA_DEBUG_LOG_FORMAT(format, ...)
 

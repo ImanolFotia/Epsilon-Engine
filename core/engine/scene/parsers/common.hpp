@@ -2,6 +2,8 @@
 
 #include <nlohmann/json.hpp>
 
+#include <core/engine/renderer/types.hpp>
+
 namespace engine::parsers {
 
 	static WindingMode resolveWindingMode(const std::string& x) {
@@ -41,6 +43,8 @@ namespace engine::parsers {
 		if (x == "BINDLESS_TEXTURE") return UniformBindingType::BINDLESS_TEXTURE;
 		if (x == "ACCELERATION_STRUCTURE") return UniformBindingType::ACCELERATION_STRUCTURE;
 		if (x == "STORAGE_IMAGE") return UniformBindingType::STORAGE_IMAGE;
+		
+		return UniformBindingType::SIZE;
 	}
 
 
@@ -116,6 +120,7 @@ namespace engine::parsers {
 		if (x == "XYZW_INT16") return XYZW_INT16;
 		if (x == "XYZW_UINT16") return XYZW_UINT16;
 
+		return VERTEX_FORMAT_SIZE;
 	}
 
 

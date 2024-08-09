@@ -50,7 +50,7 @@ public:
   void UpdateMesh(Ref<Mesh>, UpdateMeshInfo) override;
   void PatchMesh(Ref<Mesh>, UpdateMeshInfo) override;
 
-  void UpdateUniform(const std::string &name, void *newData);
+  void UpdateUniform(const std::string &name, void *newData) override;
 
   Ref<Texture> GetRenderTarget(Ref<RenderPass>, uint32_t) override;
   void CopyTexture(Ref<Texture> src, Ref<Texture> dst) override;
@@ -119,7 +119,7 @@ private:
   void pGenerateMipMaps(TextureCreationInfo, vk::VulkanTexture &);
   void UploadMipmaps();
 
-  int FramesInFlight() { return vk::MAX_FRAMES_IN_FLIGHT; }
+  int FramesInFlight() override { return vk::MAX_FRAMES_IN_FLIGHT; }
 
   const uint32_t MAX_BINDLESS_RESOURCES = 16536;
   const uint32_t RENDERPASS_LAYOUT = 0;

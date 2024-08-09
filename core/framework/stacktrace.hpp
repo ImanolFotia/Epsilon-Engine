@@ -140,8 +140,8 @@ namespace framework
             for (int i = 0; i < numFrames; i++)
             {
 
-                void *frameAddress = buffer[i];
-                size_t p = 0;
+                //void *frameAddress = buffer[i];
+                int p = 0;
 
                 while (framesDescriptions[i][p] != '(' &&
                        framesDescriptions[i][p] != ' ' &&

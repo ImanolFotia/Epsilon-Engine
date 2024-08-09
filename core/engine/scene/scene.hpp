@@ -170,7 +170,7 @@ public:
       using render_node_type = engine::Node<typename std::list<OctreeItem<OctreeRenderType>>::iterator>;
       std::shared_ptr<render_node_type> octree_render_node = getChild<typename std::list<OctreeItem<OctreeRenderType>>::iterator>(node->Parent());
       if (octree_render_node != nullptr) {
-        auto new_item = m_pRenderOctree->relocate(octree_render_node->data, boundingBox);
+        m_pRenderOctree->relocate(octree_render_node->data, boundingBox);
       }
     }
   }
@@ -195,7 +195,7 @@ public:
 
   template <typename P, typename T> void removeFromNode(std::shared_ptr<Node<P>> parent, std::shared_ptr<Node<P>> node) { m_pSceneManager.erase(node); }
 
-  template <typename T> void remove_selected(std::vector<T> &v, std::vector<size_t> selection) {
+  template <typename T> void remove_selected(std::vector<T> &v, std::vector<std::size_t> selection) {
 
     int offset = v.size();
     for (size_t i = 0; i < selection.size(); i++) {
@@ -266,7 +266,7 @@ auto emplaceIntoScene(Box boundingBox)
 {
     std::shared_ptr<Node<T>> scene_node =
 m_pSceneManager.emplace<T>(m_pSceneManager.root);
-    /*auto octree_node = m_pNodeOctree->insert(boundingBox, scene_node);
+    auto octree_node = m_pNodeOctree->insert(boundingBox, scene_node);
 
     m_pSceneManager.insert(scene_node, octree_node);*/
 

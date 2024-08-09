@@ -21,7 +21,7 @@ public:
   enum BRUSH_TYPE { GAUSSIAN, SQUARE, SIZE };
 
   Quad(uint16_t tesselation = 2, glm::vec2 uvMultiplier = glm::vec2(1.0f), glm::vec3 size = glm::vec3(1.0f))
-      : m_pTesselation(tesselation), m_pUvMultiplier(uvMultiplier) {
+      :  m_pUvMultiplier(uvMultiplier), m_pTesselation(tesselation) {
 
     m_pType = DrawableType::QUAD;
 
@@ -35,7 +35,6 @@ public:
     bounds.min = glm::vec3(100000.0f);
     bounds.max = glm::vec3(-100000.0f);
 
-    glm::vec3 halfSize = size * 0.5f;
 
     for (int i = 0; i <= tesselation; i++) {
       for (int j = 0; j <= tesselation; j++) {
@@ -135,10 +134,6 @@ public:
 
     p = (p - g);
 
-    int index = p.y + p.x * (m_pTesselation + 1);
-
-    if (position.x < origin.x || position.x >= bounds.x || position.z < origin.y || position.z >= bounds.y)
-      index = 0;
     p += 2;
     for (int i = -1; i <= radius * 2; i++)
       for (int j = -1; j <= radius * 2; j++) {
@@ -247,33 +242,23 @@ public:
     glm::ivec3 pos = glm::floor(position - 1.0f);
 
     int x_a = pos.x + (m_pTesselation) / 2;
-    int x_b = 0;
 
     int y_a = pos.z - (m_pTesselation) / 2;
-    int y_b = 0;
 
     if (x_a >= m_pTesselation + 1) {
-      x_b = x_a;
       x_a = x_a - 1;
-    } else {
-      x_b = x_a + 1;
-    }
+    } 
 
     if (y_a >= m_pTesselation + 1) {
-      y_b = y_a;
       y_a = y_a - 1;
-    } else {
-      y_b = y_a + 1;
     }
 
     if (y_a < 0) {
       y_a = 0;
-      y_b = 1;
     }
 
     if (x_a < 0) {
       x_a = 0;
-      x_b = 1;
     }
 
     glm::vec2 m_pGridOrigin = glm::vec2(-128.0, -128.0);

@@ -16,15 +16,19 @@
 #endif
 #elif defined(__linux__)
 //  GCC
-#if defined(EPSILON_BUILD_DLL)
+#if defined(EPSILON_BUILD_DLL) && !defined(EPSILON_DLL)
 #define EPSILON_DLL __attribute__((visibility("default")))
 #else
+#if !defined(EPSILON_DLL)
 #define EPSILON_DLL
+#endif
 #endif
 #else
 //  do nothing and hope for the best?
+#if !defined(EPSILON_DLL)
 #define EPSILON_DLL
 #pragma warning Unknown dynamic link import / export semantics.
+#endif
 #endif
 
 namespace framework

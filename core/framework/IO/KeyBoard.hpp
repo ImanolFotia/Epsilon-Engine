@@ -14,7 +14,7 @@
 
 #include <beacon/beacon.hpp>
 
-#if defined(_WIN32)
+#if _WIN32
 //  Microsoft
 #if defined(EPSILON_BUILD_DLL)
 #define EPSILON_DLL __declspec(dllexport)
@@ -23,14 +23,17 @@
 #endif
 #elif defined(__linux__)
 //  GCC
-#if defined(EPSILON_BUILD_DLL)
+#if defined(EPSILON_BUILD_DLL) && !defined(EPSILON_DLL)
 #define EPSILON_DLL __attribute__((visibility("default")))
 #else
+#if !defined(EPSILON_DLL)
 #define EPSILON_DLL
 #endif
+#endif
 #else
-//  do nothing and hope for the best?
+#if !defined(EPSILON_DLL)
 #define EPSILON_DLL
+#endif
 #pragma warning Unknown dynamic link import / export semantics.
 #endif
 

@@ -35,8 +35,8 @@ enum AssetType { TEXTURE = 0, MODEL, SIZE };
 struct AssetInfo {
   std::string AssetPath{};
   AssetType type;
-  size_t bindGroup = 0;
-  size_t shadowBindGroup = 0;
+  std::size_t bindGroup = 0;
+  std::size_t shadowBindGroup = 0;
 };
 
 struct ShaderData {
@@ -89,7 +89,7 @@ struct PBRMaterial {
 struct PBRMaterialIndex {
   PBRMaterial material;
   uint32_t index{};
-  size_t Slot[4] = {0};
+  std::size_t Slot[4] = {0};
   std::string name;
 };
 
@@ -114,9 +114,9 @@ struct RenderModel {
   std::string shadowBindGroup = "ShadowLayout";
   std::string prepassBindGroup = "prepassLayout";
 
-  size_t bindGroupId = std::hash<std::string>{}("DefaultLayout");
-  size_t shadowBindGroupId = std::hash<std::string>{}("ShadowLayout");
-  size_t prepassBindGroupId = std::hash<std::string>{}("prepassLayout");
+  std::size_t bindGroupId = std::hash<std::string>{}("DefaultLayout");
+  std::size_t shadowBindGroupId = std::hash<std::string>{}("ShadowLayout");
+  std::size_t prepassBindGroupId = std::hash<std::string>{}("prepassLayout");
   uint32_t animationIndex = 0;
   bool hasAnimation = false;
   bool isInstanced = false;
@@ -171,13 +171,13 @@ struct Decal {
 };
 
 class AssetManager {
-  std::unordered_map<size_t, Ref<Texture>> m_pImages;
+  std::unordered_map<std::size_t, Ref<Texture>> m_pImages;
   std::unordered_map<std::string, RenderModel> m_pModels;
   std::unordered_map<std::string, AudioBuffer> m_pAudioBuffers;
   std::unordered_map<std::string, ShaderAsset> m_pShaders;
   std::unordered_map<std::size_t, PBRMaterialIndex> m_pMaterials;
 
-  std::unordered_map<size_t, std::string> m_pImageName;
+  std::unordered_map<std::size_t, std::string> m_pImageName;
 
   std::unordered_map<std::string, Ref<Buffer>> m_pGPUBuffers;
 
@@ -196,24 +196,26 @@ class AssetManager {
   ShaderEntity *lightBufferPtr;
 
 public:
-  static const size_t MAX_MATERIALS = 10000;
-  static const size_t MAX_OBJECTS = 1100000;
-  static const size_t MAX_TRANSFORMS = 1100000;
-  static const size_t MAX_DECALS = 1000;
+  static const std::size_t MAX_MATERIALS = 10000;
+  static const std::size_t MAX_OBJECTS = 1100000;
+  static const std::size_t MAX_TRANSFORMS = 1100000;
+  static const std::size_t MAX_DECALS = 1000;
   AssetManager() {}
 
-  const std::unordered_map<size_t, Ref<Texture>> &getImages() { return m_pImages; }
+  const std::unordered_map<std::size_t, Ref<Texture>> &getImages() { return m_pImages; }
 
   void setContext(std::shared_ptr<Context> context) { m_pContext = context; }
 
-  const std::string &getImageName(size_t hash) { return m_pImageName.at(hash); }
+  const std::string &getImageName(std::size_t hash) { return m_pImageName.at(hash); }
 
   const Ref<Texture> getImage(const std::string &name) {
     if (m_pImages.contains(std::hash<std::string>{}(name)))
       return m_pImages[std::hash<std::string>{}(name)];
+
+      return Ref<Texture>::makeEmpty();
   }
 
-  const Ref<Texture> getImage(size_t hash) {
+  const Ref<Texture> getImage(std::size_t hash) {
     if (m_pImages.contains(hash))
       return m_pImages[hash];
     return Ref<Texture>::makeEmpty();
@@ -274,7 +276,7 @@ public:
     infoBufferPtr = reinterpret_cast<CursorInfo *>(resourceManager->mapBuffer(m_pGPUBuffers["info_buffer"], 0));
   }
 
-  Ref<Buffer> CreateGPUBuffer(const std::string &name, size_t size, engine::BufferStorageType type = engine::BufferStorageType::STORAGE_BUFFER,
+  Ref<Buffer> CreateGPUBuffer(const std::string &name, std::size_t size, engine::BufferStorageType type = engine::BufferStorageType::STORAGE_BUFFER,
                               int count = -1) {
     if (m_pGPUBuffers.contains(name)) {
       IO::Error("Trying to create a buffer that already exists");
@@ -297,8 +299,6 @@ public:
   }
 
   ShaderEntity *getEntityPointer(int32_t index = 0) {
-
-    uint32_t currFrame = m_pContext->Renderer()->CurrentFrameInFlight();
     return lightBufferPtr;
   }
 
@@ -380,8 +380,6 @@ public:
   }
 
   CursorInfo *getBufferPointer() {
-
-    uint32_t currFrame = m_pContext->Renderer()->CurrentFrameInFlight();
     return infoBufferPtr; // [currFrame] ;
   }
 
@@ -434,7 +432,7 @@ public:
     unsigned int material_index = 0;
     for (auto &material : materials) {
       std::string material_name = name + "_material" + std::to_string(material_index);
-      size_t material_name_hash = std::hash<std::string>{}(material_name);
+      std::size_t material_name_hash = std::hash<std::string>{}(material_name);
 
       if (m_pMaterials.contains(material_name_hash)) {
         subRenderC.material_keys[material_index] = material_name_hash;
@@ -548,7 +546,7 @@ public:
     if (subRenderC.numMaterials == 0) {
       subRenderC.numMaterials = 1;
       std::string material_name = name + "_material" + std::to_string(material_index);
-      size_t material_name_hash = std::hash<std::string>{}(material_name);
+      std::size_t material_name_hash = std::hash<std::string>{}(material_name);
       subRenderC.material_keys[material_index] = material_name_hash;
 
       uint32_t mat_index = 0;
@@ -586,7 +584,7 @@ public:
     RenderModel &model = m_pModels[name];
     model.name = name;
     std::string material_name;
-    size_t material_name_hash;
+    std::size_t material_name_hash;
 
     if (material.name.empty())
       material_name = name + "_material";
@@ -757,7 +755,7 @@ public:
       subRenderC.id = mesh_counter;
       mesh_counter++;
 
-      size_t material_name_hash = std::hash<std::string>{}(material_name);
+      std::size_t material_name_hash = std::hash<std::string>{}(material_name);
 
       if (m_pMaterials.contains(material_name_hash)) {
         model.renderMeshes[0].push_back(subRenderC);
@@ -933,12 +931,11 @@ public:
     return obj_index;
   }
 
-  Ref<Texture> addTextureFromBytes(const std::string &name, unsigned char *bytes, size_t size, int w, int h, int c, const TextureInfo &info) {
+  Ref<Texture> addTextureFromBytes(const std::string &name, unsigned char *bytes, std::size_t size, int w, int h, int c, const TextureInfo &info) {
 
-    std::vector<size_t> offsets;
+    std::vector<std::size_t> offsets;
     unsigned int format = info.format;
     bool isKTX = false;
-    bool isDDS = false;
     int mipLevels = 0;
     Ref<Texture> ref = Ref<Texture>::makeEmpty();
     if (bytes != nullptr) {
@@ -979,7 +976,7 @@ public:
     }
 
     int width, height, num_channels, mipLevels = 1;
-    size_t size = 0;
+    std::size_t size = 0;
     bool isCompressed = false;
     std::string texture_path = "./assets/" + path;
 
@@ -987,7 +984,7 @@ public:
     unsigned char *pixels;
     // ktxTexture *ktxTex;
     // ktxTexture2 *ktxTex2;
-    std::vector<size_t> offsets;
+    std::vector<std::size_t> offsets;
     unsigned int format = info.format;
     bool isKTX = false;
     bool isDDS = false;
@@ -1010,7 +1007,7 @@ public:
             }
             pixels = ktxTexture_GetData(ktxTex);
             pixels = ktxTexture_GetData(ktxTex);
-            ktx_size_t ktxTextureSize = ktxTexture_GetDataSize(ktxTex);
+            ktx_std::size_t ktxTextureSize = ktxTexture_GetDataSize(ktxTex);
 
             width = ktxTex->baseWidth;
             height = ktxTex->baseHeight;
@@ -1021,7 +1018,7 @@ public:
 
             for (int i = 0; i < mipLevels; i++)
             {
-                    ktx_size_t offset;
+                    ktx_std::size_t offset;
                     KTX_error_code result = ktxTexture_GetImageOffset(ktxTex, i,
     0, 0, &offset); offsets.push_back(offset);
             }
@@ -1043,7 +1040,7 @@ public:
                     isCompressed = true;
             }
             pixels = ktxTex2->pData;
-            ktx_size_t ktxTextureSize = ktxTex2->dataSize;
+            ktx_std::size_t ktxTextureSize = ktxTex2->dataSize;
 
             width = ktxTex2->baseWidth;
             height = ktxTex2->baseHeight;
@@ -1054,7 +1051,7 @@ public:
 
             for (int i = 0; i < mipLevels; i++)
             {
-                    ktx_size_t offset;
+                    ktx_std::size_t offset;
 
                     KTX_error_code result =
     ktxTexture_GetImageOffset(ktxTexture(ktxTex2), i, 0, 0, &offset);
@@ -1063,7 +1060,7 @@ public:
     }
     else */
     if (ext == "dds") {
-      int baseLevel = 0;
+      int baseLevel = 2;
       DDS ddsfile(texture_path, baseLevel);
       isDDS = true;
       width = ddsfile.width();
@@ -1091,7 +1088,7 @@ public:
         format = NON_COLOR_RG_BC5U;
       }
       pixels = ddsfile.data();
-      size_t offset = 0;
+      std::size_t offset = 0;
 
       int w = width, h = height;
       unsigned int s = 0;
@@ -1169,15 +1166,15 @@ public:
     return ref;
   }
 
-  std::unordered_map<size_t, PBRMaterialIndex> &getMaterials() { return m_pMaterials; }
+  std::unordered_map<std::size_t, PBRMaterialIndex> &getMaterials() { return m_pMaterials; }
 
-  PBRMaterialIndex &getMaterial(size_t key) { return m_pMaterials.at(key); }
+  PBRMaterialIndex &getMaterial(std::size_t key) { return m_pMaterials.at(key); }
 
-  void setMaterial(size_t key, PBRMaterialIndex material) { m_pMaterials.at(key) = material; }
+  void setMaterial(std::size_t key, PBRMaterialIndex material) { m_pMaterials.at(key) = material; }
 
   std::unordered_map<std::string, ShaderAsset> getShaders() { return m_pShaders; }
 
-  size_t createMaterial(const std::string &name, PBRMaterial material) {
+  std::size_t createMaterial(const std::string &name, PBRMaterial material) {
 
     auto resourceManager = m_pContext->ResourceManager();
     uint32_t mat_index = 0;
@@ -1189,7 +1186,7 @@ public:
       m_pMaterialCurrentIndex++;
     }
 
-    size_t material_name_hash = std::hash<std::string>{}(name);
+    std::size_t material_name_hash = std::hash<std::string>{}(name);
     m_pMaterials[material_name_hash].index = mat_index;
 
     for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {

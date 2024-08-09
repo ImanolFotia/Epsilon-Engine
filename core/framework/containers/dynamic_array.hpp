@@ -183,27 +183,28 @@ namespace framework {
         }
 
         // Element access
-        constexpr reference_type at(size_t pos) {
+        constexpr reference_type at(size_type pos) {
             if (pos >= m_pSize || pos < 0) {
                 throw std::out_of_range("Index is out of bounds");
             }
 
             return m_pData[pos];
         }
-
+/*
         constexpr const_reference at(size_type pos) const {
             if (pos >= m_pSize || pos < 0) {
                 throw std::out_of_range("Index is out of bounds");
             }
 
             return m_pData[pos];
-        }
+        }*/
 
-        constexpr reference_type operator[](size_t pos) { return m_pData[pos]; }
-
+        constexpr reference_type operator[](size_type pos) { return m_pData[pos]; }
+/*
         constexpr const_reference operator[](size_type pos) const {
             return m_pData[pos];
         }
+        */
 
         constexpr reference_type front() { return m_pData[0]; }
 

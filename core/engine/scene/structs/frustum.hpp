@@ -50,11 +50,11 @@ namespace engine
 			auto center = box.center();
 			return CubeInFrustum(center.x, center.y, center.z, box.halfSize());
 		}
-
+/*
 		std::array<glm::vec4, 8> getFrustumPoints() {
-			corners;
+			return
 		}
-
+*/
 		BoundingSphere calculateSphere() {
 			glm::vec3 vmin{}, vmax{};
 

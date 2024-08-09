@@ -11,6 +11,7 @@
 #include <set>
 #include <string>
 #include <tiny_gltf.h>
+#include "gltf_animation.hpp"
 // #include <core/framework/vfs/filesystem.hpp>
 
 namespace framework {
@@ -19,12 +20,12 @@ class gltfModel : public ModelBase {
 
   template <typename T> struct IndexArrayStorage {
     const unsigned char *bytes;
-    const size_t count = 0;
-    const size_t stride = 0;
+    const std::size_t count = 0;
+    const std::size_t stride = 0;
     using type = T;
-    IndexArrayStorage(const unsigned char *b, const size_t c, const size_t s) : bytes(b), count(c), stride(s) {}
+    IndexArrayStorage(const unsigned char *b, const std::size_t c, const std::size_t s) : bytes(b), count(c), stride(s) {}
 
-    T operator[](size_t pos) {
+    T operator[](std::size_t pos) {
       if (pos >= count)
         throw std::out_of_range(__PRETTY_FUNCTION__);
       return *(reinterpret_cast<const T *>(bytes + pos * stride));
@@ -32,8 +33,9 @@ class gltfModel : public ModelBase {
   };
 
   struct IndexArrayPtrBase {
-    virtual uint32_t operator[](size_t pos) = 0;
-    virtual size_t size() = 0;
+    virtual uint32_t operator[](std::size_t pos) = 0;
+    virtual std::size_t size() = 0;
+    virtual ~IndexArrayPtrBase(){}
   };
 
   template <typename T> struct IndexArrayPtr : public IndexArrayPtrBase {
@@ -41,19 +43,19 @@ class gltfModel : public ModelBase {
 
     IndexArrayPtr(const IndexArrayStorage<T> &s) : storage(s) {}
 
-    uint32_t operator[](size_t pos) override { return static_cast<uint32_t>(storage[pos]); }
+    uint32_t operator[](std::size_t pos) override { return static_cast<uint32_t>(storage[pos]); }
 
-    size_t size() override { return storage.count; }
+    std::size_t size() override { return storage.count; }
   };
 
   template <typename T> struct VertexArrayStorage {
     using type = T;
-    VertexArrayStorage(const unsigned char *b, const size_t c, const size_t s) : bytes(b), count(c), stride(s) {}
+    VertexArrayStorage(const unsigned char *b, const std::size_t c, const std::size_t s) : bytes(b), count(c), stride(s) {}
     const unsigned char *bytes;
-    const size_t count = 0;
-    const size_t stride = 0;
+    const std::size_t count = 0;
+    const std::size_t stride = 0;
 
-    T operator[](size_t pos) {
+    T operator[](std::size_t pos) {
       if (pos >= count)
         throw std::out_of_range(__PRETTY_FUNCTION__);
       return *(reinterpret_cast<const T *>(bytes + pos * stride));
@@ -61,23 +63,23 @@ class gltfModel : public ModelBase {
   };
 
   struct Vertex3DArrayPtrBase {
-    virtual glm::vec3 operator[](size_t pos) = 0;
-    virtual size_t size() = 0;
+    virtual glm::vec3 operator[](std::size_t pos) = 0;
+    virtual std::size_t size() = 0;
   };
 
   struct Vertex4DArrayPtrBase {
-    virtual glm::vec4 operator[](size_t pos) = 0;
-    virtual size_t size() = 0;
+    virtual glm::vec4 operator[](std::size_t pos) = 0;
+    virtual std::size_t size() = 0;
   };
 
   struct Vertex2DArrayPtrBase {
-    virtual glm::vec2 operator[](size_t pos) = 0;
-    virtual size_t size() = 0;
+    virtual glm::vec2 operator[](std::size_t pos) = 0;
+    virtual std::size_t size() = 0;
   };
 
   struct UnsignedVertex4DArrayPtrBase {
-    virtual glm::lowp_u16vec4 operator[](size_t pos) = 0;
-    virtual size_t size() = 0;
+    virtual glm::lowp_u16vec4 operator[](std::size_t pos) = 0;
+    virtual std::size_t size() = 0;
   };
 
   template <typename T> struct UnsignedVertex4DArrayPtr : public UnsignedVertex4DArrayPtrBase {
@@ -85,13 +87,13 @@ class gltfModel : public ModelBase {
 
     UnsignedVertex4DArrayPtr(const VertexArrayStorage<T> &s) : storage(s) {}
 
-    glm::lowp_u16vec4 operator[](size_t pos) override {
+    glm::lowp_u16vec4 operator[](std::size_t pos) override {
       if (pos >= storage.count)
         throw std::out_of_range(__PRETTY_FUNCTION__);
       return static_cast<glm::lowp_u16vec4>(storage[pos]);
     }
 
-    virtual size_t size() override { return storage.count; }
+    virtual std::size_t size() override { return storage.count; }
   };
 
   template <typename T> struct Vertex4DArrayPtr : public Vertex4DArrayPtrBase {
@@ -99,13 +101,13 @@ class gltfModel : public ModelBase {
 
     Vertex4DArrayPtr(const VertexArrayStorage<T> &s) : storage(s) {}
 
-    glm::vec4 operator[](size_t pos) override {
+    glm::vec4 operator[](std::size_t pos) override {
       if (pos >= storage.count)
         throw std::out_of_range(__PRETTY_FUNCTION__);
       return static_cast<glm::vec4>(storage[pos]);
     }
 
-    virtual size_t size() override { return storage.count; }
+    virtual std::size_t size() override { return storage.count; }
   };
 
   template <typename T> struct Vertex3DArrayPtr : public Vertex3DArrayPtrBase {
@@ -113,22 +115,22 @@ class gltfModel : public ModelBase {
 
     Vertex3DArrayPtr(const VertexArrayStorage<T> &s) : storage(s) {}
 
-    glm::vec3 operator[](size_t pos) override {
+    glm::vec3 operator[](std::size_t pos) override {
       if (pos >= storage.count)
         throw std::out_of_range(__PRETTY_FUNCTION__);
       return static_cast<glm::vec3>(storage[pos]);
     }
 
-    virtual size_t size() override { return storage.count; }
+    virtual std::size_t size() override { return storage.count; }
   };
   template <typename T> struct Vertex2DArrayPtr : Vertex2DArrayPtrBase {
     VertexArrayStorage<T> storage;
 
     Vertex2DArrayPtr(const VertexArrayStorage<T> &s) : storage(s) {}
 
-    glm::vec2 operator[](size_t pos) override { return static_cast<glm::vec2>(storage[pos]); }
+    glm::vec2 operator[](std::size_t pos) override { return static_cast<glm::vec2>(storage[pos]); }
 
-    virtual size_t size() override { return storage.count; }
+    virtual std::size_t size() override { return storage.count; }
   };
 
   struct temp_mesh {
@@ -193,9 +195,6 @@ class gltfModel : public ModelBase {
       m.hasMesh = false;
     }
     m.transform = glm::mat4(1.0f);
-    glm::mat4 rot_matrix = glm::mat4(1.0f);
-    glm::mat4 scale_matrix = glm::mat4(1.0f);
-    glm::mat4 translation_matrix = glm::mat4(1.0f);
 
     m.transform = parentTransform * getTransformFromNode(node);
 
@@ -287,7 +286,7 @@ class gltfModel : public ModelBase {
         const auto &bufferView = model.bufferViews[outputAccesor.bufferView];
         const auto &buffer = model.buffers[bufferView.buffer];
         const void *dataAddress = &buffer.data[bufferView.byteOffset + outputAccesor.byteOffset];
-        const auto byteStride = outputAccesor.ByteStride(bufferView);
+        //const auto byteStride = outputAccesor.ByteStride(bufferView);
 
         sampler.outputs.resize(outputAccesor.count);
         for (int j = 0; j < outputAccesor.count; j++) {
@@ -307,7 +306,7 @@ class gltfModel : public ModelBase {
     }
 
     current_animation.channels.resize(animation.channels.size());
-    for (size_t j = 0; j < animation.channels.size(); j++) {
+    for (std::size_t j = 0; j < animation.channels.size(); j++) {
       auto &channel = current_animation.channels[j];
 
       channel.sampler_index = animation.channels[j].sampler;
@@ -615,7 +614,6 @@ public:
       const auto &gltfMesh = tmpMesh.mesh;
       for (const auto &meshPrimitive : gltfMesh.primitives) {
         parent_transform = tmpMesh.transform;
-        const auto meshTransform = tmpMesh.transform;
         auto &currentMesh = this->mMeshes.emplace_back(); // at(index);
         currentMesh.setName(tmpMesh.mesh.name);
         mAnimatedMeshes.emplace_back();
@@ -731,7 +729,7 @@ public:
 
               // Push back the indices that describe just one triangle one by
               // one
-              for (size_t i{currentvOffset + 2}; i < triangleFan.size() + currentvOffset; ++i) {
+              for (std::size_t i{currentvOffset + 2}; i < triangleFan.size() + currentvOffset; ++i) {
                 currentMesh.data().mesh.Indices[i] = triangleFan[0] + currentvOffset;
                 currentMesh.data().mesh.Indices[i + 1] = triangleFan[i - 1] + currentvOffset;
                 currentMesh.data().mesh.Indices[i + 2] = triangleFan[i] + currentvOffset;
@@ -749,7 +747,7 @@ public:
               auto triangleStrip = std::move(indices);
               // currentMesh.data().mesh.Indices.clear();
 
-              for (size_t i{currentvOffset + 2}; i < triangleStrip.size() + currentvOffset; ++i) {
+              for (std::size_t i{currentvOffset + 2}; i < triangleStrip.size() + currentvOffset; ++i) {
 
                 currentMesh.data().mesh.Indices[i] = triangleStrip[i - 2] + currentvOffset;
                 currentMesh.data().mesh.Indices[i + 1] = triangleStrip[i - 1] + currentvOffset;
@@ -796,7 +794,7 @@ public:
                     auto positions = std::unique_ptr<Vertex3DArrayPtr<glm::vec3>>(
                         new Vertex3DArrayPtr<glm::vec3>(VertexArrayStorage<glm::vec3>(dataPtr, count, byte_stride)));
 
-                    for (size_t i{0}; i < positions->size(); ++i) {
+                    for (std::size_t i{0}; i < positions->size(); ++i) {
                       auto v = (*positions)[i];
                       // std::cout << "positions[" << i << "]: (" << v.x << ", "
                       //	<< v.y << ", " << v.z << ")\n";
@@ -836,7 +834,7 @@ public:
                     auto positions = std::unique_ptr<Vertex3DArrayPtr<glm::vec3>>(
                         new Vertex3DArrayPtr<glm::vec3>(VertexArrayStorage<glm::vec3>(dataPtr, count, byte_stride)));
 
-                    for (size_t i{0}; i < positions->size(); ++i) {
+                    for (std::size_t i{0}; i < positions->size(); ++i) {
                       auto v = (*positions)[i];
                       // std::cout << "positions[" << i << "]: (" << v.x
                       //	<< ", " << v.y << ", " << v.z << ")\n";
@@ -891,7 +889,7 @@ public:
 
                     // For each triangle :
 
-                    for (size_t i{0}; i < indices.size() / 3; ++i) {
+                    for (std::size_t i{0}; i < indices.size() / 3; ++i) {
                       // get the i'th triange's indexes
                       auto f0 = indices[3 * i + 0];
                       auto f1 = indices[3 * i + 1];
@@ -929,7 +927,7 @@ public:
                     // coordinates into "facevarying" order) for each face
 
                     // For each triangle :
-                    for (size_t i{0}; i < indices.size() / 3; ++i) {
+                    for (std::size_t i{0}; i < indices.size() / 3; ++i) {
                       // get the i'th triange's indexes
                       auto f0 = indices[3 * i + 0];
                       auto f1 = indices[3 * i + 1];
@@ -981,7 +979,7 @@ public:
                     auto uvs = std::unique_ptr<Vertex2DArrayPtr<glm::vec2>>(
                         new Vertex2DArrayPtr<glm::vec2>(VertexArrayStorage<glm::vec2>(dataPtr, count, byte_stride)));
 
-                    for (size_t i{0}; i < indices.size() / 3; ++i) {
+                    for (std::size_t i{0}; i < indices.size() / 3; ++i) {
                       // get the i'th triange's indexes
                       auto f0 = indices[3 * i + 0];
                       auto f1 = indices[3 * i + 1];
@@ -1012,7 +1010,7 @@ public:
                     auto uvs = std::unique_ptr<Vertex2DArrayPtr<glm::dvec2>>(
                         new Vertex2DArrayPtr<glm::dvec2>(VertexArrayStorage<glm::dvec2>(dataPtr, count, byte_stride)));
 
-                    for (size_t i{0}; i < indices.size() / 3; ++i) {
+                    for (std::size_t i{0}; i < indices.size() / 3; ++i) {
                       // get the i'th triange's indexes
                       auto f0 = indices[3 * i + 0];
                       auto f1 = indices[3 * i + 1];
@@ -1055,7 +1053,7 @@ public:
                         new UnsignedVertex4DArrayPtr<glm::lowp_u16vec4>(
                             VertexArrayStorage<glm::lowp_u16vec4>(dataPtr, count, byte_stride)));
 
-                    for (size_t i{0}; i < indices.size() / 3; ++i) {
+                    for (std::size_t i{0}; i < indices.size() / 3; ++i) {
                       // get the i'th triange's indexes
                       auto f0 = indices[3 * i + 0];
                       auto f1 = indices[3 * i + 1];
@@ -1094,7 +1092,7 @@ public:
                     auto color = std::unique_ptr<Vertex4DArrayPtr<glm::dvec4>>(
                         new Vertex4DArrayPtr<glm::dvec4>(VertexArrayStorage<glm::dvec4>(dataPtr, count, byte_stride)));
 
-                    for (size_t i{0}; i < indices.size() / 3; ++i) {
+                    for (std::size_t i{0}; i < indices.size() / 3; ++i) {
                       // get the i'th triange's indexes
                       auto f0 = indices[3 * i + 0];
                       auto f1 = indices[3 * i + 1];
@@ -1124,7 +1122,7 @@ public:
                     auto color = std::unique_ptr<Vertex4DArrayPtr<glm::vec4>>(
                         new Vertex4DArrayPtr<glm::vec4>(VertexArrayStorage<glm::vec4>(dataPtr, count, byte_stride)));
 
-                    for (size_t i{0}; i < indices.size() / 3; ++i) {
+                    for (std::size_t i{0}; i < indices.size() / 3; ++i) {
                       // get the i'th triange's indexes
                       auto f0 = indices[3 * i + 0];
                       auto f1 = indices[3 * i + 1];
@@ -1168,7 +1166,7 @@ public:
                         new UnsignedVertex4DArrayPtr<glm::lowp_u16vec4>(
                             VertexArrayStorage<glm::lowp_u16vec4>(dataPtr, count, byte_stride)));
 
-                    for (size_t i{0}; i < indices.size() / 3; ++i) {
+                    for (std::size_t i{0}; i < indices.size() / 3; ++i) {
                       // get the i'th triange's indexes
                       auto f0 = indices[3 * i + 0];
                       auto f1 = indices[3 * i + 1];
@@ -1195,7 +1193,7 @@ public:
                         new UnsignedVertex4DArrayPtr<glm::lowp_u8vec4>(
                             VertexArrayStorage<glm::lowp_u8vec4>(dataPtr, count, byte_stride)));
 
-                    for (size_t i{0}; i < indices.size() / 3; ++i) {
+                    for (std::size_t i{0}; i < indices.size() / 3; ++i) {
                       // get the i'th triange's indexes
                       auto f0 = indices[3 * i + 0];
                       auto f1 = indices[3 * i + 1];
@@ -1238,7 +1236,7 @@ public:
 
                     // For each triangle :
 
-                    for (size_t i{0}; i < indices.size() / 3; ++i) {
+                    for (std::size_t i{0}; i < indices.size() / 3; ++i) {
                       // get the i'th triange's indexes
                       auto f0 = indices[3 * i + 0];
                       auto f1 = indices[3 * i + 1];

@@ -46,6 +46,9 @@ namespace engine
             m_SizeX = x;
             m_SizeY = y;
 
+            printf("current size: %d %d\nlast size: %d %d\n", x, y, old_x, old_y);
+            std::fflush(stdout);
+
             return m_SizeX != old_x || m_SizeY != old_y;
         }
 

@@ -162,7 +162,7 @@ public:
   }
 
   void generateTangentSpaceVectors() {
-    uint32_t num_triangles = m_pData.mesh.Indices.size() / 3;
+    //uint32_t num_triangles = m_pData.mesh.Indices.size() / 3;
     // calculate tangent/bitangent vectors of both triangles
     glm::vec3 tangent1, bitangent1;
     // std::cout << m_pMesh.m_Tris.size() <<  std::endl;

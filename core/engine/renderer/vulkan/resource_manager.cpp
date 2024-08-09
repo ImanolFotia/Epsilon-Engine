@@ -669,7 +669,7 @@ void VulkanResourceManager::ReloadShaders(const std::string &shaderName) {
     for (auto &renderPassId : stage.renderPassIds) {
       auto renderPass = renderPassPool.get(renderPassId);
       for (auto &pipelineId : stage.pipelines[renderPassId])
-        renderPass->renderPipelines[pipelineId];
+        (void)renderPass->renderPipelines[pipelineId];
     }
   }
 }
@@ -1362,7 +1362,7 @@ Ref<Texture> VulkanResourceManager::GetRenderTarget(Ref<RenderPass> renderPassRe
   if (index >= renderPass->numAttachments) {
     return Ref<Texture>::makeEmpty();
   }
-
+return Ref<Texture>::makeEmpty();
  // return renderPass->renderPassChain.Textures.at(index).;
 }
 
