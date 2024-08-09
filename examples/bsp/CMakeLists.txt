@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5.0)
 project(BSP VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 20)
 
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR} ../../)
+include_directories(${CMAKE_SOURCE_DIR} ../../)
 
 set_source_files_properties( ${PROJECT_ICON} PROPERTIES RESOU Resources )
 add_executable(${PROJECT_NAME} main.cpp bsp_definitions.hpp SourceBSP.hpp  ${PROJECT_ICON})
