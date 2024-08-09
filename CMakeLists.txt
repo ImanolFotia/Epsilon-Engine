@@ -316,7 +316,7 @@ include_directories(${TINYGLTF_BUILD_DIR})
 
 
 include_directories(${THIRDPARTY_DIR}/FontAwesome)
-SET(HEADERS
+set(HEADERS
     ${HEADERS}
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/framework
@@ -324,7 +324,7 @@ SET(HEADERS
     ${CMAKE_SOURCE_DIR}/engine
 )
 
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
+include_directories(${CMAKE_SOURCE_DIR})
 
 set(EPSILON_SOURCE_LOCATION ${CMAKE_SOURCE_DIR})
 
@@ -516,17 +516,17 @@ include(CPack)
 #        OUTPUT_VARIABLE outVar
 #)
 
-FILE(GLOB shaders "${CMAKE_SOURCE_DIR}/assets/shaders/chess/*.spv")
+file(GLOB shaders "${CMAKE_SOURCE_DIR}/assets/shaders/chess/*.spv")
 install(FILES ${shaders} DESTINATION "bin/assets/shaders/chess/")
 
-FILE(GLOB shaders "${CMAKE_SOURCE_DIR}/assets/shaders/*.spv")
+file(GLOB shaders "${CMAKE_SOURCE_DIR}/assets/shaders/*.spv")
 install(FILES ${shaders} DESTINATION "bin/assets/shaders/")
 
-FILE(GLOB shaders "${CMAKE_SOURCE_DIR}/assets/images/*.*")
+file(GLOB shaders "${CMAKE_SOURCE_DIR}/assets/images/*.*")
 install(FILES ${shaders} DESTINATION "bin/assets/images/")
 
 
-FILE(GLOB images "${CMAKE_SOURCE_DIR}/assets/images")
+file(GLOB images "${CMAKE_SOURCE_DIR}/assets/images")
 install(DIRECTORY ${images} DESTINATION "bin/assets")
 
 if(NOT ${IS_CI_ENV})
