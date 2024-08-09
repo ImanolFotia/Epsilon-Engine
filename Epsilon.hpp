@@ -149,7 +149,7 @@ namespace Epsilon
 
 #endif // EPSILON_HPP
 
-#ifdef IMPL_EPSILON_MAIN &&BUILD_AS_LIBRARY == FALSE
+#if defined(IMPL_EPSILON_MAIN) && BUILD_AS_LIBRARY == FALSE
 
 int EpsilonMain(int argc, char **argv);
 #ifdef _WIN32
