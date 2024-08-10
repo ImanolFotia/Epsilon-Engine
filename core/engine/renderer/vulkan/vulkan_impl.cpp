@@ -5,6 +5,7 @@
 #include "resource_manager.hpp"
 
 #include "vk_mem_alloc.h"
+#include <core/framework/containers/dynamic_array.hpp>
 
 #ifdef WIN32
 #if !defined(__PRETTY_FUNCTION__) && !defined(__GNUC__)
@@ -372,11 +373,13 @@ void VulkanResourceManager::pUpdateMaterial(vk::VulkanMaterial &material) {
   for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
 
     uint32_t numSlots = material.slots + 1;
-    std::vector<VkWriteDescriptorSet> descriptorWrites{};
+    std::vector<VkWriteDescriptorSet> descriptorWrites;
     std::list<VkDescriptorImageInfo> imageInfos;
     std::list<VkDescriptorBufferInfo> bufferInfos;
     // numSlots += material.shaderBindings.size();
-    descriptorWrites.resize(numSlots);
+    //for(int kkk = 0; kkk < numSlots; kkk++)
+      descriptorWrites.resize(numSlots);
+      
     int index = 1;
     bool bindingZeroSet = false;
     for (auto &binding : material.shaderBindings) {
