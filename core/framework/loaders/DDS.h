@@ -1,6 +1,7 @@
 #pragma once
 #include "DDSFile.h"
 #include <memory>
+#include <string>
 class DDS
 {
 public:

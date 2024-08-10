@@ -95,6 +95,9 @@ void UI::Draw(engine::Ref<engine::RenderPass> renderPass) {
     // m_pRenderer->SetRenderPass(m_pRenderPass);
     for (int i = 0; i < commands_pushed + 1; i++) {
       auto &draw_command = m_DrawLists[i];
+
+      if(draw_command.num_vertices <= 0) continue;
+      
       m_pResourceManager->UpdateMesh(m_pMesh, {.vertex_size = draw_command.num_vertices, .vertex_offset = draw_command.vertex_offset});
 
       m_pRenderer->Push({.mesh = m_pMesh,
