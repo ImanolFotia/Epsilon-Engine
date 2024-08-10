@@ -89,6 +89,8 @@ static VkSurfaceFormatKHR chooseSwapSurfaceFormat(
 static VkPresentModeKHR chooseSwapPresentMode(
     const VulkanData &vk_data,
     const std::vector<VkPresentModeKHR> &availablePresentModes) {
+
+  return VK_PRESENT_MODE_MAILBOX_KHR;
 #if defined(__ANDROID__)
   return VK_PRESENT_MODE_FIFO_KHR;
 #endif

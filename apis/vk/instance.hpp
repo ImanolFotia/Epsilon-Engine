@@ -30,7 +30,7 @@ namespace vk
         appInfo.pEngineName = "Epsilon Engine";
         appInfo.engineVersion = VK_MAKE_VERSION(1, 1, 0);
 
-        appInfo.apiVersion = VK_API_VERSION_1_3;
+        appInfo.apiVersion = VK_API_VERSION_1_1;
 #if defined(__ANDROID__)
         appInfo.apiVersion = VK_API_VERSION_1_1;
 #endif
@@ -69,6 +69,10 @@ namespace vk
         {
             createInfo.enabledLayerCount = 0;
         }
+
+
+        //VkResult result = vkCreateInstance(&createInfo, nullptr, &vk_data.instance);
+
 
         if (vkCreateInstance(&createInfo, nullptr, &vk_data.instance) != VK_SUCCESS)
         {
