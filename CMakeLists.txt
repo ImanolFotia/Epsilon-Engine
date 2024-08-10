@@ -422,7 +422,7 @@ target_sources(${PROJECT_NAME} PUBLIC
     ${PROJECT_FILES})
 
 find_package(Vulkan REQUIRED)
-
+  set(CMAKE_CXX_FLAGS_RELEASE "-O2 -fno-math-errno -Os -g -Wall -Wno-unused-variable -Wunused-function  -Wunused -Wunused-function -Wunused-label -Wunused-parameter -Wunused-value -Wunused-variable -Wunused-but-set-parameter -Wunused-but-set-variable")
 
 if(NOT BUILD_ANDROID)
 endif()
