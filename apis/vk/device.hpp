@@ -335,18 +335,20 @@ static VkPhysicalDevice pickPhysicalDevice(VulkanData &vk_data) {
     if (isDeviceSuitable(device, vk_data)) {
 
       vk_data.msaaSamples = getMaxUsableSampleCount(device);
-      IO::Log("Max MSAA Samples: ", vk_data.msaaSamples);
       VkPhysicalDeviceProperties deviceProperties;
       vkGetPhysicalDeviceProperties(device, &deviceProperties);
       std::string deviceName = deviceProperties.deviceName;
       std::transform(deviceName.begin(), deviceName.end(), deviceName.begin(),
                      ::toupper);
-      if (deviceName.find("LLVM") != std::string::npos) {
 
-        //if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
+
+      IO::Info(deviceName);
+      IO::Log("\t* Max MSAA Samples: ", vk_data.msaaSamples);
+      //if (deviceName.find("LLVM") != std::string::npos) {
+
+      if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
         physicalDevice = device;
-        IO::Info("found discrete GPU");
-        IO::Info(deviceName);
+        IO::Info("\t* Discrete GPU");
         found = true;
         break;
       }
