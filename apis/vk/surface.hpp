@@ -24,6 +24,7 @@
 #include "vk_data.hpp"
 
 #include <core/framework/window.hpp>
+#include <core/framework/log.hpp>
 
 namespace vk
 {
@@ -35,7 +36,7 @@ namespace vk
 
         if (auto result = glfwCreateWindowSurface(vk_data.instance, window, nullptr, &vk_data.surface); result != VK_SUCCESS)
         {
-            IO::Error("Error code: ", result);
+            Log::Error("Error code: ", result);
             throw std::runtime_error("failed to create window surface!");
         }
 #elif _WIN32
@@ -46,7 +47,7 @@ namespace vk
 
         if (auto result = vkCreateWin32SurfaceKHR(vk_data.instance, &vk_data.createInfo, nullptr, &vk_data.surface); result != VK_SUCCESS)
         {
-            IO::Error("Error code: ", result);
+            Log::Error("Error code: ", result);
             throw std::runtime_error("failed to create window surface!");
         }
 #elif defined(__ANDROID__)
@@ -57,7 +58,7 @@ namespace vk
         surface_info.window = window;
         if (auto result = vkCreateAndroidSurfaceKHR(vk_data.instance, &surface_info, NULL, &vk_data.surface); result != VK_SUCCESS)
         {
-            IO::Error("Error code: ", result);
+            Log::Error("Error code: ", result);
             throw std::runtime_error("failed to create window surface!");
         }
 #endif

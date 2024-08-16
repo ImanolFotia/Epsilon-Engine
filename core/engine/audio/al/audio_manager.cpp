@@ -1,5 +1,5 @@
 #include "audio_manager.hpp"
-#include <core/framework/common.hpp>
+#include <core/framework/log.hpp>
 
 #if defined(ANDROID) || defined(__ANDROID__)
 
@@ -16,7 +16,7 @@ void ALAudioManager::Init() {
 
   if (!res) {
 
-    IO::Log("Couldn't start audio device");
+    Log::Info("Couldn't start audio device");
   }
 
   listenersPool.Initialize();
@@ -34,7 +34,7 @@ void ALAudioManager::Update() {
     std::cout << "device: " << deviceName << std::endl;
 
     if (nullptr == m_pAlData.device) {
-      IO::Error("device reopen failed: \ncause: device is null");
+      Log::Error("device reopen failed: \ncause: device is null");
       return;
     }
 
@@ -43,8 +43,8 @@ void ALAudioManager::Update() {
 
     if (res == ALC_FALSE) {
       auto error_code = alcGetError(m_pAlData.device);
-      IO::Error("device reopen failed: ", deviceName);
-      IO::Error(error_code);
+      Log::Error("device reopen failed: ", deviceName);
+      Log::Error(error_code);
     }
     //}
   }

@@ -7,7 +7,7 @@
 #include <vulkan/vulkan.hpp>
 #endif
 
-#include "core/framework/common.hpp"
+#include "core/framework/log.hpp"
 #include "queues.hpp"
 #include "swap_chain.hpp"
 // #include "validation_layers.hpp"
@@ -93,10 +93,10 @@ static void createLogicalDevice(VulkanData &vk_data) {
 
   if (separateStencilSupported) {
     indexing_features.pNext = &layoutFeatures;
-    IO::Log("Separate Stencil is supported");
+    Log::Info("Separate Stencil is supported");
   }
   if (bindless_supported) {
-    IO::Log("bindless is supported");
+    Log::Info("bindless is supported");
     indexing_features.descriptorBindingPartiallyBound = VK_TRUE;
     indexing_features.descriptorBindingSampledImageUpdateAfterBind = VK_TRUE;
     indexing_features.runtimeDescriptorArray = VK_TRUE;
@@ -105,7 +105,7 @@ static void createLogicalDevice(VulkanData &vk_data) {
     physical_features2.pNext = &indexing_features;
     vk_data.bindless_supported = true;
   } else {
-    IO::Log("bindless is not supported");
+    Log::Info("bindless is not supported");
   }
 
 #endif
@@ -116,7 +116,7 @@ static void createLogicalDevice(VulkanData &vk_data) {
   MIN_FRAMES_IN_FLIGHT = surfaceCapabilities.minImageCount;
   MAX_FRAMES_IN_FLIGHT = std::max(MIN_FRAMES_IN_FLIGHT, MAX_FRAMES_IN_FLIGHT);
 
-  IO::Log("Min frames in flight: ", MIN_FRAMES_IN_FLIGHT);
+  Log::Info("Min frames in flight: ", MIN_FRAMES_IN_FLIGHT);
 
   std::vector<VkDeviceQueueCreateInfo> queueCreateInfo{};
   queueCreateInfo.resize(vk_data.uniqueQueueFamilies.size());
@@ -165,11 +165,11 @@ static void createLogicalDevice(VulkanData &vk_data) {
       static_cast<uint32_t>(vk_data.deviceExtensions.size());
   createInfo.ppEnabledExtensionNames = vk_data.deviceExtensions.data();
 
-  IO::Log("Required extensions\n");
+  Log::Info("Required extensions\n");
   for (const auto &extension : vk_data.deviceExtensions) {
-    IO::Log(extension);
+    Log::Info(extension);
   }
-  IO::Log("\n");
+  Log::Info("\n");
 
 #if !defined(__ANDROID__)
   createInfo.pNext = &physical_features2;
@@ -189,7 +189,7 @@ static void createLogicalDevice(VulkanData &vk_data) {
   if (auto deviceResult = vkCreateDevice(vk_data.physicalDevice, &createInfo,
                                          nullptr, &vk_data.logicalDevice);
       deviceResult != VK_SUCCESS) {
-    IO::Error("Error creating the device: ", deviceResult);
+    Log::Error("Error creating the device: ", deviceResult);
     throw std::runtime_error("failed to create logical device!");
   }
 
@@ -227,7 +227,7 @@ static VkSampleCountFlagBits
 getMaxUsableSampleCount(VkPhysicalDevice physicalDevice) {
   VkPhysicalDeviceProperties physicalDeviceProperties;
   vkGetPhysicalDeviceProperties(physicalDevice, &physicalDeviceProperties);
-  IO::Info("max indirected draws: ",
+  Log::Info("max indirected draws: ",
            physicalDeviceProperties.limits.maxDrawIndirectCount);
 
   VkSampleCountFlags counts =
@@ -262,12 +262,12 @@ static void showDeviceFeatures(VkPhysicalDevice device) {
 
   VkPhysicalDeviceFeatures deviceFeatures;
   vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
-  IO::Log("Selected device: ", deviceProperties.deviceName);
-  IO::Log("\tApi version: ", deviceProperties.apiVersion);
-  IO::Log("\tID: ", deviceProperties.deviceID);
-  IO::Log("\tDriver version: ", deviceProperties.driverVersion);
-  IO::Log("\tVendor ID: ", deviceProperties.vendorID);
-  IO::Log("\tIs discrete device: ",
+  Log::Info("Selected device: ", deviceProperties.deviceName);
+  Log::Info("\tApi version: ", deviceProperties.apiVersion);
+  Log::Info("\tID: ", deviceProperties.deviceID);
+  Log::Info("\tDriver version: ", deviceProperties.driverVersion);
+  Log::Info("\tVendor ID: ", deviceProperties.vendorID);
+  Log::Info("\tIs discrete device: ",
           (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU
                ? "yes"
                : "no"));
@@ -342,13 +342,13 @@ static VkPhysicalDevice pickPhysicalDevice(VulkanData &vk_data) {
                      ::toupper);
 
 
-      IO::Info(deviceName);
-      IO::Log("\t* Max MSAA Samples: ", vk_data.msaaSamples);
+      Log::Info(deviceName);
+      Log::Info("\t* Max MSAA Samples: ", vk_data.msaaSamples);
       //if (deviceName.find("LLVM") != std::string::npos) {
 
       if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
         physicalDevice = device;
-        IO::Info("\t* Discrete GPU");
+        Log::Info("\t* Discrete GPU");
         found = true;
         break;
       }

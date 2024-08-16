@@ -268,7 +268,7 @@ public:
     };
     m_pVertexBuffer.resize(m_pResourceManager->FramesInFlight());
 
-    IO::Info("Allocating ", m_pResourceManager->FramesInFlight(), " vertex buffers for UI.");
+    Log::Info("Allocating ", m_pResourceManager->FramesInFlight(), " vertex buffers for UI.");
 
     for (int i = 0; i < m_pResourceManager->FramesInFlight(); i++) {
 

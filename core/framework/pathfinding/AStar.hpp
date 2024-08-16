@@ -80,7 +80,7 @@ public:
     }
 
     if (endNode->index == startNode->index)
-      IO::Info("end found!");
+      Log::Info("end found!");
 
     return path;
   }

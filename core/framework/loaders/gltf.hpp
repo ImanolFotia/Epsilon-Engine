@@ -438,7 +438,7 @@ class gltfModel : public ModelBase {
 
 public:
   gltfModel(const std::string &path = "") : ModelBase(path) {
-    IO::Log("Loading", path);
+    Log::Info("Loading", path);
     Load(path);
   }
 
@@ -473,15 +473,15 @@ public:
     /*
     if (!warn.empty())
     {
-            IO::Warning("glTF parse warning: ", warn);
+            Log::Warning("glTF parse warning: ", warn);
     }
 
     if (!err.empty())
     {
-            IO::Error("glTF parse error: ",err);
+            Log::Error("glTF parse error: ",err);
     }*/
     if (!ret) {
-      IO::Error("Failed to load glTF: ", path);
+      Log::Error("Failed to load glTF: ", path);
       return false;
     }
     /*
@@ -960,11 +960,11 @@ public:
                     }
                   } break;
                   default:
-                    IO::Error("Unhandled component type for normal");
+                    Log::Error("Unhandled component type for normal");
                   }
                 } break;
                 default:
-                  IO::Error("Unhandled vector type for normal");
+                  Log::Error("Unhandled vector type for normal");
                 }
               }
 
@@ -1033,11 +1033,11 @@ public:
                     }
                   } break;
                   default:
-                    IO::Error("unrecognized vector type for UV");
+                    Log::Error("unrecognized vector type for UV");
                   }
                 } break;
                 default:
-                  IO::Error("unreconized componant type for UV");
+                  Log::Error("unreconized componant type for UV");
                 }
               }
 
@@ -1148,11 +1148,11 @@ public:
                     }
                   } break;
                   default:
-                    IO::Error("unrecognized vector type for color");
+                    Log::Error("unrecognized vector type for color");
                   }
                 } break;
                 default:
-                  IO::Error("unreconized componant type for color");
+                  Log::Error("unreconized componant type for color");
                 }
               }
               if (attribute.first == "JOINTS_0") {
@@ -1214,11 +1214,11 @@ public:
                     }
                   } break;
                   default:
-                    IO::Error("unrecognized vector type for joint");
+                    Log::Error("unrecognized vector type for joint");
                   }
                 } break;
                 default:
-                  IO::Error("unreconized componant type for joint");
+                  Log::Error("unreconized componant type for joint");
                 }
               }
 
@@ -1256,25 +1256,25 @@ public:
                   } break;
 
                   default:
-                    IO::Error("Unhandeled componant type for normal");
+                    Log::Error("Unhandeled componant type for normal");
                   }
                 } break;
                 default:
-                  IO::Error("Unhandeled vector type for normal");
+                  Log::Error("Unhandeled vector type for normal");
                 }
               }
             }
           } break;
 
           default:
-            IO::Error("Primitive mode not implemented");
+            Log::Error("Primitive mode not implemented");
             break;
 
             // These aren't triangles:
           case TINYGLTF_MODE_POINTS:
           case TINYGLTF_MODE_LINE:
           case TINYGLTF_MODE_LINE_LOOP:
-            IO::Error("Primitive is not triangle based, ignoring");
+            Log::Error("Primitive is not triangle based, ignoring");
           }
         }
 

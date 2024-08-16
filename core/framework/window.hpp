@@ -59,6 +59,7 @@
 #endif
 
 #include "common.hpp"
+#include <core/framework/log.hpp>
 
 namespace framework {
 struct WindowSizeDescription {
@@ -104,7 +105,7 @@ public:
   bool ShouldClose() {
 #if USE_GLFW
     if (glfwWindowShouldClose(mWindow)) {
-      IO::Log("The OS requested to close the window");
+      Log::Info("The OS requested to close the window");
       return true;
     }
 #endif
@@ -256,7 +257,7 @@ public:
     int code = glfwGetError(&description);
 
     if (description)
-      IO::Error("Setting window icon: \nCode: ", code, "\nDescription: ", description);
+      Log::Error("Setting window icon: \nCode: ", code, "\nDescription: ", description);
   }
 
   windowType *getWindow() const { return mWindow; }

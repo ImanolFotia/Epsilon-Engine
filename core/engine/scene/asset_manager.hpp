@@ -279,17 +279,17 @@ public:
   Ref<Buffer> CreateGPUBuffer(const std::string &name, std::size_t size, engine::BufferStorageType type = engine::BufferStorageType::STORAGE_BUFFER,
                               int count = -1) {
     if (m_pGPUBuffers.contains(name)) {
-      IO::Error("Trying to create a buffer that already exists");
+      Log::Error("Trying to create a buffer that already exists");
       return Ref<Buffer>::makeEmpty();
     }
 
     if (name.empty()) {
-      IO::Error("GPU buffer name can't be null");
+      Log::Error("GPU buffer name can't be null");
       return Ref<Buffer>::makeEmpty();
     }
 
     if (size <= 0) {
-      IO::Error("GPU buffer size can't be zero");
+      Log::Error("GPU buffer size can't be zero");
       return Ref<Buffer>::makeEmpty();
     }
     auto resourceManager = m_pContext->ResourceManager();

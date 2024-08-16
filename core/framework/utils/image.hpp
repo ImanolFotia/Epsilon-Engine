@@ -7,13 +7,13 @@
 #define STBI_FAILURE_USERMSG
 #include "stb_image.h"
 
-#include "../common.hpp"
+#include <core/framework/log.hpp>
 
 namespace framework {
 static inline unsigned char *load_image_from_file(const char *path, int *width, int *height, int *num_channels) {
   unsigned char *data = stbi_load(path, width, height, num_channels, 4);
   if (data == nullptr) {
-    IO::Error("Error loading image from file: ", path);
+    Log::Error("Error loading image from file: ", path);
     return nullptr;
   }
   return data;

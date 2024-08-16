@@ -5,7 +5,7 @@
 #include <iostream>
 #include <cstring>
 
-#include <core/framework/common.hpp>
+#include <core/framework/log.hpp>
 
 // #include <AL/alBufferSOFT.h>
 
@@ -48,10 +48,10 @@ static LPALGETAUXILIARYEFFECTSLOTFV alGetAuxiliaryEffectSlotfv;
 static void callback(int eventType, int deviceType,
                      ALCdevice *device, int length, const char *message, void *userParam)
 {
-    IO::Log("Event Type: ", eventType);
-    IO::Log("Device Type: ", deviceType);
-    IO::Log("Length: ", length);
-    IO::Log("Message: ", message);
+    Log::Info("Event Type: ", eventType);
+    Log::Info("Device Type: ", deviceType);
+    Log::Info("Length: ", length);
+    Log::Info("Message: ", message);
 
     al::OpenALData *al_data = (al::OpenALData *)userParam;
 
@@ -70,15 +70,15 @@ namespace al
         const ALCchar *device = devices, *next = devices + 1;
         size_t len = 0;
 
-        IO::Log(message);
+        Log::Info(message);
         while (device && *device != '\0' && next && *next != '\0')
         {
-            IO::Log(device);
+            Log::Info(device);
             len = std::strlen(device);
             device += (len + 1);
             next += (len + 2);
         }
-        IO::Log("----------");
+        Log::Info("----------");
 #endif
     }
 
@@ -89,13 +89,13 @@ namespace al
         al_data->device = alcOpenDevice(device_name);
         if (al_data->device == nullptr)
         {
-            IO::Error("Cannot open sound card");
+            Log::Error("Cannot open sound card");
             return false;
         }
         al_data->context = alcCreateContext(al_data->device, nullptr);
         if (al_data->context == nullptr)
         {
-            IO::Error("Cannot open audio context");
+            Log::Error("Cannot open audio context");
             return false;
         }
         alcMakeContextCurrent(al_data->context);
@@ -103,7 +103,7 @@ namespace al
 #if !defined(ANDROID) && !defined(__ANDROID__)
         if (!alcIsExtensionPresent(alcGetContextsDevice(alcGetCurrentContext()), "ALC_EXT_EFX"))
         {
-            IO::Error(g_szALC_EXT_EFX, "`xff0000Error: EFX not supported");
+            Log::Error(g_szALC_EXT_EFX, "`xff0000Error: EFX not supported");
             return false;
         }
 
@@ -185,7 +185,7 @@ namespace al
             ALC_EVENT_TYPE_DEVICE_REMOVED_SOFT};
         alcEventControlSOFT(3, events, ALC_TRUE);
         alcEventCallbackSOFT((ALCEVENTPROCTYPESOFT)callback, (void *)al_data);
-        IO::Info("Opened ", name);
+        Log::Info("Opened ", name);
         // printf("Opened \"%s\"\n", name);
 
         return true;

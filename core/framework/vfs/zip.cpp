@@ -1,7 +1,7 @@
 #include "zip.hpp"
 #include "cifstream.hpp"
 
-#include <core/framework/common.hpp>
+#include <core/framework/log.hpp>
 
 namespace engine
 {
@@ -19,7 +19,7 @@ namespace engine
 
 		if (ZipIdentifier[0] != 'P' && ZipIdentifier[1] != 'K')
 		{
-			IO::Error("Attempted to mount a not zip file... aborting.");
+			Log::Error("Attempted to mount a not zip file... aborting.");
 			return;
 		}
 
@@ -134,15 +134,15 @@ namespace engine
 			switch (error)
 			{
 			case Z_NEED_DICT:
-				IO::Error("Need Dictionary");
+				Log::Error("Need Dictionary");
 				return error;
 				break;
 			case Z_DATA_ERROR:
-				IO::Error("Data error");
+				Log::Error("Data error");
 				return error;
 				break;
 			case Z_MEM_ERROR:
-				IO::Error("Memory error");
+				Log::Error("Memory error");
 				return error;
 				break;
 			default:

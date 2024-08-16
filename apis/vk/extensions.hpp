@@ -9,6 +9,8 @@
 
 #include <vulkan/vulkan.h>
 
+#include <core/framework/log.hpp>
+
 namespace vk
 {
 
@@ -18,11 +20,11 @@ namespace vk
         vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
         std::vector<VkExtensionProperties> extensions(extensionCount);
         vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
-        IO::Log("available extensions:\n");
+        Log::Info("available extensions:\n");
 
         for (const auto &extension : extensions)
         {
-            IO::Log('\t', extension.extensionName, '\n');
+            Log::Info('\t', extension.extensionName, '\n');
         }
 
     }

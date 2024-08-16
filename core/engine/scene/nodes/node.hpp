@@ -21,7 +21,7 @@ namespace engine
 
         std::vector<std::function<void()>> destroy_children;
 
-        friend class SceneManager;
+        friend struct SceneManager;
     };
 
     template <typename T>

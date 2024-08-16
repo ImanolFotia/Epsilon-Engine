@@ -20,7 +20,7 @@ namespace vk
         "VK_LAYER_KHRONOS_validation",
     };
 
-#if 1
+#if 0
     const bool enableValidationLayers = false;
 #else
     constexpr bool enableValidationLayers = true;
@@ -30,14 +30,14 @@ namespace vk
     {
         if (messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT)
         {
-            IO::Log("validation layer: ", pCallbackData->pMessage, "\n");
+            Log::Info("validation layer: ", pCallbackData->pMessage, "\n");
 
             return VK_FALSE;
         }
 
         else if (messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT)
         {
-            IO::Error("validation layer: ", pCallbackData->pMessage, "\n");
+            Log::Error("validation layer: ", pCallbackData->pMessage, "\n");
 
             return VK_FALSE;
         }

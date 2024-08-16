@@ -22,7 +22,7 @@ namespace framework
 
             if (std::strncmp((char *)buffer, "RIFF", 4) != 0)
             {
-                IO::Error(" ::AUDIO ERROR:: ---> ", fn, " is not a valid WAVE file.");
+                Log::Error(" ::AUDIO ERROR:: ---> ", fn, " is not a valid WAVE file.");
                 return NULL;
             }
             inFILE.read((char *)buffer, 4);

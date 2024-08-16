@@ -155,7 +155,7 @@ public:
         }
       }
     }
-    // IO::Log("Removed ", vertices.size() - new_vertices.size(), " vertices");
+    // Log::Info("Removed ", vertices.size() - new_vertices.size(), " vertices");
 
     vertices.swap(new_vertices);
     indices.swap(new_indices);

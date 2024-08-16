@@ -1,6 +1,6 @@
 #include "DDS.h"
 #include <core/engine/renderer/types.hpp>
-#include <core/framework/common.hpp>
+#include <core/framework/log.hpp>
 #include <core/framework/vfs/filesystem.hpp>
 #include <cstring>
 #include <fstream>
@@ -29,7 +29,7 @@ bool DDS::LoadCompressed(const std::string &filename, int baseLevel = 0) {
   if (engine::Filesystem::is_present(name.c_str())) {
     FILE = engine::Filesystem::open<engine::cifstream>(name);
   } else {
-    IO::Warning("Couldn't find ", name, " in virtual file system\nFalling back to disk...");
+    Log::Warning("Couldn't find ", name, " in virtual file system\nFalling back to disk...");
     return false;
   }
 
@@ -38,7 +38,7 @@ bool DDS::LoadCompressed(const std::string &filename, int baseLevel = 0) {
   FILE->read(filecode, sizeof(char) * 3);
 
   if (strcmp("DDS", filecode) == 0) {
-    IO::Error(filename, " is not a DDS File.");
+    Log::Error(filename, " is not a DDS File.");
     FILE->close();
     return false;
   }
@@ -120,14 +120,14 @@ void DDS::Load(const std::string &filename, int baseLevel = 0) {
 
   std::ifstream FILE = std::ifstream(filename, std::ifstream::binary);
 
-  // IO::Error("Loading texture: ", filename);
+  // Log::Error("Loading texture: ", filename);
 
   FILE.seekg(0, FILE.beg);
   char filecode[4] = {0};
   FILE.read(filecode, sizeof(char) * 4);
 
   if (strcmp("DDS", filecode) == 0) {
-    IO::Error(filename, " is not a DDS File.");
+    Log::Error(filename, " is not a DDS File.");
     FILE.close();
     return;
   }
