@@ -24,7 +24,7 @@ VulkanResourceManager::~VulkanResourceManager() {}
 
 void VulkanResourceManager::Init() {
 
-  IO::Log("Initiating Resource Manager");
+  Log::Info("Initiating Resource Manager");
   VmaAllocatorCreateInfo allocatorInfo = {};
   allocatorInfo.physicalDevice = m_pVkDataPtr->physicalDevice;
   allocatorInfo.device = m_pVkDataPtr->logicalDevice;
@@ -180,6 +180,7 @@ Ref<Texture> VulkanResourceManager::createTexture(TextureCreationInfo texInfo) {
     bindless_image_info.sampler = texture.sampler;
     bindless_image_info.imageView = texture.imageView;
     bindless_image_info.imageLayout = texture.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    bindless_image_info.imageLayout = texInfo.storage_image ? VK_IMAGE_LAYOUT_GENERAL : bindless_image_info.imageLayout;
     bindless_descriptor_writes.pImageInfo = &bindless_image_info;
 
     if (count > 0)
@@ -570,6 +571,7 @@ Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPas
     vk::VulkanTexture texture = pCreateTextureBuffer(texInfo);
     texture.name = attachment.name;
     texture.imageLayout = attachment.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    texture.imageLayout = attachment.storageImage ? VK_IMAGE_LAYOUT_GENERAL : texture.imageLayout;
     texture.bindingType = vk::RENDER_BUFFER_SAMPLER;
     texture.info.mipLevels = 1;
     createImageView(*m_pVkDataPtr, texture,
@@ -1128,8 +1130,9 @@ Ref<ComputeShader> VulkanResourceManager::createComputeShader(ComputeShaderInfo 
       VkImageMemoryBarrier2 imageMemoryBarrier = {};
       imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
       imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL;
-      imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+      imageMemoryBarrier.newLayout = texture.imageLayout;//VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
       imageMemoryBarrier.image = texture.image;
+      
       imageMemoryBarrier.subresourceRange = {VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT, 0, 1, 0, 1};
       imageMemoryBarrier.srcAccessMask = srcAccessMask;
       imageMemoryBarrier.dstAccessMask = dstAccessMask;
@@ -1240,6 +1243,7 @@ void VulkanResourceManager::ResizeFramebuffer(Ref<RenderPass> renderpass_ref, gl
                     (attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
 
     texture.imageLayout = attachment.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    texture.imageLayout = attachment.storageImage ? VK_IMAGE_LAYOUT_GENERAL : texture.imageLayout;
     if (attachment.isSampler) {
       vk::createTextureSampler(*m_pVkDataPtr, texture);
     }
@@ -1311,25 +1315,25 @@ void VulkanResourceManager::UpdateMesh(Ref<Mesh> meshRef, UpdateMeshInfo updateI
   /*
                   if (updateInfo.index_offset >= mesh->numIndices)
                   {
-                          IO::Error("Mesh index offset is bigger than buffer's index capacity\n\t", "buffer size: ", mesh->numIndices);
+                          Log::Error("Mesh index offset is bigger than buffer's index capacity\n\t", "buffer size: ", mesh->numIndices);
                           // throw std::out_of_range(std::string(__PRETTY_FUNCTION__ ": index offset out of range"));
                   }
 
                   if (updateInfo.vertex_offset >= mesh->numVertices)
                   {
-                          IO::Error("Mesh vertex offset is bigger than buffer's vertex capacity\n\t", "buffer size: ", mesh->numVertices);
+                          Log::Error("Mesh vertex offset is bigger than buffer's vertex capacity\n\t", "buffer size: ", mesh->numVertices);
                           // throw std::out_of_range(std::string(__PRETTY_FUNCTION__ ": vertex offset out of range"));
                   }
 
                   if (updateInfo.vertex_offset + updateInfo.vertex_size >= mesh->numVertices)
                   {
-                          IO::Error("Trying to allocate beyond vertex buffer's capacity\n\t", "buffer size: ", mesh->numVertices);
+                          Log::Error("Trying to allocate beyond vertex buffer's capacity\n\t", "buffer size: ", mesh->numVertices);
                           // throw std::out_of_range(std::string(__PRETTY_FUNCTION__ ": vertex allocation out of range"));
                   }
 
                   if (updateInfo.index_offset + updateInfo.index_size >= mesh->numIndices)
                   {
-                          IO::Error("Trying to allocate beyond index buffer's capacity\n\t", "buffer size: ", mesh->numVertices);
+                          Log::Error("Trying to allocate beyond index buffer's capacity\n\t", "buffer size: ", mesh->numVertices);
                           // throw std::out_of_range(std::string(__PRETTY_FUNCTION__ ": index allocation out of range"));
                   }
 
