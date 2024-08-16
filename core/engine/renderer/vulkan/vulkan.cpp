@@ -63,7 +63,7 @@ void VulkanRenderer::Init(const char *appName, framework::Window &window) {
 
   m_pFrame.SetSize(m_pWindow->getSize().width, m_pWindow->getSize().height);
 
-  IO::Log("Initiating Vulkan Context");
+  Log::Info("Initiating Vulkan Context");
 
 #if defined(ANDROID) || defined(__ANDROID__)
   LOGI("Initiating Vulkan Instance\n");
@@ -285,7 +285,7 @@ void VulkanRenderer::Submit() {
     if (m_pWindow->getSize().width > 0) {
       pRecreateSwapChain();
       m_pShouldRecreateSwapchain = false;
-      IO::Log("swap chain recreated");
+      Log::Info("swap chain recreated");
     }
   }
 
@@ -429,7 +429,7 @@ void VulkanRenderer::Flush(engine::Ref<engine::RenderPass> renderPassRef, engine
     FlushIndexedIndirect(renderPass);
     break;
   default:
-    IO::Error("Error: Draw command type not supported!");
+    Log::Error("Error: Draw command type not supported!");
     exit(99);
     break;
   }

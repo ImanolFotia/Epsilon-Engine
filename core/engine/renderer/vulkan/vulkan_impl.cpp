@@ -24,7 +24,7 @@ vk::VulkanBuffer VulkanResourceManager::pCreateVertexBuffer() {
   vk::VulkanBuffer buffer;
   pCreateBuffer(buffer, sizeof(common::Vertex) * MAX_VERTICES_PER_BUFFER, VERTEX_BUFFER_USAGE, VERTEX_BUFFER_PROP, VERTEX_BUFFER_MEM_USAGE);
   if (0)
-    IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", sizeof(common::Vertex) * MAX_VERTICES_PER_BUFFER,
+    Log::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", sizeof(common::Vertex) * MAX_VERTICES_PER_BUFFER,
              " bytes in local vertex buffer");
   return buffer;
 }
@@ -33,7 +33,7 @@ vk::VulkanBuffer VulkanResourceManager::pCreateIndexBuffer() {
   vk::VulkanBuffer buffer;
   pCreateBuffer(buffer, sizeof(IndexType) * MAX_INDICES_PER_BUFFER, INDEX_BUFFER_USAGE, INDEX_BUFFER_PROP, INDEX_BUFFER_MEM_USAGE);
   if (0)
-    IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", sizeof(IndexType) * MAX_INDICES_PER_BUFFER,
+    Log::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", sizeof(IndexType) * MAX_INDICES_PER_BUFFER,
              " bytes in local index buffer");
   return buffer;
 }
@@ -45,7 +45,7 @@ vk::VulkanUniformBuffer VulkanResourceManager::pCreateUniformBuffer(UniformBindi
   for (auto &i : buffer.buffers) {
     i.size = buffer.size;
     pCreateBuffer(i, bindingInfo.size, UNIFORM_BUFFER_USAGE, UNIFORM_BUFFER_PROP, UNIFORM_BUFFER_MEM_USAGE);
-    IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", size, " bytes in local uniform buffer");
+    Log::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", size, " bytes in local uniform buffer");
   }
   return buffer;
 }
@@ -314,7 +314,7 @@ void VulkanResourceManager::pCreateDescriptorSets(/*vk::VulkanMaterial &material
   descriptor_sets += count;
   descriptorSets.resize(count);
   if (auto result = vkAllocateDescriptorSets(m_pVkDataPtr->logicalDevice, &allocInfo, descriptorSets.data()); result != VK_SUCCESS) {
-    IO::Error(result);
+    Log::Error(result);
     throw std::runtime_error("failed to allocate descriptor sets!");
   }
 }
@@ -335,7 +335,7 @@ vk::VulkanBuffer VulkanResourceManager::pCreateStagingBuffer(const std::vector<c
   memcpy(data, vertices.data(), vertices.size() * sizeof(common::Vertex));
   vmaUnmapMemory(m_pAllocator, stagingBuffer.allocation);
   if (0)
-    IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", vertices.size() * sizeof(common::Vertex),
+    Log::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", vertices.size() * sizeof(common::Vertex),
              " bytes in hosted staging buffer");
   return stagingBuffer;
 }
@@ -349,7 +349,7 @@ vk::VulkanBuffer VulkanResourceManager::pCreateStagingBuffer(const std::vector<c
   memcpy(data, vertices.data(), vertices.size() * sizeof(common::AnimatedVertex));
   vmaUnmapMemory(m_pAllocator, stagingBuffer.allocation);
   if (0)
-    IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", vertices.size() * sizeof(common::AnimatedVertex),
+    Log::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", vertices.size() * sizeof(common::AnimatedVertex),
              " bytes in hosted staging buffer");
   return stagingBuffer;
 }
@@ -364,7 +364,7 @@ vk::VulkanBuffer VulkanResourceManager::pCreateStagingIndexBuffer(const std::vec
   memcpy(data, indices.data(), indices.size() * sizeof(IndexType));
   vmaUnmapMemory(m_pAllocator, stagingBuffer.allocation);
   if (0)
-    IO::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", indices.size() * sizeof(IndexType),
+    Log::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", indices.size() * sizeof(IndexType),
              " bytes in hosted staging buffer");
   return stagingBuffer;
 }
@@ -463,7 +463,7 @@ void VulkanResourceManager::pUpdateMaterial(vk::VulkanMaterial &material) {
 
         auto &imageInfo = imageInfos.emplace_back();
 
-        imageInfo.imageLayout = binding.texture.isDepthAttachment ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        imageInfo.imageLayout = VK_IMAGE_LAYOUT_GENERAL;//binding.texture.isDepthAttachment ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
         // imageInfo.imageLayout = binding.texture.format == VK_FORMAT_D32_SFLOAT ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : imageInfo.imageLayout;
 
         binding.texture.imageLayout = imageInfo.imageLayout;
@@ -611,6 +611,7 @@ void VulkanResourceManager::pRecreateFrameBuffers(VkExtent2D extent) {
                       (attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
 
       texture.imageLayout = attachment.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+      texture.imageLayout = attachment.storageImage ? VK_IMAGE_LAYOUT_GENERAL : texture.imageLayout;
       if (attachment.isSampler) {
         vk::createTextureSampler(*m_pVkDataPtr, texture);
       }
@@ -682,7 +683,7 @@ void VulkanResourceManager::pGenerateMipMaps(TextureCreationInfo texInfo, vk::Vu
 
   VkCommandBuffer blitCommandBuffer = vk::beginSingleTimeCommands(*m_pVkDataPtr, m_pTransferCommandPool);
   if (texInfo.storage_image) {
-
+/*
     VkImageSubresourceRange subresourceRange = {};
     subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     subresourceRange.layerCount = 1;
@@ -692,6 +693,7 @@ void VulkanResourceManager::pGenerateMipMaps(TextureCreationInfo texInfo, vk::Vu
                            VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, texture.info, blitCommandBuffer, subresourceRange, 0, texInfo.mipLevels);
 
     vk::endSingleTimeCommands(*m_pVkDataPtr, m_pTransferCommandPool, blitCommandBuffer);
+    */
     return;
   }
 
