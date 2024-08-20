@@ -166,7 +166,7 @@ public:
   void RelocateObject(Box boundingBox, int index) {
 
     std::shared_ptr<Node<RenderModel>> node = std::static_pointer_cast<Node<RenderModel>>(m_pSceneManager.get(index));
-    if (getChildren(node->Parent())[typeid(typename std::list<OctreeItem<OctreeRenderType>>::iterator)].size() > 0) {
+    if (getChildren(node->Parent())[typeid(typename std::list<OctreeItem<OctreeRenderType>>::iterator).hash_code()].size() > 0) {
       using render_node_type = engine::Node<typename std::list<OctreeItem<OctreeRenderType>>::iterator>;
       std::shared_ptr<render_node_type> octree_render_node = getChild<typename std::list<OctreeItem<OctreeRenderType>>::iterator>(node->Parent());
       if (octree_render_node != nullptr) {
@@ -181,7 +181,7 @@ public:
 
     using render_node_type = engine::Node<std::list<OctreeItem<OctreeRenderType>>::iterator>;
     auto &children = getChildren(node);
-    auto &octree_render_node = children[typeid(typename std::list<OctreeItem<OctreeRenderType>>::iterator)];
+    auto &octree_render_node = children[typeid(typename std::list<OctreeItem<OctreeRenderType>>::iterator).hash_code()];
     for (auto render_node : octree_render_node) {
 
       if (render_node != nullptr) {

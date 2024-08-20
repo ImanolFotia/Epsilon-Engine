@@ -7,23 +7,35 @@
 namespace engine
 {
 
-    struct NodeBase {
-        using type = void;
+struct NodeBase {
+    using type = void;
 
-        int Index() { return index; }
+    int Index() { return index; }
 
-        std::shared_ptr<NodeBase> Parent() { return parent; }
+    std::shared_ptr<NodeBase> Parent() { return parent; }
 
-    private:
-        int index = 0;
-        size_t container_index = 0;
-        std::shared_ptr<NodeBase> parent;
+   protected:
+    int index = 0;
+    std::shared_ptr<NodeBase> parent;
 
-        std::vector<std::function<void()>> destroy_children;
+    std::unordered_map<std::size_t, std::vector<std::shared_ptr<NodeBase>>>
+        children;
 
-        friend struct SceneManager;
-    };
+    void clear() {
+        for (auto &[type, ptrs] : children) {
+            for (auto ptr : ptrs) {
+                ptr->clear();
+                ptr.reset();
+            }
+            ptrs.clear();
+            ptrs.resize(0);
+        }
 
+        children.clear();
+    }
+
+    friend struct SceneManager;
+};
     template <typename T>
     struct Node : NodeBase {
         template <class... Args>
@@ -33,4 +45,9 @@ namespace engine
     };
 
     struct Root{};
+
+struct NodePosition {
+    std::size_t type_id;
+    std::size_t container_position;
+};
 }
