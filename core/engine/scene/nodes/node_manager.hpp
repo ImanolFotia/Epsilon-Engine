@@ -10,6 +10,8 @@
 #include <typeinfo>
 #include <unordered_map>
 
+#include <core/framework/log.hpp>
+
 #include "node.hpp"
 
 namespace engine {
@@ -67,26 +69,40 @@ struct SceneManager {
 
     node_index[index] = node_types[iType].back(); // std::prev(node_types[iType].end());
 
-    parent->destroy_children.push_back([=, this]() {
-      try {
-        using child_type = T;
-        if (node_index.contains(index)) {
-          erase(std::static_pointer_cast<Node<T>>(node_index.at(index)));
-
-          if (children_node_index.contains(index))
-            children_node_index.erase(index);
-        }
-
-      } catch (std::exception &e) {
-        std::cout << "from " << __PRETTY_FUNCTION__ << " ::: " << e.what() << std::endl;
-      }
-    });
-
     auto new_node_ptr = std::static_pointer_cast<Node<T>>(node_types[iType].back());
 
-    children_node_index[parent->index][iType].push_back(new_node_ptr);
+    bool child_reuse = false;
+    std::size_t children_node_pos = 0;
+    for(int i = 0; i < children_node_index[parent->index][iType].size(); i++) {
+      if(children_node_index[parent->index][iType].at(i) == nullptr) {
+        children_node_index[parent->index][iType][i] = new_node_ptr;
+        child_reuse = true;
+        children_node_pos = i;
+        break;
+      }
+    }
 
-    new_node_ptr->parent = std::move(parent);
+    if(!child_reuse) {
+      children_node_index[parent->index][iType].push_back(new_node_ptr);
+      children_node_pos = children_node_index[parent->index][iType].size() - 1;
+    }
+
+    //if(parent->parent != nullptr) {
+      parent->destroy_children.push_back([=, this]() {
+        try {
+          if (node_index.contains(index)) {
+            erase(std::static_pointer_cast<Node<T>>(node_index.at(index)));
+
+            children_node_index[parent->index][iType].at(children_node_pos) = nullptr;
+          }
+
+        } catch (std::exception &e) {
+          std::cout << "from " << __PRETTY_FUNCTION__ << " ::: " << e.what() << std::endl;
+        }
+      });
+    //}
+
+    new_node_ptr->parent = parent;
     new_node_ptr->index = index;
 
     return std::static_pointer_cast<Node<T>>(node_types[iType].back());
@@ -118,14 +134,31 @@ struct SceneManager {
 
     node_index[index] = node_types[iType].back();
 
+    auto new_node_ptr = std::static_pointer_cast<Node<T>>(node_types[iType].back());
+
+    bool child_reuse = false;
+    std::size_t children_node_pos = 0;
+    for(int i = 0; i < children_node_index[parent->index][iType].size(); i++) {
+      if(children_node_index[parent->index][iType].at(i) == nullptr) {
+        children_node_index[parent->index][iType][i] = new_node_ptr;
+        child_reuse = true;
+        children_node_pos = i;
+        break;
+      }
+    }
+
+    if(!child_reuse) {
+      children_node_index[parent->index][iType].push_back(new_node_ptr);
+      children_node_pos = children_node_index[parent->index][iType].size() - 1;
+    }
+
     parent->destroy_children.push_back([=, this]() {
       try {
         using child_type = T;
         if (node_index.contains(index)) {
           erase(std::static_pointer_cast<Node<child_type>>(node_index.at(index)));
 
-          if (children_node_index.contains(index))
-            children_node_index.erase(index);
+            children_node_index[parent->index][iType].at(children_node_pos) = nullptr;
         }
 
       } catch (std::exception &e) {
@@ -133,9 +166,6 @@ struct SceneManager {
       }
     });
 
-    auto new_node_ptr = std::static_pointer_cast<Node<T>>(node_types[iType].back());
-
-    children_node_index[parent->index][iType].push_back(new_node_ptr);
 
     new_node_ptr->parent = parent;
     new_node_ptr->index = index;
@@ -151,6 +181,14 @@ struct SceneManager {
       return;
     }
 
+
+    for (auto &dst_func : node->destroy_children) {
+      dst_func();
+    }
+
+    node->destroy_children.clear();
+    node->destroy_children.shrink_to_fit();
+
     std::vector<TypeIterator> &node_container = node_types.at(iType);
 
     // nodes.erase(*node_index.at(node->index));
@@ -159,6 +197,9 @@ struct SceneManager {
     for (int i = container_index; i < node_container.size(); i++) {
       node_container.at(i)->container_index--;
     }
+
+    node_container.shrink_to_fit();
+
     // node_container.shrink_to_fit();
     /*
         if (node->parent != nullptr) {
@@ -179,15 +220,11 @@ struct SceneManager {
       node_types.erase(iType);
     }
 
-    for (auto &dst_func : node->destroy_children) {
-      dst_func();
-    }
 
-    node->destroy_children.clear();
+    //children_node_index.at(node->parent).at(iType).
+    //children_node_index.erase(node->index);
 
-    children_node_index.erase(node->index);
-
-    node = nullptr;
+    Log::Info("references: ", node.use_count());
   }
 
   template <typename T> [[nodiscard]] std::vector<TypeIterator> &get() {

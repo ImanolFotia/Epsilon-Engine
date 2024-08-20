@@ -3,6 +3,8 @@
 #include <core/engine/audio/audio_manager.hpp>
 #include <core/framework/audio/WAVFile.h>
 
+#include <core/framework/log.hpp>
+
 namespace engine {
 
 struct AudioBuffer {
@@ -11,6 +13,7 @@ struct AudioBuffer {
 };
 
 class AudioObject {
+
 
   std::vector<Ref<audio::AudioSource>> source{};
   AudioBuffer buffer{};
@@ -25,6 +28,10 @@ class AudioObject {
   friend class AssetManager;
 
 public:
+
+  ~AudioObject() {
+    Log::Info("AudioObject destroyed");
+  }
   // Setters
   void Position(glm::vec3 p) { position = p; }
 
