@@ -796,6 +796,18 @@ void VulkanResourceManager::clean() {
 
   vmaDestroyAllocator(m_pAllocator);
   vk::cleanup(*m_pVkDataPtr);
+
+  materialPool.Destroy();
+  meshPool.Destroy();
+  shaderPool.Destroy();
+  computeShaderPool.Destroy();
+  texPool.Destroy();
+  gpuBufferPool.Destroy();
+  indexBufferPool.Destroy();
+  uniformBufferPool.Destroy();
+  vertexBufferPool.Destroy();
+  pushConstantPool.Destroy();
+  renderPassPool.Destroy();
 }
 
 /**
