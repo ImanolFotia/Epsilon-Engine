@@ -52,6 +52,8 @@ template <typename T, typename R> struct Pool {
 
   void Initialize() { m_Data = new R[c_MaxObjects]; }
 
+  void Destroy() { if(m_Data != nullptr) delete[] m_Data; }
+
   template <typename... Args> Ref<T> emplace(std::string name, Args... args) {
     size_t current_index = 0;
     size_t generation = 1;
@@ -81,7 +83,7 @@ template <typename T, typename R> struct Pool {
     return ref;
   }
 
-  Ref<T> insert(std::string name, R element) {
+  [[maybe_unused]] Ref<T> insert(std::string name, R element) {
     size_t current_index = 0;
     size_t generation = 1;
     if (m_FreeRefs.size() > 0) {
@@ -111,7 +113,7 @@ template <typename T, typename R> struct Pool {
   }
 
   Ref<T> getRef(size_t id) {
-    if(m_IdMap.contains(id)) {
+    if (m_IdMap.contains(id)) {
       Ref<T> ref(m_IdMap[id], m_GenerationCache[id], id);
       return ref;
     }
