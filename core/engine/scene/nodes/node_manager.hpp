@@ -72,6 +72,7 @@ struct SceneManager {
   }
 
   template <typename T> void erase(std::shared_ptr<Node<T>> node) {
+    if(!m_Positions.contains(node->index)) return;
     auto position = m_Positions[node->index];
     auto &container = m_Nodes[position.type_id];
 
