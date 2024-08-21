@@ -24,6 +24,8 @@ struct SourceInfo {
   float gain{};
   float angle{};
   float pitch{};
+
+  std::string name;
 };
 
 struct ListenerInfo {
@@ -35,9 +37,17 @@ struct ListenerInfo {
 
 enum class AudioState { PLAYING = 0, PAUSED, STOPPED, SIZE };
 
+enum class AudioKind { MUSIC = 0, SFX, SIZE };
+
+struct AudioManagerInitParams {
+  int pool_reserve[(int)AudioKind::SIZE] = {0};
+  float initial_gain = 1.0;
+};
+
 class AudioManager {
 public:
   virtual void Init() = 0;
+  virtual void Init(AudioManagerInitParams) = 0;
   virtual void CleanUp() = 0;
 
   virtual void Update() = 0;
@@ -69,6 +79,8 @@ public:
   virtual float getSourcePitch(Ref<AudioSource>) = 0;
   virtual AudioState getSourceState(Ref<AudioSource>) = 0;
   virtual uint32_t getId(Ref<AudioSource>) = 0;
+
+  virtual void releaseSource(Ref<AudioSource>) = 0;
 
   virtual void deleteBuffer(Ref<AudioBuffer>) = 0;
   virtual uint32_t deleteSource(Ref<AudioSource>) = 0;

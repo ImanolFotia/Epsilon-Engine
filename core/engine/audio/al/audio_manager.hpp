@@ -2,6 +2,8 @@
 
 #include "../audio_manager.hpp"
 #include <apis/al/al.hpp>
+#include <set>
+#include <unordered_map>
 
 namespace engine::audio {
 class ALAudioManager : public AudioManager {
@@ -11,8 +13,20 @@ class ALAudioManager : public AudioManager {
 
   al::OpenALData m_pAlData;
 
+  std::set<int> m_FreeSources;
+  std::set<std::string> m_PlayingSources;
+
+  double m_LastCollection = 0.0;
+  const double COLLECT_TIME = 500.0; //milliseconds
+
+  ALuint pGetFreeSource();
+
+
+	void SetSourceData(al::OpenALSource& source, const SourceInfo& data);
+
 public:
   virtual void Init() override;
+  virtual void Init(AudioManagerInitParams) override {}
   virtual void CleanUp() override;
   virtual void Update() override;
 
@@ -47,6 +61,9 @@ public:
   virtual float getSourcePitch(Ref<AudioSource>) override;
   virtual AudioState getSourceState(Ref<AudioSource>) override;
   virtual uint32_t getId(Ref<AudioSource>) override;
+
+
+  virtual void releaseSource(Ref<AudioSource>) override;
 
   virtual void deleteBuffer(Ref<AudioBuffer>) override;
   virtual uint32_t deleteSource(Ref<AudioSource>) override;

@@ -3,6 +3,7 @@
 #include "AL/al.h"
 #include "al_data.hpp"
 #include <exception>
+#include <stdexcept>
 
 namespace al {
 [[nodiscard]] static OpenALBuffer createBuffer(int numChannels, std::size_t size, std::size_t bps, std::size_t bitrate,
@@ -26,11 +27,11 @@ namespace al {
   return buffer;
 }
 
-[[nodiscard]] static OpenALSource createSource(OpenALBuffer buffer) {
+
+[[nodiscard]] static OpenALSource createSource() {
 
   OpenALSource source;
   alGenSources(1, &source.id);
-  alSourcei(source.id, AL_BUFFER, (ALint)buffer.id);
 
   alSourcei(source.id, AL_SOURCE_RELATIVE, AL_FALSE);
   alSourcef(source.id, AL_GAIN, 1.0);
@@ -42,6 +43,29 @@ namespace al {
   alSource3f(source.id, AL_VELOCITY, 0.0, 0.0, 0.0);
 
   return source;
+}
+
+[[nodiscard]] static OpenALSource createSource(OpenALBuffer buffer) {
+
+  OpenALSource source;
+  alGenSources(1, &source.id);
+  if(buffer.id != 0)
+        alSourcei(source.id, AL_BUFFER, (ALint)buffer.id);
+
+  alSourcei(source.id, AL_SOURCE_RELATIVE, AL_FALSE);
+  alSourcef(source.id, AL_GAIN, 1.0);
+  alSourcef(source.id, AL_PITCH, 1.0);
+  alSource3f(source.id, AL_POSITION, 0, 0, 0);
+  alSource3f(source.id, AL_DIRECTION, 0, 0, 0);
+  alSourcef(source.id, AL_CONE_INNER_ANGLE, 360);
+  alSourcef(source.id, AL_CONE_OUTER_ANGLE, 360);
+  alSource3f(source.id, AL_VELOCITY, 0.0, 0.0, 0.0);
+
+  return source;
+}
+
+static void setBuffer(OpenALSource source, OpenALBuffer buffer) {
+        alSourcei(source.id, AL_BUFFER, (ALint)buffer.id);
 }
 
 static void deleteSource(OpenALSource source) {
@@ -78,7 +102,7 @@ static void playSource(OpenALSource source) {
   // if (getSourceState(source) == AL_PLAYING) return;
   if (alIsSource(source.id))
     alSourcei(source.id, AL_SOURCE_RELATIVE, source.relative ? AL_TRUE : AL_FALSE);
-  alSourcei(source.id, AL_LOOPING, source.looping ? AL_TRUE : AL_FALSE);
+  alSourcei(source.id, AL_LOOPING, source.loop ? AL_TRUE : AL_FALSE);
   alSourcef(source.id, AL_GAIN, source.gain);
   alSourcef(source.id, AL_PITCH, source.pitch);
   alSourcef(source.id, AL_MIN_GAIN, 0.01);
@@ -102,6 +126,18 @@ static void pauseSource(OpenALSource source) {
 static void stopSource(OpenALSource source) {
   if (alIsSource(source.id))
     alSourceStop(source.id);
+}
+
+static bool isPlaying(OpenALSource source) {
+  ALint source_state;
+  alGetSourcei(source.id, AL_SOURCE_STATE, &source_state);
+  return source_state == AL_PLAYING;
+}
+
+static bool isPaused(OpenALSource source) {
+  ALint source_state;
+  alGetSourcei(source.id, AL_SOURCE_STATE, &source_state);
+  return source_state == AL_PAUSED;
 }
 /*
 class AudioSource : public Epsilon::Audio::AudioSource

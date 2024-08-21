@@ -14,6 +14,7 @@
 #include <AL/efx-presets.h>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
+#include <string>
 
 namespace al {
 
@@ -34,9 +35,12 @@ namespace al {
 		float outer_angle = 1.0;
 		float cutoff_distance = 5.0;
 
-		bool looping = false;
+		bool loop = false;
 		bool playing = false;
 		bool relative = false;
+
+  		std::string name;
+
 	};
 	struct OpenALListener {
 		glm::vec3 position{};
