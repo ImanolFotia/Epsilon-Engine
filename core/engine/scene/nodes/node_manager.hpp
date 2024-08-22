@@ -12,6 +12,7 @@
 
 #include <core/framework/log.hpp>
 
+#include "core/framework/containers/dynamic_array.hpp"
 #include "node.hpp"
 
 namespace engine {
@@ -73,14 +74,14 @@ struct SceneManager {
 
   template <typename T> void erase(std::shared_ptr<Node<T>> node) {
     if(!m_Positions.contains(node->index)) return;
-    auto position = m_Positions[node->index];
+    auto position = m_Positions.at(node->index);
     auto &container = m_Nodes[position.type_id];
 
     // erase all data and references from this node's children
     // both from the internal array and the node container
     for (auto &[index, ptrs] : node->children) {
       for (int i = 0; i < ptrs.size(); i++) {
-        auto pos = m_Positions[ptrs[i]->index];
+        auto pos = m_Positions.at(ptrs[i]->index);
 
         auto &child_container = m_Nodes[pos.type_id];
 
@@ -89,7 +90,7 @@ struct SceneManager {
         child->clear();
 
         auto last = child_container.back();
-        auto &last_position = m_Positions[last->index];
+        auto &last_position = m_Positions.at(last->index);
 
         child_container[pos.container_position] = last;
         last_position.container_position = pos.container_position;
@@ -148,27 +149,28 @@ struct SceneManager {
 
   ChildNodes null_return_child_node{};
   ChildNodes &getChildren(std::shared_ptr<NodeBase> node) {
-    auto position = m_Positions[node->index];
+    auto position = m_Positions.at(node->index);
     if (!m_Nodes.contains(position.type_id))
       return null_return_child_node;
     return m_Nodes[position.type_id][position.container_position]->children;
   }
 
   template <typename T> bool isOfType(std::shared_ptr<NodeBase> node) {
-    auto position = m_Positions[node->index];
+    auto position = m_Positions.at(node->index);
 
     return GetType<T>().hash_code() == position.type_id;
   }
 
   template <typename T> std::shared_ptr<NodeBase> getChild(std::shared_ptr<NodeBase> node) {
-    auto position = m_Positions[node->index];
+    auto position = m_Positions.at(node->index);
     if (!m_Nodes.contains(position.type_id))
       return nullptr;
     return m_Nodes[position.type_id][position.container_position]->children[GetType<T>().hash_code()].front();
   }
 
   std::shared_ptr<NodeBase> get(uint64_t index) {
-    auto position = m_Positions[index];
+    if(!m_Positions.contains(index)) return nullptr;
+    auto position = m_Positions.at(index);
     if (m_Nodes.contains(position.type_id))
       if (m_Nodes[position.type_id].size() > 0 && m_Nodes[position.type_id].size() > position.container_position)
         return m_Nodes[position.type_id][position.container_position];

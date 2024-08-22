@@ -33,10 +33,10 @@ struct BoundingSphere {
       return false;
     if (!containsPoint(box.position + glm::vec3(0.0f, box.size.y, box.size.z), position))
       return false;
-
+/*
     std::cout << "-------- contains --------" << std::endl;
     std::cout << "box position: " << glm::to_string(box.position) << std::endl;
-    std::cout << "sphere position: " << glm::to_string(position) << std::endl;
+    std::cout << "sphere position: " << glm::to_string(position) << std::endl;*/
 
     return true;
   }

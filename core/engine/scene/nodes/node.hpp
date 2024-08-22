@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/framework/containers/dynamic_array.hpp"
 #include <memory>
 #include <vector>
 #include <functional>
