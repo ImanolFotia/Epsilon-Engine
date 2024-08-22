@@ -1,5 +1,6 @@
 #include "audio_manager.hpp"
 #include "apis/al/al_data.hpp"
+#include "apis/al/source.hpp"
 #include "core/engine/audio/audio_manager.hpp"
 #include "core/framework/clock.hpp"
 #include <core/framework/log.hpp>
@@ -27,15 +28,26 @@ void ALAudioManager::Init() {
   sourcesPool.Initialize();
   buffersPool.Initialize();
 
-  for(int i = 0; i < 256; i++) {
-    std::string source_name = "source_" + std::to_string(i+1);
+  for (int i = 0; i < MAX_SOURCES; i++) {
     al::OpenALSource alSource = al::createSource();
     m_FreeSources.insert(alSource.id);
   }
   Log::Success("Audio subsystem initialized");
 }
 
-void ALAudioManager::CleanUp() { al::destroyDevice(&m_pAlData); }
+void ALAudioManager::CleanUp() {
+
+  for (ALuint i = 1; i <= MAX_SOURCES; i++) {
+    al::stopSource({.id = i});
+    al::deleteSource({.id = i});
+  }
+
+  for (auto &buffer : buffersPool) {
+    if (buffer.id > 0)
+      al::deleteBuffer(buffer);
+  }
+  al::destroyDevice(&m_pAlData);
+}
 
 void ALAudioManager::Update() {
   if (m_pAlData.shouldReloadDevice) {
@@ -60,10 +72,15 @@ void ALAudioManager::Update() {
     //}
   }
 
-  if(framework::Clock::Time() >= m_LastCollection + COLLECT_TIME) {
-    for(auto &source: sourcesPool) {
-      if(!source.playing) {
+  if (framework::Clock::Time() >= m_LastCollection + COLLECT_TIME) {
+    for (auto &source : sourcesPool) {
+      if (source.id == 0 || m_FreeSources.contains(source.id))
+        continue;
+      if (!al::isPlaying(source) && !al::isPaused(source)) {
         m_FreeSources.insert(source.id);
+        m_PlayingSources.extract(std::hash<std::string>{}(source.name));
+        Log::Info("Freed audio source: ", source.id);
+        source.id = 0;
       }
     }
     m_LastCollection = framework::Clock::Time();
@@ -78,7 +95,7 @@ Ref<AudioBuffer> ALAudioManager::createBuffer(const std::string &name, const Buf
 }
 
 ALuint ALAudioManager::pGetFreeSource() {
-if(m_FreeSources.size() <= 0){ 
+  if (m_FreeSources.size() <= 0) {
     Log::Warning("There was no free audio source reference, try again...");
     return 0;
   }
@@ -91,33 +108,36 @@ if(m_FreeSources.size() <= 0){
   return id;
 }
 
-void ALAudioManager::SetSourceData(al::OpenALSource& source, const SourceInfo& data) {
+void ALAudioManager::SetSourceData(al::OpenALSource &source, const SourceInfo &data) {
   source.name = data.name;
   source.angle = data.angle;
   source.direction = data.direction;
   source.gain = data.gain;
   source.velocity = data.velocity;
   source.position = data.position;
+  source.buffer = *buffersPool.get(data.buffer);
 }
 
 Ref<AudioSource> ALAudioManager::createSource(const std::string &name, const SourceInfo &sourceInfo) {
 
-  ALuint free_id = pGetFreeSource();
   al::OpenALSource alSource;
-  alSource.id = free_id;
+
+  SetSourceData(alSource, sourceInfo);
+
+  alSource.name = name;
 
   auto sourceRef = sourcesPool.insert(name, alSource);
-
-  al::setBuffer(alSource, *buffersPool.get(sourceInfo.buffer));
 
   Log::Info("Source successfully created");
 
   return sourceRef;
 }
 
-void ALAudioManager::releaseSource(Ref<AudioSource> source) {
+uint32_t ALAudioManager::releaseSource(Ref<AudioSource> source) {
   auto sourceRef = sourcesPool.get(source);
   m_FreeSources.insert(sourceRef->id);
+  m_PlayingSources.extract(std::hash<std::string>{}(sourceRef->name));
+  return sourceRef->id;
 }
 
 Ref<AudioListener> ALAudioManager::createListener(const std::string &name, const ListenerInfo &listenerInfo) {
@@ -131,15 +151,27 @@ Ref<AudioListener> ALAudioManager::createListener(const std::string &name, const
   return ref;
 }
 
-void ALAudioManager::Play(Ref<AudioSource> source) { 
-  /*
-  al::OpenALSource &alSource = *sourcesPool.get(source);
+void ALAudioManager::Play(Ref<AudioSource> source) {
 
-  if(!m_FreeSources.contains(alSource.id)) {
-    alSource.id = 
-  }*/
+  al::OpenALSource *alSource = sourcesPool.get(source);
 
-  al::playSource(*getSource(source));
+  Log::Info("Trying to play: ", alSource->name);
+
+  if (m_PlayingSources.contains(std::hash<std::string>{}(alSource->name)))
+    return;
+
+  if (alSource->id == 0) {
+    ALuint free_id = pGetFreeSource();
+    if (free_id == 0)
+      return;
+    alSource->id = free_id;
+    al::setBuffer(*alSource, alSource->buffer);
+  }
+
+  Log::Success("Playing source: ", alSource->id);
+  al::playSource(*alSource);
+
+  m_PlayingSources.insert(std::hash<std::string>{}(alSource->name));
 }
 
 void ALAudioManager::Pause(Ref<AudioSource> source) { al::pauseSource(*getSource(source)); }
@@ -202,6 +234,8 @@ void ALAudioManager::setListenerDirection(Ref<AudioListener> listener_ref, glm::
 
 AudioState ALAudioManager::getSourceState(Ref<AudioSource> source_ref) {
   auto source = *sourcesPool.get(source_ref);
+  if (source.id == 0)
+    return AudioState::STOPPED;
   auto state = al::getSourceState(source);
   if (state == AL_PLAYING)
     return AudioState::PLAYING;
@@ -246,13 +280,6 @@ void ALAudioManager::deleteBuffer(Ref<AudioBuffer> buffer_ref) {
   buffersPool.destroy(buffer_ref);
 }
 
-uint32_t ALAudioManager::deleteSource(Ref<AudioSource> source_ref) {
-
-  auto source = *sourcesPool.get(source_ref);
-  al::deleteSource(source);
-  sourcesPool.destroy(source_ref);
-
-  return source.id;
-}
+uint32_t ALAudioManager::deleteSource(Ref<AudioSource> source_ref) {}
 void ALAudioManager::deleteListener(Ref<AudioListener> listener) {}
 } // namespace engine::audio

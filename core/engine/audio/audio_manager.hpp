@@ -80,7 +80,7 @@ public:
   virtual AudioState getSourceState(Ref<AudioSource>) = 0;
   virtual uint32_t getId(Ref<AudioSource>) = 0;
 
-  virtual void releaseSource(Ref<AudioSource>) = 0;
+  virtual uint32_t releaseSource(Ref<AudioSource>) = 0;
 
   virtual void deleteBuffer(Ref<AudioBuffer>) = 0;
   virtual uint32_t deleteSource(Ref<AudioSource>) = 0;

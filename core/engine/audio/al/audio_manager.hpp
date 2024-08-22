@@ -14,10 +14,11 @@ class ALAudioManager : public AudioManager {
   al::OpenALData m_pAlData;
 
   std::set<int> m_FreeSources;
-  std::set<std::string> m_PlayingSources;
+  std::set<std::size_t> m_PlayingSources;
 
   double m_LastCollection = 0.0;
-  const double COLLECT_TIME = 500.0; //milliseconds
+  const double COLLECT_TIME = 100.0; //milliseconds
+  const std::size_t MAX_SOURCES = 256;
 
   ALuint pGetFreeSource();
 
@@ -63,7 +64,7 @@ public:
   virtual uint32_t getId(Ref<AudioSource>) override;
 
 
-  virtual void releaseSource(Ref<AudioSource>) override;
+  virtual uint32_t releaseSource(Ref<AudioSource>) override;
 
   virtual void deleteBuffer(Ref<AudioBuffer>) override;
   virtual uint32_t deleteSource(Ref<AudioSource>) override;

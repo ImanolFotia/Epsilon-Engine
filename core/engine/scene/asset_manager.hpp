@@ -14,6 +14,7 @@
 #include "audio/audio_object.hpp"
 
 #include "core/engine/audio/audio_manager.hpp"
+#include "core/framework/clock.hpp"
 #include "core/framework/random.hpp"
 #include "structs/box.hpp"
 #include <core/engine/context.hpp>
@@ -389,7 +390,8 @@ public:
   }
 
   void Destroy() {
-    auto audioManager = m_pContext->AudioManager();
+    
+    /*auto audioManager = m_pContext->AudioManager();
     for (auto &[name, audio] : m_pAudioBuffers) {
       for (auto &source : audio.sources) {
         audioManager->Stop(source);
@@ -401,13 +403,16 @@ public:
       if (audio.sources.size() > 0)
         audioManager->deleteBuffer(audio.buffer);
     }
+
+    audioManager->CleanUp();*/
+    
   }
 
   void deleteAudioSource(AudioObject object, Ref<audio::AudioSource> source) {
     auto audioManager = m_pContext->AudioManager();
     if (audioManager->getSourceState(source) == audio::AudioState::PLAYING)
       audioManager->Stop(source);
-    auto id = audioManager->deleteSource(source);
+    auto id = audioManager->releaseSource(source);
 
     for (int i = 0; i < m_pAudioBuffers[object.name].sources.size(); i++) {
       if (id == audioManager->getId(source)) {
@@ -881,8 +886,9 @@ public:
       object.buffer = buffer;
 
       for (int i = 0; i < numSources; i++) {
+        std::string name = std::format("{}_source_{}_{}_{}", path, i, buffer.sources.size(), framework::Clock::Now());// path + "_source_" + std::to_string(i) + "_" + std::to_string(buffer.sources.size());
         buffer.sources.push_back(
-            audioManager->createSource(path + "_source_" + std::to_string(i) + "_" + std::to_string(buffer.sources.size()), {.buffer = buffer.buffer}));
+            audioManager->createSource(name, {.buffer = buffer.buffer, .name = name}));
         object.source.push_back(buffer.sources.back());
       }
 
@@ -902,10 +908,10 @@ public:
     AudioBuffer &audioBuffer = m_pAudioBuffers[path];
     audioBuffer.buffer = buffer;
 
-    for (int i = 0; i < numSources; i++)
-      audioBuffer.sources.push_back(audioManager->createSource(path + "_source_" + std::to_string(framework::QuickRandom<long>(0, 4123168431)) + "_" +
-                                                                   std::to_string(audioBuffer.sources.size()),
-                                                               {.buffer = audioBuffer.buffer}));
+    for (int i = 0; i < numSources; i++) {
+        std::string name = std::format("{}_source_{}_{}_{}", path, i, audioBuffer.sources.size(), framework::Clock::Now());//
+      audioBuffer.sources.push_back(audioManager->createSource(name, {.buffer = audioBuffer.buffer, .name = name}));
+    }
 
     AudioObject object;
     object.buffer = audioBuffer;
