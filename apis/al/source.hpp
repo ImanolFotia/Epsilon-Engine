@@ -6,8 +6,7 @@
 #include <stdexcept>
 
 namespace al {
-[[nodiscard]] static OpenALBuffer createBuffer(int numChannels, std::size_t size, std::size_t bps, std::size_t bitrate,
-                                               unsigned char *data) {
+[[nodiscard]] static OpenALBuffer createBuffer(int numChannels, std::size_t size, std::size_t bps, std::size_t bitrate, unsigned char *data) {
 
   OpenALBuffer buffer = {};
   ALenum format;
@@ -26,7 +25,6 @@ namespace al {
   alBufferData(buffer.id, format, data, size, bitrate);
   return buffer;
 }
-
 
 [[nodiscard]] static OpenALSource createSource() {
 
@@ -49,8 +47,8 @@ namespace al {
 
   OpenALSource source;
   alGenSources(1, &source.id);
-  if(buffer.id != 0)
-        alSourcei(source.id, AL_BUFFER, (ALint)buffer.id);
+  if (buffer.id != 0)
+    alSourcei(source.id, AL_BUFFER, (ALint)buffer.id);
 
   alSourcei(source.id, AL_SOURCE_RELATIVE, AL_FALSE);
   alSourcef(source.id, AL_GAIN, 1.0);
@@ -65,11 +63,13 @@ namespace al {
 }
 
 static void setBuffer(OpenALSource source, OpenALBuffer buffer) {
-        alSourcei(source.id, AL_BUFFER, (ALint)buffer.id);
+  assert(source.id != 0);
+  alSourcei(source.id, AL_BUFFER, (ALint)buffer.id);
 }
 
 static void deleteSource(OpenALSource source) {
 
+  assert(source.id != 0);
   ALuint s = source.id;
   if (!alIsSource(s))
     return;
@@ -91,6 +91,7 @@ static void deleteBuffer(OpenALBuffer buffer) {
 
 static int getSourceState(OpenALSource source) {
 
+  assert(source.id != 0);
   ALint source_state;
   alGetSourcei(source.id, AL_SOURCE_STATE, &source_state);
 
@@ -99,6 +100,7 @@ static int getSourceState(OpenALSource source) {
 
 static void playSource(OpenALSource source) {
 
+  assert(source.id != 0);
   // if (getSourceState(source) == AL_PLAYING) return;
   if (alIsSource(source.id))
     alSourcei(source.id, AL_SOURCE_RELATIVE, source.relative ? AL_TRUE : AL_FALSE);
