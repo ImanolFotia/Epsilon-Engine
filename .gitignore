@@ -25,6 +25,10 @@
 *.ini
 *.dtbcache.v2
 
+.clangd
+.clang-format
+dotnet_test.deps.json
+
 Epsilon
 
 /.idea
