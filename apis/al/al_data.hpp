@@ -38,6 +38,7 @@ namespace al {
 		bool loop = false;
 		bool playing = false;
 		bool relative = false;
+		bool pinned = false;
 
   		std::string name;
 

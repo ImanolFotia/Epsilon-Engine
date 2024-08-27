@@ -26,6 +26,21 @@ namespace vk
         }
     }
 
+    static void createComputeCommandPool(VulkanData &vk_data, VkCommandPool &commandPool)
+    {
+        QueueFamilyIndices queueFamilyIndices = findQueueFamilies(vk_data.physicalDevice, vk_data);
+
+        VkCommandPoolCreateInfo poolInfo{};
+        poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+        poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+        poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
+
+        if (vkCreateCommandPool(vk_data.logicalDevice, &poolInfo, nullptr, &commandPool) != VK_SUCCESS)
+        {
+            throw std::runtime_error("failed to create command pool!");
+        }
+    }
+
     static void createTransferCommandPool(VulkanData& vk_data, VkCommandPool& commandPool)
     {
         QueueFamilyIndices queueFamilyIndices = findQueueFamilies(vk_data.physicalDevice, vk_data);
