@@ -96,8 +96,9 @@ void UI::Draw(engine::Ref<engine::RenderPass> renderPass) {
     for (int i = 0; i < commands_pushed + 1; i++) {
       auto &draw_command = m_DrawLists[i];
 
-      if(draw_command.num_vertices <= 0) continue;
-      
+      if (draw_command.num_vertices <= 0)
+        continue;
+
       m_pResourceManager->UpdateMesh(m_pMesh, {.vertex_size = draw_command.num_vertices, .vertex_offset = draw_command.vertex_offset});
 
       m_pRenderer->Push({.mesh = m_pMesh,
@@ -178,13 +179,12 @@ void UI::CreatePolygon(std::vector<UIVertex> vertices) {
 
 void UI::SetNextWindowPosition(glm::vec2 position) { m_pCursorPosition = position; }
 
-void UI::Spacer(glm::vec2 size) { 
-  
+void UI::Spacer(glm::vec2 size) {
 
-  currentWindow->size.x = glm::max(m_pCursorPosition.x + size.x - currentWindow->position.x- m_pStyle.buttonPadding * 2.0f, currentWindow->size.x);
+  currentWindow->size.x = glm::max(m_pCursorPosition.x + size.x - currentWindow->position.x - m_pStyle.buttonPadding * 2.0f, currentWindow->size.x);
   currentWindow->size.y = glm::max(m_pCursorPosition.y + size.y - currentWindow->position.y, currentWindow->size.y);
   m_pCursorPosition += size;
- }
+}
 
 void UI::BeginWindow(const std::string &name, glm::vec2 size, glm::vec4 color, float border_radius) {
   CheckShader();
@@ -367,7 +367,7 @@ bool UI::Button(const std::string &text, ButtonFlags flags) {
   glm::vec2 position = m_pCursorPosition;
 
   glm::vec2 mouse = glm::vec2(framework::Input::Mouse::XPOS, framework::Input::Mouse::YPOS);
-    m_pContext.lastItemHovered = false;
+  m_pContext.lastItemHovered = false;
   if (mouse.x > position.x && mouse.x < position.x + size.x && mouse.y > position.y && mouse.y < position.y + size.y) {
     m_pContext.lastItemHovered = true;
     button_color = glm::normalize(glm::vec4(222.0f, 134.0f, 2.0f, 255.0f));
@@ -421,15 +421,13 @@ void UI::Sameline() {
     currentWindow->size.y -= m_pContext.prev_widget_size.y;
 }
 
-bool UI::IsHovered() {
-  return m_pContext.lastItemHovered;
-}
+bool UI::IsHovered() { return m_pContext.lastItemHovered; }
 
 void UI::Dock(DockLocation location, float thickness, float border_radius) {
   CheckShader();
   m_pContext.prev_widget_position = m_pCursorPosition;
 
-    m_pContext.lastItemHovered = false;
+  m_pContext.lastItemHovered = false;
   glm::vec2 white_pixel = glm::vec2(m_Fonts[current_font]->white_pixel.x, m_Fonts[current_font]->white_pixel.y);
 
   switch (location) {
@@ -467,7 +465,7 @@ bool UI::ImageButton(const std::string &text, const std::string &texture, glm::v
   glm::vec2 position = m_pCursorPosition;
 
   glm::vec2 mouse = glm::vec2(framework::Input::Mouse::XPOS, framework::Input::Mouse::YPOS);
-    m_pContext.lastItemHovered = false;
+  m_pContext.lastItemHovered = false;
   if (mouse.x > position.x && mouse.x < position.x + size.x + m_pStyle.buttonPadding * 2.0f && mouse.y > position.y &&
       mouse.y < position.y + size.y + m_pStyle.buttonPadding * 2.0f) {
     button_color = glm::vec4(0.5, 0.5, 0.5, 1.0);
@@ -531,7 +529,7 @@ bool UI::ImageButton(const std::string &text, const std::string &texture, glm::v
 
 void UI::AngularButtons(glm::vec2 position, float innerRadius, float outerRadius, int count) {
 
-    m_pContext.lastItemHovered = false;
+  m_pContext.lastItemHovered = false;
   CheckShader();
   m_pContext.prev_widget_position = m_pCursorPosition;
   glm::vec2 center = position;
@@ -674,11 +672,11 @@ bool UI::AngularButton(const std::string &text) {
   }
   */
 
-    m_pContext.lastItemHovered = false;
+      m_pContext.lastItemHovered = false;
       if (isHover) {
         float rad_dist = outerRadius - innerRadius;
         float angle_dist = end - begin;
-    m_pContext.lastItemHovered = true;
+        m_pContext.lastItemHovered = true;
         /*a += glm::normalize(a - glm::vec2(angle_dist)) * 10.0f;
         b += glm::normalize(b - glm::vec2(angle_dist)) * 10.f;
         c += glm::normalize(c - glm::vec2(angle_dist)) * 10.f;
@@ -747,7 +745,7 @@ bool UI::CheckBox(const std::string &text, bool *state) {
   }
 
   glm::vec2 mouse = glm::vec2(framework::Input::Mouse::XPOS, framework::Input::Mouse::YPOS);
-    m_pContext.lastItemHovered = false;
+  m_pContext.lastItemHovered = false;
   if (mouse.x > position.x && mouse.x < position.x + switch_width && mouse.y > position.y && mouse.y < position.y + switch_width) {
     // button_color = glm::vec4(0.2, 0.5, 0.5, 1.0);
     m_pContext.lastItemHovered = true;
@@ -791,7 +789,7 @@ void UI::HealthBar(const std::string &text, glm::vec2 position, float val, float
                    float border_radius) {
 
   CheckShader();
-    m_pContext.lastItemHovered = false;
+  m_pContext.lastItemHovered = false;
   auto font = m_Fonts[current_font];
   m_pContext.prev_widget_position = m_pCursorPosition;
   const float padding = 1;
@@ -837,7 +835,7 @@ void UI::Scale(const std::string &text, const std::string &setting_name, int &cu
   glm::vec2 widgetStart = m_pCursorPosition;
   m_pContext.prev_widget_position = widgetStart;
   CheckShader();
-    m_pContext.lastItemHovered = false;
+  m_pContext.lastItemHovered = false;
   float name_width = textSize(text).x;
   float y_offset = glm::ceil(font->highest_character * 0.5);
   m_pCursorPosition.y += m_pStyle.buttonPadding;
@@ -931,4 +929,36 @@ glm::vec2 UI::ToScreenCoords(const glm::mat4 &model, const glm::mat4 &view, cons
 
   return viewport_space * resolution;
 }
+
+void UI::Circle() {
+  std::vector<UIVertex> vertices;
+  
+  const int cSubdivisions = 10;
+  
+  float angle = 0;
+  float angle_step = (1.0f / cSubdivisions);
+  for(int i = 0; i < cSubdivisions; i++) {
+    UIVertex vtx;
+
+    vtx.vtx_pos.x = glm::sin((angle+angle_step) * glm::pi<float>() * 2.0f) + 0.5f;
+    vtx.vtx_pos.y = glm::cos((angle+angle_step) * glm::pi<float>() * 2.0f) + 0.5f;
+    vtx.color = glm::vec4(1.0f);
+    vertices.push_back(vtx);
+
+    vtx.vtx_pos.x = glm::sin(angle * glm::pi<float>() * 2.0f) + 0.5f;
+    vtx.vtx_pos.y = glm::cos(angle * glm::pi<float>() * 2.0f) + 0.5f;
+    vtx.color = glm::vec4(1.0f);
+    vertices.push_back(vtx);
+
+    vtx.vtx_pos.x = {0.5f};
+    vtx.color = glm::vec4(1.0f);
+    vertices.push_back(vtx);
+
+    angle += angle_step;
+  }
+  CreatePolygon(vertices);
+}
+void UI::Square() {}
+void UI::Triangle() {}
+void UI::Diamond() {}
 } // namespace UI

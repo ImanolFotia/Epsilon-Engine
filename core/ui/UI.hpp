@@ -364,6 +364,11 @@ public:
 
   void CreatePolygon(std::vector<UIVertex> vertices);
 
+  void Circle();
+  void Square();
+  void Triangle();
+  void Diamond();
+
   void SetNextWindowPosition(glm::vec2 position);
 
   void BeginWindow(const std::string &name, glm::vec2 size = glm::vec2(0.0f), glm::vec4 color = glm::vec4(0.0, 0.0, 0.0, 0.5), float border_radius = -1.0f);
