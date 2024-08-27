@@ -420,6 +420,8 @@ public:
         break;
       }
     }
+
+    audioManager->deleteSource(source);
   }
 
   void deleteAudioObject(AudioObject object) {
