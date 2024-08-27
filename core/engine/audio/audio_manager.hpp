@@ -68,6 +68,8 @@ public:
   virtual void setSourcePitch(Ref<AudioSource>, float) = 0;
   virtual void setSourceState(Ref<AudioSource>, AudioState) = 0;
 
+  virtual void pinSource(Ref<AudioSource>) = 0;
+
   virtual void setListenerPosition(Ref<AudioListener>, glm::vec3) = 0;
   virtual void setListenerDirection(Ref<AudioListener>, glm::vec3) = 0;
 

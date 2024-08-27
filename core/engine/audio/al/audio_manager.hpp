@@ -50,6 +50,7 @@ public:
   virtual void setSourceAngle(Ref<AudioSource>, float) override;
   virtual void setSourcePitch(Ref<AudioSource>, float) override;
   virtual void setSourceState(Ref<AudioSource>, AudioState) override;
+  virtual void pinSource(Ref<AudioSource>) override;
 
   virtual void setListenerPosition(Ref<AudioListener>, glm::vec3) override;
   virtual void setListenerDirection(Ref<AudioListener>, glm::vec3) override;

@@ -108,6 +108,10 @@ ALuint ALAudioManager::pGetFreeSource() {
   return id;
 }
 
+void ALAudioManager::pinSource(Ref<AudioSource> sourceRef) {
+  
+}
+
 void ALAudioManager::SetSourceData(al::OpenALSource &source, const SourceInfo &data) {
   source.name = data.name;
   source.angle = data.angle;
@@ -280,6 +284,8 @@ void ALAudioManager::deleteBuffer(Ref<AudioBuffer> buffer_ref) {
   buffersPool.destroy(buffer_ref);
 }
 
-uint32_t ALAudioManager::deleteSource(Ref<AudioSource> source_ref) {}
+uint32_t ALAudioManager::deleteSource(Ref<AudioSource> source_ref) {
+  sourcesPool.destroy(source_ref);
+}
 void ALAudioManager::deleteListener(Ref<AudioListener> listener) {}
 } // namespace engine::audio
