@@ -364,7 +364,7 @@ public:
 
   void CreatePolygon(std::vector<UIVertex> vertices);
 
-  void Circle();
+  void Circle(int subdivisions = 20);
   void Square();
   void Triangle();
   void Diamond();

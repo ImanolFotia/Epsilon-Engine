@@ -1,5 +1,7 @@
 
 #include "UI.hpp"
+#include "core/framework/clock.hpp"
+#include "core/framework/easing_functions.hpp"
 
 namespace UI {
 void UI::CheckShader() {
@@ -930,35 +932,109 @@ glm::vec2 UI::ToScreenCoords(const glm::mat4 &model, const glm::mat4 &view, cons
   return viewport_space * resolution;
 }
 
-void UI::Circle() {
+void UI::Circle(int subdivisions) {
+  CheckShader();
   std::vector<UIVertex> vertices;
-  
-  const int cSubdivisions = 10;
-  
+
+  float size = 10.0f;
+
   float angle = 0;
-  float angle_step = (1.0f / cSubdivisions);
-  for(int i = 0; i < cSubdivisions; i++) {
+  float angle_step = (1.0f / subdivisions);
+  for (int i = 0; i < subdivisions; i++) {
     UIVertex vtx;
-
-    vtx.vtx_pos.x = glm::sin((angle+angle_step) * glm::pi<float>() * 2.0f) + 0.5f;
-    vtx.vtx_pos.y = glm::cos((angle+angle_step) * glm::pi<float>() * 2.0f) + 0.5f;
     vtx.color = glm::vec4(1.0f);
+    vtx.pos_uv.b = m_Fonts[current_font]->white_pixel.x;
+    vtx.pos_uv.a = m_Fonts[current_font]->white_pixel.y;
+
+    vtx.pos_uv.x = (glm::sin((angle + angle_step) * glm::pi<float>() * 2.0f) / m_pResolution.x) * size + 0.5f;
+    vtx.pos_uv.y = (glm::cos((angle + angle_step) * glm::pi<float>() * 2.0f) / m_pResolution.y) * size + 0.5f;
     vertices.push_back(vtx);
 
-    vtx.vtx_pos.x = glm::sin(angle * glm::pi<float>() * 2.0f) + 0.5f;
-    vtx.vtx_pos.y = glm::cos(angle * glm::pi<float>() * 2.0f) + 0.5f;
-    vtx.color = glm::vec4(1.0f);
+    vtx.pos_uv.x = (glm::sin(angle * glm::pi<float>() * 2.0f) / m_pResolution.x) * size + 0.5;
+    vtx.pos_uv.y = (glm::cos(angle * glm::pi<float>() * 2.0f) / m_pResolution.y) * size + 0.5;
     vertices.push_back(vtx);
 
-    vtx.vtx_pos.x = {0.5f};
-    vtx.color = glm::vec4(1.0f);
+    vtx.pos_uv.x = 0.5f;
+    vtx.pos_uv.y = 0.5f;
     vertices.push_back(vtx);
 
     angle += angle_step;
   }
   CreatePolygon(vertices);
 }
-void UI::Square() {}
-void UI::Triangle() {}
-void UI::Diamond() {}
+void UI::Square() {
+  UIVertex vtx;
+  std::vector<UIVertex> vertices;
+  vtx.color = glm::vec4(1.0f);
+  vtx.pos_uv.b = m_Fonts[current_font]->white_pixel.x;
+  vtx.pos_uv.a = m_Fonts[current_font]->white_pixel.y;
+
+  float time = framework::Clock::TimeSeconds();
+  float delta_time = framework::Clock::DeltaSeconds();
+  const float aspect_ratio = m_pResolution.y / m_pResolution.x;
+  const float radius = 120.0f / glm::min(m_pResolution.x, m_pResolution.y);;
+
+  float size = (60.0f * framework::easing::easeInBounce(glm::abs(sin(time)))) + 25.0f;
+  
+
+  //vtx.padding.x = size.x;
+  //vtx.padding.y = size.x;
+
+  static float rot_time;
+  rot_time += delta_time * glm::max(1.0f, glm::abs(framework::easing::easeInExpo(glm::abs(sin(time*2.0f)))*15.0f));
+
+  glm::mat2 rot = {glm::cos(rot_time), -glm::sin(rot_time), glm::sin(rot_time), glm::cos(rot_time)};
+
+  glm::vec2 pos;
+
+  pos = (glm::vec2(-0.5f, -0.5f) * size);
+  vtx.pos_uv.x = pos.x;
+  vtx.pos_uv.y = pos.y;
+  //vtx.vtx_pos = glm::vec2(0.0, radius);
+  vertices.push_back(vtx);
+
+  pos = (glm::vec2(0.5f, -0.5f) * size);
+  vtx.pos_uv.x = pos.x;
+  vtx.pos_uv.y = pos.y;
+  //vtx.vtx_pos = glm::vec2(1.0, radius);
+  vertices.push_back(vtx);
+
+
+  pos = (glm::vec2(-0.5f, 0.5f) * size);
+  vtx.pos_uv.x = pos.x;
+  vtx.pos_uv.y = pos.y;
+  //vtx.vtx_pos = glm::vec2(2.0, radius);
+  vertices.push_back(vtx);
+
+  pos = (glm::vec2(-0.5f, 0.5f) * size);
+  vtx.pos_uv.x = pos.x;
+  vtx.pos_uv.y = pos.y;
+  //vtx.vtx_pos = glm::vec2(3.0, radius);
+  vertices.push_back(vtx);
+
+  pos = (glm::vec2(0.5f, -0.5f) * size);
+  vtx.pos_uv.x = pos.x;
+  vtx.pos_uv.y = pos.y;
+  //vtx.vtx_pos = glm::vec2(4.0, radius);
+  vertices.push_back(vtx);
+
+  pos = (glm::vec2(0.5f, 0.5f) * size);
+  vtx.pos_uv.x = pos.x;
+  vtx.pos_uv.y = pos.y;
+  //vtx.vtx_pos = glm::vec2(5.0, radius);
+  vertices.push_back(vtx);
+
+  for (auto &vertex : vertices) {
+    glm::vec2 pos = glm::vec2(vertex.pos_uv.x, vertex.pos_uv.y);
+    pos = (rot * pos);
+    pos /= m_pResolution;
+    pos += 0.5f;
+    vertex.pos_uv.x = pos.x;
+    vertex.pos_uv.y = pos.y;
+  }
+
+  CreatePolygon(vertices);
+}
+void UI::Triangle() { Circle(3); }
+void UI::Diamond() { Circle(4); }
 } // namespace UI
