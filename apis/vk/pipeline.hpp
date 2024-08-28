@@ -116,6 +116,8 @@ static void createGraphicsPipeline(VulkanData &vk_data, VulkanRenderPass &render
   vertexInputCreateInfo.resize(renderPassInfo.numLayouts);
   depthStencil.resize(renderPassInfo.numLayouts);
 
+  VkPipelineDynamicStateCreateInfo dynamicState{};
+  VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
   for (int layout_index = 0; layout_index < renderPassInfo.numLayouts; layout_index++) {
     auto &renderPipeline = renderPass.renderPipelines.at(layout_index);
     renderPipeline.numAttachments = renderPass.numAttachments;
@@ -165,7 +167,6 @@ static void createGraphicsPipeline(VulkanData &vk_data, VulkanRenderPass &render
     vertexInputInfo.vertexAttributeDescriptionCount = vertexInfo.attributeDescriptions.size();
     vertexInputInfo.pVertexAttributeDescriptions = vertexInfo.attributeDescriptions.data();
 
-    VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
     inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
     inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
     inputAssembly.primitiveRestartEnable = VK_FALSE;
@@ -185,7 +186,6 @@ static void createGraphicsPipeline(VulkanData &vk_data, VulkanRenderPass &render
         VK_DYNAMIC_STATE_LINE_WIDTH*/
     };
 
-    VkPipelineDynamicStateCreateInfo dynamicState{};
     dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
     dynamicState.dynamicStateCount = 3;
     dynamicState.pDynamicStates = dynamicStates;
