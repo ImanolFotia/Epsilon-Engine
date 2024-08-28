@@ -421,7 +421,7 @@ public:
       }
     }
 
-    audioManager->deleteSource(source);
+    //audioManager->deleteSource(source);
   }
 
   void deleteAudioObject(AudioObject object) {

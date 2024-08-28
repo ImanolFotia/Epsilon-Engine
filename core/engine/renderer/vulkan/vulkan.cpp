@@ -89,16 +89,18 @@ void VulkanRenderer::Init(const char *appName, framework::Window &window) {
   vk::createImageViews(m_pVkData);
 
   m_pVkData.m_pCommandPools.emplace_back();
-
   vk::createCommandPool(m_pVkData, m_pVkData.m_pCommandPools.back());
+
+  m_pVkData.m_pCommandPools.emplace_back();
+  vk::createComputeCommandPool(m_pVkData, m_pVkData.m_pCommandPools.back());
 
 #if defined(ANDROID) || defined(__ANDROID__)
   LOGI("Initiating Vulkan Descriptor Pool\n");
 #endif
   m_pResourceManagerRef->pCreateDescriptorPool();
 
-  vk::createCommandBuffers(m_pVkData, m_pVkData.m_pCommandPools.back(), m_pVkData.m_pCommandBuffers);
-  vk::createCommandBuffers(m_pVkData, m_pVkData.m_pCommandPools.back(), m_pVkData.m_pComputeCommandBuffers);
+  vk::createCommandBuffers(m_pVkData, m_pVkData.m_pCommandPools.at(0), m_pVkData.m_pCommandBuffers);
+  vk::createCommandBuffers(m_pVkData, m_pVkData.m_pCommandPools.at(1), m_pVkData.m_pComputeCommandBuffers);
 
   vk::createSyncObjects(m_pVkData);
 
@@ -175,7 +177,7 @@ void VulkanRenderer::BeginFrame() {
 void VulkanRenderer::InitDebugRenderer() {
   if (!imguiInit) {
     m_pImguiRenderer->Init(m_pVkData, m_pWindow->getWindow(), m_pResourceManagerRef->m_pDescriptorPool, m_pVkData.defaultRenderPass.renderPass,
-                           m_pResourceManagerRef->m_pCommandPools.front(), m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
+                           m_pResourceManagerRef->m_pCommandPools.at(0), m_pVkData.m_pCommandBuffers.at(m_pCurrentFrame));
     for (auto &renderPass : m_pResourceManagerRef->renderPassPool) {
       int image_index = 0;
       for (auto &texture : renderPass.renderPassChain.Textures) {
@@ -223,7 +225,7 @@ void VulkanRenderer::ComputeDispatch(Ref<ComputeShader> computeShaderRef, Ref<Bi
     vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
     m_pRenderPassActive = false;
   }
-  m_pFrame.AddComputeDispatch();
+  //m_pFrame.AddComputeDispatch();
   vk::VulkanComputeShader *computeShader = m_pResourceManagerRef->computeShaderPool.get(computeShaderRef);
 
   if (computeShader->hasImageBarrier || computeShader->hasBufferMemoryBarrier) {
@@ -319,7 +321,7 @@ void VulkanRenderer::End(glm::vec3 &v) {
 
   if (renderPass->id != std::numeric_limits<uint32_t>::max() || !m_pRenderPassActive) {
 
-    if (m_pActiveRenderPass.Id() != std::numeric_limits<uint32_t>::max()) {
+    if (m_pRenderPassActive) {
       vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
       m_pRenderPassActive = false;
     }
