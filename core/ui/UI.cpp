@@ -976,10 +976,6 @@ void UI::Square() {
 
   float size = (60.0f * framework::easing::easeInBounce(glm::abs(sin(time)))) + 25.0f;
   
-
-  //vtx.padding.x = size.x;
-  //vtx.padding.y = size.x;
-
   static float rot_time;
   rot_time += delta_time * glm::max(1.0f, glm::abs(framework::easing::easeInExpo(glm::abs(sin(time*2.0f)))*15.0f));
 
@@ -990,38 +986,32 @@ void UI::Square() {
   pos = (glm::vec2(-0.5f, -0.5f) * size);
   vtx.pos_uv.x = pos.x;
   vtx.pos_uv.y = pos.y;
-  //vtx.vtx_pos = glm::vec2(0.0, radius);
   vertices.push_back(vtx);
 
   pos = (glm::vec2(0.5f, -0.5f) * size);
   vtx.pos_uv.x = pos.x;
   vtx.pos_uv.y = pos.y;
-  //vtx.vtx_pos = glm::vec2(1.0, radius);
   vertices.push_back(vtx);
 
 
   pos = (glm::vec2(-0.5f, 0.5f) * size);
   vtx.pos_uv.x = pos.x;
   vtx.pos_uv.y = pos.y;
-  //vtx.vtx_pos = glm::vec2(2.0, radius);
   vertices.push_back(vtx);
 
   pos = (glm::vec2(-0.5f, 0.5f) * size);
   vtx.pos_uv.x = pos.x;
   vtx.pos_uv.y = pos.y;
-  //vtx.vtx_pos = glm::vec2(3.0, radius);
   vertices.push_back(vtx);
 
   pos = (glm::vec2(0.5f, -0.5f) * size);
   vtx.pos_uv.x = pos.x;
   vtx.pos_uv.y = pos.y;
-  //vtx.vtx_pos = glm::vec2(4.0, radius);
   vertices.push_back(vtx);
 
   pos = (glm::vec2(0.5f, 0.5f) * size);
   vtx.pos_uv.x = pos.x;
   vtx.pos_uv.y = pos.y;
-  //vtx.vtx_pos = glm::vec2(5.0, radius);
   vertices.push_back(vtx);
 
   for (auto &vertex : vertices) {
