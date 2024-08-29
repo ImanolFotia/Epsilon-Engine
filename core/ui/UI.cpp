@@ -972,12 +972,13 @@ void UI::Square() {
   float time = framework::Clock::TimeSeconds();
   float delta_time = framework::Clock::DeltaSeconds();
   const float aspect_ratio = m_pResolution.y / m_pResolution.x;
-  const float radius = 120.0f / glm::min(m_pResolution.x, m_pResolution.y);;
+  const float radius = 120.0f / glm::min(m_pResolution.x, m_pResolution.y);
+  ;
 
   float size = (60.0f * framework::easing::easeInBounce(glm::abs(sin(time)))) + 25.0f;
-  
+
   static float rot_time;
-  rot_time += delta_time * glm::max(1.0f, glm::abs(framework::easing::easeInExpo(glm::abs(sin(time*2.0f)))*15.0f));
+  rot_time += delta_time * glm::max(1.0f, glm::abs(framework::easing::easeInExpo(glm::abs(sin(time * 2.0f))) * 15.0f));
 
   glm::mat2 rot = {glm::cos(rot_time), -glm::sin(rot_time), glm::sin(rot_time), glm::cos(rot_time)};
 
@@ -992,7 +993,6 @@ void UI::Square() {
   vtx.pos_uv.x = pos.x;
   vtx.pos_uv.y = pos.y;
   vertices.push_back(vtx);
-
 
   pos = (glm::vec2(-0.5f, 0.5f) * size);
   vtx.pos_uv.x = pos.x;
@@ -1027,4 +1027,8 @@ void UI::Square() {
 }
 void UI::Triangle() { Circle(3); }
 void UI::Diamond() { Circle(4); }
+
+void UI::SetNextWidgetAnimation(AnimationManager *anim_mgr) {
+  m_CurrentAnimation = anim_mgr;
+}
 } // namespace UI
