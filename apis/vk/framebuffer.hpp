@@ -22,7 +22,7 @@ static void createSwapChainFramebuffers(VulkanData &vk_data, VulkanRenderPass &r
     VkFramebufferCreateInfo framebufferInfo{};
     framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
     framebufferInfo.renderPass = renderPass.renderPass;
-    framebufferInfo.attachmentCount = 2;
+    framebufferInfo.attachmentCount = attachments.size();
     framebufferInfo.pAttachments = attachments.data();
     framebufferInfo.width = renderPass.renderPassChain.Extent.width;
     framebufferInfo.height = renderPass.renderPassChain.Extent.height;

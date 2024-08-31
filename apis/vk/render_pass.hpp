@@ -133,7 +133,7 @@ namespace vk
 
         if (renderPassInfo.numSamples > 1) {
             colorAttachmentResolve.format = renderPass.renderPassChain.ImageFormats[0];
-            colorAttachmentResolve.samples = VK_SAMPLE_COUNT_1_BIT;
+            colorAttachmentResolve.samples = (VkSampleCountFlagBits)renderPassInfo.numSamples;
             colorAttachmentResolve.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
             colorAttachmentResolve.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
             colorAttachmentResolve.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -184,9 +184,8 @@ namespace vk
 
 
 
-        std::vector<VkAttachmentDescription> attachments = renderPass.renderPassData.colorAttachments;
         if (containsDepthAttachment)
-            attachments.push_back(renderPass.renderPassData.depthAttachment);
+            renderPass.renderPassData.colorAttachments.push_back(renderPass.renderPassData.depthAttachment);
 
         if (renderPassInfo.numSamples > 1) {
             renderPass.renderPassData.colorAttachments.push_back(colorAttachmentResolve);
@@ -195,8 +194,8 @@ namespace vk
 
         VkRenderPassCreateInfo renderPassCreateInfo{};
         renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-        renderPassCreateInfo.attachmentCount = attachments.size();
-        renderPassCreateInfo.pAttachments = attachments.data();
+        renderPassCreateInfo.attachmentCount = renderPass.renderPassData.colorAttachments.size();
+        renderPassCreateInfo.pAttachments = renderPass.renderPassData.colorAttachments.data();
         renderPassCreateInfo.subpassCount = 1;
         renderPassCreateInfo.pSubpasses = &renderPass.renderPassData.subpass;
         renderPassCreateInfo.dependencyCount = 2;

@@ -22,7 +22,7 @@ static void setupRasterizer(VulkanRenderPipeline &renderPipeline, engine::Render
 
   renderPipeline.multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
   renderPipeline.multisampling.sampleShadingEnable = VK_FALSE;
-  renderPipeline.multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+  renderPipeline.multisampling.rasterizationSamples = (VkSampleCountFlagBits)renderPassInfo.numSamples;//VK_SAMPLE_COUNT_1_BIT;
   renderPipeline.multisampling.minSampleShading = 1.0f;          // Optional
   renderPipeline.multisampling.pSampleMask = nullptr;            // Optional
   renderPipeline.multisampling.alphaToCoverageEnable = VK_FALSE; // Optional

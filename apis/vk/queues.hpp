@@ -86,7 +86,7 @@ static QueueFamilyIndices findQueueFamilies(VkPhysicalDevice &physicalDevice, co
   if (!indices.transferFamily.has_value())
     indices.transferFamily = graphics_and_transfer;
   if (!indices.computeFamily.has_value())
-    indices.transferFamily = graphics_and_compute;
+    indices.computeFamily = graphics_and_compute;
 
   return indices;
 }
