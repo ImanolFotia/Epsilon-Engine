@@ -131,6 +131,12 @@ namespace engine::parsers
 
 				resizeWithSwapChain = renderpass["resizeWithSwapChain"];
 			}
+			
+			int numSamples = 1;
+
+			if(renderpass.contains("numSamples")) {
+				numSamples = renderpass["numSamples"];
+			}
 
 			size_t renderpass_index = 0;
 
@@ -152,6 +158,7 @@ namespace engine::parsers
 					.pushConstant(renderpass["pushConstant"]);
 
 			renderPassInfo.resizeWithSwapChain = resizeWithSwapChain;
+			renderPassInfo.numSamples = numSamples;
 
 			for (auto &pLayout : renderpass["pipelineLayouts"])
 			{
