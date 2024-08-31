@@ -45,6 +45,18 @@ enum class Interpolation {
 };
 
 struct Key {
+  Key() {
+    interpolation = [](float x) -> float { return x; };
+  }
+
+  Key(Action action_, glm::vec4 value_, float duration_) : action(action_), value(value_), duration(duration_) {
+    interpolation = [](float x) -> float { return x; };
+  }
+
+  Key(Action action_, glm::vec4 value_, std::function<float(float)> interpolation_, float duration_) : action(action_), interpolation(interpolation_), value(value_), duration(duration_) {
+    interpolation = [](float x) -> float { return x; };
+  }
+
   Action action = Action::None;
   // Interpolation interpolation = Interpolation::Linear;
   std::function<float(float)> interpolation = [](float x) -> float { return x; }; // default linear
@@ -59,55 +71,55 @@ protected:
 
 struct AnimationManager {
 
+  glm::vec2 accum_transform{};
+  float accum_rot = 0.0;
+
   void Add(Key key) { keys.push_back(key); }
 
-  void Update(std::span<UIVertex> span) {
-    if (current_key > keys.size())
-      return;
+  void Update(std::span<UIVertex>& span, glm::vec2 position, glm::vec2 size) {
+    if(keys.size() <= 0) return;
 
-    auto getCenter = [](std::span<UIVertex> span) {
-      glm::vec2 c;
-      for (auto &vtx : span)
-        c += glm::vec2(vtx.pos_uv);
-      c /= span.size();
-      return c;
-    };
-
-    auto sub = [](std::span<UIVertex> span, glm::vec2 p) {
-      for (auto &vtx : span) {
-        vtx.pos_uv.x -= p.x;
-        vtx.pos_uv.y -= p.y;
-      }
-    };
-
-    auto add = [](std::span<UIVertex> span, glm::vec2 p) {
-      for (auto &vtx : span) {
-        vtx.pos_uv.x += p.x;
-        vtx.pos_uv.y += p.y;
-      }
-    };
+    if (current_key >= keys.size()) {
+      current_key = 0;
+      accum_transform = {};
+    }
 
     auto rot = [](float t) {return glm::mat2{glm::cos(t), -glm::sin(t), glm::sin(t), glm::cos(t)};};
 
     Key &key = keys[current_key];
 
+    float aspect_ratio = 720.0 / 1280.0;
+
     for (auto &vtx : span) {
       switch (key.action) {
       case Action::Translate: {
-        vtx.pos_uv.x = glm::mix(vtx.pos_uv.x, key.value.x, key.t);
-        vtx.pos_uv.y = glm::mix(vtx.pos_uv.y, key.value.y, key.t);
-      } break;
+        vtx.pos_uv.x =  accum_transform.x + (vtx.pos_uv.x + (key.value.x) * key.t);
+        vtx.pos_uv.y =  accum_transform.y + (vtx.pos_uv.y + (key.value.y) * key.t);
+        break;
+      }
       case Action::Rotate: {
-        glm::vec2 c = getCenter(span);
-        sub(span, c);
-        // rotate here
-        add(span, c);
+        vtx.pos_uv.x -= (position.x);
+        vtx.pos_uv.y -= (position.y);
+
+        vtx.pos_uv.x *= ( 1280.0f);
+        vtx.pos_uv.y *= ( 720.0f);
+
+        glm::vec2 pos = glm::vec2(vtx.pos_uv.x, vtx.pos_uv.y);
+        pos = rot((key.value.x / 180.0f) * key.t* glm::pi<float>()) * pos;
+
+        pos /= glm::vec2(1280, 720);
+
+        vtx.pos_uv.x =  pos.x;
+        vtx.pos_uv.y =  pos.y;
+
+        vtx.pos_uv.x += position.x;
+        vtx.pos_uv.y += position.y;
+
+
+        vtx.pos_uv.x +=  accum_transform.x;
+        vtx.pos_uv.y +=  accum_transform.y;
       } break;
       case Action::Scale: {
-        glm::vec2 c = getCenter(span);
-        sub(span, c);
-        // scale here
-        add(span, c);
       } break;
       case Action::Color:
         vtx.color = glm::mix(vtx.color, key.value, key.t);
@@ -120,18 +132,25 @@ struct AnimationManager {
       }
     }
 
-    key.elapsed = (key.elapsed * key.duration) + framework::Clock::DeltaSeconds();
+    key.elapsed += glm::min(framework::Clock::DeltaSeconds(), 0.016l);
 
-    key.t = key.interpolation(key.elapsed);
+    key.t = key.elapsed / key.duration;//key.interpolation(key.elapsed);
 
-    if (key.t >= 1.0f) {
+    if (key.elapsed >= key.duration) {
       current_key++;
-      key.t = 0.0f;
+      key.t = 1.0f;
+      key.elapsed = 0.0f;
+      if(key.action == Action::Translate) {
+      accum_transform.x += key.value.x;
+      accum_transform.y += key.value.y;
+      } else if(key.action == Action::Rotate) {
+        accum_rot += key.value.x;
+      }
     }
   }
 
 private:
   std::vector<Key> keys;
-  size_t current_key = 0;
+  std::size_t current_key = 0;
 };
 } // namespace UI

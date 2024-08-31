@@ -87,7 +87,7 @@ private:
 
     std::span<UIVertex> span = std::span{m_pVertices}.subspan(offset, num);
 
-    m_CurrentAnimation->Update(span);
+    m_CurrentAnimation->Update(span, glm::vec2(1.0), glm::vec2(1.0f));
 
     m_CurrentAnimation = nullptr;
   }
@@ -293,7 +293,7 @@ public:
   void CreatePolygon(std::vector<UIVertex> vertices);
 
   void Circle(int subdivisions = 20);
-  void Square();
+  void Square(glm::vec2, glm::vec2);
   void Triangle();
   void Diamond();
 

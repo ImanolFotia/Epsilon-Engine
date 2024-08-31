@@ -962,7 +962,7 @@ void UI::Circle(int subdivisions) {
   }
   CreatePolygon(vertices);
 }
-void UI::Square() {
+void UI::Square(glm::vec2 size, glm::vec2 position) {
   UIVertex vtx;
   std::vector<UIVertex> vertices;
   vtx.color = glm::vec4(1.0f);
@@ -973,9 +973,8 @@ void UI::Square() {
   float delta_time = framework::Clock::DeltaSeconds();
   const float aspect_ratio = m_pResolution.y / m_pResolution.x;
   const float radius = 120.0f / glm::min(m_pResolution.x, m_pResolution.y);
-  ;
 
-  float size = (60.0f * framework::easing::easeInBounce(glm::abs(sin(time)))) + 25.0f;
+  //float size = 30.0;//(60.0f * framework::easing::easeInBounce(glm::abs(sin(time)))) + 25.0f;
 
   static float rot_time;
   rot_time += delta_time * glm::max(1.0f, glm::abs(framework::easing::easeInExpo(glm::abs(sin(time * 2.0f))) * 15.0f));
@@ -1014,16 +1013,35 @@ void UI::Square() {
   vtx.pos_uv.y = pos.y;
   vertices.push_back(vtx);
 
+  glm::vec2 c{};
+
   for (auto &vertex : vertices) {
     glm::vec2 pos = glm::vec2(vertex.pos_uv.x, vertex.pos_uv.y);
-    pos = (rot * pos);
+    //pos = (rot * pos);
     pos /= m_pResolution;
-    pos += 0.5f;
+    pos += position;
+    c += pos;
     vertex.pos_uv.x = pos.x;
     vertex.pos_uv.y = pos.y;
   }
+  c /= 6;
 
+  std::size_t offset = vertices_pushed;
   CreatePolygon(vertices);
+
+  std::size_t num = vertices_pushed - offset;
+
+  if(m_CurrentAnimation) {
+    auto slice = std::span{m_pVertices}.subspan(offset, num);
+    m_CurrentAnimation->Update(slice, position, size);
+    int index = offset;
+    for(auto &vtx: slice) {
+      m_pVertices[index] = vtx;
+      index++;
+    }
+  }
+
+
 }
 void UI::Triangle() { Circle(3); }
 void UI::Diamond() { Circle(4); }
