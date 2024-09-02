@@ -258,7 +258,7 @@ public:
         resourceManager->createGPUBuffer("transform_buffer", sizeof(glm::mat4) * MAX_TRANSFORMS, engine::BufferStorageType::STORAGE_BUFFER);
 
     m_pGPUBuffers["animation_transform_buffer"] =
-        resourceManager->createGPUBuffer("animation_transform_buffer", sizeof(GPUAnimationData) * 100, engine::BufferStorageType::STORAGE_BUFFER);
+        resourceManager->createGPUBuffer("animation_transform_buffer", sizeof(GPUAnimationData) * 256, engine::BufferStorageType::STORAGE_BUFFER);
 
     m_pGPUBuffers["entity_buffer"] =
         resourceManager->createGPUBuffer("entity_buffer", sizeof(ShaderEntity) * 256, engine::BufferStorageType::STORAGE_BUFFER, 1);

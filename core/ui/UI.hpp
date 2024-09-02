@@ -176,7 +176,7 @@ public:
     m_pRenderer = renderer;
     m_pWindow = window;
 
-    m_pVertices.resize(10000);
+    m_pVertices.resize(100000);
 
     engine::ShaderInfo mainShaderInfo = loadShaders();
 
@@ -200,7 +200,7 @@ public:
 
     for (int i = 0; i < m_pResourceManager->FramesInFlight(); i++) {
 
-      m_pVertexBuffer[i] = m_pResourceManager->createMappedVertexBuffer("UIVertexBuffer" + std::to_string(i), {.size = 10000 * sizeof(UIVertex)});
+      m_pVertexBuffer[i] = m_pResourceManager->createMappedVertexBuffer("UIVertexBuffer" + std::to_string(i), {.size = 100000 * sizeof(UIVertex)});
     }
 
     InitDefaultFont();
