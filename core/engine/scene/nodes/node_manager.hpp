@@ -162,6 +162,7 @@ struct SceneManager {
   }
 
   template <typename T> std::shared_ptr<NodeBase> getChild(std::shared_ptr<NodeBase> node) {
+    if(!m_Positions.contains(node->index)) return nullptr;
     auto position = m_Positions.at(node->index);
     if (!m_Nodes.contains(position.type_id))
       return nullptr;
