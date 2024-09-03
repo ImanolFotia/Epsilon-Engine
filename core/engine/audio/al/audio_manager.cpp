@@ -80,7 +80,6 @@ void ALAudioManager::Update() {
         m_FreeSources.insert(source.id);
         m_PlayingSources.extract(std::hash<std::string>{}(source.name));
         Log::Info("Freed audio source: ", source.id);
-        source.id = 0;
       }
     }
     m_LastCollection = framework::Clock::Time();

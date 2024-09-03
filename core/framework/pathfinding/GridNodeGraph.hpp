@@ -18,6 +18,7 @@ public:
     std::vector<Node *> neighbors{};
     int8_t level = 0;
     bool terrain_node = false;
+    uint16_t node_group;
 
     void AddNeighbor(Node *node) { neighbors.push_back(node); }
   };
