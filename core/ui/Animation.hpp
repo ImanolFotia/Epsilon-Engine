@@ -48,31 +48,30 @@ enum class Interpolation {
 struct Key {
   Key() {}
 
-  Key(Action action_, glm::vec4 value_, float duration_) : action(action_), value(value_), duration(duration_) {}
+  Key(Action action_, glm::vec4 value_, double duration_) : action(action_), value(value_), duration(duration_) {}
 
-  Key(Action action_, Interpolation interpolation_, glm::vec4 value_, float duration_)
+  Key(Action action_, Interpolation interpolation_, glm::vec4 value_, double duration_)
       : action(action_), interpolation(interpolation_), value(value_), duration(duration_) {}
 
   Action action = Action::None;
   Interpolation interpolation = Interpolation::Linear;
   glm::vec4 value{};
-  float duration = 1.0f;
+  double duration = 1.0;
 
 protected:
-  float t = 0.0f;
-  float elapsed = 0.0f;
+  double t = 0.0;
+  double elapsed = 0.0;
   friend struct AnimationManager;
 };
 
 struct AnimationManager {
 
   glm::vec2 accum_transform{};
-  float accum_rot = 0.0;
+  double accum_rot = 0.0;
 
-  inline float Interpolate(float elapsed, float duration, Interpolation interpolation) {
+  inline double Interpolate(double elapsed, double duration, Interpolation interpolation) {
     using namespace framework::easing;
-    float t = elapsed / duration;
-    assert(t <= 1.0);
+    double t = elapsed / duration;
     switch (interpolation) {
     case Interpolation::Linear:
       return t;
@@ -152,11 +151,11 @@ struct AnimationManager {
       accum_transform = {};
     }
 
-    auto rot = [](float t) { return glm::mat2{glm::cos(t), -glm::sin(t), glm::sin(t), glm::cos(t)}; };
+    auto rot = [](double t) { return glm::mat2{glm::cos(t), -glm::sin(t), glm::sin(t), glm::cos(t)}; };
 
     Key &key = keys[current_key];
 
-    float aspect_ratio = 720.0 / 1280.0;
+    double aspect_ratio = 720.0 / 1280.0;
 
     for (auto &vtx : span) {
       switch (key.action) {
@@ -169,11 +168,11 @@ struct AnimationManager {
         vtx.pos_uv.x -= (position.x);
         vtx.pos_uv.y -= (position.y);
 
-        vtx.pos_uv.x *= (1280.0f);
-        vtx.pos_uv.y *= (720.0f);
+        vtx.pos_uv.x *= (1280.0);
+        vtx.pos_uv.y *= (720.0);
 
         glm::vec2 pos = glm::vec2(vtx.pos_uv.x, vtx.pos_uv.y);
-        pos = rot((key.value.x / 180.0f) * key.t * glm::pi<float>()) * pos;
+        pos = rot((key.value.x / 180.0) * key.t * glm::pi<double>()) * pos;
 
         pos /= glm::vec2(1280, 720);
 
@@ -201,17 +200,20 @@ struct AnimationManager {
 
     key.elapsed += glm::min(framework::Clock::DeltaSeconds(), 0.016l);
 
-    key.t = Interpolate(key.elapsed, key.duration, key.interpolation);
 
     if (key.elapsed >= key.duration) {
       current_key++;
-      key.elapsed = 0.0f;
+      key.elapsed = 0.0;
+      key.t = 0.0;
       if (key.action == Action::Translate) {
         accum_transform.x += key.value.x;
         accum_transform.y += key.value.y;
       } else if (key.action == Action::Rotate) {
         accum_rot += key.value.x;
       }
+    } else {
+
+    key.t = Interpolate(key.elapsed, key.duration, key.interpolation);
     }
   }
 
