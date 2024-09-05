@@ -363,7 +363,6 @@ m_pSceneManager.emplace<T>(m_pSceneManager.root);
       m_pMeshCount = 0;
     }
 
-    m_pContext->AudioManager()->Update();
   }
 
   void Flush(engine::DrawType drawType = engine::DrawType::INDEXED) {
@@ -605,6 +604,8 @@ m_pSceneManager.emplace<T>(m_pSceneManager.root);
       renderer->Submit();
       renderer->EndFrame();
     }
+
+    m_pContext->AudioManager()->Update();
   }
 
   void Destroy() {}

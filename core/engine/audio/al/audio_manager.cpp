@@ -74,12 +74,20 @@ void ALAudioManager::Update() {
 
   if (framework::Clock::Time() >= m_LastCollection + COLLECT_TIME) {
     for (auto &source : sourcesPool) {
-      if (source.id == 0 || m_FreeSources.contains(source.id))
+      if(m_PlayingSources.contains(std::hash<std::string>{}(source.name))) {
+        if (al::isPlaying(source) == false && al::isPaused(source) == false) {
+          Log::Info("Freed audio: ", source.name);
+          m_PlayingSources.extract(std::hash<std::string>{}(source.name));
+        }
+      }
+      if (source.id == 0 || m_FreeSources.contains(source.id)) {
         continue;
-      if (!al::isPlaying(source) && !al::isPaused(source)) {
+      }
+      if (al::isPlaying(source) == false && al::isPaused(source) == false) {
         m_FreeSources.insert(source.id);
         m_PlayingSources.extract(std::hash<std::string>{}(source.name));
         Log::Info("Freed audio source: ", source.id);
+        source.id = 0;
       }
     }
     m_LastCollection = framework::Clock::Time();
@@ -159,15 +167,23 @@ void ALAudioManager::Play(Ref<AudioSource> source) {
   al::OpenALSource *alSource = sourcesPool.get(source);
 
   Log::Info("Trying to play: ", alSource->name);
-
-  if (m_PlayingSources.contains(std::hash<std::string>{}(alSource->name)))
+/*
+  if (m_PlayingSources.contains(std::hash<std::string>{}(alSource->name))) {
+    Log::Error("Audio already playing");
     return;
+  }*/
 
   if (alSource->id == 0) {
     ALuint free_id = pGetFreeSource();
-    if (free_id == 0)
+    if (free_id == 0) {
+      Log::Error("No available sources");
       return;
+    }
     alSource->id = free_id;
+    if(al::isPlaying(*alSource) || al::isPaused(*alSource)) {
+      Log::Error("Selected source", free_id, " already playing");
+      return;
+    }
     al::setBuffer(*alSource, alSource->buffer);
   }
 
