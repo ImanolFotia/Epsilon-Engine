@@ -921,15 +921,15 @@ void UI::Scale(const std::string &text, const std::string &setting_name, int &cu
   // m_pCursorPosition.y += 8.0f;
 }
 
-glm::vec2 UI::ToScreenCoords(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj, const glm::vec2 &resolution) {
-  glm::vec4 ndc = proj * view * model * glm::vec4(1.0f);
+glm::vec2 UI::ToScreenCoords(const glm::mat4 &model) {
+  glm::vec4 ndc = projectionMatrix * viewMatrix * model * glm::vec4(1.0f);
 
   ndc /= ndc.w;
   ndc.y = -1.0 * ndc.y;
 
   glm::vec2 viewport_space = glm::vec2(ndc.x, ndc.y) * 0.5f + 0.5f;
 
-  return viewport_space * resolution;
+  return viewport_space * m_pResolution;
 }
 
 void UI::Circle(int subdivisions) {

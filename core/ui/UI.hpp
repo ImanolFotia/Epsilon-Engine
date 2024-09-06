@@ -72,6 +72,9 @@ private:
 
   engine::PipelineLayout uiLayout;
 
+  glm::mat4 viewMatrix = glm::mat4(1.0f);
+  glm::mat4 projectionMatrix = glm::mat4(1.0f);
+
   engine::ShaderInfo loadShaders() {
 
     auto vertexCode = utils::readFile("./assets/shaders/ui-vertex.spv");
@@ -279,6 +282,11 @@ public:
   glm::vec2 buttonSize(const std::string &text);
   glm::vec2 const &Resolution() { return m_pResolution; }
 
+  void SetMatrices(glm::mat4 view, glm::mat4 proj) {
+    viewMatrix = view;
+    projectionMatrix = proj;
+  }
+
   void Update();
   void Draw(engine::Ref<engine::RenderPass>);
   void Free();
@@ -287,7 +295,7 @@ public:
   glm::vec2 CursorPosition();
   void CursorPosition(glm::vec2 position);
 
-  glm::vec2 ToScreenCoords(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj, const glm::vec2 &resolution);
+  glm::vec2 ToScreenCoords(const glm::mat4 &model);
 
   void CreateRect(glm::vec2 position, glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1, glm::vec4 color = glm::vec4(0.11, 0.11, 0.11, 0.8),
                   float border_radius = -1.0f);
