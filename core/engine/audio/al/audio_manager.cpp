@@ -301,6 +301,7 @@ void ALAudioManager::deleteBuffer(Ref<AudioBuffer> buffer_ref) {
 
 uint32_t ALAudioManager::deleteSource(Ref<AudioSource> source_ref) {
   sourcesPool.destroy(source_ref);
+  return 0;
 }
 void ALAudioManager::deleteListener(Ref<AudioListener> listener) {}
 } // namespace engine::audio
