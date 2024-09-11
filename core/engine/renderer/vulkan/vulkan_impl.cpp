@@ -45,7 +45,7 @@ vk::VulkanUniformBuffer VulkanResourceManager::pCreateUniformBuffer(UniformBindi
   for (auto &i : buffer.buffers) {
     i.size = buffer.size;
     pCreateBuffer(i, bindingInfo.size, UNIFORM_BUFFER_USAGE, UNIFORM_BUFFER_PROP, UNIFORM_BUFFER_MEM_USAGE);
-    Log::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", size, " bytes in local uniform buffer");
+    Log::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", i.size, " bytes in local uniform buffer");
   }
   return buffer;
 }
@@ -370,12 +370,13 @@ vk::VulkanBuffer VulkanResourceManager::pCreateStagingIndexBuffer(const std::vec
 }
 
 void VulkanResourceManager::pUpdateMaterial(vk::VulkanMaterial &material) {
+
   for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
 
     uint32_t numSlots = material.slots + 1;
-    std::vector<VkWriteDescriptorSet> descriptorWrites;
-    std::list<VkDescriptorImageInfo> imageInfos;
-    std::list<VkDescriptorBufferInfo> bufferInfos;
+    std::vector<VkWriteDescriptorSet> descriptorWrites{};
+    std::list<VkDescriptorImageInfo> imageInfos{};
+    std::list<VkDescriptorBufferInfo> bufferInfos{};
     // numSlots += material.shaderBindings.size();
     //for(int kkk = 0; kkk < numSlots; kkk++)
       descriptorWrites.resize(numSlots);
@@ -496,8 +497,9 @@ void VulkanResourceManager::pUpdateMaterial(vk::VulkanMaterial &material) {
       j++;
     }
 
+    VkDescriptorBufferInfo bufferInfo{};
+    
     if (!bindingZeroSet) {
-      VkDescriptorBufferInfo bufferInfo{};
       bufferInfo.buffer = material.bufferInfo[i].buffer; // m_pUniformBuffers[i].buffer;
       bufferInfo.offset = material.bufferOffset;
       bufferInfo.range = material.bufferSize;
