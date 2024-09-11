@@ -20,8 +20,6 @@ struct ThreadData {
 
 struct ResourceManager {
 
-  virtual ResourceManager *get() = 0;
-
   virtual void Init() = 0;
 
   virtual Ref<Texture> createTexture(TextureCreationInfo) = 0;

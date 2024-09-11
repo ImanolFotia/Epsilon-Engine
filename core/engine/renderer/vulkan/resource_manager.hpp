@@ -24,12 +24,6 @@ public:
   VulkanResourceManager();
   ~VulkanResourceManager();
 
-  ResourceManager *get() override {
-    if (m_pSelf == nullptr)
-      m_pSelf = new VulkanResourceManager();
-    return m_pSelf;
-  }
-
   void Init() override;
 
   Ref<BindGroup> createBindGroup(BindGroupInfo) override;
