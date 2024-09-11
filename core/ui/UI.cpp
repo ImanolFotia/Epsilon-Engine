@@ -116,7 +116,7 @@ void UI::Draw(engine::Ref<engine::RenderPass> renderPass) {
     }
 
     m_pRenderer->Flush(renderPass, engine::DrawType::NON_INDEXED);
-    glm::vec3 v = glm::vec3(1.0f);
+    //glm::vec3 v = glm::vec3(1.0f);
     // m_pRenderer->End(v);
 
     // m_pRenderer->Submit();

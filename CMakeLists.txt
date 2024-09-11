@@ -446,7 +446,7 @@ if(WIN32)
 else()
     target_link_libraries(${PROJECT_NAME} PRIVATE openal)
 
-    set(CMAKE_CXX_FLAGS_RELEASE "-O2 -fsized-deallocation")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O2 -fsized-deallocation -g")
     #set(CMAKE_CXX_FLAGS_DEBUG "-O2")
 endif()
 
