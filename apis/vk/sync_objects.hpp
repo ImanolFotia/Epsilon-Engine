@@ -99,8 +99,9 @@ namespace vk
 
         // std::mutex mtx{};
         // std::lock_guard lock{ mtx };
-        if (vkQueueSubmit(vk_data.graphicsQueue[currentFrame], 1, &submitInfo, vk_data.syncObjects[currentFrame].inFlightFences) != VK_SUCCESS)
+        if (VkResult result = vkQueueSubmit(vk_data.graphicsQueue[currentFrame], 1, &submitInfo, vk_data.syncObjects[currentFrame].inFlightFences); result != VK_SUCCESS)
         {
+            std::cout << result << std::endl;
             throw std::runtime_error("failed to submit draw command buffer!");
         }
     }
