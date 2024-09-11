@@ -107,7 +107,7 @@ void VulkanRenderer::Init(const char *appName, framework::Window &window) {
   m_pCurrentCommandQueue.resize(MAX_COMMAND_QUEUE_SIZE);
 
   m_pImguiRenderer = std::make_shared<ImGuiRenderer>();
-  m_pImguiRenderer->setResourceManager(m_pResourceManagerRef);
+  m_pImguiRenderer->setResourceManager(m_pResourceManagerRef.get());
 }
 
 engine::Renderer::ObjectDataId VulkanRenderer::RegisterMesh(const std::vector<common::Vertex> &, std::vector<IndexType> &indices, bool) {
@@ -336,7 +336,7 @@ void VulkanRenderer::End(glm::vec3 &v) {
     vk::beginRenderPass(m_pFrame.CommandBuffer(), m_pVkData.defaultRenderPass);
     m_pRenderPassActive = true;
   }
-  m_pImguiRenderer->DrawUI(std::forward<glm::vec3 &>(v), m_pResourceManagerRef->ResourcesMemory);
+  //m_pImguiRenderer->DrawUI(std::forward<glm::vec3 &>(v), m_pResourceManagerRef->ResourcesMemory);
 #endif
   if (m_pRenderPassActive) {
     vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);

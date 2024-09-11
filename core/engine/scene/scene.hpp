@@ -379,7 +379,8 @@ m_pSceneManager.emplace<T>(m_pSceneManager.root);
     if (m_pContext->Window().getSize().width > 0) {
       auto renderer = m_pContext->Renderer();
 
-      Ref<PushConstant> push_constant;
+      Ref<PushConstant> push_constant = engine::Ref<engine::PushConstant>::makeEmpty();
+      
 
       auto &renderLayout = layout;
 
@@ -393,7 +394,7 @@ m_pSceneManager.emplace<T>(m_pSceneManager.root);
           Flush();
         }
 
-        uint32_t material_indices[4] = {0};
+        uint32_t material_indices[4] = {};
 
         for (int i = 0; i < mesh.numMaterials; i++) {
           uint32_t uniform_index = m_pAssetManager->m_pMaterials.at(mesh.material_keys[i]).index;
@@ -598,7 +599,7 @@ m_pSceneManager.emplace<T>(m_pSceneManager.root);
   void EndScene() {
     if (m_pContext->Window().getSize().width > 0) {
       auto renderer = m_pContext->Renderer();
-      glm::vec3 v;
+      glm::vec3 v{};
       renderer->End(v);
 
       renderer->Submit();

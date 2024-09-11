@@ -95,7 +95,7 @@ public:
 
   void pUpdateMaterial(vk::VulkanMaterial &);
 
-  void setResourceManagerRef(engine::VulkanResourceManager *ref) { m_pResourceManagerRef = ref; }
+  void setResourceManagerRef(std::shared_ptr<VulkanResourceManager> ref) { m_pResourceManagerRef = ref; }
 
   void *perPassData = nullptr;
 
@@ -140,7 +140,7 @@ private:
   uint64_t m_pNumVertices = 0;
   engine::Ref<engine::RenderPass> m_pActiveRenderPass;
 
-  VulkanResourceManager *m_pResourceManagerRef = nullptr;
+  std::shared_ptr<VulkanResourceManager> m_pResourceManagerRef = nullptr;
   bool m_pRenderPassActive = false;
   bool m_pShouldRecreateSwapchain = false;
 
