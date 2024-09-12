@@ -405,7 +405,7 @@ Ref<BindGroup> VulkanResourceManager::createBindGroup(BindGroupInfo material) {
       if (renderPass->uniformBuffer.size() > 0) {
 
         auto &buffers = renderPass->uniformBuffer.front().buffers;
-        vkMaterial.bufferInfo.resize(vk::MAX_FRAMES_IN_FLIGHT);
+        //vkMaterial.bufferInfo.resize(vk::MAX_FRAMES_IN_FLIGHT);
         for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
           vkMaterial.bufferInfo[i].offset = buffers[i].offset;
           vkMaterial.bufferInfo[i].buffer = buffers[i].buffer;
@@ -502,10 +502,8 @@ Ref<RenderPass> VulkanResourceManager::createDefaultRenderPass(RenderPassInfo re
     if (binding.type == UniformBindingType::UNIFORM_BUFFER) {
       auto uniformRef = createUniformData(binding);
 
-      if(binding.binding == 0) {
-        for(int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) 
-          m_pVkDataPtr->defaultRenderPass.uniformBuffer.push_back(*uniformBufferPool.get(uniformRef));
-      }
+      m_pVkDataPtr->defaultRenderPass.uniformBuffer.push_back(*uniformBufferPool.get(uniformRef));
+      
     }
   }
 
@@ -651,10 +649,8 @@ Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPas
   for (auto &binding : renderPassInfo.bindingInfo) {
     if (binding.type == UniformBindingType::UNIFORM_BUFFER) {
       auto uniformRef = createUniformData(binding);
-      if(binding.binding == 0) {
-        for(int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) 
-          renderPass.uniformBuffer.push_back(*uniformBufferPool.get(uniformRef));
-      }
+      renderPass.uniformBuffer.push_back(*uniformBufferPool.get(uniformRef));
+      
     } else if (binding.type == UniformBindingType::SHADER_STORAGE) {
     }
   }
