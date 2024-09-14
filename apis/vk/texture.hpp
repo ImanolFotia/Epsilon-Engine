@@ -103,7 +103,7 @@ static bool destroyImage(VulkanData &vkData, VulkanTexture &texture) {
   return true;
 }
 
-static void imageMemoryBarrier(VulkanData &vkData, VkCommandPool &commandPool, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, VulkanTextureInfo info, VkCommandBuffer commandBuffer, VkImageSubresourceRange subResourceRange, unsigned mipLevel = 0, unsigned mipCount = 1) {
+static VkImageMemoryBarrier createImageBarrier(VkImageLayout oldLayout, VkImageLayout newLayout, VkImage image, int mipLevel, int mipCount) {
 
   VkImageMemoryBarrier barrier{};
   barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -117,7 +117,33 @@ static void imageMemoryBarrier(VulkanData &vkData, VkCommandPool &commandPool, V
   barrier.subresourceRange.levelCount = mipCount;
   barrier.subresourceRange.baseArrayLayer = 0;
   barrier.subresourceRange.layerCount = 1;
-  // barrier.subresourceRange.levelCount = mipLevels;
+
+  return barrier;
+}
+
+static void insertImageBarrier(VkCommandBuffer commandBuffer, 
+                               VkImage dstImage, 
+                               VkImageLayout oldLayout, 
+                               VkImageLayout newLayout, 
+                               VkAccessFlags srcAccess,
+                               VkAccessFlags dstAccess, 
+                               VkPipelineStageFlags srcStage, 
+                               VkPipelineStageFlags dstStage, 
+                               int mipLevel = 0, 
+                               int mipCount = 1) {
+
+  VkImageMemoryBarrier barrier = createImageBarrier(oldLayout, newLayout, dstImage, mipLevel, mipCount);
+  barrier.dstAccessMask = dstAccess;
+  barrier.srcAccessMask = srcAccess;
+  vkCmdPipelineBarrier(commandBuffer, srcStage, dstStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+
+}
+
+static void imageMemoryBarrier(VulkanData &vkData, VkCommandPool &commandPool, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout,
+                               VulkanTextureInfo info, VkCommandBuffer commandBuffer, VkImageSubresourceRange subResourceRange, unsigned mipLevel = 0,
+                               unsigned mipCount = 1) {
+
+  VkImageMemoryBarrier barrier = createImageBarrier(oldLayout, newLayout, image, mipLevel, mipCount);
 
   VkPipelineStageFlags sourceStage;
   VkPipelineStageFlags destinationStage;
@@ -173,7 +199,8 @@ static void imageMemoryBarrier(VulkanData &vkData, VkCommandPool &commandPool, V
   vkCmdPipelineBarrier(commandBuffer, sourceStage, destinationStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 }
 
-static void transitionImageLayout(VulkanData &vkData, VkCommandPool &commandPool, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, VulkanTextureInfo info, unsigned mipLevel = 0, unsigned mipCount = 1) {
+static void transitionImageLayout(VulkanData &vkData, VkCommandPool &commandPool, VkImage image, VkFormat format, VkImageLayout oldLayout,
+                                  VkImageLayout newLayout, VulkanTextureInfo info, unsigned mipLevel = 0, unsigned mipCount = 1) {
 
   // int mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(info.width, info.height)))) + 1;
   VkCommandBuffer commandBuffer = beginSingleTimeCommands(vkData, commandPool);
@@ -188,7 +215,8 @@ static void transitionImageLayout(VulkanData &vkData, VkCommandPool &commandPool
   endSingleTimeCommands(vkData, commandPool, commandBuffer);
 }
 
-static void copyBufferToImage(VulkanData &vkData, VkCommandPool &commandPool, VkBuffer &buffer, VkImage &image, uint32_t width, uint32_t height, std::vector<size_t> offsets, uint32_t mipLevels) {
+static void copyBufferToImage(VulkanData &vkData, VkCommandPool &commandPool, VkBuffer &buffer, VkImage &image, uint32_t width, uint32_t height,
+                              std::vector<size_t> offsets, uint32_t mipLevels) {
   VkCommandBuffer commandBuffer = beginSingleTimeCommands(vkData, commandPool);
 
   std::vector<VkBufferImageCopy> bufferCopyRegions;
@@ -244,6 +272,9 @@ static VkFormat findSupportedFormat(VulkanData &vkData, const std::vector<VkForm
   throw std::runtime_error("failed to find supported format!");
 }
 
-static VkFormat findDepthFormat(VulkanData &vkData) { return findSupportedFormat(vkData, {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT}, VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT); }
+static VkFormat findDepthFormat(VulkanData &vkData) {
+  return findSupportedFormat(vkData, {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT}, VK_IMAGE_TILING_OPTIMAL,
+                             VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
+}
 
 } // namespace vk
