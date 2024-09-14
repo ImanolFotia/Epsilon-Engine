@@ -38,8 +38,7 @@ struct ResourceManager {
   virtual Ref<Buffer> createMappedVertexBuffer(const std::string &, const BufferInfo &) = 0;
   virtual void UpdateMappedBuffer(Ref<Buffer>, const UpdateVertexBufferInfo &) = 0;
 
-  virtual void CopyTexture(Ref<Texture> src, Ref<Texture> dst) = 0;
-  virtual Ref<Texture> GetRenderTarget(Ref<RenderPass>, uint32_t) = 0;
+  virtual void CopyTexture(Ref<Texture> src, Ref<Texture>& dst) = 0;
 
   virtual void UpdateMesh(Ref<Mesh>, UpdateMeshInfo) = 0;
   virtual void PatchMesh(Ref<Mesh>, UpdateMeshInfo) = 0;

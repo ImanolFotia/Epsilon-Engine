@@ -1,3 +1,4 @@
+
 #include "apis/vk/vk_data.hpp"
 #include "core/common/common.hpp"
 #include "vulkan/vulkan_core.h"
@@ -1376,15 +1377,102 @@ void VulkanResourceManager::UpdateMesh(Ref<Mesh> meshRef, UpdateMeshInfo updateI
                   */
 }
 
-Ref<Texture> VulkanResourceManager::GetRenderTarget(Ref<RenderPass> renderPassRef, uint32_t index) {
+vk::VulkanTexture VulkanResourceManager::GetRenderTarget(Ref<RenderPass> renderPassRef, uint32_t index) {
   vk::VulkanRenderPass *renderPass = renderPassPool.get(renderPassRef);
 
   if (index >= renderPass->numAttachments) {
-    return Ref<Texture>::makeEmpty();
+    return {};
   }
-return Ref<Texture>::makeEmpty();
- // return renderPass->renderPassChain.Textures.at(index).;
+
+  return renderPass->renderPassChain.Textures.at(index);
 }
 
-void VulkanResourceManager::CopyTexture(Ref<Texture> srcRef, Ref<Texture> dstRef) {}
+void VulkanResourceManager::CopyTexture(Ref<Texture> srcRef, Ref<Texture>& dstRef) {
+  auto srcTexture = texPool.get(srcRef);
+
+  if(dstRef.empty()) {
+    TextureCreationInfo texInfo;
+    auto texture = pCreateTextureBuffer({
+          .width = srcTexture->info.width,
+          .height = srcTexture->info.height,
+          .num_channels = srcTexture->info.num_channels,
+          .mipLevels = srcTexture->info.mipLevels,
+          .arrayLayers = srcTexture->info.arrayLayers,
+          .format = srcTexture->info.format,
+          .usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT
+      });
+
+    dstRef = texPool.insert("global_texture_" + std::to_string(texPool.size()), texture);
+  } 
+
+  vk::VulkanTexture *dstTexture = texPool.get(srcRef);
+
+  VkCommandBuffer copyCmd = vk::beginSingleTimeCommands(*m_pVkDataPtr, m_pCommandPools.front());
+
+  vk::insertImageBarrier(copyCmd, 
+  dstTexture->image, 
+  VK_IMAGE_LAYOUT_UNDEFINED, 
+  VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 
+  0, 
+  VK_ACCESS_TRANSFER_WRITE_BIT,
+  VK_PIPELINE_STAGE_TRANSFER_BIT, 
+  VK_PIPELINE_STAGE_TRANSFER_BIT);
+
+
+  vk::insertImageBarrier(copyCmd, 
+  srcTexture->image, 
+  VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, 
+  VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, 
+  VK_ACCESS_MEMORY_READ_BIT, 
+  VK_ACCESS_TRANSFER_READ_BIT,
+  VK_PIPELINE_STAGE_TRANSFER_BIT, 
+  VK_PIPELINE_STAGE_TRANSFER_BIT);
+/*
+// If source and destination support blit we'll blit as this also does automatic format conversion (e.g. from BGR to RGB)
+		if (m_pVkDataPtr->blitSupported)
+		{
+			// Define the region to blit (we will blit the whole swapchain image)
+			VkOffset3D blitSize;
+			blitSize.x = width;
+			blitSize.y = height;
+			blitSize.z = 1;
+			VkImageBlit imageBlitRegion{};
+			imageBlitRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			imageBlitRegion.srcSubresource.layerCount = 1;
+			imageBlitRegion.srcOffsets[1] = blitSize;
+			imageBlitRegion.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			imageBlitRegion.dstSubresource.layerCount = 1;
+			imageBlitRegion.dstOffsets[1] = blitSize;
+
+			// Issue the blit command
+			vkCmdBlitImage(
+				copyCmd,
+				srcImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+				dstImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+				1,
+				&imageBlitRegion,
+				VK_FILTER_NEAREST);
+		}
+		else
+		{
+			// Otherwise use image copy (requires us to manually flip components)
+			VkImageCopy imageCopyRegion{};
+			imageCopyRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			imageCopyRegion.srcSubresource.layerCount = 1;
+			imageCopyRegion.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			imageCopyRegion.dstSubresource.layerCount = 1;
+			imageCopyRegion.extent.width = width;
+			imageCopyRegion.extent.height = height;
+			imageCopyRegion.extent.depth = 1;
+
+			// Issue the copy command
+			vkCmdCopyImage(
+				copyCmd,
+				srcImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+				dstImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+				1,
+				&imageCopyRegion);
+		}*/
+
+}
 } // namespace engine
