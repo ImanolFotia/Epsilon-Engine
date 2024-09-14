@@ -316,6 +316,7 @@ struct VulkanData {
   // RenderPassChain swapChainData;
   VulkanRenderPass defaultRenderPass;
   bool bindless_supported = false;
+  bool blitSupported = false;
   uint32_t swapChainWidth = 0;
   uint32_t swapChainHeight = 0;
 

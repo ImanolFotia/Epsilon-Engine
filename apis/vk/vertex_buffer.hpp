@@ -4,6 +4,8 @@
 
 #include <vulkan/vulkan.h>
 
+#include "command.hpp"
+
 namespace vk
 {
     static VkVertexInputBindingDescription getBindingDescription(size_t size)
