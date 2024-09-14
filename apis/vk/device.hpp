@@ -67,6 +67,7 @@ static void createLogicalDevice(VulkanData &vk_data) {
   VkPhysicalDeviceDescriptorIndexingFeatures indexing_features{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT, nullptr};
   VkPhysicalDeviceSynchronization2Features sync_features{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES, nullptr, VK_TRUE};
   VkPhysicalDeviceMemoryProperties memory_properties{};
+  VkFormatProperties formatProperties;
   VkPhysicalDeviceFeatures2 device_features{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2, &indexing_features};
   VkPhysicalDeviceFeatures2 device_features2{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2, &layoutFeatures};
 
@@ -74,11 +75,13 @@ static void createLogicalDevice(VulkanData &vk_data) {
   vkGetPhysicalDeviceFeatures2(vk_data.physicalDevice, &device_features2);
 
   vkGetPhysicalDeviceMemoryProperties(vk_data.physicalDevice, &memory_properties);
+  vkGetPhysicalDeviceFormatProperties(vk_data.physicalDevice, VK_FORMAT_B8G8R8A8_SRGB, &formatProperties);
 
   vk_data.max_memory_heaps = memory_properties.memoryHeapCount;
 
   bool bindless_supported = indexing_features.descriptorBindingPartiallyBound && indexing_features.runtimeDescriptorArray;
   bool separateStencilSupported = layoutFeatures.separateDepthStencilLayouts;
+  bool supporstBlit = formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_SRC_BIT;
 
   VkPhysicalDeviceFeatures2 physical_features2 = {VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2};
   vkGetPhysicalDeviceFeatures2(vk_data.physicalDevice, &physical_features2);
@@ -87,6 +90,12 @@ static void createLogicalDevice(VulkanData &vk_data) {
     indexing_features.pNext = &layoutFeatures;
     Log::Info("Separate Stencil is supported");
   }
+
+  if(supporstBlit) {
+    vk_data.blitSupported = true;
+    Log::Info("Blit for format 'VK_FORMAT_B8G8R8A8_SRGB' is supported");
+  }
+
   if (bindless_supported) {
     Log::Info("bindless is supported");
     indexing_features.descriptorBindingPartiallyBound = VK_TRUE;
