@@ -16,7 +16,7 @@ public:
     float globalDistance = 10000000000000000.0f;
     Node *parent = nullptr;
     std::vector<Node *> neighbors{};
-    int8_t level = 0;
+    int8_t level = 64;
     bool terrain_node = false;
     uint16_t node_group;
 
