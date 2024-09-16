@@ -47,7 +47,7 @@ public:
   void UpdateUniform(const std::string &name, void *newData) override;
 
   vk::VulkanTexture GetRenderTarget(Ref<RenderPass>, uint32_t);
-  void CopyTexture(Ref<Texture> src, Ref<Texture>& dst) override;
+  void CopyTexture(TextureCopyCommand copyCommand) override;
 
   void destroyTexture(Ref<Texture>) override;
   void destroyBuffer(Ref<Buffer>) override;
@@ -73,6 +73,7 @@ public:
   vk::VulkanRenderPass *getRenderPass(Ref<RenderPass>);
 
   void ResizeFramebuffer(Ref<RenderPass>, glm::ivec2) override;
+  void ResizeTexture(Ref<Texture>, glm::ivec2) override;
 
 private:
   VmaAllocator m_pAllocator;

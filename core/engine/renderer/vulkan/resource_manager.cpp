@@ -406,7 +406,7 @@ Ref<BindGroup> VulkanResourceManager::createBindGroup(BindGroupInfo material) {
       if (renderPass->uniformBuffer.size() > 0) {
 
         auto &buffers = renderPass->uniformBuffer.front().buffers;
-        //vkMaterial.bufferInfo.resize(vk::MAX_FRAMES_IN_FLIGHT);
+        // vkMaterial.bufferInfo.resize(vk::MAX_FRAMES_IN_FLIGHT);
         for (int i = 0; i < vk::MAX_FRAMES_IN_FLIGHT; i++) {
           vkMaterial.bufferInfo[i].offset = buffers[i].offset;
           vkMaterial.bufferInfo[i].buffer = buffers[i].buffer;
@@ -474,11 +474,11 @@ Ref<RenderPass> VulkanResourceManager::createDefaultRenderPass(RenderPassInfo re
   int index = 0;
   for (auto &texture : m_pVkDataPtr->defaultRenderPass.renderPassChain.Textures) {
     texture.name = "SwapChainRenderTarget" + std::to_string(index);
-    //texPool.insert(texture.name, texture);
+    // texPool.insert(texture.name, texture);
     index++;
   }
   m_pVkDataPtr->defaultRenderPass.renderPassChain.DepthTexture.name = "SwapChainDepthRenderTarget";
-  //texPool.insert("SwapChainDepthRenderTarget", m_pVkDataPtr->defaultRenderPass.renderPassChain.DepthTexture);
+  // texPool.insert("SwapChainDepthRenderTarget", m_pVkDataPtr->defaultRenderPass.renderPassChain.DepthTexture);
 
   m_pVkDataPtr->defaultRenderPass.name = renderPassInfo.name;
 
@@ -504,7 +504,6 @@ Ref<RenderPass> VulkanResourceManager::createDefaultRenderPass(RenderPassInfo re
       auto uniformRef = createUniformData(binding);
 
       m_pVkDataPtr->defaultRenderPass.uniformBuffer.push_back(*uniformBufferPool.get(uniformRef));
-      
     }
   }
 
@@ -584,7 +583,6 @@ Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPas
     if (attachment.isSampler) {
       texture.info.isSampler = true;
       vk::createTextureSampler(*m_pVkDataPtr, texture);
-
     }
 
     if (attachment.isDepthAttachment) {
@@ -607,7 +605,7 @@ Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPas
       attachment.texture_index = renderPass.renderPassChain.Textures.size() - 1;
     }
 
-    //texPool.insert(attachment.name, texture);
+    // texPool.insert(attachment.name, texture);
   }
 
   m_pRenderPassInfo[renderPass.id] = renderPassInfo;
@@ -651,7 +649,7 @@ Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPas
     if (binding.type == UniformBindingType::UNIFORM_BUFFER) {
       auto uniformRef = createUniformData(binding);
       renderPass.uniformBuffer.push_back(*uniformBufferPool.get(uniformRef));
-      
+
     } else if (binding.type == UniformBindingType::SHADER_STORAGE) {
     }
   }
@@ -1147,9 +1145,9 @@ Ref<ComputeShader> VulkanResourceManager::createComputeShader(ComputeShaderInfo 
       VkImageMemoryBarrier2 imageMemoryBarrier = {};
       imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
       imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL;
-      imageMemoryBarrier.newLayout = texture.imageLayout;//VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+      imageMemoryBarrier.newLayout = texture.imageLayout; // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
       imageMemoryBarrier.image = texture.image;
-      
+
       imageMemoryBarrier.subresourceRange = {VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT, 0, 1, 0, 1};
       imageMemoryBarrier.srcAccessMask = srcAccessMask;
       imageMemoryBarrier.dstAccessMask = dstAccessMask;
@@ -1201,6 +1199,28 @@ void VulkanResourceManager::UpdateMappedBuffer(Ref<Buffer> buff, const UpdateVer
 }
 
 void VulkanResourceManager::destroyComputeShader(Ref<ComputeShader>) {}
+
+void VulkanResourceManager::ResizeTexture(Ref<Texture> textureRef, glm::ivec2 size) {
+  vk::VulkanTexture *texture = texPool.get(textureRef);
+  vkDestroySampler(m_pVkDataPtr->logicalDevice, texture->sampler, nullptr);
+  vkDestroyImageView(m_pVkDataPtr->logicalDevice, texture->imageView, nullptr);
+  vmaDestroyImage(m_pAllocator, texture->image, texture->allocation);
+  texture->info.width = size.x;
+  texture->info.height = size.y;
+  *texture = pCreateTextureBuffer({
+              .width = texture->info.width,
+              .height = texture->info.height,
+              .num_channels = texture->info.num_channels,
+              .mipLevels = texture->info.mipLevels,
+              .arrayLayers = texture->info.arrayLayers,
+              .format = texture->info.format,
+              .usage = VK_IMAGE_USAGE_SAMPLED_BIT
+             });
+
+  vk::createImageView(*m_pVkDataPtr, *texture, VK_IMAGE_ASPECT_COLOR_BIT);
+  vk::createTextureSampler(*m_pVkDataPtr, *texture);
+  
+}
 
 void VulkanResourceManager::ResizeFramebuffer(Ref<RenderPass> renderpass_ref, glm::ivec2 size) {
   vkDeviceWaitIdle(m_pVkDataPtr->logicalDevice);
@@ -1387,92 +1407,97 @@ vk::VulkanTexture VulkanResourceManager::GetRenderTarget(Ref<RenderPass> renderP
   return renderPass->renderPassChain.Textures.at(index);
 }
 
-void VulkanResourceManager::CopyTexture(Ref<Texture> srcRef, Ref<Texture>& dstRef) {
-  auto srcTexture = texPool.get(srcRef);
+void VulkanResourceManager::CopyTexture(TextureCopyCommand copyCommand) {
 
-  if(dstRef.empty()) {
+  vk::VulkanTexture *srcTexture;
+  if (copyCommand.type == CopyTextureType::IMAGE_TO_IMAGE || copyCommand.type == CopyTextureType::IMAGE_TO_RENDER_TARGET) {
+    srcTexture = texPool.get(copyCommand.srcTexture);
+  } else {
+    auto renderPass = renderPassPool.get(copyCommand.renderPass);
+    srcTexture = &renderPass->renderPassChain.Textures.at(copyCommand.render_target_index);
+  }
+
+  if (copyCommand.dstTexture.empty()) {
     TextureCreationInfo texInfo;
-    auto texture = pCreateTextureBuffer({
-          .width = srcTexture->info.width,
-          .height = srcTexture->info.height,
-          .num_channels = srcTexture->info.num_channels,
-          .mipLevels = srcTexture->info.mipLevels,
-          .arrayLayers = srcTexture->info.arrayLayers,
-          .format = srcTexture->info.format,
-          .usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT
-      });
+    auto texture =
+        pCreateTextureBuffer({.width = srcTexture->info.width,
+                              .height = srcTexture->info.height,
+                              .num_channels = srcTexture->info.num_channels,
+                              .mipLevels = srcTexture->info.mipLevels,
+                              .arrayLayers = srcTexture->info.arrayLayers,
+                              .format = srcTexture->info.format, // No need to query format from render target for format conversion, it's done automatically if
+                                                                 // blit is supported, which should be for vulkan >= 1.0 (99.73% of devices)
+                              .usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT});
+    vk::createImageView(*m_pVkDataPtr, texture, VK_IMAGE_ASPECT_COLOR_BIT);
+    vk::createTextureSampler(*m_pVkDataPtr, texture);
+    copyCommand.dstTexture = texPool.insert("global_texture_" + std::to_string(texPool.size()), texture);
+  }
 
-    dstRef = texPool.insert("global_texture_" + std::to_string(texPool.size()), texture);
-  } 
-
-  vk::VulkanTexture *dstTexture = texPool.get(srcRef);
+  vk::VulkanTexture *dstTexture = texPool.get(copyCommand.dstTexture);
 
   VkCommandBuffer copyCmd = vk::beginSingleTimeCommands(*m_pVkDataPtr, m_pCommandPools.front());
 
-  vk::insertImageBarrier(copyCmd, 
-  dstTexture->image, 
-  VK_IMAGE_LAYOUT_UNDEFINED, 
-  VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 
-  0, 
-  VK_ACCESS_TRANSFER_WRITE_BIT,
-  VK_PIPELINE_STAGE_TRANSFER_BIT, 
-  VK_PIPELINE_STAGE_TRANSFER_BIT);
+  VkImageLayout oldSrcLayout;
 
+  switch (copyCommand.type) {
 
-  vk::insertImageBarrier(copyCmd, 
-  srcTexture->image, 
-  VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, 
-  VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, 
-  VK_ACCESS_MEMORY_READ_BIT, 
-  VK_ACCESS_TRANSFER_READ_BIT,
-  VK_PIPELINE_STAGE_TRANSFER_BIT, 
-  VK_PIPELINE_STAGE_TRANSFER_BIT);
-/*
-// If source and destination support blit we'll blit as this also does automatic format conversion (e.g. from BGR to RGB)
-		if (m_pVkDataPtr->blitSupported)
-		{
-			// Define the region to blit (we will blit the whole swapchain image)
-			VkOffset3D blitSize;
-			blitSize.x = width;
-			blitSize.y = height;
-			blitSize.z = 1;
-			VkImageBlit imageBlitRegion{};
-			imageBlitRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			imageBlitRegion.srcSubresource.layerCount = 1;
-			imageBlitRegion.srcOffsets[1] = blitSize;
-			imageBlitRegion.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			imageBlitRegion.dstSubresource.layerCount = 1;
-			imageBlitRegion.dstOffsets[1] = blitSize;
+  case CopyTextureType::IMAGE_TO_IMAGE:
+    oldSrcLayout = VK_IMAGE_LAYOUT_GENERAL;
+  case CopyTextureType::IMAGE_TO_RENDER_TARGET:
+    oldSrcLayout = VK_IMAGE_LAYOUT_GENERAL;
+  case CopyTextureType::RENDER_TARGET_TO_IMAGE:
+    oldSrcLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    break;
+  case CopyTextureType::SIZE:
+    break;
+  }
 
-			// Issue the blit command
-			vkCmdBlitImage(
-				copyCmd,
-				srcImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-				dstImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-				1,
-				&imageBlitRegion,
-				VK_FILTER_NEAREST);
-		}
-		else
-		{
-			// Otherwise use image copy (requires us to manually flip components)
-			VkImageCopy imageCopyRegion{};
-			imageCopyRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			imageCopyRegion.srcSubresource.layerCount = 1;
-			imageCopyRegion.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			imageCopyRegion.dstSubresource.layerCount = 1;
-			imageCopyRegion.extent.width = width;
-			imageCopyRegion.extent.height = height;
-			imageCopyRegion.extent.depth = 1;
+  vk::insertImageBarrier(copyCmd, dstTexture->image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 0, VK_ACCESS_TRANSFER_WRITE_BIT,
+                         VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT);
 
-			// Issue the copy command
-			vkCmdCopyImage(
-				copyCmd,
-				srcImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-				dstImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-				1,
-				&imageCopyRegion);
-		}*/
+  vk::insertImageBarrier(copyCmd, srcTexture->image, oldSrcLayout, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_ACCESS_MEMORY_READ_BIT, VK_ACCESS_TRANSFER_READ_BIT,
+                         VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT);
 
+  // If source and destination support blit we'll blit as this also does automatic format conversion (e.g. from BGR to RGB)
+  if (m_pVkDataPtr->blitSupported) {
+    // Define the region to blit (we will blit the whole swapchain image)
+    VkOffset3D blitSize;
+    blitSize.x = srcTexture->info.width;
+    blitSize.y = srcTexture->info.height;
+    blitSize.z = 1;
+    VkImageBlit imageBlitRegion{};
+    imageBlitRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    imageBlitRegion.srcSubresource.layerCount = 1;
+    imageBlitRegion.srcOffsets[1] = blitSize;
+    imageBlitRegion.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    imageBlitRegion.dstSubresource.layerCount = 1;
+    imageBlitRegion.dstOffsets[1] = blitSize;
+
+    // Issue the blit command
+    vkCmdBlitImage(copyCmd, srcTexture->image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, dstTexture->image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1,
+                   &imageBlitRegion, VK_FILTER_NEAREST);
+  } else {
+    // Otherwise use image copy (requires us to manually flip components)
+    VkImageCopy imageCopyRegion{};
+    imageCopyRegion.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    imageCopyRegion.srcSubresource.layerCount = 1;
+    imageCopyRegion.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    imageCopyRegion.dstSubresource.layerCount = 1;
+    imageCopyRegion.extent.width = srcTexture->info.width;
+    imageCopyRegion.extent.height = srcTexture->info.height;
+    imageCopyRegion.extent.depth = 1;
+
+    // Issue the copy command
+    vkCmdCopyImage(copyCmd, srcTexture->image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, dstTexture->image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1,
+                   &imageCopyRegion);
+  }
+
+  vk::insertImageBarrier(copyCmd, dstTexture->image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_GENERAL, VK_ACCESS_TRANSFER_WRITE_BIT,
+                         VK_ACCESS_MEMORY_READ_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT);
+
+  vk::insertImageBarrier(copyCmd, srcTexture->image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, oldSrcLayout, VK_ACCESS_TRANSFER_READ_BIT, VK_ACCESS_MEMORY_READ_BIT,
+                         VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT);
+
+  vk::endSingleTimeCommands(*m_pVkDataPtr, m_pCommandPools.front(), copyCmd);
 }
 } // namespace engine

@@ -18,6 +18,21 @@ struct ThreadData {
   std::vector<VkCommandBuffer> commandBuffer;
 };
 
+enum class CopyTextureType : uint8_t {
+  IMAGE_TO_IMAGE = 0,
+  IMAGE_TO_RENDER_TARGET,
+  RENDER_TARGET_TO_IMAGE,
+  SIZE
+};
+
+struct TextureCopyCommand {
+  Ref<Texture> srcTexture;
+  Ref<Texture> dstTexture;
+  Ref<RenderPass> renderPass;
+  CopyTextureType type;
+  int8_t render_target_index = -1;
+};
+
 struct ResourceManager {
 
   virtual void Init() = 0;
@@ -38,7 +53,7 @@ struct ResourceManager {
   virtual Ref<Buffer> createMappedVertexBuffer(const std::string &, const BufferInfo &) = 0;
   virtual void UpdateMappedBuffer(Ref<Buffer>, const UpdateVertexBufferInfo &) = 0;
 
-  virtual void CopyTexture(Ref<Texture> src, Ref<Texture>& dst) = 0;
+  virtual void CopyTexture(TextureCopyCommand copyCommand) = 0;
 
   virtual void UpdateMesh(Ref<Mesh>, UpdateMeshInfo) = 0;
   virtual void PatchMesh(Ref<Mesh>, UpdateMeshInfo) = 0;
@@ -64,6 +79,7 @@ struct ResourceManager {
   virtual void clean() = 0;
 
   virtual void ResizeFramebuffer(Ref<RenderPass>, glm::ivec2) = 0;
+  virtual void ResizeTexture(Ref<Texture>, glm::ivec2) = 0;
 
   virtual int FramesInFlight() = 0;
 
