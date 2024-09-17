@@ -311,7 +311,7 @@ struct VulkanData {
 #else
   const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 #endif
-
+  int frame_index = 0;
   VkSwapchainKHR swapChain;
   // RenderPassChain swapChainData;
   VulkanRenderPass defaultRenderPass;
