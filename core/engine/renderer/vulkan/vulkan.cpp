@@ -154,6 +154,7 @@ void VulkanRenderer::Push(ObjectData object) {
 void VulkanRenderer::BeginFrame() {
   m_pImageIndex = pPrepareSyncObjects();
   vmaSetCurrentFrameIndex(m_pResourceManagerRef->m_pAllocator, m_pCurrentFrame);
+  m_pVkData.frame_index = m_pCurrentFrame;
 
   if (m_pImageIndex == -1)
     return;

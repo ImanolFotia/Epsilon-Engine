@@ -164,11 +164,14 @@ Ref<Texture> VulkanResourceManager::createTexture(TextureCreationInfo texInfo) {
   texture.bindingType = vk::MATERIAL_SAMPLER;
 
   auto ref = texPool.insert(texInfo.name, texture);
-  texture.index = ref.m_pIndex;
+  if(texInfo.bindless_array_index == -1)
+    texture.index = ref.m_pIndex;
+  else 
+    texture.index = texInfo.bindless_array_index;
+
   texPool.get(ref)->index = ref.m_pIndex;
 
   if (m_pVkDataPtr->bindless_supported) {
-    int count = 1;
     VkWriteDescriptorSet bindless_descriptor_writes;
     VkDescriptorImageInfo bindless_image_info;
     bindless_descriptor_writes = {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET};
@@ -177,15 +180,12 @@ Ref<Texture> VulkanResourceManager::createTexture(TextureCreationInfo texInfo) {
     bindless_descriptor_writes.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
     bindless_descriptor_writes.dstSet = m_pGlobalDescriptorSets;
     bindless_descriptor_writes.dstBinding = 0;
-
     bindless_image_info.sampler = texture.sampler;
     bindless_image_info.imageView = texture.imageView;
     bindless_image_info.imageLayout = texture.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
     bindless_image_info.imageLayout = texInfo.storage_image ? VK_IMAGE_LAYOUT_GENERAL : bindless_image_info.imageLayout;
     bindless_descriptor_writes.pImageInfo = &bindless_image_info;
-
-    if (count > 0)
-      vkUpdateDescriptorSets(m_pVkDataPtr->logicalDevice, count, &bindless_descriptor_writes, 0, nullptr);
+    vkUpdateDescriptorSets(m_pVkDataPtr->logicalDevice, 1, &bindless_descriptor_writes, 0, nullptr);
   }
 
   return ref;
@@ -565,9 +565,9 @@ Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPas
     texInfo.height = renderPassInfo.dimensions.height;
     texInfo.num_channels = attachment.isDepthAttachment ? 1 : resolveNumChannels(attachment.format);
     texInfo.usage =
-        ((attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT
+        ((attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? (VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT)
                                                                                   : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT) |
-        (attachment.storageImage ? VK_IMAGE_USAGE_STORAGE_BIT : 0u);
+        (attachment.storageImage ? VK_IMAGE_USAGE_STORAGE_BIT : 0u) | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
 
     texInfo.compareEnable = attachment.depthCompare;
 
@@ -1207,6 +1207,9 @@ void VulkanResourceManager::ResizeTexture(Ref<Texture> textureRef, glm::ivec2 si
   vmaDestroyImage(m_pAllocator, texture->image, texture->allocation);
   texture->info.width = size.x;
   texture->info.height = size.y;
+
+  int index = texture->index;
+  
   *texture = pCreateTextureBuffer({
               .width = texture->info.width,
               .height = texture->info.height,
@@ -1216,9 +1219,30 @@ void VulkanResourceManager::ResizeTexture(Ref<Texture> textureRef, glm::ivec2 si
               .format = texture->info.format,
               .usage = VK_IMAGE_USAGE_SAMPLED_BIT
              });
+             
 
   vk::createImageView(*m_pVkDataPtr, *texture, VK_IMAGE_ASPECT_COLOR_BIT);
   vk::createTextureSampler(*m_pVkDataPtr, *texture);
+
+  texture->index = index;
+
+  if (m_pVkDataPtr->bindless_supported) {
+    VkWriteDescriptorSet bindless_descriptor_writes;
+    VkDescriptorImageInfo bindless_image_info;
+    bindless_descriptor_writes = {VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET};
+    bindless_descriptor_writes.descriptorCount = 1;
+    bindless_descriptor_writes.dstArrayElement = texture->index;
+    bindless_descriptor_writes.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    bindless_descriptor_writes.dstSet = m_pGlobalDescriptorSets;
+    bindless_descriptor_writes.dstBinding = 0;
+
+    bindless_image_info.sampler = texture->sampler;
+    bindless_image_info.imageView = texture->imageView;
+    bindless_image_info.imageLayout = texture->isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    bindless_descriptor_writes.pImageInfo = &bindless_image_info;
+
+    vkUpdateDescriptorSets(m_pVkDataPtr->logicalDevice, 1, &bindless_descriptor_writes, 0, nullptr);
+  }
   
 }
 
@@ -1413,29 +1437,37 @@ void VulkanResourceManager::CopyTexture(TextureCopyCommand copyCommand) {
   if (copyCommand.type == CopyTextureType::IMAGE_TO_IMAGE || copyCommand.type == CopyTextureType::IMAGE_TO_RENDER_TARGET) {
     srcTexture = texPool.get(copyCommand.srcTexture);
   } else {
-    auto renderPass = renderPassPool.get(copyCommand.renderPass);
-    srcTexture = &renderPass->renderPassChain.Textures.at(copyCommand.render_target_index);
+    auto renderPass = renderPassPool.get(copyCommand.srcRenderPass);
+    if(renderPass->renderPassChain.Textures.size() == copyCommand.src_render_target_index)
+      srcTexture = &renderPass->renderPassChain.DepthTexture;
+    else
+      srcTexture = &renderPass->renderPassChain.Textures.at(copyCommand.src_render_target_index);;
   }
 
-  if (copyCommand.dstTexture.empty()) {
-    TextureCreationInfo texInfo;
-    auto texture =
-        pCreateTextureBuffer({.width = srcTexture->info.width,
-                              .height = srcTexture->info.height,
-                              .num_channels = srcTexture->info.num_channels,
-                              .mipLevels = srcTexture->info.mipLevels,
-                              .arrayLayers = srcTexture->info.arrayLayers,
-                              .format = srcTexture->info.format, // No need to query format from render target for format conversion, it's done automatically if
-                                                                 // blit is supported, which should be for vulkan >= 1.0 (99.73% of devices)
-                              .usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT});
-    vk::createImageView(*m_pVkDataPtr, texture, VK_IMAGE_ASPECT_COLOR_BIT);
-    vk::createTextureSampler(*m_pVkDataPtr, texture);
-    copyCommand.dstTexture = texPool.insert("global_texture_" + std::to_string(texPool.size()), texture);
+  vk::VulkanTexture *dstTexture = nullptr;
+  if (copyCommand.type == CopyTextureType::IMAGE_TO_IMAGE || copyCommand.type == CopyTextureType::RENDER_TARGET_TO_IMAGE) {
+    if (copyCommand.dstTexture.empty()) {
+      TextureCreationInfo texInfo;
+      auto texture =
+          pCreateTextureBuffer({.width = srcTexture->info.width,
+                                .height = srcTexture->info.height,
+                                .num_channels = srcTexture->info.num_channels,
+                                .mipLevels = srcTexture->info.mipLevels,
+                                .arrayLayers = srcTexture->info.arrayLayers,
+                                .format = srcTexture->info.format, // No need to query format from render target for format conversion, it's done automatically if
+                                                                  // blit is supported, which should be for vulkan >= 1.0 (99.73% of devices)
+                                .usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT});
+      vk::createImageView(*m_pVkDataPtr, texture, VK_IMAGE_ASPECT_COLOR_BIT);
+      vk::createTextureSampler(*m_pVkDataPtr, texture);
+      copyCommand.dstTexture = texPool.insert("global_texture_" + std::to_string(texPool.size()), texture);
+    } 
+    dstTexture = texPool.get(copyCommand.dstTexture);
+  } else {
+    auto renderPass = renderPassPool.get(copyCommand.dstRenderPass);
+    dstTexture = &renderPass->renderPassChain.Textures.at(copyCommand.dst_render_target_index);
   }
 
-  vk::VulkanTexture *dstTexture = texPool.get(copyCommand.dstTexture);
-
-  VkCommandBuffer copyCmd = vk::beginSingleTimeCommands(*m_pVkDataPtr, m_pCommandPools.front());
+  VkCommandBuffer copyCmd =  vk::beginSingleTimeCommands(*m_pVkDataPtr, m_pCommandPools.front());
 
   VkImageLayout oldSrcLayout;
 
@@ -1443,10 +1475,15 @@ void VulkanResourceManager::CopyTexture(TextureCopyCommand copyCommand) {
 
   case CopyTextureType::IMAGE_TO_IMAGE:
     oldSrcLayout = VK_IMAGE_LAYOUT_GENERAL;
+    break;
   case CopyTextureType::IMAGE_TO_RENDER_TARGET:
     oldSrcLayout = VK_IMAGE_LAYOUT_GENERAL;
+    break;
   case CopyTextureType::RENDER_TARGET_TO_IMAGE:
     oldSrcLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+    break;
+  case CopyTextureType::RENDER_TARGET_TO_RENDER_TARGET:
+    oldSrcLayout = VK_IMAGE_LAYOUT_GENERAL;
     break;
   case CopyTextureType::SIZE:
     break;

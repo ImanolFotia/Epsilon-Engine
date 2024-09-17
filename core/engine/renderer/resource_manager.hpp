@@ -22,15 +22,18 @@ enum class CopyTextureType : uint8_t {
   IMAGE_TO_IMAGE = 0,
   IMAGE_TO_RENDER_TARGET,
   RENDER_TARGET_TO_IMAGE,
+  RENDER_TARGET_TO_RENDER_TARGET,
   SIZE
 };
 
 struct TextureCopyCommand {
   Ref<Texture> srcTexture;
   Ref<Texture> dstTexture;
-  Ref<RenderPass> renderPass;
+  Ref<RenderPass> srcRenderPass;
+  Ref<RenderPass> dstRenderPass;
   CopyTextureType type;
-  int8_t render_target_index = -1;
+  int8_t src_render_target_index = -1;
+  int8_t dst_render_target_index = -1;
 };
 
 struct ResourceManager {

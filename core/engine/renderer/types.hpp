@@ -238,6 +238,7 @@ struct TextureCreationInfo {
   std::vector<std::size_t> offsets;
   std::size_t size{};
   bool storage_image = false;
+  int bindless_array_index = -1;
   unsigned char *pixels = nullptr;
 };
 
