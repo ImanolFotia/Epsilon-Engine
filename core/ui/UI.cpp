@@ -115,7 +115,7 @@ void UI::Draw(engine::Ref<engine::RenderPass> renderPass) {
       draw_command.vertex_offset = 0;
     }
 
-    m_pRenderer->Flush(renderPass, engine::DrawType::NON_INDEXED);
+    m_pRenderer->Flush({renderPass, engine::DrawType::NON_INDEXED, 0, true});
     //glm::vec3 v = glm::vec3(1.0f);
     // m_pRenderer->End(v);
 

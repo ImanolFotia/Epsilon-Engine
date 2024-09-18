@@ -1467,7 +1467,7 @@ void VulkanResourceManager::CopyTexture(TextureCopyCommand copyCommand) {
     dstTexture = &renderPass->renderPassChain.Textures.at(copyCommand.dst_render_target_index);
   }
 
-  VkCommandBuffer copyCmd =  vk::beginSingleTimeCommands(*m_pVkDataPtr, m_pCommandPools.front());
+  VkCommandBuffer copyCmd =  vk::beginSingleTimeCommands(*m_pVkDataPtr, m_pTransferCommandPool);
 
   VkImageLayout oldSrcLayout;
 
@@ -1535,6 +1535,6 @@ void VulkanResourceManager::CopyTexture(TextureCopyCommand copyCommand) {
   vk::insertImageBarrier(copyCmd, srcTexture->image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, oldSrcLayout, VK_ACCESS_TRANSFER_READ_BIT, VK_ACCESS_MEMORY_READ_BIT,
                          VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT);
 
-  vk::endSingleTimeCommands(*m_pVkDataPtr, m_pCommandPools.front(), copyCmd);
+  vk::endSingleTimeCommands(*m_pVkDataPtr, m_pTransferCommandPool, copyCmd);
 }
 } // namespace engine
