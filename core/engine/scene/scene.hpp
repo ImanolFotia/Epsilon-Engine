@@ -365,12 +365,12 @@ m_pSceneManager.emplace<T>(m_pSceneManager.root);
 
   }
 
-  void Flush(engine::DrawType drawType = engine::DrawType::INDEXED) {
+  void Flush(engine::DrawType drawType = engine::DrawType::INDEXED, bool clean_attachments = true) {
 
     if (m_pContext->Window().getSize().width > 0) {
       auto renderer = m_pContext->Renderer();
 
-      renderer->Flush(m_pCurrentRenderPass, drawType);
+      renderer->Flush({.renderPassRef = m_pCurrentRenderPass,.type = drawType, .frameBufferIndex = 0, .clean_attachments = clean_attachments});
     }
   }
 

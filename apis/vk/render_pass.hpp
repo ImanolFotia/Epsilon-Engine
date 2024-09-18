@@ -45,8 +45,8 @@ namespace vk
 
                 if (renderPassInfo.numSamples == 1) {
                     renderPass.renderPassData.depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-                    renderPass.renderPassData.depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-                    renderPass.renderPassData.depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+                    renderPass.renderPassData.depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
+                    renderPass.renderPassData.depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
                 }
                 else {
                     renderPass.renderPassData.depthAttachment.samples = (VkSampleCountFlagBits)renderPassInfo.numSamples;
@@ -57,7 +57,7 @@ namespace vk
                 if (attachment.isSampler)
                     renderPass.renderPassData.depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 
-                renderPass.renderPassData.depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+                renderPass.renderPassData.depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
                 renderPass.renderPassData.depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
                 renderPass.renderPassData.depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
                 renderPass.renderPassData.depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
@@ -73,7 +73,7 @@ namespace vk
 
                 if (renderPassInfo.numSamples == 1) {
                     attachmentDesc.samples = VK_SAMPLE_COUNT_1_BIT;
-                    attachmentDesc.loadOp = attachment.clearAttachment ? VK_ATTACHMENT_LOAD_OP_CLEAR : VK_ATTACHMENT_LOAD_OP_LOAD;;
+                    attachmentDesc.loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;//attachment.clearAttachment ? VK_ATTACHMENT_LOAD_OP_CLEAR : VK_ATTACHMENT_LOAD_OP_LOAD;;
                     attachmentDesc.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
                 }
                 else {
@@ -82,8 +82,8 @@ namespace vk
                     attachmentDesc.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
                 }
 
-                attachmentDesc.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-                attachmentDesc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+                attachmentDesc.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
+                attachmentDesc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_STORE;
                 attachmentDesc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
                 if (forPresent)
                 {

@@ -58,6 +58,7 @@ struct FlushCommand {
   engine::Ref<engine::RenderPass> renderPassRef{};
   engine::DrawType type{};
   uint32_t frameBufferIndex{};
+  bool clean_attachments = true;
 };
 
 /**

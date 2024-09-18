@@ -3,6 +3,7 @@
 #include "core/framework/window.hpp"
 #include <core/engine/context.hpp>
 #include <core/framework/clock.hpp>
+#include <vulkan/vulkan_core.h>
 
 #include "imgui/imgui_setup.hpp"
 #include "resource_manager.hpp"
@@ -361,6 +362,7 @@ void VulkanRenderer::Flush(FlushCommand command) {
       vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
       m_pRenderPassActive = false;
     }
+
     if (renderPass->id == std::numeric_limits<uint32_t>::max()) {
       vk::createRenderPassInfo(m_pImageIndex, m_pVkData, m_pVkData.defaultRenderPass);
 
@@ -379,8 +381,61 @@ void VulkanRenderer::Flush(FlushCommand command) {
       m_pRenderPassActive = true;
       m_pActiveRenderPass = command.renderPassRef;
     }
+
+    if(command.clean_attachments) {
+      VkExtent2D extent = renderPass->renderPassChain.Extent;
+
+      std::vector<VkClearAttachment> clearAttachments;
+      std::vector<VkClearRect> rects;
+      clearAttachments.resize(renderPass->numAttachments + (renderPass->renderPassChain.hasDepthSampler ? 1 : 0));
+      rects.resize(renderPass->numAttachments + (renderPass->renderPassChain.hasDepthSampler ? 1 : 0));
+      int c_index = 0;
+      for(auto &attachament: clearAttachments) {
+        attachament.clearValue = renderPass->clearValues[c_index];
+        attachament.aspectMask = renderPass->renderPassChain.Textures[c_index].isDepthAttachment ?  VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
+        attachament.colorAttachment = c_index;
+        c_index++;
+      }
+
+      if(renderPass->renderPassChain.hasDepthSampler) { 
+        auto &attachament = clearAttachments.back(); attachament.clearValue = renderPass->clearValues[c_index];
+        attachament.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+        attachament.colorAttachment = c_index;
+      }
+
+      for(auto &rect: rects) {
+        rect.rect = {0, 0, extent.width, extent.height};
+        rect.baseArrayLayer = 0;
+        rect.layerCount = 1;
+      }
+
+      vkCmdClearAttachments(m_pFrame.CommandBuffer(), renderPass->numAttachments, clearAttachments.data(), renderPass->numAttachments, rects.data());
+    }
   }
-  framework::NotImplemented(__FILE__, __PRETTY_FUNCTION__);
+
+  switch (command.type) {
+  case DrawType::NON_INDEXED:
+    FlushNonIndexed(renderPass);
+    break;
+
+  case DrawType::INDEXED:
+    FlushIndexed(renderPass);
+    break;
+
+  case DrawType::INDIRECT:
+    FlushIndirect(renderPass);
+    break;
+
+  case DrawType::INDEXED_INDIRECT:
+    FlushIndexedIndirect(renderPass);
+    break;
+  default:
+    Log::Error("Error: Draw command type not supported!");
+    exit(99);
+    break;
+  }
+
+  currentCommandsInQueue = 0;
 }
 
 void VulkanRenderer::Flush(engine::Ref<engine::RenderPass> renderPassRef, engine::DrawType type) {
@@ -395,6 +450,7 @@ void VulkanRenderer::Flush(engine::Ref<engine::RenderPass> renderPassRef, engine
       vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
       m_pRenderPassActive = false;
     }
+
     if (renderPass->id == std::numeric_limits<uint32_t>::max()) {
       vk::createRenderPassInfo(m_pImageIndex, m_pVkData, m_pVkData.defaultRenderPass);
 
@@ -413,6 +469,7 @@ void VulkanRenderer::Flush(engine::Ref<engine::RenderPass> renderPassRef, engine
       m_pRenderPassActive = true;
       m_pActiveRenderPass = renderPassRef;
     }
+
   }
 
   switch (type) {
