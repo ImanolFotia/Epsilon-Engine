@@ -160,6 +160,25 @@ struct AnimationManager {
     for (auto &vtx : span) {
       switch (key.action) {
       case Action::Translate: {
+        {
+          vtx.pos_uv.x -= (position.x);
+          vtx.pos_uv.y -= (position.y);
+
+          vtx.pos_uv.x *= (1280.0);
+          vtx.pos_uv.y *= (720.0);
+
+          glm::vec2 pos = glm::vec2(vtx.pos_uv.x, vtx.pos_uv.y);
+          
+          pos = rot((accum_rot / 180.0) * glm::pi<double>()) * pos;
+
+          pos /= glm::vec2(1280, 720);
+
+          vtx.pos_uv.x = pos.x;
+          vtx.pos_uv.y = pos.y;
+
+          vtx.pos_uv.x += position.x;
+          vtx.pos_uv.y += position.y;
+        }
         vtx.pos_uv.x = accum_transform.x + (vtx.pos_uv.x + (key.value.x) * key.t);
         vtx.pos_uv.y = accum_transform.y + (vtx.pos_uv.y + (key.value.y) * key.t);
         break;
@@ -172,7 +191,8 @@ struct AnimationManager {
         vtx.pos_uv.y *= (720.0);
 
         glm::vec2 pos = glm::vec2(vtx.pos_uv.x, vtx.pos_uv.y);
-        pos = rot((key.value.x / 180.0) * key.t * glm::pi<double>()) * pos;
+
+        pos = rot((accum_rot / 180.0) * glm::pi<double>()) * rot((key.value.x / 180.0) * key.t * glm::pi<double>()) * pos;
 
         pos /= glm::vec2(1280, 720);
 
@@ -218,6 +238,9 @@ struct AnimationManager {
   }
 
 private:
+
+
+
   std::vector<Key> keys;
   std::size_t current_key = 0;
 };
