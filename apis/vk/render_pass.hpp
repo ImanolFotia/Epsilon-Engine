@@ -82,7 +82,7 @@ namespace vk
                     attachmentDesc.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
                 }
 
-                attachmentDesc.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
+                attachmentDesc.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
                 attachmentDesc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_STORE;
                 attachmentDesc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
                 if (forPresent)
