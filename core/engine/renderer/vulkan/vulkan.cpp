@@ -387,20 +387,24 @@ void VulkanRenderer::Flush(FlushCommand command) {
 
       std::vector<VkClearAttachment> clearAttachments;
       std::vector<VkClearRect> rects;
-      clearAttachments.resize(renderPass->numAttachments + (renderPass->renderPassChain.hasDepthSampler ? 1 : 0));
-      rects.resize(renderPass->numAttachments + (renderPass->renderPassChain.hasDepthSampler ? 1 : 0));
-      int c_index = 0;
-      for(auto &attachament: clearAttachments) {
-        attachament.clearValue = renderPass->clearValues[c_index];
-        attachament.aspectMask = renderPass->renderPassChain.Textures[c_index].isDepthAttachment ?  VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
-        attachament.colorAttachment = c_index;
-        c_index++;
+      for(int i = 0; i < renderPass->renderPassData.colorAttachments.size(); i++) {
+        if(renderPass->renderPassData.colorAttachments[i].format == VK_FORMAT_D32_SFLOAT || 
+        renderPass->renderPassData.colorAttachments[i].format == VK_FORMAT_D32_SFLOAT_S8_UINT || 
+        renderPass->renderPassData.colorAttachments[i].format == VK_FORMAT_D16_UNORM_S8_UINT || 
+        renderPass->renderPassData.colorAttachments[i].format == VK_FORMAT_D16_UNORM) break;
+
+        rects.emplace_back();
+        auto &attachment = clearAttachments.emplace_back();
+        attachment.clearValue.color = renderPass->clearValues[i].color;
+        attachment.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        attachment.colorAttachment = i;
       }
 
-      if(renderPass->renderPassChain.hasDepthSampler) { 
-        auto &attachament = clearAttachments.back(); attachament.clearValue = renderPass->clearValues[c_index];
-        attachament.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
-        attachament.colorAttachment = c_index;
+      if(renderPass->renderPassData.hasDepthAttachment) {
+        auto &attachment = clearAttachments.emplace_back();
+        rects.emplace_back();
+        attachment.clearValue.depthStencil = renderPass->depthStencilClearColor;
+        attachment.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
       }
 
       for(auto &rect: rects) {
@@ -409,7 +413,12 @@ void VulkanRenderer::Flush(FlushCommand command) {
         rect.layerCount = 1;
       }
 
-      vkCmdClearAttachments(m_pFrame.CommandBuffer(), renderPass->numAttachments, clearAttachments.data(), renderPass->numAttachments, rects.data());
+      vkCmdClearAttachments(
+        m_pFrame.CommandBuffer(), 
+        clearAttachments.size(), 
+        clearAttachments.data(), 
+        rects.size(), 
+        rects.data());
     }
   }
 
