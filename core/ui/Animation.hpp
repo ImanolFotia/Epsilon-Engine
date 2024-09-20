@@ -9,7 +9,7 @@
 #include <vector>
 
 namespace UI {
-enum class Action : uint8_t { Translate = 0, Rotate, Scale, Color, Alpha, None };
+enum class Action : uint8_t { Translate = 0, Rotate, Scale, Color, Alpha, Type, None };
 
 enum class Interpolation {
   Linear = 0,
@@ -68,6 +68,8 @@ struct AnimationManager {
 
   glm::vec2 accum_transform{};
   double accum_rot = 0.0;
+  glm::vec4 current_color{};
+  bool color_set = false;
 
   inline double Interpolate(double elapsed, double duration, Interpolation interpolation) {
     using namespace framework::easing;
@@ -140,6 +142,63 @@ struct AnimationManager {
     return t;
   }
 
+  glm::mat2 rot(double t) { return glm::mat2{glm::cos(t), -glm::sin(t), glm::sin(t), glm::cos(t)}; }
+
+  void pre_rotate(UIVertex &vtx, glm::vec2 position, glm::vec2 size) {
+
+    vtx.pos_uv.x -= (position.x);
+    vtx.pos_uv.y -= (position.y);
+
+    vtx.pos_uv.x *= (1280.0);
+    vtx.pos_uv.y *= (720.0);
+  }
+
+  void pre_color(UIVertex &vtx, glm::vec2 position, glm::vec2 size) {
+    pre_translate(vtx, position, size);
+    
+    vtx.pos_uv.x += accum_transform.x;
+    vtx.pos_uv.y += accum_transform.y;
+    if (color_set)
+      vtx.color = current_color;
+  }
+
+  void pre_translate(UIVertex &vtx, glm::vec2 position, glm::vec2 size) {
+
+    vtx.pos_uv.x -= (position.x);
+    vtx.pos_uv.y -= (position.y);
+
+    vtx.pos_uv.x *= (1280.0);
+    vtx.pos_uv.y *= (720.0);
+
+    glm::vec2 pos = glm::vec2(vtx.pos_uv.x, vtx.pos_uv.y);
+
+    pos = rot((accum_rot / 180.0) * glm::pi<double>()) * pos;
+
+    pos /= glm::vec2(1280, 720);
+
+    vtx.pos_uv.x = pos.x;
+    vtx.pos_uv.y = pos.y;
+
+    vtx.pos_uv.x += position.x;
+    vtx.pos_uv.y += position.y;
+  }
+
+  void post_translate(UIVertex &vtx) {
+    if (color_set)
+      vtx.color = current_color;
+  }
+
+  void post_rotate(UIVertex &vtx, glm::vec2 position, glm::vec2 size) {
+
+    vtx.pos_uv.x += position.x;
+    vtx.pos_uv.y += position.y;
+
+    vtx.pos_uv.x += accum_transform.x;
+    vtx.pos_uv.y += accum_transform.y;
+    if (color_set)
+      vtx.color = current_color;
+  }
+
   void Add(Key key) { keys.push_back(key); }
 
   void Update(std::span<UIVertex> &span, glm::vec2 position, glm::vec2 size) {
@@ -151,8 +210,6 @@ struct AnimationManager {
       accum_transform = {};
     }
 
-    auto rot = [](double t) { return glm::mat2{glm::cos(t), -glm::sin(t), glm::sin(t), glm::cos(t)}; };
-
     Key &key = keys[current_key];
 
     double aspect_ratio = 720.0 / 1280.0;
@@ -160,35 +217,18 @@ struct AnimationManager {
     for (auto &vtx : span) {
       switch (key.action) {
       case Action::Translate: {
-        {
-          vtx.pos_uv.x -= (position.x);
-          vtx.pos_uv.y -= (position.y);
 
-          vtx.pos_uv.x *= (1280.0);
-          vtx.pos_uv.y *= (720.0);
+        pre_translate(vtx, position, size);
 
-          glm::vec2 pos = glm::vec2(vtx.pos_uv.x, vtx.pos_uv.y);
-          
-          pos = rot((accum_rot / 180.0) * glm::pi<double>()) * pos;
-
-          pos /= glm::vec2(1280, 720);
-
-          vtx.pos_uv.x = pos.x;
-          vtx.pos_uv.y = pos.y;
-
-          vtx.pos_uv.x += position.x;
-          vtx.pos_uv.y += position.y;
-        }
         vtx.pos_uv.x = accum_transform.x + (vtx.pos_uv.x + (key.value.x) * key.t);
         vtx.pos_uv.y = accum_transform.y + (vtx.pos_uv.y + (key.value.y) * key.t);
+
+        post_translate(vtx);
         break;
       }
       case Action::Rotate: {
-        vtx.pos_uv.x -= (position.x);
-        vtx.pos_uv.y -= (position.y);
 
-        vtx.pos_uv.x *= (1280.0);
-        vtx.pos_uv.y *= (720.0);
+        pre_rotate(vtx, position, size);
 
         glm::vec2 pos = glm::vec2(vtx.pos_uv.x, vtx.pos_uv.y);
 
@@ -199,16 +239,17 @@ struct AnimationManager {
         vtx.pos_uv.x = pos.x;
         vtx.pos_uv.y = pos.y;
 
-        vtx.pos_uv.x += position.x;
-        vtx.pos_uv.y += position.y;
+        post_rotate(vtx, position, size);
 
-        vtx.pos_uv.x += accum_transform.x;
-        vtx.pos_uv.y += accum_transform.y;
       } break;
       case Action::Scale: {
       } break;
       case Action::Color:
-        vtx.color = glm::mix(vtx.color, key.value, key.t);
+      pre_color(vtx, position, size);
+        if (!color_set)
+          vtx.color = glm::mix(vtx.color, key.value, key.t);
+        else
+          vtx.color = glm::mix(current_color, key.value, key.t);
         break;
       case Action::Alpha:
         vtx.color.a = glm::mix(vtx.color.a, key.value.a, key.t);
@@ -220,7 +261,6 @@ struct AnimationManager {
 
     key.elapsed += glm::min(framework::Clock::DeltaSeconds(), 0.016l);
 
-
     if (key.elapsed >= key.duration) {
       current_key++;
       key.elapsed = 0.0;
@@ -230,17 +270,17 @@ struct AnimationManager {
         accum_transform.y += key.value.y;
       } else if (key.action == Action::Rotate) {
         accum_rot += key.value.x;
+      } else if (key.action == Action::Color) {
+        current_color = key.value;
+        color_set = true;
       }
     } else {
 
-    key.t = Interpolate(key.elapsed, key.duration, key.interpolation);
+      key.t = Interpolate(key.elapsed, key.duration, key.interpolation);
     }
   }
 
 private:
-
-
-
   std::vector<Key> keys;
   std::size_t current_key = 0;
 };
