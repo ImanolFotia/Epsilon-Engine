@@ -18,6 +18,19 @@
 namespace engine
 {
 
+	enum class OctreeItemMask : uint32_t {
+		OBJECT 		= 1 << 0,
+		LIGHT 		= 1 << 1,
+		TRANSPARENT = 1 << 2,
+		SHADOW 		= 1 << 3,
+		OPAQUE 		= OBJECT | SHADOW,
+		ANY 		= OBJECT | LIGHT | TRANSPARENT | SHADOW,
+		SIZE		= 6
+	};
+
+	inline bool operator|(OctreeItemMask a, OctreeItemMask b) { return (uint32_t)a | (uint32_t)b; }
+	inline bool operator&(OctreeItemMask a, OctreeItemMask b) { return (uint32_t)a & (uint32_t)b; }
+
 	template <typename T>
 	struct CullResult
 	{
@@ -55,6 +68,7 @@ namespace engine
 	{
 		T data{};
 		OctreeItemLocation<typename std::list<OctreeItem<T>>::iterator> data_position;
+		OctreeItemMask mask = OctreeItemMask::ANY;
 	};
 
 	template <typename T>
@@ -122,11 +136,11 @@ namespace engine
 			}
 		}
 
-		void search(const Box &box, CullResult<T> &cullResult)
+		void search(const Box &box, CullResult<T> &cullResult, OctreeItemMask mask)
 		{
 			for (const auto &p : m_Data)
 			{
-				if (box.overlaps(p.first))
+				if (box.overlaps(p.first) && p.second->mask & mask)
 				{
 					cullResult.push(p.second);
 				}
@@ -134,7 +148,7 @@ namespace engine
 
 			for (size_t i = 0; i < 8; i++)
 			{
-				check_child(i, box, cullResult);
+				check_child(i, box, cullResult, mask);
 			}
 			/*
 			for (auto& worker : m_Workers)
@@ -147,22 +161,22 @@ namespace engine
 			}*/
 		}
 
-		void check_child(int index, const Box &box, CullResult<T> &cullResult)
+		void check_child(int index, const Box &box, CullResult<T> &cullResult, OctreeItemMask mask)
 		{
 			if (m_Children[index])
 			{
 				if (box.contains(m_bChildren[index]))
-					m_Children[index]->items(cullResult);
+					m_Children[index]->items(cullResult, mask);
 				else if (box.overlaps(m_bChildren[index]))
-					m_Children[index]->search(box, cullResult);
+					m_Children[index]->search(box, cullResult, mask);
 			}
 		}
 
-		void search(Frustum &frustum, CullResult<T> &cullResult)
+		void search(Frustum &frustum, CullResult<T> &cullResult, OctreeItemMask mask)
 		{
 			for (auto &p : m_Data)
 			{
-				if (frustum.overlaps(p.first))
+				if (frustum.overlaps(p.first) && p.second->mask & mask)
 					cullResult.push(p.second);
 			}
 
@@ -171,18 +185,18 @@ namespace engine
 				if (!m_Children[i]->m_IsEmpty)
 				{
 					if (frustum.contains(m_bChildren[i]))
-						m_Children[i]->items(cullResult);
+						m_Children[i]->items(cullResult, mask);
 					else if (frustum.overlaps(m_bChildren[i]))
-						m_Children[i]->search(frustum, cullResult);
+						m_Children[i]->search(frustum, cullResult, mask);
 				}
 			}
 		}
 
-		void search(const BoundingSphere &sphere, CullResult<T> &cullResult)
+		void search(const BoundingSphere &sphere, CullResult<T> &cullResult, OctreeItemMask mask)
 		{
 			for (auto &p : m_Data)
 			{
-				if (sphere.overlaps(p.first))
+				if (sphere.overlaps(p.first) && p.second->mask & mask)
 					cullResult.push(p.second);
 			}
 
@@ -191,22 +205,23 @@ namespace engine
 				if (!m_Children[i]->m_IsEmpty)
 				{
 					if (sphere.contains(m_bChildren[i]))
-						m_Children[i]->items(cullResult);
+						m_Children[i]->items(cullResult, mask);
 					else if (sphere.overlaps(m_bChildren[i]))
-						m_Children[i]->search(sphere, cullResult);
+						m_Children[i]->search(sphere, cullResult, mask);
 				}
 			}
 		}
 
-		void items(CullResult<T> &cullResult) const
+		void items(CullResult<T> &cullResult, OctreeItemMask mask) const
 		{
 			for (auto &i : m_Data)
-				cullResult.push(i.second);
+				if(i.second->mask & mask)
+					cullResult.push(i.second);
 
 			for (auto &c : m_Children)
 			{
 				if (!c->m_IsEmpty)
-					c->items(cullResult);
+					c->items(cullResult, mask);
 			}
 		}
 
@@ -283,7 +298,7 @@ namespace engine
 		{
 		}
 
-		auto insert(Box pos, T data)
+		auto insert(Box pos, T data, OctreeItemMask mask = OctreeItemMask::ANY)
 		{
 			OctreeItem<T> item{};
 			item.data = data;
@@ -293,28 +308,29 @@ namespace engine
 			//           << " with address: " << &m_Data.back() << std::endl;
 			auto last = std::prev(m_Data.end());
 			m_Data.back().data_position = m_Root.insert(pos, last);
+			m_Data.back().mask = mask;
 
 			return last;
 		}
 
-		CullResult<typename OctreeData::iterator> &search(Frustum &frustum, CullPass pass)
+		CullResult<typename OctreeData::iterator> &search(Frustum &frustum, CullPass pass, OctreeItemMask mask)
 		{
 			m_pCullPasses[pass].reset();
-			m_Root.search(frustum, m_pCullPasses[pass]);
+			m_Root.search(frustum, m_pCullPasses[pass], mask);
 			return m_pCullPasses[pass];
 		}
 
-		CullResult<typename OctreeData::iterator> &search(const Box &box, CullPass pass)
+		CullResult<typename OctreeData::iterator> &search(const Box &box, CullPass pass, OctreeItemMask mask)
 		{
 			m_pCullPasses[pass].reset();
-			m_Root.search(box, m_pCullPasses[pass]);
+			m_Root.search(box, m_pCullPasses[pass], mask);
 			return m_pCullPasses[pass];
 		}
 
-		CullResult<typename OctreeData::iterator> &search(BoundingSphere &sphere, CullPass pass)
+		CullResult<typename OctreeData::iterator> &search(BoundingSphere &sphere, CullPass pass, OctreeItemMask mask)
 		{
 			m_pCullPasses[pass].reset();
-			m_Root.search(sphere, m_pCullPasses[pass]);
+			m_Root.search(sphere, m_pCullPasses[pass], mask);
 			return m_pCullPasses[pass];
 		}
 

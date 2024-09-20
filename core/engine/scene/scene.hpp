@@ -151,17 +151,17 @@ public:
 
   Frustum &getFrustum() { return m_pFrustum; }
 
-  auto &Cull(float cutout_distance = 0, int pass = 0) { return m_pRenderOctree->search(m_pFrustum, (OctreeContainer<OctreeRenderType>::CullPass)pass); }
+  auto &Cull(float cutout_distance = 0, int pass = 0) { return m_pRenderOctree->search(m_pFrustum, (OctreeContainer<OctreeRenderType>::CullPass)pass, OctreeItemMask::ANY); }
 
-  auto &Cull(Box &box, int pass = 0) { return m_pRenderOctree->search(box, (OctreeContainer<OctreeRenderType>::CullPass)pass); }
+  auto &Cull(Box &box, int pass = 0) { return m_pRenderOctree->search(box, (OctreeContainer<OctreeRenderType>::CullPass)pass, OctreeItemMask::ANY); }
 
-  auto &Cull(BoundingSphere &sphere, int pass = 0) { return m_pRenderOctree->search(sphere, (OctreeContainer<OctreeRenderType>::CullPass)pass); }
+  auto &Cull(BoundingSphere &sphere, int pass = 0) { return m_pRenderOctree->search(sphere, (OctreeContainer<OctreeRenderType>::CullPass)pass, OctreeItemMask::ANY); }
 
   auto &CullShadow(float cutout_distance = 0, int pass = 1) {
-    return m_pRenderOctree->search(m_pShadowFrustum, (OctreeContainer<OctreeRenderType>::CullPass)pass);
+    return m_pRenderOctree->search(m_pShadowFrustum, (OctreeContainer<OctreeRenderType>::CullPass)pass, OctreeItemMask::ANY);
   }
 
-  auto &CullShadow(Box box, int pass = 1) { return m_pRenderOctree->search(box, (OctreeContainer<OctreeRenderType>::CullPass)pass); }
+  auto &CullShadow(Box box, int pass = 1) { return m_pRenderOctree->search(box, (OctreeContainer<OctreeRenderType>::CullPass)pass, OctreeItemMask::ANY); }
 
   void RelocateObject(Box boundingBox, int index) {
 
