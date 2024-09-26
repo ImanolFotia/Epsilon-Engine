@@ -924,10 +924,10 @@ void UI::Scale(const std::string &text, const std::string &setting_name, int &cu
 glm::vec2 UI::ToScreenCoords(const glm::mat4 &model) {
   glm::vec4 ndc = projectionMatrix * viewMatrix * model * glm::vec4(1.0f);
 
-  ndc /= ndc.w;
+  ndc /= glm::max(ndc.w, 0.0f);
   ndc.y = -1.0 * ndc.y;
 
-  glm::vec2 viewport_space = glm::vec2(ndc.x, ndc.y) * 0.5f + 0.5f;
+  glm::vec2 viewport_space = clamp(glm::vec2(ndc.x, ndc.y) * 0.5f + 0.5f, 0.0f, 1.0f);
 
   return viewport_space * m_pResolution;
 }
