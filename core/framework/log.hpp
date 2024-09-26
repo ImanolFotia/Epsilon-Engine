@@ -88,29 +88,29 @@ class Log {
 public:
   template<class ...Args>
   static inline void Info(Args&& ...args) {
-    pColorText((s(BLACK_ON_BLUE) + s(BOLD)+ s(UNDERLINE)).c_str(), "[INFO]");
-    pColorText(BLUE_FG, ": ");
+    pColorText((s(BLACK_ON_BLUE) + s(BOLD)+ s(UNDERLINE)).c_str(), " INFO ");
+    pColorText(BLUE_FG, " ");
     pColorTextLn(BLUE_FG, std::forward<Args>(args)...);
   }
 
   template<class ...Args>
   static inline void Success(Args&& ...args) {
-    pColorText((s(BLACK_ON_GREEN) + s(BOLD)+ s(UNDERLINE)).c_str(), "[SUCCESS]");
-    pColorText(GREEN_FG, ": ");
+    pColorText((s(BLACK_ON_GREEN) + s(BOLD)+ s(UNDERLINE)).c_str(), " SUCCESS ");
+    pColorText(GREEN_FG, " ");
     pColorTextLn(GREEN_FG, std::forward<Args>(args)...);
   }
 
   template<class ...Args>
   static inline void Warning(Args&& ...args) {
-    pColorText((s(BLACK_ON_YELLOW) + s(BOLD)+ s(UNDERLINE)).c_str(), "[WARNING]");
-    pColorText(YELLOW_FG, ": ");
+    pColorText((s(BLACK_ON_YELLOW) + s(BOLD)+ s(UNDERLINE)).c_str(), " WARNING ");
+    pColorText(YELLOW_FG, " ");
     pColorTextLn(YELLOW_FG, std::forward<Args>(args)...);
   }
 
   template<class ...Args>
   static inline void Error(Args&& ...args) {
-    pColorText((s(BLACK_ON_RED) + s(BOLD)+ s(UNDERLINE)).c_str(), "[ERROR]");
-    pColorText(RED_FG, ": ");
+    pColorText((s(BLACK_ON_RED) + s(BOLD)+ s(UNDERLINE)).c_str(), " ERROR ");
+    pColorText(RED_FG, " ");
     pColorTextLn(RED_FG, std::forward<Args>(args)...);
   }
 
