@@ -3,13 +3,15 @@
 #include "Types.hpp"
 #include "core/framework/clock.hpp"
 #include "core/framework/easing_functions.hpp"
+#include <core/framework/log.hpp>
 #include <cstdint>
 #include <glm/glm.hpp>
+#include <initializer_list>
 #include <span>
 #include <vector>
 
 namespace UI {
-enum class Action : uint8_t { Translate = 0, Rotate, Scale, Color, Alpha, Type, None };
+enum class Action : uint8_t { Translate = 0, Rotate, Scale, Color, Alpha, Type, Key, None };
 
 enum class Interpolation {
   Linear = 0,
@@ -53,14 +55,37 @@ struct Key {
   Key(Action action_, Interpolation interpolation_, glm::vec4 value_, double duration_)
       : action(action_), interpolation(interpolation_), value(value_), duration(duration_) {}
 
+  Key(double duration_, std::initializer_list<Key> k) : duration{duration_}, keys{k} {
+    if (k.size() == 1) {
+      action = keys[0].action;
+      interpolation = keys[0].interpolation;
+      value = keys[0].value;
+      duration = keys[0].duration;
+    } else {
+      action = Action::Key;
+      interpolation = Interpolation::EaseInSine;
+    }
+  }
+
   Action action = Action::None;
   Interpolation interpolation = Interpolation::Linear;
   glm::vec4 value{};
   double duration = 1.0;
 
+  void Reset() {
+    t = 0.0;
+    elapsed = 0.0;
+    finished = false;
+
+    for (auto &key : keys)
+      key.Reset();
+  }
+
 protected:
   double t = 0.0;
   double elapsed = 0.0;
+  bool finished = false;
+  std::vector<Key> keys;
   friend struct AnimationManager;
 };
 
@@ -155,7 +180,7 @@ struct AnimationManager {
 
   void pre_color(UIVertex &vtx, glm::vec2 position, glm::vec2 size) {
     pre_translate(vtx, position, size);
-    
+
     vtx.pos_uv.x += accum_transform.x;
     vtx.pos_uv.y += accum_transform.y;
     if (color_set)
@@ -201,86 +226,119 @@ struct AnimationManager {
 
   void Add(Key key) { keys.push_back(key); }
 
-  void Update(std::span<UIVertex> &span, glm::vec2 position, glm::vec2 size) {
-    if (keys.size() <= 0)
+  void ProcessKey(Key &key, std::span<UIVertex> &span, bool child_key) {
+
+    if (key.finished)
       return;
 
-    if (current_key >= keys.size()) {
-      current_key = 0;
-      accum_transform = {};
+    if (key.action == Action::Key) {
+      for (auto &k : key.keys)
+        ProcessKey(k, span, true);
+    }
+    else {
+      for (auto &vtx : span) {
+        switch (key.action) {
+        case Action::Translate: {
+
+          pre_translate(vtx, position, size);
+
+          vtx.pos_uv.x = accum_transform.x + (vtx.pos_uv.x + (key.value.x) * key.t);
+          vtx.pos_uv.y = accum_transform.y + (vtx.pos_uv.y + (key.value.y) * key.t);
+
+          post_translate(vtx);
+          break;
+        }
+        case Action::Rotate: {
+
+          pre_rotate(vtx, position, size);
+
+          glm::vec2 pos = glm::vec2(vtx.pos_uv.x, vtx.pos_uv.y);
+
+          pos = rot((accum_rot / 180.0) * glm::pi<double>()) * rot((key.value.x / 180.0) * key.t * glm::pi<double>()) * pos;
+
+          pos /= glm::vec2(1280, 720);
+
+          vtx.pos_uv.x = pos.x;
+          vtx.pos_uv.y = pos.y;
+
+          post_rotate(vtx, position, size);
+
+        } break;
+        case Action::Scale: {
+        } break;
+        case Action::Color:
+          pre_color(vtx, position, size);
+          if (!color_set)
+            vtx.color = glm::mix(vtx.color, key.value, key.t);
+          else
+            vtx.color = glm::mix(current_color, key.value, key.t);
+          break;
+        case Action::Alpha:
+          vtx.color.a = glm::mix(vtx.color.a, key.value.a, key.t);
+          break;
+        case Action::None:
+          break;
+        case Action::Type:
+          break;
+        default: break;
+        }
+      }
     }
 
-    Key &key = keys[current_key];
+    key.elapsed += d_t;
 
-    double aspect_ratio = 720.0 / 1280.0;
-
-    for (auto &vtx : span) {
-      switch (key.action) {
-      case Action::Translate: {
-
-        pre_translate(vtx, position, size);
-
-        vtx.pos_uv.x = accum_transform.x + (vtx.pos_uv.x + (key.value.x) * key.t);
-        vtx.pos_uv.y = accum_transform.y + (vtx.pos_uv.y + (key.value.y) * key.t);
-
-        post_translate(vtx);
-        break;
+    if (key.elapsed >= key.duration && !key.finished) {
+      if (child_key == false) {
+        current_key++;
+        Log::Info("Current key: ", current_key);
       }
-      case Action::Rotate: {
-
-        pre_rotate(vtx, position, size);
-
-        glm::vec2 pos = glm::vec2(vtx.pos_uv.x, vtx.pos_uv.y);
-
-        pos = rot((accum_rot / 180.0) * glm::pi<double>()) * rot((key.value.x / 180.0) * key.t * glm::pi<double>()) * pos;
-
-        pos /= glm::vec2(1280, 720);
-
-        vtx.pos_uv.x = pos.x;
-        vtx.pos_uv.y = pos.y;
-
-        post_rotate(vtx, position, size);
-
-      } break;
-      case Action::Scale: {
-      } break;
-      case Action::Color:
-      pre_color(vtx, position, size);
-        if (!color_set)
-          vtx.color = glm::mix(vtx.color, key.value, key.t);
-        else
-          vtx.color = glm::mix(current_color, key.value, key.t);
-        break;
-      case Action::Alpha:
-        vtx.color.a = glm::mix(vtx.color.a, key.value.a, key.t);
-        break;
-      case Action::None:
-        break;
-      }
-    }
-
-    key.elapsed += glm::min(framework::Clock::DeltaSeconds(), 0.016l);
-
-    if (key.elapsed >= key.duration) {
-      current_key++;
+      key.finished = true;
       key.elapsed = 0.0;
       key.t = 0.0;
-      if (key.action == Action::Translate) {
-        accum_transform.x += key.value.x;
-        accum_transform.y += key.value.y;
-      } else if (key.action == Action::Rotate) {
-        accum_rot += key.value.x;
-      } else if (key.action == Action::Color) {
-        current_color = key.value;
-        color_set = true;
+      if (key.action != Action::Key) {
+        if (key.action == Action::Translate) {
+          accum_transform.x += key.value.x;
+          accum_transform.y += key.value.y;
+        } else if (key.action == Action::Rotate) {
+          accum_rot += key.value.x;
+        } else if (key.action == Action::Color) {
+          current_color = key.value;
+          color_set = true;
+        }
       }
     } else {
-
       key.t = Interpolate(key.elapsed, key.duration, key.interpolation);
     }
   }
 
+  void Update(std::span<UIVertex> &span, glm::vec2 position, glm::vec2 size) {
+    if (keys.size() <= 0)
+      return;
+    this->position = position;
+    this->size = size;
+
+    if (current_key >= keys.size()) {
+      current_key = 0;
+      accum_transform = {};
+      accum_rot = {};
+      color_set = false;
+      current_color = {};
+
+      for (auto &k : keys)
+        k.Reset();
+    }
+
+    Key &key = keys[current_key];
+
+    d_t = glm::min(framework::Clock::DeltaSeconds(), 0.016l);
+
+    ProcessKey(key, span, false);
+  }
+
 private:
+  glm::vec2 position{};
+  glm::vec2 size{};
+  double d_t = 0.0;
   std::vector<Key> keys;
   std::size_t current_key = 0;
 };
