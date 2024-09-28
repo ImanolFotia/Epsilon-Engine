@@ -11,7 +11,16 @@
 #include <vector>
 
 namespace UI {
-enum class Action : uint8_t { Translate = 0, Rotate, Scale, Color, Alpha, Type, Key, None };
+enum class Action : uint8_t { 
+  Scale     = 1 << 0, 
+  Translate = 1 << 1, 
+  Rotate    = 1 << 2, 
+  Color     = 1 << 3, 
+  Alpha     = 1 << 4, 
+  Type      = 1 << 5, 
+  Key       = 1 << 6, 
+  None      = 7
+};
 
 enum class Interpolation {
   Linear = 0,
@@ -65,6 +74,12 @@ struct Key {
       action = Action::Key;
       interpolation = Interpolation::EaseInSine;
     }
+
+    std::sort(keys.begin(), keys.end(), [](auto &a, Key &b){return a.action > b.action;});
+
+    for (auto &key : keys)
+      flags |= (uint8_t) key.action;
+
   }
 
   Action action = Action::None;
@@ -85,6 +100,8 @@ protected:
   double t = 0.0;
   double elapsed = 0.0;
   bool finished = false;
+  uint8_t flags = 0;
+
   std::vector<Key> keys;
   friend struct AnimationManager;
 };
@@ -181,9 +198,11 @@ struct AnimationManager {
   void pre_color(UIVertex &vtx, glm::vec2 position, glm::vec2 size) {
     pre_translate(vtx, position, size);
 
-    vtx.pos_uv.x += accum_transform.x;
-    vtx.pos_uv.y += accum_transform.y;
-    if (color_set)
+    if((current_flags & (uint8_t)Action::Translate) == 0) {
+      vtx.pos_uv.x += accum_transform.x;
+      vtx.pos_uv.y += accum_transform.y;
+    }
+    if (color_set && (current_flags & (uint8_t)Action::Color) == 0)
       vtx.color = current_color;
   }
 
@@ -209,7 +228,7 @@ struct AnimationManager {
   }
 
   void post_translate(UIVertex &vtx) {
-    if (color_set)
+    if (color_set && (current_flags & (uint8_t)Action::Color) == 0)
       vtx.color = current_color;
   }
 
@@ -218,9 +237,11 @@ struct AnimationManager {
     vtx.pos_uv.x += position.x;
     vtx.pos_uv.y += position.y;
 
-    vtx.pos_uv.x += accum_transform.x;
-    vtx.pos_uv.y += accum_transform.y;
-    if (color_set)
+    if((current_flags & (uint8_t)Action::Translate) == 0) {
+      vtx.pos_uv.x += accum_transform.x;
+      vtx.pos_uv.y += accum_transform.y;
+    }
+    if (color_set && (current_flags & (uint8_t)Action::Color) == 0)
       vtx.color = current_color;
   }
 
@@ -228,7 +249,7 @@ struct AnimationManager {
 
   void ProcessKey(Key &key, std::span<UIVertex> &span, bool child_key) {
 
-    if (key.finished)
+    if (key.finished || key.elapsed >= key.duration)
       return;
 
     if (key.action == Action::Key) {
@@ -240,16 +261,17 @@ struct AnimationManager {
         switch (key.action) {
         case Action::Translate: {
 
-          pre_translate(vtx, position, size);
+          if((current_flags & (uint8_t)Action::Rotate) == 0) 
+            pre_translate(vtx, position, size);
 
           vtx.pos_uv.x = accum_transform.x + (vtx.pos_uv.x + (key.value.x) * key.t);
           vtx.pos_uv.y = accum_transform.y + (vtx.pos_uv.y + (key.value.y) * key.t);
 
-          post_translate(vtx);
+          if((current_flags & (uint8_t)Action::Rotate) == 0) 
+           post_translate(vtx);
           break;
         }
         case Action::Rotate: {
-
           pre_rotate(vtx, position, size);
 
           glm::vec2 pos = glm::vec2(vtx.pos_uv.x, vtx.pos_uv.y);
@@ -267,7 +289,8 @@ struct AnimationManager {
         case Action::Scale: {
         } break;
         case Action::Color:
-          pre_color(vtx, position, size);
+          if((current_flags & (uint8_t)Action::Rotate) == 0)
+            pre_color(vtx, position, size);
           if (!color_set)
             vtx.color = glm::mix(vtx.color, key.value, key.t);
           else
@@ -329,6 +352,7 @@ struct AnimationManager {
     }
 
     Key &key = keys[current_key];
+    current_flags = key.flags;
 
     d_t = glm::min(framework::Clock::DeltaSeconds(), 0.016l);
 
@@ -336,6 +360,7 @@ struct AnimationManager {
   }
 
 private:
+  uint8_t current_flags;
   glm::vec2 position{};
   glm::vec2 size{};
   double d_t = 0.0;
