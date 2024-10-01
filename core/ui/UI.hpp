@@ -295,7 +295,7 @@ public:
   glm::vec2 CursorPosition();
   void CursorPosition(glm::vec2 position);
 
-  glm::vec2 ToScreenCoords(const glm::mat4 &model);
+  glm::vec2 ToScreenCoords(const glm::mat4 &model, bool clamp_to_border = false);
 
   void CreateRect(glm::vec2 position, glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1, glm::vec4 color = glm::vec4(0.11, 0.11, 0.11, 0.8),
                   float border_radius = -1.0f);

@@ -921,13 +921,16 @@ void UI::Scale(const std::string &text, const std::string &setting_name, int &cu
   // m_pCursorPosition.y += 8.0f;
 }
 
-glm::vec2 UI::ToScreenCoords(const glm::mat4 &model) {
+glm::vec2 UI::ToScreenCoords(const glm::mat4 &model, bool clamp_to_border) {
   glm::vec4 ndc = projectionMatrix * viewMatrix * model * glm::vec4(1.0f);
 
   ndc /= glm::max(ndc.w, 0.0f);
   ndc.y = -1.0 * ndc.y;
 
-  glm::vec2 viewport_space = clamp(glm::vec2(ndc.x, ndc.y) * 0.5f + 0.5f, 0.0f, 1.0f);
+  glm::vec2 viewport_space = glm::vec2(ndc.x, ndc.y) * 0.5f + 0.5f;
+
+  if(clamp_to_border)
+    glm::vec2 viewport_space = clamp(viewport_space, 0.0f, 1.0f);
 
   return viewport_space * m_pResolution;
 }
