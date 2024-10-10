@@ -298,7 +298,7 @@ static VkPhysicalDevice pickPhysicalDevice(VulkanData &vk_data) {
 
       Log::Info(deviceName);
       Log::Info("\t* Max MSAA Samples: ", vk_data.msaaSamples);
-      // if (deviceName.find("LLVM") != std::string::npos) {
+      //if (deviceName.find("INTEL") != std::string::npos) {
 
       if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
         physicalDevice = device;
