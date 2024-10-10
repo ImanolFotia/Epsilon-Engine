@@ -15,7 +15,7 @@
 #include <unordered_map>
 
 namespace vk {
-static uint32_t MAX_FRAMES_IN_FLIGHT = 4;
+static uint32_t MAX_FRAMES_IN_FLIGHT = 3;
 static uint32_t MIN_FRAMES_IN_FLIGHT = 2;
 const std::size_t ALLOCATION_SIZE_MB = 0xFFFFFFF;
 
