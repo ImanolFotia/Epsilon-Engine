@@ -313,7 +313,6 @@ struct AnimationManager {
     if (key.elapsed >= key.duration && !key.finished) {
       if (child_key == false) {
         current_key++;
-        Log::Info("Current key: ", current_key);
       }
       key.finished = true;
       key.elapsed = 0.0;
