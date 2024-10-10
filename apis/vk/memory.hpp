@@ -55,8 +55,9 @@ namespace vk
         allocInfo.allocationSize = memRequirements.size;
         allocInfo.memoryTypeIndex = findMemoryType(vkData, memRequirements.memoryTypeBits, properties);
 
-        if (vkAllocateMemory(vkData.logicalDevice, &allocInfo, nullptr, &textureBufferMemory) != VK_SUCCESS)
+        if (auto result = vkAllocateMemory(vkData.logicalDevice, &allocInfo, nullptr, &textureBufferMemory); result != VK_SUCCESS)
         {
+            Log::Error(__PRETTY_FUNCTION__, "result: ", result);
             throw std::runtime_error("failed to allocate image memory!");
         }
 
