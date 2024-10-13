@@ -5,9 +5,6 @@
 
 #include "shaders/forward.hpp"
 
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/glm.hpp>
-
 namespace Editor::Renderpasses {
 
 	struct ForwardPassPushConstant {

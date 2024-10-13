@@ -4,7 +4,6 @@
 #include "vulkan/vulkan_core.h"
 #undef VMA_DEBUG_LOG
 #undef VMA_DEBUG_LOG_FORMAT
-#define GLM_ENABLE_EXPERIMENTAL
 #include "helpers.hpp"
 #include "resource_manager.hpp"
 #include <apis/vk/barriers.hpp>

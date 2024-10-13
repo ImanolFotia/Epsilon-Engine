@@ -14,12 +14,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <core/common/common.hpp>
-#include <set>
-#include <string>
 
 #include <core/framework/common.hpp>
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/hash.hpp>
 
 namespace framework {
 

@@ -1,8 +1,5 @@
 #pragma once
 
-#include <vector>
-#include <unordered_map>
-
 namespace framework {
 
 	enum class ANIMATION_PROPERTY {

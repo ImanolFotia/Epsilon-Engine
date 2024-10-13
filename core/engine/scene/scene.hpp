@@ -117,10 +117,6 @@ public:
   void Init() {
 
     auto resourceManager = m_pContext->ResourceManager();
-    /*
-    #ifdef _WIN32
-                            system("cd .\\assets\\shaders &&
-    .\\build_shaders.sh"); #endif*/
 
     m_pContext->Renderer()->InitDebugRenderer();
   }

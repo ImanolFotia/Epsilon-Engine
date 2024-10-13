@@ -16,8 +16,6 @@
 //   by your own engine/app code.
 // Read comments in imgui_impl_vulkan.h.
 
-#define GLM_ENABLE_EXPERIMENTAL
-
 #include <IconsFontAwesome5.h>
 #include <functional>
 #include <imgui.h>

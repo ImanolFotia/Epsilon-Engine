@@ -1,5 +1,3 @@
-#include "core/framework/common.hpp"
-#include "core/framework/exception.hpp"
 #include "core/framework/window.hpp"
 #include <core/engine/context.hpp>
 #include <core/framework/clock.hpp>

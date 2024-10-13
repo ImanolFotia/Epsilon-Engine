@@ -101,10 +101,11 @@ struct ResourcesMemory_t {
   uint32_t m_pUniformBufferAllocationSize = 0;
   uint32_t m_pStorageBufferAllocationSize = 0;
 
-  std::vector<MemoryHeap> heaps;
+  std::vector<MemoryHeap> heaps{};
+  std::unordered_map<std::string, double> m_StageTimings{};
 
-  std::string GPUVendor;
-  std::string GPUName;
+  std::string GPUVendor{};
+  std::string GPUName{};
   uint32_t numDrawCalls = 0;
   uint64_t numVertices = 0;
 };

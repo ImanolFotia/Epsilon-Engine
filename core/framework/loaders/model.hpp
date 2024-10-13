@@ -5,13 +5,6 @@
 ///=============================================================================
 #pragma once
 
-/// GL Includes
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
-#include <glm/gtx/quaternion.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
 #include "mesh.hpp"
 #include "eml1_0.hpp"
 
