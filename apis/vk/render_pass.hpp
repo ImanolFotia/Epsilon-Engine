@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vulkan/vulkan_core.h>
 #if !defined(__ANDROID__)
 #include <vulkan/vulkan.hpp>
 #endif
@@ -59,11 +60,17 @@ namespace vk
 
                 renderPass.renderPassData.depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
                 renderPass.renderPassData.depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_STORE;
-                renderPass.renderPassData.depthAttachment.initialLayout = VK_IMAGE_LAYOUT_GENERAL;
+                renderPass.renderPassData.depthAttachment.initialLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
                 renderPass.renderPassData.depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
 
                 renderPass.renderPassData.depthAttachmentRef.attachment = index;
                 renderPass.renderPassData.depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+                /*if (forPresent)
+                {
+                    renderPass.renderPassData.depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+                    renderPass.renderPassData.depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+                    renderPass.renderPassData.depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+                }*/
             }
             else
             {
@@ -84,7 +91,14 @@ namespace vk
 
                 attachmentDesc.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
                 attachmentDesc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_STORE;
-                attachmentDesc.initialLayout = VK_IMAGE_LAYOUT_GENERAL;
+                if (forPresent)
+                {
+                    attachmentDesc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+                    //attachmentDesc.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+                    //attachmentDesc.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+                } else {
+                    attachmentDesc.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+                }
                 if (forPresent)
                 {
                     if (renderPassInfo.numSamples == 1)

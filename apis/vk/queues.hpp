@@ -19,6 +19,7 @@ struct QueueFamilyIndices {
   std::optional<uint32_t> transferFamily;
 
   std::unordered_map<uint32_t, uint32_t> queueFamilyCount;
+  std::unordered_map<uint32_t, uint32_t> timestampValidBits;
 
   int queueCount = 0;
 
@@ -41,6 +42,7 @@ static QueueFamilyIndices findQueueFamilies(VkPhysicalDevice &physicalDevice, co
     if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT && !indices.graphicsFamily.has_value()) {
       indices.graphicsFamily = i;
       indices.queueFamilyCount[i] = queueFamily.queueCount;
+      indices.timestampValidBits[i] = queueFamily.timestampValidBits;
       if(queueFamily.queueFlags & VK_QUEUE_TRANSFER_BIT)
         indices.transferFamily = i;
     }
@@ -50,6 +52,7 @@ static QueueFamilyIndices findQueueFamilies(VkPhysicalDevice &physicalDevice, co
           (indices.transferFamily.has_value() && indices.transferFamily.value() != i)) {
         indices.computeFamily = i;
         indices.queueFamilyCount[i] = queueFamily.queueCount;
+        indices.timestampValidBits[i] = queueFamily.timestampValidBits;
       }
     }
 
@@ -57,6 +60,7 @@ static QueueFamilyIndices findQueueFamilies(VkPhysicalDevice &physicalDevice, co
       if (indices.graphicsFamily.has_value() && indices.graphicsFamily.value() != i) {
         indices.transferFamily = i;
         indices.queueFamilyCount[i] = queueFamily.queueCount;
+        indices.timestampValidBits[i] = queueFamily.timestampValidBits;
       }
     }
 
@@ -73,6 +77,7 @@ static QueueFamilyIndices findQueueFamilies(VkPhysicalDevice &physicalDevice, co
     if (presentSupport && !indices.presentFamily.has_value()) {
       indices.presentFamily = i;
       indices.queueFamilyCount[i] = queueFamily.queueCount;
+      indices.timestampValidBits[i] = queueFamily.timestampValidBits;
     }
 
     if (indices.isComplete()) {
@@ -83,10 +88,16 @@ static QueueFamilyIndices findQueueFamilies(VkPhysicalDevice &physicalDevice, co
     i++;
   }
 
-  if (!indices.transferFamily.has_value())
+  if (!indices.transferFamily.has_value()) {
     indices.transferFamily = graphics_and_transfer;
-  if (!indices.computeFamily.has_value())
+    indices.queueFamilyCount[indices.transferFamily.value()] = indices.queueFamilyCount[indices.transferFamily.value()];
+    indices.timestampValidBits[indices.transferFamily.value()] = indices.timestampValidBits[indices.transferFamily.value()];
+  }
+  if (!indices.computeFamily.has_value()) {
     indices.computeFamily = graphics_and_compute;
+    indices.queueFamilyCount[indices.computeFamily.value()] = indices.queueFamilyCount[indices.computeFamily.value()];
+    indices.timestampValidBits[indices.computeFamily.value()] = indices.timestampValidBits[indices.computeFamily.value()];
+  }
 
   return indices;
 }

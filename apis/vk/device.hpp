@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <vector>
+#include <vulkan/vulkan_core.h>
 
 #if !defined(__ANDROID__)
 #include <vulkan/vulkan.hpp>
@@ -59,6 +60,7 @@ static void createLogicalDevice(VulkanData &vk_data) {
   VkPhysicalDeviceFeatures deviceFeatures{};
 
 #if !defined(__ANDROID__)
+
   deviceFeatures.samplerAnisotropy = VK_TRUE;
   deviceFeatures.multiDrawIndirect = VK_TRUE;
   deviceFeatures.shaderClipDistance = VK_TRUE;
@@ -67,6 +69,7 @@ static void createLogicalDevice(VulkanData &vk_data) {
   VkPhysicalDeviceDescriptorIndexingFeatures indexing_features{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT, nullptr};
   VkPhysicalDeviceSynchronization2Features sync_features{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES, nullptr, VK_TRUE};
   VkPhysicalDeviceMemoryProperties memory_properties{};
+  VkPhysicalDeviceProperties physicalProperties{};
   VkFormatProperties formatProperties;
   VkPhysicalDeviceFeatures2 device_features{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2, &indexing_features};
   VkPhysicalDeviceFeatures2 device_features2{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2, &layoutFeatures};
@@ -76,6 +79,9 @@ static void createLogicalDevice(VulkanData &vk_data) {
 
   vkGetPhysicalDeviceMemoryProperties(vk_data.physicalDevice, &memory_properties);
   vkGetPhysicalDeviceFormatProperties(vk_data.physicalDevice, VK_FORMAT_B8G8R8A8_SRGB, &formatProperties);
+
+  vkGetPhysicalDeviceProperties(vk_data.physicalDevice, &physicalProperties);
+
 
   vk_data.max_memory_heaps = memory_properties.memoryHeapCount;
 
@@ -95,6 +101,9 @@ static void createLogicalDevice(VulkanData &vk_data) {
     vk_data.blitSupported = true;
     Log::Info("Blit for format 'VK_FORMAT_B8G8R8A8_SRGB' is supported");
   }
+
+  Log::Info(std::format("timestampPeriod is{} supported", physicalProperties.limits.timestampPeriod == 0 ? " not" : ""));
+
 
   if (bindless_supported) {
     Log::Info("bindless is supported");
@@ -134,6 +143,12 @@ static void createLogicalDevice(VulkanData &vk_data) {
     queueCreateInfo[1].pQueuePriorities = computeQueuePriority.data();
   }
 
+  Log::Info(std::format("Graphics queue family: {} support timestamp queries", indices.timestampValidBits[indices.graphicsFamily.value()] == 0 ? "does not" : "does"));
+  Log::Info(std::format("Compute queue family: {} support timestamp queries", indices.timestampValidBits[indices.computeFamily.value()] == 0 ? "does not" : "does"));
+  Log::Info(std::format("Transfer queue family: {} support timestamp queries", indices.timestampValidBits[indices.transferFamily.value()] == 0 ? "does not" : "does"));
+  Log::Info(std::format("Present queue family: {} support timestamp queries", indices.timestampValidBits[indices.presentFamily.value()] == 0 ? "does not" : "does"));
+
+
   VkDeviceCreateInfo createInfo{};
   createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
   createInfo.pQueueCreateInfos = queueCreateInfo.data();
@@ -172,8 +187,9 @@ static void createLogicalDevice(VulkanData &vk_data) {
   vk_data.computeQueue.resize(MAX_FRAMES_IN_FLIGHT);
   // if (vk_data.uniqueQueueFamilies.size() >= MAX_FRAMES_IN_FLIGHT) {
 
+  //this might break on some gpus
   for (int i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) 
-    vkGetDeviceQueue(vk_data.logicalDevice, indices.presentFamily.value(), 0, &vk_data.presentQueue[i]);
+    vkGetDeviceQueue(vk_data.logicalDevice, indices.graphicsFamily.value(), 0, &vk_data.presentQueue[i]);
 
   for (int i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) 
     vkGetDeviceQueue(vk_data.logicalDevice, indices.graphicsFamily.value(), 0, &vk_data.graphicsQueue[i]);
