@@ -171,7 +171,7 @@ EXPORT void CreateContext(const char *name, engine::renderer_type api) { instanc
 
 EXPORT void EpsilonRun() { instance.run(); }
 
-EXPORT std::shared_ptr<engine::Context> getContext() { return instance.getContext(); }
+std::shared_ptr<engine::Context> getContext() { return instance.getContext(); }
 
 EXPORT void beginScene() { instance.getScene()->BeginScene(); }
 

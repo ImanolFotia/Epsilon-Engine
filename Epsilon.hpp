@@ -1,12 +1,5 @@
 #ifndef EPSILON_HPP
 #define EPSILON_HPP
-#include <iostream>
-#include <vector>
-#include <memory>
-#include <string>
-#include <cstring>
-#include <set>
-#include <sstream>
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
