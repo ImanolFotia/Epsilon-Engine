@@ -1,7 +1,5 @@
 #pragma once
 
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/glm.hpp>
 #include "al_data.hpp"
 
 namespace al {

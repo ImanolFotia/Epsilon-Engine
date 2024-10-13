@@ -56,6 +56,8 @@ endif()
 
 set(DBUILD_AS_LIBRARY TRUE)
 add_compile_definitions(BUILD_AS_LIBRARY=TRUE)
+add_compile_definitions(GLM_ENABLE_EXPERIMENTAL=TRUE)
+
 
 include(FindPkgConfig)
 
@@ -418,11 +420,54 @@ else()
         ${PROJECT_FILES} ${PROJECT_ICON})
 endif()
 
+set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+target_precompile_headers(Epsilon 
+PRIVATE
+    <vector>
+    <unordered_map>
+    <map>
+    <array>
+    <set>
+    <unordered_set>
+    <iostream>
+    <fstream>
+    <format>
+    <string>
+    <chrono>
+    <cstdint>
+    <cstdio>
+    <cstring>
+    <cstdlib>
+    <memory>
+    <functional>
+    <chrono>
+    <mutex>
+    <thread>
+    <glm/glm.hpp>
+    <glm/ext/matrix_transform.hpp>
+    <glm/gtc/matrix_transform.hpp>
+    <glm/gtc/quaternion.hpp>
+    <glm/gtx/quaternion.hpp>
+    <glm/common.hpp>
+    <glm/ext.hpp>
+    <glm/geometric.hpp>
+    <glm/gtx/hash.hpp>
+    <glm/gtx/compatibility.hpp>
+    <random>
+    <type_traits>
+    <concepts>
+    <algorithm>
+    <any>
+)
+
+
 target_sources(${PROJECT_NAME} PUBLIC
     ${PROJECT_FILES})
 
 find_package(Vulkan REQUIRED)
-  set(CMAKE_CXX_FLAGS_RELEASE "-O2 -fno-math-errno -g ")
+
+#set(CMAKE_CXX_FLAGS_RELEASE "-O2 -fno-math-errno -g ")
 
 if(NOT BUILD_ANDROID)
 endif()
@@ -446,7 +491,7 @@ if(WIN32)
 else()
     target_link_libraries(${PROJECT_NAME} PRIVATE openal)
 
-    set(CMAKE_CXX_FLAGS_RELEASE "-O2 -fsized-deallocation -g")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O2 -fsized-deallocation")
     #set(CMAKE_CXX_FLAGS_DEBUG "-O2")
 endif()
 
