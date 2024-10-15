@@ -41,7 +41,7 @@ namespace framework
 
     long double Clock::DeltaSeconds()
     {
-        return delta() / 1000.0;
+        return glm::min(delta() / 1000.0, 1.0l / 60.0l);
     }
 
     int64_t Clock::Now()
