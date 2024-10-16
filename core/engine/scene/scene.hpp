@@ -438,7 +438,7 @@ m_pSceneManager.emplace<T>(m_pSceneManager.root);
           Flush();
         }
 
-        for (int j = 0; j < 1; j++) {
+        for (int j = 0; j < 4; j++) {
           uint32_t uniform_index = m_pAssetManager->m_pMaterials.at(std::hash<std::string>{}(material)).index;
           material_indices[j] = uniform_index;
         }
