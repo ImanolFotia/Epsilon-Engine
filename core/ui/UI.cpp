@@ -825,7 +825,6 @@ void UI::Spinner(glm::vec2 position, float innerRadius, float outerRadius, float
     t += step;
   }
 
-
   std::size_t offset = vertices_pushed;
   CreatePolygon(vertices);
   std::size_t num = vertices_pushed - offset;
@@ -839,8 +838,6 @@ void UI::Spinner(glm::vec2 position, float innerRadius, float outerRadius, float
       index++;
     }
   }
-
-
 }
 
 bool UI::HealthBar(const std::string &text, glm::vec2 position, float val, float min, float max, glm::vec4 color, glm::vec4 backgroundColor,
