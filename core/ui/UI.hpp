@@ -333,7 +333,9 @@ public:
 
   bool CheckBox(const std::string &text, bool *state);
 
-  void HealthBar(const std::string &text, glm::vec2 position, float val, float min, float max, glm::vec4 color = glm::vec4(0.0, 1.0, 0.0, 1.0),
+  void Spinner(glm::vec2 position, float innerRadius, float outerRadius, float percent);
+
+  bool HealthBar(const std::string &text, glm::vec2 position, float val, float min, float max, glm::vec4 color = glm::vec4(0.0, 1.0, 0.0, 1.0),
                  glm::vec4 backgroundColor = glm::vec4(0.0, 0.0, 0.0, 1.0), float border_radius = -1.0f);
 
   void Switch(const std::string &text, bool &state) {}

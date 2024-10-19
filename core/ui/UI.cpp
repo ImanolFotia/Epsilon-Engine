@@ -2,6 +2,7 @@
 #include "UI.hpp"
 #include "core/framework/clock.hpp"
 #include "core/framework/easing_functions.hpp"
+#include <cmath>
 
 namespace UI {
 void UI::CheckShader() {
@@ -787,7 +788,62 @@ bool UI::CheckBox(const std::string &text, bool *state) {
   return false;
 }
 
-void UI::HealthBar(const std::string &text, glm::vec2 position, float val, float min, float max, glm::vec4 color, glm::vec4 backgroundColor,
+void UI::Spinner(glm::vec2 position, float innerRadius, float outerRadius, float percent) {
+  CheckShader();
+  m_pContext.lastItemHovered = false;
+  auto font = m_Fonts[current_font];
+  m_pContext.prev_widget_position = m_pCursorPosition;
+  const int subdivisons = 40;
+  const float thickness = 20.0f;
+  float step = (2.0f * glm::pi<float>()) / subdivisons; 
+  float t = 0.0;
+
+  std::vector<UIVertex> vertices{};
+
+  auto rotate = [](float angle) -> glm::vec2 {
+    return glm::vec2(glm::sin(angle), glm::cos(angle));
+  };
+
+  for(int i = 0 ; i < subdivisons; i++){
+
+    auto d0 = rotate(t);
+    auto d1 = rotate(t + step);
+
+    auto a = position + (innerRadius * d0) / m_pResolution;
+    auto b = position + (outerRadius * d1) / m_pResolution;
+    auto c = position + (outerRadius * d0) / m_pResolution;
+    auto d = position + (innerRadius * d1) / m_pResolution;
+
+    vertices.push_back({.pos_uv = glm::vec4(a.x, a.y, font->white_pixel.x, font->white_pixel.y), .color = glm::vec4(0.2, 0.2, 0.2, glm::pow((float)i / subdivisons, 3.0f))});
+    vertices.push_back({.pos_uv = glm::vec4(b.x, b.y, font->white_pixel.x, font->white_pixel.y), .color = glm::vec4(0.2, 0.2, 0.2, glm::pow((float)i / subdivisons, 3.0f))});
+    vertices.push_back({.pos_uv = glm::vec4(c.x, c.y, font->white_pixel.x, font->white_pixel.y), .color = glm::vec4(0.2, 0.2, 0.2, glm::pow((float)i / subdivisons, 3.0f))});
+    
+    vertices.push_back({.pos_uv = glm::vec4(a.x, a.y, font->white_pixel.x, font->white_pixel.y), .color = glm::vec4(0.2, 0.2, 0.2, glm::pow((float)i / subdivisons, 3.0f))});
+    vertices.push_back({.pos_uv = glm::vec4(d.x, d.y, font->white_pixel.x, font->white_pixel.y), .color = glm::vec4(0.2, 0.2, 0.2, glm::pow((float)i / subdivisons, 3.0f))});
+    vertices.push_back({.pos_uv = glm::vec4(b.x, b.y, font->white_pixel.x, font->white_pixel.y), .color = glm::vec4(0.2, 0.2, 0.2, glm::pow((float)i / subdivisons, 3.0f))});
+
+    t += step;
+  }
+
+
+  std::size_t offset = vertices_pushed;
+  CreatePolygon(vertices);
+  std::size_t num = vertices_pushed - offset;
+
+  if(m_CurrentAnimation) {
+    auto slice = std::span{m_pVertices}.subspan(offset, num);
+    m_CurrentAnimation->Update(slice, position, glm::vec2(1.0f));
+    int index = offset;
+    for(auto &vtx: slice) {
+      m_pVertices[index] = vtx;
+      index++;
+    }
+  }
+
+
+}
+
+bool UI::HealthBar(const std::string &text, glm::vec2 position, float val, float min, float max, glm::vec4 color, glm::vec4 backgroundColor,
                    float border_radius) {
 
   CheckShader();
@@ -830,6 +886,13 @@ void UI::HealthBar(const std::string &text, glm::vec2 position, float val, float
   Text(text, half_point - glm::vec2(0.0, font->highest_character * 0.5f), glm::vec4(1.0f), false);
 
   Text("1", glm::vec2(last_sqr_width + 10, half_point.y - padding * 2.0f), glm::vec4(1.0f), false);
+
+  glm::vec2 mouse = glm::vec2(framework::Input::Mouse::XPOS, framework::Input::Mouse::YPOS);
+
+  if (mouse.x > position.x && mouse.x < position.x + size.x && mouse.y > position.y && mouse.y < position.y + size.y && m_pMouse.left_pressed) {
+    return true;
+  }
+  return false;
 }
 
 void UI::Scale(const std::string &text, const std::string &setting_name, int &current, int min, int max, glm::vec2 fixed_size = glm::vec2(-1.0f)) {
