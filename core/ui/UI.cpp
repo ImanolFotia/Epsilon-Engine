@@ -171,6 +171,16 @@ void UI::CreateRect(glm::vec2 position, glm::vec2 size, glm::vec2 uv0 = glm::vec
   current_draw_command.num_vertices = vertices_pushed - current_draw_command.vertex_offset;
 }
 
+
+void UI::CreatePolygon(const UIVertex* vertices, size_t size) {
+  for (int i = 0; i < size; i++) {
+    m_pVertices[vertices_pushed++] = vertices[i];
+  }
+
+  auto &current_draw_command = m_DrawLists[commands_pushed];
+  current_draw_command.num_vertices = vertices_pushed - current_draw_command.vertex_offset;
+}
+
 void UI::CreatePolygon(std::vector<UIVertex> vertices) {
   for (int i = 0; i < vertices.size(); i++) {
     m_pVertices[vertices_pushed++] = vertices[i];
@@ -788,23 +798,32 @@ bool UI::CheckBox(const std::string &text, bool *state) {
   return false;
 }
 
-void UI::Spinner(glm::vec2 position, float innerRadius, float outerRadius, float percent) {
+void UI::Spinner(glm::vec2 position, float innerRadius, float outerRadius, float percent, glm::vec4 color) {
   CheckShader();
   m_pContext.lastItemHovered = false;
   auto font = m_Fonts[current_font];
   m_pContext.prev_widget_position = m_pCursorPosition;
-  const int subdivisons = 40;
-  const float thickness = 20.0f;
-  float step = (2.0f * glm::pi<float>()) / subdivisons; 
-  float t = 0.0;
+  const constexpr int subdivisons = 40;
+  const constexpr float tau = glm::pi<float>() * 2.0f;
+  const constexpr float step = tau / subdivisons; 
+  constexpr size_t size = subdivisons * 6;
 
-  std::vector<UIVertex> vertices{};
+  const glm::vec3 widget_color = glm::vec3(color.x, color.y, color.z);
+
+  UIVertex vertices[size];
 
   auto rotate = [](float angle) -> glm::vec2 {
     return glm::vec2(glm::sin(angle), glm::cos(angle));
   };
 
+  vec2 w = font->white_pixel;
+
+  float t = 0.0;
+
   for(int i = 0 ; i < subdivisons; i++){
+
+    glm::vec4 color_a = glm::clamp(glm::vec4(widget_color, glm::pow(t          / tau, 2.2f)), 0.0f, 1.0f);
+    glm::vec4 color_b = glm::clamp(glm::vec4(widget_color, glm::pow((t + step) / tau, 2.2f)), 0.0f, 1.0f);
 
     auto d0 = rotate(t);
     auto d1 = rotate(t + step);
@@ -814,19 +833,19 @@ void UI::Spinner(glm::vec2 position, float innerRadius, float outerRadius, float
     auto c = position + (outerRadius * d0) / m_pResolution;
     auto d = position + (innerRadius * d1) / m_pResolution;
 
-    vertices.push_back({.pos_uv = glm::vec4(a.x, a.y, font->white_pixel.x, font->white_pixel.y), .color = glm::vec4(0.2, 0.2, 0.2, glm::pow((float)i / subdivisons, 3.0f))});
-    vertices.push_back({.pos_uv = glm::vec4(b.x, b.y, font->white_pixel.x, font->white_pixel.y), .color = glm::vec4(0.2, 0.2, 0.2, glm::pow((float)i / subdivisons, 3.0f))});
-    vertices.push_back({.pos_uv = glm::vec4(c.x, c.y, font->white_pixel.x, font->white_pixel.y), .color = glm::vec4(0.2, 0.2, 0.2, glm::pow((float)i / subdivisons, 3.0f))});
+    vertices[6 * i    ] = UIVertex({.pos_uv = glm::vec4(a.x, a.y, w.x, w.y), .color = color_a});
+    vertices[6 * i + 1] = UIVertex({.pos_uv = glm::vec4(b.x, b.y, w.x, w.y), .color = color_b});
+    vertices[6 * i + 2] = UIVertex({.pos_uv = glm::vec4(c.x, c.y, w.x, w.y), .color = color_a});
     
-    vertices.push_back({.pos_uv = glm::vec4(a.x, a.y, font->white_pixel.x, font->white_pixel.y), .color = glm::vec4(0.2, 0.2, 0.2, glm::pow((float)i / subdivisons, 3.0f))});
-    vertices.push_back({.pos_uv = glm::vec4(d.x, d.y, font->white_pixel.x, font->white_pixel.y), .color = glm::vec4(0.2, 0.2, 0.2, glm::pow((float)i / subdivisons, 3.0f))});
-    vertices.push_back({.pos_uv = glm::vec4(b.x, b.y, font->white_pixel.x, font->white_pixel.y), .color = glm::vec4(0.2, 0.2, 0.2, glm::pow((float)i / subdivisons, 3.0f))});
-
+    vertices[6 * i + 3] = UIVertex({.pos_uv = glm::vec4(a.x, a.y, w.x, w.y), .color = color_a});
+    vertices[6 * i + 4] = UIVertex({.pos_uv = glm::vec4(d.x, d.y, w.x, w.y), .color = color_b});
+    vertices[6 * i + 5] = UIVertex({.pos_uv = glm::vec4(b.x, b.y, w.x, w.y), .color = color_b});
+ 
     t += step;
   }
 
   std::size_t offset = vertices_pushed;
-  CreatePolygon(vertices);
+  CreatePolygon(vertices, size);
   std::size_t num = vertices_pushed - offset;
 
   if(m_CurrentAnimation) {

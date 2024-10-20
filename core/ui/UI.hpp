@@ -300,6 +300,7 @@ public:
   void CreateRect(glm::vec2 position, glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1, glm::vec4 color = glm::vec4(0.11, 0.11, 0.11, 0.8),
                   float border_radius = -1.0f);
 
+  void CreatePolygon(const UIVertex* vertices, size_t size);
   void CreatePolygon(std::vector<UIVertex> vertices);
 
   void Circle(int subdivisions = 20);
@@ -333,7 +334,7 @@ public:
 
   bool CheckBox(const std::string &text, bool *state);
 
-  void Spinner(glm::vec2 position, float innerRadius, float outerRadius, float percent);
+  void Spinner(glm::vec2 position, float innerRadius, float outerRadius, float percent, glm::vec4 color = glm::vec4(0.5, 0.5, 0.5, 1.0));
 
   bool HealthBar(const std::string &text, glm::vec2 position, float val, float min, float max, glm::vec4 color = glm::vec4(0.0, 1.0, 0.0, 1.0),
                  glm::vec4 backgroundColor = glm::vec4(0.0, 0.0, 0.0, 1.0), float border_radius = -1.0f);
