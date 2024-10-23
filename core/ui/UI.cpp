@@ -807,6 +807,10 @@ void UI::Spinner(glm::vec2 position, float innerRadius, float outerRadius, float
   const constexpr float tau = glm::pi<float>() * 2.0f;
   const constexpr float step = tau / subdivisons; 
   constexpr size_t size = subdivisons * 6;
+  const vec2 w = font->white_pixel;
+  float t = 0.0;
+
+  position = position / m_pResolution;
 
   const glm::vec3 widget_color = glm::vec3(color.x, color.y, color.z);
 
@@ -815,10 +819,6 @@ void UI::Spinner(glm::vec2 position, float innerRadius, float outerRadius, float
   auto rotate = [](float angle) -> glm::vec2 {
     return glm::vec2(glm::sin(angle), glm::cos(angle));
   };
-
-  vec2 w = font->white_pixel;
-
-  float t = 0.0;
 
   for(int i = 0 ; i < subdivisons; i++){
 
