@@ -71,11 +71,15 @@ public:
 
   static std::vector<GridNodeGraph::Node> ConstructPath(GridNodeGraph::Node *startNode, GridNodeGraph::Node *endNode) {
     std::vector<GridNodeGraph::Node> path;
+    path.clear();
+
+    if(startNode == nullptr || endNode == nullptr) return {};
 
     GridNodeGraph::Node *currentNode = endNode;
 
     while (currentNode->parent != nullptr) {
       path.push_back(*currentNode);
+      if(currentNode->parent == nullptr) break;
       currentNode = currentNode->parent;
     }
 
