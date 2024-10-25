@@ -4,6 +4,8 @@
 #include <string>
 #include <iostream>
 class Log {
+    static std::mutex mtx;
+
     static inline const char *BLACK_FG           =   ";30";
     static inline const char *RED_FG             =   ";31";
     static inline const char *GREEN_FG           =   ";32";
@@ -117,12 +119,14 @@ public:
 private:
   template<class ...Args>
   static void pColorText(const char *color, Args&& ...args) {
+    const std::lock_guard<std::mutex> lock(mtx);
     std::clog << "\033[" << color << "m";
     (std::clog << ... << args) << "\033[0m";//std::format("\033[{}m{}\033[0m", std::make_format_args(color, args...));
   }
 
   template<class ...Args>
   static void pColorTextLn(const char *color, Args&& ...args) {
+    const std::lock_guard<std::mutex> lock(mtx);
     std::clog << "\033[" << color << "m";
     (std::clog << ... << args) << "\033[0m\n";//std::format("\033[{}m{}\033[0m", std::make_format_args(color, args...));
   }
@@ -130,4 +134,6 @@ private:
   static std::string s(const char *c_str) {
     return std::string(c_str);
   }
+
+  
 };
