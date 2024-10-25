@@ -1009,7 +1009,7 @@ glm::vec2 UI::ToScreenCoords(const glm::mat4 &model, bool clamp_to_border) {
   glm::vec2 viewport_space = glm::vec2(ndc.x, ndc.y) * 0.5f + 0.5f;
 
   if(clamp_to_border)
-    glm::vec2 viewport_space = clamp(viewport_space, 0.0f, 1.0f);
+    glm::vec2 viewport_space = glm::abs(viewport_space);
 
   return viewport_space * m_pResolution;
 }
