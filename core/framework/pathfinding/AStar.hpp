@@ -79,7 +79,6 @@ public:
 
     while (currentNode->parent != nullptr) {
       path.push_back(*currentNode);
-      if(currentNode->parent == nullptr) break;
       currentNode = currentNode->parent;
     }
 
