@@ -358,6 +358,20 @@ struct AnimationManager {
     ProcessKey(key, span, false);
   }
 
+  void Clear() {
+    position = glm::vec2(0.0f);
+    size = glm::vec2(0.0f);
+    keys.clear();
+    current_key = 0;
+    d_t = 0.0;
+    current_flags = 0;
+
+    accum_transform = glm::vec2(0.0f);
+    accum_rot = 0.0;
+    current_color = glm::vec4(0.0f);
+    color_set = false;
+  }
+
 private:
   uint8_t current_flags;
   glm::vec2 position{};
