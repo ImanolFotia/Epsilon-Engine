@@ -263,6 +263,7 @@ void UI::Text(const std::string &text, glm::vec2 position, glm::vec4 color, bool
   CheckShader();
   // font->highest_character = 0.1;
 
+  std::size_t offset = vertices_pushed;
   m_pContext.prev_widget_position = position;
   glm::vec2 text_size = textSize(text);
 
@@ -336,6 +337,20 @@ void UI::Text(const std::string &text, glm::vec2 position, glm::vec4 color, bool
     m_pContext.prev_widget_size.x = characters_size.x - m_pContext.prev_widget_position.x;
     m_pContext.prev_widget_size.y = glm::max(characters_size.y + 5.0f, currentWindow->size.y);
   }
+
+  std::size_t num = vertices_pushed - offset;
+
+  if(m_CurrentAnimation) {
+    auto slice = std::span{m_pVertices}.subspan(offset, num);
+    m_CurrentAnimation->Update(slice, position, glm::vec2(1.0f));
+    int index = offset;
+    for(auto &vtx: slice) {
+      m_pVertices[index] = vtx;
+      index++;
+    }
+  }
+
+  m_CurrentAnimation = nullptr;
 
   delete[] text_data_orig;
 }
@@ -857,6 +872,8 @@ void UI::Spinner(glm::vec2 position, float innerRadius, float outerRadius, float
       index++;
     }
   }
+
+  m_CurrentAnimation = nullptr;
 }
 
 bool UI::HealthBar(const std::string &text, glm::vec2 position, float val, float min, float max, glm::vec4 color, glm::vec4 backgroundColor,
@@ -1123,6 +1140,7 @@ void UI::Square(glm::vec2 size, glm::vec2 position) {
     }
   }
 
+  m_CurrentAnimation = nullptr;
 
 }
 void UI::Triangle() { Circle(3); }
