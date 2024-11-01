@@ -77,9 +77,28 @@ class gltfModel : public ModelBase {
     virtual std::size_t size() = 0;
   };
 
+  struct UnsignedVertex3DArrayPtrBase {
+    virtual glm::lowp_u16vec3 operator[](std::size_t pos) = 0;
+    virtual std::size_t size() = 0;
+  };
+
   struct UnsignedVertex4DArrayPtrBase {
     virtual glm::lowp_u16vec4 operator[](std::size_t pos) = 0;
     virtual std::size_t size() = 0;
+  };
+  
+  template <typename T> struct UnsignedVertex3DArrayPtr : public UnsignedVertex3DArrayPtrBase {
+    VertexArrayStorage<T> storage;
+
+    UnsignedVertex3DArrayPtr(const VertexArrayStorage<T> &s) : storage(s) {}
+
+    glm::lowp_u16vec3 operator[](std::size_t pos) override {
+      if (pos >= storage.count)
+        throw std::out_of_range(__PRETTY_FUNCTION__);
+      return static_cast<glm::lowp_u16vec3>(storage[pos]);
+    }
+
+    virtual std::size_t size() override { return storage.count; }
   };
 
   template <typename T> struct UnsignedVertex4DArrayPtr : public UnsignedVertex4DArrayPtrBase {
@@ -1148,11 +1167,117 @@ public:
                     }
                   } break;
                   default:
-                    Log::Error("unrecognized vector type for color");
+                    Log::Error("unrecognized vector type for color: ", attribAccessor.componentType);
+                  }
+                } break;
+                case TINYGLTF_TYPE_VEC3: {
+                  switch (attribAccessor.componentType) {
+                  case TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT: {
+
+                    auto color = std::unique_ptr<UnsignedVertex3DArrayPtr<glm::lowp_u16vec3>>(
+                        new UnsignedVertex3DArrayPtr<glm::lowp_u16vec3>(
+                            VertexArrayStorage<glm::lowp_u16vec3>(dataPtr, count, byte_stride)));
+
+                    for (std::size_t i{0}; i < indices.size() / 3; ++i) {
+                      // get the i'th triange's indexes
+                      auto f0 = indices[3 * i + 0];
+                      auto f1 = indices[3 * i + 1];
+                      auto f2 = indices[3 * i + 2];
+
+                      // get the texture coordinates for each triangle's
+                      // vertices
+                      glm::vec4 color0, color1, color2;
+                      color0 = glm::vec4((*color)[f0], 1.0);
+                      color1 = glm::vec4((*color)[f1], 1.0);
+                      color2 = glm::vec4((*color)[f2], 1.0);
+
+                      color0 = color0 / glm::vec4(65535);
+                      color1 = color1 / glm::vec4(65535);
+                      color2 = color2 / glm::vec4(65535);
+
+                      color0.a = 1.0;
+                      color1.a = 1.0;
+                      color2.a = 1.0;
+
+                      // push them in order into the mesh data
+                      currentMesh.data().mesh.Vertices[f0 + currentvOffset].color = glm::vec4(color0);
+                      currentMesh.data().mesh.Vertices[f1 + currentvOffset].color = glm::vec4(color1);
+                      currentMesh.data().mesh.Vertices[f2 + currentvOffset].color = glm::vec4(color2);
+
+                      if (HasAnimation()) {
+
+                        mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].color = glm::vec4(color0);
+                        mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].color = glm::vec4(color1);
+                        mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].color = glm::vec4(color2);
+                      }
+                    }
+                  } break;
+                  case TINYGLTF_COMPONENT_TYPE_DOUBLE: {
+
+                    auto color = std::unique_ptr<Vertex3DArrayPtr<glm::dvec3>>(
+                        new Vertex3DArrayPtr<glm::dvec3>(VertexArrayStorage<glm::dvec3>(dataPtr, count, byte_stride)));
+
+                    for (std::size_t i{0}; i < indices.size() / 3; ++i) {
+                      // get the i'th triange's indexes
+                      auto f0 = indices[3 * i + 0];
+                      auto f1 = indices[3 * i + 1];
+                      auto f2 = indices[3 * i + 2];
+
+                      glm::vec4 color0, color1, color2;
+                      color0 = glm::vec4((*color)[f0], 1.0);
+                      color1 = glm::vec4((*color)[f1], 1.0);
+                      color2 = glm::vec4((*color)[f2], 1.0);
+                      color0.a = 1.0;
+                      color1.a = 1.0;
+                      color2.a = 1.0;
+                      currentMesh.data().mesh.Vertices[f0 + currentvOffset].color = glm::dvec4(color0);
+                      currentMesh.data().mesh.Vertices[f1 + currentvOffset].color = glm::dvec4(color1);
+                      currentMesh.data().mesh.Vertices[f2 + currentvOffset].color = glm::dvec4(color2);
+
+                      if (HasAnimation()) {
+
+                        mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].color = glm::dvec4(color0);
+                        mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].color = glm::dvec4(color1);
+                        mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].color = glm::dvec4(color2);
+                      }
+                    }
+                  } break;
+                  case TINYGLTF_COMPONENT_TYPE_FLOAT: {
+
+                    auto color = std::unique_ptr<Vertex3DArrayPtr<glm::vec3>>(
+                        new Vertex3DArrayPtr<glm::vec3>(VertexArrayStorage<glm::vec3>(dataPtr, count, byte_stride)));
+
+                    for (std::size_t i{0}; i < indices.size() / 3; ++i) {
+                      // get the i'th triange's indexes
+                      auto f0 = indices[3 * i + 0];
+                      auto f1 = indices[3 * i + 1];
+                      auto f2 = indices[3 * i + 2];
+
+                      glm::vec4 color0, color1, color2;
+                      color0 = glm::vec4((*color)[f0], 1.0);
+                      color1 = glm::vec4((*color)[f1], 1.0);
+                      color2 = glm::vec4((*color)[f2], 1.0);
+                      color0.a = 1.0;
+                      color1.a = 1.0;
+                      color2.a = 1.0;
+                      currentMesh.data().mesh.Vertices[f0 + currentvOffset].color = glm::vec4(color0);
+                      currentMesh.data().mesh.Vertices[f1 + currentvOffset].color = glm::vec4(color1);
+                      currentMesh.data().mesh.Vertices[f2 + currentvOffset].color = glm::vec4(color2);
+
+                      if (HasAnimation()) {
+
+                        mAnimatedMeshes.at(index).Vertices[f0 + currentvOffset].color = glm::vec4(color0);
+                        mAnimatedMeshes.at(index).Vertices[f1 + currentvOffset].color = glm::vec4(color1);
+                        mAnimatedMeshes.at(index).Vertices[f2 + currentvOffset].color = glm::vec4(color2);
+                      }
+                    }
+                  } break;
+                  default:
+                    Log::Error("unrecognized vector type for color: ", attribAccessor.componentType);
                   }
                 } break;
                 default:
-                  Log::Error("unreconized componant type for color");
+                  Log::Error("unreconized componant type for color:", attribAccessor.type);
                 }
               }
               if (attribute.first == "JOINTS_0") {
