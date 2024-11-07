@@ -1,0 +1,4 @@
+*.ppm
+sdf_gen
+*.exe
+*.out
