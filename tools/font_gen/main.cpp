@@ -31,6 +31,7 @@ struct Options {
   int font_size = 20;
   int first_char = 32;
   int num_chars = 95;
+  int out_format = 0;
   std::string output_name{};
   std::string font_name{};
   std::string font_name_no_ext{};
@@ -95,12 +96,18 @@ Options ParseArgs(int argc, char **argv) {
       i++;
     }
 
+    if (std::strcmp(argv[i], "--format") == 0) {
+      options.out_format = strcmp(argv[i + 1], "h") == 0 ? 0 : 1;
+      i++;
+    }
+
     if (std::strcmp(argv[i], "-h") == 0) {
       std::cout << "Usage: font_gen file [options]\n";
       std::cout << "Options:\n";
       std::cout << "   -d\t\tImage/texture dimensions (default: 256x256)\n";
       std::cout << "   -o\t\tOutput file name (default: input file name)\n";
       std::cout << "   -s\t\tDesired font size (default: 20)\n";
+      std::cout << "   --format\t\tDesired file format [h, ppm] (default: c header)\n";
       std::cout << "   -h\t\tPrint this message\n";
       std::cout << std::endl;
       std::exit(0);
@@ -273,79 +280,227 @@ int main(int argc, char **argv) {
   delete[] temp_bitmap;
   delete[] ttf_buffer;
   codepoints_file.close();
-  codepoints_file = std::ifstream(code_points_path);
 
-  std::ofstream outHeader(options.font_name_no_ext + ".hpp");
-  outHeader << "#pragma once\n\n#include <core/ui/font.hpp>\n\n";
-  outHeader << "//" << options.font_name_no_ext << " font\n";
-  outHeader << "struct " << options.font_name_no_ext << " : UI::Font{\n\n";
+  if (options.out_format == 0) {
+    codepoints_file = std::ifstream(code_points_path);
 
-  int index = 0;
-  if (codepoints_file.is_open()) {
-    std::string line;
-    while (std::getline(codepoints_file, line)) {
-      outHeader << "    "
-                << "static constexpr const char* ";
-      auto first_space = line.find_first_of(' ');
-      outHeader << "ICON_" << str_toupper(line.substr(0, first_space));
-      outHeader << " = " << EncodeCodepoint(line.substr(first_space + 1)) << "; // U+" << str_toupper(line.substr(first_space + 1)) << std::endl;
+    std::ofstream outHeader(options.font_name_no_ext + ".hpp");
+    outHeader << "#pragma once\n\n#include <core/ui/font.hpp>\n\n";
+    outHeader << "//" << options.font_name_no_ext << " font\n";
+    outHeader << "struct " << options.font_name_no_ext << " : UI::Font{\n\n";
 
-      index++;
-    }
-    outHeader << "\n";
-  }
+    int index = 0;
+    if (codepoints_file.is_open()) {
+      std::string line;
+      while (std::getline(codepoints_file, line)) {
+        outHeader << "    "
+                  << "static constexpr const char* ";
+        auto first_space = line.find_first_of(' ');
+        outHeader << "ICON_" << str_toupper(line.substr(0, first_space));
+        outHeader << " = " << EncodeCodepoint(line.substr(first_space + 1)) << "; // U+" << str_toupper(line.substr(first_space + 1)) << std::endl;
 
-  outHeader << "    " << options.font_name_no_ext << "(){\n";
-
-  outHeader << "        "
-            << "min_range = 0x" << std::format("{:04x}", min) << ";\n";
-  outHeader << "        "
-            << "max_range = 0x" << std::format("{:04x}", max) << ";\n";
-  outHeader << "        "
-            << "font_name = \"" << options.font_name << "\";\n";
-  outHeader << "        "
-            << "font_size = " << options.font_size << ";\n";
-  outHeader << "        "
-            << "dimensions = " << options.texture_size << ";\n";
-  outHeader << "        "
-            << "num_chars = " << (codepoints_file.is_open() ? index : options.num_chars) << ";\n";
-  outHeader << "        "
-            << "first_char = " << (codepoints_file.is_open() ? 0 : options.first_char) << ";\n";
-  outHeader << "        "
-            << "pixels.reserve(" << options.texture_size << "*" << options.texture_size << ");\n";
-  outHeader << "        "
-            << "pixels = {\n";
-
-  outHeader << "           ";
-  for (int i = 0; i < options.texture_size * options.texture_size; i++) {
-
-    outHeader << (int)pixels[i].a << ", ";
-
-    if (i % 14 == 0 && i != 0) {
-
+        index++;
+      }
       outHeader << "\n";
-      outHeader << "           ";
+    }
+
+    outHeader << "    " << options.font_name_no_ext << "(){\n";
+
+    outHeader << "        "
+              << "min_range = 0x" << std::format("{:04x}", min) << ";\n";
+    outHeader << "        "
+              << "max_range = 0x" << std::format("{:04x}", max) << ";\n";
+    outHeader << "        "
+              << "font_name = \"" << options.font_name << "\";\n";
+    outHeader << "        "
+              << "font_size = " << options.font_size << ";\n";
+    outHeader << "        "
+              << "dimensions = " << options.texture_size << ";\n";
+    outHeader << "        "
+              << "num_chars = " << (codepoints_file.is_open() ? index : options.num_chars) << ";\n";
+    outHeader << "        "
+              << "first_char = " << (codepoints_file.is_open() ? 0 : options.first_char) << ";\n";
+    outHeader << "        "
+              << "pixels.reserve(" << options.texture_size << "*" << options.texture_size << ");\n";
+    outHeader << "        "
+              << "pixels = {\n";
+
+    outHeader << "           ";
+    for (int i = 0; i < options.texture_size * options.texture_size; i++) {
+
+      outHeader << (int)pixels[i].a << ", ";
+
+      if (i % 14 == 0 && i != 0) {
+
+        outHeader << "\n";
+        outHeader << "           ";
+      }
+    }
+
+    outHeader << "        "
+              << "};\n\n";
+    outHeader << "        "
+              << "glyphs.reserve(" << options.num_chars << ");\n";
+    outHeader << "        "
+              << "glyphs = {\n";
+
+    for (int i = 0; i < options.num_chars; i++) {
+      if (i % 2 == 1 || i == 0)
+        outHeader << "            ";
+      outHeader << "{" << m_AlignedQuads[i].quad.x0 << ", " << m_AlignedQuads[i].quad.y0 << ", " << m_AlignedQuads[i].quad.s0 << ", "
+                << m_AlignedQuads[i].quad.t0 << ",";
+      outHeader << m_AlignedQuads[i].quad.x1 << ", " << m_AlignedQuads[i].quad.y1 << ", " << m_AlignedQuads[i].quad.s1 << ", " << m_AlignedQuads[i].quad.t1
+                << ", " << m_AlignedQuads[i].code << "},";
+      if (i % 2 == 0)
+        outHeader << "\n";
+    }
+    outHeader << "};\n";
+    outHeader << "}\n";
+    outHeader << "};\n";
+  } else {
+
+    std::vector<int> sdf_font;
+    sdf_font.resize(options.texture_size * options.texture_size);
+    const int num_pixels = options.texture_size * options.texture_size;
+
+    for (int &n : sdf_font)
+      n = 1000000000;
+
+    std::vector<int> clean_lines;
+
+    // horizontal
+    for (int i = 0; i < num_pixels; i++) {
+
+      if (pixels[i].a >= 64) {
+        sdf_font[i] = 0;
+
+        int y = i / options.texture_size;
+        int current_distance = 1;
+
+        bool hit = false;
+        for (int j = 1; j < options.texture_size; j++) {
+          int x_r = (i + j) % options.texture_size;
+          int x_l = (i - j) % options.texture_size;
+
+          if (x_l >= 0) {
+            sdf_font[x_l + y * options.texture_size] = std::min(current_distance, sdf_font[x_l + y * options.texture_size]);
+          }
+
+          if (x_r < options.texture_size) {
+            sdf_font[x_r + y * options.texture_size] = std::min(current_distance, sdf_font[x_r + y * options.texture_size]);
+          }
+
+          current_distance += 2;
+        }
+      }
+    }
+
+    for (int y = 0; y < options.texture_size; y++) {
+      for (int x = 0; x < options.texture_size; x++) {
+        if (sdf_font[x + y * options.texture_size] == 1000000000)
+          continue;
+        if (x == options.texture_size - 1 && sdf_font[x + y * options.texture_size] != 1000000000)
+          clean_lines.push_back(y);
+      }
+    }
+
+    std::cout << "clean_lines: " << clean_lines.size() << std::endl;
+    /*int num_changes = 1;
+    while(num_changes > 0) {
+      num_changes=0;
+    // vertical
+      for (int i = 0; i < options.texture_size; i++) {
+          int x = i % options.texture_size;
+          int b = 1;
+
+          int iter = 1;
+          for (int j = 1; j < options.texture_size/2; j++) {
+            const int mid = options.texture_size / 2;
+            int y_b = mid + j;
+            int y_t = mid - j;
+
+            int t_color = sdf_font[x + (y_t + 1) * options.texture_size];
+            int b_color = sdf_font[x + (y_b - 1) * options.texture_size];
+
+            if(sdf_font[x + y_b * options.texture_size] > 10000) num_changes++;
+            if(sdf_font[x + y_t * options.texture_size] > 10000) num_changes++;
+
+            if (y_t >= 0) {
+                sdf_font[x + y_t * options.texture_size] = std::min(t_color+b, sdf_font[x + y_t * options.texture_size]);
+            }
+
+            if (y_b < options.texture_size) {
+                sdf_font[x + y_b * options.texture_size] = std::min(b_color+b, sdf_font[x + y_b * options.texture_size]);
+
+            }
+
+            b += 2;
+          }
+      }
+    }*/
+    
+    std::vector<int> pair_indices;
+
+    int prev = clean_lines.at(0);
+    for(int i = 1; i < clean_lines.size(); i++) {
+      if(prev + 1 == clean_lines.at(i)) pair_indices.push_back(prev);
+      prev = clean_lines.at(i);
+    }
+    // vertical
+    for(int gh; gh < 20; gh++) {
+    int index = pair_indices.at(pair_indices.size() / 2) * options.texture_size;
+    std::cout << "index: " << index << std::endl;
+    for (int i = 0; i < num_pixels; i++) {
+
+      // if (sdf_font[i] == 0) {
+
+      index = i;//index + i;
+
+      int x = index  % options.texture_size;
+      int b = 1;
+
+      for (int j = 1; j < options.texture_size; j++) {
+        int y_b = (index / options.texture_size) + j;
+        int y_t = (index / options.texture_size) - j;
+
+        if (y_b < options.texture_size) {
+          int b_color = sdf_font[x + (y_b - 1) * options.texture_size];
+          sdf_font[x + y_b * options.texture_size] = std::min(b_color + b, sdf_font[x + y_b * options.texture_size]);
+        }
+
+        if (y_t >= 0) {
+          int t_color = sdf_font[x + (y_t + 1) * options.texture_size];
+          sdf_font[x + y_t * options.texture_size] = std::min(t_color + b, sdf_font[x + y_t * options.texture_size]);
+        }
+
+        b += 2;
+      }
+
+      //}
     }
   }
 
-  outHeader << "        "
-            << "};\n\n";
-  outHeader << "        "
-            << "glyphs.reserve(" << options.num_chars << ");\n";
-  outHeader << "        "
-            << "glyphs = {\n";
+    int max = 0;
 
-  for (int i = 0; i < options.num_chars; i++) {
-    if (i % 2 == 1 || i == 0)
-      outHeader << "            ";
-    outHeader << "{" << m_AlignedQuads[i].quad.x0 << ", " << m_AlignedQuads[i].quad.y0 << ", " << m_AlignedQuads[i].quad.s0 << ", " << m_AlignedQuads[i].quad.t0
-              << ",";
-    outHeader << m_AlignedQuads[i].quad.x1 << ", " << m_AlignedQuads[i].quad.y1 << ", " << m_AlignedQuads[i].quad.s1 << ", " << m_AlignedQuads[i].quad.t1
-              << ", " << m_AlignedQuads[i].code << "},";
-    if (i % 2 == 0)
-      outHeader << "\n";
+    for (auto &n : sdf_font) {
+      if (1000000000 == n)
+        n = 0;
+      if (n > max)
+        max = n;
+    }
+
+    std::ofstream outImage(options.font_name_no_ext + ".ppm");
+    outImage << "P2\n";
+    outImage << options.texture_size << " " << options.texture_size << "\n";
+    outImage << max << "\n";
+
+    for (int i = 0; i < options.texture_size * options.texture_size; i++) {
+      outImage << max-(int)sdf_font[i] << " ";
+
+      if (i % 255 == 0 && i != 0) {
+
+        outImage << "\n";
+      }
+    }
   }
-  outHeader << "};\n";
-  outHeader << "}\n";
-  outHeader << "};\n";
 }
