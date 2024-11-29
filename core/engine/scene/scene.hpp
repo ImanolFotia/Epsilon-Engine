@@ -3,6 +3,7 @@
 #include <span>
 
 #include "asset_manager.hpp"
+#include "core/common/common.hpp"
 #include "nodes/node_manager.hpp"
 #include <core/engine/context.hpp>
 
@@ -36,6 +37,11 @@ struct OctreeSceneItem {
   bool visible;
 
   ~OctreeSceneItem() {}
+};
+
+struct ItemInfo {
+  Box box;
+  OctreeItemMask mask = OctreeItemMask::ANY;
 };
 
 struct EntityData {
@@ -147,17 +153,17 @@ public:
 
   Frustum &getFrustum() { return m_pFrustum; }
 
-  auto &Cull(float cutout_distance = 0, int pass = 0) { return m_pRenderOctree->search(m_pFrustum, (OctreeContainer<OctreeRenderType>::CullPass)pass, OctreeItemMask::ANY); }
+  auto &Cull(float cutout_distance = 0, int pass = 0, OctreeItemMask mask = OctreeItemMask::ANY) { return m_pRenderOctree->search(m_pFrustum, (OctreeContainer<OctreeRenderType>::CullPass)pass, mask); }
 
-  auto &Cull(Box &box, int pass = 0) { return m_pRenderOctree->search(box, (OctreeContainer<OctreeRenderType>::CullPass)pass, OctreeItemMask::ANY); }
+  auto &Cull(Box &box, int pass = 0, OctreeItemMask mask = OctreeItemMask::ANY) { return m_pRenderOctree->search(box, (OctreeContainer<OctreeRenderType>::CullPass)pass, mask); }
 
-  auto &Cull(BoundingSphere &sphere, int pass = 0) { return m_pRenderOctree->search(sphere, (OctreeContainer<OctreeRenderType>::CullPass)pass, OctreeItemMask::ANY); }
+  auto &Cull(BoundingSphere &sphere, int pass = 0, OctreeItemMask mask = OctreeItemMask::ANY) { return m_pRenderOctree->search(sphere, (OctreeContainer<OctreeRenderType>::CullPass)pass, mask); }
 
-  auto &CullShadow(float cutout_distance = 0, int pass = 1) {
-    return m_pRenderOctree->search(m_pShadowFrustum, (OctreeContainer<OctreeRenderType>::CullPass)pass, OctreeItemMask::ANY);
+  auto &CullShadow(float cutout_distance = 0, int pass = 1, OctreeItemMask mask = OctreeItemMask::SHADOW) {
+    return m_pRenderOctree->search(m_pShadowFrustum, (OctreeContainer<OctreeRenderType>::CullPass)pass, mask);
   }
 
-  auto &CullShadow(Box box, int pass = 1) { return m_pRenderOctree->search(box, (OctreeContainer<OctreeRenderType>::CullPass)pass, OctreeItemMask::ANY); }
+  auto &CullShadow(Box box, int pass = 1, OctreeItemMask mask = OctreeItemMask::SHADOW) { return m_pRenderOctree->search(box, (OctreeContainer<OctreeRenderType>::CullPass)pass, mask); }
 
   void RelocateObject(Box boundingBox, int index) {
 
@@ -275,7 +281,7 @@ m_pSceneManager.emplace<T>(m_pSceneManager.root);
     return node;
   }
 
-  template <typename P, typename T> auto insertIntoNode(Box boundingBox, std::shared_ptr<Node<P>> parent, T object) {
+  template <typename P, typename T> auto insertIntoNode(Box boundingBox, std::shared_ptr<Node<P>> parent, T object, OctreeItemMask mask = OctreeItemMask::ANY) {
     auto node = m_pSceneManager.insert(parent, object);
 
     if (typeid(T) == typeid(RenderModel)) {
@@ -283,14 +289,16 @@ m_pSceneManager.emplace<T>(m_pSceneManager.root);
       item.renderModel = node;
       item.index = node->Index();
       std::list<OctreeItem<OctreeRenderType>>::iterator octree_node = m_pRenderOctree->insert(boundingBox, item);
+      octree_node->mask = mask;
 
       insertIntoNode(parent, octree_node);
     }
     return node;
   }
 
-  auto insertIntoOctree(Box boundingBox, OctreeSceneItem item) {
+  auto insertIntoOctree(Box boundingBox, OctreeSceneItem item, OctreeItemMask mask = OctreeItemMask::ANY) {
     std::list<OctreeItem<OctreeRenderType>>::iterator octree_node = m_pRenderOctree->insert(boundingBox, item);
+      octree_node->mask = mask;
     return octree_node;
   }
 
@@ -299,7 +307,7 @@ m_pSceneManager.emplace<T>(m_pSceneManager.root);
     return node;
   }
 
-  template <typename T, typename P, class... Args> auto emplaceIntoNode(Box boundingBox, std::shared_ptr<Node<P>> parent, Args &&...args) {
+  template <typename T, typename P, class... Args> auto emplaceIntoNode(ItemInfo info, std::shared_ptr<Node<P>> parent, Args &&...args) {
 
     auto node = m_pSceneManager.emplace<T>(parent, std::forward<Args>(args)...);
     if (typeid(T) == typeid(RenderModel)) {
@@ -307,7 +315,8 @@ m_pSceneManager.emplace<T>(m_pSceneManager.root);
       OctreeSceneItem item;
       item.renderModel = node;
       item.index = node->Index();
-      std::list<OctreeItem<OctreeRenderType>>::iterator octree_node = m_pRenderOctree->insert(boundingBox, item);
+      std::list<OctreeItem<OctreeRenderType>>::iterator octree_node = m_pRenderOctree->insert(info.box, item);
+      octree_node->mask = info.mask;
       insertIntoNode(parent, octree_node);
     }
 
