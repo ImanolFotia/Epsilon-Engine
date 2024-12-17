@@ -11,7 +11,7 @@ class FloodFill {
     std::set<int> unique;
     int current_group = 1;
 
-    int col = 255;
+    int col = 128;
 
     auto &nodes = nodeGraph.getNodes();
 
