@@ -84,6 +84,8 @@ void UI::Update() {
   }
 
   m_pMouse.left_was_down = m_pMouse.left_down;
+
+  m_pMouse.left_released = m_pMouse.left_was_down && m_pMouse.left_pressed == false;
 }
 void UI::Draw(engine::Ref<engine::RenderPass> renderPass) {
 
@@ -549,7 +551,7 @@ bool UI::ImageButton(const std::string &text, const std::string &texture, glm::v
 
   m_pCursorPosition.x = currentWindow->position.x; // position.x - m_pStyle.buttonPadding;
   m_pCursorPosition.y = position.y + size.y;
-  if (mouse.x > position.x && mouse.x < position.x + size.x && mouse.y > position.y && mouse.y < position.y + size.y && m_pMouse.left_pressed) {
+  if (mouse.x > position.x && mouse.x < position.x + size.x && mouse.y > position.y && mouse.y < position.y + size.y && m_pMouse.left_released) {
     return true;
   }
   return false;
