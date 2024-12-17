@@ -16,6 +16,7 @@
 #include <core/common/common.hpp>
 
 #include <core/framework/common.hpp>
+#include <core/framework/log.hpp>
 
 namespace framework {
 
@@ -151,7 +152,7 @@ public:
         }
       }
     }
-    // Log::Info("Removed ", vertices.size() - new_vertices.size(), " vertices");
+    Log::Info("Removed ", vertices.size() - new_vertices.size(), " vertices");
 
     vertices.swap(new_vertices);
     indices.swap(new_indices);
