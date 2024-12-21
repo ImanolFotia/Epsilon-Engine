@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vulkan/vulkan.h>
+#include <vulkan/vulkan_core.h>
 #include "core/framework/common.hpp"
 
 #if defined(ANDROID) || defined(__ANDROID__)
@@ -83,6 +84,24 @@ namespace vk
         else
         {
             return VK_ERROR_EXTENSION_NOT_PRESENT;
+        }
+    }
+
+    static void CmdEndDebugUtilsLabelEXT(VkInstance instance, VkCommandBuffer commandBuffer)
+    {
+        auto func = (PFN_vkCmdEndDebugUtilsLabelEXT)vkGetInstanceProcAddr(instance, "vkCmdEndDebugUtilsLabelEXT");
+        if (func != nullptr)
+        {
+            func(commandBuffer);
+        }
+    }
+
+    static void CmdBeginDebugUtilsLabelEXT(VkInstance instance, VkCommandBuffer commandBuffer, const VkDebugUtilsLabelEXT *label)
+    {
+        auto func = (PFN_vkCmdBeginDebugUtilsLabelEXT)vkGetInstanceProcAddr(instance, "vkCmdBeginDebugUtilsLabelEXT");
+        if (func != nullptr)
+        {
+            func(commandBuffer, label);
         }
     }
 
