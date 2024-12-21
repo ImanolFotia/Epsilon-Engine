@@ -235,6 +235,7 @@ struct TextureCreationInfo {
   bool isCompressed = false;
   bool isKTX = false;
   bool generateMipMaps = true;
+  bool isAttachment = false;
   uint32_t mipLevels = 1;
   std::vector<std::size_t> offsets;
   std::size_t size{};
