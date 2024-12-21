@@ -248,10 +248,12 @@ public:
     images[0].pixels = framework::load_image_from_file("./media/icon_48.png", &images[0].width, &images[0].height, &channels);
     images[1].pixels = framework::load_image_from_file("./media/icon_32.png", &images[1].width, &images[1].height, &channels);
     images[2].pixels = framework::load_image_from_file("./media/icon_16.png", &images[2].width, &images[2].height, &channels);
-    glfwSetWindowIcon(mWindow, 3, images);
-    framework::free_image_data(images[0].pixels);
-    framework::free_image_data(images[1].pixels);
-    framework::free_image_data(images[2].pixels);
+    if(images[0].height != 0) {
+      glfwSetWindowIcon(mWindow, 3, images);
+      framework::free_image_data(images[0].pixels);
+      framework::free_image_data(images[1].pixels);
+      framework::free_image_data(images[2].pixels);
+    }
 
     const char *description;
     int code = glfwGetError(&description);
