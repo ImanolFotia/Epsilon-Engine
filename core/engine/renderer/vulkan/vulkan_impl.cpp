@@ -1,3 +1,4 @@
+#include <mutex>
 #undef VMA_DEBUG_LOG
 #undef VMA_DEBUG_LOG_FORMAT
 #include "helpers.hpp"
@@ -24,7 +25,7 @@ vk::VulkanBuffer VulkanResourceManager::pCreateVertexBuffer() {
   pCreateBuffer(buffer, sizeof(common::Vertex) * MAX_VERTICES_PER_BUFFER, VERTEX_BUFFER_USAGE, VERTEX_BUFFER_PROP, VERTEX_BUFFER_MEM_USAGE);
   if (0)
     Log::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", sizeof(common::Vertex) * MAX_VERTICES_PER_BUFFER,
-             " bytes in local vertex buffer");
+              " bytes in local vertex buffer");
   return buffer;
 }
 
@@ -33,7 +34,7 @@ vk::VulkanBuffer VulkanResourceManager::pCreateIndexBuffer() {
   pCreateBuffer(buffer, sizeof(IndexType) * MAX_INDICES_PER_BUFFER, INDEX_BUFFER_USAGE, INDEX_BUFFER_PROP, INDEX_BUFFER_MEM_USAGE);
   if (0)
     Log::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", sizeof(IndexType) * MAX_INDICES_PER_BUFFER,
-             " bytes in local index buffer");
+              " bytes in local index buffer");
   return buffer;
 }
 
@@ -138,8 +139,10 @@ vk::VulkanTexture VulkanResourceManager::pCreateTextureBuffer(vk::VulkanTextureI
   texture.imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
   texture.imageInfo.flags = 0; // Optional
   texture.imageInfo.usage = texInfo.usage;
-  if (!(texture.imageInfo.usage & VK_IMAGE_USAGE_TRANSFER_DST_BIT)) {
-    texture.imageInfo.usage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+  if (!texInfo.isAttachment) {
+    if (!(texture.imageInfo.usage & VK_IMAGE_USAGE_TRANSFER_DST_BIT)) {
+      texture.imageInfo.usage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+    }
   }
 
   texture.addressMode = texInfo.addressMode;
@@ -335,7 +338,7 @@ vk::VulkanBuffer VulkanResourceManager::pCreateStagingBuffer(const std::vector<c
   vmaUnmapMemory(m_pAllocator, stagingBuffer.allocation);
   if (0)
     Log::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", vertices.size() * sizeof(common::Vertex),
-             " bytes in hosted staging buffer");
+              " bytes in hosted staging buffer");
   return stagingBuffer;
 }
 
@@ -349,7 +352,7 @@ vk::VulkanBuffer VulkanResourceManager::pCreateStagingBuffer(const std::vector<c
   vmaUnmapMemory(m_pAllocator, stagingBuffer.allocation);
   if (0)
     Log::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", vertices.size() * sizeof(common::AnimatedVertex),
-             " bytes in hosted staging buffer");
+              " bytes in hosted staging buffer");
   return stagingBuffer;
 }
 
@@ -364,7 +367,7 @@ vk::VulkanBuffer VulkanResourceManager::pCreateStagingIndexBuffer(const std::vec
   vmaUnmapMemory(m_pAllocator, stagingBuffer.allocation);
   if (0)
     Log::Info("From function ", __PRETTY_FUNCTION__, " | Line ", __LINE__, " : ", "allocating ", indices.size() * sizeof(IndexType),
-             " bytes in hosted staging buffer");
+              " bytes in hosted staging buffer");
   return stagingBuffer;
 }
 
@@ -377,9 +380,9 @@ void VulkanResourceManager::pUpdateMaterial(vk::VulkanMaterial &material) {
     std::list<VkDescriptorImageInfo> imageInfos{};
     std::list<VkDescriptorBufferInfo> bufferInfos{};
     // numSlots += material.shaderBindings.size();
-    //for(int kkk = 0; kkk < numSlots; kkk++)
-      descriptorWrites.resize(numSlots);
-      
+    // for(int kkk = 0; kkk < numSlots; kkk++)
+    descriptorWrites.resize(numSlots);
+
     int index = 1;
     bool bindingZeroSet = false;
     for (auto &binding : material.shaderBindings) {
@@ -397,12 +400,17 @@ void VulkanResourceManager::pUpdateMaterial(vk::VulkanMaterial &material) {
       if (binding.descriptorBinding == VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER) {
         auto &imageInfo = imageInfos.emplace_back();
 
-        imageInfo.imageLayout = binding.texture.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        imageInfo.imageLayout = binding.texture.format == VK_FORMAT_D32_SFLOAT ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : imageInfo.imageLayout;
+       imageInfo.imageLayout = binding.texture.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+       imageInfo.imageLayout = binding.texture.format == VK_FORMAT_D32_SFLOAT ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : imageInfo.imageLayout;
 
         binding.texture.imageLayout = imageInfo.imageLayout;
         if (!binding.renderpass.empty()) {
           auto pass = renderPassPool.get(std::hash<std::string>{}(binding.renderpass));
+
+          if(pass->renderPassData.depthWriteEnabled)
+            imageInfo.imageLayout = binding.texture.isDepthAttachment ?  VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL;
+          else
+            imageInfo.imageLayout = binding.texture.isDepthAttachment ?  VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
           if (binding.attachment_index == pass->renderPassChain.Textures.size()) {
             if (pass->id == std::numeric_limits<uint32_t>::max()) {
@@ -463,7 +471,8 @@ void VulkanResourceManager::pUpdateMaterial(vk::VulkanMaterial &material) {
 
         auto &imageInfo = imageInfos.emplace_back();
 
-        imageInfo.imageLayout = VK_IMAGE_LAYOUT_GENERAL;//binding.texture.isDepthAttachment ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        imageInfo.imageLayout =
+            VK_IMAGE_LAYOUT_GENERAL; // binding.texture.isDepthAttachment ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
         // imageInfo.imageLayout = binding.texture.format == VK_FORMAT_D32_SFLOAT ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : imageInfo.imageLayout;
 
         binding.texture.imageLayout = imageInfo.imageLayout;
@@ -497,7 +506,7 @@ void VulkanResourceManager::pUpdateMaterial(vk::VulkanMaterial &material) {
     }
 
     VkDescriptorBufferInfo bufferInfo{};
-    
+
     if (!bindingZeroSet) {
       bufferInfo.buffer = material.bufferInfo[i].buffer; // m_pUniformBuffers[i].buffer;
       bufferInfo.offset = material.bufferOffset;
@@ -586,6 +595,12 @@ void VulkanResourceManager::pRecreateFrameBuffers(VkExtent2D extent) {
 
     renderPass->renderPassChain.Extent = extent;
 
+
+    bool depth_write_enable = false;
+
+    for(auto &pLayout: renderPassInfo.pipelineLayout)
+      if(pLayout.depthWriteEnable) {depth_write_enable  = true; break;}
+
     for (size_t i = 0; i < renderPassInfo.attachments.size(); i++) {
       auto &attachment = renderPassInfo.attachments[i];
 
@@ -603,6 +618,7 @@ void VulkanResourceManager::pRecreateFrameBuffers(VkExtent2D extent) {
                           : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 
       texInfo.compareEnable = attachment.depthCompare;
+      texInfo.isAttachment = true;
 
       vk::VulkanTexture texture = pCreateTextureBuffer(texInfo);
 
@@ -611,7 +627,13 @@ void VulkanResourceManager::pRecreateFrameBuffers(VkExtent2D extent) {
       createImageView(*m_pVkDataPtr, texture,
                       (attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
 
-      texture.imageLayout = attachment.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+      if(depth_write_enable)
+        texture.imageLayout = attachment.isDepthAttachment ?  VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL;
+      else
+        texture.imageLayout = attachment.isDepthAttachment ?  VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+      //texture.imageLayout = attachment.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
       texture.imageLayout = attachment.storageImage ? VK_IMAGE_LAYOUT_GENERAL : texture.imageLayout;
       if (attachment.isSampler) {
         vk::createTextureSampler(*m_pVkDataPtr, texture);
@@ -621,21 +643,21 @@ void VulkanResourceManager::pRecreateFrameBuffers(VkExtent2D extent) {
         texture.isDepthAttachment = true;
         texture.name = renderPass->renderPassChain.DepthTexture.name;
 
-        //if(texture.name.size() > 0)
-        //  texPool.insert(texture.name, texture);
+        // if(texture.name.size() > 0)
+        //   texPool.insert(texture.name, texture);
 
         renderPass->renderPassChain.DepthTexture = texture;
 
         if (attachment.isSampler) {
           renderPass->renderPassChain.hasDepthSampler = false;
           renderPass->renderPassChain.ImageViews.at(i) = texture.imageView;
-         texture.name = renderPass->renderPassChain.Textures.at(i).name;
+          texture.name = renderPass->renderPassChain.Textures.at(i).name;
           renderPass->renderPassChain.Textures.at(i) = texture;
           renderPass->renderPassChain.DepthTexture.index = i;
         }
       } else {
         renderPass->renderPassChain.ImageViews.at(i) = texture.imageView;
-         texture.name = renderPass->renderPassChain.Textures.at(i).name;
+        texture.name = renderPass->renderPassChain.Textures.at(i).name;
         renderPass->renderPassChain.Textures.at(i) = texture;
 
         // if(texture.name.size() > 0)
@@ -678,23 +700,23 @@ void VulkanResourceManager::pRecreateFrameBuffers(VkExtent2D extent) {
 }
 
 void VulkanResourceManager::pGenerateMipMaps(TextureCreationInfo texInfo, vk::VulkanTexture &texture) {
-
+  //std::lock_guard guard(m_CommandMutex);
   /* Begin generate mips*/
   // Copy down mips from n-1 to n
 
   VkCommandBuffer blitCommandBuffer = vk::beginSingleTimeCommands(*m_pVkDataPtr, m_pTransferCommandPool);
   if (texInfo.storage_image) {
-/*
-    VkImageSubresourceRange subresourceRange = {};
-    subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    subresourceRange.layerCount = 1;
-    subresourceRange.levelCount = texInfo.mipLevels;
+    /*
+        VkImageSubresourceRange subresourceRange = {};
+        subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        subresourceRange.layerCount = 1;
+        subresourceRange.levelCount = texInfo.mipLevels;
 
-    vk::imageMemoryBarrier(*m_pVkDataPtr, m_pTransferCommandPool, texture.image, texture.format, VK_IMAGE_LAYOUT_GENERAL,
-                           VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, texture.info, blitCommandBuffer, subresourceRange, 0, texInfo.mipLevels);
+        vk::imageMemoryBarrier(*m_pVkDataPtr, m_pTransferCommandPool, texture.image, texture.format, VK_IMAGE_LAYOUT_GENERAL,
+                               VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, texture.info, blitCommandBuffer, subresourceRange, 0, texInfo.mipLevels);
 
-    vk::endSingleTimeCommands(*m_pVkDataPtr, m_pTransferCommandPool, blitCommandBuffer);
-    */
+        vk::endSingleTimeCommands(*m_pVkDataPtr, m_pTransferCommandPool, blitCommandBuffer);
+        */
     return;
   }
 
@@ -746,10 +768,15 @@ void VulkanResourceManager::pGenerateMipMaps(TextureCreationInfo texInfo, vk::Vu
   subresourceRange.layerCount = 1;
   subresourceRange.levelCount = texInfo.mipLevels;
 
+
+    //bindless_image_info.imageLayout = texInfo.storage_image ? VK_IMAGE_LAYOUT_GENERAL : bindless_image_info.imageLayout;
+
+  if(!texInfo.storage_image) {
   vk::imageMemoryBarrier(*m_pVkDataPtr, m_pTransferCommandPool, texture.image, texture.format, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
                          VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, texture.info, blitCommandBuffer, subresourceRange, 0, texInfo.mipLevels);
 
   vk::endSingleTimeCommands(*m_pVkDataPtr, m_pTransferCommandPool, blitCommandBuffer);
+  }
 
   /*transitionImageLayout(*m_pVkDataPtr, m_pVkDataPtr->m_pCommandPools.back(), texture.image,
           format, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,

@@ -197,7 +197,7 @@ void VulkanRenderer::ComputeDispatchAsync(Ref<ComputeShader> computeShaderRef, R
 
   if (computeShader->hasImageBarrier || computeShader->hasBufferMemoryBarrier) {
 
-    VkDependencyInfo dependencyInfo = {.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER_2,
+    VkDependencyInfo dependencyInfo = {.sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
                                        .pNext = nullptr,
                                        .memoryBarrierCount = 0,
                                        .pMemoryBarriers = nullptr,
@@ -223,6 +223,7 @@ void VulkanRenderer::ComputeDispatch(Ref<ComputeShader> computeShaderRef, Ref<Bi
 
   if (m_pRenderPassActive) {
     vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
+    //vk::CmdEndDebugUtilsLabelEXT(m_pVkData.instance, m_pFrame.CommandBuffer());
     m_pRenderPassActive = false;
   }
   //m_pFrame.AddComputeDispatch();
@@ -230,7 +231,7 @@ void VulkanRenderer::ComputeDispatch(Ref<ComputeShader> computeShaderRef, Ref<Bi
 
   if (computeShader->hasImageBarrier || computeShader->hasBufferMemoryBarrier) {
 
-    VkDependencyInfo dependencyInfo = {.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER_2,
+    VkDependencyInfo dependencyInfo = {.sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO,
                                        .pNext = nullptr,
                                        .memoryBarrierCount = 0,
                                        .pMemoryBarriers = nullptr,
@@ -323,6 +324,7 @@ void VulkanRenderer::End(glm::vec3 &v) {
 
     if (m_pRenderPassActive) {
       vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
+      //vk::CmdEndDebugUtilsLabelEXT(m_pVkData.instance, m_pFrame.CommandBuffer());
       m_pRenderPassActive = false;
     }
 
@@ -340,6 +342,7 @@ void VulkanRenderer::End(glm::vec3 &v) {
 #endif
   if (m_pRenderPassActive) {
     vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
+    //vk::CmdEndDebugUtilsLabelEXT(m_pVkData.instance, m_pFrame.CommandBuffer());
     m_pRenderPassActive = false;
   }
   if (m_pImageIndex == -1)
@@ -358,9 +361,13 @@ void VulkanRenderer::Flush(FlushCommand command) {
 
     if (m_pRenderPassActive) {
       vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
+      //vk::CmdEndDebugUtilsLabelEXT(m_pVkData.instance, m_pFrame.CommandBuffer());
       m_pRenderPassActive = false;
     }
-
+    /*VkDebugUtilsLabelEXT debugLabel;
+    debugLabel.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT;
+    debugLabel.pLabelName = renderPass->name.c_str();
+    vk::CmdBeginDebugUtilsLabelEXT(m_pVkData.instance, m_pFrame.CommandBuffer(), &debugLabel);*/
     if (renderPass->id == std::numeric_limits<uint32_t>::max()) {
       vk::createRenderPassInfo(m_pImageIndex, m_pVkData, m_pVkData.defaultRenderPass);
 
@@ -455,6 +462,7 @@ void VulkanRenderer::Flush(engine::Ref<engine::RenderPass> renderPassRef, engine
 
     if (m_pRenderPassActive) {
       vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
+       //vk::CmdEndDebugUtilsLabelEXT(m_pVkData.instance, m_pFrame.CommandBuffer());
       m_pRenderPassActive = false;
     }
 
