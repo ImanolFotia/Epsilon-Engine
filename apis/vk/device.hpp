@@ -198,7 +198,7 @@ static void createLogicalDevice(VulkanData &vk_data) {
     vkGetDeviceQueue(vk_data.logicalDevice, indices.graphicsFamily.value(), 0, &vk_data.computeQueue[i]);
   }
 
-  vkGetDeviceQueue(vk_data.logicalDevice, indices.transferFamily.value(), 1, &vk_data.transferQueue);
+  vkGetDeviceQueue(vk_data.logicalDevice, indices.graphicsFamily.value(), 1, &vk_data.transferQueue);
   /* } else {
 
      for (int i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
