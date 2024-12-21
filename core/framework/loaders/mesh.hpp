@@ -8,8 +8,10 @@
 /// Std. Includes
 /// GL Includes
 #include "eml1_0.hpp"
-#include "glm/common.hpp"
-#include "glm/geometric.hpp"
+#include <glm/gtx/hash.hpp>
+
+#include <glm/common.hpp>
+#include <glm/geometric.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
