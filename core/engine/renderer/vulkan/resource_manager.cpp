@@ -90,6 +90,8 @@ void VulkanResourceManager::Init() {
 }
 
 Ref<Texture> VulkanResourceManager::createTexture(TextureCreationInfo texInfo) {
+
+  std::lock_guard guard(m_CommandMutex);
   Ref<Texture> refTexture;
 
   auto format = resolveFormat(texInfo.format, texInfo.isCompressed);
@@ -119,7 +121,7 @@ Ref<Texture> VulkanResourceManager::createTexture(TextureCreationInfo texInfo) {
       .arrayLayers = texInfo.numLayers,
       .format = format,
       .usage = (!texInfo.storage_image ? VK_IMAGE_USAGE_TRANSFER_DST_BIT : 0u) | (!texInfo.storage_image ? VK_IMAGE_USAGE_TRANSFER_SRC_BIT : 0u) |
-               VK_IMAGE_USAGE_SAMPLED_BIT | (texInfo.storage_image ? VK_IMAGE_USAGE_STORAGE_BIT : 0u),
+               VK_IMAGE_USAGE_SAMPLED_BIT | (texInfo.storage_image && !texInfo.isAttachment ? VK_IMAGE_USAGE_STORAGE_BIT : 0u),
   });
 
   texture.format = format;
@@ -156,16 +158,18 @@ Ref<Texture> VulkanResourceManager::createTexture(TextureCreationInfo texInfo) {
   ResourcesMemory.m_pTextureBufferAllocationSize += size;
 
   // Call gen mips
-  pGenerateMipMaps(texInfo, texture);
+
+  if (texInfo.pixels != nullptr)
+    pGenerateMipMaps(texInfo, texture);
 
   vk::createTextureSampler(*m_pVkDataPtr, texture);
 
   texture.bindingType = vk::MATERIAL_SAMPLER;
 
   auto ref = texPool.insert(texInfo.name, texture);
-  if(texInfo.bindless_array_index == -1)
+  if (texInfo.bindless_array_index == -1)
     texture.index = ref.m_pIndex;
-  else 
+  else
     texture.index = texInfo.bindless_array_index;
 
   texPool.get(ref)->index = ref.m_pIndex;
@@ -181,7 +185,11 @@ Ref<Texture> VulkanResourceManager::createTexture(TextureCreationInfo texInfo) {
     bindless_descriptor_writes.dstBinding = 0;
     bindless_image_info.sampler = texture.sampler;
     bindless_image_info.imageView = texture.imageView;
-    bindless_image_info.imageLayout = texture.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    // texture.imageLayout
+    // if(renderPass.renderPassData.depthWriteEnabled){
+    // bindless_image_info.imageLayout = texture.imageLayout;
+
+    bindless_image_info.imageLayout = texture.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
     bindless_image_info.imageLayout = texInfo.storage_image ? VK_IMAGE_LAYOUT_GENERAL : bindless_image_info.imageLayout;
     bindless_descriptor_writes.pImageInfo = &bindless_image_info;
     vkUpdateDescriptorSets(m_pVkDataPtr->logicalDevice, 1, &bindless_descriptor_writes, 0, nullptr);
@@ -286,7 +294,6 @@ Ref<BindGroup> VulkanResourceManager::createBindGroup(BindGroupInfo material) {
 
         auto pass = renderPassPool.get(std::hash<std::string>{}(binding.renderPass));
         vkMaterial.slots++;
-
         auto texture =
             binding.index == pass->renderPassChain.Textures.size() ? pass->renderPassChain.DepthTexture : pass->renderPassChain.Textures.at(binding.index);
 
@@ -331,7 +338,6 @@ Ref<BindGroup> VulkanResourceManager::createBindGroup(BindGroupInfo material) {
       if (binding.type == UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER) {
         vkMaterial.slots++;
         vk::VulkanTexture texture;
-
         if (binding.textureInfo.pixels != nullptr) {
           texture = *texPool.get(createTexture(binding.textureInfo));
         } else {
@@ -450,6 +456,10 @@ Ref<RenderPass> VulkanResourceManager::createDefaultRenderPass(RenderPassInfo re
                                                                        renderPassInfo.attachments.back().depthStencilValue[1]};
   }
 
+  for (auto &pLayout : renderPassInfo.pipelineLayout)
+    if (pLayout.depthWriteEnable)
+      m_pVkDataPtr->defaultRenderPass.renderPassData.depthWriteEnabled = true;
+
   vk::createRenderPass(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, renderPassInfo, true);
 
   m_pVkDataPtr->defaultRenderPass.renderPipelines.resize(renderPassInfo.numLayouts);
@@ -530,6 +540,10 @@ Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPas
   for (int index = 0; index < renderPassInfo.attachments.size(); index++)
     renderPass.renderPassChain.ImageFormats[index] = resolveFormat(renderPassInfo.attachments[index].format);
 
+  for (auto &pLayout : renderPassInfo.pipelineLayout)
+    if (pLayout.depthWriteEnable)
+      renderPass.renderPassData.depthWriteEnabled = true;
+
   vk::createRenderPass(*m_pVkDataPtr, renderPass, renderPassInfo, false);
 
   for (size_t i = 0; i < renderPassInfo.attachments.size(); i++) {
@@ -566,13 +580,23 @@ Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPas
     texInfo.usage =
         ((attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? (VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT)
                                                                                   : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT) |
-        (attachment.storageImage ? VK_IMAGE_USAGE_STORAGE_BIT : 0u) | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+        (attachment.storageImage ? VK_IMAGE_USAGE_STORAGE_BIT : 0u);
 
     texInfo.compareEnable = attachment.depthCompare;
-
+    texInfo.isAttachment = true;
     vk::VulkanTexture texture = pCreateTextureBuffer(texInfo);
     texture.name = attachment.name;
-    texture.imageLayout = attachment.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    bool depth_write_enable = false;
+
+    for (auto &pLayout : renderPassInfo.pipelineLayout)
+      if (pLayout.depthWriteEnable) {
+        depth_write_enable = true;
+        break;
+      }
+    if (depth_write_enable)
+      texture.imageLayout = attachment.isDepthAttachment ? VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL;
+    else
+      texture.imageLayout = attachment.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
     texture.imageLayout = attachment.storageImage ? VK_IMAGE_LAYOUT_GENERAL : texture.imageLayout;
     texture.bindingType = vk::RENDER_BUFFER_SAMPLER;
     texture.info.mipLevels = 1;
@@ -830,6 +854,8 @@ Ref<Mesh> VulkanResourceManager::insertMesh(const std::string &name, MeshResourc
 }
 
 Ref<Mesh> VulkanResourceManager::createMesh(MeshInfo meshInfo) {
+
+  std::lock_guard guard(m_CommandMutex);
   std::vector<common::Vertex> *vertices = &meshInfo.vertices;
   std::vector<uint32_t> *indices = &meshInfo.indices;
 
@@ -919,6 +945,8 @@ Ref<Mesh> VulkanResourceManager::createMesh(MeshInfo meshInfo) {
 }
 
 Ref<Mesh> VulkanResourceManager::createMesh(AnimatedMeshInfo meshInfo) {
+
+  std::lock_guard guard(m_CommandMutex);
   std::vector<common::AnimatedVertex> *vertices = &meshInfo.vertices;
   std::vector<uint32_t> *indices = &meshInfo.indices;
 
@@ -1142,12 +1170,16 @@ Ref<ComputeShader> VulkanResourceManager::createComputeShader(ComputeShaderInfo 
       vk::ResolveMasks(imageBarrier.memoryBarrierHint, srcAccessMask, dstAccessMask, srcStageMask, dstStageMask);
 
       VkImageMemoryBarrier2 imageMemoryBarrier = {};
-      imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-      imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL;
-      imageMemoryBarrier.newLayout = texture.imageLayout; // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+      imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2;
+      imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_GENERAL;// texture.imageLayout;//VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL;
+      imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_GENERAL;//texture.imageLayout; // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
       imageMemoryBarrier.image = texture.image;
+      VkImageAspectFlagBits aspect_flags = VK_IMAGE_ASPECT_COLOR_BIT;
+      if (texture.format == VK_FORMAT_D32_SFLOAT || texture.format == VK_FORMAT_D32_SFLOAT_S8_UINT || texture.format == VK_FORMAT_D16_UNORM_S8_UINT ||
+          texture.format == VK_FORMAT_D16_UNORM || texture.format == VK_FORMAT_D24_UNORM_S8_UINT)
+        aspect_flags = (VkImageAspectFlagBits)(VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT);
 
-      imageMemoryBarrier.subresourceRange = {VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT, 0, 1, 0, 1};
+      imageMemoryBarrier.subresourceRange = {aspect_flags, 0, 1, 0, 1};
       imageMemoryBarrier.srcAccessMask = srcAccessMask;
       imageMemoryBarrier.dstAccessMask = dstAccessMask;
       imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
@@ -1208,17 +1240,14 @@ void VulkanResourceManager::ResizeTexture(Ref<Texture> textureRef, glm::ivec2 si
   texture->info.height = size.y;
 
   int index = texture->index;
-  
-  *texture = pCreateTextureBuffer({
-              .width = texture->info.width,
-              .height = texture->info.height,
-              .num_channels = texture->info.num_channels,
-              .mipLevels = texture->info.mipLevels,
-              .arrayLayers = texture->info.arrayLayers,
-              .format = texture->info.format,
-              .usage = VK_IMAGE_USAGE_SAMPLED_BIT
-             });
-             
+
+  *texture = pCreateTextureBuffer({.width = texture->info.width,
+                                   .height = texture->info.height,
+                                   .num_channels = texture->info.num_channels,
+                                   .mipLevels = texture->info.mipLevels,
+                                   .arrayLayers = texture->info.arrayLayers,
+                                   .format = texture->info.format,
+                                   .usage = VK_IMAGE_USAGE_SAMPLED_BIT});
 
   vk::createImageView(*m_pVkDataPtr, *texture, VK_IMAGE_ASPECT_COLOR_BIT);
   vk::createTextureSampler(*m_pVkDataPtr, *texture);
@@ -1237,12 +1266,11 @@ void VulkanResourceManager::ResizeTexture(Ref<Texture> textureRef, glm::ivec2 si
 
     bindless_image_info.sampler = texture->sampler;
     bindless_image_info.imageView = texture->imageView;
-    bindless_image_info.imageLayout = texture->isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    bindless_image_info.imageLayout =  texture->isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
     bindless_descriptor_writes.pImageInfo = &bindless_image_info;
 
     vkUpdateDescriptorSets(m_pVkDataPtr->logicalDevice, 1, &bindless_descriptor_writes, 0, nullptr);
   }
-  
 }
 
 void VulkanResourceManager::ResizeFramebuffer(Ref<RenderPass> renderpass_ref, glm::ivec2 size) {
@@ -1295,6 +1323,7 @@ void VulkanResourceManager::ResizeFramebuffer(Ref<RenderPass> renderpass_ref, gl
 
     texInfo.compareEnable = attachment.depthCompare;
 
+    texInfo.isAttachment = true;
     vk::VulkanTexture texture = pCreateTextureBuffer(texInfo);
 
     texture.bindingType = vk::RENDER_BUFFER_SAMPLER;
@@ -1302,7 +1331,20 @@ void VulkanResourceManager::ResizeFramebuffer(Ref<RenderPass> renderpass_ref, gl
     createImageView(*m_pVkDataPtr, texture,
                     (attachment.isDepthAttachment || texInfo.format == VK_FORMAT_D32_SFLOAT) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
 
-    texture.imageLayout = attachment.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    bool depth_write_enable = false;
+
+    for (auto &pLayout : renderPassInfo.pipelineLayout)
+      if (pLayout.depthWriteEnable) {
+        depth_write_enable = true;
+        break;
+      }
+    if (depth_write_enable)
+      texture.imageLayout = attachment.isDepthAttachment ? VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL;
+    else
+      texture.imageLayout = attachment.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+    // texture.imageLayout = attachment.isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
     texture.imageLayout = attachment.storageImage ? VK_IMAGE_LAYOUT_GENERAL : texture.imageLayout;
     if (attachment.isSampler) {
       vk::createTextureSampler(*m_pVkDataPtr, texture);
@@ -1437,10 +1479,11 @@ void VulkanResourceManager::CopyTexture(TextureCopyCommand copyCommand) {
     srcTexture = texPool.get(copyCommand.srcTexture);
   } else {
     auto renderPass = renderPassPool.get(copyCommand.srcRenderPass);
-    if(renderPass->renderPassChain.Textures.size() == copyCommand.src_render_target_index)
+    if (renderPass->renderPassChain.Textures.size() == copyCommand.src_render_target_index)
       srcTexture = &renderPass->renderPassChain.DepthTexture;
     else
-      srcTexture = &renderPass->renderPassChain.Textures.at(copyCommand.src_render_target_index);;
+      srcTexture = &renderPass->renderPassChain.Textures.at(copyCommand.src_render_target_index);
+    ;
   }
 
   vk::VulkanTexture *dstTexture = nullptr;
@@ -1453,20 +1496,20 @@ void VulkanResourceManager::CopyTexture(TextureCopyCommand copyCommand) {
                                 .num_channels = srcTexture->info.num_channels,
                                 .mipLevels = srcTexture->info.mipLevels,
                                 .arrayLayers = srcTexture->info.arrayLayers,
-                                .format = srcTexture->info.format, // No need to query format from render target for format conversion, it's done automatically if
-                                                                  // blit is supported, which should be for vulkan >= 1.0 (99.73% of devices)
+                                .format = srcTexture->info.format, // No need to query format from render target for format conversion, it's done automatically
+                                                                   // if blit is supported, which should be for vulkan >= 1.0 (99.73% of devices)
                                 .usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT});
       vk::createImageView(*m_pVkDataPtr, texture, VK_IMAGE_ASPECT_COLOR_BIT);
       vk::createTextureSampler(*m_pVkDataPtr, texture);
       copyCommand.dstTexture = texPool.insert("global_texture_" + std::to_string(texPool.size()), texture);
-    } 
+    }
     dstTexture = texPool.get(copyCommand.dstTexture);
   } else {
     auto renderPass = renderPassPool.get(copyCommand.dstRenderPass);
     dstTexture = &renderPass->renderPassChain.Textures.at(copyCommand.dst_render_target_index);
   }
 
-  VkCommandBuffer copyCmd =  vk::beginSingleTimeCommands(*m_pVkDataPtr, m_pTransferCommandPool);
+  VkCommandBuffer copyCmd = vk::beginSingleTimeCommands(*m_pVkDataPtr, m_pTransferCommandPool);
 
   VkImageLayout oldSrcLayout;
 

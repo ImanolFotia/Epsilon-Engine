@@ -196,6 +196,8 @@ protected:
   std::vector<vk::VulkanBuffer> m_pIndirectBuffer;
   vk::VulkanBuffer m_pMaterialBuffer;
 
+  std::mutex m_CommandMutex;
+
   ResourceCache m_pVertexCache;
   ResourceCache m_pIndexCache;
   ResourceCache m_pTextureCache;
