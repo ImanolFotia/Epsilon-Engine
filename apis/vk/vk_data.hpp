@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/engine/renderer/types.hpp"
+#include <vulkan/vulkan_core.h>
 #if !defined(__ANDROID__)
 #include <vulkan/vulkan.hpp>
 #endif
@@ -61,6 +62,7 @@ struct VulkanTextureInfo {
   VkCompareOp compareOp{};
   bool compareEnable = false;
   bool isSampler = false;
+  bool isAttachment = false;
 };
 
 enum VulkanTextureBindingType { RENDER_BUFFER_SAMPLER = 0, MATERIAL_SAMPLER };
@@ -204,6 +206,7 @@ struct VulkanRenderPassData {
   VkAttachmentReference depthAttachmentRef{};
 
   bool hasDepthAttachment = false;
+  bool depthWriteEnabled = false; 
 };
 
 struct VulkanRenderPassAttachment {
@@ -307,7 +310,8 @@ struct VulkanData {
 
 #if !defined(__ANDROID__)
   const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME, VK_EXT_MEMORY_BUDGET_EXTENSION_NAME,
-                                                      VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME, VK_KHR_MAINTENANCE3_EXTENSION_NAME};
+                                                      VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME, VK_KHR_MAINTENANCE3_EXTENSION_NAME,
+                                                      /*VK_EXT_DEBUG_UTILS_EXTENSION_NAME*/};
 #else
   const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 #endif
