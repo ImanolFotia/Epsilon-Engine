@@ -44,7 +44,7 @@ glm::vec2 UI::textSize(const std::string &text) {
     }
 
     if (*text_data == ' ') {
-      ox += 5;
+      ox += 10;
     } else {
       ox += q.x1;
       oy = glm::max(oy, q.y1 - q.y0);
@@ -304,7 +304,7 @@ void UI::Text(const std::string &text, glm::vec2 position, glm::vec4 color, bool
     }
 
     if (*text_data == ' ') {
-      position.x += 5;
+      position.x += 10;
     } else {
 
       glm::vec4 a = glm::vec4((position) / m_pResolution + glm::vec2(q.x0, q.y0 + font->highest_character) / m_pResolution, q.s0, q.t0);
