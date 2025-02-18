@@ -98,7 +98,7 @@ static void createRenderPass(VulkanData &vk_data, VulkanRenderPass &renderPass, 
         // attachmentDesc.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
         // attachmentDesc.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
       } else {
-        attachmentDesc.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+        attachmentDesc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
         if (attachmentDesc.loadOp == VK_ATTACHMENT_LOAD_OP_LOAD)
           attachmentDesc.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
