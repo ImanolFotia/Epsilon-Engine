@@ -197,6 +197,8 @@ enum class DrawType { NON_INDEXED = 0, INDIRECT, INDEXED, INDEXED_INDIRECT, INST
 
 enum class MemoryUsage { DEVICE_ONLY = 0, HOST_VISIBLE, TRANSFER_SRC, TRANSFER_DST };
 
+enum class ImageLayout {UNDEFINED = 0, PRE_INITIALIZED, ATTACHMENT, READ_ONLY_COLOR_ATTACHMENT, DEPTH_ATTACHMENT, DEPTH_STENCIL_ATTACHMENT, READ_ONLY_DEPTH_ATTACHMENT, READ_ONLY_DEPTH_STENCIL_ATTACHMENT };
+
 struct ObjectDataConstant {
   glm::mat4 transform = glm::mat4(1.0f);
   uint32_t material_index = 0;
@@ -304,6 +306,7 @@ struct RenderPassAttachment {
   WrapMode wrapMode;
   Filtering filtering;
   CompareFunction compareFunc;
+  ImageLayout imageLayout;
   bool depthCompare = false;
   bool blendEnable = false;
   float clearColor[4]{};
