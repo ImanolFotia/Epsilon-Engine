@@ -1,9 +1,5 @@
 #pragma once
 
-#include <any>
-#include <queue>
-#include <string>
-#include <unordered_map>
 
 #include <core/engine/renderer/resource_manager.hpp>
 #include <core/framework/loaders/gltf.hpp>
@@ -213,7 +209,7 @@ public:
     if (m_pImages.contains(std::hash<std::string>{}(name)))
       return m_pImages[std::hash<std::string>{}(name)];
 
-      return Ref<Texture>::makeEmpty();
+    return Ref<Texture>::makeEmpty();
   }
 
   const Ref<Texture> getImage(std::size_t hash) {
@@ -299,9 +295,7 @@ public:
     return m_pGPUBuffers[name];
   }
 
-  ShaderEntity *getEntityPointer(int32_t index = 0) {
-    return lightBufferPtr;
-  }
+  ShaderEntity *getEntityPointer(int32_t index = 0) { return lightBufferPtr; }
 
   int AddEntity(ShaderEntity entity, bool reserve = false) {
     int index;
@@ -390,7 +384,7 @@ public:
   }
 
   void Destroy() {
-    
+
     /*auto audioManager = m_pContext->AudioManager();
     for (auto &[name, audio] : m_pAudioBuffers) {
       for (auto &source : audio.sources) {
@@ -405,7 +399,6 @@ public:
     }
 
     audioManager->CleanUp();*/
-    
   }
 
   void deleteAudioSource(AudioObject object, Ref<audio::AudioSource> source) {
@@ -421,7 +414,7 @@ public:
       }
     }
 
-    //audioManager->deleteSource(source);
+    // audioManager->deleteSource(source);
   }
 
   void deleteAudioObject(AudioObject object) {
@@ -556,19 +549,22 @@ public:
       std::size_t material_name_hash = std::hash<std::string>{}(material_name);
       subRenderC.material_keys[material_index] = material_name_hash;
 
-      uint32_t mat_index = 0;
-      if (!m_pFreeMaterialIndexes.empty()) {
-        mat_index = m_pFreeMaterialIndexes.front();
-        m_pFreeMaterialIndexes.pop();
-      } else {
-        mat_index = m_pMaterialCurrentIndex;
-        m_pMaterialCurrentIndex++;
-      }
-      PBRMaterial pbr_material;
-      m_pMaterials[material_name_hash].index = mat_index;
-      m_pMaterials[material_name_hash].material = pbr_material;
+      if (!m_pMaterials.contains(material_name_hash)) {
 
-      m_pMaterials[material_name_hash].name = material_name;
+        uint32_t mat_index = 0;
+        if (!m_pFreeMaterialIndexes.empty()) {
+          mat_index = m_pFreeMaterialIndexes.front();
+          m_pFreeMaterialIndexes.pop();
+        } else {
+          mat_index = m_pMaterialCurrentIndex;
+          m_pMaterialCurrentIndex++;
+        }
+        PBRMaterial pbr_material;
+        m_pMaterials[material_name_hash].index = mat_index;
+        m_pMaterials[material_name_hash].material = pbr_material;
+
+        m_pMaterials[material_name_hash].name = material_name;
+      }
     }
 
     model.renderMeshes[0].push_back(subRenderC);
@@ -888,9 +884,9 @@ public:
       object.buffer = buffer;
 
       for (int i = 0; i < numSources; i++) {
-        std::string name = std::format("{}_source_{}_{}_{}", path, i, buffer.sources.size(), framework::Clock::Now());// path + "_source_" + std::to_string(i) + "_" + std::to_string(buffer.sources.size());
-        buffer.sources.push_back(
-            audioManager->createSource(name, {.buffer = buffer.buffer, .name = name}));
+        std::string name = std::format("{}_source_{}_{}_{}", path, i, buffer.sources.size(),
+                                       framework::Clock::Now()); // path + "_source_" + std::to_string(i) + "_" + std::to_string(buffer.sources.size());
+        buffer.sources.push_back(audioManager->createSource(name, {.buffer = buffer.buffer, .name = name}));
         object.source.push_back(buffer.sources.back());
       }
 
@@ -911,7 +907,7 @@ public:
     audioBuffer.buffer = buffer;
 
     for (int i = 0; i < numSources; i++) {
-        std::string name = std::format("{}_source_{}_{}_{}", path, i, audioBuffer.sources.size(), framework::Clock::Now());//
+      std::string name = std::format("{}_source_{}_{}_{}", path, i, audioBuffer.sources.size(), framework::Clock::Now()); //
       audioBuffer.sources.push_back(audioManager->createSource(name, {.buffer = audioBuffer.buffer, .name = name}));
     }
 

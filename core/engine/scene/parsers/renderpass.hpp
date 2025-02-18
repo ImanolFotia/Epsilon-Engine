@@ -10,6 +10,7 @@ namespace engine::parsers
 	{
 		unsigned int pipelineLayoutIndex = 0;
 		engine::Ref<engine::BindGroup> bindGroup;
+		std::string name{};
 	};
 
 	static std::unordered_map<std::string, RenderPassInfo> parse_renderpasses()

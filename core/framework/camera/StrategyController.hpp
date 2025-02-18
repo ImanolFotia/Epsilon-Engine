@@ -88,7 +88,7 @@ namespace framework
 
             if (m_UsingWheel)
             {
-                glm::vec2 current_mouse = glm::vec2(framework::Input::Mouse::XPOS, framework::Input::Mouse::YPOS);
+                glm::vec2 current_mouse = glm::vec2(framework::Input::Mouse::XPOS, framework::Input::Mouse::YPOS)*0.1f;
                 glm::vec2 delta_mouse = current_mouse - m_LastMouse;
                 glm::vec2 Orientation = glm::vec2(
                     glm::cos(m_Pitch) * glm::sin(m_Yaw),
@@ -104,7 +104,7 @@ namespace framework
                 m_Movement += glm::normalize(Orientation) * delta_mouse.y;
                 m_Position += glm::vec3(m_Movement.x, 0.0, m_Movement.y) * m_cMaxDragSpeed;
             }
-            m_LastMouse = glm::vec2(obj.X(), obj.Y());
+            m_LastMouse = glm::vec2(obj.X(), obj.Y())*0.1f;
         }
 
         virtual void onUpdate() override

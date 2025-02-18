@@ -141,11 +141,11 @@ public:
 
   void setDragCursor() {
 #if USE_GLFW
-    if (current_cursor == GLFW_IBEAM_CURSOR)
+    /*if (current_cursor == GLFW_IBEAM_CURSOR)
       return;
     GLFWcursor *cursor = glfwCreateStandardCursor(GLFW_IBEAM_CURSOR);
     glfwSetCursor(mWindow, cursor);
-    current_cursor = GLFW_IBEAM_CURSOR;
+    current_cursor = GLFW_IBEAM_CURSOR;*/
 #endif
   }
 
