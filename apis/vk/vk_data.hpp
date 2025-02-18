@@ -187,11 +187,10 @@ struct VulkanRenderPipeline {
   VkPipelineColorBlendStateCreateInfo colorBlending{};
   VkFrontFace winding;
   VkCullModeFlags cullMode;
-  bool dirty = true;
-  // VkClearColorValue clearColor = {0.1f, 0.1f, 0.1f, 1.0f};
   VkClearColorValue clearColor = {{1.0f, 1.0f, 1.0f, 1.0f}};
   VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
   uint32_t numAttachments = 1;
+  bool dirty = true;
   bool recreatePipeline = false;
 };
 
