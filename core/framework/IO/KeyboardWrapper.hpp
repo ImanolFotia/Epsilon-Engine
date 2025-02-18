@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GLFW/glfw3.h"
 namespace framework
 {
     namespace Input
@@ -60,9 +61,12 @@ namespace framework
 
                 static constexpr int ESCAPE = GLFW_KEY_ESCAPE;
                 static constexpr int SPACE = GLFW_KEY_SPACE;
+                static constexpr int ENTER = GLFW_KEY_ENTER;
+                static constexpr int BACKSPACE = GLFW_KEY_BACKSPACE;
                 static constexpr int LEFT_SHIFT = GLFW_KEY_LEFT_SHIFT;
 
                 static constexpr int GRAVE_ACCENT = GLFW_KEY_GRAVE_ACCENT;
+
             }
         }
 #endif
