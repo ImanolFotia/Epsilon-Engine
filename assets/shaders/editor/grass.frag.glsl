@@ -187,7 +187,7 @@ void main() {
 
     vec3 light = CalculateDirectionalPBR(lightDir, vec3(1.0), 1.0, RenderPassUBO.data.viewPosition, fs_in.position, F0, Normal, roughness, Albedo.rgb, specular);
     
-    fragColor = vec4(tonemapACES(light + ambient * ao), 1.0);
+    fragColor = vec4(tonemapACES(light + ambient), 1.0);
 
     vec2 a = (Position.xy / Position.w) * 0.5 + 0.5;
     vec2 b = (PrevPosition.xy / PrevPosition.w) * 0.5 + 0.5;

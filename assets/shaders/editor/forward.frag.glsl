@@ -154,7 +154,7 @@ void main() {
     
     vec3 irradiance = (Gamma(textureLod(textures[1], SampleSphericalMap(-Normal), 0).rgb));
 
-    vec2 lut = textureLod(textures[2], vec2(max(dot(-Normal, V), 0.0), perceptualRoughness), 0).rg;
+    vec2 lut = textureLod(textures[2], vec2(max(dot(Normal, V), 0.0), perceptualRoughness), 0).rg;
 
     float att = 1.0;
     
@@ -166,15 +166,16 @@ void main() {
 
     radiance = (radiance*metallic + radiance*specular) * 0.5;
 
-    vec3 reflec = radiance * (F * lut.x + lut.y);
+    vec3 reflec = radiance  * (F * lut.x + lut.y);
 
     vec3 diffuse = irradiance * Albedo.rgb;
 
     vec3 ambient = (kD * diffuse + reflec);
 
-    vec3 light = CalculateDirectionalPBR(lightDir, vec3(1.0), 1.0, RenderPassUBO.data.viewPosition, fs_in.position, F0, Normal, roughness, Albedo.rgb, specular);
+    vec3 light = CalculateDirectionalPBR(lightDir, vec3(1.0), 1.0, RenderPassUBO.data.viewPosition, fs_in.position, F0, Normal, perceptualRoughness, Albedo.rgb, specular);
     
     fragColor = vec4(tonemapACES(light + ambient), 1.0);
+    fragColor.a = 1.0;
 
     vec2 a = (Position.xy / Position.w) * 0.5 + 0.5;
     vec2 b = (PrevPosition.xy / PrevPosition.w) * 0.5 + 0.5;

@@ -19,4 +19,5 @@ glslc -fshader-stage=comp dummyCompute.glsl -DCOMPUTE_SHADER -o dummyCompute.spv
 
 glslc -fshader-stage=vert effect.vert.glsl -DVERTEX_SHADER -o effect_vert.spv
 glslc -fshader-stage=frag TAA.glsl -DFRAGMENT_SHADER -o TAA.spv
+glslc -fshader-stage=frag SSS.glsl -DFRAGMENT_SHADER -o SSS.spv
 

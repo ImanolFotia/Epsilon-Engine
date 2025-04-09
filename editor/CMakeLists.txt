@@ -14,7 +14,13 @@ add_executable(${PROJECT_NAME} main.cpp  ${PROJECT_ICON})
 
 target_sources(${PROJECT_NAME} PRIVATE main.cpp editor.cpp)
 
+target_precompile_headers(${PROJECT_NAME} REUSE_FROM Epsilon)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
+target_compile_options(${PROJECT_NAME} PRIVATE -fPIC)
 add_dependencies(${PROJECT_NAME} Epsilon)
+
+set(CMAKE_CXX_FLAGS_RELEASE "-O2 -fsized-deallocation -g")
 
 if (MSVC)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")

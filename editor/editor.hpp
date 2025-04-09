@@ -1,11 +1,10 @@
 #pragma once
 
-#define IMGUI_DEFINE_MATH_OPERATORS
-#include "imgui_internal.h"
 #include "renderpasses/compute.hpp"
 #include "renderpasses/default.hpp"
 #include "renderpasses/forward.hpp"
 #include "renderpasses/taa.hpp"
+#include "renderpasses/screen_space_shadows.hpp"
 #include <Epsilon.hpp>
 #include <codecvt>
 #include <locale>
@@ -79,6 +78,7 @@ class Editor : public Epsilon::Epsilon {
   size_t m_SkyBindGroup;
   size_t m_GrassBindGroup;
   size_t m_GridBindGroup;
+  size_t m_SSSBindGroup;
 
   std::shared_ptr<utils::Camera> m_Camera;
   ShaderData shaderData;
@@ -97,6 +97,7 @@ class Editor : public Epsilon::Epsilon {
   bool m_CurrentTAAPass = false;
 
   Renderpasses::TAARenderPasses m_TAAPasses;
+  engine::Ref<engine::RenderPass> m_SSSPass;
 
   engine::Scene::SceneEntity *selected_entity = nullptr;
 
@@ -121,7 +122,15 @@ class Editor : public Epsilon::Epsilon {
     script->data.ManagedPtr = managed_ref;
   }
 
-  std::unordered_map<int, std::mt19937> generators;
+  struct GrassChunk {
+    int index = 0;
+    int id_x = 0;
+    int id_y = 0;
+    int transforms[600];
+    int transform_count = 0;
+  };
+
+  std::vector<GrassChunk> grass_chunks;
   void pLoadDotnet() {
 
     host.Load(L"./modules/dotnet/EpsilonSharp/bin/x64/Debug/net8.0");

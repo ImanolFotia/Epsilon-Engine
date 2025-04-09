@@ -21,7 +21,7 @@ namespace Editor::UI {
 				bool containsRenderModel = false;
 				for (auto& child : children) {
 
-					if (child.first == typeid(engine::RenderModel)) {
+					if (child.first == typeid(engine::RenderModel).hash_code()) {
 						containsRenderModel = true;
 						break;
 					}
@@ -32,7 +32,8 @@ namespace Editor::UI {
 
 					auto r = m_pSceneRef->getChild<engine::RenderModel>(entity);
 					auto render_node = std::static_pointer_cast<engine::Node<engine::RenderModel>>(r);
-
+					if(render_node->data.renderMeshes[0].size() <= 0) return;
+					
 					int max_mesh_id = render_node->data.renderMeshes[0].size();
 					static int current_mesh = 0;
 					current_mesh = glm::min(max_mesh_id - 1, current_mesh);

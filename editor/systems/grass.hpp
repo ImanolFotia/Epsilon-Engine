@@ -63,9 +63,9 @@ public:
     GrassBlade_Lod0.renderMeshes[2] = GrassBlade_Lod2.renderMeshes[0];
     GrassBlade_Lod0.isInstanced = true;
 
-    std::mt19937 e2(555);
     for (int i = 0; i < 256; i++) {
       for (int j = 0; j < 256; j++) {
+        std::mt19937 e2(i * 255 + j);
         // pAddDefaultPlane(glm::vec3((float)(i * 0.15) - 15, 0.0f, (float)(j * 0.15) - 15));
         glm::vec3 position = glm::vec3((float)(i * 0.15) - 15, 0.0f, (float)(j * 0.15) - 15);
         std::random_device rd;
@@ -100,15 +100,15 @@ public:
 
       float i = 0.0f;
       int j = 0;
-      std::mt19937 e2(555);
       for (auto &transform : grass_model_node->data.transforms) {
+        std::mt19937 e2((i+ glm::floor(cam_coords.x)) * 255 + (j+ glm::floor(cam_coords.z)));
         glm::vec3 position = glm::vec3((float)(glm::floor(i / 256.0f) * 0.15) - 15 + cam_coords.x, 0.0f, (float)((j % 256) * 0.15) - 15 + cam_coords.z);
 
         std::uniform_real_distribution<float> dist(-0.2, 0.2);
         std::uniform_real_distribution<float> dist2(-glm::pi<float>(), glm::pi<float>());
 
-        glm::mat4 transform_matrix = glm::translate(glm::mat4(1.0), position /*+ glm::vec3(dist(e2), 0.0, dist(e2))*/ + glm::vec3(0.5, 0.0, 0.5));
-        glm::mat4 rotation_matrix = glm::rotate(glm::mat4(1.0), /*dist2(e2)*/ 0.0f, glm::vec3(0.0, 1.0, 0.0));
+        glm::mat4 transform_matrix = glm::translate(glm::mat4(1.0), position + glm::vec3(dist(e2), 0.0, dist(e2)) + glm::vec3(0.5, 0.0, 0.5));
+        glm::mat4 rotation_matrix = glm::rotate(glm::mat4(1.0), dist2(e2) 0.0f, glm::vec3(0.0, 1.0, 0.0));
         glm::mat4 model_matrix = transform_matrix * rotation_matrix;
         transform = model_matrix;
         i += 1;

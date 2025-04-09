@@ -31,23 +31,7 @@ namespace Editor::Renderpasses {
 		using namespace engine;
 		auto context = scene->getContext();
 		auto assetManager = scene->getAssetManager();
-		/*
-		std::vector<char> vertexCode;
-
-		for (int i = 0; i < (sizeof(Shaders::forward_vertex) / sizeof(uint32_t)); i++) {
-			for (int j = 0; j < 4; j++) {
-				vertexCode.push_back((char)(((char*)&Shaders::forward_vertex[i])[j]));
-			}
-		}
-
-		std::vector<char> fragmentCode;
-
-		for (int i = 0; i < (sizeof(Shaders::forward_vertex) / sizeof(uint32_t)); i++) {
-			for (int j = 0; j < 4; j++) {
-				fragmentCode.push_back((char)(((char*)&Shaders::forward_fragment[i])[j]));
-			}
-		}
-		*/
+		
 		auto vertexCode = utils::readFile("./assets/shaders/editor/effect_vert.spv");
 		auto fragmentCode = utils::readFile("./assets/shaders/editor/TAA.spv");
 

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ui_element.hpp"
-#include <nlohmann/json.hpp>
 
 namespace Editor::UI {
 	class UIObjectProperty : public UIElement {
