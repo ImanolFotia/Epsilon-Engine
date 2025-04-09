@@ -41,10 +41,10 @@ namespace framework
 
     long double Clock::DeltaSeconds()
     {
-        return glm::min(delta() / 1000.0, 1.0l / 60.0l);
+        return delta() / 1000.0;
     }
 
-    int64_t Clock::Now()
+    uint64_t Clock::Now()
     {
         using namespace std::chrono_literals;
         auto n = std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::steady_clock::now());

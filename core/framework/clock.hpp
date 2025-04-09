@@ -48,7 +48,7 @@ namespace framework
 
         static long double DeltaSeconds();
 
-        static int64_t Now();
+        static uint64_t Now();
 
         static void Tick();
 
