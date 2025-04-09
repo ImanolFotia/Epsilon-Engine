@@ -21,7 +21,7 @@ struct SourceInfo {
   glm::vec3 position{};
   glm::vec3 direction{};
   glm::vec3 velocity{};
-  float gain{};
+  float gain = 1.0;
   float angle{};
   float pitch{};
 

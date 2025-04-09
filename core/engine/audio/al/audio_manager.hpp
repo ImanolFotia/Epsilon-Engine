@@ -2,8 +2,6 @@
 
 #include "../audio_manager.hpp"
 #include <apis/al/al.hpp>
-#include <set>
-#include <unordered_map>
 
 namespace engine::audio {
 class ALAudioManager : public AudioManager {
