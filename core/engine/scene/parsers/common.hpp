@@ -1,7 +1,5 @@
 #pragma once
 
-#include <nlohmann/json.hpp>
-
 #include <core/engine/renderer/types.hpp>
 
 namespace engine::parsers {
