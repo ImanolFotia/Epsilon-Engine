@@ -9,6 +9,9 @@ set(EPSILON_BUILD_LOCATION ${CMAKE_BINARY_DIR})
 set(IS_CI_ENV FALSE CACHE BOOL "It's in a CI environment")
 
 set(BUILD_ANDROID FALSE CACHE BOOL "Build for Android")
+add_compile_definitions(IMGUI_DEFINE_MATH_OPERATORS=ON)
+set(DIMGUI_DEFINE_MATH_OPERATORS TRUE)
+set(IMGUI_DEFINE_MATH_OPERATORS "Define math operators for imgui" ON)
 
 add_compile_definitions(BUILD_SHARED_LIBS=${DBUILD_SHARED_LIBS})
 
@@ -364,6 +367,7 @@ set(PROJECT_FILES
     ${CMAKE_SOURCE_DIR}/core/framework/loaders/DDS.cpp
     ${CMAKE_SOURCE_DIR}/core/framework/vfs/cifstream.cpp
     ${CMAKE_SOURCE_DIR}/core/framework/vfs/zip.cpp
+    ${CMAKE_SOURCE_DIR}/core/engine/scene/asset_manager.cpp
     ${CMAKE_SOURCE_DIR}/apis/al/listener.hpp
     ${CMAKE_SOURCE_DIR}/apis/al/source.hpp
     ${CMAKE_SOURCE_DIR}/apis/al/al_data.hpp
@@ -430,6 +434,7 @@ PRIVATE
     <map>
     <array>
     <set>
+    <stack>
     <unordered_set>
     <iostream>
     <fstream>
@@ -460,6 +465,15 @@ PRIVATE
     <concepts>
     <algorithm>
     <any>
+    <core/ui/MaterialIcons_Regular.hpp>
+    <vulkan/vulkan_core.h>
+    <vulkan/vulkan.hpp>
+    <nlohmann/json.hpp>
+    <GLFW/glfw3.h>
+    <GLFW/glfw3native.h>
+    <imgui.h>
+    <imgui_internal.h>
+    <vk_mem_alloc.h>
 )
 
 
