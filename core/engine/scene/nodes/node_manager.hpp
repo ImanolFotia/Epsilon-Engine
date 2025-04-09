@@ -47,12 +47,13 @@ struct SceneManager {
 
   template <typename T, typename P, class... Args> std::shared_ptr<Node<T>> emplace(std::shared_ptr<Node<P>> parent, Args &&...args) {
     auto type = GetType<T>().hash_code();
-    m_Nodes[type].push_back(std::make_shared<Node<T>>(std::forward<Args>(args)...));
-    auto ptr = m_Nodes[type].back();
+    auto &node_container = m_Nodes[type];
+    node_container.push_back(std::make_shared<Node<T>>(std::forward<Args>(args)...));
+    auto &ptr = node_container.back();
     ptr->parent = parent;
     ptr->parent->children[type].push_back(ptr);
     m_Positions[node_count].type_id = type;
-    m_Positions[node_count].container_position = m_Nodes[type].size() - 1;
+    m_Positions[node_count].container_position = node_container.size() - 1;
     ptr->index = node_count;
 
     node_count++;
@@ -60,13 +61,15 @@ struct SceneManager {
     return std::static_pointer_cast<Node<T>>(ptr);
   }
 
-  template <typename T, typename P, class... Args> std::shared_ptr<Node<T>> insert(std::shared_ptr<Node<P>> parent, T obj) {
+  template <typename T, typename P, class... Args> std::shared_ptr<Node<T>> insert(std::shared_ptr<Node<P>> parent, const T &obj) {
     auto type = GetType<T>().hash_code();
-    m_Nodes[type].push_back(std::make_shared<Node<T>>(obj));
-    auto ptr = m_Nodes[type].back();
+    auto &node_container = m_Nodes[type];
+    auto &n = node_container.emplace_back();
+    n = std::make_shared<Node<T>>(obj);
+    auto &ptr = node_container.back();
     ptr->parent = parent;
     ptr->parent->children[type].push_back(ptr);
-    m_Positions[node_count] = {type, m_Nodes[type].size() - 1};
+    m_Positions[node_count] = {type, node_container.size() - 1};
     ptr->index = node_count;
     node_count++;
     return std::static_pointer_cast<Node<T>>(ptr);

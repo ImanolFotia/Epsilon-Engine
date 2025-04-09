@@ -281,7 +281,7 @@ m_pSceneManager.emplace<T>(m_pSceneManager.root);
     return node;
   }
 
-  template <typename P, typename T> auto insertIntoNode(Box boundingBox, std::shared_ptr<Node<P>> parent, T object, OctreeItemMask mask = OctreeItemMask::ANY) {
+  template <typename P, typename T> auto insertIntoNode(Box boundingBox, std::shared_ptr<Node<P>> parent, const T &object, OctreeItemMask mask = OctreeItemMask::ANY) {
     auto node = m_pSceneManager.insert(parent, object);
 
     if (typeid(T) == typeid(RenderModel)) {
@@ -293,6 +293,7 @@ m_pSceneManager.emplace<T>(m_pSceneManager.root);
 
       insertIntoNode(parent, octree_node);
     }
+      
     return node;
   }
 
