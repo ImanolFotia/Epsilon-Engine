@@ -1,16 +1,5 @@
 #pragma once
 
-#include <algorithm> // Necessary for std::clamp
-#include <cstddef>
-#include <cstdint> // Necessary for UINT32_MAX
-#include <limits>
-#include <vector>
-
-#if !defined(__ANDROID__)
-#include "GLFW/glfw3.h"
-#include <vulkan/vulkan.hpp>
-#endif
-
 #include "framebuffer.hpp"
 #include "memory.hpp"
 #include "pipeline.hpp"

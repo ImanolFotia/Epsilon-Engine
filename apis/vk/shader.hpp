@@ -1,11 +1,5 @@
 #pragma once
 
-#if !defined(__ANDROID__)
-#include <vulkan/vulkan.hpp>
-#endif
-
-#include <vector>
-#include <fstream>
 #include "vk_data.hpp"
 
 namespace vk::shader

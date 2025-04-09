@@ -1,13 +1,5 @@
 #pragma once
 
-#include <stdexcept>
-#include <vector>
-#include <vulkan/vulkan_core.h>
-
-#if !defined(__ANDROID__)
-#include <vulkan/vulkan.hpp>
-#endif
-
 #include "core/framework/log.hpp"
 #include "queues.hpp"
 #include "swap_chain.hpp"
@@ -17,10 +9,6 @@
 #include "pipeline.hpp"
 #include "sync_objects.hpp"
 #include "vk_data.hpp"
-
-#if defined(__linux__) && (!defined(ANDROID) && !defined(__ANDROID__))
-#include <bits/stdc++.h>
-#endif
 
 #if defined(ANDROID) || defined(__ANDROID__)
 

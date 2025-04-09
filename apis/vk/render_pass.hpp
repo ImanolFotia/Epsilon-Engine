@@ -1,10 +1,5 @@
 #pragma once
 
-#include <vulkan/vulkan_core.h>
-#if !defined(__ANDROID__)
-#include <vulkan/vulkan.hpp>
-#endif
-
 #include "device.hpp"
 #include "swap_chain.hpp"
 #include "texture.hpp"

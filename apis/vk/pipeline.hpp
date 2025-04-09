@@ -1,10 +1,5 @@
 #pragma once
 
-#include "vulkan/vulkan_core.h"
-#if !defined(__ANDROID__)
-#include <vulkan/vulkan.hpp>
-#endif
-
 #include "core/engine/renderer/types.hpp"
 #include "descriptors.hpp"
 #include "rasterizer.hpp"
@@ -14,7 +9,6 @@
 #include "vertex_buffer.hpp"
 #include "viewport.hpp"
 #include <core/framework/containers/static_array.hpp>
-#include <functional>
 
 #include "vk_data.hpp"
 

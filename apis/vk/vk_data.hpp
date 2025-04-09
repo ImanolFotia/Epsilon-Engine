@@ -1,19 +1,12 @@
 #pragma once
 
 #include "core/engine/renderer/types.hpp"
-#include <vulkan/vulkan_core.h>
-#if !defined(__ANDROID__)
-#include <vulkan/vulkan.hpp>
-#endif
 
 #if defined(ANDROID) || defined(__ANDROID__)
 #define VK_USE_PLATFORM_ANDROID_KHR
 #undef VK_USE_PLATFORM_XLIB_KHR
 #endif
 #include "vk_mem_alloc.h"
-#include <cstdint>
-#include <set>
-#include <unordered_map>
 
 namespace vk {
 static uint32_t MAX_FRAMES_IN_FLIGHT = 4;

@@ -1,12 +1,5 @@
 #pragma once
 
-#include <optional>
-#include <vector>
-
-#if !defined(__ANDROID__)
-#include <vulkan/vulkan.hpp>
-#endif
-
 #include "surface.hpp"
 #include "vk_data.hpp"
 

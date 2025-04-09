@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vulkan/vulkan.h>
-
 #include "device.hpp"
 #include "render_pass.hpp"
 

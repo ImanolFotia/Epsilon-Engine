@@ -1,9 +1,5 @@
 #pragma once
 
-#if !defined(__ANDROID__)
-#include <vulkan/vulkan.hpp>
-#endif
-#include <cmath>
 
 #include "command.hpp"
 #include "vk_data.hpp"

@@ -1,10 +1,5 @@
 #pragma once
 
-#if !defined(__ANDROID__)
-#include <vulkan/vulkan.hpp>
-#endif
-
-#include <stdexcept>
 #include "vk_data.hpp"
 
 namespace vk

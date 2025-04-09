@@ -1,9 +1,5 @@
 #pragma once
 
-#if !defined(__ANDROID__)
-#include <vulkan/vulkan.hpp>
-#endif
-
 #include "render_pass.hpp"
 #include "sync_objects.hpp"
 #include "vk_data.hpp"

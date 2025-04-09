@@ -1,14 +1,5 @@
 #pragma once
 
-#include <iostream>
-#include <vector>
-#include <memory>
-#include <string>
-#include <cstring>
-#include <set>
-
-#include <vulkan/vulkan.h>
-
 #include "extensions.hpp"
 #include "vk_data.hpp"
 

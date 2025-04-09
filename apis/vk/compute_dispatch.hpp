@@ -1,4 +1,3 @@
-#include <vulkan/vulkan.hpp>
 
 #include "shader.hpp"
 #include "vk_data.hpp"

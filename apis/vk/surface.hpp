@@ -1,16 +1,5 @@
 #pragma once
 
-#if !defined(__ANDROID__)
-#include <vulkan/vulkan.hpp>
-#endif
-
-#if USE_GLFW
-
-#include <GLFW/glfw3.h>
-#include <GLFW/glfw3native.h>
-
-#endif
-
 #ifdef _WIN32
 #include <windows.h>
 #define VK_USE_PLATFORM_WIN32_KHR
