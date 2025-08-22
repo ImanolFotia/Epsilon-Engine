@@ -8,6 +8,8 @@ long double framework::Clock::mCurrentTime = 0;
 long double framework::Clock::mLastTime = 0;
 long double framework::Clock::mDeltaTime = 0;
 
+uint64_t framework::Clock::mNow = 0;
+
 std::chrono::steady_clock::time_point framework::Clock::mStart{};
 long double framework::Clock::mdStart = 0.0;
 
@@ -50,6 +52,8 @@ namespace framework
         auto n = std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::steady_clock::now());
 
         return (n - std::chrono::time_point<std::chrono::steady_clock, std::chrono::microseconds>(0us)).count();
+
+        return mNow;
     }
 
     void Clock::Tick()
@@ -58,6 +62,9 @@ namespace framework
 
         auto now = steady_clock::now();
         auto now_ms = time_point_cast<milliseconds>(now);
+        auto now_us = time_point_cast<microseconds>(now);
+
+        mNow = (now_us - std::chrono::time_point<std::chrono::steady_clock, std::chrono::microseconds>(0us)).count();
 
         last(curr());
         curr(duration_cast<milliseconds>(now_ms - start()).count());

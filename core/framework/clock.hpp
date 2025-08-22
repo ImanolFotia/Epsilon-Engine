@@ -67,6 +67,8 @@ namespace framework
         static long double mLastTime;
         static long double mDeltaTime;
 
+        static uint64_t mNow;
+
         static std::chrono::steady_clock::time_point mStart;
         static long double mdStart;
 
