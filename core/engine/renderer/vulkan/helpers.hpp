@@ -77,13 +77,53 @@ static VkFormat resolveFormat(engine::TextureFormat format,
     return VK_FORMAT_R8G8B8A8_UNORM;
 
   if (format == DEPTH_F16)
-    return VK_FORMAT_D16_UNORM_S8_UINT;
+    return VK_FORMAT_D32_SFLOAT_S8_UINT;
   if (format == DEPTH_F32)
     return VK_FORMAT_D32_SFLOAT;
   if (format == DEPTH_F32_STENCIL_8)
     return VK_FORMAT_D32_SFLOAT_S8_UINT;
   return VK_FORMAT_MAX_ENUM;
 }
+
+static VkPrimitiveTopology resolveTopology(PrimitiveTopology topology) {
+   if(PrimitiveTopology::POINT_LIST == topology){
+    return VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
+   }
+   else if(PrimitiveTopology::LINE_LIST == topology){
+    return VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
+   }
+   else if(PrimitiveTopology::LINE_STRIP == topology){
+    return VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
+   }
+   else if(PrimitiveTopology::TRIANGLE_LIST == topology){
+    return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+   }
+   else if(PrimitiveTopology::TRIANGLE_STRIP == topology){
+    return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+   }
+   else if(PrimitiveTopology::TRIANGLE_FAN == topology){
+    return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN;
+   }
+   else if(PrimitiveTopology::LINE_LIST_WITH_ADJACENCY == topology){
+    return VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY;
+   }
+   else if(PrimitiveTopology::LINE_STRIP_WITH_ADJACENCY == topology){
+    return VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY;
+   }
+   else if(PrimitiveTopology::TRIANGLE_LIST_WITH_ADJACENCY == topology){
+    return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY;
+   }
+   else if(PrimitiveTopology::TRIANGLE_STRIP_WITH_ADJACENCY == topology){
+    return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY;
+   }
+   else if(PrimitiveTopology::PATCH_LIST == topology){
+    return VK_PRIMITIVE_TOPOLOGY_PATCH_LIST;
+   }
+   
+   assert("Invalid primitive topology");
+
+   return {};
+};
 
 static VkFilter resolveFilter(engine::Filtering filter) {
   if (filter == POINT)
