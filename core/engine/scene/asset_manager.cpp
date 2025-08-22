@@ -269,6 +269,7 @@ void AssetManager::pLoadMaterials(std::string name, RenderMesh &subRenderC,
     std::size_t material_name_hash = std::hash<std::string>{}(material_name);
 
     if (m_pMaterials.contains(material_name_hash)) {
+      m_pMaterials.at(material_name_hash).referenceCount++;
       subRenderC.material_keys[material_index] = material_name_hash;
       material_index++;
       continue;
@@ -329,6 +330,7 @@ void AssetManager::pLoadMaterials(std::string name, RenderMesh &subRenderC,
     m_pMaterials[material_name_hash].index = mat_index;
     m_pMaterials[material_name_hash].material = pbr_material;
     m_pMaterials[material_name_hash].name = material_name;
+    m_pMaterials[material_name_hash].referenceCount = 1;
 
     if (!material.albedo_path.empty()) {
       m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Albedo] =
@@ -414,6 +416,9 @@ RenderModel AssetManager::createModelFromMesh(
       m_pMaterials[material_name_hash].material = pbr_material;
 
       m_pMaterials[material_name_hash].name = material_name;
+      m_pMaterials[material_name_hash].referenceCount = 1;
+    } else {
+      m_pMaterials[material_name_hash].referenceCount++;
     }
   }
 
@@ -459,6 +464,7 @@ AssetManager::createModelFromMesh(const std::string &name,
   model.renderMeshes[0].push_back(subRenderC);
 
   if (m_pMaterials.contains(material_name_hash)) {
+    m_pMaterials[material_name_hash].referenceCount++;
     return model;
   }
   PBRMaterial pbr_material;
@@ -513,6 +519,7 @@ AssetManager::createModelFromMesh(const std::string &name,
   m_pMaterials[material_name_hash].material = pbr_material;
 
   m_pMaterials[material_name_hash].name = material_name;
+  m_pMaterials[material_name_hash].referenceCount = 1;
 
   if (!material.albedo_path.empty()) {
     m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Albedo] =
@@ -635,6 +642,7 @@ RenderModel &AssetManager::loadModel(
     std::size_t material_name_hash = std::hash<std::string>{}(material_name);
 
     if (m_pMaterials.contains(material_name_hash)) {
+      m_pMaterials[material_name_hash].referenceCount++;
       model.renderMeshes[0].push_back(subRenderC);
       continue;
     }
@@ -646,6 +654,7 @@ RenderModel &AssetManager::loadModel(
 
       m_pMaterials[material_name_hash].material = material;
       m_pMaterials[material_name_hash].name = material_name;
+      m_pMaterials[material_name_hash].referenceCount = 1;
 
       if (!mesh_material.albedo.empty()) {
         m_pMaterials[material_name_hash].Slot[(int)TextureSlot::Albedo] =

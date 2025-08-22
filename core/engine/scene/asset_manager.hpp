@@ -94,6 +94,7 @@ struct PBRMaterialIndex {
   uint32_t index{};
   std::size_t Slot[4] = {0};
   std::string name;
+  int referenceCount = 0;
 };
 
 struct RenderMesh {
@@ -201,6 +202,7 @@ class AssetManager {
   std::shared_ptr<Context> m_pContext;
 
   friend class Scene;
+  friend class RenderGraph;
 
   uint32_t mesh_counter = 0;
 
