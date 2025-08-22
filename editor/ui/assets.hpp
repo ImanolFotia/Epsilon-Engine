@@ -48,8 +48,11 @@ namespace Editor::UI
 					auto result = m_pFileDialog.GetLastPath();
 					if (result.size() > 0) {
 						auto ext = getExtension(result.back());
-						if (ext == "gltf" || ext == "glb")
-							assetManager->loadModel(result.back());
+					        std::println("{}", ext);
+						if (ext == "gltf" || ext == "glb") {
+					          std::println("found gltf file");
+						  assetManager->loadModel(result.back());
+						}
 					} });
 				th.detach();
 				// addEntityCallback();
