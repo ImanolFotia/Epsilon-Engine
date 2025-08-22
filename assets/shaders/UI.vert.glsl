@@ -3,10 +3,15 @@
 
 layout(location = 0) in vec4 pos_coords;
 layout(location = 1) in vec4 color;
+layout(location = 2) in vec2 vtx_coords;
+layout(location = 3) in vec2 padding;
+layout(location = 4) in vec4 attributes;
 
 layout(location = 0) out VARYING  {
     vec4 color;
     vec2 texCoords;
+    vec4 vtx_coord;
+    float radius;
 } vs_out;
 
 
@@ -30,8 +35,21 @@ layout(set = 0, binding = 0) uniform UniformBufferObject
 }
 RenderPassUBO;
 
+
+vec2 corners[] = {
+    vec2(0.0, 0.0),
+    vec2(1.0, 0.0),
+    vec2(0.0, 1.0),
+    vec2(0.0, 1.0),
+    vec2(1.0, 0.0),
+    vec2(1.0, 1.0)
+};
+
 void main() {
     gl_Position = vec4(pos_coords.xy * 2.0 - 1.0, 0.0, 1.0);
     vs_out.color = color;
     vs_out.texCoords = pos_coords.zw;
+    vs_out.vtx_coord.xy = corners[int(vtx_coords.x)];
+    vs_out.vtx_coord.zw = padding;
+    vs_out.radius = vtx_coords.y;
 }
