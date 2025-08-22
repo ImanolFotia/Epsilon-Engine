@@ -297,6 +297,9 @@ Ref<BindGroup> VulkanResourceManager::createBindGroup(BindGroupInfo material) {
         auto texture =
             binding.index == pass->renderPassChain.Textures.size() ? pass->renderPassChain.DepthTexture : pass->renderPassChain.Textures.at(binding.index);
 
+        if (texture.info.numSamples > 1) {
+          texture = pass->renderPassChain.ResolveTextures[binding.index];
+        }
         vk::VulkanShaderBinding shaderBinding = {.texture = texture,
                                                  .descriptorBinding = binding.type == UniformBindingType::STORAGE_IMAGE
                                                                           ? VkDescriptorType::VK_DESCRIPTOR_TYPE_STORAGE_IMAGE
@@ -318,6 +321,9 @@ Ref<BindGroup> VulkanResourceManager::createBindGroup(BindGroupInfo material) {
         auto texture =
             binding.index == pass->renderPassChain.Textures.size() ? pass->renderPassChain.DepthTexture : pass->renderPassChain.Textures.at(binding.index);
 
+        if (texture.info.numSamples > 1) {
+          texture = pass->renderPassChain.ResolveTextures[binding.index];
+        }
         vk::VulkanShaderBinding shaderBinding = {.texture = texture,
                                                  .descriptorBinding = binding.type == UniformBindingType::STORAGE_IMAGE
                                                                           ? VkDescriptorType::VK_DESCRIPTOR_TYPE_STORAGE_IMAGE
@@ -469,12 +475,14 @@ Ref<RenderPass> VulkanResourceManager::createDefaultRenderPass(RenderPassInfo re
 
   m_pVkDataPtr->defaultRenderPass.numAttachments = renderPassInfo.depthAttachment ? renderPassInfo.numAttachments - 1 : renderPassInfo.numAttachments;
 
+  int i = 0;
   for (auto &pipeline : m_pVkDataPtr->defaultRenderPass.renderPipelines) {
     pipeline.descriptorSetLayouts.resize(1);
     if (m_pVkDataPtr->bindless_supported) {
       pipeline.descriptorSetLayouts.resize(2);
       pipeline.descriptorSetLayouts.at(GLOBAL_LAYOUT) = m_pGlobalDescriptorSetLayout;
     }
+    pipeline.topology = resolveTopology(renderPassInfo.pipelineLayout[i++].topology);
   }
   vk::createGraphicsPipeline(*m_pVkDataPtr, m_pVkDataPtr->defaultRenderPass, renderPassInfo);
 
@@ -529,9 +537,12 @@ Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPas
     renderPass.clearValues[i].color = {renderPassInfo.attachments[i].clearColor[0], renderPassInfo.attachments[i].clearColor[1],
                                        renderPassInfo.attachments[i].clearColor[2], renderPassInfo.attachments[i].clearColor[3]};
   }
-  if (renderPassInfo.depthAttachment)
+  if (renderPassInfo.depthAttachment) {
+    renderPass.depthStencilClearColor = {(float)renderPassInfo.attachments.back().depthStencilValue[0],
+                                                  renderPassInfo.attachments.back().depthStencilValue[1]};
     renderPass.clearValues.back().depthStencil = {(float)renderPassInfo.attachments.back().depthStencilValue[0],
                                                   renderPassInfo.attachments.back().depthStencilValue[1]};
+  }
 
   renderPass.id = m_pRenderPassCount;
 
@@ -546,6 +557,28 @@ Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPas
 
   vk::createRenderPass(*m_pVkDataPtr, renderPass, renderPassInfo, false);
 
+  if (renderPass.multisampled) {
+    for (int i = 0; i < renderPassInfo.attachments.size(); i++) {
+
+      vk::VulkanTextureInfo texInfo;
+      texInfo.numSamples = static_cast<VkSampleCountFlagBits>(1);
+      texInfo.format = renderPass.renderPassChain.ImageFormats[i];
+      texInfo.width = renderPassInfo.dimensions.width;
+      texInfo.height = renderPassInfo.dimensions.height;
+      texInfo.usage = VK_IMAGE_USAGE_SAMPLED_BIT;
+
+      texInfo.usage |= renderPassInfo.attachments[i].isDepthAttachment ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+
+      auto &resolve_texture = renderPass.renderPassChain.ResolveTextures.emplace_back();
+      resolve_texture = createImage(*m_pVkDataPtr, texInfo);
+
+      resolve_texture.deviceMemory = vk::allocateTextureMemory(*m_pVkDataPtr, resolve_texture, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+      resolve_texture.format = resolve_texture.imageInfo.format;
+      vk::createImageView(*m_pVkDataPtr, resolve_texture, renderPassInfo.attachments[i].isDepthAttachment ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
+      vk::createTextureSampler(*m_pVkDataPtr, resolve_texture);
+    }
+  }
+
   for (size_t i = 0; i < renderPassInfo.attachments.size(); i++) {
     auto &attachment = renderPassInfo.attachments[i];
 
@@ -556,8 +589,13 @@ Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPas
       for (auto &externAttachment : m_pRenderPassInfo[externRenderPass->id].attachments) {
         if (externAttachment.name == attachment.name) {
           externValid = true;
-          renderPass.renderPassChain.Textures.push_back(externRenderPass->renderPassChain.Textures.at(externAttachment.texture_index));
-          renderPass.renderPassChain.ImageViews.push_back(externRenderPass->renderPassChain.ImageViews.at(externAttachment.imageview_index));
+          if (externRenderPass->renderPassChain.Textures.at(externAttachment.texture_index).info.numSamples > 1) {
+            renderPass.renderPassChain.Textures.push_back(externRenderPass->renderPassChain.ResolveTextures[externAttachment.texture_index]);
+            renderPass.renderPassChain.ImageViews.push_back(externRenderPass->renderPassChain.ResolveTextures[externAttachment.texture_index].imageView);
+          } else {
+            renderPass.renderPassChain.Textures.push_back(externRenderPass->renderPassChain.Textures.at(externAttachment.texture_index));
+            renderPass.renderPassChain.ImageViews.push_back(externRenderPass->renderPassChain.ImageViews.at(externAttachment.imageview_index));
+          }
 
           if (attachment.isDepthAttachment)
             renderPass.renderPassChain.DepthTexture = externRenderPass->renderPassChain.Textures.at(externAttachment.texture_index);
@@ -584,6 +622,8 @@ Ref<RenderPass> VulkanResourceManager::createRenderPass(RenderPassInfo renderPas
 
     texInfo.compareEnable = attachment.depthCompare;
     texInfo.isAttachment = true;
+    if (renderPass.multisampled)
+      texInfo.numSamples = m_pVkDataPtr->msaaSamples;
     vk::VulkanTexture texture = pCreateTextureBuffer(texInfo);
     texture.name = attachment.name;
     bool depth_write_enable = false;
@@ -1171,8 +1211,8 @@ Ref<ComputeShader> VulkanResourceManager::createComputeShader(ComputeShaderInfo 
 
       VkImageMemoryBarrier2 imageMemoryBarrier = {};
       imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2;
-      imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_GENERAL;// texture.imageLayout;//VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL;
-      imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_GENERAL;//texture.imageLayout; // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+      imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_GENERAL; // texture.imageLayout;//VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL;
+      imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_GENERAL; // texture.imageLayout; // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
       imageMemoryBarrier.image = texture.image;
       VkImageAspectFlagBits aspect_flags = VK_IMAGE_ASPECT_COLOR_BIT;
       if (texture.format == VK_FORMAT_D32_SFLOAT || texture.format == VK_FORMAT_D32_SFLOAT_S8_UINT || texture.format == VK_FORMAT_D16_UNORM_S8_UINT ||
@@ -1202,6 +1242,49 @@ Ref<ComputeShader> VulkanResourceManager::UpdateComputeShader(Ref<ComputeShader>
   computeShader->groupCountX = computeInfo.groupCountX;
   computeShader->groupCountY = computeInfo.groupCountY;
   computeShader->groupCountZ = computeInfo.groupCountZ;
+
+  computeShader->imageMemoryBarrier.clear();
+  for (auto &imageBarrier : computeInfo.memoryBarrier) {
+    if (imageBarrier.image.size() > 0) {
+      vk::VulkanTexture texture;
+
+      auto pass = renderPassPool.get(std::hash<std::string>{}(imageBarrier.image));
+      if (pass)
+        texture = pass->renderPassChain.Textures.at(0);
+      else
+        texture = *texPool.get(std::hash<std::string>{}(imageBarrier.image));
+
+      engine::MemoryBarrierHint hint;
+
+      VkAccessFlags srcAccessMask;
+      VkAccessFlags dstAccessMask;
+      VkPipelineStageFlags2 srcStageMask;
+      VkPipelineStageFlags2 dstStageMask;
+
+      vk::ResolveMasks(imageBarrier.memoryBarrierHint, srcAccessMask, dstAccessMask, srcStageMask, dstStageMask);
+
+      VkImageMemoryBarrier2 imageMemoryBarrier = {};
+      imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2;
+      imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_GENERAL; // texture.imageLayout;//VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL;
+      imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_GENERAL; // texture.imageLayout; // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+      imageMemoryBarrier.image = texture.image;
+      VkImageAspectFlagBits aspect_flags = VK_IMAGE_ASPECT_COLOR_BIT;
+      if (texture.format == VK_FORMAT_D32_SFLOAT || texture.format == VK_FORMAT_D32_SFLOAT_S8_UINT || texture.format == VK_FORMAT_D16_UNORM_S8_UINT ||
+          texture.format == VK_FORMAT_D16_UNORM || texture.format == VK_FORMAT_D24_UNORM_S8_UINT)
+        aspect_flags = (VkImageAspectFlagBits)(VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT);
+
+      imageMemoryBarrier.subresourceRange = {aspect_flags, 0, 1, 0, 1};
+      imageMemoryBarrier.srcAccessMask = srcAccessMask;
+      imageMemoryBarrier.dstAccessMask = dstAccessMask;
+      imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+      imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+      imageMemoryBarrier.srcStageMask = srcStageMask;
+      imageMemoryBarrier.dstStageMask = dstStageMask;
+
+      computeShader->hasImageBarrier = true;
+      computeShader->imageMemoryBarrier.push_back(imageMemoryBarrier);
+    }
+  }
 
   return computeShaderRef;
 }
@@ -1266,7 +1349,7 @@ void VulkanResourceManager::ResizeTexture(Ref<Texture> textureRef, glm::ivec2 si
 
     bindless_image_info.sampler = texture->sampler;
     bindless_image_info.imageView = texture->imageView;
-    bindless_image_info.imageLayout =  texture->isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    bindless_image_info.imageLayout = texture->isDepthAttachment ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
     bindless_descriptor_writes.pImageInfo = &bindless_image_info;
 
     vkUpdateDescriptorSets(m_pVkDataPtr->logicalDevice, 1, &bindless_descriptor_writes, 0, nullptr);
@@ -1298,12 +1381,49 @@ void VulkanResourceManager::ResizeFramebuffer(Ref<RenderPass> renderpass_ref, gl
     if (renderPass->renderPassChain.DepthTexture.image != VK_NULL_HANDLE && renderPass->renderPassChain.DepthTexture.index < 0)
       vmaDestroyImage(m_pAllocator, renderPass->renderPassChain.DepthTexture.image, renderPass->renderPassChain.DepthTexture.allocation);
   }
+  {
+    for (int i = 0; i < renderPass->renderPassChain.ResolveTextures.size(); i++) {
+      if (renderPass->renderPassChain.ResolveTextures[i].sampler != VK_NULL_HANDLE && renderPass->renderPassChain.ResolveTextures[i].index < 0)
+        vkDestroySampler(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.ResolveTextures[i].sampler, nullptr);
+
+      if (renderPass->renderPassChain.ResolveTextures[i].imageView != VK_NULL_HANDLE && renderPass->renderPassChain.ResolveTextures[i].index < 0)
+        vkDestroyImageView(m_pVkDataPtr->logicalDevice, renderPass->renderPassChain.ResolveTextures[i].imageView, nullptr);
+      if (renderPass->renderPassChain.ResolveTextures[i].image != VK_NULL_HANDLE && renderPass->renderPassChain.ResolveTextures[i].index < 0)
+        vk::destroyImage(*m_pVkDataPtr, renderPass->renderPassChain.ResolveTextures[i]);
+
+      vk::freeMemory(*m_pVkDataPtr, renderPass->renderPassChain.ResolveTextures[i].deviceMemory);
+    }
+  }
 
   auto &renderPassInfo = m_pRenderPassInfo[renderPass->id];
   renderPassInfo.dimensions.width = extent.width;
   renderPassInfo.dimensions.height = extent.height;
 
   renderPass->renderPassChain.Extent = extent;
+
+
+  if (renderPass->multisampled) {
+    for (int i = 0; i < renderPass->renderPassChain.ResolveTextures.size(); i++) {
+      vk::VulkanTextureInfo texInfo;
+      texInfo.numSamples = static_cast<VkSampleCountFlagBits>(1);
+      texInfo.format = renderPass->renderPassChain.ImageFormats[i];
+      texInfo.width = renderPassInfo.dimensions.width;
+      texInfo.height = renderPassInfo.dimensions.height;
+      texInfo.usage = VK_IMAGE_USAGE_SAMPLED_BIT;
+
+      texInfo.usage |= renderPassInfo.attachments[i].isDepthAttachment ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+
+      auto &resolve_texture = renderPass->renderPassChain.ResolveTextures[i];
+      resolve_texture = createImage(*m_pVkDataPtr, texInfo);
+
+      resolve_texture.deviceMemory = vk::allocateTextureMemory(*m_pVkDataPtr, resolve_texture, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+      resolve_texture.format = resolve_texture.imageInfo.format;
+      vk::createImageView(*m_pVkDataPtr, resolve_texture, renderPassInfo.attachments[i].isDepthAttachment ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT);
+      vk::createTextureSampler(*m_pVkDataPtr, resolve_texture);
+    }
+  }
+
+
 
   for (size_t i = 0; i < renderPassInfo.attachments.size(); i++) {
     auto &attachment = renderPassInfo.attachments[i];
@@ -1324,6 +1444,7 @@ void VulkanResourceManager::ResizeFramebuffer(Ref<RenderPass> renderpass_ref, gl
     texInfo.compareEnable = attachment.depthCompare;
 
     texInfo.isAttachment = true;
+    texInfo.numSamples = (VkSampleCountFlagBits)renderPassInfo.numSamples;
     vk::VulkanTexture texture = pCreateTextureBuffer(texInfo);
 
     texture.bindingType = vk::RENDER_BUFFER_SAMPLER;
@@ -1360,7 +1481,7 @@ void VulkanResourceManager::ResizeFramebuffer(Ref<RenderPass> renderpass_ref, gl
       }
 
       if (attachment.isSampler) {
-        renderPass->renderPassChain.hasDepthSampler = false;
+        renderPass->renderPassChain.hasDepthSampler = true;
         renderPass->renderPassChain.ImageViews.at(i) = texture.imageView;
         renderPass->renderPassChain.Textures.at(i) = texture;
       }
@@ -1388,6 +1509,7 @@ void VulkanResourceManager::ResizeFramebuffer(Ref<RenderPass> renderpass_ref, gl
 
   renderPass->renderPassChain.setViewport(viewport);
   renderPass->renderPassChain.setScissor(rect);
+
 }
 
 void VulkanResourceManager::PatchMesh(Ref<Mesh> meshRef, UpdateMeshInfo updateInfo) {
