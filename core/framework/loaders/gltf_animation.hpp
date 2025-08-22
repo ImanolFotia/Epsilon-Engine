@@ -41,6 +41,8 @@ namespace framework {
 		int index = 0;
 		float current_time = 0.0f;
 		float offset_time = 0.0f;
+	        float speed = 1.0;
+	        bool loops = true;
 	};
 
 	struct SkeletonNode {
