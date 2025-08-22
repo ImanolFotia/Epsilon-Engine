@@ -10,6 +10,8 @@
 #include "core/framework/def.hpp"
 #include <core/framework/clock.hpp>
 
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+//#define GLM_FORCE_LEFT_HANDED
 namespace utils
 {
     Camera::Camera(glm::vec3 cPosition, glm::vec3 cOrientation)
@@ -279,8 +281,12 @@ namespace utils
         const glm::vec2 iRes = 1.0f / glm::vec2((float)winx, (float)winy);
 
         if(m_pProjType == Perspective)
-            ProjectionMatrix = glm::perspective(glm::radians(FieldOfView), glm::clamp(Aspectratio, -10.0f, 10.0f), near_plane, far_plane);
-        else
+#ifdef REVERSE_Z
+          ProjectionMatrix =  glm::perspectiveFovRH_ZO(glm::radians(FieldOfView), (float)winx, (float)winy, far_plane, near_plane);
+#else
+      ProjectionMatrix = glm::perspective(glm::radians(FieldOfView), glm::clamp(Aspectratio, -10.0f, 10.0f), near_plane, far_plane);
+#endif
+      else
             ProjectionMatrix = glm::ortho(-(float)winx/60.0f, (float)winx / 60.0f, -(float)winy /60.0f, (float)winy / 60.0f, -500.0f, 500.0f);
 
         glm::vec2 Jitter = glm::vec2(0.0f);;
