@@ -1,8 +1,6 @@
 #pragma once
 #include "../object_pool.hpp"
 
-#include <glm/glm.hpp>
-
 namespace engine::audio {
 class AudioSource;
 class AudioBuffer;
@@ -76,6 +74,7 @@ public:
   virtual glm::vec3 getSourcePosition(Ref<AudioSource>) = 0;
   virtual glm::vec3 getSourceDirection(Ref<AudioSource>) = 0;
   virtual glm::vec3 getSourceVelocity(Ref<AudioSource>) = 0;
+  virtual float getSourcePlayingPosition(Ref<AudioSource>) = 0;
   virtual float getSourceGain(Ref<AudioSource>) = 0;
   virtual float getSourceAngle(Ref<AudioSource>) = 0;
   virtual float getSourcePitch(Ref<AudioSource>) = 0;

@@ -4,7 +4,6 @@
 #include "core/engine/audio/audio_manager.hpp"
 #include "core/framework/clock.hpp"
 #include <core/framework/log.hpp>
-#include <string>
 
 #if defined(ANDROID) || defined(__ANDROID__)
 
@@ -74,7 +73,7 @@ void ALAudioManager::Update() {
 
   if (framework::Clock::Time() >= m_LastCollection + COLLECT_TIME) {
     for (auto &source : sourcesPool) {
-      if(m_PlayingSources.contains(std::hash<std::string>{}(source.name))) {
+      if (m_PlayingSources.contains(std::hash<std::string>{}(source.name))) {
         if (al::isPlaying(source) == false && al::isPaused(source) == false) {
           Log::Info("Freed audio: ", source.name);
           m_PlayingSources.extract(std::hash<std::string>{}(source.name));
@@ -89,6 +88,7 @@ void ALAudioManager::Update() {
         Log::Info("Freed audio source: ", source.id);
         source.id = 0;
       }
+
     }
     m_LastCollection = framework::Clock::Time();
   }
@@ -115,9 +115,7 @@ ALuint ALAudioManager::pGetFreeSource() {
   return id;
 }
 
-void ALAudioManager::pinSource(Ref<AudioSource> sourceRef) {
-  
-}
+void ALAudioManager::pinSource(Ref<AudioSource> sourceRef) {}
 
 void ALAudioManager::SetSourceData(al::OpenALSource &source, const SourceInfo &data) {
   source.name = data.name;
@@ -167,11 +165,11 @@ void ALAudioManager::Play(Ref<AudioSource> source) {
   al::OpenALSource *alSource = sourcesPool.get(source);
 
   Log::Info("Trying to play: ", alSource->name);
-/*
-  if (m_PlayingSources.contains(std::hash<std::string>{}(alSource->name))) {
-    Log::Error("Audio already playing");
-    return;
-  }*/
+  /*
+    if (m_PlayingSources.contains(std::hash<std::string>{}(alSource->name))) {
+      Log::Error("Audio already playing");
+      return;
+    }*/
 
   if (alSource->id == 0) {
     ALuint free_id = pGetFreeSource();
@@ -180,7 +178,7 @@ void ALAudioManager::Play(Ref<AudioSource> source) {
       return;
     }
     alSource->id = free_id;
-    if(al::isPlaying(*alSource) || al::isPaused(*alSource)) {
+    if (al::isPlaying(*alSource) || al::isPaused(*alSource)) {
       Log::Error("Selected source", free_id, " already playing");
       return;
     }
@@ -212,6 +210,10 @@ void ALAudioManager::setSourceDirection(Ref<AudioSource> source_ref, glm::vec3 d
 void ALAudioManager::setSourceVelocity(Ref<AudioSource> source_ref, glm::vec3 velocity) {
   auto source = sourcesPool.get(source_ref);
   source->velocity = velocity;
+}
+float ALAudioManager::getSourcePlayingPosition(Ref<AudioSource> source_ref) {
+  auto source = sourcesPool.get(source_ref);
+  return al::getSourcePlayingPosition(*source);
 }
 void ALAudioManager::setSourceGain(Ref<AudioSource> source_ref, float gain) {
   auto source = sourcesPool.get(source_ref);

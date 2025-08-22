@@ -44,6 +44,7 @@ public:
   virtual void setSourcePosition(Ref<AudioSource>, glm::vec3) override;
   virtual void setSourceDirection(Ref<AudioSource>, glm::vec3) override;
   virtual void setSourceVelocity(Ref<AudioSource>, glm::vec3) override;
+  virtual float getSourcePlayingPosition(Ref<AudioSource>) override;
   virtual void setSourceGain(Ref<AudioSource>, float) override;
   virtual void setSourceAngle(Ref<AudioSource>, float) override;
   virtual void setSourcePitch(Ref<AudioSource>, float) override;
