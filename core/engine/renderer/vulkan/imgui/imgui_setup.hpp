@@ -413,7 +413,7 @@ public:
     init_info.Subpass = 0;
     init_info.MinImageCount = vk::MAX_FRAMES_IN_FLIGHT;
     init_info.ImageCount = vk::MAX_FRAMES_IN_FLIGHT;
-    init_info.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
+    init_info.MSAASamples = m_pVkDataPtr->msaaSamples;
     init_info.Allocator = VK_NULL_HANDLE;
     ImGui_ImplVulkan_Init(&init_info, m_pVkDataPtr->defaultRenderPass.renderPass);
 
