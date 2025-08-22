@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 3.5.0)
 project(BSP VERSION 0.1.0)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 
 include_directories(${CMAKE_SOURCE_DIR} ../../)
 
 set_source_files_properties( ${PROJECT_ICON} PROPERTIES RESOU Resources )
 add_executable(${PROJECT_NAME} main.cpp bsp_definitions.hpp SourceBSP.hpp  ${PROJECT_ICON})
+target_precompile_headers(${PROJECT_NAME} REUSE_FROM Epsilon)
 
 target_sources(${PROJECT_NAME} PRIVATE main.cpp BSP.hpp)
 

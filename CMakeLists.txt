@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10.0)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 set(DBUILD_SHARED_LIBS ON CACHE BOOL "Build as a shared library")
 set(DGENERATE_RPM_PACKAGE OFF CACHE BOOL "Generate RPM deployment package")
@@ -118,7 +118,6 @@ include_directories(${VMA_BUILD_DIR}/include)
 #Download and include stb-image
 ExternalProject_Add(stb
     INSTALL_COMMAND cmake -E echo "Skipping install step for stb-image."
-
     SOURCE_DIR ${THIRDPARTY_DIR}/stb
     BINARY_DIR ${THIRDPARTY_DIR}/stb/build
     TMP_DIR ${THIRDPARTY_DIR}/stb/tmp
@@ -345,6 +344,7 @@ project(Epsilon VERSION 0.1.0)
 
 set(PROJECT_FILES
     ${CMAKE_SOURCE_DIR}/core/engine/context.cpp
+    ${CMAKE_SOURCE_DIR}/core/engine/scene/scene.cpp
     ${CMAKE_SOURCE_DIR}/core/framework/env.cpp
     ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/vulkan_impl.cpp
     ${CMAKE_SOURCE_DIR}/core/engine/renderer/vulkan/vulkan.cpp
@@ -385,6 +385,7 @@ set(PROJECT_FILES
     ${CMAKE_SOURCE_DIR}/modules/imgui/imgui_impl_glfw.cpp
     ${CMAKE_SOURCE_DIR}/modules/imgui/imgui_impl_vulkan.cpp
     ${CMAKE_SOURCE_DIR}/core/ui/UI.cpp
+    ${CMAKE_SOURCE_DIR}/core/engine/render_graph.hpp
     ${THIRDPARTY_DIR}/implot/implot_items.cpp
     ${THIRDPARTY_DIR}/implot/implot.cpp
     ${IMGUI_BUILD_DIR}/imgui.cpp
@@ -428,7 +429,7 @@ endif()
 set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 target_precompile_headers(Epsilon 
-PRIVATE
+PUBLIC
     <vector>
     <unordered_map>
     <map>
@@ -505,9 +506,8 @@ if(WIN32)
 
 else()
     target_link_libraries(${PROJECT_NAME} PRIVATE openal)
-
-    set(CMAKE_CXX_FLAGS_RELEASE "-O2 -fsized-deallocation")
-    #set(CMAKE_CXX_FLAGS_DEBUG "-O2")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O2 -fsized-deallocation -g -ggdb")
+    set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fsized-deallocation -g -ggdb")
 endif()
 
 
@@ -595,7 +595,8 @@ if(NOT ${IS_CI_ENV})
     add_subdirectory(examples/chess)
     add_subdirectory(editor)
     add_subdirectory(projects/TowerDefense)
-    #add_subdirectory(projects/uiapp)
+    add_subdirectory(projects/UIApp)
+    add_subdirectory(projects/Physics)
 endif()
 #if(${Mono_FOUND})
 #add_subdirectory(examples/mono-managed)

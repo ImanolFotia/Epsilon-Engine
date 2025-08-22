@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5.0)
 project(Chess VERSION 0.1.0)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR} ../../)
 
@@ -16,6 +16,7 @@ include_directories(${THIRDPARTY_DIR}/openal/alc)
 
 add_executable(${PROJECT_NAME} chess.hpp main.cpp UCI.hpp chess.cpp game/player.cpp game/player.hpp game/common.hpp game/board.cpp game/board.hpp  ${PROJECT_ICON})
 
+target_precompile_headers(${PROJECT_NAME} REUSE_FROM Epsilon)
 target_sources(${PROJECT_NAME} PRIVATE main.cpp)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${Mono_LINK_LIBRARIES})
