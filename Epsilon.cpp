@@ -70,7 +70,10 @@ void Epsilon::setOnUpdate(std::function<void(void)> fun) { onUpdate = fun; }
 
 void Epsilon::setOnExit(std::function<void(void)> fun) { onExit = fun; }
 
-void Epsilon::initWindow(int w, int h) { m_Context->Window().init(m_ApplicationName, w, h); }
+void Epsilon::initWindow(int w, int h) {
+  m_Context->Window().msaaSamples = m_MsaaSamples;
+  m_Context->Window().init(m_ApplicationName, w, h);
+}
 
 void Epsilon::initVulkan() {
   m_Context->Renderer()->Init(m_ApplicationName.c_str(), m_Context->Window());

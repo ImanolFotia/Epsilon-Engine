@@ -11,15 +11,11 @@
 #include "core/framework/window.hpp"
 #include "core/framework/env.hpp"
 #include "core/framework/utils/image.hpp"
-#include "core/framework/utils/file.hpp"
-#include "core/framework/clock.hpp"
 
 #include "core/engine/context.hpp"
 
-#include "core/engine/renderer/vulkan/vulkan.hpp"
 
 #include "core/engine/renderer/resource_manager.hpp"
-#include "core/engine/renderer/vulkan/resource_manager.hpp"
 
 #include <core/engine/scene/scene.hpp>
 #include <core/engine/scene/asset_manager.hpp>
@@ -137,6 +133,7 @@ namespace Epsilon
 
         ShaderData shaderData;
         int m_MaxFPS = 5000;
+        int m_MsaaSamples = 1;
     };
 }
 
