@@ -196,6 +196,12 @@ namespace framework
                                 std::cout << "Joystick vector size: " << JoystickVector.size() << std::endl;
                             }
                         }
+                      if (event == GLFW_CONNECTED)
+                      {
+                          std::cout << "Joystick Connected" << std::endl;
+                          DetectJoysticks();
+
+                      }
                     }
                     catch (std::exception &e)
                     {
