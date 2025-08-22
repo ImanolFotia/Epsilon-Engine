@@ -63,7 +63,7 @@ class BSP : public Epsilon::Epsilon {
 public:
   explicit BSP(const std::string &appname) : Epsilon::Epsilon(appname) {
     m_pCamera = std::make_shared<utils::Camera>(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-
+    m_MsaaSamples = 4;
     Epsilon::onCreate = [this] { onCreate(); };
     Epsilon::onReady = [this] { onReady(); };
     Epsilon::onRender = [this] { onRender(); };
@@ -372,7 +372,7 @@ private:
   auto setupShadowCamera() -> void {
 
     auto window_size = getWindowDimensions();
-    m_pCameraData.iResolution = glm::vec2(1500, 1500);
+    m_pCameraData.iResolution = glm::vec2(3000, 3000);
 
     // 30.6363, 13.117, -38.7729
 
@@ -393,7 +393,7 @@ private:
     float cascadeSplits = 0.0f;
 
     float nearClip = m_pCamera->getNearPlane();
-    float farClip = 25.0f;
+    float farClip = -25.0f;
     float clipRange = farClip - nearClip;
 
     float minZ = nearClip;
@@ -426,6 +426,8 @@ private:
 
     glm::mat4 ViewMatrix = glm::lookAt(m_pCamera->getPosition(), m_pCamera->getPosition() + m_pCamera->getDirection(), glm::vec3(0.0f, 1.0f, 0.0f));
 
+    ViewMatrix = m_pCamera->getViewMatrix();
+    //ProjectionMatrix = m_pCamera->getProjectionMatrix();
     // Project frustum corners into world space
     glm::mat4 invCam = glm::inverse(ProjectionMatrix * ViewMatrix);
     for (uint32_t i = 0; i < 8; i++) {
@@ -462,7 +464,7 @@ private:
     // glm::vec3 lightDir = glm::normalize(glm::vec3(0.0, -1.0, 0.0));
 
     glm::mat4 lightViewMatrix = glm::lookAt(frustumCenter - lightDir * -minExtents.z, frustumCenter, glm::vec3(0.0f, 1.0, 0.0f));
-    glm::mat4 lightOrthoMatrix = glm::ortho(minExtents.x, maxExtents.x, minExtents.y, maxExtents.y, -20.0f, 100.0f);
+    glm::mat4 lightOrthoMatrix = glm::ortho(minExtents.x, maxExtents.x, minExtents.y, maxExtents.y, -70.0f, 40.0f);
 
     m_pCameraData.view = lightViewMatrix;
 
@@ -558,7 +560,7 @@ private:
             .pipelineLayout(skyLayout)
             .pushConstant(sizeof(PushConstant));
     renderPassInfo.resizeWithSwapChain = true;
-    renderPassInfo.numSamples = 1;
+    renderPassInfo.numSamples = 4;
 
     RenderPassInfo shadowRenderPassInfo = RenderPassFactory()
 
@@ -590,8 +592,8 @@ private:
                                               .pipelineLayout(shadowLayout)
                                               .pushConstant(sizeof(PushConstant));
 
-    renderPassInfo.resizeWithSwapChain = false;
-    renderPassInfo.numSamples = 1;
+    shadowRenderPassInfo.resizeWithSwapChain = false;
+    shadowRenderPassInfo.numSamples = 1;
 
     m_pRenderPass = Epsilon::getContext()->ResourceManager()->createDefaultRenderPass(renderPassInfo);
     m_pShadowRenderPass = Epsilon::getContext()->ResourceManager()->createRenderPass(shadowRenderPassInfo);
