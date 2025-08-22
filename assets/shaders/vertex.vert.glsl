@@ -127,7 +127,7 @@ void main() {
 
     position = /*(PushConstants.model)*/model * vec4(inPosition, 1.0);
 	//shadowCoords = (biasMat * ubo.lightMatrix * /*(PushConstants.model)*/model) * vec4(inPosition, 1.0);
-	shadowCoords = (biasMat * ubo.lightMatrix * model) * vec4(inPosition, 1.0);
+	shadowCoords = (biasMat * ubo.lightMatrix) * vec4(inPosition, 1.0);
 	//shadowCoords = shadowCoords * 0.5 + 0.5;
     texCoords = inTexCoord;
     normal = inNormal; //normalize(mat3(transpose(inverse(PushConstants.model))) * inNormal);
