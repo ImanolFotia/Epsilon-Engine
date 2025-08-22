@@ -279,12 +279,14 @@ public:
     mHeight = height;
   }
 
+  int msaaSamples = 1;
 private:
   static int mWidth;
   static int mHeight;
 
   int mLastWidth = 640;
   int mLastHeight = 480;
+
 
   WindowMode mWindowMode = WindowMode::WINDOWED;
 
