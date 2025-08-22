@@ -29,7 +29,7 @@ void main() {
     mat4 viewProjectionInverse = inverse(RenderPassUBO.data.proj * RenderPassUBO.data.view);
 
     nearPoint = unprojectPoint(pos.x, pos.y, 0.0, viewProjectionInverse);
-    farPoint = unprojectPoint(pos.x, pos.y, 1.0, viewProjectionInverse);
+    farPoint = unprojectPoint(pos.x, pos.y,1.0, viewProjectionInverse);
 
 
     gl_Position = vec4(pos, 1.0);
