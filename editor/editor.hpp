@@ -60,7 +60,7 @@ class Editor : public Epsilon::Epsilon {
 
   UI::MenuBar m_MenuBar;
   UI::MainViewport m_MainViewport;
-  UI::Inspector m_Inspector;
+  //UI::Inspector m_Inspector;
   UI::Gizmo m_Guizmo;
   UI::Toolbar m_Tooldbar;
   UI::UIObjectProperty m_ObjectProperty;
@@ -126,10 +126,17 @@ class Editor : public Epsilon::Epsilon {
     int index = 0;
     int id_x = 0;
     int id_y = 0;
-    int transforms[600];
+    int transforms[1000];
     int transform_count = 0;
   };
 
+    struct check_info {
+      int index = 0;
+      bool checked = false;
+    };
+  std::unordered_map<glm::ivec2, check_info> old_chunks{};
+  std::unordered_map<glm::ivec2, check_info> new_chunks{};
+  std::vector<int> unused_chunks;
   std::vector<GrassChunk> grass_chunks;
   void pLoadDotnet() {
 
@@ -182,6 +189,7 @@ class Editor : public Epsilon::Epsilon {
 
 public:
   Editor(const std::string name) : Epsilon::Epsilon(name) {
+    m_MsaaSamples = 4;
     this->setOnCreate([this] { OnCreate(); });
     this->setOnRender([this] { OnRender(); });
     this->setOnExit([this] { OnExit(); });

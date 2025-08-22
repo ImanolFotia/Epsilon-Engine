@@ -17,8 +17,8 @@ void Editor::OnCreate() {
   m_Camera = std::make_shared<utils::Camera>(
       glm::vec3(0.0, 5.0, 0.0), glm::vec3(0.0) - glm::vec3(5.0, 5.0, 4.5));
 
-  m_Inspector.setTransform(selected_matrix);
-  m_Inspector.setName("Cube");
+  m_ObjectProperty.setTransform(selected_matrix);
+  //m_Inspector.setName("Cube");
 
   m_Scene = std::make_shared<engine::Scene>(getContext());
 
@@ -148,6 +148,7 @@ void Editor::OnCreate() {
                      {.renderPass = "Forward", .index = 1, .bindingPoint = 4},
                      {.renderPass = "Forward", .index = 2, .bindingPoint = 5}},
           .renderPass = "TAARenderPass0",
+
           .name = "TAABindGroup0",
       });
 
@@ -237,7 +238,7 @@ void Editor::OnCreate() {
   m_GridPlane = m_Scene->insertIntoNode(
       engine::Box{glm::vec3(planeNode->data.transform[3]), glm::vec3(10.0)},
       planeNode, m_DefaultCube);
-  m_GridPlane->data.bindGroupId = m_DefaultBindGroup;
+  m_GridPlane->data.bindGroupId = m_GridBindGroup;
 
   auto script = m_Scene->emplaceIntoNode<EntityScript>(planeNode);
   script->data.ManagedPtr = host.assembly.Invoke<void *>(
@@ -325,7 +326,7 @@ void Editor::OnCreate() {
   renderer->getDebugRenderer()->setUserFunction([this]() {
     m_MenuBar.draw();
     m_Tooldbar.draw();
-    m_Inspector.draw();
+    //m_Inspector.draw();
     if (m_PostProcess.TaaEnabled() && !just_resized) {
       m_MainViewport.setImage(
           getContext()->Renderer()->getDebugRenderer()->getImages().at(
@@ -353,8 +354,8 @@ void Editor::OnCreate() {
     m_MaterialEditor.selected_entity = selected_index;
     m_MaterialEditor.draw();
 
-    glm::mat4 original_transform = m_Inspector.getTransform();
-    selected_matrix = m_Inspector.getTransform();
+    glm::mat4 original_transform = m_ObjectProperty.getTransform();
+    selected_matrix = m_ObjectProperty.getTransform();
     if (selected_entity != nullptr)
       m_Guizmo.prepare(&selected_matrix, m_MainViewport.getMode(),
                        m_Camera->getViewMatrix(),
@@ -483,7 +484,7 @@ void Editor::OnUpdate() {
 
     if (selected_entity != nullptr) {
       selected_matrix = selected_entity->transform;
-      m_Inspector.setTransform(selected_entity->transform);
+      m_ObjectProperty.setTransform(selected_entity->transform);
     }
 
     m_Tooldbar.SetStepStatus(UI::Toolbar::StepStatus::Current);
@@ -526,6 +527,8 @@ void Editor::OnUpdate() {
   shaderData.view = m_Camera->getViewMatrix();
   shaderData.proj = m_Camera->getProjectionMatrix();
   shaderData.proj[1][1] *= -1;
+  //shaderData.proj[3][2] *= -1;
+  //shaderData.proj[3][2] *= -1;
   shaderData.iTime = framework::Clock::TimeSeconds();
   shaderData.viewPosition = m_Camera->getPosition();
   shaderData.iFrame = Frame();
@@ -592,13 +595,10 @@ void Editor::OnUpdate() {
 
     size_t row_size = 30;
 
-    struct check_info {
-      int index = 0;
-      bool checked = false;
-    };
-    std::vector<int> unused_chunks;
-    std::unordered_map<glm::ivec2, check_info> old_chunks{};
-    std::unordered_map<glm::ivec2, check_info> new_chunks{};
+
+    old_chunks.clear();
+    new_chunks.clear();
+    unused_chunks.clear();
     for (int i = 0; i < row_size; i++) {
       for (int j = 0; j < row_size; j++) {
         int index = i + j * row_size;
@@ -698,6 +698,20 @@ void Editor::OnRender() {
 
   for (auto &model_node : models) {
     auto model =
+          std::static_pointer_cast<engine::Node<engine::RenderModel>>(models[0]);
+    auto transform =
+        std::static_pointer_cast<engine::Node<engine::Scene::SceneEntity>>(
+            model->Parent());
+    if (model->data.name == "skybox") {
+      m_Scene->Push(model, transform->data.transform,
+                    m_GraphicsHelper->getBindGroup(model->data.bindGroupId));
+      break;
+    }
+
+  }
+
+  for (auto &model_node : models) {
+    auto model =
         std::static_pointer_cast<engine::Node<engine::RenderModel>>(model_node);
     auto transform =
         std::static_pointer_cast<engine::Node<engine::Scene::SceneEntity>>(
@@ -707,6 +721,7 @@ void Editor::OnRender() {
                     model->data.transforms.size(),
                     m_GraphicsHelper->getBindGroup(model->data.bindGroupId));
     } else {
+      if (model->data.name == "skybox") continue;
       m_Scene->Push(model, transform->data.transform,
                     m_GraphicsHelper->getBindGroup(model->data.bindGroupId));
     }
@@ -800,7 +815,7 @@ void Editor::pAddDefaultPlane(glm::vec3 position) {
       chunk.id_y = j;
       chunk.index = index;
 
-      for (int k = 0; k < 300; k++) {
+      for (int k = 0; k < 20; k++) {
         glm::vec3 position = glm::vec3((float)i - 15, 0.0f, (float)j - 15);
         std::random_device rd;
 
