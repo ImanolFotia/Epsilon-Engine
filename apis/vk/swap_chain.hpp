@@ -196,6 +196,19 @@ static void createSwapChain(VulkanData &vk_data,
   vk_data.defaultRenderPass.renderPassChain.Extent = extent;
   vk_data.swapChainWidth = extent.width;
   vk_data.swapChainHeight = extent.height;
+
+  //if(vk_data.defaultRenderPass.multisampled) {
+    vk::VulkanTextureInfo texInfo;
+    texInfo.numSamples = static_cast<VkSampleCountFlagBits>(1);
+    texInfo.format = vk_data.defaultRenderPass.renderPassChain.ImageFormats[0];
+    texInfo.width = vk_data.swapChainWidth;
+    texInfo.height = vk_data.swapChainHeight;
+    texInfo.usage = VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    texInfo.numSamples = vk_data.msaaSamples;
+    if (vk_data.defaultRenderPass.renderPassChain.ResolveTextures.empty()) vk_data.defaultRenderPass.renderPassChain.ResolveTextures.emplace_back();
+    auto & res_tex = vk_data.defaultRenderPass.renderPassChain.ResolveTextures[0];
+    res_tex = createImage(vk_data, texInfo);
+  //}
 }
 
 static void createImageViews(VulkanData &vk_data) {
@@ -214,6 +227,8 @@ static void createImageViews(VulkanData &vk_data) {
   vk_data.defaultRenderPass.renderPassChain.DepthTextureInfo.usage =
       VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 
+  vk_data.defaultRenderPass.renderPassChain.DepthTextureInfo.numSamples = vk_data.msaaSamples;
+
   vk_data.defaultRenderPass.renderPassChain.DepthTexture = createImage(
       vk_data, vk_data.defaultRenderPass.renderPassChain.DepthTextureInfo);
   vk_data.defaultRenderPass.renderPassChain.DepthTexture.format =
@@ -226,6 +241,7 @@ static void createImageViews(VulkanData &vk_data) {
   createImageView(vk_data,
                   vk_data.defaultRenderPass.renderPassChain.DepthTexture,
                   VK_IMAGE_ASPECT_DEPTH_BIT);
+
 
   if (false) {
 
@@ -245,6 +261,17 @@ static void createImageViews(VulkanData &vk_data) {
     vk_data.defaultRenderPass.renderPassChain.ImageViews[i] = texture.imageView;
     vk_data.defaultRenderPass.renderPassChain.Textures[i] = texture;
   }
+
+  //if(vk_data.defaultRenderPass.multisampled) {
+  vk_data.defaultRenderPass.renderPassChain.ResolveTextures[0].deviceMemory =
+       allocateTextureMemory(
+           vk_data, vk_data.defaultRenderPass.renderPassChain.ResolveTextures[0],
+           VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+  vk_data.defaultRenderPass.renderPassChain.ResolveTextures[0].format = vk_data.defaultRenderPass.renderPassChain.ResolveTextures[0].imageInfo.format;
+    createImageView(vk_data,
+                    vk_data.defaultRenderPass.renderPassChain.ResolveTextures[0],
+                    VK_IMAGE_ASPECT_COLOR_BIT);
+  //}
 }
 
 static void cleanupSwapChain(const VulkanData &vk_data) {
@@ -266,12 +293,26 @@ static void cleanupSwapChain(const VulkanData &vk_data) {
       vk_data.logicalDevice,
       vk_data.defaultRenderPass.renderPassChain.DepthTexture.imageView,
       nullptr);
+
+  vkDestroyImageView(
+      vk_data.logicalDevice,
+      vk_data.defaultRenderPass.renderPassChain.ResolveTextures[0].imageView,
+      nullptr);
   vkDestroyImage(vk_data.logicalDevice,
                  vk_data.defaultRenderPass.renderPassChain.DepthTexture.image,
+                 nullptr);
+
+  vkDestroyImage(vk_data.logicalDevice,
+                 vk_data.defaultRenderPass.renderPassChain.ResolveTextures[0].image,
                  nullptr);
   vkFreeMemory(
       vk_data.logicalDevice,
       vk_data.defaultRenderPass.renderPassChain.DepthTextureBuffer.deviceMemory,
+      nullptr);
+
+  vkFreeMemory(
+      vk_data.logicalDevice,
+      vk_data.defaultRenderPass.renderPassChain.ResolveTextures[0].deviceMemory,
       nullptr);
   // vkDestroySampler(vk_data.logicalDevice,
   // vk_data.defaultRenderPass.renderPassChain.DepthTexture.sampler, nullptr);

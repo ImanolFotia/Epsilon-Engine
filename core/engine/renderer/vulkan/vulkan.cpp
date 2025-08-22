@@ -84,6 +84,7 @@ void VulkanRenderer::Init(const char *appName, framework::Window &window) {
 #if defined(ANDROID) || defined(__ANDROID__)
   LOGI("Initiating Vulkan swapchain\n");
 #endif
+  m_pVkData.msaaSamples = (VkSampleCountFlagBits)window.msaaSamples;
   vk::createSwapChain(m_pVkData, window.getWindow());
   vk::createImageViews(m_pVkData);
 
@@ -289,7 +290,16 @@ void VulkanRenderer::Submit() {
       pRecreateSwapChain();
       m_pShouldRecreateSwapchain = false;
       Log::Info("swap chain recreated");
-    }
+    }/*
+    for (auto &renderPass : m_pResourceManagerRef->renderPassPool) {
+      int image_index = 0;
+      for (auto &texture : renderPass.renderPassChain.Textures) {
+        if (texture.info.isSampler) {
+          m_pImguiRenderer->addTexture(renderPass.name, image_index);
+        }
+        image_index++;
+      }
+    }*/
   }
 
   m_pCurrentFrame = m_pImageIndex;
@@ -540,6 +550,7 @@ void VulkanRenderer::FlushIndexed(vk::VulkanRenderPass *renderPass) {
   scissor.extent = extent;
 
   vkCmdSetScissor(m_pFrame.CommandBuffer(), 0, 1, &renderPass->renderPassChain.Scissor);
+  vkCmdSetLineWidth(m_pFrame.CommandBuffer(), 2.0);
 
   for (int i = 0; i < currentCommandsInQueue; i++) {
 
@@ -617,6 +628,7 @@ void VulkanRenderer::FlushNonIndexed(vk::VulkanRenderPass *renderPass) {
   scissor.extent = extent;
 
   vkCmdSetScissor(m_pFrame.CommandBuffer(), 0, 1, &renderPass->renderPassChain.Scissor);
+  vkCmdSetLineWidth(m_pFrame.CommandBuffer(), 2.0);
 
   for (int i = 0; i < currentCommandsInQueue; i++) {
 
@@ -709,6 +721,7 @@ void VulkanRenderer::FlushIndexedIndirect(vk::VulkanRenderPass *renderPass) {
   scissor.offset = {0, 0};
   scissor.extent = extent;
   vkCmdSetScissor(m_pFrame.CommandBuffer(), 0, 1, &scissor);
+  vkCmdSetLineWidth(m_pFrame.CommandBuffer(), 2.0);
 
   for (auto &batch : batches) {
     auto material = m_pResourceManagerRef->materialPool.get(batch.material);

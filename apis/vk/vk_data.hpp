@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/engine/renderer/types.hpp"
+#include <vulkan/vulkan_core.h>
 
 #if defined(ANDROID) || defined(__ANDROID__)
 #define VK_USE_PLATFORM_ANDROID_KHR
@@ -172,6 +173,8 @@ struct VulkanRenderPipeline {
   std::vector<VkPipelineLayout> pipelineLayout{};
   VkPipeline graphicsPipeline;
   VkPipelineViewportStateCreateInfo viewportState{};
+
+  VkPipelineRasterizationLineStateCreateInfo lineRasterizationCreateInfo{};
   VkRect2D scissor{};
   VkViewport viewport{};
   VkPipelineRasterizationStateCreateInfo rasterizer{};
@@ -182,6 +185,7 @@ struct VulkanRenderPipeline {
   VkCullModeFlags cullMode;
   VkClearColorValue clearColor = {{1.0f, 1.0f, 1.0f, 1.0f}};
   VkClearDepthStencilValue depthStencilClearColor = {1.0f, 0};
+  VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
   uint32_t numAttachments = 1;
   bool dirty = true;
   bool recreatePipeline = false;
@@ -233,7 +237,7 @@ struct RenderPassChain {
   //
   bool hasDepthSampler = false;
   //
-  VulkanTexture ResolveTexture;
+  std::vector<VulkanTexture> ResolveTextures;
 
   void setViewport(const VkViewport &v) { Viewport = v; }
 
