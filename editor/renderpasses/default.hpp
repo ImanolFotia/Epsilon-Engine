@@ -83,6 +83,7 @@ namespace Editor::Renderpasses {
 					   .isDepthAttachment = true} })
 					   .pipelineLayout(mainLayout)
 			.pushConstant(256);
+	  renderPassInfo.numSamples = 4;
 
 		return context->ResourceManager()->createDefaultRenderPass(renderPassInfo);
 	}
