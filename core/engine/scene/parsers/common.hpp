@@ -10,6 +10,22 @@ namespace engine::parsers {
 		return COUNTER_CLOCK_WISE;
 	}
 
+	static PrimitiveTopology resolveTopology(const std::string& x) {
+        if (x == "POINT_LIST") return PrimitiveTopology::POINT_LIST;
+        if (x == "LINE_LIST") return PrimitiveTopology::LINE_LIST;
+        if (x == "LINE_STRIP") return PrimitiveTopology::LINE_STRIP;
+        if (x == "TRIANGLE_LIST") return PrimitiveTopology::TRIANGLE_LIST;
+        if (x == "TRIANGLE_STRIP") return PrimitiveTopology::TRIANGLE_STRIP;
+        if (x == "TRIANGLE_FAN") return PrimitiveTopology::TRIANGLE_FAN;
+        if (x == "LINE_LIST_WITH_ADJACENCY") return PrimitiveTopology::LINE_LIST_WITH_ADJACENCY;
+        if (x == "LINE_STRIP_WITH_ADJACENCY") return PrimitiveTopology::LINE_STRIP_WITH_ADJACENCY;
+        if (x == "TRIANGLE_LIST_WITH_ADJACENCY") return PrimitiveTopology::TRIANGLE_LIST_WITH_ADJACENCY;
+        if (x == "TRIANGLE_STRIP_WITH_ADJACENCY") return PrimitiveTopology::TRIANGLE_STRIP_WITH_ADJACENCY;
+        if (x == "PATCH_LIST") return PrimitiveTopology::PATCH_LIST;
+
+		return  PrimitiveTopology::TRIANGLE_LIST;
+	}
+
 	static CullMode resolveCullMode(const std::string& x) {
 		if (x == "BACK") return BACK;
 		if (x == "FRONT") return FRONT;
