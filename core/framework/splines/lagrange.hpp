@@ -3,7 +3,8 @@
 #include "spline.hpp"
 
 namespace framework::splines {
-	class Lagrange : public Spline {
+	template<typename T = glm::vec3>
+	class Lagrange : public Spline<T> {
 	public:
 		glm::vec3 Integrate(glm::vec3 A, glm::vec3 B, glm::vec3 C, glm::vec3 D, float t)
 		{
