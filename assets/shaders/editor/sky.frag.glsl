@@ -25,5 +25,5 @@ void main() {
     vec2 a = (Position.xy / Position.w) * 0.5 + 0.5;
     vec2 b = (PrevPosition.xy / PrevPosition.w) * 0.5 + 0.5;
 
-    velocityBuffer = vec2(a - b);
+    velocityBuffer = vec2(a-b);
 }

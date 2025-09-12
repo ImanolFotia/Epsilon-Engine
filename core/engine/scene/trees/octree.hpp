@@ -276,8 +276,9 @@ namespace engine
 	class OctreeContainer
 	{
 
+	public:
 		using OctreeData = std::list<OctreeItem<T>>;
-
+	private:
 		OctreeData m_Data;
 		Octree<typename OctreeData::iterator> m_Root;
 

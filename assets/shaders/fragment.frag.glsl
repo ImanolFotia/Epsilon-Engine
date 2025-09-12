@@ -204,7 +204,7 @@ void main()
     //sum = PCF_Filter(shadowCoords.xy / shadowCoords.w, shadowCoord.z, 10.0);
     
 
-    sum = PCSS(depthMap, shadowMap, shadowCoords, shadowCoord, texCoords);
+    //sum = PCSS(depthMap, shadowMap, shadowCoords, shadowCoord, texCoords);
     
     //sum = VSM(depthMap, shadowCoord);
     

@@ -111,7 +111,7 @@ static void createGraphicsPipeline(VulkanData &vk_data, VulkanRenderPass &render
   depthStencil.resize(renderPassInfo.numLayouts);
 
   VkPipelineDynamicStateCreateInfo dynamicState{};
-  VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
+  VkPipelineInputAssemblyStateCreateInfo inputAssembly[renderPassInfo.numLayouts];
   for (int layout_index = 0; layout_index < renderPassInfo.numLayouts; layout_index++) {
     auto &renderPipeline = renderPass.renderPipelines.at(layout_index);
     renderPipeline.numAttachments = renderPass.numAttachments;
@@ -161,9 +161,9 @@ static void createGraphicsPipeline(VulkanData &vk_data, VulkanRenderPass &render
     vertexInputInfo.vertexAttributeDescriptionCount = vertexInfo.attributeDescriptions.size();
     vertexInputInfo.pVertexAttributeDescriptions = vertexInfo.attributeDescriptions.data();
 
-    inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-    inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-    inputAssembly.primitiveRestartEnable = VK_FALSE;
+    inputAssembly[layout_index].sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+    inputAssembly[layout_index].topology = renderPipeline.topology;
+    inputAssembly[layout_index].primitiveRestartEnable = VK_FALSE;
 
     // Viewport stage
     createViewport(vk_data, renderPipeline, renderPass.renderPassChain);
@@ -194,14 +194,15 @@ static void createGraphicsPipeline(VulkanData &vk_data, VulkanRenderPass &render
     pipelineInfo.stageCount = shaderStages[layout_index].size();
     pipelineInfo.pStages = shaderStages[layout_index].data();
 
+
     if (renderPass.renderPassData.hasDepthAttachment) {
       depthStencil.at(layout_index).sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
       depthStencil.at(layout_index).depthTestEnable = pipelineLayout.depthTestEnable ? VK_TRUE : VK_FALSE;
       depthStencil.at(layout_index).depthWriteEnable = pipelineLayout.depthWriteEnable ? VK_TRUE : VK_FALSE;
-      depthStencil.at(layout_index).depthCompareOp = VK_COMPARE_OP_LESS;
+      depthStencil.at(layout_index).depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;//VK_COMPARE_OP_GREATER_OR_EQUAL;
       depthStencil.at(layout_index).depthBoundsTestEnable = VK_FALSE;
-      depthStencil.at(layout_index).minDepthBounds = 0.0f; // Optional
-      depthStencil.at(layout_index).maxDepthBounds = 1.0f; // Optional
+      depthStencil.at(layout_index).minDepthBounds = 1.0f; // Optional
+      depthStencil.at(layout_index).maxDepthBounds = 0.0f; // Optional
       depthStencil.at(layout_index).stencilTestEnable = VK_FALSE;
       depthStencil.at(layout_index).pNext = NULL;
       depthStencil.at(layout_index).flags = 0;
@@ -210,8 +211,12 @@ static void createGraphicsPipeline(VulkanData &vk_data, VulkanRenderPass &render
       pipelineInfo.pDepthStencilState = &depthStencil[layout_index];
     }
 
+    inputAssembly[layout_index].pNext = nullptr;
+
+    inputAssembly[layout_index].flags = 0;
+
     pipelineInfo.pVertexInputState = &vertexInputInfo;
-    pipelineInfo.pInputAssemblyState = &inputAssembly;
+    pipelineInfo.pInputAssemblyState = &inputAssembly[layout_index];
     pipelineInfo.pViewportState = &renderPipeline.viewportState;
     pipelineInfo.pRasterizationState = &renderPipeline.rasterizer;
     pipelineInfo.pMultisampleState = &renderPipeline.multisampling; // Optional

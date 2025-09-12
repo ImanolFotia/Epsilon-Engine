@@ -13,7 +13,7 @@ struct Transform {
   glm::vec3 prev_scale = glm::vec3(1.0f);
   glm::vec3 target_scale = glm::vec3(1.0f);
   float angle = 0;
-  glm::quat orientation{};
+  glm::quat orientation = glm::mat4(1.0);
   glm::mat4 model_matrix = glm::mat4(1.0f);
   float lifetime = 0;
   bool grows = false;

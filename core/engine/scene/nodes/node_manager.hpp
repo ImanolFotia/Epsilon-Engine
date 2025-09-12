@@ -46,6 +46,7 @@ struct SceneManager {
   template <typename T> std::type_index GetType() { return std::type_index(typeid(T)); }
 
   template <typename T, typename P, class... Args> std::shared_ptr<Node<T>> emplace(std::shared_ptr<Node<P>> parent, Args &&...args) {
+    std::lock_guard<std::mutex> lock(m_Mutex);
     auto type = GetType<T>().hash_code();
     auto &node_container = m_Nodes[type];
     node_container.push_back(std::make_shared<Node<T>>(std::forward<Args>(args)...));
@@ -62,6 +63,7 @@ struct SceneManager {
   }
 
   template <typename T, typename P, class... Args> std::shared_ptr<Node<T>> insert(std::shared_ptr<Node<P>> parent, const T &obj) {
+    std::lock_guard<std::mutex> lock(m_Mutex);
     auto type = GetType<T>().hash_code();
     auto &node_container = m_Nodes[type];
     auto &n = node_container.emplace_back();
@@ -76,6 +78,7 @@ struct SceneManager {
   }
 
   template <typename T> void erase(std::shared_ptr<Node<T>> node) {
+    std::lock_guard<std::mutex> lock(m_Mutex);
     if(!m_Positions.contains(node->index)) return;
     auto position = m_Positions.at(node->index);
     auto &container = m_Nodes[position.type_id];
@@ -139,12 +142,14 @@ struct SceneManager {
   }
 
   template <typename T> [[nodiscard]] std::vector<TypeIterator> &get() {
+    std::lock_guard<std::mutex> lock(m_Mutex);
     if (!m_Nodes.contains(GetType<T>().hash_code()))
       return empty;
     return m_Nodes[GetType<T>().hash_code()];
   }
 
   template <typename T> std::vector<std::shared_ptr<NodeBase>> &get(std::shared_ptr<NodeBase> node) {
+    std::lock_guard<std::mutex> lock(m_Mutex);
     if (!m_Nodes.contains(GetType<T>().hash_code()))
       return empty;
     return m_Nodes[GetType<T>().hash_code()];
@@ -152,6 +157,7 @@ struct SceneManager {
 
   ChildNodes null_return_child_node{};
   ChildNodes &getChildren(std::shared_ptr<NodeBase> node) {
+    std::lock_guard<std::mutex> lock(m_Mutex);
     auto position = m_Positions.at(node->index);
     if (!m_Nodes.contains(position.type_id))
       return null_return_child_node;
@@ -159,12 +165,14 @@ struct SceneManager {
   }
 
   template <typename T> bool isOfType(std::shared_ptr<NodeBase> node) {
+    std::lock_guard<std::mutex> lock(m_Mutex);
     auto position = m_Positions.at(node->index);
 
     return GetType<T>().hash_code() == position.type_id;
   }
 
   template <typename T> std::shared_ptr<NodeBase> getChild(std::shared_ptr<NodeBase> node) {
+    std::lock_guard<std::mutex> lock(m_Mutex);
     if(!m_Positions.contains(node->index)) return nullptr;
     auto position = m_Positions.at(node->index);
     if (!m_Nodes.contains(position.type_id))
@@ -173,6 +181,7 @@ struct SceneManager {
   }
 
   std::shared_ptr<NodeBase> get(uint64_t index) {
+    std::lock_guard<std::mutex> lock(m_Mutex);
     if(!m_Positions.contains(index)) return nullptr;
     auto position = m_Positions.at(index);
     if (m_Nodes.contains(position.type_id))
@@ -182,9 +191,11 @@ struct SceneManager {
     return nullptr;
   }
 
-  template <typename T> std::shared_ptr<Node<T>> to(std::shared_ptr<NodeBase> node) { return std::static_pointer_cast<Node<T>>(node); }
+  template <typename T> std::shared_ptr<Node<T>> to(std::shared_ptr<NodeBase> node) {
+    std::lock_guard<std::mutex> lock(m_Mutex); return std::static_pointer_cast<Node<T>>(node); }
 
   std::vector<TypeIterator> empty;
+  std::mutex m_Mutex;
 };
 
 } // namespace engine

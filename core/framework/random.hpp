@@ -54,6 +54,7 @@ template <typename T> static inline T QuickRandom(T min = 0, T max = 1) {
   auto distribution = distribution_type(min, max);
   std::random_device random_device{};
   std::mt19937 random_engine(random_device());
+  random_engine.seed(time(NULL));
 
   return distribution(random_engine);
 }

@@ -25,9 +25,10 @@ namespace engine::parsers {
 				.vertexLayout = vertex_descriptors[layout["vertexLayout"]],
 				.cullMode = resolveCullMode(layout["cullMode"]),
 				.windingMode = resolveWindingMode(layout["windingMode"]),
+				.topology = resolveTopology(layout["topology"]),
 				.depthWriteEnable = layout["depthWriteEnable"],
 				.depthTestEnable = layout["depthTestEnable"],
-				.name = layout["name"]
+				.name = layout["name"],
 			};
 
 			layouts[layout["name"]] = tLayout;

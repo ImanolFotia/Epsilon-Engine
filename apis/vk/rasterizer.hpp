@@ -18,10 +18,18 @@ static void setupRasterizer(VulkanRenderPipeline &renderPipeline, engine::Render
   renderPipeline.rasterizer.depthBiasClamp = 0.0f;          // Optional
   renderPipeline.rasterizer.depthBiasSlopeFactor = 0.5f;    // Optional
 
+
+  renderPipeline.lineRasterizationCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO;
+  renderPipeline.lineRasterizationCreateInfo.lineRasterizationMode = VK_LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH;
+  renderPipeline.lineRasterizationCreateInfo.stippledLineEnable = VK_FALSE;
+  renderPipeline.lineRasterizationCreateInfo.lineStipplePattern = 0b0000111100001111;
+
+  renderPipeline.rasterizer.pNext = &renderPipeline.lineRasterizationCreateInfo;
+
   renderPipeline.multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-  renderPipeline.multisampling.sampleShadingEnable = VK_FALSE;
+  renderPipeline.multisampling.sampleShadingEnable = VK_TRUE;
   renderPipeline.multisampling.rasterizationSamples = (VkSampleCountFlagBits)renderPassInfo.numSamples;//VK_SAMPLE_COUNT_1_BIT;
-  renderPipeline.multisampling.minSampleShading = 1.0f;          // Optional
+  renderPipeline.multisampling.minSampleShading = 0.5f;          // Optional
   renderPipeline.multisampling.pSampleMask = nullptr;            // Optional
   renderPipeline.multisampling.alphaToCoverageEnable = VK_FALSE; // Optional
   renderPipeline.multisampling.alphaToOneEnable = VK_FALSE;      // Optional

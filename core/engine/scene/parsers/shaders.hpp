@@ -4,8 +4,6 @@
 
 #include <core/framework/utils/file.hpp>
 
-#include <unordered_map>
-
 namespace engine::parsers {
 
 	static std::unordered_map<std::string, ShaderInfo> parse_shaders() {

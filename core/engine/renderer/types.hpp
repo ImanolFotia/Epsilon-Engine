@@ -6,6 +6,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <vulkan/vulkan_core.h>
 
 namespace engine {
 struct ID;
@@ -198,6 +199,22 @@ enum class DrawType { NON_INDEXED = 0, INDIRECT, INDEXED, INDEXED_INDIRECT, INST
 enum class MemoryUsage { DEVICE_ONLY = 0, HOST_VISIBLE, TRANSFER_SRC, TRANSFER_DST };
 
 enum class ImageLayout {UNDEFINED = 0, PRE_INITIALIZED, ATTACHMENT, READ_ONLY_COLOR_ATTACHMENT, DEPTH_ATTACHMENT, DEPTH_STENCIL_ATTACHMENT, READ_ONLY_DEPTH_ATTACHMENT, READ_ONLY_DEPTH_STENCIL_ATTACHMENT };
+
+
+enum class PrimitiveTopology {
+    POINT_LIST,
+    LINE_LIST,
+    LINE_STRIP,
+    TRIANGLE_LIST,
+    TRIANGLE_STRIP,
+    TRIANGLE_FAN,
+    LINE_LIST_WITH_ADJACENCY,
+    LINE_STRIP_WITH_ADJACENCY,
+    TRIANGLE_LIST_WITH_ADJACENCY,
+    TRIANGLE_STRIP_WITH_ADJACENCY,
+    PATCH_LIST,
+    SIZE
+};
 
 struct ObjectDataConstant {
   glm::mat4 transform = glm::mat4(1.0f);
@@ -451,6 +468,7 @@ struct PipelineLayout {
   VertexLayout vertexLayout{};
   CullMode cullMode;
   WindingMode windingMode;
+  PrimitiveTopology topology= engine::PrimitiveTopology::TRIANGLE_LIST;
   bool depthWriteEnable = true;
   bool depthTestEnable = true;
   std::string name;
