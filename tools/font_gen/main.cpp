@@ -238,7 +238,7 @@ int main(int argc, char **argv) {
 
   fread(ttf_buffer, 1, 1 << 20, fopen(argv[1], "rb"));
 
-  stbtt_BakeFontBitmap(ttf_buffer, 0, options.font_size, temp_bitmap, options.texture_size, options.texture_size, 0, options.num_chars, cdata.data());
+  stbtt_BakeFontBitmap(ttf_buffer, 0, options.font_size, temp_bitmap, options.texture_size, options.texture_size, options.first_char, options.num_chars, cdata.data());
 
   if (codepoints_file.is_open()) {
     options.first_char = 0;
