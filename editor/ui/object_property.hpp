@@ -3,227 +3,263 @@
 #include "ui_element.hpp"
 
 namespace Editor::UI {
-	class UIObjectProperty : public UIElement {
-	public:
+class UIObjectProperty : public UIElement {
 
-		std::vector<Property> m_pProperties;
-		std::string m_pScriptName;
-		std::shared_ptr<engine::Scene> m_pScenePtr = nullptr;
+  struct SelectedTransform {
+    glm::vec3 position{};
+    glm::vec3 scale{};
+    glm::quat rotation{};
+  };
 
-		const std::vector<Property>& getProperties() {
-			return m_pProperties;
-		}
+public:
+  std::vector<Property> m_pProperties;
+  std::string m_pScriptName;
+  std::shared_ptr<engine::Scene> m_pScenePtr = nullptr;
 
-		void setProperties(const std::string& script_name, std::vector<Property> props) {
-			m_pScriptName = script_name;
-			m_pProperties = props;
-		}
+  const std::vector<Property> &getProperties() { return m_pProperties; }
 
-		void setProperties(const std::string& script_name, const std::string& props) {
-			m_pScriptName = script_name;
-			nlohmann::json data = nlohmann::json::parse(props);
+  void setProperties(const std::string &script_name, std::vector<Property> props) {
+    m_pScriptName = script_name;
+    m_pProperties = props;
+  }
 
-			for (auto& [key, property] : data.items()) {
-				std::cout << "key: " << key << " property: " << property << std::endl;
+  void setProperties(const std::string &script_name, const std::string &props) {
+    m_pScriptName = script_name;
+    nlohmann::json data = nlohmann::json::parse(props);
 
-				Property prop;
-				if (property["Value"].is_string()) {
-					prop.name = key;
-					prop.type = PropertyType::STRING;
-					prop.value = std::string(property["Value"].get<std::string>());
-				}
-				else if (property["Value"].is_boolean()) {
-					prop.name = key;
-					prop.type = PropertyType::BOOL;
-					prop.value = property["Value"].get<bool>();
-				}
+    for (auto &[key, property] : data.items()) {
+      std::cout << "key: " << key << " property: " << property << std::endl;
 
-				else if (property["Value"].is_number()) {
-					prop.name = key;
-					prop.type = PropertyType::NUMBER;
-					prop.value = property["Value"].get<float>();
-				}
+      Property prop;
+      if (property["Value"].is_string()) {
+        prop.name = key;
+        prop.type = PropertyType::STRING;
+        prop.value = std::string(property["Value"].get<std::string>());
+      } else if (property["Value"].is_boolean()) {
+        prop.name = key;
+        prop.type = PropertyType::BOOL;
+        prop.value = property["Value"].get<bool>();
+      }
 
-				for (auto& [name, attribute] : property["Attributes"].items()) {
-					if (name == "RangeAttribute") {
-						auto attr_ptr = std::make_shared<RangeAttribute>();//prop.attributes.emplace_back<RangeAttribute>();
-						attr_ptr->min = attribute["Min"].get<float>();
-						attr_ptr->max = attribute["Max"].get<float>();
-						prop.attributes.push_back(attr_ptr);
-					}
-					std::cout << attribute << std::endl;
-				}
-				m_pProperties.push_back(prop);
-			}
-		}
+      else if (property["Value"].is_number()) {
+        prop.name = key;
+        prop.type = PropertyType::NUMBER;
+        prop.value = property["Value"].get<float>();
+      }
 
-		NodeProperties* selected_node = nullptr;
+      for (auto &[name, attribute] : property["Attributes"].items()) {
+        if (name == "RangeAttribute") {
+          auto attr_ptr = std::make_shared<RangeAttribute>(); // prop.attributes.emplace_back<RangeAttribute>();
+          attr_ptr->min = attribute["Min"].get<float>();
+          attr_ptr->max = attribute["Max"].get<float>();
+          prop.attributes.push_back(attr_ptr);
+        }
+        std::cout << attribute << std::endl;
+      }
+      m_pProperties.push_back(prop);
+    }
+  }
 
-		void SetNode(NodeProperties* selected) {
-			selected_node = selected;
-		}
+  NodeProperties *selected_node = nullptr;
+  SelectedTransform m_pSelectedTransform;
 
-		void draw() override {
-			ImGui::Begin("Properties");
-			if (selected_node) {
-				char* name_vec = selected_node->name.data();
-				char* path_vec = selected_node->model_path.data();
-				ImGui::InputText("Name", name_vec, selected_node->name.size(), ImGuiInputTextFlags_ReadOnly);
+  bool m_pLockScaleAxis = true;
 
-				ImGui::SeparatorText("Object Script Properties");
-				ImGui::InputText("Class Name", m_pScriptName.data(), m_pScriptName.size(), ImGuiInputTextFlags_ReadOnly);
+  void SetNode(NodeProperties *selected) { selected_node = selected; }
 
-				for (auto& prop : m_pProperties) {
-					if (prop.type == PropertyType::NUMBER) {
-						bool hasRange = false;
-						float min = 0, max = 0;
-						float x = std::any_cast<float>(prop.value);
-						for (auto& attribute : prop.attributes) {
-							if (attribute->name == "RangeAttribute") {
-								hasRange = true;
-								min = std::static_pointer_cast<RangeAttribute>(attribute)->min;
-								max = std::static_pointer_cast<RangeAttribute>(attribute)->max;
-							}
-						}
-						if (hasRange) {
-							ImGui::SliderFloat(prop.name.c_str(), &x, min, max);
-						}
-						else {
-							ImGui::DragFloat(prop.name.c_str(), &x, 0.01f);
-						}
-						prop.value = x;
-					}
-					else if (prop.type == PropertyType::BOOL) {
-						bool x = std::any_cast<bool>(prop.value);
-						if(ImGui::Checkbox(prop.name.c_str(), &x))
-						prop.value = x;
-					}
-					else if (prop.type == PropertyType::STRING) {
-						std::string x = std::any_cast<std::string>(prop.value);
-						ImGui::InputText(prop.name.c_str(), x.data(), x.size(), ImGuiInputTextFlags_ReadOnly);
-						prop.value = x;
-					}
-					else {}
-				}
+  void draw() override {
+    ImGui::Begin("Properties");
+    if (selected_node) {
 
+      char *name_vec = selected_node->name.data();
+      char *path_vec = selected_node->model_path.data();
+      {
+        ImGui::InputText("Name", name_vec, selected_node->name.size(), ImGuiInputTextFlags_ReadOnly);
+        ImGui::Separator();
+        ImGui::Text("Transform");
 
+        EpsilonUI::vector3("Position", &m_pSelectedTransform.position);
 
-				//ImGui::Begin("Inspector");
-				if (selected_node != nullptr) {
+        ImGui::Checkbox("Lock Scale Axis", &m_pLockScaleAxis);
+        if (m_pLockScaleAxis) {
+          float *scale = &m_pSelectedTransform.scale.x;
+          if (ImGui::DragFloat("Scale##lock_scale", scale, 0.001f)) {
+            m_pSelectedTransform.scale = glm::vec3(m_pSelectedTransform.scale.x);
+          }
+        } else {
 
-					char* name_vec = selected_node->name.data();
-					char* path_vec = selected_node->model_path.data();
-					//Gui::InputText("Name", name_vec, selected_node->name.size(), ImGuiInputTextFlags_ReadOnly);
+          EpsilonUI::vector3("Scale", &m_pSelectedTransform.scale);
+        }
+        glm::vec3 rotation = glm::eulerAngles(m_pSelectedTransform.rotation);
+        EpsilonUI::vector3("Rotation", &rotation);
+        m_pSelectedTransform.rotation = glm::tquat<float>(rotation);
+      }
 
-					if (selected_node->mType == SceneNodeType::Render) {
-						ImGui::SeparatorText("Render Properties");
+      ImGui::SeparatorText("Object Script Properties");
+      ImGui::InputText("Class Name", m_pScriptName.data(), m_pScriptName.size(), ImGuiInputTextFlags_ReadOnly);
 
-						engine::RenderModel* renderModel = reinterpret_cast<engine::RenderModel*>(selected_node->node_ref);
+      for (auto &prop : m_pProperties) {
+        if (prop.type == PropertyType::NUMBER) {
+          bool hasRange = false;
+          float min = 0, max = 0;
+          float x = std::any_cast<float>(prop.value);
+          for (auto &attribute : prop.attributes) {
+            if (attribute->name == "RangeAttribute") {
+              hasRange = true;
+              min = std::static_pointer_cast<RangeAttribute>(attribute)->min;
+              max = std::static_pointer_cast<RangeAttribute>(attribute)->max;
+            }
+          }
+          if (hasRange) {
+            ImGui::SliderFloat(prop.name.c_str(), &x, min, max);
+          } else {
+            ImGui::DragFloat(prop.name.c_str(), &x, 0.01f);
+          }
+          prop.value = x;
+        } else if (prop.type == PropertyType::BOOL) {
+          bool x = std::any_cast<bool>(prop.value);
+          if (ImGui::Checkbox(prop.name.c_str(), &x))
+            prop.value = x;
+        } else if (prop.type == PropertyType::STRING) {
+          std::string x = std::any_cast<std::string>(prop.value);
+          ImGui::InputText(prop.name.c_str(), x.data(), x.size(), ImGuiInputTextFlags_ReadOnly);
+          prop.value = x;
+        } else {
+        }
+      }
 
-						char* model_name_vec = renderModel->name.data();
-						ImGui::InputText("Model Name", model_name_vec, renderModel->name.size(), ImGuiInputTextFlags_ReadOnly);
-						//if (ImGui::Button("Model", buttonsize)) {
-						ModelPopUp();
-						//}
-						ImGui::Checkbox("Instanced", &renderModel->isInstanced);
-						if (renderModel->isInstanced) {
-							ImGui::BeginChild("Instancing");
-							ImGui::Button("Add instance");
-							ImGui::BulletText("Total instances: %d", renderModel->transforms.size());
-							ImGui::EndChild();
-						}
-						ImGui::RadioButton("Is visible", renderModel->visible);
-						bool ha = renderModel->hasAnimation;
-						ImGui::RadioButton("Has Animation", ha);
+      // ImGui::Begin("Inspector");
+      if (selected_node != nullptr) {
 
-						if (renderModel->hasAnimation) {
+        char *name_vec = selected_node->name.data();
+        char *path_vec = selected_node->model_path.data();
+        // Gui::InputText("Name", name_vec, selected_node->name.size(), ImGuiInputTextFlags_ReadOnly);
 
+        if (selected_node->mType == SceneNodeType::Render) {
+          ImGui::SeparatorText("Render Properties");
 
-							ImGui::SeparatorText("Animations");
-							if (renderModel == nullptr) return;
+          engine::RenderModel *renderModel = reinterpret_cast<engine::RenderModel *>(selected_node->node_ref);
 
-							auto& animations = renderModel->animations;
-							auto& skeleton = renderModel->skeleton;
-							int anim_index = 0;
-							for (auto& animation : animations) {
-								char* anim_name_vec = animation.name.data();
-								if (ImGui::RadioButton(anim_name_vec, skeleton.activeAnimation == anim_index)) {
-									if (skeleton.activeAnimation != anim_index) {
-										skeleton.activeAnimation = anim_index;
-									}
-								}
-								anim_index++;
-							}
+          char *model_name_vec = renderModel->name.data();
+          ImGui::InputText("Model Name", model_name_vec, renderModel->name.size(), ImGuiInputTextFlags_ReadOnly);
+          // if (ImGui::Button("Model", buttonsize)) {
+          ModelPopUp();
+          //}
+          ImGui::Checkbox("Instanced", &renderModel->isInstanced);
+          if (renderModel->isInstanced) {
+            ImGui::BeginChild("Instancing");
+            ImGui::Button("Add instance");
+            ImGui::BulletText("Total instances: %d", renderModel->transforms.size());
+            ImGui::EndChild();
+          }
+          ImGui::RadioButton("Is visible", renderModel->visible);
+          bool ha = renderModel->hasAnimation;
+          ImGui::RadioButton("Has Animation", ha);
 
-							ImGui::SeparatorText("Active Animation");
-							if (ImGui::Button("Reset")) {
-								animations[skeleton.activeAnimation].current_time = 0;
-							}
-							ImGui::SameLine();
-							if (ImGui::Button(animations[skeleton.activeAnimation].isActive ? "Pause" : "Play")) {
-								animations[skeleton.activeAnimation].isActive = !animations[skeleton.activeAnimation].isActive;
-							}
+          if (renderModel->hasAnimation) {
 
-							ImGui::SameLine();
-							if (ImGui::Button("Stop")) {
-								animations[skeleton.activeAnimation].current_time = 0;
-								animations[skeleton.activeAnimation].isActive = false;
-							}
+            ImGui::SeparatorText("Animations");
+            if (renderModel == nullptr)
+              return;
 
-							ImGui::SliderFloat("Current time", &animations[skeleton.activeAnimation].current_time, animations[skeleton.activeAnimation].start, animations[skeleton.activeAnimation].end, "%.3f", ImGuiInputTextFlags_ReadOnly);
-							ImGui::InputFloat("Duration", &animations[skeleton.activeAnimation].duration, 0.0, 0.0, "%.3f", ImGuiInputTextFlags_ReadOnly);
-							ImGui::InputFloat("Start", &animations[skeleton.activeAnimation].start, 0.0, 0.0, "%.3f", ImGuiInputTextFlags_ReadOnly);
-							ImGui::InputFloat("End", &animations[skeleton.activeAnimation].end, 0.0, 0.0, "%.3f", ImGuiInputTextFlags_ReadOnly);
+            auto &animations = renderModel->animations;
+            auto &skeleton = renderModel->skeleton;
+            int anim_index = 0;
+            for (auto &animation : animations) {
+              char *anim_name_vec = animation.name.data();
+              if (ImGui::RadioButton(anim_name_vec, skeleton.activeAnimation == anim_index)) {
+                if (skeleton.activeAnimation != anim_index) {
+                  skeleton.activeAnimation = anim_index;
+                }
+              }
+              anim_index++;
+            }
 
+            ImGui::SeparatorText("Active Animation");
+            if (ImGui::Button("Reset")) {
+              animations[skeleton.activeAnimation].current_time = 0;
+            }
+            ImGui::SameLine();
+            if (ImGui::Button(animations[skeleton.activeAnimation].isActive ? "Pause" : "Play")) {
+              animations[skeleton.activeAnimation].isActive = !animations[skeleton.activeAnimation].isActive;
+            }
 
-						}
-					}
-				}
-			}
-			ImGui::End();
-		}
+            ImGui::SameLine();
+            if (ImGui::Button("Stop")) {
+              animations[skeleton.activeAnimation].current_time = 0;
+              animations[skeleton.activeAnimation].isActive = false;
+            }
 
-		void ModelPopUp() {
+            ImGui::SliderFloat("Current time", (float *)&animations[skeleton.activeAnimation].current_time, animations[skeleton.activeAnimation].start,
+                               animations[skeleton.activeAnimation].end, "%.3f", ImGuiInputTextFlags_ReadOnly);
+            ImGui::InputFloat("Duration", (float *)&animations[skeleton.activeAnimation].duration, 0.0, 0.0, "%.3f", ImGuiInputTextFlags_ReadOnly);
+            ImGui::InputFloat("Start", (float *)&animations[skeleton.activeAnimation].start, 0.0, 0.0, "%.3f", ImGuiInputTextFlags_ReadOnly);
+            ImGui::InputFloat("End", (float *)&animations[skeleton.activeAnimation].end, 0.0, 0.0, "%.3f", ImGuiInputTextFlags_ReadOnly);
+          }
+        }
+      }
+    }
+    ImGui::End();
+  }
 
-			engine::RenderModel* renderModel = reinterpret_cast<engine::RenderModel*>(selected_node->node_ref);
-			ImVec2 buttonsize = ImVec2(ImGui::GetContentRegionAvail().x, 0);
-			if (ImGui::Button("Model", buttonsize))
-				ImGui::OpenPopup("Model Popup");
+  void setTransform(glm::mat4 transform) {
+    glm::vec3 skew = glm::vec3(1.0f);
+    glm::vec4 proj = glm::vec4(1.0f);
+    glm::decompose(transform, m_pSelectedTransform.scale, m_pSelectedTransform.rotation, m_pSelectedTransform.position, skew, proj);
+  }
 
-			static std::string selected = renderModel->name;
-			if (ImGui::BeginPopupModal("Model Popup", NULL)) {
-				if (m_pScenePtr != nullptr) {
-					auto& models = m_pScenePtr->getAssetManager()->getModels();
+  glm::mat4 getTransform() {
+    glm::mat4 model_transform = glm::mat4(1.0f);
+    model_transform = glm::translate(glm::mat4(1.0f), m_pSelectedTransform.position);
+    model_transform *= glm::toMat4(m_pSelectedTransform.rotation);
+    model_transform *= glm::scale(glm::mat4(1.0f), m_pSelectedTransform.scale);
+    return model_transform;
+  }
 
-					if (ImGui::BeginListBox("##models_listbox", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
-					{
-						for (auto& model : models) {
+  void ModelPopUp() {
 
-							const bool is_selected = (selected == model.first);
-							if (ImGui::Selectable(model.first.c_str(), is_selected)) {
-								selected = model.first;
-							}
-							if (is_selected)
-								ImGui::SetItemDefaultFocus();
-						}
-						ImGui::EndListBox();
-					}
-				}
+    engine::RenderModel *renderModel = reinterpret_cast<engine::RenderModel *>(selected_node->node_ref);
+    ImVec2 buttonsize = ImVec2(ImGui::GetContentRegionAvail().x, 0);
+    if (ImGui::Button("Model", buttonsize))
+      ImGui::OpenPopup("Model Popup");
 
-				if (ImGui::Button("Accept")) {
+    static std::string selected = renderModel->name;
+    if (ImGui::BeginPopupModal("Model Popup", NULL)) {
+      if (m_pScenePtr != nullptr) {
+        auto &models = m_pScenePtr->getAssetManager()->getModels();
 
-					auto parent_node = m_pScenePtr->getNode(selected_node->Index());
-					auto child = m_pScenePtr->getChild<engine::RenderModel>(parent_node);
-					auto bindGroup = renderModel->bindGroup;
-					child->data = m_pScenePtr->getAssetManager()->getModel(selected);
-					child->data.bindGroup = bindGroup;
-					child->data.bindGroupId = std::hash<std::string>{}(bindGroup);
-					ImGui::CloseCurrentPopup();
-				} ImGui::SameLine();
-				if (ImGui::Button("Cancel")) ImGui::CloseCurrentPopup();
+        if (ImGui::BeginListBox("##models_listbox", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing()))) {
+          for (auto &model : models) {
 
-				ImGui::EndPopup();
-			}
-		}
-	};
-}
+            const bool is_selected = (selected == model.first);
+            if (ImGui::Selectable(model.first.c_str(), is_selected)) {
+              selected = model.first;
+            }
+            if (is_selected)
+              ImGui::SetItemDefaultFocus();
+          }
+          ImGui::EndListBox();
+        }
+      }
+
+      if (ImGui::Button("Accept")) {
+
+        auto parent_node = m_pScenePtr->getNode(selected_node->Index());
+        auto child = m_pScenePtr->getChild<engine::RenderModel>(parent_node);
+        if (child != nullptr) {
+          auto bindGroup = renderModel->bindGroup;
+          child->data = m_pScenePtr->getAssetManager()->getModel(selected);
+          child->data.bindGroup = bindGroup;
+          child->data.bindGroupId = std::hash<std::string>{}(bindGroup);
+        }
+        ImGui::CloseCurrentPopup();
+      }
+      ImGui::SameLine();
+      if (ImGui::Button("Cancel"))
+        ImGui::CloseCurrentPopup();
+
+      ImGui::EndPopup();
+    }
+  }
+};
+} // namespace Editor::UI

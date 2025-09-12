@@ -112,7 +112,7 @@ namespace Editor::Renderpasses {
 			.vertexLayout = vertexLayout,
 			.cullMode = CullMode::FRONT,
 			.windingMode = WindingMode::COUNTER_CLOCK_WISE,
-			.depthWriteEnable = true,
+			.depthWriteEnable = false,
 			.depthTestEnable = false
 		};
 
@@ -134,8 +134,8 @@ namespace Editor::Renderpasses {
 		PipelineLayout gridLayout = mainLayout;
 		gridLayout.shaderInfo = gridShaderInfo;
 		gridLayout.depthTestEnable = false;
-		gridLayout.depthWriteEnable = true;
-		gridLayout.cullMode = CullMode::FRONT;
+		gridLayout.depthWriteEnable = false;
+		gridLayout.cullMode = CullMode::NONE;
 
 		engine::ShaderAsset gridShaderAsset;
 		gridShaderAsset.name = "GridShader";
@@ -216,7 +216,7 @@ namespace Editor::Renderpasses {
 					{
 						  .format = DEPTH_F32_STENCIL_8,
 						  .wrapMode = engine::WrapMode::CLAMP_TO_EDGE,
-						  .depthCompare = false,
+						  .depthCompare = true,
 						  .blendEnable = false,
 						  .depthStencilValue = {1, 0},
 						  .isSampler = true,
@@ -230,7 +230,7 @@ namespace Editor::Renderpasses {
 			.pipelineLayout(gridLayout)
 			.pipelineLayout(grassLayout)
 			.pushConstant(72);
-
+	  renderPassInfo.numSamples = 4;
 		return context->ResourceManager()->createRenderPass(renderPassInfo);
 	}
 }
