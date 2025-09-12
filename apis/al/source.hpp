@@ -141,6 +141,14 @@ static bool isPaused(OpenALSource source) {
   alGetSourcei(source.id, AL_SOURCE_STATE, &source_state);
   return source_state == AL_PAUSED;
 }
+
+static float getSourcePlayingPosition(OpenALSource source) {
+  if (!isPlaying(source))
+    return 0;
+  float secoffset = 0;
+  alGetSourcef(source.id, AL_SAMPLE_OFFSET, &secoffset);
+  return secoffset;
+}
 /*
 class AudioSource : public Epsilon::Audio::AudioSource
 {
