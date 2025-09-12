@@ -4,21 +4,26 @@
 
 namespace framework::splines {
 
+	template<typename T = glm::vec3>
 	struct ControlPoint {
-		glm::vec3 position{};
+		T position{};
 		float length{};
 	};
 
+	template<typename T = glm::vec3>
 	struct CurrentSegment {
-		glm::vec3 p0{};
-		glm::vec3 p1{};
-		glm::vec3 p2{};
-		glm::vec3 p3{};
+		T p0{};
+		T p1{};
+		T p2{};
+		T p3{};
 	};
-
+    
+	template<typename T = glm::vec3>
 	class Spline {
 	public:
-		void addPoint(glm::vec3 point) {
+	    Spline() = default;
+
+		void addPoint(T point) {
 			m_pControlPoints.push_back({ .position = point, .length = 0 });
 		}
 
@@ -30,7 +35,7 @@ namespace framework::splines {
 			m_pLoop = val;
 		}
 
-		glm::vec3 getLastPoint() {
+		T getLastPoint() {
 			return m_pControlPoints.at(m_pControlPoints.size() - 2).position;
 		}
 
@@ -38,10 +43,13 @@ namespace framework::splines {
 			m_pControlPoints.clear();
 		}
 
+		auto &getPoints () {
+			return m_pControlPoints;
+		}
+
 	protected:
 
-
-		std::vector<ControlPoint> m_pControlPoints{};
+		std::vector<ControlPoint<T>> m_pControlPoints;
 		bool m_pLoop = true;
 	};
 }
