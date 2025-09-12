@@ -1,15 +1,19 @@
 ﻿#pragma once
 
+#include <cmath>
 #include <core/engine/renderer/renderer.hpp>
 #include <core/engine/renderer/resource_manager.hpp>
 #include <core/framework/IO/Mouse.hpp>
 
 #include <core/framework/common.hpp>
+#include <core/framework/splines/catmull_rom.hpp>
 #include <core/framework/utils/file.hpp>
 #include <core/framework/utils/image.hpp>
 
 #include "Animation.hpp"
 #include "Types.hpp"
+#include "core/framework/splines/cuadratic_bezier.hpp"
+#include "core/framework/splines/cubic_bezier.hpp"
 #include "font.hpp"
 
 #include <span>
@@ -22,6 +26,9 @@
 // #include "Roboto.hpp"
 #include "Orbitron-Regular.hpp"
 #include "Orbitron_Regular_10.hpp"
+#include "glm/geometric.hpp"
+#include "glm/gtc/constants.hpp"
+#include "glm/trigonometric.hpp"
 
 namespace UI {
 
@@ -58,17 +65,28 @@ private:
   uint32_t pending_actions = 0;
   uint32_t current_font = 0;
 
+  size_t grabed_window_id = 0;
+  int selected_point = -1;
+
   glm::vec2 m_pCursorPosition{};
   glm::vec2 m_pResolution = glm::vec2(1280.0f, 720.0f);
+  glm::vec2 m_pLastResolution{};
 
-  const size_t VERTEX_COUNT = 100000;
+  glm::ivec2 lastMouse = {};
+  // glm::vec2 mouse;
+
+  const size_t VERTEX_COUNT = 450000;
   // glm::vec2 m_WhitePixelPos{};
 
   float m_pAspectRatio = 1280.0f / 720.0f;
+  bool resolution_changed = false;
 
   AnimationManager *m_CurrentAnimation = nullptr;
 
   Window *currentWindow = nullptr;
+
+  size_t window_stack_pointer = 100;
+  size_t window_stack[100] = {};
 
   engine::PipelineLayout uiLayout;
 
@@ -88,7 +106,8 @@ private:
   }
 
   void pUpdateAnimation(size_t offset, size_t num) {
-    if(m_CurrentAnimation == nullptr) return;
+    if (m_CurrentAnimation == nullptr)
+      return;
 
     std::span<UIVertex> span = std::span{m_pVertices}.subspan(offset, num);
 
@@ -113,6 +132,8 @@ public:
 
     m_CurrentBindGroup = m_pBindGroups[m_Fonts[current_font]->Name()];
   }
+
+  Style &GetStyle();
 
   int32_t AddFont(std::shared_ptr<Font> font) {
     if (font == nullptr)
@@ -155,8 +176,8 @@ public:
     texInfo.width = font->texture_size;
     texInfo.height = font->texture_size;
     texInfo.format = engine::TextureFormat::COLOR_RGBA;
-    texInfo.generateMipMaps = false;
-    texInfo.mipLevels = 1;
+    texInfo.generateMipMaps = true;
+    texInfo.mipLevels = 5;
     texInfo.size = font->texture_size * font->texture_size * 4;
 
     m_pBindGroups[font->Name()] = m_pResourceManager->createBindGroup({
@@ -182,23 +203,23 @@ public:
     m_pWindow = window;
 
     m_pVertices.resize(VERTEX_COUNT);
+    /*
+        engine::ShaderInfo mainShaderInfo = loadShaders();
 
-    engine::ShaderInfo mainShaderInfo = loadShaders();
+        engine::VertexLayout vertexLayout = {.descriptors = {{engine::XYZW_FLOAT, offsetof(UIVertex, pos_uv)},
+                                                             {engine::XYZW_FLOAT, offsetof(UIVertex, color)},
+                                                             {engine::XY_FLOAT, offsetof(UIVertex, vtx_pos)},
+                                                             {engine::XY_FLOAT, offsetof(UIVertex, padding)}},
+                                             .size = sizeof(UIVertex)};
 
-    engine::VertexLayout vertexLayout = {.descriptors = {{engine::XYZW_FLOAT, offsetof(UIVertex, pos_uv)},
-                                                         {engine::XYZW_FLOAT, offsetof(UIVertex, color)},
-                                                         {engine::XY_FLOAT, offsetof(UIVertex, vtx_pos)},
-                                                         {engine::XY_FLOAT, offsetof(UIVertex, padding)}},
-                                         .size = sizeof(UIVertex)};
-
-    uiLayout = {
-        .shaderInfo = mainShaderInfo,
-        .vertexLayout = vertexLayout,
-        .cullMode = engine::CullMode::NONE,
-        .windingMode = engine::WindingMode::CLOCKWISE,
-        .depthWriteEnable = false,
-        .depthTestEnable = false,
-    };
+        uiLayout = {
+            .shaderInfo = mainShaderInfo,
+            .vertexLayout = vertexLayout,
+            .cullMode = engine::CullMode::NONE,
+            .windingMode = engine::WindingMode::CLOCKWISE,
+            .depthWriteEnable = false,
+            .depthTestEnable = false,
+        };*/
     m_pVertexBuffer.resize(m_pResourceManager->FramesInFlight());
 
     Log::Info("Allocating ", m_pResourceManager->FramesInFlight(), " vertex buffers for UI.");
@@ -240,7 +261,7 @@ public:
     });
   }
 
-  void AddImageFromFile(const char *path, const char *name) {
+  void AddImageFromFile(const char *path, const char *name, int mipBase = 0, int mipLevels = 1) {
     int w, h, c = 4;
     unsigned char *pixels = framework::load_image_from_file(path, &w, &h, &c);
 
@@ -258,8 +279,9 @@ public:
     texInfo.width = w;
     texInfo.height = h;
     texInfo.format = engine::TextureFormat::COLOR_RGBA;
-    texInfo.generateMipMaps = false;
-    texInfo.mipLevels = 1;
+    texInfo.filtering = engine::Filtering::LINEAR;
+    texInfo.generateMipMaps = mipLevels > 1;
+    texInfo.mipLevels = mipLevels;
     texInfo.size = w * h * 4;
 
     m_pBindGroups[name] = m_pResourceManager->createBindGroup({
@@ -287,7 +309,7 @@ public:
     projectionMatrix = proj;
   }
 
-  void Update();
+  bool Update();
   void Draw(engine::Ref<engine::RenderPass>);
   void Free();
   bool IsHovered();
@@ -300,22 +322,110 @@ public:
   void CreateRect(glm::vec2 position, glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1, glm::vec4 color = glm::vec4(0.11, 0.11, 0.11, 0.8),
                   float border_radius = -1.0f);
 
-  void CreatePolygon(const UIVertex* vertices, size_t size);
+  void CreatePolygon(const UIVertex *vertices, size_t size);
   void CreatePolygon(std::vector<UIVertex> vertices);
 
-  void Circle(int subdivisions = 20);
+  void Circle(int subdivisions = 20, float size = 10.0f, glm::vec4 color = glm::vec4(0.5, 0.5, 0.5, 1.0));
   void Square(glm::vec2, glm::vec2);
   void Triangle();
   void Diamond();
+
+  bool MouseLeftReleased() {
+    return m_pMouse.left_released;
+  }
+  bool MouseLeftPressed() {
+    return m_pMouse.left_pressed;
+  }
+
+  bool MouseRightReleased() {
+    return m_pMouse.right_released;
+  }
+  bool MouseRightPressed() {
+    return m_pMouse.right_pressed;
+  }
+
+  void DrawLine(LinePoint &&p0, LinePoint &&p1) {
+
+    auto font = m_Fonts[current_font];
+    if (m_DrawLists[commands_pushed].layout != Primitive::LINE) {
+      auto &new_command = m_DrawLists.emplace_back();
+      commands_pushed++;
+      new_command.vertex_offset = vertices_pushed;
+      new_command.num_vertices = 0;
+      new_command.bind_group = m_CurrentBindGroup;
+      new_command.layout = Primitive::LINE;
+    }
+
+    m_pVertices[vertices_pushed].color = glm::vec4(p0.color);
+    m_pVertices[vertices_pushed].pos_uv = glm::vec4(p0.position.x / m_pResolution.x, p0.position.y / m_pResolution.y, font->white_pixel.x, font->white_pixel.y);
+    m_pVertices[vertices_pushed].padding = glm::vec2(-1.0f);
+    m_pVertices[vertices_pushed++].vtx_pos = glm::vec2(0.0, -1);
+
+    m_pVertices[vertices_pushed].color = glm::vec4(p1.color);
+    m_pVertices[vertices_pushed].pos_uv = glm::vec4(p1.position.x / m_pResolution.x, p1.position.y / m_pResolution.y, font->white_pixel.x, font->white_pixel.y);
+    m_pVertices[vertices_pushed].padding = glm::vec2(-1.0f);
+    m_pVertices[vertices_pushed++].vtx_pos = glm::vec2(-1.0f);
+    m_DrawLists[commands_pushed].num_vertices += 2;
+  }
+
+  void Ellipse(glm::vec2 rad) {
+    using namespace glm;
+    using v2 = glm::vec2;
+
+    auto p = m_pCursorPosition;
+
+    const float subdivisions = 100;
+
+    const float step = (1.0 / subdivisions) * glm::tau<float>();
+
+    for (int i = 0; i < subdivisions * 0.5; i++) {
+      float th0 = step * i;
+      float th1 = step * (i + 1);
+      v2 p0 = v2(cos(th0), -sin(th0)) * rad + p + v2(rad.x, 0.0);
+      v2 p1 = v2(cos(th1), -sin(th1)) * rad + p + v2(rad.x, 0.0);
+
+      DrawLine({.position = p0, .color = RED}, {.position = p1, .color = RED});
+    }
+
+    m_pCursorPosition = p;
+  }
+
+  template <typename T = glm::vec2> void Spline(std::vector<SplinePoint<T>> &points, SplineFlags flags) {
+    auto original_position = m_pCursorPosition;
+    switch (flags.type) {
+    case SplineType::CATMULL_ROM:
+      pCatmullRomSpline(points, flags);
+      break;
+
+    case SplineType::QUADRATIC_BEZIER:
+      pQuadraticBezierSpline(points, flags);
+      break;
+
+    case SplineType::CUBIC_BEZIER:
+      pCubicBezierSpline(points, flags);
+      break;
+    default:
+      break;
+    }
+
+    m_pCursorPosition = original_position;
+  }
 
   void SetNextWidgetAnimation(AnimationManager *anim_mgr);
 
   void SetNextWindowPosition(glm::vec2 position);
 
-  void BeginWindow(const std::string &name, glm::vec2 size = glm::vec2(0.0f), glm::vec4 color = glm::vec4(0.0, 0.0, 0.0, 0.5), float border_radius = -1.0f);
+  void BeginWindow(const std::string &name, glm::vec2 size = glm::vec2(0.0f), glm::vec4 color = glm::vec4(0.0, 0.0, 0.0, 0.5), float border_radius = -1.0f,
+                   bool header = false, bool fixed = true, bool moves = false);
 
   void EndWindow();
 
+  bool WindowChanged() { return resolution_changed; }
+
+  template <typename... Args> void Text(std::string_view fmt, Args &&...args) {
+    auto str = std::vformat(fmt, std::make_format_args(args...));
+    Text(str, m_pCursorPosition, glm::vec4(1.0), true);
+  }
   void Text(const std::string &text, glm::vec4 color = glm::vec4(1.0f), bool standalone = true);
   void Text(const std::string &text, glm::vec2 position, glm::vec4 color = glm::vec4(1.0f), bool standalone = true);
 
@@ -326,8 +436,7 @@ public:
 
   void Spacer(glm::vec2 size);
 
-  bool ImageButton(const std::string &, const std::string &texture, glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1, glm::vec4 tint = glm::vec4(1.0f),
-                   bool fill_background = false, float border_radius = -1.0f);
+  bool ImageButton(const std::string &, const std::string &texture, glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1, ImageButtonFlags flags = {});
 
   void AngularButtons(glm::vec2 position, float innerRadius, float outerRadius, int count);
   bool AngularButton(const std::string &text);
@@ -336,11 +445,419 @@ public:
 
   void Spinner(glm::vec2 position, float innerRadius, float outerRadius, float percent, glm::vec4 color = glm::vec4(0.5, 0.5, 0.5, 1.0));
 
-  bool HealthBar(const std::string &text, glm::vec2 position, float val, float min, float max, glm::vec4 color = glm::vec4(0.0, 1.0, 0.0, 1.0),
-                 glm::vec4 backgroundColor = glm::vec4(0.0, 0.0, 0.0, 1.0), float border_radius = -1.0f);
+  bool HealthBar(const std::string &text, glm::vec2 position, float val, float min, float max, HealthBarFlags flags);
 
   void Switch(const std::string &text, bool &state) {}
 
   void Scale(const std::string &text, const std::string &setting_name, int &current, int min, int max, glm::vec2 size);
+
+  glm::vec2 ToScreenCoords(const glm::vec3 &point, bool clamp_to_border = false) {
+    glm::vec4 ndc = projectionMatrix * viewMatrix * glm::vec4(point, 1.0);
+
+    ndc /= ndc.w;
+    ndc.y = -1.0 * ndc.y;
+
+    glm::vec2 viewport_space = glm::vec2(ndc.x, ndc.y) * 0.5f + 0.5f;
+
+    if (clamp_to_border)
+      viewport_space = glm::clamp(viewport_space, glm::vec2(0.0), glm::vec2(1.0));
+
+    return viewport_space * m_pResolution;
+  }
+
+private:
+  template <typename T> void pCatmullRomSpline(std::vector<SplinePoint<T>> &points, SplineFlags flags) {
+
+    auto font = m_Fonts[current_font];
+
+    int hovered_point = -1;
+
+    auto circle_col = [](glm::vec2 m, glm::vec2 p, float r) -> bool { return glm::length(m - p) <= r; };
+    auto segment_color = [](SplinePoint<T> &p0, SplinePoint<T> &p1, float t) { return glm::vec4(glm::mix(p0.color.get(), p1.color.get(), t)); };
+    auto rot = [](float angle) { return glm::mat2(glm::cos(angle), -glm::sin(angle), glm::sin(angle), glm::cos(angle)); };
+
+    framework::splines::CatmullRom<glm::vec2> spline;
+    spline.Loops(false);
+    for (int i = 0; i < points.size(); i++) {
+      auto &p = points[i];
+      spline.addPoint(p.position);
+      if (circle_col(m_pMouse.position, p.position, 12) || selected_point == i) {
+        hovered_point = i;
+        if (m_pMouse.right_down && selected_point == -1 || selected_point == i) {
+          selected_point = i;
+          p.position.x += (m_pMouse.position - lastMouse).x;
+          p.position.y += (m_pMouse.position - lastMouse).y;
+        }
+      }
+    }
+    if (points.size() == 2 && flags.drawHandles) {
+
+      DrawLine({.position = points[0].position, .color = LIGHT_BLUE}, {.position = points[1].position, .color = LIGHT_BLUE});
+    }
+
+    if (points.size() >= 4) {
+
+      const int subdivisions = 50;
+
+      for (int i = 0; i < points.size() - 1; i++) {
+        for (int j = 0; j < subdivisions; j++) {
+          float t = (float)(j) / (float)subdivisions;
+          float t2 = (float)(j + 1) / (float)subdivisions;
+
+          auto &p0 = points[i];
+          auto &p1 = points[(i + 1) % points.size()];
+
+          auto sp0 = spline.getPoint(t + i);
+          auto sp1 = spline.getPoint(t2 + i - ((subdivisions - 1 == j) ? 1e-5 : 0.0));
+
+          if (i < points.size() - 2 &&
+              (points[i].position.x >= m_pResolution.x || points[i].position.y >= m_pResolution.y || points[i].position.x < 0 || points[i].position.y < 0) &&
+              (points[i + 1].position.x >= m_pResolution.x || points[i + 1].position.y >= m_pResolution.y || points[i + 1].position.x < 0 ||
+               points[i + 1].position.y < 0) &&
+              (points[i + 2].position.x >= m_pResolution.x || points[i + 2].position.y >= m_pResolution.y || points[i + 2].position.x < 0 ||
+               points[i + 2].position.y < 0)) {
+            // i++;
+            break;
+            ;
+          }
+
+          auto g = spline.getGradient(t + i);
+          float acc = length(g);
+          auto grad = glm::normalize(g);
+          auto normal = normalize(rot(glm::radians(90.0f)) * grad);
+          if (flags.drawTangents) {
+            DrawLine({.position = sp0, .color = glm::vec4(grad, 0.0, 1.0)}, {.position = (sp0 + grad * acc * 0.25), .color = glm::vec4(grad, 1.0, 1.0)});
+          }
+          if (flags.drawNormals) {
+            DrawLine({.position = sp0, .color = glm::vec4(normal, 0.0, 1.0)}, {.position = (sp0 + normal * 80.0), .color = glm::vec4(normal, 1.0, 1.0)});
+          }
+          DrawLine({.position = sp0, .color = segment_color(p0, p1, t)}, {.position = sp1, .color = segment_color(p0, p1, t2)});
+        }
+      }
+      if (flags.drawHandles) {
+        for (int i = 0; i < points.size() - 1; i++) {
+          DrawLine({.position = points[i].position, .color = LIGHT_BLUE}, {.position = points[i + 1].position, .color = LIGHT_BLUE});
+        }
+      }
+    }
+    if (flags.drawHandles) {
+      for (int i = 0; i < points.size(); i++) {
+        auto &p = points[i];
+        m_pCursorPosition = p.position;
+        float color = 1.0;
+        int subdivs = 15;
+        Circle(subdivs, 12, glm::vec4(0.0, 0.0, 0.0, color));
+        Circle(subdivs, i == hovered_point ? 8 : 4, p.color.get());
+        // Text("({}, {})", p.position.x, p.position.y);
+      }
+      if (selected_point == -1 && m_pMouse.right_pressed && points.size() >= 1) {
+        T handle_position = T(1.0f);
+        handle_position.x = m_pMouse.position.x;
+        handle_position.y = m_pMouse.position.y;
+        points.push_back({.position = handle_position, .color = WHITE});
+        selected_point = points.size() - 1;
+
+      } else if (points.size() == 0 && m_pMouse.right_pressed) {
+        T handle_position = T(1.0f);
+        handle_position.x = m_pMouse.position.x;
+        handle_position.y = m_pMouse.position.y;
+        points.push_back({.position = handle_position, .color = WHITE});
+        selected_point = points.size() - 1;
+      }
+    }
+  }
+
+  template <typename T> void pQuadraticBezierSpline(std::vector<SplinePoint<T>> &points, SplineFlags flags = {}) {
+
+    auto font = m_Fonts[current_font];
+
+    int hovered_point = -1;
+
+    auto circle_col = [](glm::vec2 m, glm::vec2 p, float r) -> bool { return glm::length(m - p) <= r; };
+    auto segment_color = [](SplinePoint<T> &p0, SplinePoint<T> &p1, float t) { return glm::vec4(glm::mix(p0.color.get(), p1.color.get(), t)); };
+    auto rot = [](float angle) { return glm::mat2(glm::cos(angle), -glm::sin(angle), glm::sin(angle), glm::cos(angle)); };
+
+    framework::splines::CuadraticBezier<glm::vec2> spline;
+    std::vector<UIVertex> fill_vertices;
+    spline.Loops(false);
+    for (int i = 0; i < points.size(); i++) {
+      auto &p = points[i];
+      spline.addPoint(p.position);
+      if (circle_col(m_pMouse.position, p.position, 12) || selected_point == i) {
+        hovered_point = i;
+        if (m_pMouse.right_down && selected_point == -1 || selected_point == i) {
+          selected_point = i;
+          p.position.x += (m_pMouse.position - lastMouse).x;
+          p.position.y += (m_pMouse.position - lastMouse).y;
+
+          int x = i % 3;
+          if (flags.mirrorControlPoints) {
+            if (i % 3 != 0 && i > 1) {
+              if (x == 1)
+                points[i - 2].position = points[i - 1].position - (points[i].position - points[i - 1].position);
+              if (x == 2)
+                points[i + 2].position = points[i + 1].position - (points[i].position - points[i + 1].position);
+            } else if (i > 1) {
+              points[i - 1].position.x += (m_pMouse.position - lastMouse).x;
+              points[i + 1].position.x += (m_pMouse.position - lastMouse).x;
+
+              points[i - 1].position.y += (m_pMouse.position - lastMouse).y;
+              points[i + 1].position.y += (m_pMouse.position - lastMouse).y;
+            } else if (i == 0) {
+              points[i + 1].position.x += (m_pMouse.position - lastMouse).x;
+              points[i + 1].position.y += (m_pMouse.position - lastMouse).y;
+            }
+          }
+        }
+      }
+    }
+    if (points.size() == 2 && flags.drawHandles) {
+
+      DrawLine({.position = points[0].position, .color = LIGHT_BLUE}, {.position = points[1].position, .color = LIGHT_BLUE});
+    }
+
+    if (points.size() >= 3) {
+
+      const int subdivisions = 50;
+
+      if (flags.fill) {
+
+        DrawLine({.position = points[0].position, .color = points[0].color.get()},
+                 {.position = points[points.size() - 1].position, .color = points[points.size() - 1].color.get()});
+      }
+      for (int i = 0; i < points.size() - 2; i += 2) {
+        for (int j = 0; j < subdivisions; j++) {
+          float t = (float)(j) / (float)subdivisions;
+          float t2 = (float)(j + 1) / (float)subdivisions;
+
+          auto &p0 = points[i];
+          auto &p1 = points[(i + 2) % points.size()];
+
+          auto sp0 = spline.getPoint(t + i);
+          auto sp1 = spline.getPoint(t2 + i - ((subdivisions - 1 == j) ? 1e-5 : 0.0));
+
+          if (flags.fill) {
+            fill_vertices.push_back(
+                {.pos_uv = glm::vec4(points[0].position.x / m_pResolution.x, points[0].position.y / m_pResolution.y, font->white_pixel.x, font->white_pixel.y),
+                 .color = p0.color.get(),
+                 .vtx_pos = glm::vec2(-1.0f),
+                 .padding = glm::vec2(-1.0f)});
+            fill_vertices.push_back({.pos_uv = glm::vec4(sp0.x / m_pResolution.x, sp0.y / m_pResolution.y, font->white_pixel.x, font->white_pixel.y),
+                                     .color = p0.color.get(),
+                                     .vtx_pos = glm::vec2(-1.0f),
+                                     .padding = glm::vec2(-1.0f)});
+            fill_vertices.push_back({.pos_uv = glm::vec4(sp1.x / m_pResolution.x, sp1.y / m_pResolution.y, font->white_pixel.x, font->white_pixel.y),
+                                     .color = p0.color.get(),
+                                     .vtx_pos = glm::vec2(-1.0f),
+                                     .padding = glm::vec2(-1.0f)});
+          }
+          auto g = spline.getGradient(t + i);
+          float acc = length(g);
+          auto grad = glm::normalize(g);
+          auto normal = normalize(rot(glm::radians(90.0f)) * grad);
+          if (flags.drawTangents) {
+            DrawLine({.position = sp0, .color = glm::vec4(grad, 0.0, 1.0)}, {.position = (sp0 + grad * acc * 0.25), .color = glm::vec4(grad, 1.0, 1.0)});
+          }
+          if (flags.drawNormals) {
+            DrawLine({.position = sp0, .color = glm::vec4(normal, 0.0, 1.0)}, {.position = (sp0 + normal * 80.0), .color = glm::vec4(normal, 1.0, 1.0)});
+          }
+          DrawLine({.position = sp0, .color = segment_color(p0, p1, t)},
+                   {.position = (sp1 + glm::normalize(sp1 - sp0) * 0.0), .color = segment_color(p0, p1, t2)});
+        }
+      }
+
+      if (flags.drawHandles) {
+        for (int i = 0; i < points.size() - 1; i++) {
+          DrawLine({.position = points[i].position, .color = LIGHT_BLUE}, {.position = points[i + 1].position, .color = LIGHT_BLUE});
+        }
+      }
+    }
+    if (flags.drawHandles) {
+      for (int i = 0; i < points.size(); i++) {
+        auto &p = points[i];
+        m_pCursorPosition = p.position;
+        float color = 1.0;
+        int subdivs = 15;
+        if (i % 2)
+          subdivs = 4;
+        Circle(subdivs, 12, glm::vec4(0.0, 0.0, 0.0, color));
+        Circle(subdivs, i == hovered_point ? 8 : 4, p.color.get());
+        Text("({}, {})", p.position.x, p.position.y);
+      }
+      if (selected_point == -1 && m_pMouse.right_pressed && points.size() >= 1) {
+        T handle_position = T(1.0f);
+        handle_position.x = m_pMouse.position.x;
+        handle_position.y = m_pMouse.position.y;
+        points.push_back({.position = handle_position, .color = LIGHT_BLUE});
+        points.push_back({.position = handle_position, .color = WHITE});
+        // if (points.size() > 4)
+        // if (points.size() == 4)
+        //   points.push_back({.position = glm::vec2(m_pMouse.position), .color = LIGHT_BLUE});
+        selected_point = points.size() - 1;
+
+      } else if (points.size() == 0 && m_pMouse.right_pressed) {
+        T handle_position = T(1.0f);
+        handle_position.x = m_pMouse.position.x;
+        handle_position.y = m_pMouse.position.y;
+        points.push_back({.position = handle_position, .color = WHITE});
+        selected_point = points.size() - 1;
+      }
+    }
+
+    if (flags.fill) {
+      CheckShader();
+      CreatePolygon(fill_vertices);
+    }
+  }
+
+  template <typename T> void pCubicBezierSpline(std::vector<SplinePoint<T>> &points, SplineFlags flags = {}) {
+
+    auto font = m_Fonts[current_font];
+
+    int hovered_point = -1;
+
+    auto circle_col = [](glm::vec2 m, glm::vec2 p, float r) -> bool { return glm::length(m - p) <= r; };
+    auto segment_color = [](SplinePoint<T> &p0, SplinePoint<T> &p1, float t) { return glm::vec4(glm::mix(p0.color.get(), p1.color.get(), t)); };
+    auto rot = [](float angle) { return glm::mat2(glm::cos(angle), -glm::sin(angle), glm::sin(angle), glm::cos(angle)); };
+
+    framework::splines::CubicBezier<glm::vec2> spline;
+    std::vector<UIVertex> fill_vertices;
+    spline.Loops(false);
+    for (int i = 0; i < points.size(); i++) {
+      auto &p = points[i];
+      spline.addPoint(p.position);
+      if (circle_col(m_pMouse.position, p.position, 12) || selected_point == i) {
+        hovered_point = i;
+        if (m_pMouse.right_down && selected_point == -1 || selected_point == i) {
+          selected_point = i;
+          p.position.x += (m_pMouse.position - lastMouse).x;
+          p.position.y += (m_pMouse.position - lastMouse).y;
+
+          int x = i % 3;
+          if (flags.mirrorControlPoints) {
+            if (i % 3 != 0 && i > 1) {
+              if (x == 1)
+                points[i - 2].position = points[i - 1].position - (points[i].position - points[i - 1].position);
+              if (x == 2)
+                points[i + 2].position = points[i + 1].position - (points[i].position - points[i + 1].position);
+            } else if (i > 1) {
+              points[i - 1].position.x += (m_pMouse.position - lastMouse).x;
+              points[i + 1].position.x += (m_pMouse.position - lastMouse).x;
+
+              points[i - 1].position.y += (m_pMouse.position - lastMouse).y;
+              points[i + 1].position.y += (m_pMouse.position - lastMouse).y;
+            } else if (i == 0) {
+              points[i + 1].position.x += (m_pMouse.position - lastMouse).x;
+              points[i + 1].position.y += (m_pMouse.position - lastMouse).y;
+            }
+          }
+        }
+      }
+    }
+    if (points.size() == 2 && flags.drawHandles) {
+
+      DrawLine({.position = points[0].position, .color = LIGHT_BLUE}, {.position = points[1].position, .color = LIGHT_BLUE});
+    }
+
+    if (points.size() > 3) {
+
+      if (flags.fill) {
+
+        DrawLine({.position = points[0].position, .color = points[0].color.get()},
+                 {.position = points[points.size() - 2].position, .color = points[points.size() - 2].color.get()});
+      }
+      const int subdivisions = 50;
+
+      for (int i = 0; i < points.size() - 3; i += 3) {
+        for (int j = 0; j < subdivisions; j++) {
+          float t = (float)(j) / (float)subdivisions;
+          float t2 = (float)(j + 1) / (float)subdivisions;
+
+          auto &p0 = points[i];
+          auto &p1 = points[(i + 3) % points.size()];
+
+          auto sp0 = spline.getPoint(t + i);
+          auto sp1 = spline.getPoint(t2 + i - ((subdivisions - 1 == j) ? 1e-5 : 0.0));
+
+          if (flags.fill) {
+            fill_vertices.push_back(
+                {.pos_uv = glm::vec4(points[0].position.x / m_pResolution.x, points[0].position.y / m_pResolution.y, font->white_pixel.x, font->white_pixel.y),
+                 .color = p0.color.get(),
+                 .vtx_pos = glm::vec2(-1.0f),
+                 .padding = glm::vec2(-1.0f)});
+            fill_vertices.push_back({.pos_uv = glm::vec4(sp0.x / m_pResolution.x, sp0.y / m_pResolution.y, font->white_pixel.x, font->white_pixel.y),
+                                     .color = p0.color.get(),
+                                     .vtx_pos = glm::vec2(-1.0f),
+                                     .padding = glm::vec2(-1.0f)});
+            fill_vertices.push_back({.pos_uv = glm::vec4(sp1.x / m_pResolution.x, sp1.y / m_pResolution.y, font->white_pixel.x, font->white_pixel.y),
+                                     .color = p0.color.get(),
+                                     .vtx_pos = glm::vec2(-1.0f),
+                                     .padding = glm::vec2(-1.0f)});
+          }
+
+          auto g = spline.getGradient(t + i);
+          float acc = length(g);
+          auto grad = glm::normalize(g);
+          auto normal = normalize(rot(glm::radians(90.0f)) * grad);
+          if (flags.drawTangents) {
+            DrawLine({.position = sp0, .color = glm::vec4(grad, 0.0, 1.0)}, {.position = (sp0 + grad * acc * 0.25), .color = glm::vec4(grad, 1.0, 1.0)});
+          }
+          if (flags.drawNormals) {
+            DrawLine({.position = sp0, .color = glm::vec4(normal, 0.0, 1.0)}, {.position = (sp0 + normal * 80.0), .color = glm::vec4(normal, 1.0, 1.0)});
+          }
+          DrawLine({.position = sp0, .color = segment_color(p0, p1, t)},
+                   {.position = (sp1 + glm::normalize(sp1 - sp0) * 0.0), .color = segment_color(p0, p1, t2)});
+        }
+      }
+      if (flags.drawHandles) {
+        for (int i = 0; i < points.size() - 1; i += 3) {
+          DrawLine({.position = points[i].position, .color = LIGHT_BLUE}, {.position = points[i + 1].position, .color = LIGHT_BLUE});
+          if (i > 0)
+            DrawLine({.position = points[i].position, .color = LIGHT_BLUE}, {.position = points[i - 1].position, .color = LIGHT_BLUE});
+        }
+
+        DrawLine({.position = points[points.size() - 1].position, .color = LIGHT_BLUE},
+                 {.position = points[points.size() - 1 - 1].position, .color = LIGHT_BLUE});
+      }
+    }
+    if (flags.drawHandles) {
+      for (int i = 0; i < points.size(); i++) {
+        auto &p = points[i];
+        m_pCursorPosition = p.position;
+        float color = 1.0;
+        int subdivs = 15;
+        if (i % 3 > 0)
+          subdivs = 4;
+        Circle(subdivs, 12, glm::vec4(0.0, 0.0, 0.0, color));
+        Circle(subdivs, i == hovered_point ? 8 : 4, p.color.get());
+        Text("({}, {})", p.position.x, p.position.y);
+      }
+      if (selected_point == -1 && m_pMouse.right_pressed && points.size() >= 1) {
+        T handle_position = T(1.0f);
+        handle_position.x = m_pMouse.position.x;
+        handle_position.y = m_pMouse.position.y;
+        points.push_back({.position = handle_position, .color = LIGHT_BLUE});
+        points.push_back({.position = handle_position, .color = WHITE});
+        points.push_back({.position = handle_position, .color = LIGHT_BLUE});
+        // if (points.size() > 4)
+        // if (points.size() == 4)
+        //   points.push_back({.position = glm::vec2(m_pMouse.position), .color = LIGHT_BLUE});
+        selected_point = points.size() - 1;
+
+      } else if (points.size() == 0 && m_pMouse.right_pressed) {
+        T handle_position = T(1.0f);
+        handle_position.x = m_pMouse.position.x;
+        handle_position.y = m_pMouse.position.y;
+        points.push_back({.position = handle_position, .color = WHITE});
+        points.push_back({.position = handle_position, .color = LIGHT_BLUE});
+        selected_point = points.size() - 1;
+      }
+    }
+
+    if (flags.fill) {
+      CheckShader();
+      CreatePolygon(fill_vertices);
+    }
+  }
 };
 } // namespace UI

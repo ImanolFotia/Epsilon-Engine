@@ -2,17 +2,20 @@
 #include "UI.hpp"
 #include "core/framework/clock.hpp"
 #include "core/framework/easing_functions.hpp"
+#include "core/ui/Types.hpp"
 #include <cmath>
 
 namespace UI {
 void UI::CheckShader() {
 
-  if (m_DrawLists[commands_pushed].bind_group != m_CurrentBindGroup) {
+  if (m_DrawLists[commands_pushed].bind_group != m_CurrentBindGroup ||
+      m_DrawLists[commands_pushed].layout != Primitive::TRIANGLE) {
     auto &new_command = m_DrawLists.emplace_back();
     commands_pushed++;
     new_command.vertex_offset = vertices_pushed;
     new_command.num_vertices = 0;
     new_command.bind_group = m_CurrentBindGroup;
+    new_command.layout = Primitive::TRIANGLE;
   }
 }
 
@@ -59,14 +62,22 @@ glm::vec2 UI::textSize(const std::string &text) {
   return {ox, oy};
 }
 
-void UI::Update() {
+bool UI::Update() {
+
+  bool res = false;
 
   m_pCursorPosition = glm::vec2(0.0f);
   m_pResolution = glm::vec2(m_pWindow->getSize().width, m_pWindow->getSize().height);
+  resolution_changed = m_pLastResolution != m_pResolution;
+  m_pLastResolution = m_pResolution;
   m_pAspectRatio = m_pResolution.x / m_pResolution.y;
 
+  lastMouse = m_pMouse.position;
   glm::vec2 mouse = glm::vec2(framework::Input::Mouse::XPOS, framework::Input::Mouse::YPOS);
   m_pMouse.position = mouse;
+
+  glm::vec2 delta_mouse = m_pMouse.position - lastMouse;
+  auto mouse_mov = glm::length(delta_mouse);
 
   m_pMouse.left_down = framework::Input::Mouse::LEFT == framework::Input::STATE::PRESSED;
   m_pMouse.right_down = framework::Input::Mouse::RIGHT == framework::Input::STATE::PRESSED;
@@ -77,15 +88,33 @@ void UI::Update() {
     m_pMouse.left_pressed = false;
   }
 
-  if (m_pMouse.right_down && !m_pMouse.right_pressed) {
+  if (m_pMouse.right_down && !m_pMouse.right_pressed && m_pMouse.right_was_down == false) {
     m_pMouse.right_pressed = true;
   } else {
     m_pMouse.right_pressed = false;
   }
 
-  m_pMouse.left_was_down = m_pMouse.left_down;
+  if (!m_pMouse.left_down)
+    grabed_window_id = 0;
+
+  if(!m_pMouse.right_down)
+    selected_point = -1;
+
+  if (m_pMouse.left_down && grabed_window_id != 0) {
+    res |= true;
+  }
+
+  if (m_pMouse.right_down && selected_point >= 0) {
+    res |= true;
+  }
+
 
   m_pMouse.left_released = m_pMouse.left_was_down && m_pMouse.left_pressed == false;
+  m_pMouse.right_released = m_pMouse.right_was_down && m_pMouse.right_pressed == false;
+
+  m_pMouse.left_was_down = m_pMouse.left_down;
+  m_pMouse.right_was_down = m_pMouse.right_down;
+  return res;
 }
 void UI::Draw(engine::Ref<engine::RenderPass> renderPass) {
 
@@ -95,9 +124,6 @@ void UI::Draw(engine::Ref<engine::RenderPass> renderPass) {
                                               .vertexBuffer = m_pVertexBuffer[m_pRenderer->CurrentFrameInFlight()],
                                           });
   if (m_pResolution.x > 0) {
-    // m_pRenderer->BeginFrame();
-    // m_pRenderer->Begin();
-    // m_pRenderer->SetRenderPass(m_pRenderPass);
     for (int i = 0; i < commands_pushed + 1; i++) {
       auto &draw_command = m_DrawLists[i];
 
@@ -110,7 +136,7 @@ void UI::Draw(engine::Ref<engine::RenderPass> renderPass) {
                          .material = draw_command.bind_group,
                          .pushConstant = engine::Ref<engine::PushConstant>::makeEmpty(),
                          .objectConstant = {.transform = glm::mat4(1.0f), .material_index = 0, .animation_offset = 0},
-                         .layout_index = 1,
+                         .layout_index = (uint32_t)draw_command.layout,
                          .uniformIndex = 0});
 
       draw_command.bind_group = m_CurrentBindGroup;
@@ -119,13 +145,14 @@ void UI::Draw(engine::Ref<engine::RenderPass> renderPass) {
     }
 
     m_pRenderer->Flush({renderPass, engine::DrawType::NON_INDEXED, 0, true});
-    //glm::vec3 v = glm::vec3(1.0f);
-    // m_pRenderer->End(v);
-
-    // m_pRenderer->Submit();
-    // m_pRenderer->EndFrame();
   }
   m_DrawLists.resize(1);
+  auto &comm = m_DrawLists[0];
+
+  comm.bind_group = m_CurrentBindGroup;
+  comm.num_vertices = 0;
+  comm.vertex_offset = 0;
+  comm.layout = Primitive::TRIANGLE;
   commands_pushed = 0;
   vertices_pushed = 0;
 }
@@ -173,8 +200,7 @@ void UI::CreateRect(glm::vec2 position, glm::vec2 size, glm::vec2 uv0 = glm::vec
   current_draw_command.num_vertices = vertices_pushed - current_draw_command.vertex_offset;
 }
 
-
-void UI::CreatePolygon(const UIVertex* vertices, size_t size) {
+void UI::CreatePolygon(const UIVertex *vertices, size_t size) {
   for (int i = 0; i < size; i++) {
     m_pVertices[vertices_pushed++] = vertices[i];
   }
@@ -196,29 +222,60 @@ void UI::SetNextWindowPosition(glm::vec2 position) { m_pCursorPosition = positio
 
 void UI::Spacer(glm::vec2 size) {
 
-  currentWindow->size.x = glm::max(m_pCursorPosition.x + size.x - currentWindow->position.x - m_pStyle.buttonPadding * 2.0f, currentWindow->size.x);
-  currentWindow->size.y = glm::max(m_pCursorPosition.y + size.y - currentWindow->position.y, currentWindow->size.y);
+  if (currentWindow->new_window) {
+    currentWindow->size.x = glm::max(m_pCursorPosition.x + size.x - currentWindow->position.x - m_pStyle.buttonPadding * 2.0f, currentWindow->size.x);
+    currentWindow->size.y += size.y;//glm::max(m_pCursorPosition.y + size.y - currentWindow->position.y, currentWindow->size.y);
+  }
   m_pCursorPosition += size;
 }
 
-void UI::BeginWindow(const std::string &name, glm::vec2 size, glm::vec4 color, float border_radius) {
+Style &UI::GetStyle() { return m_pStyle; }
+
+void UI::BeginWindow(const std::string &name, glm::vec2 size, glm::vec4 color, float border_radius, bool header, bool fixed, bool moves) {
   CheckShader();
   size_t id = std::hash<std::string>{}(name);
+  bool new_window = false;
   if (!m_pContext.windows.contains(id)) {
     m_pContext.windows[id] = {id};
+    new_window = true;
   }
-
   currentWindow = &m_pContext.windows[id];
-  currentWindow->fixed_size = glm::dot(size, size) > 0.0 ? false : true;
-  currentWindow->size = glm::vec2(0.0);
+  currentWindow->name = name;
+  currentWindow->id = id;
+  currentWindow->new_window = new_window;
+
+  window_stack[--window_stack_pointer] = id;
+
+  currentWindow->fixed_size = glm::dot(size, size) > 0.0 ? true : false;
+  if (new_window && !currentWindow->fixed_size)
+    currentWindow->size = glm::vec2(0.0);
+  else if(currentWindow->fixed_size)
+    currentWindow->size = size;
+
   currentWindow->vtx_index = vertices_pushed;
   currentWindow->setted_size = size;
   currentWindow->color = color;
+  currentWindow->draw_header = header;
+  currentWindow->fixed = fixed;
   // m_pCursorPosition.y += m_pStyle.windowPadding;
-  currentWindow->position = m_pCursorPosition;
+  if(new_window)
+    currentWindow->position = m_pCursorPosition;
+
+  //currentWindow->position = m_pCursorPosition;
+
+  if (!moves)
+    currentWindow->position = m_pCursorPosition;
+  else if(moves)
+    m_pCursorPosition = currentWindow->position;
+
   currentWindow->border_radius = border_radius;
+  if (header) {
+    m_pCursorPosition.y += 25;
+  }
 
   vertices_pushed += 6;
+  if (currentWindow->draw_header)
+    vertices_pushed += 6;
   auto &current_draw_command = m_DrawLists[commands_pushed];
   current_draw_command.num_vertices = vertices_pushed - current_draw_command.vertex_offset;
 
@@ -227,38 +284,70 @@ void UI::BeginWindow(const std::string &name, glm::vec2 size, glm::vec4 color, f
 
 void UI::EndWindow() {
   assert(currentWindow != nullptr);
-  glm::vec2 size = currentWindow->fixed_size ? currentWindow->size : currentWindow->setted_size;
+  glm::vec2 size = currentWindow->size;//currentWindow->fixed_size ? currentWindow->size : currentWindow->setted_size;
+  currentWindow->new_window = false;
 
+  if (currentWindow->draw_header)
+    size.y += 25;
   m_pContext.prev_widget_position = m_pCursorPosition;
+
+  glm::vec2 margin = glm::vec2(5.0);
 
   size_t temp_vtx = vertices_pushed;
   vertices_pushed = currentWindow->vtx_index;
 
   glm::vec2 white_pixel = glm::vec2(m_Fonts[current_font]->white_pixel.x, m_Fonts[current_font]->white_pixel.y);
 
-  CreateRect(currentWindow->position, size + glm::vec2(m_pStyle.windowPadding * 3.0f, m_pStyle.windowPadding * 3.0f), white_pixel, white_pixel,
+  CreateRect(currentWindow->position, size + glm::vec2(m_pStyle.windowPadding.x * 3.0f, m_pStyle.windowPadding.y * 3.0f), white_pixel, white_pixel,
              currentWindow->color, currentWindow->border_radius);
+
+  if (currentWindow->draw_header){
+    CreateRect(currentWindow->position, glm::vec2(size.x + m_pStyle.windowPadding.x * 3.0f, 25.0), white_pixel, white_pixel,
+               glm::vec4(glm::vec3(currentWindow->color + 0.1f), 1.0), currentWindow->border_radius);
+  }
 
   vertices_pushed = temp_vtx;
 
   auto &current_draw_command = m_DrawLists[commands_pushed];
   current_draw_command.num_vertices = vertices_pushed - current_draw_command.vertex_offset;
+  m_pCursorPosition.y = currentWindow->position.y + 2;
+  m_pCursorPosition.x = currentWindow->position.x + 5;
+  if (currentWindow->draw_header)
+    Text(currentWindow->name, glm::vec4(1.0), true);
 
-  m_pCursorPosition.y += m_pStyle.windowPadding * 2;
+  m_pCursorPosition.y = currentWindow->position.y + size.y + margin.y + m_pStyle.windowPadding.y * 3;
 
-  m_pContext.prev_widget_size = size + (m_pStyle.windowPadding * 2);
+  m_pContext.prev_widget_size = size + (m_pStyle.windowPadding * 3);
+  size = m_pContext.prev_widget_size;
+
+  m_pContext.lastItemHovered = false;
+
+  glm::ivec2 mouse = glm::ivec2(framework::Input::Mouse::XPOS, framework::Input::Mouse::YPOS);
+  
+  if (mouse.x > currentWindow->position.x && mouse.x < currentWindow->position.x + size.x && mouse.y > currentWindow->position.y &&
+      mouse.y < currentWindow->position.y + size.y) {
+    m_pContext.lastItemHovered = true;
+  }
+  if (m_pMouse.position.x > currentWindow->position.x && m_pMouse.position.x < currentWindow->position.x + size.x &&
+          m_pMouse.position.y > currentWindow->position.y && m_pMouse.position.y < currentWindow->position.y + 25 && m_pMouse.left_down &&
+          grabed_window_id == 0 && currentWindow->fixed == false ||
+      grabed_window_id == currentWindow->id) {
+    currentWindow->position += (m_pMouse.position - lastMouse);
+    grabed_window_id = currentWindow->id;
+  }
 
   currentWindow = nullptr;
   pending_actions--;
+  currentWindow = &m_pContext.windows[window_stack[++window_stack_pointer]];
 }
+/*
+template <typename... Args> void UI::Text(std::string_view fmt, Args&&... args)
+{
+    auto str = std::vformat(fmt, std::make_format_args(args...));
+    Text(str, m_pCursorPosition, glm::vec4(1.0), true);
+}*/
 
-void UI::Text(const std::string &text, glm::vec4 color, bool standalone) {
-  glm::vec2 text_size = textSize(text);
-  // m_pCursorPosition += 5.0f;
-  Text(text, m_pCursorPosition, color, standalone);
-  m_pCursorPosition.y += text_size.y + 5.0f;
-  // m_pCursorPosition.x -= 5.0f;
-}
+void UI::Text(const std::string &text, glm::vec4 color, bool standalone) { Text(text, m_pCursorPosition, color, standalone); }
 
 void UI::Text(const std::string &text, glm::vec2 position, glm::vec4 color, bool standalone) {
   auto font = m_Fonts[current_font];
@@ -281,6 +370,8 @@ void UI::Text(const std::string &text, glm::vec2 position, glm::vec4 color, bool
 
   if (standalone)
     position.x += 5.0f;
+  else
+    position.x += 2.0f;
 
   while (*text_data) {
     int byte_count = 1;
@@ -304,7 +395,7 @@ void UI::Text(const std::string &text, glm::vec2 position, glm::vec4 color, bool
     }
 
     if (*text_data == ' ') {
-      position.x += 10;
+      position.x += 5;
     } else {
 
       glm::vec4 a = glm::vec4((position) / m_pResolution + glm::vec2(q.x0, q.y0 + font->highest_character) / m_pResolution, q.s0, q.t0);
@@ -332,9 +423,15 @@ void UI::Text(const std::string &text, glm::vec2 position, glm::vec4 color, bool
     text_data += byte_count;
   }
 
+  if (currentWindow) {
+    m_pContext.prev_widget_size.y = glm::max(characters_size.y + 5.0f, currentWindow->size.y);
+  }
+
   if (currentWindow && standalone) {
-    currentWindow->size.x = glm::max(characters_size.x + 2.0f, currentWindow->size.x);
-    currentWindow->size.y += characters_size.y + 5;
+    if (currentWindow->new_window && !currentWindow->fixed_size) {
+      currentWindow->size.x = glm::max(characters_size.x + 2.0f, currentWindow->size.x);
+      currentWindow->size.y += characters_size.y + 5;
+    }
 
     m_pContext.prev_widget_size.x = characters_size.x - m_pContext.prev_widget_position.x;
     m_pContext.prev_widget_size.y = glm::max(characters_size.y + 5.0f, currentWindow->size.y);
@@ -342,11 +439,11 @@ void UI::Text(const std::string &text, glm::vec2 position, glm::vec4 color, bool
 
   std::size_t num = vertices_pushed - offset;
 
-  if(m_CurrentAnimation) {
+  if (m_CurrentAnimation) {
     auto slice = std::span{m_pVertices}.subspan(offset, num);
     m_CurrentAnimation->Update(slice, position, glm::vec2(1.0f));
     int index = offset;
-    for(auto &vtx: slice) {
+    for (auto &vtx : slice) {
       m_pVertices[index] = vtx;
       index++;
     }
@@ -355,6 +452,10 @@ void UI::Text(const std::string &text, glm::vec2 position, glm::vec4 color, bool
   m_CurrentAnimation = nullptr;
 
   delete[] text_data_orig;
+  if (standalone) {
+    glm::vec2 margin = glm::vec2(5.0);
+    m_pCursorPosition.y += text_size.y + 2.0 + margin.y;
+  }
 }
 
 glm::vec2 UI::CursorPosition() { return m_pCursorPosition; }
@@ -378,14 +479,14 @@ bool UI::Button(const std::string &text, ButtonFlags flags) {
   const float padding = 3;
   glm::vec2 size = glm::vec2(m_pStyle.buttonPadding, m_pStyle.buttonHeight + m_pStyle.buttonPadding);
   // glm::vec2 text_size = m_pStyle.textSize; // glm::vec2(10, 20);
-  glm::vec4 button_color = (flags.is_tab && flags.is_selected_tab) ? glm::vec4(0.5, 0.5, 0.5, 1.0) : glm::vec4(0.2, 0.2, 0.2, 1.0);
+  glm::vec4 button_color = (flags.is_tab && flags.is_selected_tab) ? glm::vec4(0.5, 0.5, 0.5, 1.0) : flags.color;
 
   glm::vec2 text_size = textSize(text);
 
   bool result = false;
 
   if (flags.fill_width) {
-    size.x = currentWindow->setted_size.x + m_pStyle.buttonPadding;
+    size.x = currentWindow->size.x + m_pStyle.buttonPadding;
   } else {
     size.x += text_size.x;
 
@@ -400,7 +501,7 @@ bool UI::Button(const std::string &text, ButtonFlags flags) {
   m_pContext.lastItemHovered = false;
   if (mouse.x > position.x && mouse.x < position.x + size.x && mouse.y > position.y && mouse.y < position.y + size.y) {
     m_pContext.lastItemHovered = true;
-    button_color = glm::normalize(glm::vec4(222.0f, 134.0f, 2.0f, 255.0f));
+    button_color = flags.hover_color;
   }
 
   if (mouse.x > position.x && mouse.x < position.x + size.x && mouse.y > position.y && mouse.y < position.y + size.y && m_pMouse.left_pressed) {
@@ -410,9 +511,17 @@ bool UI::Button(const std::string &text, ButtonFlags flags) {
 
   glm::vec2 white_pixel = glm::vec2(font->white_pixel.x, font->white_pixel.y);
 
-  CreateRect(m_pCursorPosition, size, white_pixel, white_pixel, button_color, flags.border_radius);
-
   glm::vec2 cursor_pos = m_pCursorPosition;
+
+  if (flags.shape == ButtonShape::Rect)
+    CreateRect(m_pCursorPosition, size, white_pixel, white_pixel, button_color, flags.border_radius);
+  else if (flags.shape == ButtonShape::Circle) {
+    m_pCursorPosition.y += size.y * 0.5;
+    m_pCursorPosition.x += size.x * 0.5;
+    Circle(20, size.y, button_color);
+    m_pCursorPosition = cursor_pos;
+  }
+
   cursor_pos.x += padding;
   cursor_pos.y += glm::ceil(padding * 0.5);
 
@@ -420,7 +529,7 @@ bool UI::Button(const std::string &text, ButtonFlags flags) {
     float x_pos = size.x * 0.5f;
     // align right: x_pos = x_pos - text_size.x;
     x_pos = (cursor_pos.x + x_pos) - (text_size.x * 0.5f);
-    x_pos = glm::ceil(((int)x_pos % 2 == 0 ? x_pos + 1 : x_pos));
+    //x_pos = glm::ceil(((int)x_pos % 2 == 0 ? x_pos + 1 : x_pos));
     Text(text, glm::vec2(x_pos, cursor_pos.y), glm::vec4(1.0f), false);
   } else {
     cursor_pos.x += (int)cursor_pos.x % 2 ? 0 : 1;
@@ -428,10 +537,14 @@ bool UI::Button(const std::string &text, ButtonFlags flags) {
   }
   m_pCursorPosition.x -= m_pStyle.buttonPadding;
 
-  m_pCursorPosition.y += size.y;
+  // m_pCursorPosition.y += size.y;
 
-  currentWindow->size.x = glm::max(m_pStyle.buttonPadding + size.x, currentWindow->size.x);
-  currentWindow->size.y += (size.y + m_pStyle.buttonPadding);
+  m_pCursorPosition.y = initial_position.y + size.y + m_pStyle.buttonPadding;
+
+  if (currentWindow->new_window && !currentWindow->fixed_size) {
+    currentWindow->size.x = glm::max(2.0f * m_pStyle.buttonPadding + text_size.x, currentWindow->size.x);
+    currentWindow->size.y += (size.y + m_pStyle.buttonPadding);
+  }
 
   m_pContext.prev_widget_size.x = m_pStyle.buttonPadding + size.x;
   m_pContext.prev_widget_size.y = size.y + m_pStyle.buttonPadding;
@@ -447,7 +560,8 @@ bool UI::Button(const std::string &text, ButtonFlags flags) {
 void UI::Sameline() {
   m_pCursorPosition.x = m_pContext.prev_widget_position.x + m_pContext.prev_widget_size.x;
   m_pCursorPosition.y = m_pContext.prev_widget_position.y; // m_pContext.prev_widget_size.y;
-  if (currentWindow)
+
+  if (currentWindow && currentWindow->new_window && !currentWindow->fixed_size)
     currentWindow->size.y -= m_pContext.prev_widget_size.y;
 }
 
@@ -478,18 +592,18 @@ void UI::Dock(DockLocation location, float thickness, float border_radius) {
   }
 }
 
-bool UI::ImageButton(const std::string &text, const std::string &texture, glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1, glm::vec4 tint, bool fill_background,
-                     float border_radius) {
+bool UI::ImageButton(const std::string &text, const std::string &texture, glm::vec2 size, glm::vec2 uv0, glm::vec2 uv1, ImageButtonFlags flags) {
   if (m_DrawLists[commands_pushed].bind_group != m_pBindGroups[texture]) {
     auto &new_command = m_DrawLists.emplace_back();
     commands_pushed++;
     new_command.vertex_offset = vertices_pushed;
     new_command.num_vertices = 0;
     new_command.bind_group = m_pBindGroups[texture];
+    new_command.layout = Primitive::TRIANGLE;
   }
   const float padding = 5;
   // glm::vec2 text_size = m_pStyle.textSize; // glm::vec2(10, 20);
-  glm::vec4 button_color = tint;
+  glm::vec4 button_color = flags.image_tint.get();;
 
   m_pCursorPosition += m_pStyle.buttonPadding;
   glm::vec2 position = m_pCursorPosition;
@@ -498,7 +612,7 @@ bool UI::ImageButton(const std::string &text, const std::string &texture, glm::v
   m_pContext.lastItemHovered = false;
   if (mouse.x > position.x && mouse.x < position.x + size.x + m_pStyle.buttonPadding * 2.0f && mouse.y > position.y &&
       mouse.y < position.y + size.y + m_pStyle.buttonPadding * 2.0f) {
-    button_color = glm::vec4(0.5, 0.5, 0.5, 1.0);
+    button_color += 0.1;
     m_pContext.lastItemHovered = true;
   }
 
@@ -534,24 +648,25 @@ bool UI::ImageButton(const std::string &text, const std::string &texture, glm::v
   size.x += text_size.x + m_pStyle.buttonPadding * (text.size() > 0 ? 3.0f : 2.0f);
   size.y += m_pStyle.buttonPadding * 2.0f;
 
-  if (fill_background && m_WhitePixelPositions.contains(texture))
-    CreateRect(position, size, m_WhitePixelPositions[texture], m_WhitePixelPositions[texture], button_color, border_radius);
+  if (flags.fill_background && m_WhitePixelPositions.contains(texture))
+    CreateRect(position, size, m_WhitePixelPositions[texture], m_WhitePixelPositions[texture], flags.background_color.get(), flags.border_radius);
 
-  CreateRect(image_position, image_size, uv0, uv1, glm::vec4(1.0));
+  CreateRect(image_position, image_size, uv0, uv1, button_color);
 
   if (text.size() > 0)
-    Text(text, text_position, glm::vec4(1.0f));
+    Text(text, text_position, glm::vec4(1.0f), false);
 
   m_pContext.prev_widget_size = size;
 
   m_pContext.prev_widget_position = position + glm::vec2(0.0f, -m_pStyle.buttonPadding);
 
-  currentWindow->size.x = glm::max((position.x + size.x) - currentWindow->position.x - m_pStyle.buttonPadding * 2.0f, currentWindow->size.x);
-  currentWindow->size.y = glm::max((position.y + size.y) - currentWindow->position.y - m_pStyle.buttonPadding * 2.0f, currentWindow->size.y);
-
+  if (currentWindow->new_window) {
+    currentWindow->size.x = glm::max((position.x + size.x) - currentWindow->position.x - m_pStyle.buttonPadding * 2.0f, currentWindow->size.x);
+    currentWindow->size.y = glm::max((position.y + size.y) - currentWindow->position.y - m_pStyle.buttonPadding * 2.0f, currentWindow->size.y);
+  }
   m_pCursorPosition.x = currentWindow->position.x; // position.x - m_pStyle.buttonPadding;
   m_pCursorPosition.y = position.y + size.y;
-  if (mouse.x > position.x && mouse.x < position.x + size.x && mouse.y > position.y && mouse.y < position.y + size.y && m_pMouse.left_released) {
+  if (mouse.x > position.x && mouse.x < position.x + size.x && mouse.y > position.y && mouse.y < position.y + size.y && m_pMouse.left_pressed) {
     return true;
   }
   return false;
@@ -590,7 +705,7 @@ bool UI::AngularButton(const std::string &text) {
 
   auto font = m_Fonts[current_font];
 
-  auto rotate = [](float angle) { return glm::vec2(glm::sin(angle), glm::cos(angle)); };
+  auto rotate = [](float angle) { return glm::vec2(-glm::sin(angle), glm::cos(angle)); };
 
   AngularButtonWidget &angularWidget = m_pContext.currentAngularWidget;
   float angle_step = angularWidget.angular_step;
@@ -614,7 +729,7 @@ bool UI::AngularButton(const std::string &text) {
 
   // mouse_2_center = glm::normalize(mouse_2_center);
 
-  float mouseAngle = std::atan2(mouse_2_center.y, mouse_2_center.x);
+  float mouseAngle = std::atan2(mouse_2_center.y, -mouse_2_center.x);
   mouseAngle += glm::pi<float>() + (glm::pi<float>() * 1.5f);
   mouseAngle = std::fmod(mouseAngle, glm::pi<float>() * 2.0f);
 
@@ -769,9 +884,9 @@ bool UI::CheckBox(const std::string &text, bool *state) {
   glm::vec2 position = m_pCursorPosition;
 
   if (*state) {
-    button_color = glm::vec4(0.0, 0.7, 0.0, 1.0);
+    button_color = glm::vec4(0.1, 0.2, 0.5, 1.0);
   } else {
-    button_color = glm::vec4(0.7, 0.0, 0.0, 1.0);
+    button_color = glm::vec4(0.5, 0.5, 0.5, 1.0);
   }
 
   glm::vec2 mouse = glm::vec2(framework::Input::Mouse::XPOS, framework::Input::Mouse::YPOS);
@@ -791,22 +906,24 @@ bool UI::CheckBox(const std::string &text, bool *state) {
   CreateRect(position, glm::vec2(switch_width), white_pixel, white_pixel, glm::vec4(0.0, 0.0, 0.0, 1.0));
   CreateRect(position + glm::vec2(switch_width * 0.1), glm::vec2(switch_width) * 0.8f, white_pixel, white_pixel, button_color);
 
-  int glyph_size = abs(m_Fonts[DEFAULT_FONT]->Glyphs()[(int)'x' - 32].quad.y0 - m_Fonts[DEFAULT_FONT]->Glyphs()[(int)'x' - 32].quad.y1);
+  int glyph_size = abs(m_Fonts[current_font]->Glyphs()[(int)'x' - 32].quad.y0 - m_Fonts[current_font]->Glyphs()[(int)'x' - 32].quad.y1);
   // std::string tick = '√';
   if (*state)
-    Text("x", position + glm::vec2(switch_width * 0.3f, -glm::ceil(glyph_size * 0.25)), glm::vec4(1.0f), false);
+    Text("x", position + glm::vec2((switch_width * 0.25), -glm::ceil(glyph_size * 0.25)), glm::vec4(1.0f), false);
 
   Text(text, cursor_pos + glm::vec2(switch_width, -glm::ceil(font->highest_character * 0.25)), glm::vec4(1.0f), false);
 
   m_pCursorPosition.x -= m_pStyle.buttonPadding;
 
-  m_pCursorPosition.y += size.y + m_pStyle.buttonPadding;
+  m_pCursorPosition.y = m_pContext.prev_widget_position.y + size.y;
 
-  currentWindow->size.x = glm::max(m_pStyle.buttonPadding + size.x, currentWindow->size.x);
-  currentWindow->size.y += (size.y + m_pStyle.buttonPadding);
+  if (currentWindow->new_window) {
+    currentWindow->size.x = glm::max(2.0f * m_pStyle.buttonPadding + size.x, currentWindow->size.x);
+    currentWindow->size.y += size.y + 5.0;
+  }
 
   m_pContext.prev_widget_size.x = switch_width + text_size.x + m_pStyle.buttonPadding;
-  m_pContext.prev_widget_size.y = (size.y + m_pStyle.buttonPadding);
+  m_pContext.prev_widget_size.y += (m_pStyle.buttonPadding * 2.0f);
 
   if (mouse.x > position.x && mouse.x < position.x + switch_width && mouse.y > position.y && mouse.y < position.y + switch_width && m_pMouse.left_pressed) {
     *state = !*state;
@@ -822,7 +939,7 @@ void UI::Spinner(glm::vec2 position, float innerRadius, float outerRadius, float
   m_pContext.prev_widget_position = m_pCursorPosition;
   const constexpr int subdivisons = 40;
   const constexpr float tau = glm::pi<float>() * 2.0f;
-  const constexpr float step = tau / subdivisons; 
+  const constexpr float step = tau / subdivisons;
   constexpr size_t size = subdivisons * 6;
   const vec2 w = font->white_pixel;
   float t = 0.0;
@@ -833,13 +950,11 @@ void UI::Spinner(glm::vec2 position, float innerRadius, float outerRadius, float
 
   UIVertex vertices[size];
 
-  auto rotate = [](float angle) -> glm::vec2 {
-    return glm::vec2(glm::sin(angle), glm::cos(angle));
-  };
+  auto rotate = [](float angle) -> glm::vec2 { return glm::vec2(glm::sin(angle), glm::cos(angle)); };
 
-  for(int i = 0 ; i < subdivisons; i++){
+  for (int i = 0; i < subdivisons; i++) {
 
-    glm::vec4 color_a = glm::clamp(glm::vec4(widget_color, glm::pow(t          / tau, 2.2f)), 0.0f, 1.0f);
+    glm::vec4 color_a = glm::clamp(glm::vec4(widget_color, glm::pow(t / tau, 2.2f)), 0.0f, 1.0f);
     glm::vec4 color_b = glm::clamp(glm::vec4(widget_color, glm::pow((t + step) / tau, 2.2f)), 0.0f, 1.0f);
 
     auto d0 = rotate(t);
@@ -850,14 +965,14 @@ void UI::Spinner(glm::vec2 position, float innerRadius, float outerRadius, float
     auto c = position + (outerRadius * d0) / m_pResolution;
     auto d = position + (innerRadius * d1) / m_pResolution;
 
-    vertices[6 * i    ] = UIVertex({.pos_uv = glm::vec4(a.x, a.y, w.x, w.y), .color = color_a});
+    vertices[6 * i] = UIVertex({.pos_uv = glm::vec4(a.x, a.y, w.x, w.y), .color = color_a});
     vertices[6 * i + 1] = UIVertex({.pos_uv = glm::vec4(b.x, b.y, w.x, w.y), .color = color_b});
     vertices[6 * i + 2] = UIVertex({.pos_uv = glm::vec4(c.x, c.y, w.x, w.y), .color = color_a});
-    
+
     vertices[6 * i + 3] = UIVertex({.pos_uv = glm::vec4(a.x, a.y, w.x, w.y), .color = color_a});
     vertices[6 * i + 4] = UIVertex({.pos_uv = glm::vec4(d.x, d.y, w.x, w.y), .color = color_b});
     vertices[6 * i + 5] = UIVertex({.pos_uv = glm::vec4(b.x, b.y, w.x, w.y), .color = color_b});
- 
+
     t += step;
   }
 
@@ -865,11 +980,11 @@ void UI::Spinner(glm::vec2 position, float innerRadius, float outerRadius, float
   CreatePolygon(vertices, size);
   std::size_t num = vertices_pushed - offset;
 
-  if(m_CurrentAnimation) {
+  if (m_CurrentAnimation) {
     auto slice = std::span{m_pVertices}.subspan(offset, num);
     m_CurrentAnimation->Update(slice, position, glm::vec2(1.0f));
     int index = offset;
-    for(auto &vtx: slice) {
+    for (auto &vtx : slice) {
       m_pVertices[index] = vtx;
       index++;
     }
@@ -878,8 +993,7 @@ void UI::Spinner(glm::vec2 position, float innerRadius, float outerRadius, float
   m_CurrentAnimation = nullptr;
 }
 
-bool UI::HealthBar(const std::string &text, glm::vec2 position, float val, float min, float max, glm::vec4 color, glm::vec4 backgroundColor,
-                   float border_radius) {
+bool UI::HealthBar(const std::string &text, glm::vec2 position, float val, float min, float max, HealthBarFlags flags) {
 
   CheckShader();
   m_pContext.lastItemHovered = false;
@@ -890,33 +1004,35 @@ bool UI::HealthBar(const std::string &text, glm::vec2 position, float val, float
 
   glm::vec2 text_size = textSize(text);
 
-  size = glm::vec2(100, 25);
+  size = glm::vec2(100, text_size.y + 20);
 
   const int num_squares = glm::min(10, (int)((val / max) * 10) + 1);
 
   glm::vec2 white_pixel = glm::vec2(m_Fonts[current_font]->white_pixel.x, m_Fonts[current_font]->white_pixel.y);
 
-  CreateRect(position, size + glm::vec2(25, 0), white_pixel, white_pixel, backgroundColor, border_radius);
+  CreateRect(position, size + glm::vec2(size.y, 0), white_pixel, white_pixel, flags.background_color.get(), flags.border_radius*3.0);
 
   glm::vec2 sqr_position = position + padding + glm::vec2(0.0f, size.y - 10 - padding);
   glm::vec2 sqr_size = glm::vec2((size.x - (padding * (10 + 1))) / 10, 10 - (padding * 2.0f));
   float last_sqr_width = 10.0f - ((max / 10.0f) - (fmod(val, 10.0f))) + padding;
   int i = 0;
   for (i = 0; i < num_squares - 1; i++) {
-    CreateRect(sqr_position, sqr_size, white_pixel, white_pixel, color, border_radius * 3.5);
+    CreateRect(sqr_position, sqr_size, white_pixel, white_pixel, flags.color.get(), flags.border_radius * 3);
     sqr_position.x += sqr_size.x + padding;
   }
   last_sqr_width = position.x + sqr_size.x * 10.0f + padding * 10.0f;
-  CreateRect(sqr_position, sqr_size, white_pixel, white_pixel, color, border_radius * 3.5);
+  CreateRect(sqr_position, sqr_size, white_pixel, white_pixel, flags.color.get(), flags.border_radius * 3.5);
   sqr_position.x += sqr_size.x + padding;
 
-  CreateRect(glm::vec2(last_sqr_width + padding * 2.0f, position.y + padding), glm::vec2(25, 25) - padding * 2.0f, white_pixel, white_pixel,
-             backgroundColor + glm::vec4(0.1, 0.1, 0.1, 0.0), border_radius * 1.5);
+  CreateRect(glm::vec2(last_sqr_width + padding * 2.0f, position.y + padding), glm::vec2(size.y, size.y) - padding * 2.0f, white_pixel, white_pixel,
+             flags.background_color.get() + glm::vec4(0.1, 0.1, 0.1, 0.0), flags.border_radius * 1.5);
 
   glm::vec2 half_point = position + glm::vec2(size.x * 0.5, size.y * 0.25f) + glm::vec2(-text_size.x * 0.5, 0.0);
 
   // CreateRect(position - glm::vec2(0.0, size.y + 2), size + glm::vec2(0.0, 2),
   // m_WhitePixelPos, m_WhitePixelPos, glm::vec4(0.0, 0.0, 0.0, 0.5));
+
+  //half_point.x += (int)half_point.x % 2 ? 0 : 1;
 
   Text(text, half_point - glm::vec2(0.0, font->highest_character * 0.5f), glm::vec4(1.0f), false);
 
@@ -1010,10 +1126,12 @@ void UI::Scale(const std::string &text, const std::string &setting_name, int &cu
   m_pCursorPosition.y = widgetStart.y + m_pContext.prev_widget_size.y;
   // 15 from text, 5 for widget padding, 2 on each side of text padding
 
-  currentWindow->size.x = glm::max(m_pStyle.buttonPadding + size, currentWindow->size.x);
+  if (currentWindow->new_window) {
+    currentWindow->size.x = glm::max(m_pStyle.buttonPadding + size, currentWindow->size.x);
 
-  if (fixed_size.x > 0.0)
-    currentWindow->size.x = glm::max(fixed_size.x, currentWindow->size.x);
+    if (fixed_size.x > 0.0)
+      currentWindow->size.x = glm::max(fixed_size.x, currentWindow->size.x);
+  }
 
   // m_pCursorPosition.x = currentWindow->position.x;
   // m_pCursorPosition.y += 8.0f;
@@ -1022,41 +1140,43 @@ void UI::Scale(const std::string &text, const std::string &setting_name, int &cu
 glm::vec2 UI::ToScreenCoords(const glm::mat4 &model, bool clamp_to_border) {
   glm::vec4 ndc = projectionMatrix * viewMatrix * model * glm::vec4(1.0f);
 
-  ndc /= glm::max(ndc.w, 0.0f);
+  ndc /= glm::max(ndc.w, 0.001f);
   ndc.y = -1.0 * ndc.y;
 
   glm::vec2 viewport_space = glm::vec2(ndc.x, ndc.y) * 0.5f + 0.5f;
 
-  if(clamp_to_border)
-    glm::vec2 viewport_space = glm::min(glm::vec2(1.0), glm::max(glm::vec2(0.0), viewport_space));
+  if (clamp_to_border){
+      viewport_space = glm::clamp(viewport_space, glm::vec2(0.0), glm::vec2(1.0));
+  }
 
   return viewport_space * m_pResolution;
 }
 
-void UI::Circle(int subdivisions) {
+void UI::Circle(int subdivisions, float size, glm::vec4 color) {
   CheckShader();
   std::vector<UIVertex> vertices;
-
-  float size = 10.0f;
 
   float angle = 0;
   float angle_step = (1.0f / subdivisions);
   for (int i = 0; i < subdivisions; i++) {
     UIVertex vtx;
-    vtx.color = glm::vec4(1.0f);
+    vtx.color = color;
     vtx.pos_uv.b = m_Fonts[current_font]->white_pixel.x;
     vtx.pos_uv.a = m_Fonts[current_font]->white_pixel.y;
 
-    vtx.pos_uv.x = (glm::sin((angle + angle_step) * glm::pi<float>() * 2.0f) / m_pResolution.x) * size + 0.5f;
-    vtx.pos_uv.y = (glm::cos((angle + angle_step) * glm::pi<float>() * 2.0f) / m_pResolution.y) * size + 0.5f;
+    vtx.pos_uv.x = (glm::sin((angle + angle_step) * glm::pi<float>() * 2.0f) / m_pResolution.x) * size;
+    vtx.pos_uv.y = (glm::cos((angle + angle_step) * glm::pi<float>() * 2.0f) / m_pResolution.y) * size;
+    vtx.pos_uv += glm::vec4(m_pCursorPosition / m_pResolution, 0.0, 0.0);
     vertices.push_back(vtx);
 
-    vtx.pos_uv.x = (glm::sin(angle * glm::pi<float>() * 2.0f) / m_pResolution.x) * size + 0.5;
-    vtx.pos_uv.y = (glm::cos(angle * glm::pi<float>() * 2.0f) / m_pResolution.y) * size + 0.5;
+    vtx.pos_uv.x = (glm::sin(angle * glm::pi<float>() * 2.0f) / m_pResolution.x) * size;
+    vtx.pos_uv.y = (glm::cos(angle * glm::pi<float>() * 2.0f) / m_pResolution.y) * size;
+    vtx.pos_uv += glm::vec4(m_pCursorPosition / m_pResolution, 0.0, 0.0);
     vertices.push_back(vtx);
 
-    vtx.pos_uv.x = 0.5f;
-    vtx.pos_uv.y = 0.5f;
+    vtx.pos_uv.x = 0.0f;
+    vtx.pos_uv.y = 0.0f;
+    vtx.pos_uv += glm::vec4(m_pCursorPosition / m_pResolution, 0.0, 0.0);
     vertices.push_back(vtx);
 
     angle += angle_step;
@@ -1075,7 +1195,7 @@ void UI::Square(glm::vec2 size, glm::vec2 position) {
   const float aspect_ratio = m_pResolution.y / m_pResolution.x;
   const float radius = 120.0f / glm::min(m_pResolution.x, m_pResolution.y);
 
-  //float size = 30.0;//(60.0f * framework::easing::easeInBounce(glm::abs(sin(time)))) + 25.0f;
+  // float size = 30.0;//(60.0f * framework::easing::easeInBounce(glm::abs(sin(time)))) + 25.0f;
 
   static float rot_time;
   rot_time += delta_time * glm::max(1.0f, glm::abs(framework::easing::easeInExpo(glm::abs(sin(time * 2.0f))) * 15.0f));
@@ -1118,7 +1238,7 @@ void UI::Square(glm::vec2 size, glm::vec2 position) {
 
   for (auto &vertex : vertices) {
     glm::vec2 pos = glm::vec2(vertex.pos_uv.x, vertex.pos_uv.y);
-    //pos = (rot * pos);
+    // pos = (rot * pos);
     pos /= m_pResolution;
     pos += position;
     c += pos;
@@ -1132,23 +1252,20 @@ void UI::Square(glm::vec2 size, glm::vec2 position) {
 
   std::size_t num = vertices_pushed - offset;
 
-  if(m_CurrentAnimation) {
+  if (m_CurrentAnimation) {
     auto slice = std::span{m_pVertices}.subspan(offset, num);
     m_CurrentAnimation->Update(slice, position, size);
     int index = offset;
-    for(auto &vtx: slice) {
+    for (auto &vtx : slice) {
       m_pVertices[index] = vtx;
       index++;
     }
   }
 
   m_CurrentAnimation = nullptr;
-
 }
 void UI::Triangle() { Circle(3); }
 void UI::Diamond() { Circle(4); }
 
-void UI::SetNextWidgetAnimation(AnimationManager *anim_mgr) {
-  m_CurrentAnimation = anim_mgr;
-}
+void UI::SetNextWidgetAnimation(AnimationManager *anim_mgr) { m_CurrentAnimation = anim_mgr; }
 } // namespace UI
