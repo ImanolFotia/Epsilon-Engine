@@ -14,7 +14,10 @@ static void createSwapChainFramebuffers(VulkanData &vk_data, VulkanRenderPass &r
     std::vector<VkImageView> attachments = {renderPass.renderPassChain.ImageViews[i], renderPass.renderPassChain.DepthTexture.imageView};
 
     if (renderPass.multisampled) {
-      attachments.push_back(chain.ResolveTexture.imageView);
+      attachments.clear();
+      attachments.push_back(chain.ResolveTextures[0].imageView);
+      attachments.push_back(renderPass.renderPassChain.DepthTexture.imageView);
+      attachments.push_back(renderPass.renderPassChain.ImageViews[i]);
     }
 
     VkFramebufferCreateInfo framebufferInfo{};
@@ -43,6 +46,21 @@ static void createFramebuffers(VulkanData &vk_data, VulkanRenderPass &renderPass
 
   if (!renderPass.renderPassChain.hasDepthSampler)
     attachments.push_back(renderPass.renderPassChain.DepthTexture.imageView);
+
+  if (renderPass.multisampled) {
+    attachments.clear();
+    attachments.insert (attachments.end(), renderPass.renderPassChain.ImageViews.begin(), renderPass.renderPassChain.ImageViews.end());
+    //attachments.push_back(renderPass.renderPassChain.DepthTexture.imageView);
+
+    if (renderPass.renderPassChain.DepthTexture.imageView != VK_NULL_HANDLE && renderPass.renderPassChain.hasDepthSampler == false)
+      attachments.push_back(renderPass.renderPassChain.DepthTexture.imageView);
+    for (int i = 0; i < renderPass.renderPassChain.ResolveTextures.size(); i++) {
+      attachments.push_back(renderPass.renderPassChain.ResolveTextures[i].imageView);
+    }
+
+    numAttachments = attachments.size();
+  }
+
 
   VkFramebufferCreateInfo framebufferInfo{};
   framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;

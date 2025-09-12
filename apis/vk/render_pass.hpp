@@ -15,9 +15,16 @@ static void createRenderPass(VulkanData &vk_data, VulkanRenderPass &renderPass, 
   bool containsDepthAttachment = false;
   renderPass.renderPassData.colorAttachments.clear();
   renderPass.renderPassData.colorAttachments.resize(0);
+  renderPass.renderPassData.colorAttachments.reserve(10);
 
   renderPass.renderPassData.colorAttachmentRefs.clear();
   renderPass.renderPassData.colorAttachmentRefs.resize(0);
+  renderPass.renderPassData.colorAttachmentRefs.reserve(10);
+
+  std::vector<VkAttachmentDescription> colorAttachmentResolve{};
+  std::vector<VkAttachmentReference> colorAttachmentResolveRef{};
+  colorAttachmentResolveRef.reserve(10);
+  colorAttachmentResolve.reserve(10);
 
   unsigned index = 0;
   for (auto &attachment : renderPassInfo.attachments) {
@@ -34,7 +41,7 @@ static void createRenderPass(VulkanData &vk_data, VulkanRenderPass &renderPass, 
         renderPass.renderPassData.depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
       } else {
         renderPass.renderPassData.depthAttachment.samples = (VkSampleCountFlagBits)renderPassInfo.numSamples;
-        renderPass.renderPassData.depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+        renderPass.renderPassData.depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
         renderPass.renderPassData.depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
       }
 
@@ -55,9 +62,9 @@ static void createRenderPass(VulkanData &vk_data, VulkanRenderPass &renderPass, 
         renderPass.renderPassData.depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
       }
 
-        if (renderPass.renderPassData.depthAttachment.loadOp == VK_ATTACHMENT_LOAD_OP_LOAD) {
-          renderPass.renderPassData.depthAttachment.initialLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-        }
+      if (renderPass.renderPassData.depthAttachment.loadOp == VK_ATTACHMENT_LOAD_OP_LOAD) {
+        renderPass.renderPassData.depthAttachment.initialLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+      }
 
       renderPass.renderPassData.depthAttachmentRef.attachment = index;
       // renderPass.renderPassData.depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
@@ -67,6 +74,22 @@ static void createRenderPass(VulkanData &vk_data, VulkanRenderPass &renderPass, 
           renderPass.renderPassData.depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
           renderPass.renderPassData.depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
       }*/
+
+      if (renderPassInfo.numSamples > 1 && !forPresent) {
+        auto &resolve = colorAttachmentResolve.emplace_back();
+        auto &resolve_ref = colorAttachmentResolveRef.emplace_back();
+        resolve.format = renderPass.renderPassData.depthAttachment.format;
+        resolve.samples = VK_SAMPLE_COUNT_1_BIT;
+        resolve.loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
+        resolve.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+        resolve.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
+        resolve.stencilStoreOp = VK_ATTACHMENT_STORE_OP_STORE;
+        resolve.initialLayout = VK_IMAGE_LAYOUT_GENERAL;
+        resolve.finalLayout = renderPass.renderPassData.depthAttachment.finalLayout;
+
+        resolve_ref.attachment = renderPassInfo.attachments.size() + index;
+        resolve_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+      }
     } else {
       VkAttachmentDescription attachmentDesc{};
       attachmentDesc.format = renderPass.renderPassChain.ImageFormats[index];
@@ -78,8 +101,8 @@ static void createRenderPass(VulkanData &vk_data, VulkanRenderPass &renderPass, 
         attachmentDesc.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
       } else {
         attachmentDesc.samples = (VkSampleCountFlagBits)renderPassInfo.numSamples;
-        attachmentDesc.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-        attachmentDesc.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        attachmentDesc.loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
+        attachmentDesc.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
       }
 
       attachmentDesc.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
@@ -90,14 +113,11 @@ static void createRenderPass(VulkanData &vk_data, VulkanRenderPass &renderPass, 
         if (attachmentDesc.loadOp == VK_ATTACHMENT_LOAD_OP_LOAD) {
           attachmentDesc.initialLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
         }
-        // attachmentDesc.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-        // attachmentDesc.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
       } else {
         attachmentDesc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 
         if (attachmentDesc.loadOp == VK_ATTACHMENT_LOAD_OP_LOAD)
           attachmentDesc.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
       }
       if (forPresent) {
         if (renderPassInfo.numSamples == 1)
@@ -106,11 +126,7 @@ static void createRenderPass(VulkanData &vk_data, VulkanRenderPass &renderPass, 
           attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
       } else if (attachment.format == engine::DEPTH_F32 || attachment.format == engine::DEPTH_F32_STENCIL_8) {
-        // if (attachment.clearAttachment)
-        //{
-        //     attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-        // }
-        // else
+
         {
           attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
 
@@ -121,14 +137,19 @@ static void createRenderPass(VulkanData &vk_data, VulkanRenderPass &renderPass, 
           }
         }
       } else {
-        attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+        if (renderPassInfo.numSamples == 1)
+          attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        else
+          attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
         attachmentDesc.finalLayout = attachment.storageImage ? VK_IMAGE_LAYOUT_GENERAL : attachmentDesc.finalLayout;
       }
       renderPass.renderPassData.colorAttachments.push_back(attachmentDesc);
 
       VkAttachmentReference attachmentRef{};
       attachmentRef.attachment = index;
-      
+
       if (attachment.format == engine::DEPTH_F32 || attachment.format == engine::DEPTH_F32_STENCIL_8) {
 
         if (renderPass.renderPassData.depthWriteEnabled) {
@@ -137,40 +158,57 @@ static void createRenderPass(VulkanData &vk_data, VulkanRenderPass &renderPass, 
           attachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
         }
 
-        
       } else {
         attachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
       }
       // attachmentRef.layout = attachment.format == engine::DEPTH_F32 ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL :
       // VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
       renderPass.renderPassData.colorAttachmentRefs.push_back(attachmentRef);
+
+      if (renderPassInfo.numSamples > 1) {
+        auto &resolve = colorAttachmentResolve.emplace_back();
+        auto &resolve_ref = colorAttachmentResolveRef.emplace_back();
+        resolve.format = renderPass.renderPassChain.ImageFormats[index];
+        resolve.samples = VK_SAMPLE_COUNT_1_BIT;
+        resolve.loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
+        resolve.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+        resolve.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
+        resolve.stencilStoreOp = VK_ATTACHMENT_STORE_OP_STORE;
+        resolve.initialLayout = VK_IMAGE_LAYOUT_GENERAL;
+        if (forPresent) {
+          resolve.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+        } else {
+          resolve.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+          // colorAttachmentResolve.finalLayout = attachment.storageImage ? VK_IMAGE_LAYOUT_GENERAL : colorAttachmentResolve.finalLayout;
+        }
+        resolve_ref.attachment = renderPassInfo.attachments.size() + index;
+        resolve_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+      }
+
     }
 
     index++;
   }
 
-  VkAttachmentDescription colorAttachmentResolve{};
-  VkAttachmentReference colorAttachmentResolveRef{};
+  /*
+    if (renderPassInfo.numSamples > 1) {
+      colorAttachmentResolve.format = renderPass.renderPassChain.ImageFormats[0];
+      colorAttachmentResolve.samples = VK_SAMPLE_COUNT_1_BIT;
+      colorAttachmentResolve.loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
+      colorAttachmentResolve.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+      colorAttachmentResolve.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
+      colorAttachmentResolve.stencilStoreOp = VK_ATTACHMENT_STORE_OP_STORE;
+      colorAttachmentResolve.initialLayout = VK_IMAGE_LAYOUT_GENERAL;
+      if (forPresent) {
+        colorAttachmentResolve.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+      } else {
+        colorAttachmentResolve.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        // colorAttachmentResolve.finalLayout = attachment.storageImage ? VK_IMAGE_LAYOUT_GENERAL : colorAttachmentResolve.finalLayout;
+      }
+      colorAttachmentResolveRef.attachment = renderPassInfo.attachments.size();
+      colorAttachmentResolveRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-  if (renderPassInfo.numSamples > 1) {
-    colorAttachmentResolve.format = renderPass.renderPassChain.ImageFormats[0];
-    colorAttachmentResolve.samples = (VkSampleCountFlagBits)renderPassInfo.numSamples;
-    colorAttachmentResolve.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-    colorAttachmentResolve.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-    colorAttachmentResolve.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
-    colorAttachmentResolve.stencilStoreOp = VK_ATTACHMENT_STORE_OP_STORE;
-    colorAttachmentResolve.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-    if (forPresent) {
-      colorAttachmentResolve.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-    } else {
-      colorAttachmentResolve.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-      // colorAttachmentResolve.finalLayout = attachment.storageImage ? VK_IMAGE_LAYOUT_GENERAL : colorAttachmentResolve.finalLayout;
-    }
-    colorAttachmentResolveRef.attachment = 2;
-    colorAttachmentResolveRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-    renderPass.renderPassData.subpass.pResolveAttachments = &colorAttachmentResolveRef;
-  }
+    }*/
 
   renderPass.renderPassData.hasDepthAttachment = containsDepthAttachment;
 
@@ -211,11 +249,19 @@ static void createRenderPass(VulkanData &vk_data, VulkanRenderPass &renderPass, 
 
   if (containsDepthAttachment)
     renderPass.renderPassData.colorAttachments.push_back(renderPass.renderPassData.depthAttachment);
+  VkAttachmentReference resolveRefs[1] = {};
 
   if (renderPassInfo.numSamples > 1) {
-    renderPass.renderPassData.colorAttachments.push_back(colorAttachmentResolve);
-    renderPass.renderPassData.colorAttachmentRefs.push_back(colorAttachmentResolveRef);
+    for (int i = 0; i < colorAttachmentResolve.size(); i++) {
+      renderPass.renderPassData.colorAttachments.push_back(colorAttachmentResolve[i]);
+      renderPass.renderPassData.colorAttachmentRefs.push_back(colorAttachmentResolveRef[i]);
+      renderPass.renderPassData.subpass.pResolveAttachments = colorAttachmentResolveRef.data();
+      renderPass.renderPassData.subpass.preserveAttachmentCount = 0;
+      renderPass.multisampled = true;
+    }
   }
+
+  renderPass.renderPassData.subpass.preserveAttachmentCount = 0;
 
   // renderPass.renderPassData.subpass.preserveAttachmentCount = renderPass.renderPassData.colorAttachments.size();
 
@@ -233,7 +279,8 @@ static void createRenderPass(VulkanData &vk_data, VulkanRenderPass &renderPass, 
   renderPassCreateInfo.dependencyCount = 2;
   renderPassCreateInfo.pDependencies = dependencies.data(); //&renderPass.renderPassData.dependency;
 
-  if (vkCreateRenderPass(vk_data.logicalDevice, &renderPassCreateInfo, nullptr, &renderPass.renderPass) != VK_SUCCESS) {
+  if (auto result = vkCreateRenderPass(vk_data.logicalDevice, &renderPassCreateInfo, nullptr, &renderPass.renderPass); result != VK_SUCCESS) {
+    Log::Error("failed to create render pass: {}", result);
     throw std::runtime_error("failed to create render pass!");
   }
 }
