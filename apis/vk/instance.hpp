@@ -23,7 +23,7 @@ namespace vk
 
         appInfo.apiVersion = VK_API_VERSION_1_3;
 #if defined(__ANDROID__)
-        appInfo.apiVersion = VK_API_VERSION_1_3;
+        appInfo.apiVersion = VK_API_VERSION_1_4;
 #endif
 
         VkInstanceCreateInfo createInfo{};
