@@ -41,6 +41,7 @@ namespace Editor::Renderpasses {
 				{.entryPoint = "main", .shaderCode = fragmentCode, .stage = FRAGMENT}
 			},
 			.usedStages = ShaderModuleStage(VERTEX | FRAGMENT),
+
 			.name = "TAAShader"
 		};
 
@@ -81,7 +82,6 @@ namespace Editor::Renderpasses {
 			.isSwapChainAttachment(false)
 			.subpasses({})
 			.dimensions({ .width = 1280, .height = 720 })
-
 			.inputs({ 
 				{
 					.size = 385,
@@ -156,7 +156,7 @@ namespace Editor::Renderpasses {
 
 			.inputs({
 				{
-					.size = 384,
+					.size = 416,
 					.offset = 0,
 					.binding = 0,
 					.set = 0,
