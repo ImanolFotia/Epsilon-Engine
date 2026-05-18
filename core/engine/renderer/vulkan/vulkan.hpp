@@ -77,6 +77,8 @@ public:
 
   void End(glm::vec3 &v) override;
 
+  void End() override;
+
   void BeginCompute() override;
 
   void EndCompute() override;
@@ -84,6 +86,8 @@ public:
   void Flush(FlushCommand command) override;
 
   void Flush(engine::Ref<engine::RenderPass>, engine::DrawType) override;
+
+  void Clear() override;
 
   void Cleanup() override;
 

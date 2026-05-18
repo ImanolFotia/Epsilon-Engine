@@ -313,6 +313,12 @@ void VulkanRenderer::Submit() {
 
 void VulkanRenderer::EndFrame() {}
 
+void VulkanRenderer::End() {
+  glm::vec3 v;
+  End(v);
+}
+
+
 void VulkanRenderer::End(glm::vec3 &v) {
 #if !defined(__ANDROID__)
   std::vector<VmaBudget> budgets;
@@ -348,7 +354,7 @@ void VulkanRenderer::End(glm::vec3 &v) {
     vk::beginRenderPass(m_pFrame.CommandBuffer(), m_pVkData.defaultRenderPass);
     m_pRenderPassActive = true;
   }
-  m_pImguiRenderer->DrawUI(std::forward<glm::vec3 &>(v), m_pResourceManagerRef->ResourcesMemory);
+  m_pImguiRenderer->DrawUI(m_pResourceManagerRef->ResourcesMemory);
 #endif
   if (m_pRenderPassActive) {
     vk::endRenderPass(m_pFrame.CommandBuffer(), m_pVkData);
@@ -769,6 +775,52 @@ void VulkanRenderer::FlushIndexedIndirect(vk::VulkanRenderPass *renderPass) {
   vmaUnmapMemory(m_pResourceManagerRef->m_pAllocator, m_pResourceManagerRef->m_pIndirectBuffer[m_pCurrentFrame].allocation);
 }
 
+void VulkanRenderer::Clear() {
+
+
+  if (m_pActiveRenderPass.isValid()) {
+    std::vector<VkClearAttachment> clearAttachments;
+    std::vector<VkClearRect> rects;
+
+    auto renderPass = m_pResourceManagerRef->getRenderPass(m_pActiveRenderPass);
+
+    VkExtent2D extent = renderPass->renderPassChain.Extent;
+
+    for(int i = 0; i < renderPass->renderPassData.colorAttachments.size(); i++) {
+      if(renderPass->renderPassData.colorAttachments[i].format == VK_FORMAT_D32_SFLOAT ||
+      renderPass->renderPassData.colorAttachments[i].format == VK_FORMAT_D32_SFLOAT_S8_UINT ||
+      renderPass->renderPassData.colorAttachments[i].format == VK_FORMAT_D16_UNORM_S8_UINT ||
+      renderPass->renderPassData.colorAttachments[i].format == VK_FORMAT_D16_UNORM) break;
+
+      rects.emplace_back();
+      auto &attachment = clearAttachments.emplace_back();
+      attachment.clearValue.color = renderPass->clearValues[i].color;
+      attachment.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+      attachment.colorAttachment = i;
+    }
+
+    if(renderPass->renderPassData.hasDepthAttachment) {
+      auto &attachment = clearAttachments.emplace_back();
+      rects.emplace_back();
+      attachment.clearValue.depthStencil = renderPass->depthStencilClearColor;
+      attachment.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+    }
+
+    for(auto &rect: rects) {
+      rect.rect = {0, 0, extent.width, extent.height};
+      rect.baseArrayLayer = 0;
+      rect.layerCount = 1;
+    }
+
+    vkCmdClearAttachments(
+          m_pFrame.CommandBuffer(),
+          clearAttachments.size(),
+          clearAttachments.data(),
+          rects.size(),
+          rects.data());
+  }
+}
+
 int32_t VulkanRenderer::pPrepareSyncObjects() {
 
   // graphics sync
@@ -901,7 +953,7 @@ void VulkanRenderer::SetScissor(const Scissor &scissor) {
 }
 
 void VulkanRenderer::SetRenderPass(Ref<RenderPass> renderpass) {
-  // m_pActiveRenderPass = renderpass;
+  m_pActiveRenderPass = renderpass;
 }
 
 std::shared_ptr<ImGuiRenderer> VulkanRenderer::getDebugRenderer() { return m_pImguiRenderer; }
