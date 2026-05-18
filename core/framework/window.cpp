@@ -8,6 +8,7 @@
 #include "core/framework/IO/Joystick/Joystick.hpp"
 #include "core/framework/IO/KeyBoard.hpp"
 #include "core/framework/IO/Mouse.hpp"
+#include "cursor.hpp"
 
 namespace framework {
 
@@ -19,7 +20,12 @@ void Window::init(std::string appName, int w, int h) {
 
 #if USE_GLFW
 
+#ifdef __linux__
+  std::string theme = GetSystemCursorTheme();
+  setenv("XCURSOR_THEME", theme.c_str(), 0);
+#endif
   glfwInit();
+
 
   glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
   glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
@@ -41,6 +47,7 @@ void Window::init(std::string appName, int w, int h) {
   const GLFWvidmode *modes = glfwGetVideoModes(glfwGetPrimaryMonitor(), &count);
 
   mWindow = glfwCreateWindow(mWidth, mHeight, appName.c_str(), nullptr, nullptr);
+
 
   // glfwSetWindowOpacity(mWindow, 0.2f);
   auto currentMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
