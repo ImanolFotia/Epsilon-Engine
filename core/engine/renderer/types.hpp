@@ -539,10 +539,16 @@ struct RenderPassFactory {
     return *this;
   }
 
+  RenderPassFactory numSamples(uint8_t samples) {
+    info.numSamples = samples;
+    return *this;
+  }
+
   RenderPassFactory inputs(std::vector<UniformBindingInfo> bi) {
     info.bindingInfo = bi;
     return *this;
   }
+
   RenderPassFactory outputs(std::vector<RenderPassAttachment> a) {
     info.attachments = a;
     info.numAttachments = info.attachments.size();
