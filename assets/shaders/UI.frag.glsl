@@ -39,7 +39,7 @@ float sdBox( in vec2 p, in vec2 b )
 float udRoundBox( vec2 p, vec2 b, float r ) { return length(max(vec2(abs(p.x), abs(p.y))-b+r,0.0))-r; }
 
 void main() {
-    fragColor = fs_in.color * texture(tex, fs_in.texCoords);
+    fragColor = fs_in.color * textureLod(tex, fs_in.texCoords, 0);
 
     if(fs_in.radius >= 0) {
         vec2 size = fs_in.vtx_coord.zw;
