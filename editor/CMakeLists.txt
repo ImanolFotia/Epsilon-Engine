@@ -27,8 +27,6 @@ if (MSVC)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
     target_link_libraries(${PROJECT_NAME} PUBLIC Epsilon)
 
-    else ()
-    link_libraries(${PROJECT_NAME} PRIVATE ${EPSILON_BUILD_LOCATION}/libEpsilon.so)
 endif ()
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR})
@@ -46,7 +44,7 @@ if(WIN32)
     target_link_libraries(${PROJECT_NAME} PUBLIC ${THIRDPARTY_DIR}/nethost.lib  OleAut32)
     
 else()
-    set(NetHostDir "~/.dotnet/packs/Microsoft.NETCore.App.Host.linux-x64/8.0.4/runtimes/linux-x64/native")
+    set(NetHostDir "~/.dotnet/packs/Microsoft.NETCore.App.Host.linux-x64/9.0.10/runtimes/linux-x64/native")
     target_link_directories(${PROJECT_NAME} PRIVATE ${NetHostDir})
     target_link_libraries(${PROJECT_NAME} PRIVATE openal)
     target_link_libraries(${PROJECT_NAME} PRIVATE dl)
