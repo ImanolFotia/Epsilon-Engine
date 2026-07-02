@@ -428,7 +428,7 @@ endif()
 
 set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
-target_precompile_headers(Epsilon 
+target_precompile_headers(${PROJECT_NAME}
 PUBLIC
     <vector>
     <unordered_map>
@@ -478,7 +478,7 @@ PUBLIC
 )
 
 
-target_sources(${PROJECT_NAME} PUBLIC
+target_sources(${PROJECT_NAME} PRIVATE
     ${PROJECT_FILES})
 
 find_package(Vulkan REQUIRED)
@@ -508,6 +508,8 @@ else()
     target_link_libraries(${PROJECT_NAME} PRIVATE openal)
     set(CMAKE_CXX_FLAGS_RELEASE "-O2 -fsized-deallocation -g -ggdb")
     set(CMAKE_CXX_FLAGS_DEBUG "-O0 -fsized-deallocation -g -ggdb")
+
+    target_link_libraries(${PROJECT_NAME}  PRIVATE stdc++exp)
 endif()
 
 
@@ -597,6 +599,8 @@ if(NOT ${IS_CI_ENV})
     add_subdirectory(projects/TowerDefense)
     add_subdirectory(projects/UIApp)
     add_subdirectory(projects/Physics)
+    add_subdirectory(projects/rogue-lite)
+    add_subdirectory(projects/shooter)
 endif()
 #if(${Mono_FOUND})
 #add_subdirectory(examples/mono-managed)
