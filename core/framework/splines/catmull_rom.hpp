@@ -140,6 +140,7 @@ public:
       return m_pIntervalDistances[index];
     return 0.0f;
   }
+  void CalculateDistance() override {}
 
   std::vector<float> m_pIntervalDistances;
 };

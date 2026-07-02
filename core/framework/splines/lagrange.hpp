@@ -34,5 +34,6 @@ namespace framework::splines {
 					(t - c_x2) / (c_x3 - c_x2)
 					);
 		}
+	  void CalculateDistance() override {}
 	};
 }
