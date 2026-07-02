@@ -14,6 +14,7 @@ struct AlignedQuad {
 struct Glyph {
   AlignedQuad quad;
   std::string code;
+  float advance = 0.1;
 };
 
 struct vec2 {
@@ -34,7 +35,11 @@ struct Font {
   uint32_t num_chars = 95;
   uint32_t first_char = 32;
   uint32_t texture_size = 128;
-  uint32_t highest_character = 0;
+  float highest_character = 0;
+  float underline_y = 0.0f;
+  float undeline_thickness = 0.0f;
+  bool msdf = false;
+  std::string atlas_path{};
 
   uint32_t min_range = 0;
   uint32_t max_range = 0;
