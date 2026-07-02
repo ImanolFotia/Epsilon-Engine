@@ -22,6 +22,7 @@ public:
   Ref<engine::BindGroup> material;
   uint32_t uniformIndex = 0;
   uint32_t count = 1;
+  float lineWidth = 1.0;
   ObjectDataConstant pushConstantData{};
 };
 
