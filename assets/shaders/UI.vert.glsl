@@ -48,9 +48,9 @@ vec2 corners[] = {
 
 layout( push_constant ) uniform constants
 {
-	mat4 transform;
-    uint material_index;
-    uint animation_offset;
+  mat4 transform;
+  uint material_index;
+  uint animation_offset;
 } PushConstants;
 
 void main() {

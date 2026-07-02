@@ -45,8 +45,14 @@ vec2 corners[] = {
     vec2(1.0, 1.0)
 };
 
+layout( push_constant ) uniform constants
+{
+	mat4 transform;
+    uint material_index;
+    uint animation_offset;
+} PushConstants;
 void main() {
-    gl_Position = vec4(pos_coords.xy * 2.0 - 1.0, 0.0, 1.0);
+    gl_Position = PushConstants.transform * vec4(pos_coords.xy * 2.0 - 1.0, 0.0, 1.0);
     vs_out.color = color;
     vs_out.texCoords = pos_coords.zw;
     vs_out.vtx_coord.xy = corners[int(vtx_coords.x)];
