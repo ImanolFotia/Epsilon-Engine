@@ -138,6 +138,7 @@ void VulkanRenderer::Push(ObjectData object) {
   drawCommand.count = object.count;
 
   drawCommand.material = object.material;
+  drawCommand.lineWidth = object.lineWidth;
   // auto pushConstant = m_pResourceManagerRef->pushConstantPool.get(object.pushConstant);
   /*if (pushConstant != nullptr)
   {
@@ -441,6 +442,7 @@ void VulkanRenderer::Flush(FlushCommand command) {
         rects.size(), 
         rects.data());
     }
+
   }
 
   switch (command.type) {
@@ -561,6 +563,8 @@ void VulkanRenderer::FlushIndexed(vk::VulkanRenderPass *renderPass) {
   for (int i = 0; i < currentCommandsInQueue; i++) {
 
     auto &command = m_pCurrentCommandQueue[i];
+
+    vkCmdSetLineWidth(m_pFrame.CommandBuffer(), command.lineWidth);
     if (prev_layout != command.layoutIndex) {
       vk::bindPipeline(renderPass->renderPipelines[command.layoutIndex].graphicsPipeline, m_pFrame.CommandBuffer());
       prev_layout = command.layoutIndex;
@@ -634,11 +638,11 @@ void VulkanRenderer::FlushNonIndexed(vk::VulkanRenderPass *renderPass) {
   scissor.extent = extent;
 
   vkCmdSetScissor(m_pFrame.CommandBuffer(), 0, 1, &renderPass->renderPassChain.Scissor);
-  vkCmdSetLineWidth(m_pFrame.CommandBuffer(), 2.0);
 
   for (int i = 0; i < currentCommandsInQueue; i++) {
 
     auto &command = m_pCurrentCommandQueue[i];
+    vkCmdSetLineWidth(m_pFrame.CommandBuffer(), command.lineWidth);
     if (prev_layout != command.layoutIndex) {
       vk::bindPipeline(renderPass->renderPipelines[command.layoutIndex].graphicsPipeline, m_pFrame.CommandBuffer());
       prev_layout = command.layoutIndex;
@@ -699,6 +703,7 @@ void VulkanRenderer::FlushIndexedIndirect(vk::VulkanRenderPass *renderPass) {
   VkDrawIndexedIndirectCommand *indirect_commands = reinterpret_cast<VkDrawIndexedIndirectCommand *>(data);
   int i = 0;
   for (auto &command : m_pCurrentCommandQueue) {
+    vkCmdSetLineWidth(m_pFrame.CommandBuffer(), command.lineWidth);
     if (i >= currentCommandsInQueue)
       break;
 
