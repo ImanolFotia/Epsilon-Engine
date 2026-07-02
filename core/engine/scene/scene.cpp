@@ -26,7 +26,7 @@ void Scene::Init() { auto resourceManager = m_pContext->ResourceManager(); }
 
 void Scene::setCurrentRenderPass(engine::Ref<engine::RenderPass> renderPassRef) {
   auto renderer = m_pContext->Renderer();
-  renderer->SetRenderPass(renderPassRef);
+  //renderer->SetRenderPass(renderPassRef);
   m_pCurrentRenderPass = renderPassRef;
 }
 
