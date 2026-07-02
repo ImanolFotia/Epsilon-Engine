@@ -5,7 +5,7 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <thread>
+#include <print>
 #include <chrono>
 
 #include <core/framework/containers/static_array.hpp>
@@ -151,13 +151,15 @@ namespace framework
                 char cmd[256];
                 sprintf(cmd, "addr2line -i -C -e %.*s -f %p ", p, framesDescriptions[i], buffer[i]);
 
+                std::println("{} {}", framesDescriptions[i], buffer[i]);
+
                 auto message = sh(cmd);
 
                 auto lines = split(message, '\n');
                 auto data = split(lines[1], ':');
 
-                if (std::string(lines[0]).find("??") != std::string::npos)
-                    continue;
+                //if (std::string(lines[0]).find("??") != std::string::npos)
+               //     continue;
 
                 entry e;
                 e.m_pDescription = std::string(lines[0]);
