@@ -8,7 +8,8 @@ namespace framework
     {
 
     protected:
-        bool m_Enabled = false;
+      ~CameraControllerBase() = default;
+      bool m_Enabled = false;
         glm::vec2 m_MousePosOnViewport;
 
         glm::vec3 m_Position;
