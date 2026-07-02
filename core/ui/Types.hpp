@@ -84,9 +84,10 @@ struct Color {
     };
 };
 
-template <typename T> struct SplinePoint {
+template <typename T = glm::vec2> struct SplinePoint {
   using type = T;
   T position;
+  T internal_position;
   Color color;
 };
 
@@ -139,6 +140,7 @@ enum class Primitive {
 struct DrawCommand {
   int32_t vertex_offset;
   int32_t num_vertices;
+  glm::mat4 transform = glm::mat4(1.0f);
   Primitive layout;
   engine::Ref<engine::BindGroup> bind_group;
 };
@@ -150,6 +152,7 @@ struct ButtonFlags {
   bool center_text = false;
   bool is_tab = false;
   bool is_selected_tab = false;
+  bool active = true;
   float border_radius = -1.0f;
   glm::vec4 color = glm::vec4(0.25, 0.25, 0.25, 1.0);
   glm::vec4 hover_color = glm::vec4(0.35, 0.35, 0.35, 1.0);
@@ -178,6 +181,8 @@ struct SplineFlags {
   bool mirrorControlPoints = true;
   bool fill = false;
   bool projectToScreen = false;
+  int snap_size = 1;
+  float lineWidth = 2.0f;
   glm::mat4 transform = glm::mat4(1.0f);
   SplineType type = SplineType::CUBIC_BEZIER;
 };

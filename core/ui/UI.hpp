@@ -12,11 +12,14 @@
 
 #include "Animation.hpp"
 #include "Types.hpp"
+#include "core/framework/loaders/gltf.hpp"
 #include "core/framework/splines/cuadratic_bezier.hpp"
 #include "core/framework/splines/cubic_bezier.hpp"
 #include "font.hpp"
 
+#include <print>
 #include <span>
+#include <stack>
 #include <vector>
 
 // #define STBTT_STATIC
@@ -26,6 +29,8 @@
 // #include "Roboto.hpp"
 #include "Orbitron-Regular.hpp"
 #include "Orbitron_Regular_10.hpp"
+#include "glm/common.hpp"
+#include "glm/ext.hpp"
 #include "glm/geometric.hpp"
 #include "glm/gtc/constants.hpp"
 #include "glm/trigonometric.hpp"
@@ -54,7 +59,7 @@ private:
   std::shared_ptr<engine::Renderer> m_pRenderer = nullptr;
 
   engine::Ref<engine::Mesh> m_pMesh; // dummy mesh to pass the vertex buffer
-  engine::Ref<engine::BindGroup> m_CurrentBindGroup;
+  engine::Ref<engine::BindGroup> m_CurrentBindGroup{};
   engine::Ref<engine::RenderPass> m_pRenderPass;
 
   size_t vertices_pushed = 0;
@@ -73,7 +78,10 @@ private:
   glm::vec2 m_pLastResolution{};
 
   glm::ivec2 lastMouse = {};
+  glm::ivec2 lastCanvasMouse = {};
   // glm::vec2 mouse;
+
+  float m_LineWidth = 2.0f;
 
   const size_t VERTEX_COUNT = 450000;
   // glm::vec2 m_WhitePixelPos{};
@@ -92,6 +100,7 @@ private:
 
   glm::mat4 viewMatrix = glm::mat4(1.0f);
   glm::mat4 projectionMatrix = glm::mat4(1.0f);
+  std::stack<glm::mat4> transforms;
 
   engine::ShaderInfo loadShaders() {
 
@@ -234,6 +243,8 @@ public:
     m_pMesh = m_pResourceManager->insertMesh("UIMesh", {.vertexBuffer = m_pVertexBuffer[0], .numVertices = 0});
 
     m_DrawLists.resize(1);
+
+    transforms.push(glm::mat4(1.0f));
   }
 
   void AddRenderTarget(const char *name, uint32_t rto_index, const std::string &renderPass) {
@@ -300,9 +311,22 @@ public:
 
   void CheckShader();
 
+  void PushTransform(const glm::mat4 &transform);
+  void PopTransform();
+
+  void SetLineWidth(float width) {
+    m_LineWidth = width;
+  }
+
+  float GetLineWidth() {
+    return m_LineWidth;
+  }
+
   glm::vec2 textSize(const std::string &text);
   glm::vec2 buttonSize(const std::string &text);
   glm::vec2 const &Resolution() { return m_pResolution; }
+
+  static glm::vec2 MousePosition() { return glm::vec2(framework::Input::Mouse::XPOS, framework::Input::Mouse::YPOS); }
 
   void SetMatrices(glm::mat4 view, glm::mat4 proj) {
     viewMatrix = view;
@@ -330,19 +354,11 @@ public:
   void Triangle();
   void Diamond();
 
-  bool MouseLeftReleased() {
-    return m_pMouse.left_released;
-  }
-  bool MouseLeftPressed() {
-    return m_pMouse.left_pressed;
-  }
+  bool MouseLeftReleased() { return m_pMouse.left_released; }
+  bool MouseLeftPressed() { return m_pMouse.left_pressed; }
 
-  bool MouseRightReleased() {
-    return m_pMouse.right_released;
-  }
-  bool MouseRightPressed() {
-    return m_pMouse.right_pressed;
-  }
+  bool MouseRightReleased() { return m_pMouse.right_released; }
+  bool MouseRightPressed() { return m_pMouse.right_pressed; }
 
   void DrawLine(LinePoint &&p0, LinePoint &&p1) {
 
@@ -354,6 +370,8 @@ public:
       new_command.num_vertices = 0;
       new_command.bind_group = m_CurrentBindGroup;
       new_command.layout = Primitive::LINE;
+      // if(m_DrawLists.size() > 1)
+      new_command.transform = transforms.top(); // m_DrawLists[m_DrawLists.size() - 2].transform;
     }
 
     m_pVertices[vertices_pushed].color = glm::vec4(p0.color);
@@ -466,6 +484,63 @@ public:
   }
 
 private:
+  template <typename T> int control_point_move(std::vector<SplinePoint<T>> &points, const SplineFlags &flags) {
+    auto circle_col = [](glm::vec2 m, glm::vec2 p, float r) -> bool { return glm::length(m - p) <= r; };
+    auto snap = [](T v, int snap) {
+      return (v / snap) * snap;
+    };
+    int hovered_point = -1;
+    int point_stride[(int)SplineType::SIZE] = {2, 3, 2};
+    glm::vec2 mouse_screen = glm::vec2(m_pMouse.position) / m_pResolution;                               // screen-space to clip-space
+    mouse_screen = mouse_screen * 2.0f - 1.0f;                                                           // clip-space to ncd
+    mouse_screen = (glm::inverse(transforms.top()) * glm::vec4(mouse_screen, 0.0f, 1.0f)) * 0.5f + 0.5f; // ndc to normalized window coords
+    mouse_screen *= m_pResolution;                                                                       // normalized window coords to window coords
+    glm::ivec2 imouse_screen = glm::ivec2(mouse_screen);
+    for (int i = 0; i < points.size(); i++) {
+      auto &p = points[i];
+      if (circle_col(mouse_screen, p.position, 12) || selected_point == i) {
+        hovered_point = i;
+        if (m_pMouse.right_down && selected_point == -1 || selected_point == i) {
+          selected_point = i;
+          p.internal_position.x += (imouse_screen - lastCanvasMouse).x;
+          p.internal_position.y += (imouse_screen - lastCanvasMouse).y;
+          
+          p.position = glm::ivec2(p.internal_position / flags.snap_size) * flags.snap_size;
+         
+          int mod = (int)point_stride[(int)flags.type];
+
+          int x = i % mod;
+          if (flags.mirrorControlPoints && flags.type != SplineType::CATMULL_ROM) {
+            if (i % mod != 0 && i > 1) {
+              if (x == 1) {
+                points[i - 2].internal_position = points[i - 1].position - (points[i].position - points[i - 1].position);
+                points[i - 2].position = snap(points[i - 2].internal_position, flags.snap_size);
+              }
+              if (x == (flags.type == SplineType::QUADRATIC_BEZIER ? 0 : 2)) {
+                points[i + 2].internal_position = points[i + 1].position - (points[i].position - points[i + 1].position);
+                points[i + 2].position = snap(points[i + 2].internal_position, flags.snap_size);
+              
+              }
+            } else if (i > 1) {
+              points[i - 1].internal_position.x += (imouse_screen - lastCanvasMouse).x;
+              points[i + 1].internal_position.x += (imouse_screen - lastCanvasMouse).x;
+
+              points[i - 1].internal_position.y += (imouse_screen - lastCanvasMouse).y;
+              points[i + 1].internal_position.y += (imouse_screen - lastCanvasMouse).y;
+
+              points[i + 1].position = snap(points[i + 1].internal_position, flags.snap_size);
+              points[i - 1].position = snap(points[i - 1].internal_position, flags.snap_size);
+            } else if (i == 0) {
+              points[i + 1].internal_position.x += (imouse_screen - lastCanvasMouse).x;
+              points[i + 1].internal_position.y += (imouse_screen - lastCanvasMouse).y;
+              points[i + 1].position = snap(points[i + 1].internal_position, flags.snap_size);
+            }
+          }
+        }
+      }
+    }
+    return hovered_point;
+  }
   template <typename T> void pCatmullRomSpline(std::vector<SplinePoint<T>> &points, SplineFlags flags) {
 
     auto font = m_Fonts[current_font];
@@ -478,18 +553,29 @@ private:
 
     framework::splines::CatmullRom<glm::vec2> spline;
     spline.Loops(false);
+
+    glm::vec2 mouse_screen = glm::vec2(m_pMouse.position) / m_pResolution;                               // screen-space to clip-space
+    mouse_screen = mouse_screen * 2.0f - 1.0f;                                                           // clip-space to ncd
+    mouse_screen = (glm::inverse(transforms.top()) * glm::vec4(mouse_screen, 0.0f, 1.0f)) * 0.5f + 0.5f; // ndc to normalized window coords
+    mouse_screen *= m_pResolution;                                                                       // normalized window coords to window coords
+    glm::ivec2 imouse_screen = glm::ivec2(mouse_screen);
     for (int i = 0; i < points.size(); i++) {
       auto &p = points[i];
-      spline.addPoint(p.position);
-      if (circle_col(m_pMouse.position, p.position, 12) || selected_point == i) {
+      if (circle_col(mouse_screen, p.position, 12) || selected_point == i) {
         hovered_point = i;
         if (m_pMouse.right_down && selected_point == -1 || selected_point == i) {
           selected_point = i;
-          p.position.x += (m_pMouse.position - lastMouse).x;
-          p.position.y += (m_pMouse.position - lastMouse).y;
+          p.internal_position.x += (imouse_screen - lastCanvasMouse).x;
+          p.internal_position.y += (imouse_screen - lastCanvasMouse).y;
+          
+          p.position = glm::ivec2(p.internal_position / flags.snap_size) * flags.snap_size;
+         
         }
       }
+
+      spline.addPoint(p.position);
     }
+    lastCanvasMouse = imouse_screen;
     if (points.size() == 2 && flags.drawHandles) {
 
       DrawLine({.position = points[0].position, .color = LIGHT_BLUE}, {.position = points[1].position, .color = LIGHT_BLUE});
@@ -552,16 +638,18 @@ private:
       }
       if (selected_point == -1 && m_pMouse.right_pressed && points.size() >= 1) {
         T handle_position = T(1.0f);
-        handle_position.x = m_pMouse.position.x;
-        handle_position.y = m_pMouse.position.y;
+        handle_position.x = imouse_screen.x;
+        handle_position.y = imouse_screen.y;
         points.push_back({.position = handle_position, .color = WHITE});
+        points.back().internal_position = handle_position;
         selected_point = points.size() - 1;
 
       } else if (points.size() == 0 && m_pMouse.right_pressed) {
         T handle_position = T(1.0f);
-        handle_position.x = m_pMouse.position.x;
-        handle_position.y = m_pMouse.position.y;
+        handle_position.x = imouse_screen.x;
+        handle_position.y = imouse_screen.y;
         points.push_back({.position = handle_position, .color = WHITE});
+        points.back().internal_position = handle_position;
         selected_point = points.size() - 1;
       }
     }
@@ -580,37 +668,20 @@ private:
     framework::splines::CuadraticBezier<glm::vec2> spline;
     std::vector<UIVertex> fill_vertices;
     spline.Loops(false);
+    hovered_point = control_point_move(points, flags);
+
+    glm::vec2 mouse_screen = glm::vec2(m_pMouse.position) / m_pResolution;                               // screen-space to clip-space
+    mouse_screen = mouse_screen * 2.0f - 1.0f;                                                           // clip-space to ncd
+    mouse_screen = (glm::inverse(transforms.top()) * glm::vec4(mouse_screen, 0.0f, 1.0f)) * 0.5f + 0.5f; // ndc to normalized window coords
+    mouse_screen *= m_pResolution;                                                                       // normalized window coords to window coords
+    glm::ivec2 imouse_screen = glm::ivec2(mouse_screen);
+    
+
     for (int i = 0; i < points.size(); i++) {
       auto &p = points[i];
       spline.addPoint(p.position);
-      if (circle_col(m_pMouse.position, p.position, 12) || selected_point == i) {
-        hovered_point = i;
-        if (m_pMouse.right_down && selected_point == -1 || selected_point == i) {
-          selected_point = i;
-          p.position.x += (m_pMouse.position - lastMouse).x;
-          p.position.y += (m_pMouse.position - lastMouse).y;
-
-          int x = i % 3;
-          if (flags.mirrorControlPoints) {
-            if (i % 3 != 0 && i > 1) {
-              if (x == 1)
-                points[i - 2].position = points[i - 1].position - (points[i].position - points[i - 1].position);
-              if (x == 2)
-                points[i + 2].position = points[i + 1].position - (points[i].position - points[i + 1].position);
-            } else if (i > 1) {
-              points[i - 1].position.x += (m_pMouse.position - lastMouse).x;
-              points[i + 1].position.x += (m_pMouse.position - lastMouse).x;
-
-              points[i - 1].position.y += (m_pMouse.position - lastMouse).y;
-              points[i + 1].position.y += (m_pMouse.position - lastMouse).y;
-            } else if (i == 0) {
-              points[i + 1].position.x += (m_pMouse.position - lastMouse).x;
-              points[i + 1].position.y += (m_pMouse.position - lastMouse).y;
-            }
-          }
-        }
-      }
     }
+    lastCanvasMouse = imouse_screen;
     if (points.size() == 2 && flags.drawHandles) {
 
       DrawLine({.position = points[0].position, .color = LIGHT_BLUE}, {.position = points[1].position, .color = LIGHT_BLUE});
@@ -682,24 +753,27 @@ private:
           subdivs = 4;
         Circle(subdivs, 12, glm::vec4(0.0, 0.0, 0.0, color));
         Circle(subdivs, i == hovered_point ? 8 : 4, p.color.get());
-        Text("({}, {})", p.position.x, p.position.y);
+        // Text("({}, {})", p.position.x, p.position.y);
       }
       if (selected_point == -1 && m_pMouse.right_pressed && points.size() >= 1) {
         T handle_position = T(1.0f);
-        handle_position.x = m_pMouse.position.x;
-        handle_position.y = m_pMouse.position.y;
+        handle_position.x = imouse_screen.x;
+        handle_position.y = imouse_screen.y;
         points.push_back({.position = handle_position, .color = LIGHT_BLUE});
+        points.back().internal_position = handle_position;
         points.push_back({.position = handle_position, .color = WHITE});
         // if (points.size() > 4)
         // if (points.size() == 4)
         //   points.push_back({.position = glm::vec2(m_pMouse.position), .color = LIGHT_BLUE});
-        selected_point = points.size() - 1;
+        points.back().internal_position = handle_position;
+        selected_point = points.size() - 2;
 
       } else if (points.size() == 0 && m_pMouse.right_pressed) {
         T handle_position = T(1.0f);
-        handle_position.x = m_pMouse.position.x;
-        handle_position.y = m_pMouse.position.y;
+        handle_position.x = imouse_screen.x;
+        handle_position.y = imouse_screen.y;
         points.push_back({.position = handle_position, .color = WHITE});
+        points.back().internal_position = handle_position;
         selected_point = points.size() - 1;
       }
     }
@@ -723,37 +797,23 @@ private:
     framework::splines::CubicBezier<glm::vec2> spline;
     std::vector<UIVertex> fill_vertices;
     spline.Loops(false);
+
+    hovered_point = control_point_move(points, flags);
+
+    glm::vec2 mouse_screen = glm::vec2(m_pMouse.position) / m_pResolution;                               // screen-space to clip-space
+    mouse_screen = mouse_screen * 2.0f - 1.0f;                                                           // clip-space to ncd
+    mouse_screen = (glm::inverse(transforms.top()) * glm::vec4(mouse_screen, 0.0f, 1.0f)) * 0.5f + 0.5f; // ndc to normalized window coords
+    mouse_screen *= m_pResolution;                                                                       // normalized window coords to window coords
+    glm::ivec2 imouse_screen = glm::ivec2(mouse_screen);
+   
     for (int i = 0; i < points.size(); i++) {
       auto &p = points[i];
       spline.addPoint(p.position);
-      if (circle_col(m_pMouse.position, p.position, 12) || selected_point == i) {
-        hovered_point = i;
-        if (m_pMouse.right_down && selected_point == -1 || selected_point == i) {
-          selected_point = i;
-          p.position.x += (m_pMouse.position - lastMouse).x;
-          p.position.y += (m_pMouse.position - lastMouse).y;
-
-          int x = i % 3;
-          if (flags.mirrorControlPoints) {
-            if (i % 3 != 0 && i > 1) {
-              if (x == 1)
-                points[i - 2].position = points[i - 1].position - (points[i].position - points[i - 1].position);
-              if (x == 2)
-                points[i + 2].position = points[i + 1].position - (points[i].position - points[i + 1].position);
-            } else if (i > 1) {
-              points[i - 1].position.x += (m_pMouse.position - lastMouse).x;
-              points[i + 1].position.x += (m_pMouse.position - lastMouse).x;
-
-              points[i - 1].position.y += (m_pMouse.position - lastMouse).y;
-              points[i + 1].position.y += (m_pMouse.position - lastMouse).y;
-            } else if (i == 0) {
-              points[i + 1].position.x += (m_pMouse.position - lastMouse).x;
-              points[i + 1].position.y += (m_pMouse.position - lastMouse).y;
-            }
-          }
-        }
-      }
     }
+    lastCanvasMouse = imouse_screen;
+    spline.CalculateDistance();
+    SetNextWindowPosition(glm::vec2(30, 200));
+    // Text(std::format("Spline length: {:.3f}", spline.Length()));
     if (points.size() == 2 && flags.drawHandles) {
 
       DrawLine({.position = points[0].position, .color = LIGHT_BLUE}, {.position = points[1].position, .color = LIGHT_BLUE});
@@ -819,10 +879,23 @@ private:
         DrawLine({.position = points[points.size() - 1].position, .color = LIGHT_BLUE},
                  {.position = points[points.size() - 1 - 1].position, .color = LIGHT_BLUE});
       }
+      float l = spline.Length();
+      const float interval = 50.0f;
+      float delta = 0.0f;
+      while (delta < l) {
+        auto p = spline.getPoint(spline.getT(delta));
+        delta += interval;
+        m_pCursorPosition = p;
+        Circle(20, 5);
+      }
     }
     if (flags.drawHandles) {
       for (int i = 0; i < points.size(); i++) {
         auto &p = points[i];
+
+        SetNextWindowPosition(p.position + glm::vec2(-10.0, -50.0));
+        // Text(num);
+
         m_pCursorPosition = p.position;
         float color = 1.0;
         int subdivs = 15;
@@ -830,26 +903,28 @@ private:
           subdivs = 4;
         Circle(subdivs, 12, glm::vec4(0.0, 0.0, 0.0, color));
         Circle(subdivs, i == hovered_point ? 8 : 4, p.color.get());
-        Text("({}, {})", p.position.x, p.position.y);
+        // Text("({}, {})", p.position.x, p.position.y);
       }
       if (selected_point == -1 && m_pMouse.right_pressed && points.size() >= 1) {
         T handle_position = T(1.0f);
-        handle_position.x = m_pMouse.position.x;
-        handle_position.y = m_pMouse.position.y;
+        handle_position.x = imouse_screen.x;
+        handle_position.y = imouse_screen.y;
         points.push_back({.position = handle_position, .color = LIGHT_BLUE});
+        points.back().internal_position = points.back().position;
         points.push_back({.position = handle_position, .color = WHITE});
+        points.back().internal_position = points.back().position;
         points.push_back({.position = handle_position, .color = LIGHT_BLUE});
-        // if (points.size() > 4)
-        // if (points.size() == 4)
-        //   points.push_back({.position = glm::vec2(m_pMouse.position), .color = LIGHT_BLUE});
+        points.back().internal_position = points.back().position;
         selected_point = points.size() - 1;
 
       } else if (points.size() == 0 && m_pMouse.right_pressed) {
         T handle_position = T(1.0f);
-        handle_position.x = m_pMouse.position.x;
-        handle_position.y = m_pMouse.position.y;
+        handle_position.x = imouse_screen.x; // m_pMouse.position.x;
+        handle_position.y = imouse_screen.y; // m_pMouse.position.y;
         points.push_back({.position = handle_position, .color = WHITE});
+        points.back().internal_position = points.back().position;
         points.push_back({.position = handle_position, .color = LIGHT_BLUE});
+        points.back().internal_position = points.back().position;
         selected_point = points.size() - 1;
       }
     }

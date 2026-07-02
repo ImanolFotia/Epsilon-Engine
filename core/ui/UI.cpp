@@ -16,7 +16,36 @@ void UI::CheckShader() {
     new_command.num_vertices = 0;
     new_command.bind_group = m_CurrentBindGroup;
     new_command.layout = Primitive::TRIANGLE;
+    //if(m_DrawLists.size() > 1)
+    new_command.transform = transforms.top();//m_DrawLists[m_DrawLists.size() - 2].transform;
   }
+}
+
+void UI::PushTransform(const glm::mat4 &transform){
+  DrawCommand new_command;
+  new_command.bind_group = m_CurrentBindGroup;
+  new_command.layout = Primitive::TRIANGLE;
+
+  if(m_DrawLists.size() > 0) new_command = m_DrawLists.back();
+
+  new_command.transform = transform;
+  new_command.vertex_offset = vertices_pushed;
+  new_command.num_vertices = 0;
+  transforms.push(transform);
+  m_DrawLists.emplace_back(new_command);
+  commands_pushed++;
+}
+
+void UI::PopTransform() {
+  assert(m_DrawLists.size() > 1);
+  transforms.pop(); 
+  DrawCommand new_command = m_DrawLists[m_DrawLists.size() - 2];
+  new_command.vertex_offset = vertices_pushed;
+  new_command.num_vertices = 0;
+  new_command.transform = transforms.top();
+  new_command.bind_group = m_CurrentBindGroup;
+  m_DrawLists.emplace_back(new_command);
+  commands_pushed++;
 }
 
 glm::vec2 UI::textSize(const std::string &text) {
@@ -135,9 +164,10 @@ void UI::Draw(engine::Ref<engine::RenderPass> renderPass) {
       m_pRenderer->Push({.mesh = m_pMesh,
                          .material = draw_command.bind_group,
                          .pushConstant = engine::Ref<engine::PushConstant>::makeEmpty(),
-                         .objectConstant = {.transform = glm::mat4(1.0f), .material_index = 0, .animation_offset = 0},
+                         .objectConstant = {.transform = draw_command.transform, .material_index = 0, .animation_offset = 0},
                          .layout_index = (uint32_t)draw_command.layout,
-                         .uniformIndex = 0});
+                         .uniformIndex = 0,
+                         .lineWidth = m_LineWidth});
 
       draw_command.bind_group = m_CurrentBindGroup;
       draw_command.num_vertices = 0;
