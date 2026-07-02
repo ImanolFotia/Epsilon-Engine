@@ -12,6 +12,9 @@
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "../../thirdparty/stb/stb_truetype.h"
 
+#include "../../thirdparty/json/include/nlohmann/json.hpp"
+
+
 struct font_pixel {
   uint8_t r, g, b, a;
 };
@@ -35,6 +38,7 @@ struct Options {
   std::string output_name{};
   std::string font_name{};
   std::string font_name_no_ext{};
+  std::string file_name{};
 };
 
 struct vec2 {
@@ -63,7 +67,7 @@ Options ParseArgs(int argc, char **argv) {
     std::cerr << "No files provided" << std::endl;
     std::exit(255);
   }
-
+  options.file_name = std::string(argv[1]);
   options.font_name = std::string(argv[1]);
   options.font_name = options.font_name.substr(options.font_name.find_last_of('/') + 1, options.font_name.size());
   options.font_name_no_ext = options.font_name.substr(0, options.font_name.find_last_of('.'));
@@ -184,33 +188,39 @@ std::string DecodeCodepoint(const char *codepoint) {
   return std::format("U+{:04x}", value);
 }
 
-int main(int argc, char **argv) {
+struct FontInfo {
+  std::ifstream codepoints_file;
+  uint32_t min = std::numeric_limits<uint32_t>::max();
+  uint32_t max = 0;
+  std::vector<font_pixel> pixels{};
+  std::vector<Glyph> m_AlignedQuads;
+};
 
-  Options options = ParseArgs(argc, argv);
+FontInfo bake_fonts(Options &options) {
+  FontInfo font_info;
 
   std::string code_points_path = options.font_name.substr(0, options.font_name.find_last_of('.')) + ".codepoints";
-  std::ifstream codepoints_file(code_points_path);
+  font_info.codepoints_file = std::ifstream(code_points_path);
 
   std::cout << code_points_path << std::endl;
   std::string current, prev;
   int counted_chars = 0;
   int first_char_codepoint = 0;
   std::vector<std::string> codepoints;
-  uint32_t min = std::numeric_limits<uint32_t>::max();
-  uint32_t max = 0;
-  if (codepoints_file.is_open()) {
+
+  if (font_info.codepoints_file.is_open()) {
     std::string line;
-    while (std::getline(codepoints_file, line)) {
+    while (std::getline(font_info.codepoints_file, line)) {
       auto first_space = line.find_first_of(' ');
       if (counted_chars == 0) {
         first_char_codepoint = std::strtol(line.substr(first_space + 1).c_str(), nullptr, 16);
       }
       codepoints.push_back(line.substr(first_space + 1));
       uint32_t code = strtol(str_toupper(line.substr(first_space + 1)).c_str(), nullptr, 16);
-      if (code > max)
-        max = code;
-      if (code < min)
-        min = code;
+      if (code > font_info.max)
+        font_info.max = code;
+      if (code < font_info.min)
+        font_info.min = code;
       // if (line == prev)
       //   continue;
       prev = line;
@@ -218,13 +228,12 @@ int main(int argc, char **argv) {
     }
   }
 
-  codepoints_file.seekg(0, std::ios::beg);
+  font_info.codepoints_file.seekg(0, std::ios::beg);
   vec2 m_WhitePixelPos{};
-  std::vector<font_pixel> pixels{};
-  pixels.resize(options.texture_size * options.texture_size);
+  font_info.pixels.resize(options.texture_size * options.texture_size);
 
   std::vector<stbtt_bakedchar> cdata;
-  if (codepoints_file.is_open()) {
+  if (font_info.codepoints_file.is_open()) {
     std::cout << counted_chars << std::endl;
     cdata.resize(counted_chars);
     options.num_chars = counted_chars;
@@ -236,16 +245,16 @@ int main(int argc, char **argv) {
   unsigned char *ttf_buffer = new unsigned char[1 << 20];
   unsigned char *temp_bitmap = new unsigned char[options.texture_size * options.texture_size];
 
-  fread(ttf_buffer, 1, 1 << 20, fopen(argv[1], "rb"));
+  fread(ttf_buffer, 1, 1 << 20, fopen(options.file_name.c_str(), "rb"));
 
-  stbtt_BakeFontBitmap(ttf_buffer, 0, options.font_size, temp_bitmap, options.texture_size, options.texture_size, options.first_char, options.num_chars, cdata.data());
+  stbtt_BakeFontBitmap(ttf_buffer, 0, options.font_size, temp_bitmap, options.texture_size, options.texture_size, options.first_char, options.num_chars,
+                       cdata.data());
 
-  if (codepoints_file.is_open()) {
+  if (font_info.codepoints_file.is_open()) {
     options.first_char = 0;
   }
 
-  std::vector<Glyph> m_AlignedQuads;
-  m_AlignedQuads.resize(options.num_chars);
+  font_info.m_AlignedQuads.resize(options.num_chars);
   for (int i = 0; i < options.num_chars; i++) {
     char c = i;
     float x = 0, y = 0;
@@ -263,26 +272,44 @@ int main(int argc, char **argv) {
       code = "\"\\\\\"";
     }
     if (codepoints.size() > 0)
-      if (min > 0x7F || i + options.first_char > 0x7F) {
+      if (font_info.min > 0x7F || i + options.first_char > 0x7F) {
         code = EncodeCodepoint(codepoints.at(i));
       }
-    m_AlignedQuads[i] = {q.x0, q.y0, q.s0, q.t0, q.x1, q.y1, q.s1, q.t1, code};
+    font_info.m_AlignedQuads[i] = {q.x0, q.y0, q.s0, q.t0, q.x1, q.y1, q.s1, q.t1, code};
   }
 
   for (int i = 0; i < options.texture_size * options.texture_size; i++) {
-    pixels[i] = {255, 255, 255, temp_bitmap[i]};
+    font_info.pixels[i] = {255, 255, 255, temp_bitmap[i]};
 
     if (temp_bitmap[i] == 255) {
       m_WhitePixelPos = vec2(i % options.texture_size, i / options.texture_size) / 255.0f;
     }
   }
 
+  font_info.codepoints_file.close();
   delete[] temp_bitmap;
   delete[] ttf_buffer;
-  codepoints_file.close();
+}
+
+FontInfo parse_msdf(Options &options) {
+  FontInfo font_info;
+  std::ifstream j(options.file_name);
+  nlohmann::json json  = nlohmann::json::parse(j);
+
+  options.texture_size = json["atlas"]["width"];
+
+
+}
+
+int main(int argc, char **argv) {
+
+  Options options = ParseArgs(argc, argv);
+
+  FontInfo font_info = bake_fonts(options);
 
   if (options.out_format == 0) {
-    codepoints_file = std::ifstream(code_points_path);
+    std::string code_points_path = options.font_name.substr(0, options.font_name.find_last_of('.')) + ".codepoints";
+    std::ifstream codepoints_file(code_points_path);
 
     std::ofstream outHeader(options.font_name_no_ext + ".hpp");
     outHeader << "#pragma once\n\n#include <core/ui/font.hpp>\n\n";
@@ -307,15 +334,19 @@ int main(int argc, char **argv) {
     outHeader << "    " << options.font_name_no_ext << "(){\n";
 
     outHeader << "        "
-              << "min_range = 0x" << std::format("{:04x}", min) << ";\n";
+              << "min_range = 0x" << std::format("{:04x}", font_info.min) << ";\n";
     outHeader << "        "
-              << "max_range = 0x" << std::format("{:04x}", max) << ";\n";
+              << "max_range = 0x" << std::format("{:04x}", font_info.max) << ";\n";
     outHeader << "        "
               << "font_name = \"" << options.font_name << "\";\n";
     outHeader << "        "
               << "font_size = " << options.font_size << ";\n";
     outHeader << "        "
               << "dimensions = " << options.texture_size << ";\n";
+    outHeader << "        "
+    << "msdf = " << "false" << ";\n";
+    outHeader << "        "
+              << "atlas_path = " << "\"atlas.png\"" << ";\n";
     outHeader << "        "
               << "num_chars = " << (codepoints_file.is_open() ? index : options.num_chars) << ";\n";
     outHeader << "        "
@@ -328,7 +359,7 @@ int main(int argc, char **argv) {
     outHeader << "           ";
     for (int i = 0; i < options.texture_size * options.texture_size; i++) {
 
-      outHeader << (int)pixels[i].a << ", ";
+      outHeader << (int)font_info.pixels[i].a << ", ";
 
       if (i % 14 == 0 && i != 0) {
 
@@ -347,10 +378,10 @@ int main(int argc, char **argv) {
     for (int i = 0; i < options.num_chars; i++) {
       if (i % 2 == 1 || i == 0)
         outHeader << "            ";
-      outHeader << "{" << m_AlignedQuads[i].quad.x0 << ", " << m_AlignedQuads[i].quad.y0 << ", " << m_AlignedQuads[i].quad.s0 << ", "
-                << m_AlignedQuads[i].quad.t0 << ",";
-      outHeader << m_AlignedQuads[i].quad.x1 << ", " << m_AlignedQuads[i].quad.y1 << ", " << m_AlignedQuads[i].quad.s1 << ", " << m_AlignedQuads[i].quad.t1
-                << ", " << m_AlignedQuads[i].code << "},";
+      outHeader << "{" << font_info.m_AlignedQuads[i].quad.x0 << ", " << font_info.m_AlignedQuads[i].quad.y0 << ", " << font_info.m_AlignedQuads[i].quad.s0 << ", "
+                << font_info.m_AlignedQuads[i].quad.t0 << ",";
+      outHeader << font_info.m_AlignedQuads[i].quad.x1 << ", " << font_info.m_AlignedQuads[i].quad.y1 << ", " << font_info.m_AlignedQuads[i].quad.s1 << ", " << font_info.m_AlignedQuads[i].quad.t1
+                << ", " << font_info.m_AlignedQuads[i].code << "},";
       if (i % 2 == 0)
         outHeader << "\n";
     }
@@ -371,7 +402,7 @@ int main(int argc, char **argv) {
     // horizontal
     for (int i = 0; i < num_pixels; i++) {
 
-      if (pixels[i].a >= 64) {
+      if (font_info.pixels[i].a >= 64) {
         sdf_font[i] = 0;
 
         int y = i / options.texture_size;
@@ -405,80 +436,47 @@ int main(int argc, char **argv) {
     }
 
     std::cout << "clean_lines: " << clean_lines.size() << std::endl;
-    /*int num_changes = 1;
-    while(num_changes > 0) {
-      num_changes=0;
-    // vertical
-      for (int i = 0; i < options.texture_size; i++) {
-          int x = i % options.texture_size;
-          int b = 1;
-
-          int iter = 1;
-          for (int j = 1; j < options.texture_size/2; j++) {
-            const int mid = options.texture_size / 2;
-            int y_b = mid + j;
-            int y_t = mid - j;
-
-            int t_color = sdf_font[x + (y_t + 1) * options.texture_size];
-            int b_color = sdf_font[x + (y_b - 1) * options.texture_size];
-
-            if(sdf_font[x + y_b * options.texture_size] > 10000) num_changes++;
-            if(sdf_font[x + y_t * options.texture_size] > 10000) num_changes++;
-
-            if (y_t >= 0) {
-                sdf_font[x + y_t * options.texture_size] = std::min(t_color+b, sdf_font[x + y_t * options.texture_size]);
-            }
-
-            if (y_b < options.texture_size) {
-                sdf_font[x + y_b * options.texture_size] = std::min(b_color+b, sdf_font[x + y_b * options.texture_size]);
-
-            }
-
-            b += 2;
-          }
-      }
-    }*/
-    
     std::vector<int> pair_indices;
 
     int prev = clean_lines.at(0);
-    for(int i = 1; i < clean_lines.size(); i++) {
-      if(prev + 1 == clean_lines.at(i)) pair_indices.push_back(prev);
+    for (int i = 1; i < clean_lines.size(); i++) {
+      if (prev + 1 == clean_lines.at(i))
+        pair_indices.push_back(prev);
       prev = clean_lines.at(i);
     }
     // vertical
-    for(int gh; gh < 20; gh++) {
-    int index = pair_indices.at(pair_indices.size() / 2) * options.texture_size;
-    std::cout << "index: " << index << std::endl;
-    for (int i = 0; i < num_pixels; i++) {
+    for (int gh; gh < 20; gh++) {
+      int index = pair_indices.at(pair_indices.size() / 2) * options.texture_size;
+      std::cout << "index: " << index << std::endl;
+      for (int i = 0; i < num_pixels; i++) {
 
-      // if (sdf_font[i] == 0) {
+        // if (sdf_font[i] == 0) {
 
-      index = i;//index + i;
+        index = i; // index + i;
 
-      int x = index  % options.texture_size;
-      int b = 1;
+        int x = index % options.texture_size;
+        int b = 1;
 
-      for (int j = 1; j < options.texture_size; j++) {
-        int y_b = (index / options.texture_size) + j;
-        int y_t = (index / options.texture_size) - j;
+        for (int j = 1; j < options.texture_size; j++) {
+          int y_b = (index / options.texture_size) + j;
+          int y_t = (index / options.texture_size) - j;
 
-        if (y_b < options.texture_size) {
-          int b_color = sdf_font[x + (y_b - 1) * options.texture_size];
-          sdf_font[x + y_b * options.texture_size] = std::min(b_color + b, sdf_font[x + y_b * options.texture_size]);
+          if (y_b < options.texture_size) {
+            int b_color = sdf_font[x + (y_b - 1) * options.texture_size];
+            sdf_font[x + y_b * options.texture_size] = std::min(b_color + b, sdf_font[x + y_b * options.texture_size]);
+          }
+
+          if (y_t >= 0) {
+            int t_color = sdf_font[x + (y_t + 1) * options.texture_size];
+            sdf_font[x + y_t * options.texture_size] = std::min(t_color + b, sdf_font[x + y_t * options.texture_size]);
+          }
+
+          b += 2;
         }
 
-        if (y_t >= 0) {
-          int t_color = sdf_font[x + (y_t + 1) * options.texture_size];
-          sdf_font[x + y_t * options.texture_size] = std::min(t_color + b, sdf_font[x + y_t * options.texture_size]);
-        }
-
-        b += 2;
+        //}
       }
-
-      //}
     }
-  }
 
     int max = 0;
 
@@ -495,7 +493,7 @@ int main(int argc, char **argv) {
     outImage << max << "\n";
 
     for (int i = 0; i < options.texture_size * options.texture_size; i++) {
-      outImage << max-(int)sdf_font[i] << " ";
+      outImage << max - (int)sdf_font[i] << " ";
 
       if (i % 255 == 0 && i != 0) {
 
