@@ -517,7 +517,7 @@ public:
     }
   }
 
-  void DrawUI(glm::vec3 &data, engine::ResourcesMemory_t resources) {
+  void DrawUI(engine::ResourcesMemory_t resources) {
     if (m_pEnabled) {
       // ImGuiBegin();
 
