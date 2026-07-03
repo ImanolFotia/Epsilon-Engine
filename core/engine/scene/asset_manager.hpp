@@ -20,6 +20,8 @@
 #include "transform.hpp"
 #include <core/engine/renderer/vulkan/imgui/imgui_setup.hpp>
 
+#include <stack>
+
 namespace engine {
 
 enum AssetType { TEXTURE = 0, MODEL, SIZE };

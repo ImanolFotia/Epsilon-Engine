@@ -14,7 +14,7 @@ namespace engine
 {
     // We create an enum of the sides so we don't have to call each side 0 or 1.
     // This way it makes it more understandable and readable when dealing with frustum sides.
-    enum FrustumSide
+    enum class FrustumSide
     {
         RIGHT = 0,  // The RIGHT side of the frustum
         LEFT = 1,   // The LEFT	 side of the frustum
@@ -117,61 +117,61 @@ namespace engine
         // the clipping planes we received above and extract the sides from them.
 
         // This will extract the RIGHT side of the frustum
-        m_Frustum[RIGHT][A] = clip[3] - clip[0];
-        m_Frustum[RIGHT][B] = clip[7] - clip[4];
-        m_Frustum[RIGHT][C] = clip[11] - clip[8];
-        m_Frustum[RIGHT][D] = clip[15] - clip[12];
+        m_Frustum[(int)FrustumSide::RIGHT][A] = clip[3] - clip[0];
+        m_Frustum[(int)FrustumSide::RIGHT][B] = clip[7] - clip[4];
+        m_Frustum[(int)FrustumSide::RIGHT][C] = clip[11] - clip[8];
+        m_Frustum[(int)FrustumSide::RIGHT][D] = clip[15] - clip[12];
 
         // Now that we have a normal (A,B,C) and a distance (D) to the plane,
         // we want to normalize that normal and distance.
 
         // Normalize the RIGHT side
-        NormalizePlane(m_Frustum, RIGHT);
+        NormalizePlane(m_Frustum, (int)FrustumSide::RIGHT);
 
         // This will extract the LEFT side of the frustum
-        m_Frustum[LEFT][A] = clip[3] + clip[0];
-        m_Frustum[LEFT][B] = clip[7] + clip[4];
-        m_Frustum[LEFT][C] = clip[11] + clip[8];
-        m_Frustum[LEFT][D] = clip[15] + clip[12];
+        m_Frustum[(int)FrustumSide::LEFT][A] = clip[3] + clip[0];
+        m_Frustum[(int)FrustumSide::LEFT][B] = clip[7] + clip[4];
+        m_Frustum[(int)FrustumSide::LEFT][C] = clip[11] + clip[8];
+        m_Frustum[(int)FrustumSide::LEFT][D] = clip[15] + clip[12];
 
         // Normalize the LEFT side
-        NormalizePlane(m_Frustum, LEFT);
+        NormalizePlane(m_Frustum, (int)FrustumSide::LEFT);
 
         // This will extract the BOTTOM side of the frustum
-        m_Frustum[BOTTOM][A] = clip[3] + clip[1];
-        m_Frustum[BOTTOM][B] = clip[7] + clip[5];
-        m_Frustum[BOTTOM][C] = clip[11] + clip[9];
-        m_Frustum[BOTTOM][D] = clip[15] + clip[13];
+        m_Frustum[(int)FrustumSide::BOTTOM][A] = clip[3] + clip[1];
+        m_Frustum[(int)FrustumSide::BOTTOM][B] = clip[7] + clip[5];
+        m_Frustum[(int)FrustumSide::BOTTOM][C] = clip[11] + clip[9];
+        m_Frustum[(int)FrustumSide::BOTTOM][D] = clip[15] + clip[13];
 
         /// Normalize the BOTTOM side
-        NormalizePlane(m_Frustum, BOTTOM);
+        NormalizePlane(m_Frustum, (int)FrustumSide::BOTTOM);
 
         /// This will extract the TOP side of the frustum
-        m_Frustum[TOP][A] = clip[3] - clip[1];
-        m_Frustum[TOP][B] = clip[7] - clip[5];
-        m_Frustum[TOP][C] = clip[11] - clip[9];
-        m_Frustum[TOP][D] = clip[15] - clip[13];
+        m_Frustum[(int)FrustumSide::TOP][A] = clip[3] - clip[1];
+        m_Frustum[(int)FrustumSide::TOP][B] = clip[7] - clip[5];
+        m_Frustum[(int)FrustumSide::TOP][C] = clip[11] - clip[9];
+        m_Frustum[(int)FrustumSide::TOP][D] = clip[15] - clip[13];
 
         /// Normalize the TOP side
-        NormalizePlane(m_Frustum, TOP);
+        NormalizePlane(m_Frustum, (int)FrustumSide::TOP);
 
         /// This will extract the BACK side of the frustum
-        m_Frustum[BACK][A] = clip[3] - clip[2];
-        m_Frustum[BACK][B] = clip[7] - clip[6];
-        m_Frustum[BACK][C] = clip[11] - clip[10];
-        m_Frustum[BACK][D] = clip[15] - clip[14];
+        m_Frustum[(int)FrustumSide::BACK][A] = clip[3] - clip[2];
+        m_Frustum[(int)FrustumSide::BACK][B] = clip[7] - clip[6];
+        m_Frustum[(int)FrustumSide::BACK][C] = clip[11] - clip[10];
+        m_Frustum[(int)FrustumSide::BACK][D] = clip[15] - clip[14];
 
         /// Normalize the BACK side
-        NormalizePlane(m_Frustum, BACK);
+        NormalizePlane(m_Frustum, (int)FrustumSide::BACK);
 
         // This will extract the FRONT side of the frustum
-        m_Frustum[FRONT][A] = clip[3] + clip[2];
-        m_Frustum[FRONT][B] = clip[7] + clip[6];
-        m_Frustum[FRONT][C] = clip[11] + clip[10];
-        m_Frustum[FRONT][D] = clip[15] + clip[14];
+        m_Frustum[(int)FrustumSide::FRONT][A] = clip[3] + clip[2];
+        m_Frustum[(int)FrustumSide::FRONT][B] = clip[7] + clip[6];
+        m_Frustum[(int)FrustumSide::FRONT][C] = clip[11] + clip[10];
+        m_Frustum[(int)FrustumSide::FRONT][D] = clip[15] + clip[14];
 
         /// Normalize the FRONT side
-        NormalizePlane(m_Frustum, FRONT);
+        NormalizePlane(m_Frustum, (int)FrustumSide::FRONT);
 
         glm::vec4 corners2[8] = {glm::vec4(-1.0f, -1.0f, 1.0f, 1.0f), glm::vec4(-1.0f, -1.0f, -1.0f, 1.0f), glm::vec4(-1.0f, 1.0f, 1.0f, 1.0f), glm::vec4(-1.0f, 1.0f, -1.0f, 1.0f),
                         glm::vec4(1.0f, -1.0f, 1.0f, 1.0f), glm::vec4(1.0f, -1.0f, -1.0f, 1.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec4(1.0f, 1.0f, -1.0f, 1.0f) };

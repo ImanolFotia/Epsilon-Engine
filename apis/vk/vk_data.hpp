@@ -3,6 +3,8 @@
 #include "core/engine/renderer/types.hpp"
 #include <vulkan/vulkan_core.h>
 
+#include <set>
+
 #if defined(ANDROID) || defined(__ANDROID__)
 #define VK_USE_PLATFORM_ANDROID_KHR
 #undef VK_USE_PLATFORM_XLIB_KHR

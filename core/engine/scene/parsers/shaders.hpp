@@ -2,6 +2,8 @@
 
 #include "common.hpp"
 
+#include <nlohmann/json.hpp>
+
 #include <core/framework/utils/file.hpp>
 
 namespace engine::parsers {

@@ -1,5 +1,6 @@
 #pragma once
 #include "../common.hpp"
+#define GLM_ENABLE_EXPERIMENTAL
 #include "model.h"
 #include <core/common/common.hpp>
 #include <glm/gtc/matrix_transform.hpp>

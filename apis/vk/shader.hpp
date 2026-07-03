@@ -2,6 +2,8 @@
 
 #include "vk_data.hpp"
 
+#include <fstream>
+
 namespace vk::shader
 {
     static std::vector<char> readFile(const std::string &filename, const VulkanData& vk_data)
