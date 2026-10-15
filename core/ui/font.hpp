@@ -22,14 +22,21 @@ struct vec2 {
   float y;
 };
 
+enum class QuadOrigin {
+  Top,
+  Bottom
+};
+
 struct Font {
 
-  const std::vector<unsigned char> &Pixels() { return pixels; }
-  const std::vector<Glyph> &Glyphs() { return glyphs; }
+  std::vector<unsigned char> &Pixels() { return pixels; }
+  std::vector<Glyph> &Glyphs() { return glyphs; }
 
   int Dimensions() { return dimensions; }
+  void Dimensions(int w, int h) { dimensions = w; }
   int FontSize() { return font_size; }
   const std::string &Name() { return font_name; }
+  void Name(const std::string &name ) { font_name = name; }
 
   vec2 white_pixel = {0.0f, 0.0f};
   uint32_t num_chars = 95;
@@ -44,9 +51,11 @@ struct Font {
   uint32_t min_range = 0;
   uint32_t max_range = 0;
 
+  QuadOrigin yOrigin = QuadOrigin::Top;
+  int font_size{};
+
 protected:
   std::string font_name{};
-  int font_size{};
   int dimensions{};
   std::vector<unsigned char> pixels{};
   std::vector<Glyph> glyphs{};

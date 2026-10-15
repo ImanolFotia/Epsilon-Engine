@@ -115,7 +115,7 @@ struct UIVertex {
   glm::vec4 color = glm::vec4(0.2, 0.2, 0.2, 0.5);
   glm::vec2 vtx_pos = glm::vec2(-1.0);
   glm::vec2 padding = glm::vec2(-1.0);
-  glm::vec4 attributes = glm::vec4(0.8);
+  glm::vec4 attributes = glm::vec4(0.0);
 };
 
 struct Rect {

@@ -9,8 +9,9 @@ layout(location = 4) in vec4 attributes;
 
 layout(location = 0) out VARYING  {
     vec4 color;
-    vec2 texCoords;
     vec4 vtx_coord;
+    vec4 attributes;
+    vec2 texCoords;
     float radius;
 } vs_out;
 
@@ -60,4 +61,5 @@ void main() {
     vs_out.vtx_coord.xy = corners[int(vtx_coords.x)];
     vs_out.vtx_coord.zw = padding;
     vs_out.radius = vtx_coords.y;
+    vs_out.attributes = attributes;
 }
