@@ -3,30 +3,31 @@
 #include "core/framework/clock.hpp"
 #include "core/framework/easing_functions.hpp"
 #include "core/ui/Types.hpp"
+#include "core/ui/font.hpp"
 #include <cmath>
 
 namespace UI {
 void UI::CheckShader() {
 
-  if (m_DrawLists[commands_pushed].bind_group != m_CurrentBindGroup ||
-      m_DrawLists[commands_pushed].layout != Primitive::TRIANGLE) {
+  if (m_DrawLists[commands_pushed].bind_group != m_CurrentBindGroup || m_DrawLists[commands_pushed].layout != Primitive::TRIANGLE) {
     auto &new_command = m_DrawLists.emplace_back();
     commands_pushed++;
     new_command.vertex_offset = vertices_pushed;
     new_command.num_vertices = 0;
     new_command.bind_group = m_CurrentBindGroup;
     new_command.layout = Primitive::TRIANGLE;
-    //if(m_DrawLists.size() > 1)
-    new_command.transform = transforms.top();//m_DrawLists[m_DrawLists.size() - 2].transform;
+    // if(m_DrawLists.size() > 1)
+    new_command.transform = transforms.top(); // m_DrawLists[m_DrawLists.size() - 2].transform;
   }
 }
 
-void UI::PushTransform(const glm::mat4 &transform){
+void UI::PushTransform(const glm::mat4 &transform) {
   DrawCommand new_command;
   new_command.bind_group = m_CurrentBindGroup;
   new_command.layout = Primitive::TRIANGLE;
 
-  if(m_DrawLists.size() > 0) new_command = m_DrawLists.back();
+  if (m_DrawLists.size() > 0)
+    new_command = m_DrawLists.back();
 
   new_command.transform = transform;
   new_command.vertex_offset = vertices_pushed;
@@ -38,7 +39,7 @@ void UI::PushTransform(const glm::mat4 &transform){
 
 void UI::PopTransform() {
   assert(m_DrawLists.size() > 1);
-  transforms.pop(); 
+  transforms.pop();
   DrawCommand new_command = m_DrawLists[m_DrawLists.size() - 2];
   new_command.vertex_offset = vertices_pushed;
   new_command.num_vertices = 0;
@@ -50,13 +51,16 @@ void UI::PopTransform() {
 
 glm::vec2 UI::textSize(const std::string &text) {
   auto font = m_Fonts[current_font];
-  float ox = 0, oy = 0;
+  float ox = 0, oy = 0, curr_line = 0;
   char *text_data;
   char *text_data_orig;
 
   text_data = new char[text.size() + 1];
   text_data_orig = text_data;
   std::memcpy(text_data, text.c_str(), text.size() + 1);
+
+  float pixel_scale = PixelScale(this->text_size);
+  float text_start = ox;
   while (*text_data) {
     int byte_count = 1;
     // if (*text_data >= font->first_char && *text_data < font->first_char + font->num_chars) {
@@ -66,19 +70,85 @@ glm::vec2 UI::textSize(const std::string &text) {
     // &x, &y, &q, 1); // 1=opengl & d3d10+,0=d3d9AlignedQuad q;
 
     AlignedQuad q;
+    Glyph *g = nullptr;
+    if (*text_data == '\n') {
+      oy += font->highest_character;
+      ox = glm::max(ox, curr_line);
+      text_data += byte_count;
+      curr_line = 0;
+      continue;
+    }
     if ((unsigned)*text_data > 127) {
       uint32_t utf8_char = Font::DecodeCodepoint(text_data, &byte_count);
       byte_count = glm::max(1, byte_count);
+      g = &font->Glyphs()[font->glyph_index[utf8_char]];
       q = font->Glyphs()[font->glyph_index[utf8_char]].quad;
     } else {
+      g = &font->Glyphs()[(int)(*text_data) - font->first_char];
+      q = font->Glyphs()[(int)(*text_data) - font->first_char].quad;
+    }
 
+    if (*text_data == ' ') {
+      curr_line += 5;
+      //ox += 10;
+    } else {
+      curr_line += g->advance * pixel_scale;
+      //ox += g->advance * pixel_scale; // q.x1;
+      oy = glm::max(oy, q.y1 - q.y0);
+    }
+    // }
+
+    text_data += byte_count;
+  }
+
+  ox = glm::max(curr_line, ox);
+
+  delete[] text_data_orig;
+
+  return {ox, oy * pixel_scale};
+}
+
+glm::vec2 UI::textSize(std::string_view text) {
+  auto font = m_Fonts[current_font];
+  float ox = 0, oy = 0;
+  char *text_data;
+  char *text_data_orig;
+
+  text_data = new char[text.size() + 1];
+  text_data_orig = text_data;
+  std::memcpy(text_data, text.data(), text.size() + 1);
+
+  float pixel_scale = PixelScale(this->text_size);
+  float text_start = ox;
+  while (*text_data) {
+    int byte_count = 1;
+    // if (*text_data >= font->first_char && *text_data < font->first_char + font->num_chars) {
+    float x = 0, y = 0;
+    // stbtt_aligned_quad q;
+    // stbtt_GetBakedQuad(cdata, texture_size, texture_size, *text_data - 32,
+    // &x, &y, &q, 1); // 1=opengl & d3d10+,0=d3d9AlignedQuad q;
+
+    AlignedQuad q;
+    Glyph *g = nullptr;
+    if (*text_data == '\n') {
+      oy += font->highest_character* 1.0 * pixel_scale;
+      text_data += byte_count;
+      continue;
+    }
+    if ((unsigned)*text_data > 127) {
+      uint32_t utf8_char = Font::DecodeCodepoint(text_data, &byte_count);
+      byte_count = glm::max(1, byte_count);
+      g = &font->Glyphs()[font->glyph_index[utf8_char]];
+      q = font->Glyphs()[font->glyph_index[utf8_char]].quad;
+    } else {
+      g = &font->Glyphs()[(int)(*text_data) - font->first_char];
       q = font->Glyphs()[(int)(*text_data) - font->first_char].quad;
     }
 
     if (*text_data == ' ') {
       ox += 10;
     } else {
-      ox += q.x1;
+      ox += g->advance * pixel_scale; // q.x1;
       oy = glm::max(oy, q.y1 - q.y0);
     }
     // }
@@ -88,7 +158,7 @@ glm::vec2 UI::textSize(const std::string &text) {
 
   delete[] text_data_orig;
 
-  return {ox, oy};
+  return {ox, oy * pixel_scale};
 }
 
 bool UI::Update() {
@@ -126,7 +196,7 @@ bool UI::Update() {
   if (!m_pMouse.left_down)
     grabed_window_id = 0;
 
-  if(!m_pMouse.right_down)
+  if (!m_pMouse.right_down)
     selected_point = -1;
 
   if (m_pMouse.left_down && grabed_window_id != 0) {
@@ -136,7 +206,6 @@ bool UI::Update() {
   if (m_pMouse.right_down && selected_point >= 0) {
     res |= true;
   }
-
 
   m_pMouse.left_released = m_pMouse.left_was_down && m_pMouse.left_pressed == false;
   m_pMouse.right_released = m_pMouse.right_was_down && m_pMouse.right_pressed == false;
@@ -199,31 +268,37 @@ void UI::CreateRect(glm::vec2 position, glm::vec2 size, glm::vec2 uv0 = glm::vec
   m_pVertices[vertices_pushed].color = color;
   m_pVertices[vertices_pushed].pos_uv = glm::vec4(position.x, position.y, uv0.x, uv0.y);
   m_pVertices[vertices_pushed].padding = s;
+  m_pVertices[vertices_pushed].attributes = glm::vec4(0.0f);
   m_pVertices[vertices_pushed++].vtx_pos = glm::vec2(0.0, radius);
 
   m_pVertices[vertices_pushed].color = color;
   m_pVertices[vertices_pushed].pos_uv = glm::vec4(position + glm::vec2(size.x, 0.0f), uv1.x, uv0.y);
   m_pVertices[vertices_pushed].padding = s;
+  m_pVertices[vertices_pushed].attributes = glm::vec4(0.0f);
   m_pVertices[vertices_pushed++].vtx_pos = glm::vec2(1.0, radius);
 
   m_pVertices[vertices_pushed].color = color;
   m_pVertices[vertices_pushed].pos_uv = glm::vec4(position + glm::vec2(0.0f, size.y), uv0.x, uv1.y);
   m_pVertices[vertices_pushed].padding = s;
+  m_pVertices[vertices_pushed].attributes = glm::vec4(0.0f);
   m_pVertices[vertices_pushed++].vtx_pos = glm::vec2(2.0, radius);
 
   m_pVertices[vertices_pushed].color = color;
   m_pVertices[vertices_pushed].pos_uv = glm::vec4(position + glm::vec2(0.0f, size.y), uv0.x, uv1.y);
   m_pVertices[vertices_pushed].padding = s;
+  m_pVertices[vertices_pushed].attributes = glm::vec4(0.0f);
   m_pVertices[vertices_pushed++].vtx_pos = glm::vec2(3.0, radius);
 
   m_pVertices[vertices_pushed].color = color;
   m_pVertices[vertices_pushed].pos_uv = glm::vec4(position + glm::vec2(size.x, 0.0f), uv1.x, uv0.y);
   m_pVertices[vertices_pushed].padding = s;
+  m_pVertices[vertices_pushed].attributes = glm::vec4(0.0f);
   m_pVertices[vertices_pushed++].vtx_pos = glm::vec2(4.0, radius);
 
   m_pVertices[vertices_pushed].color = color;
   m_pVertices[vertices_pushed].pos_uv = glm::vec4(position + size, uv1.x, uv1.y);
   m_pVertices[vertices_pushed].padding = s;
+  m_pVertices[vertices_pushed].attributes = glm::vec4(0.0f);
   m_pVertices[vertices_pushed++].vtx_pos = glm::vec2(5.0, radius);
 
   auto &current_draw_command = m_DrawLists[commands_pushed];
@@ -239,7 +314,7 @@ void UI::CreatePolygon(const UIVertex *vertices, size_t size) {
   current_draw_command.num_vertices = vertices_pushed - current_draw_command.vertex_offset;
 }
 
-void UI::CreatePolygon(std::vector<UIVertex> vertices) {
+void UI::CreatePolygon(const std::vector<UIVertex> &vertices) {
   for (int i = 0; i < vertices.size(); i++) {
     m_pVertices[vertices_pushed++] = vertices[i];
   }
@@ -254,7 +329,7 @@ void UI::Spacer(glm::vec2 size) {
 
   if (currentWindow->new_window) {
     currentWindow->size.x = glm::max(m_pCursorPosition.x + size.x - currentWindow->position.x - m_pStyle.buttonPadding * 2.0f, currentWindow->size.x);
-    currentWindow->size.y += size.y;//glm::max(m_pCursorPosition.y + size.y - currentWindow->position.y, currentWindow->size.y);
+    currentWindow->size.y += size.y; // glm::max(m_pCursorPosition.y + size.y - currentWindow->position.y, currentWindow->size.y);
   }
   m_pCursorPosition += size;
 }
@@ -265,6 +340,8 @@ void UI::BeginWindow(const std::string &name, glm::vec2 size, glm::vec4 color, f
   CheckShader();
   size_t id = std::hash<std::string>{}(name);
   bool new_window = false;
+
+  auto text_size = textSize(name);
   if (!m_pContext.windows.contains(id)) {
     m_pContext.windows[id] = {id};
     new_window = true;
@@ -279,7 +356,7 @@ void UI::BeginWindow(const std::string &name, glm::vec2 size, glm::vec4 color, f
   currentWindow->fixed_size = glm::dot(size, size) > 0.0 ? true : false;
   if (new_window && !currentWindow->fixed_size)
     currentWindow->size = glm::vec2(0.0);
-  else if(currentWindow->fixed_size)
+  else if (currentWindow->fixed_size)
     currentWindow->size = size;
 
   currentWindow->vtx_index = vertices_pushed;
@@ -288,19 +365,19 @@ void UI::BeginWindow(const std::string &name, glm::vec2 size, glm::vec4 color, f
   currentWindow->draw_header = header;
   currentWindow->fixed = fixed;
   // m_pCursorPosition.y += m_pStyle.windowPadding;
-  if(new_window)
+  if (new_window)
     currentWindow->position = m_pCursorPosition;
 
-  //currentWindow->position = m_pCursorPosition;
+  // currentWindow->position = m_pCursorPosition;
 
   if (!moves)
     currentWindow->position = m_pCursorPosition;
-  else if(moves)
+  else if (moves)
     m_pCursorPosition = currentWindow->position;
 
   currentWindow->border_radius = border_radius;
   if (header) {
-    m_pCursorPosition.y += 25;
+    m_pCursorPosition.y += text_size.y + m_pStyle.windowPadding.y * 3.0f;
   }
 
   vertices_pushed += 6;
@@ -314,11 +391,13 @@ void UI::BeginWindow(const std::string &name, glm::vec2 size, glm::vec4 color, f
 
 void UI::EndWindow() {
   assert(currentWindow != nullptr);
-  glm::vec2 size = currentWindow->size;//currentWindow->fixed_size ? currentWindow->size : currentWindow->setted_size;
+  glm::vec2 size = currentWindow->size; // currentWindow->fixed_size ? currentWindow->size : currentWindow->setted_size;
   currentWindow->new_window = false;
 
+  auto text_size = textSize(currentWindow->name);
+
   if (currentWindow->draw_header)
-    size.y += 25;
+    size.y += text_size.y + m_pStyle.windowPadding.y * 2.0;
   m_pContext.prev_widget_position = m_pCursorPosition;
 
   glm::vec2 margin = glm::vec2(5.0);
@@ -331,16 +410,16 @@ void UI::EndWindow() {
   CreateRect(currentWindow->position, size + glm::vec2(m_pStyle.windowPadding.x * 3.0f, m_pStyle.windowPadding.y * 3.0f), white_pixel, white_pixel,
              currentWindow->color, currentWindow->border_radius);
 
-  if (currentWindow->draw_header){
-    CreateRect(currentWindow->position, glm::vec2(size.x + m_pStyle.windowPadding.x * 3.0f, 25.0), white_pixel, white_pixel,
-               glm::vec4(glm::vec3(currentWindow->color + 0.1f), 1.0), currentWindow->border_radius);
+  if (currentWindow->draw_header) {
+    CreateRect(currentWindow->position, glm::vec2(size.x + m_pStyle.windowPadding.x * 3.0f, text_size.y + m_pStyle.windowPadding.y * 2.0), white_pixel,
+               white_pixel, glm::vec4(glm::vec3(currentWindow->color + 0.1f), 1.0), currentWindow->border_radius);
   }
 
   vertices_pushed = temp_vtx;
 
   auto &current_draw_command = m_DrawLists[commands_pushed];
   current_draw_command.num_vertices = vertices_pushed - current_draw_command.vertex_offset;
-  m_pCursorPosition.y = currentWindow->position.y + 2;
+  m_pCursorPosition.y = currentWindow->position.y;
   m_pCursorPosition.x = currentWindow->position.x + 5;
   if (currentWindow->draw_header)
     Text(currentWindow->name, glm::vec4(1.0), true);
@@ -353,7 +432,7 @@ void UI::EndWindow() {
   m_pContext.lastItemHovered = false;
 
   glm::ivec2 mouse = glm::ivec2(framework::Input::Mouse::XPOS, framework::Input::Mouse::YPOS);
-  
+
   if (mouse.x > currentWindow->position.x && mouse.x < currentWindow->position.x + size.x && mouse.y > currentWindow->position.y &&
       mouse.y < currentWindow->position.y + size.y) {
     m_pContext.lastItemHovered = true;
@@ -398,13 +477,25 @@ void UI::Text(const std::string &text, glm::vec2 position, glm::vec4 color, bool
 
   std::memcpy(text_data, text.c_str(), text.size() + 1);
 
-  if (standalone)
+  if (standalone) {
     position.x += 5.0f;
-  else
+    position.y -= 5.0;
+  } else {
     position.x += 2.0f;
+  }
 
+  float text_start = position.x;
+
+  float pixel_scale = PixelScale(this->text_size);
   while (*text_data) {
     int byte_count = 1;
+    if (*text_data == '\n') {
+      position.x = text_start;
+      position.y += font->highest_character * 1.0 * pixel_scale;
+      text_data += byte_count;
+      continue;
+    }
+
     // if (*text_data >= font->first_char && *text_data < font->first_char + font->num_chars) {
     float x = 0, y = 0;
     std::vector<UIVertex> vertices;
@@ -414,36 +505,45 @@ void UI::Text(const std::string &text, glm::vec2 position, glm::vec4 color, bool
     // stbtt_GetBakedQuad(cdata, texture_size, texture_size, *text_data - 32,
     // &x, &y, &q, 1); // 1=opengl & d3d10+,0=d3d9
     AlignedQuad q;
+    Glyph *g = nullptr;
 
     if ((unsigned)*text_data > 127) {
       uint32_t utf8_char = Font::DecodeCodepoint(text_data, &byte_count);
       byte_count = glm::max(1, byte_count);
+      g = &font->Glyphs()[font->glyph_index[utf8_char]];
       q = font->Glyphs()[font->glyph_index[utf8_char]].quad;
     } else {
-
+      g = &font->Glyphs()[(int)(*text_data) - font->first_char];
       q = font->Glyphs()[(int)(*text_data) - font->first_char].quad;
     }
 
     if (*text_data == ' ') {
       position.x += 5;
     } else {
+      glm::vec4 a, b, c, d;
 
-      glm::vec4 a = glm::vec4((position) / m_pResolution + glm::vec2(q.x0, q.y0 + font->highest_character) / m_pResolution, q.s0, q.t0);
-      glm::vec4 b = glm::vec4((position) / m_pResolution + glm::vec2(q.x1, q.y0 + font->highest_character) / m_pResolution, q.s1, q.t0);
-      glm::vec4 c = glm::vec4((position) / m_pResolution + glm::vec2(q.x0, q.y1 + font->highest_character) / m_pResolution, q.s0, q.t1);
-      glm::vec4 d = glm::vec4((position) / m_pResolution + glm::vec2(q.x1, q.y1 + font->highest_character) / m_pResolution, q.s1, q.t1);
+      if (font->msdf) {
+        q.x0 *= pixel_scale;
+        q.y0 *= pixel_scale;
+        q.x1 *= pixel_scale;
+        q.y1 *= pixel_scale;
+      }
 
-      vertices[0] = {a, color};
-      vertices[1] = {b, color};
-      vertices[2] = {c, color};
+      a = glm::vec4((position) / m_pResolution + glm::vec2(q.x0, q.y0 + font->highest_character * 1.0 * pixel_scale) / m_pResolution, q.s0, q.t0);
+      b = glm::vec4((position) / m_pResolution + glm::vec2(q.x1, q.y0 + font->highest_character * 1.0 * pixel_scale) / m_pResolution, q.s1, q.t0);
+      c = glm::vec4((position) / m_pResolution + glm::vec2(q.x0, q.y1 + font->highest_character * 1.0 * pixel_scale) / m_pResolution, q.s0, q.t1);
+      d = glm::vec4((position) / m_pResolution + glm::vec2(q.x1, q.y1 + font->highest_character * 1.0 * pixel_scale) / m_pResolution, q.s1, q.t1);
 
-      vertices[3] = {c, color};
-      vertices[4] = {b, color};
-      vertices[5] = {d, color};
+      vertices[0] = {.pos_uv = a, .color = color, .attributes = glm::vec4(1.0f)};
+      vertices[1] = {.pos_uv = b, .color = color, .attributes = glm::vec4(1.0f)};
+      vertices[2] = {.pos_uv = c, .color = color, .attributes = glm::vec4(1.0f)};
+      vertices[3] = {.pos_uv = c, .color = color, .attributes = glm::vec4(1.0f)};
+      vertices[4] = {.pos_uv = b, .color = color, .attributes = glm::vec4(1.0f)};
+      vertices[5] = {.pos_uv = d, .color = color, .attributes = glm::vec4(1.0f)};
 
       CreatePolygon(vertices);
 
-      position.x += q.x1;
+      position.x += g->advance * pixel_scale; // q.x1;
     }
 
     characters_size.x = position.x;
@@ -522,8 +622,10 @@ bool UI::Button(const std::string &text, ButtonFlags flags) {
 
     size.x += m_pStyle.buttonPadding;
   }
+
+  float pixel_scale = PixelScale(this->text_size);
   size.y += m_pStyle.buttonPadding;
-  size.y = font->highest_character + (m_pStyle.buttonPadding * 2.0f);
+  size.y = font->highest_character * pixel_scale + (m_pStyle.buttonPadding * 2.0f);
   m_pCursorPosition += m_pStyle.buttonPadding;
   glm::vec2 position = m_pCursorPosition;
 
@@ -559,7 +661,7 @@ bool UI::Button(const std::string &text, ButtonFlags flags) {
     float x_pos = size.x * 0.5f;
     // align right: x_pos = x_pos - text_size.x;
     x_pos = (cursor_pos.x + x_pos) - (text_size.x * 0.5f);
-    //x_pos = glm::ceil(((int)x_pos % 2 == 0 ? x_pos + 1 : x_pos));
+    // x_pos = glm::ceil(((int)x_pos % 2 == 0 ? x_pos + 1 : x_pos));
     Text(text, glm::vec2(x_pos, cursor_pos.y), glm::vec4(1.0f), false);
   } else {
     cursor_pos.x += (int)cursor_pos.x % 2 ? 0 : 1;
@@ -633,7 +735,8 @@ bool UI::ImageButton(const std::string &text, const std::string &texture, glm::v
   }
   const float padding = 5;
   // glm::vec2 text_size = m_pStyle.textSize; // glm::vec2(10, 20);
-  glm::vec4 button_color = flags.image_tint.get();;
+  glm::vec4 button_color = flags.image_tint.get();
+  ;
 
   m_pCursorPosition += m_pStyle.buttonPadding;
   glm::vec2 position = m_pCursorPosition;
@@ -936,12 +1039,13 @@ bool UI::CheckBox(const std::string &text, bool *state) {
   CreateRect(position, glm::vec2(switch_width), white_pixel, white_pixel, glm::vec4(0.0, 0.0, 0.0, 1.0));
   CreateRect(position + glm::vec2(switch_width * 0.1), glm::vec2(switch_width) * 0.8f, white_pixel, white_pixel, button_color);
 
-  int glyph_size = abs(m_Fonts[current_font]->Glyphs()[(int)'x' - 32].quad.y0 - m_Fonts[current_font]->Glyphs()[(int)'x' - 32].quad.y1);
+  float pixel_scale = PixelScale(this->text_size);
+  int glyph_size = abs(m_Fonts[current_font]->Glyphs()[(int)'x' - 32].quad.y0 - m_Fonts[current_font]->Glyphs()[(int)'x' - 32].quad.y1) * pixel_scale;
   // std::string tick = '√';
   if (*state)
-    Text("x", position + glm::vec2((switch_width * 0.25), -glm::ceil(glyph_size * 0.25)), glm::vec4(1.0f), false);
+    Text("x", position + glm::vec2((switch_width * 0.25), -glm::ceil(glyph_size * 0.45)), glm::vec4(1.0f), false);
 
-  Text(text, cursor_pos + glm::vec2(switch_width, -glm::ceil(font->highest_character * 0.25)), glm::vec4(1.0f), false);
+  Text(text, cursor_pos + glm::vec2(switch_width, -glm::ceil(font->highest_character * pixel_scale * 0.45)), glm::vec4(1.0f), false);
 
   m_pCursorPosition.x -= m_pStyle.buttonPadding;
 
@@ -949,13 +1053,13 @@ bool UI::CheckBox(const std::string &text, bool *state) {
 
   if (currentWindow->new_window) {
     currentWindow->size.x = glm::max(2.0f * m_pStyle.buttonPadding + size.x, currentWindow->size.x);
-    currentWindow->size.y += size.y + 5.0;
+    currentWindow->size.y += size.y;
   }
 
   m_pContext.prev_widget_size.x = switch_width + text_size.x + m_pStyle.buttonPadding;
   m_pContext.prev_widget_size.y += (m_pStyle.buttonPadding * 2.0f);
 
-  if (mouse.x > position.x && mouse.x < position.x + switch_width && mouse.y > position.y && mouse.y < position.y + switch_width && m_pMouse.left_pressed) {
+  if (mouse.x > position.x && mouse.x < position.x + size.x && mouse.y > position.y && mouse.y < position.y + switch_width && m_pMouse.left_pressed) {
     *state = !*state;
     return true;
   }
@@ -1040,7 +1144,7 @@ bool UI::HealthBar(const std::string &text, glm::vec2 position, float val, float
 
   glm::vec2 white_pixel = glm::vec2(m_Fonts[current_font]->white_pixel.x, m_Fonts[current_font]->white_pixel.y);
 
-  CreateRect(position, size + glm::vec2(size.y, 0), white_pixel, white_pixel, flags.background_color.get(), flags.border_radius*3.0);
+  CreateRect(position, size + glm::vec2(size.y, 0), white_pixel, white_pixel, flags.background_color.get(), flags.border_radius * 3.0);
 
   glm::vec2 sqr_position = position + padding + glm::vec2(0.0f, size.y - 10 - padding);
   glm::vec2 sqr_size = glm::vec2((size.x - (padding * (10 + 1))) / 10, 10 - (padding * 2.0f));
@@ -1062,7 +1166,7 @@ bool UI::HealthBar(const std::string &text, glm::vec2 position, float val, float
   // CreateRect(position - glm::vec2(0.0, size.y + 2), size + glm::vec2(0.0, 2),
   // m_WhitePixelPos, m_WhitePixelPos, glm::vec4(0.0, 0.0, 0.0, 0.5));
 
-  //half_point.x += (int)half_point.x % 2 ? 0 : 1;
+  // half_point.x += (int)half_point.x % 2 ? 0 : 1;
 
   Text(text, half_point - glm::vec2(0.0, font->highest_character * 0.5f), glm::vec4(1.0f), false);
 
@@ -1175,8 +1279,8 @@ glm::vec2 UI::ToScreenCoords(const glm::mat4 &model, bool clamp_to_border) {
 
   glm::vec2 viewport_space = glm::vec2(ndc.x, ndc.y) * 0.5f + 0.5f;
 
-  if (clamp_to_border){
-      viewport_space = glm::clamp(viewport_space, glm::vec2(0.0), glm::vec2(1.0));
+  if (clamp_to_border) {
+    viewport_space = glm::clamp(viewport_space, glm::vec2(0.0), glm::vec2(1.0));
   }
 
   return viewport_space * m_pResolution;
@@ -1213,10 +1317,10 @@ void UI::Circle(int subdivisions, float size, glm::vec4 color) {
   }
   CreatePolygon(vertices);
 }
-void UI::Square(glm::vec2 size, glm::vec2 position) {
+void UI::Square(glm::vec2 size, glm::vec2 position, glm::vec4 color) {
   UIVertex vtx;
   std::vector<UIVertex> vertices;
-  vtx.color = glm::vec4(1.0f);
+  vtx.color = color;
   vtx.pos_uv.b = m_Fonts[current_font]->white_pixel.x;
   vtx.pos_uv.a = m_Fonts[current_font]->white_pixel.y;
 
@@ -1232,7 +1336,7 @@ void UI::Square(glm::vec2 size, glm::vec2 position) {
 
   glm::mat2 rot = {glm::cos(rot_time), -glm::sin(rot_time), glm::sin(rot_time), glm::cos(rot_time)};
 
-  glm::vec2 pos;
+  glm::vec2 pos{};
 
   pos = (glm::vec2(-0.5f, -0.5f) * size);
   vtx.pos_uv.x = pos.x;

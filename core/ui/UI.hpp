@@ -17,6 +17,8 @@
 #include "core/framework/splines/cubic_bezier.hpp"
 #include "font.hpp"
 
+#include <filesystem>
+#include <optional>
 #include <print>
 #include <span>
 #include <stack>
@@ -144,6 +146,155 @@ public:
 
   Style &GetStyle();
 
+  float text_size = 1.6;
+
+  float PixelScale(float pt) {
+    auto font = m_Fonts[current_font];
+    return (pt / font->font_size) * font->texture_size;
+  }
+
+  int32_t AddFont(const std::string &path) {
+    auto absolute = std::filesystem::absolute(path);
+    if (!std::filesystem::exists(absolute)) {
+      Log::Error("Provided font :", absolute, " doesn't exist.");
+      return -1;
+    }
+    auto ext = std::filesystem::path(absolute).extension();
+    auto filename = std::filesystem::path(absolute).filename();
+    auto parent = std::filesystem::path(absolute).parent_path();
+
+    if (ext == ".json") {
+      std::ifstream f(path);
+      nlohmann::json json = nlohmann::json::parse(f);
+
+      auto &atlas = json["atlas"];
+      auto &metrics = json["metrics"];
+      auto &glyphs = json["glyphs"];
+
+      std::shared_ptr<Font> font = std::make_shared<Font>();
+      std::vector<unsigned char> &pixels = font->Pixels();
+      std::vector<Glyph> &font_glyphs = font->Glyphs();
+
+      font->max_range = 0;
+      font->num_chars = 0;
+
+      font->Name(filename);
+
+      uint32_t max_range = 0;
+      uint32_t num_glyphs = 0;
+
+      for (auto &glyph : glyphs) {
+        uint32_t unicode = glyph["unicode"].get<uint32_t>();
+        max_range = std::max(max_range, unicode);
+        num_glyphs++;
+      }
+
+      font_glyphs.resize(num_glyphs);
+      font->msdf = true;
+      font->font_size = atlas["size"].get<uint32_t>();
+      font->glyph_index.resize(max_range + 1);
+      font->highest_character = metrics["lineHeight"].get<float>();
+      font->yOrigin = QuadOrigin::Bottom;
+
+      int width = atlas["width"].get<int>();
+      int height = atlas["height"].get<int>();
+
+      for (auto &glyph : glyphs) {
+        uint32_t unicode = glyph["unicode"].get<uint32_t>();
+        font->max_range = std::max(font->max_range, unicode);
+        font->glyph_index[unicode] = font->num_chars;
+
+        AlignedQuad quad = {
+            glyph["planeBounds"]["left"].get<float>(),  -glyph["planeBounds"]["top"].get<float>(),
+            glyph["atlasBounds"]["left"].get<float>(),  glyph["atlasBounds"]["top"].get<float>(),
+
+            glyph["planeBounds"]["right"].get<float>(), -glyph["planeBounds"]["bottom"].get<float>(),
+            glyph["atlasBounds"]["right"].get<float>(), glyph["atlasBounds"]["bottom"].get<float>(),
+        };
+/*
+        quad.x0 *= font->font_size;
+        quad.x1 *= font->font_size;
+        quad.y0 *= font->font_size;
+        quad.y1 *= font->font_size;
+*/
+        quad.s0 /= width;
+        quad.s1 /= width;
+        quad.t0 /= height;
+        quad.t1 /= height;
+
+        quad.t0 = 1.0f - quad.t0;
+        quad.t1 = 1.0f - quad.t1;
+
+        std::string code{};
+        if (unicode <= 0x7F) {
+          code = (char)unicode;
+        } else {
+          continue;
+        }
+
+        font_glyphs[unicode - 32] = {quad, code, glyph["advance"].get<float>()};
+        font->num_chars++;
+      }
+
+      font->texture_size = width;
+      pixels.resize(width * width * 4);
+      int w, h, c = 4;
+
+      const std::string image_filename = parent.string() + "/" + filename.stem().string() + ".png";
+
+      unsigned char *image_pixels = framework::load_image_from_file(image_filename.c_str(), &w, &h, &c);
+
+      for (int i = 0; i < w * h * 4; i += 4) {
+        pixels[i] = image_pixels[i];
+        pixels[i + 1] = image_pixels[i + 1];
+        pixels[i + 2] = image_pixels[i + 2];
+        pixels[i + 3] = image_pixels[i + 3];
+      };
+      framework::free_image_data(image_pixels);
+
+      double max_dist = {};
+
+      for (int i = 0; i < w * h * 4; i += 4) {
+        glm::vec4 v = glm::vec4(pixels[i], pixels[i + 1], pixels[i + 2], pixels[i + 3]);
+        double curr_dist = glm::length(v);
+
+        if (curr_dist > max_dist) {
+          max_dist = curr_dist;
+          // if (pixels[i] == 255 && pixels[i + 1] == 255 && pixels[i + 2] == 255 && pixels[i + 3] == 255) {
+          m_WhitePixelPositions[filename] = glm::vec2(i % h, i / w) / glm::vec2(w, h);
+          font->white_pixel = {(float)(i % h) / (float)w, (float)((float)i / w) / (float)h};
+        }
+      }
+
+      engine::TextureCreationInfo texInfo;
+      texInfo.pixels = (unsigned char *)pixels.data();
+      texInfo.width = font->texture_size;
+      texInfo.height = font->texture_size;
+      texInfo.format = engine::TextureFormat::COLOR_RGBA;
+      texInfo.generateMipMaps = false;
+      texInfo.mipLevels = 1;
+      texInfo.filtering = engine::Filtering::LINEAR;
+      texInfo.size = font->texture_size * font->texture_size * 4;
+
+      m_pBindGroups[font->Name()] = m_pResourceManager->createBindGroup({
+          .bindingInfo = {{
+              .binding = 2,
+              .type = engine::UniformBindingType::TEXTURE_IMAGE_COMBINED_SAMPLER,
+              .textureInfo = texInfo,
+              .name = font->Name(),
+          }},
+          .inputs = {},
+          .renderPass = "SwapChainPass",
+          .name = "UIBindGroup" + std::to_string(m_Fonts.size()),
+      });
+
+      m_Fonts.push_back(font);
+
+      return m_Fonts.size() - 1;
+    }
+    return -1;
+  }
+
   int32_t AddFont(std::shared_ptr<Font> font) {
     if (font == nullptr)
       return -1;
@@ -186,7 +337,7 @@ public:
     texInfo.height = font->texture_size;
     texInfo.format = engine::TextureFormat::COLOR_RGBA;
     texInfo.generateMipMaps = true;
-    texInfo.mipLevels = 5;
+    texInfo.mipLevels = 1;
     texInfo.size = font->texture_size * font->texture_size * 4;
 
     m_pBindGroups[font->Name()] = m_pResourceManager->createBindGroup({
@@ -314,15 +465,12 @@ public:
   void PushTransform(const glm::mat4 &transform);
   void PopTransform();
 
-  void SetLineWidth(float width) {
-    m_LineWidth = width;
-  }
+  void SetLineWidth(float width) { m_LineWidth = width; }
 
-  float GetLineWidth() {
-    return m_LineWidth;
-  }
+  float GetLineWidth() { return m_LineWidth; }
 
   glm::vec2 textSize(const std::string &text);
+  glm::vec2 textSize(std::string_view text);
   glm::vec2 buttonSize(const std::string &text);
   glm::vec2 const &Resolution() { return m_pResolution; }
 
@@ -347,10 +495,10 @@ public:
                   float border_radius = -1.0f);
 
   void CreatePolygon(const UIVertex *vertices, size_t size);
-  void CreatePolygon(std::vector<UIVertex> vertices);
+  void CreatePolygon(const std::vector<UIVertex>& vertices);
 
   void Circle(int subdivisions = 20, float size = 10.0f, glm::vec4 color = glm::vec4(0.5, 0.5, 0.5, 1.0));
-  void Square(glm::vec2, glm::vec2);
+  void Square(glm::vec2, glm::vec2, glm::vec4 color = glm::vec4(1.0));
   void Triangle();
   void Diamond();
 
@@ -433,6 +581,13 @@ public:
 
   void SetNextWindowPosition(glm::vec2 position);
 
+  std::optional<glm::vec2> GetCurrentWindowPosition() {
+    if(currentWindow)
+      return currentWindow->position;
+
+    return std::nullopt;
+  }
+
   void BeginWindow(const std::string &name, glm::vec2 size = glm::vec2(0.0f), glm::vec4 color = glm::vec4(0.0, 0.0, 0.0, 0.5), float border_radius = -1.0f,
                    bool header = false, bool fixed = true, bool moves = false);
 
@@ -486,9 +641,7 @@ public:
 private:
   template <typename T> int control_point_move(std::vector<SplinePoint<T>> &points, const SplineFlags &flags) {
     auto circle_col = [](glm::vec2 m, glm::vec2 p, float r) -> bool { return glm::length(m - p) <= r; };
-    auto snap = [](T v, int snap) {
-      return (v / snap) * snap;
-    };
+    auto snap = [](T v, int snap) { return (v / snap) * snap; };
     int hovered_point = -1;
     int point_stride[(int)SplineType::SIZE] = {2, 3, 2};
     glm::vec2 mouse_screen = glm::vec2(m_pMouse.position) / m_pResolution;                               // screen-space to clip-space
@@ -504,9 +657,9 @@ private:
           selected_point = i;
           p.internal_position.x += (imouse_screen - lastCanvasMouse).x;
           p.internal_position.y += (imouse_screen - lastCanvasMouse).y;
-          
+
           p.position = glm::ivec2(p.internal_position / flags.snap_size) * flags.snap_size;
-         
+
           int mod = (int)point_stride[(int)flags.type];
 
           int x = i % mod;
@@ -519,7 +672,6 @@ private:
               if (x == (flags.type == SplineType::QUADRATIC_BEZIER ? 0 : 2)) {
                 points[i + 2].internal_position = points[i + 1].position - (points[i].position - points[i + 1].position);
                 points[i + 2].position = snap(points[i + 2].internal_position, flags.snap_size);
-              
               }
             } else if (i > 1) {
               points[i - 1].internal_position.x += (imouse_screen - lastCanvasMouse).x;
@@ -567,9 +719,8 @@ private:
           selected_point = i;
           p.internal_position.x += (imouse_screen - lastCanvasMouse).x;
           p.internal_position.y += (imouse_screen - lastCanvasMouse).y;
-          
+
           p.position = glm::ivec2(p.internal_position / flags.snap_size) * flags.snap_size;
-         
         }
       }
 
@@ -675,7 +826,6 @@ private:
     mouse_screen = (glm::inverse(transforms.top()) * glm::vec4(mouse_screen, 0.0f, 1.0f)) * 0.5f + 0.5f; // ndc to normalized window coords
     mouse_screen *= m_pResolution;                                                                       // normalized window coords to window coords
     glm::ivec2 imouse_screen = glm::ivec2(mouse_screen);
-    
 
     for (int i = 0; i < points.size(); i++) {
       auto &p = points[i];
@@ -805,13 +955,13 @@ private:
     mouse_screen = (glm::inverse(transforms.top()) * glm::vec4(mouse_screen, 0.0f, 1.0f)) * 0.5f + 0.5f; // ndc to normalized window coords
     mouse_screen *= m_pResolution;                                                                       // normalized window coords to window coords
     glm::ivec2 imouse_screen = glm::ivec2(mouse_screen);
-   
+
     for (int i = 0; i < points.size(); i++) {
       auto &p = points[i];
       spline.addPoint(p.position);
     }
     lastCanvasMouse = imouse_screen;
-    spline.CalculateDistance();
+    //spline.CalculateDistance();
     SetNextWindowPosition(glm::vec2(30, 200));
     // Text(std::format("Spline length: {:.3f}", spline.Length()));
     if (points.size() == 2 && flags.drawHandles) {
@@ -879,7 +1029,7 @@ private:
         DrawLine({.position = points[points.size() - 1].position, .color = LIGHT_BLUE},
                  {.position = points[points.size() - 1 - 1].position, .color = LIGHT_BLUE});
       }
-      float l = spline.Length();
+     /* float l = spline.Length();
       const float interval = 50.0f;
       float delta = 0.0f;
       while (delta < l) {
@@ -887,7 +1037,7 @@ private:
         delta += interval;
         m_pCursorPosition = p;
         Circle(20, 5);
-      }
+      }*/
     }
     if (flags.drawHandles) {
       for (int i = 0; i < points.size(); i++) {
