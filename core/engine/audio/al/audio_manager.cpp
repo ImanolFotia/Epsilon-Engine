@@ -3,6 +3,7 @@
 #include "apis/al/source.hpp"
 #include "core/engine/audio/audio_manager.hpp"
 #include "core/framework/clock.hpp"
+#include <AL/alc.h>
 #include <core/framework/log.hpp>
 
 #if defined(ANDROID) || defined(__ANDROID__)
@@ -31,6 +32,8 @@ void ALAudioManager::Init() {
     al::OpenALSource alSource = al::createSource();
     m_FreeSources.insert(alSource.id);
   }
+
+  listCaptureDevices();
   Log::Success("Audio subsystem initialized");
 }
 
@@ -88,7 +91,6 @@ void ALAudioManager::Update() {
         Log::Info("Freed audio source: ", source.id);
         source.id = 0;
       }
-
     }
     m_LastCollection = framework::Clock::Time();
   }
@@ -306,4 +308,71 @@ uint32_t ALAudioManager::deleteSource(Ref<AudioSource> source_ref) {
   return 0;
 }
 void ALAudioManager::deleteListener(Ref<AudioListener> listener) {}
+
+std::vector<CaptureDeviceInfo> ALAudioManager::listCaptureDevices() {
+  const ALCchar *devices_string = alcGetString(NULL, ALC_CAPTURE_DEVICE_SPECIFIER);
+  const ALCchar *default_device_string = alcGetString(NULL, ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER);
+  std::string default_device_name = default_device_string;
+  int i = 0;
+  std::string n;
+  if (devices_string == nullptr)
+    return capture_devices;
+  for (;;) {
+    char c = devices_string[i];
+    if (c == '\0') {
+      if (n.empty())
+        break;
+
+      capture_devices.push_back({n, 44100, AL_FORMAT_MONO16, default_device_name == n});
+      Log::Info("Input device: ", n, ", Sample rate: ", 44100, ", Default device: ", capture_devices.back().default_device);
+      n.clear();
+    } else {
+      n += c;
+    }
+    i++;
+  }
+
+  return capture_devices;
+}
+bool ALAudioManager::openCaptureDevice(CaptureDeviceInfo deviceInfo) {
+  input_device = alcCaptureOpenDevice(deviceInfo.name.c_str(), deviceInfo.sample_rate, deviceInfo.format, (4410/2));
+  return true;
+}
+
+bool ALAudioManager::openDefaultCaptureDevice() {
+  CaptureDeviceInfo default_device;
+  for (auto &device : capture_devices) {
+    if (device.default_device)
+      default_device = device;
+  }
+  input_device = alcCaptureOpenDevice(default_device.name.c_str(), default_device.sample_rate, default_device.format, (4410/2));
+  return true;
+}
+void ALAudioManager::closeCaptureDevice() {
+  if (input_device) {
+    alcCaptureCloseDevice(input_device);
+    input_device = nullptr;
+  }
+}
+std::vector<int16_t> ALAudioManager::startCaptureSamples() {
+  std::vector<int16_t> buffer;
+  if (input_device) {
+    alcCaptureStart(input_device);
+    ALCint samplesAvailable;
+    uint32_t bufferCapacity = (4410/2) * 2;
+    alcGetIntegerv(input_device, ALC_CAPTURE_SAMPLES, 1, &samplesAvailable);
+    if (samplesAvailable > 0) {
+      ALCint toRead = (samplesAvailable < bufferCapacity) ? samplesAvailable : bufferCapacity;
+      buffer.resize(toRead);
+      alcCaptureSamples(input_device, buffer.data(), toRead);
+    }
+  }
+  return buffer;
+}
+
+void ALAudioManager::stopCaptureSamples() {
+  if (input_device) {
+    alcCaptureStop(input_device);
+  }
+}
 } // namespace engine::audio

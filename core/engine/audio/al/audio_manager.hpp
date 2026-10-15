@@ -9,6 +9,10 @@ class ALAudioManager : public AudioManager {
   Pool<AudioBuffer, al::OpenALBuffer> buffersPool;
   Pool<AudioListener, al::OpenALListener> listenersPool;
 
+  std::vector<CaptureDeviceInfo> capture_devices;
+
+  ALCdevice *input_device = nullptr;
+
   al::OpenALData m_pAlData;
 
   std::set<int> m_FreeSources;
@@ -40,6 +44,14 @@ public:
   al::OpenALSource *getSource(Ref<AudioSource>);
   al::OpenALBuffer *getBuffer(Ref<AudioBuffer>);
   al::OpenALListener *getListener(Ref<AudioListener>);
+
+
+  virtual std::vector<CaptureDeviceInfo> listCaptureDevices() override;
+  virtual bool openCaptureDevice(CaptureDeviceInfo) override;
+  virtual bool openDefaultCaptureDevice() override;
+  virtual void closeCaptureDevice() override;
+  virtual std::vector<int16_t> startCaptureSamples() override;
+  virtual void stopCaptureSamples() override;
 
   virtual void setSourcePosition(Ref<AudioSource>, glm::vec3) override;
   virtual void setSourceDirection(Ref<AudioSource>, glm::vec3) override;

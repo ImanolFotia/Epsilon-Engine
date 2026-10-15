@@ -6,6 +6,7 @@ namespace engine::audio {
 class AudioSource;
 class AudioBuffer;
 class AudioListener;
+class AudioCapture;
 
 struct BufferInfo {
   size_t numChannels{};
@@ -34,6 +35,13 @@ struct ListenerInfo {
   float gain = 1.0;
 };
 
+struct CaptureDeviceInfo {
+  std::string name;
+  uint32_t sample_rate = 0;
+  int format;
+  bool default_device = false;
+};
+
 enum class AudioState { PLAYING = 0, PAUSED, STOPPED, SIZE };
 
 enum class AudioKind { MUSIC = 0, SFX, SIZE };
@@ -54,6 +62,13 @@ public:
   virtual Ref<AudioBuffer> createBuffer(const std::string &, const BufferInfo &) = 0;
   virtual Ref<AudioSource> createSource(const std::string &, const SourceInfo &) = 0;
   virtual Ref<AudioListener> createListener(const std::string &, const ListenerInfo &) = 0;
+
+  virtual std::vector<CaptureDeviceInfo> listCaptureDevices() = 0;
+  virtual bool openCaptureDevice(CaptureDeviceInfo) = 0;
+  virtual bool openDefaultCaptureDevice() = 0;
+  virtual void closeCaptureDevice() = 0;
+  virtual std::vector<int16_t> startCaptureSamples() = 0;
+  virtual void stopCaptureSamples() = 0;
 
   virtual void Play(Ref<AudioSource>) = 0;
   virtual void Pause(Ref<AudioSource>) = 0;
