@@ -81,7 +81,8 @@ void Epsilon::initVulkan() {
 }
 
 void Epsilon::mainLoop() {
-  double llastTime = framework::Clock::Now();
+  double frame_begin = framework::Clock::Now();
+  double current_time = frame_begin;
   framework::Clock::Tick();
   showFPS();
   if (onUpdate)
@@ -99,9 +100,11 @@ void Epsilon::mainLoop() {
 
   while (accum < min_frametime) {
     double currentTime = framework::Clock::Now();
-    accum += currentTime - llastTime;
-    llastTime = currentTime;
+    accum += currentTime - current_time;
+    current_time = currentTime;
   }
+  double frame_end = framework::Clock::Now();
+  m_DeltaTime = (frame_end - frame_begin) / 1000000.0;
 }
 
 void Epsilon::showFPS() {

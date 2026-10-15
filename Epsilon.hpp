@@ -92,6 +92,8 @@ namespace Epsilon
 
         std::string m_ApplicationName;
 
+        double DeltaTime() {return m_DeltaTime; }
+
         int getMaxFPS() { return m_MaxFPS; }
         void setMaxFPS(int fps) { m_MaxFPS = fps; }
 
@@ -134,6 +136,7 @@ namespace Epsilon
         ShaderData shaderData;
         int m_MaxFPS = 5000;
         int m_MsaaSamples = 1;
+        double m_DeltaTime = 0;
     };
 }
 
